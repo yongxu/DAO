@@ -37,6 +37,10 @@ import SSBX.Foundation.ShuSuan
 import SSBX.Foundation.LuoJi
 import SSBX.Foundation.XingWei
 import SSBX.Foundation.TongJi
+import SSBX.Foundation.LeiYing
+import SSBX.Foundation.DongLi
+import SSBX.Foundation.XinZhi
+import SSBX.Foundation.WuXiang
 import SSBX.Foundation.WenyanSelfInterp
 import SSBX.Foundation.WenyanText
 import SSBX.Foundation.YiCore
