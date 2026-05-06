@@ -16,7 +16,7 @@ import Mathlib.LinearAlgebra.UnitaryGroup
 import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
 import Mathlib.Data.Complex.Basic
 
-namespace SSBX.Foundation.Phase4.SUN
+namespace SSBX.Foundation.Phase4.SpecialUnitary
 
 open Matrix
 
@@ -79,8 +79,10 @@ theorem z2_3_finite : Finite (Bool × Bool × Bool) := by infer_instance
 theorem z2_3_card_eq :
     (Finset.univ : Finset (Bool × Bool × Bool)).card = 8 := by decide
 
-/-- **SU(N) 在 N ≥ 2 时含连续族**——anchor，不形式化连续基数论证。 -/
-theorem SUN_nontrivial_anchor (n : ℕ) (h : 2 ≤ n) :
+/-- **SU(N) 在 N ≥ 2 时含连续族**——anchor，不形式化连续基数论证。
+    `_h` 之 2 ≤ n 是 anchor 之必要类型条件（统一 SU(2) / SU(3) 之最小情形），
+    虽 `1 ∈ SUN n` 对任意 n 皆成立，但本 anchor 之语义专指"非平凡"维度。 -/
+theorem SUN_nontrivial_anchor (n : ℕ) (_h : 2 ≤ n) :
     ∃ U : Matrix (Fin n) (Fin n) ℂ, U ∈ SUN n := by
   exact ⟨1, id_mem_SUN n⟩
 
@@ -115,4 +117,4 @@ theorem sun_summary :
     ∧ (∀ n : ℕ, 2 ≤ n → ∃ U : Matrix (Fin n) (Fin n) ℂ, U ∈ SUN n) :=
   ⟨id_mem_SUN, by decide, SUN_nontrivial_anchor⟩
 
-end SSBX.Foundation.Phase4.SUN
+end SSBX.Foundation.Phase4.SpecialUnitary
