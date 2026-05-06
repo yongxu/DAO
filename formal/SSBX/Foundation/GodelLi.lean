@@ -369,8 +369,19 @@ theorem halts_undecidable_under_kleene (h_kleene : KleeneInverter) :
 /-! ## § 5 公理化版本：完整 Halting 不可判定 -/
 
 /-- **Kleene 递归公理**：捕获 Church-Turing 论题对 BaguaTuring 之应用。
-    完全形式化需在 YiInstr 内构造 quine（约 500 行机械工程，已知可做但
-    暂不实现）。此公理是 道理二分 的精确陈述：道认可理之 CT 论题。 -/
+
+    本公理在 `KleeneInternal.lean` 中被精确分解为四个独立 `Prop`：
+    - `UniversalInterpExists`     (≈ 700 行 YiInstr 通用解释器)
+    - `SmnExists`                 (≈ 50 行 cell-pushing 子程序)
+    - `KleeneFromPrimitives`      (≈ 100 行 Kleene 对角构造)
+    - `AllDecidersAreYiComputable` (Church-Turing 论题之 Lean 形式)
+
+    定理 `KleeneInternal.path_to_zero_axiom` 已严格证明：四者合则
+    `KleeneInverter` 可证为定理（即此公理可去）。本轮保留此公理，因前两件
+    primitives 之 Lean 实现仍是约 750 行机械工程（`WenyanSelfInterp § 6b`
+    已完成 ≈ 15% 之 fetch-decode-execute scaffold）。
+
+    此公理 + KleeneInternal 合：道理二分 之精确形式落位（道认可理之 CT 论题）。 -/
 axiom kleene_recursion_axiom : KleeneInverter
 
 /-- **理之不完备主定理**（无条件版）：在 Kleene 递归公理下，Halts 不可由任何
