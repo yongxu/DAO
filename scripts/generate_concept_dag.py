@@ -17,7 +17,8 @@ import re
 
 ROOT = Path(__file__).resolve().parents[1]
 ROSTER = ROOT / "formal/SSBX/Roster.lean"
-OUT_DIR = ROOT / "formal/SSBX"
+DIAGRAMS_DIR = ROOT / "formal/SSBX/diagrams"
+NOTES_DIR = ROOT / "formal/SSBX/notes"
 
 KIND_LABEL = {
     "A": "字根",
@@ -196,9 +197,9 @@ def write_complete_mmd(nodes: list[Node], edges: list[Edge], acyclic: bool) -> N
     for edge in edges:
         lines.append(mermaid_edge(edge, ids))
     lines += CLASS_DEF
-    (OUT_DIR / "ConceptDAG.complete.mmd").write_text("\n".join(lines) + "\n")
+    (DIAGRAMS_DIR / "ConceptDAG.complete.mmd").write_text("\n".join(lines) + "\n")
     # Keep this filename as the audit graph for existing links.
-    (OUT_DIR / "ConceptDAG.full.mmd").write_text("\n".join(lines) + "\n")
+    (DIAGRAMS_DIR / "ConceptDAG.full.mmd").write_text("\n".join(lines) + "\n")
 
 
 def write_layered_mmd(nodes: list[Node], edges: list[Edge], acyclic: bool) -> None:
@@ -242,7 +243,7 @@ def write_layered_mmd(nodes: list[Node], edges: list[Edge], acyclic: bool) -> No
     for edge in edges:
         lines.append(mermaid_edge(edge, ids))
     lines += CLASS_DEF
-    (OUT_DIR / "ConceptDAG.layered.mmd").write_text("\n".join(lines) + "\n")
+    (DIAGRAMS_DIR / "ConceptDAG.layered.mmd").write_text("\n".join(lines) + "\n")
 
 
 def write_core_mmd() -> None:
@@ -347,11 +348,11 @@ flowchart TB
   classDef pending fill:#fef2f2,stroke:#dc2626,color:#7f1d1d;
   classDef external fill:#f5f3ff,stroke:#7c3aed,color:#3b0764;
 '''
-    (OUT_DIR / "ConceptDAG.core.mmd").write_text(core)
+    (DIAGRAMS_DIR / "ConceptDAG.core.mmd").write_text(core)
 
 
 def write_markdown(node_counts: dict[str, int], edge_count: int, acyclic: bool) -> None:
-    core = (OUT_DIR / "ConceptDAG.core.mmd").read_text().strip()
+    core = (DIAGRAMS_DIR / "ConceptDAG.core.mmd").read_text().strip()
     md = f'''# Concept DAG / 概念有向无环图
 
 方向约定：`字根 / 依赖项 --> 生成项 / 递归项`。
@@ -398,7 +399,7 @@ def write_markdown(node_counts: dict[str, int], edge_count: int, acyclic: bool) 
 
 这张图证明的是“名册依赖形状可作为 DAG 展示”。它不是额外哲学证明；哲学真理仍由 `Truth` 和 `Model` 层的公理账本与模型充分性承载。
 '''
-    (OUT_DIR / "ConceptDAG.md").write_text(md)
+    (NOTES_DIR / "ConceptDAG.md").write_text(md)
 
 
 def main() -> None:
@@ -445,9 +446,9 @@ def main() -> None:
     write_core_mmd()
     write_markdown({kind: len(group) for kind, group in names.items()}, len(edges), acyclic)
     print(f"nodes={len(nodes)} edges={len(edges)} acyclic={acyclic}")
-    print(f"wrote {OUT_DIR / 'ConceptDAG.md'}")
-    print(f"wrote {OUT_DIR / 'ConceptDAG.complete.mmd'}")
-    print(f"wrote {OUT_DIR / 'ConceptDAG.layered.mmd'}")
+    print(f"wrote {NOTES_DIR / 'ConceptDAG.md'}")
+    print(f"wrote {DIAGRAMS_DIR / 'ConceptDAG.complete.mmd'}")
+    print(f"wrote {DIAGRAMS_DIR / 'ConceptDAG.layered.mmd'}")
 
 
 if __name__ == "__main__":

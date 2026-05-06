@@ -1,6 +1,6 @@
 # H · 证明报告 · 八卦完整算子代数（BaguaAlgebra）
 
-**文件**：`formal/SSBX/Foundation/BaguaAlgebra.lean`
+**文件**：`formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean`
 **配套文档**：[`G_完整算子系统_八卦互通与归一.md`](G_完整算子系统_八卦互通与归一.md)
 **报告日期**：2026-05-06
 **Lean 版本**：4.29.1（Lake 5.0.0）
@@ -61,8 +61,8 @@
 
 | 文件 | 角色 | 行数 | 状态 |
 |------|------|------|------|
-| `formal/SSBX/Foundation/Yi.lean` | 既有依赖（不修改） | 1975 | ✓ |
-| `formal/SSBX/Foundation/BaguaAlgebra.lean` | 本次新建 | **734** | ✓ |
+| `formal/SSBX/Foundation/Yi/Yi.lean` | 既有依赖（不修改） | 1975 | ✓ |
+| `formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean` | 本次新建 | **734** | ✓ |
 | `formal/SSBX.lean` | 主入口（增 1 import） | 36 | ✓ |
 | `formal/SSBX/Core.lean` 等其余 33 文件 | 不动 | — | ✓ |
 

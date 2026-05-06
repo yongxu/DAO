@@ -20,7 +20,7 @@
 9. **Frame connectedness strict** (法则 53 retain): derivations cross-applicable.
 10. **法则 数**: v11.1 之 55 → v12 之 ~62.
 11. **字 economy**: v11.1 之 ~150 → v12 之 ~120 unique 字.
-12. **完备自指之核 consolidated** (v12 → v12-he): 古文 ≈ λ-calc + temporal + aspect + effect 之 识 已 第一步; 完备自指之核 立 in `daoli-v12-he.md` + `formal/SSBX/Foundation/Kernel.lean`. kernel boundary: 虚字 algebra + 8 sorts + 三值 + 一元 + 12 面 + 43 核心 + 自指 + 名实合一. 单字 (实字) layer expansion 之 protocol 已 立.
+12. **完备自指之核 consolidated** (v12 → v12-he): 古文 ≈ λ-calc + temporal + aspect + effect 之 识 已 第一步; 完备自指之核 立 in `daoli-v12-he.md` + `formal/SSBX/Foundation/Wen/Kernel.lean`. kernel boundary: 虚字 algebra + 8 sorts + 三值 + 一元 + 12 面 + 43 核心 + 自指 + 名实合一. 单字 (实字) layer expansion 之 protocol 已 立.
 
 ---
 

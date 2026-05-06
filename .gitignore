@@ -2,6 +2,10 @@
 .lake/
 build/
 
+# Python
+__pycache__/
+*.pyc
+
 # Editor / tooling
 .vscode/
 .idea/

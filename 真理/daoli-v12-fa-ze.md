@@ -773,8 +773,8 @@ Gödel-style: self-reference 不 矛盾 — 是 framework completeness 之 condi
 
 formal commit 见:
 - `daoli-v12-he.md` §七 (自指 closure — kernel level statement)
-- `formal/SSBX/Foundation/Kernel.lean` theorem `kernel_self_articulates`
-- `formal/SSBX/Foundation/MonadRoot.lean` theorem `ssbx_reachable_from_root`
+- `formal/SSBX/Foundation/Wen/Kernel.lean` theorem `kernel_self_articulates`
+- `formal/SSBX/Foundation/Core/MonadRoot.lean` theorem `ssbx_reachable_from_root`
 
 ---
 

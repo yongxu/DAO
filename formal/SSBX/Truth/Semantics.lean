@@ -58,7 +58,7 @@ def semanticTermOf (id : ClaimId) : SemanticTerm :=
   | .wenyanOperatorTableComplete => .theoremRef "SSBX.Text.Completeness.operator_table_complete"
   | .semanticAdequacyClaim => .theoremRef "SSBX.Truth.Adequacy.semantic_adequacy_complete"
   | .absoluteTruthClaim => .theoremRef "SSBX.Truth.Absolute.ssbx_absolute_truth"
-  | .rootToSsbxLiClaim => .theoremRef "SSBX.Foundation.Li.shengsheng_buxi_is_li_from_ledger"
+  | .rootToSsbxLiClaim => .theoremRef "SSBX.Foundation.Core.Li.shengsheng_buxi_is_li_from_ledger"
   | other => .predicate (claimEntry other).label
 
 def semanticValueOf (id : ClaimId) : SSBX.Core.Tri :=

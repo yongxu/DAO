@@ -139,7 +139,7 @@ $$(- \times \text{Bool})^6(1) = \text{Bool}^6$$
 
 ## 形式实现指引
 
-项目实际 Lean 实现（`formal/SSBX/Foundation/BaguaAlgebra.lean`）：
+项目实际 Lean 实现（`formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean`）：
 
 ```lean
 -- Yao 来自 Yi.lean：inductive Yao | yang | yin
@@ -167,7 +167,7 @@ structure Hexagram where  -- ⟨y1..y6⟩，y1..y3 = 内卦，y4..y6 = 外卦
 
 ## 与项目 MonadDAG 之接口
 
-由 `formal/SSBX/MonadDAG.md` 之单字 333 + 生成 134 = 467 体系：
+由 `formal/SSBX/notes/MonadDAG.md` 之单字 333 + 生成 134 = 467 体系：
 - 四级之 1+2+4+8 = 15 个结点皆有单字承担
 - 64 卦皆有传统单字（49 单字 + 15 双字）
 - 但 64 之 3 时态投影（192 格）不再造新字（参表六）

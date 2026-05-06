@@ -1,6 +1,6 @@
 # I · 八卦全集 · 字 · 符 · 爻 · 算子一一对应
 
-**配套形式化**：[`formal/SSBX/Foundation/Yi.lean`](../formal/SSBX/Foundation/Yi.lean) · [`formal/SSBX/Foundation/BaguaAlgebra.lean`](../formal/SSBX/Foundation/BaguaAlgebra.lean)
+**配套形式化**：[`formal/SSBX/Foundation/Yi/Yi.lean`](../formal/SSBX/Foundation/Yi/Yi.lean) · [`formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean`](../formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean)
 **配套报告**：[`H_证明报告.md`](H_证明报告.md)
 **修订日期**：2026-05-06
 
@@ -107,7 +107,7 @@
 > - **错综** = cuo ∘ zong $: \langle y_1, y_2, y_3 \rangle \mapsto \langle \neg y_3, \neg y_2, \neg y_1 \rangle$ —— 既改值又反位，亦不属 (Z/2)³
 > 
 > 故 cuo ∘ zong 属于扩张群 $(\mathbb{Z}/2)^3 \rtimes \langle \text{综} \rangle$（阶 16），不可还原为 (Z/2)³ 之内的 flip 复合。
-> 形式见证：[`zong_outside_flip_group`](../formal/SSBX/Foundation/BaguaAlgebra.lean) 之 5 条不等式。
+> 形式见证：[`zong_outside_flip_group`](../formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean) 之 5 条不等式。
 
 ---
 

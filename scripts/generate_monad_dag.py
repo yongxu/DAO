@@ -15,10 +15,11 @@ import re
 
 ROOT = Path(__file__).resolve().parents[1]
 ROSTER = ROOT / "formal/SSBX/Roster.lean"
-MONAD = ROOT / "formal/SSBX/Foundation/MonadRoot.lean"
-MONISM = ROOT / "formal/SSBX/Foundation/Monism.lean"
+MONAD = ROOT / "formal/SSBX/Foundation/Core/MonadRoot.lean"
+MONISM = ROOT / "formal/SSBX/Foundation/Core/Monism.lean"
 CLAIMS = ROOT / "formal/SSBX/Truth/ClaimLedger.lean"
-OUT_DIR = ROOT / "formal/SSBX"
+DIAGRAMS_DIR = ROOT / "formal/SSBX/diagrams"
+NOTES_DIR = ROOT / "formal/SSBX/notes"
 
 CLASS_DEF = [
     "  classDef root fill:#111827,stroke:#111827,color:#ffffff;",
@@ -358,7 +359,7 @@ def main() -> None:
         lines.append(mermaid_edge(edge, ids))
     lines += CLASS_DEF
 
-    (OUT_DIR / "MonadDAG.mmd").write_text("\n".join(lines) + "\n")
+    (DIAGRAMS_DIR / "MonadDAG.mmd").write_text("\n".join(lines) + "\n")
 
     md = [
         "# Monad DAG / 一元单根生成图",
@@ -383,8 +384,8 @@ def main() -> None:
         "",
         "## Mermaid Source",
         "",
-        "- `formal/SSBX/MonadDAG.mmd`",
-        "- `formal/SSBX/MonadDAG.svg`",
+        "- `formal/SSBX/diagrams/MonadDAG.mmd`",
+        "- `formal/SSBX/diagrams/MonadDAG.svg`",
         "",
         "## 图",
         "",
@@ -393,13 +394,13 @@ def main() -> None:
         "```",
         "",
     ]
-    (OUT_DIR / "MonadDAG.md").write_text("\n".join(md))
+    (NOTES_DIR / "MonadDAG.md").write_text("\n".join(md))
 
     if not root_only:
         raise SystemExit(f"MonadDAG has non-root sources: {sources}")
     if not is_acyclic:
         raise SystemExit("MonadDAG has a cycle")
-    print(f"wrote {OUT_DIR / 'MonadDAG.mmd'}")
+    print(f"wrote {DIAGRAMS_DIR / 'MonadDAG.mmd'}")
     print(f"nodes={len(node_list)} edges={len(edge_list)} unique_root={root_only} acyclic={is_acyclic}")
 
 

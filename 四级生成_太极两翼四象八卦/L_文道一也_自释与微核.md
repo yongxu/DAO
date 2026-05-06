@@ -1,10 +1,10 @@
 # L · 文道一也：图灵完备 · 以文自释 · 可执文言 · 微核
 
 **文件**：
-- `formal/SSBX/Foundation/BaguaTuring.lean`
-- `formal/SSBX/Foundation/WenyanSelfInterp.lean`
-- `formal/SSBX/Foundation/WenyanText.lean`
-- `formal/SSBX/Foundation/YiCore.lean`
+- `formal/SSBX/Foundation/Bagua/BaguaTuring.lean`
+- `formal/SSBX/Foundation/Wen/WenyanSelfInterp.lean`
+- `formal/SSBX/Foundation/Wen/WenyanText.lean`
+- `formal/SSBX/Foundation/Yi/YiCore.lean`
 
 **报告日期**：2026-05-07
 **Lean 版本**：4.29.1

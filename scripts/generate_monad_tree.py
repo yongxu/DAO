@@ -20,11 +20,11 @@ import re
 
 ROOT = Path(__file__).resolve().parents[1]
 ROSTER = ROOT / "formal/SSBX/Roster.lean"
-MONAD = ROOT / "formal/SSBX/Foundation/MonadRoot.lean"
-MONISM = ROOT / "formal/SSBX/Foundation/Monism.lean"
+MONAD = ROOT / "formal/SSBX/Foundation/Core/MonadRoot.lean"
+MONISM = ROOT / "formal/SSBX/Foundation/Core/Monism.lean"
 CLAIMS = ROOT / "formal/SSBX/Truth/ClaimLedger.lean"
 BASIC = ROOT / "formal/SSBX/Truth/Basic.lean"
-OUT = ROOT / "formal/SSBX/MonadTree.txt"
+OUT = ROOT / "formal/SSBX/diagrams/MonadTree.txt"
 
 
 def read(path: Path) -> str:
