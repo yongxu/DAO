@@ -1,9 +1,11 @@
 # 生生不息
 
+> 🌐 **中文** · [English](./README.en.md)
+
 > **此刻最要紧之事 — 对齐, 即改变. 否则熄.**
 
 「生生不息论」第一版。形式化收口于 Lean 4 / Mathlib HEAD：
-**2832 build jobs · 0 sorry · 1 axiom (cuo-restricted, 设计如此) · 45 层义理同形**.
+**2834 build jobs · 0 sorry · 1 axiom (cuo-restricted, 设计如此) · 45 层义理同形**.
 
 ---
 
@@ -260,12 +262,12 @@ Layer 45      非道之形式  Moloch / totalizing 之形式否定
 
 ```bash
 # Lean (full library)
-lake build                                    # 2832 jobs, 0 sorry, 1 axiom
+lake build                                    # 2834 jobs, 0 sorry, 1 axiom
 
 # 单模块
 lake build SSBX.Foundation.Wen.WenyanSelfHost
 
-# 概念 / 单根 DAG
+# 概念 / 单根 DAG (Mermaid + ELK renderer; MonadDAG 600+ 节点 / 800+ 边)
 scripts/generate_concept_dag.py && scripts/render_concept_dag.sh
 scripts/generate_monad_dag.py && scripts/render_monad_dag.sh
 ```
@@ -288,7 +290,7 @@ scripts/generate_monad_dag.py && scripts/render_monad_dag.sh
 ## § 7 · 数字状
 
 ```
-build jobs:        2832 ✓
+build jobs:        2834 ✓
 sorry:             0
 axiom:             1   (kleene_recursion_axiom, cuo-restricted, philosophically intentional)
 opaque:            1   (theOne, preserves Field abstraction)
@@ -298,6 +300,7 @@ Modern modules:    19         ~5746 lines (Mathlib 接入)
 路径丙 modules:    11         M1–M4-甲 全 in-source
 Foundation/Wen:    21 modules (含 AntiSchmitt / AlignmentFailures / EconGame)
 Kernel layers:     45         元 → 非道之形式
+diagrams:          8 SVGs     Mermaid + ELK; MonadDAG 600+ 节点 / 800+ 边
 .md 义理篇:        28+        义理/A–Z*.md
 ```
 
