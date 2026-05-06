@@ -1,2 +1,12 @@
 .DS_Store
 .lake/
+build/
+
+# Editor / tooling
+.vscode/
+.idea/
+*.swp
+
+# Claude Code session artifacts
+.claude/worktrees/
+.claude/settings.local.json
