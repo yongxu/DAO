@@ -7,7 +7,7 @@ v5 之 chain: 動 → 元 → 几 → 势 → 聚散 → 中 → 生生不息.
 此 layer 之 capture: 動 → 几 → 中 → 生生不息 + 自指 + 自洽.
 
 实证 (real proofs, no sorry); compiles with `lake build`.
-Mirror markdown: /Users/ren/repos/生生不息/真理/daoli-v12-yi-zi.md
+Mirror markdown: 史料/真理/daoli-v12-yi-zi.md (archived v12)
 
 一元 link: imports `SSBX.Foundation.Core.MonadRoot` to expose explicit mapping
 KernelDanZi → MonadRoot.CoreAtom (9 共有 字: 一/元/动/行/生/仁/理/心/聚).

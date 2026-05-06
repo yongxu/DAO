@@ -1,18 +1,34 @@
 # 史料
 
-研究过程中之早期文档与已被取代之版本。本目录存档之前的研究路径——不在第一个完整版（三本文 / formal/SSBX 当前布局 / 真理 v12 模块化 / 四级生成 / 六表）的呈现范围内，但不舍弃，以为来路可追。
+研究过程中之早期文档与已被取代之版本。本目录存档之前的研究路径——不在第一版（formal/SSBX + 四级生成_太极两翼四象八卦 + 六表_实虚史真 + wenyan-operators.md）之呈现范围内，但不舍弃，以为来路可追。
 
 ## 目录
 
+### v13.2 主文 (2026-05-07 archived — 由 Foundation/Wen/Kernel.lean 之 45 层 + 22+ 卷义理篇 取代)
+
+| 路径 | 性质 |
+|---|---|
+| `生生不息论_三本文完整版/` | 正篇 v13.2 + 补篇〇/一/二 + 合订版结语；476K, ~70+ 卷 |
+| `生生不息论_三本文完整版.md` | 上目录之索引指针 |
+
+### 道理 framework v12 (2026-05-07 archived — 由 Foundation/Phase4/DaoLi.lean + Foundation/Wen/Kernel.lean 取代)
+
+| 路径 | 性质 |
+|---|---|
+| `真理/daoli-v12-main.md` + 9 子模块 | v12 模块化道理 framework；596K |
+| `真理/jian-kernel.md` | 间 之 文/约/替 spec (由 Foundation/Jian/Jian.lean 取代) |
+
+### 早期单体存档
+
 | 文件 | 来源 | 性质 | 已被何处取代 |
 |---|---|---|---|
-| `daoli-v11.md` | 真理/ | 道理 v11 单体版 | `真理/daoli-v12-main.md` + 9 个 `daoli-v12-*.md`（v12 是 v11 严格扩展） |
-| `daoli-v11.1.md` | 真理/ | v11.1 keystone refinement（53/54/55 法则 + 5 verifications + 2-category） | `真理/daoli-v12-frames.md` + `daoli-v12-fa-ze.md` + `daoli-v12-verifications.md` |
-| `daoli-v12.md` | 真理/ | v12 单体合订 | 9 个 `daoli-v12-*.md` 模块化 |
-| `生生不息.md` | docs/ | v9→v10 间「间开本/致知版」32 项改进总结 | `生生不息论_三本文完整版/03_补篇一_间开本_致知版/`（卷一–卷十）+ `01_正篇_v13.2/`（卷三–卷十五）|
+| `daoli-v11.md` | 真理/ | 道理 v11 单体版 | `史料/真理/daoli-v12-main.md` + 9 个子模块 |
+| `daoli-v11.1.md` | 真理/ | v11.1 keystone refinement（53/54/55 法则 + 5 verifications + 2-category） | `史料/真理/daoli-v12-frames.md` + `daoli-v12-fa-ze.md` + `daoli-v12-verifications.md` |
+| `daoli-v12.md` | 真理/ | v12 单体合订 | 9 个 `史料/真理/daoli-v12-*.md` 模块化 |
+| `生生不息.md` | docs/ | v9→v10 间「间开本/致知版」32 项改进总结 | `史料/生生不息论_三本文完整版/03_补篇一_间开本_致知版/`（卷一–卷十）+ `01_正篇_v13.2/`（卷三–卷十五）|
 | `间本体论_元三相与场修订稿.md` | docs/ | 間/Jian 五层架构早期修订稿 | `formal/SSBX/Foundation/Jian/Jian.lean` + `JianOntology.lean` + `四级生成_太极两翼四象八卦/B_六征体系.md` + `六表_实虚史真/表一_六征本表.md` |
 | `atom-derivation-report.md` | docs/ | 单字整合实施报告（221→43 CoreAtom） | `formal/SSBX/Foundation/Core/AtomDerivation.lean` + `MonadRoot.lean` |
-| `生生不息论_v14_形式证明骨架版.md` | 根 | v14 proof skeleton 草稿 | `生生不息论_三本文完整版/01_正篇_v13.2/`（卷〇/十三/十四/附录甲/附录乙）+ `formal/SSBX/Core.lean` + `formal/SSBX/Foundation/Core/MathAxiomMap.lean` |
+| `生生不息论_v14_形式证明骨架版.md` | 根 | v14 proof skeleton 草稿 | `史料/生生不息论_三本文完整版/01_正篇_v13.2/` + `formal/SSBX/Core.lean` + `Foundation/Core/MathAxiomMap.lean` |
 
 ## 仍保留主目录之早期/开放文档
 
