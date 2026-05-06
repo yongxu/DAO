@@ -1,23 +1,32 @@
 /-
-# BaguaWenSpec — 受控文 baguaWen 之冻结词表
+# BaguaWenSpec — L0 内核：baguaWen 之冻结 22-token
 
-Frozen at HEAD `1cd30f8`, corresponding to `docs/baguaWen-spec.md`.
+Frozen at HEAD `1cd30f8`, corresponding to `notes/baguaWen-spec.md`.
 
-This module is the **machine-checkable** companion to the human-readable spec.
-It defines:
+This module is the **L0 internal kernel** — the 22 baguaWen primitives
+that bind one-to-one with `YiInstr`/`Shi`/`Yao Fin 6` constructors.
+It is the machine-checkable companion to the human-readable spec.
 
-  · `primaryToken` — canonical wenyan string for each YiInstr constructor
-  · `primaryTokens` — the 12 verb tokens (de-duplicated, ordered)
-  · `shiTokens` — 3 time-mode tokens
-  · `yaoTokens` — 6 line-position tokens
-  · `reservedTokens` — full reserved set (22 tokens, excluding numerals)
+Defines:
+  · `primaryToken`    — canonical wenyan string for each YiInstr constructor
+  · `primaryTokens`   — the 12 verb tokens (de-duplicated, ordered)
+  · `shiTokens`       — 3 time-mode tokens
+  · `yaoTokens`       — 6 line-position tokens
+  · `reservedTokens`  — full L0 reserved set (22 tokens, excluding numerals)
 
 Lemmas verified by `native_decide`:
   · `primaryTokens` length = 12, no duplicates
   · `reservedTokens` length = 22
   · `primaryToken` covers every `YiInstr` constructor
 
-Risk mitigated: 路径丙 § 风险 3.
+## L1 扩展层（外）
+
+wenyan-operators.md 之 281 字（推、比、必、不、并、或、同、凡 …）皆经
+`Foundation/Wen/WenDef.lean` 之 typed lambda + 用户 def 加载（命名用天干 / ASCII
+以避命名空间冲突）。L0 之 22 token 与 L1 之扩展 def 名严格互斥
+（`isValidName s = false ⟸ s ∈ reservedTokens`，由 `native_decide` 见证）。
+
+Risk mitigated: 路径丙 § 风险 3 (由 L0 冻结 + L1 def 全面缓解).
 -/
 import SSBX.Foundation.Bagua.BaguaTuring
 

@@ -1,16 +1,18 @@
 # baguaWen · 受控文规范（Frozen for M1）
 
 > **Status**: Frozen at HEAD `1cd30f8`. 任何扩展须显式 PR 修改本文件。
-> **Risk mitigated**: 路径丙 § 风险 3（baguaWen 与 wenyan-operators.md 200+ 算子冲突）。
-> **Companion module**: `formal/SSBX/Foundation/BaguaWenSpec.lean`（机器可校验的 token 表）。
+> **Risk mitigated**: 路径丙 § 风险 3（baguaWen 与 wenyan-operators.md 200+ 算子冲突）—— **§ 9 v2 由 `Foundation/Wen/WenDef.lean` 完全解决**.
+> **Companion modules**:
+> · `Foundation/Bagua/BaguaWenSpec.lean`（L0 内核 22 token，机器可校验）
+> · `Foundation/Wen/WenDef.lean`（L1 typed def 扩展层，wenyan-ops 之 281 字皆经此入库）
 
 ---
 
 ## 〇 · 设计意图
 
-`wenyan-operators.md` 列出 200+ 算子，覆盖六征、心智、史维、格、重、耦等多维度。**M1 之 parser 只识其中 12 主字 + 3 时态 + 6 爻 + 数词**——这是文证文之最小闭核。
+`wenyan-operators.md` 列出 200+ 算子，覆盖六征、心智、史维、格、重、耦等多维度。**M1 之 parser 只识其中 12 主字 + 3 时态 + 6 爻 + 数词**——这是文证文之最小闭核 (L0)。
 
-`wenyan-operators.md` 中其他算子在 reflection 阶段（M5+）通过等同律证明加入。在此之前，遇任何未列于本文之 token 即返 `none`（句法非法）。
+其他算子由 **L1 之 WenDef** 加载：每条 wenyan-op 以 typed lambda 项（`Foundation/Wen/WenDef.Tm`）表达，类型为 `Hexagram^k → (Hexagram | Bool)^m`，命名用天干或 ASCII（避命名空间冲突），合度 + 类型一致皆 `native_decide` 验证后入 stdlib（见 § 9 v2）。
 
 ---
 

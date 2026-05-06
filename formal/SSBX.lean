@@ -29,11 +29,12 @@ import SSBX.Foundation.Core.Li
 import SSBX.Foundation.Core.HumanAlignment
 import SSBX.Foundation.Core.Attention
 
--- Foundation/Wen — 古文虚字 / 核 / 自释
+-- Foundation/Wen — 古文虚字 / 核 / 自释 / 类型化扩展
 import SSBX.Foundation.Wen.Operators
 import SSBX.Foundation.Wen.Kernel
 import SSBX.Foundation.Wen.WenyanText
 import SSBX.Foundation.Wen.WenyanSelfInterp
+import SSBX.Foundation.Wen.WenDef
 
 -- Foundation/Jian — 间之核（14 字粒子核）
 import SSBX.Foundation.Jian.JianOntology
