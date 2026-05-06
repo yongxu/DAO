@@ -37,6 +37,7 @@ import SSBX.Foundation.Wen.WenyanSelfInterp
 import SSBX.Foundation.Wen.WenDef
 import SSBX.Foundation.Wen.WenyanParser
 import SSBX.Foundation.Wen.WenEval
+import SSBX.Foundation.Wen.WenDefEval
 import SSBX.Foundation.Wen.Demo
 
 -- Foundation/Jian — 间之核（14 字粒子核）
