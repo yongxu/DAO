@@ -86,3 +86,8 @@ import SSBX.Foundation.Phase4.ODESmoothness
 import SSBX.Foundation.Phase4.Neuro
 import SSBX.Foundation.Phase4.KolmogorovExt
 import SSBX.Foundation.Phase4.RCauchyExt
+
+-- Phase 4 主体三尾（几何位 / 范畴论扩展 / 道-理二分 cross-cutting）
+import SSBX.Foundation.Phase4.HexagramPosition
+import SSBX.Foundation.Phase4.CatExt
+import SSBX.Foundation.Phase4.DaoLi
