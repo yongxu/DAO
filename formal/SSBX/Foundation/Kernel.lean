@@ -116,11 +116,24 @@ structure One where
   /-- 「动起」 — origin is alive (motion takes it elsewhere; origin 是 中, 不 极). -/
   alive : dong origin ≠ origin
 
-/-- 单一 axiom: ∃ 一.
-    Replaces three previous axioms (Field, dong, exists_middle) with ONE
-    architectural commit: framework-level 一 exists with a live origin.
-    严格 「一+算子」 落地. -/
-axiom theOne : One
+/-- **theOne — concrete witness, no axiom**.  框架级 一 之 具体 Lean 见证。
+
+    Witness shape: `state := Fin 3`, `dong := (0↔1, 2 fixed)`, `origin := 0`.
+    - 0 is `middle` (dong 0 = 1 ≠ 0) — origin is alive
+    - 1 is `middle` (dong 1 = 0 ≠ 1)
+    - 2 is `extreme` (dong 2 = 2)
+    Both `middle` and `extreme` are inhabited, so `zhi`'s 中/极 dichotomy
+    is non-degenerate.
+
+    Replaces the previous `axiom theOne : One` with a `def`.  This:
+    - eliminates the only "architectural" axiom (now 0 axioms in Kernel.lean)
+    - makes 一 a *concrete witness* rather than abstract existential claim
+    - matches v5 §二 l. 60 「动起则元成」: origin lives by virtue of motion. -/
+def theOne : One :=
+  { state  := Fin 3
+    dong   := fun n => if n = 2 then 2 else if n = 0 then 1 else 0
+    origin := 0
+    alive  := by decide }
 
 /-! #### 自 一 derived: 場, 動, 元, 一 (yiOne alias) -/
 
