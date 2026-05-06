@@ -92,3 +92,8 @@ import SSBX.Foundation.Phase4.RCauchyExt
 import SSBX.Foundation.Phase4.HexagramPosition
 import SSBX.Foundation.Phase4.CatExt
 import SSBX.Foundation.Phase4.DaoLi
+
+-- Phase 4 深化（Yoneda 全引理 / Lebesgue 深 (MCT/DCT/Fubini) / Picard-Lindelöf 一般化）
+import SSBX.Foundation.Phase4.YonedaFull
+import SSBX.Foundation.Phase4.LebesgueDepth
+import SSBX.Foundation.Phase4.PicardLindelofGen
