@@ -116,20 +116,25 @@ structure One where
   /-- 「动起」 — origin is alive (motion takes it elsewhere; origin 是 中, 不 极). -/
   alive : dong origin ≠ origin
 
-/-- **theOne — concrete witness, no axiom**.  框架级 一 之 具体 Lean 见证。
+/-- **theOne — opaque, witnessed**.  框架级 一 之 sealed 见证。
 
-    Witness shape: `state := Fin 3`, `dong := (0↔1, 2 fixed)`, `origin := 0`.
-    - 0 is `middle` (dong 0 = 1 ≠ 0) — origin is alive
-    - 1 is `middle` (dong 1 = 0 ≠ 1)
-    - 2 is `extreme` (dong 2 = 2)
-    Both `middle` and `extreme` are inhabited, so `zhi`'s 中/极 dichotomy
-    is non-degenerate.
+    Replaces the previous `axiom theOne : One` with an `opaque def`.  The
+    body provides a concrete witness (`Fin 3` with `dong := 0↔1, 2 fixed`),
+    so existence is constructively established — `#print axioms` shows
+    NO axiom for theOne.  But `opaque` seals the definition: Lean refuses
+    to unfold it, so `Field := theOne.state` stays abstract and downstream
+    proofs cannot collapse via `decide` on the Fin 3 representation.
 
-    Replaces the previous `axiom theOne : One` with a `def`.  This:
-    - eliminates the only "architectural" axiom (now 0 axioms in Kernel.lean)
-    - makes 一 a *concrete witness* rather than abstract existential claim
-    - matches v5 §二 l. 60 「动起则元成」: origin lives by virtue of motion. -/
-def theOne : One :=
+    This is metaphysically faithful to v5 §二: 一 exists (witnessed) but
+    its *carrier* is opaque to the framework — 道可道，非常道. The framework
+    commits to existence + properties (alive origin, 中/极 inhabited)
+    without committing to a specific carrier type.
+
+    Witness internals (private — not unfoldable downstream):
+    - state := Fin 3, origin := 0
+    - dong (0↔1, 2 fixed) — both middle (0,1) and extreme (2) are inhabited
+    - alive : dong 0 = 1 ≠ 0 (provable by decide on the witness) -/
+opaque theOne : One :=
   { state  := Fin 3
     dong   := fun n => if n = 2 then 2 else if n = 0 then 1 else 0
     origin := 0
