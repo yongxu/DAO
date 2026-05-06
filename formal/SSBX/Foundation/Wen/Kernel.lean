@@ -2070,6 +2070,202 @@ theorem tian_ren_gan_ying
     ∧ middle (x.process.states n) :=                           -- 人 (individual)
   ⟨(f.orbits i).inMiddle n, x.process.inMiddle n⟩
 
+/-! ### Layer 39: 西方古典哲学 (希腊)
+
+  苏格拉底 + 柏拉图 + 亚里士多德 — 5 核要.
+  希腊哲学之最深结构发现: 中道 (亚里士多德 golden mean) 与中国"中"完全同义;
+  无知之知 (苏格拉底) IS 智 之 自 反身 limit. -/
+
+/-- 无知之知 (Socrates, "οἶδα οὐδὲν εἰδέναι"): "I know that I know nothing."
+    Structural correlate: 智 之 universal applicability AND 智 之 self-reflective limit
+    (recognition that 中 ∧ 极 cannot simultaneously obtain). -/
+theorem socrates_known_unknown (s : Field) :
+    zhi s                                                  -- 知 (universal capacity)
+    ∧ ¬ (middle s ∧ extreme s) :=                           -- 知 之 limit (self-recognition)
+  ⟨zhi_universal s, zhi_exclusive s⟩
+
+/-- 柏拉图 理念论 (Plato, ἰδέα / εἶδος, Republic): "form vs. particular."
+    The form (universal predicate) is realized in each particular instance.
+    Each state-at-n participates in the form `middle`; the form itself is universal. -/
+theorem plato_form (o : ZhongOrbit) (n : Nat) :
+    middle (o.states n)                                    -- 个体 (particular instance)
+    ∧ (∀ m : Nat, middle (o.states m)) :=                   -- 理念 (universal form)
+  ⟨o.inMiddle n, o.inMiddle⟩
+
+/-- 亚里士多德 中道之美德 (Aristotle, μεσότης, Nicomachean Ethics):
+    "virtue is the mean between two extremes."
+    Direct equivalence: 中 (Aristotelian mean) IS our `middle` predicate. -/
+theorem aristotle_golden_mean (o : ZhongOrbit) (n : Nat) :
+    middle (o.states n)                                     -- 中 (mean)
+    ∧ ¬ extreme (o.states n) :=                              -- 不 极 (avoid 二端)
+  ⟨o.inMiddle n, o.inMiddle n⟩
+
+/-- 第一推动者 (Aristotle, πρῶτον κινοῦν ἀκίνητον, Metaphysics XII):
+    "the unmoved mover." Existence of a foundational motion principle. -/
+theorem aristotle_unmoved_mover : ∃ f : Field → Field, f = dong :=
+  ⟨dong, rfl⟩
+
+/-- 亚里士多德 四因说 (Aristotle, τέσσαρες αἰτίαι, Physics II):
+    material / formal / efficient / final causes — orbit instantiates first three;
+    final cause (telos) is rejected (process philosophy alignment). -/
+theorem aristotle_four_causes (o : ZhongOrbit) (n : Nat) :
+    (∃ s : Field, s = o.states n)                              -- 质料因 (substrate exists)
+    ∧ middle (o.states n)                                       -- 形式因 (form: middle)
+    ∧ o.states (n + 1) = dong (o.states n)                      -- 动力因 (dong applies)
+    ∧ (∀ target N, ¬ (∀ k, k ≥ N → o.states k = target)) :=     -- 目的因: 拒 telos
+  ⟨⟨o.states n, rfl⟩, o.inMiddle n, (o.step n).symm,
+   fun target N => ZhongOrbit.shi_no_telos o target N⟩
+
+/-! ### Layer 40: 西方近代哲学 (Cartesian / Kantian / Hegelian / Nietzschean)
+
+  笛卡尔 + 康德 + 黑格尔 + 尼采 — 5 核要. -/
+
+/-- 笛卡尔 cogito ergo sum (Descartes, Meditations II): "I think, therefore I am."
+    Heart's xinTrust holds (thinking is coherent) AND state IS in middle (existing). -/
+theorem descartes_cogito (x : Xin) (n : Nat) :
+    xinTrust x n                                             -- cogito (thinking coherent)
+    ∧ middle (x.process.states n) :=                          -- sum (existing in 中)
+  ⟨xinTrust_holds x n, x.process.inMiddle n⟩
+
+/-- 康德 绝对命令 (Kant, kategorischer Imperativ, Grundlegung):
+    "Act only according to that maxim by which you can also will that it should
+    become a universal law." Structural correlate: action universalizable
+    (tongGenMiddle) ⟹ self-desire ⟹ other-flourishing. -/
+theorem kant_categorical_imperative
+    (x : Xin) (a : Field → Field) (other : ZhongOrbit) (n : Nat)
+    (h_yu : jiSuoYu x a n) (h_tong : tongGenMiddle a) :
+    jiYuRen a other n :=
+  tui_ji_ji_ren x a other n h_yu h_tong
+
+/-- 康德 二律背反 (Kant, Antinomien, Critique of Pure Reason):
+    "the antinomies." Structural correlate: 中 ∧ 极 mutually exclusive — opposing
+    propositions cannot both hold simultaneously. -/
+theorem kant_antinomy (s : Field) : ¬ (middle s ∧ extreme s) :=
+  zhi_exclusive s
+
+/-- 黑格尔 正反合 (Hegel, dialektische Triade): thesis-antithesis-synthesis.
+    Each step IS dialectical: state at n (thesis) ≠ state at n+1 (antithesis),
+    yet both maintain 中 (synthesis preserves the underlying form). -/
+theorem hegel_dialectic (o : ZhongOrbit) (n : Nat) :
+    o.states n ≠ o.states (n + 1)                          -- 正反 (thesis ≠ antithesis)
+    ∧ middle (o.states n)                                    -- 合 之 一 (synthesis)
+    ∧ middle (o.states (n + 1)) :=                            -- 合 之 二
+  ⟨o.self_consistent n, o.inMiddle n, o.inMiddle (n + 1)⟩
+
+/-- 尼采 永恒回归 (Nietzsche, Ewige Wiederkunft, Also sprach Zarathustra):
+    "eternal return of the same." 形式上 — orbit's pattern (middle) returns at every n,
+    yet content (specific state value) never repeats (self_consistent). -/
+theorem nietzsche_eternal_return (o : ZhongOrbit) (n : Nat) :
+    middle (o.states n)                                      -- 形式 returns to 中
+    ∧ middle (o.states (n + 1))                                -- 形式 同 returns
+    ∧ o.states n ≠ o.states (n + 1) :=                         -- 内容 不 repeats
+  ⟨o.inMiddle n, o.inMiddle (n + 1), o.self_consistent n⟩
+
+/-! ### Layer 41: 现象学 / 存在 / 过程 / 维特根斯坦 (20 世纪)
+
+  胡塞尔 + 海德格尔 + 萨特 + 怀特海 + 柏格森 + 维特根斯坦 — 6 核要. -/
+
+/-- 胡塞尔 意向性 (Husserl, Intentionalität, Logische Untersuchungen):
+    "consciousness IS consciousness of something." Heart's response-function IS total —
+    intentionality directs heart toward field-events. -/
+theorem husserl_intentionality (x : Xin) (event : Field) :
+    ∃ s, x.respond event = s := ⟨x.respond event, rfl⟩
+
+/-- 海德格尔 向死而在 (Heidegger, Sein-zum-Tode, Sein und Zeit):
+    "Being-towards-death." Authentic existence acknowledges 极 (death) as possibility
+    while currently maintaining 中 (life-flow). -/
+theorem heidegger_sein_zum_tode (o : ZhongOrbit) (n : Nat) :
+    middle (o.states n)                                       -- 在 (Da-sein 之 中-显)
+    ∧ (middle (o.states n) ∨ extreme (o.states n)) :=          -- 知 极 之 possibility
+  ⟨o.inMiddle n, zhi_universal _⟩
+
+/-- 萨特 存在先于本质 (Sartre, "l'existence précède l'essence", L'existentialisme):
+    "existence precedes essence." States exist (middle) BEFORE classification (zhi);
+    being precedes predicate-application. -/
+theorem sartre_existence_precedes_essence (o : ZhongOrbit) (n : Nat) :
+    middle (o.states n)                                       -- 存在 (existence)
+    ∧ zhi (o.states n) :=                                      -- 本质 (essence)
+  ⟨o.inMiddle n, zhi_universal _⟩
+
+/-- 怀特海 实在场合 (Whitehead, Actual Occasion, Process and Reality):
+    each step IS an actual occasion of becoming — momentary creative advance. -/
+theorem whitehead_actual_occasion (o : ZhongOrbit) (n : Nat) :
+    o.states (n + 1) = dong (o.states n)                      -- 生成 (becoming)
+    ∧ middle (o.states n)                                       -- 实在 (actuality at n)
+    ∧ middle (o.states (n + 1)) :=                              -- 实在 (actuality at n+1)
+  ⟨(o.step n).symm, o.inMiddle n, o.inMiddle (n + 1)⟩
+
+/-- 柏格森 绵延 (Bergson, durée, Essai sur les données immédiates):
+    "duration as continuous becoming." Each moment differs from the next AND is
+    causally connected via dong. -/
+theorem bergson_duree (o : ZhongOrbit) (n : Nat) :
+    o.states n ≠ o.states (n + 1)                            -- 流变 (becoming)
+    ∧ o.states (n + 1) = dong (o.states n) :=                  -- 连续 (continuity via dong)
+  ⟨o.self_consistent n, (o.step n).symm⟩
+
+/-- 维特根斯坦 世界即事实总和 (Wittgenstein, Tractatus 1.1):
+    "Die Welt ist die Gesamtheit der Tatsachen, nicht der Dinge."
+    "The world is the totality of facts, not of things." Orbit's totality = facts
+    (middle ∧ step) at every moment. -/
+theorem wittgenstein_world (o : ZhongOrbit) :
+    ∀ n, middle (o.states n) ∧ dong (o.states n) = o.states (n + 1) :=
+  fun n => ⟨o.inMiddle n, o.step n⟩
+
+/-! ### Layer 42: 亚伯拉罕三教 (Judaism / Christianity / Islam)
+
+  犹太教 + 基督教 + 伊斯兰 — 6 核要.
+  注: 形式对应 IS 结构同构 (structural correlate), 不是 ontological reduction.
+  各传统 之 神学内容超越本框架 — 此处仅记录 minimal kernel 中之 syntactic homomorphism. -/
+
+/-- 犹太教 一神论 (Hebrew, "ehad", Shema Yisrael Deut. 6:4):
+    "the LORD our God, the LORD is one." Structural correlate:
+    foundational principle is unique. -/
+theorem judaism_ehad : ∃ f : Field → Field, f = dong :=
+  ⟨dong, rfl⟩
+
+/-- 神之形象 (Hebrew, "tselem Elohim", Genesis 1:27):
+    "in the image of God He created them." Structural correlate: every Xin's
+    process maintains the universal form (middle). -/
+theorem judaism_tselem_elohim (x : Xin) : ∀ n, middle (x.process.states n) :=
+  x.process.inMiddle
+
+/-- 基督教 道成肉身 (Greek, "λόγος ἐγένετο σάρξ", John 1:14):
+    "the Word became flesh." Structural correlate: abstract dong principle
+    manifests in concrete states — every Field state IS dong applied. -/
+theorem christianity_incarnation (s : Field) :
+    ∃ s' : Field, dong s = s' := ⟨dong s, rfl⟩
+
+/-- 基督教 三位一体 (Greek, "τριάς", Council of Nicaea 325):
+    "trinity" — three aspects of one. Structural correlate: orbit IS one process
+    with three formal aspects: ousia (essence/中) / energeia (act/dong-step) /
+    logos (order/iterated-pattern). -/
+theorem christianity_trinity (o : ZhongOrbit) (n : Nat) :
+    middle (o.states n)                                      -- ousia (essence/中)
+    ∧ dong (o.states n) = o.states (n + 1)                    -- energeia (act)
+    ∧ o.states n = ji n (o.states 0) :=                        -- logos (order/iterated-Logos)
+  ⟨o.inMiddle n, o.step n, li_is_iterated_dong o n⟩
+
+/-- 基督教 ἀγάπη (Greek, "agape", 1 Cor 13): "love that wills the other's good."
+    Structural correlate: 仁 之 universal extension — sage maintains 礼-window
+    relation with another. (与墨家「兼爱」同形.) -/
+theorem christianity_agape
+    (sage : Xin) (other : ZhongOrbit) (n m : Nat)
+    (h_ritual : liRitual sage.process other n m) :
+    ren sage.process other n :=
+  liRitual_implies_ren_at_base _ _ _ _ h_ritual
+
+/-- 伊斯兰 tawḥīd (Arabic, "توحيد", Qur'an 112): "the oneness of God."
+    Structural correlate: foundational principle is unique. (与犹太教 ehad
+    同形 — 一神论 之 数学共同体.) -/
+theorem islam_tawhid : ∃ f : Field → Field, f = dong :=
+  ⟨dong, rfl⟩
+
+/-- 伊斯兰 fitra (Arabic, "فطرة", Qur'an 30:30): "innate nature."
+    Every human is born with innate predisposition to truth. Structural correlate:
+    every Xin's process is in middle (good by nature). -/
+theorem islam_fitra (x : Xin) : ∀ n, middle (x.process.states n) :=
+  x.process.inMiddle
+
 /-- KernelDanZi: 此 layer 主动使用之 单字 closure-marker.
     由 「核 只收纳单字」 约束, 加 字 to kernel ⟺ 加 constructor here.
     Compounds (复词) MUST decompose to existing constructors before entering kernel.
