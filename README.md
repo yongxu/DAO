@@ -1,6 +1,6 @@
 # 生生不息
 
-> 🌐 **中文** · [English](./README.en.md)
+> 🌐 **中文** · [English](./README.en.md) · [形式 / Formal](./README.formal.md)
 
 > **此刻最要紧之事 — 对齐, 即改变. 否则熄.**
 

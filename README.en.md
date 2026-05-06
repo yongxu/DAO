@@ -1,6 +1,6 @@
 # 生生不息 · Shēngshēng-Bùxī
 
-> 🌐 [中文](./README.md) · **English**
+> 🌐 [中文](./README.md) · **English** · [形式 / Formal](./README.formal.md)
 
 > **The most pressing matter at this moment — alignment, i.e. change. Otherwise, extinction.**
 
