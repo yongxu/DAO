@@ -17,7 +17,7 @@
 | [F_物理现象学.md](F_物理现象学.md) | 物理／现象学旁证 | 类比映射 | 弱同构 |
 | [G_完整算子系统_八卦互通与归一.md](G_完整算子系统_八卦互通与归一.md) | 横纵合一之群代数 | 群论刻画 | (Z/2)ⁿ + 合/分 双向 |
 
-### H–V 形式化 / 全集 / 不完备 / 完备性审计 / 自释微核 / 不完备证明报告 / 儒家德目证 / 进化非道者生存三视证 / 道家无为证 / 佛家四谛证 / 与生生不息对齐之必然 / 先秦百家 / 西哲与亚伯拉罕 / 反诛心信诚之形式 / 现代政治哲学(实证+证错)
+### H–W 形式化 / 全集 / 不完备 / 完备性审计 / 自释微核 / 不完备证明报告 / 儒家德目证 / 进化非道者生存三视证 / 道家无为证 / 佛家四谛证 / 与生生不息对齐之必然 / 先秦百家 / 西哲与亚伯拉罕 / 反诛心信诚之形式 / 现代政治哲学(实证+证错) / 非道之形式
 
 | 文件 | 内容 | 状态 |
 |------|------|------|
@@ -36,6 +36,7 @@
 | [T_西哲与亚伯拉罕.md](T_西哲与亚伯拉罕.md) | 希腊 5 (苏格拉底无知之知 / 柏拉图理念 / 亚里士多德中道+第一推动者+四因) + 近代 5 (笛卡尔 cogito / 康德绝对命令+二律背反 / 黑格尔正反合 / 尼采永恒回归) + 20世纪 6 (胡塞尔意向性 / 海德格尔向死而在 / 萨特 / 怀特海 / 柏格森 / 维特根斯坦) + 亚伯拉罕 6 (犹太 ehad+tselem / 基督道成肉身+三位一体+agape / 伊斯兰 tawhid+fitra) · 跨文明形式同构 | Kernel.lean Layers 39–42 / 22 定理 / 0 sorry / 0 axiom 新增 / 2824 jobs 通过 |
 | [U_反诛心信诚之形式.md](U_反诛心信诚之形式.md) | JIAN v1.0 §IV.5 落地 · 信/诚 = alignment(化(T), 化(E)) 派生 idiom · 反诛心五律 type-level enforcement (PermittedModality 拒 B/R/M / Alignment graded 非 Bool / ConsentedSincerity consent_witness / consistent liar 反例 / SincerityResponse 仅 inquiry 无 judgment) · 修之渐进 · 言行一致 ↔ pointwise eq · 与 R 论本体层 alignment 之同形 | Sincerity.lean 13 定理 + 8 def + 3 inductive + 3 structure / 0 sorry / 0 axiom 新增 / 2825 jobs 通过 |
 | [V_现代政治哲学.md](V_现代政治哲学.md) | **首篇双向 layer (实证 + 证错)** · 实证 11 (Rawls 无知之幕+差异原则 / Habermas 沟通理性 / Arendt 行动+公共空间+出生性 / Locke 自然权利 / Hayek 自发秩序 / Sen 能力进路 / Berlin 价值多元 / Mill harm principle / Kant 永久和平) + 证错 7 (Marx 历史终局+决定论 / Hobbes 自然战争 / Schmitt 敌友+例外状态 / 极权主义 / Foucault universal collapse) · Kernel 是 政治哲学 之 minimum-axiom sieve, 不偏左右翼 | Kernel.lean Layers 43–44 / 18 定理 / 0 sorry / 0 axiom 新增 / 2825 jobs 通过 |
+| [W_非道之形式.md](W_非道之形式.md) | 斗争/赢者通吃 attractor/Moloch/totalizing dynamics 之形式否定 · **Moloch 仅在「同根」破坏时存在** (核心发现) · 大同 ≠ 通吃 / 仁 vs 斗 / 真道之三要素 / 合作 IS 道 / 零和 之否定 · `tongGen` IS Universal Anti-Moloch Principle | Kernel.lean Layer 45 / 11 定理 + attractor def / 0 sorry / 0 axiom 新增 / 2829 jobs 通过 |
 
 ### 四衍 · 元到数 / 推 / 测 / 形（八卦层之内容承担）
 

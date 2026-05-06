@@ -2432,6 +2432,137 @@ theorem foucault_universal_collapse_refuted (o : ZhongOrbit) :
   intro h
   exact o.inMiddle 0 (h 0)
 
+/-! ### Layer 45: 非道之形式 (Form of Non-Way)
+
+  斗争 / 赢者通吃 attractor / Moloch / totalizing dynamics — 这些 dynamics 在
+  本框架中 形式上 站不住 (refuted). 「邪」 之 内涵 不直接 formalize, 但
+  「非道」 (violation of ZhongOrbit / ZhongField invariants) 形式可证.
+
+  最深刻发现: **Moloch 仅 在 「同根」 (仁 之 premise) 破坏时 能存在**.
+  真正之 仁 (universal 同根) 形式上 prevents Moloch dynamics. -/
+
+/-! #### 斗争 之 self-defeating -/
+
+/-- 斗争 之 自我否定 (struggle self-defeats under 同根):
+    若 A 之 action collapse B (= shiYuRen), 则 由 同根 (仁 之 premise),
+    同 action 也 collapse A (= jiSuoBuYu). 斗争 是 structurally self-defeating. -/
+theorem zhen_dou_self_refuting
+    (x : Xin) (a : Field → Field) (other : ZhongOrbit) (n : Nat)
+    (h_tongGen : tongGen a)
+    (h_dou_other : shiYuRen a other n) :
+    jiSuoBuYu x a n :=
+  (h_tongGen (other.states n) (x.process.states n)
+     (other.inMiddle n) (x.process.inMiddle n)).mp h_dou_other
+
+/-- 仁 vs 斗 — 仁 提供 第三 option:
+    distinct (二焦点 不 collapse 至 同) yet 中 (二焦点 都 不 极 / 不 collapse 至 极).
+    既 非 「同」 (friend-collapse) 又 非 「斗」 (collapse-other). -/
+theorem ren_vs_dou
+    (h1 h2 : ZhongOrbit) (n : Nat) (h_distinct : h1.states n ≠ h2.states n) :
+    ren h1 h2 n                                              -- 仁 (distinct yet middle)
+    ∧ ¬ extreme (h1.states n)                                 -- ¬ 斗: h1 不 collapse
+    ∧ ¬ extreme (h2.states n) :=                              -- ¬ 斗: h2 不 collapse
+  ⟨h_distinct, h1.inMiddle n, h2.inMiddle n⟩
+
+/-! #### 赢者通吃 attractor 之否定 -/
+
+/-- 赢者通吃 (winner-takes-all) attractor:
+    所有 orbits eventually converge to a single target value. -/
+def attractor (target : Field) (f : ZhongField) : Prop :=
+  ∃ N, ∀ n, n ≥ N → ∀ i : Fin f.k, (f.orbits i).states n = target
+
+/-- 赢者通吃 attractor 不可能存在于 ZhongField:
+    多样性 (ever_differentiated) 直接 否定 universal 收敛. -/
+theorem winner_takes_all_refuted (f : ZhongField) (target : Field) :
+    ¬ attractor target f := by
+  intro ⟨N, h⟩
+  obtain ⟨i, j, _, h_diff⟩ := f.ever_differentiated N
+  apply h_diff
+  rw [h N (Nat.le_refl N) i, h N (Nat.le_refl N) j]
+
+/-! #### Moloch 之 否定 -/
+
+/-- Moloch 终局 (race-to-bottom collective endpoint) 不可能:
+    所有 orbits 在 同 一 时刻 全 在 极 — ZhongField 之 invariants 直接 否定. -/
+theorem moloch_endpoint_refuted (f : ZhongField) :
+    ¬ (∃ n, ∀ i : Fin f.k, extreme ((f.orbits i).states n)) := by
+  intro ⟨n, h⟩
+  have h_k : 0 < f.k := by have := f.k_ge_two; omega
+  exact (f.orbits ⟨0, h_k⟩).inMiddle n (h ⟨0, h_k⟩)
+
+/-- **Moloch 通过 externality 之否定 (the deepest result of this layer)**:
+    Moloch dynamics 假设: A 之 action 为 A 是 中-preserving (locally rational)
+    同时 为 B 是 极-inducing (externality-harmful). 在 同根 (tongGen) 之下,
+    此 asymmetric externality 是 不可能 — 行动 之 effect 必然 symmetric.
+
+    哲学 含义: 真正之 仁 (universal 同根) prevents Moloch dynamics.
+    Moloch 仅 在 「同根」 被打破 时 才 能 存在 (e.g., 当 actor 之 universalizability
+    被 偏私 / 等级制 / 例外状态 切断时). -/
+theorem moloch_via_externality_refuted
+    (a : Field → Field) (h_tongGen : tongGen a)
+    (h1 h2 : ZhongOrbit) (n : Nat)
+    (h_local_rational : middle (a (h1.states n)))            -- A 之 action 为 A 中
+    (h_external_harm : extreme (a (h2.states n))) :          -- 但 为 B 极
+    False := by
+  exact h_local_rational
+    ((h_tongGen (h2.states n) (h1.states n)
+       (h2.inMiddle n) (h1.inMiddle n)).mp h_external_harm)
+
+/-! #### Totalizing dynamics 之否定 -/
+
+/-- Totalizing dynamics — 全 absorb 至 同 一 状态:
+    任何 时刻, 所有 orbits 之 状态 统一 — ZhongField 之 plurality 直接 否定. -/
+theorem totalizing_dynamics_refuted (f : ZhongField) :
+    ¬ (∃ n, ∀ i j : Fin f.k, (f.orbits i).states n = (f.orbits j).states n) := by
+  intro ⟨n, h⟩
+  exact f.he_not_same n h
+
+/-- Race-to-the-bottom 之否定: orbit 不可能 eventually settle 至 极. -/
+theorem race_to_bottom_refuted (o : ZhongOrbit) :
+    ¬ (∃ N, ∀ n, n ≥ N → extreme (o.states n)) := by
+  intro ⟨N, h⟩
+  exact o.inMiddle N (h N (Nat.le_refl N))
+
+/-! #### 大同 vs 通吃 — 形式区分 -/
+
+/-- 大同 ≠ 赢者通吃 (大同 distinct from winner-takes-all):
+    大同 IS 全 中 (unified in 中-quality) WITHOUT collapse 至 同 一 value.
+    赢者通吃 IS 全 同 一 value (uniformity). 二者形式 distinct. -/
+theorem datong_distinct_from_winner_takes_all (f : ZhongField) (n : Nat) :
+    (∀ i : Fin f.k, middle ((f.orbits i).states n))                            -- 大同 (全 中)
+    ∧ ¬ (∀ i j : Fin f.k, (f.orbits i).states n = (f.orbits j).states n) :=     -- ¬ 通吃
+  ⟨fun i => (f.orbits i).inMiddle n, f.he_not_same n⟩
+
+/-! #### 真道之 positive form -/
+
+/-- 真道之形 (positive form of the Way):
+    全 中 (universal middle) ∧ 多样 (plurality) ∧ 流通 (flow). 此 三 项 是 道 之
+    structural minimum. 缺一即 非道. -/
+theorem zhen_dao_form (f : ZhongField) (n : Nat) :
+    (∀ i : Fin f.k, middle ((f.orbits i).states n))                                -- 全 中
+    ∧ (∃ i j : Fin f.k, i ≠ j ∧ (f.orbits i).states n ≠ (f.orbits j).states n)    -- 多样
+    ∧ (∀ i : Fin f.k, (f.orbits i).states n ≠ (f.orbits i).states (n + 1)) :=        -- 流通
+  ⟨fun i => (f.orbits i).inMiddle n, (f.he n).2, (f.he n).1⟩
+
+/-- 合作 IS 道 (cooperation aligns with the Way):
+    礼-window 内 之 合作 IS 仁 之 持续 + 双方 中 之 maintain. -/
+theorem cooperation_cong_dao
+    (h1 h2 : ZhongOrbit) (n m : Nat) (h_li : liRitual h1 h2 n m)
+    (k : Nat) (hk : k ≤ m) :
+    ren h1 h2 (n + k)                                          -- 合作 之 仁
+    ∧ middle (h1.states (n + k))                                -- 双方 中 (1)
+    ∧ middle (h2.states (n + k)) :=                             -- 双方 中 (2)
+  ⟨h_li k hk, h1.inMiddle (n + k), h2.inMiddle (n + k)⟩
+
+/-- 零和 之 否定: 二焦点 之 间 既无 winner 也无 loser, 而是 仁 (双方 中).
+    Zero-sum framing 误解 仁 之 结构. -/
+theorem zero_sum_refuted_by_ren
+    (h1 h2 : ZhongOrbit) (n : Nat) (h_distinct : h1.states n ≠ h2.states n) :
+    middle (h1.states n)                                        -- ¬ loser
+    ∧ middle (h2.states n)                                       -- ¬ loser
+    ∧ ren h1 h2 n :=                                              -- 仁 (positive-sum 之 form)
+  ⟨h1.inMiddle n, h2.inMiddle n, h_distinct⟩
+
 /-- KernelDanZi: 此 layer 主动使用之 单字 closure-marker.
     由 「核 只收纳单字」 约束, 加 字 to kernel ⟺ 加 constructor here.
     Compounds (复词) MUST decompose to existing constructors before entering kernel.
