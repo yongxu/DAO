@@ -47,6 +47,9 @@ import SSBX.Foundation.Wen.WenDefCompile
 import SSBX.Foundation.Wen.WenyanParserGeneral
 import SSBX.Foundation.Wen.WenyanSelfHost
 import SSBX.Foundation.Wen.Demo
+import SSBX.Foundation.Wen.AntiSchmitt
+import SSBX.Foundation.Wen.AlignmentFailures
+import SSBX.Foundation.Wen.EconGame
 
 -- Foundation/Jian — 间之核（14 字粒子核）
 import SSBX.Foundation.Jian.JianOntology

@@ -17,7 +17,7 @@
 | [F_物理现象学.md](F_物理现象学.md) | 物理／现象学旁证 | 类比映射 | 弱同构 |
 | [G_完整算子系统_八卦互通与归一.md](G_完整算子系统_八卦互通与归一.md) | 横纵合一之群代数 | 群论刻画 | (Z/2)ⁿ + 合/分 双向 |
 
-### H–W 形式化 / 全集 / 不完备 / 完备性审计 / 自释微核 / 不完备证明报告 / 儒家德目证 / 进化非道者生存三视证 / 道家无为证 / 佛家四谛证 / 与生生不息对齐之必然 / 先秦百家 / 西哲与亚伯拉罕 / 反诛心信诚之形式 / 现代政治哲学(实证+证错) / 非道之形式
+### H–Z 形式化 / 全集 / 不完备 / 完备性审计 / 自释微核 / 不完备证明报告 / 儒家德目证 / 进化非道者生存三视证 / 道家无为证 / 佛家四谛证 / 与生生不息对齐之必然 / 先秦百家 / 西哲与亚伯拉罕 / 反诛心信诚之形式 / 现代政治哲学(实证+证错) / 非道之形式 / 反施密特 / 对齐失败 / 经济博弈
 
 | 文件 | 内容 | 状态 |
 |------|------|------|
@@ -37,6 +37,9 @@
 | [U_反诛心信诚之形式.md](U_反诛心信诚之形式.md) | JIAN v1.0 §IV.5 落地 · 信/诚 = alignment(化(T), 化(E)) 派生 idiom · 反诛心五律 type-level enforcement (PermittedModality 拒 B/R/M / Alignment graded 非 Bool / ConsentedSincerity consent_witness / consistent liar 反例 / SincerityResponse 仅 inquiry 无 judgment) · 修之渐进 · 言行一致 ↔ pointwise eq · 与 R 论本体层 alignment 之同形 | Sincerity.lean 13 定理 + 8 def + 3 inductive + 3 structure / 0 sorry / 0 axiom 新增 / 2825 jobs 通过 |
 | [V_现代政治哲学.md](V_现代政治哲学.md) | **首篇双向 layer (实证 + 证错)** · 实证 11 (Rawls 无知之幕+差异原则 / Habermas 沟通理性 / Arendt 行动+公共空间+出生性 / Locke 自然权利 / Hayek 自发秩序 / Sen 能力进路 / Berlin 价值多元 / Mill harm principle / Kant 永久和平) + 证错 7 (Marx 历史终局+决定论 / Hobbes 自然战争 / Schmitt 敌友+例外状态 / 极权主义 / Foucault universal collapse) · Kernel 是 政治哲学 之 minimum-axiom sieve, 不偏左右翼 | Kernel.lean Layers 43–44 / 18 定理 / 0 sorry / 0 axiom 新增 / 2825 jobs 通过 |
 | [W_非道之形式.md](W_非道之形式.md) | 斗争/赢者通吃 attractor/Moloch/totalizing dynamics 之形式否定 · **Moloch 仅在「同根」破坏时存在** (核心发现) · 大同 ≠ 通吃 / 仁 vs 斗 / 真道之三要素 / 合作 IS 道 / 零和 之否定 · `tongGen` IS Universal Anti-Moloch Principle | Kernel.lean Layer 45 / 11 定理 + attractor def / 0 sorry / 0 axiom 新增 / 2829 jobs 通过 |
+| [X_反施密特.md](X_反施密特.md) | Schmitt 三支柱(敌友区分 / decisionism / 例外状态)之 deep formalization · partisan war / legitimacy via emergency / sovereign vs law universality 全部 collapse 至 `¬ tongGen a` · `friend_enemy_implies_moloch` · PoliticalRelation inductive(仁/敌友/混) · **Anti-Schmitt = Anti-Moloch** | AntiSchmitt.lean / 16 定理 + 4 def + 1 inductive / 0 sorry / 0 axiom 新增 / lake build 通过 |
+| [Y_对齐失败.md](Y_对齐失败.md) | alignment 失败模式 catalog · Goodhart / specification gaming / reward hacking / mesa-optimization / wireheading / power-seeking / corrigibility / faithful self-report / deceptive alignment / double-Goodhart · **misaligned terminal goal 与 aligned terminal goal 形式上同样不可能** — 唯 alignment-to-process (中 + 多样 + 流通) 结构稳健 · 与 R 卷 / O 卷衔接 | AlignmentFailures.lean / 21 定理 + 6 def + 1 structure / 0 sorry / 0 axiom 新增 / lake build 通过 |
+| [Z_经济博弈.md](Z_经济博弈.md) | 现代经济学/博弈论之 Kernel sieve · **6 实证** (Pareto at middle / Coase / mechanism IC / Nash bargaining / public goods / Smith proper) + **4 有条件** (Nash静态=极 / 理性二分 / 静vs动 / VCG under tongGen) + **8 证错** (囚徒困境 refuted under tongGen / 公地悲剧 / universal free-rider / race-to-bottom / Arrow dictator / homo economicus / universal greed / zero-sum) + **meta** (market_two_faces) · Rawls 无知之幕 / Kant 绝对命令 / 推己及人 / IC / Coase / VCG truth-telling 全部 collapse 到 `tongGen` | EconGame.lean / 19 定理 (6+4+8+1) / 0 sorry / 0 axiom 新增 / lake build 通过 |
 
 ### 四衍 · 元到数 / 推 / 测 / 形（八卦层之内容承担）
 
