@@ -2237,11 +2237,12 @@ frame additions justified by:
 
 1. daoli-v12-fa-ze.md          (3495 行) — 62 法则 完整 spec
 2. daoli-v12-theories.md        (3283 行) — 19 theory mappings 详细
-3. daoli-v12-verifications.md   (1549 行) — 5 verifications of 法则 53 strict
+3. daoli-v12-verifications.md   (1549 行 + §7 v12-specific tests) — 5 verifications of 法则 53 strict
 4. daoli-v12-frames.md          (2436 行) — 8 frames 完整 articulation
 5. daoli-v12-physics-emergence.md (855 行) — 物理 emergence derivation
 6. daoli-v12-cross-cultural.md  (2428 行) — 6 traditions cross-cultural attestation
 7. daoli-v12-lean-verifier.md   (1356 行) — Lean 4 formal verifier blueprint
+8. daoli-v12-implications.md    (21 条) — framework 之 living significance（自 v12 单体 §21 迁出）
 
 总 framework 之 详细 spec: ~15,400 + 本 doc 行数.
 
