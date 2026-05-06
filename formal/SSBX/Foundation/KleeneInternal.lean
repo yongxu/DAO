@@ -165,18 +165,22 @@ def KleeneFromPrimitives : Prop :=
 def AllDecidersAreYiComputable : Prop :=
   ∀ (decide : List YiInstr → Hexagram → Bool), YiComputable decide
 
-/-- **Structural reduction**: the original `KleeneInverter` follows from
-    `YiKleeneInverter` plus Church-Turing.  This is a STRAIGHTFORWARD theorem
-    proved here without any axiom — it captures the precise content of
-    Church-Turing as the bridge.
+/-- **Structural reduction**: the (now cuo-invariant restricted)
+    `KleeneInverter` follows from `YiKleeneInverter` plus Church-Turing.
+    The cuo-invariance precondition (`CuoInvariantDecide decide`) is unused
+    here — once `decide` is YiComputable, `YiKleeneInverter` provides the
+    counter-example unconditionally.
 
-    Once `YiKleeneInverter` is proven (via § 6), the only remaining gap is
-    Church-Turing, which is the Lean equivalent of accepting that "every Lean
-    Bool function on List YiInstr × Hexagram is implementable as a YiInstr
-    program" — a meta-axiom about Lean's expressivity vs. BaguaTuring. -/
+    Note (post-`CuoInvariance.lean`): `AllDecidersAreYiComputable` is itself
+    *provably false* in Lean (e.g. `nonCuoInvariantDecide` from CuoInvariance
+    is Lean-definable but no YiInstr program decides it, since every YiComputable
+    decider is forced cuo-invariant).  The honest version of Church-Turing
+    here is "every CUO-INVARIANT Lean decider is YiComputable", which still
+    suffices for the chain since the new `KleeneInverter` only quantifies
+    over cuo-invariant deciders. -/
 theorem kleene_inverter_via_yi_kleene :
     YiKleeneInverter → AllDecidersAreYiComputable → KleeneInverter := by
-  intro h_yi h_ct decide
+  intro h_yi h_ct decide _h_cuo
   exact h_yi decide (h_ct decide)
 
 /-! ## § 6 Path to 0-axiom
