@@ -23,19 +23,28 @@
 |------|------|------|
 | [H_证明报告.md](H_证明报告.md) | G 之 Lean 形式化报告 | 75 定理 / 0 sorry / lake build 通过 |
 | [I_八卦全集.md](I_八卦全集.md) | 字 · 符 · 爻 · 算子总册 | T₀..T₆ 全层 + 全算子 |
-| [J_理之不完备_哥德尔在192.md](J_理之不完备_哥德尔在192.md) | 道理二分 · Halting 不可判 · Rice 四象齐备 · 192=最小 TC 层 | GodelLi.lean 38 定理 / 1 公理 (Kleene 递归) / 0 sorry / lake build 通过 |
+| [J_理之不完备_哥德尔在192.md](J_理之不完备_哥德尔在192.md) | 道理二分 · Halting 不可判 · Rice 四象齐备 · Rice uniform · 道判机不可通用 · 192=最小 TC 层 | GodelLi.lean 49 定理 / 1 公理 (Kleene 递归) / 0 sorry / lake build 通过 |
 | [K_完备性审计.md](K_完备性审计.md) | 五维度自审 · 算子合表 · 三值保守律 · 道理二分集中陈述 | 集合元自省 |
 | [L_文道一也_自释与微核.md](L_文道一也_自释与微核.md) | 道判机 · 以文自释 · 可执文言 · 微核（加+一二字含 64 卦 + 道法自然 + 生生不息 + 二者为一） | 4 模块 / 127 声明 / 0 sorry / 42 jobs 通过 |
-| [M_证明报告_192_理之不完备.md](M_证明报告_192_理之不完备.md) | J 之 Lean 形式化报告（与 H 并列）· 九层结果 · Rice 四象齐备 · 公理诚实陈述 | GodelLi.lean 38 定理 / 1 公理 / 0 sorry / 复现命令 |
+| [M_证明报告_192_理之不完备.md](M_证明报告_192_理之不完备.md) | J 之 Lean 形式化报告（与 H 并列）· 十二层结果 · Rice 四象齐备 + uniform · daoJudge 不可通用 · 公理诚实陈述 | GodelLi.lean 49 定理 / 1 公理 / 0 sorry / 复现命令 |
 
 ### 四衍 · 元到数 / 推 / 测 / 形（八卦层之内容承担）
 
 | 文件 | 主题 | 入口算子 | 出口结构 | Lean 配套 |
 |------|------|---------|---------|---|
-| [数与算术 · 从元到数.md](数与算术%20·%20从元到数.md) | 自然数 · ℤ · ℚ · ℝ · 四则运算 | 元 → 一 → 续 → 合 → 重 → 除 | (ℕ, +, ×) 半环 → ℤ 环 → ℝ Cauchy 完备 | `ShuSuan.lean` ✓ 32 定理 |
-| [形式逻辑 · 从元到推.md](形式逻辑%20·%20从元到推.md) | Bool³ ≅ 八卦 ≅ 真值表 · K3 三值 · 自然演绎 · Curry-Howard | 是 → 非 → 与 → 或 → 推 | 命题逻辑 + 三值保守律 U ⇏ ⊤ | `LuoJi.lean` ✓ 36 定理 |
-| [统计 · 从元到测.md](统计%20·%20从元到测.md) | Kolmogorov 测度 · Bayes · 大衍占筮 · LLN/CLT · 熵 · Markov | 测 → 配 → 反衡 → 极 → 序 | (Ω, ℱ, P) 概率空间 + Bernoulli³ ≅ 八卦 | `TongJi.lean` ✓ 24 定理（finite-no-Mathlib）|
-| [几何位 · 从元到形.md](几何位%20·%20从元到形.md) | 点 · 距 · 拓扑 · 连续 · 易经四位（中/应/比/当）· 立方体 · 流形 | 点 → 位 → 距 → 邻 → 连 | 度量空间 + 拓扑 + 立方体 1-skeleton + ℝⁿ 连续底 | `XingWei.lean` ✓ 19 定理 |
+| [数与算术 · 从元到数.md](数与算术%20·%20从元到数.md) | 自然数 · ℤ · ℚ · ℝ · 四则运算 | 元 → 一 → 续 → 合 → 重 → 除 | (ℕ, +, ×) 半环 → ℤ 环 → ℝ Cauchy 完备 | `ShuSuan.lean` ✓ 40 声明 |
+| [形式逻辑 · 从元到推.md](形式逻辑%20·%20从元到推.md) | Bool³ ≅ 八卦 ≅ 真值表 · K3 三值 · 自然演绎 · Curry-Howard | 是 → 非 → 与 → 或 → 推 | 命题逻辑 + 三值保守律 U ⇏ ⊤ | `LuoJi.lean` ✓ 44 声明 |
+| [统计 · 从元到测.md](统计%20·%20从元到测.md) | Kolmogorov 测度 · Bayes · 大衍占筮 · LLN/CLT · 熵 · Markov | 测 → 配 → 反衡 → 极 → 序 | (Ω, ℱ, P) 概率空间 + Bernoulli³ ≅ 八卦 | `TongJi.lean` ✓ 32 声明（finite-no-Mathlib）|
+| [几何位 · 从元到形.md](几何位%20·%20从元到形.md) | 点 · 距 · 拓扑 · 连续 · 易经四位（中/应/比/当）· 立方体 · 流形 | 点 → 位 → 距 → 邻 → 连 | 度量空间 + 拓扑 + 立方体 1-skeleton + ℝⁿ 连续底 | `XingWei.lean` ✓ 32 声明 |
+
+### 八衍之副线四衍 · 类 / 动 / 识 / 象（Phase 3 扩张）
+
+| 文件 | 主题 | 入口算子 | 出口结构 | Lean 配套 |
+|------|------|---------|---------|---|
+| [类与映 · 从元到映.md](类与映%20·%20从元到映.md) | 范畴 · 函子 · 自然变换 · Yoneda · CCC · Monad · Adjunction | 异 → 间 → 合 → 元 → 函 → 通 → 双 | Cat / Functor / NatTrans / Adjunction（universe-polymorphic）| `LeiYing.lean` ✓ 12 声明 |
+| [动力 · 从元到行.md](动力%20·%20从元到行.md) | 相空间 · 轨道 · 不动点 · 周期 · Markov · ergodic | 位 → 算 → 续 → 不（静）→ 重 | DynSys / Orbit / FixedPoint / Periodic（八卦反爻周期 = 2，无不动点）| `DongLi.lean` ✓ 26 声明 |
+| [心智 · 从元到识.md](心智%20·%20从元到识.md) | 唯识四分 · 心学四端 · 注意力函子 · K3 心理三态 | 能 → 见 → 自证 → 证自证 | FenSi ≅ Bool² 四象 · SiDuan → 四正卦 · Att functor · XinZ ≅ TriV | `XinZhi.lean` ✓ 30 声明 |
+| [物理 · 从元到象.md](物理%20·%20从元到象.md) | qubit basis · 对偶 · 守恒 · Z/2 自旋 · SU(3) 弱类比之严格界限 | 列 → 位 → 反 → 守 → 量 | Yao ≅ Bool / Trigram ≅ Bool³ / cuo² = id / yinCount mod 2 | `WuXiang.lean` ✓ 23 声明 |
 
 ## 三类映射之分判
 
@@ -44,8 +53,8 @@
 | 形式同构 | 严格 2ⁿ 二分树 | A、B、D、G | 强 |
 | 轴乘积 | 多轴笛卡尔积 | C | 中 |
 | 类比对应 | 意象呼应 | E（部分）、F | 弱 |
-| 机器验证 | Lean 形式化 | H、ShuSuan、LuoJi、XingWei、TongJi、GodelLi、L | **零 sorry**（仅 Kleene 1 公理）|
-| 内容承担 | 数 / 推 / 测 / 形四道之展开 | 四衍文件 | 数学严格 + 字元落地 |
+| 机器验证 | Lean 形式化 | H、ShuSuan、LuoJi、XingWei、TongJi、LeiYing、DongLi、XinZhi、WuXiang、GodelLi、L | **零 sorry**（仅 Kleene 1 公理）|
+| 内容承担 | 数 / 推 / 测 / 形 / **类 / 动 / 识 / 象** 八道之展开 | 八衍文件 | 数学严格 + 字元落地 |
 | 元自省 | 集合自身完备性 | K | 五维度审计 + 道理二分 |
 | 自释微核 | 文之自指 + 计算闭合 | L | 4 模块 / 127 声明 / 0 sorry |
 
@@ -66,7 +75,9 @@
 - **横纵算子统一**：G（5 个最小单字算子：变／化／动／合／生生）
 - **机器验证**：H（Lean 4 形式化，75 定理 / 0 sorry / lake build 通过）
 - **总册**：I（字·符·爻·算子全表，含 T₀..T₆ 五层）
-- **数 / 推 / 测 / 形**：四衍文件（八卦层内容之严格展开 + 字元承担 + Lean 形式化全通过：ShuSuan 32 / LuoJi 36 / TongJi 24 / XingWei 19 = 111 定理）
+- **数 / 推 / 测 / 形**（主线四衍）：八卦层内容之严格展开 + Lean 全通过：ShuSuan 40 / LuoJi 44 / TongJi 32 / XingWei 32 = **148 声明**
+- **类 / 动 / 识 / 象**（副线四衍，Phase 3 扩张）：LeiYing 12 / DongLi 26 / XinZhi 30 / WuXiang 23 = **91 声明**
+- **八衍合计**：**239 公开声明 / 0 sorry / 0 公理 / lake build 50 jobs 通过**
 - **自释与微核**：L（图灵完备 + 以文自释 + 可执文言 + 微核归一；二者为一形式证明）
 
 ## 全局约定

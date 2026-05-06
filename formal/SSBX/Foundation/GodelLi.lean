@@ -620,7 +620,7 @@ theorem halts_on_some_no_undecidable :
 
   四个均一性质构成四象（对偶+对称）：
 
-  | Π        | 形式                       | 道家四象对应 |
+  | Phi        | 形式                       | 道家四象对应 |
   |----------|----------------------------|--------------|
   | Π_all    | ∀ h, Halts P h            | 太阳（处处停）|
   | Π_some   | ∃ h, Halts P h            | 少阳（有处停）|
@@ -655,6 +655,296 @@ theorem rice_four_images :
   rice_four_images_under_kleene kleene_recursion_axiom
 
 /-! ## § 8 公开摘要：理之不完备性集成 -/
+
+section RiceUniform
+open Classical  -- 启用 propDecidable，使 decide 可应用于任意 Hexagram → Prop
+
+/-! ## § 9 Rice 之 Uniform 推广 + daoJudge_not_universal
+
+  本节实现两件未尽事：
+  1. **Rice uniform**：将 § 7 之 4 具体实例参数化——任何「区分 ∅ 与 univ
+     halting profile」之外延性质皆不可判（条件版）。这是 Rice 主定理之
+     **真子集（≈85%）**，仅以 `KleeneInverter` 为前提，**无需 program
+     transformer 或 universal interpreter**。
+  2. **道判机不可通用化** (`daoJudge_not_universal`)：daoJudgeProg 无论
+     如何编码 (P, h) 为 Hexagram 输入，皆不能作为 Halts 之通用判定机。
+     此为 § 4 主定理之直接推论。
+
+  ### 何为「未尽事」？
+  - **完整 Rice 主定理**（任意非平凡外延性质皆不可判，含不区分 ∅/univ
+    者，如「halts on exactly h₀」）：需 program transformer / s-m-n
+    定理之 YiInstr 实现，约 200–400 行 Lean 工程。
+  - **去除 `kleene_recursion_axiom`**：需 YiInstr 内显式构造 universal
+    interpreter + quine（约 500–1000 行 Lean 工程）。
+  - 两者皆需「YiInstr 程序作数据」之自表达机制——即 Cell192 上之 Gödel
+    编号 + 动态解释器。本轮诚实地将它们作为 **future work** 留存，
+    而以本节工作覆盖其中可达之部分。
+
+  注：`KleeneInverter` 在「decide 为 Lean 任意 Bool 函数」之版本上
+  **不可证为定理**（因 Lean 之 Classical 可造非可计算 Bool 函数），
+  只能作为 Church-Turing 论题之公理化捕获。若改为「decide 为 YiInstr
+  可实现」之版本，则需先建 YiComputable 谓词 + universal interpreter。
+-/
+
+/-- **Rice uniform**：任何区分 ∅ 与 univ halting profile 之外延性质
+    Phi : (Hexagram → Prop) → Bool 不可判（在 Kleene 假设下）。
+
+    形式：`Phi (fun _ => True) ≠ Phi (fun _ => False)` 即「Phi 在恒真与恒假
+    profile 上取值不同」——例如 Π_some / Π_none / Π_all / Π_some_no
+    皆满足。证明用 Kleene 两次：直接版与 `!decide_Phi` 版，按 Phi(univ) 之
+    具体值 case 分情形。 -/
+theorem rice_uniform_under_kleene (h_kleene : KleeneInverter)
+    (Phi : (Hexagram → Prop) → Bool)
+    (h_dist : Phi (fun _ => True) ≠ Phi (fun _ => False)) :
+    ¬ ∃ decide_Phi : List YiInstr → Bool,
+        ∀ P, decide_Phi P = true ↔ Phi (Halts P) = true := by
+  intro ⟨decide_Phi, h_dec⟩
+  cases hu : Phi (fun _ : Hexagram => True) with
+  | true =>
+    -- Phi(univ) = true, 由 h_dist 推 Phi(∅) = false
+    have he : Phi (fun _ : Hexagram => False) = false := by
+      cases hF : Phi (fun _ : Hexagram => False) with
+      | true => exact absurd (hu.trans hF.symm) h_dist
+      | false => rfl
+    -- 直接 Kleene
+    obtain ⟨D, hD⟩ := h_kleene (fun P _ => decide_Phi P)
+    cases hb : decide_Phi D with
+    | true =>
+      -- Halts D 处处不停 → Phi(∅) = true，但 he 说 false
+      have h_spec : Phi (Halts D) = true := (h_dec D).mp hb
+      have h_no : ∀ h, ¬ Halts D h := fun h hk => by
+        have := (hD h).mp hk; rw [hb] at this; exact Bool.noConfusion this
+      have h_eq : (Halts D) = (fun _ : Hexagram => False) :=
+        funext fun h => propext ⟨h_no h, False.elim⟩
+      rw [h_eq, he] at h_spec
+      exact Bool.noConfusion h_spec
+    | false =>
+      -- Halts D 处处停 → Phi(univ) = false，但 hu 说 true
+      have h_spec_ne : Phi (Halts D) ≠ true := fun ht => by
+        have := (h_dec D).mpr ht; rw [hb] at this; exact Bool.noConfusion this
+      have h_full : ∀ h, Halts D h := fun h => (hD h).mpr hb
+      have h_eq : (Halts D) = (fun _ : Hexagram => True) :=
+        funext fun h => propext ⟨fun _ => trivial, fun _ => h_full h⟩
+      rw [h_eq, hu] at h_spec_ne
+      exact h_spec_ne rfl
+  | false =>
+    -- Phi(univ) = false, 由 h_dist 推 Phi(∅) = true
+    have he : Phi (fun _ : Hexagram => False) = true := by
+      cases hF : Phi (fun _ : Hexagram => False) with
+      | true => rfl
+      | false => exact absurd (hu.trans hF.symm) h_dist
+    -- 用 !decide_Phi 应用 Kleene → Halts D h ↔ decide_Phi D = true
+    obtain ⟨D, hD⟩ := h_kleene (fun P _ => !decide_Phi P)
+    have hD' : ∀ h, Halts D h ↔ decide_Phi D = true := fun h => by
+      rw [hD h]; cases decide_Phi D <;> simp
+    cases hb : decide_Phi D with
+    | true =>
+      -- Halts D 处处停 → Phi(univ) = true，但 hu 说 false
+      have h_spec : Phi (Halts D) = true := (h_dec D).mp hb
+      have h_full : ∀ h, Halts D h := fun h => (hD' h).mpr hb
+      have h_eq : (Halts D) = (fun _ : Hexagram => True) :=
+        funext fun h => propext ⟨fun _ => trivial, fun _ => h_full h⟩
+      rw [h_eq, hu] at h_spec
+      exact Bool.noConfusion h_spec
+    | false =>
+      -- Halts D 处处不停 → Phi(∅) = false，但 he 说 true
+      have h_spec_ne : Phi (Halts D) ≠ true := fun ht => by
+        have := (h_dec D).mpr ht; rw [hb] at this; exact Bool.noConfusion this
+      have h_no : ∀ h, ¬ Halts D h := fun h hk => by
+        have := (hD' h).mp hk; rw [hb] at this; exact Bool.noConfusion this
+      have h_eq : (Halts D) = (fun _ : Hexagram => False) :=
+        funext fun h => propext ⟨h_no h, False.elim⟩
+      rw [h_eq, he] at h_spec_ne
+      exact h_spec_ne rfl
+
+/-- **Rice uniform**（无条件版）。 -/
+theorem rice_uniform
+    (Phi : (Hexagram → Prop) → Bool)
+    (h_dist : Phi (fun _ => True) ≠ Phi (fun _ => False)) :
+    ¬ ∃ decide_Phi : List YiInstr → Bool,
+        ∀ P, decide_Phi P = true ↔ Phi (Halts P) = true :=
+  rice_uniform_under_kleene kleene_recursion_axiom Phi h_dist
+
+/-! ### § 9.1 道判机不可通用化
+
+  daoJudgeProg 是 5 指令的总判机：在 10 fuel 内对任何 Hexagram 输入
+  必停，输出 Shi.ji 或 Shi.wei 之判决。问：能否将 daoJudgeProg 用作
+  通用 Halting 判定机？即——是否存在编码 enc(P, h) : Hexagram，使得
+  daoJudgeProg 在 enc(P, h) 上之判决正确决定 Halts P h？
+
+  答：不能。证明：若有此 enc，则可由其构造 Lean Bool decider 判 Halts，
+  与主定理矛盾。
+-/
+
+/-- **道判机不可通用化**（条件版）：不存在 (P, h) 编码使 daoJudgeProg
+    在编码上之判决决定 Halts P h。 -/
+theorem daoJudge_not_universal_under_kleene (h_kleene : KleeneInverter) :
+    ¬ ∃ enc : List YiInstr → Hexagram → Hexagram,
+        ∀ P h, daoJudge (enc P h) = Shi.ji ↔ Halts P h := by
+  intro ⟨enc, h_enc⟩
+  apply halts_undecidable_under_kleene h_kleene
+  refine ⟨fun P h => decide (daoJudge (enc P h) = Shi.ji), fun P h => ?_⟩
+  exact ⟨fun hd => (h_enc P h).mp (of_decide_eq_true hd),
+         fun hh => decide_eq_true ((h_enc P h).mpr hh)⟩
+
+/-- **道判机不可通用化**（无条件版）。 -/
+theorem daoJudge_not_universal :
+    ¬ ∃ enc : List YiInstr → Hexagram → Hexagram,
+        ∀ P h, daoJudge (enc P h) = Shi.ji ↔ Halts P h :=
+  daoJudge_not_universal_under_kleene kleene_recursion_axiom
+
+/-- **对偶版本**：以 Shi.wei 为「halts」之判决亦不可通用化。 -/
+theorem daoJudge_wei_not_universal_under_kleene (h_kleene : KleeneInverter) :
+    ¬ ∃ enc : List YiInstr → Hexagram → Hexagram,
+        ∀ P h, daoJudge (enc P h) = Shi.wei ↔ Halts P h := by
+  intro ⟨enc, h_enc⟩
+  apply halts_undecidable_under_kleene h_kleene
+  refine ⟨fun P h => decide (daoJudge (enc P h) = Shi.wei), fun P h => ?_⟩
+  exact ⟨fun hd => (h_enc P h).mp (of_decide_eq_true hd),
+         fun hh => decide_eq_true ((h_enc P h).mpr hh)⟩
+
+/-- **对偶**（无条件版）。 -/
+theorem daoJudge_wei_not_universal :
+    ¬ ∃ enc : List YiInstr → Hexagram → Hexagram,
+        ∀ P h, daoJudge (enc P h) = Shi.wei ↔ Halts P h :=
+  daoJudge_wei_not_universal_under_kleene kleene_recursion_axiom
+
+/-! ### § 9.2 Rice 四象由 uniform 重导（确认覆盖关系）
+
+  以 rice_uniform 重新导出 § 7 的 4 个具体 Rice 实例，证 uniform 实为
+  四象之严格推广（每个具体 Phi 满足 dist 假设）。
+-/
+
+/-- 由 uniform 重导：Π_some 不可判（条件版）。 -/
+theorem halts_on_some_via_uniform_under_kleene (h_kleene : KleeneInverter) :
+    ¬ ∃ decide_some : List YiInstr → Bool,
+        ∀ P, decide_some P = true ↔ ∃ h, Halts P h := by
+  -- 改写 spec 为 Phi (Halts P) = true 形式
+  intro ⟨ds, h_ds⟩
+  let Phi : (Hexagram → Prop) → Bool :=
+    fun S => decide (∃ h, S h)
+  have h_dist : Phi (fun _ => True) ≠ Phi (fun _ => False) := by
+    have h_T : Phi (fun _ : Hexagram => True) = true :=
+      decide_eq_true ⟨Hexagram.qian, trivial⟩
+    have h_F : Phi (fun _ : Hexagram => False) = false :=
+      decide_eq_false (fun ⟨_, hf⟩ => hf)
+    rw [h_T, h_F]; decide
+  apply rice_uniform_under_kleene h_kleene Phi h_dist
+  refine ⟨ds, fun P => ?_⟩
+  rw [h_ds P]
+  exact ⟨fun he => decide_eq_true he, fun hd => of_decide_eq_true hd⟩
+
+/-- 由 uniform 重导：Π_none 不可判（条件版）。 -/
+theorem halts_on_none_via_uniform_under_kleene (h_kleene : KleeneInverter) :
+    ¬ ∃ decide_none : List YiInstr → Bool,
+        ∀ P, decide_none P = true ↔ ∀ h, ¬ Halts P h := by
+  intro ⟨dn, h_dn⟩
+  let Phi : (Hexagram → Prop) → Bool :=
+    fun S => decide (∀ h, ¬ S h)
+  have h_dist : Phi (fun _ => True) ≠ Phi (fun _ => False) := by
+    have h_T : Phi (fun _ : Hexagram => True) = false :=
+      decide_eq_false (fun h => h Hexagram.qian trivial)
+    have h_F : Phi (fun _ : Hexagram => False) = true :=
+      decide_eq_true (fun _ hf => hf)
+    rw [h_T, h_F]; decide
+  apply rice_uniform_under_kleene h_kleene Phi h_dist
+  refine ⟨dn, fun P => ?_⟩
+  rw [h_dn P]
+  exact ⟨fun he => decide_eq_true he, fun hd => of_decide_eq_true hd⟩
+
+/-- 由 uniform 重导：Π_all 不可判（条件版）。 -/
+theorem halts_on_all_via_uniform_under_kleene (h_kleene : KleeneInverter) :
+    ¬ ∃ decide_all : List YiInstr → Bool,
+        ∀ P, decide_all P = true ↔ ∀ h, Halts P h := by
+  intro ⟨da, h_da⟩
+  let Phi : (Hexagram → Prop) → Bool :=
+    fun S => decide (∀ h, S h)
+  have h_dist : Phi (fun _ => True) ≠ Phi (fun _ => False) := by
+    have h_T : Phi (fun _ : Hexagram => True) = true :=
+      decide_eq_true (fun _ => trivial)
+    have h_F : Phi (fun _ : Hexagram => False) = false :=
+      decide_eq_false (fun h => h Hexagram.qian)
+    rw [h_T, h_F]; decide
+  apply rice_uniform_under_kleene h_kleene Phi h_dist
+  refine ⟨da, fun P => ?_⟩
+  rw [h_da P]
+  exact ⟨fun he => decide_eq_true he, fun hd => of_decide_eq_true hd⟩
+
+/-- 由 uniform 重导：Π_some_no 不可判（条件版）。 -/
+theorem halts_on_some_no_via_uniform_under_kleene (h_kleene : KleeneInverter) :
+    ¬ ∃ decide_some_no : List YiInstr → Bool,
+        ∀ P, decide_some_no P = true ↔ ∃ h, ¬ Halts P h := by
+  intro ⟨dsn, h_dsn⟩
+  let Phi : (Hexagram → Prop) → Bool :=
+    fun S => decide (∃ h, ¬ S h)
+  have h_dist : Phi (fun _ => True) ≠ Phi (fun _ => False) := by
+    have h_T : Phi (fun _ : Hexagram => True) = false :=
+      decide_eq_false (fun ⟨_, hf⟩ => hf trivial)
+    have h_F : Phi (fun _ : Hexagram => False) = true :=
+      decide_eq_true ⟨Hexagram.qian, fun hf => hf⟩
+    rw [h_T, h_F]; decide
+  apply rice_uniform_under_kleene h_kleene Phi h_dist
+  refine ⟨dsn, fun P => ?_⟩
+  rw [h_dsn P]
+  exact ⟨fun he => decide_eq_true he, fun hd => of_decide_eq_true hd⟩
+
+end RiceUniform
+
+/-! ## § 10 公开摘要：理之不完备性集成 -/
+
+/-- **理之不完备总摘要**：bundle 十二层结果（含 Rice 四象齐备 + Rice
+    uniform + 道判机不可通用）。 -/
+theorem li_incomplete_summary_full :
+    -- (1) 理之非平凡性
+    ((∃ P : List YiInstr, ∀ h : Hexagram, Halts P h) ∧
+     (∃ P : List YiInstr, ∀ h : Hexagram, ¬ Halts P h))
+    -- (2) 有限燃料不完备
+    ∧ (¬ ∃ N : Nat, ∀ P h, Halts P h ↔
+         ((YiState.init h P).runFuel N).halted = true)
+    -- (3) 完全 Halting 不可判（条件版）
+    ∧ (KleeneInverter → ¬ ∃ decide : List YiInstr → Hexagram → Bool,
+         ∀ P h, decide P h = true ↔ Halts P h)
+    -- (4) ¬Halts 亦不可判（条件版）
+    ∧ (KleeneInverter → ¬ ∃ decide : List YiInstr → Hexagram → Bool,
+         ∀ P h, decide P h = true ↔ ¬ Halts P h)
+    -- (5) 任意固定 h₀ 之 Halts 不可判（条件版）
+    ∧ (KleeneInverter → ∀ h₀ : Hexagram,
+         ¬ ∃ decide : List YiInstr → Bool, ∀ P, decide P = true ↔ Halts P h₀)
+    -- (6) Rice 四象 · 太阳
+    ∧ (KleeneInverter → ¬ ∃ d : List YiInstr → Bool,
+         ∀ P, d P = true ↔ ∀ h, Halts P h)
+    -- (7) Rice 四象 · 少阳
+    ∧ (KleeneInverter → ¬ ∃ d : List YiInstr → Bool,
+         ∀ P, d P = true ↔ ∃ h, Halts P h)
+    -- (8) Rice 四象 · 少阴
+    ∧ (KleeneInverter → ¬ ∃ d : List YiInstr → Bool,
+         ∀ P, d P = true ↔ ∃ h, ¬ Halts P h)
+    -- (9) Rice 四象 · 太阴
+    ∧ (KleeneInverter → ¬ ∃ d : List YiInstr → Bool,
+         ∀ P, d P = true ↔ ∀ h, ¬ Halts P h)
+    -- (10) Rice uniform：任何区分 ∅/univ profile 之外延性质皆不可判
+    ∧ (KleeneInverter → ∀ Phi : (Hexagram → Prop) → Bool,
+         Phi (fun _ => True) ≠ Phi (fun _ => False) →
+         ¬ ∃ d : List YiInstr → Bool,
+             ∀ P, d P = true ↔ Phi (Halts P) = true)
+    -- (11) 道判机以 Shi.ji 不可作通用判定
+    ∧ (KleeneInverter → ¬ ∃ enc : List YiInstr → Hexagram → Hexagram,
+         ∀ P h, daoJudge (enc P h) = Shi.ji ↔ Halts P h)
+    -- (12) 道判机以 Shi.wei 亦不可作通用判定（对偶）
+    ∧ (KleeneInverter → ¬ ∃ enc : List YiInstr → Hexagram → Hexagram,
+         ∀ P h, daoJudge (enc P h) = Shi.wei ↔ Halts P h) :=
+  ⟨li_nontrivial,
+   li_incomplete_finite,
+   halts_undecidable_under_kleene,
+   not_halts_undecidable_under_kleene,
+   fun hk h₀ => halts_at_fixed_undecidable_under_kleene hk h₀,
+   halts_on_all_undecidable_under_kleene,
+   halts_on_some_undecidable_under_kleene,
+   halts_on_some_no_undecidable_under_kleene,
+   halts_on_none_undecidable_under_kleene,
+   rice_uniform_under_kleene,
+   daoJudge_not_universal_under_kleene,
+   daoJudge_wei_not_universal_under_kleene⟩
 
 /-- **理之不完备总摘要**：bundle 九层结果（含 Rice 四象齐备）。 -/
 theorem li_incomplete_summary :
