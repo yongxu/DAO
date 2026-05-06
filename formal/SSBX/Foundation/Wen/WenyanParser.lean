@@ -279,4 +279,83 @@ theorem daoJudgeProg_print :
 theorem daoJudgeProg_roundtrip :
     «解程» («印程» daoJudgeProg) = some daoJudgeProg := by native_decide
 
+/-! ## § 8  扩展 round-trip：所有 12 构造子 + 全 param 值 -/
+
+/-- 12 构造子之代表（每构造子至少一例，含全部 6 爻位 / 3 时态 / 范围内 Nat 参数）。 -/
+def allKindReprs : List YiInstr := [
+  .nop,
+  .hu, .cuo, .zong,
+  .push, .pop,
+  .halt,
+  .setShi .ji, .setShi .jin, .setShi .wei,
+  .flipYao ⟨0, by omega⟩, .flipYao ⟨1, by omega⟩, .flipYao ⟨2, by omega⟩,
+  .flipYao ⟨3, by omega⟩, .flipYao ⟨4, by omega⟩, .flipYao ⟨5, by omega⟩,
+  .branchYaoEq ⟨0, by omega⟩ ⟨5, by omega⟩ 1,
+  .branchYaoEq ⟨2, by omega⟩ ⟨3, by omega⟩ 64,
+  .branchShiEq .ji 1,   .branchShiEq .jin 32, .branchShiEq .wei 64,
+  .jump 1, .jump 10, .jump 32, .jump 64
+]
+
+/-- 12 构造子代表之单例 round-trip：每例 print 后 parse 回原指令. -/
+theorem allKindReprs_singleton_roundtrip :
+    allKindReprs.all (fun i => «解程» (printInstr i) = some [i]) = true := by
+  native_decide
+
+/-- 1..64 之中文数词在 jump 中之 round-trip（覆盖全数词范围）. -/
+def numeralRange : List Nat := (List.range 64).map (· + 1)
+
+theorem numeralRange_jump_roundtrip :
+    numeralRange.all (fun n =>
+      «解程» (printInstr (.jump n)) = some [.jump n]) = true := by
+  native_decide
+
+theorem numeralRange_branchYaoEq_roundtrip :
+    numeralRange.all (fun n =>
+      «解程» (printInstr (.branchYaoEq ⟨2, by omega⟩ ⟨3, by omega⟩ n))
+        = some [.branchYaoEq ⟨2, by omega⟩ ⟨3, by omega⟩ n]) = true := by
+  native_decide
+
+theorem numeralRange_branchShiEq_roundtrip :
+    numeralRange.all (fun n =>
+      «解程» (printInstr (.branchShiEq .wei n)) = some [.branchShiEq .wei n]) = true := by
+  native_decide
+
+/-- 多构造子组合程序之 round-trip 测试集. -/
+def testPrograms : List (List YiInstr) := [
+  daoJudgeProg,
+  [.nop, .halt],
+  [.push, .pop, .halt],
+  [.hu, .cuo, .zong, .halt],
+  [.flipYao ⟨0, by omega⟩, .flipYao ⟨5, by omega⟩, .halt],
+  [.setShi .ji, .setShi .jin, .setShi .wei, .halt],
+  [.branchYaoEq ⟨0, by omega⟩ ⟨1, by omega⟩ 5, .halt, .nop, .nop, .nop, .halt],
+  [.jump 2, .halt, .nop, .halt],
+  [.branchShiEq .ji 3, .setShi .wei, .halt, .setShi .ji, .halt]
+]
+
+theorem testPrograms_all_valid :
+    testPrograms.all validProg = true := by native_decide
+
+/-- **测试集 round-trip 主公示**：所有合度测试程序 print 后 parse 回原程序. -/
+theorem testPrograms_roundtrip :
+    testPrograms.all (fun p => «解程» («印程» p) = some p) = true := by native_decide
+
+/-! ## § 9  完全一般之 round-trip 定理（v3 之事）
+
+  形式: `∀ p, validProg p = true → «解程» («印程» p) = some p`
+
+  证明思路（待 v3 实施）:
+    · 引理 1: parseShi (printShi 之 inner) = some s   （case analysis on Shi）
+    · 引理 2: parseYao (printYao 之 inner) = some i   （case analysis on Fin 6）
+    · 引理 3: parseNumeral (printNumeral 之 inner) = some n  当 n ∈ [1, 64]
+              （n ∈ [1,9] / n=10 / n ∈ [11,19] / n ∈ [20,60] (multiples) / n ∈ [21,64] 五例）
+    · 引理 4: lex 之 concatenation: lex (s₁ ++ "；" ++ s₂) = lex s₁ ++ [.sep] ++ lex s₂
+              （需 lex 转为非 partial 形式并加 termination）
+    · 引理 5: parseInstr 之 print-逆: 12 构造子各一证
+    · 主定理: 由引理 4-5 + induction on List YiInstr
+
+  当前以 native_decide 见证测试集（足覆盖 12 构造子 + 全 1..64 数词），
+  足够实用；完全一般化留待 v3.
+-/
+
 end SSBX.Foundation.Wen.WenyanParser
