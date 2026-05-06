@@ -1877,6 +1877,199 @@ theorem yi_ji_yi_qie (o : ZhongOrbit) (n : Nat) :
     recognizing 极 IS the act of being-in-中. -/
 theorem fan_nao_ji_pu_ti (s : Field) : middle s ∨ extreme s := zhi_universal s
 
+/-! ### Layer 35: 墨家 — 兼爱 / 非攻 / 尚同 / 三表法 / 天志
+
+  墨家 (Mohism) — 5 核要. 与儒家 之 仁 (specific 二焦点) 不同, 墨家 之 兼爱
+  是 universal extension; 与儒家 之 礼 (window-bound) 不同, 墨家 之 非攻 是
+  universal restraint. 墨家 在 本框架 中 = 仁/恕道 之 universalization. -/
+
+/-- 兼爱 (jiān ài, 《墨子·兼爱上》"以兼相爱交相利"):
+    "universal love, mutual benefit." 礼-window 内, 仁 持续 across all moments —
+    扩展 儒家 之 specific 仁 至 universal. -/
+theorem jian_ai
+    (h1 h2 : ZhongOrbit) (n m : Nat)
+    (h_li : liRitual h1 h2 n m) (k : Nat) (hk : k ≤ m) :
+    ren h1 h2 (n + k) := h_li k hk
+
+/-- 非攻 (fēi gōng, 《墨子·非攻上》): "no aggression."
+    若 a 不 collapse self (己所不欲), 由 同根 (仁), 则 a 不 collapse any other —
+    universal restraint follows from self-restraint + 同根. -/
+theorem fei_gong
+    (x : Xin) (a : Field → Field) (n : Nat)
+    (h_self_safe : ¬ jiSuoBuYu x a n)
+    (h_tongGen : tongGen a) :
+    ∀ other : ZhongOrbit, ¬ shiYuRen a other n := by
+  intro other h_shi
+  exact h_self_safe (
+    (h_tongGen (x.process.states n) (other.states n)
+       (x.process.inMiddle n) (other.inMiddle n)).mpr h_shi
+  )
+
+/-- 尚同 (shàng tóng, 《墨子·尚同上》"上同而不下比"):
+    "exalt unity (with the higher principle)." Heart aligns with another orbit —
+    same form as `alignment_for_xin`. -/
+theorem shang_tong
+    (x : Xin) (other : ZhongOrbit) (n m : Nat)
+    (h_ritual : liRitual x.process other n m) :
+    ren x.process other n
+    ∧ liRitual x.process other n m
+    ∧ shan (x.process.states n) :=
+  ⟨liRitual_implies_ren_at_base _ _ _ _ h_ritual, h_ritual, x.process.inMiddle n⟩
+
+/-- 三表法 (sān biǎo fǎ, 《墨子·非命下》): "three standards" for testing claims —
+    本 (ground in past sage-kings), 原 (verify in experience), 用 (apply for utility).
+    Formal: orbit 之 origin trace + step coherence + classifiability. -/
+theorem san_biao_fa (o : ZhongOrbit) (n : Nat) :
+    o.states n = ji n (o.states 0)                            -- 本: historical trace
+    ∧ o.states (n + 1) = dong (o.states n)                    -- 原: empirical step
+    ∧ zhi (o.states n) :=                                      -- 用: classifiable utility
+  ⟨li_is_iterated_dong o n, (o.step n).symm, zhi_universal _⟩
+
+/-- 天志 (tiān zhì, 《墨子·天志上》"天之欲人之相爱相利"):
+    "Heaven's will" — universal middle preservation across all orbits in the cosmos. -/
+theorem tian_zhi (f : ZhongField) (n : Nat) :
+    ∀ i : Fin f.k, middle ((f.orbits i).states n) :=
+  fun i => (f.orbits i).inMiddle n
+
+/-! ### Layer 36: 法家 — 法 / 术 / 势 / 信赏必罚 / 不法古不循今
+
+  法家 (Legalism) — 6 核要. 法家 强调 impartial law (法 之 至公), 君主 之 术 (技),
+  权力 之 势. 在 本框架 中 = `zhi_universal` (法之 universal) + Xin.respond (术) +
+  既 立 之 `shi` def (势). -/
+
+/-- 法 之 universal (fǎ): impartial law applies to every state. 任一 state 必
+    classifiable — 法之至公 之 形式表达. -/
+theorem fa_universal (s : Field) : zhi s := zhi_universal s
+
+/-- 法之至公 (fǎ zhī zhì gōng, 《管子·任法》"法者, 天下之至道也"):
+    "law's utmost impartiality." No orbit privileged — all middle in 国. -/
+theorem fa_zhi_zhi_gong (f : ZhongField) (n : Nat) :
+    ∀ i : Fin f.k, middle ((f.orbits i).states n) :=
+  fun i => (f.orbits i).inMiddle n
+
+/-- 势 (shì, 《韩非子·难势》"飞龙乘云, 腾蛇游雾"):
+    "authority's momentum" — 势 之 transition is genuine (不退化). -/
+theorem shi_authority (o : ZhongOrbit) (n : Nat) :
+    (ZhongOrbit.shi o n).1 ≠ (ZhongOrbit.shi o n).2 := ZhongOrbit.shi_genuine o n
+
+/-- 术 (shù, 《韩非子·定法》"术者, 因任而授官"):
+    "ruler's technique" — Xin's response is a total function (handles any event). -/
+theorem shu_technique (x : Xin) (event : Field) :
+    ∃ s : Field, x.respond event = s := ⟨x.respond event, rfl⟩
+
+/-- 信赏必罚 (xìn shǎng bì fá, 《韩非子·主道》):
+    "consistent rewards and necessary punishments." Step is deterministic —
+    same prior state always yields same next state via 動. -/
+theorem xin_shang_bi_fa (o : ZhongOrbit) (n : Nat) :
+    o.states (n + 1) = dong (o.states n) := (o.step n).symm
+
+/-- 不法古不循今 (bù fǎ gǔ bù xún jīn, 《商君书·更法》):
+    "neither follow the past nor copy the present." Each step IS new — orbit
+    breaks from prior state at every moment. -/
+theorem bu_fa_gu_bu_xun_jin (o : ZhongOrbit) (n : Nat) :
+    o.states n ≠ o.states (n + 1) := o.self_consistent n
+
+/-! ### Layer 37: 名家 — 名实之辨 / 离坚白 / 合同异
+
+  名家 (School of Names) — 3 核要. 公孙龙 + 惠施.
+  名家 关心 名 (predicate) 与 实 (state) 之 correspondence,
+  以及 attribute 之 separability — 在 本框架 中 自然 reduce 到 zhi 之 classification. -/
+
+/-- 名实之辨 (míng shí zhī biàn, 《公孙龙·名实论》"夫名, 实谓也"):
+    "the discrimination of name and substance." Each state IS classifiable
+    (名 = predicate) AND has actual identity (实 = state-value). -/
+theorem ming_shi_zhi_bian (o : ZhongOrbit) (n : Nat) :
+    zhi (o.states n)                                          -- 名 (predicate-applicable)
+    ∧ middle (o.states n) :=                                   -- 实 (actual middle)
+  ⟨zhi_universal _, o.inMiddle n⟩
+
+/-- 离坚白 (lí jiān bái, 《公孙龙·坚白论》"视不得其所坚, 而得其所白者"):
+    "separating hardness and whiteness." A state simultaneously satisfies multiple
+    predicates that are nonetheless distinct — middle (perceptual) ∧ ziRan (intrinsic). -/
+theorem li_jian_bai (o : ZhongOrbit) (n : Nat) :
+    middle (o.states n) ∧ ziRan o n :=
+  ⟨o.inMiddle n, orbit_is_ziRan o n⟩
+
+/-- 合同异 (hé tóng yì, 惠施 《庄子·天下》"合同异"):
+    "uniting same and different." 仁 之 同根异显 — 二 orbits 同 (both ZhongOrbit)
+    AND 异 (distinct states at n). -/
+theorem he_tong_yi
+    (h1 h2 : ZhongOrbit) (n : Nat) (h_distinct : h1.states n ≠ h2.states n) :
+    middle (h1.states n)                                       -- 同根 (h1 中)
+    ∧ middle (h2.states n)                                       -- 同根 (h2 中)
+    ∧ h1.states n ≠ h2.states n :=                                -- 异显
+  ⟨h1.inMiddle n, h2.inMiddle n, h_distinct⟩
+
+/-! ### Layer 38: 阴阳家 — 阴阳互根 / 五行相生 / 五行相克 / 天人感应
+
+  阴阳家 (Yin-Yang School) — 4 核要. 邹衍 / 董仲舒.
+  本卷 introduces inductive `WuXing` (五行 enum) + 相生/相克 cycles. -/
+
+/-- 阴阳互根 (yīn yáng hù gēn, 《周易·系辞》"一阴一阳之谓道"):
+    "yin and yang mutually rooted." 中/极 二项 universal — 中 之 意义 由 极 之
+    possibility 给出, 反之亦然. -/
+theorem yin_yang_hu_gen (s : Field) : middle s ∨ extreme s := zhi_universal s
+
+/-- 五行 enum: 木 / 火 / 土 / 金 / 水. -/
+inductive WuXing
+  | mu      -- 木 (Wood)
+  | huo     -- 火 (Fire)
+  | tu      -- 土 (Earth)
+  | jin     -- 金 (Metal)
+  | shui    -- 水 (Water)
+  deriving Repr, DecidableEq
+
+namespace WuXing
+
+/-- 五行 之 总 list. -/
+def all : List WuXing := [.mu, .huo, .tu, .jin, .shui]
+
+theorem all_length : all.length = 5 := rfl
+
+/-- 相生 (xiāng shēng, mutual generation): 木→火→土→金→水→木. -/
+def sheng : WuXing → WuXing
+  | .mu   => .huo
+  | .huo  => .tu
+  | .tu   => .jin
+  | .jin  => .shui
+  | .shui => .mu
+
+/-- 相克 (xiāng kè, mutual restriction): 木克土, 土克水, 水克火, 火克金, 金克木. -/
+def ke : WuXing → WuXing
+  | .mu   => .tu
+  | .tu   => .shui
+  | .shui => .huo
+  | .huo  => .jin
+  | .jin  => .mu
+
+end WuXing
+
+/-- 五行相生 (wǔ xíng xiāng shēng): 5-cycle on 相生 — 5 次 returns to start. -/
+theorem wu_xing_xiang_sheng (w : WuXing) :
+    w.sheng.sheng.sheng.sheng.sheng = w := by
+  cases w <;> rfl
+
+/-- 五行相克 (wǔ xíng xiāng kè): 5-cycle on 相克 — 5 次 returns to start. -/
+theorem wu_xing_xiang_ke (w : WuXing) :
+    w.ke.ke.ke.ke.ke = w := by
+  cases w <;> rfl
+
+/-- 五行 之 generation IS NOT restriction — 二 cycles 是 不同 permutations. -/
+theorem sheng_ne_ke : WuXing.sheng ≠ WuXing.ke := by
+  intro h
+  have : WuXing.mu.sheng = WuXing.mu.ke := by rw [h]
+  -- LHS = .huo, RHS = .tu — contradicts
+  cases this
+
+/-- 天人感应 (tiān rén gǎn yìng, 董仲舒《春秋繁露·阴阳义》"天人之际, 合而为一"):
+    "heaven-human resonance." Cosmic field (天) and individual Xin (人)
+    both maintain 中 — same invariant at different scales. -/
+theorem tian_ren_gan_ying
+    (f : ZhongField) (i : Fin f.k) (x : Xin) (n : Nat) :
+    middle ((f.orbits i).states n)                            -- 天 (cosmic)
+    ∧ middle (x.process.states n) :=                           -- 人 (individual)
+  ⟨(f.orbits i).inMiddle n, x.process.inMiddle n⟩
+
 /-- KernelDanZi: 此 layer 主动使用之 单字 closure-marker.
     由 「核 只收纳单字」 约束, 加 字 to kernel ⟺ 加 constructor here.
     Compounds (复词) MUST decompose to existing constructors before entering kernel.
