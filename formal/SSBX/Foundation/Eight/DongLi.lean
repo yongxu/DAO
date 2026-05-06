@@ -1,7 +1,7 @@
 /-
 # DongLi — 动力 · 离散动力系统之最薄骨架
 
-Companion document: `四级生成_太极两翼四象八卦/动力 · 从元到行.md`
+Companion document: `义理/动力 · 从元到行.md`
 
 This file gives the **finite, no-Mathlib** core of the **动力** 衍 file:
   § 1   动力系统 DynSys（相空间 + 一步映射）

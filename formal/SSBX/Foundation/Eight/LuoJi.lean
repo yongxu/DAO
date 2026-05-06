@@ -1,7 +1,7 @@
 /-
 # LuoJi — 形式逻辑 · K3 三值核心
 
-Companion document: `四级生成_太极两翼四象八卦/形式逻辑 · 从元到推.md`
+Companion document: `义理/形式逻辑 · 从元到推.md`
 
 This file formalizes the **形式逻辑** 衍 file's K3 (Kleene strong 3-valued logic):
 the project's chosen 3-valued semantics for handling 实/虚/中 (true/false/undetermined).

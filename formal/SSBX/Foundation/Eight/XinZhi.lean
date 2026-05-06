@@ -1,7 +1,7 @@
 /-
 # XinZhi — 心智 · 唯识四分 / 心学四端 / 注意力函子之最薄骨架
 
-Companion document: `四级生成_太极两翼四象八卦/心智 · 从元到识.md`
+Companion document: `义理/心智 · 从元到识.md`
 
 This file gives the **finite, no-Mathlib** core of the **心智** 衍 file:
   § 1   唯识四分 FenSi (相 / 见 / 自证 / 证自证) inductive

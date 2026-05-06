@@ -1,7 +1,7 @@
 /-
 # TongJi — 统计 · 大衍占筮 + 八卦 = Bernoulli³
 
-Companion document: `四级生成_太极两翼四象八卦/统计 · 从元到测.md`
+Companion document: `义理/统计 · 从元到测.md`
 
 This file formalizes the **finite, no-Mathlib** core of the **统计** 衍 file:
   § 1   项目字 (lv / yu / shi / due / lai)

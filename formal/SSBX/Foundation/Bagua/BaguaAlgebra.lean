@@ -2,7 +2,7 @@
 # BaguaAlgebra — 八卦完整算子代数
 
 The complete operator system for 八卦 (T_3 = Σ³), formalizing
-  四级生成_太极两翼四象八卦/G_完整算子系统_八卦互通与归一.md
+  义理/G_完整算子系统_八卦互通与归一.md
 
 Yi.lean already provides Trigram with 错 (cuo) = full negation and 综 (zong) =
 positional reversal — these form the V_4 subgroup acting on Trigram.

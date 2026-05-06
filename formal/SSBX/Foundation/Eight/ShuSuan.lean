@@ -1,7 +1,7 @@
 /-
 # ShuSuan — 数算 · 项目自字之 ℕ 算术
 
-Companion document: `四级生成_太极两翼四象八卦/数与算术 · 从元到数.md`
+Companion document: `义理/数与算术 · 从元到数.md`
 
 This file formalizes the **数与算术** 衍 file's mapping from project single-character
 operators (元 / 一 / 续 / 合 / 损 / 重 / 除 / 反 / 空) to standard Nat / Int arithmetic,

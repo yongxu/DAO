@@ -1,7 +1,7 @@
 /-
 # LeiYing — 类与映 · 范畴 / 函子 / 自然变换 / 伴随之最薄骨架
 
-Companion document: `四级生成_太极两翼四象八卦/类与映 · 从元到映.md`
+Companion document: `义理/类与映 · 从元到映.md`
 
 This file gives the **finite, no-Mathlib** core of the **类映** 衍 file:
   § 1   Cat structure（universe-polymorphic，三公理）

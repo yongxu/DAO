@@ -1,7 +1,7 @@
 /-
 # GodelLi — 理之不完备 · 哥德尔在 192
 
-Companion document: `四级生成_太极两翼四象八卦/J_理之不完备_哥德尔在192.md`
+Companion document: `义理/J_理之不完备_哥德尔在192.md`
 
 This file formalizes the **理之不完备** (incompleteness-of-Li) theorem at the
 192-cell layer (`Cell192 := Hexagram × Shi`, the 64×3 Turing-complete

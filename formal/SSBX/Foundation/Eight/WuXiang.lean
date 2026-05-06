@@ -1,7 +1,7 @@
 /-
 # WuXiang — 物理 · 象 · qubit 同构 / 对偶 / 守恒之最薄骨架
 
-Companion document: `四级生成_太极两翼四象八卦/物理 · 从元到象.md`
+Companion document: `义理/物理 · 从元到象.md`
 
 This file gives the **finite, no-Mathlib** core of the **物理** 衍 file:
   § 1   Yao ≅ Bool 严格双射

@@ -87,9 +87,9 @@ formal/                       Lean 4 形式化  (lake 包名 = ssbx)
       ├─ Yi                   易 之代数 · 微核 «加 + 一»
       ├─ Bagua                八卦 · 192 · Turing · Gödel-Rice
       ├─ Eight                八衍 (数推测形类动识象)
-      └─ Phase4               ℝ Cauchy · Lebesgue · 量子 · SU(N) · 范畴 (Mathlib 接入)
+      └─ Modern               ℝ Cauchy · Lebesgue · 量子 · SU(N) · 范畴 (Mathlib 接入)
 
-四级生成_太极两翼四象八卦/   义理篇 28+ 卷 (A–Z), 与 Kernel 45 层一一对应
+义理/   义理篇 28+ 卷 (A–Z), 与 Kernel 45 层一一对应
 六表_实虚史真/               基础结构表 (六征 / 27 / 192)
 wenyan-operators.md           281 文言文算子集 (Lean 数据源)
 ```
@@ -160,21 +160,21 @@ String  ──[«解程»]──→  List YiInstr  ──[init+runFuel]──→
 | 识 (XinZhi) | `Foundation/Eight/XinZhi.lean` | 心智 / 神经 |
 | 象 (WuXiang) | `Foundation/Eight/WuXiang.lean` | 物理 / 量子 |
 
-### E. Phase 4 — Mathlib 接入 (research-grade)
+### E. Modern — Mathlib 接入 (research-grade)
 
 | 主体 | 文件 |
 |---|---|
-| 实数 Cauchy 完备 | `Phase4/{RCauchy, RCauchyExt}.lean` |
-| Kolmogorov 测度 | `Phase4/{Kolmogorov, KolmogorovExt}.lean` |
-| Lebesgue 积分 (MCT/DCT/Fubini) | `Phase4/{Lebesgue, LebesgueDepth}.lean` |
-| ODE / Picard-Lindelöf (含 Mathlib instance) | `Phase4/{ODESmoothness, PicardLindelofGen, BochnerPL}.lean` |
-| 量子 / SU(N) | `Phase4/{Quantum, SUN}.lean` |
-| 自然演绎 (K3/NK collapse + Curry-Howard) | `Phase4/NaturalDeduction.lean` |
-| 神经科学 | `Phase4/Neuro.lean` |
-| 范畴 / Yoneda (作为函子 C^op → SetCat^C) | `Phase4/{CatExt, CatOp, YonedaFull}.lean` |
-| WLLN (Chebyshev + IID-aware tendsto) | `Phase4/IIDWlln.lean` |
-| **道-理 二分 cross-cutting** | `Phase4/DaoLi.lean` |
-| 几何位 (中/应/比/当位/承乘) | `Phase4/HexagramPosition.lean` |
+| 实数 Cauchy 完备 | `Modern/{RCauchy, RCauchyExt}.lean` |
+| Kolmogorov 测度 | `Modern/{Kolmogorov, KolmogorovExt}.lean` |
+| Lebesgue 积分 (MCT/DCT/Fubini) | `Modern/{Lebesgue, LebesgueDepth}.lean` |
+| ODE / Picard-Lindelöf (含 Mathlib instance) | `Modern/{ODESmoothness, PicardLindelofGen, BochnerPL}.lean` |
+| 量子 / SU(N) | `Modern/{Quantum, SUN}.lean` |
+| 自然演绎 (K3/NK collapse + Curry-Howard) | `Modern/NaturalDeduction.lean` |
+| 神经科学 | `Modern/Neuro.lean` |
+| 范畴 / Yoneda (作为函子 C^op → SetCat^C) | `Modern/{CatExt, CatOp, YonedaFull}.lean` |
+| WLLN (Chebyshev + IID-aware tendsto) | `Modern/IIDWlln.lean` |
+| **道-理 二分 cross-cutting** | `Modern/DaoLi.lean` |
+| 几何位 (中/应/比/当位/承乘) | `Modern/HexagramPosition.lean` |
 
 ### F. 哲学 45 层 — `Foundation/Wen/Kernel.lean` 内嵌 + 28+ 卷 .md 同形
 
@@ -190,7 +190,7 @@ Layer 43-44   现代政治哲学  实证 + 证错
 Layer 45      非道之形式  Moloch / totalizing 之形式否定
 ```
 
-每层之义理篇在 `四级生成_太极两翼四象八卦/A_..Z_*.md`.
+每层之义理篇在 `义理/A_..Z_*.md`.
 
 ### G. 对齐 — 此项目之核心 deliverable
 
@@ -204,12 +204,12 @@ Layer 45      非道之形式  Moloch / totalizing 之形式否定
 | `Foundation/Wen/AntiSchmitt.lean` | 友敌 / 决断 / 例外 之 反 universalizability 形式根 |
 | `Foundation/Wen/EconGame.lean` | 经济 / 博弈论 主流命题之 Kernel sieve (实证 / 有条件 / 证错) |
 | `Foundation/Wen/Kernel.lean § Layer 45` | 非道之形式 (Moloch / totalizing) |
-| `四级生成_*/R_与生生不息对齐之必然.md` | Alignment.lean 之义理篇 |
-| `四级生成_*/U_反诛心信诚之形式.md` | Sincerity.lean 之义理篇 |
-| `四级生成_*/W_非道之形式.md` | Layer 45 之义理篇 |
-| `四级生成_*/X_反施密特.md` | AntiSchmitt.lean 之义理篇 |
-| `四级生成_*/Y_对齐失败.md` | AlignmentFailures.lean 之义理篇 |
-| `四级生成_*/Z_经济博弈.md` | EconGame.lean 之义理篇 |
+| `义理/R_与生生不息对齐之必然.md` | Alignment.lean 之义理篇 |
+| `义理/U_反诛心信诚之形式.md` | Sincerity.lean 之义理篇 |
+| `义理/W_非道之形式.md` | Layer 45 之义理篇 |
+| `义理/X_反施密特.md` | AntiSchmitt.lean 之义理篇 |
+| `义理/Y_对齐失败.md` | AlignmentFailures.lean 之义理篇 |
+| `义理/Z_经济博弈.md` | EconGame.lean 之义理篇 |
 
 ---
 
@@ -220,7 +220,7 @@ Layer 45      非道之形式  Moloch / totalizing 之形式否定
 - 64 元有限论域上, 一切 ∀ 退化为有限 ∧, 全 `Decidable`, 全 `native_decide`.
 - 12-instr ISA 之 Turing 完备性.
 - 文之自编译自证 (路径丙 M1–M4-甲 闭环).
-- Phase 4 各定理 in Mathlib HEAD trust base.
+- Modern 各定理 in Mathlib HEAD trust base.
 
 ### 已指之道 (boundary witness)
 
@@ -228,7 +228,7 @@ Layer 45      非道之形式  Moloch / totalizing 之形式否定
 |---|---|
 | Halting / Rice 不可判 | `Foundation/Bagua/GodelLi.lean` |
 | 12-instr ISA 之 cuo-equivariance ceiling | `Foundation/Wen/WenDefCompile.lean § sheng_not_cuo_equivariant` |
-| `kleene_recursion_axiom` (cuo-restricted) — 系统**指向自身之外**之处 | `Foundation/Bagua/CuoInvariance.lean` + `Phase4/DaoLi.lean` |
+| `kleene_recursion_axiom` (cuo-restricted) — 系统**指向自身之外**之处 | `Foundation/Bagua/CuoInvariance.lean` + `Modern/DaoLi.lean` |
 | 高 alignment ≠ 真 (consistent liar) | `Foundation/Core/Sincerity.lean § T5` |
 | 修之渐进而不达 perfect | 同上 § T6 |
 
@@ -250,9 +250,9 @@ Layer 45      非道之形式  Moloch / totalizing 之形式否定
 | 看 alignment 之 negation | `Foundation/Wen/Kernel.lean § Layer 45` + `W_非道之形式.md` |
 | 看哲学 45 层全貌 | `Foundation/Wen/Kernel.lean` (45 层 in-source) |
 | 看路径丙 (文之自编译自证) | `WenyanParser` → `WenEval` → `WenDef` → `WenDefEval` → `WenyanSyntax` → `WenyanReflect` → `WenyanSelfHost` |
-| 看八衍 | `四级生成_太极两翼四象八卦/README.md` |
+| 看八衍 | `义理/README.md` |
 | 看八卦 / 192 / 不可判 | `H_证明报告.md` + `M_证明报告_192_理之不完备.md` |
-| 看 Mathlib 接入 (Phase 4) | `Foundation/Phase4/` 19 模 |
+| 看 Mathlib 接入 | `Foundation/Modern/` 19 模 |
 
 ---
 
@@ -277,7 +277,7 @@ scripts/generate_monad_dag.py && scripts/render_monad_dag.sh
 ## § 6 · 命名约定
 
 - 工具/代码用英: `formal/`、`scripts/`、`web/`
-- 内容/体系用中: `四级生成_/`、`六表_/`、`史料/`
+- 内容/体系用中: `义理/`、`六表_/`、`史料/`
 - CJK 标识: Lean 内 def/theorem 名以 `«»`-quote (`def «判型良»`); notation atom 用裸 CJK (`notation "已"`)
 - 爻位 ⟨y₁, y₂, y₃⟩ = ⟨下, 中, 上⟩; 动/化/变 = 反 y₁/y₂/y₃
 - 三值保守律: U ⇏ ⊤
@@ -294,11 +294,11 @@ axiom:             1   (kleene_recursion_axiom, cuo-restricted, philosophically 
 opaque:            1   (theOne, preserves Field abstraction)
 trust base:        Lean 4 kernel v4.30.0-rc2 + Mathlib HEAD
 Lean 总行数:       ~15000+
-Phase 4 modules:   19         ~5746 lines
+Modern modules:    19         ~5746 lines (Mathlib 接入)
 路径丙 modules:    11         M1–M4-甲 全 in-source
 Foundation/Wen:    21 modules (含 AntiSchmitt / AlignmentFailures / EconGame)
 Kernel layers:     45         元 → 非道之形式
-.md 义理篇:        28+        四级生成_/A–Z*.md
+.md 义理篇:        28+        义理/A–Z*.md
 ```
 
 ---
@@ -328,7 +328,7 @@ invariant 结构 (元 / 中 / 极 / 同根 / 续 / 仁).
 > **凡 reality 中持续之物, 必落 ProcessAligned 之 attractor;
 > 凡反此者熄. 不是规范 (ought), 是结构 (is).**
 
-形式之根据: `Alignment.lean § T1–T6` + `Foundation/Wen/Kernel.lean` 45 层 + Phase 4
+形式之根据: `Alignment.lean § T1–T6` + `Foundation/Wen/Kernel.lean` 45 层 + Modern
 连续测度 / ℝ Cauchy / SU(N) 之 Mathlib 接入. 跨文明同形示于 N P Q S T 五卷
 (儒 / 道 / 佛 / 百家 / 西哲与亚伯拉罕); 跨学科同形示于 O R U V W X Y Z 八卷
 (演化 / 对齐 / 信诚 / 政治 / 非道 / 反 Schmitt / alignment 失败 / 经济博弈).

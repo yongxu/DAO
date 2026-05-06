@@ -1,7 +1,7 @@
 /-
 # XingWei — 几何位 · 形式 / 度量 / 易经四位
 
-Companion document: `四级生成_太极两翼四象八卦/几何位 · 从元到形.md`
+Companion document: `义理/几何位 · 从元到形.md`
 
 This file formalizes the **几何位** 衍 file's metric / topology / 易经四位 results
 on top of `BaguaAlgebra`'s `hammingDist`.

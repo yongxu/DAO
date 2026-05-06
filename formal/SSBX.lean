@@ -31,6 +31,7 @@ import SSBX.Foundation.Core.Attention
 import SSBX.Foundation.Core.EvolutionDao
 import SSBX.Foundation.Core.Alignment
 import SSBX.Foundation.Core.Sincerity
+import SSBX.Foundation.Core.Renlei
 
 -- Foundation/Wen — 古文虚字 / 核 / 自释 / 类型化扩展 / 解析 / first-light demo
 import SSBX.Foundation.Wen.Operators
@@ -46,6 +47,7 @@ import SSBX.Foundation.Wen.WenyanReflect
 import SSBX.Foundation.Wen.WenDefCompile
 import SSBX.Foundation.Wen.WenyanParserGeneral
 import SSBX.Foundation.Wen.WenyanSelfHost
+import SSBX.Foundation.Wen.DaoSource
 import SSBX.Foundation.Wen.Demo
 import SSBX.Foundation.Wen.AntiSchmitt
 import SSBX.Foundation.Wen.AlignmentFailures
@@ -86,30 +88,30 @@ import SSBX.Foundation.Eight.XinZhi
 import SSBX.Foundation.Eight.WuXiang
 
 -- Phase 4 主体（Mathlib 接入 · 连续测度 / ℝ Cauchy / 量子叠加 / SU(N)）
-import SSBX.Foundation.Phase4.RCauchy
-import SSBX.Foundation.Phase4.Kolmogorov
-import SSBX.Foundation.Phase4.Quantum
-import SSBX.Foundation.Phase4.SUN
+import SSBX.Foundation.Modern.RCauchy
+import SSBX.Foundation.Modern.Kolmogorov
+import SSBX.Foundation.Modern.Quantum
+import SSBX.Foundation.Modern.SUN
 
 -- Phase 4 主体续（自然演绎 / Lebesgue 积分 / 连续 ODE / 神经科学 / 完备性深化）
-import SSBX.Foundation.Phase4.NaturalDeduction
-import SSBX.Foundation.Phase4.Lebesgue
-import SSBX.Foundation.Phase4.ODESmoothness
-import SSBX.Foundation.Phase4.Neuro
-import SSBX.Foundation.Phase4.KolmogorovExt
-import SSBX.Foundation.Phase4.RCauchyExt
+import SSBX.Foundation.Modern.NaturalDeduction
+import SSBX.Foundation.Modern.Lebesgue
+import SSBX.Foundation.Modern.ODESmoothness
+import SSBX.Foundation.Modern.Neuro
+import SSBX.Foundation.Modern.KolmogorovExt
+import SSBX.Foundation.Modern.RCauchyExt
 
 -- Phase 4 主体三尾（几何位 / 范畴论扩展 / 道-理二分 cross-cutting）
-import SSBX.Foundation.Phase4.HexagramPosition
-import SSBX.Foundation.Phase4.CatExt
-import SSBX.Foundation.Phase4.DaoLi
+import SSBX.Foundation.Modern.HexagramPosition
+import SSBX.Foundation.Modern.CatExt
+import SSBX.Foundation.Modern.DaoLi
 
 -- Phase 4 深化（Yoneda 全引理 / Lebesgue 深 (MCT/DCT/Fubini) / Picard-Lindelöf 一般化）
-import SSBX.Foundation.Phase4.YonedaFull
-import SSBX.Foundation.Phase4.LebesgueDepth
-import SSBX.Foundation.Phase4.PicardLindelofGen
+import SSBX.Foundation.Modern.YonedaFull
+import SSBX.Foundation.Modern.LebesgueDepth
+import SSBX.Foundation.Modern.PicardLindelofGen
 
 -- Phase 4 终章（Cat.op + 函子范畴 / IID-aware WLLN / Bochner + IsPicardLindelof）
-import SSBX.Foundation.Phase4.CatOp
-import SSBX.Foundation.Phase4.IIDWlln
-import SSBX.Foundation.Phase4.BochnerPL
+import SSBX.Foundation.Modern.CatOp
+import SSBX.Foundation.Modern.IIDWlln
+import SSBX.Foundation.Modern.BochnerPL
