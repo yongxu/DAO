@@ -28,6 +28,7 @@ import SSBX.Foundation.Core.ShengshengBuxi
 import SSBX.Foundation.Core.Li
 import SSBX.Foundation.Core.HumanAlignment
 import SSBX.Foundation.Core.Attention
+import SSBX.Foundation.Core.EvolutionDao
 
 -- Foundation/Wen — 古文虚字 / 核 / 自释 / 类型化扩展 / 解析 / first-light demo
 import SSBX.Foundation.Wen.Operators
@@ -98,3 +99,8 @@ import SSBX.Foundation.Phase4.DaoLi
 import SSBX.Foundation.Phase4.YonedaFull
 import SSBX.Foundation.Phase4.LebesgueDepth
 import SSBX.Foundation.Phase4.PicardLindelofGen
+
+-- Phase 4 终章（Cat.op + 函子范畴 / IID-aware WLLN / Bochner + IsPicardLindelof）
+import SSBX.Foundation.Phase4.CatOp
+import SSBX.Foundation.Phase4.IIDWlln
+import SSBX.Foundation.Phase4.BochnerPL
