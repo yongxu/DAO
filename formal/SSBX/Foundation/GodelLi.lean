@@ -529,6 +529,67 @@ theorem halts_on_none_undecidable_under_kleene (h_kleene : KleeneInverter) :
     rw [hb] at h_dn_true
     contradiction
 
+/-- **Π_all 不可判**（条件版）：「程序处处停」不可由任何 Lean Bool 函数判定。
+    证明：直接对 (fun P _ => decide_all P) 应用 KleeneInverter。 -/
+theorem halts_on_all_undecidable_under_kleene (h_kleene : KleeneInverter) :
+    ¬ ∃ decide_all : List YiInstr → Bool,
+        ∀ P, decide_all P = true ↔ ∀ h, Halts P h := by
+  intro ⟨decide_all, h_dec⟩
+  obtain ⟨D, hD⟩ := h_kleene (fun P _ => decide_all P)
+  -- hD h : Halts D h ↔ decide_all D = false
+  cases hb : decide_all D with
+  | true =>
+    -- decide_all D = true → ∀ h, Halts D h，但 Kleene 给 ∀ h, ¬ Halts D h
+    have h_all_halt : ∀ h, Halts D h := (h_dec D).mp hb
+    have h_qian : Halts D Hexagram.qian := h_all_halt Hexagram.qian
+    have h_kl : Halts D Hexagram.qian ↔ decide_all D = false := hD Hexagram.qian
+    have hf : decide_all D = false := h_kl.mp h_qian
+    rw [hb] at hf
+    contradiction
+  | false =>
+    -- decide_all D = false → ¬ ∀ h, Halts D h，但 Kleene 给 ∀ h, Halts D h
+    have h_all_halt : ∀ h, Halts D h := fun h => (hD h).mpr hb
+    have h_dec_true : decide_all D = true := (h_dec D).mpr h_all_halt
+    rw [hb] at h_dec_true
+    contradiction
+
+/-- **Π_some_no 不可判**（条件版）：「程序在某 h 上不停」不可由任何 Lean Bool
+    函数判定。证明：Π_some_no = ¬ Π_all，故由 Π_all 不可判推出。 -/
+theorem halts_on_some_no_undecidable_under_kleene (h_kleene : KleeneInverter) :
+    ¬ ∃ decide_some_no : List YiInstr → Bool,
+        ∀ P, decide_some_no P = true ↔ ∃ h, ¬ Halts P h := by
+  intro ⟨decide_some_no, h_dec⟩
+  -- 用 !decide_some_no 判 Π_all = ∀ h, Halts P h
+  apply halts_on_all_undecidable_under_kleene h_kleene
+  refine ⟨fun P => !decide_some_no P, fun P => ?_⟩
+  show (!decide_some_no P) = true ↔ ∀ h, Halts P h
+  cases hd : decide_some_no P with
+  | true =>
+    -- decide_some_no P = true → ∃ h, ¬ Halts P h
+    obtain ⟨h_w, h_no_halt⟩ : ∃ h, ¬ Halts P h := (h_dec P).mp hd
+    constructor
+    · -- mp: !true = false ≠ true，左侧不成立，故无前提
+      intro hb
+      simp at hb
+    · -- mpr: ∀ h, Halts P h → 矛盾（用 h_w）
+      intro h_all
+      exact (h_no_halt (h_all h_w)).elim
+  | false =>
+    -- decide_some_no P = false → ¬ ∃ h, ¬ Halts P h
+    have h_no_some : ¬ ∃ h, ¬ Halts P h := by
+      intro he
+      have h_dn_true : decide_some_no P = true := (h_dec P).mpr he
+      rw [hd] at h_dn_true
+      contradiction
+    constructor
+    · -- mp: !false = true 成立。需 ∀ h, Halts P h
+      intro _
+      intro h
+      -- ¬ ∃ h, ¬ Halts P h → Halts P h（经典）
+      exact Classical.byContradiction fun h_no => h_no_some ⟨h, h_no⟩
+    · intro _
+      rfl
+
 /-! ### § 7.1 无条件版本（使用 kleene_recursion_axiom） -/
 
 /-- 无条件「Π_some 不可判」。 -/
@@ -543,9 +604,59 @@ theorem halts_on_none_undecidable :
         ∀ P, decide_none P = true ↔ ∀ h, ¬ Halts P h :=
   halts_on_none_undecidable_under_kleene kleene_recursion_axiom
 
+/-- 无条件「Π_all 不可判」。 -/
+theorem halts_on_all_undecidable :
+    ¬ ∃ decide_all : List YiInstr → Bool,
+        ∀ P, decide_all P = true ↔ ∀ h, Halts P h :=
+  halts_on_all_undecidable_under_kleene kleene_recursion_axiom
+
+/-- 无条件「Π_some_no 不可判」。 -/
+theorem halts_on_some_no_undecidable :
+    ¬ ∃ decide_some_no : List YiInstr → Bool,
+        ∀ P, decide_some_no P = true ↔ ∃ h, ¬ Halts P h :=
+  halts_on_some_no_undecidable_under_kleene kleene_recursion_axiom
+
+/-! ### § 7.2 Rice 四象总览
+
+  四个均一性质构成四象（对偶+对称）：
+
+  | Π        | 形式                       | 道家四象对应 |
+  |----------|----------------------------|--------------|
+  | Π_all    | ∀ h, Halts P h            | 太阳（处处停）|
+  | Π_some   | ∃ h, Halts P h            | 少阳（有处停）|
+  | Π_some_no| ∃ h, ¬ Halts P h          | 少阴（有处不停）|
+  | Π_none   | ∀ h, ¬ Halts P h          | 太阴（处处不停）|
+
+  四象皆不可判（在 Kleene 假设下）。Π_all 与 Π_none 之间、Π_some 与
+  Π_some_no 之间存在 De Morgan 对偶；四者形成完整 Rice 四象。
+-/
+
+/-- **Rice 四象总定理**：四个均一性质皆不可判（条件版 bundle）。 -/
+theorem rice_four_images_under_kleene (h_kleene : KleeneInverter) :
+    -- 太阳 Π_all
+    (¬ ∃ d : List YiInstr → Bool, ∀ P, d P = true ↔ ∀ h, Halts P h)
+    -- 少阳 Π_some
+    ∧ (¬ ∃ d : List YiInstr → Bool, ∀ P, d P = true ↔ ∃ h, Halts P h)
+    -- 少阴 Π_some_no
+    ∧ (¬ ∃ d : List YiInstr → Bool, ∀ P, d P = true ↔ ∃ h, ¬ Halts P h)
+    -- 太阴 Π_none
+    ∧ (¬ ∃ d : List YiInstr → Bool, ∀ P, d P = true ↔ ∀ h, ¬ Halts P h) :=
+  ⟨halts_on_all_undecidable_under_kleene h_kleene,
+   halts_on_some_undecidable_under_kleene h_kleene,
+   halts_on_some_no_undecidable_under_kleene h_kleene,
+   halts_on_none_undecidable_under_kleene h_kleene⟩
+
+/-- **Rice 四象总定理**（无条件版）。 -/
+theorem rice_four_images :
+    (¬ ∃ d : List YiInstr → Bool, ∀ P, d P = true ↔ ∀ h, Halts P h)
+    ∧ (¬ ∃ d : List YiInstr → Bool, ∀ P, d P = true ↔ ∃ h, Halts P h)
+    ∧ (¬ ∃ d : List YiInstr → Bool, ∀ P, d P = true ↔ ∃ h, ¬ Halts P h)
+    ∧ (¬ ∃ d : List YiInstr → Bool, ∀ P, d P = true ↔ ∀ h, ¬ Halts P h) :=
+  rice_four_images_under_kleene kleene_recursion_axiom
+
 /-! ## § 8 公开摘要：理之不完备性集成 -/
 
-/-- **理之不完备总摘要**：bundle 七层结果。 -/
+/-- **理之不完备总摘要**：bundle 九层结果（含 Rice 四象齐备）。 -/
 theorem li_incomplete_summary :
     -- (1) 理之非平凡性：既有必停程序，也有必不停程序
     ((∃ P : List YiInstr, ∀ h : Hexagram, Halts P h) ∧
@@ -562,18 +673,26 @@ theorem li_incomplete_summary :
     -- (5) 任意固定 h₀ 之 Halts 不可判（条件版）
     ∧ (KleeneInverter → ∀ h₀ : Hexagram,
          ¬ ∃ decide : List YiInstr → Bool, ∀ P, decide P = true ↔ Halts P h₀)
-    -- (6) Rice 实例：「在某 h 上停」不可判（条件版）
+    -- (6) Rice 四象 · 少阳 Π_some：「在某 h 上停」不可判（条件版）
     ∧ (KleeneInverter → ¬ ∃ decide_some : List YiInstr → Bool,
          ∀ P, decide_some P = true ↔ ∃ h, Halts P h)
-    -- (7) Rice 实例：「处处不停」不可判（条件版）
+    -- (7) Rice 四象 · 太阴 Π_none：「处处不停」不可判（条件版）
     ∧ (KleeneInverter → ¬ ∃ decide_none : List YiInstr → Bool,
-         ∀ P, decide_none P = true ↔ ∀ h, ¬ Halts P h) :=
+         ∀ P, decide_none P = true ↔ ∀ h, ¬ Halts P h)
+    -- (8) Rice 四象 · 太阳 Π_all：「处处停」不可判（条件版）
+    ∧ (KleeneInverter → ¬ ∃ decide_all : List YiInstr → Bool,
+         ∀ P, decide_all P = true ↔ ∀ h, Halts P h)
+    -- (9) Rice 四象 · 少阴 Π_some_no：「有处不停」不可判（条件版）
+    ∧ (KleeneInverter → ¬ ∃ decide_some_no : List YiInstr → Bool,
+         ∀ P, decide_some_no P = true ↔ ∃ h, ¬ Halts P h) :=
   ⟨li_nontrivial,
    li_incomplete_finite,
    halts_undecidable_under_kleene,
    not_halts_undecidable_under_kleene,
    fun hk h₀ => halts_at_fixed_undecidable_under_kleene hk h₀,
    halts_on_some_undecidable_under_kleene,
-   halts_on_none_undecidable_under_kleene⟩
+   halts_on_none_undecidable_under_kleene,
+   halts_on_all_undecidable_under_kleene,
+   halts_on_some_no_undecidable_under_kleene⟩
 
 end SSBX.Foundation.GodelLi
