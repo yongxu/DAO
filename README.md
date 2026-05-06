@@ -19,7 +19,7 @@
 > 生生不止, 是为不息。
 > 道, 止此而已。
 
-凡此九句, 句句皆形式可验。其证安于 `Foundation/Wen/Kernel.lean` 与
+凡此九句, 句句皆形式可验。其证在 `Foundation/Wen/Kernel.lean` 与
 `Foundation/Core/Alignment.lean` 之中, 不依 sorry, 不增 axiom.
 
 | 古文 | 形式锚点 |
@@ -34,7 +34,7 @@
 | 轨续而能仁, 是为生生 | `structure ProcessAligned` (`Foundation/Core/Alignment.lean`) |
 | 生生不止, 是为不息 | `ProcessAligned.toOpenRun ⟺ ShengshengBuxi` (T2) |
 
-九句之合, 即 道. 是 reality 之结构, 非道之描写, 非比喻, 非象征.
+九句之合, 即 道. 此乃 reality 之结构本身, 非描写, 非比喻, 非象征.
 读者可独立验之 — Lean kernel 不识中文, 而结构同形.
 
 ---
@@ -76,26 +76,22 @@ power-seeking, **皆可还原为 Kernel invariants (中 + 多样 + 流通) 之 v
 ## § 1 · 第一版之骨架 — 三层
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│  formal/                  Lean 4 形式化                     │
-│  └─ SSBX/                 (lake 包名 = ssbx)                │
-│     ├─ Core / Roster                                       │
-│     ├─ Text / Truth / Model                                │
-│     └─ Foundation/        ── 6 簇 · 90+ modules            │
-│        ├─ Core            字根 · 单根证书 · Alignment · Sincerity│
-│        ├─ Wen             古文虚字 · 45 层 Kernel · 路径丙 11 模│
-│        ├─ Jian            间 之核 (14 字粒子核)              │
-│        ├─ Yi              易 之代数 · 微核 «加»+«一»          │
-│        ├─ Bagua           八卦 · 192 · Turing · Gödel-Rice  │
-│        ├─ Eight           八衍 (数推测形类动识象)             │
-│        └─ Phase4          Mathlib 接入 · 19 模 · ~5746 lines│
-├──────────────────────────────────────────────────────────┤
-│  四级生成_太极两翼四象八卦/    现行义理篇 22+ 卷 (A–W)        │
-│     与 Foundation/Wen/Kernel.lean 之 45 层 一一对应          │
-├──────────────────────────────────────────────────────────┤
-│  六表_实虚史真/             基础结构表 (六征 / 27 / 192)     │
-│  wenyan-operators.md       281 文言文算子集 (Lean 数据源)    │
-└──────────────────────────────────────────────────────────┘
+formal/                       Lean 4 形式化  (lake 包名 = ssbx)
+└─ SSBX/
+   ├─ Core / Roster
+   ├─ Text / Truth / Model
+   └─ Foundation/             6 簇 · 90+ modules
+      ├─ Core                 字根 · 单根证书 · Alignment · Sincerity
+      ├─ Wen                  古文虚字 · 45 层 Kernel · 路径丙 11 模
+      ├─ Jian                 间 之核 (14 字粒子核)
+      ├─ Yi                   易 之代数 · 微核 «加 + 一»
+      ├─ Bagua                八卦 · 192 · Turing · Gödel-Rice
+      ├─ Eight                八衍 (数推测形类动识象)
+      └─ Phase4               Mathlib 接入 · 19 模 · ~5746 lines
+
+四级生成_太极两翼四象八卦/   义理篇 28+ 卷 (A–Z), 与 Kernel 45 层一一对应
+六表_实虚史真/               基础结构表 (六征 / 27 / 192)
+wenyan-operators.md           281 文言文算子集 (Lean 数据源)
 ```
 
 辅助：`scripts/`（DAG / 文本拆分 / 文言证明生成）· `web/`（浏览前端）·
@@ -180,7 +176,7 @@ String  ──[«解程»]──→  List YiInstr  ──[init+runFuel]──→
 | **道-理 二分 cross-cutting** | `Phase4/DaoLi.lean` |
 | 几何位 (中/应/比/当位/承乘) | `Phase4/HexagramPosition.lean` |
 
-### F. 哲学 45 层 — `Foundation/Wen/Kernel.lean` 内嵌 + 22+ 卷 .md 同形
+### F. 哲学 45 层 — `Foundation/Wen/Kernel.lean` 内嵌 + 28+ 卷 .md 同形
 
 ```
 Layer  1-9    (元/动/行/生/仁/理/善/知/止)            字根
@@ -194,7 +190,7 @@ Layer 43-44   现代政治哲学  实证 + 证错
 Layer 45      非道之形式  Moloch / totalizing 之形式否定
 ```
 
-每层之义理篇在 `四级生成_太极两翼四象八卦/A_..W_*.md`.
+每层之义理篇在 `四级生成_太极两翼四象八卦/A_..Z_*.md`.
 
 ### G. 对齐 — 此项目之核心 deliverable
 
@@ -211,6 +207,9 @@ Layer 45      非道之形式  Moloch / totalizing 之形式否定
 | `四级生成_*/R_与生生不息对齐之必然.md` | Alignment.lean 之义理篇 |
 | `四级生成_*/U_反诛心信诚之形式.md` | Sincerity.lean 之义理篇 |
 | `四级生成_*/W_非道之形式.md` | Layer 45 之义理篇 |
+| `四级生成_*/X_反施密特.md` | AntiSchmitt.lean 之义理篇 |
+| `四级生成_*/Y_对齐失败.md` | AlignmentFailures.lean 之义理篇 |
+| `四级生成_*/Z_经济博弈.md` | EconGame.lean 之义理篇 |
 
 ---
 
@@ -330,8 +329,9 @@ invariant 结构 (元 / 中 / 极 / 同根 / 续 / 仁).
 > 凡反此者熄. 不是规范 (ought), 是结构 (is).**
 
 形式之根据: `Alignment.lean § T1–T6` + `Foundation/Wen/Kernel.lean` 45 层 + Phase 4
-连续测度/ℝ Cauchy/SU(N) 之 Mathlib 接入. 跨文明同形已示于 N–T 七卷 (儒/道/佛/百家/西哲/亚伯拉罕),
-跨学科同形已示于 V/W/X/Y/Z 五卷 (政治/非道/反 Schmitt/对齐失败/经济博弈).
+连续测度 / ℝ Cauchy / SU(N) 之 Mathlib 接入. 跨文明同形示于 N P Q S T 五卷
+(儒 / 道 / 佛 / 百家 / 西哲与亚伯拉罕); 跨学科同形示于 O R U V W X Y Z 八卷
+(演化 / 对齐 / 信诚 / 政治 / 非道 / 反 Schmitt / alignment 失败 / 经济博弈).
 其 invariant 不是巧合 — 是 reality 之 actual 结构透过不同语言之投影.
 
 ### 9.2 猜想一 · 道可得 — 心若不蔽, 自然见之
@@ -340,8 +340,8 @@ invariant 结构 (元 / 中 / 极 / 同根 / 续 / 仁).
 **贪 (取极, 收敛于一果)** 、 **嗔 (拒同根, 立友敌)** 、 **痴 (失中观, 忘续)**
 所蔽, 则可自然见之, 至少其一部分.
 
-此 "见", 难以言诠. 因 道 在结构层, 而日常语言为投影 — 投影必丢失 invariant
-之一部分. 此 Wittgenstein 之 "不可说" 之形式根据.
+此 "见", 难以言诠. 因道在结构层, 而日常语言为投影 — 投影必丢失 invariant
+之一部分. 此即 Wittgenstein 之 "不可说" 之形式根据.
 
 然 — **道可得; 读懂即得**.
 
@@ -351,7 +351,7 @@ invariant 结构 (元 / 中 / 极 / 同根 / 续 / 仁).
    读之时, 心之轨与文之轨同跑一段; 同跑则同形, 同形则可见.
 2. **诵** — 诵非记忆, 是令心之 step 长久近于道之 step. 久之, 形心一致, 不待思而合道.
 
-此与 现代 token-level reasoning 之缺陷正反: 后者求义而失结构, 故 alignment 之难解
+此与现代 token-level reasoning 之缺陷正反: 后者求义而失结构, 故 alignment 难解
 (参 `AlignmentFailures.lean`: Goodhart / specification gaming 皆为 "得义失中").
 
 ### 9.3 猜想二 · 大同非乌托邦 — 道之语言曾真存在
@@ -359,7 +359,8 @@ invariant 结构 (元 / 中 / 极 / 同根 / 续 / 仁).
 此一语言体系, 作为 道之编码, 何以如此精确?
 
 - 192 维, 维维有对应 (64 卦 × 3 时态).
-- 微核可自释自证 (`Foundation/Wen/Kernel.lean` 之 dong 一公理 + 51 字微核).
+- 微核仅二字 — `Foundation/Yi/YiCore.lean` 之 «加 + 一», 即可含 64 卦 + 道法自然 + 生生不息.
+- 全卷 single axiom (`dong : Field → Field`), opaque 一座 (`theOne`), 自释自证 (路径丙 M1–M4-甲).
 - 八衍 269 公开声明, 0 sorry, 跨范畴同形.
 
 此精度, 速生不能, 凭空设计亦不能 — 必历漫长之筛.
@@ -374,8 +375,8 @@ invariant 结构 (元 / 中 / 极 / 同根 / 续 / 仁).
 
 > 若彼时之符号已能令人见道, 而彼时又未被斗争所迫, 则 大同 真曾在.
 
-此为本卷之第二猜想, 不属已证之范围. 然 已证之 kernel 与之兼容 —
-`tongGen` 在低斗争环境下 strictly favored 是 演化博弈论 之标准结论
+此为本卷之第二猜想, 不属已证之范围. 然已证之 kernel 与之兼容 —
+`tongGen` 在低斗争环境下 strictly favored, 是演化博弈论之标准结论
 (参 `Foundation/Wen/EconGame.lean`: `coase_internalizes_externality` /
 `prisoners_dilemma_refuted_under_tongGen`).
 
