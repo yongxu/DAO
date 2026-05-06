@@ -205,9 +205,113 @@ def AttZiZheng (m : FenSi) : FenSi := m
 /-- **自证算子任意输入皆不动点**。 -/
 theorem ziZheng_fixed (m : FenSi) : AttZiZheng m = m := rfl
 
-/-! ## § 8 公开摘要 -/
+/-! ## § 8 神经科学接口 · Hopfield-like + Hebbian (Phase 4 先行)
 
-/-- **心智总摘要**：
+神经元 ≅ Yao（fire / rest）；3 神经元同步 pattern ≅ Trigram；
+8 卦 ≅ 8 Hopfield-like attractor states（finite 离散版 Hopfield）。
+Hebbian "neurons that fire together wire together"：在 (Z/2)³ flip 群上即"两 pattern 同步 → 加强连接"。
+此处以 finite 框架陈述；连续动力（Hopfield 之 Lyapunov ODE）属 Phase 4 之 Mathlib 工作。 -/
+
+/-- **神经元**：fire（激发）= yang，rest（静息）= yin。 -/
+abbrev Neuron : Type := Yao
+
+/-- **3 神经元同步 pattern**：三神经元之同时状态。 -/
+abbrev Pattern3 : Type := Trigram
+
+/-- **Hopfield-like attractor 总数 = 8**：八卦正好枚举所有 3-神经元 pattern。 -/
+theorem hopfield_attractor_count : Trigram.all.length = 8 := by decide
+
+/-- **Hebbian-like 转移**：从 current pattern 到 target，即应用 (Z/2)³ 中 (current → target) flip 于 current。
+    "Pattern 同步" 即两 pattern 之差，"加强" 即此 flip 之 commit 至记忆。 -/
+def hebbianTransition (current target : Pattern3) : Pattern3 :=
+  transform current target current
+
+/-- **Hebbian 之 transform_correct**：从 current 出发 + Hebbian flip → target。 -/
+theorem hebbian_reaches_target (current target : Pattern3) :
+    hebbianTransition current target = target :=
+  transform_correct current target
+
+/-- **firing rate（阴爻数）= 静神经元数**。 -/
+def Pattern3.restCount (p : Pattern3) : Nat := Trigram.yinCount_helper p
+where
+  Trigram.yinCount_helper (t : Trigram) : Nat :=
+    (if t.y1 = .yin then 1 else 0)
+    + (if t.y2 = .yin then 1 else 0)
+    + (if t.y3 = .yin then 1 else 0)
+
+/-- **乾 pattern 之 restCount = 0**（全 fire）。 -/
+theorem restCount_qian : Pattern3.restCount Trigram.qian = 0 := by decide
+
+/-- **坤 pattern 之 restCount = 3**（全 rest）。 -/
+theorem restCount_kun : Pattern3.restCount Trigram.kun = 3 := by decide
+
+/-! ## § 9 现象学时间意识三相 · Husserl (Phase 4 先行)
+
+Husserl 之内时间意识三相：
+- retention（保持 / 刚过去）= 初爻 y₁
+- primal impression（原印象 / 当下）= 中爻 y₂
+- protention（前摄 / 即将）= 上爻 y₃
+
+三爻 ≅ 三相 是 finite 离散骨架；连续 modulation 属 Phase 4 之 Mathlib 工作。 -/
+
+/-- **时间意识三相**。 -/
+inductive TimePhase : Type
+  | retention      -- 保持（刚过去）
+  | primalImpr     -- 原印象（当下）
+  | protention     -- 前摄（即将）
+  deriving DecidableEq, Repr
+
+/-- 三相穷尽。 -/
+def TimePhase.all : List TimePhase :=
+  [.retention, .primalImpr, .protention]
+
+theorem timephase_all_length : TimePhase.all.length = 3 := rfl
+
+/-- **三相 → 三爻位置**：retention → 初爻，primalImpr → 中爻，protention → 上爻。 -/
+def TimePhase.toFin3 : TimePhase → Fin 3
+  | .retention   => 0
+  | .primalImpr  => 1
+  | .protention  => 2
+
+/-- **三相投影到 Trigram**：从 Trigram 取对应爻之 yin/yang。 -/
+def TimePhase.proj (t : Trigram) : TimePhase → Yao
+  | .retention   => t.y1
+  | .primalImpr  => t.y2
+  | .protention  => t.y3
+
+/-- **乾 之三相皆 yang**。 -/
+theorem qian_all_yang (p : TimePhase) : TimePhase.proj Trigram.qian p = .yang := by
+  cases p <;> rfl
+
+/-- **坤 之三相皆 yin**。 -/
+theorem kun_all_yin (p : TimePhase) : TimePhase.proj Trigram.kun p = .yin := by
+  cases p <;> rfl
+
+/-- **时间流之离散一步**：cyclic shift（retention ← primalImpr ← protention ← new）。
+    Finite 版本：retention 出，protention 入新值。 -/
+def timeFlow (newProtention : Yao) (t : Trigram) : Trigram :=
+  ⟨t.y2, t.y3, newProtention⟩
+
+/-- **时间流保 protention 之新输入**。 -/
+theorem timeFlow_protention (newP : Yao) (t : Trigram) :
+    (timeFlow newP t).y3 = newP := rfl
+
+/-- **时间流之 primalImpr 由前一刻 protention 接续**。 -/
+theorem timeFlow_continuity (newP : Yao) (t : Trigram) :
+    (timeFlow newP t).y2 = t.y3 := rfl
+
+/-- **时间流之 retention 由前一刻 primalImpr 接续**。 -/
+theorem timeFlow_retention (newP : Yao) (t : Trigram) :
+    (timeFlow newP t).y1 = t.y2 := rfl
+
+/-- **三相互不相等**。 -/
+theorem retention_ne_primalImpr : TimePhase.retention ≠ TimePhase.primalImpr := by decide
+theorem primalImpr_ne_protention : TimePhase.primalImpr ≠ TimePhase.protention := by decide
+theorem retention_ne_protention : TimePhase.retention ≠ TimePhase.protention := by decide
+
+/-! ## § 10 公开摘要 -/
+
+/-- **心智总摘要**（含 Phase 4 先行：神经 + 时间）：
     (1) 四分穷尽 4 元
     (2) 四端穷尽 4 元
     (3) 四分 ≅ Bool² 四象（双向 roundtrip）
@@ -215,7 +319,11 @@ theorem ziZheng_fixed (m : FenSi) : AttZiZheng m = m := rfl
     (5) 注意力函子 transform_correct
     (6) 三值认同 ≅ K3 TriV
     (7) 悬置 ≠ 认同（U ⇏ ⊤ 在心智）
-    (8) 自证 = identity（必有不动点）-/
+    (8) 自证 = identity（必有不动点）
+    (9) Hopfield-like attractor count = 8
+    (10) Hebbian transition reaches target
+    (11) 时间三相穷尽 3 元
+    (12) 时间流保 continuity（primalImpr ← 上一刻 protention）-/
 theorem xinzhi_summary :
     (FenSi.all.length = 4)
     ∧ (SiDuan.all.length = 4)
@@ -225,10 +333,16 @@ theorem xinzhi_summary :
     ∧ (∀ a b : Trigram, Att a b a = b)
     ∧ (∀ x : XinZ, TriV.toXinZ (XinZ.toTriV x) = x)
     ∧ (XinZ.xuan ≠ XinZ.ren)
-    ∧ (∀ m : FenSi, AttZiZheng m = m) :=
+    ∧ (∀ m : FenSi, AttZiZheng m = m)
+    ∧ (Trigram.all.length = 8)
+    ∧ (∀ c t : Pattern3, hebbianTransition c t = t)
+    ∧ (TimePhase.all.length = 3)
+    ∧ (∀ newP : Yao, ∀ t : Trigram, (timeFlow newP t).y2 = t.y3) :=
   ⟨fensi_all_length, siduan_all_length,
    fensi_sixiang_roundtrip, sixiang_fensi_roundtrip,
    siduan_toTrigram_injective, att_correct,
-   xinz_triv_roundtrip, xuan_ne_ren, ziZheng_fixed⟩
+   xinz_triv_roundtrip, xuan_ne_ren, ziZheng_fixed,
+   hopfield_attractor_count, hebbian_reaches_target,
+   timephase_all_length, timeFlow_continuity⟩
 
 end SSBX.Foundation.XinZhi

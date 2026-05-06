@@ -42,8 +42,8 @@
 | 文件 | 主题 | 入口算子 | 出口结构 | Lean 配套 |
 |------|------|---------|---------|---|
 | [类与映 · 从元到映.md](类与映%20·%20从元到映.md) | 范畴 · 函子 · 自然变换 · Yoneda · CCC · Monad · Adjunction | 异 → 间 → 合 → 元 → 函 → 通 → 双 | Cat / Functor / NatTrans / Adjunction（universe-polymorphic）| `LeiYing.lean` ✓ 12 声明 |
-| [动力 · 从元到行.md](动力%20·%20从元到行.md) | 相空间 · 轨道 · 不动点 · 周期 · Markov · ergodic | 位 → 算 → 续 → 不（静）→ 重 | DynSys / Orbit / FixedPoint / Periodic（八卦反爻周期 = 2，无不动点）| `DongLi.lean` ✓ 26 声明 |
-| [心智 · 从元到识.md](心智%20·%20从元到识.md) | 唯识四分 · 心学四端 · 注意力函子 · K3 心理三态 | 能 → 见 → 自证 → 证自证 | FenSi ≅ Bool² 四象 · SiDuan → 四正卦 · Att functor · XinZ ≅ TriV | `XinZhi.lean` ✓ 30 声明 |
+| [动力 · 从元到行.md](动力%20·%20从元到行.md) | 相空间 · 轨道 · 不动点 · 周期 · Markov · ergodic + **连续 ODE 之 finite Euler approximation** | 位 → 算 → 续 → 不（静）→ 重 + Euler step | DynSys / Orbit / FixedPoint / Periodic（八卦反爻周期 = 2，无不动点）+ Lyapunov + finite-step Banach | `DongLi.lean` ✓ 35 声明（+ Phase 4 先行）|
+| [心智 · 从元到识.md](心智%20·%20从元到识.md) | 唯识四分 · 心学四端 · 注意力函子 · K3 心理三态 + **神经科学接口 + Husserl 时间意识三相** | 能 → 见 → 自证 → 证自证 + 神经 + 时间 | FenSi ≅ Bool² 四象 · SiDuan → 四正卦 · Att functor · XinZ ≅ TriV · Hopfield-like · TimePhase ≅ 三爻 | `XinZhi.lean` ✓ 51 声明（+ Phase 4 先行）|
 | [物理 · 从元到象.md](物理%20·%20从元到象.md) | qubit basis · 对偶 · 守恒 · Z/2 自旋 · SU(3) 弱类比之严格界限 | 列 → 位 → 反 → 守 → 量 | Yao ≅ Bool / Trigram ≅ Bool³ / cuo² = id / yinCount mod 2 | `WuXiang.lean` ✓ 23 声明 |
 
 ## 三类映射之分判
@@ -76,8 +76,9 @@
 - **机器验证**：H（Lean 4 形式化，75 定理 / 0 sorry / lake build 通过）
 - **总册**：I（字·符·爻·算子全表，含 T₀..T₆ 五层）
 - **数 / 推 / 测 / 形**（主线四衍）：八卦层内容之严格展开 + Lean 全通过：ShuSuan 40 / LuoJi 44 / TongJi 32 / XingWei 32 = **148 声明**
-- **类 / 动 / 识 / 象**（副线四衍，Phase 3 扩张）：LeiYing 12 / DongLi 26 / XinZhi 30 / WuXiang 23 = **91 声明**
-- **八衍合计**：**239 公开声明 / 0 sorry / 0 公理 / lake build 50 jobs 通过**
+- **类 / 动 / 识 / 象**（副线四衍，Phase 3 扩张）：LeiYing 12 / DongLi 35 / XinZhi 51 / WuXiang 23 = **121 声明**（含 Phase 4 先行）
+- **Phase 4 先行三章**（神经 + Husserl 时间意识 + 连续 ODE 之 finite）：扩 XinZhi (+21) 与 DongLi (+9) = **30 增量声明**
+- **八衍合计**：**269 公开声明 / 0 sorry / 0 公理 / lake build 51 jobs 通过**
 - **自释与微核**：L（图灵完备 + 以文自释 + 可执文言 + 微核归一；二者为一形式证明）
 
 ## 全局约定

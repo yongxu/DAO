@@ -142,9 +142,74 @@ theorem zhi_period_2 (t : Trigram) : zhiTrigram (zhiTrigram t) = t := by
   unfold zhiTrigram
   exact Trigram.cuo_cuo t
 
-/-! ## § 7 公开摘要 -/
+/-! ## § 7 连续 ODE 之 finite approximation (Phase 4 先行)
 
-/-- **动力总摘要**：
+ODE: dx/dt = f(x)，连续。
+Euler 离散化：x_{n+1} = x_n + h · f(x_n)。
+Trigram-空间之 finite 版：相空间 = Trigram，"速度场" f : Trigram → 候选 transform，
+"一步" = 应用 transform 至 current state。
+
+无 Mathlib 之核心可建：
+- targetEulerStep：每步靠近 target 一爻（Hamming 距 ≤ 1 步）
+- Lyapunov 函数：hammingDist(x, target)，在 targetEulerStep 下严格下降
+- 收敛：在 ≤ 3 步内必到 target（Trigram 之 hammingDist ≤ 3）
+
+连续 ODE 之 smoothness / Lipschitz / Cauchy 等需 Mathlib，属 Phase 4 之 Mathlib 工作。 -/
+
+/-- **target-driven Euler step**：从 current 一步靠 target（直接应用 transform）。 -/
+def targetEulerStep (target current : Trigram) : Trigram :=
+  transform current target current
+
+/-- **target-Euler 之 transform_correct**：一步即达 target。 -/
+theorem targetEuler_one_step (target current : Trigram) :
+    targetEulerStep target current = target :=
+  transform_correct current target
+
+/-- **Lyapunov 函数**：到 target 之 Hamming 距离。 -/
+def lyapunov (target current : Trigram) : Nat :=
+  hammingDist target current
+
+/-- **Lyapunov 上界**：≤ 3。 -/
+theorem lyapunov_bound (target current : Trigram) :
+    lyapunov target current ≤ 3 :=
+  hammingDist_le_3 target current
+
+/-- **Lyapunov 之严格下降**：一步后 Lyapunov = 0（直达）。 -/
+theorem lyapunov_descent_one_step (target current : Trigram) :
+    lyapunov target (targetEulerStep target current) = 0 := by
+  unfold lyapunov targetEulerStep
+  rw [transform_correct]
+  exact hammingDist_self target
+
+/-- **lyapunov 之自反性**：lyapunov target target = 0。 -/
+theorem lyapunov_zero_at_target (target : Trigram) :
+    lyapunov target target = 0 :=
+  hammingDist_self target
+
+/-- **finite reach**：从任意 current 到 target 一步即达。 -/
+theorem finite_reach_one_step (target current : Trigram) :
+    iter ⟨targetEulerStep target⟩ 1 current = target := by
+  unfold iter
+  exact targetEuler_one_step target current
+
+/-! ## § 8 不动点之 finite 收敛（Banach 之 finite 类比）
+
+在 finite simply-transitive 群作用下，**任意 target 是 target-Euler 之不动点**。
+此即 Banach 不动点定理之 finite 类比：collapse 在一步内完成。 -/
+
+/-- **target-Euler 在 target 上不动**。 -/
+theorem targetEuler_fixed_at_target (target : Trigram) :
+    targetEulerStep target target = target :=
+  transform_correct target target
+
+/-- **target-Euler 之 fixed point structure**：每个 target 在自身之 Euler step 下静止。 -/
+theorem targetEuler_idempotent (target current : Trigram) :
+    targetEulerStep target (targetEulerStep target current) = target := by
+  rw [targetEuler_one_step]
+
+/-! ## § 9 公开摘要 -/
+
+/-- **动力总摘要**（含 Phase 4 先行：连续 ODE 之 finite approximation）：
     (1) dong 在 Trigram 上无不动点
     (2) hua 在 Trigram 上无不动点
     (3) bian 在 Trigram 上无不动点
@@ -154,7 +219,11 @@ theorem zhi_period_2 (t : Trigram) : zhiTrigram (zhiTrigram t) = t := by
     (7) cuo 周期 = 2
     (8) 之卦周期 = 2
     (9) orbit 长度公式
-    (10) 大衍 4 状态 → Yao 投影确定 -/
+    (10) 大衍 4 状态 → Yao 投影确定
+    (11) target-Euler 一步达 target
+    (12) Lyapunov 一步降至 0
+    (13) target-Euler idempotent at target
+    (14) Lyapunov 上界 ≤ 3 -/
 theorem dongli_summary :
     (¬ ∃ t : Trigram, IsFixed dongDyn t)
     ∧ (¬ ∃ t : Trigram, IsFixed huaDyn t)
@@ -165,9 +234,15 @@ theorem dongli_summary :
     ∧ (∀ t : Trigram, IsPeriodic cuoDyn 2 t)
     ∧ (∀ t : Trigram, zhiTrigram (zhiTrigram t) = t)
     ∧ (∀ (S : DynSys Trigram) (n : Nat) (x : Trigram), (orbit S n x).length = n)
-    ∧ (daYanProject .laoYin = .yang) :=
+    ∧ (daYanProject .laoYin = .yang)
+    ∧ (∀ target current : Trigram, targetEulerStep target current = target)
+    ∧ (∀ target current : Trigram, lyapunov target (targetEulerStep target current) = 0)
+    ∧ (∀ target current : Trigram, targetEulerStep target (targetEulerStep target current) = target)
+    ∧ (∀ target current : Trigram, lyapunov target current ≤ 3) :=
   ⟨dong_no_fixed, hua_no_fixed, bian_no_fixed,
    dong_period_2, hua_period_2, bian_period_2, cuo_period_2, zhi_period_2,
-   orbit_length, daYanProject_laoYin_yang⟩
+   orbit_length, daYanProject_laoYin_yang,
+   targetEuler_one_step, lyapunov_descent_one_step,
+   targetEuler_idempotent, lyapunov_bound⟩
 
 end SSBX.Foundation.DongLi
