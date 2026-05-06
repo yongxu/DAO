@@ -53,7 +53,7 @@ all_atoms_pass_through_core
 
 Lean 中 `atomCore` 是这 9 类目的全映射。这里按义类分组只为人类可读，不影响 Lean 之字典序排列。
 
-## 仍需义位拆分的 27 字
+## 仍需义位拆分的 26 字
 
 这些字已注册为 `needsSenseSplitAtoms`：可回根，但不能把语义压成一个无歧义定义。
 
