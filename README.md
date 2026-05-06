@@ -87,7 +87,7 @@ formal/                       Lean 4 形式化  (lake 包名 = ssbx)
       ├─ Yi                   易 之代数 · 微核 «加 + 一»
       ├─ Bagua                八卦 · 192 · Turing · Gödel-Rice
       ├─ Eight                八衍 (数推测形类动识象)
-      └─ Phase4               Mathlib 接入 · 19 模 · ~5746 lines
+      └─ Phase4               ℝ Cauchy · Lebesgue · 量子 · SU(N) · 范畴 (Mathlib 接入)
 
 四级生成_太极两翼四象八卦/   义理篇 28+ 卷 (A–Z), 与 Kernel 45 层一一对应
 六表_实虚史真/               基础结构表 (六征 / 27 / 192)
