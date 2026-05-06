@@ -1,0 +1,65 @@
+%% Attention construction DAG. Direction: predecessor --> constructed stage.
+flowchart TB
+  focus["聚焦\n成子过程"]:::formation
+  child["子\n聚焦所成之结构项"]:::structure
+  mechanism["注意机制\n动态调配"]:::mechanism
+  attention["注意 / Attention\n机制/动态"]:::attention
+
+  weight["动态权重分配"]:::component
+  gate["门控"]:::component
+  maintain["维持"]:::component
+  shift["转焦"]:::component
+  inhibit["抑制"]:::component
+  audit["回观可校"]:::component
+
+  substrate["共享基底\n场/焦/感/识/择/权/重/阈/扰/稳/回/观/意图"]:::substrate
+  focusBase["聚焦基底\n含子"]:::substrate
+  attentionBase["注意基底"]:::substrate
+
+  bottom["自下而上注意\nbottom-up salience"]:::pattern
+  top["自上而下注意\ntop-down attention"]:::pattern
+  selective["择注意\nselective attention"]:::pattern
+  sustained["持续注意\nsustained attention"]:::pattern
+  executive["执行控制\nlocal control mechanism"]:::pattern
+  memory["工作记忆\nworking memory"]:::pattern
+  conscious["意识通达\nconscious access"]:::pattern
+
+  aligned["注意向齐生\naligned attention"]:::align
+  doingAttention["做人注意\n支持做人，不以控为目标"]:::doing
+
+  focus --> child
+  weight --> mechanism
+  gate --> mechanism
+  maintain --> mechanism
+  shift --> mechanism
+  inhibit --> mechanism
+  audit --> mechanism
+  focus --> attention
+  mechanism --> attention
+
+  substrate --> focusBase
+  substrate --> attentionBase
+  focus --> focusBase
+  child --> focusBase
+  attention --> attentionBase
+
+  attention --> bottom
+  attention --> top
+  attention --> selective
+  attention --> sustained
+  attention --> shift
+  attention --> executive
+  attention --> memory
+  attention --> conscious
+  attention --> aligned
+  aligned --> doingAttention
+
+  classDef formation fill:#ecfeff,stroke:#0891b2,color:#164e63,stroke-width:2px;
+  classDef structure fill:#eef2ff,stroke:#4f46e5,color:#312e81,stroke-width:2px;
+  classDef mechanism fill:#eef2ff,stroke:#4f46e5,color:#312e81,stroke-width:2px;
+  classDef attention fill:#fefce8,stroke:#ca8a04,color:#422006,stroke-width:3px;
+  classDef component fill:#f8fafc,stroke:#64748b,color:#0f172a;
+  classDef substrate fill:#f0fdf4,stroke:#16a34a,color:#14532d;
+  classDef pattern fill:#fff7ed,stroke:#ea580c,color:#7c2d12;
+  classDef align fill:#fdf2f8,stroke:#db2777,color:#831843,stroke-width:2px;
+  classDef doing fill:#fef2f2,stroke:#dc2626,color:#7f1d1d,stroke-width:3px;

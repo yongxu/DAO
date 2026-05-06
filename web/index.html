@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>生生不息｜文本与图谱</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">生</div>
+          <div>
+            <h1>生生不息</h1>
+            <p>文本与形式图谱</p>
+          </div>
+        </div>
+
+        <div class="search-box">
+          <input id="searchInput" type="search" placeholder="搜索标题、路径、正文" autocomplete="off" />
+        </div>
+
+        <div class="mode-tabs" role="tablist" aria-label="内容类型">
+          <button class="mode-tab is-active" type="button" data-mode="diagrams">图谱</button>
+          <button class="mode-tab" type="button" data-mode="texts">文本</button>
+          <button class="mode-tab" type="button" data-mode="formal">形式</button>
+        </div>
+
+        <div id="itemList" class="item-list" aria-label="内容列表"></div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div class="title-block">
+            <p id="sectionLabel" class="section-label">图谱</p>
+            <h2 id="contentTitle">Concept DAG</h2>
+            <p id="contentMeta" class="content-meta"></p>
+          </div>
+          <div id="statsGrid" class="stats-grid"></div>
+        </header>
+
+        <section id="diagramView" class="content-view diagram-view">
+          <div class="diagram-toolbar">
+            <div class="diagram-title">
+              <span id="diagramBadge" class="type-badge">SVG</span>
+              <span id="diagramPath"></span>
+            </div>
+            <div class="zoom-controls" aria-label="缩放控制">
+              <button id="zoomOut" type="button" title="缩小">−</button>
+              <button id="zoomReset" type="button" title="原始大小">100%</button>
+              <button id="zoomFit" type="button" title="适合窗口">Fit</button>
+              <button id="zoomIn" type="button" title="放大">+</button>
+            </div>
+          </div>
+          <div id="diagramViewport" class="diagram-viewport">
+            <div id="diagramCanvas" class="diagram-canvas">
+              <img id="diagramImage" class="diagram-image" alt="" />
+            </div>
+          </div>
+          <details class="source-drawer">
+            <summary>Mermaid 源码</summary>
+            <pre id="diagramSource"></pre>
+          </details>
+        </section>
+
+        <section id="textView" class="content-view text-view" hidden>
+          <article id="markdownContent" class="markdown-body"></article>
+        </section>
+
+        <section id="formalView" class="content-view formal-view" hidden>
+          <div id="formalContent" class="code-viewer"></div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./data.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>

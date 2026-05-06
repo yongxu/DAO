@@ -1,0 +1,106 @@
+{
+  "source_dir": "生生不息论_三本文完整版/03_补篇一_间开本_致知版",
+  "target_dir": "生生不息论_三本文完整版/03_补篇一_间开本_致知版_古文证明版",
+  "files": [
+    {
+      "source": "生生不息论_三本文完整版/03_补篇一_间开本_致知版/00_补篇一_间开本_致知版_全量收入.md",
+      "target": "生生不息论_三本文完整版/03_补篇一_间开本_致知版_古文证明版/00_补篇一_间开本_致知版_全量收入.md",
+      "title": "补篇一 · 间开本 · 致知版（全量收入）",
+      "proof_missing_chars": {},
+      "full_markdown_missing_chars": {}
+    },
+    {
+      "source": "生生不息论_三本文完整版/03_补篇一_间开本_致知版/01_生生不息论.md",
+      "target": "生生不息论_三本文完整版/03_补篇一_间开本_致知版_古文证明版/01_生生不息论.md",
+      "title": "生生不息论",
+      "proof_missing_chars": {},
+      "full_markdown_missing_chars": {}
+    },
+    {
+      "source": "生生不息论_三本文完整版/03_补篇一_间开本_致知版/02_卷一_立位.md",
+      "target": "生生不息论_三本文完整版/03_补篇一_间开本_致知版_古文证明版/02_卷一_立位.md",
+      "title": "卷一 · 立位",
+      "proof_missing_chars": {},
+      "full_markdown_missing_chars": {}
+    },
+    {
+      "source": "生生不息论_三本文完整版/03_补篇一_间开本_致知版/03_卷二_发生.md",
+      "target": "生生不息论_三本文完整版/03_补篇一_间开本_致知版_古文证明版/03_卷二_发生.md",
+      "title": "卷二 · 发生",
+      "proof_missing_chars": {},
+      "full_markdown_missing_chars": {}
+    },
+    {
+      "source": "生生不息论_三本文完整版/03_补篇一_间开本_致知版/04_卷三_判准.md",
+      "target": "生生不息论_三本文完整版/03_补篇一_间开本_致知版_古文证明版/04_卷三_判准.md",
+      "title": "卷三 · 判准",
+      "proof_missing_chars": {},
+      "full_markdown_missing_chars": {}
+    },
+    {
+      "source": "生生不息论_三本文完整版/03_补篇一_间开本_致知版/05_卷四_境与模.md",
+      "target": "生生不息论_三本文完整版/03_补篇一_间开本_致知版_古文证明版/05_卷四_境与模.md",
+      "title": "卷四 · 境与模",
+      "proof_missing_chars": {},
+      "full_markdown_missing_chars": {}
+    },
+    {
+      "source": "生生不息论_三本文完整版/03_补篇一_间开本_致知版/06_卷五_价值之相.md",
+      "target": "生生不息论_三本文完整版/03_补篇一_间开本_致知版_古文证明版/06_卷五_价值之相.md",
+      "title": "卷五 · 价值之相",
+      "proof_missing_chars": {},
+      "full_markdown_missing_chars": {}
+    },
+    {
+      "source": "生生不息论_三本文完整版/03_补篇一_间开本_致知版/07_卷六_心物.md",
+      "target": "生生不息论_三本文完整版/03_补篇一_间开本_致知版_古文证明版/07_卷六_心物.md",
+      "title": "卷六 · 心物",
+      "proof_missing_chars": {},
+      "full_markdown_missing_chars": {}
+    },
+    {
+      "source": "生生不息论_三本文完整版/03_补篇一_间开本_致知版/08_卷七_道之相.md",
+      "target": "生生不息论_三本文完整版/03_补篇一_间开本_致知版_古文证明版/08_卷七_道之相.md",
+      "title": "卷七 · 道之相",
+      "proof_missing_chars": {},
+      "full_markdown_missing_chars": {}
+    },
+    {
+      "source": "生生不息论_三本文完整版/03_补篇一_间开本_致知版/09_卷八_五常.md",
+      "target": "生生不息论_三本文完整版/03_补篇一_间开本_致知版_古文证明版/09_卷八_五常.md",
+      "title": "卷八 · 五常",
+      "proof_missing_chars": {},
+      "full_markdown_missing_chars": {}
+    },
+    {
+      "source": "生生不息论_三本文完整版/03_补篇一_间开本_致知版/10_卷九_行与性.md",
+      "target": "生生不息论_三本文完整版/03_补篇一_间开本_致知版_古文证明版/10_卷九_行与性.md",
+      "title": "卷九 · 行与性",
+      "proof_missing_chars": {},
+      "full_markdown_missing_chars": {}
+    },
+    {
+      "source": "生生不息论_三本文完整版/03_补篇一_间开本_致知版/11_卷十_收.md",
+      "target": "生生不息论_三本文完整版/03_补篇一_间开本_致知版_古文证明版/11_卷十_收.md",
+      "title": "卷十 · 收",
+      "proof_missing_chars": {},
+      "full_markdown_missing_chars": {}
+    },
+    {
+      "source": "生生不息论_三本文完整版/03_补篇一_间开本_致知版/12_四十二、终式.md",
+      "target": "生生不息论_三本文完整版/03_补篇一_间开本_致知版_古文证明版/12_四十二、终式.md",
+      "title": "四十二、终式",
+      "proof_missing_chars": {},
+      "full_markdown_missing_chars": {}
+    },
+    {
+      "source": "生生不息论_三本文完整版/03_补篇一_间开本_致知版/13_终言.md",
+      "target": "生生不息论_三本文完整版/03_补篇一_间开本_致知版_古文证明版/13_终言.md",
+      "title": "终言",
+      "proof_missing_chars": {},
+      "full_markdown_missing_chars": {}
+    }
+  ],
+  "proof_missing_chars": {},
+  "full_markdown_missing_chars": {}
+}

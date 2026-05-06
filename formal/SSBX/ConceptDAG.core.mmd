@@ -1,0 +1,100 @@
+%% Reading-oriented summary. Not complete; use ConceptDAG.complete.mmd for full registry coverage.
+flowchart TB
+  subgraph W["物面 / 格物"]
+    物["物｜字根"]:::atom
+    面["面｜字根"]:::atom
+    格["格｜字根"]:::atom
+    域["域｜字根"]:::atom
+    验["验｜字根"]:::atom
+    格物["格物｜生成"]:::generated
+    经验校准["经验校准｜待校"]:::pending
+  end
+
+  subgraph M["模 / 科学评价"]
+    模["模｜字根"]:::atom
+    评["评｜字根"]:::atom
+    价["价｜字根"]:::atom
+    科["科｜字根"]:::atom
+    学["学｜字根"]:::atom
+    可校["可校｜生成"]:::generated
+    互证["互证｜生成"]:::generated
+    审校不败["审校不败｜生成"]:::generated
+  end
+
+  subgraph F["形式证明 / CIC 位置"]
+    逻["逻｜字根"]:::atom
+    辑["辑｜字根"]:::atom
+    构["构｜字根"]:::atom
+    造["造｜字根"]:::atom
+    纳["纳｜字根"]:::atom
+    证["证｜字根"]:::atom
+    明["明｜字根"]:::atom
+    算["算｜字根"]:::atom
+    理["理｜字根"]:::atom
+    CIC模["CIC / 归纳构造演算｜外部模"]:::external
+  end
+
+  subgraph C["核心价值递归"]
+    开["开｜递归"]:::recursive
+    闭["闭｜递归"]:::recursive
+    正["正｜递归"]:::recursive
+    邪["邪｜递归"]:::recursive
+    共开["共开｜递归"]:::recursive
+    坏["坏｜递归"]:::recursive
+    义["义｜递归"]:::recursive
+    善["善｜递归"]:::recursive
+    仁["仁｜递归"]:::recursive
+    道["道｜递归"]:::recursive
+    真["真｜递归"]:::recursive
+    真道["真道｜生成"]:::generated
+  end
+
+  物 --> 格物
+  格 --> 格物
+  格物 --> 经验校准
+  域 --> 经验校准
+  验 --> 经验校准
+
+  模 --> 可校
+  评 --> 可校
+  价 --> 可校
+  科 --> 可校
+  学 --> 可校
+  审["审｜字根"]:::atom --> 审校不败
+  校["校｜字根"]:::atom --> 审校不败
+  败["败｜字根"]:::atom --> 审校不败
+  可校 --> 审校不败
+  互证 --> 审校不败
+
+  逻 --> CIC模
+  辑 --> CIC模
+  构 --> CIC模
+  造 --> CIC模
+  纳 --> CIC模
+  证 --> CIC模
+  明 --> CIC模
+  算 --> CIC模
+  理 --> CIC模
+  CIC模 --> 可校
+
+  经验校准 --> 开
+  审校不败 --> 正
+  开 --> 正
+  闭 --> 邪
+  开 --> 共开
+  闭 --> 坏
+  正 --> 义
+  义 --> 善
+  共开 --> 道
+  坏 --> 道
+  审校不败 --> 真
+  真 --> 真道
+  道 --> 真道
+
+  可校 --> 真
+
+  classDef atom fill:#f8fafc,stroke:#64748b,color:#0f172a;
+  classDef generated fill:#ecfeff,stroke:#0891b2,color:#164e63;
+  classDef recursive fill:#fff7ed,stroke:#ea580c,color:#7c2d12;
+  classDef pending fill:#fef2f2,stroke:#dc2626,color:#7f1d1d;
+  classDef external fill:#f5f3ff,stroke:#7c3aed,color:#3b0764;
