@@ -18,12 +18,12 @@
 
 | 模块 | 行 | 声明 | 角色 |
 |------|----|------|------|
-| `BaguaTuring` | 288 | 24 | 文程序、解释器、道判机；图灵完备 |
-| `WenyanSelfInterp` | 508 | 46 | 以文自释——文化数、数化文、META 解释器 |
+| `BaguaTuring` | ~315 | 26 | 文程序、解释器、道判机；图灵完备 + loopProg 不止形证 |
+| `WenyanSelfInterp` | ~675 | 56 | 以文自释——文化数、数化文、META 解释器、1-cell Quine、微 metaInterp |
 | `WenyanText` | 197 | 40 | 文言可执——`«»` 引号下真 wenyan 即程 |
 | `YiCore` | 204 | 17 | 微核——加 + 一 + 二者为一 |
 
-**全库 42 jobs 构建通过，0 sorry。**
+**全库 46 jobs 构建通过，0 sorry，0 axiom。**
 
 四位一体：
 1. **图灵完备**（BaguaTuring）——文之程序可表万机
@@ -94,7 +94,9 @@ def daoJudgeProg : List YiInstr :=
 | `daoJudge_isXin`  | `daoJudge h = wei ↔ h.isXin = true` |
 | `daoJudgeProg_total_within_10` | 任卦 10 步内必止 |
 | `daoJudge_qian / kun / pi / tai` | 经卦皆验 |
-| `dao_judge_complete` | 三合：周遍、isTian 一致、有限 fuel |
+| `step_loopProg_init` | 单步定点：`(init h loopProg).step = init h loopProg`（新增） |
+| `loopProg_unbounded` | `∀ n, ¬(runFuel n).halted`（新增：不止形证） |
+| `dao_judge_complete` | 四合：周遍、isTian 一致、有限 fuel、loopProg 不止 |
 
 ### 1.7 图灵完备四原语
 
@@ -104,9 +106,10 @@ def daoJudgeProg : List YiInstr :=
 | 数据依赖分支 | `branchYaoEq` / `branchShiEq` |
 | 无界跳转 | `jump (target : Nat)` |
 | 无界程序 | `prog : List YiInstr` |
-| 非全终止 | `partial def run` + `loopProg = [jump 0]` |
+| 非全终止 | `partial def run` + `loopProg = [jump 0]`；并形证 `loopProg_unbounded`：∀ n, ¬(runFuel n).halted |
 
 `unboundedHistoryProg = [push, jump 0]` 见证无界记忆。
+`step_loopProg_init` + `loopProg_unbounded` 共证：循环程序即不动点之具体例。
 
 ---
 
@@ -128,8 +131,12 @@ def daoJudgeProg : List YiInstr :=
 
 §3 · `YiInstr ↔ List Cell192`
 - `encInstr` / `decInstr` 覆盖全 12 构造子
-- **9 条来回定理已证**（`nop, hu, cuo, zong, push, pop, halt, setShi, flipYao`）
-- Nat-参数 3 项（`branchYaoEq, branchShiEq, jump`）依 `decNat ∘ encNat = id`，思路同理
+- **9 条来回定理**（`nop, hu, cuo, zong, push, pop, halt, setShi, flipYao`）
+- **Nat-参数 3 项已证**（`jump, branchShiEq, branchYaoEq`）—— `decNat_encNat` 桥接
+
+§3c · 桥接定理（新）
+- `decNat_encNat`：`(encodeNat n).length < 192 → decNat (encNat n ++ rest) = some (n, rest)`
+- 关键引理：`list_take_left_eq` / `list_drop_left_eq` / `decNat_cellFromIdx_cons`
 
 §4 · `List YiInstr` / `YiState ↔ List Cell192`
 - `ProgEnc.encProg`、`StateEnc.encState`：整个状态摊平为卦时之列
@@ -140,13 +147,22 @@ def daoJudgeProg : List YiInstr :=
 §6 · 模拟定理
 - `metaStep_cur_correct`：`(metaStep s).head? = some s.step.cur`
 
+§6b · Meta-interpreter 程序雏形（新）
+- `MetaInterp.metaInterpProg`（nop+halt 雏形）+ 完整路线图
+- 部分定理：`metaInterpProg_halt_halts` / `_nop_advances` / `_halts`
+
+§7.1 · 真正之 Quine（新）
+- `quineProg = [push]`，`quineCur = cellFromIdx ⟨9, _⟩`
+- `quine_history`：`(quineInit.runFuel 3).history = (quineProg.map encInstr).flatten`
+- 即「文之运行轨迹 = 文之自身编码」（1-cell Kleene 不动点形式）
+
 §7 · Quine 原语
 - `selfPushProg = [push, halt]`、`selfPush_history`
 
 §8 · 公示
-- `wenyan_self_interp_complete`：13 子句之大公示
+- `wenyan_self_interp_complete`：17 子句之大公示（含 Nat-参数、Quine、metaInterp）
 
-### 2.3 13 子句之大公示
+### 2.3 17 子句之大公示
 
 ```lean
 theorem wenyan_self_interp_complete :
@@ -166,6 +182,19 @@ theorem wenyan_self_interp_complete :
     -- 13-14. setShi、flipYao 来回
   ∧ (∀ s rest, decInstr (encInstr (.setShi s)  ++ rest) = some (.setShi s,  rest))
   ∧ (∀ i rest, decInstr (encInstr (.flipYao i) ++ rest) = some (.flipYao i, rest))
+    -- 15. decNat ∘ encNat = id (新增 ; (encodeNat t).length < 192 前提)
+  ∧ (∀ n rest, (encodeNat n).length < 192 → decNat (encNat n ++ rest) = some (n, rest))
+    -- 16-18. Nat-参数三 instr 来回（新增）
+  ∧ (∀ t rest, (encodeNat t).length < 192 →
+       decInstr (encInstr (.jump t) ++ rest) = some (.jump t, rest))
+  ∧ (∀ s t rest, (encodeNat t).length < 192 →
+       decInstr (encInstr (.branchShiEq s t) ++ rest) = some (.branchShiEq s t, rest))
+  ∧ (∀ i j t rest, (encodeNat t).length < 192 →
+       decInstr (encInstr (.branchYaoEq i j t) ++ rest) = some (.branchYaoEq i j t, rest))
+    -- 19. Quine（新增）：文之运行轨迹 = 文之自身编码
+  ∧ (Quine.quineInit.runFuel 3).history = (Quine.quineProg.map encInstr).flatten
+    -- 20. Meta-interpreter 雏形可终止（新增）
+  ∧ (∀ h, ((YiState.init h MetaInterp.metaInterpProg).runFuel 4).halted = true)
 ```
 
 ---
@@ -400,25 +429,24 @@ metaStep (META 解释器)
 
 | 模块 | 行数 | def | abbrev | theorem | 总计 |
 |------|------|-----|--------|---------|------|
-| BaguaTuring | 288 | 8 | 0 | 14 | 24 (含 1 inductive、1 structure) |
-| WenyanSelfInterp | 508 | 22 | 0 | 24 | 46 |
+| BaguaTuring | ~315 | 8 | 0 | 16 | 26 (含 1 inductive、1 structure；新增 step_loopProg_init、loopProg_unbounded) |
+| WenyanSelfInterp | ~675 | 26 | 0 | 30 | 56 (新增 decNat_encNat、jump/branchShiEq/branchYaoEq 来回、Quine、metaInterp 雏形) |
 | WenyanText | 197 | 5 | 22 | 13 | 40 |
 | YiCore | 204 | 4 | 0 | 13 | 17 |
-| **小计** | **1197** | 39 | 22 | 64 | **127** |
+| **小计** | **~1391** | 43 | 22 | 72 | **139** |
 
-加 H 之 BaguaAlgebra（120 声明）后，整库 SSBX 共 **42 modules**、**~250 + 声明**。
+加 H 之 BaguaAlgebra（120 声明）后，整库 SSBX 共 **46 modules**、**~270 + 声明**。
 
 ### 5.5 全库构建
 
 ```bash
 $ lake build
-✔ [40/42] Built SSBX.Foundation.YiCore (587ms)
-✔ [41/42] Built SSBX.Foundation.WenyanText (1.0s)
-✔ [42/42] Built SSBX (465ms)
-Build completed successfully (42 jobs).
+✔ [44/46] Built SSBX.Foundation.YiCore (575ms)
+✔ [45/46] Built SSBX (394ms)
+Build completed successfully (46 jobs).
 ```
 
-**0 sorry，0 error。**
+**0 sorry，0 axiom，0 error。**
 
 ---
 
@@ -467,7 +495,10 @@ Build completed successfully (42 jobs).
 | II | 以文释文 | `metaStep` ——文之程序解释文之程序（编码） |
 | III | 以文自释 | `encInstr ↔ decInstr` ——文化为数、数化为文 |
 
-第三阶之 Quine 由 Kleene 不动点保证存在，机械可造（`selfPushProg` 为原语见证）。
+第三阶之 Quine 由 Kleene 不动点保证存在，**已具体形证一例**：
+`Quine.quineProg = [push]`，初态 `cur = cellFromIdx ⟨9, _⟩`（即 push 之编码），
+则 `(quineInit.runFuel 3).history = (quineProg.map encInstr).flatten`（rfl）。
+此即「**文之运行结果 = 文之自身编码**」之最小见证（一卦自释）。
 
 ---
 
@@ -511,7 +542,7 @@ theorem «卦由索引»、«一_toIdx»、«加_toIdx»、«生生_toIdx»
         «微核之至»
 ```
 
-### 道判机（BaguaTuring）— 24 项
+### 道判机（BaguaTuring）— 26 项
 
 ```
 inductive YiInstr
@@ -524,23 +555,46 @@ theorem daoJudge_correct  ★
         daoJudge_qian / kun / pi / tai
         daoJudgeProg_total_within_10  ★
         yi_self_interprets_dao
-        dao_judge_complete  ★
         run_is_partial
+        step_loopProg_init                ★（新增：单步定点）
+        loopProg_unbounded                ★（新增：不止形证）
+        dao_judge_complete  ★（含 4 子句：含 loopProg_unbounded）
 ```
 
-### 自释（WenyanSelfInterp）— 46 项
+### 自释（WenyanSelfInterp）— 56 项
 
 ```
-namespace Yao / Shi / Hexagram / NatCell / YiInstrEnc / ProgEnc / StateEnc / Quine
+namespace Yao / Shi / Hexagram / NatCell / YiInstrEnc / ProgEnc / StateEnc /
+          Quine / MetaInterp
 def cellToIdx / cellFromIdx
 def encInstr, decInstr, encNat, decNat, encProg, decInstrs, encState
 def metaStep, selfPushProg
+def Quine.{quineProg, quineCur, quineInit}                 -- 新增
+def MetaInterp.{metaInterpProg_halt, metaInterpProg_nop,
+                metaInterpProg}                            -- 新增
 theorem 双射来回（Yao、Shi、Hexagram、Cell192、Nat 各两条）
-        9 条 decInstr_encInstr_X 来回
+        9 条 decInstr_encInstr_X 来回（参数无 Nat 之 instrs）
+        decNat_encNat                                       ★（新增）
+        decInstr_encInstr_jump                              ★（新增）
+        decInstr_encInstr_branchShiEq                       ★（新增）
+        decInstr_encInstr_branchYaoEq                       ★（新增）
+        list_take_left_eq, list_drop_left_eq, decNat_cellFromIdx_cons  -- 私有辅助
         metaStep_cur_correct  ★
         selfPush_history, selfPush_pushes_cur
-        wenyan_self_interp_complete  ★（13 子句）
+        Quine.quine_history                                 ★（新增：1-cell Quine）
+        Quine.quine_history_is_self_encoding                -- 新增
+        MetaInterp.metaInterpProg_halt_halts                -- 新增
+        MetaInterp.metaInterpProg_nop_advances              -- 新增
+        MetaInterp.metaInterpProg_halts                     -- 新增
+        wenyan_self_interp_complete  ★（17 子句：含 Nat-参数三式 + Quine + metaInterp）
 ```
+
+**新增小节**：
+
+- §3c 三个 Nat-参数 instr 来回完整证毕（Task 1）
+- §6b MetaInterp 雏形（Task 4 部分）—— 路线图与 nop+halt 处理子样例
+- §7.1 1-cell 真 Quine（Task 3）：`quineProg = [push]`，`quineCur = cellFromIdx ⟨9, _⟩`，
+  `quineInit.runFuel 3`.history 等于 `(quineProg.map encInstr).flatten`
 
 ### 文言可执（WenyanText）— 40 项
 

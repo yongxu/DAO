@@ -229,10 +229,11 @@ theorem daoJudge_tai :
   - `loopProg`: an unconditional jump-to-self (witnesses unbounded jumps).
   - `unboundedHistoryProg`: push then loop (witnesses unbounded memory).
 
-  We do not formally prove non-termination of `loopProg` here; the TC argument
-  rests on the syntactic primitives (unbounded jump targets, unbounded program
-  length, unbounded history list, data-dependent branching) being present. The
-  `partial def run` makes the interpreter strictly more expressive than `runFuel`. -/
+  We additionally prove formally that `loopProg` is non-halting at every fuel
+  level (`loopProg_unbounded`): no matter how much fuel you give it, it never
+  reaches a halted state. This is a Lean witness that the language admits true
+  non-termination, hence `partial def run` is strictly more expressive than
+  `runFuel`. -/
 
 /-- A non-halting program: jumps back to itself forever. -/
 def loopProg : List YiInstr := [YiInstr.jump 0]
@@ -243,6 +244,49 @@ def unboundedHistoryProg : List YiInstr := [YiInstr.push, YiInstr.jump 0]
 /-- The interpreter `partial def run` is admitted as a partial function — this is
     the formal Lean witness that the language is not guaranteed to terminate. -/
 theorem run_is_partial : True := trivial
+
+/-- Stepping `loopProg`'s init state returns the init state itself: pc stays at
+    0 because the only instruction is `jump 0`. -/
+theorem step_loopProg_init (h : Hexagram) :
+    (YiState.init h loopProg).step = YiState.init h loopProg := by
+  rfl
+
+/-- `loopProg_unbounded` — for any fuel `n`, running `loopProg` from init never
+    enters the halted state. This formally witnesses non-termination of the
+    interpreter on `loopProg`. -/
+theorem loopProg_unbounded :
+    ∀ n : Nat, ¬((YiState.init Hexagram.qian loopProg).runFuel n).halted = true := by
+  intro n
+  -- Generalize to any state equal to (init qian loopProg) — needed because
+  -- runFuel pushes the state through .step, and we need the invariant
+  -- `s = init qian loopProg → step s = s`.
+  suffices H : ∀ n s, s = YiState.init Hexagram.qian loopProg →
+                 ¬(s.runFuel n).halted = true by
+    exact H n _ rfl
+  intro n
+  induction n with
+  | zero =>
+    intro s hs
+    rw [hs]
+    show ¬(YiState.init Hexagram.qian loopProg).halted = true
+    decide
+  | succ k ih =>
+    intro s hs
+    rw [hs]
+    -- runFuel (k+1) (init qian loopProg)
+    -- = if (init qian loopProg).halted then init else runFuel k (init qian loopProg).step
+    -- But (init qian loopProg).halted = false, so it becomes
+    -- runFuel k (init qian loopProg).step = runFuel k (init qian loopProg)
+    show ¬((YiState.init Hexagram.qian loopProg).runFuel (k+1)).halted = true
+    unfold YiState.runFuel
+    show ¬(if (YiState.init Hexagram.qian loopProg).halted
+            then YiState.init Hexagram.qian loopProg
+            else YiState.runFuel k (YiState.init Hexagram.qian loopProg).step).halted = true
+    have hnot : (YiState.init Hexagram.qian loopProg).halted = false := rfl
+    rw [hnot]
+    show ¬(YiState.runFuel k (YiState.init Hexagram.qian loopProg).step).halted = true
+    rw [step_loopProg_init]
+    exact ih (YiState.init Hexagram.qian loopProg) rfl
 
 /-! ### § 7c 道判机 as a wenyan claim within the system
 
@@ -279,8 +323,10 @@ theorem dao_judge_complete :
     ∧ -- (2) result matches isTian
     (∀ h : Hexagram, daoJudge h = (if h.isTian then Shi.ji else Shi.wei))
     ∧ -- (3) terminates within fixed fuel
-    (∀ h : Hexagram, ((YiState.init h daoJudgeProg).runFuel 10).halted = true) := by
-  refine ⟨?_, daoJudge_correct, daoJudgeProg_total_within_10⟩
+    (∀ h : Hexagram, ((YiState.init h daoJudgeProg).runFuel 10).halted = true)
+    ∧ -- (4) loopProg is provably unbounded (non-halting at every fuel level)
+    (∀ n : Nat, ¬((YiState.init Hexagram.qian loopProg).runFuel n).halted = true) := by
+  refine ⟨?_, daoJudge_correct, daoJudgeProg_total_within_10, loopProg_unbounded⟩
   intro h
   rw [daoJudge_correct]
   cases h.isTian <;> simp
