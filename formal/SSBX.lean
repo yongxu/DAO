@@ -42,6 +42,7 @@ import SSBX.Foundation.DongLi
 import SSBX.Foundation.XinZhi
 import SSBX.Foundation.WuXiang
 import SSBX.Foundation.WenyanSelfInterp
+import SSBX.Foundation.KleeneInternal
 import SSBX.Foundation.WenyanText
 import SSBX.Foundation.YiCore
 import SSBX.Foundation.JianYiBridge
