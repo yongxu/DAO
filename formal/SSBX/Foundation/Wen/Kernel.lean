@@ -2266,6 +2266,172 @@ theorem islam_tawhid : ∃ f : Field → Field, f = dong :=
 theorem islam_fitra (x : Xin) : ∀ n, middle (x.process.states n) :=
   x.process.inMiddle
 
+/-! ### Layer 43: 现代政治哲学 — 实证 (validated by Kernel)
+
+  现代政治哲学 之 核要 — 经 Kernel 之 检验, 与本框架 align 之 命题.
+  注: "实证" IS 「在本 framework 中可证为定理」, 不是 historical 实证.
+  各思想之 specific 经验内容超越本框架. -/
+
+/-- 罗尔斯 无知之幕 (Rawls, "veil of ignorance", A Theory of Justice §24):
+    "Behind the veil of ignorance, all parties make decisions without knowledge
+    of their position." Structural correlate: action evaluated under universal
+    premise (tongGenMiddle) — same effect on any 中-state. -/
+theorem rawls_veil_of_ignorance
+    (a : Field → Field) (h_universal : tongGenMiddle a) (s t : Field)
+    (hs : middle s) (ht : middle t) :
+    middle (a s) ↔ middle (a t) := h_universal s t hs ht
+
+/-- 罗尔斯 差异原则 (Rawls, "difference principle", §13):
+    "Social and economic inequalities are arranged so that they are to the greatest
+    benefit of the least advantaged." Structural correlate: ZhongField maintains
+    plurality (multiple orbits, all middle) — none privileged, none collapsed. -/
+theorem rawls_difference_principle (f : ZhongField) (n : Nat) :
+    (∃ i j : Fin f.k, i ≠ j ∧ (f.orbits i).states n ≠ (f.orbits j).states n)  -- 多样性
+    ∧ (∀ i : Fin f.k, middle ((f.orbits i).states n)) :=                       -- 全 中
+  ⟨f.ever_differentiated n, fun i => (f.orbits i).inMiddle n⟩
+
+/-- 哈贝马斯 沟通理性 (Habermas, "kommunikative Rationalität", Theorie des
+    kommunikativen Handelns): "rationality through communication." 礼-window 内
+    多焦点 仁-relation 持续, 中 共维持. -/
+theorem habermas_communicative_rationality
+    (h1 h2 : ZhongOrbit) (n m : Nat) (h_li : liRitual h1 h2 n m) (k : Nat) (hk : k ≤ m) :
+    middle (h1.states (n + k))
+    ∧ middle (h2.states (n + k))
+    ∧ ren h1 h2 (n + k) :=
+  ⟨h1.inMiddle (n + k), h2.inMiddle (n + k), h_li k hk⟩
+
+/-- 阿伦特 行动 (Arendt, "action", The Human Condition):
+    "Action constitutes the public realm." Each orbit's step IS dong-application —
+    spontaneous beginning of new sequences. -/
+theorem arendt_action (f : ZhongField) (i : Fin f.k) (n : Nat) :
+    dong ((f.orbits i).states n) = (f.orbits i).states (n + 1) :=
+  (f.orbits i).step n
+
+/-- 阿伦特 公共空间 (Arendt, "public space"): "Public space requires plurality
+    and appearance." ZhongField 之 多样性 (k ≥ 2) ∧ 持续异显. -/
+theorem arendt_public_space (f : ZhongField) :
+    f.k ≥ 2
+    ∧ (∀ n, ∃ i j : Fin f.k, i ≠ j ∧ (f.orbits i).states n ≠ (f.orbits j).states n) :=
+  ⟨f.k_ge_two, f.ever_differentiated⟩
+
+/-- 阿伦特 出生性 (Arendt, "natality"): "Capacity for new beginnings." Each orbit
+    step generates novelty — state at n+1 ≠ state at n. -/
+theorem arendt_natality (o : ZhongOrbit) (n : Nat) :
+    o.states n ≠ o.states (n + 1) := o.self_consistent n
+
+/-- 洛克 自然权利 (Locke, "natural rights", Two Treatises §6):
+    "Life, liberty, property — endowed by nature, not granted by state."
+    Every Xin's process is in middle by structural necessity. -/
+theorem locke_natural_rights (x : Xin) : ∀ n, middle (x.process.states n) :=
+  x.process.inMiddle
+
+/-- 哈耶克 自发秩序 (Hayek, "spontaneous order", The Constitution of Liberty):
+    "Order emerges from autonomous action without central design." Each orbit
+    in ZhongField advances autonomously, yielding 流通 ∧ 多样. -/
+theorem hayek_spontaneous_order (f : ZhongField) (n : Nat) :
+    (∀ i : Fin f.k, dong ((f.orbits i).states n) = (f.orbits i).states (n + 1))   -- 自发
+    ∧ (∀ i : Fin f.k, (f.orbits i).states n ≠ (f.orbits i).states (n + 1))         -- 流通
+    ∧ (∃ i j : Fin f.k, i ≠ j ∧ (f.orbits i).states n ≠ (f.orbits j).states n) := -- 多样
+  ⟨fun i => (f.orbits i).step n, (f.he n).1, (f.he n).2⟩
+
+/-- 阿马蒂亚·森 能力进路 (Sen, "capability approach", Development as Freedom):
+    "Development is the expansion of capability." Heart's response IS total —
+    capability to function on any field event. -/
+theorem sen_capability (x : Xin) (event : Field) :
+    (∃ s, x.respond event = s) ∧ zhi event :=
+  ⟨⟨x.respond event, rfl⟩, zhi_universal _⟩
+
+/-- 柏林 价值多元主义 (Berlin, "value pluralism", Two Concepts of Liberty):
+    "Plurality is not a defect but a structural feature." ZhongField 之 he_not_same:
+    uniformity is forbidden. -/
+theorem berlin_value_pluralism (f : ZhongField) :
+    ∀ n, ¬ (∀ i j : Fin f.k, (f.orbits i).states n = (f.orbits j).states n) :=
+  f.he_not_same
+
+/-- 穆勒 自由原则 (Mill, "harm principle", On Liberty Ch. 1):
+    "The only purpose for which power can be rightfully exercised over any member
+    of a civilized community, against his will, is to prevent harm to others."
+    Structural form: 自我安全 + 同根 ⟹ 不害他者 (= 非攻 之 alias). -/
+theorem mill_harm_principle
+    (x : Xin) (a : Field → Field) (other : ZhongOrbit) (n : Nat)
+    (h_self_safe : ¬ jiSuoBuYu x a n) (h_tongGen : tongGen a) :
+    ¬ shiYuRen a other n := by
+  intro h_shi
+  exact h_self_safe (
+    (h_tongGen (x.process.states n) (other.states n)
+       (x.process.inMiddle n) (other.inMiddle n)).mpr h_shi)
+
+/-- 康德 永久和平 (Kant, "Zum ewigen Frieden", 1795):
+    "Perpetual peace among nations." Structural correlate: every orbit in cosmic
+    ZhongField maintains middle at every time — universal-temporal stability. -/
+theorem kant_perpetual_peace (f : ZhongField) :
+    ∀ n, ∀ i : Fin f.k, middle ((f.orbits i).states n) :=
+  fun n i => (f.orbits i).inMiddle n
+
+/-! ### Layer 44: 现代政治哲学 — 证错 (refuted by Kernel)
+
+  以下 命题 在本框架 中 形式 上 站不住 — Kernel 之 invariants 直接 否定 它们.
+  注: 这 不 否定 各思想 之 historical / sociological insight, 仅 表 它们 之
+  特定形式陈述 与 minimal kernel 之 结构 冲突. -/
+
+/-- 马克思 历史终局之否定 (Marx 之 "communism as end of history" reading):
+    若 历史有 fixed 终极 state, 则 orbit eventually settles to it — 但 ZhongOrbit
+    自洽 拒此 (shi_no_telos). 历史 IS 永远 open process, 无 终局. -/
+theorem marx_historical_telos_refuted (o : ZhongOrbit) (target : Field) (N : Nat) :
+    ¬ (∀ n, n ≥ N → o.states n = target) :=
+  ZhongOrbit.shi_no_telos o target N
+
+/-- 马克思 决定论之否定 (Marx 之 mechanistic 历史唯物论 reading):
+    "There exists N such that for all n ≥ N, history ends at target."
+    Structurally impossible — orbit never converges. -/
+theorem marx_deterministic_outcome_refuted (o : ZhongOrbit) (target : Field) :
+    ¬ (∃ N, ∀ n, n ≥ N → o.states n = target) := by
+  intro ⟨N, h⟩
+  exact ZhongOrbit.shi_no_telos o target N h
+
+/-- 霍布斯 自然状态之否定 (Hobbes, "bellum omnium contra omnes", Leviathan):
+    "war of all against all" = universal extreme state. 本框架 中 ZhongField
+    之 invariants 否定 universal extreme — 总 有 ≥ 一 orbit 在 中. -/
+theorem hobbes_state_of_nature_refuted (f : ZhongField) :
+    ¬ (∀ n, ∀ i : Fin f.k, extreme ((f.orbits i).states n)) := by
+  intro h
+  have h_k : 0 < f.k := by have := f.k_ge_two; omega
+  exact (f.orbits ⟨0, h_k⟩).inMiddle 0 (h 0 ⟨0, h_k⟩)
+
+/-- 施密特 敌友区分之否定 (Schmitt, "Begriff des Politischen"):
+    "Politics IS the friend-enemy distinction." 本框架 提供 第三 option:
+    distinct 二焦点 既 非 同 (collapse) 又 非 敌 (extreme), 而 是 仁
+    (中 之 同根异显). 敌友二分 之 必然性 不成立. -/
+theorem schmitt_friend_enemy_refuted
+    (h1 h2 : ZhongOrbit) (n : Nat) (h_distinct : h1.states n ≠ h2.states n) :
+    h1.states n ≠ h2.states n                            -- ¬ 同 (not friend-collapse)
+    ∧ ¬ extreme (h1.states n)                             -- ¬ 敌 from h1's side
+    ∧ ¬ extreme (h2.states n)                             -- ¬ 敌 from h2's side
+    ∧ ren h1 h2 n :=                                       -- 第三 option: 仁
+  ⟨h_distinct, h1.inMiddle n, h2.inMiddle n, h_distinct⟩
+
+/-- 施密特 例外状态之否定 (Schmitt, "Ausnahmezustand", Politische Theologie):
+    "Sovereign is he who decides on the state of exception (perpetual)."
+    Perpetual extreme is structurally impossible — orbit cannot remain in 极. -/
+theorem schmitt_state_of_exception_refuted (o : ZhongOrbit) (n : Nat) :
+    ¬ extreme (o.states n) := o.inMiddle n
+
+/-- 极权主义之否定 (totalitarianism as ideology, e.g. as critiqued by Arendt):
+    "Total uniformity of all subjects." Violates ZhongField's plurality requirement
+    — uniformity at any time is structurally impossible. -/
+theorem totalitarianism_refuted (f : ZhongField) (n : Nat) :
+    ¬ (∀ i j : Fin f.k, (f.orbits i).states n = (f.orbits j).states n) :=
+  f.he_not_same n
+
+/-- 福柯 权力之 universal extreme reading 之否定 (Foucault, naive reading
+    "everything is power = collapse"): if power IS interpreted as universal
+    extreme/collapse, refuted. (Foucault's nuanced thesis on power-knowledge
+    is NOT touched — only the simplified universal-collapse reading.) -/
+theorem foucault_universal_collapse_refuted (o : ZhongOrbit) :
+    ¬ (∀ n, extreme (o.states n)) := by
+  intro h
+  exact o.inMiddle 0 (h 0)
+
 /-- KernelDanZi: 此 layer 主动使用之 单字 closure-marker.
     由 「核 只收纳单字」 约束, 加 字 to kernel ⟺ 加 constructor here.
     Compounds (复词) MUST decompose to existing constructors before entering kernel.
