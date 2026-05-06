@@ -68,3 +68,9 @@ import SSBX.Foundation.Eight.LeiYing
 import SSBX.Foundation.Eight.DongLi
 import SSBX.Foundation.Eight.XinZhi
 import SSBX.Foundation.Eight.WuXiang
+
+-- Phase 4 主体（Mathlib 接入 · 连续测度 / ℝ Cauchy / 量子叠加 / SU(N)）
+import SSBX.Foundation.Phase4.RCauchy
+import SSBX.Foundation.Phase4.Kolmogorov
+import SSBX.Foundation.Phase4.Quantum
+import SSBX.Foundation.Phase4.SUN

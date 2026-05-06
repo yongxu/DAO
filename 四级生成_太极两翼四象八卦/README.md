@@ -78,7 +78,8 @@
 - **数 / 推 / 测 / 形**（主线四衍）：八卦层内容之严格展开 + Lean 全通过：ShuSuan 40 / LuoJi 44 / TongJi 32 / XingWei 32 = **148 声明**
 - **类 / 动 / 识 / 象**（副线四衍，Phase 3 扩张）：LeiYing 12 / DongLi 35 / XinZhi 51 / WuXiang 23 = **121 声明**（含 Phase 4 先行）
 - **Phase 4 先行三章**（神经 + Husserl 时间意识 + 连续 ODE 之 finite）：扩 XinZhi (+21) 与 DongLi (+9) = **30 增量声明**
-- **八衍合计**：**269 公开声明 / 0 sorry / 0 公理 / lake build 51 jobs 通过**
+- **Phase 4 主体首批四章**（2026-05-07 落 · Mathlib HEAD 接入）：`Phase4/RCauchy.lean`（ℝ Cauchy 完备 / 1/2ⁿ→0 / √2 ∉ ℚ）+ `Phase4/Kolmogorov.lean`（σ-代数 / ProbabilityMeasure / Borel ℝ）+ `Phase4/Quantum.lean`（Qubit ≅ ℂ² / Pauli X²=I / Trigram → Fin 8 / cuo ≅ X⊗X⊗X）+ `Phase4/SUN.lean`（SU(N) / SU(3) ≄ (Z/2)³ 严格界限）= **~430 行 Lean / lake build 2568 jobs 通过**
+- **八衍合计**：**269 公开声明 / 0 sorry / 0 公理 / Phase 3 lake build 51 jobs 通过 + Phase 4 主体 lake build 2568 jobs 通过**
 - **自释与微核**：L（图灵完备 + 以文自释 + 可执文言 + 微核归一；二者为一形式证明）
 
 ## 全局约定

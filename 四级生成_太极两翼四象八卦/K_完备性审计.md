@@ -147,7 +147,8 @@
 **已完备**：约 **5300+ 行 Lean / 75 + 298 + 49 + 40 + 44 + 32 + 32 + 12 + 35 + 51 + 23 = 691 公开声明 + 1 公理（Kleene 递归，仅 GodelLi）/ 0 sorry / lake build 通过**（**51 jobs**）。
 **Phase 3 增量**：副线四衍 **LeiYing 12 + DongLi 26 + XinZhi 30 + WuXiang 23 = 91 声明**（无 Mathlib 依赖）。
 **Phase 4 先行**：神经科学心智 / Husserl 时间意识 / 连续 ODE 之 finite Euler = **+30 声明**（XinZhi +21 / DongLi +9）。
-**Phase 4 主体待补**：~2000 行 Lean 估算（自然演绎 / Kolmogorov 连续测度 / ℝ 完备性 / 量子叠加 / 连续 ODE / SU(N) 等）；最大缺口在 Mathlib 依赖之连续测度论。
+**Phase 4 主体首批四章** （2026-05-07 落地）：Kolmogorov 连续测度 / ℝ Cauchy / 量子叠加 / SU(N) = `Phase4/{Kolmogorov,RCauchy,Quantum,SUN}.lean` 共 ~430 行 Lean，依 Mathlib HEAD（master）+ Lean v4.30.0-rc2，`lake build` 通过 2568 jobs。
+**Phase 4 主体续待补**：~1500 行 Lean 估算（自然演绎 / Lebesgue 积分 / 大数律 / 连续 ODE smoothness / 神经科学连续 mechanism 等）；首批 Mathlib 接入已成桥头堡。
 
 ### 维度 5 · 边界完备性（元理论）
 
@@ -280,16 +281,20 @@ $$\exists \psi \in \mathcal{L}_\text{道}, \quad \text{道} \not\vdash \psi \lan
 | 3 | ~~连续动力 ODE 之 finite Euler approximation（targetEulerStep / Lyapunov / finite Banach）~~ | DongLi.lean §7-8（+9 声明）+ 动力衍 §13·半 | ✓ 完成（0 公理 / 0 sorry）|
 | 4 | 先行三章合计 | **+30 声明** | ✓（八衍合 691 声明）|
 
-### Phase 4 主体（长期 · Mathlib 接入 + 连续 / 量子叠加）
+### Phase 4 主体（Mathlib 接入 · 已落 ¼ · 2026-05-07）
 
-| # | 主题 | 形式 |
-|---|---|---|
-| 1 | Mathlib 接入 + Kolmogorov 连续测度（σ-代数无穷扩展 / Lebesgue 积分 / 大数律 / 中心极限）| 测衍 Lean 扩 |
-| 2 | ℝ 完备性 + Cauchy 收敛严格证 | 数衍 Lean 扩 |
-| 3 | 自然演绎 + Curry-Howard Lean | 推衍 Lean 扩 |
-| 4 | 量子叠加 / Hilbert 空间 / Schrödinger | 物衍 Lean 扩（需 Mathlib + ℂ）|
-| 5 | 神经科学之**连续** mechanism / 时间意识之**连续 modulation** | 识衍扩（需 ODE / 大脑模型 / 海德格尔之时间性）|
-| 6 | 连续动力 / ODE 之 smoothness / Lyapunov 之严格下降 / chaos | 动衍 Lean 扩（需 Mathlib `Topology` + ℝ）|
+| # | 主题 | 形式 | 状态 |
+|---|---|---|---|
+| 1 | **Kolmogorov 连续测度** / σ-代数 / ProbabilityMeasure / Bayes 框架 | `Phase4/Kolmogorov.lean` | **✓ 落地** |
+| 2 | **ℝ Cauchy 完备性** + 1/2ⁿ → 0 + √2 ∈ ℝ + √2 ∉ ℚ + ShuSuan 桥 | `Phase4/RCauchy.lean` | **✓ 落地** |
+| 3 | **量子叠加** / Qubit ≅ ℂ² / Pauli X·Y·Z / Hadamard / Trigram → Fin 8 / cuo ≅ X⊗X⊗X | `Phase4/Quantum.lean` | **✓ 落地** |
+| 4 | **SU(N)** Lie 群 / I ∈ SU(N) / SU(3) 与 (Z/2)³ 之严格界限 | `Phase4/SUN.lean` | **✓ 落地** |
+| 5 | 自然演绎 + Curry-Howard Lean | 推衍 Lean 扩 | 待补 |
+| 6 | Lebesgue 积分 / 大数律 / 中心极限 | 测衍 Lean 深化 | 待补 |
+| 7 | 神经科学之**连续** mechanism / 时间意识之**连续 modulation** | 识衍扩（需 ODE / 大脑模型）| 待补 |
+| 8 | 连续动力 / ODE 之 smoothness / Lyapunov 严格下降 / chaos | 动衍 Lean 扩（需 `Topology` + ℝ）| 待补 |
+
+**Phase 4 主体首批四章已通过 `lake build`**：Mathlib HEAD（master 分支） + Lean v4.30.0-rc2 toolchain，cache get 成功，2568 jobs 全过；0 sorry / 0 公理新增，仅 4 个 `noncomputable def`（涉 ℝ 之除法 / √）。
 
 ---
 
@@ -301,7 +306,7 @@ $$\exists \psi \in \mathcal{L}_\text{道}, \quad \text{道} \not\vdash \psi \lan
 > **形式**层 ✓ 完备（八卦层 + 192 + 八衍 Lean 全建：5300+ 行 / 691 公开声明 / 0 sorry / 1 公理 / 51 jobs 通过）
 > **内容**层 ✓ 完备（数 / 推 / 测 / 形 主线 + 类 / 动 / 识 / 象 副线 + **Phase 4 先行**：神经 / Husserl 时间 / 连续 ODE finite）
 > **元理**层 ✓ 自界（道-理二分 + U ⇏ ⊤ + Gödel 在 192 之精确刻画 + Rice 四象 + 自释微核 L）
-> **唯余**：**Phase 4 主体之 Mathlib 接入**（连续测度 / ℝ Cauchy / 量子叠加 / 连续 ODE 之 smoothness），属外部依赖，不属内容空缺。
+> **唯余**：**Phase 4 主体首批已落**（Kolmogorov 连续测度 / ℝ Cauchy / 量子叠加 / SU(N) 四章 ✓ 2026-05-07），余 Lebesgue 积分 / 自然演绎 / 连续 ODE smoothness / 神经连续 mechanism 等待补，属外部依赖，不属内容空缺。
 
 > **完备性论证**：
 > 1. 在维度内每个声明范围**已知完备** —— 此为 **强主张**（Lean 0 sorry / 0 axiom 见证）
