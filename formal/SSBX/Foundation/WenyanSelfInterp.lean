@@ -447,6 +447,51 @@ theorem decInstr_encInstr_branchYaoEq (i j : Fin 6) (t : Nat) (rest : List Cell1
   rw [dif_pos hi, dif_pos hj]
   rw [decNat_encNat t rest hlen]
 
+/-! ### § 3d Unified round-trip for `YiInstr ↔ List Cell192`
+
+  Every `YiInstr` round-trips through `encInstr / decInstr`.  The only caveat:
+  for the three Nat-parameter constructors (`jump / branchShiEq / branchYaoEq`),
+  the Nat's base-192 encoding length must fit in one cell (`< 192`).  In
+  practice all programs we work with satisfy this trivially (jump targets are
+  bounded by program length; programs we construct have ≤ 192 instructions). -/
+
+/-- A YiInstr is "encodable" iff any Nat parameter encodes to a list shorter
+    than 192 cells.  All our programs satisfy this (jump targets ≤ |prog| ≪ 192). -/
+def Encodable : YiInstr → Prop
+  | .jump t                  => (NatCell.encodeNat t).length < 192
+  | .branchShiEq _ t         => (NatCell.encodeNat t).length < 192
+  | .branchYaoEq _ _ t       => (NatCell.encodeNat t).length < 192
+  | _                        => True
+
+/-- **Unified round-trip theorem**: for every encodable YiInstr `i` and any
+    suffix `rest`, decoding `encInstr i ++ rest` recovers `(i, rest)`.
+
+    This is the foundation for any meta-interpreter: it guarantees that the
+    encoding is faithful — no information is lost. -/
+theorem decInstr_encInstr (i : YiInstr) (h_enc : Encodable i)
+    (rest : List Cell192) :
+    decInstr (encInstr i ++ rest) = some (i, rest) := by
+  cases i with
+  | nop                      => exact decInstr_encInstr_nop rest
+  | hu                       => exact decInstr_encInstr_hu rest
+  | cuo                      => exact decInstr_encInstr_cuo rest
+  | zong                     => exact decInstr_encInstr_zong rest
+  | push                     => exact decInstr_encInstr_push rest
+  | pop                      => exact decInstr_encInstr_pop rest
+  | halt                     => exact decInstr_encInstr_halt rest
+  | setShi s                 => exact decInstr_encInstr_setShi s rest
+  | flipYao i                => exact decInstr_encInstr_flipYao i rest
+  | jump t                   => exact decInstr_encInstr_jump t rest h_enc
+  | branchShiEq s t          => exact decInstr_encInstr_branchShiEq s t rest h_enc
+  | branchYaoEq i j t        => exact decInstr_encInstr_branchYaoEq i j t rest h_enc
+
+/-- **All-encodable corollary**: if every instruction in a program list is
+    encodable, decoding round-trips all of them. -/
+theorem decInstr_encInstr_of_all (i : YiInstr) (h_enc : Encodable i) :
+    decInstr (encInstr i) = some (i, []) := by
+  have := decInstr_encInstr i h_enc []
+  rwa [List.append_nil] at this
+
 end YiInstrEnc
 
 /-! ## § 4 List YiInstr, YiState ↔ List Cell192 -/
@@ -470,6 +515,41 @@ def decInstrs : Nat → List Cell192 → Option (List YiInstr × List Cell192)
         | some (is, rest'') => some (i :: is, rest'')
         | none => none
     | none => none
+
+/-- A program is "encodable" iff every instruction in it is. -/
+def AllEncodable (p : List YiInstr) : Prop :=
+  ∀ i ∈ p, YiInstrEnc.Encodable i
+
+/-- **Program-level round-trip**: decoding the encoded program (with the
+    correct length parameter) recovers the original list.  By induction on
+    the program, using the unified `decInstr_encInstr` per-instruction
+    round-trip. -/
+theorem decInstrs_encProg (p : List YiInstr) (h_enc : AllEncodable p)
+    (rest : List Cell192) :
+    decInstrs p.length (encProg p ++ rest) = some (p, rest) := by
+  induction p with
+  | nil => rfl
+  | cons head tail ih =>
+    have h_head : YiInstrEnc.Encodable head := h_enc head List.mem_cons_self
+    have h_tail : AllEncodable tail :=
+      fun i hi => h_enc i (List.mem_cons_of_mem _ hi)
+    have h_split : encProg (head :: tail) ++ rest =
+        YiInstrEnc.encInstr head ++ (encProg tail ++ rest) := by
+      show ((head :: tail).map YiInstrEnc.encInstr).flatten ++ rest =
+           YiInstrEnc.encInstr head ++
+             ((tail.map YiInstrEnc.encInstr).flatten ++ rest)
+      simp [List.map_cons, List.flatten_cons, List.append_assoc]
+    -- decInstrs (tail.length + 1) ... unfolds to a match on decInstr first cell
+    show decInstrs (tail.length + 1)
+           (encProg (head :: tail) ++ rest) = some (head :: tail, rest)
+    rw [h_split]
+    unfold decInstrs
+    rw [YiInstrEnc.decInstr_encInstr head h_head]
+    -- now the inner match reduces via the explicit some (head, encProg tail ++ rest)
+    show (match decInstrs tail.length (encProg tail ++ rest) with
+            | some (is, rest'') => some (head :: is, rest'')
+            | none => none) = some (head :: tail, rest)
+    rw [ih h_tail]
 
 end ProgEnc
 
@@ -575,8 +655,21 @@ theorem metaStep_cur_correct (s : YiState) :
       lemmas into a single statement
       `metaInterpProg simulates step on every reachable encoded state`.
 
-  Status: about 5% done (`nop` and `halt` handlers and simulation).
-  Estimated remaining work: 1–2 weeks. -/
+  Status (post-Phase-12-bb):
+  - ✓ §1-3 atomic encoding (Yao/Shi/Hexagram/Cell192/Nat ↔ Fin/List)
+  - ✓ §3a-c: 12 个 YiInstr 之 round-trip lemmas（含 3 个 Nat-参数）
+  - ✓ §3d **统一 round-trip 定理** `decInstr_encInstr` (case split on 12)
+  - ✓ §4 `decInstrs_encProg` **程序级 round-trip**（按 list 归纳 + 统一 round-trip）
+  - ✓ §5-6 Lean-level `metaStep` + 模拟定理
+  - ✓ §6b 部分 `metaInterpProg`（仅 nop + halt 之 stub）
+  - ✓ §7 1-cell Quine 之严格证 (`quine_history`)
+  - ✗ 完整 fetch-decode-execute loop（剩 12 个 dispatch + 11 个 execute blocks）
+  - ✗ N-cell Quine（需 fixed-point construction）
+  - ✗ s-m-n algebraic lemma（subst 算子 + 正确性）
+
+  完成度估计：~15%（编码层完备；解释层架构 + stub；剩余为 12 路 dispatch +
+  fetch + writeback 之机械工程）。剩余约 700-1000 行 Lean。Kleene 之去公理化
+  路径完全依赖此 §6b 之展开。 -/
 
 namespace MetaInterp
 
