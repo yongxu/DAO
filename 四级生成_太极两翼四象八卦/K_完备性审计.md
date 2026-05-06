@@ -8,17 +8,17 @@
 
 ## 〇 · 摘要
 
-**总判断**：当前结构骨架完备（A–J + 四衍 = 13 文件 + 1 README + 此 K），形式化部分完备（G + Cell192 + BaguaTuring 入 Lean），meta 自省此 K 文件中补全。
+**总判断**：当前结构骨架完备（A–M + 四衍 + L 微核 = 16 文件 + 1 README + 此 K），形式化主线完备（八卦层 + 192 + 四衍 Lean 全建：4734 行 / 516 定理 / 0 sorry / 1 公理），meta 自省此 K 文件中补全。
 
 | 维度 | 已完备 | 待补 | 进度 |
 |------|------|------|-----|
-| 层级（layer） | T₀..T₆ × Z/3 = 192 | T_n 一般 / ω-tower | **85%** |
-| 算子（operators） | (Z/2)³ + ⋊⟨综⟩ + 合分重 + 生生 | 全集合表 / 互/之 统一 | **75%** |
+| 层级（layer） | T₀..T₆ × Z/3 = 192 | T_n 一般 / ω-tower 极限语义 | **85%** |
+| 算子（operators） | (Z/2)³ + ⋊⟨综⟩ + 合分重 + 生生 + 全集合表（I §十五）| V₄ / 互之 Lean 群论刻画 | **85%** |
 | 内容（content） | 数 / 推 / 测 / 形 四衍 | 范畴 / 动力 / 心智 / 物理 | **70%** |
 | 形式化（formal） | BaguaAlgebra 75 + Cell192 + BaguaTuring + GodelLi 32 + **ShuSuan 32 + LuoJi 36 + XingWei 19 + TongJi 24** ✓ | 连续测度 Lean (Mathlib) | **90%** |
-| 边界（boundary） | J 之道-理二分 + U⇏⊤ 散布 | G/H/I 道理对接 / 集中陈述 | **50%** |
+| 边界（boundary） | J 之道-理二分 + U⇏⊤ 四衍全集中 + G/H/I 道理对接 | T₆ 截断 justification 集中 | **80%** |
 
-**合计完备度**：约 **85 ± 5%**（2026-05-07 实测）——结构层完备，**形式化层 90% 完备**（GodelLi + 数衍 ShuSuan + 推衍 LuoJi + 测衍 TongJi + 形衍 XingWei 五 Lean 全建，**四衍 Lean 全通过**），主要待补在 Kolmogorov 连续测度 / Lebesgue 积分（需 Mathlib，Phase 3）。
+**合计完备度**：约 **88 ± 5%**（2026-05-07 实测）——**结构 / 形式 / 边界 三层皆 ≥ 80% 完备**，主要待补在 (i) 内容副线（范畴 / 动力 / 心智 / 物理）与 (ii) Mathlib 接入（连续测度 / ℝ Cauchy 严格 Lean 证）—— 二者皆 **Phase 3** 项。
 
 ---
 
@@ -204,7 +204,7 @@ $$\exists \psi \in \mathcal{L}_\text{道}, \quad \text{道} \not\vdash \psi \lan
 |---|---|---|
 | 形式逻辑 | §3 | K3 三值真值表中 U → U（非 ⊤）|
 | 统计 | §13 | 假设检验中"未拒绝 ≠ 接受" |
-| 数与算术 | §10 | ℝ 之极限存在性需显式 Cauchy 见证 |
+| 数与算术 | §十六·半 | 截断减 / 负数公理化 / ℝ 完备公设 / Vitali 集 / ℝ-eq 不可判（五落点）|
 | J | §一 D2 | 理不含道（YiState 不能编码 Sheng）|
 | 此 K | §三 | 道-理二分之精确陈述 |
 
@@ -228,9 +228,10 @@ $$\exists \psi \in \mathcal{L}_\text{道}, \quad \text{道} \not\vdash \psi \lan
 
 ### Phase 0（当前完成）
 
-- [x] A–J 十层 + 四衍 + README + 此 K = **14 文件 + 1 索引**
-- [x] BaguaAlgebra 75 定理 / Yi.lean 298 声明 / Cell192 / BaguaTuring 全部 lake build 通过
-- [x] 全集爻序 / 算子 / 三值保守律 / 道理二分 之集中陈述
+- [x] A–M 十二层 + 四衍 + README + 此 K = **16 文件 + 1 索引**
+- [x] BaguaAlgebra 75 / Yi 298 / Cell192 / BaguaTuring / GodelLi 32 / ShuSuan 32 / LuoJi 36 / TongJi 24 / XingWei 19 = **516 公开定理 / 0 sorry / 1 公理 / 46 jobs**
+- [x] 全集爻序 / 算子 / 三值保守律 / 道理二分 之集中陈述（四衍全建）
+- [x] 自释微核 L（4 模块 / 127 声明 / 0 sorry / 42 jobs，文道一也）
 
 ### Phase 1（短期 · 此 markdown 集合内）—— 全部 ✓ 完成
 
