@@ -43,9 +43,15 @@ import SSBX.Foundation.XinZhi
 import SSBX.Foundation.WuXiang
 import SSBX.Foundation.WenyanSelfInterp
 import SSBX.Foundation.KleeneInternal
+import SSBX.Foundation.CuoInvariance
 import SSBX.Foundation.WenyanText
 import SSBX.Foundation.YiCore
 import SSBX.Foundation.JianYiBridge
 import SSBX.Foundation.Yuan
 import SSBX.Foundation.JianModeKernel
 import SSBX.Foundation.Newman
+
+-- 风险缓解（路径丙之 pre-M1 工程）
+import SSBX.Foundation.BaguaWenSpec
+import SSBX.Foundation.ChunkedDecide
+import SSBX.Foundation.FuelDiscipline
