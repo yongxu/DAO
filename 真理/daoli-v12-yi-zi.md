@@ -3,7 +3,7 @@
 > **主张**: 一字 (動) + 古文算子 ⊢ 生生不息 ∧ 自指 ∧ 自洽
 > **此 是 gradual proof construction; 当前 已 实证 layers 1' .. 18** (取 v5 之 derivation structure + 一元 link).
 > v5 之 chain: 動 → 元 → 几 → 势 → 机 → 聚散 → 中 → 和 → 美 → 德 → 理 → 心 → 情 → 积 → ... → 仁 → 义/礼/智/信 → 自相似.
-> Lean 实证: `formal/SSBX/Foundation/Kernel.lean` (lake build passes, no sorry).
+> Lean 实证: `formal/SSBX/Foundation/Wen/Kernel.lean` (lake build passes, no sorry).
 >
 > 已 实证 layers:
 > - **Layer 1'** — 動 → 几 → 中 → 中-orbit ⊢ 生生不息 ∧ 自指 ∧ 自洽
@@ -731,7 +731,7 @@ theorem shared_count : kernelMonadRootShared.length = 9 := rfl
 theorem shared_all_map : ∀ z ∈ kernelMonadRootShared, (kernelToMonadRoot z).isSome := ...
 ```
 
-`Kernel.lean` 之 KernelDanZi (27 单字) 与 `Foundation/MonadRoot.lean` 之 CoreAtom (43 单字) 关系:
+`Kernel.lean` 之 KernelDanZi (27 单字) 与 `Foundation/Core/MonadRoot.lean` 之 CoreAtom (43 单字) 关系:
 
 | 关系 | 字 |
 |---|---|
@@ -747,7 +747,7 @@ theorem shared_all_map : ∀ z ∈ kernelMonadRootShared, (kernelToMonadRoot z).
 
 ## 七、Lean 实证 (no sorry)
 
-`formal/SSBX/Foundation/Kernel.lean` 全文 (compiles via `lake build`):
+`formal/SSBX/Foundation/Wen/Kernel.lean` 全文 (compiles via `lake build`):
 
 ```lean
 namespace SSBX.Foundation.Kernel
@@ -822,12 +822,12 @@ inductive KernelDanZi : Type
   | xinTrust   -- 信 (def; Layer 14)
   deriving Repr, DecidableEq
 
--- KernelDanZi.role mappings (one-line each) listed in Foundation/Kernel.lean.
+-- KernelDanZi.role mappings (one-line each) listed in Foundation/Wen/Kernel.lean.
 
 end SSBX.Foundation.Kernel
 ```
 
-(Layer 2-14 之 函数定义 各 listed in §三/§三半/§四/§六.5–§六.14; 全文 见 `formal/SSBX/Foundation/Kernel.lean`.)
+(Layer 2-14 之 函数定义 各 listed in §三/§三半/§四/§六.5–§六.14; 全文 见 `formal/SSBX/Foundation/Wen/Kernel.lean`.)
 (自相似 在 Layer 9 是 composite phrase, 不入 KernelDanZi, 但 theorem zixiangsi 实证.)
 
 担保:
@@ -900,7 +900,7 @@ elided in current layers (留 后续):
 
 每 next layer:
 ```
-1. 加 axiom 或 def in Foundation/Kernel.lean (or sibling layer file).
+1. 加 axiom 或 def in Foundation/Wen/Kernel.lean (or sibling layer file).
 2. State theorem about new 字 之 relation to existing kernel.
 3. Real proof, no sorry.
 4. lake build 通过.

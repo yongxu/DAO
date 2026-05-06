@@ -3,7 +3,7 @@
 > **核 之 constraint**: 核 ONLY admits 单字 (single-character atoms) + 古文虚字 (single-character operators).
 > **复合 (8 frames / 62 法则 / 19 theories / 三名) 皆 expansion** — 复合 入 framework 必 通过 trace 回 单字 (per 单字根律, v13.2 卷〇二).
 > **此核 是 connection hub**: 多 structures 通过 单字 connect.
-> **Layer 1' 实证**: `formal/SSBX/Foundation/Kernel.lean` — 動 + 中 → 生生不息 ∧ 自指 ∧ 自洽 (lake build passes, no sorry).
+> **Layer 1' 实证**: `formal/SSBX/Foundation/Wen/Kernel.lean` — 動 + 中 → 生生不息 ∧ 自指 ∧ 自洽 (lake build passes, no sorry).
 > **基础识**: 古文 ≈ λ-calc + temporal + aspect + effect; 名实合一 structural default.
 > **基础**: wenyan-operators.md + v13.2 + v14 + daoli-v12-* + formal/SSBX/*.lean
 
@@ -73,7 +73,7 @@ Curry-Howard-Lambek 在西方 是 deep discovery (proofs = programs = morphisms)
           → claim / 模型判准 / 案例结论
 ```
 
-(引 docs/monad-root-plan.md lines 23-32)
+(引 formal/SSBX/notes/monad-root-plan.md lines 23-32)
 
 ### 1.2 一元 之 性
 
@@ -84,7 +84,7 @@ Curry-Howard-Lambek 在西方 是 deep discovery (proofs = programs = morphisms)
 一元 是 唯一根节点, 是 所有 面 / 字 / 概念 / 模型 / 证明 / claim 之 generation source.
 ```
 
-(引 docs/monad-root-plan.md lines 11-15)
+(引 formal/SSBX/notes/monad-root-plan.md lines 11-15)
 
 ### 1.3 12 面 之 enumeration
 
@@ -92,7 +92,7 @@ Curry-Howard-Lambek 在西方 是 deep discovery (proofs = programs = morphisms)
 文面、物面、生面、理面、心面、人面、模面、审校面、价值面、证明面、注意面、真理面
 ```
 
-(引 docs/monad-root-plan.md line 20; formal/SSBX/Foundation/MonadRoot.lean Face inductive)
+(引 formal/SSBX/notes/monad-root-plan.md line 20; formal/SSBX/Foundation/Core/MonadRoot.lean Face inductive)
 
 面 不是 多个 本体根, 是 一元 之 不同 投影.
 
@@ -107,7 +107,7 @@ Theorem signature (待 formal):
 ∀ formal item t, ∃ finite path p, p.start = t ∧ p.end = 一元.
 ```
 
-(引 formal/SSBX/Foundation/MonadRoot.lean: ssbx_reachable_from_root, all_atoms_return_through_core, monad_dag_acyclic)
+(引 formal/SSBX/Foundation/Core/MonadRoot.lean: ssbx_reachable_from_root, all_atoms_return_through_core, monad_dag_acyclic)
 
 ---
 
@@ -134,7 +134,7 @@ Theorem signature (待 formal):
 | 十三、心行类 | 感 择 情 礼 信 性 能 归 轨 息 迫 替 基 线 域 试 定 再 关 格 | 20 |
 
 > **总计**: ~159 主字元 + 27 辅助字元 (十四) = ~186 字元
-> (与 docs/monad-root-plan.md 之 「221 登记字元」 一致, 含 后续登记)
+> (与 formal/SSBX/notes/monad-root-plan.md 之 「221 登记字元」 一致, 含 后续登记)
 
 ### 2.2 单字根律
 
@@ -448,7 +448,7 @@ kernel_self_articulates :
   describes(node, X).
 ```
 
-(formal stub in `formal/SSBX/Foundation/Kernel.lean`; full proof 待 后续)
+(formal stub in `formal/SSBX/Foundation/Wen/Kernel.lean`; full proof 待 后续)
 
 ### 7.3 自指 之 必然性
 
@@ -581,7 +581,7 @@ T6 数学接口有根  : ∀ A ∈ MathAxiomFamily,
 path 之 形:
   t → ... → 字元 → 核心单字 → 面 → 一元
 
-(引 formal/SSBX/Foundation/MonadRoot.lean
+(引 formal/SSBX/Foundation/Core/MonadRoot.lean
     ssbx_reachable_from_root,
     all_atoms_return_through_core,
     structures_return_atom_and_root,
@@ -681,7 +681,7 @@ path 之 形:
 
 ### 10.8 Lean verifier blueprint (Phases A-G)
 
-详 daoli-v12-lean-verifier.md. Phase A-G 之 implementation 是 expansion; Phase Layer 1' 已 实证 in formal/SSBX/Foundation/Kernel.lean.
+详 daoli-v12-lean-verifier.md. Phase A-G 之 implementation 是 expansion; Phase Layer 1' 已 实证 in formal/SSBX/Foundation/Wen/Kernel.lean.
 
 ---
 
@@ -788,14 +788,14 @@ Layer 5 (theory-mapping)  : 19 theories (已 in theories.md)
 
 ### 12.1 已 substantiated
 
-- 一元 architecture                          (docs/monad-root-plan.md)
+- 一元 architecture                          (formal/SSBX/notes/monad-root-plan.md)
 - 字元 inventory (~186 atoms in 13 类)        (v13.2 卷一)
 - 8 sorts + 三值 logic                       (v14 §二, §三)
 - 6 metatheorems Lean skeletons              (v14 §六-§十二)
 - 64 hexagram-operator mapping               (wenyan-operators §28)
 - Y-combinator patterns via 生生 = fix(生)   (wenyan-operators §26)
 - 法则 12 自指 declarative                   (daoli-v12-fa-ze 713-770)
-- MonadRoot Lean: ssbx_reachable_from_root   (Foundation/MonadRoot.lean)
+- MonadRoot Lean: ssbx_reachable_from_root   (Foundation/Core/MonadRoot.lean)
 - Three-name equivalence declarative         (法则 60, daoli-v12-fa-ze 3227-3292)
 
 ### 12.2 待 complete
@@ -813,7 +813,7 @@ Layer 5 (theory-mapping)  : 19 theories (已 in theories.md)
 
 本 文档 commit 之:
 - consolidate kernel 之 8 components into single readable spec
-- 加 Foundation/Kernel.lean module with theorem stubs (signatures only)
+- 加 Foundation/Wen/Kernel.lean module with theorem stubs (signatures only)
 - cross-link with v12-main, v12-fa-ze
 
 不 在 本 milestone:
@@ -826,7 +826,7 @@ Layer 5 (theory-mapping)  : 19 theories (已 in theories.md)
 
 ## 十三、附 — Lean 实证 (Layer 1', no sorry)
 
-参 `formal/SSBX/Foundation/Kernel.lean` (compiles via `lake build`, 25 jobs successful):
+参 `formal/SSBX/Foundation/Wen/Kernel.lean` (compiles via `lake build`, 25 jobs successful):
 
 ```lean
 namespace SSBX.Foundation.Kernel
@@ -1012,16 +1012,16 @@ Layers 1'-16 已 实证: 一字 (動) ⊢ 生生不息∧自指∧自洽∧拒 t
 |---|---|
 | /Users/ren/repos/生生不息/wenyan-operators.md | 算子 catalogue, §24 atomic core, §26 fixed-point, §28 hexagrams |
 | /Users/ren/repos/生生不息/生生不息论_v13.2_形式项总清与类型校正版.md | 卷〇 单字根律, 卷一 字元 13 类, 卷〇三 DAG, 完备性声明 |
-| /Users/ren/repos/生生不息/生生不息论_v14_形式证明骨架版.md | §二 8 sorts, §三 三值, §六-§十二 6 metatheorems |
-| /Users/ren/repos/生生不息/docs/monad-root-plan.md | 一元 architecture, 12 面, 43 核心 |
+| /Users/ren/repos/生生不息/史料/生生不息论_v14_形式证明骨架版.md | §二 8 sorts, §三 三值, §六-§十二 6 metatheorems |
+| /Users/ren/repos/生生不息/formal/SSBX/notes/monad-root-plan.md | 一元 architecture, 12 面, 43 核心 |
 | /Users/ren/repos/生生不息/真理/daoli-v12-fa-ze.md | 法则 12 (lines 713-770), 法则 60 (3227-3292) |
 | /Users/ren/repos/生生不息/真理/daoli-v12-main.md | §3 三面一道 (207-277), framework metatheory |
 | /Users/ren/repos/生生不息/真理/daoli-v12-verifications.md | 法则 53 之 5 verifications |
 | /Users/ren/repos/生生不息/间生论_主篇.md | 自显 (13-27), 自相似 (§八) |
 | /Users/ren/repos/生生不息/生生不息论_间开本_致知版.md | 自洽∧可行∧可校∧开 |
-| /Users/ren/repos/生生不息/formal/SSBX/Foundation/Monism.lean | ConstructionId 12 faces + 43 cores |
-| /Users/ren/repos/生生不息/formal/SSBX/Foundation/MonadRoot.lean | atom_reachable_to_root, ssbx_reachable_from_root |
-| /Users/ren/repos/生生不息/formal/SSBX/Foundation/Kernel.lean | Layer 1' 实证: 動 + 中 ⊢ 生生不息 ∧ 自指 ∧ 自洽 |
+| /Users/ren/repos/生生不息/formal/SSBX/Foundation/Core/Monism.lean | ConstructionId 12 faces + 43 cores |
+| /Users/ren/repos/生生不息/formal/SSBX/Foundation/Core/MonadRoot.lean | atom_reachable_to_root, ssbx_reachable_from_root |
+| /Users/ren/repos/生生不息/formal/SSBX/Foundation/Wen/Kernel.lean | Layer 1' 实证: 動 + 中 ⊢ 生生不息 ∧ 自指 ∧ 自洽 |
 | /Users/ren/repos/生生不息/真理/daoli-v12-yi-zi.md | Layer 1' 之 markdown mirror (动→几→势→中→生生不息 chain, 引 v5) |
 | /Users/ren/repos/生生不息/真理/daoli-v12-frames.md | 8 frames (复合, expansion) |
 | /Users/ren/repos/生生不息/真理/daoli-v12-theories.md | 19 theory mappings (复合, expansion) |

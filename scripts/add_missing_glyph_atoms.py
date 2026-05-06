@@ -16,11 +16,11 @@ import re
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "生生不息论_三本文完整版/03_补篇一_间开本_致知版_古文证明版/manifest.json"
 ROSTER = ROOT / "formal/SSBX/Roster.lean"
-MONAD_ROOT = ROOT / "formal/SSBX/Foundation/MonadRoot.lean"
+MONAD_ROOT = ROOT / "formal/SSBX/Foundation/Core/MonadRoot.lean"
 GLYPH = ROOT / "formal/SSBX/Text/Glyph.lean"
-MISSING_GLYPHS_LEAN = ROOT / "formal/SSBX/Foundation/MissingGlyphs.lean"
+MISSING_GLYPHS_LEAN = ROOT / "formal/SSBX/Foundation/Core/MissingGlyphs.lean"
 SSBX_IMPORTS = ROOT / "formal/SSBX.lean"
-REPORT = ROOT / "formal/SSBX/Foundation/MissingGlyphRootReport.md"
+REPORT = ROOT / "formal/SSBX/notes/MissingGlyphRootReport.md"
 
 RECOVERED_GLYPHS = list(
     "七三不与中乃九事二五亦仍以件位例保值全八六其册冒准凡出判别前十卷原口古句只名含四型增"
@@ -504,7 +504,7 @@ def write_report(chars: list[str], unmapped: list[str]) -> None:
         "",
         "代码证明入口：",
         "",
-        "- `formal/SSBX/Foundation/MissingGlyphs.lean`",
+        "- `formal/SSBX/Foundation/Core/MissingGlyphs.lean`",
         "- `recovered_missing_glyphs_structural_proof`：补字皆已登记、文本覆盖、可达一元根。",
         "- `proof_language_pending_connected`：证明术语类已接到 `proofLegality` 与 claim 账本，但仍是待义证。",
         "- `value_pending_connected_to_value_axioms`：价值词类已接到价值面与价值 claim，但仍是待义证。",

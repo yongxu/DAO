@@ -1547,3 +1547,43 @@ framework's one ultimate claim verified.
 ---
 
 **5 verifications. 1 framework. infinite truth. 道 法 自 然.**
+
+---
+
+## 7. v12-specific test cases
+
+> 自 `史料/daoli-v12.md` §24 迁入。这 6 项 test cases 是 v12 单体版独有之 framework-自 test，与上 5 个完整 verifications 并列；此处保留为 outline-form sketch（源亦如此），具体 derivations 待 future articulation。
+
+```
+Test: 三 names cross-applicability
+  Verify 普通 derivations applicable in 常识 frame applicable in 真理 frame.
+
+Test: 4 aspects empirical features verification
+  物 之 质 + 位 are observable.
+  動 之 势 is observable.
+  間 之 关系 is observable.
+  事 之 结构 is observable.
+
+Test: 4 aspects mutual perspectival
+  Each aspect's perspective can articulate others.
+  No aspect transcendent.
+
+Test: 文 = pattern AND culture
+  Same character used consistently in both senses.
+  Verify framework's commits work either reading.
+
+Test: 8 frames cross-applicability
+  All 8 primary frames 互通 derivations.
+  Theorem proven in any frame applicable in all others.
+
+Test: 矫正 mechanism
+  Given 系统 in 混, apply 矫正 → return to 生生.
+  Verify 沌 仍 recoverable.
+  Verify 灭 boundary irreversible.
+
+Test: cross-cultural attestation strict
+  太极 derivation ≡ Ubuntu derivation ≡ 波粒 derivation.
+  Verify same truth, different articulations.
+```
+
+每项 test 之 完整 wenyan derivation 可在后续展开；与 §1–§5 之 5 verifications 一致 use frame transformation + truth-equivalence + cross-attestation pattern。
