@@ -75,3 +75,11 @@ import SSBX.Foundation.Phase4.RCauchy
 import SSBX.Foundation.Phase4.Kolmogorov
 import SSBX.Foundation.Phase4.Quantum
 import SSBX.Foundation.Phase4.SUN
+
+-- Phase 4 主体续（自然演绎 / Lebesgue 积分 / 连续 ODE / 神经科学 / 完备性深化）
+import SSBX.Foundation.Phase4.NaturalDeduction
+import SSBX.Foundation.Phase4.Lebesgue
+import SSBX.Foundation.Phase4.ODESmoothness
+import SSBX.Foundation.Phase4.Neuro
+import SSBX.Foundation.Phase4.KolmogorovExt
+import SSBX.Foundation.Phase4.RCauchyExt
