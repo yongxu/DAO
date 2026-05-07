@@ -237,6 +237,29 @@ example : (wenyanInterp "益 损 一").toOption = some «一» := by native_deci
 /-- 「损 益 乾」 → ((乾 + 1) − 1) = 乾. -/
 example : (wenyanInterp "损 益 乾").toOption = some Hexagram.qian := by native_decide
 
+/-! ## § 6.5  之又 iteration construction (Phase D)
+
+  「之又 F X」 = F (F X)。语义上等价于 «生生» 2 X 当 F = «生»（即 surface 推）。
+  与 stdlib 一元算子组合：之又 推 / 之又 不 各为 hex / bool 之双重应用。
+-/
+
+/-- 「之又 推 一」 = 推 (推 一) = «生生» 2 «一». -/
+example :
+    (wenyanInterp "之又 推 一").toOption = some («生生» 2 «一») := by native_decide
+
+/-- 「之又 推 乾」 = 推 (推 乾) = «生生» 2 «乾» = idx 2. -/
+example :
+    (wenyanInterp "之又 推 乾").toOption = some («生生» 2 Hexagram.qian) :=
+  by native_decide
+
+/-- 之又 + 不 + 真 — 双重否定 = 真. -/
+example :
+    (wenyanInterpBool "之又 不 真").toOption = some true := by native_decide
+
+/-- 之又 + 不 + 假 — 双重否定 假 = 假. -/
+example :
+    (wenyanInterpBool "之又 不 假").toOption = some false := by native_decide
+
 /-! ## § 7  公示总结 -/
 
 /-- v1 公示：6 stdlib 算子 + 1 hex 常的端到端可达性。

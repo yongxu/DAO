@@ -50,7 +50,8 @@ deriving DecidableEq, Repr
     · 其他 hexConst h 走 `.hexLit h`
     · boolConst b 走 `.boolLit b`
     · catalogueOp 按 OperatorId 派发到 stdlib body
-    · appMarker 不应进 atomToTm（应在 list 层被过滤）—— 防御性返 `empty`. -/
+    · appMarker 不应进 atomToTm（应在 list 层被过滤）—— 防御性返 `empty`
+    · iterate 由 parseExpr 直接处理，atomToTm 仅作防御性 `empty`. -/
 def atomToTm : ResolvedAtom → Except ElabErr Tm
   | .hexConst h =>
       if h = «一» then .ok .yi else .ok (.hexLit h)
@@ -68,6 +69,7 @@ def atomToTm : ResolvedAtom → Except ElabErr Tm
       | some id    => .error (.unsupportedOp id)
       | none       => .error .empty
   | .appMarker  => .error .empty
+  | .iterate    => .error .empty
 
 /-! ## § 3  Arity 表 -/
 
@@ -99,6 +101,15 @@ mutual
       .ok ((if h = «一» then .yi else .hexLit h), rest)
     | _+1,  .boolConst b :: rest               =>
       .ok (.boolLit b, rest)
+    | n+1,  .iterate :: rest                   =>
+      -- 「之又 F X」 → F (F X)：递归解析 `F X` 子表达式（消耗 op + arg），
+      -- 然后将其内部 application 复制为 F (F X)。
+      match parseExpr n rest with
+      | .error e         => .error e
+      | .ok (innerTm, rest') =>
+        match innerTm with
+        | .app f x => .ok (.app f (.app f x), rest')
+        | _        => .error .empty   -- 之又 后必须紧跟 arity≥1 的 op + 实参
     | n+1,  .catalogueOp r :: rest             =>
       match r.operator? with
       | none    => .error .empty

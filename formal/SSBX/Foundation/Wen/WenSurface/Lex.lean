@@ -55,9 +55,9 @@ def isAsciiSpace (c : Char) : Bool :=
 /-! ## § 3  多字 surface 词典 -/
 
 /-- 多字 wenyan surface — 来自 OperatorReadings spike 2026-05-08。
-    当前唯一多字 entry：「名分」。
-    扩充时按长度降序排列（最长前缀优先匹配）。 -/
-def multiCharSurfaces : List String := ["名分"]
+    当前 entries：「之又」(iteration construction)、「名分」。
+    扩充时按长度降序排列（最长前缀优先匹配）；同长度内顺序无关. -/
+def multiCharSurfaces : List String := ["之又", "名分"]
 
 /-- 检查 prefix 是否为 cs 之前缀（字符级）。 -/
 def listIsPrefix : List Char → List Char → Bool
@@ -124,6 +124,16 @@ example :
 example :
     (lexWen "名分推").toOption
       = some [⟨"名分", 0, 2, true⟩, ⟨"推", 2, 1, false⟩] :=
+  by native_decide
+
+/-- 多字 surface 「之又」单独 lex 为 1 token，width = 2，isMulti = true. -/
+example :
+    (lexWen "之又").toOption = some [⟨"之又", 0, 2, true⟩] := by native_decide
+
+/-- 「之又 推 一」：之又 + 推 + 一 三 token；空格调整 col. -/
+example :
+    (lexWen "之又 推 一").toOption
+      = some [⟨"之又", 0, 2, true⟩, ⟨"推", 3, 1, false⟩, ⟨"一", 5, 1, false⟩] :=
   by native_decide
 
 /-- 仅「名」（不接「分」）保持单字读. -/

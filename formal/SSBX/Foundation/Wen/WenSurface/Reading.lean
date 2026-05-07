@@ -33,12 +33,14 @@ open SSBX.Foundation.Yi.YiCore
 
 /-! ## § 1  Resolved 类型 -/
 
-/-- 已消歧的原子：卦字面值 / Bool 字面值 / catalogue 算子读法 / 应用标记. -/
+/-- 已消歧的原子：卦字面值 / Bool 字面值 / catalogue 算子读法 /
+    应用标记 / 迭代构式. -/
 inductive ResolvedAtom where
   | hexConst    (h : Hexagram)
   | boolConst   (b : Bool)
   | catalogueOp (reading : OperatorReading)
   | appMarker             -- 「之」 等不发射 Tm 的 surface marker
+  | iterate               -- 「之又」 迭代构式 marker：F X ↦ F (F X)
 deriving DecidableEq, Repr
 
 /-- 已消歧的 token：保留 GlyphTok 与解析结果. -/
@@ -96,12 +98,23 @@ def isApplicationMarker : Glyph → Bool
   | "之" => true   -- S_1 属格 / function application
   | _    => false
 
+/-- 「之又」迭代构式：surface 之又 双字独立辨认，
+    与单字「之」(appMarker) 互不冲突（不同 surface）. -/
+def isIterateConstruction : Glyph → Bool
+  | "之又" => true
+  | _      => false
+
 /-! ## § 3  Resolver -/
 
-/-- 单 token resolver。优先级：appMarker → bool 常值 → hex 常值 → stdlib 算子；
-    全失败则 `.noReading`. -/
+/-- 单 token resolver。优先级：iterate (「之又」) → appMarker (「之」) → bool 常值 →
+    hex 常值 → stdlib 算子；全失败则 `.noReading`.
+
+    注：「之又」与「之」是不同 GlyphTok surface（多字 vs 单字 lex 输出），
+    优先序无歧义；此处先判 iterate 仅为可读性. -/
 def resolveOne (t : GlyphTok) : Except ResolveErr ResolvedTok :=
-  if isApplicationMarker t.surface then
+  if isIterateConstruction t.surface then
+    .ok ⟨t, .iterate⟩
+  else if isApplicationMarker t.surface then
     .ok ⟨t, .appMarker⟩
   else match resolveBoolConst t.surface with
   | some b => .ok ⟨t, .boolConst b⟩
@@ -146,6 +159,7 @@ def ResolvedAtom.opId? : ResolvedAtom → Option OperatorId
   | .boolConst _   => none
   | .catalogueOp r => r.operator?
   | .appMarker     => none
+  | .iterate       => none
 
 /-- 判别 atom 是否为 appMarker（elab 阶段用）. -/
 def ResolvedAtom.isAppMarker : ResolvedAtom → Bool
@@ -193,6 +207,12 @@ example : opIdsOf "推 之 一" = some [some OperatorId.T_10, none, none] := by 
 example :
     ((lexAndResolve "之").toOption.map (fun rs => rs.map (·.atom |> ResolvedAtom.isAppMarker)))
       = some [true] :=
+  by native_decide
+
+/-- 「之又」识别为 iterate atom（与单字「之」不同 surface, 不冲突）. -/
+example :
+    ((lexAndResolve "之又").toOption.map (fun rs => rs.map (·.atom)))
+      = some [.iterate] :=
   by native_decide
 
 /-- 未知 surface → ResolveErr. -/
