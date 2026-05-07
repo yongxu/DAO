@@ -39,6 +39,8 @@ open SSBX.Text.OperatorReadings
 inductive ElabErr where
   | unsupportedOp (id : OperatorId)
   | empty
+  | leftoverAtoms (count : Nat)
+  | fuelExhausted
 deriving DecidableEq, Repr
 
 /-! ## § 2  Atom → Tm -/
@@ -63,29 +65,61 @@ def atomToTm : ResolvedAtom → Except ElabErr Tm
       | none       => .error .empty
   | .appMarker  => .error .empty
 
-/-! ## § 3  右结合组合（先过滤 appMarker） -/
+/-! ## § 3  Arity 表 -/
 
-/-- 右结合的连续 application：
-    · `[a]` → atom 的 Tm
-    · `[f, ..rest]` → `.app f (elabRightAssoc rest)` -/
-def elabRightAssoc : List ResolvedAtom → Except ElabErr Tm
-  | [] => .error .empty
-  | [a] => atomToTm a
-  | a :: rest =>
-    match atomToTm a with
-    | .error e => .error e
-    | .ok f =>
-      match elabRightAssoc rest with
-      | .error e => .error e
-      | .ok arg  => .ok (.app f arg)
+/-- Stdlib 算子的 arity（参数个数）.
+    其他 OperatorId → 0（不在 v1 范围）. -/
+def opArity : OperatorId → Nat
+  | .T_10 => 1   -- 推 : Hex → Hex
+  | .R_8  => 2   -- 比 : Hex → Hex → Bool
+  | .N_1  => 1   -- 不 : Bool → Bool
+  | .M_1  => 1   -- 必 : (Hex → Bool) → Bool
+  | .I_1  => 2   -- 同 : Hex → Hex → Bool
+  | .Q_1  => 1   -- 凡 : (Hex → Bool) → Bool
+  | _     => 0
 
-/-- 顶层 elaborator：ResolvedTok 流 → Tm。
-    appMarker（如「之」）在 elab 前被过滤掉 —— "推 之 一" 等价于 "推 一". -/
+/-! ## § 4  Arity-driven 递归下降 (fuel-bounded total)
+
+  从 atom 列表解析一个表达式，返回 (Tm, 余下 atoms)。
+  Arity 驱动：算子按其声明 arity 消耗后续子表达式；appMarker 被透明跳过.
+-/
+
+mutual
+  def parseExpr : Nat → List ResolvedAtom → Except ElabErr (Tm × List ResolvedAtom)
+    | 0,    _                                  => .error .fuelExhausted
+    | _+1,  []                                 => .error .empty
+    | n+1,  .appMarker :: rest                 => parseExpr n rest
+    | _+1,  .hexConst h :: rest                =>
+      .ok ((if h = «一» then .yi else .hexLit h), rest)
+    | n+1,  .catalogueOp r :: rest             =>
+      match r.operator? with
+      | none    => .error .empty
+      | some id =>
+        match atomToTm (.catalogueOp r) with
+        | .error e => .error e
+        | .ok body => collectArgs n body (opArity id) rest
+
+  /-- 消费 `k` 个子表达式作为 `acc` 的参数（左结合：`((acc a1) a2) ...`). -/
+  def collectArgs : Nat → Tm → Nat → List ResolvedAtom → Except ElabErr (Tm × List ResolvedAtom)
+    | _,    acc, 0,   rest => .ok (acc, rest)
+    | 0,    _,   _+1, _    => .error .fuelExhausted
+    | n+1,  acc, k+1, rest =>
+      match parseExpr n rest with
+      | .error e          => .error e
+      | .ok (arg, rest')  => collectArgs n (.app acc arg) k rest'
+end -- mutual
+
+/-- 顶层 elaborator：所有 atom 必须被一个 expression 完整消费。
+    Fuel = 2·n + 1：每个 atom 至多触发 1 次 parseExpr + 1 次 collectArgs. -/
 def elabTokens (rs : List ResolvedTok) : Except ElabErr Tm :=
-  let atoms := (rs.map (·.atom)).filter (fun a => !a.isAppMarker)
-  elabRightAssoc atoms
+  let atoms := rs.map (·.atom)
+  let fuel  := atoms.length * 2 + 1
+  match parseExpr fuel atoms with
+  | .error e         => .error e
+  | .ok (tm, [])     => .ok tm
+  | .ok (_, leftover) => .error (.leftoverAtoms leftover.length)
 
-/-! ## § 4  Sanity 例子 (native_decide via toOption) -/
+/-! ## § 5  Sanity 例子 (native_decide via toOption) -/
 
 /-- 「一」 elab 成 `.yi` primitive. -/
 example :
@@ -93,16 +127,16 @@ example :
       = some Tm.yi :=
   by native_decide
 
-/-- 「推」 elab 成 `Stdlib.tuiBody`. -/
+/-- 「推」 单独 elab 报 empty（arity 1 但无参） -/
 example :
-    (elabTokens [⟨⟨"推", 0, 1, false⟩,
-                  .catalogueOp (catalogueReading "推" "T-10" "对象推进 / 生"
-                                   (some OperatorId.T_10) .prefix
-                                   [.expectedObject])⟩]).toOption
-      = some Stdlib.tuiBody :=
+    let toks : List ResolvedTok :=
+      [⟨⟨"推", 0, 1, false⟩,
+        .catalogueOp (catalogueReading "推" "T-10" "对象推进 / 生"
+                         (some OperatorId.T_10) .prefix [.expectedObject])⟩]
+    (elabTokens toks).toOption = none :=
   by native_decide
 
-/-! ## § 5  端到端 atomToTm 类型核校 -/
+/-! ## § 6  端到端 atomToTm 类型核校 -/
 
 /-- 6 stdlib body 之 typecheck（来自 WenDef.Stdlib 既有定理）. -/
 example : typeCheck [] Stdlib.tuiBody     = some (.arr .hex .hex)            := by native_decide

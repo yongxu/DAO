@@ -128,6 +128,48 @@ example :
     (wenyanInterp "推 之 乾").toOption = some «一» :=
   by native_decide
 
+/-! ### 二元谓词测试（arity-driven 解析） -/
+
+/-- 「同 一 一」 → true（恒等成立）. -/
+example : (wenyanInterpBool "同 一 一").toOption = some true := by native_decide
+
+/-- 「同 一 乾」 → false（«一» ≠ «乾»）. -/
+example : (wenyanInterpBool "同 一 乾").toOption = some false := by native_decide
+
+/-- 「同 乾 乾」 → true. -/
+example : (wenyanInterpBool "同 乾 乾").toOption = some true := by native_decide
+
+/-- 「比 一 一」 → true（v1 比 = 同）. -/
+example : (wenyanInterpBool "比 一 一").toOption = some true := by native_decide
+
+/-- 「比 乾 坤」 → false. -/
+example : (wenyanInterpBool "比 乾 坤").toOption = some false := by native_decide
+
+/-- 嵌套：「同 推 一 推 一」 → 「same 一+1 一+1」 = true. -/
+example :
+    (wenyanInterpBool "同 推 一 推 一").toOption = some true :=
+  by native_decide
+
+/-- 「同 推 乾 一」 → 「«生» «乾» = «一»」 = true（旋转闭合）. -/
+example :
+    (wenyanInterpBool "同 推 乾 一").toOption = some true :=
+  by native_decide
+
+/-- 「同 推 坤 乾」 → 「«生» «坤» = «乾»」 = true（cyclic closure）. -/
+example :
+    (wenyanInterpBool "同 推 坤 乾").toOption = some true :=
+  by native_decide
+
+/-- 「不 同 一 一」 → ¬true = false. -/
+example :
+    (wenyanInterpBool "不 同 一 一").toOption = some false :=
+  by native_decide
+
+/-- 「不 同 一 乾」 → ¬false = true. -/
+example :
+    (wenyanInterpBool "不 同 一 乾").toOption = some true :=
+  by native_decide
+
 /-! ## § 4  错误路径 sanity -/
 
 /-- 未知 surface「瓜」走 resolve 错误. -/
