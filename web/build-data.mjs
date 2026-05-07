@@ -74,6 +74,8 @@ const textFiles = [
   'formal/SSBX/notes/JianOntology.md',
   'formal/SSBX/notes/HumanAlignment.md',
   'formal/SSBX/notes/Attention.md',
+  'formal/SSBX/notes/PositionOperatorGraph.md',
+  'formal/SSBX/notes/zhouyi-position-operator-report.md',
   'formal/SSBX/notes/atom-naming.md',
   'formal/SSBX/notes/baguaWen-spec.md',
   'formal/SSBX/notes/math-axiom-map.md',
@@ -89,7 +91,9 @@ const diagramFiles = [
   ['ConstructionDAG',     'formal/SSBX/diagrams/ConstructionDAG.mmd',     'formal/SSBX/notes/ConstructionDAG.md'],
   ['MonadDAG',            'formal/SSBX/diagrams/MonadDAG.mmd',            'formal/SSBX/notes/MonadDAG.md'],
   ['HumanAlignmentDAG',   'formal/SSBX/diagrams/HumanAlignmentDAG.mmd',   'formal/SSBX/notes/HumanAlignment.md'],
-  ['AttentionDAG',        'formal/SSBX/diagrams/AttentionDAG.mmd',        'formal/SSBX/notes/Attention.md']
+  ['AttentionDAG',        'formal/SSBX/diagrams/AttentionDAG.mmd',        'formal/SSBX/notes/Attention.md'],
+  ['PositionOperatorGraph.six',   'formal/SSBX/diagrams/PositionOperatorGraph.six.mmd',   'formal/SSBX/notes/PositionOperatorGraph.md'],
+  ['PositionOperatorGraph.hex64', 'formal/SSBX/diagrams/PositionOperatorGraph.hex64.mmd', 'formal/SSBX/notes/PositionOperatorGraph.md']
 ];
 
 function read(relativePath) {
@@ -137,7 +141,7 @@ function svgSize(relativeSvgPath) {
 }
 
 function mermaidCounts(content) {
-  const edgeMatches = content.match(/[-.=]+>/g) || [];
+  const edgeMatches = content.match(/^\s*[A-Za-z0-9_一-鿿]+\s+(?:[-.=]+>|---)/gm) || [];
   const nodeMatches = content.match(/^\s*[A-Za-z0-9_一-鿿]+(?:\[[^\]]+\]|\([^)]+\)|\{[^}]+\})/gm) || [];
   return {
     nodes: nodeMatches.length,

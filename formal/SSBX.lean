@@ -108,6 +108,7 @@ import SSBX.Foundation.Modern.RCauchyExt
 
 -- Phase 4 主体三尾（几何位 / 范畴论扩展 / 道-理二分 cross-cutting）
 import SSBX.Foundation.Modern.HexagramPosition
+import SSBX.Truth.SelfDescription
 import SSBX.Foundation.Modern.CatExt
 import SSBX.Foundation.Modern.DaoLi
 
