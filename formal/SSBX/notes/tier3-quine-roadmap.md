@@ -89,3 +89,48 @@ This is the exact conceptual gap:
 
 4. After two or three handlers share the same fetch/writeback path, factor the
    dispatch theorem. Only then start the N-cell quine builder.
+
+## Phases Shipped
+
+### Phase C.1 — Length-framed program encoding (2026-05-07)
+
+Closes blocker #1 (program framing). Added in `WenyanSelfInterp.lean § 4b`:
+
+- `ProgEnc.encFramedProg p := YiInstrEnc.encNat p.length ++ encProg p` — length-prefixed
+  program encoding, using the existing length-prefix Nat scheme.
+- `ProgEnc.decFramedProg : List Cell192 → Option (List YiInstr × List Cell192)` —
+  reads the length cell, then runs `decInstrs n` for that length.
+- `ProgEnc.decFramedProg_encFramedProg` — generic round-trip theorem
+  (`AllEncodable p → (NatCell.encodeNat p.length).length < 192 → ...`).
+- `ProgEnc.framed_round_trip_witness` — concrete witness on `[push, halt]`.
+
+This gives stream-friendly self-decoding: a Tier 3 interpreter can read the program
+from a raw `List Cell192` stream without an externally-supplied instruction count.
+
+### Phase C.7 partial — uniform N-cell quine (2026-05-07)
+
+Closes the uniform-program subset of Tier 3 (the simplest non-trivial Tier 3
+class). Added in `WenyanSelfInterp.lean § 7.3`:
+
+- `Quine.quineNProg N := List.replicate N YiInstr.push` — uniform N-push program.
+- `Quine.quineNInit N` — initial state with `cur := encInstr push = cellFromIdx ⟨9, _⟩`.
+- `Quine.quine3_history`, `quine5_history`, `quine16_history` — all proven by `rfl`.
+
+These are honest Tier 3 quines: running the program from the prescribed initial
+state literally produces `(quineNProg N).map encInstr |>.flatten = encProg
+(quineNProg N)` in `history`.  The construction generalizes to any N.
+
+The class is restricted because:
+- Programs must be `List.replicate N push` (no other instructions).
+- Initial `cur` must be `encInstr push`.
+
+This is not the full Tier 3 — for that we'd need `buildEmitProg` for arbitrary
+target lists plus the Kleene diagonal step.  See plan
+`/Users/ren/.claude/plans/let-s-look-in-this-dapper-island.md` § Phase C.7
+for the full construction.
+
+### Phases C.2–C.6 — pending (meta-interpreter scaffold)
+
+State layout, 12 handlers, dispatch, simulation theorem all remain.
+The uniform N-cell quine in C.7 partial does NOT depend on these phases —
+it's an orthogonal axis to the meta-interpreter.

@@ -175,6 +175,7 @@ String  ──[«解程»]──→  List YiInstr  ──[init+runFuel]──→
 | M1 String parser + printer | `Foundation/Wen/WenyanParser.lean § daoJudgeProg_roundtrip` |
 | M1 v2 · 12 constructors × 1..64 numerals | same file §8-9 |
 | M1 v3 · non-partial recast + token-level full generality | `Foundation/Wen/WenyanParserGeneral.lean § parseProgN_tokensOfProg` |
+| M1 v3.1 · character-level lex inverse + universal String round-trip | `Foundation/Wen/WenyanParserGeneral.lean § lexN_printProg_thm, parseN_printProg_inverse_universal` |
 | M2 multi-step evaluator + end-to-end | `Foundation/Wen/WenEval.lean § «端到端_乾», «端到端_坤», «端到端_否»` |
 | M3-甲 Lean block syntax | `Foundation/Wen/WenyanSyntax.lean § daoJudgeBlock_eq_daoJudgeProg` (by `rfl`) |
 | L1 typed lambda (type layer of 281 ops) | `Foundation/Wen/WenDef.lean § Stdlib.{tui, bi, bu, biModal, tong, fan}` |
@@ -182,6 +183,8 @@ String  ──[«解程»]──→  List YiInstr  ──[init+runFuel]──→
 | L1 ⟶ L0 compilation (cuo-equivariant subset) | `Foundation/Wen/WenDefCompile.lean § {idProg, add32Prog, cuoProg}_correct` |
 | Reflection layer: well-formedness / halting / verifier | `Foundation/Wen/WenyanReflect.lean § «文核同源»` |
 | M4-甲 micro-kernel self-validation (Tier 2: 64-instr quine PoC) | `Foundation/Wen/WenyanSelfHost.lean § «微核自验», «微核自释_total»` |
+| M4-甲 Tier 3 partial · uniform N-cell quine ([push]^N) | `Foundation/Wen/WenyanSelfInterp.lean § Quine.quine{3,5,16}_history` |
+| M4-甲 Tier 3 ground · framed program encoding | `Foundation/Wen/WenyanSelfInterp.lean § ProgEnc.{encFramedProg, decFramedProg, decFramedProg_encFramedProg, framed_round_trip_witness}` |
 | 道源 (5-fold self-reference: form / parse / print / halt / semantics) | `Foundation/Wen/DaoSource.lean § «道之自指»` |
 | Self-interpretation demo | `Foundation/Wen/Demo.lean § daojudge_{qian, kun, pi}` |
 
@@ -280,6 +283,7 @@ Read every "proved" claim below with this status split:
 |---|---|
 | Halting / Rice undecidability | `Foundation/Bagua/GodelLi.lean` |
 | 12-instruction ISA's cuo-equivariance ceiling | `Foundation/Wen/WenDefCompile.lean § sheng_not_cuo_equivariant` |
+| Universal `compileTm` undefinable (corollary of cuo-invariance ceiling) | `Foundation/Bagua/GodelLi.lean § halts_cuo_invariant` + `Foundation/Bagua/CuoInvariance.lean § unrestricted_kleene_inverter_inconsistent` |
 | `kleene_recursion_axiom` (cuo-restricted) — where the system **points beyond itself** | `Foundation/Bagua/GodelLi.lean` (axiom) + `CuoInvariance.lean` (cuo-machinery) + `Modern/DaoLi.lean` (bifurcation) |
 | High alignment ≠ truth (consistent liar) | `Foundation/Core/Sincerity.lean § T5` |
 | Repair is asymptotic, never reaches perfect | same § T6 |
@@ -288,9 +292,7 @@ Read every "proved" claim below with this status split:
 
 | Gap | Current state |
 |---|---|
-| M1 v3 · character-level lex inverse | hypothesis form (~150 lines estimated) |
-| M3-甲 · general `compileTm` | only the cuo-equivariant subset (impossibility witnessed above) |
-| M4-甲 · Tier 3 full quine | currently Tier 2 (64-instr); Tier 3 left as engineering work |
+| M4-甲 · Tier 3 universal quine (any program) | Tier 2 (64-instr) + Tier 3 uniform [push]^N (partial) shipped; general buildEmitProg + diagonal left as engineering |
 
 ---
 

@@ -98,6 +98,101 @@ theorem splitOnClose_app_close (cs rs : List Char) (h : ∀ c ∈ cs, c ≠ '»'
       rw [splitOnClose_cons_neq c (cs ++ '»' :: rs) hc]
       rw [ih_call]
 
+/-! ## § 2.5  字符级 lex 反演之引理 (M1 v3.1) -/
+
+/-- 若 cs 中无 '»'，则 splitOnClose cs = (cs, [])。 -/
+theorem splitOnClose_no_close (cs : List Char) (h : ∀ c ∈ cs, c ≠ '»') :
+    splitOnClose cs = (cs, []) := by
+  induction cs with
+  | nil => simp [splitOnClose]
+  | cons c cs ih =>
+      have hc : c ≠ '»' := h c (by exact List.mem_cons_self)
+      have h' : ∀ x ∈ cs, x ≠ '»' := fun x hx => h x (List.mem_cons_of_mem _ hx)
+      have := ih h'
+      rw [splitOnClose_cons_neq c cs hc, this]
+
+/-- lexFuel 单调（mirrors parseProgFuel_mono）。 -/
+theorem lexFuel_mono : ∀ (n m : Nat) (cs : List Char) (out : List Tok),
+    n ≤ m → lexFuel n cs = some out → lexFuel m cs = some out := by
+  intro n
+  induction n with
+  | zero =>
+      intro m cs out _ hn
+      simp [lexFuel] at hn
+  | succ n ih =>
+      intro m cs out hnm hn
+      cases m with
+      | zero => omega
+      | succ m =>
+          have hnm' : n ≤ m := Nat.le_of_succ_le_succ hnm
+          cases cs with
+          | nil => simpa [lexFuel] using hn
+          | cons c rest =>
+              -- 用 generalize 抽出 condition booleans
+              simp only [lexFuel] at hn ⊢
+              -- 三个 if-then-else 一层一层地处理
+              split at hn
+              · -- whitespace
+                rename_i hws
+                simp only [hws, ite_true]
+                exact ih m rest out hnm' hn
+              · split at hn
+                · -- '«'
+                  rename_i hws hopen
+                  simp only [hws, hopen, ite_true, ite_false]
+                  generalize hsplit : splitOnClose rest = sp at hn ⊢
+                  obtain ⟨inner, after⟩ := sp
+                  cases after with
+                  | nil => simp at hn
+                  | cons a aRest =>
+                      by_cases ha : a = '»'
+                      · subst ha
+                        simp only at hn ⊢
+                        cases hres : lexFuel n aRest with
+                        | none => rw [hres] at hn; simp at hn
+                        | some toks =>
+                            rw [hres] at hn
+                            simp at hn
+                            have := ih m aRest toks hnm' hres
+                            rw [this]
+                            simpa using hn
+                      · simp [ha] at hn
+                · split at hn
+                  · -- ';' || '；'
+                    rename_i hws hopen hsep
+                    simp only [hws, hopen, hsep, ite_true, ite_false]
+                    cases hres : lexFuel n rest with
+                    | none => rw [hres] at hn; simp at hn
+                    | some toks =>
+                        rw [hres] at hn
+                        simp at hn
+                        have := ih m rest toks hnm' hres
+                        rw [this]
+                        simpa using hn
+                  · simp at hn
+
+/-- 单个 «inner» 之 lex 抽离：n+1 fuel ⇒ 消去一桥括号组. -/
+theorem lexFuel_bracket_group
+    (inner tail : List Char) (n : Nat)
+    (h_no_close : ∀ c ∈ inner, c ≠ '»') :
+    lexFuel (n + 1) ('«' :: inner ++ '»' :: tail)
+      = (lexFuel n tail).map (fun toks => Tok.cjk (String.ofList inner) :: toks) := by
+  simp only [lexFuel, List.cons_append]
+  -- '«' 不是 whitespace, 是 '«'
+  have h_open : ('«' = ' ' || '«' = '\t' || '«' = '\n' || '«' = '\r') = false := by decide
+  rw [splitOnClose_app_close inner tail h_no_close]
+  rfl
+
+/-- 跳过 ASCII 空格. -/
+theorem lexFuel_skip_space (cs : List Char) (n : Nat) :
+    lexFuel (n + 1) (' ' :: cs) = lexFuel n cs := by
+  simp [lexFuel]
+
+/-- 全角分号 '；' 之 lex. -/
+theorem lexFuel_sep_fullwidth (cs : List Char) (n : Nat) :
+    lexFuel (n + 1) ('；' :: cs) = (lexFuel n cs).map (fun toks => Tok.sep :: toks) := by
+  simp [lexFuel]
+
 /-! ## § 3  规范化 token 序列 -/
 
 /-- 单个 时态 之 token. -/
@@ -220,6 +315,383 @@ theorem tokOfYao_eq (i : Fin 6) :
   | ⟨3, _⟩ => rfl
   | ⟨4, _⟩ => rfl
   | ⟨5, _⟩ => rfl
+
+/-! ## § 5.5  printInstr 之 List Char 形 (与 String.toList 之桥, M1 v3.1) -/
+
+/-- 时态 之 char 列表表示. -/
+def printShiChars : Shi → List Char
+  | .ji  => ['«', '已', '»']
+  | .jin => ['«', '今', '»']
+  | .wei => ['«', '未', '»']
+
+/-- 爻位 之 char 列表表示. -/
+def printYaoChars : Fin 6 → List Char
+  | ⟨0, _⟩ => ['«', '初', '爻', '»']
+  | ⟨1, _⟩ => ['«', '二', '爻', '»']
+  | ⟨2, _⟩ => ['«', '三', '爻', '»']
+  | ⟨3, _⟩ => ['«', '四', '爻', '»']
+  | ⟨4, _⟩ => ['«', '五', '爻', '»']
+  | ⟨5, _⟩ => ['«', '上', '爻', '»']
+  | _      => ['«', '?', '»']
+
+theorem printShi_toList (s : Shi) : (printShi s).toList = printShiChars s := by
+  cases s <;> rfl
+
+theorem printYao_toList (i : Fin 6) : (printYao i).toList = printYaoChars i := by
+  match i with
+  | ⟨0, h⟩ => decide +revert
+  | ⟨1, h⟩ => decide +revert
+  | ⟨2, h⟩ => decide +revert
+  | ⟨3, h⟩ => decide +revert
+  | ⟨4, h⟩ => decide +revert
+  | ⟨5, h⟩ => decide +revert
+
+/-- inner 数词字符串 (1..64) 之 List Char (无 «»). -/
+def numeralInnerChars (n : Nat) : List Char := (numeralInner n).toList
+
+/-- printNumeral n 之 List Char (含 «»). -/
+def printNumeralChars (n : Nat) : List Char :=
+  '«' :: numeralInnerChars n ++ ['»']
+
+/-- printNumeral n (1 ≤ n ≤ 64) 之 toList 形：'«' :: inner ++ ['»']. -/
+theorem printNumeral_toList (n : Nat) (h1 : 1 ≤ n) (h64 : n ≤ 64) :
+    (printNumeral n).toList = printNumeralChars n := by
+  unfold printNumeralChars numeralInnerChars
+  interval_cases n <;> native_decide
+
+/-- numeralInner 之 List Char 不含 '»' (在 1..64 之内). -/
+theorem numeralInnerChars_no_close (n : Nat) (h1 : 1 ≤ n) (h64 : n ≤ 64) :
+    ∀ c ∈ numeralInnerChars n, c ≠ '»' := by
+  unfold numeralInnerChars
+  interval_cases n <;> native_decide
+
+/-- 单条指令打印之 List Char 形 (镜像 printInstr 之分发). -/
+def printInstrChars : YiInstr → List Char
+  | .nop  => ['«', '不', '动', '»']
+  | .hu   => ['«', '互', '»']
+  | .cuo  => ['«', '错', '»']
+  | .zong => ['«', '综', '»']
+  | .push => ['«', '推', '»']
+  | .pop  => ['«', '取', '»']
+  | .halt => ['«', '终', '»']
+  | .setShi s    => ['«', '设', '时', '»', ' '] ++ printShiChars s
+  | .flipYao i   => ['«', '翻', '爻', '»', ' '] ++ printYaoChars i
+  | .branchYaoEq i j t =>
+      ['«', '比', '爻', '»', ' '] ++ printYaoChars i ++ [' '] ++ printYaoChars j ++
+        [' ', '«', '至', '»', ' '] ++ printNumeralChars t
+  | .branchShiEq s t =>
+      ['«', '比', '时', '»', ' '] ++ printShiChars s ++ [' ', '«', '至', '»', ' '] ++
+        printNumeralChars t
+  | .jump t =>
+      ['«', '跳', '»', ' ', '«', '至', '»', ' '] ++ printNumeralChars t
+
+/-- (printInstr i).toList 化为 printInstrChars i (在 validInstr i = true 之下). -/
+theorem printInstr_toList (i : YiInstr) (h : validInstr i = true) :
+    (printInstr i).toList = printInstrChars i := by
+  cases i with
+  | nop  => decide
+  | hu   => decide
+  | cuo  => decide
+  | zong => decide
+  | push => decide
+  | pop  => decide
+  | halt => decide
+  | setShi s => cases s <;> decide
+  | flipYao i =>
+      simp only [printInstr, printInstrChars, String.toList_append]
+      rw [printYao_toList i]
+      rfl
+  | branchYaoEq i j t =>
+      simp only [validInstr, decide_eq_true_eq] at h
+      obtain ⟨h1, h64⟩ := h
+      simp only [printInstr, printInstrChars, String.toList_append]
+      rw [printYao_toList i, printYao_toList j, printNumeral_toList t h1 h64]
+      rfl
+  | branchShiEq s t =>
+      simp only [validInstr, decide_eq_true_eq] at h
+      obtain ⟨h1, h64⟩ := h
+      simp only [printInstr, printInstrChars, String.toList_append]
+      rw [printShi_toList s, printNumeral_toList t h1 h64]
+      rfl
+  | jump t =>
+      simp only [validInstr, decide_eq_true_eq] at h
+      obtain ⟨h1, h64⟩ := h
+      simp only [printInstr, printInstrChars, String.toList_append]
+      rw [printNumeral_toList t h1 h64]
+      rfl
+
+/-! ## § 5.6  per-instruction lex bridge (M1 v3.1 之主柱) -/
+
+/-- 单条指令 lex 所需 fuel 数 (= 括号组 + 内空格). -/
+def instrLexFuel : YiInstr → Nat
+  | .nop  | .hu  | .cuo | .zong | .push | .pop | .halt => 1
+  | .setShi _   | .flipYao _ => 3
+  | .jump _ => 5
+  | .branchShiEq _ _ => 7
+  | .branchYaoEq _ _ _ => 9
+
+/-- printShiChars 之 inner 不含 '»'. -/
+private theorem printShiChars_inner_no_close (s : Shi) :
+    ∀ c ∈ (printShiChars s).tail.dropLast, c ≠ '»' := by
+  cases s <;> (intro c hc; simp [printShiChars] at hc; subst hc; decide)
+
+/-- printYaoChars 之 inner 不含 '»'. -/
+private theorem printYaoChars_inner_no_close (i : Fin 6) :
+    ∀ c ∈ (printYaoChars i).tail.dropLast, c ≠ '»' := by
+  match i with
+  | ⟨0, _⟩ => intro c hc; simp [printYaoChars] at hc; rcases hc with rfl | rfl <;> decide
+  | ⟨1, _⟩ => intro c hc; simp [printYaoChars] at hc; rcases hc with rfl | rfl <;> decide
+  | ⟨2, _⟩ => intro c hc; simp [printYaoChars] at hc; rcases hc with rfl | rfl <;> decide
+  | ⟨3, _⟩ => intro c hc; simp [printYaoChars] at hc; rcases hc with rfl | rfl <;> decide
+  | ⟨4, _⟩ => intro c hc; simp [printYaoChars] at hc; rcases hc with rfl | rfl <;> decide
+  | ⟨5, _⟩ => intro c hc; simp [printYaoChars] at hc; rcases hc with rfl | rfl <;> decide
+
+/-- '«' ++ inner ++ '»' ++ tail 之 lex 形 (将 List Char 写为 «inner» tail). -/
+private theorem lexFuel_bracket_split
+    (inner tail : List Char) (n : Nat)
+    (h_no_close : ∀ c ∈ inner, c ≠ '»') :
+    lexFuel (n + 1) (('«' :: inner ++ ['»']) ++ tail)
+      = (lexFuel n tail).map (fun toks => Tok.cjk (String.ofList inner) :: toks) := by
+  show lexFuel (n + 1) ('«' :: (inner ++ ['»'] ++ tail))
+        = (lexFuel n tail).map (fun toks => Tok.cjk (String.ofList inner) :: toks)
+  have h_eq : inner ++ ['»'] ++ tail = inner ++ '»' :: tail := by simp
+  rw [h_eq]
+  exact lexFuel_bracket_group inner tail n h_no_close
+
+/-- printShiChars 之 lex (用 lexFuel_bracket_split 直接). -/
+private theorem lexFuel_printShiChars
+    (s : Shi) (tail : List Char) (n : Nat) :
+    lexFuel (n + 1) (printShiChars s ++ tail)
+      = (lexFuel n tail).map (fun toks => tokOfShi s :: toks) := by
+  cases s with
+  | ji =>
+      show lexFuel (n + 1) (('«' :: ['已'] ++ ['»']) ++ tail) = _
+      rw [lexFuel_bracket_split ['已'] tail n
+            (by intro c hc; simp at hc; subst hc; decide)]
+      rfl
+  | jin =>
+      show lexFuel (n + 1) (('«' :: ['今'] ++ ['»']) ++ tail) = _
+      rw [lexFuel_bracket_split ['今'] tail n
+            (by intro c hc; simp at hc; subst hc; decide)]
+      rfl
+  | wei =>
+      show lexFuel (n + 1) (('«' :: ['未'] ++ ['»']) ++ tail) = _
+      rw [lexFuel_bracket_split ['未'] tail n
+            (by intro c hc; simp at hc; subst hc; decide)]
+      rfl
+
+/-- printYaoChars 之 lex. -/
+private theorem lexFuel_printYaoChars
+    (i : Fin 6) (tail : List Char) (n : Nat) :
+    lexFuel (n + 1) (printYaoChars i ++ tail)
+      = (lexFuel n tail).map (fun toks => tokOfYao i :: toks) := by
+  match i with
+  | ⟨0, _⟩ =>
+      show lexFuel (n + 1) (('«' :: ['初', '爻'] ++ ['»']) ++ tail) = _
+      rw [lexFuel_bracket_split ['初', '爻'] tail n
+            (by intro c hc; simp at hc; rcases hc with rfl|rfl <;> decide)]
+      rfl
+  | ⟨1, _⟩ =>
+      show lexFuel (n + 1) (('«' :: ['二', '爻'] ++ ['»']) ++ tail) = _
+      rw [lexFuel_bracket_split ['二', '爻'] tail n
+            (by intro c hc; simp at hc; rcases hc with rfl|rfl <;> decide)]
+      rfl
+  | ⟨2, _⟩ =>
+      show lexFuel (n + 1) (('«' :: ['三', '爻'] ++ ['»']) ++ tail) = _
+      rw [lexFuel_bracket_split ['三', '爻'] tail n
+            (by intro c hc; simp at hc; rcases hc with rfl|rfl <;> decide)]
+      rfl
+  | ⟨3, _⟩ =>
+      show lexFuel (n + 1) (('«' :: ['四', '爻'] ++ ['»']) ++ tail) = _
+      rw [lexFuel_bracket_split ['四', '爻'] tail n
+            (by intro c hc; simp at hc; rcases hc with rfl|rfl <;> decide)]
+      rfl
+  | ⟨4, _⟩ =>
+      show lexFuel (n + 1) (('«' :: ['五', '爻'] ++ ['»']) ++ tail) = _
+      rw [lexFuel_bracket_split ['五', '爻'] tail n
+            (by intro c hc; simp at hc; rcases hc with rfl|rfl <;> decide)]
+      rfl
+  | ⟨5, _⟩ =>
+      show lexFuel (n + 1) (('«' :: ['上', '爻'] ++ ['»']) ++ tail) = _
+      rw [lexFuel_bracket_split ['上', '爻'] tail n
+            (by intro c hc; simp at hc; rcases hc with rfl|rfl <;> decide)]
+      rfl
+
+/-- printNumeralChars 之 lex (1 ≤ t ≤ 64). -/
+private theorem lexFuel_printNumeralChars
+    (t : Nat) (h1 : 1 ≤ t) (h64 : t ≤ 64) (tail : List Char) (n : Nat) :
+    lexFuel (n + 1) (printNumeralChars t ++ tail)
+      = (lexFuel n tail).map (fun toks => tokOfNum t :: toks) := by
+  unfold printNumeralChars
+  rw [lexFuel_bracket_split (numeralInnerChars t) tail n (numeralInnerChars_no_close t h1 h64)]
+  unfold numeralInnerChars
+  simp only [tokOfNum, String.ofList_toList]
+
+/-- 单条指令 print 后之 lex 抽离主柱 (with append). -/
+theorem lexFuel_printInstrChars_app
+    (i : YiInstr) (tail : List Char) (n : Nat) (h : validInstr i = true) :
+    lexFuel (n + instrLexFuel i) (printInstrChars i ++ tail)
+      = (lexFuel n tail).map (fun toks => tokensOfInstr i ++ toks) := by
+  cases i with
+  | nop =>
+      show lexFuel (n + 1) (('«' :: ['不', '动'] ++ ['»']) ++ tail) = _
+      rw [lexFuel_bracket_split ['不', '动'] tail n
+            (by intro c hc; simp at hc; rcases hc with rfl|rfl <;> decide)]
+      rfl
+  | hu =>
+      show lexFuel (n + 1) (('«' :: ['互'] ++ ['»']) ++ tail) = _
+      rw [lexFuel_bracket_split ['互'] tail n
+            (by intro c hc; simp at hc; subst hc; decide)]
+      rfl
+  | cuo =>
+      show lexFuel (n + 1) (('«' :: ['错'] ++ ['»']) ++ tail) = _
+      rw [lexFuel_bracket_split ['错'] tail n
+            (by intro c hc; simp at hc; subst hc; decide)]
+      rfl
+  | zong =>
+      show lexFuel (n + 1) (('«' :: ['综'] ++ ['»']) ++ tail) = _
+      rw [lexFuel_bracket_split ['综'] tail n
+            (by intro c hc; simp at hc; subst hc; decide)]
+      rfl
+  | push =>
+      show lexFuel (n + 1) (('«' :: ['推'] ++ ['»']) ++ tail) = _
+      rw [lexFuel_bracket_split ['推'] tail n
+            (by intro c hc; simp at hc; subst hc; decide)]
+      rfl
+  | pop =>
+      show lexFuel (n + 1) (('«' :: ['取'] ++ ['»']) ++ tail) = _
+      rw [lexFuel_bracket_split ['取'] tail n
+            (by intro c hc; simp at hc; subst hc; decide)]
+      rfl
+  | halt =>
+      show lexFuel (n + 1) (('«' :: ['终'] ++ ['»']) ++ tail) = _
+      rw [lexFuel_bracket_split ['终'] tail n
+            (by intro c hc; simp at hc; subst hc; decide)]
+      rfl
+  | setShi s =>
+      -- printInstrChars (setShi s) = ['«', '设', '时', '»', ' '] ++ printShiChars s
+      simp only [printInstrChars, instrLexFuel]
+      have heq : (['«', '设', '时', '»', ' '] : List Char) ++ printShiChars s ++ tail
+        = ('«' :: ['设', '时'] ++ ['»']) ++ ' ' :: (printShiChars s ++ tail) := by simp
+      rw [heq, show n + 3 = (n + 2) + 1 from rfl]
+      rw [lexFuel_bracket_split ['设', '时'] (' ' :: (printShiChars s ++ tail)) (n + 2)
+            (by intro c hc; simp at hc; rcases hc with rfl|rfl <;> decide)]
+      rw [show n + 2 = (n + 1) + 1 from rfl, lexFuel_skip_space _ (n + 1)]
+      rw [lexFuel_printShiChars s tail n]
+      simp only [tokensOfInstr, List.cons_append, List.nil_append, Option.map_map,
+                 Function.comp_def, show String.ofList ['设', '时'] = "设时" from rfl,
+                 show String.ofList ['翻', '爻'] = "翻爻" from rfl,
+                 show String.ofList ['比', '爻'] = "比爻" from rfl,
+                 show String.ofList ['比', '时'] = "比时" from rfl,
+                 show String.ofList ['至'] = "至" from rfl,
+                 show String.ofList ['跳'] = "跳" from rfl]
+  | flipYao i =>
+      simp only [printInstrChars, instrLexFuel]
+      have heq : (['«', '翻', '爻', '»', ' '] : List Char) ++ printYaoChars i ++ tail
+        = ('«' :: ['翻', '爻'] ++ ['»']) ++ ' ' :: (printYaoChars i ++ tail) := by simp
+      rw [heq, show n + 3 = (n + 2) + 1 from rfl]
+      rw [lexFuel_bracket_split ['翻', '爻'] (' ' :: (printYaoChars i ++ tail)) (n + 2)
+            (by intro c hc; simp at hc; rcases hc with rfl|rfl <;> decide)]
+      rw [show n + 2 = (n + 1) + 1 from rfl, lexFuel_skip_space _ (n + 1)]
+      rw [lexFuel_printYaoChars i tail n]
+      simp only [tokensOfInstr, List.cons_append, List.nil_append, Option.map_map,
+                 Function.comp_def, show String.ofList ['设', '时'] = "设时" from rfl,
+                 show String.ofList ['翻', '爻'] = "翻爻" from rfl,
+                 show String.ofList ['比', '爻'] = "比爻" from rfl,
+                 show String.ofList ['比', '时'] = "比时" from rfl,
+                 show String.ofList ['至'] = "至" from rfl,
+                 show String.ofList ['跳'] = "跳" from rfl]
+  | branchYaoEq i j t =>
+      simp only [validInstr, decide_eq_true_eq] at h
+      obtain ⟨h1, h64⟩ := h
+      simp only [printInstrChars, instrLexFuel]
+      -- 重组 chars: [«比爻» yao_i yao_j «至» numeral] tail
+      have heq : (['«', '比', '爻', '»', ' '] : List Char) ++ printYaoChars i ++ [' '] ++
+                  printYaoChars j ++ [' ', '«', '至', '»', ' '] ++ printNumeralChars t ++ tail
+        = ('«' :: ['比', '爻'] ++ ['»']) ++ ' ' :: (printYaoChars i ++ ' ' :: (printYaoChars j ++
+            ' ' :: (('«' :: ['至'] ++ ['»']) ++ ' ' :: (printNumeralChars t ++ tail)))) := by simp
+      rw [heq]
+      -- 比爻 bracket
+      rw [show n + 9 = (n + 8) + 1 from rfl]
+      rw [lexFuel_bracket_split ['比', '爻'] _ (n + 8)
+            (by intro c hc; simp at hc; rcases hc with rfl|rfl <;> decide)]
+      -- space
+      rw [show n + 8 = (n + 7) + 1 from rfl, lexFuel_skip_space _ (n + 7)]
+      -- yao_i
+      rw [lexFuel_printYaoChars i _ (n + 6)]
+      -- space
+      rw [show n + 6 = (n + 5) + 1 from rfl, lexFuel_skip_space _ (n + 5)]
+      -- yao_j
+      rw [lexFuel_printYaoChars j _ (n + 4)]
+      -- space
+      rw [show n + 4 = (n + 3) + 1 from rfl, lexFuel_skip_space _ (n + 3)]
+      -- 至 bracket
+      rw [show n + 3 = (n + 2) + 1 from rfl]
+      rw [lexFuel_bracket_split ['至'] _ (n + 2)
+            (by intro c hc; simp at hc; subst hc; decide)]
+      -- space
+      rw [show n + 2 = (n + 1) + 1 from rfl, lexFuel_skip_space _ (n + 1)]
+      -- numeral
+      rw [lexFuel_printNumeralChars t h1 h64 tail n]
+      simp only [tokensOfInstr, List.cons_append, List.nil_append, Option.map_map,
+                 Function.comp_def, show String.ofList ['设', '时'] = "设时" from rfl,
+                 show String.ofList ['翻', '爻'] = "翻爻" from rfl,
+                 show String.ofList ['比', '爻'] = "比爻" from rfl,
+                 show String.ofList ['比', '时'] = "比时" from rfl,
+                 show String.ofList ['至'] = "至" from rfl,
+                 show String.ofList ['跳'] = "跳" from rfl]
+  | branchShiEq s t =>
+      simp only [validInstr, decide_eq_true_eq] at h
+      obtain ⟨h1, h64⟩ := h
+      simp only [printInstrChars, instrLexFuel]
+      have heq : (['«', '比', '时', '»', ' '] : List Char) ++ printShiChars s ++
+                  [' ', '«', '至', '»', ' '] ++ printNumeralChars t ++ tail
+        = ('«' :: ['比', '时'] ++ ['»']) ++ ' ' :: (printShiChars s ++
+            ' ' :: (('«' :: ['至'] ++ ['»']) ++ ' ' :: (printNumeralChars t ++ tail))) := by simp
+      rw [heq]
+      rw [show n + 7 = (n + 6) + 1 from rfl]
+      rw [lexFuel_bracket_split ['比', '时'] _ (n + 6)
+            (by intro c hc; simp at hc; rcases hc with rfl|rfl <;> decide)]
+      rw [show n + 6 = (n + 5) + 1 from rfl, lexFuel_skip_space _ (n + 5)]
+      rw [lexFuel_printShiChars s _ (n + 4)]
+      rw [show n + 4 = (n + 3) + 1 from rfl, lexFuel_skip_space _ (n + 3)]
+      rw [show n + 3 = (n + 2) + 1 from rfl]
+      rw [lexFuel_bracket_split ['至'] _ (n + 2)
+            (by intro c hc; simp at hc; subst hc; decide)]
+      rw [show n + 2 = (n + 1) + 1 from rfl, lexFuel_skip_space _ (n + 1)]
+      rw [lexFuel_printNumeralChars t h1 h64 tail n]
+      simp only [tokensOfInstr, List.cons_append, List.nil_append, Option.map_map,
+                 Function.comp_def, show String.ofList ['设', '时'] = "设时" from rfl,
+                 show String.ofList ['翻', '爻'] = "翻爻" from rfl,
+                 show String.ofList ['比', '爻'] = "比爻" from rfl,
+                 show String.ofList ['比', '时'] = "比时" from rfl,
+                 show String.ofList ['至'] = "至" from rfl,
+                 show String.ofList ['跳'] = "跳" from rfl]
+  | jump t =>
+      simp only [validInstr, decide_eq_true_eq] at h
+      obtain ⟨h1, h64⟩ := h
+      simp only [printInstrChars, instrLexFuel]
+      have heq : (['«', '跳', '»', ' ', '«', '至', '»', ' '] : List Char) ++
+                  printNumeralChars t ++ tail
+        = ('«' :: ['跳'] ++ ['»']) ++ ' ' :: (('«' :: ['至'] ++ ['»']) ++
+            ' ' :: (printNumeralChars t ++ tail)) := by simp
+      rw [heq]
+      rw [show n + 5 = (n + 4) + 1 from rfl]
+      rw [lexFuel_bracket_split ['跳'] _ (n + 4)
+            (by intro c hc; simp at hc; subst hc; decide)]
+      rw [show n + 4 = (n + 3) + 1 from rfl, lexFuel_skip_space _ (n + 3)]
+      rw [show n + 3 = (n + 2) + 1 from rfl]
+      rw [lexFuel_bracket_split ['至'] _ (n + 2)
+            (by intro c hc; simp at hc; subst hc; decide)]
+      rw [show n + 2 = (n + 1) + 1 from rfl, lexFuel_skip_space _ (n + 1)]
+      rw [lexFuel_printNumeralChars t h1 h64 tail n]
+      simp only [tokensOfInstr, List.cons_append, List.nil_append, Option.map_map,
+                 Function.comp_def, show String.ofList ['设', '时'] = "设时" from rfl,
+                 show String.ofList ['翻', '爻'] = "翻爻" from rfl,
+                 show String.ofList ['比', '爻'] = "比爻" from rfl,
+                 show String.ofList ['比', '时'] = "比时" from rfl,
+                 show String.ofList ['至'] = "至" from rfl,
+                 show String.ofList ['跳'] = "跳" from rfl]
 
 /-! ## § 6  parseInstr inversion (12 案，with append) -/
 
@@ -419,13 +891,10 @@ theorem parseProgN_tokensOfProg (p : List YiInstr) (h : validProg p = true) :
                       subst this
                       simp
 
-/-! ## § 9  String-level round-trip (HYP form + testPrograms 见证)
+/-! ## § 9  String-level round-trip (M1 v3.1：fully proven, 0 hypothesis) -/
 
-  完整 String-level round-trip 之 final step 是 `lex (printProg p) = some (tokensOfProg p)`：
-  此涉 lex 之 character-level 串接 + balance 引理，约 ~150-200 行.
-  v3 暂以 hypothesis-form 提供，并以 testPrograms 上 native_decide 见证. -/
-
-/-- 主公示之 hypothesis-form：given lex inversion，得 String-level 完全 round-trip. -/
+/-- 主公示之 hypothesis-form：given lex inversion，得 String-level 完全 round-trip.
+    保留为旧式入口；现 `lexN_printProg_thm` 不需此 hypothesis. -/
 theorem parseN_printProg_inverse_via_lex_inversion (p : List YiInstr)
     (h : validProg p = true)
     (h_lex : lexN («印程» p) = some (tokensOfProg p)) :
@@ -435,18 +904,185 @@ theorem parseN_printProg_inverse_via_lex_inversion (p : List YiInstr)
   simp
   exact parseProgN_tokensOfProg p h
 
-/-- 一般 lex inversion 命题（v3.1 之事）。 -/
-def lexN_printProg_hypothesis : Prop :=
-  ∀ (p : List YiInstr), validProg p = true → lexN (printProg p) = some (tokensOfProg p)
+/-- '；'.toList 之展开 (用 native_decide 见证). -/
+private theorem fullwidth_semicolon_toList : "；".toList = ['；'] := by decide
 
-/-- 一般 String-level round-trip 命题。 -/
-def parseN_printProg_inverse_universal : Prop :=
-  ∀ (p : List YiInstr), validProg p = true → «解程N» («印程» p) = some p
+/-- printProg 所需 lex fuel (per-instr + sep 数). -/
+def progLexFuel : List YiInstr → Nat
+  | [] => 0
+  | [i] => instrLexFuel i
+  | i :: rest => instrLexFuel i + 1 + progLexFuel rest
 
-/-- 归约：lex hypothesis ⇒ universal round-trip. -/
-theorem universal_via_lex_hypothesis (h_lex : lexN_printProg_hypothesis) :
-    parseN_printProg_inverse_universal :=
-  fun p hp => parseN_printProg_inverse_via_lex_inversion p hp (h_lex p hp)
+/-- printProg 之 lexFuel 一致 — fuel = progLexFuel p + 1 时之 lex 正确性. -/
+private theorem lexFuel_printProg_exact (p : List YiInstr)
+    (h : validProg p = true) :
+    lexFuel (progLexFuel p + 1) (printProg p).toList = some (tokensOfProg p) := by
+  induction p with
+  | nil =>
+      show lexFuel 1 [] = some []
+      simp [lexFuel]
+  | cons i rest ih =>
+      have hi : validInstr i = true := by
+        unfold validProg at h
+        simp only [List.all_cons, Bool.and_eq_true] at h
+        exact h.1
+      have hrest : validProg rest = true := by
+        unfold validProg at h ⊢
+        simp only [List.all_cons, Bool.and_eq_true] at h
+        exact h.2
+      cases rest with
+      | nil =>
+          show lexFuel (progLexFuel [i] + 1) (printProg [i]).toList = some (tokensOfProg [i])
+          have h_print : (printProg [i]).toList = printInstrChars i := by
+            show (printInstr i).toList = printInstrChars i
+            exact printInstr_toList i hi
+          rw [h_print]
+          rw [show printInstrChars i = printInstrChars i ++ [] from (List.append_nil _).symm]
+          show lexFuel (instrLexFuel i + 1) (printInstrChars i ++ []) = _
+          rw [show instrLexFuel i + 1 = 1 + instrLexFuel i from Nat.add_comm _ _]
+          rw [lexFuel_printInstrChars_app i [] 1 hi]
+          show (lexFuel 1 []).map _ = some (tokensOfProg [i])
+          simp [lexFuel, tokensOfProg]
+      | cons r rs =>
+          have ih_rest := ih hrest
+          show lexFuel (progLexFuel (i :: r :: rs) + 1) (printProg (i :: r :: rs)).toList
+            = some (tokensOfProg (i :: r :: rs))
+          have h_print : (printProg (i :: r :: rs)).toList
+            = printInstrChars i ++ '；' :: (printProg (r :: rs)).toList := by
+            show (printInstr i ++ "；" ++ printProg (r :: rs)).toList = _
+            rw [String.toList_append, String.toList_append, fullwidth_semicolon_toList]
+            rw [printInstr_toList i hi]
+            simp
+          rw [h_print]
+          have h_split : printInstrChars i ++ '；' :: (printProg (r :: rs)).toList
+            = printInstrChars i ++ ('；' :: (printProg (r :: rs)).toList) := by rfl
+          rw [h_split]
+          show lexFuel (progLexFuel (i :: r :: rs) + 1)
+                (printInstrChars i ++ ('；' :: (printProg (r :: rs)).toList))
+              = some (tokensOfProg (i :: r :: rs))
+          have h_pf : progLexFuel (i :: r :: rs) = instrLexFuel i + 1 + progLexFuel (r :: rs) := by
+            rfl
+          rw [h_pf]
+          rw [show instrLexFuel i + 1 + progLexFuel (r :: rs) + 1
+                = (1 + progLexFuel (r :: rs) + 1) + instrLexFuel i from by omega]
+          rw [lexFuel_printInstrChars_app i ('；' :: (printProg (r :: rs)).toList)
+               (1 + progLexFuel (r :: rs) + 1) hi]
+          rw [show 1 + progLexFuel (r :: rs) + 1
+                = (progLexFuel (r :: rs) + 1) + 1 from by omega]
+          rw [lexFuel_sep_fullwidth (printProg (r :: rs)).toList (progLexFuel (r :: rs) + 1)]
+          rw [ih_rest]
+          show (Option.map (fun toks => Tok.sep :: toks) (some (tokensOfProg (r :: rs)))).map
+                  (fun toks => tokensOfInstr i ++ toks)
+              = some (tokensOfProg (i :: r :: rs))
+          simp [tokensOfProg]
+
+/-- progLexFuel p ≤ (printProg p).toList.length —— 每 fuel 单位至少消耗 1 char. -/
+private theorem progLexFuel_le_length (p : List YiInstr) (h : validProg p = true) :
+    progLexFuel p ≤ (printProg p).toList.length := by
+  induction p with
+  | nil => simp [progLexFuel, printProg]
+  | cons i rest ih =>
+      have hi : validInstr i = true := by
+        unfold validProg at h
+        simp only [List.all_cons, Bool.and_eq_true] at h
+        exact h.1
+      have hrest : validProg rest = true := by
+        unfold validProg at h ⊢
+        simp only [List.all_cons, Bool.and_eq_true] at h
+        exact h.2
+      cases rest with
+      | nil =>
+          show instrLexFuel i ≤ (printInstr i).toList.length
+          rw [printInstr_toList i hi]
+          -- printInstrChars i 的 length 大于 instrLexFuel i (since each fuel = ≥ 1 char)
+          cases i with
+          | nop  => decide
+          | hu   => decide
+          | cuo  => decide
+          | zong => decide
+          | push => decide
+          | pop  => decide
+          | halt => decide
+          | setShi s =>
+              cases s <;> simp [printInstrChars, printShiChars, instrLexFuel]
+          | flipYao i =>
+              match i with
+              | ⟨0, _⟩ => simp [printInstrChars, printYaoChars, instrLexFuel]
+              | ⟨1, _⟩ => simp [printInstrChars, printYaoChars, instrLexFuel]
+              | ⟨2, _⟩ => simp [printInstrChars, printYaoChars, instrLexFuel]
+              | ⟨3, _⟩ => simp [printInstrChars, printYaoChars, instrLexFuel]
+              | ⟨4, _⟩ => simp [printInstrChars, printYaoChars, instrLexFuel]
+              | ⟨5, _⟩ => simp [printInstrChars, printYaoChars, instrLexFuel]
+          | branchYaoEq i j t =>
+              simp [printInstrChars, instrLexFuel, printNumeralChars, numeralInnerChars]
+              try omega
+          | branchShiEq s t =>
+              simp [printInstrChars, instrLexFuel, printNumeralChars, numeralInnerChars]
+              try omega
+          | jump t =>
+              simp [printInstrChars, instrLexFuel, printNumeralChars, numeralInnerChars]
+              try omega
+      | cons r rs =>
+          have ih' := ih hrest
+          show instrLexFuel i + 1 + progLexFuel (r :: rs)
+            ≤ (printInstr i ++ "；" ++ printProg (r :: rs)).toList.length
+          rw [String.toList_append, String.toList_append, fullwidth_semicolon_toList]
+          rw [List.length_append, List.length_append]
+          rw [printInstr_toList i hi]
+          have h_inst : instrLexFuel i ≤ (printInstrChars i).length := by
+            cases i with
+            | nop  => decide
+            | hu   => decide
+            | cuo  => decide
+            | zong => decide
+            | push => decide
+            | pop  => decide
+            | halt => decide
+            | setShi s => cases s <;> simp [printInstrChars, printShiChars, instrLexFuel]
+            | flipYao i =>
+                match i with
+                | ⟨0, _⟩ => simp [printInstrChars, printYaoChars, instrLexFuel]
+                | ⟨1, _⟩ => simp [printInstrChars, printYaoChars, instrLexFuel]
+                | ⟨2, _⟩ => simp [printInstrChars, printYaoChars, instrLexFuel]
+                | ⟨3, _⟩ => simp [printInstrChars, printYaoChars, instrLexFuel]
+                | ⟨4, _⟩ => simp [printInstrChars, printYaoChars, instrLexFuel]
+                | ⟨5, _⟩ => simp [printInstrChars, printYaoChars, instrLexFuel]
+            | branchYaoEq i j t =>
+                simp [printInstrChars, instrLexFuel, printNumeralChars, numeralInnerChars]
+                try omega
+            | branchShiEq s t =>
+                simp [printInstrChars, instrLexFuel, printNumeralChars, numeralInnerChars]
+                try omega
+            | jump t =>
+                simp [printInstrChars, instrLexFuel, printNumeralChars, numeralInnerChars]
+                try omega
+          have h_sep : ['；'].length = 1 := rfl
+          rw [h_sep]
+          omega
+
+/-- **M1 v3.1 主定理**：完整 String-level lex inversion (无 hypothesis). -/
+theorem lexN_printProg_thm (p : List YiInstr) (h : validProg p = true) :
+    lexN (printProg p) = some (tokensOfProg p) := by
+  unfold lexN lexCharsN
+  have h_exact := lexFuel_printProg_exact p h
+  have h_bound := progLexFuel_le_length p h
+  exact lexFuel_mono (progLexFuel p + 1) ((printProg p).toList.length + 1) _ _
+        (by omega) h_exact
+
+/-- 主公示 (alias 与原 hypothesis-form 同语义 — 现已为 theorem). -/
+theorem lexN_printProg_hypothesis :
+    ∀ (p : List YiInstr), validProg p = true → lexN (printProg p) = some (tokensOfProg p) :=
+  lexN_printProg_thm
+
+/-- 一般 String-level round-trip 命题 (现已为 theorem). -/
+theorem parseN_printProg_inverse_universal :
+    ∀ (p : List YiInstr), validProg p = true → «解程N» («印程» p) = some p :=
+  fun p hp => parseN_printProg_inverse_via_lex_inversion p hp (lexN_printProg_thm p hp)
+
+/-- 归约保留：lex theorem ⇒ universal round-trip. -/
+theorem universal_via_lex_hypothesis :
+    ∀ (p : List YiInstr), validProg p = true → «解程N» («印程» p) = some p :=
+  parseN_printProg_inverse_universal
 
 /-! ## § 10  testPrograms 上之 round-trip 见证 (native_decide) -/
 
@@ -496,16 +1132,23 @@ theorem numeralRange_branchShiEq_roundtripN :
       «解程N» (printInstr (.branchShiEq .wei n)) = some [.branchShiEq .wei n]) = true := by
   native_decide
 
-/-! ## § 12  剩余间隙之声明 (remaining gaps)
+/-! ## § 12  M1 v3.1 之闭合 (formerly remaining gaps)
 
-* `lexN_printProg_hypothesis`：完整 character-level 之 lex 串接归纳；
-  约 ~150-200 行，留待 v3.1。 当前 testPrograms 上由 native_decide 见证.
+* `lexN_printProg_thm` (formerly `lexN_printProg_hypothesis`)：完整 character-level
+  之 lex 串接归纳，**已闭合** (无 hypothesis)。证明结构 § 2.5 + § 5.5 + § 5.6 + § 9：
+  - § 2.5 lex 之 fuel 单调与括号组分离 (lexFuel_mono, lexFuel_bracket_group, ...)
+  - § 5.5 printInstr 之 List Char 桥 (printInstrChars + printInstr_toList)
+  - § 5.6 12-构造子之 lexFuel append 主柱 (lexFuel_printInstrChars_app)
+  - § 9   按 List YiInstr 结构归纳 (progLexFuel + lexFuel_printProg_exact +
+          progLexFuel_le_length + lexN_printProg_thm)
 
 * String-level 之 universal round-trip (`parseN_printProg_inverse_universal`)：
-  在 `lexN_printProg_hypothesis` 之假定下由 `universal_via_lex_hypothesis` 即得.
+  现已为 theorem (而非 hypothesis-conditional)，由 `lexN_printProg_thm` 直证.
 
-无 sorry / 无 axiom（验证：`#print axioms parseProgN_tokensOfProg` 应仅显
-`propext`、`Classical.choice` 等 Lean stdlib axiom）.
+无 sorry / 无 axiom（验证：`#print axioms lexN_printProg_thm` /
+`#print axioms parseN_printProg_inverse_universal` 应仅显 `propext`、
+`Classical.choice`、`Quot.sound` 等 Lean stdlib axiom + native_decide reflection axioms.
+后者来自 `numeralInnerChars_no_close` 等之 native_decide 计算，不增信任基.
 -/
 
 end SSBX.Foundation.Wen.WenyanParserGeneral

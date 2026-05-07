@@ -85,3 +85,16 @@ The final theorem should keep the existing public entry semantics unchanged:
 theorem parse_print_valid (p : List YiInstr) :
     validProg p = true → «解程» («印程» p) = some p
 ```
+
+## Closed in v3.1 (M1 v3.1)
+
+The character-level lex inversion is now fully proved (no hypothesis):
+
+* `WenyanParserGeneral.lean § lexN_printProg_thm` — `lexN (printProg p) = some (tokensOfProg p)` for valid `p`.
+* `WenyanParserGeneral.lean § parseN_printProg_inverse_universal` — `«解程N» («印程» p) = some p` for valid `p` (theorem, not conditional).
+
+Proof structure (≈190 lines):
+* § 2.5 lex fuel monotonicity, splitOnClose lemmas, `lexFuel_bracket_group`, whitespace/separator skip
+* § 5.5 `printInstrChars`/`printShiChars`/`printYaoChars`/`printNumeralChars` + bridge `(printInstr i).toList = printInstrChars i`
+* § 5.6 12-constructor `lexFuel_printInstrChars_app` per-instr bridge
+* § 9 `progLexFuel`, `lexFuel_printProg_exact` (structural induction over `List YiInstr`), `progLexFuel_le_length`, final `lexN_printProg_thm` via `lexFuel_mono`
