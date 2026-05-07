@@ -59,6 +59,10 @@ import SSBX.Foundation.Wen.WenyanReflect
 import SSBX.Foundation.Wen.WenDefCompile
 import SSBX.Foundation.Wen.WenyanParserGeneral
 import SSBX.Foundation.Wen.WenyanSelfHost
+import SSBX.Foundation.Wen.WenyanQuine
+import SSBX.Foundation.Wen.WenyanQuineRoutes
+import SSBX.Foundation.Wen.WenyanQuineConcreteSearch
+import SSBX.Foundation.Wen.WenyanQuineKleene
 import SSBX.Foundation.Wen.DaoSource
 import SSBX.Foundation.Wen.Demo
 import SSBX.Foundation.Wen.AntiSchmitt
