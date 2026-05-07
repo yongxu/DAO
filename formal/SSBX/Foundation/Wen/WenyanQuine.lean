@@ -5,6 +5,7 @@ import SSBX.Foundation.Wen.WenyanQuineHistory
 import SSBX.Foundation.Wen.WenyanQuineWitness
 import SSBX.Foundation.Wen.WenyanQuineConcreteSearch
 import SSBX.Foundation.Wen.WenyanQuineKleene
+import SSBX.Foundation.Wen.WenyanLambdaBridge
 import SSBX.Foundation.Wen.WenyanFramedProg
 import SSBX.Foundation.Wen.WenyanQuineMeta
 
@@ -41,5 +42,21 @@ export SSBX.Foundation.Wen.WenyanQuineConcreteSearch
 export SSBX.Foundation.Wen.WenyanQuineKleene
   (QuoterSpec SelfApplicationSpec KleeneQuinePayload HistoryEqualityFixedPointExists
    wenyanQuineKleene_summary)
+
+export SSBX.Foundation.Wen.WenyanLambdaRoute
+  (Tier3QuineExists LambdaHistoryFixedPointExists LambdaHistoryBackend LambdaQuotationBackend
+   lambdaHistoryFixedPointExists_to_tier3QuineExists
+   lambda_history_backend_finishes_tier3 lambda_history_backend_gives_tier3_quine
+   lambda_backend_finishes_tier3)
+
+export SSBX.Foundation.Wen.WenyanLambdaBridge.LamRoute
+  (quoteInstr quoteProg beta_step_simulates_wen
+   JianLambdaHistoryBackend JianLambdaQuotationBackend)
+
+export SSBX.Foundation.Wen.WenyanLambdaBridge.LamRoute.JianLambdaHistoryBackend
+  (finishes_tier3 gives_tier3_quine)
+
+export SSBX.Foundation.Wen.WenyanLambdaBridge.LamRoute.JianLambdaQuotationBackend
+  (finishes_tier3 gives_tier3_quine)
 
 end SSBX.Foundation.Wen.WenyanQuine
