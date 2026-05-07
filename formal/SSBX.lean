@@ -11,6 +11,7 @@ import SSBX.Pending.Examples
 -- 文 / 字 / 算子目录
 import SSBX.Text.Glyph
 import SSBX.Text.WenyanOperators
+import SSBX.Text.OperatorReadings
 import SSBX.Text.Completeness
 
 -- 真 / 模型 层
