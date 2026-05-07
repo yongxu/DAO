@@ -1183,6 +1183,77 @@ theorem metaInterpStep_branchShiEq_preserves_gcur (h : Hexagram)
     (s.runFuel 4).history = [gcur] ∧ (s.runFuel 4).halted = true := by
   refine ⟨?_, ?_⟩ <;> rfl
 
+/-! ### § 6c.2e Phase 2.3.w — pc-aware simulation for jump (richer layout)
+
+  Demonstrates a pc-aware simulation: the encoded state carries guest pc
+  (in addition to gcur), and the meta-interp program effects guest pc the
+  same way `YiInstr.execute` does.
+
+  Layout (top → bottom):  `host.history = [encOldPc, encNewPc, gcur]`
+
+  After running, `host.history = [encNewPc, gcur]` — the old pc cell is
+  consumed, the new one becomes the head. This is the cleanest possible
+  formalization of `jump t`'s semantic effect: "next iteration's pc fetch
+  reads from the head of the pc stack, which is now `encNewPc`."
+
+  Both `encOldPc` and `encNewPc` are abstract cells passed in by the
+  caller (they would be supplied by the surrounding fetch loop). The
+  meta-interp program itself is `[.pop, .halt]` — pop discards the old
+  pc cell, halt stops the host. -/
+
+def metaInterpStepPc_jump : List YiInstr := [.pop, .halt]
+
+theorem metaInterpStepPc_jump_simulates
+    (h : Hexagram) (encOldPc encNewPc gcur : Cell192) :
+    let s := { (YiState.init h metaInterpStepPc_jump)
+               with history := [encOldPc, encNewPc, gcur] }
+    (s.runFuel 3).history = [encNewPc, gcur] ∧ (s.runFuel 3).halted = true := by
+  refine ⟨?_, ?_⟩ <;> rfl
+
+/-! pc-aware simulation for `branchShiEq sh _t`. We preserve gcur in
+    history and distinguish "taken" vs "not taken" via the host's `pc`:
+    final host pc = 5 means branch taken (cur.shi == sh), final host pc =
+    3 means not taken. The encoded `target` Nat parameter is implicit in
+    the layout choice (it would correspond to pushing a different new pc
+    cell in a richer encoding, parallel to jump above). -/
+
+def metaInterpStepPc_branchShiEq (sh : Shi) : List YiInstr :=
+  [ .pop                          -- pc 0: cur := gcur
+  , .branchShiEq sh 4             -- pc 1: if cur.shi == sh jump to pc 4
+  , .push                         -- pc 2: not-taken: push gcur back
+  , .halt                         -- pc 3: not-taken halt
+  , .push                         -- pc 4: taken: push gcur back
+  , .halt                         -- pc 5: taken halt
+  ]
+
+theorem metaInterpStepPc_branchShiEq_taken (h hex : Hexagram) (sh : Shi) :
+    let gcur : Cell192 := (hex, sh)
+    let s := { (YiState.init h (metaInterpStepPc_branchShiEq sh))
+               with history := [gcur] }
+    (s.runFuel 5).pc = 5
+    ∧ (s.runFuel 5).history = [gcur]
+    ∧ (s.runFuel 5).halted = true := by
+  refine ⟨?_, ?_, ?_⟩ <;> (cases sh <;> rfl)
+
+/-- When `gcur.shi ≠ sh`, the branch is not taken: host halts at pc 3. -/
+theorem metaInterpStepPc_branchShiEq_notTaken_jin_ji (h hex : Hexagram) :
+    let gcur : Cell192 := (hex, Shi.ji)
+    let s := { (YiState.init h (metaInterpStepPc_branchShiEq Shi.jin))
+               with history := [gcur] }
+    (s.runFuel 5).pc = 3
+    ∧ (s.runFuel 5).history = [gcur]
+    ∧ (s.runFuel 5).halted = true := by
+  refine ⟨?_, ?_, ?_⟩ <;> rfl
+
+theorem metaInterpStepPc_branchShiEq_notTaken_jin_wei (h hex : Hexagram) :
+    let gcur : Cell192 := (hex, Shi.wei)
+    let s := { (YiState.init h (metaInterpStepPc_branchShiEq Shi.jin))
+               with history := [gcur] }
+    (s.runFuel 5).pc = 3
+    ∧ (s.runFuel 5).history = [gcur]
+    ∧ (s.runFuel 5).halted = true := by
+  refine ⟨?_, ?_, ?_⟩ <;> rfl
+
 /-! ### § 6c.4 Dispatch architecture (3×4 hybrid)
 
   Demonstrates the 12-way dispatch architecture (Phase 2.3 design Q#1):
