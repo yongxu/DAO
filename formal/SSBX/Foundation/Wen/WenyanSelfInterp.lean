@@ -1183,26 +1183,101 @@ theorem metaInterpStep_branchShiEq_preserves_gcur (h : Hexagram)
     (s.runFuel 4).history = [gcur] ∧ (s.runFuel 4).halted = true := by
   refine ⟨?_, ?_⟩ <;> rfl
 
-/-! ### § 6c.4 Dispatch architecture (3×4 hybrid) — design recorded, proofs deferred
+/-! ### § 6c.4 Dispatch architecture (3×4 hybrid)
 
-  The 12-way dispatch program has been designed (33 instructions; pcs 0..20
-  are dispatch branches via 1 outer y1-test + 2 inner y2-tests + per-shi
-  branchShiEq chains; pcs 21..32 are 12 sentinel-halt leaves at known offsets
-  per `dispatchLeafPc : Fin 12 → Nat`).
+  Demonstrates the 12-way dispatch architecture (Phase 2.3 design Q#1):
+  pop a tag cell off `host.history`, route to one of 12 distinct halt-leaf
+  pcs by branching first on `cur.shi` (3-way) then on `cur.hex.y1`/`y2`
+  (2 × 2). Tag cells are exactly `cellFromIdx ⟨k, _⟩` for `k ∈ 0..11`,
+  matching the heads of `YiInstrEnc.encInstr` from § 3 (per the
+  `OperatorInstructionSemantics` ledger, this is the formal target for
+  all 12 L0 clauses).
 
-  The proofs `dispatchProg_routes_k` (one per `k ∈ Fin 12`) timed out at
-  600k+ heartbeats during `rfl` reduction of `runFuel 8` over the 33-instruction
-  program with branchYaoEq + branchShiEq dispatch. The fundamental issue is
-  the same as § 6c.2b's setShi/flipYao: native `rfl` can't handle the
-  combined `match` reductions across that many instructions in one sitting.
+  Routing proofs use `native_decide` (kernel-evaluated) because the 33-instr
+  program × `runFuel 8` symbolic reduction blows past 600k+ heartbeats with
+  pure `rfl`. `native_decide` compiles the goal to native code so the cost
+  amortizes to compile-once / run-once. No new axioms beyond the standard
+  `Lean.ofReduceBool` already used elsewhere in the project. -/
 
-  Path forward (Phase 2.3.z): prove `runFuel_succ : runFuel (n+1) s = step (runFuel n s)`
-  + per-opcode `step` reduction lemmas, then compose them step-by-step rather
-  than via single-shot `rfl`. ~ 3-5 days of work.
+/-- The 12-way dispatch program. 33 instructions; pcs 0..20 are dispatch
+    branches, pcs 21..32 are the 12 sentinel-halt leaves. -/
+def dispatchProg : List YiInstr :=
+  [ .pop                                                    -- pc 0:  tag → cur
+  , .branchYaoEq ⟨0, by omega⟩ ⟨2, by omega⟩ 8              -- pc 1:  y1=yang? → hex_idx ∈ {0,2} → jump 8
+  , .branchYaoEq ⟨1, by omega⟩ ⟨2, by omega⟩ 14             -- pc 2:  y2=yang? → hex_idx=1 → jump 14
+  , .branchShiEq Shi.ji  30                                 -- pc 3:  hex_idx=3, shi=ji → tag=9 (push) → 30
+  , .branchShiEq Shi.jin 31                                 -- pc 4:  hex_idx=3, shi=jin → tag=10 (pop) → 31
+  , .jump 32                                                -- pc 5:  hex_idx=3, shi=wei → tag=11 (halt) → 32
+  , .halt , .halt                                           -- pc 6, 7: padding
+  , .branchYaoEq ⟨1, by omega⟩ ⟨2, by omega⟩ 17             -- pc 8:  y2=yang? → hex_idx=0 → jump 17
+  , .branchShiEq Shi.ji  27                                 -- pc 9:  hex_idx=2, shi=ji → tag=6 (branchYaoEq) → 27
+  , .branchShiEq Shi.jin 28                                 -- pc 10: → tag=7 (branchShiEq) → 28
+  , .jump 29                                                -- pc 11: → tag=8 (jump) → 29
+  , .halt , .halt                                           -- pc 12, 13: padding
+  , .branchShiEq Shi.ji  24                                 -- pc 14: hex_idx=1, shi=ji → tag=3 (hu) → 24
+  , .branchShiEq Shi.jin 25                                 -- pc 15: → tag=4 (cuo) → 25
+  , .jump 26                                                -- pc 16: → tag=5 (zong) → 26
+  , .branchShiEq Shi.ji  21                                 -- pc 17: hex_idx=0, shi=ji → tag=0 (nop) → 21
+  , .branchShiEq Shi.jin 22                                 -- pc 18: → tag=1 (setShi) → 22
+  , .jump 23                                                -- pc 19: → tag=2 (flipYao) → 23
+  , .halt                                                   -- pc 20: padding
+  -- pc 21..32: 12 sentinel leaves
+  , .halt , .halt , .halt , .halt , .halt , .halt           -- pc 21..26: tags 0..5
+  , .halt , .halt , .halt , .halt , .halt , .halt           -- pc 27..32: tags 6..11
+  ]
 
-  The 12-way dispatch *design* is captured in the project plan
-  (`/Users/ren/.claude/plans/lean-snoopy-elephant.md`) so future work can
-  pick it up without re-deriving the encoding-tag table. -/
+/-- Map opcode tag k ∈ Fin 12 to its dispatch leaf pc. -/
+def dispatchLeafPc : Fin 12 → Nat
+  | ⟨0, _⟩  => 21 | ⟨1, _⟩  => 22 | ⟨2, _⟩  => 23
+  | ⟨3, _⟩  => 24 | ⟨4, _⟩  => 25 | ⟨5, _⟩  => 26
+  | ⟨6, _⟩  => 27 | ⟨7, _⟩  => 28 | ⟨8, _⟩  => 29
+  | ⟨9, _⟩  => 30 | ⟨10, _⟩ => 31 | ⟨11, _⟩ => 32
+
+theorem dispatchProg_routes_0  : ((({(YiState.init Hexagram.qian dispatchProg) with history := [cellFromIdx ⟨0,  by omega⟩]} : YiState)).runFuel 8).pc = 21 := by native_decide
+theorem dispatchProg_routes_1  : ((({(YiState.init Hexagram.qian dispatchProg) with history := [cellFromIdx ⟨1,  by omega⟩]} : YiState)).runFuel 8).pc = 22 := by native_decide
+theorem dispatchProg_routes_2  : ((({(YiState.init Hexagram.qian dispatchProg) with history := [cellFromIdx ⟨2,  by omega⟩]} : YiState)).runFuel 8).pc = 23 := by native_decide
+theorem dispatchProg_routes_3  : ((({(YiState.init Hexagram.qian dispatchProg) with history := [cellFromIdx ⟨3,  by omega⟩]} : YiState)).runFuel 8).pc = 24 := by native_decide
+theorem dispatchProg_routes_4  : ((({(YiState.init Hexagram.qian dispatchProg) with history := [cellFromIdx ⟨4,  by omega⟩]} : YiState)).runFuel 8).pc = 25 := by native_decide
+theorem dispatchProg_routes_5  : ((({(YiState.init Hexagram.qian dispatchProg) with history := [cellFromIdx ⟨5,  by omega⟩]} : YiState)).runFuel 8).pc = 26 := by native_decide
+theorem dispatchProg_routes_6  : ((({(YiState.init Hexagram.qian dispatchProg) with history := [cellFromIdx ⟨6,  by omega⟩]} : YiState)).runFuel 8).pc = 27 := by native_decide
+theorem dispatchProg_routes_7  : ((({(YiState.init Hexagram.qian dispatchProg) with history := [cellFromIdx ⟨7,  by omega⟩]} : YiState)).runFuel 8).pc = 28 := by native_decide
+theorem dispatchProg_routes_8  : ((({(YiState.init Hexagram.qian dispatchProg) with history := [cellFromIdx ⟨8,  by omega⟩]} : YiState)).runFuel 8).pc = 29 := by native_decide
+theorem dispatchProg_routes_9  : ((({(YiState.init Hexagram.qian dispatchProg) with history := [cellFromIdx ⟨9,  by omega⟩]} : YiState)).runFuel 8).pc = 30 := by native_decide
+theorem dispatchProg_routes_10 : ((({(YiState.init Hexagram.qian dispatchProg) with history := [cellFromIdx ⟨10, by omega⟩]} : YiState)).runFuel 8).pc = 31 := by native_decide
+theorem dispatchProg_routes_11 : ((({(YiState.init Hexagram.qian dispatchProg) with history := [cellFromIdx ⟨11, by omega⟩]} : YiState)).runFuel 8).pc = 32 := by native_decide
+
+theorem dispatchProg_halts_0  : ((({(YiState.init Hexagram.qian dispatchProg) with history := [cellFromIdx ⟨0,  by omega⟩]} : YiState)).runFuel 8).halted = true := by native_decide
+theorem dispatchProg_halts_1  : ((({(YiState.init Hexagram.qian dispatchProg) with history := [cellFromIdx ⟨1,  by omega⟩]} : YiState)).runFuel 8).halted = true := by native_decide
+theorem dispatchProg_halts_2  : ((({(YiState.init Hexagram.qian dispatchProg) with history := [cellFromIdx ⟨2,  by omega⟩]} : YiState)).runFuel 8).halted = true := by native_decide
+theorem dispatchProg_halts_3  : ((({(YiState.init Hexagram.qian dispatchProg) with history := [cellFromIdx ⟨3,  by omega⟩]} : YiState)).runFuel 8).halted = true := by native_decide
+theorem dispatchProg_halts_4  : ((({(YiState.init Hexagram.qian dispatchProg) with history := [cellFromIdx ⟨4,  by omega⟩]} : YiState)).runFuel 8).halted = true := by native_decide
+theorem dispatchProg_halts_5  : ((({(YiState.init Hexagram.qian dispatchProg) with history := [cellFromIdx ⟨5,  by omega⟩]} : YiState)).runFuel 8).halted = true := by native_decide
+theorem dispatchProg_halts_6  : ((({(YiState.init Hexagram.qian dispatchProg) with history := [cellFromIdx ⟨6,  by omega⟩]} : YiState)).runFuel 8).halted = true := by native_decide
+theorem dispatchProg_halts_7  : ((({(YiState.init Hexagram.qian dispatchProg) with history := [cellFromIdx ⟨7,  by omega⟩]} : YiState)).runFuel 8).halted = true := by native_decide
+theorem dispatchProg_halts_8  : ((({(YiState.init Hexagram.qian dispatchProg) with history := [cellFromIdx ⟨8,  by omega⟩]} : YiState)).runFuel 8).halted = true := by native_decide
+theorem dispatchProg_halts_9  : ((({(YiState.init Hexagram.qian dispatchProg) with history := [cellFromIdx ⟨9,  by omega⟩]} : YiState)).runFuel 8).halted = true := by native_decide
+theorem dispatchProg_halts_10 : ((({(YiState.init Hexagram.qian dispatchProg) with history := [cellFromIdx ⟨10, by omega⟩]} : YiState)).runFuel 8).halted = true := by native_decide
+theorem dispatchProg_halts_11 : ((({(YiState.init Hexagram.qian dispatchProg) with history := [cellFromIdx ⟨11, by omega⟩]} : YiState)).runFuel 8).halted = true := by native_decide
+
+/-- Combined dispatch theorem: every opcode tag k ∈ Fin 12 routes to its
+    expected leaf pc within `runFuel 8`, halting there. -/
+theorem dispatchProg_routes (k : Fin 12) :
+    let s := { (YiState.init Hexagram.qian dispatchProg)
+               with history := [cellFromIdx ⟨k.val, by have := k.isLt; omega⟩] }
+    (s.runFuel 8).pc = dispatchLeafPc k ∧ (s.runFuel 8).halted = true := by
+  match k with
+  | ⟨0, _⟩  => exact ⟨dispatchProg_routes_0,  dispatchProg_halts_0⟩
+  | ⟨1, _⟩  => exact ⟨dispatchProg_routes_1,  dispatchProg_halts_1⟩
+  | ⟨2, _⟩  => exact ⟨dispatchProg_routes_2,  dispatchProg_halts_2⟩
+  | ⟨3, _⟩  => exact ⟨dispatchProg_routes_3,  dispatchProg_halts_3⟩
+  | ⟨4, _⟩  => exact ⟨dispatchProg_routes_4,  dispatchProg_halts_4⟩
+  | ⟨5, _⟩  => exact ⟨dispatchProg_routes_5,  dispatchProg_halts_5⟩
+  | ⟨6, _⟩  => exact ⟨dispatchProg_routes_6,  dispatchProg_halts_6⟩
+  | ⟨7, _⟩  => exact ⟨dispatchProg_routes_7,  dispatchProg_halts_7⟩
+  | ⟨8, _⟩  => exact ⟨dispatchProg_routes_8,  dispatchProg_halts_8⟩
+  | ⟨9, _⟩  => exact ⟨dispatchProg_routes_9,  dispatchProg_halts_9⟩
+  | ⟨10, _⟩ => exact ⟨dispatchProg_routes_10, dispatchProg_halts_10⟩
+  | ⟨11, _⟩ => exact ⟨dispatchProg_routes_11, dispatchProg_halts_11⟩
 
 /-! ### § 6c.3 Combined "Phase 2.3 trivial-7" summary
 
