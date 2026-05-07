@@ -156,6 +156,7 @@ def signatureKindStr : SignatureKind → String
   | .objectEndo => "objectEndo"
   | .propUnary  => "propUnary"
   | .opUnary    => "opUnary"
+  | k           => ((repr k).pretty.takeWhile (· != ' ')).toString   -- a369867+ added many more kinds
 
 def cmdSignatures : IO UInt32 := do
   IO.println s!"-- {exactSignatureSeed.length} exact signature seeds (Text/OperatorSignatures.lean) --"
