@@ -11,6 +11,7 @@ import SSBX.Pending.Examples
 -- 文 / 字 / 算子目录
 import SSBX.Text.Glyph
 import SSBX.Text.WenyanOperators
+import SSBX.Text.OperatorReadings
 import SSBX.Text.Completeness
 
 -- 真 / 模型 层
@@ -78,6 +79,8 @@ import SSBX.Foundation.Bagua.Newman
 import SSBX.Foundation.Bagua.KleeneInternal
 import SSBX.Foundation.Bagua.GodelLi
 import SSBX.Foundation.Bagua.BaguaWenSpec
+import SSBX.Text.OperatorAnchors
+import SSBX.Text.OperatorCellMap
 import SSBX.Foundation.Bagua.ChunkedDecide
 import SSBX.Foundation.Bagua.CuoInvariance
 import SSBX.Foundation.Bagua.FuelDiscipline

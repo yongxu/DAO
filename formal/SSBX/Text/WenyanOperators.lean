@@ -9,6 +9,7 @@ open SSBX.Text.Glyph
 
 inductive OperatorGroup where
   | R | C | T | F | B | Q | K | M | N | I | S | H | P | G | A | D | E | L | Y | X | Z
+  | ZHU | SUN | CHU | LIJ | ZA
   deriving DecidableEq, Repr
 
 inductive SignatureStatus where
@@ -57,6 +58,17 @@ inductive OperatorId where
   | Z_22 | Z_23 | Z_24 | Z_25 | Z_26 | Z_27 | Z_28 | Z_29
   | Z_30 | Z_31 | Z_32 | Z_33 | Z_34 | Z_35 | Z_36 | Z_37
   | Z_38 | Z_39 | Z_40
+  | ZHU_1 | ZHU_2 | ZHU_3 | ZHU_4 | ZHU_5 | ZHU_6
+  | ZHU_7 | ZHU_8 | ZHU_9 | ZHU_10 | ZHU_11 | ZHU_12
+  | SUN_1 | SUN_2 | SUN_3 | SUN_4 | SUN_5 | SUN_6 | SUN_7
+  | SUN_8 | SUN_9 | SUN_10 | SUN_11 | SUN_12 | SUN_13 | SUN_14
+  | CHU_1 | CHU_2 | CHU_3 | CHU_4 | CHU_5 | CHU_6 | CHU_7
+  | CHU_8 | CHU_9 | CHU_10
+  | LIJ_1 | LIJ_2 | LIJ_3 | LIJ_4 | LIJ_5 | LIJ_6 | LIJ_7
+  | LIJ_8 | LIJ_9 | LIJ_10 | LIJ_11 | LIJ_12 | LIJ_13 | LIJ_14
+  | ZA_1 | ZA_2 | ZA_3 | ZA_4 | ZA_5 | ZA_6 | ZA_7 | ZA_8
+  | ZA_9 | ZA_10 | ZA_11 | ZA_12 | ZA_13 | ZA_14 | ZA_15
+  | ZA_16 | ZA_17 | ZA_18 | ZA_19 | ZA_20
   deriving DecidableEq, Repr
 
 structure OperatorEntry where
@@ -370,6 +382,76 @@ def OperatorId.group : OperatorId -> OperatorGroup
   | .Z_38 => .Z
   | .Z_39 => .Z
   | .Z_40 => .Z
+  | .ZHU_1 => .ZHU
+  | .ZHU_2 => .ZHU
+  | .ZHU_3 => .ZHU
+  | .ZHU_4 => .ZHU
+  | .ZHU_5 => .ZHU
+  | .ZHU_6 => .ZHU
+  | .ZHU_7 => .ZHU
+  | .ZHU_8 => .ZHU
+  | .ZHU_9 => .ZHU
+  | .ZHU_10 => .ZHU
+  | .ZHU_11 => .ZHU
+  | .ZHU_12 => .ZHU
+  | .SUN_1 => .SUN
+  | .SUN_2 => .SUN
+  | .SUN_3 => .SUN
+  | .SUN_4 => .SUN
+  | .SUN_5 => .SUN
+  | .SUN_6 => .SUN
+  | .SUN_7 => .SUN
+  | .SUN_8 => .SUN
+  | .SUN_9 => .SUN
+  | .SUN_10 => .SUN
+  | .SUN_11 => .SUN
+  | .SUN_12 => .SUN
+  | .SUN_13 => .SUN
+  | .SUN_14 => .SUN
+  | .CHU_1 => .CHU
+  | .CHU_2 => .CHU
+  | .CHU_3 => .CHU
+  | .CHU_4 => .CHU
+  | .CHU_5 => .CHU
+  | .CHU_6 => .CHU
+  | .CHU_7 => .CHU
+  | .CHU_8 => .CHU
+  | .CHU_9 => .CHU
+  | .CHU_10 => .CHU
+  | .LIJ_1 => .LIJ
+  | .LIJ_2 => .LIJ
+  | .LIJ_3 => .LIJ
+  | .LIJ_4 => .LIJ
+  | .LIJ_5 => .LIJ
+  | .LIJ_6 => .LIJ
+  | .LIJ_7 => .LIJ
+  | .LIJ_8 => .LIJ
+  | .LIJ_9 => .LIJ
+  | .LIJ_10 => .LIJ
+  | .LIJ_11 => .LIJ
+  | .LIJ_12 => .LIJ
+  | .LIJ_13 => .LIJ
+  | .LIJ_14 => .LIJ
+  | .ZA_1 => .ZA
+  | .ZA_2 => .ZA
+  | .ZA_3 => .ZA
+  | .ZA_4 => .ZA
+  | .ZA_5 => .ZA
+  | .ZA_6 => .ZA
+  | .ZA_7 => .ZA
+  | .ZA_8 => .ZA
+  | .ZA_9 => .ZA
+  | .ZA_10 => .ZA
+  | .ZA_11 => .ZA
+  | .ZA_12 => .ZA
+  | .ZA_13 => .ZA
+  | .ZA_14 => .ZA
+  | .ZA_15 => .ZA
+  | .ZA_16 => .ZA
+  | .ZA_17 => .ZA
+  | .ZA_18 => .ZA
+  | .ZA_19 => .ZA
+  | .ZA_20 => .ZA
 
 def OperatorId.code : OperatorId -> String
   | .R_1 => "R-1"
@@ -673,6 +755,76 @@ def OperatorId.code : OperatorId -> String
   | .Z_38 => "Z-38"
   | .Z_39 => "Z-39"
   | .Z_40 => "Z-40"
+  | .ZHU_1 => "ZHU-1"
+  | .ZHU_2 => "ZHU-2"
+  | .ZHU_3 => "ZHU-3"
+  | .ZHU_4 => "ZHU-4"
+  | .ZHU_5 => "ZHU-5"
+  | .ZHU_6 => "ZHU-6"
+  | .ZHU_7 => "ZHU-7"
+  | .ZHU_8 => "ZHU-8"
+  | .ZHU_9 => "ZHU-9"
+  | .ZHU_10 => "ZHU-10"
+  | .ZHU_11 => "ZHU-11"
+  | .ZHU_12 => "ZHU-12"
+  | .SUN_1 => "SUN-1"
+  | .SUN_2 => "SUN-2"
+  | .SUN_3 => "SUN-3"
+  | .SUN_4 => "SUN-4"
+  | .SUN_5 => "SUN-5"
+  | .SUN_6 => "SUN-6"
+  | .SUN_7 => "SUN-7"
+  | .SUN_8 => "SUN-8"
+  | .SUN_9 => "SUN-9"
+  | .SUN_10 => "SUN-10"
+  | .SUN_11 => "SUN-11"
+  | .SUN_12 => "SUN-12"
+  | .SUN_13 => "SUN-13"
+  | .SUN_14 => "SUN-14"
+  | .CHU_1 => "CHU-1"
+  | .CHU_2 => "CHU-2"
+  | .CHU_3 => "CHU-3"
+  | .CHU_4 => "CHU-4"
+  | .CHU_5 => "CHU-5"
+  | .CHU_6 => "CHU-6"
+  | .CHU_7 => "CHU-7"
+  | .CHU_8 => "CHU-8"
+  | .CHU_9 => "CHU-9"
+  | .CHU_10 => "CHU-10"
+  | .LIJ_1 => "LIJ-1"
+  | .LIJ_2 => "LIJ-2"
+  | .LIJ_3 => "LIJ-3"
+  | .LIJ_4 => "LIJ-4"
+  | .LIJ_5 => "LIJ-5"
+  | .LIJ_6 => "LIJ-6"
+  | .LIJ_7 => "LIJ-7"
+  | .LIJ_8 => "LIJ-8"
+  | .LIJ_9 => "LIJ-9"
+  | .LIJ_10 => "LIJ-10"
+  | .LIJ_11 => "LIJ-11"
+  | .LIJ_12 => "LIJ-12"
+  | .LIJ_13 => "LIJ-13"
+  | .LIJ_14 => "LIJ-14"
+  | .ZA_1 => "ZA-1"
+  | .ZA_2 => "ZA-2"
+  | .ZA_3 => "ZA-3"
+  | .ZA_4 => "ZA-4"
+  | .ZA_5 => "ZA-5"
+  | .ZA_6 => "ZA-6"
+  | .ZA_7 => "ZA-7"
+  | .ZA_8 => "ZA-8"
+  | .ZA_9 => "ZA-9"
+  | .ZA_10 => "ZA-10"
+  | .ZA_11 => "ZA-11"
+  | .ZA_12 => "ZA-12"
+  | .ZA_13 => "ZA-13"
+  | .ZA_14 => "ZA-14"
+  | .ZA_15 => "ZA-15"
+  | .ZA_16 => "ZA-16"
+  | .ZA_17 => "ZA-17"
+  | .ZA_18 => "ZA-18"
+  | .ZA_19 => "ZA-19"
+  | .ZA_20 => "ZA-20"
 
 def OperatorId.title : OperatorId -> String
   | .R_1 => "在"
@@ -976,6 +1128,76 @@ def OperatorId.title : OperatorId -> String
   | .Z_38 => "悟"
   | .Z_39 => "識 / 识"
   | .Z_40 => "知 (作算子)"
+  | .ZHU_1 => "齊 / 齐"
+  | .ZHU_2 => "游"
+  | .ZHU_3 => "逍遙 / 逍遥"
+  | .ZHU_4 => "忘"
+  | .ZHU_5 => "喪 / 丧"
+  | .ZHU_6 => "物化"
+  | .ZHU_7 => "因"
+  | .ZHU_8 => "解"
+  | .ZHU_9 => "天理"
+  | .ZHU_10 => "方"
+  | .ZHU_11 => "鏡 / 镜"
+  | .ZHU_12 => "筌"
+  | .SUN_1 => "形"
+  | .SUN_2 => "勢 / 势"
+  | .SUN_3 => "虛 / 虚"
+  | .SUN_4 => "實 / 实"
+  | .SUN_5 => "奇"
+  | .SUN_6 => "正"
+  | .SUN_7 => "迂"
+  | .SUN_8 => "直"
+  | .SUN_9 => "詭 / 诡"
+  | .SUN_10 => "示"
+  | .SUN_11 => "致人"
+  | .SUN_12 => "分合"
+  | .SUN_13 => "速"
+  | .SUN_14 => "知"
+  | .CHU_1 => "招"
+  | .CHU_2 => "求"
+  | .CHU_3 => "遊 / 游"
+  | .CHU_4 => "登"
+  | .CHU_5 => "望"
+  | .CHU_6 => "降"
+  | .CHU_7 => "反顧 / 反顾"
+  | .CHU_8 => "紉 / 纫"
+  | .CHU_9 => "集"
+  | .CHU_10 => "未變 / 未变"
+  | .LIJ_1 => "序"
+  | .LIJ_2 => "敬"
+  | .LIJ_3 => "辭 / 辞"
+  | .LIJ_4 => "位"
+  | .LIJ_5 => "儀 / 仪"
+  | .LIJ_6 => "節 / 节"
+  | .LIJ_7 => "中"
+  | .LIJ_8 => "和"
+  | .LIJ_9 => "誠 / 诚"
+  | .LIJ_10 => "慎"
+  | .LIJ_11 => "獨 / 独"
+  | .LIJ_12 => "格"
+  | .LIJ_13 => "齊 / 齐"
+  | .LIJ_14 => "平"
+  | .ZA_1 => "虛 / 虚 (心术版)"
+  | .ZA_2 => "靜 / 静 (心术版)"
+  | .ZA_3 => "心君"
+  | .ZA_4 => "官分"
+  | .ZA_5 => "精 (内业版)"
+  | .ZA_6 => "時 / 时 (月令版)"
+  | .ZA_7 => "令 (月令版)"
+  | .ZA_8 => "察今"
+  | .ZA_9 => "統 / 统"
+  | .ZA_10 => "應 / 应 (兵略版)"
+  | .ZA_11 => "督"
+  | .ZA_12 => "調 / 调 (淮南版)"
+  | .ZA_13 => "大一"
+  | .ZA_14 => "小一"
+  | .ZA_15 => "無厚 / 无厚"
+  | .ZA_16 => "同異 / 同异"
+  | .ZA_17 => "兩可 / 两可"
+  | .ZA_18 => "正名 (尹文子版)"
+  | .ZA_19 => "名分 (尹文子版)"
+  | .ZA_20 => "辨 / 辩"
 
 def operatorForms : OperatorId -> List GlyphSense
   | .R_1 => textToSenses "在"
@@ -1279,6 +1501,76 @@ def operatorForms : OperatorId -> List GlyphSense
   | .Z_38 => textToSenses "悟"
   | .Z_39 => textToSenses "識识"
   | .Z_40 => textToSenses "知"
+  | .ZHU_1 => textToSenses "齐"
+  | .ZHU_2 => [«行1»]
+  | .ZHU_3 => textToSenses "無无己名"
+  | .ZHU_4 => textToSenses "执"
+  | .ZHU_5 => textToSenses "己"
+  | .ZHU_6 => textToSenses "物化"
+  | .ZHU_7 => textToSenses "因"
+  | .ZHU_8 => textToSenses "解"
+  | .ZHU_9 => textToSenses "天理"
+  | .ZHU_10 => textToSenses "方"
+  | .ZHU_11 => textToSenses "應应"
+  | .ZHU_12 => textToSenses "得"
+  | .SUN_1 => textToSenses "形"
+  | .SUN_2 => textToSenses "勢势"
+  | .SUN_3 => textToSenses "虛"
+  | .SUN_4 => textToSenses "實实"
+  | .SUN_5 => textToSenses "異异"
+  | .SUN_6 => textToSenses "正"
+  | .SUN_7 => [«由1»]
+  | .SUN_8 => textToSenses "至"
+  | .SUN_9 => textToSenses "錯错"
+  | .SUN_10 => textToSenses "形"
+  | .SUN_11 => textToSenses "致人"
+  | .SUN_12 => textToSenses "分合"
+  | .SUN_13 => textToSenses "動动"
+  | .SUN_14 => textToSenses "知"
+  | .CHU_1 => textToSenses "來来"
+  | .CHU_2 => textToSenses "上下"
+  | .CHU_3 => textToSenses "目"
+  | .CHU_4 => textToSenses "高"
+  | .CHU_5 => textToSenses "目"
+  | .CHU_6 => textToSenses "降"
+  | .CHU_7 => textToSenses "反"
+  | .CHU_8 => textToSenses "德"
+  | .CHU_9 => textToSenses "集"
+  | .CHU_10 => textToSenses "未變变"
+  | .LIJ_1 => textToSenses "序"
+  | .LIJ_2 => textToSenses "礼"
+  | .LIJ_3 => textToSenses "辭辞"
+  | .LIJ_4 => textToSenses "位"
+  | .LIJ_5 => textToSenses "礼"
+  | .LIJ_6 => textToSenses "節节"
+  | .LIJ_7 => textToSenses "中"
+  | .LIJ_8 => [«和1»]
+  | .LIJ_9 => textToSenses "真"
+  | .LIJ_10 => textToSenses "独"
+  | .LIJ_11 => textToSenses "独"
+  | .LIJ_12 => textToSenses "格"
+  | .LIJ_13 => textToSenses "齐"
+  | .LIJ_14 => textToSenses "平"
+  | .ZA_1 => textToSenses "虛"
+  | .ZA_2 => textToSenses "靜静"
+  | .ZA_3 => textToSenses "心"
+  | .ZA_4 => textToSenses "分"
+  | .ZA_5 => textToSenses "精"
+  | .ZA_6 => textToSenses "期"
+  | .ZA_7 => textToSenses "令"
+  | .ZA_8 => textToSenses "察"
+  | .ZA_9 => [«合1»]
+  | .ZA_10 => textToSenses "應应"
+  | .ZA_11 => textToSenses "控"
+  | .ZA_12 => textToSenses "調调"
+  | .ZA_13 => textToSenses "大一"
+  | .ZA_14 => textToSenses "一"
+  | .ZA_15 => textToSenses "無无"
+  | .ZA_16 => textToSenses "同異异"
+  | .ZA_17 => textToSenses "兩两可"
+  | .ZA_18 => textToSenses "正名"
+  | .ZA_19 => textToSenses "名分"
+  | .ZA_20 => textToSenses "辨辩"
 
 def operatorEntry (id : OperatorId) : OperatorEntry :=
   { id := id, code := id.code, title := id.title, group := id.group,
@@ -1323,7 +1615,17 @@ def allOperatorIds : List OperatorId := [
   .Z_14, .Z_15, .Z_16, .Z_17, .Z_18, .Z_19, .Z_20, .Z_21,
   .Z_22, .Z_23, .Z_24, .Z_25, .Z_26, .Z_27, .Z_28, .Z_29,
   .Z_30, .Z_31, .Z_32, .Z_33, .Z_34, .Z_35, .Z_36, .Z_37,
-  .Z_38, .Z_39, .Z_40,
+  .Z_38, .Z_39, .Z_40, .ZHU_1, .ZHU_2, .ZHU_3, .ZHU_4,
+  .ZHU_5, .ZHU_6, .ZHU_7, .ZHU_8, .ZHU_9, .ZHU_10, .ZHU_11,
+  .ZHU_12, .SUN_1, .SUN_2, .SUN_3, .SUN_4, .SUN_5, .SUN_6,
+  .SUN_7, .SUN_8, .SUN_9, .SUN_10, .SUN_11, .SUN_12, .SUN_13,
+  .SUN_14, .CHU_1, .CHU_2, .CHU_3, .CHU_4, .CHU_5, .CHU_6,
+  .CHU_7, .CHU_8, .CHU_9, .CHU_10, .LIJ_1, .LIJ_2, .LIJ_3,
+  .LIJ_4, .LIJ_5, .LIJ_6, .LIJ_7, .LIJ_8, .LIJ_9, .LIJ_10,
+  .LIJ_11, .LIJ_12, .LIJ_13, .LIJ_14, .ZA_1, .ZA_2, .ZA_3,
+  .ZA_4, .ZA_5, .ZA_6, .ZA_7, .ZA_8, .ZA_9, .ZA_10, .ZA_11,
+  .ZA_12, .ZA_13, .ZA_14, .ZA_15, .ZA_16, .ZA_17, .ZA_18,
+  .ZA_19, .ZA_20,
 ]
 
 def SignatureStatus.admissible : SignatureStatus -> Prop
