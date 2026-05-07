@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import itertools
 import json
 import os
 import re
@@ -629,6 +630,193 @@ def cell192_transition_index(root: Path) -> tuple[dict, str]:
     return data, md
 
 
+def cell192_tree_index(root: Path) -> tuple[dict, str]:
+    yi_path = root / "formal/SSBX/Foundation/Yi/Yi.lean"
+    cell_path = root / "formal/SSBX/Foundation/Bagua/Cell192.lean"
+
+    bits = [("1", "阳"), ("0", "阴")]
+    shis = [("JI", "已"), ("JIN", "今"), ("WEI", "未")]
+    position_names = ["初爻", "二爻", "三爻", "四爻", "五爻", "上爻"]
+
+    def bit_label(bit_string: str) -> str:
+        return "".join("阳" if bit == "1" else "阴" for bit in bit_string)
+
+    def patterns(width: int) -> list[str]:
+        return ["".join(p) for p in itertools.product([b[0] for b in bits], repeat=width)]
+
+    nodes = [
+        {
+            "id": "ROOT",
+            "level": 0,
+            "kind": "root",
+            "label": "根",
+            "path": "根",
+            "count_under_node": 192,
+        }
+    ]
+    edges = []
+    leaves = []
+
+    for depth in range(1, 6):
+        for prefix in patterns(depth):
+            nodes.append(
+                {
+                    "id": f"Y{depth}.{prefix}",
+                    "level": depth,
+                    "kind": "yaoPrefix",
+                    "label": bit_label(prefix),
+                    "path": " / ".join(
+                        f"{position_names[i]}={bit_label(prefix[i])}" for i in range(depth)
+                    ),
+                    "count_under_node": (2 ** (6 - depth)) * 3,
+                }
+            )
+
+    for hex_bits in patterns(6):
+        nodes.append(
+            {
+                "id": f"H{hex_bits}",
+                "level": 6,
+                "kind": "hexagram",
+                "label": bit_label(hex_bits),
+                "path": " / ".join(
+                    f"{position_names[i]}={bit_label(hex_bits[i])}" for i in range(6)
+                ),
+                "count_under_node": 3,
+            }
+        )
+        for shi_key, shi_label in shis:
+            cell_id = f"H{hex_bits}.{shi_key}"
+            path_parts = [f"{position_names[i]}={bit_label(hex_bits[i])}" for i in range(6)]
+            path_parts.append(f"时态={shi_label}")
+            cell = {
+                "id": cell_id,
+                "level": 7,
+                "kind": "cell192",
+                "label": f"{bit_label(hex_bits)}/{shi_label}",
+                "path": " / ".join(path_parts),
+                "count_under_node": 1,
+            }
+            nodes.append(cell)
+            leaves.append(cell)
+
+    for bit, label in bits:
+        edges.append(
+            {
+                "from": "ROOT",
+                "to": f"Y1.{bit}",
+                "relation": f"生{position_names[0]}={label}",
+                "relation_kind": "chooseYao",
+            }
+        )
+
+    for depth in range(1, 5):
+        for prefix in patterns(depth):
+            for bit, label in bits:
+                child = prefix + bit
+                edges.append(
+                    {
+                        "from": f"Y{depth}.{prefix}",
+                        "to": f"Y{depth + 1}.{child}",
+                        "relation": f"定{position_names[depth]}={label}",
+                        "relation_kind": "chooseYao",
+                    }
+                )
+
+    for prefix in patterns(5):
+        for bit, label in bits:
+            hex_bits = prefix + bit
+            edges.append(
+                {
+                    "from": f"Y5.{prefix}",
+                    "to": f"H{hex_bits}",
+                    "relation": f"定{position_names[5]}={label}; 成卦",
+                    "relation_kind": "completeHexagram",
+                }
+            )
+
+    for hex_bits in patterns(6):
+        for shi_key, shi_label in shis:
+            edges.append(
+                {
+                    "from": f"H{hex_bits}",
+                    "to": f"H{hex_bits}.{shi_key}",
+                    "relation": f"配时态={shi_label}; 成Cell192",
+                    "relation_kind": "realizeShi",
+                }
+            )
+
+    level_rows = [
+        {"level": 0, "kind": "root", "count": 1, "meaning": "共同根节点"},
+        {"level": 1, "kind": "yaoPrefix", "count": 2, "meaning": "初爻二分"},
+        {"level": 2, "kind": "yaoPrefix", "count": 4, "meaning": "初、二爻前缀"},
+        {"level": 3, "kind": "yaoPrefix", "count": 8, "meaning": "三爻前缀 / 八卦形"},
+        {"level": 4, "kind": "yaoPrefix", "count": 16, "meaning": "四爻前缀"},
+        {"level": 5, "kind": "yaoPrefix", "count": 32, "meaning": "五爻前缀"},
+        {"level": 6, "kind": "hexagram", "count": 64, "meaning": "六爻成卦"},
+        {"level": 7, "kind": "cell192", "count": 192, "meaning": "每卦配 已/今/未 三时态"},
+    ]
+    relation_rows = [
+        {
+            "kind": "chooseYao",
+            "meaning": "在下一爻位选择阳或阴，沿二叉前缀树下行。",
+            "edge_count": 2 + 4 + 8 + 16 + 32,
+        },
+        {
+            "kind": "completeHexagram",
+            "meaning": "选择上爻后，六位前缀闭合为一个 Hexagram。",
+            "edge_count": 64,
+        },
+        {
+            "kind": "realizeShi",
+            "meaning": "每个 Hexagram 与 已/今/未 三时态相乘，成为 Cell192。",
+            "edge_count": 192,
+        },
+    ]
+
+    data = {
+        "sources": [rel(yi_path, root), rel(cell_path, root)],
+        "coordinate_convention": "Habcdef.SHI uses six yao bits from bottom to top; 1=yang, 0=yin; SHI is JI/JIN/WEI.",
+        "shape": "1 -> 2 -> 4 -> 8 -> 16 -> 32 -> 64 -> 192",
+        "node_count": len(nodes),
+        "edge_count": len(edges),
+        "leaf_count": len(leaves),
+        "levels": level_rows,
+        "relation_types": relation_rows,
+        "nodes": nodes,
+        "edges": edges,
+        "leaves": leaves,
+    }
+
+    md = provenance("Cell192 Root Tree Index", data["sources"])
+    md += f"- Shape: `{data['shape']}`\n"
+    md += f"- Nodes: {len(nodes)}\n"
+    md += f"- Edges: {len(edges)}\n"
+    md += f"- Leaves: {len(leaves)}\n"
+    md += "- Convention: `Habcdef.SHI` records six yao from bottom to top; `1=yang`, `0=yin`; `SHI ∈ {JI,JIN,WEI}`.\n\n"
+    md += "## Levels\n\n"
+    md += md_table(
+        ["Level", "Kind", "Count", "Meaning"],
+        [[r["level"], r["kind"], r["count"], r["meaning"]] for r in level_rows],
+    )
+    md += "\n## Relation Types\n\n"
+    md += md_table(
+        ["Kind", "Edges", "Meaning"],
+        [[r["kind"], r["edge_count"], r["meaning"]] for r in relation_rows],
+    )
+    md += "\n## Tree Edges\n\n"
+    md += md_table(
+        ["From", "Relation", "To", "Kind"],
+        [[r["from"], r["relation"], r["to"], r["relation_kind"]] for r in edges],
+    )
+    md += "\n## Leaf Paths\n\n"
+    md += md_table(
+        ["Cell", "Label", "Path"],
+        [[r["id"], r["label"], r["path"]] for r in leaves],
+    )
+    return data, md
+
+
 def markdown_index(root: Path, include_archive: bool) -> tuple[dict, str]:
     rows = []
     for path in files(root, (".md", ".mdx", ".rst", ".adoc"), include_archive=include_archive):
@@ -783,6 +971,7 @@ def build_generated(root: Path, out: Path, include_archive: bool, web_payload: b
     claim_data, claim_md = claim_index(root)
     operator_data, operator_md = operator_index(root)
     cell192_transition_data, cell192_transition_md = cell192_transition_index(root)
+    cell192_tree_data, cell192_tree_md = cell192_tree_index(root)
     markdown_data, markdown_md = markdown_index(root, include_archive)
     diagram_data, diagram_md = diagram_index(root)
     crossrefs_data, crossrefs_md = crossrefs(root, markdown_data, lean_data)
@@ -796,6 +985,7 @@ def build_generated(root: Path, out: Path, include_archive: bool, web_payload: b
         "claim-index": claim_data,
         "operator-index": operator_data,
         "cell192-transition-index": cell192_transition_data,
+        "cell192-tree-index": cell192_tree_data,
         "markdown-index": markdown_data,
         "diagram-index": diagram_data,
         "crossrefs": crossrefs_data,
@@ -807,6 +997,7 @@ def build_generated(root: Path, out: Path, include_archive: bool, web_payload: b
         "claim-index": claim_md,
         "operator-index": operator_md,
         "cell192-transition-index": cell192_transition_md,
+        "cell192-tree-index": cell192_tree_md,
         "markdown-index": markdown_md,
         "diagram-index": diagram_md,
         "crossrefs": crossrefs_md,

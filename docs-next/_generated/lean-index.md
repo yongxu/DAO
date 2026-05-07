@@ -32,7 +32,7 @@
 | SSBX.Foundation.Bagua.BaguaAlgebra | Foundation/Bagua | 1 | 120 | 734 | `formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean` |
 | SSBX.Foundation.Bagua.BaguaTuring | Foundation/Bagua | 1 | 28 | 339 | `formal/SSBX/Foundation/Bagua/BaguaTuring.lean` |
 | SSBX.Foundation.Bagua.BaguaWenSpec | Foundation/Bagua | 1 | 18 | 121 | `formal/SSBX/Foundation/Bagua/BaguaWenSpec.lean` |
-| SSBX.Foundation.Bagua.Cell192 | Foundation/Bagua | 2 | 43 | 266 | `formal/SSBX/Foundation/Bagua/Cell192.lean` |
+| SSBX.Foundation.Bagua.Cell192 | Foundation/Bagua | 2 | 46 | 280 | `formal/SSBX/Foundation/Bagua/Cell192.lean` |
 | SSBX.Foundation.Bagua.ChunkedDecide | Foundation/Bagua | 1 | 10 | 89 | `formal/SSBX/Foundation/Bagua/ChunkedDecide.lean` |
 | SSBX.Foundation.Bagua.CuoInvariance | Foundation/Bagua | 1 | 7 | 126 | `formal/SSBX/Foundation/Bagua/CuoInvariance.lean` |
 | SSBX.Foundation.Bagua.FuelDiscipline | Foundation/Bagua | 1 | 7 | 80 | `formal/SSBX/Foundation/Bagua/FuelDiscipline.lean` |

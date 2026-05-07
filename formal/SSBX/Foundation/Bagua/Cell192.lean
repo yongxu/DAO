@@ -81,6 +81,20 @@ theorem mem_all (c : Cell192) : c ∈ all := by
   refine List.mem_flatMap.mpr ⟨h, hexagram_mem_allHex h, ?_⟩
   exact List.mem_map.mpr ⟨s, by cases s <;> simp [Shi.all], rfl⟩
 
+/-- Node counts for the root-to-192 prefix tree:
+root, six successive yao-prefix levels, then the 192 time-realized cells.
+-/
+def rootTo192TreeLevelCounts : List Nat :=
+  [1, 2, 4, 8, 16, 32, 64, 192]
+
+theorem rootTo192TreeLevelCounts_sum :
+    rootTo192TreeLevelCounts.sum = 319 := by
+  native_decide
+
+theorem rootTo192TreeEdgeCount :
+    2 + 4 + 8 + 16 + 32 + 64 + 192 = 318 := by
+  native_decide
+
 end Cell192
 
 /-! ## § 3 Cell192 lateral operators — combined hex flips + 时态 -/

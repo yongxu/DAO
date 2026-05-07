@@ -1293,7 +1293,7 @@
     },
     {
       "cluster": "Foundation/Bagua",
-      "declaration_count": 43,
+      "declaration_count": 46,
       "declarations": [
         {
           "kind": "inductive",
@@ -1346,6 +1346,18 @@
         {
           "kind": "theorem",
           "name": "mem_all"
+        },
+        {
+          "kind": "def",
+          "name": "rootTo192TreeLevelCounts"
+        },
+        {
+          "kind": "theorem",
+          "name": "rootTo192TreeLevelCounts_sum"
+        },
+        {
+          "kind": "theorem",
+          "name": "rootTo192TreeEdgeCount"
         },
         {
           "kind": "def",
@@ -1472,10 +1484,10 @@
         "SSBX.Foundation.Yi.Yi",
         "SSBX.Foundation.Bagua.BaguaAlgebra"
       ],
-      "lines": 266,
+      "lines": 280,
       "module": "SSBX.Foundation.Bagua.Cell192",
       "path": "formal/SSBX/Foundation/Bagua/Cell192.lean",
-      "sha256": "364a7c9b0c06a6c037cd4bf07227eaa420d76747de8d4f27afe9a70caf4a6e2b"
+      "sha256": "d968d7d6dc8a934cb63dd3ad437ab8f4588fb2ec4a270cb1f1ecb2e513ebcebb"
     },
     {
       "cluster": "Foundation/Bagua",

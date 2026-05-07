@@ -1080,14 +1080,15 @@
           "title": "核验"
         }
       ],
-      "lines": 37,
+      "lines": 39,
       "links": [
+        "../_generated/cell192-tree-index.md",
         "../_generated/cell192-transition-index.md",
         "../_generated/trust-boundary.md",
         "../_generated/lean-index.md"
       ],
       "path": "docs-next/10_formal_形式/yi-bagua.md",
-      "sha256": "632855f8ba4b16b6af5de47891e10ef195f505f2876fb0646608b8db66ecb54a",
+      "sha256": "e7d4e2ef665e7278fdab864aab999bc108a73ee47a8f221b56702e1ef96aeb5a",
       "summary": "Yi/Bagua 层把易、八卦、Cell192、受控计算与不完备边界放到同一阅读路径。这里也是当前唯一 axiom 与唯一 partial boundary 所在区域。",
       "title": "Yi 与 Bagua"
     },

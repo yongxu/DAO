@@ -29,7 +29,7 @@
 | 信任边界 | 54 | `docs-next/10_formal_形式/trust-boundaries.md` |
 | Truth 与 Model | 42 | `docs-next/10_formal_形式/truth-model.md` |
 | Foundation/Wen | 37 | `docs-next/10_formal_形式/wen.md` |
-| Yi 与 Bagua | 37 | `docs-next/10_formal_形式/yi-bagua.md` |
+| Yi 与 Bagua | 39 | `docs-next/10_formal_形式/yi-bagua.md` |
 | 义理索引 | 38 | `docs-next/20_theory_义理/README.md` |
 | 义理到 Lean | 94 | `docs-next/20_theory_义理/bridge-to-lean.md` |
 | 核心框架 | 46 | `docs-next/20_theory_义理/core-framework.md` |

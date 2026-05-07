@@ -135,9 +135,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 1991,
+      "bytes": 2196,
       "path": "docs-next/10_formal_形式/yi-bagua.md",
-      "sha256": "632855f8ba4b16b6af5de47891e10ef195f505f2876fb0646608b8db66ecb54a",
+      "sha256": "e7d4e2ef665e7278fdab864aab999bc108a73ee47a8f221b56702e1ef96aeb5a",
       "suffix": ".md"
     },
     {
@@ -375,9 +375,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 11579,
+      "bytes": 11979,
       "path": "formal/SSBX/Foundation/Bagua/Cell192.lean",
-      "sha256": "364a7c9b0c06a6c037cd4bf07227eaa420d76747de8d4f27afe9a70caf4a6e2b",
+      "sha256": "d968d7d6dc8a934cb63dd3ad437ab8f4588fb2ec4a270cb1f1ecb2e513ebcebb",
       "suffix": ".lean"
     },
     {
