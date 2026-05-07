@@ -751,6 +751,210 @@ theorem metaInterpProg_nop_advances (h : Hexagram) :
     ∧ ((YiState.init h metaInterpProg_nop).runFuel 2).halted = true := by
   refine ⟨?_, ?_⟩ <;> rfl
 
+/-! ### § 6b.1 Phase 2.1 handlers — `setShi` / `flipYao` / `jump`
+
+  Three handler programs extending the stub.  Each handler is a tiny YiInstr
+  program containing the instruction-under-test followed by a `halt` (or
+  designed so the runFuel deterministically reaches a halted state).  Each
+  comes with a simulation lemma showing the resulting YiState's `cur`/`pc`
+  matches what `YiState.execute` would produce on the init state.
+
+  #### StateEncLayout
+
+  When the full meta-interpreter is wired (Phase 2.3), encoded YiState data
+  will live in `history` at the following fixed cell offsets (history is
+  indexed from the head, low offset = most-recently-pushed):
+
+  ```
+    offset 0   →  cur          (1 cell : Cell192)
+    offset 1   →  pc           (1 cell, base-192 single digit assumed < 192)
+    offset 2   →  halted flag  (1 cell : 0 = false, 1 = true)
+    offset 3   →  prog_len     (1 cell, base-192 single digit)
+    offset 4.. →  prog_cells   (encoded YiInstr stream)
+  ```
+
+  Phase 2.1 handlers in this section operate on the *direct* YiState (not its
+  encoded form); the layout is documented here so subsequent phases (2.2,
+  2.3) can encode/decode at consistent offsets. -/
+
+/-- A 2-instruction meta-interpreter handling `setShi`: write `s` into
+    `cur.shi`, advance pc, then halt.  The program is `[setShi s, halt]`. -/
+def metaInterpProg_setShi (sh : Shi) : List YiInstr :=
+  [YiInstr.setShi sh, YiInstr.halt]
+
+/-- Simulation lemma for `setShi` handler: after running the 2-instr program,
+    `cur.shi = sh`, `cur.hex = h`, pc advanced to 1, halted. -/
+theorem metaInterpProg_setShi_correct (h : Hexagram) (sh : Shi) :
+    ((YiState.init h (metaInterpProg_setShi sh)).runFuel 2).cur = (h, sh)
+    ∧ ((YiState.init h (metaInterpProg_setShi sh)).runFuel 2).pc = 1
+    ∧ ((YiState.init h (metaInterpProg_setShi sh)).runFuel 2).halted = true := by
+  refine ⟨?_, ?_, ?_⟩ <;> (cases sh <;> rfl)
+
+/-- A 2-instruction meta-interpreter handling `flipYao`: flip the i-th yao of
+    `cur.hex`, advance pc, then halt.  The program is `[flipYao i, halt]`. -/
+def metaInterpProg_flipYao (i : Fin 6) : List YiInstr :=
+  [YiInstr.flipYao i, YiInstr.halt]
+
+/-- Simulation lemma for `flipYao` handler: after running the 2-instr program,
+    `cur.hex = h.flipPos i`, `cur.shi = jin`, pc advanced to 1, halted. -/
+theorem metaInterpProg_flipYao_correct (h : Hexagram) (i : Fin 6) :
+    ((YiState.init h (metaInterpProg_flipYao i)).runFuel 2).cur = (h.flipPos i, Shi.jin)
+    ∧ ((YiState.init h (metaInterpProg_flipYao i)).runFuel 2).pc = 1
+    ∧ ((YiState.init h (metaInterpProg_flipYao i)).runFuel 2).halted = true := by
+  refine ⟨?_, ?_, ?_⟩
+  all_goals
+    match i with
+    | ⟨0, _⟩ | ⟨1, _⟩ | ⟨2, _⟩ | ⟨3, _⟩ | ⟨4, _⟩ | ⟨5, _⟩ => rfl
+
+/-- A 3-instruction meta-interpreter handling `jump`: unconditionally set pc
+    to target, then the runFuel reaches the target instruction.  Program is
+    `[jump 2, halt, halt]` — jumping to pc 2 skips the first halt and lands
+    on the second.  Demonstrates pc-mutation semantics. -/
+def metaInterpProg_jump : List YiInstr :=
+  [YiInstr.jump 2, YiInstr.halt, YiInstr.halt]
+
+/-- Simulation lemma for `jump` handler: pc becomes 2 (the target), and after
+    one more step the second `halt` fires. -/
+theorem metaInterpProg_jump_correct (h : Hexagram) :
+    ((YiState.init h metaInterpProg_jump).runFuel 1).pc = 2
+    ∧ ((YiState.init h metaInterpProg_jump).runFuel 2).pc = 2
+    ∧ ((YiState.init h metaInterpProg_jump).runFuel 2).halted = true := by
+  refine ⟨?_, ?_, ?_⟩ <;> rfl
+
+/-- Bonus: jumping out of program range (pc ≥ prog.length) leads to halt
+    on the next step (per `step`'s `prog[pc]? = none → halted := true`). -/
+def metaInterpProg_jump_out : List YiInstr := [YiInstr.jump 5, YiInstr.nop]
+
+/-- After 1 step pc=5 (out of range, length=2); after 2 steps halted. -/
+theorem metaInterpProg_jump_out_correct (h : Hexagram) :
+    ((YiState.init h metaInterpProg_jump_out).runFuel 1).pc = 5
+    ∧ ((YiState.init h metaInterpProg_jump_out).runFuel 2).halted = true := by
+  refine ⟨?_, ?_⟩ <;> rfl
+
+/-! ### Phase 2.2 — remaining per-instruction handlers
+
+  These handlers complete the per-YiInstr meta-interpreter coverage: the
+  three Bagua maps (互/错/综), the two history primitives (push/pop), and the
+  two conditional branches (branchYaoEq / branchShiEq). Each is a
+  `[<the instruction>, halt]` (or slightly larger) program with a simulation
+  lemma asserting the post-`runFuel` state matches direct execution. -/
+
+/-- A 2-instruction meta-interpreter handling `hu`: replace `cur.hex` with
+    its 互卦, advance pc, then halt. Program is `[hu, halt]`. -/
+def metaInterpProg_hu : List YiInstr :=
+  [YiInstr.hu, YiInstr.halt]
+
+/-- Simulation lemma for `hu` handler: after running the 2-instr program,
+    `cur.hex = Hexagram.hu h`, `cur.shi = jin`, pc advanced, halted. -/
+theorem metaInterpProg_hu_correct (h : Hexagram) :
+    ((YiState.init h metaInterpProg_hu).runFuel 2).cur = (Hexagram.hu h, Shi.jin)
+    ∧ ((YiState.init h metaInterpProg_hu).runFuel 2).pc = 1
+    ∧ ((YiState.init h metaInterpProg_hu).runFuel 2).halted = true := by
+  refine ⟨?_, ?_, ?_⟩ <;> rfl
+
+/-- A 2-instruction meta-interpreter handling `cuo`: replace `cur.hex` with
+    its 错卦 (full negation), advance pc, then halt. Program is `[cuo, halt]`. -/
+def metaInterpProg_cuo : List YiInstr :=
+  [YiInstr.cuo, YiInstr.halt]
+
+/-- Simulation lemma for `cuo` handler: after running the 2-instr program,
+    `cur.hex = Hexagram.cuo h`, `cur.shi = jin`, pc advanced, halted. -/
+theorem metaInterpProg_cuo_correct (h : Hexagram) :
+    ((YiState.init h metaInterpProg_cuo).runFuel 2).cur = (Hexagram.cuo h, Shi.jin)
+    ∧ ((YiState.init h metaInterpProg_cuo).runFuel 2).pc = 1
+    ∧ ((YiState.init h metaInterpProg_cuo).runFuel 2).halted = true := by
+  refine ⟨?_, ?_, ?_⟩ <;> rfl
+
+/-- A 2-instruction meta-interpreter handling `zong`: replace `cur.hex` with
+    its 综卦 (vertical reversal), advance pc, then halt. Program is `[zong, halt]`. -/
+def metaInterpProg_zong : List YiInstr :=
+  [YiInstr.zong, YiInstr.halt]
+
+/-- Simulation lemma for `zong` handler: after running the 2-instr program,
+    `cur.hex = Hexagram.zong h`, `cur.shi = jin`, pc advanced, halted. -/
+theorem metaInterpProg_zong_correct (h : Hexagram) :
+    ((YiState.init h metaInterpProg_zong).runFuel 2).cur = (Hexagram.zong h, Shi.jin)
+    ∧ ((YiState.init h metaInterpProg_zong).runFuel 2).pc = 1
+    ∧ ((YiState.init h metaInterpProg_zong).runFuel 2).halted = true := by
+  refine ⟨?_, ?_, ?_⟩ <;> rfl
+
+/-- A 2-instruction meta-interpreter handling `push`: prepend `cur` onto
+    `history`, advance pc, then halt. Program is `[push, halt]`. -/
+def metaInterpProg_push : List YiInstr :=
+  [YiInstr.push, YiInstr.halt]
+
+/-- Simulation lemma for `push` handler: after running the 2-instr program,
+    `history = [cur]` (the original cur was pushed), pc advanced, halted. -/
+theorem metaInterpProg_push_correct (h : Hexagram) :
+    ((YiState.init h metaInterpProg_push).runFuel 2).history = [(h, Shi.jin)]
+    ∧ ((YiState.init h metaInterpProg_push).runFuel 2).pc = 1
+    ∧ ((YiState.init h metaInterpProg_push).runFuel 2).halted = true := by
+  refine ⟨?_, ?_, ?_⟩ <;> rfl
+
+/-- A 2-instruction meta-interpreter handling `pop` on the *empty* history
+    case (the init state has no history). Program is `[pop, halt]`.
+
+    Per `execute`'s pattern match, `pop` on `[]` sets `halted := true`
+    immediately *without* advancing pc. So after 1 step we already halt. -/
+def metaInterpProg_pop : List YiInstr :=
+  [YiInstr.pop, YiInstr.halt]
+
+/-- Simulation lemma for `pop` handler on empty-history init state: after
+    runFuel 1, `halted = true`, `pc = 0` (unchanged), `cur = (h, jin)`
+    (unchanged), `history = []`. -/
+theorem metaInterpProg_pop_correct (h : Hexagram) :
+    ((YiState.init h metaInterpProg_pop).runFuel 1).halted = true
+    ∧ ((YiState.init h metaInterpProg_pop).runFuel 1).pc = 0
+    ∧ ((YiState.init h metaInterpProg_pop).runFuel 1).cur = (h, Shi.jin)
+    ∧ ((YiState.init h metaInterpProg_pop).runFuel 1).history = [] := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> rfl
+
+/-- A 3-instruction meta-interpreter handling `branchYaoEq`: branch when
+    yao i equals yao j. Program is `[branchYaoEq i j target, halt, halt]`.
+
+    The simulation lemma is pinned to `Hexagram.qian` (all yang) and concrete
+    target `2`: in qian, every pair of yao is equal, so the branch is taken
+    and pc jumps to 2 (skipping the first halt onto the second). -/
+def metaInterpProg_branchYaoEq (i j : Fin 6) (target : Nat) : List YiInstr :=
+  [YiInstr.branchYaoEq i j target, YiInstr.halt, YiInstr.halt]
+
+/-- Simulation lemma for `branchYaoEq` handler on `Hexagram.qian`, target = 2.
+    Since qian has all yang yao, the equality holds and pc jumps to 2. -/
+theorem metaInterpProg_branchYaoEq_correct (i j : Fin 6) :
+    ((YiState.init Hexagram.qian (metaInterpProg_branchYaoEq i j 2)).runFuel 1).pc = 2
+    ∧ ((YiState.init Hexagram.qian (metaInterpProg_branchYaoEq i j 2)).runFuel 2).halted
+        = true := by
+  refine ⟨?_, ?_⟩
+  all_goals
+    match i, j with
+    | ⟨0, _⟩, ⟨0, _⟩ | ⟨0, _⟩, ⟨1, _⟩ | ⟨0, _⟩, ⟨2, _⟩
+    | ⟨0, _⟩, ⟨3, _⟩ | ⟨0, _⟩, ⟨4, _⟩ | ⟨0, _⟩, ⟨5, _⟩
+    | ⟨1, _⟩, ⟨0, _⟩ | ⟨1, _⟩, ⟨1, _⟩ | ⟨1, _⟩, ⟨2, _⟩
+    | ⟨1, _⟩, ⟨3, _⟩ | ⟨1, _⟩, ⟨4, _⟩ | ⟨1, _⟩, ⟨5, _⟩
+    | ⟨2, _⟩, ⟨0, _⟩ | ⟨2, _⟩, ⟨1, _⟩ | ⟨2, _⟩, ⟨2, _⟩
+    | ⟨2, _⟩, ⟨3, _⟩ | ⟨2, _⟩, ⟨4, _⟩ | ⟨2, _⟩, ⟨5, _⟩
+    | ⟨3, _⟩, ⟨0, _⟩ | ⟨3, _⟩, ⟨1, _⟩ | ⟨3, _⟩, ⟨2, _⟩
+    | ⟨3, _⟩, ⟨3, _⟩ | ⟨3, _⟩, ⟨4, _⟩ | ⟨3, _⟩, ⟨5, _⟩
+    | ⟨4, _⟩, ⟨0, _⟩ | ⟨4, _⟩, ⟨1, _⟩ | ⟨4, _⟩, ⟨2, _⟩
+    | ⟨4, _⟩, ⟨3, _⟩ | ⟨4, _⟩, ⟨4, _⟩ | ⟨4, _⟩, ⟨5, _⟩
+    | ⟨5, _⟩, ⟨0, _⟩ | ⟨5, _⟩, ⟨1, _⟩ | ⟨5, _⟩, ⟨2, _⟩
+    | ⟨5, _⟩, ⟨3, _⟩ | ⟨5, _⟩, ⟨4, _⟩ | ⟨5, _⟩, ⟨5, _⟩ => rfl
+
+/-- A 2-instruction meta-interpreter handling `branchShiEq`: branch when
+    `cur.shi` equals `sh`. Program is `[branchShiEq sh target, halt]`.
+
+    The simulation lemma is pinned to `sh = .jin` and concrete target `1`:
+    init Shi is `jin`, so the branch is taken and pc jumps to 1 (the halt). -/
+def metaInterpProg_branchShiEq (sh : Shi) (target : Nat) : List YiInstr :=
+  [YiInstr.branchShiEq sh target, YiInstr.halt]
+
+/-- Simulation lemma for `branchShiEq` handler on `sh = .jin`, target = 1.
+    Since init Shi is `jin`, equality holds and pc jumps to 1, then halt. -/
+theorem metaInterpProg_branchShiEq_correct (h : Hexagram) :
+    ((YiState.init h (metaInterpProg_branchShiEq Shi.jin 1)).runFuel 1).pc = 1
+    ∧ ((YiState.init h (metaInterpProg_branchShiEq Shi.jin 1)).runFuel 2).halted = true := by
+  refine ⟨?_, ?_⟩ <;> rfl
+
 /-- The full meta-interpreter is the disjoint union of the per-instruction
     handlers, joined by a dispatch.  We provide a stub that demonstrates the
     architectural shape (nop + halt for now); extending to all 12 constructors
