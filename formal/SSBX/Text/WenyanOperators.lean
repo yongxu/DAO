@@ -30,25 +30,28 @@ inductive OperatorId where
   | K_7 | K_8 | M_1 | M_2 | M_3 | M_4 | M_5 | M_6
   | M_7 | M_8 | N_1 | N_2 | N_3 | N_4 | N_5 | N_6
   | N_7 | N_8 | I_1 | I_2 | I_3 | I_4 | I_5 | I_6
-    | I_7 | I_8 | S_1 | S_2 | S_3 | S_4 | S_5 | S_6
+    | I_7 | I_8 | I_9 | S_1 | S_2 | S_3 | S_4 | S_5 | S_6
     | S_7 | S_8 | S_9 | S_10 | S_11 | S_12 | S_13 | S_14
-    | S_15 | S_16 | S_17 | S_18 | H_1 | H_2
+    | S_15 | S_16 | S_17 | S_18 | S_19 | S_20 | H_1 | H_2
   | H_3 | H_4 | H_5 | H_6 | H_7 | H_8 | P_1 | P_2
   | P_3 | P_4 | P_5 | P_6 | P_7 | P_8 | P_9 | P_10
   | P_11 | P_12 | P_13 | P_14 | P_15 | P_16 | P_17 | P_18
-  | P_19 | P_20 | G_1 | G_2 | G_3 | G_4 | G_5 | G_6
-  | G_7 | G_8 | G_9 | G_10 | A_1 | A_2 | A_3 | A_4
+  | P_19 | P_20 | P_21 | P_22 | P_23 | P_24 | G_1 | G_2
+  | G_3 | G_4 | G_5 | G_6 | G_7 | G_8 | G_9 | G_10
+  | G_11 | A_1 | A_2 | A_3 | A_4
   | A_5 | A_6 | A_7 | A_8 | A_9 | A_10 | A_11 | A_12
-  | A_13 | A_14 | A_15 | D_1 | D_2 | D_3 | D_4 | D_5
-  | D_6 | D_7 | D_8 | D_9 | D_10 | E_1 | E_2 | E_3
-  | E_4 | E_5 | E_6 | E_7 | L_1 | L_2 | L_3 | L_4
+  | A_13 | A_14 | A_15 | A_16 | A_17 | A_18 | A_19 | A_20
+  | D_1 | D_2 | D_3 | D_4 | D_5 | D_6 | D_7 | D_8 | D_9
+  | D_10 | E_1 | E_2 | E_3 | E_4 | E_5 | E_6 | E_7
+  | E_8 | E_9 | L_1 | L_2 | L_3 | L_4
   | L_5 | L_6 | L_7 | L_8 | L_9 | L_10 | L_11 | L_12
   | L_13 | L_14 | L_15 | L_16 | Y_1 | Y_2 | Y_3 | Y_4
   | Y_5 | Y_6 | Y_7 | Y_8 | Y_9 | Y_10 | Y_11 | Y_12
   | Y_13 | Y_14 | Y_15 | Y_16 | Y_17 | Y_18 | Y_19 | Y_20
-  | Y_21 | Y_22 | Y_23 | Y_24 | Y_25 | X_1 | X_2 | X_3
-  | X_4 | X_5 | X_6 | X_7 | X_8 | X_9 | X_10 | X_11
-  | X_12 | X_13 | X_14 | Z_1 | Z_2 | Z_3 | Z_4 | Z_5
+  | Y_21 | Y_22 | Y_23 | Y_24 | Y_25 | Y_26 | Y_27 | Y_28
+  | X_1 | X_2 | X_3 | X_4 | X_5 | X_6 | X_7 | X_8
+  | X_9 | X_10 | X_11 | X_12 | X_13 | X_14 | X_15 | X_16
+  | Z_1 | Z_2 | Z_3 | Z_4 | Z_5
   | Z_6 | Z_7 | Z_8 | Z_9 | Z_10 | Z_11 | Z_12 | Z_13
   | Z_14 | Z_15 | Z_16 | Z_17 | Z_18 | Z_19 | Z_20 | Z_21
   | Z_22 | Z_23 | Z_24 | Z_25 | Z_26 | Z_27 | Z_28 | Z_29
@@ -164,6 +167,7 @@ def OperatorId.group : OperatorId -> OperatorGroup
   | .I_6 => .I
   | .I_7 => .I
   | .I_8 => .I
+  | .I_9 => .I
   | .S_1 => .S
   | .S_2 => .S
   | .S_3 => .S
@@ -182,6 +186,8 @@ def OperatorId.group : OperatorId -> OperatorGroup
   | .S_16 => .S
   | .S_17 => .S
   | .S_18 => .S
+  | .S_19 => .S
+  | .S_20 => .S
   | .H_1 => .H
   | .H_2 => .H
   | .H_3 => .H
@@ -210,6 +216,10 @@ def OperatorId.group : OperatorId -> OperatorGroup
   | .P_18 => .P
   | .P_19 => .P
   | .P_20 => .P
+  | .P_21 => .P
+  | .P_22 => .P
+  | .P_23 => .P
+  | .P_24 => .P
   | .G_1 => .G
   | .G_2 => .G
   | .G_3 => .G
@@ -220,6 +230,7 @@ def OperatorId.group : OperatorId -> OperatorGroup
   | .G_8 => .G
   | .G_9 => .G
   | .G_10 => .G
+  | .G_11 => .G
   | .A_1 => .A
   | .A_2 => .A
   | .A_3 => .A
@@ -235,6 +246,11 @@ def OperatorId.group : OperatorId -> OperatorGroup
   | .A_13 => .A
   | .A_14 => .A
   | .A_15 => .A
+  | .A_16 => .A
+  | .A_17 => .A
+  | .A_18 => .A
+  | .A_19 => .A
+  | .A_20 => .A
   | .D_1 => .D
   | .D_2 => .D
   | .D_3 => .D
@@ -252,6 +268,8 @@ def OperatorId.group : OperatorId -> OperatorGroup
   | .E_5 => .E
   | .E_6 => .E
   | .E_7 => .E
+  | .E_8 => .E
+  | .E_9 => .E
   | .L_1 => .L
   | .L_2 => .L
   | .L_3 => .L
@@ -293,6 +311,9 @@ def OperatorId.group : OperatorId -> OperatorGroup
   | .Y_23 => .Y
   | .Y_24 => .Y
   | .Y_25 => .Y
+  | .Y_26 => .Y
+  | .Y_27 => .Y
+  | .Y_28 => .Y
   | .X_1 => .X
   | .X_2 => .X
   | .X_3 => .X
@@ -307,6 +328,8 @@ def OperatorId.group : OperatorId -> OperatorGroup
   | .X_12 => .X
   | .X_13 => .X
   | .X_14 => .X
+  | .X_15 => .X
+  | .X_16 => .X
   | .Z_1 => .Z
   | .Z_2 => .Z
   | .Z_3 => .Z
@@ -447,6 +470,7 @@ def OperatorId.code : OperatorId -> String
   | .I_6 => "I-6"
   | .I_7 => "I-7"
   | .I_8 => "I-8"
+  | .I_9 => "I-9"
   | .S_1 => "S-1"
   | .S_2 => "S-2"
   | .S_3 => "S-3"
@@ -465,6 +489,8 @@ def OperatorId.code : OperatorId -> String
   | .S_16 => "S-16"
   | .S_17 => "S-17"
   | .S_18 => "S-18"
+  | .S_19 => "S-19"
+  | .S_20 => "S-20"
   | .H_1 => "H-1"
   | .H_2 => "H-2"
   | .H_3 => "H-3"
@@ -493,6 +519,10 @@ def OperatorId.code : OperatorId -> String
   | .P_18 => "P-18"
   | .P_19 => "P-19"
   | .P_20 => "P-20"
+  | .P_21 => "P-21"
+  | .P_22 => "P-22"
+  | .P_23 => "P-23"
+  | .P_24 => "P-24"
   | .G_1 => "G-1"
   | .G_2 => "G-2"
   | .G_3 => "G-3"
@@ -503,6 +533,7 @@ def OperatorId.code : OperatorId -> String
   | .G_8 => "G-8"
   | .G_9 => "G-9"
   | .G_10 => "G-10"
+  | .G_11 => "G-11"
   | .A_1 => "A-1"
   | .A_2 => "A-2"
   | .A_3 => "A-3"
@@ -518,6 +549,11 @@ def OperatorId.code : OperatorId -> String
   | .A_13 => "A-13"
   | .A_14 => "A-14"
   | .A_15 => "A-15"
+  | .A_16 => "A-16"
+  | .A_17 => "A-17"
+  | .A_18 => "A-18"
+  | .A_19 => "A-19"
+  | .A_20 => "A-20"
   | .D_1 => "D-1"
   | .D_2 => "D-2"
   | .D_3 => "D-3"
@@ -535,6 +571,8 @@ def OperatorId.code : OperatorId -> String
   | .E_5 => "E-5"
   | .E_6 => "E-6"
   | .E_7 => "E-7"
+  | .E_8 => "E-8"
+  | .E_9 => "E-9"
   | .L_1 => "L-1"
   | .L_2 => "L-2"
   | .L_3 => "L-3"
@@ -576,6 +614,9 @@ def OperatorId.code : OperatorId -> String
   | .Y_23 => "Y-23"
   | .Y_24 => "Y-24"
   | .Y_25 => "Y-25"
+  | .Y_26 => "Y-26"
+  | .Y_27 => "Y-27"
+  | .Y_28 => "Y-28"
   | .X_1 => "X-1"
   | .X_2 => "X-2"
   | .X_3 => "X-3"
@@ -590,6 +631,8 @@ def OperatorId.code : OperatorId -> String
   | .X_12 => "X-12"
   | .X_13 => "X-13"
   | .X_14 => "X-14"
+  | .X_15 => "X-15"
+  | .X_16 => "X-16"
   | .Z_1 => "Z-1"
   | .Z_2 => "Z-2"
   | .Z_3 => "Z-3"
@@ -730,6 +773,7 @@ def OperatorId.title : OperatorId -> String
   | .I_6 => "分"
   | .I_7 => "合"
   | .I_8 => "別 (复用 N-8) — 在分异层"
+  | .I_9 => "系"
   | .S_1 => "之"
   | .S_2 => "而"
   | .S_3 => "則 / 则"
@@ -748,6 +792,8 @@ def OperatorId.title : OperatorId -> String
   | .S_16 => "所"
   | .S_17 => "未"
   | .S_18 => "已"
+  | .S_19 => "的"
+  | .S_20 => "地"
   | .H_1 => "道"
   | .H_2 => "理"
   | .H_3 => "勢 / 势"
@@ -776,6 +822,10 @@ def OperatorId.title : OperatorId -> String
   | .P_18 => "法"
   | .P_19 => "名 (墨经三类)"
   | .P_20 => "知 (墨经三类)"
+  | .P_21 => "辭 / 辞"
+  | .P_22 => "說 / 说"
+  | .P_23 => "辯 / 辩"
+  | .P_24 => "類 / 类"
   | .G_1 => "指"
   | .G_2 => "物"
   | .G_3 => "名 (名家版)"
@@ -786,6 +836,7 @@ def OperatorId.title : OperatorId -> String
   | .G_8 => "兼 / 合 (名家版)"
   | .G_9 => "別 / 别 (名家版)"
   | .G_10 => "然"
+  | .G_11 => "命"
   | .A_1 => "漸 / 渐"
   | .A_2 => "驟 / 骤"
   | .A_3 => "忽"
@@ -801,6 +852,11 @@ def OperatorId.title : OperatorId -> String
   | .A_13 => "但"
   | .A_14 => "唯 (副词层)"
   | .A_15 => "亦"
+  | .A_16 => "已"
+  | .A_17 => "未"
+  | .A_18 => "將 / 将"
+  | .A_19 => "方"
+  | .A_20 => "嘗 / 尝"
   | .D_1 => "一 (作算子)"
   | .D_2 => "再"
   | .D_3 => "三 (作算子)"
@@ -810,7 +866,7 @@ def OperatorId.title : OperatorId -> String
   | .D_7 => "全"
   | .D_8 => "餘 / 余"
   | .D_9 => "終 / 终 (作量词层)"
-  | .D_10 => "半 / 過半 / 大半"
+  | .D_10 => "過半 / 大半"
   | .E_1 => "書 / 书"
   | .E_2 => "曰"
   | .E_3 => "稱 / 称"
@@ -818,6 +874,8 @@ def OperatorId.title : OperatorId -> String
   | .E_5 => "譏 / 讥"
   | .E_6 => "與 / 与 (春秋层)"
   | .E_7 => "削"
+  | .E_8 => "筆 / 笔"
+  | .E_9 => "褒 / 貶"
   | .L_1 => "法 (法家版)"
   | .L_2 => "術 / 术"
   | .L_3 => "勢 / 势 (法家版)"
@@ -849,16 +907,19 @@ def OperatorId.title : OperatorId -> String
   | .Y_13 => "表 / 裡 (医家专版)"
   | .Y_14 => "寒 / 熱 (热)"
   | .Y_15 => "虛 / 實 (虚/实)"
-  | .Y_16 => "補 / 補 (补) 与 瀉 / 泻"
+  | .Y_16 => "補 / 瀉 (补/泻)"
   | .Y_17 => "平"
   | .Y_18 => "和"
   | .Y_19 => "調 / 调"
   | .Y_20 => "順 / 逆 (顺/逆)"
-  | .Y_21 => "標 / 標 (标) 与 本"
+  | .Y_21 => "標 / 本 (标/本)"
   | .Y_22 => "營 / 营 与 衛 / 卫"
   | .Y_23 => "通 / 滯 (通/滞)"
   | .Y_24 => "五运六气"
   | .Y_25 => "上工 / 中工 / 下工"
+  | .Y_26 => "出 / 入 (医家专版)"
+  | .Y_27 => "候"
+  | .Y_28 => "治"
   | .X_1 => "性"
   | .X_2 => "偽 / 伪"
   | .X_3 => "化性 (起伪)"
@@ -873,6 +934,8 @@ def OperatorId.title : OperatorId -> String
   | .X_12 => "名分"
   | .X_13 => "解 (蔽)"
   | .X_14 => "積 / 积"
+  | .X_15 => "學 / 学"
+  | .X_16 => "教"
   | .Z_1 => "因 (一般)"
   | .Z_2 => "相 (mutuality prefix)"
   | .Z_3 => "互"
@@ -1013,6 +1076,7 @@ def operatorForms : OperatorId -> List GlyphSense
   | .I_6 => textToSenses "分"
   | .I_7 => [«合1»]
   | .I_8 => textToSenses "別"
+  | .I_9 => [«系1»]
   | .S_1 => [«之1»]
   | .S_2 => textToSenses "而"
   | .S_3 => [«則1», «则1»]
@@ -1031,6 +1095,8 @@ def operatorForms : OperatorId -> List GlyphSense
   | .S_16 => [«所1»]
   | .S_17 => [«未1»]
   | .S_18 => [«已1»]
+  | .S_19 => [«的1»]
+  | .S_20 => [«地1»]
   | .H_1 => textToSenses "道"
   | .H_2 => textToSenses "理"
   | .H_3 => textToSenses "勢势"
@@ -1059,6 +1125,10 @@ def operatorForms : OperatorId -> List GlyphSense
   | .P_18 => [«法1»]
   | .P_19 => textToSenses "名"
   | .P_20 => textToSenses "知"
+  | .P_21 => textToSenses "辭辞"
+  | .P_22 => textToSenses "說说"
+  | .P_23 => textToSenses "辯辩"
+  | .P_24 => textToSenses "類类"
   | .G_1 => textToSenses "指"
   | .G_2 => textToSenses "物"
   | .G_3 => textToSenses "名"
@@ -1069,6 +1139,7 @@ def operatorForms : OperatorId -> List GlyphSense
   | .G_8 => textToSenses "兼合"
   | .G_9 => textToSenses "別别"
   | .G_10 => textToSenses "然"
+  | .G_11 => textToSenses "命"
   | .A_1 => textToSenses "漸渐"
   | .A_2 => textToSenses "驟骤"
   | .A_3 => textToSenses "忽"
@@ -1084,6 +1155,11 @@ def operatorForms : OperatorId -> List GlyphSense
   | .A_13 => textToSenses "但"
   | .A_14 => textToSenses "唯"
   | .A_15 => textToSenses "亦"
+  | .A_16 => [«已1»]
+  | .A_17 => [«未1»]
+  | .A_18 => textToSenses "將将"
+  | .A_19 => textToSenses "方"
+  | .A_20 => textToSenses "嘗尝"
   | .D_1 => textToSenses "一"
   | .D_2 => textToSenses "再"
   | .D_3 => textToSenses "三"
@@ -1093,7 +1169,7 @@ def operatorForms : OperatorId -> List GlyphSense
   | .D_7 => textToSenses "全"
   | .D_8 => textToSenses "餘余"
   | .D_9 => textToSenses "終终"
-  | .D_10 => textToSenses "半過半大半"
+  | .D_10 => textToSenses "過过半大"
   | .E_1 => textToSenses "書书"
   | .E_2 => textToSenses "曰"
   | .E_3 => textToSenses "稱称"
@@ -1101,6 +1177,8 @@ def operatorForms : OperatorId -> List GlyphSense
   | .E_5 => textToSenses "譏讥"
   | .E_6 => textToSenses "與与"
   | .E_7 => textToSenses "削"
+  | .E_8 => textToSenses "筆笔"
+  | .E_9 => textToSenses "褒貶贬"
   | .L_1 => [«法1»]
   | .L_2 => textToSenses "術术"
   | .L_3 => textToSenses "勢势"
@@ -1132,16 +1210,19 @@ def operatorForms : OperatorId -> List GlyphSense
   | .Y_13 => textToSenses "表裡"
   | .Y_14 => textToSenses "寒熱"
   | .Y_15 => textToSenses "虛實"
-  | .Y_16 => textToSenses "補補与瀉泻"
+  | .Y_16 => textToSenses "補补瀉泻"
   | .Y_17 => textToSenses "平"
   | .Y_18 => [«和1»]
   | .Y_19 => textToSenses "調调"
   | .Y_20 => textToSenses "順逆"
-  | .Y_21 => textToSenses "標標与本"
+  | .Y_21 => textToSenses "標标本"
   | .Y_22 => textToSenses "營营与衛卫"
   | .Y_23 => textToSenses "通滯"
   | .Y_24 => textToSenses "五运六气"
   | .Y_25 => textToSenses "上工中工下工"
+  | .Y_26 => textToSenses "出入"
+  | .Y_27 => textToSenses "候"
+  | .Y_28 => textToSenses "治"
   | .X_1 => textToSenses "性"
   | .X_2 => textToSenses "偽伪"
   | .X_3 => textToSenses "化性"
@@ -1156,6 +1237,8 @@ def operatorForms : OperatorId -> List GlyphSense
   | .X_12 => textToSenses "名分"
   | .X_13 => textToSenses "解"
   | .X_14 => textToSenses "積积"
+  | .X_15 => textToSenses "學学"
+  | .X_16 => textToSenses "教"
   | .Z_1 => textToSenses "因"
   | .Z_2 => textToSenses "相"
   | .Z_3 => textToSenses "互"
@@ -1214,25 +1297,28 @@ def allOperatorIds : List OperatorId := [
   .K_7, .K_8, .M_1, .M_2, .M_3, .M_4, .M_5, .M_6,
   .M_7, .M_8, .N_1, .N_2, .N_3, .N_4, .N_5, .N_6,
   .N_7, .N_8, .I_1, .I_2, .I_3, .I_4, .I_5, .I_6,
-  .I_7, .I_8, .S_1, .S_2, .S_3, .S_4, .S_5, .S_6,
+  .I_7, .I_8, .I_9, .S_1, .S_2, .S_3, .S_4, .S_5, .S_6,
   .S_7, .S_8, .S_9, .S_10, .S_11, .S_12, .S_13, .S_14,
-  .S_15, .S_16, .S_17, .S_18, .H_1, .H_2,
+  .S_15, .S_16, .S_17, .S_18, .S_19, .S_20, .H_1, .H_2,
   .H_3, .H_4, .H_5, .H_6, .H_7, .H_8, .P_1, .P_2,
   .P_3, .P_4, .P_5, .P_6, .P_7, .P_8, .P_9, .P_10,
   .P_11, .P_12, .P_13, .P_14, .P_15, .P_16, .P_17, .P_18,
-  .P_19, .P_20, .G_1, .G_2, .G_3, .G_4, .G_5, .G_6,
-  .G_7, .G_8, .G_9, .G_10, .A_1, .A_2, .A_3, .A_4,
-  .A_5, .A_6, .A_7, .A_8, .A_9, .A_10, .A_11, .A_12,
-  .A_13, .A_14, .A_15, .D_1, .D_2, .D_3, .D_4, .D_5,
-  .D_6, .D_7, .D_8, .D_9, .D_10, .E_1, .E_2, .E_3,
-  .E_4, .E_5, .E_6, .E_7, .L_1, .L_2, .L_3, .L_4,
+  .P_19, .P_20, .P_21, .P_22, .P_23, .P_24, .G_1, .G_2,
+  .G_3, .G_4, .G_5, .G_6, .G_7, .G_8, .G_9, .G_10,
+  .G_11, .A_1, .A_2, .A_3, .A_4, .A_5, .A_6, .A_7,
+  .A_8, .A_9, .A_10, .A_11, .A_12, .A_13, .A_14, .A_15,
+  .A_16, .A_17, .A_18, .A_19, .A_20, .D_1, .D_2, .D_3,
+  .D_4, .D_5, .D_6, .D_7, .D_8, .D_9, .D_10, .E_1,
+  .E_2, .E_3, .E_4, .E_5, .E_6, .E_7, .E_8, .E_9,
+  .L_1, .L_2, .L_3, .L_4,
   .L_5, .L_6, .L_7, .L_8, .L_9, .L_10, .L_11, .L_12,
   .L_13, .L_14, .L_15, .L_16, .Y_1, .Y_2, .Y_3, .Y_4,
   .Y_5, .Y_6, .Y_7, .Y_8, .Y_9, .Y_10, .Y_11, .Y_12,
   .Y_13, .Y_14, .Y_15, .Y_16, .Y_17, .Y_18, .Y_19, .Y_20,
-  .Y_21, .Y_22, .Y_23, .Y_24, .Y_25, .X_1, .X_2, .X_3,
-  .X_4, .X_5, .X_6, .X_7, .X_8, .X_9, .X_10, .X_11,
-  .X_12, .X_13, .X_14, .Z_1, .Z_2, .Z_3, .Z_4, .Z_5,
+  .Y_21, .Y_22, .Y_23, .Y_24, .Y_25, .Y_26, .Y_27, .Y_28,
+  .X_1, .X_2, .X_3, .X_4, .X_5, .X_6, .X_7, .X_8,
+  .X_9, .X_10, .X_11, .X_12, .X_13, .X_14, .X_15, .X_16,
+  .Z_1, .Z_2, .Z_3, .Z_4, .Z_5,
   .Z_6, .Z_7, .Z_8, .Z_9, .Z_10, .Z_11, .Z_12, .Z_13,
   .Z_14, .Z_15, .Z_16, .Z_17, .Z_18, .Z_19, .Z_20, .Z_21,
   .Z_22, .Z_23, .Z_24, .Z_25, .Z_26, .Z_27, .Z_28, .Z_29,

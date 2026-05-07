@@ -112,11 +112,14 @@ theorem added_particle_operator_entries :
       (operatorEntry .S_15).forms = [«于1», «於1»] ∧
       (operatorEntry .S_16).forms = [«所1»] ∧
       (operatorEntry .S_17).forms = [«未1»] ∧
-      (operatorEntry .S_18).forms = [«已1»] := by
+      (operatorEntry .S_18).forms = [«已1»] ∧
+      (operatorEntry .S_19).forms = [«的1»] ∧
+      (operatorEntry .S_20).forms = [«地1»] := by
   native_decide
 
 theorem core_operator_entries_use_numbered_senses :
     (operatorEntry .I_4).forms = [«是1»] ∧
+      (operatorEntry .I_9).forms = [«系1»] ∧
       (operatorEntry .I_7).forms = [«合1»] ∧
       (operatorEntry .F_9).forms = [«行1»] ∧
       (operatorEntry .M_5).forms = [«可1»] ∧
@@ -126,6 +129,8 @@ theorem core_operator_entries_use_numbered_senses :
       (operatorEntry .K_3).forms = [«自1»] ∧
       (operatorEntry .S_6).forms = [«然1»] ∧
       (operatorEntry .S_7).forms = [«故1»] ∧
+      (operatorEntry .S_19).forms = [«的1»] ∧
+      (operatorEntry .S_20).forms = [«地1»] ∧
       (operatorEntry .H_5).forms = [«法1»] ∧
       (operatorEntry .Y_18).forms = [«和1»] ∧
       (operatorEntry .Z_32).forms = [«自1»] := by
