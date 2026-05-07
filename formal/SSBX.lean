@@ -65,6 +65,10 @@ import SSBX.Foundation.Wen.WenyanQuineConcreteSearch
 import SSBX.Foundation.Wen.WenyanQuineKleene
 import SSBX.Foundation.Wen.WenyanLambdaRoute
 import SSBX.Foundation.Wen.WenyanLambdaBridge
+import SSBX.Foundation.Wen.WenSurface.Lex
+import SSBX.Foundation.Wen.WenSurface.Reading
+import SSBX.Foundation.Wen.WenSurface.Elaborate
+import SSBX.Foundation.Wen.WenSurface.EndToEnd
 import SSBX.Foundation.Wen.DaoSource
 import SSBX.Foundation.Wen.Demo
 import SSBX.Foundation.Wen.AntiSchmitt

@@ -282,15 +282,58 @@ def fanDef : WenDef where
   validName      := by native_decide
   bodyTypechecks := by native_decide
 
+/-! ### T-12 損（减一 / 反生）
+
+  实现：λx:Hex. 加 «坤» x.
+  «坤» 之索引为 63，故 (x + 63) mod 64 = (x − 1) mod 64，即 mod-64 减一.
+  与 T-13 益 互逆；与 T-10 推 一加一减.
+  类型：Hex → Hex.
+-/
+
+def sunBody : Tm :=
+  .abs "x" .hex (.app (.app .jia (.hexLit Hexagram.kun)) (.var "x"))
+
+theorem sunBody_typed :
+    typeCheck [] sunBody = some (.arr .hex .hex) := by native_decide
+
+def sunDef : WenDef where
+  name           := "sun"
+  body           := sunBody
+  bodyType       := .arr .hex .hex
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+/-! ### T-13 益（加一 / 同推）
+
+  实现：λx:Hex. 加 一 x  （即 YiCore.«生»，与 T-10 推 共体）.
+  以独立 WenDef 收录，明示 catalogue 中「益 = 推」之同义.
+  类型：Hex → Hex.
+-/
+
+def yiBenefitBody : Tm :=
+  .abs "x" .hex (.app (.app .jia .yi) (.var "x"))
+
+theorem yiBenefitBody_typed :
+    typeCheck [] yiBenefitBody = some (.arr .hex .hex) := by native_decide
+
+def yiBenefitDef : WenDef where
+  name           := "yiBenefit"
+  body           := yiBenefitBody
+  bodyType       := .arr .hex .hex
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
 /-! ### Stdlib 总表 -/
 
 /-- 当前 stdlib 中已合度且类型化之 wenyan-ops 定义。 -/
-def all : List WenDef := [tuiDef, biDef, buDef, biModalDef, tongDef, fanDef]
+def all : List WenDef :=
+  [tuiDef, biDef, buDef, biModalDef, tongDef, fanDef, sunDef, yiBenefitDef]
 
-theorem all_length : all.length = 6 := by native_decide
+theorem all_length : all.length = 8 := by native_decide
 
 theorem all_names :
-    all.map WenDef.name = ["tui", "bi", "bu", "biModal", "tong", "fan"] := by
+    all.map WenDef.name =
+      ["tui", "bi", "bu", "biModal", "tong", "fan", "sun", "yiBenefit"] := by
   native_decide
 
 theorem all_distinct_names : (all.map WenDef.name).Nodup := by native_decide
