@@ -217,7 +217,27 @@ theorem wenyan_tui_yi_eq_sheng :
     (wenyanInterp "推 一").toOption = some («生» «一») := by
   native_decide
 
-/-! ## § 6  公示总结 -/
+/-! ## § 6  損/益 端到端 -/
+
+/-- 「益 一」 → «生» «一»（即 hex idx 2）；与「推 一」等价. -/
+example : (wenyanInterp "益 一").toOption = some («生» «一») := by native_decide
+
+/-- 「損 一」 → «一» − 1 = idx 0 = «乾». -/
+example : (wenyanInterp "損 一").toOption = some Hexagram.qian := by native_decide
+
+/-- 「損 乾」 → «乾» − 1 = idx -1 mod 64 = idx 63 = «坤». -/
+example : (wenyanInterp "損 乾").toOption = some Hexagram.kun := by native_decide
+
+/-- 简体「损」也认得. -/
+example : (wenyanInterp "损 一").toOption = some Hexagram.qian := by native_decide
+
+/-- 「益 损 一」 → ((一 − 1) + 1) = 一. -/
+example : (wenyanInterp "益 损 一").toOption = some «一» := by native_decide
+
+/-- 「损 益 乾」 → ((乾 + 1) − 1) = 乾. -/
+example : (wenyanInterp "损 益 乾").toOption = some Hexagram.qian := by native_decide
+
+/-! ## § 7  公示总结 -/
 
 /-- v1 公示：6 stdlib 算子 + 1 hex 常的端到端可达性。
     `推`/`一` 的合成结果与 YiCore.«生»/«生生» 一致。 -/

@@ -70,6 +70,12 @@ def resolveStdlibOp : Glyph → Option OperatorReading
                     .prefix [.expectedObject])
   | "凡" => some (catalogueReading "凡" "Q-1"  "凡量"         (some .Q_1)
                     .prefix [.quantifierDomain])
+  | "損" | "损" =>
+      some (catalogueReading "損" "T-12" "减一"         (some .T_12)
+                    .prefix [.expectedObject])
+  | "益" =>
+      some (catalogueReading "益" "T-13" "加一"         (some .T_13)
+                    .prefix [.expectedObject])
   | _   => none
 
 /-- v1 hex 常值 surface → Hexagram。包含「一」与两个固定点「乾」「坤」. -/
@@ -214,6 +220,24 @@ example :
       = [OperatorId.T_10, OperatorId.R_8, OperatorId.N_1,
          OperatorId.M_1,  OperatorId.I_1, OperatorId.Q_1] :=
   by native_decide
+
+/-! ### § 6.5  損/益 surface map (T-12 / T-13) -/
+
+/-- 損/损/益 之 OperatorId — 繁简同读 T_12，益读 T_13. -/
+example :
+    (["損", "损", "益"].filterMap
+       (fun s => (resolveStdlibOp s).bind (·.operator?)))
+      = [OperatorId.T_12, OperatorId.T_12, OperatorId.T_13] :=
+  by native_decide
+
+/-- 「損」 → catalogueOp T_12. -/
+example : opIdsOf "損" = some [some OperatorId.T_12] := by native_decide
+
+/-- 「损」（简体）也读 T_12. -/
+example : opIdsOf "损" = some [some OperatorId.T_12] := by native_decide
+
+/-- 「益」 → catalogueOp T_13. -/
+example : opIdsOf "益" = some [some OperatorId.T_13] := by native_decide
 
 /-! ## § 7  Cue-based resolution (Phase C)
 

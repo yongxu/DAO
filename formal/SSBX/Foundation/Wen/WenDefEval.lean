@@ -204,6 +204,23 @@ theorem tui_eq_sheng (h : Hexagram) :
     cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
     all_goals native_decide
 
+/-- 損 之 denotation = mod-64 减一 (即 «加» Hexagram.kun).
+    «坤».toIdx = 63；(x + 63) mod 64 = (x − 1) mod 64. -/
+theorem sun_eq_decrement (h : Hexagram) :
+    denoteHexFun Stdlib.sunBody h = some («加» Hexagram.kun h) := by
+  cases h with
+  | mk y1 y2 y3 y4 y5 y6 =>
+    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+    all_goals native_decide
+
+/-- 益 之 denotation = mod-64 加一 = «生». 与 推 共体. -/
+theorem yiBenefit_eq_sheng (h : Hexagram) :
+    denoteHexFun Stdlib.yiBenefitBody h = some («生» h) := by
+  cases h with
+  | mk y1 y2 y3 y4 y5 y6 =>
+    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+    all_goals native_decide
+
 /-- 「同 «一» «一»」denotes true (恒等于自身). -/
 example :
     denoteBool (.app (.app Stdlib.tongBody .yi) .yi) = some true := by native_decide

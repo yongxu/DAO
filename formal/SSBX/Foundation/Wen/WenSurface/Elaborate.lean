@@ -63,6 +63,8 @@ def atomToTm : ResolvedAtom → Except ElabErr Tm
       | some .M_1  => .ok Stdlib.biModalBody
       | some .I_1  => .ok Stdlib.tongBody
       | some .Q_1  => .ok Stdlib.fanBody
+      | some .T_12 => .ok Stdlib.sunBody
+      | some .T_13 => .ok Stdlib.yiBenefitBody
       | some id    => .error (.unsupportedOp id)
       | none       => .error .empty
   | .appMarker  => .error .empty
@@ -78,6 +80,8 @@ def opArity : OperatorId → Nat
   | .M_1  => 1   -- 必 : (Hex → Bool) → Bool
   | .I_1  => 2   -- 同 : Hex → Hex → Bool
   | .Q_1  => 1   -- 凡 : (Hex → Bool) → Bool
+  | .T_12 => 1   -- 損 : Hex → Hex
+  | .T_13 => 1   -- 益 : Hex → Hex
   | _     => 0
 
 /-! ## § 4  Arity-driven 递归下降 (fuel-bounded total)
