@@ -27,6 +27,8 @@ open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Yi.YiCore
 open SSBX.Foundation.Wen.WenDef
 open SSBX.Foundation.Wen.WenDefEval
+open SSBX.Text.WenyanOperators
+open SSBX.Text.OperatorReadings
 
 /-! ## § 1  统一错误类型 -/
 
@@ -226,5 +228,74 @@ theorem v1_endToEnd_summary :
     ∧ (wenyanInterp "推 推 推 一").toOption = some («生生» 3 «一»)
     := by
   refine ⟨?_, ?_, ?_, ?_⟩ <;> native_decide
+
+/-! ## § 7  Phase C cue resolution 端到端 sanity
+
+  cue-aware resolver (`resolveWithCues`) 与 v1 (`resolveSimple`) 在不含
+  「之」的 stdlib 流上完全等价 —— 这里给一组端到端等价见证.
+
+  含「之」时，cue 路径将「之」消歧为 S_1 catalogue（v1 路径里是 appMarker），
+  但 elab 阶段 S_1 暂未支持，故端到端 wenyanInterp 现仍走 v1 路径
+  (resolveSimple) 以保留 noop appMarker 行为。本节只 verify
+  resolveWithCues 之 atom 序列正确性，与 cue → unique reading 桥定理. -/
+
+/-- 不含「之」的程序：cue-aware resolve 之 atom 序列与 simple resolve 一致.
+    通过这一 bridge，「推 一」之意义不依赖路径选择. -/
+example :
+    let toks : List GlyphTok :=
+      [⟨"推", 0, 1, false⟩, ⟨"一", 2, 1, false⟩]
+    ((resolveWithCues toks).toOption.map (fun rs => rs.map (·.atom)))
+      = ((resolveSimple toks).toOption.map (fun rs => rs.map (·.atom))) :=
+  by native_decide
+
+/-- 「推 一」之 cue resolve 序列同 v1 resolve 序列（atom 等价）. -/
+example :
+    let toks : List GlyphTok :=
+      [⟨"推", 0, 1, false⟩, ⟨"比", 2, 1, false⟩, ⟨"不", 4, 1, false⟩,
+       ⟨"必", 6, 1, false⟩, ⟨"同", 8, 1, false⟩, ⟨"凡", 10, 1, false⟩,
+       ⟨"一", 12, 1, false⟩]
+    ((resolveWithCues toks).toOption.map (fun rs => rs.map (·.atom)))
+      = ((resolveSimple toks).toOption.map (fun rs => rs.map (·.atom))) :=
+  by native_decide
+
+/-- 「推 之 一」cue resolve 比 v1 resolve 多识：「之」拿到 S_1 catalogue.
+    具体地：v1 给 [T_10-cat, appMarker, hex«一»]；cue 给 [T_10-cat, S_1-cat, hex«一»]. -/
+example :
+    let toks : List GlyphTok :=
+      [⟨"推", 0, 1, false⟩, ⟨"之", 2, 1, false⟩, ⟨"一", 4, 1, false⟩]
+    ((resolveWithCues toks).toOption.map (fun rs => rs.map (·.atom |> ResolvedAtom.opId?)))
+      = some [some OperatorId.T_10, some OperatorId.S_1, none] :=
+  by native_decide
+
+/-- v1 路径仍把同一程序之「之」识为 appMarker（无 OperatorId）—— 与 cue 路径成对.
+    note: opId? 在 catalogueOp 时返 reading.operator?；appMarker 时返 none. -/
+example :
+    let toks : List GlyphTok :=
+      [⟨"推", 0, 1, false⟩, ⟨"之", 2, 1, false⟩, ⟨"一", 4, 1, false⟩]
+    ((resolveSimple toks).toOption.map (fun rs => rs.map (·.atom |> ResolvedAtom.opId?)))
+      = some [some OperatorId.T_10, none, none] :=
+  by native_decide
+
+/-- 桥定理：cue 路径 + uniqueCatalogueReading 同 OperatorReadings.
+    `zhi_between_nominals_unique` (line 749-751) 桥. -/
+theorem wensurface_zhi_between_nominals_S1 :
+    (uniqueCatalogueReading "之" [.betweenNominals]).bind (·.operator?)
+      = some OperatorId.S_1 :=
+  zhi_between_nominals_unique_catalogue
+
+/-- 端到端 cue → unique reading：「推 之 一」之 i=1 处 cues 为
+    [.betweenNominals]，从而「之」唯一对应 S_1 catalogue. -/
+theorem zhi_in_tui_zhi_yi_resolves_S1 :
+    let toks : List GlyphTok :=
+      [⟨"推", 0, 1, false⟩, ⟨"之", 2, 1, false⟩, ⟨"一", 4, 1, false⟩]
+    (uniqueCatalogueReading "之" (computeCues toks 1)).bind (·.operator?)
+      = some OperatorId.S_1 :=
+  by native_decide
+
+/-- v1 wenyanInterp（仍走 resolveSimple）不被新增模块影响：
+    「推 之 一」 = «生» «一»，与 Phase B 表现一致. -/
+example :
+    (wenyanInterp "推 之 一").toOption = some («生» «一») :=
+  by native_decide
 
 end SSBX.Foundation.Wen.WenSurface
