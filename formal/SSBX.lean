@@ -14,6 +14,9 @@ import SSBX.Text.WenyanOperators
 import SSBX.Text.OperatorReadings
 import SSBX.Text.OperatorSignatures
 import SSBX.Text.OperatorFamilySemantics
+import SSBX.Text.OperatorReachabilitySemantics
+import SSBX.Text.OperatorInstructionSemantics
+import SSBX.Text.OperatorCellCandidateSemantics
 import SSBX.Text.OperatorCellSemantics
 import SSBX.Text.Completeness
 
