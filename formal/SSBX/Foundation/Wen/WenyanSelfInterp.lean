@@ -1463,6 +1463,57 @@ theorem universalMetaInterp_push_qian :
     ∧ (s.runFuel 15).halted = true := by
   refine ⟨?_, ?_⟩ <;> native_decide
 
+/-- Sanity sample: tag 1 (setShi default Shi.jin) — gcur.shi := jin. -/
+theorem universalMetaInterp_setShi_qian :
+    let s := { (YiState.init Hexagram.qian universalMetaInterp)
+               with history := [cellFromIdx ⟨1, by omega⟩, (Hexagram.qian, Shi.ji)] }
+    (s.runFuel 15).history = [(Hexagram.qian, Shi.jin)]
+    ∧ (s.runFuel 15).halted = true := by
+  refine ⟨?_, ?_⟩ <;> native_decide
+
+/-- Sanity sample: tag 2 (flipYao default ⟨0,_⟩) — flip y1 of gcur.hex. -/
+theorem universalMetaInterp_flipYao_qian :
+    let s := { (YiState.init Hexagram.qian universalMetaInterp)
+               with history := [cellFromIdx ⟨2, by omega⟩, (Hexagram.qian, Shi.jin)] }
+    (s.runFuel 15).history = [(Hexagram.qian.flipPos ⟨0, by omega⟩, Shi.jin)]
+    ∧ (s.runFuel 15).halted = true := by
+  refine ⟨?_, ?_⟩ <;> native_decide
+
+/-- Sanity sample: tag 6 (branchYaoEq) — preserve gcur (state-control, no cur effect). -/
+theorem universalMetaInterp_branchYaoEq_qian :
+    let s := { (YiState.init Hexagram.qian universalMetaInterp)
+               with history := [cellFromIdx ⟨6, by omega⟩, (Hexagram.qian, Shi.jin)] }
+    (s.runFuel 15).history = [(Hexagram.qian, Shi.jin)]
+    ∧ (s.runFuel 15).halted = true := by
+  refine ⟨?_, ?_⟩ <;> native_decide
+
+/-- Sanity sample: tag 7 (branchShiEq) — preserve gcur. -/
+theorem universalMetaInterp_branchShiEq_qian :
+    let s := { (YiState.init Hexagram.qian universalMetaInterp)
+               with history := [cellFromIdx ⟨7, by omega⟩, (Hexagram.qian, Shi.jin)] }
+    (s.runFuel 15).history = [(Hexagram.qian, Shi.jin)]
+    ∧ (s.runFuel 15).halted = true := by
+  refine ⟨?_, ?_⟩ <;> native_decide
+
+/-- Sanity sample: tag 8 (jump) — preserve gcur. -/
+theorem universalMetaInterp_jump_qian :
+    let s := { (YiState.init Hexagram.qian universalMetaInterp)
+               with history := [cellFromIdx ⟨8, by omega⟩, (Hexagram.qian, Shi.jin)] }
+    (s.runFuel 15).history = [(Hexagram.qian, Shi.jin)]
+    ∧ (s.runFuel 15).halted = true := by
+  refine ⟨?_, ?_⟩ <;> native_decide
+
+/-- Sanity sample: tag 10 (pop) on 3-cell history — drop top, cur := bottom. -/
+theorem universalMetaInterp_pop_qian :
+    let s := { (YiState.init Hexagram.qian universalMetaInterp)
+               with history := [cellFromIdx ⟨10, by omega⟩,
+                                (Hexagram.qian, Shi.jin),
+                                (Hexagram.kun, Shi.ji)] }
+    (s.runFuel 15).history = []
+    ∧ (s.runFuel 15).halted = true
+    ∧ (s.runFuel 15).cur = (Hexagram.kun, Shi.ji) := by
+  refine ⟨?_, ?_, ?_⟩ <;> native_decide
+
 /-- Halt-after-runFuel-15 lemma per tag k ∈ Fin 12, on concrete
     (Hexagram.qian, Shi.jin) gcur. The pop block requires a 3-cell history
     (tag + two gcurs); all others use 2-cell. -/
