@@ -2709,9 +2709,9 @@ $$\text{胜} = \text{势}(\text{致人}(\text{奇正}(\text{避实击虚}(\text{
 ## 二十二、算子组合规律 (基础)
 
 > **Lean 对齐状态（重要）**：当前 Lean 侧分两层：
-> 1. `Text/WenyanOperators.lean` / `Text/Completeness.lean` 证明原 301 条 catalogue 条目、单字义位与注册完整性；`OperatorEntry.signature` 目前仍主要是 placeholder，不等于精确语义签名已 theorem 化；
+> 1. `Text/WenyanOperators.lean` / `Text/Completeness.lean` 证明当前 371 条 catalogue 条目、单字义位与注册完整性；`OperatorEntry.signature` 目前仍主要是 placeholder，不等于精确语义签名已 theorem 化；
 > 2. `Foundation/Wen/Operators.lean` 只形式化了少量可执行/可证明算子律，例如 isness 伴随算子、存在/否定、若干组合形态。
-> 3. 本轮新增的二十一甲至二十一戊 70 条先处于 markdown catalogue 层，尚未同步进 Lean 的 generated table。
+> 3. 二十一甲至二十一戊 70 条已同步进 Lean catalogue；它们的可执行语义仍待后续按流派分别 theorem 化。
 > 因此下列代数律中，凡未明说 Lean theorem 者，先读作数学/语义猜想或设计约束，而非已经完成的形式证明。
 
 ### 1. 对偶配对
@@ -3305,6 +3305,8 @@ $$\text{六十四卦} = \text{分}^6(\text{太极})$$
 
 ★ = 卦名直接是核心算子。
 
+Lean 对应：`formal/SSBX/Text/OperatorAnchors.lean` 已把本表 64 行按 `xuGua` 序转成 `hexagramOperatorAnchors`，并证明 `hexagramOperatorAnchors.length = 64` 与 `anchoredHexagrams = xuGua`。该文件还把 22 个 BaguaWen 保留 token、三时、六爻位、六个易位关系、8 个三爻卦、以及 64 × 3 = 192 个卦时格全部列为可检查锚点。其中 37 行已有精确 catalogue `OperatorId`，31 行仍显式保留在 `missingForms` 或 `semanticIds` 中，避免把近义词误当成已经入表的算子。
+
 ### 21.1 观察
 
 **至少 7 个卦的卦名直接命名了核心算子**: 復、損、益、升、艮(止)、漸、節 — 暗示易经本身已经在使用同一套算子词汇。
@@ -3839,7 +3841,7 @@ $$\forall t.\, \text{方}(\text{生})(t) \wedge \text{方}(\text{死})(t)$$
 
 **合计 371 条 catalogue entries** — 当前已覆盖范围。本轮把此前待办中的庄子、孙子、楚辞、礼制 / 中庸、管子、吕氏春秋、淮南子、惠施、邓析、尹文子先补入目录层；完整全集仍不预设上限，后续继续识别。
 
-这里的「完成」分两层读：一至二十一为 Lean catalogue 已注册的 301 条基础目录；二十一甲至二十一戊为 markdown catalogue 新增 70 条，已有稳定编号、字形、源、读法和签名草案，但尚待同步到 Lean generated table。代数律的可执行语义与 theorem 化仍按下列形式分析任务推进。
+这里的「完成」分两层读：一至二十一为 301 条基础目录；二十一甲至二十一戊为新增 70 条。两层均已同步到 Lean catalogue，共 371 个 `OperatorId`，但代数律的可执行语义与 theorem 化仍按下列形式分析任务推进。
 
 ---
 
@@ -4005,7 +4007,7 @@ $$\forall t.\, \text{方}(\text{生})(t) \wedge \text{方}(\text{死})(t)$$
 - 荀子社会涌现 (二十)
 - 补遗 ~40 字 (二十一)
 - 庄子动力、孙子军事拓扑、楚辞方向、礼制 / 中庸、杂家 / 黄老 / 辩者补编 70 条目录层新增 (二十一甲至二十一戊)
-- Lean catalogue 已覆盖原 301 个编号条目；isness 单字簇 `是/系/之/的/地` 及伴随算子已注册。新增 70 条待同步到 Lean。
+- Lean catalogue 已覆盖 371 个编号条目；ZHU / SUN / CHU / LIJ / ZA 五族 70 条已同步到 `formal/SSBX/Text/WenyanOperators.lean`，并由 `operator_table_complete` 覆盖。
 
 **已完成的代数分析：**
 - 算子组合规律 / 流派链 (二十二、二十三)
@@ -4014,6 +4016,7 @@ $$\forall t.\, \text{方}(\text{生})(t) \wedge \text{方}(\text{死})(t)$$
 - 不动点 / 递归算子 (二十六)
 - 非交换性分析 (二十七)
 - 64 卦 ↔ 算子映射 (二十八)
+- Lean 八卦锚点桥 `formal/SSBX/Text/OperatorAnchors.lean`：已把 BaguaWen 22 个保留 token、L0 十二指令、三时、六爻位、六个易位关系、8 个三爻卦、64 个 `xuGua` 卦位、以及 192 个 `Cell192` 卦时格全部列为机器可检查锚点；64 卦表中 37 卦已有精确 catalogue `OperatorId`，31 卦仍含待入 Lean 的缺口词或仅有语义近似锚点
 - 新代数律 — 法家 2-category, 五行 (Z/5)\*, 阴阳带种子 involution, 三元门, 化性起伪, 群分单调性, 标本 DAG, 反 dagger (二十九)
 - Categorical 形式化 — symmetric monoidal PROP + modal layer (三十)
 - 逆向工程实例 (三十一)
@@ -4023,7 +4026,6 @@ $$\forall t.\, \text{方}(\text{生})(t) \wedge \text{方}(\text{死})(t)$$
 
 ### 未完成 — 文献流派
 
-- [ ] **新增 70 条 Lean 同步** — 为 ZHU / SUN / CHU / LIJ / ZA 建 `OperatorGroup`、`OperatorId`、`operatorTable` 与 completeness 证明
 - [ ] **庄子精化** — 把 齐 / 游 / 忘 / 丧 / 镜 / 筌 从目录层推进到状态空间语义
 - [ ] **孙子精化** — 给形势、虚实、奇正、迂直建立 game / topology model，区分信息暴露与真实资源
 - [ ] **楚辞精化** — 对 招 / 降 / 登 / 望 建方向图和召回 / 缺席语义
@@ -4035,7 +4037,8 @@ $$\forall t.\, \text{方}(\text{生})(t) \wedge \text{方}(\text{死})(t)$$
 ### 未完成 — 形式分析
 
 - [ ] **Lean 层级标注** — 区分 catalogue complete、semantic modeled、theorem proved 三种完成度
-- [ ] **多义字读法表 Lean 化** — 文档侧已穷举 63 个同形多编号组；后续将 `Text/OperatorReadings.lean` 从 之 / 或 / 故 / 自 扩展到全表，并加入 domain cue / precedence / type expectation
+- [ ] **64 卦缺口词入 catalogue** — `OperatorAnchors.lean` 已显式列出 `待/争/蓄/塞/备/从/临/决/断/饰/养/过/险/丽/附/感/壮/难/遇/困/井/鼎/震/归/丰/远/悦/信/大/小/阻` 等 31 个去重缺口，并机器标注处理策略：25 个可升通用算子，`大/小` 宜做参数，`丽/井/鼎/震` 宜保持卦象专属或语义锚
+- [ ] **多义字读法表继续精化** — `Text/OperatorReadings.lean` 已覆盖文档同形多编号表的 60 个组 / 81 个 surface entry，并证明这些 reading 均已挂接 `OperatorId`；后续继续补 precedence / type expectation / construction rules
 - [ ] **並 / 與 对齐** — 明确二者在 monoidal product、logical conjunction、social co-presence 中的不同签名
 - [ ] **反状态层 involution** — 给具体 state-space 后证明 `反 ∘ 反 = id`
 - [ ] **递归 / 不动点** — 把 `X 之又 X` 从有限 iter 扩展到 fix/termination 语义
