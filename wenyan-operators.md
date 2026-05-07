@@ -2710,7 +2710,7 @@ $$\text{胜} = \text{势}(\text{致人}(\text{奇正}(\text{避实击虚}(\text{
 
 > **Lean 对齐状态（重要）**：当前 Lean 侧按层级读取：
 > 1. `Text/WenyanOperators.lean` / `Text/Completeness.lean` 证明当前 371 条 catalogue 条目、单字义位与注册完整性；`OperatorEntry.signature` 目前仍主要是 placeholder，不等于精确语义签名已 theorem 化；
-> 2. `Text/OperatorCellMap.lean` 证明 371 个 catalogue `OperatorId`、192 个 `Cell192`、以及 71,232 个 `(operator, cell)` pair 的覆盖网格完整，并用 `functionalCompletionRows` 标注 complete / tracked / pending 层级；其中 `Text/OperatorSignatures.lean` 的 14 个 signature seed 只是 tracked，不把全量 exact signatures 标成 complete。
+> 2. `Text/OperatorCellMap.lean` 证明 371 个 catalogue `OperatorId`、192 个 `Cell192`、以及 71,232 个 `(operator, cell)` pair 的覆盖网格完整，并用 `functionalCompletionRows` 标注 complete / tracked / pending 层级；这个 71,232 只是覆盖上界，不是 theorem-level 语义义务。该文件另以 `semanticLowerBoundRows` 固化当前语义证明的低维目标：3 个 exact cell-transform family、7 个 `Cell192` 可达性生成元、12 个 L0 指令语义 clause、约 27 个核心 text semantic family。
 > 3. `Foundation/Wen/Operators.lean` 只形式化了少量可执行/可证明算子律，例如 isness 伴随算子、存在/否定、若干组合形态。
 > 4. 二十一甲至二十一戊 70 条已同步进 Lean catalogue；它们的可执行语义仍待后续按流派分别 theorem 化。
 > 因此下列代数律中，凡未明说 Lean theorem 者，先读作数学/语义猜想或设计约束，而非已经完成的形式证明。
@@ -4021,7 +4021,8 @@ Lean 已机器检查的消歧样例包括：`之` 在名词间、动词后、路
 - 64 卦 ↔ 算子映射 (二十八)
 - Lean 八卦锚点桥 `formal/SSBX/Text/OperatorAnchors.lean`：已把 BaguaWen 22 个保留 token、L0 十二指令、三时、六爻位、六个易位关系、8 个三爻卦、64 个 `xuGua` 卦位、以及 192 个 `Cell192` 卦时格全部列为机器可检查锚点；64 卦表中 37 卦已有精确 catalogue `OperatorId`，31 卦仍含待升格为 catalogue `OperatorId` 的缺口词，或仅有语义近似锚点；`蓄/塞/感/难/鼎/震/归` 7 个 near-miss 已单独审计为“有语义锚但非精确 id”。
 - Lean 总索引桥 `formal/SSBX/Text/OperatorCellMap.lean`：已证明 371 个 catalogue `OperatorId` 与 192 个 `Cell192` 的笛卡尔积共有 71,232 个 pair，且任意 `(operator, cell)` pair 均已被枚举；同时证明固定任一 `OperatorId` 有 192 个 indexed cell，固定任一 `Cell192` 有 371 个 indexed operator。该层只说明全量覆盖，不把覆盖自动视为 theorem-level 语义。
-- Lean 完成度分层：`OperatorCellMap.lean` 已用 `functionalCompletionRows` 固化 5 个 complete 层、3 个 tracked 层、2 个 pending 层；因此 371 × 192 的 coverage / indexing 已完成，31 卦缺口策略、14 个 signature seed、以及 3 个 cell-transform family laws 已 tracked，full exact signatures 与更广义 theorem-level cell semantics 仍明确留作下一层。
+- Lean 完成度分层：`OperatorCellMap.lean` 已用 `functionalCompletionRows` 固化 5 个 complete 层、4 个 tracked 层、2 个 pending 层；因此 371 × 192 的 coverage / indexing 已完成，31 卦缺口策略、14 个 signature seed、3 个 cell-transform family laws、以及 4 行 semantic lower-bound audit 已 tracked。pending 不再按 71,232 个 pair 估算，而是保留为 371 个 full exact signatures 与约 27 个 parameterized semantic families。
+- Lean semantic lower-bound audit：`OperatorCellMap.lean` 已证明 lower-bound audit 的 scope 为 `[3, 7, 12, 27]`，并证明 `27 < 71,232`；这把“覆盖网格”与“真正要 theorem 化的语义族”明确拆开。
 - Lean 多义读法层：`OperatorReadings.lean` 已证明 82 个 surface row / 193 个 reading；catalogue 同形表为 60 组 / 81 个 surface entry / 189 个 reading，且全部 linked 到 `OperatorId`，并补入多组唯一 / 保歧义上下文样例；所有 reading 均有 precedence 与 expected type metadata，construction metadata 当前覆盖 13 个 reading。
 - Lean signature seed：`Text/OperatorSignatures.lean` 已给 `之/而/以/故/反/復/错/综/互/损/益` 等高价值入口建立 14 个 text-level signature shape rows；这些 rows 只记录 arity/type-shape，不等同于可执行语义或全量 exact signature 完成。
 - Lean 参数化 cell semantics：`Text/OperatorFamilySemantics.lean` 已把 `错/综/互` 三个 exact catalogue operator family 绑定到 `Cell192.hexCuo / hexZong / hexHu`，并证明这些 family law 对所有 `Cell192` 参数化成立；这替代了逐 pair 证明，不生成 3 × 192 个定理。

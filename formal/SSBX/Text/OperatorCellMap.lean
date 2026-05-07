@@ -184,8 +184,9 @@ inductive CompletionLayer where
   | hexagramGapPolicies
   | exactSignatureSeeds
   | cellTransformFamilyLaws
+  | semanticLowerBoundAudit
   | exactOperatorSignatures
-  | theoremLevelCellSemantics
+  | parameterizedSemanticFamilies
   deriving Repr, DecidableEq, BEq
 
 /-- Whether a layer is complete, explicitly tracked, or still pending. -/
@@ -194,6 +195,53 @@ inductive CompletionMark where
   | tracked
   | pending
   deriving Repr, DecidableEq, BEq
+
+/-! ## § 3a Semantic proof-obligation lower bounds -/
+
+/--
+Finite audit targets for semantic proof obligations.  These are intentionally
+not the 371 × 192 pair grid: the pair grid is an index, while semantics should
+be proved by parameterized families and generators.
+-/
+inductive SemanticLowerBoundKind where
+  | exactCellTransformFamilies
+  | cell192ReachabilityGenerators
+  | l0InstructionClauses
+  | coreTextSemanticFamilies
+  deriving Repr, DecidableEq, BEq
+
+structure SemanticLowerBoundRow where
+  kind : SemanticLowerBoundKind
+  scope : Nat
+  deriving Repr, DecidableEq
+
+/--
+Current lower-bound audit for theorem families:
+
+* 3 exact catalogue cell transforms: 错 / 综 / 互.
+* 7 concrete `Cell192` reachability generators: six line flips plus one time edge.
+* 12 BaguaWen L0 instruction clauses.
+* 27 core text-level semantic families from the parameterized kernel draft.
+-/
+def semanticLowerBoundRows : List SemanticLowerBoundRow :=
+  [ { kind := .exactCellTransformFamilies, scope := 3 }
+  , { kind := .cell192ReachabilityGenerators, scope := 7 }
+  , { kind := .l0InstructionClauses, scope := 12 }
+  , { kind := .coreTextSemanticFamilies, scope := 27 }
+  ]
+
+theorem semanticLowerBoundRows_length :
+    semanticLowerBoundRows.length = 4 := by
+  native_decide
+
+theorem semanticLowerBoundRows_scopes :
+    semanticLowerBoundRows.map (·.scope) = [3, 7, 12, 27] := by
+  native_decide
+
+theorem parameterizedSemanticFamilies_lt_operatorCellGrid :
+    27 < allOperatorCells.length := by
+  rw [allOperatorCells_length]
+  native_decide
 
 /--
 A compact status row.  `scope` is the size of the layer being described, not a
@@ -209,9 +257,9 @@ structure CompletionRow where
 Functional completion ledger for the current text/Bagua bridge.
 
 The first five rows are complete for the current catalogue and Bagua universe.
-The gap-policy row is tracked but not promoted into exact catalogue ids.  The
-last two rows are intentionally pending: exact signatures and theorem-level
-cell semantics are stronger claims than enumeration.
+The tracked rows cover gap policies, seed signatures, exact cell-transform
+families, and the lower-bound audit.  Pending rows now point at parameterized
+semantic families, not the 371 × 192 coverage grid.
 -/
 def functionalCompletionRows : List CompletionRow :=
   [ { layer := .catalogueOperators, mark := .complete, scope := 371 }
@@ -222,8 +270,9 @@ def functionalCompletionRows : List CompletionRow :=
   , { layer := .hexagramGapPolicies, mark := .tracked, scope := 31 }
   , { layer := .exactSignatureSeeds, mark := .tracked, scope := 14 }
   , { layer := .cellTransformFamilyLaws, mark := .tracked, scope := 3 }
+  , { layer := .semanticLowerBoundAudit, mark := .tracked, scope := 4 }
   , { layer := .exactOperatorSignatures, mark := .pending, scope := 371 }
-  , { layer := .theoremLevelCellSemantics, mark := .pending, scope := 71232 }
+  , { layer := .parameterizedSemanticFamilies, mark := .pending, scope := 27 }
   ]
 
 def functionalCompletionCompleteRows : List CompletionRow :=
@@ -236,7 +285,7 @@ def functionalCompletionPendingRows : List CompletionRow :=
   functionalCompletionRows.filter (fun row => row.mark == CompletionMark.pending)
 
 theorem functionalCompletionRows_length :
-    functionalCompletionRows.length = 10 := by
+    functionalCompletionRows.length = 11 := by
   native_decide
 
 theorem functionalCompletionCompleteRows_length :
@@ -244,7 +293,7 @@ theorem functionalCompletionCompleteRows_length :
   native_decide
 
 theorem functionalCompletionTrackedRows_length :
-    functionalCompletionTrackedRows.length = 3 := by
+    functionalCompletionTrackedRows.length = 4 := by
   native_decide
 
 theorem functionalCompletionPendingRows_length :
@@ -266,13 +315,14 @@ theorem functionalCompletionTrackedRows_eq :
       [ { layer := .hexagramGapPolicies, mark := .tracked, scope := 31 }
       , { layer := .exactSignatureSeeds, mark := .tracked, scope := 14 }
       , { layer := .cellTransformFamilyLaws, mark := .tracked, scope := 3 }
+      , { layer := .semanticLowerBoundAudit, mark := .tracked, scope := 4 }
       ] := by
   native_decide
 
 theorem functionalCompletionPendingRows_eq :
     functionalCompletionPendingRows =
       [ { layer := .exactOperatorSignatures, mark := .pending, scope := 371 }
-      , { layer := .theoremLevelCellSemantics, mark := .pending, scope := 71232 }
+      , { layer := .parameterizedSemanticFamilies, mark := .pending, scope := 27 }
       ] := by
   native_decide
 
@@ -295,13 +345,14 @@ theorem functionalCompletionTrackedLayers_eq :
       [ .hexagramGapPolicies
       , .exactSignatureSeeds
       , .cellTransformFamilyLaws
+      , .semanticLowerBoundAudit
       ] := by
   native_decide
 
 theorem functionalCompletionPendingLayers_eq :
     functionalCompletionPendingRows.map (·.layer) =
       [ .exactOperatorSignatures
-      , .theoremLevelCellSemantics
+      , .parameterizedSemanticFamilies
       ] := by
   native_decide
 
@@ -326,8 +377,11 @@ theorem functional_completion_summary :
     ∧ signedOperatorIds.Nodup
     ∧ cellTransformKinds.length = 3
     ∧ cellTransformOperatorIds.all (fun id => decide (id ∈ signedOperatorIds)) = true
+    ∧ semanticLowerBoundRows.length = 4
+    ∧ semanticLowerBoundRows.map (·.scope) = [3, 7, 12, 27]
+    ∧ 27 < allOperatorCells.length
     ∧ functionalCompletionCompleteRows.length = 5
-    ∧ functionalCompletionTrackedRows.length = 3
+    ∧ functionalCompletionTrackedRows.length = 4
     ∧ functionalCompletionPendingRows.length = 2 := by
   exact
     ⟨ allOperatorIds_length
@@ -350,6 +404,9 @@ theorem functional_completion_summary :
     , signedOperatorIds_nodup
     , cellTransformKinds_length
     , cellTransformOperatorIds_have_signature_seed
+    , semanticLowerBoundRows_length
+    , semanticLowerBoundRows_scopes
+    , parameterizedSemanticFamilies_lt_operatorCellGrid
     , functionalCompletionCompleteRows_length
     , functionalCompletionTrackedRows_length
     , functionalCompletionPendingRows_length
