@@ -1136,7 +1136,28 @@ theorem metaInterpStep_flipYao_simulates (h : Hexagram) (i : Fin 6) (gcur : Cell
   (`host.history = [gcur]`) doesn't carry guest pc; extending to
   `host.history = [encGuestPc, gcur, ...]` is a separate architectural
   step. ddbc3a8's `l0InstructionClauses` row scope = 12 is therefore
-  covered as 9 / 12 in this file (7 trivial + setShi + flipYao). -/
+  covered as 9 / 12 in § 6c.1+§6c.2b (7 trivial + setShi + flipYao). -/
+
+/-! ### § 6c.4 Dispatch architecture (3×4 hybrid) — design recorded, proofs deferred
+
+  The 12-way dispatch program has been designed (33 instructions; pcs 0..20
+  are dispatch branches via 1 outer y1-test + 2 inner y2-tests + per-shi
+  branchShiEq chains; pcs 21..32 are 12 sentinel-halt leaves at known offsets
+  per `dispatchLeafPc : Fin 12 → Nat`).
+
+  The proofs `dispatchProg_routes_k` (one per `k ∈ Fin 12`) timed out at
+  600k+ heartbeats during `rfl` reduction of `runFuel 8` over the 33-instruction
+  program with branchYaoEq + branchShiEq dispatch. The fundamental issue is
+  the same as § 6c.2b's setShi/flipYao: native `rfl` can't handle the
+  combined `match` reductions across that many instructions in one sitting.
+
+  Path forward (Phase 2.3.z): prove `runFuel_succ : runFuel (n+1) s = step (runFuel n s)`
+  + per-opcode `step` reduction lemmas, then compose them step-by-step rather
+  than via single-shot `rfl`. ~ 3-5 days of work.
+
+  The 12-way dispatch *design* is captured in the project plan
+  (`/Users/ren/.claude/plans/lean-snoopy-elephant.md`) so future work can
+  pick it up without re-deriving the encoding-tag table. -/
 
 /-! ### § 6c.3 Combined "Phase 2.3 trivial-7" summary
 
