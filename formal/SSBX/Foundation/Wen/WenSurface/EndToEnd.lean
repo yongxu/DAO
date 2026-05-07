@@ -170,6 +170,28 @@ example :
     (wenyanInterpBool "不 同 一 乾").toOption = some true :=
   by native_decide
 
+/-! ### Bool 字面值测试 -/
+
+/-- 「真」 → true. -/
+example : (wenyanInterpBool "真").toOption = some true := by native_decide
+
+/-- 「假」 → false. -/
+example : (wenyanInterpBool "假").toOption = some false := by native_decide
+
+/-- 「不 真」 → false. -/
+example : (wenyanInterpBool "不 真").toOption = some false := by native_decide
+
+/-- 「不 假」 → true. -/
+example : (wenyanInterpBool "不 假").toOption = some true := by native_decide
+
+/-- 「不 不 真」 → ¬¬true = true. -/
+example : (wenyanInterpBool "不 不 真").toOption = some true := by native_decide
+
+/-- 「不 不 不 真」 → false. -/
+example :
+    (wenyanInterpBool "不 不 不 真").toOption = some false :=
+  by native_decide
+
 /-! ## § 4  错误路径 sanity -/
 
 /-- 未知 surface「瓜」走 resolve 错误. -/

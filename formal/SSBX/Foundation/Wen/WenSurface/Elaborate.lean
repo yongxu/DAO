@@ -48,11 +48,13 @@ deriving DecidableEq, Repr
 /-- 单个 ResolvedAtom 之 Tm 解释。
     · hexConst «一» 走 `.yi` primitive（与 `tui_eq_sheng` 等定理对齐）
     · 其他 hexConst h 走 `.hexLit h`
+    · boolConst b 走 `.boolLit b`
     · catalogueOp 按 OperatorId 派发到 stdlib body
     · appMarker 不应进 atomToTm（应在 list 层被过滤）—— 防御性返 `empty`. -/
 def atomToTm : ResolvedAtom → Except ElabErr Tm
   | .hexConst h =>
       if h = «一» then .ok .yi else .ok (.hexLit h)
+  | .boolConst b => .ok (.boolLit b)
   | .catalogueOp r =>
       match r.operator? with
       | some .T_10 => .ok Stdlib.tuiBody
@@ -91,6 +93,8 @@ mutual
     | n+1,  .appMarker :: rest                 => parseExpr n rest
     | _+1,  .hexConst h :: rest                =>
       .ok ((if h = «一» then .yi else .hexLit h), rest)
+    | _+1,  .boolConst b :: rest               =>
+      .ok (.boolLit b, rest)
     | n+1,  .catalogueOp r :: rest             =>
       match r.operator? with
       | none    => .error .empty

@@ -33,9 +33,10 @@ open SSBX.Foundation.Yi.YiCore
 
 /-! ## § 1  Resolved 类型 -/
 
-/-- 已消歧的原子：卦字面值 / catalogue 算子读法 / 应用标记. -/
+/-- 已消歧的原子：卦字面值 / Bool 字面值 / catalogue 算子读法 / 应用标记. -/
 inductive ResolvedAtom where
   | hexConst    (h : Hexagram)
+  | boolConst   (b : Bool)
   | catalogueOp (reading : OperatorReading)
   | appMarker             -- 「之」 等不发射 Tm 的 surface marker
 deriving DecidableEq, Repr
@@ -78,6 +79,12 @@ def resolveHexConst : Glyph → Option Hexagram
   | "坤" => some Hexagram.kun
   | _    => none
 
+/-- v1 Bool 字面值 surface → Bool。古汉语之「真」/「假」. -/
+def resolveBoolConst : Glyph → Option Bool
+  | "真" => some true
+  | "假" => some false
+  | _    => none
+
 /-- 「之」/「以」 等 application marker —— 不发射 Tm，elab 阶段跳过. -/
 def isApplicationMarker : Glyph → Bool
   | "之" => true   -- S_1 属格 / function application
@@ -85,17 +92,20 @@ def isApplicationMarker : Glyph → Bool
 
 /-! ## § 3  Resolver -/
 
-/-- 单 token resolver. 先尝试 application marker，再 hex 常值，再 stdlib 算子；
-    失败则 `.noReading`. -/
+/-- 单 token resolver。优先级：appMarker → bool 常值 → hex 常值 → stdlib 算子；
+    全失败则 `.noReading`. -/
 def resolveOne (t : GlyphTok) : Except ResolveErr ResolvedTok :=
   if isApplicationMarker t.surface then
     .ok ⟨t, .appMarker⟩
-  else match resolveHexConst t.surface with
-  | some h => .ok ⟨t, .hexConst h⟩
+  else match resolveBoolConst t.surface with
+  | some b => .ok ⟨t, .boolConst b⟩
   | none =>
-    match resolveStdlibOp t.surface with
-    | some r => .ok ⟨t, .catalogueOp r⟩
-    | none   => .error (.noReading t.surface t.startCol)
+    match resolveHexConst t.surface with
+    | some h => .ok ⟨t, .hexConst h⟩
+    | none =>
+      match resolveStdlibOp t.surface with
+      | some r => .ok ⟨t, .catalogueOp r⟩
+      | none   => .error (.noReading t.surface t.startCol)
 
 /-- 全 token 列表 resolver。结构递归，总函数. -/
 def resolveSimple : List GlyphTok → Except ResolveErr (List ResolvedTok)
@@ -127,6 +137,7 @@ def atomsOf : List ResolvedTok → List ResolvedAtom :=
 /-- 从 ResolvedAtom 抽 OperatorId（仅对 catalogueOp 有效）. -/
 def ResolvedAtom.opId? : ResolvedAtom → Option OperatorId
   | .hexConst _    => none
+  | .boolConst _   => none
   | .catalogueOp r => r.operator?
   | .appMarker     => none
 
