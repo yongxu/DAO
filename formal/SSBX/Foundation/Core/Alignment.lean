@@ -4,7 +4,7 @@
 主旨形式化:
 
   T1 · 内容对齐失败:存在 ContentAligned 与 OpenCriteria,使策略选出之 step 后 ¬ Open.
-  T2 · 过程对齐 → 生生不息:ProcessAligned 之 trajectory 即 OpenRun (即 ShengshengBuxi).
+  T2 · 过程对齐 → 道 → 生生不息:ProcessAligned 之 trajectory 即 Dao/OpenRun.
   T3 · 反对自毁 (performative contradiction):Denier 之 step 破 ShengshengBuxi.
   T4 · 持续蕴 Open (transcendental):ShengshengBuxi 之 trajectory 每一态皆 Open.
   T5 · 仁之共开:co-aligned policies 即诸个体 process alignment 之合.
@@ -131,7 +131,21 @@ theorem content_does_not_imply_process :
   ⟨Closing.model, Closing.criteria, Closing.trivialContent, true,
     Closing.false_not_open⟩
 
-/-! ## 4 · 过程对齐 → 生生不息 -/
+/-! ## 4 · 过程对齐 → 道 → 生生不息 -/
+
+/--
+道之见证 (DaoWitness):始于 `g` 的无穷 OpenRun.
+
+此处把「道」显式放在 `ProcessAligned` 与 `ShengshengBuxi` 之间:
+不是一个外加 content predicate,而是「持续开运行」之结构见证。
+-/
+structure DaoWitness (M : Model) (C : OpenCriteria M) (g : M.Gamma) where
+  run : OpenRun M C
+  starts_at : run.state 0 = g
+
+/-- 道 (Dao):存在一个始于 `g` 的 DaoWitness. -/
+def Dao (M : Model) (C : OpenCriteria M) (g : M.Gamma) : Prop :=
+  Nonempty (DaoWitness M C g)
 
 /--
 由 `ProcessAligned` 与初态 `g₀` 及 Open 之证,构造无穷 OpenRun.
@@ -162,6 +176,76 @@ theorem process_aligned_implies_shengshengbuxi
     (g : M.Gamma) (h : Open M C g) :
     ShengshengBuxi M C g :=
   ⟨PA.toOpenRun g h, rfl⟩
+
+/--
+**T2a · 过程对齐 → 道**:
+
+若策略与过程对齐,且初态已 Open,则由该策略构造出始于此态的 Dao/OpenRun.
+-/
+theorem process_aligned_implies_dao
+    {M : Model} {C : OpenCriteria M} (PA : ProcessAligned M C)
+    (g : M.Gamma) (h : Open M C g) :
+    Dao M C g :=
+  ⟨⟨PA.toOpenRun g h, rfl⟩⟩
+
+/--
+**T2b · 道 → 生生不息**:
+
+Dao/OpenRun 本身即 `ShengshengBuxi` 的结构见证.
+-/
+theorem dao_implies_shengshengbuxi
+    {M : Model} {C : OpenCriteria M} {g : M.Gamma}
+    (h : Dao M C g) :
+    ShengshengBuxi M C g := by
+  rcases h with ⟨w⟩
+  exact ⟨w.run, w.starts_at⟩
+
+/--
+**T2c · 过程对齐 → 道 → 生生不息**:
+
+这是主链的显式版本:过程对齐先给 Dao,再由 Dao 给生生不息.
+-/
+theorem process_aligned_to_dao_to_shengshengbuxi
+    {M : Model} {C : OpenCriteria M} (PA : ProcessAligned M C)
+    (g : M.Gamma) (h : Open M C g) :
+    ShengshengBuxi M C g :=
+  dao_implies_shengshengbuxi (process_aligned_implies_dao PA g h)
+
+/--
+**T2d · 生生不息 → 道**:
+
+若已有 `ShengshengBuxi`,则其内部 OpenRun 正是 Dao 见证。
+-/
+theorem shengshengbuxi_implies_dao
+    {M : Model} {C : OpenCriteria M} {g : M.Gamma}
+    (h : ShengshengBuxi M C g) :
+    Dao M C g := by
+  rcases h with ⟨run, hzero⟩
+  exact ⟨⟨run, hzero⟩⟩
+
+/-- Dao 与 ShengshengBuxi 在此形式层上等价。 -/
+theorem dao_iff_shengshengbuxi
+    {M : Model} {C : OpenCriteria M} {g : M.Gamma} :
+    Dao M C g ↔ ShengshengBuxi M C g :=
+  ⟨dao_implies_shengshengbuxi, shengshengbuxi_implies_dao⟩
+
+/--
+**过程对齐、道、生生不息之总链**:
+
+1. `ProcessAligned` 加初态 `Open` 给出 `Dao`;
+2. `Dao` 给出 `ShengshengBuxi`;
+3. `ShengshengBuxi` 反向给出 `Dao`.
+-/
+theorem process_alignment_dao_shengshengbuxi_summary :
+    (∀ (M : Model) (C : OpenCriteria M),
+        ProcessAligned M C → ∀ g : M.Gamma, Open M C g → Dao M C g) ∧
+    (∀ (M : Model) (C : OpenCriteria M) (g : M.Gamma),
+        Dao M C g → ShengshengBuxi M C g) ∧
+    (∀ (M : Model) (C : OpenCriteria M) (g : M.Gamma),
+        ShengshengBuxi M C g → Dao M C g) :=
+  ⟨fun _ _ PA g h => process_aligned_implies_dao PA g h,
+   fun _ _ _ h => dao_implies_shengshengbuxi h,
+   fun _ _ _ h => shengshengbuxi_implies_dao h⟩
 
 /-! ## 5 · 反对者之 performative contradiction -/
 
