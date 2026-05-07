@@ -358,7 +358,7 @@ def catalogueHomographGroups : List (List Glyph) := [
   ["出"], ["分"], ["制"], ["動", "动"], ["化"], ["升"], ["合"], ["同"], ["名分"],
   ["和"], ["唯"], ["復", "复"], ["守"], ["將", "将"], ["嘗", "尝"], ["已"],
   ["異", "异"], ["或"], ["推"], ["未"], ["止"], ["遊", "游"], ["然"], ["益"],
-  ["積", "积"], ["精"], ["終", "终"], ["自"], ["致"], ["節", "节"], ["表"], ["解"],
+  ["過", "过"], ["積", "积"], ["精"], ["終", "终"], ["自"], ["致"], ["節", "节"], ["表"], ["解"],
   ["調", "调"], ["辭", "辞"], ["辯", "辨", "辩"], ["通"]
 ]
 
@@ -631,6 +631,14 @@ def catalogueHomographReadings : List SurfaceReadings := [
     catalogueReading "益" "T-13" "增益" (some .T_13) .prefix [.expectedObject],
     catalogueReading "益" "A-9" "更加" (some .A_9) .prefix [.aspectContext]
   ],
+  surfaceReadings "過" [
+    catalogueReading "過" "T-22" "越界 / 超阈值" (some .T_22) .prefix [.expectedObject],
+    catalogueReading "過" "D-10" "过半 / 大半" (some .D_10) .prefix [.expectedNominal]
+  ],
+  surfaceReadings "过" [
+    catalogueReading "过" "T-22" "越界 / 超阈值" (some .T_22) .prefix [.expectedObject],
+    catalogueReading "过" "D-10" "过半 / 大半" (some .D_10) .prefix [.expectedNominal]
+  ],
   surfaceReadings "積" [
     catalogueReading "積" "X-14" "行动累积生能力" (some .X_14) .prefix [.xunziContext],
     catalogueReading "積" "Z-19" "一般积累" (some .Z_19) .prefix [.expectedObject]
@@ -783,7 +791,7 @@ theorem core_multi_reading_table_count :
   native_decide
 
 theorem all_surface_readings_count :
-    allSurfaceReadings.length = 82 := by
+    allSurfaceReadings.length = 84 := by
   native_decide
 
 theorem readings_for_zhi_count :
@@ -811,19 +819,19 @@ theorem readings_for_mingfen_count :
   native_decide
 
 theorem catalogue_homograph_group_count :
-    catalogueHomographGroups.length = 60 := by
+    catalogueHomographGroups.length = 61 := by
   native_decide
 
 theorem catalogue_homograph_surface_count :
-    catalogueHomographReadings.length = 81 := by
+    catalogueHomographReadings.length = 83 := by
   native_decide
 
 theorem catalogue_homograph_total_reading_count :
-    (catalogueHomographReadings.map (fun e => e.readings.length)).foldl Nat.add 0 = 189 := by
+    (catalogueHomographReadings.map (fun e => e.readings.length)).foldl Nat.add 0 = 193 := by
   native_decide
 
 theorem all_surface_total_reading_count :
-    (allSurfaceReadings.map (fun e => e.readings.length)).foldl Nat.add 0 = 193 := by
+    (allSurfaceReadings.map (fun e => e.readings.length)).foldl Nat.add 0 = 197 := by
   native_decide
 
 theorem all_surface_readings_have_expected_type_metadata :

@@ -6,7 +6,7 @@ import SSBX.Text.OperatorSignatures
 # OperatorCellSemantics — theorem-level coverage rows for operator-cell pairs
 
 This file gives every `OperatorId × Cell192` pair a machine-checkable semantic
-row.  It does not hand-write 71,232 denotational theorems.  Each row carries the
+row.  It does not hand-write 76,032 denotational theorems.  Each row carries the
 total text-level signature coverage, plus executable `Cell192` transform data
 when the operator family is one of the currently exact cell transforms.
 -/
@@ -53,7 +53,7 @@ def operatorCellSemanticRow (id : OperatorId) (cell : Cell192) :
 def operatorCellSemanticRowsFor (id : OperatorId) : List OperatorCellSemanticRow :=
   Cell192.all.map (operatorCellSemanticRow id)
 
-/-- Total semantic coverage table for the 371 × 192 operator-cell grid. -/
+/-- Total semantic coverage table for the 396 × 192 operator-cell grid. -/
 def allOperatorCellSemanticRows : List OperatorCellSemanticRow :=
   allOperatorIds.flatMap operatorCellSemanticRowsFor
 
@@ -77,11 +77,11 @@ theorem operatorCellSemanticRowsFor_length (id : OperatorId) :
   rw [operatorCellSemanticRowsFor, List.length_map, Cell192.all_length]
 
 theorem allOperatorCellSemanticRows_length :
-    allOperatorCellSemanticRows.length = 71232 := by
+    allOperatorCellSemanticRows.length = 76032 := by
   native_decide
 
 theorem allOperatorCellSemanticPairs_length :
-    allOperatorCellSemanticPairs.length = 71232 := by
+    allOperatorCellSemanticPairs.length = 76032 := by
   rw [allOperatorCellSemanticPairs, List.length_map, allOperatorCellSemanticRows_length]
 
 theorem executableCellTransformRows_length :
@@ -93,7 +93,7 @@ theorem exactSignatureShapeRows_length :
   native_decide
 
 theorem groupDefaultSignatureShapeRows_length :
-    groupDefaultSignatureShapeRows.length = 68544 := by
+    groupDefaultSignatureShapeRows.length = 73344 := by
   native_decide
 
 theorem operatorCellSemanticStatus_counts_sum :
@@ -153,17 +153,17 @@ theorem operatorCellSemanticRows_R_1_signature_only (cell : Cell192) :
   rfl
 
 /--
-Summary: all 71,232 pairs have theorem-level semantic coverage rows; exact
+Summary: all 76,032 pairs have theorem-level semantic coverage rows; exact
 cell execution is attached only where a current cell-transform family exists.
 The remaining rows split between exact seed-signature obligations and
 group-default signature-shape obligations.
 -/
 theorem operator_cell_semantic_coverage_summary :
-    allOperatorCellSemanticRows.length = 71232
-    ∧ allOperatorCellSemanticPairs.length = 71232
+    allOperatorCellSemanticRows.length = 76032
+    ∧ allOperatorCellSemanticPairs.length = 76032
     ∧ executableCellTransformRows.length = 576
     ∧ exactSignatureShapeRows.length = 2112
-    ∧ groupDefaultSignatureShapeRows.length = 68544
+    ∧ groupDefaultSignatureShapeRows.length = 73344
     ∧ executableCellTransformRows.length
         + exactSignatureShapeRows.length
         + groupDefaultSignatureShapeRows.length

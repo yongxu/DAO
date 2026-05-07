@@ -162,7 +162,9 @@ def recoveredMissingGlyphSenses : List GlyphSense := [
   senseOfGlyph "诸", senseOfGlyph "谓", senseOfGlyph "象", senseOfGlyph "连", senseOfGlyph "述", senseOfGlyph "递", senseOfGlyph "遇", senseOfGlyph "量", senseOfGlyph "锚", senseOfGlyph "随",
   senseOfGlyph "非", senseOfGlyph "项", senseOfGlyph "高", senseOfGlyph "黑",
   senseOfGlyph "恶", senseOfGlyph "辭", senseOfGlyph "辞", senseOfGlyph "說", senseOfGlyph "说", senseOfGlyph "辯", senseOfGlyph "辩", senseOfGlyph "類", senseOfGlyph "命", senseOfGlyph "筆",
-  senseOfGlyph "笔", senseOfGlyph "褒", senseOfGlyph "貶", senseOfGlyph "贬", senseOfGlyph "过", senseOfGlyph "治", senseOfGlyph "學", senseOfGlyph "教"
+  senseOfGlyph "笔", senseOfGlyph "褒", senseOfGlyph "貶", senseOfGlyph "贬", senseOfGlyph "过", senseOfGlyph "治", senseOfGlyph "學", senseOfGlyph "教",
+  senseOfGlyph "蓄", senseOfGlyph "塞", senseOfGlyph "备", senseOfGlyph "从", senseOfGlyph "决", senseOfGlyph "饰", senseOfGlyph "养", senseOfGlyph "附", senseOfGlyph "壮",
+  senseOfGlyph "难", senseOfGlyph "困", senseOfGlyph "丰", senseOfGlyph "远", senseOfGlyph "悦", senseOfGlyph "阻"
 ]
 
 /-- Total glyph-sense table for the v15 roster and the v16 wenyan operator catalogue. -/

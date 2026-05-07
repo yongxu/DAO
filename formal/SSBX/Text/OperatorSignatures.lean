@@ -9,7 +9,7 @@ commitments that can later be connected to concrete semantics.
 
 The `exactSignatureSeed` layer remains the small high-value seed set already
 used by downstream audits.  The `fullOperatorSignatures` layer gives total
-all-371 coverage by applying explicit seed overrides over honest group-level
+all-396 coverage by applying explicit seed overrides over honest group-level
 defaults.
 -/
 
@@ -173,7 +173,7 @@ def fullSignatureFor (id : OperatorId) : CoveredOperatorSignature :=
         arity := defaultSignatureArityForGroup g,
         evidence := .groupDefault, note := defaultSignatureNoteForGroup g }
 
-/-- Total all-371 signature coverage layer. -/
+/-- Total all-396 signature coverage layer. -/
 def fullOperatorSignatures : List CoveredOperatorSignature :=
   allOperatorIds.map fullSignatureFor
 
@@ -227,7 +227,7 @@ theorem defaultSignatureArities_positive :
   native_decide
 
 theorem fullOperatorSignatures_length :
-    fullOperatorSignatures.length = 371 := by
+    fullOperatorSignatures.length = 396 := by
   native_decide
 
 theorem fullSignatureOperatorIds_eq :
@@ -251,7 +251,7 @@ theorem seedOverrideSignatureRows_length :
   native_decide
 
 theorem groupDefaultSignatureRows_length :
-    groupDefaultSignatureRows.length = 357 := by
+    groupDefaultSignatureRows.length = 382 := by
   native_decide
 
 theorem fullSignatureFor_id (id : OperatorId) :
@@ -275,13 +275,13 @@ theorem fullSignatureFor_R_1_default :
   native_decide
 
 theorem fullOperatorSignatureCoverage_summary :
-    fullOperatorSignatures.length = 371
+    fullOperatorSignatures.length = 396
     ∧ fullSignatureOperatorIds = allOperatorIds
     ∧ fullSignatureOperatorIds.Nodup
     ∧ fullOperatorSignatures.all (fun sig => decide (sig.id ∈ allOperatorIds)) = true
     ∧ fullOperatorSignatures.all (fun sig => decide (0 < sig.arity)) = true
     ∧ seedOverrideSignatureRows.length = 14
-    ∧ groupDefaultSignatureRows.length = 357
+    ∧ groupDefaultSignatureRows.length = 382
     ∧ (∀ id : OperatorId, (fullSignatureFor id).id = id) := by
   exact
     ⟨ fullOperatorSignatures_length

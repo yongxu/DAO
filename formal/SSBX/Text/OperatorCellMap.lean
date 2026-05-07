@@ -5,7 +5,7 @@ import SSBX.Text.OperatorCellSemantics
 import SSBX.Text.OperatorAnchors
 
 /-!
-# OperatorCellMap — 371 文言算子 × 192 八卦单元
+# OperatorCellMap — 396 文言算子 × 192 八卦单元
 
 This file records the total indexing layer between the text catalogue and the
 Bagua cell space.  It is deliberately weaker than a semantic interpretation:
@@ -29,20 +29,20 @@ open SSBX.Foundation.Bagua.Cell192
 abbrev OperatorCell : Type := OperatorId × Cell192
 
 /--
-The total 371 × 192 index.  This is a coverage grid, not a claim that each
+The total 396 × 192 index.  This is a coverage grid, not a claim that each
 operator has a distinct theorem-level semantics at each cell.
 -/
 def allOperatorCells : List OperatorCell :=
   allOperatorIds.flatMap fun id =>
     Cell192.all.map fun c => (id, c)
 
-theorem allOperatorIds_length : allOperatorIds.length = 371 := by
+theorem allOperatorIds_length : allOperatorIds.length = 396 := by
   native_decide
 
 theorem allOperatorIds_nodup : allOperatorIds.Nodup := by
   native_decide
 
-theorem allOperatorCells_length : allOperatorCells.length = 71232 := by
+theorem allOperatorCells_length : allOperatorCells.length = 76032 := by
   native_decide
 
 theorem allOperatorCells_length_product :
@@ -82,7 +82,7 @@ theorem cellsForOperator_length (id : OperatorId) :
   rw [cellsForOperator, List.length_map, Cell192.all_length]
 
 theorem operatorsForCell_length (cell : Cell192) :
-    (operatorsForCell cell).length = 371 := by
+    (operatorsForCell cell).length = 396 := by
   rw [operatorsForCell, List.length_map, allOperatorIds_length]
 
 theorem indexedCellsForOperator_length (id : OperatorId) :
@@ -90,7 +90,7 @@ theorem indexedCellsForOperator_length (id : OperatorId) :
   rw [indexedCellsForOperator, Cell192.all_length]
 
 theorem indexedOperatorsForCell_length (cell : Cell192) :
-    (indexedOperatorsForCell cell).length = 371 := by
+    (indexedOperatorsForCell cell).length = 396 := by
   rw [indexedOperatorsForCell, allOperatorIds_length]
 
 theorem indexedCellsForOperator_complete (id : OperatorId) (cell : Cell192) :
@@ -142,23 +142,23 @@ theorem allOperatorCells_cell_mem (p : OperatorCell) :
 /--
 Machine-checkable summary for the text/Bagua bridge:
 
-* 371 catalogue operator ids are registered.
+* 396 catalogue operator ids are registered.
 * 192 Bagua cells are enumerated.
-* the total coverage grid has 71,232 rows.
+* the total coverage grid has 76,032 rows.
 * every operator-cell pair is present in that grid.
 * the more specific `OperatorAnchors` layer still covers every `Cell192`.
 -/
 theorem operator_cell_bagua_summary :
-    allOperatorIds.length = 371
+    allOperatorIds.length = 396
     ∧ Cell192.all.length = 192
-    ∧ allOperatorCells.length = 71232
+    ∧ allOperatorCells.length = 76032
     ∧ allOperatorIds.Nodup
     ∧ Cell192.all.Nodup
     ∧ (∀ id : OperatorId, id ∈ allOperatorIds)
     ∧ (∀ c : Cell192, c ∈ Cell192.all)
     ∧ (∀ id : OperatorId, ∀ c : Cell192, (id, c) ∈ allOperatorCells)
     ∧ (∀ id : OperatorId, (cellsForOperator id).length = 192)
-    ∧ (∀ cell : Cell192, (operatorsForCell cell).length = 371)
+    ∧ (∀ cell : Cell192, (operatorsForCell cell).length = 396)
     ∧ (∀ c : Cell192, cellCovered c = true) := by
   exact
     ⟨ allOperatorIds_length
@@ -203,7 +203,7 @@ inductive CompletionMark where
 
 /--
 Finite audit targets for semantic proof obligations.  These are intentionally
-not the 371 × 192 pair grid: the pair grid is an index, while semantics should
+not the 396 × 192 pair grid: the pair grid is an index, while semantics should
 be proved by parameterized families and generators.
 -/
 inductive SemanticLowerBoundKind where
@@ -261,20 +261,20 @@ Functional completion ledger for the current text/Bagua bridge.
 
 The first five rows are complete for the current catalogue and Bagua universe.
 The tracked rows retain seed / policy subledgers.  The requested completion
-rows are explicit: all 371 operators have conservative signature coverage, all
-71,232 operator-cell pairs have semantic rows, and the 31 gap words have a
-25/6 promotion partition.
+rows are explicit: all 396 operators have conservative signature coverage, all
+76,032 operator-cell pairs have semantic rows, and the 25 formerly general
+hexagram gap words have admitted catalogue ids while 6 gaps remain tracked.
 -/
 def functionalCompletionRows : List CompletionRow :=
-  [ { layer := .catalogueOperators, mark := .complete, scope := 371 }
+  [ { layer := .catalogueOperators, mark := .complete, scope := 396 }
   , { layer := .baguaCells, mark := .complete, scope := 192 }
-  , { layer := .operatorCellIndex, mark := .complete, scope := 71232 }
+  , { layer := .operatorCellIndex, mark := .complete, scope := 76032 }
   , { layer := .baguaAnchors, mark := .complete, scope := 192 }
-  , { layer := .homographReadings, mark := .complete, scope := 81 }
-  , { layer := .exactOperatorSignatures, mark := .complete, scope := 371 }
-  , { layer := .operatorCellSemanticRows, mark := .complete, scope := 71232 }
+  , { layer := .homographReadings, mark := .complete, scope := 83 }
+  , { layer := .exactOperatorSignatures, mark := .complete, scope := 396 }
+  , { layer := .operatorCellSemanticRows, mark := .complete, scope := 76032 }
   , { layer := .hexagramGapPromotions, mark := .complete, scope := 25 }
-  , { layer := .hexagramGapPolicies, mark := .tracked, scope := 31 }
+  , { layer := .hexagramGapPolicies, mark := .tracked, scope := 6 }
   , { layer := .exactSignatureSeeds, mark := .tracked, scope := 14 }
   , { layer := .cellTransformFamilyLaws, mark := .tracked, scope := 3 }
   , { layer := .semanticLowerBoundAudit, mark := .tracked, scope := 4 }
@@ -307,20 +307,20 @@ theorem functionalCompletionPendingRows_length :
 
 theorem functionalCompletionCompleteRows_eq :
     functionalCompletionCompleteRows =
-      [ { layer := .catalogueOperators, mark := .complete, scope := 371 }
+      [ { layer := .catalogueOperators, mark := .complete, scope := 396 }
       , { layer := .baguaCells, mark := .complete, scope := 192 }
-      , { layer := .operatorCellIndex, mark := .complete, scope := 71232 }
+      , { layer := .operatorCellIndex, mark := .complete, scope := 76032 }
       , { layer := .baguaAnchors, mark := .complete, scope := 192 }
-      , { layer := .homographReadings, mark := .complete, scope := 81 }
-      , { layer := .exactOperatorSignatures, mark := .complete, scope := 371 }
-      , { layer := .operatorCellSemanticRows, mark := .complete, scope := 71232 }
+      , { layer := .homographReadings, mark := .complete, scope := 83 }
+      , { layer := .exactOperatorSignatures, mark := .complete, scope := 396 }
+      , { layer := .operatorCellSemanticRows, mark := .complete, scope := 76032 }
       , { layer := .hexagramGapPromotions, mark := .complete, scope := 25 }
       ] := by
   native_decide
 
 theorem functionalCompletionTrackedRows_eq :
     functionalCompletionTrackedRows =
-      [ { layer := .hexagramGapPolicies, mark := .tracked, scope := 31 }
+      [ { layer := .hexagramGapPolicies, mark := .tracked, scope := 6 }
       , { layer := .exactSignatureSeeds, mark := .tracked, scope := 14 }
       , { layer := .cellTransformFamilyLaws, mark := .tracked, scope := 3 }
       , { layer := .semanticLowerBoundAudit, mark := .tracked, scope := 4 }
@@ -362,35 +362,35 @@ theorem functionalCompletionPendingLayers_eq :
   native_decide
 
 theorem functional_completion_summary :
-    allOperatorIds.length = 371
+    allOperatorIds.length = 396
     ∧ Cell192.all.length = 192
-    ∧ allOperatorCells.length = 71232
+    ∧ allOperatorCells.length = 76032
     ∧ allOperatorIds.Nodup
     ∧ Cell192.all.Nodup
     ∧ (functionalCompletionRows.map (·.layer)).Nodup
     ∧ (∀ id : OperatorId, (indexedCellsForOperator id).length = 192)
-    ∧ (∀ cell : Cell192, (indexedOperatorsForCell cell).length = 371)
+    ∧ (∀ cell : Cell192, (indexedOperatorsForCell cell).length = 396)
     ∧ (∀ id : OperatorId, (cellsForOperator id).length = 192)
-    ∧ (∀ cell : Cell192, (operatorsForCell cell).length = 371)
+    ∧ (∀ cell : Cell192, (operatorsForCell cell).length = 396)
     ∧ cellOperatorAnchors.length = 192
-    ∧ catalogueHomographReadings.length = 81
-    ∧ allSurfaceReadings.length = 82
-    ∧ (allSurfaceReadings.map (fun e => e.readings.length)).foldl Nat.add 0 = 193
-    ∧ hexagramMissingPolicies.length = 31
+    ∧ catalogueHomographReadings.length = 83
+    ∧ allSurfaceReadings.length = 84
+    ∧ (allSurfaceReadings.map (fun e => e.readings.length)).foldl Nat.add 0 = 197
+    ∧ hexagramMissingPolicies.length = 6
     ∧ hexagramGapPromotions.length = 25
     ∧ hexagramUnpromotedGapForms = ["丽", "井", "鼎", "震", "大", "小"]
     ∧ hexagramNearMissAnchors.length = 7
     ∧ exactSignatureSeed.length = 14
     ∧ signedOperatorIds.Nodup
-    ∧ fullOperatorSignatures.length = 371
+    ∧ fullOperatorSignatures.length = 396
     ∧ seedOverrideSignatureRows.length = 14
-    ∧ groupDefaultSignatureRows.length = 357
+    ∧ groupDefaultSignatureRows.length = 382
     ∧ cellTransformKinds.length = 3
     ∧ cellTransformOperatorIds.all (fun id => decide (id ∈ signedOperatorIds)) = true
-    ∧ allOperatorCellSemanticRows.length = 71232
+    ∧ allOperatorCellSemanticRows.length = 76032
     ∧ executableCellTransformRows.length = 576
     ∧ exactSignatureShapeRows.length = 2112
-    ∧ groupDefaultSignatureShapeRows.length = 68544
+    ∧ groupDefaultSignatureShapeRows.length = 73344
     ∧ semanticLowerBoundRows.length = 4
     ∧ semanticLowerBoundRows.map (·.scope) = [3, 7, 12, 27]
     ∧ 27 < allOperatorCells.length

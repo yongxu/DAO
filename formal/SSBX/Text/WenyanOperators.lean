@@ -20,16 +20,21 @@ inductive SignatureStatus where
 
 inductive OperatorId where
   | R_1 | R_2 | R_3 | R_4 | R_5 | R_6 | R_7 | R_8
-  | R_9 | R_10 | R_11 | R_12 | R_13 | R_14 | R_15 | C_1
+  | R_9 | R_10 | R_11 | R_12 | R_13 | R_14 | R_15
+  | R_16 | R_17 | R_18 | R_19 | R_20 | C_1
   | C_2 | C_3 | C_4 | C_5 | C_6 | C_7 | C_8 | T_1
   | T_2 | T_3 | T_4 | T_5 | T_6 | T_7 | T_8 | T_9
-  | T_10 | T_11 | T_12 | T_13 | T_14 | T_15 | F_1 | F_2
+  | T_10 | T_11 | T_12 | T_13 | T_14 | T_15
+  | T_16 | T_17 | T_18 | T_19 | T_20 | T_21 | T_22
+  | T_23 | T_24 | T_25 | T_26 | F_1 | F_2
   | F_3 | F_4 | F_5 | F_6 | F_7 | F_8 | F_9 | F_10
-  | F_11 | F_12 | B_1 | B_2 | B_3 | B_4 | B_5 | B_6
+  | F_11 | F_12 | F_13 | F_14 | F_15 | F_16 | F_17
+  | B_1 | B_2 | B_3 | B_4 | B_5 | B_6
   | B_7 | B_8 | Q_1 | Q_2 | Q_3 | Q_4 | Q_5 | Q_6
   | Q_7 | Q_8 | K_1 | K_2 | K_3 | K_4 | K_5 | K_6
   | K_7 | K_8 | M_1 | M_2 | M_3 | M_4 | M_5 | M_6
-  | M_7 | M_8 | N_1 | N_2 | N_3 | N_4 | N_5 | N_6
+  | M_7 | M_8 | M_9 | M_10 | M_11 | M_12
+  | N_1 | N_2 | N_3 | N_4 | N_5 | N_6
   | N_7 | N_8 | I_1 | I_2 | I_3 | I_4 | I_5 | I_6
     | I_7 | I_8 | I_9 | S_1 | S_2 | S_3 | S_4 | S_5 | S_6
     | S_7 | S_8 | S_9 | S_10 | S_11 | S_12 | S_13 | S_14
@@ -96,6 +101,11 @@ def OperatorId.group : OperatorId -> OperatorGroup
   | .R_13 => .R
   | .R_14 => .R
   | .R_15 => .R
+  | .R_16 => .R
+  | .R_17 => .R
+  | .R_18 => .R
+  | .R_19 => .R
+  | .R_20 => .R
   | .C_1 => .C
   | .C_2 => .C
   | .C_3 => .C
@@ -119,6 +129,17 @@ def OperatorId.group : OperatorId -> OperatorGroup
   | .T_13 => .T
   | .T_14 => .T
   | .T_15 => .T
+  | .T_16 => .T
+  | .T_17 => .T
+  | .T_18 => .T
+  | .T_19 => .T
+  | .T_20 => .T
+  | .T_21 => .T
+  | .T_22 => .T
+  | .T_23 => .T
+  | .T_24 => .T
+  | .T_25 => .T
+  | .T_26 => .T
   | .F_1 => .F
   | .F_2 => .F
   | .F_3 => .F
@@ -131,6 +152,11 @@ def OperatorId.group : OperatorId -> OperatorGroup
   | .F_10 => .F
   | .F_11 => .F
   | .F_12 => .F
+  | .F_13 => .F
+  | .F_14 => .F
+  | .F_15 => .F
+  | .F_16 => .F
+  | .F_17 => .F
   | .B_1 => .B
   | .B_2 => .B
   | .B_3 => .B
@@ -163,6 +189,10 @@ def OperatorId.group : OperatorId -> OperatorGroup
   | .M_6 => .M
   | .M_7 => .M
   | .M_8 => .M
+  | .M_9 => .M
+  | .M_10 => .M
+  | .M_11 => .M
+  | .M_12 => .M
   | .N_1 => .N
   | .N_2 => .N
   | .N_3 => .N
@@ -469,6 +499,11 @@ def OperatorId.code : OperatorId -> String
   | .R_13 => "R-13"
   | .R_14 => "R-14"
   | .R_15 => "R-15"
+  | .R_16 => "R-16"
+  | .R_17 => "R-17"
+  | .R_18 => "R-18"
+  | .R_19 => "R-19"
+  | .R_20 => "R-20"
   | .C_1 => "C-1"
   | .C_2 => "C-2"
   | .C_3 => "C-3"
@@ -492,6 +527,17 @@ def OperatorId.code : OperatorId -> String
   | .T_13 => "T-13"
   | .T_14 => "T-14"
   | .T_15 => "T-15"
+  | .T_16 => "T-16"
+  | .T_17 => "T-17"
+  | .T_18 => "T-18"
+  | .T_19 => "T-19"
+  | .T_20 => "T-20"
+  | .T_21 => "T-21"
+  | .T_22 => "T-22"
+  | .T_23 => "T-23"
+  | .T_24 => "T-24"
+  | .T_25 => "T-25"
+  | .T_26 => "T-26"
   | .F_1 => "F-1"
   | .F_2 => "F-2"
   | .F_3 => "F-3"
@@ -504,6 +550,11 @@ def OperatorId.code : OperatorId -> String
   | .F_10 => "F-10"
   | .F_11 => "F-11"
   | .F_12 => "F-12"
+  | .F_13 => "F-13"
+  | .F_14 => "F-14"
+  | .F_15 => "F-15"
+  | .F_16 => "F-16"
+  | .F_17 => "F-17"
   | .B_1 => "B-1"
   | .B_2 => "B-2"
   | .B_3 => "B-3"
@@ -536,6 +587,10 @@ def OperatorId.code : OperatorId -> String
   | .M_6 => "M-6"
   | .M_7 => "M-7"
   | .M_8 => "M-8"
+  | .M_9 => "M-9"
+  | .M_10 => "M-10"
+  | .M_11 => "M-11"
+  | .M_12 => "M-12"
   | .N_1 => "N-1"
   | .N_2 => "N-2"
   | .N_3 => "N-3"
@@ -842,6 +897,11 @@ def OperatorId.title : OperatorId -> String
   | .R_13 => "並 / 并"
   | .R_14 => "與 / 与"
   | .R_15 => "偕"
+  | .R_16 => "争"
+  | .R_17 => "临"
+  | .R_18 => "附"
+  | .R_19 => "感"
+  | .R_20 => "遇"
   | .C_1 => "含"
   | .C_2 => "包"
   | .C_3 => "容"
@@ -865,6 +925,17 @@ def OperatorId.title : OperatorId -> String
   | .T_13 => "益"
   | .T_14 => "屈"
   | .T_15 => "伸"
+  | .T_16 => "蓄"
+  | .T_17 => "备"
+  | .T_18 => "决"
+  | .T_19 => "断"
+  | .T_20 => "饰"
+  | .T_21 => "养"
+  | .T_22 => "過 / 过"
+  | .T_23 => "壮"
+  | .T_24 => "归"
+  | .T_25 => "丰"
+  | .T_26 => "悦"
   | .F_1 => "往"
   | .F_2 => "來 / 来"
   | .F_3 => "進 / 进"
@@ -877,6 +948,11 @@ def OperatorId.title : OperatorId -> String
   | .F_10 => "動 / 动"
   | .F_11 => "靜 / 静"
   | .F_12 => "通"
+  | .F_13 => "待"
+  | .F_14 => "塞"
+  | .F_15 => "从"
+  | .F_16 => "远"
+  | .F_17 => "阻"
   | .B_1 => "始"
   | .B_2 => "終 / 终"
   | .B_3 => "起"
@@ -909,6 +985,10 @@ def OperatorId.title : OperatorId -> String
   | .M_6 => "能"
   | .M_7 => "得"
   | .M_8 => "應 / 应 (复用 R-7)"
+  | .M_9 => "险"
+  | .M_10 => "难"
+  | .M_11 => "困"
+  | .M_12 => "信"
   | .N_1 => "不"
   | .N_2 => "非"
   | .N_3 => "弗"
@@ -1215,6 +1295,11 @@ def operatorForms : OperatorId -> List GlyphSense
   | .R_13 => textToSenses "並并"
   | .R_14 => textToSenses "與与"
   | .R_15 => textToSenses "偕"
+  | .R_16 => textToSenses "争"
+  | .R_17 => textToSenses "临"
+  | .R_18 => textToSenses "附"
+  | .R_19 => textToSenses "感"
+  | .R_20 => textToSenses "遇"
   | .C_1 => textToSenses "含"
   | .C_2 => textToSenses "包"
   | .C_3 => textToSenses "容"
@@ -1238,6 +1323,17 @@ def operatorForms : OperatorId -> List GlyphSense
   | .T_13 => textToSenses "益"
   | .T_14 => textToSenses "屈"
   | .T_15 => textToSenses "伸"
+  | .T_16 => textToSenses "蓄"
+  | .T_17 => textToSenses "备"
+  | .T_18 => textToSenses "决"
+  | .T_19 => textToSenses "断"
+  | .T_20 => textToSenses "饰"
+  | .T_21 => textToSenses "养"
+  | .T_22 => textToSenses "過过"
+  | .T_23 => textToSenses "壮"
+  | .T_24 => textToSenses "归"
+  | .T_25 => textToSenses "丰"
+  | .T_26 => textToSenses "悦"
   | .F_1 => textToSenses "往"
   | .F_2 => textToSenses "來来"
   | .F_3 => textToSenses "進进"
@@ -1250,6 +1346,11 @@ def operatorForms : OperatorId -> List GlyphSense
   | .F_10 => textToSenses "動动"
   | .F_11 => textToSenses "靜静"
   | .F_12 => textToSenses "通"
+  | .F_13 => textToSenses "待"
+  | .F_14 => textToSenses "塞"
+  | .F_15 => textToSenses "从"
+  | .F_16 => textToSenses "远"
+  | .F_17 => textToSenses "阻"
   | .B_1 => textToSenses "始"
   | .B_2 => textToSenses "終终"
   | .B_3 => textToSenses "起"
@@ -1282,6 +1383,10 @@ def operatorForms : OperatorId -> List GlyphSense
   | .M_6 => [«能1»]
   | .M_7 => textToSenses "得"
   | .M_8 => textToSenses "應应"
+  | .M_9 => textToSenses "险"
+  | .M_10 => textToSenses "难"
+  | .M_11 => textToSenses "困"
+  | .M_12 => textToSenses "信"
   | .N_1 => [«不1»]
   | .N_2 => [«非1»]
   | .N_3 => textToSenses "弗"
@@ -1578,16 +1683,21 @@ def operatorEntry (id : OperatorId) : OperatorEntry :=
 
 def allOperatorIds : List OperatorId := [
   .R_1, .R_2, .R_3, .R_4, .R_5, .R_6, .R_7, .R_8,
-  .R_9, .R_10, .R_11, .R_12, .R_13, .R_14, .R_15, .C_1,
+  .R_9, .R_10, .R_11, .R_12, .R_13, .R_14, .R_15, .R_16,
+  .R_17, .R_18, .R_19, .R_20, .C_1,
   .C_2, .C_3, .C_4, .C_5, .C_6, .C_7, .C_8, .T_1,
   .T_2, .T_3, .T_4, .T_5, .T_6, .T_7, .T_8, .T_9,
-  .T_10, .T_11, .T_12, .T_13, .T_14, .T_15, .F_1, .F_2,
+  .T_10, .T_11, .T_12, .T_13, .T_14, .T_15, .T_16, .T_17,
+  .T_18, .T_19, .T_20, .T_21, .T_22, .T_23, .T_24, .T_25,
+  .T_26, .F_1, .F_2,
   .F_3, .F_4, .F_5, .F_6, .F_7, .F_8, .F_9, .F_10,
-  .F_11, .F_12, .B_1, .B_2, .B_3, .B_4, .B_5, .B_6,
+  .F_11, .F_12, .F_13, .F_14, .F_15, .F_16, .F_17, .B_1,
+  .B_2, .B_3, .B_4, .B_5, .B_6,
   .B_7, .B_8, .Q_1, .Q_2, .Q_3, .Q_4, .Q_5, .Q_6,
   .Q_7, .Q_8, .K_1, .K_2, .K_3, .K_4, .K_5, .K_6,
   .K_7, .K_8, .M_1, .M_2, .M_3, .M_4, .M_5, .M_6,
-  .M_7, .M_8, .N_1, .N_2, .N_3, .N_4, .N_5, .N_6,
+  .M_7, .M_8, .M_9, .M_10, .M_11, .M_12, .N_1, .N_2,
+  .N_3, .N_4, .N_5, .N_6,
   .N_7, .N_8, .I_1, .I_2, .I_3, .I_4, .I_5, .I_6,
   .I_7, .I_8, .I_9, .S_1, .S_2, .S_3, .S_4, .S_5, .S_6,
   .S_7, .S_8, .S_9, .S_10, .S_11, .S_12, .S_13, .S_14,
