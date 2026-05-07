@@ -3305,7 +3305,7 @@ $$\text{六十四卦} = \text{分}^6(\text{太极})$$
 
 ★ = 卦名直接是核心算子。
 
-Lean 对应：`formal/SSBX/Text/OperatorAnchors.lean` 已把本表 64 行按 `xuGua` 序转成 `hexagramOperatorAnchors`，并证明 `hexagramOperatorAnchors.length = 64` 与 `anchoredHexagrams = xuGua`。该文件还把 22 个 BaguaWen 保留 token、三时、六爻位、六个易位关系、8 个三爻卦、以及 64 × 3 = 192 个卦时格全部列为可检查锚点。其中 37 行已有精确 catalogue `OperatorId`，31 行仍显式保留在 `missingForms` 或 `semanticIds` 中，避免把近义词误当成已经入表的算子。
+Lean 对应：`formal/SSBX/Text/OperatorAnchors.lean` 已把本表 64 行按 `xuGua` 序转成 `hexagramOperatorAnchors`，并证明 `hexagramOperatorAnchors.length = 64` 与 `anchoredHexagrams = xuGua`。该文件还把 22 个 BaguaWen 保留 token、三时、六爻位、六个易位关系、8 个三爻卦、以及 64 × 3 = 192 个卦时格全部列为可检查锚点。其中 37 行已有精确 catalogue `OperatorId`，31 行仍显式保留在 `missingForms` 或 `semanticIds` 中，避免把近义词误当成已经入表的算子。`formal/SSBX/Text/OperatorCellMap.lean` 另给出总索引层：371 个 catalogue `OperatorId` × 192 个 `Cell192` = 71,232 个 operator-cell pair，并证明每个 `(operator, cell)` pair 均在索引中；这只是覆盖网格，不等同于每个组合已有 theorem-level 语义。
 
 ### 21.1 观察
 
@@ -4016,7 +4016,8 @@ $$\forall t.\, \text{方}(\text{生})(t) \wedge \text{方}(\text{死})(t)$$
 - 不动点 / 递归算子 (二十六)
 - 非交换性分析 (二十七)
 - 64 卦 ↔ 算子映射 (二十八)
-- Lean 八卦锚点桥 `formal/SSBX/Text/OperatorAnchors.lean`：已把 BaguaWen 22 个保留 token、L0 十二指令、三时、六爻位、六个易位关系、8 个三爻卦、64 个 `xuGua` 卦位、以及 192 个 `Cell192` 卦时格全部列为机器可检查锚点；64 卦表中 37 卦已有精确 catalogue `OperatorId`，31 卦仍含待入 Lean 的缺口词或仅有语义近似锚点
+- Lean 八卦锚点桥 `formal/SSBX/Text/OperatorAnchors.lean`：已把 BaguaWen 22 个保留 token、L0 十二指令、三时、六爻位、六个易位关系、8 个三爻卦、64 个 `xuGua` 卦位、以及 192 个 `Cell192` 卦时格全部列为机器可检查锚点；64 卦表中 37 卦已有精确 catalogue `OperatorId`，31 卦仍含待升格为 catalogue `OperatorId` 的缺口词，或仅有语义近似锚点
+- Lean 总索引桥 `formal/SSBX/Text/OperatorCellMap.lean`：已证明 371 个 catalogue `OperatorId` 与 192 个 `Cell192` 的笛卡尔积共有 71,232 个 pair，且任意 `(operator, cell)` pair 均已被枚举；该层只说明全量覆盖，不把覆盖自动视为 theorem-level 语义。
 - 新代数律 — 法家 2-category, 五行 (Z/5)\*, 阴阳带种子 involution, 三元门, 化性起伪, 群分单调性, 标本 DAG, 反 dagger (二十九)
 - Categorical 形式化 — symmetric monoidal PROP + modal layer (三十)
 - 逆向工程实例 (三十一)

@@ -80,6 +80,7 @@ import SSBX.Foundation.Bagua.KleeneInternal
 import SSBX.Foundation.Bagua.GodelLi
 import SSBX.Foundation.Bagua.BaguaWenSpec
 import SSBX.Text.OperatorAnchors
+import SSBX.Text.OperatorCellMap
 import SSBX.Foundation.Bagua.ChunkedDecide
 import SSBX.Foundation.Bagua.CuoInvariance
 import SSBX.Foundation.Bagua.FuelDiscipline
