@@ -71,6 +71,9 @@ def all : List Cell192 :=
 /-- |Cell192| = 192 strictly. -/
 theorem all_length : all.length = 192 := by native_decide
 
+/-- The 192-cell enumeration has no duplicate cells. -/
+theorem all_nodup : all.Nodup := by native_decide
+
 /-- Every Cell192 is in `all` (exhaustion). -/
 theorem mem_all (c : Cell192) : c ∈ all := by
   rcases c with ⟨h, s⟩
@@ -123,6 +126,15 @@ theorem hexCuo_hexCuo (c : Cell192) : hexCuo (hexCuo c) = c := by
 theorem hexZong_hexZong (c : Cell192) : hexZong (hexZong c) = c := by
   rcases c with ⟨h, s⟩
   simp [hexZong, Hexagram.zong_zong]
+
+theorem hexCuo_hexZong_comm (c : Cell192) :
+    hexCuo (hexZong c) = hexZong (hexCuo c) := by
+  rcases c with ⟨h, s⟩
+  simp [hexCuo, hexZong, Hexagram.cuo_zong_comm]
+
+theorem hexCuoZong_hexCuoZong (c : Cell192) :
+    hexCuo (hexZong (hexCuo (hexZong c))) = c := by
+  rw [hexCuo_hexZong_comm, hexCuo_hexCuo, hexZong_hexZong]
 
 theorem flip1_flip1 (c : Cell192) : flip1 (flip1 c) = c := by
   rcases c with ⟨h, s⟩; simp [flip1, dongInner_dongInner]

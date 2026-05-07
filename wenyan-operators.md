@@ -2710,7 +2710,7 @@ $$\text{胜} = \text{势}(\text{致人}(\text{奇正}(\text{避实击虚}(\text{
 
 > **Lean 对齐状态（重要）**：当前 Lean 侧按层级读取：
 > 1. `Text/WenyanOperators.lean` / `Text/Completeness.lean` 证明当前 371 条 catalogue 条目、单字义位与注册完整性；`OperatorEntry.signature` 目前仍主要是 placeholder，不等于精确语义签名已 theorem 化；
-> 2. `Text/OperatorCellMap.lean` 证明 371 个 catalogue `OperatorId`、192 个 `Cell192`、以及 71,232 个 `(operator, cell)` pair 的覆盖网格完整，并用 `functionalCompletionRows` 标注 complete / tracked / pending 层级。
+> 2. `Text/OperatorCellMap.lean` 证明 371 个 catalogue `OperatorId`、192 个 `Cell192`、以及 71,232 个 `(operator, cell)` pair 的覆盖网格完整，并用 `functionalCompletionRows` 标注 complete / tracked / pending 层级；`Text/OperatorSignatures.lean` 已给 371 个 operator 建 conservative signature coverage，`Text/OperatorCellSemantics.lean` 已给 71,232 个 pair 建 theorem-level semantic row，`Text/OperatorAnchors.lean` 已把 31 个 gap words 分成 25 个可升格候选与 6 个不升格项。
 > 3. `Foundation/Wen/Operators.lean` 只形式化了少量可执行/可证明算子律，例如 isness 伴随算子、存在/否定、若干组合形态。
 > 4. 二十一甲至二十一戊 70 条已同步进 Lean catalogue；它们的可执行语义仍待后续按流派分别 theorem 化。
 > 因此下列代数律中，凡未明说 Lean theorem 者，先读作数学/语义猜想或设计约束，而非已经完成的形式证明。
@@ -3306,7 +3306,7 @@ $$\text{六十四卦} = \text{分}^6(\text{太极})$$
 
 ★ = 卦名直接是核心算子。
 
-Lean 对应：`formal/SSBX/Text/OperatorAnchors.lean` 已把本表 64 行按 `xuGua` 序转成 `hexagramOperatorAnchors`，并证明 `hexagramOperatorAnchors.length = 64` 与 `anchoredHexagrams = xuGua`。该文件还把 22 个 BaguaWen 保留 token、三时、六爻位、六个易位关系、8 个三爻卦、以及 64 × 3 = 192 个卦时格全部列为可检查锚点。其中 37 行已有精确 catalogue `OperatorId`，31 行仍显式保留在 `missingForms` 或 `semanticIds` 中，避免把近义词误当成已经入表的算子。`formal/SSBX/Text/OperatorCellMap.lean` 另给出总索引层：371 个 catalogue `OperatorId` × 192 个 `Cell192` = 71,232 个 operator-cell pair，并证明每个 `(operator, cell)` pair 均在索引中；这只是覆盖网格，不等同于每个组合已有 theorem-level 语义。
+Lean 对应：`formal/SSBX/Text/OperatorAnchors.lean` 已把本表 64 行按 `xuGua` 序转成 `hexagramOperatorAnchors`，并证明 `hexagramOperatorAnchors.length = 64` 与 `anchoredHexagrams = xuGua`。该文件还把 22 个 BaguaWen 保留 token、三时、六爻位、六个易位关系、8 个三爻卦、以及 64 × 3 = 192 个卦时格全部列为可检查锚点。其中 37 行已有精确 catalogue `OperatorId`，31 行仍显式保留在 `missingForms` 或 `semanticIds` 中，避免把近义词误当成已经入表的算子；`hexagramNearMissAnchors` 另把 `蓄/塞/感/难/鼎/震/归` 7 个“有近似语义锚但不是精确 id”的案例列出审计。`formal/SSBX/Text/OperatorCellMap.lean` 另给出总索引层：371 个 catalogue `OperatorId` × 192 个 `Cell192` = 71,232 个 operator-cell pair，并证明每个 `(operator, cell)` pair 均在索引中；还证明固定任一算子可投影到 192 个 cell，固定任一 cell 可投影到 371 个算子。这只是覆盖网格，不等同于每个组合已有 theorem-level 语义。
 
 ### 21.1 观察
 
@@ -3859,7 +3859,7 @@ $$\forall t.\, \text{方}(\text{生})(t) \wedge \text{方}(\text{死})(t)$$
       → OperatorId / ConstructionId
 ```
 
-其中 `GlyphSense` 解决「同一字形不同义位」；`OperatorReading` 解决「同一义位在不同上下文中的算子读法」。Lean 侧轻量 metadata 见 `Text/OperatorReadings.lean`。它不扩展 M1 `baguaWen` parser；M1 仍只认 `«... »` 保留 token，因此多义字不会破坏现有受控语法。
+其中 `GlyphSense` 解决「同一字形不同义位」；`OperatorReading` 解决「同一义位在不同上下文中的算子读法」。Lean 侧轻量 metadata 见 `Text/OperatorReadings.lean`：当前覆盖 82 个 surface reading row，合计 193 个 reading，其中 catalogue 同形多编号表为 60 组 / 81 个 surface entry / 189 个 reading，且这些 catalogue reading 均已挂接 `OperatorId`。每个 reading 现在还带有 precedence、expected type metadata、construction kind；这些字段只用于审计和后续 parser 策略，不改变当前 `contextualReadings` 的过滤逻辑。它不扩展 M1 `baguaWen` parser；M1 仍只认 `«... »` 保留 token，因此多义字不会破坏现有受控语法。
 
 ### 以「之」为例
 
@@ -3992,6 +3992,8 @@ $$\forall t.\, \text{方}(\text{生})(t) \wedge \text{方}(\text{死})(t)$$
 
 当前策略：先把这些多义字做成 `OperatorReading` / 文档表，再让自然文言 parser 输出候选集合；只有当 `uniquelyResolved` 成立时才落到单一算子。
 
+Lean 已机器检查的消歧样例包括：`之` 在名词间、动词后、路径语境、`之又` 构式、期待函数、期待路径时唯一；裸 `之` 保留 4 个候选；`中` 无上下文歧义、内外语境唯一、几何语境仍歧义；`反` 在命题 / 算子语境分别唯一；`推` 在算子语境唯一；`唯` 在量词域 / focus adverb 语境分别唯一；`自` 在来源 / 反身语境分别唯一；`方`、`將` 在 aspect 语境仍保留歧义；`已` 在命题 / aspect 语境分别唯一。
+
 ---
 
 ## 三十六、待办 (open threads)
@@ -4017,9 +4019,18 @@ $$\forall t.\, \text{方}(\text{生})(t) \wedge \text{方}(\text{死})(t)$$
 - 不动点 / 递归算子 (二十六)
 - 非交换性分析 (二十七)
 - 64 卦 ↔ 算子映射 (二十八)
-- Lean 八卦锚点桥 `formal/SSBX/Text/OperatorAnchors.lean`：已把 BaguaWen 22 个保留 token、L0 十二指令、三时、六爻位、六个易位关系、8 个三爻卦、64 个 `xuGua` 卦位、以及 192 个 `Cell192` 卦时格全部列为机器可检查锚点；64 卦表中 37 卦已有精确 catalogue `OperatorId`，31 卦仍含待升格为 catalogue `OperatorId` 的缺口词，或仅有语义近似锚点
-- Lean 总索引桥 `formal/SSBX/Text/OperatorCellMap.lean`：已证明 371 个 catalogue `OperatorId` 与 192 个 `Cell192` 的笛卡尔积共有 71,232 个 pair，且任意 `(operator, cell)` pair 均已被枚举；该层只说明全量覆盖，不把覆盖自动视为 theorem-level 语义。
-- Lean 完成度分层：`OperatorCellMap.lean` 已用 `functionalCompletionRows` 固化 5 个 complete 层、1 个 tracked 层、2 个 pending 层；因此 371 × 192 的 coverage / indexing 已完成，exact signatures 与 theorem-level cell semantics 明确留作下一层。
+- Lean 八卦锚点桥 `formal/SSBX/Text/OperatorAnchors.lean`：已把 BaguaWen 22 个保留 token、L0 十二指令、三时、六爻位、六个易位关系、8 个三爻卦、64 个 `xuGua` 卦位、以及 192 个 `Cell192` 卦时格全部列为机器可检查锚点；64 卦表中 37 卦已有精确 catalogue `OperatorId`，31 卦仍含待升格为 catalogue `OperatorId` 的缺口词，或仅有语义近似锚点；`蓄/塞/感/难/鼎/震/归` 7 个 near-miss 已单独审计为“有语义锚但非精确 id”。
+- Lean 总索引桥 `formal/SSBX/Text/OperatorCellMap.lean`：已证明 371 个 catalogue `OperatorId` 与 192 个 `Cell192` 的笛卡尔积共有 71,232 个 pair，且任意 `(operator, cell)` pair 均已被枚举；同时证明固定任一 `OperatorId` 有 192 个 indexed cell，固定任一 `Cell192` 有 371 个 indexed operator。该层只说明全量覆盖，不把覆盖自动视为 theorem-level 语义。
+- Lean 完成度分层：`OperatorCellMap.lean` 已用 `functionalCompletionRows` 固化 8 个 complete 层、4 个 tracked 层、0 个 pending 层；因此 371 × 192 的 coverage / indexing、371 个 conservative full signatures、71,232 个 operator-cell semantic rows、以及 31 gap word 的 25/6 promotion partition 均已有机器检查入口。14 个 signature seed、3 个 cell-transform family laws / 4 个 enabled catalogue ids、31 gap policies、4 行 semantic lower-bound audit 仍作为子账本 tracked。
+- Lean semantic lower-bound audit：`OperatorCellMap.lean` 已证明 lower-bound audit 的 scope 为 `[3, 7, 12, 27]`，并证明 `27 < 71,232`；这把“覆盖网格”与“真正要 theorem 化的语义族”明确拆开。
+- Lean 多义读法层：`OperatorReadings.lean` 已证明 82 个 surface row / 193 个 reading；catalogue 同形表为 60 组 / 81 个 surface entry / 189 个 reading，且全部 linked 到 `OperatorId`，并补入多组唯一 / 保歧义上下文样例；所有 reading 均有 precedence 与 expected type metadata，construction metadata 当前覆盖 13 个 reading。
+- Lean signature coverage：`Text/OperatorSignatures.lean` 已给全部 371 个 catalogue operator 建 conservative signature row；其中 14 个为 seed override，357 个为逐 `OperatorId` 的 catalogue-shape signature row。该层完成 arity/type-shape 覆盖，但仍不声称所有算子已有可执行 denotation。
+- Lean operator-cell semantics：`Text/OperatorCellSemantics.lean` 已给 71,232 个 `(OperatorId, Cell192)` pair 建 theorem-level semantic row；状态计数为 768 个 family-backed / executable cell-transform rows、1,920 个 exact seed-signature rows、68,544 个 catalogue-shape signature rows。新增的 executable rows 只来自 `T-6 反` 作为 `hexCuo` 的保守 alias；该层证明 pair 覆盖，不手写 71,232 个定理。
+- Lean gap promotion：`Text/OperatorAnchors.lean` 已把 31 个 hexagram gap words 分成 25 个 catalogue-admission candidates 与 6 个不升格项；`待/争/蓄/塞/备/从/临/决/断/饰/养/过/险/附/感/壮/难/遇/困/归/丰/远/悦/信/阻` 可升通用算子，`丽/井/鼎/震` 保留卦象专属，`大/小` 保留参数词。
+- Lean signature seed：`Text/OperatorSignatures.lean` 仍保留 `之/而/以/故/反/復/错/综/互/损/益` 等高价值入口的 14 个 seed rows，供高置信 override 与 pair semantics 分类使用。
+- Lean 参数化 cell semantics：`Text/OperatorFamilySemantics.lean` 已把 `错/综/互` 三个 exact cell-transform family 绑定到 `Cell192.hexCuo / hexZong / hexHu`，并把 catalogue id `T-6 反` 保守接到同一个 `hexCuo` family；这些 family law 对所有 `Cell192` 参数化成立，替代逐 pair 证明。
+- Lean reachability / L0 / candidate audit：`Text/OperatorReachabilitySemantics.lean` 已证明 6 个 line flip + `shiNext` 共 7 个 `Cell192` generator；`Text/OperatorInstructionSemantics.lean` 已证明 12 个 BaguaWen L0 instruction clause，其中 6 个 current-cell endomap 与 `YiState.execute` 对齐、6 个 state/control clause 不暴露 cell endomap；`Text/OperatorCellCandidateSemantics.lean` 把 `动/化/变/推/复/损/益` 7 个有争议绑定保留为 candidate audit，不计入 executable row count。
+- Lean 错综 Cell 层：`Cell192.lean` 已补 `hexCuo` 与 `hexZong` 的交换律，以及二者复合的二阶恒等，作为 bit-level 错综群作用的 cell-level 加强。
 - 新代数律 — 法家 2-category, 五行 (Z/5)\*, 阴阳带种子 involution, 三元门, 化性起伪, 群分单调性, 标本 DAG, 反 dagger (二十九)
 - Categorical 形式化 — symmetric monoidal PROP + modal layer (三十)
 - 逆向工程实例 (三十一)
@@ -4039,15 +4050,15 @@ $$\forall t.\, \text{方}(\text{生})(t) \wedge \text{方}(\text{死})(t)$$
 
 ### 未完成 — 形式分析
 
-- [ ] **64 卦缺口词入 catalogue** — `OperatorAnchors.lean` 已显式列出 `待/争/蓄/塞/备/从/临/决/断/饰/养/过/险/丽/附/感/壮/难/遇/困/井/鼎/震/归/丰/远/悦/信/大/小/阻` 等 31 个去重缺口，并机器标注处理策略：25 个可升通用算子，`大/小` 宜做参数，`丽/井/鼎/震` 宜保持卦象专属或语义锚
-- [ ] **多义字读法表继续精化** — `Text/OperatorReadings.lean` 已覆盖文档同形多编号表的 60 个组 / 81 个 surface entry，并证明这些 reading 均已挂接 `OperatorId`；后续继续补 precedence / type expectation / construction rules
+- [x] **64 卦缺口词升格边界** — `OperatorAnchors.lean` 已显式列出 `待/争/蓄/塞/备/从/临/决/断/饰/养/过/险/丽/附/感/壮/难/遇/困/井/鼎/震/归/丰/远/悦/信/大/小/阻` 等 31 个去重缺口，并机器标注处理策略：25 个可升通用算子，`大/小` 做参数，`丽/井/鼎/震` 保持卦象专属或语义锚；`hexagramGapPromotions` 已证明 25/6 partition，`蓄/塞/感/难/鼎/震/归` 仍以 near-miss 表示“有近似锚但非已入 catalogue id”
+- [ ] **多义字读法表继续精化** — `Text/OperatorReadings.lean` 已覆盖文档同形多编号表的 60 个组 / 81 个 surface entry / 189 个 catalogue reading，并证明这些 reading 均已挂接 `OperatorId`；含核心 `之` 后总计 82 个 surface row / 193 个 reading。precedence / expected type / construction metadata 已入表；后续需让 parser 真正使用这些 metadata。
 - [ ] **並 / 與 对齐** — 明确二者在 monoidal product、logical conjunction、social co-presence 中的不同签名
 - [ ] **反状态层 involution** — 给具体 state-space 后证明 `反 ∘ 反 = id`
 - [ ] **递归 / 不动点** — 把 `X 之又 X` 从有限 iter 扩展到 fix/termination 语义
-- [ ] **错综群作用** — 先证明 bit-level $V_4$，再另建 interpretation-level obstruction
-- [ ] **算子的精确类型签名** — state types / constraint types / effect types 完整建模
+- [ ] **错综群作用** — `Cell192` 层已补 `hexCuo` / `hexZong` 的交换与复合二阶恒等；`OperatorFamilySemantics.lean` 已给 `错/综/互` 建参数化 family semantics。后续仍需 `hu`/flip 共轭细律与 interpretation-level obstruction
+- [x] **算子的精确类型签名覆盖** — `OperatorSignatures.lean` 已有全 371 conservative signature rows：14 个 seed override + 357 个逐 `OperatorId` catalogue-shape rows；后续若要更强，是继续把 catalogue-shape rows 接到 domain-specific denotation / state types / effect types
 - [ ] **错综结构的群论分析** — 64 卦在 (错, 综) 作用下的精确轨道分类
-- [ ] **算子优先级表** — 在 `OperatorReading` 上加入 precedence / type expectation / construction rules，用于解析时 disambiguate (e.g. 反 vs. 反求, 化 vs. 化性)
+- [ ] **算子优先级表** — `OperatorReading` 已有 precedence / type expectation / construction metadata；后续需接入 parser 策略，用于 disambiguate (e.g. 反 vs. 反求, 化 vs. 化性)
 - [ ] **算子的 effect system** — pure / IO / state-changing 算子区分
 - [ ] **算子等式系统的整理** — 整合所有发现的等式 (极反复律、损益盈虚、无为无不为、化性起伪、势法术、生克侮、参同形名)
 - [ ] **算子的 Categorical Logic 实现** — Allegory? Fibration? Topos?

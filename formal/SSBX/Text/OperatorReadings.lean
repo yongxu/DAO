@@ -83,6 +83,90 @@ inductive ReadingStatus where
   | pending
   deriving DecidableEq, Repr
 
+inductive ExpectedType where
+  | unknown
+  | function
+  | prop
+  | path
+  | object
+  | operator
+  | action
+  | nominal
+  | predicate
+  | quantifier
+  | modal
+  | aspect
+  | role
+  | construction
+  deriving DecidableEq, Repr, BEq
+
+inductive ConstructionKind where
+  | none
+  | genitiveProjection
+  | anaphora
+  | sourcePath
+  | iteration
+  | quantifier
+  | modal
+  | causal
+  | sequential
+  | mohistCondition
+  | reflexive
+  | wholeConstruction
+  deriving DecidableEq, Repr, BEq
+
+def expectedTypeOfCue : ContextCue → Option ExpectedType
+  | .betweenNominals => some .function
+  | .betweenActions => some .action
+  | .afterVerb => some .object
+  | .beforeMotionVerb => some .path
+  | .beforeYou => some .construction
+  | .wholeConstruction => some .construction
+  | .asConstruction => some .construction
+  | .nominalizerConstruction => some .construction
+  | .expectedFunction => some .function
+  | .expectedProp => some .prop
+  | .expectedPath => some .path
+  | .expectedObject => some .object
+  | .expectedOperator => some .operator
+  | .expectedAction => some .action
+  | .expectedNominal => some .nominal
+  | .expectedPredicate => some .predicate
+  | .quantifierDomain => some .quantifier
+  | .modalFrame => some .modal
+  | .aspectContext => some .aspect
+  | .roleContext => some .role
+  | _ => none
+
+def expectedTypesOfCues (cues : List ContextCue) : List ExpectedType :=
+  let types := cues.filterMap expectedTypeOfCue
+  if types.isEmpty then [.unknown] else types
+
+def precedenceOfCues (cues : List ContextCue) : Nat :=
+  if cues.contains .controlledToken then 1
+  else if cues.contains .instructionContext then 2
+  else if cues.contains .explicitSense then 3
+  else if cues.contains .wholeConstruction
+      || cues.contains .asConstruction
+      || cues.contains .nominalizerConstruction
+      || cues.contains .beforeYou then 4
+  else if cues.contains .finalAssertion then 5
+  else if cues.contains .expectedFunction
+      || cues.contains .betweenActions
+      || cues.contains .expectedProp
+      || cues.contains .expectedPath then 6
+  else 7
+
+def constructionKindOf (fixity : Fixity) (cues : List ContextCue) : ConstructionKind :=
+  if cues.contains .beforeYou then .iteration
+  else if cues.contains .wholeConstruction
+      || cues.contains .asConstruction
+      || cues.contains .nominalizerConstruction then .wholeConstruction
+  else
+    match fixity with
+    | .construction => .wholeConstruction
+    | _ => .none
+
 structure OperatorReading where
   sense : GlyphSense
   operator? : Option OperatorId
@@ -90,6 +174,9 @@ structure OperatorReading where
   gloss : String
   fixity : Fixity
   cues : List ContextCue
+  precedence : Nat
+  expectedTypes : List ExpectedType
+  construction : ConstructionKind
   status : ReadingStatus
   deriving DecidableEq, Repr
 
@@ -116,6 +203,9 @@ def catalogueReading (surface code gloss : String) (operator? : Option OperatorI
   gloss := gloss
   fixity := fixity
   cues := cues
+  precedence := precedenceOfCues cues
+  expectedTypes := expectedTypesOfCues cues
+  construction := constructionKindOf fixity cues
   status := if operator?.isSome then .catalogue else .pending
 
 def pendingReading (surface code gloss : String) (fixity : Fixity)
@@ -132,6 +222,9 @@ def «之属格读法» : OperatorReading where
   gloss := "属格 / 投影 / function application"
   fixity := .infix
   cues := [.betweenNominals, .expectedFunction]
+  precedence := 6
+  expectedTypes := [.function]
+  construction := .genitiveProjection
   status := .catalogue
 
 def «之代指读法» : OperatorReading where
@@ -141,6 +234,9 @@ def «之代指读法» : OperatorReading where
   gloss := "代指 / 虚词承接 / discourse anaphora"
   fixity := .suffix
   cues := [.afterVerb]
+  precedence := 6
+  expectedTypes := [.object]
+  construction := .anaphora
   status := .contextual
 
 def «之路径读法» : OperatorReading where
@@ -150,6 +246,9 @@ def «之路径读法» : OperatorReading where
   gloss := "生成来源 / 路径所从 / source binding"
   fixity := .infix
   cues := [.beforeMotionVerb, .expectedPath]
+  precedence := 6
+  expectedTypes := [.path]
+  construction := .sourcePath
   status := .contextual
 
 def «之又构式» : OperatorReading where
@@ -159,6 +258,9 @@ def «之又构式» : OperatorReading where
   gloss := "迭代构式 marker, as in X 之又 X"
   fixity := .construction
   cues := [.beforeYou]
+  precedence := 4
+  expectedTypes := [.construction]
+  construction := .iteration
   status := .construction
 
 def «或存在读法» : OperatorReading where
@@ -168,6 +270,9 @@ def «或存在读法» : OperatorReading where
   gloss := "不定 / 存在量化"
   fixity := .prefix
   cues := [.expectedProp]
+  precedence := 6
+  expectedTypes := [.quantifier, .prop]
+  construction := .quantifier
   status := .catalogue
 
 def «或可能读法» : OperatorReading where
@@ -177,6 +282,9 @@ def «或可能读法» : OperatorReading where
   gloss := "可能模态"
   fixity := .prefix
   cues := [.expectedProp]
+  precedence := 6
+  expectedTypes := [.modal, .prop]
+  construction := .modal
   status := .catalogue
 
 def «故因果读法» : OperatorReading where
@@ -186,6 +294,9 @@ def «故因果读法» : OperatorReading where
   gloss := "因果根据 / because-therefore"
   fixity := .infix
   cues := [.expectedProp]
+  precedence := 6
+  expectedTypes := [.prop]
+  construction := .causal
   status := .catalogue
 
 def «故序贯读法» : OperatorReading where
@@ -195,6 +306,9 @@ def «故序贯读法» : OperatorReading where
   gloss := "证明步 / therefore connective"
   fixity := .infix
   cues := [.expectedProp]
+  precedence := 6
+  expectedTypes := [.prop]
+  construction := .sequential
   status := .catalogue
 
 def «自来源读法» : OperatorReading where
@@ -204,6 +318,9 @@ def «自来源读法» : OperatorReading where
   gloss := "始于 / from"
   fixity := .prefix
   cues := [.expectedPath]
+  precedence := 6
+  expectedTypes := [.path]
+  construction := .sourcePath
   status := .catalogue
 
 def «自反身读法» : OperatorReading where
@@ -213,6 +330,9 @@ def «自反身读法» : OperatorReading where
   gloss := "自身 / reflexive identity"
   fixity := .prefix
   cues := [.expectedFunction]
+  precedence := 6
+  expectedTypes := [.function]
+  construction := .reflexive
   status := .catalogue
 
 def «故墨经读法» : OperatorReading where
@@ -222,6 +342,9 @@ def «故墨经读法» : OperatorReading where
   gloss := "墨经小故 / 大故, necessary / sufficient condition"
   fixity := .infix
   cues := [.mohistContext, .expectedProp]
+  precedence := 6
+  expectedTypes := [.prop]
+  construction := .mohistCondition
   status := .catalogue
 
 def coreMultiReadingTable : List SurfaceReadings := [
@@ -639,6 +762,14 @@ theorem zhi_before_you_unique :
     uniquelyResolved "之" [.beforeYou] := by
   native_decide
 
+theorem zhi_expected_function_unique :
+    uniquelyResolved "之" [.expectedFunction] := by
+  native_decide
+
+theorem zhi_expected_path_unique :
+    uniquelyResolved "之" [.expectedPath] := by
+  native_decide
+
 theorem zhi_no_context_ambiguous :
     ¬ uniquelyResolved "之" [] := by
   native_decide
@@ -647,12 +778,92 @@ theorem huo_prop_context_still_ambiguous :
     ¬ uniquelyResolved "或" [.expectedProp] := by
   native_decide
 
+theorem core_multi_reading_table_count :
+    coreMultiReadingTable.length = 1 := by
+  native_decide
+
+theorem all_surface_readings_count :
+    allSurfaceReadings.length = 82 := by
+  native_decide
+
+theorem readings_for_zhi_count :
+    (readingsForGlyph "之").length = 4 := by
+  native_decide
+
+theorem zhi_no_context_reading_count :
+    (contextualReadings "之" []).length = 4 := by
+  native_decide
+
+theorem readings_for_zhong_count :
+    (readingsForGlyph "中").length = 4 := by
+  native_decide
+
+theorem readings_for_gu_count :
+    (readingsForGlyph "故").length = 3 := by
+  native_decide
+
+theorem readings_for_huo_count :
+    (readingsForGlyph "或").length = 2 := by
+  native_decide
+
+theorem readings_for_mingfen_count :
+    (readingsForGlyph "名分").length = 2 := by
+  native_decide
+
 theorem catalogue_homograph_group_count :
     catalogueHomographGroups.length = 60 := by
   native_decide
 
 theorem catalogue_homograph_surface_count :
     catalogueHomographReadings.length = 81 := by
+  native_decide
+
+theorem catalogue_homograph_total_reading_count :
+    (catalogueHomographReadings.map (fun e => e.readings.length)).foldl Nat.add 0 = 189 := by
+  native_decide
+
+theorem all_surface_total_reading_count :
+    (allSurfaceReadings.map (fun e => e.readings.length)).foldl Nat.add 0 = 193 := by
+  native_decide
+
+theorem all_surface_readings_have_expected_type_metadata :
+    allSurfaceReadings.all
+      (fun entry => entry.readings.all (fun reading => !reading.expectedTypes.isEmpty)) = true := by
+  native_decide
+
+theorem all_surface_reading_precedence_bounded :
+    allSurfaceReadings.all
+      (fun entry => entry.readings.all
+        (fun reading => decide (1 <= reading.precedence ∧ reading.precedence <= 7))) = true := by
+  native_decide
+
+theorem construction_metadata_count :
+    (allSurfaceReadings.map
+      (fun entry =>
+        (entry.readings.filter
+          (fun reading => reading.construction != ConstructionKind.none)).length)).foldl Nat.add 0 = 13 := by
+  native_decide
+
+theorem zhi_you_metadata :
+    «之又构式».precedence = 4
+      ∧ «之又构式».expectedTypes = [.construction]
+      ∧ «之又构式».construction = ConstructionKind.iteration := by
+  native_decide
+
+theorem zhi_genitive_metadata :
+    «之属格读法».expectedTypes = [.function]
+      ∧ «之属格读法».construction = ConstructionKind.genitiveProjection := by
+  native_decide
+
+theorem huo_expected_type_metadata :
+    «或存在读法».expectedTypes = [.quantifier, .prop]
+      ∧ «或可能读法».expectedTypes = [.modal, .prop] := by
+  native_decide
+
+theorem gu_construction_metadata :
+    «故因果读法».construction = ConstructionKind.causal
+      ∧ «故序贯读法».construction = ConstructionKind.sequential
+      ∧ «故墨经读法».construction = ConstructionKind.mohistCondition := by
   native_decide
 
 theorem catalogue_homograph_readings_all_linked :
@@ -676,6 +887,18 @@ theorem zhong_inner_outer_unique :
     uniquelyResolved "中" [.innerOuterContext] := by
   native_decide
 
+theorem zhong_geometry_context_still_ambiguous :
+    ¬ uniquelyResolved "中" [.geometryContext] := by
+  native_decide
+
+theorem fan_operator_unique :
+    uniquelyResolved "反" [.expectedOperator] := by
+  native_decide
+
+theorem fan_prop_unique :
+    uniquelyResolved "反" [.expectedProp] := by
+  native_decide
+
 theorem gu_mohist_unique :
     uniquelyResolved "故" [.mohistContext] := by
   native_decide
@@ -690,6 +913,42 @@ theorem bian_simplified_no_context_ambiguous :
 
 theorem mingfen_role_unique :
     uniquelyResolved "名分" [.roleContext] := by
+  native_decide
+
+theorem tui_operator_unique :
+    uniquelyResolved "推" [.expectedOperator] := by
+  native_decide
+
+theorem wei_quantifier_unique :
+    uniquelyResolved "唯" [.quantifierDomain] := by
+  native_decide
+
+theorem wei_focus_unique :
+    uniquelyResolved "唯" [.focusAdverb] := by
+  native_decide
+
+theorem zi_source_unique :
+    uniquelyResolved "自" [.expectedPath] := by
+  native_decide
+
+theorem zi_reflexive_unique :
+    uniquelyResolved "自" [.expectedFunction] := by
+  native_decide
+
+theorem fang_aspect_context_still_ambiguous :
+    ¬ uniquelyResolved "方" [.aspectContext] := by
+  native_decide
+
+theorem jiang_aspect_context_still_ambiguous :
+    ¬ uniquelyResolved "將" [.aspectContext] := by
+  native_decide
+
+theorem yi_prop_unique :
+    uniquelyResolved "已" [.expectedProp] := by
+  native_decide
+
+theorem yi_aspect_unique :
+    uniquelyResolved "已" [.aspectContext] := by
   native_decide
 
 end SSBX.Text.OperatorReadings

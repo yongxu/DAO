@@ -12,6 +12,9 @@ formal Bagua/Yi layer.  It is intentionally conservative:
   variant or derived meaning.
 * `missingForms` records words present in the 64-hexagram operator table but not
   yet admitted as Lean `OperatorId`s.
+* `hexagramGapPromotions` records the conservative subset of missing forms that
+  can be treated as future general catalogue entries without changing the
+  generated catalogue.
 -/
 
 namespace SSBX.Text.OperatorAnchors
@@ -446,6 +449,19 @@ theorem hexagramAnchorsWithGaps_length :
     hexagramAnchorsWithGaps.length = 31 := by
   native_decide
 
+theorem hexagramAnchor_numbers_range :
+    hexagramOperatorAnchors.all
+      (fun a => decide (1 <= a.number ∧ a.number <= 64)) = true := by
+  native_decide
+
+theorem hexagramAnchorsWithCatalogue_all_have_catalogueId :
+    hexagramAnchorsWithCatalogue.all HexagramOperatorAnchor.hasCatalogueId = true := by
+  native_decide
+
+theorem hexagramAnchorsWithGaps_all_have_gap :
+    hexagramAnchorsWithGaps.all HexagramOperatorAnchor.hasGap = true := by
+  native_decide
+
 /-- All documentary words from the 64-hexagram table that lack exact `OperatorId`s. -/
 def hexagramMissingForms : List String :=
   hexagramOperatorAnchors.flatMap (·.missingForms)
@@ -558,6 +574,131 @@ theorem hexagramMissingSpecificForms_eq :
     hexagramMissingSpecificForms = ["丽", "井", "鼎", "震"] := by
   native_decide
 
+/-!
+The policy split above is reflected in a small promotion layer.  These rows do
+not mutate `OperatorId`; they say which current gap words are suitable as exact
+future catalogue entries, with the target catalogue group already audited.
+-/
+structure HexagramGapPromotion where
+  form : String
+  targetGroup : OperatorGroup
+  deriving Repr
+
+/-- Conservative catalogue-admission subset of the 31 hexagram gap words. -/
+def hexagramGapPromotions : List HexagramGapPromotion :=
+  [ { form := "待", targetGroup := .F }
+  , { form := "争", targetGroup := .R }
+  , { form := "蓄", targetGroup := .T }
+  , { form := "塞", targetGroup := .F }
+  , { form := "备", targetGroup := .T }
+  , { form := "从", targetGroup := .F }
+  , { form := "临", targetGroup := .R }
+  , { form := "决", targetGroup := .T }
+  , { form := "断", targetGroup := .T }
+  , { form := "饰", targetGroup := .T }
+  , { form := "养", targetGroup := .T }
+  , { form := "过", targetGroup := .T }
+  , { form := "险", targetGroup := .M }
+  , { form := "附", targetGroup := .R }
+  , { form := "感", targetGroup := .R }
+  , { form := "壮", targetGroup := .T }
+  , { form := "难", targetGroup := .M }
+  , { form := "遇", targetGroup := .R }
+  , { form := "困", targetGroup := .M }
+  , { form := "归", targetGroup := .T }
+  , { form := "丰", targetGroup := .T }
+  , { form := "远", targetGroup := .F }
+  , { form := "悦", targetGroup := .T }
+  , { form := "信", targetGroup := .M }
+  , { form := "阻", targetGroup := .F }
+  ]
+
+def hexagramPromotedGapForms : List String :=
+  hexagramGapPromotions.map (·.form)
+
+def hexagramUnpromotedGapForms : List String :=
+  hexagramMissingSpecificForms ++ hexagramMissingParameterForms
+
+theorem hexagramGapPromotions_length :
+    hexagramGapPromotions.length = 25 := by
+  native_decide
+
+theorem hexagramPromotedGapForms_eq_generalForms :
+    hexagramPromotedGapForms = hexagramMissingGeneralForms := by
+  native_decide
+
+theorem hexagramGapPromotions_match_missing_policy :
+    hexagramGapPromotions.map (fun p => (p.form, some p.targetGroup)) =
+      (hexagramMissingPolicies.filter
+        (fun p => p.disposition == MissingFormDisposition.generalOperator)).map
+        (fun p => (p.form, p.suggestedGroup)) := by
+  native_decide
+
+theorem hexagramPromotedGapForms_are_missing :
+    hexagramPromotedGapForms.all
+      (fun s => hexagramMissingVocabulary.contains s) = true := by
+  native_decide
+
+theorem hexagramUnpromotedGapForms_eq :
+    hexagramUnpromotedGapForms = ["丽", "井", "鼎", "震", "大", "小"] := by
+  native_decide
+
+theorem hexagramUnpromotedGapForms_are_missing :
+    hexagramUnpromotedGapForms.all
+      (fun s => hexagramMissingVocabulary.contains s) = true := by
+  native_decide
+
+theorem hexagramPromotedGapForms_exclude_unpromoted :
+    hexagramPromotedGapForms.all
+      (fun s => !hexagramUnpromotedGapForms.contains s) = true := by
+  native_decide
+
+theorem hexagramPromotionPartition_count :
+    hexagramPromotedGapForms.length + hexagramUnpromotedGapForms.length =
+      hexagramMissingVocabulary.length := by
+  native_decide
+
+/-!
+Some missing forms have nearby semantic anchors, but they are not exact
+catalogue ids.  Keeping this list separate prevents accidental promotion of a
+synonym, compound, or image word into `catalogueIds`.
+-/
+structure NearMissAnchor where
+  missingForm : String
+  semanticIds : List OperatorId
+  reason : String
+  deriving Repr
+
+/-- Auditable near-miss cases among the 31 64-hexagram gap words. -/
+def hexagramNearMissAnchors : List NearMissAnchor :=
+  [ { missingForm := "蓄", semanticIds := [.Z_19], reason := "near 积/accumulation, not exact 蓄" }
+  , { missingForm := "塞", semanticIds := [.F_12], reason := "opposite/obstruction near 通, not exact 塞" }
+  , { missingForm := "感", semanticIds := [.R_7], reason := "near 应/correspondence, not exact 感" }
+  , { missingForm := "难", semanticIds := [.B_4], reason := "near 止/block, not exact 难" }
+  , { missingForm := "鼎", semanticIds := [.B_5], reason := "near 立/standing vessel image, not exact 鼎" }
+  , { missingForm := "震", semanticIds := [.F_10], reason := "near 动/initiation, not exact 震" }
+  , { missingForm := "归", semanticIds := [.T_7], reason := "near 复/return, not exact 归" }
+  ]
+
+def hexagramNearMissForms : List String :=
+  hexagramNearMissAnchors.map (·.missingForm)
+
+theorem hexagramNearMissAnchors_length :
+    hexagramNearMissAnchors.length = 7 := by
+  native_decide
+
+theorem hexagramNearMissForms_eq :
+    hexagramNearMissForms = ["蓄", "塞", "感", "难", "鼎", "震", "归"] := by
+  native_decide
+
+theorem hexagramNearMissForms_are_missing :
+    hexagramNearMissForms.all (fun s => hexagramMissingVocabulary.contains s) = true := by
+  native_decide
+
+theorem hexagramNearMissSemanticIds_nonempty :
+    hexagramNearMissAnchors.all (fun a => !a.semanticIds.isEmpty) = true := by
+  native_decide
+
 /-! ## § 7 192 Cell anchors -/
 
 structure CellOperatorAnchor where
@@ -594,6 +735,15 @@ theorem cellOperatorAnchors_length_eq_cell192 :
     cellOperatorAnchors.length = Cell192.all.length := by
   rw [cellOperatorAnchors_length, Cell192.all_length]
 
+theorem anchoredCells_nodup :
+    anchoredCells.Nodup := by
+  native_decide
+
+theorem cellOperatorAnchor_hexagram_numbers_range :
+    cellOperatorAnchors.all
+      (fun a => decide (1 <= a.hexagramNumber ∧ a.hexagramNumber <= 64)) = true := by
+  native_decide
+
 theorem cellOperatorAnchors_cover_all (c : Cell192) :
     cellCovered c = true := by
   rcases c with ⟨⟨y1, y2, y3, y4, y5, y6⟩, s⟩
@@ -617,11 +767,22 @@ theorem bagua_operator_anchor_summary :
     ∧ trigramOperatorAnchors.map (·.trigram) = Trigram.all
     ∧ hexagramOperatorAnchors.length = xuGua.length
     ∧ anchoredHexagrams = xuGua
+    ∧ hexagramOperatorAnchors.all
+        (fun a => decide (1 <= a.number ∧ a.number <= 64)) = true
     ∧ hexagramMissingVocabulary.length = 31
     ∧ hexagramMissingForms.all (fun s => hexagramMissingVocabulary.contains s) = true
     ∧ hexagramMissingPolicies.map (·.form) = hexagramMissingVocabulary
     ∧ hexagramMissingGeneralForms.length = 25
+    ∧ hexagramPromotedGapForms = hexagramMissingGeneralForms
+    ∧ hexagramUnpromotedGapForms = ["丽", "井", "鼎", "震", "大", "小"]
+    ∧ hexagramPromotedGapForms.all
+        (fun s => !hexagramUnpromotedGapForms.contains s) = true
+    ∧ hexagramNearMissAnchors.length = 7
+    ∧ hexagramNearMissForms.all (fun s => hexagramMissingVocabulary.contains s) = true
     ∧ cellOperatorAnchors.length = Cell192.all.length
+    ∧ anchoredCells.Nodup
+    ∧ cellOperatorAnchors.all
+        (fun a => decide (1 <= a.hexagramNumber ∧ a.hexagramNumber <= 64)) = true
     ∧ (∀ c : Cell192, cellCovered c = true) := by
   exact
     ⟨ by rw [reservedTokenAnchors_length, reservedTokens_length]
@@ -634,11 +795,19 @@ theorem bagua_operator_anchor_summary :
     , trigramOperatorAnchors_cover_all
     , by rw [hexagramOperatorAnchors_length, xuGua_length]
     , anchoredHexagrams_eq_xuGua
+    , hexagramAnchor_numbers_range
     , hexagramMissingVocabulary_length
     , hexagramMissingForms_in_vocabulary
     , hexagramMissingPolicies_cover_vocabulary
     , hexagramMissingGeneralForms_length
+    , hexagramPromotedGapForms_eq_generalForms
+    , hexagramUnpromotedGapForms_eq
+    , hexagramPromotedGapForms_exclude_unpromoted
+    , hexagramNearMissAnchors_length
+    , hexagramNearMissForms_are_missing
     , cellOperatorAnchors_length_eq_cell192
+    , anchoredCells_nodup
+    , cellOperatorAnchor_hexagram_numbers_range
     , cellOperatorAnchors_cover_all
     ⟩
 
