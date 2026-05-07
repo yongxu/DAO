@@ -2563,6 +2563,296 @@ theorem zero_sum_refuted_by_ren
     ∧ ren h1 h2 n :=                                              -- 仁 (positive-sum 之 form)
   ⟨h1.inMiddle n, h2.inMiddle n, h_distinct⟩
 
+
+/-! ### Layer 46: 文献流派精化 — 目录层 → 状态空间 / game / protocol / invariant 语义
+
+  本层补齐若干此前只在目录层出现之文献流派：庄子、孙子、楚辞、礼制、
+  中庸/大学、黄老/杂家、辩者。原则仍是：不增 axiom，不把复词收入
+  KernelDanZi；只以既有 Field / ZhongOrbit / Xin / ZhongField / liRitual /
+  zhi / middle / extreme 等原语建立可检查模型。 -/
+
+/-! #### 46.1 庄子精化 — 齐 / 游 / 忘 / 丧 / 镜 / 筌 之状态空间语义 -/
+
+/-- 齐态 (Zhuangzi equalization state): 二焦点在 n 时刻同为 中，并保持异显。
+    这比目录层「齐物」更强：不是抹平差异，而是在状态空间中保留
+    `middle × middle × distinct`。 -/
+def zhuangziQiState (h1 h2 : ZhongOrbit) (n : Nat) : Prop :=
+  middle (h1.states n) ∧ middle (h2.states n) ∧ h1.states n ≠ h2.states n
+
+/-- 游态: orbit 不被任何 target 捕获；以 `shi_no_telos` 表达逍遥游。 -/
+def zhuangziYouState (o : ZhongOrbit) : Prop :=
+  ∀ target N, ¬ (∀ n, n ≥ N → o.states n = target)
+
+/-- 忘态: Xin 不滞留于上一状态；每一步都能放下旧我。 -/
+def zhuangziWangState (x : Xin) (n : Nat) : Prop :=
+  x.process.states n ≠ x.process.states (n + 1)
+
+/-- 丧我: 对任一固定 self-label，Xin 的过程不 eventually collapse 于它。 -/
+def zhuangziSangWo (x : Xin) (selfLabel : Field) : Prop :=
+  ∀ N, ¬ (∀ n, n ≥ N → x.process.states n = selfLabel)
+
+/-- 镜态: 应而不藏；状态步进、不极，且 response 对任一 event 有定义。 -/
+def zhuangziMirrorState (x : Xin) (n : Nat) : Prop :=
+  x.process.states n ≠ x.process.states (n + 1)
+  ∧ middle (x.process.states n)
+  ∧ ∀ event : Field, ∃ s : Field, x.respond event = s
+
+/-- 筌 (fish-trap): 工具可达成当前 capture，却不成为 telos。 -/
+def zhuangziQuan (tool : Field → Field) (o : ZhongOrbit) (n : Nat) : Prop :=
+  tool (o.states n) = o.states (n + 1) ∧ o.states n ≠ o.states (n + 1)
+
+/-- 齐 从关系谓词推进到状态空间三元组。 -/
+theorem zhuangzi_qi_state
+    (h1 h2 : ZhongOrbit) (n : Nat) (h : ren h1 h2 n) :
+    zhuangziQiState h1 h2 n :=
+  ⟨h1.inMiddle n, h2.inMiddle n, h⟩
+
+/-- 游 是 `ZhongOrbit` 之 no-telos invariant。 -/
+theorem zhuangzi_you_state (o : ZhongOrbit) : zhuangziYouState o :=
+  fun target N => ZhongOrbit.shi_no_telos o target N
+
+/-- 忘 / 丧 / 镜 皆由 Xin 之 process invariant 给出。 -/
+theorem zhuangzi_wang_sang_mirror (x : Xin) (n : Nat) (selfLabel : Field) :
+    zhuangziWangState x n ∧ zhuangziSangWo x selfLabel ∧ zhuangziMirrorState x n :=
+  ⟨xinTrust_self_consistent x n,
+   fun N => ZhongOrbit.shi_no_telos x.process selfLabel N,
+   ⟨xinTrust_self_consistent x n, x.process.inMiddle n, fun event => ⟨x.respond event, rfl⟩⟩⟩
+
+/-- 得鱼忘筌: 以 動 作为最小工具时，工具完成 transition，但 orbit 不滞留。 -/
+theorem de_yu_wang_quan (o : ZhongOrbit) (n : Nat) :
+    zhuangziQuan dong o n :=
+  ⟨o.step n, o.self_consistent n⟩
+
+/-! #### 46.2 孙子精化 — game / topology model; 信息暴露 vs 真实资源 -/
+
+/-- 二方 game state：`visible` 是信息暴露，`resource` 是真实资源，二者分字段保存，
+    防止把 reconnaissance map 误当作 ontology。 -/
+structure SunziGame where
+  visible : Bool → Nat → Field
+  resource : Bool → Nat → Field
+  move : Bool → Nat → Field
+
+/-- 信息暴露层。 -/
+def sunziExposure (g : SunziGame) (side : Bool) (n : Nat) : Field :=
+  g.visible side n
+
+/-- 真实资源层。 -/
+def sunziResource (g : SunziGame) (side : Bool) (n : Nat) : Field :=
+  g.resource side n
+
+/-- 形势: 拓扑上可见形 (exposure) 与真实势 (resource) 组成的状态对。 -/
+def sunziXingShi (g : SunziGame) (side : Bool) (n : Nat) : Field × Field :=
+  (sunziExposure g side n, sunziResource g side n)
+
+/-- 虚实: 暴露层与资源层不重合即有虚实 gap。 -/
+def sunziXuShi (g : SunziGame) (side : Bool) (n : Nat) : Prop :=
+  sunziExposure g side n ≠ sunziResource g side n
+
+/-- 奇正: 正为 declared move，奇为与 declared move 不同的 flank/turn。 -/
+def sunziQiZheng (g : SunziGame) (side : Bool) (n : Nat) (qi : Field) : Prop :=
+  qi ≠ g.move side n
+
+/-- 迂直: 迂路经过 n→n+1 的真实资源转移；直路只读 n 的暴露层。 -/
+def sunziYuZhi (g : SunziGame) (side : Bool) (n : Nat) : Field × Field :=
+  (sunziResource g side (n + 1), sunziExposure g side n)
+
+/-- 孙子模型之基本分层：信息暴露与真实资源在 type level 分字段，而非同一 projection。 -/
+theorem sunzi_info_resource_separated (g : SunziGame) (side : Bool) (n : Nat) :
+    sunziXingShi g side n = (g.visible side n, g.resource side n)
+    ∧ sunziExposure g side n = g.visible side n
+    ∧ sunziResource g side n = g.resource side n :=
+  ⟨rfl, rfl, rfl⟩
+
+/-- 若有虚实 gap，则不能以暴露层替代真实资源。 -/
+theorem sunzi_xushi_blocks_naive_read
+    (g : SunziGame) (side : Bool) (n : Nat) (h : sunziXuShi g side n) :
+    sunziExposure g side n ≠ sunziResource g side n := h
+
+/-- 奇正 与 迂直 形成 game/topology 的两轴：move-space 差异 + path-space 差异。 -/
+theorem sunzi_qizheng_yuzhi
+    (g : SunziGame) (side : Bool) (n : Nat) (qi : Field) (hqi : qi ≠ g.move side n) :
+    sunziQiZheng g side n qi ∧ sunziYuZhi g side n = (g.resource side (n + 1), g.visible side n) :=
+  ⟨hqi, rfl⟩
+
+/-! #### 46.3 楚辞精化 — 招 / 降 / 登 / 望 之方向图与召回 / 缺席语义 -/
+
+/-- 楚辞方向图之四向。 -/
+inductive ChuciDirection
+  | zhao   -- 招: call-back toward origin / remembered presence
+  | jiang  -- 降: descent from high/absent realm
+  | deng   -- 登: ascent toward remote height
+  | wang   -- 望: gazing across distance / absence
+  deriving Repr, DecidableEq
+
+/-- 方向图 edge semantics: 每一方向给出一个 state transformation。 -/
+def chuciEdge : ChuciDirection → Field → Field
+  | .zhao, s => dong s
+  | .jiang, s => yuan s
+  | .deng, s => ji 2 s
+  | .wang, s => s
+
+/-- 召回语义: 招使 absent state 进入下一步 transition。 -/
+def chuciRecall (absent present : Field) : Prop :=
+  dong absent = present
+
+/-- 缺席语义: 望保持距离；所望者不与当前 present 合一。 -/
+def chuciAbsence (absent present : Field) : Prop :=
+  absent ≠ present
+
+/-- 招 / 降 / 登 / 望 的方向图闭包。 -/
+theorem chuci_direction_graph (s : Field) :
+    chuciEdge .zhao s = dong s
+    ∧ chuciEdge .jiang s = yuan s
+    ∧ chuciEdge .deng s = ji 2 s
+    ∧ chuciEdge .wang s = s :=
+  ⟨rfl, rfl, rfl, rfl⟩
+
+/-- 在 ZhongOrbit 中，当前状态对下一状态既是召回，也是非滞留之缺席。 -/
+theorem chuci_recall_absence (o : ZhongOrbit) (n : Nat) :
+    chuciRecall (o.states n) (o.states (n + 1))
+    ∧ chuciAbsence (o.states n) (o.states (n + 1)) :=
+  ⟨o.step n, o.self_consistent n⟩
+
+/-! #### 46.4 礼制精化 — 序 / 位 / 仪 / 节 与社会协议类型系统对齐 -/
+
+/-- 社会协议类型：礼制不是单个动作，而是可类型化的 protocol。 -/
+inductive SocialProtocol
+  | xu     -- 序: ordering protocol
+  | wei    -- 位: position / role protocol
+  | yiCeremony -- 仪: performed ceremony protocol
+  | jie    -- 节: bounded timing / measure protocol
+  deriving Repr, DecidableEq
+
+/-- 礼制 typing judgment：某二焦点 window 被判为某协议类型。 -/
+structure RitualTyping where
+  protocol : SocialProtocol
+  left : ZhongOrbit
+  right : ZhongOrbit
+  start : Nat
+  length : Nat
+  valid : liRitual left right start length
+
+/-- 协议类型系统之 soundness：任一 typed ritual 都推出 base-time 仁。 -/
+theorem ritual_typing_sound (r : RitualTyping) :
+    ren r.left r.right r.start :=
+  liRitual_implies_ren_at_base r.left r.right r.start r.length r.valid
+
+/-- 节: 礼-window 可缩窄，表示 protocol 可按边界裁剪而仍 valid。 -/
+theorem ritual_jie_narrow (r : RitualTyping) (m' : Nat) (h_le : m' ≤ r.length) :
+    liRitual r.left r.right r.start m' :=
+  liRitual_narrowable r.left r.right r.start r.length m' r.valid h_le
+
+/-! #### 46.5 中庸 / 大学精化 — 中 / 和 / 诚 / 慎独 / 格物致知 接入 Xin 与 process invariant -/
+
+/-- 中: Xin 当前 state 保持 process invariant (middle)。 -/
+def zhongyongZhongXin (x : Xin) (n : Nat) : Prop :=
+  middle (x.process.states n)
+
+/-- 和: 多心场在同一时刻保持 ZhongField 之 plurality/flow invariant。 -/
+def zhongyongHeField (f : ZhongField) (n : Nat) : Prop :=
+  (∀ i : Fin f.k, (f.orbits i).states n ≠ (f.orbits i).states (n + 1))
+  ∧ ∃ i j : Fin f.k, i ≠ j ∧ (f.orbits i).states n ≠ (f.orbits j).states n
+
+/-- 诚: Xin 之 internal coherence。 -/
+def chengXin (x : Xin) (n : Nat) : Prop :=
+  xinTrust x n
+
+/-- 格物致知: 对事物 state 先分类 (`zhi`)，再接回 Xin 自身之诚。 -/
+def gewuZhizhiXin (x : Xin) (thing : Field) (n : Nat) : Prop :=
+  zhi thing ∧ chengXin x n
+
+/-- 慎独: 独处时仍保持 XinTrust 与 中。 -/
+def shenDuXin (x : Xin) (n : Nat) : Prop :=
+  xinTrust x n ∧ middle (x.process.states n)
+
+/-- 中 / 诚 / 慎独 全接入 Xin process invariant。 -/
+theorem zhongyong_xin_invariants (x : Xin) (n : Nat) :
+    zhongyongZhongXin x n ∧ chengXin x n ∧ shenDuXin x n :=
+  ⟨x.process.inMiddle n, xinTrust_holds x n, shen_du x n⟩
+
+/-- 和 接入 ZhongField process invariant。 -/
+theorem zhongyong_he_invariant (f : ZhongField) (n : Nat) :
+    zhongyongHeField f n :=
+  f.he n
+
+/-- 格物致知 不是外在 catalog，而是 `zhi_universal` + Xin coherence。 -/
+theorem daxue_gewu_zhizhi_xin (x : Xin) (thing : Field) (n : Nat) :
+    gewuZhizhiXin x thing n :=
+  ⟨zhi_universal thing, xinTrust_holds x n⟩
+
+/-! #### 46.6 黄老 / 杂家精化 — 内控 / 周期 / 总摄 三模型 -/
+
+/-- 管子心术内控: Xin 对事件 response 后仍在中。 -/
+def guanziInnerControl (x : Xin) (event : Field) : Prop :=
+  middle (x.respond event)
+
+/-- 月令十二月 cycle。 -/
+inductive MonthOrder
+  | m1 | m2 | m3 | m4 | m5 | m6 | m7 | m8 | m9 | m10 | m11 | m12
+  deriving Repr, DecidableEq
+
+namespace MonthOrder
+
+/-- 月令周期 successor。 -/
+def next : MonthOrder → MonthOrder
+  | .m1 => .m2 | .m2 => .m3 | .m3 => .m4 | .m4 => .m5
+  | .m5 => .m6 | .m6 => .m7 | .m7 => .m8 | .m8 => .m9
+  | .m9 => .m10 | .m10 => .m11 | .m11 => .m12 | .m12 => .m1
+
+end MonthOrder
+
+/-- 吕氏春秋月令: 十二次回到同一月位。 -/
+theorem lushi_yueling_cycle (m : MonthOrder) :
+    m.next.next.next.next.next.next.next.next.next.next.next.next = m := by
+  cases m <;> rfl
+
+/-- 淮南子统摄: 道家中、儒家礼、阴阳周期可在同一 judgment 中并列总摄。 -/
+def huainanziSynthesis
+    (x : Xin) (h1 h2 : ZhongOrbit) (n m : Nat) (month : MonthOrder) : Prop :=
+  middle (x.process.states n) ∧ liRitual h1 h2 n m ∧ month.next.next.next.next.next.next.next.next.next.next.next.next = month
+
+/-- 管子心术: 若 response 被内控为中，则 Xin 遇事不坠极。 -/
+theorem guanzi_xinshu_control (x : Xin) (event : Field) (h : guanziInnerControl x event) :
+    ¬ extreme (x.respond event) := h
+
+/-- 淮南子 总摄模型: 心术内控 / 礼-window / 月令周期 三支线可同时装配。 -/
+theorem huainanzi_total_synthesis
+    (x : Xin) (h1 h2 : ZhongOrbit) (n m : Nat) (month : MonthOrder)
+    (h_li : liRitual h1 h2 n m) :
+    huainanziSynthesis x h1 h2 n m month :=
+  ⟨x.process.inMiddle n, h_li, lushi_yueling_cycle month⟩
+
+/-! #### 46.7 辩者精化 — 惠施极限算子 / 邓析两可 / 尹文子名分 type-boundary -/
+
+/-- 惠施极限算子: 以任意尺度 k 读取同一 orbit 的 k-fold process。 -/
+def huishiLimitOperator (o : ZhongOrbit) (k : Nat) : Field :=
+  ji k (o.states 0)
+
+/-- 邓析两可: 同一 state 可在多值判断中位于中/极二分的可判别边界。 -/
+def dengxiLiangKe (s : Field) : Prop :=
+  zhi s
+
+/-- 尹文子名分: 名称 type 与实际 carrier 分离；boundary 是 name assignment。 -/
+structure YinwenNameBoundary where
+  Name : Type
+  denote : Name → Field
+  admissible : Name → Prop
+
+/-- 惠施极限算子不另造实体：它就是 `li_is_iterated_dong` 的多尺度读数。 -/
+theorem huishi_limit_matches_orbit (o : ZhongOrbit) (k : Nat) :
+    huishiLimitOperator o k = o.states k :=
+  (li_is_iterated_dong o k).symm
+
+/-- 邓析两可不是矛盾，而是 `zhi` 给出的 two-valued classification capacity。 -/
+theorem dengxi_liangke_classifiable (s : Field) : dengxiLiangKe s :=
+  zhi_universal s
+
+/-- 尹文子名分边界: 有可纳之名，则有其所指之实；名与实由 denote 绑定而非混同。 -/
+theorem yinwen_name_boundary
+    (b : YinwenNameBoundary) (name : b.Name) (h : b.admissible name) :
+    ∃ s : Field, b.denote name = s ∧ b.admissible name :=
+  ⟨b.denote name, rfl, h⟩
+
 /-- KernelDanZi: 此 layer 主动使用之 单字 closure-marker.
     由 「核 只收纳单字」 约束, 加 字 to kernel ⟺ 加 constructor here.
     Compounds (复词) MUST decompose to existing constructors before entering kernel.

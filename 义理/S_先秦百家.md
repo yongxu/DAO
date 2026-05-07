@@ -297,5 +297,72 @@ grep -nE "^theorem (jian_ai|fei_gong|shang_tong|san_biao|tian_zhi|fa_|shi_author
 ---
 
 **文件路径**：`义理/S_先秦百家.md`
-**配套源**：`formal/SSBX/Foundation/Wen/Kernel.lean` Layers 35–38
+**配套源**：`formal/SSBX/Foundation/Wen/Kernel.lean` Layers 35–38 + Layer 46
 **伴侣文档**：`N_儒家从元到圣.md` / `P_道家从无到化.md` / `Q_佛家从苦到觉.md`（同源 Kernel 之三家篇）
+
+---
+
+## 十 · 2026-05-07 精化补丁：文献流派从目录层进入形式层
+
+本次补丁新增 `Kernel.lean` **Layer 46**，把此前在「未完成 / 可补」中仍偏目录化的文献流派推进到可检查的语义模型。原则仍与本卷一致：**不增 axiom、不扩 KernelDanZi、不把复词当单字收入核**；所有模型只复用 `Field` / `ZhongOrbit` / `Xin` / `ZhongField` / `liRitual` / `zhi` / `middle` / `extreme` 等既有原语。
+
+### 10.1 新增形式模型总览
+
+| 支线 | 新增形式对象 | 新增定理 | 精化结果 |
+|---|---|---|---|
+| 庄子 | `zhuangziQiState` / `zhuangziYouState` / `zhuangziWangState` / `zhuangziSangWo` / `zhuangziMirrorState` / `zhuangziQuan` | `zhuangzi_qi_state` / `zhuangzi_you_state` / `zhuangzi_wang_sang_mirror` / `de_yu_wang_quan` | 齐 / 游 / 忘 / 丧 / 镜 / 筌 从篇名目录推进为状态空间谓词 |
+| 孙子 | `SunziGame` / `sunziExposure` / `sunziResource` / `sunziXingShi` / `sunziXuShi` / `sunziQiZheng` / `sunziYuZhi` | `sunzi_info_resource_separated` / `sunzi_xushi_blocks_naive_read` / `sunzi_qizheng_yuzhi` | 建立 game / topology model，并在 type level 区分信息暴露与真实资源 |
+| 楚辞 | `ChuciDirection` / `chuciEdge` / `chuciRecall` / `chuciAbsence` | `chuci_direction_graph` / `chuci_recall_absence` | 招 / 降 / 登 / 望 成为方向图；召回与缺席可同时表达 |
+| 礼制 | `SocialProtocol` / `RitualTyping` | `ritual_typing_sound` / `ritual_jie_narrow` | 序 / 位 / 仪 / 节 对齐为社会协议类型系统 |
+| 中庸 / 大学 | `zhongyongZhongXin` / `zhongyongHeField` / `chengXin` / `gewuZhizhiXin` | `zhongyong_xin_invariants` / `zhongyong_he_invariant` / `daxue_gewu_zhizhi_xin` | 中 / 和 / 诚 / 慎独 / 格物致知 接入 `Xin` 与 process invariant |
+| 黄老 / 杂家 | `guanziInnerControl` / `MonthOrder` / `huainanziSynthesis` | `lushi_yueling_cycle` / `guanzi_xinshu_control` / `huainanzi_total_synthesis` | 管子心术、吕氏春秋月令、淮南子统摄 分别落为内控、周期、总摄模型 |
+| 辩者 | `huishiLimitOperator` / `dengxiLiangKe` / `YinwenNameBoundary` | `huishi_limit_matches_orbit` / `dengxi_liangke_classifiable` / `yinwen_name_boundary` | 惠施极限算子、邓析两可、尹文子名分获得多尺度 / 多值 / type-boundary 语义 |
+
+### 10.2 关键语义推进
+
+1. **庄子不再只是「齐物 / 逍遥 / 坐忘」条目**：
+   - `zhuangziQiState` 把「齐」定义为 `middle × middle × distinct`，明确不是差异抹平，而是同根异显。
+   - `zhuangziYouState` 与 `zhuangziSangWo` 直接使用 `shi_no_telos`，表示游与丧我皆拒绝固定 target。
+   - `zhuangziMirrorState` 把「用心若镜」拆成步进、不极、response total 三项。
+   - `zhuangziQuan` 与 `de_yu_wang_quan` 把「筌」定义为 transition tool：工具达成下一步，但不成为目的。
+
+2. **孙子被拆成两层 state**：
+   - `SunziGame.visible` 表信息暴露，`SunziGame.resource` 表真实资源。
+   - `sunziXuShi` 是二者不重合；`sunzi_xushi_blocks_naive_read` 明确禁止把侦察暴露当真实 ontology。
+   - `sunziQiZheng` 是 move-space 的奇正差异，`sunziYuZhi` 是 path-space 的迂直差异。
+
+3. **楚辞具有方向图而非单向抒情**：
+   - `ChuciDirection` 四构造子对应 招 / 降 / 登 / 望。
+   - `chuciRecall` 与 `chuciAbsence` 可在同一 `ZhongOrbit` transition 上并立：下一步被召回，但上一状态仍不被保留。
+
+4. **礼制成为 typed protocol**：
+   - `SocialProtocol` 明确区分 序 / 位 / 仪 / 节。
+   - `RitualTyping.valid : liRitual ...` 使礼制 judgment 必须有礼-window 证明。
+   - `ritual_typing_sound` 保证所有 typed ritual 都推出 base-time `ren`；`ritual_jie_narrow` 保证节度裁剪仍有效。
+
+5. **中庸 / 大学接回 Xin**：
+   - 中 = `middle (x.process.states n)`。
+   - 诚 = `xinTrust x n`。
+   - 慎独 = `shenDuXin x n`（复用既有 `shen_du` 定理的 XinTrust 与 middle 合取）。
+   - 格物致知 = `zhi thing ∧ xinTrust x n`，因此不是外部 catalog，而是分类能力与心之内在一致的组合。
+
+6. **黄老 / 杂家分三支线**：
+   - 管子心术 = response 后仍 `middle` 的内控模型。
+   - 吕氏春秋月令 = `MonthOrder.next` 十二循环。
+   - 淮南子统摄 = `middle` + `liRitual` + 月令周期的合取式 synthesis。
+
+7. **辩者进入 type / scale / value 边界**：
+   - 惠施 = `huishiLimitOperator o k`，即任意尺度的 `ji k` 读数。
+   - 邓析 = `dengxiLiangKe s := zhi s`，把“两可”解释为可分类边界，而非爆炸矛盾。
+   - 尹文子 = `YinwenNameBoundary`，把名的 type 与实的 `Field` carrier 分开，由 `denote` 建 boundary。
+
+### 10.3 对第六节「缺口」的修订
+
+原第 6.2 节中列出的 **名家白马非马 / 阴阳月令 / 杂家吕氏春秋与淮南子统合** 已部分推进：
+
+- **阴阳家 / 月令**：已由 `MonthOrder` 与 `lushi_yueling_cycle` 覆盖十二月周期。
+- **杂家 / 吕氏春秋 / 淮南子**：已由 `huainanziSynthesis` 与 `huainanzi_total_synthesis` 覆盖总摄模型。
+- **名家 / 辩者**：已新增惠施、邓析、尹文子三条；白马非马仍可在 `YinwenNameBoundary` 基础上继续细化为 subtype / predicate-boundary 案例。
+- **孙子 / 楚辞 / 礼制**：不再是外部目录，已经进入 Layer 46 的形式模型。
+
+因此，本卷现在不仅覆盖 Layers 35–38 的百家四家，也给出 **Layer 46 文献流派精化层**，专门处理跨文体、跨学派、跨制度文本的语义落地。
