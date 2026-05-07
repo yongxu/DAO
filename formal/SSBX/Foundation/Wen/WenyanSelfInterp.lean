@@ -1095,12 +1095,56 @@ theorem metaInterpStep_pop_simulates (h : Hexagram) (gcur1 gcur2 : Cell192) :
     ∧ (s.runFuel 4).cur = gcur2 := by
   refine ⟨?_, ?_, ?_⟩ <;> rfl
 
+/-! ### § 6c.2b setShi / flipYao — Lean-parametric host programs
+
+  For these two opcodes the parameter (`Shi` or `Fin 6`) is lifted to the
+  host program's **Lean-level type**: each host program is generated from
+  the parameter at Lean elaboration time. This is the same character as the
+  Phase 2.1+2.2 stubs but combined with the encoded-state layout.
+
+  The semantic content — "the encoded state evolves correctly under each
+  guest opcode + parameter combination" — is genuine simulation. The
+  difference from a *runtime-dispatched* meta-interpreter is that there
+  isn't a single universal `metaInterpStep_setShi : List YiInstr` that
+  reads the parameter from cells; instead, there's a family
+  `metaInterpStep_setShi : Shi → List YiInstr`. A unified runtime-dispatched
+  version is tracked as Phase 2.3.y (requires symbolic step lemmas to
+  bypass the `branchShiEq`/`branchYaoEq` reduction-cost blowup observed at
+  ~1.2M heartbeats for naive `rfl`-style proofs over abstract `gcur`). -/
+
+def metaInterpStep_setShi (sh : Shi) : List YiInstr :=
+  [.pop, .setShi sh, .push, .halt]
+
+theorem metaInterpStep_setShi_simulates (h : Hexagram) (sh : Shi) (gcur : Cell192) :
+    let s := { (YiState.init h (metaInterpStep_setShi sh))
+               with history := [gcur] }
+    (s.runFuel 5).history = [(gcur.1, sh)] ∧ (s.runFuel 5).halted = true := by
+  refine ⟨?_, ?_⟩ <;> rfl
+
+def metaInterpStep_flipYao (i : Fin 6) : List YiInstr :=
+  [.pop, .flipYao i, .push, .halt]
+
+theorem metaInterpStep_flipYao_simulates (h : Hexagram) (i : Fin 6) (gcur : Cell192) :
+    let s := { (YiState.init h (metaInterpStep_flipYao i))
+               with history := [gcur] }
+    (s.runFuel 5).history = [(gcur.1.flipPos i, gcur.2)] ∧ (s.runFuel 5).halted = true := by
+  refine ⟨?_, ?_⟩ <;> rfl
+
+/-! ### § 6c.2c jump / branchYaoEq / branchShiEq — deferred (Phase 2.3.x)
+
+  These three opcodes mutate guest `pc`. The minimal layout used here
+  (`host.history = [gcur]`) doesn't carry guest pc; extending to
+  `host.history = [encGuestPc, gcur, ...]` is a separate architectural
+  step. ddbc3a8's `l0InstructionClauses` row scope = 12 is therefore
+  covered as 9 / 12 in this file (7 trivial + setShi + flipYao). -/
+
 /-! ### § 6c.3 Combined "Phase 2.3 trivial-7" summary
 
-  This bundles the 7 simulation lemmas into a single statement so downstream
-  audit code can cite a one-line completion claim for ddbc3a8's
-  `l0InstructionClauses` row (partial: 7 of 12 — the 5 parameterized opcodes
-  setShi / flipYao / jump / branchYaoEq / branchShiEq remain). -/
+  This bundles the 7 trivial simulation lemmas into a single statement so
+  downstream audit code can cite a one-line completion claim. Combined with
+  § 6c.2b's setShi / flipYao, this advances ddbc3a8's `l0InstructionClauses`
+  row from 0/12 to **9/12**; the remaining 3 (jump / branchYaoEq /
+  branchShiEq) are tracked as Phase 2.3.x. -/
 theorem trivialSeven_simulates :
     -- nop / halt: cur unchanged, halted
     (∀ h gcur,
