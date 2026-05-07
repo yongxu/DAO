@@ -1,3 +1,4 @@
+import SSBX.Text.OperatorReadings
 import SSBX.Text.OperatorAnchors
 
 /-!
@@ -12,6 +13,7 @@ claims remain in the specialized anchor/semantics files.
 namespace SSBX.Text.OperatorCellMap
 
 open SSBX.Text.WenyanOperators
+open SSBX.Text.OperatorReadings
 open SSBX.Text.OperatorAnchors
 open SSBX.Foundation.Bagua.Cell192
 
@@ -77,6 +79,103 @@ theorem operator_cell_bagua_summary :
     , Cell192.mem_all
     , allOperatorCells_complete_pair
     , cellOperatorAnchors_cover_all
+    ⟩
+
+/-! ## § 3 Completion-level status -/
+
+/-- Coarse layers used to distinguish coverage from semantic interpretation. -/
+inductive CompletionLayer where
+  | catalogueOperators
+  | baguaCells
+  | operatorCellIndex
+  | baguaAnchors
+  | homographReadings
+  | hexagramGapPolicies
+  | exactOperatorSignatures
+  | theoremLevelCellSemantics
+  deriving Repr, DecidableEq, BEq
+
+/-- Whether a layer is complete, explicitly tracked, or still pending. -/
+inductive CompletionMark where
+  | complete
+  | tracked
+  | pending
+  deriving Repr, DecidableEq, BEq
+
+/--
+A compact status row.  `scope` is the size of the layer being described, not a
+claim that pending rows have already been semantically proved.
+-/
+structure CompletionRow where
+  layer : CompletionLayer
+  mark : CompletionMark
+  scope : Nat
+  deriving Repr, DecidableEq
+
+/--
+Functional completion ledger for the current text/Bagua bridge.
+
+The first five rows are complete for the current catalogue and Bagua universe.
+The gap-policy row is tracked but not promoted into exact catalogue ids.  The
+last two rows are intentionally pending: exact signatures and theorem-level
+cell semantics are stronger claims than enumeration.
+-/
+def functionalCompletionRows : List CompletionRow :=
+  [ { layer := .catalogueOperators, mark := .complete, scope := 371 }
+  , { layer := .baguaCells, mark := .complete, scope := 192 }
+  , { layer := .operatorCellIndex, mark := .complete, scope := 71232 }
+  , { layer := .baguaAnchors, mark := .complete, scope := 192 }
+  , { layer := .homographReadings, mark := .complete, scope := 81 }
+  , { layer := .hexagramGapPolicies, mark := .tracked, scope := 31 }
+  , { layer := .exactOperatorSignatures, mark := .pending, scope := 371 }
+  , { layer := .theoremLevelCellSemantics, mark := .pending, scope := 71232 }
+  ]
+
+def functionalCompletionCompleteRows : List CompletionRow :=
+  functionalCompletionRows.filter (fun row => row.mark == CompletionMark.complete)
+
+def functionalCompletionTrackedRows : List CompletionRow :=
+  functionalCompletionRows.filter (fun row => row.mark == CompletionMark.tracked)
+
+def functionalCompletionPendingRows : List CompletionRow :=
+  functionalCompletionRows.filter (fun row => row.mark == CompletionMark.pending)
+
+theorem functionalCompletionRows_length :
+    functionalCompletionRows.length = 8 := by
+  native_decide
+
+theorem functionalCompletionCompleteRows_length :
+    functionalCompletionCompleteRows.length = 5 := by
+  native_decide
+
+theorem functionalCompletionTrackedRows_length :
+    functionalCompletionTrackedRows.length = 1 := by
+  native_decide
+
+theorem functionalCompletionPendingRows_length :
+    functionalCompletionPendingRows.length = 2 := by
+  native_decide
+
+theorem functional_completion_summary :
+    allOperatorIds.length = 371
+    ∧ Cell192.all.length = 192
+    ∧ allOperatorCells.length = 71232
+    ∧ cellOperatorAnchors.length = 192
+    ∧ catalogueHomographReadings.length = 81
+    ∧ hexagramMissingPolicies.length = 31
+    ∧ functionalCompletionCompleteRows.length = 5
+    ∧ functionalCompletionTrackedRows.length = 1
+    ∧ functionalCompletionPendingRows.length = 2 := by
+  exact
+    ⟨ allOperatorIds_length
+    , Cell192.all_length
+    , allOperatorCells_length
+    , cellOperatorAnchors_length
+    , catalogue_homograph_surface_count
+    , hexagramMissingPolicies_length
+    , functionalCompletionCompleteRows_length
+    , functionalCompletionTrackedRows_length
+    , functionalCompletionPendingRows_length
     ⟩
 
 end SSBX.Text.OperatorCellMap

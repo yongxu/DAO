@@ -2708,10 +2708,11 @@ $$\text{胜} = \text{势}(\text{致人}(\text{奇正}(\text{避实击虚}(\text{
 
 ## 二十二、算子组合规律 (基础)
 
-> **Lean 对齐状态（重要）**：当前 Lean 侧分两层：
+> **Lean 对齐状态（重要）**：当前 Lean 侧按层级读取：
 > 1. `Text/WenyanOperators.lean` / `Text/Completeness.lean` 证明当前 371 条 catalogue 条目、单字义位与注册完整性；`OperatorEntry.signature` 目前仍主要是 placeholder，不等于精确语义签名已 theorem 化；
-> 2. `Foundation/Wen/Operators.lean` 只形式化了少量可执行/可证明算子律，例如 isness 伴随算子、存在/否定、若干组合形态。
-> 3. 二十一甲至二十一戊 70 条已同步进 Lean catalogue；它们的可执行语义仍待后续按流派分别 theorem 化。
+> 2. `Text/OperatorCellMap.lean` 证明 371 个 catalogue `OperatorId`、192 个 `Cell192`、以及 71,232 个 `(operator, cell)` pair 的覆盖网格完整，并用 `functionalCompletionRows` 标注 complete / tracked / pending 层级。
+> 3. `Foundation/Wen/Operators.lean` 只形式化了少量可执行/可证明算子律，例如 isness 伴随算子、存在/否定、若干组合形态。
+> 4. 二十一甲至二十一戊 70 条已同步进 Lean catalogue；它们的可执行语义仍待后续按流派分别 theorem 化。
 > 因此下列代数律中，凡未明说 Lean theorem 者，先读作数学/语义猜想或设计约束，而非已经完成的形式证明。
 
 ### 1. 对偶配对
@@ -4018,6 +4019,7 @@ $$\forall t.\, \text{方}(\text{生})(t) \wedge \text{方}(\text{死})(t)$$
 - 64 卦 ↔ 算子映射 (二十八)
 - Lean 八卦锚点桥 `formal/SSBX/Text/OperatorAnchors.lean`：已把 BaguaWen 22 个保留 token、L0 十二指令、三时、六爻位、六个易位关系、8 个三爻卦、64 个 `xuGua` 卦位、以及 192 个 `Cell192` 卦时格全部列为机器可检查锚点；64 卦表中 37 卦已有精确 catalogue `OperatorId`，31 卦仍含待升格为 catalogue `OperatorId` 的缺口词，或仅有语义近似锚点
 - Lean 总索引桥 `formal/SSBX/Text/OperatorCellMap.lean`：已证明 371 个 catalogue `OperatorId` 与 192 个 `Cell192` 的笛卡尔积共有 71,232 个 pair，且任意 `(operator, cell)` pair 均已被枚举；该层只说明全量覆盖，不把覆盖自动视为 theorem-level 语义。
+- Lean 完成度分层：`OperatorCellMap.lean` 已用 `functionalCompletionRows` 固化 5 个 complete 层、1 个 tracked 层、2 个 pending 层；因此 371 × 192 的 coverage / indexing 已完成，exact signatures 与 theorem-level cell semantics 明确留作下一层。
 - 新代数律 — 法家 2-category, 五行 (Z/5)\*, 阴阳带种子 involution, 三元门, 化性起伪, 群分单调性, 标本 DAG, 反 dagger (二十九)
 - Categorical 形式化 — symmetric monoidal PROP + modal layer (三十)
 - 逆向工程实例 (三十一)
@@ -4037,7 +4039,6 @@ $$\forall t.\, \text{方}(\text{生})(t) \wedge \text{方}(\text{死})(t)$$
 
 ### 未完成 — 形式分析
 
-- [ ] **Lean 层级标注** — 区分 catalogue complete、semantic modeled、theorem proved 三种完成度
 - [ ] **64 卦缺口词入 catalogue** — `OperatorAnchors.lean` 已显式列出 `待/争/蓄/塞/备/从/临/决/断/饰/养/过/险/丽/附/感/壮/难/遇/困/井/鼎/震/归/丰/远/悦/信/大/小/阻` 等 31 个去重缺口，并机器标注处理策略：25 个可升通用算子，`大/小` 宜做参数，`丽/井/鼎/震` 宜保持卦象专属或语义锚
 - [ ] **多义字读法表继续精化** — `Text/OperatorReadings.lean` 已覆盖文档同形多编号表的 60 个组 / 81 个 surface entry，并证明这些 reading 均已挂接 `OperatorId`；后续继续补 precedence / type expectation / construction rules
 - [ ] **並 / 與 对齐** — 明确二者在 monoidal product、logical conjunction、social co-presence 中的不同签名
