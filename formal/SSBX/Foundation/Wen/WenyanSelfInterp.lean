@@ -1350,6 +1350,167 @@ theorem dispatchProg_routes (k : Fin 12) :
   | ⟨10, _⟩ => exact ⟨dispatchProg_routes_10, dispatchProg_halts_10⟩
   | ⟨11, _⟩ => exact ⟨dispatchProg_routes_11, dispatchProg_halts_11⟩
 
+/-! ### § 6c.5 Universal `metaInterpProg` — dispatch + 12 execute blocks
+
+  Phase 2.3.z final glue: combine `dispatchProg`'s 21-instruction routing
+  layer with 12 size-4 execute blocks (one per opcode) into a single
+  69-instruction `universalMetaInterp : List YiInstr` that, given an
+  encoded guest instruction tag in `host.history` head, simulates one
+  step of guest execution.
+
+  Layout invariants:
+    Pre:  host.history = [tagCell k] ++ guestStateLayout
+          (where guestStateLayout is one or two cells depending on opcode)
+    Post: host.history reflects guest's evolved state per the per-clause
+          simulation (currentCell evolution or stateControl preservation)
+          AND host.halted = true.
+
+  Block layout (each size 4, pcs 21 + 4·k for opcode tag k):
+    pc 21..24:  tag 0 (nop)         [pop, push, halt, halt]
+    pc 25..28:  tag 1 (setShi)      [pop, setShi Shi.jin, push, halt]
+    pc 29..32:  tag 2 (flipYao)     [pop, flipYao ⟨0,_⟩, push, halt]
+    pc 33..36:  tag 3 (hu)          [pop, hu, push, halt]
+    pc 37..40:  tag 4 (cuo)         [pop, cuo, push, halt]
+    pc 41..44:  tag 5 (zong)        [pop, zong, push, halt]
+    pc 45..48:  tag 6 (branchYaoEq) [pop, push, halt, halt]   (preserve)
+    pc 49..52:  tag 7 (branchShiEq) [pop, push, halt, halt]   (preserve)
+    pc 53..56:  tag 8 (jump)        [pop, push, halt, halt]   (preserve)
+    pc 57..60:  tag 9 (push)        [pop, push, push, halt]
+    pc 61..64:  tag 10 (pop)        [pop, pop, halt, halt]
+    pc 65..68:  tag 11 (halt)       [pop, push, halt, halt]   (preserve)
+
+  Parameterized opcodes use default parameters (Shi.jin / ⟨0,_⟩); a fully
+  parameterized version requires reading parameter cells from history,
+  tracked as Phase 2.3.q. -/
+def universalMetaInterp : List YiInstr :=
+  -- pc 0..20: dispatch (leaf jump targets retargeted to size-4 block starts)
+  [ .pop                                                    -- pc 0:  tag → cur
+  , .branchYaoEq ⟨0, by omega⟩ ⟨2, by omega⟩ 8              -- pc 1
+  , .branchYaoEq ⟨1, by omega⟩ ⟨2, by omega⟩ 14             -- pc 2
+  , .branchShiEq Shi.ji  57                                 -- pc 3:  tag 9 → 57
+  , .branchShiEq Shi.jin 61                                 -- pc 4:  tag 10 → 61
+  , .jump 65                                                -- pc 5:  tag 11 → 65
+  , .halt , .halt                                           -- pc 6, 7
+  , .branchYaoEq ⟨1, by omega⟩ ⟨2, by omega⟩ 17             -- pc 8
+  , .branchShiEq Shi.ji  45                                 -- pc 9:  tag 6 → 45
+  , .branchShiEq Shi.jin 49                                 -- pc 10: tag 7 → 49
+  , .jump 53                                                -- pc 11: tag 8 → 53
+  , .halt , .halt                                           -- pc 12, 13
+  , .branchShiEq Shi.ji  33                                 -- pc 14: tag 3 → 33
+  , .branchShiEq Shi.jin 37                                 -- pc 15: tag 4 → 37
+  , .jump 41                                                -- pc 16: tag 5 → 41
+  , .branchShiEq Shi.ji  21                                 -- pc 17: tag 0 → 21
+  , .branchShiEq Shi.jin 25                                 -- pc 18: tag 1 → 25
+  , .jump 29                                                -- pc 19: tag 2 → 29
+  , .halt                                                   -- pc 20
+  -- pc 21..68: 12 execute blocks (size 4 each)
+  , .pop, .push, .halt, .halt                                              -- pc 21..24: nop
+  , .pop, .setShi Shi.jin, .push, .halt                                    -- pc 25..28: setShi
+  , .pop, .flipYao ⟨0, by omega⟩, .push, .halt                             -- pc 29..32: flipYao
+  , .pop, .hu, .push, .halt                                                -- pc 33..36: hu
+  , .pop, .cuo, .push, .halt                                               -- pc 37..40: cuo
+  , .pop, .zong, .push, .halt                                              -- pc 41..44: zong
+  , .pop, .push, .halt, .halt                                              -- pc 45..48: branchYaoEq (preserve)
+  , .pop, .push, .halt, .halt                                              -- pc 49..52: branchShiEq (preserve)
+  , .pop, .push, .halt, .halt                                              -- pc 53..56: jump (preserve)
+  , .pop, .push, .push, .halt                                              -- pc 57..60: push
+  , .pop, .pop, .halt, .halt                                               -- pc 61..64: pop
+  , .pop, .push, .halt, .halt                                              -- pc 65..68: halt (preserve)
+  ]
+
+theorem universalMetaInterp_length : universalMetaInterp.length = 69 := by native_decide
+
+/-- Sanity sample: tag 0 (nop) input + concrete gcur, after fuel 15, gcur preserved + halted. -/
+theorem universalMetaInterp_nop_qian :
+    let s := { (YiState.init Hexagram.qian universalMetaInterp)
+               with history := [cellFromIdx ⟨0, by omega⟩, (Hexagram.qian, Shi.jin)] }
+    (s.runFuel 15).history = [(Hexagram.qian, Shi.jin)] ∧ (s.runFuel 15).halted = true := by
+  refine ⟨?_, ?_⟩ <;> native_decide
+
+/-- Sanity sample: tag 3 (hu) — gcur transformed to its hu. -/
+theorem universalMetaInterp_hu_qian :
+    let s := { (YiState.init Hexagram.qian universalMetaInterp)
+               with history := [cellFromIdx ⟨3, by omega⟩, (Hexagram.qian, Shi.jin)] }
+    (s.runFuel 15).history = [(Hexagram.hu Hexagram.qian, Shi.jin)] ∧ (s.runFuel 15).halted = true := by
+  refine ⟨?_, ?_⟩ <;> native_decide
+
+/-- Sanity sample: tag 4 (cuo) — gcur transformed to its cuo. -/
+theorem universalMetaInterp_cuo_qian :
+    let s := { (YiState.init Hexagram.qian universalMetaInterp)
+               with history := [cellFromIdx ⟨4, by omega⟩, (Hexagram.qian, Shi.jin)] }
+    (s.runFuel 15).history = [(Hexagram.cuo Hexagram.qian, Shi.jin)] ∧ (s.runFuel 15).halted = true := by
+  refine ⟨?_, ?_⟩ <;> native_decide
+
+/-- Sanity sample: tag 5 (zong) — gcur transformed to its zong. -/
+theorem universalMetaInterp_zong_qian :
+    let s := { (YiState.init Hexagram.qian universalMetaInterp)
+               with history := [cellFromIdx ⟨5, by omega⟩, (Hexagram.qian, Shi.jin)] }
+    (s.runFuel 15).history = [(Hexagram.zong Hexagram.qian, Shi.jin)] ∧ (s.runFuel 15).halted = true := by
+  refine ⟨?_, ?_⟩ <;> native_decide
+
+/-- Sanity sample: tag 11 (halt) — gcur preserved. -/
+theorem universalMetaInterp_halt_qian :
+    let s := { (YiState.init Hexagram.qian universalMetaInterp)
+               with history := [cellFromIdx ⟨11, by omega⟩, (Hexagram.qian, Shi.jin)] }
+    (s.runFuel 15).history = [(Hexagram.qian, Shi.jin)] ∧ (s.runFuel 15).halted = true := by
+  refine ⟨?_, ?_⟩ <;> native_decide
+
+/-- Sanity sample: tag 9 (push) — gcur duplicated. -/
+theorem universalMetaInterp_push_qian :
+    let s := { (YiState.init Hexagram.qian universalMetaInterp)
+               with history := [cellFromIdx ⟨9, by omega⟩, (Hexagram.qian, Shi.jin)] }
+    (s.runFuel 15).history = [(Hexagram.qian, Shi.jin), (Hexagram.qian, Shi.jin)]
+    ∧ (s.runFuel 15).halted = true := by
+  refine ⟨?_, ?_⟩ <;> native_decide
+
+/-- Halt-after-runFuel-15 lemma per tag k ∈ Fin 12, on concrete
+    (Hexagram.qian, Shi.jin) gcur. The pop block requires a 3-cell history
+    (tag + two gcurs); all others use 2-cell. -/
+theorem universalMetaInterp_halts_tag_0  : ((({(YiState.init Hexagram.qian universalMetaInterp) with history := [cellFromIdx ⟨0,  by omega⟩, (Hexagram.qian, Shi.jin)]} : YiState)).runFuel 15).halted = true := by native_decide
+theorem universalMetaInterp_halts_tag_1  : ((({(YiState.init Hexagram.qian universalMetaInterp) with history := [cellFromIdx ⟨1,  by omega⟩, (Hexagram.qian, Shi.jin)]} : YiState)).runFuel 15).halted = true := by native_decide
+theorem universalMetaInterp_halts_tag_2  : ((({(YiState.init Hexagram.qian universalMetaInterp) with history := [cellFromIdx ⟨2,  by omega⟩, (Hexagram.qian, Shi.jin)]} : YiState)).runFuel 15).halted = true := by native_decide
+theorem universalMetaInterp_halts_tag_3  : ((({(YiState.init Hexagram.qian universalMetaInterp) with history := [cellFromIdx ⟨3,  by omega⟩, (Hexagram.qian, Shi.jin)]} : YiState)).runFuel 15).halted = true := by native_decide
+theorem universalMetaInterp_halts_tag_4  : ((({(YiState.init Hexagram.qian universalMetaInterp) with history := [cellFromIdx ⟨4,  by omega⟩, (Hexagram.qian, Shi.jin)]} : YiState)).runFuel 15).halted = true := by native_decide
+theorem universalMetaInterp_halts_tag_5  : ((({(YiState.init Hexagram.qian universalMetaInterp) with history := [cellFromIdx ⟨5,  by omega⟩, (Hexagram.qian, Shi.jin)]} : YiState)).runFuel 15).halted = true := by native_decide
+theorem universalMetaInterp_halts_tag_6  : ((({(YiState.init Hexagram.qian universalMetaInterp) with history := [cellFromIdx ⟨6,  by omega⟩, (Hexagram.qian, Shi.jin)]} : YiState)).runFuel 15).halted = true := by native_decide
+theorem universalMetaInterp_halts_tag_7  : ((({(YiState.init Hexagram.qian universalMetaInterp) with history := [cellFromIdx ⟨7,  by omega⟩, (Hexagram.qian, Shi.jin)]} : YiState)).runFuel 15).halted = true := by native_decide
+theorem universalMetaInterp_halts_tag_8  : ((({(YiState.init Hexagram.qian universalMetaInterp) with history := [cellFromIdx ⟨8,  by omega⟩, (Hexagram.qian, Shi.jin)]} : YiState)).runFuel 15).halted = true := by native_decide
+theorem universalMetaInterp_halts_tag_9  : ((({(YiState.init Hexagram.qian universalMetaInterp) with history := [cellFromIdx ⟨9,  by omega⟩, (Hexagram.qian, Shi.jin)]} : YiState)).runFuel 15).halted = true := by native_decide
+theorem universalMetaInterp_halts_tag_10 : ((({(YiState.init Hexagram.qian universalMetaInterp) with history := [cellFromIdx ⟨10, by omega⟩, (Hexagram.qian, Shi.jin), (Hexagram.kun, Shi.ji)]} : YiState)).runFuel 15).halted = true := by native_decide
+theorem universalMetaInterp_halts_tag_11 : ((({(YiState.init Hexagram.qian universalMetaInterp) with history := [cellFromIdx ⟨11, by omega⟩, (Hexagram.qian, Shi.jin)]} : YiState)).runFuel 15).halted = true := by native_decide
+
+/-- Helper: build the per-tag input state for the universal interp.
+    Tag 10 (pop) needs a 3-cell history; all others use 2-cell. -/
+def universalMetaInterp_input (k : Fin 12) : YiState :=
+  if k.val = 10 then
+    { (YiState.init Hexagram.qian universalMetaInterp)
+      with history := [cellFromIdx ⟨k.val, by have := k.isLt; omega⟩,
+                       (Hexagram.qian, Shi.jin), (Hexagram.kun, Shi.ji)] }
+  else
+    { (YiState.init Hexagram.qian universalMetaInterp)
+      with history := [cellFromIdx ⟨k.val, by have := k.isLt; omega⟩,
+                       (Hexagram.qian, Shi.jin)] }
+
+/-- Combined universal-interp totality: every L0 tag k ∈ Fin 12 reaches
+    halted = true within fuel 15 on a concrete sample input. This composes
+    dispatch + execute end-to-end through the 69-instruction universal
+    program. -/
+theorem universalMetaInterp_halts_all_12 (k : Fin 12) :
+    ((universalMetaInterp_input k).runFuel 15).halted = true := by
+  match k with
+  | ⟨0, _⟩  => exact universalMetaInterp_halts_tag_0
+  | ⟨1, _⟩  => exact universalMetaInterp_halts_tag_1
+  | ⟨2, _⟩  => exact universalMetaInterp_halts_tag_2
+  | ⟨3, _⟩  => exact universalMetaInterp_halts_tag_3
+  | ⟨4, _⟩  => exact universalMetaInterp_halts_tag_4
+  | ⟨5, _⟩  => exact universalMetaInterp_halts_tag_5
+  | ⟨6, _⟩  => exact universalMetaInterp_halts_tag_6
+  | ⟨7, _⟩  => exact universalMetaInterp_halts_tag_7
+  | ⟨8, _⟩  => exact universalMetaInterp_halts_tag_8
+  | ⟨9, _⟩  => exact universalMetaInterp_halts_tag_9
+  | ⟨10, _⟩ => exact universalMetaInterp_halts_tag_10
+  | ⟨11, _⟩ => exact universalMetaInterp_halts_tag_11
+
 /-! ### § 6c.3 Combined "Phase 2.3 trivial-7" summary
 
   This bundles the 7 trivial simulation lemmas into a single statement so
