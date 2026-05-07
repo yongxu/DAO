@@ -9,7 +9,7 @@ YiProg and outputs whether the hexagram is 天道 (tian) or 心道 (xin) — ans
 
 ## Phases (continuing from Cell192.lean's §1–5)
   § 4   YiInstr inductive (文 instruction set)
-  § 5   YiState + structurally-recursive `runFuel` + `partial def run`
+  § 5   YiState + structurally-recursive `runFuel` + executable `partial def run`
   § 6   daoJudge: a YiProg that judges 是道非道
   § 7   Correctness theorem: daoJudge h matches Hexagram.isTian
        + TC discussion
@@ -153,8 +153,12 @@ def runFuel : Nat → YiState → YiState
   | 0, s => s
   | n+1, s => if s.halted then s else runFuel n s.step
 
-/-- Unbounded interpreter (this is what makes the system Turing-complete:
-    `partial def` allows non-termination). -/
+/-- Unbounded executable interpreter.
+
+    The theorem-level proof path uses `runFuel`: Lean needs an explicit fuel
+    argument to reason by structural recursion. This unbounded `run` is kept as
+    the executable boundary where non-terminating programs may diverge instead of
+    returning a final `YiState`. -/
 partial def run (s : YiState) : YiState :=
   if s.halted then s else run s.step
 
@@ -229,11 +233,12 @@ theorem daoJudge_tai :
   - `loopProg`: an unconditional jump-to-self (witnesses unbounded jumps).
   - `unboundedHistoryProg`: push then loop (witnesses unbounded memory).
 
-  We additionally prove formally that `loopProg` is non-halting at every fuel
-  level (`loopProg_unbounded`): no matter how much fuel you give it, it never
-  reaches a halted state. This is a Lean witness that the language admits true
-  non-termination, hence `partial def run` is strictly more expressive than
-  `runFuel`. -/
+  We additionally prove formally, via `runFuel`, that `loopProg` is non-halting
+  at every fuel level (`loopProg_unbounded`): no matter how much fuel you give
+  it, it never reaches a halted state. This is the theorem-level witness that
+  the language admits true non-termination. The unbounded `partial def run`
+  remains the executable boundary for that divergence; `runFuel` remains the
+  total proof path. -/
 
 /-- A non-halting program: jumps back to itself forever. -/
 def loopProg : List YiInstr := [YiInstr.jump 0]
@@ -241,8 +246,11 @@ def loopProg : List YiInstr := [YiInstr.jump 0]
 /-- A program that grows the history unboundedly (push then loop). -/
 def unboundedHistoryProg : List YiInstr := [YiInstr.push, YiInstr.jump 0]
 
-/-- The interpreter `partial def run` is admitted as a partial function — this is
-    the formal Lean witness that the language is not guaranteed to terminate. -/
+/-- Boundary marker: the unbounded interpreter is intentionally partial.
+
+    Machine-checkable non-termination evidence lives below, in the `runFuel`
+    theorems for `loopProg`; this theorem is deliberately only a public marker
+    for the API boundary. -/
 theorem run_is_partial : True := trivial
 
 /-- Stepping `loopProg`'s init state returns the init state itself: pc stays at
@@ -251,42 +259,39 @@ theorem step_loopProg_init (h : Hexagram) :
     (YiState.init h loopProg).step = YiState.init h loopProg := by
   rfl
 
+/-- Bounded execution of `loopProg` is stuttering: every fuel amount returns the
+    same initial state. -/
+theorem runFuel_loopProg_init_eq (h : Hexagram) :
+    ∀ n : Nat, (YiState.init h loopProg).runFuel n = YiState.init h loopProg := by
+  intro n
+  induction n with
+  | zero =>
+      rfl
+  | succ k ih =>
+      unfold YiState.runFuel
+      show (if (YiState.init h loopProg).halted
+            then YiState.init h loopProg
+            else YiState.runFuel k (YiState.init h loopProg).step) =
+        YiState.init h loopProg
+      have hnot : (YiState.init h loopProg).halted = false := rfl
+      rw [hnot, step_loopProg_init, ih]
+      simp
+
+/-- `loopProg` has no finite fuel witness for halting. -/
+theorem loopProg_has_no_fuel_witness (h : Hexagram) :
+    ¬ ∃ n : Nat, ((YiState.init h loopProg).runFuel n).halted = true := by
+  rintro ⟨n, hn⟩
+  have hfalse : (YiState.init h loopProg).halted = false := rfl
+  rw [runFuel_loopProg_init_eq h n, hfalse] at hn
+  cases hn
+
 /-- `loopProg_unbounded` — for any fuel `n`, running `loopProg` from init never
     enters the halted state. This formally witnesses non-termination of the
     interpreter on `loopProg`. -/
 theorem loopProg_unbounded :
     ∀ n : Nat, ¬((YiState.init Hexagram.qian loopProg).runFuel n).halted = true := by
-  intro n
-  -- Generalize to any state equal to (init qian loopProg) — needed because
-  -- runFuel pushes the state through .step, and we need the invariant
-  -- `s = init qian loopProg → step s = s`.
-  suffices H : ∀ n s, s = YiState.init Hexagram.qian loopProg →
-                 ¬(s.runFuel n).halted = true by
-    exact H n _ rfl
-  intro n
-  induction n with
-  | zero =>
-    intro s hs
-    rw [hs]
-    show ¬(YiState.init Hexagram.qian loopProg).halted = true
-    decide
-  | succ k ih =>
-    intro s hs
-    rw [hs]
-    -- runFuel (k+1) (init qian loopProg)
-    -- = if (init qian loopProg).halted then init else runFuel k (init qian loopProg).step
-    -- But (init qian loopProg).halted = false, so it becomes
-    -- runFuel k (init qian loopProg).step = runFuel k (init qian loopProg)
-    show ¬((YiState.init Hexagram.qian loopProg).runFuel (k+1)).halted = true
-    unfold YiState.runFuel
-    show ¬(if (YiState.init Hexagram.qian loopProg).halted
-            then YiState.init Hexagram.qian loopProg
-            else YiState.runFuel k (YiState.init Hexagram.qian loopProg).step).halted = true
-    have hnot : (YiState.init Hexagram.qian loopProg).halted = false := rfl
-    rw [hnot]
-    show ¬(YiState.runFuel k (YiState.init Hexagram.qian loopProg).step).halted = true
-    rw [step_loopProg_init]
-    exact ih (YiState.init Hexagram.qian loopProg) rfl
+  intro n hn
+  exact loopProg_has_no_fuel_witness Hexagram.qian ⟨n, hn⟩
 
 /-! ### § 7c 道判机 as a wenyan claim within the system
 

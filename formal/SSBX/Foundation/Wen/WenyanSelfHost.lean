@@ -50,6 +50,7 @@
   (c) 即 «微核自释» — 运行至 halted 之 见证。
 -/
 import SSBX.Foundation.Wen.WenyanSelfInterp
+import SSBX.Foundation.Wen.WenyanParserGeneral
 
 namespace SSBX.Foundation.Wen.WenyanSelfHost
 
@@ -57,6 +58,8 @@ open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Bagua.Cell192
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
+open SSBX.Foundation.Wen.WenyanParser
+open SSBX.Foundation.Wen.WenyanParserGeneral
 
 /-! ## § 1  «判型良_basic» — 基本结构合度判定
 
@@ -184,6 +187,14 @@ def «微核数» : List Cell192 := ProgEnc.encProg «微核源»
 /-- (a) «判型良_basic 微核源 = true» — 文之形合度。 -/
 theorem «微核源_well_formed» : «判型良_basic» «微核源» = true := by native_decide
 
+/-- `WenyanSelfHost` 之 standalone 合度判定与 parser 侧 `validProg`
+    在 «微核源» 上一致。 -/
+theorem «微核源_validProg_eq_basic» :
+    validProg «微核源» = «判型良_basic» «微核源» := by native_decide
+
+/-- Parser 侧之合度判定亦接受 «微核源»。 -/
+theorem «微核源_validProg» : validProg «微核源» = true := by native_decide
+
 /-- AllEncodable «微核源»：每条指令皆 encodable (Nat targets all ∈ 1..64 < 192).
 
     Proof strategy: enumerate the program elementwise via `List.mem_cons`,
@@ -220,6 +231,32 @@ theorem «微核自验» :
     ProgEnc.decInstrs «微核源».length «微核数» = some («微核源», []) :=
   ⟨«微核源_well_formed», «微核源_round_trip»⟩
 
+/-! ### § 4b 句法 round-trip：接入 ParserGeneral
+
+  Tier 3 完整 quine 需要两层回读：
+    · data-level: `ProgEnc.encProg/decInstrs` 回读 YiInstr list；
+    · syntax-level: `printProg/lexN/parseProgN` 回读受控文源码。
+
+  本节只推进安全小步：对当前 «微核源»，用 `WenyanParserGeneral` 已有
+  token-level 一般定理，证明 token image 可回读；再用 concrete `lexN`
+  见证补上 String-level round-trip。 这仍不是完整 quine：它没有证明
+  程序运行时能打印/产生自己的完整编码。 -/
+
+/-- Token-level 一般 parser 定理在 «微核源» 上的实例。 -/
+theorem «微核源_token_round_trip» :
+    parseProgN (tokensOfProg «微核源») = some «微核源» :=
+  parseProgN_tokensOfProg «微核源» «微核源_validProg»
+
+/-- «微核源» 之打印文本经非 partial lexer 得到规范 token image。 -/
+theorem «微核源_lexN_print_tokens» :
+    lexN («印程» «微核源») = some (tokensOfProg «微核源») := by native_decide
+
+/-- String-level round-trip for the concrete Tier 2 kernel source. -/
+theorem «微核源_print_parseN_round_trip» :
+    «解程N» («印程» «微核源») = some «微核源» :=
+  parseN_printProg_inverse_via_lex_inversion
+    «微核源» «微核源_validProg» «微核源_lexN_print_tokens»
+
 /-! ## § 5  «微核自释» — 在 易 之 自动机 上 执行 收敛
 
   «微核源» 从 (qian, jin) 始，沿 阶段一..六 之路径，最终 reach halted state。
@@ -240,6 +277,13 @@ theorem «微核自释_total» :
   rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
   cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
     native_decide
+
+/-- 当前 Tier 2 微核在 qian 初态的运行结果并不会把自身编码留在 history。
+    这标记了它与 Tier 3 完整 quine 的关键差距：已有 self-decoding，
+    但尚无 runtime self-production。 -/
+theorem «微核源_not_runtime_quine_qian» :
+    ((YiState.init Hexagram.qian «微核源»).runFuel 200).history ≠ «微核数» := by
+  native_decide
 
 /-! ## § 6  §文之至 — 四相俱
 

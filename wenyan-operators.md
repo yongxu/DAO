@@ -782,6 +782,12 @@
 - **读**: 名物化 / 集合化 / 所指化
 - **注**: 「所是(Γ)」即 `what Γ is`；「所P」可读作 `{x | P(x)}` 或动作结果名物。
 
+> **Isness 单字簇（补）**：`是 / 系 / 之 / 的 / 地` 与伴随算子 `有 / 无 / 所 / 者 / 也 / 为 / 然 / 于`
+> 共同承担英文 *is / isness* 的分解。`是` 为等同，`系` 为关系连接，`之/的` 为属格或投影绑定，
+> `地/于` 为境域成立；`有/无` 给存在边界，`所` 名物化，`者/也` 定义闭合，`为/然` 给谓述与断定。
+> Lean 侧见 `Foundation/Wen/Operators.lean` 的 `isness_with_companion_operators` 与
+> `Text/Completeness.lean` 的 `isness_single_glyph_operators_registered`。
+
 ### S-17: 未
 - **义位**: 未1
 - **签名**: Prop → Prop

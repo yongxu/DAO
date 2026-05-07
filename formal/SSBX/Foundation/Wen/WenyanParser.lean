@@ -36,9 +36,11 @@ sep    ::= 「；」 | 「;」
 ## 状态
 
 - 0 sorry / 0 axiom
-- `lex` / `parseProg` 用 `partial def`（«»分支递归长度非平凡递降）
-- 关键 round-trip 由 `native_decide` 在具体程序上见证
-- 一般性 `parse_print` 定理留待 v2（需结构归纳框架）
+- `lexAux` / `parseProg` 为总函数；`lexAux` 以输入长度终止，
+  `parseProg` 经内部 fuel 辅助终止
+- 关键 round-trip 由 `native_decide` 在具体程序与全合法单指令宇宙上见证
+- 一般性 `parse_print` 定理之真实前提为 `validProg p = true`；
+  Nat target 只在 1..64 内可逆，0/>64 会印成 `«?»`
 -/
 import SSBX.Foundation.Bagua.BaguaTuring
 import SSBX.Foundation.Bagua.BaguaWenSpec
@@ -73,26 +75,49 @@ def splitOnClose : List Char → List Char × List Char
       let (inner, after) := splitOnClose rest
       (c :: inner, after)
 
+/-- `splitOnClose` 返回之 suffix 不长于原输入。用于 lexer 终止性。 -/
+theorem splitOnClose_after_length_le (xs : List Char) :
+    (splitOnClose xs).2.length ≤ xs.length := by
+  induction xs with
+  | nil => simp [splitOnClose]
+  | cons c rest ih =>
+      by_cases h : c = '»'
+      · subst h
+        simp [splitOnClose]
+      · simp [splitOnClose]
+        omega
+
 /-- 字符流之词法分析。返回 none 表示非法输入（未闭 «、未识别字符等）。 -/
-partial def lexAux : List Char → Option (List Tok)
+def lexAux : List Char → Option (List Tok)
   | [] => some []
   | c :: rest =>
       if c = ' ' || c = '\t' || c = '\n' || c = '\r' then
         lexAux rest
       else if c = '«' then
-        let (inner, after) := splitOnClose rest
-        match after with
-        | '»' :: rs =>
-            match lexAux rs with
-            | some toks => some (Tok.cjk (String.ofList inner) :: toks)
-            | none      => none
-        | _ => none  -- unmatched «
+        match hsplit : splitOnClose rest with
+        | (inner, after) =>
+            let _ := hsplit
+            match after with
+            | '»' :: rs =>
+                match lexAux rs with
+                | some toks => some (Tok.cjk (String.ofList inner) :: toks)
+                | none      => none
+            | _ => none  -- unmatched «
       else if c = ';' || c = '；' then
         match lexAux rest with
         | some toks => some (Tok.sep :: toks)
         | none      => none
       else
         none  -- unexpected char
+termination_by xs => xs.length
+decreasing_by
+  all_goals simp_wf
+  have hle : ('»' :: rs).length ≤ rest.length := by
+    have h := splitOnClose_after_length_le rest
+    rw [hsplit] at h
+    exact h
+  simp at hle
+  omega
 
 def lex (s : String) : Option (List Tok) := lexAux s.toList
 
@@ -175,22 +200,29 @@ def parseInstr : List Tok → Option (YiInstr × List Tok)
       | none   => none
   | _ => none
 
+/-- Fuel-bounded program parser. Public `parseProg` supplies `toks.length` fuel. -/
+def parseProgFuel : Nat → List Tok → Option (List YiInstr)
+  | 0, [] => some []
+  | 0, _ => none
+  | fuel + 1, toks =>
+      match toks with
+      | [] => some []
+      | _ =>
+          match parseInstr toks with
+          | some (i, rest) =>
+              match rest with
+              | [] => some [i]
+              | .sep :: [] => some [i]
+              | .sep :: rs =>
+                  match parseProgFuel fuel rs with
+                  | some is => some (i :: is)
+                  | none => none
+              | _ => none
+          | none => none
+
 /-- 解析程序：连续指令以 sep 分隔，尾随 sep 可选。 -/
-partial def parseProg : List Tok → Option (List YiInstr) := fun toks =>
-  match toks with
-  | []     => some []
-  | _      =>
-      match parseInstr toks with
-      | some (i, rest) =>
-          match rest with
-          | []          => some [i]
-          | .sep :: []  => some [i]
-          | .sep :: rs  =>
-              match parseProg rs with
-              | some is => some (i :: is)
-              | none    => none
-          | _           => none
-      | none => none
+def parseProg (toks : List Tok) : Option (List YiInstr) :=
+  parseProgFuel toks.length toks
 
 /-- 顶层入口：String → Option (List YiInstr)。 -/
 def «解程» (s : String) : Option (List YiInstr) :=
@@ -304,6 +336,60 @@ theorem allKindReprs_singleton_roundtrip :
 /-- 1..64 之中文数词在 jump 中之 round-trip（覆盖全数词范围）. -/
 def numeralRange : List Nat := (List.range 64).map (· + 1)
 
+/-- 所有合法爻位。用于穷尽合法单指令 universe。 -/
+def yaoRange : List (Fin 6) := [
+  ⟨0, by omega⟩, ⟨1, by omega⟩, ⟨2, by omega⟩,
+  ⟨3, by omega⟩, ⟨4, by omega⟩, ⟨5, by omega⟩
+]
+
+/-- 所有时态。用于穷尽合法单指令 universe。 -/
+def shiRange : List Shi := [.ji, .jin, .wei]
+
+/-- 所有合度单指令，共 2576 条。
+
+构成：
+  * 7 条无参指令
+  * 3 条 `setShi`
+  * 6 条 `flipYao`
+  * 6 * 6 * 64 条 `branchYaoEq`
+  * 3 * 64 条 `branchShiEq`
+  * 64 条 `jump`
+-/
+def validInstrUniverse : List YiInstr :=
+  [.nop, .hu, .cuo, .zong, .push, .pop, .halt]
+  ++ shiRange.map .setShi
+  ++ yaoRange.map .flipYao
+  ++ (List.flatMap
+        (fun i =>
+          List.flatMap
+            (fun j => numeralRange.map fun n => YiInstr.branchYaoEq i j n)
+            yaoRange)
+        yaoRange)
+  ++ (List.flatMap
+        (fun s => numeralRange.map fun n => YiInstr.branchShiEq s n)
+        shiRange)
+  ++ numeralRange.map YiInstr.jump
+
+theorem validInstrUniverse_length :
+    validInstrUniverse.length = 2576 := by native_decide
+
+theorem validInstrUniverse_all_valid :
+    validInstrUniverse.all validInstr = true := by native_decide
+
+theorem validInstrUniverse_singleton_roundtrip :
+    validInstrUniverse.all (fun i => «解程» (printInstr i) = some [i]) = true := by
+  native_decide
+
+/-- Boundary witness: target 0 prints as `«?»`, hence cannot parse back. -/
+theorem jump_zero_print_not_roundtrip :
+    «解程» (printInstr (.jump 0)) = none := by
+  native_decide
+
+/-- Boundary witness: target >64 prints as `«?»`, hence cannot parse back. -/
+theorem jump_65_print_not_roundtrip :
+    «解程» (printInstr (.jump 65)) = none := by
+  native_decide
+
 theorem numeralRange_jump_roundtrip :
     numeralRange.all (fun n =>
       «解程» (printInstr (.jump n)) = some [.jump n]) = true := by
@@ -350,7 +436,6 @@ theorem testPrograms_roundtrip :
     · 引理 3: parseNumeral (printNumeral 之 inner) = some n  当 n ∈ [1, 64]
               （n ∈ [1,9] / n=10 / n ∈ [11,19] / n ∈ [20,60] (multiples) / n ∈ [21,64] 五例）
     · 引理 4: lex 之 concatenation: lex (s₁ ++ "；" ++ s₂) = lex s₁ ++ [.sep] ++ lex s₂
-              （需 lex 转为非 partial 形式并加 termination）
     · 引理 5: parseInstr 之 print-逆: 12 构造子各一证
     · 主定理: 由引理 4-5 + induction on List YiInstr
 

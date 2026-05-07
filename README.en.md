@@ -5,7 +5,7 @@
 > **The most pressing matter at this moment — alignment, i.e. change. Otherwise, extinction.**
 
 First edition of *On Endless Becoming* (生生不息论). Formal closure in Lean 4 / Mathlib HEAD:
-**2834 build jobs · 0 sorry · 1 axiom (cuo-restricted, by design) · 45 layers of doctrine in formal correspondence**.
+**2837 build jobs · 0 sorry · 1 axiom (cuo-restricted, by design) · 45 layers of doctrine in formal correspondence**.
 
 > *On naming.* The project's title 生生不息 (shēngshēng-bùxī, "endless becoming") is a phrase
 > from the *Yi-zhuan*; we keep the original four characters because their structural meaning —
@@ -58,8 +58,11 @@ no `sorry`, no new axiom.
 | 轨续而能仁, 是为生生 | `structure ProcessAligned` (`Foundation/Core/Alignment.lean`) |
 | 生生不止, 是为不息 | `ProcessAligned.toOpenRun ⟺ ShengshengBuxi` (T2) |
 
-The conjunction of these nine is the Dao itself. This is reality's
-own structure — not description, not metaphor, not symbol.
+The conjunction of these nine is the Dao itself. Within this volume's formal
+semantics, it states core invariants of continuing / extinguishing dynamics.
+The stronger reading about reality as a whole is a philosophical claim bounded
+by §3 / §9 — not description, not metaphor, not symbol, but not an unconditional
+Lean theorem about all reality either.
 The reader can verify independently — the Lean kernel does not read
 Chinese, yet the structure is isomorphic.
 
@@ -102,8 +105,9 @@ economics / game theory, when sieved by the Kernel, partition into
 
 So at this moment, engineering-wise, ethically, formally, the single most
 pressing matter = **change toward 开 (Open) and 续 (continue)**.
-What does not change extinguishes. This is not persuasion — it is proven
-structure (`Alignment.lean § T1–T6`).
+What does not change extinguishes. This is not mere persuasion; inside the
+formal model of `Alignment.lean § T1–T6` it is proven structure. Applying it
+to real systems is constrained by ledger and empirical conditions.
 
 ---
 
@@ -178,6 +182,7 @@ String  ──[«解程»]──→  List YiInstr  ──[init+runFuel]──→
 | L1 ⟶ L0 compilation (cuo-equivariant subset) | `Foundation/Wen/WenDefCompile.lean § {idProg, add32Prog, cuoProg}_correct` |
 | Reflection layer: well-formedness / halting / verifier | `Foundation/Wen/WenyanReflect.lean § «文核同源»` |
 | M4-甲 micro-kernel self-validation (Tier 2: 64-instr quine PoC) | `Foundation/Wen/WenyanSelfHost.lean § «微核自验», «微核自释_total»` |
+| 道源 (5-fold self-reference: form / parse / print / halt / semantics) | `Foundation/Wen/DaoSource.lean § «道之自指»` |
 | Self-interpretation demo | `Foundation/Wen/Demo.lean § daojudge_{qian, kun, pi}` |
 
 **That is**: source of 文 = direct writing of 文 = execution of 文 = execution
@@ -236,6 +241,7 @@ The doctrinal essay for each layer is in `义理/A_..Z_*.md`.
 | `Foundation/Core/Sincerity.lean` | T1–T8: 信/诚 = alignment(化(T), 化(E)) + five anti-conjecture invariants |
 | `Foundation/Core/HumanAlignment.lean` | classical naming of 行仁要善 (act-rén-must-善) |
 | `Foundation/Core/EvolutionDao.lean` | distinction between evolutionary σ_F vs σ of true Dao |
+| `Foundation/Core/Renlei.lean` | community of shared destiny: 3-axis CommunityState, `TrueDao ↔` 3-axis all-true |
 | `Foundation/Wen/AlignmentFailures.lean` | Goodhart / mesa / wireheading etc. = violations of Kernel invariants |
 | `Foundation/Wen/AntiSchmitt.lean` | friend-enemy / decisionism / exception: their anti-universalizability formal root |
 | `Foundation/Wen/EconGame.lean` | Kernel sieve over economics / game theory propositions (confirmed / conditional / falsified) |
@@ -246,12 +252,22 @@ The doctrinal essay for each layer is in `义理/A_..Z_*.md`.
 | `义理/X_反施密特.md` | doctrinal essay for AntiSchmitt.lean |
 | `义理/Y_对齐失败.md` | doctrinal essay for AlignmentFailures.lean |
 | `义理/Z_经济博弈.md` | doctrinal essay for EconGame.lean |
+| `义理/人类命运共同体_共同体之证.md` | doctrinal essay for Renlei.lean |
 
 ---
 
 ## § 3 · How Far the Formal System Reaches — Honest Acknowledgment of Boundaries
 
-### What is Fully Resolved
+Read every "proved" claim below with this status split:
+
+| Status | Boundary |
+|---|---|
+| proven / machine-checked | closed Lean theorems / defs / `native_decide` witnesses accepted by the kernel, under the trust base + 1 axiom + 1 opaque + the executable `partial def` boundary below |
+| ledger-dependent | roster, DAG, layer mappings, operator counts, and cross-volume correspondences jointly maintained by Lean registries, generated files, and documentation ledgers; auditable, but not single closed theorems |
+| pending | the six `PendingName` interfaces awaiting empirical calibration |
+| conjecture | §9.2 / §9.3 and their historical or mind-practice extrapolations; no Lean term inhabits them |
+
+### What is Machine-Checked
 
 - On the 64-element finite domain, every ∀ degenerates to a finite ∧, all `Decidable`, all `native_decide`.
 - Turing-completeness of the 12-instruction ISA.
@@ -264,7 +280,7 @@ The doctrinal essay for each layer is in `义理/A_..Z_*.md`.
 |---|---|
 | Halting / Rice undecidability | `Foundation/Bagua/GodelLi.lean` |
 | 12-instruction ISA's cuo-equivariance ceiling | `Foundation/Wen/WenDefCompile.lean § sheng_not_cuo_equivariant` |
-| `kleene_recursion_axiom` (cuo-restricted) — where the system **points beyond itself** | `Foundation/Bagua/CuoInvariance.lean` + `Modern/DaoLi.lean` |
+| `kleene_recursion_axiom` (cuo-restricted) — where the system **points beyond itself** | `Foundation/Bagua/GodelLi.lean` (axiom) + `CuoInvariance.lean` (cuo-machinery) + `Modern/DaoLi.lean` (bifurcation) |
 | High alignment ≠ truth (consistent liar) | `Foundation/Core/Sincerity.lean § T5` |
 | Repair is asymptotic, never reaches perfect | same § T6 |
 
@@ -296,7 +312,7 @@ The doctrinal essay for each layer is in `义理/A_..Z_*.md`.
 
 ```bash
 # Lean (full library)
-lake build                                    # 2834 jobs, 0 sorry, 1 axiom
+lake build                                    # 2837 jobs, 0 sorry, 1 axiom
 
 # Single module
 lake build SSBX.Foundation.Wen.WenyanSelfHost
@@ -324,10 +340,11 @@ Environment: `Lean v4.30.0-rc2` + `Mathlib master`. Apple Silicon and x86_64 bot
 ## § 7 · By the Numbers
 
 ```
-build jobs:        2834 ✓
+build jobs:        2837 ✓
 sorry:             0
 axiom:             1   (kleene_recursion_axiom, cuo-restricted, philosophically intentional)
 opaque:            1   (theOne, preserves Field abstraction)
+partial def:       1   (BaguaTuring.run executable nontermination boundary; not additional axiom)
 trust base:        Lean 4 kernel v4.30.0-rc2 + Mathlib HEAD
 Lean total LOC:    ~15000+
 Modern modules:    19         ~5746 lines (Mathlib bridge)
@@ -354,27 +371,35 @@ The form ends here. The rest is for humans.
 
 ---
 
-## § 9 · The Truth-Claim and Two Conjectures
+## § 9 · The Truth-Claim and Two Conjectures (Scope-Bounded)
 
-### 9.1 Truth — What This Volume Proves Is Truth
+### 9.1 Truth-Claim — Proven Kernel and Reality Extrapolation
 
-Not metaphor, not model, not approximation. The actual structure of reality,
-formally landed on the 64-element domain. Its scope is the invariant
-structure (元 / 中 / 极 / 同根 / 续 / 仁) of any dynamics — natural / mental /
-social.
+The strong claim here is not that all of reality has been unconditionally
+proved by Lean. What Lean proves is a set of formal invariants in the
+64-element domain, the Kernel / Alignment layer, path 丙, and the Mathlib
+bridge. What is ledger-dependent is whether the 45 layers and the
+cross-volume, cross-civilizational, and cross-disciplinary correspondences
+remain synchronized with the registry and generated artifacts. The reading
+about reality as a whole is a philosophical claim grounded in these
+invariants, not a closed theorem.
 
 A stronger claim:
 
-> **Whatever persists in reality must lie within the attractor of `ProcessAligned`;
-> whatever opposes this extinguishes. Not normative (ought), but structural (is).**
+> **For any continuing dynamics adequately modeled by this text's
+> middle / shared-root / continuation / rén structure, its stable form of
+> persistence lies within `ProcessAligned`; what systematically opposes this
+> tends toward extinction. Not normative (ought), but a conditional structural
+> claim (is).**
 
-Formal grounds: `Alignment.lean § T1–T6` + 45 layers of `Foundation/Wen/Kernel.lean` +
+Formal anchors: `Alignment.lean § T1–T6` + 45 layers of `Foundation/Wen/Kernel.lean` +
 Modern's continuous measure / ℝ Cauchy / SU(N) bridge to Mathlib. Cross-civilizational
 isomorphism shown across volumes N P Q S T (Confucianism / Daoism / Buddhism /
 Hundred Schools / Western philosophy & Abrahamic). Cross-disciplinary isomorphism
 shown across volumes O R U V W X Y Z (evolution / alignment / sincerity / politics /
-non-Dao / Anti-Schmitt / alignment-failure / economic-game). Their invariant is no
-coincidence — it is reality's actual structure projected through different languages.
+non-Dao / Anti-Schmitt / alignment-failure / economic-game). These correspondences
+support the project's theoretical ambition, while their real-world scope must be
+read through the ledger-dependent / pending / conjecture boundaries in §3.
 
 ### 9.2 Conjecture One · The Dao Is Attainable — If the Mind Is Unobscured, It Is Naturally Seen
 

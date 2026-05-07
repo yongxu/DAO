@@ -4,6 +4,10 @@
 import SSBX.Core
 import SSBX.Roster
 
+-- Pending empirical interfaces: certificate boundaries only; no roster promotion.
+import SSBX.Pending.Interfaces
+import SSBX.Pending.Examples
+
 -- 文 / 字 / 算子目录
 import SSBX.Text.Glyph
 import SSBX.Text.WenyanOperators
@@ -16,6 +20,7 @@ import SSBX.Truth.Semantics
 import SSBX.Truth.Adequacy
 import SSBX.Truth.Absolute
 import SSBX.Model.Adequacy
+import SSBX.Model.ConcreteLedger
 
 -- Foundation/Core — 字根、注义、单根证书
 import SSBX.Foundation.Core.Yuan

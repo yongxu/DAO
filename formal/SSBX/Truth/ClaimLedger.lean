@@ -68,6 +68,116 @@ def allClaimIds : List ClaimId := [
 def allClaims : List ClaimEntry :=
   allClaimIds.map claimEntry
 
+/-- Claims whose current status is checked directly by Lean theorems. -/
+def machineCheckedClaims : List ClaimId := [
+  .triValueConservativity,
+  .generatedRootsDiscipline,
+  .recursiveSemanticsDiscipline,
+  .rosterTextComplete,
+  .wenyanOperatorTableComplete,
+  .semanticAdequacyClaim,
+  .rootToSsbxLiClaim,
+]
+
+/-- Claims whose current status depends on the explicit axiom/model/text ledger. -/
+def ledgerDependentClaims : List ClaimId := [
+  .openDefinition,
+  .closeDefinition,
+  .rightDefinition,
+  .wrongDefinition,
+  .goodDefinition,
+  .badDefinition,
+  .freedomDefinition,
+  .flourishingDefinition,
+  .yiDefinition,
+  .shanDefinition,
+  .renDefinition,
+  .daoDefinition,
+  .trueDaoDefinition,
+  .auditUnbrokenDefinition,
+  .omegaInterface,
+  .omegaBInterface,
+  .piOpenInterface,
+  .thresholdProtocol,
+  .sourceTextClaimMapping,
+  .openValueAxiomClaim,
+  .auditReliabilityAxiomClaim,
+  .omegaAdequacyAxiomClaim,
+  .omegaBAdequacyAxiomClaim,
+  .piOpenAdequacyAxiomClaim,
+  .truthPathAxiomClaim,
+  .recommendationI2CandidateTrueDao,
+  .absoluteTruthClaim,
+]
+
+/-- Claims whose current status is a finite model/case computation. -/
+def modelComputedClaims : List ClaimId := [
+  .recommendationI1Evil,
+  .recommendationI2Right,
+  .recommendationI2Ren,
+  .recommendationI3ProtectiveClosure,
+]
+
+/-- Reserved status class; currently no registered claim uses it. -/
+def registryCheckedClaims : List ClaimId := []
+
+/-- Reserved status class; currently no registered claim uses it. -/
+def pendingClaims : List ClaimId := []
+
+def ClaimsWithStatus : TruthStatus -> List ClaimId
+  | .machineChecked => machineCheckedClaims
+  | .ledgerDependent => ledgerDependentClaims
+  | .modelComputed => modelComputedClaims
+  | .registryChecked => registryCheckedClaims
+  | .pending => pendingClaims
+
+/-- The hand-maintained `machineCheckedClaims` list matches `claimEntry`. -/
+theorem machineCheckedClaims_exact (id : ClaimId) :
+    id ∈ machineCheckedClaims ↔ (claimEntry id).status = .machineChecked := by
+  cases id <;> decide
+
+/-- The hand-maintained `ledgerDependentClaims` list matches `claimEntry`. -/
+theorem ledgerDependentClaims_exact (id : ClaimId) :
+    id ∈ ledgerDependentClaims ↔ (claimEntry id).status = .ledgerDependent := by
+  cases id <;> decide
+
+/-- The hand-maintained `modelComputedClaims` list matches `claimEntry`. -/
+theorem modelComputedClaims_exact (id : ClaimId) :
+    id ∈ modelComputedClaims ↔ (claimEntry id).status = .modelComputed := by
+  cases id <;> decide
+
+/-- `registryChecked` is intentionally unused by the current claim ledger. -/
+theorem registryCheckedClaims_exact (id : ClaimId) :
+    id ∈ registryCheckedClaims ↔ (claimEntry id).status = .registryChecked := by
+  cases id <;> decide
+
+/-- `pending` is intentionally unused by the current claim ledger. -/
+theorem pendingClaims_exact (id : ClaimId) :
+    id ∈ pendingClaims ↔ (claimEntry id).status = .pending := by
+  cases id <;> decide
+
+/-- Every current `ClaimId` lands in one of the three status classes used today. -/
+theorem claimEntry_status_current (id : ClaimId) :
+    (claimEntry id).status = .machineChecked ∨
+      (claimEntry id).status = .ledgerDependent ∨
+      (claimEntry id).status = .modelComputed := by
+  cases id <;> decide
+
+/-- Every current `ClaimId` is listed by one of the three nonempty status ledgers. -/
+theorem currentStatusClaims_complete (id : ClaimId) :
+    id ∈ machineCheckedClaims ∨ id ∈ ledgerDependentClaims ∨ id ∈ modelComputedClaims := by
+  cases id <;> decide
+
+/-- No registered claim currently has `registryChecked` status. -/
+theorem no_registryChecked_claimEntry (id : ClaimId) :
+    (claimEntry id).status ≠ .registryChecked := by
+  cases id <;> decide
+
+/-- No registered claim currently has `pending` status. -/
+theorem no_pending_claimEntry (id : ClaimId) :
+    (claimEntry id).status ≠ .pending := by
+  cases id <;> decide
+
 /-- A formal claim is admitted exactly when it is present in the v17 ledger. -/
 def FormalClaim (c : ClaimEntry) : Prop :=
   c ∈ allClaims
@@ -84,5 +194,23 @@ theorem no_unregistered_claim {c : ClaimEntry} : FormalClaim c -> c ∈ allClaim
 
 theorem no_unregistered_claim_entry (id : ClaimId) : FormalClaim (claimEntry id) :=
   all_claims_have_entries id
+
+theorem formal_claim_status_current {c : ClaimEntry} (h : FormalClaim c) :
+    c.status = .machineChecked ∨ c.status = .ledgerDependent ∨ c.status = .modelComputed := by
+  unfold FormalClaim allClaims at h
+  rcases List.mem_map.mp h with ⟨id, _hid, rfl⟩
+  exact claimEntry_status_current id
+
+theorem no_formal_claim_registryChecked {c : ClaimEntry} (h : FormalClaim c) :
+    c.status ≠ .registryChecked := by
+  unfold FormalClaim allClaims at h
+  rcases List.mem_map.mp h with ⟨id, _hid, rfl⟩
+  exact no_registryChecked_claimEntry id
+
+theorem no_formal_claim_pending {c : ClaimEntry} (h : FormalClaim c) :
+    c.status ≠ .pending := by
+  unfold FormalClaim allClaims at h
+  rcases List.mem_map.mp h with ⟨id, _hid, rfl⟩
+  exact no_pending_claimEntry id
 
 end SSBX.Truth.ClaimLedger

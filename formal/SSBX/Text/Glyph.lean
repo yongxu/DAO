@@ -37,7 +37,7 @@ def mk (glyph : Glyph) (sense : SenseNo) (kind : LexKind) : GlyphSense :=
 def canonicalKind (glyph : Glyph) : LexKind :=
   match glyph with
   | "之" | "真" | "是" | "自" | "由" | "似" | "行" | "校" | "合" | "法" | "洽" | "复"
-  | "生" | "和" | "故" | "以" | "为" | "為" | "乃" | "即" => .operator
+  | "生" | "和" | "故" | "以" | "为" | "為" | "乃" | "即" | "然" | "系" | "的" | "地" => .operator
   | "可" | "能" | "当" | "當" | "宜" | "或" => .modal
   | "所" | "者" | "也" | "于" | "於" | "未" | "已" | "不" | "非" | "无" | "無"
   | "凡" | "皆" | "有" | "若" | "则" | "則" => .particle
@@ -69,6 +69,9 @@ def «之3» : GlyphSense := mk "之" 3 .operator
 def «真1» : GlyphSense := senseOfGlyph "真"
 def «真2» : GlyphSense := mk "真" 2 .generated
 def «是1» : GlyphSense := senseOfGlyph "是"
+def «系1» : GlyphSense := senseOfGlyph "系"
+def «的1» : GlyphSense := senseOfGlyph "的"
+def «地1» : GlyphSense := senseOfGlyph "地"
 def «所1» : GlyphSense := senseOfGlyph "所"
 def «自1» : GlyphSense := senseOfGlyph "自"
 def «由1» : GlyphSense := senseOfGlyph "由"
@@ -109,11 +112,16 @@ def «为1» : GlyphSense := senseOfGlyph "为"
 def «為1» : GlyphSense := senseOfGlyph "為"
 def «乃1» : GlyphSense := senseOfGlyph "乃"
 def «即1» : GlyphSense := senseOfGlyph "即"
+def «然1» : GlyphSense := senseOfGlyph "然"
 
 def coreSenseEntries : List SenseEntry := [
   { key := «真1», label := "真1", gloss := "言合所是", role := "truth-correspondence" },
   { key := «真2», label := "真2", gloss := "度期周且审校不败", role := "audited-truth" },
   { key := «是1», label := "是1", gloss := "此境如此之所是", role := "what-is" },
+  { key := «系1», label := "系1", gloss := "关系连接、诸分成网", role := "relational-connection" },
+  { key := «的1», label := "的1", gloss := "现代属格或投影绑定，之1之今别名", role := "modern-genitive-binding" },
+  { key := «地1», label := "地1", gloss := "境位所依、成立之地", role := "situated-ground" },
+  { key := «然1», label := "然1", gloss := "如此成立、谓述成真", role := "affirmation-predication" },
   { key := «所1», label := "所1", gloss := "名物化或集合化", role := "nominalizer" },
   { key := «之1», label := "之1", gloss := "属格或投影绑定", role := "genitive-binding" },
   { key := «之2», label := "之2", gloss := "代指或虚词承接", role := "particle-anaphora" },

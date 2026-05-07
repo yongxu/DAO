@@ -30,6 +30,21 @@ abbrev zhiOp {α β : Sort _} (f : α → β) (x : α) : β := f x
 /-- 之 ≡ Lean's function application. -/
 theorem zhi_eq_app {α β : Sort _} (f : α → β) (x : α) : «之» f x = f x := rfl
 
+/-! ### 的 (de) — modern genitive / projection binding
+
+  「X 的 Y」 is the modern surface counterpart of 「X 之 Y」.  It is registered
+  as a single-glyph operator so modern explanatory prose can reduce to the same
+  projection/application primitive. -/
+
+/-- 的 (de): modern genitive/projection binding, semantically equal to 之. -/
+abbrev «的» {α β : Sort _} (f : α → β) (x : α) : β := f x
+
+abbrev deOp {α β : Sort _} (f : α → β) (x : α) : β := f x
+
+theorem de_eq_zhi {α β : Sort _} (f : α → β) (x : α) : «的» f x = «之» f x := rfl
+
+theorem de_eq_app {α β : Sort _} (f : α → β) (x : α) : «的» f x = f x := rfl
+
 /-! ### S-13: 者 (zhe) — λ-binder marker
 
   「X 者 ... 也」 = "X is defined as ..." 「者」 marks the binder.
@@ -72,6 +87,42 @@ abbrev «也» (P : Prop) : Prop := P
 abbrev yeOp (P : Prop) : Prop := P
 
 theorem ye_eq_id (P : Prop) : «也» P ↔ P := Iff.rfl
+
+/-! ### S-15: 于 / 於 (yu) — context binding
+
+  「P 于 Γ」 = P holds in context Γ. -/
+
+/-- 于 (yu): context binding / holds-in. -/
+abbrev «于» {Γ : Sort _} (P : Γ → Prop) (ctx : Γ) : Prop := P ctx
+
+abbrev yuCtxOp {Γ : Sort _} (P : Γ → Prop) (ctx : Γ) : Prop := P ctx
+
+theorem yu_ctx_eq_app {Γ : Sort _} (P : Γ → Prop) (ctx : Γ) : «于» P ctx ↔ P ctx :=
+  Iff.rfl
+
+/-- 於 (yu): traditional-form context binding. -/
+abbrev «於» {Γ : Sort _} (P : Γ → Prop) (ctx : Γ) : Prop := P ctx
+
+abbrev yuTradCtxOp {Γ : Sort _} (P : Γ → Prop) (ctx : Γ) : Prop := P ctx
+
+theorem yu_trad_ctx_eq_app {Γ : Sort _} (P : Γ → Prop) (ctx : Γ) :
+    «於» P ctx ↔ P ctx := Iff.rfl
+
+/-! ### 地 (di) — situated ground / context-place
+
+  「地」 is the single-glyph ground/place reading of situatedness: a proposition
+  is not just abstractly true, but holds on a given ground or in a given place. -/
+
+/-- 地 (di): situated ground; a place/context-specific holds-in operator. -/
+abbrev «地» {Γ : Sort _} (P : Γ → Prop) (ctx : Γ) : Prop := P ctx
+
+abbrev diGroundOp {Γ : Sort _} (P : Γ → Prop) (ctx : Γ) : Prop := P ctx
+
+theorem di_eq_yu {Γ : Sort _} (P : Γ → Prop) (ctx : Γ) : «地» P ctx ↔ «于» P ctx :=
+  Iff.rfl
+
+theorem di_eq_app {Γ : Sort _} (P : Γ → Prop) (ctx : Γ) : «地» P ctx ↔ P ctx :=
+  Iff.rfl
 
 /-! ### 不 (bu) — negation
 
@@ -251,6 +302,19 @@ abbrev shiOp {α : Sort _} (x y : α) : Prop := x = y
 theorem shi_eq_eq {α : Sort _} (x y : α) : «是» x y ↔ x = y := Iff.rfl
 
 theorem shi_iff_si {α : Sort _} (x y : α) : «是» x y ↔ «似» x y := Iff.rfl
+
+/-! ### 系 (xi) — relational connection
+
+  「X 系 Y」 does not collapse X and Y by identity; it asserts an explicit
+  relation between them.  This is the relational isness complement to 是. -/
+
+/-- 系 (xi): relational connection under a supplied relation. -/
+abbrev «系» {α : Sort _} (R : α → α → Prop) (x y : α) : Prop := R x y
+
+abbrev xiRelOp {α : Sort _} (R : α → α → Prop) (x y : α) : Prop := R x y
+
+theorem xi_rel_eq {α : Sort _} (R : α → α → Prop) (x y : α) :
+    «系» R x y ↔ R x y := Iff.rfl
 
 /-! ### 即 (ji) — immediately is / equivalence
 
@@ -597,6 +661,26 @@ theorem wei_only_eq {α : Sort _} (P : α → Prop) :
 abbrev «然» (P : Prop) : Prop := P
 abbrev ranOp (P : Prop) : Prop := P
 theorem ran_eq (P : Prop) : «然» P = P := rfl
+
+/-- The isness micro-family and its companion operators are all single-glyph
+    operators reducing to existing Lean primitives, with no new axioms. -/
+theorem isness_with_companion_operators
+    {α β Γ : Sort _} (x y : α) (R : α → α → Prop) (f : α → β)
+    (PΓ : Γ → Prop) (ctx : Γ) (P Q : Prop) :
+    («是» x y ↔ x = y) ∧
+      («系» R x y ↔ R x y) ∧
+      («之» f x = f x) ∧
+      («的» f x = f x) ∧
+      («地» PΓ ctx ↔ PΓ ctx) ∧
+      («于» PΓ ctx ↔ PΓ ctx) ∧
+      («所» PΓ = PΓ) ∧
+      («有» PΓ ↔ ∃ z : Γ, PΓ z) ∧
+      («无» PΓ ↔ ¬ ∃ z : Γ, PΓ z) ∧
+      («为» x y = (x = y)) ∧
+      («者» f = f) ∧
+      («也» P ↔ P) ∧
+      («然» Q = Q) := by
+  simp [«是», «系», «之», «的», «地», «于», «所», «有», «无», «为», «者», «也», «然»]
 
 /-! ### 否 (fou) — interrogative denial: 「P 否」 ≡ ¬ P. -/
 

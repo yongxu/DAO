@@ -3,7 +3,7 @@
 
 L1 layer (`WenDef.Tm`) 与 L0 internal kernel (`YiCore.«加»/«一»`) 之桥：
 
-  ·  `eval`              — closure-based Lean-level 求值器（partial def + fuel）
+  ·  `eval`              — closure-based Lean-level 求值器（total, fuel-bounded）
   ·  builtin 等价         — `.jia ⟷ «加»`，`.yi ⟷ «一»`，`.eqHex ⟷ DecidableEq`，…
   ·  Stdlib correctness   — `tuiDef` 之 denotation = `«生»`
 
@@ -19,8 +19,8 @@ Value :=
   | builtinV : Builtin → List Value → Value                  -- partially-applied builtin
 ```
 
-`eval` 使用 fuel 防 nontermination；STLC 上结构 normalizing，但 partial-def
-之等价仍用 `native_decide` 见证特例.
+`evalFuel` 使用显式 fuel 防 nontermination；STLC 上结构 normalizing，
+特例等价仍用 `native_decide` 见证.
 
 ## 桥到 baguaTuring (M3 之始)
 
@@ -33,7 +33,7 @@ Value :=
 
 ## 状态
 
-0 sorry / 0 axiom. 全 partial def + native_decide 见证 PoC.
+0 sorry / 0 axiom. evaluator 为 fuel-bounded 总函数 + native_decide 见证 PoC.
 -/
 import SSBX.Foundation.Wen.WenDef
 import SSBX.Foundation.Yi.YiCore
@@ -81,50 +81,68 @@ def forallHex (p : Hexagram → Bool) : Bool :=
 
 /-! ## § 4  evaluator -/
 
+/-- 闭项 denotation 使用之默认 fuel。stdlib demos 远低于此界。 -/
+def defaultFuel : Nat := 512
+
 mutual
-  /-- 应用 Value 到 Value: closure beta + builtin partial-apply. -/
-  partial def apply : Value → Value → Option Value
-    | .closV env n body, arg => eval ((n, arg) :: env) body
-    | .builtinV b args, arg =>
+  /-- Fuel-bounded 应用 Value 到 Value: closure beta + builtin partial-apply. -/
+  def applyFuel : Nat → Value → Value → Option Value
+    | 0,     _, _ => none
+    | fuel+1, .closV env n body, arg => evalFuel fuel ((n, arg) :: env) body
+    | fuel+1, .builtinV b args, arg =>
         let args' := args ++ [arg]
         if args'.length < b.arity then
           some (.builtinV b args')
         else
-          applyBuiltin b args'
-    | _, _ => none
+          applyBuiltinFuel fuel b args'
+    | _+1, _, _ => none
 
-  /-- Tm 之求值（closure-based，partial）. -/
-  partial def eval : Env → Tm → Option Value
-    | env, .var n        => env.lookup n
-    | env, .abs n _ body => some (.closV env n body)
-    | env, .app f x      => do
-        let vf ← eval env f
-        let vx ← eval env x
-        apply vf vx
-    | _,   .hexLit h     => some (.hexV h)
-    | _,   .boolLit b    => some (.boolV b)
-    | _,   .jia          => some (.builtinV .jia [])
-    | _,   .yi           => some (.hexV «一»)
-    | _,   .notB         => some (.builtinV .notB [])
-    | _,   .andB         => some (.builtinV .andB [])
-    | _,   .orB          => some (.builtinV .orB [])
-    | _,   .eqHex        => some (.builtinV .eqHex [])
-    | _,   .forallH      => some (.builtinV .forallH [])
+  /-- Fuel-bounded Tm 求值（closure-based，总函数）. -/
+  def evalFuel : Nat → Env → Tm → Option Value
+    | 0,      _,   _             => none
+    | _+1,    env, .var n        => env.lookup n
+    | _+1,    env, .abs n _ body => some (.closV env n body)
+    | fuel+1, env, .app f x      => do
+        let vf ← evalFuel fuel env f
+        let vx ← evalFuel fuel env x
+        applyFuel fuel vf vx
+    | _+1,    _,   .hexLit h     => some (.hexV h)
+    | _+1,    _,   .boolLit b    => some (.boolV b)
+    | _+1,    _,   .jia          => some (.builtinV .jia [])
+    | _+1,    _,   .yi           => some (.hexV «一»)
+    | _+1,    _,   .notB         => some (.builtinV .notB [])
+    | _+1,    _,   .andB         => some (.builtinV .andB [])
+    | _+1,    _,   .orB          => some (.builtinV .orB [])
+    | _+1,    _,   .eqHex        => some (.builtinV .eqHex [])
+    | _+1,    _,   .forallH      => some (.builtinV .forallH [])
 
-  /-- builtin 之满足后求值. -/
-  partial def applyBuiltin : Builtin → List Value → Option Value
-    | .jia,    [.hexV a, .hexV b]   => some (.hexV («加» a b))
-    | .notB,   [.boolV b]           => some (.boolV (!b))
-    | .andB,   [.boolV a, .boolV b] => some (.boolV (a && b))
-    | .orB,    [.boolV a, .boolV b] => some (.boolV (a || b))
-    | .eqHex,  [.hexV a, .hexV b]   => some (.boolV (decide (a = b)))
-    | .forallH, [p]                 =>
+  /-- Fuel-bounded builtin 求值. -/
+  def applyBuiltinFuel : Nat → Builtin → List Value → Option Value
+    | 0,      _,       _                    => none
+    | _+1,    .jia,    [.hexV a, .hexV b]   => some (.hexV («加» a b))
+    | _+1,    .notB,   [.boolV b]           => some (.boolV (!b))
+    | _+1,    .andB,   [.boolV a, .boolV b] => some (.boolV (a && b))
+    | _+1,    .orB,    [.boolV a, .boolV b] => some (.boolV (a || b))
+    | _+1,    .eqHex,  [.hexV a, .hexV b]   => some (.boolV (decide (a = b)))
+    | fuel+1, .forallH, [p]                 =>
         some (.boolV (forallHex (fun h =>
-          match apply p (.hexV h) with
+          match applyFuel fuel p (.hexV h) with
           | some (.boolV b) => b
           | _               => false)))
-    | _, _ => none
+    | _+1,    _,       _                    => none
 end
+
+/-- 应用 Value 到 Value: closure beta + builtin partial-apply. -/
+def apply (v arg : Value) : Option Value :=
+  applyFuel defaultFuel v arg
+
+/-- Tm 之求值（closure-based，fuel-bounded）. -/
+def eval (env : Env) (t : Tm) : Option Value :=
+  evalFuel defaultFuel env t
+
+/-- builtin 之满足后求值. -/
+def applyBuiltin (b : Builtin) (args : List Value) : Option Value :=
+  applyBuiltinFuel defaultFuel b args
 
 /-! ## § 5  closed-Tm 之 denotation -/
 

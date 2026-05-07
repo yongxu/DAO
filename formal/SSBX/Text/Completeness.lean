@@ -92,6 +92,20 @@ theorem core_particle_senses_registered :
       RegisteredSense «於1» ∧ RegisteredSense «未1» ∧ RegisteredSense «已1» := by
   native_decide
 
+theorem isness_single_glyph_operators_registered :
+    RegisteredSense «是1» ∧ RegisteredSense «系1» ∧ RegisteredSense «之1» ∧
+      RegisteredSense «的1» ∧ RegisteredSense «地1» ∧ RegisteredSense «于1» ∧
+      RegisteredSense «所1» ∧ RegisteredSense «有1» ∧ RegisteredSense «无1» ∧
+      RegisteredSense «为1» ∧ RegisteredSense «然1» ∧ RegisteredSense «者1» ∧
+      RegisteredSense «也1» ∧
+      «是1».kind = LexKind.operator ∧
+      «系1».kind = LexKind.operator ∧
+      «之1».kind = LexKind.operator ∧
+      «的1».kind = LexKind.operator ∧
+      «地1».kind = LexKind.operator ∧
+      «然1».kind = LexKind.operator := by
+  native_decide
+
 theorem added_particle_operator_entries :
     (operatorEntry .S_13).forms = [«者1»] ∧
       (operatorEntry .S_14).forms = [«也1»] ∧
@@ -110,6 +124,7 @@ theorem core_operator_entries_use_numbered_senses :
       (operatorEntry .M_2).forms = [«或1»] ∧
       (operatorEntry .K_2).forms = [«由1»] ∧
       (operatorEntry .K_3).forms = [«自1»] ∧
+      (operatorEntry .S_6).forms = [«然1»] ∧
       (operatorEntry .S_7).forms = [«故1»] ∧
       (operatorEntry .H_5).forms = [«法1»] ∧
       (operatorEntry .Y_18).forms = [«和1»] ∧

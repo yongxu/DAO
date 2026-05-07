@@ -7,7 +7,8 @@ package        : ssbx
 language       : Lean 4 v4.30.0-rc2
 upstream       : Mathlib master (HEAD)
 build target   : @[default_target] lean_lib SSBX (srcDir = "formal")
-build status   : 2834 jobs ✓        sorry : 0        axiom : 1        opaque : 1
+build status   : 2837 jobs ✓        sorry : 0        axiom : 1        opaque : 1
+partial defs   : 1 top-level executable definition (not an additional axiom)
 trust base     : Lean kernel + Mathlib HEAD
 namespace root : SSBX
 ```
@@ -46,12 +47,26 @@ axiom kleene_recursion_axiom : KleeneInverter
 -- Witnesses the boundary between Lean (道) and YiInstr (理).
 ```
 
-### 1.4 Mathlib-derived facts
+### 1.4 Machine-checked facts and executable boundary
 
-All other claims reduce to Lean kernel + `Mathlib master` reduction rules.
-No `#allow_unsafe`, no `partial def` in the trust path of any closed theorem
-(`partial def` exists only for `WenyanParser.lex` / `parseProg` which are
-witnessed correct on test sets via `native_decide`, not used inside any proof).
+Machine-checked theorem claims reduce to Lean kernel + `Mathlib master`
+reduction rules, plus the single explicit axiom and opaque seal above.
+Documentation, roster, DAG, operator, and cross-volume correspondence claims
+are ledger-dependent sync claims; they are not silently promoted to closed
+theorem status.
+
+No `#allow_unsafe`. The repository currently contains exactly 1 top-level
+`partial def` in `formal/`:
+
+```
+Foundation/Bagua/BaguaTuring.lean     YiState.run
+```
+
+It forms the executable nontermination boundary. It is tracked as an
+implementation boundary, not as an additional `axiom` or `opaque` constant;
+proof-critical total behavior is stated through total/fueled variants or finite
+`native_decide` witnesses where applicable (`runFuel` is the total-recursive
+Bagua interpreter used in proofs; `WenyanParser` and `WenDefEval` are now total).
 
 ---
 
@@ -277,9 +292,11 @@ eval      : Tm → Tm                                      -- structural
                                                    281
 ```
 
-L1 type-layer for these 281 operators is in `WenDef.lean § Stdlib`
-(currently exhibits {tui, bi, bu, biModal, tong, fan} as representative
-constructors; full surface expansion in `Foundation/Wen/Operators.lean`).
+L1 type-layer is in `WenDef.lean § Stdlib` (representative constructors:
+{tui, bi, bu, biModal, tong, fan}); a subset of the surface particles
+(之 / 者 / 而 / 也 / 不 / 凡 / 自 / 相 / 似 / 要 etc.) is named in
+`Foundation/Wen/Operators.lean` with ASCII aliases. Full 281-operator
+catalogue remains documented in `wenyan-operators.md`.
 
 ### 3.4 受控文言 (Controlled Wenyan, M1 grammar)
 
@@ -327,10 +344,10 @@ Cell192.lean              all_length = 192, mem_all (exhaustion)
 BaguaAlgebra.lean         Boolean algebra of trigrams + V₄ orders
 BaguaTuring.lean          daoJudge_correct, loopProg_unbounded (TC witness)
 BaguaWenSpec.lean         reservedTokens.length = 22, primaryToken_in_primaryTokens
-GodelLi.lean              halts_undecidable_internally
+GodelLi.lean              halts_undecidable_internally; kleene_recursion_axiom (cuo-restricted)
 KleeneInternal.lean       kleene fixpoint internalized
 Newman.lean               Newman's lemma local form
-CuoInvariance.lean        kleene_recursion_axiom (cuo-restricted)
+CuoInvariance.lean        cuo-equivariance machinery (CuoInvariantDecide etc.)
 ChunkedDecide.lean        decision-procedure budget framework
 FuelDiscipline.lean       runFuel monotonicity + fuel-extension lemmas
 ```
@@ -413,12 +430,6 @@ IIDWlln                       WLLN (Chebyshev + IID-aware)
 DaoLi                         道-理 bifurcation, cross-cutting
 ```
 
-### 4.7 Foundation/Jian (interval kernel)
-
-```
-JianOntology / Jian / JianSTLC / JianMinimality / JianModeKernel / JianYiBridge
-```
-
 ---
 
 ## 5 · Headline Theorems (one-liner statements)
@@ -460,8 +471,10 @@ theorem «道之自指» :
                                                                        (DaoSource.lean)
 
 -- H. alignment
-theorem processAligned_iff_shengsheng_buxi : ProcessAligned ⟺ ShengshengBuxi   (Alignment T2)
-theorem denier_breaks_shengsheng_buxi      : Denier.step _ ⊨ ¬ ShengshengBuxi  (Alignment T3)
+theorem process_aligned_implies_shengshengbuxi
+    : ProcessAligned PA → ShengshengBuxi                                       (Alignment T2)
+theorem denier_breaks_shengshengbuxi
+    : Denier.policy 之 step 破 ShengshengBuxi                                  (Alignment T3)
 
 -- I. sincerity (anti-conjecture)
 theorem sincerity_main_theorem : T1 ∧ T2 ∧ T3 ∧ T4 ∧ T5 ∧ T6 ∧ T7 ∧ T8        (Sincerity.lean)
@@ -486,11 +499,11 @@ theorem li_cannot_encode_dao : ∀ N, ∃ n > N, Nonempty (Sheng n)        (DaoL
 ```
 ∀ commit ∈ main:
   lake build                  ⇒  exit 0
-  jobs(lake build)            =  2834
+  jobs(lake build)            =  2837
   count(sorry, formal/)       =  0
   count(axiom, formal/)       =  1          (kleene_recursion_axiom; cuo-restricted)
   count(opaque, formal/)      =  1          (theOne; carries Field/dong/origin/alive)
-  count(partial def, formal/) =  ≤ 5        (lex/parseProg only; not in proof path)
+  count(partial def, formal/) =  1          (YiState.run)
 ```
 
 ### 6.1 Continuous regression check
@@ -505,7 +518,7 @@ $ scripts/render_monad_dag.sh               # render to SVG
 ### 6.2 New module checklist
 
 ```
-☐ axiom count unchanged (= 2)
+☐ axiom count unchanged (= 1)
 ☐ opaque count unchanged (= 1)
 ☐ sorry count = 0 in this file
 ☐ all theorems machine-witnessed (native_decide / by exact / by rfl / by induction)
@@ -536,18 +549,30 @@ Cell192 ↔ List Cell192 (encoding)     Foundation/Wen/WenyanSelfInterp.lean § 
 
 ## 8 · Two Conjectures (out-of-scope, marked)
 
-```
-9.2  ConjOne  Dao-attainability via reading-and-recitation
-              not formally claimed; compatible with proven kernel
-9.3  ConjTwo  大同 (Great Concord) as historical residue
-              not formally claimed; tongGen-favoring environment
-              consistent with EconGame.lean § coase_internalizes_externality
+Documented in prose at `README.md § 9.2 / 9.3` and `README.en.md § 9.2 / 9.3`.
 
-         Distinction maintained by Sheng/sieve/witness:
-         · proven   : everything in §§ 1-7 above
-         · pending  : §§ 2.4.3 six interfaces (PendingName)
-         · conjecture: §§ 8 (no Lean term inhabits these)
 ```
+ConjOne   Dao-attainability via reading-and-recitation
+          not formally claimed; compatible with proven kernel
+
+ConjTwo   大同 (Great Concord) as historical residue
+          not formally claimed; tongGen-favoring environment
+          consistent with EconGame.lean § coase_internalizes_externality
+```
+
+Scope sieve:
+
+| Status | Included | Excluded |
+|---|---|---|
+| machine-proven | closed Lean declarations accepted by the build, under the trust base in §1 and the executable boundary above | prose extrapolations; ledger sync claims; the six pending interfaces |
+| ledger-dependent | generated DAG / roster summaries, operator counts, layer-to-essay mappings, module counts, and cross-volume correspondences | not single closed theorems unless separately named by a Lean declaration |
+| pending | §§ 2.4.3 six `PendingName` interfaces awaiting empirical calibration | not used as established truth |
+| conjecture | ConjOne / ConjTwo and the historical or practice claims in prose | no Lean term inhabits these |
+
+The reality-scope claim in `README.md § 9.1` / `README.en.md § 9.1` is a
+defended philosophical extrapolation from machine-proven invariants plus
+ledger-dependent correspondences. It is not a theorem named by this formal
+specification.
 
 ---
 
@@ -555,20 +580,24 @@ Cell192 ↔ List Cell192 (encoding)     Foundation/Wen/WenyanSelfInterp.lean § 
 
 ```
 Lean LOC                  ~15000+ across 77 Foundation modules (7 clusters)
-Foundation/Wen modules    21    (incl. DaoSource, AntiSchmitt, AlignmentFailures, EconGame, Renlei*)
+Foundation/Core modules   14    (incl. Alignment, Sincerity, HumanAlignment, EvolutionDao, Renlei)
+Foundation/Wen modules    18    (incl. DaoSource, AntiSchmitt, AlignmentFailures, EconGame)
 Foundation/Modern modules 19    (~5746 lines, Mathlib bridge)
 Path-丙 modules           11    (M1 → M4-甲)
 Kernel layers             45    (元 → 非道之形式)
-义理 essays               28+   (义理/A_..Z_*.md)
+义理 essays               28+   (义理/A_..Z_*.md, plus 人类命运共同体_共同体之证.md)
 六表 tables               6     (六表_实虚史真/)
 wenyan operators          281   (wenyan-operators.md, 21 categories)
-                                ↳ * Renlei is in Foundation/Core, not Foundation/Wen.
 ```
 
 ```
 trust:    Lean kernel (v4.30.0-rc2) + Mathlib HEAD
-proven:   2834 build jobs · 0 sorry · 1 axiom (kleene_recursion_axiom; cuo-restricted)
+machine:  2837 build jobs · 0 sorry · 1 axiom (kleene_recursion_axiom; cuo-restricted)
 opaque:   1 (theOne)
+partial:  1 top-level executable partial def (BaguaTuring.run nontermination boundary)
+ledger:   DAG / roster / operator / layer / essay correspondences are sync claims
+pending:  6 PendingName interfaces
+conj:     ConjOne / ConjTwo, no Lean term claimed
 boundary: cuo-equivariance ceiling, halting-undecidability, dao-li bifurcation
 ```
 

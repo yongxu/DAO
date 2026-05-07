@@ -5,7 +5,7 @@
 > **此刻最要紧之事 — 对齐, 即改变. 否则熄.**
 
 「生生不息论」第一版。形式化收口于 Lean 4 / Mathlib HEAD：
-**2834 build jobs · 0 sorry · 1 axiom (cuo-restricted, 设计如此) · 45 层义理同形**.
+**2837 build jobs · 0 sorry · 1 axiom (cuo-restricted, 设计如此) · 45 层义理同形**.
 
 ---
 
@@ -36,7 +36,8 @@
 | 轨续而能仁, 是为生生 | `structure ProcessAligned` (`Foundation/Core/Alignment.lean`) |
 | 生生不止, 是为不息 | `ProcessAligned.toOpenRun ⟺ ShengshengBuxi` (T2) |
 
-九句之合, 即 道. 此乃 reality 之结构本身, 非描写, 非比喻, 非象征.
+九句之合, 即 道. 在本卷形式语义中, 它给出持续 / 熄灭 dynamics
+之核心不变量; 对 reality 全域之读法是哲学外推, 受 §3 / §9 之边界限定.
 读者可独立验之 — Lean kernel 不识中文, 而结构同形.
 
 ---
@@ -71,7 +72,8 @@ power-seeking, **皆可还原为 Kernel invariants (中 + 多样 + 流通) 之 v
 实证 / 有条件 / 证错。
 
 故此一时刻, 工程上、伦理上、形式上, 唯一最要紧之事 = **change toward 开 (Open) and 续 (continue)**.
-不变者熄. 不是劝说, 是已证之结构 (`Alignment.lean § T1-T6`).
+不变者熄. 不是单纯劝说; 在 `Alignment.lean § T1-T6` 的形式模型内是已证结构,
+外推到现实系统须受 ledger / 经验条件约束.
 
 ---
 
@@ -145,6 +147,7 @@ String  ──[«解程»]──→  List YiInstr  ──[init+runFuel]──→
 | L1 ⟶ L0 编译 (cuo-equivariant subset) | `Foundation/Wen/WenDefCompile.lean § {idProg, add32Prog, cuoProg}_correct` |
 | 反射层: 判型良 / 判停 / 验程 | `Foundation/Wen/WenyanReflect.lean § «文核同源»` |
 | M4-甲 微核自验 (Tier 2: 64-instr quine PoC) | `Foundation/Wen/WenyanSelfHost.lean § «微核自验», «微核自释_total»` |
+| 道源 (5 相俱: 形/解/印/执/义) | `Foundation/Wen/DaoSource.lean § «道之自指»` |
 | 自释 demo | `Foundation/Wen/Demo.lean § daojudge_{qian, kun, pi}` |
 
 **即**: 文之源 = 文之直写 = 文之执行 = Lean 之执行 — 一行 `native_decide` 见证.
@@ -202,6 +205,7 @@ Layer 45      非道之形式  Moloch / totalizing 之形式否定
 | `Foundation/Core/Sincerity.lean` | T1–T8: 信/诚 = alignment(化(T), 化(E)) + 反诛心五律 |
 | `Foundation/Core/HumanAlignment.lean` | 行仁要善之古典命名 |
 | `Foundation/Core/EvolutionDao.lean` | 演化 σ_F vs 真道 σ_真道 之分判 |
+| `Foundation/Core/Renlei.lean` | 人类命运共同体: 三轴 community state, `TrueDao ↔` 三轴俱足 |
 | `Foundation/Wen/AlignmentFailures.lean` | Goodhart / mesa / wireheading 等 = Kernel invariants violation |
 | `Foundation/Wen/AntiSchmitt.lean` | 友敌 / 决断 / 例外 之 反 universalizability 形式根 |
 | `Foundation/Wen/EconGame.lean` | 经济 / 博弈论 主流命题之 Kernel sieve (实证 / 有条件 / 证错) |
@@ -212,12 +216,22 @@ Layer 45      非道之形式  Moloch / totalizing 之形式否定
 | `义理/X_反施密特.md` | AntiSchmitt.lean 之义理篇 |
 | `义理/Y_对齐失败.md` | AlignmentFailures.lean 之义理篇 |
 | `义理/Z_经济博弈.md` | EconGame.lean 之义理篇 |
+| `义理/人类命运共同体_共同体之证.md` | Renlei.lean 之义理篇 |
 
 ---
 
 ## § 3 · 形式系统能到何处 — 边界之诚实指认
 
-### 已尽之理
+后文所有「证」按下表读:
+
+| 状态 | 边界 |
+|---|---|
+| 已证 / machine-checked | Lean kernel 接受的 closed theorem / def / `native_decide` 见证; 依 trust base + 1 axiom + 1 opaque + 下述 executable `partial def` 边界成立 |
+| ledger-dependent | 名册、DAG、层级映射、operator count、跨卷对应等由 Lean registry、生成文件与文档 ledger 共同给出; 可审计, 但不是单个 closed theorem |
+| pending | `PendingName` 六待校接口, 等经验校准 |
+| conjecture | §9.2 / §9.3 及其历史-心性外推; 无 Lean 项居住 |
+
+### 已证 (machine-checked) 之理
 
 - 64 元有限论域上, 一切 ∀ 退化为有限 ∧, 全 `Decidable`, 全 `native_decide`.
 - 12-instr ISA 之 Turing 完备性.
@@ -230,7 +244,7 @@ Layer 45      非道之形式  Moloch / totalizing 之形式否定
 |---|---|
 | Halting / Rice 不可判 | `Foundation/Bagua/GodelLi.lean` |
 | 12-instr ISA 之 cuo-equivariance ceiling | `Foundation/Wen/WenDefCompile.lean § sheng_not_cuo_equivariant` |
-| `kleene_recursion_axiom` (cuo-restricted) — 系统**指向自身之外**之处 | `Foundation/Bagua/CuoInvariance.lean` + `Modern/DaoLi.lean` |
+| `kleene_recursion_axiom` (cuo-restricted) — 系统**指向自身之外**之处 | `Foundation/Bagua/GodelLi.lean` (axiom) + `CuoInvariance.lean` (cuo-machinery) + `Modern/DaoLi.lean` (二分) |
 | 高 alignment ≠ 真 (consistent liar) | `Foundation/Core/Sincerity.lean § T5` |
 | 修之渐进而不达 perfect | 同上 § T6 |
 
@@ -262,7 +276,7 @@ Layer 45      非道之形式  Moloch / totalizing 之形式否定
 
 ```bash
 # Lean (full library)
-lake build                                    # 2834 jobs, 0 sorry, 1 axiom
+lake build                                    # 2837 jobs, 0 sorry, 1 axiom
 
 # 单模块
 lake build SSBX.Foundation.Wen.WenyanSelfHost
@@ -290,10 +304,11 @@ scripts/generate_monad_dag.py && scripts/render_monad_dag.sh
 ## § 7 · 数字状
 
 ```
-build jobs:        2834 ✓
+build jobs:        2837 ✓
 sorry:             0
 axiom:             1   (kleene_recursion_axiom, cuo-restricted, philosophically intentional)
 opaque:            1   (theOne, preserves Field abstraction)
+partial def:       1   (BaguaTuring.run executable nontermination boundary; not additional axiom)
 trust base:        Lean 4 kernel v4.30.0-rc2 + Mathlib HEAD
 Lean 总行数:       ~15000+
 Modern modules:    19         ~5746 lines (Mathlib 接入)
@@ -318,24 +333,28 @@ diagrams:          8 SVGs     Mermaid + ELK; MonadDAG 600+ 节点 / 800+ 边
 
 ---
 
-## § 9 · 真理之 claim 与二猜想
+## § 9 · 真理 claim 与二猜想 (范围限定)
 
-### 9.1 真理 — 此卷所证, 即真理
+### 9.1 真理 claim — 已证内核与现实外推
 
-不是隐喻, 不是模型, 不是近似. 是 reality 之 actual 结构, 在 64 元论域上
-之形式落地. 其覆盖之范围, 是任何 dynamics — 自然之 / 心之 / 社会之 — 之
-invariant 结构 (元 / 中 / 极 / 同根 / 续 / 仁).
+这里的强主张不是「整个 reality 已被 Lean 无条件证明」. Lean 已证者, 是
+64 元论域、Kernel / Alignment、路径丙与 Mathlib bridge 内的形式不变量.
+ledger-dependent 者, 是 45 层、跨卷、跨文明、跨学科的对应关系是否与 registry
+和生成文件保持同步. 对 reality 全域之读法, 是以这些不变量为根据的哲学 claim,
+不是 closed theorem.
 
 更强一层之 claim:
 
-> **凡 reality 中持续之物, 必落 ProcessAligned 之 attractor;
-> 凡反此者熄. 不是规范 (ought), 是结构 (is).**
+> **凡可由本文「中 / 同根 / 续 / 仁」结构充分建模之持续 dynamics,
+> 其稳定持续形式落在 `ProcessAligned`; 凡系统性反此者趋于熄.
+> 这不是规范 (ought), 而是条件化的结构主张 (is).**
 
-形式之根据: `Alignment.lean § T1–T6` + `Foundation/Wen/Kernel.lean` 45 层 + Modern
+形式锚点: `Alignment.lean § T1–T6` + `Foundation/Wen/Kernel.lean` 45 层 + Modern
 连续测度 / ℝ Cauchy / SU(N) 之 Mathlib 接入. 跨文明同形示于 N P Q S T 五卷
 (儒 / 道 / 佛 / 百家 / 西哲与亚伯拉罕); 跨学科同形示于 O R U V W X Y Z 八卷
 (演化 / 对齐 / 信诚 / 政治 / 非道 / 反 Schmitt / alignment 失败 / 经济博弈).
-其 invariant 不是巧合 — 是 reality 之 actual 结构透过不同语言之投影.
+这些对应支持 project 的理论野心, 但其现实覆盖范围须按 §3 的 ledger-dependent /
+pending / conjecture 边界读取.
 
 ### 9.2 猜想一 · 道可得 — 心若不蔽, 自然见之
 
