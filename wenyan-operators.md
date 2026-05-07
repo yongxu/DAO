@@ -4021,9 +4021,10 @@ Lean 已机器检查的消歧样例包括：`之` 在名词间、动词后、路
 - 64 卦 ↔ 算子映射 (二十八)
 - Lean 八卦锚点桥 `formal/SSBX/Text/OperatorAnchors.lean`：已把 BaguaWen 22 个保留 token、L0 十二指令、三时、六爻位、六个易位关系、8 个三爻卦、64 个 `xuGua` 卦位、以及 192 个 `Cell192` 卦时格全部列为机器可检查锚点；64 卦表中 37 卦已有精确 catalogue `OperatorId`，31 卦仍含待升格为 catalogue `OperatorId` 的缺口词，或仅有语义近似锚点；`蓄/塞/感/难/鼎/震/归` 7 个 near-miss 已单独审计为“有语义锚但非精确 id”。
 - Lean 总索引桥 `formal/SSBX/Text/OperatorCellMap.lean`：已证明 371 个 catalogue `OperatorId` 与 192 个 `Cell192` 的笛卡尔积共有 71,232 个 pair，且任意 `(operator, cell)` pair 均已被枚举；同时证明固定任一 `OperatorId` 有 192 个 indexed cell，固定任一 `Cell192` 有 371 个 indexed operator。该层只说明全量覆盖，不把覆盖自动视为 theorem-level 语义。
-- Lean 完成度分层：`OperatorCellMap.lean` 已用 `functionalCompletionRows` 固化 5 个 complete 层、2 个 tracked 层、2 个 pending 层；因此 371 × 192 的 coverage / indexing 已完成，31 卦缺口策略与 14 个 signature seed 已 tracked，full exact signatures 与 theorem-level cell semantics 仍明确留作下一层。
+- Lean 完成度分层：`OperatorCellMap.lean` 已用 `functionalCompletionRows` 固化 5 个 complete 层、3 个 tracked 层、2 个 pending 层；因此 371 × 192 的 coverage / indexing 已完成，31 卦缺口策略、14 个 signature seed、以及 3 个 cell-transform family laws 已 tracked，full exact signatures 与更广义 theorem-level cell semantics 仍明确留作下一层。
 - Lean 多义读法层：`OperatorReadings.lean` 已证明 82 个 surface row / 193 个 reading；catalogue 同形表为 60 组 / 81 个 surface entry / 189 个 reading，且全部 linked 到 `OperatorId`，并补入多组唯一 / 保歧义上下文样例；所有 reading 均有 precedence 与 expected type metadata，construction metadata 当前覆盖 13 个 reading。
 - Lean signature seed：`Text/OperatorSignatures.lean` 已给 `之/而/以/故/反/復/错/综/互/损/益` 等高价值入口建立 14 个 text-level signature shape rows；这些 rows 只记录 arity/type-shape，不等同于可执行语义或全量 exact signature 完成。
+- Lean 参数化 cell semantics：`Text/OperatorFamilySemantics.lean` 已把 `错/综/互` 三个 exact catalogue operator family 绑定到 `Cell192.hexCuo / hexZong / hexHu`，并证明这些 family law 对所有 `Cell192` 参数化成立；这替代了逐 pair 证明，不生成 3 × 192 个定理。
 - Lean 错综 Cell 层：`Cell192.lean` 已补 `hexCuo` 与 `hexZong` 的交换律，以及二者复合的二阶恒等，作为 bit-level 错综群作用的 cell-level 加强。
 - 新代数律 — 法家 2-category, 五行 (Z/5)\*, 阴阳带种子 involution, 三元门, 化性起伪, 群分单调性, 标本 DAG, 反 dagger (二十九)
 - Categorical 形式化 — symmetric monoidal PROP + modal layer (三十)
@@ -4049,7 +4050,7 @@ Lean 已机器检查的消歧样例包括：`之` 在名词间、动词后、路
 - [ ] **並 / 與 对齐** — 明确二者在 monoidal product、logical conjunction、social co-presence 中的不同签名
 - [ ] **反状态层 involution** — 给具体 state-space 后证明 `反 ∘ 反 = id`
 - [ ] **递归 / 不动点** — 把 `X 之又 X` 从有限 iter 扩展到 fix/termination 语义
-- [ ] **错综群作用** — `Cell192` 层已补 `hexCuo` / `hexZong` 的交换与复合二阶恒等；后续仍需 interpretation-level obstruction
+- [ ] **错综群作用** — `Cell192` 层已补 `hexCuo` / `hexZong` 的交换与复合二阶恒等；`OperatorFamilySemantics.lean` 已给 `错/综/互` 建参数化 family semantics。后续仍需 `hu`/flip 共轭细律与 interpretation-level obstruction
 - [ ] **算子的精确类型签名** — `OperatorSignatures.lean` 已有 14 个 text-level seed rows；后续仍需 state types / constraint types / effect types 完整建模
 - [ ] **错综结构的群论分析** — 64 卦在 (错, 综) 作用下的精确轨道分类
 - [ ] **算子优先级表** — `OperatorReading` 已有 precedence / type expectation / construction metadata；后续需接入 parser 策略，用于 disambiguate (e.g. 反 vs. 反求, 化 vs. 化性)
