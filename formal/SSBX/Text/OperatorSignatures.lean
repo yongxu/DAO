@@ -71,6 +71,275 @@ inductive SignatureKind where
   | distinction
   deriving Repr, DecidableEq, BEq
 
+/-- Compact signature-shape key for full operator encoding. -/
+def SignatureKind.key : SignatureKind -> String
+  | .app => "APP"
+  | .endoComp => "COMP"
+  | .propImp => "IMP"
+  | .instrument => "INST"
+  | .objectEndo => "ENDO"
+  | .propUnary => "PUN"
+  | .opUnary => "OPN"
+  | .relation => "REL"
+  | .containment => "CONT"
+  | .flow => "FLOW"
+  | .boundary => "BND"
+  | .quantifier => "QNT"
+  | .identity => "ID"
+  | .syntax => "SYN"
+  | .concept => "CONC"
+  | .predicate => "PRED"
+  | .modifier => "MODF"
+  | .degree => "DEG"
+  | .textAct => "TEXT"
+  | .domainRule => "DRUL"
+  | .domainProcess => "DPROC"
+  | .objectMap => "MAP"
+  | .binaryObject => "BOBJ"
+  | .binaryPoint => "BPT"
+  | .extractor => "EXT"
+  | .constructor => "CONS"
+  | .decomposer => "DEC"
+  | .propConnective => "PCONN"
+  | .binaryModal => "BMOD"
+  | .binder => "BINDER"
+  | .aspect => "ASP"
+  | .stateProjection => "SPROJ"
+  | .stateTransition => "STRN"
+  | .aggregate => "AGG"
+  | .assignment => "ASGN"
+  | .query => "QRY"
+  | .protocol => "PROTO"
+  | .quotient => "QUOT"
+  | .trajectory => "TRAJ"
+  | .debind => "DBIND"
+  | .response => "RESP"
+  | .partition => "PART"
+  | .signal => "SIG"
+  | .binding => "BNDG"
+  | .invariant => "INV"
+  | .supervision => "SUPV"
+  | .integration => "INTG"
+  | .limit => "LIM"
+  | .dialectic => "DIA"
+  | .distinction => "DIST"
+
+/-- Short Chinese name for the signature-shape layer. -/
+def SignatureKind.zhName : SignatureKind -> String
+  | .app => "应用形"
+  | .endoComp => "自映复合形"
+  | .propImp => "命题蕴含形"
+  | .instrument => "工具施用形"
+  | .objectEndo => "对象自映形"
+  | .propUnary => "命题一元形"
+  | .opUnary => "算子一元形"
+  | .relation => "关系形"
+  | .containment => "含包形"
+  | .flow => "流动形"
+  | .boundary => "边界形"
+  | .quantifier => "量化形"
+  | .identity => "同一形"
+  | .syntax => "句法形"
+  | .concept => "概念形"
+  | .predicate => "谓词形"
+  | .modifier => "修饰形"
+  | .degree => "度量形"
+  | .textAct => "文本行为形"
+  | .domainRule => "域规则形"
+  | .domainProcess => "域过程形"
+  | .objectMap => "对象映射形"
+  | .binaryObject => "二元对象形"
+  | .binaryPoint => "二元点位形"
+  | .extractor => "抽取形"
+  | .constructor => "构造形"
+  | .decomposer => "分解形"
+  | .propConnective => "命题连接形"
+  | .binaryModal => "二元模态形"
+  | .binder => "绑定形"
+  | .aspect => "时貌形"
+  | .stateProjection => "状态投影形"
+  | .stateTransition => "状态迁移形"
+  | .aggregate => "聚合形"
+  | .assignment => "赋值形"
+  | .query => "查询形"
+  | .protocol => "协议形"
+  | .quotient => "商化形"
+  | .trajectory => "轨迹形"
+  | .debind => "解绑定形"
+  | .response => "响应形"
+  | .partition => "划分形"
+  | .signal => "信号形"
+  | .binding => "结合形"
+  | .invariant => "不变量形"
+  | .supervision => "监督形"
+  | .integration => "整合形"
+  | .limit => "极限形"
+  | .dialectic => "辩证形"
+  | .distinction => "区分形"
+
+/-! ## Effect/action bit layer -/
+
+/--
+Conservative action bit induced by a signature shape.
+
+The signature layer says how many arguments and what coarse shape an operator
+has; this layer says what kind of operation it can perform on that bit and what
+observable catalogue effect should be expected.  It is still a ledger-level
+classification, not an executable denotation.
+-/
+inductive OperatorActionBit where
+  | apply
+  | compose
+  | transform
+  | relate
+  | contain
+  | flow
+  | bound
+  | quantify
+  | qualify
+  | name
+  | record
+  | regulate
+  | extract
+  | construct
+  | decompose
+  | bind
+  | compare
+  deriving Repr, DecidableEq, BEq
+
+/-- Compact action-bit key for full operator encoding. -/
+def OperatorActionBit.key : OperatorActionBit -> String
+  | .apply => "APPLY"
+  | .compose => "COMP"
+  | .transform => "XFORM"
+  | .relate => "LINK"
+  | .contain => "CONT"
+  | .flow => "FLOW"
+  | .bound => "BND"
+  | .quantify => "QNT"
+  | .qualify => "QUAL"
+  | .name => "NAME"
+  | .record => "REC"
+  | .regulate => "REG"
+  | .extract => "EXT"
+  | .construct => "CONS"
+  | .decompose => "DEC"
+  | .bind => "BIND"
+  | .compare => "CMP"
+
+/-- Short Chinese action-bit name used in generated reference indexes. -/
+def OperatorActionBit.zhName : OperatorActionBit -> String
+  | .apply => "施用位"
+  | .compose => "复合位"
+  | .transform => "变换位"
+  | .relate => "关联位"
+  | .contain => "含包位"
+  | .flow => "流动位"
+  | .bound => "边界位"
+  | .quantify => "量化位"
+  | .qualify => "限定位"
+  | .name => "命名位"
+  | .record => "记录位"
+  | .regulate => "规制位"
+  | .extract => "抽取位"
+  | .construct => "构造位"
+  | .decompose => "分解位"
+  | .bind => "绑定位"
+  | .compare => "辨析位"
+
+/-- Operator mode allowed by this action bit. -/
+def OperatorActionBit.operatorMode : OperatorActionBit -> String
+  | .apply => "apply"
+  | .compose => "compose"
+  | .transform => "transform"
+  | .relate => "relate"
+  | .contain => "contain"
+  | .flow => "flow"
+  | .bound => "bound"
+  | .quantify => "quantify"
+  | .qualify => "qualify"
+  | .name => "name"
+  | .record => "record"
+  | .regulate => "regulate"
+  | .extract => "extract"
+  | .construct => "construct"
+  | .decompose => "decompose"
+  | .bind => "bind"
+  | .compare => "compare"
+
+/-- Human-readable effect expected from this action bit. -/
+def OperatorActionBit.effectSummary : OperatorActionBit -> String
+  | .apply => "把一个结构施用于另一个结构，产生投影、归属或工具化结果。"
+  | .compose => "把两个结构按次序、蕴含或连接关系合成一个复合结构。"
+  | .transform => "把对象、状态或算子改写到同一空间内的另一个位置。"
+  | .relate => "在两个对象、点位或判断之间建立关系边。"
+  | .contain => "标出内外、范围、容纳或被容纳关系。"
+  | .flow => "给出方向、过程、响应、轨迹或信号的移动效果。"
+  | .bound => "标出起点、终点、阈值或极限。"
+  | .quantify => "给出数量、程度或量词辖域。"
+  | .qualify => "限定命题、对象或行为的时貌、模态、否定或修饰方式。"
+  | .name => "把对象提升为概念、谓词或可称名的判断入口。"
+  | .record => "把事件或判断登记为文本、史官或注记行为。"
+  | .regulate => "施加规则、协议、治理或监督约束。"
+  | .extract => "从结构中读出、查询或投影一个局部。"
+  | .construct => "把若干部分聚合、整合或构造成新结构。"
+  | .decompose => "把整体分割、商化、解绑定或拆成可审计部分。"
+  | .bind => "把变量、角色、值或语法辖域固定到一个位置。"
+  | .compare => "保持不变量，或在对立、区分、辨析中生成差异判断。"
+
+/-- The action/effect bit induced by a signature shape. -/
+def SignatureKind.actionBit : SignatureKind -> OperatorActionBit
+  | .app => .apply
+  | .endoComp => .compose
+  | .propImp => .compose
+  | .instrument => .apply
+  | .objectEndo => .transform
+  | .propUnary => .qualify
+  | .opUnary => .transform
+  | .relation => .relate
+  | .containment => .contain
+  | .flow => .flow
+  | .boundary => .bound
+  | .quantifier => .quantify
+  | .identity => .relate
+  | .syntax => .compose
+  | .concept => .name
+  | .predicate => .name
+  | .modifier => .qualify
+  | .degree => .quantify
+  | .textAct => .record
+  | .domainRule => .regulate
+  | .domainProcess => .flow
+  | .objectMap => .transform
+  | .binaryObject => .relate
+  | .binaryPoint => .relate
+  | .extractor => .extract
+  | .constructor => .construct
+  | .decomposer => .decompose
+  | .propConnective => .compose
+  | .binaryModal => .qualify
+  | .binder => .bind
+  | .aspect => .qualify
+  | .stateProjection => .extract
+  | .stateTransition => .transform
+  | .aggregate => .construct
+  | .assignment => .bind
+  | .query => .extract
+  | .protocol => .regulate
+  | .quotient => .decompose
+  | .trajectory => .flow
+  | .debind => .decompose
+  | .response => .flow
+  | .partition => .decompose
+  | .signal => .flow
+  | .binding => .bind
+  | .invariant => .compare
+  | .supervision => .regulate
+  | .integration => .construct
+  | .limit => .bound
+  | .dialectic => .compare
+  | .distinction => .compare
+
 /-- A seed exact signature row for one catalogue operator id. -/
 structure ExactOperatorSignature where
   id : OperatorId

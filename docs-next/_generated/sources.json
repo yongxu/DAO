@@ -135,9 +135,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 1736,
+      "bytes": 1991,
       "path": "docs-next/10_formal_形式/yi-bagua.md",
-      "sha256": "a2eec992bca88f5e90e53c6f8e89f7efb907c74ab2efb29e5a23caf553c351db",
+      "sha256": "632855f8ba4b16b6af5de47891e10ef195f505f2876fb0646608b8db66ecb54a",
       "suffix": ".md"
     },
     {
@@ -273,9 +273,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 2098,
+      "bytes": 3446,
       "path": "docs-next/40_reference_参考/operators.md",
-      "sha256": "fa5a88945b4a039ac9cbf471ac9421c00e22ef71b358d056a8fee8422da2b4bf",
+      "sha256": "d5078a792573bd4d866baf1f3332b1907018a6ba2c9b7de3a7273313ee360be8",
       "suffix": ".md"
     },
     {
@@ -981,9 +981,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 6712,
+      "bytes": 11416,
       "path": "formal/SSBX/Text/OperatorReachabilitySemantics.lean",
-      "sha256": "822800f59ef21da7df44c1d0b320920ddc2706284231396f146c34186ba70e90",
+      "sha256": "fb45376c3a7103779cb7b510883582437fb06b12a6d04bb085c93577a26eb230",
       "suffix": ".lean"
     },
     {
@@ -993,9 +993,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 20012,
+      "bytes": 28254,
       "path": "formal/SSBX/Text/OperatorSignatures.lean",
-      "sha256": "c0fbfd3d4159c054a6088a8e4f62ae60fbcdd9f8bd4933b43f19fe8f0c973716",
+      "sha256": "541b506b75da04752467895368ec2ef127acb10fff49416818b4b92fb8d00f25",
       "suffix": ".lean"
     },
     {
@@ -1005,9 +1005,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 41221,
+      "bytes": 43577,
       "path": "formal/SSBX/Text/WenyanOperators.lean",
-      "sha256": "d0e43d5ad2b10d7a9e7baec5c82f0f731e004e7db22fd96bb2d2f20e8d78947c",
+      "sha256": "b4df8ea2c36e3263ba6cda332288efb37fb99d2d193944efe7873a2516e5fd9b",
       "suffix": ".lean"
     },
     {

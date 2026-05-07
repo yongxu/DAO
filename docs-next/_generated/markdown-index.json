@@ -1080,13 +1080,14 @@
           "title": "核验"
         }
       ],
-      "lines": 35,
+      "lines": 37,
       "links": [
+        "../_generated/cell192-transition-index.md",
         "../_generated/trust-boundary.md",
         "../_generated/lean-index.md"
       ],
       "path": "docs-next/10_formal_形式/yi-bagua.md",
-      "sha256": "a2eec992bca88f5e90e53c6f8e89f7efb907c74ab2efb29e5a23caf553c351db",
+      "sha256": "632855f8ba4b16b6af5de47891e10ef195f505f2876fb0646608b8db66ecb54a",
       "summary": "Yi/Bagua 层把易、八卦、Cell192、受控计算与不完备边界放到同一阅读路径。这里也是当前唯一 axiom 与唯一 partial boundary 所在区域。",
       "title": "Yi 与 Bagua"
     },
@@ -2000,10 +2001,10 @@
           "title": "维护规则"
         }
       ],
-      "lines": 44,
+      "lines": 61,
       "links": [],
       "path": "docs-next/40_reference_参考/operators.md",
-      "sha256": "fa5a88945b4a039ac9cbf471ac9421c00e22ef71b358d056a8fee8422da2b4bf",
+      "sha256": "d5078a792573bd4d866baf1f3332b1907018a6ba2c9b7de3a7273313ee360be8",
       "summary": "本页是算子系统的人读入口。机器事实以 `../_generated/operator-index.md` 和 Lean 源为准；本页不维护总数、分组数量或完整表格。",
       "title": "算子参考"
     },

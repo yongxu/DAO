@@ -306,6 +306,12 @@
       "symbol_hits": [
         {
           "paths": [
+            "formal/SSBX/Foundation/Bagua/Cell192.lean"
+          ],
+          "symbol": "Cell192"
+        },
+        {
+          "paths": [
             "formal/SSBX/Foundation/Bagua/GodelLi.lean"
           ],
           "symbol": "kleene_recursion_axiom"
@@ -575,7 +581,20 @@
         "formal/SSBX/Text/OperatorSignatures.lean",
         "formal/SSBX/Text/WenyanOperators.lean"
       ],
-      "symbol_hits": []
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Roster.lean"
+          ],
+          "symbol": "R"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "transform"
+        }
+      ]
     },
     {
       "document": "docs-next/40_reference_参考/six-tables.md",

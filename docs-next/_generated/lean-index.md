@@ -132,11 +132,11 @@
 | SSBX.Text.OperatorCellSemantics | Text | 3 | 32 | 245 | `formal/SSBX/Text/OperatorCellSemantics.lean` |
 | SSBX.Text.OperatorFamilySemantics | Text | 2 | 27 | 160 | `formal/SSBX/Text/OperatorFamilySemantics.lean` |
 | SSBX.Text.OperatorInstructionSemantics | Text | 1 | 33 | 268 | `formal/SSBX/Text/OperatorInstructionSemantics.lean` |
-| SSBX.Text.OperatorReachabilitySemantics | Text | 1 | 45 | 221 | `formal/SSBX/Text/OperatorReachabilitySemantics.lean` |
+| SSBX.Text.OperatorReachabilitySemantics | Text | 1 | 58 | 370 | `formal/SSBX/Text/OperatorReachabilitySemantics.lean` |
 | SSBX.Text.OperatorReadings | Text | 1 | 83 | 954 | `formal/SSBX/Text/OperatorReadings.lean` |
-| SSBX.Text.OperatorSignatures | Text | 1 | 35 | 639 | `formal/SSBX/Text/OperatorSignatures.lean` |
+| SSBX.Text.OperatorSignatures | Text | 1 | 43 | 908 | `formal/SSBX/Text/OperatorSignatures.lean` |
 | SSBX.Text.SenseSyntax | Text | 1 | 14 | 82 | `formal/SSBX/Text/SenseSyntax.lean` |
-| SSBX.Text.WenyanOperators | Text | 1 | 14 | 1655 | `formal/SSBX/Text/WenyanOperators.lean` |
+| SSBX.Text.WenyanOperators | Text | 1 | 17 | 1745 | `formal/SSBX/Text/WenyanOperators.lean` |
 | SSBX.Truth.Absolute | Truth | 1 | 4 | 32 | `formal/SSBX/Truth/Absolute.lean` |
 | SSBX.Truth.Adequacy | Truth | 1 | 6 | 36 | `formal/SSBX/Truth/Adequacy.lean` |
 | SSBX.Truth.Basic | Truth | 2 | 15 | 110 | `formal/SSBX/Truth/Basic.lean` |

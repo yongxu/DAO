@@ -265,6 +265,17 @@ def lean_cases_map(text: str, def_name: str) -> dict[str, str]:
     return out
 
 
+def lean_namespace_cases_map(text: str, namespace: str, def_name: str) -> dict[str, str]:
+    marker = f"namespace {namespace}"
+    if marker not in text:
+        return {}
+    block = text.split(marker, 1)[1]
+    end_marker = f"end {namespace}"
+    if end_marker in block:
+        block = block.split(end_marker, 1)[0]
+    return lean_cases_map(block, def_name)
+
+
 def claim_index(root: Path) -> tuple[dict, str]:
     path = root / "formal/SSBX/Truth/ClaimLedger.lean"
     text = read(path)
@@ -299,22 +310,322 @@ def operator_index(root: Path) -> tuple[dict, str]:
     path = root / "formal/SSBX/Text/WenyanOperators.lean"
     text = read(path)
     groups = lean_cases_map(text, "OperatorId.group")
+    group_keys = lean_cases_map(text, "OperatorGroup.key")
+    group_names = lean_cases_map(text, "OperatorGroup.zhName")
+    group_positions = lean_cases_map(text, "OperatorGroup.actionPosition")
     codes = lean_cases_map(text, "OperatorId.code")
     titles = lean_cases_map(text, "OperatorId.title")
     ids = extract_inductive_names(text, "OperatorId")
+
+    sig_path = root / "formal/SSBX/Text/OperatorSignatures.lean"
+    sig_text = read(sig_path)
+    signature_keys = lean_cases_map(sig_text, "SignatureKind.key")
+    signature_names = lean_cases_map(sig_text, "SignatureKind.zhName")
+    signature_action_bits = lean_cases_map(sig_text, "SignatureKind.actionBit")
+    action_keys = lean_cases_map(sig_text, "OperatorActionBit.key")
+    action_names = lean_cases_map(sig_text, "OperatorActionBit.zhName")
+    action_modes = lean_cases_map(sig_text, "OperatorActionBit.operatorMode")
+    action_effects = lean_cases_map(sig_text, "OperatorActionBit.effectSummary")
+    signatures = {
+        op_id: {"signature_kind": kind, "arity": int(arity), "signature_evidence": "catalogueShape"}
+        for op_id, kind, arity in re.findall(r"\| \.([A-Za-z0-9_]+) => \(\.([A-Za-z0-9_]+),\s*(\d+)\)", sig_text)
+    }
+    for op_id, kind, arity in re.findall(
+        r"\{\s*id := \.([A-Za-z0-9_]+),\s+kind := \.([A-Za-z0-9_]+),\s+arity := (\d+)",
+        sig_text,
+    ):
+        signatures[op_id] = {"signature_kind": kind, "arity": int(arity), "signature_evidence": "seedOverride"}
+
     rows = [
-        {"id": i, "code": codes.get(i, ""), "group": groups.get(i, ""), "title": titles.get(i, "")}
+        {
+            "id": i,
+            "code": codes.get(i, ""),
+            "group": groups.get(i, ""),
+            "group_key": group_keys.get(groups.get(i, ""), ""),
+            "group_name": group_names.get(groups.get(i, ""), ""),
+            "action_position": group_positions.get(groups.get(i, ""), ""),
+            "signature_kind": signatures.get(i, {}).get("signature_kind", ""),
+            "signature_key": signature_keys.get(signatures.get(i, {}).get("signature_kind", ""), ""),
+            "signature_name": signature_names.get(signatures.get(i, {}).get("signature_kind", ""), ""),
+            "arity": signatures.get(i, {}).get("arity", ""),
+            "signature_evidence": signatures.get(i, {}).get("signature_evidence", ""),
+            "title": titles.get(i, ""),
+        }
         for i in ids
     ]
+    for row in rows:
+        action_bit = signature_action_bits.get(row["signature_kind"], "")
+        row["action_bit"] = action_bit
+        row["action_key"] = action_keys.get(action_bit, "")
+        row["action_name"] = action_names.get(action_bit, "")
+        row["operator_mode"] = action_modes.get(action_bit, "")
+        row["effect"] = action_effects.get(action_bit, "")
+        sig_code = f"{row['signature_key']}{row['arity']}" if row["signature_key"] and row["arity"] != "" else ""
+        row["full_code"] = ".".join(x for x in [row["group_key"], sig_code, row["action_key"], row["code"]] if x)
     counts: dict[str, int] = {}
+    signature_counts: dict[str, int] = {}
+    action_counts: dict[str, int] = {}
+    action_signatures: dict[str, set[str]] = {}
     for row in rows:
         counts[row["group"]] = counts.get(row["group"], 0) + 1
-    data = {"source": rel(path, root), "count": len(rows), "counts_by_group": counts, "operators": rows}
-    md = provenance("Wenyan Operator Index", [rel(path, root), "wenyan-operators.md"])
+        signature_counts[row["signature_kind"]] = signature_counts.get(row["signature_kind"], 0) + 1
+        action_counts[row["action_bit"]] = action_counts.get(row["action_bit"], 0) + 1
+        action_signatures.setdefault(row["action_bit"], set()).add(row["signature_kind"])
+    group_rows = [
+        {
+            "group": group,
+            "group_key": group_keys.get(group, ""),
+            "group_name": group_names.get(group, ""),
+            "action_position": group_positions.get(group, ""),
+            "count": count,
+        }
+        for group, count in sorted(counts.items())
+    ]
+    signature_rows = [
+        {
+            "signature_kind": kind,
+            "signature_key": signature_keys.get(kind, ""),
+            "signature_name": signature_names.get(kind, ""),
+            "count": count,
+        }
+        for kind, count in sorted(signature_counts.items())
+    ]
+    action_rows = [
+        {
+            "action_bit": bit,
+            "action_key": action_keys.get(bit, ""),
+            "action_name": action_names.get(bit, ""),
+            "operator_mode": action_modes.get(bit, ""),
+            "effect": action_effects.get(bit, ""),
+            "signature_kinds": sorted(action_signatures.get(bit, set())),
+            "count": count,
+        }
+        for bit, count in sorted(action_counts.items())
+    ]
+    data = {
+        "source": rel(path, root),
+        "signature_source": rel(sig_path, root),
+        "count": len(rows),
+        "groups": group_rows,
+        "signature_kinds": signature_rows,
+        "action_bits": action_rows,
+        "counts_by_group": counts,
+        "counts_by_signature_kind": signature_counts,
+        "counts_by_action_bit": action_counts,
+        "operators": rows,
+    }
+    md = provenance("Wenyan Operator Index", [rel(path, root), rel(sig_path, root), "wenyan-operators.md"])
     md += f"- Operators: {len(rows)}\n\n"
-    md += md_table(["Group", "Count"], sorted(counts.items()))
+    md += md_table(
+        ["Group", "Key", "Name", "Action Position", "Count"],
+        [[r["group"], r["group_key"], r["group_name"], r["action_position"], r["count"]] for r in group_rows],
+    )
+    md += "\n## Signature Kinds\n\n"
+    md += md_table(
+        ["Kind", "Key", "Name", "Count"],
+        [[r["signature_kind"], r["signature_key"], r["signature_name"], r["count"]] for r in signature_rows],
+    )
+    md += "\n## Action Bits\n\n"
+    md += md_table(
+        ["Bit", "Key", "Name", "Operator Mode", "Effect", "Signatures", "Count"],
+        [
+            [
+                r["action_bit"],
+                r["action_key"],
+                r["action_name"],
+                r["operator_mode"],
+                r["effect"],
+                ", ".join(r["signature_kinds"]),
+                r["count"],
+            ]
+            for r in action_rows
+        ],
+    )
     md += "\n## Operators\n\n"
-    md += md_table(["Code", "Group", "Title", "Id"], [[r["code"], r["group"], r["title"], r["id"]] for r in rows])
+    md += md_table(
+        [
+            "Full Code",
+            "Code",
+            "Group",
+            "Group Key",
+            "Action Position",
+            "Signature",
+            "Sig Key",
+            "Arity",
+            "Action Bit",
+            "Operator Mode",
+            "Effect",
+            "Title",
+            "Id",
+        ],
+        [
+            [
+                r["full_code"],
+                r["code"],
+                r["group"],
+                r["group_key"],
+                r["action_position"],
+                r["signature_kind"],
+                r["signature_key"],
+                r["arity"],
+                r["action_name"],
+                r["operator_mode"],
+                r["effect"],
+                r["title"],
+                r["id"],
+            ]
+            for r in rows
+        ],
+    )
+    return data, md
+
+
+def cell192_transition_index(root: Path) -> tuple[dict, str]:
+    cell_path = root / "formal/SSBX/Foundation/Bagua/Cell192.lean"
+    reach_path = root / "formal/SSBX/Text/OperatorReachabilitySemantics.lean"
+    reach_text = read(reach_path)
+
+    operator_order = [
+        "flip1",
+        "flip2",
+        "flip3",
+        "flip4",
+        "flip5",
+        "flip6",
+        "shiNext",
+        "shiPrev",
+        "hexCuo",
+        "hexZong",
+        "hexHu",
+    ]
+    operator_keys = lean_namespace_cases_map(reach_text, "Cell192TransitionOperator", "key")
+    operator_names = lean_namespace_cases_map(reach_text, "Cell192TransitionOperator", "zhName")
+    operator_refs = lean_namespace_cases_map(reach_text, "Cell192TransitionOperator", "operatorRef")
+    operator_effects = lean_namespace_cases_map(reach_text, "Cell192TransitionOperator", "effectSummary")
+    operators = [
+        {
+            "id": op,
+            "key": operator_keys.get(op, ""),
+            "name": operator_names.get(op, ""),
+            "operator_ref": operator_refs.get(op, ""),
+            "effect": operator_effects.get(op, ""),
+        }
+        for op in operator_order
+    ]
+
+    yaos = [("yang", "1", "阳"), ("yin", "0", "阴")]
+    shis = [("ji", "JI", "已"), ("jin", "JIN", "今"), ("wei", "WEI", "未")]
+    shi_next = {"JI": "JIN", "JIN": "WEI", "WEI": "JI"}
+    shi_prev = {"JI": "WEI", "JIN": "JI", "WEI": "JIN"}
+
+    cells = []
+    index_by_code: dict[str, int] = {}
+    for y1 in yaos:
+        for y2 in yaos:
+            for y3 in yaos:
+                for y4 in yaos:
+                    for y5 in yaos:
+                        for y6 in yaos:
+                            bits = "".join(y[1] for y in [y1, y2, y3, y4, y5, y6])
+                            hex_label = "".join(y[2] for y in [y1, y2, y3, y4, y5, y6])
+                            for _, shi_key, shi_label in shis:
+                                code = f"H{bits}.{shi_key}"
+                                row = {
+                                    "index": len(cells) + 1,
+                                    "cell": code,
+                                    "hex_bits": bits,
+                                    "hex_label": hex_label,
+                                    "shi": shi_key,
+                                    "shi_label": shi_label,
+                                    "label": f"{hex_label}/{shi_label}",
+                                }
+                                index_by_code[code] = row["index"]
+                                cells.append(row)
+
+    def toggle(bit: str) -> str:
+        return "0" if bit == "1" else "1"
+
+    def apply_operator(bits: str, shi: str, operator: str) -> tuple[str, str]:
+        if operator.startswith("flip"):
+            pos = int(operator[-1]) - 1
+            out = list(bits)
+            out[pos] = toggle(out[pos])
+            return "".join(out), shi
+        if operator == "shiNext":
+            return bits, shi_next[shi]
+        if operator == "shiPrev":
+            return bits, shi_prev[shi]
+        if operator == "hexCuo":
+            return "".join(toggle(bit) for bit in bits), shi
+        if operator == "hexZong":
+            return bits[::-1], shi
+        if operator == "hexHu":
+            return "".join([bits[1], bits[2], bits[3], bits[2], bits[3], bits[4]]), shi
+        raise ValueError(f"unknown Cell192 transition operator: {operator}")
+
+    transitions = []
+    matrix_rows = []
+    for cell in cells:
+        targets = {}
+        for operator in operators:
+            to_bits, to_shi = apply_operator(cell["hex_bits"], cell["shi"], operator["id"])
+            to_cell = f"H{to_bits}.{to_shi}"
+            transitions.append(
+                {
+                    "from_index": cell["index"],
+                    "from": cell["cell"],
+                    "operator": operator["id"],
+                    "operator_key": operator["key"],
+                    "operator_name": operator["name"],
+                    "operator_ref": operator["operator_ref"],
+                    "effect": operator["effect"],
+                    "to_index": index_by_code[to_cell],
+                    "to": to_cell,
+                }
+            )
+            targets[operator["id"]] = to_cell
+        matrix_rows.append(
+            {
+                "from_index": cell["index"],
+                "from": cell["cell"],
+                "label": cell["label"],
+                "targets": targets,
+            }
+        )
+
+    data = {
+        "sources": [rel(cell_path, root), rel(reach_path, root)],
+        "coordinate_convention": "Habcdef.SHI uses six yao bits from bottom to top; 1=yang, 0=yin; SHI is JI/JIN/WEI.",
+        "cell_count": len(cells),
+        "operator_count": len(operators),
+        "transition_count": len(transitions),
+        "cells": cells,
+        "operators": operators,
+        "reachability_generator_ids": ["flip1", "flip2", "flip3", "flip4", "flip5", "flip6", "shiNext"],
+        "transitions": transitions,
+        "matrix": matrix_rows,
+    }
+
+    md = provenance("Cell192 Transition Index", data["sources"])
+    md += f"- Cells: {len(cells)}\n"
+    md += f"- Operators: {len(operators)}\n"
+    md += f"- One-step transitions: {len(transitions)}\n"
+    md += "- Reachability generators: `flip1`, `flip2`, `flip3`, `flip4`, `flip5`, `flip6`, `shiNext`.\n"
+    md += "- Convention: `Habcdef.SHI` records six yao from bottom to top; `1=yang`, `0=yin`; `SHI ∈ {JI,JIN,WEI}`.\n\n"
+    md += "## Operators\n\n"
+    md += md_table(
+        ["Id", "Key", "Name", "Lean Operator", "Effect"],
+        [[op["id"], op["key"], op["name"], f"`{op['operator_ref']}`", op["effect"]] for op in operators],
+    )
+    md += "\n## Transition Matrix\n\n"
+    headers = ["#", "From", "Label"] + [f"{op['key']} {op['name']}" for op in operators]
+    md += md_table(
+        headers,
+        [
+            [r["from_index"], r["from"], r["label"]] + [r["targets"][op["id"]] for op in operators]
+            for r in matrix_rows
+        ],
+    )
     return data, md
 
 
@@ -471,6 +782,7 @@ def build_generated(root: Path, out: Path, include_archive: bool, web_payload: b
     registry_data, registry_md = registry_index(root)
     claim_data, claim_md = claim_index(root)
     operator_data, operator_md = operator_index(root)
+    cell192_transition_data, cell192_transition_md = cell192_transition_index(root)
     markdown_data, markdown_md = markdown_index(root, include_archive)
     diagram_data, diagram_md = diagram_index(root)
     crossrefs_data, crossrefs_md = crossrefs(root, markdown_data, lean_data)
@@ -483,6 +795,7 @@ def build_generated(root: Path, out: Path, include_archive: bool, web_payload: b
         "registry-index": registry_data,
         "claim-index": claim_data,
         "operator-index": operator_data,
+        "cell192-transition-index": cell192_transition_data,
         "markdown-index": markdown_data,
         "diagram-index": diagram_data,
         "crossrefs": crossrefs_data,
@@ -493,6 +806,7 @@ def build_generated(root: Path, out: Path, include_archive: bool, web_payload: b
         "registry-index": registry_md,
         "claim-index": claim_md,
         "operator-index": operator_md,
+        "cell192-transition-index": cell192_transition_md,
         "markdown-index": markdown_md,
         "diagram-index": diagram_md,
         "crossrefs": crossrefs_md,

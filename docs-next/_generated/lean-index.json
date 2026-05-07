@@ -17973,7 +17973,7 @@
     },
     {
       "cluster": "Text",
-      "declaration_count": 45,
+      "declaration_count": 58,
       "declarations": [
         {
           "kind": "inductive",
@@ -17990,6 +17990,22 @@
         {
           "kind": "def",
           "name": "lineFlip"
+        },
+        {
+          "kind": "def",
+          "name": "key"
+        },
+        {
+          "kind": "def",
+          "name": "zhName"
+        },
+        {
+          "kind": "def",
+          "name": "operatorRef"
+        },
+        {
+          "kind": "def",
+          "name": "effectSummary"
         },
         {
           "kind": "def",
@@ -18154,15 +18170,51 @@
         {
           "kind": "theorem",
           "name": "cell192_generator_summary"
+        },
+        {
+          "kind": "inductive",
+          "name": "Cell192TransitionOperator"
+        },
+        {
+          "kind": "def",
+          "name": "key"
+        },
+        {
+          "kind": "def",
+          "name": "zhName"
+        },
+        {
+          "kind": "def",
+          "name": "operatorRef"
+        },
+        {
+          "kind": "def",
+          "name": "effectSummary"
+        },
+        {
+          "kind": "def",
+          "name": "all"
+        },
+        {
+          "kind": "def",
+          "name": "apply"
+        },
+        {
+          "kind": "theorem",
+          "name": "all_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "all_nodup"
         }
       ],
       "imports": [
         "SSBX.Foundation.Bagua.Cell192"
       ],
-      "lines": 221,
+      "lines": 370,
       "module": "SSBX.Text.OperatorReachabilitySemantics",
       "path": "formal/SSBX/Text/OperatorReachabilitySemantics.lean",
-      "sha256": "822800f59ef21da7df44c1d0b320920ddc2706284231396f146c34186ba70e90"
+      "sha256": "fb45376c3a7103779cb7b510883582437fb06b12a6d04bb085c93577a26eb230"
     },
     {
       "cluster": "Text",
@@ -18511,11 +18563,43 @@
     },
     {
       "cluster": "Text",
-      "declaration_count": 35,
+      "declaration_count": 43,
       "declarations": [
         {
           "kind": "inductive",
           "name": "SignatureKind"
+        },
+        {
+          "kind": "def",
+          "name": "SignatureKind.key"
+        },
+        {
+          "kind": "def",
+          "name": "SignatureKind.zhName"
+        },
+        {
+          "kind": "inductive",
+          "name": "OperatorActionBit"
+        },
+        {
+          "kind": "def",
+          "name": "OperatorActionBit.key"
+        },
+        {
+          "kind": "def",
+          "name": "OperatorActionBit.zhName"
+        },
+        {
+          "kind": "def",
+          "name": "OperatorActionBit.operatorMode"
+        },
+        {
+          "kind": "def",
+          "name": "OperatorActionBit.effectSummary"
+        },
+        {
+          "kind": "def",
+          "name": "SignatureKind.actionBit"
         },
         {
           "kind": "structure",
@@ -18657,10 +18741,10 @@
       "imports": [
         "SSBX.Text.WenyanOperators"
       ],
-      "lines": 639,
+      "lines": 908,
       "module": "SSBX.Text.OperatorSignatures",
       "path": "formal/SSBX/Text/OperatorSignatures.lean",
-      "sha256": "c0fbfd3d4159c054a6088a8e4f62ae60fbcdd9f8bd4933b43f19fe8f0c973716"
+      "sha256": "541b506b75da04752467895368ec2ef127acb10fff49416818b4b92fb8d00f25"
     },
     {
       "cluster": "Text",
@@ -18733,11 +18817,23 @@
     },
     {
       "cluster": "Text",
-      "declaration_count": 14,
+      "declaration_count": 17,
       "declarations": [
         {
           "kind": "inductive",
           "name": "OperatorGroup"
+        },
+        {
+          "kind": "def",
+          "name": "OperatorGroup.key"
+        },
+        {
+          "kind": "def",
+          "name": "OperatorGroup.zhName"
+        },
+        {
+          "kind": "def",
+          "name": "OperatorGroup.actionPosition"
         },
         {
           "kind": "inductive",
@@ -18795,10 +18891,10 @@
       "imports": [
         "SSBX.Text.Glyph"
       ],
-      "lines": 1655,
+      "lines": 1745,
       "module": "SSBX.Text.WenyanOperators",
       "path": "formal/SSBX/Text/WenyanOperators.lean",
-      "sha256": "d0e43d5ad2b10d7a9e7baec5c82f0f731e004e7db22fd96bb2d2f20e8d78947c"
+      "sha256": "b4df8ea2c36e3263ba6cda332288efb37fb99d2d193944efe7873a2516e5fd9b"
     },
     {
       "cluster": "Truth",
