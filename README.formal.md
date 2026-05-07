@@ -599,7 +599,9 @@ partial:  1 top-level executable partial def (BaguaTuring.run nontermination bou
 ledger:   DAG / roster / operator / layer / essay correspondences are sync claims
 pending:  6 PendingName interfaces
 conj:     ConjOne / ConjTwo, no Lean term claimed
-boundary: cuo-equivariance ceiling, halting-undecidability, dao-li bifurcation
+boundary: cuo-equivariance ceiling, universal-compileTm undefinable
+          (halts_cuo_invariant + unrestricted_kleene_inverter_inconsistent),
+          halting-undecidability, dao-li bifurcation
 ```
 
 — *EOF · this is a specification, not an introduction. For prose, see `README.md` (中文) or `README.en.md` (English).*

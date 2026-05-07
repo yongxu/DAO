@@ -551,6 +551,64 @@ theorem decInstrs_encProg (p : List YiInstr) (h_enc : AllEncodable p)
             | none => none) = some (head :: tail, rest)
     rw [ih h_tail]
 
+/-! ### § 4b Framed program encoding (Tier 3 phase C.1)
+
+  `encFramedProg` 在 `encProg` 之前置 `encNat p.length`，使 stream-friendly
+  decoder 可在不知 instruction count 的情况下读出整段程序。 -/
+
+/-- 程序之 length-prefixed encoding：先 encode length（length-prefix Nat 形），
+    再 encode instructions. -/
+def encFramedProg (p : List YiInstr) : List Cell192 :=
+  YiInstrEnc.encNat p.length ++ encProg p
+
+/-- 解 framed encoding：先读 length 头，再 decode instructions. -/
+def decFramedProg (l : List Cell192) : Option (List YiInstr × List Cell192) :=
+  match YiInstrEnc.decNat l with
+  | some (n, rest) =>
+      match decInstrs n rest with
+      | some (p, rest') => some (p, rest')
+      | none => none
+  | none => none
+
+/-- decNat 之 round-trip (来自 § 3c 的 decNat_encNat 等价形式). -/
+private theorem decNat_encNat_app (n : Nat) (rest : List Cell192)
+    (h_len : (NatCell.encodeNat n).length < 192) :
+    YiInstrEnc.decNat (YiInstrEnc.encNat n ++ rest) = some (n, rest) := by
+  unfold YiInstrEnc.decNat YiInstrEnc.encNat
+  simp only [List.cons_append]
+  rw [YiInstrEnc.cellToIdx_val_of_cellFromIdx]
+  simp only [Nat.min_eq_left (by omega : (NatCell.encodeNat n).length ≤ 191)]
+  have h_take : (NatCell.encodeNat n ++ rest).take (NatCell.encodeNat n).length
+    = NatCell.encodeNat n := by
+    simp [List.take_append, List.take_of_length_le]
+  have h_drop : (NatCell.encodeNat n ++ rest).drop (NatCell.encodeNat n).length = rest := by
+    simp [List.drop_append]
+  have h_le : (NatCell.encodeNat n).length ≤ (NatCell.encodeNat n ++ rest).length := by
+    simp [List.length_append]
+  simp [h_le, h_take, h_drop, NatCell.decode_encode]
+
+/-- **C.1 主定理**: `decFramedProg (encFramedProg p ++ rest) = some (p, rest)` for AllEncodable p. -/
+theorem decFramedProg_encFramedProg (p : List YiInstr) (h_enc : AllEncodable p)
+    (rest : List Cell192) (h_len : (NatCell.encodeNat p.length).length < 192) :
+    decFramedProg (encFramedProg p ++ rest) = some (p, rest) := by
+  unfold decFramedProg encFramedProg
+  rw [List.append_assoc]
+  rw [decNat_encNat_app p.length (encProg p ++ rest) h_len]
+  simp only [decInstrs_encProg p h_enc rest]
+
+/-- 具体 framed round-trip 见证 (Tier 3 phase C.1)：[push, halt] 之 framed encoding. -/
+theorem framed_round_trip_witness :
+    decFramedProg (encFramedProg [YiInstr.push, YiInstr.halt] ++ []) =
+      some ([YiInstr.push, YiInstr.halt], []) := by
+  apply decFramedProg_encFramedProg
+  · intro i hi
+    simp at hi
+    rcases hi with rfl | rfl
+    · show YiInstrEnc.Encodable YiInstr.push; trivial
+    · show YiInstrEnc.Encodable YiInstr.halt; trivial
+  · show (NatCell.encodeNat 2).length < 192
+    native_decide
+
 end ProgEnc
 
 namespace StateEnc
@@ -796,6 +854,41 @@ theorem quine_history_is_self_encoding :
   Our proven 1-cell case demonstrates the principle: the language has all
   primitives needed for Quine, and we exhibit a literal example that is
   verified by `rfl`. -/
+
+/-! ### § 7.3 Tier 3 partial: N-cell uniform quine
+
+  When the target encoding is `List.replicate N c` (N copies of one cell),
+  we can quine with `program := List.replicate N push` and `cur := c`.
+  Each `push` prepends `cur` to history; since `cur` is unchanged, after N
+  pushes history = `List.replicate N c`.
+
+  This corresponds to programs `List.replicate N push` whose `encInstr push`
+  is exactly `[c]` (where `c = cellFromIdx ⟨9, _⟩` is the push tag).  So
+  this concrete construction quines `List.replicate N push` for any N. -/
+
+/-- N-cell uniform quine source: N pushes. -/
+def quineNProg (N : Nat) : List YiInstr := List.replicate N YiInstr.push
+
+/-- Initial state for the N-cell uniform quine. -/
+def quineNInit (N : Nat) : YiState :=
+  { cur := quineCur, history := [], pc := 0
+  , prog := quineNProg N, halted := false }
+
+/-- 3-cell uniform quine witness: running [push, push, push] from cur=⟨9⟩
+    leaves history = encProg [push, push, push] = [⟨9⟩, ⟨9⟩, ⟨9⟩]. -/
+theorem quine3_history :
+    ((quineNInit 3).runFuel 5).history = ((quineNProg 3).map encInstr).flatten := by
+  rfl
+
+/-- 5-cell uniform quine witness. -/
+theorem quine5_history :
+    ((quineNInit 5).runFuel 7).history = ((quineNProg 5).map encInstr).flatten := by
+  rfl
+
+/-- 16-cell uniform quine witness (matching DaoSource scale). -/
+theorem quine16_history :
+    ((quineNInit 16).runFuel 20).history = ((quineNProg 16).map encInstr).flatten := by
+  rfl
 
 end Quine
 

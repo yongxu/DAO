@@ -141,6 +141,7 @@ String  ──[«解程»]──→  List YiInstr  ──[init+runFuel]──→
 | M1 String parser + printer | `Foundation/Wen/WenyanParser.lean § daoJudgeProg_roundtrip` |
 | M1 v2 · 12 构造子 × 1..64 全数词 | 同上 §8-9 |
 | M1 v3 · 非 partial 重铸 + token-level 完全一般 | `Foundation/Wen/WenyanParserGeneral.lean § parseProgN_tokensOfProg` |
+| M1 v3.1 · 字符级 lex 反演 + universal String round-trip | `Foundation/Wen/WenyanParserGeneral.lean § lexN_printProg_thm, parseN_printProg_inverse_universal` |
 | M2 多步求值器 + 端到端 | `Foundation/Wen/WenEval.lean § «端到端_乾», «端到端_坤», «端到端_否»` |
 | M3-甲 Lean 块语法 | `Foundation/Wen/WenyanSyntax.lean § daoJudgeBlock_eq_daoJudgeProg` (by `rfl`) |
 | L1 typed lambda (281 ops 之类型层) | `Foundation/Wen/WenDef.lean § Stdlib.{tui, bi, bu, biModal, tong, fan}` |
@@ -148,6 +149,8 @@ String  ──[«解程»]──→  List YiInstr  ──[init+runFuel]──→
 | L1 ⟶ L0 编译 (cuo-equivariant subset) | `Foundation/Wen/WenDefCompile.lean § {idProg, add32Prog, cuoProg}_correct` |
 | 反射层: 判型良 / 判停 / 验程 | `Foundation/Wen/WenyanReflect.lean § «文核同源»` |
 | M4-甲 微核自验 (Tier 2: 64-instr quine PoC) | `Foundation/Wen/WenyanSelfHost.lean § «微核自验», «微核自释_total»` |
+| M4-甲 Tier 3 部分 · uniform N-cell quine ([push]^N) | `Foundation/Wen/WenyanSelfInterp.lean § Quine.quine{3,5,16}_history` |
+| M4-甲 Tier 3 ground · framed program encoding | `Foundation/Wen/WenyanSelfInterp.lean § ProgEnc.{encFramedProg, decFramedProg, decFramedProg_encFramedProg, framed_round_trip_witness}` |
 | 道源 (5 相俱: 形/解/印/执/义) | `Foundation/Wen/DaoSource.lean § «道之自指»` |
 | 自释 demo | `Foundation/Wen/Demo.lean § daojudge_{qian, kun, pi}` |
 
@@ -246,6 +249,7 @@ Layer 45      非道之形式  Moloch / totalizing 之形式否定
 |---|---|
 | Halting / Rice 不可判 | `Foundation/Bagua/GodelLi.lean` |
 | 12-instr ISA 之 cuo-equivariance ceiling | `Foundation/Wen/WenDefCompile.lean § sheng_not_cuo_equivariant` |
+| 通用 compileTm 不可定义 (cuo-invariance ceiling 之推论) | `Foundation/Bagua/GodelLi.lean § halts_cuo_invariant` + `Foundation/Bagua/CuoInvariance.lean § unrestricted_kleene_inverter_inconsistent` |
 | `kleene_recursion_axiom` (cuo-restricted) — 系统**指向自身之外**之处 | `Foundation/Bagua/GodelLi.lean` (axiom) + `CuoInvariance.lean` (cuo-machinery) + `Modern/DaoLi.lean` (二分) |
 | 高 alignment ≠ 真 (consistent liar) | `Foundation/Core/Sincerity.lean § T5` |
 | 修之渐进而不达 perfect | 同上 § T6 |
@@ -254,9 +258,7 @@ Layer 45      非道之形式  Moloch / totalizing 之形式否定
 
 | Gap | 现态 |
 |---|---|
-| M1 v3 · 字符级 lex 反演 | hypothesis form (~150 行 estimate) |
-| M3-甲 · 通用 compileTm | 仅 cuo-equivariant subset (impossibility 见上) |
-| M4-甲 · Tier 3 完整 quine | 现 Tier 2 (64-instr); Tier 3 留作工程 |
+| M4-甲 · Tier 3 通用 quine (任意 program) | 现 Tier 2 (64-instr) + Tier 3 uniform [push]^N (部分); 通用 buildEmitProg + diagonal 留作工程 |
 
 ---
 
