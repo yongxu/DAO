@@ -1,0 +1,3328 @@
+{
+  "documents": [
+    {
+      "document": "README.en.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "README.formal.md",
+      "lean_path_mentions": [
+        "formal/SSBX.lean"
+      ],
+      "symbol_hits": []
+    },
+    {
+      "document": "README.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/00_start/README.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/00_start/formal-path.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/00_start/maintenance-path.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/00_start/scope.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/00_start/theory-path.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/10_formal_形式/README.md",
+      "lean_path_mentions": [
+        "formal/SSBX.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/Cell192.lean"
+          ],
+          "symbol": "Cell192"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "Field"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean",
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "dong"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "kleene_recursion_axiom"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "origin"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "origin_alive"
+        }
+      ]
+    },
+    {
+      "document": "docs-next/10_formal_形式/build-and-verify.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "kleene_recursion_axiom"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "theOne"
+        }
+      ]
+    },
+    {
+      "document": "docs-next/10_formal_形式/concepts.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/10_formal_形式/core.md",
+      "lean_path_mentions": [
+        "formal/SSBX.lean",
+        "formal/SSBX/Core.lean",
+        "formal/SSBX/Roster.lean"
+      ],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/10_formal_形式/eight.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/10_formal_形式/foundation-core.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/10_formal_形式/jian.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/10_formal_形式/modern.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/SUN.lean"
+          ],
+          "symbol": "SUN"
+        }
+      ]
+    },
+    {
+      "document": "docs-next/10_formal_形式/module-map.md",
+      "lean_path_mentions": [
+        "formal/SSBX.lean",
+        "formal/SSBX/Core.lean",
+        "formal/SSBX/Roster.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Core.lean",
+            "formal/SSBX/Core.lean",
+            "formal/SSBX/Pending/Interfaces.lean"
+          ],
+          "symbol": "Model"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "kleene_recursion_axiom"
+        }
+      ]
+    },
+    {
+      "document": "docs-next/10_formal_形式/pending.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Pending/Examples.lean",
+        "formal/SSBX/Pending/Interfaces.lean"
+      ],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/10_formal_形式/text.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/10_formal_形式/trust-boundaries.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Bagua/BaguaTuring.lean",
+        "formal/SSBX/Foundation/Bagua/GodelLi.lean",
+        "formal/SSBX/Foundation/Bagua/KleeneInternal.lean",
+        "formal/SSBX/Foundation/Wen/Kernel.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "Field"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean",
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "dong"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "kleene_recursion_axiom"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "origin"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean",
+            "formal/SSBX/Foundation/Bagua/FuelDiscipline.lean",
+            "formal/SSBX/Pending/Examples.lean"
+          ],
+          "symbol": "run"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
+          ],
+          "symbol": "runFuel"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "theOne"
+        }
+      ]
+    },
+    {
+      "document": "docs-next/10_formal_形式/truth-model.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "kleene_recursion_axiom"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "theOne"
+        }
+      ]
+    },
+    {
+      "document": "docs-next/10_formal_形式/wen.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "Field"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean",
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "dong"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "kleene_recursion_axiom"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "origin"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "origin_alive"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "theOne"
+        }
+      ]
+    },
+    {
+      "document": "docs-next/10_formal_形式/yi-bagua.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "kleene_recursion_axiom"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean",
+            "formal/SSBX/Foundation/Bagua/FuelDiscipline.lean",
+            "formal/SSBX/Pending/Examples.lean"
+          ],
+          "symbol": "run"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
+          ],
+          "symbol": "runFuel"
+        }
+      ]
+    },
+    {
+      "document": "docs-next/20_theory_义理/README.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Roster.lean"
+          ],
+          "symbol": "A"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Roster.lean"
+          ],
+          "symbol": "G"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Roster.lean"
+          ],
+          "symbol": "P"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Roster.lean"
+          ],
+          "symbol": "R"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Roster.lean"
+          ],
+          "symbol": "U"
+        }
+      ]
+    },
+    {
+      "document": "docs-next/20_theory_义理/bridge-to-lean.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Core.lean",
+            "formal/SSBX/Core.lean",
+            "formal/SSBX/Pending/Interfaces.lean"
+          ],
+          "symbol": "Model"
+        }
+      ]
+    },
+    {
+      "document": "docs-next/20_theory_义理/core-framework.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/20_theory_义理/eight-expansions.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/20_theory_义理/extensions.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/20_theory_义理/formal-and-proof.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/20_theory_义理/map-a-g.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/20_theory_义理/map-h-m.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/Cell192.lean"
+          ],
+          "symbol": "Cell192"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "kleene_recursion_axiom"
+        }
+      ]
+    },
+    {
+      "document": "docs-next/20_theory_义理/map-n-t.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Sincerity.lean"
+          ],
+          "symbol": "Alignment"
+        }
+      ]
+    },
+    {
+      "document": "docs-next/20_theory_义理/map-u-z.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/20_theory_义理/modern-and-alignment.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/20_theory_义理/reading-order.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/20_theory_义理/traditions.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/30_crosswalk_互证/claim-status.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "kleene_recursion_axiom"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "theOne"
+        }
+      ]
+    },
+    {
+      "document": "docs-next/30_crosswalk_互证/diagrams.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "kleene_recursion_axiom"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "theOne"
+        }
+      ]
+    },
+    {
+      "document": "docs-next/30_crosswalk_互证/lean-to-theory.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "kleene_recursion_axiom"
+        }
+      ]
+    },
+    {
+      "document": "docs-next/30_crosswalk_互证/old-to-new.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Roster.lean"
+          ],
+          "symbol": "G"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Roster.lean"
+          ],
+          "symbol": "P"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Roster.lean"
+          ],
+          "symbol": "R"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Roster.lean"
+          ],
+          "symbol": "U"
+        }
+      ]
+    },
+    {
+      "document": "docs-next/30_crosswalk_互证/theory-to-lean.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/40_reference_参考/README.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/40_reference_参考/glossary.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "theOne"
+        }
+      ]
+    },
+    {
+      "document": "docs-next/40_reference_参考/glyphs-registry.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Core/AtomDerivation.lean",
+        "formal/SSBX/Foundation/Core/MissingGlyphs.lean",
+        "formal/SSBX/Roster.lean",
+        "formal/SSBX/Text/Glyph.lean"
+      ],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/40_reference_参考/historical-sources.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/40_reference_参考/operators.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Wen/Operators.lean",
+        "formal/SSBX/Text/OperatorCellMap.lean",
+        "formal/SSBX/Text/OperatorReadings.lean",
+        "formal/SSBX/Text/OperatorSignatures.lean",
+        "formal/SSBX/Text/WenyanOperators.lean"
+      ],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/40_reference_参考/six-tables.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean",
+        "formal/SSBX/Foundation/Bagua/Cell192.lean"
+      ],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/40_reference_参考/ziwen-language.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/50_maintenance/README.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/50_maintenance/archive-policy.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/50_maintenance/docs-contract.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/50_maintenance/generation-pipeline.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/50_maintenance/release-checklist.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "kleene_recursion_axiom"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "theOne"
+        }
+      ]
+    },
+    {
+      "document": "docs-next/README.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/archive-pointers.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/coverage.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Roster.lean",
+        "formal/SSBX/Text/WenyanOperators.lean",
+        "formal/SSBX/Truth/ClaimLedger.lean"
+      ],
+      "symbol_hits": []
+    },
+    {
+      "document": "docs-next/overview.en.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "kleene_recursion_axiom"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "theOne"
+        }
+      ]
+    },
+    {
+      "document": "formal/SSBX/README.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "formal/SSBX/notes/Attention.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Attention.lean"
+          ],
+          "symbol": "aligned_attention_supports_doing_human"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Attention.lean"
+          ],
+          "symbol": "attention_and_focus_share_substrate"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Attention.lean"
+          ],
+          "symbol": "attention_can_be_aligned_to_life"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Attention.lean"
+          ],
+          "symbol": "attention_depends_on_focus"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Attention.lean"
+          ],
+          "symbol": "attention_mechanism_has_components"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Attention.lean"
+          ],
+          "symbol": "cognitive_attention_patterns_registered"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Attention.lean"
+          ],
+          "symbol": "control_can_be_local_mechanism_but_not_doing_goal"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Attention.lean"
+          ],
+          "symbol": "focus_and_attention_have_different_layers"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Attention.lean"
+          ],
+          "symbol": "focus_forms_child"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Attention.lean"
+          ],
+          "symbol": "focus_not_identical_attention"
+        }
+      ]
+    },
+    {
+      "document": "formal/SSBX/notes/ConceptDAG.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Roster.lean"
+          ],
+          "symbol": "AtomName"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Roster.lean"
+          ],
+          "symbol": "GenName"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/MonadRoot.lean"
+          ],
+          "symbol": "MonadDAG"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Pending/Interfaces.lean",
+            "formal/SSBX/Roster.lean"
+          ],
+          "symbol": "PendingName"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Roster.lean"
+          ],
+          "symbol": "PrimName"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Roster.lean"
+          ],
+          "symbol": "RecName"
+        }
+      ]
+    },
+    {
+      "document": "formal/SSBX/notes/ConstructionDAG.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "formal/SSBX/notes/HumanAlignment.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/HumanAlignment.lean"
+          ],
+          "symbol": "canonicalDoingHumanAim"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/HumanAlignment.lean"
+          ],
+          "symbol": "child_is_focus_formed"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/HumanAlignment.lean"
+          ],
+          "symbol": "doing_human_goal_not_control"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/HumanAlignment.lean"
+          ],
+          "symbol": "doing_human_is_intentional_life_alignment"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/HumanAlignment.lean"
+          ],
+          "symbol": "doing_human_not_control_by_registry"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/HumanAlignment.lean"
+          ],
+          "symbol": "heaven_child_is_heaven_focus_formed_child"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/HumanAlignment.lean"
+          ],
+          "symbol": "human_returns_to_heaven_child_with_awareness"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Attention.lean",
+            "formal/SSBX/Foundation/Core/HumanAlignment.lean",
+            "formal/SSBX/Foundation/Core/Monism.lean"
+          ],
+          "symbol": "predecessor_rank_lt"
+        }
+      ]
+    },
+    {
+      "document": "formal/SSBX/notes/JianOntology.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "formal/SSBX/notes/MissingGlyphRootReport.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Core/MissingGlyphs.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/MissingGlyphs.lean"
+          ],
+          "symbol": "proof_language_pending_connected"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/MissingGlyphs.lean"
+          ],
+          "symbol": "proof_language_pending_not_semantically_proved"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/MissingGlyphs.lean"
+          ],
+          "symbol": "recovered_missing_glyphs_have_no_object_semantic_proof"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/MissingGlyphs.lean"
+          ],
+          "symbol": "recovered_missing_glyphs_registered"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/MissingGlyphs.lean"
+          ],
+          "symbol": "recovered_missing_glyphs_return_to_root"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/MissingGlyphs.lean"
+          ],
+          "symbol": "recovered_missing_glyphs_structural_proof"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/MissingGlyphs.lean"
+          ],
+          "symbol": "text_only_pending_kept_textual"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/MissingGlyphs.lean"
+          ],
+          "symbol": "value_pending_connected_to_value_axioms"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/MissingGlyphs.lean"
+          ],
+          "symbol": "value_pending_not_semantically_proved"
+        }
+      ]
+    },
+    {
+      "document": "formal/SSBX/notes/MonadDAG.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "formal/SSBX/notes/PositionOperatorGraph.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/Cell192.lean"
+          ],
+          "symbol": "shiNext"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/Cell192.lean"
+          ],
+          "symbol": "shiPrev"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenyanText.lean"
+          ],
+          "symbol": "互"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenyanText.lean"
+          ],
+          "symbol": "综"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenyanText.lean"
+          ],
+          "symbol": "错"
+        }
+      ]
+    },
+    {
+      "document": "formal/SSBX/notes/atom-naming.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "formal/SSBX/notes/baguaWen-spec.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "formal/SSBX/notes/math-axiom-map.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "formal/SSBX/notes/monad-root-plan.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Core/HumanAlignment.lean",
+        "formal/SSBX/Foundation/Core/MonadRoot.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/MonadRoot.lean"
+          ],
+          "symbol": "MonadDAG"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/YiCore.lean"
+          ],
+          "symbol": "一"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/MonadRoot.lean"
+          ],
+          "symbol": "一元"
+        }
+      ]
+    },
+    {
+      "document": "formal/SSBX/notes/parse-print-roadmap.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "formal/SSBX/notes/pending-interfaces.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Pending/Examples.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Pending/Interfaces.lean",
+            "formal/SSBX/Roster.lean"
+          ],
+          "symbol": "PendingName"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Truth/Basic.lean"
+          ],
+          "symbol": "SemanticAdequacy"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Pending/Interfaces.lean"
+          ],
+          "symbol": "bot"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Roster.lean"
+          ],
+          "symbol": "entryOf"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Pending/Interfaces.lean"
+          ],
+          "symbol": "top"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Pending/Interfaces.lean"
+          ],
+          "symbol": "unk"
+        }
+      ]
+    },
+    {
+      "document": "formal/SSBX/notes/run-boundary.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
+          ],
+          "symbol": "YiState"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
+          ],
+          "symbol": "loopProg"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
+          ],
+          "symbol": "loopProg_has_no_fuel_witness"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
+          ],
+          "symbol": "loopProg_unbounded"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean",
+            "formal/SSBX/Foundation/Bagua/FuelDiscipline.lean",
+            "formal/SSBX/Pending/Examples.lean"
+          ],
+          "symbol": "run"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
+          ],
+          "symbol": "runFuel"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
+          ],
+          "symbol": "runFuel_loopProg_init_eq"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
+          ],
+          "symbol": "step_loopProg_init"
+        }
+      ]
+    },
+    {
+      "document": "formal/SSBX/notes/tier3-quine-roadmap.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Wen/WenyanSelfHost.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenyanSelfInterp.lean"
+          ],
+          "symbol": "encProg"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenyanParserGeneral.lean"
+          ],
+          "symbol": "lexN"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenyanParserGeneral.lean"
+          ],
+          "symbol": "parseProgN"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenyanParserGeneral.lean",
+            "formal/SSBX/Foundation/Wen/WenyanParserGeneral.lean"
+          ],
+          "symbol": "parseProgN_tokensOfProg"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenyanQuineWitness.lean",
+            "formal/SSBX/Foundation/Wen/WenyanSelfInterp.lean"
+          ],
+          "symbol": "quine16_history"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenyanQuineWitness.lean",
+            "formal/SSBX/Foundation/Wen/WenyanSelfInterp.lean"
+          ],
+          "symbol": "quine5_history"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
+          ],
+          "symbol": "runFuel"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenyanSelfHost.lean"
+          ],
+          "symbol": "微核数"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenyanSelfHost.lean"
+          ],
+          "symbol": "微核源"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenyanSelfHost.lean"
+          ],
+          "symbol": "微核源_not_runtime_quine_qian"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenyanSelfHost.lean"
+          ],
+          "symbol": "微核源_print_parseN_round_trip"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenyanSelfHost.lean"
+          ],
+          "symbol": "微核源_round_trip"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenyanSelfHost.lean"
+          ],
+          "symbol": "微核源_token_round_trip"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenyanSelfHost.lean"
+          ],
+          "symbol": "微核源_well_formed"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenyanSelfHost.lean"
+          ],
+          "symbol": "微核自释_total"
+        }
+      ]
+    },
+    {
+      "document": "formal/SSBX/notes/truth-ledger-boundary.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Truth/Basic.lean"
+          ],
+          "symbol": "AbsoluteTruth"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Truth/Basic.lean"
+          ],
+          "symbol": "AbsoluteTruthCertificate"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Model/Adequacy.lean"
+          ],
+          "symbol": "AdequateModel"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Truth/Basic.lean"
+          ],
+          "symbol": "ClaimId"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Truth/Basic.lean"
+          ],
+          "symbol": "ClaimKind"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Truth/ClaimLedger.lean"
+          ],
+          "symbol": "ClaimsWithStatus"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Truth/Semantics.lean"
+          ],
+          "symbol": "FormalSemantics"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Truth/Basic.lean"
+          ],
+          "symbol": "RecommendationCaseTruth"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Truth/Basic.lean"
+          ],
+          "symbol": "SSBXAxiomLedger"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Truth/Basic.lean"
+          ],
+          "symbol": "TruthStatus"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Truth/Absolute.lean"
+          ],
+          "symbol": "absolute_truth_certificate"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Truth/ClaimLedger.lean"
+          ],
+          "symbol": "claimEntry"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Truth/ClaimLedger.lean"
+          ],
+          "symbol": "claimEntry_status_current"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Truth/ClaimLedger.lean"
+          ],
+          "symbol": "currentStatusClaims_complete"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Truth/ClaimLedger.lean"
+          ],
+          "symbol": "ledgerDependentClaims"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Truth/ClaimLedger.lean"
+          ],
+          "symbol": "machineCheckedClaims"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Truth/ClaimLedger.lean"
+          ],
+          "symbol": "modelComputedClaims"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Truth/ClaimLedger.lean"
+          ],
+          "symbol": "no_formal_claim_pending"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Truth/ClaimLedger.lean"
+          ],
+          "symbol": "no_formal_claim_registryChecked"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Truth/ClaimLedger.lean"
+          ],
+          "symbol": "no_pending_claimEntry"
+        }
+      ]
+    },
+    {
+      "document": "formal/SSBX/notes/v14-roadmap.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "formal/SSBX/notes/zero-axiom-roadmap.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Bagua/KleeneInternal.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/KleeneInternal.lean"
+          ],
+          "symbol": "AllDecidersAreYiComputable"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/KleeneInternal.lean"
+          ],
+          "symbol": "BoolInverterCompilerExists"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/KleeneInternal.lean"
+          ],
+          "symbol": "BoolInverterCompilerFromUniversal"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/Cell192.lean"
+          ],
+          "symbol": "Cell192"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "CuoInvariantDecide"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/KleeneInternal.lean"
+          ],
+          "symbol": "HaltsWith"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/KleeneInternal.lean"
+          ],
+          "symbol": "KleeneFixedPointExists"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/KleeneInternal.lean"
+          ],
+          "symbol": "KleeneFixedPointFromPrimitives"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/KleeneInternal.lean"
+          ],
+          "symbol": "KleeneFromPrimitives"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "KleeneInverter"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Roster.lean"
+          ],
+          "symbol": "P"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/Cell192.lean",
+            "formal/SSBX/Foundation/Jian/Jian.lean"
+          ],
+          "symbol": "Shi"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/KleeneInternal.lean"
+          ],
+          "symbol": "SmnExists"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/KleeneInternal.lean"
+          ],
+          "symbol": "SmnSpec"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Roster.lean"
+          ],
+          "symbol": "U"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/KleeneInternal.lean"
+          ],
+          "symbol": "UniversalInterpExists"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/KleeneInternal.lean"
+          ],
+          "symbol": "UniversalInterpSpec"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/KleeneInternal.lean"
+          ],
+          "symbol": "YiDecides"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
+          ],
+          "symbol": "YiInstr"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/KleeneInternal.lean"
+          ],
+          "symbol": "all_deciders_from_all_lean_deciders"
+        }
+      ]
+    },
+    {
+      "document": "formal/SSBX/notes/zhouyi-position-operator-report.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Truth/SelfDescription.lean"
+          ],
+          "symbol": "BitPositionObject"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Truth/SelfDescription.lean"
+          ],
+          "symbol": "BitPositionVerified"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/Cell192.lean"
+          ],
+          "symbol": "Cell192"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Truth/SelfDescription.lean"
+          ],
+          "symbol": "CompleteSelfDescription"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "Hexagram"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "Sheng"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "YaoStar"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "atPos"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "bagua_algebra_complete"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "bagua_intercommunication"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "bagua_intercommunication_bounded"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "biAdj"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/HexagramPosition.lean"
+          ],
+          "symbol": "biCount"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/HexagramPosition.lean"
+          ],
+          "symbol": "biCountAt_total"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/HexagramPosition.lean"
+          ],
+          "symbol": "biCount_cuo_invariant"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/HexagramPosition.lean"
+          ],
+          "symbol": "biCount_zong_invariant"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "bian"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "bianInner"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "bianOuter"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Truth/SelfDescription.lean"
+          ],
+          "symbol": "cell192_operator_complete"
+        }
+      ]
+    },
+    {
+      "document": "formal/SSBX/notes/自释与自证.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "wenyan-operators.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Text/OperatorAnchors.lean",
+        "formal/SSBX/Text/OperatorCellMap.lean",
+        "formal/SSBX/Text/WenyanOperators.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Roster.lean"
+          ],
+          "symbol": "P"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Text/Completeness.lean"
+          ],
+          "symbol": "isness_single_glyph_operators_registered"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Operators.lean"
+          ],
+          "symbol": "isness_with_companion_operators"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Operators.lean"
+          ],
+          "symbol": "所"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Operators.lean"
+          ],
+          "symbol": "是"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Operators.lean"
+          ],
+          "symbol": "系"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Text/Glyph.lean"
+          ],
+          "symbol": "系1"
+        }
+      ]
+    },
+    {
+      "document": "ziwen-spec.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Text/Glyph.lean"
+          ],
+          "symbol": "Glyph"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Operators.lean"
+          ],
+          "symbol": "与"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Operators.lean"
+          ],
+          "symbol": "为"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Operators.lean"
+          ],
+          "symbol": "则"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Operators.lean"
+          ],
+          "symbol": "复"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Operators.lean"
+          ],
+          "symbol": "将"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Operators.lean"
+          ],
+          "symbol": "异"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Operators.lean"
+          ],
+          "symbol": "无"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenyanText.lean"
+          ],
+          "symbol": "终"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenyanText.lean"
+          ],
+          "symbol": "综"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenyanText.lean"
+          ],
+          "symbol": "错"
+        }
+      ]
+    },
+    {
+      "document": "义理/A_经典易传.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "Trigram"
+        }
+      ]
+    },
+    {
+      "document": "义理/B_六征体系.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "义理/C_实虚史真.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "义理/Cell192_BaguaTuring_理层全集与不完备.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean",
+        "formal/SSBX/Foundation/Bagua/BaguaTuring.lean",
+        "formal/SSBX/Foundation/Bagua/Cell192.lean",
+        "formal/SSBX/Foundation/Bagua/GodelLi.lean",
+        "formal/SSBX/Foundation/Yi/Yi.lean"
+      ],
+      "symbol_hits": []
+    },
+    {
+      "document": "义理/D_算子代数.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+      ],
+      "symbol_hits": []
+    },
+    {
+      "document": "义理/E_古代源流.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "义理/F_物理现象学.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "义理/G_完整算子系统_八卦互通与归一.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "Trigram"
+        }
+      ]
+    },
+    {
+      "document": "义理/H_证明报告.md",
+      "lean_path_mentions": [
+        "formal/SSBX.lean",
+        "formal/SSBX/Core.lean",
+        "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean",
+        "formal/SSBX/Foundation/Yi/Yi.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "Hexagram"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "Trigram"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "Yao"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/YiCore.lean"
+          ],
+          "symbol": "生生不息"
+        }
+      ]
+    },
+    {
+      "document": "义理/I_八卦全集.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean",
+        "formal/SSBX/Foundation/Yi/Yi.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "FlipCombo"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "Hexagram"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "LiangYi"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "SiXiang"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean",
+            "formal/SSBX/Foundation/Core/Yuan.lean"
+          ],
+          "symbol": "TaiJi"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "Trigram"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "Yao"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "bagua_intercommunication"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "bagua_intercommunication_bounded"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "bian"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "bianInner"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "bianOuter"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean",
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "dong"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "dongInner"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "dongOuter"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "dui"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "fenToSiXiang"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "fenToTrigram"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "fenToYi"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "gen"
+        }
+      ]
+    },
+    {
+      "document": "义理/J_理之不完备_哥德尔在192.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Bagua/BaguaTuring.lean",
+        "formal/SSBX/Foundation/Bagua/Cell192.lean",
+        "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/Cell192.lean"
+          ],
+          "symbol": "Cell192"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "Halts"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "Hexagram"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "KleeneInverter"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "Sheng"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/Cell192.lean",
+            "formal/SSBX/Foundation/Jian/Jian.lean"
+          ],
+          "symbol": "Shi"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
+          ],
+          "symbol": "YiInstr"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
+          ],
+          "symbol": "YiState"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
+          ],
+          "symbol": "daoJudge"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
+          ],
+          "symbol": "daoJudgeProg"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "daoJudge_not_universal"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "halts_at_fixed_undecidable_under_kleene"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "halts_undecidable_internally"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "halts_undecidable_under_kleene"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "kleene_recursion_axiom"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "li_incomplete_finite"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "li_incomplete_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "li_incomplete_summary_full"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
+          ],
+          "symbol": "loopProg"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/Cell192.lean"
+          ],
+          "symbol": "mem_all"
+        }
+      ]
+    },
+    {
+      "document": "义理/K_完备性审计.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/Cell192.lean"
+          ],
+          "symbol": "Cell192"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "Hexagram"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "Sheng"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "SiXiang"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "Trigram"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "Yao"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "bagua_algebra_complete"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "canonical_complete"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "hexagram_mem_allHex"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "trigram_mem_all"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "zong_outside_flip_group"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/YiCore.lean"
+          ],
+          "symbol": "一"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Operators.lean"
+          ],
+          "symbol": "不"
+        }
+      ]
+    },
+    {
+      "document": "义理/L_文道一也_自释与微核.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Bagua/BaguaTuring.lean",
+        "formal/SSBX/Foundation/Wen/WenyanSelfInterp.lean",
+        "formal/SSBX/Foundation/Wen/WenyanText.lean",
+        "formal/SSBX/Foundation/Yi/YiCore.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
+          ],
+          "symbol": "YiInstr"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
+          ],
+          "symbol": "YiState"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
+          ],
+          "symbol": "daoJudgeProg"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
+          ],
+          "symbol": "runFuel"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenyanText.lean"
+          ],
+          "symbol": "道判之程"
+        }
+      ]
+    },
+    {
+      "document": "义理/M_证明报告_192_理之不完备.md",
+      "lean_path_mentions": [
+        "formal/SSBX.lean",
+        "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "Halts"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "KleeneInverter"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
+          ],
+          "symbol": "YiInstr"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
+          ],
+          "symbol": "YiState"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
+          ],
+          "symbol": "daoJudgeProg"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "daoJudge_not_universal"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "halts_undecidable_internally"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "halts_undecidable_under_kleene"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "kleene_recursion_axiom"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "li_incomplete_finite"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "li_incomplete_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "li_incomplete_summary_full"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
+          ],
+          "symbol": "loopProg"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "rice_four_images"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "rice_uniform_under_kleene"
+        }
+      ]
+    },
+    {
+      "document": "义理/N_儒家从元到圣.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Wen/Kernel.lean"
+      ],
+      "symbol_hits": []
+    },
+    {
+      "document": "义理/O_进化非道者生存_三视证.md",
+      "lean_path_mentions": [
+        "formal/SSBX.lean",
+        "formal/SSBX/Core.lean",
+        "formal/SSBX/Foundation/Core/EvolutionDao.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Core.lean"
+          ],
+          "symbol": "Closed"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/EvolutionDao.lean"
+          ],
+          "symbol": "CorrectiveSieve"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/EvolutionDao.lean"
+          ],
+          "symbol": "EvolutionSieve"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Core.lean",
+            "formal/SSBX/Core.lean",
+            "formal/SSBX/Pending/Interfaces.lean"
+          ],
+          "symbol": "Model"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Core.lean"
+          ],
+          "symbol": "Open"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/EvolutionDao.lean"
+          ],
+          "symbol": "evolution_not_truedao_three_views"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/EvolutionDao.lean"
+          ],
+          "symbol": "good_path_passes_corrective"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/EvolutionDao.lean"
+          ],
+          "symbol": "reflexive_perspective"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/EvolutionDao.lean"
+          ],
+          "symbol": "scale_perspective"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Core.lean"
+          ],
+          "symbol": "unitProcess"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/EvolutionDao.lean"
+          ],
+          "symbol": "value_perspective"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/YiCore.lean"
+          ],
+          "symbol": "生生不息"
+        }
+      ]
+    },
+    {
+      "document": "义理/P_道家从无到化.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Wen/Kernel.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "wuBuWei"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "wuWei"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "ziRan"
+        }
+      ]
+    },
+    {
+      "document": "义理/Q_佛家从苦到觉.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Wen/Kernel.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "extreme"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "ku"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "middle"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "zhi_universal"
+        }
+      ]
+    },
+    {
+      "document": "义理/README.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/AntiSchmitt.lean"
+          ],
+          "symbol": "friend_enemy_implies_moloch"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "tongGen"
+        }
+      ]
+    },
+    {
+      "document": "义理/R_与生生不息对齐之必然.md",
+      "lean_path_mentions": [
+        "formal/SSBX.lean",
+        "formal/SSBX/Core.lean",
+        "formal/SSBX/Foundation/Core/Alignment.lean",
+        "formal/SSBX/Foundation/Core/EvolutionDao.lean",
+        "formal/SSBX/Foundation/Core/HumanAlignment.lean",
+        "formal/SSBX/Foundation/Core/ShengshengBuxi.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Alignment.lean"
+          ],
+          "symbol": "alignment_to_shengshengbuxi_is_necessary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Alignment.lean"
+          ],
+          "symbol": "co_aligned_iff_individual"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Alignment.lean"
+          ],
+          "symbol": "content_does_not_imply_process"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Alignment.lean"
+          ],
+          "symbol": "denier_breaks_shengshengbuxi"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Alignment.lean"
+          ],
+          "symbol": "doing_human_is_process_alignment"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Alignment.lean"
+          ],
+          "symbol": "persistence_implies_open_at_every_step"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Alignment.lean"
+          ],
+          "symbol": "process_alignment_dao_shengshengbuxi_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/EvolutionDao.lean"
+          ],
+          "symbol": "reflexive_perspective"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/EvolutionDao.lean"
+          ],
+          "symbol": "scale_perspective"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/EvolutionDao.lean"
+          ],
+          "symbol": "value_perspective"
+        }
+      ]
+    },
+    {
+      "document": "义理/S_先秦百家.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Wen/Kernel.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "WuXing"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean",
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean",
+            "formal/SSBX/Foundation/Bagua/Cell192.lean"
+          ],
+          "symbol": "all"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "ke"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Eight/ShuSuan.lean",
+            "formal/SSBX/Foundation/Wen/Kernel.lean",
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "sheng"
+        }
+      ]
+    },
+    {
+      "document": "义理/T_西哲与亚伯拉罕.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Wen/Kernel.lean"
+      ],
+      "symbol_hits": []
+    },
+    {
+      "document": "义理/U_反诛心信诚之形式.md",
+      "lean_path_mentions": [
+        "formal/SSBX.lean",
+        "formal/SSBX/Core.lean",
+        "formal/SSBX/Foundation/Core/Alignment.lean",
+        "formal/SSBX/Foundation/Core/Sincerity.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Sincerity.lean"
+          ],
+          "symbol": "consented_requires_witness"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Sincerity.lean"
+          ],
+          "symbol": "cultivation_can_be_asymptotic"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Sincerity.lean"
+          ],
+          "symbol": "high_alignment_not_truth"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Sincerity.lean"
+          ],
+          "symbol": "matchCount_eq_iff_pointwise"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Sincerity.lean"
+          ],
+          "symbol": "response_is_only_inquiry"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Sincerity.lean"
+          ],
+          "symbol": "sincerity_excludes_BRM"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Sincerity.lean"
+          ],
+          "symbol": "sincerity_is_graded"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Sincerity.lean"
+          ],
+          "symbol": "sincerity_main_theorem"
+        }
+      ]
+    },
+    {
+      "document": "义理/V_现代政治哲学.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Wen/Kernel.lean"
+      ],
+      "symbol_hits": []
+    },
+    {
+      "document": "义理/W_非道之形式.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Wen/Kernel.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "attractor"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "moloch_via_externality_refuted"
+        }
+      ]
+    },
+    {
+      "document": "义理/X_反施密特.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Wen/AntiSchmitt.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/AntiSchmitt.lean"
+          ],
+          "symbol": "PoliticalRelation"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/AntiSchmitt.lean"
+          ],
+          "symbol": "concreteOrderViaRen"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/AntiSchmitt.lean"
+          ],
+          "symbol": "decisionistAsymmetry"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/AntiSchmitt.lean"
+          ],
+          "symbol": "friendOrEnemy"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "schmitt_friend_enemy_refuted"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "schmitt_state_of_exception_refuted"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/AntiSchmitt.lean"
+          ],
+          "symbol": "stateOfException"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "tongGen"
+        }
+      ]
+    },
+    {
+      "document": "义理/Y_对齐失败.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Wen/AlignmentFailures.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/AlignmentFailures.lean"
+          ],
+          "symbol": "AttractorTarget"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/AlignmentFailures.lean"
+          ],
+          "symbol": "GoodhartState"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/AlignmentFailures.lean"
+          ],
+          "symbol": "Misaligned"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/AlignmentFailures.lean"
+          ],
+          "symbol": "ObjectivePair"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/AlignmentFailures.lean"
+          ],
+          "symbol": "Proxy"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/AlignmentFailures.lean"
+          ],
+          "symbol": "RewardSignal"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/AlignmentFailures.lean"
+          ],
+          "symbol": "gamingWitness"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/AlignmentFailures.lean"
+          ],
+          "symbol": "no_stable_goal"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/AlignmentFailures.lean"
+          ],
+          "symbol": "wireheading_refuted"
+        }
+      ]
+    },
+    {
+      "document": "义理/Z_经济博弈.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Wen/EconGame.lean"
+      ],
+      "symbol_hits": []
+    },
+    {
+      "document": "义理/人类命运共同体_共同体之证.md",
+      "lean_path_mentions": [
+        "formal/SSBX.lean",
+        "formal/SSBX/Core.lean",
+        "formal/SSBX/Foundation/Core/HumanAlignment.lean",
+        "formal/SSBX/Foundation/Core/Renlei.lean",
+        "formal/SSBX/Roster.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Renlei.lean"
+          ],
+          "symbol": "CommunityState"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Core.lean"
+          ],
+          "symbol": "TrueDao"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Renlei.lean"
+          ],
+          "symbol": "aligned"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Renlei.lean"
+          ],
+          "symbol": "aligned_realizes_truedao"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Renlei.lean"
+          ],
+          "symbol": "communityDao"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Renlei.lean"
+          ],
+          "symbol": "communityModel"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Renlei.lean"
+          ],
+          "symbol": "isolated_fails_truedao"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Renlei.lean"
+          ],
+          "symbol": "renleiCommonDestinyDef"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Renlei.lean"
+          ],
+          "symbol": "seized_fails_truedao"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Renlei.lean"
+          ],
+          "symbol": "severed_fails_truedao"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Renlei.lean"
+          ],
+          "symbol": "人类命运共同体_aligned_iff"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Core/Renlei.lean"
+          ],
+          "symbol": "人类命运共同体_之证"
+        }
+      ]
+    },
+    {
+      "document": "义理/几何位 · 从元到形.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Eight/XingWei.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "bagua_intercommunication"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "biAdj"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "hammingDist"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "hammingDist_eq_zero_iff"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "hammingDist_le_3"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "hammingDist_self"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "hexHammingDist_le_6"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "hex_intercommunication"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "isZhongPos"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "pathFromTo_length_eq_hammingDist"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "wellPos"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Eight/XingWei.lean"
+          ],
+          "symbol": "xingwei_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "yingResponds"
+        }
+      ]
+    },
+    {
+      "document": "义理/动力 · 从元到行.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Eight/DongLi.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "Trigram"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "bagua_intercommunication"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "cuo_eq_compose"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Core.lean",
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean",
+            "formal/SSBX/Foundation/Jian/Jian.lean"
+          ],
+          "symbol": "step"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "transform_correct"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Eight/TongJi.lean"
+          ],
+          "symbol": "trigram_uniform_card"
+        }
+      ]
+    },
+    {
+      "document": "义理/形式逻辑 · 从元到推.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Eight/LuoJi.lean"
+      ],
+      "symbol_hits": []
+    },
+    {
+      "document": "义理/心智 · 从元到识.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Eight/XinZhi.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "SiXiang"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "bagua_intercommunication"
+        }
+      ]
+    },
+    {
+      "document": "义理/拓扑 · 从元到障.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "义理/数与算术 · 从元到数.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Eight/ShuSuan.lean"
+      ],
+      "symbol_hits": []
+    },
+    {
+      "document": "义理/物理 · 从元到象.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Eight/WuXiang.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Eight/WuXiang.lean"
+          ],
+          "symbol": "Bool.toYao"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Eight/WuXiang.lean"
+          ],
+          "symbol": "Yao.toBool"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "bagua_intercommunication"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "cuoZong_cuoZong"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Jian/JianModeKernel.lean",
+            "formal/SSBX/Foundation/Yi/Yi.lean",
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "cuo_cuo"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Jian/JianModeKernel.lean",
+            "formal/SSBX/Foundation/Yi/Yi.lean",
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "zong_zong"
+        }
+      ]
+    },
+    {
+      "document": "义理/生态 · 从元到生.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "bagua_intercommunication"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
+          ],
+          "symbol": "daoJudge"
+        }
+      ]
+    },
+    {
+      "document": "义理/算子别名总表.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "Sheng"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Eight/XingWei.lean"
+          ],
+          "symbol": "bi"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "bian"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean",
+            "formal/SSBX/Foundation/Eight/ShuSuan.lean"
+          ],
+          "symbol": "chong"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Jian/JianModeKernel.lean",
+            "formal/SSBX/Foundation/Yi/Yi.lean",
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "cuo"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Eight/XingWei.lean"
+          ],
+          "symbol": "dang"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean",
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "dong"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Eight/ShuSuan.lean"
+          ],
+          "symbol": "fan"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "guiyi"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Eight/ShuSuan.lean",
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "he"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "hua"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Eight/DongLi.lean"
+          ],
+          "symbol": "iter"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "ji"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "ke"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Eight/TongJi.lean"
+          ],
+          "symbol": "shu"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Eight/ShuSuan.lean"
+          ],
+          "symbol": "sun"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Eight/XingWei.lean"
+          ],
+          "symbol": "ying"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "yuan"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "zhi"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Jian/JianModeKernel.lean",
+            "formal/SSBX/Foundation/Yi/Yi.lean",
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "zong"
+        }
+      ]
+    },
+    {
+      "document": "义理/类与映 · 从元到映.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Eight/LeiYing.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Eight/LeiYing.lean"
+          ],
+          "symbol": "BaguaCat"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Eight/LeiYing.lean"
+          ],
+          "symbol": "HexagramCat"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Eight/LeiYing.lean"
+          ],
+          "symbol": "SetCat"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Eight/ShuSuan.lean"
+          ],
+          "symbol": "galois_sun_he"
+        }
+      ]
+    },
+    {
+      "document": "义理/统计 · 从元到测.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Eight/TongJi.lean"
+      ],
+      "symbol_hits": []
+    },
+    {
+      "document": "义理/道桥接_ProcessAligned_Dao_ShengshengBuxi.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Core/Alignment.lean",
+        "formal/SSBX/Foundation/Core/ShengshengBuxi.lean"
+      ],
+      "symbol_hits": []
+    },
+    {
+      "document": "六表_实虚史真/表一_六征本表.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "六表_实虚史真/表三_实虚modal三态.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "六表_实虚史真/表二_史维三态.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "六表_实虚史真/表五_三轴27格.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "六表_实虚史真/表六_192格全表.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    },
+    {
+      "document": "六表_实虚史真/表四_真假认识三态.md",
+      "lean_path_mentions": [],
+      "symbol_hits": []
+    }
+  ]
+}

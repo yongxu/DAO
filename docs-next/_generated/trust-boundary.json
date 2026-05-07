@@ -1,0 +1,22 @@
+{
+  "records": [
+    {
+      "kind": "partial def",
+      "line": 162,
+      "name": "run",
+      "path": "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
+    },
+    {
+      "kind": "axiom",
+      "line": 651,
+      "name": "kleene_recursion_axiom",
+      "path": "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+    },
+    {
+      "kind": "opaque",
+      "line": 164,
+      "name": "theOne",
+      "path": "formal/SSBX/Foundation/Wen/Kernel.lean"
+    }
+  ]
+}

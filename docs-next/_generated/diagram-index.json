@@ -1,0 +1,95 @@
+{
+  "count": 10,
+  "diagrams": [
+    {
+      "edges": 24,
+      "lines": 66,
+      "nodes": 22,
+      "path": "formal/SSBX/diagrams/AttentionDAG.mmd",
+      "sha256": "31920e2dc2bb44405282494d91b039d696e02b6a535cb2db2f4ffbd8ae06556c",
+      "svg": "formal/SSBX/diagrams/AttentionDAG.svg",
+      "svg_exists": true
+    },
+    {
+      "edges": 458,
+      "lines": 960,
+      "nodes": 491,
+      "path": "formal/SSBX/diagrams/ConceptDAG.complete.mmd",
+      "sha256": "fc3e866375dc0e809e27105823499cf987121128ceb2f2d9d9972c5bccaf09f2",
+      "svg": "formal/SSBX/diagrams/ConceptDAG.complete.svg",
+      "svg_exists": true
+    },
+    {
+      "edges": 36,
+      "lines": 101,
+      "nodes": 40,
+      "path": "formal/SSBX/diagrams/ConceptDAG.core.mmd",
+      "sha256": "5d08b369379e3ca2204e7afef8110ae45eaf768a6e89e9ddf29a7cbf883bb148",
+      "svg": "formal/SSBX/diagrams/ConceptDAG.core.svg",
+      "svg_exists": true
+    },
+    {
+      "edges": 458,
+      "lines": 960,
+      "nodes": 491,
+      "path": "formal/SSBX/diagrams/ConceptDAG.full.mmd",
+      "sha256": "fc3e866375dc0e809e27105823499cf987121128ceb2f2d9d9972c5bccaf09f2",
+      "svg": "formal/SSBX/diagrams/ConceptDAG.full.svg",
+      "svg_exists": true
+    },
+    {
+      "edges": 458,
+      "lines": 981,
+      "nodes": 491,
+      "path": "formal/SSBX/diagrams/ConceptDAG.layered.mmd",
+      "sha256": "5cb0a9ba9d877edf243899f1bd9a23b844a550a735556616ae0c52783e82f8f6",
+      "svg": "formal/SSBX/diagrams/ConceptDAG.layered.svg",
+      "svg_exists": true
+    },
+    {
+      "edges": 37,
+      "lines": 71,
+      "nodes": 16,
+      "path": "formal/SSBX/diagrams/ConstructionDAG.mmd",
+      "sha256": "3d735dfaf0b4c720138b29d8b1d6cb75b2acca44eb4ee1dbebc9269497013263",
+      "svg": "formal/SSBX/diagrams/ConstructionDAG.svg",
+      "svg_exists": true
+    },
+    {
+      "edges": 15,
+      "lines": 43,
+      "nodes": 13,
+      "path": "formal/SSBX/diagrams/HumanAlignmentDAG.mmd",
+      "sha256": "985527cddc40551871eafcd472a6c59b240ff74b49ce3cd7a02dc2d0a995fa88",
+      "svg": "formal/SSBX/diagrams/HumanAlignmentDAG.svg",
+      "svg_exists": true
+    },
+    {
+      "edges": 895,
+      "lines": 1533,
+      "nodes": 601,
+      "path": "formal/SSBX/diagrams/MonadDAG.mmd",
+      "sha256": "8f786ed739da12b2d1ddc2d4eae544faa5fc92f82789acb821f71793f962fc46",
+      "svg": "formal/SSBX/diagrams/MonadDAG.svg",
+      "svg_exists": true
+    },
+    {
+      "edges": 324,
+      "lines": 393,
+      "nodes": 64,
+      "path": "formal/SSBX/diagrams/PositionOperatorGraph.hex64.mmd",
+      "sha256": "f538b47dbb80f813f600aeebfb2a7391822a2b33845dd9b8587ea12c1a10d569",
+      "svg": "formal/SSBX/diagrams/PositionOperatorGraph.hex64.svg",
+      "svg_exists": true
+    },
+    {
+      "edges": 23,
+      "lines": 34,
+      "nodes": 6,
+      "path": "formal/SSBX/diagrams/PositionOperatorGraph.six.mmd",
+      "sha256": "5c7841d915db624695284870f896a1dabb393e70dc53bf286a53fcb853e2e699",
+      "svg": "formal/SSBX/diagrams/PositionOperatorGraph.six.svg",
+      "svg_exists": true
+    }
+  ]
+}

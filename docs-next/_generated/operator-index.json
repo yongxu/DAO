@@ -1,0 +1,2260 @@
+{
+  "count": 371,
+  "counts_by_group": {
+    "A": 20,
+    "B": 8,
+    "C": 8,
+    "CHU": 10,
+    "D": 10,
+    "E": 9,
+    "F": 12,
+    "G": 11,
+    "H": 8,
+    "I": 9,
+    "K": 8,
+    "L": 16,
+    "LIJ": 14,
+    "M": 8,
+    "N": 8,
+    "P": 24,
+    "Q": 8,
+    "R": 15,
+    "S": 20,
+    "SUN": 14,
+    "T": 15,
+    "X": 16,
+    "Y": 28,
+    "Z": 40,
+    "ZA": 20,
+    "ZHU": 12
+  },
+  "operators": [
+    {
+      "code": "R-1",
+      "group": "R",
+      "id": "R_1",
+      "title": "在"
+    },
+    {
+      "code": "R-2",
+      "group": "R",
+      "id": "R_2",
+      "title": "屬 / 属"
+    },
+    {
+      "code": "R-3",
+      "group": "R",
+      "id": "R_3",
+      "title": "際 / 际"
+    },
+    {
+      "code": "R-4",
+      "group": "R",
+      "id": "R_4",
+      "title": "間 / 间"
+    },
+    {
+      "code": "R-5",
+      "group": "R",
+      "id": "R_5",
+      "title": "中"
+    },
+    {
+      "code": "R-6",
+      "group": "R",
+      "id": "R_6",
+      "title": "正"
+    },
+    {
+      "code": "R-7",
+      "group": "R",
+      "id": "R_7",
+      "title": "應 / 应"
+    },
+    {
+      "code": "R-8",
+      "group": "R",
+      "id": "R_8",
+      "title": "比"
+    },
+    {
+      "code": "R-9",
+      "group": "R",
+      "id": "R_9",
+      "title": "承"
+    },
+    {
+      "code": "R-10",
+      "group": "R",
+      "id": "R_10",
+      "title": "乘"
+    },
+    {
+      "code": "R-11",
+      "group": "R",
+      "id": "R_11",
+      "title": "對 / 对"
+    },
+    {
+      "code": "R-12",
+      "group": "R",
+      "id": "R_12",
+      "title": "偶 / 耦"
+    },
+    {
+      "code": "R-13",
+      "group": "R",
+      "id": "R_13",
+      "title": "並 / 并"
+    },
+    {
+      "code": "R-14",
+      "group": "R",
+      "id": "R_14",
+      "title": "與 / 与"
+    },
+    {
+      "code": "R-15",
+      "group": "R",
+      "id": "R_15",
+      "title": "偕"
+    },
+    {
+      "code": "C-1",
+      "group": "C",
+      "id": "C_1",
+      "title": "含"
+    },
+    {
+      "code": "C-2",
+      "group": "C",
+      "id": "C_2",
+      "title": "包"
+    },
+    {
+      "code": "C-3",
+      "group": "C",
+      "id": "C_3",
+      "title": "容"
+    },
+    {
+      "code": "C-4",
+      "group": "C",
+      "id": "C_4",
+      "title": "中 (用作 inside)"
+    },
+    {
+      "code": "C-5",
+      "group": "C",
+      "id": "C_5",
+      "title": "外"
+    },
+    {
+      "code": "C-6",
+      "group": "C",
+      "id": "C_6",
+      "title": "內 / 内"
+    },
+    {
+      "code": "C-7",
+      "group": "C",
+      "id": "C_7",
+      "title": "表"
+    },
+    {
+      "code": "C-8",
+      "group": "C",
+      "id": "C_8",
+      "title": "裡 / 里"
+    },
+    {
+      "code": "T-1",
+      "group": "T",
+      "id": "T_1",
+      "title": "化"
+    },
+    {
+      "code": "T-2",
+      "group": "T",
+      "id": "T_2",
+      "title": "變 / 变"
+    },
+    {
+      "code": "T-3",
+      "group": "T",
+      "id": "T_3",
+      "title": "易"
+    },
+    {
+      "code": "T-4",
+      "group": "T",
+      "id": "T_4",
+      "title": "革"
+    },
+    {
+      "code": "T-5",
+      "group": "T",
+      "id": "T_5",
+      "title": "改"
+    },
+    {
+      "code": "T-6",
+      "group": "T",
+      "id": "T_6",
+      "title": "反"
+    },
+    {
+      "code": "T-7",
+      "group": "T",
+      "id": "T_7",
+      "title": "復 / 复"
+    },
+    {
+      "code": "T-8",
+      "group": "T",
+      "id": "T_8",
+      "title": "還 / 还"
+    },
+    {
+      "code": "T-9",
+      "group": "T",
+      "id": "T_9",
+      "title": "轉 / 转"
+    },
+    {
+      "code": "T-10",
+      "group": "T",
+      "id": "T_10",
+      "title": "推"
+    },
+    {
+      "code": "T-11",
+      "group": "T",
+      "id": "T_11",
+      "title": "致"
+    },
+    {
+      "code": "T-12",
+      "group": "T",
+      "id": "T_12",
+      "title": "損 / 损"
+    },
+    {
+      "code": "T-13",
+      "group": "T",
+      "id": "T_13",
+      "title": "益"
+    },
+    {
+      "code": "T-14",
+      "group": "T",
+      "id": "T_14",
+      "title": "屈"
+    },
+    {
+      "code": "T-15",
+      "group": "T",
+      "id": "T_15",
+      "title": "伸"
+    },
+    {
+      "code": "F-1",
+      "group": "F",
+      "id": "F_1",
+      "title": "往"
+    },
+    {
+      "code": "F-2",
+      "group": "F",
+      "id": "F_2",
+      "title": "來 / 来"
+    },
+    {
+      "code": "F-3",
+      "group": "F",
+      "id": "F_3",
+      "title": "進 / 进"
+    },
+    {
+      "code": "F-4",
+      "group": "F",
+      "id": "F_4",
+      "title": "退"
+    },
+    {
+      "code": "F-5",
+      "group": "F",
+      "id": "F_5",
+      "title": "升"
+    },
+    {
+      "code": "F-6",
+      "group": "F",
+      "id": "F_6",
+      "title": "降"
+    },
+    {
+      "code": "F-7",
+      "group": "F",
+      "id": "F_7",
+      "title": "出"
+    },
+    {
+      "code": "F-8",
+      "group": "F",
+      "id": "F_8",
+      "title": "入"
+    },
+    {
+      "code": "F-9",
+      "group": "F",
+      "id": "F_9",
+      "title": "行"
+    },
+    {
+      "code": "F-10",
+      "group": "F",
+      "id": "F_10",
+      "title": "動 / 动"
+    },
+    {
+      "code": "F-11",
+      "group": "F",
+      "id": "F_11",
+      "title": "靜 / 静"
+    },
+    {
+      "code": "F-12",
+      "group": "F",
+      "id": "F_12",
+      "title": "通"
+    },
+    {
+      "code": "B-1",
+      "group": "B",
+      "id": "B_1",
+      "title": "始"
+    },
+    {
+      "code": "B-2",
+      "group": "B",
+      "id": "B_2",
+      "title": "終 / 终"
+    },
+    {
+      "code": "B-3",
+      "group": "B",
+      "id": "B_3",
+      "title": "起"
+    },
+    {
+      "code": "B-4",
+      "group": "B",
+      "id": "B_4",
+      "title": "止"
+    },
+    {
+      "code": "B-5",
+      "group": "B",
+      "id": "B_5",
+      "title": "立"
+    },
+    {
+      "code": "B-6",
+      "group": "B",
+      "id": "B_6",
+      "title": "成"
+    },
+    {
+      "code": "B-7",
+      "group": "B",
+      "id": "B_7",
+      "title": "極 / 极"
+    },
+    {
+      "code": "B-8",
+      "group": "B",
+      "id": "B_8",
+      "title": "節 / 节"
+    },
+    {
+      "code": "Q-1",
+      "group": "Q",
+      "id": "Q_1",
+      "title": "凡"
+    },
+    {
+      "code": "Q-2",
+      "group": "Q",
+      "id": "Q_2",
+      "title": "皆"
+    },
+    {
+      "code": "Q-3",
+      "group": "Q",
+      "id": "Q_3",
+      "title": "各"
+    },
+    {
+      "code": "Q-4",
+      "group": "Q",
+      "id": "Q_4",
+      "title": "莫"
+    },
+    {
+      "code": "Q-5",
+      "group": "Q",
+      "id": "Q_5",
+      "title": "或"
+    },
+    {
+      "code": "Q-6",
+      "group": "Q",
+      "id": "Q_6",
+      "title": "有"
+    },
+    {
+      "code": "Q-7",
+      "group": "Q",
+      "id": "Q_7",
+      "title": "無 / 无"
+    },
+    {
+      "code": "Q-8",
+      "group": "Q",
+      "id": "Q_8",
+      "title": "唯"
+    },
+    {
+      "code": "K-1",
+      "group": "K",
+      "id": "K_1",
+      "title": "故"
+    },
+    {
+      "code": "K-2",
+      "group": "K",
+      "id": "K_2",
+      "title": "由"
+    },
+    {
+      "code": "K-3",
+      "group": "K",
+      "id": "K_3",
+      "title": "自"
+    },
+    {
+      "code": "K-4",
+      "group": "K",
+      "id": "K_4",
+      "title": "至"
+    },
+    {
+      "code": "K-5",
+      "group": "K",
+      "id": "K_5",
+      "title": "致 (复用 T-11)"
+    },
+    {
+      "code": "K-6",
+      "group": "K",
+      "id": "K_6",
+      "title": "使"
+    },
+    {
+      "code": "K-7",
+      "group": "K",
+      "id": "K_7",
+      "title": "令"
+    },
+    {
+      "code": "K-8",
+      "group": "K",
+      "id": "K_8",
+      "title": "以"
+    },
+    {
+      "code": "M-1",
+      "group": "M",
+      "id": "M_1",
+      "title": "必"
+    },
+    {
+      "code": "M-2",
+      "group": "M",
+      "id": "M_2",
+      "title": "或 (复用 Q-5 的另一读法)"
+    },
+    {
+      "code": "M-3",
+      "group": "M",
+      "id": "M_3",
+      "title": "當 / 当"
+    },
+    {
+      "code": "M-4",
+      "group": "M",
+      "id": "M_4",
+      "title": "宜"
+    },
+    {
+      "code": "M-5",
+      "group": "M",
+      "id": "M_5",
+      "title": "可"
+    },
+    {
+      "code": "M-6",
+      "group": "M",
+      "id": "M_6",
+      "title": "能"
+    },
+    {
+      "code": "M-7",
+      "group": "M",
+      "id": "M_7",
+      "title": "得"
+    },
+    {
+      "code": "M-8",
+      "group": "M",
+      "id": "M_8",
+      "title": "應 / 应 (复用 R-7)"
+    },
+    {
+      "code": "N-1",
+      "group": "N",
+      "id": "N_1",
+      "title": "不"
+    },
+    {
+      "code": "N-2",
+      "group": "N",
+      "id": "N_2",
+      "title": "非"
+    },
+    {
+      "code": "N-3",
+      "group": "N",
+      "id": "N_3",
+      "title": "弗"
+    },
+    {
+      "code": "N-4",
+      "group": "N",
+      "id": "N_4",
+      "title": "勿"
+    },
+    {
+      "code": "N-5",
+      "group": "N",
+      "id": "N_5",
+      "title": "毋"
+    },
+    {
+      "code": "N-6",
+      "group": "N",
+      "id": "N_6",
+      "title": "反 (复用 T-6) — 在对偶层"
+    },
+    {
+      "code": "N-7",
+      "group": "N",
+      "id": "N_7",
+      "title": "異 / 异"
+    },
+    {
+      "code": "N-8",
+      "group": "N",
+      "id": "N_8",
+      "title": "別 / 别"
+    },
+    {
+      "code": "I-1",
+      "group": "I",
+      "id": "I_1",
+      "title": "同"
+    },
+    {
+      "code": "I-2",
+      "group": "I",
+      "id": "I_2",
+      "title": "一"
+    },
+    {
+      "code": "I-3",
+      "group": "I",
+      "id": "I_3",
+      "title": "即"
+    },
+    {
+      "code": "I-4",
+      "group": "I",
+      "id": "I_4",
+      "title": "是"
+    },
+    {
+      "code": "I-5",
+      "group": "I",
+      "id": "I_5",
+      "title": "為 / 为"
+    },
+    {
+      "code": "I-6",
+      "group": "I",
+      "id": "I_6",
+      "title": "分"
+    },
+    {
+      "code": "I-7",
+      "group": "I",
+      "id": "I_7",
+      "title": "合"
+    },
+    {
+      "code": "I-8",
+      "group": "I",
+      "id": "I_8",
+      "title": "別 (复用 N-8) — 在分异层"
+    },
+    {
+      "code": "I-9",
+      "group": "I",
+      "id": "I_9",
+      "title": "系"
+    },
+    {
+      "code": "S-1",
+      "group": "S",
+      "id": "S_1",
+      "title": "之"
+    },
+    {
+      "code": "S-2",
+      "group": "S",
+      "id": "S_2",
+      "title": "而"
+    },
+    {
+      "code": "S-3",
+      "group": "S",
+      "id": "S_3",
+      "title": "則 / 则"
+    },
+    {
+      "code": "S-4",
+      "group": "S",
+      "id": "S_4",
+      "title": "若"
+    },
+    {
+      "code": "S-5",
+      "group": "S",
+      "id": "S_5",
+      "title": "雖 / 虽"
+    },
+    {
+      "code": "S-6",
+      "group": "S",
+      "id": "S_6",
+      "title": "然"
+    },
+    {
+      "code": "S-7",
+      "group": "S",
+      "id": "S_7",
+      "title": "故 (复用 K-1)"
+    },
+    {
+      "code": "S-8",
+      "group": "S",
+      "id": "S_8",
+      "title": "乃"
+    },
+    {
+      "code": "S-9",
+      "group": "S",
+      "id": "S_9",
+      "title": "既"
+    },
+    {
+      "code": "S-10",
+      "group": "S",
+      "id": "S_10",
+      "title": "將 / 将"
+    },
+    {
+      "code": "S-11",
+      "group": "S",
+      "id": "S_11",
+      "title": "方"
+    },
+    {
+      "code": "S-12",
+      "group": "S",
+      "id": "S_12",
+      "title": "嘗 / 尝"
+    },
+    {
+      "code": "S-13",
+      "group": "S",
+      "id": "S_13",
+      "title": "者"
+    },
+    {
+      "code": "S-14",
+      "group": "S",
+      "id": "S_14",
+      "title": "也"
+    },
+    {
+      "code": "S-15",
+      "group": "S",
+      "id": "S_15",
+      "title": "于 / 於"
+    },
+    {
+      "code": "S-16",
+      "group": "S",
+      "id": "S_16",
+      "title": "所"
+    },
+    {
+      "code": "S-17",
+      "group": "S",
+      "id": "S_17",
+      "title": "未"
+    },
+    {
+      "code": "S-18",
+      "group": "S",
+      "id": "S_18",
+      "title": "已"
+    },
+    {
+      "code": "S-19",
+      "group": "S",
+      "id": "S_19",
+      "title": "的"
+    },
+    {
+      "code": "S-20",
+      "group": "S",
+      "id": "S_20",
+      "title": "地"
+    },
+    {
+      "code": "H-1",
+      "group": "H",
+      "id": "H_1",
+      "title": "道"
+    },
+    {
+      "code": "H-2",
+      "group": "H",
+      "id": "H_2",
+      "title": "理"
+    },
+    {
+      "code": "H-3",
+      "group": "H",
+      "id": "H_3",
+      "title": "勢 / 势"
+    },
+    {
+      "code": "H-4",
+      "group": "H",
+      "id": "H_4",
+      "title": "機 / 机"
+    },
+    {
+      "code": "H-5",
+      "group": "H",
+      "id": "H_5",
+      "title": "法"
+    },
+    {
+      "code": "H-6",
+      "group": "H",
+      "id": "H_6",
+      "title": "象"
+    },
+    {
+      "code": "H-7",
+      "group": "H",
+      "id": "H_7",
+      "title": "名"
+    },
+    {
+      "code": "H-8",
+      "group": "H",
+      "id": "H_8",
+      "title": "體 / 体 与 用"
+    },
+    {
+      "code": "P-1",
+      "group": "P",
+      "id": "P_1",
+      "title": "故 (墨经版)"
+    },
+    {
+      "code": "P-2",
+      "group": "P",
+      "id": "P_2",
+      "title": "體 / 体"
+    },
+    {
+      "code": "P-3",
+      "group": "P",
+      "id": "P_3",
+      "title": "兼"
+    },
+    {
+      "code": "P-4",
+      "group": "P",
+      "id": "P_4",
+      "title": "同 (墨经四类)"
+    },
+    {
+      "code": "P-5",
+      "group": "P",
+      "id": "P_5",
+      "title": "異 / 异 (墨经四类)"
+    },
+    {
+      "code": "P-6",
+      "group": "P",
+      "id": "P_6",
+      "title": "久"
+    },
+    {
+      "code": "P-7",
+      "group": "P",
+      "id": "P_7",
+      "title": "宇"
+    },
+    {
+      "code": "P-8",
+      "group": "P",
+      "id": "P_8",
+      "title": "動 (墨经版)"
+    },
+    {
+      "code": "P-9",
+      "group": "P",
+      "id": "P_9",
+      "title": "止 (墨经版)"
+    },
+    {
+      "code": "P-10",
+      "group": "P",
+      "id": "P_10",
+      "title": "端"
+    },
+    {
+      "code": "P-11",
+      "group": "P",
+      "id": "P_11",
+      "title": "尺"
+    },
+    {
+      "code": "P-12",
+      "group": "P",
+      "id": "P_12",
+      "title": "中 (墨经版)"
+    },
+    {
+      "code": "P-13",
+      "group": "P",
+      "id": "P_13",
+      "title": "圜 / 圆"
+    },
+    {
+      "code": "P-14",
+      "group": "P",
+      "id": "P_14",
+      "title": "平"
+    },
+    {
+      "code": "P-15",
+      "group": "P",
+      "id": "P_15",
+      "title": "攖 / 撄"
+    },
+    {
+      "code": "P-16",
+      "group": "P",
+      "id": "P_16",
+      "title": "仳"
+    },
+    {
+      "code": "P-17",
+      "group": "P",
+      "id": "P_17",
+      "title": "次"
+    },
+    {
+      "code": "P-18",
+      "group": "P",
+      "id": "P_18",
+      "title": "法"
+    },
+    {
+      "code": "P-19",
+      "group": "P",
+      "id": "P_19",
+      "title": "名 (墨经三类)"
+    },
+    {
+      "code": "P-20",
+      "group": "P",
+      "id": "P_20",
+      "title": "知 (墨经三类)"
+    },
+    {
+      "code": "P-21",
+      "group": "P",
+      "id": "P_21",
+      "title": "辭 / 辞"
+    },
+    {
+      "code": "P-22",
+      "group": "P",
+      "id": "P_22",
+      "title": "說 / 说"
+    },
+    {
+      "code": "P-23",
+      "group": "P",
+      "id": "P_23",
+      "title": "辯 / 辩"
+    },
+    {
+      "code": "P-24",
+      "group": "P",
+      "id": "P_24",
+      "title": "類 / 类"
+    },
+    {
+      "code": "G-1",
+      "group": "G",
+      "id": "G_1",
+      "title": "指"
+    },
+    {
+      "code": "G-2",
+      "group": "G",
+      "id": "G_2",
+      "title": "物"
+    },
+    {
+      "code": "G-3",
+      "group": "G",
+      "id": "G_3",
+      "title": "名 (名家版)"
+    },
+    {
+      "code": "G-4",
+      "group": "G",
+      "id": "G_4",
+      "title": "實 / 实"
+    },
+    {
+      "code": "G-5",
+      "group": "G",
+      "id": "G_5",
+      "title": "位"
+    },
+    {
+      "code": "G-6",
+      "group": "G",
+      "id": "G_6",
+      "title": "正 (名家版)"
+    },
+    {
+      "code": "G-7",
+      "group": "G",
+      "id": "G_7",
+      "title": "離 / 离 (坚白离)"
+    },
+    {
+      "code": "G-8",
+      "group": "G",
+      "id": "G_8",
+      "title": "兼 / 合 (名家版)"
+    },
+    {
+      "code": "G-9",
+      "group": "G",
+      "id": "G_9",
+      "title": "別 / 别 (名家版)"
+    },
+    {
+      "code": "G-10",
+      "group": "G",
+      "id": "G_10",
+      "title": "然"
+    },
+    {
+      "code": "G-11",
+      "group": "G",
+      "id": "G_11",
+      "title": "命"
+    },
+    {
+      "code": "A-1",
+      "group": "A",
+      "id": "A_1",
+      "title": "漸 / 渐"
+    },
+    {
+      "code": "A-2",
+      "group": "A",
+      "id": "A_2",
+      "title": "驟 / 骤"
+    },
+    {
+      "code": "A-3",
+      "group": "A",
+      "id": "A_3",
+      "title": "忽"
+    },
+    {
+      "code": "A-4",
+      "group": "A",
+      "id": "A_4",
+      "title": "遂"
+    },
+    {
+      "code": "A-5",
+      "group": "A",
+      "id": "A_5",
+      "title": "復 / 复 (副词层)"
+    },
+    {
+      "code": "A-6",
+      "group": "A",
+      "id": "A_6",
+      "title": "又"
+    },
+    {
+      "code": "A-7",
+      "group": "A",
+      "id": "A_7",
+      "title": "屢 / 屡"
+    },
+    {
+      "code": "A-8",
+      "group": "A",
+      "id": "A_8",
+      "title": "愈"
+    },
+    {
+      "code": "A-9",
+      "group": "A",
+      "id": "A_9",
+      "title": "益 (副词层)"
+    },
+    {
+      "code": "A-10",
+      "group": "A",
+      "id": "A_10",
+      "title": "寖 / 浸"
+    },
+    {
+      "code": "A-11",
+      "group": "A",
+      "id": "A_11",
+      "title": "既...又... / 一...且... (双重 marker)"
+    },
+    {
+      "code": "A-12",
+      "group": "A",
+      "id": "A_12",
+      "title": "且"
+    },
+    {
+      "code": "A-13",
+      "group": "A",
+      "id": "A_13",
+      "title": "但"
+    },
+    {
+      "code": "A-14",
+      "group": "A",
+      "id": "A_14",
+      "title": "唯 (副词层)"
+    },
+    {
+      "code": "A-15",
+      "group": "A",
+      "id": "A_15",
+      "title": "亦"
+    },
+    {
+      "code": "A-16",
+      "group": "A",
+      "id": "A_16",
+      "title": "已"
+    },
+    {
+      "code": "A-17",
+      "group": "A",
+      "id": "A_17",
+      "title": "未"
+    },
+    {
+      "code": "A-18",
+      "group": "A",
+      "id": "A_18",
+      "title": "將 / 将"
+    },
+    {
+      "code": "A-19",
+      "group": "A",
+      "id": "A_19",
+      "title": "方"
+    },
+    {
+      "code": "A-20",
+      "group": "A",
+      "id": "A_20",
+      "title": "嘗 / 尝"
+    },
+    {
+      "code": "D-1",
+      "group": "D",
+      "id": "D_1",
+      "title": "一 (作算子)"
+    },
+    {
+      "code": "D-2",
+      "group": "D",
+      "id": "D_2",
+      "title": "再"
+    },
+    {
+      "code": "D-3",
+      "group": "D",
+      "id": "D_3",
+      "title": "三 (作算子)"
+    },
+    {
+      "code": "D-4",
+      "group": "D",
+      "id": "D_4",
+      "title": "兩 / 两"
+    },
+    {
+      "code": "D-5",
+      "group": "D",
+      "id": "D_5",
+      "title": "倍"
+    },
+    {
+      "code": "D-6",
+      "group": "D",
+      "id": "D_6",
+      "title": "半"
+    },
+    {
+      "code": "D-7",
+      "group": "D",
+      "id": "D_7",
+      "title": "全"
+    },
+    {
+      "code": "D-8",
+      "group": "D",
+      "id": "D_8",
+      "title": "餘 / 余"
+    },
+    {
+      "code": "D-9",
+      "group": "D",
+      "id": "D_9",
+      "title": "終 / 终 (作量词层)"
+    },
+    {
+      "code": "D-10",
+      "group": "D",
+      "id": "D_10",
+      "title": "過半 / 大半"
+    },
+    {
+      "code": "E-1",
+      "group": "E",
+      "id": "E_1",
+      "title": "書 / 书"
+    },
+    {
+      "code": "E-2",
+      "group": "E",
+      "id": "E_2",
+      "title": "曰"
+    },
+    {
+      "code": "E-3",
+      "group": "E",
+      "id": "E_3",
+      "title": "稱 / 称"
+    },
+    {
+      "code": "E-4",
+      "group": "E",
+      "id": "E_4",
+      "title": "諱 / 讳"
+    },
+    {
+      "code": "E-5",
+      "group": "E",
+      "id": "E_5",
+      "title": "譏 / 讥"
+    },
+    {
+      "code": "E-6",
+      "group": "E",
+      "id": "E_6",
+      "title": "與 / 与 (春秋层)"
+    },
+    {
+      "code": "E-7",
+      "group": "E",
+      "id": "E_7",
+      "title": "削"
+    },
+    {
+      "code": "E-8",
+      "group": "E",
+      "id": "E_8",
+      "title": "筆 / 笔"
+    },
+    {
+      "code": "E-9",
+      "group": "E",
+      "id": "E_9",
+      "title": "褒 / 貶"
+    },
+    {
+      "code": "L-1",
+      "group": "L",
+      "id": "L_1",
+      "title": "法 (法家版)"
+    },
+    {
+      "code": "L-2",
+      "group": "L",
+      "id": "L_2",
+      "title": "術 / 术"
+    },
+    {
+      "code": "L-3",
+      "group": "L",
+      "id": "L_3",
+      "title": "勢 / 势 (法家版)"
+    },
+    {
+      "code": "L-4",
+      "group": "L",
+      "id": "L_4",
+      "title": "形名 (paired)"
+    },
+    {
+      "code": "L-5",
+      "group": "L",
+      "id": "L_5",
+      "title": "參同 / 参同 (参验)"
+    },
+    {
+      "code": "L-6",
+      "group": "L",
+      "id": "L_6",
+      "title": "二柄 (刑/德)"
+    },
+    {
+      "code": "L-7",
+      "group": "L",
+      "id": "L_7",
+      "title": "因 (法家版)"
+    },
+    {
+      "code": "L-8",
+      "group": "L",
+      "id": "L_8",
+      "title": "任"
+    },
+    {
+      "code": "L-9",
+      "group": "L",
+      "id": "L_9",
+      "title": "守"
+    },
+    {
+      "code": "L-10",
+      "group": "L",
+      "id": "L_10",
+      "title": "靜 / 静 (法家版)"
+    },
+    {
+      "code": "L-11",
+      "group": "L",
+      "id": "L_11",
+      "title": "無為 / 无为 (法家版)"
+    },
+    {
+      "code": "L-12",
+      "group": "L",
+      "id": "L_12",
+      "title": "利"
+    },
+    {
+      "code": "L-13",
+      "group": "L",
+      "id": "L_13",
+      "title": "一 (法家版: 法令统一)"
+    },
+    {
+      "code": "L-14",
+      "group": "L",
+      "id": "L_14",
+      "title": "制"
+    },
+    {
+      "code": "L-15",
+      "group": "L",
+      "id": "L_15",
+      "title": "度 (法家版)"
+    },
+    {
+      "code": "L-16",
+      "group": "L",
+      "id": "L_16",
+      "title": "罰 / 赏"
+    },
+    {
+      "code": "Y-1",
+      "group": "Y",
+      "id": "Y_1",
+      "title": "陰 / 阴 与 陽 / 阳"
+    },
+    {
+      "code": "Y-2",
+      "group": "Y",
+      "id": "Y_2",
+      "title": "五行 (木火土金水)"
+    },
+    {
+      "code": "Y-3",
+      "group": "Y",
+      "id": "Y_3",
+      "title": "相生"
+    },
+    {
+      "code": "Y-4",
+      "group": "Y",
+      "id": "Y_4",
+      "title": "相克 (相剋)"
+    },
+    {
+      "code": "Y-5",
+      "group": "Y",
+      "id": "Y_5",
+      "title": "相侮 / 反侮"
+    },
+    {
+      "code": "Y-6",
+      "group": "Y",
+      "id": "Y_6",
+      "title": "氣 / 气"
+    },
+    {
+      "code": "Y-7",
+      "group": "Y",
+      "id": "Y_7",
+      "title": "血"
+    },
+    {
+      "code": "Y-8",
+      "group": "Y",
+      "id": "Y_8",
+      "title": "精"
+    },
+    {
+      "code": "Y-9",
+      "group": "Y",
+      "id": "Y_9",
+      "title": "神"
+    },
+    {
+      "code": "Y-10",
+      "group": "Y",
+      "id": "Y_10",
+      "title": "升 / 降 (医家专版)"
+    },
+    {
+      "code": "Y-11",
+      "group": "Y",
+      "id": "Y_11",
+      "title": "開 / 闔 / 樞 (开/合/枢 三才)"
+    },
+    {
+      "code": "Y-12",
+      "group": "Y",
+      "id": "Y_12",
+      "title": "經 / 经 与 絡 / 络"
+    },
+    {
+      "code": "Y-13",
+      "group": "Y",
+      "id": "Y_13",
+      "title": "表 / 裡 (医家专版)"
+    },
+    {
+      "code": "Y-14",
+      "group": "Y",
+      "id": "Y_14",
+      "title": "寒 / 熱 (热)"
+    },
+    {
+      "code": "Y-15",
+      "group": "Y",
+      "id": "Y_15",
+      "title": "虛 / 實 (虚/实)"
+    },
+    {
+      "code": "Y-16",
+      "group": "Y",
+      "id": "Y_16",
+      "title": "補 / 瀉 (补/泻)"
+    },
+    {
+      "code": "Y-17",
+      "group": "Y",
+      "id": "Y_17",
+      "title": "平"
+    },
+    {
+      "code": "Y-18",
+      "group": "Y",
+      "id": "Y_18",
+      "title": "和"
+    },
+    {
+      "code": "Y-19",
+      "group": "Y",
+      "id": "Y_19",
+      "title": "調 / 调"
+    },
+    {
+      "code": "Y-20",
+      "group": "Y",
+      "id": "Y_20",
+      "title": "順 / 逆 (顺/逆)"
+    },
+    {
+      "code": "Y-21",
+      "group": "Y",
+      "id": "Y_21",
+      "title": "標 / 本 (标/本)"
+    },
+    {
+      "code": "Y-22",
+      "group": "Y",
+      "id": "Y_22",
+      "title": "營 / 营 与 衛 / 卫"
+    },
+    {
+      "code": "Y-23",
+      "group": "Y",
+      "id": "Y_23",
+      "title": "通 / 滯 (通/滞)"
+    },
+    {
+      "code": "Y-24",
+      "group": "Y",
+      "id": "Y_24",
+      "title": "五运六气"
+    },
+    {
+      "code": "Y-25",
+      "group": "Y",
+      "id": "Y_25",
+      "title": "上工 / 中工 / 下工"
+    },
+    {
+      "code": "Y-26",
+      "group": "Y",
+      "id": "Y_26",
+      "title": "出 / 入 (医家专版)"
+    },
+    {
+      "code": "Y-27",
+      "group": "Y",
+      "id": "Y_27",
+      "title": "候"
+    },
+    {
+      "code": "Y-28",
+      "group": "Y",
+      "id": "Y_28",
+      "title": "治"
+    },
+    {
+      "code": "X-1",
+      "group": "X",
+      "id": "X_1",
+      "title": "性"
+    },
+    {
+      "code": "X-2",
+      "group": "X",
+      "id": "X_2",
+      "title": "偽 / 伪"
+    },
+    {
+      "code": "X-3",
+      "group": "X",
+      "id": "X_3",
+      "title": "化性 (起伪)"
+    },
+    {
+      "code": "X-4",
+      "group": "X",
+      "id": "X_4",
+      "title": "群"
+    },
+    {
+      "code": "X-5",
+      "group": "X",
+      "id": "X_5",
+      "title": "分 (荀子社会版)"
+    },
+    {
+      "code": "X-6",
+      "group": "X",
+      "id": "X_6",
+      "title": "礼"
+    },
+    {
+      "code": "X-7",
+      "group": "X",
+      "id": "X_7",
+      "title": "義 / 义"
+    },
+    {
+      "code": "X-8",
+      "group": "X",
+      "id": "X_8",
+      "title": "別 / 别 (荀子版)"
+    },
+    {
+      "code": "X-9",
+      "group": "X",
+      "id": "X_9",
+      "title": "制 (荀子社会版)"
+    },
+    {
+      "code": "X-10",
+      "group": "X",
+      "id": "X_10",
+      "title": "隆 / 殺"
+    },
+    {
+      "code": "X-11",
+      "group": "X",
+      "id": "X_11",
+      "title": "化 (荀子版)"
+    },
+    {
+      "code": "X-12",
+      "group": "X",
+      "id": "X_12",
+      "title": "名分"
+    },
+    {
+      "code": "X-13",
+      "group": "X",
+      "id": "X_13",
+      "title": "解 (蔽)"
+    },
+    {
+      "code": "X-14",
+      "group": "X",
+      "id": "X_14",
+      "title": "積 / 积"
+    },
+    {
+      "code": "X-15",
+      "group": "X",
+      "id": "X_15",
+      "title": "學 / 学"
+    },
+    {
+      "code": "X-16",
+      "group": "X",
+      "id": "X_16",
+      "title": "教"
+    },
+    {
+      "code": "Z-1",
+      "group": "Z",
+      "id": "Z_1",
+      "title": "因 (一般)"
+    },
+    {
+      "code": "Z-2",
+      "group": "Z",
+      "id": "Z_2",
+      "title": "相 (mutuality prefix)"
+    },
+    {
+      "code": "Z-3",
+      "group": "Z",
+      "id": "Z_3",
+      "title": "互"
+    },
+    {
+      "code": "Z-4",
+      "group": "Z",
+      "id": "Z_4",
+      "title": "交"
+    },
+    {
+      "code": "Z-5",
+      "group": "Z",
+      "id": "Z_5",
+      "title": "錯 / 错"
+    },
+    {
+      "code": "Z-6",
+      "group": "Z",
+      "id": "Z_6",
+      "title": "綜 / 综"
+    },
+    {
+      "code": "Z-7",
+      "group": "Z",
+      "id": "Z_7",
+      "title": "雜 / 杂"
+    },
+    {
+      "code": "Z-8",
+      "group": "Z",
+      "id": "Z_8",
+      "title": "隱 / 隐"
+    },
+    {
+      "code": "Z-9",
+      "group": "Z",
+      "id": "Z_9",
+      "title": "顯 / 显 (見/见 - xiàn 读)"
+    },
+    {
+      "code": "Z-10",
+      "group": "Z",
+      "id": "Z_10",
+      "title": "藏"
+    },
+    {
+      "code": "Z-11",
+      "group": "Z",
+      "id": "Z_11",
+      "title": "露"
+    },
+    {
+      "code": "Z-12",
+      "group": "Z",
+      "id": "Z_12",
+      "title": "守"
+    },
+    {
+      "code": "Z-13",
+      "group": "Z",
+      "id": "Z_13",
+      "title": "持"
+    },
+    {
+      "code": "Z-14",
+      "group": "Z",
+      "id": "Z_14",
+      "title": "居"
+    },
+    {
+      "code": "Z-15",
+      "group": "Z",
+      "id": "Z_15",
+      "title": "處 / 处"
+    },
+    {
+      "code": "Z-16",
+      "group": "Z",
+      "id": "Z_16",
+      "title": "聚"
+    },
+    {
+      "code": "Z-17",
+      "group": "Z",
+      "id": "Z_17",
+      "title": "集"
+    },
+    {
+      "code": "Z-18",
+      "group": "Z",
+      "id": "Z_18",
+      "title": "散"
+    },
+    {
+      "code": "Z-19",
+      "group": "Z",
+      "id": "Z_19",
+      "title": "積 / 积"
+    },
+    {
+      "code": "Z-20",
+      "group": "Z",
+      "id": "Z_20",
+      "title": "引"
+    },
+    {
+      "code": "Z-21",
+      "group": "Z",
+      "id": "Z_21",
+      "title": "攝 / 摄"
+    },
+    {
+      "code": "Z-22",
+      "group": "Z",
+      "id": "Z_22",
+      "title": "蘊 / 蕴"
+    },
+    {
+      "code": "Z-23",
+      "group": "Z",
+      "id": "Z_23",
+      "title": "萌"
+    },
+    {
+      "code": "Z-24",
+      "group": "Z",
+      "id": "Z_24",
+      "title": "兆"
+    },
+    {
+      "code": "Z-25",
+      "group": "Z",
+      "id": "Z_25",
+      "title": "苗"
+    },
+    {
+      "code": "Z-26",
+      "group": "Z",
+      "id": "Z_26",
+      "title": "占"
+    },
+    {
+      "code": "Z-27",
+      "group": "Z",
+      "id": "Z_27",
+      "title": "卜"
+    },
+    {
+      "code": "Z-28",
+      "group": "Z",
+      "id": "Z_28",
+      "title": "演"
+    },
+    {
+      "code": "Z-29",
+      "group": "Z",
+      "id": "Z_29",
+      "title": "推 (复用 T-10) — 算子上的推"
+    },
+    {
+      "code": "Z-30",
+      "group": "Z",
+      "id": "Z_30",
+      "title": "譬 / 喻"
+    },
+    {
+      "code": "Z-31",
+      "group": "Z",
+      "id": "Z_31",
+      "title": "反 (作算子上的算子)"
+    },
+    {
+      "code": "Z-32",
+      "group": "Z",
+      "id": "Z_32",
+      "title": "自"
+    },
+    {
+      "code": "Z-33",
+      "group": "Z",
+      "id": "Z_33",
+      "title": "自反 / 反自 (合成)"
+    },
+    {
+      "code": "Z-34",
+      "group": "Z",
+      "id": "Z_34",
+      "title": "觀 / 观"
+    },
+    {
+      "code": "Z-35",
+      "group": "Z",
+      "id": "Z_35",
+      "title": "察"
+    },
+    {
+      "code": "Z-36",
+      "group": "Z",
+      "id": "Z_36",
+      "title": "明"
+    },
+    {
+      "code": "Z-37",
+      "group": "Z",
+      "id": "Z_37",
+      "title": "蔽"
+    },
+    {
+      "code": "Z-38",
+      "group": "Z",
+      "id": "Z_38",
+      "title": "悟"
+    },
+    {
+      "code": "Z-39",
+      "group": "Z",
+      "id": "Z_39",
+      "title": "識 / 识"
+    },
+    {
+      "code": "Z-40",
+      "group": "Z",
+      "id": "Z_40",
+      "title": "知 (作算子)"
+    },
+    {
+      "code": "ZHU-1",
+      "group": "ZHU",
+      "id": "ZHU_1",
+      "title": "齊 / 齐"
+    },
+    {
+      "code": "ZHU-2",
+      "group": "ZHU",
+      "id": "ZHU_2",
+      "title": "游"
+    },
+    {
+      "code": "ZHU-3",
+      "group": "ZHU",
+      "id": "ZHU_3",
+      "title": "逍遙 / 逍遥"
+    },
+    {
+      "code": "ZHU-4",
+      "group": "ZHU",
+      "id": "ZHU_4",
+      "title": "忘"
+    },
+    {
+      "code": "ZHU-5",
+      "group": "ZHU",
+      "id": "ZHU_5",
+      "title": "喪 / 丧"
+    },
+    {
+      "code": "ZHU-6",
+      "group": "ZHU",
+      "id": "ZHU_6",
+      "title": "物化"
+    },
+    {
+      "code": "ZHU-7",
+      "group": "ZHU",
+      "id": "ZHU_7",
+      "title": "因"
+    },
+    {
+      "code": "ZHU-8",
+      "group": "ZHU",
+      "id": "ZHU_8",
+      "title": "解"
+    },
+    {
+      "code": "ZHU-9",
+      "group": "ZHU",
+      "id": "ZHU_9",
+      "title": "天理"
+    },
+    {
+      "code": "ZHU-10",
+      "group": "ZHU",
+      "id": "ZHU_10",
+      "title": "方"
+    },
+    {
+      "code": "ZHU-11",
+      "group": "ZHU",
+      "id": "ZHU_11",
+      "title": "鏡 / 镜"
+    },
+    {
+      "code": "ZHU-12",
+      "group": "ZHU",
+      "id": "ZHU_12",
+      "title": "筌"
+    },
+    {
+      "code": "SUN-1",
+      "group": "SUN",
+      "id": "SUN_1",
+      "title": "形"
+    },
+    {
+      "code": "SUN-2",
+      "group": "SUN",
+      "id": "SUN_2",
+      "title": "勢 / 势"
+    },
+    {
+      "code": "SUN-3",
+      "group": "SUN",
+      "id": "SUN_3",
+      "title": "虛 / 虚"
+    },
+    {
+      "code": "SUN-4",
+      "group": "SUN",
+      "id": "SUN_4",
+      "title": "實 / 实"
+    },
+    {
+      "code": "SUN-5",
+      "group": "SUN",
+      "id": "SUN_5",
+      "title": "奇"
+    },
+    {
+      "code": "SUN-6",
+      "group": "SUN",
+      "id": "SUN_6",
+      "title": "正"
+    },
+    {
+      "code": "SUN-7",
+      "group": "SUN",
+      "id": "SUN_7",
+      "title": "迂"
+    },
+    {
+      "code": "SUN-8",
+      "group": "SUN",
+      "id": "SUN_8",
+      "title": "直"
+    },
+    {
+      "code": "SUN-9",
+      "group": "SUN",
+      "id": "SUN_9",
+      "title": "詭 / 诡"
+    },
+    {
+      "code": "SUN-10",
+      "group": "SUN",
+      "id": "SUN_10",
+      "title": "示"
+    },
+    {
+      "code": "SUN-11",
+      "group": "SUN",
+      "id": "SUN_11",
+      "title": "致人"
+    },
+    {
+      "code": "SUN-12",
+      "group": "SUN",
+      "id": "SUN_12",
+      "title": "分合"
+    },
+    {
+      "code": "SUN-13",
+      "group": "SUN",
+      "id": "SUN_13",
+      "title": "速"
+    },
+    {
+      "code": "SUN-14",
+      "group": "SUN",
+      "id": "SUN_14",
+      "title": "知"
+    },
+    {
+      "code": "CHU-1",
+      "group": "CHU",
+      "id": "CHU_1",
+      "title": "招"
+    },
+    {
+      "code": "CHU-2",
+      "group": "CHU",
+      "id": "CHU_2",
+      "title": "求"
+    },
+    {
+      "code": "CHU-3",
+      "group": "CHU",
+      "id": "CHU_3",
+      "title": "遊 / 游"
+    },
+    {
+      "code": "CHU-4",
+      "group": "CHU",
+      "id": "CHU_4",
+      "title": "登"
+    },
+    {
+      "code": "CHU-5",
+      "group": "CHU",
+      "id": "CHU_5",
+      "title": "望"
+    },
+    {
+      "code": "CHU-6",
+      "group": "CHU",
+      "id": "CHU_6",
+      "title": "降"
+    },
+    {
+      "code": "CHU-7",
+      "group": "CHU",
+      "id": "CHU_7",
+      "title": "反顧 / 反顾"
+    },
+    {
+      "code": "CHU-8",
+      "group": "CHU",
+      "id": "CHU_8",
+      "title": "紉 / 纫"
+    },
+    {
+      "code": "CHU-9",
+      "group": "CHU",
+      "id": "CHU_9",
+      "title": "集"
+    },
+    {
+      "code": "CHU-10",
+      "group": "CHU",
+      "id": "CHU_10",
+      "title": "未變 / 未变"
+    },
+    {
+      "code": "LIJ-1",
+      "group": "LIJ",
+      "id": "LIJ_1",
+      "title": "序"
+    },
+    {
+      "code": "LIJ-2",
+      "group": "LIJ",
+      "id": "LIJ_2",
+      "title": "敬"
+    },
+    {
+      "code": "LIJ-3",
+      "group": "LIJ",
+      "id": "LIJ_3",
+      "title": "辭 / 辞"
+    },
+    {
+      "code": "LIJ-4",
+      "group": "LIJ",
+      "id": "LIJ_4",
+      "title": "位"
+    },
+    {
+      "code": "LIJ-5",
+      "group": "LIJ",
+      "id": "LIJ_5",
+      "title": "儀 / 仪"
+    },
+    {
+      "code": "LIJ-6",
+      "group": "LIJ",
+      "id": "LIJ_6",
+      "title": "節 / 节"
+    },
+    {
+      "code": "LIJ-7",
+      "group": "LIJ",
+      "id": "LIJ_7",
+      "title": "中"
+    },
+    {
+      "code": "LIJ-8",
+      "group": "LIJ",
+      "id": "LIJ_8",
+      "title": "和"
+    },
+    {
+      "code": "LIJ-9",
+      "group": "LIJ",
+      "id": "LIJ_9",
+      "title": "誠 / 诚"
+    },
+    {
+      "code": "LIJ-10",
+      "group": "LIJ",
+      "id": "LIJ_10",
+      "title": "慎"
+    },
+    {
+      "code": "LIJ-11",
+      "group": "LIJ",
+      "id": "LIJ_11",
+      "title": "獨 / 独"
+    },
+    {
+      "code": "LIJ-12",
+      "group": "LIJ",
+      "id": "LIJ_12",
+      "title": "格"
+    },
+    {
+      "code": "LIJ-13",
+      "group": "LIJ",
+      "id": "LIJ_13",
+      "title": "齊 / 齐"
+    },
+    {
+      "code": "LIJ-14",
+      "group": "LIJ",
+      "id": "LIJ_14",
+      "title": "平"
+    },
+    {
+      "code": "ZA-1",
+      "group": "ZA",
+      "id": "ZA_1",
+      "title": "虛 / 虚 (心术版)"
+    },
+    {
+      "code": "ZA-2",
+      "group": "ZA",
+      "id": "ZA_2",
+      "title": "靜 / 静 (心术版)"
+    },
+    {
+      "code": "ZA-3",
+      "group": "ZA",
+      "id": "ZA_3",
+      "title": "心君"
+    },
+    {
+      "code": "ZA-4",
+      "group": "ZA",
+      "id": "ZA_4",
+      "title": "官分"
+    },
+    {
+      "code": "ZA-5",
+      "group": "ZA",
+      "id": "ZA_5",
+      "title": "精 (内业版)"
+    },
+    {
+      "code": "ZA-6",
+      "group": "ZA",
+      "id": "ZA_6",
+      "title": "時 / 时 (月令版)"
+    },
+    {
+      "code": "ZA-7",
+      "group": "ZA",
+      "id": "ZA_7",
+      "title": "令 (月令版)"
+    },
+    {
+      "code": "ZA-8",
+      "group": "ZA",
+      "id": "ZA_8",
+      "title": "察今"
+    },
+    {
+      "code": "ZA-9",
+      "group": "ZA",
+      "id": "ZA_9",
+      "title": "統 / 统"
+    },
+    {
+      "code": "ZA-10",
+      "group": "ZA",
+      "id": "ZA_10",
+      "title": "應 / 应 (兵略版)"
+    },
+    {
+      "code": "ZA-11",
+      "group": "ZA",
+      "id": "ZA_11",
+      "title": "督"
+    },
+    {
+      "code": "ZA-12",
+      "group": "ZA",
+      "id": "ZA_12",
+      "title": "調 / 调 (淮南版)"
+    },
+    {
+      "code": "ZA-13",
+      "group": "ZA",
+      "id": "ZA_13",
+      "title": "大一"
+    },
+    {
+      "code": "ZA-14",
+      "group": "ZA",
+      "id": "ZA_14",
+      "title": "小一"
+    },
+    {
+      "code": "ZA-15",
+      "group": "ZA",
+      "id": "ZA_15",
+      "title": "無厚 / 无厚"
+    },
+    {
+      "code": "ZA-16",
+      "group": "ZA",
+      "id": "ZA_16",
+      "title": "同異 / 同异"
+    },
+    {
+      "code": "ZA-17",
+      "group": "ZA",
+      "id": "ZA_17",
+      "title": "兩可 / 两可"
+    },
+    {
+      "code": "ZA-18",
+      "group": "ZA",
+      "id": "ZA_18",
+      "title": "正名 (尹文子版)"
+    },
+    {
+      "code": "ZA-19",
+      "group": "ZA",
+      "id": "ZA_19",
+      "title": "名分 (尹文子版)"
+    },
+    {
+      "code": "ZA-20",
+      "group": "ZA",
+      "id": "ZA_20",
+      "title": "辨 / 辩"
+    }
+  ],
+  "source": "formal/SSBX/Text/WenyanOperators.lean"
+}

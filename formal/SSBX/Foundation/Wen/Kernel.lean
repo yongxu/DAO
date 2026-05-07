@@ -2685,7 +2685,7 @@ inductive ChuciDirection
   deriving Repr, DecidableEq
 
 /-- 方向图 edge semantics: 每一方向给出一个 state transformation。 -/
-def chuciEdge : ChuciDirection → Field → Field
+noncomputable def chuciEdge : ChuciDirection → Field → Field
   | .zhao, s => dong s
   | .jiang, s => yuan s
   | .deng, s => ji 2 s
@@ -2825,7 +2825,7 @@ theorem huainanzi_total_synthesis
 /-! #### 46.7 辩者精化 — 惠施极限算子 / 邓析两可 / 尹文子名分 type-boundary -/
 
 /-- 惠施极限算子: 以任意尺度 k 读取同一 orbit 的 k-fold process。 -/
-def huishiLimitOperator (o : ZhongOrbit) (k : Nat) : Field :=
+noncomputable def huishiLimitOperator (o : ZhongOrbit) (k : Nat) : Field :=
   ji k (o.states 0)
 
 /-- 邓析两可: 同一 state 可在多值判断中位于中/极二分的可判别边界。 -/
