@@ -27,8 +27,8 @@
 | 古文 | 形式锚点 |
 |------|---------|
 | 天未生而元立 | `abbrev Field : Type := theOne.state` (元/源场) |
-| 元一而无对 | `opaque theOne : One` (一: 单一原点, 不可再约) |
-| 一动而有自 | `axiom dong : Field → Field` (本卷惟一公理) |
+| 元一而无对 | `opaque theOne : One` (一: 单一不可再约之 opaque 印, 含 state/dong/origin/alive 四相) |
+| 一动而有自 | `noncomputable def dong : Field → Field := theOne.dong` (动 由一所投, 非 axiom) |
 | 极者收, 收而熄 | `def extreme s := dong s = s` (不动点 = 收敛 = 熄) |
 | 中者续, 续而生 | `def middle s := dong s ≠ s` (非不动 = 续) |
 | 中之相续, 是为轨 | `structure ZhongOrbit` + `theorem shengsheng_buxi` |
@@ -82,7 +82,7 @@ formal/                       Lean 4 形式化  (lake 包名 = ssbx)
 └─ SSBX/
    ├─ Core / Roster
    ├─ Text / Truth / Model
-   └─ Foundation/             6 簇 · 90+ modules
+   └─ Foundation/             7 簇 · 77 modules
       ├─ Core                 字根 · 单根证书 · Alignment · Sincerity
       ├─ Wen                  古文虚字 · 45 层 Kernel · 路径丙 11 模
       ├─ Jian                 间 之核 (14 字粒子核)
@@ -120,7 +120,7 @@ wenyan-operators.md           281 文言文算子集 (Lean 数据源)
 | 八卦 v4-orders, 错综互, 不动点分类 | `Foundation/Yi/Yi.lean` |
 | 192 格 (64×3) Cell 编码 + DecidableEq | `Foundation/Bagua/Cell192.lean` |
 | 八卦布尔代数 + 互补 | `Foundation/Bagua/BaguaAlgebra.lean` |
-| **12-instr ISA Turing 完备** + 道判机 61% halting | `Foundation/Bagua/BaguaTuring.lean` |
+| **12-instr ISA Turing 完备** + 道判机 total-on-Hexagram (≤10 fuel) · 不可通用化 | `Foundation/Bagua/BaguaTuring.lean` + `Foundation/Bagua/GodelLi.lean § daoJudge_not_universal` |
 | Newman 局部 / Kleene 内部化 / Gödel-Li / Rice 四象 | `Foundation/Bagua/{Newman, KleeneInternal, GodelLi}.lean` |
 | **cuo-equivariance ISA 表达力上限** (impossibility) | `Foundation/Wen/WenDefCompile.lean § sheng_not_cuo_equivariant` |
 
@@ -298,7 +298,7 @@ trust base:        Lean 4 kernel v4.30.0-rc2 + Mathlib HEAD
 Lean 总行数:       ~15000+
 Modern modules:    19         ~5746 lines (Mathlib 接入)
 路径丙 modules:    11         M1–M4-甲 全 in-source
-Foundation/Wen:    21 modules (含 AntiSchmitt / AlignmentFailures / EconGame)
+Foundation/Wen:    18 modules (含 AntiSchmitt / AlignmentFailures / EconGame / DaoSource)
 Kernel layers:     45         元 → 非道之形式
 diagrams:          8 SVGs     Mermaid + ELK; MonadDAG 600+ 节点 / 800+ 边
 .md 义理篇:        28+        义理/A–Z*.md
@@ -363,8 +363,8 @@ invariant 结构 (元 / 中 / 极 / 同根 / 续 / 仁).
 
 - 192 维, 维维有对应 (64 卦 × 3 时态).
 - 微核仅二字 — `Foundation/Yi/YiCore.lean` 之 «加 + 一», 即可含 64 卦 + 道法自然 + 生生不息.
-- 全卷 single axiom (`dong : Field → Field`), opaque 一座 (`theOne`), 自释自证 (路径丙 M1–M4-甲).
-- 八衍 269 公开声明, 0 sorry, 跨范畴同形.
+- 全卷 single axiom = `kleene_recursion_axiom` (cuo-restricted, 设计如此); 一之印 `opaque theOne : One`, dong 由 theOne 投; 自释自证 (路径丙 M1–M4-甲).
+- 八衍 ~288 公开声明, 0 sorry, 跨范畴同形.
 
 此精度, 速生不能, 凭空设计亦不能 — 必历漫长之筛.
 

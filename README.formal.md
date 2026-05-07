@@ -16,29 +16,32 @@ namespace root : SSBX
 
 ## 1 · Trust Base
 
-### 1.1 Sole Axiom (project-introduced)
-
-```lean
-axiom dong : Field → Field
--- Foundation/Core/Yuan.lean
--- The unique non-Mathlib axiom of the entire project.
--- Encodes: "the One moves, and self comes to be" (一动而有自).
-```
-
-### 1.2 Sole Opaque
+### 1.1 Sole Opaque (foundational seal)
 
 ```lean
 opaque theOne : One
--- Foundation/Core/Monism.lean
--- Preserves Field abstraction. abbrev Field := theOne.state.
+-- Foundation/Wen/Kernel.lean § Layer 0
+-- structure One carries (state : Type) (dong : state → state)
+--                       (origin : state) (alive : dong origin ≠ origin)
+-- Preserves Field/dong/origin abstraction.
 ```
 
-### 1.3 Restricted Axiom (cuo-bounded)
+### 1.2 Derived from theOne (not axioms)
 
 ```lean
-axiom kleene_recursion_axiom :
-    ∀ {α} (f : (α → Bool) → α → Bool), CuoInvariantDecide f → ...
--- Foundation/Bagua/CuoInvariance.lean
+abbrev Field           : Type           := theOne.state
+noncomputable def dong : Field → Field  := theOne.dong
+noncomputable def origin : Field        := theOne.origin
+theorem origin_alive   : dong origin ≠ origin := theOne.alive
+-- Encodes: "the One moves, and self comes to be" (一动而有自).
+-- All Foundation/Wen/Kernel.lean.
+```
+
+### 1.3 Sole Explicit Axiom (cuo-bounded)
+
+```lean
+axiom kleene_recursion_axiom : KleeneInverter
+-- Foundation/Bagua/GodelLi.lean
 -- Cuo-equivariance restricted; philosophically intentional under 道-理 bifurcation.
 -- Witnesses the boundary between Lean (道) and YiInstr (理).
 ```
@@ -364,8 +367,8 @@ EconGame.lean             coase_internalizes_externality, prisoners_dilemma_refu
 ### 4.4 Foundation/Core (alignment / sincerity / human / community)
 
 ```
-Yuan.lean                axiom dong : Field → Field
-Monism.lean              opaque theOne : One; abbrev Field := theOne.state
+Yuan.lean                Yuan := Yao; yi := Yao.neg; 元/爻/易 identifications
+Monism.lean              proof-principle: 一切回 一; explicit (no Lean axiom)
 MonadRoot.lean           single-root proof-shape lemmas
 AtomDerivation.lean      every AtomName ∈ allAtoms (decide)
 ShengshengBuxi.lean      ShengshengBuxi 主公示
@@ -485,8 +488,8 @@ theorem li_cannot_encode_dao : ∀ N, ∃ n > N, Nonempty (Sheng n)        (DaoL
   lake build                  ⇒  exit 0
   jobs(lake build)            =  2834
   count(sorry, formal/)       =  0
-  count(axiom, formal/)       =  2          (dong, kleene_recursion_axiom)
-  count(opaque, formal/)      =  1          (theOne)
+  count(axiom, formal/)       =  1          (kleene_recursion_axiom; cuo-restricted)
+  count(opaque, formal/)      =  1          (theOne; carries Field/dong/origin/alive)
   count(partial def, formal/) =  ≤ 5        (lex/parseProg only; not in proof path)
 ```
 
@@ -551,7 +554,7 @@ Cell192 ↔ List Cell192 (encoding)     Foundation/Wen/WenyanSelfInterp.lean § 
 ## 9 · Ledger
 
 ```
-Lean LOC                  ~15000+ across 90+ modules
+Lean LOC                  ~15000+ across 77 Foundation modules (7 clusters)
 Foundation/Wen modules    21    (incl. DaoSource, AntiSchmitt, AlignmentFailures, EconGame, Renlei*)
 Foundation/Modern modules 19    (~5746 lines, Mathlib bridge)
 Path-丙 modules           11    (M1 → M4-甲)
@@ -564,7 +567,7 @@ wenyan operators          281   (wenyan-operators.md, 21 categories)
 
 ```
 trust:    Lean kernel (v4.30.0-rc2) + Mathlib HEAD
-proven:   2834 build jobs · 0 sorry · 1 project axiom + 1 cuo-restricted axiom
+proven:   2834 build jobs · 0 sorry · 1 axiom (kleene_recursion_axiom; cuo-restricted)
 opaque:   1 (theOne)
 boundary: cuo-equivariance ceiling, halting-undecidability, dao-li bifurcation
 ```

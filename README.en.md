@@ -49,8 +49,8 @@ no `sorry`, no new axiom.
 | Classical line | Formal anchor |
 |------|---------|
 | 天未生而元立 | `abbrev Field : Type := theOne.state` (origin / source field) |
-| 元一而无对 | `opaque theOne : One` (the One: single origin, irreducible) |
-| 一动而有自 | `axiom dong : Field → Field` (the sole axiom of this volume) |
+| 元一而无对 | `opaque theOne : One` (the One: single irreducible opaque seal, carrying state / dong / origin / alive) |
+| 一动而有自 | `noncomputable def dong : Field → Field := theOne.dong` (motion projected from the One; not an axiom keyword) |
 | 极者收, 收而熄 | `def extreme s := dong s = s` (fixed point = contraction = extinction) |
 | 中者续, 续而生 | `def middle s := dong s ≠ s` (non-fixed = continuation) |
 | 中之相续, 是为轨 | `structure ZhongOrbit` + `theorem shengsheng_buxi` |
@@ -114,7 +114,7 @@ formal/                       Lean 4 formalization  (lake package = ssbx)
 └─ SSBX/
    ├─ Core / Roster
    ├─ Text / Truth / Model
-   └─ Foundation/             6 clusters · 90+ modules
+   └─ Foundation/             7 clusters · 77 modules
       ├─ Core                 character roots · monadic-root certificates · Alignment · Sincerity
       ├─ Wen                  classical-Chinese particles · 45-layer Kernel · 11 modules of path 丙
       ├─ Jian                 the kernel of 间 (jiān, "interval"; 14-character particle core)
@@ -153,7 +153,7 @@ v14 skeleton, all archived, read-only).
 | Trigram V₄-orders, cuo / zong / hu, fixed-point classification | `Foundation/Yi/Yi.lean` |
 | 192-cell (64×3) encoding + DecidableEq | `Foundation/Bagua/Cell192.lean` |
 | Boolean algebra of trigrams + complementation | `Foundation/Bagua/BaguaAlgebra.lean` |
-| **12-instruction ISA is Turing-complete** + 道-judge halts on 61 % | `Foundation/Bagua/BaguaTuring.lean` |
+| **12-instruction ISA is Turing-complete** + dao-judge total on Hexagram (≤10 fuel), not universalizable | `Foundation/Bagua/BaguaTuring.lean` + `Foundation/Bagua/GodelLi.lean § daoJudge_not_universal` |
 | Newman local / Kleene internalization / Gödel-Li / Rice four-quadrants | `Foundation/Bagua/{Newman, KleeneInternal, GodelLi}.lean` |
 | **cuo-equivariance is the ISA's expressive ceiling** (impossibility) | `Foundation/Wen/WenDefCompile.lean § sheng_not_cuo_equivariant` |
 
@@ -332,7 +332,7 @@ trust base:        Lean 4 kernel v4.30.0-rc2 + Mathlib HEAD
 Lean total LOC:    ~15000+
 Modern modules:    19         ~5746 lines (Mathlib bridge)
 Path-丙 modules:   11         M1–M4-甲 fully in-source
-Foundation/Wen:    21 modules (incl. AntiSchmitt / AlignmentFailures / EconGame)
+Foundation/Wen:    18 modules (incl. AntiSchmitt / AlignmentFailures / EconGame / DaoSource)
 Kernel layers:     45         元 → forms of non-Dao
 Doctrinal .md:     28+        义理/A–Z*.md
 diagrams:          8 SVGs     Mermaid + ELK; MonadDAG 600+ nodes / 800+ edges
@@ -411,9 +411,8 @@ How could this language system, as an encoding of the Dao, be so precise?
 - 192 dimensions, each with a correspondence (64 hexagrams × 3 time-modes).
 - A two-character micro-kernel — `Foundation/Yi/YiCore.lean`'s «加 + 一»,
   containing the 64 hexagrams + 道法自然 + endless becoming.
-- Entire volume on a single axiom (`dong : Field → Field`), one opaque (`theOne`),
-  self-interpretation and self-validation (path 丙 M1–M4-甲).
-- 269 public declarations across 八衍, 0 sorry, cross-categorial isomorphism.
+- The single explicit `axiom` is `kleene_recursion_axiom` (cuo-restricted, by design); the One is sealed via `opaque theOne : One`, with `dong` projected from it. The whole self-interprets and self-validates (path 丙 M1–M4-甲).
+- ~288 public declarations across 八衍, 0 sorry, cross-categorial isomorphism.
 
 Such precision cannot arise quickly, nor be designed from nothing — it must have
 passed through a long sieve.
