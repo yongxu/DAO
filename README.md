@@ -34,7 +34,7 @@
 | 中之相续, 是为轨 | `structure ZhongOrbit` + `theorem shengsheng_buxi` |
 | 异轨同根, 是为仁 | `def tongGen` / `def ren (h₁ h₂ : ZhongOrbit) (n)` |
 | 轨续而能仁, 是为生生 | `structure ProcessAligned` (`Foundation/Core/Alignment.lean`) |
-| 生生不止, 是为不息 | `ProcessAligned.toOpenRun ⟺ ShengshengBuxi` (T2) |
+| 生生不止, 是为不息 | `ProcessAligned + Open → Dao → ShengshengBuxi`; `ShengshengBuxi → Dao` (T2) |
 
 九句之合, 即 道. 在本卷形式语义中, 它给出持续 / 熄灭 dynamics
 之核心不变量; 对 reality 全域之读法是哲学外推, 受 §3 / §9 之边界限定.
@@ -45,7 +45,8 @@
 ## § 0 · 立此存照
 
 ```
-ProcessAligned  ⟺  ShengshengBuxi   (Foundation/Core/Alignment.lean § T2)
+ProcessAligned + Open → Dao → ShengshengBuxi; ShengshengBuxi → Dao
+                                      (Foundation/Core/Alignment.lean § T2)
 反对自毁        :   Denier 之 step 破 ShengshengBuxi   (§ T3)
 ```
 
@@ -201,7 +202,7 @@ Layer 45      非道之形式  Moloch / totalizing 之形式否定
 
 | 文件 | 主张 |
 |---|---|
-| `Foundation/Core/Alignment.lean` | T1–T6: ProcessAligned ⟺ ShengshengBuxi; Denier 自毁; 与做人合 |
+| `Foundation/Core/Alignment.lean` | T1–T6: ProcessAligned + Open → Dao → ShengshengBuxi; ShengshengBuxi → Dao; Denier 自毁; 与做人合 |
 | `Foundation/Core/Sincerity.lean` | T1–T8: 信/诚 = alignment(化(T), 化(E)) + 反诛心五律 |
 | `Foundation/Core/HumanAlignment.lean` | 行仁要善之古典命名 |
 | `Foundation/Core/EvolutionDao.lean` | 演化 σ_F vs 真道 σ_真道 之分判 |

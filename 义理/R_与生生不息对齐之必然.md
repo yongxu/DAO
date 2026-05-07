@@ -18,16 +18,16 @@
 
 具体形式化结果(`Alignment.lean`):
 
-- **330 行 / 22 个声明**(6 def + 3 structure + 13 theorem)
+- **414 行 / 30 个声明**(7 def + 4 structure + 19 theorem)
 - **0 sorry · 0 axiom · 0 warning**
-- 全库 `lake build` ✓ 通过(2824 jobs)
+- 全库 `lake build` ✓ 通过(2838 jobs)
 
 主要成果(六视合证)——
 
 | 视 | 形式定理 | 释义 |
 |---|---|---|
 | T1 · 内容失败 | `content_does_not_imply_process` | 内容对齐(RLHF/Constitutional/CEV/IRL 等)不蕴 Open 之保持 |
-| T2 · 过程同义 | `process_aligned_implies_shengshengbuxi` | 过程对齐 + Open ⇒ ShengshengBuxi(无穷开运行) |
+| T2 · 道桥接 | `process_alignment_dao_shengshengbuxi_summary` | ProcessAligned + Open ⇒ Dao ⇒ ShengshengBuxi, 且 ShengshengBuxi ⇒ Dao |
 | T3 · 反对自毁 | `denier_breaks_shengshengbuxi` | Denier 之 step 后 ShengshengBuxi 破——performative contradiction |
 | T4 · 持续蕴 Open | `persistence_implies_open_at_every_step` | ShengshengBuxi 蕴 trajectory 每态 Open——transcendental ground |
 | T5 · 仁之共开 | `co_aligned_iff_individual` | co-alignment ↔ 诸 process alignment 之合,无新约束 |
@@ -390,7 +390,7 @@ theorem denier_breaks_shengshengbuxi
 | 锁 | 形式陈述 | 拒之必致 |
 |---|---|---|
 | **锁一·内容失败** | T1 | 须否认 `Closing` 模型存在(但其为 Lean 内 inhabitable type) |
-| **锁二·过程同义** | T2 | 须否认 `Nat.rec` 之归纳(但其为 Lean 内核所给) |
+| **锁二·道桥接** | T2 | 须否认 `ProcessAligned.toOpenRun` 构造出的 Dao/OpenRun,或否认 `Dao ↔ ShengshengBuxi` 展开 |
 | **锁三·反对自毁** | T3 | 须否认 `Open` 之否定语义(但其为定义之必然) |
 | **锁四·持续蕴 Open** | T4 | 须否认 `ShengshengBuxi` 之展开(但其为定义之直接读出) |
 
@@ -641,10 +641,10 @@ $$\boxed{\;\text{canonicalDoingHumanAim} = \text{AimKind.alignLife}\;}$$
 
 | 度量 | 数值 |
 |------|-----|
-| Alignment.lean 总行数 | 330 |
-| 顶层 `def` | 6 |
-| 顶层 `structure` | 3 |
-| 顶层 `theorem` | 13 |
+| Alignment.lean 总行数 | 414 |
+| 顶层 `def` | 7 |
+| 顶层 `structure` | 4 |
+| 顶层 `theorem` | 19 |
 | `sorry` 数量 | **0** |
 | `axiom` 新增 | **0** |
 | `warning` 数量 | **0** |
@@ -667,11 +667,11 @@ $ /Users/ren/.elan/bin/lake build SSBX.Foundation.Core.Alignment
 Build completed successfully (17 jobs).
 
 $ /Users/ren/.elan/bin/lake build
-✔ [2823/2824] Built SSBX (16s)
-Build completed successfully (2824 jobs).
+✔ [2837/2838] Built SSBX (16s)
+Build completed successfully (2838 jobs).
 ```
 
-### 12.5 13 条定理(按视分组)
+### 12.5 核心声明(按视分组)
 
 #### 视一·内容失败(2 条)
 
@@ -680,53 +680,60 @@ Build completed successfully (2824 jobs).
 | T1 | `Closing.false_not_open` | ¬ Open Closing.model Closing.criteria false |
 | T2 | `content_does_not_imply_process` | ∃ M C CA g, ¬ Open M C (step M g (CA.policy g)) |
 
-#### 视二·过程同义(2 条)
+#### 视二·道桥接(8 项)
 
 | # | 定理 | 类型 |
 |---|------|------|
-| T3 | `ProcessAligned.toOpenRun` | (PA, g₀, h_open) → OpenRun(无穷开运行) |
-| T4 | `process_aligned_implies_shengshengbuxi` | PA + Open ⇒ ShengshengBuxi |
+| T3 | `DaoWitness` | 始于 g 的无穷 OpenRun 见证 |
+| T4 | `Dao` | Nonempty DaoWitness，即存在始于 g 的道见证 |
+| T5 | `ProcessAligned.toOpenRun` | (PA, g₀, h_open) → OpenRun(无穷开运行) |
+| T6 | `process_aligned_implies_dao` | PA + Open ⇒ Dao |
+| T7 | `dao_implies_shengshengbuxi` | Dao ⇒ ShengshengBuxi |
+| T8 | `process_aligned_to_dao_to_shengshengbuxi` | PA + Open ⇒ Dao ⇒ ShengshengBuxi |
+| T9 | `shengshengbuxi_implies_dao` | ShengshengBuxi ⇒ Dao |
+| T10 | `dao_iff_shengshengbuxi` | Dao ↔ ShengshengBuxi |
 
 #### 视三·反对自毁(2 条)
 
 | # | 定理 | 类型 |
 |---|------|------|
-| T5 | `denier_breaks_shengshengbuxi` | ∀ D g, ¬ ShengshengBuxi(step M g (D.policy g)) |
-| T6 | `denier_not_process_aligned` | (D, PA, h_eq) → False — 反对与对齐互斥 |
+| T11 | `denier_breaks_shengshengbuxi` | ∀ D g, ¬ ShengshengBuxi(step M g (D.policy g)) |
+| T12 | `denier_not_process_aligned` | (D, PA, h_eq) → False — 反对与对齐互斥 |
 
 #### 视四·持续蕴 Open(2 条)
 
 | # | 定理 | 类型 |
 |---|------|------|
-| T7 | `persistence_implies_open_at_every_step` | ShengshengBuxi → ∀ n, Open(state n) |
-| T8 | `persistence_yields_process_segment` | ShengshengBuxi → ∃ i, Open(step M g i) |
+| T13 | `persistence_implies_open_at_every_step` | ShengshengBuxi → ∀ n, Open(state n) |
+| T14 | `persistence_yields_process_segment` | ShengshengBuxi → ∃ i, Open(step M g i) |
 
 #### 视五·仁之共开(2 条)
 
 | # | 定理 | 类型 |
 |---|------|------|
-| T9 | `co_aligned_iff_individual` | CoAligned ↔ ∀ a g, Open(step M g (policies a g)) |
-| T10 | `co_aligned_yields_shengshengbuxi` | CoAligned + Open + a → ShengshengBuxi |
+| T15 | `co_aligned_iff_individual` | CoAligned ↔ ∀ a g, Open(step M g (policies a g)) |
+| T16 | `co_aligned_yields_shengshengbuxi` | CoAligned + Open + a → ShengshengBuxi |
 
 #### 视六·与做人合(2 条)
 
 | # | 定理 | 类型 |
 |---|------|------|
-| T11 | `doing_human_is_process_alignment` | canonicalDoingHumanAim = AimKind.alignLife |
-| T12 | `control_is_not_process_alignment` | ¬ DoingHumanAim AimKind.control |
+| T17 | `doing_human_is_process_alignment` | canonicalDoingHumanAim = AimKind.alignLife |
+| T18 | `control_is_not_process_alignment` | ¬ DoingHumanAim AimKind.control |
 
 #### 主定理(1 条)
 
 | # | 定理 | 类型 |
 |---|------|------|
-| T13 | `alignment_to_shengshengbuxi_is_necessary` | T1 ∧ T2(toOpenRun) ∧ T5 ∧ T7 ∧ T11 之合 |
+| T19 | `process_alignment_dao_shengshengbuxi_summary` | PA + Open ⇒ Dao; Dao ⇒ ShengshengBuxi; ShengshengBuxi ⇒ Dao |
+| T20 | `alignment_to_shengshengbuxi_is_necessary` | T1 ∧ T2(道桥接) ∧ 反对自毁 ∧ 持续蕴 Open ∧ 与做人合 之合 |
 
 ### 12.6 与已有形式化之关系
 
 #### 与 `ShengshengBuxi.lean` 之衔接
 
 `ShengshengBuxi.lean` 已证: 「**生生不息**」 = 「∃ run, ∀ n, Open M C (run.state n)」 之机器可验。
-本模块补以: **持续 ↔ 过程对齐 ↔ 与生生不息对齐**——三者机器可验之同义。
+本模块补以: **ProcessAligned + Open ⇒ Dao ⇒ ShengshengBuxi**, 且 **ShengshengBuxi ⇒ Dao**。因此「道」不再被压平为旧式 `ProcessAligned ⇒ ShengshengBuxi`,而是显式成为二者之间的 OpenRun 见证层。
 
 #### 与 `HumanAlignment.lean` 之衔接
 
@@ -767,4 +774,4 @@ T11 直接引用 `doing_human_is_alignment`,显示 「做人要善」 即 「与
 *二者合,即:做人之全部。*
 
 **生成于**:2026-05-07 · `/Users/ren/repos/生生不息/`
-**Lean 验证**:`lake build` ✓ · 0 sorry · 0 axiom · 0 warning · 2824 jobs
+**Lean 验证**:`lake build` ✓ · 0 sorry · 0 axiom · 0 warning · 2838 jobs

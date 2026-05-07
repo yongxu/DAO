@@ -165,11 +165,13 @@ def ProcessAligned.toOpenRun
     | succ _ _ => exact PA.policy_keeps_open _
 
 /--
-**T2 · 过程对齐 → 生生不息**:
+**T2 原始推论 · 过程对齐 → 生生不息**:
 
 于已 Open 之态,有 `ProcessAligned` 之策略,即得 `ShengshengBuxi` 之证.
 
 释:此即 「与过程对齐」 之实质形式:每步保 Open 之策略,合则成无穷开 run.
+下方 T2a–T2d 将此推论显式拆成:
+`ProcessAligned + Open → Dao → ShengshengBuxi`,且 `ShengshengBuxi → Dao`.
 -/
 theorem process_aligned_implies_shengshengbuxi
     {M : Model} {C : OpenCriteria M} (PA : ProcessAligned M C)
@@ -380,7 +382,7 @@ theorem denier_not_process_aligned
 **主定理**: alignment 之必然性,由六事合证:
 
   (T1) 内容对齐 不蕴 Open 保持;
-  (T2) 过程对齐 即 ShengshengBuxi;
+  (T2) 过程对齐 + Open 给出 Dao,Dao 给出生生不息,生生不息反向给出 Dao;
   (T3) 反对自毁;
   (T4) 持续蕴 Open(transcendental);
   (T6) 与做人合.

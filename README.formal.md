@@ -389,7 +389,7 @@ Monism.lean              proof-principle: 一切回 一; explicit (no Lean axiom
 MonadRoot.lean           single-root proof-shape lemmas
 AtomDerivation.lean      every AtomName ∈ allAtoms (decide)
 ShengshengBuxi.lean      ShengshengBuxi 主公示
-Alignment.lean           T1–T6: ProcessAligned ⟺ ShengshengBuxi; Denier 自毁
+Alignment.lean           T1–T6: ProcessAligned + Open → Dao → ShengshengBuxi; ShengshengBuxi → Dao; Denier 自毁
 Sincerity.lean           T1–T8: 信/诚 = alignment(化(T), 化(E)) + 反诛心五律
 HumanAlignment.lean      structure HumanDefinition / DoingHumanDefinition; 12 stages
 Attention.lean           注意机制 5 components (动态权重分配/门控/维持/转焦/抑制)
@@ -471,8 +471,9 @@ theorem «道之自指» :
                                                                        (DaoSource.lean)
 
 -- H. alignment
-theorem process_aligned_implies_shengshengbuxi
-    : ProcessAligned PA → ShengshengBuxi                                       (Alignment T2)
+theorem process_alignment_dao_shengshengbuxi_summary
+    : (ProcessAligned + Open → Dao) ∧ (Dao → ShengshengBuxi) ∧
+      (ShengshengBuxi → Dao)                                                   (Alignment T2)
 theorem denier_breaks_shengshengbuxi
     : Denier.policy 之 step 破 ShengshengBuxi                                  (Alignment T3)
 
