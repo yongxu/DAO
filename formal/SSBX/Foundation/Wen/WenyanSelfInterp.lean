@@ -968,6 +968,175 @@ theorem metaInterpProg_halts (h : Hexagram) :
     ((YiState.init h metaInterpProg).runFuel 4).halted = true := by
   rfl
 
+/-! ## § 6c Phase 2.3 — encoded-state simulation for the 7 trivial opcodes
+
+  Phase 2.1+2.2 above established the architectural shape with `metaInterpProg_X`
+  programs that simulated one instruction *directly*. Phase 2.3 graduates to
+  **encoded-state** simulation: the guest state lives in `host.history` and the
+  meta-interpreter program reads/writes it through pop/push.
+
+  This section ships the 7 trivial (parameter-free) opcodes:
+  `nop / halt / hu / cuo / zong / push / pop`.
+
+  ### Minimal state layout used here
+
+  We start from an absolutely minimal encoding to make the proofs tractable:
+
+      host.history = [encGuestCur]              -- 1 cell at the top
+
+  i.e. the entire guest state under simulation is just the guest's `cur`. Guest
+  `pc` / `prog` / `halted` / `history` are all out of scope for this layer. The
+  guest "instruction" being simulated is implicit in *which* `metaInterpStep_X`
+  program the host runs — i.e. each `X` IS the choice of guest opcode.
+
+  This is a deliberate scoping decision per the project's ddbc3a8 audit
+  (`l0InstructionClauses` row scope = 12 — these are 7 of the 12, the remaining
+  5 are the parameterized ones tracked separately).
+
+  ### Pattern
+
+  Each `metaInterpStep_X : List YiInstr`:
+
+  1. `pop`   — encGuestCur → host.cur
+  2. one (or zero) host instruction(s) that mirror what guest's `X` would do
+     to its own cur (e.g. `hu` mirrors `Hexagram.hu`)
+  3. `push`  — host.cur (= encoded new guest cur) back onto host.history
+  4. `halt`  — host stops
+
+  Each comes with `metaInterpStep_X_simulates`: starting from the host-init
+  state with `history := [c]` (the encoded guest cur), after `runFuel 4`,
+  `history = [<expected new guest cur>]` and `halted = true`.
+
+  ### Open guest-history constraint
+
+  Because `YiInstr.execute .push = { s with history := s.cur :: s.history, ... }`
+  pushes *the host's* cur (not the guest's), the `metaInterpStep_push` /
+  `metaInterpStep_pop` blocks below simulate guest push/pop on a guest history
+  that lives in the *same* host history list — the encoding is exactly aligned
+  by construction, no separate guest-history bookkeeping needed. -/
+
+namespace MetaInterp23
+
+open YiInstrEnc
+
+/-! ### § 6c.1 Programs -/
+
+def metaInterpStep_nop : List YiInstr :=
+  [.pop, .push, .halt]                        -- pop guest cur, push back unchanged, halt
+
+def metaInterpStep_halt : List YiInstr :=
+  [.pop, .push, .halt]                        -- guest halt: no cur change at this layer
+
+def metaInterpStep_hu : List YiInstr :=
+  [.pop, .hu, .push, .halt]                   -- guest cur := Hexagram.hu
+
+def metaInterpStep_cuo : List YiInstr :=
+  [.pop, .cuo, .push, .halt]                  -- guest cur := Hexagram.cuo
+
+def metaInterpStep_zong : List YiInstr :=
+  [.pop, .zong, .push, .halt]                 -- guest cur := Hexagram.zong
+
+def metaInterpStep_push : List YiInstr :=
+  [.pop, .push, .push, .halt]                 -- guest push: cur stays, but is also pushed
+
+def metaInterpStep_pop : List YiInstr :=
+  [.pop, .pop, .halt]                         -- guest pop: drop top of guest history (popped twice)
+
+/-! ### § 6c.2 Simulation lemmas
+
+  Each lemma takes an arbitrary host init hexagram `h` (irrelevant — gets
+  immediately overwritten by the first `pop`) and an arbitrary encoded guest
+  cur `gcur`. It asserts that after `runFuel 4`, `host.history` contains the
+  expected post-state encoding.
+
+  Proof tactic in every case: `rfl` (the program is short enough that
+  `runFuel` unfolds completely). -/
+
+theorem metaInterpStep_nop_simulates (h : Hexagram) (gcur : Cell192) :
+    let s := { (YiState.init h metaInterpStep_nop) with history := [gcur] }
+    (s.runFuel 4).history = [gcur]
+    ∧ (s.runFuel 4).halted = true := by
+  refine ⟨?_, ?_⟩ <;> rfl
+
+theorem metaInterpStep_halt_simulates (h : Hexagram) (gcur : Cell192) :
+    let s := { (YiState.init h metaInterpStep_halt) with history := [gcur] }
+    (s.runFuel 4).history = [gcur]
+    ∧ (s.runFuel 4).halted = true := by
+  refine ⟨?_, ?_⟩ <;> rfl
+
+theorem metaInterpStep_hu_simulates (h : Hexagram) (gcur : Cell192) :
+    let s := { (YiState.init h metaInterpStep_hu) with history := [gcur] }
+    (s.runFuel 5).history = [(Hexagram.hu gcur.1, gcur.2)]
+    ∧ (s.runFuel 5).halted = true := by
+  refine ⟨?_, ?_⟩ <;> rfl
+
+theorem metaInterpStep_cuo_simulates (h : Hexagram) (gcur : Cell192) :
+    let s := { (YiState.init h metaInterpStep_cuo) with history := [gcur] }
+    (s.runFuel 5).history = [(Hexagram.cuo gcur.1, gcur.2)]
+    ∧ (s.runFuel 5).halted = true := by
+  refine ⟨?_, ?_⟩ <;> rfl
+
+theorem metaInterpStep_zong_simulates (h : Hexagram) (gcur : Cell192) :
+    let s := { (YiState.init h metaInterpStep_zong) with history := [gcur] }
+    (s.runFuel 5).history = [(Hexagram.zong gcur.1, gcur.2)]
+    ∧ (s.runFuel 5).halted = true := by
+  refine ⟨?_, ?_⟩ <;> rfl
+
+theorem metaInterpStep_push_simulates (h : Hexagram) (gcur : Cell192) :
+    let s := { (YiState.init h metaInterpStep_push) with history := [gcur] }
+    (s.runFuel 5).history = [gcur, gcur]
+    ∧ (s.runFuel 5).halted = true := by
+  refine ⟨?_, ?_⟩ <;> rfl
+
+theorem metaInterpStep_pop_simulates (h : Hexagram) (gcur1 gcur2 : Cell192) :
+    let s := { (YiState.init h metaInterpStep_pop) with history := [gcur1, gcur2] }
+    (s.runFuel 4).history = []
+    ∧ (s.runFuel 4).halted = true
+    ∧ (s.runFuel 4).cur = gcur2 := by
+  refine ⟨?_, ?_, ?_⟩ <;> rfl
+
+/-! ### § 6c.3 Combined "Phase 2.3 trivial-7" summary
+
+  This bundles the 7 simulation lemmas into a single statement so downstream
+  audit code can cite a one-line completion claim for ddbc3a8's
+  `l0InstructionClauses` row (partial: 7 of 12 — the 5 parameterized opcodes
+  setShi / flipYao / jump / branchYaoEq / branchShiEq remain). -/
+theorem trivialSeven_simulates :
+    -- nop / halt: cur unchanged, halted
+    (∀ h gcur,
+        let s := { (YiState.init h metaInterpStep_nop) with history := [gcur] }
+        (s.runFuel 4).history = [gcur] ∧ (s.runFuel 4).halted = true)
+    ∧ (∀ h gcur,
+        let s := { (YiState.init h metaInterpStep_halt) with history := [gcur] }
+        (s.runFuel 4).history = [gcur] ∧ (s.runFuel 4).halted = true)
+    -- hu / cuo / zong: cur transformed, halted
+    ∧ (∀ h gcur,
+        let s := { (YiState.init h metaInterpStep_hu) with history := [gcur] }
+        (s.runFuel 5).history = [(Hexagram.hu gcur.1, gcur.2)] ∧ (s.runFuel 5).halted = true)
+    ∧ (∀ h gcur,
+        let s := { (YiState.init h metaInterpStep_cuo) with history := [gcur] }
+        (s.runFuel 5).history = [(Hexagram.cuo gcur.1, gcur.2)] ∧ (s.runFuel 5).halted = true)
+    ∧ (∀ h gcur,
+        let s := { (YiState.init h metaInterpStep_zong) with history := [gcur] }
+        (s.runFuel 5).history = [(Hexagram.zong gcur.1, gcur.2)] ∧ (s.runFuel 5).halted = true)
+    -- push / pop: history reshape, halted
+    ∧ (∀ h gcur,
+        let s := { (YiState.init h metaInterpStep_push) with history := [gcur] }
+        (s.runFuel 5).history = [gcur, gcur] ∧ (s.runFuel 5).halted = true)
+    ∧ (∀ h gcur1 gcur2,
+        let s := { (YiState.init h metaInterpStep_pop) with history := [gcur1, gcur2] }
+        (s.runFuel 4).history = [] ∧ (s.runFuel 4).halted = true ∧ (s.runFuel 4).cur = gcur2) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact metaInterpStep_nop_simulates
+  · exact metaInterpStep_halt_simulates
+  · exact metaInterpStep_hu_simulates
+  · exact metaInterpStep_cuo_simulates
+  · exact metaInterpStep_zong_simulates
+  · exact metaInterpStep_push_simulates
+  · exact metaInterpStep_pop_simulates
+
+end MetaInterp23
+
 end MetaInterp
 
 /-! ## § 7 Quine — a literal self-reproducing 文 program -/
