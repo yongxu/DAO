@@ -1,0 +1,276 @@
+{
+  "claims": [
+    {
+      "id": "openDefinition",
+      "kind": "definition",
+      "label": "开定义",
+      "sourceRef": "卷六/卷十五：开_F",
+      "status": "ledgerDependent"
+    },
+    {
+      "id": "closeDefinition",
+      "kind": "definition",
+      "label": "闭定义",
+      "sourceRef": "卷六/卷十五：闭_F",
+      "status": "ledgerDependent"
+    },
+    {
+      "id": "rightDefinition",
+      "kind": "definition",
+      "label": "正定义",
+      "sourceRef": "卷八/卷十五：正_F",
+      "status": "ledgerDependent"
+    },
+    {
+      "id": "wrongDefinition",
+      "kind": "definition",
+      "label": "邪定义",
+      "sourceRef": "卷八/卷十五：邪_F",
+      "status": "ledgerDependent"
+    },
+    {
+      "id": "goodDefinition",
+      "kind": "definition",
+      "label": "好定义",
+      "sourceRef": "卷八：好_F",
+      "status": "ledgerDependent"
+    },
+    {
+      "id": "badDefinition",
+      "kind": "definition",
+      "label": "坏定义",
+      "sourceRef": "卷八：坏_F",
+      "status": "ledgerDependent"
+    },
+    {
+      "id": "freedomDefinition",
+      "kind": "definition",
+      "label": "自由定义",
+      "sourceRef": "卷八：自由",
+      "status": "ledgerDependent"
+    },
+    {
+      "id": "flourishingDefinition",
+      "kind": "definition",
+      "label": "繁荣定义",
+      "sourceRef": "卷八：繁荣_F",
+      "status": "ledgerDependent"
+    },
+    {
+      "id": "yiDefinition",
+      "kind": "definition",
+      "label": "义定义",
+      "sourceRef": "卷八：义_F",
+      "status": "ledgerDependent"
+    },
+    {
+      "id": "shanDefinition",
+      "kind": "definition",
+      "label": "善定义",
+      "sourceRef": "卷八：善_F",
+      "status": "ledgerDependent"
+    },
+    {
+      "id": "renDefinition",
+      "kind": "definition",
+      "label": "仁定义",
+      "sourceRef": "卷八：仁_F",
+      "status": "ledgerDependent"
+    },
+    {
+      "id": "daoDefinition",
+      "kind": "definition",
+      "label": "道定义",
+      "sourceRef": "卷八：道_F",
+      "status": "ledgerDependent"
+    },
+    {
+      "id": "trueDaoDefinition",
+      "kind": "axiomBacked",
+      "label": "真道定义",
+      "sourceRef": "卷八：真道_F",
+      "status": "ledgerDependent"
+    },
+    {
+      "id": "auditUnbrokenDefinition",
+      "kind": "definition",
+      "label": "审校不败定义",
+      "sourceRef": "卷七：审校不败全拆式",
+      "status": "ledgerDependent"
+    },
+    {
+      "id": "omegaInterface",
+      "kind": "modelInterface",
+      "label": "Ω 接口",
+      "sourceRef": "补篇〇：Ω",
+      "status": "ledgerDependent"
+    },
+    {
+      "id": "omegaBInterface",
+      "kind": "modelInterface",
+      "label": "Ω_B 接口",
+      "sourceRef": "补篇〇：Ω_B",
+      "status": "ledgerDependent"
+    },
+    {
+      "id": "piOpenInterface",
+      "kind": "modelInterface",
+      "label": "Π_开 接口",
+      "sourceRef": "补篇〇：Π_开",
+      "status": "ledgerDependent"
+    },
+    {
+      "id": "thresholdProtocol",
+      "kind": "modelInterface",
+      "label": "阈值协议",
+      "sourceRef": "补篇〇：阈值设定法",
+      "status": "ledgerDependent"
+    },
+    {
+      "id": "triValueConservativity",
+      "kind": "proved",
+      "label": "三值保守性",
+      "sourceRef": "Core Tri unknown conservativity",
+      "status": "machineChecked"
+    },
+    {
+      "id": "generatedRootsDiscipline",
+      "kind": "proved",
+      "label": "生成项有根",
+      "sourceRef": "Roster generated_entries_have_roots",
+      "status": "machineChecked"
+    },
+    {
+      "id": "recursiveSemanticsDiscipline",
+      "kind": "proved",
+      "label": "递归项有语义",
+      "sourceRef": "Roster recursive_entries_have_semantics",
+      "status": "machineChecked"
+    },
+    {
+      "id": "rosterTextComplete",
+      "kind": "registry",
+      "label": "名册文字完备",
+      "sourceRef": "Text.Completeness roster_text_complete",
+      "status": "machineChecked"
+    },
+    {
+      "id": "wenyanOperatorTableComplete",
+      "kind": "registry",
+      "label": "文言算子表完备",
+      "sourceRef": "Text.Completeness operator_table_complete",
+      "status": "machineChecked"
+    },
+    {
+      "id": "sourceTextClaimMapping",
+      "kind": "axiomBacked",
+      "label": "文本 claim 映射",
+      "sourceRef": "三本文完整版核心公式对应",
+      "status": "ledgerDependent"
+    },
+    {
+      "id": "openValueAxiomClaim",
+      "kind": "axiomBacked",
+      "label": "开价值公理",
+      "sourceRef": "公理账本：open_value_axiom",
+      "status": "ledgerDependent"
+    },
+    {
+      "id": "auditReliabilityAxiomClaim",
+      "kind": "axiomBacked",
+      "label": "审校可靠公理",
+      "sourceRef": "公理账本：audit_reliability_axiom",
+      "status": "ledgerDependent"
+    },
+    {
+      "id": "omegaAdequacyAxiomClaim",
+      "kind": "axiomBacked",
+      "label": "Ω 充分性公理",
+      "sourceRef": "公理账本：omega_adequacy_axiom",
+      "status": "ledgerDependent"
+    },
+    {
+      "id": "omegaBAdequacyAxiomClaim",
+      "kind": "axiomBacked",
+      "label": "Ω_B 充分性公理",
+      "sourceRef": "公理账本：omegaB_adequacy_axiom",
+      "status": "ledgerDependent"
+    },
+    {
+      "id": "piOpenAdequacyAxiomClaim",
+      "kind": "axiomBacked",
+      "label": "Π_开 充分性公理",
+      "sourceRef": "公理账本：pi_open_adequacy_axiom",
+      "status": "ledgerDependent"
+    },
+    {
+      "id": "truthPathAxiomClaim",
+      "kind": "axiomBacked",
+      "label": "真道路径公理",
+      "sourceRef": "公理账本：truth_path_axiom",
+      "status": "ledgerDependent"
+    },
+    {
+      "id": "recommendationI1Evil",
+      "kind": "caseResult",
+      "label": "推荐案例 i1 邪行",
+      "sourceRef": "补篇〇：推荐系统案例 i1",
+      "status": "modelComputed"
+    },
+    {
+      "id": "recommendationI2Right",
+      "kind": "caseResult",
+      "label": "推荐案例 i2 正行",
+      "sourceRef": "补篇〇：推荐系统案例 i2 正行",
+      "status": "modelComputed"
+    },
+    {
+      "id": "recommendationI2Ren",
+      "kind": "caseResult",
+      "label": "推荐案例 i2 仁",
+      "sourceRef": "补篇〇：推荐系统案例 i2 仁",
+      "status": "modelComputed"
+    },
+    {
+      "id": "recommendationI2CandidateTrueDao",
+      "kind": "caseResult",
+      "label": "推荐案例 i2 候选真道",
+      "sourceRef": "补篇〇：推荐系统案例 i2 候选真道",
+      "status": "ledgerDependent"
+    },
+    {
+      "id": "recommendationI3ProtectiveClosure",
+      "kind": "caseResult",
+      "label": "推荐案例 i3 护闭",
+      "sourceRef": "补篇〇：推荐系统案例 i3",
+      "status": "modelComputed"
+    },
+    {
+      "id": "semanticAdequacyClaim",
+      "kind": "proved",
+      "label": "语义充分性总 claim",
+      "sourceRef": "Truth.Adequacy semantic_adequacy_complete",
+      "status": "machineChecked"
+    },
+    {
+      "id": "absoluteTruthClaim",
+      "kind": "axiomBacked",
+      "label": "体系内绝对真理 claim",
+      "sourceRef": "Truth.Absolute ssbx_absolute_truth",
+      "status": "ledgerDependent"
+    },
+    {
+      "id": "rootToSsbxLiClaim",
+      "kind": "proved",
+      "label": "根至生生不息成理 claim",
+      "sourceRef": "Foundation.Li shengsheng_buxi_is_li_from_ledger",
+      "status": "machineChecked"
+    }
+  ],
+  "counts_by_status": {
+    "ledgerDependent": 27,
+    "machineChecked": 7,
+    "modelComputed": 4
+  },
+  "source": "formal/SSBX/Truth/ClaimLedger.lean"
+}

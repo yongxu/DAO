@@ -1,0 +1,3394 @@
+{
+  "counts": {
+    "atom": 334,
+    "generated": 134,
+    "pending": 6,
+    "primitive": 5,
+    "recursive": 13
+  },
+  "generated_deps": [
+    {
+      "kind": "generated",
+      "name": "伪开",
+      "refs": [
+        {
+          "kind": "G",
+          "name": "似开"
+        },
+        {
+          "kind": "G",
+          "name": "实闭"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "审校不败",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "审"
+        },
+        {
+          "kind": "A",
+          "name": "校"
+        },
+        {
+          "kind": "A",
+          "name": "败"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "证源同执",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "证"
+        },
+        {
+          "kind": "A",
+          "name": "源"
+        },
+        {
+          "kind": "A",
+          "name": "同"
+        },
+        {
+          "kind": "A",
+          "name": "执"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "天",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "天"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "子",
+      "refs": [
+        {
+          "kind": "G",
+          "name": "聚焦"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "成子",
+      "refs": [
+        {
+          "kind": "G",
+          "name": "聚焦"
+        },
+        {
+          "kind": "G",
+          "name": "子"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "聚焦成子",
+      "refs": [
+        {
+          "kind": "G",
+          "name": "聚焦"
+        },
+        {
+          "kind": "G",
+          "name": "成子"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "天之子",
+      "refs": [
+        {
+          "kind": "G",
+          "name": "天"
+        },
+        {
+          "kind": "G",
+          "name": "聚焦成子"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "人",
+      "refs": [
+        {
+          "kind": "G",
+          "name": "天之子"
+        },
+        {
+          "kind": "G",
+          "name": "意识"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "为人",
+      "refs": [
+        {
+          "kind": "G",
+          "name": "人"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "做人",
+      "refs": [
+        {
+          "kind": "G",
+          "name": "意图向齐生"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "意图向齐生",
+      "refs": [
+        {
+          "kind": "G",
+          "name": "意图"
+        },
+        {
+          "kind": "G",
+          "name": "向齐生"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "向齐生",
+      "refs": [
+        {
+          "kind": "G",
+          "name": "对齐"
+        },
+        {
+          "kind": "A",
+          "name": "生"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "注意",
+      "refs": [
+        {
+          "kind": "G",
+          "name": "聚焦"
+        },
+        {
+          "kind": "G",
+          "name": "注意机制"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "注意机制",
+      "refs": [
+        {
+          "kind": "G",
+          "name": "动态权重分配"
+        },
+        {
+          "kind": "G",
+          "name": "门控"
+        },
+        {
+          "kind": "G",
+          "name": "维持"
+        },
+        {
+          "kind": "G",
+          "name": "转焦"
+        },
+        {
+          "kind": "G",
+          "name": "抑制"
+        },
+        {
+          "kind": "G",
+          "name": "回观可校"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "聚焦基底",
+      "refs": [
+        {
+          "kind": "G",
+          "name": "聚焦"
+        },
+        {
+          "kind": "G",
+          "name": "同基"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "注意基底",
+      "refs": [
+        {
+          "kind": "G",
+          "name": "注意"
+        },
+        {
+          "kind": "G",
+          "name": "同基"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "自下而上注意",
+      "refs": [
+        {
+          "kind": "G",
+          "name": "显著"
+        },
+        {
+          "kind": "A",
+          "name": "扰"
+        },
+        {
+          "kind": "A",
+          "name": "变"
+        },
+        {
+          "kind": "G",
+          "name": "注意"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "自上而下注意",
+      "refs": [
+        {
+          "kind": "G",
+          "name": "意图"
+        },
+        {
+          "kind": "G",
+          "name": "目标"
+        },
+        {
+          "kind": "G",
+          "name": "注意"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "择注意",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "筛"
+        },
+        {
+          "kind": "A",
+          "name": "择"
+        },
+        {
+          "kind": "A",
+          "name": "抑"
+        },
+        {
+          "kind": "A",
+          "name": "放"
+        },
+        {
+          "kind": "G",
+          "name": "注意"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "持续注意",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "稳"
+        },
+        {
+          "kind": "A",
+          "name": "续"
+        },
+        {
+          "kind": "G",
+          "name": "注意"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "执行控制",
+      "refs": [
+        {
+          "kind": "G",
+          "name": "控制"
+        },
+        {
+          "kind": "A",
+          "name": "阈"
+        },
+        {
+          "kind": "G",
+          "name": "审校不败"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "工作记忆",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "存"
+        },
+        {
+          "kind": "A",
+          "name": "续"
+        },
+        {
+          "kind": "A",
+          "name": "识"
+        },
+        {
+          "kind": "G",
+          "name": "回观"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "意识通达",
+      "refs": [
+        {
+          "kind": "G",
+          "name": "意识"
+        },
+        {
+          "kind": "G",
+          "name": "回观"
+        },
+        {
+          "kind": "G",
+          "name": "可识"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "注意向齐生",
+      "refs": [
+        {
+          "kind": "G",
+          "name": "注意"
+        },
+        {
+          "kind": "G",
+          "name": "向齐生"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "做人注意",
+      "refs": [
+        {
+          "kind": "G",
+          "name": "做人"
+        },
+        {
+          "kind": "G",
+          "name": "注意向齐生"
+        }
+      ]
+    }
+  ],
+  "generated_roots": [
+    {
+      "kind": "generated",
+      "name": "未尽",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "未"
+        },
+        {
+          "kind": "A",
+          "name": "尽"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "可生",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "可"
+        },
+        {
+          "kind": "A",
+          "name": "生"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "候间",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "候"
+        },
+        {
+          "kind": "A",
+          "name": "间"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "合法",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "合"
+        },
+        {
+          "kind": "A",
+          "name": "法"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "史法",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "史"
+        },
+        {
+          "kind": "A",
+          "name": "法"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "开法",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "开"
+        },
+        {
+          "kind": "A",
+          "name": "法"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "暂法",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "暂"
+        },
+        {
+          "kind": "A",
+          "name": "法"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "开维法",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "开"
+        },
+        {
+          "kind": "A",
+          "name": "维"
+        },
+        {
+          "kind": "A",
+          "name": "法"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "稳焦",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "稳"
+        },
+        {
+          "kind": "A",
+          "name": "焦"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "可达",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "可"
+        },
+        {
+          "kind": "A",
+          "name": "达"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "实达",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "实"
+        },
+        {
+          "kind": "A",
+          "name": "达"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "可返",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "可"
+        },
+        {
+          "kind": "A",
+          "name": "返"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "可修",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "可"
+        },
+        {
+          "kind": "A",
+          "name": "修"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "可复",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "可"
+        },
+        {
+          "kind": "A",
+          "name": "复"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "复开",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "复"
+        },
+        {
+          "kind": "A",
+          "name": "开"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "再生",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "再"
+        },
+        {
+          "kind": "A",
+          "name": "生"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "断闭",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "断"
+        },
+        {
+          "kind": "A",
+          "name": "闭"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "绝闭",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "绝"
+        },
+        {
+          "kind": "A",
+          "name": "闭"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "机闭",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "机"
+        },
+        {
+          "kind": "A",
+          "name": "闭"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "成闭",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "成"
+        },
+        {
+          "kind": "A",
+          "name": "闭"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "元闭",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "元"
+        },
+        {
+          "kind": "A",
+          "name": "闭"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "夺闭",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "夺"
+        },
+        {
+          "kind": "A",
+          "name": "闭"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "蔽闭",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "蔽"
+        },
+        {
+          "kind": "A",
+          "name": "闭"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "伪闭",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "伪"
+        },
+        {
+          "kind": "A",
+          "name": "闭"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "似开",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "似"
+        },
+        {
+          "kind": "A",
+          "name": "开"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "实闭",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "实"
+        },
+        {
+          "kind": "A",
+          "name": "闭"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "伪开",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "伪"
+        },
+        {
+          "kind": "A",
+          "name": "似"
+        },
+        {
+          "kind": "A",
+          "name": "开"
+        },
+        {
+          "kind": "A",
+          "name": "实"
+        },
+        {
+          "kind": "A",
+          "name": "闭"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "回观",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "回"
+        },
+        {
+          "kind": "A",
+          "name": "观"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "回观稳",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "回"
+        },
+        {
+          "kind": "A",
+          "name": "观"
+        },
+        {
+          "kind": "A",
+          "name": "稳"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "回观不败",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "回"
+        },
+        {
+          "kind": "A",
+          "name": "观"
+        },
+        {
+          "kind": "A",
+          "name": "败"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "异入",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "异"
+        },
+        {
+          "kind": "A",
+          "name": "入"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "众应",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "众"
+        },
+        {
+          "kind": "A",
+          "name": "应"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "迹查",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "迹"
+        },
+        {
+          "kind": "A",
+          "name": "查"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "互证",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "互"
+        },
+        {
+          "kind": "A",
+          "name": "证"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "源独",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "源"
+        },
+        {
+          "kind": "A",
+          "name": "独"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "受入",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "受"
+        },
+        {
+          "kind": "A",
+          "name": "入"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "受黜",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "受"
+        },
+        {
+          "kind": "A",
+          "name": "黜"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "迹蔽",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "迹"
+        },
+        {
+          "kind": "A",
+          "name": "蔽"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "证源同执",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "证"
+        },
+        {
+          "kind": "A",
+          "name": "源"
+        },
+        {
+          "kind": "A",
+          "name": "同"
+        },
+        {
+          "kind": "A",
+          "name": "执"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "审校不败",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "审"
+        },
+        {
+          "kind": "A",
+          "name": "校"
+        },
+        {
+          "kind": "A",
+          "name": "败"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "共开",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "共"
+        },
+        {
+          "kind": "A",
+          "name": "开"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "共续",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "共"
+        },
+        {
+          "kind": "A",
+          "name": "续"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "己续",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "己"
+        },
+        {
+          "kind": "A",
+          "name": "续"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "夺依",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "夺"
+        },
+        {
+          "kind": "A",
+          "name": "依"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "护开",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "护"
+        },
+        {
+          "kind": "A",
+          "name": "开"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "护闭",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "护"
+        },
+        {
+          "kind": "A",
+          "name": "闭"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "正行",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "正"
+        },
+        {
+          "kind": "A",
+          "name": "行"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "邪行",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "邪"
+        },
+        {
+          "kind": "A",
+          "name": "行"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "正危",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "正"
+        },
+        {
+          "kind": "A",
+          "name": "危"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "正筛",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "正"
+        },
+        {
+          "kind": "A",
+          "name": "筛"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "邪势",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "邪"
+        },
+        {
+          "kind": "A",
+          "name": "势"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "状态夺",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "状"
+        },
+        {
+          "kind": "A",
+          "name": "态"
+        },
+        {
+          "kind": "A",
+          "name": "夺"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "自由",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "自"
+        },
+        {
+          "kind": "A",
+          "name": "由"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "繁荣",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "繁"
+        },
+        {
+          "kind": "A",
+          "name": "荣"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "真道",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "真"
+        },
+        {
+          "kind": "A",
+          "name": "道"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "度期周",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "度"
+        },
+        {
+          "kind": "A",
+          "name": "期"
+        },
+        {
+          "kind": "A",
+          "name": "周"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "开剖",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "开"
+        },
+        {
+          "kind": "A",
+          "name": "剖"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "自似",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "自"
+        },
+        {
+          "kind": "A",
+          "name": "似"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "可识",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "可"
+        },
+        {
+          "kind": "A",
+          "name": "识"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "可择",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "可"
+        },
+        {
+          "kind": "A",
+          "name": "择"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "可校",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "可"
+        },
+        {
+          "kind": "A",
+          "name": "校"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "未定",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "未"
+        },
+        {
+          "kind": "A",
+          "name": "定"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "限试",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "限"
+        },
+        {
+          "kind": "A",
+          "name": "试"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "限域",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "限"
+        },
+        {
+          "kind": "A",
+          "name": "域"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "限期",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "限"
+        },
+        {
+          "kind": "A",
+          "name": "期"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "限损",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "限"
+        },
+        {
+          "kind": "A",
+          "name": "损"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "偏闭",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "偏"
+        },
+        {
+          "kind": "A",
+          "name": "闭"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "强护开",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "强"
+        },
+        {
+          "kind": "A",
+          "name": "护"
+        },
+        {
+          "kind": "A",
+          "name": "开"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "归开",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "归"
+        },
+        {
+          "kind": "A",
+          "name": "开"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "异可显",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "异"
+        },
+        {
+          "kind": "A",
+          "name": "可"
+        },
+        {
+          "kind": "A",
+          "name": "显"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "异可通",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "异"
+        },
+        {
+          "kind": "A",
+          "name": "可"
+        },
+        {
+          "kind": "A",
+          "name": "通"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "正续",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "正"
+        },
+        {
+          "kind": "A",
+          "name": "续"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "夺共续",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "夺"
+        },
+        {
+          "kind": "A",
+          "name": "共"
+        },
+        {
+          "kind": "A",
+          "name": "续"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "续能",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "续"
+        },
+        {
+          "kind": "A",
+          "name": "能"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "夺益",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "夺"
+        },
+        {
+          "kind": "A",
+          "name": "益"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "被迫",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "迫"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "基线替径",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "基"
+        },
+        {
+          "kind": "A",
+          "name": "线"
+        },
+        {
+          "kind": "A",
+          "name": "替"
+        },
+        {
+          "kind": "A",
+          "name": "径"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "格物",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "格"
+        },
+        {
+          "kind": "A",
+          "name": "物"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "相关度期",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "相"
+        },
+        {
+          "kind": "A",
+          "name": "关"
+        },
+        {
+          "kind": "A",
+          "name": "度"
+        },
+        {
+          "kind": "A",
+          "name": "期"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "一元论",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "一"
+        },
+        {
+          "kind": "A",
+          "name": "元"
+        },
+        {
+          "kind": "A",
+          "name": "论"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "一元构造",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "一"
+        },
+        {
+          "kind": "A",
+          "name": "元"
+        },
+        {
+          "kind": "A",
+          "name": "构"
+        },
+        {
+          "kind": "A",
+          "name": "造"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "普遍证明理",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "普"
+        },
+        {
+          "kind": "A",
+          "name": "遍"
+        },
+        {
+          "kind": "A",
+          "name": "证"
+        },
+        {
+          "kind": "A",
+          "name": "明"
+        },
+        {
+          "kind": "A",
+          "name": "理"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "证成法",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "证"
+        },
+        {
+          "kind": "A",
+          "name": "成"
+        },
+        {
+          "kind": "A",
+          "name": "法"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "归纳构造演算",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "归"
+        },
+        {
+          "kind": "A",
+          "name": "纳"
+        },
+        {
+          "kind": "A",
+          "name": "构"
+        },
+        {
+          "kind": "A",
+          "name": "造"
+        },
+        {
+          "kind": "A",
+          "name": "演"
+        },
+        {
+          "kind": "A",
+          "name": "算"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "天",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "天"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "子",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "子"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "成子",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "成"
+        },
+        {
+          "kind": "A",
+          "name": "子"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "聚焦成子",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "聚"
+        },
+        {
+          "kind": "A",
+          "name": "焦"
+        },
+        {
+          "kind": "A",
+          "name": "成"
+        },
+        {
+          "kind": "A",
+          "name": "子"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "天之子",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "天"
+        },
+        {
+          "kind": "A",
+          "name": "之"
+        },
+        {
+          "kind": "A",
+          "name": "子"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "世界",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "世"
+        },
+        {
+          "kind": "A",
+          "name": "界"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "自身",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "自"
+        },
+        {
+          "kind": "A",
+          "name": "身"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "聚焦",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "聚"
+        },
+        {
+          "kind": "A",
+          "name": "焦"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "意识",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "意"
+        },
+        {
+          "kind": "A",
+          "name": "识"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "人",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "人"
+        },
+        {
+          "kind": "A",
+          "name": "天"
+        },
+        {
+          "kind": "A",
+          "name": "之"
+        },
+        {
+          "kind": "A",
+          "name": "子"
+        },
+        {
+          "kind": "A",
+          "name": "意"
+        },
+        {
+          "kind": "A",
+          "name": "识"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "为人",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "为"
+        },
+        {
+          "kind": "A",
+          "name": "人"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "做人",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "做"
+        },
+        {
+          "kind": "A",
+          "name": "人"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "意图",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "意"
+        },
+        {
+          "kind": "A",
+          "name": "图"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "意图层面",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "意"
+        },
+        {
+          "kind": "A",
+          "name": "图"
+        },
+        {
+          "kind": "A",
+          "name": "层"
+        },
+        {
+          "kind": "A",
+          "name": "面"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "目标",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "目"
+        },
+        {
+          "kind": "A",
+          "name": "标"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "控制",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "控"
+        },
+        {
+          "kind": "A",
+          "name": "制"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "对齐",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "对"
+        },
+        {
+          "kind": "A",
+          "name": "齐"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "向齐生",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "向"
+        },
+        {
+          "kind": "A",
+          "name": "齐"
+        },
+        {
+          "kind": "A",
+          "name": "生"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "意图向齐生",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "意"
+        },
+        {
+          "kind": "A",
+          "name": "图"
+        },
+        {
+          "kind": "A",
+          "name": "向"
+        },
+        {
+          "kind": "A",
+          "name": "齐"
+        },
+        {
+          "kind": "A",
+          "name": "生"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "注意",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "注"
+        },
+        {
+          "kind": "A",
+          "name": "意"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "注意机制",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "注"
+        },
+        {
+          "kind": "A",
+          "name": "意"
+        },
+        {
+          "kind": "A",
+          "name": "机"
+        },
+        {
+          "kind": "A",
+          "name": "制"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "动态权重分配",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "动"
+        },
+        {
+          "kind": "A",
+          "name": "态"
+        },
+        {
+          "kind": "A",
+          "name": "权"
+        },
+        {
+          "kind": "A",
+          "name": "重"
+        },
+        {
+          "kind": "A",
+          "name": "分"
+        },
+        {
+          "kind": "A",
+          "name": "配"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "门控",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "门"
+        },
+        {
+          "kind": "A",
+          "name": "控"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "维持",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "维"
+        },
+        {
+          "kind": "A",
+          "name": "持"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "转焦",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "转"
+        },
+        {
+          "kind": "A",
+          "name": "焦"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "抑制",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "抑"
+        },
+        {
+          "kind": "A",
+          "name": "制"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "回观可校",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "回"
+        },
+        {
+          "kind": "A",
+          "name": "观"
+        },
+        {
+          "kind": "A",
+          "name": "可"
+        },
+        {
+          "kind": "A",
+          "name": "校"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "同基",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "同"
+        },
+        {
+          "kind": "A",
+          "name": "基"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "聚焦基底",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "聚"
+        },
+        {
+          "kind": "A",
+          "name": "焦"
+        },
+        {
+          "kind": "A",
+          "name": "基"
+        },
+        {
+          "kind": "A",
+          "name": "底"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "注意基底",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "注"
+        },
+        {
+          "kind": "A",
+          "name": "意"
+        },
+        {
+          "kind": "A",
+          "name": "基"
+        },
+        {
+          "kind": "A",
+          "name": "底"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "显著",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "显"
+        },
+        {
+          "kind": "A",
+          "name": "著"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "自下而上注意",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "自"
+        },
+        {
+          "kind": "A",
+          "name": "下"
+        },
+        {
+          "kind": "A",
+          "name": "而"
+        },
+        {
+          "kind": "A",
+          "name": "上"
+        },
+        {
+          "kind": "A",
+          "name": "注"
+        },
+        {
+          "kind": "A",
+          "name": "意"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "自上而下注意",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "自"
+        },
+        {
+          "kind": "A",
+          "name": "上"
+        },
+        {
+          "kind": "A",
+          "name": "而"
+        },
+        {
+          "kind": "A",
+          "name": "下"
+        },
+        {
+          "kind": "A",
+          "name": "注"
+        },
+        {
+          "kind": "A",
+          "name": "意"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "择注意",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "择"
+        },
+        {
+          "kind": "A",
+          "name": "注"
+        },
+        {
+          "kind": "A",
+          "name": "意"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "持续注意",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "持"
+        },
+        {
+          "kind": "A",
+          "name": "续"
+        },
+        {
+          "kind": "A",
+          "name": "注"
+        },
+        {
+          "kind": "A",
+          "name": "意"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "执行控制",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "执"
+        },
+        {
+          "kind": "A",
+          "name": "行"
+        },
+        {
+          "kind": "A",
+          "name": "控"
+        },
+        {
+          "kind": "A",
+          "name": "制"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "工作记忆",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "工"
+        },
+        {
+          "kind": "A",
+          "name": "作"
+        },
+        {
+          "kind": "A",
+          "name": "记"
+        },
+        {
+          "kind": "A",
+          "name": "忆"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "意识通达",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "意"
+        },
+        {
+          "kind": "A",
+          "name": "识"
+        },
+        {
+          "kind": "A",
+          "name": "通"
+        },
+        {
+          "kind": "A",
+          "name": "达"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "注意向齐生",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "注"
+        },
+        {
+          "kind": "A",
+          "name": "意"
+        },
+        {
+          "kind": "A",
+          "name": "向"
+        },
+        {
+          "kind": "A",
+          "name": "齐"
+        },
+        {
+          "kind": "A",
+          "name": "生"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "做人注意",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "做"
+        },
+        {
+          "kind": "A",
+          "name": "人"
+        },
+        {
+          "kind": "A",
+          "name": "注"
+        },
+        {
+          "kind": "A",
+          "name": "意"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "成界",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "成"
+        },
+        {
+          "kind": "A",
+          "name": "界"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "露隙",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "露"
+        },
+        {
+          "kind": "A",
+          "name": "隙"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "生合",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "生"
+        },
+        {
+          "kind": "A",
+          "name": "合"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "生新隙",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "生"
+        },
+        {
+          "kind": "A",
+          "name": "新"
+        },
+        {
+          "kind": "A",
+          "name": "隙"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "成态",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "成"
+        },
+        {
+          "kind": "A",
+          "name": "态"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "所是",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "所"
+        },
+        {
+          "kind": "A",
+          "name": "是"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "自洽",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "自"
+        },
+        {
+          "kind": "A",
+          "name": "洽"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "可行",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "可"
+        },
+        {
+          "kind": "A",
+          "name": "行"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "复生",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "复"
+        },
+        {
+          "kind": "A",
+          "name": "生"
+        }
+      ]
+    },
+    {
+      "kind": "generated",
+      "name": "生生不息",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "生"
+        },
+        {
+          "kind": "A",
+          "name": "生"
+        },
+        {
+          "kind": "A",
+          "name": "不"
+        },
+        {
+          "kind": "A",
+          "name": "息"
+        }
+      ]
+    }
+  ],
+  "groups": {
+    "atom": [
+      "显",
+      "未",
+      "尽",
+      "间",
+      "可",
+      "生",
+      "续",
+      "开",
+      "闭",
+      "绝",
+      "断",
+      "达",
+      "候",
+      "新",
+      "场",
+      "焦",
+      "物",
+      "境",
+      "系",
+      "心",
+      "身",
+      "态",
+      "状",
+      "维",
+      "形",
+      "相",
+      "因",
+      "结",
+      "据",
+      "证",
+      "迹",
+      "史",
+      "积",
+      "精",
+      "气",
+      "耦",
+      "神",
+      "合",
+      "法",
+      "悖",
+      "入",
+      "待",
+      "行",
+      "成",
+      "冻",
+      "修",
+      "复",
+      "转",
+      "动",
+      "元",
+      "几",
+      "权",
+      "重",
+      "差",
+      "势",
+      "强",
+      "向",
+      "临",
+      "岐",
+      "机",
+      "扰",
+      "变",
+      "应",
+      "伤",
+      "散",
+      "坍",
+      "径",
+      "返",
+      "限",
+      "暂",
+      "稳",
+      "展",
+      "审",
+      "校",
+      "验",
+      "异",
+      "众",
+      "互",
+      "受",
+      "独",
+      "查",
+      "源",
+      "执",
+      "著",
+      "黜",
+      "蔽",
+      "程",
+      "败",
+      "伪",
+      "似",
+      "实",
+      "真",
+      "通",
+      "流",
+      "和",
+      "平",
+      "危",
+      "正",
+      "邪",
+      "夺",
+      "依",
+      "压",
+      "护",
+      "存",
+      "偏",
+      "同",
+      "筛",
+      "放",
+      "抑",
+      "汰",
+      "益",
+      "损",
+      "险",
+      "率",
+      "阈",
+      "效",
+      "责",
+      "好",
+      "坏",
+      "自",
+      "由",
+      "繁",
+      "荣",
+      "义",
+      "善",
+      "己",
+      "共",
+      "仁",
+      "道",
+      "度",
+      "期",
+      "及",
+      "外",
+      "序",
+      "周",
+      "回",
+      "观",
+      "照",
+      "辨",
+      "识",
+      "知",
+      "智",
+      "感",
+      "择",
+      "情",
+      "礼",
+      "信",
+      "性",
+      "能",
+      "归",
+      "轨",
+      "息",
+      "迫",
+      "替",
+      "基",
+      "线",
+      "域",
+      "试",
+      "定",
+      "再",
+      "关",
+      "格",
+      "模",
+      "面",
+      "评",
+      "价",
+      "础",
+      "科",
+      "学",
+      "逻",
+      "辑",
+      "构",
+      "造",
+      "纳",
+      "一",
+      "论",
+      "普",
+      "遍",
+      "理",
+      "算",
+      "演",
+      "明",
+      "天",
+      "子",
+      "之",
+      "人",
+      "世",
+      "界",
+      "对",
+      "聚",
+      "意",
+      "图",
+      "控",
+      "齐",
+      "做",
+      "目",
+      "标",
+      "为",
+      "制",
+      "层",
+      "注",
+      "调",
+      "门",
+      "分",
+      "配",
+      "持",
+      "竞",
+      "争",
+      "记",
+      "忆",
+      "上",
+      "下",
+      "而",
+      "工",
+      "作",
+      "底",
+      "露",
+      "隙",
+      "发",
+      "凝",
+      "剖",
+      "所",
+      "是",
+      "洽",
+      "者",
+      "也",
+      "于",
+      "於",
+      "已",
+      "七",
+      "三",
+      "不",
+      "与",
+      "中",
+      "乃",
+      "九",
+      "事",
+      "二",
+      "五",
+      "亦",
+      "仍",
+      "以",
+      "件",
+      "位",
+      "例",
+      "保",
+      "值",
+      "全",
+      "八",
+      "六",
+      "其",
+      "册",
+      "冒",
+      "准",
+      "凡",
+      "出",
+      "判",
+      "别",
+      "前",
+      "十",
+      "卷",
+      "原",
+      "口",
+      "古",
+      "句",
+      "只",
+      "名",
+      "含",
+      "四",
+      "型",
+      "增",
+      "始",
+      "字",
+      "守",
+      "完",
+      "导",
+      "尺",
+      "常",
+      "式",
+      "当",
+      "录",
+      "律",
+      "得",
+      "微",
+      "德",
+      "指",
+      "推",
+      "收",
+      "故",
+      "整",
+      "文",
+      "易",
+      "有",
+      "本",
+      "束",
+      "极",
+      "染",
+      "根",
+      "此",
+      "渲",
+      "版",
+      "皆",
+      "空",
+      "立",
+      "箱",
+      "篇",
+      "籍",
+      "类",
+      "终",
+      "经",
+      "缺",
+      "美",
+      "背",
+      "致",
+      "补",
+      "表",
+      "见",
+      "言",
+      "语",
+      "诸",
+      "谓",
+      "象",
+      "连",
+      "述",
+      "递",
+      "遇",
+      "量",
+      "锚",
+      "随",
+      "非",
+      "项",
+      "高",
+      "黑",
+      "恶"
+    ],
+    "generated": [
+      "未尽",
+      "可生",
+      "候间",
+      "合法",
+      "史法",
+      "开法",
+      "暂法",
+      "开维法",
+      "稳焦",
+      "可达",
+      "实达",
+      "可返",
+      "可修",
+      "可复",
+      "复开",
+      "再生",
+      "断闭",
+      "绝闭",
+      "机闭",
+      "成闭",
+      "元闭",
+      "夺闭",
+      "蔽闭",
+      "伪闭",
+      "似开",
+      "实闭",
+      "伪开",
+      "回观",
+      "回观稳",
+      "回观不败",
+      "异入",
+      "众应",
+      "迹查",
+      "互证",
+      "源独",
+      "受入",
+      "受黜",
+      "迹蔽",
+      "证源同执",
+      "审校不败",
+      "共开",
+      "共续",
+      "己续",
+      "夺依",
+      "护开",
+      "护闭",
+      "正行",
+      "邪行",
+      "正危",
+      "正筛",
+      "邪势",
+      "状态夺",
+      "自由",
+      "繁荣",
+      "真道",
+      "度期周",
+      "开剖",
+      "自似",
+      "可识",
+      "可择",
+      "可校",
+      "未定",
+      "限试",
+      "限域",
+      "限期",
+      "限损",
+      "偏闭",
+      "强护开",
+      "归开",
+      "异可显",
+      "异可通",
+      "正续",
+      "夺共续",
+      "续能",
+      "夺益",
+      "被迫",
+      "基线替径",
+      "格物",
+      "相关度期",
+      "一元论",
+      "一元构造",
+      "普遍证明理",
+      "证成法",
+      "归纳构造演算",
+      "天",
+      "子",
+      "成子",
+      "聚焦成子",
+      "天之子",
+      "世界",
+      "自身",
+      "聚焦",
+      "意识",
+      "人",
+      "为人",
+      "做人",
+      "意图",
+      "意图层面",
+      "目标",
+      "控制",
+      "对齐",
+      "向齐生",
+      "意图向齐生",
+      "注意",
+      "注意机制",
+      "动态权重分配",
+      "门控",
+      "维持",
+      "转焦",
+      "抑制",
+      "回观可校",
+      "同基",
+      "聚焦基底",
+      "注意基底",
+      "显著",
+      "自下而上注意",
+      "自上而下注意",
+      "择注意",
+      "持续注意",
+      "执行控制",
+      "工作记忆",
+      "意识通达",
+      "注意向齐生",
+      "做人注意",
+      "成界",
+      "露隙",
+      "生合",
+      "生新隙",
+      "成态",
+      "所是",
+      "自洽",
+      "可行",
+      "复生",
+      "生生不息"
+    ],
+    "pending": [
+      "邪续",
+      "开势投影",
+      "审校数据",
+      "正邪阈值",
+      "度期计算",
+      "经验校准"
+    ],
+    "primitive": [
+      "域",
+      "格",
+      "权",
+      "生",
+      "校"
+    ],
+    "recursive": [
+      "开",
+      "闭",
+      "正",
+      "邪",
+      "共开",
+      "好",
+      "坏",
+      "自由",
+      "义",
+      "善",
+      "仁",
+      "道",
+      "真"
+    ]
+  },
+  "recursive_deps": [
+    {
+      "kind": "recursive",
+      "name": "开",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "未"
+        },
+        {
+          "kind": "A",
+          "name": "可"
+        },
+        {
+          "kind": "A",
+          "name": "应"
+        },
+        {
+          "kind": "A",
+          "name": "转"
+        }
+      ]
+    },
+    {
+      "kind": "recursive",
+      "name": "闭",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "断"
+        },
+        {
+          "kind": "A",
+          "name": "机"
+        },
+        {
+          "kind": "A",
+          "name": "成"
+        },
+        {
+          "kind": "A",
+          "name": "元"
+        },
+        {
+          "kind": "A",
+          "name": "夺"
+        },
+        {
+          "kind": "A",
+          "name": "蔽"
+        },
+        {
+          "kind": "A",
+          "name": "伪"
+        }
+      ]
+    },
+    {
+      "kind": "recursive",
+      "name": "正",
+      "refs": [
+        {
+          "kind": "R",
+          "name": "开"
+        },
+        {
+          "kind": "A",
+          "name": "合"
+        },
+        {
+          "kind": "A",
+          "name": "法"
+        },
+        {
+          "kind": "G",
+          "name": "审校不败"
+        }
+      ]
+    },
+    {
+      "kind": "recursive",
+      "name": "邪",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "偏"
+        },
+        {
+          "kind": "A",
+          "name": "伪"
+        },
+        {
+          "kind": "A",
+          "name": "夺"
+        },
+        {
+          "kind": "R",
+          "name": "闭"
+        }
+      ]
+    },
+    {
+      "kind": "recursive",
+      "name": "共开",
+      "refs": [
+        {
+          "kind": "R",
+          "name": "开"
+        },
+        {
+          "kind": "A",
+          "name": "共"
+        },
+        {
+          "kind": "A",
+          "name": "存"
+        }
+      ]
+    },
+    {
+      "kind": "recursive",
+      "name": "好",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "平"
+        },
+        {
+          "kind": "A",
+          "name": "和"
+        },
+        {
+          "kind": "G",
+          "name": "正危"
+        }
+      ]
+    },
+    {
+      "kind": "recursive",
+      "name": "坏",
+      "refs": [
+        {
+          "kind": "R",
+          "name": "闭"
+        },
+        {
+          "kind": "A",
+          "name": "夺"
+        },
+        {
+          "kind": "A",
+          "name": "伪"
+        }
+      ]
+    },
+    {
+      "kind": "recursive",
+      "name": "自由",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "自"
+        },
+        {
+          "kind": "A",
+          "name": "由"
+        },
+        {
+          "kind": "G",
+          "name": "可择"
+        },
+        {
+          "kind": "G",
+          "name": "可识"
+        },
+        {
+          "kind": "G",
+          "name": "可达"
+        },
+        {
+          "kind": "G",
+          "name": "被迫"
+        }
+      ]
+    },
+    {
+      "kind": "recursive",
+      "name": "义",
+      "refs": [
+        {
+          "kind": "A",
+          "name": "机"
+        },
+        {
+          "kind": "A",
+          "name": "择"
+        },
+        {
+          "kind": "R",
+          "name": "正"
+        }
+      ]
+    },
+    {
+      "kind": "recursive",
+      "name": "善",
+      "refs": [
+        {
+          "kind": "R",
+          "name": "义"
+        },
+        {
+          "kind": "G",
+          "name": "正筛"
+        }
+      ]
+    },
+    {
+      "kind": "recursive",
+      "name": "仁",
+      "refs": [
+        {
+          "kind": "G",
+          "name": "己续"
+        },
+        {
+          "kind": "G",
+          "name": "共续"
+        }
+      ]
+    },
+    {
+      "kind": "recursive",
+      "name": "道",
+      "refs": [
+        {
+          "kind": "G",
+          "name": "正续"
+        },
+        {
+          "kind": "R",
+          "name": "共开"
+        },
+        {
+          "kind": "G",
+          "name": "夺共续"
+        },
+        {
+          "kind": "R",
+          "name": "坏"
+        }
+      ]
+    },
+    {
+      "kind": "recursive",
+      "name": "真",
+      "refs": [
+        {
+          "kind": "G",
+          "name": "所是"
+        },
+        {
+          "kind": "G",
+          "name": "相关度期"
+        },
+        {
+          "kind": "G",
+          "name": "审校不败"
+        }
+      ]
+    }
+  ],
+  "source": "formal/SSBX/Roster.lean"
+}
