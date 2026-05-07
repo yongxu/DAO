@@ -20,33 +20,59 @@ open SSBX.Text.OperatorSignatures
 
 /-- Semantic evidence attached to one operator-cell pair. -/
 inductive OperatorCellSemanticEvidence where
-  | executableCellTransform
+  | familyBackedDenotation
   | exactSignatureShape
-  | groupDefaultSignatureShape
+  | catalogueSignatureShape
   deriving Repr, DecidableEq, BEq
+
+/-- Family namespace for denotations used by operator-cell rows. -/
+inductive OperatorFamilyId where
+  | cellTransform (kind : CellTransformKind)
+  deriving Repr, DecidableEq, BEq
+
+/--
+Denotation evidence for one operator-cell pair.
+
+`outputCell?` is present only for families that execute as a concrete `Cell192`
+transform. Future text-level families may be family-backed without producing a
+direct cell output.
+-/
+structure OperatorCellDenotation where
+  family : OperatorFamilyId
+  outputCell? : Option Cell192
+  deriving Repr, DecidableEq
 
 structure OperatorCellSemanticRow where
   id : OperatorId
   cell : Cell192
   signature : CoveredOperatorSignature
+  denotation? : Option OperatorCellDenotation
   cellTransform? : Option Cell192
   evidence : OperatorCellSemanticEvidence
   deriving Repr
 
+def operatorCellDenotationFor? (id : OperatorId) (cell : Cell192) :
+    Option OperatorCellDenotation :=
+  match cellTransformForOperator? id with
+  | some kind =>
+      some { family := .cellTransform kind, outputCell? := some (kind.apply cell) }
+  | none => none
+
 def semanticEvidenceFor (id : OperatorId) (cell : Cell192) :
     OperatorCellSemanticEvidence :=
-  match applyCellTransformForOperator? id cell with
-  | some _ => .executableCellTransform
+  match operatorCellDenotationFor? id cell with
+  | some _ => .familyBackedDenotation
   | none =>
       match (fullSignatureFor id).evidence with
       | .seedOverride => .exactSignatureShape
-      | .groupDefault => .groupDefaultSignatureShape
+      | .catalogueShape => .catalogueSignatureShape
 
 def operatorCellSemanticRow (id : OperatorId) (cell : Cell192) :
     OperatorCellSemanticRow :=
   { id := id
   , cell := cell
   , signature := fullSignatureFor id
+  , denotation? := operatorCellDenotationFor? id cell
   , cellTransform? := applyCellTransformForOperator? id cell
   , evidence := semanticEvidenceFor id cell }
 
@@ -60,17 +86,20 @@ def allOperatorCellSemanticRows : List OperatorCellSemanticRow :=
 def allOperatorCellSemanticPairs : List (OperatorId × Cell192) :=
   allOperatorCellSemanticRows.map (fun row => (row.id, row.cell))
 
-def executableCellTransformRows : List OperatorCellSemanticRow :=
+def familyBackedDenotationRows : List OperatorCellSemanticRow :=
   allOperatorCellSemanticRows.filter
-    (fun row => row.evidence == OperatorCellSemanticEvidence.executableCellTransform)
+    (fun row => row.evidence == OperatorCellSemanticEvidence.familyBackedDenotation)
+
+def executableCellTransformRows : List OperatorCellSemanticRow :=
+  familyBackedDenotationRows
 
 def exactSignatureShapeRows : List OperatorCellSemanticRow :=
   allOperatorCellSemanticRows.filter
     (fun row => row.evidence == OperatorCellSemanticEvidence.exactSignatureShape)
 
-def groupDefaultSignatureShapeRows : List OperatorCellSemanticRow :=
+def catalogueSignatureShapeRows : List OperatorCellSemanticRow :=
   allOperatorCellSemanticRows.filter
-    (fun row => row.evidence == OperatorCellSemanticEvidence.groupDefaultSignatureShape)
+    (fun row => row.evidence == OperatorCellSemanticEvidence.catalogueSignatureShape)
 
 theorem operatorCellSemanticRowsFor_length (id : OperatorId) :
     (operatorCellSemanticRowsFor id).length = 192 := by
@@ -84,25 +113,29 @@ theorem allOperatorCellSemanticPairs_length :
     allOperatorCellSemanticPairs.length = 71232 := by
   rw [allOperatorCellSemanticPairs, List.length_map, allOperatorCellSemanticRows_length]
 
-theorem executableCellTransformRows_length :
-    executableCellTransformRows.length = 576 := by
+theorem familyBackedDenotationRows_length :
+    familyBackedDenotationRows.length = 768 := by
   native_decide
+
+theorem executableCellTransformRows_length :
+    executableCellTransformRows.length = 768 := by
+  rw [executableCellTransformRows, familyBackedDenotationRows_length]
 
 theorem exactSignatureShapeRows_length :
-    exactSignatureShapeRows.length = 2112 := by
+    exactSignatureShapeRows.length = 1920 := by
   native_decide
 
-theorem groupDefaultSignatureShapeRows_length :
-    groupDefaultSignatureShapeRows.length = 68544 := by
+theorem catalogueSignatureShapeRows_length :
+    catalogueSignatureShapeRows.length = 68544 := by
   native_decide
 
 theorem operatorCellSemanticStatus_counts_sum :
     executableCellTransformRows.length
       + exactSignatureShapeRows.length
-      + groupDefaultSignatureShapeRows.length
+      + catalogueSignatureShapeRows.length
       = allOperatorCellSemanticRows.length := by
   rw [executableCellTransformRows_length, exactSignatureShapeRows_length,
-    groupDefaultSignatureShapeRows_length, allOperatorCellSemanticRows_length]
+    catalogueSignatureShapeRows_length, allOperatorCellSemanticRows_length]
 
 theorem operatorCellSemanticRow_signature_id (id : OperatorId) (cell : Cell192) :
     (operatorCellSemanticRow id cell).signature.id = id := by
@@ -131,42 +164,53 @@ theorem operatorCellSemanticRows_signature_complete
 
 theorem operatorCellSemanticRows_cuo_executable (cell : Cell192) :
     (operatorCellSemanticRow .Z_5 cell).evidence =
-      OperatorCellSemanticEvidence.executableCellTransform
+      OperatorCellSemanticEvidence.familyBackedDenotation
       ∧ (operatorCellSemanticRow .Z_5 cell).cellTransform? = some (Cell192.hexCuo cell) := by
   constructor <;> rfl
 
 theorem operatorCellSemanticRows_zong_executable (cell : Cell192) :
     (operatorCellSemanticRow .Z_6 cell).evidence =
-      OperatorCellSemanticEvidence.executableCellTransform
+      OperatorCellSemanticEvidence.familyBackedDenotation
       ∧ (operatorCellSemanticRow .Z_6 cell).cellTransform? = some (Cell192.hexZong cell) := by
   constructor <;> rfl
 
 theorem operatorCellSemanticRows_hu_executable (cell : Cell192) :
     (operatorCellSemanticRow .Z_3 cell).evidence =
-      OperatorCellSemanticEvidence.executableCellTransform
+      OperatorCellSemanticEvidence.familyBackedDenotation
       ∧ (operatorCellSemanticRow .Z_3 cell).cellTransform? = some (Cell192.hexHu cell) := by
   constructor <;> rfl
 
+theorem operatorCellSemanticRows_fan_executable (cell : Cell192) :
+    (operatorCellSemanticRow .T_6 cell).evidence =
+      OperatorCellSemanticEvidence.familyBackedDenotation
+      ∧ (operatorCellSemanticRow .T_6 cell).cellTransform? = some (Cell192.hexCuo cell) := by
+  constructor <;> rfl
+
+theorem operatorCellSemanticRows_fan_denotation (cell : Cell192) :
+    (operatorCellSemanticRow .T_6 cell).denotation?.isSome = true := by
+  rfl
+
 theorem operatorCellSemanticRows_R_1_signature_only (cell : Cell192) :
     (operatorCellSemanticRow .R_1 cell).evidence =
-      OperatorCellSemanticEvidence.groupDefaultSignatureShape := by
+      OperatorCellSemanticEvidence.catalogueSignatureShape := by
   rfl
 
 /--
 Summary: all 71,232 pairs have theorem-level semantic coverage rows; exact
 cell execution is attached only where a current cell-transform family exists.
 The remaining rows split between exact seed-signature obligations and
-group-default signature-shape obligations.
+catalogue-shape signature obligations.
 -/
 theorem operator_cell_semantic_coverage_summary :
     allOperatorCellSemanticRows.length = 71232
     ∧ allOperatorCellSemanticPairs.length = 71232
-    ∧ executableCellTransformRows.length = 576
-    ∧ exactSignatureShapeRows.length = 2112
-    ∧ groupDefaultSignatureShapeRows.length = 68544
+    ∧ familyBackedDenotationRows.length = 768
+    ∧ executableCellTransformRows.length = 768
+    ∧ exactSignatureShapeRows.length = 1920
+    ∧ catalogueSignatureShapeRows.length = 68544
     ∧ executableCellTransformRows.length
         + exactSignatureShapeRows.length
-        + groupDefaultSignatureShapeRows.length
+        + catalogueSignatureShapeRows.length
         = allOperatorCellSemanticRows.length
     ∧ (∀ id : OperatorId, (operatorCellSemanticRowsFor id).length = 192)
     ∧ (∀ id : OperatorId, ∀ cell : Cell192,
@@ -179,19 +223,23 @@ theorem operator_cell_semantic_coverage_summary :
     ∧ (∀ cell : Cell192,
         (operatorCellSemanticRow .Z_6 cell).cellTransform? = some (Cell192.hexZong cell))
     ∧ (∀ cell : Cell192,
-        (operatorCellSemanticRow .Z_3 cell).cellTransform? = some (Cell192.hexHu cell)) := by
+        (operatorCellSemanticRow .Z_3 cell).cellTransform? = some (Cell192.hexHu cell))
+    ∧ (∀ cell : Cell192,
+        (operatorCellSemanticRow .T_6 cell).cellTransform? = some (Cell192.hexCuo cell)) := by
   exact
     ⟨ allOperatorCellSemanticRows_length
     , allOperatorCellSemanticPairs_length
+    , familyBackedDenotationRows_length
     , executableCellTransformRows_length
     , exactSignatureShapeRows_length
-    , groupDefaultSignatureShapeRows_length
+    , catalogueSignatureShapeRows_length
     , operatorCellSemanticStatus_counts_sum
     , operatorCellSemanticRowsFor_length
     , operatorCellSemanticRows_signature_complete
     , fun cell => (operatorCellSemanticRows_cuo_executable cell).2
     , fun cell => (operatorCellSemanticRows_zong_executable cell).2
     , fun cell => (operatorCellSemanticRows_hu_executable cell).2
+    , fun cell => (operatorCellSemanticRows_fan_executable cell).2
     ⟩
 
 end SSBX.Text.OperatorCellSemantics

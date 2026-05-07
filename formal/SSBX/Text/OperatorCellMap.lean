@@ -1,6 +1,9 @@
 import SSBX.Text.OperatorReadings
 import SSBX.Text.OperatorSignatures
 import SSBX.Text.OperatorFamilySemantics
+import SSBX.Text.OperatorReachabilitySemantics
+import SSBX.Text.OperatorInstructionSemantics
+import SSBX.Text.OperatorCellCandidateSemantics
 import SSBX.Text.OperatorCellSemantics
 import SSBX.Text.OperatorAnchors
 
@@ -19,6 +22,9 @@ open SSBX.Text.WenyanOperators
 open SSBX.Text.OperatorReadings
 open SSBX.Text.OperatorSignatures
 open SSBX.Text.OperatorFamilySemantics
+open SSBX.Text.OperatorReachabilitySemantics
+open SSBX.Text.OperatorInstructionSemantics
+open SSBX.Text.OperatorCellCandidateSemantics
 open SSBX.Text.OperatorCellSemantics
 open SSBX.Text.OperatorAnchors
 open SSBX.Foundation.Bagua.Cell192
@@ -221,7 +227,8 @@ structure SemanticLowerBoundRow where
 /--
 Current lower-bound audit for theorem families:
 
-* 3 exact catalogue cell transforms: 错 / 综 / 互.
+* 3 exact cell-transform families: 错 / 综 / 互, with `T_6` as a
+  conservative alias for the `错`/`hexCuo` cell-level family.
 * 7 concrete `Cell192` reachability generators: six line flips plus one time edge.
 * 12 BaguaWen L0 instruction clauses.
 * 27 core text-level semantic families from the parameterized kernel draft.
@@ -384,13 +391,18 @@ theorem functional_completion_summary :
     ∧ signedOperatorIds.Nodup
     ∧ fullOperatorSignatures.length = 371
     ∧ seedOverrideSignatureRows.length = 14
-    ∧ groupDefaultSignatureRows.length = 357
+    ∧ catalogueShapeSignatureRows.length = 357
     ∧ cellTransformKinds.length = 3
+    ∧ cellTransformOperatorIds.length = 4
     ∧ cellTransformOperatorIds.all (fun id => decide (id ∈ signedOperatorIds)) = true
+    ∧ Cell192Generator.all.length = 7
+    ∧ l0InstructionClauseKinds.length = 12
+    ∧ operatorCellCandidateBindings.length = 7
     ∧ allOperatorCellSemanticRows.length = 71232
-    ∧ executableCellTransformRows.length = 576
-    ∧ exactSignatureShapeRows.length = 2112
-    ∧ groupDefaultSignatureShapeRows.length = 68544
+    ∧ familyBackedDenotationRows.length = 768
+    ∧ executableCellTransformRows.length = 768
+    ∧ exactSignatureShapeRows.length = 1920
+    ∧ catalogueSignatureShapeRows.length = 68544
     ∧ semanticLowerBoundRows.length = 4
     ∧ semanticLowerBoundRows.map (·.scope) = [3, 7, 12, 27]
     ∧ 27 < allOperatorCells.length
@@ -420,13 +432,18 @@ theorem functional_completion_summary :
     , signedOperatorIds_nodup
     , fullOperatorSignatures_length
     , seedOverrideSignatureRows_length
-    , groupDefaultSignatureRows_length
+    , catalogueShapeSignatureRows_length
     , cellTransformKinds_length
+    , cellTransformOperatorIds_length
     , cellTransformOperatorIds_have_signature_seed
+    , Cell192Generator.all_length
+    , l0InstructionClauseKinds_length
+    , operatorCellCandidateBindings_length
     , allOperatorCellSemanticRows_length
+    , familyBackedDenotationRows_length
     , executableCellTransformRows_length
     , exactSignatureShapeRows_length
-    , groupDefaultSignatureShapeRows_length
+    , catalogueSignatureShapeRows_length
     , semanticLowerBoundRows_length
     , semanticLowerBoundRows_scopes
     , parameterizedSemanticFamilies_lt_operatorCellGrid

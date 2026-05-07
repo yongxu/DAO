@@ -41,12 +41,13 @@ def cellTransformKinds : List CellTransformKind :=
   [.cuo, .zong, .hu]
 
 def cellTransformOperatorIds : List OperatorId :=
-  cellTransformKinds.map CellTransformKind.operatorId
+  [.Z_5, .Z_6, .Z_3, .T_6]
 
 def cellTransformForOperator? : OperatorId → Option CellTransformKind
   | .Z_5 => some .cuo
   | .Z_6 => some .zong
   | .Z_3 => some .hu
+  | .T_6 => some .cuo
   | _ => none
 
 def applyCellTransformForOperator? (id : OperatorId) (c : Cell192) : Option Cell192 :=
@@ -57,7 +58,11 @@ theorem cellTransformKinds_length :
   native_decide
 
 theorem cellTransformOperatorIds_eq :
-    cellTransformOperatorIds = [.Z_5, .Z_6, .Z_3] := by
+    cellTransformOperatorIds = [.Z_5, .Z_6, .Z_3, .T_6] := by
+  native_decide
+
+theorem cellTransformOperatorIds_length :
+    cellTransformOperatorIds.length = 4 := by
   native_decide
 
 theorem cellTransformOperatorIds_nodup :
@@ -81,6 +86,9 @@ theorem cellTransformForOperator?_zong :
 theorem cellTransformForOperator?_hu :
     cellTransformForOperator? .Z_3 = some .hu := rfl
 
+theorem cellTransformForOperator?_fan :
+    cellTransformForOperator? .T_6 = some .cuo := rfl
+
 theorem applyCellTransformForOperator?_cuo (c : Cell192) :
     applyCellTransformForOperator? .Z_5 c = some (Cell192.hexCuo c) := rfl
 
@@ -89,6 +97,9 @@ theorem applyCellTransformForOperator?_zong (c : Cell192) :
 
 theorem applyCellTransformForOperator?_hu (c : Cell192) :
     applyCellTransformForOperator? .Z_3 c = some (Cell192.hexHu c) := rfl
+
+theorem applyCellTransformForOperator?_fan (c : Cell192) :
+    applyCellTransformForOperator? .T_6 c = some (Cell192.hexCuo c) := rfl
 
 theorem cellTransform_preserves_shi (k : CellTransformKind) (c : Cell192) :
     (k.apply c).2 = c.2 := by
@@ -116,12 +127,14 @@ theorem cuo_zong_family_composite_involutive (c : Cell192) :
 
 /--
 Summary: three operator families currently have parameterized `Cell192`
-semantics.  These laws range over all cells; they do not introduce 3 × 192
-pair-specific theorem rows.
+semantics, with four catalogue ids enabled because `反` is a conservative alias
+for the same cell-level reversal as `错`.  These laws range over all cells; they
+do not introduce pair-specific theorem rows.
 -/
 theorem cell_transform_family_summary :
     cellTransformKinds.length = 3
-    ∧ cellTransformOperatorIds = [.Z_5, .Z_6, .Z_3]
+    ∧ cellTransformOperatorIds.length = 4
+    ∧ cellTransformOperatorIds = [.Z_5, .Z_6, .Z_3, .T_6]
     ∧ cellTransformOperatorIds.Nodup
     ∧ cellTransformOperatorIds.all (fun id => decide (id ∈ allOperatorIds)) = true
     ∧ cellTransformOperatorIds.all (fun id => decide (id ∈ signedOperatorIds)) = true
@@ -133,6 +146,7 @@ theorem cell_transform_family_summary :
           = CellTransformKind.zong.apply (CellTransformKind.cuo.apply c)) := by
   exact
     ⟨ cellTransformKinds_length
+    , cellTransformOperatorIds_length
     , cellTransformOperatorIds_eq
     , cellTransformOperatorIds_nodup
     , cellTransformOperatorIds_catalogue_members
