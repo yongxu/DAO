@@ -1,4 +1,5 @@
 import SSBX.Text.OperatorReadings
+import SSBX.Text.OperatorSignatures
 import SSBX.Text.OperatorAnchors
 
 /-!
@@ -14,6 +15,7 @@ namespace SSBX.Text.OperatorCellMap
 
 open SSBX.Text.WenyanOperators
 open SSBX.Text.OperatorReadings
+open SSBX.Text.OperatorSignatures
 open SSBX.Text.OperatorAnchors
 open SSBX.Foundation.Bagua.Cell192
 
@@ -178,6 +180,7 @@ inductive CompletionLayer where
   | baguaAnchors
   | homographReadings
   | hexagramGapPolicies
+  | exactSignatureSeeds
   | exactOperatorSignatures
   | theoremLevelCellSemantics
   deriving Repr, DecidableEq, BEq
@@ -214,6 +217,7 @@ def functionalCompletionRows : List CompletionRow :=
   , { layer := .baguaAnchors, mark := .complete, scope := 192 }
   , { layer := .homographReadings, mark := .complete, scope := 81 }
   , { layer := .hexagramGapPolicies, mark := .tracked, scope := 31 }
+  , { layer := .exactSignatureSeeds, mark := .tracked, scope := 14 }
   , { layer := .exactOperatorSignatures, mark := .pending, scope := 371 }
   , { layer := .theoremLevelCellSemantics, mark := .pending, scope := 71232 }
   ]
@@ -228,7 +232,7 @@ def functionalCompletionPendingRows : List CompletionRow :=
   functionalCompletionRows.filter (fun row => row.mark == CompletionMark.pending)
 
 theorem functionalCompletionRows_length :
-    functionalCompletionRows.length = 8 := by
+    functionalCompletionRows.length = 9 := by
   native_decide
 
 theorem functionalCompletionCompleteRows_length :
@@ -236,7 +240,7 @@ theorem functionalCompletionCompleteRows_length :
   native_decide
 
 theorem functionalCompletionTrackedRows_length :
-    functionalCompletionTrackedRows.length = 1 := by
+    functionalCompletionTrackedRows.length = 2 := by
   native_decide
 
 theorem functionalCompletionPendingRows_length :
@@ -255,7 +259,9 @@ theorem functionalCompletionCompleteRows_eq :
 
 theorem functionalCompletionTrackedRows_eq :
     functionalCompletionTrackedRows =
-      [ { layer := .hexagramGapPolicies, mark := .tracked, scope := 31 } ] := by
+      [ { layer := .hexagramGapPolicies, mark := .tracked, scope := 31 }
+      , { layer := .exactSignatureSeeds, mark := .tracked, scope := 14 }
+      ] := by
   native_decide
 
 theorem functionalCompletionPendingRows_eq :
@@ -281,7 +287,9 @@ theorem functionalCompletionCompleteLayers_eq :
 
 theorem functionalCompletionTrackedLayers_eq :
     functionalCompletionTrackedRows.map (·.layer) =
-      [ .hexagramGapPolicies ] := by
+      [ .hexagramGapPolicies
+      , .exactSignatureSeeds
+      ] := by
   native_decide
 
 theorem functionalCompletionPendingLayers_eq :
@@ -308,8 +316,10 @@ theorem functional_completion_summary :
     ∧ (allSurfaceReadings.map (fun e => e.readings.length)).foldl Nat.add 0 = 193
     ∧ hexagramMissingPolicies.length = 31
     ∧ hexagramNearMissAnchors.length = 7
+    ∧ exactSignatureSeed.length = 14
+    ∧ signedOperatorIds.Nodup
     ∧ functionalCompletionCompleteRows.length = 5
-    ∧ functionalCompletionTrackedRows.length = 1
+    ∧ functionalCompletionTrackedRows.length = 2
     ∧ functionalCompletionPendingRows.length = 2 := by
   exact
     ⟨ allOperatorIds_length
@@ -328,6 +338,8 @@ theorem functional_completion_summary :
     , all_surface_total_reading_count
     , hexagramMissingPolicies_length
     , hexagramNearMissAnchors_length
+    , exactSignatureSeed_length
+    , signedOperatorIds_nodup
     , functionalCompletionCompleteRows_length
     , functionalCompletionTrackedRows_length
     , functionalCompletionPendingRows_length
