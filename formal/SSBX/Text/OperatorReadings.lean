@@ -639,6 +639,14 @@ theorem zhi_before_you_unique :
     uniquelyResolved "之" [.beforeYou] := by
   native_decide
 
+theorem zhi_expected_function_unique :
+    uniquelyResolved "之" [.expectedFunction] := by
+  native_decide
+
+theorem zhi_expected_path_unique :
+    uniquelyResolved "之" [.expectedPath] := by
+  native_decide
+
 theorem zhi_no_context_ambiguous :
     ¬ uniquelyResolved "之" [] := by
   native_decide
@@ -647,12 +655,52 @@ theorem huo_prop_context_still_ambiguous :
     ¬ uniquelyResolved "或" [.expectedProp] := by
   native_decide
 
+theorem core_multi_reading_table_count :
+    coreMultiReadingTable.length = 1 := by
+  native_decide
+
+theorem all_surface_readings_count :
+    allSurfaceReadings.length = 82 := by
+  native_decide
+
+theorem readings_for_zhi_count :
+    (readingsForGlyph "之").length = 4 := by
+  native_decide
+
+theorem zhi_no_context_reading_count :
+    (contextualReadings "之" []).length = 4 := by
+  native_decide
+
+theorem readings_for_zhong_count :
+    (readingsForGlyph "中").length = 4 := by
+  native_decide
+
+theorem readings_for_gu_count :
+    (readingsForGlyph "故").length = 3 := by
+  native_decide
+
+theorem readings_for_huo_count :
+    (readingsForGlyph "或").length = 2 := by
+  native_decide
+
+theorem readings_for_mingfen_count :
+    (readingsForGlyph "名分").length = 2 := by
+  native_decide
+
 theorem catalogue_homograph_group_count :
     catalogueHomographGroups.length = 60 := by
   native_decide
 
 theorem catalogue_homograph_surface_count :
     catalogueHomographReadings.length = 81 := by
+  native_decide
+
+theorem catalogue_homograph_total_reading_count :
+    (catalogueHomographReadings.map (fun e => e.readings.length)).foldl Nat.add 0 = 189 := by
+  native_decide
+
+theorem all_surface_total_reading_count :
+    (allSurfaceReadings.map (fun e => e.readings.length)).foldl Nat.add 0 = 193 := by
   native_decide
 
 theorem catalogue_homograph_readings_all_linked :
@@ -676,6 +724,18 @@ theorem zhong_inner_outer_unique :
     uniquelyResolved "中" [.innerOuterContext] := by
   native_decide
 
+theorem zhong_geometry_context_still_ambiguous :
+    ¬ uniquelyResolved "中" [.geometryContext] := by
+  native_decide
+
+theorem fan_operator_unique :
+    uniquelyResolved "反" [.expectedOperator] := by
+  native_decide
+
+theorem fan_prop_unique :
+    uniquelyResolved "反" [.expectedProp] := by
+  native_decide
+
 theorem gu_mohist_unique :
     uniquelyResolved "故" [.mohistContext] := by
   native_decide
@@ -690,6 +750,42 @@ theorem bian_simplified_no_context_ambiguous :
 
 theorem mingfen_role_unique :
     uniquelyResolved "名分" [.roleContext] := by
+  native_decide
+
+theorem tui_operator_unique :
+    uniquelyResolved "推" [.expectedOperator] := by
+  native_decide
+
+theorem wei_quantifier_unique :
+    uniquelyResolved "唯" [.quantifierDomain] := by
+  native_decide
+
+theorem wei_focus_unique :
+    uniquelyResolved "唯" [.focusAdverb] := by
+  native_decide
+
+theorem zi_source_unique :
+    uniquelyResolved "自" [.expectedPath] := by
+  native_decide
+
+theorem zi_reflexive_unique :
+    uniquelyResolved "自" [.expectedFunction] := by
+  native_decide
+
+theorem fang_aspect_context_still_ambiguous :
+    ¬ uniquelyResolved "方" [.aspectContext] := by
+  native_decide
+
+theorem jiang_aspect_context_still_ambiguous :
+    ¬ uniquelyResolved "將" [.aspectContext] := by
+  native_decide
+
+theorem yi_prop_unique :
+    uniquelyResolved "已" [.expectedProp] := by
+  native_decide
+
+theorem yi_aspect_unique :
+    uniquelyResolved "已" [.aspectContext] := by
   native_decide
 
 end SSBX.Text.OperatorReadings

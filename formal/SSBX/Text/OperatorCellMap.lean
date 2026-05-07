@@ -33,6 +33,9 @@ def allOperatorCells : List OperatorCell :=
 theorem allOperatorIds_length : allOperatorIds.length = 371 := by
   native_decide
 
+theorem allOperatorIds_nodup : allOperatorIds.Nodup := by
+  native_decide
+
 theorem allOperatorCells_length : allOperatorCells.length = 71232 := by
   native_decide
 
@@ -52,6 +55,82 @@ theorem allOperatorCells_complete_pair (id : OperatorId) (c : Cell192) :
     (id, c) ∈ allOperatorCells := by
   exact allOperatorCells_complete (id, c)
 
+/-- The row fiber of the total grid at a fixed operator. -/
+def cellsForOperator (id : OperatorId) : List OperatorCell :=
+  Cell192.all.map fun c => (id, c)
+
+/-- The column fiber of the total grid at a fixed Bagua cell. -/
+def operatorsForCell (cell : Cell192) : List OperatorCell :=
+  allOperatorIds.map fun id => (id, cell)
+
+/-- Projection of the total index at a fixed operator. -/
+def indexedCellsForOperator (_id : OperatorId) : List Cell192 :=
+  Cell192.all
+
+/-- Projection of the total index at a fixed Bagua cell. -/
+def indexedOperatorsForCell (_cell : Cell192) : List OperatorId :=
+  allOperatorIds
+
+theorem cellsForOperator_length (id : OperatorId) :
+    (cellsForOperator id).length = 192 := by
+  rw [cellsForOperator, List.length_map, Cell192.all_length]
+
+theorem operatorsForCell_length (cell : Cell192) :
+    (operatorsForCell cell).length = 371 := by
+  rw [operatorsForCell, List.length_map, allOperatorIds_length]
+
+theorem indexedCellsForOperator_length (id : OperatorId) :
+    (indexedCellsForOperator id).length = 192 := by
+  rw [indexedCellsForOperator, Cell192.all_length]
+
+theorem indexedOperatorsForCell_length (cell : Cell192) :
+    (indexedOperatorsForCell cell).length = 371 := by
+  rw [indexedOperatorsForCell, allOperatorIds_length]
+
+theorem indexedCellsForOperator_complete (id : OperatorId) (cell : Cell192) :
+    cell ∈ indexedCellsForOperator id
+      ∧ (id, cell) ∈ allOperatorCells := by
+  exact ⟨Cell192.mem_all cell, allOperatorCells_complete_pair id cell⟩
+
+theorem cellsForOperator_complete (id : OperatorId) (cell : Cell192) :
+    (id, cell) ∈ cellsForOperator id
+      ∧ (id, cell) ∈ allOperatorCells := by
+  exact
+    ⟨List.mem_map.mpr ⟨cell, Cell192.mem_all cell, rfl⟩,
+      allOperatorCells_complete_pair id cell⟩
+
+theorem indexedOperatorsForCell_complete (cell : Cell192) (id : OperatorId) :
+    id ∈ indexedOperatorsForCell cell
+      ∧ (id, cell) ∈ allOperatorCells := by
+  exact ⟨allOperatorIds_complete id, allOperatorCells_complete_pair id cell⟩
+
+theorem operatorsForCell_complete (cell : Cell192) (id : OperatorId) :
+    (id, cell) ∈ operatorsForCell cell
+      ∧ (id, cell) ∈ allOperatorCells := by
+  exact
+    ⟨List.mem_map.mpr ⟨id, allOperatorIds_complete id, rfl⟩,
+      allOperatorCells_complete_pair id cell⟩
+
+theorem allOperatorCells_operator_mem (p : OperatorCell) :
+    p ∈ allOperatorCells → p.1 ∈ allOperatorIds := by
+  intro h
+  rcases p with ⟨op, cell⟩
+  unfold allOperatorCells at h
+  rcases List.mem_flatMap.mp h with ⟨id, hid, hp⟩
+  rcases List.mem_map.mp hp with ⟨c, _hc, hpair⟩
+  cases hpair
+  exact hid
+
+theorem allOperatorCells_cell_mem (p : OperatorCell) :
+    p ∈ allOperatorCells → p.2 ∈ Cell192.all := by
+  intro h
+  rcases p with ⟨op, cell⟩
+  unfold allOperatorCells at h
+  rcases List.mem_flatMap.mp h with ⟨id, _hid, hp⟩
+  rcases List.mem_map.mp hp with ⟨c, hc, hpair⟩
+  cases hpair
+  exact hc
+
 /-! ## § 2 Bagua coverage summary -/
 
 /--
@@ -67,17 +146,25 @@ theorem operator_cell_bagua_summary :
     allOperatorIds.length = 371
     ∧ Cell192.all.length = 192
     ∧ allOperatorCells.length = 71232
+    ∧ allOperatorIds.Nodup
+    ∧ Cell192.all.Nodup
     ∧ (∀ id : OperatorId, id ∈ allOperatorIds)
     ∧ (∀ c : Cell192, c ∈ Cell192.all)
     ∧ (∀ id : OperatorId, ∀ c : Cell192, (id, c) ∈ allOperatorCells)
+    ∧ (∀ id : OperatorId, (cellsForOperator id).length = 192)
+    ∧ (∀ cell : Cell192, (operatorsForCell cell).length = 371)
     ∧ (∀ c : Cell192, cellCovered c = true) := by
   exact
     ⟨ allOperatorIds_length
     , Cell192.all_length
     , allOperatorCells_length
+    , allOperatorIds_nodup
+    , Cell192.all_nodup
     , allOperatorIds_complete
     , Cell192.mem_all
     , allOperatorCells_complete_pair
+    , cellsForOperator_length
+    , operatorsForCell_length
     , cellOperatorAnchors_cover_all
     ⟩
 
@@ -156,13 +243,71 @@ theorem functionalCompletionPendingRows_length :
     functionalCompletionPendingRows.length = 2 := by
   native_decide
 
+theorem functionalCompletionCompleteRows_eq :
+    functionalCompletionCompleteRows =
+      [ { layer := .catalogueOperators, mark := .complete, scope := 371 }
+      , { layer := .baguaCells, mark := .complete, scope := 192 }
+      , { layer := .operatorCellIndex, mark := .complete, scope := 71232 }
+      , { layer := .baguaAnchors, mark := .complete, scope := 192 }
+      , { layer := .homographReadings, mark := .complete, scope := 81 }
+      ] := by
+  native_decide
+
+theorem functionalCompletionTrackedRows_eq :
+    functionalCompletionTrackedRows =
+      [ { layer := .hexagramGapPolicies, mark := .tracked, scope := 31 } ] := by
+  native_decide
+
+theorem functionalCompletionPendingRows_eq :
+    functionalCompletionPendingRows =
+      [ { layer := .exactOperatorSignatures, mark := .pending, scope := 371 }
+      , { layer := .theoremLevelCellSemantics, mark := .pending, scope := 71232 }
+      ] := by
+  native_decide
+
+theorem functionalCompletionLayers_nodup :
+    (functionalCompletionRows.map (·.layer)).Nodup := by
+  native_decide
+
+theorem functionalCompletionCompleteLayers_eq :
+    functionalCompletionCompleteRows.map (·.layer) =
+      [ .catalogueOperators
+      , .baguaCells
+      , .operatorCellIndex
+      , .baguaAnchors
+      , .homographReadings
+      ] := by
+  native_decide
+
+theorem functionalCompletionTrackedLayers_eq :
+    functionalCompletionTrackedRows.map (·.layer) =
+      [ .hexagramGapPolicies ] := by
+  native_decide
+
+theorem functionalCompletionPendingLayers_eq :
+    functionalCompletionPendingRows.map (·.layer) =
+      [ .exactOperatorSignatures
+      , .theoremLevelCellSemantics
+      ] := by
+  native_decide
+
 theorem functional_completion_summary :
     allOperatorIds.length = 371
     ∧ Cell192.all.length = 192
     ∧ allOperatorCells.length = 71232
+    ∧ allOperatorIds.Nodup
+    ∧ Cell192.all.Nodup
+    ∧ (functionalCompletionRows.map (·.layer)).Nodup
+    ∧ (∀ id : OperatorId, (indexedCellsForOperator id).length = 192)
+    ∧ (∀ cell : Cell192, (indexedOperatorsForCell cell).length = 371)
+    ∧ (∀ id : OperatorId, (cellsForOperator id).length = 192)
+    ∧ (∀ cell : Cell192, (operatorsForCell cell).length = 371)
     ∧ cellOperatorAnchors.length = 192
     ∧ catalogueHomographReadings.length = 81
+    ∧ allSurfaceReadings.length = 82
+    ∧ (allSurfaceReadings.map (fun e => e.readings.length)).foldl Nat.add 0 = 193
     ∧ hexagramMissingPolicies.length = 31
+    ∧ hexagramNearMissAnchors.length = 7
     ∧ functionalCompletionCompleteRows.length = 5
     ∧ functionalCompletionTrackedRows.length = 1
     ∧ functionalCompletionPendingRows.length = 2 := by
@@ -170,9 +315,19 @@ theorem functional_completion_summary :
     ⟨ allOperatorIds_length
     , Cell192.all_length
     , allOperatorCells_length
+    , allOperatorIds_nodup
+    , Cell192.all_nodup
+    , functionalCompletionLayers_nodup
+    , indexedCellsForOperator_length
+    , indexedOperatorsForCell_length
+    , cellsForOperator_length
+    , operatorsForCell_length
     , cellOperatorAnchors_length
     , catalogue_homograph_surface_count
+    , all_surface_readings_count
+    , all_surface_total_reading_count
     , hexagramMissingPolicies_length
+    , hexagramNearMissAnchors_length
     , functionalCompletionCompleteRows_length
     , functionalCompletionTrackedRows_length
     , functionalCompletionPendingRows_length

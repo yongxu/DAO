@@ -71,6 +71,9 @@ def all : List Cell192 :=
 /-- |Cell192| = 192 strictly. -/
 theorem all_length : all.length = 192 := by native_decide
 
+/-- The 192-cell enumeration has no duplicate cells. -/
+theorem all_nodup : all.Nodup := by native_decide
+
 /-- Every Cell192 is in `all` (exhaustion). -/
 theorem mem_all (c : Cell192) : c ∈ all := by
   rcases c with ⟨h, s⟩

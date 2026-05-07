@@ -446,6 +446,19 @@ theorem hexagramAnchorsWithGaps_length :
     hexagramAnchorsWithGaps.length = 31 := by
   native_decide
 
+theorem hexagramAnchor_numbers_range :
+    hexagramOperatorAnchors.all
+      (fun a => decide (1 <= a.number ∧ a.number <= 64)) = true := by
+  native_decide
+
+theorem hexagramAnchorsWithCatalogue_all_have_catalogueId :
+    hexagramAnchorsWithCatalogue.all HexagramOperatorAnchor.hasCatalogueId = true := by
+  native_decide
+
+theorem hexagramAnchorsWithGaps_all_have_gap :
+    hexagramAnchorsWithGaps.all HexagramOperatorAnchor.hasGap = true := by
+  native_decide
+
 /-- All documentary words from the 64-hexagram table that lack exact `OperatorId`s. -/
 def hexagramMissingForms : List String :=
   hexagramOperatorAnchors.flatMap (·.missingForms)
@@ -558,6 +571,47 @@ theorem hexagramMissingSpecificForms_eq :
     hexagramMissingSpecificForms = ["丽", "井", "鼎", "震"] := by
   native_decide
 
+/-!
+Some missing forms have nearby semantic anchors, but they are not exact
+catalogue ids.  Keeping this list separate prevents accidental promotion of a
+synonym, compound, or image word into `catalogueIds`.
+-/
+structure NearMissAnchor where
+  missingForm : String
+  semanticIds : List OperatorId
+  reason : String
+  deriving Repr
+
+/-- Auditable near-miss cases among the 31 64-hexagram gap words. -/
+def hexagramNearMissAnchors : List NearMissAnchor :=
+  [ { missingForm := "蓄", semanticIds := [.Z_19], reason := "near 积/accumulation, not exact 蓄" }
+  , { missingForm := "塞", semanticIds := [.F_12], reason := "opposite/obstruction near 通, not exact 塞" }
+  , { missingForm := "感", semanticIds := [.R_7], reason := "near 应/correspondence, not exact 感" }
+  , { missingForm := "难", semanticIds := [.B_4], reason := "near 止/block, not exact 难" }
+  , { missingForm := "鼎", semanticIds := [.B_5], reason := "near 立/standing vessel image, not exact 鼎" }
+  , { missingForm := "震", semanticIds := [.F_10], reason := "near 动/initiation, not exact 震" }
+  , { missingForm := "归", semanticIds := [.T_7], reason := "near 复/return, not exact 归" }
+  ]
+
+def hexagramNearMissForms : List String :=
+  hexagramNearMissAnchors.map (·.missingForm)
+
+theorem hexagramNearMissAnchors_length :
+    hexagramNearMissAnchors.length = 7 := by
+  native_decide
+
+theorem hexagramNearMissForms_eq :
+    hexagramNearMissForms = ["蓄", "塞", "感", "难", "鼎", "震", "归"] := by
+  native_decide
+
+theorem hexagramNearMissForms_are_missing :
+    hexagramNearMissForms.all (fun s => hexagramMissingVocabulary.contains s) = true := by
+  native_decide
+
+theorem hexagramNearMissSemanticIds_nonempty :
+    hexagramNearMissAnchors.all (fun a => !a.semanticIds.isEmpty) = true := by
+  native_decide
+
 /-! ## § 7 192 Cell anchors -/
 
 structure CellOperatorAnchor where
@@ -594,6 +648,15 @@ theorem cellOperatorAnchors_length_eq_cell192 :
     cellOperatorAnchors.length = Cell192.all.length := by
   rw [cellOperatorAnchors_length, Cell192.all_length]
 
+theorem anchoredCells_nodup :
+    anchoredCells.Nodup := by
+  native_decide
+
+theorem cellOperatorAnchor_hexagram_numbers_range :
+    cellOperatorAnchors.all
+      (fun a => decide (1 <= a.hexagramNumber ∧ a.hexagramNumber <= 64)) = true := by
+  native_decide
+
 theorem cellOperatorAnchors_cover_all (c : Cell192) :
     cellCovered c = true := by
   rcases c with ⟨⟨y1, y2, y3, y4, y5, y6⟩, s⟩
@@ -617,11 +680,18 @@ theorem bagua_operator_anchor_summary :
     ∧ trigramOperatorAnchors.map (·.trigram) = Trigram.all
     ∧ hexagramOperatorAnchors.length = xuGua.length
     ∧ anchoredHexagrams = xuGua
+    ∧ hexagramOperatorAnchors.all
+        (fun a => decide (1 <= a.number ∧ a.number <= 64)) = true
     ∧ hexagramMissingVocabulary.length = 31
     ∧ hexagramMissingForms.all (fun s => hexagramMissingVocabulary.contains s) = true
     ∧ hexagramMissingPolicies.map (·.form) = hexagramMissingVocabulary
     ∧ hexagramMissingGeneralForms.length = 25
+    ∧ hexagramNearMissAnchors.length = 7
+    ∧ hexagramNearMissForms.all (fun s => hexagramMissingVocabulary.contains s) = true
     ∧ cellOperatorAnchors.length = Cell192.all.length
+    ∧ anchoredCells.Nodup
+    ∧ cellOperatorAnchors.all
+        (fun a => decide (1 <= a.hexagramNumber ∧ a.hexagramNumber <= 64)) = true
     ∧ (∀ c : Cell192, cellCovered c = true) := by
   exact
     ⟨ by rw [reservedTokenAnchors_length, reservedTokens_length]
@@ -634,11 +704,16 @@ theorem bagua_operator_anchor_summary :
     , trigramOperatorAnchors_cover_all
     , by rw [hexagramOperatorAnchors_length, xuGua_length]
     , anchoredHexagrams_eq_xuGua
+    , hexagramAnchor_numbers_range
     , hexagramMissingVocabulary_length
     , hexagramMissingForms_in_vocabulary
     , hexagramMissingPolicies_cover_vocabulary
     , hexagramMissingGeneralForms_length
+    , hexagramNearMissAnchors_length
+    , hexagramNearMissForms_are_missing
     , cellOperatorAnchors_length_eq_cell192
+    , anchoredCells_nodup
+    , cellOperatorAnchor_hexagram_numbers_range
     , cellOperatorAnchors_cover_all
     ⟩
 
