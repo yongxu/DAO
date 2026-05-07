@@ -46,7 +46,8 @@ deriving DecidableEq, Repr
 /-- 单个 ResolvedAtom 之 Tm 解释。
     · hexConst «一» 走 `.yi` primitive（与 `tui_eq_sheng` 等定理对齐）
     · 其他 hexConst h 走 `.hexLit h`
-    · catalogueOp 按 OperatorId 派发到 stdlib body. -/
+    · catalogueOp 按 OperatorId 派发到 stdlib body
+    · appMarker 不应进 atomToTm（应在 list 层被过滤）—— 防御性返 `empty`. -/
 def atomToTm : ResolvedAtom → Except ElabErr Tm
   | .hexConst h =>
       if h = «一» then .ok .yi else .ok (.hexLit h)
@@ -60,8 +61,9 @@ def atomToTm : ResolvedAtom → Except ElabErr Tm
       | some .Q_1  => .ok Stdlib.fanBody
       | some id    => .error (.unsupportedOp id)
       | none       => .error .empty
+  | .appMarker  => .error .empty
 
-/-! ## § 3  右结合组合 -/
+/-! ## § 3  右结合组合（先过滤 appMarker） -/
 
 /-- 右结合的连续 application：
     · `[a]` → atom 的 Tm
@@ -77,9 +79,11 @@ def elabRightAssoc : List ResolvedAtom → Except ElabErr Tm
       | .error e => .error e
       | .ok arg  => .ok (.app f arg)
 
-/-- 顶层 elaborator：ResolvedTok 流 → Tm. -/
+/-- 顶层 elaborator：ResolvedTok 流 → Tm。
+    appMarker（如「之」）在 elab 前被过滤掉 —— "推 之 一" 等价于 "推 一". -/
 def elabTokens (rs : List ResolvedTok) : Except ElabErr Tm :=
-  elabRightAssoc (rs.map (·.atom))
+  let atoms := (rs.map (·.atom)).filter (fun a => !a.isAppMarker)
+  elabRightAssoc atoms
 
 /-! ## § 4  Sanity 例子 (native_decide via toOption) -/
 

@@ -97,6 +97,37 @@ example :
     (wenyanInterp chain).toOption = some «一» :=
   by native_decide
 
+/-- 「乾」→ Hexagram.qian (idx 0). -/
+example : (wenyanInterp "乾").toOption = some Hexagram.qian := by native_decide
+
+/-- 「坤」→ Hexagram.kun (idx 63). -/
+example : (wenyanInterp "坤").toOption = some Hexagram.kun := by native_decide
+
+/-- 「推 乾」→ «生» «乾» = «一»（idx 0 + 1 mod 64 = 1）. -/
+example : (wenyanInterp "推 乾").toOption = some «一» := by native_decide
+
+/-- 「推 坤」→ «生» «坤» = «乾»（idx 63 + 1 mod 64 = 0，周而复始）. -/
+example :
+    (wenyanInterp "推 坤").toOption = some Hexagram.qian :=
+  by native_decide
+
+/-! ### 「之」 应用标记测试（noop skip 语义） -/
+
+/-- 「推 之 一」≡「推 一」，「之」elab 时被过滤. -/
+example :
+    (wenyanInterp "推 之 一").toOption = (wenyanInterp "推 一").toOption :=
+  by native_decide
+
+/-- 「推 之 推 之 一」 ≡ 「推 推 一」 = «生生» 2 «一». -/
+example :
+    (wenyanInterp "推 之 推 之 一").toOption = some («生生» 2 «一») :=
+  by native_decide
+
+/-- 「推 乾 之」尾随之是合法的（被 elab 过滤）—— 与「推 乾」同结果. -/
+example :
+    (wenyanInterp "推 之 乾").toOption = some «一» :=
+  by native_decide
+
 /-! ## § 4  错误路径 sanity -/
 
 /-- 未知 surface「瓜」走 resolve 错误. -/

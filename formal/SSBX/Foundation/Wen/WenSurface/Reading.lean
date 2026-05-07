@@ -33,10 +33,11 @@ open SSBX.Foundation.Yi.YiCore
 
 /-! ## § 1  Resolved 类型 -/
 
-/-- 已消歧的原子：要么是卦字面值，要么是 catalogue 算子读法. -/
+/-- 已消歧的原子：卦字面值 / catalogue 算子读法 / 应用标记. -/
 inductive ResolvedAtom where
   | hexConst    (h : Hexagram)
   | catalogueOp (reading : OperatorReading)
+  | appMarker             -- 「之」 等不发射 Tm 的 surface marker
 deriving DecidableEq, Repr
 
 /-- 已消歧的 token：保留 GlyphTok 与解析结果. -/
@@ -70,16 +71,26 @@ def resolveStdlibOp : Glyph → Option OperatorReading
                     .prefix [.quantifierDomain])
   | _   => none
 
-/-- v1 hex 常值 surface → Hexagram. -/
+/-- v1 hex 常值 surface → Hexagram。包含「一」与两个固定点「乾」「坤」. -/
 def resolveHexConst : Glyph → Option Hexagram
   | "一" => some «一»
-  | _   => none
+  | "乾" => some Hexagram.qian
+  | "坤" => some Hexagram.kun
+  | _    => none
+
+/-- 「之」/「以」 等 application marker —— 不发射 Tm，elab 阶段跳过. -/
+def isApplicationMarker : Glyph → Bool
+  | "之" => true   -- S_1 属格 / function application
+  | _    => false
 
 /-! ## § 3  Resolver -/
 
-/-- 单 token resolver. 先尝试 hex 常值，再 stdlib 算子；失败则 `.noReading`. -/
+/-- 单 token resolver. 先尝试 application marker，再 hex 常值，再 stdlib 算子；
+    失败则 `.noReading`. -/
 def resolveOne (t : GlyphTok) : Except ResolveErr ResolvedTok :=
-  match resolveHexConst t.surface with
+  if isApplicationMarker t.surface then
+    .ok ⟨t, .appMarker⟩
+  else match resolveHexConst t.surface with
   | some h => .ok ⟨t, .hexConst h⟩
   | none =>
     match resolveStdlibOp t.surface with
@@ -117,6 +128,12 @@ def atomsOf : List ResolvedTok → List ResolvedAtom :=
 def ResolvedAtom.opId? : ResolvedAtom → Option OperatorId
   | .hexConst _    => none
   | .catalogueOp r => r.operator?
+  | .appMarker     => none
+
+/-- 判别 atom 是否为 appMarker（elab 阶段用）. -/
+def ResolvedAtom.isAppMarker : ResolvedAtom → Bool
+  | .appMarker => true
+  | _          => false
 
 /-! ## § 5  Sanity 例子 (native_decide) -/
 
@@ -143,6 +160,24 @@ example :
     opIdsOf "推 一" = some [some OperatorId.T_10, none] :=
   by native_decide
 
+/-- 「乾」 → hexConst Hexagram.qian. -/
+example : opIdsOf "乾" = some [none] := by native_decide
+
+/-- 「坤」 → hexConst Hexagram.kun. -/
+example : opIdsOf "坤" = some [none] := by native_decide
+
+/-- 「推 乾」 → T_10 + qian. -/
+example : opIdsOf "推 乾" = some [some OperatorId.T_10, none] := by native_decide
+
+/-- 「推 之 一」 → T_10 + appMarker + 一. -/
+example : opIdsOf "推 之 一" = some [some OperatorId.T_10, none, none] := by native_decide
+
+/-- 「之」 单独识别为 appMarker. -/
+example :
+    ((lexAndResolve "之").toOption.map (fun rs => rs.map (·.atom |> ResolvedAtom.isAppMarker)))
+      = some [true] :=
+  by native_decide
+
 /-- 未知 surface → ResolveErr. -/
 example : opIdsOf "瓜" = none := by native_decide
 
@@ -155,9 +190,11 @@ example : opIdsOf "" = some [] := by native_decide
 example : (["推", "比", "不", "必", "同", "凡"].all
             (resolveStdlibOp · |>.isSome)) = true := by native_decide
 
-/-- v1 hex 常值 map 唯一项「一」. -/
-example : resolveHexConst "一" = some «一» := by native_decide
-example : resolveHexConst "推" = none := by native_decide
+/-- v1 hex 常值 map. -/
+example : resolveHexConst "一" = some «一»          := by native_decide
+example : resolveHexConst "乾" = some Hexagram.qian := by native_decide
+example : resolveHexConst "坤" = some Hexagram.kun  := by native_decide
+example : resolveHexConst "推" = none               := by native_decide
 
 /-- 6 stdlib 算子的 OperatorId 互不相同（按定义顺序展开）. -/
 example :
