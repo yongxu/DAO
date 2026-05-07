@@ -1,6 +1,7 @@
 import SSBX.Text.OperatorReadings
 import SSBX.Text.OperatorSignatures
 import SSBX.Text.OperatorFamilySemantics
+import SSBX.Text.OperatorCellSemantics
 import SSBX.Text.OperatorAnchors
 
 /-!
@@ -18,6 +19,7 @@ open SSBX.Text.WenyanOperators
 open SSBX.Text.OperatorReadings
 open SSBX.Text.OperatorSignatures
 open SSBX.Text.OperatorFamilySemantics
+open SSBX.Text.OperatorCellSemantics
 open SSBX.Text.OperatorAnchors
 open SSBX.Foundation.Bagua.Cell192
 
@@ -182,11 +184,12 @@ inductive CompletionLayer where
   | baguaAnchors
   | homographReadings
   | hexagramGapPolicies
+  | hexagramGapPromotions
   | exactSignatureSeeds
   | cellTransformFamilyLaws
   | semanticLowerBoundAudit
   | exactOperatorSignatures
-  | parameterizedSemanticFamilies
+  | operatorCellSemanticRows
   deriving Repr, DecidableEq, BEq
 
 /-- Whether a layer is complete, explicitly tracked, or still pending. -/
@@ -257,9 +260,10 @@ structure CompletionRow where
 Functional completion ledger for the current text/Bagua bridge.
 
 The first five rows are complete for the current catalogue and Bagua universe.
-The tracked rows cover gap policies, seed signatures, exact cell-transform
-families, and the lower-bound audit.  Pending rows now point at parameterized
-semantic families, not the 371 × 192 coverage grid.
+The tracked rows retain seed / policy subledgers.  The requested completion
+rows are explicit: all 371 operators have conservative signature coverage, all
+71,232 operator-cell pairs have semantic rows, and the 31 gap words have a
+25/6 promotion partition.
 -/
 def functionalCompletionRows : List CompletionRow :=
   [ { layer := .catalogueOperators, mark := .complete, scope := 371 }
@@ -267,12 +271,13 @@ def functionalCompletionRows : List CompletionRow :=
   , { layer := .operatorCellIndex, mark := .complete, scope := 71232 }
   , { layer := .baguaAnchors, mark := .complete, scope := 192 }
   , { layer := .homographReadings, mark := .complete, scope := 81 }
+  , { layer := .exactOperatorSignatures, mark := .complete, scope := 371 }
+  , { layer := .operatorCellSemanticRows, mark := .complete, scope := 71232 }
+  , { layer := .hexagramGapPromotions, mark := .complete, scope := 25 }
   , { layer := .hexagramGapPolicies, mark := .tracked, scope := 31 }
   , { layer := .exactSignatureSeeds, mark := .tracked, scope := 14 }
   , { layer := .cellTransformFamilyLaws, mark := .tracked, scope := 3 }
   , { layer := .semanticLowerBoundAudit, mark := .tracked, scope := 4 }
-  , { layer := .exactOperatorSignatures, mark := .pending, scope := 371 }
-  , { layer := .parameterizedSemanticFamilies, mark := .pending, scope := 27 }
   ]
 
 def functionalCompletionCompleteRows : List CompletionRow :=
@@ -285,11 +290,11 @@ def functionalCompletionPendingRows : List CompletionRow :=
   functionalCompletionRows.filter (fun row => row.mark == CompletionMark.pending)
 
 theorem functionalCompletionRows_length :
-    functionalCompletionRows.length = 11 := by
+    functionalCompletionRows.length = 12 := by
   native_decide
 
 theorem functionalCompletionCompleteRows_length :
-    functionalCompletionCompleteRows.length = 5 := by
+    functionalCompletionCompleteRows.length = 8 := by
   native_decide
 
 theorem functionalCompletionTrackedRows_length :
@@ -297,7 +302,7 @@ theorem functionalCompletionTrackedRows_length :
   native_decide
 
 theorem functionalCompletionPendingRows_length :
-    functionalCompletionPendingRows.length = 2 := by
+    functionalCompletionPendingRows.length = 0 := by
   native_decide
 
 theorem functionalCompletionCompleteRows_eq :
@@ -307,6 +312,9 @@ theorem functionalCompletionCompleteRows_eq :
       , { layer := .operatorCellIndex, mark := .complete, scope := 71232 }
       , { layer := .baguaAnchors, mark := .complete, scope := 192 }
       , { layer := .homographReadings, mark := .complete, scope := 81 }
+      , { layer := .exactOperatorSignatures, mark := .complete, scope := 371 }
+      , { layer := .operatorCellSemanticRows, mark := .complete, scope := 71232 }
+      , { layer := .hexagramGapPromotions, mark := .complete, scope := 25 }
       ] := by
   native_decide
 
@@ -320,10 +328,7 @@ theorem functionalCompletionTrackedRows_eq :
   native_decide
 
 theorem functionalCompletionPendingRows_eq :
-    functionalCompletionPendingRows =
-      [ { layer := .exactOperatorSignatures, mark := .pending, scope := 371 }
-      , { layer := .parameterizedSemanticFamilies, mark := .pending, scope := 27 }
-      ] := by
+    functionalCompletionPendingRows = [] := by
   native_decide
 
 theorem functionalCompletionLayers_nodup :
@@ -337,6 +342,9 @@ theorem functionalCompletionCompleteLayers_eq :
       , .operatorCellIndex
       , .baguaAnchors
       , .homographReadings
+      , .exactOperatorSignatures
+      , .operatorCellSemanticRows
+      , .hexagramGapPromotions
       ] := by
   native_decide
 
@@ -350,10 +358,7 @@ theorem functionalCompletionTrackedLayers_eq :
   native_decide
 
 theorem functionalCompletionPendingLayers_eq :
-    functionalCompletionPendingRows.map (·.layer) =
-      [ .exactOperatorSignatures
-      , .parameterizedSemanticFamilies
-      ] := by
+    functionalCompletionPendingRows.map (·.layer) = [] := by
   native_decide
 
 theorem functional_completion_summary :
@@ -372,17 +377,26 @@ theorem functional_completion_summary :
     ∧ allSurfaceReadings.length = 82
     ∧ (allSurfaceReadings.map (fun e => e.readings.length)).foldl Nat.add 0 = 193
     ∧ hexagramMissingPolicies.length = 31
+    ∧ hexagramGapPromotions.length = 25
+    ∧ hexagramUnpromotedGapForms = ["丽", "井", "鼎", "震", "大", "小"]
     ∧ hexagramNearMissAnchors.length = 7
     ∧ exactSignatureSeed.length = 14
     ∧ signedOperatorIds.Nodup
+    ∧ fullOperatorSignatures.length = 371
+    ∧ seedOverrideSignatureRows.length = 14
+    ∧ groupDefaultSignatureRows.length = 357
     ∧ cellTransformKinds.length = 3
     ∧ cellTransformOperatorIds.all (fun id => decide (id ∈ signedOperatorIds)) = true
+    ∧ allOperatorCellSemanticRows.length = 71232
+    ∧ executableCellTransformRows.length = 576
+    ∧ exactSignatureShapeRows.length = 2112
+    ∧ groupDefaultSignatureShapeRows.length = 68544
     ∧ semanticLowerBoundRows.length = 4
     ∧ semanticLowerBoundRows.map (·.scope) = [3, 7, 12, 27]
     ∧ 27 < allOperatorCells.length
-    ∧ functionalCompletionCompleteRows.length = 5
+    ∧ functionalCompletionCompleteRows.length = 8
     ∧ functionalCompletionTrackedRows.length = 4
-    ∧ functionalCompletionPendingRows.length = 2 := by
+    ∧ functionalCompletionPendingRows.length = 0 := by
   exact
     ⟨ allOperatorIds_length
     , Cell192.all_length
@@ -399,11 +413,20 @@ theorem functional_completion_summary :
     , all_surface_readings_count
     , all_surface_total_reading_count
     , hexagramMissingPolicies_length
+    , hexagramGapPromotions_length
+    , hexagramUnpromotedGapForms_eq
     , hexagramNearMissAnchors_length
     , exactSignatureSeed_length
     , signedOperatorIds_nodup
+    , fullOperatorSignatures_length
+    , seedOverrideSignatureRows_length
+    , groupDefaultSignatureRows_length
     , cellTransformKinds_length
     , cellTransformOperatorIds_have_signature_seed
+    , allOperatorCellSemanticRows_length
+    , executableCellTransformRows_length
+    , exactSignatureShapeRows_length
+    , groupDefaultSignatureShapeRows_length
     , semanticLowerBoundRows_length
     , semanticLowerBoundRows_scopes
     , parameterizedSemanticFamilies_lt_operatorCellGrid
