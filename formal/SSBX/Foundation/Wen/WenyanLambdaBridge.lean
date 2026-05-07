@@ -1,5 +1,6 @@
 import SSBX.Foundation.Jian.JianSTLC
 import SSBX.Foundation.Wen.WenyanLambdaRoute
+import SSBX.Foundation.Wen.WenyanQuineWitness
 
 /-!
 # WenyanLambdaBridge
@@ -187,6 +188,53 @@ theorem gives_tier3_quine (backend : JianLambdaQuotationBackend) :
     backend.toHistoryBackend.toLambdaHistoryBackend
 
 end JianLambdaQuotationBackend
+
+/-! ## Constant-compile JianLambdaHistoryBackend instance
+
+  The existing 16-instr push-only Tier 3 witness (`pushQuineSource 16` /
+  `wenyan_tier3_quine_complete`) already meets the raw history-quine
+  spec: starting from `pushQuineInit 16`, after `pushQuineFuel 16` steps,
+  history equals `ProgEnc.encProg (pushQuineSource 16)`.
+
+  We can package that witness as a **constant** `JianLambdaHistoryBackend`:
+  `compileLam` and `selfApplyLam` ignore their `F` argument, so the
+  resulting quine source does not vary with the parameter program. This
+  closes the backend interface (the `JianLambdaHistoryBackend` structure
+  is non-empty) and via `lambda_history_backend_finishes_tier3` discharges
+  `Tier3QuineExists` and `LambdaHistoryFixedPointExists` through the
+  abstract route.
+
+  This **does not** count as a "meaningful lambda compiler". A real
+  compileLam — one that produces a *different* concrete YiInstr program
+  per Lam input — remains the substantive engineering target. The
+  artifact below is an existence proof at the route-interface level: it
+  shows the backend type is inhabited, freeing downstream theorems to be
+  stated against the abstract backend rather than ad hoc on the concrete
+  push quine.
+
+  For the stronger `JianLambdaQuotationBackend` (which carries the
+  Kleene-halting `haltingSpec`), no constant instance is given here:
+  `SelfApplicationHaltingSpec F D` says `Halts D h ↔ HaltsWith F h
+  (ProgEnc.encProg D)`, which depends nontrivially on `F` and cannot be
+  satisfied by a constant `D`. The quotation backend is the real
+  Kleene-bridging target. -/
+
+open SSBX.Foundation.Wen.WenyanQuineWitness in
+def constJianLambdaHistoryBackend : JianLambdaHistoryBackend where
+  compileLam   := fun _ => pushQuineSource 16
+  selfApplyLam := fun _ => sym "_constLambdaQuine"
+  initOf       := fun _ => pushQuineInit 16
+  fuelOf       := fun _ => pushQuineFuel 16
+  init_runs_compiled := fun _ => rfl
+  historySpec  := fun _ => wenyan_tier3_quine_complete
+
+/-- The constant lambda backend instantiates the raw Tier 3 quine route. -/
+theorem constJianLambdaHistoryBackend_gives_tier3_quine : Tier3QuineExists :=
+  constJianLambdaHistoryBackend.gives_tier3_quine
+
+theorem constJianLambdaHistoryBackend_finishes_tier3 :
+    LambdaHistoryFixedPointExists :=
+  constJianLambdaHistoryBackend.finishes_tier3
 
 end LamRoute
 
