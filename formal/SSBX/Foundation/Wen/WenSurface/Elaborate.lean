@@ -1,27 +1,23 @@
 /-
-# WenSurface.Elaborate — ResolvedTok → WenDef.Tm
+# WenSurface.Elaborate — SurfaceExpr → WenDef.Tm
 
 把 ResolvedTok 流 elaborate 为 WenDef.Tm（typed-λ over Hex+Bool+Arr）。
 求值仍由既有 [WenDefEval.evalFuel](../WenDefEval.lean) 完成。
 
-## v1 范围
+## 当前范围
 
-- **算子**：6 个 stdlib (推/比/不/必/同/凡) → 直接复用 [Stdlib bodies](../WenDef.lean#L171)
-  · T_10 → `Stdlib.tuiBody`     (Hex → Hex)
-  · R_8  → `Stdlib.biBody`      (Hex → Hex → Bool)
-  · N_1  → `Stdlib.buBody`      (Bool → Bool)
-  · M_1  → `Stdlib.biModalBody` ((Hex → Bool) → Bool)
-  · I_1  → `Stdlib.tongBody`    (Hex → Hex → Bool)
-  · Q_1  → `Stdlib.fanBody`     ((Hex → Bool) → Bool)
-- **常值**：「一」 → `.yi` (primitive)；其他 hex 字面值 → `.hexLit h`
-- **组合**：右结合 application — `[f, g, x]` → `.app f (.app g x)`
-- **未知 OperatorId**（含反/错/损/益等）→ `.unsupported`
+- **算子**：通过 `ExecutableSemantics` registry 进入 theorem-backed `Stdlib`
+  bodies；catalogue-only operator 只给诊断，不求值。
+- **常值**：「一」 → `.yi` primitive；64 卦名 / aliases → `.hexLit h`。
+- **组合**：显式 `SurfaceExpr.app` 左结合到 `Tm.app`。
+- **绑定**：Hex-only `者` lambda、`凡` forall、`令` let。
+- **同字冲突**：`hexOrOp` 在 parser 已消歧；elab fallback 只把它当 hex literal。
 
 ## 状态
 
 0 sorry / 0 axiom / 总函数. 关键例由 native_decide 见证.
 -/
-import SSBX.Foundation.Wen.WenSurface.Reading
+import SSBX.Foundation.Wen.WenSurface.Syntax
 import SSBX.Foundation.Wen.WenDef
 import SSBX.Foundation.Wen.WenDefEval
 
@@ -36,11 +32,25 @@ open SSBX.Text.OperatorReadings
 
 /-! ## § 1  Elab error 类型 -/
 
+inductive TypeDiag where
+  | unknownVar (name : String)
+  | expectedFunction (actual : Ty)
+  | argumentMismatch (expected actual : Ty)
+deriving DecidableEq, Repr
+
 inductive ElabErr where
-  | unsupportedOp (id : OperatorId)
+  | unsupportedOp (id : OperatorId) (surface : String) (col : Nat)
+  | unsupportedConstruction (name : String)
   | empty
   | leftoverAtoms (count : Nat)
   | fuelExhausted
+  | typeMismatch (diag : TypeDiag)
+deriving DecidableEq, Repr
+
+/-- A closed elaborated term plus its checked type. -/
+structure TypedTm where
+  tm : Tm
+  ty : Ty
 deriving DecidableEq, Repr
 
 /-! ## § 2  Atom → Tm -/
@@ -56,35 +66,26 @@ def atomToTm : ResolvedAtom → Except ElabErr Tm
   | .hexConst h =>
       if h = «一» then .ok .yi else .ok (.hexLit h)
   | .boolConst b => .ok (.boolLit b)
+  | .varName name => .ok (.var name)
   | .catalogueOp r =>
       match r.operator? with
-      | some .T_10 => .ok Stdlib.tuiBody
-      | some .R_8  => .ok Stdlib.biBody
-      | some .N_1  => .ok Stdlib.buBody
-      | some .M_1  => .ok Stdlib.biModalBody
-      | some .I_1  => .ok Stdlib.tongBody
-      | some .Q_1  => .ok Stdlib.fanBody
-      | some .T_12 => .ok Stdlib.sunBody
-      | some .T_13 => .ok Stdlib.yiBenefitBody
-      | some id    => .error (.unsupportedOp id)
-      | none       => .error .empty
+      | some id =>
+          match executableSemanticsFor? id with
+          | some sem => .ok sem.body
+          | none     => .error (.unsupportedOp id "" 0)
+      | none => .error .empty
+  | .hexOrOp h _ =>
+      if h = «一» then .ok .yi else .ok (.hexLit h)
+  | .syntax _    => .error .empty
   | .appMarker  => .error .empty
   | .iterate    => .error .empty
 
 /-! ## § 3  Arity 表 -/
 
-/-- Stdlib 算子的 arity（参数个数）.
-    其他 OperatorId → 0（不在 v1 范围）. -/
+/-- Surface parser 使用的 operator arity：executable registry 优先，
+    catalogue signature fallback. -/
 def opArity : OperatorId → Nat
-  | .T_10 => 1   -- 推 : Hex → Hex
-  | .R_8  => 2   -- 比 : Hex → Hex → Bool
-  | .N_1  => 1   -- 不 : Bool → Bool
-  | .M_1  => 1   -- 必 : (Hex → Bool) → Bool
-  | .I_1  => 2   -- 同 : Hex → Hex → Bool
-  | .Q_1  => 1   -- 凡 : (Hex → Bool) → Bool
-  | .T_12 => 1   -- 損 : Hex → Hex
-  | .T_13 => 1   -- 益 : Hex → Hex
-  | _     => 0
+  | id => parseArityFor id
 
 /-! ## § 4  Arity-driven 递归下降 (fuel-bounded total)
 
@@ -101,6 +102,12 @@ mutual
       .ok ((if h = «一» then .yi else .hexLit h), rest)
     | _+1,  .boolConst b :: rest               =>
       .ok (.boolLit b, rest)
+    | _+1,  .varName name :: rest              =>
+      .ok (.var name, rest)
+    | _+1,  .hexOrOp h _ :: rest               =>
+      .ok ((if h = «一» then .yi else .hexLit h), rest)
+    | _+1,  .syntax _ :: _                     =>
+      .error .empty
     | n+1,  .iterate :: rest                   =>
       -- 「之又 F X」 → F (F X)：递归解析 `F X` 子表达式（消耗 op + arg），
       -- 然后将其内部 application 复制为 F (F X)。
@@ -138,6 +145,91 @@ def elabTokens (rs : List ResolvedTok) : Except ElabErr Tm :=
   | .ok (tm, [])     => .ok tm
   | .ok (_, leftover) => .error (.leftoverAtoms leftover.length)
 
+/-! ## § 4.5 SurfaceExpr elaboration -/
+
+def atomToTmAt (tok : ResolvedTok) : Except ElabErr Tm :=
+  match tok.atom with
+  | .catalogueOp r =>
+      match r.operator? with
+      | some id =>
+          match executableSemanticsFor? id with
+          | some sem => .ok sem.body
+          | none     => .error (.unsupportedOp id tok.surface tok.col)
+      | none => .error .empty
+  | _ => atomToTm tok.atom
+
+def elabSurfaceExpr : SurfaceExpr → Except ElabErr Tm
+  | .atom tok => atomToTmAt tok
+  | .app f x =>
+      match elabSurfaceExpr f, elabSurfaceExpr x with
+      | .ok tf, .ok tx => .ok (.app tf tx)
+      | .error e, _ => .error e
+      | _, .error e => .error e
+  | .seq [x] => elabSurfaceExpr x
+  | .seq _ => .error (.unsupportedConstruction "seq")
+  | .marker _ body => elabSurfaceExpr body
+  | .binder .lambda name body =>
+      match elabSurfaceExpr body with
+      | .ok t => .ok (.abs name .hex t)
+      | .error e => .error e
+  | .binder .forallHex name body =>
+      match elabSurfaceExpr body with
+      | .ok t => .ok (.app .forallH (.abs name .hex t))
+      | .error e => .error e
+  | .letBind name value body =>
+      match elabSurfaceExpr value, elabSurfaceExpr body with
+      | .ok tv, .ok tb => .ok (.app (.abs name .hex tb) tv)
+      | .error e, _ => .error e
+      | _, .error e => .error e
+  | .construction "之又" [inner] =>
+      match elabSurfaceExpr inner with
+      | .error e => .error e
+      | .ok (.app f x) => .ok (.app f (.app f x))
+      | .ok _ => .error .empty
+  | .construction name _ => .error (.unsupportedConstruction name)
+
+/-- Diagnostic type inference used only by WenSurface errors.
+    `WenDef.typeCheck` remains the kernel checker; this mirrors it while
+    preserving the first actionable mismatch for CLI/JSON output. -/
+def inferTypeDetailed : Ctx → Tm → Except TypeDiag Ty
+  | ctx, .var n =>
+      match ctx.lookup n with
+      | some ty => .ok ty
+      | none => .error (.unknownVar n)
+  | ctx, .abs n t body =>
+      match inferTypeDetailed ((n, t) :: ctx) body with
+      | .ok t' => .ok (.arr t t')
+      | .error e => .error e
+  | ctx, .app f x =>
+      match inferTypeDetailed ctx f with
+      | .error e => .error e
+      | .ok (.arr a b) =>
+          match inferTypeDetailed ctx x with
+          | .error e => .error e
+          | .ok a' =>
+              if a = a' then .ok b else .error (.argumentMismatch a a')
+      | .ok actual => .error (.expectedFunction actual)
+  | _, .hexLit _  => .ok .hex
+  | _, .boolLit _ => .ok .bool
+  | _, .jia       => .ok (.arr .hex (.arr .hex .hex))
+  | _, .yi        => .ok .hex
+  | _, .notB      => .ok (.arr .bool .bool)
+  | _, .andB      => .ok (.arr .bool (.arr .bool .bool))
+  | _, .orB       => .ok (.arr .bool (.arr .bool .bool))
+  | _, .eqHex     => .ok (.arr .hex (.arr .hex .bool))
+  | _, .forallH   => .ok (.arr (.arr .hex .bool) .bool)
+  | _, .cuoH      => .ok (.arr .hex .hex)
+  | _, .zongH     => .ok (.arr .hex .hex)
+  | _, .huH       => .ok (.arr .hex .hex)
+
+def elabSurfaceTyped (expr : SurfaceExpr) : Except ElabErr TypedTm :=
+  match elabSurfaceExpr expr with
+  | .error e => .error e
+  | .ok t =>
+      match inferTypeDetailed [] t with
+      | .ok ty => .ok ⟨t, ty⟩
+      | .error diag => .error (.typeMismatch diag)
+
 /-! ## § 5  Sanity 例子 (native_decide via toOption) -/
 
 /-- 「一」 elab 成 `.yi` primitive. -/
@@ -157,7 +249,7 @@ example :
 
 /-! ## § 6  端到端 atomToTm 类型核校 -/
 
-/-- 6 stdlib body 之 typecheck（来自 WenDef.Stdlib 既有定理）. -/
+/-- 基础 stdlib body 之 typecheck（来自 WenDef.Stdlib 既有定理）. -/
 example : typeCheck [] Stdlib.tuiBody     = some (.arr .hex .hex)            := by native_decide
 example : typeCheck [] Stdlib.biBody      = some (.arr .hex (.arr .hex .bool)) := by native_decide
 example : typeCheck [] Stdlib.buBody      = some (.arr .bool .bool)          := by native_decide
@@ -167,5 +259,17 @@ example : typeCheck [] Stdlib.fanBody     = some (.arr (.arr .hex .bool) .bool) 
 
 /-- `.yi` primitive 之类型. -/
 example : typeCheck [] Tm.yi = some .hex := by native_decide
+
+example :
+    (match inferTypeDetailed [] (.app .notB (.hexLit Hexagram.qian)) with
+     | .error (.argumentMismatch .bool .hex) => true
+     | _ => false) = true :=
+  by native_decide
+
+example :
+    (match inferTypeDetailed [] (.app (.hexLit Hexagram.qian) (.hexLit Hexagram.kun)) with
+     | .error (.expectedFunction .hex) => true
+     | _ => false) = true :=
+  by native_decide
 
 end SSBX.Foundation.Wen.WenSurface

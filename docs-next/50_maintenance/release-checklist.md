@@ -5,6 +5,8 @@
 ## 构建
 
 - `lake build` 通过。
+- `lake build wenyan-surface` 通过。
+- `scripts/check_wenyan_surface_cli.py` 通过。
 - `python3 scripts/docs_next.py build` 通过。
 - `../_generated/` 已刷新。
 - 没有意外改动生成文件以外的区域。
@@ -16,6 +18,7 @@
 - 依赖 `kleene_recursion_axiom` 的说明仍带条件。
 - `theOne` 未被写成可展开构造。
 - `YiState.run` 未被写成 theorem-level total evaluator。
+- `wenyan-surface` 的 catalogue-only 算子仍报告 `known-not-executable`，未被写成 evaluator 结果。
 
 ## Claim 与状态
 

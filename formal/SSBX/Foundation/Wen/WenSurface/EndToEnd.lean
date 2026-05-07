@@ -1,19 +1,21 @@
 /-
 # WenSurface.EndToEnd — 文表层端到端管线
 
-把 lex / resolve / elab / denote 拼成单一入口：
-  · `wenyanInterp : String → Option Hexagram`     — 闭项 wenyan 程序求 hex
-  · `wenyanInterpBool : String → Option Bool`     — 求 bool
+把 lex / resolve / parse / elab / typecheck / denote 拼成单一入口：
+  · `wenyanCompile : String → Except WenSurfaceErr TypedTm`
+  · `wenyanInterp : String → Except WenSurfaceErr Hexagram`
+  · `wenyanInterpBool : String → Except WenSurfaceErr Bool`
 
 求值复用既有 [WenDefEval.denoteHex / denoteBool](../WenDefEval.lean)，
 不走 baguaWen IL（保留 [WenDefCompile.lean](../WenDefCompile.lean) 的
 cuo-equivariant 子集 commute 作 future work）。
 
-## v1 范围
+## 当前范围
 
-- 6 stdlib 算子 (推/比/不/必/同/凡) + 1 hex 常 (一)
-- 右结合连续 application
-- 「推 一」「推 推 一」「推 推 推 一」全打通到 YiCore.«生» 链
+- cue-aware resolver + explicit `SurfaceExpr` AST
+- 64 卦名 / aliases + Bool literals + Hex-only binders
+- executable registry 中的 theorem-backed operator 可求值
+- catalogue-only operator / unpromoted gap form 只诊断，不伪造 denotation
 
 ## 状态
 
@@ -36,41 +38,49 @@ open SSBX.Text.OperatorReadings
 inductive WenSurfaceErr where
   | lex     (e : LexErr)
   | resolve (e : ResolveErr)
+  | parse   (e : ParseErr)
   | elab    (e : ElabErr)
-  | denoteFailed
+  | denoteFailed (expected actual : Ty)
 deriving DecidableEq, Repr
 
 /-! ## § 2  端到端管线 -/
 
-/-- String → Tm 之完整管线（lex + resolve + elab）. -/
-def wenyanCompile (s : String) : Except WenSurfaceErr Tm :=
+/-- String → typed Tm 之完整管线（lex + cue-aware resolve + parse + elab + typecheck）. -/
+def wenyanCompile (s : String) : Except WenSurfaceErr TypedTm :=
   match lexWen s with
   | .error e => .error (.lex e)
   | .ok toks =>
-    match resolveSimple toks with
+    match resolveWithCues toks with
     | .error e => .error (.resolve e)
     | .ok rs =>
-      match elabTokens rs with
-      | .error e => .error (.elab e)
-      | .ok t    => .ok t
+      match parseSurfaceResolved rs with
+      | .error e => .error (.parse e)
+      | .ok expr =>
+        match elabSurfaceTyped expr with
+        | .error e => .error (.elab e)
+        | .ok t    => .ok t
+
+/-- Backward-compatible untyped projection for code that only needs the Tm. -/
+def wenyanCompileTm (s : String) : Except WenSurfaceErr Tm :=
+  (wenyanCompile s).map (fun typed => typed.tm)
 
 /-- 闭项 hex 求值：String → Hexagram. -/
 def wenyanInterp (s : String) : Except WenSurfaceErr Hexagram :=
   match wenyanCompile s with
   | .error e => .error e
-  | .ok t =>
-    match denoteHex t with
+  | .ok typed =>
+    match denoteHex typed.tm with
     | some h => .ok h
-    | none   => .error .denoteFailed
+    | none   => .error (.denoteFailed .hex typed.ty)
 
 /-- 闭项 bool 求值：String → Bool. -/
 def wenyanInterpBool (s : String) : Except WenSurfaceErr Bool :=
   match wenyanCompile s with
   | .error e => .error e
-  | .ok t =>
-    match denoteBool t with
+  | .ok typed =>
+    match denoteBool typed.tm with
     | some b => .ok b
-    | none   => .error .denoteFailed
+    | none   => .error (.denoteFailed .bool typed.ty)
 
 /-! ## § 3  端到端 sanity 例子 -/
 
@@ -113,7 +123,7 @@ example :
     (wenyanInterp "推 坤").toOption = some Hexagram.qian :=
   by native_decide
 
-/-! ### 「之」 应用标记测试（noop skip 语义） -/
+/-! ### 「之」 应用标记测试（显式 AST marker，elab 时透明） -/
 
 /-- 「推 之 一」≡「推 一」，「之」elab 时被过滤. -/
 example :
@@ -125,9 +135,9 @@ example :
     (wenyanInterp "推 之 推 之 一").toOption = some («生生» 2 «一») :=
   by native_decide
 
-/-- 「推 乾 之」尾随之是合法的（被 elab 过滤）—— 与「推 乾」同结果. -/
+/-- 尾随「之」不再被静默吞掉。 -/
 example :
-    (wenyanInterp "推 之 乾").toOption = some «一» :=
+    (wenyanInterp "推 乾 之").toOption = none :=
   by native_decide
 
 /-! ### 二元谓词测试（arity-driven 解析） -/
@@ -146,6 +156,98 @@ example : (wenyanInterpBool "比 一 一").toOption = some true := by native_dec
 
 /-- 「比 乾 坤」 → false. -/
 example : (wenyanInterpBool "比 乾 坤").toOption = some false := by native_decide
+
+/-! ### Hex/operator surface collision tests
+
+  「比」「益」「损/損」既可作已执行算子，也可作卦名。parser 在 prefix
+  表达式中可用作算子；在裸值或需给后续参数预留 token 的位置回退为卦名。
+-/
+
+example : (wenyanInterp "比").toOption = resolveHexConst "比" := by native_decide
+
+example :
+    (wenyanInterpBool "同 比 比").toOption = some true :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "比 乾 坤").toOption = some false :=
+  by native_decide
+
+example :
+    (wenyanInterp "益 乾").toOption = some («生» Hexagram.qian) :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "同 益 乾").toOption = some false :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "同 损 损").toOption = some true :=
+  by native_decide
+
+example : (wenyanInterp "大壯").toOption = (wenyanInterp "大壮").toOption := by native_decide
+
+example : (wenyanInterp "鼎").toOption = resolveHexConst "鼎" := by native_decide
+
+example : (wenyanInterp "鼎 乾").toOption = none := by native_decide
+
+example :
+    (match wenyanCompile "鼎 乾" with
+     | .error (.parse (.unpromotedHexagramGap "鼎" 0)) => true
+     | _ => false) = true :=
+  by native_decide
+
+example : (wenyanInterp "丽").toOption = none := by native_decide
+
+example :
+    (match wenyanCompile "丽" with
+     | .error (.resolve (.unpromotedHexagramGap "丽" 0)) => true
+     | _ => false) = true :=
+  by native_decide
+
+example :
+    (match wenyanCompile "大" with
+     | .error (.resolve (.unpromotedHexagramGap "大" 0)) => true
+     | _ => false) = true :=
+  by native_decide
+
+example :
+    (match wenyanCompile "在 乾 坤" with
+     | .error (.elab (.unsupportedOp OperatorId.R_1 "在" 0)) => true
+     | _ => false) = true :=
+  by native_decide
+
+example :
+    (match wenyanCompile "五行 乾" with
+     | .error (.elab (.unsupportedOp OperatorId.Y_2 "五行" 0)) => true
+     | _ => false) = true :=
+  by native_decide
+
+example :
+    (match wenyanCompile "或 乾" with
+     | .error (.resolve (.ambiguous "或" 0 candidates)) => candidates.length == 2
+     | _ => false) = true :=
+  by native_decide
+
+example :
+    (match wenyanCompile "名分 乾" with
+     | .error (.resolve (.ambiguous "名分" 0 candidates)) => candidates.length == 2
+     | _ => false) = true :=
+  by native_decide
+
+example : (parseSurface "乾 之 坤").toOption.isSome = true := by native_decide
+
+example : (wenyanCompile "乾 之 坤").toOption = none := by native_decide
+
+theorem canonicalHexNames_interpret_to_xuGua :
+    canonicalHexNameRows.all
+        (fun row => decide ((wenyanInterp row.fst).toOption = some row.snd)) = true := by
+  native_decide
+
+theorem hexNameAliases_interpret_to_canonical :
+    hexNameAliases.all
+        (fun row => decide ((wenyanInterp row.fst).toOption = (wenyanInterp row.snd).toOption)) = true := by
+  native_decide
 
 /-- 嵌套：「同 推 一 推 一」 → 「same 一+1 一+1」 = true. -/
 example :
@@ -209,7 +311,7 @@ example : (wenyanInterp "").toOption = none := by native_decide
 
 /-- 「推 一」之 elab Tm 等于 `.app Stdlib.tuiBody .yi`. -/
 example :
-    (wenyanCompile "推 一").toOption = some (.app Stdlib.tuiBody .yi) :=
+    (wenyanCompileTm "推 一").toOption = some (.app Stdlib.tuiBody .yi) :=
   by native_decide
 
 /-- 与 `tui_eq_sheng` 桥 — 用 wenyan 表层走 stdlib 算子等价于 YiCore.«生». -/
@@ -237,6 +339,28 @@ example : (wenyanInterp "益 损 一").toOption = some «一» := by native_deci
 /-- 「损 益 乾」 → ((乾 + 1) − 1) = 乾. -/
 example : (wenyanInterp "损 益 乾").toOption = some Hexagram.qian := by native_decide
 
+/-! ## § 6.25 exact Hex transforms -/
+
+example : (wenyanInterp "错 乾").toOption = some Hexagram.kun := by native_decide
+example : (wenyanInterp "錯 乾").toOption = some Hexagram.kun := by native_decide
+example : (wenyanInterp "综 乾").toOption = some Hexagram.qian := by native_decide
+example : (wenyanInterp "互 坤").toOption = some Hexagram.kun := by native_decide
+example : (wenyanInterp "反 乾").toOption = some Hexagram.kun := by native_decide
+
+/-! ## § 6.3 prefix binder / let forms -/
+
+example :
+    (wenyanInterpBool "凡 甲 同 甲 甲").toOption = some true :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "令 甲 乾 同 甲 乾").toOption = some true :=
+  by native_decide
+
+example :
+    (wenyanInterp "令 甲 乾 推 甲").toOption = some «一» :=
+  by native_decide
+
 /-! ## § 6.5  之又 iteration construction (Phase D)
 
   「之又 F X」 = F (F X)。语义上等价于 «生生» 2 X 当 F = «生»（即 surface 推）。
@@ -262,7 +386,7 @@ example :
 
 /-! ## § 7  公示总结 -/
 
-/-- v1 公示：6 stdlib 算子 + 1 hex 常的端到端可达性。
+/-- 基础公示：早期 stdlib 算子 + 「一」的端到端可达性。
     `推`/`一` 的合成结果与 YiCore.«生»/«生生» 一致。 -/
 theorem v1_endToEnd_summary :
     (wenyanInterp "一").toOption = some «一»
@@ -274,12 +398,11 @@ theorem v1_endToEnd_summary :
 
 /-! ## § 7  Phase C cue resolution 端到端 sanity
 
-  cue-aware resolver (`resolveWithCues`) 与 v1 (`resolveSimple`) 在不含
-  「之」的 stdlib 流上完全等价 —— 这里给一组端到端等价见证.
+  cue-aware resolver (`resolveWithCues`) 与 simple resolver (`resolveSimple`)
+  在不含「之」的 stdlib 流上完全等价 —— 这里给一组 atom 序列见证.
 
   含「之」时，cue 路径将「之」消歧为 S_1 catalogue（v1 路径里是 appMarker），
-  但 elab 阶段 S_1 暂未支持，故端到端 wenyanInterp 现仍走 v1 路径
-  (resolveSimple) 以保留 noop appMarker 行为。本节只 verify
+  parser 将其保留成 explicit marker，elab 时透明处理。本节 verify
   resolveWithCues 之 atom 序列正确性，与 cue → unique reading 桥定理. -/
 
 /-- 不含「之」的程序：cue-aware resolve 之 atom 序列与 simple resolve 一致.
@@ -310,7 +433,7 @@ example :
       = some [some OperatorId.T_10, some OperatorId.S_1, none] :=
   by native_decide
 
-/-- v1 路径仍把同一程序之「之」识为 appMarker（无 OperatorId）—— 与 cue 路径成对.
+/-- simple 路径仍把同一程序之「之」识为 appMarker（无 OperatorId）—— 与 cue 路径成对.
     note: opId? 在 catalogueOp 时返 reading.operator?；appMarker 时返 none. -/
 example :
     let toks : List GlyphTok :=
@@ -335,8 +458,8 @@ theorem zhi_in_tui_zhi_yi_resolves_S1 :
       = some OperatorId.S_1 :=
   by native_decide
 
-/-- v1 wenyanInterp（仍走 resolveSimple）不被新增模块影响：
-    「推 之 一」 = «生» «一»，与 Phase B 表现一致. -/
+/-- 当前 wenyanInterp 走 cue-aware resolver：
+    「推 之 一」 = «生» «一»，显式 marker 透明. -/
 example :
     (wenyanInterp "推 之 一").toOption = some («生» «一») :=
   by native_decide

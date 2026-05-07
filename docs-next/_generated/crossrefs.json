@@ -1348,6 +1348,66 @@
       "symbol_hits": []
     },
     {
+      "document": "formal/SSBX/notes/wensurface-roadmap.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Text/WenyanOperators.lean"
+          ],
+          "symbol": "OperatorId"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenSurface/Syntax.lean"
+          ],
+          "symbol": "SurfaceExpr"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Text/OperatorReadings.lean"
+          ],
+          "symbol": "allSurfaceReadings"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenSurface/Syntax.lean"
+          ],
+          "symbol": "parseSurface"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenSurface/Reading.lean"
+          ],
+          "symbol": "resolveStdlibOp"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/YiCore.lean"
+          ],
+          "symbol": "一"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Operators.lean"
+          ],
+          "symbol": "之"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenyanText.lean"
+          ],
+          "symbol": "互"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Operators.lean"
+          ],
+          "symbol": "反"
+        }
+      ]
+    },
+    {
       "document": "formal/SSBX/notes/zero-axiom-roadmap.md",
       "lean_path_mentions": [
         "formal/SSBX/Foundation/Bagua/KleeneInternal.lean"

@@ -5,21 +5,20 @@
   · 原 GlyphTok（位置 / surface）
   · ResolvedAtom：要么是 hex 常值，要么是 catalogue 算子读法
 
-## v1 范围（最小闭环）
+## 当前范围
 
-直接 surface map，硬编码：
-  · **6 stdlib 算子**: 推/比/不/必/同/凡 → T_10/R_8/N_1/M_1/I_1/Q_1
-    与 [WenDef.lean](../WenDef.lean) `Stdlib.{tui,bi,bu,biModal,tong,fan}Def` 一一对应。
-  · **1 hex 常**: 一 → YiCore.«一»
-  · 其他 surface → `.noReading`
-
-Phase C（cue-aware）将取代此层；Phase B 仅为打通 lex→elab 管线。
+解析层默认走 cue-aware resolver：先识别语法 marker / binder / 字面值，
+再走 registry-backed executable surface map，最后落到 `OperatorReadings` catalogue。
+catalogue-only operator 可以被说明和诊断，但不会被 evaluator 偷接语义。
 
 ## 状态
 
 0 sorry / 0 axiom / 总函数. 关键例由 native_decide 见证.
 -/
 import SSBX.Foundation.Wen.WenSurface.Lex
+import SSBX.Foundation.Wen.WenSurface.Semantics
+import SSBX.Foundation.Bagua.Cell192
+import SSBX.Text.OperatorAnchors
 import SSBX.Text.OperatorReadings
 import SSBX.Foundation.Yi.YiCore
 
@@ -30,15 +29,26 @@ open SSBX.Text.WenyanOperators
 open SSBX.Text.OperatorReadings
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Yi.YiCore
+open SSBX.Foundation.Bagua.Cell192
+open SSBX.Text.OperatorAnchors
 
 /-! ## § 1  Resolved 类型 -/
+
+/-- Surface-level syntax markers that are not value operators by themselves. -/
+inductive SyntaxMarker where
+  | zhe
+  | ling
+deriving DecidableEq, Repr
 
 /-- 已消歧的原子：卦字面值 / Bool 字面值 / catalogue 算子读法 /
     应用标记 / 迭代构式. -/
 inductive ResolvedAtom where
   | hexConst    (h : Hexagram)
   | boolConst   (b : Bool)
+  | varName     (name : String)
   | catalogueOp (reading : OperatorReading)
+  | hexOrOp     (h : Hexagram) (reading : OperatorReading)
+  | syntax      (marker : SyntaxMarker)
   | appMarker             -- 「之」 等不发射 Tm 的 surface marker
   | iterate               -- 「之又」 迭代构式 marker：F X ↦ F (F X)
 deriving DecidableEq, Repr
@@ -52,13 +62,68 @@ deriving DecidableEq, Repr
 /-- Resolver 错误。 -/
 inductive ResolveErr where
   | noReading (surface : String) (col : Nat) : ResolveErr
+  | ambiguous (surface : String) (col : Nat) (candidates : List OperatorReading) : ResolveErr
+  | knownButUnsupported (surface : String) (col : Nat) (readings : List OperatorReading) : ResolveErr
+  | unpromotedHexagramGap (surface : String) (col : Nat) : ResolveErr
 deriving DecidableEq, Repr
 
-/-! ## § 2  v1 surface map -/
+/-! ## § 2  Surface maps -/
 
-/-- 6 个 stdlib 算子的 surface → catalogue reading. 每条 reading
-    通过 `catalogueReading` factory 构造，与 [Stdlib WenDef](../WenDef.lean#L171)
-    之 def 一一对应. -/
+/-- Surface variables accepted by the prefix-only binder forms. -/
+def surfaceVarNames : List String :=
+  ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"]
+
+def resolveVarName : Glyph → Option String
+  | g => if surfaceVarNames.contains g then some g else none
+
+/-- Canonical King Wen hexagram names, aligned with `Cell192.xuGua`. -/
+def canonicalHexNames : List String :=
+  [ "乾", "坤", "屯", "蒙", "需", "讼", "师", "比"
+  , "小畜", "履", "泰", "否", "同人", "大有", "谦", "豫"
+  , "随", "蛊", "临", "观", "噬嗑", "贲", "剥", "复"
+  , "无妄", "大畜", "颐", "大过", "坎", "离", "咸", "恒"
+  , "遁", "大壮", "晋", "明夷", "家人", "睽", "蹇", "解"
+  , "损", "益", "夬", "姤", "萃", "升", "困", "井"
+  , "革", "鼎", "震", "艮", "渐", "归妹", "丰", "旅"
+  , "巽", "兑", "涣", "节", "中孚", "小过", "既济", "未济" ]
+
+/-- Conservative traditional aliases for full hexagram names. -/
+def hexNameAliases : List (String × String) :=
+  [ ("訟", "讼"), ("師", "师"), ("謙", "谦"), ("隨", "随")
+  , ("蠱", "蛊"), ("臨", "临"), ("觀", "观"), ("賁", "贲")
+  , ("剝", "剥"), ("復", "复"), ("無妄", "无妄"), ("頤", "颐")
+  , ("過", "过"), ("大過", "大过"), ("小過", "小过")
+  , ("離", "离"), ("恆", "恒"), ("晉", "晋"), ("大壯", "大壮")
+  , ("損", "损"), ("漸", "渐"), ("歸妹", "归妹"), ("豐", "丰")
+  , ("兌", "兑"), ("渙", "涣"), ("節", "节"), ("濟", "济")
+  , ("既濟", "既济"), ("未濟", "未济") ]
+
+def lookupStringAssoc? (key : String) : List (String × α) → Option α
+  | [] => none
+  | (k, v) :: rest => if k = key then some v else lookupStringAssoc? key rest
+
+def canonicalHexNameRows : List (String × Hexagram) :=
+  canonicalHexNames.zip xuGua
+
+def canonicalHexForName? (name : String) : Option Hexagram :=
+  lookupStringAssoc? name canonicalHexNameRows
+
+def normalizeHexName (name : String) : String :=
+  match lookupStringAssoc? name hexNameAliases with
+  | some canonical => canonical
+  | none => name
+
+def resolveNamedHexConst (g : Glyph) : Option Hexagram :=
+  canonicalHexForName? (normalizeHexName g)
+
+def isUnpromotedHexagramGap (g : Glyph) : Bool :=
+  hexagramUnpromotedGapForms.contains g
+
+/-- Legacy executable stdlib surface → catalogue reading witness.
+
+Runtime resolution is table/registry-driven through
+`uniqueExecutableReadingForGlyph`; this definition is retained as a compact
+compatibility check for the original v1 surfaces. -/
 def resolveStdlibOp : Glyph → Option OperatorReading
   | "推" => some (catalogueReading "推" "T-10" "对象推进 / 生" (some .T_10)
                     .prefix [.expectedObject])
@@ -78,14 +143,24 @@ def resolveStdlibOp : Glyph → Option OperatorReading
   | "益" =>
       some (catalogueReading "益" "T-13" "加一"         (some .T_13)
                     .prefix [.expectedObject])
+  | "错" | "錯" =>
+      some (catalogueReading "错" "Z-5" "错卦 / 爻位取反" (some .Z_5)
+                    .prefix [.expectedObject])
+  | "综" | "綜" =>
+      some (catalogueReading "综" "Z-6" "综卦 / 爻序反转" (some .Z_6)
+                    .prefix [.expectedObject])
+  | "互" =>
+      some (catalogueReading "互" "Z-3" "互卦 / 中四爻抽取" (some .Z_3)
+                    .prefix [.expectedObject])
+  | "反" =>
+      some (catalogueReading "反" "T-6" "对象层反转" (some .T_6)
+                    .prefix [.expectedObject])
   | _   => none
 
-/-- v1 hex 常值 surface → Hexagram。包含「一」与两个固定点「乾」「坤」. -/
+/-- v1+ hex 常值 surface → Hexagram。包含「一」与完整 64 卦名. -/
 def resolveHexConst : Glyph → Option Hexagram
   | "一" => some «一»
-  | "乾" => some Hexagram.qian
-  | "坤" => some Hexagram.kun
-  | _    => none
+  | g    => resolveNamedHexConst g
 
 /-- v1 Bool 字面值 surface → Bool。古汉语之「真」/「假」. -/
 def resolveBoolConst : Glyph → Option Bool
@@ -104,6 +179,77 @@ def isIterateConstruction : Glyph → Bool
   | "之又" => true
   | _      => false
 
+def resolveSyntaxMarker : Glyph → Option SyntaxMarker
+  | "者" => some .zhe
+  | "令" => some .ling
+  | _    => none
+
+def catalogueReadingsForGlyph (glyph : Glyph) : List OperatorReading :=
+  (readingsForGlyph glyph).filter (fun r => r.status = .catalogue ∧ r.operator?.isSome)
+
+def operatorFormIdsForGlyph (glyph : Glyph) : List OperatorId :=
+  allOperatorIds.filter (fun id =>
+    (operatorForms id).any (fun sense => sense.glyph = glyph))
+
+def operatorFormReadingsForGlyph (glyph : Glyph) : List OperatorReading :=
+  (operatorFormIdsForGlyph glyph).map (fun id =>
+    catalogueReading glyph id.code id.title (some id) .prefix [.expectedObject])
+
+def operatorCompoundReadingsForGlyph (glyph : Glyph) : List OperatorReading :=
+  (operatorCompoundSurfaceIds.filter (fun row => row.fst = glyph)).map (fun row =>
+    let id := row.snd
+    catalogueReading glyph id.code id.title (some id) .prefix [.expectedObject])
+
+def catalogueOrOperatorFormReadingsForGlyph (glyph : Glyph) : List OperatorReading :=
+  let tableReadings := catalogueReadingsForGlyph glyph
+  if tableReadings.isEmpty && !isUnpromotedHexagramGap glyph then
+    let compoundReadings := operatorCompoundReadingsForGlyph glyph
+    if compoundReadings.isEmpty then operatorFormReadingsForGlyph glyph else compoundReadings
+  else
+    tableReadings
+
+def executableCatalogueReadingsForGlyph (glyph : Glyph) : List OperatorReading :=
+  (catalogueReadingsForGlyph glyph).filter (fun r =>
+    match r.operator? with
+    | some id => (executableSemanticsFor? id).isSome
+    | none => false)
+
+def executableOperatorFormReadingsForGlyph (glyph : Glyph) : List OperatorReading :=
+  (operatorFormIdsForGlyph glyph).filterMap (fun id =>
+    if (executableSemanticsFor? id).isSome then
+      some (catalogueReading glyph id.code id.title (some id) .prefix [.expectedObject])
+    else
+      none)
+
+def uniqueExecutableCatalogueReading (glyph : Glyph) : Option OperatorReading :=
+  match executableCatalogueReadingsForGlyph glyph with
+  | [r] => some r
+  | _ => none
+
+def uniqueExecutableReadingForGlyph (glyph : Glyph) : Option OperatorReading :=
+  match executableCatalogueReadingsForGlyph glyph with
+  | [r] => some r
+  | [] =>
+      match executableOperatorFormReadingsForGlyph glyph with
+      | [r] => some r
+      | _ => none
+  | _ => none
+
+def resolveCatalogueByTable (t : GlyphTok) : Except ResolveErr ResolvedTok :=
+  if isUnpromotedHexagramGap t.surface then
+    .error (.unpromotedHexagramGap t.surface t.startCol)
+  else
+    let readings := catalogueOrOperatorFormReadingsForGlyph t.surface
+    match readings with
+    | [] =>
+        let knownReadings := readingsForGlyph t.surface
+        if knownReadings.isEmpty then
+          .error (.noReading t.surface t.startCol)
+        else
+          .error (.knownButUnsupported t.surface t.startCol knownReadings)
+    | [r] => .ok ⟨t, .catalogueOp r⟩
+    | rs  => .error (.ambiguous t.surface t.startCol rs)
+
 /-! ## § 3  Resolver -/
 
 /-- 单 token resolver。优先级：iterate (「之又」) → appMarker (「之」) → bool 常值 →
@@ -116,15 +262,24 @@ def resolveOne (t : GlyphTok) : Except ResolveErr ResolvedTok :=
     .ok ⟨t, .iterate⟩
   else if isApplicationMarker t.surface then
     .ok ⟨t, .appMarker⟩
-  else match resolveBoolConst t.surface with
+  else match resolveSyntaxMarker t.surface with
+  | some marker => .ok ⟨t, .syntax marker⟩
+  | none =>
+  match resolveVarName t.surface with
+  | some name => .ok ⟨t, .varName name⟩
+  | none =>
+  match resolveBoolConst t.surface with
   | some b => .ok ⟨t, .boolConst b⟩
   | none =>
-    match resolveHexConst t.surface with
-    | some h => .ok ⟨t, .hexConst h⟩
+    match uniqueExecutableReadingForGlyph t.surface with
+    | some r =>
+        match resolveHexConst t.surface with
+        | some h => .ok ⟨t, .hexOrOp h r⟩
+        | none   => .ok ⟨t, .catalogueOp r⟩
     | none =>
-      match resolveStdlibOp t.surface with
-      | some r => .ok ⟨t, .catalogueOp r⟩
-      | none   => .error (.noReading t.surface t.startCol)
+      match resolveHexConst t.surface with
+      | some h => .ok ⟨t, .hexConst h⟩
+      | none   => resolveCatalogueByTable t
 
 /-- 全 token 列表 resolver。结构递归，总函数. -/
 def resolveSimple : List GlyphTok → Except ResolveErr (List ResolvedTok)
@@ -157,7 +312,10 @@ def atomsOf : List ResolvedTok → List ResolvedAtom :=
 def ResolvedAtom.opId? : ResolvedAtom → Option OperatorId
   | .hexConst _    => none
   | .boolConst _   => none
+  | .varName _     => none
   | .catalogueOp r => r.operator?
+  | .hexOrOp _ r   => r.operator?
+  | .syntax _      => none
   | .appMarker     => none
   | .iterate       => none
 
@@ -178,7 +336,7 @@ example : opIdsOf "推" = some [some OperatorId.T_10] := by native_decide
 /-- 「一」单独 → hexConst «一». -/
 example : opIdsOf "一" = some [none] := by native_decide
 
-/-- 6 个 stdlib 算子 + 「一」全打通. -/
+/-- 基础 stdlib 算子 + 「一」全打通. -/
 example :
     opIdsOf "推 比 不 必 同 凡 一"
       = some [some OperatorId.T_10, some OperatorId.R_8, some OperatorId.N_1,
@@ -223,17 +381,93 @@ example : opIdsOf "" = some [] := by native_decide
 
 /-! ## § 6  结构性断言 -/
 
-/-- v1 stdlib map 之全部 6 个 surface 都解析成 some. -/
+/-- Legacy stdlib witness still covers the first six v1 surfaces. -/
 example : (["推", "比", "不", "必", "同", "凡"].all
             (resolveStdlibOp · |>.isSome)) = true := by native_decide
 
-/-- v1 hex 常值 map. -/
+/-- Hex 常值 map. -/
+theorem canonicalHexNames_length :
+    canonicalHexNames.length = 64 := by native_decide
+
+theorem canonicalHexNameRows_length :
+    canonicalHexNameRows.length = 64 := by native_decide
+
+theorem canonicalHexNameRows_hexagrams_eq_xuGua :
+    canonicalHexNameRows.map Prod.snd = xuGua := by native_decide
+
+def lexesAsSingleSurface (s : String) : Bool :=
+  match lexWen s with
+  | .ok [tok] =>
+      (tok.surface == s)
+        && (tok.startCol == 0)
+        && (tok.width == s.toList.length)
+        && (tok.isMulti == decide (s.toList.length > 1))
+  | _ => false
+
+theorem canonicalMultiHexNames_lex_as_single :
+    (canonicalHexNames.filter (fun s => decide (s.toList.length > 1))).all
+        lexesAsSingleSurface = true := by
+  native_decide
+
+theorem hexNameAliasSurfaces_lex_as_single :
+    ((hexNameAliases.map Prod.fst).filter (fun s => decide (s.toList.length > 1))).all
+        lexesAsSingleSurface = true := by
+  native_decide
+
 example : resolveHexConst "一" = some «一»          := by native_decide
 example : resolveHexConst "乾" = some Hexagram.qian := by native_decide
 example : resolveHexConst "坤" = some Hexagram.kun  := by native_decide
+example : resolveHexConst "大壯" = resolveHexConst "大壮" := by native_decide
 example : resolveHexConst "推" = none               := by native_decide
+example : isUnpromotedHexagramGap "鼎" = true := by native_decide
+example : isUnpromotedHexagramGap "丽" = true := by native_decide
+example : isUnpromotedHexagramGap "益" = false := by native_decide
+example :
+    (uniqueExecutableCatalogueReading "推").bind (·.operator?) = some OperatorId.T_10 :=
+  by native_decide
+example :
+    (uniqueExecutableCatalogueReading "同").bind (·.operator?) = some OperatorId.I_1 :=
+  by native_decide
+example :
+    (uniqueExecutableCatalogueReading "益").bind (·.operator?) = some OperatorId.T_13 :=
+  by native_decide
+example :
+    (uniqueExecutableReadingForGlyph "错").bind (·.operator?) = some OperatorId.Z_5 :=
+  by native_decide
+example :
+    (uniqueExecutableReadingForGlyph "反").bind (·.operator?) = some OperatorId.T_6 :=
+  by native_decide
+theorem executableSurfaceReadings_use_registry_path :
+    (["推", "比", "不", "必", "同", "凡", "損", "损", "益",
+      "错", "錯", "综", "綜", "互", "反"].all
+        (fun s => (uniqueExecutableReadingForGlyph s).isSome)) = true := by
+  native_decide
 
-/-- 6 stdlib 算子的 OperatorId 互不相同（按定义顺序展开）. -/
+theorem executableSurfaceReadings_table_driven_ids :
+    (["推", "比", "不", "必", "同", "凡", "損", "损", "益",
+      "错", "錯", "综", "綜", "互", "反"].filterMap
+        (fun s => (uniqueExecutableReadingForGlyph s).bind (·.operator?)))
+      = [ OperatorId.T_10, OperatorId.R_8, OperatorId.N_1,
+          OperatorId.M_1, OperatorId.I_1, OperatorId.Q_1,
+          OperatorId.T_12, OperatorId.T_12, OperatorId.T_13,
+          OperatorId.Z_5, OperatorId.Z_5, OperatorId.Z_6,
+          OperatorId.Z_6, OperatorId.Z_3, OperatorId.T_6 ] := by
+  native_decide
+example :
+    (operatorFormReadingsForGlyph "在").map (fun r => r.operator?) = [some OperatorId.R_1] :=
+  by native_decide
+example : opIdsOf "在" = some [some OperatorId.R_1] := by native_decide
+example :
+    (operatorCompoundReadingsForGlyph "五行").map (fun r => r.operator?) =
+      [some OperatorId.Y_2] :=
+  by native_decide
+example : opIdsOf "五行" = some [some OperatorId.Y_2] := by native_decide
+example : opIdsOf "形名" = some [some OperatorId.L_4] := by native_decide
+example : opIdsOf "大一" = some [some OperatorId.ZA_13] := by native_decide
+example : opIdsOf "陰与陽" = some [some OperatorId.Y_1] := by native_decide
+example : opIdsOf "上工" = some [some OperatorId.Y_25] := by native_decide
+
+/-- 基础 stdlib 算子的 OperatorId 互不相同（按定义顺序展开）. -/
 example :
     (["推", "比", "不", "必", "同", "凡"].filterMap
        (fun s => (resolveStdlibOp s).bind (·.operator?)))
@@ -261,20 +495,20 @@ example : opIdsOf "益" = some [some OperatorId.T_13] := by native_decide
 
 /-! ## § 7  Cue-based resolution (Phase C)
 
-  v1 走 surface map，对「之」一律视为 noop appMarker —— S_1 的属格读法
-  确实与 juxtaposition 之 application 同效，故 elab 阶段透明跳过即可。
+  simple resolver 对「之」一律视为透明 appMarker；cue-aware 路径可在
+  betweenNominals 上下文把它消歧为 S_1 catalogue reading。
 
   本节增加 cue-aware 通路：从邻居 GlyphTok 之 `canonicalKind` 推 ContextCue，
   再用 `OperatorReadings.contextualReadings` 过滤，若唯一则采用之。
-  与 v1 通路并行 —— `resolveSimple` / `resolveOne` 不动。
+  与 simple 通路并行 —— `resolveSimple` / `resolveOne` 保留作对照。
 
-  v1 重点：当左右皆为 `.glyph` (普通名物) 时发射 `.betweenNominals`，
+  cue 重点：当左右皆为 `.glyph` (普通名物) 时发射 `.betweenNominals`，
   「之」据此唯一对应 `«之属格读法»` (operator? = some .S_1)。这与 stdlib
-  6 算子相容（其 surface 单字 canonicalKind = .glyph），故 cue 路径与
+  基础算子相容（其 surface 单字 canonicalKind = .glyph），故 cue 路径与
   surface 路径在 stdlib 范围内殊途同归。
 
   其他 cue（如 .afterVerb / .beforeMotionVerb）需引入 verb / motion
-  分类表，留作后续扩充；本节只交付 betweenNominals 启动样.
+  分类表，留作后续扩充；现版先覆盖 betweenNominals 启动样.
 -/
 
 /-- 取 `i` 处 token 之 surface 之 canonicalKind；越界返 none. -/
@@ -289,7 +523,7 @@ def kindAt? (toks : List GlyphTok) (i : Nat) : Option LexKind :=
     扩充时可加：
     - 左为 `.operator` (motion-like) 时 `.afterVerb`
     - 右为特定 motion verb 时 `.beforeMotionVerb`
-    现版只覆盖 `.betweenNominals` 一例，避免 v1 范围外的语义判定.
+    现版只覆盖 `.betweenNominals` 一例，避免引入尚未建模的语义判定.
 
     位置 0 由于无左邻居，返空 cues. -/
 def computeCues (toks : List GlyphTok) (i : Nat) : List ContextCue :=
@@ -307,7 +541,7 @@ def computeCues (toks : List GlyphTok) (i : Nat) : List ContextCue :=
 
     关键：当 cues 为空时直接返 none —— 不依赖 `contextualReadings` 的
     fallback（后者在空 cue 时会返所有 readings，让 cue 路径退化）.
-    cue 路径 *只* 在显式 cue 下生效；其余情形退到 surface map. -/
+    cue 路径 *只* 在显式 cue 下生效；其余情形退到 registry-backed surface map. -/
 def uniqueCatalogueReading (glyph : Glyph) (cues : List ContextCue)
     : Option OperatorReading :=
   if cues.isEmpty then none
@@ -320,30 +554,45 @@ def uniqueCatalogueReading (glyph : Glyph) (cues : List ContextCue)
 
 /-- Cue-aware 单 token resolver。优先级:
     appMarker 关闭后改走 cue 路径 → bool 常值 → hex 常值 → cue-唯一 catalogue
-    → 默认 stdlib map → 错误.
+    → executable registry surface map → 错误.
 
     与 `resolveOne` 并存：appMarker 路径仍保留作 fallback，但若 cue 路径
     给出唯一 catalogue reading（如「之」在 betweenNominals 下→ S_1），
-    则采用之；其余情形回到 surface map. -/
+    则采用之；其余情形回到 registry-backed surface map. -/
 def resolveOneWithCues (toks : List GlyphTok) (i : Nat) (t : GlyphTok)
     : Except ResolveErr ResolvedTok :=
+  if isIterateConstruction t.surface then
+    .ok ⟨t, .iterate⟩
+  else
   match resolveBoolConst t.surface with
   | some b => .ok ⟨t, .boolConst b⟩
   | none =>
-    match resolveHexConst t.surface with
-    | some h => .ok ⟨t, .hexConst h⟩
+    match resolveSyntaxMarker t.surface with
+    | some marker => .ok ⟨t, .syntax marker⟩
+    | none =>
+    match resolveVarName t.surface with
+    | some name => .ok ⟨t, .varName name⟩
     | none =>
       let cues := computeCues toks i
       match uniqueCatalogueReading t.surface cues with
-      | some r => .ok ⟨t, .catalogueOp r⟩
+      | some r =>
+          match resolveHexConst t.surface with
+          | some h => .ok ⟨t, .hexOrOp h r⟩
+          | none   => .ok ⟨t, .catalogueOp r⟩
       | none =>
-        -- cue 路径无唯一答；回 surface map / appMarker
+        -- cue 路径无唯一答；回 registry-backed surface map / appMarker
         if isApplicationMarker t.surface then
           .ok ⟨t, .appMarker⟩
         else
-          match resolveStdlibOp t.surface with
-          | some r => .ok ⟨t, .catalogueOp r⟩
-          | none   => .error (.noReading t.surface t.startCol)
+          match uniqueExecutableReadingForGlyph t.surface with
+          | some r =>
+              match resolveHexConst t.surface with
+              | some h => .ok ⟨t, .hexOrOp h r⟩
+              | none   => .ok ⟨t, .catalogueOp r⟩
+          | none =>
+            match resolveHexConst t.surface with
+            | some h => .ok ⟨t, .hexConst h⟩
+            | none   => resolveCatalogueByTable t
 
 /-- 全 token 列表 cue-aware resolver。结构递归 on index. -/
 def resolveWithCuesAux (toks : List GlyphTok)
@@ -409,8 +658,8 @@ private def opIdsOfCues (toks : List GlyphTok) : Option (List (Option OperatorId
   (resolveWithCues toks).toOption.map (fun rs => rs.map (·.atom |> ResolvedAtom.opId?))
 
 /-- 「推 之 一」走 cue 路径 → [T_10, S_1, none]。注意此处「之」拿到 S_1
-    catalogue reading（与 v1 noop appMarker 不同；elab 阶段 S_1 暂未支持，
-    属本子任务范围外）. -/
+    catalogue reading（与 simple 透明 appMarker 不同；parser/elab 将其作为
+    explicit marker 透明处理）. -/
 example :
     opIdsOfCues
       [⟨"推", 0, 1, false⟩, ⟨"之", 2, 1, false⟩, ⟨"一", 4, 1, false⟩]
@@ -465,7 +714,7 @@ theorem zhi_no_cue_no_unique_catalogue :
   对不包含「之」的 stdlib token 流，cue 路径与 surface 路径一致 —— 这
   通过 atom 序列对比见证. -/
 
-/-- 6 stdlib 算子 + 「一」的 atom 序列同 resolveSimple. -/
+/-- 基础 stdlib 算子 + 「一」的 atom 序列同 resolveSimple. -/
 example :
     ((resolveWithCues
         [⟨"推", 0, 1, false⟩, ⟨"比", 2, 1, false⟩, ⟨"不", 4, 1, false⟩,

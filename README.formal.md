@@ -7,7 +7,7 @@ package        : ssbx
 language       : Lean 4 v4.30.0-rc2
 upstream       : Mathlib master (HEAD)
 build target   : @[default_target] lean_lib SSBX (srcDir = "formal")
-build status   : 2837 jobs ✓        sorry : 0        axiom : 1        opaque : 1
+build status   : 2867 jobs ✓        sorry : 0        axiom : 1        opaque : 1
 partial defs   : 1 top-level executable definition (not an additional axiom)
 trust base     : Lean kernel + Mathlib HEAD
 namespace root : SSBX
@@ -262,41 +262,15 @@ typeCheck : Ctx → Tm → Option Ty                        -- total
 eval      : Tm → Tm                                      -- structural
 ```
 
-### 3.3 wenyan-operators.md — 281 Surface Operators (21 categories)
-
-```
-                 (counts approximate; canonical source is wenyan-operators.md)
-
- 1  R-1..15   关系算子 (static structure)            15
- 2  C-1..8    含包算子 (space / nesting)              8
- 3  T-1..15   变换算子 (dynamic)                     15
- 4  F-1..12   流动算子 (directed)                    12
- 5  B-1..8    边界算子 (endpoints / start-end)        8
- 6  Q-1..8    量化算子                                8
- 7  K-1..8    因果算子                                8
- 8  M-1..8    模态算子                                8
- 9  N-1..8    对偶 / 否定                             8
-10  I-1..8    同一 / 分异                             8
-11  S-1..18   序贯算子 (虚词层)                      18
-12  H-1..8    复合算子 (高阶)                         8
-13  P-1..20   墨经定义算子                           20
-14  G-1..10   名家关系算子 (公孙龙)                  10
-15  A-1..15   副词修饰算子 (aspect/manner)           15
-16  D-1..10   数词作算子                             10
-17  E-1..7    史官元算子 (春秋 meta-textual)          7
-18  L-1..16   法家算子 (韩非政治拓扑)                16
-19  Y-1..25   医家算子 (黄帝内经系统动力学)          25
-20  X-1..14   社会算子 (荀子)                        14
-21  Z-1..40   补遗算子                               40
-                                                  ─────
-                                                   281
-```
+### 3.3 Operator catalogue — 371 OperatorId rows
 
 L1 type-layer is in `WenDef.lean § Stdlib` (representative constructors:
-{tui, bi, bu, biModal, tong, fan}); a subset of the surface particles
+{tui, bi, bu, biModal, tong, fan, sun, yiBenefit, cuo, zong, hu, fanReverse}); a subset of the surface particles
 (之 / 者 / 而 / 也 / 不 / 凡 / 自 / 相 / 似 / 要 etc.) is named in
-`Foundation/Wen/Operators.lean` with ASCII aliases. Full 281-operator
-catalogue remains documented in `wenyan-operators.md`.
+`Foundation/Wen/Operators.lean` with ASCII aliases. The full 371-OperatorId
+catalogue is machine-tracked in `Text/WenyanOperators.lean` and `Text/OperatorCellMap.lean`.
+WenSurface exposes that catalogue as complete diagnostics, but only the
+12 theorem-backed registry rows are executable.
 
 ### 3.4 受控文言 (Controlled Wenyan, M1 grammar)
 
@@ -368,8 +342,8 @@ BaguaWenSpec → WenyanParser → WenyanParserGeneral
 WenyanParser.lean         daoJudgeProg_{print,roundtrip}, allKindReprs_singleton_roundtrip
 WenyanParserGeneral.lean  parseProgN_tokensOfProg (full generality, non-partial)
 WenEval.lean              «端到端_乾», «端到端_坤», «端到端_否»
-WenDef.lean               typeCheck total + Stdlib.{tui,bi,bu,biModal,tong,fan}
-WenDefEval.lean           tui_eq_sheng (∀ 64 hex)
+WenDef.lean               typeCheck total + 12-body Stdlib (tui/bi/bu/.../hu/fanReverse)
+WenDefEval.lean           tui_eq_sheng + exact Hex transforms (∀ 64 hex)
 WenDefCompile.lean        {idProg, add32Prog, cuoProg}_correct, sheng_not_cuo_equivariant
 WenyanReflect.lean        «文核同源» (rfl), «判型良»/«判停»/«验程»
 WenyanSelfHost.lean       «微核自验», «微核自释_total» (Tier 2 quine PoC)
@@ -500,7 +474,7 @@ theorem li_cannot_encode_dao : ∀ N, ∃ n > N, Nonempty (Sheng n)        (DaoL
 ```
 ∀ commit ∈ main:
   lake build                  ⇒  exit 0
-  jobs(lake build)            =  2837
+  jobs(lake build)            =  2867
   count(sorry, formal/)       =  0
   count(axiom, formal/)       =  1          (kleene_recursion_axiom; cuo-restricted)
   count(opaque, formal/)      =  1          (theOne; carries Field/dong/origin/alive)
@@ -580,20 +554,20 @@ specification.
 ## 9 · Ledger
 
 ```
-Lean LOC                  ~15000+ across 77 Foundation modules (7 clusters)
+Foundation Lean LOC       ~33000+ across 97 Foundation modules (7 clusters)
 Foundation/Core modules   14    (incl. Alignment, Sincerity, HumanAlignment, EvolutionDao, Renlei)
-Foundation/Wen modules    18    (incl. DaoSource, AntiSchmitt, AlignmentFailures, EconGame)
+Foundation/Wen modules    38    (incl. WenSurface, DaoSource, AntiSchmitt, AlignmentFailures, EconGame)
 Foundation/Modern modules 19    (~5746 lines, Mathlib bridge)
 Path-丙 modules           11    (M1 → M4-甲)
 Kernel layers             45    (元 → 非道之形式)
 义理 essays               28+   (义理/A_..Z_*.md, plus 人类命运共同体_共同体之证.md)
 六表 tables               6     (六表_实虚史真/)
-wenyan operators          281   (wenyan-operators.md, 21 categories)
+wenyan operators          371   (`Text/WenyanOperators.lean` OperatorId catalogue)
 ```
 
 ```
 trust:    Lean kernel (v4.30.0-rc2) + Mathlib HEAD
-machine:  2837 build jobs · 0 sorry · 1 axiom (kleene_recursion_axiom; cuo-restricted)
+machine:  2867 build jobs · 0 sorry · 1 axiom (kleene_recursion_axiom; cuo-restricted)
 opaque:   1 (theOne)
 partial:  1 top-level executable partial def (BaguaTuring.run nontermination boundary)
 ledger:   DAG / roster / operator / layer / essay correspondences are sync claims

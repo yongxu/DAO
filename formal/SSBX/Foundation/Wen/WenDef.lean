@@ -18,7 +18,7 @@ Path 丙 § 风险 3 之完全缓解：
 类型 (Ty):   Hex | Bool | Arr a b
 
 项 (Tm):     var | abs | app | hexLit | boolLit
-            + 7 内核 primitives:
+            + 10 内核 primitives:
               jia (加) :  Hex → Hex → Hex
               yi  (一) :  Hex
               notB (不):  Bool → Bool
@@ -26,6 +26,9 @@ Path 丙 § 风险 3 之完全缓解：
               orB  (或):  Bool → Bool → Bool
               eqHex (同): Hex → Hex → Bool
               forallH (凡): (Hex → Bool) → Bool      -- 64-fold ∀，有限可决
+              cuoH (错): Hex → Hex
+              zongH (综): Hex → Hex
+              huH (互): Hex → Hex
 
 命名约定:
   · 天干 10 字（甲乙丙丁戊己庚辛壬癸）— 中性变量名
@@ -61,7 +64,7 @@ deriving DecidableEq, Repr
 
 /-! ## § 2  项 -/
 
-/-- 文之项：λ + app + var + 字面值 + 7 个内核 primitives。 -/
+/-- 文之项：λ + app + var + 字面值 + 10 个内核 primitives。 -/
 inductive Tm : Type
   | var     (n : String)               : Tm
   | abs     (n : String) (t : Ty) (body : Tm) : Tm
@@ -75,6 +78,9 @@ inductive Tm : Type
   | orB                                : Tm  -- 或 :  Bool → Bool → Bool
   | eqHex                              : Tm  -- 同 :  Hex → Hex → Bool
   | forallH                            : Tm  -- 凡 :  (Hex → Bool) → Bool
+  | cuoH                               : Tm  -- 错 :  Hex → Hex
+  | zongH                              : Tm  -- 综 :  Hex → Hex
+  | huH                                : Tm  -- 互 :  Hex → Hex
 deriving DecidableEq, Repr
 
 /-! ## § 3  类型检查 -/
@@ -108,6 +114,9 @@ def typeCheck : Ctx → Tm → Option Ty
   | _, .orB       => some (.arr .bool (.arr .bool .bool))
   | _, .eqHex     => some (.arr .hex (.arr .hex .bool))
   | _, .forallH   => some (.arr (.arr .hex .bool) .bool)
+  | _, .cuoH      => some (.arr .hex .hex)
+  | _, .zongH     => some (.arr .hex .hex)
+  | _, .huH       => some (.arr .hex .hex)
 
 /-! ## § 4  命名空间 -/
 
@@ -323,17 +332,72 @@ def yiBenefitDef : WenDef where
   validName      := by native_decide
   bodyTypechecks := by native_decide
 
+/-! ### Z-5 / Z-6 / Z-3 / T-6 exact Hex transforms
+
+  这些对应 `Yi.Hexagram` 已证明的结构算子，不从 catalogue 文义临时解释。
+-/
+
+def cuoBody : Tm := .cuoH
+
+theorem cuoBody_typed :
+    typeCheck [] cuoBody = some (.arr .hex .hex) := by native_decide
+
+def cuoDef : WenDef where
+  name           := "cuo"
+  body           := cuoBody
+  bodyType       := .arr .hex .hex
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def zongBody : Tm := .zongH
+
+theorem zongBody_typed :
+    typeCheck [] zongBody = some (.arr .hex .hex) := by native_decide
+
+def zongDef : WenDef where
+  name           := "zong"
+  body           := zongBody
+  bodyType       := .arr .hex .hex
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def huBody : Tm := .huH
+
+theorem huBody_typed :
+    typeCheck [] huBody = some (.arr .hex .hex) := by native_decide
+
+def huDef : WenDef where
+  name           := "hu"
+  body           := huBody
+  bodyType       := .arr .hex .hex
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def fanReverseBody : Tm := .cuoH
+
+theorem fanReverseBody_typed :
+    typeCheck [] fanReverseBody = some (.arr .hex .hex) := by native_decide
+
+def fanReverseDef : WenDef where
+  name           := "fanReverse"
+  body           := fanReverseBody
+  bodyType       := .arr .hex .hex
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
 /-! ### Stdlib 总表 -/
 
 /-- 当前 stdlib 中已合度且类型化之 wenyan-ops 定义。 -/
 def all : List WenDef :=
-  [tuiDef, biDef, buDef, biModalDef, tongDef, fanDef, sunDef, yiBenefitDef]
+  [ tuiDef, biDef, buDef, biModalDef, tongDef, fanDef, sunDef, yiBenefitDef
+  , cuoDef, zongDef, huDef, fanReverseDef ]
 
-theorem all_length : all.length = 8 := by native_decide
+theorem all_length : all.length = 12 := by native_decide
 
 theorem all_names :
     all.map WenDef.name =
-      ["tui", "bi", "bu", "biModal", "tong", "fan", "sun", "yiBenefit"] := by
+      [ "tui", "bi", "bu", "biModal", "tong", "fan", "sun", "yiBenefit"
+      , "cuo", "zong", "hu", "fanReverse" ] := by
   native_decide
 
 theorem all_distinct_names : (all.map WenDef.name).Nodup := by native_decide
