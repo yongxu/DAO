@@ -83,7 +83,7 @@
 | Tier 3 Quine Roadmap | 136 | `formal/SSBX/notes/tier3-quine-roadmap.md` |
 | Truth / ClaimLedger / Absolute claim strength audit | 240 | `formal/SSBX/notes/truth-ledger-boundary.md` |
 | v14 形式证明骨架 · 三分原则与 roadmap | 65 | `formal/SSBX/notes/v14-roadmap.md` |
-| WenSurface 路线状态 | 52 | `formal/SSBX/notes/wensurface-roadmap.md` |
+| WenSurface 路线状态 | 56 | `formal/SSBX/notes/wensurface-roadmap.md` |
 | WenSurface Syntax Spec: brackets, precedence, infix, mixfix | 544 | `formal/SSBX/notes/wensurface-syntax-spec.md` |
 | zero-axiom roadmap for `kleene_recursion_axiom` | 265 | `formal/SSBX/notes/zero-axiom-roadmap.md` |
 | 周易位与算子对照报告 | 378 | `formal/SSBX/notes/zhouyi-position-operator-report.md` |

@@ -155,9 +155,6 @@ def resolveStdlibOp : Glyph → Option OperatorReading
   | "互" =>
       some (catalogueReading "互" "Z-3" "互卦 / 中四爻抽取" (some .Z_3)
                     .prefix [.expectedObject])
-  | "反" =>
-      some (catalogueReading "反" "T-6" "对象层反转" (some .T_6)
-                    .prefix [.expectedObject])
   | _   => none
 
 /-- v1+ hex 常值 surface → Hexagram。包含「一」与完整 64 卦名. -/
@@ -257,6 +254,13 @@ def sameExecutableSemantics (sem : ExecutableSemantics) (r : OperatorReading) : 
   | some sem' => sem'.arity == sem.arity && decide (sem'.body = sem.body)
   | none => false
 
+def firstTheoremBackedReading? : List OperatorReading → Option OperatorReading
+  | [] => none
+  | r :: rest =>
+      match r.operator? with
+      | some id => if isTheoremBackedOperator id then some r else firstTheoremBackedReading? rest
+      | none => firstTheoremBackedReading? rest
+
 /--
 Choose a surface reading when all executable candidates collapse to the same
 typed body.  This keeps true homographic aliases such as `故` (K-1/S-7) usable
@@ -269,44 +273,46 @@ def uniqueExecutableReadingBySemantics : List OperatorReading → Option Operato
       match executableSemanticsForReading? r with
       | none => none
       | some sem =>
-          if rest.all (sameExecutableSemantics sem) then some r else none
+          if rest.all (sameExecutableSemantics sem) then
+            match firstTheoremBackedReading? (r :: rest) with
+            | some exact => some exact
+            | none => some r
+          else
+            none
 
 def uniqueExecutableCatalogueReading (glyph : Glyph) : Option OperatorReading :=
-  let exact := theoremBackedCatalogueReadingsForGlyph glyph
-  match uniqueExecutableReadingBySemantics exact with
-  | some r => some r
-  | none =>
-      if exact.isEmpty then
-        uniqueExecutableReadingBySemantics (executableCatalogueReadingsForGlyph glyph)
-      else
-        none
+  uniqueExecutableReadingBySemantics (catalogueReadingsForGlyph glyph)
+
+/--
+Reserved v1 surfaces remain stable even when the full catalogue records later
+homographs for the same glyph.  Outside this small compatibility surface, a
+glyph only auto-resolves when every relevant catalogue candidate has the same
+executable semantics.
+-/
+def reservedV1ExecutableReadingForGlyph (glyph : Glyph) : Option OperatorReading :=
+  match resolveStdlibOp glyph with
+  | some r =>
+      match r.operator? with
+      | some id => if isTheoremBackedOperator id then some r else none
+      | none => none
+  | none => none
 
 def uniqueExecutableReadingForGlyph (glyph : Glyph) : Option OperatorReading :=
-  let exactCatalogue := theoremBackedCatalogueReadingsForGlyph glyph
-  match uniqueExecutableReadingBySemantics exactCatalogue with
+  match reservedV1ExecutableReadingForGlyph glyph with
   | some r => some r
   | none =>
-      if exactCatalogue.isEmpty then
-        let exactForms := theoremBackedOperatorFormReadingsForGlyph glyph
-        match uniqueExecutableReadingBySemantics exactForms with
-        | some r => some r
-        | none =>
-            if exactForms.isEmpty then
-              match resolveHexConst glyph with
-              | some _ => none
-              | none =>
-                  let catalogue := executableCatalogueReadingsForGlyph glyph
-                  match uniqueExecutableReadingBySemantics catalogue with
-                  | some r => some r
-                  | none =>
-                      if catalogue.isEmpty then
-                        uniqueExecutableReadingBySemantics (executableOperatorFormReadingsForGlyph glyph)
-                      else
-                        none
+      match resolveHexConst glyph with
+      | some _ => none
+      | none =>
+          let catalogue := catalogueReadingsForGlyph glyph
+          if catalogue.isEmpty then
+            let compounds := operatorCompoundReadingsForGlyph glyph
+            if compounds.isEmpty then
+              uniqueExecutableReadingBySemantics (operatorFormReadingsForGlyph glyph)
             else
-              none
-      else
-        none
+              uniqueExecutableReadingBySemantics compounds
+          else
+            uniqueExecutableReadingBySemantics catalogue
 
 def resolveCatalogueByTable (t : GlyphTok) : Except ResolveErr ResolvedTok :=
   if isUnpromotedHexagramGap t.surface then
@@ -501,36 +507,38 @@ example : resolveHexConst "推" = none               := by native_decide
 example : isUnpromotedHexagramGap "鼎" = true := by native_decide
 example : isUnpromotedHexagramGap "丽" = true := by native_decide
 example : isUnpromotedHexagramGap "益" = false := by native_decide
+example : uniqueExecutableCatalogueReading "推" = none := by native_decide
 example :
-    (uniqueExecutableCatalogueReading "推").bind (·.operator?) = some OperatorId.T_10 :=
+    (uniqueExecutableReadingForGlyph "推").bind (·.operator?) = some OperatorId.T_10 :=
   by native_decide
 example :
     (uniqueExecutableCatalogueReading "同").bind (·.operator?) = some OperatorId.I_1 :=
   by native_decide
+example : uniqueExecutableCatalogueReading "益" = none := by native_decide
 example :
-    (uniqueExecutableCatalogueReading "益").bind (·.operator?) = some OperatorId.T_13 :=
+    (uniqueExecutableReadingForGlyph "益").bind (·.operator?) = some OperatorId.T_13 :=
   by native_decide
+example : uniqueExecutableReadingForGlyph "或" = none := by native_decide
+example : uniqueExecutableReadingForGlyph "反" = none := by native_decide
+example : uniqueExecutableReadingForGlyph "名分" = none := by native_decide
 example :
     (uniqueExecutableReadingForGlyph "错").bind (·.operator?) = some OperatorId.Z_5 :=
   by native_decide
-example :
-    (uniqueExecutableReadingForGlyph "反").bind (·.operator?) = some OperatorId.T_6 :=
-  by native_decide
 theorem executableSurfaceReadings_use_registry_path :
     (["推", "比", "不", "必", "同", "凡", "損", "损", "益",
-      "错", "錯", "综", "綜", "互", "反"].all
+      "错", "錯", "综", "綜", "互"].all
         (fun s => (uniqueExecutableReadingForGlyph s).isSome)) = true := by
   native_decide
 
 theorem executableSurfaceReadings_table_driven_ids :
     (["推", "比", "不", "必", "同", "凡", "損", "损", "益",
-      "错", "錯", "综", "綜", "互", "反"].filterMap
+      "错", "錯", "综", "綜", "互"].filterMap
         (fun s => (uniqueExecutableReadingForGlyph s).bind (·.operator?)))
       = [ OperatorId.T_10, OperatorId.R_8, OperatorId.N_1,
           OperatorId.M_1, OperatorId.I_1, OperatorId.Q_1,
           OperatorId.T_12, OperatorId.T_12, OperatorId.T_13,
           OperatorId.Z_5, OperatorId.Z_5, OperatorId.Z_6,
-          OperatorId.Z_6, OperatorId.Z_3, OperatorId.T_6 ] := by
+          OperatorId.Z_6, OperatorId.Z_3 ] := by
   native_decide
 example :
     (operatorFormReadingsForGlyph "在").map (fun r => r.operator?) = [some OperatorId.R_1] :=
