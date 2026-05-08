@@ -180,10 +180,24 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .Y_3  => some ⟨.Y_3,  Stdlib.tuiBody, 1, "相生: five-phase generation as increment"⟩
   | .Y_4  => some ⟨.Y_4,  Stdlib.sunBody, 1, "相克: five-phase control as decrement"⟩
   | .Y_5  => some ⟨.Y_5,  Stdlib.sunBody, 1, "相侮/反侮: counter-control as decrement"⟩
+  | .Y_6  => some ⟨.Y_6,  Stdlib.hexIdBody, 1, "氣/气: medical state projection anchor as identity; no qi physiology semantics"⟩
+  | .Y_7  => some ⟨.Y_7,  Stdlib.hexIdBody, 1, "血: medical state projection anchor as identity; no blood physiology semantics"⟩
+  | .Y_8  => some ⟨.Y_8,  Stdlib.hexIdBody, 1, "精: medical state projection anchor as identity; no essence physiology semantics"⟩
+  | .Y_10 => some ⟨.Y_10, Stdlib.hexIdBody, 1, "升/降: medical movement-state projection anchor as identity; no directional physiology semantics"⟩
+  | .Y_11 => some ⟨.Y_11, Stdlib.hexIdBody, 1, "開/闔/樞: medical phase projection anchor as identity; no channel mechanics semantics"⟩
+  | .Y_12 => some ⟨.Y_12, Stdlib.hexIdBody, 1, "經/絡: medical channel projection anchor as identity; no meridian semantics"⟩
+  | .Y_13 => some ⟨.Y_13, Stdlib.hexIdBody, 1, "表/裡: medical surface/interior projection anchor as identity; no diagnostic semantics"⟩
+  | .Y_14 => some ⟨.Y_14, Stdlib.hexIdBody, 1, "寒/熱: medical thermal-state projection anchor as identity; no pathology semantics"⟩
+  | .Y_15 => some ⟨.Y_15, Stdlib.hexIdBody, 1, "虛/實: medical deficiency/excess projection anchor as identity; no pathology semantics"⟩
   | .Y_17 => some ⟨.Y_17, Stdlib.hexIdBody, 1, "平: medical balance as identity"⟩
   | .Y_18 => some ⟨.Y_18, Stdlib.hexIdBody, 1, "和: medical harmony as identity"⟩
   | .Y_21 => some ⟨.Y_21, Stdlib.dupHBody, 1, "標/标本: paired facet carrier via duplicate Hex; no root/branch decomposition"⟩
   | .Y_22 => some ⟨.Y_22, Stdlib.dupHBody, 1, "營/营與衛/卫: paired facet carrier via duplicate Hex; no medical channel decomposition"⟩
+  | .Y_23 => some ⟨.Y_23, Stdlib.hexIdBody, 1, "通/滯: medical patency projection anchor as identity; no treatment semantics"⟩
+  | .Y_24 => some ⟨.Y_24, Stdlib.hexIdBody, 1, "五运六气: medical cosmological-state projection anchor as identity; no calendrical physiology semantics"⟩
+  | .Y_25 => some ⟨.Y_25, Stdlib.hexIdBody, 1, "上工/中工/下工: medical skill-grade projection anchor as identity; no practitioner evaluation semantics"⟩
+  | .Y_26 => some ⟨.Y_26, Stdlib.hexIdBody, 1, "出/入: medical ingress/egress projection anchor as identity; no physiological motion semantics"⟩
+  | .Y_27 => some ⟨.Y_27, Stdlib.hexIdBody, 1, "候: diagnostic query anchor as identity; no observation protocol semantics"⟩
   | .X_4  => some ⟨.X_4,  Stdlib.list1HBody, 1, "群: singleton Hex list carrier; no social grouping semantics"⟩
   | .X_14 => some ⟨.X_14, Stdlib.list2HBody, 2, "積/积: two-input aggregate carrier; no arithmetic accumulation"⟩
   | .Z_2  => some ⟨.Z_2,  Stdlib.huBody, 1, "相: mutuality prefix as hu anchor"⟩
@@ -199,10 +213,14 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .Z_21 => some ⟨.Z_21, Stdlib.list1HBody, 1, "攝/摄: singleton Hex list carrier; no subsumption semantics"⟩
   | .Z_22 => some ⟨.Z_22, Stdlib.sunBody, 1, "蘊/蕴: enfold as decrement"⟩
   | .Z_24 => some ⟨.Z_24, Stdlib.hexIdBody, 1, "兆: omen extractor anchor as identity; no prognostic semantics"⟩
+  | .Z_26 => some ⟨.Z_26, Stdlib.hexIdBody, 1, "占: divination query anchor as identity; no divinatory semantics"⟩
+  | .Z_27 => some ⟨.Z_27, Stdlib.hexIdBody, 1, "卜: divination query anchor as identity; no divinatory semantics"⟩
   | .Z_29 => some ⟨.Z_29, Stdlib.hexApplyBody, 2, "推: operator-level Hex endomap application"⟩
   | .Z_31 => some ⟨.Z_31, Stdlib.cuoBody, 1, "反: operator-level reversal anchored as cuo"⟩
   | .Z_32 => some ⟨.Z_32, Stdlib.hexApplyBody, 2, "自: reflexive Hex endomap application"⟩
   | .Z_33 => some ⟨.Z_33, Stdlib.cuoZongBody, 1, "自反/反自: self-reflection as cuoZong"⟩
+  | .Z_34 => some ⟨.Z_34, Stdlib.hexIdBody, 1, "觀/观: observation query anchor as identity; no perceptual semantics"⟩
+  | .Z_35 => some ⟨.Z_35, Stdlib.hexIdBody, 1, "察: inspection query anchor as identity; no investigation semantics"⟩
   | .F_3  => some ⟨.F_3,  Stdlib.tuiBody, 1, "進/进: forward Hex motion as increment"⟩
   | .F_4  => some ⟨.F_4,  Stdlib.sunBody, 1, "退: backward Hex motion as decrement"⟩
   | .F_5  => some ⟨.F_5,  Stdlib.tuiBody, 1, "升: upward Hex motion as increment"⟩
@@ -315,9 +333,12 @@ def coreTheoremBackedOperatorIds : List OperatorId :=
         .P_2, .P_3, .P_6, .P_7, .P_9, .P_10,
         .P_11, .P_12, .P_13, .P_18, .P_22, .P_24, .G_5, .G_8, .G_9,
         .D_1, .D_4, .D_8, .H_8, .L_3, .L_5, .L_9, .L_10, .L_12, .L_13, .L_15,
-        .Y_1, .Y_3, .Y_4, .Y_5, .Y_17, .Y_18, .Y_21, .Y_22, .X_4, .X_14,
+        .Y_1, .Y_3, .Y_4, .Y_5, .Y_6, .Y_7, .Y_8, .Y_10, .Y_11, .Y_12,
+        .Y_13, .Y_14, .Y_15, .Y_17, .Y_18, .Y_21, .Y_22, .Y_23, .Y_24,
+        .Y_25, .Y_26, .Y_27, .X_4, .X_14,
         .Z_2, .Z_7, .Z_8, .Z_9, .Z_12, .Z_13,
-        .Z_16, .Z_17, .Z_18, .Z_19, .Z_21, .Z_22, .Z_24, .Z_29, .Z_31, .Z_32, .Z_33,
+        .Z_16, .Z_17, .Z_18, .Z_19, .Z_21, .Z_22, .Z_24, .Z_26, .Z_27,
+        .Z_29, .Z_31, .Z_32, .Z_33, .Z_34, .Z_35,
         .F_3, .F_4, .F_5, .F_6, .F_9, .F_10, .F_11,
         .L_11, .SUN_6, .Z_10, .Z_11, .Z_36, .Z_37, .ZA_2,
         .ZHU_9, .SUN_2, .SUN_3, .SUN_4, .SUN_14, .CHU_4, .CHU_5, .CHU_9,
@@ -344,7 +365,7 @@ def structuralCatalogueOperatorIds : List OperatorId :=
 Structural total fallback for catalogue rows.
 
 These bodies are executable and type-checkable, but intentionally weaker than
-the 248 exact rows above: they preserve the operator id, signature kind, and
+the 266 exact rows above: they preserve the operator id, signature kind, and
 evaluated arguments as a catalogue value instead of projecting fake Hex/Bool
 results.
 -/
@@ -419,10 +440,10 @@ theorem executableOperatorIds_length :
     executableOperatorIds.length = 371 := by native_decide
 
 theorem coreTheoremBackedOperatorIds_length :
-    coreTheoremBackedOperatorIds.length = 202 := by native_decide
+    coreTheoremBackedOperatorIds.length = 220 := by native_decide
 
 theorem theoremBackedOperatorIds_length :
-    theoremBackedOperatorIds.length = 248 := by native_decide
+    theoremBackedOperatorIds.length = 266 := by native_decide
 
 theorem theoremBackedOperatorIds_nodup :
     theoremBackedOperatorIds.Nodup := by native_decide
@@ -432,7 +453,7 @@ theorem theoremBackedOperatorIds_all_semantics :
   native_decide
 
 theorem structuralCatalogueOperatorIds_length :
-    structuralCatalogueOperatorIds.length = 123 := by native_decide
+    structuralCatalogueOperatorIds.length = 105 := by native_decide
 
 theorem structuralCatalogueOperatorIds_all_not_theorem_backed :
     structuralCatalogueOperatorIds.all (fun id => (theoremBackedSemanticsFor? id).isNone) = true := by
@@ -463,8 +484,8 @@ theorem operatorRegistryCoverage_summary :
     operatorRegistryEntries.length = 371
       ∧ executableRegistryEntries.length = 371
       ∧ executableOperatorIds.length = 371
-      ∧ theoremBackedOperatorIds.length = 248
-      ∧ structuralCatalogueOperatorIds.length = 123
+      ∧ theoremBackedOperatorIds.length = 266
+      ∧ structuralCatalogueOperatorIds.length = 105
       ∧ theoremBackedOperatorIds.length + structuralCatalogueOperatorIds.length = 371
       ∧ executableOperatorIds.all isCatalogueOperator = true
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).id = id)
