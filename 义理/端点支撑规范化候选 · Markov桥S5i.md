@@ -1,6 +1,6 @@
 # 端点支撑规范化候选 · Markov桥S5i
 
-**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [端点索引路径族候选 · Markov桥S5h](端点索引路径族候选%20·%20Markov桥S5h.md) · [有限路径族求和代数候选 · Markov桥S5g](有限路径族求和代数候选%20·%20Markov桥S5g.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
+**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [双路径枚举候选 · Markov桥S5j](双路径枚举候选%20·%20Markov桥S5j.md) · [端点索引路径族候选 · Markov桥S5h](端点索引路径族候选%20·%20Markov桥S5h.md) · [有限路径族求和代数候选 · Markov桥S5g](有限路径族求和代数候选%20·%20Markov桥S5g.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
 **Lean 锚点**：
 
@@ -78,7 +78,8 @@ theorem endpoint_support_normalization_bridge_summary :
 | 轴 | 状态 | 说明 |
 |---|---|---|
 | quotient / true dedup | 后续结构 | S5i 显式计算重复贡献，不把重复路径商掉 |
-| all-path enumeration | 后续结构 | S5i 只处理给定 family 的筛选，不生成全部同端点路径 |
+| toy source/target enumeration | S5j 已关闭 | S5j 证明 twoRoute source/target two-step middle 必为 `upper` 或 `lower` |
+| general all-path enumeration | 后续结构 | S5i/S5j 不生成任意过程、任意长度全部路径 |
 | path integral | 后续结构 | 仍需要路径空间、测度、极限或 over-all-paths construction |
 | continuous phase/action law | 后续结构 | 仍需连续相位、action functional 或 Hamiltonian/unitary law |
 | Born rule derivation | 后续结构 | 仍只复用 `ampProb` boundary |
@@ -121,7 +122,7 @@ endpoint_indexed_family_duplicate_sum :
 
 ## 三 · 下一步
 
-S5i 后最省力的增强是 S5j：
+S5i 后的直接增强 S5j 已关闭：
 
 ```text
 twoRouteProcess
@@ -129,7 +130,7 @@ twoRouteProcess
 -> every source-target two-step path is upper or lower
 ```
 
-这只会是 toy process 的有限穷举，不是一般 all-path enumeration 或 path integral。
+下一步应处理 finite path identity / quotient boundary，或转向 observation ledger。一般 all-path enumeration 或 path integral 仍不可提前写入 theorem。
 
 ---
 

@@ -93,7 +93,8 @@ theorem finite_path_sum_algebra_bridge_summary :
 
 | 轴 | 状态 | 说明 |
 |---|---|---|
-| arbitrary all-path enumeration | 后续结构 | S5g 只证明给定 finite list 的代数，不生成全部路径 |
+| two-route toy enumeration | S5j 已关闭 | S5j 证明 toy source/target two-step middle enumeration |
+| general all-path enumeration | 后续结构 | S5g/S5j 不生成任意过程、任意长度全部路径 |
 | endpoint-indexed family construction | S5h 已关闭 | 已由 `endpoint_indexed_path_family_bridge_summary` 把同端点 ledger 推到 endpoint-indexed family |
 | filter / duplicate normalization | S5i 已关闭有限候选接口 | 已由 `endpoint_support_normalization_bridge_summary` 证明 amplitude-complete filter preservation 与 duplicate expansion |
 | quotient / true dedup | 后续结构 | S5i 显式计算重复贡献，尚未做路径等价商 |
@@ -124,7 +125,7 @@ sum (reverse F) = sum F
 sum F = 0 and sum G = 0 -> sum (F ++ G) = 0
 ```
 
-因此，后续可以继续做 endpoint-indexed construction、filter、support normalization 或 all-path enumeration，而不会每次回到 two-path special case。
+因此，后续已经可以做 endpoint-indexed construction、filter、support normalization 与 toy source/target enumeration；若要推进一般 all-path enumeration，不需要每次回到 two-path special case。
 
 ---
 
@@ -138,7 +139,7 @@ finite path-sum algebra
 -> finite support filter / duplicate boundary
 ```
 
-下一步应在 two-route toy process 上尝试 source/target two-step enumeration。一般 path integral、连续测度与经验可测干涉仍不应提前写入 theorem。
+S5j 已在 two-route toy process 上关闭 source/target two-step enumeration。下一步若继续，应处理 finite path identity / quotient boundary 或 observation ledger；一般 path integral、连续测度与经验可测干涉仍不应提前写入 theorem。
 
 ---
 

@@ -1,5 +1,5 @@
 {
-  "count": 370,
+  "count": 372,
   "include_archive": false,
   "sources": [
     {
@@ -99,9 +99,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 2394,
+      "bytes": 2441,
       "path": "docs-next/10_formal_形式/modern.md",
-      "sha256": "336889c068b34f054bb3917e530ddc35f3e0f22443f2aaef878c0bb7b380752e",
+      "sha256": "9f18b2bacbe141e3dc6a9af51dd51e7824975788d2dcb1f68401d9610a7d5f5d",
       "suffix": ".md"
     },
     {
@@ -351,9 +351,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 7386,
+      "bytes": 7459,
       "path": "formal/SSBX.lean",
-      "sha256": "f351e39c3609f6bae03ec4448b41255affd756cdfee4c16c3e65b1581b298d44",
+      "sha256": "64bd0266930f4a4eb2c90116683fb1a7413d5c7e0af88fd77d4a7c8bc5ce1c23",
       "suffix": ".lean"
     },
     {
@@ -846,6 +846,12 @@
       "bytes": 13801,
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean",
       "sha256": "7129840fcd57905b5265ede059b6071783fad70536f48ff72066bae88b0cfaa0",
+      "suffix": ".lean"
+    },
+    {
+      "bytes": 6653,
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityTwoRouteEnumerationBridge.lean",
+      "sha256": "bb5e13fb9bf2b8886e66745a25accb4f4cb3f5e4889b08b9aa60784669ae1926",
       "suffix": ".lean"
     },
     {
@@ -1569,15 +1575,15 @@
       "suffix": ".md"
     },
     {
-      "bytes": 28924,
+      "bytes": 30448,
       "path": "formal/SSBX/notes/markov-causal-bridge-plan.md",
-      "sha256": "09c5e4658c51bd3d0e5dffe2ddb5275ba8b8569d0e2b28c9e299dbbee60bf2fd",
+      "sha256": "b20ebfefe5207074d6c3672ff2f7ecb950f7a15d2c6debd097dcf64962e75e81",
       "suffix": ".md"
     },
     {
-      "bytes": 26020,
+      "bytes": 27222,
       "path": "formal/SSBX/notes/markov-causal-bridge-verification-plan.md",
-      "sha256": "2dfd0859403bb7ec7ea45a55fd907b885ce5b5bcd3647a0233f4e4e35fd61fef",
+      "sha256": "7cdfc89643cfbc23652ebf922cd4316b4b290c8dbc731fae7b6cb39a95df1fd0",
       "suffix": ".md"
     },
     {
@@ -1629,9 +1635,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 41109,
+      "bytes": 43921,
       "path": "formal/SSBX/notes/unification-stepwise-plan.md",
-      "sha256": "7d0aa38abfa931f62c94281fa2ada482369634d326194672b287a4c5f15c9546",
+      "sha256": "2f70c353ba9d699db41e9a4187ad28664f493113fa285dfbb9b155f2c4121d74",
       "suffix": ".md"
     },
     {
@@ -1833,9 +1839,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 43536,
+      "bytes": 45177,
       "path": "义理/Markov因果桥 · 大统一最小验证构造.md",
-      "sha256": "ad504f092a3371f48df498d0f3f1053f224bc47cfe54d434b19a0a5d13b98411",
+      "sha256": "30c07417001dd0663051d53fcf303c4c5fe59c5f8296eeb06690d3d125332df0",
       "suffix": ".md"
     },
     {
@@ -1941,6 +1947,12 @@
       "suffix": ".md"
     },
     {
+      "bytes": 4958,
+      "path": "义理/双路径枚举候选 · Markov桥S5j.md",
+      "sha256": "265e1703537ecb1c228addf240341f12bcbf79cfeed5a14cb3bebf8a70461578",
+      "suffix": ".md"
+    },
+    {
       "bytes": 12004,
       "path": "义理/双路径相消候选 · Markov桥S5c.md",
       "sha256": "2415bc5a6dce202101b04f43b2c9deb5305bebb0a31fe3a366c9d67ae4435fed",
@@ -1989,9 +2001,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 8511,
+      "bytes": 8748,
       "path": "义理/有限路径族求和代数候选 · Markov桥S5g.md",
-      "sha256": "44c12083187e8300d66954ffbcd587a6b0c3f1ea174b9c01c568ad0a198524d7",
+      "sha256": "70375724d60f5e0ab3342365c45ef82e57f92a8e892f2972c2b4e7a161dde6b2",
       "suffix": ".md"
     },
     {
@@ -2025,15 +2037,15 @@
       "suffix": ".md"
     },
     {
-      "bytes": 6908,
+      "bytes": 7199,
       "path": "义理/端点支撑规范化候选 · Markov桥S5i.md",
-      "sha256": "9b9c8bdb8f458c4926f0648aaa08f86886cdaeb293c4f8dc974c14179bd5c8ee",
+      "sha256": "c5aa65c31463dd5f6a18336106643a3b8058748a1fe7ef38a14e1997f047665d",
       "suffix": ".md"
     },
     {
-      "bytes": 7230,
+      "bytes": 7402,
       "path": "义理/端点索引路径族候选 · Markov桥S5h.md",
-      "sha256": "42e068e63de3c27f6d7c072941c637e575117f7f49ba3fd9840bb77b5f2aab6d",
+      "sha256": "cffd34ff79a64aa7cd01eb98bfab4bb76ee4101afbc6d0be2b5cbc8c9a45c5ea",
       "suffix": ".md"
     },
     {

@@ -83,7 +83,8 @@ theorem endpoint_indexed_path_family_bridge_summary :
 
 | 轴 | 状态 | 说明 |
 |---|---|---|
-| all-path enumeration | 后续结构 | S5h 只转换给定 finite family，不生成全部同端点路径 |
+| toy source/target enumeration | S5j 已关闭 | S5j 证明 twoRoute source/target two-step middle 必为 `upper` 或 `lower` |
+| general all-path enumeration | 后续结构 | S5h/S5j 不生成任意过程、任意长度全部路径 |
 | filter / support normalization | S5i 已关闭有限候选接口 | `endpoint_support_normalization_bridge_summary` 证明 amplitude-complete filter 保持 sum/weight |
 | quotient / true dedup | 后续结构 | S5i 显式计算 duplicate expansion，不把重复路径商掉 |
 | path integral | 后续结构 | 需要路径空间、测度、极限或 over-all-paths construction |
@@ -125,14 +126,14 @@ endpoint-indexed finite family
 -> duplicate handling boundary
 ```
 
-下一步应推进 toy source-target two-step enumeration：
+S5j 已推进 toy source-target two-step enumeration：
 
 ```text
 twoRouteProcess
 -> every source-target two-step path is upper or lower
 ```
 
-这仍只应读作 toy process 的有限穷举，不提前声称一般 all-path enumeration、path integral 或真实干涉律。
+下一步应处理 finite path identity / quotient boundary，或转向 observation ledger；一般 all-path enumeration、path integral 或真实干涉律仍不可提前声称。
 
 ---
 
