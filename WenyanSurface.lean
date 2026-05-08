@@ -347,6 +347,8 @@ private def errShow : WenSurfaceErr → String
       s!"parse error at col {col}: unexpected application marker \"{surface}\""
   | .parse (.unpromotedHexagramGap surface col) =>
       s!"parse error at col {col}: surface \"{surface}\" is a tracked hexagram gap, not an executable operator"
+  | .parse (.typeMismatch expected actual surface col) =>
+      s!"type error at col {col}: expected {tyShow expected}, got {tyShow actual} from \"{surface}\""
   | .parse (.leftoverAtoms n surface col) =>
       s!"parse error at col {col}: {n} leftover token(s) past parsed expression; first leftover \"{surface}\""
   | .elab (.unsupportedOp id surface col) =>
@@ -371,6 +373,7 @@ private def errPhase : WenSurfaceErr → String
   | .resolve (.unpromotedHexagramGap _ _) => "unsupported"
   | .resolve _ => "resolve"
   | .parse (.unpromotedHexagramGap _ _) => "unsupported"
+  | .parse (.typeMismatch _ _ _ _) => "type"
   | .parse _ => "parse"
   | .elab (.unsupportedOp _ _ _) => "unsupported"
   | .elab (.unsupportedConstruction _) => "unsupported"
@@ -393,6 +396,7 @@ private def errCode : WenSurfaceErr → String
   | .parse (.expectedVariable _ _) => "expected_variable"
   | .parse (.unexpectedApplicationMarker _ _) => "unexpected_application_marker"
   | .parse (.unpromotedHexagramGap _ _) => "unpromoted_hexagram_gap"
+  | .parse (.typeMismatch _ _ _ _) => "type_mismatch"
   | .parse (.leftoverAtoms _ _ _) => "leftover_tokens"
   | .elab (.unsupportedOp _ _ _) => "unsupported_operator"
   | .elab (.unsupportedConstruction _) => "unsupported_construction"
@@ -433,6 +437,8 @@ private def parseErrShow : ParseErr → String
       s!"parse error at col {col}: unexpected application marker \"{surface}\""
   | .unpromotedHexagramGap surface col =>
       s!"parse error at col {col}: surface \"{surface}\" is a tracked hexagram gap, not an executable operator"
+  | .typeMismatch expected actual surface col =>
+      s!"type error at col {col}: expected {tyShow expected}, got {tyShow actual} from \"{surface}\""
   | .leftoverAtoms n surface col =>
       s!"parse error at col {col}: {n} leftover token(s) past parsed expression; first leftover \"{surface}\""
 
@@ -653,6 +659,11 @@ private def errExtraFields : WenSurfaceErr → List (String × String)
       ]
   | .parse (.unexpectedApplicationMarker surface col) => errLocationFields surface col
   | .parse (.unpromotedHexagramGap surface col) => errLocationFields surface col
+  | .parse (.typeMismatch expected actual surface col) =>
+      errLocationFields surface col ++
+        [ jsonFieldString "expectedType" (tyShow expected)
+        , jsonFieldString "actualType" (tyShow actual)
+        ]
   | .parse (.leftoverAtoms count surface col) =>
       errLocationFields surface col ++ [jsonFieldNat "leftoverCount" count]
   | .parse _ => []
@@ -1007,7 +1018,7 @@ private def usage : String :=
      "       wenyan-surface --help",
      "",
      "Surface vocabulary:",
-     "  Executable operators: 371 rows (38 theorem-backed exact; 333 symbolic catalogue-shape)",
+     "  Executable operators: 371 rows (84 exact/theorem-backed; 287 symbolic catalogue-shape)",
      "  Examples include: 推 比 不 必 同 凡 損 损 益 错 錯 综 綜 互 反 則 且 非 或 莫",
      "  Hex consts: 一 乾 坤 plus canonical 64 hexagram names",
      "  Bool consts: 真 假",
