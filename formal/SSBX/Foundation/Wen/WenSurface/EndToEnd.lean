@@ -15,7 +15,7 @@ cuo-equivariant 子集 commute 作 future work）。
 - cue-aware resolver + explicit `SurfaceExpr` AST
 - 64 卦名 / aliases + Bool literals + Hex-only binders
 - executable registry 覆盖全部 371 个 OperatorId
-- 141 个 exact/theorem-backed operator 可求 Hex/Bool；其余 catalogue rows 求 symbolic normal form
+- 141 个 exact/theorem-backed operator 可求 Hex/Bool；其余 catalogue rows 求 structural normal form
 - unpromoted gap form 只诊断，不伪造 denotation
 
 ## 状态

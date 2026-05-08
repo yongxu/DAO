@@ -1,12 +1,12 @@
 /-
 # WenSurface.Semantics — executable semantics registry
 
-This module separates exact stdlib denotations from total catalogue-shape
+This module separates exact stdlib denotations from total catalogue
 execution.  One hundred forty-one `OperatorId`s use exact `WenDef.Tm` bodies:
 the original high-value stdlib rows, the ObjectEndo/ObjectMap/OpUnary Hex
 transform package, finite Hex quantifiers, finite Hex motion/process rows,
 plus the Bool relation/predicate package.  Every
-remaining catalogue row gets a conservative, signature-shaped `WenDef.Tm` so
+remaining catalogue row gets a structural catalogue constructor `WenDef.Tm` so
 CLI support is total without confusing it with exact text semantics.
 -/
 import SSBX.Foundation.Wen.WenDef
@@ -197,7 +197,7 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
       "而: Hex endomap composition; surface currently requires explicit Hex→Hex terms"⟩
   | id    => relationPredicateBoolSemanticsFor? id
 
-/-- The exact theorem-backed subset, kept separate from total shape semantics. -/
+/-- The exact theorem-backed subset, kept separate from structural catalogue semantics. -/
 def coreTheoremBackedOperatorIds : List OperatorId :=
   [.T_10, .R_8, .N_1, .M_1, .I_1, .Q_1, .T_12, .T_13, .Z_5, .Z_6, .Z_3, .T_6]
     ++ [.R_6, .R_11, .T_1, .T_2, .T_4, .T_5, .T_7, .T_8, .T_9, .T_14, .T_15,
@@ -216,69 +216,31 @@ def theoremBackedOperatorIds : List OperatorId :=
 def isTheoremBackedOperator (id : OperatorId) : Bool :=
   (theoremBackedSemanticsFor? id).isSome
 
-/-! ## § 1.5 Total catalogue-shape semantics -/
-
-def shapeHexIdBody : Tm :=
-  .abs "x" .hex (.var "x")
-
-def shapeHexBinaryFirstBody : Tm :=
-  .abs "a" .hex (.abs "b" .hex (.var "a"))
-
-def shapeHexTernaryFirstBody : Tm :=
-  .abs "a" .hex (.abs "b" .hex (.abs "c" .hex (.var "a")))
-
-def shapeHexPredTrueBody : Tm :=
-  .abs "x" .hex (.boolLit true)
-
-def shapeBoolIdBody : Tm :=
-  .abs "p" .bool (.var "p")
-
-def catalogueObjectShapeBody : Nat → Tm
-  | 1 => shapeHexIdBody
-  | 2 => shapeHexBinaryFirstBody
-  | 3 => shapeHexTernaryFirstBody
-  | _ => .yi
-
-def catalogueRelationShapeBody : Nat → Tm
-  | 1 => shapeHexPredTrueBody
-  | 2 => .eqHex
-  | 3 => .abs "a" .hex (.abs "b" .hex (.abs "c" .hex (.boolLit true)))
-  | _ => .boolLit true
+/-! ## § 1.5 Structural catalogue semantics -/
 
 /--
-Conservative total fallback by catalogue signature shape.
+Structural total fallback for catalogue rows.
 
-These bodies are executable and type-checkable, but they are intentionally
-weaker than the 141 exact rows above: they witness the catalogue shape as a total
-interpreter operation, not a full doctrinal/textual denotation.
+These bodies are executable and type-checkable, but intentionally weaker than
+the 141 exact rows above: they preserve the operator id, signature kind, and
+evaluated arguments as a catalogue value instead of projecting fake Hex/Bool
+results.
 -/
-def catalogueShapeBodyFor (sig : CoveredOperatorSignature) : Tm :=
-  match sig.kind with
-  | .propUnary => shapeBoolIdBody
-  | .propImp => Stdlib.impBody
-  | .propConnective => .andB
-  | .binaryModal => Stdlib.impBody
-  | .quantifier =>
-      match sig.arity with
-      | 1 => Stdlib.fanBody
-      | _ => catalogueRelationShapeBody sig.arity
-  | .relation
-  | .containment
-  | .boundary
-  | .identity
-  | .predicate
-  | .query
-  | .invariant
-  | .dialectic
-  | .distinction => catalogueRelationShapeBody sig.arity
-  | _ => catalogueObjectShapeBody sig.arity
+def catalogueStructuralBodyFor (sig : CoveredOperatorSignature) : Tm :=
+  match sig.arity with
+  | 1 => .abs "a" .hex (.catalogue1 sig.id (.var "a"))
+  | 2 => .abs "a" .hex (.abs "b" .hex (.catalogue2 sig.id (.var "a") (.var "b")))
+  | 3 => .abs "a" .hex
+      (.abs "b" .hex
+        (.abs "c" .hex (.catalogue3 sig.id (.var "a") (.var "b") (.var "c"))))
+  | _ => .yi
 
-def catalogueShapeSemanticsFor (id : OperatorId) : ExecutableSemantics :=
+def catalogueStructuralSemanticsFor (id : OperatorId) : ExecutableSemantics :=
   let sig := fullSignatureFor id
   { id := id
-  , body := catalogueShapeBodyFor sig
+  , body := catalogueStructuralBodyFor sig
   , arity := sig.arity
-  , note := "symbolic catalogue normal form for "
+  , note := "structural catalogue normal form for "
       ++ id.code ++ " " ++ id.title ++ " ("
       ++ sig.kind.key ++ "/" ++ toString sig.arity ++ ")" }
 
@@ -287,7 +249,7 @@ def executableSemanticsFor? (id : OperatorId) : Option ExecutableSemantics :=
   match theoremBackedSemanticsFor? id with
   | some sem => some sem
   | none =>
-      if decide (id ∈ allOperatorIds) then some (catalogueShapeSemanticsFor id) else none
+      if decide (id ∈ allOperatorIds) then some (catalogueStructuralSemanticsFor id) else none
 
 /-- Default execution registry used by WenSurface. -/
 def operatorSemanticsRegistry : OperatorSemanticsRegistry :=

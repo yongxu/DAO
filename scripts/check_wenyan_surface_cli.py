@@ -108,6 +108,7 @@ CLI_CASES = [
     (["--operator", "R-1"], "executable note: exact Bool relation/predicate package"),
     (["--operator", "LIJ-9"], "executable note: exact Bool relation/predicate package"),
     (["--operator", "Y-2"], "compound surfaces: 五行"),
+    (["--operator", "Y-2"], "executable note: structural catalogue normal form"),
     (["--operators", "executable"], "operators executable: 371 shown; 371 registered / 371 executable"),
     (["--operators", "known-not-executable"], "operators known-not-executable: 0 shown; 371 registered / 371 executable"),
     (["--operators", "unsupported"], "operators unsupported: 0 shown; 371 registered / 371 executable"),
@@ -115,6 +116,7 @@ CLI_CASES = [
     (["--coverage"], "operators: 371 registered / 371 executable"),
     (["--coverage"], "operator forms: 371 ids with at least one form"),
     (["--help"], "wenyan-surface --json --operators [all|executable|known-not-executable|unsupported]"),
+    (["--help"], "0 symbolic catalogue-shape"),
 ]
 
 JSON_CLI_CASES = [
