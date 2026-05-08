@@ -64,7 +64,7 @@ theorem coverage_counts :
 theorem wenSurface_operator_catalogue_counts :
     fullOperatorSignatures.length = 371
       ∧ operatorRegistryEntries.length = 371
-      ∧ executableRegistryEntries.length = 12
+      ∧ executableRegistryEntries.length = 33
       ∧ allOperatorIds.all (fun id => !(operatorForms id).isEmpty) = true := by
   exact
     ⟨ fullOperatorSignatures_length
@@ -97,7 +97,7 @@ theorem wenSurface_registry_summary :
       ∧ fullOperatorSignatures.length = 371
       ∧ allOperatorCellSemanticRows.length = 71232
       ∧ operatorRegistryEntries.length = 371
-      ∧ executableRegistryEntries.length = 12
+      ∧ executableRegistryEntries.length = 33
       ∧ allOperatorIds.all (fun id => !(operatorForms id).isEmpty) = true
       ∧ executableOperatorIds.all isCatalogueOperator = true
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).signature.id = id) := by

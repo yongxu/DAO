@@ -169,7 +169,7 @@ private def operatorSummaryLine (id : OperatorId) : String :=
 
 private def operatorsOutput (filter : String) : String :=
   if !(operatorListFilterValid filter) then
-    s!"operators: unknown filter \"{filter}\"; expected all, executable, or known-not-executable"
+    s!"operators: unknown filter \"{filter}\"; expected all, executable, known-not-executable, or unsupported"
   else
     let ids := operatorListIds filter
     let header :=
@@ -731,7 +731,7 @@ private def operatorsJsonOutput (filter : String) : String :=
       [ jsonFieldBool "ok" false
       , jsonFieldString "phase" "operators"
       , jsonFieldString "code" "unknown_operator_filter"
-      , jsonFieldString "message" s!"operators: unknown filter \"{filter}\"; expected all, executable, or known-not-executable"
+      , jsonFieldString "message" s!"operators: unknown filter \"{filter}\"; expected all, executable, known-not-executable, or unsupported"
       , jsonFieldString "filter" filter
       ]
   else
@@ -790,7 +790,8 @@ private def usage : String :=
      "       wenyan-surface --help",
      "",
      "Surface vocabulary:",
-     "  Executable operators: 推 比 不 必 同 凡 損 损 益 错 錯 综 綜 互 反",
+     "  Executable operators: 33 theorem-backed rows; run --operators executable for the list",
+     "  Examples include: 推 比 不 必 同 凡 損 损 益 错 錯 综 綜 互 反 則 且 非 或 莫",
      "  Hex consts: 一 乾 坤 plus canonical 64 hexagram names",
      "  Bool consts: 真 假",
      "  Marker: 之 (explicit application/projection marker)",

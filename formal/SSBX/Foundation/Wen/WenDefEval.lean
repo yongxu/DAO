@@ -182,6 +182,18 @@ def denoteHexPred (t : Tm) (h : Hexagram) : Option Bool :=
       | _               => none
   | none => none
 
+/-- Hex → Hex → Bool 之 Tm: binary relation denotation. -/
+def denoteHexRel (t : Tm) (a b : Hexagram) : Option Bool :=
+  match eval [] t with
+  | some v =>
+      match apply v (.hexV a) with
+      | some v' =>
+          match apply v' (.hexV b) with
+          | some (.boolV out) => some out
+          | _                 => none
+      | _ => none
+  | none => none
+
 /-! ## § 6  builtin 等价：.jia/.yi/.eqHex ⟷ YiCore -/
 
 /-- `.jia .yi .yi` denotes «加» «一» «一» = «生» «一». -/
@@ -268,6 +280,39 @@ example :
 /-- 「不」之 denotation 即 boolean negation. -/
 example : denoteBool (.app .notB (.boolLit true)) = some false := by native_decide
 example : denoteBool (.app .notB (.boolLit false)) = some true := by native_decide
+
+/-! ### Promoted logic alias bodies -/
+
+example :
+    denoteBool (.app (.app Stdlib.impBody (.boolLit true)) (.boolLit false))
+      = some false := by native_decide
+
+example :
+    denoteBool (.app (.app Stdlib.impBody (.boolLit false)) (.boolLit false))
+      = some true := by native_decide
+
+example :
+    denoteHexRel Stdlib.neqHexBody «一» «一» = some false := by native_decide
+
+example :
+    denoteHexRel Stdlib.neqHexBody «一» Hexagram.qian = some true := by native_decide
+
+example :
+    denoteBool (.app Stdlib.existsHBody
+      (.abs "h" .hex (.app (.app .eqHex (.var "h")) .yi)))
+      = some true := by native_decide
+
+example :
+    denoteBool (.app Stdlib.noneHBody
+      (.abs "h" .hex (.app (.app .eqHex (.var "h")) .yi)))
+      = some false := by native_decide
+
+example :
+    denoteHex
+      (.app
+        (.app (.app Stdlib.endoCompBody Stdlib.tuiBody) Stdlib.sunBody)
+        .yi)
+      = some «一» := by native_decide
 
 /-- 「凡 (λh. 同 h h)」denotes true (反身性 universally). -/
 theorem self_eq_all_true : denoteBool selfEqAll = some true := by native_decide

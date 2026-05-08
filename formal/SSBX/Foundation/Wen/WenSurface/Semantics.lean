@@ -45,6 +45,27 @@ def executableSemanticsFor? : OperatorSemanticsRegistry
   | .Z_6  => some ⟨.Z_6,  Stdlib.zongBody, 1, "综/綜: Hexagram.zong"⟩
   | .Z_3  => some ⟨.Z_3,  Stdlib.huBody, 1, "互: Hexagram.hu"⟩
   | .T_6  => some ⟨.T_6,  Stdlib.fanReverseBody, 1, "反: object-level reversal as cuo"⟩
+  | .N_3  => some ⟨.N_3,  Stdlib.buBody, 1, "弗: Bool negation alias"⟩
+  | .N_4  => some ⟨.N_4,  Stdlib.buBody, 1, "勿: Bool negation alias"⟩
+  | .N_5  => some ⟨.N_5,  Stdlib.buBody, 1, "毋: Bool negation alias"⟩
+  | .K_1  => some ⟨.K_1,  Stdlib.impBody, 2, "故: Bool implication"⟩
+  | .S_3  => some ⟨.S_3,  Stdlib.impBody, 2, "則/则: Bool implication"⟩
+  | .S_7  => some ⟨.S_7,  Stdlib.impBody, 2, "故: sequential implication alias"⟩
+  | .Z_1  => some ⟨.Z_1,  Stdlib.impBody, 2, "因: Bool implication"⟩
+  | .I_3  => some ⟨.I_3,  Stdlib.tongBody, 2, "即: Hex equality alias"⟩
+  | .I_4  => some ⟨.I_4,  Stdlib.tongBody, 2, "是: Hex equality alias"⟩
+  | .I_5  => some ⟨.I_5,  Stdlib.tongBody, 2, "為/为: Hex equality alias"⟩
+  | .P_4  => some ⟨.P_4,  Stdlib.tongBody, 2, "同: Mohist equality alias"⟩
+  | .N_2  => some ⟨.N_2,  Stdlib.neqHexBody, 2, "非: Hex disequality"⟩
+  | .N_7  => some ⟨.N_7,  Stdlib.neqHexBody, 2, "異/异: Hex disequality"⟩
+  | .P_5  => some ⟨.P_5,  Stdlib.neqHexBody, 2, "異/异: Mohist disequality alias"⟩
+  | .Q_2  => some ⟨.Q_2,  Stdlib.fanBody, 1, "皆: finite forall over Hex"⟩
+  | .Q_4  => some ⟨.Q_4,  Stdlib.noneHBody, 1, "莫: finite no-witness quantifier over Hex"⟩
+  | .Q_5  => some ⟨.Q_5,  Stdlib.existsHBody, 1, "或: finite exists over Hex"⟩
+  | .Q_6  => some ⟨.Q_6,  Stdlib.existsHBody, 1, "有: finite exists over Hex"⟩
+  | .Q_7  => some ⟨.Q_7,  Stdlib.noneHBody, 1, "無/无: finite no-witness quantifier over Hex"⟩
+  | .A_12 => some ⟨.A_12, .andB, 2, "且: Bool conjunction"⟩
+  | .S_2  => some ⟨.S_2,  Stdlib.endoCompBody, 2, "而: Hex endomap composition"⟩
   | _     => none
 
 /-- Default theorem-backed execution registry used by WenSurface. -/
@@ -53,6 +74,8 @@ def operatorSemanticsRegistry : OperatorSemanticsRegistry :=
 
 def executableOperatorIds : List OperatorId :=
   [.T_10, .R_8, .N_1, .M_1, .I_1, .Q_1, .T_12, .T_13, .Z_5, .Z_6, .Z_3, .T_6]
+    ++ [.N_3, .N_4, .N_5, .K_1, .S_3, .S_7, .Z_1, .I_3, .I_4, .I_5, .P_4,
+        .N_2, .N_7, .P_5, .Q_2, .Q_4, .Q_5, .Q_6, .Q_7, .A_12, .S_2]
 
 def isExecutableOperator (id : OperatorId) : Bool :=
   (executableSemanticsFor? id).isSome
@@ -89,7 +112,7 @@ def executableRegistryEntries : List OperatorRegistryEntry :=
   operatorRegistryEntries.filter (fun entry => entry.executable?.isSome)
 
 theorem executableOperatorIds_length :
-    executableOperatorIds.length = 12 := by native_decide
+    executableOperatorIds.length = 33 := by native_decide
 
 theorem executableOperatorIds_registered :
     executableOperatorIds.all isCatalogueOperator = true := by native_decide
@@ -106,12 +129,12 @@ theorem operatorRegistryEntryFor_signature_id (id : OperatorId) :
   exact fullSignatureFor_id id
 
 theorem executableRegistryEntries_length :
-    executableRegistryEntries.length = 12 := by native_decide
+    executableRegistryEntries.length = 33 := by native_decide
 
 theorem operatorRegistryCoverage_summary :
     operatorRegistryEntries.length = 371
-      ∧ executableRegistryEntries.length = 12
-      ∧ executableOperatorIds.length = 12
+      ∧ executableRegistryEntries.length = 33
+      ∧ executableOperatorIds.length = 33
       ∧ executableOperatorIds.all isCatalogueOperator = true
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).id = id)
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).signature.id = id) := by
@@ -126,6 +149,8 @@ theorem operatorRegistryCoverage_summary :
 
 example : (executableSemanticsFor? .Z_5).isSome = true := by native_decide
 example : (executableSemanticsFor? .S_1).isSome = false := by native_decide
+example : (executableSemanticsFor? .Q_5).isSome = true := by native_decide
+example : (executableSemanticsFor? .A_12).isSome = true := by native_decide
 example : (operatorSemanticsRegistry .T_10).isSome = true := by native_decide
 example : parseArityFor .S_1 = 2 := by native_decide
 

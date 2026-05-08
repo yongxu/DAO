@@ -265,12 +265,13 @@ eval      : Tm → Tm                                      -- structural
 ### 3.3 Operator catalogue — 371 OperatorId rows
 
 L1 type-layer is in `WenDef.lean § Stdlib` (representative constructors:
-{tui, bi, bu, biModal, tong, fan, sun, yiBenefit, cuo, zong, hu, fanReverse}); a subset of the surface particles
+{tui, bi, bu, biModal, tong, fan, sun, yiBenefit, cuo, zong, hu, fanReverse,
+imp, neqHex, existsH, noneH, endoComp}); a subset of the surface particles
 (之 / 者 / 而 / 也 / 不 / 凡 / 自 / 相 / 似 / 要 etc.) is named in
 `Foundation/Wen/Operators.lean` with ASCII aliases. The full 371-OperatorId
 catalogue is machine-tracked in `Text/WenyanOperators.lean` and `Text/OperatorCellMap.lean`.
 WenSurface exposes that catalogue as complete diagnostics, but only the
-12 theorem-backed registry rows are executable.
+33 theorem-backed registry rows are executable.
 
 ### 3.4 受控文言 (Controlled Wenyan, M1 grammar)
 
@@ -342,8 +343,8 @@ BaguaWenSpec → WenyanParser → WenyanParserGeneral
 WenyanParser.lean         daoJudgeProg_{print,roundtrip}, allKindReprs_singleton_roundtrip
 WenyanParserGeneral.lean  parseProgN_tokensOfProg (full generality, non-partial)
 WenEval.lean              «端到端_乾», «端到端_坤», «端到端_否»
-WenDef.lean               typeCheck total + 12-body Stdlib (tui/bi/bu/.../hu/fanReverse)
-WenDefEval.lean           tui_eq_sheng + exact Hex transforms (∀ 64 hex)
+WenDef.lean               typeCheck total + 17-body Stdlib (core Hex/Bool + logic aliases)
+WenDefEval.lean           tui_eq_sheng + exact Hex transforms + promoted logic examples
 WenDefCompile.lean        {idProg, add32Prog, cuoProg}_correct, sheng_not_cuo_equivariant
 WenyanReflect.lean        «文核同源» (rfl), «判型良»/«判停»/«验程»
 WenyanSelfHost.lean       «微核自验», «微核自释_total» (Tier 2 quine PoC)

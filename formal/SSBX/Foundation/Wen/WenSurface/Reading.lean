@@ -221,19 +221,40 @@ def executableOperatorFormReadingsForGlyph (glyph : Glyph) : List OperatorReadin
     else
       none)
 
+def executableSemanticsForReading? (r : OperatorReading) : Option ExecutableSemantics :=
+  r.operator?.bind executableSemanticsFor?
+
+def sameExecutableSemantics (sem : ExecutableSemantics) (r : OperatorReading) : Bool :=
+  match executableSemanticsForReading? r with
+  | some sem' => sem'.arity == sem.arity && decide (sem'.body = sem.body)
+  | none => false
+
+/--
+Choose a surface reading when all executable candidates collapse to the same
+typed body.  This keeps true homographic aliases such as `故` (K-1/S-7) usable
+without pretending that different bodies, such as object-level and proposition-
+level `反`, have been disambiguated.
+-/
+def uniqueExecutableReadingBySemantics : List OperatorReading → Option OperatorReading
+  | [] => none
+  | r :: rest =>
+      match executableSemanticsForReading? r with
+      | none => none
+      | some sem =>
+          if rest.all (sameExecutableSemantics sem) then some r else none
+
 def uniqueExecutableCatalogueReading (glyph : Glyph) : Option OperatorReading :=
-  match executableCatalogueReadingsForGlyph glyph with
-  | [r] => some r
-  | _ => none
+  uniqueExecutableReadingBySemantics (executableCatalogueReadingsForGlyph glyph)
 
 def uniqueExecutableReadingForGlyph (glyph : Glyph) : Option OperatorReading :=
-  match executableCatalogueReadingsForGlyph glyph with
-  | [r] => some r
-  | [] =>
-      match executableOperatorFormReadingsForGlyph glyph with
-      | [r] => some r
-      | _ => none
-  | _ => none
+  let catalogue := executableCatalogueReadingsForGlyph glyph
+  match uniqueExecutableReadingBySemantics catalogue with
+  | some r => some r
+  | none =>
+      if catalogue.isEmpty then
+        uniqueExecutableReadingBySemantics (executableOperatorFormReadingsForGlyph glyph)
+      else
+        none
 
 def resolveCatalogueByTable (t : GlyphTok) : Except ResolveErr ResolvedTok :=
   if isUnpromotedHexagramGap t.surface then

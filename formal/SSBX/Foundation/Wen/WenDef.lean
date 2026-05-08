@@ -385,19 +385,109 @@ def fanReverseDef : WenDef where
   validName      := by native_decide
   bodyTypechecks := by native_decide
 
+/-! ### Logic and identity aliases promoted from catalogue-only rows
+
+  These bodies reuse the existing `Bool`, `Hex`, and finite `forallH` core.
+  They deliberately avoid catalogue rows that require new carriers such as
+  `Cell192`, paths, text acts, modal frames, or domain-specific state.
+-/
+
+def impBody : Tm :=
+  .abs "p" .bool
+    (.abs "q" .bool
+      (.app (.app .orB (.app .notB (.var "p"))) (.var "q")))
+
+theorem impBody_typed :
+    typeCheck [] impBody = some (.arr .bool (.arr .bool .bool)) := by native_decide
+
+def impDef : WenDef where
+  name           := "imp"
+  body           := impBody
+  bodyType       := .arr .bool (.arr .bool .bool)
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def neqHexBody : Tm :=
+  .abs "a" .hex
+    (.abs "b" .hex
+      (.app .notB (.app (.app .eqHex (.var "a")) (.var "b"))))
+
+theorem neqHexBody_typed :
+    typeCheck [] neqHexBody = some (.arr .hex (.arr .hex .bool)) := by native_decide
+
+def neqHexDef : WenDef where
+  name           := "neqHex"
+  body           := neqHexBody
+  bodyType       := .arr .hex (.arr .hex .bool)
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def existsHBody : Tm :=
+  .abs "p" (.arr .hex .bool)
+    (.app .notB
+      (.app .forallH
+        (.abs "x" .hex
+          (.app .notB (.app (.var "p") (.var "x"))))))
+
+theorem existsHBody_typed :
+    typeCheck [] existsHBody = some (.arr (.arr .hex .bool) .bool) := by native_decide
+
+def existsHDef : WenDef where
+  name           := "existsH"
+  body           := existsHBody
+  bodyType       := .arr (.arr .hex .bool) .bool
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def noneHBody : Tm :=
+  .abs "p" (.arr .hex .bool)
+    (.app .forallH
+      (.abs "x" .hex
+        (.app .notB (.app (.var "p") (.var "x")))))
+
+theorem noneHBody_typed :
+    typeCheck [] noneHBody = some (.arr (.arr .hex .bool) .bool) := by native_decide
+
+def noneHDef : WenDef where
+  name           := "noneH"
+  body           := noneHBody
+  bodyType       := .arr (.arr .hex .bool) .bool
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def endoCompBody : Tm :=
+  .abs "f" (.arr .hex .hex)
+    (.abs "g" (.arr .hex .hex)
+      (.abs "x" .hex
+        (.app (.var "f") (.app (.var "g") (.var "x")))))
+
+theorem endoCompBody_typed :
+    typeCheck [] endoCompBody =
+      some (.arr (.arr .hex .hex) (.arr (.arr .hex .hex) (.arr .hex .hex))) := by
+  native_decide
+
+def endoCompDef : WenDef where
+  name           := "endoComp"
+  body           := endoCompBody
+  bodyType       := .arr (.arr .hex .hex) (.arr (.arr .hex .hex) (.arr .hex .hex))
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
 /-! ### Stdlib 总表 -/
 
 /-- 当前 stdlib 中已合度且类型化之 wenyan-ops 定义。 -/
 def all : List WenDef :=
   [ tuiDef, biDef, buDef, biModalDef, tongDef, fanDef, sunDef, yiBenefitDef
-  , cuoDef, zongDef, huDef, fanReverseDef ]
+  , cuoDef, zongDef, huDef, fanReverseDef
+  , impDef, neqHexDef, existsHDef, noneHDef, endoCompDef ]
 
-theorem all_length : all.length = 12 := by native_decide
+theorem all_length : all.length = 17 := by native_decide
 
 theorem all_names :
     all.map WenDef.name =
       [ "tui", "bi", "bu", "biModal", "tong", "fan", "sun", "yiBenefit"
-      , "cuo", "zong", "hu", "fanReverse" ] := by
+      , "cuo", "zong", "hu", "fanReverse"
+      , "imp", "neqHex", "existsH", "noneH", "endoComp" ] := by
   native_decide
 
 theorem all_distinct_names : (all.map WenDef.name).Nodup := by native_decide
