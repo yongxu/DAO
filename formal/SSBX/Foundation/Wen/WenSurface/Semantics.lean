@@ -2,7 +2,7 @@
 # WenSurface.Semantics — executable semantics registry
 
 This module separates exact stdlib denotations from total catalogue
-execution.  One hundred sixty-eight `OperatorId`s use exact `WenDef.Tm` bodies:
+execution.  One hundred seventy-three `OperatorId`s use exact `WenDef.Tm` bodies:
 the original high-value stdlib rows, the ObjectEndo/ObjectMap/OpUnary Hex
 transform package, finite Hex pair/list carriers, finite Hex quantifiers, finite Hex motion/process rows,
 plus the Bool relation/predicate package.  Every
@@ -120,11 +120,13 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .C_2  => some ⟨.C_2,  Stdlib.pairHBody, 2, "包: Hex pair carrier constructor"⟩
   | .T_1  => some ⟨.T_1,  Stdlib.flip2Body, 1, "化: Hex y2 transform / inner hua"⟩
   | .T_2  => some ⟨.T_2,  Stdlib.flip3Body, 1, "變/变: Hex y3 transform / inner bian"⟩
+  | .T_3  => some ⟨.T_3,  Stdlib.pairHBody, 2, "易: binary object exchange carrier"⟩
   | .T_4  => some ⟨.T_4,  Stdlib.cuoBody, 1, "革: total Hex overhaul as cuo"⟩
   | .T_5  => some ⟨.T_5,  Stdlib.flip1Body, 1, "改: local Hex y1 correction / inner dong"⟩
   | .T_7  => some ⟨.T_7,  Stdlib.hexIdBody, 1, "復/复: return-to-root as identity anchor"⟩
   | .T_8  => some ⟨.T_8,  Stdlib.hexIdBody, 1, "還/还: return as identity anchor"⟩
   | .T_9  => some ⟨.T_9,  Stdlib.zongBody, 1, "轉/转: Hex rotation/reflection as zong"⟩
+  | .T_11 => some ⟨.T_11, Stdlib.pairHBody, 2, "致: binary object carrier"⟩
   | .T_14 => some ⟨.T_14, Stdlib.sunBody, 1, "屈: Hex contraction as mod-64 decrement"⟩
   | .T_15 => some ⟨.T_15, Stdlib.tuiBody, 1, "伸: Hex extension as mod-64 increment"⟩
   | .B_3  => some ⟨.B_3,  Stdlib.tuiBody, 1, "起: Hex start step as increment"⟩
@@ -176,6 +178,7 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .N_5  => some ⟨.N_5,  Stdlib.buBody, 1, "毋: Bool negation alias"⟩
   | .N_6  => some ⟨.N_6,  Stdlib.buBody, 1, "反: proposition-level Bool negation"⟩
   | .K_1  => some ⟨.K_1,  Stdlib.impBody, 2, "故: Bool implication"⟩
+  | .K_5  => some ⟨.K_5,  Stdlib.pairHBody, 2, "致: causative binary object carrier"⟩
   | .K_6  => some ⟨.K_6,  Stdlib.hexApplyBody, 2, "使: causative Hex endomap application"⟩
   | .K_7  => some ⟨.K_7,  Stdlib.hexApplyBody, 2, "令: command Hex endomap application"⟩
   | .K_8  => some ⟨.K_8,  Stdlib.hexApplyBody, 2, "以: Hex endomap instrument application"⟩
@@ -187,9 +190,11 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .I_3  => some ⟨.I_3,  Stdlib.tongBody, 2, "即: Hex equality alias"⟩
   | .I_4  => some ⟨.I_4,  Stdlib.tongBody, 2, "是: Hex equality alias"⟩
   | .I_5  => some ⟨.I_5,  Stdlib.tongBody, 2, "為/为: Hex equality alias"⟩
+  | .I_7  => some ⟨.I_7,  Stdlib.pairHBody, 2, "合: binary object combination carrier"⟩
   | .P_4  => some ⟨.P_4,  Stdlib.tongBody, 2, "同: Mohist equality alias"⟩
   | .N_2  => some ⟨.N_2,  Stdlib.neqHexBody, 2, "非: Hex disequality"⟩
   | .N_7  => some ⟨.N_7,  Stdlib.neqHexBody, 2, "異/异: Hex disequality"⟩
+  | .N_8  => some ⟨.N_8,  Stdlib.pairHBody, 2, "別/别: binary object distinction carrier"⟩
   | .P_5  => some ⟨.P_5,  Stdlib.neqHexBody, 2, "異/异: Mohist disequality alias"⟩
   | .Q_2  => some ⟨.Q_2,  Stdlib.fanBody, 1, "皆: finite forall over Hex"⟩
   | .Q_4  => some ⟨.Q_4,  Stdlib.noneHBody, 1, "莫: finite no-witness quantifier over Hex"⟩
@@ -228,14 +233,14 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
 def coreTheoremBackedOperatorIds : List OperatorId :=
   [.T_10, .R_8, .N_1, .M_1, .I_1, .Q_1, .T_12, .T_13, .Z_5, .Z_6, .Z_3, .T_6]
     ++ [.R_6, .R_11, .R_12, .R_13, .R_14, .R_15, .C_2,
-        .T_1, .T_2, .T_4, .T_5, .T_7, .T_8, .T_9, .T_14, .T_15,
+        .T_1, .T_2, .T_3, .T_4, .T_5, .T_7, .T_8, .T_9, .T_11, .T_14, .T_15,
         .B_3, .B_4, .B_5, .B_6, .I_2, .I_6, .I_8, .P_9, .D_1, .D_4, .L_9, .L_10,
         .Y_3, .Y_4, .Y_5, .Y_17, .Y_18, .Z_2, .Z_8, .Z_9, .Z_12, .Z_13,
         .Z_16, .Z_17, .Z_18, .Z_22, .Z_29, .Z_31, .Z_32, .Z_33,
         .F_3, .F_4, .F_5, .F_6, .F_9, .F_10, .F_11,
         .L_11, .SUN_6, .Z_10, .Z_11, .Z_36, .Z_37, .ZA_2]
-    ++ [.N_3, .N_4, .N_5, .N_6, .K_1, .K_6, .K_7, .K_8, .L_7, .S_3, .S_7, .Z_1, .I_3, .I_4,
-        .I_5, .P_4, .N_2, .N_7, .P_5, .Q_2, .Q_4, .M_2, .Q_5, .Q_6, .Q_7,
+    ++ [.N_3, .N_4, .N_5, .N_6, .K_1, .K_5, .K_6, .K_7, .K_8, .L_7, .S_3, .S_7, .Z_1, .I_3, .I_4,
+        .I_5, .I_7, .P_4, .N_2, .N_7, .N_8, .P_5, .Q_2, .Q_4, .M_2, .Q_5, .Q_6, .Q_7,
         .Q_3, .Q_8, .D_2, .D_3, .D_9, .D_10, .M_3, .M_4, .M_5, .M_6, .M_7, .M_8,
         .A_4, .A_5, .A_6, .A_11, .A_12, .A_13, .A_14,
         .S_1, .S_2, .S_4, .S_5, .S_6, .S_8]
@@ -255,7 +260,7 @@ def structuralCatalogueOperatorIds : List OperatorId :=
 Structural total fallback for catalogue rows.
 
 These bodies are executable and type-checkable, but intentionally weaker than
-the 168 exact rows above: they preserve the operator id, signature kind, and
+the 173 exact rows above: they preserve the operator id, signature kind, and
 evaluated arguments as a catalogue value instead of projecting fake Hex/Bool
 results.
 -/
@@ -330,10 +335,10 @@ theorem executableOperatorIds_length :
     executableOperatorIds.length = 371 := by native_decide
 
 theorem coreTheoremBackedOperatorIds_length :
-    coreTheoremBackedOperatorIds.length = 122 := by native_decide
+    coreTheoremBackedOperatorIds.length = 127 := by native_decide
 
 theorem theoremBackedOperatorIds_length :
-    theoremBackedOperatorIds.length = 168 := by native_decide
+    theoremBackedOperatorIds.length = 173 := by native_decide
 
 theorem theoremBackedOperatorIds_nodup :
     theoremBackedOperatorIds.Nodup := by native_decide
@@ -343,7 +348,7 @@ theorem theoremBackedOperatorIds_all_semantics :
   native_decide
 
 theorem structuralCatalogueOperatorIds_length :
-    structuralCatalogueOperatorIds.length = 203 := by native_decide
+    structuralCatalogueOperatorIds.length = 198 := by native_decide
 
 theorem structuralCatalogueOperatorIds_all_not_theorem_backed :
     structuralCatalogueOperatorIds.all (fun id => (theoremBackedSemanticsFor? id).isNone) = true := by
@@ -374,8 +379,8 @@ theorem operatorRegistryCoverage_summary :
     operatorRegistryEntries.length = 371
       ∧ executableRegistryEntries.length = 371
       ∧ executableOperatorIds.length = 371
-      ∧ theoremBackedOperatorIds.length = 168
-      ∧ structuralCatalogueOperatorIds.length = 203
+      ∧ theoremBackedOperatorIds.length = 173
+      ∧ structuralCatalogueOperatorIds.length = 198
       ∧ theoremBackedOperatorIds.length + structuralCatalogueOperatorIds.length = 371
       ∧ executableOperatorIds.all isCatalogueOperator = true
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).id = id)

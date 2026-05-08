@@ -124,6 +124,11 @@ CLI_CASES = [
     (["--operator", "R-12"], "executable note: 偶/耦: Hex pair carrier constructor"),
     (["--operator", "R-14"], "executable note: 與/与: Hex pair carrier constructor"),
     (["--operator", "R-15"], "executable note: 偕: Hex pair carrier constructor"),
+    (["--operator", "T-3"], "executable note: 易: binary object exchange carrier"),
+    (["--operator", "T-11"], "executable note: 致: binary object carrier"),
+    (["--operator", "K-5"], "executable note: 致: causative binary object carrier"),
+    (["--operator", "N-8"], "executable note: 別/别: binary object distinction carrier"),
+    (["--operator", "I-7"], "executable note: 合: binary object combination carrier"),
     (["--operator", "Z-18"], "executable note: 散: first Hex projection from a list carrier"),
     (["--operator", "R-1"], "executable note: exact Bool relation/predicate package"),
     (["--operator", "LIJ-9"], "executable note: exact Bool relation/predicate package"),
@@ -136,7 +141,7 @@ CLI_CASES = [
     (["--coverage"], "operators: 371 registered / 371 executable"),
     (["--coverage"], "operator forms: 371 ids with at least one form"),
     (["--help"], "wenyan-surface --json --operators [all|executable|known-not-executable|unsupported]"),
-    (["--help"], "168 exact/theorem-backed; 203 structural catalogue"),
+    (["--help"], "173 exact/theorem-backed; 198 structural catalogue"),
     (["--help"], "0 symbolic catalogue-shape"),
 ]
 
