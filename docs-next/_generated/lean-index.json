@@ -4,7 +4,7 @@
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
-    "Foundation/Modern": 53,
+    "Foundation/Modern": 54,
     "Foundation/Wen": 51,
     "Foundation/Yi": 2,
     "Model": 2,
@@ -169,6 +169,7 @@
         "SSBX.Foundation.Modern.QuantumRelativityEndpointSupportNormalizationBridge",
         "SSBX.Foundation.Modern.QuantumRelativityTwoRouteEnumerationBridge",
         "SSBX.Foundation.Modern.QuantumRelativityPathIdentityBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityFiniteKeyQuotientBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -187,10 +188,10 @@
         "SSBX.Foundation.Modern.IIDWlln",
         "SSBX.Foundation.Modern.BochnerPL"
       ],
-      "lines": 179,
+      "lines": 180,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "c12ccdb36f3382c56fbb7448c196929d1fa0feb75caee0ce00d716cecf28a8b7"
+      "sha256": "0c2f51223569095f93867983fbeae7abd875ffe268ac16b7edfe077496582126"
     },
     {
       "cluster": "root",
@@ -10605,6 +10606,127 @@
       "module": "SSBX.Foundation.Modern.QuantumRelativityEndpointSupportNormalizationBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean",
       "sha256": "037a146eb95a2f64e232682da074d11424415ceab17f6d77fcc80e51dc5ab050"
+    },
+    {
+      "cluster": "Foundation/Modern",
+      "declaration_count": 27,
+      "declarations": [
+        {
+          "kind": "def",
+          "name": "TwoStepPathKeyEquivalent"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_step_path_key_equiv_refl"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_step_path_key_equiv_symm"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_step_path_key_equiv_trans"
+        },
+        {
+          "kind": "structure",
+          "name": "TwoStepKeyAmplitudeCandidate"
+        },
+        {
+          "kind": "def",
+          "name": "PathAmplitudeFactorsThroughKey"
+        },
+        {
+          "kind": "theorem",
+          "name": "key_equivalent_paths_amplitude_eq"
+        },
+        {
+          "kind": "def",
+          "name": "endpointIndexedKeyList"
+        },
+        {
+          "kind": "def",
+          "name": "twoStepKeyAmplitudeSum"
+        },
+        {
+          "kind": "def",
+          "name": "twoStepKeyBornWeight"
+        },
+        {
+          "kind": "def",
+          "name": "duplicateTwoStepPathKeyList"
+        },
+        {
+          "kind": "theorem",
+          "name": "endpoint_key_sum_eq_path_sum_of_factor_list"
+        },
+        {
+          "kind": "theorem",
+          "name": "endpoint_indexed_key_sum_eq_path_sum_of_factor"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_step_key_amplitude_sum_append"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_step_key_amplitude_sum_duplicate"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_step_key_duplicate_cancels_of_canceling"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_step_key_duplicate_born_weight_zero_of_canceling"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteDisplayedKeyAmplitude"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteKeyAmplitudeCandidate"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_upper_key_amplitude"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_lower_key_amplitude"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_endpoint_indexed_key_list_eq"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_key_amplitude_sum_cancels"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_key_born_weight_zero"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_duplicated_key_amplitude_sum_cancels"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_duplicated_key_born_weight_zero"
+        },
+        {
+          "kind": "theorem",
+          "name": "finite_key_quotient_bridge_summary"
+        }
+      ],
+      "imports": [
+        "SSBX.Foundation.Modern.QuantumRelativityPathIdentityBridge"
+      ],
+      "lines": 319,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityFiniteKeyQuotientBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean",
+      "sha256": "918d19e574cdf5e76955f04510f49879b4573da7c6e49248c2f4b448c2d36bfe"
     },
     {
       "cluster": "Foundation/Modern",
