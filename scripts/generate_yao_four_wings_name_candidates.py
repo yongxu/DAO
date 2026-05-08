@@ -13,31 +13,31 @@ OUT = ROOT / "docs-next" / "40_reference_参考" / "yao-four-wings-name-candidat
 
 
 YAO_POSITIONS = [
-    ("Y1", 0, "初", "初爻", "下始", "始", "发端", "发端", "初心", "始生", "initial line", "first coordinate / lower boundary"),
-    ("Y2", 1, "二", "二爻", "下中", "承", "承接", "中正", "受持", "承载", "second line", "lower-middle support coordinate"),
-    ("Y3", 2, "三", "三爻", "下终", "际", "临界", "慎独", "转处", "关口", "third line", "inner threshold / phase boundary"),
-    ("Y4", 3, "四", "四爻", "上始", "进", "进入", "近君", "趋向", "升转", "fourth line", "outer-entry coordinate"),
-    ("Y5", 4, "五", "五爻", "上中", "中", "中位", "中庸", "正中", "中和", "fifth line", "upper-middle governing coordinate"),
-    ("Y6", 5, "上", "上爻", "上终", "终", "终极", "成德", "究竟", "复归", "top line", "terminal coordinate / overflow boundary"),
+    ("Y1", 0, "初", "初爻", "下始", "始 / 一 / 初爻", "发端", "发端", "初心", "始生", "initial line", "first coordinate / lower boundary"),
+    ("Y2", 1, "承", "二爻", "下中", "二 / 下中 / 二爻", "承接", "中正", "受持", "承载", "second line", "lower-middle support coordinate"),
+    ("Y3", 2, "际", "三爻", "下终", "三 / 界 / 下终 / 三爻", "临界", "慎独", "转处", "关口", "third line", "inner threshold / phase boundary"),
+    ("Y4", 3, "近", "四爻", "上始", "四 / 上始 / 四爻", "近接", "近君", "趋向", "升转", "fourth line", "outer-entry coordinate"),
+    ("Y5", 4, "主", "五爻", "上中", "五 / 上中 / 中 / 君 / 尊 / 五爻", "主位", "中庸", "正中", "中和", "fifth line", "upper-middle governing coordinate"),
+    ("Y6", 5, "极", "上爻", "上终", "上 / 终 / 穷 / 上爻", "终极", "成德", "究竟", "复归", "top line", "terminal coordinate / overflow boundary"),
 ]
 
 
 # Working four-wing grouping for this review table.  The canonical 十翼 can be
 # split more finely later; this table keeps the naming surface compact.
 WINGS = [
-    ("TUAN", 0, "彖", "彖传", "断", "断义", "总断", "断义", "判相", "裁成", "judgment", "global classifier / summary predicate"),
-    ("XIANG", 1, "象", "象传", "象", "取象", "象意", "观象", "现相", "取象", "image", "observable representation"),
-    ("WENYAN", 2, "文", "文言", "文", "文释", "文义", "修辞", "名言", "文理", "wording", "semantic annotation"),
-    ("XICI", 3, "系", "系辞", "系", "系辞", "关联", "系理", "缘系", "连属", "appended statement", "recursive linkage / meta-theory"),
+    ("TUAN", 0, "彖", "彖传", "彖传 / 断 / 斷 / 总断", "断义", "总断", "断义", "判相", "裁成", "judgment", "global classifier / summary predicate"),
+    ("XIANG", 1, "象", "象传", "象传 / 取象 / 象意", "取象", "象意", "观象", "现相", "取象", "image", "observable representation"),
+    ("WENYAN", 2, "文", "文言", "文言 / 文释 / 文义", "文释", "文义", "修辞", "名言", "文理", "wording", "semantic annotation"),
+    ("XICI", 3, "系", "系辞", "系辞 / 关联", "系辞", "关联", "系理", "缘系", "连属", "appended statement", "recursive linkage / meta-theory"),
 ]
 
 
 OPERATORS = [
-    ("YOP-1", "yao", "升", "上行", "YaoPos -> Option YaoPos", "初→二→三→四→五→上", "move upward", "successor on finite line positions"),
-    ("YOP-2", "yao", "降", "下行", "YaoPos -> Option YaoPos", "上→五→四→三→二→初", "move downward", "predecessor on finite line positions"),
+    ("YOP-1", "yao", "升", "上行", "YaoPos -> Option YaoPos", "初→承→际→近→主→极", "move upward", "successor on finite line positions"),
+    ("YOP-2", "yao", "降", "下行", "YaoPos -> Option YaoPos", "极→主→近→际→承→初", "move downward", "predecessor on finite line positions"),
     ("YOP-3", "yao", "比", "相邻", "YaoPos × YaoPos -> Bool", "相邻爻位", "adjacent", "path adjacency"),
-    ("YOP-4", "yao", "应", "相应", "YaoPos × YaoPos -> Bool", "初/四、二/五、三/上", "correspond", "paired coordinate relation"),
-    ("YOP-5", "yao", "中", "中位", "YaoPos -> Bool", "二、五为中", "middle position", "middle-coordinate predicate"),
+    ("YOP-4", "yao", "应", "相应", "YaoPos × YaoPos -> Bool", "初/近、承/主、际/极", "correspond", "paired coordinate relation"),
+    ("YOP-5", "yao", "中", "中位", "YaoPos -> Bool", "承、主为中", "middle position", "middle-coordinate predicate"),
     ("YOP-6", "yao", "正", "当位", "YaoPos × YaoPolarity -> Bool", "阳居阳位、阴居阴位", "correct position", "parity-position predicate"),
     ("YOP-7", "yao", "承", "承上", "YaoPos × YaoPos -> Bool", "下位承其上一位", "support above", "ordered support relation"),
     ("YOP-8", "yao", "乘", "乘下", "YaoPos × YaoPos -> Bool", "上位乘其下一位", "ride below", "reverse ordered support relation"),
@@ -45,14 +45,28 @@ OPERATORS = [
     ("WOP-2", "wing", "综", "统综", "List Wing -> WingSummary", "四翼合看", "synthesize", "fold over interpretive lenses"),
     ("WOP-3", "wing", "分", "析分", "WingSummary -> List Wing", "统义分回四翼", "decompose", "projection from summary to lenses"),
     ("WOP-4", "wing", "互", "互释", "Wing × Wing -> Relation", "翼与翼互相解释", "cross-interpret", "binary relation between lenses"),
-    ("GOP-1", "grid", "释", "翼释爻", "Wing × YaoPos -> YaoWing", "用一翼解释一爻", "interpret line", "product introduction"),
-    ("GOP-2", "grid", "取", "取爻", "YaoWing -> YaoPos", "从格点取爻位", "project line", "first projection"),
-    ("GOP-3", "grid", "属", "取翼", "YaoWing -> Wing", "从格点取所属翼", "project wing", "second projection"),
-    ("GOP-4", "grid", "同爻", "同一爻位", "YaoWing × YaoWing -> Bool", "爻位相同", "same line", "first-coordinate equality"),
-    ("GOP-5", "grid", "同翼", "同一解释翼", "YaoWing × YaoWing -> Bool", "翼相同", "same wing", "second-coordinate equality"),
-    ("GOP-6", "grid", "进爻", "同翼升爻", "YaoWing -> Option YaoWing", "同一翼内上行一爻", "advance line", "map successor over first coordinate"),
-    ("GOP-7", "grid", "转翼", "同爻转翼", "YaoWing -> YaoWing", "同一爻位转到下一翼", "advance wing", "map successor over second coordinate"),
+    ("GOP-1", "grid", "释爻", "释 / 翼释爻", "Wing × YaoPos -> YaoWing", "用一翼解释一爻", "interpret line", "product introduction"),
+    ("GOP-2", "grid", "取爻", "取", "YaoWing -> YaoPos", "从格点取爻位", "project line", "first projection"),
+    ("GOP-3", "grid", "取翼", "属 / 屬", "YaoWing -> Wing", "从格点取所属翼", "project wing", "second projection"),
+    ("GOP-4", "grid", "同爻", "同一爻位 / 侔", "YaoWing × YaoWing -> Bool", "爻位相同", "same line", "first-coordinate equality"),
+    ("GOP-5", "grid", "同翼", "同一解释翼 / 伦 / 倫", "YaoWing × YaoWing -> Bool", "翼相同", "same wing", "second-coordinate equality"),
+    ("GOP-6", "grid", "升爻", "进爻 / 陟", "YaoWing -> Option YaoWing", "同一翼内上行一爻", "advance line", "map successor over first coordinate"),
+    ("GOP-7", "grid", "转翼", "递 / 遞 / 同爻转翼", "YaoWing -> YaoWing", "同一爻位转到下一翼", "advance wing", "map successor over second coordinate"),
 ]
+
+
+YAO_PAIR_ALIASES = {
+    "Y2": ["二"],
+    "Y3": ["三"],
+    "Y4": ["四"],
+    "Y5": ["五"],
+    "Y6": ["上"],
+}
+
+
+WING_PAIR_ALIASES = {
+    "TUAN": ["断", "斷"],
+}
 
 
 def md(s: object) -> str:
@@ -116,7 +130,10 @@ def pair_surface(yao: tuple, wing: tuple) -> str:
 
 
 def pair_alias(yao: tuple, wing: tuple) -> str:
-    return yao[2] + "之" + wing[2]
+    aliases = [yao[2] + "之" + wing[2]]
+    aliases.extend(y + wing[2] for y in YAO_PAIR_ALIASES.get(yao[0], []))
+    aliases.extend(yao[2] + w for w in WING_PAIR_ALIASES.get(wing[0], []))
+    return " / ".join(dict.fromkeys(aliases))
 
 
 def main() -> None:
@@ -133,9 +150,10 @@ def main() -> None:
     out.append("> Working definition: 四翼 = `彖 / 象 / 文言 / 系辞`. This is a naming review table, not a parser or theorem change.\n\n")
     out.append("目的：给六爻位与四个解释翼之间的 24 个组合准备可审阅 surface 候选。它与 `Cell192` 命名表相同，只登记候选、别名、跨传统说明、英文和形式逻辑对应；后续是否 promotion 到 WenSurface 另行决定。\n\n")
     out.append("## 审阅规则\n\n")
-    out.append("- 枚举顺序为 `初/二/三/四/五/上 × 彖/象/文/系`。\n")
-    out.append("- `古文候选` 是短 surface；`保留别名` 使用 `爻位之翼`，更可读但更长。\n")
+    out.append("- 枚举顺序为 `初/承/际/近/主/极 × 彖/象/文/系`。\n")
+    out.append("- `古文候选` 是短 surface；`保留别名` 保留数字、传统爻位名和 `爻位之翼` 组合。\n")
     out.append("- `四翼` 在此先合并十翼为四类：彖断、象观、文言释义、系辞系理；说卦/序卦/杂卦可另表追加。\n")
+    out.append("- `grid` 层算子默认采用组合名，例如 `同爻/同翼/升爻/转翼`，单字只作为别名。\n")
     out.append("- `冲突提示` 只提示与当前 operator/readings/reserved 字的静态冲突，不代表禁用。\n\n")
     out.append("## 覆盖审计\n\n")
     out.append("| Item | Count |\n|---|---:|\n")
@@ -159,7 +177,7 @@ def main() -> None:
     for wing in WINGS:
         code, idx, short, name, default, compound, modern, ru, fo, dao, english, formal = wing
         collision, ids = collision_info(short)
-        out.append(line([code, idx, name, short, name, modern, ru, fo, dao, english, formal, collision, ids]))
+        out.append(line([code, idx, name, short, default, modern, ru, fo, dao, english, formal, collision, ids]))
 
     out.append("\n## 候选算子目录\n\n")
     out.append("| op_id | layer | 古文算子 | 保留别名 | type sketch | law / relation | English | Formal logic | 冲突提示 | operator_collision_ids |\n")
