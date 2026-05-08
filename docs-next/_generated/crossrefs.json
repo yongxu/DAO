@@ -1144,6 +1144,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportAlgebraBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityStepwiseUnificationBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleBornBoundaryBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleChannelBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityTwoRouteEnumerationBridge.lean",
@@ -1209,6 +1210,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportAlgebraBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityStepwiseUnificationBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleBornBoundaryBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleChannelBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityTwoRouteEnumerationBridge.lean",
@@ -3627,6 +3629,60 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeAssociativityBridge.lean"
           ],
           "symbol": "operatorCellGrid_no_channel_diagonal_identity"
+        }
+      ]
+    },
+    {
+      "document": "义理/sum-over-middle Born边界候选 · Markov桥S16.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleBornBoundaryBridge.lean"
+          ],
+          "symbol": "SumOverMiddleBornDistributionBoundary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleBornBoundaryBridge.lean"
+          ],
+          "symbol": "SumOverMiddleBornDistributionBoundaryClosed"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleBornBoundaryBridge.lean"
+          ],
+          "symbol": "concrete_composed_endpoint_amplitude_support_normalized"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleBornBoundaryBridge.lean"
+          ],
+          "symbol": "concrete_sumOverMiddle_endpoint_amplitude_support"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleBornBoundaryBridge.lean"
+          ],
+          "symbol": "sumOverMiddleEndpointAmplitudeSupport"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleBornBoundaryBridge.lean"
+          ],
+          "symbol": "sum_over_middle_born_distribution_boundary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleBornBoundaryBridge.lean"
+          ],
+          "symbol": "sum_over_middle_born_distribution_boundary_closed"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleBornBoundaryBridge.lean"
+          ],
+          "symbol": "sum_over_middle_born_distribution_bridge_summary"
         }
       ]
     },

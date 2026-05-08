@@ -167,6 +167,7 @@ import SSBX.Foundation.Modern.QuantumRelativityBornDistributionBridge
 import SSBX.Foundation.Modern.QuantumRelativityChannelComposeBridge
 import SSBX.Foundation.Modern.QuantumRelativityChannelComposeAssociativityBridge
 import SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleChannelBridge
+import SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleBornBoundaryBridge
 import SSBX.Foundation.Modern.SUN
 
 -- Phase 4 主体续（自然演绎 / Lebesgue 积分 / 连续 ODE / 神经科学 / 完备性深化）

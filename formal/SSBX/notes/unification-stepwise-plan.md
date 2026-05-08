@@ -96,6 +96,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityBornDistributionBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityChannelComposeBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityChannelComposeAssociativityBridge
 lake build SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleChannelBridge
+lake build SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleBornBoundaryBridge
 lake build SSBX
 git diff --check --
 ```
@@ -1005,6 +1006,40 @@ sum_over_middle_channel_bridge_summary。
 | `concrete_prepared_measured_not_one_step` | `QuantumRelativitySumOverMiddleChannelBridge.lean` | 同一 endpoint pair 不是 concrete one-step edge |
 | `sum_over_middle_channel_bridge_summary` | `QuantumRelativitySumOverMiddleChannelBridge.lean` | S15 finite middle-list composition boundary 已关闭 |
 
+## S16 · sum-over-middle Born 边界候选
+
+目标：把 S15 composed endpoint amplitude support 接到 S12 finite Born distribution boundary。S16 仍是条件式：support 已由 `ampProb` 归一时才给出 probability interface。
+
+| 项 | 内容 |
+|---|---|
+| Lean 出口 | `sum_over_middle_born_distribution_bridge_summary` |
+| 最低 theorem 形态 | 合取 `SumOverMiddleChannelBoundaryClosed`、`BornDistributionBoundaryClosed`、`SumOverMiddleBornDistributionBoundaryClosed`、concrete `[1]` support 与 Wen coverage |
+| 失败记录 | concrete dependent existential witness 展开时触发 `whnf` heartbeat timeout；改用 generic closed boundary + concrete normalized input |
+| 文档更新 | 已新增《sum-over-middle Born边界候选 · Markov桥S16》 |
+| 后续结构 | unitary/CPTP ledger、metric recovery 与 empirical closure |
+
+通过判准：
+
+```text
+sumOverMiddleEndpointAmplitudeSupport；
+SumOverMiddleBornDistributionBoundary；
+sum_over_middle_born_distribution_boundary；
+sum_over_middle_born_distribution_boundary_closed；
+concrete_sumOverMiddle_endpoint_amplitude_support；
+concrete_composed_endpoint_amplitude_support_normalized；
+sum_over_middle_born_distribution_bridge_summary。
+```
+
+当前状态：
+
+| theorem | 文件 | 读法 |
+|---|---|---|
+| `sum_over_middle_born_distribution_boundary` | `QuantumRelativitySumOverMiddleBornBoundaryBridge.lean` | normalized composed endpoint amplitude support 进入 S12 finite Born boundary |
+| `sum_over_middle_born_distribution_boundary_closed` | `QuantumRelativitySumOverMiddleBornBoundaryBridge.lean` | 条件式 composed Born boundary 对任意 endpoint support 关闭 |
+| `concrete_sumOverMiddle_endpoint_amplitude_support` | `QuantumRelativitySumOverMiddleBornBoundaryBridge.lean` | concrete composed support 的 amplitude list 为 `[1]` |
+| `concrete_composed_endpoint_amplitude_support_normalized` | `QuantumRelativitySumOverMiddleBornBoundaryBridge.lean` | concrete composed support normalized |
+| `sum_over_middle_born_distribution_bridge_summary` | `QuantumRelativitySumOverMiddleBornBoundaryBridge.lean` | S16 composed Born boundary 已关闭 |
+
 ## 失败记录追加区
 
 失败记录格式沿用验证计划，并允许追加在此区：
@@ -1055,6 +1090,7 @@ sum_over_middle_channel_bridge_summary。
 | 2026-05-09 | S13 | success | `channelCompose` stdin 试探一次通过；关闭 current skeleton 的 channel composition candidate，仍不证明 physical unitary/CPTP channel law |
 | 2026-05-09 | S14 | failure retained / success | 第一次 identity obstruction 试探中未展开 `QuantumAmplitudeSupport` 导致 rewrite 找不到目标；展开 support 后关闭 pointwise associativity 与 diagonal identity obstruction |
 | 2026-05-09 | S15 | failure retained / success | 第一次 sum-over-middle support proof 试探中 `List.mem_map` 等式方向写反；改为 `rw [hbeq]` 并展开 `QuantumAmplitudeSupport` 后关闭 finite middle-list composition 的 two-step boundary |
+| 2026-05-09 | S16 | failure retained / success | concrete dependent existential witness 展开到 structure fields 时触发 `whnf` heartbeat timeout；保留 generic closed boundary 与 concrete normalized `[1]` input，关闭 composed Born boundary |
 
 ## 统一用语正名
 
@@ -1062,9 +1098,9 @@ sum_over_middle_channel_bridge_summary。
 
 | 词 | 在本路线中的含义 | 结构依据 |
 |---|---|---|
-| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S15 已关闭的 summary theorem 与路线日志 |
-| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8-S15 pending list |
-| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary`、`normalized_mass_bridge_summary`、`born_weight_normalization_bridge_summary`、`born_distribution_bridge_summary`、`channel_compose_bridge_summary`、`channel_compose_associativity_bridge_summary`、`sum_over_middle_channel_bridge_summary` |
+| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S16 已关闭的 summary theorem 与路线日志 |
+| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8-S16 pending list |
+| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary`、`normalized_mass_bridge_summary`、`born_weight_normalization_bridge_summary`、`born_distribution_bridge_summary`、`channel_compose_bridge_summary`、`channel_compose_associativity_bridge_summary`、`sum_over_middle_channel_bridge_summary`、`sum_over_middle_born_distribution_bridge_summary` |
 
 推荐正名句：
 

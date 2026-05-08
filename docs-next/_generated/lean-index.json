@@ -4,7 +4,7 @@
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
-    "Foundation/Modern": 68,
+    "Foundation/Modern": 69,
     "Foundation/Wen": 51,
     "Foundation/Yi": 2,
     "Model": 2,
@@ -184,6 +184,7 @@
         "SSBX.Foundation.Modern.QuantumRelativityChannelComposeBridge",
         "SSBX.Foundation.Modern.QuantumRelativityChannelComposeAssociativityBridge",
         "SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleChannelBridge",
+        "SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleBornBoundaryBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -202,10 +203,10 @@
         "SSBX.Foundation.Modern.IIDWlln",
         "SSBX.Foundation.Modern.BochnerPL"
       ],
-      "lines": 194,
+      "lines": 195,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "e63a1f6dd080c60870cf39a8c7745610cb9be878f8fb22933a9f7057bdc0f9e9"
+      "sha256": "9c0707753cf25fbd97e5611073c6cf94d8480930e623274baff37df78e7685e9"
     },
     {
       "cluster": "root",
@@ -12529,6 +12530,60 @@
       "module": "SSBX.Foundation.Modern.QuantumRelativityStepwiseUnificationBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityStepwiseUnificationBridge.lean",
       "sha256": "9ce719d8ae973d4eac895f5363564d6ec3d595fd9e27052157edbd55036e8b40"
+    },
+    {
+      "cluster": "Foundation/Modern",
+      "declaration_count": 10,
+      "declarations": [
+        {
+          "kind": "def",
+          "name": "sumOverMiddleEndpointAmplitudeSupport"
+        },
+        {
+          "kind": "structure",
+          "name": "SumOverMiddleBornDistributionBoundary"
+        },
+        {
+          "kind": "def",
+          "name": "sumOverMiddleBornDistributionBoundary"
+        },
+        {
+          "kind": "theorem",
+          "name": "sum_over_middle_born_distribution_boundary"
+        },
+        {
+          "kind": "def",
+          "name": "SumOverMiddleBornDistributionBoundaryClosed"
+        },
+        {
+          "kind": "theorem",
+          "name": "sum_over_middle_born_distribution_boundary_closed"
+        },
+        {
+          "kind": "def",
+          "name": "concreteComposedEndpointSupport"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_sumOverMiddle_endpoint_amplitude_support"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_composed_endpoint_amplitude_support_normalized"
+        },
+        {
+          "kind": "theorem",
+          "name": "sum_over_middle_born_distribution_bridge_summary"
+        }
+      ],
+      "imports": [
+        "Mathlib.Tactic",
+        "SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleChannelBridge"
+      ],
+      "lines": 182,
+      "module": "SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleBornBoundaryBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleBornBoundaryBridge.lean",
+      "sha256": "8162d5204783c8e18cd6cec98690db846c7a68ebb58014b5034ece221bb48a61"
     },
     {
       "cluster": "Foundation/Modern",
