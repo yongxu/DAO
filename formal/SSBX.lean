@@ -60,6 +60,8 @@ import SSBX.Foundation.Wen.MetaInterp.Block_Branches
 import SSBX.Foundation.Wen.MetaInterp.Block_PushPop
 import SSBX.Foundation.Wen.MetaInterp.Fetch
 import SSBX.Foundation.Wen.MetaInterp.Dispatch
+import SSBX.Foundation.Wen.MetaInterp.SubDispatch_BranchShiEq
+import SSBX.Foundation.Wen.MetaInterp.SubDispatch_BranchYaoEq
 import SSBX.Foundation.Wen.MetaInterp.OuterLoop
 import SSBX.Foundation.Wen.WenDef
 import SSBX.Foundation.Wen.WenyanParser
