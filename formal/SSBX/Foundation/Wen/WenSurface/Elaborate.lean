@@ -10,7 +10,8 @@
   其余 54 个 catalogue operator elaborates to structural catalogue normal forms。
 - **常值**：「一」 → `.yi` primitive；64 卦名 / aliases → `.hexLit h`。
 - **组合**：显式 `SurfaceExpr.app` 左结合到 `Tm.app`。
-- **绑定**：Hex-only `者` lambda、`凡` forall、`令` let。
+- **绑定**：`者` lambda / `令` let 支持 Hex-first, Bool fallback；
+  `凡` forall 仍是 Hex universe quantifier。
 - **同字冲突**：`hexOrOp` 在 parser 已消歧；elab fallback 只把它当 hex literal。
 
 ## 状态
@@ -200,72 +201,93 @@ def symbolicCatalogueHead? (tok : ResolvedTok) (arity : Nat) : Option OperatorId
       | none => none
   | _ => none
 
-def elabSurfaceExpr : SurfaceExpr → Except ElabErr Tm
+def elabSurfaceExprWithCtx (ctx : Ctx) : SurfaceExpr → Except ElabErr Tm
   | .atom tok => atomToTmAt tok
   | .app (.atom tok) a =>
       match symbolicCatalogueHead? tok 1 with
       | some id =>
-          match elabSurfaceExpr a with
+          match elabSurfaceExprWithCtx ctx a with
           | .ok ta => .ok (.catalogue1 id ta)
           | .error e => .error e
       | none =>
-          match atomToTmAt tok, elabSurfaceExpr a with
+          match atomToTmAt tok, elabSurfaceExprWithCtx ctx a with
           | .ok tf, .ok ta => .ok (.app tf ta)
           | .error e, _ => .error e
           | _, .error e => .error e
   | .app (.app (.atom tok) a) b =>
       match symbolicCatalogueHead? tok 2 with
       | some id =>
-          match elabSurfaceExpr a, elabSurfaceExpr b with
+          match elabSurfaceExprWithCtx ctx a, elabSurfaceExprWithCtx ctx b with
           | .ok ta, .ok tb => .ok (.catalogue2 id ta tb)
           | .error e, _ => .error e
           | _, .error e => .error e
       | none =>
-          match elabSurfaceExpr (.app (.atom tok) a), elabSurfaceExpr b with
+          match elabSurfaceExprWithCtx ctx (.app (.atom tok) a), elabSurfaceExprWithCtx ctx b with
           | .ok tf, .ok tb => .ok (.app tf tb)
           | .error e, _ => .error e
           | _, .error e => .error e
   | .app (.app (.app (.atom tok) a) b) c =>
       match symbolicCatalogueHead? tok 3 with
       | some id =>
-          match elabSurfaceExpr a, elabSurfaceExpr b, elabSurfaceExpr c with
+          match elabSurfaceExprWithCtx ctx a, elabSurfaceExprWithCtx ctx b, elabSurfaceExprWithCtx ctx c with
           | .ok ta, .ok tb, .ok tc => .ok (.catalogue3 id ta tb tc)
           | .error e, _, _ => .error e
           | _, .error e, _ => .error e
           | _, _, .error e => .error e
       | none =>
-          match elabSurfaceExpr (.app (.app (.atom tok) a) b), elabSurfaceExpr c with
+          match elabSurfaceExprWithCtx ctx (.app (.app (.atom tok) a) b), elabSurfaceExprWithCtx ctx c with
           | .ok tf, .ok tc => .ok (.app tf tc)
           | .error e, _ => .error e
           | _, .error e => .error e
   | .app f x =>
-      match elabSurfaceExpr f, elabSurfaceExpr x with
+      match elabSurfaceExprWithCtx ctx f, elabSurfaceExprWithCtx ctx x with
       | .ok tf, .ok tx => .ok (.app tf tx)
       | .error e, _ => .error e
       | _, .error e => .error e
-  | .seq [x] => elabSurfaceExpr x
+  | .seq [x] => elabSurfaceExprWithCtx ctx x
   | .seq _ => .error (.unsupportedConstruction "seq")
-  | .marker _ body => elabSurfaceExpr body
+  | .marker _ body => elabSurfaceExprWithCtx ctx body
   | .binder .lambda name body =>
-      match elabSurfaceExpr body with
-      | .ok t => .ok (.abs name .hex t)
-      | .error e => .error e
+      match elabSurfaceExprWithCtx ((name, .hex) :: ctx) body with
+      | .ok tHex =>
+          let hexAbs := .abs name .hex tHex
+          if (typeCheck ctx hexAbs).isSome then
+            .ok hexAbs
+          else
+            match elabSurfaceExprWithCtx ((name, .bool) :: ctx) body with
+            | .ok tBool =>
+                let boolAbs := .abs name .bool tBool
+                if (typeCheck ctx boolAbs).isSome then .ok boolAbs else .ok hexAbs
+            | .error _ => .ok hexAbs
+      | .error hexErr =>
+          match elabSurfaceExprWithCtx ((name, .bool) :: ctx) body with
+          | .ok tBool => .ok (.abs name .bool tBool)
+          | .error _ => .error hexErr
   | .binder .forallHex name body =>
-      match elabSurfaceExpr body with
+      match elabSurfaceExprWithCtx ((name, .hex) :: ctx) body with
       | .ok t => .ok (.app .forallH (.abs name .hex t))
       | .error e => .error e
   | .letBind name value body =>
-      match elabSurfaceExpr value, elabSurfaceExpr body with
-      | .ok tv, .ok tb => .ok (.app (.abs name .hex tb) tv)
-      | .error e, _ => .error e
-      | _, .error e => .error e
+      match elabSurfaceExprWithCtx ctx value with
+      | .ok tv =>
+          let dom :=
+            match typeCheck ctx tv with
+            | some .bool => .bool
+            | _ => .hex
+          match elabSurfaceExprWithCtx ((name, dom) :: ctx) body with
+          | .ok tb => .ok (.app (.abs name dom tb) tv)
+          | .error e => .error e
+      | .error e => .error e
   | .construction "之又" [inner] =>
-      match elabSurfaceExpr inner with
+      match elabSurfaceExprWithCtx ctx inner with
       | .error e => .error e
       | .ok (.app f x) => .ok (.app f (.app f x))
       | .ok _ => .error .empty
-  | .grouped _ _ body => elabSurfaceExpr body
+  | .grouped _ _ body => elabSurfaceExprWithCtx ctx body
   | .construction name _ => .error (.unsupportedConstruction name)
+
+def elabSurfaceExpr (expr : SurfaceExpr) : Except ElabErr Tm :=
+  elabSurfaceExprWithCtx [] expr
 
 /-- Diagnostic type inference used only by WenSurface errors.
     `WenDef.typeCheck` remains the kernel checker; this mirrors it while

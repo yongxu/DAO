@@ -14,7 +14,7 @@ cuo-equivariant 子集 commute 作 future work）。
 ## 当前范围
 
 - cue-aware resolver + explicit `SurfaceExpr` AST
-- 64 卦名 / aliases + Bool literals + Hex-only binders
+- 64 卦名 / aliases + Bool literals + Hex-first/Bool-fallback lambdas and lets
 - executable registry 覆盖全部 371 个 OperatorId
 - 317 个 exact/theorem-backed operator 可求 Hex/Bool/Pair/List；其余 catalogue rows 求 structural normal form
 - unpromoted gap form 只诊断，不伪造 denotation
@@ -959,6 +959,25 @@ example : (wenyanInterpBool "（同 乾） 乾").toOption = some true := by nati
 example : (wenyanInterp "者 甲 推 甲 乾").toOption = some «一» := by native_decide
 
 example :
+    (wenyanCompile "者 甲 甲").toOption.map (·.ty)
+      = some (.arr .hex .hex) :=
+  by native_decide
+
+example :
+    (wenyanCompile "者 甲 不 甲").toOption.map (·.ty)
+      = some (.arr .bool .bool) :=
+  by native_decide
+
+example :
+    (wenyanCompile "者 甲 同 甲 甲").toOption.map (·.ty)
+      = some (.arr .hex .bool) :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "（者 甲 不 甲） 之 真").toOption = some false :=
+  by native_decide
+
+example :
     (match wenyanCompile "而 不 不 真" with
      | .error (.parse (.typeMismatch (.arr .hex .hex) (.arr .bool .bool) "不" 2)) => true
      | _ => false) = true :=
@@ -982,6 +1001,16 @@ example :
 
 example :
     (wenyanInterp "令 甲 乾 推 甲").toOption = some «一» :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "令 甲 真 不 甲").toOption = some false :=
+  by native_decide
+
+example :
+    (match wenyanCompile "凡 甲 不 甲" with
+     | .error (.elab (.typeMismatch (.argumentMismatch .bool .hex))) => true
+     | _ => false) = true :=
   by native_decide
 
 /-! ## § 6.5  之又 iteration construction (Phase D)
