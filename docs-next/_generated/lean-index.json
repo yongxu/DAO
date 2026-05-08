@@ -4,7 +4,7 @@
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
-    "Foundation/Modern": 57,
+    "Foundation/Modern": 58,
     "Foundation/Wen": 51,
     "Foundation/Yi": 2,
     "Model": 2,
@@ -173,6 +173,7 @@
         "SSBX.Foundation.Modern.QuantumRelativityPathQuotientBridge",
         "SSBX.Foundation.Modern.QuantumRelativityCanonicalRepresentativeBridge",
         "SSBX.Foundation.Modern.QuantumRelativityQuotientSupportBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityQuotientSupportAlgebraBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -191,10 +192,10 @@
         "SSBX.Foundation.Modern.IIDWlln",
         "SSBX.Foundation.Modern.BochnerPL"
       ],
-      "lines": 183,
+      "lines": 184,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "305ebc937daa0e325d6e58d361ff7069e1be3b148d446d9c5fdc3be10f93d7db"
+      "sha256": "6d97c012d8bceb0160a96e271a82b5fd68e380c4c1ac282d6a06a343136d6729"
     },
     {
       "cluster": "root",
@@ -11699,6 +11700,99 @@
       "module": "SSBX.Foundation.Modern.QuantumRelativityPathQuotientBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityPathQuotientBridge.lean",
       "sha256": "7cf635b5c435e0ecb1bc3cdf3154ba32b59561efd075db8c65699427d1ed9b0b"
+    },
+    {
+      "cluster": "Foundation/Modern",
+      "declaration_count": 20,
+      "declarations": [
+        {
+          "kind": "def",
+          "name": "appendQuotientSupports"
+        },
+        {
+          "kind": "def",
+          "name": "reverseQuotientSupport"
+        },
+        {
+          "kind": "def",
+          "name": "duplicateQuotientSupport"
+        },
+        {
+          "kind": "theorem",
+          "name": "quotient_support_amplitude_sum_append"
+        },
+        {
+          "kind": "theorem",
+          "name": "quotient_support_born_weight_append_boundary"
+        },
+        {
+          "kind": "theorem",
+          "name": "quotient_support_amplitude_sum_perm"
+        },
+        {
+          "kind": "theorem",
+          "name": "quotient_support_born_weight_perm"
+        },
+        {
+          "kind": "theorem",
+          "name": "quotient_support_amplitude_sum_reverse"
+        },
+        {
+          "kind": "theorem",
+          "name": "quotient_support_born_weight_reverse"
+        },
+        {
+          "kind": "theorem",
+          "name": "quotient_support_amplitude_sum_duplicate"
+        },
+        {
+          "kind": "theorem",
+          "name": "quotient_support_duplicate_cancels_of_canceling"
+        },
+        {
+          "kind": "theorem",
+          "name": "quotient_support_duplicate_born_weight_zero_of_canceling"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteReversedQuotientSupport"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_reversed_quotient_support_perm"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_reversed_quotient_support_amplitude_cancels"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_reversed_quotient_support_born_weight_zero"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteDoubleQuotientSupport"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_double_quotient_support_amplitude_cancels"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_double_quotient_support_born_weight_zero"
+        },
+        {
+          "kind": "theorem",
+          "name": "quotient_support_algebra_bridge_summary"
+        }
+      ],
+      "imports": [
+        "SSBX.Foundation.Modern.QuantumRelativityQuotientSupportBridge"
+      ],
+      "lines": 227,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityQuotientSupportAlgebraBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportAlgebraBridge.lean",
+      "sha256": "2c05010dd25ff94ab7c7481a5f9527d0ec06c5b15681d6eb6f201c4b3b8372b0"
     },
     {
       "cluster": "Foundation/Modern",

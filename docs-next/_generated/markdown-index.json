@@ -1,5 +1,5 @@
 {
-  "count": 172,
+  "count": 173,
   "documents": [
     {
       "headings": [
@@ -826,7 +826,7 @@
         "../_generated/registry-index.md"
       ],
       "path": "docs-next/10_formal_形式/modern.md",
-      "sha256": "73bd129453efd8c5a7bb162e4f7922aabf1ec6770d9a4fc20d982efa7f815ae8",
+      "sha256": "a9bd7ff19056d76c0baf089706ccc12d5415b152c0ed565286c0f71b11bae74c",
       "summary": "`Foundation/Modern` 收纳现代数学、逻辑、概率、物理与神经相关桥接。它让项目概念能与现代形式工具对话，但不把所有外部理论都重新证明一遍。",
       "title": "Foundation/Modern"
     },
@@ -2918,12 +2918,16 @@
         {
           "level": 3,
           "title": "2026-05-08 · S5o 商支撑枚举候选"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-08 · S5p 商支撑代数候选"
         }
       ],
-      "lines": 390,
+      "lines": 402,
       "links": [],
       "path": "formal/SSBX/notes/markov-causal-bridge-plan.md",
-      "sha256": "0b58413484938f95cfdd9a1b8907f4c5a926bde52b13ee95d52a774d51b79305",
+      "sha256": "fccd8b4823696c9a57883a0a8db6462c381160b48971e97af5af9ba062c565da",
       "summary": "目标：用最省力的有限构造，尝试把“中介桥”从方向定理推进到可验证骨架。核心不是先造完整量子引力，而是先证明同一个有限过程结构可以同时读成 Markov/测量过程与因果事件结构。",
       "title": "Markov-Causal Bridge Plan"
     },
@@ -2962,10 +2966,10 @@
           "title": "当前命令记录"
         }
       ],
-      "lines": 282,
+      "lines": 289,
       "links": [],
       "path": "formal/SSBX/notes/markov-causal-bridge-verification-plan.md",
-      "sha256": "568f3007aa0372a21db6f169328803a16445ea730974be94f1bd8d4f247e5d1d",
+      "sha256": "d1aa07c11d4ca97fecc76c766fd6b8a6210f9d248e1692b54f2ca84f8e8aa861",
       "summary": "目标：把 Markov-因果桥从“已能构建的 typed skeleton”推进到可重复验证的研究程序。本文只定义验证流程，不新增物理 claim。",
       "title": "Markov-Causal Bridge Verification Plan"
     },
@@ -3549,6 +3553,10 @@
         },
         {
           "level": 2,
+          "title": "S5p · 商支撑代数候选"
+        },
+        {
+          "level": 2,
           "title": "S6 · 几何与度规候选接口"
         },
         {
@@ -3568,10 +3576,10 @@
           "title": "统一用语正名"
         }
       ],
-      "lines": 758,
+      "lines": 781,
       "links": [],
       "path": "formal/SSBX/notes/unification-stepwise-plan.md",
-      "sha256": "688cd0a13664e5568b4dc9869639985bba232e64e603ea76cdf5081962f8ba6f",
+      "sha256": "407acc075bf5d293ec055dc9ba205f0ce0b39ad2e38bafd37dcf23fca09d4853",
       "summary": "目标：把 Markov-因果桥从最小 typed skeleton 推进为逐步增强的验证程序。本文把“统一”限定为已经关闭或计划关闭的形式接口；量子引力、Born rule、度规恢复和经验闭合分别作为后续结构单独推进。",
       "title": "大统一逐步验证路线"
     },
@@ -7825,7 +7833,7 @@
           "title": "八 · Validation Command"
         }
       ],
-      "lines": 562,
+      "lines": 573,
       "links": [
         "量子与相对论整合方向%20·%20从桥到新理论.md",
         "文构造完备与直相加边界.md",
@@ -7847,13 +7855,14 @@
         "路径商类候选%20·%20Markov桥S5m.md",
         "规范代表元候选%20·%20Markov桥S5n.md",
         "商支撑枚举候选%20·%20Markov桥S5o.md",
+        "商支撑代数候选%20·%20Markov桥S5p.md",
         "量子与相对论直统一不可能%20·%20当前语言NoGo.md",
         "../formal/SSBX/notes/markov-causal-bridge-plan.md",
         "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
       ],
       "path": "义理/Markov因果桥 · 大统一最小验证构造.md",
-      "sha256": "1b9bd4a798cb724cfe2d678118b046f1d323afd20b65f116c50e89f637b0898b",
-      "summary": "**前置**：[量子与相对论整合方向 · 从桥到新理论](量子与相对论整合方向%20·%20从桥到新理论.md) · [文构造完备与直相加边界](文构造完备与直相加边界.md) · [有限概率核接口 · Markov桥S2](有限概率核接口%20·%20Markov桥S2.md) · [路径组合与因果约束 · Markov桥S3](路径组合与因果约束%20·%20Markov桥S3.md) · [经典Markov与量子振幅分层 · Markov桥S4](经典Markov与量子振幅分层%20·%20Markov桥S4.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [非零路径振幅候选 · Markov桥S5b](非零路径振幅候选%20·%20Markov桥S5b.md) · [双路径相消候选 · Markov桥S5c](双路径相消候选%20·%20Markov桥S5c.md) · [离散相位标记候选 · Markov桥S5d](离散相位标记候选%20·%20Markov桥S5d.md) · [离散作用量相位候选 · Markov桥S5e](离散作用量相位候选%20·%20Markov桥S5e.md) · [有限路径族求和候选 · Markov桥S5f](有限路径族求和候选%20·%20Markov桥S5f.md) · [有限路径族求和代数候选 · Markov桥S5g](有限路径族求和代数候选%20·%20Markov桥S5g.md) · [端点索引路径族候选 · Markov桥S5h](端点索引路径族候选%20·%20Markov桥S5h.md) · [端点支撑规范化候选 · Markov桥S5i](端点支撑规范化候选%20·%20Markov桥S5i.md) · [双路径枚举候选 · Markov桥S5j](双路径枚举候选%20·%20Markov桥S5j.md) · [路径身份键候选 · Markov桥S5k](路径身份键候选%20·%20Markov桥S5k.md) · [有限键商候选 · Markov桥S5l](有限键商候选%20·%20Markov桥S5l.md) · [路径商类候选 · Markov桥S5m](路径商类候选%20·%20Markov桥S5m.md) · [规范代表元候选 · Markov桥S5n](规范代表元候选%20·%20Markov桥S5n.md) · [商支撑枚举候选 · Markov桥S5o](商支撑枚举候选%20·%20Markov桥S5o.md) · [量子与相对论直统一不可能 · 当前语言NoGo](量子与相对论直统一不可能%20·%20当前语言NoGo.md) · [`markov-causal-bridge-plan`](../formal/SSBX/notes/markov-causal-bridge-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "sha256": "75f18d157e72cc9ffdbeb6ad9480d09425eb58b4fa024f19b98ad86dbc01157b",
+      "summary": "**前置**：[量子与相对论整合方向 · 从桥到新理论](量子与相对论整合方向%20·%20从桥到新理论.md) · [文构造完备与直相加边界](文构造完备与直相加边界.md) · [有限概率核接口 · Markov桥S2](有限概率核接口%20·%20Markov桥S2.md) · [路径组合与因果约束 · Markov桥S3](路径组合与因果约束%20·%20Markov桥S3.md) · [经典Markov与量子振幅分层 · Markov桥S4](经典Markov与量子振幅分层%20·%20Markov桥S4.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [非零路径振幅候选 · Markov桥S5b](非零路径振幅候选%20·%20Markov桥S5b.md) · [双路径相消候选 · Markov桥S5c](双路径相消候选%20·%20Markov桥S5c.md) · [离散相位标记候选 · Markov桥S5d](离散相位标记候选%20·%20Markov桥S5d.md) · [离散作用量相位候选 · Markov桥S5e](离散作用量相位候选%20·%20Markov桥S5e.md) · [有限路径族求和候选 · Markov桥S5f](有限路径族求和候选%20·%20Markov桥S5f.md) · [有限路径族求和代数候选 · Markov桥S5g](有限路径族求和代数候选%20·%20Markov桥S5g.md) · [端点索引路径族候选 · Markov桥S5h](端点索引路径族候选%20·%20Markov桥S5h.md) · [端点支撑规范化候选 · Markov桥S5i](端点支撑规范化候选%20·%20Markov桥S5i.md) · [双路径枚举候选 · Markov桥S5j](双路径枚举候选%20·%20Markov桥S5j.md) · [路径身份键候选 · Markov桥S5k](路径身份键候选%20·%20Markov桥S5k.md) · [有限键商候选 · Markov桥S5l](有限键商候选%20·%20Markov桥S5l.md) · [路径商类候选 · Markov桥S5m](路径商类候选%20·%20Markov桥S5m.md) · [规范代表元候选 · Markov桥S5n](规范代表元候选%20·%20Markov桥S5n.md) · [商支撑枚举候选 · Markov桥S5o](商支撑枚举候选%20·%20Markov桥S5o.md) · [商支撑代数候选 · Markov桥S5p](商支撑代数候选%20·%20Markov桥S5p.md) · [量子与相对论直统一不可能 · 当前语言NoGo](量子与相对论直统一不可能%20·%20当前语言NoGo.md) · [`markov-causal-bridge-plan`](../formal/SSBX/notes/markov-causal-bridge-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
       "title": "Markov因果桥 · 大统一最小验证构造"
     },
     {
@@ -10404,6 +10413,46 @@
       "headings": [
         {
           "level": 1,
+          "title": "商支撑代数候选 · Markov桥S5p"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 失败记录"
+        },
+        {
+          "level": 2,
+          "title": "二 · 下一步"
+        },
+        {
+          "level": 2,
+          "title": "三 · Validation Command"
+        }
+      ],
+      "lines": 124,
+      "links": [
+        "Markov因果桥%20·%20大统一最小验证构造.md",
+        "商支撑枚举候选%20·%20Markov桥S5o.md",
+        "规范代表元候选%20·%20Markov桥S5n.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
+      ],
+      "path": "义理/商支撑代数候选 · Markov桥S5p.md",
+      "sha256": "6929383dd648ecbb96b000c3af77d934126f27f68a46861046472237c22daf17",
+      "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [商支撑枚举候选 · Markov桥S5o](商支撑枚举候选%20·%20Markov桥S5o.md) · [规范代表元候选 · Markov桥S5n](规范代表元候选%20·%20Markov桥S5n.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "商支撑代数候选 · Markov桥S5p"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
           "title": "商支撑枚举候选 · Markov桥S5o"
         },
         {
@@ -10436,7 +10485,7 @@
         "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
       ],
       "path": "义理/商支撑枚举候选 · Markov桥S5o.md",
-      "sha256": "0a02717e981abaa9b387417bb6abd15dd282523b266a4a348f1cbde9666f3f04",
+      "sha256": "d7048db3fa18734c0ff11250e701b2bbcaa0e3fe53f211c90162ce59ae3b7725",
       "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [规范代表元候选 · Markov桥S5n](规范代表元候选%20·%20Markov桥S5n.md) · [路径商类候选 · Markov桥S5m](路径商类候选%20·%20Markov桥S5m.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
       "title": "商支撑枚举候选 · Markov桥S5o"
     },
@@ -11559,7 +11608,7 @@
           "title": "三 · Validation Command"
         }
       ],
-      "lines": 136,
+      "lines": 137,
       "links": [
         "Markov因果桥%20·%20大统一最小验证构造.md",
         "路径身份键候选%20·%20Markov桥S5k.md",
@@ -11569,7 +11618,7 @@
         "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
       ],
       "path": "义理/有限键商候选 · Markov桥S5l.md",
-      "sha256": "2cd5cbe560b2c5db81d441113789d800f26ccecb6715e7382c6594c3585d4235",
+      "sha256": "c8380b66c3dd414ee8b74287e91c55bd2bad919aeb384a5d6a98070d65e92ea2",
       "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [路径身份键候选 · Markov桥S5k](路径身份键候选%20·%20Markov桥S5k.md) · [双路径枚举候选 · Markov桥S5j](双路径枚举候选%20·%20Markov桥S5j.md) · [路径商类候选 · Markov桥S5m](路径商类候选%20·%20Markov桥S5m.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
       "title": "有限键商候选 · Markov桥S5l"
     },
@@ -12594,7 +12643,7 @@
         "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
       ],
       "path": "义理/规范代表元候选 · Markov桥S5n.md",
-      "sha256": "aae440280e574b6aca5ee8ba1ed4fd293213412b8c7d3903969e000c24182d63",
+      "sha256": "0266e64ec3f2c322cd532c06fc186b4f35eb8b8ba74344d390560dde0ea79c56",
       "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [路径商类候选 · Markov桥S5m](路径商类候选%20·%20Markov桥S5m.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
       "title": "规范代表元候选 · Markov桥S5n"
     },
@@ -12625,7 +12674,7 @@
           "title": "三 · Validation Command"
         }
       ],
-      "lines": 129,
+      "lines": 130,
       "links": [
         "Markov因果桥%20·%20大统一最小验证构造.md",
         "规范代表元候选%20·%20Markov桥S5n.md",
@@ -12635,7 +12684,7 @@
         "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
       ],
       "path": "义理/路径商类候选 · Markov桥S5m.md",
-      "sha256": "8cceac31783692ded8129503dd117fc30e944d6e49f9125e115f90a0b3f0906f",
+      "sha256": "3648480f0d312523c6c061bc57606d367943768e44f2a8771f03f855f36ee712",
       "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [规范代表元候选 · Markov桥S5n](规范代表元候选%20·%20Markov桥S5n.md) · [有限键商候选 · Markov桥S5l](有限键商候选%20·%20Markov桥S5l.md) · [路径身份键候选 · Markov桥S5k](路径身份键候选%20·%20Markov桥S5k.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
       "title": "路径商类候选 · Markov桥S5m"
     },
@@ -12717,7 +12766,7 @@
           "title": "三 · Validation Command"
         }
       ],
-      "lines": 142,
+      "lines": 143,
       "links": [
         "Markov因果桥%20·%20大统一最小验证构造.md",
         "双路径枚举候选%20·%20Markov桥S5j.md",
@@ -12727,7 +12776,7 @@
         "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
       ],
       "path": "义理/路径身份键候选 · Markov桥S5k.md",
-      "sha256": "697c56bf6eea18a2999f35bdd9d03ed4663c799ad05cfcb0b661654688c954c2",
+      "sha256": "4cd2c5ef36e286254d1657089957dedecd2a6559e28bcf39c964f827aaf79787",
       "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [双路径枚举候选 · Markov桥S5j](双路径枚举候选%20·%20Markov桥S5j.md) · [端点支撑规范化候选 · Markov桥S5i](端点支撑规范化候选%20·%20Markov桥S5i.md) · [有限键商候选 · Markov桥S5l](有限键商候选%20·%20Markov桥S5l.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
       "title": "路径身份键候选 · Markov桥S5k"
     },

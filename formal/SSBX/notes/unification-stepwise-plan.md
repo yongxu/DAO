@@ -34,6 +34,7 @@
 -> 路径商类候选
 -> 规范代表元候选
 -> 商支撑枚举候选
+-> 商支撑代数候选
 -> 几何候选接口
 -> 经验 pending ledger
 -> 统一摘要 theorem
@@ -72,6 +73,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityFiniteKeyQuotientBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityPathQuotientBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityCanonicalRepresentativeBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityQuotientSupportBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityQuotientSupportAlgebraBridge
 lake build SSBX
 git diff --check --
 ```
@@ -640,6 +642,26 @@ general all-path enumeration 与 path integral 仍在 theorem 外。
 | `two_route_quotient_support_visible_keys_eq` | `QuantumRelativityQuotientSupportBridge.lean` | displayed quotient support 可回读为 displayed key list |
 | `two_route_quotient_support_amplitude_sum_cancels` | `QuantumRelativityQuotientSupportBridge.lean` | quotient-support 层保持 `1 + (-1) = 0` |
 
+## S5p · 商支撑代数候选
+
+目标：为 finite quotient-support lists 增加 append / permutation / reverse / duplicate algebra，并证明 two-route quotient-support cancellation 在这些有限操作下稳定。
+
+| 项 | 内容 |
+|---|---|
+| Lean 出口 | `quotient_support_algebra_bridge_summary` |
+| 最低 theorem 形态 | `quotient_support_amplitude_sum_append`、`quotient_support_amplitude_sum_perm`、`quotient_support_amplitude_sum_reverse`、`quotient_support_duplicate_cancels_of_canceling` |
+| 失败记录 | 若 dependent type 显式标注导致 namespace mismatch，记录对应 process 名称与修正；若 algebra law 失败，记录为 `Lean proof failure` |
+| 文档读法 | 正面写明已证 quotient-support finite list algebra；general all-path enumeration、path integral、Born rule derivation 与 empirical prediction 仍需后续结构 |
+| 边界保留 | S5p 不把 finite list algebra 误读为一般 path integral |
+
+当前状态：
+
+| theorem | 文件 | 读法 |
+|---|---|---|
+| `quotient_support_algebra_bridge_summary` | `QuantumRelativityQuotientSupportAlgebraBridge.lean` | 合取 quotient-support algebra、two-route cancellation stability 与文构造覆盖 |
+| `two_route_reversed_quotient_support_amplitude_cancels` | `QuantumRelativityQuotientSupportAlgebraBridge.lean` | two-route support 反序后仍相消 |
+| `two_route_double_quotient_support_amplitude_cancels` | `QuantumRelativityQuotientSupportAlgebraBridge.lean` | support append reversed support 后仍相消 |
+
 ## S6 · 几何与度规候选接口
 
 目标：从因果事件网络推进到几何候选接口，但只在有 theorem 时声称具体结构。
@@ -735,7 +757,8 @@ Lean 只关闭一个几何候选接口；
 | 2026-05-08 | S5l | success | 新增 finite visible-key quotient candidate；关闭 key-equivalence、key-compatible amplitude descent、duplicate compensation 与 two-route key-level cancellation；visible-key quotient class 已由 S5m 承接，仍不证明 general all-path enumeration、path integral 或经验闭合 |
 | 2026-05-08 | S5m | success | 新增 visible-key quotient class candidate；关闭 `Setoid` / `Quot` construction、quotient descent 与 two-route quotient completeness；two-route canonical representative 已由 S5n 承接，仍不证明 general choice function、general all-path enumeration、path integral 或经验闭合 |
 | 2026-05-08 | S5n | success | 新增 two-route canonical representative candidate；关闭 displayed representatives 与 toy source/target representative completeness；finite quotient-support enumeration 已由 S5o 承接，仍不证明 general choice function、general all-path enumeration、path integral 或经验闭合 |
-| 2026-05-08 | S5o | failure retained / success | 第一次 quotient-support build 因 `rfl` 未展开 `quotientKeyAmplitude` 与 `Function.comp_def` 失败；修正后新增 finite quotient-support candidate，关闭 support coverage、visible-key readback、quotient-level cancellation 与 Born-shaped zero boundary，仍不证明 quotient-support algebra、general all-path enumeration、path integral 或经验闭合 |
+| 2026-05-08 | S5o | failure retained / success | 第一次 quotient-support build 因 `rfl` 未展开 `quotientKeyAmplitude` 与 `Function.comp_def` 失败；修正后新增 finite quotient-support candidate，关闭 support coverage、visible-key readback、quotient-level cancellation 与 Born-shaped zero boundary；quotient-support algebra 已由 S5p 承接，仍不证明 general all-path enumeration、path integral 或经验闭合 |
+| 2026-05-08 | S5p | failure retained / success | 第一次 quotient-support algebra build 因显式 `twoRouteProcess` 类型标注解析到不同 namespace 下的同名 process 失败；移除显式返回类型后新增 quotient-support algebra candidate，关闭 append / permutation / reverse stability、duplicate zero-sum cancellation 与 two-route algebraic cancellation stability，仍不证明 general all-path enumeration、path integral 或经验闭合 |
 
 ## 统一用语正名
 
@@ -743,8 +766,8 @@ Lean 只关闭一个几何候选接口；
 
 | 词 | 在本路线中的含义 | 结构依据 |
 |---|---|---|
-| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S5o 已关闭的 summary theorem 与路线日志 |
-| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5o 候选接口、后续 S7 ledger |
+| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S5p 已关闭的 summary theorem 与路线日志 |
+| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5p 候选接口、后续 S7 ledger |
 | 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `markov_causal_bridge_summary` 与各阶段 `*_summary` theorem |
 
 推荐正名句：

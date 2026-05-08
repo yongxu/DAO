@@ -1,5 +1,5 @@
 {
-  "count": 382,
+  "count": 384,
   "include_archive": false,
   "sources": [
     {
@@ -99,9 +99,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 2660,
+      "bytes": 2710,
       "path": "docs-next/10_formal_形式/modern.md",
-      "sha256": "73bd129453efd8c5a7bb162e4f7922aabf1ec6770d9a4fc20d982efa7f815ae8",
+      "sha256": "a9bd7ff19056d76c0baf089706ccc12d5415b152c0ed565286c0f71b11bae74c",
       "suffix": ".md"
     },
     {
@@ -351,9 +351,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 7808,
+      "bytes": 7884,
       "path": "formal/SSBX.lean",
-      "sha256": "305ebc937daa0e325d6e58d361ff7069e1be3b148d446d9c5fdc3be10f93d7db",
+      "sha256": "6d97c012d8bceb0160a96e271a82b5fd68e380c4c1ac282d6a06a343136d6729",
       "suffix": ".lean"
     },
     {
@@ -864,6 +864,12 @@
       "bytes": 9256,
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityPathQuotientBridge.lean",
       "sha256": "7cf635b5c435e0ecb1bc3cdf3154ba32b59561efd075db8c65699427d1ed9b0b",
+      "suffix": ".lean"
+    },
+    {
+      "bytes": 9583,
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportAlgebraBridge.lean",
+      "sha256": "2c05010dd25ff94ab7c7481a5f9527d0ec06c5b15681d6eb6f201c4b3b8372b0",
       "suffix": ".lean"
     },
     {
@@ -1605,15 +1611,15 @@
       "suffix": ".md"
     },
     {
-      "bytes": 38197,
+      "bytes": 39805,
       "path": "formal/SSBX/notes/markov-causal-bridge-plan.md",
-      "sha256": "0b58413484938f95cfdd9a1b8907f4c5a926bde52b13ee95d52a774d51b79305",
+      "sha256": "fccd8b4823696c9a57883a0a8db6462c381160b48971e97af5af9ba062c565da",
       "suffix": ".md"
     },
     {
-      "bytes": 28137,
+      "bytes": 29202,
       "path": "formal/SSBX/notes/markov-causal-bridge-verification-plan.md",
-      "sha256": "568f3007aa0372a21db6f169328803a16445ea730974be94f1bd8d4f247e5d1d",
+      "sha256": "d1aa07c11d4ca97fecc76c766fd6b8a6210f9d248e1692b54f2ca84f8e8aa861",
       "suffix": ".md"
     },
     {
@@ -1665,9 +1671,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 53461,
+      "bytes": 55568,
       "path": "formal/SSBX/notes/unification-stepwise-plan.md",
-      "sha256": "688cd0a13664e5568b4dc9869639985bba232e64e603ea76cdf5081962f8ba6f",
+      "sha256": "407acc075bf5d293ec055dc9ba205f0ce0b39ad2e38bafd37dcf23fca09d4853",
       "suffix": ".md"
     },
     {
@@ -1869,9 +1875,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 51907,
+      "bytes": 53890,
       "path": "义理/Markov因果桥 · 大统一最小验证构造.md",
-      "sha256": "1b9bd4a798cb724cfe2d678118b046f1d323afd20b65f116c50e89f637b0898b",
+      "sha256": "75f18d157e72cc9ffdbeb6ad9480d09425eb58b4fa024f19b98ad86dbc01157b",
       "suffix": ".md"
     },
     {
@@ -1989,9 +1995,15 @@
       "suffix": ".md"
     },
     {
-      "bytes": 5195,
+      "bytes": 5196,
+      "path": "义理/商支撑代数候选 · Markov桥S5p.md",
+      "sha256": "6929383dd648ecbb96b000c3af77d934126f27f68a46861046472237c22daf17",
+      "suffix": ".md"
+    },
+    {
+      "bytes": 5189,
       "path": "义理/商支撑枚举候选 · Markov桥S5o.md",
-      "sha256": "0a02717e981abaa9b387417bb6abd15dd282523b266a4a348f1cbde9666f3f04",
+      "sha256": "d7048db3fa18734c0ff11250e701b2bbcaa0e3fe53f211c90162ce59ae3b7725",
       "suffix": ".md"
     },
     {
@@ -2049,9 +2061,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 6229,
+      "bytes": 6362,
       "path": "义理/有限键商候选 · Markov桥S5l.md",
-      "sha256": "2cd5cbe560b2c5db81d441113789d800f26ccecb6715e7382c6594c3585d4235",
+      "sha256": "c8380b66c3dd414ee8b74287e91c55bd2bad919aeb384a5d6a98070d65e92ea2",
       "suffix": ".md"
     },
     {
@@ -2115,15 +2127,15 @@
       "suffix": ".md"
     },
     {
-      "bytes": 4131,
+      "bytes": 4133,
       "path": "义理/规范代表元候选 · Markov桥S5n.md",
-      "sha256": "aae440280e574b6aca5ee8ba1ed4fd293213412b8c7d3903969e000c24182d63",
+      "sha256": "0266e64ec3f2c322cd532c06fc186b4f35eb8b8ba74344d390560dde0ea79c56",
       "suffix": ".md"
     },
     {
-      "bytes": 5128,
+      "bytes": 5261,
       "path": "义理/路径商类候选 · Markov桥S5m.md",
-      "sha256": "8cceac31783692ded8129503dd117fc30e944d6e49f9125e115f90a0b3f0906f",
+      "sha256": "3648480f0d312523c6c061bc57606d367943768e44f2a8771f03f855f36ee712",
       "suffix": ".md"
     },
     {
@@ -2133,9 +2145,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 5745,
+      "bytes": 5878,
       "path": "义理/路径身份键候选 · Markov桥S5k.md",
-      "sha256": "697c56bf6eea18a2999f35bdd9d03ed4663c799ad05cfcb0b661654688c954c2",
+      "sha256": "4cd2c5ef36e286254d1657089957dedecd2a6559e28bcf39c964f827aaf79787",
       "suffix": ".md"
     },
     {

@@ -91,7 +91,7 @@ S5n 后可以继续：
 ```text
 displayed canonical representatives
 -> finite quotient-support enumeration
--> quotient-support algebra
+-> observable ledger boundary
 ```
 
 或者转向：

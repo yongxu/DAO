@@ -108,7 +108,7 @@ S5o 后可以继续：
 
 ```text
 quotient support
--> quotient-level support algebra
+-> quotient-support algebra
 -> observable ledger boundary
 ```
 

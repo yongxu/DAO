@@ -76,6 +76,7 @@ theorem finite_key_quotient_bridge_summary :
 | visible-key quotient class | S5m 已关闭 | S5l 不构造 Lean quotient class；S5m 已补上 `Setoid` / `Quot` construction |
 | two-route canonical representative | S5n 已关闭 | S5n 已为 toy source/target quotient classes 给出 displayed representatives |
 | finite quotient support | S5o 已关闭 | S5o 已把 displayed quotient classes 升级为 finite quotient-support list |
+| quotient-support algebra | S5p 已关闭 | S5p 已证明 quotient-support append / permutation / reverse / duplicate stability |
 | general choice function | 后续结构 | 仍未为任意 process 或任意 quotient class 选代表元 |
 | proof-field path equality | 后续结构 | S5l 仍只看 visible `(start,middle,stop)` |
 | general all-path enumeration | 后续结构 | S5l 仍只处理有限 key list 与 two-route toy witness |
@@ -113,7 +114,7 @@ finite visible-key quotient candidate
 
 ```text
 visible-key quotient class
--> quotient-support algebra
+-> observable ledger boundary
 ```
 
 或者转向：
