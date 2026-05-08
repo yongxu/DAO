@@ -30,6 +30,7 @@ import SSBX.Foundation.Eight.WuXiang
 namespace SSBX.Foundation.Modern.Quantum
 
 open Complex Matrix
+open SSBX.Foundation.Bagua.BaguaAlgebra
 
 /-! ## § 1 Qubit ≅ ℂ² (computational basis) -/
 
@@ -98,6 +99,13 @@ theorem pauliX_apply_ket1 :
   ext i
   fin_cases i <;> simp [Matrix.mulVec, dotProduct, Fin.sum_univ_two]
 
+/-- **Pauli X = 爻取反**：在 `Yao → Qubit basis` 上，X 正是 `Yao.neg`。 -/
+theorem pauliX_apply_yao_basis (y : SSBX.Foundation.Yi.Yi.Yao) :
+    Matrix.mulVec pauliX (Yao.toQubit y) = Yao.toQubit y.neg := by
+  cases y
+  · exact pauliX_apply_ket0
+  · exact pauliX_apply_ket1
+
 /-! ## § 5 叠加 (superposition) -/
 
 /-- **叠加态 |+⟩**：(|0⟩ + |1⟩) / √2。 -/
@@ -112,7 +120,52 @@ noncomputable def ketMinus : Qubit :=
 theorem hadamard_creates_superposition_skeleton :
     ∃ q : Qubit, q = ketPlus := ⟨ketPlus, rfl⟩
 
-/-! ## § 6 与 Trigram 之桥（3-qubit basis）-/
+/-! ## § 6 Born rule（computational basis 之有限版） -/
+
+/-- 单一 complex amplitude 之 Born 权重：模平方。 -/
+def ampProb (z : ℂ) : ℝ := Complex.normSq z
+
+/-- 测得 computational basis `|0⟩` 之权重。 -/
+def bornProb0 (ψ : Qubit) : ℝ := ampProb (ψ 0)
+
+/-- 测得 computational basis `|1⟩` 之权重。 -/
+def bornProb1 (ψ : Qubit) : ℝ := ampProb (ψ 1)
+
+/-- computational-basis Born 权重之总和。 -/
+def bornTotal (ψ : Qubit) : ℝ := bornProb0 ψ + bornProb1 ψ
+
+/-- `ψ` 对 computational-basis 测量归一化。 -/
+def computationalBasisNormalized (ψ : Qubit) : Prop := bornTotal ψ = 1
+
+/-- Born 权重非负：`|0⟩` 分支。 -/
+theorem bornProb0_nonneg (ψ : Qubit) : 0 ≤ bornProb0 ψ :=
+  Complex.normSq_nonneg (ψ 0)
+
+/-- Born 权重非负：`|1⟩` 分支。 -/
+theorem bornProb1_nonneg (ψ : Qubit) : 0 ≤ bornProb1 ψ :=
+  Complex.normSq_nonneg (ψ 1)
+
+/-- 归一化 qubit 的 computational-basis Born 权重和为 1。 -/
+theorem bornTotal_of_normalized {ψ : Qubit} (hψ : computationalBasisNormalized ψ) :
+    bornProb0 ψ + bornProb1 ψ = 1 := hψ
+
+/-- `|0⟩` 的 Born 权重为 `(1, 0)`。 -/
+theorem born_ket0 :
+    bornProb0 ket0 = 1 ∧ bornProb1 ket0 = 0 ∧ computationalBasisNormalized ket0 := by
+  simp [computationalBasisNormalized, bornTotal, bornProb0, bornProb1, ampProb, ket0]
+
+/-- `|1⟩` 的 Born 权重为 `(0, 1)`。 -/
+theorem born_ket1 :
+    bornProb0 ket1 = 0 ∧ bornProb1 ket1 = 1 ∧ computationalBasisNormalized ket1 := by
+  simp [computationalBasisNormalized, bornTotal, bornProb0, bornProb1, ampProb, ket1]
+
+/-- **one-qubit computational-basis Born rule**：
+    任一归一化 qubit 在 `{|0⟩, |1⟩}` 测量下给出一个二值概率分布。 -/
+theorem computational_basis_born_rule (ψ : Qubit) (hψ : computationalBasisNormalized ψ) :
+    0 ≤ bornProb0 ψ ∧ 0 ≤ bornProb1 ψ ∧ bornProb0 ψ + bornProb1 ψ = 1 :=
+  ⟨bornProb0_nonneg ψ, bornProb1_nonneg ψ, bornTotal_of_normalized hψ⟩
+
+/-! ## § 7 与 Trigram 之桥（3-qubit basis）-/
 
 /-- **3-qubit basis state index**：Trigram → Fin 8（按 BaguaAlgebra 之 Sheng 之 ofTrigram 之 dual）。
     简化版：直接用 (Yao 之 Bool 表示) 之三元组合。 -/
@@ -137,7 +190,7 @@ theorem kun_to_seven :
     Trigram.toFin8 SSBX.Foundation.Yi.Yi.Trigram.kun = 7 := by
   rfl
 
-/-! ## § 7 cuo ≅ X ⊗ X ⊗ X 之 anchor
+/-! ## § 8 cuo ≅ X ⊗ X ⊗ X 之 anchor
 
 **项目主张**（连接 P17 之 cuo-equivariance）：
 Trigram 之 cuo 算子 = 三 qubit 上之 Pauli X⊗X⊗X 矩阵之作用。
@@ -156,7 +209,107 @@ theorem cuo_via_fin8 (t : SSBX.Foundation.Yi.Yi.Trigram) :
   | mk y1 y2 y3 =>
     cases y1 <;> cases y2 <;> cases y3 <;> rfl
 
-/-! ## § 8 公开摘要 -/
+/-! ## § 9 算子与位：动 / 化 / 变 / 综 的 basis-index 证明 -/
+
+/-- 初爻位翻转：basis index 之最高 bit 翻转。 -/
+def flipInitialIndex : Fin 8 → Fin 8
+  | ⟨0, _⟩ => 4
+  | ⟨1, _⟩ => 5
+  | ⟨2, _⟩ => 6
+  | ⟨3, _⟩ => 7
+  | ⟨4, _⟩ => 0
+  | ⟨5, _⟩ => 1
+  | ⟨6, _⟩ => 2
+  | ⟨7, _⟩ => 3
+
+/-- 中爻位翻转：basis index 之中 bit 翻转。 -/
+def flipMiddleIndex : Fin 8 → Fin 8
+  | ⟨0, _⟩ => 2
+  | ⟨1, _⟩ => 3
+  | ⟨2, _⟩ => 0
+  | ⟨3, _⟩ => 1
+  | ⟨4, _⟩ => 6
+  | ⟨5, _⟩ => 7
+  | ⟨6, _⟩ => 4
+  | ⟨7, _⟩ => 5
+
+/-- 上爻位翻转：basis index 之最低 bit 翻转。 -/
+def flipTopIndex : Fin 8 → Fin 8
+  | ⟨0, _⟩ => 1
+  | ⟨1, _⟩ => 0
+  | ⟨2, _⟩ => 3
+  | ⟨3, _⟩ => 2
+  | ⟨4, _⟩ => 5
+  | ⟨5, _⟩ => 4
+  | ⟨6, _⟩ => 7
+  | ⟨7, _⟩ => 6
+
+/-- 三爻位置反序：basis index 之 bit-reversal。 -/
+def reversePositionIndex : Fin 8 → Fin 8
+  | ⟨0, _⟩ => 0
+  | ⟨1, _⟩ => 4
+  | ⟨2, _⟩ => 2
+  | ⟨3, _⟩ => 6
+  | ⟨4, _⟩ => 1
+  | ⟨5, _⟩ => 5
+  | ⟨6, _⟩ => 3
+  | ⟨7, _⟩ => 7
+
+/-- **动 = 初爻位翻转**：在 3-qubit computational basis index 上即最高 bit 翻转。 -/
+theorem dong_via_fin8 (t : SSBX.Foundation.Yi.Yi.Trigram) :
+    Trigram.toFin8 (dong t) = flipInitialIndex (Trigram.toFin8 t) := by
+  cases t with
+  | mk y1 y2 y3 =>
+    cases y1 <;> cases y2 <;> cases y3 <;> rfl
+
+/-- **化 = 中爻位翻转**：在 3-qubit computational basis index 上即中 bit 翻转。 -/
+theorem hua_via_fin8 (t : SSBX.Foundation.Yi.Yi.Trigram) :
+    Trigram.toFin8 (hua t) = flipMiddleIndex (Trigram.toFin8 t) := by
+  cases t with
+  | mk y1 y2 y3 =>
+    cases y1 <;> cases y2 <;> cases y3 <;> rfl
+
+/-- **变 = 上爻位翻转**：在 3-qubit computational basis index 上即最低 bit 翻转。 -/
+theorem bian_via_fin8 (t : SSBX.Foundation.Yi.Yi.Trigram) :
+    Trigram.toFin8 (bian t) = flipTopIndex (Trigram.toFin8 t) := by
+  cases t with
+  | mk y1 y2 y3 =>
+    cases y1 <;> cases y2 <;> cases y3 <;> rfl
+
+/-- **综 = 位反序**：在 3-qubit computational basis index 上即 bit-reversal。 -/
+theorem zong_via_fin8 (t : SSBX.Foundation.Yi.Yi.Trigram) :
+    Trigram.toFin8 (SSBX.Foundation.Yi.Yi.Trigram.zong t)
+      = reversePositionIndex (Trigram.toFin8 t) := by
+  cases t with
+  | mk y1 y2 y3 =>
+    cases y1 <;> cases y2 <;> cases y3 <;> rfl
+
+/-- 乾出发时，三个位算子分别给出 4/2/1 的 basis 权重。 -/
+theorem qian_position_weights :
+    Trigram.toFin8 (dong SSBX.Foundation.Yi.Yi.Trigram.qian) = 4
+    ∧ Trigram.toFin8 (hua SSBX.Foundation.Yi.Yi.Trigram.qian) = 2
+    ∧ Trigram.toFin8 (bian SSBX.Foundation.Yi.Yi.Trigram.qian) = 1 := by
+  exact ⟨rfl, rfl, rfl⟩
+
+/-- **算子-位对齐总表**：动/化/变/错/综全落到 3-qubit basis index 的位操作。 -/
+theorem operator_position_index_alignment :
+    (∀ t : SSBX.Foundation.Yi.Yi.Trigram,
+        Trigram.toFin8 (dong t) = flipInitialIndex (Trigram.toFin8 t))
+    ∧ (∀ t : SSBX.Foundation.Yi.Yi.Trigram,
+        Trigram.toFin8 (hua t) = flipMiddleIndex (Trigram.toFin8 t))
+    ∧ (∀ t : SSBX.Foundation.Yi.Yi.Trigram,
+        Trigram.toFin8 (bian t) = flipTopIndex (Trigram.toFin8 t))
+    ∧ (∀ t : SSBX.Foundation.Yi.Yi.Trigram,
+        Trigram.toFin8 (SSBX.Foundation.Yi.Yi.Trigram.cuo t)
+          = ⟨7 - (Trigram.toFin8 t).val, by
+              have h := (Trigram.toFin8 t).isLt
+              omega⟩)
+    ∧ (∀ t : SSBX.Foundation.Yi.Yi.Trigram,
+        Trigram.toFin8 (SSBX.Foundation.Yi.Yi.Trigram.zong t)
+          = reversePositionIndex (Trigram.toFin8 t)) := by
+  exact ⟨dong_via_fin8, hua_via_fin8, bian_via_fin8, cuo_via_fin8, zong_via_fin8⟩
+
+/-! ## § 10 公开摘要 -/
 
 /-- **量子总摘要**：
     (1) Qubit = Fin 2 → ℂ
@@ -168,15 +321,33 @@ theorem cuo_via_fin8 (t : SSBX.Foundation.Yi.Yi.Trigram) :
     (7) Trigram ↦ Fin 8 之 basis index
     (8) 乾 ↦ 0
     (9) 坤 ↦ 7
-    (10) cuo 在 Fin 8 上即 b ↦ 7-b（X⊗X⊗X 之 basis 表示） -/
+    (10) cuo 在 Fin 8 上即 b ↦ 7-b（X⊗X⊗X 之 basis 表示）
+    (11) Pauli X 在 Yao basis 上等于 Yao.neg
+    (12) computational-basis Born rule 给二值归一概率分布
+    (13) 动/化/变/综 对齐 3-qubit basis index 之位操作 -/
 theorem quantum_summary :
     pauliX * pauliX = (1 : Matrix (Fin 2) (Fin 2) ℂ)
     ∧ pauliZ * pauliZ = (1 : Matrix (Fin 2) (Fin 2) ℂ)
     ∧ Matrix.mulVec pauliX ket0 = ket1
     ∧ Matrix.mulVec pauliX ket1 = ket0
     ∧ Trigram.toFin8 SSBX.Foundation.Yi.Yi.Trigram.qian = 0
-    ∧ Trigram.toFin8 SSBX.Foundation.Yi.Yi.Trigram.kun = 7 :=
+    ∧ Trigram.toFin8 SSBX.Foundation.Yi.Yi.Trigram.kun = 7
+    ∧ (∀ y : SSBX.Foundation.Yi.Yi.Yao,
+        Matrix.mulVec pauliX (Yao.toQubit y) = Yao.toQubit y.neg)
+    ∧ (∀ ψ : Qubit, computationalBasisNormalized ψ →
+        0 ≤ bornProb0 ψ ∧ 0 ≤ bornProb1 ψ ∧ bornProb0 ψ + bornProb1 ψ = 1)
+    ∧ (∀ t : SSBX.Foundation.Yi.Yi.Trigram,
+        Trigram.toFin8 (dong t) = flipInitialIndex (Trigram.toFin8 t))
+    ∧ (∀ t : SSBX.Foundation.Yi.Yi.Trigram,
+        Trigram.toFin8 (hua t) = flipMiddleIndex (Trigram.toFin8 t))
+    ∧ (∀ t : SSBX.Foundation.Yi.Yi.Trigram,
+        Trigram.toFin8 (bian t) = flipTopIndex (Trigram.toFin8 t))
+    ∧ (∀ t : SSBX.Foundation.Yi.Yi.Trigram,
+        Trigram.toFin8 (SSBX.Foundation.Yi.Yi.Trigram.zong t)
+          = reversePositionIndex (Trigram.toFin8 t)) :=
   ⟨pauliX_squared, pauliZ_squared, pauliX_apply_ket0, pauliX_apply_ket1,
-   qian_to_zero, kun_to_seven⟩
+   qian_to_zero, kun_to_seven, pauliX_apply_yao_basis,
+   computational_basis_born_rule,
+   dong_via_fin8, hua_via_fin8, bian_via_fin8, zong_via_fin8⟩
 
 end SSBX.Foundation.Modern.Quantum
