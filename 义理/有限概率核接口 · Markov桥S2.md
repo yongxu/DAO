@@ -1,6 +1,6 @@
 # 有限概率核接口 · Markov桥S2
 
-**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [路径组合与因果约束 · Markov桥S3](路径组合与因果约束%20·%20Markov桥S3.md) · [经典Markov与量子振幅分层 · Markov桥S4](经典Markov与量子振幅分层%20·%20Markov桥S4.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [文构造完备与直相加边界](文构造完备与直相加边界.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
+**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [路径组合与因果约束 · Markov桥S3](路径组合与因果约束%20·%20Markov桥S3.md) · [经典Markov与量子振幅分层 · Markov桥S4](经典Markov与量子振幅分层%20·%20Markov桥S4.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [非零路径振幅候选 · Markov桥S5b](非零路径振幅候选%20·%20Markov桥S5b.md) · [文构造完备与直相加边界](文构造完备与直相加边界.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
 **Lean 锚点**：
 
@@ -61,7 +61,7 @@ theorem finite_probability_bridge_summary :
 | Born rule | 未纳入本轮 | 尚未从振幅范数推出测量概率 |
 | quantum amplitude / channel candidate | S2 未纳入；S4 已开单独接口 | 见《经典Markov与量子振幅分层 · Markov桥S4》；S2 finite mass 不等于振幅或 Born 概率 |
 | 真实 quantum channel law | 未纳入本轮 | 尚未证明 unitarity、CPTP、Kraus 或 density-matrix law |
-| 干涉、度规、经验闭合 | 未纳入本轮 | S3/S4/S5 已分别处理路径、候选分层与干涉/Born-shaped candidate；真实干涉律、几何和经验闭合仍需后续层 |
+| 干涉、度规、经验闭合 | 未纳入本轮 | S3/S4/S5/S5b 已分别处理路径、候选分层、干涉/Born-shaped candidate 与非零 witness；真实干涉律、几何和经验闭合仍需后续层 |
 
 边界句：
 
@@ -97,7 +97,7 @@ S2 关闭的是 finite denominator interface；
 | 路径组合 | S2 未纳入；S3 已开单独接口 | 见《路径组合与因果约束 · Markov桥S3》；`pathWeight` 乘法仍未纳入 |
 | 经验接口 | 未纳入本轮 | 没有 observation ledger 和数据判准 |
 
-本轮闭合范围：**S2 已在 Lean 中关闭 finite probability-kernel denominator interface；它保守地证明非终端行分母非零和权重上界，不关闭 sum-one 概率律、Born rule、quantum amplitude/channel candidate、干涉、几何恢复或经验闭合。S4/S5 后续只把 amplitude/channel、path amplitude 与 Born-shaped boundary 作为独立候选层接上，不把 S2 finite mass 解释成 Born 概率。**
+本轮闭合范围：**S2 已在 Lean 中关闭 finite probability-kernel denominator interface；它保守地证明非终端行分母非零和权重上界，不关闭 sum-one 概率律、Born rule、quantum amplitude/channel candidate、干涉、几何恢复或经验闭合。S4/S5/S5b 后续只把 amplitude/channel、path amplitude、Born-shaped boundary 与非零 path witness 作为独立候选层接上，不把 S2 finite mass 解释成 Born 概率。**
 
 ---
 
@@ -164,6 +164,7 @@ S2 之后，最省力的推进顺序是：
 | S3 | 路径组合与局部因果约束 | 已由《路径组合与因果约束 · Markov桥S3》关闭最小接口 |
 | S4 | classical Markov 与 quantum amplitude 分层 | 已由《经典Markov与量子振幅分层 · Markov桥S4》关闭候选接口；真实 channel law 仍未纳入 |
 | S5 | 干涉与 Born-rule-shaped candidate | 已由《干涉与测量律候选 · Markov桥S5》关闭候选接口；真实干涉律与 Born rule 推导仍未纳入 |
+| S5b | 非零 path-amplitude candidate witness | 已由《非零路径振幅候选 · Markov桥S5b》关闭候选接口；相位律、路径求和与可测相消仍未纳入 |
 | S6 | 几何与度规候选接口 | 未纳入本轮 |
 | S7 | 经验 pending ledger | 未纳入本轮 |
 
@@ -181,5 +182,5 @@ lake build SSBX
 文档与格式检查：
 
 ```bash
-git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean formal/SSBX.lean formal/SSBX/notes/unification-stepwise-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md formal/SSBX/notes/markov-causal-bridge-plan.md docs-next/10_formal_形式/modern.md '义理/有限概率核接口 · Markov桥S2.md' '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/经典Markov与量子振幅分层 · Markov桥S4.md' '义理/干涉与测量律候选 · Markov桥S5.md'
+git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean formal/SSBX.lean formal/SSBX/notes/unification-stepwise-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md formal/SSBX/notes/markov-causal-bridge-plan.md docs-next/10_formal_形式/modern.md '义理/有限概率核接口 · Markov桥S2.md' '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/经典Markov与量子振幅分层 · Markov桥S4.md' '义理/干涉与测量律候选 · Markov桥S5.md' '义理/非零路径振幅候选 · Markov桥S5b.md'
 ```

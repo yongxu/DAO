@@ -20,6 +20,7 @@
 -> 路径组合与因果约束
 -> 经典 Markov / 量子 amplitude 分层
 -> 干涉与测量律候选
+-> 非零路径振幅候选
 -> 几何候选接口
 -> 经验 pending ledger
 -> 统一摘要 theorem
@@ -44,8 +45,9 @@ lake build SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityPathCausalBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityAmplitudeChannelBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityInterferenceBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityNonzeroPathAmplitudeBridge
 lake build SSBX
-git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean formal/SSBX.lean formal/SSBX/notes/unification-stepwise-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/有限概率核接口 · Markov桥S2.md' '义理/路径组合与因果约束 · Markov桥S3.md' '义理/经典Markov与量子振幅分层 · Markov桥S4.md' '义理/干涉与测量律候选 · Markov桥S5.md'
+git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean formal/SSBX.lean formal/SSBX/notes/unification-stepwise-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/有限概率核接口 · Markov桥S2.md' '义理/路径组合与因果约束 · Markov桥S3.md' '义理/经典Markov与量子振幅分层 · Markov桥S4.md' '义理/干涉与测量律候选 · Markov桥S5.md' '义理/非零路径振幅候选 · Markov桥S5b.md'
 ```
 
 ## S0 · 基线重审
@@ -206,6 +208,34 @@ Lean 中有独立的 amplitude / channel 层；
 | `born_rule_candidate_boundary` | `QuantumRelativityInterferenceBridge.lean` | 单一复幅候选权重等于 `ampProb` |
 | `born_rule_candidate_nonnegative` | `QuantumRelativityInterferenceBridge.lean` | Born-shaped candidate weight 非负 |
 
+## S5b · 非零路径振幅候选
+
+目标：在不引入真实相位动力学的情况下，先摆脱全零 placeholder，并证明非零 path amplitude 不跑出 path / causal boundary。
+
+| 项 | 内容 |
+|---|---|
+| Lean 出口 | `nonzero_path_amplitude_bridge_summary` |
+| 最低 theorem 形态 | `nonzero_path_amplitude_implies_valid`、`nonzero_path_amplitude_implies_reachable`、`nonzero_path_amplitude_implies_causal_before`、`concrete_prepared_measured_path_nonzero_amplitude` |
+| 失败记录 | 若非零 witness 只能靠任意有效性假设，记录为 `candidate only`；不能升级为物理动力学 |
+| 文档更新 | 只能写“nonzero path-amplitude candidate witness”；不能写“真实干涉律已证” |
+| 不可声称 | 不能说已有 phase law、path integral、Born-rule derivation、unitary/CPTP law 或 empirical prediction |
+
+通过判准：
+
+```text
+Lean 中存在一个非零候选 path amplitude witness；
+该 witness 可以投影到 valid path、Reachable 和 causalBefore；
+真实干涉律仍在 theorem 外。
+```
+
+当前状态：
+
+| theorem | 文件 | 读法 |
+|---|---|---|
+| `nonzero_path_amplitude_bridge_summary` | `QuantumRelativityNonzeroPathAmplitudeBridge.lean` | 非零 path amplitude 推出 valid / Reachable / causalBefore，并给 concrete path 一个非零 candidate witness |
+| `validPathIndicatorPathAmplitudeSkeleton` | `QuantumRelativityNonzeroPathAmplitudeBridge.lean` | 有效 path 给 `1`，无效 path 给 `0` 的最小候选骨架 |
+| `concrete_prepared_measured_path_nonzero_amplitude` | `QuantumRelativityNonzeroPathAmplitudeBridge.lean` | concrete `prepared -> measured` composed path 的候选振幅非零 |
+
 ## S6 · 几何与度规候选接口
 
 目标：从因果事件网络推进到几何候选接口，但只在有 theorem 时声称具体结构。
@@ -288,6 +318,7 @@ Lean 只关闭一个几何候选接口；
 | 2026-05-08 | S3 | success | 新增 path composition and local causal constraints；关闭组合 path witness 的可达/因果读法与 concrete/grid no-self-loop，仍不证明完整偏序、局部有限 causal set、light cone 或 metric recovery |
 | 2026-05-08 | S4 | success | 新增 classical Markov / quantum amplitude-channel 分层接口；关闭 layer separation、channel candidate 到 S2 边界的投影与非零振幅支持精化，仍不证明干涉、Born rule 推导、unitary/CPTP channel law 或经验闭合 |
 | 2026-05-08 | S5 | success | 新增 path amplitude / interference / Born-shaped candidate interface；关闭候选组合等式、相消 witness 与 `ampProb` boundary，仍不证明真实干涉律、Born rule 推导、unitary/CPTP channel law 或经验闭合 |
+| 2026-05-08 | S5b | success | 新增 nonzero path-amplitude candidate witness；关闭非零候选振幅到 valid / Reachable / causalBefore 的边界，仍不证明相位律、路径求和、真实干涉律或经验闭合 |
 
 ## 统一用语边界
 
