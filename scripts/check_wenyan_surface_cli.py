@@ -340,9 +340,11 @@ CLI_CASES = [
 JSON_CLI_CASES = [
     (["--json", "--tokens", "推 一"], {"mode": "tokens"}),
     (["--json", "--resolve", "在"], {"mode": "resolve"}),
-    (["--json", "--ast", "推 一"], {"mode": "ast"}),
+    (["--json", "--ast", "推 一"], {"mode": "ast", "syntaxFormCount": 0}),
+    (["--json", "--ast", "一 同 一"], {"mode": "ast", "syntaxFormCount": 1}),
     (["--json", "--typecheck", "同 一 一"], {"mode": "typecheck", "type": "Bool"}),
     (["--json", "--explain", "推 一"], {"mode": "explain"}),
+    (["--json", "--explain", "一 同 一"], {"mode": "explain"}),
     (["--json", "--operator", "Y-2"], {
         "mode": "operator",
         "operatorCode": "Y-2",
@@ -519,6 +521,25 @@ def main() -> int:
             for key in ["tokens", "resolve", "ast", "typecheck", "run"]:
                 if not isinstance(actual.get(key), dict):
                     failures.append(f"{args!r}: expected nested object for {key}, got {actual.get(key)!r}")
+            if args[2] == "一 同 一":
+                ast = actual.get("ast")
+                forms = ast.get("syntaxForms") if isinstance(ast, dict) else None
+                if not isinstance(forms, list) or len(forms) != 1:
+                    failures.append(f"{args!r}: expected one infix syntax form, got {forms!r}")
+                elif forms[0].get("fixity") != "infix" or forms[0].get("assoc") != "nonassoc":
+                    failures.append(f"{args!r}: unexpected infix syntax form {forms[0]!r}")
+        if args[:2] == ["--json", "--ast"] and args[2] == "一 同 一":
+            forms = actual.get("syntaxForms")
+            if not isinstance(forms, list) or len(forms) != 1:
+                failures.append(f"{args!r}: expected one infix syntax form, got {forms!r}")
+            elif (
+                forms[0].get("operatorCode") != "I-1"
+                or forms[0].get("surface") != "同"
+                or forms[0].get("fixity") != "infix"
+                or forms[0].get("precedence") != 40
+                or forms[0].get("assoc") != "nonassoc"
+            ):
+                failures.append(f"{args!r}: unexpected infix syntax form {forms[0]!r}")
         if args[:2] == ["--json", "--operators"]:
             operators = actual.get("operators")
             if not isinstance(operators, list) or len(operators) != expected_fields["count"]:

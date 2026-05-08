@@ -21,9 +21,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 47848,
+      "bytes": 53234,
       "path": "WenyanSurface.lean",
-      "sha256": "ee1f83eda11c04774f51e63b598a8319f8a2670761615d7e4fef7c4296419878",
+      "sha256": "2387843eb32f10a8ec4f4e755b9ec8e572065a0362b4991b7a4cc5fc9823dbce",
       "suffix": ".lean"
     },
     {
@@ -1719,9 +1719,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 15864,
+      "bytes": 16267,
       "path": "formal/SSBX/notes/wensurface-syntax-spec.md",
-      "sha256": "5b18e7140846520b9a83305f57e0cf245801eb7eda0177e2f43ed4c775995aab",
+      "sha256": "1ef073e949c500697013753ffe12fc6899e5dec9a3ec42475181d3493af1662d",
       "suffix": ".md"
     },
     {

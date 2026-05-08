@@ -610,6 +610,127 @@ private def operatorIdJsonFields (id : OperatorId) : List (String × String) :=
   , jsonFieldString "operatorTitle" id.title
   ]
 
+private def optMin (a b : Option Nat) : Option Nat :=
+  match a, b with
+  | some x, some y => some (Nat.min x y)
+  | some x, none => some x
+  | none, some y => some y
+  | none, none => none
+
+private def optMax (a b : Option Nat) : Option Nat :=
+  match a, b with
+  | some x, some y => some (Nat.max x y)
+  | some x, none => some x
+  | none, some y => some y
+  | none, none => none
+
+private def resolvedTokEndCol (t : ResolvedTok) : Nat :=
+  t.tok.startCol + t.tok.width
+
+mutual
+  private def surfaceExprStartCol? : SurfaceExpr → Option Nat
+    | .atom tok => some tok.tok.startCol
+    | .app f x => optMin (surfaceExprStartCol? f) (surfaceExprStartCol? x)
+    | .seq items => surfaceExprListStartCol? items
+    | .marker tok body => optMin (some tok.tok.startCol) (surfaceExprStartCol? body)
+    | .binder _ _ body => surfaceExprStartCol? body
+    | .letBind _ value body => optMin (surfaceExprStartCol? value) (surfaceExprStartCol? body)
+    | .construction _ items => surfaceExprListStartCol? items
+    | .grouped openTok _ _ => some openTok.tok.startCol
+
+  private def surfaceExprListStartCol? : List SurfaceExpr → Option Nat
+    | [] => none
+    | item :: rest => optMin (surfaceExprStartCol? item) (surfaceExprListStartCol? rest)
+end
+
+mutual
+  private def surfaceExprEndCol? : SurfaceExpr → Option Nat
+    | .atom tok => some (resolvedTokEndCol tok)
+    | .app f x => optMax (surfaceExprEndCol? f) (surfaceExprEndCol? x)
+    | .seq items => surfaceExprListEndCol? items
+    | .marker tok body => optMax (some (resolvedTokEndCol tok)) (surfaceExprEndCol? body)
+    | .binder _ _ body => surfaceExprEndCol? body
+    | .letBind _ value body => optMax (surfaceExprEndCol? value) (surfaceExprEndCol? body)
+    | .construction _ items => surfaceExprListEndCol? items
+    | .grouped _ closeTok _ => some (resolvedTokEndCol closeTok)
+
+  private def surfaceExprListEndCol? : List SurfaceExpr → Option Nat
+    | [] => none
+    | item :: rest => optMax (surfaceExprEndCol? item) (surfaceExprListEndCol? rest)
+end
+
+private def surfaceExprJson (expr : SurfaceExpr) : String :=
+  let spanFields :=
+    match surfaceExprStartCol? expr, surfaceExprEndCol? expr with
+    | some startCol, some endCol =>
+        [ jsonFieldNat "startCol" startCol
+        , jsonFieldNat "endCol" endCol
+        ]
+    | _, _ => []
+  jsonObject <| spanFields ++ [jsonFieldString "ast" (reprStr expr)]
+
+private def relationInfixSyntaxJson? (expr : SurfaceExpr) : Option String :=
+  match expr with
+  | .app (.app (.atom opTok) lhs) rhs =>
+      match relationInfixTok? opTok with
+      | none => none
+      | some normalizedOp =>
+          match normalizedOp.atom.operatorId?, surfaceExprEndCol? lhs, surfaceExprStartCol? rhs with
+          | some id, some lhsEndCol, some rhsStartCol =>
+              if decide (lhsEndCol <= opTok.tok.startCol ∧ opTok.tok.startCol < rhsStartCol) then
+                let spanFields :=
+                  match surfaceExprStartCol? expr, surfaceExprEndCol? expr with
+                  | some startCol, some endCol =>
+                      [ jsonFieldNat "startCol" startCol
+                      , jsonFieldNat "endCol" endCol
+                      ]
+                  | _, _ => []
+                some <| jsonObject <|
+                  [ jsonFieldString "node" "operatorForm"
+                  , jsonFieldString "surface" normalizedOp.tok.surface
+                  , jsonFieldString "syntaxForm" "infix"
+                  , jsonFieldString "fixity" "infix"
+                  , jsonFieldNat "precedence" 40
+                  , jsonFieldString "assoc" "nonassoc"
+                  , jsonFieldString "desugaredTo" "curriedApplication"
+                  , jsonFieldNat "operatorStartCol" opTok.tok.startCol
+                  , jsonFieldNat "operatorEndCol" (resolvedTokEndCol opTok)
+                  , jsonFieldRaw "args" (jsonArray [surfaceExprJson lhs, surfaceExprJson rhs])
+                  ] ++ operatorIdJsonFields id ++ spanFields
+              else
+                none
+          | _, _, _ => none
+  | _ => none
+
+mutual
+  private def syntaxFormsJsonFuel : Nat → SurfaceExpr → List String
+    | 0, _ => []
+    | fuel+1, expr =>
+        let children :=
+          match expr with
+          | .atom _ => []
+          | .app f x => syntaxFormsJsonFuel fuel f ++ syntaxFormsJsonFuel fuel x
+          | .seq items => syntaxFormsListJsonFuel fuel items
+          | .marker _ body => syntaxFormsJsonFuel fuel body
+          | .binder _ _ body => syntaxFormsJsonFuel fuel body
+          | .letBind _ value body =>
+              syntaxFormsJsonFuel fuel value ++ syntaxFormsJsonFuel fuel body
+          | .construction _ items => syntaxFormsListJsonFuel fuel items
+          | .grouped _ _ body => syntaxFormsJsonFuel fuel body
+        match relationInfixSyntaxJson? expr with
+        | some form => form :: children
+        | none => children
+
+  private def syntaxFormsListJsonFuel : Nat → List SurfaceExpr → List String
+    | 0, _ => []
+    | _+1, [] => []
+    | fuel+1, item :: rest =>
+        syntaxFormsJsonFuel fuel item ++ syntaxFormsListJsonFuel fuel rest
+end
+
+private def syntaxFormsJson (fuel : Nat) (expr : SurfaceExpr) : List String :=
+  syntaxFormsJsonFuel fuel expr
+
 private def readingJson
     (r : SSBX.Text.OperatorReadings.OperatorReading) : String :=
   let opFields :=
@@ -813,10 +934,13 @@ private def resolveJsonOutput (src : String) : String :=
 private def astJsonOutput (src : String) : String :=
   match parseSurface src with
   | .ok ast =>
+      let syntaxForms := syntaxFormsJson (src.toList.length + 10) ast
       jsonObject
         [ jsonFieldBool "ok" true
         , jsonFieldString "mode" "ast"
         , jsonFieldString "ast" (reprStr ast)
+        , jsonFieldNat "syntaxFormCount" syntaxForms.length
+        , jsonFieldRaw "syntaxForms" (jsonArray syntaxForms)
         ]
   | .error (.inl e) => errJson (.lex e)
   | .error (.inr (.inl e)) => errJson (.resolve e)

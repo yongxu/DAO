@@ -3,7 +3,8 @@
 Status: design spec and implementation tracker for the next WenSurface parser.
 S0-S1 are implemented, binder domain inference has been regularized for Bool
 and common function values, and S4 relation infix forms are implemented for
-`同`/`比`.  S2/S3/S6/S7 remain design contracts.  This document defines the
+`同`/`比`.  S5 relation-chain diagnostics and relation infix JSON metadata are
+also implemented.  S2/S3/S6/S7 remain design contracts.  This document defines the
 contract that the next parser should satisfy while preserving the current
 `wenyan-surface` behavior.
 
@@ -271,6 +272,9 @@ position after a left expression, `比` may use its infix operator form.
 Status: implemented by desugaring relation infix to existing curried
 application AST: `A 同 B` becomes `同 A B`, and `A 比 B` becomes `比 A B`.
 Relation chains such as `一 同 一 同 一` are rejected as non-associative syntax.
+`--json --ast` and nested `--json --explain.ast` include a `syntaxForms` entry
+for each detected source infix form with `fixity`, `precedence`, `assoc`, source
+span, and desugaring metadata.
 
 ## 11. Prefix Forms
 
@@ -504,7 +508,8 @@ Inspection modes should show syntax-form data:
 
 - `--tokens`: bracket tokens and delimiter tokens;
 - `--resolve`: candidate readings and syntax entries;
-- `--ast`: grouped/operatorForm/fixity nodes;
+- `--ast`: grouped/operatorForm/fixity nodes, or additive `syntaxForms` metadata
+  when an implemented form is currently represented by desugared `.app`;
 - `--typecheck`: type mismatch with grouped source spans;
 - `--json`: stable fields for fixity, precedence, associativity, and support.
 
@@ -532,7 +537,7 @@ Example JSON fields for an infix form:
 | S2 | next | Add syntax registry for existing prefix forms | old parser behavior reproduced through registry |
 | S3 | pending | Replace parser core with Pratt parser | all old examples pass, better parse errors |
 | S4 | done | Promote `同` and `比` infix forms | prefix and infix both pass |
-| S5 | partial | Add nonassoc diagnostics and precedence JSON | relation chains fail structurally; precedence JSON pending |
+| S5 | done | Add nonassoc diagnostics and precedence JSON | relation chains fail structurally; relation infix JSON exposes precedence/assoc |
 | S6 | pending | Add bounded mixfix parser machinery | catalogue-only mixfix can parse and diagnose unsupported |
 | S7 | pending | Broaden syntax entries across 371 operators | all registered forms parse or diagnose ambiguity |
 

@@ -89,7 +89,7 @@
 | 大统一逐步验证路线 | 872 | `formal/SSBX/notes/unification-stepwise-plan.md` |
 | v14 形式证明骨架 · 三分原则与 roadmap | 65 | `formal/SSBX/notes/v14-roadmap.md` |
 | WenSurface 路线状态 | 64 | `formal/SSBX/notes/wensurface-roadmap.md` |
-| WenSurface Syntax Spec: brackets, precedence, infix, mixfix | 558 | `formal/SSBX/notes/wensurface-syntax-spec.md` |
+| WenSurface Syntax Spec: brackets, precedence, infix, mixfix | 563 | `formal/SSBX/notes/wensurface-syntax-spec.md` |
 | zero-axiom roadmap for `kleene_recursion_axiom` | 265 | `formal/SSBX/notes/zero-axiom-roadmap.md` |
 | 周易位与算子对照报告 | 378 | `formal/SSBX/notes/zhouyi-position-operator-report.md` |
 | 自释 与 自证 · 分层 | 121 | `formal/SSBX/notes/自释与自证.md` |

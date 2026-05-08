@@ -42,19 +42,19 @@
     },
     {
       "path": "docs-next/_generated/lean-index.json",
-      "sha256": "24a6e43810a4109d918e2cbc1e80a55ac2862d1ffd21a729b9ea02084b57078e"
+      "sha256": "de71cb02dc55c55103680b8f8331e7dc77ca2b390e8ec39a4d7f2d914d78ff22"
     },
     {
       "path": "docs-next/_generated/lean-index.md",
-      "sha256": "a5700ab2d723838732cec8c2741f0e43c842244577b3cd87595476365cfff8cf"
+      "sha256": "06449e02a704702bc05125a49e193a5e4ff34706393e21edb1b0683481b82868"
     },
     {
       "path": "docs-next/_generated/markdown-index.json",
-      "sha256": "43cf277b8532b3e947e6c62f95a0a6d22f7d55284d47d00df36f7c60830fd58a"
+      "sha256": "ab52e5e8709ccaac3ef6d2dfbc2cf4b6b5d70f1e85a84dbd3ab3546ce8559d44"
     },
     {
       "path": "docs-next/_generated/markdown-index.md",
-      "sha256": "7992a2662158959ffe9743549b5b08bf380a84c8cbfd3e0699409239486fd56c"
+      "sha256": "1e8a684908309ef37e87fdfec79797a05ca639e37eb6ca04ecbb48db42789fc0"
     },
     {
       "path": "docs-next/_generated/operator-index.json",
@@ -74,7 +74,7 @@
     },
     {
       "path": "docs-next/_generated/sources.json",
-      "sha256": "2d7feef4fcca0bca0a1c48175c5407ee46c000926a045406431e484273a99fa5"
+      "sha256": "8fc5d6611339fcba4eb75dc3f03aa1fbadee03e657307c709e1ac94328ea39dc"
     },
     {
       "path": "docs-next/_generated/trust-boundary.json",
