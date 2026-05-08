@@ -989,6 +989,45 @@ end
 private def surfaceExprTreeJson (fuel : Nat) (expr : SurfaceExpr) : String :=
   surfaceExprTreeJsonFuel fuel expr
 
+private def surfaceAssocJsonString : SurfaceAssoc → String :=
+  SurfaceAssoc.label
+
+private def patternPartJson : PatternPart → String
+  | .lit surface =>
+      jsonObject
+        [ jsonFieldString "kind" "lit"
+        , jsonFieldString "surface" surface
+        ]
+  | .hole name minPrec =>
+      jsonObject
+        [ jsonFieldString "kind" "hole"
+        , jsonFieldString "name" name
+        , jsonFieldNat "minPrec" minPrec
+        ]
+
+private def surfaceFormJson (form : SurfaceForm) : String :=
+  let common :=
+    [ jsonFieldString "fixity" (SurfaceForm.fixityLabel form)
+    , jsonFieldNat "precedence" (SurfaceForm.precedence form)
+    ]
+  match form with
+  | .prefix _ => jsonObject common
+  | .infix _ assoc =>
+      jsonObject <| common ++ [jsonFieldString "assoc" (surfaceAssocJsonString assoc)]
+  | .postfix _ => jsonObject common
+  | .mixfix pattern _ =>
+      jsonObject <|
+        common ++ [jsonFieldRaw "pattern" (jsonArray (pattern.map patternPartJson))]
+
+private def surfaceSyntaxEntryJson (entry : SurfaceSyntaxEntry) : String :=
+  jsonObject
+    [ jsonFieldString "operatorCode" entry.id.code
+    , jsonFieldString "operatorTitle" entry.id.title
+    , jsonFieldString "surface" entry.surface
+    , jsonFieldRaw "form" (surfaceFormJson entry.form)
+    , jsonFieldString "note" entry.note
+    ]
+
 private def tokensJsonOutput (src : String) : String :=
   match lexWen src with
   | .ok toks =>
@@ -1170,6 +1209,7 @@ private def operatorJsonOutput (code : String) : String :=
       let entry := operatorRegistryEntryFor id
       let sig := entry.signature
       let glyphForms := operatorForms id |>.map (fun sense => sense.glyph)
+      let syntaxEntries := surfaceSyntaxEntriesForOperator id
       let compoundForms :=
         operatorCompoundSurfaceIds.filterMap (fun row =>
           if row.snd = id then some row.fst else none)
@@ -1188,6 +1228,8 @@ private def operatorJsonOutput (code : String) : String :=
         , jsonFieldString "operatorTitle" id.title
         , jsonFieldRaw "forms" (jsonArray (glyphForms.map jsonString))
         , jsonFieldRaw "compoundSurfaces" (jsonArray (compoundForms.map jsonString))
+        , jsonFieldNat "syntaxEntryCount" syntaxEntries.length
+        , jsonFieldRaw "syntaxEntries" (jsonArray (syntaxEntries.map surfaceSyntaxEntryJson))
         , jsonFieldRaw "signature"
             (jsonObject
               [ jsonFieldString "kind" (reprStr sig.kind)

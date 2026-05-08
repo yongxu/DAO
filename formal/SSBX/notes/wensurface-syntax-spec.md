@@ -4,7 +4,8 @@ Status: design spec and implementation tracker for the next WenSurface parser.
 S0-S1 are implemented, binder domain inference has been regularized for Bool
 and common function values, and S4 relation infix forms are implemented for
 `同`/`比`.  S5 relation-chain diagnostics and relation infix JSON metadata are
-also implemented.  S2/S3/S6/S7 remain design contracts.  This document defines the
+also implemented.  S2 now has inspectable registry data, while the parser still
+uses the legacy arity/type path.  S3/S6/S7 remain design contracts.  This document defines the
 contract that the next parser should satisfy while preserving the current
 `wenyan-surface` behavior.
 
@@ -157,6 +158,12 @@ Registry lookup must be context-sensitive:
 - expression start: atom, bracket, binder, prefix, mixfix opener;
 - after a left expression: infix, postfix, application marker;
 - inside a mixfix pattern: expected literal delimiter or expression hole.
+
+Status: `SurfaceAssoc`, `PatternPart`, `SurfaceForm`, and
+`SurfaceSyntaxEntry` now exist in `WenSurface.Syntax`.  The first registry view
+contains every `operatorForms` prefix entry plus the implemented relation infix
+forms for `同` and `比`.  `--json --operator CODE` exposes these as
+`syntaxEntries`.  Parser dispatch is not yet driven by the registry.
 
 ## 7. Precedence
 
@@ -536,7 +543,7 @@ Example JSON fields for an infix form:
 | S0 | done | Add this spec and preserve current parser | docs-only |
 | S1 | done | Tokenize brackets and add grouped AST | current tests + bracket parse tests |
 | S1b | done | Regularize Bool/function binder inference | `者 甲 不 甲 真`, `者 甲 甲 推`, predicate/function args |
-| S2 | next | Add syntax registry for existing prefix forms | old parser behavior reproduced through registry |
+| S2 | partial | Add syntax registry for existing prefix forms | registry data and CLI exposure exist; parser dispatch still legacy |
 | S3 | pending | Replace parser core with Pratt parser | all old examples pass, better parse errors |
 | S4 | done | Promote `同` and `比` infix forms | prefix and infix both pass |
 | S5 | done | Add nonassoc diagnostics and precedence JSON | relation chains fail structurally; relation infix JSON exposes precedence/assoc |

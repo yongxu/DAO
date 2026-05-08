@@ -28,10 +28,10 @@
         "SSBX.Foundation.Wen.WenSurface.EndToEnd",
         "SSBX.Foundation.Wen.WenSurface.Coverage"
       ],
-      "lines": 1380,
+      "lines": 1422,
       "module": "WenyanSurface.lean",
       "path": "WenyanSurface.lean",
-      "sha256": "5de7f91eeb005e1541ada93bc883ddffd6456a1f6bc36f51984cad2d0fdc48ec"
+      "sha256": "ed4dc24ca14626c0104cac324e69daca093bb3f804ff8721859b426fe466666d"
     },
     {
       "cluster": "root",
@@ -19132,7 +19132,7 @@
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 44,
+      "declaration_count": 60,
       "declarations": [
         {
           "kind": "inductive",
@@ -19141,6 +19141,22 @@
         {
           "kind": "inductive",
           "name": "SurfaceExpr"
+        },
+        {
+          "kind": "inductive",
+          "name": "SurfaceAssoc"
+        },
+        {
+          "kind": "inductive",
+          "name": "PatternPart"
+        },
+        {
+          "kind": "inductive",
+          "name": "SurfaceForm"
+        },
+        {
+          "kind": "structure",
+          "name": "SurfaceSyntaxEntry"
         },
         {
           "kind": "inductive",
@@ -19169,6 +19185,54 @@
         {
           "kind": "def",
           "name": "isRelationInfixOperator"
+        },
+        {
+          "kind": "def",
+          "name": "SurfaceForm.precedence"
+        },
+        {
+          "kind": "def",
+          "name": "SurfaceForm.fixityLabel"
+        },
+        {
+          "kind": "def",
+          "name": "SurfaceAssoc.label"
+        },
+        {
+          "kind": "def",
+          "name": "prefixSurfaceSyntaxEntriesForOperator"
+        },
+        {
+          "kind": "def",
+          "name": "allPrefixSurfaceSyntaxEntriesFrom"
+        },
+        {
+          "kind": "def",
+          "name": "allPrefixSurfaceSyntaxEntries"
+        },
+        {
+          "kind": "def",
+          "name": "relationInfixSurfaceSyntaxEntries"
+        },
+        {
+          "kind": "def",
+          "name": "surfaceSyntaxEntries"
+        },
+        {
+          "kind": "def",
+          "name": "surfaceSyntaxEntriesForOperator"
+        },
+        {
+          "kind": "theorem",
+          "name": "relationInfixSurfaceSyntaxEntries_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "prefixSurfaceSyntaxEntries_cover_all_operators"
+        },
+        {
+          "kind": "theorem",
+          "name": "surfaceSyntaxEntries_relation_examples"
         },
         {
           "kind": "def",
@@ -19315,10 +19379,10 @@
         "SSBX.Foundation.Wen.WenSurface.Semantics",
         "SSBX.Foundation.Wen.WenSurface.Reading"
       ],
-      "lines": 664,
+      "lines": 750,
       "module": "SSBX.Foundation.Wen.WenSurface.Syntax",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Syntax.lean",
-      "sha256": "b60ee75d535fa3c9b60566513a5e8816144f0dd6ae17130214c8babdd276973d"
+      "sha256": "838691cd70e862400f823e3f4cc8b78978a128c41c875a906bcb084de767a94e"
     },
     {
       "cluster": "Foundation/Wen",

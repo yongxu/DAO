@@ -352,6 +352,13 @@ JSON_CLI_CASES = [
         "support": "executable",
         "executable": True,
     }),
+    (["--json", "--operator", "I-1"], {
+        "mode": "operator",
+        "operatorCode": "I-1",
+        "support": "executable",
+        "executable": True,
+        "syntaxEntryCount": 2,
+    }),
     (["--json", "--operators", "executable"], {
         "mode": "operators",
         "filter": "executable",
@@ -563,6 +570,12 @@ def main() -> int:
                 and {op.get("support") for op in operators} != {"known-not-executable"}
             ):
                 failures.append(f"{args!r}: expected unsupported operator list, got {operators!r}")
+        if args[:2] == ["--json", "--operator"] and args[2] == "I-1":
+            syntax_entries = actual.get("syntaxEntries")
+            forms = [entry.get("form") for entry in syntax_entries] if isinstance(syntax_entries, list) else []
+            fixities = {form.get("fixity") for form in forms if isinstance(form, dict)}
+            if fixities != {"prefix", "infix"}:
+                failures.append(f"{args!r}: expected prefix+infix syntax entries, got {syntax_entries!r}")
 
     bad_filter_completed = run_cli(["--json", "--operators", "bad"], allow_failure=True)
     bad_filter = json.loads(bad_filter_completed.stdout)

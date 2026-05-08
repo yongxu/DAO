@@ -31,6 +31,31 @@ inductive SurfaceExpr where
   | grouped (openTok closeTok : ResolvedTok) (body : SurfaceExpr)
 deriving Repr
 
+inductive SurfaceAssoc where
+  | left
+  | right
+  | nonassoc
+deriving DecidableEq, Repr
+
+inductive PatternPart where
+  | lit (surface : String)
+  | hole (name : String) (minPrec : Nat)
+deriving DecidableEq, Repr
+
+inductive SurfaceForm where
+  | prefix (prec : Nat)
+  | infix (prec : Nat) (assoc : SurfaceAssoc)
+  | postfix (prec : Nat)
+  | mixfix (pattern : List PatternPart) (prec : Nat)
+deriving DecidableEq, Repr
+
+structure SurfaceSyntaxEntry where
+  id : OperatorId
+  surface : String
+  form : SurfaceForm
+  note : String
+deriving DecidableEq, Repr
+
 inductive ParseErr where
   | empty
   | fuelExhausted
@@ -72,6 +97,67 @@ def isRelationInfixOperator : OperatorId → Bool
   | .I_1 => true
   | .R_8 => true
   | _ => false
+
+def SurfaceForm.precedence : SurfaceForm → Nat
+  | .prefix prec => prec
+  | .infix prec _ => prec
+  | .postfix prec => prec
+  | .mixfix _ prec => prec
+
+def SurfaceForm.fixityLabel : SurfaceForm → String
+  | .prefix _ => "prefix"
+  | .infix _ _ => "infix"
+  | .postfix _ => "postfix"
+  | .mixfix _ _ => "mixfix"
+
+def SurfaceAssoc.label : SurfaceAssoc → String
+  | .left => "left"
+  | .right => "right"
+  | .nonassoc => "nonassoc"
+
+def prefixSurfaceSyntaxEntriesForOperator (id : OperatorId) : List SurfaceSyntaxEntry :=
+  (operatorForms id).map (fun sense =>
+    { id := id
+    , surface := sense.glyph
+    , form := .prefix 80
+    , note := "registered prefix surface form from operatorForms" })
+
+def allPrefixSurfaceSyntaxEntriesFrom : List OperatorId → List SurfaceSyntaxEntry
+  | [] => []
+  | id :: rest =>
+      prefixSurfaceSyntaxEntriesForOperator id ++ allPrefixSurfaceSyntaxEntriesFrom rest
+
+def allPrefixSurfaceSyntaxEntries : List SurfaceSyntaxEntry :=
+  allPrefixSurfaceSyntaxEntriesFrom allOperatorIds
+
+def relationInfixSurfaceSyntaxEntries : List SurfaceSyntaxEntry :=
+  [ { id := .I_1
+    , surface := "同"
+    , form := .infix 40 .nonassoc
+    , note := "relation equality infix; parser currently desugars to curried application" }
+  , { id := .R_8
+    , surface := "比"
+    , form := .infix 40 .nonassoc
+    , note := "relation comparison infix; expression-start 比 remains hex/operator disambiguated" }
+  ]
+
+def surfaceSyntaxEntries : List SurfaceSyntaxEntry :=
+  relationInfixSurfaceSyntaxEntries ++ allPrefixSurfaceSyntaxEntries
+
+def surfaceSyntaxEntriesForOperator (id : OperatorId) : List SurfaceSyntaxEntry :=
+  surfaceSyntaxEntries.filter (fun entry => decide (entry.id = id))
+
+theorem relationInfixSurfaceSyntaxEntries_length :
+    relationInfixSurfaceSyntaxEntries.length = 2 := by native_decide
+
+theorem prefixSurfaceSyntaxEntries_cover_all_operators :
+    allOperatorIds.all (fun id => !(prefixSurfaceSyntaxEntriesForOperator id).isEmpty) = true := by
+  native_decide
+
+theorem surfaceSyntaxEntries_relation_examples :
+    (surfaceSyntaxEntriesForOperator .I_1).length = 2
+      ∧ (surfaceSyntaxEntriesForOperator .R_8).length = 2 := by
+  native_decide
 
 def relationInfixTok? (t : ResolvedTok) : Option ResolvedTok :=
   match t.atom with
