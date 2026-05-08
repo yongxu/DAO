@@ -230,13 +230,13 @@ Current lower-bound audit for theorem families:
 * 3 exact cell-transform families: 错 / 综 / 互, with `T_6` as a
   conservative alias for the `错`/`hexCuo` cell-level family.
 * 7 concrete `Cell192` reachability generators: six line flips plus one time edge.
-* 12 BaguaWen L0 instruction clauses.
+* 13 BaguaWen L0 instruction clauses.
 * 27 core text-level semantic families from the parameterized kernel draft.
 -/
 def semanticLowerBoundRows : List SemanticLowerBoundRow :=
   [ { kind := .exactCellTransformFamilies, scope := 3 }
   , { kind := .cell192ReachabilityGenerators, scope := 7 }
-  , { kind := .l0InstructionClauses, scope := 12 }
+  , { kind := .l0InstructionClauses, scope := 13 }
   , { kind := .coreTextSemanticFamilies, scope := 27 }
   ]
 
@@ -245,7 +245,7 @@ theorem semanticLowerBoundRows_length :
   native_decide
 
 theorem semanticLowerBoundRows_scopes :
-    semanticLowerBoundRows.map (·.scope) = [3, 7, 12, 27] := by
+    semanticLowerBoundRows.map (·.scope) = [3, 7, 13, 27] := by
   native_decide
 
 theorem parameterizedSemanticFamilies_lt_operatorCellGrid :
@@ -396,7 +396,7 @@ theorem functional_completion_summary :
     ∧ cellTransformOperatorIds.length = 4
     ∧ cellTransformOperatorIds.all (fun id => decide (id ∈ signedOperatorIds)) = true
     ∧ Cell192Generator.all.length = 7
-    ∧ l0InstructionClauseKinds.length = 12
+    ∧ l0InstructionClauseKinds.length = 13
     ∧ operatorCellCandidateBindings.length = 7
     ∧ allOperatorCellSemanticRows.length = 71232
     ∧ familyBackedDenotationRows.length = 768
@@ -404,7 +404,7 @@ theorem functional_completion_summary :
     ∧ exactSignatureShapeRows.length = 1920
     ∧ catalogueSignatureShapeRows.length = 68544
     ∧ semanticLowerBoundRows.length = 4
-    ∧ semanticLowerBoundRows.map (·.scope) = [3, 7, 12, 27]
+    ∧ semanticLowerBoundRows.map (·.scope) = [3, 7, 13, 27]
     ∧ 27 < allOperatorCells.length
     ∧ functionalCompletionCompleteRows.length = 8
     ∧ functionalCompletionTrackedRows.length = 4
