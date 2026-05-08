@@ -272,9 +272,10 @@ position after a left expression, `比` may use its infix operator form.
 Status: implemented by desugaring relation infix to existing curried
 application AST: `A 同 B` becomes `同 A B`, and `A 比 B` becomes `比 A B`.
 Relation chains such as `一 同 一 同 一` are rejected as non-associative syntax.
-`--json --ast` and nested `--json --explain.ast` include a `syntaxForms` entry
-for each detected source infix form with `fixity`, `precedence`, `assoc`, source
-span, and desugaring metadata.
+`--json --ast` and nested `--json --explain.ast` include a structured `tree`
+for the normalized `SurfaceExpr`, plus a `syntaxForms` entry for each detected
+source infix form with `fixity`, `precedence`, `assoc`, source span, and
+desugaring metadata.
 
 ## 11. Prefix Forms
 
@@ -508,8 +509,9 @@ Inspection modes should show syntax-form data:
 
 - `--tokens`: bracket tokens and delimiter tokens;
 - `--resolve`: candidate readings and syntax entries;
-- `--ast`: grouped/operatorForm/fixity nodes, or additive `syntaxForms` metadata
-  when an implemented form is currently represented by desugared `.app`;
+- `--ast`: a structured `tree` for grouped/application/binder nodes, plus
+  additive `syntaxForms` metadata when an implemented form is currently
+  represented by desugared `.app`;
 - `--typecheck`: type mismatch with grouped source spans;
 - `--json`: stable fields for fixity, precedence, associativity, and support.
 

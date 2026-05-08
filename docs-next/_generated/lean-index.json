@@ -28,10 +28,10 @@
         "SSBX.Foundation.Wen.WenSurface.EndToEnd",
         "SSBX.Foundation.Wen.WenSurface.Coverage"
       ],
-      "lines": 1297,
+      "lines": 1380,
       "module": "WenyanSurface.lean",
       "path": "WenyanSurface.lean",
-      "sha256": "2387843eb32f10a8ec4f4e755b9ec8e572065a0362b4991b7a4cc5fc9823dbce"
+      "sha256": "5de7f91eeb005e1541ada93bc883ddffd6456a1f6bc36f51984cad2d0fdc48ec"
     },
     {
       "cluster": "root",

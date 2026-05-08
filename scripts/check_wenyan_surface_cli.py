@@ -341,6 +341,7 @@ JSON_CLI_CASES = [
     (["--json", "--tokens", "推 一"], {"mode": "tokens"}),
     (["--json", "--resolve", "在"], {"mode": "resolve"}),
     (["--json", "--ast", "推 一"], {"mode": "ast", "syntaxFormCount": 0}),
+    (["--json", "--ast", "（推 一）"], {"mode": "ast", "syntaxFormCount": 0}),
     (["--json", "--ast", "一 同 一"], {"mode": "ast", "syntaxFormCount": 1}),
     (["--json", "--typecheck", "同 一 一"], {"mode": "typecheck", "type": "Bool"}),
     (["--json", "--explain", "推 一"], {"mode": "explain"}),
@@ -529,6 +530,9 @@ def main() -> int:
                 elif forms[0].get("fixity") != "infix" or forms[0].get("assoc") != "nonassoc":
                     failures.append(f"{args!r}: unexpected infix syntax form {forms[0]!r}")
         if args[:2] == ["--json", "--ast"] and args[2] == "一 同 一":
+            tree = actual.get("tree")
+            if not isinstance(tree, dict) or tree.get("node") != "app":
+                failures.append(f"{args!r}: expected app tree, got {tree!r}")
             forms = actual.get("syntaxForms")
             if not isinstance(forms, list) or len(forms) != 1:
                 failures.append(f"{args!r}: expected one infix syntax form, got {forms!r}")
@@ -540,6 +544,13 @@ def main() -> int:
                 or forms[0].get("assoc") != "nonassoc"
             ):
                 failures.append(f"{args!r}: unexpected infix syntax form {forms[0]!r}")
+        if args[:2] == ["--json", "--ast"] and args[2] == "（推 一）":
+            tree = actual.get("tree")
+            body = tree.get("body") if isinstance(tree, dict) else None
+            if not isinstance(tree, dict) or tree.get("node") != "grouped":
+                failures.append(f"{args!r}: expected grouped tree, got {tree!r}")
+            elif not isinstance(body, dict) or body.get("node") != "app":
+                failures.append(f"{args!r}: expected grouped app body, got {body!r}")
         if args[:2] == ["--json", "--operators"]:
             operators = actual.get("operators")
             if not isinstance(operators, list) or len(operators) != expected_fields["count"]:

@@ -908,6 +908,87 @@ private def resolvedTokJson (t : ResolvedTok) : String :=
     , jsonFieldRaw "atom" (atomJson t.atom)
     ]
 
+private def binderKindJsonString : BinderKind → String
+  | .lambda => "lambda"
+  | .forallHex => "forallHex"
+
+private def surfaceExprSpanFields (expr : SurfaceExpr) : List (String × String) :=
+  match surfaceExprStartCol? expr, surfaceExprEndCol? expr with
+  | some startCol, some endCol =>
+      [ jsonFieldNat "startCol" startCol
+      , jsonFieldNat "endCol" endCol
+      ]
+  | _, _ => []
+
+mutual
+  private def surfaceExprTreeJsonFuel : Nat → SurfaceExpr → String
+    | 0, expr =>
+        jsonObject <|
+          [ jsonFieldString "node" "fuelExhausted"
+          , jsonFieldString "ast" (reprStr expr)
+          ] ++ surfaceExprSpanFields expr
+    | fuel+1, expr =>
+        match expr with
+        | .atom tok =>
+            jsonObject <|
+              [ jsonFieldString "node" "atom"
+              , jsonFieldRaw "token" (resolvedTokJson tok)
+              ] ++ surfaceExprSpanFields expr
+        | .app f x =>
+            jsonObject <|
+              [ jsonFieldString "node" "app"
+              , jsonFieldRaw "function" (surfaceExprTreeJsonFuel fuel f)
+              , jsonFieldRaw "argument" (surfaceExprTreeJsonFuel fuel x)
+              ] ++ surfaceExprSpanFields expr
+        | .seq items =>
+            jsonObject <|
+              [ jsonFieldString "node" "seq"
+              , jsonFieldRaw "items" (jsonArray (surfaceExprTreeListJsonFuel fuel items))
+              ] ++ surfaceExprSpanFields expr
+        | .marker tok body =>
+            jsonObject <|
+              [ jsonFieldString "node" "marker"
+              , jsonFieldRaw "marker" (resolvedTokJson tok)
+              , jsonFieldRaw "body" (surfaceExprTreeJsonFuel fuel body)
+              ] ++ surfaceExprSpanFields expr
+        | .binder kind name body =>
+            jsonObject <|
+              [ jsonFieldString "node" "binder"
+              , jsonFieldString "kind" (binderKindJsonString kind)
+              , jsonFieldString "name" name
+              , jsonFieldRaw "body" (surfaceExprTreeJsonFuel fuel body)
+              ] ++ surfaceExprSpanFields expr
+        | .letBind name value body =>
+            jsonObject <|
+              [ jsonFieldString "node" "letBind"
+              , jsonFieldString "name" name
+              , jsonFieldRaw "value" (surfaceExprTreeJsonFuel fuel value)
+              , jsonFieldRaw "body" (surfaceExprTreeJsonFuel fuel body)
+              ] ++ surfaceExprSpanFields expr
+        | .construction name items =>
+            jsonObject <|
+              [ jsonFieldString "node" "construction"
+              , jsonFieldString "name" name
+              , jsonFieldRaw "items" (jsonArray (surfaceExprTreeListJsonFuel fuel items))
+              ] ++ surfaceExprSpanFields expr
+        | .grouped openTok closeTok body =>
+            jsonObject <|
+              [ jsonFieldString "node" "grouped"
+              , jsonFieldRaw "open" (resolvedTokJson openTok)
+              , jsonFieldRaw "close" (resolvedTokJson closeTok)
+              , jsonFieldRaw "body" (surfaceExprTreeJsonFuel fuel body)
+              ] ++ surfaceExprSpanFields expr
+
+  private def surfaceExprTreeListJsonFuel : Nat → List SurfaceExpr → List String
+    | 0, _ => []
+    | _+1, [] => []
+    | fuel+1, item :: rest =>
+        surfaceExprTreeJsonFuel fuel item :: surfaceExprTreeListJsonFuel fuel rest
+end
+
+private def surfaceExprTreeJson (fuel : Nat) (expr : SurfaceExpr) : String :=
+  surfaceExprTreeJsonFuel fuel expr
+
 private def tokensJsonOutput (src : String) : String :=
   match lexWen src with
   | .ok toks =>
@@ -934,11 +1015,13 @@ private def resolveJsonOutput (src : String) : String :=
 private def astJsonOutput (src : String) : String :=
   match parseSurface src with
   | .ok ast =>
-      let syntaxForms := syntaxFormsJson (src.toList.length + 10) ast
+      let fuel := src.toList.length + 10
+      let syntaxForms := syntaxFormsJson fuel ast
       jsonObject
         [ jsonFieldBool "ok" true
         , jsonFieldString "mode" "ast"
         , jsonFieldString "ast" (reprStr ast)
+        , jsonFieldRaw "tree" (surfaceExprTreeJson fuel ast)
         , jsonFieldNat "syntaxFormCount" syntaxForms.length
         , jsonFieldRaw "syntaxForms" (jsonArray syntaxForms)
         ]

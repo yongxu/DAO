@@ -27,7 +27,7 @@
 
 | Module | Cluster | Imports | Decls | Lines | Path |
 | --- | --- | --- | --- | --- | --- |
-| WenyanSurface.lean | other | 2 | 1 | 1297 | `WenyanSurface.lean` |
+| WenyanSurface.lean | other | 2 | 1 | 1380 | `WenyanSurface.lean` |
 | SSBX | root | 157 | 0 | 188 | `formal/SSBX.lean` |
 | SSBX.Core | root | 0 | 111 | 648 | `formal/SSBX/Core.lean` |
 | SSBX.Foundation.Bagua.AxiomCheck | Foundation/Bagua | 1 | 0 | 18 | `formal/SSBX/Foundation/Bagua/AxiomCheck.lean` |
