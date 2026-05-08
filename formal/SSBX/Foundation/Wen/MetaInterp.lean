@@ -2,8 +2,8 @@
 # MetaInterp — YiInstr 通用元解释器（构造中）
 
 目标：建造 `metaInterpProg : List YiInstr` 满足
-`KleeneInternal.UniversalInterpSpec metaInterpProg`，从而 discharge
-`KleeneCarrier.universalInterpExists` 公理。
+`KleeneInternal.UniversalInterpSpec metaInterpProg`，从而为
+`KleeneInternal.UniversalInterpExists` 提供具体 witness。
 
 ## 文件位置（roadmap）
 
