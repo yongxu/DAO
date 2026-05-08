@@ -1,6 +1,6 @@
 # 逐步统一候选摘要 · Markov桥S8
 
-**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [作用量相位律候选 · Markov桥S5r](作用量相位律候选%20·%20Markov桥S5r.md) · [观测账本候选 · Markov桥S5q](观测账本候选%20·%20Markov桥S5q.md) · [有限概率归一化候选 · Markov桥S9](有限概率归一化候选%20·%20Markov桥S9.md) · [归一化质量求和候选 · Markov桥S10](归一化质量求和候选%20·%20Markov桥S10.md) · [Born权重条件归一候选 · Markov桥S11](Born权重条件归一候选%20·%20Markov桥S11.md) · [Born分布边界候选 · Markov桥S12](Born分布边界候选%20·%20Markov桥S12.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
+**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [作用量相位律候选 · Markov桥S5r](作用量相位律候选%20·%20Markov桥S5r.md) · [观测账本候选 · Markov桥S5q](观测账本候选%20·%20Markov桥S5q.md) · [有限概率归一化候选 · Markov桥S9](有限概率归一化候选%20·%20Markov桥S9.md) · [归一化质量求和候选 · Markov桥S10](归一化质量求和候选%20·%20Markov桥S10.md) · [Born权重条件归一候选 · Markov桥S11](Born权重条件归一候选%20·%20Markov桥S11.md) · [Born分布边界候选 · Markov桥S12](Born分布边界候选%20·%20Markov桥S12.md) · [channelCompose候选 · Markov桥S13](channelCompose候选%20·%20Markov桥S13.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
 **Lean 锚点**：
 
@@ -29,7 +29,7 @@ concrete Markov-causal bridge
 
 这不是物理终局统一，也不是实验闭合。它只是把本分支已经机器检查通过的有限结构合取成当前摘要 theorem，并把尚未关闭的边界逐项列出。
 
-注：S8 的 pending list 是 S8 当层边界；S9 已进一步关闭 finite row sum-one normalization boundary，S10 已进一步关闭逐项 normalized mass sum-one law，S11 已进一步关闭 normalized amplitude support 条件下的 candidateWeight law，S12 已进一步关闭 finite Born distribution boundary，但不改变 S8 theorem 的历史读法。
+注：S8 的 pending list 是 S8 当层边界；S9 已进一步关闭 finite row sum-one normalization boundary，S10 已进一步关闭逐项 normalized mass sum-one law，S11 已进一步关闭 normalized amplitude support 条件下的 candidateWeight law，S12 已进一步关闭 finite Born distribution boundary，S13 已进一步关闭 channel composition candidate，但不改变 S8 theorem 的历史读法。
 
 公开摘要为：
 
@@ -78,7 +78,7 @@ theorem stepwise_unification_candidate_summary :
 
 | 轴 | 状态 |
 |---|---|
-| S8 当层 finite row sum-one boundary | S8 记为 `ClosedByStepwiseS5r .sumOneProbability = false`；S9 已关闭 concrete/grid finite row version，S10 已关闭逐项 normalized mass version，S11 已关闭 conditional Born-weight version，S12 已关闭 finite distribution packaging |
+| S8 当层 finite row sum-one boundary | S8 记为 `ClosedByStepwiseS5r .sumOneProbability = false`；S9 已关闭 concrete/grid finite row version，S10 已关闭逐项 normalized mass version，S11 已关闭 conditional Born-weight version，S12 已关闭 finite distribution packaging，S13 已关闭 channel composition candidate |
 | Born-rule derivation | `ClosedByStepwiseS5r .bornRuleDerivation = false` |
 | continuous action law | `ClosedByStepwiseS5r .continuousActionLaw = false` |
 | general path integral | `ClosedByStepwiseS5r .generalPathIntegral = false` |

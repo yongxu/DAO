@@ -84,6 +84,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityNormalizatio
 lake build SSBX.Foundation.Modern.QuantumRelativityNormalizedMassBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityBornWeightNormalizationBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityBornDistributionBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityChannelComposeBridge
 lake build SSBX
 git diff --check --
 ```
@@ -898,6 +899,38 @@ born_distribution_bridge_summary。
 | `born_distribution_bridge_summary` | `QuantumRelativityBornDistributionBridge.lean` | S9-S12 probability-side boundaries 的合取摘要 |
 | `PendingBeyondS12` | `QuantumRelativityBornDistributionBridge.lean` | channel composition 与 Born derivation 等较大边界仍 pending |
 
+## S13 · channelCompose 候选
+
+目标：给 S4 的 `QuantumChannelSkeleton` 加入最小 composition operation。S13 不证明物理 unitary/CPTP channel law，只证明 current skeleton 的候选组合保持 support-to-step soundness。
+
+| 项 | 内容 |
+|---|---|
+| Lean 出口 | `channel_compose_bridge_summary` |
+| 最低 theorem 形态 | 合取 `BornDistributionBoundaryClosed`、`ChannelCompositionBoundaryClosed`、concrete/grid channel candidates、`PendingBeyondS13` 与 Wen coverage |
+| 失败记录 | stdin 试探一次通过；保留“不是 physical channel law”的概念边界 |
+| 文档更新 | 已新增《channelCompose候选 · Markov桥S13》 |
+| 后续结构 | identity/associativity candidate、probability push-forward、unitary/CPTP ledger、metric recovery 与 empirical closure |
+
+通过判准：
+
+```text
+channelCompose；
+channelCompose_amplitude；
+channelCompose_keeps_left_classical_boundary；
+channelCompose_support_implies_step；
+channel_compose_bridge_summary。
+```
+
+当前状态：
+
+| theorem | 文件 | 读法 |
+|---|---|---|
+| `channelCompose_amplitude` | `QuantumRelativityChannelComposeBridge.lean` | composed amplitude 是逐点乘积 |
+| `channelCompose_keeps_left_classical_boundary` | `QuantumRelativityChannelComposeBridge.lean` | composition 保留左侧 finite classical boundary |
+| `channelCompose_support_implies_step` | `QuantumRelativityChannelComposeBridge.lean` | nonzero composed amplitude 仍推出 process step |
+| `channel_compose_bridge_summary` | `QuantumRelativityChannelComposeBridge.lean` | current skeleton channel composition boundary 已关闭 |
+| `PendingBeyondS13` | `QuantumRelativityChannelComposeBridge.lean` | physical channel law、unitary/CPTP 与 empirical closure 仍 pending |
+
 ## 失败记录追加区
 
 失败记录格式沿用验证计划，并允许追加在此区：
@@ -945,6 +978,7 @@ born_distribution_bridge_summary。
 | 2026-05-09 | S10 | failure retained / success | direct concrete/grid 展开 proof 可过但不够结构化；改为泛型 `normalizedMassSum_eq_normalizedRowTotalCandidate`，关闭 `normalizedMass_sum_one` 与 concrete/grid normalized mass sum-one boundary |
 | 2026-05-09 | S11 | failure retained / success | `simp` 不能直接改写 `(candidateWeight ∘ bornRuleCandidate)` 的 list sum；改用 list induction 后关闭 conditional Born-weight normalization boundary |
 | 2026-05-09 | S12 | failure retained / success | `simp [bornDistributionBoundary]` 未自动拆出 dependent distribution fields；改为显式 existential witness 后关闭 finite Born distribution boundary |
+| 2026-05-09 | S13 | success | `channelCompose` stdin 试探一次通过；关闭 current skeleton 的 channel composition candidate，仍不证明 physical unitary/CPTP channel law |
 
 ## 统一用语正名
 
@@ -952,9 +986,9 @@ born_distribution_bridge_summary。
 
 | 词 | 在本路线中的含义 | 结构依据 |
 |---|---|---|
-| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S12 已关闭的 summary theorem 与路线日志 |
-| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8-S12 pending list |
-| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary`、`normalized_mass_bridge_summary`、`born_weight_normalization_bridge_summary`、`born_distribution_bridge_summary` |
+| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S13 已关闭的 summary theorem 与路线日志 |
+| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8-S13 pending list |
+| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary`、`normalized_mass_bridge_summary`、`born_weight_normalization_bridge_summary`、`born_distribution_bridge_summary`、`channel_compose_bridge_summary` |
 
 推荐正名句：
 

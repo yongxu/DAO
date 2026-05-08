@@ -1120,6 +1120,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityBornDistributionBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityBornWeightNormalizationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityCanonicalRepresentativeBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean",
@@ -1182,6 +1183,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityBornDistributionBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityBornWeightNormalizationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityCanonicalRepresentativeBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean",
@@ -1259,6 +1261,18 @@
         },
         {
           "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeBridge.lean"
+          ],
+          "symbol": "channelCompose"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeBridge.lean"
+          ],
+          "symbol": "channel_compose_bridge_summary"
+        },
+        {
+          "paths": [
             "formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean"
           ],
           "symbol": "concrete_bridge_summary"
@@ -1316,18 +1330,6 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
           ],
           "symbol": "finite_probability_normalization_bridge_summary"
-        },
-        {
-          "paths": [
-            "formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean"
-          ],
-          "symbol": "interference_bridge_summary"
-        },
-        {
-          "paths": [
-            "formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean"
-          ],
-          "symbol": "markov_causal_bridge_summary"
         }
       ]
     },
@@ -2986,6 +2988,12 @@
         },
         {
           "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeBridge.lean"
+          ],
+          "symbol": "channel_compose_bridge_summary"
+        },
+        {
+          "paths": [
             "formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean"
           ],
           "symbol": "concrete_bridge_summary"
@@ -3013,12 +3021,6 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean"
           ],
           "symbol": "endpoint_support_normalization_bridge_summary"
-        },
-        {
-          "paths": [
-            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean"
-          ],
-          "symbol": "finite_key_quotient_bridge_summary"
         }
       ]
     },
@@ -3515,6 +3517,66 @@
         "formal/SSBX/Foundation/Wen/EconGame.lean"
       ],
       "symbol_hits": []
+    },
+    {
+      "document": "义理/channelCompose候选 · Markov桥S13.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeBridge.lean"
+          ],
+          "symbol": "ChannelCompositionBoundaryClosed"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeBridge.lean"
+          ],
+          "symbol": "channelCompose"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeBridge.lean"
+          ],
+          "symbol": "channelCompose_amplitude"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeBridge.lean"
+          ],
+          "symbol": "channelCompose_keeps_left_classical_boundary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeBridge.lean"
+          ],
+          "symbol": "channelCompose_support_implies_step"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeBridge.lean"
+          ],
+          "symbol": "channel_compose_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeBridge.lean"
+          ],
+          "symbol": "channel_composition_boundary_closed"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeBridge.lean"
+          ],
+          "symbol": "concrete_channelCompose_self_keeps_boundary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeBridge.lean"
+          ],
+          "symbol": "operatorCellGrid_channelCompose_self_keeps_boundary"
+        }
+      ]
     },
     {
       "document": "义理/人类命运共同体_共同体之证.md",

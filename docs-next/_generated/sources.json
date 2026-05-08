@@ -1,5 +1,5 @@
 {
-  "count": 399,
+  "count": 401,
   "include_archive": false,
   "sources": [
     {
@@ -99,9 +99,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 3038,
+      "bytes": 3080,
       "path": "docs-next/10_formal_形式/modern.md",
-      "sha256": "73723306679cbfafd12989759a99323780f47c32342acf1bb8f0dc817141b990",
+      "sha256": "2a3eef3b8f41470716844a9e62a71c4794770e95c2b9c79503887e50df78e859",
       "suffix": ".md"
     },
     {
@@ -357,9 +357,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 8394,
+      "bytes": 8462,
       "path": "formal/SSBX.lean",
-      "sha256": "0bc63ac3644e1ff0c2331f59cef267dee53e1b257b5767747b7807e8f28614db",
+      "sha256": "edcf9d1bf24bd7d68de537c42a7a7c7bee008eb22befe5e1e2b90f66384c0eaa",
       "suffix": ".lean"
     },
     {
@@ -786,6 +786,12 @@
       "bytes": 5080,
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityCanonicalRepresentativeBridge.lean",
       "sha256": "2231f6a4d11d7c35dcc71b3616c46ba0a40565b237c7e281a6da29c20ceec4d6",
+      "suffix": ".lean"
+    },
+    {
+      "bytes": 7409,
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeBridge.lean",
+      "sha256": "9a5eb96ea5d210df8da09ed7ee2c51864d17d8f30ea5e9b92f952bd6366b9f76",
       "suffix": ".lean"
     },
     {
@@ -1659,15 +1665,15 @@
       "suffix": ".md"
     },
     {
-      "bytes": 51970,
+      "bytes": 53222,
       "path": "formal/SSBX/notes/markov-causal-bridge-plan.md",
-      "sha256": "fee296b9f601b152f5c4ae8010628ac440e5434928c3c2e2e690850ff1569028",
+      "sha256": "f78741a78a93363d92b0da404934b842cdb720213edf92e58b47ea520ba13f0a",
       "suffix": ".md"
     },
     {
-      "bytes": 35966,
+      "bytes": 36884,
       "path": "formal/SSBX/notes/markov-causal-bridge-verification-plan.md",
-      "sha256": "a8f97708329e0e52592ee94d09bd793018f4eef7438401b1ff2ea4e55ed022d2",
+      "sha256": "5741ae670e5a8104f4d75e36fd08c12dfc5a725614605168afc3e02fb977810c",
       "suffix": ".md"
     },
     {
@@ -1719,9 +1725,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 69527,
+      "bytes": 71579,
       "path": "formal/SSBX/notes/unification-stepwise-plan.md",
-      "sha256": "c3350fe5f89fc4e94e8c2d203924f958ca2d9a2d2a389b274fcc2cb7081adc6c",
+      "sha256": "71207736572ef7fd0f9a4a1bb51704511b4b32f12a1aa7b490e3e146c9897751",
       "suffix": ".md"
     },
     {
@@ -1851,9 +1857,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 5195,
+      "bytes": 5380,
       "path": "义理/Born分布边界候选 · Markov桥S12.md",
-      "sha256": "3d4c743f1762d55316c5e99361acc4a7b798fc8d50540c47122bcce1f084f9b1",
+      "sha256": "66f0b4b155fccb347e596364ae4e5533a34c9302710c227ee21f6192d2c31a24",
       "suffix": ".md"
     },
     {
@@ -1935,9 +1941,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 63238,
+      "bytes": 64107,
       "path": "义理/Markov因果桥 · 大统一最小验证构造.md",
-      "sha256": "d3665e249e8e3a47b5591525198e46629a02a2dc0d98fe3978ce758ccba02eb2",
+      "sha256": "12577357bd1145052d3a2e625e2cec1c0c9f6fbb4fb0841f8e9a4425787c0937",
       "suffix": ".md"
     },
     {
@@ -2022,6 +2028,12 @@
       "bytes": 17927,
       "path": "义理/Z_经济博弈.md",
       "sha256": "8c9233c976a1400eb5fe9e13c0c1f589d245726069d4f5da552941b2b8effb74",
+      "suffix": ".md"
+    },
+    {
+      "bytes": 5708,
+      "path": "义理/channelCompose候选 · Markov桥S13.md",
+      "sha256": "aae68e66fd9033c0457b2684fa0b816acca50d59b47e23061becdc49a46a2a10",
       "suffix": ".md"
     },
     {
@@ -2319,9 +2331,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 6485,
+      "bytes": 6673,
       "path": "义理/逐步统一候选摘要 · Markov桥S8.md",
-      "sha256": "672ef49500162da086076c34be53052f507d4c5adfa377d09ca4d09d6afc2d3e",
+      "sha256": "771e881119907eb25363b5ff4b755f517d258033a157414a03b71aea86241b03",
       "suffix": ".md"
     },
     {
