@@ -1,12 +1,12 @@
 /-
 # WenSurface.Elaborate — SurfaceExpr → WenDef.Tm
 
-把 ResolvedTok 流 elaborate 为 WenDef.Tm（typed-λ over Hex+Bool+Arr）。
+把 ResolvedTok 流 elaborate 为 WenDef.Tm（typed-λ over Hex+Bool+Pair/List+Arr）。
 求值仍由既有 [WenDefEval.evalFuel](../WenDefEval.lean) 完成。
 
 ## 当前范围
 
-- **算子**：159 个 exact operator 进入 theorem-backed / Bool package bodies；
+- **算子**：166 个 exact operator 进入 theorem-backed / Bool / carrier package bodies；
   其余 catalogue operator elaborates to structural catalogue normal forms。
 - **常值**：「一」 → `.yi` primitive；64 卦名 / aliases → `.hexLit h`。
 - **组合**：显式 `SurfaceExpr.app` 左结合到 `Tm.app`。
@@ -307,6 +307,11 @@ def inferTypeDetailed : Ctx → Tm → Except TypeDiag Ty
   | _, .flip1H    => .ok (.arr .hex .hex)
   | _, .flip2H    => .ok (.arr .hex .hex)
   | _, .flip3H    => .ok (.arr .hex .hex)
+  | _, .pairH     => .ok (.arr .hex (.arr .hex (.prod .hex .hex)))
+  | _, .dupH      => .ok (.arr .hex (.prod .hex .hex))
+  | _, .list1H    => .ok (.arr .hex (.list .hex))
+  | _, .list2H    => .ok (.arr .hex (.arr .hex (.list .hex)))
+  | _, .headH     => .ok (.arr (.list .hex) .hex)
   | ctx, .catalogue1 id a =>
       match inferTypeDetailed ctx a with
       | .error e => .error e

@@ -2,8 +2,8 @@
 # wenyan-surface — CLI for the WenSurface interpreter
 
 Reads a wenyan program from stdin or a single argv argument, runs it through
-`SSBX.Foundation.Wen.WenSurface.wenyanInterp` (and `wenyanInterpBool` as a
-fallback for Bool-typed programs), and prints the result.
+`SSBX.Foundation.Wen.WenSurface.wenyanInterp`, with Bool and finite carrier
+fallbacks, and prints the result.
 
 Examples:
   echo '推 一'         | wenyan-surface
@@ -54,6 +54,15 @@ private def hexLabel (h : Hexagram) : String :=
 private def hexShow (h : Hexagram) : String :=
   let idx := (Hexagram.toIdx h).val
   s!"hex idx {idx}{hexLabel h}\n{hexDiagram h}"
+
+private def hexBrief (h : Hexagram) : String :=
+  s!"idx {(Hexagram.toIdx h).val}{hexLabel h}"
+
+private def hexPairShow (p : Hexagram × Hexagram) : String :=
+  s!"pair ({hexBrief p.1}) ({hexBrief p.2})"
+
+private def hexListShow (xs : List Hexagram) : String :=
+  "list [" ++ String.intercalate ", " (xs.map hexBrief) ++ "]"
 
 private def readingSupportShow
     (r : SSBX.Text.OperatorReadings.OperatorReading) : String :=
@@ -227,6 +236,8 @@ private def tyShow : SSBX.Foundation.Wen.WenDef.Ty → String
   | .hex => "Hex"
   | .bool => "Bool"
   | .catalogue kind => "Catalogue[" ++ kind.key ++ "]"
+  | .prod a b => "(" ++ tyShow a ++ " * " ++ tyShow b ++ ")"
+  | .list a => "List[" ++ tyShow a ++ "]"
   | .arr a b => "(" ++ tyShow a ++ " -> " ++ tyShow b ++ ")"
 
 private def typeDiagShow : TypeDiag → String
@@ -531,6 +542,18 @@ private def jsonFieldBool (key : String) (value : Bool) : String × String :=
 private def jsonFieldRaw (key value : String) : String × String :=
   (key, value)
 
+private def hexJson (h : Hexagram) : String :=
+  jsonObject
+    [ jsonFieldNat "idx" (Hexagram.toIdx h).val
+    , jsonFieldString "label" (hexLabel h)
+    ]
+
+private def hexPairJson (p : Hexagram × Hexagram) : String :=
+  jsonArray [hexJson p.1, hexJson p.2]
+
+private def hexListJson (xs : List Hexagram) : String :=
+  jsonArray (xs.map hexJson)
+
 private def endColOfSurface (startCol : Nat) (surface : String) : Nat :=
   startCol + surface.toList.length
 
@@ -811,17 +834,33 @@ private def jsonOutput (src : String) : String :=
     match wenyanInterpBool src with
     | .ok b => "{\"ok\":true,\"kind\":\"bool\",\"value\":" ++ toString b ++ "}"
     | .error _ =>
-        match catalogueRun? src with
-        | some (id, kind, arity) =>
+      match wenyanInterpHexPair src with
+      | .ok p =>
+          jsonObject
+            [ jsonFieldBool "ok" true
+            , jsonFieldString "kind" "hexPair"
+            , jsonFieldRaw "values" (hexPairJson p)
+            ]
+      | .error _ =>
+        match wenyanInterpHexList src with
+        | .ok xs =>
             jsonObject
               [ jsonFieldBool "ok" true
-              , jsonFieldString "kind" "catalogue"
-              , jsonFieldString "operatorCode" id.code
-              , jsonFieldString "operatorTitle" id.title
-              , jsonFieldString "signatureKind" kind.key
-              , jsonFieldNat "arity" arity
+              , jsonFieldString "kind" "hexList"
+              , jsonFieldRaw "values" (hexListJson xs)
               ]
-        | none => errJson eHex
+        | .error _ =>
+            match catalogueRun? src with
+            | some (id, kind, arity) =>
+                jsonObject
+                  [ jsonFieldBool "ok" true
+                  , jsonFieldString "kind" "catalogue"
+                  , jsonFieldString "operatorCode" id.code
+                  , jsonFieldString "operatorTitle" id.title
+                  , jsonFieldString "signatureKind" kind.key
+                  , jsonFieldNat "arity" arity
+                  ]
+            | none => errJson eHex
 
 private def programOk (src : String) : Bool :=
   match wenyanInterp src with
@@ -829,7 +868,13 @@ private def programOk (src : String) : Bool :=
   | .error _ =>
       match wenyanInterpBool src with
       | .ok _ => true
-      | .error _ => (catalogueRun? src).isSome
+      | .error _ =>
+          match wenyanInterpHexPair src with
+          | .ok _ => true
+          | .error _ =>
+              match wenyanInterpHexList src with
+              | .ok _ => true
+              | .error _ => (catalogueRun? src).isSome
 
 private def tokensOk (src : String) : Bool :=
   match lexWen src with
@@ -860,16 +905,22 @@ private def exitCode (ok : Bool) : UInt32 :=
 /-! ## Run a single program -/
 
 private def runProgram (src : String) : String :=
-  -- Try Hex first; if that fails for a denote reason, try Bool.
+  -- Try concrete exact values first; if those fail, fall back to catalogue form.
   match wenyanInterp src with
   | .ok h => hexShow h
   | .error eHex =>
     match wenyanInterpBool src with
     | .ok b => s!"bool {b}"
     | .error _ =>
-        match catalogueRun? src with
-        | some (id, kind, arity) => catalogueRunShow id kind arity
-        | none => errShow eHex   -- show the original (Hex-attempt) error
+      match wenyanInterpHexPair src with
+      | .ok p => hexPairShow p
+      | .error _ =>
+        match wenyanInterpHexList src with
+        | .ok xs => hexListShow xs
+        | .error _ =>
+            match catalogueRun? src with
+            | some (id, kind, arity) => catalogueRunShow id kind arity
+            | none => errShow eHex   -- show the original (Hex-attempt) error
 
 private def explainOutput (src : String) : String :=
   String.intercalate "\n\n"
@@ -1018,7 +1069,7 @@ private def usage : String :=
      "       wenyan-surface --help",
      "",
      "Surface vocabulary:",
-     "  Executable operators: 371 rows (159 exact/theorem-backed; 212 structural catalogue; 0 symbolic catalogue-shape)",
+     "  Executable operators: 371 rows (166 exact/theorem-backed; 205 structural catalogue; 0 symbolic catalogue-shape)",
      "  Examples include: 推 比 不 必 同 凡 損 损 益 错 錯 综 綜 互 反 則 且 非 或 莫",
      "  Hex consts: 一 乾 坤 plus canonical 64 hexagram names",
      "  Bool consts: 真 假",

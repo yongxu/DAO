@@ -66,6 +66,8 @@ inductive Ty : Type
   | hex
   | bool
   | catalogue (kind : SignatureKind)
+  | prod (fst snd : Ty)
+  | list (elem : Ty)
   | arr (dom cod : Ty)
 deriving DecidableEq, Repr
 
@@ -95,6 +97,11 @@ inductive Tm : Type
   | flip1H                             : Tm  -- 初爻 flip : Hex → Hex
   | flip2H                             : Tm  -- 二爻 flip : Hex → Hex
   | flip3H                             : Tm  -- 三爻 flip : Hex → Hex
+  | pairH                              : Tm  -- pair : Hex → Hex → Hex×Hex
+  | dupH                               : Tm  -- dup : Hex → Hex×Hex
+  | list1H                             : Tm  -- singleton : Hex → List Hex
+  | list2H                             : Tm  -- pair-list : Hex → Hex → List Hex
+  | headH                              : Tm  -- head : List Hex → Hex
   | catalogue1 (id : OperatorId) (a : Tm) : Tm
   | catalogue2 (id : OperatorId) (a b : Tm) : Tm
   | catalogue3 (id : OperatorId) (a b c : Tm) : Tm
@@ -141,6 +148,11 @@ def typeCheck : Ctx → Tm → Option Ty
   | _, .flip1H    => some (.arr .hex .hex)
   | _, .flip2H    => some (.arr .hex .hex)
   | _, .flip3H    => some (.arr .hex .hex)
+  | _, .pairH     => some (.arr .hex (.arr .hex (.prod .hex .hex)))
+  | _, .dupH      => some (.arr .hex (.prod .hex .hex))
+  | _, .list1H    => some (.arr .hex (.list .hex))
+  | _, .list2H    => some (.arr .hex (.arr .hex (.list .hex)))
+  | _, .headH     => some (.arr (.list .hex) .hex)
   | ctx, .catalogue1 id a =>
       let sig := fullSignatureFor id
       if sig.arity = 1 && (typeCheck ctx a).isSome then
@@ -681,6 +693,70 @@ def eachHDef : WenDef where
   validName      := by native_decide
   bodyTypechecks := by native_decide
 
+/-! ### Hex pair/list carrier helpers -/
+
+def pairHBody : Tm := .pairH
+
+theorem pairHBody_typed :
+    typeCheck [] pairHBody = some (.arr .hex (.arr .hex (.prod .hex .hex))) := by
+  native_decide
+
+def pairHDef : WenDef where
+  name           := "pairH"
+  body           := pairHBody
+  bodyType       := .arr .hex (.arr .hex (.prod .hex .hex))
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def dupHBody : Tm := .dupH
+
+theorem dupHBody_typed :
+    typeCheck [] dupHBody = some (.arr .hex (.prod .hex .hex)) := by native_decide
+
+def dupHDef : WenDef where
+  name           := "dupH"
+  body           := dupHBody
+  bodyType       := .arr .hex (.prod .hex .hex)
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def list1HBody : Tm := .list1H
+
+theorem list1HBody_typed :
+    typeCheck [] list1HBody = some (.arr .hex (.list .hex)) := by native_decide
+
+def list1HDef : WenDef where
+  name           := "list1H"
+  body           := list1HBody
+  bodyType       := .arr .hex (.list .hex)
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def list2HBody : Tm := .list2H
+
+theorem list2HBody_typed :
+    typeCheck [] list2HBody = some (.arr .hex (.arr .hex (.list .hex))) := by
+  native_decide
+
+def list2HDef : WenDef where
+  name           := "list2H"
+  body           := list2HBody
+  bodyType       := .arr .hex (.arr .hex (.list .hex))
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def headHBody : Tm := .headH
+
+theorem headHBody_typed :
+    typeCheck [] headHBody = some (.arr (.list .hex) .hex) := by native_decide
+
+def headHDef : WenDef where
+  name           := "headH"
+  body           := headHBody
+  bodyType       := .arr (.list .hex) .hex
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
 /-! ### Stdlib 总表 -/
 
 /-- 当前 stdlib 中已合度且类型化之 wenyan-ops 定义。 -/
@@ -690,9 +766,10 @@ def all : List WenDef :=
   , hexIdDef, cuoZongDef, flip1Def, flip2Def, flip3Def
   , impDef, neqHexDef, existsHDef, noneHDef
   , uniqueHDef, exactly3HDef, majorityHDef, endoCompDef, hexApplyDef
-  , boolMarkerDef, repeatOnceDef, eachHDef ]
+  , boolMarkerDef, repeatOnceDef, eachHDef
+  , pairHDef, dupHDef, list1HDef, list2HDef, headHDef ]
 
-theorem all_length : all.length = 29 := by native_decide
+theorem all_length : all.length = 34 := by native_decide
 
 theorem all_names :
     all.map WenDef.name =
@@ -701,7 +778,8 @@ theorem all_names :
       , "hexId", "cuoZong", "flip1", "flip2", "flip3"
       , "imp", "neqHex", "existsH", "noneH"
       , "uniqueH", "exactly3H", "majorityH", "endoComp", "hexApply"
-      , "boolMarker", "repeatOnce", "eachH" ] := by
+      , "boolMarker", "repeatOnce", "eachH"
+      , "pairH", "dupH", "list1H", "list2H", "headH" ] := by
   native_decide
 
 theorem all_distinct_names : (all.map WenDef.name).Nodup := by native_decide

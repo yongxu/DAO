@@ -155,6 +155,9 @@ def resolveStdlibOp : Glyph → Option OperatorReading
   | "互" =>
       some (catalogueReading "互" "Z-3" "互卦 / 中四爻抽取" (some .Z_3)
                     .prefix [.expectedObject])
+  | "兩" | "两" =>
+      some (catalogueReading "兩" "D-4" "兩 / duplicate" (some .D_4)
+                    .prefix [.expectedObject])
   | _   => none
 
 /-- v1+ hex 常值 surface → Hexagram。包含「一」与完整 64 卦名. -/

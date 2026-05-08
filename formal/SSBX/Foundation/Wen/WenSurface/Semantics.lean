@@ -2,9 +2,9 @@
 # WenSurface.Semantics — executable semantics registry
 
 This module separates exact stdlib denotations from total catalogue
-execution.  One hundred fifty-nine `OperatorId`s use exact `WenDef.Tm` bodies:
+execution.  One hundred sixty-six `OperatorId`s use exact `WenDef.Tm` bodies:
 the original high-value stdlib rows, the ObjectEndo/ObjectMap/OpUnary Hex
-transform package, finite Hex quantifiers, finite Hex motion/process rows,
+transform package, finite Hex pair/list carriers, finite Hex quantifiers, finite Hex motion/process rows,
 plus the Bool relation/predicate package.  Every
 remaining catalogue row gets a structural catalogue constructor `WenDef.Tm` so
 CLI support is total without confusing it with exact text semantics.
@@ -113,6 +113,9 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .T_6  => some ⟨.T_6,  Stdlib.fanReverseBody, 1, "反: object-level reversal as cuo"⟩
   | .R_6  => some ⟨.R_6,  Stdlib.hexIdBody, 1, "正: Hex identity / normalize in place"⟩
   | .R_11 => some ⟨.R_11, Stdlib.hexIdBody, 1, "對/对: Hex identity as paired alignment anchor"⟩
+  | .R_12 => some ⟨.R_12, Stdlib.pairHBody, 2, "偶/耦: Hex pair carrier constructor"⟩
+  | .R_13 => some ⟨.R_13, Stdlib.pairHBody, 2, "並/并: Hex pair carrier constructor"⟩
+  | .C_2  => some ⟨.C_2,  Stdlib.pairHBody, 2, "包: Hex pair carrier constructor"⟩
   | .T_1  => some ⟨.T_1,  Stdlib.flip2Body, 1, "化: Hex y2 transform / inner hua"⟩
   | .T_2  => some ⟨.T_2,  Stdlib.flip3Body, 1, "變/变: Hex y3 transform / inner bian"⟩
   | .T_4  => some ⟨.T_4,  Stdlib.cuoBody, 1, "革: total Hex overhaul as cuo"⟩
@@ -131,6 +134,7 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .I_8  => some ⟨.I_8,  Stdlib.cuoZongBody, 1, "別: Hex differentiation as cuoZong"⟩
   | .P_9  => some ⟨.P_9,  Stdlib.hexIdBody, 1, "止: Mohist stop as identity"⟩
   | .D_1  => some ⟨.D_1,  Stdlib.hexIdBody, 1, "一: numeric unity as identity"⟩
+  | .D_4  => some ⟨.D_4,  Stdlib.dupHBody, 1, "兩/两: duplicate a Hex into a pair carrier"⟩
   | .L_9  => some ⟨.L_9,  Stdlib.hexIdBody, 1, "守: governance hold as identity"⟩
   | .L_10 => some ⟨.L_10, Stdlib.hexIdBody, 1, "靜/静: governance stillness as identity"⟩
   | .Y_3  => some ⟨.Y_3,  Stdlib.tuiBody, 1, "相生: five-phase generation as increment"⟩
@@ -143,6 +147,9 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .Z_9  => some ⟨.Z_9,  Stdlib.tuiBody, 1, "顯/显: manifest as increment"⟩
   | .Z_12 => some ⟨.Z_12, Stdlib.hexIdBody, 1, "守: hold as identity"⟩
   | .Z_13 => some ⟨.Z_13, Stdlib.hexIdBody, 1, "持: maintain as identity"⟩
+  | .Z_16 => some ⟨.Z_16, Stdlib.list1HBody, 1, "聚: singleton Hex list carrier"⟩
+  | .Z_17 => some ⟨.Z_17, Stdlib.list1HBody, 1, "集: singleton Hex list carrier"⟩
+  | .Z_18 => some ⟨.Z_18, Stdlib.headHBody, 1, "散: first Hex projection from a list carrier"⟩
   | .Z_22 => some ⟨.Z_22, Stdlib.sunBody, 1, "蘊/蕴: enfold as decrement"⟩
   | .Z_29 => some ⟨.Z_29, Stdlib.hexApplyBody, 2, "推: operator-level Hex endomap application"⟩
   | .Z_31 => some ⟨.Z_31, Stdlib.cuoBody, 1, "反: operator-level reversal anchored as cuo"⟩
@@ -218,10 +225,11 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
 /-- The exact theorem-backed subset, kept separate from structural catalogue semantics. -/
 def coreTheoremBackedOperatorIds : List OperatorId :=
   [.T_10, .R_8, .N_1, .M_1, .I_1, .Q_1, .T_12, .T_13, .Z_5, .Z_6, .Z_3, .T_6]
-    ++ [.R_6, .R_11, .T_1, .T_2, .T_4, .T_5, .T_7, .T_8, .T_9, .T_14, .T_15,
-        .B_3, .B_4, .B_5, .B_6, .I_2, .I_6, .I_8, .P_9, .D_1, .L_9, .L_10,
+    ++ [.R_6, .R_11, .R_12, .R_13, .C_2,
+        .T_1, .T_2, .T_4, .T_5, .T_7, .T_8, .T_9, .T_14, .T_15,
+        .B_3, .B_4, .B_5, .B_6, .I_2, .I_6, .I_8, .P_9, .D_1, .D_4, .L_9, .L_10,
         .Y_3, .Y_4, .Y_5, .Y_17, .Y_18, .Z_2, .Z_8, .Z_9, .Z_12, .Z_13,
-        .Z_22, .Z_29, .Z_31, .Z_32, .Z_33,
+        .Z_16, .Z_17, .Z_18, .Z_22, .Z_29, .Z_31, .Z_32, .Z_33,
         .F_3, .F_4, .F_5, .F_6, .F_9, .F_10, .F_11,
         .L_11, .SUN_6, .Z_10, .Z_11, .Z_36, .Z_37, .ZA_2]
     ++ [.N_3, .N_4, .N_5, .N_6, .K_1, .K_6, .K_7, .K_8, .L_7, .S_3, .S_7, .Z_1, .I_3, .I_4,
@@ -245,7 +253,7 @@ def structuralCatalogueOperatorIds : List OperatorId :=
 Structural total fallback for catalogue rows.
 
 These bodies are executable and type-checkable, but intentionally weaker than
-the 159 exact rows above: they preserve the operator id, signature kind, and
+the 166 exact rows above: they preserve the operator id, signature kind, and
 evaluated arguments as a catalogue value instead of projecting fake Hex/Bool
 results.
 -/
@@ -320,10 +328,10 @@ theorem executableOperatorIds_length :
     executableOperatorIds.length = 371 := by native_decide
 
 theorem coreTheoremBackedOperatorIds_length :
-    coreTheoremBackedOperatorIds.length = 113 := by native_decide
+    coreTheoremBackedOperatorIds.length = 120 := by native_decide
 
 theorem theoremBackedOperatorIds_length :
-    theoremBackedOperatorIds.length = 159 := by native_decide
+    theoremBackedOperatorIds.length = 166 := by native_decide
 
 theorem theoremBackedOperatorIds_nodup :
     theoremBackedOperatorIds.Nodup := by native_decide
@@ -333,7 +341,7 @@ theorem theoremBackedOperatorIds_all_semantics :
   native_decide
 
 theorem structuralCatalogueOperatorIds_length :
-    structuralCatalogueOperatorIds.length = 212 := by native_decide
+    structuralCatalogueOperatorIds.length = 205 := by native_decide
 
 theorem structuralCatalogueOperatorIds_all_not_theorem_backed :
     structuralCatalogueOperatorIds.all (fun id => (theoremBackedSemanticsFor? id).isNone) = true := by
@@ -364,8 +372,8 @@ theorem operatorRegistryCoverage_summary :
     operatorRegistryEntries.length = 371
       ∧ executableRegistryEntries.length = 371
       ∧ executableOperatorIds.length = 371
-      ∧ theoremBackedOperatorIds.length = 159
-      ∧ structuralCatalogueOperatorIds.length = 212
+      ∧ theoremBackedOperatorIds.length = 166
+      ∧ structuralCatalogueOperatorIds.length = 205
       ∧ theoremBackedOperatorIds.length + structuralCatalogueOperatorIds.length = 371
       ∧ executableOperatorIds.all isCatalogueOperator = true
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).id = id)

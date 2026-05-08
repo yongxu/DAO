@@ -5,8 +5,9 @@
   · `wenyanCompile : String → Except WenSurfaceErr TypedTm`
   · `wenyanInterp : String → Except WenSurfaceErr Hexagram`
   · `wenyanInterpBool : String → Except WenSurfaceErr Bool`
+  · `wenyanInterpHexPair` / `wenyanInterpHexList` for exact carrier values
 
-求值复用既有 [WenDefEval.denoteHex / denoteBool](../WenDefEval.lean)，
+求值复用既有 [WenDefEval.denoteHex / denoteBool / denoteHexPair / denoteHexList](../WenDefEval.lean)，
 不走 baguaWen IL（保留 [WenDefCompile.lean](../WenDefCompile.lean) 的
 cuo-equivariant 子集 commute 作 future work）。
 
@@ -15,7 +16,7 @@ cuo-equivariant 子集 commute 作 future work）。
 - cue-aware resolver + explicit `SurfaceExpr` AST
 - 64 卦名 / aliases + Bool literals + Hex-only binders
 - executable registry 覆盖全部 371 个 OperatorId
-- 159 个 exact/theorem-backed operator 可求 Hex/Bool；其余 catalogue rows 求 structural normal form
+- 166 个 exact/theorem-backed operator 可求 Hex/Bool/Pair/List；其余 catalogue rows 求 structural normal form
 - unpromoted gap form 只诊断，不伪造 denotation
 
 ## 状态
@@ -84,6 +85,22 @@ def wenyanInterpBool (s : String) : Except WenSurfaceErr Bool :=
     match denoteBool typed.tm with
     | some b => .ok b
     | none   => .error (.denoteFailed .bool typed.ty)
+
+def wenyanInterpHexPair (s : String) : Except WenSurfaceErr (Hexagram × Hexagram) :=
+  match wenyanCompile s with
+  | .error e => .error e
+  | .ok typed =>
+    match denoteHexPair typed.tm with
+    | some p => .ok p
+    | none   => .error (.denoteFailed (.prod .hex .hex) typed.ty)
+
+def wenyanInterpHexList (s : String) : Except WenSurfaceErr (List Hexagram) :=
+  match wenyanCompile s with
+  | .error e => .error e
+  | .ok typed =>
+    match denoteHexList typed.tm with
+    | some xs => .ok xs
+    | none    => .error (.denoteFailed (.list .hex) typed.ty)
 
 /-! ## § 3  端到端 sanity 例子 -/
 
@@ -462,6 +479,27 @@ example : (wenyanInterpBool "宜 真 假").toOption = some false := by native_de
 example : (wenyanInterpBool "能 假 真").toOption = some true := by native_decide
 example :
     (theoremBackedSemanticsFor? OperatorId.M_7).isSome = true :=
+  by native_decide
+example :
+    (wenyanCompile "偶 乾 坤").toOption.map (·.ty) =
+      some (.prod .hex .hex) :=
+  by native_decide
+example :
+    (wenyanInterpHexPair "偶 乾 坤").toOption =
+      some (Hexagram.qian, Hexagram.kun) :=
+  by native_decide
+example :
+    (wenyanInterpHexPair "兩 乾").toOption =
+      some (Hexagram.qian, Hexagram.qian) :=
+  by native_decide
+example :
+    (wenyanInterpHexList "聚 乾").toOption = some [Hexagram.qian] :=
+  by native_decide
+example :
+    (wenyanInterp "散 聚 乾").toOption = some Hexagram.qian :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Z_17).isSome = true :=
   by native_decide
 example :
     (wenyanCompile "改").toOption.map (·.ty) = some (.arr .hex .hex) :=

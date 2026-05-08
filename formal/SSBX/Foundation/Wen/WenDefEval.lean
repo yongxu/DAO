@@ -15,6 +15,8 @@ L1 layer (`WenDef.Tm`) 与 L0 internal kernel (`YiCore.«加»/«一»`) 之桥�
 Value :=
   | hexV : Hexagram → Value
   | boolV : Bool → Value
+  | pairV : Value → Value → Value
+  | listV : List Value → Value
   | closV : List (String × Value) → String → Tm → Value      -- λ closure
   | builtinV : Builtin → List Value → Value                  -- partially-applied builtin
 ```
@@ -53,13 +55,14 @@ inductive Builtin : Type
   | jia | notB | andB | orB | eqHex | forallH | cuoH | zongH | huH
   | uniqueH | exactly3H | majorityH
   | cuoZongH | flip1H | flip2H | flip3H
+  | pairH | dupH | list1H | list2H | headH
 deriving DecidableEq, Repr
 
 /-- builtin 之 arity（满足后产 result）。 -/
 def Builtin.arity : Builtin → Nat
-  | .jia | .andB | .orB | .eqHex => 2
+  | .jia | .andB | .orB | .eqHex | .pairH | .list2H => 2
   | .notB | .forallH | .uniqueH | .exactly3H | .majorityH | .cuoH | .zongH | .huH
-  | .cuoZongH | .flip1H | .flip2H | .flip3H => 1
+  | .cuoZongH | .flip1H | .flip2H | .flip3H | .dupH | .list1H | .headH => 1
 
 /-! ## § 2  Value -/
 
@@ -67,6 +70,8 @@ def Builtin.arity : Builtin → Nat
 inductive Value : Type
   | hexV     (h : Hexagram)                                    : Value
   | boolV    (b : Bool)                                        : Value
+  | pairV    (a b : Value)                                     : Value
+  | listV    (xs : List Value)                                 : Value
   | closV    (env : List (String × Value)) (n : String) (body : Tm) : Value
   | builtinV (b : Builtin) (args : List Value)                 : Value
   | catalogueV (id : SSBX.Text.WenyanOperators.OperatorId)
@@ -147,6 +152,11 @@ mutual
     | _+1,    _,   .flip1H       => some (.builtinV .flip1H [])
     | _+1,    _,   .flip2H       => some (.builtinV .flip2H [])
     | _+1,    _,   .flip3H       => some (.builtinV .flip3H [])
+    | _+1,    _,   .pairH        => some (.builtinV .pairH [])
+    | _+1,    _,   .dupH         => some (.builtinV .dupH [])
+    | _+1,    _,   .list1H       => some (.builtinV .list1H [])
+    | _+1,    _,   .list2H       => some (.builtinV .list2H [])
+    | _+1,    _,   .headH        => some (.builtinV .headH [])
     | fuel+1, env, .catalogue1 id a => do
         let va ← evalFuel fuel env a
         some (.catalogueV id (SSBX.Text.OperatorSignatures.fullSignatureFor id).kind [va])
@@ -175,6 +185,11 @@ mutual
     | _+1,    .flip1H, [.hexV h]            => some (.hexV (dongInner h))
     | _+1,    .flip2H, [.hexV h]            => some (.hexV (huaInner h))
     | _+1,    .flip3H, [.hexV h]            => some (.hexV (bianInner h))
+    | _+1,    .pairH,  [.hexV a, .hexV b]   => some (.pairV (.hexV a) (.hexV b))
+    | _+1,    .dupH,   [.hexV h]            => some (.pairV (.hexV h) (.hexV h))
+    | _+1,    .list1H, [.hexV h]            => some (.listV [.hexV h])
+    | _+1,    .list2H, [.hexV a, .hexV b]   => some (.listV [.hexV a, .hexV b])
+    | _+1,    .headH,  [.listV (.hexV h :: _)] => some (.hexV h)
     | fuel+1, .forallH, [p]                 =>
         some (.boolV (forallHex (fun h =>
           match applyFuel fuel p (.hexV h) with
@@ -223,6 +238,28 @@ def denoteBool (t : Tm) : Option Bool :=
   match eval [] t with
   | some (.boolV b) => some b
   | _               => none
+
+def valueToHexPair? : Value → Option (Hexagram × Hexagram)
+  | .pairV (.hexV a) (.hexV b) => some (a, b)
+  | _ => none
+
+def valueToHexList? : List Value → Option (List Hexagram)
+  | [] => some []
+  | .hexV h :: rest =>
+      match valueToHexList? rest with
+      | some hs => some (h :: hs)
+      | none => none
+  | _ :: _ => none
+
+def denoteHexPair (t : Tm) : Option (Hexagram × Hexagram) :=
+  match eval [] t with
+  | some v => valueToHexPair? v
+  | none => none
+
+def denoteHexList (t : Tm) : Option (List Hexagram) :=
+  match eval [] t with
+  | some (.listV xs) => valueToHexList? xs
+  | _ => none
 
 /-- Hex → Hex 之 Tm: 逐输入施 apply 取 hexV. -/
 def denoteHexFun (t : Tm) (h : Hexagram) : Option Hexagram :=
@@ -278,6 +315,18 @@ example :
 example :
     denoteBool (.app (.app .eqHex .yi) (.hexLit Hexagram.qian))
       = some false := by native_decide
+
+example :
+    denoteHexPair (.app (.app .pairH (.hexLit Hexagram.qian)) (.hexLit Hexagram.kun))
+      = some (Hexagram.qian, Hexagram.kun) := by native_decide
+
+example :
+    denoteHexList (.app .list1H (.hexLit Hexagram.qian))
+      = some [Hexagram.qian] := by native_decide
+
+example :
+    denoteHex (.app .headH (.app .list1H (.hexLit Hexagram.qian)))
+      = some Hexagram.qian := by native_decide
 
 /-! ## § 7  Stdlib correctness — 推 ⟷ 生 -/
 
