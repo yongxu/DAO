@@ -30,6 +30,8 @@ CASES = [
     ("非 乾 坤", {"ok": True, "kind": "bool", "value": True}),
     ("莫 者 甲 同 甲 一", {"ok": True, "kind": "bool", "value": False}),
     ("（而 者 甲 推 甲 者 甲 損 甲） 之 一", {"ok": True, "kind": "hex", "idx": 1}),
+    ("而 推 損 一", {"ok": True, "kind": "hex", "idx": 1}),
+    ("而 损 推 一", {"ok": True, "kind": "hex", "idx": 1}),
     ("比", {"ok": True, "kind": "hex", "idx": 47}),
     ("同 比 比", {"ok": True, "kind": "bool", "value": True}),
     ("比 乾 坤", {"ok": True, "kind": "bool", "value": False}),
@@ -52,7 +54,7 @@ NEGATIVE_CASES = [
     ("或 者 甲 同 甲 一", {"phase": "resolve", "code": "ambiguous_reading", "surface": "或", "startCol": 0, "endCol": 1, "candidateCount": 2}),
     ("故 假 假", {"phase": "resolve", "code": "ambiguous_reading", "surface": "故", "startCol": 0, "endCol": 1, "candidateCount": 3}),
     ("反 乾", {"phase": "resolve", "code": "ambiguous_reading", "surface": "反", "startCol": 0, "endCol": 1, "candidateCount": 3}),
-    ("而 推 損 一", {"phase": "parse", "code": "empty_expression"}),
+    ("而 不 不 真", {"phase": "parse", "code": "empty_expression"}),
     ("（推 一", {"phase": "parse", "code": "unmatched_open_bracket", "surface": "（", "startCol": 0, "endCol": 1}),
     ("推 一）", {"phase": "parse", "code": "unmatched_close_bracket", "surface": "）", "startCol": 3, "endCol": 4}),
 ]
@@ -133,10 +135,15 @@ NEGATIVE_CLI_CASES = [
     (["--tokens", "abc"], "lex error"),
     (["--resolve", "瓜"], "no known reading"),
     (["--resolve", "或"], "is ambiguous"),
+    (["--resolve", "或"], "Why ambiguous"),
+    (["--resolve", "或"], "quantifierDomain"),
+    (["--resolve", "反"], "expectedOperator"),
     (["--ast", "推 乾 之"], "leftover token"),
     (["--ast", "（推 一"], "unmatched open bracket"),
     (["--ast", "推 一）"], "unmatched close bracket"),
     (["--typecheck", "不 乾"], "type error"),
+    (["--explain", "或 者 甲 同 甲 一"], "Suggestions:"),
+    (["--explain", "反 乾"], "expectedObject"),
     (["--operator", "NOPE"], "no such catalogue OperatorId"),
     (["--operators", "bad"], "unknown filter"),
 ]
@@ -196,6 +203,22 @@ def main() -> int:
                 failures.append(f"{program!r}: expected 2 structured candidates, got {candidates!r}")
             elif {c.get("support") for c in candidates} != {"executable"}:
                 failures.append(f"{program!r}: expected executable candidates, got {candidates!r}")
+        if program.startswith("或 "):
+            suggestions = actual.get("suggestions")
+            if not isinstance(suggestions, list) or len(suggestions) != 2:
+                failures.append(f"{program!r}: expected 2 ambiguity suggestions, got {suggestions!r}")
+            else:
+                cue_families = {cue for suggestion in suggestions for cue in suggestion.get("cueFamilies", [])}
+                if not {"quantifierDomain", "modalFrame"}.issubset(cue_families):
+                    failures.append(f"{program!r}: expected quantifier/modal cue suggestions, got {suggestions!r}")
+        if program == "反 乾":
+            suggestions = actual.get("suggestions")
+            if not isinstance(suggestions, list) or len(suggestions) != 3:
+                failures.append(f"{program!r}: expected 3 ambiguity suggestions, got {suggestions!r}")
+            else:
+                cue_families = {cue for suggestion in suggestions for cue in suggestion.get("cueFamilies", [])}
+                if not {"expectedObject", "expectedProp", "expectedOperator"}.issubset(cue_families):
+                    failures.append(f"{program!r}: expected object/prop/operator cue suggestions, got {suggestions!r}")
 
     for args, expected_substring in CLI_CASES:
         actual = run_cli(args).stdout
@@ -271,6 +294,17 @@ def main() -> int:
     elif bad_explain["resolve"].get("code") != "no_reading":
         failures.append(f"bad explain JSON: expected resolve no_reading, got {bad_explain!r}")
 
+    ambiguous_explain_completed = run_cli(["--json", "--explain", "或 者 甲 同 甲 一"], allow_failure=True)
+    ambiguous_explain = json.loads(ambiguous_explain_completed.stdout)
+    if ambiguous_explain_completed.returncode == 0:
+        failures.append("ambiguous explain JSON: expected nonzero exit")
+    resolve = ambiguous_explain.get("resolve")
+    suggestions = resolve.get("suggestions") if isinstance(resolve, dict) else None
+    if not isinstance(suggestions, list) or not any(
+        "modalFrame" in suggestion.get("cueFamilies", []) for suggestion in suggestions
+    ):
+        failures.append(f"ambiguous explain JSON: expected cue suggestions, got {ambiguous_explain!r}")
+
     empty_stdin = run_cli([], allow_failure=True)
     if empty_stdin.returncode == 0 or "Usage:" not in empty_stdin.stdout:
         failures.append(f"empty stdin: expected usage with nonzero exit, got {empty_stdin!r}")
@@ -287,7 +321,7 @@ def main() -> int:
         + len(CLI_CASES)
         + len(NEGATIVE_CLI_CASES)
         + len(JSON_CLI_CASES)
-        + 3
+        + 4
     )
     print(f"wenyan-surface CLI smoke passed ({total} cases)")
     return 0

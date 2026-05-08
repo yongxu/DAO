@@ -499,21 +499,38 @@ def endoCompDef : WenDef where
   validName      := by native_decide
   bodyTypechecks := by native_decide
 
+def hexApplyBody : Tm :=
+  .abs "f" (.arr .hex .hex)
+    (.abs "x" .hex
+      (.app (.var "f") (.var "x")))
+
+theorem hexApplyBody_typed :
+    typeCheck [] hexApplyBody =
+      some (.arr (.arr .hex .hex) (.arr .hex .hex)) := by
+  native_decide
+
+def hexApplyDef : WenDef where
+  name           := "hexApply"
+  body           := hexApplyBody
+  bodyType       := .arr (.arr .hex .hex) (.arr .hex .hex)
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
 /-! ### Stdlib 总表 -/
 
 /-- 当前 stdlib 中已合度且类型化之 wenyan-ops 定义。 -/
 def all : List WenDef :=
   [ tuiDef, biDef, buDef, biModalDef, tongDef, fanDef, sunDef, yiBenefitDef
   , cuoDef, zongDef, huDef, fanReverseDef
-  , impDef, neqHexDef, existsHDef, noneHDef, endoCompDef ]
+  , impDef, neqHexDef, existsHDef, noneHDef, endoCompDef, hexApplyDef ]
 
-theorem all_length : all.length = 17 := by native_decide
+theorem all_length : all.length = 18 := by native_decide
 
 theorem all_names :
     all.map WenDef.name =
       [ "tui", "bi", "bu", "biModal", "tong", "fan", "sun", "yiBenefit"
       , "cuo", "zong", "hu", "fanReverse"
-      , "imp", "neqHex", "existsH", "noneH", "endoComp" ] := by
+      , "imp", "neqHex", "existsH", "noneH", "endoComp", "hexApply" ] := by
   native_decide
 
 theorem all_distinct_names : (all.map WenDef.name).Nodup := by native_decide

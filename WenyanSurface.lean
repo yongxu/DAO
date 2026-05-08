@@ -79,6 +79,143 @@ private def readingSupportKind
       else "known-not-executable"
   | none => "pending"
 
+private def expectedTypeDiagShow : SSBX.Text.OperatorReadings.ExpectedType → String
+  | .unknown => "unknown"
+  | .function => "function"
+  | .prop => "prop"
+  | .path => "path"
+  | .object => "object"
+  | .operator => "operator"
+  | .action => "action"
+  | .nominal => "nominal"
+  | .predicate => "predicate"
+  | .quantifier => "quantifier"
+  | .modal => "modal"
+  | .aspect => "aspect"
+  | .role => "role"
+  | .construction => "construction"
+
+private def cueDiagShow : SSBX.Text.OperatorReadings.ContextCue → String
+  | .controlledToken => "controlledToken"
+  | .instructionContext => "instructionContext"
+  | .explicitSense => "explicitSense"
+  | .betweenNominals => "betweenNominals"
+  | .betweenActions => "betweenActions"
+  | .contrastive => "contrastive"
+  | .afterVerb => "afterVerb"
+  | .beforeMotionVerb => "beforeMotionVerb"
+  | .beforeYou => "beforeYou"
+  | .wholeConstruction => "wholeConstruction"
+  | .asConstruction => "asConstruction"
+  | .nominalizerConstruction => "nominalizerConstruction"
+  | .finalAssertion => "finalAssertion"
+  | .expectedFunction => "expectedFunction"
+  | .expectedProp => "expectedProp"
+  | .expectedPath => "expectedPath"
+  | .expectedObject => "expectedObject"
+  | .expectedOperator => "expectedOperator"
+  | .expectedAction => "expectedAction"
+  | .expectedNominal => "expectedNominal"
+  | .expectedPredicate => "expectedPredicate"
+  | .quantifierDomain => "quantifierDomain"
+  | .modalFrame => "modalFrame"
+  | .abilityContext => "abilityContext"
+  | .permissionContext => "permissionContext"
+  | .normativeContext => "normativeContext"
+  | .positionTimeContext => "positionTimeContext"
+  | .instrumentalContext => "instrumentalContext"
+  | .purposeContext => "purposeContext"
+  | .identityContext => "identityContext"
+  | .geometryContext => "geometryContext"
+  | .innerOuterContext => "innerOuterContext"
+  | .emotionContext => "emotionContext"
+  | .legalContext => "legalContext"
+  | .governanceContext => "governanceContext"
+  | .strategyContext => "strategyContext"
+  | .militaryContext => "militaryContext"
+  | .medicalContext => "medicalContext"
+  | .ritualContext => "ritualContext"
+  | .mohistContext => "mohistContext"
+  | .namesSchoolContext => "namesSchoolContext"
+  | .xunziContext => "xunziContext"
+  | .zhuangziContext => "zhuangziContext"
+  | .chuciContext => "chuciContext"
+  | .guanziContext => "guanziContext"
+  | .huainanContext => "huainanContext"
+  | .aspectContext => "aspectContext"
+  | .boundaryMotionContext => "boundaryMotionContext"
+  | .qiFlowContext => "qiFlowContext"
+  | .roleContext => "roleContext"
+  | .argumentContext => "argumentContext"
+  | .temporalRange => "temporalRange"
+  | .focusAdverb => "focusAdverb"
+
+private def constructionDiagShow : SSBX.Text.OperatorReadings.ConstructionKind → String
+  | .none => "none"
+  | .genitiveProjection => "genitiveProjection"
+  | .anaphora => "anaphora"
+  | .sourcePath => "sourcePath"
+  | .iteration => "iteration"
+  | .quantifier => "quantifier"
+  | .modal => "modal"
+  | .causal => "causal"
+  | .sequential => "sequential"
+  | .mohistCondition => "mohistCondition"
+  | .reflexive => "reflexive"
+  | .wholeConstruction => "wholeConstruction"
+
+private def cueFamiliesForReading
+    (r : SSBX.Text.OperatorReadings.OperatorReading) : List String :=
+  let direct := r.cues.map cueDiagShow
+  let fromTypes := r.expectedTypes.filterMap fun ty =>
+    match ty with
+    | .function => some "expectedFunction"
+    | .prop => some "expectedProp"
+    | .path => some "expectedPath"
+    | .object => some "expectedObject"
+    | .operator => some "expectedOperator"
+    | .action => some "expectedAction"
+    | .nominal => some "expectedNominal"
+    | .predicate => some "expectedPredicate"
+    | .quantifier => some "quantifierDomain"
+    | .modal => some "modalFrame"
+    | .aspect => some "aspectContext"
+    | .role => some "roleContext"
+    | .construction => some "wholeConstruction"
+    | .unknown => none
+  let fromConstruction :=
+    match r.construction with
+    | .quantifier => ["quantifierDomain"]
+    | .modal => ["modalFrame"]
+    | .mohistCondition => ["mohistContext", "expectedProp"]
+    | .reflexive => ["expectedFunction"]
+    | .sourcePath => ["expectedPath"]
+    | .iteration => ["beforeYou"]
+    | .wholeConstruction => ["wholeConstruction"]
+    | .causal | .sequential => ["expectedProp"]
+    | .none | .genitiveProjection | .anaphora => []
+  (direct ++ fromTypes ++ fromConstruction).eraseDups
+
+private def ambiguityAction
+    (r : SSBX.Text.OperatorReadings.OperatorReading) : String :=
+  let families := cueFamiliesForReading r
+  let familyShow := String.intercalate ", " families
+  let typeShow := String.intercalate ", " (r.expectedTypes.map expectedTypeDiagShow)
+  let constructionShow := constructionDiagShow r.construction
+  "choose " ++ r.label ++
+    " by adding context for " ++
+    (if familyShow.isEmpty then "one of its catalogue cue families" else familyShow) ++
+    "; expected=" ++ typeShow ++
+    "; construction=" ++ constructionShow
+
+private def ambiguityActionBlock
+    (rs : List SSBX.Text.OperatorReadings.OperatorReading) : String :=
+  if rs.isEmpty then ""
+  else
+    "\nWhy ambiguous: multiple catalogue readings share this surface; context has not selected one.\n" ++
+    "Suggestions:\n" ++
+      String.intercalate "\n" (rs.map fun r => "  - " ++ ambiguityAction r)
+
 private def operatorByCode? (code : String) : Option OperatorId :=
   allOperatorIds.find? (fun id => id.code == code)
 
@@ -188,7 +325,7 @@ private def errShow : WenSurfaceErr → String
       s!"resolve error at col {col}: surface \"{surface}\" has no known reading"
   | .resolve (.ambiguous surface col candidates) =>
       s!"resolve error at col {col}: surface \"{surface}\" is ambiguous ({candidates.length} catalogue readings)" ++
-        readingBlock candidates
+        readingBlock candidates ++ ambiguityActionBlock candidates
   | .resolve (.knownButUnsupported surface col readings) =>
       s!"resolve error at col {col}: surface \"{surface}\" is known ({readings.length} readings) but has no executable catalogue reading" ++
         readingBlock readings
@@ -274,7 +411,7 @@ private def resolveErrShow : ResolveErr → String
       s!"resolve error at col {col}: surface \"{surface}\" has no known reading"
   | .ambiguous surface col candidates =>
       s!"resolve error at col {col}: surface \"{surface}\" is ambiguous ({candidates.length} catalogue readings)" ++
-        readingBlock candidates
+        readingBlock candidates ++ ambiguityActionBlock candidates
   | .knownButUnsupported surface col readings =>
       s!"resolve error at col {col}: surface \"{surface}\" is known ({readings.length} readings) but has no executable catalogue reading" ++
         readingBlock readings
@@ -450,12 +587,32 @@ private def readingJson
     , jsonFieldString "support" (readingSupportKind r)
     , jsonFieldString "status" (readingStatusShow r.status)
     , jsonFieldString "fixity" (fixityShow r.fixity)
+    , jsonFieldRaw "cues" (jsonArray (r.cues.map (jsonString ∘ cueDiagShow)))
     , jsonFieldRaw "expectedTypes" (jsonArray (r.expectedTypes.map (jsonString ∘ expectedTypeShow)))
     , jsonFieldString "construction" (constructionKindShow r.construction)
     ] ++ opFields
 
 private def readingsJson (rs : List SSBX.Text.OperatorReadings.OperatorReading) : String :=
   jsonArray (rs.map readingJson)
+
+private def ambiguitySuggestionJson
+    (r : SSBX.Text.OperatorReadings.OperatorReading) : String :=
+  let fields :=
+    match r.operator? with
+    | some id => operatorIdJsonFields id
+    | none => [jsonFieldRaw "operatorCode" "null", jsonFieldRaw "operatorTitle" "null"]
+  jsonObject <|
+    [ jsonFieldString "label" r.label
+    , jsonFieldString "gloss" r.gloss
+    , jsonFieldRaw "cueFamilies" (jsonArray ((cueFamiliesForReading r).map jsonString))
+    , jsonFieldRaw "expectedTypes" (jsonArray (r.expectedTypes.map (jsonString ∘ expectedTypeShow)))
+    , jsonFieldString "construction" (constructionKindShow r.construction)
+    , jsonFieldString "action" (ambiguityAction r)
+    ] ++ fields
+
+private def ambiguitySuggestionsJson
+    (rs : List SSBX.Text.OperatorReadings.OperatorReading) : String :=
+  jsonArray (rs.map ambiguitySuggestionJson)
 
 private def errLocationFields (surface : String) (col : Nat) : List (String × String) :=
   [ jsonFieldString "surface" surface
@@ -475,6 +632,8 @@ private def errExtraFields : WenSurfaceErr → List (String × String)
       errLocationFields surface col ++
         [ jsonFieldNat "candidateCount" candidates.length
         , jsonFieldRaw "candidates" (readingsJson candidates)
+        , jsonFieldRaw "suggestions" (ambiguitySuggestionsJson candidates)
+        , jsonFieldString "hint" "Surface is ambiguous because multiple catalogue readings remain viable; add a contextual cue family to select one."
         ]
   | .resolve (.knownButUnsupported surface col readings) =>
       errLocationFields surface col ++
@@ -848,7 +1007,7 @@ private def usage : String :=
      "       wenyan-surface --help",
      "",
      "Surface vocabulary:",
-     "  Executable operators: 371 rows (33 theorem-backed exact; 338 symbolic catalogue-shape)",
+     "  Executable operators: 371 rows (38 theorem-backed exact; 333 symbolic catalogue-shape)",
      "  Examples include: 推 比 不 必 同 凡 損 损 益 错 錯 综 綜 互 反 則 且 非 或 莫",
      "  Hex consts: 一 乾 坤 plus canonical 64 hexagram names",
      "  Bool consts: 真 假",

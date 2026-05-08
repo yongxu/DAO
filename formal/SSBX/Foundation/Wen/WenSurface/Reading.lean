@@ -254,6 +254,13 @@ def sameExecutableSemantics (sem : ExecutableSemantics) (r : OperatorReading) : 
   | some sem' => sem'.arity == sem.arity && decide (sem'.body = sem.body)
   | none => false
 
+def sameExecutableReadingShape (base r : OperatorReading) : Bool :=
+  decide (r.fixity = base.fixity) && decide (r.construction = base.construction)
+
+def sameExecutableSemanticsAndShape (base : OperatorReading) (sem : ExecutableSemantics)
+    (r : OperatorReading) : Bool :=
+  sameExecutableSemantics sem r && sameExecutableReadingShape base r
+
 def firstTheoremBackedReading? : List OperatorReading → Option OperatorReading
   | [] => none
   | r :: rest =>
@@ -263,9 +270,10 @@ def firstTheoremBackedReading? : List OperatorReading → Option OperatorReading
 
 /--
 Choose a surface reading when all executable candidates collapse to the same
-typed body.  This keeps true homographic aliases such as `故` (K-1/S-7) usable
-without pretending that different bodies, such as object-level and proposition-
-level `反`, have been disambiguated.
+typed body and the same syntactic reading shape.  This keeps true aliases such
+as `同` (I-1/P-4) usable without pretending that different constructions, such
+as quantifier/modal `或`, have been disambiguated just because the current
+finite model shares a body for them.
 -/
 def uniqueExecutableReadingBySemantics : List OperatorReading → Option OperatorReading
   | [] => none
@@ -273,7 +281,7 @@ def uniqueExecutableReadingBySemantics : List OperatorReading → Option Operato
       match executableSemanticsForReading? r with
       | none => none
       | some sem =>
-          if rest.all (sameExecutableSemantics sem) then
+          if rest.all (sameExecutableSemanticsAndShape r sem) then
             match firstTheoremBackedReading? (r :: rest) with
             | some exact => some exact
             | none => some r
@@ -623,6 +631,24 @@ def computeCues (toks : List GlyphTok) (i : Nat) : List ContextCue :=
     | some .glyph, some .glyph => [.betweenNominals]
     | _,           _           => []
 
+/-- A reading satisfies a cue either by carrying that exact cue or by exposing
+    the expected type denoted by that cue.  This lets strong type cues refine
+    ambiguous surfaces without changing parser/elaborator syntax. -/
+def readingSatisfiesCue (r : OperatorReading) (cue : ContextCue) : Bool :=
+  r.cues.contains cue ||
+    match expectedTypeOfCue cue with
+    | some ty => r.expectedTypes.contains ty
+    | none => false
+
+/-- Cue-selected catalogue readings: every cue must be satisfied by the reading.
+    Non-type contextual cues such as `.mohistContext` still require an exact cue
+    match; expected-type cues may match `expectedTypes` metadata. -/
+def cueSelectedCatalogueReadings (glyph : Glyph) (cues : List ContextCue)
+    : List OperatorReading :=
+  (readingsForGlyph glyph).filter (fun r =>
+    r.status = .catalogue ∧ r.operator?.isSome ∧
+      cues.all (readingSatisfiesCue r))
+
 /-- 从给定 cue 上下文中查找 glyph 的唯一 catalogue reading
     （status = .catalogue ∧ operator?.isSome）.
 
@@ -633,9 +659,7 @@ def uniqueCatalogueReading (glyph : Glyph) (cues : List ContextCue)
     : Option OperatorReading :=
   if cues.isEmpty then none
   else
-    let rs := contextualReadings glyph cues
-    let cats := rs.filter (fun r => r.status = .catalogue ∧ r.operator?.isSome)
-    match cats with
+    match cueSelectedCatalogueReadings glyph cues with
     | [r] => some r
     | _   => none
 
@@ -741,6 +765,51 @@ example : uniqueCatalogueReading "之" [] = none := by native_decide
 
 /-- 「推」在任意 cue 下不在 cue 表（无对应 readings）→ none. -/
 example : uniqueCatalogueReading "推" [.betweenNominals] = none := by native_decide
+
+/-! ### § 7.2.1  Cue selection for ambiguous catalogue surfaces -/
+
+example :
+    (uniqueCatalogueReading "或" [.quantifierDomain]).bind (·.operator?)
+      = some OperatorId.Q_5 :=
+  by native_decide
+
+example :
+    (uniqueCatalogueReading "或" [.expectedProp, .quantifierDomain]).bind (·.operator?)
+      = some OperatorId.Q_5 :=
+  by native_decide
+
+example :
+    uniqueCatalogueReading "或" [.expectedProp] = none :=
+  by native_decide
+
+example :
+    (uniqueCatalogueReading "反" [.expectedObject]).bind (·.operator?)
+      = some OperatorId.T_6 :=
+  by native_decide
+
+example :
+    (uniqueCatalogueReading "反" [.expectedProp]).bind (·.operator?)
+      = some OperatorId.N_6 :=
+  by native_decide
+
+example :
+    (uniqueCatalogueReading "反" [.expectedOperator]).bind (·.operator?)
+      = some OperatorId.Z_31 :=
+  by native_decide
+
+example :
+    (uniqueCatalogueReading "故" [.mohistContext]).bind (·.operator?)
+      = some OperatorId.P_1 :=
+  by native_decide
+
+example :
+    uniqueCatalogueReading "故" [.expectedProp] = none :=
+  by native_decide
+
+example : uniqueCatalogueReading "或" [] = none := by native_decide
+example : uniqueCatalogueReading "反" [] = none := by native_decide
+example : uniqueCatalogueReading "故" [] = none := by native_decide
+example : uniqueCatalogueReading "名分" [] = none := by native_decide
 
 /-! ### § 7.3  resolveWithCues 端到端 -/
 

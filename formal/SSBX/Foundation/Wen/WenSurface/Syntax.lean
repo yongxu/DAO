@@ -10,6 +10,7 @@ import SSBX.Foundation.Wen.WenSurface.Reading
 
 namespace SSBX.Foundation.Wen.WenSurface
 
+open SSBX.Foundation.Wen.WenDef
 open SSBX.Text.WenyanOperators
 
 /-! ## § 1 AST -/
@@ -64,6 +65,27 @@ def isApplicationMarkerTok (t : ResolvedTok) : Bool :=
       | some id => isApplicationOperator id
       | none => false
   | _ => false
+
+def canParseBareOperatorValue (id : OperatorId) : Bool :=
+  match theoremBackedSemanticsFor? id with
+  | some sem => typeCheck [] sem.body = some (.arr .hex .hex)
+  | none => false
+
+def bareHexEndoTok? (t : ResolvedTok) : Option ResolvedTok :=
+  match t.atom with
+  | .catalogueOp r =>
+      match r.operator? with
+      | some id => if canParseBareOperatorValue id then some t else none
+      | none => none
+  | .hexOrOp _ r =>
+      match r.operator? with
+      | some id =>
+          if canParseBareOperatorValue id then
+            some { t with atom := .catalogueOp r }
+          else
+            none
+      | none => none
+  | _ => none
 
 def asVarName? (t : ResolvedTok) : Option String :=
   match t.atom with
@@ -178,9 +200,36 @@ mutual
                     match collectSurfaceArgs n (.atom head) (parseArityFor id) rest with
                     | .ok (expr, rest') => parsePostfixApplications n reserve expr rest'
                     | .error e => .error e
+              else if id = .S_2 then
+                match parseHexEndoValue n 1 rest with
+                | .error e => .error e
+                | .ok (f, rest') =>
+                    match parseHexEndoValue n reserve rest' with
+                    | .error e => .error e
+                    | .ok (g, rest'') =>
+                        let comp := .app (.app (.atom head) f) g
+                        match rest'' with
+                        | next :: _ =>
+                            if isApplicationMarkerTok next then
+                              parsePostfixApplications n reserve comp rest''
+                            else
+                              match parseSurfaceExprAux n reserve rest'' with
+                              | .ok (arg, rest''') =>
+                                  if decide (reserve <= rest'''.length) then
+                                    parsePostfixApplications n reserve (.app comp arg) rest'''
+                                  else
+                                    parsePostfixApplications n reserve comp rest''
+                              | .error _ => parsePostfixApplications n reserve comp rest''
+                        | [] => parsePostfixApplications n reserve comp rest''
               else
                 match collectSurfaceArgs n (.atom head) (parseArityFor id) rest with
-                | .ok (expr, rest') => parsePostfixApplications n reserve expr rest'
+                | .ok (expr, rest') =>
+                    if decide (reserve <= rest'.length) then
+                      parsePostfixApplications n reserve expr rest'
+                    else if canParseBareOperatorValue id then
+                      parsePostfixApplications n reserve (.atom head) rest
+                    else
+                      .error .empty
                 | .error e => .error e
       | .hexConst _ => parsePostfixApplications n reserve (.atom head) rest
       | .boolConst _ => parsePostfixApplications n reserve (.atom head) rest
@@ -194,6 +243,15 @@ mutual
         match parseSurfaceExprAux n k rest with
         | .error e => .error e
         | .ok (arg, rest') => collectSurfaceArgs n (.app acc arg) k rest'
+
+  def parseHexEndoValue : Nat → Nat → List ResolvedTok →
+      Except ParseErr (SurfaceExpr × List ResolvedTok)
+    | 0, _, _ => .error .fuelExhausted
+    | _+1, _, [] => .error .empty
+    | n+1, reserve, head :: rest =>
+        match bareHexEndoTok? head with
+        | some tok => .ok (.atom tok, rest)
+        | none => parseSurfaceExprAux n reserve (head :: rest)
 
   def parsePostfixApplications : Nat → Nat → SurfaceExpr → List ResolvedTok →
       Except ParseErr (SurfaceExpr × List ResolvedTok)
@@ -263,6 +321,9 @@ example : (parseSurface "（推 一）").toOption.isSome = true := by native_dec
 example : (parseSurface "(推 一)").toOption.isSome = true := by native_decide
 
 example : (parseSurface "同 （推 一） （推 一）").toOption.isSome = true := by native_decide
+
+example : (parseSurface "而 推 損 一").toOption.isSome = true := by native_decide
+example : (parseSurface "而 損 推").toOption.isSome = true := by native_decide
 
 example : (parseSurface "（推 一").toOption.isNone = true := by native_decide
 

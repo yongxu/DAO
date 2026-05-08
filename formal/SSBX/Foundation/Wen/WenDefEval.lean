@@ -336,6 +336,14 @@ example :
         .yi)
       = some «一» := by native_decide
 
+example :
+    denoteHex (.app (.app Stdlib.hexApplyBody Stdlib.tuiBody) .yi)
+      = some («生» «一») := by native_decide
+
+example :
+    denoteHex (.app (.app Stdlib.hexApplyBody Stdlib.sunBody) .yi)
+      = some («加» Hexagram.kun «一») := by native_decide
+
 /-- 「凡 (λh. 同 h h)」denotes true (反身性 universally). -/
 theorem self_eq_all_true : denoteBool selfEqAll = some true := by native_decide
 
