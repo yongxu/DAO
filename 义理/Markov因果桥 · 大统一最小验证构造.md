@@ -1,12 +1,13 @@
 # Markov因果桥 · 大统一最小验证构造
 
-**前置**：[量子与相对论整合方向 · 从桥到新理论](量子与相对论整合方向%20·%20从桥到新理论.md) · [量子与相对论直统一不可能 · 当前语言NoGo](量子与相对论直统一不可能%20·%20当前语言NoGo.md) · [`markov-causal-bridge-plan`](../formal/SSBX/notes/markov-causal-bridge-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
+**前置**：[量子与相对论整合方向 · 从桥到新理论](量子与相对论整合方向%20·%20从桥到新理论.md) · [文构造完备与直相加边界](文构造完备与直相加边界.md) · [量子与相对论直统一不可能 · 当前语言NoGo](量子与相对论直统一不可能%20·%20当前语言NoGo.md) · [`markov-causal-bridge-plan`](../formal/SSBX/notes/markov-causal-bridge-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
 **Lean 锚点**：
 
 | 层 | 文件 | 内容 | 状态 |
 |---|---|---|---|
-| 直统一 no-go | `Foundation/Modern/QuantumRelativityNoGo.lean` | `no_direct_unification_by_addition` 排除当前语言直接相加 | `machineChecked` |
+| tagged 物理语言边界 | `Foundation/Modern/QuantumRelativityNoGo.lean` | `tagged_addition_noncollapse` 排除 tagged sum 自动坍缩 | `machineChecked` |
+| 文构造覆盖修正 | `Foundation/Modern/QuantumRelativityWenBoundary.lean` | `wen_constructive_boundary_summary` 证明 `192 × 371` 覆盖不受 tagged 边界否定 | `machineChecked` |
 | 中介桥方向 | `Foundation/Modern/QuantumRelativityIntegration.lean` | `only_mediated_bridge_is_framework_route` 定位正向路线为中介桥 | `machineChecked` |
 | 桥项双投影 | `Foundation/Modern/QuantumRelativityIntegration.lean` | `BridgeTerm`、`bridge_projections_same_one`、`bridge_projections_not_current_identity` | `machineChecked` |
 | Markov-因果桥载体 | `Foundation/Modern/QuantumRelativityMarkovBridge.lean` | `FiniteProcess`、`state_code_within_bound`、`ProcessPath`、`path_implies_reachable` | `machineChecked` |
@@ -34,7 +35,8 @@
   + Markov / 测量投影
   + 因果 / 事件投影
   + 终端状态的测量-事件对齐
-  + 仍服从 current-language no-go
+  + 仍服从 tagged physical-language noncollapse
+  + 不否定 192 × 371 文构造覆盖
 ```
 
 这不是量子引力理论，也不是“大统一已经完成”。它只把上一层的“中介桥方向”推进为一个候选最小构造：同一个有限过程对象可以被双读，并且终端状态可以同时被读为测量结果与事件记录。
@@ -63,11 +65,12 @@ theorem markov_causal_bridge_summary :
 
 | 说法 | 本文状态 | 精确含义 |
 |---|---|---|
-| 当前语言直接相加不可行 | `machineChecked` | 复用 `no_direct_unification_by_addition` |
+| 当前 tagged 物理语言不自动坍缩 | `machineChecked` | 复用 `tagged_addition_noncollapse` |
+| `192 × 371` 文构造覆盖 | `machineChecked` | 复用 `wen_constructive_boundary_summary`；它不是 tagged 边界的否定对象 |
 | 正向方向应为中介桥 | `machineChecked` | 复用 `only_mediated_bridge_is_framework_route` |
 | Markov-因果桥是候选中介载体 | `machineChecked` typed skeleton | Lean 模块已构建通过 |
 | 终端状态可读成测量结果与事件记录 | `machineChecked` typed skeleton | 由 `measurement_event_alignment` 关闭 |
-| 该桥不是 direct language addition | `machineChecked` bridge target | 复用 no-go 的 `markov_bridge_not_direct_language_addition` |
+| 该桥不是 tagged-language collapse | `machineChecked` bridge target | 复用 `markov_bridge_not_direct_language_addition` |
 | 归一化概率 / Born rule | 未纳入本轮 | 初版最多用支持集与 `Nat` 权重 |
 | 复幅、干涉、量子通道 | 未纳入本轮 | 后续才从经典 Markov 结构升级 |
 | Lorentzian geometry / 度规恢复 | 未纳入本轮 | 初版只保留事件与可达因果接口 |
@@ -89,7 +92,8 @@ Markov 因果桥只验证“测量结果作为事件”的有限过程骨架；
 
 | 轴 | Lean 锚点 | 读法 |
 |---|---|---|
-| 直统一 no-go | `no_direct_unification_by_addition` | 现成量子语言与相对论语言的 tagged addition 不能产生直接统一项 |
+| tagged 物理语言边界 | `tagged_addition_noncollapse` | 现成量子语言与相对论语言的 tagged addition 不自动坍缩为直接统一项 |
+| 文构造覆盖 | `wen_constructive_boundary_summary` | `192 × 371` 覆盖与 tagged 边界相容 |
 | 中介桥方向 | `only_mediated_bridge_is_framework_route` | 若保留两面并新增中介，正向路线是 `mediatedBridge` |
 | 桥项双投影 | `BridgeTerm`、`bridge_projections_same_one`、`bridge_projections_not_current_identity` | 中介项可双投影、同根，但不是当前 face identity |
 
@@ -124,7 +128,7 @@ typed skeleton / machineChecked in this branch：
 | 度规与曲率 | 未纳入本轮 | 需要几何极限或额外重建结构 |
 | 经验闭合 | 未纳入本轮 | 尚无可测差异与数据判准 |
 
-本轮闭合范围：**Markov-因果桥的最小 typed skeleton 已在 Lean 中关闭；它只关闭有限过程双读、测量-事件对齐、同根非同一与 no-go 保持，不关闭概率归一化、Born rule、量子通道、干涉、度规恢复或经验闭合。**
+本轮闭合范围：**Markov-因果桥的最小 typed skeleton 已在 Lean 中关闭；它只关闭有限过程双读、测量-事件对齐、同根非同一与 tagged-language noncollapse 保持，不关闭概率归一化、Born rule、量子通道、干涉、度规恢复或经验闭合；同时不否定 `192 × 371` 文构造覆盖。**
 
 ---
 
@@ -238,10 +242,10 @@ theorem measurement_event_alignment :
 = 在因果投影下的事件记录
 ```
 
-这一步不把量子项和相对论项直接相加。它是在一个新中介载体中给出共享底层状态，再分别投影到两套读法。因此它必须继续带着 no-go 边界：
+这一步不把量子项和相对论项直接相加。它是在一个新中介载体中给出共享底层状态，再分别投影到两套读法。因此它只保留 tagged-language noncollapse 边界：
 
 ```lean
-no_direct_unification_by_addition
+tagged_addition_noncollapse
 ```
 
 ---
@@ -324,8 +328,9 @@ theorem markov_bridge_same_one_not_identity :
 | 2026-05-08 | `BridgeTerm` projection | success | 新增 `MeasurementEventBridge.toBridgeTerm` 与 `measurement_event_bridge_term_keeps_faces`，把本层桥接到上一层 tag-level `BridgeTerm` |
 | 2026-05-08 | first native `lake build` | infrastructure failure / retained | 新 worktree 首次构建卡在 `mathlib4` 克隆超过十分钟，尚未进入 Lean 检查；这不是 theorem 失败 |
 | 2026-05-08 | cache-assisted `lake build SSBX.Foundation.Modern.QuantumRelativityMarkovBridge` | success | 改用主 worktree 同 revision 依赖缓存后通过，输出 `Build completed successfully (6 jobs).` |
-| 2026-05-08 | `markov_causal_bridge_summary` | `machineChecked` | 关闭 Markov 投影、因果投影、测量-事件对齐、两面保留、同根非同一、no-go 保持 |
-| 2026-05-08 | `lake build SSBX` | success with existing warnings | 顶层 import 构建通过，输出 `Build completed successfully (2885 jobs).`；警告来自既有 Wen 模块 unused simp args，不来自本轮新增 Markov 模块 |
+| 2026-05-08 | `markov_causal_bridge_summary` | `machineChecked` | 关闭 Markov 投影、因果投影、测量-事件对齐、两面保留、同根非同一、tagged-language noncollapse 保持 |
+| 2026-05-08 | `192 × 371` correction | `machineChecked` | 新增 `QuantumRelativityWenBoundary.lean` 与《文构造完备与直相加边界》，确认文构造覆盖不受 tagged-language 边界否定 |
+| 2026-05-08 | `lake build SSBX` | success with existing warnings | 顶层 import 构建通过，输出 `Build completed successfully (2886 jobs).`；警告来自既有 Wen 模块 unused simp args，不来自本轮新增 Markov / WenBoundary 模块 |
 | 2026-05-08 | verification plan | success | 新增 `formal/SSBX/notes/markov-causal-bridge-verification-plan.md`，记录回归验证、锚点审计、边界审计、升级路线与失败模板 |
 
 ---
@@ -335,6 +340,7 @@ theorem markov_bridge_same_one_not_identity :
 Lean 验证命令：
 
 ```bash
+lake build SSBX.Foundation.Modern.QuantumRelativityWenBoundary
 lake build SSBX.Foundation.Modern.QuantumRelativityMarkovBridge
 lake build SSBX
 ```
@@ -342,7 +348,7 @@ lake build SSBX
 文档与索引格式检查：
 
 ```bash
-git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean formal/SSBX.lean formal/SSBX/notes/markov-causal-bridge-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md docs-next/10_formal_形式/modern.md '义理/Markov因果桥 · 大统一最小验证构造.md'
+git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean formal/SSBX/Foundation/Modern/QuantumRelativityIntegration.lean formal/SSBX/Foundation/Modern/QuantumRelativityWenBoundary.lean formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean formal/SSBX.lean formal/SSBX/notes/markov-causal-bridge-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md docs-next/10_formal_形式/modern.md '义理/文构造完备与直相加边界.md' '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/量子与相对论直统一不可能 · 当前语言NoGo.md' '义理/量子与相对论整合方向 · 从桥到新理论.md' '义理/量子时空互补 · 从一到测.md'
 ```
 
 一句话总结：

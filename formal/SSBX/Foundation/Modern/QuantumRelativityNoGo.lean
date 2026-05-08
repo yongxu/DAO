@@ -1,5 +1,5 @@
 /-
-# QuantumRelativityNoGo — 当前语言直统一之 no-go 边界
+# QuantumRelativityNoGo — 当前 tagged 物理语言直相加边界
 
 Companion: `义理/量子与相对论直统一不可能 · 当前语言NoGo.md`
 
@@ -8,7 +8,9 @@ Companion: `义理/量子与相对论直统一不可能 · 当前语言NoGo.md`
 1. 当前量子语言与相对论语言的主对象属于不同 tagged summand；
 2. 把两套现成语言相加，并不会产生一个同时属于二者的当前语言对象；
 3. 二者仍可同指一个 root，并作为同一世界的不同 face 被互补读取；
-4. 因此 no-go 的范围只是“直接同一化 / 现成语言相加”，不是未来物理统一理论。
+4. 因此本文件的范围只是“当前 tagged 物理语言的直接同一化 / 现成语言相加”，
+   不是未来物理统一理论，也不是文构造系统的生成边界。`192 × 371`
+   文构造覆盖另见 `QuantumRelativityWenBoundary`。
 -/
 import SSBX.Foundation.Modern.QuantumSpacetime
 
@@ -70,7 +72,7 @@ def DirectCurrentUnifier (t : CurrentLanguageTerm) : Prop :=
 def DirectUnificationByAddition : Prop :=
   ∃ t : CurrentLanguageTerm, DirectCurrentUnifier t
 
-/-! ## § 2 No-go for direct identity -/
+/-! ## § 2 Tagged-addition noncollapse -/
 
 /-- 量子来源与相对论来源不是同一个来源标签。 -/
 theorem quantum_source_ne_relativity_source
@@ -95,6 +97,15 @@ theorem no_direct_unification_by_addition :
   rcases h with ⟨t, ht⟩
   exact term_cannot_be_both_quantum_and_relativity t ht
 
+/-- 更精确的读法：当前 tagged 物理语言的并和不会自动坍缩成统一项。 -/
+def TaggedAdditionNoncollapse : Prop :=
+  ¬ DirectUnificationByAddition
+
+/-- `no_direct_unification_by_addition` 的精确命名别名。 -/
+theorem tagged_addition_noncollapse :
+    TaggedAdditionNoncollapse :=
+  no_direct_unification_by_addition
+
 /-! ## § 3 Same root without direct unification -/
 
 /-- 任一量子主对象与任一相对论主对象仍可被读作同根。 -/
@@ -117,7 +128,7 @@ theorem every_cross_pair_complementary
 
 /-! ## § 4 Scope boundary -/
 
-/-- 本 no-go 处理的统一尝试类型。 -/
+/-- 本 tagged-addition 边界处理的统一尝试类型。 -/
 inductive UnityAttempt : Type
   | directObjectIdentity
   | mediatedNewTheory
@@ -128,11 +139,17 @@ def handledHere : UnityAttempt → Bool
   | .directObjectIdentity => true
   | .mediatedNewTheory => false
 
-/-- no-go 的范围边界。 -/
-theorem no_go_scope_boundary :
+/-- tagged-addition 非坍缩的范围边界。 -/
+theorem tagged_addition_scope_boundary :
     handledHere .directObjectIdentity = true
     ∧ handledHere .mediatedNewTheory = false :=
   ⟨rfl, rfl⟩
+
+/- 旧名保留为兼容入口，但精确读法见 `tagged_addition_scope_boundary`。 -/
+theorem no_go_scope_boundary :
+    handledHere .directObjectIdentity = true
+    ∧ handledHere .mediatedNewTheory = false :=
+  tagged_addition_scope_boundary
 
 /-! ## § 5 Public summary -/
 
@@ -140,8 +157,8 @@ theorem no_go_scope_boundary :
     (1) 现成两套语言相加不能给出直接统一项；
     (2) 任一量子 / 相对论交叉配对仍同根；
     (3) 任一交叉配对在当前 face identity 下不可直接统一；
-    (4) 本 no-go 只覆盖直接对象同一化，不覆盖未来中介新理论。 -/
-theorem current_language_no_go_summary :
+    (4) 本边界只覆盖直接对象同一化，不覆盖未来中介新理论或 Wen 构造覆盖。 -/
+theorem current_language_tagged_boundary_summary :
     (¬ DirectUnificationByAddition)
     ∧ (∀ q : QuantumSubject, ∀ r : RelativitySubject,
         sameOne (face (.quantum q)) (face (.relativity r)))
@@ -154,5 +171,16 @@ theorem current_language_no_go_summary :
    every_cross_pair_not_current_physical_unity,
    rfl,
    rfl⟩
+
+/- 旧名保留为兼容入口，但精确读法见 `current_language_tagged_boundary_summary`。 -/
+theorem current_language_no_go_summary :
+    (¬ DirectUnificationByAddition)
+    ∧ (∀ q : QuantumSubject, ∀ r : RelativitySubject,
+        sameOne (face (.quantum q)) (face (.relativity r)))
+    ∧ (∀ q : QuantumSubject, ∀ r : RelativitySubject,
+        ¬ CurrentPhysicalUnity (face (.quantum q)) (face (.relativity r)))
+    ∧ handledHere .directObjectIdentity = true
+    ∧ handledHere .mediatedNewTheory = false :=
+  current_language_tagged_boundary_summary
 
 end SSBX.Foundation.Modern.QuantumRelativityNoGo

@@ -8,8 +8,8 @@ Companion: `义理/Markov因果桥 · 大统一最小验证构造.md`
 1. 一个有限过程结构可以提供 Markov 读法：状态、一步支持、路径；
 2. 同一个过程结构可以提供因果读法：事件与 before 关系；
 3. 终端状态可以同时读成测量候选与事件记录；
-4. 这仍不是现成量子/相对论语言的直接相加，而是上一层 `mediatedBridge`
-   方向的一个最小中介候选。
+4. 这仍不是现成 tagged 量子/相对论语言的直接相加，而是上一层 `mediatedBridge`
+   方向的一个最小中介候选；它不否定 `192 × 371` 文构造覆盖路线。
 -/
 import SSBX.Foundation.Modern.QuantumRelativityIntegration
 
@@ -182,7 +182,7 @@ theorem markov_bridge_same_one_not_identity :
     ∧ ¬ CurrentPhysicalUnity .quantumSpace .relativisticSpacetime :=
   quantum_spacetime_complementary_faces
 
-/-- Markov/因果桥不取消上一层 no-go：直接相加仍不可行。 -/
+/-- Markov/因果桥不取消 tagged-language 非坍缩边界。 -/
 theorem markov_bridge_not_direct_language_addition :
     ¬ DirectUnificationByAddition :=
   no_direct_unification_by_addition
@@ -191,8 +191,8 @@ theorem markov_bridge_not_direct_language_addition :
 
 /-- 公开摘要：
     若给定一个有限过程、一个 Markov kernel skeleton、一个终端桥状态，
-    则该结构有 Markov 投影、因果投影、测量-事件对齐；同时不违反上一层
-    “不能由现成语言直接相加统一”的 no-go。 -/
+    则该结构有 Markov 投影、因果投影、测量-事件对齐；同时保留上一层
+    tagged physical-language noncollapse 边界。 -/
 theorem markov_causal_bridge_summary
     (P : FiniteProcess)
     (K : MarkovKernelSkeleton P)

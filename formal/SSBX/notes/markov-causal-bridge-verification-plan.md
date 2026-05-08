@@ -6,16 +6,20 @@
 
 | 文件 | 作用 |
 |---|---|
+| `formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean` | tagged 物理语言非坍缩边界 |
+| `formal/SSBX/Foundation/Modern/QuantumRelativityWenBoundary.lean` | `192 × 371` 文构造覆盖与 tagged 边界相容性 |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean` | 当前 machine-checked Lean 骨架 |
 | `formal/SSBX/notes/markov-causal-bridge-plan.md` | 探索计划与完成记录 |
+| `义理/文构造完备与直相加边界.md` | 对 `current-language no-go` 旧说法的边界修正 |
 | `义理/Markov因果桥 · 大统一最小验证构造.md` | 义理边界与 theorem 锚点说明 |
 
 ## 当前验证结论
 
 - [x] `QuantumRelativityMarkovBridge.lean` 可单独构建。
 - [x] `SSBX` 顶层入口可构建并导入新模块。
-- [x] `markov_causal_bridge_summary` 已关闭有限过程双读、测量-事件对齐、两面保留、同根非同一、no-go 保持。
+- [x] `markov_causal_bridge_summary` 已关闭有限过程双读、测量-事件对齐、两面保留、同根非同一、tagged physical-language noncollapse 保持。
 - [x] `MeasurementEventBridge.toBridgeTerm` 已把本层桥接到上一层 tag-level `BridgeTerm`。
+- [x] `wen_constructive_boundary_summary` 已确认 `192 × 371` 文构造覆盖不受 tagged-language 边界否定。
 - [x] 首次新 worktree 原生构建的 `mathlib4` 克隆阻塞已记录为基础设施失败，不当作 theorem 失败。
 - [ ] 尚未验证任何概率归一化、Born rule、量子通道、干涉、因果偏序、度规恢复或经验闭合。
 
@@ -24,9 +28,10 @@
 任何改动触及本桥相关 Lean 或文档时，至少执行：
 
 ```bash
+lake build SSBX.Foundation.Modern.QuantumRelativityWenBoundary
 lake build SSBX.Foundation.Modern.QuantumRelativityMarkovBridge
 lake build SSBX
-git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean formal/SSBX.lean formal/SSBX/notes/markov-causal-bridge-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md docs-next/10_formal_形式/modern.md '义理/Markov因果桥 · 大统一最小验证构造.md'
+git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean formal/SSBX/Foundation/Modern/QuantumRelativityIntegration.lean formal/SSBX/Foundation/Modern/QuantumRelativityWenBoundary.lean formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean formal/SSBX.lean formal/SSBX/notes/markov-causal-bridge-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md docs-next/10_formal_形式/modern.md '义理/文构造完备与直相加边界.md' '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/量子与相对论直统一不可能 · 当前语言NoGo.md' '义理/量子与相对论整合方向 · 从桥到新理论.md' '义理/量子时空互补 · 从一到测.md'
 ```
 
 通过标准：
@@ -57,7 +62,8 @@ rg -n "待处理|future|deferred|部分相关|佛|唯识|analogy|unchecked|plann
 | 测量-事件对齐 | `MeasurementEventBridge`、`measurement_event_alignment` | `machineChecked` |
 | 上层桥项投影 | `MeasurementEventBridge.toBridgeTerm`、`measurement_event_bridge_term_keeps_faces` | `machineChecked` |
 | 中介路线边界 | `MarkovCausalRoute`、`markov_causal_route_is_framework_route` | `machineChecked` |
-| no-go 保持 | `markov_bridge_not_direct_language_addition` | `machineChecked` |
+| 文构造边界修正 | `wen_constructive_boundary_summary` | `machineChecked` |
+| tagged-language noncollapse 保持 | `markov_bridge_not_direct_language_addition` | `machineChecked` |
 | 公开摘要 | `markov_causal_bridge_summary` | `machineChecked` |
 
 审计命令：
@@ -75,7 +81,7 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
   可以有 Markov / 测量读法
   可以有因果 / 事件读法
   终端状态可以对齐成测量候选与事件记录
-  并且不取消当前语言 direct-addition no-go
+  并且不取消当前 tagged 物理语言 noncollapse 边界
 ```
 
 本桥当前不能说：
@@ -123,8 +129,9 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
 
 ```bash
 lake build SSBX.Foundation.Modern.QuantumRelativityMarkovBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityWenBoundary
 lake build SSBX
-git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean formal/SSBX.lean formal/SSBX/notes/markov-causal-bridge-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md docs-next/10_formal_形式/modern.md '义理/Markov因果桥 · 大统一最小验证构造.md'
+git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean formal/SSBX/Foundation/Modern/QuantumRelativityIntegration.lean formal/SSBX/Foundation/Modern/QuantumRelativityWenBoundary.lean formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean formal/SSBX.lean formal/SSBX/notes/markov-causal-bridge-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md docs-next/10_formal_形式/modern.md '义理/文构造完备与直相加边界.md' '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/量子与相对论直统一不可能 · 当前语言NoGo.md' '义理/量子与相对论整合方向 · 从桥到新理论.md' '义理/量子时空互补 · 从一到测.md'
 ```
 
-备注：`lake build SSBX` 仍会输出既有 Wen 模块的 unused simp args linter 警告；本轮新增 Markov 模块无警告。
+备注：`lake build SSBX` 仍会输出既有 Wen 模块的 unused simp args linter 警告；本轮新增 Markov / WenBoundary 模块无警告。
