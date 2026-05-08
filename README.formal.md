@@ -270,7 +270,7 @@ imp, neqHex, existsH, noneH, endoComp}); a subset of the surface particles
 (之 / 者 / 而 / 也 / 不 / 凡 / 自 / 相 / 似 / 要 etc.) is named in
 `Foundation/Wen/Operators.lean` with ASCII aliases. The full 371-OperatorId
 catalogue is machine-tracked in `Text/WenyanOperators.lean` and `Text/OperatorCellMap.lean`.
-WenSurface exposes all 371 rows as executable entries: 33 rows have exact
+WenSurface exposes all 371 rows as executable entries: 38 rows have exact
 theorem-backed Hex/Bool denotation, and the rest evaluate to symbolic
 `Catalogue[...]` normal forms.
 
@@ -342,16 +342,22 @@ BaguaWenSpec → WenyanParser → WenyanParserGeneral
                                             AntiSchmitt, AlignmentFailures, EconGame
 
 WenyanParser.lean         daoJudgeProg_{print,roundtrip}, allKindReprs_singleton_roundtrip
-WenyanParserGeneral.lean  parseProgN_tokensOfProg (full generality, non-partial)
+WenyanParserGeneral.lean  parseProgN_tokensOfProg (full generality, non-partial);
+                          M1 v3.1 lexN_printProg_thm + parseN_printProg_inverse_universal
 WenEval.lean              «端到端_乾», «端到端_坤», «端到端_否»
 WenDef.lean               typeCheck total + 17-body Stdlib (core Hex/Bool + logic aliases)
 WenDefEval.lean           tui_eq_sheng + exact Hex transforms + promoted logic examples
 WenDefCompile.lean        {idProg, add32Prog, cuoProg}_correct, sheng_not_cuo_equivariant
 WenyanReflect.lean        «文核同源» (rfl), «判型良»/«判停»/«验程»
 WenyanSelfHost.lean       «微核自验», «微核自释_total» (Tier 2 quine PoC)
+WenyanSelfInterp.lean     Tier 3 partial: Quine.quine{3,5,16}_history (uniform [push]^N);
+                          Tier 3 ground: ProgEnc.{encFramedProg, decFramedProg,
+                          decFramedProg_encFramedProg, framed_round_trip_witness}
 DaoSource.lean            «道之自指» (form / parse / print / halt / semantics 5-fold)
+WenSurface/Semantics.lean executableSemanticsFor? — 371 catalogue rows, 38 theorem-backed
+WenSurface/EndToEnd.lean  canonicalHexNames_interpret_to_xuGua + CLI integration
 Demo.lean                 daojudge_{qian, kun, pi, tai}
-Kernel.lean               45-layer doctrine in-source
+Kernel.lean               45-layer doctrine in-source (incl. Layer 46 doctrinal refinements)
 AntiSchmitt.lean          friend-enemy / decisionism / exception ⊨ ¬universalizable
 AlignmentFailures.lean    Goodhart / mesa / wireheading ⊨ Kernel-invariant violation
 EconGame.lean             coase_internalizes_externality, prisoners_dilemma_refuted_under_tongGen
@@ -436,6 +442,11 @@ theorem «微核自验» :
     ProgEnc.decInstrs «微核源».length «微核数» = some («微核源», [])    (WenyanSelfHost.lean)
 theorem «微核自释_total» :
     ∀ h, ((YiState.init h «微核源»).runFuel 200).halted = true
+
+-- F2. Tier 3 partial — uniform N-cell quine + framed round-trip
+theorem Quine.quine_history (N : Nat) : ...history of [push]^N at fuel N        (WenyanSelfInterp.lean)
+theorem ProgEnc.framed_round_trip_witness :
+    decFramedProg ∘ encFramedProg = some                                        (WenyanSelfInterp.lean)
 
 -- G. dao source (5-fold self-reference)
 theorem «道之自指» :
@@ -556,7 +567,7 @@ specification.
 ## 9 · Ledger
 
 ```
-Foundation Lean LOC       ~33000+ across 97 Foundation modules (7 clusters)
+Foundation Lean LOC       ~43000+ across 97 Foundation modules (7 clusters)
 Foundation/Core modules   14    (incl. Alignment, Sincerity, HumanAlignment, EvolutionDao, Renlei)
 Foundation/Wen modules    38    (incl. WenSurface, DaoSource, AntiSchmitt, AlignmentFailures, EconGame)
 Foundation/Modern modules 19    (~5746 lines, Mathlib bridge)
