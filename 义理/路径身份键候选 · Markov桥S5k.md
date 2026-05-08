@@ -31,7 +31,7 @@ upper key != lower key
 source/target two-step path key is in [upper key, lower key]
 ```
 
-这不是真正 quotient；它只是给后续 quotient 或去重提供一个可审计身份键。
+这不是商类本身；它只是给后续 quotient 或去重提供一个可审计身份键。S5m 已把该 key equality 承接为 visible-key quotient class。
 
 公开摘要为：
 
@@ -70,7 +70,8 @@ theorem path_identity_bridge_summary :
 | 轴 | 状态 | 说明 |
 |---|---|---|
 | finite visible-key quotient candidate | S5l 已关闭 | S5k 不把 key 相同的 paths 商掉；S5l 已证明 key-equivalence 与 key-compatible amplitude descent |
-| quotient type construction | 后续结构 | S5k/S5l 仍不构造 Lean quotient type |
+| visible-key quotient class | S5m 已关闭 | S5k 不构造 Lean quotient class；S5m 已补上 `Setoid` / `Quot` construction |
+| canonical representative | 后续结构 | S5m 仍未为每个 quotient class 选代表元 |
 | proof-field path equality | 后续结构 | S5k 避免证明 witness proof fields 相同 |
 | general all-path enumeration | 后续结构 | S5k 仍只处理 two-route toy source/target two-step keys |
 | path integral | 后续结构 | 仍需要路径空间、测度、极限或 over-all-paths construction |
@@ -100,13 +101,14 @@ S5k 的直接增强已由 S5l 承接：
 visible path key
 -> finite quotient candidate
 -> duplicate compensation theorem
+-> visible-key quotient class
 ```
 
 下一步可以继续：
 
 ```text
 finite visible-key quotient candidate
--> quotient type construction / canonical representative
+-> canonical representative / finite support quotient enumeration
 ```
 
 或者转向：
