@@ -630,6 +630,57 @@ def hexApplyDef : WenDef where
   validName      := by native_decide
   bodyTypechecks := by native_decide
 
+/-! ### Structural truth/motion helpers -/
+
+def boolMarkerBody : Tm :=
+  .abs "p" .bool (.var "p")
+
+theorem boolMarkerBody_typed :
+    typeCheck [] boolMarkerBody = some (.arr .bool .bool) := by native_decide
+
+def boolMarkerDef : WenDef where
+  name           := "boolMarker"
+  body           := boolMarkerBody
+  bodyType       := .arr .bool .bool
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def repeatOnceBody : Tm :=
+  .abs "f" (.arr .hex .hex)
+    (.abs "x" .hex (.app (.var "f") (.app (.var "f") (.var "x"))))
+
+theorem repeatOnceBody_typed :
+    typeCheck [] repeatOnceBody =
+      some (.arr (.arr .hex .hex) (.arr .hex .hex)) := by native_decide
+
+def repeatOnceDef : WenDef where
+  name           := "repeatOnce"
+  body           := repeatOnceBody
+  bodyType       := .arr (.arr .hex .hex) (.arr .hex .hex)
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def eachHBody : Tm :=
+  .abs "dom" (.arr .hex .bool)
+    (.abs "p" (.arr .hex .bool)
+      (.app .forallH
+        (.abs "x" .hex
+          (.app
+            (.app impBody (.app (.var "dom") (.var "x")))
+            (.app (.var "p") (.var "x"))))))
+
+theorem eachHBody_typed :
+    typeCheck [] eachHBody =
+      some (.arr (.arr .hex .bool) (.arr (.arr .hex .bool) .bool)) := by
+  native_decide
+
+def eachHDef : WenDef where
+  name           := "eachH"
+  body           := eachHBody
+  bodyType       := .arr (.arr .hex .bool) (.arr (.arr .hex .bool) .bool)
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
 /-! ### Stdlib 总表 -/
 
 /-- 当前 stdlib 中已合度且类型化之 wenyan-ops 定义。 -/
@@ -638,9 +689,10 @@ def all : List WenDef :=
   , cuoDef, zongDef, huDef, fanReverseDef
   , hexIdDef, cuoZongDef, flip1Def, flip2Def, flip3Def
   , impDef, neqHexDef, existsHDef, noneHDef
-  , uniqueHDef, exactly3HDef, majorityHDef, endoCompDef, hexApplyDef ]
+  , uniqueHDef, exactly3HDef, majorityHDef, endoCompDef, hexApplyDef
+  , boolMarkerDef, repeatOnceDef, eachHDef ]
 
-theorem all_length : all.length = 26 := by native_decide
+theorem all_length : all.length = 29 := by native_decide
 
 theorem all_names :
     all.map WenDef.name =
@@ -648,7 +700,8 @@ theorem all_names :
       , "cuo", "zong", "hu", "fanReverse"
       , "hexId", "cuoZong", "flip1", "flip2", "flip3"
       , "imp", "neqHex", "existsH", "noneH"
-      , "uniqueH", "exactly3H", "majorityH", "endoComp", "hexApply" ] := by
+      , "uniqueH", "exactly3H", "majorityH", "endoComp", "hexApply"
+      , "boolMarker", "repeatOnce", "eachH" ] := by
   native_decide
 
 theorem all_distinct_names : (all.map WenDef.name).Nodup := by native_decide

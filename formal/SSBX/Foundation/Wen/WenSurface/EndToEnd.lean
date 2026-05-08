@@ -15,7 +15,7 @@ cuo-equivariant 子集 commute 作 future work）。
 - cue-aware resolver + explicit `SurfaceExpr` AST
 - 64 卦名 / aliases + Bool literals + Hex-only binders
 - executable registry 覆盖全部 371 个 OperatorId
-- 141 个 exact/theorem-backed operator 可求 Hex/Bool；其余 catalogue rows 求 structural normal form
+- 155 个 exact/theorem-backed operator 可求 Hex/Bool；其余 catalogue rows 求 structural normal form
 - unpromoted gap form 只诊断，不伪造 denotation
 
 ## 状态
@@ -439,6 +439,24 @@ example : (wenyanInterp "明 乾").toOption = some («生» Hexagram.qian) := by
 example : (wenyanInterp "蔽 乾").toOption = some («加» Hexagram.kun Hexagram.qian) := by native_decide
 example :
     (theoremBackedSemanticsFor? OperatorId.M_5).isSome = true :=
+  by native_decide
+example : (wenyanInterp "使 推 乾").toOption = some («生» Hexagram.qian) := by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.K_7).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.L_7).isSome = true :=
+  by native_decide
+example : (wenyanInterpBool "若 真").toOption = some true := by native_decide
+example : (wenyanInterp "再 推 乾").toOption = some («生» («生» Hexagram.qian)) := by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.A_6).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Q_3).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.D_9).isSome = true :=
   by native_decide
 example :
     (wenyanCompile "改").toOption.map (·.ty) = some (.arr .hex .hex) :=
