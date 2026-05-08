@@ -16,7 +16,7 @@ cuo-equivariant 子集 commute 作 future work）。
 - cue-aware resolver + explicit `SurfaceExpr` AST
 - 64 卦名 / aliases + Bool literals + Hex-only binders
 - executable registry 覆盖全部 371 个 OperatorId
-- 229 个 exact/theorem-backed operator 可求 Hex/Bool/Pair/List；其余 catalogue rows 求 structural normal form
+- 245 个 exact/theorem-backed operator 可求 Hex/Bool/Pair/List；其余 catalogue rows 求 structural normal form
 - unpromoted gap form 只诊断，不伪造 denotation
 
 ## 状态
@@ -677,6 +677,54 @@ example :
   by native_decide
 example :
     (theoremBackedSemanticsFor? OperatorId.ZA_6).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.S_9).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.S_10).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.S_11).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.S_12).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.S_17).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.S_18).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.A_1).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.A_2).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.A_3).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.A_7).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.A_10).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.A_16).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.A_17).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.A_18).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.A_19).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.A_20).isSome = true :=
   by native_decide
 example :
     (wenyanInterpHexPair "兩 乾").toOption =

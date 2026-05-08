@@ -2,7 +2,7 @@
 # WenSurface.Semantics — executable semantics registry
 
 This module separates exact stdlib denotations from total catalogue
-execution.  Two hundred twenty-nine `OperatorId`s use exact `WenDef.Tm` bodies:
+execution.  Two hundred forty-five `OperatorId`s use exact `WenDef.Tm` bodies:
 the original high-value stdlib rows, the ObjectEndo/ObjectMap/OpUnary Hex
 transform package, finite Hex pair/list carriers, finite Hex quantifiers, finite Hex motion/process rows,
 plus the Bool relation/predicate package.  Every
@@ -269,6 +269,9 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .M_4  => some ⟨.M_4,  Stdlib.impBody, 2, "宜: advisory modal condition as Bool implication"⟩
   | .M_6  => some ⟨.M_6,  Stdlib.impBody, 2, "能: capability condition as Bool implication"⟩
   | .M_7  => some ⟨.M_7,  Stdlib.impBody, 2, "得: permission condition as Bool implication"⟩
+  | .A_1  => some ⟨.A_1,  Stdlib.hexIdBody, 1, "漸/渐: aspect anchor as identity; no gradual-time semantics"⟩
+  | .A_2  => some ⟨.A_2,  Stdlib.hexIdBody, 1, "驟/骤: aspect anchor as identity; no sudden-time semantics"⟩
+  | .A_3  => some ⟨.A_3,  Stdlib.hexIdBody, 1, "忽: aspect anchor as identity; no abrupt-time semantics"⟩
   | .A_11 => some ⟨.A_11, .andB, 2, "既...又... / 一...且...: Bool conjunction"⟩
   | .A_12 => some ⟨.A_12, .andB, 2, "且: Bool conjunction"⟩
   | .A_13 => some ⟨.A_13, .andB, 2, "但: truth-conditional contrast as Bool conjunction"⟩
@@ -276,10 +279,23 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .D_2  => some ⟨.D_2,  Stdlib.repeatOnceBody, 1, "再: repeat a Hex endomap once"⟩
   | .A_5  => some ⟨.A_5,  Stdlib.repeatOnceBody, 1, "復/复: aspectual repeat as applying a Hex endomap twice"⟩
   | .A_6  => some ⟨.A_6,  Stdlib.repeatOnceBody, 1, "又: again as applying a Hex endomap twice"⟩
+  | .A_7  => some ⟨.A_7,  Stdlib.hexIdBody, 1, "屢/屡: aspect anchor as identity; no frequency semantics"⟩
+  | .A_10 => some ⟨.A_10, Stdlib.hexIdBody, 1, "寖/浸: aspect anchor as identity; no gradual-time semantics"⟩
+  | .A_16 => some ⟨.A_16, Stdlib.hexIdBody, 1, "已: aspect anchor as identity; no completed-time semantics"⟩
+  | .A_17 => some ⟨.A_17, Stdlib.hexIdBody, 1, "未: aspect anchor as identity; no future/negation semantics"⟩
+  | .A_18 => some ⟨.A_18, Stdlib.hexIdBody, 1, "將/将: aspect anchor as identity; no prospective-time semantics"⟩
+  | .A_19 => some ⟨.A_19, Stdlib.hexIdBody, 1, "方: aspect anchor as identity; no progressive-time semantics"⟩
+  | .A_20 => some ⟨.A_20, Stdlib.hexIdBody, 1, "嘗/尝: aspect anchor as identity; no experiential-time semantics"⟩
   | .S_4  => some ⟨.S_4,  Stdlib.boolMarkerBody, 1, "若: truth-core conditional marker"⟩
   | .S_5  => some ⟨.S_5,  Stdlib.boolMarkerBody, 1, "雖/虽: truth-core concessive marker"⟩
   | .S_6  => some ⟨.S_6,  Stdlib.boolMarkerBody, 1, "然: truth-core discourse marker"⟩
   | .S_8  => some ⟨.S_8,  Stdlib.boolMarkerBody, 1, "乃: truth-core sequential marker"⟩
+  | .S_9  => some ⟨.S_9,  Stdlib.hexIdBody, 1, "既: aspect anchor as identity; no completed-time semantics"⟩
+  | .S_10 => some ⟨.S_10, Stdlib.hexIdBody, 1, "將/将: aspect anchor as identity; no prospective-time semantics"⟩
+  | .S_11 => some ⟨.S_11, Stdlib.hexIdBody, 1, "方: aspect anchor as identity; no progressive-time semantics"⟩
+  | .S_12 => some ⟨.S_12, Stdlib.hexIdBody, 1, "嘗/尝: aspect anchor as identity; no experiential-time semantics"⟩
+  | .S_17 => some ⟨.S_17, Stdlib.hexIdBody, 1, "未: aspect anchor as identity; no future/negation semantics"⟩
+  | .S_18 => some ⟨.S_18, Stdlib.hexIdBody, 1, "已: aspect anchor as identity; no completed-time semantics"⟩
   | .S_1  => some ⟨.S_1,  Stdlib.hexApplyBody, 2, "之: Hex endomap application/projection"⟩
   | .S_2  => some ⟨.S_2,  Stdlib.endoCompBody, 2,
       "而: Hex endomap composition; surface currently requires explicit Hex→Hex terms"⟩
@@ -306,8 +322,9 @@ def coreTheoremBackedOperatorIds : List OperatorId :=
     ++ [.N_3, .N_4, .N_5, .N_6, .K_1, .K_5, .K_6, .K_7, .K_8, .L_7, .S_3, .S_7, .Z_1, .I_3, .I_4,
         .I_5, .I_7, .P_4, .N_2, .N_7, .N_8, .P_5, .Q_2, .Q_4, .M_2, .Q_5, .Q_6, .Q_7,
         .Q_3, .Q_8, .D_2, .D_3, .D_9, .D_10, .M_3, .M_4, .M_5, .M_6, .M_7, .M_8,
-        .A_4, .A_5, .A_6, .A_11, .A_12, .A_13, .A_14,
-        .S_1, .S_2, .S_4, .S_5, .S_6, .S_8]
+        .A_1, .A_2, .A_3, .A_4, .A_5, .A_6, .A_7, .A_10,
+        .A_11, .A_12, .A_13, .A_14, .A_16, .A_17, .A_18, .A_19, .A_20,
+        .S_1, .S_2, .S_4, .S_5, .S_6, .S_8, .S_9, .S_10, .S_11, .S_12, .S_17, .S_18]
 
 def theoremBackedOperatorIds : List OperatorId :=
   coreTheoremBackedOperatorIds ++ relationPredicateBoolOperatorIds
@@ -324,7 +341,7 @@ def structuralCatalogueOperatorIds : List OperatorId :=
 Structural total fallback for catalogue rows.
 
 These bodies are executable and type-checkable, but intentionally weaker than
-the 229 exact rows above: they preserve the operator id, signature kind, and
+the 245 exact rows above: they preserve the operator id, signature kind, and
 evaluated arguments as a catalogue value instead of projecting fake Hex/Bool
 results.
 -/
@@ -399,10 +416,10 @@ theorem executableOperatorIds_length :
     executableOperatorIds.length = 371 := by native_decide
 
 theorem coreTheoremBackedOperatorIds_length :
-    coreTheoremBackedOperatorIds.length = 183 := by native_decide
+    coreTheoremBackedOperatorIds.length = 199 := by native_decide
 
 theorem theoremBackedOperatorIds_length :
-    theoremBackedOperatorIds.length = 229 := by native_decide
+    theoremBackedOperatorIds.length = 245 := by native_decide
 
 theorem theoremBackedOperatorIds_nodup :
     theoremBackedOperatorIds.Nodup := by native_decide
@@ -412,7 +429,7 @@ theorem theoremBackedOperatorIds_all_semantics :
   native_decide
 
 theorem structuralCatalogueOperatorIds_length :
-    structuralCatalogueOperatorIds.length = 142 := by native_decide
+    structuralCatalogueOperatorIds.length = 126 := by native_decide
 
 theorem structuralCatalogueOperatorIds_all_not_theorem_backed :
     structuralCatalogueOperatorIds.all (fun id => (theoremBackedSemanticsFor? id).isNone) = true := by
@@ -443,8 +460,8 @@ theorem operatorRegistryCoverage_summary :
     operatorRegistryEntries.length = 371
       ∧ executableRegistryEntries.length = 371
       ∧ executableOperatorIds.length = 371
-      ∧ theoremBackedOperatorIds.length = 229
-      ∧ structuralCatalogueOperatorIds.length = 142
+      ∧ theoremBackedOperatorIds.length = 245
+      ∧ structuralCatalogueOperatorIds.length = 126
       ∧ theoremBackedOperatorIds.length + structuralCatalogueOperatorIds.length = 371
       ∧ executableOperatorIds.all isCatalogueOperator = true
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).id = id)
