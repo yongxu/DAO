@@ -4,7 +4,7 @@
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
-    "Foundation/Modern": 55,
+    "Foundation/Modern": 56,
     "Foundation/Wen": 51,
     "Foundation/Yi": 2,
     "Model": 2,
@@ -171,6 +171,7 @@
         "SSBX.Foundation.Modern.QuantumRelativityPathIdentityBridge",
         "SSBX.Foundation.Modern.QuantumRelativityFiniteKeyQuotientBridge",
         "SSBX.Foundation.Modern.QuantumRelativityPathQuotientBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityCanonicalRepresentativeBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -189,10 +190,10 @@
         "SSBX.Foundation.Modern.IIDWlln",
         "SSBX.Foundation.Modern.BochnerPL"
       ],
-      "lines": 181,
+      "lines": 182,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "e3b7fa3ae4ac0b5047959bebe1d41cdc3fa838881651c4e675ee6f9fd630ed15"
+      "sha256": "10c35ded7840499160c23c9f2623d1a5576dadb2dac0d7ed1f93925c066ae643"
     },
     {
       "cluster": "root",
@@ -10165,6 +10166,47 @@
       "module": "SSBX.Foundation.Modern.QuantumRelativityAmplitudeChannelBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean",
       "sha256": "d80d02b2fb3ac2be8a76a9ea17eceeb6e82d9d31d26ca9464f54835e5986a78a"
+    },
+    {
+      "cluster": "Foundation/Modern",
+      "declaration_count": 7,
+      "declarations": [
+        {
+          "kind": "def",
+          "name": "CanonicalRepresentativeFor"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_upper_canonical_represents"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_lower_canonical_represents"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_source_target_has_canonical_representative"
+        },
+        {
+          "kind": "def",
+          "name": "TwoRouteSourceTargetCanonicalRepresentativeComplete"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_source_target_canonical_representative_complete"
+        },
+        {
+          "kind": "theorem",
+          "name": "canonical_representative_bridge_summary"
+        }
+      ],
+      "imports": [
+        "SSBX.Foundation.Modern.QuantumRelativityPathQuotientBridge"
+      ],
+      "lines": 120,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityCanonicalRepresentativeBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityCanonicalRepresentativeBridge.lean",
+      "sha256": "2231f6a4d11d7c35dcc71b3616c46ba0a40565b237c7e281a6da29c20ceec4d6"
     },
     {
       "cluster": "Foundation/Modern",

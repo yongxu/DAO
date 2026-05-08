@@ -1,6 +1,6 @@
 # 路径商类候选 · Markov桥S5m
 
-**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [有限键商候选 · Markov桥S5l](有限键商候选%20·%20Markov桥S5l.md) · [路径身份键候选 · Markov桥S5k](路径身份键候选%20·%20Markov桥S5k.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
+**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [规范代表元候选 · Markov桥S5n](规范代表元候选%20·%20Markov桥S5n.md) · [有限键商候选 · Markov桥S5l](有限键商候选%20·%20Markov桥S5l.md) · [路径身份键候选 · Markov桥S5k](路径身份键候选%20·%20Markov桥S5k.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
 **Lean 锚点**：
 
@@ -67,7 +67,8 @@ theorem path_quotient_bridge_summary :
 | 轴 | 状态 | 说明 |
 |---|---|---|
 | proof-field path equality | 后续结构 | S5m 商掉 proof fields，但不证明原 witness proof fields 相等 |
-| canonical representative | 后续结构 | 尚未为每个 quotient class 选代表元 |
+| two-route canonical representative | S5n 已关闭 | S5n 已为 toy source/target quotient classes 给出 displayed representatives |
+| general choice function | 后续结构 | 仍未为任意 process 或任意 quotient class 选代表元 |
 | general all-path enumeration | 后续结构 | S5m 仍只处理 two-step witness 与 two-route toy enumeration |
 | path integral | 后续结构 | 仍需要路径空间、测度、极限或 over-all-paths construction |
 | empirical closure | 后续结构 | 需要 observation ledger 与数据判准 |
@@ -93,11 +94,18 @@ Setoid
 
 ## 二 · 下一步
 
-S5m 后可以继续：
+S5m 的直接增强已由 S5n 承接：
 
 ```text
 quotient class
--> canonical representative / finite support quotient enumeration
+-> two-route canonical representative
+```
+
+S5n 后可以继续：
+
+```text
+quotient class
+-> finite support quotient enumeration
 ```
 
 或者转向：
