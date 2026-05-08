@@ -270,8 +270,9 @@ imp, neqHex, existsH, noneH, endoComp}); a subset of the surface particles
 (之 / 者 / 而 / 也 / 不 / 凡 / 自 / 相 / 似 / 要 etc.) is named in
 `Foundation/Wen/Operators.lean` with ASCII aliases. The full 371-OperatorId
 catalogue is machine-tracked in `Text/WenyanOperators.lean` and `Text/OperatorCellMap.lean`.
-WenSurface exposes that catalogue as complete diagnostics, but only the
-33 theorem-backed registry rows are executable.
+WenSurface exposes all 371 rows as executable entries: 33 rows have exact
+theorem-backed Hex/Bool denotation, and the rest evaluate to symbolic
+`Catalogue[...]` normal forms.
 
 ### 3.4 受控文言 (Controlled Wenyan, M1 grammar)
 

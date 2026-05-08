@@ -28,10 +28,10 @@
         "SSBX.Foundation.Wen.WenSurface.EndToEnd",
         "SSBX.Foundation.Wen.WenSurface.Coverage"
       ],
-      "lines": 886,
+      "lines": 913,
       "module": "WenyanSurface.lean",
       "path": "WenyanSurface.lean",
-      "sha256": "b589ade78a744d861e2ccce6d3fabc0371529e005d856f3c08b65d3296d7e0be"
+      "sha256": "c81436a3fecd53876858b1f586429471fba439e870748b0e472771e4eef7489b"
     },
     {
       "cluster": "root",
@@ -12261,12 +12261,13 @@
       ],
       "imports": [
         "SSBX.Foundation.Yi.Yi",
-        "SSBX.Foundation.Bagua.BaguaWenSpec"
+        "SSBX.Foundation.Bagua.BaguaWenSpec",
+        "SSBX.Text.OperatorSignatures"
       ],
-      "lines": 512,
+      "lines": 538,
       "module": "SSBX.Foundation.Wen.WenDef",
       "path": "formal/SSBX/Foundation/Wen/WenDef.lean",
-      "sha256": "4222718fc65afebf4df75b43edf6d3e5bc160fb421819941c91a5895e06d7244"
+      "sha256": "6e94a8b5d06dc89945ff2242365fed2b4090fefcefdb20f3c21a42fd04800124"
     },
     {
       "cluster": "Foundation/Wen",
@@ -12376,7 +12377,7 @@
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 27,
+      "declaration_count": 28,
       "declarations": [
         {
           "kind": "inductive",
@@ -12451,6 +12452,10 @@
           "name": "denoteHexRel"
         },
         {
+          "kind": "def",
+          "name": "denoteCatalogue"
+        },
+        {
           "kind": "theorem",
           "name": "tui_eq_sheng"
         },
@@ -12491,10 +12496,10 @@
         "SSBX.Foundation.Wen.WenDef",
         "SSBX.Foundation.Yi.YiCore"
       ],
-      "lines": 367,
+      "lines": 389,
       "module": "SSBX.Foundation.Wen.WenDefEval",
       "path": "formal/SSBX/Foundation/Wen/WenDefEval.lean",
-      "sha256": "545c36cd1be872524219a0dd499558ac016859ed6bb0a3993ba080becf9dc3bf"
+      "sha256": "b5f55a7d1d0e27add1ab1727fa1e3e92a5c9edaadc8aa484c6f70d5b960754ac"
     },
     {
       "cluster": "Foundation/Wen",
@@ -12613,14 +12618,14 @@
         "SSBX.Text.OperatorCellMap",
         "SSBX.Text.OperatorCellSemantics"
       ],
-      "lines": 141,
+      "lines": 142,
       "module": "SSBX.Foundation.Wen.WenSurface.Coverage",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Coverage.lean",
-      "sha256": "3dcf25fd3fef43d49ba2f80a765f030953afc90b64551c5e0cb2446e3167b888"
+      "sha256": "19accbf5dc71f7c6763a4779ec690cebfda3227924bc78f4c258d372a3f81b6f"
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 12,
+      "declaration_count": 15,
       "declarations": [
         {
           "kind": "inductive",
@@ -12640,6 +12645,10 @@
         },
         {
           "kind": "def",
+          "name": "symbolicCatalogueTm?"
+        },
+        {
+          "kind": "def",
           "name": "opArity"
         },
         {
@@ -12652,11 +12661,19 @@
         },
         {
           "kind": "def",
+          "name": "collectArgTerms"
+        },
+        {
+          "kind": "def",
           "name": "elabTokens"
         },
         {
           "kind": "def",
           "name": "atomToTmAt"
+        },
+        {
+          "kind": "def",
+          "name": "symbolicCatalogueHead?"
         },
         {
           "kind": "def",
@@ -12676,10 +12693,10 @@
         "SSBX.Foundation.Wen.WenDef",
         "SSBX.Foundation.Wen.WenDefEval"
       ],
-      "lines": 275,
+      "lines": 368,
       "module": "SSBX.Foundation.Wen.WenSurface.Elaborate",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Elaborate.lean",
-      "sha256": "3e2638934ea29ca49bde6a0ca22d2853ab75eff7d1018d74824d97c82b6df653"
+      "sha256": "9d1e63da67da012a12a3030c834c836c5890b5058858c2ce04d48aa75b9b2838"
     },
     {
       "cluster": "Foundation/Wen",
@@ -12733,10 +12750,10 @@
       "imports": [
         "SSBX.Foundation.Wen.WenSurface.Elaborate"
       ],
-      "lines": 513,
+      "lines": 515,
       "module": "SSBX.Foundation.Wen.WenSurface.EndToEnd",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/EndToEnd.lean",
-      "sha256": "95c25645444d7fe88c05cb7cb49562c7c1701c96e5f9cb5457bd897b5b015c72"
+      "sha256": "03168215ee6da4dd120e8d5b2d1f0eca78c4a89301ce31cb2b8e245066bc755b"
     },
     {
       "cluster": "Foundation/Wen",
@@ -12813,7 +12830,7 @@
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 56,
+      "declaration_count": 58,
       "declarations": [
         {
           "kind": "inductive",
@@ -12921,7 +12938,15 @@
         },
         {
           "kind": "def",
+          "name": "theoremBackedCatalogueReadingsForGlyph"
+        },
+        {
+          "kind": "def",
           "name": "executableOperatorFormReadingsForGlyph"
+        },
+        {
+          "kind": "def",
+          "name": "theoremBackedOperatorFormReadingsForGlyph"
         },
         {
           "kind": "def",
@@ -13048,14 +13073,14 @@
         "SSBX.Text.OperatorReadings",
         "SSBX.Foundation.Yi.YiCore"
       ],
-      "lines": 749,
+      "lines": 787,
       "module": "SSBX.Foundation.Wen.WenSurface.Reading",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Reading.lean",
-      "sha256": "daab4431c41bf236aae7698d53139545b1cc3a21da44936e902e0180dddf8b8f"
+      "sha256": "88492b038998285c99f19175cc53cd309b0d229ab8e6644c865db3c25e59cd10"
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 19,
+      "declaration_count": 32,
       "declarations": [
         {
           "kind": "structure",
@@ -13064,6 +13089,54 @@
         {
           "kind": "abbrev",
           "name": "OperatorSemanticsRegistry"
+        },
+        {
+          "kind": "def",
+          "name": "theoremBackedSemanticsFor?"
+        },
+        {
+          "kind": "def",
+          "name": "theoremBackedOperatorIds"
+        },
+        {
+          "kind": "def",
+          "name": "isTheoremBackedOperator"
+        },
+        {
+          "kind": "def",
+          "name": "shapeHexIdBody"
+        },
+        {
+          "kind": "def",
+          "name": "shapeHexBinaryFirstBody"
+        },
+        {
+          "kind": "def",
+          "name": "shapeHexTernaryFirstBody"
+        },
+        {
+          "kind": "def",
+          "name": "shapeHexPredTrueBody"
+        },
+        {
+          "kind": "def",
+          "name": "shapeBoolIdBody"
+        },
+        {
+          "kind": "def",
+          "name": "catalogueObjectShapeBody"
+        },
+        {
+          "kind": "def",
+          "name": "catalogueRelationShapeBody"
+        },
+        {
+          "kind": "def",
+          "name": "catalogueShapeBodyFor"
+        },
+        {
+          "kind": "def",
+          "name": "catalogueShapeSemanticsFor"
         },
         {
           "kind": "def",
@@ -13111,6 +13184,10 @@
         },
         {
           "kind": "theorem",
+          "name": "theoremBackedOperatorIds_length"
+        },
+        {
+          "kind": "theorem",
           "name": "executableOperatorIds_registered"
         },
         {
@@ -13139,10 +13216,10 @@
         "SSBX.Text.OperatorSignatures",
         "SSBX.Text.WenyanOperators"
       ],
-      "lines": 157,
+      "lines": 243,
       "module": "SSBX.Foundation.Wen.WenSurface.Semantics",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Semantics.lean",
-      "sha256": "b41d59a16966f599636a81297e23597b5ee567057b7921e9677f1b3177cc2027"
+      "sha256": "22a766a89c25f37b2e81dd787e77061844f32d035b89bcfe8ee438f7a21b55fb"
     },
     {
       "cluster": "Foundation/Wen",

@@ -122,7 +122,7 @@
         "./README.formal.md"
       ],
       "path": "README.en.md",
-      "sha256": "e65b80a36333caa9e6fb8711b8e75bdc20accedc63df96cd30b54e599173f7d3",
+      "sha256": "200b4ac303c0e0ce31a9c4e4892f76760099cba96a1f4cc9c39540d2ca9c2de6",
       "summary": "> 🌐 [中文](./README.md) · **English** · [形式 / Formal](./README.formal.md)",
       "title": "生生不息 · Shēngshēng-Bùxī"
     },
@@ -273,13 +273,13 @@
           "title": "9 · Ledger"
         }
       ],
-      "lines": 582,
+      "lines": 583,
       "links": [
         "./README.md",
         "./README.en.md"
       ],
       "path": "README.formal.md",
-      "sha256": "932ed7f09f5b687ebe1e4517c711454590f6fb2ebfc6757490ca3afd4b540ac4",
+      "sha256": "4d6c3b6fe95f6b36ac1a38b4cb644cb0ee045423b8ddecff5d8e1ae0157f692e",
       "summary": "> 🌐 [中文](./README.md) · [English](./README.en.md) · **形式 / Formal**",
       "title": "SSBX · Formal Specification"
     },
@@ -402,13 +402,13 @@
           "title": "9.3 猜想二 · 大同非乌托邦 — 道之语言曾真存在"
         }
       ],
-      "lines": 422,
+      "lines": 423,
       "links": [
         "./README.en.md",
         "./README.formal.md"
       ],
       "path": "README.md",
-      "sha256": "9f36bc54c514a0c46ab21aeb248edb6fed7c7826d2faa9e4bb690bce8668e92a",
+      "sha256": "43ad17aaa0f11f06b4032c0b95b2b244280c1072f7bbc1dfc87d790d2fd00442",
       "summary": "> 🌐 **中文** · [English](./README.en.md) · [形式 / Formal](./README.formal.md)",
       "title": "生生不息"
     },
@@ -3260,10 +3260,10 @@
           "title": "边界"
         }
       ],
-      "lines": 43,
+      "lines": 44,
       "links": [],
       "path": "formal/SSBX/notes/wensurface-roadmap.md",
-      "sha256": "ce87c810d5e237529953fda7eab75c264bbacf4672433457cf9c0f03d9bec5bb",
+      "sha256": "0da382c9d933c0b513f37416fc2b56d4398c0f061970b5d8d353bf1c28a524d3",
       "summary": "本页记录 `wenyan-surface` 的实现边界。它是 `ziwen-spec.md` 的可执行子集前端，不宣称覆盖完整 Ziwen v0：当前没有 layout token、语句块、函数定义、match、数字/树等通用语言结构。",
       "title": "WenSurface 路线状态"
     },

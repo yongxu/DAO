@@ -8,8 +8,9 @@
 
 - 371 个 `OperatorId` 全部可登记、可查 signature、可诊断支持状态。
 - 82 个 surface / 193 个 reading 可被 resolver 说明或报告歧义。
-- 只有 theorem-backed registry 中的 33 个 operator 进入 evaluator。
-- catalogue-only operator 在 CLI 中报告 `known-not-executable`，不伪造结果。
+- 371 个 `OperatorId` 全部进入 evaluator：33 个 theorem-backed exact rows，
+  338 个 catalogue-shape symbolic normal forms。
+- catalogue-shape operator 返回 `Catalogue[...]` symbolic result，不伪装成 Hex/Bool denotation。
 - `baguaWen` 的 22-token 受控 IL parser 仍独立冻结。
 
 ## 里程碑状态
@@ -21,8 +22,8 @@
 | M2 表驱动 resolver | done | runtime 走 `allSurfaceReadings` / operator forms / executable registry；`resolveStdlibOp` 仅作 legacy witness。 |
 | M3 字面值扩展 | done | `一` + 64 卦名 + conservative 繁简 alias；未 promotion gap 只诊断。 |
 | M4 核心语法能力 | done for Hex | `者 甲 E`、`凡 甲 E`、`令 甲 V E` 支持 Hex binder；Bool binder 留后续。 |
-| M5 可执行语义扩展 | done for current subset | 33 个 executable：早期 Hex/Bool 核心 + exact Hex transforms + 第一批逻辑/恒等/量词 aliases。 |
-| M6 全目录覆盖 | done as catalogue coverage | 371 operator 全部 registry/signature 可查；338 个当前 known-not-executable。 |
+| M5 可执行语义扩展 | done | 33 个 exact executable：早期 Hex/Bool 核心 + exact Hex transforms + 第一批逻辑/恒等/量词 aliases。 |
+| M6 全目录覆盖 | done | 371 operator 全部 registry/signature 可查、可 symbolic-eval；0 个 known-not-executable。 |
 | M7 CLI 产品化 | done | `--tokens`、`--resolve`、`--ast`、`--typecheck`、`--json`、`--explain`、`--operator`、`--operators`、`--coverage`；失败返回非零。 |
 
 ## 验收命令
@@ -37,7 +38,7 @@ scripts/check_wenyan_surface_cli.py
 
 ## 边界
 
-- `known-not-executable` 不是错误的 catalogue 行；它表示签名/读法存在但没有 theorem-backed denotation。
-- `unsupported` 仅保留作 CLI filter/phase 的兼容词，产品语义以 `known-not-executable` 为准。
+- `known-not-executable` / `unsupported` filter 仅保留作 CLI 兼容词；当前 operator catalogue 返回 0 行。
+- 非 exact row 的 evaluator 语义是 symbolic catalogue normal form，仍不承诺 Hex/Bool denotation。
 - `推/益/损/損` 等可在 `WenDefEval` 求值，不代表都能 compile 到 L0 `YiInstr`；`WenDefCompile` 的 cuo-equivariance ceiling 仍有效。
 - 完整 Ziwen v0 仍以 `ziwen-spec.md` 为未来目标，不由 WenSurface 当前子集承诺。
