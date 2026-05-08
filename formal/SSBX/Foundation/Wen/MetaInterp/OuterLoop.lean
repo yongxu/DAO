@@ -11,7 +11,7 @@ metaInterpProg
   = prologueProg                        -- §6 of MetaInterp.lean
  ++ outerLoopEntry fetchOffset          -- ← THIS FILE
  ++ fetchProg fetchOffset               -- decode opcode at sim.pc
- ++ dispatchProg dispatchOffset         -- 13-way branch on tag
+ ++ dispatchProg dispatchOffset         -- 12-way branch on tag
  ++ executeBlock_<op> ...               -- 12 per-opcode blocks
  ++ haltProg                            -- terminal segment when sim halts
 ```

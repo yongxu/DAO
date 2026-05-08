@@ -33,7 +33,7 @@ This file is **the historical receipt** for why `KleeneInverter` (在
 Removing the precondition would make the corresponding axiom False in Lean.
 
 参见：`KleeneCarrier.lean` 之 `allDecidersAreYiComputable`（cuo-限定
-Church-Turing）—— 即 `kleeneBoundary` 之第 4 个投影，
+Church-Turing）—— 即原 `kleene_recursion_axiom` 之 4 件分解中第 4 件，
 其 `CuoInvariantDecide` 限定动机正源于本文件之不一致性结果。
 
 The cuo-equivariance machinery (cuoCell, cuoState, halts_cuo_invariant, etc.)

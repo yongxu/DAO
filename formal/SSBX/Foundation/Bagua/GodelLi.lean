@@ -448,11 +448,6 @@ theorem cuoState_step (s : YiState) :
         | nil => simp
         | cons head rest => simp [cuoCell]
       | halt => rfl
-      | swap =>
-        unfold YiState.execute cuoState
-        cases h_hist : s.history with
-        | nil => simp
-        | cons head rest => simp [cuoCell]
 
 /-- runFuel commutes with cuoState (any fuel). -/
 theorem cuoState_runFuel (s : YiState) (n : Nat) :
@@ -640,10 +635,9 @@ theorem halts_undecidable_under_kleene (h_kleene : KleeneInverter) :
 /-! ## § 5 无条件版本之承载层
 
   **本节移至 `KleeneCarrier.lean`**.  原 `axiom kleene_recursion_axiom :
-  KleeneInverter` 已收口为单一 bundled boundary axiom
-  `kleeneBoundary`；其四个投影（`universalInterpExists` / `smnExists` /
-  `kleeneFromPrimitives` / `allDecidersAreYiComputable`）与
-  `KleeneInternal.path_to_zero_axiom` 之分解一一对应。
+  KleeneInverter` 已被分解为四件原子公理（`universalInterpExists` /
+  `smnExists` / `kleeneFromPrimitives` / `allDecidersAreYiComputable`），
+  与 `KleeneInternal.path_to_zero_axiom` 之分解一一对应。
 
   原"无条件"主定理（如 `halts_undecidable_internally`、`rice_four_images`、
   `rice_uniform`、`daoJudge_not_universal` 等）皆从 `_under_kleene` 之

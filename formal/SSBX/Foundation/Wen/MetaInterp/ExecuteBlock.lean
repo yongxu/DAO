@@ -1,11 +1,9 @@
 /-
-# ExecuteBlock — interface contract for per-opcode blocks
+# ExecuteBlock — interface contract for the 12 per-opcode blocks
 
-This file is the **API contract** that the `executeBlock_<op>` programs must
-implement, plus two **worked examples** (`nop`, `halt`) that validate the
-contract end-to-end.  The concrete block layout below is the legacy pre-swap
-12-opcode scaffold; `YiInstr.swap` is now part of the ISA and awaits a Phase C
-block/dispatch integration.
+This file is the **API contract** that the 12 `executeBlock_<op>` programs
+must implement, plus two **worked examples** (`nop`, `halt`) that validate
+the contract end-to-end.
 
 ## Architecture recap (Phase B target)
 
@@ -14,7 +12,7 @@ metaInterpProg
   = prologueProg                        -- §6 of MetaInterp.lean (DONE)
  ++ fetchProg fetchOffset                -- TBD: identifies opcode at sim.pc,
                                           -- routes pc to dispatch
- ++ dispatchProg dispatchOffset          -- TBD: 13-way branch on tag cell,
+ ++ dispatchProg dispatchOffset          -- TBD: 12-way branch on tag cell,
                                           -- jumps to executeBlock_<op>
  ++ executeBlock_nop      o₀  fetchOffset
  ++ executeBlock_setShi   o₁  fetchOffset
@@ -28,7 +26,6 @@ metaInterpProg
  ++ executeBlock_push     o₉  fetchOffset
  ++ executeBlock_pop      o₁₀ fetchOffset
  ++ executeBlock_halt     o₁₁ fetchOffset
- ++ executeBlock_swap     o₁₂ fetchOffset
  ++ haltProg                             -- terminal segment when sim halts
 ```
 

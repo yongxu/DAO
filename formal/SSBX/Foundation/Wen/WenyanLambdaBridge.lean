@@ -70,7 +70,6 @@ def quoteInstr : YiInstr → Lam
   | .push => sym "YiInstr.push"
   | .pop => sym "YiInstr.pop"
   | .halt => sym "YiInstr.halt"
-  | .swap => sym "YiInstr.swap"
 
 def quoteList : List Lam → Lam
   | [] => sym "List.nil"
