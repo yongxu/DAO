@@ -130,6 +130,8 @@ import SSBX.Foundation.Eight.WuXiang
 import SSBX.Foundation.Modern.RCauchy
 import SSBX.Foundation.Modern.Kolmogorov
 import SSBX.Foundation.Modern.Quantum
+import SSBX.Foundation.Modern.QuantumRelativityNoGo
+import SSBX.Foundation.Modern.QuantumRelativityIntegration
 import SSBX.Foundation.Modern.SUN
 
 -- Phase 4 主体续（自然演绎 / Lebesgue 积分 / 连续 ODE / 神经科学 / 完备性深化）
