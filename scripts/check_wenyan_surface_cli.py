@@ -23,15 +23,24 @@ CASES = [
     ("之又 不 真", {"ok": True, "kind": "bool", "value": True}),
     ("错 乾", {"ok": True, "kind": "hex", "idx": 63}),
     ("凡 甲 同 甲 甲", {"ok": True, "kind": "bool", "value": True}),
+    ("（推 一）", {"ok": True, "kind": "hex", "idx": 2}),
+    ("同 （推 一） （推 一）", {"ok": True, "kind": "bool", "value": True}),
     ("則 真 假", {"ok": True, "kind": "bool", "value": False}),
     ("且 真 假", {"ok": True, "kind": "bool", "value": False}),
     ("非 乾 坤", {"ok": True, "kind": "bool", "value": True}),
-    ("或 者 甲 同 甲 一", {"ok": True, "kind": "bool", "value": True}),
     ("莫 者 甲 同 甲 一", {"ok": True, "kind": "bool", "value": False}),
+    ("（而 者 甲 推 甲 者 甲 損 甲） 之 一", {"ok": True, "kind": "hex", "idx": 1}),
+    ("而 推 損 一", {"ok": True, "kind": "hex", "idx": 1}),
+    ("而 损 推 一", {"ok": True, "kind": "hex", "idx": 1}),
+    ("（推） 一", {"ok": True, "kind": "hex", "idx": 2}),
+    ("（同 乾） 乾", {"ok": True, "kind": "bool", "value": True}),
+    ("者 甲 推 甲 乾", {"ok": True, "kind": "hex", "idx": 1}),
     ("比", {"ok": True, "kind": "hex", "idx": 47}),
     ("同 比 比", {"ok": True, "kind": "bool", "value": True}),
     ("比 乾 坤", {"ok": True, "kind": "bool", "value": False}),
     ("同 益 乾", {"ok": True, "kind": "bool", "value": False}),
+    ("在 乾 坤", {"ok": True, "kind": "catalogue", "operatorCode": "R-1", "operatorTitle": "在", "signatureKind": "REL", "arity": 2}),
+    ("五行 乾", {"ok": True, "kind": "catalogue", "operatorCode": "Y-2", "operatorTitle": "五行 (木火土金水)", "signatureKind": "CONS", "arity": 1}),
     ("鼎", {"ok": True, "kind": "hex", "idx": 17}),
     ("大壯", {"ok": True, "kind": "hex", "idx": 48}),
 ]
@@ -45,28 +54,41 @@ NEGATIVE_CASES = [
     ("大", {"phase": "unsupported", "code": "unpromoted_hexagram_gap", "surface": "大", "startCol": 0, "endCol": 1}),
     ("乾 之 坤", {"phase": "type", "code": "type_mismatch", "expectedType": "function", "actualType": "Hex"}),
     ("不 乾", {"phase": "type", "code": "type_mismatch", "expectedType": "Bool", "actualType": "Hex"}),
-    ("在 乾 坤", {"phase": "unsupported", "code": "unsupported_operator", "operatorCode": "R-1", "surface": "在", "startCol": 0, "endCol": 1, "support": "known-not-executable"}),
-    ("五行 乾", {"phase": "unsupported", "code": "unsupported_operator", "operatorCode": "Y-2", "surface": "五行", "startCol": 0, "endCol": 2, "support": "known-not-executable"}),
+    ("或 者 甲 同 甲 一", {"phase": "resolve", "code": "ambiguous_reading", "surface": "或", "startCol": 0, "endCol": 1, "candidateCount": 2}),
+    ("故 假 假", {"phase": "resolve", "code": "ambiguous_reading", "surface": "故", "startCol": 0, "endCol": 1, "candidateCount": 3}),
+    ("反 乾", {"phase": "resolve", "code": "ambiguous_reading", "surface": "反", "startCol": 0, "endCol": 1, "candidateCount": 3}),
+    ("而 不 不 真", {"phase": "parse", "code": "empty_expression"}),
+    ("在 乾", {"phase": "parse", "code": "empty_expression"}),
+    ("（推 一", {"phase": "parse", "code": "unmatched_open_bracket", "surface": "（", "startCol": 0, "endCol": 1}),
+    ("推 一）", {"phase": "parse", "code": "unmatched_close_bracket", "surface": "）", "startCol": 3, "endCol": 4}),
 ]
 
 CLI_CASES = [
     (["--tokens", "推 一"], "0:推/w1\n2:一/w1"),
+    (["--tokens", "（推 一）"], "0:（/w1\n1:推/w1\n3:一/w1\n4:）/w1"),
     (["--resolve", "推 一"], "0:推/w1 => op[T-10:推]"),
     (["--resolve", "在"], "0:在/w1 => op[R-1:在]"),
     (["--resolve", "五行"], "0:五行/w2 => op[Y-2:五行"),
     (["--resolve", "陰与陽"], "0:陰与陽/w3 => op[Y-1:"),
     (["--ast", "推 一"], "SurfaceExpr.app"),
+    (["--ast", "（推 一）"], "SurfaceExpr.grouped"),
     (["--ast", "乾 之 坤"], "SurfaceExpr.marker"),
     (["--typecheck", "同 一 一"], "type Bool"),
+    (["--typecheck", "（推 一）"], "type Hex"),
+    (["--typecheck", "推"], "type (Hex -> Hex)"),
+    (["--typecheck", "不"], "type (Bool -> Bool)"),
+    (["--typecheck", "同 乾"], "type (Hex -> Bool)"),
+    (["--typecheck", "（推）"], "type (Hex -> Hex)"),
+    (["--typecheck", "（同 乾）"], "type (Hex -> Bool)"),
     (["--operator", "T-10"], "executable: yes"),
-    (["--operator", "R-1"], "status: known but not executable yet"),
-    (["--operator", "LIJ-9"], "status: known but not executable yet"),
+    (["--operator", "R-1"], "executable note: symbolic catalogue normal form"),
+    (["--operator", "LIJ-9"], "executable note: symbolic catalogue normal form"),
     (["--operator", "Y-2"], "compound surfaces: 五行"),
-    (["--operators", "executable"], "operators executable: 33 shown; 371 registered / 33 executable"),
-    (["--operators", "known-not-executable"], "operators known-not-executable: 338 shown; 371 registered / 33 executable"),
-    (["--operators", "unsupported"], "operators unsupported: 338 shown; 371 registered / 33 executable"),
+    (["--operators", "executable"], "operators executable: 371 shown; 371 registered / 371 executable"),
+    (["--operators", "known-not-executable"], "operators known-not-executable: 0 shown; 371 registered / 371 executable"),
+    (["--operators", "unsupported"], "operators unsupported: 0 shown; 371 registered / 371 executable"),
     (["--coverage"], "surface readings: 82 surfaces / 193 readings"),
-    (["--coverage"], "operators: 371 registered / 33 executable"),
+    (["--coverage"], "operators: 371 registered / 371 executable"),
     (["--coverage"], "operator forms: 371 ids with at least one form"),
     (["--help"], "wenyan-surface --json --operators [all|executable|known-not-executable|unsupported]"),
 ]
@@ -80,31 +102,39 @@ JSON_CLI_CASES = [
     (["--json", "--operator", "Y-2"], {
         "mode": "operator",
         "operatorCode": "Y-2",
-        "support": "known-not-executable",
-        "executable": False,
+        "support": "executable",
+        "executable": True,
     }),
     (["--json", "--operators", "executable"], {
         "mode": "operators",
         "filter": "executable",
-        "count": 33,
+        "count": 371,
         "operatorsRegistered": 371,
-        "executableOperators": 33,
-        "knownNotExecutableOperators": 338,
+        "executableOperators": 371,
+        "knownNotExecutableOperators": 0,
     }),
     (["--json", "--operators", "known-not-executable"], {
         "mode": "operators",
         "filter": "known-not-executable",
-        "count": 338,
+        "count": 0,
         "operatorsRegistered": 371,
-        "executableOperators": 33,
-        "knownNotExecutableOperators": 338,
+        "executableOperators": 371,
+        "knownNotExecutableOperators": 0,
+    }),
+    (["--json", "--operators", "unsupported"], {
+        "mode": "operators",
+        "filter": "unsupported",
+        "count": 0,
+        "operatorsRegistered": 371,
+        "executableOperators": 371,
+        "knownNotExecutableOperators": 0,
     }),
     (["--json", "--coverage"], {
         "mode": "coverage",
         "surfaceCount": 82,
         "readingCount": 193,
         "operatorsRegistered": 371,
-        "executableOperators": 33,
+        "executableOperators": 371,
         "operatorCellRows": 71232,
         "operatorCellSemanticRows": 71232,
     }),
@@ -113,8 +143,16 @@ JSON_CLI_CASES = [
 NEGATIVE_CLI_CASES = [
     (["--tokens", "abc"], "lex error"),
     (["--resolve", "瓜"], "no known reading"),
+    (["--resolve", "或"], "is ambiguous"),
+    (["--resolve", "或"], "Why ambiguous"),
+    (["--resolve", "或"], "quantifierDomain"),
+    (["--resolve", "反"], "expectedOperator"),
     (["--ast", "推 乾 之"], "leftover token"),
+    (["--ast", "（推 一"], "unmatched open bracket"),
+    (["--ast", "推 一）"], "unmatched close bracket"),
     (["--typecheck", "不 乾"], "type error"),
+    (["--explain", "或 者 甲 同 甲 一"], "Suggestions:"),
+    (["--explain", "反 乾"], "expectedObject"),
     (["--operator", "NOPE"], "no such catalogue OperatorId"),
     (["--operators", "bad"], "unknown filter"),
 ]
@@ -172,8 +210,24 @@ def main() -> int:
             candidates = actual.get("candidates")
             if not isinstance(candidates, list) or len(candidates) != 2:
                 failures.append(f"{program!r}: expected 2 structured candidates, got {candidates!r}")
-            elif {c.get("support") for c in candidates} != {"known-not-executable"}:
-                failures.append(f"{program!r}: expected known-not-executable candidates, got {candidates!r}")
+            elif {c.get("support") for c in candidates} != {"executable"}:
+                failures.append(f"{program!r}: expected executable candidates, got {candidates!r}")
+        if program.startswith("或 "):
+            suggestions = actual.get("suggestions")
+            if not isinstance(suggestions, list) or len(suggestions) != 2:
+                failures.append(f"{program!r}: expected 2 ambiguity suggestions, got {suggestions!r}")
+            else:
+                cue_families = {cue for suggestion in suggestions for cue in suggestion.get("cueFamilies", [])}
+                if not {"quantifierDomain", "modalFrame"}.issubset(cue_families):
+                    failures.append(f"{program!r}: expected quantifier/modal cue suggestions, got {suggestions!r}")
+        if program == "反 乾":
+            suggestions = actual.get("suggestions")
+            if not isinstance(suggestions, list) or len(suggestions) != 3:
+                failures.append(f"{program!r}: expected 3 ambiguity suggestions, got {suggestions!r}")
+            else:
+                cue_families = {cue for suggestion in suggestions for cue in suggestion.get("cueFamilies", [])}
+                if not {"expectedObject", "expectedProp", "expectedOperator"}.issubset(cue_families):
+                    failures.append(f"{program!r}: expected object/prop/operator cue suggestions, got {suggestions!r}")
 
     for args, expected_substring in CLI_CASES:
         actual = run_cli(args).stdout
@@ -226,7 +280,11 @@ def main() -> int:
                 failures.append(f"{args!r}: unexpected operator list length {operators!r}")
             elif args[2] == "executable" and {op.get("support") for op in operators} != {"executable"}:
                 failures.append(f"{args!r}: expected executable operator list, got {operators!r}")
-            elif args[2] in {"known-not-executable", "unsupported"} and {op.get("support") for op in operators} != {"known-not-executable"}:
+            elif (
+                args[2] in {"known-not-executable", "unsupported"}
+                and operators
+                and {op.get("support") for op in operators} != {"known-not-executable"}
+            ):
                 failures.append(f"{args!r}: expected unsupported operator list, got {operators!r}")
 
     bad_filter_completed = run_cli(["--json", "--operators", "bad"], allow_failure=True)
@@ -245,6 +303,17 @@ def main() -> int:
     elif bad_explain["resolve"].get("code") != "no_reading":
         failures.append(f"bad explain JSON: expected resolve no_reading, got {bad_explain!r}")
 
+    ambiguous_explain_completed = run_cli(["--json", "--explain", "或 者 甲 同 甲 一"], allow_failure=True)
+    ambiguous_explain = json.loads(ambiguous_explain_completed.stdout)
+    if ambiguous_explain_completed.returncode == 0:
+        failures.append("ambiguous explain JSON: expected nonzero exit")
+    resolve = ambiguous_explain.get("resolve")
+    suggestions = resolve.get("suggestions") if isinstance(resolve, dict) else None
+    if not isinstance(suggestions, list) or not any(
+        "modalFrame" in suggestion.get("cueFamilies", []) for suggestion in suggestions
+    ):
+        failures.append(f"ambiguous explain JSON: expected cue suggestions, got {ambiguous_explain!r}")
+
     empty_stdin = run_cli([], allow_failure=True)
     if empty_stdin.returncode == 0 or "Usage:" not in empty_stdin.stdout:
         failures.append(f"empty stdin: expected usage with nonzero exit, got {empty_stdin!r}")
@@ -261,7 +330,7 @@ def main() -> int:
         + len(CLI_CASES)
         + len(NEGATIVE_CLI_CASES)
         + len(JSON_CLI_CASES)
-        + 3
+        + 4
     )
     print(f"wenyan-surface CLI smoke passed ({total} cases)")
     return 0

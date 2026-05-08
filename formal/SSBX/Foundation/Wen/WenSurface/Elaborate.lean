@@ -6,8 +6,8 @@
 
 ## 当前范围
 
-- **算子**：通过 `ExecutableSemantics` registry 进入 theorem-backed `Stdlib`
-  bodies；catalogue-only operator 只给诊断，不求值。
+- **算子**：38 个 exact operator 进入 theorem-backed `Stdlib` bodies；
+  其余 catalogue operator elaborates to symbolic catalogue normal forms。
 - **常值**：「一」 → `.yi` primitive；64 卦名 / aliases → `.hexLit h`。
 - **组合**：显式 `SurfaceExpr.app` 左结合到 `Tm.app`。
 - **绑定**：Hex-only `者` lambda、`凡` forall、`令` let。
@@ -28,6 +28,7 @@ open SSBX.Foundation.Yi.YiCore
 open SSBX.Foundation.Wen.WenDef
 open SSBX.Foundation.Wen.WenDefEval
 open SSBX.Text.WenyanOperators
+open SSBX.Text.OperatorSignatures
 open SSBX.Text.OperatorReadings
 
 /-! ## § 1  Elab error 类型 -/
@@ -70,7 +71,7 @@ def atomToTm : ResolvedAtom → Except ElabErr Tm
   | .catalogueOp r =>
       match r.operator? with
       | some id =>
-          match executableSemanticsFor? id with
+          match theoremBackedSemanticsFor? id with
           | some sem => .ok sem.body
           | none     => .error (.unsupportedOp id "" 0)
       | none => .error .empty
@@ -79,6 +80,14 @@ def atomToTm : ResolvedAtom → Except ElabErr Tm
   | .syntax _    => .error .empty
   | .appMarker  => .error .empty
   | .iterate    => .error .empty
+  | .openBracket => .error .empty
+  | .closeBracket => .error .empty
+
+def symbolicCatalogueTm? (id : OperatorId) : List Tm → Option Tm
+  | [a] => some (.catalogue1 id a)
+  | [a, b] => some (.catalogue2 id a b)
+  | [a, b, c] => some (.catalogue3 id a b c)
+  | _ => none
 
 /-! ## § 3  Arity 表 -/
 
@@ -108,6 +117,10 @@ mutual
       .ok ((if h = «一» then .yi else .hexLit h), rest)
     | _+1,  .syntax _ :: _                     =>
       .error .empty
+    | _+1,  .openBracket :: _                  =>
+      .error .empty
+    | _+1,  .closeBracket :: _                 =>
+      .error .empty
     | n+1,  .iterate :: rest                   =>
       -- 「之又 F X」 → F (F X)：递归解析 `F X` 子表达式（消耗 op + arg），
       -- 然后将其内部 application 复制为 F (F X)。
@@ -121,9 +134,15 @@ mutual
       match r.operator? with
       | none    => .error .empty
       | some id =>
-        match atomToTm (.catalogueOp r) with
-        | .error e => .error e
-        | .ok body => collectArgs n body (opArity id) rest
+        match theoremBackedSemanticsFor? id with
+        | some sem => collectArgs n sem.body (opArity id) rest
+        | none =>
+            match collectArgTerms n (opArity id) rest with
+            | .error e => .error e
+            | .ok (args, rest') =>
+                match symbolicCatalogueTm? id args with
+                | some tm => .ok (tm, rest')
+                | none => .error .empty
 
   /-- 消费 `k` 个子表达式作为 `acc` 的参数（左结合：`((acc a1) a2) ...`). -/
   def collectArgs : Nat → Tm → Nat → List ResolvedAtom → Except ElabErr (Tm × List ResolvedAtom)
@@ -133,6 +152,17 @@ mutual
       match parseExpr n rest with
       | .error e          => .error e
       | .ok (arg, rest')  => collectArgs n (.app acc arg) k rest'
+
+  def collectArgTerms : Nat → Nat → List ResolvedAtom → Except ElabErr (List Tm × List ResolvedAtom)
+    | _,    0,   rest => .ok ([], rest)
+    | 0,    _+1, _    => .error .fuelExhausted
+    | n+1,  k+1, rest =>
+      match parseExpr n rest with
+      | .error e => .error e
+      | .ok (arg, rest') =>
+          match collectArgTerms n k rest' with
+          | .error e => .error e
+          | .ok (args, rest'') => .ok (arg :: args, rest'')
 end -- mutual
 
 /-- 顶层 elaborator：所有 atom 必须被一个 expression 完整消费。
@@ -152,14 +182,62 @@ def atomToTmAt (tok : ResolvedTok) : Except ElabErr Tm :=
   | .catalogueOp r =>
       match r.operator? with
       | some id =>
-          match executableSemanticsFor? id with
+          match theoremBackedSemanticsFor? id with
           | some sem => .ok sem.body
           | none     => .error (.unsupportedOp id tok.surface tok.col)
       | none => .error .empty
   | _ => atomToTm tok.atom
 
+def symbolicCatalogueHead? (tok : ResolvedTok) (arity : Nat) : Option OperatorId :=
+  match tok.atom with
+  | .catalogueOp r =>
+      match r.operator? with
+      | some id =>
+          if (theoremBackedSemanticsFor? id).isNone && (fullSignatureFor id).arity = arity then
+            some id
+          else
+            none
+      | none => none
+  | _ => none
+
 def elabSurfaceExpr : SurfaceExpr → Except ElabErr Tm
   | .atom tok => atomToTmAt tok
+  | .app (.atom tok) a =>
+      match symbolicCatalogueHead? tok 1 with
+      | some id =>
+          match elabSurfaceExpr a with
+          | .ok ta => .ok (.catalogue1 id ta)
+          | .error e => .error e
+      | none =>
+          match atomToTmAt tok, elabSurfaceExpr a with
+          | .ok tf, .ok ta => .ok (.app tf ta)
+          | .error e, _ => .error e
+          | _, .error e => .error e
+  | .app (.app (.atom tok) a) b =>
+      match symbolicCatalogueHead? tok 2 with
+      | some id =>
+          match elabSurfaceExpr a, elabSurfaceExpr b with
+          | .ok ta, .ok tb => .ok (.catalogue2 id ta tb)
+          | .error e, _ => .error e
+          | _, .error e => .error e
+      | none =>
+          match elabSurfaceExpr (.app (.atom tok) a), elabSurfaceExpr b with
+          | .ok tf, .ok tb => .ok (.app tf tb)
+          | .error e, _ => .error e
+          | _, .error e => .error e
+  | .app (.app (.app (.atom tok) a) b) c =>
+      match symbolicCatalogueHead? tok 3 with
+      | some id =>
+          match elabSurfaceExpr a, elabSurfaceExpr b, elabSurfaceExpr c with
+          | .ok ta, .ok tb, .ok tc => .ok (.catalogue3 id ta tb tc)
+          | .error e, _, _ => .error e
+          | _, .error e, _ => .error e
+          | _, _, .error e => .error e
+      | none =>
+          match elabSurfaceExpr (.app (.app (.atom tok) a) b), elabSurfaceExpr c with
+          | .ok tf, .ok tc => .ok (.app tf tc)
+          | .error e, _ => .error e
+          | _, .error e => .error e
   | .app f x =>
       match elabSurfaceExpr f, elabSurfaceExpr x with
       | .ok tf, .ok tx => .ok (.app tf tx)
@@ -186,6 +264,7 @@ def elabSurfaceExpr : SurfaceExpr → Except ElabErr Tm
       | .error e => .error e
       | .ok (.app f x) => .ok (.app f (.app f x))
       | .ok _ => .error .empty
+  | .grouped _ _ body => elabSurfaceExpr body
   | .construction name _ => .error (.unsupportedConstruction name)
 
 /-- Diagnostic type inference used only by WenSurface errors.
@@ -221,6 +300,27 @@ def inferTypeDetailed : Ctx → Tm → Except TypeDiag Ty
   | _, .cuoH      => .ok (.arr .hex .hex)
   | _, .zongH     => .ok (.arr .hex .hex)
   | _, .huH       => .ok (.arr .hex .hex)
+  | ctx, .catalogue1 id a =>
+      match inferTypeDetailed ctx a with
+      | .error e => .error e
+      | .ok _ =>
+          let sig := fullSignatureFor id
+          if sig.arity = 1 then .ok (.catalogue sig.kind) else .error (.expectedFunction (.catalogue sig.kind))
+  | ctx, .catalogue2 id a b =>
+      match inferTypeDetailed ctx a, inferTypeDetailed ctx b with
+      | .ok _, .ok _ =>
+          let sig := fullSignatureFor id
+          if sig.arity = 2 then .ok (.catalogue sig.kind) else .error (.expectedFunction (.catalogue sig.kind))
+      | .error e, _ => .error e
+      | _, .error e => .error e
+  | ctx, .catalogue3 id a b c =>
+      match inferTypeDetailed ctx a, inferTypeDetailed ctx b, inferTypeDetailed ctx c with
+      | .ok _, .ok _, .ok _ =>
+          let sig := fullSignatureFor id
+          if sig.arity = 3 then .ok (.catalogue sig.kind) else .error (.expectedFunction (.catalogue sig.kind))
+      | .error e, _, _ => .error e
+      | _, .error e, _ => .error e
+      | _, _, .error e => .error e
 
 def elabSurfaceTyped (expr : SurfaceExpr) : Except ElabErr TypedTm :=
   match elabSurfaceExpr expr with

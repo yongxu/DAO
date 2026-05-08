@@ -14,7 +14,8 @@ This binary is parallel to (not a replacement for) the frozen baguaWen
 22-token controlled IL parser. WenSurface speaks the surface language:
 推/比/不/必/同/凡/損/损/益, hex consts 一/乾/坤/full King-Wen names,
 bool 真/假, marker 之, construction 之又, and prefix-only binders 者/凡/令
-over Hex variables.
+over Hex variables. Grouping brackets `（ E ）` and `( E )` preserve AST
+grouping and elaborate transparently.
 -/
 import SSBX.Foundation.Wen.WenSurface.EndToEnd
 import SSBX.Foundation.Wen.WenSurface.Coverage
@@ -22,6 +23,7 @@ import SSBX.Foundation.Wen.WenSurface.Coverage
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Yi.YiCore
 open SSBX.Foundation.Wen.WenSurface
+open SSBX.Foundation.Wen.WenDefEval
 open SSBX.Text.WenyanOperators
 open SSBX.Text.OperatorReadings
 open SSBX.Text.OperatorSignatures
@@ -77,6 +79,143 @@ private def readingSupportKind
       else "known-not-executable"
   | none => "pending"
 
+private def expectedTypeDiagShow : SSBX.Text.OperatorReadings.ExpectedType → String
+  | .unknown => "unknown"
+  | .function => "function"
+  | .prop => "prop"
+  | .path => "path"
+  | .object => "object"
+  | .operator => "operator"
+  | .action => "action"
+  | .nominal => "nominal"
+  | .predicate => "predicate"
+  | .quantifier => "quantifier"
+  | .modal => "modal"
+  | .aspect => "aspect"
+  | .role => "role"
+  | .construction => "construction"
+
+private def cueDiagShow : SSBX.Text.OperatorReadings.ContextCue → String
+  | .controlledToken => "controlledToken"
+  | .instructionContext => "instructionContext"
+  | .explicitSense => "explicitSense"
+  | .betweenNominals => "betweenNominals"
+  | .betweenActions => "betweenActions"
+  | .contrastive => "contrastive"
+  | .afterVerb => "afterVerb"
+  | .beforeMotionVerb => "beforeMotionVerb"
+  | .beforeYou => "beforeYou"
+  | .wholeConstruction => "wholeConstruction"
+  | .asConstruction => "asConstruction"
+  | .nominalizerConstruction => "nominalizerConstruction"
+  | .finalAssertion => "finalAssertion"
+  | .expectedFunction => "expectedFunction"
+  | .expectedProp => "expectedProp"
+  | .expectedPath => "expectedPath"
+  | .expectedObject => "expectedObject"
+  | .expectedOperator => "expectedOperator"
+  | .expectedAction => "expectedAction"
+  | .expectedNominal => "expectedNominal"
+  | .expectedPredicate => "expectedPredicate"
+  | .quantifierDomain => "quantifierDomain"
+  | .modalFrame => "modalFrame"
+  | .abilityContext => "abilityContext"
+  | .permissionContext => "permissionContext"
+  | .normativeContext => "normativeContext"
+  | .positionTimeContext => "positionTimeContext"
+  | .instrumentalContext => "instrumentalContext"
+  | .purposeContext => "purposeContext"
+  | .identityContext => "identityContext"
+  | .geometryContext => "geometryContext"
+  | .innerOuterContext => "innerOuterContext"
+  | .emotionContext => "emotionContext"
+  | .legalContext => "legalContext"
+  | .governanceContext => "governanceContext"
+  | .strategyContext => "strategyContext"
+  | .militaryContext => "militaryContext"
+  | .medicalContext => "medicalContext"
+  | .ritualContext => "ritualContext"
+  | .mohistContext => "mohistContext"
+  | .namesSchoolContext => "namesSchoolContext"
+  | .xunziContext => "xunziContext"
+  | .zhuangziContext => "zhuangziContext"
+  | .chuciContext => "chuciContext"
+  | .guanziContext => "guanziContext"
+  | .huainanContext => "huainanContext"
+  | .aspectContext => "aspectContext"
+  | .boundaryMotionContext => "boundaryMotionContext"
+  | .qiFlowContext => "qiFlowContext"
+  | .roleContext => "roleContext"
+  | .argumentContext => "argumentContext"
+  | .temporalRange => "temporalRange"
+  | .focusAdverb => "focusAdverb"
+
+private def constructionDiagShow : SSBX.Text.OperatorReadings.ConstructionKind → String
+  | .none => "none"
+  | .genitiveProjection => "genitiveProjection"
+  | .anaphora => "anaphora"
+  | .sourcePath => "sourcePath"
+  | .iteration => "iteration"
+  | .quantifier => "quantifier"
+  | .modal => "modal"
+  | .causal => "causal"
+  | .sequential => "sequential"
+  | .mohistCondition => "mohistCondition"
+  | .reflexive => "reflexive"
+  | .wholeConstruction => "wholeConstruction"
+
+private def cueFamiliesForReading
+    (r : SSBX.Text.OperatorReadings.OperatorReading) : List String :=
+  let direct := r.cues.map cueDiagShow
+  let fromTypes := r.expectedTypes.filterMap fun ty =>
+    match ty with
+    | .function => some "expectedFunction"
+    | .prop => some "expectedProp"
+    | .path => some "expectedPath"
+    | .object => some "expectedObject"
+    | .operator => some "expectedOperator"
+    | .action => some "expectedAction"
+    | .nominal => some "expectedNominal"
+    | .predicate => some "expectedPredicate"
+    | .quantifier => some "quantifierDomain"
+    | .modal => some "modalFrame"
+    | .aspect => some "aspectContext"
+    | .role => some "roleContext"
+    | .construction => some "wholeConstruction"
+    | .unknown => none
+  let fromConstruction :=
+    match r.construction with
+    | .quantifier => ["quantifierDomain"]
+    | .modal => ["modalFrame"]
+    | .mohistCondition => ["mohistContext", "expectedProp"]
+    | .reflexive => ["expectedFunction"]
+    | .sourcePath => ["expectedPath"]
+    | .iteration => ["beforeYou"]
+    | .wholeConstruction => ["wholeConstruction"]
+    | .causal | .sequential => ["expectedProp"]
+    | .none | .genitiveProjection | .anaphora => []
+  (direct ++ fromTypes ++ fromConstruction).eraseDups
+
+private def ambiguityAction
+    (r : SSBX.Text.OperatorReadings.OperatorReading) : String :=
+  let families := cueFamiliesForReading r
+  let familyShow := String.intercalate ", " families
+  let typeShow := String.intercalate ", " (r.expectedTypes.map expectedTypeDiagShow)
+  let constructionShow := constructionDiagShow r.construction
+  "choose " ++ r.label ++
+    " by adding context for " ++
+    (if familyShow.isEmpty then "one of its catalogue cue families" else familyShow) ++
+    "; expected=" ++ typeShow ++
+    "; construction=" ++ constructionShow
+
+private def ambiguityActionBlock
+    (rs : List SSBX.Text.OperatorReadings.OperatorReading) : String :=
+  if rs.isEmpty then ""
+  else
+    "\nWhy ambiguous: multiple catalogue readings share this surface; context has not selected one.\n" ++
+    "Suggestions:\n" ++
+      String.intercalate "\n" (rs.map fun r => "  - " ++ ambiguityAction r)
+
 private def operatorByCode? (code : String) : Option OperatorId :=
   allOperatorIds.find? (fun id => id.code == code)
 
@@ -87,6 +226,7 @@ private def signatureEvidenceShow : SignatureEvidence → String
 private def tyShow : SSBX.Foundation.Wen.WenDef.Ty → String
   | .hex => "Hex"
   | .bool => "Bool"
+  | .catalogue kind => "Catalogue[" ++ kind.key ++ "]"
   | .arr a b => "(" ++ tyShow a ++ " -> " ++ tyShow b ++ ")"
 
 private def typeDiagShow : TypeDiag → String
@@ -185,7 +325,7 @@ private def errShow : WenSurfaceErr → String
       s!"resolve error at col {col}: surface \"{surface}\" has no known reading"
   | .resolve (.ambiguous surface col candidates) =>
       s!"resolve error at col {col}: surface \"{surface}\" is ambiguous ({candidates.length} catalogue readings)" ++
-        readingBlock candidates
+        readingBlock candidates ++ ambiguityActionBlock candidates
   | .resolve (.knownButUnsupported surface col readings) =>
       s!"resolve error at col {col}: surface \"{surface}\" is known ({readings.length} readings) but has no executable catalogue reading" ++
         readingBlock readings
@@ -195,6 +335,12 @@ private def errShow : WenSurfaceErr → String
       "parse error: empty / incomplete expression"
   | .parse .fuelExhausted =>
       "parse error: fuel exhausted (program too deeply nested?)"
+  | .parse (.unmatchedOpenBracket surface col) =>
+      s!"parse error at col {col}: unmatched open bracket \"{surface}\""
+  | .parse (.unmatchedCloseBracket surface col) =>
+      s!"parse error at col {col}: unmatched close bracket \"{surface}\""
+  | .parse (.expectedCloseBracket openSurface expected openCol col) =>
+      s!"parse error at col {col}: expected close bracket \"{expected}\" for \"{openSurface}\" opened at col {openCol}"
   | .parse (.expectedVariable surface col) =>
       s!"parse error at col {col}: \"{surface}\" expects a Hex variable name"
   | .parse (.unexpectedApplicationMarker surface col) =>
@@ -241,6 +387,9 @@ private def errCode : WenSurfaceErr → String
   | .resolve (.unpromotedHexagramGap _ _) => "unpromoted_hexagram_gap"
   | .parse .empty => "empty_expression"
   | .parse .fuelExhausted => "parse_fuel_exhausted"
+  | .parse (.unmatchedOpenBracket _ _) => "unmatched_open_bracket"
+  | .parse (.unmatchedCloseBracket _ _) => "unmatched_close_bracket"
+  | .parse (.expectedCloseBracket _ _ _ _) => "expected_close_bracket"
   | .parse (.expectedVariable _ _) => "expected_variable"
   | .parse (.unexpectedApplicationMarker _ _) => "unexpected_application_marker"
   | .parse (.unpromotedHexagramGap _ _) => "unpromoted_hexagram_gap"
@@ -262,7 +411,7 @@ private def resolveErrShow : ResolveErr → String
       s!"resolve error at col {col}: surface \"{surface}\" has no known reading"
   | .ambiguous surface col candidates =>
       s!"resolve error at col {col}: surface \"{surface}\" is ambiguous ({candidates.length} catalogue readings)" ++
-        readingBlock candidates
+        readingBlock candidates ++ ambiguityActionBlock candidates
   | .knownButUnsupported surface col readings =>
       s!"resolve error at col {col}: surface \"{surface}\" is known ({readings.length} readings) but has no executable catalogue reading" ++
         readingBlock readings
@@ -272,6 +421,12 @@ private def resolveErrShow : ResolveErr → String
 private def parseErrShow : ParseErr → String
   | .empty => "parse error: empty / incomplete expression"
   | .fuelExhausted => "parse error: fuel exhausted"
+  | .unmatchedOpenBracket surface col =>
+      s!"parse error at col {col}: unmatched open bracket \"{surface}\""
+  | .unmatchedCloseBracket surface col =>
+      s!"parse error at col {col}: unmatched close bracket \"{surface}\""
+  | .expectedCloseBracket openSurface expected openCol col =>
+      s!"parse error at col {col}: expected close bracket \"{expected}\" for \"{openSurface}\" opened at col {openCol}"
   | .expectedVariable surface col =>
       s!"parse error at col {col}: \"{surface}\" expects a Hex variable name"
   | .unexpectedApplicationMarker surface col =>
@@ -297,6 +452,8 @@ private def atomShow : ResolvedAtom → String
   | .syntax .ling => "syntax[令]"
   | .appMarker => "marker[之]"
   | .iterate => "construction[之又]"
+  | .openBracket => "open-bracket"
+  | .closeBracket => "close-bracket"
 
 private def tokShow (t : GlyphTok) : String :=
   s!"{t.startCol}:{t.surface}/w{t.width}"
@@ -328,6 +485,17 @@ private def typeOutput (src : String) : String :=
   match wenyanCompile src with
   | .ok typed => s!"type {tyShow typed.ty}\nterm {repr typed.tm}"
   | .error e => errShow e
+
+private def catalogueRun? (src : String) : Option (OperatorId × SignatureKind × Nat) :=
+  match wenyanCompile src with
+  | .error _ => none
+  | .ok typed =>
+      match denoteCatalogue typed.tm with
+      | some (id, kind, args) => some (id, kind, args.length)
+      | none => none
+
+private def catalogueRunShow (id : OperatorId) (kind : SignatureKind) (arity : Nat) : String :=
+  s!"catalogue {id.code} {id.title} kind {kind.key} args {arity}"
 
 private def jsonEscape (s : String) : String :=
   String.join <| s.toList.map fun c =>
@@ -419,12 +587,32 @@ private def readingJson
     , jsonFieldString "support" (readingSupportKind r)
     , jsonFieldString "status" (readingStatusShow r.status)
     , jsonFieldString "fixity" (fixityShow r.fixity)
+    , jsonFieldRaw "cues" (jsonArray (r.cues.map (jsonString ∘ cueDiagShow)))
     , jsonFieldRaw "expectedTypes" (jsonArray (r.expectedTypes.map (jsonString ∘ expectedTypeShow)))
     , jsonFieldString "construction" (constructionKindShow r.construction)
     ] ++ opFields
 
 private def readingsJson (rs : List SSBX.Text.OperatorReadings.OperatorReading) : String :=
   jsonArray (rs.map readingJson)
+
+private def ambiguitySuggestionJson
+    (r : SSBX.Text.OperatorReadings.OperatorReading) : String :=
+  let fields :=
+    match r.operator? with
+    | some id => operatorIdJsonFields id
+    | none => [jsonFieldRaw "operatorCode" "null", jsonFieldRaw "operatorTitle" "null"]
+  jsonObject <|
+    [ jsonFieldString "label" r.label
+    , jsonFieldString "gloss" r.gloss
+    , jsonFieldRaw "cueFamilies" (jsonArray ((cueFamiliesForReading r).map jsonString))
+    , jsonFieldRaw "expectedTypes" (jsonArray (r.expectedTypes.map (jsonString ∘ expectedTypeShow)))
+    , jsonFieldString "construction" (constructionKindShow r.construction)
+    , jsonFieldString "action" (ambiguityAction r)
+    ] ++ fields
+
+private def ambiguitySuggestionsJson
+    (rs : List SSBX.Text.OperatorReadings.OperatorReading) : String :=
+  jsonArray (rs.map ambiguitySuggestionJson)
 
 private def errLocationFields (surface : String) (col : Nat) : List (String × String) :=
   [ jsonFieldString "surface" surface
@@ -444,6 +632,8 @@ private def errExtraFields : WenSurfaceErr → List (String × String)
       errLocationFields surface col ++
         [ jsonFieldNat "candidateCount" candidates.length
         , jsonFieldRaw "candidates" (readingsJson candidates)
+        , jsonFieldRaw "suggestions" (ambiguitySuggestionsJson candidates)
+        , jsonFieldString "hint" "Surface is ambiguous because multiple catalogue readings remain viable; add a contextual cue family to select one."
         ]
   | .resolve (.knownButUnsupported surface col readings) =>
       errLocationFields surface col ++
@@ -452,6 +642,15 @@ private def errExtraFields : WenSurfaceErr → List (String × String)
         ]
   | .resolve (.unpromotedHexagramGap surface col) => errLocationFields surface col
   | .parse (.expectedVariable surface col) => errLocationFields surface col
+  | .parse (.unmatchedOpenBracket surface col) => errLocationFields surface col
+  | .parse (.unmatchedCloseBracket surface col) => errLocationFields surface col
+  | .parse (.expectedCloseBracket openSurface expected openCol col) =>
+      [ jsonFieldString "surface" openSurface
+      , jsonFieldString "expected" expected
+      , jsonFieldNat "openCol" openCol
+      , jsonFieldNat "startCol" col
+      , jsonFieldNat "endCol" (col + expected.toList.length)
+      ]
   | .parse (.unexpectedApplicationMarker surface col) => errLocationFields surface col
   | .parse (.unpromotedHexagramGap surface col) => errLocationFields surface col
   | .parse (.leftoverAtoms count surface col) =>
@@ -533,6 +732,10 @@ private def atomJson : ResolvedAtom → String
       jsonObject [jsonFieldString "kind" "applicationMarker", jsonFieldString "surface" "之"]
   | .iterate =>
       jsonObject [jsonFieldString "kind" "construction", jsonFieldString "surface" "之又"]
+  | .openBracket =>
+      jsonObject [jsonFieldString "kind" "openBracket"]
+  | .closeBracket =>
+      jsonObject [jsonFieldString "kind" "closeBracket"]
 
 private def resolvedTokJson (t : ResolvedTok) : String :=
   jsonObject
@@ -594,9 +797,20 @@ private def jsonOutput (src : String) : String :=
   | .ok h =>
       "{\"ok\":true,\"kind\":\"hex\",\"idx\":" ++ toString (Hexagram.toIdx h).val ++ "}"
   | .error eHex =>
-      match wenyanInterpBool src with
-      | .ok b => "{\"ok\":true,\"kind\":\"bool\",\"value\":" ++ toString b ++ "}"
-      | .error _ => errJson eHex
+    match wenyanInterpBool src with
+    | .ok b => "{\"ok\":true,\"kind\":\"bool\",\"value\":" ++ toString b ++ "}"
+    | .error _ =>
+        match catalogueRun? src with
+        | some (id, kind, arity) =>
+            jsonObject
+              [ jsonFieldBool "ok" true
+              , jsonFieldString "kind" "catalogue"
+              , jsonFieldString "operatorCode" id.code
+              , jsonFieldString "operatorTitle" id.title
+              , jsonFieldString "signatureKind" kind.key
+              , jsonFieldNat "arity" arity
+              ]
+        | none => errJson eHex
 
 private def programOk (src : String) : Bool :=
   match wenyanInterp src with
@@ -604,7 +818,7 @@ private def programOk (src : String) : Bool :=
   | .error _ =>
       match wenyanInterpBool src with
       | .ok _ => true
-      | .error _ => false
+      | .error _ => (catalogueRun? src).isSome
 
 private def tokensOk (src : String) : Bool :=
   match lexWen src with
@@ -641,7 +855,10 @@ private def runProgram (src : String) : String :=
   | .error eHex =>
     match wenyanInterpBool src with
     | .ok b => s!"bool {b}"
-    | .error _ => errShow eHex   -- show the original (Hex-attempt) error
+    | .error _ =>
+        match catalogueRun? src with
+        | some (id, kind, arity) => catalogueRunShow id kind arity
+        | none => errShow eHex   -- show the original (Hex-attempt) error
 
 private def explainOutput (src : String) : String :=
   String.intercalate "\n\n"
@@ -790,10 +1007,11 @@ private def usage : String :=
      "       wenyan-surface --help",
      "",
      "Surface vocabulary:",
-     "  Executable operators: 33 theorem-backed rows; run --operators executable for the list",
+     "  Executable operators: 371 rows (38 theorem-backed exact; 333 symbolic catalogue-shape)",
      "  Examples include: 推 比 不 必 同 凡 損 损 益 错 錯 综 綜 互 反 則 且 非 或 莫",
      "  Hex consts: 一 乾 坤 plus canonical 64 hexagram names",
      "  Bool consts: 真 假",
+     "  Grouping: （ E ） and ( E )",
      "  Marker: 之 (explicit application/projection marker)",
      "  Construction: 之又 (iterate F twice over the next argument)",
      "  Binders: 者 甲 E, 凡 甲 E, 令 甲 V E (Hex variables only)",

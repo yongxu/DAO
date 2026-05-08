@@ -9,7 +9,8 @@
 
 解析层默认走 cue-aware resolver：先识别语法 marker / binder / 字面值，
 再走 registry-backed executable surface map，最后落到 `OperatorReadings` catalogue。
-catalogue-only operator 可以被说明和诊断，但不会被 evaluator 偷接语义。
+non-exact catalogue operator 可以进入 symbolic evaluator，但不会被伪装成
+Hex/Bool denotation。
 
 ## 状态
 
@@ -51,6 +52,8 @@ inductive ResolvedAtom where
   | syntax      (marker : SyntaxMarker)
   | appMarker             -- 「之」 等不发射 Tm 的 surface marker
   | iterate               -- 「之又」 迭代构式 marker：F X ↦ F (F X)
+  | openBracket
+  | closeBracket
 deriving DecidableEq, Repr
 
 /-- 已消歧的 token：保留 GlyphTok 与解析结果. -/
@@ -152,9 +155,6 @@ def resolveStdlibOp : Glyph → Option OperatorReading
   | "互" =>
       some (catalogueReading "互" "Z-3" "互卦 / 中四爻抽取" (some .Z_3)
                     .prefix [.expectedObject])
-  | "反" =>
-      some (catalogueReading "反" "T-6" "对象层反转" (some .T_6)
-                    .prefix [.expectedObject])
   | _   => none
 
 /-- v1+ hex 常值 surface → Hexagram。包含「一」与完整 64 卦名. -/
@@ -183,6 +183,18 @@ def resolveSyntaxMarker : Glyph → Option SyntaxMarker
   | "者" => some .zhe
   | "令" => some .ling
   | _    => none
+
+def matchingCloseBracket? : Glyph → Option Glyph
+  | "（" => some "）"
+  | "("  => some ")"
+  | _    => none
+
+def isOpenBracketSurface (g : Glyph) : Bool :=
+  (matchingCloseBracket? g).isSome
+
+def isCloseBracketSurface : Glyph → Bool
+  | "）" | ")" => true
+  | _ => false
 
 def catalogueReadingsForGlyph (glyph : Glyph) : List OperatorReading :=
   (readingsForGlyph glyph).filter (fun r => r.status = .catalogue ∧ r.operator?.isSome)
@@ -214,9 +226,22 @@ def executableCatalogueReadingsForGlyph (glyph : Glyph) : List OperatorReading :
     | some id => (executableSemanticsFor? id).isSome
     | none => false)
 
+def theoremBackedCatalogueReadingsForGlyph (glyph : Glyph) : List OperatorReading :=
+  (catalogueReadingsForGlyph glyph).filter (fun r =>
+    match r.operator? with
+    | some id => isTheoremBackedOperator id
+    | none => false)
+
 def executableOperatorFormReadingsForGlyph (glyph : Glyph) : List OperatorReading :=
   (operatorFormIdsForGlyph glyph).filterMap (fun id =>
     if (executableSemanticsFor? id).isSome then
+      some (catalogueReading glyph id.code id.title (some id) .prefix [.expectedObject])
+    else
+      none)
+
+def theoremBackedOperatorFormReadingsForGlyph (glyph : Glyph) : List OperatorReading :=
+  (operatorFormIdsForGlyph glyph).filterMap (fun id =>
+    if isTheoremBackedOperator id then
       some (catalogueReading glyph id.code id.title (some id) .prefix [.expectedObject])
     else
       none)
@@ -229,11 +254,26 @@ def sameExecutableSemantics (sem : ExecutableSemantics) (r : OperatorReading) : 
   | some sem' => sem'.arity == sem.arity && decide (sem'.body = sem.body)
   | none => false
 
+def sameExecutableReadingShape (base r : OperatorReading) : Bool :=
+  decide (r.fixity = base.fixity) && decide (r.construction = base.construction)
+
+def sameExecutableSemanticsAndShape (base : OperatorReading) (sem : ExecutableSemantics)
+    (r : OperatorReading) : Bool :=
+  sameExecutableSemantics sem r && sameExecutableReadingShape base r
+
+def firstTheoremBackedReading? : List OperatorReading → Option OperatorReading
+  | [] => none
+  | r :: rest =>
+      match r.operator? with
+      | some id => if isTheoremBackedOperator id then some r else firstTheoremBackedReading? rest
+      | none => firstTheoremBackedReading? rest
+
 /--
 Choose a surface reading when all executable candidates collapse to the same
-typed body.  This keeps true homographic aliases such as `故` (K-1/S-7) usable
-without pretending that different bodies, such as object-level and proposition-
-level `反`, have been disambiguated.
+typed body and the same syntactic reading shape.  This keeps true aliases such
+as `同` (I-1/P-4) usable without pretending that different constructions, such
+as quantifier/modal `或`, have been disambiguated just because the current
+finite model shares a body for them.
 -/
 def uniqueExecutableReadingBySemantics : List OperatorReading → Option OperatorReading
   | [] => none
@@ -241,20 +281,46 @@ def uniqueExecutableReadingBySemantics : List OperatorReading → Option Operato
       match executableSemanticsForReading? r with
       | none => none
       | some sem =>
-          if rest.all (sameExecutableSemantics sem) then some r else none
+          if rest.all (sameExecutableSemanticsAndShape r sem) then
+            match firstTheoremBackedReading? (r :: rest) with
+            | some exact => some exact
+            | none => some r
+          else
+            none
 
 def uniqueExecutableCatalogueReading (glyph : Glyph) : Option OperatorReading :=
-  uniqueExecutableReadingBySemantics (executableCatalogueReadingsForGlyph glyph)
+  uniqueExecutableReadingBySemantics (catalogueReadingsForGlyph glyph)
+
+/--
+Reserved v1 surfaces remain stable even when the full catalogue records later
+homographs for the same glyph.  Outside this small compatibility surface, a
+glyph only auto-resolves when every relevant catalogue candidate has the same
+executable semantics.
+-/
+def reservedV1ExecutableReadingForGlyph (glyph : Glyph) : Option OperatorReading :=
+  match resolveStdlibOp glyph with
+  | some r =>
+      match r.operator? with
+      | some id => if isTheoremBackedOperator id then some r else none
+      | none => none
+  | none => none
 
 def uniqueExecutableReadingForGlyph (glyph : Glyph) : Option OperatorReading :=
-  let catalogue := executableCatalogueReadingsForGlyph glyph
-  match uniqueExecutableReadingBySemantics catalogue with
+  match reservedV1ExecutableReadingForGlyph glyph with
   | some r => some r
   | none =>
-      if catalogue.isEmpty then
-        uniqueExecutableReadingBySemantics (executableOperatorFormReadingsForGlyph glyph)
-      else
-        none
+      match resolveHexConst glyph with
+      | some _ => none
+      | none =>
+          let catalogue := catalogueReadingsForGlyph glyph
+          if catalogue.isEmpty then
+            let compounds := operatorCompoundReadingsForGlyph glyph
+            if compounds.isEmpty then
+              uniqueExecutableReadingBySemantics (operatorFormReadingsForGlyph glyph)
+            else
+              uniqueExecutableReadingBySemantics compounds
+          else
+            uniqueExecutableReadingBySemantics catalogue
 
 def resolveCatalogueByTable (t : GlyphTok) : Except ResolveErr ResolvedTok :=
   if isUnpromotedHexagramGap t.surface then
@@ -279,7 +345,11 @@ def resolveCatalogueByTable (t : GlyphTok) : Except ResolveErr ResolvedTok :=
     注：「之又」与「之」是不同 GlyphTok surface（多字 vs 单字 lex 输出），
     优先序无歧义；此处先判 iterate 仅为可读性. -/
 def resolveOne (t : GlyphTok) : Except ResolveErr ResolvedTok :=
-  if isIterateConstruction t.surface then
+  if isOpenBracketSurface t.surface then
+    .ok ⟨t, .openBracket⟩
+  else if isCloseBracketSurface t.surface then
+    .ok ⟨t, .closeBracket⟩
+  else if isIterateConstruction t.surface then
     .ok ⟨t, .iterate⟩
   else if isApplicationMarker t.surface then
     .ok ⟨t, .appMarker⟩
@@ -339,6 +409,8 @@ def ResolvedAtom.opId? : ResolvedAtom → Option OperatorId
   | .syntax _      => none
   | .appMarker     => none
   | .iterate       => none
+  | .openBracket   => none
+  | .closeBracket  => none
 
 /-- 判别 atom 是否为 appMarker（elab 阶段用）. -/
 def ResolvedAtom.isAppMarker : ResolvedAtom → Bool
@@ -443,36 +515,38 @@ example : resolveHexConst "推" = none               := by native_decide
 example : isUnpromotedHexagramGap "鼎" = true := by native_decide
 example : isUnpromotedHexagramGap "丽" = true := by native_decide
 example : isUnpromotedHexagramGap "益" = false := by native_decide
+example : uniqueExecutableCatalogueReading "推" = none := by native_decide
 example :
-    (uniqueExecutableCatalogueReading "推").bind (·.operator?) = some OperatorId.T_10 :=
+    (uniqueExecutableReadingForGlyph "推").bind (·.operator?) = some OperatorId.T_10 :=
   by native_decide
 example :
     (uniqueExecutableCatalogueReading "同").bind (·.operator?) = some OperatorId.I_1 :=
   by native_decide
+example : uniqueExecutableCatalogueReading "益" = none := by native_decide
 example :
-    (uniqueExecutableCatalogueReading "益").bind (·.operator?) = some OperatorId.T_13 :=
+    (uniqueExecutableReadingForGlyph "益").bind (·.operator?) = some OperatorId.T_13 :=
   by native_decide
+example : uniqueExecutableReadingForGlyph "或" = none := by native_decide
+example : uniqueExecutableReadingForGlyph "反" = none := by native_decide
+example : uniqueExecutableReadingForGlyph "名分" = none := by native_decide
 example :
     (uniqueExecutableReadingForGlyph "错").bind (·.operator?) = some OperatorId.Z_5 :=
   by native_decide
-example :
-    (uniqueExecutableReadingForGlyph "反").bind (·.operator?) = some OperatorId.T_6 :=
-  by native_decide
 theorem executableSurfaceReadings_use_registry_path :
     (["推", "比", "不", "必", "同", "凡", "損", "损", "益",
-      "错", "錯", "综", "綜", "互", "反"].all
+      "错", "錯", "综", "綜", "互"].all
         (fun s => (uniqueExecutableReadingForGlyph s).isSome)) = true := by
   native_decide
 
 theorem executableSurfaceReadings_table_driven_ids :
     (["推", "比", "不", "必", "同", "凡", "損", "损", "益",
-      "错", "錯", "综", "綜", "互", "反"].filterMap
+      "错", "錯", "综", "綜", "互"].filterMap
         (fun s => (uniqueExecutableReadingForGlyph s).bind (·.operator?)))
       = [ OperatorId.T_10, OperatorId.R_8, OperatorId.N_1,
           OperatorId.M_1, OperatorId.I_1, OperatorId.Q_1,
           OperatorId.T_12, OperatorId.T_12, OperatorId.T_13,
           OperatorId.Z_5, OperatorId.Z_5, OperatorId.Z_6,
-          OperatorId.Z_6, OperatorId.Z_3, OperatorId.T_6 ] := by
+          OperatorId.Z_6, OperatorId.Z_3 ] := by
   native_decide
 example :
     (operatorFormReadingsForGlyph "在").map (fun r => r.operator?) = [some OperatorId.R_1] :=
@@ -557,6 +631,24 @@ def computeCues (toks : List GlyphTok) (i : Nat) : List ContextCue :=
     | some .glyph, some .glyph => [.betweenNominals]
     | _,           _           => []
 
+/-- A reading satisfies a cue either by carrying that exact cue or by exposing
+    the expected type denoted by that cue.  This lets strong type cues refine
+    ambiguous surfaces without changing parser/elaborator syntax. -/
+def readingSatisfiesCue (r : OperatorReading) (cue : ContextCue) : Bool :=
+  r.cues.contains cue ||
+    match expectedTypeOfCue cue with
+    | some ty => r.expectedTypes.contains ty
+    | none => false
+
+/-- Cue-selected catalogue readings: every cue must be satisfied by the reading.
+    Non-type contextual cues such as `.mohistContext` still require an exact cue
+    match; expected-type cues may match `expectedTypes` metadata. -/
+def cueSelectedCatalogueReadings (glyph : Glyph) (cues : List ContextCue)
+    : List OperatorReading :=
+  (readingsForGlyph glyph).filter (fun r =>
+    r.status = .catalogue ∧ r.operator?.isSome ∧
+      cues.all (readingSatisfiesCue r))
+
 /-- 从给定 cue 上下文中查找 glyph 的唯一 catalogue reading
     （status = .catalogue ∧ operator?.isSome）.
 
@@ -567,9 +659,7 @@ def uniqueCatalogueReading (glyph : Glyph) (cues : List ContextCue)
     : Option OperatorReading :=
   if cues.isEmpty then none
   else
-    let rs := contextualReadings glyph cues
-    let cats := rs.filter (fun r => r.status = .catalogue ∧ r.operator?.isSome)
-    match cats with
+    match cueSelectedCatalogueReadings glyph cues with
     | [r] => some r
     | _   => none
 
@@ -582,7 +672,11 @@ def uniqueCatalogueReading (glyph : Glyph) (cues : List ContextCue)
     则采用之；其余情形回到 registry-backed surface map. -/
 def resolveOneWithCues (toks : List GlyphTok) (i : Nat) (t : GlyphTok)
     : Except ResolveErr ResolvedTok :=
-  if isIterateConstruction t.surface then
+  if isOpenBracketSurface t.surface then
+    .ok ⟨t, .openBracket⟩
+  else if isCloseBracketSurface t.surface then
+    .ok ⟨t, .closeBracket⟩
+  else if isIterateConstruction t.surface then
     .ok ⟨t, .iterate⟩
   else
   match resolveBoolConst t.surface with
@@ -671,6 +765,51 @@ example : uniqueCatalogueReading "之" [] = none := by native_decide
 
 /-- 「推」在任意 cue 下不在 cue 表（无对应 readings）→ none. -/
 example : uniqueCatalogueReading "推" [.betweenNominals] = none := by native_decide
+
+/-! ### § 7.2.1  Cue selection for ambiguous catalogue surfaces -/
+
+example :
+    (uniqueCatalogueReading "或" [.quantifierDomain]).bind (·.operator?)
+      = some OperatorId.Q_5 :=
+  by native_decide
+
+example :
+    (uniqueCatalogueReading "或" [.expectedProp, .quantifierDomain]).bind (·.operator?)
+      = some OperatorId.Q_5 :=
+  by native_decide
+
+example :
+    uniqueCatalogueReading "或" [.expectedProp] = none :=
+  by native_decide
+
+example :
+    (uniqueCatalogueReading "反" [.expectedObject]).bind (·.operator?)
+      = some OperatorId.T_6 :=
+  by native_decide
+
+example :
+    (uniqueCatalogueReading "反" [.expectedProp]).bind (·.operator?)
+      = some OperatorId.N_6 :=
+  by native_decide
+
+example :
+    (uniqueCatalogueReading "反" [.expectedOperator]).bind (·.operator?)
+      = some OperatorId.Z_31 :=
+  by native_decide
+
+example :
+    (uniqueCatalogueReading "故" [.mohistContext]).bind (·.operator?)
+      = some OperatorId.P_1 :=
+  by native_decide
+
+example :
+    uniqueCatalogueReading "故" [.expectedProp] = none :=
+  by native_decide
+
+example : uniqueCatalogueReading "或" [] = none := by native_decide
+example : uniqueCatalogueReading "反" [] = none := by native_decide
+example : uniqueCatalogueReading "故" [] = none := by native_decide
+example : uniqueCatalogueReading "名分" [] = none := by native_decide
 
 /-! ### § 7.3  resolveWithCues 端到端 -/
 

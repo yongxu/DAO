@@ -69,7 +69,7 @@
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         },
@@ -93,7 +93,7 @@
       "symbol_hits": [
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         },
@@ -164,7 +164,7 @@
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         }
@@ -207,7 +207,7 @@
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         },
@@ -245,7 +245,7 @@
       "symbol_hits": [
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         },
@@ -276,7 +276,7 @@
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         },
@@ -312,7 +312,7 @@
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         },
@@ -419,7 +419,7 @@
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         }
@@ -463,7 +463,7 @@
       "symbol_hits": [
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         },
@@ -481,7 +481,7 @@
       "symbol_hits": [
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         },
@@ -499,7 +499,7 @@
       "symbol_hits": [
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         }
@@ -635,7 +635,7 @@
       "symbol_hits": [
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         },
@@ -672,7 +672,7 @@
       "symbol_hits": [
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         },
@@ -1396,6 +1396,36 @@
       ]
     },
     {
+      "document": "formal/SSBX/notes/wensurface-syntax-spec.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenSurface/Semantics.lean"
+          ],
+          "symbol": "ExecutableSemantics"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Text/WenyanOperators.lean"
+          ],
+          "symbol": "OperatorId"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenSurface/Syntax.lean"
+          ],
+          "symbol": "SurfaceExpr"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenDef.lean"
+          ],
+          "symbol": "Tm"
+        }
+      ]
+    },
+    {
       "document": "formal/SSBX/notes/zero-axiom-roadmap.md",
       "lean_path_mentions": [
         "formal/SSBX/Foundation/Bagua/KleeneInternal.lean"
@@ -2080,7 +2110,7 @@
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
           ],
           "symbol": "daoJudge_not_universal"
         },
@@ -2092,7 +2122,7 @@
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
           ],
           "symbol": "halts_undecidable_internally"
         },
@@ -2104,7 +2134,7 @@
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         },
@@ -2304,13 +2334,13 @@
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
           ],
           "symbol": "daoJudge_not_universal"
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
           ],
           "symbol": "halts_undecidable_internally"
         },
@@ -2322,7 +2352,7 @@
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         },
@@ -2352,7 +2382,7 @@
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
           ],
           "symbol": "rice_four_images"
         },

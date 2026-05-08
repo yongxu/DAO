@@ -14,8 +14,9 @@ cuo-equivariant 子集 commute 作 future work）。
 
 - cue-aware resolver + explicit `SurfaceExpr` AST
 - 64 卦名 / aliases + Bool literals + Hex-only binders
-- executable registry 中的 theorem-backed operator 可求值
-- catalogue-only operator / unpromoted gap form 只诊断，不伪造 denotation
+- executable registry 覆盖全部 371 个 OperatorId
+- 38 个 theorem-backed operator 可求 Hex/Bool；其余 catalogue rows 求 symbolic normal form
+- unpromoted gap form 只诊断，不伪造 denotation
 
 ## 状态
 
@@ -31,6 +32,7 @@ open SSBX.Foundation.Wen.WenDef
 open SSBX.Foundation.Wen.WenDefEval
 open SSBX.Text.WenyanOperators
 open SSBX.Text.OperatorReadings
+open SSBX.Text.OperatorSignatures
 
 /-! ## § 1  统一错误类型 -/
 
@@ -213,19 +215,19 @@ example :
 
 example :
     (match wenyanCompile "在 乾 坤" with
-     | .error (.elab (.unsupportedOp OperatorId.R_1 "在" 0)) => true
+     | .ok typed => typed.ty = .catalogue SignatureKind.relation
      | _ => false) = true :=
   by native_decide
 
 example :
     (match wenyanCompile "五行 乾" with
-     | .error (.elab (.unsupportedOp OperatorId.Y_2 "五行" 0)) => true
+     | .ok typed => typed.ty = .catalogue SignatureKind.constructor
      | _ => false) = true :=
   by native_decide
 
 example :
     (match wenyanCompile "或 乾" with
-     | .error (.elab (.typeMismatch (.argumentMismatch (.arr .hex .bool) .hex))) => true
+     | .error (.resolve (.ambiguous "或" 0 candidates)) => candidates.length == 2
      | _ => false) = true :=
   by native_decide
 
@@ -246,7 +248,9 @@ example :
   by native_decide
 
 example :
-    (wenyanInterpBool "故 假 假").toOption = some true :=
+    (match wenyanCompile "故 假 假" with
+     | .error (.resolve (.ambiguous "故" 0 candidates)) => candidates.length == 3
+     | _ => false) = true :=
   by native_decide
 
 example :
@@ -278,7 +282,9 @@ example :
   by native_decide
 
 example :
-    (wenyanInterpBool "或 者 甲 同 甲 一").toOption = some true :=
+    (match wenyanCompile "或 者 甲 同 甲 一" with
+     | .error (.resolve (.ambiguous "或" 0 candidates)) => candidates.length == 2
+     | _ => false) = true :=
   by native_decide
 
 example :
@@ -360,6 +366,24 @@ example :
     (wenyanCompileTm "推 一").toOption = some (.app Stdlib.tuiBody .yi) :=
   by native_decide
 
+/-! ### Grouping punctuation -/
+
+example :
+    (wenyanInterp "（推 一）").toOption = (wenyanInterp "推 一").toOption :=
+  by native_decide
+
+example :
+    (wenyanInterp "(推 一)").toOption = (wenyanInterp "推 一").toOption :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "同 （推 一） （推 一）").toOption = some true :=
+  by native_decide
+
+example : (wenyanInterp "（推 一").toOption = none := by native_decide
+
+example : (wenyanInterp "推 一）").toOption = none := by native_decide
+
 /-- 与 `tui_eq_sheng` 桥 — 用 wenyan 表层走 stdlib 算子等价于 YiCore.«生». -/
 theorem wenyan_tui_yi_eq_sheng :
     (wenyanInterp "推 一").toOption = some («生» «一») := by
@@ -391,7 +415,61 @@ example : (wenyanInterp "错 乾").toOption = some Hexagram.kun := by native_dec
 example : (wenyanInterp "錯 乾").toOption = some Hexagram.kun := by native_decide
 example : (wenyanInterp "综 乾").toOption = some Hexagram.qian := by native_decide
 example : (wenyanInterp "互 坤").toOption = some Hexagram.kun := by native_decide
-example : (wenyanInterp "反 乾").toOption = some Hexagram.kun := by native_decide
+example :
+    (match wenyanCompile "反 乾" with
+     | .error (.resolve (.ambiguous "反" 0 candidates)) => candidates.length == 3
+     | _ => false) = true :=
+  by native_decide
+
+example :
+    (wenyanInterp "（而 者 甲 推 甲 者 甲 損 甲） 之 一").toOption = some «一» :=
+  by native_decide
+
+example : (wenyanInterp "而 推 損 一").toOption = some «一» := by native_decide
+
+example : (wenyanInterp "而 损 推 一").toOption = some «一» := by native_decide
+
+example :
+    (wenyanCompile "而 推 損").toOption.map (·.ty)
+      = some (.arr .hex .hex) :=
+  by native_decide
+
+example :
+    (wenyanCompile "推").toOption.map (·.ty)
+      = some (.arr .hex .hex) :=
+  by native_decide
+
+example :
+    (wenyanCompile "不").toOption.map (·.ty)
+      = some (.arr .bool .bool) :=
+  by native_decide
+
+example :
+    (wenyanCompile "同 乾").toOption.map (·.ty)
+      = some (.arr .hex .bool) :=
+  by native_decide
+
+example :
+    (wenyanCompile "（推）").toOption.map (·.ty)
+      = some (.arr .hex .hex) :=
+  by native_decide
+
+example :
+    (wenyanCompile "（同 乾）").toOption.map (·.ty)
+      = some (.arr .hex .bool) :=
+  by native_decide
+
+example : (wenyanInterpBool "（同 乾） 乾").toOption = some true := by native_decide
+
+example : (wenyanInterp "者 甲 推 甲 乾").toOption = some «一» := by native_decide
+
+example : (wenyanCompile "而 不 不 真").toOption.isNone = true := by native_decide
+
+example :
+    (match wenyanCompile "在 乾" with
+     | .error (.parse .empty) => true
+     | _ => false) = true :=
+  by native_decide
 
 /-! ## § 6.3 prefix binder / let forms -/
 

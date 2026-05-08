@@ -1,11 +1,11 @@
 {
   "clusters": {
-    "Foundation/Bagua": 10,
+    "Foundation/Bagua": 13,
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
     "Foundation/Modern": 19,
-    "Foundation/Wen": 38,
+    "Foundation/Wen": 39,
     "Foundation/Yi": 2,
     "Model": 2,
     "Pending": 2,
@@ -28,10 +28,10 @@
         "SSBX.Foundation.Wen.WenSurface.EndToEnd",
         "SSBX.Foundation.Wen.WenSurface.Coverage"
       ],
-      "lines": 886,
+      "lines": 945,
       "module": "WenyanSurface.lean",
       "path": "WenyanSurface.lean",
-      "sha256": "b589ade78a744d861e2ccce6d3fabc0371529e005d856f3c08b65d3296d7e0be"
+      "sha256": "11a160837872a394174ab76ff1167c552afd9b8a4a279cfd86a21240a84d8c37"
     },
     {
       "cluster": "root",
@@ -77,6 +77,7 @@
         "SSBX.Foundation.Wen.Kernel",
         "SSBX.Foundation.Wen.WenyanText",
         "SSBX.Foundation.Wen.WenyanSelfInterp",
+        "SSBX.Foundation.Wen.MetaInterp",
         "SSBX.Foundation.Wen.WenDef",
         "SSBX.Foundation.Wen.WenyanParser",
         "SSBX.Foundation.Wen.WenEval",
@@ -118,6 +119,7 @@
         "SSBX.Foundation.Bagua.Newman",
         "SSBX.Foundation.Bagua.KleeneInternal",
         "SSBX.Foundation.Bagua.GodelLi",
+        "SSBX.Foundation.Bagua.KleeneCarrier",
         "SSBX.Foundation.Bagua.BaguaWenSpec",
         "SSBX.Text.OperatorAnchors",
         "SSBX.Text.OperatorCellMap",
@@ -153,10 +155,10 @@
         "SSBX.Foundation.Modern.IIDWlln",
         "SSBX.Foundation.Modern.BochnerPL"
       ],
-      "lines": 145,
+      "lines": 147,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "0fe350757e20844dc1a111b09f73aa4f19b5d7cc0bcbc47a1aea0a4074cd307b"
+      "sha256": "4740db41385a73c3ee2222c61402e45ffd737b8b95e4801ff45ce5001d6470e8"
     },
     {
       "cluster": "root",
@@ -612,6 +614,18 @@
       "module": "SSBX.Core",
       "path": "formal/SSBX/Core.lean",
       "sha256": "7a10362f80f15525978603e67ffa82747296082474800dbebbac439a086877c0"
+    },
+    {
+      "cluster": "Foundation/Bagua",
+      "declaration_count": 0,
+      "declarations": [],
+      "imports": [
+        "SSBX.Foundation.Bagua.KleeneCarrier"
+      ],
+      "lines": 17,
+      "module": "SSBX.Foundation.Bagua.AxiomCheck",
+      "path": "formal/SSBX/Foundation/Bagua/AxiomCheck.lean",
+      "sha256": "fa5e85aad65cde2ba158c145fa958b6707702d5dc993b3cbc655d5b3a9b48138"
     },
     {
       "cluster": "Foundation/Bagua",
@@ -1603,10 +1617,10 @@
       "imports": [
         "SSBX.Foundation.Bagua.GodelLi"
       ],
-      "lines": 126,
+      "lines": 133,
       "module": "SSBX.Foundation.Bagua.CuoInvariance",
       "path": "formal/SSBX/Foundation/Bagua/CuoInvariance.lean",
-      "sha256": "27cfa4e1c934a24f94fdd8f2b0971c89c17a7d557fd6ab41bbb7154162a64108"
+      "sha256": "1e6e48caa9f834e12802e4fc8dacca0dc74f7c653975377b01bcb276f8e4cb8b"
     },
     {
       "cluster": "Foundation/Bagua",
@@ -1651,7 +1665,7 @@
     },
     {
       "cluster": "Foundation/Bagua",
-      "declaration_count": 74,
+      "declaration_count": 62,
       "declarations": [
         {
           "kind": "def",
@@ -1834,14 +1848,6 @@
           "name": "halts_undecidable_under_kleene"
         },
         {
-          "kind": "axiom",
-          "name": "kleene_recursion_axiom"
-        },
-        {
-          "kind": "theorem",
-          "name": "halts_undecidable_internally"
-        },
-        {
           "kind": "theorem",
           "name": "not_halts_undecidable_under_kleene"
         },
@@ -1852,14 +1858,6 @@
         {
           "kind": "theorem",
           "name": "halts_at_fixed_undecidable_under_kleene"
-        },
-        {
-          "kind": "theorem",
-          "name": "not_halts_undecidable"
-        },
-        {
-          "kind": "theorem",
-          "name": "halts_at_fixed_undecidable"
         },
         {
           "kind": "theorem",
@@ -1879,27 +1877,7 @@
         },
         {
           "kind": "theorem",
-          "name": "halts_on_some_undecidable"
-        },
-        {
-          "kind": "theorem",
-          "name": "halts_on_none_undecidable"
-        },
-        {
-          "kind": "theorem",
-          "name": "halts_on_all_undecidable"
-        },
-        {
-          "kind": "theorem",
-          "name": "halts_on_some_no_undecidable"
-        },
-        {
-          "kind": "theorem",
           "name": "rice_four_images_under_kleene"
-        },
-        {
-          "kind": "theorem",
-          "name": "rice_four_images"
         },
         {
           "kind": "theorem",
@@ -1907,23 +1885,11 @@
         },
         {
           "kind": "theorem",
-          "name": "rice_uniform"
-        },
-        {
-          "kind": "theorem",
           "name": "daoJudge_not_universal_under_kleene"
         },
         {
           "kind": "theorem",
-          "name": "daoJudge_not_universal"
-        },
-        {
-          "kind": "theorem",
           "name": "daoJudge_wei_not_universal_under_kleene"
-        },
-        {
-          "kind": "theorem",
-          "name": "daoJudge_wei_not_universal"
         },
         {
           "kind": "theorem",
@@ -1953,10 +1919,91 @@
       "imports": [
         "SSBX.Foundation.Bagua.BaguaTuring"
       ],
-      "lines": 1275,
+      "lines": 1215,
       "module": "SSBX.Foundation.Bagua.GodelLi",
       "path": "formal/SSBX/Foundation/Bagua/GodelLi.lean",
-      "sha256": "6bd796481ba957fa4fefc2e860cfae46b36897fab7e1af7f795903b078bd5f28"
+      "sha256": "9fc1472a91fcf7849e70a9b5baf0130807b86a2e6d12ece49a9e07cc6b2029c4"
+    },
+    {
+      "cluster": "Foundation/Bagua",
+      "declaration_count": 17,
+      "declarations": [
+        {
+          "kind": "axiom",
+          "name": "universalInterpExists"
+        },
+        {
+          "kind": "axiom",
+          "name": "smnExists"
+        },
+        {
+          "kind": "axiom",
+          "name": "kleeneFromPrimitives"
+        },
+        {
+          "kind": "axiom",
+          "name": "allDecidersAreYiComputable"
+        },
+        {
+          "kind": "theorem",
+          "name": "kleene_recursion"
+        },
+        {
+          "kind": "theorem",
+          "name": "halts_undecidable_internally"
+        },
+        {
+          "kind": "theorem",
+          "name": "not_halts_undecidable"
+        },
+        {
+          "kind": "theorem",
+          "name": "halts_at_fixed_undecidable"
+        },
+        {
+          "kind": "theorem",
+          "name": "halts_on_some_undecidable"
+        },
+        {
+          "kind": "theorem",
+          "name": "halts_on_none_undecidable"
+        },
+        {
+          "kind": "theorem",
+          "name": "halts_on_all_undecidable"
+        },
+        {
+          "kind": "theorem",
+          "name": "halts_on_some_no_undecidable"
+        },
+        {
+          "kind": "theorem",
+          "name": "rice_four_images"
+        },
+        {
+          "kind": "theorem",
+          "name": "rice_uniform"
+        },
+        {
+          "kind": "theorem",
+          "name": "daoJudge_not_universal"
+        },
+        {
+          "kind": "theorem",
+          "name": "daoJudge_wei_not_universal"
+        },
+        {
+          "kind": "theorem",
+          "name": "kleene_recursion_axiom"
+        }
+      ],
+      "imports": [
+        "SSBX.Foundation.Bagua.KleeneInternal"
+      ],
+      "lines": 190,
+      "module": "SSBX.Foundation.Bagua.KleeneCarrier",
+      "path": "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean",
+      "sha256": "fc0a4d205c4b24e342fe82851261b00061c507313a2501528dbaa858c6d721b2"
     },
     {
       "cluster": "Foundation/Bagua",
@@ -2166,6 +2213,35 @@
       "module": "SSBX.Foundation.Bagua.Newman",
       "path": "formal/SSBX/Foundation/Bagua/Newman.lean",
       "sha256": "0b8e21474b60d1e44c132397077b783079c7c85c31bc538be6a0759c325561fd"
+    },
+    {
+      "cluster": "Foundation/Bagua",
+      "declaration_count": 4,
+      "declarations": [
+        {
+          "kind": "def",
+          "name": "classical_halts_decide"
+        },
+        {
+          "kind": "theorem",
+          "name": "classical_halts_decide_spec"
+        },
+        {
+          "kind": "theorem",
+          "name": "classical_halts_decide_cuoInvariant"
+        },
+        {
+          "kind": "theorem",
+          "name": "kleene_recursion_inconsistent"
+        }
+      ],
+      "imports": [
+        "SSBX.Foundation.Bagua.KleeneCarrier"
+      ],
+      "lines": 86,
+      "module": "SSBX.Foundation.Bagua.SoundnessProbe",
+      "path": "formal/SSBX/Foundation/Bagua/SoundnessProbe.lean",
+      "sha256": "1c871ac4be505de2006ba7b0c3b9a12e7f1f04c70c421aa9df905bd29948ddf8"
     },
     {
       "cluster": "Foundation/Core",
@@ -6997,14 +7073,15 @@
       ],
       "imports": [
         "SSBX.Foundation.Bagua.GodelLi",
+        "SSBX.Foundation.Bagua.KleeneCarrier",
         "SSBX.Foundation.Bagua.CuoInvariance",
         "SSBX.Foundation.Bagua.BaguaAlgebra",
         "SSBX.Foundation.Eight.LuoJi"
       ],
-      "lines": 279,
+      "lines": 284,
       "module": "SSBX.Foundation.Modern.DaoLi",
       "path": "formal/SSBX/Foundation/Modern/DaoLi.lean",
-      "sha256": "2143bc5deed82749d6f874d591b128f8cffead588db358c816d67556d6036b41"
+      "sha256": "f000b60081c20e774d4a3f798ea12f9e1760eeb1f85c5ecaeb4393edcb32ca94"
     },
     {
       "cluster": "Foundation/Modern",
@@ -11117,6 +11194,148 @@
     },
     {
       "cluster": "Foundation/Wen",
+      "declaration_count": 32,
+      "declarations": [
+        {
+          "kind": "def",
+          "name": "regDataCell"
+        },
+        {
+          "kind": "def",
+          "name": "regMarkerCell"
+        },
+        {
+          "kind": "def",
+          "name": "haltedTrueCell"
+        },
+        {
+          "kind": "def",
+          "name": "haltedFalseCell"
+        },
+        {
+          "kind": "def",
+          "name": "encCounter"
+        },
+        {
+          "kind": "theorem",
+          "name": "encCounter_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "encCounter_zero"
+        },
+        {
+          "kind": "theorem",
+          "name": "encCounter_succ"
+        },
+        {
+          "kind": "def",
+          "name": "decCounter"
+        },
+        {
+          "kind": "theorem",
+          "name": "decCounter_encCounter"
+        },
+        {
+          "kind": "def",
+          "name": "decHaltedFlag"
+        },
+        {
+          "kind": "theorem",
+          "name": "decHaltedFlag_haltedTrue"
+        },
+        {
+          "kind": "theorem",
+          "name": "decHaltedFlag_haltedFalse"
+        },
+        {
+          "kind": "def",
+          "name": "encHaltedFlag"
+        },
+        {
+          "kind": "theorem",
+          "name": "decHaltedFlag_encHaltedFlag"
+        },
+        {
+          "kind": "def",
+          "name": "encMetaHistory"
+        },
+        {
+          "kind": "theorem",
+          "name": "encMetaHistory_length"
+        },
+        {
+          "kind": "def",
+          "name": "metaStateOf"
+        },
+        {
+          "kind": "def",
+          "name": "prologueProg"
+        },
+        {
+          "kind": "theorem",
+          "name": "prologueProg_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "afterPrologue_cur"
+        },
+        {
+          "kind": "theorem",
+          "name": "afterPrologue_history"
+        },
+        {
+          "kind": "theorem",
+          "name": "afterPrologue_pc"
+        },
+        {
+          "kind": "theorem",
+          "name": "afterPrologue_halted"
+        },
+        {
+          "kind": "theorem",
+          "name": "afterPrologue_prog"
+        },
+        {
+          "kind": "theorem",
+          "name": "afterPrologue_history_eq_encMetaHistory"
+        },
+        {
+          "kind": "def",
+          "name": "countedLoop"
+        },
+        {
+          "kind": "theorem",
+          "name": "countedLoop_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "countedLoop_first_instr"
+        },
+        {
+          "kind": "theorem",
+          "name": "countedLoop_second_instr"
+        },
+        {
+          "kind": "def",
+          "name": "countedLoop_exitOffset"
+        },
+        {
+          "kind": "theorem",
+          "name": "countedLoop_exitOffset_eq_length"
+        }
+      ],
+      "imports": [
+        "SSBX.Foundation.Wen.WenyanSelfInterp",
+        "SSBX.Foundation.Bagua.KleeneInternal"
+      ],
+      "lines": 391,
+      "module": "SSBX.Foundation.Wen.MetaInterp",
+      "path": "formal/SSBX/Foundation/Wen/MetaInterp.lean",
+      "sha256": "274ea9052c69610fae916649000e986ebcb323a15042dc103414678be9c895d9"
+    },
+    {
+      "cluster": "Foundation/Wen",
       "declaration_count": 213,
       "declarations": [
         {
@@ -12261,12 +12480,13 @@
       ],
       "imports": [
         "SSBX.Foundation.Yi.Yi",
-        "SSBX.Foundation.Bagua.BaguaWenSpec"
+        "SSBX.Foundation.Bagua.BaguaWenSpec",
+        "SSBX.Text.OperatorSignatures"
       ],
-      "lines": 512,
+      "lines": 538,
       "module": "SSBX.Foundation.Wen.WenDef",
       "path": "formal/SSBX/Foundation/Wen/WenDef.lean",
-      "sha256": "4222718fc65afebf4df75b43edf6d3e5bc160fb421819941c91a5895e06d7244"
+      "sha256": "6e94a8b5d06dc89945ff2242365fed2b4090fefcefdb20f3c21a42fd04800124"
     },
     {
       "cluster": "Foundation/Wen",
@@ -12376,7 +12596,7 @@
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 27,
+      "declaration_count": 28,
       "declarations": [
         {
           "kind": "inductive",
@@ -12451,6 +12671,10 @@
           "name": "denoteHexRel"
         },
         {
+          "kind": "def",
+          "name": "denoteCatalogue"
+        },
+        {
           "kind": "theorem",
           "name": "tui_eq_sheng"
         },
@@ -12491,10 +12715,10 @@
         "SSBX.Foundation.Wen.WenDef",
         "SSBX.Foundation.Yi.YiCore"
       ],
-      "lines": 367,
+      "lines": 389,
       "module": "SSBX.Foundation.Wen.WenDefEval",
       "path": "formal/SSBX/Foundation/Wen/WenDefEval.lean",
-      "sha256": "545c36cd1be872524219a0dd499558ac016859ed6bb0a3993ba080becf9dc3bf"
+      "sha256": "b5f55a7d1d0e27add1ab1727fa1e3e92a5c9edaadc8aa484c6f70d5b960754ac"
     },
     {
       "cluster": "Foundation/Wen",
@@ -12613,14 +12837,14 @@
         "SSBX.Text.OperatorCellMap",
         "SSBX.Text.OperatorCellSemantics"
       ],
-      "lines": 141,
+      "lines": 142,
       "module": "SSBX.Foundation.Wen.WenSurface.Coverage",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Coverage.lean",
-      "sha256": "3dcf25fd3fef43d49ba2f80a765f030953afc90b64551c5e0cb2446e3167b888"
+      "sha256": "19accbf5dc71f7c6763a4779ec690cebfda3227924bc78f4c258d372a3f81b6f"
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 12,
+      "declaration_count": 15,
       "declarations": [
         {
           "kind": "inductive",
@@ -12640,6 +12864,10 @@
         },
         {
           "kind": "def",
+          "name": "symbolicCatalogueTm?"
+        },
+        {
+          "kind": "def",
           "name": "opArity"
         },
         {
@@ -12652,11 +12880,19 @@
         },
         {
           "kind": "def",
+          "name": "collectArgTerms"
+        },
+        {
+          "kind": "def",
           "name": "elabTokens"
         },
         {
           "kind": "def",
           "name": "atomToTmAt"
+        },
+        {
+          "kind": "def",
+          "name": "symbolicCatalogueHead?"
         },
         {
           "kind": "def",
@@ -12676,10 +12912,10 @@
         "SSBX.Foundation.Wen.WenDef",
         "SSBX.Foundation.Wen.WenDefEval"
       ],
-      "lines": 275,
+      "lines": 375,
       "module": "SSBX.Foundation.Wen.WenSurface.Elaborate",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Elaborate.lean",
-      "sha256": "3e2638934ea29ca49bde6a0ca22d2853ab75eff7d1018d74824d97c82b6df653"
+      "sha256": "a3ddbad3c15c3552cacc2df45b842d92e5c4b972575cfa87330ef6d283fcc7c7"
     },
     {
       "cluster": "Foundation/Wen",
@@ -12733,14 +12969,14 @@
       "imports": [
         "SSBX.Foundation.Wen.WenSurface.Elaborate"
       ],
-      "lines": 513,
+      "lines": 547,
       "module": "SSBX.Foundation.Wen.WenSurface.EndToEnd",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/EndToEnd.lean",
-      "sha256": "95c25645444d7fe88c05cb7cb49562c7c1701c96e5f9cb5457bd897b5b015c72"
+      "sha256": "671cbc65e431c7789ef5a3a5c8084f89cd5c2b234e772f085d884d829a3e3dc7"
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 15,
+      "declaration_count": 16,
       "declarations": [
         {
           "kind": "structure",
@@ -12757,6 +12993,10 @@
         {
           "kind": "def",
           "name": "isAsciiSpace"
+        },
+        {
+          "kind": "def",
+          "name": "isBracketChar"
         },
         {
           "kind": "def",
@@ -12806,14 +13046,14 @@
       "imports": [
         "SSBX.Text.WenyanOperators"
       ],
-      "lines": 251,
+      "lines": 272,
       "module": "SSBX.Foundation.Wen.WenSurface.Lex",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Lex.lean",
-      "sha256": "da57370a2c932825e688926ae63036bb3e0aa1ba8aec78ea127301e9c4f22d41"
+      "sha256": "ab264e83f8391ee0dec139d734d90e18f5ffe0a0a7742607a2f233624d388822"
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 56,
+      "declaration_count": 63,
       "declarations": [
         {
           "kind": "inductive",
@@ -12897,6 +13137,18 @@
         },
         {
           "kind": "def",
+          "name": "matchingCloseBracket?"
+        },
+        {
+          "kind": "def",
+          "name": "isOpenBracketSurface"
+        },
+        {
+          "kind": "def",
+          "name": "isCloseBracketSurface"
+        },
+        {
+          "kind": "def",
           "name": "catalogueReadingsForGlyph"
         },
         {
@@ -12921,7 +13173,15 @@
         },
         {
           "kind": "def",
+          "name": "theoremBackedCatalogueReadingsForGlyph"
+        },
+        {
+          "kind": "def",
           "name": "executableOperatorFormReadingsForGlyph"
+        },
+        {
+          "kind": "def",
+          "name": "theoremBackedOperatorFormReadingsForGlyph"
         },
         {
           "kind": "def",
@@ -12933,11 +13193,19 @@
         },
         {
           "kind": "def",
+          "name": "firstTheoremBackedReading?"
+        },
+        {
+          "kind": "def",
           "name": "uniqueExecutableReadingBySemantics"
         },
         {
           "kind": "def",
           "name": "uniqueExecutableCatalogueReading"
+        },
+        {
+          "kind": "def",
+          "name": "reservedV1ExecutableReadingForGlyph"
         },
         {
           "kind": "def",
@@ -13048,14 +13316,14 @@
         "SSBX.Text.OperatorReadings",
         "SSBX.Foundation.Yi.YiCore"
       ],
-      "lines": 749,
+      "lines": 819,
       "module": "SSBX.Foundation.Wen.WenSurface.Reading",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Reading.lean",
-      "sha256": "daab4431c41bf236aae7698d53139545b1cc3a21da44936e902e0180dddf8b8f"
+      "sha256": "c672310689b1b87ad3985c2f713027dd59880aba8d2c0f6cc5ed39df1631374c"
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 19,
+      "declaration_count": 32,
       "declarations": [
         {
           "kind": "structure",
@@ -13064,6 +13332,54 @@
         {
           "kind": "abbrev",
           "name": "OperatorSemanticsRegistry"
+        },
+        {
+          "kind": "def",
+          "name": "theoremBackedSemanticsFor?"
+        },
+        {
+          "kind": "def",
+          "name": "theoremBackedOperatorIds"
+        },
+        {
+          "kind": "def",
+          "name": "isTheoremBackedOperator"
+        },
+        {
+          "kind": "def",
+          "name": "shapeHexIdBody"
+        },
+        {
+          "kind": "def",
+          "name": "shapeHexBinaryFirstBody"
+        },
+        {
+          "kind": "def",
+          "name": "shapeHexTernaryFirstBody"
+        },
+        {
+          "kind": "def",
+          "name": "shapeHexPredTrueBody"
+        },
+        {
+          "kind": "def",
+          "name": "shapeBoolIdBody"
+        },
+        {
+          "kind": "def",
+          "name": "catalogueObjectShapeBody"
+        },
+        {
+          "kind": "def",
+          "name": "catalogueRelationShapeBody"
+        },
+        {
+          "kind": "def",
+          "name": "catalogueShapeBodyFor"
+        },
+        {
+          "kind": "def",
+          "name": "catalogueShapeSemanticsFor"
         },
         {
           "kind": "def",
@@ -13111,6 +13427,10 @@
         },
         {
           "kind": "theorem",
+          "name": "theoremBackedOperatorIds_length"
+        },
+        {
+          "kind": "theorem",
           "name": "executableOperatorIds_registered"
         },
         {
@@ -13139,14 +13459,14 @@
         "SSBX.Text.OperatorSignatures",
         "SSBX.Text.WenyanOperators"
       ],
-      "lines": 157,
+      "lines": 244,
       "module": "SSBX.Foundation.Wen.WenSurface.Semantics",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Semantics.lean",
-      "sha256": "b41d59a16966f599636a81297e23597b5ee567057b7921e9677f1b3177cc2027"
+      "sha256": "af71d95dee3dd66ca3df48fa2f812ed33b188e58d0c7c19ecea167b5d5ab62f6"
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 16,
+      "declaration_count": 17,
       "declarations": [
         {
           "kind": "inductive",
@@ -13190,6 +13510,10 @@
         },
         {
           "kind": "def",
+          "name": "expectedCloseBracketErr"
+        },
+        {
+          "kind": "def",
           "name": "parseSurfaceExprAux"
         },
         {
@@ -13217,10 +13541,10 @@
         "SSBX.Foundation.Wen.WenSurface.Semantics",
         "SSBX.Foundation.Wen.WenSurface.Reading"
       ],
-      "lines": 231,
+      "lines": 273,
       "module": "SSBX.Foundation.Wen.WenSurface.Syntax",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Syntax.lean",
-      "sha256": "452338e76228745d1ae6c729cc58e6e76d7d930e6b791a550a86583563ff4958"
+      "sha256": "22e209bfbfbc2abecdc0aaaf2d9c784761d2fd43daee6f617f20b98341ac5049"
     },
     {
       "cluster": "Foundation/Wen",

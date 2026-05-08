@@ -64,6 +64,9 @@ inductive Value : Type
   | boolV    (b : Bool)                                        : Value
   | closV    (env : List (String × Value)) (n : String) (body : Tm) : Value
   | builtinV (b : Builtin) (args : List Value)                 : Value
+  | catalogueV (id : SSBX.Text.WenyanOperators.OperatorId)
+      (kind : SSBX.Text.OperatorSignatures.SignatureKind)
+      (args : List Value)                                      : Value
 deriving Repr
 
 abbrev Env := List (String × Value)
@@ -118,6 +121,18 @@ mutual
     | _+1,    _,   .cuoH         => some (.builtinV .cuoH [])
     | _+1,    _,   .zongH        => some (.builtinV .zongH [])
     | _+1,    _,   .huH          => some (.builtinV .huH [])
+    | fuel+1, env, .catalogue1 id a => do
+        let va ← evalFuel fuel env a
+        some (.catalogueV id (SSBX.Text.OperatorSignatures.fullSignatureFor id).kind [va])
+    | fuel+1, env, .catalogue2 id a b => do
+        let va ← evalFuel fuel env a
+        let vb ← evalFuel fuel env b
+        some (.catalogueV id (SSBX.Text.OperatorSignatures.fullSignatureFor id).kind [va, vb])
+    | fuel+1, env, .catalogue3 id a b c => do
+        let va ← evalFuel fuel env a
+        let vb ← evalFuel fuel env b
+        let vc ← evalFuel fuel env c
+        some (.catalogueV id (SSBX.Text.OperatorSignatures.fullSignatureFor id).kind [va, vb, vc])
 
   /-- Fuel-bounded builtin 求值. -/
   def applyBuiltinFuel : Nat → Builtin → List Value → Option Value
@@ -193,6 +208,13 @@ def denoteHexRel (t : Tm) (a b : Hexagram) : Option Bool :=
           | _                 => none
       | _ => none
   | none => none
+
+def denoteCatalogue (t : Tm) :
+    Option (SSBX.Text.WenyanOperators.OperatorId ×
+      SSBX.Text.OperatorSignatures.SignatureKind × List Value) :=
+  match eval [] t with
+  | some (.catalogueV id kind args) => some (id, kind, args)
+  | _ => none
 
 /-! ## § 6  builtin 等价：.jia/.yi/.eqHex ⟷ YiCore -/
 
@@ -313,6 +335,14 @@ example :
         (.app (.app Stdlib.endoCompBody Stdlib.tuiBody) Stdlib.sunBody)
         .yi)
       = some «一» := by native_decide
+
+example :
+    denoteHex (.app (.app Stdlib.hexApplyBody Stdlib.tuiBody) .yi)
+      = some («生» «一») := by native_decide
+
+example :
+    denoteHex (.app (.app Stdlib.hexApplyBody Stdlib.sunBody) .yi)
+      = some («加» Hexagram.kun «一») := by native_decide
 
 /-- 「凡 (λh. 同 h h)」denotes true (反身性 universally). -/
 theorem self_eq_all_true : denoteBool selfEqAll = some true := by native_decide
