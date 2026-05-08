@@ -97,6 +97,7 @@ import SSBX.Foundation.Bagua.BaguaTuring
 import SSBX.Foundation.Bagua.Newman
 import SSBX.Foundation.Bagua.KleeneInternal
 import SSBX.Foundation.Bagua.GodelLi
+import SSBX.Foundation.Bagua.KleeneCarrier
 import SSBX.Foundation.Bagua.BaguaWenSpec
 import SSBX.Text.OperatorAnchors
 import SSBX.Text.OperatorCellMap
