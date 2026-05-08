@@ -74,8 +74,8 @@
 | formal/SSBX/notes/PositionOperatorGraph.md | 0 | 5 |
 | formal/SSBX/notes/atom-naming.md | 0 | 0 |
 | formal/SSBX/notes/baguaWen-spec.md | 0 | 0 |
-| formal/SSBX/notes/markov-causal-bridge-plan.md | 29 | 1 |
-| formal/SSBX/notes/markov-causal-bridge-verification-plan.md | 28 | 20 |
+| formal/SSBX/notes/markov-causal-bridge-plan.md | 30 | 3 |
+| formal/SSBX/notes/markov-causal-bridge-verification-plan.md | 29 | 20 |
 | formal/SSBX/notes/math-axiom-map.md | 0 | 0 |
 | formal/SSBX/notes/metainterp-isa-gap.md | 0 | 0 |
 | formal/SSBX/notes/monad-root-plan.md | 2 | 3 |
@@ -131,12 +131,13 @@
 | 义理/商支撑代数候选 · Markov桥S5p.md | 0 | 11 |
 | 义理/商支撑枚举候选 · Markov桥S5o.md | 0 | 8 |
 | 义理/干涉与测量律候选 · Markov桥S5.md | 6 | 17 |
+| 义理/归一化质量求和候选 · Markov桥S10.md | 0 | 9 |
 | 义理/形式逻辑 · 从元到推.md | 1 | 0 |
 | 义理/心智 · 从元到识.md | 1 | 2 |
 | 义理/拓扑 · 从元到障.md | 0 | 0 |
 | 义理/数与算术 · 从元到数.md | 1 | 0 |
 | 义理/文构造完备与直相加边界.md | 0 | 7 |
-| 义理/有限概率归一化候选 · Markov桥S9.md | 0 | 12 |
+| 义理/有限概率归一化候选 · Markov桥S9.md | 0 | 13 |
 | 义理/有限概率核接口 · Markov桥S2.md | 3 | 12 |
 | 义理/有限路径族求和代数候选 · Markov桥S5g.md | 0 | 14 |
 | 义理/有限路径族求和候选 · Markov桥S5f.md | 0 | 12 |

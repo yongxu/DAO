@@ -4,7 +4,7 @@
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
-    "Foundation/Modern": 62,
+    "Foundation/Modern": 63,
     "Foundation/Wen": 51,
     "Foundation/Yi": 2,
     "Model": 2,
@@ -178,6 +178,7 @@
         "SSBX.Foundation.Modern.QuantumRelativityActionPhaseLawBridge",
         "SSBX.Foundation.Modern.QuantumRelativityStepwiseUnificationBridge",
         "SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityNormalizationBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityNormalizedMassBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -196,10 +197,10 @@
         "SSBX.Foundation.Modern.IIDWlln",
         "SSBX.Foundation.Modern.BochnerPL"
       ],
-      "lines": 188,
+      "lines": 189,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "27ed0c9fcddce1061ca4c44defe738e9137d47126237e784b1122a48837fbcc7"
+      "sha256": "9d786b56cebc867c5251655599f659734614cac9b4a54ff86262d71ca6a10833"
     },
     {
       "cluster": "root",
@@ -11136,7 +11137,7 @@
     },
     {
       "cluster": "Foundation/Modern",
-      "declaration_count": 24,
+      "declaration_count": 25,
       "declarations": [
         {
           "kind": "def",
@@ -11153,6 +11154,10 @@
         {
           "kind": "structure",
           "name": "FiniteRowSupportNormalization"
+        },
+        {
+          "kind": "theorem",
+          "name": "rowWeightSum_eq_rowTotal"
         },
         {
           "kind": "def",
@@ -11239,10 +11244,10 @@
         "Mathlib.Tactic",
         "SSBX.Foundation.Modern.QuantumRelativityStepwiseUnificationBridge"
       ],
-      "lines": 307,
+      "lines": 316,
       "module": "SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityNormalizationBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean",
-      "sha256": "d6c732af49d5cf60de782bb820dea6ae31c9984b0c8552a2b9fc0d833ac595ba"
+      "sha256": "52629a83a3e570e163e05ea9b1563928c00bde6f64d6ae40f3691ef3d701d6bd"
     },
     {
       "cluster": "Foundation/Modern",
@@ -11716,6 +11721,64 @@
       "module": "SSBX.Foundation.Modern.QuantumRelativityNonzeroPathAmplitudeBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean",
       "sha256": "82f3fdf344544eb210b35748ea82aa7cd7394a997a2a94ba2ddd9d320486b767"
+    },
+    {
+      "cluster": "Foundation/Modern",
+      "declaration_count": 11,
+      "declarations": [
+        {
+          "kind": "def",
+          "name": "normalizedMassSum"
+        },
+        {
+          "kind": "theorem",
+          "name": "normalizedMassSum_eq_normalizedRowTotalCandidate"
+        },
+        {
+          "kind": "theorem",
+          "name": "normalizedMass_sum_one"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_normalizedMass_sum_one"
+        },
+        {
+          "kind": "theorem",
+          "name": "operatorCellGrid_normalizedMass_sum_one"
+        },
+        {
+          "kind": "inductive",
+          "name": "PendingBeyondS10"
+        },
+        {
+          "kind": "def",
+          "name": "ClosedByStepwiseS10"
+        },
+        {
+          "kind": "theorem",
+          "name": "pending_boundary_not_closed_by_s10"
+        },
+        {
+          "kind": "def",
+          "name": "FiniteNormalizedMassBoundaryClosed"
+        },
+        {
+          "kind": "theorem",
+          "name": "finite_normalized_mass_boundary_closed"
+        },
+        {
+          "kind": "theorem",
+          "name": "normalized_mass_bridge_summary"
+        }
+      ],
+      "imports": [
+        "Mathlib.Tactic",
+        "SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityNormalizationBridge"
+      ],
+      "lines": 174,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityNormalizedMassBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityNormalizedMassBridge.lean",
+      "sha256": "03899079e04961838d8226d42f14c4605596e14e7c980be5aae848ba917d2912"
     },
     {
       "cluster": "Foundation/Modern",

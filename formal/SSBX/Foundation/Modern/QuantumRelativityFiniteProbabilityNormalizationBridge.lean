@@ -71,6 +71,15 @@ structure FiniteRowSupportNormalization {P : FiniteProcess}
   row_weight_sum_eq_rowTotal :
     ∀ a : P.State, rowWeightSum K rowSupport a = K.rowTotal a
 
+/-- Named projection for the row-weight sum law carried by a finite support. -/
+theorem rowWeightSum_eq_rowTotal
+    {P : FiniteProcess}
+    {K : FiniteProbabilityKernelSkeleton P}
+    (R : FiniteRowSupportNormalization K)
+    (a : P.State) :
+    rowWeightSum K R.rowSupport a = K.rowTotal a :=
+  R.row_weight_sum_eq_rowTotal a
+
 /-- A process has finite row-support normalization when one of its kernels does. -/
 def HasFiniteRowSupportNormalization (P : FiniteProcess) : Prop :=
   ∃ K : FiniteProbabilityKernelSkeleton P,

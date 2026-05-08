@@ -81,6 +81,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityObservableLedgerBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityActionPhaseLawBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityStepwiseUnificationBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityNormalizationBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityNormalizedMassBridge
 lake build SSBX
 git diff --check --
 ```
@@ -806,6 +807,36 @@ rowWeightSum = rowTotal；
 | `FiniteSumOneProbabilityBoundaryClosed` | `QuantumRelativityFiniteProbabilityNormalizationBridge.lean` | concrete/grid row support 与非终端行归一合取 |
 | `PendingBeyondS9` | `QuantumRelativityFiniteProbabilityNormalizationBridge.lean` | sum-one row boundary 不再列入 pending；Born derivation 等较大边界仍 pending |
 
+## S10 · 归一化质量求和候选
+
+目标：把 S9 的 row-total candidate 改写为逐项 normalized mass 的有限概率分布律。S10 不做 Born rule 推导，只证明在已显示 row support 上，`normalizedMass = weight / rowTotal` 的有限和为 `1`。
+
+| 项 | 内容 |
+|---|---|
+| Lean 出口 | `normalized_mass_bridge_summary` |
+| 最低 theorem 形态 | 合取 `FiniteSumOneProbabilityBoundaryClosed`、`FiniteNormalizedMassBoundaryClosed`、concrete/grid finite probability projection、`71232` grid length、`PendingBeyondS10` 与 Wen coverage |
+| 失败记录 | 已记录 direct concrete/grid 展开 proof 试探；修正为泛型 algebra bridge |
+| 文档更新 | 已新增《归一化质量求和候选 · Markov桥S10》 |
+| 后续结构 | 条件式 Born weight 非负与 sum-one、Born distribution boundary、channel composition、metric recovery 与 empirical closure 继续推进 |
+
+通过判准：
+
+```text
+rowWeightSum_eq_rowTotal 有独立命名出口；
+normalizedMassSum = normalizedRowTotalCandidate；
+任一 normalizable finite row support 的 normalizedMass 求和为 1；
+concrete 与 grid 非终端行均实例化。
+```
+
+当前状态：
+
+| theorem | 文件 | 读法 |
+|---|---|---|
+| `rowWeightSum_eq_rowTotal` | `QuantumRelativityFiniteProbabilityNormalizationBridge.lean` | S9 row-weight sum law 的命名出口 |
+| `normalizedMass_sum_one` | `QuantumRelativityNormalizedMassBridge.lean` | finite row support 上的 classical probability law |
+| `normalized_mass_bridge_summary` | `QuantumRelativityNormalizedMassBridge.lean` | concrete/grid normalized mass sum-one boundary 已关闭 |
+| `PendingBeyondS10` | `QuantumRelativityNormalizedMassBridge.lean` | amplitude/Born normalized support 与 Born derivation 等较大边界仍 pending |
+
 ## 失败记录追加区
 
 失败记录格式沿用验证计划，并允许追加在此区：
@@ -850,6 +881,7 @@ rowWeightSum = rowTotal；
 | 2026-05-09 | S5r | failure retained / success | 第一次 action-phase law build 因展开 `quotientVisibleKey` 暴露 `Quot.lift` 导致 quotient readback 化简失败；修正后新增 finite action-to-phase law candidate，关闭 action index `0/1` 到 `1/-1` 的 quotient-support cancellation 与 pending ledger registration |
 | 2026-05-09 | S8 | failure retained / success | 第一次 stepwise summary build 因 operator-cell grid 与 path-quotient support namespace/defeq 解析失败；修正后关闭 current stepwise unification candidate summary，并显式列出 `PendingBeyondS5r` |
 | 2026-05-09 | S9 | failure retained / success | 第一次 finite probability normalization build 因 concrete row list-sum、grid singleton `Fin` 化简与 Rat coercion 递归深度失败；修正后关闭 concrete/grid finite row sum-one boundary，并显式列出 `PendingBeyondS9` |
+| 2026-05-09 | S10 | failure retained / success | direct concrete/grid 展开 proof 可过但不够结构化；改为泛型 `normalizedMassSum_eq_normalizedRowTotalCandidate`，关闭 `normalizedMass_sum_one` 与 concrete/grid normalized mass sum-one boundary |
 
 ## 统一用语正名
 
@@ -857,9 +889,9 @@ rowWeightSum = rowTotal；
 
 | 词 | 在本路线中的含义 | 结构依据 |
 |---|---|---|
-| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S9 已关闭的 summary theorem 与路线日志 |
-| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8/S9 pending list |
-| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary` |
+| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S10 已关闭的 summary theorem 与路线日志 |
+| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8-S10 pending list |
+| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary`、`normalized_mass_bridge_summary` |
 
 推荐正名句：
 
