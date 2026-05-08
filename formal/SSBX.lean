@@ -63,6 +63,7 @@ import SSBX.Foundation.Wen.MetaInterp.Dispatch
 import SSBX.Foundation.Wen.MetaInterp.SubDispatch_BranchShiEq
 import SSBX.Foundation.Wen.MetaInterp.SubDispatch_BranchYaoEq
 import SSBX.Foundation.Wen.MetaInterp.OuterLoop
+import SSBX.Foundation.Wen.MetaInterp.TargetContract
 import SSBX.Foundation.Wen.WenDef
 import SSBX.Foundation.Wen.WenyanParser
 import SSBX.Foundation.Wen.WenEval
