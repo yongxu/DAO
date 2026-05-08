@@ -4,7 +4,7 @@
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
-    "Foundation/Modern": 64,
+    "Foundation/Modern": 65,
     "Foundation/Wen": 51,
     "Foundation/Yi": 2,
     "Model": 2,
@@ -180,6 +180,7 @@
         "SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityNormalizationBridge",
         "SSBX.Foundation.Modern.QuantumRelativityNormalizedMassBridge",
         "SSBX.Foundation.Modern.QuantumRelativityBornWeightNormalizationBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityBornDistributionBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -198,10 +199,10 @@
         "SSBX.Foundation.Modern.IIDWlln",
         "SSBX.Foundation.Modern.BochnerPL"
       ],
-      "lines": 190,
+      "lines": 191,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "2941bbc24d5e31d3be164699abef4dc1568461181a67573af25cc002eed74182"
+      "sha256": "0bc63ac3644e1ff0c2331f59cef267dee53e1b257b5767747b7807e8f28614db"
     },
     {
       "cluster": "root",
@@ -10295,6 +10296,68 @@
       "module": "SSBX.Foundation.Modern.QuantumRelativityAmplitudeChannelBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean",
       "sha256": "d80d02b2fb3ac2be8a76a9ea17eceeb6e82d9d31d26ca9464f54835e5986a78a"
+    },
+    {
+      "cluster": "Foundation/Modern",
+      "declaration_count": 12,
+      "declarations": [
+        {
+          "kind": "structure",
+          "name": "FiniteProbabilityDistributionInterface"
+        },
+        {
+          "kind": "def",
+          "name": "amplitudeSupportAmplitudeSum"
+        },
+        {
+          "kind": "def",
+          "name": "bornFiniteProbabilityDistribution"
+        },
+        {
+          "kind": "structure",
+          "name": "BornDistributionBoundary"
+        },
+        {
+          "kind": "def",
+          "name": "bornDistributionBoundary"
+        },
+        {
+          "kind": "theorem",
+          "name": "born_distribution_boundary"
+        },
+        {
+          "kind": "def",
+          "name": "BornDistributionBoundaryClosed"
+        },
+        {
+          "kind": "theorem",
+          "name": "born_distribution_boundary_closed"
+        },
+        {
+          "kind": "inductive",
+          "name": "PendingBeyondS12"
+        },
+        {
+          "kind": "def",
+          "name": "ClosedByStepwiseS12"
+        },
+        {
+          "kind": "theorem",
+          "name": "pending_boundary_not_closed_by_s12"
+        },
+        {
+          "kind": "theorem",
+          "name": "born_distribution_bridge_summary"
+        }
+      ],
+      "imports": [
+        "Mathlib.Tactic",
+        "SSBX.Foundation.Modern.QuantumRelativityBornWeightNormalizationBridge"
+      ],
+      "lines": 198,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityBornDistributionBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityBornDistributionBridge.lean",
+      "sha256": "40b8bf85d101cc91a85736f43b39c7d6d1820be6b18060e28635f17531d03065"
     },
     {
       "cluster": "Foundation/Modern",
