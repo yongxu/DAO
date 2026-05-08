@@ -149,6 +149,7 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .H_2  => some ⟨.H_2,  Stdlib.hexIdBody, 1, "理: extractor anchor as identity; no principle semantics"⟩
   | .H_3  => some ⟨.H_3,  Stdlib.hexIdBody, 1, "勢/势: extractor anchor as identity; no tendency semantics"⟩
   | .H_4  => some ⟨.H_4,  Stdlib.hexIdBody, 1, "機/机: extractor anchor as identity; no opportunity semantics"⟩
+  | .H_5  => some ⟨.H_5,  Stdlib.pairHBody, 2, "法: Hex pair carrier constructor; no law/norm semantics"⟩
   | .H_6  => some ⟨.H_6,  Stdlib.hexIdBody, 1, "象: extractor anchor as identity; no image semantics"⟩
   | .P_2  => some ⟨.P_2,  Stdlib.hexIdBody, 1, "體/体: Mohist part extractor anchor as identity; no part-whole semantics"⟩
   | .P_3  => some ⟨.P_3,  Stdlib.list1HBody, 1, "兼: singleton Hex aggregate carrier; no universal inclusion semantics"⟩
@@ -286,6 +287,7 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .N_7  => some ⟨.N_7,  Stdlib.neqHexBody, 2, "異/异: Hex disequality"⟩
   | .N_8  => some ⟨.N_8,  Stdlib.pairHBody, 2, "別/别: binary object distinction carrier"⟩
   | .P_5  => some ⟨.P_5,  Stdlib.neqHexBody, 2, "異/异: Mohist disequality alias"⟩
+  | .P_23 => some ⟨.P_23, .andB, 2, "辯/辩: proposition connective carrier as Bool conjunction; no debate semantics"⟩
   | .Q_2  => some ⟨.Q_2,  Stdlib.fanBody, 1, "皆: finite forall over Hex"⟩
   | .Q_4  => some ⟨.Q_4,  Stdlib.noneHBody, 1, "莫: finite no-witness quantifier over Hex"⟩
   | .M_2  => some ⟨.M_2,  Stdlib.existsHBody, 1, "或: finite modal/exists over Hex"⟩
@@ -333,6 +335,7 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .S_12 => some ⟨.S_12, Stdlib.hexIdBody, 1, "嘗/尝: aspect anchor as identity; no experiential-time semantics"⟩
   | .S_17 => some ⟨.S_17, Stdlib.hexIdBody, 1, "未: aspect anchor as identity; no future/negation semantics"⟩
   | .S_18 => some ⟨.S_18, Stdlib.hexIdBody, 1, "已: aspect anchor as identity; no completed-time semantics"⟩
+  | .S_19 => some ⟨.S_19, Stdlib.hexApplyBody, 2, "的: explicit modifier application as Hex endomap application; no modern-grammar semantics"⟩
   | .S_1  => some ⟨.S_1,  Stdlib.hexApplyBody, 2, "之: Hex endomap application/projection"⟩
   | .S_2  => some ⟨.S_2,  Stdlib.endoCompBody, 2,
       "而: Hex endomap composition; surface currently requires explicit Hex→Hex terms"⟩
@@ -345,7 +348,7 @@ def coreTheoremBackedOperatorIds : List OperatorId :=
         .C_2, .C_4, .C_5, .C_6, .C_7, .C_8,
         .T_1, .T_2, .T_3, .T_4, .T_5, .T_7, .T_8, .T_9, .T_11, .T_14, .T_15,
         .B_1, .B_2, .B_3, .B_4, .B_5, .B_6, .B_7,
-        .I_2, .I_6, .I_8, .H_1, .H_2, .H_3, .H_4, .H_6,
+        .I_2, .I_6, .I_8, .H_1, .H_2, .H_3, .H_4, .H_5, .H_6,
         .P_2, .P_3, .P_6, .P_7, .P_9, .P_10,
         .P_11, .P_12, .P_13, .P_18, .P_22, .P_24, .G_2, .G_4, .G_5, .G_8, .G_9,
         .D_1, .D_4, .D_8, .H_8, .L_3, .L_5, .L_9, .L_10, .L_12, .L_13, .L_15,
@@ -361,11 +364,11 @@ def coreTheoremBackedOperatorIds : List OperatorId :=
         .SUN_2, .SUN_3, .SUN_4, .SUN_14, .CHU_4, .CHU_5, .CHU_9,
         .LIJ_4, .LIJ_7, .LIJ_11, .ZA_6]
     ++ [.N_3, .N_4, .N_5, .N_6, .K_1, .K_5, .K_6, .K_7, .K_8, .L_7, .S_3, .S_7, .Z_1, .I_3, .I_4,
-        .I_5, .I_7, .P_4, .N_2, .N_7, .N_8, .P_5, .Q_2, .Q_4, .M_2, .Q_5, .Q_6, .Q_7,
+        .I_5, .I_7, .P_4, .N_2, .N_7, .N_8, .P_5, .P_23, .Q_2, .Q_4, .M_2, .Q_5, .Q_6, .Q_7,
         .Q_3, .Q_8, .D_2, .D_3, .D_9, .D_10, .M_3, .M_4, .M_5, .M_6, .M_7, .M_8,
         .A_1, .A_2, .A_3, .A_4, .A_5, .A_6, .A_7, .A_8, .A_9, .A_10,
         .A_11, .A_12, .A_13, .A_14, .A_15, .A_16, .A_17, .A_18, .A_19, .A_20,
-        .S_1, .S_2, .S_4, .S_5, .S_6, .S_8, .S_9, .S_10, .S_11, .S_12, .S_17, .S_18]
+        .S_1, .S_2, .S_4, .S_5, .S_6, .S_8, .S_9, .S_10, .S_11, .S_12, .S_17, .S_18, .S_19]
 
 def theoremBackedOperatorIds : List OperatorId :=
   coreTheoremBackedOperatorIds ++ relationPredicateBoolOperatorIds
@@ -382,7 +385,7 @@ def structuralCatalogueOperatorIds : List OperatorId :=
 Structural total fallback for catalogue rows.
 
 These bodies are executable and type-checkable, but intentionally weaker than
-the 282 exact rows above: they preserve the operator id, signature kind, and
+the 285 exact rows above: they preserve the operator id, signature kind, and
 evaluated arguments as a catalogue value instead of projecting fake Hex/Bool
 results.
 -/
@@ -457,10 +460,10 @@ theorem executableOperatorIds_length :
     executableOperatorIds.length = 371 := by native_decide
 
 theorem coreTheoremBackedOperatorIds_length :
-    coreTheoremBackedOperatorIds.length = 236 := by native_decide
+    coreTheoremBackedOperatorIds.length = 239 := by native_decide
 
 theorem theoremBackedOperatorIds_length :
-    theoremBackedOperatorIds.length = 282 := by native_decide
+    theoremBackedOperatorIds.length = 285 := by native_decide
 
 theorem theoremBackedOperatorIds_nodup :
     theoremBackedOperatorIds.Nodup := by native_decide
@@ -470,7 +473,7 @@ theorem theoremBackedOperatorIds_all_semantics :
   native_decide
 
 theorem structuralCatalogueOperatorIds_length :
-    structuralCatalogueOperatorIds.length = 89 := by native_decide
+    structuralCatalogueOperatorIds.length = 86 := by native_decide
 
 theorem structuralCatalogueOperatorIds_all_not_theorem_backed :
     structuralCatalogueOperatorIds.all (fun id => (theoremBackedSemanticsFor? id).isNone) = true := by
@@ -501,8 +504,8 @@ theorem operatorRegistryCoverage_summary :
     operatorRegistryEntries.length = 371
       ∧ executableRegistryEntries.length = 371
       ∧ executableOperatorIds.length = 371
-      ∧ theoremBackedOperatorIds.length = 282
-      ∧ structuralCatalogueOperatorIds.length = 89
+      ∧ theoremBackedOperatorIds.length = 285
+      ∧ structuralCatalogueOperatorIds.length = 86
       ∧ theoremBackedOperatorIds.length + structuralCatalogueOperatorIds.length = 371
       ∧ executableOperatorIds.all isCatalogueOperator = true
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).id = id)

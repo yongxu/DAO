@@ -178,6 +178,7 @@ CLI_CASES = [
     (["--operator", "H-2"], "executable note: 理: extractor anchor as identity; no principle semantics"),
     (["--operator", "H-3"], "executable note: 勢/势: extractor anchor as identity; no tendency semantics"),
     (["--operator", "H-4"], "executable note: 機/机: extractor anchor as identity; no opportunity semantics"),
+    (["--operator", "H-5"], "executable note: 法: Hex pair carrier constructor; no law/norm semantics"),
     (["--operator", "H-6"], "executable note: 象: extractor anchor as identity; no image semantics"),
     (["--operator", "P-2"], "executable note: 體/体: Mohist part extractor anchor as identity; no part-whole semantics"),
     (["--operator", "P-6"], "executable note: 久: temporal extractor anchor as identity; no duration semantics"),
@@ -239,6 +240,8 @@ CLI_CASES = [
     (["--operator", "F-2"], "executable note: 來/来: return flow as Hex endomap application; no path semantics"),
     (["--operator", "F-7"], "executable note: 出: outbound flow as Hex endomap application; no boundary topology"),
     (["--operator", "F-8"], "executable note: 入: inbound flow as Hex endomap application; no boundary topology"),
+    (["--operator", "P-23"], "executable note: 辯/辩: proposition connective carrier as Bool conjunction; no debate semantics"),
+    (["--operator", "S-19"], "executable note: 的: explicit modifier application as Hex endomap application; no modern-grammar semantics"),
     (["--operator", "R-1"], "executable note: exact Bool relation/predicate package"),
     (["--operator", "LIJ-9"], "executable note: exact Bool relation/predicate package"),
     (["--operator", "Y-2"], "compound surfaces: 五行"),
@@ -250,7 +253,7 @@ CLI_CASES = [
     (["--coverage"], "operators: 371 registered / 371 executable"),
     (["--coverage"], "operator forms: 371 ids with at least one form"),
     (["--help"], "wenyan-surface --json --operators [all|executable|known-not-executable|unsupported]"),
-    (["--help"], "282 exact/theorem-backed; 89 structural catalogue"),
+    (["--help"], "285 exact/theorem-backed; 86 structural catalogue"),
     (["--help"], "0 symbolic catalogue-shape"),
 ]
 
