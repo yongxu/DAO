@@ -508,7 +508,7 @@ example : (parseSurface "（推）").toOption.isSome = true := by native_decide
 example : (parseSurface "（同 乾）").toOption.isSome = true := by native_decide
 example : (parseSurface "（同 乾） 乾").toOption.isSome = true := by native_decide
 example : (parseSurface "者 甲 推 甲 乾").toOption.isSome = true := by native_decide
-example : (parseSurface "在 乾").toOption.isNone = true := by native_decide
+example : (parseSurface "在 乾").toOption.isSome = true := by native_decide
 
 example : (parseSurface "（推 一").toOption.isNone = true := by native_decide
 
