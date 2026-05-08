@@ -118,7 +118,7 @@ S5d 关闭的是离散 phase-label candidate 到 two-path cancellation 的接口
 | Hamiltonian / unitary evolution | 未纳入本轮 | 没有时间演化算子 |
 | path integral | 未纳入本轮 | 没有路径空间和求和/积分测度 |
 | Born rule derivation | 未纳入本轮 | 仍只复用 `ampProb` boundary |
-| empirical closure | 未纳入本轮 | 没有观测 ledger |
+| empirical closure | 未纳入本轮 | S5q 已补 pending observable ledger；仍没有外部数据或实验闭合 |
 
 本轮闭合范围：**S5d 已在 Lean 中关闭“two-route upper/lower paths 的相反候选振幅可由离散 phase label `zero/pi` 导出，并保持 S5c 的 two-path cancellation 与 Born-shaped zero boundary”；S5e 后续关闭 edge-action phase accumulation candidate；它们不关闭连续相位、作用量动力学、unitary/CPTP、path integral、Born rule 推导或经验闭合。**
 

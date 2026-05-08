@@ -68,7 +68,7 @@ theorem interference_bridge_summary :
 | 离散相位标记候选 | S5 未纳入；S5d 已开单独接口 | 见《离散相位标记候选 · Markov桥S5d》；该接口仍不是 physical phase law |
 | 离散作用量相位候选 | S5 未纳入；S5e 已开单独接口 | 见《离散作用量相位候选 · Markov桥S5e》；该接口证明 edge phase accumulation candidate |
 | 非零物理路径振幅 | 未纳入本轮 | 尚无 action、phase evolution、Hamiltonian 或 unitary law |
-| 真实干涉律 | 未纳入本轮 | S5c 有 toy two-path cancellation，但没有相位动力学、path integral、观测 ledger 或可测差异 |
+| 真实干涉律 | 未纳入本轮 | S5c 有 toy two-path cancellation，S5q 已有 pending observable ledger；仍没有相位动力学、path integral 或可测预言 theorem |
 | Born rule 推导 | 未纳入本轮 | 只记录形状，不从 Markov 权重或 path amplitude 推出测量概率律 |
 | unitary / CPTP / decoherence | 未纳入本轮 | 没有 Hilbert-space evolution law、Kraus map、density matrix 或环境模型 |
 | 经验闭合 | 未纳入本轮 | 没有观测量 ledger、数据判准或实验接口 |

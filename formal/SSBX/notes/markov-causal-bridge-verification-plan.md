@@ -30,6 +30,7 @@
 | `formal/SSBX/Foundation/Modern/QuantumRelativityCanonicalRepresentativeBridge.lean` | S5n two-route canonical representative candidate |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportBridge.lean` | S5o finite quotient-support candidate |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportAlgebraBridge.lean` | S5p quotient-support algebra candidate |
+| `formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean` | S5q observable ledger candidate boundary |
 | `formal/SSBX/notes/markov-causal-bridge-plan.md` | 探索计划与完成记录 |
 | `formal/SSBX/notes/unification-stepwise-plan.md` | 逐步完善到候选统一的阶段路线 |
 | `义理/文构造完备与直相加边界.md` | 对 `current-language no-go` 旧说法的正名 |
@@ -53,6 +54,7 @@
 | `义理/规范代表元候选 · Markov桥S5n.md` | S5n 规范代表元 companion 文档 |
 | `义理/商支撑枚举候选 · Markov桥S5o.md` | S5o 商支撑枚举 companion 文档 |
 | `义理/商支撑代数候选 · Markov桥S5p.md` | S5p 商支撑代数 companion 文档 |
+| `义理/观测账本候选 · Markov桥S5q.md` | S5q 观测账本 companion 文档 |
 
 ## 当前验证结论
 
@@ -82,8 +84,9 @@
 - [x] `canonical_representative_bridge_summary` 已关闭 two-route canonical representative candidate：upper/lower displayed paths 代表自身 quotient class，任意 toy source/target two-step path 的 quotient class 由 displayed upper/lower path 代表。
 - [x] `quotient_support_bridge_summary` 已关闭 finite quotient-support candidate：two-route quotient support 覆盖 toy source/target quotient classes，可回读 visible keys，并保持 quotient-level cancellation 与 Born-shaped zero boundary。
 - [x] `quotient_support_algebra_bridge_summary` 已关闭 quotient-support algebra candidate：append / permutation / reverse stability、duplicate zero-sum cancellation 与 two-route algebraic cancellation stability 已形式化。
+- [x] `observable_ledger_bridge_summary` 已关闭 observable ledger candidate boundary：two-route quotient-support cancellation 可登记为 pending observable ledger entry，且 pending entry 不等于 empirical closure。
 - [x] 首次新 worktree 原生构建的 `mathlib4` 克隆阻塞已记录为基础设施失败，不当作 theorem 失败。
-- [ ] 尚未验证 sum-one 概率律、Born rule 从 Markov 桥的推导、continuous phase/action law、general all-path enumeration、一般 path integral、真实可测干涉律、unitary / CPTP quantum channel law、完整因果偏序、局部有限 causal set、度规恢复或经验闭合。
+- [ ] 尚未验证 sum-one 概率律、Born rule 从 Markov 桥的推导、continuous phase/action law、general all-path enumeration、一般 path integral、真实可测干涉律、unitary / CPTP quantum channel law、完整因果偏序、局部有限 causal set、度规恢复、数据校准、可测预言 theorem 或经验闭合。
 
 ## 每次变更的最低验证门槛
 
@@ -113,6 +116,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityPathQuotientBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityCanonicalRepresentativeBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityQuotientSupportBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityQuotientSupportAlgebraBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityObservableLedgerBridge
 lake build SSBX
 git diff --check --
 ```
@@ -129,7 +133,7 @@ git diff --check --
 状态词自审命令：
 
 ```bash
-rg -n "待处理|future|deferred|部分相关|佛|唯识|analogy|unchecked|planned|build pending|not run|not edited|failure-to-close" formal/SSBX/notes/markov-causal-bridge-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md formal/SSBX/notes/unification-stepwise-plan.md '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/有限概率核接口 · Markov桥S2.md' '义理/路径组合与因果约束 · Markov桥S3.md' '义理/经典Markov与量子振幅分层 · Markov桥S4.md' '义理/干涉与测量律候选 · Markov桥S5.md' '义理/非零路径振幅候选 · Markov桥S5b.md' '义理/双路径相消候选 · Markov桥S5c.md' '义理/离散相位标记候选 · Markov桥S5d.md' '义理/离散作用量相位候选 · Markov桥S5e.md' '义理/有限路径族求和候选 · Markov桥S5f.md' '义理/有限路径族求和代数候选 · Markov桥S5g.md' '义理/端点索引路径族候选 · Markov桥S5h.md' '义理/端点支撑规范化候选 · Markov桥S5i.md' '义理/双路径枚举候选 · Markov桥S5j.md' '义理/路径身份键候选 · Markov桥S5k.md' '义理/有限键商候选 · Markov桥S5l.md' '义理/路径商类候选 · Markov桥S5m.md'
+rg -n "待处理|future|deferred|部分相关|佛|唯识|analogy|unchecked|planned|build pending|not run|not edited|failure-to-close" formal/SSBX/notes/markov-causal-bridge-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md formal/SSBX/notes/unification-stepwise-plan.md '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/'*'Markov桥S'*.md
 ```
 
 ## Theorem 锚点审计
@@ -167,6 +171,7 @@ rg -n "待处理|future|deferred|部分相关|佛|唯识|analogy|unchecked|plann
 | two-route canonical representative candidate | `canonical_representative_bridge_summary` | `machineChecked` |
 | finite quotient-support candidate | `quotient_support_bridge_summary` | `machineChecked` |
 | quotient-support algebra candidate | `quotient_support_algebra_bridge_summary` | `machineChecked` |
+| observable ledger candidate boundary | `observable_ledger_bridge_summary` | `machineChecked` |
 | tagged-language noncollapse 保持 | `markov_bridge_not_direct_language_addition` | `machineChecked` |
 | 公开摘要 | `markov_causal_bridge_summary` | `machineChecked` |
 
@@ -195,6 +200,8 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
   可以承载 finite path-family sum 的 append / permutation / reverse stability
   可以承载 endpoint-indexed finite path-family conversion
   可以承载 amplitude-complete finite filter 与 duplicate handling boundary
+  可以承载 two-route source/target middle enumeration、visible path-key、visible-key quotient class、canonical representative、finite quotient support 与 quotient-support algebra
+  可以把 quotient-support cancellation 登记为 pending observable ledger entry，并证明 pending entry 不等于 empirical closure
   同时保持当前 tagged 物理语言 noncollapse 边界
 ```
 
@@ -204,10 +211,10 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
 |---|---|
 | 量子引力 | 还需要动力学、连续极限、量子场或引力方程 |
 | Born rule 推导 | 还需要从 Markov / 振幅结构推出归一化测量概率律 |
-| 真实干涉律 | S5/S5b/S5c/S5d/S5e/S5f/S5g/S5h/S5i/S5j/S5k/S5l/S5m/S5n/S5o/S5p 已有 path amplitude、非零 witness、two-path finite cancellation candidate、discrete phase-label candidate、edge-action phase accumulation candidate、finite path-family sum candidate、finite path-sum algebra candidate、endpoint-indexed finite family candidate、endpoint support normalization candidate、two-route toy enumeration candidate、visible path-key candidate、finite visible-key quotient candidate、visible-key quotient class candidate、two-route canonical representative candidate、finite quotient-support candidate 与 quotient-support algebra candidate；还需要 general choice function、general all-path enumeration、一般 path integral、连续相位动力学、观测 ledger 或可测相消 theorem |
+| 真实干涉律 | S5/S5b/S5c/S5d/S5e/S5f/S5g/S5h/S5i/S5j/S5k/S5l/S5m/S5n/S5o/S5p/S5q 已有 path amplitude、非零 witness、two-path finite cancellation candidate、discrete phase-label candidate、edge-action phase accumulation candidate、finite path-family sum candidate、finite path-sum algebra candidate、endpoint-indexed finite family candidate、endpoint support normalization candidate、two-route toy enumeration candidate、visible path-key candidate、finite visible-key quotient candidate、visible-key quotient class candidate、two-route canonical representative candidate、finite quotient-support candidate、quotient-support algebra candidate 与 pending observable ledger boundary；还需要 general choice function、general all-path enumeration、一般 path integral、连续相位动力学、可测预言 theorem 或经验闭合 |
 | 真实 quantum channel law | S4 的 `QuantumChannelSkeleton` 是 candidate interface；还需要 unitary evolution、CPTP、Kraus 或 density-matrix law |
 | 完整因果集或时空度规 | S3 已关闭一步 no-self-loop；还需要偏序全公理、Lorentzian geometry 或 metric recovery theorem |
-| 经验预言 | 还需要 pending ledger、观测量或数据判准 |
+| 经验预言 | S5q 已给出 pending observable ledger entry；还需要外部数据、观测量、误差模型、阈值或数据判准 |
 
 文档若使用这些更强术语，应同步补上相应 formal structure 与验证记录；没有新增结构时，按当前已闭合 theorem 命名。
 
@@ -238,7 +245,7 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
 | V6n | 引入 two-route canonical representative candidate | 已由 `canonical_representative_bridge_summary` 关闭 displayed representative boundary；finite quotient-support enumeration 已由 V6o 承接，general choice function、proof-field path equality、general all-path enumeration、continuous action law 与 path integral 仍 pending |
 | V6o | 引入 finite quotient-support candidate | 已由 `quotient_support_bridge_summary` 关闭 quotient support coverage、visible-key readback、quotient-level cancellation 与 Born-shaped zero boundary；quotient-support algebra 已由 V6p 承接，general all-path enumeration、continuous action law 与 path integral 仍 pending |
 | V6p | 引入 quotient-support algebra candidate | 已由 `quotient_support_algebra_bridge_summary` 关闭 append / permutation / reverse stability、duplicate zero-sum cancellation 与 two-route algebraic cancellation stability；general all-path enumeration、continuous action law 与 path integral 仍 pending |
-| V7 | 经验接口 | 把候选可测差异写入 pending ledger，而不是直接宣称实验闭合 |
+| V7 | 经验接口 | 已由 `observable_ledger_bridge_summary` 关闭 two-route cancellation 进入 pending observable ledger 的最小边界；外部数据、误差模型、观测量与可测预言 theorem 仍 pending |
 
 ## 失败记录模板
 
@@ -282,8 +289,9 @@ lake build SSBX.Foundation.Modern.QuantumRelativityPathQuotientBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityCanonicalRepresentativeBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityQuotientSupportBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityQuotientSupportAlgebraBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityObservableLedgerBridge
 lake build SSBX
 git diff --check --
 ```
 
-备注：`lake build SSBX` 仍会输出既有 Wen 模块的 unused simp args linter 警告；本轮新增 Markov / WenBoundary / ConcreteBridge / OperatorCellGrid / FiniteProbabilityBridge / PathCausalBridge / AmplitudeChannelBridge / InterferenceBridge / NonzeroPathAmplitudeBridge / TwoPathInterferenceBridge / DiscretePhaseBridge / DiscreteActionBridge / FinitePathSumBridge / FinitePathSumAlgebraBridge / EndpointIndexedPathFamilyBridge / EndpointSupportNormalizationBridge / TwoRouteEnumerationBridge / PathIdentityBridge 模块无警告。
+备注：`lake build SSBX` 仍会输出既有 Wen 模块的 unused simp args linter 警告；本轮新增 Markov / WenBoundary / ConcreteBridge / OperatorCellGrid / FiniteProbabilityBridge / PathCausalBridge / AmplitudeChannelBridge / InterferenceBridge / NonzeroPathAmplitudeBridge / TwoPathInterferenceBridge / DiscretePhaseBridge / DiscreteActionBridge / FinitePathSumBridge / FinitePathSumAlgebraBridge / EndpointIndexedPathFamilyBridge / EndpointSupportNormalizationBridge / TwoRouteEnumerationBridge / PathIdentityBridge / FiniteKeyQuotientBridge / PathQuotientBridge / CanonicalRepresentativeBridge / QuotientSupportBridge / QuotientSupportAlgebraBridge / ObservableLedgerBridge 模块无警告。

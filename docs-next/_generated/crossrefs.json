@@ -997,6 +997,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityPathIdentityBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityPathQuotientBridge.lean",
@@ -1034,6 +1035,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityPathIdentityBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityPathQuotientBridge.lean",
@@ -1148,6 +1150,12 @@
         },
         {
           "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean"
+          ],
+          "symbol": "observable_ledger_bridge_summary"
+        },
+        {
+          "paths": [
             "formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean"
           ],
           "symbol": "operator_cell_grid_markov_causal_bridge_summary"
@@ -1157,12 +1165,6 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean"
           ],
           "symbol": "path_causal_bridge_summary"
-        },
-        {
-          "paths": [
-            "formal/SSBX/Foundation/Modern/QuantumRelativityPathIdentityBridge.lean"
-          ],
-          "symbol": "path_identity_bridge_summary"
         }
       ]
     },
@@ -5030,6 +5032,66 @@
         "formal/SSBX/Foundation/Eight/TongJi.lean"
       ],
       "symbol_hits": []
+    },
+    {
+      "document": "义理/观测账本候选 · Markov桥S5q.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean"
+          ],
+          "symbol": "EmpiricallyClosed"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean"
+          ],
+          "symbol": "ObservableLedgerEntry"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean"
+          ],
+          "symbol": "ObservableLedgerPending"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean"
+          ],
+          "symbol": "observable_ledger_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean"
+          ],
+          "symbol": "pending_not_empirically_closed"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean"
+          ],
+          "symbol": "twoRouteCancellationObservableLedgerEntry"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean"
+          ],
+          "symbol": "two_route_observable_ledger_amplitude_zero"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean"
+          ],
+          "symbol": "two_route_observable_ledger_not_empirically_closed"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean"
+          ],
+          "symbol": "two_route_observable_ledger_weight_zero"
+        }
+      ]
     },
     {
       "document": "义理/规范代表元候选 · Markov桥S5n.md",

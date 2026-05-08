@@ -4,7 +4,7 @@
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
-    "Foundation/Modern": 58,
+    "Foundation/Modern": 59,
     "Foundation/Wen": 51,
     "Foundation/Yi": 2,
     "Model": 2,
@@ -174,6 +174,7 @@
         "SSBX.Foundation.Modern.QuantumRelativityCanonicalRepresentativeBridge",
         "SSBX.Foundation.Modern.QuantumRelativityQuotientSupportBridge",
         "SSBX.Foundation.Modern.QuantumRelativityQuotientSupportAlgebraBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityObservableLedgerBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -192,10 +193,10 @@
         "SSBX.Foundation.Modern.IIDWlln",
         "SSBX.Foundation.Modern.BochnerPL"
       ],
-      "lines": 184,
+      "lines": 185,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "6d97c012d8bceb0160a96e271a82b5fd68e380c4c1ac282d6a06a343136d6729"
+      "sha256": "f66d2957fd7eef98444757fd3835a5c57833a8db6ec89412103afc4a28cbf21b"
     },
     {
       "cluster": "root",
@@ -11481,6 +11482,79 @@
       "module": "SSBX.Foundation.Modern.QuantumRelativityNonzeroPathAmplitudeBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean",
       "sha256": "82f3fdf344544eb210b35748ea82aa7cd7394a997a2a94ba2ddd9d320486b767"
+    },
+    {
+      "cluster": "Foundation/Modern",
+      "declaration_count": 15,
+      "declarations": [
+        {
+          "kind": "inductive",
+          "name": "EmpiricalClosureStatus"
+        },
+        {
+          "kind": "structure",
+          "name": "ObservableLedgerEntry"
+        },
+        {
+          "kind": "def",
+          "name": "ObservableLedgerPending"
+        },
+        {
+          "kind": "def",
+          "name": "EmpiricallyClosed"
+        },
+        {
+          "kind": "theorem",
+          "name": "pending_not_empirically_closed"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteCancellationObservableLedgerEntry"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_observable_ledger_amplitude_zero"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_observable_ledger_weight_zero"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_observable_ledger_pending"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_observable_ledger_not_empirically_closed"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_observable_ledger_matches_support_sum"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_observable_ledger_matches_born_weight"
+        },
+        {
+          "kind": "def",
+          "name": "TwoRouteObservableLedgerBoundaryComplete"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_observable_ledger_boundary_complete"
+        },
+        {
+          "kind": "theorem",
+          "name": "observable_ledger_bridge_summary"
+        }
+      ],
+      "imports": [
+        "SSBX.Foundation.Modern.QuantumRelativityQuotientSupportAlgebraBridge"
+      ],
+      "lines": 182,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityObservableLedgerBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean",
+      "sha256": "392d12d80654d9ce7f44138f8faeef757cbb2337d2d26f4189c8820147111c05"
     },
     {
       "cluster": "Foundation/Modern",

@@ -178,7 +178,7 @@ S3 之后，最省力的推进顺序是：
 | S5 | 干涉与 Born-rule-shaped candidate | 已由《干涉与测量律候选 · Markov桥S5》关闭候选接口；真实干涉律与 Born rule 推导仍未纳入 |
 | S5b | 非零 path-amplitude candidate witness | 已由《非零路径振幅候选 · Markov桥S5b》关闭候选接口；相位律、路径求和与可测相消仍未纳入 |
 | S6 | 几何与度规候选接口 | 未纳入本轮 |
-| S7 | 经验 pending ledger | 未纳入本轮 |
+| S7 | 经验 pending ledger | S5q 已关闭最小 pending observable ledger；数据接口仍未纳入本轮 |
 
 ---
 

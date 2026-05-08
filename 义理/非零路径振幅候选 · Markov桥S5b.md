@@ -104,7 +104,7 @@ S5b 关闭的是非零 path-amplitude candidate witness 与 path/causal boundary
 | 离散相位标签 | S5b 未纳入；S5d 已开单独接口 | `zero/pi` 导出 `1/-1` 并保持 two-path cancellation |
 | 离散作用量相位 | S5b 未纳入；S5e 已开单独接口 | edge increments 累积为 path phase 并保持 two-path cancellation |
 | 一般路径求和 | 未纳入本轮 | 没有 over-paths sum 或 path integral |
-| 真实干涉律 | 未纳入本轮 | 没有由相位动力学和观测 ledger 支撑的可测相消定理 |
+| 真实干涉律 | 未纳入本轮 | S5q 已补 pending observable ledger；仍没有由相位动力学、path integral 和数据判准支撑的可测相消定理 |
 | Born rule 从桥推导 | 未纳入本轮 | `ampProb` boundary 仍不是 derivation |
 | 经验预测 | 未纳入本轮 | 没有 observation ledger |
 

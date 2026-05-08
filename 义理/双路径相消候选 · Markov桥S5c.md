@@ -129,7 +129,7 @@ S5c 关闭的是 middle-preserving two-step finite cancellation candidate；
 | unitary/CPTP law | 未纳入本轮 | channel 仍是 candidate skeleton |
 | Born rule derivation | 未纳入本轮 | 只复用 `ampProb` 形状 |
 | decoherence / measurement model | 未纳入本轮 | 没有环境、密度矩阵或测量仪器模型 |
-| empirical closure | 未纳入本轮 | 没有观测 ledger 或数据接口 |
+| empirical closure | 未纳入本轮 | S5q 已补 pending observable ledger；仍没有数据接口、误差模型或实验闭合 |
 
 本轮闭合范围：**S5c 已在 Lean 中关闭“同端点、不同中间态的两条 two-step candidate paths 可携带 `1` 与 `-1`，其有限和为 `0`，并且相消后的 Born-shaped candidate weight 为 `0`”这个 typed skeleton；S5d 后续关闭 discrete phase-label candidate；S5e 后续关闭 discrete edge-action phase accumulation candidate；它们不关闭一般路径积分、连续相位/作用量动力学、Born rule 推导、unitary/CPTP channel law、decoherence 或经验闭合。**
 

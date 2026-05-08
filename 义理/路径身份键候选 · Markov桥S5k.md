@@ -74,6 +74,7 @@ theorem path_identity_bridge_summary :
 | two-route canonical representative | S5n 已关闭 | S5n 已为 toy source/target quotient classes 给出 displayed representatives |
 | finite quotient support | S5o 已关闭 | S5o 已把 displayed quotient classes 升级为 finite quotient-support list |
 | quotient-support algebra | S5p 已关闭 | S5p 已证明 quotient-support append / permutation / reverse / duplicate stability |
+| observable ledger boundary | S5q 已关闭 | S5q 已把 quotient-support cancellation 登记为 pending observable ledger entry |
 | general choice function | 后续结构 | 仍未为任意 process 或任意 quotient class 选代表元 |
 | proof-field path equality | 后续结构 | S5k 避免证明 witness proof fields 相同 |
 | general all-path enumeration | 后续结构 | S5k 仍只处理 two-route toy source/target two-step keys |
@@ -107,18 +108,22 @@ visible path key
 -> visible-key quotient class
 ```
 
-下一步可以继续：
+后续已继续到：
 
 ```text
 finite visible-key quotient candidate
+-> visible-key quotient class
+-> displayed canonical representatives
+-> finite quotient support
+-> quotient-support algebra
 -> observable ledger boundary
 ```
 
-或者转向：
+再往后可以转向：
 
 ```text
-candidate interference
--> observable ledger boundary
+observable ledger boundary
+-> continuous phase/action law candidate
 ```
 
 两条线都需要单独 theorem。

@@ -102,7 +102,7 @@ theorem discrete_action_phase_bridge_summary :
 | finite path-family sum | S5f 已关闭 | 已由 `finite_path_sum_bridge_summary` 把 two-route pair 扩展为 finite same-endpoint path family sum |
 | path integral | 后续结构 | 需要路径空间、测度、极限或 over-all-paths sum |
 | Born rule derivation | 后续结构 | 仍只复用 `ampProb` boundary |
-| empirical closure | 后续结构 | 需要观测 ledger 与数据判准 |
+| empirical closure | 后续结构 | S5q 已补 pending observable ledger；仍需要数据判准与实验闭合 |
 
 本轮闭合范围：**S5e 已在 Lean 中关闭“edge phase increments -> two-step path phase accumulation -> relative phase pi -> induced two-path cancellation”的候选接口；S5f 已在后续文件中把该 two-route sum 接到 finite path-family sum。**
 

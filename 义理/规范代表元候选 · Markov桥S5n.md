@@ -94,11 +94,11 @@ displayed canonical representatives
 -> observable ledger boundary
 ```
 
-或者转向：
+这条线已由 S5o/S5p/S5q 承接。再往后可以转向：
 
 ```text
-quotient class
--> observable ledger boundary
+observable ledger boundary
+-> continuous phase/action law candidate
 ```
 
 两条线都必须保持 machine-checked theorem 和失败记录。

@@ -70,6 +70,7 @@ theorem path_quotient_bridge_summary :
 | two-route canonical representative | S5n 已关闭 | S5n 已为 toy source/target quotient classes 给出 displayed representatives |
 | finite quotient support | S5o 已关闭 | S5o 已把 displayed quotient classes 升级为 finite quotient-support list |
 | quotient-support algebra | S5p 已关闭 | S5p 已证明 quotient-support append / permutation / reverse / duplicate stability |
+| observable ledger boundary | S5q 已关闭 | S5q 已把 quotient-support cancellation 登记为 pending observable ledger entry |
 | general choice function | 后续结构 | 仍未为任意 process 或任意 quotient class 选代表元 |
 | general all-path enumeration | 后续结构 | S5m 仍只处理 two-step witness 与 two-route toy enumeration |
 | path integral | 后续结构 | 仍需要路径空间、测度、极限或 over-all-paths construction |
@@ -107,14 +108,17 @@ S5n 后可以继续：
 
 ```text
 quotient class
+-> displayed canonical representatives
+-> finite quotient support
+-> quotient-support algebra
 -> observable ledger boundary
 ```
 
 或者转向：
 
 ```text
-quotient class
--> observable ledger boundary
+observable ledger boundary
+-> continuous phase/action law candidate
 ```
 
 两条线都必须保持 machine-checked theorem 和失败记录。

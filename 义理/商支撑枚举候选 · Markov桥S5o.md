@@ -112,10 +112,10 @@ quotient support
 -> observable ledger boundary
 ```
 
-或者转向：
+该线已由 S5p/S5q 承接。再往后可以转向：
 
 ```text
-quotient support
+observable ledger boundary
 -> continuous phase/action law candidate
 ```
 
