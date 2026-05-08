@@ -216,6 +216,9 @@ def theoremBackedOperatorIds : List OperatorId :=
 def isTheoremBackedOperator (id : OperatorId) : Bool :=
   (theoremBackedSemanticsFor? id).isSome
 
+def structuralCatalogueOperatorIds : List OperatorId :=
+  allOperatorIds.filter (fun id => (theoremBackedSemanticsFor? id).isNone)
+
 /-! ## § 1.5 Structural catalogue semantics -/
 
 /--
@@ -309,6 +312,17 @@ theorem theoremBackedOperatorIds_all_semantics :
     theoremBackedOperatorIds.all (fun id => (theoremBackedSemanticsFor? id).isSome) = true := by
   native_decide
 
+theorem structuralCatalogueOperatorIds_length :
+    structuralCatalogueOperatorIds.length = 230 := by native_decide
+
+theorem structuralCatalogueOperatorIds_all_not_theorem_backed :
+    structuralCatalogueOperatorIds.all (fun id => (theoremBackedSemanticsFor? id).isNone) = true := by
+  native_decide
+
+theorem executablePartition_counts :
+    theoremBackedOperatorIds.length + structuralCatalogueOperatorIds.length = 371 := by
+  native_decide
+
 theorem executableOperatorIds_registered :
     executableOperatorIds.all isCatalogueOperator = true := by native_decide
 
@@ -331,6 +345,8 @@ theorem operatorRegistryCoverage_summary :
       ∧ executableRegistryEntries.length = 371
       ∧ executableOperatorIds.length = 371
       ∧ theoremBackedOperatorIds.length = 141
+      ∧ structuralCatalogueOperatorIds.length = 230
+      ∧ theoremBackedOperatorIds.length + structuralCatalogueOperatorIds.length = 371
       ∧ executableOperatorIds.all isCatalogueOperator = true
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).id = id)
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).signature.id = id) := by
@@ -339,6 +355,8 @@ theorem operatorRegistryCoverage_summary :
     , executableRegistryEntries_length
     , executableOperatorIds_length
     , theoremBackedOperatorIds_length
+    , structuralCatalogueOperatorIds_length
+    , executablePartition_counts
     , executableOperatorIds_registered
     , operatorRegistryEntryFor_id
     , operatorRegistryEntryFor_signature_id
