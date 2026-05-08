@@ -5,16 +5,34 @@
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
     "Foundation/Modern": 19,
-    "Foundation/Wen": 31,
+    "Foundation/Wen": 38,
     "Foundation/Yi": 2,
     "Model": 2,
     "Pending": 2,
     "Text": 13,
     "Truth": 6,
-    "other": 1,
+    "other": 2,
     "root": 3
   },
   "records": [
+    {
+      "cluster": "other",
+      "declaration_count": 1,
+      "declarations": [
+        {
+          "kind": "def",
+          "name": "main"
+        }
+      ],
+      "imports": [
+        "SSBX.Foundation.Wen.WenSurface.EndToEnd",
+        "SSBX.Foundation.Wen.WenSurface.Coverage"
+      ],
+      "lines": 885,
+      "module": "WenyanSurface.lean",
+      "path": "WenyanSurface.lean",
+      "sha256": "b498ee4b62e97a20392f9d3d241ae2166af6689a84afe8d744732f5a0a8fa07d"
+    },
     {
       "cluster": "root",
       "declaration_count": 0,
@@ -74,6 +92,13 @@
         "SSBX.Foundation.Wen.WenyanQuineKleene",
         "SSBX.Foundation.Wen.WenyanLambdaRoute",
         "SSBX.Foundation.Wen.WenyanLambdaBridge",
+        "SSBX.Foundation.Wen.WenSurface.Lex",
+        "SSBX.Foundation.Wen.WenSurface.Reading",
+        "SSBX.Foundation.Wen.WenSurface.Semantics",
+        "SSBX.Foundation.Wen.WenSurface.Syntax",
+        "SSBX.Foundation.Wen.WenSurface.Elaborate",
+        "SSBX.Foundation.Wen.WenSurface.EndToEnd",
+        "SSBX.Foundation.Wen.WenSurface.Coverage",
         "SSBX.Foundation.Wen.DaoSource",
         "SSBX.Foundation.Wen.Demo",
         "SSBX.Foundation.Wen.AntiSchmitt",
@@ -128,10 +153,10 @@
         "SSBX.Foundation.Modern.IIDWlln",
         "SSBX.Foundation.Modern.BochnerPL"
       ],
-      "lines": 138,
+      "lines": 145,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "bf32cddae7de2cb3ec5068ad09a4d5fb9c633f82ceeded7398b284c68c140729"
+      "sha256": "0fe350757e20844dc1a111b09f73aa4f19b5d7cc0bcbc47a1aea0a4074cd307b"
     },
     {
       "cluster": "root",
@@ -1293,7 +1318,7 @@
     },
     {
       "cluster": "Foundation/Bagua",
-      "declaration_count": 43,
+      "declaration_count": 46,
       "declarations": [
         {
           "kind": "inductive",
@@ -1346,6 +1371,18 @@
         {
           "kind": "theorem",
           "name": "mem_all"
+        },
+        {
+          "kind": "def",
+          "name": "rootTo192TreeLevelCounts"
+        },
+        {
+          "kind": "theorem",
+          "name": "rootTo192TreeLevelCounts_sum"
+        },
+        {
+          "kind": "theorem",
+          "name": "rootTo192TreeEdgeCount"
         },
         {
           "kind": "def",
@@ -1472,10 +1509,10 @@
         "SSBX.Foundation.Yi.Yi",
         "SSBX.Foundation.Bagua.BaguaAlgebra"
       ],
-      "lines": 266,
+      "lines": 280,
       "module": "SSBX.Foundation.Bagua.Cell192",
       "path": "formal/SSBX/Foundation/Bagua/Cell192.lean",
-      "sha256": "364a7c9b0c06a6c037cd4bf07227eaa420d76747de8d4f27afe9a70caf4a6e2b"
+      "sha256": "d968d7d6dc8a934cb63dd3ad437ab8f4588fb2ec4a270cb1f1ecb2e513ebcebb"
     },
     {
       "cluster": "Foundation/Bagua",
@@ -11943,7 +11980,7 @@
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 36,
+      "declaration_count": 54,
       "declarations": [
         {
           "kind": "inductive",
@@ -12067,6 +12104,78 @@
         },
         {
           "kind": "def",
+          "name": "sunBody"
+        },
+        {
+          "kind": "theorem",
+          "name": "sunBody_typed"
+        },
+        {
+          "kind": "def",
+          "name": "sunDef"
+        },
+        {
+          "kind": "def",
+          "name": "yiBenefitBody"
+        },
+        {
+          "kind": "theorem",
+          "name": "yiBenefitBody_typed"
+        },
+        {
+          "kind": "def",
+          "name": "yiBenefitDef"
+        },
+        {
+          "kind": "def",
+          "name": "cuoBody"
+        },
+        {
+          "kind": "theorem",
+          "name": "cuoBody_typed"
+        },
+        {
+          "kind": "def",
+          "name": "cuoDef"
+        },
+        {
+          "kind": "def",
+          "name": "zongBody"
+        },
+        {
+          "kind": "theorem",
+          "name": "zongBody_typed"
+        },
+        {
+          "kind": "def",
+          "name": "zongDef"
+        },
+        {
+          "kind": "def",
+          "name": "huBody"
+        },
+        {
+          "kind": "theorem",
+          "name": "huBody_typed"
+        },
+        {
+          "kind": "def",
+          "name": "huDef"
+        },
+        {
+          "kind": "def",
+          "name": "fanReverseBody"
+        },
+        {
+          "kind": "theorem",
+          "name": "fanReverseBody_typed"
+        },
+        {
+          "kind": "def",
+          "name": "fanReverseDef"
+        },
+        {
+          "kind": "def",
           "name": "all"
         },
         {
@@ -12094,10 +12203,10 @@
         "SSBX.Foundation.Yi.Yi",
         "SSBX.Foundation.Bagua.BaguaWenSpec"
       ],
-      "lines": 315,
+      "lines": 422,
       "module": "SSBX.Foundation.Wen.WenDef",
       "path": "formal/SSBX/Foundation/Wen/WenDef.lean",
-      "sha256": "8c025c8ae1bf5b83b83f6bf51d9a7a219e4ffa994c18ef1cb5d9bf01d318f16f"
+      "sha256": "3b806da1e8bad414f27c8d4e02f6f5d8c2fe6ae643e79ff71f824328e36fada7"
     },
     {
       "cluster": "Foundation/Wen",
@@ -12207,7 +12316,7 @@
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 20,
+      "declaration_count": 26,
       "declarations": [
         {
           "kind": "inductive",
@@ -12283,6 +12392,30 @@
         },
         {
           "kind": "theorem",
+          "name": "sun_eq_decrement"
+        },
+        {
+          "kind": "theorem",
+          "name": "yiBenefit_eq_sheng"
+        },
+        {
+          "kind": "theorem",
+          "name": "cuoBody_eq_cuo"
+        },
+        {
+          "kind": "theorem",
+          "name": "zongBody_eq_zong"
+        },
+        {
+          "kind": "theorem",
+          "name": "huBody_eq_hu"
+        },
+        {
+          "kind": "theorem",
+          "name": "fanReverseBody_eq_cuo"
+        },
+        {
+          "kind": "theorem",
           "name": "self_eq_all_true"
         },
         {
@@ -12294,10 +12427,10 @@
         "SSBX.Foundation.Wen.WenDef",
         "SSBX.Foundation.Yi.YiCore"
       ],
-      "lines": 270,
+      "lines": 322,
       "module": "SSBX.Foundation.Wen.WenDefEval",
       "path": "formal/SSBX/Foundation/Wen/WenDefEval.lean",
-      "sha256": "55e466d90eeac38cae95cdea65b535102e9403a4dd9481ef561857041b49badd"
+      "sha256": "3d30d650e4502450c7ed578fd5f39088fe74b37660702db0dc57e2e989113e65"
     },
     {
       "cluster": "Foundation/Wen",
@@ -12364,6 +12497,654 @@
       "module": "SSBX.Foundation.Wen.WenEval",
       "path": "formal/SSBX/Foundation/Wen/WenEval.lean",
       "sha256": "eaa61cf9af73abd3f57078d35f0eddbf57ddcdafe794eb63e762c64a556de5a4"
+    },
+    {
+      "cluster": "Foundation/Wen",
+      "declaration_count": 10,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "wenSurface_reading_catalogue_counts"
+        },
+        {
+          "kind": "theorem",
+          "name": "wenSurface_hex_literal_counts"
+        },
+        {
+          "kind": "theorem",
+          "name": "coverage_counts"
+        },
+        {
+          "kind": "theorem",
+          "name": "wenSurface_operator_catalogue_counts"
+        },
+        {
+          "kind": "theorem",
+          "name": "wenSurface_operator_compound_surface_lex_coverage"
+        },
+        {
+          "kind": "theorem",
+          "name": "wenSurface_operator_cell_catalogue_counts"
+        },
+        {
+          "kind": "theorem",
+          "name": "wenSurface_registry_total_signature"
+        },
+        {
+          "kind": "theorem",
+          "name": "wenSurface_registry_summary"
+        },
+        {
+          "kind": "theorem",
+          "name": "wenSurface_reuses_bagua_grid_summary"
+        },
+        {
+          "kind": "theorem",
+          "name": "wenSurface_reuses_operator_cell_semantic_summary"
+        }
+      ],
+      "imports": [
+        "SSBX.Foundation.Wen.WenSurface.Semantics",
+        "SSBX.Foundation.Wen.WenSurface.Reading",
+        "SSBX.Text.OperatorCellMap",
+        "SSBX.Text.OperatorCellSemantics"
+      ],
+      "lines": 141,
+      "module": "SSBX.Foundation.Wen.WenSurface.Coverage",
+      "path": "formal/SSBX/Foundation/Wen/WenSurface/Coverage.lean",
+      "sha256": "179f9abb5a3b023c4af27954685beb516760089a1ae23c6ce88b202807326060"
+    },
+    {
+      "cluster": "Foundation/Wen",
+      "declaration_count": 12,
+      "declarations": [
+        {
+          "kind": "inductive",
+          "name": "TypeDiag"
+        },
+        {
+          "kind": "inductive",
+          "name": "ElabErr"
+        },
+        {
+          "kind": "structure",
+          "name": "TypedTm"
+        },
+        {
+          "kind": "def",
+          "name": "atomToTm"
+        },
+        {
+          "kind": "def",
+          "name": "opArity"
+        },
+        {
+          "kind": "def",
+          "name": "parseExpr"
+        },
+        {
+          "kind": "def",
+          "name": "collectArgs"
+        },
+        {
+          "kind": "def",
+          "name": "elabTokens"
+        },
+        {
+          "kind": "def",
+          "name": "atomToTmAt"
+        },
+        {
+          "kind": "def",
+          "name": "elabSurfaceExpr"
+        },
+        {
+          "kind": "def",
+          "name": "inferTypeDetailed"
+        },
+        {
+          "kind": "def",
+          "name": "elabSurfaceTyped"
+        }
+      ],
+      "imports": [
+        "SSBX.Foundation.Wen.WenSurface.Syntax",
+        "SSBX.Foundation.Wen.WenDef",
+        "SSBX.Foundation.Wen.WenDefEval"
+      ],
+      "lines": 275,
+      "module": "SSBX.Foundation.Wen.WenSurface.Elaborate",
+      "path": "formal/SSBX/Foundation/Wen/WenSurface/Elaborate.lean",
+      "sha256": "3e2638934ea29ca49bde6a0ca22d2853ab75eff7d1018d74824d97c82b6df653"
+    },
+    {
+      "cluster": "Foundation/Wen",
+      "declaration_count": 11,
+      "declarations": [
+        {
+          "kind": "inductive",
+          "name": "WenSurfaceErr"
+        },
+        {
+          "kind": "def",
+          "name": "wenyanCompile"
+        },
+        {
+          "kind": "def",
+          "name": "wenyanCompileTm"
+        },
+        {
+          "kind": "def",
+          "name": "wenyanInterp"
+        },
+        {
+          "kind": "def",
+          "name": "wenyanInterpBool"
+        },
+        {
+          "kind": "theorem",
+          "name": "canonicalHexNames_interpret_to_xuGua"
+        },
+        {
+          "kind": "theorem",
+          "name": "hexNameAliases_interpret_to_canonical"
+        },
+        {
+          "kind": "theorem",
+          "name": "wenyan_tui_yi_eq_sheng"
+        },
+        {
+          "kind": "theorem",
+          "name": "v1_endToEnd_summary"
+        },
+        {
+          "kind": "theorem",
+          "name": "wensurface_zhi_between_nominals_S1"
+        },
+        {
+          "kind": "theorem",
+          "name": "zhi_in_tui_zhi_yi_resolves_S1"
+        }
+      ],
+      "imports": [
+        "SSBX.Foundation.Wen.WenSurface.Elaborate"
+      ],
+      "lines": 467,
+      "module": "SSBX.Foundation.Wen.WenSurface.EndToEnd",
+      "path": "formal/SSBX/Foundation/Wen/WenSurface/EndToEnd.lean",
+      "sha256": "c6b55dfb756be3f1971adb57aace87004928f178a3779964010ac8370b6963aa"
+    },
+    {
+      "cluster": "Foundation/Wen",
+      "declaration_count": 15,
+      "declarations": [
+        {
+          "kind": "structure",
+          "name": "GlyphTok"
+        },
+        {
+          "kind": "inductive",
+          "name": "LexErr"
+        },
+        {
+          "kind": "def",
+          "name": "isCJKBasic"
+        },
+        {
+          "kind": "def",
+          "name": "isAsciiSpace"
+        },
+        {
+          "kind": "def",
+          "name": "operatorCompoundSurfaceIds"
+        },
+        {
+          "kind": "def",
+          "name": "multiCharSurfaces"
+        },
+        {
+          "kind": "def",
+          "name": "listIsPrefix"
+        },
+        {
+          "kind": "def",
+          "name": "matchMulti"
+        },
+        {
+          "kind": "def",
+          "name": "lexFuel"
+        },
+        {
+          "kind": "def",
+          "name": "lexWen"
+        },
+        {
+          "kind": "theorem",
+          "name": "operatorCompoundSurfaces_lex_as_single"
+        },
+        {
+          "kind": "theorem",
+          "name": "lexFuel_nil"
+        },
+        {
+          "kind": "def",
+          "name": "GlyphTok.wellFormed"
+        },
+        {
+          "kind": "theorem",
+          "name": "listIsPrefix_self"
+        },
+        {
+          "kind": "theorem",
+          "name": "listIsPrefix_nil_left"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators"
+      ],
+      "lines": 251,
+      "module": "SSBX.Foundation.Wen.WenSurface.Lex",
+      "path": "formal/SSBX/Foundation/Wen/WenSurface/Lex.lean",
+      "sha256": "da57370a2c932825e688926ae63036bb3e0aa1ba8aec78ea127301e9c4f22d41"
+    },
+    {
+      "cluster": "Foundation/Wen",
+      "declaration_count": 53,
+      "declarations": [
+        {
+          "kind": "inductive",
+          "name": "SyntaxMarker"
+        },
+        {
+          "kind": "inductive",
+          "name": "ResolvedAtom"
+        },
+        {
+          "kind": "structure",
+          "name": "ResolvedTok"
+        },
+        {
+          "kind": "inductive",
+          "name": "ResolveErr"
+        },
+        {
+          "kind": "def",
+          "name": "surfaceVarNames"
+        },
+        {
+          "kind": "def",
+          "name": "resolveVarName"
+        },
+        {
+          "kind": "def",
+          "name": "canonicalHexNames"
+        },
+        {
+          "kind": "def",
+          "name": "hexNameAliases"
+        },
+        {
+          "kind": "def",
+          "name": "lookupStringAssoc?"
+        },
+        {
+          "kind": "def",
+          "name": "canonicalHexNameRows"
+        },
+        {
+          "kind": "def",
+          "name": "canonicalHexForName?"
+        },
+        {
+          "kind": "def",
+          "name": "normalizeHexName"
+        },
+        {
+          "kind": "def",
+          "name": "resolveNamedHexConst"
+        },
+        {
+          "kind": "def",
+          "name": "isUnpromotedHexagramGap"
+        },
+        {
+          "kind": "def",
+          "name": "resolveStdlibOp"
+        },
+        {
+          "kind": "def",
+          "name": "resolveHexConst"
+        },
+        {
+          "kind": "def",
+          "name": "resolveBoolConst"
+        },
+        {
+          "kind": "def",
+          "name": "isApplicationMarker"
+        },
+        {
+          "kind": "def",
+          "name": "isIterateConstruction"
+        },
+        {
+          "kind": "def",
+          "name": "resolveSyntaxMarker"
+        },
+        {
+          "kind": "def",
+          "name": "catalogueReadingsForGlyph"
+        },
+        {
+          "kind": "def",
+          "name": "operatorFormIdsForGlyph"
+        },
+        {
+          "kind": "def",
+          "name": "operatorFormReadingsForGlyph"
+        },
+        {
+          "kind": "def",
+          "name": "operatorCompoundReadingsForGlyph"
+        },
+        {
+          "kind": "def",
+          "name": "catalogueOrOperatorFormReadingsForGlyph"
+        },
+        {
+          "kind": "def",
+          "name": "executableCatalogueReadingsForGlyph"
+        },
+        {
+          "kind": "def",
+          "name": "executableOperatorFormReadingsForGlyph"
+        },
+        {
+          "kind": "def",
+          "name": "uniqueExecutableCatalogueReading"
+        },
+        {
+          "kind": "def",
+          "name": "uniqueExecutableReadingForGlyph"
+        },
+        {
+          "kind": "def",
+          "name": "resolveCatalogueByTable"
+        },
+        {
+          "kind": "def",
+          "name": "resolveOne"
+        },
+        {
+          "kind": "def",
+          "name": "resolveSimple"
+        },
+        {
+          "kind": "def",
+          "name": "lexAndResolve"
+        },
+        {
+          "kind": "def",
+          "name": "atomsOf"
+        },
+        {
+          "kind": "def",
+          "name": "ResolvedAtom.opId?"
+        },
+        {
+          "kind": "def",
+          "name": "ResolvedAtom.isAppMarker"
+        },
+        {
+          "kind": "theorem",
+          "name": "canonicalHexNames_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "canonicalHexNameRows_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "canonicalHexNameRows_hexagrams_eq_xuGua"
+        },
+        {
+          "kind": "def",
+          "name": "lexesAsSingleSurface"
+        },
+        {
+          "kind": "theorem",
+          "name": "canonicalMultiHexNames_lex_as_single"
+        },
+        {
+          "kind": "theorem",
+          "name": "hexNameAliasSurfaces_lex_as_single"
+        },
+        {
+          "kind": "theorem",
+          "name": "executableSurfaceReadings_use_registry_path"
+        },
+        {
+          "kind": "theorem",
+          "name": "executableSurfaceReadings_table_driven_ids"
+        },
+        {
+          "kind": "def",
+          "name": "kindAt?"
+        },
+        {
+          "kind": "def",
+          "name": "computeCues"
+        },
+        {
+          "kind": "def",
+          "name": "uniqueCatalogueReading"
+        },
+        {
+          "kind": "def",
+          "name": "resolveOneWithCues"
+        },
+        {
+          "kind": "def",
+          "name": "resolveWithCuesAux"
+        },
+        {
+          "kind": "def",
+          "name": "resolveWithCues"
+        },
+        {
+          "kind": "theorem",
+          "name": "zhi_between_nominals_unique_catalogue"
+        },
+        {
+          "kind": "theorem",
+          "name": "zhi_after_verb_no_catalogue"
+        },
+        {
+          "kind": "theorem",
+          "name": "zhi_no_cue_no_unique_catalogue"
+        }
+      ],
+      "imports": [
+        "SSBX.Foundation.Wen.WenSurface.Lex",
+        "SSBX.Foundation.Wen.WenSurface.Semantics",
+        "SSBX.Foundation.Bagua.Cell192",
+        "SSBX.Text.OperatorAnchors",
+        "SSBX.Text.OperatorReadings",
+        "SSBX.Foundation.Yi.YiCore"
+      ],
+      "lines": 728,
+      "module": "SSBX.Foundation.Wen.WenSurface.Reading",
+      "path": "formal/SSBX/Foundation/Wen/WenSurface/Reading.lean",
+      "sha256": "b27db1fb9ba0278cd678321e1af5874560855f4177451f35fc81f9585a835b92"
+    },
+    {
+      "cluster": "Foundation/Wen",
+      "declaration_count": 19,
+      "declarations": [
+        {
+          "kind": "structure",
+          "name": "ExecutableSemantics"
+        },
+        {
+          "kind": "abbrev",
+          "name": "OperatorSemanticsRegistry"
+        },
+        {
+          "kind": "def",
+          "name": "executableSemanticsFor?"
+        },
+        {
+          "kind": "def",
+          "name": "operatorSemanticsRegistry"
+        },
+        {
+          "kind": "def",
+          "name": "executableOperatorIds"
+        },
+        {
+          "kind": "def",
+          "name": "isExecutableOperator"
+        },
+        {
+          "kind": "def",
+          "name": "parseArityFor"
+        },
+        {
+          "kind": "def",
+          "name": "isCatalogueOperator"
+        },
+        {
+          "kind": "structure",
+          "name": "OperatorRegistryEntry"
+        },
+        {
+          "kind": "def",
+          "name": "operatorRegistryEntryFor"
+        },
+        {
+          "kind": "def",
+          "name": "operatorRegistryEntries"
+        },
+        {
+          "kind": "def",
+          "name": "executableRegistryEntries"
+        },
+        {
+          "kind": "theorem",
+          "name": "executableOperatorIds_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "executableOperatorIds_registered"
+        },
+        {
+          "kind": "theorem",
+          "name": "operatorRegistryEntries_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "operatorRegistryEntryFor_id"
+        },
+        {
+          "kind": "theorem",
+          "name": "operatorRegistryEntryFor_signature_id"
+        },
+        {
+          "kind": "theorem",
+          "name": "executableRegistryEntries_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "operatorRegistryCoverage_summary"
+        }
+      ],
+      "imports": [
+        "SSBX.Foundation.Wen.WenDef",
+        "SSBX.Text.OperatorSignatures",
+        "SSBX.Text.WenyanOperators"
+      ],
+      "lines": 132,
+      "module": "SSBX.Foundation.Wen.WenSurface.Semantics",
+      "path": "formal/SSBX/Foundation/Wen/WenSurface/Semantics.lean",
+      "sha256": "b917bb3db6c74cc7c5b364ab5a53edea0215fb748a37a6fd1990e35a41ce3b25"
+    },
+    {
+      "cluster": "Foundation/Wen",
+      "declaration_count": 16,
+      "declarations": [
+        {
+          "kind": "inductive",
+          "name": "BinderKind"
+        },
+        {
+          "kind": "inductive",
+          "name": "SurfaceExpr"
+        },
+        {
+          "kind": "inductive",
+          "name": "ParseErr"
+        },
+        {
+          "kind": "def",
+          "name": "ResolvedTok.col"
+        },
+        {
+          "kind": "def",
+          "name": "ResolvedTok.surface"
+        },
+        {
+          "kind": "def",
+          "name": "ResolvedAtom.operatorId?"
+        },
+        {
+          "kind": "def",
+          "name": "isApplicationOperator"
+        },
+        {
+          "kind": "def",
+          "name": "isApplicationMarkerTok"
+        },
+        {
+          "kind": "def",
+          "name": "asVarName?"
+        },
+        {
+          "kind": "def",
+          "name": "expectedVariableErr"
+        },
+        {
+          "kind": "def",
+          "name": "parseSurfaceExprAux"
+        },
+        {
+          "kind": "def",
+          "name": "collectSurfaceArgs"
+        },
+        {
+          "kind": "def",
+          "name": "parsePostfixApplications"
+        },
+        {
+          "kind": "def",
+          "name": "leftoverAtomsErr"
+        },
+        {
+          "kind": "def",
+          "name": "parseSurfaceResolved"
+        },
+        {
+          "kind": "def",
+          "name": "parseSurface"
+        }
+      ],
+      "imports": [
+        "SSBX.Foundation.Wen.WenSurface.Semantics",
+        "SSBX.Foundation.Wen.WenSurface.Reading"
+      ],
+      "lines": 231,
+      "module": "SSBX.Foundation.Wen.WenSurface.Syntax",
+      "path": "formal/SSBX/Foundation/Wen/WenSurface/Syntax.lean",
+      "sha256": "452338e76228745d1ae6c729cc58e6e76d7d930e6b791a550a86583563ff4958"
     },
     {
       "cluster": "Foundation/Wen",
@@ -17973,7 +18754,7 @@
     },
     {
       "cluster": "Text",
-      "declaration_count": 45,
+      "declaration_count": 58,
       "declarations": [
         {
           "kind": "inductive",
@@ -17990,6 +18771,22 @@
         {
           "kind": "def",
           "name": "lineFlip"
+        },
+        {
+          "kind": "def",
+          "name": "key"
+        },
+        {
+          "kind": "def",
+          "name": "zhName"
+        },
+        {
+          "kind": "def",
+          "name": "operatorRef"
+        },
+        {
+          "kind": "def",
+          "name": "effectSummary"
         },
         {
           "kind": "def",
@@ -18154,15 +18951,51 @@
         {
           "kind": "theorem",
           "name": "cell192_generator_summary"
+        },
+        {
+          "kind": "inductive",
+          "name": "Cell192TransitionOperator"
+        },
+        {
+          "kind": "def",
+          "name": "key"
+        },
+        {
+          "kind": "def",
+          "name": "zhName"
+        },
+        {
+          "kind": "def",
+          "name": "operatorRef"
+        },
+        {
+          "kind": "def",
+          "name": "effectSummary"
+        },
+        {
+          "kind": "def",
+          "name": "all"
+        },
+        {
+          "kind": "def",
+          "name": "apply"
+        },
+        {
+          "kind": "theorem",
+          "name": "all_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "all_nodup"
         }
       ],
       "imports": [
         "SSBX.Foundation.Bagua.Cell192"
       ],
-      "lines": 221,
+      "lines": 370,
       "module": "SSBX.Text.OperatorReachabilitySemantics",
       "path": "formal/SSBX/Text/OperatorReachabilitySemantics.lean",
-      "sha256": "822800f59ef21da7df44c1d0b320920ddc2706284231396f146c34186ba70e90"
+      "sha256": "fb45376c3a7103779cb7b510883582437fb06b12a6d04bb085c93577a26eb230"
     },
     {
       "cluster": "Text",
@@ -18511,11 +19344,43 @@
     },
     {
       "cluster": "Text",
-      "declaration_count": 35,
+      "declaration_count": 43,
       "declarations": [
         {
           "kind": "inductive",
           "name": "SignatureKind"
+        },
+        {
+          "kind": "def",
+          "name": "SignatureKind.key"
+        },
+        {
+          "kind": "def",
+          "name": "SignatureKind.zhName"
+        },
+        {
+          "kind": "inductive",
+          "name": "OperatorActionBit"
+        },
+        {
+          "kind": "def",
+          "name": "OperatorActionBit.key"
+        },
+        {
+          "kind": "def",
+          "name": "OperatorActionBit.zhName"
+        },
+        {
+          "kind": "def",
+          "name": "OperatorActionBit.operatorMode"
+        },
+        {
+          "kind": "def",
+          "name": "OperatorActionBit.effectSummary"
+        },
+        {
+          "kind": "def",
+          "name": "SignatureKind.actionBit"
         },
         {
           "kind": "structure",
@@ -18657,10 +19522,10 @@
       "imports": [
         "SSBX.Text.WenyanOperators"
       ],
-      "lines": 639,
+      "lines": 908,
       "module": "SSBX.Text.OperatorSignatures",
       "path": "formal/SSBX/Text/OperatorSignatures.lean",
-      "sha256": "c0fbfd3d4159c054a6088a8e4f62ae60fbcdd9f8bd4933b43f19fe8f0c973716"
+      "sha256": "541b506b75da04752467895368ec2ef127acb10fff49416818b4b92fb8d00f25"
     },
     {
       "cluster": "Text",
@@ -18733,11 +19598,23 @@
     },
     {
       "cluster": "Text",
-      "declaration_count": 14,
+      "declaration_count": 17,
       "declarations": [
         {
           "kind": "inductive",
           "name": "OperatorGroup"
+        },
+        {
+          "kind": "def",
+          "name": "OperatorGroup.key"
+        },
+        {
+          "kind": "def",
+          "name": "OperatorGroup.zhName"
+        },
+        {
+          "kind": "def",
+          "name": "OperatorGroup.actionPosition"
         },
         {
           "kind": "inductive",
@@ -18795,10 +19672,10 @@
       "imports": [
         "SSBX.Text.Glyph"
       ],
-      "lines": 1655,
+      "lines": 1745,
       "module": "SSBX.Text.WenyanOperators",
       "path": "formal/SSBX/Text/WenyanOperators.lean",
-      "sha256": "d0e43d5ad2b10d7a9e7baec5c82f0f731e004e7db22fd96bb2d2f20e8d78947c"
+      "sha256": "b4df8ea2c36e3263ba6cda332288efb37fb99d2d193944efe7873a2516e5fd9b"
     },
     {
       "cluster": "Truth",
@@ -19309,10 +20186,10 @@
       "imports": [
         "Lake"
       ],
-      "lines": 11,
+      "lines": 15,
       "module": "lakefile.lean",
       "path": "lakefile.lean",
-      "sha256": "f76127e5e0dfa897558cd028d2160cfb5ab3a801c424160b7daea55bdf0681be"
+      "sha256": "dc82b873629917f168328b7585d3939117e86f136506ba73d129eec2d16b71a6"
     }
   ]
 }

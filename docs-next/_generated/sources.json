@@ -1,24 +1,30 @@
 {
-  "count": 276,
+  "count": 285,
   "include_archive": false,
   "sources": [
     {
-      "bytes": 25772,
+      "bytes": 25850,
       "path": "README.en.md",
-      "sha256": "8a86c94d7f0239fb5afa0e8643c0d50361ebba17674fd2d78025a31b5c67b242",
+      "sha256": "92dc06e028fa882e624b1b8670f7d783efd75c2c2ba68d43a1c4a33fdf9ddd50",
       "suffix": ".md"
     },
     {
-      "bytes": 25931,
+      "bytes": 24672,
       "path": "README.formal.md",
-      "sha256": "5a26d0438614c986cbaf71a895e3d35a20ddf18a35b6c6f046d8a853c93fd5e3",
+      "sha256": "ae218b620f56ddfaf21f8d63bbc6aa7d334fd5be34b53e4d31d0c23429e1cc8b",
       "suffix": ".md"
     },
     {
-      "bytes": 21018,
+      "bytes": 21747,
       "path": "README.md",
-      "sha256": "ff97f91e54e65bcb5ff057507f03d3c38e9bfd3f0bfec26bbf76081390fb08ea",
+      "sha256": "211f47a734efdbd79c8fd7a89c7ea05a3e33e3db29831aca26f939031f72c181",
       "suffix": ".md"
+    },
+    {
+      "bytes": 35349,
+      "path": "WenyanSurface.lean",
+      "sha256": "b498ee4b62e97a20392f9d3d241ae2166af6689a84afe8d744732f5a0a8fa07d",
+      "suffix": ".lean"
     },
     {
       "bytes": 675,
@@ -135,9 +141,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 1736,
+      "bytes": 2196,
       "path": "docs-next/10_formal_形式/yi-bagua.md",
-      "sha256": "a2eec992bca88f5e90e53c6f8e89f7efb907c74ab2efb29e5a23caf553c351db",
+      "sha256": "e7d4e2ef665e7278fdab864aab999bc108a73ee47a8f221b56702e1ef96aeb5a",
       "suffix": ".md"
     },
     {
@@ -273,9 +279,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 2098,
+      "bytes": 3446,
       "path": "docs-next/40_reference_参考/operators.md",
-      "sha256": "fa5a88945b4a039ac9cbf471ac9421c00e22ef71b358d056a8fee8422da2b4bf",
+      "sha256": "d5078a792573bd4d866baf1f3332b1907018a6ba2c9b7de3a7273313ee360be8",
       "suffix": ".md"
     },
     {
@@ -285,9 +291,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 1527,
+      "bytes": 1865,
       "path": "docs-next/40_reference_参考/ziwen-language.md",
-      "sha256": "f492e0808bccbabcb6279464484b7eaad1281dd88b9f5559429b88d6f3a00811",
+      "sha256": "e8b0ec50772b43b5124d5d88984f739e1862669ec0b8e1573a768279f98be402",
       "suffix": ".md"
     },
     {
@@ -315,9 +321,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 1409,
+      "bytes": 1611,
       "path": "docs-next/50_maintenance/release-checklist.md",
-      "sha256": "250df36709012c32d6c7bd2be12e10820fcdbd1637921a8f053ae9c0565c2947",
+      "sha256": "cff5fb4ee25205ba09d61224a5015ae86669e032750b8237c39be8ed013eb5fc",
       "suffix": ".md"
     },
     {
@@ -345,9 +351,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 5147,
+      "bytes": 5470,
       "path": "formal/SSBX.lean",
-      "sha256": "bf32cddae7de2cb3ec5068ad09a4d5fb9c633f82ceeded7398b284c68c140729",
+      "sha256": "0fe350757e20844dc1a111b09f73aa4f19b5d7cc0bcbc47a1aea0a4074cd307b",
       "suffix": ".lean"
     },
     {
@@ -375,9 +381,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 11579,
+      "bytes": 11979,
       "path": "formal/SSBX/Foundation/Bagua/Cell192.lean",
-      "sha256": "364a7c9b0c06a6c037cd4bf07227eaa420d76747de8d4f27afe9a70caf4a6e2b",
+      "sha256": "d968d7d6dc8a934cb63dd3ad437ab8f4588fb2ec4a270cb1f1ecb2e513ebcebb",
       "suffix": ".lean"
     },
     {
@@ -741,9 +747,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 10464,
+      "bytes": 13712,
       "path": "formal/SSBX/Foundation/Wen/WenDef.lean",
-      "sha256": "8c025c8ae1bf5b83b83f6bf51d9a7a219e4ffa994c18ef1cb5d9bf01d318f16f",
+      "sha256": "3b806da1e8bad414f27c8d4e02f6f5d8c2fe6ae643e79ff71f824328e36fada7",
       "suffix": ".lean"
     },
     {
@@ -753,15 +759,57 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 10173,
+      "bytes": 12353,
       "path": "formal/SSBX/Foundation/Wen/WenDefEval.lean",
-      "sha256": "55e466d90eeac38cae95cdea65b535102e9403a4dd9481ef561857041b49badd",
+      "sha256": "3d30d650e4502450c7ed578fd5f39088fe74b37660702db0dc57e2e989113e65",
       "suffix": ".lean"
     },
     {
       "bytes": 5367,
       "path": "formal/SSBX/Foundation/Wen/WenEval.lean",
       "sha256": "eaa61cf9af73abd3f57078d35f0eddbf57ddcdafe794eb63e762c64a556de5a4",
+      "suffix": ".lean"
+    },
+    {
+      "bytes": 5575,
+      "path": "formal/SSBX/Foundation/Wen/WenSurface/Coverage.lean",
+      "sha256": "179f9abb5a3b023c4af27954685beb516760089a1ae23c6ce88b202807326060",
+      "suffix": ".lean"
+    },
+    {
+      "bytes": 10713,
+      "path": "formal/SSBX/Foundation/Wen/WenSurface/Elaborate.lean",
+      "sha256": "3e2638934ea29ca49bde6a0ca22d2853ab75eff7d1018d74824d97c82b6df653",
+      "suffix": ".lean"
+    },
+    {
+      "bytes": 17512,
+      "path": "formal/SSBX/Foundation/Wen/WenSurface/EndToEnd.lean",
+      "sha256": "c6b55dfb756be3f1971adb57aace87004928f178a3779964010ac8370b6963aa",
+      "suffix": ".lean"
+    },
+    {
+      "bytes": 9823,
+      "path": "formal/SSBX/Foundation/Wen/WenSurface/Lex.lean",
+      "sha256": "da57370a2c932825e688926ae63036bb3e0aa1ba8aec78ea127301e9c4f22d41",
+      "suffix": ".lean"
+    },
+    {
+      "bytes": 29761,
+      "path": "formal/SSBX/Foundation/Wen/WenSurface/Reading.lean",
+      "sha256": "b27db1fb9ba0278cd678321e1af5874560855f4177451f35fc81f9585a835b92",
+      "suffix": ".lean"
+    },
+    {
+      "bytes": 5278,
+      "path": "formal/SSBX/Foundation/Wen/WenSurface/Semantics.lean",
+      "sha256": "b917bb3db6c74cc7c5b364ab5a53edea0215fb748a37a6fd1990e35a41ce3b25",
+      "suffix": ".lean"
+    },
+    {
+      "bytes": 9301,
+      "path": "formal/SSBX/Foundation/Wen/WenSurface/Syntax.lean",
+      "sha256": "452338e76228745d1ae6c729cc58e6e76d7d930e6b791a550a86583563ff4958",
       "suffix": ".lean"
     },
     {
@@ -981,9 +1029,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 6712,
+      "bytes": 11416,
       "path": "formal/SSBX/Text/OperatorReachabilitySemantics.lean",
-      "sha256": "822800f59ef21da7df44c1d0b320920ddc2706284231396f146c34186ba70e90",
+      "sha256": "fb45376c3a7103779cb7b510883582437fb06b12a6d04bb085c93577a26eb230",
       "suffix": ".lean"
     },
     {
@@ -993,9 +1041,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 20012,
+      "bytes": 28254,
       "path": "formal/SSBX/Text/OperatorSignatures.lean",
-      "sha256": "c0fbfd3d4159c054a6088a8e4f62ae60fbcdd9f8bd4933b43f19fe8f0c973716",
+      "sha256": "541b506b75da04752467895368ec2ef127acb10fff49416818b4b92fb8d00f25",
       "suffix": ".lean"
     },
     {
@@ -1005,9 +1053,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 41221,
+      "bytes": 43577,
       "path": "formal/SSBX/Text/WenyanOperators.lean",
-      "sha256": "d0e43d5ad2b10d7a9e7baec5c82f0f731e004e7db22fd96bb2d2f20e8d78947c",
+      "sha256": "b4df8ea2c36e3263ba6cda332288efb37fb99d2d193944efe7873a2516e5fd9b",
       "suffix": ".lean"
     },
     {
@@ -1281,6 +1329,12 @@
       "suffix": ".md"
     },
     {
+      "bytes": 2553,
+      "path": "formal/SSBX/notes/wensurface-roadmap.md",
+      "sha256": "966f04f816555673aaa6d292a433d52bc42c70595673f9bd7495fde6560f1f0c",
+      "suffix": ".md"
+    },
+    {
       "bytes": 12455,
       "path": "formal/SSBX/notes/zero-axiom-roadmap.md",
       "sha256": "5bbbe6ed82266641eb07ee037954670d1710ff1cc6dbf8d6b039ee1d4b83bb5e",
@@ -1299,9 +1353,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 200,
+      "bytes": 289,
       "path": "lakefile.lean",
-      "sha256": "f76127e5e0dfa897558cd028d2160cfb5ab3a801c424160b7daea55bdf0681be",
+      "sha256": "dc82b873629917f168328b7585d3939117e86f136506ba73d129eec2d16b71a6",
       "suffix": ".lean"
     },
     {

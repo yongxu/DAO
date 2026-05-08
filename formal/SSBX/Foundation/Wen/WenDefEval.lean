@@ -48,13 +48,13 @@ open SSBX.Foundation.Wen.WenDef
 
 /-- 求值时之 builtin tag。 -/
 inductive Builtin : Type
-  | jia | notB | andB | orB | eqHex | forallH
+  | jia | notB | andB | orB | eqHex | forallH | cuoH | zongH | huH
 deriving DecidableEq, Repr
 
 /-- builtin 之 arity（满足后产 result）。 -/
 def Builtin.arity : Builtin → Nat
   | .jia | .andB | .orB | .eqHex => 2
-  | .notB | .forallH => 1
+  | .notB | .forallH | .cuoH | .zongH | .huH => 1
 
 /-! ## § 2  Value -/
 
@@ -115,6 +115,9 @@ mutual
     | _+1,    _,   .orB          => some (.builtinV .orB [])
     | _+1,    _,   .eqHex        => some (.builtinV .eqHex [])
     | _+1,    _,   .forallH      => some (.builtinV .forallH [])
+    | _+1,    _,   .cuoH         => some (.builtinV .cuoH [])
+    | _+1,    _,   .zongH        => some (.builtinV .zongH [])
+    | _+1,    _,   .huH          => some (.builtinV .huH [])
 
   /-- Fuel-bounded builtin 求值. -/
   def applyBuiltinFuel : Nat → Builtin → List Value → Option Value
@@ -124,6 +127,9 @@ mutual
     | _+1,    .andB,   [.boolV a, .boolV b] => some (.boolV (a && b))
     | _+1,    .orB,    [.boolV a, .boolV b] => some (.boolV (a || b))
     | _+1,    .eqHex,  [.hexV a, .hexV b]   => some (.boolV (decide (a = b)))
+    | _+1,    .cuoH,   [.hexV h]            => some (.hexV h.cuo)
+    | _+1,    .zongH,  [.hexV h]            => some (.hexV h.zong)
+    | _+1,    .huH,    [.hexV h]            => some (.hexV h.hu)
     | fuel+1, .forallH, [p]                 =>
         some (.boolV (forallHex (fun h =>
           match applyFuel fuel p (.hexV h) with
@@ -220,6 +226,35 @@ theorem yiBenefit_eq_sheng (h : Hexagram) :
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
     all_goals native_decide
+
+/-- 错 之 denotation = Hexagram.cuo. -/
+theorem cuoBody_eq_cuo (h : Hexagram) :
+    denoteHexFun Stdlib.cuoBody h = some h.cuo := by
+  cases h with
+  | mk y1 y2 y3 y4 y5 y6 =>
+    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+    all_goals native_decide
+
+/-- 综 之 denotation = Hexagram.zong. -/
+theorem zongBody_eq_zong (h : Hexagram) :
+    denoteHexFun Stdlib.zongBody h = some h.zong := by
+  cases h with
+  | mk y1 y2 y3 y4 y5 y6 =>
+    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+    all_goals native_decide
+
+/-- 互 之 denotation = Hexagram.hu. -/
+theorem huBody_eq_hu (h : Hexagram) :
+    denoteHexFun Stdlib.huBody h = some h.hu := by
+  cases h with
+  | mk y1 y2 y3 y4 y5 y6 =>
+    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+    all_goals native_decide
+
+/-- 反 在 object-transform 读法下同错. -/
+theorem fanReverseBody_eq_cuo (h : Hexagram) :
+    denoteHexFun Stdlib.fanReverseBody h = some h.cuo :=
+  cuoBody_eq_cuo h
 
 /-- 「同 «一» «一»」denotes true (恒等于自身). -/
 example :

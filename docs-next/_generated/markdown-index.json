@@ -1,5 +1,5 @@
 {
-  "count": 128,
+  "count": 129,
   "documents": [
     {
       "headings": [
@@ -122,7 +122,7 @@
         "./README.formal.md"
       ],
       "path": "README.en.md",
-      "sha256": "8a86c94d7f0239fb5afa0e8643c0d50361ebba17674fd2d78025a31b5c67b242",
+      "sha256": "92dc06e028fa882e624b1b8670f7d783efd75c2c2ba68d43a1c4a33fdf9ddd50",
       "summary": "> 🌐 [中文](./README.md) · **English** · [形式 / Formal](./README.formal.md)",
       "title": "生生不息 · Shēngshēng-Bùxī"
     },
@@ -210,7 +210,7 @@
         },
         {
           "level": 3,
-          "title": "3.3 wenyan-operators.md — 281 Surface Operators (21 categories)"
+          "title": "3.3 Operator catalogue — 371 OperatorId rows"
         },
         {
           "level": 3,
@@ -273,13 +273,13 @@
           "title": "9 · Ledger"
         }
       ],
-      "lines": 607,
+      "lines": 581,
       "links": [
         "./README.md",
         "./README.en.md"
       ],
       "path": "README.formal.md",
-      "sha256": "5a26d0438614c986cbaf71a895e3d35a20ddf18a35b6c6f046d8a853c93fd5e3",
+      "sha256": "ae218b620f56ddfaf21f8d63bbc6aa7d334fd5be34b53e4d31d0c23429e1cc8b",
       "summary": "> 🌐 [中文](./README.md) · [English](./README.en.md) · **形式 / Formal**",
       "title": "SSBX · Formal Specification"
     },
@@ -367,6 +367,10 @@
         },
         {
           "level": 1,
+          "title": "WenSurface surface-language CLI"
+        },
+        {
+          "level": 1,
           "title": "概念 / 单根 DAG (Mermaid + ELK renderer; MonadDAG 600+ 节点 / 800+ 边)"
         },
         {
@@ -398,13 +402,13 @@
           "title": "9.3 猜想二 · 大同非乌托邦 — 道之语言曾真存在"
         }
       ],
-      "lines": 410,
+      "lines": 422,
       "links": [
         "./README.en.md",
         "./README.formal.md"
       ],
       "path": "README.md",
-      "sha256": "ff97f91e54e65bcb5ff057507f03d3c38e9bfd3f0bfec26bbf76081390fb08ea",
+      "sha256": "211f47a734efdbd79c8fd7a89c7ea05a3e33e3db29831aca26f939031f72c181",
       "summary": "> 🌐 **中文** · [English](./README.en.md) · [形式 / Formal](./README.formal.md)",
       "title": "生生不息"
     },
@@ -1080,13 +1084,15 @@
           "title": "核验"
         }
       ],
-      "lines": 35,
+      "lines": 39,
       "links": [
+        "../_generated/cell192-tree-index.md",
+        "../_generated/cell192-transition-index.md",
         "../_generated/trust-boundary.md",
         "../_generated/lean-index.md"
       ],
       "path": "docs-next/10_formal_形式/yi-bagua.md",
-      "sha256": "a2eec992bca88f5e90e53c6f8e89f7efb907c74ab2efb29e5a23caf553c351db",
+      "sha256": "e7d4e2ef665e7278fdab864aab999bc108a73ee47a8f221b56702e1ef96aeb5a",
       "summary": "Yi/Bagua 层把易、八卦、Cell192、受控计算与不完备边界放到同一阅读路径。这里也是当前唯一 axiom 与唯一 partial boundary 所在区域。",
       "title": "Yi 与 Bagua"
     },
@@ -2000,10 +2006,10 @@
           "title": "维护规则"
         }
       ],
-      "lines": 44,
+      "lines": 61,
       "links": [],
       "path": "docs-next/40_reference_参考/operators.md",
-      "sha256": "fa5a88945b4a039ac9cbf471ac9421c00e22ef71b358d056a8fee8422da2b4bf",
+      "sha256": "d5078a792573bd4d866baf1f3332b1907018a6ba2c9b7de3a7273313ee360be8",
       "summary": "本页是算子系统的人读入口。机器事实以 `../_generated/operator-index.md` 和 Lean 源为准；本页不维护总数、分组数量或完整表格。",
       "title": "算子参考"
     },
@@ -2060,11 +2066,11 @@
           "title": "审计规则"
         }
       ],
-      "lines": 42,
+      "lines": 46,
       "links": [],
       "path": "docs-next/40_reference_参考/ziwen-language.md",
-      "sha256": "f492e0808bccbabcb6279464484b7eaad1281dd88b9f5559429b88d6f3a00811",
-      "summary": "字文语言的完整规范在根目录 `ziwen-spec.md`。本页只给新版文档中的读法和审计入口。",
+      "sha256": "e8b0ec50772b43b5124d5d88984f739e1862669ec0b8e1573a768279f98be402",
+      "summary": "字文语言的完整未来规范在根目录 `ziwen-spec.md`。当前可执行 surface 子集是",
       "title": "字文语言"
     },
     {
@@ -2239,10 +2245,10 @@
           "title": "合作"
         }
       ],
-      "lines": 46,
+      "lines": 49,
       "links": [],
       "path": "docs-next/50_maintenance/release-checklist.md",
-      "sha256": "250df36709012c32d6c7bd2be12e10820fcdbd1637921a8f053ae9c0565c2947",
+      "sha256": "cff5fb4ee25205ba09d61224a5015ae86669e032750b8237c39be8ed013eb5fc",
       "summary": "本表用于 docs-next 或形式层同步前的最低检查。它不替代 CI。",
       "title": "发布检查表"
     },
@@ -3230,6 +3236,36 @@
       "sha256": "590fce89f508e7e006db75091cbc53f5a116973820143259c0f7666e6b2cd1c4",
       "summary": "来源：`史料/生生不息论_v14_形式证明骨架版.md` §十一 + §十四。",
       "title": "v14 形式证明骨架 · 三分原则与 roadmap"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "WenSurface 路线状态"
+        },
+        {
+          "level": 2,
+          "title": "当前定义"
+        },
+        {
+          "level": 2,
+          "title": "里程碑状态"
+        },
+        {
+          "level": 2,
+          "title": "验收命令"
+        },
+        {
+          "level": 2,
+          "title": "边界"
+        }
+      ],
+      "lines": 43,
+      "links": [],
+      "path": "formal/SSBX/notes/wensurface-roadmap.md",
+      "sha256": "966f04f816555673aaa6d292a433d52bc42c70595673f9bd7495fde6560f1f0c",
+      "summary": "本页记录 `wenyan-surface` 的实现边界。它是 `ziwen-spec.md` 的可执行子集前端，不宣称覆盖完整 Ziwen v0：当前没有 layout token、语句块、函数定义、match、数字/树等通用语言结构。",
+      "title": "WenSurface 路线状态"
     },
     {
       "headings": [

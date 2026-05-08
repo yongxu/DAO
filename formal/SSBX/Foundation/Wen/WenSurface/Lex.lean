@@ -12,16 +12,19 @@ String，产出独立的 GlyphTok 流。
 
 ## 多字 surface 词典
 
-来源：OperatorReadings.lean 之 `surfaceReadings` keys。
-spike 2026-05-08 实证：当前 82 个 surface 中唯一多字 surface 为「名分」，
-其余 81 皆单 CJK 字（含简繁变体）。故 `multiCharSurfaces = ["名分"]`。
+来源：surface catalogue 复词、显式构式，以及 Reading 层完整卦名/alias。
+`multiCharSurfaces` 保持为最长前缀表：Lex 不依赖 Reading，Reading/Coverage
+反向用 native_decide 例子守住多字卦名与 alias 的单 token 行为。
 
 ## 状态
 
 0 sorry / 0 axiom / 总函数 (fuel-bounded). 关键例由 native_decide 见证.
 -/
+import SSBX.Text.WenyanOperators
 
 namespace SSBX.Foundation.Wen.WenSurface
+
+open SSBX.Text.WenyanOperators
 
 /-! ## § 1  Glyph token 类型 -/
 
@@ -43,7 +46,7 @@ deriving DecidableEq, Repr
 /-! ## § 2  Char 分类 -/
 
 /-- 基本 CJK Unified Ideographs (U+4E00..U+9FFF). 涵盖现代汉语 + 多数
-    古汉语字符（含 simp/trad 变体）。Extension A/B 等不含 — v1 范围足。 -/
+    古汉语字符（含 simp/trad 变体）。Extension A/B 等暂不进入 surface 前端。 -/
 def isCJKBasic (c : Char) : Bool :=
   let n := c.toNat
   Nat.ble 0x4E00 n && Nat.ble n 0x9FFF
@@ -54,10 +57,44 @@ def isAsciiSpace (c : Char) : Bool :=
 
 /-! ## § 3  多字 surface 词典 -/
 
-/-- 多字 wenyan surface — 来自 OperatorReadings spike 2026-05-08。
-    当前 entries：「之又」(iteration construction)、「名分」。
+/-- Conservatively curated multi-character catalogue surfaces.
+    `operatorForms` stores glyph senses, so multi-character technical terms
+    need this explicit table rather than being inferred from concatenated
+    simplified/traditional glyph alternatives. -/
+def operatorCompoundSurfaceIds : List (String × OperatorId) :=
+  [ ("上工中工下工", .Y_25), ("五运六气", .Y_24), ("五運六氣", .Y_24)
+  , ("開闔樞", .Y_11), ("开阖枢", .Y_11), ("無己名", .ZHU_3), ("无己名", .ZHU_3)
+  , ("陰与陽", .Y_1), ("阴与阳", .Y_1), ("陰陽", .Y_1), ("阴阳", .Y_1)
+  , ("體与用", .H_8), ("体与用", .H_8), ("體用", .H_8), ("体用", .H_8)
+  , ("過半", .D_10), ("过半", .D_10), ("大半", .D_10)
+  , ("褒貶", .E_9), ("褒贬", .E_9), ("形名", .L_4)
+  , ("參同", .L_5), ("参同", .L_5), ("二柄", .L_6)
+  , ("無為", .L_11), ("无为", .L_11), ("罰賞", .L_16), ("罚赏", .L_16)
+  , ("五行", .Y_2), ("相生", .Y_3), ("相克", .Y_4), ("相侮", .Y_5)
+  , ("反侮", .Y_5), ("升降", .Y_10), ("經絡", .Y_12), ("经络", .Y_12)
+  , ("經与絡", .Y_12), ("经与络", .Y_12)
+  , ("表裡", .Y_13), ("表里", .Y_13), ("寒熱", .Y_14), ("寒热", .Y_14)
+  , ("虛實", .Y_15), ("虚实", .Y_15), ("補瀉", .Y_16), ("补泻", .Y_16)
+  , ("順逆", .Y_20), ("顺逆", .Y_20), ("標本", .Y_21), ("标本", .Y_21)
+  , ("營衛", .Y_22), ("营卫", .Y_22), ("營与衛", .Y_22), ("营与卫", .Y_22)
+  , ("通滯", .Y_23), ("通滞", .Y_23), ("上工", .Y_25), ("中工", .Y_25)
+  , ("下工", .Y_25), ("出入", .Y_26), ("化性", .X_3)
+  , ("隆殺", .X_10), ("隆杀", .X_10)
+  , ("名分", .X_12), ("譬喻", .Z_30), ("自反", .Z_33), ("反自", .Z_33)
+  , ("物化", .ZHU_6), ("天理", .ZHU_9), ("致人", .SUN_11), ("分合", .SUN_12)
+  , ("上下", .CHU_2), ("未變", .CHU_10), ("未变", .CHU_10)
+  , ("大一", .ZA_13), ("同異", .ZA_16), ("同异", .ZA_16)
+  , ("兩可", .ZA_17), ("两可", .ZA_17), ("正名", .ZA_18) ]
+
+/-- 多字 wenyan surface。
+    包含构式/目录复词，以及完整卦名中不能被拆为单字的 surface。
     扩充时按长度降序排列（最长前缀优先匹配）；同长度内顺序无关. -/
-def multiCharSurfaces : List String := ["之又", "名分"]
+def multiCharSurfaces : List String :=
+  [ "之又"
+  , "小畜", "同人", "大有", "噬嗑", "无妄", "無妄", "大畜", "大过", "大過"
+  , "明夷", "家人", "大壮", "大壯", "归妹", "歸妹", "中孚", "小过", "小過"
+  , "既济", "既濟", "未济", "未濟" ]
+    ++ operatorCompoundSurfaceIds.map Prod.fst
 
 /-- 检查 prefix 是否为 cs 之前缀（字符级）。 -/
 def listIsPrefix : List Char → List Char → Bool
@@ -124,6 +161,28 @@ example :
 example :
     (lexWen "名分推").toOption
       = some [⟨"名分", 0, 2, true⟩, ⟨"推", 2, 1, false⟩] :=
+  by native_decide
+
+/-- 较长 compound surface 优先于其内部短 token. -/
+example :
+    (lexWen "上工中工下工").toOption = some [⟨"上工中工下工", 0, 6, true⟩] :=
+  by native_decide
+
+theorem operatorCompoundSurfaces_lex_as_single :
+    (operatorCompoundSurfaceIds.map Prod.fst).all
+        (fun s =>
+          match lexWen s with
+          | .ok [tok] =>
+              (tok.surface == s)
+                && (tok.startCol == 0)
+                && (tok.width == s.toList.length)
+                && (tok.isMulti == decide (s.toList.length > 1))
+          | _ => false) = true := by
+  native_decide
+
+/-- 多字卦名保持单 token. -/
+example :
+    (lexWen "小过").toOption = some [⟨"小过", 0, 2, true⟩] :=
   by native_decide
 
 /-- 多字 surface 「之又」单独 lex 为 1 token，width = 2，isMulti = true. -/

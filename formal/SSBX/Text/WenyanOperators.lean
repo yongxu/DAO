@@ -12,6 +12,96 @@ inductive OperatorGroup where
   | ZHU | SUN | CHU | LIJ | ZA
   deriving DecidableEq, Repr
 
+/--
+Readable mnemonic for an operator group.  The original constructor name remains
+the stable machine key; this mnemonic is for indexes and human scanning.
+-/
+def OperatorGroup.key : OperatorGroup -> String
+  | .R => "REL"
+  | .C => "CONT"
+  | .T => "TRN"
+  | .F => "FLOW"
+  | .B => "BND"
+  | .Q => "QNT"
+  | .K => "CAUS"
+  | .M => "MOD"
+  | .N => "NEG"
+  | .I => "ID"
+  | .S => "SYN"
+  | .H => "CORE"
+  | .P => "MOH"
+  | .G => "NAME"
+  | .A => "ASP"
+  | .D => "NUM"
+  | .E => "ANN"
+  | .L => "LAW"
+  | .Y => "MED"
+  | .X => "SOC"
+  | .Z => "SUPP"
+  | .ZHU => "ZHU"
+  | .SUN => "MIL"
+  | .CHU => "DIR"
+  | .LIJ => "RIT"
+  | .ZA => "MIX"
+
+/-- Short Chinese group name used in generated reference indexes. -/
+def OperatorGroup.zhName : OperatorGroup -> String
+  | .R => "关系算子"
+  | .C => "含包算子"
+  | .T => "变换算子"
+  | .F => "流动算子"
+  | .B => "边界算子"
+  | .Q => "量化算子"
+  | .K => "因果算子"
+  | .M => "模态算子"
+  | .N => "否定算子"
+  | .I => "同异算子"
+  | .S => "序贯句法算子"
+  | .H => "高阶义理算子"
+  | .P => "墨经定义算子"
+  | .G => "名家关系算子"
+  | .A => "副词时貌算子"
+  | .D => "数词算子"
+  | .E => "史官元算子"
+  | .L => "法家治理算子"
+  | .Y => "医家系统算子"
+  | .X => "社会秩序算子"
+  | .Z => "补遗算子"
+  | .ZHU => "庄子动力算子"
+  | .SUN => "孙子军事算子"
+  | .CHU => "楚辞方向算子"
+  | .LIJ => "礼制中庸算子"
+  | .ZA => "杂家黄老算子"
+
+/-- Where the operator primarily acts in the structure. -/
+def OperatorGroup.actionPosition : OperatorGroup -> String
+  | .R => "结构关系位"
+  | .C => "空间含包位"
+  | .T => "状态变换位"
+  | .F => "有向流动位"
+  | .B => "起止边界位"
+  | .Q => "量词辖域位"
+  | .K => "因果生成位"
+  | .M => "可能必然位"
+  | .N => "否定对偶位"
+  | .I => "同异分合位"
+  | .S => "句法连接位"
+  | .H => "义理抽象位"
+  | .P => "定义辨析位"
+  | .G => "名实指定位"
+  | .A => "时貌修饰位"
+  | .D => "数量倍分位"
+  | .E => "文本记录位"
+  | .L => "治理机制位"
+  | .Y => "身体系统位"
+  | .X => "社会秩序位"
+  | .Z => "通用补遗位"
+  | .ZHU => "逍遥齐物位"
+  | .SUN => "军事形势位"
+  | .CHU => "方向召返位"
+  | .LIJ => "礼制角色位"
+  | .ZA => "杂合统摄位"
+
 inductive SignatureStatus where
   | given
   | placeholder

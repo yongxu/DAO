@@ -1,0 +1,6080 @@
+{
+  "coordinate_convention": "Habcdef.SHI uses six yao bits from bottom to top; 1=yang, 0=yin; SHI is JI/JIN/WEI.",
+  "edge_count": 318,
+  "edges": [
+    {
+      "from": "ROOT",
+      "relation": "生初爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y1.1"
+    },
+    {
+      "from": "ROOT",
+      "relation": "生初爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y1.0"
+    },
+    {
+      "from": "Y1.1",
+      "relation": "定二爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y2.11"
+    },
+    {
+      "from": "Y1.1",
+      "relation": "定二爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y2.10"
+    },
+    {
+      "from": "Y1.0",
+      "relation": "定二爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y2.01"
+    },
+    {
+      "from": "Y1.0",
+      "relation": "定二爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y2.00"
+    },
+    {
+      "from": "Y2.11",
+      "relation": "定三爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y3.111"
+    },
+    {
+      "from": "Y2.11",
+      "relation": "定三爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y3.110"
+    },
+    {
+      "from": "Y2.10",
+      "relation": "定三爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y3.101"
+    },
+    {
+      "from": "Y2.10",
+      "relation": "定三爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y3.100"
+    },
+    {
+      "from": "Y2.01",
+      "relation": "定三爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y3.011"
+    },
+    {
+      "from": "Y2.01",
+      "relation": "定三爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y3.010"
+    },
+    {
+      "from": "Y2.00",
+      "relation": "定三爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y3.001"
+    },
+    {
+      "from": "Y2.00",
+      "relation": "定三爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y3.000"
+    },
+    {
+      "from": "Y3.111",
+      "relation": "定四爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y4.1111"
+    },
+    {
+      "from": "Y3.111",
+      "relation": "定四爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y4.1110"
+    },
+    {
+      "from": "Y3.110",
+      "relation": "定四爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y4.1101"
+    },
+    {
+      "from": "Y3.110",
+      "relation": "定四爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y4.1100"
+    },
+    {
+      "from": "Y3.101",
+      "relation": "定四爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y4.1011"
+    },
+    {
+      "from": "Y3.101",
+      "relation": "定四爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y4.1010"
+    },
+    {
+      "from": "Y3.100",
+      "relation": "定四爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y4.1001"
+    },
+    {
+      "from": "Y3.100",
+      "relation": "定四爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y4.1000"
+    },
+    {
+      "from": "Y3.011",
+      "relation": "定四爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y4.0111"
+    },
+    {
+      "from": "Y3.011",
+      "relation": "定四爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y4.0110"
+    },
+    {
+      "from": "Y3.010",
+      "relation": "定四爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y4.0101"
+    },
+    {
+      "from": "Y3.010",
+      "relation": "定四爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y4.0100"
+    },
+    {
+      "from": "Y3.001",
+      "relation": "定四爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y4.0011"
+    },
+    {
+      "from": "Y3.001",
+      "relation": "定四爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y4.0010"
+    },
+    {
+      "from": "Y3.000",
+      "relation": "定四爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y4.0001"
+    },
+    {
+      "from": "Y3.000",
+      "relation": "定四爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y4.0000"
+    },
+    {
+      "from": "Y4.1111",
+      "relation": "定五爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y5.11111"
+    },
+    {
+      "from": "Y4.1111",
+      "relation": "定五爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y5.11110"
+    },
+    {
+      "from": "Y4.1110",
+      "relation": "定五爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y5.11101"
+    },
+    {
+      "from": "Y4.1110",
+      "relation": "定五爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y5.11100"
+    },
+    {
+      "from": "Y4.1101",
+      "relation": "定五爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y5.11011"
+    },
+    {
+      "from": "Y4.1101",
+      "relation": "定五爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y5.11010"
+    },
+    {
+      "from": "Y4.1100",
+      "relation": "定五爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y5.11001"
+    },
+    {
+      "from": "Y4.1100",
+      "relation": "定五爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y5.11000"
+    },
+    {
+      "from": "Y4.1011",
+      "relation": "定五爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y5.10111"
+    },
+    {
+      "from": "Y4.1011",
+      "relation": "定五爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y5.10110"
+    },
+    {
+      "from": "Y4.1010",
+      "relation": "定五爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y5.10101"
+    },
+    {
+      "from": "Y4.1010",
+      "relation": "定五爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y5.10100"
+    },
+    {
+      "from": "Y4.1001",
+      "relation": "定五爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y5.10011"
+    },
+    {
+      "from": "Y4.1001",
+      "relation": "定五爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y5.10010"
+    },
+    {
+      "from": "Y4.1000",
+      "relation": "定五爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y5.10001"
+    },
+    {
+      "from": "Y4.1000",
+      "relation": "定五爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y5.10000"
+    },
+    {
+      "from": "Y4.0111",
+      "relation": "定五爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y5.01111"
+    },
+    {
+      "from": "Y4.0111",
+      "relation": "定五爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y5.01110"
+    },
+    {
+      "from": "Y4.0110",
+      "relation": "定五爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y5.01101"
+    },
+    {
+      "from": "Y4.0110",
+      "relation": "定五爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y5.01100"
+    },
+    {
+      "from": "Y4.0101",
+      "relation": "定五爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y5.01011"
+    },
+    {
+      "from": "Y4.0101",
+      "relation": "定五爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y5.01010"
+    },
+    {
+      "from": "Y4.0100",
+      "relation": "定五爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y5.01001"
+    },
+    {
+      "from": "Y4.0100",
+      "relation": "定五爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y5.01000"
+    },
+    {
+      "from": "Y4.0011",
+      "relation": "定五爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y5.00111"
+    },
+    {
+      "from": "Y4.0011",
+      "relation": "定五爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y5.00110"
+    },
+    {
+      "from": "Y4.0010",
+      "relation": "定五爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y5.00101"
+    },
+    {
+      "from": "Y4.0010",
+      "relation": "定五爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y5.00100"
+    },
+    {
+      "from": "Y4.0001",
+      "relation": "定五爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y5.00011"
+    },
+    {
+      "from": "Y4.0001",
+      "relation": "定五爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y5.00010"
+    },
+    {
+      "from": "Y4.0000",
+      "relation": "定五爻=阳",
+      "relation_kind": "chooseYao",
+      "to": "Y5.00001"
+    },
+    {
+      "from": "Y4.0000",
+      "relation": "定五爻=阴",
+      "relation_kind": "chooseYao",
+      "to": "Y5.00000"
+    },
+    {
+      "from": "Y5.11111",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H111111"
+    },
+    {
+      "from": "Y5.11111",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H111110"
+    },
+    {
+      "from": "Y5.11110",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H111101"
+    },
+    {
+      "from": "Y5.11110",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H111100"
+    },
+    {
+      "from": "Y5.11101",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H111011"
+    },
+    {
+      "from": "Y5.11101",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H111010"
+    },
+    {
+      "from": "Y5.11100",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H111001"
+    },
+    {
+      "from": "Y5.11100",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H111000"
+    },
+    {
+      "from": "Y5.11011",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H110111"
+    },
+    {
+      "from": "Y5.11011",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H110110"
+    },
+    {
+      "from": "Y5.11010",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H110101"
+    },
+    {
+      "from": "Y5.11010",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H110100"
+    },
+    {
+      "from": "Y5.11001",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H110011"
+    },
+    {
+      "from": "Y5.11001",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H110010"
+    },
+    {
+      "from": "Y5.11000",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H110001"
+    },
+    {
+      "from": "Y5.11000",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H110000"
+    },
+    {
+      "from": "Y5.10111",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H101111"
+    },
+    {
+      "from": "Y5.10111",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H101110"
+    },
+    {
+      "from": "Y5.10110",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H101101"
+    },
+    {
+      "from": "Y5.10110",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H101100"
+    },
+    {
+      "from": "Y5.10101",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H101011"
+    },
+    {
+      "from": "Y5.10101",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H101010"
+    },
+    {
+      "from": "Y5.10100",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H101001"
+    },
+    {
+      "from": "Y5.10100",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H101000"
+    },
+    {
+      "from": "Y5.10011",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H100111"
+    },
+    {
+      "from": "Y5.10011",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H100110"
+    },
+    {
+      "from": "Y5.10010",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H100101"
+    },
+    {
+      "from": "Y5.10010",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H100100"
+    },
+    {
+      "from": "Y5.10001",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H100011"
+    },
+    {
+      "from": "Y5.10001",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H100010"
+    },
+    {
+      "from": "Y5.10000",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H100001"
+    },
+    {
+      "from": "Y5.10000",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H100000"
+    },
+    {
+      "from": "Y5.01111",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H011111"
+    },
+    {
+      "from": "Y5.01111",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H011110"
+    },
+    {
+      "from": "Y5.01110",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H011101"
+    },
+    {
+      "from": "Y5.01110",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H011100"
+    },
+    {
+      "from": "Y5.01101",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H011011"
+    },
+    {
+      "from": "Y5.01101",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H011010"
+    },
+    {
+      "from": "Y5.01100",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H011001"
+    },
+    {
+      "from": "Y5.01100",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H011000"
+    },
+    {
+      "from": "Y5.01011",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H010111"
+    },
+    {
+      "from": "Y5.01011",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H010110"
+    },
+    {
+      "from": "Y5.01010",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H010101"
+    },
+    {
+      "from": "Y5.01010",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H010100"
+    },
+    {
+      "from": "Y5.01001",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H010011"
+    },
+    {
+      "from": "Y5.01001",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H010010"
+    },
+    {
+      "from": "Y5.01000",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H010001"
+    },
+    {
+      "from": "Y5.01000",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H010000"
+    },
+    {
+      "from": "Y5.00111",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H001111"
+    },
+    {
+      "from": "Y5.00111",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H001110"
+    },
+    {
+      "from": "Y5.00110",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H001101"
+    },
+    {
+      "from": "Y5.00110",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H001100"
+    },
+    {
+      "from": "Y5.00101",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H001011"
+    },
+    {
+      "from": "Y5.00101",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H001010"
+    },
+    {
+      "from": "Y5.00100",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H001001"
+    },
+    {
+      "from": "Y5.00100",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H001000"
+    },
+    {
+      "from": "Y5.00011",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H000111"
+    },
+    {
+      "from": "Y5.00011",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H000110"
+    },
+    {
+      "from": "Y5.00010",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H000101"
+    },
+    {
+      "from": "Y5.00010",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H000100"
+    },
+    {
+      "from": "Y5.00001",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H000011"
+    },
+    {
+      "from": "Y5.00001",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H000010"
+    },
+    {
+      "from": "Y5.00000",
+      "relation": "定上爻=阳; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H000001"
+    },
+    {
+      "from": "Y5.00000",
+      "relation": "定上爻=阴; 成卦",
+      "relation_kind": "completeHexagram",
+      "to": "H000000"
+    },
+    {
+      "from": "H111111",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H111111.JI"
+    },
+    {
+      "from": "H111111",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H111111.JIN"
+    },
+    {
+      "from": "H111111",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H111111.WEI"
+    },
+    {
+      "from": "H111110",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H111110.JI"
+    },
+    {
+      "from": "H111110",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H111110.JIN"
+    },
+    {
+      "from": "H111110",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H111110.WEI"
+    },
+    {
+      "from": "H111101",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H111101.JI"
+    },
+    {
+      "from": "H111101",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H111101.JIN"
+    },
+    {
+      "from": "H111101",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H111101.WEI"
+    },
+    {
+      "from": "H111100",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H111100.JI"
+    },
+    {
+      "from": "H111100",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H111100.JIN"
+    },
+    {
+      "from": "H111100",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H111100.WEI"
+    },
+    {
+      "from": "H111011",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H111011.JI"
+    },
+    {
+      "from": "H111011",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H111011.JIN"
+    },
+    {
+      "from": "H111011",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H111011.WEI"
+    },
+    {
+      "from": "H111010",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H111010.JI"
+    },
+    {
+      "from": "H111010",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H111010.JIN"
+    },
+    {
+      "from": "H111010",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H111010.WEI"
+    },
+    {
+      "from": "H111001",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H111001.JI"
+    },
+    {
+      "from": "H111001",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H111001.JIN"
+    },
+    {
+      "from": "H111001",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H111001.WEI"
+    },
+    {
+      "from": "H111000",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H111000.JI"
+    },
+    {
+      "from": "H111000",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H111000.JIN"
+    },
+    {
+      "from": "H111000",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H111000.WEI"
+    },
+    {
+      "from": "H110111",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H110111.JI"
+    },
+    {
+      "from": "H110111",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H110111.JIN"
+    },
+    {
+      "from": "H110111",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H110111.WEI"
+    },
+    {
+      "from": "H110110",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H110110.JI"
+    },
+    {
+      "from": "H110110",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H110110.JIN"
+    },
+    {
+      "from": "H110110",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H110110.WEI"
+    },
+    {
+      "from": "H110101",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H110101.JI"
+    },
+    {
+      "from": "H110101",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H110101.JIN"
+    },
+    {
+      "from": "H110101",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H110101.WEI"
+    },
+    {
+      "from": "H110100",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H110100.JI"
+    },
+    {
+      "from": "H110100",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H110100.JIN"
+    },
+    {
+      "from": "H110100",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H110100.WEI"
+    },
+    {
+      "from": "H110011",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H110011.JI"
+    },
+    {
+      "from": "H110011",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H110011.JIN"
+    },
+    {
+      "from": "H110011",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H110011.WEI"
+    },
+    {
+      "from": "H110010",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H110010.JI"
+    },
+    {
+      "from": "H110010",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H110010.JIN"
+    },
+    {
+      "from": "H110010",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H110010.WEI"
+    },
+    {
+      "from": "H110001",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H110001.JI"
+    },
+    {
+      "from": "H110001",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H110001.JIN"
+    },
+    {
+      "from": "H110001",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H110001.WEI"
+    },
+    {
+      "from": "H110000",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H110000.JI"
+    },
+    {
+      "from": "H110000",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H110000.JIN"
+    },
+    {
+      "from": "H110000",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H110000.WEI"
+    },
+    {
+      "from": "H101111",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H101111.JI"
+    },
+    {
+      "from": "H101111",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H101111.JIN"
+    },
+    {
+      "from": "H101111",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H101111.WEI"
+    },
+    {
+      "from": "H101110",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H101110.JI"
+    },
+    {
+      "from": "H101110",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H101110.JIN"
+    },
+    {
+      "from": "H101110",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H101110.WEI"
+    },
+    {
+      "from": "H101101",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H101101.JI"
+    },
+    {
+      "from": "H101101",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H101101.JIN"
+    },
+    {
+      "from": "H101101",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H101101.WEI"
+    },
+    {
+      "from": "H101100",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H101100.JI"
+    },
+    {
+      "from": "H101100",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H101100.JIN"
+    },
+    {
+      "from": "H101100",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H101100.WEI"
+    },
+    {
+      "from": "H101011",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H101011.JI"
+    },
+    {
+      "from": "H101011",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H101011.JIN"
+    },
+    {
+      "from": "H101011",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H101011.WEI"
+    },
+    {
+      "from": "H101010",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H101010.JI"
+    },
+    {
+      "from": "H101010",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H101010.JIN"
+    },
+    {
+      "from": "H101010",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H101010.WEI"
+    },
+    {
+      "from": "H101001",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H101001.JI"
+    },
+    {
+      "from": "H101001",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H101001.JIN"
+    },
+    {
+      "from": "H101001",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H101001.WEI"
+    },
+    {
+      "from": "H101000",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H101000.JI"
+    },
+    {
+      "from": "H101000",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H101000.JIN"
+    },
+    {
+      "from": "H101000",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H101000.WEI"
+    },
+    {
+      "from": "H100111",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H100111.JI"
+    },
+    {
+      "from": "H100111",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H100111.JIN"
+    },
+    {
+      "from": "H100111",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H100111.WEI"
+    },
+    {
+      "from": "H100110",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H100110.JI"
+    },
+    {
+      "from": "H100110",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H100110.JIN"
+    },
+    {
+      "from": "H100110",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H100110.WEI"
+    },
+    {
+      "from": "H100101",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H100101.JI"
+    },
+    {
+      "from": "H100101",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H100101.JIN"
+    },
+    {
+      "from": "H100101",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H100101.WEI"
+    },
+    {
+      "from": "H100100",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H100100.JI"
+    },
+    {
+      "from": "H100100",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H100100.JIN"
+    },
+    {
+      "from": "H100100",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H100100.WEI"
+    },
+    {
+      "from": "H100011",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H100011.JI"
+    },
+    {
+      "from": "H100011",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H100011.JIN"
+    },
+    {
+      "from": "H100011",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H100011.WEI"
+    },
+    {
+      "from": "H100010",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H100010.JI"
+    },
+    {
+      "from": "H100010",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H100010.JIN"
+    },
+    {
+      "from": "H100010",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H100010.WEI"
+    },
+    {
+      "from": "H100001",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H100001.JI"
+    },
+    {
+      "from": "H100001",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H100001.JIN"
+    },
+    {
+      "from": "H100001",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H100001.WEI"
+    },
+    {
+      "from": "H100000",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H100000.JI"
+    },
+    {
+      "from": "H100000",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H100000.JIN"
+    },
+    {
+      "from": "H100000",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H100000.WEI"
+    },
+    {
+      "from": "H011111",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H011111.JI"
+    },
+    {
+      "from": "H011111",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H011111.JIN"
+    },
+    {
+      "from": "H011111",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H011111.WEI"
+    },
+    {
+      "from": "H011110",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H011110.JI"
+    },
+    {
+      "from": "H011110",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H011110.JIN"
+    },
+    {
+      "from": "H011110",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H011110.WEI"
+    },
+    {
+      "from": "H011101",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H011101.JI"
+    },
+    {
+      "from": "H011101",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H011101.JIN"
+    },
+    {
+      "from": "H011101",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H011101.WEI"
+    },
+    {
+      "from": "H011100",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H011100.JI"
+    },
+    {
+      "from": "H011100",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H011100.JIN"
+    },
+    {
+      "from": "H011100",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H011100.WEI"
+    },
+    {
+      "from": "H011011",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H011011.JI"
+    },
+    {
+      "from": "H011011",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H011011.JIN"
+    },
+    {
+      "from": "H011011",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H011011.WEI"
+    },
+    {
+      "from": "H011010",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H011010.JI"
+    },
+    {
+      "from": "H011010",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H011010.JIN"
+    },
+    {
+      "from": "H011010",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H011010.WEI"
+    },
+    {
+      "from": "H011001",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H011001.JI"
+    },
+    {
+      "from": "H011001",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H011001.JIN"
+    },
+    {
+      "from": "H011001",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H011001.WEI"
+    },
+    {
+      "from": "H011000",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H011000.JI"
+    },
+    {
+      "from": "H011000",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H011000.JIN"
+    },
+    {
+      "from": "H011000",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H011000.WEI"
+    },
+    {
+      "from": "H010111",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H010111.JI"
+    },
+    {
+      "from": "H010111",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H010111.JIN"
+    },
+    {
+      "from": "H010111",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H010111.WEI"
+    },
+    {
+      "from": "H010110",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H010110.JI"
+    },
+    {
+      "from": "H010110",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H010110.JIN"
+    },
+    {
+      "from": "H010110",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H010110.WEI"
+    },
+    {
+      "from": "H010101",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H010101.JI"
+    },
+    {
+      "from": "H010101",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H010101.JIN"
+    },
+    {
+      "from": "H010101",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H010101.WEI"
+    },
+    {
+      "from": "H010100",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H010100.JI"
+    },
+    {
+      "from": "H010100",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H010100.JIN"
+    },
+    {
+      "from": "H010100",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H010100.WEI"
+    },
+    {
+      "from": "H010011",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H010011.JI"
+    },
+    {
+      "from": "H010011",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H010011.JIN"
+    },
+    {
+      "from": "H010011",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H010011.WEI"
+    },
+    {
+      "from": "H010010",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H010010.JI"
+    },
+    {
+      "from": "H010010",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H010010.JIN"
+    },
+    {
+      "from": "H010010",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H010010.WEI"
+    },
+    {
+      "from": "H010001",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H010001.JI"
+    },
+    {
+      "from": "H010001",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H010001.JIN"
+    },
+    {
+      "from": "H010001",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H010001.WEI"
+    },
+    {
+      "from": "H010000",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H010000.JI"
+    },
+    {
+      "from": "H010000",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H010000.JIN"
+    },
+    {
+      "from": "H010000",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H010000.WEI"
+    },
+    {
+      "from": "H001111",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H001111.JI"
+    },
+    {
+      "from": "H001111",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H001111.JIN"
+    },
+    {
+      "from": "H001111",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H001111.WEI"
+    },
+    {
+      "from": "H001110",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H001110.JI"
+    },
+    {
+      "from": "H001110",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H001110.JIN"
+    },
+    {
+      "from": "H001110",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H001110.WEI"
+    },
+    {
+      "from": "H001101",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H001101.JI"
+    },
+    {
+      "from": "H001101",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H001101.JIN"
+    },
+    {
+      "from": "H001101",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H001101.WEI"
+    },
+    {
+      "from": "H001100",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H001100.JI"
+    },
+    {
+      "from": "H001100",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H001100.JIN"
+    },
+    {
+      "from": "H001100",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H001100.WEI"
+    },
+    {
+      "from": "H001011",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H001011.JI"
+    },
+    {
+      "from": "H001011",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H001011.JIN"
+    },
+    {
+      "from": "H001011",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H001011.WEI"
+    },
+    {
+      "from": "H001010",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H001010.JI"
+    },
+    {
+      "from": "H001010",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H001010.JIN"
+    },
+    {
+      "from": "H001010",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H001010.WEI"
+    },
+    {
+      "from": "H001001",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H001001.JI"
+    },
+    {
+      "from": "H001001",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H001001.JIN"
+    },
+    {
+      "from": "H001001",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H001001.WEI"
+    },
+    {
+      "from": "H001000",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H001000.JI"
+    },
+    {
+      "from": "H001000",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H001000.JIN"
+    },
+    {
+      "from": "H001000",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H001000.WEI"
+    },
+    {
+      "from": "H000111",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H000111.JI"
+    },
+    {
+      "from": "H000111",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H000111.JIN"
+    },
+    {
+      "from": "H000111",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H000111.WEI"
+    },
+    {
+      "from": "H000110",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H000110.JI"
+    },
+    {
+      "from": "H000110",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H000110.JIN"
+    },
+    {
+      "from": "H000110",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H000110.WEI"
+    },
+    {
+      "from": "H000101",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H000101.JI"
+    },
+    {
+      "from": "H000101",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H000101.JIN"
+    },
+    {
+      "from": "H000101",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H000101.WEI"
+    },
+    {
+      "from": "H000100",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H000100.JI"
+    },
+    {
+      "from": "H000100",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H000100.JIN"
+    },
+    {
+      "from": "H000100",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H000100.WEI"
+    },
+    {
+      "from": "H000011",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H000011.JI"
+    },
+    {
+      "from": "H000011",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H000011.JIN"
+    },
+    {
+      "from": "H000011",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H000011.WEI"
+    },
+    {
+      "from": "H000010",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H000010.JI"
+    },
+    {
+      "from": "H000010",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H000010.JIN"
+    },
+    {
+      "from": "H000010",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H000010.WEI"
+    },
+    {
+      "from": "H000001",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H000001.JI"
+    },
+    {
+      "from": "H000001",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H000001.JIN"
+    },
+    {
+      "from": "H000001",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H000001.WEI"
+    },
+    {
+      "from": "H000000",
+      "relation": "配时态=已; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H000000.JI"
+    },
+    {
+      "from": "H000000",
+      "relation": "配时态=今; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H000000.JIN"
+    },
+    {
+      "from": "H000000",
+      "relation": "配时态=未; 成Cell192",
+      "relation_kind": "realizeShi",
+      "to": "H000000.WEI"
+    }
+  ],
+  "leaf_count": 192,
+  "leaves": [
+    {
+      "count_under_node": 1,
+      "id": "H111111.JI",
+      "kind": "cell192",
+      "label": "阳阳阳阳阳阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111111.JIN",
+      "kind": "cell192",
+      "label": "阳阳阳阳阳阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111111.WEI",
+      "kind": "cell192",
+      "label": "阳阳阳阳阳阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111110.JI",
+      "kind": "cell192",
+      "label": "阳阳阳阳阳阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111110.JIN",
+      "kind": "cell192",
+      "label": "阳阳阳阳阳阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111110.WEI",
+      "kind": "cell192",
+      "label": "阳阳阳阳阳阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111101.JI",
+      "kind": "cell192",
+      "label": "阳阳阳阳阴阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111101.JIN",
+      "kind": "cell192",
+      "label": "阳阳阳阳阴阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111101.WEI",
+      "kind": "cell192",
+      "label": "阳阳阳阳阴阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111100.JI",
+      "kind": "cell192",
+      "label": "阳阳阳阳阴阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111100.JIN",
+      "kind": "cell192",
+      "label": "阳阳阳阳阴阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111100.WEI",
+      "kind": "cell192",
+      "label": "阳阳阳阳阴阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111011.JI",
+      "kind": "cell192",
+      "label": "阳阳阳阴阳阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111011.JIN",
+      "kind": "cell192",
+      "label": "阳阳阳阴阳阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111011.WEI",
+      "kind": "cell192",
+      "label": "阳阳阳阴阳阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111010.JI",
+      "kind": "cell192",
+      "label": "阳阳阳阴阳阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111010.JIN",
+      "kind": "cell192",
+      "label": "阳阳阳阴阳阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111010.WEI",
+      "kind": "cell192",
+      "label": "阳阳阳阴阳阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111001.JI",
+      "kind": "cell192",
+      "label": "阳阳阳阴阴阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111001.JIN",
+      "kind": "cell192",
+      "label": "阳阳阳阴阴阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111001.WEI",
+      "kind": "cell192",
+      "label": "阳阳阳阴阴阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111000.JI",
+      "kind": "cell192",
+      "label": "阳阳阳阴阴阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111000.JIN",
+      "kind": "cell192",
+      "label": "阳阳阳阴阴阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111000.WEI",
+      "kind": "cell192",
+      "label": "阳阳阳阴阴阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110111.JI",
+      "kind": "cell192",
+      "label": "阳阳阴阳阳阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110111.JIN",
+      "kind": "cell192",
+      "label": "阳阳阴阳阳阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110111.WEI",
+      "kind": "cell192",
+      "label": "阳阳阴阳阳阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110110.JI",
+      "kind": "cell192",
+      "label": "阳阳阴阳阳阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110110.JIN",
+      "kind": "cell192",
+      "label": "阳阳阴阳阳阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110110.WEI",
+      "kind": "cell192",
+      "label": "阳阳阴阳阳阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110101.JI",
+      "kind": "cell192",
+      "label": "阳阳阴阳阴阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110101.JIN",
+      "kind": "cell192",
+      "label": "阳阳阴阳阴阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110101.WEI",
+      "kind": "cell192",
+      "label": "阳阳阴阳阴阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110100.JI",
+      "kind": "cell192",
+      "label": "阳阳阴阳阴阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110100.JIN",
+      "kind": "cell192",
+      "label": "阳阳阴阳阴阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110100.WEI",
+      "kind": "cell192",
+      "label": "阳阳阴阳阴阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110011.JI",
+      "kind": "cell192",
+      "label": "阳阳阴阴阳阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110011.JIN",
+      "kind": "cell192",
+      "label": "阳阳阴阴阳阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110011.WEI",
+      "kind": "cell192",
+      "label": "阳阳阴阴阳阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110010.JI",
+      "kind": "cell192",
+      "label": "阳阳阴阴阳阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110010.JIN",
+      "kind": "cell192",
+      "label": "阳阳阴阴阳阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110010.WEI",
+      "kind": "cell192",
+      "label": "阳阳阴阴阳阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110001.JI",
+      "kind": "cell192",
+      "label": "阳阳阴阴阴阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110001.JIN",
+      "kind": "cell192",
+      "label": "阳阳阴阴阴阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110001.WEI",
+      "kind": "cell192",
+      "label": "阳阳阴阴阴阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110000.JI",
+      "kind": "cell192",
+      "label": "阳阳阴阴阴阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110000.JIN",
+      "kind": "cell192",
+      "label": "阳阳阴阴阴阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110000.WEI",
+      "kind": "cell192",
+      "label": "阳阳阴阴阴阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101111.JI",
+      "kind": "cell192",
+      "label": "阳阴阳阳阳阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101111.JIN",
+      "kind": "cell192",
+      "label": "阳阴阳阳阳阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101111.WEI",
+      "kind": "cell192",
+      "label": "阳阴阳阳阳阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101110.JI",
+      "kind": "cell192",
+      "label": "阳阴阳阳阳阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101110.JIN",
+      "kind": "cell192",
+      "label": "阳阴阳阳阳阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101110.WEI",
+      "kind": "cell192",
+      "label": "阳阴阳阳阳阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101101.JI",
+      "kind": "cell192",
+      "label": "阳阴阳阳阴阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101101.JIN",
+      "kind": "cell192",
+      "label": "阳阴阳阳阴阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101101.WEI",
+      "kind": "cell192",
+      "label": "阳阴阳阳阴阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101100.JI",
+      "kind": "cell192",
+      "label": "阳阴阳阳阴阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101100.JIN",
+      "kind": "cell192",
+      "label": "阳阴阳阳阴阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101100.WEI",
+      "kind": "cell192",
+      "label": "阳阴阳阳阴阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101011.JI",
+      "kind": "cell192",
+      "label": "阳阴阳阴阳阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101011.JIN",
+      "kind": "cell192",
+      "label": "阳阴阳阴阳阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101011.WEI",
+      "kind": "cell192",
+      "label": "阳阴阳阴阳阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101010.JI",
+      "kind": "cell192",
+      "label": "阳阴阳阴阳阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101010.JIN",
+      "kind": "cell192",
+      "label": "阳阴阳阴阳阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101010.WEI",
+      "kind": "cell192",
+      "label": "阳阴阳阴阳阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101001.JI",
+      "kind": "cell192",
+      "label": "阳阴阳阴阴阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101001.JIN",
+      "kind": "cell192",
+      "label": "阳阴阳阴阴阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101001.WEI",
+      "kind": "cell192",
+      "label": "阳阴阳阴阴阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101000.JI",
+      "kind": "cell192",
+      "label": "阳阴阳阴阴阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101000.JIN",
+      "kind": "cell192",
+      "label": "阳阴阳阴阴阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101000.WEI",
+      "kind": "cell192",
+      "label": "阳阴阳阴阴阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100111.JI",
+      "kind": "cell192",
+      "label": "阳阴阴阳阳阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100111.JIN",
+      "kind": "cell192",
+      "label": "阳阴阴阳阳阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100111.WEI",
+      "kind": "cell192",
+      "label": "阳阴阴阳阳阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100110.JI",
+      "kind": "cell192",
+      "label": "阳阴阴阳阳阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100110.JIN",
+      "kind": "cell192",
+      "label": "阳阴阴阳阳阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100110.WEI",
+      "kind": "cell192",
+      "label": "阳阴阴阳阳阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100101.JI",
+      "kind": "cell192",
+      "label": "阳阴阴阳阴阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100101.JIN",
+      "kind": "cell192",
+      "label": "阳阴阴阳阴阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100101.WEI",
+      "kind": "cell192",
+      "label": "阳阴阴阳阴阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100100.JI",
+      "kind": "cell192",
+      "label": "阳阴阴阳阴阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100100.JIN",
+      "kind": "cell192",
+      "label": "阳阴阴阳阴阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100100.WEI",
+      "kind": "cell192",
+      "label": "阳阴阴阳阴阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100011.JI",
+      "kind": "cell192",
+      "label": "阳阴阴阴阳阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100011.JIN",
+      "kind": "cell192",
+      "label": "阳阴阴阴阳阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100011.WEI",
+      "kind": "cell192",
+      "label": "阳阴阴阴阳阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100010.JI",
+      "kind": "cell192",
+      "label": "阳阴阴阴阳阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100010.JIN",
+      "kind": "cell192",
+      "label": "阳阴阴阴阳阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100010.WEI",
+      "kind": "cell192",
+      "label": "阳阴阴阴阳阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100001.JI",
+      "kind": "cell192",
+      "label": "阳阴阴阴阴阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100001.JIN",
+      "kind": "cell192",
+      "label": "阳阴阴阴阴阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100001.WEI",
+      "kind": "cell192",
+      "label": "阳阴阴阴阴阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100000.JI",
+      "kind": "cell192",
+      "label": "阳阴阴阴阴阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100000.JIN",
+      "kind": "cell192",
+      "label": "阳阴阴阴阴阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100000.WEI",
+      "kind": "cell192",
+      "label": "阳阴阴阴阴阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011111.JI",
+      "kind": "cell192",
+      "label": "阴阳阳阳阳阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011111.JIN",
+      "kind": "cell192",
+      "label": "阴阳阳阳阳阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011111.WEI",
+      "kind": "cell192",
+      "label": "阴阳阳阳阳阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011110.JI",
+      "kind": "cell192",
+      "label": "阴阳阳阳阳阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011110.JIN",
+      "kind": "cell192",
+      "label": "阴阳阳阳阳阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011110.WEI",
+      "kind": "cell192",
+      "label": "阴阳阳阳阳阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011101.JI",
+      "kind": "cell192",
+      "label": "阴阳阳阳阴阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011101.JIN",
+      "kind": "cell192",
+      "label": "阴阳阳阳阴阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011101.WEI",
+      "kind": "cell192",
+      "label": "阴阳阳阳阴阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011100.JI",
+      "kind": "cell192",
+      "label": "阴阳阳阳阴阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011100.JIN",
+      "kind": "cell192",
+      "label": "阴阳阳阳阴阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011100.WEI",
+      "kind": "cell192",
+      "label": "阴阳阳阳阴阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011011.JI",
+      "kind": "cell192",
+      "label": "阴阳阳阴阳阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011011.JIN",
+      "kind": "cell192",
+      "label": "阴阳阳阴阳阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011011.WEI",
+      "kind": "cell192",
+      "label": "阴阳阳阴阳阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011010.JI",
+      "kind": "cell192",
+      "label": "阴阳阳阴阳阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011010.JIN",
+      "kind": "cell192",
+      "label": "阴阳阳阴阳阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011010.WEI",
+      "kind": "cell192",
+      "label": "阴阳阳阴阳阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011001.JI",
+      "kind": "cell192",
+      "label": "阴阳阳阴阴阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011001.JIN",
+      "kind": "cell192",
+      "label": "阴阳阳阴阴阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011001.WEI",
+      "kind": "cell192",
+      "label": "阴阳阳阴阴阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011000.JI",
+      "kind": "cell192",
+      "label": "阴阳阳阴阴阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011000.JIN",
+      "kind": "cell192",
+      "label": "阴阳阳阴阴阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011000.WEI",
+      "kind": "cell192",
+      "label": "阴阳阳阴阴阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010111.JI",
+      "kind": "cell192",
+      "label": "阴阳阴阳阳阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010111.JIN",
+      "kind": "cell192",
+      "label": "阴阳阴阳阳阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010111.WEI",
+      "kind": "cell192",
+      "label": "阴阳阴阳阳阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010110.JI",
+      "kind": "cell192",
+      "label": "阴阳阴阳阳阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010110.JIN",
+      "kind": "cell192",
+      "label": "阴阳阴阳阳阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010110.WEI",
+      "kind": "cell192",
+      "label": "阴阳阴阳阳阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010101.JI",
+      "kind": "cell192",
+      "label": "阴阳阴阳阴阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010101.JIN",
+      "kind": "cell192",
+      "label": "阴阳阴阳阴阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010101.WEI",
+      "kind": "cell192",
+      "label": "阴阳阴阳阴阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010100.JI",
+      "kind": "cell192",
+      "label": "阴阳阴阳阴阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010100.JIN",
+      "kind": "cell192",
+      "label": "阴阳阴阳阴阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010100.WEI",
+      "kind": "cell192",
+      "label": "阴阳阴阳阴阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010011.JI",
+      "kind": "cell192",
+      "label": "阴阳阴阴阳阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010011.JIN",
+      "kind": "cell192",
+      "label": "阴阳阴阴阳阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010011.WEI",
+      "kind": "cell192",
+      "label": "阴阳阴阴阳阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010010.JI",
+      "kind": "cell192",
+      "label": "阴阳阴阴阳阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010010.JIN",
+      "kind": "cell192",
+      "label": "阴阳阴阴阳阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010010.WEI",
+      "kind": "cell192",
+      "label": "阴阳阴阴阳阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010001.JI",
+      "kind": "cell192",
+      "label": "阴阳阴阴阴阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010001.JIN",
+      "kind": "cell192",
+      "label": "阴阳阴阴阴阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010001.WEI",
+      "kind": "cell192",
+      "label": "阴阳阴阴阴阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010000.JI",
+      "kind": "cell192",
+      "label": "阴阳阴阴阴阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010000.JIN",
+      "kind": "cell192",
+      "label": "阴阳阴阴阴阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010000.WEI",
+      "kind": "cell192",
+      "label": "阴阳阴阴阴阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001111.JI",
+      "kind": "cell192",
+      "label": "阴阴阳阳阳阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001111.JIN",
+      "kind": "cell192",
+      "label": "阴阴阳阳阳阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001111.WEI",
+      "kind": "cell192",
+      "label": "阴阴阳阳阳阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001110.JI",
+      "kind": "cell192",
+      "label": "阴阴阳阳阳阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001110.JIN",
+      "kind": "cell192",
+      "label": "阴阴阳阳阳阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001110.WEI",
+      "kind": "cell192",
+      "label": "阴阴阳阳阳阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001101.JI",
+      "kind": "cell192",
+      "label": "阴阴阳阳阴阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001101.JIN",
+      "kind": "cell192",
+      "label": "阴阴阳阳阴阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001101.WEI",
+      "kind": "cell192",
+      "label": "阴阴阳阳阴阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001100.JI",
+      "kind": "cell192",
+      "label": "阴阴阳阳阴阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001100.JIN",
+      "kind": "cell192",
+      "label": "阴阴阳阳阴阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001100.WEI",
+      "kind": "cell192",
+      "label": "阴阴阳阳阴阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001011.JI",
+      "kind": "cell192",
+      "label": "阴阴阳阴阳阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001011.JIN",
+      "kind": "cell192",
+      "label": "阴阴阳阴阳阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001011.WEI",
+      "kind": "cell192",
+      "label": "阴阴阳阴阳阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001010.JI",
+      "kind": "cell192",
+      "label": "阴阴阳阴阳阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001010.JIN",
+      "kind": "cell192",
+      "label": "阴阴阳阴阳阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001010.WEI",
+      "kind": "cell192",
+      "label": "阴阴阳阴阳阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001001.JI",
+      "kind": "cell192",
+      "label": "阴阴阳阴阴阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001001.JIN",
+      "kind": "cell192",
+      "label": "阴阴阳阴阴阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001001.WEI",
+      "kind": "cell192",
+      "label": "阴阴阳阴阴阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001000.JI",
+      "kind": "cell192",
+      "label": "阴阴阳阴阴阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001000.JIN",
+      "kind": "cell192",
+      "label": "阴阴阳阴阴阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001000.WEI",
+      "kind": "cell192",
+      "label": "阴阴阳阴阴阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000111.JI",
+      "kind": "cell192",
+      "label": "阴阴阴阳阳阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000111.JIN",
+      "kind": "cell192",
+      "label": "阴阴阴阳阳阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000111.WEI",
+      "kind": "cell192",
+      "label": "阴阴阴阳阳阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000110.JI",
+      "kind": "cell192",
+      "label": "阴阴阴阳阳阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000110.JIN",
+      "kind": "cell192",
+      "label": "阴阴阴阳阳阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000110.WEI",
+      "kind": "cell192",
+      "label": "阴阴阴阳阳阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000101.JI",
+      "kind": "cell192",
+      "label": "阴阴阴阳阴阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000101.JIN",
+      "kind": "cell192",
+      "label": "阴阴阴阳阴阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000101.WEI",
+      "kind": "cell192",
+      "label": "阴阴阴阳阴阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000100.JI",
+      "kind": "cell192",
+      "label": "阴阴阴阳阴阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000100.JIN",
+      "kind": "cell192",
+      "label": "阴阴阴阳阴阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000100.WEI",
+      "kind": "cell192",
+      "label": "阴阴阴阳阴阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000011.JI",
+      "kind": "cell192",
+      "label": "阴阴阴阴阳阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000011.JIN",
+      "kind": "cell192",
+      "label": "阴阴阴阴阳阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000011.WEI",
+      "kind": "cell192",
+      "label": "阴阴阴阴阳阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000010.JI",
+      "kind": "cell192",
+      "label": "阴阴阴阴阳阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000010.JIN",
+      "kind": "cell192",
+      "label": "阴阴阴阴阳阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000010.WEI",
+      "kind": "cell192",
+      "label": "阴阴阴阴阳阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000001.JI",
+      "kind": "cell192",
+      "label": "阴阴阴阴阴阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000001.JIN",
+      "kind": "cell192",
+      "label": "阴阴阴阴阴阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000001.WEI",
+      "kind": "cell192",
+      "label": "阴阴阴阴阴阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000000.JI",
+      "kind": "cell192",
+      "label": "阴阴阴阴阴阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000000.JIN",
+      "kind": "cell192",
+      "label": "阴阴阴阴阴阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000000.WEI",
+      "kind": "cell192",
+      "label": "阴阴阴阴阴阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=未"
+    }
+  ],
+  "levels": [
+    {
+      "count": 1,
+      "kind": "root",
+      "level": 0,
+      "meaning": "共同根节点"
+    },
+    {
+      "count": 2,
+      "kind": "yaoPrefix",
+      "level": 1,
+      "meaning": "初爻二分"
+    },
+    {
+      "count": 4,
+      "kind": "yaoPrefix",
+      "level": 2,
+      "meaning": "初、二爻前缀"
+    },
+    {
+      "count": 8,
+      "kind": "yaoPrefix",
+      "level": 3,
+      "meaning": "三爻前缀 / 八卦形"
+    },
+    {
+      "count": 16,
+      "kind": "yaoPrefix",
+      "level": 4,
+      "meaning": "四爻前缀"
+    },
+    {
+      "count": 32,
+      "kind": "yaoPrefix",
+      "level": 5,
+      "meaning": "五爻前缀"
+    },
+    {
+      "count": 64,
+      "kind": "hexagram",
+      "level": 6,
+      "meaning": "六爻成卦"
+    },
+    {
+      "count": 192,
+      "kind": "cell192",
+      "level": 7,
+      "meaning": "每卦配 已/今/未 三时态"
+    }
+  ],
+  "node_count": 319,
+  "nodes": [
+    {
+      "count_under_node": 192,
+      "id": "ROOT",
+      "kind": "root",
+      "label": "根",
+      "level": 0,
+      "path": "根"
+    },
+    {
+      "count_under_node": 96,
+      "id": "Y1.1",
+      "kind": "yaoPrefix",
+      "label": "阳",
+      "level": 1,
+      "path": "初爻=阳"
+    },
+    {
+      "count_under_node": 96,
+      "id": "Y1.0",
+      "kind": "yaoPrefix",
+      "label": "阴",
+      "level": 1,
+      "path": "初爻=阴"
+    },
+    {
+      "count_under_node": 48,
+      "id": "Y2.11",
+      "kind": "yaoPrefix",
+      "label": "阳阳",
+      "level": 2,
+      "path": "初爻=阳 / 二爻=阳"
+    },
+    {
+      "count_under_node": 48,
+      "id": "Y2.10",
+      "kind": "yaoPrefix",
+      "label": "阳阴",
+      "level": 2,
+      "path": "初爻=阳 / 二爻=阴"
+    },
+    {
+      "count_under_node": 48,
+      "id": "Y2.01",
+      "kind": "yaoPrefix",
+      "label": "阴阳",
+      "level": 2,
+      "path": "初爻=阴 / 二爻=阳"
+    },
+    {
+      "count_under_node": 48,
+      "id": "Y2.00",
+      "kind": "yaoPrefix",
+      "label": "阴阴",
+      "level": 2,
+      "path": "初爻=阴 / 二爻=阴"
+    },
+    {
+      "count_under_node": 24,
+      "id": "Y3.111",
+      "kind": "yaoPrefix",
+      "label": "阳阳阳",
+      "level": 3,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳"
+    },
+    {
+      "count_under_node": 24,
+      "id": "Y3.110",
+      "kind": "yaoPrefix",
+      "label": "阳阳阴",
+      "level": 3,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴"
+    },
+    {
+      "count_under_node": 24,
+      "id": "Y3.101",
+      "kind": "yaoPrefix",
+      "label": "阳阴阳",
+      "level": 3,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳"
+    },
+    {
+      "count_under_node": 24,
+      "id": "Y3.100",
+      "kind": "yaoPrefix",
+      "label": "阳阴阴",
+      "level": 3,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴"
+    },
+    {
+      "count_under_node": 24,
+      "id": "Y3.011",
+      "kind": "yaoPrefix",
+      "label": "阴阳阳",
+      "level": 3,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳"
+    },
+    {
+      "count_under_node": 24,
+      "id": "Y3.010",
+      "kind": "yaoPrefix",
+      "label": "阴阳阴",
+      "level": 3,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴"
+    },
+    {
+      "count_under_node": 24,
+      "id": "Y3.001",
+      "kind": "yaoPrefix",
+      "label": "阴阴阳",
+      "level": 3,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳"
+    },
+    {
+      "count_under_node": 24,
+      "id": "Y3.000",
+      "kind": "yaoPrefix",
+      "label": "阴阴阴",
+      "level": 3,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴"
+    },
+    {
+      "count_under_node": 12,
+      "id": "Y4.1111",
+      "kind": "yaoPrefix",
+      "label": "阳阳阳阳",
+      "level": 4,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳"
+    },
+    {
+      "count_under_node": 12,
+      "id": "Y4.1110",
+      "kind": "yaoPrefix",
+      "label": "阳阳阳阴",
+      "level": 4,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴"
+    },
+    {
+      "count_under_node": 12,
+      "id": "Y4.1101",
+      "kind": "yaoPrefix",
+      "label": "阳阳阴阳",
+      "level": 4,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳"
+    },
+    {
+      "count_under_node": 12,
+      "id": "Y4.1100",
+      "kind": "yaoPrefix",
+      "label": "阳阳阴阴",
+      "level": 4,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴"
+    },
+    {
+      "count_under_node": 12,
+      "id": "Y4.1011",
+      "kind": "yaoPrefix",
+      "label": "阳阴阳阳",
+      "level": 4,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳"
+    },
+    {
+      "count_under_node": 12,
+      "id": "Y4.1010",
+      "kind": "yaoPrefix",
+      "label": "阳阴阳阴",
+      "level": 4,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴"
+    },
+    {
+      "count_under_node": 12,
+      "id": "Y4.1001",
+      "kind": "yaoPrefix",
+      "label": "阳阴阴阳",
+      "level": 4,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳"
+    },
+    {
+      "count_under_node": 12,
+      "id": "Y4.1000",
+      "kind": "yaoPrefix",
+      "label": "阳阴阴阴",
+      "level": 4,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴"
+    },
+    {
+      "count_under_node": 12,
+      "id": "Y4.0111",
+      "kind": "yaoPrefix",
+      "label": "阴阳阳阳",
+      "level": 4,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳"
+    },
+    {
+      "count_under_node": 12,
+      "id": "Y4.0110",
+      "kind": "yaoPrefix",
+      "label": "阴阳阳阴",
+      "level": 4,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴"
+    },
+    {
+      "count_under_node": 12,
+      "id": "Y4.0101",
+      "kind": "yaoPrefix",
+      "label": "阴阳阴阳",
+      "level": 4,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳"
+    },
+    {
+      "count_under_node": 12,
+      "id": "Y4.0100",
+      "kind": "yaoPrefix",
+      "label": "阴阳阴阴",
+      "level": 4,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴"
+    },
+    {
+      "count_under_node": 12,
+      "id": "Y4.0011",
+      "kind": "yaoPrefix",
+      "label": "阴阴阳阳",
+      "level": 4,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳"
+    },
+    {
+      "count_under_node": 12,
+      "id": "Y4.0010",
+      "kind": "yaoPrefix",
+      "label": "阴阴阳阴",
+      "level": 4,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴"
+    },
+    {
+      "count_under_node": 12,
+      "id": "Y4.0001",
+      "kind": "yaoPrefix",
+      "label": "阴阴阴阳",
+      "level": 4,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳"
+    },
+    {
+      "count_under_node": 12,
+      "id": "Y4.0000",
+      "kind": "yaoPrefix",
+      "label": "阴阴阴阴",
+      "level": 4,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.11111",
+      "kind": "yaoPrefix",
+      "label": "阳阳阳阳阳",
+      "level": 5,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.11110",
+      "kind": "yaoPrefix",
+      "label": "阳阳阳阳阴",
+      "level": 5,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.11101",
+      "kind": "yaoPrefix",
+      "label": "阳阳阳阴阳",
+      "level": 5,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.11100",
+      "kind": "yaoPrefix",
+      "label": "阳阳阳阴阴",
+      "level": 5,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.11011",
+      "kind": "yaoPrefix",
+      "label": "阳阳阴阳阳",
+      "level": 5,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.11010",
+      "kind": "yaoPrefix",
+      "label": "阳阳阴阳阴",
+      "level": 5,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.11001",
+      "kind": "yaoPrefix",
+      "label": "阳阳阴阴阳",
+      "level": 5,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.11000",
+      "kind": "yaoPrefix",
+      "label": "阳阳阴阴阴",
+      "level": 5,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.10111",
+      "kind": "yaoPrefix",
+      "label": "阳阴阳阳阳",
+      "level": 5,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.10110",
+      "kind": "yaoPrefix",
+      "label": "阳阴阳阳阴",
+      "level": 5,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.10101",
+      "kind": "yaoPrefix",
+      "label": "阳阴阳阴阳",
+      "level": 5,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.10100",
+      "kind": "yaoPrefix",
+      "label": "阳阴阳阴阴",
+      "level": 5,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.10011",
+      "kind": "yaoPrefix",
+      "label": "阳阴阴阳阳",
+      "level": 5,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.10010",
+      "kind": "yaoPrefix",
+      "label": "阳阴阴阳阴",
+      "level": 5,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.10001",
+      "kind": "yaoPrefix",
+      "label": "阳阴阴阴阳",
+      "level": 5,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.10000",
+      "kind": "yaoPrefix",
+      "label": "阳阴阴阴阴",
+      "level": 5,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.01111",
+      "kind": "yaoPrefix",
+      "label": "阴阳阳阳阳",
+      "level": 5,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.01110",
+      "kind": "yaoPrefix",
+      "label": "阴阳阳阳阴",
+      "level": 5,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.01101",
+      "kind": "yaoPrefix",
+      "label": "阴阳阳阴阳",
+      "level": 5,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.01100",
+      "kind": "yaoPrefix",
+      "label": "阴阳阳阴阴",
+      "level": 5,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.01011",
+      "kind": "yaoPrefix",
+      "label": "阴阳阴阳阳",
+      "level": 5,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.01010",
+      "kind": "yaoPrefix",
+      "label": "阴阳阴阳阴",
+      "level": 5,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.01001",
+      "kind": "yaoPrefix",
+      "label": "阴阳阴阴阳",
+      "level": 5,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.01000",
+      "kind": "yaoPrefix",
+      "label": "阴阳阴阴阴",
+      "level": 5,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.00111",
+      "kind": "yaoPrefix",
+      "label": "阴阴阳阳阳",
+      "level": 5,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.00110",
+      "kind": "yaoPrefix",
+      "label": "阴阴阳阳阴",
+      "level": 5,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.00101",
+      "kind": "yaoPrefix",
+      "label": "阴阴阳阴阳",
+      "level": 5,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.00100",
+      "kind": "yaoPrefix",
+      "label": "阴阴阳阴阴",
+      "level": 5,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.00011",
+      "kind": "yaoPrefix",
+      "label": "阴阴阴阳阳",
+      "level": 5,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.00010",
+      "kind": "yaoPrefix",
+      "label": "阴阴阴阳阴",
+      "level": 5,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.00001",
+      "kind": "yaoPrefix",
+      "label": "阴阴阴阴阳",
+      "level": 5,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳"
+    },
+    {
+      "count_under_node": 6,
+      "id": "Y5.00000",
+      "kind": "yaoPrefix",
+      "label": "阴阴阴阴阴",
+      "level": 5,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H111111",
+      "kind": "hexagram",
+      "label": "阳阳阳阳阳阳",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111111.JI",
+      "kind": "cell192",
+      "label": "阳阳阳阳阳阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111111.JIN",
+      "kind": "cell192",
+      "label": "阳阳阳阳阳阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111111.WEI",
+      "kind": "cell192",
+      "label": "阳阳阳阳阳阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H111110",
+      "kind": "hexagram",
+      "label": "阳阳阳阳阳阴",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111110.JI",
+      "kind": "cell192",
+      "label": "阳阳阳阳阳阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111110.JIN",
+      "kind": "cell192",
+      "label": "阳阳阳阳阳阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111110.WEI",
+      "kind": "cell192",
+      "label": "阳阳阳阳阳阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H111101",
+      "kind": "hexagram",
+      "label": "阳阳阳阳阴阳",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111101.JI",
+      "kind": "cell192",
+      "label": "阳阳阳阳阴阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111101.JIN",
+      "kind": "cell192",
+      "label": "阳阳阳阳阴阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111101.WEI",
+      "kind": "cell192",
+      "label": "阳阳阳阳阴阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H111100",
+      "kind": "hexagram",
+      "label": "阳阳阳阳阴阴",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111100.JI",
+      "kind": "cell192",
+      "label": "阳阳阳阳阴阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111100.JIN",
+      "kind": "cell192",
+      "label": "阳阳阳阳阴阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111100.WEI",
+      "kind": "cell192",
+      "label": "阳阳阳阳阴阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H111011",
+      "kind": "hexagram",
+      "label": "阳阳阳阴阳阳",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111011.JI",
+      "kind": "cell192",
+      "label": "阳阳阳阴阳阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111011.JIN",
+      "kind": "cell192",
+      "label": "阳阳阳阴阳阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111011.WEI",
+      "kind": "cell192",
+      "label": "阳阳阳阴阳阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H111010",
+      "kind": "hexagram",
+      "label": "阳阳阳阴阳阴",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111010.JI",
+      "kind": "cell192",
+      "label": "阳阳阳阴阳阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111010.JIN",
+      "kind": "cell192",
+      "label": "阳阳阳阴阳阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111010.WEI",
+      "kind": "cell192",
+      "label": "阳阳阳阴阳阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H111001",
+      "kind": "hexagram",
+      "label": "阳阳阳阴阴阳",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111001.JI",
+      "kind": "cell192",
+      "label": "阳阳阳阴阴阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111001.JIN",
+      "kind": "cell192",
+      "label": "阳阳阳阴阴阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111001.WEI",
+      "kind": "cell192",
+      "label": "阳阳阳阴阴阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H111000",
+      "kind": "hexagram",
+      "label": "阳阳阳阴阴阴",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111000.JI",
+      "kind": "cell192",
+      "label": "阳阳阳阴阴阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111000.JIN",
+      "kind": "cell192",
+      "label": "阳阳阳阴阴阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H111000.WEI",
+      "kind": "cell192",
+      "label": "阳阳阳阴阴阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H110111",
+      "kind": "hexagram",
+      "label": "阳阳阴阳阳阳",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110111.JI",
+      "kind": "cell192",
+      "label": "阳阳阴阳阳阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110111.JIN",
+      "kind": "cell192",
+      "label": "阳阳阴阳阳阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110111.WEI",
+      "kind": "cell192",
+      "label": "阳阳阴阳阳阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H110110",
+      "kind": "hexagram",
+      "label": "阳阳阴阳阳阴",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110110.JI",
+      "kind": "cell192",
+      "label": "阳阳阴阳阳阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110110.JIN",
+      "kind": "cell192",
+      "label": "阳阳阴阳阳阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110110.WEI",
+      "kind": "cell192",
+      "label": "阳阳阴阳阳阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H110101",
+      "kind": "hexagram",
+      "label": "阳阳阴阳阴阳",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110101.JI",
+      "kind": "cell192",
+      "label": "阳阳阴阳阴阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110101.JIN",
+      "kind": "cell192",
+      "label": "阳阳阴阳阴阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110101.WEI",
+      "kind": "cell192",
+      "label": "阳阳阴阳阴阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H110100",
+      "kind": "hexagram",
+      "label": "阳阳阴阳阴阴",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110100.JI",
+      "kind": "cell192",
+      "label": "阳阳阴阳阴阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110100.JIN",
+      "kind": "cell192",
+      "label": "阳阳阴阳阴阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110100.WEI",
+      "kind": "cell192",
+      "label": "阳阳阴阳阴阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H110011",
+      "kind": "hexagram",
+      "label": "阳阳阴阴阳阳",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110011.JI",
+      "kind": "cell192",
+      "label": "阳阳阴阴阳阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110011.JIN",
+      "kind": "cell192",
+      "label": "阳阳阴阴阳阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110011.WEI",
+      "kind": "cell192",
+      "label": "阳阳阴阴阳阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H110010",
+      "kind": "hexagram",
+      "label": "阳阳阴阴阳阴",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110010.JI",
+      "kind": "cell192",
+      "label": "阳阳阴阴阳阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110010.JIN",
+      "kind": "cell192",
+      "label": "阳阳阴阴阳阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110010.WEI",
+      "kind": "cell192",
+      "label": "阳阳阴阴阳阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H110001",
+      "kind": "hexagram",
+      "label": "阳阳阴阴阴阳",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110001.JI",
+      "kind": "cell192",
+      "label": "阳阳阴阴阴阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110001.JIN",
+      "kind": "cell192",
+      "label": "阳阳阴阴阴阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110001.WEI",
+      "kind": "cell192",
+      "label": "阳阳阴阴阴阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H110000",
+      "kind": "hexagram",
+      "label": "阳阳阴阴阴阴",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110000.JI",
+      "kind": "cell192",
+      "label": "阳阳阴阴阴阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110000.JIN",
+      "kind": "cell192",
+      "label": "阳阳阴阴阴阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H110000.WEI",
+      "kind": "cell192",
+      "label": "阳阳阴阴阴阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H101111",
+      "kind": "hexagram",
+      "label": "阳阴阳阳阳阳",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101111.JI",
+      "kind": "cell192",
+      "label": "阳阴阳阳阳阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101111.JIN",
+      "kind": "cell192",
+      "label": "阳阴阳阳阳阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101111.WEI",
+      "kind": "cell192",
+      "label": "阳阴阳阳阳阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H101110",
+      "kind": "hexagram",
+      "label": "阳阴阳阳阳阴",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101110.JI",
+      "kind": "cell192",
+      "label": "阳阴阳阳阳阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101110.JIN",
+      "kind": "cell192",
+      "label": "阳阴阳阳阳阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101110.WEI",
+      "kind": "cell192",
+      "label": "阳阴阳阳阳阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H101101",
+      "kind": "hexagram",
+      "label": "阳阴阳阳阴阳",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101101.JI",
+      "kind": "cell192",
+      "label": "阳阴阳阳阴阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101101.JIN",
+      "kind": "cell192",
+      "label": "阳阴阳阳阴阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101101.WEI",
+      "kind": "cell192",
+      "label": "阳阴阳阳阴阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H101100",
+      "kind": "hexagram",
+      "label": "阳阴阳阳阴阴",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101100.JI",
+      "kind": "cell192",
+      "label": "阳阴阳阳阴阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101100.JIN",
+      "kind": "cell192",
+      "label": "阳阴阳阳阴阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101100.WEI",
+      "kind": "cell192",
+      "label": "阳阴阳阳阴阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H101011",
+      "kind": "hexagram",
+      "label": "阳阴阳阴阳阳",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101011.JI",
+      "kind": "cell192",
+      "label": "阳阴阳阴阳阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101011.JIN",
+      "kind": "cell192",
+      "label": "阳阴阳阴阳阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101011.WEI",
+      "kind": "cell192",
+      "label": "阳阴阳阴阳阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H101010",
+      "kind": "hexagram",
+      "label": "阳阴阳阴阳阴",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101010.JI",
+      "kind": "cell192",
+      "label": "阳阴阳阴阳阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101010.JIN",
+      "kind": "cell192",
+      "label": "阳阴阳阴阳阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101010.WEI",
+      "kind": "cell192",
+      "label": "阳阴阳阴阳阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H101001",
+      "kind": "hexagram",
+      "label": "阳阴阳阴阴阳",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101001.JI",
+      "kind": "cell192",
+      "label": "阳阴阳阴阴阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101001.JIN",
+      "kind": "cell192",
+      "label": "阳阴阳阴阴阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101001.WEI",
+      "kind": "cell192",
+      "label": "阳阴阳阴阴阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H101000",
+      "kind": "hexagram",
+      "label": "阳阴阳阴阴阴",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101000.JI",
+      "kind": "cell192",
+      "label": "阳阴阳阴阴阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101000.JIN",
+      "kind": "cell192",
+      "label": "阳阴阳阴阴阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H101000.WEI",
+      "kind": "cell192",
+      "label": "阳阴阳阴阴阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H100111",
+      "kind": "hexagram",
+      "label": "阳阴阴阳阳阳",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100111.JI",
+      "kind": "cell192",
+      "label": "阳阴阴阳阳阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100111.JIN",
+      "kind": "cell192",
+      "label": "阳阴阴阳阳阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100111.WEI",
+      "kind": "cell192",
+      "label": "阳阴阴阳阳阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H100110",
+      "kind": "hexagram",
+      "label": "阳阴阴阳阳阴",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100110.JI",
+      "kind": "cell192",
+      "label": "阳阴阴阳阳阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100110.JIN",
+      "kind": "cell192",
+      "label": "阳阴阴阳阳阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100110.WEI",
+      "kind": "cell192",
+      "label": "阳阴阴阳阳阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H100101",
+      "kind": "hexagram",
+      "label": "阳阴阴阳阴阳",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100101.JI",
+      "kind": "cell192",
+      "label": "阳阴阴阳阴阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100101.JIN",
+      "kind": "cell192",
+      "label": "阳阴阴阳阴阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100101.WEI",
+      "kind": "cell192",
+      "label": "阳阴阴阳阴阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H100100",
+      "kind": "hexagram",
+      "label": "阳阴阴阳阴阴",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100100.JI",
+      "kind": "cell192",
+      "label": "阳阴阴阳阴阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100100.JIN",
+      "kind": "cell192",
+      "label": "阳阴阴阳阴阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100100.WEI",
+      "kind": "cell192",
+      "label": "阳阴阴阳阴阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H100011",
+      "kind": "hexagram",
+      "label": "阳阴阴阴阳阳",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100011.JI",
+      "kind": "cell192",
+      "label": "阳阴阴阴阳阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100011.JIN",
+      "kind": "cell192",
+      "label": "阳阴阴阴阳阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100011.WEI",
+      "kind": "cell192",
+      "label": "阳阴阴阴阳阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H100010",
+      "kind": "hexagram",
+      "label": "阳阴阴阴阳阴",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100010.JI",
+      "kind": "cell192",
+      "label": "阳阴阴阴阳阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100010.JIN",
+      "kind": "cell192",
+      "label": "阳阴阴阴阳阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100010.WEI",
+      "kind": "cell192",
+      "label": "阳阴阴阴阳阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H100001",
+      "kind": "hexagram",
+      "label": "阳阴阴阴阴阳",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100001.JI",
+      "kind": "cell192",
+      "label": "阳阴阴阴阴阳/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100001.JIN",
+      "kind": "cell192",
+      "label": "阳阴阴阴阴阳/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100001.WEI",
+      "kind": "cell192",
+      "label": "阳阴阴阴阴阳/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H100000",
+      "kind": "hexagram",
+      "label": "阳阴阴阴阴阴",
+      "level": 6,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100000.JI",
+      "kind": "cell192",
+      "label": "阳阴阴阴阴阴/已",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100000.JIN",
+      "kind": "cell192",
+      "label": "阳阴阴阴阴阴/今",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H100000.WEI",
+      "kind": "cell192",
+      "label": "阳阴阴阴阴阴/未",
+      "level": 7,
+      "path": "初爻=阳 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H011111",
+      "kind": "hexagram",
+      "label": "阴阳阳阳阳阳",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011111.JI",
+      "kind": "cell192",
+      "label": "阴阳阳阳阳阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011111.JIN",
+      "kind": "cell192",
+      "label": "阴阳阳阳阳阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011111.WEI",
+      "kind": "cell192",
+      "label": "阴阳阳阳阳阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H011110",
+      "kind": "hexagram",
+      "label": "阴阳阳阳阳阴",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011110.JI",
+      "kind": "cell192",
+      "label": "阴阳阳阳阳阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011110.JIN",
+      "kind": "cell192",
+      "label": "阴阳阳阳阳阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011110.WEI",
+      "kind": "cell192",
+      "label": "阴阳阳阳阳阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H011101",
+      "kind": "hexagram",
+      "label": "阴阳阳阳阴阳",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011101.JI",
+      "kind": "cell192",
+      "label": "阴阳阳阳阴阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011101.JIN",
+      "kind": "cell192",
+      "label": "阴阳阳阳阴阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011101.WEI",
+      "kind": "cell192",
+      "label": "阴阳阳阳阴阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H011100",
+      "kind": "hexagram",
+      "label": "阴阳阳阳阴阴",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011100.JI",
+      "kind": "cell192",
+      "label": "阴阳阳阳阴阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011100.JIN",
+      "kind": "cell192",
+      "label": "阴阳阳阳阴阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011100.WEI",
+      "kind": "cell192",
+      "label": "阴阳阳阳阴阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H011011",
+      "kind": "hexagram",
+      "label": "阴阳阳阴阳阳",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011011.JI",
+      "kind": "cell192",
+      "label": "阴阳阳阴阳阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011011.JIN",
+      "kind": "cell192",
+      "label": "阴阳阳阴阳阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011011.WEI",
+      "kind": "cell192",
+      "label": "阴阳阳阴阳阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H011010",
+      "kind": "hexagram",
+      "label": "阴阳阳阴阳阴",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011010.JI",
+      "kind": "cell192",
+      "label": "阴阳阳阴阳阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011010.JIN",
+      "kind": "cell192",
+      "label": "阴阳阳阴阳阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011010.WEI",
+      "kind": "cell192",
+      "label": "阴阳阳阴阳阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H011001",
+      "kind": "hexagram",
+      "label": "阴阳阳阴阴阳",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011001.JI",
+      "kind": "cell192",
+      "label": "阴阳阳阴阴阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011001.JIN",
+      "kind": "cell192",
+      "label": "阴阳阳阴阴阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011001.WEI",
+      "kind": "cell192",
+      "label": "阴阳阳阴阴阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H011000",
+      "kind": "hexagram",
+      "label": "阴阳阳阴阴阴",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011000.JI",
+      "kind": "cell192",
+      "label": "阴阳阳阴阴阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011000.JIN",
+      "kind": "cell192",
+      "label": "阴阳阳阴阴阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H011000.WEI",
+      "kind": "cell192",
+      "label": "阴阳阳阴阴阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H010111",
+      "kind": "hexagram",
+      "label": "阴阳阴阳阳阳",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010111.JI",
+      "kind": "cell192",
+      "label": "阴阳阴阳阳阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010111.JIN",
+      "kind": "cell192",
+      "label": "阴阳阴阳阳阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010111.WEI",
+      "kind": "cell192",
+      "label": "阴阳阴阳阳阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H010110",
+      "kind": "hexagram",
+      "label": "阴阳阴阳阳阴",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010110.JI",
+      "kind": "cell192",
+      "label": "阴阳阴阳阳阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010110.JIN",
+      "kind": "cell192",
+      "label": "阴阳阴阳阳阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010110.WEI",
+      "kind": "cell192",
+      "label": "阴阳阴阳阳阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H010101",
+      "kind": "hexagram",
+      "label": "阴阳阴阳阴阳",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010101.JI",
+      "kind": "cell192",
+      "label": "阴阳阴阳阴阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010101.JIN",
+      "kind": "cell192",
+      "label": "阴阳阴阳阴阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010101.WEI",
+      "kind": "cell192",
+      "label": "阴阳阴阳阴阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H010100",
+      "kind": "hexagram",
+      "label": "阴阳阴阳阴阴",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010100.JI",
+      "kind": "cell192",
+      "label": "阴阳阴阳阴阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010100.JIN",
+      "kind": "cell192",
+      "label": "阴阳阴阳阴阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010100.WEI",
+      "kind": "cell192",
+      "label": "阴阳阴阳阴阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H010011",
+      "kind": "hexagram",
+      "label": "阴阳阴阴阳阳",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010011.JI",
+      "kind": "cell192",
+      "label": "阴阳阴阴阳阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010011.JIN",
+      "kind": "cell192",
+      "label": "阴阳阴阴阳阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010011.WEI",
+      "kind": "cell192",
+      "label": "阴阳阴阴阳阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H010010",
+      "kind": "hexagram",
+      "label": "阴阳阴阴阳阴",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010010.JI",
+      "kind": "cell192",
+      "label": "阴阳阴阴阳阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010010.JIN",
+      "kind": "cell192",
+      "label": "阴阳阴阴阳阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010010.WEI",
+      "kind": "cell192",
+      "label": "阴阳阴阴阳阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H010001",
+      "kind": "hexagram",
+      "label": "阴阳阴阴阴阳",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010001.JI",
+      "kind": "cell192",
+      "label": "阴阳阴阴阴阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010001.JIN",
+      "kind": "cell192",
+      "label": "阴阳阴阴阴阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010001.WEI",
+      "kind": "cell192",
+      "label": "阴阳阴阴阴阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H010000",
+      "kind": "hexagram",
+      "label": "阴阳阴阴阴阴",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010000.JI",
+      "kind": "cell192",
+      "label": "阴阳阴阴阴阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010000.JIN",
+      "kind": "cell192",
+      "label": "阴阳阴阴阴阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H010000.WEI",
+      "kind": "cell192",
+      "label": "阴阳阴阴阴阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阳 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H001111",
+      "kind": "hexagram",
+      "label": "阴阴阳阳阳阳",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001111.JI",
+      "kind": "cell192",
+      "label": "阴阴阳阳阳阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001111.JIN",
+      "kind": "cell192",
+      "label": "阴阴阳阳阳阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001111.WEI",
+      "kind": "cell192",
+      "label": "阴阴阳阳阳阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H001110",
+      "kind": "hexagram",
+      "label": "阴阴阳阳阳阴",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001110.JI",
+      "kind": "cell192",
+      "label": "阴阴阳阳阳阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001110.JIN",
+      "kind": "cell192",
+      "label": "阴阴阳阳阳阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001110.WEI",
+      "kind": "cell192",
+      "label": "阴阴阳阳阳阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H001101",
+      "kind": "hexagram",
+      "label": "阴阴阳阳阴阳",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001101.JI",
+      "kind": "cell192",
+      "label": "阴阴阳阳阴阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001101.JIN",
+      "kind": "cell192",
+      "label": "阴阴阳阳阴阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001101.WEI",
+      "kind": "cell192",
+      "label": "阴阴阳阳阴阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H001100",
+      "kind": "hexagram",
+      "label": "阴阴阳阳阴阴",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001100.JI",
+      "kind": "cell192",
+      "label": "阴阴阳阳阴阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001100.JIN",
+      "kind": "cell192",
+      "label": "阴阴阳阳阴阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001100.WEI",
+      "kind": "cell192",
+      "label": "阴阴阳阳阴阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H001011",
+      "kind": "hexagram",
+      "label": "阴阴阳阴阳阳",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001011.JI",
+      "kind": "cell192",
+      "label": "阴阴阳阴阳阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001011.JIN",
+      "kind": "cell192",
+      "label": "阴阴阳阴阳阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001011.WEI",
+      "kind": "cell192",
+      "label": "阴阴阳阴阳阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H001010",
+      "kind": "hexagram",
+      "label": "阴阴阳阴阳阴",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001010.JI",
+      "kind": "cell192",
+      "label": "阴阴阳阴阳阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001010.JIN",
+      "kind": "cell192",
+      "label": "阴阴阳阴阳阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001010.WEI",
+      "kind": "cell192",
+      "label": "阴阴阳阴阳阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H001001",
+      "kind": "hexagram",
+      "label": "阴阴阳阴阴阳",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001001.JI",
+      "kind": "cell192",
+      "label": "阴阴阳阴阴阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001001.JIN",
+      "kind": "cell192",
+      "label": "阴阴阳阴阴阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001001.WEI",
+      "kind": "cell192",
+      "label": "阴阴阳阴阴阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H001000",
+      "kind": "hexagram",
+      "label": "阴阴阳阴阴阴",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001000.JI",
+      "kind": "cell192",
+      "label": "阴阴阳阴阴阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001000.JIN",
+      "kind": "cell192",
+      "label": "阴阴阳阴阴阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H001000.WEI",
+      "kind": "cell192",
+      "label": "阴阴阳阴阴阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阳 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H000111",
+      "kind": "hexagram",
+      "label": "阴阴阴阳阳阳",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000111.JI",
+      "kind": "cell192",
+      "label": "阴阴阴阳阳阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000111.JIN",
+      "kind": "cell192",
+      "label": "阴阴阴阳阳阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000111.WEI",
+      "kind": "cell192",
+      "label": "阴阴阴阳阳阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H000110",
+      "kind": "hexagram",
+      "label": "阴阴阴阳阳阴",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000110.JI",
+      "kind": "cell192",
+      "label": "阴阴阴阳阳阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000110.JIN",
+      "kind": "cell192",
+      "label": "阴阴阴阳阳阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000110.WEI",
+      "kind": "cell192",
+      "label": "阴阴阴阳阳阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H000101",
+      "kind": "hexagram",
+      "label": "阴阴阴阳阴阳",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000101.JI",
+      "kind": "cell192",
+      "label": "阴阴阴阳阴阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000101.JIN",
+      "kind": "cell192",
+      "label": "阴阴阴阳阴阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000101.WEI",
+      "kind": "cell192",
+      "label": "阴阴阴阳阴阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H000100",
+      "kind": "hexagram",
+      "label": "阴阴阴阳阴阴",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000100.JI",
+      "kind": "cell192",
+      "label": "阴阴阴阳阴阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000100.JIN",
+      "kind": "cell192",
+      "label": "阴阴阴阳阴阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000100.WEI",
+      "kind": "cell192",
+      "label": "阴阴阴阳阴阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阳 / 五爻=阴 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H000011",
+      "kind": "hexagram",
+      "label": "阴阴阴阴阳阳",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000011.JI",
+      "kind": "cell192",
+      "label": "阴阴阴阴阳阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000011.JIN",
+      "kind": "cell192",
+      "label": "阴阴阴阴阳阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000011.WEI",
+      "kind": "cell192",
+      "label": "阴阴阴阴阳阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H000010",
+      "kind": "hexagram",
+      "label": "阴阴阴阴阳阴",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000010.JI",
+      "kind": "cell192",
+      "label": "阴阴阴阴阳阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000010.JIN",
+      "kind": "cell192",
+      "label": "阴阴阴阴阳阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000010.WEI",
+      "kind": "cell192",
+      "label": "阴阴阴阴阳阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阳 / 上爻=阴 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H000001",
+      "kind": "hexagram",
+      "label": "阴阴阴阴阴阳",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阳"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000001.JI",
+      "kind": "cell192",
+      "label": "阴阴阴阴阴阳/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000001.JIN",
+      "kind": "cell192",
+      "label": "阴阴阴阴阴阳/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000001.WEI",
+      "kind": "cell192",
+      "label": "阴阴阴阴阴阳/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阳 / 时态=未"
+    },
+    {
+      "count_under_node": 3,
+      "id": "H000000",
+      "kind": "hexagram",
+      "label": "阴阴阴阴阴阴",
+      "level": 6,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阴"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000000.JI",
+      "kind": "cell192",
+      "label": "阴阴阴阴阴阴/已",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=已"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000000.JIN",
+      "kind": "cell192",
+      "label": "阴阴阴阴阴阴/今",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=今"
+    },
+    {
+      "count_under_node": 1,
+      "id": "H000000.WEI",
+      "kind": "cell192",
+      "label": "阴阴阴阴阴阴/未",
+      "level": 7,
+      "path": "初爻=阴 / 二爻=阴 / 三爻=阴 / 四爻=阴 / 五爻=阴 / 上爻=阴 / 时态=未"
+    }
+  ],
+  "relation_types": [
+    {
+      "edge_count": 62,
+      "kind": "chooseYao",
+      "meaning": "在下一爻位选择阳或阴，沿二叉前缀树下行。"
+    },
+    {
+      "edge_count": 64,
+      "kind": "completeHexagram",
+      "meaning": "选择上爻后，六位前缀闭合为一个 Hexagram。"
+    },
+    {
+      "edge_count": 192,
+      "kind": "realizeShi",
+      "meaning": "每个 Hexagram 与 已/今/未 三时态相乘，成为 Cell192。"
+    }
+  ],
+  "shape": "1 -> 2 -> 4 -> 8 -> 16 -> 32 -> 64 -> 192",
+  "sources": [
+    "formal/SSBX/Foundation/Yi/Yi.lean",
+    "formal/SSBX/Foundation/Bagua/Cell192.lean"
+  ]
+}

@@ -27,7 +27,7 @@
 | docs-next/10_formal_形式/trust-boundaries.md | 4 | 7 |
 | docs-next/10_formal_形式/truth-model.md | 0 | 2 |
 | docs-next/10_formal_形式/wen.md | 0 | 6 |
-| docs-next/10_formal_形式/yi-bagua.md | 0 | 3 |
+| docs-next/10_formal_形式/yi-bagua.md | 0 | 4 |
 | docs-next/20_theory_义理/README.md | 0 | 5 |
 | docs-next/20_theory_义理/bridge-to-lean.md | 0 | 1 |
 | docs-next/20_theory_义理/core-framework.md | 0 | 0 |
@@ -50,7 +50,7 @@
 | docs-next/40_reference_参考/glossary.md | 0 | 1 |
 | docs-next/40_reference_参考/glyphs-registry.md | 4 | 0 |
 | docs-next/40_reference_参考/historical-sources.md | 0 | 0 |
-| docs-next/40_reference_参考/operators.md | 5 | 0 |
+| docs-next/40_reference_参考/operators.md | 5 | 2 |
 | docs-next/40_reference_参考/six-tables.md | 2 | 0 |
 | docs-next/40_reference_参考/ziwen-language.md | 0 | 0 |
 | docs-next/50_maintenance/README.md | 0 | 0 |
@@ -81,6 +81,7 @@
 | formal/SSBX/notes/tier3-quine-roadmap.md | 1 | 15 |
 | formal/SSBX/notes/truth-ledger-boundary.md | 0 | 20 |
 | formal/SSBX/notes/v14-roadmap.md | 0 | 0 |
+| formal/SSBX/notes/wensurface-roadmap.md | 0 | 9 |
 | formal/SSBX/notes/zero-axiom-roadmap.md | 1 | 20 |
 | formal/SSBX/notes/zhouyi-position-operator-report.md | 0 | 20 |
 | formal/SSBX/notes/自释与自证.md | 0 | 0 |

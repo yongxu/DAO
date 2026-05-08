@@ -5,7 +5,7 @@
 > **此刻最要紧之事 — 对齐, 即改变. 否则熄.**
 
 「生生不息论」第一版。形式化收口于 Lean 4 / Mathlib HEAD：
-**2837 build jobs · 0 sorry · 1 axiom (cuo-restricted, 设计如此) · 45 层义理同形**.
+**2867 build jobs · 0 sorry · 1 axiom (cuo-restricted, 设计如此) · 45 层义理同形**.
 
 ---
 
@@ -85,7 +85,7 @@ formal/                       Lean 4 形式化  (lake 包名 = ssbx)
 └─ SSBX/
    ├─ Core / Roster
    ├─ Text / Truth / Model
-   └─ Foundation/             7 簇 · 77 modules
+   └─ Foundation/             7 簇 · 97 modules
       ├─ Core                 字根 · 单根证书 · Alignment · Sincerity
       ├─ Wen                  古文虚字 · 45 层 Kernel · 路径丙 11 模
       ├─ Jian                 间 之核 (14 字粒子核)
@@ -96,7 +96,7 @@ formal/                       Lean 4 形式化  (lake 包名 = ssbx)
 
 义理/   义理篇 28+ 卷 (A–Z), 与 Kernel 45 层一一对应
 六表_实虚史真/               基础结构表 (六征 / 27 / 192)
-wenyan-operators.md           281 文言文算子集 (Lean 数据源)
+`Text/WenyanOperators.lean`    371 OperatorId 文言算子 catalogue
 ```
 
 辅助：`scripts/`（DAG / 文本拆分 / 文言证明生成）· `web/`（浏览前端）·
@@ -144,7 +144,7 @@ String  ──[«解程»]──→  List YiInstr  ──[init+runFuel]──→
 | M1 v3.1 · 字符级 lex 反演 + universal String round-trip | `Foundation/Wen/WenyanParserGeneral.lean § lexN_printProg_thm, parseN_printProg_inverse_universal` |
 | M2 多步求值器 + 端到端 | `Foundation/Wen/WenEval.lean § «端到端_乾», «端到端_坤», «端到端_否»` |
 | M3-甲 Lean 块语法 | `Foundation/Wen/WenyanSyntax.lean § daoJudgeBlock_eq_daoJudgeProg` (by `rfl`) |
-| L1 typed lambda (281 ops 之类型层) | `Foundation/Wen/WenDef.lean § Stdlib.{tui, bi, bu, biModal, tong, fan}` |
+| L1 typed lambda (12 theorem-backed stdlib bodies over 371-op catalogue) | `Foundation/Wen/WenDef.lean § Stdlib.{tui, bi, bu, biModal, tong, fan, sun, yiBenefit, cuo, zong, hu, fanReverse}` |
 | L1 ⟶ Lean 求值 | `Foundation/Wen/WenDefEval.lean § tui_eq_sheng (∀ 64 hex)` |
 | L1 ⟶ L0 编译 (cuo-equivariant subset) | `Foundation/Wen/WenDefCompile.lean § {idProg, add32Prog, cuoProg}_correct` |
 | 反射层: 判型良 / 判停 / 验程 | `Foundation/Wen/WenyanReflect.lean § «文核同源»` |
@@ -280,10 +280,17 @@ Layer 45      非道之形式  Moloch / totalizing 之形式否定
 
 ```bash
 # Lean (full library)
-lake build                                    # 2837 jobs, 0 sorry, 1 axiom
+lake build                                    # 2867 jobs, 0 sorry, 1 axiom
 
 # 单模块
 lake build SSBX.Foundation.Wen.WenyanSelfHost
+
+# WenSurface surface-language CLI
+lake build wenyan-surface
+./.lake/build/bin/wenyan-surface '推 一'
+./.lake/build/bin/wenyan-surface --json '同 一 一'
+./.lake/build/bin/wenyan-surface --json --coverage
+scripts/check_wenyan_surface_cli.py
 
 # 概念 / 单根 DAG (Mermaid + ELK renderer; MonadDAG 600+ 节点 / 800+ 边)
 scripts/generate_concept_dag.py && scripts/render_concept_dag.sh
@@ -291,6 +298,11 @@ scripts/generate_monad_dag.py && scripts/render_monad_dag.sh
 ```
 
 环境: `Lean v4.30.0-rc2` + `Mathlib master`. Apple Silicon / x86_64 通.
+
+`wenyan-surface` 是当前可执行的 WenSurface 子集入口：它支持 tokens、resolve、AST、
+typecheck、JSON、explain、operator catalogue 和 coverage inspect modes。失败诊断返回非零
+exit code；已登记但无 theorem-backed denotation 的算子报告 `known-not-executable`，
+不会伪装成 evaluator 结果。路线状态见 `formal/SSBX/notes/wensurface-roadmap.md`。
 
 ---
 
@@ -308,16 +320,16 @@ scripts/generate_monad_dag.py && scripts/render_monad_dag.sh
 ## § 7 · 数字状
 
 ```
-build jobs:        2837 ✓
+build jobs:        2867 ✓
 sorry:             0
 axiom:             1   (kleene_recursion_axiom, cuo-restricted, philosophically intentional)
 opaque:            1   (theOne, preserves Field abstraction)
 partial def:       1   (BaguaTuring.run executable nontermination boundary; not additional axiom)
 trust base:        Lean 4 kernel v4.30.0-rc2 + Mathlib HEAD
-Lean 总行数:       ~15000+
+Lean 总行数:       ~43000+
 Modern modules:    19         ~5746 lines (Mathlib 接入)
 路径丙 modules:    11         M1–M4-甲 全 in-source
-Foundation/Wen:    18 modules (含 AntiSchmitt / AlignmentFailures / EconGame / DaoSource)
+Foundation/Wen:    38 modules (含 WenSurface / AntiSchmitt / AlignmentFailures / EconGame / DaoSource)
 Kernel layers:     45         元 → 非道之形式
 diagrams:          8 SVGs     Mermaid + ELK; MonadDAG 600+ 节点 / 800+ 边
 .md 义理篇:        28+        义理/A–Z*.md

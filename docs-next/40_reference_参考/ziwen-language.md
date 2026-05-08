@@ -1,6 +1,8 @@
 # 字文语言
 
-字文语言的完整规范在根目录 `ziwen-spec.md`。本页只给新版文档中的读法和审计入口。
+字文语言的完整未来规范在根目录 `ziwen-spec.md`。当前可执行 surface 子集是
+`wenyan-surface`，状态账本见 `formal/SSBX/notes/wensurface-roadmap.md`。
+本页只给新版文档中的读法和审计入口。
 
 ## 定位
 
@@ -17,6 +19,7 @@
 | 主题 | 入口 |
 |---|---|
 | 规范正文 | `ziwen-spec.md` |
+| WenSurface 状态账本 | `formal/SSBX/notes/wensurface-roadmap.md` |
 | 受控文规范 | `formal/SSBX/notes/baguaWen-spec.md` |
 | parse-print 路线 | `formal/SSBX/notes/parse-print-roadmap.md` |
 | 文言算子 | `operators.md` |
@@ -40,3 +43,4 @@
 - 再看 `Foundation/Wen` 与 `Text` 相关 Lean 模块。
 - 若涉及 quine、自宿主或自解释，保留路线状态，不写成全系统已自证。
 - 若涉及旧文「文道一也」，应同时参考 `../30_crosswalk_互证/claim-status.md`。
+- 若涉及 `wenyan-surface`，区分完整 Ziwen v0 规范与当前可执行子集；catalogue-only 算子只能写成 `known-not-executable`。

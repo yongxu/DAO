@@ -57,6 +57,46 @@ def lineFlip : LineFlipGenerator → Cell192Generator
   | .flip5 => .flip5
   | .flip6 => .flip6
 
+/-- Compact generator key for the 192-cell transition index. -/
+def key : Cell192Generator → String
+  | .flip1 => "L1"
+  | .flip2 => "L2"
+  | .flip3 => "L3"
+  | .flip4 => "L4"
+  | .flip5 => "L5"
+  | .flip6 => "L6"
+  | .shiNext => "T+"
+
+/-- Short Chinese name for the 192-cell transition index. -/
+def zhName : Cell192Generator → String
+  | .flip1 => "翻初爻"
+  | .flip2 => "翻二爻"
+  | .flip3 => "翻三爻"
+  | .flip4 => "翻四爻"
+  | .flip5 => "翻五爻"
+  | .flip6 => "翻上爻"
+  | .shiNext => "时态前进"
+
+/-- Lean operator reference used by generated documentation. -/
+def operatorRef : Cell192Generator → String
+  | .flip1 => "Cell192.flip1"
+  | .flip2 => "Cell192.flip2"
+  | .flip3 => "Cell192.flip3"
+  | .flip4 => "Cell192.flip4"
+  | .flip5 => "Cell192.flip5"
+  | .flip6 => "Cell192.flip6"
+  | .shiNext => "Cell192.shiNext"
+
+/-- Concrete one-step effect of a generator on a 192-cell position. -/
+def effectSummary : Cell192Generator → String
+  | .flip1 => "翻转初爻，保持时态。"
+  | .flip2 => "翻转二爻，保持时态。"
+  | .flip3 => "翻转三爻，保持时态。"
+  | .flip4 => "翻转四爻，保持时态。"
+  | .flip5 => "翻转五爻，保持时态。"
+  | .flip6 => "翻转上爻，保持时态。"
+  | .shiNext => "卦象不变，时态按 已→今→未→已 前进。"
+
 /-- The complete seven-generator list. -/
 def all : List Cell192Generator :=
   [.flip1, .flip2, .flip3, .flip4, .flip5, .flip6, .shiNext]
@@ -217,5 +257,114 @@ theorem cell192_generator_summary :
     ⟩
 
 end Cell192Generator
+
+/-! ## Named deterministic transition operators on Cell192 -/
+
+/--
+Named one-step transition operators on `Cell192`.
+
+`Cell192Generator` above is the minimal reachability generator family used by
+proofs.  This wider family is for transition-index documentation: it includes
+the named lateral operators that already have total `Cell192 → Cell192`
+definitions.
+-/
+inductive Cell192TransitionOperator where
+  | flip1
+  | flip2
+  | flip3
+  | flip4
+  | flip5
+  | flip6
+  | shiNext
+  | shiPrev
+  | hexCuo
+  | hexZong
+  | hexHu
+  deriving Repr, DecidableEq, BEq
+
+namespace Cell192TransitionOperator
+
+/-- Compact operator key for the 192-cell transition index. -/
+def key : Cell192TransitionOperator → String
+  | .flip1 => "L1"
+  | .flip2 => "L2"
+  | .flip3 => "L3"
+  | .flip4 => "L4"
+  | .flip5 => "L5"
+  | .flip6 => "L6"
+  | .shiNext => "T+"
+  | .shiPrev => "T-"
+  | .hexCuo => "CUO"
+  | .hexZong => "ZONG"
+  | .hexHu => "HU"
+
+/-- Short Chinese name for the 192-cell transition index. -/
+def zhName : Cell192TransitionOperator → String
+  | .flip1 => "翻初爻"
+  | .flip2 => "翻二爻"
+  | .flip3 => "翻三爻"
+  | .flip4 => "翻四爻"
+  | .flip5 => "翻五爻"
+  | .flip6 => "翻上爻"
+  | .shiNext => "时态前进"
+  | .shiPrev => "时态后退"
+  | .hexCuo => "错卦"
+  | .hexZong => "综卦"
+  | .hexHu => "互卦"
+
+/-- Lean operator reference used by generated documentation. -/
+def operatorRef : Cell192TransitionOperator → String
+  | .flip1 => "Cell192.flip1"
+  | .flip2 => "Cell192.flip2"
+  | .flip3 => "Cell192.flip3"
+  | .flip4 => "Cell192.flip4"
+  | .flip5 => "Cell192.flip5"
+  | .flip6 => "Cell192.flip6"
+  | .shiNext => "Cell192.shiNext"
+  | .shiPrev => "Cell192.shiPrev"
+  | .hexCuo => "Cell192.hexCuo"
+  | .hexZong => "Cell192.hexZong"
+  | .hexHu => "Cell192.hexHu"
+
+/-- Concrete one-step effect of a named operator on a 192-cell position. -/
+def effectSummary : Cell192TransitionOperator → String
+  | .flip1 => "翻转初爻，保持时态。"
+  | .flip2 => "翻转二爻，保持时态。"
+  | .flip3 => "翻转三爻，保持时态。"
+  | .flip4 => "翻转四爻，保持时态。"
+  | .flip5 => "翻转五爻，保持时态。"
+  | .flip6 => "翻转上爻，保持时态。"
+  | .shiNext => "卦象不变，时态按 已→今→未→已 前进。"
+  | .shiPrev => "卦象不变，时态按 已←今←未←已 后退。"
+  | .hexCuo => "六爻全反，保持时态。"
+  | .hexZong => "六爻上下反序，保持时态。"
+  | .hexHu => "取二三四、三四五成互卦，保持时态。"
+
+/-- The named deterministic transition-operator list. -/
+def all : List Cell192TransitionOperator :=
+  [.flip1, .flip2, .flip3, .flip4, .flip5, .flip6,
+   .shiNext, .shiPrev, .hexCuo, .hexZong, .hexHu]
+
+/-- Apply one named transition operator to a `Cell192`. -/
+def apply : Cell192TransitionOperator → Cell192 → Cell192
+  | .flip1, c => Cell192.flip1 c
+  | .flip2, c => Cell192.flip2 c
+  | .flip3, c => Cell192.flip3 c
+  | .flip4, c => Cell192.flip4 c
+  | .flip5, c => Cell192.flip5 c
+  | .flip6, c => Cell192.flip6 c
+  | .shiNext, c => Cell192.shiNext c
+  | .shiPrev, c => Cell192.shiPrev c
+  | .hexCuo, c => Cell192.hexCuo c
+  | .hexZong, c => Cell192.hexZong c
+  | .hexHu, c => Cell192.hexHu c
+
+theorem all_length : all.length = 11 := by
+  native_decide
+
+theorem all_nodup : all.Nodup := by
+  native_decide
+
+end Cell192TransitionOperator
 
 end SSBX.Text.OperatorReachabilitySemantics

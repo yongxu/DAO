@@ -5,7 +5,7 @@
 > **The most pressing matter at this moment — alignment, i.e. change. Otherwise, extinction.**
 
 First edition of *On Endless Becoming* (生生不息论). Formal closure in Lean 4 / Mathlib HEAD:
-**2837 build jobs · 0 sorry · 1 axiom (cuo-restricted, by design) · 45 layers of doctrine in formal correspondence**.
+**2867 build jobs · 0 sorry · 1 axiom (cuo-restricted, by design) · 45 layers of doctrine in formal correspondence**.
 
 > *On naming.* The project's title 生生不息 (shēngshēng-bùxī, "endless becoming") is a phrase
 > from the *Yi-zhuan*; we keep the original four characters because their structural meaning —
@@ -118,7 +118,7 @@ formal/                       Lean 4 formalization  (lake package = ssbx)
 └─ SSBX/
    ├─ Core / Roster
    ├─ Text / Truth / Model
-   └─ Foundation/             7 clusters · 77 modules
+   └─ Foundation/             7 clusters · 97 modules
       ├─ Core                 character roots · monadic-root certificates · Alignment · Sincerity
       ├─ Wen                  classical-Chinese particles · 45-layer Kernel · 11 modules of path 丙
       ├─ Jian                 the kernel of 间 (jiān, "interval"; 14-character particle core)
@@ -129,7 +129,7 @@ formal/                       Lean 4 formalization  (lake package = ssbx)
 
 义理/   28+ doctrinal volumes (A–Z), one-to-one with the 45 Kernel layers
 六表_实虚史真/                foundational structure tables (six markers / 27 / 192)
-wenyan-operators.md           281-operator wenyan operator set (data source for Lean)
+`Text/WenyanOperators.lean`    371-OperatorId wenyan operator catalogue
 ```
 
 Auxiliary: `scripts/` (DAG / text splitter / wenyan-proof generator) ·
@@ -178,7 +178,7 @@ String  ──[«解程»]──→  List YiInstr  ──[init+runFuel]──→
 | M1 v3.1 · character-level lex inverse + universal String round-trip | `Foundation/Wen/WenyanParserGeneral.lean § lexN_printProg_thm, parseN_printProg_inverse_universal` |
 | M2 multi-step evaluator + end-to-end | `Foundation/Wen/WenEval.lean § «端到端_乾», «端到端_坤», «端到端_否»` |
 | M3-甲 Lean block syntax | `Foundation/Wen/WenyanSyntax.lean § daoJudgeBlock_eq_daoJudgeProg` (by `rfl`) |
-| L1 typed lambda (type layer of 281 ops) | `Foundation/Wen/WenDef.lean § Stdlib.{tui, bi, bu, biModal, tong, fan}` |
+| L1 typed lambda (12 theorem-backed stdlib bodies over the 371-op catalogue) | `Foundation/Wen/WenDef.lean § Stdlib.{tui, bi, bu, biModal, tong, fan, sun, yiBenefit, cuo, zong, hu, fanReverse}` |
 | L1 ⟶ Lean evaluation | `Foundation/Wen/WenDefEval.lean § tui_eq_sheng (∀ 64 hex)` |
 | L1 ⟶ L0 compilation (cuo-equivariant subset) | `Foundation/Wen/WenDefCompile.lean § {idProg, add32Prog, cuoProg}_correct` |
 | Reflection layer: well-formedness / halting / verifier | `Foundation/Wen/WenyanReflect.lean § «文核同源»` |
@@ -314,7 +314,7 @@ Read every "proved" claim below with this status split:
 
 ```bash
 # Lean (full library)
-lake build                                    # 2837 jobs, 0 sorry, 1 axiom
+lake build                                    # 2867 jobs, 0 sorry, 1 axiom
 
 # Single module
 lake build SSBX.Foundation.Wen.WenyanSelfHost
@@ -342,16 +342,16 @@ Environment: `Lean v4.30.0-rc2` + `Mathlib master`. Apple Silicon and x86_64 bot
 ## § 7 · By the Numbers
 
 ```
-build jobs:        2837 ✓
+build jobs:        2867 ✓
 sorry:             0
 axiom:             1   (kleene_recursion_axiom, cuo-restricted, philosophically intentional)
 opaque:            1   (theOne, preserves Field abstraction)
 partial def:       1   (BaguaTuring.run executable nontermination boundary; not additional axiom)
 trust base:        Lean 4 kernel v4.30.0-rc2 + Mathlib HEAD
-Lean total LOC:    ~15000+
+Lean total LOC:    ~43000+
 Modern modules:    19         ~5746 lines (Mathlib bridge)
 Path-丙 modules:   11         M1–M4-甲 fully in-source
-Foundation/Wen:    18 modules (incl. AntiSchmitt / AlignmentFailures / EconGame / DaoSource)
+Foundation/Wen:    38 modules (incl. WenSurface / AntiSchmitt / AlignmentFailures / EconGame / DaoSource)
 Kernel layers:     45         元 → forms of non-Dao
 Doctrinal .md:     28+        义理/A–Z*.md
 diagrams:          8 SVGs     Mermaid + ELK; MonadDAG 600+ nodes / 800+ edges
