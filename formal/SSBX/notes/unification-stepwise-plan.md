@@ -80,6 +80,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityQuotientSupportAlgebraBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityObservableLedgerBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityActionPhaseLawBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityStepwiseUnificationBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityNormalizationBridge
 lake build SSBX
 git diff --check --
 ```
@@ -91,7 +92,7 @@ git diff --check --
 | 项 | 内容 |
 |---|---|
 | Lean 出口 | 保持 `markov_causal_bridge_summary`、`measurement_event_alignment`、`markov_bridge_not_direct_language_addition` 为 `machineChecked` |
-| 文档出口 | 本文件与验证计划明确列出未关闭项：sum-one 概率律、Born rule 从桥的推导、真实 quantum channel law、干涉、因果偏序、度规恢复、经验闭合 |
+| 文档出口 | 本文件与验证计划明确列出未关闭项：Born rule 从桥的推导、真实 quantum channel law、干涉、因果偏序、度规恢复、经验闭合；finite row sum-one boundary 已由 S9 后续关闭 |
 | 失败记录 | 若发现文档中有强于 theorem 的终局统一或量子引力完成等 claim，记录为 `conceptual mismatch`，并改回对应结构层级 |
 | 当前正名 | Markov-因果桥当前是最小可验证中介构造；更强的物理大统一读法需要后续 theorem 合取后再命名 |
 
@@ -777,6 +778,34 @@ Lean 只关闭一个几何候选接口；
 | `PendingBeyondS5r` | `QuantumRelativityStepwiseUnificationBridge.lean` | sum-one、Born derivation、continuous action、path integral、data、unitary/CPTP、metric recovery、empirical closure 保持显式 pending |
 | `pending_boundary_not_closed_by_s5r` | `QuantumRelativityStepwiseUnificationBridge.lean` | 每个 pending boundary 在本层 `ClosedByStepwiseS5r = false` |
 
+## S9 · 有限概率归一化候选
+
+目标：把 S2 的 finite probability-kernel denominator interface 升级到最小 finite row sum-one boundary。S9 不做 Born rule 推导，只证明 concrete 与 `71232` grid kernel 的非终端行在显式 row support 上归一为 `1`。
+
+| 项 | 内容 |
+|---|---|
+| Lean 出口 | `finite_probability_normalization_bridge_summary` |
+| 最低 theorem 形态 | 合取 `FiniteSumOneProbabilityBoundaryClosed`、concrete/grid finite probability projection、`71232` grid length、`PendingBeyondS9` 与 Wen coverage |
+| 失败记录 | 已记录 list-sum / `Fin` singleton / Rat coercion failure；修正为直接分支证明 |
+| 文档更新 | 已新增《有限概率归一化候选 · Markov桥S9》 |
+| 后续结构 | Born rule derivation、amplitude/Born normalized support、unitary/CPTP、metric recovery 与 empirical closure 继续 pending |
+
+通过判准：
+
+```text
+concrete 与 grid kernel 均有 sound/complete row support；
+rowWeightSum = rowTotal；
+非终端行的 normalizedRowTotalCandidate = 1。
+```
+
+当前状态：
+
+| theorem | 文件 | 读法 |
+|---|---|---|
+| `finite_probability_normalization_bridge_summary` | `QuantumRelativityFiniteProbabilityNormalizationBridge.lean` | finite row sum-one probability boundary 已关闭 |
+| `FiniteSumOneProbabilityBoundaryClosed` | `QuantumRelativityFiniteProbabilityNormalizationBridge.lean` | concrete/grid row support 与非终端行归一合取 |
+| `PendingBeyondS9` | `QuantumRelativityFiniteProbabilityNormalizationBridge.lean` | sum-one row boundary 不再列入 pending；Born derivation 等较大边界仍 pending |
+
 ## 失败记录追加区
 
 失败记录格式沿用验证计划，并允许追加在此区：
@@ -820,6 +849,7 @@ Lean 只关闭一个几何候选接口；
 | 2026-05-09 | S5q | success | 新增 observable ledger candidate boundary；关闭 pending entry 与 empirical closure 的区分、two-route cancellation ledger entry 的 zero sum/weight 与 pending status，仍不证明数据校准、可测预言 theorem、path integral 或经验闭合 |
 | 2026-05-09 | S5r | failure retained / success | 第一次 action-phase law build 因展开 `quotientVisibleKey` 暴露 `Quot.lift` 导致 quotient readback 化简失败；修正后新增 finite action-to-phase law candidate，关闭 action index `0/1` 到 `1/-1` 的 quotient-support cancellation 与 pending ledger registration |
 | 2026-05-09 | S8 | failure retained / success | 第一次 stepwise summary build 因 operator-cell grid 与 path-quotient support namespace/defeq 解析失败；修正后关闭 current stepwise unification candidate summary，并显式列出 `PendingBeyondS5r` |
+| 2026-05-09 | S9 | failure retained / success | 第一次 finite probability normalization build 因 concrete row list-sum、grid singleton `Fin` 化简与 Rat coercion 递归深度失败；修正后关闭 concrete/grid finite row sum-one boundary，并显式列出 `PendingBeyondS9` |
 
 ## 统一用语正名
 
@@ -827,9 +857,9 @@ Lean 只关闭一个几何候选接口；
 
 | 词 | 在本路线中的含义 | 结构依据 |
 |---|---|---|
-| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S8 已关闭的 summary theorem 与路线日志 |
-| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8 pending list |
-| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary` |
+| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S9 已关闭的 summary theorem 与路线日志 |
+| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8/S9 pending list |
+| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary` |
 
 推荐正名句：
 
@@ -837,6 +867,6 @@ Lean 只关闭一个几何候选接口；
 本路线追求逐步增强的形式统一候选；
 每一步以 Lean 出口、文档锚点和失败记录实事求是地确认含义；
 已经关闭的 summary theorem 就是当前阶段的统一内容，
-尚未闭合的概率律、真实 quantum channel law、几何恢复、数据校准与经验闭合
+尚未闭合的 Born rule 推导、真实 quantum channel law、几何恢复、数据校准与经验闭合
 作为后续结构继续推进。
 ```

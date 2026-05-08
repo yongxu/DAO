@@ -57,7 +57,7 @@ theorem finite_probability_bridge_summary :
 | 非终端行可规格化 | `machineChecked` | `RowNormalizable` 只表示行分母非零 |
 | 权重受分母约束 | `machineChecked` | 每个 `weight a b ≤ rowTotal a` |
 | 有限质量候选 | `machineChecked` typed skeleton | `numerator / denominator` 作为候选接口 |
-| sum-one 概率律 | 未纳入本轮 | 尚未证明一行权重求和等于分母 |
+| sum-one 概率律 | S9 已后续关闭有限行版本 | 本文件 S2 只证明分母接口；`finite_probability_normalization_bridge_summary` 已证明 concrete/grid 非终端行归一 |
 | Born rule | 未纳入本轮 | 尚未从振幅范数推出测量概率 |
 | quantum amplitude / channel candidate | S2 未纳入；S4 已开单独接口 | 见《经典Markov与量子振幅分层 · Markov桥S4》；S2 finite mass 不等于振幅或 Born 概率 |
 | 真实 quantum channel law | 未纳入本轮 | 尚未证明 unitarity、CPTP、Kraus 或 density-matrix law |
@@ -97,7 +97,7 @@ S2 关闭的是 finite denominator interface；
 | 路径组合 | S2 未纳入；S3 已开单独接口 | 见《路径组合与因果约束 · Markov桥S3》；`pathWeight` 乘法仍未纳入 |
 | 经验接口 | 未纳入本轮 | 没有 observation ledger 和数据判准 |
 
-本轮闭合范围：**S2 已在 Lean 中关闭 finite probability-kernel denominator interface；它保守地证明非终端行分母非零和权重上界，不关闭 sum-one 概率律、Born rule、quantum amplitude/channel candidate、干涉、几何恢复或经验闭合。S4/S5/S5b 后续只把 amplitude/channel、path amplitude、Born-shaped boundary 与非零 path witness 作为独立候选层接上，不把 S2 finite mass 解释成 Born 概率。**
+本轮闭合范围：**S2 已在 Lean 中关闭 finite probability-kernel denominator interface；它保守地证明非终端行分母非零和权重上界。S9 已后续关闭 concrete/grid 的 finite row sum-one normalization boundary；Born rule、quantum amplitude/channel law、干涉、几何恢复或经验闭合仍不由 S2 推出。S4/S5/S5b 后续只把 amplitude/channel、path amplitude、Born-shaped boundary 与非零 path witness 作为独立候选层接上，不把 S2 finite mass 解释成 Born 概率。**
 
 ---
 

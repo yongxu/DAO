@@ -33,6 +33,7 @@
 | `formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean` | S5q observable ledger candidate boundary |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean` | S5r finite action-to-phase law candidate |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityStepwiseUnificationBridge.lean` | S8 current stepwise unification candidate summary |
+| `formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean` | S9 finite probability normalization candidate |
 | `formal/SSBX/notes/markov-causal-bridge-plan.md` | 探索计划与完成记录 |
 | `formal/SSBX/notes/unification-stepwise-plan.md` | 逐步完善到候选统一的阶段路线 |
 | `义理/文构造完备与直相加边界.md` | 对 `current-language no-go` 旧说法的正名 |
@@ -59,6 +60,7 @@
 | `义理/观测账本候选 · Markov桥S5q.md` | S5q 观测账本 companion 文档 |
 | `义理/作用量相位律候选 · Markov桥S5r.md` | S5r 作用量相位律 companion 文档 |
 | `义理/逐步统一候选摘要 · Markov桥S8.md` | S8 逐步统一候选摘要 companion 文档 |
+| `义理/有限概率归一化候选 · Markov桥S9.md` | S9 有限概率归一化 companion 文档 |
 
 ## 当前验证结论
 
@@ -91,8 +93,9 @@
 - [x] `observable_ledger_bridge_summary` 已关闭 observable ledger candidate boundary：two-route quotient-support cancellation 可登记为 pending observable ledger entry，且 pending entry 不等于 empirical closure。
 - [x] `action_phase_law_bridge_summary` 已关闭 finite action-to-phase law candidate：period-two action index 导出 `1/-1`，在 quotient support 上相消，并接回 pending observable ledger。
 - [x] `stepwise_unification_candidate_summary` 已关闭 current stepwise unification candidate summary：concrete bridge、finite probability、`71232` grid、S5r action-phase cancellation、pending ledger 与未闭合边界列表已合取。
+- [x] `finite_probability_normalization_bridge_summary` 已关闭 finite row sum-one probability boundary：concrete 与 `71232` grid kernel 都有显式 row support，非终端行 normalized-row-total candidate 为 `1`。
 - [x] 首次新 worktree 原生构建的 `mathlib4` 克隆阻塞已记录为基础设施失败，不当作 theorem 失败。
-- [ ] 尚未验证 sum-one 概率律、Born rule 从 Markov 桥的推导、continuous phase/action law、general all-path enumeration、一般 path integral、真实可测干涉律、unitary / CPTP quantum channel law、完整因果偏序、局部有限 causal set、度规恢复、数据校准、可测预言 theorem 或经验闭合。
+- [ ] 尚未验证 Born rule 从 Markov 桥的推导、continuous phase/action law、general all-path enumeration、一般 path integral、真实可测干涉律、unitary / CPTP quantum channel law、完整因果偏序、局部有限 causal set、度规恢复、数据校准、可测预言 theorem 或经验闭合。
 
 ## 每次变更的最低验证门槛
 
@@ -125,6 +128,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityQuotientSupportAlgebraBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityObservableLedgerBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityActionPhaseLawBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityStepwiseUnificationBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityNormalizationBridge
 lake build SSBX
 git diff --check --
 ```
@@ -182,6 +186,7 @@ rg -n "待处理|future|deferred|部分相关|佛|唯识|analogy|unchecked|plann
 | observable ledger candidate boundary | `observable_ledger_bridge_summary` | `machineChecked` |
 | finite action-to-phase law candidate | `action_phase_law_bridge_summary` | `machineChecked` |
 | current stepwise unification candidate summary | `stepwise_unification_candidate_summary` | `machineChecked` |
+| finite row sum-one normalization boundary | `finite_probability_normalization_bridge_summary` | `machineChecked` |
 | tagged-language noncollapse 保持 | `markov_bridge_not_direct_language_addition` | `machineChecked` |
 | 公开摘要 | `markov_causal_bridge_summary` | `machineChecked` |
 
@@ -214,6 +219,7 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
   可以把 quotient-support cancellation 登记为 pending observable ledger entry，并证明 pending entry 不等于 empirical closure
   可以把 finite action index `0/1` 导出为 `1/-1` 并在 quotient support 上相消
   可以把当前已关闭结构合取成 current stepwise unification candidate summary
+  可以给 concrete 与 71232 grid kernel 显式 row support，并让非终端行归一为 1
   同时保持当前 tagged 物理语言 noncollapse 边界
 ```
 
@@ -222,7 +228,7 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
 | 后续结构 | 当前缺口 |
 |---|---|
 | 量子引力 | 还需要动力学、连续极限、量子场或引力方程 |
-| Born rule 推导 | 还需要从 Markov / 振幅结构推出归一化测量概率律 |
+| Born rule 推导 | S9 已关闭 finite Markov row normalization；还需要从振幅结构推出归一化测量概率律 |
 | 真实干涉律 | S5/S5b/S5c/S5d/S5e/S5f/S5g/S5h/S5i/S5j/S5k/S5l/S5m/S5n/S5o/S5p/S5q/S5r 已有 path amplitude、非零 witness、two-path finite cancellation candidate、discrete phase-label candidate、edge-action phase accumulation candidate、finite path-family sum candidate、finite path-sum algebra candidate、endpoint-indexed finite family candidate、endpoint support normalization candidate、two-route toy enumeration candidate、visible path-key candidate、finite visible-key quotient candidate、visible-key quotient class candidate、two-route canonical representative candidate、finite quotient-support candidate、quotient-support algebra candidate、pending observable ledger boundary 与 finite action-to-phase law candidate；还需要 general choice function、general all-path enumeration、一般 path integral、连续相位动力学、可测预言 theorem 或经验闭合 |
 | 真实 quantum channel law | S4 的 `QuantumChannelSkeleton` 是 candidate interface；还需要 unitary evolution、CPTP、Kraus 或 density-matrix law |
 | 完整因果集或时空度规 | S3 已关闭一步 no-self-loop；还需要偏序全公理、Lorentzian geometry 或 metric recovery theorem |
@@ -260,6 +266,7 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
 | V7 | 经验接口 | 已由 `observable_ledger_bridge_summary` 关闭 two-route cancellation 进入 pending observable ledger 的最小边界；外部数据、误差模型、观测量与可测预言 theorem 仍 pending |
 | V7b | 引入 finite action-to-phase law candidate | 已由 `action_phase_law_bridge_summary` 关闭 action index `0/1` 到 `1/-1` 的 quotient-support cancellation 与 pending ledger registration；continuous action law、path integral 与数据校准仍 pending |
 | V8 | 当前统一摘要 theorem | 已由 `stepwise_unification_candidate_summary` 合取当前已关闭结构，并用 `PendingBeyondS5r` 明确未闭合边界 |
+| V9 | 引入 finite probability normalization candidate | 已由 `finite_probability_normalization_bridge_summary` 关闭 concrete/grid finite row sum-one boundary；Born rule derivation、amplitude/Born normalized support、unitary/CPTP 与 empirical closure 仍 pending |
 
 ## 失败记录模板
 

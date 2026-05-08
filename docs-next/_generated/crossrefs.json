@@ -994,6 +994,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean",
@@ -1034,6 +1035,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean",
@@ -1142,6 +1144,12 @@
         },
         {
           "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
+          ],
+          "symbol": "finite_probability_normalization_bridge_summary"
+        },
+        {
+          "paths": [
             "formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean"
           ],
           "symbol": "interference_bridge_summary"
@@ -1163,12 +1171,6 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean"
           ],
           "symbol": "observable_ledger_bridge_summary"
-        },
-        {
-          "paths": [
-            "formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean"
-          ],
-          "symbol": "operator_cell_grid_markov_causal_bridge_summary"
         }
       ]
     },
@@ -3993,6 +3995,84 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityWenBoundary.lean"
           ],
           "symbol": "wen_constructive_coverage_192_371"
+        }
+      ]
+    },
+    {
+      "document": "义理/有限概率归一化候选 · Markov桥S9.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
+          ],
+          "symbol": "FiniteRowSupportNormalization"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
+          ],
+          "symbol": "HasFiniteRowSupportNormalization"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
+          ],
+          "symbol": "PendingBeyondS9"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
+          ],
+          "symbol": "concreteFiniteRowSupportNormalization"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
+          ],
+          "symbol": "concrete_normalized_row_total_candidate_eq_one"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
+          ],
+          "symbol": "finite_probability_normalization_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
+          ],
+          "symbol": "normalizedMass"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
+          ],
+          "symbol": "normalizedRowTotalCandidate"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
+          ],
+          "symbol": "operatorCellGridFiniteRowSupportNormalization"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
+          ],
+          "symbol": "operatorCellGrid_normalized_row_total_candidate_eq_one"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
+          ],
+          "symbol": "pending_boundary_not_closed_by_s9"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
+          ],
+          "symbol": "rowWeightSum"
         }
       ]
     },

@@ -4,7 +4,7 @@
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
-    "Foundation/Modern": 61,
+    "Foundation/Modern": 62,
     "Foundation/Wen": 51,
     "Foundation/Yi": 2,
     "Model": 2,
@@ -177,6 +177,7 @@
         "SSBX.Foundation.Modern.QuantumRelativityObservableLedgerBridge",
         "SSBX.Foundation.Modern.QuantumRelativityActionPhaseLawBridge",
         "SSBX.Foundation.Modern.QuantumRelativityStepwiseUnificationBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityNormalizationBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -195,10 +196,10 @@
         "SSBX.Foundation.Modern.IIDWlln",
         "SSBX.Foundation.Modern.BochnerPL"
       ],
-      "lines": 187,
+      "lines": 188,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "92bbc901815ce38f929129d6643fc82a8a2b354494c0900ff01b2d02452046fb"
+      "sha256": "27ed0c9fcddce1061ca4c44defe738e9137d47126237e784b1122a48837fbcc7"
     },
     {
       "cluster": "root",
@@ -11132,6 +11133,116 @@
       "module": "SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean",
       "sha256": "593d2f0be9d6fc7fdf62aad6fae26b4ccdf016b94c57e61425cdc98c0796ab88"
+    },
+    {
+      "cluster": "Foundation/Modern",
+      "declaration_count": 24,
+      "declarations": [
+        {
+          "kind": "def",
+          "name": "rowWeightSum"
+        },
+        {
+          "kind": "def",
+          "name": "normalizedMass"
+        },
+        {
+          "kind": "def",
+          "name": "normalizedRowTotalCandidate"
+        },
+        {
+          "kind": "structure",
+          "name": "FiniteRowSupportNormalization"
+        },
+        {
+          "kind": "def",
+          "name": "HasFiniteRowSupportNormalization"
+        },
+        {
+          "kind": "theorem",
+          "name": "normalized_row_total_candidate_eq_one_of_complete"
+        },
+        {
+          "kind": "def",
+          "name": "concreteRowSupport"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_row_support_sound"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_row_support_complete"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_row_weight_sum_eq_rowTotal"
+        },
+        {
+          "kind": "def",
+          "name": "concreteFiniteRowSupportNormalization"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_normalized_row_total_candidate_eq_one"
+        },
+        {
+          "kind": "def",
+          "name": "operatorCellGridRowSupport"
+        },
+        {
+          "kind": "theorem",
+          "name": "operatorCellGrid_row_support_sound"
+        },
+        {
+          "kind": "theorem",
+          "name": "operatorCellGrid_row_support_complete"
+        },
+        {
+          "kind": "theorem",
+          "name": "operatorCellGrid_row_weight_sum_eq_rowTotal"
+        },
+        {
+          "kind": "def",
+          "name": "operatorCellGridFiniteRowSupportNormalization"
+        },
+        {
+          "kind": "theorem",
+          "name": "operatorCellGrid_normalized_row_total_candidate_eq_one"
+        },
+        {
+          "kind": "inductive",
+          "name": "PendingBeyondS9"
+        },
+        {
+          "kind": "def",
+          "name": "ClosedByStepwiseS9"
+        },
+        {
+          "kind": "theorem",
+          "name": "pending_boundary_not_closed_by_s9"
+        },
+        {
+          "kind": "def",
+          "name": "FiniteSumOneProbabilityBoundaryClosed"
+        },
+        {
+          "kind": "theorem",
+          "name": "finite_sum_one_probability_boundary_closed"
+        },
+        {
+          "kind": "theorem",
+          "name": "finite_probability_normalization_bridge_summary"
+        }
+      ],
+      "imports": [
+        "Mathlib.Tactic",
+        "SSBX.Foundation.Modern.QuantumRelativityStepwiseUnificationBridge"
+      ],
+      "lines": 307,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityNormalizationBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean",
+      "sha256": "d6c732af49d5cf60de782bb820dea6ae31c9984b0c8552a2b9fc0d833ac595ba"
     },
     {
       "cluster": "Foundation/Modern",
