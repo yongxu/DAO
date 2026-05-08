@@ -2,7 +2,7 @@
 # WenSurface.Semantics — executable semantics registry
 
 This module separates exact stdlib denotations from total catalogue
-execution.  One hundred fifty-five `OperatorId`s use exact `WenDef.Tm` bodies:
+execution.  One hundred fifty-nine `OperatorId`s use exact `WenDef.Tm` bodies:
 the original high-value stdlib rows, the ObjectEndo/ObjectMap/OpUnary Hex
 transform package, finite Hex quantifiers, finite Hex motion/process rows,
 plus the Bool relation/predicate package.  Every
@@ -195,6 +195,10 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .D_10 => some ⟨.D_10, Stdlib.majorityHBody, 1, "過半/大半: finite majority quantifier over Hex"⟩
   | .M_5  => some ⟨.M_5,  Stdlib.existsHBody, 1, "可: finite possibility over Hex predicate"⟩
   | .M_8  => some ⟨.M_8,  Stdlib.biModalBody, 1, "應/应: finite necessity / should over Hex"⟩
+  | .M_3  => some ⟨.M_3,  Stdlib.impBody, 2, "當/当: guarded modal condition as Bool implication"⟩
+  | .M_4  => some ⟨.M_4,  Stdlib.impBody, 2, "宜: advisory modal condition as Bool implication"⟩
+  | .M_6  => some ⟨.M_6,  Stdlib.impBody, 2, "能: capability condition as Bool implication"⟩
+  | .M_7  => some ⟨.M_7,  Stdlib.impBody, 2, "得: permission condition as Bool implication"⟩
   | .A_11 => some ⟨.A_11, .andB, 2, "既...又... / 一...且...: Bool conjunction"⟩
   | .A_12 => some ⟨.A_12, .andB, 2, "且: Bool conjunction"⟩
   | .A_13 => some ⟨.A_13, .andB, 2, "但: truth-conditional contrast as Bool conjunction"⟩
@@ -222,7 +226,7 @@ def coreTheoremBackedOperatorIds : List OperatorId :=
         .L_11, .SUN_6, .Z_10, .Z_11, .Z_36, .Z_37, .ZA_2]
     ++ [.N_3, .N_4, .N_5, .N_6, .K_1, .K_6, .K_7, .K_8, .L_7, .S_3, .S_7, .Z_1, .I_3, .I_4,
         .I_5, .P_4, .N_2, .N_7, .P_5, .Q_2, .Q_4, .M_2, .Q_5, .Q_6, .Q_7,
-        .Q_3, .Q_8, .D_2, .D_3, .D_9, .D_10, .M_5, .M_8,
+        .Q_3, .Q_8, .D_2, .D_3, .D_9, .D_10, .M_3, .M_4, .M_5, .M_6, .M_7, .M_8,
         .A_4, .A_5, .A_6, .A_11, .A_12, .A_13, .A_14,
         .S_1, .S_2, .S_4, .S_5, .S_6, .S_8]
 
@@ -241,7 +245,7 @@ def structuralCatalogueOperatorIds : List OperatorId :=
 Structural total fallback for catalogue rows.
 
 These bodies are executable and type-checkable, but intentionally weaker than
-the 155 exact rows above: they preserve the operator id, signature kind, and
+the 159 exact rows above: they preserve the operator id, signature kind, and
 evaluated arguments as a catalogue value instead of projecting fake Hex/Bool
 results.
 -/
@@ -316,10 +320,10 @@ theorem executableOperatorIds_length :
     executableOperatorIds.length = 371 := by native_decide
 
 theorem coreTheoremBackedOperatorIds_length :
-    coreTheoremBackedOperatorIds.length = 109 := by native_decide
+    coreTheoremBackedOperatorIds.length = 113 := by native_decide
 
 theorem theoremBackedOperatorIds_length :
-    theoremBackedOperatorIds.length = 155 := by native_decide
+    theoremBackedOperatorIds.length = 159 := by native_decide
 
 theorem theoremBackedOperatorIds_nodup :
     theoremBackedOperatorIds.Nodup := by native_decide
@@ -329,7 +333,7 @@ theorem theoremBackedOperatorIds_all_semantics :
   native_decide
 
 theorem structuralCatalogueOperatorIds_length :
-    structuralCatalogueOperatorIds.length = 216 := by native_decide
+    structuralCatalogueOperatorIds.length = 212 := by native_decide
 
 theorem structuralCatalogueOperatorIds_all_not_theorem_backed :
     structuralCatalogueOperatorIds.all (fun id => (theoremBackedSemanticsFor? id).isNone) = true := by
@@ -360,8 +364,8 @@ theorem operatorRegistryCoverage_summary :
     operatorRegistryEntries.length = 371
       ∧ executableRegistryEntries.length = 371
       ∧ executableOperatorIds.length = 371
-      ∧ theoremBackedOperatorIds.length = 155
-      ∧ structuralCatalogueOperatorIds.length = 216
+      ∧ theoremBackedOperatorIds.length = 159
+      ∧ structuralCatalogueOperatorIds.length = 212
       ∧ theoremBackedOperatorIds.length + structuralCatalogueOperatorIds.length = 371
       ∧ executableOperatorIds.all isCatalogueOperator = true
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).id = id)
