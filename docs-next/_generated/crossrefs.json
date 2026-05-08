@@ -69,7 +69,7 @@
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         },
@@ -93,7 +93,7 @@
       "symbol_hits": [
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         },
@@ -164,7 +164,7 @@
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         }
@@ -207,7 +207,7 @@
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         },
@@ -245,7 +245,7 @@
       "symbol_hits": [
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         },
@@ -276,7 +276,7 @@
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         },
@@ -312,7 +312,7 @@
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         },
@@ -419,7 +419,7 @@
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         }
@@ -463,7 +463,7 @@
       "symbol_hits": [
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         },
@@ -481,7 +481,7 @@
       "symbol_hits": [
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         },
@@ -499,7 +499,7 @@
       "symbol_hits": [
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         }
@@ -635,7 +635,7 @@
       "symbol_hits": [
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         },
@@ -672,7 +672,7 @@
       "symbol_hits": [
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         },
@@ -2110,7 +2110,7 @@
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
           ],
           "symbol": "daoJudge_not_universal"
         },
@@ -2122,7 +2122,7 @@
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
           ],
           "symbol": "halts_undecidable_internally"
         },
@@ -2134,7 +2134,7 @@
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         },
@@ -2334,13 +2334,13 @@
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
           ],
           "symbol": "daoJudge_not_universal"
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
           ],
           "symbol": "halts_undecidable_internally"
         },
@@ -2352,7 +2352,7 @@
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
           ],
           "symbol": "kleene_recursion_axiom"
         },
@@ -2382,7 +2382,7 @@
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
           ],
           "symbol": "rice_four_images"
         },
@@ -3146,7 +3146,9 @@
     {
       "document": "义理/物理 · 从元到象.md",
       "lean_path_mentions": [
-        "formal/SSBX/Foundation/Eight/WuXiang.lean"
+        "formal/SSBX/Foundation/Eight/WuXiang.lean",
+        "formal/SSBX/Foundation/Modern/Quantum.lean",
+        "formal/SSBX/Foundation/Modern/QuantumSpacetime.lean"
       ],
       "symbol_hits": [
         {
@@ -3169,6 +3171,54 @@
         },
         {
           "paths": [
+            "formal/SSBX/Foundation/Modern/Quantum.lean"
+          ],
+          "symbol": "bian_via_fin8"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Eight/WuXiang.lean"
+          ],
+          "symbol": "bool3_trigram_roundtrip"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Eight/WuXiang.lean"
+          ],
+          "symbol": "bool_yao_roundtrip"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/Quantum.lean"
+          ],
+          "symbol": "bornProb0_nonneg"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/Quantum.lean"
+          ],
+          "symbol": "bornProb1_nonneg"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/Quantum.lean"
+          ],
+          "symbol": "born_ket0"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/Quantum.lean"
+          ],
+          "symbol": "born_ket1"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/Quantum.lean"
+          ],
+          "symbol": "computational_basis_born_rule"
+        },
+        {
+          "paths": [
             "formal/SSBX/Foundation/Yi/Yi.lean"
           ],
           "symbol": "cuoZong_cuoZong"
@@ -3183,11 +3233,45 @@
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Jian/JianModeKernel.lean",
-            "formal/SSBX/Foundation/Yi/Yi.lean",
-            "formal/SSBX/Foundation/Yi/Yi.lean"
+            "formal/SSBX/Foundation/Modern/Quantum.lean"
           ],
-          "symbol": "zong_zong"
+          "symbol": "cuo_via_fin8"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/Quantum.lean"
+          ],
+          "symbol": "dong_via_fin8"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/Quantum.lean"
+          ],
+          "symbol": "hua_via_fin8"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/Quantum.lean"
+          ],
+          "symbol": "operator_position_index_alignment"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/Quantum.lean"
+          ],
+          "symbol": "pauliX_apply_ket0"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/Quantum.lean"
+          ],
+          "symbol": "pauliX_apply_ket1"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/Quantum.lean"
+          ],
+          "symbol": "pauliX_apply_yao_basis"
         }
       ]
     },
@@ -3384,12 +3468,1184 @@
       "symbol_hits": []
     },
     {
+      "document": "义理/边界/README.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/BoundaryAtlas.lean"
+          ],
+          "symbol": "boundary_atlas_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/CeBoundary.lean"
+          ],
+          "symbol": "ce_boundary_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/FourBoundary.lean"
+          ],
+          "symbol": "four_boundary_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/GanBoundary.lean"
+          ],
+          "symbol": "gan_boundary_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/KeBoundary.lean"
+          ],
+          "symbol": "ke_boundary_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/KnowableBoundary.lean"
+          ],
+          "symbol": "knowable_boundary_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/LiangBoundary.lean"
+          ],
+          "symbol": "liang_boundary_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/MingBoundary.lean"
+          ],
+          "symbol": "ming_boundary_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/TuiBoundary.lean"
+          ],
+          "symbol": "tui_boundary_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/UnityBoundary.lean"
+          ],
+          "symbol": "unity_boundary_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/XingBoundary.lean"
+          ],
+          "symbol": "xing_boundary_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/ZhengBoundary.lean"
+          ],
+          "symbol": "zheng_boundary_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/ZhiBoundary.lean"
+          ],
+          "symbol": "zhi_boundary_summary"
+        }
+      ]
+    },
+    {
+      "document": "义理/边界/可的边界 · 感行证.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Modern/KeBoundary.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/KeBoundary.lean"
+          ],
+          "symbol": "actionability_boundary_complete"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/KeBoundary.lean"
+          ],
+          "symbol": "feel_act_proof_boundaries_handled_here"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/KeBoundary.lean"
+          ],
+          "symbol": "measurable_boundaries_not_handled_in_ke"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/LiangBoundary.lean"
+          ],
+          "symbol": "measurable_deferred_boundaries_handled_in_liang"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/KeBoundary.lean"
+          ],
+          "symbol": "name_boundaries_not_handled_in_ke"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/MingBoundary.lean"
+          ],
+          "symbol": "name_deferred_boundaries_handled_in_ming"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/KeBoundary.lean"
+          ],
+          "symbol": "proof_boundary_complete"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/KeBoundary.lean"
+          ],
+          "symbol": "sensibility_boundary_complete"
+        }
+      ]
+    },
+    {
+      "document": "义理/边界/可知边界 · 语言与理.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Modern/KnowableBoundary.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/UnityBoundary.lean"
+          ],
+          "symbol": "FiniteExpression"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/UnityBoundary.lean"
+          ],
+          "symbol": "LiExpression"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/UnityBoundary.lean"
+          ],
+          "symbol": "WenExpression"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/KnowableBoundary.lean"
+          ],
+          "symbol": "beyond_boundary_utterance_is_non_li"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/KnowableBoundary.lean"
+          ],
+          "symbol": "beyond_describable_li_is_not_li"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/KnowableBoundary.lean"
+          ],
+          "symbol": "beyond_describable_li_is_unsayable"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/KnowableBoundary.lean"
+          ],
+          "symbol": "deferred_ke_boundaries_are_not_handled_here"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/KnowableBoundary.lean"
+          ],
+          "symbol": "knowable_iff_sayable"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/KnowableBoundary.lean"
+          ],
+          "symbol": "languageBoundary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/KnowableBoundary.lean"
+          ],
+          "symbol": "language_boundary_eq_describable_li_boundary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/KnowableBoundary.lean"
+          ],
+          "symbol": "sayable_iff_is_li"
+        }
+      ]
+    },
+    {
+      "document": "义理/边界/名的边界 · 指称定名.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/MingBoundary.lean"
+          ],
+          "symbol": "CompleteMing"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/KnowableBoundary.lean"
+          ],
+          "symbol": "DeferredKeBoundary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/KeBoundary.lean"
+          ],
+          "symbol": "KeBoundary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/MingBoundary.lean"
+          ],
+          "symbol": "complete_ming_maps_to_nameable"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/MingBoundary.lean"
+          ],
+          "symbol": "incomplete_ming_maps_to_unnameable"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/MingBoundary.lean"
+          ],
+          "symbol": "ming_axes_pairwise_distinct"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/MingBoundary.lean"
+          ],
+          "symbol": "ming_boundary_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/MingBoundary.lean"
+          ],
+          "symbol": "name_deferred_boundaries_handled_in_ming"
+        }
+      ]
+    },
+    {
+      "document": "义理/边界/四界不混同 · 测量推感.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/BoundaryAtlas.lean"
+          ],
+          "symbol": "boundary_layers_pairwise_distinct"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/CeBoundary.lean"
+          ],
+          "symbol": "ce_boundary_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/FourBoundary.lean"
+          ],
+          "symbol": "ce_liang_tui_gan_chain_distinct"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/FourBoundary.lean"
+          ],
+          "symbol": "four_boundaries_pairwise_distinct"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/GanBoundary.lean"
+          ],
+          "symbol": "gan_boundary_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/LiangBoundary.lean"
+          ],
+          "symbol": "liang_boundary_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/TuiBoundary.lean"
+          ],
+          "symbol": "tui_boundary_summary"
+        }
+      ]
+    },
+    {
+      "document": "义理/边界/感的边界 · 受觉现.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/KeBoundary.lean"
+          ],
+          "symbol": "SensibilityRegion"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/GanBoundary.lean"
+          ],
+          "symbol": "affection_boundary_complete"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/GanBoundary.lean"
+          ],
+          "symbol": "complete_gan_maps_to_feelable"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/GanBoundary.lean"
+          ],
+          "symbol": "exposure_boundary_complete"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/GanBoundary.lean"
+          ],
+          "symbol": "feeling_report_boundary_complete"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/GanBoundary.lean"
+          ],
+          "symbol": "incomplete_gan_maps_to_unfeelable"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/GanBoundary.lean"
+          ],
+          "symbol": "phenomenal_boundary_complete"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/GanBoundary.lean"
+          ],
+          "symbol": "reception_boundary_complete"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/KeBoundary.lean"
+          ],
+          "symbol": "sensibility_boundary_complete"
+        }
+      ]
+    },
+    {
+      "document": "义理/边界/推的边界 · 前规则结.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/TuiBoundary.lean"
+          ],
+          "symbol": "complete_tui_yields_inference_claim"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/TuiBoundary.lean"
+          ],
+          "symbol": "conclusion_boundary_complete"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/TuiBoundary.lean"
+          ],
+          "symbol": "derivation_boundary_complete"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/NaturalDeduction.lean"
+          ],
+          "symbol": "imp_elim"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/TuiBoundary.lean"
+          ],
+          "symbol": "incomplete_tui_not_inference_claim"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/CeBoundary.lean"
+          ],
+          "symbol": "measurement_record_ne_inference_claim"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/TuiBoundary.lean"
+          ],
+          "symbol": "modus_ponens_anchor"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/TuiBoundary.lean"
+          ],
+          "symbol": "premise_boundary_complete"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/TuiBoundary.lean"
+          ],
+          "symbol": "rule_boundary_complete"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/TuiBoundary.lean"
+          ],
+          "symbol": "tui_claim_ne_measurement_record"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/TuiBoundary.lean"
+          ],
+          "symbol": "warrant_boundary_complete"
+        }
+      ]
+    },
+    {
+      "document": "义理/边界/测的边界 · 观验读.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumSpacetime.lean"
+          ],
+          "symbol": "CollapseOutcome"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/CeBoundary.lean"
+          ],
+          "symbol": "CompleteCe"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/LiangBoundary.lean"
+          ],
+          "symbol": "MeasurementRegion"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/CeBoundary.lean"
+          ],
+          "symbol": "calibration_boundary_complete"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/FourBoundary.lean"
+          ],
+          "symbol": "ce_liang_tui_gan_chain_distinct"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/CeBoundary.lean"
+          ],
+          "symbol": "collapse_outcome_is_readable"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/CeBoundary.lean"
+          ],
+          "symbol": "complete_ce_maps_to_liang_measurable"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/CeBoundary.lean"
+          ],
+          "symbol": "interface_boundary_complete"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/LiangBoundary.lean"
+          ],
+          "symbol": "measurement_boundary_complete"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/CeBoundary.lean"
+          ],
+          "symbol": "measurement_record_ne_inference_claim"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/CeBoundary.lean"
+          ],
+          "symbol": "observability_boundary_complete"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/CeBoundary.lean"
+          ],
+          "symbol": "protocol_boundary_complete"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/CeBoundary.lean"
+          ],
+          "symbol": "readout_boundary_complete"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/CeBoundary.lean"
+          ],
+          "symbol": "record_boundary_complete"
+        }
+      ]
+    },
+    {
+      "document": "义理/边界/知的边界 · 明辨述.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/ZhiBoundary.lean"
+          ],
+          "symbol": "CompleteZhi"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/KnowableBoundary.lean"
+          ],
+          "symbol": "Knowable"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/ZhiBoundary.lean"
+          ],
+          "symbol": "complete_zhi_maps_to_knowable"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/ZhiBoundary.lean"
+          ],
+          "symbol": "incomplete_zhi_maps_beyond_describable_li"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/ZhiBoundary.lean"
+          ],
+          "symbol": "zhi_axes_pairwise_distinct"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/ZhiBoundary.lean"
+          ],
+          "symbol": "zhi_boundary_summary"
+        }
+      ]
+    },
+    {
+      "document": "义理/边界/统一边界 · 从理到文.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Modern/UnityBoundary.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/UnityBoundary.lean"
+          ],
+          "symbol": "FiniteExpression"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/UnityBoundary.lean"
+          ],
+          "symbol": "InformationDescription"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/UnityBoundary.lean"
+          ],
+          "symbol": "LiExpression"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/UnityBoundary.lean"
+          ],
+          "symbol": "WenExpression"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/DaoLi.lean"
+          ],
+          "symbol": "dao_li_bifurcation"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/UnityBoundary.lean"
+          ],
+          "symbol": "information_description_never_is_unity"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/DaoLi.lean"
+          ],
+          "symbol": "li_cannot_encode_dao"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/UnityBoundary.lean"
+          ],
+          "symbol": "li_expression_has_outside_depth"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/UnityBoundary.lean"
+          ],
+          "symbol": "li_wen_boundaries_coincide"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/UnityBoundary.lean"
+          ],
+          "symbol": "unity"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/UnityBoundary.lean"
+          ],
+          "symbol": "unityContent"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/UnityBoundary.lean"
+          ],
+          "symbol": "unity_is_shared_boundary_condition"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/UnityBoundary.lean"
+          ],
+          "symbol": "wen_expression_has_outside_depth"
+        }
+      ]
+    },
+    {
+      "document": "义理/边界/行的边界 · 能境作效.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/KeBoundary.lean"
+          ],
+          "symbol": "Actionable"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/XingBoundary.lean"
+          ],
+          "symbol": "CompleteXing"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/XingBoundary.lean"
+          ],
+          "symbol": "complete_xing_maps_to_actionable"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/XingBoundary.lean"
+          ],
+          "symbol": "incomplete_xing_maps_to_unactionable"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/XingBoundary.lean"
+          ],
+          "symbol": "xing_axes_pairwise_distinct"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/XingBoundary.lean"
+          ],
+          "symbol": "xing_boundary_summary"
+        }
+      ]
+    },
+    {
+      "document": "义理/边界/证的边界 · 命题系统证书.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/ZhengBoundary.lean"
+          ],
+          "symbol": "CompleteZheng"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/ZhengBoundary.lean"
+          ],
+          "symbol": "complete_zheng_maps_to_provable"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/ZhengBoundary.lean"
+          ],
+          "symbol": "incomplete_zheng_maps_to_unprovable"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/ZhengBoundary.lean"
+          ],
+          "symbol": "zheng_axes_pairwise_distinct"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/ZhengBoundary.lean"
+          ],
+          "symbol": "zheng_boundary_is_sayable_skeleton"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/ZhengBoundary.lean"
+          ],
+          "symbol": "zheng_boundary_summary"
+        }
+      ]
+    },
+    {
+      "document": "义理/边界/边界总图谱 · 知感行证名量测推.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/BoundaryAtlas.lean"
+          ],
+          "symbol": "boundary_layer_chain_distinct"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/BoundaryAtlas.lean"
+          ],
+          "symbol": "boundary_layers_pairwise_distinct"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/CeBoundary.lean"
+          ],
+          "symbol": "ce_boundary_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/GanBoundary.lean"
+          ],
+          "symbol": "gan_boundary_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/LiangBoundary.lean"
+          ],
+          "symbol": "liang_boundary_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/MingBoundary.lean"
+          ],
+          "symbol": "ming_boundary_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/TuiBoundary.lean"
+          ],
+          "symbol": "tui_boundary_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/XingBoundary.lean"
+          ],
+          "symbol": "xing_boundary_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/ZhengBoundary.lean"
+          ],
+          "symbol": "zheng_boundary_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/ZhiBoundary.lean"
+          ],
+          "symbol": "zhi_boundary_summary"
+        }
+      ]
+    },
+    {
+      "document": "义理/边界/量的边界 · 数测度.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/KnowableBoundary.lean"
+          ],
+          "symbol": "DeferredKeBoundary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/LiangBoundary.lean"
+          ],
+          "symbol": "born_rule_gives_normalized_measurement_weights"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/CeBoundary.lean"
+          ],
+          "symbol": "ce_boundary_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumSpacetime.lean"
+          ],
+          "symbol": "collapse_outcome_exhaustive"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/LiangBoundary.lean"
+          ],
+          "symbol": "collapse_output_has_no_fourth_liang_class"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/Quantum.lean"
+          ],
+          "symbol": "computational_basis_born_rule"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/FourBoundary.lean"
+          ],
+          "symbol": "four_boundaries_pairwise_distinct"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/LiangBoundary.lean"
+          ],
+          "symbol": "measurable_deferred_boundaries_handled_in_liang"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/LiangBoundary.lean"
+          ],
+          "symbol": "measure_theoretic_boundary_complete"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/LiangBoundary.lean"
+          ],
+          "symbol": "measurement_boundary_complete"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/LiangBoundary.lean"
+          ],
+          "symbol": "metric_boundary_complete"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/Kolmogorov.lean"
+          ],
+          "symbol": "prob_total_one"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/LiangBoundary.lean"
+          ],
+          "symbol": "probability_measure_normalizes"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/LiangBoundary.lean"
+          ],
+          "symbol": "quantifier_boundary_complete"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/LiangBoundary.lean"
+          ],
+          "symbol": "quantity_boundary_complete"
+        }
+      ]
+    },
+    {
       "document": "义理/道桥接_ProcessAligned_Dao_ShengshengBuxi.md",
       "lean_path_mentions": [
         "formal/SSBX/Foundation/Core/Alignment.lean",
         "formal/SSBX/Foundation/Core/ShengshengBuxi.lean"
       ],
       "symbol_hits": []
+    },
+    {
+      "document": "义理/量子与相对论整合方向 · 从桥到新理论.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityIntegration.lean"
+          ],
+          "symbol": "BridgeTerm"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityIntegration.lean"
+          ],
+          "symbol": "IntegrationRoute"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityIntegration.lean"
+          ],
+          "symbol": "bridge_projections_not_current_identity"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityIntegration.lean"
+          ],
+          "symbol": "bridge_projections_same_one"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean"
+          ],
+          "symbol": "no_direct_unification_by_addition"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityIntegration.lean"
+          ],
+          "symbol": "only_mediated_bridge_is_framework_route"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityIntegration.lean"
+          ],
+          "symbol": "quantum_relativity_integration_summary"
+        }
+      ]
+    },
+    {
+      "document": "义理/量子与相对论直统一不可能 · 当前语言NoGo.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean"
+          ],
+          "symbol": "CurrentLanguageTerm"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean"
+          ],
+          "symbol": "DirectCurrentUnifier"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumSpacetime.lean"
+          ],
+          "symbol": "OneRoot"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean"
+          ],
+          "symbol": "QuantumSubject"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean"
+          ],
+          "symbol": "RelativitySubject"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean"
+          ],
+          "symbol": "current_language_no_go_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean"
+          ],
+          "symbol": "every_cross_pair_not_current_physical_unity"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean"
+          ],
+          "symbol": "every_cross_pair_same_one"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean"
+          ],
+          "symbol": "no_direct_unification_by_addition"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityIntegration.lean"
+          ],
+          "symbol": "only_mediated_bridge_is_framework_route"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumSpacetime.lean"
+          ],
+          "symbol": "quantum_spacetime_complementary_faces"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumSpacetime.lean"
+          ],
+          "symbol": "quantum_spacetime_not_identical"
+        }
+      ]
+    },
+    {
+      "document": "义理/量子时空互补 · 从一到测.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Modern/QuantumSpacetime.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumSpacetime.lean"
+          ],
+          "symbol": "CurrentPhysicalUnity"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumSpacetime.lean"
+          ],
+          "symbol": "OneRoot"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumSpacetime.lean"
+          ],
+          "symbol": "PhysicalFace"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumSpacetime.lean"
+          ],
+          "symbol": "bagua_outcome_cardinality_anchor"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumSpacetime.lean"
+          ],
+          "symbol": "collapse_outcome_exhaustive"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumSpacetime.lean"
+          ],
+          "symbol": "complementaryFaces"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean"
+          ],
+          "symbol": "no_direct_unification_by_addition"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityIntegration.lean"
+          ],
+          "symbol": "only_mediated_bridge_is_framework_route"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumSpacetime.lean"
+          ],
+          "symbol": "quantum_spacetime_complementary_faces"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumSpacetime.lean"
+          ],
+          "symbol": "quantum_spacetime_not_identical"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumSpacetime.lean"
+          ],
+          "symbol": "quantum_spacetime_same_one"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumSpacetime.lean"
+          ],
+          "symbol": "sameOne"
+        }
+      ]
+    },
+    {
+      "document": "义理/量子物理语言 · 从虚到测.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/CeBoundary.lean"
+          ],
+          "symbol": "ce_boundary_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumSpacetime.lean"
+          ],
+          "symbol": "collapse_outcome_exhaustive"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/CeBoundary.lean"
+          ],
+          "symbol": "collapse_outcome_is_readable"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/Quantum.lean"
+          ],
+          "symbol": "computational_basis_born_rule"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/Quantum.lean"
+          ],
+          "symbol": "operator_position_index_alignment"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/Quantum.lean"
+          ],
+          "symbol": "pauliX_apply_yao_basis"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumSpacetime.lean"
+          ],
+          "symbol": "quantum_spacetime_complementary_faces"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/SUN.lean"
+          ],
+          "symbol": "sun_bagua_weak_analogy_strict_bound"
+        }
+      ]
     },
     {
       "document": "六表_实虚史真/表一_六征本表.md",

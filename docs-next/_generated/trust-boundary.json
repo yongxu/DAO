@@ -8,27 +8,9 @@
     },
     {
       "kind": "axiom",
-      "line": 54,
-      "name": "universalInterpExists",
-      "path": "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
-    },
-    {
-      "kind": "axiom",
-      "line": 65,
-      "name": "smnExists",
-      "path": "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
-    },
-    {
-      "kind": "axiom",
-      "line": 75,
-      "name": "kleeneFromPrimitives",
-      "path": "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
-    },
-    {
-      "kind": "axiom",
-      "line": 87,
-      "name": "allDecidersAreYiComputable",
-      "path": "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
+      "line": 651,
+      "name": "kleene_recursion_axiom",
+      "path": "formal/SSBX/Foundation/Bagua/GodelLi.lean"
     },
     {
       "kind": "opaque",

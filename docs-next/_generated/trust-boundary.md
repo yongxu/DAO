@@ -6,8 +6,5 @@
 | Kind | Name | Path | Line |
 | --- | --- | --- | --- |
 | partial def | run | `formal/SSBX/Foundation/Bagua/BaguaTuring.lean` | 162 |
-| axiom | universalInterpExists | `formal/SSBX/Foundation/Bagua/KleeneCarrier.lean` | 54 |
-| axiom | smnExists | `formal/SSBX/Foundation/Bagua/KleeneCarrier.lean` | 65 |
-| axiom | kleeneFromPrimitives | `formal/SSBX/Foundation/Bagua/KleeneCarrier.lean` | 75 |
-| axiom | allDecidersAreYiComputable | `formal/SSBX/Foundation/Bagua/KleeneCarrier.lean` | 87 |
+| axiom | kleene_recursion_axiom | `formal/SSBX/Foundation/Bagua/GodelLi.lean` | 651 |
 | opaque | theOne | `formal/SSBX/Foundation/Wen/Kernel.lean` | 164 |
