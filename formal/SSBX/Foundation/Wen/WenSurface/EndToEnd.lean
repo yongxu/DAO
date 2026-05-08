@@ -14,8 +14,9 @@ cuo-equivariant 子集 commute 作 future work）。
 
 - cue-aware resolver + explicit `SurfaceExpr` AST
 - 64 卦名 / aliases + Bool literals + Hex-only binders
-- executable registry 中的 theorem-backed operator 可求值
-- catalogue-only operator / unpromoted gap form 只诊断，不伪造 denotation
+- executable registry 覆盖全部 371 个 OperatorId
+- 33 个 theorem-backed operator 可求 Hex/Bool；其余 catalogue rows 求 symbolic normal form
+- unpromoted gap form 只诊断，不伪造 denotation
 
 ## 状态
 
@@ -31,6 +32,7 @@ open SSBX.Foundation.Wen.WenDef
 open SSBX.Foundation.Wen.WenDefEval
 open SSBX.Text.WenyanOperators
 open SSBX.Text.OperatorReadings
+open SSBX.Text.OperatorSignatures
 
 /-! ## § 1  统一错误类型 -/
 
@@ -213,13 +215,13 @@ example :
 
 example :
     (match wenyanCompile "在 乾 坤" with
-     | .error (.elab (.unsupportedOp OperatorId.R_1 "在" 0)) => true
+     | .ok typed => typed.ty = .catalogue SignatureKind.relation
      | _ => false) = true :=
   by native_decide
 
 example :
     (match wenyanCompile "五行 乾" with
-     | .error (.elab (.unsupportedOp OperatorId.Y_2 "五行" 0)) => true
+     | .ok typed => typed.ty = .catalogue SignatureKind.constructor
      | _ => false) = true :=
   by native_decide
 
@@ -359,6 +361,24 @@ example : (wenyanInterp "").toOption = none := by native_decide
 example :
     (wenyanCompileTm "推 一").toOption = some (.app Stdlib.tuiBody .yi) :=
   by native_decide
+
+/-! ### Grouping punctuation -/
+
+example :
+    (wenyanInterp "（推 一）").toOption = (wenyanInterp "推 一").toOption :=
+  by native_decide
+
+example :
+    (wenyanInterp "(推 一)").toOption = (wenyanInterp "推 一").toOption :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "同 （推 一） （推 一）").toOption = some true :=
+  by native_decide
+
+example : (wenyanInterp "（推 一").toOption = none := by native_decide
+
+example : (wenyanInterp "推 一）").toOption = none := by native_decide
 
 /-- 与 `tui_eq_sheng` 桥 — 用 wenyan 表层走 stdlib 算子等价于 YiCore.«生». -/
 theorem wenyan_tui_yi_eq_sheng :

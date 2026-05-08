@@ -47,11 +47,14 @@ Path 丙 § 风险 3 之完全缓解：
 -/
 import SSBX.Foundation.Yi.Yi
 import SSBX.Foundation.Bagua.BaguaWenSpec
+import SSBX.Text.OperatorSignatures
 
 namespace SSBX.Foundation.Wen.WenDef
 
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Bagua.BaguaWenSpec
+open SSBX.Text.WenyanOperators
+open SSBX.Text.OperatorSignatures
 
 /-! ## § 1  简单类型 -/
 
@@ -59,6 +62,7 @@ open SSBX.Foundation.Bagua.BaguaWenSpec
 inductive Ty : Type
   | hex
   | bool
+  | catalogue (kind : SignatureKind)
   | arr (dom cod : Ty)
 deriving DecidableEq, Repr
 
@@ -81,6 +85,9 @@ inductive Tm : Type
   | cuoH                               : Tm  -- 错 :  Hex → Hex
   | zongH                              : Tm  -- 综 :  Hex → Hex
   | huH                                : Tm  -- 互 :  Hex → Hex
+  | catalogue1 (id : OperatorId) (a : Tm) : Tm
+  | catalogue2 (id : OperatorId) (a b : Tm) : Tm
+  | catalogue3 (id : OperatorId) (a b c : Tm) : Tm
 deriving DecidableEq, Repr
 
 /-! ## § 3  类型检查 -/
@@ -117,6 +124,25 @@ def typeCheck : Ctx → Tm → Option Ty
   | _, .cuoH      => some (.arr .hex .hex)
   | _, .zongH     => some (.arr .hex .hex)
   | _, .huH       => some (.arr .hex .hex)
+  | ctx, .catalogue1 id a =>
+      let sig := fullSignatureFor id
+      if sig.arity = 1 && (typeCheck ctx a).isSome then
+        some (.catalogue sig.kind)
+      else
+        none
+  | ctx, .catalogue2 id a b =>
+      let sig := fullSignatureFor id
+      if sig.arity = 2 && (typeCheck ctx a).isSome && (typeCheck ctx b).isSome then
+        some (.catalogue sig.kind)
+      else
+        none
+  | ctx, .catalogue3 id a b c =>
+      let sig := fullSignatureFor id
+      if sig.arity = 3 && (typeCheck ctx a).isSome && (typeCheck ctx b).isSome
+          && (typeCheck ctx c).isSome then
+        some (.catalogue sig.kind)
+      else
+        none
 
 /-! ## § 4  命名空间 -/
 

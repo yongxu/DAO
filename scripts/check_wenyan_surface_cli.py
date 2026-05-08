@@ -23,6 +23,8 @@ CASES = [
     ("之又 不 真", {"ok": True, "kind": "bool", "value": True}),
     ("错 乾", {"ok": True, "kind": "hex", "idx": 63}),
     ("凡 甲 同 甲 甲", {"ok": True, "kind": "bool", "value": True}),
+    ("（推 一）", {"ok": True, "kind": "hex", "idx": 2}),
+    ("同 （推 一） （推 一）", {"ok": True, "kind": "bool", "value": True}),
     ("則 真 假", {"ok": True, "kind": "bool", "value": False}),
     ("且 真 假", {"ok": True, "kind": "bool", "value": False}),
     ("非 乾 坤", {"ok": True, "kind": "bool", "value": True}),
@@ -32,6 +34,8 @@ CASES = [
     ("同 比 比", {"ok": True, "kind": "bool", "value": True}),
     ("比 乾 坤", {"ok": True, "kind": "bool", "value": False}),
     ("同 益 乾", {"ok": True, "kind": "bool", "value": False}),
+    ("在 乾 坤", {"ok": True, "kind": "catalogue", "operatorCode": "R-1", "operatorTitle": "在", "signatureKind": "REL", "arity": 2}),
+    ("五行 乾", {"ok": True, "kind": "catalogue", "operatorCode": "Y-2", "operatorTitle": "五行 (木火土金水)", "signatureKind": "CONS", "arity": 1}),
     ("鼎", {"ok": True, "kind": "hex", "idx": 17}),
     ("大壯", {"ok": True, "kind": "hex", "idx": 48}),
 ]
@@ -45,28 +49,31 @@ NEGATIVE_CASES = [
     ("大", {"phase": "unsupported", "code": "unpromoted_hexagram_gap", "surface": "大", "startCol": 0, "endCol": 1}),
     ("乾 之 坤", {"phase": "type", "code": "type_mismatch", "expectedType": "function", "actualType": "Hex"}),
     ("不 乾", {"phase": "type", "code": "type_mismatch", "expectedType": "Bool", "actualType": "Hex"}),
-    ("在 乾 坤", {"phase": "unsupported", "code": "unsupported_operator", "operatorCode": "R-1", "surface": "在", "startCol": 0, "endCol": 1, "support": "known-not-executable"}),
-    ("五行 乾", {"phase": "unsupported", "code": "unsupported_operator", "operatorCode": "Y-2", "surface": "五行", "startCol": 0, "endCol": 2, "support": "known-not-executable"}),
+    ("（推 一", {"phase": "parse", "code": "unmatched_open_bracket", "surface": "（", "startCol": 0, "endCol": 1}),
+    ("推 一）", {"phase": "parse", "code": "unmatched_close_bracket", "surface": "）", "startCol": 3, "endCol": 4}),
 ]
 
 CLI_CASES = [
     (["--tokens", "推 一"], "0:推/w1\n2:一/w1"),
+    (["--tokens", "（推 一）"], "0:（/w1\n1:推/w1\n3:一/w1\n4:）/w1"),
     (["--resolve", "推 一"], "0:推/w1 => op[T-10:推]"),
     (["--resolve", "在"], "0:在/w1 => op[R-1:在]"),
     (["--resolve", "五行"], "0:五行/w2 => op[Y-2:五行"),
     (["--resolve", "陰与陽"], "0:陰与陽/w3 => op[Y-1:"),
     (["--ast", "推 一"], "SurfaceExpr.app"),
+    (["--ast", "（推 一）"], "SurfaceExpr.grouped"),
     (["--ast", "乾 之 坤"], "SurfaceExpr.marker"),
     (["--typecheck", "同 一 一"], "type Bool"),
+    (["--typecheck", "（推 一）"], "type Hex"),
     (["--operator", "T-10"], "executable: yes"),
-    (["--operator", "R-1"], "status: known but not executable yet"),
-    (["--operator", "LIJ-9"], "status: known but not executable yet"),
+    (["--operator", "R-1"], "executable note: symbolic catalogue normal form"),
+    (["--operator", "LIJ-9"], "executable note: symbolic catalogue normal form"),
     (["--operator", "Y-2"], "compound surfaces: 五行"),
-    (["--operators", "executable"], "operators executable: 33 shown; 371 registered / 33 executable"),
-    (["--operators", "known-not-executable"], "operators known-not-executable: 338 shown; 371 registered / 33 executable"),
-    (["--operators", "unsupported"], "operators unsupported: 338 shown; 371 registered / 33 executable"),
+    (["--operators", "executable"], "operators executable: 371 shown; 371 registered / 371 executable"),
+    (["--operators", "known-not-executable"], "operators known-not-executable: 0 shown; 371 registered / 371 executable"),
+    (["--operators", "unsupported"], "operators unsupported: 0 shown; 371 registered / 371 executable"),
     (["--coverage"], "surface readings: 82 surfaces / 193 readings"),
-    (["--coverage"], "operators: 371 registered / 33 executable"),
+    (["--coverage"], "operators: 371 registered / 371 executable"),
     (["--coverage"], "operator forms: 371 ids with at least one form"),
     (["--help"], "wenyan-surface --json --operators [all|executable|known-not-executable|unsupported]"),
 ]
@@ -80,31 +87,31 @@ JSON_CLI_CASES = [
     (["--json", "--operator", "Y-2"], {
         "mode": "operator",
         "operatorCode": "Y-2",
-        "support": "known-not-executable",
-        "executable": False,
+        "support": "executable",
+        "executable": True,
     }),
     (["--json", "--operators", "executable"], {
         "mode": "operators",
         "filter": "executable",
-        "count": 33,
+        "count": 371,
         "operatorsRegistered": 371,
-        "executableOperators": 33,
-        "knownNotExecutableOperators": 338,
+        "executableOperators": 371,
+        "knownNotExecutableOperators": 0,
     }),
     (["--json", "--operators", "known-not-executable"], {
         "mode": "operators",
         "filter": "known-not-executable",
-        "count": 338,
+        "count": 0,
         "operatorsRegistered": 371,
-        "executableOperators": 33,
-        "knownNotExecutableOperators": 338,
+        "executableOperators": 371,
+        "knownNotExecutableOperators": 0,
     }),
     (["--json", "--coverage"], {
         "mode": "coverage",
         "surfaceCount": 82,
         "readingCount": 193,
         "operatorsRegistered": 371,
-        "executableOperators": 33,
+        "executableOperators": 371,
         "operatorCellRows": 71232,
         "operatorCellSemanticRows": 71232,
     }),
@@ -114,6 +121,8 @@ NEGATIVE_CLI_CASES = [
     (["--tokens", "abc"], "lex error"),
     (["--resolve", "瓜"], "no known reading"),
     (["--ast", "推 乾 之"], "leftover token"),
+    (["--ast", "（推 一"], "unmatched open bracket"),
+    (["--ast", "推 一）"], "unmatched close bracket"),
     (["--typecheck", "不 乾"], "type error"),
     (["--operator", "NOPE"], "no such catalogue OperatorId"),
     (["--operators", "bad"], "unknown filter"),
@@ -172,8 +181,8 @@ def main() -> int:
             candidates = actual.get("candidates")
             if not isinstance(candidates, list) or len(candidates) != 2:
                 failures.append(f"{program!r}: expected 2 structured candidates, got {candidates!r}")
-            elif {c.get("support") for c in candidates} != {"known-not-executable"}:
-                failures.append(f"{program!r}: expected known-not-executable candidates, got {candidates!r}")
+            elif {c.get("support") for c in candidates} != {"executable"}:
+                failures.append(f"{program!r}: expected executable candidates, got {candidates!r}")
 
     for args, expected_substring in CLI_CASES:
         actual = run_cli(args).stdout
@@ -226,7 +235,11 @@ def main() -> int:
                 failures.append(f"{args!r}: unexpected operator list length {operators!r}")
             elif args[2] == "executable" and {op.get("support") for op in operators} != {"executable"}:
                 failures.append(f"{args!r}: expected executable operator list, got {operators!r}")
-            elif args[2] in {"known-not-executable", "unsupported"} and {op.get("support") for op in operators} != {"known-not-executable"}:
+            elif (
+                args[2] in {"known-not-executable", "unsupported"}
+                and operators
+                and {op.get("support") for op in operators} != {"known-not-executable"}
+            ):
                 failures.append(f"{args!r}: expected unsupported operator list, got {operators!r}")
 
     bad_filter_completed = run_cli(["--json", "--operators", "bad"], allow_failure=True)

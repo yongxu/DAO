@@ -55,6 +55,10 @@ def isCJKBasic (c : Char) : Bool :=
 def isAsciiSpace (c : Char) : Bool :=
   c == ' ' || c == '\t' || c == '\n' || c == '\r'
 
+/-- Grouping punctuation accepted by the WenSurface parser. -/
+def isBracketChar (c : Char) : Bool :=
+  c == '（' || c == '）' || c == '(' || c == ')'
+
 /-! ## § 3  多字 surface 词典 -/
 
 /-- Conservatively curated multi-character catalogue surfaces.
@@ -121,6 +125,10 @@ def lexFuel : Nat → Nat → List Char → Except LexErr (List GlyphTok)
   | n+1,   col, c :: rest      =>
     if isAsciiSpace c then
       lexFuel n (col + 1) rest
+    else if isBracketChar c then
+      match lexFuel n (col + 1) rest with
+      | .ok ts   => .ok (⟨c.toString, col, 1, false⟩ :: ts)
+      | .error e => .error e
     else
       match matchMulti (c :: rest) with
       | some (s, w, rest') =>
@@ -205,6 +213,19 @@ example : (lexWen "").toOption = some [] := by native_decide
 
 /-- ASCII 字母（非 CJK 非 whitespace）→ error. -/
 example : (lexWen "x").toOption = none := by native_decide
+
+/-- Grouping punctuation is tokenized even though it is not CJK. -/
+example :
+    (lexWen "（推 一）").toOption
+      = some [⟨"（", 0, 1, false⟩, ⟨"推", 1, 1, false⟩,
+              ⟨"一", 3, 1, false⟩, ⟨"）", 4, 1, false⟩] :=
+  by native_decide
+
+example :
+    (lexWen "(推 一)").toOption
+      = some [⟨"(", 0, 1, false⟩, ⟨"推", 1, 1, false⟩,
+              ⟨"一", 3, 1, false⟩, ⟨")", 4, 1, false⟩] :=
+  by native_decide
 
 /-- 全空白. -/
 example : (lexWen "   ").toOption = some [] := by native_decide

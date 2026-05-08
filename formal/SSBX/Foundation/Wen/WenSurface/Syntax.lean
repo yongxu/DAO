@@ -27,11 +27,15 @@ inductive SurfaceExpr where
   | binder (kind : BinderKind) (name : String) (body : SurfaceExpr)
   | letBind (name : String) (value body : SurfaceExpr)
   | construction (name : String) (items : List SurfaceExpr)
+  | grouped (openTok closeTok : ResolvedTok) (body : SurfaceExpr)
 deriving Repr
 
 inductive ParseErr where
   | empty
   | fuelExhausted
+  | unmatchedOpenBracket (surface : String) (col : Nat)
+  | unmatchedCloseBracket (surface : String) (col : Nat)
+  | expectedCloseBracket (openSurface expected : String) (openCol col : Nat)
   | expectedVariable (surface : String) (col : Nat)
   | unexpectedApplicationMarker (surface : String) (col : Nat)
   | unpromotedHexagramGap (surface : String) (col : Nat)
@@ -68,6 +72,12 @@ def asVarName? (t : ResolvedTok) : Option String :=
 
 def expectedVariableErr (head : ResolvedTok) : ParseErr :=
   .expectedVariable head.surface head.col
+
+def expectedCloseBracketErr (openTok : ResolvedTok) (rest : List ResolvedTok) : ParseErr :=
+  let expected := (matchingCloseBracket? openTok.surface).getD "）"
+  match rest with
+  | closeTok :: _ => .expectedCloseBracket openTok.surface expected openTok.col closeTok.col
+  | [] => .unmatchedOpenBracket openTok.surface openTok.col
 
 /-! ## § 3 Prefix parser -/
 
@@ -111,6 +121,23 @@ mutual
           | .ok (body, rest') =>
               parsePostfixApplications n reserve (.construction "之又" [body]) rest'
           | .error e => .error e
+      | .openBracket =>
+          match parseSurfaceExprAux n reserve rest with
+          | .error e => .error e
+          | .ok (body, closeTok :: rest') =>
+              match closeTok.atom with
+              | .closeBracket =>
+                  match matchingCloseBracket? head.surface with
+                  | some expected =>
+                      if closeTok.surface = expected then
+                        parsePostfixApplications n reserve (.grouped head closeTok body) rest'
+                      else
+                        .error (.expectedCloseBracket head.surface expected head.col closeTok.col)
+                  | none => .error (.unmatchedOpenBracket head.surface head.col)
+              | _ => .error (expectedCloseBracketErr head (closeTok :: rest'))
+          | .ok (_, []) => .error (expectedCloseBracketErr head [])
+      | .closeBracket =>
+          .error (.unmatchedCloseBracket head.surface head.col)
       | .hexOrOp h r =>
           match r.operator? with
           | none => parsePostfixApplications n reserve (.atom { head with atom := .hexConst h }) rest
@@ -187,7 +214,10 @@ end
 
 def leftoverAtomsErr : List ResolvedTok → ParseErr
   | [] => .leftoverAtoms 0 "" 0
-  | first :: rest => .leftoverAtoms (rest.length + 1) first.surface first.col
+  | first :: rest =>
+      match first.atom with
+      | .closeBracket => .unmatchedCloseBracket first.surface first.col
+      | _ => .leftoverAtoms (rest.length + 1) first.surface first.col
 
 def parseSurfaceResolved (rs : List ResolvedTok) : Except ParseErr SurfaceExpr :=
   let fuel := rs.length * 2 + 1
@@ -227,5 +257,17 @@ example : (parseSurface "令 甲 乾 同 甲 乾").toOption.isSome = true := by 
 example : (parseSurface "者 甲 甲 之 乾").toOption.isSome = true := by native_decide
 
 example : (parseSurface "同 乾 之 坤").toOption.isSome = true := by native_decide
+
+example : (parseSurface "（推 一）").toOption.isSome = true := by native_decide
+
+example : (parseSurface "(推 一)").toOption.isSome = true := by native_decide
+
+example : (parseSurface "同 （推 一） （推 一）").toOption.isSome = true := by native_decide
+
+example : (parseSurface "（推 一").toOption.isNone = true := by native_decide
+
+example : (parseSurface "推 一）").toOption.isNone = true := by native_decide
+
+example : (parseSurface "（）").toOption.isNone = true := by native_decide
 
 end SSBX.Foundation.Wen.WenSurface

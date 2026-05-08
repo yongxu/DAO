@@ -1396,6 +1396,36 @@
       ]
     },
     {
+      "document": "formal/SSBX/notes/wensurface-syntax-spec.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenSurface/Semantics.lean"
+          ],
+          "symbol": "ExecutableSemantics"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Text/WenyanOperators.lean"
+          ],
+          "symbol": "OperatorId"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenSurface/Syntax.lean"
+          ],
+          "symbol": "SurfaceExpr"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenDef.lean"
+          ],
+          "symbol": "Tm"
+        }
+      ]
+    },
+    {
       "document": "formal/SSBX/notes/zero-axiom-roadmap.md",
       "lean_path_mentions": [
         "formal/SSBX/Foundation/Bagua/KleeneInternal.lean"
