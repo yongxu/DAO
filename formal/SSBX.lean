@@ -141,6 +141,7 @@ import SSBX.Foundation.Modern.OperatorCellGridMarkovBridge
 import SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityBridge
 import SSBX.Foundation.Modern.QuantumRelativityPathCausalBridge
 import SSBX.Foundation.Modern.QuantumRelativityAmplitudeChannelBridge
+import SSBX.Foundation.Modern.QuantumRelativityInterferenceBridge
 import SSBX.Foundation.Modern.SUN
 
 -- Phase 4 主体续（自然演绎 / Lebesgue 积分 / 连续 ODE / 神经科学 / 完备性深化）

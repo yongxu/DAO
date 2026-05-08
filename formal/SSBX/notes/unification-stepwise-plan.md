@@ -19,6 +19,7 @@
 -> 有限概率核接口
 -> 路径组合与因果约束
 -> 经典 Markov / 量子 amplitude 分层
+-> 干涉与测量律候选
 -> 几何候选接口
 -> 经验 pending ledger
 -> 统一摘要 theorem
@@ -42,8 +43,9 @@ lake build SSBX.Foundation.Modern.OperatorCellGridMarkovBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityPathCausalBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityAmplitudeChannelBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityInterferenceBridge
 lake build SSBX
-git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean formal/SSBX.lean formal/SSBX/notes/unification-stepwise-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/有限概率核接口 · Markov桥S2.md' '义理/路径组合与因果约束 · Markov桥S3.md' '义理/经典Markov与量子振幅分层 · Markov桥S4.md'
+git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean formal/SSBX.lean formal/SSBX/notes/unification-stepwise-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/有限概率核接口 · Markov桥S2.md' '义理/路径组合与因果约束 · Markov桥S3.md' '义理/经典Markov与量子振幅分层 · Markov桥S4.md' '义理/干涉与测量律候选 · Markov桥S5.md'
 ```
 
 ## S0 · 基线重审
@@ -181,7 +183,7 @@ Lean 中有独立的 amplitude / channel 层；
 
 | 项 | 内容 |
 |---|---|
-| Lean 出口 | 新增路径振幅组合、相消候选或测量概率候选接口 theorem |
+| Lean 出口 | `interference_bridge_summary` |
 | 最低 theorem 形态 | `amplitude_path_composition`、`interference_candidate`、`born_rule_candidate_boundary` |
 | 失败记录 | 若只能写候选接口而无法证明数值律，记录为 `candidate only`，并保留 theorem 名称空缺 |
 | 文档更新 | 只能写“Born-rule-shaped candidate”，不能写“Born rule 已证” |
@@ -193,6 +195,16 @@ Lean 中有独立的 amplitude / channel 层；
 候选测量律有明确输入、输出和未关闭条件；
 所有未证明条件保留为 pending ledger 条目。
 ```
+
+当前状态：
+
+| theorem | 文件 | 读法 |
+|---|---|---|
+| `interference_bridge_summary` | `QuantumRelativityInterferenceBridge.lean` | concrete 与 `71232` grid bridge 承载 path amplitude candidate、interference witness 与 Born-shaped boundary |
+| `amplitude_path_composition` | `QuantumRelativityInterferenceBridge.lean` | 显式 composable path witness 上的 path-amplitude candidate 组合等式 |
+| `interference_candidate` | `QuantumRelativityInterferenceBridge.lean` | `1 + (-1) = 0` 的 destructive-interference typed witness |
+| `born_rule_candidate_boundary` | `QuantumRelativityInterferenceBridge.lean` | 单一复幅候选权重等于 `ampProb` |
+| `born_rule_candidate_nonnegative` | `QuantumRelativityInterferenceBridge.lean` | Born-shaped candidate weight 非负 |
 
 ## S6 · 几何与度规候选接口
 
@@ -275,6 +287,7 @@ Lean 只关闭一个几何候选接口；
 | 2026-05-08 | S2 | success | 新增 finite probability-kernel denominator interface；关闭非终端行分母非零与权重上界，仍不证明 sum-one 概率律、Born rule、真实 quantum channel law 或经验闭合 |
 | 2026-05-08 | S3 | success | 新增 path composition and local causal constraints；关闭组合 path witness 的可达/因果读法与 concrete/grid no-self-loop，仍不证明完整偏序、局部有限 causal set、light cone 或 metric recovery |
 | 2026-05-08 | S4 | success | 新增 classical Markov / quantum amplitude-channel 分层接口；关闭 layer separation、channel candidate 到 S2 边界的投影与非零振幅支持精化，仍不证明干涉、Born rule 推导、unitary/CPTP channel law 或经验闭合 |
+| 2026-05-08 | S5 | success | 新增 path amplitude / interference / Born-shaped candidate interface；关闭候选组合等式、相消 witness 与 `ampProb` boundary，仍不证明真实干涉律、Born rule 推导、unitary/CPTP channel law 或经验闭合 |
 
 ## 统一用语边界
 

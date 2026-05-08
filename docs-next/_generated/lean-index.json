@@ -4,7 +4,7 @@
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
-    "Foundation/Modern": 42,
+    "Foundation/Modern": 43,
     "Foundation/Wen": 51,
     "Foundation/Yi": 2,
     "Model": 2,
@@ -31,7 +31,7 @@
       "lines": 1167,
       "module": "WenyanSurface.lean",
       "path": "WenyanSurface.lean",
-      "sha256": "329d73b87d5549f21c36ffa977f98625a68948ca7d039d4571df9b1b25c3a56c"
+      "sha256": "d31996c0c6cff3a19be82a17c4c9df8e3ce5aed202cc469432e5d6bbaebc26fb"
     },
     {
       "cluster": "root",
@@ -158,6 +158,7 @@
         "SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityBridge",
         "SSBX.Foundation.Modern.QuantumRelativityPathCausalBridge",
         "SSBX.Foundation.Modern.QuantumRelativityAmplitudeChannelBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityInterferenceBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -176,10 +177,10 @@
         "SSBX.Foundation.Modern.IIDWlln",
         "SSBX.Foundation.Modern.BochnerPL"
       ],
-      "lines": 168,
+      "lines": 169,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "e02bfd46cbff8de60d8aded2e3fb36642620bf7ca9a637c725370b6e660f8879"
+      "sha256": "344138e72661c34df6054bc68982a33031d80aab82d0728c8fbd8785540c71c3"
     },
     {
       "cluster": "root",
@@ -10412,6 +10413,79 @@
     },
     {
       "cluster": "Foundation/Modern",
+      "declaration_count": 15,
+      "declarations": [
+        {
+          "kind": "structure",
+          "name": "PathAmplitudeSkeleton"
+        },
+        {
+          "kind": "def",
+          "name": "HasPathAmplitudeProjection"
+        },
+        {
+          "kind": "theorem",
+          "name": "amplitude_path_composition"
+        },
+        {
+          "kind": "structure",
+          "name": "InterferenceCandidate"
+        },
+        {
+          "kind": "def",
+          "name": "HasInterferenceCandidate"
+        },
+        {
+          "kind": "def",
+          "name": "destructiveInterferenceWitness"
+        },
+        {
+          "kind": "theorem",
+          "name": "interference_candidate"
+        },
+        {
+          "kind": "structure",
+          "name": "BornRuleCandidateBoundary"
+        },
+        {
+          "kind": "def",
+          "name": "bornRuleCandidate"
+        },
+        {
+          "kind": "theorem",
+          "name": "born_rule_candidate_boundary"
+        },
+        {
+          "kind": "theorem",
+          "name": "born_rule_candidate_nonnegative"
+        },
+        {
+          "kind": "def",
+          "name": "zeroPathAmplitudeSkeleton"
+        },
+        {
+          "kind": "def",
+          "name": "concretePathAmplitudeSkeleton"
+        },
+        {
+          "kind": "def",
+          "name": "operatorCellGridPathAmplitudeSkeleton"
+        },
+        {
+          "kind": "theorem",
+          "name": "interference_bridge_summary"
+        }
+      ],
+      "imports": [
+        "SSBX.Foundation.Modern.QuantumRelativityAmplitudeChannelBridge"
+      ],
+      "lines": 185,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityInterferenceBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean",
+      "sha256": "9233d0ad1b07f2716d8c3737d0c8beb5c49e9ba5c70eba82c1d137b2ce6effdc"
+    },
+    {
+      "cluster": "Foundation/Modern",
       "declaration_count": 29,
       "declarations": [
         {
@@ -16776,10 +16850,10 @@
       "imports": [
         "SSBX.Foundation.Wen.WenSurface.Elaborate"
       ],
-      "lines": 1055,
+      "lines": 1064,
       "module": "SSBX.Foundation.Wen.WenSurface.EndToEnd",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/EndToEnd.lean",
-      "sha256": "1e821276837184df3b6e01abede003636b6ffb15a1ac6471380972b3b0eeaf94"
+      "sha256": "7d439935a90425de23402881a10412e39cf38b953225982628f44c5501abe3a8"
     },
     {
       "cluster": "Foundation/Wen",
@@ -17326,10 +17400,10 @@
         "SSBX.Text.OperatorSignatures",
         "SSBX.Text.WenyanOperators"
       ],
-      "lines": 534,
+      "lines": 569,
       "module": "SSBX.Foundation.Wen.WenSurface.Semantics",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Semantics.lean",
-      "sha256": "919e51102c26906f9373498f3230ed7cd38a0438715f99d1950cd1d3fc380013"
+      "sha256": "9f540581deb9417f305c65fdb5668cd58fe67ea4779c63069e9396efb6317615"
     },
     {
       "cluster": "Foundation/Wen",

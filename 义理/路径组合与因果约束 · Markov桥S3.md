@@ -1,6 +1,6 @@
 # 路径组合与因果约束 · Markov桥S3
 
-**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [有限概率核接口 · Markov桥S2](有限概率核接口%20·%20Markov桥S2.md) · [经典Markov与量子振幅分层 · Markov桥S4](经典Markov与量子振幅分层%20·%20Markov桥S4.md) · [文构造完备与直相加边界](文构造完备与直相加边界.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
+**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [有限概率核接口 · Markov桥S2](有限概率核接口%20·%20Markov桥S2.md) · [经典Markov与量子振幅分层 · Markov桥S4](经典Markov与量子振幅分层%20·%20Markov桥S4.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [文构造完备与直相加边界](文构造完备与直相加边界.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
 **Lean 锚点**：
 
@@ -67,7 +67,7 @@ theorem path_causal_bridge_summary :
 | `71232` grid code-successor | `machineChecked` | successor index 每一步 code 加一 |
 | 一步自环排除 | `machineChecked` | code-monotone step 不可能有 `step a a` |
 | pathWeight 乘法律 | 未纳入本轮 | `pathWeight` 仍是占位接口 |
-| 振幅干涉读法 | 未纳入本轮 | S4 已开 amplitude/channel candidate，但 S3 path composition 不被解释为路径振幅叠加或相消 |
+| 振幅干涉读法 | S3 未纳入；S5 已开候选接口 | S3 path composition 不被解释为路径振幅叠加或相消；S5 只记录 candidate，不证明真实干涉律 |
 | 完整可达传递闭包 | 未纳入本轮 | 本轮只组合显式 path witness |
 | 完整因果偏序 / causal set | 未纳入本轮 | 尚未证明反身、传递、反对称、局部有限全公理 |
 | light cone / Lorentzian metric | 未纳入本轮 | 没有连续几何、度规恢复或光锥结构 |
@@ -175,7 +175,7 @@ S3 之后，最省力的推进顺序是：
 | 阶段 | 目标 | 本文状态 |
 |---|---|---|
 | S4 | classical Markov 与 quantum amplitude 分层 | 已由《经典Markov与量子振幅分层 · Markov桥S4》关闭候选接口；S3 path composition 本身仍不表达干涉 |
-| S5 | 干涉与 Born-rule-shaped candidate | 未纳入本轮 |
+| S5 | 干涉与 Born-rule-shaped candidate | 已由《干涉与测量律候选 · Markov桥S5》关闭候选接口；真实干涉律与 Born rule 推导仍未纳入 |
 | S6 | 几何与度规候选接口 | 未纳入本轮 |
 | S7 | 经验 pending ledger | 未纳入本轮 |
 
@@ -193,5 +193,5 @@ lake build SSBX
 文档与格式检查：
 
 ```bash
-git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean formal/SSBX.lean formal/SSBX/notes/unification-stepwise-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md formal/SSBX/notes/markov-causal-bridge-plan.md docs-next/10_formal_形式/modern.md '义理/路径组合与因果约束 · Markov桥S3.md' '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/经典Markov与量子振幅分层 · Markov桥S4.md'
+git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean formal/SSBX.lean formal/SSBX/notes/unification-stepwise-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md formal/SSBX/notes/markov-causal-bridge-plan.md docs-next/10_formal_形式/modern.md '义理/路径组合与因果约束 · Markov桥S3.md' '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/经典Markov与量子振幅分层 · Markov桥S4.md' '义理/干涉与测量律候选 · Markov桥S5.md'
 ```
