@@ -38,6 +38,7 @@
 | `formal/SSBX/Foundation/Modern/QuantumRelativityBornWeightNormalizationBridge.lean` | S11 conditional Born-weight normalization law |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityBornDistributionBridge.lean` | S12 finite Born distribution boundary |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeBridge.lean` | S13 channel composition candidate |
+| `formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeAssociativityBridge.lean` | S14 channel associativity and identity obstruction |
 | `formal/SSBX/notes/markov-causal-bridge-plan.md` | 探索计划与完成记录 |
 | `formal/SSBX/notes/unification-stepwise-plan.md` | 逐步完善到候选统一的阶段路线 |
 | `义理/文构造完备与直相加边界.md` | 对 `current-language no-go` 旧说法的正名 |
@@ -69,6 +70,7 @@
 | `义理/Born权重条件归一候选 · Markov桥S11.md` | S11 conditional Born-weight normalization companion 文档 |
 | `义理/Born分布边界候选 · Markov桥S12.md` | S12 finite Born distribution companion 文档 |
 | `义理/channelCompose候选 · Markov桥S13.md` | S13 channel composition companion 文档 |
+| `义理/channelCompose结合律候选 · Markov桥S14.md` | S14 associativity / identity obstruction companion 文档 |
 
 ## 当前验证结论
 
@@ -106,6 +108,7 @@
 - [x] `born_weight_normalization_bridge_summary` 已关闭 conditional finite Born-weight normalization law：若有限 amplitude support 已由 `ampProb` 归一，则所有 `candidateWeight` 非负且有限和为 `1`。
 - [x] `born_distribution_bridge_summary` 已关闭 finite Born distribution boundary：normalized amplitude support 可打包成带 amplitude sum、candidate support 与 candidateWeight projection 的 finite probability distribution interface。
 - [x] `channel_compose_bridge_summary` 已关闭 channel composition candidate：`channelCompose` 逐点相乘 amplitude、保留左侧 classical boundary，并保持 support-to-step soundness。
+- [x] `channel_compose_associativity_bridge_summary` 已关闭 channel associativity candidate：pointwise composition 可重新括号化，且 diagonal identity 在 no-self-step process 中被阻塞。
 - [x] 首次新 worktree 原生构建的 `mathlib4` 克隆阻塞已记录为基础设施失败，不当作 theorem 失败。
 - [ ] 尚未验证 Born rule 从 Markov 桥的推导、continuous phase/action law、general all-path enumeration、一般 path integral、真实可测干涉律、unitary / CPTP quantum channel law、完整因果偏序、局部有限 causal set、度规恢复、数据校准、可测预言 theorem 或经验闭合。
 
@@ -145,6 +148,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityNormalizedMassBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityBornWeightNormalizationBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityBornDistributionBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityChannelComposeBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityChannelComposeAssociativityBridge
 lake build SSBX
 git diff --check --
 ```

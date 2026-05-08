@@ -85,6 +85,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityNormalizedMassBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityBornWeightNormalizationBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityBornDistributionBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityChannelComposeBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityChannelComposeAssociativityBridge
 lake build SSBX
 git diff --check --
 ```
@@ -909,7 +910,7 @@ born_distribution_bridge_summary。
 | 最低 theorem 形态 | 合取 `BornDistributionBoundaryClosed`、`ChannelCompositionBoundaryClosed`、concrete/grid channel candidates、`PendingBeyondS13` 与 Wen coverage |
 | 失败记录 | stdin 试探一次通过；保留“不是 physical channel law”的概念边界 |
 | 文档更新 | 已新增《channelCompose候选 · Markov桥S13》 |
-| 后续结构 | identity/associativity candidate、probability push-forward、unitary/CPTP ledger、metric recovery 与 empirical closure |
+| 后续结构 | associativity / identity obstruction 已由 S14 承接；继续推进 sum-over-middle composition、probability push-forward、unitary/CPTP ledger、metric recovery 与 empirical closure |
 
 通过判准：
 
@@ -930,6 +931,36 @@ channel_compose_bridge_summary。
 | `channelCompose_support_implies_step` | `QuantumRelativityChannelComposeBridge.lean` | nonzero composed amplitude 仍推出 process step |
 | `channel_compose_bridge_summary` | `QuantumRelativityChannelComposeBridge.lean` | current skeleton channel composition boundary 已关闭 |
 | `PendingBeyondS13` | `QuantumRelativityChannelComposeBridge.lean` | physical channel law、unitary/CPTP 与 empirical closure 仍 pending |
+
+## S14 · channelCompose 结合律与 identity obstruction
+
+目标：关闭 S13 pointwise `channelCompose` 的 associativity boundary，同时明确普通 diagonal identity channel 在当前 support-respecting skeleton 中为什么不能直接给出。
+
+| 项 | 内容 |
+|---|---|
+| Lean 出口 | `channel_compose_associativity_bridge_summary` |
+| 最低 theorem 形态 | 合取 `ChannelCompositionBoundaryClosed`、`ChannelComposeAssociativityBoundaryClosed`、concrete/grid diagonal identity obstruction 与 Wen coverage |
+| 失败记录 | theorem 试探一次修正：`QuantumAmplitudeSupport` 需先展开后重写 diagonal amplitude |
+| 文档更新 | 已新增《channelCompose结合律候选 · Markov桥S14》 |
+| 后续结构 | sum-over-middle composition、probability push-forward、unitary/CPTP ledger |
+
+通过判准：
+
+```text
+channelCompose_associative_amplitude；
+channelCompose_associative_classical_boundary；
+no_self_step_blocks_channel_diagonal_identity；
+channel_compose_associativity_bridge_summary。
+```
+
+当前状态：
+
+| theorem | 文件 | 读法 |
+|---|---|---|
+| `channelCompose_associative_amplitude` | `QuantumRelativityChannelComposeAssociativityBridge.lean` | pointwise composition 重新括号化后 amplitude 相同 |
+| `channelCompose_associative_classical_boundary` | `QuantumRelativityChannelComposeAssociativityBridge.lean` | 重新括号化后仍保留最左侧 classical boundary |
+| `no_self_step_blocks_channel_diagonal_identity` | `QuantumRelativityChannelComposeAssociativityBridge.lean` | diagonal identity amplitude 会推出 self-step，因此被 no-self-step process 阻塞 |
+| `channel_compose_associativity_bridge_summary` | `QuantumRelativityChannelComposeAssociativityBridge.lean` | S14 algebra/obstruction boundary 已关闭 |
 
 ## 失败记录追加区
 
@@ -979,6 +1010,7 @@ channel_compose_bridge_summary。
 | 2026-05-09 | S11 | failure retained / success | `simp` 不能直接改写 `(candidateWeight ∘ bornRuleCandidate)` 的 list sum；改用 list induction 后关闭 conditional Born-weight normalization boundary |
 | 2026-05-09 | S12 | failure retained / success | `simp [bornDistributionBoundary]` 未自动拆出 dependent distribution fields；改为显式 existential witness 后关闭 finite Born distribution boundary |
 | 2026-05-09 | S13 | success | `channelCompose` stdin 试探一次通过；关闭 current skeleton 的 channel composition candidate，仍不证明 physical unitary/CPTP channel law |
+| 2026-05-09 | S14 | failure retained / success | 第一次 identity obstruction 试探中未展开 `QuantumAmplitudeSupport` 导致 rewrite 找不到目标；展开 support 后关闭 pointwise associativity 与 diagonal identity obstruction |
 
 ## 统一用语正名
 
@@ -986,9 +1018,9 @@ channel_compose_bridge_summary。
 
 | 词 | 在本路线中的含义 | 结构依据 |
 |---|---|---|
-| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S13 已关闭的 summary theorem 与路线日志 |
-| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8-S13 pending list |
-| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary`、`normalized_mass_bridge_summary`、`born_weight_normalization_bridge_summary`、`born_distribution_bridge_summary`、`channel_compose_bridge_summary` |
+| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S14 已关闭的 summary theorem 与路线日志 |
+| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8-S14 pending list |
+| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary`、`normalized_mass_bridge_summary`、`born_weight_normalization_bridge_summary`、`born_distribution_bridge_summary`、`channel_compose_bridge_summary`、`channel_compose_associativity_bridge_summary` |
 
 推荐正名句：
 

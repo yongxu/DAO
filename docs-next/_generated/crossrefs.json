@@ -1120,6 +1120,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityBornDistributionBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityBornWeightNormalizationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityCanonicalRepresentativeBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeAssociativityBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean",
@@ -1183,6 +1184,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityBornDistributionBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityBornWeightNormalizationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityCanonicalRepresentativeBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeAssociativityBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean",
@@ -1267,6 +1269,12 @@
         },
         {
           "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeAssociativityBridge.lean"
+          ],
+          "symbol": "channel_compose_associativity_bridge_summary"
+        },
+        {
+          "paths": [
             "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeBridge.lean"
           ],
           "symbol": "channel_compose_bridge_summary"
@@ -1324,12 +1332,6 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean"
           ],
           "symbol": "finite_probability_bridge_summary"
-        },
-        {
-          "paths": [
-            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
-          ],
-          "symbol": "finite_probability_normalization_bridge_summary"
         }
       ]
     },
@@ -2988,6 +2990,12 @@
         },
         {
           "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeAssociativityBridge.lean"
+          ],
+          "symbol": "channel_compose_associativity_bridge_summary"
+        },
+        {
+          "paths": [
             "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeBridge.lean"
           ],
           "symbol": "channel_compose_bridge_summary"
@@ -3015,12 +3023,6 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean"
           ],
           "symbol": "endpoint_indexed_path_family_bridge_summary"
-        },
-        {
-          "paths": [
-            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean"
-          ],
-          "symbol": "endpoint_support_normalization_bridge_summary"
         }
       ]
     },
@@ -3575,6 +3577,54 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeBridge.lean"
           ],
           "symbol": "operatorCellGrid_channelCompose_self_keeps_boundary"
+        }
+      ]
+    },
+    {
+      "document": "义理/channelCompose结合律候选 · Markov桥S14.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeAssociativityBridge.lean"
+          ],
+          "symbol": "ChannelComposeAssociativityBoundaryClosed"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeAssociativityBridge.lean"
+          ],
+          "symbol": "channelCompose_associative_amplitude"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeAssociativityBridge.lean"
+          ],
+          "symbol": "channel_compose_associativity_boundary_closed"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeAssociativityBridge.lean"
+          ],
+          "symbol": "channel_compose_associativity_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeAssociativityBridge.lean"
+          ],
+          "symbol": "concrete_no_channel_diagonal_identity"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeAssociativityBridge.lean"
+          ],
+          "symbol": "no_self_step_blocks_channel_diagonal_identity"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeAssociativityBridge.lean"
+          ],
+          "symbol": "operatorCellGrid_no_channel_diagonal_identity"
         }
       ]
     },

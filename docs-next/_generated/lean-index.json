@@ -4,7 +4,7 @@
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
-    "Foundation/Modern": 66,
+    "Foundation/Modern": 67,
     "Foundation/Wen": 51,
     "Foundation/Yi": 2,
     "Model": 2,
@@ -182,6 +182,7 @@
         "SSBX.Foundation.Modern.QuantumRelativityBornWeightNormalizationBridge",
         "SSBX.Foundation.Modern.QuantumRelativityBornDistributionBridge",
         "SSBX.Foundation.Modern.QuantumRelativityChannelComposeBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityChannelComposeAssociativityBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -200,10 +201,10 @@
         "SSBX.Foundation.Modern.IIDWlln",
         "SSBX.Foundation.Modern.BochnerPL"
       ],
-      "lines": 192,
+      "lines": 193,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "edcf9d1bf24bd7d68de537c42a7a7c7bee008eb22befe5e1e2b90f66384c0eaa"
+      "sha256": "9c7bb7401dd4fd9b321c9833023371ba9e38395f1c40115c74c85c5999712b31"
     },
     {
       "cluster": "root",
@@ -10474,6 +10475,64 @@
       "module": "SSBX.Foundation.Modern.QuantumRelativityCanonicalRepresentativeBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityCanonicalRepresentativeBridge.lean",
       "sha256": "2231f6a4d11d7c35dcc71b3616c46ba0a40565b237c7e281a6da29c20ceec4d6"
+    },
+    {
+      "cluster": "Foundation/Modern",
+      "declaration_count": 11,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "channelCompose_associative_amplitude"
+        },
+        {
+          "kind": "theorem",
+          "name": "channelCompose_associative_classical_boundary"
+        },
+        {
+          "kind": "def",
+          "name": "ChannelComposeAssociativityBoundaryClosed"
+        },
+        {
+          "kind": "theorem",
+          "name": "channel_compose_associativity_boundary_closed"
+        },
+        {
+          "kind": "def",
+          "name": "ChannelDiagonalIdentityCandidate"
+        },
+        {
+          "kind": "def",
+          "name": "NoSelfStepProcess"
+        },
+        {
+          "kind": "theorem",
+          "name": "channel_diagonal_identity_forces_self_step"
+        },
+        {
+          "kind": "theorem",
+          "name": "no_self_step_blocks_channel_diagonal_identity"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_no_channel_diagonal_identity"
+        },
+        {
+          "kind": "theorem",
+          "name": "operatorCellGrid_no_channel_diagonal_identity"
+        },
+        {
+          "kind": "theorem",
+          "name": "channel_compose_associativity_bridge_summary"
+        }
+      ],
+      "imports": [
+        "Mathlib.Tactic",
+        "SSBX.Foundation.Modern.QuantumRelativityChannelComposeBridge"
+      ],
+      "lines": 151,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityChannelComposeAssociativityBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeAssociativityBridge.lean",
+      "sha256": "30c1a2fec42aecd04a0c227fa56201033fdd8a3a6c00f74c4db9beab4964e874"
     },
     {
       "cluster": "Foundation/Modern",

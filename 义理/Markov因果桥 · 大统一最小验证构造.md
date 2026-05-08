@@ -45,6 +45,7 @@
 | S11 Born 权重条件归一候选 | `Foundation/Modern/QuantumRelativityBornWeightNormalizationBridge.lean` | `born_weight_normalization_bridge_summary` 关闭 normalized amplitude support 条件下的 candidateWeight probability law | `machineChecked` |
 | S12 Born 分布边界候选 | `Foundation/Modern/QuantumRelativityBornDistributionBridge.lean` | `born_distribution_bridge_summary` 关闭 finite Born distribution boundary | `machineChecked` |
 | S13 channelCompose 候选 | `Foundation/Modern/QuantumRelativityChannelComposeBridge.lean` | `channel_compose_bridge_summary` 关闭 current skeleton channel composition candidate | `machineChecked` |
+| S14 channelCompose 结合律候选 | `Foundation/Modern/QuantumRelativityChannelComposeAssociativityBridge.lean` | `channel_compose_associativity_bridge_summary` 关闭 pointwise associativity 与 diagonal identity obstruction | `machineChecked` |
 
 > 本文回答第三个问题：
 >
@@ -152,7 +153,8 @@ theorem markov_causal_bridge_summary :
 | conditional Born-weight law | `machineChecked` theorem | S11 证明 normalized amplitude support 条件下 candidateWeight 非负且求和为 `1` |
 | finite Born distribution boundary | `machineChecked` theorem | S12 把 amplitude support / amplitude sum / candidateWeight projection 装入 finite probability distribution interface |
 | channel composition candidate | `machineChecked` theorem | S13 证明 `channelCompose` 逐点相乘 amplitude、保留左侧 classical boundary，并保持 support-to-step soundness |
-| Born rule 从 Markov / 振幅桥的推导 | 未纳入本轮 | S13 不证明无条件振幅平方律推导或物理测量概率律 |
+| channel associativity / identity obstruction | `machineChecked` theorem | S14 证明 pointwise `channelCompose` 可重新括号化，并证明 diagonal identity 被 no-self-step skeleton 阻塞 |
+| Born rule 从 Markov / 振幅桥的推导 | 未纳入本轮 | S14 不证明无条件振幅平方律推导或物理测量概率律 |
 | 真实干涉、真实 quantum channel law、Born rule 推导 | 未纳入本轮 | S5/S5b/S5c/S5d/S5e/S5f/S5g/S5h/S5i/S5j/S5k/S5l/S5m/S5n/S5o/S5p/S5q/S5r 已开候选接口；还需要 unitary/CPTP、连续相位/作用量动力学、general choice function、general all-path enumeration、一般 path integral、可测预言 theorem 或 Markov 到 Born 的推导 |
 | Lorentzian geometry / 度规恢复 | 未纳入本轮 | 初版只保留事件与可达因果接口 |
 | 完整反对称性、局部有限性、经典极限 | 未纳入本轮 | S3 只排除一步自环；完整因果集结构需要更强 theorem |
@@ -293,12 +295,14 @@ typed skeleton / machineChecked in this branch：
 | S12 公开摘要 | `born_distribution_bridge_summary` | `machineChecked` theorem |
 | channel composition candidate | `channelCompose`、`channelCompose_amplitude`、`channelCompose_support_implies_step` | `machineChecked` theorem |
 | S13 公开摘要 | `channel_compose_bridge_summary` | `machineChecked` theorem |
+| channel associativity / identity obstruction | `channelCompose_associative_amplitude`、`no_self_step_blocks_channel_diagonal_identity` | `machineChecked` theorem |
+| S14 公开摘要 | `channel_compose_associativity_bridge_summary` | `machineChecked` theorem |
 
 未纳入本轮：
 
 | 轴 | 状态 | 说明 |
 |---|---|---|
-| Born rule 从 Markov 桥的推导 | 未纳入本轮 | S13 已关闭 channel composition candidate；仍未从振幅结构推出无条件物理测量概率律 |
+| Born rule 从 Markov 桥的推导 | 未纳入本轮 | S14 已关闭 channel associativity / identity obstruction boundary；仍未从振幅结构推出无条件物理测量概率律 |
 | 路径权重乘法定律 | 未纳入本轮 | `pathWeight` 可先作为接口占位 |
 | 非平凡量子通道律 | 未纳入本轮 | S4 只有 candidate skeleton；没有 unitary evolution、CPTP、Kraus 或 density-matrix law |
 | 真实干涉律 | 未纳入本轮 | S5/S5b/S5c/S5d/S5e/S5f/S5g/S5h/S5i/S5j/S5k/S5l/S5m/S5n/S5o/S5p/S5q/S5r 有相消 witness、非零候选 path witness、two-path finite cancellation candidate、discrete phase-label candidate、edge-action phase accumulation candidate、finite path-family sum candidate、finite path-sum algebra candidate、endpoint-indexed finite family candidate、endpoint support normalization candidate、two-route toy enumeration candidate、visible path-key candidate、finite visible-key quotient candidate、visible-key quotient class candidate、two-route canonical representative candidate、finite quotient-support candidate、quotient-support algebra candidate、pending observable ledger boundary 与 finite action-to-phase law candidate；没有 general choice function、general all-path enumeration、一般 path integral、连续相位/作用量演化或可测预言 theorem |
