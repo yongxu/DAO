@@ -1,0 +1,128 @@
+# 作用量相位律候选 · Markov桥S5r
+
+**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [观测账本候选 · Markov桥S5q](观测账本候选%20·%20Markov桥S5q.md) · [商支撑代数候选 · Markov桥S5p](商支撑代数候选%20·%20Markov桥S5p.md) · [离散作用量相位候选 · Markov桥S5e](离散作用量相位候选%20·%20Markov桥S5e.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
+
+**Lean 锚点**：
+
+| 层 | 文件 | 内容 | 状态 |
+|---|---|---|---|
+| period-two action phase | `Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean` | `actionIndexPhase`、`actionIndexAmplitude` | `machineChecked` |
+| action law candidate | `Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean` | `QuotientActionPhaseLawCandidate`、`quotientActionPhaseAmplitude` | `machineChecked` |
+| two-route action law | `Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean` | `twoRouteQuotientActionPhaseLaw`、`two_route_upper_quotient_action_index`、`two_route_lower_quotient_action_index` | `machineChecked` |
+| quotient-support cancellation | `Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean` | `two_route_action_phase_support_amplitude_cancels`、`two_route_action_phase_support_born_weight_zero` | `machineChecked` |
+| ledger-compatible key law | `Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean` | `twoRouteActionPhaseKeyAmplitudeCandidate`、`twoRouteActionPhaseObservableLedgerEntry` | `machineChecked` |
+| S5r 公开摘要 | `Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean` | `action_phase_law_bridge_summary` | `machineChecked` |
+
+---
+
+## 〇 · Claim Block
+
+S5r 的主张：
+
+```text
+finite action index
+-> period-two phase
+-> quotient-support amplitude sum
+-> pending observable ledger entry
+```
+
+对 two-route toy quotient support：
+
+```text
+upper action index = 0
+lower action index = 1
+actionIndexAmplitude 0 = 1
+actionIndexAmplitude 1 = -1
+finite quotient-support sum = 0
+Born-shaped candidate weight = 0
+status = pendingData
+```
+
+这不是连续作用量泛函，也不是 Hamiltonian/unitary dynamics、一般 path integral、Born rule 推导或经验闭合；它只关闭有限 period-two action-to-phase law candidate。
+
+公开摘要为：
+
+```lean
+theorem action_phase_law_bridge_summary :
+    TwoRouteActionPhaseLawBoundaryComplete
+    ∧ quotientSupportAmplitudeSum twoRouteActionPhaseKeyAmplitudeCandidate
+      twoRouteSourceTargetQuotientEnumeration = 0
+    ∧ quotientSupportBornWeight twoRouteActionPhaseKeyAmplitudeCandidate
+      twoRouteSourceTargetQuotientEnumeration = 0
+    ∧ TwoRouteObservableLedgerBoundaryComplete
+    ∧ WenConstructiveCoverage
+```
+
+该 theorem 已通过 `lake build SSBX.Foundation.Modern.QuantumRelativityActionPhaseLawBridge`。
+
+---
+
+## 〇一 · 完成度审计
+
+已完成 / 已证 / machineChecked：
+
+| 轴 | Lean 锚点 | 读法 |
+|---|---|---|
+| finite action phase | `actionIndexPhase`、`actionIndexAmplitude` | action index mod 2 导出 `zero/pi` 与 `1/-1` |
+| cancellation seed | `action_index_zero_one_amplitudes_cancel` | index `0` 与 `1` 的诱导振幅相消 |
+| quotient action law | `QuotientActionPhaseLawCandidate` | quotient class 上的有限 action index law |
+| two-route action indices | `two_route_upper_quotient_action_index`、`two_route_lower_quotient_action_index` | upper/lower quotient classes 分别携带 `0/1` |
+| support cancellation | `two_route_action_phase_support_amplitude_cancels` | action-phase law 在 two-route quotient support 上相消 |
+| ledger entry | `twoRouteActionPhaseObservableLedgerEntry` | action-phase law 可登记为 pending observable entry |
+| summary | `action_phase_law_bridge_summary` | 合取 finite action-phase law、ledger boundary 与文构造覆盖 |
+
+后续结构：
+
+| 轴 | 状态 | 说明 |
+|---|---|---|
+| continuous action functional | 后续结构 | S5r 只处理 finite period-two action index |
+| Hamiltonian / unitary dynamics | 后续结构 | 仍未给出动力学生成律 |
+| path integral | 后续结构 | 仍需要一般路径空间、求和/积分与极限 |
+| Born rule derivation | 后续结构 | 仍只记录 Born-shaped candidate weight |
+| empirical closure | 后续结构 | S5r 接回 pending ledger，不证明数据校准或实验闭合 |
+
+本轮闭合范围：**S5r 已在 Lean 中关闭 finite action-to-phase law candidate，并把其 two-route cancellation 接回 pending observable ledger。**
+
+---
+
+## 一 · 失败记录
+
+S5r 第一次目标构建失败：
+
+```text
+命令：lake build SSBX.Foundation.Modern.QuantumRelativityActionPhaseLawBridge
+失败点：two_route_action_phase_support_amplitude_cancels 与 key-support cancellation proof
+原因：proof 中展开了 `quotientVisibleKey`，导致 `Quot.lift` 暴露，`quotient_visible_key_mk` 不能作为 simp theorem 收缩 quotient readback
+修正：不展开 `quotientVisibleKey`，保留 quotient readback 形状，让既有 `[simp]` theorem 关闭计算
+结果：目标构建通过
+```
+
+---
+
+## 二 · 下一步
+
+S5r 后可以继续：
+
+```text
+finite action-to-phase law
+-> general finite action law over larger quotient supports
+```
+
+或者转向：
+
+```text
+finite action-to-phase law
+-> continuous phase/action law candidate
+```
+
+两条线都必须保持 machine-checked theorem 和失败记录。
+
+---
+
+## 三 · Validation Command
+
+Lean 验证命令：
+
+```bash
+lake build SSBX.Foundation.Modern.QuantumRelativityActionPhaseLawBridge
+```

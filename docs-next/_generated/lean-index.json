@@ -4,7 +4,7 @@
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
-    "Foundation/Modern": 59,
+    "Foundation/Modern": 60,
     "Foundation/Wen": 51,
     "Foundation/Yi": 2,
     "Model": 2,
@@ -175,6 +175,7 @@
         "SSBX.Foundation.Modern.QuantumRelativityQuotientSupportBridge",
         "SSBX.Foundation.Modern.QuantumRelativityQuotientSupportAlgebraBridge",
         "SSBX.Foundation.Modern.QuantumRelativityObservableLedgerBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityActionPhaseLawBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -193,10 +194,10 @@
         "SSBX.Foundation.Modern.IIDWlln",
         "SSBX.Foundation.Modern.BochnerPL"
       ],
-      "lines": 185,
+      "lines": 186,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "f66d2957fd7eef98444757fd3835a5c57833a8db6ec89412103afc4a28cbf21b"
+      "sha256": "8e2833bc61e79a9cd62801896d3ef78500b3cfc5728e32095a98cd902cd48f32"
     },
     {
       "cluster": "root",
@@ -10071,6 +10072,127 @@
       "module": "SSBX.Foundation.Modern.Quantum",
       "path": "formal/SSBX/Foundation/Modern/Quantum.lean",
       "sha256": "7174e00294443e896e8218bfb2912784a59c34bbe38fd02bc015cbd78baed660"
+    },
+    {
+      "cluster": "Foundation/Modern",
+      "declaration_count": 27,
+      "declarations": [
+        {
+          "kind": "def",
+          "name": "actionIndexPhase"
+        },
+        {
+          "kind": "def",
+          "name": "actionIndexAmplitude"
+        },
+        {
+          "kind": "theorem",
+          "name": "action_index_zero_phase"
+        },
+        {
+          "kind": "theorem",
+          "name": "action_index_one_phase"
+        },
+        {
+          "kind": "theorem",
+          "name": "action_index_zero_amplitude"
+        },
+        {
+          "kind": "theorem",
+          "name": "action_index_one_amplitude"
+        },
+        {
+          "kind": "theorem",
+          "name": "action_index_zero_one_amplitudes_cancel"
+        },
+        {
+          "kind": "structure",
+          "name": "QuotientActionPhaseLawCandidate"
+        },
+        {
+          "kind": "def",
+          "name": "quotientActionPhaseAmplitude"
+        },
+        {
+          "kind": "def",
+          "name": "quotientSupportActionPhaseAmplitudeSum"
+        },
+        {
+          "kind": "def",
+          "name": "quotientSupportActionPhaseBornWeight"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteQuotientActionPhaseLaw"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_upper_quotient_action_index"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_lower_quotient_action_index"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_upper_action_phase_amplitude"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_lower_action_phase_amplitude"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_action_phase_support_amplitude_cancels"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_action_phase_support_born_weight_zero"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteActionPhaseKeyAmplitudeCandidate"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_action_phase_key_support_amplitude_cancels"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_action_phase_key_support_born_weight_zero"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteActionPhaseObservableLedgerEntry"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_action_phase_observable_ledger_pending"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_action_phase_observable_ledger_not_empirically_closed"
+        },
+        {
+          "kind": "def",
+          "name": "TwoRouteActionPhaseLawBoundaryComplete"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_action_phase_law_boundary_complete"
+        },
+        {
+          "kind": "theorem",
+          "name": "action_phase_law_bridge_summary"
+        }
+      ],
+      "imports": [
+        "SSBX.Foundation.Modern.QuantumRelativityObservableLedgerBridge"
+      ],
+      "lines": 255,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityActionPhaseLawBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean",
+      "sha256": "8b2c0ae577d47eecfe5025b44adf641cdff590ca104ab2599ee9ee8c4c5fe239"
     },
     {
       "cluster": "Foundation/Modern",

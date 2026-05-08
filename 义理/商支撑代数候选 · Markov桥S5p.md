@@ -104,10 +104,10 @@ quotient-support algebra
 -> observable ledger boundary
 ```
 
-S5q 后仍可继续：
+S5q 后的 action-law 增强已由 S5r 承接；再往后可继续：
 
 ```text
-observable ledger boundary
+finite action-to-phase law candidate
 -> continuous phase/action law candidate
 ```
 

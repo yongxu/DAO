@@ -982,6 +982,7 @@
       "lean_path_mentions": [
         "formal/SSBX.lean",
         "formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityCanonicalRepresentativeBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean",
@@ -1020,6 +1021,7 @@
       "document": "formal/SSBX/notes/markov-causal-bridge-verification-plan.md",
       "lean_path_mentions": [
         "formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityCanonicalRepresentativeBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean",
@@ -1051,6 +1053,12 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityIntegration.lean"
           ],
           "symbol": "BridgeTerm"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean"
+          ],
+          "symbol": "action_phase_law_bridge_summary"
         },
         {
           "paths": [
@@ -1159,12 +1167,6 @@
             "formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean"
           ],
           "symbol": "operator_cell_grid_markov_causal_bridge_summary"
-        },
-        {
-          "paths": [
-            "formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean"
-          ],
-          "symbol": "path_causal_bridge_summary"
         }
       ]
     },
@@ -2637,6 +2639,12 @@
         },
         {
           "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean"
+          ],
+          "symbol": "action_phase_law_bridge_summary"
+        },
+        {
+          "paths": [
             "formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean"
           ],
           "symbol": "amplitude_channel_bridge_summary"
@@ -2712,12 +2720,6 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean"
           ],
           "symbol": "finite_path_sum_bridge_summary"
-        },
-        {
-          "paths": [
-            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean"
-          ],
-          "symbol": "finite_probability_bridge_summary"
         }
       ]
     },
@@ -3296,6 +3298,84 @@
             "formal/SSBX/Foundation/Core/Renlei.lean"
           ],
           "symbol": "人类命运共同体_之证"
+        }
+      ]
+    },
+    {
+      "document": "义理/作用量相位律候选 · Markov桥S5r.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean"
+          ],
+          "symbol": "QuotientActionPhaseLawCandidate"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean"
+          ],
+          "symbol": "actionIndexAmplitude"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean"
+          ],
+          "symbol": "actionIndexPhase"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean"
+          ],
+          "symbol": "action_phase_law_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean"
+          ],
+          "symbol": "quotientActionPhaseAmplitude"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean"
+          ],
+          "symbol": "twoRouteActionPhaseKeyAmplitudeCandidate"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean"
+          ],
+          "symbol": "twoRouteActionPhaseObservableLedgerEntry"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean"
+          ],
+          "symbol": "twoRouteQuotientActionPhaseLaw"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean"
+          ],
+          "symbol": "two_route_action_phase_support_amplitude_cancels"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean"
+          ],
+          "symbol": "two_route_action_phase_support_born_weight_zero"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean"
+          ],
+          "symbol": "two_route_lower_quotient_action_index"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean"
+          ],
+          "symbol": "two_route_upper_quotient_action_index"
         }
       ]
     },

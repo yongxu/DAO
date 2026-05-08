@@ -31,6 +31,7 @@
 | `formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportBridge.lean` | S5o finite quotient-support candidate |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportAlgebraBridge.lean` | S5p quotient-support algebra candidate |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean` | S5q observable ledger candidate boundary |
+| `formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean` | S5r finite action-to-phase law candidate |
 | `formal/SSBX/notes/markov-causal-bridge-plan.md` | 探索计划与完成记录 |
 | `formal/SSBX/notes/unification-stepwise-plan.md` | 逐步完善到候选统一的阶段路线 |
 | `义理/文构造完备与直相加边界.md` | 对 `current-language no-go` 旧说法的正名 |
@@ -55,6 +56,7 @@
 | `义理/商支撑枚举候选 · Markov桥S5o.md` | S5o 商支撑枚举 companion 文档 |
 | `义理/商支撑代数候选 · Markov桥S5p.md` | S5p 商支撑代数 companion 文档 |
 | `义理/观测账本候选 · Markov桥S5q.md` | S5q 观测账本 companion 文档 |
+| `义理/作用量相位律候选 · Markov桥S5r.md` | S5r 作用量相位律 companion 文档 |
 
 ## 当前验证结论
 
@@ -85,6 +87,7 @@
 - [x] `quotient_support_bridge_summary` 已关闭 finite quotient-support candidate：two-route quotient support 覆盖 toy source/target quotient classes，可回读 visible keys，并保持 quotient-level cancellation 与 Born-shaped zero boundary。
 - [x] `quotient_support_algebra_bridge_summary` 已关闭 quotient-support algebra candidate：append / permutation / reverse stability、duplicate zero-sum cancellation 与 two-route algebraic cancellation stability 已形式化。
 - [x] `observable_ledger_bridge_summary` 已关闭 observable ledger candidate boundary：two-route quotient-support cancellation 可登记为 pending observable ledger entry，且 pending entry 不等于 empirical closure。
+- [x] `action_phase_law_bridge_summary` 已关闭 finite action-to-phase law candidate：period-two action index 导出 `1/-1`，在 quotient support 上相消，并接回 pending observable ledger。
 - [x] 首次新 worktree 原生构建的 `mathlib4` 克隆阻塞已记录为基础设施失败，不当作 theorem 失败。
 - [ ] 尚未验证 sum-one 概率律、Born rule 从 Markov 桥的推导、continuous phase/action law、general all-path enumeration、一般 path integral、真实可测干涉律、unitary / CPTP quantum channel law、完整因果偏序、局部有限 causal set、度规恢复、数据校准、可测预言 theorem 或经验闭合。
 
@@ -117,6 +120,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityCanonicalRepresentativeBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityQuotientSupportBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityQuotientSupportAlgebraBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityObservableLedgerBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityActionPhaseLawBridge
 lake build SSBX
 git diff --check --
 ```
@@ -172,6 +176,7 @@ rg -n "待处理|future|deferred|部分相关|佛|唯识|analogy|unchecked|plann
 | finite quotient-support candidate | `quotient_support_bridge_summary` | `machineChecked` |
 | quotient-support algebra candidate | `quotient_support_algebra_bridge_summary` | `machineChecked` |
 | observable ledger candidate boundary | `observable_ledger_bridge_summary` | `machineChecked` |
+| finite action-to-phase law candidate | `action_phase_law_bridge_summary` | `machineChecked` |
 | tagged-language noncollapse 保持 | `markov_bridge_not_direct_language_addition` | `machineChecked` |
 | 公开摘要 | `markov_causal_bridge_summary` | `machineChecked` |
 
@@ -202,6 +207,7 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
   可以承载 amplitude-complete finite filter 与 duplicate handling boundary
   可以承载 two-route source/target middle enumeration、visible path-key、visible-key quotient class、canonical representative、finite quotient support 与 quotient-support algebra
   可以把 quotient-support cancellation 登记为 pending observable ledger entry，并证明 pending entry 不等于 empirical closure
+  可以把 finite action index `0/1` 导出为 `1/-1` 并在 quotient support 上相消
   同时保持当前 tagged 物理语言 noncollapse 边界
 ```
 
@@ -211,7 +217,7 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
 |---|---|
 | 量子引力 | 还需要动力学、连续极限、量子场或引力方程 |
 | Born rule 推导 | 还需要从 Markov / 振幅结构推出归一化测量概率律 |
-| 真实干涉律 | S5/S5b/S5c/S5d/S5e/S5f/S5g/S5h/S5i/S5j/S5k/S5l/S5m/S5n/S5o/S5p/S5q 已有 path amplitude、非零 witness、two-path finite cancellation candidate、discrete phase-label candidate、edge-action phase accumulation candidate、finite path-family sum candidate、finite path-sum algebra candidate、endpoint-indexed finite family candidate、endpoint support normalization candidate、two-route toy enumeration candidate、visible path-key candidate、finite visible-key quotient candidate、visible-key quotient class candidate、two-route canonical representative candidate、finite quotient-support candidate、quotient-support algebra candidate 与 pending observable ledger boundary；还需要 general choice function、general all-path enumeration、一般 path integral、连续相位动力学、可测预言 theorem 或经验闭合 |
+| 真实干涉律 | S5/S5b/S5c/S5d/S5e/S5f/S5g/S5h/S5i/S5j/S5k/S5l/S5m/S5n/S5o/S5p/S5q/S5r 已有 path amplitude、非零 witness、two-path finite cancellation candidate、discrete phase-label candidate、edge-action phase accumulation candidate、finite path-family sum candidate、finite path-sum algebra candidate、endpoint-indexed finite family candidate、endpoint support normalization candidate、two-route toy enumeration candidate、visible path-key candidate、finite visible-key quotient candidate、visible-key quotient class candidate、two-route canonical representative candidate、finite quotient-support candidate、quotient-support algebra candidate、pending observable ledger boundary 与 finite action-to-phase law candidate；还需要 general choice function、general all-path enumeration、一般 path integral、连续相位动力学、可测预言 theorem 或经验闭合 |
 | 真实 quantum channel law | S4 的 `QuantumChannelSkeleton` 是 candidate interface；还需要 unitary evolution、CPTP、Kraus 或 density-matrix law |
 | 完整因果集或时空度规 | S3 已关闭一步 no-self-loop；还需要偏序全公理、Lorentzian geometry 或 metric recovery theorem |
 | 经验预言 | S5q 已给出 pending observable ledger entry；还需要外部数据、观测量、误差模型、阈值或数据判准 |
@@ -246,6 +252,7 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
 | V6o | 引入 finite quotient-support candidate | 已由 `quotient_support_bridge_summary` 关闭 quotient support coverage、visible-key readback、quotient-level cancellation 与 Born-shaped zero boundary；quotient-support algebra 已由 V6p 承接，general all-path enumeration、continuous action law 与 path integral 仍 pending |
 | V6p | 引入 quotient-support algebra candidate | 已由 `quotient_support_algebra_bridge_summary` 关闭 append / permutation / reverse stability、duplicate zero-sum cancellation 与 two-route algebraic cancellation stability；general all-path enumeration、continuous action law 与 path integral 仍 pending |
 | V7 | 经验接口 | 已由 `observable_ledger_bridge_summary` 关闭 two-route cancellation 进入 pending observable ledger 的最小边界；外部数据、误差模型、观测量与可测预言 theorem 仍 pending |
+| V7b | 引入 finite action-to-phase law candidate | 已由 `action_phase_law_bridge_summary` 关闭 action index `0/1` 到 `1/-1` 的 quotient-support cancellation 与 pending ledger registration；continuous action law、path integral 与数据校准仍 pending |
 
 ## 失败记录模板
 
@@ -290,8 +297,9 @@ lake build SSBX.Foundation.Modern.QuantumRelativityCanonicalRepresentativeBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityQuotientSupportBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityQuotientSupportAlgebraBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityObservableLedgerBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityActionPhaseLawBridge
 lake build SSBX
 git diff --check --
 ```
 
-备注：`lake build SSBX` 仍会输出既有 Wen 模块的 unused simp args linter 警告；本轮新增 Markov / WenBoundary / ConcreteBridge / OperatorCellGrid / FiniteProbabilityBridge / PathCausalBridge / AmplitudeChannelBridge / InterferenceBridge / NonzeroPathAmplitudeBridge / TwoPathInterferenceBridge / DiscretePhaseBridge / DiscreteActionBridge / FinitePathSumBridge / FinitePathSumAlgebraBridge / EndpointIndexedPathFamilyBridge / EndpointSupportNormalizationBridge / TwoRouteEnumerationBridge / PathIdentityBridge / FiniteKeyQuotientBridge / PathQuotientBridge / CanonicalRepresentativeBridge / QuotientSupportBridge / QuotientSupportAlgebraBridge / ObservableLedgerBridge 模块无警告。
+备注：`lake build SSBX` 仍会输出既有 Wen 模块的 unused simp args linter 警告；本轮新增 Markov / WenBoundary / ConcreteBridge / OperatorCellGrid / FiniteProbabilityBridge / PathCausalBridge / AmplitudeChannelBridge / InterferenceBridge / NonzeroPathAmplitudeBridge / TwoPathInterferenceBridge / DiscretePhaseBridge / DiscreteActionBridge / FinitePathSumBridge / FinitePathSumAlgebraBridge / EndpointIndexedPathFamilyBridge / EndpointSupportNormalizationBridge / TwoRouteEnumerationBridge / PathIdentityBridge / FiniteKeyQuotientBridge / PathQuotientBridge / CanonicalRepresentativeBridge / QuotientSupportBridge / QuotientSupportAlgebraBridge / ObservableLedgerBridge / ActionPhaseLawBridge 模块无警告。

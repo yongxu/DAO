@@ -36,6 +36,7 @@
 -> 商支撑枚举候选
 -> 商支撑代数候选
 -> 观测账本候选
+-> 作用量相位律候选
 -> 几何候选接口
 -> 经验 pending ledger
 -> 统一摘要 theorem
@@ -76,6 +77,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityCanonicalRepresentativeBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityQuotientSupportBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityQuotientSupportAlgebraBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityObservableLedgerBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityActionPhaseLawBridge
 lake build SSBX
 git diff --check --
 ```
@@ -686,6 +688,28 @@ general all-path enumeration 与 path integral 仍在 theorem 外。
 | `two_route_observable_ledger_weight_zero` | `QuantumRelativityObservableLedgerBridge.lean` | two-route ledger entry 的 Born-shaped candidate weight 为 `0` |
 | `two_route_observable_ledger_not_empirically_closed` | `QuantumRelativityObservableLedgerBridge.lean` | two-route ledger entry 保持 pending，不被读成 empirical closure |
 
+## S5r · 作用量相位律候选
+
+目标：把 S5q 的 quotient-support cancellation 进一步写成 finite action index 到 phase/amplitude 的 law candidate，并接回 pending ledger。
+
+| 项 | 内容 |
+|---|---|
+| Lean 出口 | `action_phase_law_bridge_summary` |
+| 最低 theorem 形态 | `actionIndexPhase`、`actionIndexAmplitude`、`QuotientActionPhaseLawCandidate`、`two_route_action_phase_support_amplitude_cancels`、`twoRouteActionPhaseObservableLedgerEntry` |
+| 失败记录 | 若 quotient readback 展开后无法化简，记录 `Quot.lift` 暴露点；若 action law 不能接回 ledger，记录为 `Lean proof failure` |
+| 文档读法 | 正面写明已证 finite period-two action-to-phase law candidate；continuous action functional、Hamiltonian/unitary dynamics、path integral 与 empirical closure 仍需后续结构 |
+| 边界保留 | S5r 不把 finite action index 误读为连续作用量或真实动力学 |
+
+当前状态：
+
+| theorem | 文件 | 读法 |
+|---|---|---|
+| `action_phase_law_bridge_summary` | `QuantumRelativityActionPhaseLawBridge.lean` | 合取 finite action-phase law、pending ledger boundary 与文构造覆盖 |
+| `action_index_zero_one_amplitudes_cancel` | `QuantumRelativityActionPhaseLawBridge.lean` | index `0/1` 分别导出 `1/-1` 并相消 |
+| `two_route_action_phase_support_amplitude_cancels` | `QuantumRelativityActionPhaseLawBridge.lean` | finite action law 在 two-route quotient support 上相消 |
+| `two_route_action_phase_support_born_weight_zero` | `QuantumRelativityActionPhaseLawBridge.lean` | action-phase support sum 接回 Born-shaped zero boundary |
+| `two_route_action_phase_observable_ledger_not_empirically_closed` | `QuantumRelativityActionPhaseLawBridge.lean` | action-phase ledger entry 保持 pending |
+
 ## S6 · 几何与度规候选接口
 
 目标：从因果事件网络推进到几何候选接口，但只在有 theorem 时声称具体结构。
@@ -784,6 +808,7 @@ Lean 只关闭一个几何候选接口；
 | 2026-05-08 | S5o | failure retained / success | 第一次 quotient-support build 因 `rfl` 未展开 `quotientKeyAmplitude` 与 `Function.comp_def` 失败；修正后新增 finite quotient-support candidate，关闭 support coverage、visible-key readback、quotient-level cancellation 与 Born-shaped zero boundary；quotient-support algebra 已由 S5p 承接，仍不证明 general all-path enumeration、path integral 或经验闭合 |
 | 2026-05-08 | S5p | failure retained / success | 第一次 quotient-support algebra build 因显式 `twoRouteProcess` 类型标注解析到不同 namespace 下的同名 process 失败；移除显式返回类型后新增 quotient-support algebra candidate，关闭 append / permutation / reverse stability、duplicate zero-sum cancellation 与 two-route algebraic cancellation stability，仍不证明 general all-path enumeration、path integral 或经验闭合 |
 | 2026-05-09 | S5q | success | 新增 observable ledger candidate boundary；关闭 pending entry 与 empirical closure 的区分、two-route cancellation ledger entry 的 zero sum/weight 与 pending status，仍不证明数据校准、可测预言 theorem、path integral 或经验闭合 |
+| 2026-05-09 | S5r | failure retained / success | 第一次 action-phase law build 因展开 `quotientVisibleKey` 暴露 `Quot.lift` 导致 quotient readback 化简失败；修正后新增 finite action-to-phase law candidate，关闭 action index `0/1` 到 `1/-1` 的 quotient-support cancellation 与 pending ledger registration |
 
 ## 统一用语正名
 
@@ -791,8 +816,8 @@ Lean 只关闭一个几何候选接口；
 
 | 词 | 在本路线中的含义 | 结构依据 |
 |---|---|---|
-| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S5q 已关闭的 summary theorem 与路线日志 |
-| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5q 候选接口、S5q observable ledger boundary、后续 S7 data/calibration ledger |
+| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S5r 已关闭的 summary theorem 与路线日志 |
+| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、后续 S7 data/calibration ledger |
 | 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `markov_causal_bridge_summary` 与各阶段 `*_summary` theorem |
 
 推荐正名句：
