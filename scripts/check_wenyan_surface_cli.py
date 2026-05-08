@@ -266,6 +266,14 @@ CLI_CASES = [
     (["--operator", "X-6"], "executable note: 礼: ritual constructor carrier as singleton Hex list; no ritual-order semantics"),
     (["--operator", "X-9"], "executable note: 制: social constructor carrier as singleton Hex list; no institutional semantics"),
     (["--operator", "Z-30"], "executable note: 譬/喻: analogy constructor carrier as singleton Hex list; no metaphor semantics"),
+    (["--operator", "X-12"], "executable note: 名分: name-role partition paired facet carrier via duplicate Hex; no social-name semantics"),
+    (["--operator", "X-3"], "executable note: 化性: nature-transformation anchor as identity; no moral-cultivation semantics"),
+    (["--operator", "Z-38"], "executable note: 悟: realization-state anchor as identity; no enlightenment semantics"),
+    (["--operator", "SUN-7"], "executable note: 迂: indirect-route anchor as identity; no tactical path semantics"),
+    (["--operator", "SUN-8"], "executable note: 直: direct-route anchor as identity; no tactical path semantics"),
+    (["--operator", "ZHU-5"], "executable note: 喪/丧: debinding paired facet carrier via duplicate Hex; no Zhuangzi self-loss semantics"),
+    (["--operator", "ZA-9"], "executable note: 統/统: integration carrier as singleton Hex list; no unification semantics"),
+    (["--operator", "ZA-12"], "executable note: 調/调: harmonization carrier as singleton Hex list; no Huainanzi tuning semantics"),
     (["--operator", "R-1"], "executable note: exact Bool relation/predicate package"),
     (["--operator", "LIJ-9"], "executable note: exact Bool relation/predicate package"),
     (["--operator", "Y-2"], "compound surfaces: 五行"),
@@ -277,7 +285,7 @@ CLI_CASES = [
     (["--coverage"], "operators: 371 registered / 371 executable"),
     (["--coverage"], "operator forms: 371 ids with at least one form"),
     (["--help"], "wenyan-surface --json --operators [all|executable|known-not-executable|unsupported]"),
-    (["--help"], "309 exact/theorem-backed; 62 structural catalogue"),
+    (["--help"], "317 exact/theorem-backed; 54 structural catalogue"),
     (["--help"], "0 symbolic catalogue-shape"),
 ]
 

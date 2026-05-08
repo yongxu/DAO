@@ -2,7 +2,7 @@
 # WenSurface.Semantics — executable semantics registry
 
 This module separates exact stdlib denotations from total catalogue
-execution.  Three hundred nine `OperatorId`s use exact `WenDef.Tm` bodies:
+execution.  Three hundred seventeen `OperatorId`s use exact `WenDef.Tm` bodies:
 the original high-value stdlib rows, the ObjectEndo/ObjectMap/OpUnary Hex
 transform package, finite Hex pair/list carriers, finite Hex quantifiers, finite Hex motion/process rows,
 plus the Bool relation/predicate package.  Every
@@ -216,11 +216,13 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .Y_26 => some ⟨.Y_26, Stdlib.hexIdBody, 1, "出/入: medical ingress/egress projection anchor as identity; no physiological motion semantics"⟩
   | .Y_27 => some ⟨.Y_27, Stdlib.hexIdBody, 1, "候: diagnostic query anchor as identity; no observation protocol semantics"⟩
   | .X_1  => some ⟨.X_1,  Stdlib.hexIdBody, 1, "性: social nature-state projection anchor as identity; no anthropology semantics"⟩
+  | .X_3  => some ⟨.X_3,  Stdlib.hexIdBody, 1, "化性: nature-transformation anchor as identity; no moral-cultivation semantics"⟩
   | .X_4  => some ⟨.X_4,  Stdlib.list1HBody, 1, "群: singleton Hex list carrier; no social grouping semantics"⟩
   | .X_5  => some ⟨.X_5,  Stdlib.dupHBody, 1, "分: social role-partition paired facet carrier via duplicate Hex; no hierarchy/conflict semantics"⟩
   | .X_6  => some ⟨.X_6,  Stdlib.list1HBody, 1, "礼: ritual constructor carrier as singleton Hex list; no ritual-order semantics"⟩
   | .X_8  => some ⟨.X_8,  Stdlib.dupHBody, 1, "別/别: social distinction paired facet carrier via duplicate Hex; no stratification semantics"⟩
   | .X_9  => some ⟨.X_9,  Stdlib.list1HBody, 1, "制: social constructor carrier as singleton Hex list; no institutional semantics"⟩
+  | .X_12 => some ⟨.X_12, Stdlib.dupHBody, 1, "名分: name-role partition paired facet carrier via duplicate Hex; no social-name semantics"⟩
   | .X_14 => some ⟨.X_14, Stdlib.list2HBody, 2, "積/积: two-input aggregate carrier; no arithmetic accumulation"⟩
   | .Z_2  => some ⟨.Z_2,  Stdlib.huBody, 1, "相: mutuality prefix as hu anchor"⟩
   | .Z_7  => some ⟨.Z_7,  Stdlib.list1HBody, 1, "雜/杂: singleton Hex list carrier; no mixture semantics"⟩
@@ -263,12 +265,15 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .Z_11 => some ⟨.Z_11, Stdlib.tuiBody, 1, "露: exposure transition as increment"⟩
   | .Z_36 => some ⟨.Z_36, Stdlib.tuiBody, 1, "明: clarification transition as increment"⟩
   | .Z_37 => some ⟨.Z_37, Stdlib.sunBody, 1, "蔽: obscuring transition as decrement"⟩
+  | .Z_38 => some ⟨.Z_38, Stdlib.hexIdBody, 1, "悟: realization-state anchor as identity; no enlightenment semantics"⟩
   | .ZA_2 => some ⟨.ZA_2, Stdlib.hexIdBody, 1, "靜/静: Huang-Lao stillness as identity"⟩
   | .ZA_3 => some ⟨.ZA_3, Stdlib.hexIdBody, 1, "心君: supervisory anchor as identity; no heart-governance semantics"⟩
   | .ZA_4 => some ⟨.ZA_4, Stdlib.dupHBody, 1, "官分: role-partition paired facet carrier via duplicate Hex; no organ/office semantics"⟩
   | .ZA_5 => some ⟨.ZA_5, Stdlib.hexIdBody, 1, "精: inner-cultivation process anchor as identity; no cultivation semantics"⟩
   | .ZA_7 => some ⟨.ZA_7, Stdlib.hexIdBody, 1, "令: monthly-order directive anchor as identity; no calendrical mandate semantics"⟩
+  | .ZA_9 => some ⟨.ZA_9, Stdlib.list1HBody, 1, "統/统: integration carrier as singleton Hex list; no unification semantics"⟩
   | .ZA_11 => some ⟨.ZA_11, Stdlib.hexIdBody, 1, "督: supervisory anchor as identity; no control semantics"⟩
+  | .ZA_12 => some ⟨.ZA_12, Stdlib.list1HBody, 1, "調/调: harmonization carrier as singleton Hex list; no Huainanzi tuning semantics"⟩
   | .ZHU_9 => some ⟨.ZHU_9, Stdlib.hexIdBody, 1, "天理: Zhuangzi pattern extractor anchor as identity; no cosmological semantics"⟩
   | .ZHU_10 => some ⟨.ZHU_10, Stdlib.hexIdBody, 1, "方: modifier anchor as identity; no direction/method semantics"⟩
   | .SUN_1 => some ⟨.SUN_1, Stdlib.hexIdBody, 1, "形: military signal anchor as identity; no formation semantics"⟩
@@ -276,11 +281,14 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .SUN_3 => some ⟨.SUN_3, Stdlib.hexIdBody, 1, "虛/虚: military weakness extractor anchor as identity; no tactical semantics"⟩
   | .SUN_4 => some ⟨.SUN_4, Stdlib.hexIdBody, 1, "實/实: military strength extractor anchor as identity; no tactical semantics"⟩
   | .SUN_5 => some ⟨.SUN_5, Stdlib.hexIdBody, 1, "奇: military process anchor as identity; no tactical-surprise semantics"⟩
+  | .SUN_7 => some ⟨.SUN_7, Stdlib.hexIdBody, 1, "迂: indirect-route anchor as identity; no tactical path semantics"⟩
+  | .SUN_8 => some ⟨.SUN_8, Stdlib.hexIdBody, 1, "直: direct-route anchor as identity; no tactical path semantics"⟩
   | .SUN_12 => some ⟨.SUN_12, Stdlib.dupHBody, 1, "分合: parts/whole paired facet carrier via duplicate Hex; no military formation semantics"⟩
   | .SUN_14 => some ⟨.SUN_14, Stdlib.pairHBody, 2, "知: military intelligence extractor carrier; no epistemic semantics"⟩
   | .CHU_4 => some ⟨.CHU_4, Stdlib.hexIdBody, 1, "登: Chu-ci ascent extractor anchor as identity; no elevation semantics"⟩
   | .CHU_5 => some ⟨.CHU_5, Stdlib.pairHBody, 2, "望: Chu-ci vantage extractor carrier; no visual semantics"⟩
   | .CHU_9 => some ⟨.CHU_9, Stdlib.list1HBody, 1, "集: singleton Hex list carrier"⟩
+  | .ZHU_5 => some ⟨.ZHU_5, Stdlib.dupHBody, 1, "喪/丧: debinding paired facet carrier via duplicate Hex; no Zhuangzi self-loss semantics"⟩
   | .LIJ_4 => some ⟨.LIJ_4, Stdlib.hexIdBody, 1, "位: ritual role-position extractor anchor as identity; no ritual ontology"⟩
   | .LIJ_7 => some ⟨.LIJ_7, Stdlib.hexIdBody, 1, "中: ritual equilibrium extractor anchor as identity; no affective semantics"⟩
   | .LIJ_11 => some ⟨.LIJ_11, Stdlib.hexIdBody, 1, "獨/独: ritual solitude extractor anchor as identity; no individuation semantics"⟩
@@ -379,13 +387,14 @@ def coreTheoremBackedOperatorIds : List OperatorId :=
         .H_8, .L_3, .L_5, .L_6, .L_9, .L_10, .L_12, .L_13, .L_14, .L_15,
         .Y_1, .Y_2, .Y_3, .Y_4, .Y_5, .Y_6, .Y_7, .Y_8, .Y_9, .Y_10, .Y_11, .Y_12,
         .Y_13, .Y_14, .Y_15, .Y_17, .Y_18, .Y_21, .Y_22, .Y_23, .Y_24,
-        .Y_25, .Y_26, .Y_27, .X_1, .X_4, .X_5, .X_6, .X_8, .X_9, .X_14,
+        .Y_25, .Y_26, .Y_27, .X_1, .X_3, .X_4, .X_5, .X_6, .X_8, .X_9, .X_12, .X_14,
         .Z_2, .Z_7, .Z_8, .Z_9, .Z_12, .Z_13,
         .Z_16, .Z_17, .Z_18, .Z_19, .Z_21, .Z_22, .Z_23, .Z_24, .Z_26, .Z_27,
         .Z_29, .Z_30, .Z_31, .Z_32, .Z_33, .Z_34, .Z_35,
         .F_1, .F_2, .F_3, .F_4, .F_5, .F_6, .F_7, .F_8, .F_9, .F_10, .F_11,
-        .L_11, .LIJ_5, .SUN_1, .SUN_5, .SUN_6, .Z_10, .Z_11, .Z_36, .Z_37,
-        .ZA_2, .ZA_3, .ZA_4, .ZA_5, .ZA_7, .ZA_11, .ZHU_9, .ZHU_10,
+        .L_11, .LIJ_5, .SUN_1, .SUN_5, .SUN_6, .SUN_7, .SUN_8,
+        .Z_10, .Z_11, .Z_36, .Z_37, .Z_38,
+        .ZA_2, .ZA_3, .ZA_4, .ZA_5, .ZA_7, .ZA_9, .ZA_11, .ZA_12, .ZHU_5, .ZHU_9, .ZHU_10,
         .SUN_2, .SUN_3, .SUN_4, .SUN_12, .SUN_14, .CHU_4, .CHU_5, .CHU_9,
         .LIJ_4, .LIJ_7, .LIJ_11, .ZA_6]
     ++ [.N_3, .N_4, .N_5, .N_6, .K_1, .K_5, .K_6, .K_7, .K_8, .L_7, .S_3, .S_7, .Z_1, .I_3, .I_4,
@@ -411,7 +420,7 @@ def structuralCatalogueOperatorIds : List OperatorId :=
 Structural total fallback for catalogue rows.
 
 These bodies are executable and type-checkable, but intentionally weaker than
-the 309 exact rows above: they preserve the operator id, signature kind, and
+the 317 exact rows above: they preserve the operator id, signature kind, and
 evaluated arguments as a catalogue value instead of projecting fake Hex/Bool
 results.
 -/
@@ -486,10 +495,10 @@ theorem executableOperatorIds_length :
     executableOperatorIds.length = 371 := by native_decide
 
 theorem coreTheoremBackedOperatorIds_length :
-    coreTheoremBackedOperatorIds.length = 263 := by native_decide
+    coreTheoremBackedOperatorIds.length = 271 := by native_decide
 
 theorem theoremBackedOperatorIds_length :
-    theoremBackedOperatorIds.length = 309 := by native_decide
+    theoremBackedOperatorIds.length = 317 := by native_decide
 
 theorem theoremBackedOperatorIds_nodup :
     theoremBackedOperatorIds.Nodup := by native_decide
@@ -499,7 +508,7 @@ theorem theoremBackedOperatorIds_all_semantics :
   native_decide
 
 theorem structuralCatalogueOperatorIds_length :
-    structuralCatalogueOperatorIds.length = 62 := by native_decide
+    structuralCatalogueOperatorIds.length = 54 := by native_decide
 
 theorem structuralCatalogueOperatorIds_all_not_theorem_backed :
     structuralCatalogueOperatorIds.all (fun id => (theoremBackedSemanticsFor? id).isNone) = true := by
@@ -530,8 +539,8 @@ theorem operatorRegistryCoverage_summary :
     operatorRegistryEntries.length = 371
       ∧ executableRegistryEntries.length = 371
       ∧ executableOperatorIds.length = 371
-      ∧ theoremBackedOperatorIds.length = 309
-      ∧ structuralCatalogueOperatorIds.length = 62
+      ∧ theoremBackedOperatorIds.length = 317
+      ∧ structuralCatalogueOperatorIds.length = 54
       ∧ theoremBackedOperatorIds.length + structuralCatalogueOperatorIds.length = 371
       ∧ executableOperatorIds.all isCatalogueOperator = true
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).id = id)
@@ -570,6 +579,9 @@ example : (theoremBackedSemanticsFor? .Y_9).isSome = true := by native_decide
 example : (theoremBackedSemanticsFor? .Y_2).isSome = true := by native_decide
 example : (theoremBackedSemanticsFor? .X_6).isSome = true := by native_decide
 example : (theoremBackedSemanticsFor? .Z_30).isSome = true := by native_decide
+example : (theoremBackedSemanticsFor? .X_12).isSome = true := by native_decide
+example : (theoremBackedSemanticsFor? .ZHU_5).isSome = true := by native_decide
+example : (theoremBackedSemanticsFor? .ZA_9).isSome = true := by native_decide
 example : (operatorSemanticsRegistry .T_10).isSome = true := by native_decide
 example : parseArityFor .S_1 = 2 := by native_decide
 
