@@ -1,6 +1,6 @@
 # 双路径枚举候选 · Markov桥S5j
 
-**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [端点支撑规范化候选 · Markov桥S5i](端点支撑规范化候选%20·%20Markov桥S5i.md) · [端点索引路径族候选 · Markov桥S5h](端点索引路径族候选%20·%20Markov桥S5h.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
+**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [端点支撑规范化候选 · Markov桥S5i](端点支撑规范化候选%20·%20Markov桥S5i.md) · [端点索引路径族候选 · Markov桥S5h](端点索引路径族候选%20·%20Markov桥S5h.md) · [路径身份键候选 · Markov桥S5k](路径身份键候选%20·%20Markov桥S5k.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
 **Lean 锚点**：
 
@@ -62,7 +62,8 @@ theorem two_route_enumeration_bridge_summary :
 | 轴 | 状态 | 说明 |
 |---|---|---|
 | general all-path enumeration | 后续结构 | S5j 只枚举 `twoRouteProcess` 的 two-step source/target middle |
-| path identity quotient | 后续结构 | S5j 不证明 proof-field path equality 或 quotient 去重 |
+| visible path key | S5k 已关闭 | S5j 不证明 proof-field path equality；S5k 已补上 `(start,middle,stop)` key boundary |
+| quotient construction | 后续结构 | S5j/S5k 仍不把 key 相同的 paths 商掉 |
 | path integral | 后续结构 | 仍需要路径空间、测度、极限或 over-all-paths construction |
 | continuous phase/action law | 后续结构 | 仍需连续相位、action functional 或 Hamiltonian/unitary law |
 | empirical closure | 后续结构 | 需要 observation ledger 与数据判准 |
@@ -90,23 +91,32 @@ toy source/target two-step path has middle upper or lower
 
 ---
 
-## 二 · 下一步
+## 二 · S5k 承接与下一步
 
-S5j 后可以继续尝试两条线：
+S5j 的直接增强已由 S5k 承接：
 
 ```text
 finite toy enumeration
--> observed-candidate ledger
+-> visible path key
+-> toy source/target key completeness
+```
+
+下一步可以继续尝试两条线：
+
+```text
+finite toy enumeration
+-> finite quotient candidate
+-> duplicate compensation theorem
 ```
 
 或：
 
 ```text
 finite toy enumeration
--> finite path identity / quotient boundary
+-> observed-candidate ledger
 ```
 
-两者都必须保持 machine-checked theorem 和失败记录。
+两条线都必须保持 machine-checked theorem 和失败记录。
 
 ---
 

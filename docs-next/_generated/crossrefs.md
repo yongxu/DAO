@@ -73,8 +73,8 @@
 | formal/SSBX/notes/PositionOperatorGraph.md | 0 | 5 |
 | formal/SSBX/notes/atom-naming.md | 0 | 0 |
 | formal/SSBX/notes/baguaWen-spec.md | 0 | 0 |
-| formal/SSBX/notes/markov-causal-bridge-plan.md | 19 | 1 |
-| formal/SSBX/notes/markov-causal-bridge-verification-plan.md | 20 | 20 |
+| formal/SSBX/notes/markov-causal-bridge-plan.md | 20 | 1 |
+| formal/SSBX/notes/markov-causal-bridge-verification-plan.md | 21 | 20 |
 | formal/SSBX/notes/math-axiom-map.md | 0 | 0 |
 | formal/SSBX/notes/metainterp-isa-gap.md | 0 | 0 |
 | formal/SSBX/notes/monad-root-plan.md | 2 | 3 |
@@ -146,6 +146,7 @@
 | 义理/经典Markov与量子振幅分层 · Markov桥S4.md | 4 | 18 |
 | 义理/统计 · 从元到测.md | 1 | 0 |
 | 义理/路径组合与因果约束 · Markov桥S3.md | 3 | 12 |
+| 义理/路径身份键候选 · Markov桥S5k.md | 0 | 9 |
 | 义理/边界/README.md | 0 | 13 |
 | 义理/边界/可的边界 · 感行证.md | 1 | 8 |
 | 义理/边界/可知边界 · 语言与理.md | 1 | 11 |

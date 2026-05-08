@@ -4,7 +4,7 @@
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
-    "Foundation/Modern": 52,
+    "Foundation/Modern": 53,
     "Foundation/Wen": 51,
     "Foundation/Yi": 2,
     "Model": 2,
@@ -168,6 +168,7 @@
         "SSBX.Foundation.Modern.QuantumRelativityEndpointIndexedPathFamilyBridge",
         "SSBX.Foundation.Modern.QuantumRelativityEndpointSupportNormalizationBridge",
         "SSBX.Foundation.Modern.QuantumRelativityTwoRouteEnumerationBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityPathIdentityBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -186,10 +187,10 @@
         "SSBX.Foundation.Modern.IIDWlln",
         "SSBX.Foundation.Modern.BochnerPL"
       ],
-      "lines": 178,
+      "lines": 179,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "64bd0266930f4a4eb2c90116683fb1a7413d5c7e0af88fd77d4a7c8bc5ce1c23"
+      "sha256": "c12ccdb36f3382c56fbb7448c196929d1fa0feb75caee0ce00d716cecf28a8b7"
     },
     {
       "cluster": "root",
@@ -11390,6 +11391,71 @@
       "module": "SSBX.Foundation.Modern.QuantumRelativityPathCausalBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean",
       "sha256": "f78ae1d8a8346fff4a5c587f57d4fcde320dbec84b82924d2cad0c30056c4144"
+    },
+    {
+      "cluster": "Foundation/Modern",
+      "declaration_count": 13,
+      "declarations": [
+        {
+          "kind": "structure",
+          "name": "TwoStepPathKey"
+        },
+        {
+          "kind": "def",
+          "name": "twoStepPathKey"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_step_path_key_eq_start"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_step_path_key_eq_middle"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_step_path_key_eq_stop"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteSourceTargetKeyEnumeration"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_upper_lower_keys_distinct"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_source_target_upper_middle_key"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_source_target_lower_middle_key"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_source_target_key_mem_enumeration"
+        },
+        {
+          "kind": "def",
+          "name": "TwoRouteSourceTargetKeyComplete"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_source_target_key_complete"
+        },
+        {
+          "kind": "theorem",
+          "name": "path_identity_bridge_summary"
+        }
+      ],
+      "imports": [
+        "SSBX.Foundation.Modern.QuantumRelativityTwoRouteEnumerationBridge"
+      ],
+      "lines": 173,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityPathIdentityBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityPathIdentityBridge.lean",
+      "sha256": "7ee057995d699e39d7430e54be73d740b5fa84890f9d8e75d7765279ac9b11de"
     },
     {
       "cluster": "Foundation/Modern",

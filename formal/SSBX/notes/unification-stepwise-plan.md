@@ -29,6 +29,7 @@
 -> 端点索引路径族候选
 -> 端点支撑规范化候选
 -> 双路径枚举候选
+-> 路径身份键候选
 -> 几何候选接口
 -> 经验 pending ledger
 -> 统一摘要 theorem
@@ -62,6 +63,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityFinitePathSumAlgebraBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityEndpointIndexedPathFamilyBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityEndpointSupportNormalizationBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityTwoRouteEnumerationBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityPathIdentityBridge
 lake build SSBX
 git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean formal/SSBX.lean formal/SSBX/notes/unification-stepwise-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/有限概率核接口 · Markov桥S2.md' '义理/路径组合与因果约束 · Markov桥S3.md' '义理/经典Markov与量子振幅分层 · Markov桥S4.md' '义理/干涉与测量律候选 · Markov桥S5.md' '义理/非零路径振幅候选 · Markov桥S5b.md' '义理/双路径相消候选 · Markov桥S5c.md' '义理/离散相位标记候选 · Markov桥S5d.md' '义理/离散作用量相位候选 · Markov桥S5e.md' '义理/有限路径族求和候选 · Markov桥S5f.md' '义理/有限路径族求和代数候选 · Markov桥S5g.md' '义理/端点索引路径族候选 · Markov桥S5h.md' '义理/端点支撑规范化候选 · Markov桥S5i.md'
 ```
@@ -524,6 +526,28 @@ general all-path enumeration 与 path integral 仍在 theorem 外。
 | `two_route_source_target_middle_mem_endpoint_family` | `QuantumRelativityTwoRouteEnumerationBridge.lean` | toy source/target middle 出现在 endpoint-indexed family middle list 中 |
 | `two_route_source_target_middle_complete` | `QuantumRelativityTwoRouteEnumerationBridge.lean` | source/target middle completeness 的公开 predicate |
 
+## S5k · 路径身份键候选
+
+目标：把 two-step witness 的可见路径身份先压成 `(start, middle, stop)` key，给后续 quotient 或去重提供机器可查的边界。
+
+| 项 | 内容 |
+|---|---|
+| Lean 出口 | `path_identity_bridge_summary` |
+| 最低 theorem 形态 | `TwoStepPathKey`、`twoStepPathKey`、`two_step_path_key_eq_start`、`two_step_path_key_eq_middle`、`two_route_upper_lower_keys_distinct`、`two_route_source_target_key_complete` |
+| 失败记录 | 若 key equality 与 witness proof fields 混淆，记录为 `conceptual mismatch`；若 source/target key enumeration 失败，记录为 `Lean proof failure` |
+| 文档读法 | 正面写明已证 visible path-key boundary；quotient construction、proof-field path equality、general all-path enumeration、path integral、Born rule derivation 与 empirical prediction 仍需后续结构 |
+| 边界保留 | S5k 不证明真正 quotient，只证明 key equality 对可见路径数据的保持与 toy source/target key completeness |
+
+当前状态：
+
+| theorem | 文件 | 读法 |
+|---|---|---|
+| `path_identity_bridge_summary` | `QuantumRelativityPathIdentityBridge.lean` | 合取 visible key boundary、two-route key separation 与 S5j middle completeness |
+| `TwoStepPathKey`、`twoStepPathKey` | `QuantumRelativityPathIdentityBridge.lean` | 抽出 `start/middle/stop` 可见路径身份 |
+| `two_step_path_key_eq_start`、`two_step_path_key_eq_middle`、`two_step_path_key_eq_stop` | `QuantumRelativityPathIdentityBridge.lean` | key equality 保持可见路径数据 |
+| `two_route_upper_lower_keys_distinct` | `QuantumRelativityPathIdentityBridge.lean` | upper/lower displayed paths 的 key 不同 |
+| `two_route_source_target_key_complete` | `QuantumRelativityPathIdentityBridge.lean` | toy source/target path key 落在 displayed key enumeration 中 |
+
 ## S6 · 几何与度规候选接口
 
 目标：从因果事件网络推进到几何候选接口，但只在有 theorem 时声称具体结构。
@@ -615,6 +639,7 @@ Lean 只关闭一个几何候选接口；
 | 2026-05-08 | S5h | success | 新增 endpoint-indexed finite path-family candidate；关闭 same-endpoint family 到 endpoint-indexed family 的转换、sum/weight preservation 与 two-route endpoint-indexed cancellation；filter/support normalization 已由 S5i 承接，仍不证明 all-path enumeration、path integral 或经验闭合 |
 | 2026-05-08 | S5i | success | 新增 endpoint support normalization candidate；关闭 amplitude-complete filter preservation、Born-shaped preservation、duplicate expansion 与 duplicated zero-sum cancellation，仍不证明 quotient 去重、all-path enumeration、path integral 或经验闭合 |
 | 2026-05-08 | S5j | success | 新增 two-route source/target enumeration candidate；关闭 toy source/target two-step middle enumeration 与 endpoint family middle completeness，仍不证明 general all-path enumeration、path integral 或经验闭合 |
+| 2026-05-08 | S5k | success | 新增 finite two-step path identity-key candidate；关闭 visible key boundary、two-route key separation 与 toy source/target key completeness，仍不证明 quotient construction、general all-path enumeration、path integral 或经验闭合 |
 
 ## 统一用语正名
 
@@ -622,8 +647,8 @@ Lean 只关闭一个几何候选接口；
 
 | 词 | 在本路线中的含义 | 结构依据 |
 |---|---|---|
-| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S5j 已关闭的 summary theorem 与路线日志 |
-| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5j 候选接口、后续 S7 ledger |
+| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S5k 已关闭的 summary theorem 与路线日志 |
+| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5k 候选接口、后续 S7 ledger |
 | 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `markov_causal_bridge_summary` 与各阶段 `*_summary` theorem |
 
 推荐正名句：
