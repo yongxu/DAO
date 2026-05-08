@@ -28,10 +28,10 @@
         "SSBX.Foundation.Wen.WenSurface.EndToEnd",
         "SSBX.Foundation.Wen.WenSurface.Coverage"
       ],
-      "lines": 1422,
+      "lines": 1430,
       "module": "WenyanSurface.lean",
       "path": "WenyanSurface.lean",
-      "sha256": "ed4dc24ca14626c0104cac324e69daca093bb3f804ff8721859b426fe466666d"
+      "sha256": "02f15d1a329010803a72c0eac5aec5b1ffad0a8373d3cb8d0506f11aab858688"
     },
     {
       "cluster": "root",
@@ -19379,10 +19379,10 @@
         "SSBX.Foundation.Wen.WenSurface.Semantics",
         "SSBX.Foundation.Wen.WenSurface.Reading"
       ],
-      "lines": 750,
+      "lines": 778,
       "module": "SSBX.Foundation.Wen.WenSurface.Syntax",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Syntax.lean",
-      "sha256": "838691cd70e862400f823e3f4cc8b78978a128c41c875a906bcb084de767a94e"
+      "sha256": "064362902e265a1ac239d83b8000fc9acf7b8124fc9f783ac92dea3e87d562b6"
     },
     {
       "cluster": "Foundation/Wen",

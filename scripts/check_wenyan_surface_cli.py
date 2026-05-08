@@ -104,7 +104,10 @@ CASES = [
 ]
 
 NEGATIVE_CASES = [
+    ("", {"phase": "parse", "code": "expected_expression", "startCol": 0, "endCol": 0}),
     ("瓜", {"phase": "resolve", "code": "no_reading", "surface": "瓜", "startCol": 0, "endCol": 1}),
+    ("（）", {"phase": "parse", "code": "expected_expression", "startCol": 1, "endCol": 1}),
+    ("之", {"phase": "parse", "code": "expected_expression", "startCol": 1, "endCol": 1}),
     ("推 乾 之", {"phase": "parse", "code": "leftover_tokens", "surface": "之", "startCol": 4, "endCol": 5, "leftoverCount": 1}),
     ("达 乾 坤", {"phase": "resolve", "code": "no_reading", "surface": "达", "startCol": 0, "endCol": 1}),
     ("径 乾", {"phase": "resolve", "code": "no_reading", "surface": "径", "startCol": 0, "endCol": 1}),

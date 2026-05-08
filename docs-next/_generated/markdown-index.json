@@ -3839,10 +3839,10 @@
           "title": "21. Open Decisions"
         }
       ],
-      "lines": 572,
+      "lines": 579,
       "links": [],
       "path": "formal/SSBX/notes/wensurface-syntax-spec.md",
-      "sha256": "003c0c353caab0c9727d3e6d78c2a95f50572161d114fcfa293d7a61d1f3faff",
+      "sha256": "29f67a7c7ae7320032389c17e518ce77d4e19fa6705869414c6f13046750eefc",
       "summary": "Status: design spec and implementation tracker for the next WenSurface parser.",
       "title": "WenSurface Syntax Spec: brackets, precedence, infix, mixfix"
     },

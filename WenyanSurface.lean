@@ -345,6 +345,8 @@ private def errShow : WenSurfaceErr → String
       s!"resolve error at col {col}: surface \"{surface}\" is a tracked hexagram gap but is not promoted to executable semantics"
   | .parse .empty =>
       "parse error: empty / incomplete expression"
+  | .parse (.expectedExpression col) =>
+      s!"parse error at col {col}: expected expression"
   | .parse .fuelExhausted =>
       "parse error: fuel exhausted (program too deeply nested?)"
   | .parse (.unmatchedOpenBracket surface col) =>
@@ -403,6 +405,7 @@ private def errCode : WenSurfaceErr → String
   | .resolve (.knownButUnsupported _ _ _) => "known_but_unsupported"
   | .resolve (.unpromotedHexagramGap _ _) => "unpromoted_hexagram_gap"
   | .parse .empty => "empty_expression"
+  | .parse (.expectedExpression _) => "expected_expression"
   | .parse .fuelExhausted => "parse_fuel_exhausted"
   | .parse (.unmatchedOpenBracket _ _) => "unmatched_open_bracket"
   | .parse (.unmatchedCloseBracket _ _) => "unmatched_close_bracket"
@@ -439,6 +442,7 @@ private def resolveErrShow : ResolveErr → String
 
 private def parseErrShow : ParseErr → String
   | .empty => "parse error: empty / incomplete expression"
+  | .expectedExpression col => s!"parse error at col {col}: expected expression"
   | .fuelExhausted => "parse error: fuel exhausted"
   | .unmatchedOpenBracket surface col =>
       s!"parse error at col {col}: unmatched open bracket \"{surface}\""
@@ -797,6 +801,10 @@ private def errExtraFields : WenSurfaceErr → List (String × String)
         , jsonFieldRaw "candidates" (readingsJson readings)
         ]
   | .resolve (.unpromotedHexagramGap surface col) => errLocationFields surface col
+  | .parse (.expectedExpression col) =>
+      [ jsonFieldNat "startCol" col
+      , jsonFieldNat "endCol" col
+      ]
   | .parse (.expectedVariable surface col) => errLocationFields surface col
   | .parse (.unmatchedOpenBracket surface col) => errLocationFields surface col
   | .parse (.unmatchedCloseBracket surface col) => errLocationFields surface col

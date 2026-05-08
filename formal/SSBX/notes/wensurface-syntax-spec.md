@@ -254,6 +254,10 @@ Diagnostics should include:
 - expected matching bracket;
 - whether an expression was expected inside the bracket.
 
+Status: empty input and empty grouped expressions now report
+`expected_expression` with a concrete column instead of generic `.empty` or
+unmatched close-bracket fallout.
+
 ## 10. Infix Forms
 
 The first infix promotion should be limited to executable relation operators:
@@ -446,6 +450,9 @@ inductive ParseErr where
 
 CLI JSON should preserve the phase as `parse` for syntax failures and
 `unsupported` for successful parse plus missing executable semantics.
+
+Status: `expectedExpression` is implemented for empty input, empty brackets,
+and marker/construction forms missing their body.
 
 ## 17. Desugaring
 
