@@ -8,6 +8,7 @@
 |---|---|
 | 找旧文去向 | [史料冻结指针](historical-sources.md) |
 | 查算子 | [算子参考](operators.md) |
+| 挑八卦算子名 | [八卦算子命名候选与范式审阅](bagua-operator-name-candidates.md) |
 | 挑 192 格自然名 | [Cell192 自然命名候选全表](cell192-name-candidates.md) |
 | 挑爻位到四翼名 | [爻位到四翼自然命名候选表](yao-four-wings-name-candidates.md) |
 | 查字元名册 | [字元与名册](glyphs-registry.md) |
