@@ -206,7 +206,7 @@ end NatCell
 
 namespace YiInstrEnc
 
-/-- Each constructor gets a unique tag in 0..11.  We encode a tag as
+/-- Each constructor gets a unique tag in 0..12.  We encode a tag as
     `cellFromIdx ⟨tag, by omega⟩`. -/
 def tagCell (tag : Nat) (h : tag < 192) : Cell192 := cellFromIdx ⟨tag, h⟩
 
@@ -233,7 +233,7 @@ def decNat (l : List Cell192) : Option (Nat × List Cell192) :=
     else none
 
 /-- Encode YiInstr.  Each constructor gets a tag cell + parameters.
-    Tag cells are `cellFromIdx ⟨k, _⟩` for k in 0..11. -/
+    Tag cells are `cellFromIdx ⟨k, _⟩` for k in 0..12. -/
 def encInstr : YiInstr → List Cell192
   | .nop                        => [cellFromIdx ⟨0,  by omega⟩]
   | .setShi s                   => [cellFromIdx ⟨1,  by omega⟩, encShi s]
@@ -247,6 +247,7 @@ def encInstr : YiInstr → List Cell192
   | .push                       => [cellFromIdx ⟨9,  by omega⟩]
   | .pop                        => [cellFromIdx ⟨10, by omega⟩]
   | .halt                       => [cellFromIdx ⟨11, by omega⟩]
+  | .swap                       => [cellFromIdx ⟨12, by omega⟩]
 
 /-- Decode a single instruction; return remainder. -/
 def decInstr (l : List Cell192) : Option (YiInstr × List Cell192) :=
@@ -289,6 +290,7 @@ def decInstr (l : List Cell192) : Option (YiInstr × List Cell192) :=
     | 9,  rest => some (.push, rest)
     | 10, rest => some (.pop, rest)
     | 11, rest => some (.halt, rest)
+    | 12, rest => some (.swap, rest)
     | _, _ => none
 
 /-! ### § 3b Round-trip lemmas for instruction encoding -/
@@ -334,6 +336,11 @@ theorem decInstr_encInstr_pop (rest : List Cell192) :
 theorem decInstr_encInstr_halt (rest : List Cell192) :
     decInstr (encInstr .halt ++ rest) = some (.halt, rest) := by
   show decInstr (cellFromIdx ⟨11, by omega⟩ :: rest) = _
+  simp only [decInstr, cellFromIdx_toIdx]
+
+theorem decInstr_encInstr_swap (rest : List Cell192) :
+    decInstr (encInstr .swap ++ rest) = some (.swap, rest) := by
+  show decInstr (cellFromIdx ⟨12, by omega⟩ :: rest) = _
   simp only [decInstr, cellFromIdx_toIdx]
 
 theorem decInstr_encInstr_setShi (s : Shi) (rest : List Cell192) :
@@ -479,6 +486,7 @@ theorem decInstr_encInstr (i : YiInstr) (h_enc : Encodable i)
   | push                     => exact decInstr_encInstr_push rest
   | pop                      => exact decInstr_encInstr_pop rest
   | halt                     => exact decInstr_encInstr_halt rest
+  | swap                     => exact decInstr_encInstr_swap rest
   | setShi s                 => exact decInstr_encInstr_setShi s rest
   | flipYao i                => exact decInstr_encInstr_flipYao i rest
   | jump t                   => exact decInstr_encInstr_jump t rest h_enc
@@ -677,12 +685,12 @@ theorem metaStep_cur_correct (s : YiState) :
   - `fetch`: read pc, look up `prog[pc]` from the encoded program in
     `history`, decode the leading tag cell.
 
-  - `dispatch`: based on the tag's value (Fin 12, encoded in `cur`'s
+  - `dispatch`: based on the tag's value (Fin 13, encoded in `cur`'s
     Hexagram component), branch to the appropriate `executeBlock`.  This
     requires either nested `branchYaoEq` (binary search over Yao bits) or a
     chain of `branchShiEq` checks.
 
-  - `executeBlocks`: 12 subroutines, one per `YiInstr` constructor.  Each:
+  - `executeBlocks`: 13 subroutines, one per `YiInstr` constructor.  Each:
     - For data-free constructors (`nop`, `hu`, `cuo`, ...): just bump pc.
     - For `setShi`/`flipYao`: read parameter cell, modify cur, bump pc.
     - For `branchYaoEq`/`branchShiEq`: read params + target, conditionally
@@ -709,23 +717,23 @@ theorem metaStep_cur_correct (s : YiState) :
       `(stateEncOf s).runFuel N_c).history.head? = some (stateEncOf s.step).cur`
       where `s.cur` triggers branch to executeBlock_c.
 
-  4.  **Combination theorem**: induct on YiInstr; combine all 12 simulation
+  4.  **Combination theorem**: induct on YiInstr; combine all 13 simulation
       lemmas into a single statement
       `metaInterpProg simulates step on every reachable encoded state`.
 
-  Status (post-Phase-12-bb):
+  Status (post-swap ISA integration):
   - ✓ §1-3 atomic encoding (Yao/Shi/Hexagram/Cell192/Nat ↔ Fin/List)
-  - ✓ §3a-c: 12 个 YiInstr 之 round-trip lemmas（含 3 个 Nat-参数）
-  - ✓ §3d **统一 round-trip 定理** `decInstr_encInstr` (case split on 12)
+  - ✓ §3a-c: 13 个 YiInstr 之 round-trip lemmas（含 3 个 Nat-参数）
+  - ✓ §3d **统一 round-trip 定理** `decInstr_encInstr` (case split on 13)
   - ✓ §4 `decInstrs_encProg` **程序级 round-trip**（按 list 归纳 + 统一 round-trip）
   - ✓ §5-6 Lean-level `metaStep` + 模拟定理
   - ✓ §6b 部分 `metaInterpProg`（仅 nop + halt 之 stub）
   - ✓ §7 1-cell Quine 之严格证 (`quine_history`)
-  - ✗ 完整 fetch-decode-execute loop（剩 12 个 dispatch + 11 个 execute blocks）
+  - ✗ 完整 fetch-decode-execute loop（剩 13 路 dispatch + per-op execute blocks）
   - ✗ N-cell Quine（需 fixed-point construction）
   - ✗ s-m-n algebraic lemma（subst 算子 + 正确性）
 
-  完成度估计：~15%（编码层完备；解释层架构 + stub；剩余为 12 路 dispatch +
+  完成度估计：~15%（编码层完备；解释层架构 + stub；剩余为 13 路 dispatch +
   fetch + writeback 之机械工程）。剩余约 700-1000 行 Lean。Kleene 之去公理化
   路径完全依赖此 §6b 之展开。 -/
 
@@ -914,6 +922,7 @@ theorem wenyan_self_interp_complete :
     ∧ (∀ rest, YiInstrEnc.decInstr (YiInstrEnc.encInstr .push ++ rest) = some (.push, rest))
     ∧ (∀ rest, YiInstrEnc.decInstr (YiInstrEnc.encInstr .pop  ++ rest) = some (.pop, rest))
     ∧ (∀ rest, YiInstrEnc.decInstr (YiInstrEnc.encInstr .halt ++ rest) = some (.halt, rest))
+    ∧ (∀ rest, YiInstrEnc.decInstr (YiInstrEnc.encInstr .swap ++ rest) = some (.swap, rest))
     ∧ -- (7) Faithful encoding for simple-parameter constructors
     (∀ s rest, YiInstrEnc.decInstr (YiInstrEnc.encInstr (.setShi s) ++ rest)
               = some (.setShi s, rest))
@@ -941,7 +950,8 @@ theorem wenyan_self_interp_complete :
          YiInstrEnc.decInstr_encInstr_nop, YiInstrEnc.decInstr_encInstr_hu,
          YiInstrEnc.decInstr_encInstr_cuo, YiInstrEnc.decInstr_encInstr_zong,
          YiInstrEnc.decInstr_encInstr_push, YiInstrEnc.decInstr_encInstr_pop,
-         YiInstrEnc.decInstr_encInstr_halt, YiInstrEnc.decInstr_encInstr_setShi,
+         YiInstrEnc.decInstr_encInstr_halt, YiInstrEnc.decInstr_encInstr_swap,
+         YiInstrEnc.decInstr_encInstr_setShi,
          YiInstrEnc.decInstr_encInstr_flipYao,
          (fun n rest h => YiInstrEnc.decNat_encNat n rest h),
          (fun t rest h => YiInstrEnc.decInstr_encInstr_jump t rest h),

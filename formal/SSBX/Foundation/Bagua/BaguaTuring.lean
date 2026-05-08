@@ -59,6 +59,8 @@ inductive YiInstr : Type
   | pop
   /-- 终: halt. -/
   | halt
+  /-- 易: swap current cell with the top of history (or halt if empty). -/
+  | swap
   deriving Repr
 
 end SSBX.Foundation.Bagua.BaguaTuring
@@ -140,6 +142,10 @@ def execute (instr : YiInstr) (s : YiState) : YiState :=
       | [] => { s with halted := true }
       | h :: rest => { s with cur := h, history := rest, pc := s.pc + 1 }
   | .halt => { s with halted := true }
+  | .swap =>
+      match s.history with
+      | [] => { s with halted := true }
+      | h :: rest => { s with cur := h, history := s.cur :: rest, pc := s.pc + 1 }
 
 /-- Single-step the state: fetch instruction at pc, execute. -/
 def step (s : YiState) : YiState :=
