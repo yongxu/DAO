@@ -225,10 +225,14 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .Z_33 => some ⟨.Z_33, Stdlib.cuoZongBody, 1, "自反/反自: self-reflection as cuoZong"⟩
   | .Z_34 => some ⟨.Z_34, Stdlib.hexIdBody, 1, "觀/观: observation query anchor as identity; no perceptual semantics"⟩
   | .Z_35 => some ⟨.Z_35, Stdlib.hexIdBody, 1, "察: inspection query anchor as identity; no investigation semantics"⟩
+  | .F_1  => some ⟨.F_1,  Stdlib.hexApplyBody, 2, "往: directional flow as Hex endomap application; no path semantics"⟩
+  | .F_2  => some ⟨.F_2,  Stdlib.hexApplyBody, 2, "來/来: return flow as Hex endomap application; no path semantics"⟩
   | .F_3  => some ⟨.F_3,  Stdlib.tuiBody, 1, "進/进: forward Hex motion as increment"⟩
   | .F_4  => some ⟨.F_4,  Stdlib.sunBody, 1, "退: backward Hex motion as decrement"⟩
   | .F_5  => some ⟨.F_5,  Stdlib.tuiBody, 1, "升: upward Hex motion as increment"⟩
   | .F_6  => some ⟨.F_6,  Stdlib.sunBody, 1, "降: downward Hex motion as decrement"⟩
+  | .F_7  => some ⟨.F_7,  Stdlib.hexApplyBody, 2, "出: outbound flow as Hex endomap application; no boundary topology"⟩
+  | .F_8  => some ⟨.F_8,  Stdlib.hexApplyBody, 2, "入: inbound flow as Hex endomap application; no boundary topology"⟩
   | .F_9  => some ⟨.F_9,  Stdlib.tuiBody, 1, "行: active Hex motion as increment"⟩
   | .F_10 => some ⟨.F_10, Stdlib.tuiBody, 1, "動/动: movement as Hex increment"⟩
   | .F_11 => some ⟨.F_11, Stdlib.hexIdBody, 1, "靜/静: still flow as Hex identity"⟩
@@ -351,7 +355,7 @@ def coreTheoremBackedOperatorIds : List OperatorId :=
         .Z_2, .Z_7, .Z_8, .Z_9, .Z_12, .Z_13,
         .Z_16, .Z_17, .Z_18, .Z_19, .Z_21, .Z_22, .Z_23, .Z_24, .Z_26, .Z_27,
         .Z_29, .Z_31, .Z_32, .Z_33, .Z_34, .Z_35,
-        .F_3, .F_4, .F_5, .F_6, .F_9, .F_10, .F_11,
+        .F_1, .F_2, .F_3, .F_4, .F_5, .F_6, .F_7, .F_8, .F_9, .F_10, .F_11,
         .L_11, .LIJ_5, .SUN_1, .SUN_5, .SUN_6, .Z_10, .Z_11, .Z_36, .Z_37,
         .ZA_2, .ZA_3, .ZA_5, .ZA_7, .ZA_11, .ZHU_9, .ZHU_10,
         .SUN_2, .SUN_3, .SUN_4, .SUN_14, .CHU_4, .CHU_5, .CHU_9,
@@ -378,7 +382,7 @@ def structuralCatalogueOperatorIds : List OperatorId :=
 Structural total fallback for catalogue rows.
 
 These bodies are executable and type-checkable, but intentionally weaker than
-the 278 exact rows above: they preserve the operator id, signature kind, and
+the 282 exact rows above: they preserve the operator id, signature kind, and
 evaluated arguments as a catalogue value instead of projecting fake Hex/Bool
 results.
 -/
@@ -453,10 +457,10 @@ theorem executableOperatorIds_length :
     executableOperatorIds.length = 371 := by native_decide
 
 theorem coreTheoremBackedOperatorIds_length :
-    coreTheoremBackedOperatorIds.length = 232 := by native_decide
+    coreTheoremBackedOperatorIds.length = 236 := by native_decide
 
 theorem theoremBackedOperatorIds_length :
-    theoremBackedOperatorIds.length = 278 := by native_decide
+    theoremBackedOperatorIds.length = 282 := by native_decide
 
 theorem theoremBackedOperatorIds_nodup :
     theoremBackedOperatorIds.Nodup := by native_decide
@@ -466,7 +470,7 @@ theorem theoremBackedOperatorIds_all_semantics :
   native_decide
 
 theorem structuralCatalogueOperatorIds_length :
-    structuralCatalogueOperatorIds.length = 93 := by native_decide
+    structuralCatalogueOperatorIds.length = 89 := by native_decide
 
 theorem structuralCatalogueOperatorIds_all_not_theorem_backed :
     structuralCatalogueOperatorIds.all (fun id => (theoremBackedSemanticsFor? id).isNone) = true := by
@@ -497,8 +501,8 @@ theorem operatorRegistryCoverage_summary :
     operatorRegistryEntries.length = 371
       ∧ executableRegistryEntries.length = 371
       ∧ executableOperatorIds.length = 371
-      ∧ theoremBackedOperatorIds.length = 278
-      ∧ structuralCatalogueOperatorIds.length = 93
+      ∧ theoremBackedOperatorIds.length = 282
+      ∧ structuralCatalogueOperatorIds.length = 89
       ∧ theoremBackedOperatorIds.length + structuralCatalogueOperatorIds.length = 371
       ∧ executableOperatorIds.all isCatalogueOperator = true
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).id = id)

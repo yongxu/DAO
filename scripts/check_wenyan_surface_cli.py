@@ -235,6 +235,10 @@ CLI_CASES = [
     (["--operator", "A-19"], "executable note: 方: aspect anchor as identity; no progressive-time semantics"),
     (["--operator", "A-20"], "executable note: 嘗/尝: aspect anchor as identity; no experiential-time semantics"),
     (["--operator", "Z-18"], "executable note: 散: first Hex projection from a list carrier"),
+    (["--operator", "F-1"], "executable note: 往: directional flow as Hex endomap application; no path semantics"),
+    (["--operator", "F-2"], "executable note: 來/来: return flow as Hex endomap application; no path semantics"),
+    (["--operator", "F-7"], "executable note: 出: outbound flow as Hex endomap application; no boundary topology"),
+    (["--operator", "F-8"], "executable note: 入: inbound flow as Hex endomap application; no boundary topology"),
     (["--operator", "R-1"], "executable note: exact Bool relation/predicate package"),
     (["--operator", "LIJ-9"], "executable note: exact Bool relation/predicate package"),
     (["--operator", "Y-2"], "compound surfaces: 五行"),
@@ -246,7 +250,7 @@ CLI_CASES = [
     (["--coverage"], "operators: 371 registered / 371 executable"),
     (["--coverage"], "operator forms: 371 ids with at least one form"),
     (["--help"], "wenyan-surface --json --operators [all|executable|known-not-executable|unsupported]"),
-    (["--help"], "278 exact/theorem-backed; 93 structural catalogue"),
+    (["--help"], "282 exact/theorem-backed; 89 structural catalogue"),
     (["--help"], "0 symbolic catalogue-shape"),
 ]
 
