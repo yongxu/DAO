@@ -61,6 +61,7 @@ open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Bagua.Cell192
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Bagua.KleeneInternal
+open SSBX.Foundation.Bagua.GodelLi
 open SSBX.Foundation.Wen.WenyanSelfInterp
 
 /-! ## § 1 Shi-tagged register cells -/
@@ -374,6 +375,207 @@ theorem countedLoop_exitOffset_eq_length (offset : Nat) (body : List YiInstr) :
   unfold countedLoop_exitOffset
   rw [countedLoop_length]
   omega
+
+/-! ### § 7.1 Simulation lemma — empty-body specialization
+
+  We prove the counted-loop simulation lemma for the SPECIALIZED case
+  `body = []`.  This is the simplest interesting case — an empty body
+  means the loop just consumes the counter — and it is the workhorse
+  building block for the **fetch-pc-decoding** part of Phase B (where
+  the body is non-trivial; that's deferred).
+
+  ### Why specialize to empty body
+
+  For non-empty body, the simulation lemma has to be parametric in
+  body's effect — body is allowed to push results into history, modify
+  cur, etc.  That parametrization requires either (a) a full
+  per-instruction Hoare-style refinement layer, or (b) restricting body
+  to a class of "non-disturbing" prefixes.  Both are Phase B engineering;
+  the empty-body case is Phase A and discharges all combinator-side
+  arithmetic (PC offsets, fuel formula, branch arithmetic).
+
+  ### What's proven here
+
+  Given the META state at the entry of `countedLoop offset []` with
+  `history = encCounter regHex n ++ tail`, after exactly `3*n + 2`
+  fuel steps we land at the exit:
+
+    pc       := offset + 3                 (= countedLoop_exitOffset)
+    history  := tail                       (counter fully consumed)
+    cur      := (regHex, Shi.wei)          (last popped marker cell)
+    halted   := false
+    prog     := metaProg                   (unchanged)
+
+  The hypothesis `MetaProgHasEmptyCountedLoopAt offset metaProg` says
+  the three instruction slots `offset`, `offset+1`, `offset+2` of
+  `metaProg` look exactly like `countedLoop offset []`.
+
+  ### Roadmap for the general case
+
+  For non-empty `body`, the lemma generalizes to:
+
+    runFuel ((body_fuel + 3) * n + 2) inputState = exitState
+
+  where `body_fuel` is body's per-iteration fuel, and `exitState.cur` /
+  the upper portion of `exitState.history` are determined by an
+  abstract `body_effect : YiState → YiState` hypothesized to obey:
+
+    (H1) body, started from `cur := (regHex, Shi.jin)` and
+         `history := encCounter regHex n ++ tail` and `pc := offset+2`,
+         after `body_fuel` steps lands at `pc := offset+2+body.length`,
+         with `halted = false` and the bottom portion of history
+         (below the counter) untouched.
+
+  With (H1) the proof is the obvious analogue of the empty-body case.
+-/
+
+/-- The three instruction slots of an empty-body countedLoop placed at
+    `offset` inside `metaProg`.  Used as the structural hypothesis for
+    `countedLoop_empty_simulates_n_iterations`. -/
+def MetaProgHasEmptyCountedLoopAt (offset : Nat) (metaProg : List YiInstr) : Prop :=
+  metaProg[offset]?     = some YiInstr.pop ∧
+  metaProg[offset + 1]? = some (YiInstr.branchShiEq Shi.wei (offset + 3)) ∧
+  metaProg[offset + 2]? = some (YiInstr.jump offset)
+
+/-- Helper: the META state on entry to one invocation of `countedLoop`
+    with empty body.  `cur` is arbitrary (left as a parameter — body's
+    initial `cur` is irrelevant since the first instruction is `pop`,
+    which overwrites it). -/
+def countedLoopEmptyEntryState (offset : Nat) (metaProg : List YiInstr)
+    (cur : Cell192) (regHex : Hexagram) (n : Nat) (tail : List Cell192) : YiState :=
+  { cur     := cur
+  , history := encCounter regHex n ++ tail
+  , pc      := offset
+  , prog    := metaProg
+  , halted  := false }
+
+/-- Helper: the expected META state after the empty-body loop completes. -/
+def countedLoopEmptyExitState (offset : Nat) (metaProg : List YiInstr)
+    (regHex : Hexagram) (tail : List Cell192) : YiState :=
+  { cur     := (regHex, Shi.wei)
+  , history := tail
+  , pc      := offset + 3
+  , prog    := metaProg
+  , halted  := false }
+
+/-- Auxiliary: `runFuel` is additive in the fuel argument.  Follows from
+    `runFuel_succ_right` by induction on `n`. -/
+private theorem runFuel_add (s : YiState) (m n : Nat) :
+    s.runFuel (m + n) = (s.runFuel m).runFuel n := by
+  induction n with
+  | zero => rfl
+  | succ k ih =>
+    have h1 : s.runFuel (m + (k + 1)) = (s.runFuel (m + k)).step := by
+      have : m + (k + 1) = (m + k) + 1 := by omega
+      rw [this, runFuel_succ_right]
+    have h2 : (s.runFuel m).runFuel (k + 1) = ((s.runFuel m).runFuel k).step :=
+      runFuel_succ_right _ _
+    rw [h1, h2, ih]
+
+/-- **Counted-loop simulation, empty-body specialization**.
+
+    Starting from a META state at `pc = offset`, with the counter
+    `encCounter regHex n ++ tail` at the top of history, exactly
+    `3 * n + 2` fuel steps suffice to reach the loop's exit.
+
+    The proof is by induction on `n`.  Each iteration with `n+1` data
+    cells consumes the head data cell in 3 steps (pop, branch-not-taken,
+    jump-back) and reduces to the `n`-cell case.  The base case (`n=0`)
+    consumes the marker cell in 2 steps (pop, branch-taken). -/
+theorem countedLoop_empty_simulates_n_iterations
+    (offset : Nat) (metaProg : List YiInstr)
+    (h_loop : MetaProgHasEmptyCountedLoopAt offset metaProg)
+    (cur : Cell192) (regHex : Hexagram) (n : Nat) (tail : List Cell192) :
+    (countedLoopEmptyEntryState offset metaProg cur regHex n tail).runFuel (3 * n + 2)
+      = countedLoopEmptyExitState offset metaProg regHex tail := by
+  obtain ⟨h_pop, h_branch, h_jump⟩ := h_loop
+  induction n generalizing cur with
+  | zero =>
+    -- Fuel = 2.  history starts with [(regHex, Shi.wei)] ++ tail.
+    -- Step 1 (pop): cur := (regHex, wei), history := tail, pc := offset+1.
+    -- Step 2 (branchShiEq wei (offset+3)): cur.2 = wei, taken → pc := offset+3.
+    show (countedLoopEmptyEntryState offset metaProg cur regHex 0 tail).runFuel 2
+        = countedLoopEmptyExitState offset metaProg regHex tail
+    -- Unfold one step at a time using runFuel_succ_right.
+    have hstep1 :
+        (countedLoopEmptyEntryState offset metaProg cur regHex 0 tail).step =
+          { cur := (regHex, Shi.wei)
+          , history := tail
+          , pc := offset + 1
+          , prog := metaProg
+          , halted := false } := by
+      unfold countedLoopEmptyEntryState YiState.step
+      simp [encCounter_zero, regMarkerCell, h_pop, YiState.execute]
+    have hstep2 :
+        ({ cur := (regHex, Shi.wei)
+         , history := tail
+         , pc := offset + 1
+         , prog := metaProg
+         , halted := false } : YiState).step =
+          countedLoopEmptyExitState offset metaProg regHex tail := by
+      unfold countedLoopEmptyExitState YiState.step
+      simp [h_branch, YiState.execute]
+    -- runFuel 2 s = ((runFuel 0 s).step).step = s.step.step.
+    -- Use the right-expansion view: runFuel (n+1) s = (runFuel n s).step.
+    have h2 :
+        (countedLoopEmptyEntryState offset metaProg cur regHex 0 tail).runFuel 2 =
+          ((countedLoopEmptyEntryState offset metaProg cur regHex 0 tail).step).step := by
+      rw [show (2 : Nat) = 1 + 1 from rfl,
+          runFuel_succ_right, runFuel_succ_right]
+      rfl
+    rw [h2, hstep1, hstep2]
+  | succ k ih =>
+    -- Fuel = 3 * (k+1) + 2 = 3*k + 5 = 3 + (3*k + 2).
+    -- After 3 steps, state = entry state for k.
+    show (countedLoopEmptyEntryState offset metaProg cur regHex (k + 1) tail).runFuel
+            (3 * (k + 1) + 2)
+        = countedLoopEmptyExitState offset metaProg regHex tail
+    have hfuel : 3 * (k + 1) + 2 = 3 + (3 * k + 2) := by omega
+    rw [hfuel, runFuel_add]
+    -- Show: after 3 steps, we're at the entry state for k.
+    have hstep1 :
+        (countedLoopEmptyEntryState offset metaProg cur regHex (k + 1) tail).step =
+          { cur := (regHex, Shi.jin)
+          , history := encCounter regHex k ++ tail
+          , pc := offset + 1
+          , prog := metaProg
+          , halted := false } := by
+      unfold countedLoopEmptyEntryState YiState.step
+      simp [encCounter_succ, regDataCell, h_pop, YiState.execute]
+    have hstep2 :
+        ({ cur := (regHex, Shi.jin)
+         , history := encCounter regHex k ++ tail
+         , pc := offset + 1
+         , prog := metaProg
+         , halted := false } : YiState).step =
+          { cur := (regHex, Shi.jin)
+          , history := encCounter regHex k ++ tail
+          , pc := offset + 2
+          , prog := metaProg
+          , halted := false } := by
+      unfold YiState.step
+      simp [h_branch, YiState.execute]
+    have hstep3 :
+        ({ cur := (regHex, Shi.jin)
+         , history := encCounter regHex k ++ tail
+         , pc := offset + 2
+         , prog := metaProg
+         , halted := false } : YiState).step =
+          countedLoopEmptyEntryState offset metaProg (regHex, Shi.jin) regHex k tail := by
+      unfold countedLoopEmptyEntryState YiState.step
+      simp [h_jump, YiState.execute]
+    -- Compose the three steps to compute runFuel 3.
+    have h3 :
+        (countedLoopEmptyEntryState offset metaProg cur regHex (k + 1) tail).runFuel 3 =
+          countedLoopEmptyEntryState offset metaProg (regHex, Shi.jin) regHex k tail := by
+      rw [show (3 : Nat) = 2 + 1 from rfl, runFuel_succ_right,
+          show (2 : Nat) = 1 + 1 from rfl, runFuel_succ_right, runFuel_succ_right]
+      -- now goal: ((entry.runFuel 0).step.step).step = entry-for-k
+      change (((countedLoopEmptyEntryState offset metaProg cur regHex (k + 1) tail).step).step).step
+              = countedLoopEmptyEntryState offset metaProg (regHex, Shi.jin) regHex k tail
+      rw [hstep1, hstep2, hstep3]
+    rw [h3]
+    exact ih (regHex, Shi.jin)
 
 /-! ## § 8 Decode helpers — DEFERRED to Phase B
 
