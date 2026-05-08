@@ -4,7 +4,7 @@
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
-    "Foundation/Modern": 50,
+    "Foundation/Modern": 51,
     "Foundation/Wen": 51,
     "Foundation/Yi": 2,
     "Model": 2,
@@ -166,6 +166,7 @@
         "SSBX.Foundation.Modern.QuantumRelativityFinitePathSumBridge",
         "SSBX.Foundation.Modern.QuantumRelativityFinitePathSumAlgebraBridge",
         "SSBX.Foundation.Modern.QuantumRelativityEndpointIndexedPathFamilyBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityEndpointSupportNormalizationBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -184,10 +185,10 @@
         "SSBX.Foundation.Modern.IIDWlln",
         "SSBX.Foundation.Modern.BochnerPL"
       ],
-      "lines": 176,
+      "lines": 177,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "780249359c601c7164fe30d9702d7f5909c36faa64db9fbb6981d26c838de3db"
+      "sha256": "f351e39c3609f6bae03ec4448b41255affd756cdfee4c16c3e65b1581b298d44"
     },
     {
       "cluster": "root",
@@ -10517,6 +10518,91 @@
       "module": "SSBX.Foundation.Modern.QuantumRelativityEndpointIndexedPathFamilyBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean",
       "sha256": "b8dbea9c9298090c76bd73470b8d8361f9f63fe99869f47b65739fe7f11bbb85"
+    },
+    {
+      "cluster": "Foundation/Modern",
+      "declaration_count": 18,
+      "declarations": [
+        {
+          "kind": "def",
+          "name": "filterEndpointIndexedTwoStepPathFamily"
+        },
+        {
+          "kind": "def",
+          "name": "EndpointFamilyFilterComplete"
+        },
+        {
+          "kind": "theorem",
+          "name": "endpoint_path_sum_filter_eq_of_removed_zero"
+        },
+        {
+          "kind": "theorem",
+          "name": "endpoint_indexed_family_filter_sum_eq_of_removed_zero"
+        },
+        {
+          "kind": "theorem",
+          "name": "endpoint_indexed_family_filter_born_weight_eq_of_removed_zero"
+        },
+        {
+          "kind": "def",
+          "name": "duplicateEndpointIndexedTwoStepPathFamily"
+        },
+        {
+          "kind": "theorem",
+          "name": "endpoint_indexed_family_duplicate_sum"
+        },
+        {
+          "kind": "theorem",
+          "name": "endpoint_indexed_family_duplicate_cancels_of_canceling"
+        },
+        {
+          "kind": "theorem",
+          "name": "endpoint_indexed_family_duplicate_born_weight_zero_of_canceling"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteKeepDisplayedEndpointPath"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteFilteredEndpointFamily"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_displayed_filter_complete"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_filtered_endpoint_family_amplitude_cancels"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_filtered_endpoint_family_born_weight_zero"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteDuplicatedEndpointFamily"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_duplicated_endpoint_family_amplitude_cancels"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_duplicated_endpoint_family_born_weight_zero"
+        },
+        {
+          "kind": "theorem",
+          "name": "endpoint_support_normalization_bridge_summary"
+        }
+      ],
+      "imports": [
+        "SSBX.Foundation.Modern.QuantumRelativityEndpointIndexedPathFamilyBridge"
+      ],
+      "lines": 296,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityEndpointSupportNormalizationBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean",
+      "sha256": "037a146eb95a2f64e232682da074d11424415ceab17f6d77fcc80e51dc5ab050"
     },
     {
       "cluster": "Foundation/Modern",

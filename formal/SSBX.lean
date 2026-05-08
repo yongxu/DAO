@@ -149,6 +149,7 @@ import SSBX.Foundation.Modern.QuantumRelativityDiscreteActionBridge
 import SSBX.Foundation.Modern.QuantumRelativityFinitePathSumBridge
 import SSBX.Foundation.Modern.QuantumRelativityFinitePathSumAlgebraBridge
 import SSBX.Foundation.Modern.QuantumRelativityEndpointIndexedPathFamilyBridge
+import SSBX.Foundation.Modern.QuantumRelativityEndpointSupportNormalizationBridge
 import SSBX.Foundation.Modern.SUN
 
 -- Phase 4 主体续（自然演绎 / Lebesgue 积分 / 连续 ODE / 神经科学 / 完备性深化）

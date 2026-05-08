@@ -1,6 +1,6 @@
 # 端点索引路径族候选 · Markov桥S5h
 
-**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [有限路径族求和代数候选 · Markov桥S5g](有限路径族求和代数候选%20·%20Markov桥S5g.md) · [有限路径族求和候选 · Markov桥S5f](有限路径族求和候选%20·%20Markov桥S5f.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
+**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [端点支撑规范化候选 · Markov桥S5i](端点支撑规范化候选%20·%20Markov桥S5i.md) · [有限路径族求和代数候选 · Markov桥S5g](有限路径族求和代数候选%20·%20Markov桥S5g.md) · [有限路径族求和候选 · Markov桥S5f](有限路径族求和候选%20·%20Markov桥S5f.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
 **Lean 锚点**：
 
@@ -84,7 +84,8 @@ theorem endpoint_indexed_path_family_bridge_summary :
 | 轴 | 状态 | 说明 |
 |---|---|---|
 | all-path enumeration | 后续结构 | S5h 只转换给定 finite family，不生成全部同端点路径 |
-| filter / support normalization | 后续结构 | 尚未证明筛选、去重、支撑集或规范枚举 |
+| filter / support normalization | S5i 已关闭有限候选接口 | `endpoint_support_normalization_bridge_summary` 证明 amplitude-complete filter 保持 sum/weight |
+| quotient / true dedup | 后续结构 | S5i 显式计算 duplicate expansion，不把重复路径商掉 |
 | path integral | 后续结构 | 需要路径空间、测度、极限或 over-all-paths construction |
 | continuous phase/action law | 后续结构 | 仍需连续相位、action functional 或 Hamiltonian/unitary law |
 | Born rule derivation | 后续结构 | 仍只复用 `ampProb` boundary |
@@ -116,7 +117,7 @@ path : EndpointTwoStepPath P endpoint
 
 ## 二 · 下一步
 
-S5h 后最省力的增强是 S5i：
+S5h 后的直接增强 S5i 已关闭：
 
 ```text
 endpoint-indexed finite family
@@ -124,7 +125,14 @@ endpoint-indexed finite family
 -> duplicate handling boundary
 ```
 
-这一步仍应保持有限结构，不提前声称 all-path enumeration、path integral 或真实干涉律。
+下一步应推进 toy source-target two-step enumeration：
+
+```text
+twoRouteProcess
+-> every source-target two-step path is upper or lower
+```
+
+这仍只应读作 toy process 的有限穷举，不提前声称一般 all-path enumeration、path integral 或真实干涉律。
 
 ---
 
