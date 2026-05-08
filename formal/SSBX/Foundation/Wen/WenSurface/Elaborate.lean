@@ -6,8 +6,8 @@
 
 ## 当前范围
 
-- **算子**：168 个 exact operator 进入 theorem-backed / Bool / carrier package bodies；
-  其余 catalogue operator elaborates to structural catalogue normal forms。
+- **算子**：317 个 exact/theorem-backed operator 进入精确 `WenDef.Tm` bodies；
+  其余 54 个 catalogue operator elaborates to structural catalogue normal forms。
 - **常值**：「一」 → `.yi` primitive；64 卦名 / aliases → `.hexLit h`。
 - **组合**：显式 `SurfaceExpr.app` 左结合到 `Tm.app`。
 - **绑定**：Hex-only `者` lambda、`凡` forall、`令` let。
@@ -308,6 +308,9 @@ def inferTypeDetailed : Ctx → Tm → Except TypeDiag Ty
   | _, .flip1H    => .ok (.arr .hex .hex)
   | _, .flip2H    => .ok (.arr .hex .hex)
   | _, .flip3H    => .ok (.arr .hex .hex)
+  | _, .flip4H    => .ok (.arr .hex .hex)
+  | _, .flip5H    => .ok (.arr .hex .hex)
+  | _, .flip6H    => .ok (.arr .hex .hex)
   | _, .pairH     => .ok (.arr .hex (.arr .hex (.prod .hex .hex)))
   | _, .dupH      => .ok (.arr .hex (.prod .hex .hex))
   | _, .list1H    => .ok (.arr .hex (.list .hex))

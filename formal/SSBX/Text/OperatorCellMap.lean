@@ -228,7 +228,8 @@ structure SemanticLowerBoundRow where
 Current lower-bound audit for theorem families:
 
 * 10 exact cell-transform families: identity, next/prev, 错 / 综 / 互,
-  cuo-zong, and three line flips.
+  cuo-zong, and three line flips; equivalently the V4 transforms,
+  single-yao flips, identity, and mod-64 successor/predecessor.
 * 7 concrete `Cell192` reachability generators: six line flips plus one time edge.
 * 13 BaguaWen L0 instruction clauses.
 * 27 core text-level semantic families from the parameterized kernel draft.

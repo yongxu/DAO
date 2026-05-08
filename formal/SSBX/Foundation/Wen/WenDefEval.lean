@@ -57,7 +57,7 @@ open SSBX.Foundation.Bagua.Cell192
 inductive Builtin : Type
   | jia | notB | andB | orB | eqHex | forallH | cuoH | zongH | huH
   | uniqueH | exactly3H | majorityH
-  | cuoZongH | flip1H | flip2H | flip3H
+  | cuoZongH | flip1H | flip2H | flip3H | flip4H | flip5H | flip6H
   | pairH | dupH | list1H | list2H | headH
   | eqCell | cuoC | zongC | huC | shiNextC | shiPrevC
   | flip1C | flip2C | flip3C | flip4C | flip5C | flip6C
@@ -67,7 +67,8 @@ deriving DecidableEq, Repr
 def Builtin.arity : Builtin → Nat
   | .jia | .andB | .orB | .eqHex | .pairH | .list2H | .eqCell => 2
   | .notB | .forallH | .uniqueH | .exactly3H | .majorityH | .cuoH | .zongH | .huH
-  | .cuoZongH | .flip1H | .flip2H | .flip3H | .dupH | .list1H | .headH
+  | .cuoZongH | .flip1H | .flip2H | .flip3H | .flip4H | .flip5H | .flip6H
+  | .dupH | .list1H | .headH
   | .cuoC | .zongC | .huC | .shiNextC | .shiPrevC
   | .flip1C | .flip2C | .flip3C | .flip4C | .flip5C | .flip6C => 1
 
@@ -161,6 +162,9 @@ mutual
     | _+1,    _,   .flip1H       => some (.builtinV .flip1H [])
     | _+1,    _,   .flip2H       => some (.builtinV .flip2H [])
     | _+1,    _,   .flip3H       => some (.builtinV .flip3H [])
+    | _+1,    _,   .flip4H       => some (.builtinV .flip4H [])
+    | _+1,    _,   .flip5H       => some (.builtinV .flip5H [])
+    | _+1,    _,   .flip6H       => some (.builtinV .flip6H [])
     | _+1,    _,   .pairH        => some (.builtinV .pairH [])
     | _+1,    _,   .dupH         => some (.builtinV .dupH [])
     | _+1,    _,   .list1H       => some (.builtinV .list1H [])
@@ -206,6 +210,9 @@ mutual
     | _+1,    .flip1H, [.hexV h]            => some (.hexV (dongInner h))
     | _+1,    .flip2H, [.hexV h]            => some (.hexV (huaInner h))
     | _+1,    .flip3H, [.hexV h]            => some (.hexV (bianInner h))
+    | _+1,    .flip4H, [.hexV h]            => some (.hexV (dongOuter h))
+    | _+1,    .flip5H, [.hexV h]            => some (.hexV (huaOuter h))
+    | _+1,    .flip6H, [.hexV h]            => some (.hexV (bianOuter h))
     | _+1,    .pairH,  [.hexV a, .hexV b]   => some (.pairV (.hexV a) (.hexV b))
     | _+1,    .dupH,   [.hexV h]            => some (.pairV (.hexV h) (.hexV h))
     | _+1,    .list1H, [.hexV h]            => some (.listV [.hexV h])
@@ -507,6 +514,27 @@ theorem flip3Body_eq_bianInner (h : Hexagram) :
     cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
     all_goals native_decide
 
+theorem flip4Body_eq_dongOuter (h : Hexagram) :
+    denoteHexFun Stdlib.flip4Body h = some (dongOuter h) := by
+  cases h with
+  | mk y1 y2 y3 y4 y5 y6 =>
+    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+    all_goals native_decide
+
+theorem flip5Body_eq_huaOuter (h : Hexagram) :
+    denoteHexFun Stdlib.flip5Body h = some (huaOuter h) := by
+  cases h with
+  | mk y1 y2 y3 y4 y5 y6 =>
+    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+    all_goals native_decide
+
+theorem flip6Body_eq_bianOuter (h : Hexagram) :
+    denoteHexFun Stdlib.flip6Body h = some (bianOuter h) := by
+  cases h with
+  | mk y1 y2 y3 y4 y5 y6 =>
+    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+    all_goals native_decide
+
 /-- 「同 «一» «一»」denotes true (恒等于自身). -/
 example :
     denoteBool (.app (.app Stdlib.tongBody .yi) .yi) = some true := by native_decide
@@ -529,6 +557,14 @@ example :
 example :
     denoteBool (.app (.app Stdlib.impBody (.boolLit false)) (.boolLit false))
       = some true := by native_decide
+
+example :
+    denoteBool (.app (.app Stdlib.xorBBody (.boolLit true)) (.boolLit false))
+      = some true := by native_decide
+
+example :
+    denoteBool (.app (.app Stdlib.xorBBody (.boolLit true)) (.boolLit true))
+      = some false := by native_decide
 
 example :
     denoteHexRel Stdlib.neqHexBody «一» «一» = some false := by native_decide

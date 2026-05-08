@@ -79,7 +79,9 @@ def surfaceVarNames : List String :=
 def resolveVarName : Glyph → Option String
   | g => if surfaceVarNames.contains g then some g else none
 
-/-- Canonical King Wen hexagram names, aligned with `Cell192.xuGua`. -/
+/-- Canonical surface hexagram names, aligned with `Cell192.xuGua`.
+    The traditional `鼎` is retained as an alias; the default single-glyph
+    surface for hexagram 50 is `器` to avoid the unpromoted gap-form conflict. -/
 def canonicalHexNames : List String :=
   [ "乾", "坤", "屯", "蒙", "需", "讼", "师", "比"
   , "小畜", "履", "泰", "否", "同人", "大有", "谦", "豫"
@@ -87,7 +89,7 @@ def canonicalHexNames : List String :=
   , "无妄", "大畜", "颐", "大过", "坎", "离", "咸", "恒"
   , "遁", "大壮", "晋", "明夷", "家人", "睽", "蹇", "解"
   , "损", "益", "夬", "姤", "萃", "升", "困", "井"
-  , "革", "鼎", "震", "艮", "渐", "归妹", "丰", "旅"
+  , "革", "器", "震", "艮", "渐", "归妹", "丰", "旅"
   , "巽", "兑", "涣", "节", "中孚", "小过", "既济", "未济" ]
 
 /-- Conservative traditional aliases for full hexagram names. -/
@@ -97,7 +99,7 @@ def hexNameAliases : List (String × String) :=
   , ("剝", "剥"), ("復", "复"), ("無妄", "无妄"), ("頤", "颐")
   , ("過", "过"), ("大過", "大过"), ("小過", "小过")
   , ("離", "离"), ("恆", "恒"), ("晉", "晋"), ("大壯", "大壮")
-  , ("損", "损"), ("漸", "渐"), ("歸妹", "归妹"), ("豐", "丰")
+  , ("損", "损"), ("鼎", "器"), ("漸", "渐"), ("歸妹", "归妹"), ("豐", "丰")
   , ("兌", "兑"), ("渙", "涣"), ("節", "节"), ("濟", "济")
   , ("既濟", "既济"), ("未濟", "未济") ]
 
@@ -294,6 +296,46 @@ def uniqueExecutableReadingBySemantics : List OperatorReading → Option Operato
 def uniqueExecutableCatalogueReading (glyph : Glyph) : Option OperatorReading :=
   uniqueExecutableReadingBySemantics (catalogueReadingsForGlyph glyph)
 
+structure SurfaceExecutableAlias where
+  surface : Glyph
+  id : OperatorId
+  gloss : String
+  cues : List ContextCue
+deriving Repr
+
+/-- Conservative executable aliases added by the Bagua naming pass.
+
+The table only points at already theorem-backed/operator-registry semantics.
+Names whose intended value would need a new codomain or primitive stay in the
+candidate Markdown table until they receive real semantics.
+-/
+def surfaceExecutableAliasRows : List SurfaceExecutableAlias :=
+  [ ⟨"恒", .L_10, "恒: identity / no-op alias", [.identityContext, .expectedObject]⟩
+  , ⟨"静", .L_10, "静: identity / no-op alias", [.identityContext, .expectedObject]⟩
+  , ⟨"靜", .L_10, "靜: identity / no-op alias", [.identityContext, .expectedObject]⟩
+  , ⟨"定", .L_10, "定: identity / no-op alias", [.identityContext, .expectedObject]⟩
+  , ⟨"常", .L_10, "常: identity / no-op alias", [.identityContext, .expectedObject]⟩
+  , ⟨"安", .L_10, "安: identity / no-op alias", [.identityContext, .expectedObject]⟩
+  , ⟨"寂", .L_10, "寂: identity / no-op alias", [.identityContext, .expectedObject]⟩
+  , ⟨"息", .L_10, "息: identity / no-op alias", [.identityContext, .expectedObject]⟩
+  , ⟨"復", .T_7, "復: return-to-root identity alias", [.expectedObject]⟩
+  , ⟨"复", .T_7, "复: return-to-root identity alias", [.expectedObject]⟩
+  , ⟨"展", .T_15, "展: extension / unfold alias", [.expectedObject]⟩
+  , ⟨"顯", .Z_9, "顯: reveal/advance alias", [.expectedObject]⟩
+  , ⟨"显", .Z_9, "显: reveal/advance alias", [.expectedObject]⟩
+  , ⟨"藏", .Z_10, "藏: conceal/archive alias", [.expectedObject]⟩ ]
+
+def surfaceExecutableAliasReadingsForGlyph (glyph : Glyph) : List OperatorReading :=
+  surfaceExecutableAliasRows.filterMap (fun row =>
+    if decide (row.surface = glyph) && isTheoremBackedOperator row.id then
+      some (catalogueReading row.surface row.id.code row.gloss (some row.id)
+        .prefix row.cues)
+    else
+      none)
+
+def uniqueSurfaceExecutableAliasReading (glyph : Glyph) : Option OperatorReading :=
+  uniqueExecutableReadingBySemantics (surfaceExecutableAliasReadingsForGlyph glyph)
+
 /--
 Reserved v1 surfaces remain stable even when the full catalogue records later
 homographs for the same glyph.  Outside this small compatibility surface, a
@@ -306,7 +348,7 @@ def reservedV1ExecutableReadingForGlyph (glyph : Glyph) : Option OperatorReading
       match r.operator? with
       | some id => if isTheoremBackedOperator id then some r else none
       | none => none
-  | none => none
+  | none => uniqueSurfaceExecutableAliasReading glyph
 
 def uniqueExecutableReadingForGlyph (glyph : Glyph) : Option OperatorReading :=
   match reservedV1ExecutableReadingForGlyph glyph with
@@ -514,8 +556,10 @@ example : resolveHexConst "一" = some «一»          := by native_decide
 example : resolveHexConst "乾" = some Hexagram.qian := by native_decide
 example : resolveHexConst "坤" = some Hexagram.kun  := by native_decide
 example : resolveHexConst "大壯" = resolveHexConst "大壮" := by native_decide
+example : resolveHexConst "器" = resolveHexConst "鼎" := by native_decide
 example : resolveHexConst "推" = none               := by native_decide
 example : isUnpromotedHexagramGap "鼎" = true := by native_decide
+example : isUnpromotedHexagramGap "器" = false := by native_decide
 example : isUnpromotedHexagramGap "丽" = true := by native_decide
 example : isUnpromotedHexagramGap "益" = false := by native_decide
 example : uniqueExecutableCatalogueReading "推" = none := by native_decide
@@ -534,6 +578,17 @@ example : uniqueExecutableReadingForGlyph "反" = none := by native_decide
 example : uniqueExecutableReadingForGlyph "名分" = none := by native_decide
 example :
     (uniqueExecutableReadingForGlyph "错").bind (·.operator?) = some OperatorId.Z_5 :=
+  by native_decide
+example :
+    (uniqueExecutableReadingForGlyph "恒").bind (·.operator?) = some OperatorId.L_10 :=
+  by native_decide
+example :
+    (uniqueExecutableReadingForGlyph "静").bind (·.operator?) = some OperatorId.L_10 :=
+  by native_decide
+example :
+    (["复", "復", "展"].filterMap
+        (fun s => (uniqueExecutableReadingForGlyph s).bind (·.operator?)))
+      = [OperatorId.T_7, OperatorId.T_7, OperatorId.T_15] :=
   by native_decide
 theorem executableSurfaceReadings_use_registry_path :
     (["推", "比", "不", "必", "同", "凡", "損", "损", "益",
@@ -564,6 +619,18 @@ example : opIdsOf "形名" = some [some OperatorId.L_4] := by native_decide
 example : opIdsOf "大一" = some [some OperatorId.ZA_13] := by native_decide
 example : opIdsOf "陰与陽" = some [some OperatorId.Y_1] := by native_decide
 example : opIdsOf "上工" = some [some OperatorId.Y_25] := by native_decide
+example : opIdsOf "不动" = some [some OperatorId.L_10] := by native_decide
+example : opIdsOf "錯綜" = some [some OperatorId.I_8] := by native_decide
+example : opIdsOf "交错" = some [some OperatorId.Z_33] := by native_decide
+example : opIdsOf "归一" = some [some OperatorId.T_7] := by native_decide
+example : opIdsOf "展开" = some [some OperatorId.T_15] := by native_decide
+example : opIdsOf "动初" = some [some OperatorId.T_5] := by native_decide
+example : opIdsOf "初动" = some [some OperatorId.T_5] := by native_decide
+example : opIdsOf "動中" = some [some OperatorId.T_1] := by native_decide
+example : opIdsOf "承变" = some [some OperatorId.T_1] := by native_decide
+example : opIdsOf "上变" = some [some OperatorId.T_2] := by native_decide
+example : opIdsOf "际变" = some [some OperatorId.T_2] := by native_decide
+example : opIdsOf "恒 乾" = some [some OperatorId.L_10, none] := by native_decide
 
 /-- 基础 stdlib 算子的 OperatorId 互不相同（按定义顺序展开）. -/
 example :
