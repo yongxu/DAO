@@ -73,13 +73,17 @@
 | formal/SSBX/notes/PositionOperatorGraph.md | 0 | 5 |
 | formal/SSBX/notes/atom-naming.md | 0 | 0 |
 | formal/SSBX/notes/baguaWen-spec.md | 0 | 0 |
+| formal/SSBX/notes/markov-causal-bridge-plan.md | 9 | 0 |
+| formal/SSBX/notes/markov-causal-bridge-verification-plan.md | 10 | 9 |
 | formal/SSBX/notes/math-axiom-map.md | 0 | 0 |
+| formal/SSBX/notes/metainterp-isa-gap.md | 0 | 0 |
 | formal/SSBX/notes/monad-root-plan.md | 2 | 3 |
 | formal/SSBX/notes/parse-print-roadmap.md | 0 | 0 |
 | formal/SSBX/notes/pending-interfaces.md | 1 | 6 |
 | formal/SSBX/notes/run-boundary.md | 0 | 8 |
 | formal/SSBX/notes/tier3-quine-roadmap.md | 1 | 15 |
 | formal/SSBX/notes/truth-ledger-boundary.md | 0 | 20 |
+| formal/SSBX/notes/unification-stepwise-plan.md | 6 | 0 |
 | formal/SSBX/notes/v14-roadmap.md | 0 | 0 |
 | formal/SSBX/notes/wensurface-roadmap.md | 0 | 7 |
 | formal/SSBX/notes/wensurface-syntax-spec.md | 0 | 4 |
@@ -102,6 +106,7 @@
 | 义理/K_完备性审计.md | 0 | 13 |
 | 义理/L_文道一也_自释与微核.md | 4 | 5 |
 | 义理/M_证明报告_192_理之不完备.md | 2 | 15 |
+| 义理/Markov因果桥 · 大统一最小验证构造.md | 10 | 20 |
 | 义理/N_儒家从元到圣.md | 1 | 0 |
 | 义理/O_进化非道者生存_三视证.md | 3 | 12 |
 | 义理/P_道家从无到化.md | 1 | 3 |
@@ -123,12 +128,34 @@
 | 义理/心智 · 从元到识.md | 1 | 2 |
 | 义理/拓扑 · 从元到障.md | 0 | 0 |
 | 义理/数与算术 · 从元到数.md | 1 | 0 |
-| 义理/物理 · 从元到象.md | 1 | 6 |
+| 义理/文构造完备与直相加边界.md | 0 | 7 |
+| 义理/有限概率核接口 · Markov桥S2.md | 2 | 12 |
+| 义理/物理 · 从元到象.md | 3 | 20 |
 | 义理/生态 · 从元到生.md | 0 | 2 |
 | 义理/算子别名总表.md | 1 | 20 |
 | 义理/类与映 · 从元到映.md | 1 | 4 |
+| 义理/经典Markov与量子振幅分层 · Markov桥S4.md | 2 | 18 |
 | 义理/统计 · 从元到测.md | 1 | 0 |
+| 义理/路径组合与因果约束 · Markov桥S3.md | 2 | 12 |
+| 义理/边界/README.md | 0 | 13 |
+| 义理/边界/可的边界 · 感行证.md | 1 | 8 |
+| 义理/边界/可知边界 · 语言与理.md | 1 | 11 |
+| 义理/边界/名的边界 · 指称定名.md | 0 | 8 |
+| 义理/边界/四界不混同 · 测量推感.md | 0 | 7 |
+| 义理/边界/感的边界 · 受觉现.md | 0 | 9 |
+| 义理/边界/推的边界 · 前规则结.md | 0 | 11 |
+| 义理/边界/测的边界 · 观验读.md | 0 | 14 |
+| 义理/边界/知的边界 · 明辨述.md | 0 | 6 |
+| 义理/边界/统一边界 · 从理到文.md | 1 | 13 |
+| 义理/边界/行的边界 · 能境作效.md | 0 | 6 |
+| 义理/边界/证的边界 · 命题系统证书.md | 0 | 6 |
+| 义理/边界/边界总图谱 · 知感行证名量测推.md | 0 | 10 |
+| 义理/边界/量的边界 · 数测度.md | 0 | 15 |
 | 义理/道桥接_ProcessAligned_Dao_ShengshengBuxi.md | 2 | 0 |
+| 义理/量子与相对论整合方向 · 从桥到新理论.md | 0 | 8 |
+| 义理/量子与相对论直统一不可能 · 当前语言NoGo.md | 0 | 15 |
+| 义理/量子时空互补 · 从一到测.md | 1 | 13 |
+| 义理/量子物理语言 · 从虚到测.md | 0 | 8 |
 | 六表_实虚史真/表一_六征本表.md | 0 | 0 |
 | 六表_实虚史真/表三_实虚modal三态.md | 0 | 0 |
 | 六表_实虚史真/表二_史维三态.md | 0 | 0 |

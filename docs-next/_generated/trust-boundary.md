@@ -5,9 +5,6 @@
 
 | Kind | Name | Path | Line |
 | --- | --- | --- | --- |
-| partial def | run | `formal/SSBX/Foundation/Bagua/BaguaTuring.lean` | 162 |
-| axiom | universalInterpExists | `formal/SSBX/Foundation/Bagua/KleeneCarrier.lean` | 54 |
-| axiom | smnExists | `formal/SSBX/Foundation/Bagua/KleeneCarrier.lean` | 65 |
-| axiom | kleeneFromPrimitives | `formal/SSBX/Foundation/Bagua/KleeneCarrier.lean` | 75 |
-| axiom | allDecidersAreYiComputable | `formal/SSBX/Foundation/Bagua/KleeneCarrier.lean` | 87 |
+| partial def | run | `formal/SSBX/Foundation/Bagua/BaguaTuring.lean` | 168 |
+| axiom | kleeneBoundary | `formal/SSBX/Foundation/Bagua/KleeneCarrier.lean` | 59 |
 | opaque | theOne | `formal/SSBX/Foundation/Wen/Kernel.lean` | 164 |

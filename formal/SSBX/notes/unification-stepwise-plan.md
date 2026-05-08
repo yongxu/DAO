@@ -41,8 +41,9 @@ lake build SSBX.Foundation.Modern.QuantumRelativityConcreteBridge
 lake build SSBX.Foundation.Modern.OperatorCellGridMarkovBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityPathCausalBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityAmplitudeChannelBridge
 lake build SSBX
-git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean formal/SSBX.lean formal/SSBX/notes/unification-stepwise-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/有限概率核接口 · Markov桥S2.md' '义理/路径组合与因果约束 · Markov桥S3.md'
+git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean formal/SSBX.lean formal/SSBX/notes/unification-stepwise-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/有限概率核接口 · Markov桥S2.md' '义理/路径组合与因果约束 · Markov桥S3.md' '义理/经典Markov与量子振幅分层 · Markov桥S4.md'
 ```
 
 ## S0 · 基线重审
@@ -52,7 +53,7 @@ git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridg
 | 项 | 内容 |
 |---|---|
 | Lean 出口 | 保持 `markov_causal_bridge_summary`、`measurement_event_alignment`、`markov_bridge_not_direct_language_addition` 为 `machineChecked` |
-| 文档出口 | 本文件与验证计划明确列出未关闭项：sum-one 概率律、Born rule、量子通道、干涉、因果偏序、度规恢复、经验闭合 |
+| 文档出口 | 本文件与验证计划明确列出未关闭项：sum-one 概率律、Born rule 从桥的推导、真实 quantum channel law、干涉、因果偏序、度规恢复、经验闭合 |
 | 失败记录 | 若发现文档中有“已完成大统一”“已证明量子引力”等强 claim，记录为 `conceptual overclaim`，并降级 |
 | 不可声称 | 不能说 Markov-因果桥已经等于物理大统一；只能说它是最小可验证中介构造 |
 
@@ -151,10 +152,10 @@ Markov 权重与一步转移的支持关系仍保留。
 
 | 项 | 内容 |
 |---|---|
-| Lean 出口 | 新增 `AmplitudeSkeleton`、`ChannelSkeleton` 或同类结构，并有 theorem 表明它是新层，不等同当前 `MarkovKernelSkeleton` |
-| 最低 theorem 形态 | `amplitude_layer_is_not_markov_kernel` 或 `channel_projection_keeps_markov_boundary` |
+| Lean 出口 | `amplitude_channel_bridge_summary` |
+| 最低 theorem 形态 | `QuantumAmplitudeSkeleton`、`QuantumChannelSkeleton`、`amplitude_layer_is_not_markov_kernel`、`channel_layer_is_not_markov_kernel`、`channel_projection_keeps_markov_boundary` |
 | 失败记录 | 若复数、范数、unitarity 或 channel law 依赖不足，记录为 `conceptual / library gap` |
-| 文档更新 | 可写“量子候选接口已开口”；不能写“量子理论已恢复” |
+| 文档更新 | 可写“量子振幅 / 通道候选接口已开口，且与经典 Markov 层分开”；不能写“量子理论已恢复” |
 | 不可声称 | 不能说已经推出干涉、Born rule、unitary evolution 或真实 quantum channel |
 
 通过判准：
@@ -163,6 +164,16 @@ Markov 权重与一步转移的支持关系仍保留。
 Lean 中有独立的 amplitude / channel 层；
 旧 Markov 层和新量子候选层的边界有 theorem 标记。
 ```
+
+当前状态：
+
+| theorem | 文件 | 读法 |
+|---|---|---|
+| `amplitude_channel_bridge_summary` | `QuantumRelativityAmplitudeChannelBridge.lean` | concrete 与 `71232` grid bridge 同时承载 classical finite-probability boundary、quantum amplitude candidate 与 channel candidate |
+| `amplitude_layer_is_not_markov_kernel` | `QuantumRelativityAmplitudeChannelBridge.lean` | quantum amplitude layer 不等同 classical Markov kernel layer |
+| `channel_layer_is_not_markov_kernel` | `QuantumRelativityAmplitudeChannelBridge.lean` | quantum channel layer 不等同 classical Markov kernel layer |
+| `channel_projection_keeps_markov_boundary` | `QuantumRelativityAmplitudeChannelBridge.lean` | channel candidate 保留并投影回 S2 finite probability-kernel boundary |
+| `channel_amplitude_support_implies_step` | `QuantumRelativityAmplitudeChannelBridge.lean` | 非零振幅支持仍尊重 `FiniteProcess.step` |
 
 ## S5 · 干涉与测量律候选
 
@@ -261,8 +272,9 @@ Lean 只关闭一个几何候选接口；
 |---|---|---|---|
 | 2026-05-08 | S0 | plan | 本文件新增逐步验证路线；不新增物理 claim |
 | 2026-05-08 | S1 | success | 新增 concrete 三状态 witness 与 `71232` operator-cell grid bridge；仍不证明 sum-one 概率律、Born rule、几何恢复或经验闭合 |
-| 2026-05-08 | S2 | success | 新增 finite probability-kernel denominator interface；关闭非终端行分母非零与权重上界，仍不证明 sum-one 概率律、Born rule、量子通道或经验闭合 |
+| 2026-05-08 | S2 | success | 新增 finite probability-kernel denominator interface；关闭非终端行分母非零与权重上界，仍不证明 sum-one 概率律、Born rule、真实 quantum channel law 或经验闭合 |
 | 2026-05-08 | S3 | success | 新增 path composition and local causal constraints；关闭组合 path witness 的可达/因果读法与 concrete/grid no-self-loop，仍不证明完整偏序、局部有限 causal set、light cone 或 metric recovery |
+| 2026-05-08 | S4 | success | 新增 classical Markov / quantum amplitude-channel 分层接口；关闭 layer separation、channel candidate 到 S2 边界的投影与非零振幅支持精化，仍不证明干涉、Born rule 推导、unitary/CPTP channel law 或经验闭合 |
 
 ## 统一用语边界
 
@@ -279,6 +291,6 @@ Lean 只关闭一个几何候选接口；
 ```text
 本路线追求的是逐步增强的形式统一候选；
 每一步必须有 Lean 出口和失败记录；
-在概率律、量子通道、几何恢复与经验 ledger 关闭前，
+在概率律、真实 quantum channel law、几何恢复与经验 ledger 关闭前，
 不得宣称物理大统一已经完成。
 ```
