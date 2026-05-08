@@ -37,6 +37,7 @@
 | `formal/SSBX/Foundation/Modern/QuantumRelativityNormalizedMassBridge.lean` | S10 normalized finite mass probability law |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityBornWeightNormalizationBridge.lean` | S11 conditional Born-weight normalization law |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityBornDistributionBridge.lean` | S12 finite Born distribution boundary |
+| `formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeBridge.lean` | S13 channel composition candidate |
 | `formal/SSBX/notes/markov-causal-bridge-plan.md` | 探索计划与完成记录 |
 | `formal/SSBX/notes/unification-stepwise-plan.md` | 逐步完善到候选统一的阶段路线 |
 | `义理/文构造完备与直相加边界.md` | 对 `current-language no-go` 旧说法的正名 |
@@ -67,6 +68,7 @@
 | `义理/归一化质量求和候选 · Markov桥S10.md` | S10 normalized mass sum-one companion 文档 |
 | `义理/Born权重条件归一候选 · Markov桥S11.md` | S11 conditional Born-weight normalization companion 文档 |
 | `义理/Born分布边界候选 · Markov桥S12.md` | S12 finite Born distribution companion 文档 |
+| `义理/channelCompose候选 · Markov桥S13.md` | S13 channel composition companion 文档 |
 
 ## 当前验证结论
 
@@ -103,6 +105,7 @@
 - [x] `normalized_mass_bridge_summary` 已关闭 finite normalized mass probability law：`rowWeightSum_eq_rowTotal` 有命名出口，且 concrete/grid 非终端行的逐项 `normalizedMass` 求和为 `1`。
 - [x] `born_weight_normalization_bridge_summary` 已关闭 conditional finite Born-weight normalization law：若有限 amplitude support 已由 `ampProb` 归一，则所有 `candidateWeight` 非负且有限和为 `1`。
 - [x] `born_distribution_bridge_summary` 已关闭 finite Born distribution boundary：normalized amplitude support 可打包成带 amplitude sum、candidate support 与 candidateWeight projection 的 finite probability distribution interface。
+- [x] `channel_compose_bridge_summary` 已关闭 channel composition candidate：`channelCompose` 逐点相乘 amplitude、保留左侧 classical boundary，并保持 support-to-step soundness。
 - [x] 首次新 worktree 原生构建的 `mathlib4` 克隆阻塞已记录为基础设施失败，不当作 theorem 失败。
 - [ ] 尚未验证 Born rule 从 Markov 桥的推导、continuous phase/action law、general all-path enumeration、一般 path integral、真实可测干涉律、unitary / CPTP quantum channel law、完整因果偏序、局部有限 causal set、度规恢复、数据校准、可测预言 theorem 或经验闭合。
 
@@ -141,6 +144,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityNormalizatio
 lake build SSBX.Foundation.Modern.QuantumRelativityNormalizedMassBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityBornWeightNormalizationBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityBornDistributionBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityChannelComposeBridge
 lake build SSBX
 git diff --check --
 ```
@@ -202,6 +206,7 @@ rg -n "待处理|future|deferred|部分相关|佛|唯识|analogy|unchecked|plann
 | finite normalized mass probability law | `normalized_mass_bridge_summary` | `machineChecked` |
 | conditional Born-weight normalization law | `born_weight_normalization_bridge_summary` | `machineChecked` |
 | finite Born distribution boundary | `born_distribution_bridge_summary` | `machineChecked` |
+| channel composition candidate | `channel_compose_bridge_summary` | `machineChecked` |
 | tagged-language noncollapse 保持 | `markov_bridge_not_direct_language_addition` | `machineChecked` |
 | 公开摘要 | `markov_causal_bridge_summary` | `machineChecked` |
 
@@ -238,6 +243,7 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
   可以把 row support 上的逐项 normalizedMass 求和为 1，形成 finite classical probability law
   可以在 finite amplitude support 已由 ampProb 归一时，推出 Born-shaped candidateWeight 非负且求和为 1
   可以把 amplitude support、amplitude sum、candidate support 与 candidateWeight projection 装入 finite probability distribution interface
+  可以组合当前 QuantumChannelSkeleton：逐点相乘 amplitude，保留左侧 classical boundary，并保持 support-to-step soundness
   同时保持当前 tagged 物理语言 noncollapse 边界
 ```
 
@@ -288,6 +294,7 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
 | V10 | 引入 normalized finite mass probability law | 已由 `normalized_mass_bridge_summary` 关闭 concrete/grid 非终端行逐项 `normalizedMass` sum-one；下一步进入 conditional Born weights |
 | V11 | 引入 conditional Born-weight normalization law | 已由 `born_weight_normalization_bridge_summary` 关闭 normalized amplitude support 条件下的 candidateWeight 非负与 sum-one；下一步进入 `born_distribution_boundary` |
 | V12 | 引入 finite Born distribution boundary | 已由 `born_distribution_bridge_summary` 关闭 amplitude support / amplitude sum / candidateWeight projection 到 finite probability interface；下一步进入 `channelCompose` |
+| V13 | 引入 channel composition candidate | 已由 `channel_compose_bridge_summary` 关闭 current skeleton 的 `channelCompose`；unitary/CPTP、Kraus/density-matrix law 与 empirical closure 仍 pending |
 
 ## 失败记录模板
 

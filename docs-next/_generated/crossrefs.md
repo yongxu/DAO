@@ -73,8 +73,8 @@
 | formal/SSBX/notes/PositionOperatorGraph.md | 0 | 5 |
 | formal/SSBX/notes/atom-naming.md | 0 | 0 |
 | formal/SSBX/notes/baguaWen-spec.md | 0 | 0 |
-| formal/SSBX/notes/markov-causal-bridge-plan.md | 32 | 4 |
-| formal/SSBX/notes/markov-causal-bridge-verification-plan.md | 31 | 20 |
+| formal/SSBX/notes/markov-causal-bridge-plan.md | 33 | 4 |
+| formal/SSBX/notes/markov-causal-bridge-verification-plan.md | 32 | 20 |
 | formal/SSBX/notes/math-axiom-map.md | 0 | 0 |
 | formal/SSBX/notes/metainterp-isa-gap.md | 0 | 0 |
 | formal/SSBX/notes/monad-root-plan.md | 2 | 3 |
@@ -123,6 +123,7 @@
 | 义理/X_反施密特.md | 1 | 8 |
 | 义理/Y_对齐失败.md | 1 | 9 |
 | 义理/Z_经济博弈.md | 1 | 0 |
+| 义理/channelCompose候选 · Markov桥S13.md | 0 | 9 |
 | 义理/人类命运共同体_共同体之证.md | 5 | 12 |
 | 义理/作用量相位律候选 · Markov桥S5r.md | 0 | 12 |
 | 义理/几何位 · 从元到形.md | 1 | 13 |

@@ -4,7 +4,7 @@
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
-    "Foundation/Modern": 65,
+    "Foundation/Modern": 66,
     "Foundation/Wen": 51,
     "Foundation/Yi": 2,
     "Model": 2,
@@ -181,6 +181,7 @@
         "SSBX.Foundation.Modern.QuantumRelativityNormalizedMassBridge",
         "SSBX.Foundation.Modern.QuantumRelativityBornWeightNormalizationBridge",
         "SSBX.Foundation.Modern.QuantumRelativityBornDistributionBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityChannelComposeBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -199,10 +200,10 @@
         "SSBX.Foundation.Modern.IIDWlln",
         "SSBX.Foundation.Modern.BochnerPL"
       ],
-      "lines": 191,
+      "lines": 192,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "0bc63ac3644e1ff0c2331f59cef267dee53e1b257b5767747b7807e8f28614db"
+      "sha256": "edcf9d1bf24bd7d68de537c42a7a7c7bee008eb22befe5e1e2b90f66384c0eaa"
     },
     {
       "cluster": "root",
@@ -10473,6 +10474,68 @@
       "module": "SSBX.Foundation.Modern.QuantumRelativityCanonicalRepresentativeBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityCanonicalRepresentativeBridge.lean",
       "sha256": "2231f6a4d11d7c35dcc71b3616c46ba0a40565b237c7e281a6da29c20ceec4d6"
+    },
+    {
+      "cluster": "Foundation/Modern",
+      "declaration_count": 12,
+      "declarations": [
+        {
+          "kind": "def",
+          "name": "channelCompose"
+        },
+        {
+          "kind": "theorem",
+          "name": "channelCompose_amplitude"
+        },
+        {
+          "kind": "theorem",
+          "name": "channelCompose_keeps_left_classical_boundary"
+        },
+        {
+          "kind": "theorem",
+          "name": "channelCompose_support_implies_step"
+        },
+        {
+          "kind": "def",
+          "name": "ChannelCompositionBoundaryClosed"
+        },
+        {
+          "kind": "theorem",
+          "name": "channel_composition_boundary_closed"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_channelCompose_self_keeps_boundary"
+        },
+        {
+          "kind": "theorem",
+          "name": "operatorCellGrid_channelCompose_self_keeps_boundary"
+        },
+        {
+          "kind": "inductive",
+          "name": "PendingBeyondS13"
+        },
+        {
+          "kind": "def",
+          "name": "ClosedByStepwiseS13"
+        },
+        {
+          "kind": "theorem",
+          "name": "pending_boundary_not_closed_by_s13"
+        },
+        {
+          "kind": "theorem",
+          "name": "channel_compose_bridge_summary"
+        }
+      ],
+      "imports": [
+        "Mathlib.Tactic",
+        "SSBX.Foundation.Modern.QuantumRelativityBornDistributionBridge"
+      ],
+      "lines": 186,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityChannelComposeBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeBridge.lean",
+      "sha256": "9a5eb96ea5d210df8da09ed7ee2c51864d17d8f30ea5e9b92f952bd6366b9f76"
     },
     {
       "cluster": "Foundation/Modern",

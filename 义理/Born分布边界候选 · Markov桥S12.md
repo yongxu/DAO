@@ -2,6 +2,8 @@
 
 **前置**：[Born权重条件归一候选 · Markov桥S11](Born权重条件归一候选%20·%20Markov桥S11.md) · [归一化质量求和候选 · Markov桥S10](归一化质量求和候选%20·%20Markov桥S10.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
+**后继**：[channelCompose候选 · Markov桥S13](channelCompose候选%20·%20Markov桥S13.md) 已给 current channel skeleton 增加候选 composition operation。
+
 **Lean 锚点**：
 
 | 层 | 文件 | 内容 | 状态 |
@@ -96,7 +98,7 @@ S12 第一次 theorem 试探：
 
 ## 二 · 下一步
 
-S12 之后按当前顺序进入：
+S12 之后的 `channelCompose` 已由 S13 完成：
 
 ```text
 channelCompose
