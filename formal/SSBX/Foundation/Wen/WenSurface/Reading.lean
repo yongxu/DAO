@@ -672,34 +672,56 @@ example : opIdsOf "益" = some [some OperatorId.T_13] := by native_decide
   基础算子相容（其 surface 单字 canonicalKind = .glyph），故 cue 路径与
   surface 路径在 stdlib 范围内殊途同归。
 
-  其他 cue（如 .afterVerb / .beforeMotionVerb）需引入 verb / motion
-  分类表，留作后续扩充；现版先覆盖 betweenNominals 启动样.
+  对普通 prefix operator，则从右邻 token 的明显起点补一个轻量 expected-type
+  cue：Hex/变量起点 → `.expectedObject`，Bool 起点 → `.expectedProp`，
+  `者` 起点 → `.quantifierDomain`。这能消解「反 乾」「化 乾」
+  以及「或 者 ...」这样的局部上下文，同时不把泛语义 cue 强塞给「之」。
 -/
 
 /-- 取 `i` 处 token 之 surface 之 canonicalKind；越界返 none. -/
 def kindAt? (toks : List GlyphTok) (i : Nat) : Option LexKind :=
   (toks[i]?).map (fun t => canonicalKind t.surface)
 
+/-- 从一个显然的右邻表达式起点推 operator argument cue。
+
+    这不是完整 parser；只处理无需解析即可确定的起点：
+    - Hex 常值 / binder 变量名：对象参数
+    - Bool 常值：命题参数
+    - `者` lambda 起点：Hex 谓词，服务存在量化等 operator
+-/
+def argumentStartCue? (t : GlyphTok) : Option ContextCue :=
+  match resolveHexConst t.surface, resolveVarName t.surface, resolveBoolConst t.surface,
+      resolveSyntaxMarker t.surface with
+  | some _, _, _, _ => some .expectedObject
+  | _, some _, _, _ => some .expectedObject
+  | _, _, some _, _ => some .expectedProp
+  | _, _, _, some .zhe => some .quantifierDomain
+  | _, _, _, _ => none
+
 /-- 从相邻 GlyphTok 推 ContextCue。窗口 ±1 token.
 
     启动样：左右皆为 `.glyph` 时发射 `.betweenNominals` —— 此时「之」唯一
     对应 `«之属格读法»` (status = .catalogue, operator? = some .S_1).
 
-    扩充时可加：
-    - 左为 `.operator` (motion-like) 时 `.afterVerb`
-    - 右为特定 motion verb 时 `.beforeMotionVerb`
-    现版只覆盖 `.betweenNominals` 一例，避免引入尚未建模的语义判定.
+    若不是 between-nominals，则用右邻起点给 prefix 多义 operator 一个
+    conservative expected-type cue。between-nominals 优先，避免「乾 之 坤」
+    被额外 `.expectedObject` 过度约束。
 
-    位置 0 由于无左邻居，返空 cues. -/
+    位置 0 没有 left-neighbor cue，但仍可从右邻起点取得 expected-type cue. -/
 def computeCues (toks : List GlyphTok) (i : Nat) : List ContextCue :=
+  let rightTok := toks[i + 1]?
+  let rightStartCue :=
+    match rightTok with
+    | some t => (argumentStartCue? t).toList
+    | none => []
   match i with
-  | 0     => []
+  | 0     => rightStartCue
   | j + 1 =>
     let leftKind  := kindAt? toks j
     let rightKind := kindAt? toks (j + 2)
     match leftKind, rightKind with
     | some .glyph, some .glyph => [.betweenNominals]
-    | _,           _           => []
+    | _,           _           => rightStartCue
 
 /-- A reading satisfies a cue either by carrying that exact cue or by exposing
     the expected type denoted by that cue.  This lets strong type cues refine
@@ -807,11 +829,26 @@ example :
       = [ContextCue.betweenNominals] :=
   by native_decide
 
-/-- i=0 (无左邻居) → 空 cues. -/
+/-- i=0 且右邻不是明显参数起点 → 空 cues. -/
 example :
     computeCues
       [⟨"推", 0, 1, false⟩, ⟨"之", 2, 1, false⟩, ⟨"一", 4, 1, false⟩] 0
       = ([] : List ContextCue) :=
+  by native_decide
+
+example :
+    computeCues [⟨"反", 0, 1, false⟩, ⟨"乾", 2, 1, false⟩] 0
+      = [ContextCue.expectedObject] :=
+  by native_decide
+
+example :
+    computeCues [⟨"故", 0, 1, false⟩, ⟨"真", 2, 1, false⟩] 0
+      = [ContextCue.expectedProp] :=
+  by native_decide
+
+example :
+    computeCues [⟨"或", 0, 1, false⟩, ⟨"者", 2, 1, false⟩] 0
+      = [ContextCue.quantifierDomain] :=
   by native_decide
 
 /-- 末位 (无右邻居) → 空 cues. -/
@@ -894,6 +931,21 @@ example :
     opIdsOfCues
       [⟨"推", 0, 1, false⟩, ⟨"之", 2, 1, false⟩, ⟨"一", 4, 1, false⟩]
       = some [some OperatorId.T_10, some OperatorId.S_1, none] :=
+  by native_decide
+
+example :
+    opIdsOfCues [⟨"反", 0, 1, false⟩, ⟨"乾", 2, 1, false⟩]
+      = some [some OperatorId.T_6, none] :=
+  by native_decide
+
+example :
+    opIdsOfCues [⟨"化", 0, 1, false⟩, ⟨"乾", 2, 1, false⟩]
+      = some [some OperatorId.T_1, none] :=
+  by native_decide
+
+example :
+    opIdsOfCues [⟨"或", 0, 1, false⟩, ⟨"者", 2, 1, false⟩, ⟨"甲", 4, 1, false⟩]
+      = some [some OperatorId.Q_5, none, none] :=
   by native_decide
 
 /-- resolveWithCues 在「推 之 一」上 success（.toOption.isSome = true）. -/

@@ -55,6 +55,10 @@ def isCJKBasic (c : Char) : Bool :=
 def isAsciiSpace (c : Char) : Bool :=
   c == ' ' || c == '\t' || c == '\n' || c == '\r'
 
+/-- WenSurface whitespace includes ASCII whitespace plus ideographic space. -/
+def isWenSpace (c : Char) : Bool :=
+  isAsciiSpace c || c == '　'
+
 /-- Grouping punctuation accepted by the WenSurface parser. -/
 def isBracketChar (c : Char) : Bool :=
   c == '（' || c == '）' || c == '(' || c == ')'
@@ -140,7 +144,7 @@ def lexFuel : Nat → Nat → List Char → Except LexErr (List GlyphTok)
   | 0,     _,   _              => .error .fuelExhausted
   | _+1,   _,   []             => .ok []
   | n+1,   col, c :: rest      =>
-    if isAsciiSpace c then
+    if isWenSpace c then
       lexFuel n (col + 1) rest
     else if isBracketChar c then
       match lexFuel n (col + 1) rest with
@@ -174,6 +178,11 @@ example :
 /-- 双 CJK 之间空格 skip：col 因空格 +1. -/
 example :
     (lexWen "推 一").toOption = some [⟨"推", 0, 1, false⟩, ⟨"一", 2, 1, false⟩] :=
+  by native_decide
+
+/-- 全角空格也按 WenSurface 空白处理，col 仍按 codepoint 前进. -/
+example :
+    (lexWen "推　一").toOption = some [⟨"推", 0, 1, false⟩, ⟨"一", 2, 1, false⟩] :=
   by native_decide
 
 /-- 三字相邻无空格. -/
@@ -246,6 +255,14 @@ example :
 
 /-- 全空白. -/
 example : (lexWen "   ").toOption = some [] := by native_decide
+
+example : (lexWen "　").toOption = some [] := by native_decide
+
+/-- Wenyan punctuation is still rejected until the parser has an explicit policy. -/
+example :
+    (["。", "，", "、", "；", "：", "？", "！"].all
+      (fun p => (lexWen ("推" ++ p ++ "一")).toOption.isNone)) = true :=
+  by native_decide
 
 /-- Stdlib 6 算子 surface 各自单独 lex. -/
 example :

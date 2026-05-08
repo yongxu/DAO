@@ -324,9 +324,7 @@ example :
   by native_decide
 
 example :
-    (match wenyanCompile "或 者 甲 同 甲 一" with
-     | .error (.resolve (.ambiguous "或" 0 candidates)) => candidates.length == 2
-     | _ => false) = true :=
+    (wenyanInterpBool "或 者 甲 同 甲 一").toOption = some true :=
   by native_decide
 
 example :
@@ -892,14 +890,13 @@ example :
     (wenyanCompile "改").toOption.map (·.ty) = some (.arr .hex .hex) :=
   by native_decide
 example :
-    (match wenyanCompile "化 乾" with
-     | .error (.resolve (.ambiguous "化" 0 candidates)) => candidates.length == 2
-     | _ => false) = true :=
+    (wenyanInterp "化 乾").toOption = some (huaInner Hexagram.qian) :=
   by native_decide
 example :
-    (match wenyanCompile "反 乾" with
-     | .error (.resolve (.ambiguous "反" 0 candidates)) => candidates.length == 3
-     | _ => false) = true :=
+    (wenyanInterp "反 乾").toOption = some Hexagram.qian.cuo :=
+  by native_decide
+example :
+    (wenyanInterpBool "反 真").toOption = some false :=
   by native_decide
 
 /-! ## § 6.26 exact Bool / finite quantifier promotions -/
@@ -1024,30 +1021,31 @@ theorem v1_endToEnd_summary :
 
 /-! ## § 7  Phase C cue resolution 端到端 sanity
 
-  cue-aware resolver (`resolveWithCues`) 与 simple resolver (`resolveSimple`)
-  在不含「之」的 stdlib 流上完全等价 —— 这里给一组 atom 序列见证.
+  cue-aware resolver (`resolveWithCues`) 在明显 argument 起点处会比
+  simple resolver 选择更精确的同字 reading；因此这里固定 operator-id
+  序列，而不要求 atom constructor 与 simple 路径逐字相同。
 
   含「之」时，cue 路径将「之」消歧为 S_1 catalogue（v1 路径里是 appMarker），
   parser 将其保留成 explicit marker，elab 时透明处理。本节 verify
   resolveWithCues 之 atom 序列正确性，与 cue → unique reading 桥定理. -/
 
-/-- 不含「之」的程序：cue-aware resolve 之 atom 序列与 simple resolve 一致.
-    通过这一 bridge，「推 一」之意义不依赖路径选择. -/
+/-- 不含「之」的程序：cue-aware resolve 仍选中 `推` 的 T_10 reading. -/
 example :
     let toks : List GlyphTok :=
       [⟨"推", 0, 1, false⟩, ⟨"一", 2, 1, false⟩]
-    ((resolveWithCues toks).toOption.map (fun rs => rs.map (·.atom)))
-      = ((resolveSimple toks).toOption.map (fun rs => rs.map (·.atom))) :=
+    ((resolveWithCues toks).toOption.map (fun rs => rs.map (·.atom |> ResolvedAtom.opId?)))
+      = some [some OperatorId.T_10, none] :=
   by native_decide
 
-/-- 「推 一」之 cue resolve 序列同 v1 resolve 序列（atom 等价）. -/
+/-- 基础 stdlib token 仍按原 OperatorId 序列解析. -/
 example :
     let toks : List GlyphTok :=
       [⟨"推", 0, 1, false⟩, ⟨"比", 2, 1, false⟩, ⟨"不", 4, 1, false⟩,
        ⟨"必", 6, 1, false⟩, ⟨"同", 8, 1, false⟩, ⟨"凡", 10, 1, false⟩,
        ⟨"一", 12, 1, false⟩]
-    ((resolveWithCues toks).toOption.map (fun rs => rs.map (·.atom)))
-      = ((resolveSimple toks).toOption.map (fun rs => rs.map (·.atom))) :=
+    ((resolveWithCues toks).toOption.map (fun rs => rs.map (·.atom |> ResolvedAtom.opId?)))
+      = some [some OperatorId.T_10, some OperatorId.R_8, some OperatorId.N_1,
+          some OperatorId.M_1, some OperatorId.I_1, some OperatorId.Q_1, none] :=
   by native_decide
 
 /-- 「推 之 一」cue resolve 比 v1 resolve 多识：「之」拿到 S_1 catalogue.

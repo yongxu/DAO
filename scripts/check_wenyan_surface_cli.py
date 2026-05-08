@@ -44,6 +44,7 @@ CASES = [
     ("但 真 假", {"ok": True, "kind": "bool", "value": False}),
     ("非 乾 坤", {"ok": True, "kind": "bool", "value": True}),
     ("莫 者 甲 同 甲 一", {"ok": True, "kind": "bool", "value": False}),
+    ("或 者 甲 同 甲 一", {"ok": True, "kind": "bool", "value": True}),
     ("過半 者 甲 真", {"ok": True, "kind": "bool", "value": True}),
     ("（而 者 甲 推 甲 者 甲 損 甲） 之 一", {"ok": True, "kind": "hex", "idx": 1}),
     ("而 推 損 一", {"ok": True, "kind": "hex", "idx": 1}),
@@ -79,6 +80,9 @@ CASES = [
     ("初动 乾", {"ok": True, "kind": "hex", "idx": 1}),
     ("承变 乾", {"ok": True, "kind": "hex", "idx": 2}),
     ("际变 乾", {"ok": True, "kind": "hex", "idx": 4}),
+    ("化 乾", {"ok": True, "kind": "hex", "idx": 2}),
+    ("反 乾", {"ok": True, "kind": "hex", "idx": 63}),
+    ("反 真", {"ok": True, "kind": "bool", "value": False}),
     ("器", {"ok": True, "kind": "hex", "idx": 17}),
     ("鼎", {"ok": True, "kind": "hex", "idx": 17}),
     ("大壯", {"ok": True, "kind": "hex", "idx": 48}),
@@ -98,18 +102,17 @@ NEGATIVE_CASES = [
     ("乾 之 坤", {"phase": "type", "code": "type_mismatch", "expectedType": "function", "actualType": "Hex"}),
     ("不 乾", {"phase": "type", "code": "type_mismatch", "expectedType": "Bool", "actualType": "Hex"}),
     ("曰 真 真", {"phase": "type", "code": "type_mismatch", "expectedType": "Hex", "actualType": "Bool"}),
-    ("或 者 甲 同 甲 一", {"phase": "resolve", "code": "ambiguous_reading", "surface": "或", "startCol": 0, "endCol": 1, "candidateCount": 2}),
+    ("或 真", {"phase": "resolve", "code": "ambiguous_reading", "surface": "或", "startCol": 0, "endCol": 1, "candidateCount": 2}),
     ("故 假 假", {"phase": "resolve", "code": "ambiguous_reading", "surface": "故", "startCol": 0, "endCol": 1, "candidateCount": 3}),
-    ("反 乾", {"phase": "resolve", "code": "ambiguous_reading", "surface": "反", "startCol": 0, "endCol": 1, "candidateCount": 3}),
     ("而 不 不 真", {"phase": "type", "code": "type_mismatch", "expectedType": "(Hex -> Hex)", "actualType": "(Bool -> Bool)", "surface": "不", "startCol": 2, "endCol": 3}),
     ("在 乾", {"phase": "denote", "code": "denote_failed", "expectedType": "Hex", "actualType": "(Hex -> Bool)"}),
-    ("化 乾", {"phase": "resolve", "code": "ambiguous_reading", "surface": "化", "startCol": 0, "endCol": 1, "candidateCount": 2}),
     ("（推 一", {"phase": "parse", "code": "unmatched_open_bracket", "surface": "（", "startCol": 0, "endCol": 1}),
     ("推 一）", {"phase": "parse", "code": "unmatched_close_bracket", "surface": "）", "startCol": 3, "endCol": 4}),
 ]
 
 CLI_CASES = [
     (["--tokens", "推 一"], "0:推/w1\n2:一/w1"),
+    (["--tokens", "推　一"], "0:推/w1\n2:一/w1"),
     (["--tokens", "（推 一）"], "0:（/w1\n1:推/w1\n3:一/w1\n4:）/w1"),
     (["--resolve", "推 一"], "0:推/w1 => op[T-10:推]"),
     (["--resolve", "在"], "0:在/w1 => op[R-1:在]"),
@@ -359,6 +362,8 @@ JSON_CLI_CASES = [
 
 NEGATIVE_CLI_CASES = [
     (["--tokens", "abc"], "lex error"),
+    (["--tokens", "推，一"], "lex error at col 1"),
+    (["--tokens", "推。一"], "lex error at col 1"),
     (["--resolve", "瓜"], "no known reading"),
     (["--resolve", "或"], "is ambiguous"),
     (["--resolve", "或"], "Why ambiguous"),
@@ -368,8 +373,7 @@ NEGATIVE_CLI_CASES = [
     (["--ast", "（推 一"], "unmatched open bracket"),
     (["--ast", "推 一）"], "unmatched close bracket"),
     (["--typecheck", "不 乾"], "type error"),
-    (["--explain", "或 者 甲 同 甲 一"], "Suggestions:"),
-    (["--explain", "反 乾"], "expectedObject"),
+    (["--explain", "或 真"], "Suggestions:"),
     (["--operator", "NOPE"], "no such catalogue OperatorId"),
     (["--operators", "bad"], "unknown filter"),
 ]
@@ -520,7 +524,7 @@ def main() -> int:
     elif bad_explain["resolve"].get("code") != "no_reading":
         failures.append(f"bad explain JSON: expected resolve no_reading, got {bad_explain!r}")
 
-    ambiguous_explain_completed = run_cli(["--json", "--explain", "或 者 甲 同 甲 一"], allow_failure=True)
+    ambiguous_explain_completed = run_cli(["--json", "--explain", "或 真"], allow_failure=True)
     ambiguous_explain = json.loads(ambiguous_explain_completed.stdout)
     if ambiguous_explain_completed.returncode == 0:
         failures.append("ambiguous explain JSON: expected nonzero exit")
