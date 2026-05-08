@@ -126,7 +126,7 @@ HEX_PROFILES = [
     ("010110", 47, "困", "䷮", "困", "困穷", "困局", "困而学", "苦缚", "困", "exhaustion", "saturated constraint"),
     ("011010", 48, "井", "䷯", "井", "井养", "井养", "养民", "法泉", "不迁", "well", "shared resource"),
     ("101110", 49, "革", "䷰", "革", "变革", "变革", "革故", "转依", "变", "revolution", "rewrite transform"),
-    ("011101", 50, "鼎", "䷱", "鼎", "鼎定", "定器", "立器", "法器", "器", "cauldron", "container / composition"),
+    ("011101", 50, "鼎", "䷱", "器", "鼎定", "定器", "立器", "法器", "器", "cauldron", "container / composition"),
     ("100100", 51, "震", "䷲", "动", "震动", "震动", "警惧", "动相", "动", "arousal", "event trigger"),
     ("001001", 52, "艮", "䷳", "止", "艮止", "止息", "知止", "止", "止", "stillness", "fixed point"),
     ("001011", 53, "渐", "䷴", "渐", "渐进", "渐进", "渐修", "次第", "渐化", "gradual progress", "convergence"),
@@ -232,6 +232,20 @@ def alias_source(name: str) -> str:
     return f"canonical; trad={alias}"
 
 
+def retained_aliases_for_bits(bits: str) -> list[str]:
+    if bits == "011101":
+        return ["鼎"]
+    return []
+
+
+def retained_aliases_show(bits: str) -> str:
+    return "、".join(retained_aliases_for_bits(bits))
+
+
+def retained_192_aliases_show(shi_prefix: str, bits: str) -> str:
+    return "、".join(shi_prefix + alias for alias in retained_aliases_for_bits(bits))
+
+
 def cell_id(bits: str, shi_code: str) -> str:
     return f"H{bits}.{shi_code}"
 
@@ -272,7 +286,8 @@ def main() -> None:
     out.append("## 审阅规则\n\n")
     out.append("- 枚举顺序跟 `Cell192.all` 一致：`Hexagram.allHex` 的六爻 bit 序，外乘 `已/今/未`。\n")
     out.append("- `Habcdef.SHI` 中 `abcdef` 是自下而上的六爻，`1=阳`、`0=阴`。\n")
-    out.append("- `古文单字候选` 是 parser 主候选；`192 古文候选` 用 `已/今/未 + 单字` 保持 192 格唯一。\n")
+    out.append("- `古文单字候选` 是 parser 主候选；`保留别名` 记录不作为 default 但后续可 promotion 的传统名。\n")
+    out.append("- `192 古文候选` 用 `已/今/未 + 单字` 保持 192 格唯一；`192 保留别名` 同步记录三时传统 alias。\n")
     out.append("- `双字/现代汉语候选` 可以更自然，但 promotion 时要检查最长词法、同字歧义与已有 operator reading。\n")
     out.append("- `冲突提示` 是保守静态提示：`reading`/`operator-form`/`hex-name`/`promoted-gap`/`unpromoted-gap`/`reserved`/`compound-surface` 不等于禁用，只表示需要显式 resolver 规则。\n\n")
     out.append("## 覆盖审计\n\n")
@@ -282,8 +297,8 @@ def main() -> None:
     out.append(line(["Cell192 rows", len(rows)]))
     out.append(line(["Unique cell ids", len({cell_id(bits, shi[0]) for bits, shi, _ in rows})]))
     out.append("\n## 64 基础义名\n\n")
-    out.append("| 序卦 | 卦 | bits | 八卦/卦象 | alias_source | 古文单字候选 | 古文复合 | 双字/现代汉语 | 儒 | 释 | 道 | English | Formal logic | 冲突提示 | operator_collision_ids | gap_policy |\n")
-    out.append("|---:|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n")
+    out.append("| 序卦 | 卦 | bits | 八卦/卦象 | alias_source | 古文单字候选 | 保留别名 | 古文复合 | 双字/现代汉语 | 儒 | 释 | 道 | English | Formal logic | 冲突提示 | operator_collision_ids | gap_policy |\n")
+    out.append("|---:|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n")
     for profile in sorted(HEX_PROFILES, key=lambda p: p[1]):
         bits, kw, name, symbol, single, compound, modern, ru, fo, dao, english, formal = profile
         collision, operator_ids, gap_policy = collision_info(single, compound, modern)
@@ -294,6 +309,7 @@ def main() -> None:
             trigram_label(bits),
             alias_source(name),
             single,
+            retained_aliases_show(bits),
             compound,
             modern,
             ru,
@@ -307,8 +323,8 @@ def main() -> None:
         ]))
 
     out.append("\n## 192 Cell 候选全表\n\n")
-    out.append("| # | cell_index_0_191 | Cell192 | enum_source | hex_all_index | shi_index | shi_ctor | 卦序 | 卦 | 时 | hex_literal_y1_y6 | 八卦/卦象 | alias_source | 古文单字候选 | 192 古文候选 | 双字/现代汉语候选 | 儒 | 释 | 道 | English | Formal logic | resolve_atom_kind | duplicate_key_check | 冲突提示 | operator_collision_ids | gap_policy |\n")
-    out.append("|---:|---:|---|---|---:|---:|---|---:|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n")
+    out.append("| # | cell_index_0_191 | Cell192 | enum_source | hex_all_index | shi_index | shi_ctor | 卦序 | 卦 | 时 | hex_literal_y1_y6 | 八卦/卦象 | alias_source | 古文单字候选 | 192 古文候选 | 192 保留别名 | 双字/现代汉语候选 | 儒 | 释 | 道 | English | Formal logic | resolve_atom_kind | duplicate_key_check | 冲突提示 | operator_collision_ids | gap_policy |\n")
+    out.append("|---:|---:|---|---|---:|---:|---|---:|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n")
     for idx, (bits, shi, profile) in enumerate(rows, 1):
         shi_code, shi_index, shi_ctor, shi_zh, shi_prefix, shi_modern, shi_formal = shi
         _, kw, name, symbol, single, compound, modern, ru, fo, dao, english, formal = profile
@@ -330,6 +346,7 @@ def main() -> None:
             alias_source(name),
             single,
             f"{shi_prefix}{single}",
+            retained_192_aliases_show(shi_prefix, bits),
             f"{shi_modern}{modern}",
             f"{shi_zh}{ru}",
             f"{shi_zh}{fo}",
