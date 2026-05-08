@@ -2,10 +2,10 @@
 # WenSurface.Semantics — executable semantics registry
 
 This module separates exact stdlib denotations from total catalogue-shape
-execution.  One hundred twenty-seven `OperatorId`s use exact `WenDef.Tm` bodies:
+execution.  One hundred forty-one `OperatorId`s use exact `WenDef.Tm` bodies:
 the original high-value stdlib rows, the ObjectEndo/ObjectMap/OpUnary Hex
-transform package, finite Hex quantifiers, plus the Bool relation/predicate
-package.  Every
+transform package, finite Hex quantifiers, finite Hex motion/process rows,
+plus the Bool relation/predicate package.  Every
 remaining catalogue row gets a conservative, signature-shaped `WenDef.Tm` so
 CLI support is total without confusing it with exact text semantics.
 -/
@@ -148,6 +148,19 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .Z_31 => some ⟨.Z_31, Stdlib.cuoBody, 1, "反: operator-level reversal anchored as cuo"⟩
   | .Z_32 => some ⟨.Z_32, Stdlib.hexApplyBody, 2, "自: reflexive Hex endomap application"⟩
   | .Z_33 => some ⟨.Z_33, Stdlib.cuoZongBody, 1, "自反/反自: self-reflection as cuoZong"⟩
+  | .F_3  => some ⟨.F_3,  Stdlib.tuiBody, 1, "進/进: forward Hex motion as increment"⟩
+  | .F_4  => some ⟨.F_4,  Stdlib.sunBody, 1, "退: backward Hex motion as decrement"⟩
+  | .F_5  => some ⟨.F_5,  Stdlib.tuiBody, 1, "升: upward Hex motion as increment"⟩
+  | .F_6  => some ⟨.F_6,  Stdlib.sunBody, 1, "降: downward Hex motion as decrement"⟩
+  | .F_9  => some ⟨.F_9,  Stdlib.tuiBody, 1, "行: active Hex motion as increment"⟩
+  | .F_10 => some ⟨.F_10, Stdlib.tuiBody, 1, "動/动: movement as Hex increment"⟩
+  | .F_11 => some ⟨.F_11, Stdlib.hexIdBody, 1, "靜/静: still flow as Hex identity"⟩
+  | .L_11 => some ⟨.L_11, Stdlib.hexIdBody, 1, "無為/无为: no-op governance process as Hex identity"⟩
+  | .SUN_6 => some ⟨.SUN_6, Stdlib.hexIdBody, 1, "正: orthodox military formation as Hex identity"⟩
+  | .Z_10 => some ⟨.Z_10, Stdlib.sunBody, 1, "藏: concealment transition as decrement"⟩
+  | .Z_11 => some ⟨.Z_11, Stdlib.tuiBody, 1, "露: exposure transition as increment"⟩
+  | .Z_36 => some ⟨.Z_36, Stdlib.tuiBody, 1, "明: clarification transition as increment"⟩
+  | .Z_37 => some ⟨.Z_37, Stdlib.sunBody, 1, "蔽: obscuring transition as decrement"⟩
   | .ZA_2 => some ⟨.ZA_2, Stdlib.hexIdBody, 1, "靜/静: Huang-Lao stillness as identity"⟩
   | .N_3  => some ⟨.N_3,  Stdlib.buBody, 1, "弗: Bool negation alias"⟩
   | .N_4  => some ⟨.N_4,  Stdlib.buBody, 1, "勿: Bool negation alias"⟩
@@ -175,6 +188,7 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .Q_8  => some ⟨.Q_8,  Stdlib.uniqueHBody, 1, "唯: finite unique-existence quantifier over Hex"⟩
   | .D_3  => some ⟨.D_3,  Stdlib.exactly3HBody, 1, "三: finite exactly-three quantifier over Hex"⟩
   | .D_10 => some ⟨.D_10, Stdlib.majorityHBody, 1, "過半/大半: finite majority quantifier over Hex"⟩
+  | .M_5  => some ⟨.M_5,  Stdlib.existsHBody, 1, "可: finite possibility over Hex predicate"⟩
   | .A_11 => some ⟨.A_11, .andB, 2, "既...又... / 一...且...: Bool conjunction"⟩
   | .A_12 => some ⟨.A_12, .andB, 2, "且: Bool conjunction"⟩
   | .A_13 => some ⟨.A_13, .andB, 2, "但: truth-conditional contrast as Bool conjunction"⟩
@@ -189,10 +203,12 @@ def coreTheoremBackedOperatorIds : List OperatorId :=
     ++ [.R_6, .R_11, .T_1, .T_2, .T_4, .T_5, .T_7, .T_8, .T_9, .T_14, .T_15,
         .B_3, .B_4, .B_5, .B_6, .I_2, .I_6, .I_8, .P_9, .D_1, .L_9, .L_10,
         .Y_3, .Y_4, .Y_5, .Y_17, .Y_18, .Z_2, .Z_8, .Z_9, .Z_12, .Z_13,
-        .Z_22, .Z_29, .Z_31, .Z_32, .Z_33, .ZA_2]
+        .Z_22, .Z_29, .Z_31, .Z_32, .Z_33,
+        .F_3, .F_4, .F_5, .F_6, .F_9, .F_10, .F_11,
+        .L_11, .SUN_6, .Z_10, .Z_11, .Z_36, .Z_37, .ZA_2]
     ++ [.N_3, .N_4, .N_5, .N_6, .K_1, .K_8, .S_3, .S_7, .Z_1, .I_3, .I_4,
         .I_5, .P_4, .N_2, .N_7, .P_5, .Q_2, .Q_4, .M_2, .Q_5, .Q_6, .Q_7,
-        .Q_8, .D_3, .D_10, .A_4, .A_11, .A_12, .A_13, .S_1, .S_2]
+        .Q_8, .D_3, .D_10, .M_5, .A_4, .A_11, .A_12, .A_13, .S_1, .S_2]
 
 def theoremBackedOperatorIds : List OperatorId :=
   coreTheoremBackedOperatorIds ++ relationPredicateBoolOperatorIds
@@ -233,7 +249,7 @@ def catalogueRelationShapeBody : Nat → Tm
 Conservative total fallback by catalogue signature shape.
 
 These bodies are executable and type-checkable, but they are intentionally
-weaker than the 127 exact rows above: they witness the catalogue shape as a total
+weaker than the 141 exact rows above: they witness the catalogue shape as a total
 interpreter operation, not a full doctrinal/textual denotation.
 -/
 def catalogueShapeBodyFor (sig : CoveredOperatorSignature) : Tm :=
@@ -319,10 +335,10 @@ theorem executableOperatorIds_length :
     executableOperatorIds.length = 371 := by native_decide
 
 theorem coreTheoremBackedOperatorIds_length :
-    coreTheoremBackedOperatorIds.length = 81 := by native_decide
+    coreTheoremBackedOperatorIds.length = 95 := by native_decide
 
 theorem theoremBackedOperatorIds_length :
-    theoremBackedOperatorIds.length = 127 := by native_decide
+    theoremBackedOperatorIds.length = 141 := by native_decide
 
 theorem theoremBackedOperatorIds_nodup :
     theoremBackedOperatorIds.Nodup := by native_decide
@@ -352,7 +368,7 @@ theorem operatorRegistryCoverage_summary :
     operatorRegistryEntries.length = 371
       ∧ executableRegistryEntries.length = 371
       ∧ executableOperatorIds.length = 371
-      ∧ theoremBackedOperatorIds.length = 127
+      ∧ theoremBackedOperatorIds.length = 141
       ∧ executableOperatorIds.all isCatalogueOperator = true
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).id = id)
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).signature.id = id) := by

@@ -15,7 +15,7 @@ cuo-equivariant 子集 commute 作 future work）。
 - cue-aware resolver + explicit `SurfaceExpr` AST
 - 64 卦名 / aliases + Bool literals + Hex-only binders
 - executable registry 覆盖全部 371 个 OperatorId
-- 127 个 exact/theorem-backed operator 可求 Hex/Bool；其余 catalogue rows 求 symbolic normal form
+- 141 个 exact/theorem-backed operator 可求 Hex/Bool；其余 catalogue rows 求 symbolic normal form
 - unpromoted gap form 只诊断，不伪造 denotation
 
 ## 状态
@@ -428,6 +428,18 @@ example : (wenyanInterp "伸 乾").toOption = some («生» Hexagram.qian) := by
 example : (wenyanInterp "屈 乾").toOption = some («加» Hexagram.kun Hexagram.qian) := by native_decide
 example : (wenyanInterp "起 乾").toOption = some («生» Hexagram.qian) := by native_decide
 example : (wenyanInterp "止 乾").toOption = some Hexagram.qian := by native_decide
+example : (wenyanInterp "進 乾").toOption = some («生» Hexagram.qian) := by native_decide
+example : (wenyanInterp "退 乾").toOption = some («加» Hexagram.kun Hexagram.qian) := by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.F_11).isSome = true :=
+  by native_decide
+example : (wenyanInterp "藏 乾").toOption = some («加» Hexagram.kun Hexagram.qian) := by native_decide
+example : (wenyanInterp "露 乾").toOption = some («生» Hexagram.qian) := by native_decide
+example : (wenyanInterp "明 乾").toOption = some («生» Hexagram.qian) := by native_decide
+example : (wenyanInterp "蔽 乾").toOption = some («加» Hexagram.kun Hexagram.qian) := by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.M_5).isSome = true :=
+  by native_decide
 example :
     (wenyanCompile "改").toOption.map (·.ty) = some (.arr .hex .hex) :=
   by native_decide
