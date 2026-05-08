@@ -1,6 +1,6 @@
 # 大统一逐步验证路线
 
-目标：把 Markov-因果桥从最小 typed skeleton 推进为逐步增强的验证程序。本文只规划“逐渐完善，直至更统一的形式接口”，不声称已经完成物理大统一、量子引力、Born rule、度规恢复或经验闭合。
+目标：把 Markov-因果桥从最小 typed skeleton 推进为逐步增强的验证程序。本文把“统一”限定为已经关闭或计划关闭的形式接口；量子引力、Born rule、度规恢复和经验闭合分别作为后续结构单独推进。
 
 依据文档：
 
@@ -21,6 +21,10 @@
 -> 经典 Markov / 量子 amplitude 分层
 -> 干涉与测量律候选
 -> 非零路径振幅候选
+-> 双路径相消候选
+-> 离散相位标记候选
+-> 离散作用量相位候选
+-> 有限路径族求和候选
 -> 几何候选接口
 -> 经验 pending ledger
 -> 统一摘要 theorem
@@ -32,7 +36,7 @@
 |---|---|
 | Lean 出口 | 新增或更新明确 theorem / example / structure，并能由目标 `lake build` 检查 |
 | 失败记录 | 失败不能删除，必须写入本文件或 `markov-causal-bridge-verification-plan.md` 的失败记录格式 |
-| 边界降级 | 若 Lean 出口没有关闭，则义理文档只能写 `未纳入本轮`、`pending` 或 `candidate`，不能写成已证明 |
+| 边界正名 | Lean 出口关闭到哪一层，义理文档就按哪一层命名；未关闭项写入 `未纳入本轮`、`pending` 或 `candidate` |
 
 默认验证命令沿用：
 
@@ -46,8 +50,12 @@ lake build SSBX.Foundation.Modern.QuantumRelativityPathCausalBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityAmplitudeChannelBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityInterferenceBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityNonzeroPathAmplitudeBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityTwoPathInterferenceBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityDiscretePhaseBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityDiscreteActionBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityFinitePathSumBridge
 lake build SSBX
-git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean formal/SSBX.lean formal/SSBX/notes/unification-stepwise-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/有限概率核接口 · Markov桥S2.md' '义理/路径组合与因果约束 · Markov桥S3.md' '义理/经典Markov与量子振幅分层 · Markov桥S4.md' '义理/干涉与测量律候选 · Markov桥S5.md' '义理/非零路径振幅候选 · Markov桥S5b.md'
+git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean formal/SSBX.lean formal/SSBX/notes/unification-stepwise-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/有限概率核接口 · Markov桥S2.md' '义理/路径组合与因果约束 · Markov桥S3.md' '义理/经典Markov与量子振幅分层 · Markov桥S4.md' '义理/干涉与测量律候选 · Markov桥S5.md' '义理/非零路径振幅候选 · Markov桥S5b.md' '义理/双路径相消候选 · Markov桥S5c.md' '义理/离散相位标记候选 · Markov桥S5d.md' '义理/离散作用量相位候选 · Markov桥S5e.md' '义理/有限路径族求和候选 · Markov桥S5f.md'
 ```
 
 ## S0 · 基线重审
@@ -58,14 +66,14 @@ git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridg
 |---|---|
 | Lean 出口 | 保持 `markov_causal_bridge_summary`、`measurement_event_alignment`、`markov_bridge_not_direct_language_addition` 为 `machineChecked` |
 | 文档出口 | 本文件与验证计划明确列出未关闭项：sum-one 概率律、Born rule 从桥的推导、真实 quantum channel law、干涉、因果偏序、度规恢复、经验闭合 |
-| 失败记录 | 若发现文档中有“已完成大统一”“已证明量子引力”等强 claim，记录为 `conceptual overclaim`，并降级 |
-| 不可声称 | 不能说 Markov-因果桥已经等于物理大统一；只能说它是最小可验证中介构造 |
+| 失败记录 | 若发现文档中有强于 theorem 的终局统一或量子引力完成等 claim，记录为 `conceptual mismatch`，并改回对应结构层级 |
+| 当前正名 | Markov-因果桥当前是最小可验证中介构造；更强的物理大统一读法需要后续 theorem 合取后再命名 |
 
 通过判准：
 
 ```text
 现有 Lean 锚点仍可构建；
-所有公开句子都把当前结果限制在 finite typed skeleton。
+所有公开句子都按 finite typed skeleton 命名当前结果。
 ```
 
 ## S1 · 非空有限实例
@@ -77,8 +85,8 @@ git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridg
 | Lean 出口 | `concrete_bridge_summary` 关闭三状态实例；`operator_cell_grid_markov_causal_bridge_summary` 关闭 `71232` grid 实例 |
 | 最低 theorem 形态 | 已有命名 theorem：`concrete_bridge_summary`、`operator_cell_grid_markov_causal_bridge_summary` |
 | 失败记录 | 若实例卡在有限编码、终端状态或路径构造，记录为 `Lean proof failure`，保留未关闭字段 |
-| 文档更新 | 义理文档只能写“存在一个 toy finite bridge instance”，不能写“物理模型存在” |
-| 不可声称 | 不能从 toy instance 推出真实测量过程、真实概率或实验预言 |
+| 文档更新 | 义理文档写“存在一个 toy finite bridge instance”；若要写“物理模型存在”，需另有模型与数据判准 |
+| 后续结构 | 从 toy instance 推进到真实测量过程、真实概率或实验预言，需要新增物理模型、观测量和数据接口 |
 
 通过判准：
 
@@ -103,8 +111,8 @@ Lean 能检查一个具体实例；
 | Lean 出口 | `finite_probability_bridge_summary` |
 | 最低 theorem 形态 | `FiniteProbabilityKernelSkeleton`、`RowNormalizable`、`finiteMassCandidate_denominator_positive_if_not_terminal` |
 | 失败记录 | 若无法证明行分母非零或权重上界，记录失败的状态空间、rowTotal 定义和阻塞 theorem |
-| 文档更新 | 通过后可写“有限概率核接口已形式化”；仍需保留“sum-one 概率律 / Born rule 未纳入本轮” |
-| 不可声称 | 不能说 Born rule、真实归一化概率律或量子测量律已推出 |
+| 文档更新 | 通过后可写“有限概率核接口已形式化”；sum-one 概率律 / Born rule 继续作为后续结构 |
+| 后续结构 | Born rule、真实归一化概率律或量子测量律需要额外 theorem 推出 |
 
 通过判准：
 
@@ -131,8 +139,8 @@ Markov 权重与一步转移的支持关系仍保留。
 | Lean 出口 | `path_causal_bridge_summary` |
 | 最低 theorem 形态 | `ComposableProcessPaths`、`composed_path_reachable`、`composed_path_causal_before`、`code_monotone_step_no_self_loop` |
 | 失败记录 | 若组合律与现有 `ProcessPath` 不匹配，记录为 structure mismatch，不重写历史结论 |
-| 文档更新 | 只说明新增 path witness composition 与 code-successor/no-self-loop 约束；未证明的因果集公理继续列为未纳入 |
-| 不可声称 | 不能说已恢复 spacetime、light cone、Lorentzian metric 或完整 causal set theory |
+| 文档更新 | 说明新增 path witness composition 与 code-successor/no-self-loop 约束；未证明的因果集公理继续列为未纳入 |
+| 后续结构 | spacetime、light cone、Lorentzian metric 或完整 causal set theory 需要额外结构与 theorem |
 
 通过判准：
 
@@ -159,8 +167,8 @@ Markov 权重与一步转移的支持关系仍保留。
 | Lean 出口 | `amplitude_channel_bridge_summary` |
 | 最低 theorem 形态 | `QuantumAmplitudeSkeleton`、`QuantumChannelSkeleton`、`amplitude_layer_is_not_markov_kernel`、`channel_layer_is_not_markov_kernel`、`channel_projection_keeps_markov_boundary` |
 | 失败记录 | 若复数、范数、unitarity 或 channel law 依赖不足，记录为 `conceptual / library gap` |
-| 文档更新 | 可写“量子振幅 / 通道候选接口已开口，且与经典 Markov 层分开”；不能写“量子理论已恢复” |
-| 不可声称 | 不能说已经推出干涉、Born rule、unitary evolution 或真实 quantum channel |
+| 文档更新 | 可写“量子振幅 / 通道候选接口已开口，且与经典 Markov 层分开”；量子理论恢复需另有动力学与经验接口 |
+| 后续结构 | 干涉、Born rule、unitary evolution 或真实 quantum channel 需要额外 theorem |
 
 通过判准：
 
@@ -188,8 +196,8 @@ Lean 中有独立的 amplitude / channel 层；
 | Lean 出口 | `interference_bridge_summary` |
 | 最低 theorem 形态 | `amplitude_path_composition`、`interference_candidate`、`born_rule_candidate_boundary` |
 | 失败记录 | 若只能写候选接口而无法证明数值律，记录为 `candidate only`，并保留 theorem 名称空缺 |
-| 文档更新 | 只能写“Born-rule-shaped candidate”，不能写“Born rule 已证” |
-| 不可声称 | 不能把候选测量律当成经验证实的量子概率律 |
+| 文档更新 | 写“Born-rule-shaped candidate”；Born rule 完成需要从候选接口推出概率律 |
+| 后续结构 | 候选测量律要成为经验证实的量子概率律，需要观测 ledger、数据判准和经验验证接口 |
 
 通过判准：
 
@@ -216,16 +224,16 @@ Lean 中有独立的 amplitude / channel 层；
 |---|---|
 | Lean 出口 | `nonzero_path_amplitude_bridge_summary` |
 | 最低 theorem 形态 | `nonzero_path_amplitude_implies_valid`、`nonzero_path_amplitude_implies_reachable`、`nonzero_path_amplitude_implies_causal_before`、`concrete_prepared_measured_path_nonzero_amplitude` |
-| 失败记录 | 若非零 witness 只能靠任意有效性假设，记录为 `candidate only`；不能升级为物理动力学 |
-| 文档更新 | 只能写“nonzero path-amplitude candidate witness”；不能写“真实干涉律已证” |
-| 不可声称 | 不能说已有 phase law、path integral、Born-rule derivation、unitary/CPTP law 或 empirical prediction |
+| 失败记录 | 若非零 witness 只依赖任意有效性假设，记录为 `candidate only`；物理动力学由后续 phase/action law 承接 |
+| 文档读法 | 正面写明已证 nonzero path-amplitude candidate witness；真实干涉律仍需 phase law、path integral、Born-rule derivation、unitary/CPTP law 或 empirical prediction |
+| 边界保留 | S5b 的 Lean 出口扩展了非零振幅边界，但尚未闭合真实物理干涉 |
 
 通过判准：
 
 ```text
 Lean 中存在一个非零候选 path amplitude witness；
 该 witness 可以投影到 valid path、Reachable 和 causalBefore；
-真实干涉律仍在 theorem 外。
+S5c 已关闭最小 two-path finite cancellation；真实干涉律仍在 theorem 外。
 ```
 
 当前状态：
@@ -236,6 +244,140 @@ Lean 中存在一个非零候选 path amplitude witness；
 | `validPathIndicatorPathAmplitudeSkeleton` | `QuantumRelativityNonzeroPathAmplitudeBridge.lean` | 有效 path 给 `1`，无效 path 给 `0` 的最小候选骨架 |
 | `concrete_prepared_measured_path_nonzero_amplitude` | `QuantumRelativityNonzeroPathAmplitudeBridge.lean` | concrete `prepared -> measured` composed path 的候选振幅非零 |
 
+## S5c · 双路径相消候选
+
+目标：先不引入一般 path integral，只证明两条同端点、不同中间态的有限 candidate paths 可携带相反候选振幅并相消。
+
+| 项 | 内容 |
+|---|---|
+| Lean 出口 | `two_path_interference_bridge_summary` |
+| 最低 theorem 形态 | `TwoStepPathWitness`、`SameEndpointTwoStepPair`、`two_route_upper_amplitude`、`two_route_lower_amplitude`、`two_route_pair_amplitude_cancels`、`two_route_cancelled_born_weight_zero` |
+| 失败记录 | 若无法保留 middle identity，记录为 `structure mismatch`，不要把 endpoint-only `ProcessPath` 冒充为双路径身份 |
+| 文档读法 | 正面写明已证 two-path finite cancellation candidate；真实干涉律仍需 path integral、phase/action law、Born-rule derivation、unitary/CPTP law、decoherence 或 empirical prediction |
+| 边界保留 | S5c 的 Lean 出口已经把相消接到同端点、不同中间态路径；它尚未闭合物理相位动力学 |
+
+通过判准：
+
+```text
+Lean 中存在一个 same-endpoint / different-middle two-step pair；
+两条路径的候选振幅分别为 1 与 -1；
+有限两路径和为 0，并能接回 Born-shaped zero boundary；
+一般路径积分、相位动力学与可测干涉仍在 theorem 外。
+```
+
+当前状态：
+
+| theorem | 文件 | 读法 |
+|---|---|---|
+| `two_path_interference_bridge_summary` | `QuantumRelativityTwoPathInterferenceBridge.lean` | two-route toy process 承载 finite probability / channel / path-amplitude / two-step amplitude candidate，并关闭两路径相消 |
+| `two_route_paths_same_endpoints` | `QuantumRelativityTwoPathInterferenceBridge.lean` | upper/lower two-step paths 同起点、同终点 |
+| `two_route_paths_distinct_middle` | `QuantumRelativityTwoPathInterferenceBridge.lean` | upper/lower two-step paths 的中间态不同 |
+| `two_route_pair_amplitude_cancels` | `QuantumRelativityTwoPathInterferenceBridge.lean` | `1 + (-1) = 0` 接到 same-endpoint two-step pair |
+| `two_route_cancelled_born_weight_zero` | `QuantumRelativityTwoPathInterferenceBridge.lean` | 相消后的 Born-shaped candidate weight 为 `0` |
+
+## S5d · 离散相位标记候选
+
+目标：把 S5c 中裸露的 `1/-1` 候选振幅改写为由离散 phase label 导出的候选振幅，但仍不引入连续相位群、Hamiltonian 或作用量动力学。
+
+| 项 | 内容 |
+|---|---|
+| Lean 出口 | `discrete_phase_bridge_summary` |
+| 最低 theorem 形态 | `DiscretePhase`、`discretePhaseAmplitude`、`discrete_phase_amplitudes_cancel`、`TwoStepPhaseCandidate`、`two_route_upper_phase`、`two_route_lower_phase`、`two_route_phase_pair_amplitude_cancels` |
+| 失败记录 | 若暂时只能直接给 `1/-1`，记录为 `candidate only`；相位动力学由后续 continuous phase / action law 承接 |
+| 文档读法 | 正面写明已证 discrete phase-label candidate；physical phase law 仍需 Hamiltonian、action functional、continuous phase group、unitary/CPTP dynamics、path integral 或 empirical prediction |
+| 边界保留 | S5d 的 Lean 出口已经把 `1/-1` 解释为 `zero/pi` 标签导出；它尚未闭合连续相位或作用量动力学 |
+
+通过判准：
+
+```text
+Lean 中有 finite phase labels；
+zero/pi 标签分别导出 1/-1；
+upper/lower two-step paths 分别携带 zero/pi；
+phase-induced finite two-path amplitude cancels；
+连续相位、作用量动力学与 path integral 仍在 theorem 外。
+```
+
+当前状态：
+
+| theorem | 文件 | 读法 |
+|---|---|---|
+| `discrete_phase_bridge_summary` | `QuantumRelativityDiscretePhaseBridge.lean` | two-route cancellation 可由离散 phase labels 导出 |
+| `discrete_phase_amplitudes_cancel` | `QuantumRelativityDiscretePhaseBridge.lean` | `phaseAmplitude zero + phaseAmplitude pi = 0` |
+| `two_route_upper_phase`、`two_route_lower_phase` | `QuantumRelativityDiscretePhaseBridge.lean` | upper/lower paths 分别标为 `zero/pi` |
+| `two_route_phase_pair_amplitude_cancels` | `QuantumRelativityDiscretePhaseBridge.lean` | phase-induced two-path finite sum 为 `0` |
+| `two_route_phase_cancelled_born_weight_zero` | `QuantumRelativityDiscretePhaseBridge.lean` | phase-induced 相消后 Born-shaped candidate weight 为 `0` |
+
+## S5e · 离散作用量相位候选
+
+目标：把 S5d 的整条 path phase label 往前推一层，证明 two-step path phase 可由 edge phase increments 组成，并得到 upper/lower 相对相位 `pi`。
+
+| 项 | 内容 |
+|---|---|
+| Lean 出口 | `discrete_action_phase_bridge_summary` |
+| 最低 theorem 形态 | `discretePhaseAdd`、`TwoStepEdgePhaseCandidate`、`edgePhaseInducedTwoStepPhaseCandidate`、`two_route_upper_accumulated_phase`、`two_route_lower_accumulated_phase`、`two_route_edge_action_phase_difference`、`two_route_edge_action_pair_amplitude_cancels` |
+| 失败记录 | 若 edge phase 无法稳定接回 S5d phase candidate，记录为 `structure mismatch`；finite path-family sum 与 continuous action law 由后续层承接 |
+| 文档读法 | 正面写明已证 discrete edge-action phase accumulation candidate；physical action functional、Hamiltonian/unitary law、path integral 与 empirical prediction 仍需后续结构 |
+| 边界保留 | S5e 的 Lean 出口已经把 `zero/pi` path phase 改写为 edge increments 的累积；它尚未闭合连续作用量或一般路径求和 |
+
+通过判准：
+
+```text
+Lean 中有 finite phase composition；
+two-step path phase 由两条 edge phase increments 累积；
+upper accumulated phase = zero；
+lower accumulated phase = pi；
+relative phase = pi；
+edge-action-induced finite two-path amplitude cancels；
+finite path-family sum、连续 action law 与 path integral 仍在 theorem 外。
+```
+
+当前状态：
+
+| theorem | 文件 | 读法 |
+|---|---|---|
+| `discrete_action_phase_bridge_summary` | `QuantumRelativityDiscreteActionBridge.lean` | two-route cancellation 可由 edge phase accumulation 导出 |
+| `discretePhaseAdd`、`discretePhaseRelative` | `QuantumRelativityDiscreteActionBridge.lean` | 二值相位合成与相对相位候选 |
+| `TwoStepEdgePhaseCandidate.pathPhase` | `QuantumRelativityDiscreteActionBridge.lean` | two-step path phase 由 edge increments 合成 |
+| `two_route_upper_accumulated_phase`、`two_route_lower_accumulated_phase` | `QuantumRelativityDiscreteActionBridge.lean` | upper/lower 分别累积为 `zero/pi` |
+| `two_route_edge_action_phase_difference` | `QuantumRelativityDiscreteActionBridge.lean` | lower 相对 upper 为 `pi` |
+| `two_route_edge_action_pair_amplitude_cancels` | `QuantumRelativityDiscreteActionBridge.lean` | edge-action-induced two-path finite sum 为 `0` |
+| `two_route_edge_action_cancelled_born_weight_zero` | `QuantumRelativityDiscreteActionBridge.lean` | edge-action-induced 相消后 Born-shaped candidate weight 为 `0` |
+
+## S5f · 有限路径族求和候选
+
+目标：把 S5c/S5e 的 two-path pair sum 改写成 finite same-endpoint path family 上的有限求和接口，为后续 path-sum algebra 留出稳定入口。
+
+| 项 | 内容 |
+|---|---|
+| Lean 出口 | `finite_path_sum_bridge_summary` |
+| 最低 theorem 形态 | `FiniteTwoStepPathFamily`、`finitePathFamilyAmplitudeSum`、`finitePathFamilyBornWeight`、`two_route_family_sum_eq_pair_sum`、`two_route_finite_family_amplitude_cancels` |
+| 失败记录 | 若 list-family 无法保持 endpoint ledger，记录为 `structure mismatch`；all-path enumeration 与 path-sum algebra 由后续层承接 |
+| 文档读法 | 正面写明已证 finite path-family sum candidate；path integral、continuous action law、Born rule derivation 与 empirical prediction 仍需后续结构 |
+| 边界保留 | S5f 的 Lean 出口已经把 upper/lower pair 嵌入有限路径族求和；它尚未闭合任意路径枚举、置换不变性、一般路径积分或真实测量概率律 |
+
+通过判准：
+
+```text
+Lean 中有 finite same-endpoint two-step path family；
+family 中每条 path 共享 start/stop endpoint；
+finite family amplitude sum 可接回 Born-shaped boundary；
+two-route family sum 等于原 pair sum；
+two-route finite-family amplitude cancels；
+path-sum algebra、all-path enumeration 与 path integral 仍在 theorem 外。
+```
+
+当前状态：
+
+| theorem | 文件 | 读法 |
+|---|---|---|
+| `finite_path_sum_bridge_summary` | `QuantumRelativityFinitePathSumBridge.lean` | two-route upper/lower pair 作为 finite path family instance，关闭 family sum cancellation 与 Born-shaped zero boundary |
+| `FiniteTwoStepPathFamily`、`HasFiniteTwoStepPathFamily` | `QuantumRelativityFinitePathSumBridge.lean` | 有限 list 形式的 same-endpoint two-step path family |
+| `finitePathFamilyAmplitudeSum`、`finitePathFamilyBornWeight` | `QuantumRelativityFinitePathSumBridge.lean` | 对 family 作有限振幅求和，并接回 `ampProb` boundary |
+| `two_route_family_paths_share_endpoints` | `QuantumRelativityFinitePathSumBridge.lean` | two-route family 中每条 path 同起点同终点 |
+| `two_route_family_sum_eq_pair_sum` | `QuantumRelativityFinitePathSumBridge.lean` | finite family sum 与 S5c/S5e pair sum 相等 |
+| `two_route_finite_family_amplitude_cancels` | `QuantumRelativityFinitePathSumBridge.lean` | edge-action-induced finite family sum 为 `0` |
+| `two_route_finite_family_born_weight_zero` | `QuantumRelativityFinitePathSumBridge.lean` | finite-family 相消后 Born-shaped candidate weight 为 `0` |
+
 ## S6 · 几何与度规候选接口
 
 目标：从因果事件网络推进到几何候选接口，但只在有 theorem 时声称具体结构。
@@ -244,9 +386,9 @@ Lean 中存在一个非零候选 path amplitude witness；
 |---|---|
 | Lean 出口 | 新增粗粒化事件、邻域、距离候选、拓扑候选或 metric recovery boundary theorem |
 | 最低 theorem 形态 | `coarse_event_neighborhood`、`metric_recovery_candidate_boundary` 或同类命名 |
-| 失败记录 | 若无法从因果结构恢复几何，记录为 `conceptual gap`，不要补写强 claim |
-| 文档更新 | 可写“几何恢复接口 pending”；通过后也只能写“候选接口关闭” |
-| 不可声称 | 不能说已恢复 Lorentzian geometry、Einstein equation、曲率动力学或广义相对论 |
+| 失败记录 | 若无法从因果结构恢复几何，记录为 `conceptual gap`，并保留在后续结构表中 |
+| 文档更新 | 可写“几何恢复接口 pending”；通过后按 theorem 写“候选接口关闭” |
+| 后续结构 | Lorentzian geometry、Einstein equation、曲率动力学或广义相对论需要独立恢复结构与 theorem |
 
 通过判准：
 
@@ -264,8 +406,8 @@ Lean 只关闭一个几何候选接口；
 | Lean 出口 | 新增 `ObservableCandidate`、`PredictionBoundary` 或 pending ledger structure |
 | 最低 theorem 形态 | `observable_candidate_has_boundary`、`prediction_requires_external_data` |
 | 失败记录 | 若没有数据接口或观测量定义，记录为 `empirical interface pending` |
-| 文档更新 | 只列出待验证差异、所需数据、判准和失败条件 |
-| 不可声称 | 不能说已有经验预言、实验验证或 phenomenology 闭合 |
+| 文档更新 | 列出待验证差异、所需数据、判准和失败条件 |
+| 后续结构 | 经验预言、实验验证或 phenomenology 闭合需要数据接口与验证记录 |
 
 通过判准：
 
@@ -276,15 +418,15 @@ Lean 只关闭一个几何候选接口；
 
 ## S8 · 统一摘要 theorem
 
-目标：只有当前面阶段的 Lean 出口逐步关闭后，才写更强的统一摘要 theorem。该 theorem 仍然应命名为“stepwise”或“candidate”，避免冒充最终物理统一。
+目标：当前面阶段的 Lean 出口逐步关闭后，写更强的统一摘要 theorem。该 theorem 按其内容命名为“stepwise”或“candidate”，把已经闭合的结构合取成当前阶段的统一摘要。
 
 | 项 | 内容 |
 |---|---|
 | Lean 出口 | 新增聚合 theorem，合取已关闭的实例、概率核、路径/因果、量子候选、几何候选和经验 ledger 边界 |
 | 最低 theorem 形态 | `stepwise_unification_candidate_summary` |
 | 失败记录 | 若任何子阶段未关闭，摘要 theorem 必须缺席或只合取已关闭部分 |
-| 文档更新 | 说明“统一”在本文件中只表示形式接口逐渐汇聚，不表示物理统一已经完成 |
-| 不可声称 | 不能说 final theory、theory of everything、quantum gravity solved 或 empirical closure complete |
+| 文档更新 | 说明“统一”在本文件中表示形式接口逐渐汇聚；物理统一读法随后续结构和 theorem 增强 |
+| 后续结构 | 终局理论、万有理论、量子引力解决或经验闭合完成需要完整动力学、几何、概率律和经验 ledger 合取 |
 
 通过判准：
 
@@ -302,7 +444,7 @@ Lean 只关闭一个几何候选接口；
 阶段：
 目标：
 命令 / theorem：
-失败类型：Lean proof failure / build failure / infra failure / conceptual overclaim / empirical interface pending
+失败类型：Lean proof failure / build failure / infra failure / conceptual mismatch / empirical interface pending
 失败原因：
 保留结论：
 下一步：
@@ -319,22 +461,27 @@ Lean 只关闭一个几何候选接口；
 | 2026-05-08 | S4 | success | 新增 classical Markov / quantum amplitude-channel 分层接口；关闭 layer separation、channel candidate 到 S2 边界的投影与非零振幅支持精化，仍不证明干涉、Born rule 推导、unitary/CPTP channel law 或经验闭合 |
 | 2026-05-08 | S5 | success | 新增 path amplitude / interference / Born-shaped candidate interface；关闭候选组合等式、相消 witness 与 `ampProb` boundary，仍不证明真实干涉律、Born rule 推导、unitary/CPTP channel law 或经验闭合 |
 | 2026-05-08 | S5b | success | 新增 nonzero path-amplitude candidate witness；关闭非零候选振幅到 valid / Reachable / causalBefore 的边界，仍不证明相位律、路径求和、真实干涉律或经验闭合 |
+| 2026-05-08 | S5c | success | 新增 two-path finite cancellation candidate；关闭 same-endpoint / different-middle two-step pair 的 `1 + (-1) = 0` 与 Born-shaped zero boundary，仍不证明 path integral、相位动力学、真实干涉律或经验闭合 |
+| 2026-05-08 | S5d | success | 新增 discrete phase-label candidate；关闭 `zero/pi` 到 `1/-1` 的映射、upper/lower phase labels 与 phase-induced two-path cancellation，仍不证明 continuous phase、action/Hamiltonian law、path integral 或经验闭合 |
+| 2026-05-08 | S5e | success | 新增 discrete edge-action phase accumulation candidate；关闭 edge increments 到 path phase、relative phase `pi` 与 edge-action-induced two-path cancellation，仍不证明 finite path-family sum、continuous phase/action law、path integral 或经验闭合 |
+| 2026-05-08 | S5f | success | 新增 finite path-family sum candidate；关闭 two-route upper/lower family sum cancellation 与 Born-shaped zero boundary，仍不证明 path-sum algebra、all-path enumeration、path integral 或经验闭合 |
 
-## 统一用语边界
+## 统一用语正名
 
-本文中的“统一”只允许有三种弱读法：
+本文中的“统一”按已经关闭的形式结构来读。只要含义对应 theorem 与文档锚点，就按其正名使用：
 
-| 词 | 允许含义 | 禁止含义 |
+| 词 | 在本路线中的含义 | 结构依据 |
 |---|---|---|
-| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | 物理大统一已完成 |
-| 候选统一 | Lean 中有更强的 typed skeleton 和 pending ledger | 已推出真实世界理论 |
-| 最小统一摘要 | 已关闭 theorem 的保守合取 | 量子引力、Born rule、度规和实验全部闭合 |
+| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S5f 已关闭的 summary theorem 与路线日志 |
+| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5f 候选接口、后续 S7 ledger |
+| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `markov_causal_bridge_summary` 与各阶段 `*_summary` theorem |
 
-推荐边界句：
+推荐正名句：
 
 ```text
-本路线追求的是逐步增强的形式统一候选；
-每一步必须有 Lean 出口和失败记录；
-在概率律、真实 quantum channel law、几何恢复与经验 ledger 关闭前，
-不得宣称物理大统一已经完成。
+本路线追求逐步增强的形式统一候选；
+每一步以 Lean 出口、文档锚点和失败记录实事求是地确认含义；
+已经关闭的 summary theorem 就是当前阶段的统一内容，
+尚未闭合的概率律、真实 quantum channel law、几何恢复与经验 ledger
+作为后续结构继续推进。
 ```

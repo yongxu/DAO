@@ -1,6 +1,6 @@
 # 非零路径振幅候选 · Markov桥S5b
 
-**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [经典Markov与量子振幅分层 · Markov桥S4](经典Markov与量子振幅分层%20·%20Markov桥S4.md) · [路径组合与因果约束 · Markov桥S3](路径组合与因果约束%20·%20Markov桥S3.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
+**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [双路径相消候选 · Markov桥S5c](双路径相消候选%20·%20Markov桥S5c.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [经典Markov与量子振幅分层 · Markov桥S4](经典Markov与量子振幅分层%20·%20Markov桥S4.md) · [路径组合与因果约束 · Markov桥S3](路径组合与因果约束%20·%20Markov桥S3.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
 **Lean 锚点**：
 
@@ -12,6 +12,9 @@
 | 非零候选骨架 | `Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean` | `validPathIndicatorPathAmplitudeSkeleton`、`valid_path_indicator_nonzero` | `machineChecked` typed skeleton |
 | concrete 非零 witness | `Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean` | `concretePreparedMeasuredPath`、`concrete_prepared_measured_path_nonzero_amplitude` | `machineChecked` |
 | S5b 公开摘要 | `Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean` | `nonzero_path_amplitude_bridge_summary` | `machineChecked` |
+| S5c 双路径 follow-up | `Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean` | `two_path_interference_bridge_summary` | `machineChecked` |
+| S5d 离散相位 follow-up | `Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean` | `discrete_phase_bridge_summary` | `machineChecked` |
+| S5e 离散作用量相位 follow-up | `Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean` | `discrete_action_phase_bridge_summary` | `machineChecked` |
 
 ---
 
@@ -28,7 +31,7 @@ S5b 的主张很窄：
 = nonzero path-amplitude candidate boundary
 ```
 
-它不证明真实相位动力学，不证明路径积分，不证明真实干涉律，不证明 Born rule 从 Markov 桥推出，不证明 unitary/CPTP channel law，不证明 decoherence 或经验闭合。
+它不证明真实相位动力学，不证明路径积分，不证明真实干涉律，不证明 Born rule 从 Markov 桥推出，不证明 unitary/CPTP channel law，不证明 decoherence 或经验闭合。S5c 后续把其中一个缺口收窄为 two-path finite cancellation candidate；S5d 后续把相反振幅收窄为 discrete phase-label candidate；S5e 后续把 path phase 收窄为 edge increments 的有限累积。
 
 公开摘要为：
 
@@ -60,7 +63,10 @@ theorem nonzero_path_amplitude_bridge_summary :
 | concrete 非零候选 witness | `machineChecked` | `prepared -> evolved -> measured` 的 composed path 在 indicator skeleton 下振幅为 `1` |
 | valid-path indicator | `machineChecked` typed skeleton | 有效 path 给 `1`，无效 path 给 `0` |
 | 真实相位动力学 | 未纳入本轮 | 没有 action、phase evolution、Hamiltonian 或 unitary law |
-| 真实干涉律 | 未纳入本轮 | 没有两条实际路径的振幅求和和可测相消 theorem |
+| 双路径有限相消候选 | S5b 未纳入；S5c 已开单独接口 | `two_path_interference_bridge_summary` 关闭同端点、不同中间态的 toy two-path cancellation |
+| 离散相位标记候选 | S5b 未纳入；S5d 已开单独接口 | `discrete_phase_bridge_summary` 关闭 `zero/pi` 到 `1/-1` 的候选导出 |
+| 离散作用量相位候选 | S5b 未纳入；S5e 已开单独接口 | `discrete_action_phase_bridge_summary` 关闭 edge increments 到 path phase 与 relative phase `pi` |
+| 真实干涉律 | 未纳入本轮 | S5c 仍没有相位动力学、path integral、可测差异或实验判准 |
 | Born rule 推导 | 未纳入本轮 | 仍只保留 `ampProb` 形状，不从 Markov 权重推出测量概率律 |
 | 真实 quantum channel law | 未纳入本轮 | 没有 CPTP、Kraus、density matrix 或 trace preservation |
 | 经验闭合 | 未纳入本轮 | 没有观测量 ledger、数据判准或实验接口 |
@@ -94,12 +100,15 @@ S5b 关闭的是非零 path-amplitude candidate witness 与 path/causal boundary
 | 轴 | 状态 | 说明 |
 |---|---|---|
 | 相位演化 | 未纳入本轮 | indicator amplitude 只有 `0/1`，没有 phase |
-| 路径求和 | 未纳入本轮 | 没有 over-paths sum 或 path integral |
-| 真实干涉律 | 未纳入本轮 | 没有实际替代路径之间的相消定理 |
+| 双路径有限相消 | S5b 未纳入；S5c 已开单独接口 | `1 + (-1) = 0` 接到 same-endpoint different-middle toy paths |
+| 离散相位标签 | S5b 未纳入；S5d 已开单独接口 | `zero/pi` 导出 `1/-1` 并保持 two-path cancellation |
+| 离散作用量相位 | S5b 未纳入；S5e 已开单独接口 | edge increments 累积为 path phase 并保持 two-path cancellation |
+| 一般路径求和 | 未纳入本轮 | 没有 over-paths sum 或 path integral |
+| 真实干涉律 | 未纳入本轮 | 没有由相位动力学和观测 ledger 支撑的可测相消定理 |
 | Born rule 从桥推导 | 未纳入本轮 | `ampProb` boundary 仍不是 derivation |
 | 经验预测 | 未纳入本轮 | 没有 observation ledger |
 
-本轮闭合范围：**S5b 已在 Lean 中关闭“非零 path amplitude -> valid path -> Reachable / causalBefore”的候选边界，并给 concrete bridge 一个非零 path-amplitude witness；它不关闭相位动力学、路径求和、真实干涉律、Born rule 推导、unitary/CPTP channel law、decoherence 或经验闭合。**
+本轮闭合范围：**S5b 已在 Lean 中关闭“非零 path amplitude -> valid path -> Reachable / causalBefore”的候选边界，并给 concrete bridge 一个非零 path-amplitude witness；S5c 后续关闭 two-path finite cancellation candidate；S5d 后续关闭 discrete phase-label candidate；S5e 后续关闭 discrete edge-action phase accumulation candidate；它们不关闭连续相位/作用量动力学、一般路径求和、真实干涉律、Born rule 推导、unitary/CPTP channel law、decoherence 或经验闭合。**
 
 ---
 
@@ -132,15 +141,15 @@ invalid path -> amplitude 0
 
 ## 三 · 下一步
 
-S5b 之后，真实干涉还至少需要三件事：
+S5b 之后，S5c 已经先关闭最小 two-path finite cancellation，S5d 已经先关闭 discrete phase-label candidate，S5e 已经先关闭 edge-action phase accumulation candidate；真实干涉仍至少需要三件事：
 
 | 缺口 | 最小后续形式 |
 |---|---|
 | 相位 | 给 path amplitude 加 phase/action law |
-| 路径求和 | 定义同端点路径族与有限求和 |
+| 一般路径求和 | 从 two-path finite sum 升级到同端点路径族、路径积分或受控有限族 |
 | 可测相消 | 把求和后的振幅接到 Born-shaped boundary 或 observation ledger |
 
-这三件事未关闭前，不能写“真实干涉律已证”。
+这三件事未关闭前，不能写成真实干涉律已经完成。
 
 ---
 
@@ -150,11 +159,14 @@ Lean 验证命令：
 
 ```bash
 lake build SSBX.Foundation.Modern.QuantumRelativityNonzeroPathAmplitudeBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityTwoPathInterferenceBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityDiscretePhaseBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityDiscreteActionBridge
 lake build SSBX
 ```
 
 文档与格式检查：
 
 ```bash
-git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean formal/SSBX.lean formal/SSBX/notes/unification-stepwise-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md formal/SSBX/notes/markov-causal-bridge-plan.md docs-next/10_formal_形式/modern.md '义理/非零路径振幅候选 · Markov桥S5b.md' '义理/干涉与测量律候选 · Markov桥S5.md' '义理/Markov因果桥 · 大统一最小验证构造.md'
+git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean formal/SSBX.lean formal/SSBX/notes/unification-stepwise-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md formal/SSBX/notes/markov-causal-bridge-plan.md docs-next/10_formal_形式/modern.md '义理/非零路径振幅候选 · Markov桥S5b.md' '义理/双路径相消候选 · Markov桥S5c.md' '义理/离散相位标记候选 · Markov桥S5d.md' '义理/离散作用量相位候选 · Markov桥S5e.md' '义理/干涉与测量律候选 · Markov桥S5.md' '义理/Markov因果桥 · 大统一最小验证构造.md'
 ```

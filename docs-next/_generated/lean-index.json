@@ -4,7 +4,7 @@
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
-    "Foundation/Modern": 44,
+    "Foundation/Modern": 48,
     "Foundation/Wen": 51,
     "Foundation/Yi": 2,
     "Model": 2,
@@ -160,6 +160,10 @@
         "SSBX.Foundation.Modern.QuantumRelativityAmplitudeChannelBridge",
         "SSBX.Foundation.Modern.QuantumRelativityInterferenceBridge",
         "SSBX.Foundation.Modern.QuantumRelativityNonzeroPathAmplitudeBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityTwoPathInterferenceBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityDiscretePhaseBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityDiscreteActionBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityFinitePathSumBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -178,10 +182,10 @@
         "SSBX.Foundation.Modern.IIDWlln",
         "SSBX.Foundation.Modern.BochnerPL"
       ],
-      "lines": 170,
+      "lines": 174,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "3e06efbbfdaf787f10e06230f40f71cf435ecc044baca70b840c13e256e0a904"
+      "sha256": "c0e5d2778eb51e0eb3a2aad9d4949c9e1171c1d81f98ccc1dc16975146359125"
     },
     {
       "cluster": "root",
@@ -10231,6 +10235,273 @@
     },
     {
       "cluster": "Foundation/Modern",
+      "declaration_count": 27,
+      "declarations": [
+        {
+          "kind": "def",
+          "name": "discretePhaseAdd"
+        },
+        {
+          "kind": "theorem",
+          "name": "discrete_phase_add_zero_zero"
+        },
+        {
+          "kind": "theorem",
+          "name": "discrete_phase_add_zero_pi"
+        },
+        {
+          "kind": "theorem",
+          "name": "discrete_phase_add_pi_zero"
+        },
+        {
+          "kind": "theorem",
+          "name": "discrete_phase_add_pi_pi"
+        },
+        {
+          "kind": "def",
+          "name": "discretePhaseRelative"
+        },
+        {
+          "kind": "structure",
+          "name": "TwoStepEdgePhaseCandidate"
+        },
+        {
+          "kind": "def",
+          "name": "pathPhase"
+        },
+        {
+          "kind": "def",
+          "name": "HasTwoStepEdgePhaseCandidate"
+        },
+        {
+          "kind": "def",
+          "name": "edgePhaseInducedTwoStepPhaseCandidate"
+        },
+        {
+          "kind": "def",
+          "name": "edgePhaseInducedTwoStepAmplitudeCandidate"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteEdgePhase"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteDiscreteActionCandidate"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_upper_left_edge_phase"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_upper_right_edge_phase"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_lower_left_edge_phase"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_lower_right_edge_phase"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_upper_accumulated_phase"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_lower_accumulated_phase"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_edge_action_phase_difference"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_edge_action_upper_phase"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_edge_action_lower_phase"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_edge_action_upper_amplitude"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_edge_action_lower_amplitude"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_edge_action_pair_amplitude_cancels"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_edge_action_cancelled_born_weight_zero"
+        },
+        {
+          "kind": "theorem",
+          "name": "discrete_action_phase_bridge_summary"
+        }
+      ],
+      "imports": [
+        "SSBX.Foundation.Modern.QuantumRelativityDiscretePhaseBridge"
+      ],
+      "lines": 286,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityDiscreteActionBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean",
+      "sha256": "8c8eb9fc01650bf3606bbda879b7ff54303d30de55069f5b8bffad1538a906db"
+    },
+    {
+      "cluster": "Foundation/Modern",
+      "declaration_count": 18,
+      "declarations": [
+        {
+          "kind": "inductive",
+          "name": "DiscretePhase"
+        },
+        {
+          "kind": "def",
+          "name": "discretePhaseAmplitude"
+        },
+        {
+          "kind": "theorem",
+          "name": "discrete_phase_amplitudes_cancel"
+        },
+        {
+          "kind": "structure",
+          "name": "TwoStepPhaseCandidate"
+        },
+        {
+          "kind": "def",
+          "name": "amplitude"
+        },
+        {
+          "kind": "def",
+          "name": "HasTwoStepPhaseCandidate"
+        },
+        {
+          "kind": "def",
+          "name": "phaseInducedTwoStepAmplitudeCandidate"
+        },
+        {
+          "kind": "def",
+          "name": "twoRoutePhaseOf"
+        },
+        {
+          "kind": "def",
+          "name": "twoRoutePhaseCandidate"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_upper_phase"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_lower_phase"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_upper_phase_amplitude"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_lower_phase_amplitude"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_phase_induced_upper_amplitude"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_phase_induced_lower_amplitude"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_phase_pair_amplitude_cancels"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_phase_cancelled_born_weight_zero"
+        },
+        {
+          "kind": "theorem",
+          "name": "discrete_phase_bridge_summary"
+        }
+      ],
+      "imports": [
+        "SSBX.Foundation.Modern.QuantumRelativityTwoPathInterferenceBridge"
+      ],
+      "lines": 199,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityDiscretePhaseBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean",
+      "sha256": "3efe3aff7cffe1f729e317f1682e1721f83f8dff07a2863618cf5be145796ee2"
+    },
+    {
+      "cluster": "Foundation/Modern",
+      "declaration_count": 12,
+      "declarations": [
+        {
+          "kind": "structure",
+          "name": "FiniteTwoStepPathFamily"
+        },
+        {
+          "kind": "def",
+          "name": "HasFiniteTwoStepPathFamily"
+        },
+        {
+          "kind": "def",
+          "name": "finitePathFamilyAmplitudeSum"
+        },
+        {
+          "kind": "def",
+          "name": "finitePathFamilyBornWeight"
+        },
+        {
+          "kind": "theorem",
+          "name": "finite_path_family_born_boundary"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteUpperLowerFamily"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_family_endpoints"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_family_paths_share_endpoints"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_family_sum_eq_pair_sum"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_finite_family_amplitude_cancels"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_finite_family_born_weight_zero"
+        },
+        {
+          "kind": "theorem",
+          "name": "finite_path_sum_bridge_summary"
+        }
+      ],
+      "imports": [
+        "SSBX.Foundation.Modern.QuantumRelativityDiscreteActionBridge"
+      ],
+      "lines": 211,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityFinitePathSumBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean",
+      "sha256": "3c0beef143171692c213715f8d6a5d0f7790be7afb1a2037e41a7d3b9969c60b"
+    },
+    {
+      "cluster": "Foundation/Modern",
       "declaration_count": 20,
       "declarations": [
         {
@@ -10872,6 +11143,171 @@
       "module": "SSBX.Foundation.Modern.QuantumRelativityPathCausalBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean",
       "sha256": "f78ae1d8a8346fff4a5c587f57d4fcde320dbec84b82924d2cad0c30056c4144"
+    },
+    {
+      "cluster": "Foundation/Modern",
+      "declaration_count": 38,
+      "declarations": [
+        {
+          "kind": "structure",
+          "name": "TwoStepPathWitness"
+        },
+        {
+          "kind": "def",
+          "name": "toProcessPath"
+        },
+        {
+          "kind": "theorem",
+          "name": "toProcessPath_valid"
+        },
+        {
+          "kind": "structure",
+          "name": "SameEndpointTwoStepPair"
+        },
+        {
+          "kind": "def",
+          "name": "HasSameEndpointTwoStepPair"
+        },
+        {
+          "kind": "inductive",
+          "name": "TwoRouteState"
+        },
+        {
+          "kind": "def",
+          "name": "code"
+        },
+        {
+          "kind": "theorem",
+          "name": "code_lt_four"
+        },
+        {
+          "kind": "theorem",
+          "name": "code_injective"
+        },
+        {
+          "kind": "def",
+          "name": "terminal"
+        },
+        {
+          "kind": "def",
+          "name": "step"
+        },
+        {
+          "kind": "def",
+          "name": "weight"
+        },
+        {
+          "kind": "theorem",
+          "name": "step_iff_positive_weight"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteProcess"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteRowTotal"
+        },
+        {
+          "kind": "theorem",
+          "name": "twoRouteRowTotal_positive_if_not_terminal"
+        },
+        {
+          "kind": "theorem",
+          "name": "twoRouteWeight_le_rowTotal"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteFiniteProbabilityKernel"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteQuantumAmplitude"
+        },
+        {
+          "kind": "theorem",
+          "name": "twoRouteQuantumAmplitude_support_implies_step"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteQuantumAmplitudeSkeleton"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteQuantumChannelSkeleton"
+        },
+        {
+          "kind": "def",
+          "name": "twoRoutePathAmplitudeSkeleton"
+        },
+        {
+          "kind": "structure",
+          "name": "TwoStepPathAmplitudeCandidate"
+        },
+        {
+          "kind": "def",
+          "name": "HasTwoStepPathAmplitudeCandidate"
+        },
+        {
+          "kind": "def",
+          "name": "twoStepPairAmplitudeSum"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteUpperPath"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteLowerPath"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteUpperLowerPair"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_paths_same_endpoints"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_paths_distinct_middle"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteTwoStepAmplitude"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteTwoStepAmplitudeCandidate"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_upper_amplitude"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_lower_amplitude"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_pair_amplitude_cancels"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_cancelled_born_weight_zero"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_path_interference_bridge_summary"
+        }
+      ],
+      "imports": [
+        "SSBX.Foundation.Modern.QuantumRelativityNonzeroPathAmplitudeBridge"
+      ],
+      "lines": 389,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityTwoPathInterferenceBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean",
+      "sha256": "7129840fcd57905b5265ede059b6071783fad70536f48ff72066bae88b0cfaa0"
     },
     {
       "cluster": "Foundation/Modern",

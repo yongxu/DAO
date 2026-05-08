@@ -73,8 +73,8 @@
 | formal/SSBX/notes/PositionOperatorGraph.md | 0 | 5 |
 | formal/SSBX/notes/atom-naming.md | 0 | 0 |
 | formal/SSBX/notes/baguaWen-spec.md | 0 | 0 |
-| formal/SSBX/notes/markov-causal-bridge-plan.md | 11 | 0 |
-| formal/SSBX/notes/markov-causal-bridge-verification-plan.md | 12 | 12 |
+| formal/SSBX/notes/markov-causal-bridge-plan.md | 15 | 1 |
+| formal/SSBX/notes/markov-causal-bridge-verification-plan.md | 16 | 17 |
 | formal/SSBX/notes/math-axiom-map.md | 0 | 0 |
 | formal/SSBX/notes/metainterp-isa-gap.md | 0 | 0 |
 | formal/SSBX/notes/monad-root-plan.md | 2 | 3 |
@@ -83,7 +83,7 @@
 | formal/SSBX/notes/run-boundary.md | 0 | 8 |
 | formal/SSBX/notes/tier3-quine-roadmap.md | 1 | 15 |
 | formal/SSBX/notes/truth-ledger-boundary.md | 0 | 20 |
-| formal/SSBX/notes/unification-stepwise-plan.md | 8 | 0 |
+| formal/SSBX/notes/unification-stepwise-plan.md | 12 | 0 |
 | formal/SSBX/notes/v14-roadmap.md | 0 | 0 |
 | formal/SSBX/notes/wensurface-roadmap.md | 0 | 7 |
 | formal/SSBX/notes/wensurface-syntax-spec.md | 0 | 4 |
@@ -106,7 +106,7 @@
 | 义理/K_完备性审计.md | 0 | 13 |
 | 义理/L_文道一也_自释与微核.md | 4 | 5 |
 | 义理/M_证明报告_192_理之不完备.md | 2 | 15 |
-| 义理/Markov因果桥 · 大统一最小验证构造.md | 12 | 20 |
+| 义理/Markov因果桥 · 大统一最小验证构造.md | 16 | 20 |
 | 义理/N_儒家从元到圣.md | 1 | 0 |
 | 义理/O_进化非道者生存_三视证.md | 3 | 12 |
 | 义理/P_道家从无到化.md | 1 | 3 |
@@ -124,15 +124,19 @@
 | 义理/人类命运共同体_共同体之证.md | 5 | 12 |
 | 义理/几何位 · 从元到形.md | 1 | 13 |
 | 义理/动力 · 从元到行.md | 1 | 6 |
-| 义理/干涉与测量律候选 · Markov桥S5.md | 3 | 14 |
+| 义理/双路径相消候选 · Markov桥S5c.md | 4 | 16 |
+| 义理/干涉与测量律候选 · Markov桥S5.md | 6 | 17 |
 | 义理/形式逻辑 · 从元到推.md | 1 | 0 |
 | 义理/心智 · 从元到识.md | 1 | 2 |
 | 义理/拓扑 · 从元到障.md | 0 | 0 |
 | 义理/数与算术 · 从元到数.md | 1 | 0 |
 | 义理/文构造完备与直相加边界.md | 0 | 7 |
 | 义理/有限概率核接口 · Markov桥S2.md | 3 | 12 |
+| 义理/有限路径族求和候选 · Markov桥S5f.md | 0 | 11 |
 | 义理/物理 · 从元到象.md | 3 | 20 |
 | 义理/生态 · 从元到生.md | 0 | 2 |
+| 义理/离散作用量相位候选 · Markov桥S5e.md | 0 | 15 |
+| 义理/离散相位标记候选 · Markov桥S5d.md | 0 | 13 |
 | 义理/算子别名总表.md | 1 | 20 |
 | 义理/类与映 · 从元到映.md | 1 | 4 |
 | 义理/经典Markov与量子振幅分层 · Markov桥S4.md | 4 | 18 |
@@ -157,7 +161,7 @@
 | 义理/量子与相对论直统一不可能 · 当前语言NoGo.md | 0 | 15 |
 | 义理/量子时空互补 · 从一到测.md | 1 | 13 |
 | 义理/量子物理语言 · 从虚到测.md | 0 | 8 |
-| 义理/非零路径振幅候选 · Markov桥S5b.md | 2 | 8 |
+| 义理/非零路径振幅候选 · Markov桥S5b.md | 5 | 11 |
 | 六表_实虚史真/表一_六征本表.md | 0 | 0 |
 | 六表_实虚史真/表三_实虚modal三态.md | 0 | 0 |
 | 六表_实虚史真/表二_史维三态.md | 0 | 0 |
