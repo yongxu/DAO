@@ -1392,18 +1392,6 @@
             "formal/SSBX/Foundation/Wen/Operators.lean"
           ],
           "symbol": "之"
-        },
-        {
-          "paths": [
-            "formal/SSBX/Foundation/Wen/WenyanText.lean"
-          ],
-          "symbol": "互"
-        },
-        {
-          "paths": [
-            "formal/SSBX/Foundation/Wen/Operators.lean"
-          ],
-          "symbol": "反"
         }
       ]
     },
