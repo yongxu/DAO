@@ -250,6 +250,9 @@ CLI_CASES = [
     (["--operator", "E-7"], "executable note: 削: deletion-text anchor as identity; no redaction semantics"),
     (["--operator", "E-8"], "executable note: 筆/笔: inscription-text anchor as identity; no recording semantics"),
     (["--operator", "E-9"], "executable note: 褒/貶: appraisal-text anchor as identity; no praise/blame semantics"),
+    (["--operator", "S-13"], "executable note: 者: binder particle anchor as identity; no binding semantics"),
+    (["--operator", "S-14"], "executable note: 也: predication/finality particle anchor as identity; no assertion semantics"),
+    (["--operator", "S-16"], "executable note: 所: nominalization particle anchor as identity; no nominalization semantics"),
     (["--operator", "R-1"], "executable note: exact Bool relation/predicate package"),
     (["--operator", "LIJ-9"], "executable note: exact Bool relation/predicate package"),
     (["--operator", "Y-2"], "compound surfaces: 五行"),
@@ -261,7 +264,7 @@ CLI_CASES = [
     (["--coverage"], "operators: 371 registered / 371 executable"),
     (["--coverage"], "operator forms: 371 ids with at least one form"),
     (["--help"], "wenyan-surface --json --operators [all|executable|known-not-executable|unsupported]"),
-    (["--help"], "293 exact/theorem-backed; 78 structural catalogue"),
+    (["--help"], "296 exact/theorem-backed; 75 structural catalogue"),
     (["--help"], "0 symbolic catalogue-shape"),
 ]
 
