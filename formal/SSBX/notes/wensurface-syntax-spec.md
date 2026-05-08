@@ -1,8 +1,9 @@
 # WenSurface Syntax Spec: brackets, precedence, infix, mixfix
 
-Status: design spec for the next WenSurface parser.  This document does not
-claim implementation yet.  It defines the contract that the next parser should
-satisfy while preserving the current `wenyan-surface` behavior.
+Status: design spec and implementation tracker for the next WenSurface parser.
+S0-S1 are implemented; S2+ remain design contracts.  This document defines the
+contract that the next parser should satisfy while preserving the current
+`wenyan-surface` behavior.
 
 ## 1. Goal
 
@@ -511,16 +512,16 @@ Example JSON fields for an infix form:
 
 ## 20. Implementation Milestones
 
-| Milestone | Scope | Acceptance |
-|---|---|---|
-| S0 | Add this spec and preserve current parser | docs-only |
-| S1 | Tokenize brackets and add grouped AST | current tests + bracket parse tests |
-| S2 | Add syntax registry for existing prefix forms | old parser behavior reproduced through registry |
-| S3 | Replace parser core with Pratt parser | all old examples pass, better parse errors |
-| S4 | Promote `同` and `比` infix forms | prefix and infix both pass |
-| S5 | Add nonassoc diagnostics and precedence JSON | `A 同 B 同 C` fails structurally |
-| S6 | Add bounded mixfix parser machinery | catalogue-only mixfix can parse and diagnose unsupported |
-| S7 | Broaden syntax entries across 371 operators | all registered forms parse or diagnose ambiguity |
+| Milestone | Status | Scope | Acceptance |
+|---|---|---|---|
+| S0 | done | Add this spec and preserve current parser | docs-only |
+| S1 | done | Tokenize brackets and add grouped AST | current tests + bracket parse tests |
+| S2 | next | Add syntax registry for existing prefix forms | old parser behavior reproduced through registry |
+| S3 | pending | Replace parser core with Pratt parser | all old examples pass, better parse errors |
+| S4 | pending | Promote `同` and `比` infix forms | prefix and infix both pass |
+| S5 | pending | Add nonassoc diagnostics and precedence JSON | `A 同 B 同 C` fails structurally |
+| S6 | pending | Add bounded mixfix parser machinery | catalogue-only mixfix can parse and diagnose unsupported |
+| S7 | pending | Broaden syntax entries across 371 operators | all registered forms parse or diagnose ambiguity |
 
 Each implementation milestone must pass:
 
@@ -541,4 +542,3 @@ python3 scripts/docs_next.py check --strict
 - How much source-span data should be carried in `SurfaceExpr` versus only in
   tokens.
 - Whether Bool binders should be added before or after infix/mixfix.
-

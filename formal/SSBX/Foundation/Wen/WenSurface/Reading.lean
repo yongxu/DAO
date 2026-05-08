@@ -51,6 +51,8 @@ inductive ResolvedAtom where
   | syntax      (marker : SyntaxMarker)
   | appMarker             -- 「之」 等不发射 Tm 的 surface marker
   | iterate               -- 「之又」 迭代构式 marker：F X ↦ F (F X)
+  | openBracket
+  | closeBracket
 deriving DecidableEq, Repr
 
 /-- 已消歧的 token：保留 GlyphTok 与解析结果. -/
@@ -184,6 +186,18 @@ def resolveSyntaxMarker : Glyph → Option SyntaxMarker
   | "令" => some .ling
   | _    => none
 
+def matchingCloseBracket? : Glyph → Option Glyph
+  | "（" => some "）"
+  | "("  => some ")"
+  | _    => none
+
+def isOpenBracketSurface (g : Glyph) : Bool :=
+  (matchingCloseBracket? g).isSome
+
+def isCloseBracketSurface : Glyph → Bool
+  | "）" | ")" => true
+  | _ => false
+
 def catalogueReadingsForGlyph (glyph : Glyph) : List OperatorReading :=
   (readingsForGlyph glyph).filter (fun r => r.status = .catalogue ∧ r.operator?.isSome)
 
@@ -258,7 +272,11 @@ def resolveCatalogueByTable (t : GlyphTok) : Except ResolveErr ResolvedTok :=
     注：「之又」与「之」是不同 GlyphTok surface（多字 vs 单字 lex 输出），
     优先序无歧义；此处先判 iterate 仅为可读性. -/
 def resolveOne (t : GlyphTok) : Except ResolveErr ResolvedTok :=
-  if isIterateConstruction t.surface then
+  if isOpenBracketSurface t.surface then
+    .ok ⟨t, .openBracket⟩
+  else if isCloseBracketSurface t.surface then
+    .ok ⟨t, .closeBracket⟩
+  else if isIterateConstruction t.surface then
     .ok ⟨t, .iterate⟩
   else if isApplicationMarker t.surface then
     .ok ⟨t, .appMarker⟩
@@ -318,6 +336,8 @@ def ResolvedAtom.opId? : ResolvedAtom → Option OperatorId
   | .syntax _      => none
   | .appMarker     => none
   | .iterate       => none
+  | .openBracket   => none
+  | .closeBracket  => none
 
 /-- 判别 atom 是否为 appMarker（elab 阶段用）. -/
 def ResolvedAtom.isAppMarker : ResolvedAtom → Bool
@@ -561,7 +581,11 @@ def uniqueCatalogueReading (glyph : Glyph) (cues : List ContextCue)
     则采用之；其余情形回到 registry-backed surface map. -/
 def resolveOneWithCues (toks : List GlyphTok) (i : Nat) (t : GlyphTok)
     : Except ResolveErr ResolvedTok :=
-  if isIterateConstruction t.surface then
+  if isOpenBracketSurface t.surface then
+    .ok ⟨t, .openBracket⟩
+  else if isCloseBracketSurface t.surface then
+    .ok ⟨t, .closeBracket⟩
+  else if isIterateConstruction t.surface then
     .ok ⟨t, .iterate⟩
   else
   match resolveBoolConst t.surface with

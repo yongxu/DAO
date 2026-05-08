@@ -3264,10 +3264,10 @@
           "title": "下一阶段语法设计"
         }
       ],
-      "lines": 50,
+      "lines": 51,
       "links": [],
       "path": "formal/SSBX/notes/wensurface-roadmap.md",
-      "sha256": "835174dd5924046953510c127114536a96db63fd4483c5f44a517cbd79d61546",
+      "sha256": "c0869813dbc0d0621913787d16039edb973670cff0fa2a3ab7b974b982e3fca0",
       "summary": "本页记录 `wenyan-surface` 的实现边界。它是 `ziwen-spec.md` 的可执行子集前端，不宣称覆盖完整 Ziwen v0：当前没有 layout token、语句块、函数定义、match、数字/树等通用语言结构。",
       "title": "WenSurface 路线状态"
     },
@@ -3365,8 +3365,8 @@
       "lines": 544,
       "links": [],
       "path": "formal/SSBX/notes/wensurface-syntax-spec.md",
-      "sha256": "7ce6d3fa50581d85bf4c99ba67b17cbd6a5a5c311b4c3970b16a76448f0c7945",
-      "summary": "Status: design spec for the next WenSurface parser.  This document does not",
+      "sha256": "85992727b6644476a991adc371dcda3460163e12bbce6028f5f4b1de1af54a72",
+      "summary": "Status: design spec and implementation tracker for the next WenSurface parser.",
       "title": "WenSurface Syntax Spec: brackets, precedence, infix, mixfix"
     },
     {

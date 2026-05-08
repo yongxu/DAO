@@ -14,7 +14,8 @@ This binary is parallel to (not a replacement for) the frozen baguaWen
 22-token controlled IL parser. WenSurface speaks the surface language:
 推/比/不/必/同/凡/損/损/益, hex consts 一/乾/坤/full King-Wen names,
 bool 真/假, marker 之, construction 之又, and prefix-only binders 者/凡/令
-over Hex variables.
+over Hex variables. Grouping brackets `（ E ）` and `( E )` preserve AST
+grouping and elaborate transparently.
 -/
 import SSBX.Foundation.Wen.WenSurface.EndToEnd
 import SSBX.Foundation.Wen.WenSurface.Coverage
@@ -195,6 +196,12 @@ private def errShow : WenSurfaceErr → String
       "parse error: empty / incomplete expression"
   | .parse .fuelExhausted =>
       "parse error: fuel exhausted (program too deeply nested?)"
+  | .parse (.unmatchedOpenBracket surface col) =>
+      s!"parse error at col {col}: unmatched open bracket \"{surface}\""
+  | .parse (.unmatchedCloseBracket surface col) =>
+      s!"parse error at col {col}: unmatched close bracket \"{surface}\""
+  | .parse (.expectedCloseBracket openSurface expected openCol col) =>
+      s!"parse error at col {col}: expected close bracket \"{expected}\" for \"{openSurface}\" opened at col {openCol}"
   | .parse (.expectedVariable surface col) =>
       s!"parse error at col {col}: \"{surface}\" expects a Hex variable name"
   | .parse (.unexpectedApplicationMarker surface col) =>
@@ -241,6 +248,9 @@ private def errCode : WenSurfaceErr → String
   | .resolve (.unpromotedHexagramGap _ _) => "unpromoted_hexagram_gap"
   | .parse .empty => "empty_expression"
   | .parse .fuelExhausted => "parse_fuel_exhausted"
+  | .parse (.unmatchedOpenBracket _ _) => "unmatched_open_bracket"
+  | .parse (.unmatchedCloseBracket _ _) => "unmatched_close_bracket"
+  | .parse (.expectedCloseBracket _ _ _ _) => "expected_close_bracket"
   | .parse (.expectedVariable _ _) => "expected_variable"
   | .parse (.unexpectedApplicationMarker _ _) => "unexpected_application_marker"
   | .parse (.unpromotedHexagramGap _ _) => "unpromoted_hexagram_gap"
@@ -272,6 +282,12 @@ private def resolveErrShow : ResolveErr → String
 private def parseErrShow : ParseErr → String
   | .empty => "parse error: empty / incomplete expression"
   | .fuelExhausted => "parse error: fuel exhausted"
+  | .unmatchedOpenBracket surface col =>
+      s!"parse error at col {col}: unmatched open bracket \"{surface}\""
+  | .unmatchedCloseBracket surface col =>
+      s!"parse error at col {col}: unmatched close bracket \"{surface}\""
+  | .expectedCloseBracket openSurface expected openCol col =>
+      s!"parse error at col {col}: expected close bracket \"{expected}\" for \"{openSurface}\" opened at col {openCol}"
   | .expectedVariable surface col =>
       s!"parse error at col {col}: \"{surface}\" expects a Hex variable name"
   | .unexpectedApplicationMarker surface col =>
@@ -297,6 +313,8 @@ private def atomShow : ResolvedAtom → String
   | .syntax .ling => "syntax[令]"
   | .appMarker => "marker[之]"
   | .iterate => "construction[之又]"
+  | .openBracket => "open-bracket"
+  | .closeBracket => "close-bracket"
 
 private def tokShow (t : GlyphTok) : String :=
   s!"{t.startCol}:{t.surface}/w{t.width}"
@@ -452,6 +470,15 @@ private def errExtraFields : WenSurfaceErr → List (String × String)
         ]
   | .resolve (.unpromotedHexagramGap surface col) => errLocationFields surface col
   | .parse (.expectedVariable surface col) => errLocationFields surface col
+  | .parse (.unmatchedOpenBracket surface col) => errLocationFields surface col
+  | .parse (.unmatchedCloseBracket surface col) => errLocationFields surface col
+  | .parse (.expectedCloseBracket openSurface expected openCol col) =>
+      [ jsonFieldString "surface" openSurface
+      , jsonFieldString "expected" expected
+      , jsonFieldNat "openCol" openCol
+      , jsonFieldNat "startCol" col
+      , jsonFieldNat "endCol" (col + expected.toList.length)
+      ]
   | .parse (.unexpectedApplicationMarker surface col) => errLocationFields surface col
   | .parse (.unpromotedHexagramGap surface col) => errLocationFields surface col
   | .parse (.leftoverAtoms count surface col) =>
@@ -533,6 +560,10 @@ private def atomJson : ResolvedAtom → String
       jsonObject [jsonFieldString "kind" "applicationMarker", jsonFieldString "surface" "之"]
   | .iterate =>
       jsonObject [jsonFieldString "kind" "construction", jsonFieldString "surface" "之又"]
+  | .openBracket =>
+      jsonObject [jsonFieldString "kind" "openBracket"]
+  | .closeBracket =>
+      jsonObject [jsonFieldString "kind" "closeBracket"]
 
 private def resolvedTokJson (t : ResolvedTok) : String :=
   jsonObject
@@ -793,6 +824,7 @@ private def usage : String :=
      "  Executable operators: 推 比 不 必 同 凡 損 损 益 错 錯 综 綜 互 反",
      "  Hex consts: 一 乾 坤 plus canonical 64 hexagram names",
      "  Bool consts: 真 假",
+     "  Grouping: （ E ） and ( E )",
      "  Marker: 之 (explicit application/projection marker)",
      "  Construction: 之又 (iterate F twice over the next argument)",
      "  Binders: 者 甲 E, 凡 甲 E, 令 甲 V E (Hex variables only)",

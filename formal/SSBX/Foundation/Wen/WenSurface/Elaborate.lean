@@ -79,6 +79,8 @@ def atomToTm : ResolvedAtom → Except ElabErr Tm
   | .syntax _    => .error .empty
   | .appMarker  => .error .empty
   | .iterate    => .error .empty
+  | .openBracket => .error .empty
+  | .closeBracket => .error .empty
 
 /-! ## § 3  Arity 表 -/
 
@@ -107,6 +109,10 @@ mutual
     | _+1,  .hexOrOp h _ :: rest               =>
       .ok ((if h = «一» then .yi else .hexLit h), rest)
     | _+1,  .syntax _ :: _                     =>
+      .error .empty
+    | _+1,  .openBracket :: _                  =>
+      .error .empty
+    | _+1,  .closeBracket :: _                 =>
       .error .empty
     | n+1,  .iterate :: rest                   =>
       -- 「之又 F X」 → F (F X)：递归解析 `F X` 子表达式（消耗 op + arg），
@@ -186,6 +192,7 @@ def elabSurfaceExpr : SurfaceExpr → Except ElabErr Tm
       | .error e => .error e
       | .ok (.app f x) => .ok (.app f (.app f x))
       | .ok _ => .error .empty
+  | .grouped _ _ body => elabSurfaceExpr body
   | .construction name _ => .error (.unsupportedConstruction name)
 
 /-- Diagnostic type inference used only by WenSurface errors.

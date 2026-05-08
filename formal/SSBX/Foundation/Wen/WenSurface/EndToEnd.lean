@@ -314,6 +314,24 @@ example :
     (wenyanCompileTm "推 一").toOption = some (.app Stdlib.tuiBody .yi) :=
   by native_decide
 
+/-! ### Grouping punctuation -/
+
+example :
+    (wenyanInterp "（推 一）").toOption = (wenyanInterp "推 一").toOption :=
+  by native_decide
+
+example :
+    (wenyanInterp "(推 一)").toOption = (wenyanInterp "推 一").toOption :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "同 （推 一） （推 一）").toOption = some true :=
+  by native_decide
+
+example : (wenyanInterp "（推 一").toOption = none := by native_decide
+
+example : (wenyanInterp "推 一）").toOption = none := by native_decide
+
 /-- 与 `tui_eq_sheng` 桥 — 用 wenyan 表层走 stdlib 算子等价于 YiCore.«生». -/
 theorem wenyan_tui_yi_eq_sheng :
     (wenyanInterp "推 一").toOption = some («生» «一») := by

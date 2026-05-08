@@ -47,4 +47,5 @@ scripts/check_wenyan_surface_cli.py
 括号、优先级、infix/operator mixfix 的设计合同见
 `formal/SSBX/notes/wensurface-syntax-spec.md`。该 spec 保持 catalogue coverage
 与 theorem-backed evaluator 分离，目标是用表驱动 Pratt parser 扩展当前
-prefix-only 前端。
+prefix-only 前端。S1 已落地：`（ E ）` 与 `( E )` 可 token/parse 为 grouped
+AST，并在 elaboration 时透明求值。

@@ -28,10 +28,10 @@
         "SSBX.Foundation.Wen.WenSurface.EndToEnd",
         "SSBX.Foundation.Wen.WenSurface.Coverage"
       ],
-      "lines": 885,
+      "lines": 917,
       "module": "WenyanSurface.lean",
       "path": "WenyanSurface.lean",
-      "sha256": "b498ee4b62e97a20392f9d3d241ae2166af6689a84afe8d744732f5a0a8fa07d"
+      "sha256": "0dc2c30d0a580624288a3ce8840bca85d10ec149b2d39518155bb4d8b949854a"
     },
     {
       "cluster": "root",
@@ -12612,10 +12612,10 @@
         "SSBX.Foundation.Wen.WenDef",
         "SSBX.Foundation.Wen.WenDefEval"
       ],
-      "lines": 275,
+      "lines": 282,
       "module": "SSBX.Foundation.Wen.WenSurface.Elaborate",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Elaborate.lean",
-      "sha256": "3e2638934ea29ca49bde6a0ca22d2853ab75eff7d1018d74824d97c82b6df653"
+      "sha256": "0aa7c417cd163870617618138a1f373f71a7bb256b96c068d48fe5accf59af32"
     },
     {
       "cluster": "Foundation/Wen",
@@ -12669,14 +12669,14 @@
       "imports": [
         "SSBX.Foundation.Wen.WenSurface.Elaborate"
       ],
-      "lines": 467,
+      "lines": 485,
       "module": "SSBX.Foundation.Wen.WenSurface.EndToEnd",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/EndToEnd.lean",
-      "sha256": "c6b55dfb756be3f1971adb57aace87004928f178a3779964010ac8370b6963aa"
+      "sha256": "b5c97842c2e62c72afa0a0e95c8a540208d676bd3592fb9609296036c80e25bd"
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 15,
+      "declaration_count": 16,
       "declarations": [
         {
           "kind": "structure",
@@ -12693,6 +12693,10 @@
         {
           "kind": "def",
           "name": "isAsciiSpace"
+        },
+        {
+          "kind": "def",
+          "name": "isBracketChar"
         },
         {
           "kind": "def",
@@ -12742,14 +12746,14 @@
       "imports": [
         "SSBX.Text.WenyanOperators"
       ],
-      "lines": 251,
+      "lines": 272,
       "module": "SSBX.Foundation.Wen.WenSurface.Lex",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Lex.lean",
-      "sha256": "da57370a2c932825e688926ae63036bb3e0aa1ba8aec78ea127301e9c4f22d41"
+      "sha256": "ab264e83f8391ee0dec139d734d90e18f5ffe0a0a7742607a2f233624d388822"
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 53,
+      "declaration_count": 56,
       "declarations": [
         {
           "kind": "inductive",
@@ -12830,6 +12834,18 @@
         {
           "kind": "def",
           "name": "resolveSyntaxMarker"
+        },
+        {
+          "kind": "def",
+          "name": "matchingCloseBracket?"
+        },
+        {
+          "kind": "def",
+          "name": "isOpenBracketSurface"
+        },
+        {
+          "kind": "def",
+          "name": "isCloseBracketSurface"
         },
         {
           "kind": "def",
@@ -12972,10 +12988,10 @@
         "SSBX.Text.OperatorReadings",
         "SSBX.Foundation.Yi.YiCore"
       ],
-      "lines": 728,
+      "lines": 752,
       "module": "SSBX.Foundation.Wen.WenSurface.Reading",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Reading.lean",
-      "sha256": "b27db1fb9ba0278cd678321e1af5874560855f4177451f35fc81f9585a835b92"
+      "sha256": "3e2eafa3ffcca5b6d7184301289b083c283a816bda1c7adc6f6cecdfa2bbb5b0"
     },
     {
       "cluster": "Foundation/Wen",
@@ -13070,7 +13086,7 @@
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 16,
+      "declaration_count": 17,
       "declarations": [
         {
           "kind": "inductive",
@@ -13114,6 +13130,10 @@
         },
         {
           "kind": "def",
+          "name": "expectedCloseBracketErr"
+        },
+        {
+          "kind": "def",
           "name": "parseSurfaceExprAux"
         },
         {
@@ -13141,10 +13161,10 @@
         "SSBX.Foundation.Wen.WenSurface.Semantics",
         "SSBX.Foundation.Wen.WenSurface.Reading"
       ],
-      "lines": 231,
+      "lines": 273,
       "module": "SSBX.Foundation.Wen.WenSurface.Syntax",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Syntax.lean",
-      "sha256": "452338e76228745d1ae6c729cc58e6e76d7d930e6b791a550a86583563ff4958"
+      "sha256": "22e209bfbfbc2abecdc0aaaf2d9c784761d2fd43daee6f617f20b98341ac5049"
     },
     {
       "cluster": "Foundation/Wen",

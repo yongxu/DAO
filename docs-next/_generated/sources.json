@@ -21,9 +21,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 35349,
+      "bytes": 37232,
       "path": "WenyanSurface.lean",
-      "sha256": "b498ee4b62e97a20392f9d3d241ae2166af6689a84afe8d744732f5a0a8fa07d",
+      "sha256": "0dc2c30d0a580624288a3ce8840bca85d10ec149b2d39518155bb4d8b949854a",
       "suffix": ".lean"
     },
     {
@@ -777,27 +777,27 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 10713,
+      "bytes": 10968,
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Elaborate.lean",
-      "sha256": "3e2638934ea29ca49bde6a0ca22d2853ab75eff7d1018d74824d97c82b6df653",
+      "sha256": "0aa7c417cd163870617618138a1f373f71a7bb256b96c068d48fe5accf59af32",
       "suffix": ".lean"
     },
     {
-      "bytes": 17512,
+      "bytes": 18028,
       "path": "formal/SSBX/Foundation/Wen/WenSurface/EndToEnd.lean",
-      "sha256": "c6b55dfb756be3f1971adb57aace87004928f178a3779964010ac8370b6963aa",
+      "sha256": "b5c97842c2e62c72afa0a0e95c8a540208d676bd3592fb9609296036c80e25bd",
       "suffix": ".lean"
     },
     {
-      "bytes": 9823,
+      "bytes": 10611,
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Lex.lean",
-      "sha256": "da57370a2c932825e688926ae63036bb3e0aa1ba8aec78ea127301e9c4f22d41",
+      "sha256": "ab264e83f8391ee0dec139d734d90e18f5ffe0a0a7742607a2f233624d388822",
       "suffix": ".lean"
     },
     {
-      "bytes": 29761,
+      "bytes": 30436,
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Reading.lean",
-      "sha256": "b27db1fb9ba0278cd678321e1af5874560855f4177451f35fc81f9585a835b92",
+      "sha256": "3e2eafa3ffcca5b6d7184301289b083c283a816bda1c7adc6f6cecdfa2bbb5b0",
       "suffix": ".lean"
     },
     {
@@ -807,9 +807,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 9301,
+      "bytes": 11441,
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Syntax.lean",
-      "sha256": "452338e76228745d1ae6c729cc58e6e76d7d930e6b791a550a86583563ff4958",
+      "sha256": "22e209bfbfbc2abecdc0aaaf2d9c784761d2fd43daee6f617f20b98341ac5049",
       "suffix": ".lean"
     },
     {
@@ -1329,15 +1329,15 @@
       "suffix": ".md"
     },
     {
-      "bytes": 2836,
+      "bytes": 2946,
       "path": "formal/SSBX/notes/wensurface-roadmap.md",
-      "sha256": "835174dd5924046953510c127114536a96db63fd4483c5f44a517cbd79d61546",
+      "sha256": "c0869813dbc0d0621913787d16039edb973670cff0fa2a3ab7b974b982e3fca0",
       "suffix": ".md"
     },
     {
-      "bytes": 14802,
+      "bytes": 14925,
       "path": "formal/SSBX/notes/wensurface-syntax-spec.md",
-      "sha256": "7ce6d3fa50581d85bf4c99ba67b17cbd6a5a5c311b4c3970b16a76448f0c7945",
+      "sha256": "85992727b6644476a991adc371dcda3460163e12bbce6028f5f4b1de1af54a72",
       "suffix": ".md"
     },
     {
