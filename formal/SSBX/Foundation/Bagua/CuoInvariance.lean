@@ -1,10 +1,10 @@
 /-
 # CuoInvariance — 不一致性记录：原始无限制 KleeneInverter 必然不一致
 
-This file documents WHY the project's `kleene_recursion_axiom` (in `GodelLi.lean`)
-must restrict `decide` to be `CuoInvariantDecide`.  We prove that the
-unrestricted form is **provably inconsistent in Lean**, justifying the
-`CuoInvariantDecide` precondition added in § 3 of `GodelLi.lean`.
+This file documents WHY `KleeneInverter` (in `GodelLi.lean § 3`) and the
+派生定理 `KleeneCarrier.kleene_recursion` 必须将 `decide` 限制为
+`CuoInvariantDecide`.  We prove that the unrestricted form is **provably
+inconsistent in Lean**, justifying the `CuoInvariantDecide` precondition.
 
 ## Key fact
 
@@ -28,9 +28,13 @@ At kun = cuo qian (y1 = yin), Halts D kun.  But `halts_cuo_invariant` forces
 - `unrestricted_kleene_inverter_inconsistent`: derives `False` from
   `KleeneInverterUnrestricted` (i.e., proves `¬ KleeneInverterUnrestricted`)
 
-This file is **the historical receipt** for why `kleene_recursion_axiom` in
-`GodelLi.lean` carries the `CuoInvariantDecide` precondition.  Removing the
-precondition would make the axiom False in Lean.
+This file is **the historical receipt** for why `KleeneInverter` (在
+`GodelLi.lean` 中定义) carries the `CuoInvariantDecide` precondition.
+Removing the precondition would make the corresponding axiom False in Lean.
+
+参见：`KleeneCarrier.lean` 之 `allDecidersAreYiComputable`（cuo-限定
+Church-Turing）—— 即原 `kleene_recursion_axiom` 之 4 件分解中第 4 件，
+其 `CuoInvariantDecide` 限定动机正源于本文件之不一致性结果。
 
 The cuo-equivariance machinery (cuoCell, cuoState, halts_cuo_invariant, etc.)
 has been **inlined into `GodelLi.lean § 2.5`** so it is available to the
@@ -82,8 +86,9 @@ theorem kun_eq_cuo_qian : Hexagram.kun = Hexagram.qian.cuo := rfl
     But `halts_cuo_invariant` gives `Halts D qian ↔ Halts D kun`.  Contradiction.
 
     **Consequence**: any axiom of the form `axiom k : KleeneInverterUnrestricted`
-    immediately collapses Lean to False.  This is why `kleene_recursion_axiom`
-    in `GodelLi.lean` includes the `CuoInvariantDecide` precondition. -/
+    immediately collapses Lean to False.  This is why `KleeneInverter`
+    （以及由 `KleeneCarrier.allDecidersAreYiComputable` 派生之
+    `kleene_recursion`）皆带有 `CuoInvariantDecide` 限定. -/
 theorem unrestricted_kleene_inverter_inconsistent :
     ¬ KleeneInverterUnrestricted := by
   intro h_unrestricted
@@ -108,14 +113,16 @@ theorem unrestricted_kleene_inverter_inconsistent :
 
 /-! ## § 3 Public summary
 
-  The current `kleene_recursion_axiom` in `GodelLi.lean` is the cuo-invariant
+  当前之 `KleeneInverter`（`GodelLi.lean § 3`）以及由
+  `KleeneCarrier.kleene_recursion` 派生之同型断言皆为 cuo-invariant
   RESTRICTED form.  Whether it is consistent in Lean depends on Church-Turing
-  for cuo-invariant Bool deciders (which this project takes as the meta-axiom).
-  What this file proves UNCONDITIONALLY is the negative half: dropping the
-  restriction would make Lean inconsistent. -/
+  for cuo-invariant Bool deciders (which `KleeneCarrier.allDecidersAreYiComputable`
+  takes as the meta-axiom).  What this file proves UNCONDITIONALLY is the
+  negative half: dropping the restriction would make Lean inconsistent. -/
 
 /-- The unrestricted form is provably False; this is the receipt that
-    `CuoInvariantDecide` precondition in `GodelLi.lean § 3` is REQUIRED. -/
+    `CuoInvariantDecide` precondition in `GodelLi.lean § 3`（以及对应之
+    `KleeneCarrier.allDecidersAreYiComputable` 限定）is REQUIRED. -/
 theorem cuo_invariance_summary :
     -- (1) Halts is cuo-invariant (already in GodelLi)
     (∀ P h, Halts P h ↔ Halts P h.cuo)

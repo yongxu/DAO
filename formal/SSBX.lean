@@ -50,6 +50,7 @@ import SSBX.Foundation.Wen.Operators
 import SSBX.Foundation.Wen.Kernel
 import SSBX.Foundation.Wen.WenyanText
 import SSBX.Foundation.Wen.WenyanSelfInterp
+import SSBX.Foundation.Wen.MetaInterp
 import SSBX.Foundation.Wen.WenDef
 import SSBX.Foundation.Wen.WenyanParser
 import SSBX.Foundation.Wen.WenEval
@@ -97,6 +98,7 @@ import SSBX.Foundation.Bagua.BaguaTuring
 import SSBX.Foundation.Bagua.Newman
 import SSBX.Foundation.Bagua.KleeneInternal
 import SSBX.Foundation.Bagua.GodelLi
+import SSBX.Foundation.Bagua.KleeneCarrier
 import SSBX.Foundation.Bagua.BaguaWenSpec
 import SSBX.Text.OperatorAnchors
 import SSBX.Text.OperatorCellMap
