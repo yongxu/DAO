@@ -2,6 +2,8 @@
 
 **前置**：[sum-over-middle通道组合候选 · Markov桥S15](sum-over-middle通道组合候选%20·%20Markov桥S15.md) · [Born分布边界候选 · Markov桥S12](Born分布边界候选%20·%20Markov桥S12.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
+**后继**：[unitary-CPTP账本边界 · Markov桥S17](unitary-CPTP账本边界%20·%20Markov桥S17.md) 已把 S13-S16 已关闭 skeleton 与 physical channel law 未关闭项放入同一个 ledger。
+
 **Lean 锚点**：
 
 | 层 | 文件 | 内容 | 状态 |
@@ -82,7 +84,7 @@ S16 的 proof 先以 `lake env lean --stdin` 试探：
 失败类型：Lean proof failure / heartbeat timeout
 原因：dependent existential witness 展开到 concrete structure fields 时触发 `whnf` 心跳上限
 保留结论：泛型 `SumOverMiddleBornDistributionBoundaryClosed` 已关闭；concrete 侧保留 `[1]` amplitude support 与 normalized theorem，足够作为条件式 boundary 的输入
-下一步：若需要 concrete existential 展开，可单独优化 witness 的定义等式；S17 先推进 unitary/CPTP ledger boundary
+后继：S17 已把 unitary/CPTP ledger boundary 落地；若需要 concrete existential 展开，可单独优化 witness 的定义等式
 ```
 
 ---

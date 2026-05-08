@@ -41,6 +41,7 @@
 | `formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeAssociativityBridge.lean` | S14 channel associativity and identity obstruction |
 | `formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleChannelBridge.lean` | S15 sum-over-middle composition and two-step support boundary |
 | `formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleBornBoundaryBridge.lean` | S16 composed endpoint support to finite Born distribution boundary |
+| `formal/SSBX/Foundation/Modern/QuantumRelativityUnitaryCPTPLedgerBridge.lean` | S17 unitary/CPTP physical channel-law ledger boundary |
 | `formal/SSBX/notes/markov-causal-bridge-plan.md` | 探索计划与完成记录 |
 | `formal/SSBX/notes/unification-stepwise-plan.md` | 逐步完善到候选统一的阶段路线 |
 | `义理/文构造完备与直相加边界.md` | 对 `current-language no-go` 旧说法的正名 |
@@ -75,6 +76,7 @@
 | `义理/channelCompose结合律候选 · Markov桥S14.md` | S14 associativity / identity obstruction companion 文档 |
 | `义理/sum-over-middle通道组合候选 · Markov桥S15.md` | S15 sum-over-middle composition companion 文档 |
 | `义理/sum-over-middle Born边界候选 · Markov桥S16.md` | S16 composed Born boundary companion 文档 |
+| `义理/unitary-CPTP账本边界 · Markov桥S17.md` | S17 unitary/CPTP ledger companion 文档 |
 
 ## 当前验证结论
 
@@ -115,6 +117,7 @@
 - [x] `channel_compose_associativity_bridge_summary` 已关闭 channel associativity candidate：pointwise composition 可重新括号化，且 diagonal identity 在 no-self-step process 中被阻塞。
 - [x] `sum_over_middle_channel_bridge_summary` 已关闭 sum-over-middle channel composition candidate：finite middle-list endpoint amplitude 非零推出 two-step reachability，并给 concrete bridge 一个非一步边的二步组合 witness。
 - [x] `sum_over_middle_born_distribution_bridge_summary` 已关闭 composed Born boundary candidate：composed endpoint amplitude support 若已归一，则接入 finite Born distribution boundary；concrete composed support 为 `[1]`。
+- [x] `unitary_cptp_ledger_bridge_summary` 已关闭 unitary/CPTP ledger boundary：当前 skeleton 已关闭项与 physical channel law required-but-not-closed 项已合取。
 - [x] 首次新 worktree 原生构建的 `mathlib4` 克隆阻塞已记录为基础设施失败，不当作 theorem 失败。
 - [ ] 尚未验证 Born rule 从 Markov 桥的推导、continuous phase/action law、general all-path enumeration、一般 path integral、真实可测干涉律、unitary / CPTP quantum channel law、完整因果偏序、局部有限 causal set、度规恢复、数据校准、可测预言 theorem 或经验闭合。
 
@@ -157,6 +160,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityChannelComposeBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityChannelComposeAssociativityBridge
 lake build SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleChannelBridge
 lake build SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleBornBoundaryBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityUnitaryCPTPLedgerBridge
 lake build SSBX
 git diff --check --
 ```
@@ -222,6 +226,7 @@ rg -n "待处理|future|deferred|部分相关|佛|唯识|analogy|unchecked|plann
 | channel associativity / identity obstruction | `channel_compose_associativity_bridge_summary` | `machineChecked` |
 | sum-over-middle channel composition | `sum_over_middle_channel_bridge_summary` | `machineChecked` |
 | sum-over-middle Born boundary | `sum_over_middle_born_distribution_bridge_summary` | `machineChecked` |
+| unitary/CPTP ledger boundary | `unitary_cptp_ledger_bridge_summary` | `machineChecked` |
 | tagged-language noncollapse 保持 | `markov_bridge_not_direct_language_addition` | `machineChecked` |
 | 公开摘要 | `markov_causal_bridge_summary` | `machineChecked` |
 
@@ -261,6 +266,7 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
   可以组合当前 QuantumChannelSkeleton：逐点相乘 amplitude，保留左侧 classical boundary，并保持 support-to-step soundness
   可以对 finite middle-list 做 sum-over-middle composition，并把非零 endpoint sum 投到 two-step reachability
   可以把已归一的 composed endpoint amplitude support 接到 finite Born distribution boundary
+  可以把 physical unitary/CPTP channel law 缺口作为 required-but-not-closed ledger 项登记
   同时保持当前 tagged 物理语言 noncollapse 边界
 ```
 
@@ -271,7 +277,7 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
 | 量子引力 | 还需要动力学、连续极限、量子场或引力方程 |
 | Born rule 推导 | S12 已关闭 finite Born distribution boundary，S16 已把 composed endpoint support 条件式接入该 boundary；还需要从振幅结构推出无条件归一化测量概率律 |
 | 真实干涉律 | S5/S5b/S5c/S5d/S5e/S5f/S5g/S5h/S5i/S5j/S5k/S5l/S5m/S5n/S5o/S5p/S5q/S5r 已有 path amplitude、非零 witness、two-path finite cancellation candidate、discrete phase-label candidate、edge-action phase accumulation candidate、finite path-family sum candidate、finite path-sum algebra candidate、endpoint-indexed finite family candidate、endpoint support normalization candidate、two-route toy enumeration candidate、visible path-key candidate、finite visible-key quotient candidate、visible-key quotient class candidate、two-route canonical representative candidate、finite quotient-support candidate、quotient-support algebra candidate、pending observable ledger boundary 与 finite action-to-phase law candidate；还需要 general choice function、general all-path enumeration、一般 path integral、连续相位动力学、可测预言 theorem 或经验闭合 |
-| 真实 quantum channel law | S4 的 `QuantumChannelSkeleton` 是 candidate interface；S13/S14/S15 已给出 pointwise composition、associativity/identity obstruction 与 finite sum-over-middle boundary；还需要 unitary evolution、CPTP、Kraus 或 density-matrix law |
+| 真实 quantum channel law | S4 的 `QuantumChannelSkeleton` 是 candidate interface；S13-S17 已给出 pointwise composition、associativity/identity obstruction、finite sum-over-middle boundary、conditional composed Born boundary 与 required ledger；还需要真正关闭 unitary evolution、CPTP、Kraus 或 density-matrix law |
 | 完整因果集或时空度规 | S3 已关闭一步 no-self-loop；还需要偏序全公理、Lorentzian geometry 或 metric recovery theorem |
 | 经验预言 | S5q 已给出 pending observable ledger entry；还需要外部数据、观测量、误差模型、阈值或数据判准 |
 
@@ -315,6 +321,7 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
 | V14 | 引入 channel associativity / identity obstruction | 已由 `channel_compose_associativity_bridge_summary` 关闭 pointwise associativity，并证明 no-self-step process 阻塞 diagonal identity candidate |
 | V15 | 引入 sum-over-middle channel composition | 已由 `sum_over_middle_channel_bridge_summary` 关闭 finite middle-list endpoint amplitude 与 two-step support boundary；composed support probability/Born boundary、unitary/CPTP ledger 与 empirical closure 仍 pending |
 | V16 | 引入 sum-over-middle Born boundary | 已由 `sum_over_middle_born_distribution_bridge_summary` 关闭 composed endpoint support 到 finite Born distribution boundary 的条件式接口；unitary/CPTP ledger 与 empirical closure 仍 pending |
+| V17 | 引入 unitary/CPTP ledger boundary | 已由 `unitary_cptp_ledger_bridge_summary` 关闭 required-but-not-closed ledger；真正的 unitary/CPTP law、metric recovery 与 empirical closure 仍 pending |
 
 ## 失败记录模板
 

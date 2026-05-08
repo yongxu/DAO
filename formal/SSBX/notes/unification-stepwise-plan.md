@@ -97,6 +97,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityChannelComposeBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityChannelComposeAssociativityBridge
 lake build SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleChannelBridge
 lake build SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleBornBoundaryBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityUnitaryCPTPLedgerBridge
 lake build SSBX
 git diff --check --
 ```
@@ -1040,6 +1041,36 @@ sum_over_middle_born_distribution_bridge_summary。
 | `concrete_composed_endpoint_amplitude_support_normalized` | `QuantumRelativitySumOverMiddleBornBoundaryBridge.lean` | concrete composed support normalized |
 | `sum_over_middle_born_distribution_bridge_summary` | `QuantumRelativitySumOverMiddleBornBoundaryBridge.lean` | S16 composed Born boundary 已关闭 |
 
+## S17 · unitary/CPTP 账本边界
+
+目标：把 S13-S16 已关闭 channel/probability skeleton 与 physical unitary/CPTP channel law 的缺口放入同一个 typed ledger。S17 不证明 physical channel law，只关闭 required-but-not-closed ledger。
+
+| 项 | 内容 |
+|---|---|
+| Lean 出口 | `unitary_cptp_ledger_bridge_summary` |
+| 最低 theorem 形态 | 合取 `BornDistributionBoundaryClosed`、`SumOverMiddleChannelBoundaryClosed`、`SumOverMiddleBornDistributionBoundaryClosed`、current closed items、unitary/CPTP required-but-not-closed items 与 Wen coverage |
+| 失败记录 | 无 Lean proof failure；ledger items 均为 finite inductive cases |
+| 文档更新 | 已新增《unitary-CPTP账本边界 · Markov桥S17》 |
+| 后续结构 | 真正关闭 unitary/CPTP、metric recovery 与 empirical closure |
+
+通过判准：
+
+```text
+CurrentChannelBoundaryItem；
+current_channel_boundary_closed_by_s17；
+UnitaryCPTPLedgerItem；
+unitary_cptp_ledger_required_but_not_closed_by_s17；
+unitary_cptp_ledger_bridge_summary。
+```
+
+当前状态：
+
+| theorem | 文件 | 读法 |
+|---|---|---|
+| `current_channel_boundary_closed_by_s17` | `QuantumRelativityUnitaryCPTPLedgerBridge.lean` | S13-S16 当前 skeleton items 被登记为 closed |
+| `unitary_cptp_ledger_required_but_not_closed_by_s17` | `QuantumRelativityUnitaryCPTPLedgerBridge.lean` | Hilbert/Kraus/density/CPTP 等物理项 required but not closed |
+| `unitary_cptp_ledger_bridge_summary` | `QuantumRelativityUnitaryCPTPLedgerBridge.lean` | S17 ledger boundary 已关闭 |
+
 ## 失败记录追加区
 
 失败记录格式沿用验证计划，并允许追加在此区：
@@ -1091,6 +1122,7 @@ sum_over_middle_born_distribution_bridge_summary。
 | 2026-05-09 | S14 | failure retained / success | 第一次 identity obstruction 试探中未展开 `QuantumAmplitudeSupport` 导致 rewrite 找不到目标；展开 support 后关闭 pointwise associativity 与 diagonal identity obstruction |
 | 2026-05-09 | S15 | failure retained / success | 第一次 sum-over-middle support proof 试探中 `List.mem_map` 等式方向写反；改为 `rw [hbeq]` 并展开 `QuantumAmplitudeSupport` 后关闭 finite middle-list composition 的 two-step boundary |
 | 2026-05-09 | S16 | failure retained / success | concrete dependent existential witness 展开到 structure fields 时触发 `whnf` heartbeat timeout；保留 generic closed boundary 与 concrete normalized `[1]` input，关闭 composed Born boundary |
+| 2026-05-09 | S17 | success | 新增 unitary/CPTP ledger boundary；S13-S16 current skeleton items closed，physical Hilbert/Kraus/density/CPTP items required but not closed |
 
 ## 统一用语正名
 
@@ -1098,9 +1130,9 @@ sum_over_middle_born_distribution_bridge_summary。
 
 | 词 | 在本路线中的含义 | 结构依据 |
 |---|---|---|
-| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S16 已关闭的 summary theorem 与路线日志 |
-| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8-S16 pending list |
-| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary`、`normalized_mass_bridge_summary`、`born_weight_normalization_bridge_summary`、`born_distribution_bridge_summary`、`channel_compose_bridge_summary`、`channel_compose_associativity_bridge_summary`、`sum_over_middle_channel_bridge_summary`、`sum_over_middle_born_distribution_bridge_summary` |
+| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S17 已关闭的 summary theorem 与路线日志 |
+| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8-S17 pending list |
+| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary`、`normalized_mass_bridge_summary`、`born_weight_normalization_bridge_summary`、`born_distribution_bridge_summary`、`channel_compose_bridge_summary`、`channel_compose_associativity_bridge_summary`、`sum_over_middle_channel_bridge_summary`、`sum_over_middle_born_distribution_bridge_summary`、`unitary_cptp_ledger_bridge_summary` |
 
 推荐正名句：
 

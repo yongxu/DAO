@@ -1148,6 +1148,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleChannelBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityTwoRouteEnumerationBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityUnitaryCPTPLedgerBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityWenBoundary.lean"
       ],
       "symbol_hits": [
@@ -1214,6 +1215,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleChannelBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityTwoRouteEnumerationBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityUnitaryCPTPLedgerBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityWenBoundary.lean"
       ],
       "symbol_hits": [
@@ -3743,6 +3745,60 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleChannelBridge.lean"
           ],
           "symbol": "sum_over_middle_channel_bridge_summary"
+        }
+      ]
+    },
+    {
+      "document": "义理/unitary-CPTP账本边界 · Markov桥S17.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityUnitaryCPTPLedgerBridge.lean"
+          ],
+          "symbol": "ClosedByStepwiseS17"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityUnitaryCPTPLedgerBridge.lean"
+          ],
+          "symbol": "ClosedByStepwiseS17Boundary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityUnitaryCPTPLedgerBridge.lean"
+          ],
+          "symbol": "CurrentChannelBoundaryItem"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityUnitaryCPTPLedgerBridge.lean"
+          ],
+          "symbol": "RequiredForPhysicalChannelLaw"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityUnitaryCPTPLedgerBridge.lean"
+          ],
+          "symbol": "UnitaryCPTPLedgerItem"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityUnitaryCPTPLedgerBridge.lean"
+          ],
+          "symbol": "current_channel_boundary_closed_by_s17"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityUnitaryCPTPLedgerBridge.lean"
+          ],
+          "symbol": "unitary_cptp_ledger_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityUnitaryCPTPLedgerBridge.lean"
+          ],
+          "symbol": "unitary_cptp_ledger_required_but_not_closed_by_s17"
         }
       ]
     },
