@@ -1,5 +1,5 @@
 {
-  "count": 285,
+  "count": 286,
   "include_archive": false,
   "sources": [
     {
@@ -291,9 +291,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 1865,
+      "bytes": 1946,
       "path": "docs-next/40_reference_参考/ziwen-language.md",
-      "sha256": "e8b0ec50772b43b5124d5d88984f739e1862669ec0b8e1573a768279f98be402",
+      "sha256": "aed45279c54f4b31bf9d8553c22143d33af17e32d0091db1d522c845dca113d7",
       "suffix": ".md"
     },
     {
@@ -1329,9 +1329,15 @@
       "suffix": ".md"
     },
     {
-      "bytes": 2553,
+      "bytes": 2836,
       "path": "formal/SSBX/notes/wensurface-roadmap.md",
-      "sha256": "966f04f816555673aaa6d292a433d52bc42c70595673f9bd7495fde6560f1f0c",
+      "sha256": "835174dd5924046953510c127114536a96db63fd4483c5f44a517cbd79d61546",
+      "suffix": ".md"
+    },
+    {
+      "bytes": 14802,
+      "path": "formal/SSBX/notes/wensurface-syntax-spec.md",
+      "sha256": "7ce6d3fa50581d85bf4c99ba67b17cbd6a5a5c311b4c3970b16a76448f0c7945",
       "suffix": ".md"
     },
     {

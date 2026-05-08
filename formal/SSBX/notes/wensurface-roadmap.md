@@ -41,3 +41,10 @@ scripts/check_wenyan_surface_cli.py
 - `unsupported` 仅保留作 CLI filter/phase 的兼容词，产品语义以 `known-not-executable` 为准。
 - `推/益/损/損` 等可在 `WenDefEval` 求值，不代表都能 compile 到 L0 `YiInstr`；`WenDefCompile` 的 cuo-equivariance ceiling 仍有效。
 - 完整 Ziwen v0 仍以 `ziwen-spec.md` 为未来目标，不由 WenSurface 当前子集承诺。
+
+## 下一阶段语法设计
+
+括号、优先级、infix/operator mixfix 的设计合同见
+`formal/SSBX/notes/wensurface-syntax-spec.md`。该 spec 保持 catalogue coverage
+与 theorem-backed evaluator 分离，目标是用表驱动 Pratt parser 扩展当前
+prefix-only 前端。

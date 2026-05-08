@@ -20,6 +20,7 @@
 |---|---|
 | 规范正文 | `ziwen-spec.md` |
 | WenSurface 状态账本 | `formal/SSBX/notes/wensurface-roadmap.md` |
+| WenSurface 语法扩展 spec | `formal/SSBX/notes/wensurface-syntax-spec.md` |
 | 受控文规范 | `formal/SSBX/notes/baguaWen-spec.md` |
 | parse-print 路线 | `formal/SSBX/notes/parse-print-roadmap.md` |
 | 文言算子 | `operators.md` |
