@@ -20,6 +20,7 @@
 | `formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean` | S5d discrete phase-label candidate |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean` | S5e discrete edge-action phase accumulation candidate |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean` | S5f finite path-family sum candidate |
+| `formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean` | S5g finite path-sum algebra candidate |
 | `formal/SSBX/notes/markov-causal-bridge-plan.md` | 探索计划与完成记录 |
 | `formal/SSBX/notes/unification-stepwise-plan.md` | 逐步完善到候选统一的阶段路线 |
 | `义理/文构造完备与直相加边界.md` | 对 `current-language no-go` 旧说法的正名 |
@@ -33,6 +34,7 @@
 | `义理/离散相位标记候选 · Markov桥S5d.md` | S5d 离散相位标记候选 companion 文档 |
 | `义理/离散作用量相位候选 · Markov桥S5e.md` | S5e 离散作用量相位候选 companion 文档 |
 | `义理/有限路径族求和候选 · Markov桥S5f.md` | S5f 有限路径族求和候选 companion 文档 |
+| `义理/有限路径族求和代数候选 · Markov桥S5g.md` | S5g 有限路径族求和代数 companion 文档 |
 
 ## 当前验证结论
 
@@ -52,8 +54,9 @@
 - [x] `discrete_phase_bridge_summary` 已关闭 discrete phase-label candidate：`zero/pi` 标签导出 `1/-1`，upper/lower paths 携带相反标签，并保持 phase-induced two-path cancellation。
 - [x] `discrete_action_phase_bridge_summary` 已关闭 discrete edge-action phase accumulation candidate：edge phase increments 累积为 two-step path phase，upper/lower relative phase 为 `pi`，并保持 induced two-path cancellation。
 - [x] `finite_path_sum_bridge_summary` 已关闭 finite path-family sum candidate：upper/lower two-route witness 作为 finite same-endpoint path family，其 family amplitude sum 等于 pair sum、相消为 `0`，并接回 Born-shaped zero boundary。
+- [x] `finite_path_sum_algebra_bridge_summary` 已关闭 finite path-sum algebra candidate：finite path-family sums 的 append / permutation / reverse stability 与 cancellation stability 已形式化。
 - [x] 首次新 worktree 原生构建的 `mathlib4` 克隆阻塞已记录为基础设施失败，不当作 theorem 失败。
-- [ ] 尚未验证 sum-one 概率律、Born rule 从 Markov 桥的推导、continuous phase/action law、path-sum algebra、一般 path integral、真实可测干涉律、unitary / CPTP quantum channel law、完整因果偏序、局部有限 causal set、度规恢复或经验闭合。
+- [ ] 尚未验证 sum-one 概率律、Born rule 从 Markov 桥的推导、continuous phase/action law、all-path enumeration、一般 path integral、真实可测干涉律、unitary / CPTP quantum channel law、完整因果偏序、局部有限 causal set、度规恢复或经验闭合。
 
 ## 每次变更的最低验证门槛
 
@@ -73,8 +76,9 @@ lake build SSBX.Foundation.Modern.QuantumRelativityTwoPathInterferenceBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityDiscretePhaseBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityDiscreteActionBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityFinitePathSumBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityFinitePathSumAlgebraBridge
 lake build SSBX
-git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean formal/SSBX/Foundation/Modern/QuantumRelativityIntegration.lean formal/SSBX/Foundation/Modern/QuantumRelativityWenBoundary.lean formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean formal/SSBX.lean formal/SSBX/notes/markov-causal-bridge-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md formal/SSBX/notes/unification-stepwise-plan.md docs-next/10_formal_形式/modern.md '义理/文构造完备与直相加边界.md' '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/有限概率核接口 · Markov桥S2.md' '义理/路径组合与因果约束 · Markov桥S3.md' '义理/经典Markov与量子振幅分层 · Markov桥S4.md' '义理/干涉与测量律候选 · Markov桥S5.md' '义理/非零路径振幅候选 · Markov桥S5b.md' '义理/双路径相消候选 · Markov桥S5c.md' '义理/离散相位标记候选 · Markov桥S5d.md' '义理/离散作用量相位候选 · Markov桥S5e.md' '义理/有限路径族求和候选 · Markov桥S5f.md' '义理/量子与相对论直统一不可能 · 当前语言NoGo.md' '义理/量子与相对论整合方向 · 从桥到新理论.md' '义理/量子时空互补 · 从一到测.md'
+git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean formal/SSBX/Foundation/Modern/QuantumRelativityIntegration.lean formal/SSBX/Foundation/Modern/QuantumRelativityWenBoundary.lean formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean formal/SSBX.lean formal/SSBX/notes/markov-causal-bridge-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md formal/SSBX/notes/unification-stepwise-plan.md docs-next/10_formal_形式/modern.md '义理/文构造完备与直相加边界.md' '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/有限概率核接口 · Markov桥S2.md' '义理/路径组合与因果约束 · Markov桥S3.md' '义理/经典Markov与量子振幅分层 · Markov桥S4.md' '义理/干涉与测量律候选 · Markov桥S5.md' '义理/非零路径振幅候选 · Markov桥S5b.md' '义理/双路径相消候选 · Markov桥S5c.md' '义理/离散相位标记候选 · Markov桥S5d.md' '义理/离散作用量相位候选 · Markov桥S5e.md' '义理/有限路径族求和候选 · Markov桥S5f.md' '义理/有限路径族求和代数候选 · Markov桥S5g.md' '义理/量子与相对论直统一不可能 · 当前语言NoGo.md' '义理/量子与相对论整合方向 · 从桥到新理论.md' '义理/量子时空互补 · 从一到测.md'
 ```
 
 通过标准：
@@ -89,7 +93,7 @@ git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean for
 状态词自审命令：
 
 ```bash
-rg -n "待处理|future|deferred|部分相关|佛|唯识|analogy|unchecked|planned|build pending|not run|not edited|failure-to-close" formal/SSBX/notes/markov-causal-bridge-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md formal/SSBX/notes/unification-stepwise-plan.md '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/有限概率核接口 · Markov桥S2.md' '义理/路径组合与因果约束 · Markov桥S3.md' '义理/经典Markov与量子振幅分层 · Markov桥S4.md' '义理/干涉与测量律候选 · Markov桥S5.md' '义理/非零路径振幅候选 · Markov桥S5b.md' '义理/双路径相消候选 · Markov桥S5c.md' '义理/离散相位标记候选 · Markov桥S5d.md' '义理/离散作用量相位候选 · Markov桥S5e.md' '义理/有限路径族求和候选 · Markov桥S5f.md'
+rg -n "待处理|future|deferred|部分相关|佛|唯识|analogy|unchecked|planned|build pending|not run|not edited|failure-to-close" formal/SSBX/notes/markov-causal-bridge-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md formal/SSBX/notes/unification-stepwise-plan.md '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/有限概率核接口 · Markov桥S2.md' '义理/路径组合与因果约束 · Markov桥S3.md' '义理/经典Markov与量子振幅分层 · Markov桥S4.md' '义理/干涉与测量律候选 · Markov桥S5.md' '义理/非零路径振幅候选 · Markov桥S5b.md' '义理/双路径相消候选 · Markov桥S5c.md' '义理/离散相位标记候选 · Markov桥S5d.md' '义理/离散作用量相位候选 · Markov桥S5e.md' '义理/有限路径族求和候选 · Markov桥S5f.md' '义理/有限路径族求和代数候选 · Markov桥S5g.md'
 ```
 
 ## Theorem 锚点审计
@@ -117,6 +121,7 @@ rg -n "待处理|future|deferred|部分相关|佛|唯识|analogy|unchecked|plann
 | discrete phase-label candidate | `discrete_phase_bridge_summary` | `machineChecked` |
 | discrete edge-action phase candidate | `discrete_action_phase_bridge_summary` | `machineChecked` |
 | finite path-family sum candidate | `finite_path_sum_bridge_summary` | `machineChecked` |
+| finite path-sum algebra candidate | `finite_path_sum_algebra_bridge_summary` | `machineChecked` |
 | tagged-language noncollapse 保持 | `markov_bridge_not_direct_language_addition` | `machineChecked` |
 | 公开摘要 | `markov_causal_bridge_summary` | `machineChecked` |
 
@@ -142,6 +147,7 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
   可以承载离散 phase-label 到候选振幅的导出接口
   可以承载 edge phase increments 到 two-step path phase 的累积接口
   可以承载 finite same-endpoint path family 的候选振幅求和接口
+  可以承载 finite path-family sum 的 append / permutation / reverse stability
   同时保持当前 tagged 物理语言 noncollapse 边界
 ```
 
@@ -151,7 +157,7 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
 |---|---|
 | 量子引力 | 还需要动力学、连续极限、量子场或引力方程 |
 | Born rule 推导 | 还需要从 Markov / 振幅结构推出归一化测量概率律 |
-| 真实干涉律 | S5/S5b/S5c/S5d/S5e/S5f 已有 path amplitude、非零 witness、two-path finite cancellation candidate、discrete phase-label candidate、edge-action phase accumulation candidate 与 finite path-family sum candidate；还需要 path-sum algebra、一般 path integral、连续相位动力学、观测 ledger 或可测相消 theorem |
+| 真实干涉律 | S5/S5b/S5c/S5d/S5e/S5f/S5g 已有 path amplitude、非零 witness、two-path finite cancellation candidate、discrete phase-label candidate、edge-action phase accumulation candidate、finite path-family sum candidate 与 finite path-sum algebra candidate；还需要 all-path enumeration、一般 path integral、连续相位动力学、观测 ledger 或可测相消 theorem |
 | 真实 quantum channel law | S4 的 `QuantumChannelSkeleton` 是 candidate interface；还需要 unitary evolution、CPTP、Kraus 或 density-matrix law |
 | 完整因果集或时空度规 | S3 已关闭一步 no-self-loop；还需要偏序全公理、Lorentzian geometry 或 metric recovery theorem |
 | 经验预言 | 还需要 pending ledger、观测量或数据判准 |
@@ -174,7 +180,8 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
 | V6c | 引入 two-path finite cancellation candidate | 已由 `two_path_interference_bridge_summary` 关闭 same-endpoint / different-middle two-step pair 与 `1 + (-1) = 0`；一般 path integral、phase/action law 和可测干涉仍 pending |
 | V6d | 引入 discrete phase-label candidate | 已由 `discrete_phase_bridge_summary` 关闭 `zero/pi` 标签到 `1/-1` 的导出；continuous phase、action/Hamiltonian law、path integral 与可测干涉仍 pending |
 | V6e | 引入 discrete edge-action phase accumulation candidate | 已由 `discrete_action_phase_bridge_summary` 关闭 edge increments 到 path phase、relative phase `pi` 与 induced cancellation；finite path-family sum 已由 V6f 承接，continuous action law 与 path integral 仍 pending |
-| V6f | 引入 finite path-family sum candidate | 已由 `finite_path_sum_bridge_summary` 关闭 same-endpoint finite family、family amplitude sum 与 two-route cancellation；path-sum algebra、continuous action law 与 path integral 仍 pending |
+| V6f | 引入 finite path-family sum candidate | 已由 `finite_path_sum_bridge_summary` 关闭 same-endpoint finite family、family amplitude sum 与 two-route cancellation；path-sum algebra 已由 V6g 承接，continuous action law 与 path integral 仍 pending |
+| V6g | 引入 finite path-sum algebra candidate | 已由 `finite_path_sum_algebra_bridge_summary` 关闭 append / permutation / reverse stability 与 cancellation stability；all-path enumeration、continuous action law 与 path integral 仍 pending |
 | V7 | 经验接口 | 把候选可测差异写入 pending ledger，而不是直接宣称实验闭合 |
 
 ## 失败记录模板
@@ -209,8 +216,9 @@ lake build SSBX.Foundation.Modern.QuantumRelativityTwoPathInterferenceBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityDiscretePhaseBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityDiscreteActionBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityFinitePathSumBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityFinitePathSumAlgebraBridge
 lake build SSBX
-git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean formal/SSBX/Foundation/Modern/QuantumRelativityIntegration.lean formal/SSBX/Foundation/Modern/QuantumRelativityWenBoundary.lean formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean formal/SSBX.lean formal/SSBX/notes/markov-causal-bridge-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md formal/SSBX/notes/unification-stepwise-plan.md docs-next/10_formal_形式/modern.md '义理/文构造完备与直相加边界.md' '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/有限概率核接口 · Markov桥S2.md' '义理/路径组合与因果约束 · Markov桥S3.md' '义理/经典Markov与量子振幅分层 · Markov桥S4.md' '义理/干涉与测量律候选 · Markov桥S5.md' '义理/非零路径振幅候选 · Markov桥S5b.md' '义理/双路径相消候选 · Markov桥S5c.md' '义理/离散相位标记候选 · Markov桥S5d.md' '义理/离散作用量相位候选 · Markov桥S5e.md' '义理/有限路径族求和候选 · Markov桥S5f.md' '义理/量子与相对论直统一不可能 · 当前语言NoGo.md' '义理/量子与相对论整合方向 · 从桥到新理论.md' '义理/量子时空互补 · 从一到测.md'
+git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean formal/SSBX/Foundation/Modern/QuantumRelativityIntegration.lean formal/SSBX/Foundation/Modern/QuantumRelativityWenBoundary.lean formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean formal/SSBX.lean formal/SSBX/notes/markov-causal-bridge-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md formal/SSBX/notes/unification-stepwise-plan.md docs-next/10_formal_形式/modern.md '义理/文构造完备与直相加边界.md' '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/有限概率核接口 · Markov桥S2.md' '义理/路径组合与因果约束 · Markov桥S3.md' '义理/经典Markov与量子振幅分层 · Markov桥S4.md' '义理/干涉与测量律候选 · Markov桥S5.md' '义理/非零路径振幅候选 · Markov桥S5b.md' '义理/双路径相消候选 · Markov桥S5c.md' '义理/离散相位标记候选 · Markov桥S5d.md' '义理/离散作用量相位候选 · Markov桥S5e.md' '义理/有限路径族求和候选 · Markov桥S5f.md' '义理/有限路径族求和代数候选 · Markov桥S5g.md' '义理/量子与相对论直统一不可能 · 当前语言NoGo.md' '义理/量子与相对论整合方向 · 从桥到新理论.md' '义理/量子时空互补 · 从一到测.md'
 ```
 
-备注：`lake build SSBX` 仍会输出既有 Wen 模块的 unused simp args linter 警告；本轮新增 Markov / WenBoundary / ConcreteBridge / OperatorCellGrid / FiniteProbabilityBridge / PathCausalBridge / AmplitudeChannelBridge / InterferenceBridge / NonzeroPathAmplitudeBridge / TwoPathInterferenceBridge / DiscretePhaseBridge / DiscreteActionBridge / FinitePathSumBridge 模块无警告。
+备注：`lake build SSBX` 仍会输出既有 Wen 模块的 unused simp args linter 警告；本轮新增 Markov / WenBoundary / ConcreteBridge / OperatorCellGrid / FiniteProbabilityBridge / PathCausalBridge / AmplitudeChannelBridge / InterferenceBridge / NonzeroPathAmplitudeBridge / TwoPathInterferenceBridge / DiscretePhaseBridge / DiscreteActionBridge / FinitePathSumBridge / FinitePathSumAlgebraBridge 模块无警告。

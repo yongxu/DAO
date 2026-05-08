@@ -986,6 +986,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean",
@@ -1014,6 +1015,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityIntegration.lean",
@@ -1067,6 +1069,12 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean"
           ],
           "symbol": "discrete_phase_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
+          ],
+          "symbol": "finite_path_sum_algebra_bridge_summary"
         },
         {
           "paths": [
@@ -1509,6 +1517,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean",
@@ -2579,6 +2588,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityIntegration.lean",
@@ -2671,6 +2681,12 @@
         },
         {
           "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
+          ],
+          "symbol": "finite_path_sum_algebra_bridge_summary"
+        },
+        {
+          "paths": [
             "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean"
           ],
           "symbol": "finite_path_sum_bridge_summary"
@@ -2704,12 +2720,6 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean"
           ],
           "symbol": "markov_bridge_same_one_not_identity"
-        },
-        {
-          "paths": [
-            "formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean"
-          ],
-          "symbol": "markov_causal_bridge_summary"
         }
       ]
     },
@@ -3815,6 +3825,84 @@
       ]
     },
     {
+      "document": "义理/有限路径族求和代数候选 · Markov桥S5g.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
+          ],
+          "symbol": "appendFiniteTwoStepPathFamilies"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
+          ],
+          "symbol": "finite_path_family_amplitude_sum_append"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
+          ],
+          "symbol": "finite_path_family_amplitude_sum_perm"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
+          ],
+          "symbol": "finite_path_family_amplitude_sum_reverse"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
+          ],
+          "symbol": "finite_path_family_append_cancels_of_canceling_summands"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
+          ],
+          "symbol": "finite_path_family_born_weight_append_boundary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
+          ],
+          "symbol": "finite_path_family_born_weight_perm"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
+          ],
+          "symbol": "finite_path_family_born_weight_reverse"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
+          ],
+          "symbol": "finite_path_sum_algebra_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
+          ],
+          "symbol": "reverseFiniteTwoStepPathFamily"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
+          ],
+          "symbol": "two_route_double_family_amplitude_cancels"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
+          ],
+          "symbol": "two_route_reversed_family_amplitude_cancels"
+        }
+      ]
+    },
+    {
       "document": "义理/有限路径族求和候选 · Markov桥S5f.md",
       "lean_path_mentions": [],
       "symbol_hits": [
@@ -3847,6 +3935,12 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean"
           ],
           "symbol": "finite_path_family_born_boundary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
+          ],
+          "symbol": "finite_path_sum_algebra_bridge_summary"
         },
         {
           "paths": [

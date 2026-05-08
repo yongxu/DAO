@@ -1,6 +1,6 @@
 # 有限路径族求和候选 · Markov桥S5f
 
-**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [离散作用量相位候选 · Markov桥S5e](离散作用量相位候选%20·%20Markov桥S5e.md) · [离散相位标记候选 · Markov桥S5d](离散相位标记候选%20·%20Markov桥S5d.md) · [双路径相消候选 · Markov桥S5c](双路径相消候选%20·%20Markov桥S5c.md) · [非零路径振幅候选 · Markov桥S5b](非零路径振幅候选%20·%20Markov桥S5b.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
+**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [有限路径族求和代数候选 · Markov桥S5g](有限路径族求和代数候选%20·%20Markov桥S5g.md) · [离散作用量相位候选 · Markov桥S5e](离散作用量相位候选%20·%20Markov桥S5e.md) · [离散相位标记候选 · Markov桥S5d](离散相位标记候选%20·%20Markov桥S5d.md) · [双路径相消候选 · Markov桥S5c](双路径相消候选%20·%20Markov桥S5c.md) · [非零路径振幅候选 · Markov桥S5b](非零路径振幅候选%20·%20Markov桥S5b.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
 **Lean 锚点**：
 
@@ -13,6 +13,7 @@
 | pair-sum compatibility | `Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean` | `two_route_family_sum_eq_pair_sum` | `machineChecked` |
 | finite-family cancellation | `Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean` | `two_route_finite_family_amplitude_cancels`、`two_route_finite_family_born_weight_zero` | `machineChecked` |
 | S5f 公开摘要 | `Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean` | `finite_path_sum_bridge_summary` | `machineChecked` |
+| S5g 后续闭合 | `Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean` | `finite_path_sum_algebra_bridge_summary` 关闭 append / permutation / reverse stability | `machineChecked` |
 
 ---
 
@@ -84,7 +85,7 @@ theorem finite_path_sum_bridge_summary :
 | 轴 | 状态 | 说明 |
 |---|---|---|
 | arbitrary same-endpoint path enumeration | 后续结构 | S5f 给出 finite list interface，但未生成所有路径 |
-| algebraic laws of finite sums | 后续结构 | 可继续证明 append、permutation、filter 等求和性质 |
+| algebraic laws of finite sums | S5g 已关闭核心代数 | 已由 `finite_path_sum_algebra_bridge_summary` 关闭 append、permutation、reverse 与 cancellation stability；filter / duplicate normalization 仍在后续 |
 | continuous phase/action law | 后续结构 | 仍需连续相位、action functional 或 Hamiltonian/unitary law |
 | path integral | 后续结构 | 需要路径空间、测度、极限或 over-all-paths construction |
 | Born rule derivation | 后续结构 | 仍只复用 `ampProb` boundary |
@@ -113,17 +114,16 @@ sum family amplitudes = pair sum = 0
 
 ---
 
-## 二 · 下一步
+## 二 · 后续承接
 
-S5f 后最省力的增强是 S5g：
+S5f 后的直接增强 S5g 已关闭：
 
 ```text
 finite path family
--> endpoint-indexed finite family
 -> append / permutation / cancellation stability
 ```
 
-这仍然保持有限结构。连续 path integral 只有在有限族代数稳定后再进入。
+下一步应在 S5g 的有限代数接口上处理 endpoint-indexed family constructor、finite enumeration boundary、filter 或 duplicate normalization。连续 path integral 仍应等待有限枚举边界稳定后再进入。
 
 ---
 
