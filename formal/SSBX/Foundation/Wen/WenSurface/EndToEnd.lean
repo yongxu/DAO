@@ -16,7 +16,7 @@ cuo-equivariant 子集 commute 作 future work）。
 - cue-aware resolver + explicit `SurfaceExpr` AST
 - 64 卦名 / aliases + Bool literals + Hex-only binders
 - executable registry 覆盖全部 371 个 OperatorId
-- 245 个 exact/theorem-backed operator 可求 Hex/Bool/Pair/List；其余 catalogue rows 求 structural normal form
+- 248 个 exact/theorem-backed operator 可求 Hex/Bool/Pair/List；其余 catalogue rows 求 structural normal form
 - unpromoted gap form 只诊断，不伪造 denotation
 
 ## 状态
@@ -709,7 +709,16 @@ example :
     (theoremBackedSemanticsFor? OperatorId.A_7).isSome = true :=
   by native_decide
 example :
+    (theoremBackedSemanticsFor? OperatorId.A_8).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.A_9).isSome = true :=
+  by native_decide
+example :
     (theoremBackedSemanticsFor? OperatorId.A_10).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.A_15).isSome = true :=
   by native_decide
 example :
     (theoremBackedSemanticsFor? OperatorId.A_16).isSome = true :=

@@ -195,7 +195,10 @@ CLI_CASES = [
     (["--operator", "A-2"], "executable note: 驟/骤: aspect anchor as identity; no sudden-time semantics"),
     (["--operator", "A-3"], "executable note: 忽: aspect anchor as identity; no abrupt-time semantics"),
     (["--operator", "A-7"], "executable note: 屢/屡: aspect anchor as identity; no frequency semantics"),
+    (["--operator", "A-8"], "executable note: 愈: adverbial modifier anchor as identity; no degree semantics"),
+    (["--operator", "A-9"], "executable note: 益: adverbial modifier anchor as identity; no increment semantics"),
     (["--operator", "A-10"], "executable note: 寖/浸: aspect anchor as identity; no gradual-time semantics"),
+    (["--operator", "A-15"], "executable note: 亦: adverbial modifier anchor as identity; no focus/additive semantics"),
     (["--operator", "A-16"], "executable note: 已: aspect anchor as identity; no completed-time semantics"),
     (["--operator", "A-17"], "executable note: 未: aspect anchor as identity; no future/negation semantics"),
     (["--operator", "A-18"], "executable note: 將/将: aspect anchor as identity; no prospective-time semantics"),
@@ -213,7 +216,7 @@ CLI_CASES = [
     (["--coverage"], "operators: 371 registered / 371 executable"),
     (["--coverage"], "operator forms: 371 ids with at least one form"),
     (["--help"], "wenyan-surface --json --operators [all|executable|known-not-executable|unsupported]"),
-    (["--help"], "245 exact/theorem-backed; 126 structural catalogue"),
+    (["--help"], "248 exact/theorem-backed; 123 structural catalogue"),
     (["--help"], "0 symbolic catalogue-shape"),
 ]
 

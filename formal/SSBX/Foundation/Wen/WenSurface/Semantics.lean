@@ -272,10 +272,13 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .A_1  => some ⟨.A_1,  Stdlib.hexIdBody, 1, "漸/渐: aspect anchor as identity; no gradual-time semantics"⟩
   | .A_2  => some ⟨.A_2,  Stdlib.hexIdBody, 1, "驟/骤: aspect anchor as identity; no sudden-time semantics"⟩
   | .A_3  => some ⟨.A_3,  Stdlib.hexIdBody, 1, "忽: aspect anchor as identity; no abrupt-time semantics"⟩
+  | .A_8  => some ⟨.A_8,  Stdlib.hexIdBody, 1, "愈: adverbial modifier anchor as identity; no degree semantics"⟩
+  | .A_9  => some ⟨.A_9,  Stdlib.hexIdBody, 1, "益: adverbial modifier anchor as identity; no increment semantics"⟩
   | .A_11 => some ⟨.A_11, .andB, 2, "既...又... / 一...且...: Bool conjunction"⟩
   | .A_12 => some ⟨.A_12, .andB, 2, "且: Bool conjunction"⟩
   | .A_13 => some ⟨.A_13, .andB, 2, "但: truth-conditional contrast as Bool conjunction"⟩
   | .A_14 => some ⟨.A_14, Stdlib.uniqueHBody, 1, "唯: focus-only layer as finite unique-existence"⟩
+  | .A_15 => some ⟨.A_15, Stdlib.hexIdBody, 1, "亦: adverbial modifier anchor as identity; no focus/additive semantics"⟩
   | .D_2  => some ⟨.D_2,  Stdlib.repeatOnceBody, 1, "再: repeat a Hex endomap once"⟩
   | .A_5  => some ⟨.A_5,  Stdlib.repeatOnceBody, 1, "復/复: aspectual repeat as applying a Hex endomap twice"⟩
   | .A_6  => some ⟨.A_6,  Stdlib.repeatOnceBody, 1, "又: again as applying a Hex endomap twice"⟩
@@ -322,8 +325,8 @@ def coreTheoremBackedOperatorIds : List OperatorId :=
     ++ [.N_3, .N_4, .N_5, .N_6, .K_1, .K_5, .K_6, .K_7, .K_8, .L_7, .S_3, .S_7, .Z_1, .I_3, .I_4,
         .I_5, .I_7, .P_4, .N_2, .N_7, .N_8, .P_5, .Q_2, .Q_4, .M_2, .Q_5, .Q_6, .Q_7,
         .Q_3, .Q_8, .D_2, .D_3, .D_9, .D_10, .M_3, .M_4, .M_5, .M_6, .M_7, .M_8,
-        .A_1, .A_2, .A_3, .A_4, .A_5, .A_6, .A_7, .A_10,
-        .A_11, .A_12, .A_13, .A_14, .A_16, .A_17, .A_18, .A_19, .A_20,
+        .A_1, .A_2, .A_3, .A_4, .A_5, .A_6, .A_7, .A_8, .A_9, .A_10,
+        .A_11, .A_12, .A_13, .A_14, .A_15, .A_16, .A_17, .A_18, .A_19, .A_20,
         .S_1, .S_2, .S_4, .S_5, .S_6, .S_8, .S_9, .S_10, .S_11, .S_12, .S_17, .S_18]
 
 def theoremBackedOperatorIds : List OperatorId :=
@@ -341,7 +344,7 @@ def structuralCatalogueOperatorIds : List OperatorId :=
 Structural total fallback for catalogue rows.
 
 These bodies are executable and type-checkable, but intentionally weaker than
-the 245 exact rows above: they preserve the operator id, signature kind, and
+the 248 exact rows above: they preserve the operator id, signature kind, and
 evaluated arguments as a catalogue value instead of projecting fake Hex/Bool
 results.
 -/
@@ -416,10 +419,10 @@ theorem executableOperatorIds_length :
     executableOperatorIds.length = 371 := by native_decide
 
 theorem coreTheoremBackedOperatorIds_length :
-    coreTheoremBackedOperatorIds.length = 199 := by native_decide
+    coreTheoremBackedOperatorIds.length = 202 := by native_decide
 
 theorem theoremBackedOperatorIds_length :
-    theoremBackedOperatorIds.length = 245 := by native_decide
+    theoremBackedOperatorIds.length = 248 := by native_decide
 
 theorem theoremBackedOperatorIds_nodup :
     theoremBackedOperatorIds.Nodup := by native_decide
@@ -429,7 +432,7 @@ theorem theoremBackedOperatorIds_all_semantics :
   native_decide
 
 theorem structuralCatalogueOperatorIds_length :
-    structuralCatalogueOperatorIds.length = 126 := by native_decide
+    structuralCatalogueOperatorIds.length = 123 := by native_decide
 
 theorem structuralCatalogueOperatorIds_all_not_theorem_backed :
     structuralCatalogueOperatorIds.all (fun id => (theoremBackedSemanticsFor? id).isNone) = true := by
@@ -460,8 +463,8 @@ theorem operatorRegistryCoverage_summary :
     operatorRegistryEntries.length = 371
       ∧ executableRegistryEntries.length = 371
       ∧ executableOperatorIds.length = 371
-      ∧ theoremBackedOperatorIds.length = 245
-      ∧ structuralCatalogueOperatorIds.length = 126
+      ∧ theoremBackedOperatorIds.length = 248
+      ∧ structuralCatalogueOperatorIds.length = 123
       ∧ theoremBackedOperatorIds.length + structuralCatalogueOperatorIds.length = 371
       ∧ executableOperatorIds.all isCatalogueOperator = true
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).id = id)
