@@ -4,7 +4,7 @@
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
-    "Foundation/Modern": 49,
+    "Foundation/Modern": 50,
     "Foundation/Wen": 51,
     "Foundation/Yi": 2,
     "Model": 2,
@@ -165,6 +165,7 @@
         "SSBX.Foundation.Modern.QuantumRelativityDiscreteActionBridge",
         "SSBX.Foundation.Modern.QuantumRelativityFinitePathSumBridge",
         "SSBX.Foundation.Modern.QuantumRelativityFinitePathSumAlgebraBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityEndpointIndexedPathFamilyBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -183,10 +184,10 @@
         "SSBX.Foundation.Modern.IIDWlln",
         "SSBX.Foundation.Modern.BochnerPL"
       ],
-      "lines": 175,
+      "lines": 176,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "572700e66bc7b6a153f47a003f30d5ef007a81785176f2af2e9166d4b7d82840"
+      "sha256": "780249359c601c7164fe30d9702d7f5909c36faa64db9fbb6981d26c838de3db"
     },
     {
       "cluster": "root",
@@ -10439,6 +10440,83 @@
       "module": "SSBX.Foundation.Modern.QuantumRelativityDiscretePhaseBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean",
       "sha256": "3efe3aff7cffe1f729e317f1682e1721f83f8dff07a2863618cf5be145796ee2"
+    },
+    {
+      "cluster": "Foundation/Modern",
+      "declaration_count": 16,
+      "declarations": [
+        {
+          "kind": "structure",
+          "name": "EndpointPair"
+        },
+        {
+          "kind": "structure",
+          "name": "EndpointTwoStepPath"
+        },
+        {
+          "kind": "structure",
+          "name": "EndpointIndexedTwoStepPathFamily"
+        },
+        {
+          "kind": "def",
+          "name": "HasEndpointIndexedTwoStepPathFamily"
+        },
+        {
+          "kind": "def",
+          "name": "endpointPairOfFinitePathFamily"
+        },
+        {
+          "kind": "def",
+          "name": "endpointIndexedFamilyOfFinitePathFamily"
+        },
+        {
+          "kind": "theorem",
+          "name": "finite_family_has_endpoint_indexed_family"
+        },
+        {
+          "kind": "def",
+          "name": "endpointIndexedFamilyAmplitudeSum"
+        },
+        {
+          "kind": "def",
+          "name": "endpointIndexedFamilyBornWeight"
+        },
+        {
+          "kind": "theorem",
+          "name": "endpoint_indexed_family_sum_of_finite_family"
+        },
+        {
+          "kind": "theorem",
+          "name": "endpoint_indexed_family_born_weight_of_finite_family"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteEndpointIndexedFamily"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_endpoint_index"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_endpoint_indexed_family_amplitude_cancels"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_endpoint_indexed_family_born_weight_zero"
+        },
+        {
+          "kind": "theorem",
+          "name": "endpoint_indexed_path_family_bridge_summary"
+        }
+      ],
+      "imports": [
+        "SSBX.Foundation.Modern.QuantumRelativityFinitePathSumAlgebraBridge"
+      ],
+      "lines": 208,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityEndpointIndexedPathFamilyBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean",
+      "sha256": "b8dbea9c9298090c76bd73470b8d8361f9f63fe99869f47b65739fe7f11bbb85"
     },
     {
       "cluster": "Foundation/Modern",

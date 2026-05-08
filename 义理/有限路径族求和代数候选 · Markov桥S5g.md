@@ -1,6 +1,6 @@
 # 有限路径族求和代数候选 · Markov桥S5g
 
-**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [有限路径族求和候选 · Markov桥S5f](有限路径族求和候选%20·%20Markov桥S5f.md) · [离散作用量相位候选 · Markov桥S5e](离散作用量相位候选%20·%20Markov桥S5e.md) · [双路径相消候选 · Markov桥S5c](双路径相消候选%20·%20Markov桥S5c.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
+**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [端点索引路径族候选 · Markov桥S5h](端点索引路径族候选%20·%20Markov桥S5h.md) · [有限路径族求和候选 · Markov桥S5f](有限路径族求和候选%20·%20Markov桥S5f.md) · [离散作用量相位候选 · Markov桥S5e](离散作用量相位候选%20·%20Markov桥S5e.md) · [双路径相消候选 · Markov桥S5c](双路径相消候选%20·%20Markov桥S5c.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
 **Lean 锚点**：
 
@@ -14,6 +14,7 @@
 | cancellation stability | `Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean` | `finite_path_family_append_cancels_of_canceling_summands` | `machineChecked` |
 | two-route algebra witness | `Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean` | `two_route_reversed_family_amplitude_cancels`、`two_route_double_family_amplitude_cancels` | `machineChecked` |
 | S5g 公开摘要 | `Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean` | `finite_path_sum_algebra_bridge_summary` | `machineChecked` |
+| S5h 后续闭合 | `Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean` | `endpoint_indexed_path_family_bridge_summary` 关闭 endpoint-indexed conversion 与 sum preservation | `machineChecked` |
 
 ---
 
@@ -92,7 +93,7 @@ theorem finite_path_sum_algebra_bridge_summary :
 | 轴 | 状态 | 说明 |
 |---|---|---|
 | arbitrary all-path enumeration | 后续结构 | S5g 只证明给定 finite list 的代数，不生成全部路径 |
-| endpoint-indexed family construction | 后续结构 | 可继续把同端点约束从手动 ledger 推到索引化构造 |
+| endpoint-indexed family construction | S5h 已关闭 | 已由 `endpoint_indexed_path_family_bridge_summary` 把同端点 ledger 推到 endpoint-indexed family |
 | filter / duplicate normalization | 后续结构 | 尚未证明筛选、去重、规范化或支撑集化 |
 | continuous phase/action law | 后续结构 | 仍需连续相位、action functional 或 Hamiltonian/unitary law |
 | path integral | 后续结构 | 需要路径空间、测度、极限或 over-all-paths construction |
@@ -125,9 +126,9 @@ sum F = 0 and sum G = 0 -> sum (F ++ G) = 0
 
 ---
 
-## 二 · 下一步
+## 二 · 后续承接
 
-S5g 后最省力的增强是 S5h：
+S5g 后的直接增强 S5h 已关闭：
 
 ```text
 finite path-sum algebra
@@ -135,7 +136,7 @@ finite path-sum algebra
 -> finite enumeration boundary
 ```
 
-这一步仍应保持有限结构。一般 path integral、连续测度与经验可测干涉仍不应提前写入 theorem。
+下一步应在 S5h 的 endpoint-indexed family 上处理 filter / support normalization 与 duplicate handling boundary。一般 path integral、连续测度与经验可测干涉仍不应提前写入 theorem。
 
 ---
 
