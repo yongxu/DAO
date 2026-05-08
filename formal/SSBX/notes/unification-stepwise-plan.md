@@ -33,6 +33,7 @@
 -> 有限键商候选
 -> 路径商类候选
 -> 规范代表元候选
+-> 商支撑枚举候选
 -> 几何候选接口
 -> 经验 pending ledger
 -> 统一摘要 theorem
@@ -70,8 +71,9 @@ lake build SSBX.Foundation.Modern.QuantumRelativityPathIdentityBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityFiniteKeyQuotientBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityPathQuotientBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityCanonicalRepresentativeBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityQuotientSupportBridge
 lake build SSBX
-git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityTwoRouteEnumerationBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityPathIdentityBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityPathQuotientBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityCanonicalRepresentativeBridge.lean formal/SSBX.lean formal/SSBX/notes/unification-stepwise-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/有限概率核接口 · Markov桥S2.md' '义理/路径组合与因果约束 · Markov桥S3.md' '义理/经典Markov与量子振幅分层 · Markov桥S4.md' '义理/干涉与测量律候选 · Markov桥S5.md' '义理/非零路径振幅候选 · Markov桥S5b.md' '义理/双路径相消候选 · Markov桥S5c.md' '义理/离散相位标记候选 · Markov桥S5d.md' '义理/离散作用量相位候选 · Markov桥S5e.md' '义理/有限路径族求和候选 · Markov桥S5f.md' '义理/有限路径族求和代数候选 · Markov桥S5g.md' '义理/端点索引路径族候选 · Markov桥S5h.md' '义理/端点支撑规范化候选 · Markov桥S5i.md' '义理/双路径枚举候选 · Markov桥S5j.md' '义理/路径身份键候选 · Markov桥S5k.md' '义理/有限键商候选 · Markov桥S5l.md' '义理/路径商类候选 · Markov桥S5m.md' '义理/规范代表元候选 · Markov桥S5n.md'
+git diff --check --
 ```
 
 ## S0 · 基线重审
@@ -618,6 +620,26 @@ general all-path enumeration 与 path integral 仍在 theorem 外。
 | `CanonicalRepresentativeFor` | `QuantumRelativityCanonicalRepresentativeBridge.lean` | witness 代表某个 quotient class |
 | `two_route_source_target_has_canonical_representative` | `QuantumRelativityCanonicalRepresentativeBridge.lean` | 任意 toy source/target path 的 quotient class 由 upper/lower displayed path 代表 |
 
+## S5o · 商支撑枚举候选
+
+目标：把 two-route displayed quotient classes 升级为有限 quotient-support list，并证明支撑覆盖、visible-key readback、quotient-level cancellation 与 Born-shaped zero boundary。
+
+| 项 | 内容 |
+|---|---|
+| Lean 出口 | `quotient_support_bridge_summary` |
+| 最低 theorem 形态 | `quotientSupportAmplitudeSum`、`quotientSupportVisibleKeys`、`two_route_source_target_quotient_support_complete`、`two_route_quotient_support_amplitude_sum_cancels` |
+| 失败记录 | 若 quotient support sum 与 key sum 只差定义展开，记录具体失败 theorem 与修正；若覆盖失败，记录为 `Lean proof failure` |
+| 文档读法 | 正面写明已证 finite quotient-support boundary；quotient-support algebra、general all-path enumeration、path integral、Born rule derivation 与 empirical prediction 仍需后续结构 |
+| 边界保留 | S5o 不枚举任意 process 的全部路径，只处理 two-route toy source/target quotient support |
+
+当前状态：
+
+| theorem | 文件 | 读法 |
+|---|---|---|
+| `quotient_support_bridge_summary` | `QuantumRelativityQuotientSupportBridge.lean` | 合取 quotient support coverage、visible-key readback、cancellation、representative completeness 与文构造覆盖 |
+| `two_route_quotient_support_visible_keys_eq` | `QuantumRelativityQuotientSupportBridge.lean` | displayed quotient support 可回读为 displayed key list |
+| `two_route_quotient_support_amplitude_sum_cancels` | `QuantumRelativityQuotientSupportBridge.lean` | quotient-support 层保持 `1 + (-1) = 0` |
+
 ## S6 · 几何与度规候选接口
 
 目标：从因果事件网络推进到几何候选接口，但只在有 theorem 时声称具体结构。
@@ -712,7 +734,8 @@ Lean 只关闭一个几何候选接口；
 | 2026-05-08 | S5k | success | 新增 finite two-step path identity-key candidate；关闭 visible key boundary、two-route key separation 与 toy source/target key completeness；finite visible-key quotient candidate 已由 S5l 承接，quotient class 已由 S5m 承接，two-route canonical representative 已由 S5n 承接，仍不证明 general choice function、general all-path enumeration、path integral 或经验闭合 |
 | 2026-05-08 | S5l | success | 新增 finite visible-key quotient candidate；关闭 key-equivalence、key-compatible amplitude descent、duplicate compensation 与 two-route key-level cancellation；visible-key quotient class 已由 S5m 承接，仍不证明 general all-path enumeration、path integral 或经验闭合 |
 | 2026-05-08 | S5m | success | 新增 visible-key quotient class candidate；关闭 `Setoid` / `Quot` construction、quotient descent 与 two-route quotient completeness；two-route canonical representative 已由 S5n 承接，仍不证明 general choice function、general all-path enumeration、path integral 或经验闭合 |
-| 2026-05-08 | S5n | success | 新增 two-route canonical representative candidate；关闭 displayed representatives 与 toy source/target representative completeness，仍不证明 general choice function、general all-path enumeration、path integral 或经验闭合 |
+| 2026-05-08 | S5n | success | 新增 two-route canonical representative candidate；关闭 displayed representatives 与 toy source/target representative completeness；finite quotient-support enumeration 已由 S5o 承接，仍不证明 general choice function、general all-path enumeration、path integral 或经验闭合 |
+| 2026-05-08 | S5o | failure retained / success | 第一次 quotient-support build 因 `rfl` 未展开 `quotientKeyAmplitude` 与 `Function.comp_def` 失败；修正后新增 finite quotient-support candidate，关闭 support coverage、visible-key readback、quotient-level cancellation 与 Born-shaped zero boundary，仍不证明 quotient-support algebra、general all-path enumeration、path integral 或经验闭合 |
 
 ## 统一用语正名
 
@@ -720,8 +743,8 @@ Lean 只关闭一个几何候选接口；
 
 | 词 | 在本路线中的含义 | 结构依据 |
 |---|---|---|
-| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S5n 已关闭的 summary theorem 与路线日志 |
-| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5n 候选接口、后续 S7 ledger |
+| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S5o 已关闭的 summary theorem 与路线日志 |
+| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5o 候选接口、后续 S7 ledger |
 | 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `markov_causal_bridge_summary` 与各阶段 `*_summary` theorem |
 
 推荐正名句：

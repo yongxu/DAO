@@ -68,6 +68,7 @@ theorem path_quotient_bridge_summary :
 |---|---|---|
 | proof-field path equality | 后续结构 | S5m 商掉 proof fields，但不证明原 witness proof fields 相等 |
 | two-route canonical representative | S5n 已关闭 | S5n 已为 toy source/target quotient classes 给出 displayed representatives |
+| finite quotient support | S5o 已关闭 | S5o 已把 displayed quotient classes 升级为 finite quotient-support list |
 | general choice function | 后续结构 | 仍未为任意 process 或任意 quotient class 选代表元 |
 | general all-path enumeration | 后续结构 | S5m 仍只处理 two-step witness 与 two-route toy enumeration |
 | path integral | 后续结构 | 仍需要路径空间、测度、极限或 over-all-paths construction |
@@ -105,7 +106,7 @@ S5n 后可以继续：
 
 ```text
 quotient class
--> finite support quotient enumeration
+-> quotient-support algebra
 ```
 
 或者转向：

@@ -73,8 +73,8 @@
 | formal/SSBX/notes/PositionOperatorGraph.md | 0 | 5 |
 | formal/SSBX/notes/atom-naming.md | 0 | 0 |
 | formal/SSBX/notes/baguaWen-spec.md | 0 | 0 |
-| formal/SSBX/notes/markov-causal-bridge-plan.md | 23 | 1 |
-| formal/SSBX/notes/markov-causal-bridge-verification-plan.md | 22 | 20 |
+| formal/SSBX/notes/markov-causal-bridge-plan.md | 24 | 1 |
+| formal/SSBX/notes/markov-causal-bridge-verification-plan.md | 23 | 20 |
 | formal/SSBX/notes/math-axiom-map.md | 0 | 0 |
 | formal/SSBX/notes/metainterp-isa-gap.md | 0 | 0 |
 | formal/SSBX/notes/monad-root-plan.md | 2 | 3 |
@@ -83,7 +83,7 @@
 | formal/SSBX/notes/run-boundary.md | 0 | 8 |
 | formal/SSBX/notes/tier3-quine-roadmap.md | 1 | 15 |
 | formal/SSBX/notes/truth-ledger-boundary.md | 0 | 20 |
-| formal/SSBX/notes/unification-stepwise-plan.md | 20 | 0 |
+| formal/SSBX/notes/unification-stepwise-plan.md | 0 | 0 |
 | formal/SSBX/notes/v14-roadmap.md | 0 | 0 |
 | formal/SSBX/notes/wensurface-roadmap.md | 0 | 7 |
 | formal/SSBX/notes/wensurface-syntax-spec.md | 0 | 4 |
@@ -126,6 +126,7 @@
 | 义理/动力 · 从元到行.md | 1 | 6 |
 | 义理/双路径枚举候选 · Markov桥S5j.md | 0 | 7 |
 | 义理/双路径相消候选 · Markov桥S5c.md | 4 | 16 |
+| 义理/商支撑枚举候选 · Markov桥S5o.md | 0 | 8 |
 | 义理/干涉与测量律候选 · Markov桥S5.md | 6 | 17 |
 | 义理/形式逻辑 · 从元到推.md | 1 | 0 |
 | 义理/心智 · 从元到识.md | 1 | 2 |

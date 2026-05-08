@@ -4,7 +4,7 @@
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
-    "Foundation/Modern": 56,
+    "Foundation/Modern": 57,
     "Foundation/Wen": 51,
     "Foundation/Yi": 2,
     "Model": 2,
@@ -172,6 +172,7 @@
         "SSBX.Foundation.Modern.QuantumRelativityFiniteKeyQuotientBridge",
         "SSBX.Foundation.Modern.QuantumRelativityPathQuotientBridge",
         "SSBX.Foundation.Modern.QuantumRelativityCanonicalRepresentativeBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityQuotientSupportBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -190,10 +191,10 @@
         "SSBX.Foundation.Modern.IIDWlln",
         "SSBX.Foundation.Modern.BochnerPL"
       ],
-      "lines": 182,
+      "lines": 183,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "10c35ded7840499160c23c9f2623d1a5576dadb2dac0d7ed1f93925c066ae643"
+      "sha256": "305ebc937daa0e325d6e58d361ff7069e1be3b148d446d9c5fdc3be10f93d7db"
     },
     {
       "cluster": "root",
@@ -11698,6 +11699,71 @@
       "module": "SSBX.Foundation.Modern.QuantumRelativityPathQuotientBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityPathQuotientBridge.lean",
       "sha256": "7cf635b5c435e0ecb1bc3cdf3154ba32b59561efd075db8c65699427d1ed9b0b"
+    },
+    {
+      "cluster": "Foundation/Modern",
+      "declaration_count": 13,
+      "declarations": [
+        {
+          "kind": "def",
+          "name": "quotientSupportAmplitudeSum"
+        },
+        {
+          "kind": "def",
+          "name": "quotientSupportBornWeight"
+        },
+        {
+          "kind": "def",
+          "name": "quotientSupportVisibleKeys"
+        },
+        {
+          "kind": "theorem",
+          "name": "quotient_support_sum_eq_visible_key_sum"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteQuotientSupportRepresentatives"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_quotient_support_representative_classes"
+        },
+        {
+          "kind": "def",
+          "name": "TwoRouteSourceTargetQuotientSupportComplete"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_source_target_quotient_support_complete"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_quotient_support_visible_keys_eq"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_quotient_support_sum_eq_key_sum"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_quotient_support_amplitude_sum_cancels"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_quotient_support_born_weight_zero"
+        },
+        {
+          "kind": "theorem",
+          "name": "quotient_support_bridge_summary"
+        }
+      ],
+      "imports": [
+        "SSBX.Foundation.Modern.QuantumRelativityCanonicalRepresentativeBridge"
+      ],
+      "lines": 150,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityQuotientSupportBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportBridge.lean",
+      "sha256": "6575908692a178b475cc0081f9950a041c59f7df354616c34cee7bba374e21a4"
     },
     {
       "cluster": "Foundation/Modern",
