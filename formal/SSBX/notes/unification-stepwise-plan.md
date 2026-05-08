@@ -40,8 +40,9 @@ lake build SSBX.Foundation.Modern.QuantumRelativityMarkovBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityConcreteBridge
 lake build SSBX.Foundation.Modern.OperatorCellGridMarkovBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityPathCausalBridge
 lake build SSBX
-git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean formal/SSBX.lean formal/SSBX/notes/unification-stepwise-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/有限概率核接口 · Markov桥S2.md'
+git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean formal/SSBX.lean formal/SSBX/notes/unification-stepwise-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/有限概率核接口 · Markov桥S2.md' '义理/路径组合与因果约束 · Markov桥S3.md'
 ```
 
 ## S0 · 基线重审
@@ -122,10 +123,10 @@ Markov 权重与一步转移的支持关系仍保留。
 
 | 项 | 内容 |
 |---|---|
-| Lean 出口 | 至少关闭路径组合、一步扩展、可达闭包、反身/传递/反对称或局部有限性中的一个 |
-| 最低 theorem 形态 | `pathWeight_cons`、`reachable_trans`、`causalBefore_trans`、`locally_finite_reachable` 中择一 |
+| Lean 出口 | `path_causal_bridge_summary` |
+| 最低 theorem 形态 | `ComposableProcessPaths`、`composed_path_reachable`、`composed_path_causal_before`、`code_monotone_step_no_self_loop` |
 | 失败记录 | 若组合律与现有 `ProcessPath` 不匹配，记录为 structure mismatch，不重写历史结论 |
-| 文档更新 | 只说明新增了某一条结构约束；未证明的因果集公理继续列为未纳入 |
+| 文档更新 | 只说明新增 path witness composition 与 code-successor/no-self-loop 约束；未证明的因果集公理继续列为未纳入 |
 | 不可声称 | 不能说已恢复 spacetime、light cone、Lorentzian metric 或完整 causal set theory |
 
 通过判准：
@@ -134,6 +135,15 @@ Markov 权重与一步转移的支持关系仍保留。
 至少一个路径或因果性质成为 machine-checked theorem；
 未关闭性质保留在 pending 表。
 ```
+
+当前状态：
+
+| theorem | 文件 | 读法 |
+|---|---|---|
+| `path_causal_bridge_summary` | `QuantumRelativityPathCausalBridge.lean` | S3 关闭路径 witness 组合、组合后可达/因果读法、concrete/grid code-successor 与 no-self-loop |
+| `composed_path_reachable` | `QuantumRelativityPathCausalBridge.lean` | 两段有效 path witness 可组合成外端点可达 |
+| `composed_path_causal_before` | `QuantumRelativityPathCausalBridge.lean` | 组合 path witness 可读成外端点 `causalBefore` |
+| `code_monotone_step_no_self_loop` | `QuantumRelativityPathCausalBridge.lean` | code-monotone 一步转移排除自环 |
 
 ## S4 · 经典 Markov 与量子 amplitude 分层
 
@@ -252,6 +262,7 @@ Lean 只关闭一个几何候选接口；
 | 2026-05-08 | S0 | plan | 本文件新增逐步验证路线；不新增物理 claim |
 | 2026-05-08 | S1 | success | 新增 concrete 三状态 witness 与 `71232` operator-cell grid bridge；仍不证明 sum-one 概率律、Born rule、几何恢复或经验闭合 |
 | 2026-05-08 | S2 | success | 新增 finite probability-kernel denominator interface；关闭非终端行分母非零与权重上界，仍不证明 sum-one 概率律、Born rule、量子通道或经验闭合 |
+| 2026-05-08 | S3 | success | 新增 path composition and local causal constraints；关闭组合 path witness 的可达/因果读法与 concrete/grid no-self-loop，仍不证明完整偏序、局部有限 causal set、light cone 或 metric recovery |
 
 ## 统一用语边界
 

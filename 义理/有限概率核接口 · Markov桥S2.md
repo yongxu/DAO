@@ -1,6 +1,6 @@
 # 有限概率核接口 · Markov桥S2
 
-**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [文构造完备与直相加边界](文构造完备与直相加边界.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
+**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [路径组合与因果约束 · Markov桥S3](路径组合与因果约束%20·%20Markov桥S3.md) · [文构造完备与直相加边界](文构造完备与直相加边界.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
 **Lean 锚点**：
 
@@ -93,7 +93,7 @@ S2 关闭的是 finite denominator interface；
 | 权重行求和 | 未纳入本轮 | 没有证明 `sum weights = rowTotal` |
 | 实数概率空间 | 未纳入本轮 | 没有把候选分数提升为 measure-theoretic probability |
 | Born rule | 未纳入本轮 | 没有 amplitude，也没有范数平方律 |
-| 路径组合 | 未纳入本轮 | S3 才处理路径权重组合或 causal constraint |
+| 路径组合 | S2 未纳入；S3 已开单独接口 | 见《路径组合与因果约束 · Markov桥S3》；`pathWeight` 乘法仍未纳入 |
 | 经验接口 | 未纳入本轮 | 没有 observation ledger 和数据判准 |
 
 本轮闭合范围：**S2 已在 Lean 中关闭 finite probability-kernel denominator interface；它保守地证明非终端行分母非零和权重上界，不关闭 sum-one 概率律、Born rule、quantum channel、干涉、几何恢复或经验闭合。**
@@ -160,7 +160,7 @@ S2 之后，最省力的推进顺序是：
 
 | 阶段 | 目标 | 本文状态 |
 |---|---|---|
-| S3 | 路径组合与局部因果约束 | 未纳入本轮 |
+| S3 | 路径组合与局部因果约束 | 已由《路径组合与因果约束 · Markov桥S3》关闭最小接口 |
 | S4 | classical Markov 与 quantum amplitude 分层 | 未纳入本轮 |
 | S5 | 干涉与 Born-rule-shaped candidate | 未纳入本轮 |
 | S6 | 几何与度规候选接口 | 未纳入本轮 |
