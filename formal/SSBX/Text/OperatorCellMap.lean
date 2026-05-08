@@ -231,13 +231,13 @@ Current lower-bound audit for theorem families:
   cuo-zong, and three line flips; equivalently the V4 transforms,
   single-yao flips, identity, and mod-64 successor/predecessor.
 * 7 concrete `Cell192` reachability generators: six line flips plus one time edge.
-* 13 BaguaWen L0 instruction clauses.
+* 12 BaguaWen L0 instruction clauses.
 * 27 core text-level semantic families from the parameterized kernel draft.
 -/
 def semanticLowerBoundRows : List SemanticLowerBoundRow :=
   [ { kind := .exactCellTransformFamilies, scope := 10 }
   , { kind := .cell192ReachabilityGenerators, scope := 7 }
-  , { kind := .l0InstructionClauses, scope := 13 }
+  , { kind := .l0InstructionClauses, scope := 12 }
   , { kind := .coreTextSemanticFamilies, scope := 27 }
   ]
 
@@ -246,7 +246,7 @@ theorem semanticLowerBoundRows_length :
   native_decide
 
 theorem semanticLowerBoundRows_scopes :
-    semanticLowerBoundRows.map (·.scope) = [10, 7, 13, 27] := by
+    semanticLowerBoundRows.map (·.scope) = [10, 7, 12, 27] := by
   native_decide
 
 theorem parameterizedSemanticFamilies_lt_operatorCellGrid :
@@ -397,7 +397,7 @@ theorem functional_completion_summary :
     ∧ cellTransformOperatorIds.length = 43
     ∧ cellTransformOperatorIds.all (fun id => decide ((fullSignatureFor id).id = id)) = true
     ∧ Cell192Generator.all.length = 7
-    ∧ l0InstructionClauseKinds.length = 13
+    ∧ l0InstructionClauseKinds.length = 12
     ∧ operatorCellCandidateBindings.length = 7
     ∧ allOperatorCellSemanticRows.length = 71232
     ∧ familyBackedDenotationRows.length = 8256
@@ -405,7 +405,7 @@ theorem functional_completion_summary :
     ∧ exactSignatureShapeRows.length = 1152
     ∧ catalogueSignatureShapeRows.length = 61824
     ∧ semanticLowerBoundRows.length = 4
-    ∧ semanticLowerBoundRows.map (·.scope) = [10, 7, 13, 27]
+    ∧ semanticLowerBoundRows.map (·.scope) = [10, 7, 12, 27]
     ∧ 27 < allOperatorCells.length
     ∧ functionalCompletionCompleteRows.length = 8
     ∧ functionalCompletionTrackedRows.length = 4

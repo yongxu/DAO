@@ -2,7 +2,7 @@
 # WenyanText — 文言之程，可执之文
 
 文言不止是描述，亦可为程。
-本模块以 Lean 之 `«»` 引号给 `YiInstr` 之十三构造子起文言别名，
+本模块以 Lean 之 `«»` 引号给 `YiInstr` 之十二构造子起文言别名，
 则文之程序即真程序，可由同一 `runFuel` 解释器执行——与道判机同。
 
 注：Lean 4.29 之 lexer 不收 CJK 字为标识符之首，故须以 `«名»` 包之。
@@ -15,7 +15,7 @@ open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Bagua.Cell192
 open SSBX.Foundation.Bagua.BaguaTuring
 
-/-! ## § 1  文之十三字 — YiInstr 之文言别名 -/
+/-! ## § 1  文之十二字 — YiInstr 之文言别名 -/
 
 /-- 不动：守而不易。 -/
 abbrev «不动» : YiInstr := YiInstr.nop
@@ -31,8 +31,6 @@ abbrev «推» : YiInstr := YiInstr.push
 abbrev «取» : YiInstr := YiInstr.pop
 /-- 终：行止。 -/
 abbrev «终» : YiInstr := YiInstr.halt
-/-- 易：现与带首相易。 -/
-abbrev «易» : YiInstr := YiInstr.swap
 
 /-- 设时：定其已今未。 -/
 abbrev «设时» (s : Shi) : YiInstr := YiInstr.setShi s

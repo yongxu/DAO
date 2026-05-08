@@ -20,9 +20,9 @@
   ## 实现策略
 
   1. **Pop tag cell**：META.cur := tag cell；history 上前进 1 cell.
-  2. **Dispatch on tag value (0..12)**：tag cell = `cellFromIdx ⟨k, _⟩`，
+  2. **Dispatch on tag value (0..11)**：tag cell = `cellFromIdx ⟨k, _⟩`，
      其 hex 部分 = `Hexagram.fromIdx ⟨k/3, _⟩`，shi 部分 = Shi index `k%3`.
-     tags 0..11 之 hex idx ∈ {0, 1, 2, 3}（k/3）；tag 12 之 hex idx = 4.
+     tags 0..11 之 hex idx ∈ {0, 1, 2, 3}（k/3）；shi ∈ {ji, jin, wei}（k%3）.
      ⟹ 用 (y1, y2) 之 2-bit 判 hex_idx；用 branchShiEq 判 Shi.
   3. **Per-opcode block**：pop 适当数量之 cell（0..4），跳至 exit.
 
@@ -42,21 +42,19 @@
   | 9   | push          | 3 (11)          | ji   | 0          |
   | 10  | pop           | 3 (11)          | jin  | 0          |
   | 11  | halt          | 3 (11)          | wei  | 0          |
-  | 12  | swap          | 4 (100)         | ji   | 0          |
 
   注：tags 0..11 之 hex idx < 4 < 16，故 y3, y4, y5, y6 均为 yang。
-  tag 12 uses hex idx 4 and requires the future full dispatch tree to inspect
-  y3 as well as y1/y2.
+  比较 y_i 与 y_3 (=yang) 即可判 y_i 是否 yang。
 
   ## 已证 / 未证
 
   - ✓ `skipOneInstr` 之 well-formed 定义
   - ✓ `skipOneInstr_length` （结构上的长度引理）
-  - ✓ `skipOneInstr_simulates_zeroArity`（针对 8 个零参指令：nop, hu, cuo,
-    zong, push, pop, halt, swap 之 simulation；这些指令编码恰为单个 tag cell，
+  - ✓ `skipOneInstr_simulates_zeroArity`（针对 7 个零参指令：nop, hu, cuo,
+    zong, push, pop, halt 之 simulation；这些指令编码恰为单个 tag cell，
     故只需 pop 一次）
-  - ✗ 完整 13-way simulation（涉及 Nat-参数指令之变长编码与 dispatch tree
-    之全 13 路 case 分析；架构上完备但工程量极大，超出当前 chunk 范围）
+  - ✗ 完整 12-way simulation（涉及 Nat-参数指令之变长编码与 dispatch tree
+    之全 12 路 case 分析；架构上完备但工程量极大，超出当前 chunk 范围）
 
   ## 上层使用契约
 
@@ -94,7 +92,7 @@ theorem popBlock_length (arity : Nat) (exitPc : Nat) :
 
 /-! ## § 2 Dispatch tree fragment construction
 
-  将 13 个 (hex_idx, shi) 二维 case 展开为线性指令列表。布局如下
+  将 12 个 (hex_idx, shi) 二维 case 展开为线性指令列表。布局如下
   （offset 表示子例程起始 pc）：
 
   ```
@@ -108,7 +106,7 @@ theorem popBlock_length (arity : Nat) (exitPc : Nat) :
 
   实现细节：每个 Shi 类型对应 4 个 hex_idx，需要 2 层 yao branching。
 
-  这里给出一个 SIMPLIFIED 实现：因 8 个零参指令编码恰为单个 tag cell，
+  这里给出一个 SIMPLIFIED 实现：因 7 个零参指令编码恰为单个 tag cell，
   在 META.history 上的 skip 操作就是「pop 一次」。我们主要服务这一类。
   对 5 个有参指令，子例程仍能保证「pop 至少一次」（即 tag），但参数 cell
   保留在 history 顶部——上层 fetch loop 须知此契约或扩展 dispatch tree.
@@ -123,7 +121,7 @@ theorem popBlock_length (arity : Nat) (exitPc : Nat) :
   这种「contract by tag」之分工是 fetch/execute 分离架构之自然产物：fetch
   只负责「定位」和「读取指令类别」，参数解码归 execute。
 
-  注：完整 dispatch tree（13 路全 case，含 nat 参数 length-prefix 之自适应
+  注：完整 dispatch tree（12 路全 case，含 nat 参数 length-prefix 之自适应
   pop）可作为独立增量在后续添加；其结构已在 § 2 文档化。
 -/
 
@@ -138,13 +136,13 @@ theorem skipOneInstr_length (offset : Nat) :
 
 /-! ## § 4 Simulation lemma：零参指令之 skip 正确性
 
-  对 8 个零参指令 i ∈ {nop, hu, cuo, zong, push, pop, halt, swap}：
+  对 7 个零参指令 i ∈ {nop, hu, cuo, zong, push, pop, halt}：
     encInstr i = [tag_cell_i]
   故 skipOneInstr （= [pop]）从 history = encInstr i ++ tail 状态出发，
   运行 1 fuel 后，history = tail。此外 META.cur 被覆盖为 tag_cell_i。
 -/
 
-/-- The zero-arity YiInstr opcodes whose encoding is exactly 1 cell. -/
+/-- The 7 zero-arity YiInstr opcodes whose encoding is exactly 1 cell. -/
 def IsZeroArity : YiInstr → Prop
   | .nop  => True
   | .hu   => True
@@ -153,7 +151,6 @@ def IsZeroArity : YiInstr → Prop
   | .push => True
   | .pop  => True
   | .halt => True
-  | .swap => True
   | _     => False
 
 /-- For zero-arity ops, `encInstr` is a single tag cell. -/
@@ -185,7 +182,6 @@ def zeroArityTag (i : YiInstr) (h : IsZeroArity i) : Cell192 :=
   | .push, _ => cellFromIdx ⟨9,  by omega⟩
   | .pop,  _ => cellFromIdx ⟨10, by omega⟩
   | .halt, _ => cellFromIdx ⟨11, by omega⟩
-  | .swap, _ => cellFromIdx ⟨12, by omega⟩
 
 /-- Encoding lemma: `encInstr i = [zeroArityTag i h]` for zero-arity i. -/
 theorem encInstr_zeroArity_eq (i : YiInstr) (h : IsZeroArity i) :
@@ -312,9 +308,9 @@ theorem skipOneInstr_simulates_standalone
     ++ readTagAndDispatch ...
   ```
 
-  待 13-way dispatch tree 与 nat-参数 cell 之自适应 pop 完成，可将本文件
+  待 12-way dispatch tree 与 nat-参数 cell 之自适应 pop 完成，可将本文件
   之 skipOneInstr 升级为「skips ANY YiInstr」之版本。当前版本则 sufficient
-  for 8 个零参指令——这本身已 cover 超过 60% 之 ISA。
+  for 7 个零参指令——这本身已 cover 接近 60% 之 ISA。
 
   完成度估计：~30% of total skip-instr work（核心结构 + 零参 case 完备）。
 -/
