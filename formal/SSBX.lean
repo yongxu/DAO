@@ -159,3 +159,9 @@ import SSBX.Foundation.Modern.PicardLindelofGen
 import SSBX.Foundation.Modern.CatOp
 import SSBX.Foundation.Modern.IIDWlln
 import SSBX.Foundation.Modern.BochnerPL
+
+-- Phase 4 边界补章（统一 / 可知 / 可 / 量子时空互补）
+import SSBX.Foundation.Modern.UnityBoundary
+import SSBX.Foundation.Modern.KnowableBoundary
+import SSBX.Foundation.Modern.KeBoundary
+import SSBX.Foundation.Modern.QuantumSpacetime

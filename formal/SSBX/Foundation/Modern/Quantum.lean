@@ -343,11 +343,16 @@ theorem quantum_summary :
     ∧ (∀ t : SSBX.Foundation.Yi.Yi.Trigram,
         Trigram.toFin8 (bian t) = flipTopIndex (Trigram.toFin8 t))
     ∧ (∀ t : SSBX.Foundation.Yi.Yi.Trigram,
+        Trigram.toFin8 (SSBX.Foundation.Yi.Yi.Trigram.cuo t)
+          = ⟨7 - (Trigram.toFin8 t).val, by
+              have h := (Trigram.toFin8 t).isLt
+              omega⟩)
+    ∧ (∀ t : SSBX.Foundation.Yi.Yi.Trigram,
         Trigram.toFin8 (SSBX.Foundation.Yi.Yi.Trigram.zong t)
           = reversePositionIndex (Trigram.toFin8 t)) :=
   ⟨pauliX_squared, pauliZ_squared, pauliX_apply_ket0, pauliX_apply_ket1,
    qian_to_zero, kun_to_seven, pauliX_apply_yao_basis,
    computational_basis_born_rule,
-   dong_via_fin8, hua_via_fin8, bian_via_fin8, zong_via_fin8⟩
+   dong_via_fin8, hua_via_fin8, bian_via_fin8, cuo_via_fin8, zong_via_fin8⟩
 
 end SSBX.Foundation.Modern.Quantum

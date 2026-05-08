@@ -223,8 +223,15 @@ theorem proof_boundary_is_sayable_skeleton (r : ProofRegion) :
 
 /-! ## § 5 This file completes the deferred non-knowable ke-boundaries -/
 
-/-- `KnowableBoundary` 中 deferred 的可感 / 可行边界，在本文件中承接处理。 -/
-def handledInKeBoundary (_b : DeferredKeBoundary) : Bool := true
+/-- `KnowableBoundary` 中 deferred 的可感 / 可行 / 可证边界，在本文件中承接处理。
+    保持 constructor-explicit，使未来新增 deferred 轴必须显式审计。 -/
+def handledInKeBoundary : DeferredKeBoundary → Bool
+  | .feelable => true
+  | .unfeelable => true
+  | .actionable => true
+  | .unactionable => true
+  | .provable => true
+  | .unprovable => true
 
 /-- `KnowableBoundary` 不处理的 deferred 项，在本文件中处理。 -/
 theorem deferred_ke_boundaries_handled_here (b : DeferredKeBoundary) :
