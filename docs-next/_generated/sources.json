@@ -1,5 +1,5 @@
 {
-  "count": 394,
+  "count": 396,
   "include_archive": false,
   "sources": [
     {
@@ -99,9 +99,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 2943,
+      "bytes": 2994,
       "path": "docs-next/10_formal_形式/modern.md",
-      "sha256": "c8cb71aaa3733a3f9a1c0d396e7e4bac211e51726a81a5ab78364e77ae1e87cb",
+      "sha256": "929485fbd6ef2d546ebd391635e3fae0be6dbe8d84bdadea97295e2a91dc6b5a",
       "suffix": ".md"
     },
     {
@@ -351,9 +351,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 8247,
+      "bytes": 8324,
       "path": "formal/SSBX.lean",
-      "sha256": "9d786b56cebc867c5251655599f659734614cac9b4a54ff86262d71ca6a10833",
+      "sha256": "2941bbc24d5e31d3be164699abef4dc1568461181a67573af25cc002eed74182",
       "suffix": ".lean"
     },
     {
@@ -762,6 +762,12 @@
       "bytes": 9715,
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean",
       "sha256": "d80d02b2fb3ac2be8a76a9ea17eceeb6e82d9d31d26ca9464f54835e5986a78a",
+      "suffix": ".lean"
+    },
+    {
+      "bytes": 7030,
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityBornWeightNormalizationBridge.lean",
+      "sha256": "658e88866a03dab413e9164bcf2359cd31081fecf083f8e9d76598d1fa33deca",
       "suffix": ".lean"
     },
     {
@@ -1641,15 +1647,15 @@
       "suffix": ".md"
     },
     {
-      "bytes": 48808,
+      "bytes": 50515,
       "path": "formal/SSBX/notes/markov-causal-bridge-plan.md",
-      "sha256": "ec581d8f01df76742b7e8572b5b86047a84c48632267a311e6cb547817a7664f",
+      "sha256": "be1b6bee6356391b55e1cb5b0277d17cef78bb8607c3dbc242c19582674f1167",
       "suffix": ".md"
     },
     {
-      "bytes": 33909,
+      "bytes": 34947,
       "path": "formal/SSBX/notes/markov-causal-bridge-verification-plan.md",
-      "sha256": "21d84b0926590dba542a6229a8189d1f6cf64d1a59b548698ca6bea8d5f9b477",
+      "sha256": "ed8063d03dcf43c94d9a9a6e4b16685718226572c22b5272976b739ecb3cd649",
       "suffix": ".md"
     },
     {
@@ -1701,9 +1707,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 65575,
+      "bytes": 67750,
       "path": "formal/SSBX/notes/unification-stepwise-plan.md",
-      "sha256": "f273d2da084e2c3c83506f6ed603a26a5a8cb07b02464a46629d5d4e238fcbd3",
+      "sha256": "e5220227a322040f7b7c2a25d46740facb9b2a397f1032f846cdbf5fcffec6e9",
       "suffix": ".md"
     },
     {
@@ -1833,6 +1839,12 @@
       "suffix": ".md"
     },
     {
+      "bytes": 5567,
+      "path": "义理/Born权重条件归一候选 · Markov桥S11.md",
+      "sha256": "007bf65a4f5515e1298e07ecfa5cc657b592687777e80f7341f2127f8ef18a2c",
+      "suffix": ".md"
+    },
+    {
       "bytes": 3917,
       "path": "义理/C_实虚史真.md",
       "sha256": "ca0d689137bb2a68810e35efd3f4fc1638173a0b9de26a3b707437e216620d2d",
@@ -1905,9 +1917,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 61455,
+      "bytes": 62530,
       "path": "义理/Markov因果桥 · 大统一最小验证构造.md",
-      "sha256": "077700bd6ad4b6d9fc8f5244fbbd34331598cced21ee0d9850e68ca584ef71a8",
+      "sha256": "bed8e25ead704ea182f3990a756a6887d8f34df8d8da51005a181761a3ef6c00",
       "suffix": ".md"
     },
     {
@@ -2049,9 +2061,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 5494,
+      "bytes": 5708,
       "path": "义理/归一化质量求和候选 · Markov桥S10.md",
-      "sha256": "fda63cd452fff4a24722b930e49d34bcc4c993597e76b534202e3df6048c2a46",
+      "sha256": "9b91472200a2efdd3e1ec801fc21ed471b95853650915bf2a95e35f05b26f4f2",
       "suffix": ".md"
     },
     {
@@ -2091,9 +2103,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 10183,
+      "bytes": 10399,
       "path": "义理/有限概率核接口 · Markov桥S2.md",
-      "sha256": "8c7045419f744687b78d1d750786afcd343dd129f4addb9321b363595aa802e5",
+      "sha256": "4efe37cf5b73dccc54305e6f93be61567efc259e9813d79d72732a4204b34d82",
       "suffix": ".md"
     },
     {
@@ -2289,9 +2301,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 6051,
+      "bytes": 6289,
       "path": "义理/逐步统一候选摘要 · Markov桥S8.md",
-      "sha256": "e0235befa8d9ac06a0e8fc5207b8db01edd4a98e511c22c6455f1cd1891c5a62",
+      "sha256": "617baadebd69d7d0997b9117d37106a3fdd9c0745e6ab5cf1984c13751fdffcd",
       "suffix": ".md"
     },
     {

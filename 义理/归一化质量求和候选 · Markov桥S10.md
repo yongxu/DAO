@@ -2,6 +2,8 @@
 
 **前置**：[有限概率归一化候选 · Markov桥S9](有限概率归一化候选%20·%20Markov桥S9.md) · [逐步统一候选摘要 · Markov桥S8](逐步统一候选摘要%20·%20Markov桥S8.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
+**后继**：[Born权重条件归一候选 · Markov桥S11](Born权重条件归一候选%20·%20Markov桥S11.md) 已关闭 normalized finite amplitude support 条件下的 `candidateWeight` 非负与 sum-one。
+
 **Lean 锚点**：
 
 | 层 | 文件 | 内容 | 状态 |
@@ -100,7 +102,7 @@ S10 先做了一个可弃用的 direct proof 试探：
 
 ## 二 · 下一步
 
-S10 之后按当前顺序进入条件式 Born 权重：
+S10 之后的条件式 Born 权重已由 S11 完成：
 
 ```text
 finite amplitude support
@@ -109,7 +111,7 @@ finite amplitude support
 = Born-shaped weights are nonnegative and sum to 1
 ```
 
-目标 theorem 名：
+已关闭 theorem 名：
 
 ```text
 born_weight_nonnegative_and_sum_one_if_normalized
