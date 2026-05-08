@@ -2,7 +2,7 @@
 # WenSurface.Semantics — executable semantics registry
 
 This module separates exact stdlib denotations from total catalogue
-execution.  Two hundred three `OperatorId`s use exact `WenDef.Tm` bodies:
+execution.  Two hundred twenty-nine `OperatorId`s use exact `WenDef.Tm` bodies:
 the original high-value stdlib rows, the ObjectEndo/ObjectMap/OpUnary Hex
 transform package, finite Hex pair/list carriers, finite Hex quantifiers, finite Hex motion/process rows,
 plus the Bool relation/predicate package.  Every
@@ -145,13 +145,24 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .I_2  => some ⟨.I_2,  Stdlib.hexIdBody, 1, "一: Hex unity as identity"⟩
   | .I_6  => some ⟨.I_6,  Stdlib.huBody, 1, "分: Hex partition anchor as hu"⟩
   | .I_8  => some ⟨.I_8,  Stdlib.cuoZongBody, 1, "別: Hex differentiation as cuoZong"⟩
+  | .H_1  => some ⟨.H_1,  Stdlib.hexIdBody, 1, "道: extractor anchor as identity; no Dao semantics"⟩
+  | .H_2  => some ⟨.H_2,  Stdlib.hexIdBody, 1, "理: extractor anchor as identity; no principle semantics"⟩
+  | .H_3  => some ⟨.H_3,  Stdlib.hexIdBody, 1, "勢/势: extractor anchor as identity; no tendency semantics"⟩
+  | .H_4  => some ⟨.H_4,  Stdlib.hexIdBody, 1, "機/机: extractor anchor as identity; no opportunity semantics"⟩
+  | .H_6  => some ⟨.H_6,  Stdlib.hexIdBody, 1, "象: extractor anchor as identity; no image semantics"⟩
+  | .P_2  => some ⟨.P_2,  Stdlib.hexIdBody, 1, "體/体: Mohist part extractor anchor as identity; no part-whole semantics"⟩
   | .P_3  => some ⟨.P_3,  Stdlib.list1HBody, 1, "兼: singleton Hex aggregate carrier; no universal inclusion semantics"⟩
+  | .P_6  => some ⟨.P_6,  Stdlib.hexIdBody, 1, "久: temporal extractor anchor as identity; no duration semantics"⟩
+  | .P_7  => some ⟨.P_7,  Stdlib.hexIdBody, 1, "宇: spatial extractor anchor as identity; no spatial extent semantics"⟩
   | .P_9  => some ⟨.P_9,  Stdlib.hexIdBody, 1, "止: Mohist stop as identity"⟩
   | .P_10 => some ⟨.P_10, Stdlib.hexIdBody, 1, "端: Mohist endpoint anchor as identity; no geometry semantics"⟩
   | .P_11 => some ⟨.P_11, Stdlib.pairHBody, 2, "尺: Hex pair carrier constructor; no metric semantics"⟩
   | .P_12 => some ⟨.P_12, Stdlib.hexIdBody, 1, "中: Mohist middle-point anchor as identity; no geometry semantics"⟩
   | .P_13 => some ⟨.P_13, Stdlib.pairHBody, 2, "圜/圆: Hex pair carrier constructor; no geometric semantics"⟩
+  | .P_18 => some ⟨.P_18, Stdlib.hexIdBody, 1, "法: Mohist model extractor anchor as identity; no rule semantics"⟩
   | .P_22 => some ⟨.P_22, Stdlib.pairHBody, 2, "說/说: Hex pair carrier constructor; no rhetorical semantics"⟩
+  | .P_24 => some ⟨.P_24, Stdlib.hexIdBody, 1, "類/类: Mohist class extractor anchor as identity; no taxonomy semantics"⟩
+  | .G_5  => some ⟨.G_5,  Stdlib.hexIdBody, 1, "位: position extractor anchor as identity; no role ontology"⟩
   | .G_8  => some ⟨.G_8,  Stdlib.pairHBody, 2, "兼/合: Names-school binary constructor carrier; no ontology semantics"⟩
   | .G_9  => some ⟨.G_9,  Stdlib.dupHBody, 1, "別/别: Names-school facet carrier via duplicate Hex; no separation semantics"⟩
   | .D_1  => some ⟨.D_1,  Stdlib.hexIdBody, 1, "一: numeric unity as identity"⟩
@@ -159,9 +170,12 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .D_8  => some ⟨.D_8,  Stdlib.pairHBody, 2, "餘/余: Hex pair carrier constructor; no arithmetic remainder"⟩
   | .H_8  => some ⟨.H_8,  Stdlib.dupHBody, 1, "體/体與用: paired facet carrier via duplicate Hex; no essence/function decomposition"⟩
   | .L_5  => some ⟨.L_5,  Stdlib.list1HBody, 1, "參同/参同: singleton Hex list carrier; no verification semantics"⟩
+  | .L_3  => some ⟨.L_3,  Stdlib.hexIdBody, 1, "勢/势: Legalist power-position extractor anchor as identity; no governance semantics"⟩
   | .L_9  => some ⟨.L_9,  Stdlib.hexIdBody, 1, "守: governance hold as identity"⟩
   | .L_10 => some ⟨.L_10, Stdlib.hexIdBody, 1, "靜/静: governance stillness as identity"⟩
+  | .L_12 => some ⟨.L_12, Stdlib.hexIdBody, 1, "利: benefit extractor anchor as identity; no utility semantics"⟩
   | .L_13 => some ⟨.L_13, Stdlib.list1HBody, 1, "一: Legalist unification aggregate carrier; no legal theory semantics"⟩
+  | .L_15 => some ⟨.L_15, Stdlib.hexIdBody, 1, "度: Legalist measure extractor anchor as identity; no metric semantics"⟩
   | .Y_1  => some ⟨.Y_1,  Stdlib.dupHBody, 1, "陰/阴與陽/阳: paired facet carrier via duplicate Hex; no yin-yang decomposition"⟩
   | .Y_3  => some ⟨.Y_3,  Stdlib.tuiBody, 1, "相生: five-phase generation as increment"⟩
   | .Y_4  => some ⟨.Y_4,  Stdlib.sunBody, 1, "相克: five-phase control as decrement"⟩
@@ -184,6 +198,7 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .Z_19 => some ⟨.Z_19, Stdlib.list2HBody, 2, "積/积: two-input aggregate carrier; no arithmetic accumulation"⟩
   | .Z_21 => some ⟨.Z_21, Stdlib.list1HBody, 1, "攝/摄: singleton Hex list carrier; no subsumption semantics"⟩
   | .Z_22 => some ⟨.Z_22, Stdlib.sunBody, 1, "蘊/蕴: enfold as decrement"⟩
+  | .Z_24 => some ⟨.Z_24, Stdlib.hexIdBody, 1, "兆: omen extractor anchor as identity; no prognostic semantics"⟩
   | .Z_29 => some ⟨.Z_29, Stdlib.hexApplyBody, 2, "推: operator-level Hex endomap application"⟩
   | .Z_31 => some ⟨.Z_31, Stdlib.cuoBody, 1, "反: operator-level reversal anchored as cuo"⟩
   | .Z_32 => some ⟨.Z_32, Stdlib.hexApplyBody, 2, "自: reflexive Hex endomap application"⟩
@@ -202,7 +217,18 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .Z_36 => some ⟨.Z_36, Stdlib.tuiBody, 1, "明: clarification transition as increment"⟩
   | .Z_37 => some ⟨.Z_37, Stdlib.sunBody, 1, "蔽: obscuring transition as decrement"⟩
   | .ZA_2 => some ⟨.ZA_2, Stdlib.hexIdBody, 1, "靜/静: Huang-Lao stillness as identity"⟩
+  | .ZHU_9 => some ⟨.ZHU_9, Stdlib.hexIdBody, 1, "天理: Zhuangzi pattern extractor anchor as identity; no cosmological semantics"⟩
+  | .SUN_2 => some ⟨.SUN_2, Stdlib.pairHBody, 2, "勢/势: military two-input extractor carrier; no force-position semantics"⟩
+  | .SUN_3 => some ⟨.SUN_3, Stdlib.hexIdBody, 1, "虛/虚: military weakness extractor anchor as identity; no tactical semantics"⟩
+  | .SUN_4 => some ⟨.SUN_4, Stdlib.hexIdBody, 1, "實/实: military strength extractor anchor as identity; no tactical semantics"⟩
+  | .SUN_14 => some ⟨.SUN_14, Stdlib.pairHBody, 2, "知: military intelligence extractor carrier; no epistemic semantics"⟩
+  | .CHU_4 => some ⟨.CHU_4, Stdlib.hexIdBody, 1, "登: Chu-ci ascent extractor anchor as identity; no elevation semantics"⟩
+  | .CHU_5 => some ⟨.CHU_5, Stdlib.pairHBody, 2, "望: Chu-ci vantage extractor carrier; no visual semantics"⟩
   | .CHU_9 => some ⟨.CHU_9, Stdlib.list1HBody, 1, "集: singleton Hex list carrier"⟩
+  | .LIJ_4 => some ⟨.LIJ_4, Stdlib.hexIdBody, 1, "位: ritual role-position extractor anchor as identity; no ritual ontology"⟩
+  | .LIJ_7 => some ⟨.LIJ_7, Stdlib.hexIdBody, 1, "中: ritual equilibrium extractor anchor as identity; no affective semantics"⟩
+  | .LIJ_11 => some ⟨.LIJ_11, Stdlib.hexIdBody, 1, "獨/独: ritual solitude extractor anchor as identity; no individuation semantics"⟩
+  | .ZA_6 => some ⟨.ZA_6, Stdlib.hexIdBody, 1, "時/时: monthly-order time anchor as identity; no calendrical semantics"⟩
   | .N_3  => some ⟨.N_3,  Stdlib.buBody, 1, "弗: Bool negation alias"⟩
   | .N_4  => some ⟨.N_4,  Stdlib.buBody, 1, "勿: Bool negation alias"⟩
   | .N_5  => some ⟨.N_5,  Stdlib.buBody, 1, "毋: Bool negation alias"⟩
@@ -266,14 +292,17 @@ def coreTheoremBackedOperatorIds : List OperatorId :=
         .C_2, .C_4, .C_5, .C_6, .C_7, .C_8,
         .T_1, .T_2, .T_3, .T_4, .T_5, .T_7, .T_8, .T_9, .T_11, .T_14, .T_15,
         .B_1, .B_2, .B_3, .B_4, .B_5, .B_6, .B_7,
-        .I_2, .I_6, .I_8, .P_3, .P_9, .P_10,
-        .P_11, .P_12, .P_13, .P_22, .G_8, .G_9,
-        .D_1, .D_4, .D_8, .H_8, .L_5, .L_9, .L_10, .L_13,
+        .I_2, .I_6, .I_8, .H_1, .H_2, .H_3, .H_4, .H_6,
+        .P_2, .P_3, .P_6, .P_7, .P_9, .P_10,
+        .P_11, .P_12, .P_13, .P_18, .P_22, .P_24, .G_5, .G_8, .G_9,
+        .D_1, .D_4, .D_8, .H_8, .L_3, .L_5, .L_9, .L_10, .L_12, .L_13, .L_15,
         .Y_1, .Y_3, .Y_4, .Y_5, .Y_17, .Y_18, .Y_21, .Y_22, .X_4, .X_14,
         .Z_2, .Z_7, .Z_8, .Z_9, .Z_12, .Z_13,
-        .Z_16, .Z_17, .Z_18, .Z_19, .Z_21, .Z_22, .Z_29, .Z_31, .Z_32, .Z_33,
+        .Z_16, .Z_17, .Z_18, .Z_19, .Z_21, .Z_22, .Z_24, .Z_29, .Z_31, .Z_32, .Z_33,
         .F_3, .F_4, .F_5, .F_6, .F_9, .F_10, .F_11,
-        .L_11, .SUN_6, .Z_10, .Z_11, .Z_36, .Z_37, .ZA_2, .CHU_9]
+        .L_11, .SUN_6, .Z_10, .Z_11, .Z_36, .Z_37, .ZA_2,
+        .ZHU_9, .SUN_2, .SUN_3, .SUN_4, .SUN_14, .CHU_4, .CHU_5, .CHU_9,
+        .LIJ_4, .LIJ_7, .LIJ_11, .ZA_6]
     ++ [.N_3, .N_4, .N_5, .N_6, .K_1, .K_5, .K_6, .K_7, .K_8, .L_7, .S_3, .S_7, .Z_1, .I_3, .I_4,
         .I_5, .I_7, .P_4, .N_2, .N_7, .N_8, .P_5, .Q_2, .Q_4, .M_2, .Q_5, .Q_6, .Q_7,
         .Q_3, .Q_8, .D_2, .D_3, .D_9, .D_10, .M_3, .M_4, .M_5, .M_6, .M_7, .M_8,
@@ -295,7 +324,7 @@ def structuralCatalogueOperatorIds : List OperatorId :=
 Structural total fallback for catalogue rows.
 
 These bodies are executable and type-checkable, but intentionally weaker than
-the 203 exact rows above: they preserve the operator id, signature kind, and
+the 229 exact rows above: they preserve the operator id, signature kind, and
 evaluated arguments as a catalogue value instead of projecting fake Hex/Bool
 results.
 -/
@@ -370,10 +399,10 @@ theorem executableOperatorIds_length :
     executableOperatorIds.length = 371 := by native_decide
 
 theorem coreTheoremBackedOperatorIds_length :
-    coreTheoremBackedOperatorIds.length = 157 := by native_decide
+    coreTheoremBackedOperatorIds.length = 183 := by native_decide
 
 theorem theoremBackedOperatorIds_length :
-    theoremBackedOperatorIds.length = 203 := by native_decide
+    theoremBackedOperatorIds.length = 229 := by native_decide
 
 theorem theoremBackedOperatorIds_nodup :
     theoremBackedOperatorIds.Nodup := by native_decide
@@ -383,7 +412,7 @@ theorem theoremBackedOperatorIds_all_semantics :
   native_decide
 
 theorem structuralCatalogueOperatorIds_length :
-    structuralCatalogueOperatorIds.length = 168 := by native_decide
+    structuralCatalogueOperatorIds.length = 142 := by native_decide
 
 theorem structuralCatalogueOperatorIds_all_not_theorem_backed :
     structuralCatalogueOperatorIds.all (fun id => (theoremBackedSemanticsFor? id).isNone) = true := by
@@ -414,8 +443,8 @@ theorem operatorRegistryCoverage_summary :
     operatorRegistryEntries.length = 371
       ∧ executableRegistryEntries.length = 371
       ∧ executableOperatorIds.length = 371
-      ∧ theoremBackedOperatorIds.length = 203
-      ∧ structuralCatalogueOperatorIds.length = 168
+      ∧ theoremBackedOperatorIds.length = 229
+      ∧ structuralCatalogueOperatorIds.length = 142
       ∧ theoremBackedOperatorIds.length + structuralCatalogueOperatorIds.length = 371
       ∧ executableOperatorIds.all isCatalogueOperator = true
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).id = id)
