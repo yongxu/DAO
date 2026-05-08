@@ -770,7 +770,7 @@ def catalogueSignatureShapeFor : OperatorId → SignatureKind × Nat
 
 /-- Explanatory note for per-operator catalogue-shape rows. -/
 def catalogueSignatureNote (id : OperatorId) : String :=
-  "catalogue shape for " ++ id.code ++ " " ++ id.title ++ "; not executable semantics"
+  "signature-only catalogue shape for " ++ id.code ++ " " ++ id.title
 
 /--
 Total conservative signature for one operator.  Explicit seed rows override

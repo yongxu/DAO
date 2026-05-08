@@ -159,6 +159,11 @@ private def cueDiagShow : SSBX.Text.OperatorReadings.ContextCue → String
   | .temporalRange => "temporalRange"
   | .focusAdverb => "focusAdverb"
 
+private def operatorSemanticsSupportKind (id : OperatorId) : String :=
+  if isTheoremBackedOperator id then "theorem-backed"
+  else if isExecutableOperator id then "structural-fallback"
+  else "known-not-executable"
+
 private def constructionDiagShow : SSBX.Text.OperatorReadings.ConstructionKind → String
   | .none => "none"
   | .genitiveProjection => "genitiveProjection"
@@ -277,6 +282,7 @@ private def operatorOutput (code : String) : String :=
          , s!"signature arity: {sig.arity}"
          , s!"signature evidence: {signatureEvidenceShow sig.evidence}"
          , s!"signature note: {sig.note}"
+         , s!"semantics support: {operatorSemanticsSupportKind id}"
          , "executable: " ++ executable
          ] ++ compoundLine)
 
@@ -288,6 +294,8 @@ private def coverageOutput : String :=
   String.intercalate "\n"
     [ s!"surface readings: {allSurfaceReadings.length} surfaces / {readingCount} readings"
     , s!"operators: {operatorRegistryEntries.length} registered / {executableRegistryEntries.length} executable"
+    , s!"theorem-backed semantics: {theoremBackedOperatorIds.length}"
+    , s!"structural catalogue fallback: {structuralCatalogueOperatorIds.length}"
     , s!"operator forms: {formBackedCount} ids with at least one form"
     , s!"operator-cell rows: {SSBX.Text.OperatorCellMap.allOperatorCells.length}"
     , s!"operator-cell semantic rows: {SSBX.Text.OperatorCellSemantics.allOperatorCellSemanticRows.length}"
@@ -985,6 +993,8 @@ private def operatorJsonOutput (code : String) : String :=
         , jsonFieldBool "executable" entry.executable?.isSome
         , jsonFieldString "support"
             (if entry.executable?.isSome then "executable" else "known-not-executable")
+        , jsonFieldBool "theoremBacked" (isTheoremBackedOperator id)
+        , jsonFieldString "semanticsSupport" (operatorSemanticsSupportKind id)
         , jsonFieldRaw "executableSemantics" executableJson
         ]
 
@@ -999,6 +1009,8 @@ private def operatorSummaryJson (id : OperatorId) : String :=
     , jsonFieldString "operatorTitle" id.title
     , jsonFieldBool "executable" (isExecutableOperator id)
     , jsonFieldString "support" (operatorSupportKind id)
+    , jsonFieldBool "theoremBacked" (isTheoremBackedOperator id)
+    , jsonFieldString "semanticsSupport" (operatorSemanticsSupportKind id)
     , jsonFieldRaw "forms" (jsonArray (glyphForms.map jsonString))
     , jsonFieldRaw "compoundSurfaces" (jsonArray (compoundForms.map jsonString))
     , jsonFieldNat "signatureArity" sig.arity
@@ -1024,6 +1036,8 @@ private def operatorsJsonOutput (filter : String) : String :=
       , jsonFieldNat "operatorsRegistered" operatorRegistryEntries.length
       , jsonFieldNat "executableOperators" executableRegistryEntries.length
       , jsonFieldNat "knownNotExecutableOperators" (operatorRegistryEntries.length - executableRegistryEntries.length)
+      , jsonFieldNat "theoremBackedOperators" theoremBackedOperatorIds.length
+      , jsonFieldNat "structuralCatalogueOperators" structuralCatalogueOperatorIds.length
       , jsonFieldRaw "operators" (jsonArray (ids.map operatorSummaryJson))
       ]
 
@@ -1039,6 +1053,8 @@ private def coverageJsonOutput : String :=
     , jsonFieldNat "readingCount" readingCount
     , jsonFieldNat "operatorsRegistered" operatorRegistryEntries.length
     , jsonFieldNat "executableOperators" executableRegistryEntries.length
+    , jsonFieldNat "theoremBackedOperators" theoremBackedOperatorIds.length
+    , jsonFieldNat "structuralCatalogueOperators" structuralCatalogueOperatorIds.length
     , jsonFieldNat "operatorFormBackedCount" formBackedCount
     , jsonFieldNat "operatorCellRows" (SSBX.Text.OperatorCellMap.allOperatorCells.length)
     , jsonFieldNat "operatorCellSemanticRows" (SSBX.Text.OperatorCellSemantics.allOperatorCellSemanticRows.length)
@@ -1070,7 +1086,7 @@ private def usage : String :=
      "       wenyan-surface --help",
      "",
      "Surface vocabulary:",
-     "  Executable operators: 371 rows (317 exact/theorem-backed; 54 structural catalogue; 0 symbolic catalogue-shape)",
+     "  Executable operators: 371 rows (371 exact/theorem-backed; 0 structural catalogue; 0 symbolic catalogue-shape)",
      "  Examples include: 推 比 不 必 同 凡 損 损 益 错 錯 综 綜 互 反 則 且 非 或 莫",
      "  Hex consts: 一 乾 坤 plus canonical 64 hexagram names",
      "  Bool consts: 真 假",

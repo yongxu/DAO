@@ -58,7 +58,7 @@ inductive Builtin : Type
   | jia | notB | andB | orB | eqHex | forallH | cuoH | zongH | huH
   | uniqueH | exactly3H | majorityH
   | cuoZongH | flip1H | flip2H | flip3H
-  | pairH | dupH | list1H | list2H | headH
+  | pairH | dupH | list1H | list2H | list3H | headH
   | eqCell | cuoC | zongC | huC | shiNextC | shiPrevC
   | flip1C | flip2C | flip3C | flip4C | flip5C | flip6C
 deriving DecidableEq, Repr
@@ -66,6 +66,7 @@ deriving DecidableEq, Repr
 /-- builtin 之 arity（满足后产 result）。 -/
 def Builtin.arity : Builtin → Nat
   | .jia | .andB | .orB | .eqHex | .pairH | .list2H | .eqCell => 2
+  | .list3H => 3
   | .notB | .forallH | .uniqueH | .exactly3H | .majorityH | .cuoH | .zongH | .huH
   | .cuoZongH | .flip1H | .flip2H | .flip3H | .dupH | .list1H | .headH
   | .cuoC | .zongC | .huC | .shiNextC | .shiPrevC
@@ -165,6 +166,7 @@ mutual
     | _+1,    _,   .dupH         => some (.builtinV .dupH [])
     | _+1,    _,   .list1H       => some (.builtinV .list1H [])
     | _+1,    _,   .list2H       => some (.builtinV .list2H [])
+    | _+1,    _,   .list3H       => some (.builtinV .list3H [])
     | _+1,    _,   .headH        => some (.builtinV .headH [])
     | _+1,    _,   .eqCell       => some (.builtinV .eqCell [])
     | _+1,    _,   .cuoC         => some (.builtinV .cuoC [])
@@ -210,6 +212,8 @@ mutual
     | _+1,    .dupH,   [.hexV h]            => some (.pairV (.hexV h) (.hexV h))
     | _+1,    .list1H, [.hexV h]            => some (.listV [.hexV h])
     | _+1,    .list2H, [.hexV a, .hexV b]   => some (.listV [.hexV a, .hexV b])
+    | _+1,    .list3H, [.hexV a, .hexV b, .hexV c] =>
+        some (.listV [.hexV a, .hexV b, .hexV c])
     | _+1,    .headH,  [.listV (.hexV h :: _)] => some (.hexV h)
     | _+1,    .eqCell, [.cellV a, .cellV b] => some (.boolV (decide (a = b)))
     | _+1,    .cuoC,   [.cellV c]           => some (.cellV (Cell192.hexCuo c))

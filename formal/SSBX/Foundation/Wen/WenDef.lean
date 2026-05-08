@@ -105,6 +105,7 @@ inductive Tm : Type
   | dupH                               : Tm  -- dup : Hex → Hex×Hex
   | list1H                             : Tm  -- singleton : Hex → List Hex
   | list2H                             : Tm  -- pair-list : Hex → Hex → List Hex
+  | list3H                             : Tm  -- triple-list : Hex → Hex → Hex → List Hex
   | headH                              : Tm  -- head : List Hex → Hex
   | eqCell                             : Tm  -- Cell → Cell → Bool
   | cuoC                               : Tm  -- Cell → Cell, preserve 时
@@ -169,6 +170,7 @@ def typeCheck : Ctx → Tm → Option Ty
   | _, .dupH      => some (.arr .hex (.prod .hex .hex))
   | _, .list1H    => some (.arr .hex (.list .hex))
   | _, .list2H    => some (.arr .hex (.arr .hex (.list .hex)))
+  | _, .list3H    => some (.arr .hex (.arr .hex (.arr .hex (.list .hex))))
   | _, .headH     => some (.arr (.list .hex) .hex)
   | _, .eqCell    => some (.arr .cell (.arr .cell .bool))
   | _, .cuoC      => some (.arr .cell .cell)
@@ -774,6 +776,19 @@ def list2HDef : WenDef where
   validName      := by native_decide
   bodyTypechecks := by native_decide
 
+def list3HBody : Tm := .list3H
+
+theorem list3HBody_typed :
+    typeCheck [] list3HBody = some (.arr .hex (.arr .hex (.arr .hex (.list .hex)))) := by
+  native_decide
+
+def list3HDef : WenDef where
+  name           := "list3H"
+  body           := list3HBody
+  bodyType       := .arr .hex (.arr .hex (.arr .hex (.list .hex)))
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
 def headHBody : Tm := .headH
 
 theorem headHBody_typed :
@@ -856,11 +871,11 @@ def all : List WenDef :=
   , impDef, neqHexDef, existsHDef, noneHDef
   , uniqueHDef, exactly3HDef, majorityHDef, endoCompDef, hexApplyDef
   , boolMarkerDef, repeatOnceDef, eachHDef
-  , pairHDef, dupHDef, list1HDef, list2HDef, headHDef
+  , pairHDef, dupHDef, list1HDef, list2HDef, list3HDef, headHDef
   , eqCellDef, cuoCDef, zongCDef, huCDef, shiNextCDef, shiPrevCDef
   , flip1CDef, flip2CDef, flip3CDef, flip4CDef, flip5CDef, flip6CDef ]
 
-theorem all_length : all.length = 46 := by native_decide
+theorem all_length : all.length = 47 := by native_decide
 
 theorem all_names :
     all.map WenDef.name =
@@ -870,7 +885,7 @@ theorem all_names :
       , "imp", "neqHex", "existsH", "noneH"
       , "uniqueH", "exactly3H", "majorityH", "endoComp", "hexApply"
       , "boolMarker", "repeatOnce", "eachH"
-      , "pairH", "dupH", "list1H", "list2H", "headH"
+      , "pairH", "dupH", "list1H", "list2H", "list3H", "headH"
       , "eqCell", "cuoC", "zongC", "huC", "shiNextC", "shiPrevC"
       , "flip1C", "flip2C", "flip3C", "flip4C", "flip5C", "flip6C" ] := by
   native_decide

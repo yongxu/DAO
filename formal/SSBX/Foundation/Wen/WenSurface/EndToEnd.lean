@@ -16,7 +16,7 @@ cuo-equivariant 子集 commute 作 future work）。
 - cue-aware resolver + explicit `SurfaceExpr` AST
 - 64 卦名 / aliases + Bool literals + Hex-only binders
 - executable registry 覆盖全部 371 个 OperatorId
-- 317 个 exact/theorem-backed operator 可求 Hex/Bool/Pair/List；其余 catalogue rows 求 structural normal form
+- 371 个 exact/theorem-backed operator 可求 Hex/Bool/Pair/List；structural catalogue fallback 不再覆盖 catalogue row
 - unpromoted gap form 只诊断，不伪造 denotation
 
 ## 状态
@@ -525,6 +525,31 @@ example :
   by native_decide
 example :
     (theoremBackedSemanticsFor? OperatorId.I_7).isSome = true :=
+  by native_decide
+example :
+    structuralCatalogueOperatorIds.length = 0 :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.E_2).isSome = true :=
+  by native_decide
+example :
+    (wenyanCompile "曰 乾 坤").toOption.map (·.ty) =
+      some (.prod .hex .hex) :=
+  by native_decide
+example :
+    (wenyanInterpHexPair "曰 乾 坤").toOption =
+      some (Hexagram.qian, Hexagram.kun) :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.CHU_2).isSome = true :=
+  by native_decide
+example :
+    (wenyanCompile "上下 乾 坤 一").toOption.map (·.ty) =
+      some (.list .hex) :=
+  by native_decide
+example :
+    (wenyanInterpHexList "上下 乾 坤 一").toOption =
+      some [Hexagram.qian, Hexagram.kun, «一»] :=
   by native_decide
 example :
     (theoremBackedSemanticsFor? OperatorId.P_11).isSome = true :=

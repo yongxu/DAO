@@ -6,8 +6,8 @@
 
 ## 当前范围
 
-- **算子**：168 个 exact operator 进入 theorem-backed / Bool / carrier package bodies；
-  其余 catalogue operator elaborates to structural catalogue normal forms。
+- **算子**：371 个 catalogue operator 进入 theorem-backed / Bool / carrier package bodies；
+  structural catalogue fallback 只保留为防御性总函数路径。
 - **常值**：「一」 → `.yi` primitive；64 卦名 / aliases → `.hexLit h`。
 - **组合**：显式 `SurfaceExpr.app` 左结合到 `Tm.app`。
 - **绑定**：Hex-only `者` lambda、`凡` forall、`令` let。
@@ -312,6 +312,7 @@ def inferTypeDetailed : Ctx → Tm → Except TypeDiag Ty
   | _, .dupH      => .ok (.arr .hex (.prod .hex .hex))
   | _, .list1H    => .ok (.arr .hex (.list .hex))
   | _, .list2H    => .ok (.arr .hex (.arr .hex (.list .hex)))
+  | _, .list3H    => .ok (.arr .hex (.arr .hex (.arr .hex (.list .hex))))
   | _, .headH     => .ok (.arr (.list .hex) .hex)
   | _, .eqCell    => .ok (.arr .cell (.arr .cell .bool))
   | _, .cuoC      => .ok (.arr .cell .cell)

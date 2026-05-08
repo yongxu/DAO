@@ -1,13 +1,12 @@
 /-
 # WenSurface.Semantics — executable semantics registry
 
-This module separates exact stdlib denotations from total catalogue
-execution.  Three hundred seventeen `OperatorId`s use exact `WenDef.Tm` bodies:
+This module separates exact stdlib/carrier denotations from total catalogue
+execution.  All three hundred seventy-one `OperatorId`s use `WenDef.Tm` bodies:
 the original high-value stdlib rows, the ObjectEndo/ObjectMap/OpUnary Hex
 transform package, finite Hex pair/list carriers, finite Hex quantifiers, finite Hex motion/process rows,
-plus the Bool relation/predicate package.  Every
-remaining catalogue row gets a structural catalogue constructor `WenDef.Tm` so
-CLI support is total without confusing it with exact text semantics.
+plus the Bool relation/predicate package.  The structural catalogue fallback is
+kept as a defensive path, but no catalogue row depends on it.
 -/
 import SSBX.Foundation.Wen.WenDef
 import SSBX.Text.OperatorSignatures
@@ -95,6 +94,56 @@ def relationPredicateBoolSemanticsFor? (id : OperatorId) : Option ExecutableSema
 theorem relationPredicateBoolSemanticsFor?_all :
     relationPredicateBoolOperatorIds.all
       (fun id => (relationPredicateBoolSemanticsFor? id).isSome) = true := by
+  native_decide
+
+/-! ## § 1.2 Residual carrier package -/
+
+def residualCarrierOperatorIds : List OperatorId :=
+  [ .S_15, .S_20
+  , .P_8
+  , .G_1, .G_7, .G_11
+  , .E_2, .E_3
+  , .L_1, .L_2, .L_8, .L_16
+  , .Y_16, .Y_19, .Y_28
+  , .X_2, .X_7, .X_10, .X_11, .X_13, .X_15, .X_16
+  , .Z_20, .Z_25, .Z_28
+  , .ZHU_2, .ZHU_3, .ZHU_4, .ZHU_6, .ZHU_7, .ZHU_8, .ZHU_11, .ZHU_12
+  , .SUN_9, .SUN_10, .SUN_11, .SUN_13
+  , .CHU_1, .CHU_2, .CHU_3, .CHU_6, .CHU_7, .CHU_8
+  , .LIJ_1, .LIJ_2, .LIJ_3, .LIJ_8, .LIJ_10, .LIJ_12, .LIJ_13, .LIJ_14
+  , .ZA_1, .ZA_8, .ZA_10
+  ]
+
+theorem residualCarrierOperatorIds_length :
+    residualCarrierOperatorIds.length = 54 := by native_decide
+
+theorem residualCarrierOperatorIds_nodup :
+    residualCarrierOperatorIds.Nodup := by native_decide
+
+def residualCarrierBodyForArity? : Nat → Option Tm
+  | 2 => some Stdlib.pairHBody
+  | 3 => some Stdlib.list3HBody
+  | _ => none
+
+def residualCarrierSemanticsFor? (id : OperatorId) : Option ExecutableSemantics :=
+  if decide (id ∈ residualCarrierOperatorIds) then
+    let sig := fullSignatureFor id
+    match residualCarrierBodyForArity? sig.arity with
+    | some body =>
+        some
+          { id := id
+          , body := body
+          , arity := sig.arity
+          , note := "residual Hex carrier package for "
+              ++ id.code ++ " " ++ id.title ++ " ("
+              ++ sig.kind.key ++ "/" ++ toString sig.arity ++ ")" }
+    | none => none
+  else
+    none
+
+theorem residualCarrierSemanticsFor?_all :
+    residualCarrierOperatorIds.all
+      (fun id => (residualCarrierSemanticsFor? id).isSome) = true := by
   native_decide
 
 /-- Exact theorem-backed operator registry. -/
@@ -371,9 +420,12 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .S_1  => some ⟨.S_1,  Stdlib.hexApplyBody, 2, "之: Hex endomap application/projection"⟩
   | .S_2  => some ⟨.S_2,  Stdlib.endoCompBody, 2,
       "而: Hex endomap composition; surface currently requires explicit Hex→Hex terms"⟩
-  | id    => relationPredicateBoolSemanticsFor? id
+  | id    =>
+      match relationPredicateBoolSemanticsFor? id with
+      | some sem => some sem
+      | none => residualCarrierSemanticsFor? id
 
-/-- The exact theorem-backed subset, kept separate from structural catalogue semantics. -/
+/-- The theorem-backed subset, kept separate from structural catalogue semantics. -/
 def coreTheoremBackedOperatorIds : List OperatorId :=
   [.T_10, .R_8, .N_1, .M_1, .I_1, .Q_1, .T_12, .T_13, .Z_5, .Z_6, .Z_3, .T_6]
     ++ [.R_5, .R_6, .R_11, .R_12, .R_13, .R_14, .R_15,
@@ -406,7 +458,7 @@ def coreTheoremBackedOperatorIds : List OperatorId :=
         .S_13, .S_14, .S_16, .S_17, .S_18, .S_19]
 
 def theoremBackedOperatorIds : List OperatorId :=
-  coreTheoremBackedOperatorIds ++ relationPredicateBoolOperatorIds
+  coreTheoremBackedOperatorIds ++ relationPredicateBoolOperatorIds ++ residualCarrierOperatorIds
 
 def isTheoremBackedOperator (id : OperatorId) : Bool :=
   (theoremBackedSemanticsFor? id).isSome
@@ -420,9 +472,10 @@ def structuralCatalogueOperatorIds : List OperatorId :=
 Structural total fallback for catalogue rows.
 
 These bodies are executable and type-checkable, but intentionally weaker than
-the 317 exact rows above: they preserve the operator id, signature kind, and
-evaluated arguments as a catalogue value instead of projecting fake Hex/Bool
-results.
+the 371 theorem-backed rows above: they preserve the operator id, signature
+kind, and evaluated arguments as a catalogue value instead of projecting fake
+Hex/Bool results.  It remains available for defensive totality, but
+`structuralCatalogueOperatorIds` is empty for the catalogue.
 -/
 def catalogueStructuralBodyFor (sig : CoveredOperatorSignature) : Tm :=
   match sig.arity with
@@ -498,7 +551,7 @@ theorem coreTheoremBackedOperatorIds_length :
     coreTheoremBackedOperatorIds.length = 271 := by native_decide
 
 theorem theoremBackedOperatorIds_length :
-    theoremBackedOperatorIds.length = 317 := by native_decide
+    theoremBackedOperatorIds.length = 371 := by native_decide
 
 theorem theoremBackedOperatorIds_nodup :
     theoremBackedOperatorIds.Nodup := by native_decide
@@ -508,7 +561,7 @@ theorem theoremBackedOperatorIds_all_semantics :
   native_decide
 
 theorem structuralCatalogueOperatorIds_length :
-    structuralCatalogueOperatorIds.length = 54 := by native_decide
+    structuralCatalogueOperatorIds.length = 0 := by native_decide
 
 theorem structuralCatalogueOperatorIds_all_not_theorem_backed :
     structuralCatalogueOperatorIds.all (fun id => (theoremBackedSemanticsFor? id).isNone) = true := by
@@ -539,8 +592,8 @@ theorem operatorRegistryCoverage_summary :
     operatorRegistryEntries.length = 371
       ∧ executableRegistryEntries.length = 371
       ∧ executableOperatorIds.length = 371
-      ∧ theoremBackedOperatorIds.length = 317
-      ∧ structuralCatalogueOperatorIds.length = 54
+      ∧ theoremBackedOperatorIds.length = 371
+      ∧ structuralCatalogueOperatorIds.length = 0
       ∧ theoremBackedOperatorIds.length + structuralCatalogueOperatorIds.length = 371
       ∧ executableOperatorIds.all isCatalogueOperator = true
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).id = id)
@@ -582,6 +635,9 @@ example : (theoremBackedSemanticsFor? .Z_30).isSome = true := by native_decide
 example : (theoremBackedSemanticsFor? .X_12).isSome = true := by native_decide
 example : (theoremBackedSemanticsFor? .ZHU_5).isSome = true := by native_decide
 example : (theoremBackedSemanticsFor? .ZA_9).isSome = true := by native_decide
+example : (theoremBackedSemanticsFor? .S_15).isSome = true := by native_decide
+example : (theoremBackedSemanticsFor? .X_11).isSome = true := by native_decide
+example : structuralCatalogueOperatorIds.length = 0 := by native_decide
 example : (operatorSemanticsRegistry .T_10).isSome = true := by native_decide
 example : parseArityFor .S_1 = 2 := by native_decide
 
