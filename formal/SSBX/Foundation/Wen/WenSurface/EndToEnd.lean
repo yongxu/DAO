@@ -463,7 +463,11 @@ example : (wenyanInterpBool "（同 乾） 乾").toOption = some true := by nati
 
 example : (wenyanInterp "者 甲 推 甲 乾").toOption = some «一» := by native_decide
 
-example : (wenyanCompile "而 不 不 真").toOption.isNone = true := by native_decide
+example :
+    (match wenyanCompile "而 不 不 真" with
+     | .error (.parse (.typeMismatch (.arr .hex .hex) (.arr .bool .bool) "不" 2)) => true
+     | _ => false) = true :=
+  by native_decide
 
 example :
     (match wenyanCompile "在 乾" with

@@ -40,6 +40,7 @@ inductive ParseErr where
   | expectedVariable (surface : String) (col : Nat)
   | unexpectedApplicationMarker (surface : String) (col : Nat)
   | unpromotedHexagramGap (surface : String) (col : Nat)
+  | typeMismatch (expected actual : Ty) (surface : String) (col : Nat)
   | leftoverAtoms (count : Nat) (firstSurface : String) (firstCol : Nat)
 deriving DecidableEq, Repr
 
@@ -158,6 +159,14 @@ def typedExprMatches (expected : Ty) (expr : SurfaceExpr) : Bool :=
   match surfaceExprType? expr with
   | some actual => actual = expected
   | none => false
+
+def expectedTypeErr (expected : Ty) (head : ResolvedTok) (expr : SurfaceExpr) : ParseErr :=
+  match surfaceExprType? expr with
+  | some actual => .typeMismatch expected actual head.surface head.col
+  | none =>
+      match exactTokWithType? head with
+      | some (_, _, actual) => .typeMismatch expected actual head.surface head.col
+      | none => .empty
 
 def exactArgsForArity? (ty : Ty) (arity : Nat) : Option (List Ty) :=
   Ty.argTypesFor ty arity
@@ -397,12 +406,18 @@ mutual
               | .error _ =>
                   match parseSurfaceExprAux n reserve (head :: rest) with
                   | .ok result =>
-                      if typedExprMatches expected result.1 then .ok result else .error .empty
+                      if typedExprMatches expected result.1 then
+                        .ok result
+                      else
+                        .error (expectedTypeErr expected head result.1)
                   | .error e => .error e
           | none =>
               match parseSurfaceExprAux n reserve (head :: rest) with
               | .ok result =>
-                  if typedExprMatches expected result.1 then .ok result else .error .empty
+                  if typedExprMatches expected result.1 then
+                    .ok result
+                  else
+                    .error (expectedTypeErr expected head result.1)
               | .error e => .error e
 
   def parsePostfixApplications : Nat → Nat → SurfaceExpr → List ResolvedTok →

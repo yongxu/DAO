@@ -57,7 +57,7 @@ NEGATIVE_CASES = [
     ("或 者 甲 同 甲 一", {"phase": "resolve", "code": "ambiguous_reading", "surface": "或", "startCol": 0, "endCol": 1, "candidateCount": 2}),
     ("故 假 假", {"phase": "resolve", "code": "ambiguous_reading", "surface": "故", "startCol": 0, "endCol": 1, "candidateCount": 3}),
     ("反 乾", {"phase": "resolve", "code": "ambiguous_reading", "surface": "反", "startCol": 0, "endCol": 1, "candidateCount": 3}),
-    ("而 不 不 真", {"phase": "parse", "code": "empty_expression"}),
+    ("而 不 不 真", {"phase": "type", "code": "type_mismatch", "expectedType": "(Hex -> Hex)", "actualType": "(Bool -> Bool)", "surface": "不", "startCol": 2, "endCol": 3}),
     ("在 乾", {"phase": "parse", "code": "empty_expression"}),
     ("（推 一", {"phase": "parse", "code": "unmatched_open_bracket", "surface": "（", "startCol": 0, "endCol": 1}),
     ("推 一）", {"phase": "parse", "code": "unmatched_close_bracket", "surface": "）", "startCol": 3, "endCol": 4}),
