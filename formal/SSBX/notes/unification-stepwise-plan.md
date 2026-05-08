@@ -39,8 +39,9 @@ lake build SSBX.Foundation.Modern.QuantumRelativityWenBoundary
 lake build SSBX.Foundation.Modern.QuantumRelativityMarkovBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityConcreteBridge
 lake build SSBX.Foundation.Modern.OperatorCellGridMarkovBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityBridge
 lake build SSBX
-git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean formal/SSBX.lean formal/SSBX/notes/unification-stepwise-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md '义理/Markov因果桥 · 大统一最小验证构造.md'
+git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean formal/SSBX.lean formal/SSBX/notes/unification-stepwise-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/有限概率核接口 · Markov桥S2.md'
 ```
 
 ## S0 · 基线重审
@@ -50,7 +51,7 @@ git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridg
 | 项 | 内容 |
 |---|---|
 | Lean 出口 | 保持 `markov_causal_bridge_summary`、`measurement_event_alignment`、`markov_bridge_not_direct_language_addition` 为 `machineChecked` |
-| 文档出口 | 本文件与验证计划明确列出未关闭项：概率归一化、Born rule、量子通道、干涉、因果偏序、度规恢复、经验闭合 |
+| 文档出口 | 本文件与验证计划明确列出未关闭项：sum-one 概率律、Born rule、量子通道、干涉、因果偏序、度规恢复、经验闭合 |
 | 失败记录 | 若发现文档中有“已完成大统一”“已证明量子引力”等强 claim，记录为 `conceptual overclaim`，并降级 |
 | 不可声称 | 不能说 Markov-因果桥已经等于物理大统一；只能说它是最小可验证中介构造 |
 
@@ -89,22 +90,31 @@ Lean 能检查一个具体实例；
 
 ## S2 · 有限概率核接口
 
-目标：把 `Nat` 权重升级为有限概率核接口，先关闭归一化的形式条件，而不是 Born rule。
+目标：把 `Nat` 权重升级为有限概率核接口，先关闭有限行分母与权重上界，而不是 Born rule 或 sum-one 概率律。
 
 | 项 | 内容 |
 |---|---|
-| Lean 出口 | 新增有限 support、总权重非零或归一化接口 theorem |
-| 最低 theorem 形态 | `kernel_total_positive`、`normalized_kernel_sum_one` 或等价命名 |
-| 失败记录 | 若无法证明归一化，记录失败的状态空间、求和接口和阻塞 theorem |
-| 文档更新 | 通过后可写“有限概率核接口已形式化”；失败时写“概率归一化 pending” |
-| 不可声称 | 不能说 Born rule 已推出；归一化概率不等于量子测量律 |
+| Lean 出口 | `finite_probability_bridge_summary` |
+| 最低 theorem 形态 | `FiniteProbabilityKernelSkeleton`、`RowNormalizable`、`finiteMassCandidate_denominator_positive_if_not_terminal` |
+| 失败记录 | 若无法证明行分母非零或权重上界，记录失败的状态空间、rowTotal 定义和阻塞 theorem |
+| 文档更新 | 通过后可写“有限概率核接口已形式化”；仍需保留“sum-one 概率律 / Born rule 未纳入本轮” |
+| 不可声称 | 不能说 Born rule、真实归一化概率律或量子测量律已推出 |
 
 通过判准：
 
 ```text
-每个可转移状态有可检查的总权重条件；
+每个非终端状态有可检查的非零行分母；
+每个一步权重有可检查的分母上界；
 Markov 权重与一步转移的支持关系仍保留。
 ```
+
+当前状态：
+
+| theorem | 文件 | 读法 |
+|---|---|---|
+| `finite_probability_bridge_summary` | `QuantumRelativityFiniteProbabilityBridge.lean` | concrete 与 `71232` grid bridge 都有有限概率核接口 |
+| `finiteMassCandidate_denominator_positive_if_not_terminal` | `QuantumRelativityFiniteProbabilityBridge.lean` | 非终端行的有限质量候选分母非零 |
+| `operatorCellGrid_nonterminal_row_normalizable` | `QuantumRelativityFiniteProbabilityBridge.lean` | `371 × 192` grid 的非终端行可规格化为有限分母候选 |
 
 ## S3 · 路径组合与局部因果约束
 
@@ -240,7 +250,8 @@ Lean 只关闭一个几何候选接口；
 | 日期 | 阶段 | 结果 | 说明 |
 |---|---|---|---|
 | 2026-05-08 | S0 | plan | 本文件新增逐步验证路线；不新增物理 claim |
-| 2026-05-08 | S1 | success | 新增 concrete 三状态 witness 与 `71232` operator-cell grid bridge；仍不证明概率归一化、Born rule、几何恢复或经验闭合 |
+| 2026-05-08 | S1 | success | 新增 concrete 三状态 witness 与 `71232` operator-cell grid bridge；仍不证明 sum-one 概率律、Born rule、几何恢复或经验闭合 |
+| 2026-05-08 | S2 | success | 新增 finite probability-kernel denominator interface；关闭非终端行分母非零与权重上界，仍不证明 sum-one 概率律、Born rule、量子通道或经验闭合 |
 
 ## 统一用语边界
 

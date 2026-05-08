@@ -1,0 +1,184 @@
+# 有限概率核接口 · Markov桥S2
+
+**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [文构造完备与直相加边界](文构造完备与直相加边界.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
+
+**Lean 锚点**：
+
+| 层 | 文件 | 内容 | 状态 |
+|---|---|---|---|
+| 有限概率核接口 | `Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean` | `FiniteProbabilityKernelSkeleton` 在 Markov skeleton 上增加有限行分母 | `machineChecked` |
+| 概率投影存在性 | `Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean` | `HasFiniteProbabilityProjection` | `machineChecked` |
+| 行可规格化 | `Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean` | `RowNormalizable` 与 `nonterminal_row_normalizable` | `machineChecked` |
+| 有限质量候选 | `Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean` | `finiteMassCandidate`、`finiteMassCandidate_denominator_positive_if_not_terminal` | `machineChecked` |
+| concrete 实例 | `Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean` | `concreteFiniteProbabilityKernel`、`concrete_prepared_row_normalizable`、`concrete_evolved_row_normalizable` | `machineChecked` |
+| `71232` grid 实例 | `Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean` | `operatorCellGridFiniteProbabilityKernel`、`operatorCellGrid_nonterminal_row_normalizable` | `machineChecked` |
+| S2 公开摘要 | `Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean` | `finite_probability_bridge_summary` | `machineChecked` |
+
+---
+
+## 〇 · Claim Block
+
+S2 的主张很窄：
+
+```text
+已有 Markov / 因果桥
++ finite row denominator
++ non-terminal row denominator is nonzero
++ each weight is bounded by its row denominator
++ terminal rows may stop
+= finite probability-kernel interface
+```
+
+这一步只把 `Nat` 权重升级成可读作有限质量候选的接口。它没有证明行权重求和等于分母，没有证明实数概率测度，没有证明 Born rule，也没有引入 quantum channel、干涉、度规恢复或经验闭合。
+
+公开摘要为：
+
+```lean
+theorem finite_probability_bridge_summary :
+    HasFiniteProbabilityProjection concreteProcess
+    ∧ HasFiniteProbabilityProjection operatorCellGridProcess
+    ∧ ...
+    ∧ allOperatorIds.length = 371
+    ∧ Cell192.all.length = 192
+    ∧ allOperatorCells.length = 71232
+    ∧ WenConstructiveCoverage
+```
+
+该 theorem 已通过 `lake build SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityBridge`。
+
+---
+
+## 〇一 · 边界声明
+
+| 说法 | 本文状态 | 精确含义 |
+|---|---|---|
+| concrete bridge 有有限概率核接口 | `machineChecked` | `prepared` 与 `evolved` 行分母为 `1`，终端 `measured` 行可停止 |
+| `71232` grid bridge 有有限概率核接口 | `machineChecked` | 非终端 successor 行分母为 `1`，末端行可停止 |
+| 非终端行可规格化 | `machineChecked` | `RowNormalizable` 只表示行分母非零 |
+| 权重受分母约束 | `machineChecked` | 每个 `weight a b ≤ rowTotal a` |
+| 有限质量候选 | `machineChecked` typed skeleton | `numerator / denominator` 作为候选接口 |
+| sum-one 概率律 | 未纳入本轮 | 尚未证明一行权重求和等于分母 |
+| Born rule | 未纳入本轮 | 尚未从振幅范数推出测量概率 |
+| quantum channel / amplitude | 未纳入本轮 | 尚未引入复幅、unitarity 或 channel law |
+| 干涉、度规、经验闭合 | 未纳入本轮 | 需要后续 S3-S7 |
+
+边界句：
+
+```text
+S2 关闭的是 finite denominator interface；
+它让 Markov 权重可以进入有限质量候选读法，
+但还不是物理概率律或量子测量律。
+```
+
+---
+
+## 〇二 · 完成度审计
+
+已完成 / 已证 / machineChecked：
+
+| 轴 | Lean 锚点 | 读法 |
+|---|---|---|
+| 接口层 | `FiniteProbabilityKernelSkeleton` | 在 Markov kernel skeleton 上加 `rowTotal`、非终端非零条件与权重上界 |
+| 投影存在 | `HasFiniteProbabilityProjection` | 一个有限过程拥有这样的 kernel 即有 S2 投影 |
+| 行条件 | `RowNormalizable`、`nonterminal_row_normalizable` | 非终端行有非零分母 |
+| 质量候选 | `FiniteMassCandidate`、`finiteMassCandidate_denominator_positive_if_not_terminal` | `weight / rowTotal` 的候选分母可检查 |
+| concrete 实例 | `concreteFiniteProbabilityKernel` | 三状态实例接入 S2 |
+| grid 实例 | `operatorCellGridFiniteProbabilityKernel` | `371 × 192 = 71232` grid 接入 S2 |
+| 公开摘要 | `finite_probability_bridge_summary` | concrete、grid、`192 × 371` 覆盖同时保留 |
+
+未纳入本轮：
+
+| 轴 | 状态 | 说明 |
+|---|---|---|
+| 权重行求和 | 未纳入本轮 | 没有证明 `sum weights = rowTotal` |
+| 实数概率空间 | 未纳入本轮 | 没有把候选分数提升为 measure-theoretic probability |
+| Born rule | 未纳入本轮 | 没有 amplitude，也没有范数平方律 |
+| 路径组合 | 未纳入本轮 | S3 才处理路径权重组合或 causal constraint |
+| 经验接口 | 未纳入本轮 | 没有 observation ledger 和数据判准 |
+
+本轮闭合范围：**S2 已在 Lean 中关闭 finite probability-kernel denominator interface；它保守地证明非终端行分母非零和权重上界，不关闭 sum-one 概率律、Born rule、quantum channel、干涉、几何恢复或经验闭合。**
+
+---
+
+## 一 · 为什么这一步足够小
+
+上一轮已有：
+
+```text
+FiniteProcess
++ MarkovKernelSkeleton
++ concrete bridge
++ 71232 operator-cell grid bridge
+```
+
+但 `MarkovKernelSkeleton.weight : State -> State -> Nat` 只说明离散权重，不说明它可以进入概率候选。S2 的最省力补强是增加一行分母：
+
+```lean
+structure FiniteProbabilityKernelSkeleton (P : FiniteProcess)
+    extends MarkovKernelSkeleton P where
+  rowTotal : P.State → Nat
+  rowTotal_positive_if_not_terminal :
+    ∀ a : P.State, ¬ P.terminal a → rowTotal a ≠ 0
+  weight_le_rowTotal :
+    ∀ a b : P.State, weight a b ≤ rowTotal a
+```
+
+这使每个非终端权重都能读成：
+
+```text
+finite mass candidate = numerator / denominator
+```
+
+其中 numerator 是一步权重，denominator 是该行分母。终端行允许停止，避免为了形式归一化而偷偷加入一个吸收物理转移。
+
+---
+
+## 二 · concrete 与 grid 的读法
+
+三状态 concrete bridge：
+
+| 状态 | rowTotal | 读法 |
+|---|---:|---|
+| `prepared` | `1` | 唯一步走向 `evolved` |
+| `evolved` | `1` | 唯一步走向 `measured` |
+| `measured` | `0` | 终端行停止 |
+
+`71232` operator-cell grid bridge：
+
+| 行 | rowTotal | 读法 |
+|---|---:|---|
+| 非末端 cell | `1` | successor 权重为 `1` |
+| 末端 cell | `0` | terminal row 停止 |
+
+这两个实例都不是随机物理模型。它们只证明 S1 的有限 bridge witness 可以继续承载 S2 的有限分母接口。
+
+---
+
+## 三 · 下一步
+
+S2 之后，最省力的推进顺序是：
+
+| 阶段 | 目标 | 本文状态 |
+|---|---|---|
+| S3 | 路径组合与局部因果约束 | 未纳入本轮 |
+| S4 | classical Markov 与 quantum amplitude 分层 | 未纳入本轮 |
+| S5 | 干涉与 Born-rule-shaped candidate | 未纳入本轮 |
+| S6 | 几何与度规候选接口 | 未纳入本轮 |
+| S7 | 经验 pending ledger | 未纳入本轮 |
+
+---
+
+## 四 · Validation Command
+
+Lean 验证命令：
+
+```bash
+lake build SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityBridge
+lake build SSBX
+```
+
+文档与格式检查：
+
+```bash
+git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean formal/SSBX.lean formal/SSBX/notes/unification-stepwise-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md formal/SSBX/notes/markov-causal-bridge-plan.md docs-next/10_formal_形式/modern.md '义理/有限概率核接口 · Markov桥S2.md' '义理/Markov因果桥 · 大统一最小验证构造.md'
+```

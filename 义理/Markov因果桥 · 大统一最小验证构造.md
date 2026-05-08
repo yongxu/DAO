@@ -1,6 +1,6 @@
 # Markov因果桥 · 大统一最小验证构造
 
-**前置**：[量子与相对论整合方向 · 从桥到新理论](量子与相对论整合方向%20·%20从桥到新理论.md) · [文构造完备与直相加边界](文构造完备与直相加边界.md) · [量子与相对论直统一不可能 · 当前语言NoGo](量子与相对论直统一不可能%20·%20当前语言NoGo.md) · [`markov-causal-bridge-plan`](../formal/SSBX/notes/markov-causal-bridge-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
+**前置**：[量子与相对论整合方向 · 从桥到新理论](量子与相对论整合方向%20·%20从桥到新理论.md) · [文构造完备与直相加边界](文构造完备与直相加边界.md) · [有限概率核接口 · Markov桥S2](有限概率核接口%20·%20Markov桥S2.md) · [量子与相对论直统一不可能 · 当前语言NoGo](量子与相对论直统一不可能%20·%20当前语言NoGo.md) · [`markov-causal-bridge-plan`](../formal/SSBX/notes/markov-causal-bridge-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
 **Lean 锚点**：
 
@@ -18,6 +18,7 @@
 | 公开摘要 | `Foundation/Modern/QuantumRelativityMarkovBridge.lean` | `markov_causal_bridge_summary` | `machineChecked` |
 | concrete witness | `Foundation/Modern/QuantumRelativityConcreteBridge.lean` | `concrete_bridge_summary` 给出三状态 `prepared → evolved → measured` 实例 | `machineChecked` |
 | `71232` grid bridge | `Foundation/Modern/OperatorCellGridMarkovBridge.lean` | `operator_cell_grid_markov_causal_bridge_summary` 把 `371 × 192` 覆盖网格作为有限过程状态空间 | `machineChecked` |
+| S2 有限概率核接口 | `Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean` | `finite_probability_bridge_summary` 关闭 finite denominator / bounded weights interface | `machineChecked` |
 
 > 本文回答第三个问题：
 >
@@ -37,11 +38,12 @@
   + Markov / 测量投影
   + 因果 / 事件投影
   + 终端状态的测量-事件对齐
+  + 有限概率核分母接口
   + 仍服从 tagged physical-language noncollapse
   + 不否定 192 × 371 文构造覆盖
 ```
 
-这不是量子引力理论，也不是“大统一已经完成”。它只把上一层的“中介桥方向”推进为一个候选最小构造：同一个有限过程对象可以被双读，并且终端状态可以同时被读为测量结果与事件记录。
+这不是量子引力理论，也不是“大统一已经完成”。它只把上一层的“中介桥方向”推进为一个候选最小构造：同一个有限过程对象可以被双读，终端状态可以同时被读为测量结果与事件记录，并且非终端 Markov 行可带有限分母候选。
 
 公开摘要为：
 
@@ -75,7 +77,8 @@ theorem markov_causal_bridge_summary :
 | 该桥不是 tagged-language collapse | `machineChecked` bridge target | 复用 `markov_bridge_not_direct_language_addition` |
 | 三状态 concrete witness | `machineChecked` | `concrete_bridge_summary` 证明至少有一个具体有限 bridge instance |
 | `71232` operator-cell grid bridge | `machineChecked` | `operator_cell_grid_markov_causal_bridge_summary` 将 `192 × 371` 覆盖网格接入 `FiniteProcess` |
-| 归一化概率 / Born rule | 未纳入本轮 | 初版最多用支持集与 `Nat` 权重 |
+| 有限概率核 denominator / bounded weights | `machineChecked` | `finite_probability_bridge_summary` 证明非终端行分母非零，权重受行分母约束 |
+| sum-one 概率律 / Born rule | 未纳入本轮 | S2 尚未证明行权重求和等于分母，也没有振幅平方律 |
 | 复幅、干涉、量子通道 | 未纳入本轮 | 后续才从经典 Markov 结构升级 |
 | Lorentzian geometry / 度规恢复 | 未纳入本轮 | 初版只保留事件与可达因果接口 |
 | 反对称性、局部性、经典极限 | 未纳入本轮 | 需要更强结构与额外 theorem |
@@ -120,12 +123,15 @@ typed skeleton / machineChecked in this branch：
 | 公开摘要 | `markov_causal_bridge_summary` | `machineChecked` theorem |
 | 具体三状态实例 | `concrete_bridge_summary` | `machineChecked` theorem |
 | operator-cell grid 实例 | `operator_cell_grid_markov_causal_bridge_summary` | `machineChecked` theorem |
+| 有限概率核接口 | `FiniteProbabilityKernelSkeleton`、`RowNormalizable` | `machineChecked` typed skeleton |
+| 非终端行分母非零 | `finiteMassCandidate_denominator_positive_if_not_terminal` | `machineChecked` theorem |
+| S2 公开摘要 | `finite_probability_bridge_summary` | `machineChecked` theorem |
 
 未纳入本轮：
 
 | 轴 | 状态 | 说明 |
 |---|---|---|
-| 概率归一化 | 未纳入本轮 | 初版只需“可转移 / 权重非零”的结构事实 |
+| sum-one 概率律 | 未纳入本轮 | S2 只关闭有限行分母和权重上界 |
 | 路径权重乘法定律 | 未纳入本轮 | `pathWeight` 可先作为接口占位 |
 | Born rule | 未纳入本轮 | 不从该有限骨架直接推出物理概率律 |
 | Quantum channel / amplitude | 未纳入本轮 | 需下一层从 Markov skeleton 升级 |
@@ -134,7 +140,7 @@ typed skeleton / machineChecked in this branch：
 | 度规与曲率 | 未纳入本轮 | 需要几何极限或额外重建结构 |
 | 经验闭合 | 未纳入本轮 | 尚无可测差异与数据判准 |
 
-本轮闭合范围：**Markov-因果桥的最小 typed skeleton 已在 Lean 中关闭；它只关闭有限过程双读、测量-事件对齐、同根非同一与 tagged-language noncollapse 保持，不关闭概率归一化、Born rule、量子通道、干涉、度规恢复或经验闭合；同时不否定 `192 × 371` 文构造覆盖。**
+本轮闭合范围：**Markov-因果桥的最小 typed skeleton 与 S2 有限概率核接口已在 Lean 中关闭；它只关闭有限过程双读、测量-事件对齐、同根非同一、tagged-language noncollapse 保持、非终端行分母非零与权重上界，不关闭 sum-one 概率律、Born rule、量子通道、干涉、度规恢复或经验闭合；同时不否定 `192 × 371` 文构造覆盖。**
 
 ---
 
@@ -170,7 +176,7 @@ Finite Markov-Causal Process
 | Markov 侧对象 | 初版读法 | 非目标 |
 |---|---|---|
 | 状态 | 候选测量前后的过程节点 | 不等同完整 Hilbert 态 |
-| 转移 | 下一步支持集或权重 | 不要求概率归一化 |
+| 转移 | 下一步支持集或权重 | 不要求 sum-one 概率律 |
 | 路径 | 可能历史 | 不先证明路径积分 |
 | 终端 | 测量结果候选 | 不先证明 Born rule |
 
@@ -300,7 +306,7 @@ theorem markov_bridge_same_one_not_identity :
 
 | 方向 | 目标 | 当前状态 |
 |---|---|---|
-| 概率核 | 从支持集 / `Nat` 权重升级到归一化 Markov kernel | 未纳入本轮 |
+| 概率核 | 从支持集 / `Nat` 权重升级到 finite denominator interface；sum-one 概率律另行处理 | S2 已关闭有限分母接口 |
 | 量子通道 | 从经典转移升级为 channel / amplitude skeleton | 未纳入本轮 |
 | 干涉 | 让路径权重能表达相位与抵消 | 未纳入本轮 |
 | 因果局部性 | 下一步只依赖局部过去或邻域 | 未纳入本轮 |
@@ -315,6 +321,7 @@ theorem markov_bridge_same_one_not_identity :
 有限过程双读
 -> 测量-事件对齐
 -> Markov 权重与路径接口
+-> 有限概率核接口
 -> 因果约束加强
 -> 量子通道 / 干涉升级
 -> 几何与经验接口
@@ -340,7 +347,8 @@ theorem markov_bridge_same_one_not_identity :
 | 2026-05-08 | verification plan | success | 新增 `formal/SSBX/notes/markov-causal-bridge-verification-plan.md`，记录回归验证、锚点审计、边界审计、升级路线与失败模板 |
 | 2026-05-08 | concrete bridge witness | success | 新增 `QuantumRelativityConcreteBridge.lean`，关闭三状态 `prepared → evolved → measured` bridge witness |
 | 2026-05-08 | operator-cell grid bridge | success | 新增 `OperatorCellGridMarkovBridge.lean`，把 `371 × 192 = 71232` 覆盖网格作为 `FiniteProcess` 状态空间 |
-| 2026-05-08 | stepwise plan | success | 新增 `unification-stepwise-plan.md`，记录 S0-S8 逐步验证路线；S1 已关闭，S2 之后仍 pending |
+| 2026-05-08 | stepwise plan | success | 新增 `unification-stepwise-plan.md`，记录 S0-S8 逐步验证路线；S1 已关闭 |
+| 2026-05-08 | finite probability-kernel interface | success | 新增 `QuantumRelativityFiniteProbabilityBridge.lean` 与《有限概率核接口 · Markov桥S2》，关闭 concrete 与 `71232` grid 的非终端行分母非零和权重上界 |
 
 ---
 
@@ -353,15 +361,16 @@ lake build SSBX.Foundation.Modern.QuantumRelativityWenBoundary
 lake build SSBX.Foundation.Modern.QuantumRelativityMarkovBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityConcreteBridge
 lake build SSBX.Foundation.Modern.OperatorCellGridMarkovBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityBridge
 lake build SSBX
 ```
 
 文档与索引格式检查：
 
 ```bash
-git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean formal/SSBX/Foundation/Modern/QuantumRelativityIntegration.lean formal/SSBX/Foundation/Modern/QuantumRelativityWenBoundary.lean formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean formal/SSBX.lean formal/SSBX/notes/markov-causal-bridge-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md formal/SSBX/notes/unification-stepwise-plan.md docs-next/10_formal_形式/modern.md '义理/文构造完备与直相加边界.md' '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/量子与相对论直统一不可能 · 当前语言NoGo.md' '义理/量子与相对论整合方向 · 从桥到新理论.md' '义理/量子时空互补 · 从一到测.md'
+git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean formal/SSBX/Foundation/Modern/QuantumRelativityIntegration.lean formal/SSBX/Foundation/Modern/QuantumRelativityWenBoundary.lean formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean formal/SSBX.lean formal/SSBX/notes/markov-causal-bridge-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md formal/SSBX/notes/unification-stepwise-plan.md docs-next/10_formal_形式/modern.md '义理/文构造完备与直相加边界.md' '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/有限概率核接口 · Markov桥S2.md' '义理/量子与相对论直统一不可能 · 当前语言NoGo.md' '义理/量子与相对论整合方向 · 从桥到新理论.md' '义理/量子时空互补 · 从一到测.md'
 ```
 
 一句话总结：
 
-> Markov 因果桥不是最终统一理论，而是把“测量结果成为事件”压成有限、双投影、可验证的 skeleton；本轮已关闭抽象桥、三状态 concrete witness 与 `71232` operator-cell grid bridge，下一轮才升级概率核、量子通道、干涉、因果约束、几何极限与经验接口。
+> Markov 因果桥不是最终统一理论，而是把“测量结果成为事件”压成有限、双投影、可验证的 skeleton；本轮已关闭抽象桥、三状态 concrete witness、`71232` operator-cell grid bridge 与 S2 有限概率核分母接口，下一轮才处理路径组合、量子通道、干涉、因果约束、几何极限与经验接口。
