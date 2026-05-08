@@ -114,19 +114,19 @@ theorem allOperatorCellSemanticPairs_length :
   rw [allOperatorCellSemanticPairs, List.length_map, allOperatorCellSemanticRows_length]
 
 theorem familyBackedDenotationRows_length :
-    familyBackedDenotationRows.length = 768 := by
+    familyBackedDenotationRows.length = 8256 := by
   native_decide
 
 theorem executableCellTransformRows_length :
-    executableCellTransformRows.length = 768 := by
+    executableCellTransformRows.length = 8256 := by
   rw [executableCellTransformRows, familyBackedDenotationRows_length]
 
 theorem exactSignatureShapeRows_length :
-    exactSignatureShapeRows.length = 1920 := by
+    exactSignatureShapeRows.length = 1152 := by
   native_decide
 
 theorem catalogueSignatureShapeRows_length :
-    catalogueSignatureShapeRows.length = 68544 := by
+    catalogueSignatureShapeRows.length = 61824 := by
   native_decide
 
 theorem operatorCellSemanticStatus_counts_sum :
@@ -186,6 +186,38 @@ theorem operatorCellSemanticRows_fan_executable (cell : Cell192) :
       ∧ (operatorCellSemanticRow .T_6 cell).cellTransform? = some (Cell192.hexCuo cell) := by
   constructor <;> rfl
 
+theorem operatorCellSemanticRows_tui_executable (cell : Cell192) :
+    (operatorCellSemanticRow .T_10 cell).evidence =
+      OperatorCellSemanticEvidence.familyBackedDenotation
+      ∧ (operatorCellSemanticRow .T_10 cell).cellTransform? =
+          some (SSBX.Foundation.Yi.YiCore.«生» cell.1, cell.2) := by
+  constructor <;> rfl
+
+theorem operatorCellSemanticRows_sun_executable (cell : Cell192) :
+    (operatorCellSemanticRow .T_12 cell).evidence =
+      OperatorCellSemanticEvidence.familyBackedDenotation
+      ∧ (operatorCellSemanticRow .T_12 cell).cellTransform? =
+          some (SSBX.Foundation.Yi.YiCore.«加» SSBX.Foundation.Yi.Yi.Hexagram.kun cell.1, cell.2) := by
+  constructor <;> rfl
+
+theorem operatorCellSemanticRows_hua_executable (cell : Cell192) :
+    (operatorCellSemanticRow .T_1 cell).evidence =
+      OperatorCellSemanticEvidence.familyBackedDenotation
+      ∧ (operatorCellSemanticRow .T_1 cell).cellTransform? = some (Cell192.flip2 cell) := by
+  constructor <;> rfl
+
+theorem operatorCellSemanticRows_bian_executable (cell : Cell192) :
+    (operatorCellSemanticRow .T_2 cell).evidence =
+      OperatorCellSemanticEvidence.familyBackedDenotation
+      ∧ (operatorCellSemanticRow .T_2 cell).cellTransform? = some (Cell192.flip3 cell) := by
+  constructor <;> rfl
+
+theorem operatorCellSemanticRows_fanOperator_executable (cell : Cell192) :
+    (operatorCellSemanticRow .Z_31 cell).evidence =
+      OperatorCellSemanticEvidence.familyBackedDenotation
+      ∧ (operatorCellSemanticRow .Z_31 cell).cellTransform? = some (Cell192.hexCuo cell) := by
+  constructor <;> rfl
+
 theorem operatorCellSemanticRows_fan_denotation (cell : Cell192) :
     (operatorCellSemanticRow .T_6 cell).denotation?.isSome = true := by
   rfl
@@ -204,10 +236,10 @@ catalogue-shape signature obligations.
 theorem operator_cell_semantic_coverage_summary :
     allOperatorCellSemanticRows.length = 71232
     ∧ allOperatorCellSemanticPairs.length = 71232
-    ∧ familyBackedDenotationRows.length = 768
-    ∧ executableCellTransformRows.length = 768
-    ∧ exactSignatureShapeRows.length = 1920
-    ∧ catalogueSignatureShapeRows.length = 68544
+    ∧ familyBackedDenotationRows.length = 8256
+    ∧ executableCellTransformRows.length = 8256
+    ∧ exactSignatureShapeRows.length = 1152
+    ∧ catalogueSignatureShapeRows.length = 61824
     ∧ executableCellTransformRows.length
         + exactSignatureShapeRows.length
         + catalogueSignatureShapeRows.length

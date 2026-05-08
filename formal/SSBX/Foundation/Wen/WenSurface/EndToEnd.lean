@@ -15,7 +15,7 @@ cuo-equivariant 子集 commute 作 future work）。
 - cue-aware resolver + explicit `SurfaceExpr` AST
 - 64 卦名 / aliases + Bool literals + Hex-only binders
 - executable registry 覆盖全部 371 个 OperatorId
-- 84 个 exact/theorem-backed operator 可求 Hex/Bool；其余 catalogue rows 求 symbolic normal form
+- 127 个 exact/theorem-backed operator 可求 Hex/Bool；其余 catalogue rows 求 symbolic normal form
 - unpromoted gap form 只诊断，不伪造 denotation
 
 ## 状态
@@ -28,6 +28,7 @@ namespace SSBX.Foundation.Wen.WenSurface
 
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Yi.YiCore
+open SSBX.Foundation.Bagua.BaguaAlgebra
 open SSBX.Foundation.Wen.WenDef
 open SSBX.Foundation.Wen.WenDefEval
 open SSBX.Text.WenyanOperators
@@ -421,11 +422,42 @@ example : (wenyanInterp "错 乾").toOption = some Hexagram.kun := by native_dec
 example : (wenyanInterp "錯 乾").toOption = some Hexagram.kun := by native_decide
 example : (wenyanInterp "综 乾").toOption = some Hexagram.qian := by native_decide
 example : (wenyanInterp "互 坤").toOption = some Hexagram.kun := by native_decide
+example : (wenyanInterp "改 乾").toOption = some (dongInner Hexagram.qian) := by native_decide
+example : (wenyanInterp "轉 乾").toOption = some Hexagram.qian.zong := by native_decide
+example : (wenyanInterp "伸 乾").toOption = some («生» Hexagram.qian) := by native_decide
+example : (wenyanInterp "屈 乾").toOption = some («加» Hexagram.kun Hexagram.qian) := by native_decide
+example : (wenyanInterp "起 乾").toOption = some («生» Hexagram.qian) := by native_decide
+example : (wenyanInterp "止 乾").toOption = some Hexagram.qian := by native_decide
+example :
+    (wenyanCompile "改").toOption.map (·.ty) = some (.arr .hex .hex) :=
+  by native_decide
+example :
+    (match wenyanCompile "化 乾" with
+     | .error (.resolve (.ambiguous "化" 0 candidates)) => candidates.length == 2
+     | _ => false) = true :=
+  by native_decide
 example :
     (match wenyanCompile "反 乾" with
      | .error (.resolve (.ambiguous "反" 0 candidates)) => candidates.length == 3
      | _ => false) = true :=
   by native_decide
+
+/-! ## § 6.26 exact Bool / finite quantifier promotions -/
+
+example : (wenyanInterpBool "遂 真 假").toOption = some false := by native_decide
+example : (wenyanInterpBool "但 真 假").toOption = some false := by native_decide
+example : (wenyanInterpBool "過半 者 甲 真").toOption = some true := by native_decide
+
+example :
+    (wenyanCompile "三").toOption.map (·.ty) =
+      some (.arr (.arr .hex .bool) .bool) :=
+  by native_decide
+
+example :
+    (theoremBackedSemanticsFor? OperatorId.Q_8).isSome = true := by native_decide
+
+example :
+    (theoremBackedSemanticsFor? OperatorId.D_10).isSome = true := by native_decide
 
 example :
     (wenyanInterp "（而 者 甲 推 甲 者 甲 損 甲） 之 一").toOption = some «一» :=

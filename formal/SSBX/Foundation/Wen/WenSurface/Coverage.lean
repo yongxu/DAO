@@ -125,7 +125,7 @@ theorem wenSurface_reuses_bagua_grid_summary :
 theorem wenSurface_reuses_operator_cell_semantic_summary :
     allOperatorCellSemanticRows.length = 71232
       ∧ allOperatorCellSemanticPairs.length = 71232
-      ∧ familyBackedDenotationRows.length = 768 :=
+      ∧ familyBackedDenotationRows.length = 8256 :=
   ⟨ (operator_cell_semantic_coverage_summary).1
   , (operator_cell_semantic_coverage_summary).2.1
   , (operator_cell_semantic_coverage_summary).2.2.1
