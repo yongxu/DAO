@@ -162,6 +162,7 @@ import SSBX.Foundation.Modern.QuantumRelativityActionPhaseLawBridge
 import SSBX.Foundation.Modern.QuantumRelativityStepwiseUnificationBridge
 import SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityNormalizationBridge
 import SSBX.Foundation.Modern.QuantumRelativityNormalizedMassBridge
+import SSBX.Foundation.Modern.QuantumRelativityBornWeightNormalizationBridge
 import SSBX.Foundation.Modern.SUN
 
 -- Phase 4 主体续（自然演绎 / Lebesgue 积分 / 连续 ODE / 神经科学 / 完备性深化）

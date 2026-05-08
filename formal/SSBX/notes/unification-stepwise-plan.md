@@ -82,6 +82,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityActionPhaseLawBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityStepwiseUnificationBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityNormalizationBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityNormalizedMassBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityBornWeightNormalizationBridge
 lake build SSBX
 git diff --check --
 ```
@@ -837,6 +838,36 @@ concrete 与 grid 非终端行均实例化。
 | `normalized_mass_bridge_summary` | `QuantumRelativityNormalizedMassBridge.lean` | concrete/grid normalized mass sum-one boundary 已关闭 |
 | `PendingBeyondS10` | `QuantumRelativityNormalizedMassBridge.lean` | amplitude/Born normalized support 与 Born derivation 等较大边界仍 pending |
 
+## S11 · Born 权重条件归一候选
+
+目标：先做条件式 Born 权重律。S11 不从动力学或 Markov 权重推出 Born rule，只证明有限 amplitude support 一旦由 `ampProb` 归一，则 S5 的 `candidateWeight` 非负且 finite sum 为 `1`。
+
+| 项 | 内容 |
+|---|---|
+| Lean 出口 | `born_weight_normalization_bridge_summary` |
+| 最低 theorem 形态 | 合取 S9/S10 finite probability facts、`ConditionalBornWeightNormalizationBoundaryClosed`、unit support witness、`PendingBeyondS11` 与 Wen coverage |
+| 失败记录 | 已记录 `List.map` 字段投影 simp failure；修正为 list induction |
+| 文档更新 | 已新增《Born权重条件归一候选 · Markov桥S11》 |
+| 后续结构 | `born_distribution_boundary`、channel composition、continuous action law、path integral、metric recovery 与 empirical closure 继续推进 |
+
+通过判准：
+
+```text
+amplitudeSupportWeightSum 定义 finite ampProb sum；
+bornCandidateWeightSum_eq_amplitudeSupportWeightSum；
+born_weight_nonnegative_and_sum_one_if_normalized；
+unitAmplitudeSupport 作为最小 normalized witness。
+```
+
+当前状态：
+
+| theorem | 文件 | 读法 |
+|---|---|---|
+| `bornCandidateWeightSum_eq_amplitudeSupportWeightSum` | `QuantumRelativityBornWeightNormalizationBridge.lean` | candidateWeight sum 与 ampProb support sum 对齐 |
+| `born_weight_nonnegative_and_sum_one_if_normalized` | `QuantumRelativityBornWeightNormalizationBridge.lean` | normalized finite amplitude support 的条件式概率律 |
+| `born_weight_normalization_bridge_summary` | `QuantumRelativityBornWeightNormalizationBridge.lean` | conditional Born-weight normalization boundary 已关闭 |
+| `PendingBeyondS11` | `QuantumRelativityBornWeightNormalizationBridge.lean` | Born distribution boundary 与 Born derivation 等较大边界仍 pending |
+
 ## 失败记录追加区
 
 失败记录格式沿用验证计划，并允许追加在此区：
@@ -882,6 +913,7 @@ concrete 与 grid 非终端行均实例化。
 | 2026-05-09 | S8 | failure retained / success | 第一次 stepwise summary build 因 operator-cell grid 与 path-quotient support namespace/defeq 解析失败；修正后关闭 current stepwise unification candidate summary，并显式列出 `PendingBeyondS5r` |
 | 2026-05-09 | S9 | failure retained / success | 第一次 finite probability normalization build 因 concrete row list-sum、grid singleton `Fin` 化简与 Rat coercion 递归深度失败；修正后关闭 concrete/grid finite row sum-one boundary，并显式列出 `PendingBeyondS9` |
 | 2026-05-09 | S10 | failure retained / success | direct concrete/grid 展开 proof 可过但不够结构化；改为泛型 `normalizedMassSum_eq_normalizedRowTotalCandidate`，关闭 `normalizedMass_sum_one` 与 concrete/grid normalized mass sum-one boundary |
+| 2026-05-09 | S11 | failure retained / success | `simp` 不能直接改写 `(candidateWeight ∘ bornRuleCandidate)` 的 list sum；改用 list induction 后关闭 conditional Born-weight normalization boundary |
 
 ## 统一用语正名
 
@@ -889,9 +921,9 @@ concrete 与 grid 非终端行均实例化。
 
 | 词 | 在本路线中的含义 | 结构依据 |
 |---|---|---|
-| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S10 已关闭的 summary theorem 与路线日志 |
-| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8-S10 pending list |
-| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary`、`normalized_mass_bridge_summary` |
+| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S11 已关闭的 summary theorem 与路线日志 |
+| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8-S11 pending list |
+| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary`、`normalized_mass_bridge_summary`、`born_weight_normalization_bridge_summary` |
 
 推荐正名句：
 

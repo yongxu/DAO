@@ -1117,6 +1117,7 @@
         "formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityBornWeightNormalizationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityCanonicalRepresentativeBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean",
@@ -1147,6 +1148,12 @@
       "symbol_hits": [
         {
           "paths": [
+            "formal/SSBX/Foundation/Modern/Quantum.lean"
+          ],
+          "symbol": "ampProb"
+        },
+        {
+          "paths": [
             "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
           ],
           "symbol": "normalizedMass"
@@ -1171,6 +1178,7 @@
         "formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityBornWeightNormalizationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityCanonicalRepresentativeBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean",
@@ -1222,6 +1230,12 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean"
           ],
           "symbol": "amplitude_channel_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityBornWeightNormalizationBridge.lean"
+          ],
+          "symbol": "born_weight_normalization_bridge_summary"
         },
         {
           "paths": [
@@ -1312,12 +1326,6 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean"
           ],
           "symbol": "nonzero_path_amplitude_bridge_summary"
-        },
-        {
-          "paths": [
-            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
-          ],
-          "symbol": "normalizedMass"
         }
       ]
     },
@@ -2193,6 +2201,72 @@
       "symbol_hits": []
     },
     {
+      "document": "义理/Born权重条件归一候选 · Markov桥S11.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityBornWeightNormalizationBridge.lean"
+          ],
+          "symbol": "AmplitudeSupportNormalized"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityBornWeightNormalizationBridge.lean"
+          ],
+          "symbol": "ConditionalBornWeightNormalizationBoundaryClosed"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityBornWeightNormalizationBridge.lean"
+          ],
+          "symbol": "amplitudeSupportWeightSum"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityBornWeightNormalizationBridge.lean"
+          ],
+          "symbol": "bornCandidateBoundarySupport"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityBornWeightNormalizationBridge.lean"
+          ],
+          "symbol": "bornCandidateWeightSum"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityBornWeightNormalizationBridge.lean"
+          ],
+          "symbol": "bornCandidateWeightSum_eq_amplitudeSupportWeightSum"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityBornWeightNormalizationBridge.lean"
+          ],
+          "symbol": "born_weight_nonnegative_and_sum_one_if_normalized"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityBornWeightNormalizationBridge.lean"
+          ],
+          "symbol": "born_weight_normalization_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityBornWeightNormalizationBridge.lean"
+          ],
+          "symbol": "unitAmplitudeSupport"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityBornWeightNormalizationBridge.lean"
+          ],
+          "symbol": "unit_amplitude_support_born_weight_law"
+        }
+      ]
+    },
+    {
       "document": "义理/C_实虚史真.md",
       "lean_path_mentions": [],
       "symbol_hits": []
@@ -2814,6 +2888,12 @@
         },
         {
           "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityBornWeightNormalizationBridge.lean"
+          ],
+          "symbol": "born_weight_normalization_bridge_summary"
+        },
+        {
+          "paths": [
             "formal/SSBX/Foundation/Modern/QuantumRelativityIntegration.lean"
           ],
           "symbol": "bridge_projections_not_current_identity"
@@ -2877,12 +2957,6 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
           ],
           "symbol": "finite_path_sum_algebra_bridge_summary"
-        },
-        {
-          "paths": [
-            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean"
-          ],
-          "symbol": "finite_path_sum_bridge_summary"
         }
       ]
     },

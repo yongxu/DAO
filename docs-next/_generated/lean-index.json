@@ -4,7 +4,7 @@
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
-    "Foundation/Modern": 63,
+    "Foundation/Modern": 64,
     "Foundation/Wen": 51,
     "Foundation/Yi": 2,
     "Model": 2,
@@ -179,6 +179,7 @@
         "SSBX.Foundation.Modern.QuantumRelativityStepwiseUnificationBridge",
         "SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityNormalizationBridge",
         "SSBX.Foundation.Modern.QuantumRelativityNormalizedMassBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityBornWeightNormalizationBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -197,10 +198,10 @@
         "SSBX.Foundation.Modern.IIDWlln",
         "SSBX.Foundation.Modern.BochnerPL"
       ],
-      "lines": 189,
+      "lines": 190,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "9d786b56cebc867c5251655599f659734614cac9b4a54ff86262d71ca6a10833"
+      "sha256": "2941bbc24d5e31d3be164699abef4dc1568461181a67573af25cc002eed74182"
     },
     {
       "cluster": "root",
@@ -10294,6 +10295,80 @@
       "module": "SSBX.Foundation.Modern.QuantumRelativityAmplitudeChannelBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean",
       "sha256": "d80d02b2fb3ac2be8a76a9ea17eceeb6e82d9d31d26ca9464f54835e5986a78a"
+    },
+    {
+      "cluster": "Foundation/Modern",
+      "declaration_count": 15,
+      "declarations": [
+        {
+          "kind": "def",
+          "name": "amplitudeSupportWeightSum"
+        },
+        {
+          "kind": "def",
+          "name": "AmplitudeSupportNormalized"
+        },
+        {
+          "kind": "def",
+          "name": "bornCandidateBoundarySupport"
+        },
+        {
+          "kind": "def",
+          "name": "bornCandidateWeightSum"
+        },
+        {
+          "kind": "theorem",
+          "name": "bornCandidateWeightSum_eq_amplitudeSupportWeightSum"
+        },
+        {
+          "kind": "theorem",
+          "name": "born_weight_nonnegative_and_sum_one_if_normalized"
+        },
+        {
+          "kind": "def",
+          "name": "ConditionalBornWeightNormalizationBoundaryClosed"
+        },
+        {
+          "kind": "theorem",
+          "name": "conditional_born_weight_normalization_boundary_closed"
+        },
+        {
+          "kind": "def",
+          "name": "unitAmplitudeSupport"
+        },
+        {
+          "kind": "theorem",
+          "name": "unit_amplitude_support_normalized"
+        },
+        {
+          "kind": "theorem",
+          "name": "unit_amplitude_support_born_weight_law"
+        },
+        {
+          "kind": "inductive",
+          "name": "PendingBeyondS11"
+        },
+        {
+          "kind": "def",
+          "name": "ClosedByStepwiseS11"
+        },
+        {
+          "kind": "theorem",
+          "name": "pending_boundary_not_closed_by_s11"
+        },
+        {
+          "kind": "theorem",
+          "name": "born_weight_normalization_bridge_summary"
+        }
+      ],
+      "imports": [
+        "Mathlib.Tactic",
+        "SSBX.Foundation.Modern.QuantumRelativityNormalizedMassBridge"
+      ],
+      "lines": 181,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityBornWeightNormalizationBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityBornWeightNormalizationBridge.lean",
+      "sha256": "658e88866a03dab413e9164bcf2359cd31081fecf083f8e9d76598d1fa33deca"
     },
     {
       "cluster": "Foundation/Modern",
