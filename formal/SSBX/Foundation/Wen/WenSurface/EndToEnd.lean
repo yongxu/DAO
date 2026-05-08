@@ -969,12 +969,56 @@ example :
   by native_decide
 
 example :
+    (wenyanCompile "者 甲 甲 之 乾").toOption.map (·.ty)
+      = some (.arr (.arr .hex .hex) .hex) :=
+  by native_decide
+
+example :
+    (wenyanCompile "者 甲 甲 之 真").toOption.map (·.ty)
+      = some (.arr (.arr .bool .bool) .bool) :=
+  by native_decide
+
+example :
     (wenyanCompile "者 甲 同 甲 甲").toOption.map (·.ty)
       = some (.arr .hex .bool) :=
   by native_decide
 
 example :
+    (wenyanInterpBool "者 甲 甲 真").toOption = some true :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "者 甲 不 甲 真").toOption = some false :=
+  by native_decide
+
+example :
+    (wenyanCompile "者 甲 甲 推").toOption.map (·.ty)
+      = some (.arr .hex .hex) :=
+  by native_decide
+
+example :
     (wenyanInterpBool "（者 甲 不 甲） 之 真").toOption = some false :=
+  by native_decide
+
+example :
+    (wenyanInterp "（者 甲 甲 之 乾） 之 推").toOption = some «一» :=
+  by native_decide
+
+example :
+    (wenyanInterp "（者 甲 甲 之 一） 之 推").toOption = some («生» «一») :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "（者 甲 甲 之 真） 之 不").toOption = some false :=
+  by native_decide
+
+example :
+    (wenyanCompile "而 者 甲 甲 者 甲 推 甲").toOption.map (·.ty)
+      = some (.arr .hex .hex) :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "各 者 甲 真 者 甲 同 甲 甲").toOption = some true :=
   by native_decide
 
 example :
@@ -1005,6 +1049,14 @@ example :
 
 example :
     (wenyanInterpBool "令 甲 真 不 甲").toOption = some false :=
+  by native_decide
+
+example :
+    (wenyanInterp "令 甲 （推） （甲 之 乾）").toOption = some «一» :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "令 甲 （不） （甲 之 真）").toOption = some false :=
   by native_decide
 
 example :

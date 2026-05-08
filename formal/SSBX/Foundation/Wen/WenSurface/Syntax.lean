@@ -119,10 +119,26 @@ def exactTokWithType? (t : ResolvedTok) : Option (ResolvedTok × OperatorId × T
       | none => none
   | _ => none
 
-def atomSurfaceType? : ResolvedAtom → Option Ty
+/-- Finite binder domains inferred when the surface grammar has no explicit
+    annotation.  Hex stays first to preserve legacy `者 甲 甲`. -/
+def binderDomainCandidates : List Ty :=
+  [ .hex
+  , .bool
+  , .arr .hex .hex
+  , .arr .hex .bool
+  , .arr .bool .bool
+  , .arr .bool .hex ]
+
+def binderDomainCandidatesWith (primary? : Option Ty) : List Ty :=
+  match primary? with
+  | none => binderDomainCandidates
+  | some primary =>
+      primary :: binderDomainCandidates.filter (fun ty => decide (ty ≠ primary))
+
+def atomSurfaceTypeWithCtx? (ctx : Ctx) : ResolvedAtom → Option Ty
   | .hexConst _ => some .hex
   | .boolConst _ => some .bool
-  | .varName _ => some .hex
+  | .varName name => ctx.lookup name
   | .catalogueOp r =>
       match r.operator? with
       | some id => exactOperatorType? id
@@ -130,43 +146,68 @@ def atomSurfaceType? : ResolvedAtom → Option Ty
   | .hexOrOp _ _ => some .hex
   | _ => none
 
-def surfaceExprType? : SurfaceExpr → Option Ty
-  | .atom tok => atomSurfaceType? tok.atom
-  | .app f x =>
-      match surfaceExprType? f, surfaceExprType? x with
-      | some (.arr a b), some a' => if a = a' then some b else none
-      | _, _ => none
-  | .seq [x] => surfaceExprType? x
-  | .seq _ => none
-  | .marker _ body => surfaceExprType? body
-  | .binder .lambda _ body =>
-      match surfaceExprType? body with
-      | some ty => some (.arr .hex ty)
-      | none => none
-  | .binder .forallHex _ body =>
-      match surfaceExprType? body with
-      | some .bool => some .bool
-      | _ => none
-  | .letBind _ value body =>
-      match surfaceExprType? value with
-      | some .hex => surfaceExprType? body
-      | _ => none
-  | .construction "之又" [inner] => surfaceExprType? inner
-  | .construction _ _ => none
-  | .grouped _ _ body => surfaceExprType? body
+def atomSurfaceType? (atom : ResolvedAtom) : Option Ty :=
+  atomSurfaceTypeWithCtx? [] atom
 
-def typedExprMatches (expected : Ty) (expr : SurfaceExpr) : Bool :=
-  match surfaceExprType? expr with
+mutual
+  def surfaceExprTypeWithCtx? : Ctx → SurfaceExpr → Option Ty
+    | ctx, .atom tok => atomSurfaceTypeWithCtx? ctx tok.atom
+    | ctx, .app f x =>
+        match surfaceExprTypeWithCtx? ctx f, surfaceExprTypeWithCtx? ctx x with
+        | some (.arr a b), some a' => if a = a' then some b else none
+        | _, _ => none
+    | ctx, .seq [x] => surfaceExprTypeWithCtx? ctx x
+    | _, .seq _ => none
+    | ctx, .marker _ body => surfaceExprTypeWithCtx? ctx body
+    | ctx, .binder .lambda name body =>
+        lambdaTypeWithCtx? ctx name body binderDomainCandidates
+    | ctx, .binder .forallHex name body =>
+        match surfaceExprTypeWithCtx? ((name, .hex) :: ctx) body with
+        | some .bool => some .bool
+        | _ => none
+    | ctx, .letBind name value body =>
+        match surfaceExprTypeWithCtx? ctx value with
+        | some ty => surfaceExprTypeWithCtx? ((name, ty) :: ctx) body
+        | none => none
+    | ctx, .construction "之又" [inner] => surfaceExprTypeWithCtx? ctx inner
+    | _, .construction _ _ => none
+    | ctx, .grouped _ _ body => surfaceExprTypeWithCtx? ctx body
+
+  def lambdaTypeWithCtx? : Ctx → String → SurfaceExpr → List Ty → Option Ty
+    | _, _, _, [] => none
+    | ctx, name, body, dom :: rest =>
+        match surfaceExprTypeWithCtx? ((name, dom) :: ctx) body with
+        | some cod => some (.arr dom cod)
+        | none => lambdaTypeWithCtx? ctx name body rest
+end
+
+def surfaceExprType? (expr : SurfaceExpr) : Option Ty :=
+  surfaceExprTypeWithCtx? [] expr
+
+def surfaceExprMatchesTypeWithCtx (ctx : Ctx) (expected : Ty) (expr : SurfaceExpr) : Bool :=
+  match surfaceExprTypeWithCtx? ctx expr with
   | some actual => actual = expected
   | none => false
 
-def expectedTypeErr (expected : Ty) (head : ResolvedTok) (expr : SurfaceExpr) : ParseErr :=
-  match surfaceExprType? expr with
+def typedExprMatches (expected : Ty) (expr : SurfaceExpr) : Bool :=
+  surfaceExprMatchesTypeWithCtx [] expected expr
+
+def expectedTypeErrWithCtx (ctx : Ctx) (expected : Ty) (head : ResolvedTok)
+    (expr : SurfaceExpr) : ParseErr :=
+  match surfaceExprTypeWithCtx? ctx expr with
   | some actual => .typeMismatch expected actual head.surface head.col
   | none =>
       match exactTokWithType? head with
       | some (_, _, actual) => .typeMismatch expected actual head.surface head.col
       | none => .empty
+
+def expectedTypeErr (expected : Ty) (head : ResolvedTok) (expr : SurfaceExpr) : ParseErr :=
+  expectedTypeErrWithCtx [] expected head expr
+
+def lambdaParts? : SurfaceExpr → Option (String × SurfaceExpr)
+  | .binder .lambda name body => some (name, body)
+  | .grouped _ _ body => lambdaParts? body
+  | _ => none
 
 def exactArgsForArity? (ty : Ty) (arity : Nat) : Option (List Ty) :=
   Ty.argTypesFor ty arity
@@ -211,20 +252,43 @@ def expectedCloseBracketErr (openTok : ResolvedTok) (rest : List ResolvedTok) : 
 /-! ## § 3 Prefix parser -/
 
 mutual
-  def parseSurfaceExprAux : Nat → Nat → List ResolvedTok → Except ParseErr (SurfaceExpr × List ResolvedTok)
-    | 0, _, _ => .error .fuelExhausted
-    | _+1, _, [] => .error .empty
-    | n+1, reserve, head :: rest =>
+  def parseSurfaceExprAux : Ctx → Nat → Nat → List ResolvedTok →
+      Except ParseErr (SurfaceExpr × List ResolvedTok)
+    | _, 0, _, _ => .error .fuelExhausted
+    | _, _+1, _, [] => .error .empty
+    | ctx, n+1, reserve, head :: rest =>
       match head.atom with
       | .syntax .zhe =>
           match rest with
           | v :: rest' =>
               match asVarName? v with
               | some name =>
-                  match parseSurfaceExprAux n reserve rest' with
+                  let tryBody (dom : Ty) :=
+                    parseSurfaceExprAux ((name, dom) :: ctx) n reserve rest'
+                  match tryBody .hex with
                   | .ok (body, rest'') =>
-                      parsePostfixApplications n reserve (.binder .lambda name body) rest''
-                  | .error e => .error e
+                      parsePostfixApplications ctx n reserve (.binder .lambda name body) rest''
+                  | .error _ =>
+                      match tryBody .bool with
+                      | .ok (body, rest'') =>
+                          parsePostfixApplications ctx n reserve (.binder .lambda name body) rest''
+                      | .error _ =>
+                          match tryBody (.arr .hex .hex) with
+                          | .ok (body, rest'') =>
+                              parsePostfixApplications ctx n reserve (.binder .lambda name body) rest''
+                          | .error _ =>
+                              match tryBody (.arr .hex .bool) with
+                              | .ok (body, rest'') =>
+                                  parsePostfixApplications ctx n reserve (.binder .lambda name body) rest''
+                              | .error _ =>
+                                  match tryBody (.arr .bool .bool) with
+                                  | .ok (body, rest'') =>
+                                      parsePostfixApplications ctx n reserve (.binder .lambda name body) rest''
+                                  | .error _ =>
+                                      match tryBody (.arr .bool .hex) with
+                                      | .ok (body, rest'') =>
+                                          parsePostfixApplications ctx n reserve (.binder .lambda name body) rest''
+                                      | .error e => .error e
               | none => .error (expectedVariableErr head)
           | [] => .error (expectedVariableErr head)
       | .syntax .ling =>
@@ -232,26 +296,30 @@ mutual
           | v :: rest' =>
               match asVarName? v with
               | some name =>
-                  match parseSurfaceExprAux n 1 rest' with
+                  match parseSurfaceExprAux ctx n 1 rest' with
                   | .error e => .error e
                   | .ok (value, rest'') =>
-                      match parseSurfaceExprAux n reserve rest'' with
+                      let bodyCtx :=
+                        match surfaceExprTypeWithCtx? ctx value with
+                        | some ty => (name, ty) :: ctx
+                        | none => (name, .hex) :: ctx
+                      match parseSurfaceExprAux bodyCtx n reserve rest'' with
                       | .ok (body, rest''') =>
-                          parsePostfixApplications n reserve (.letBind name value body) rest'''
+                          parsePostfixApplications ctx n reserve (.letBind name value body) rest'''
                       | .error e => .error e
               | none => .error (expectedVariableErr head)
           | [] => .error (expectedVariableErr head)
       | .appMarker =>
-          match parseSurfaceExprAux n reserve rest with
-          | .ok (body, rest') => parsePostfixApplications n reserve (.marker head body) rest'
+          match parseSurfaceExprAux ctx n reserve rest with
+          | .ok (body, rest') => parsePostfixApplications ctx n reserve (.marker head body) rest'
           | .error e => .error e
       | .iterate =>
-          match parseSurfaceExprAux n reserve rest with
+          match parseSurfaceExprAux ctx n reserve rest with
           | .ok (body, rest') =>
-              parsePostfixApplications n reserve (.construction "之又" [body]) rest'
+              parsePostfixApplications ctx n reserve (.construction "之又" [body]) rest'
           | .error e => .error e
       | .openBracket =>
-          match parseSurfaceExprAux n reserve rest with
+          match parseSurfaceExprAux ctx n reserve rest with
           | .error e => .error e
           | .ok (body, closeTok :: rest') =>
               match closeTok.atom with
@@ -259,7 +327,7 @@ mutual
                   match matchingCloseBracket? head.surface with
                   | some expected =>
                       if closeTok.surface = expected then
-                        parsePostfixApplications n reserve (.grouped head closeTok body) rest'
+                        parsePostfixApplications ctx n reserve (.grouped head closeTok body) rest'
                       else
                         .error (.expectedCloseBracket head.surface expected head.col closeTok.col)
                   | none => .error (.unmatchedOpenBracket head.surface head.col)
@@ -269,27 +337,27 @@ mutual
           .error (.unmatchedCloseBracket head.surface head.col)
       | .hexOrOp h r =>
           match r.operator? with
-          | none => parsePostfixApplications n reserve (.atom { head with atom := .hexConst h }) rest
+          | none => parsePostfixApplications ctx n reserve (.atom { head with atom := .hexConst h }) rest
           | some id =>
               let hexFallback :=
-                parsePostfixApplications n reserve (.atom { head with atom := .hexConst h }) rest
+                parsePostfixApplications ctx n reserve (.atom { head with atom := .hexConst h }) rest
               if isApplicationOperator id then
                 hexFallback
               else
                 match exactNormalStart? head with
                 | some (tok, args) =>
-                    match collectExactArgsPartial n reserve (.atom tok) args rest with
+                    match collectExactArgsPartial ctx n reserve (.atom tok) args rest with
                     | .ok (expr, rest') =>
                         if rest'.length < rest.length then
-                          parsePostfixApplications n reserve expr rest'
+                          parsePostfixApplications ctx n reserve expr rest'
                         else
                           hexFallback
                     | .error _ => hexFallback
                 | none =>
-                    match collectSurfaceArgs n (.atom { head with atom := .catalogueOp r }) (parseArityFor id) rest with
+                    match collectSurfaceArgs ctx n (.atom { head with atom := .catalogueOp r }) (parseArityFor id) rest with
                     | .ok (expr, rest') =>
                         if decide (reserve <= rest'.length) then
-                          parsePostfixApplications n reserve expr rest'
+                          parsePostfixApplications ctx n reserve expr rest'
                         else hexFallback
                     | .error _ => hexFallback
       | .catalogueOp r =>
@@ -297,66 +365,66 @@ mutual
           | none => .error (.unexpectedApplicationMarker head.surface head.col)
           | some id =>
               if isApplicationOperator id then
-                match parseSurfaceExprAux n reserve rest with
-                | .ok (body, rest') => parsePostfixApplications n reserve (.marker head body) rest'
+                match parseSurfaceExprAux ctx n reserve rest with
+                | .ok (body, rest') => parsePostfixApplications ctx n reserve (.marker head body) rest'
                 | .error e => .error e
               else if id = .Q_1 then
                 match rest with
                 | v :: rest' =>
                     match asVarName? v with
                     | some name =>
-                        match parseSurfaceExprAux n reserve rest' with
+                        match parseSurfaceExprAux ((name, .hex) :: ctx) n reserve rest' with
                         | .ok (body, rest'') =>
-                            parsePostfixApplications n reserve (.binder .forallHex name body) rest''
+                            parsePostfixApplications ctx n reserve (.binder .forallHex name body) rest''
                         | .error e => .error e
                       | none =>
                         match exactNormalStart? head with
                         | some (tok, args) =>
-                            match collectExactArgsPartial n reserve (.atom tok) args rest with
-                            | .ok (expr, rest') => parsePostfixApplications n reserve expr rest'
+                            match collectExactArgsPartial ctx n reserve (.atom tok) args rest with
+                            | .ok (expr, rest') => parsePostfixApplications ctx n reserve expr rest'
                             | .error e => .error e
                         | none =>
-                            match collectSurfaceArgs n (.atom head) (parseArityFor id) rest with
-                            | .ok (expr, rest') => parsePostfixApplications n reserve expr rest'
+                            match collectSurfaceArgs ctx n (.atom head) (parseArityFor id) rest with
+                            | .ok (expr, rest') => parsePostfixApplications ctx n reserve expr rest'
                             | .error e => .error e
                   | [] =>
                       match exactNormalStart? head with
                       | some (tok, args) =>
-                          match collectExactArgsPartial n reserve (.atom tok) args rest with
-                          | .ok (expr, rest') => parsePostfixApplications n reserve expr rest'
+                          match collectExactArgsPartial ctx n reserve (.atom tok) args rest with
+                          | .ok (expr, rest') => parsePostfixApplications ctx n reserve expr rest'
                           | .error e => .error e
                       | none =>
-                          match collectSurfaceArgs n (.atom head) (parseArityFor id) rest with
-                          | .ok (expr, rest') => parsePostfixApplications n reserve expr rest'
+                          match collectSurfaceArgs ctx n (.atom head) (parseArityFor id) rest with
+                          | .ok (expr, rest') => parsePostfixApplications ctx n reserve expr rest'
                           | .error e => .error e
                 else
                   match exactNormalStart? head with
                   | some (tok, args) =>
-                      match collectExactArgsPartial n reserve (.atom tok) args rest with
-                      | .ok (expr, rest') => parsePostfixApplications n reserve expr rest'
+                      match collectExactArgsPartial ctx n reserve (.atom tok) args rest with
+                      | .ok (expr, rest') => parsePostfixApplications ctx n reserve expr rest'
                       | .error e => .error e
                   | none =>
-                      match collectSurfaceArgs n (.atom head) (parseArityFor id) rest with
-                      | .ok (expr, rest') => parsePostfixApplications n reserve expr rest'
+                      match collectSurfaceArgs ctx n (.atom head) (parseArityFor id) rest with
+                      | .ok (expr, rest') => parsePostfixApplications ctx n reserve expr rest'
                       | .error e => .error e
-      | .hexConst _ => parsePostfixApplications n reserve (.atom head) rest
-      | .boolConst _ => parsePostfixApplications n reserve (.atom head) rest
-      | .varName _ => parsePostfixApplications n reserve (.atom head) rest
+      | .hexConst _ => parsePostfixApplications ctx n reserve (.atom head) rest
+      | .boolConst _ => parsePostfixApplications ctx n reserve (.atom head) rest
+      | .varName _ => parsePostfixApplications ctx n reserve (.atom head) rest
 
-    def collectSurfaceArgs : Nat → SurfaceExpr → Nat → List ResolvedTok →
+    def collectSurfaceArgs : Ctx → Nat → SurfaceExpr → Nat → List ResolvedTok →
         Except ParseErr (SurfaceExpr × List ResolvedTok)
-    | _, acc, 0, rest => .ok (acc, rest)
-    | 0, _, _+1, _ => .error .fuelExhausted
-    | n+1, acc, k+1, rest =>
-          match parseSurfaceExprAux n k rest with
+    | _, _, acc, 0, rest => .ok (acc, rest)
+    | _, 0, _, _+1, _ => .error .fuelExhausted
+    | ctx, n+1, acc, k+1, rest =>
+          match parseSurfaceExprAux ctx n k rest with
           | .error e => .error e
-          | .ok (arg, rest') => collectSurfaceArgs n (.app acc arg) k rest'
+          | .ok (arg, rest') => collectSurfaceArgs ctx n (.app acc arg) k rest'
 
-    def collectExactArgsPartial : Nat → Nat → SurfaceExpr → List Ty → List ResolvedTok →
+    def collectExactArgsPartial : Ctx → Nat → Nat → SurfaceExpr → List Ty → List ResolvedTok →
         Except ParseErr (SurfaceExpr × List ResolvedTok)
-      | _, _, acc, [], rest => .ok (acc, rest)
-      | 0, _, _, _ :: _, _ => .error .fuelExhausted
-      | n+1, reserve, acc, expected :: expectedRest, rest =>
+      | _, _, _, acc, [], rest => .ok (acc, rest)
+      | _, 0, _, _, _ :: _, _ => .error .fuelExhausted
+      | ctx, n+1, reserve, acc, expected :: expectedRest, rest =>
           match rest with
           | head :: _ =>
               if isCloseBracketTok head then
@@ -367,84 +435,110 @@ mutual
                 let argReserve := reserve + expectedRest.length
                 let parsed :=
                   match expected with
-                  | .arr _ _ => parseSurfaceExprExpected n argReserve expected rest
-                  | _ => parseSurfaceExprAux n argReserve rest
+                  | .arr _ _ => parseSurfaceExprExpected ctx n argReserve expected rest
+                  | _ => parseSurfaceExprAux ctx n argReserve rest
                 match parsed with
                 | .error e => .error e
                 | .ok (arg, rest') =>
-                    collectExactArgsPartial n reserve (.app acc arg) expectedRest rest'
+                    collectExactArgsPartial ctx n reserve (.app acc arg) expectedRest rest'
           | [] => .ok (acc, [])
 
-    def collectExactArgsExact : Nat → Nat → SurfaceExpr → List Ty → List ResolvedTok →
+    def collectExactArgsExact : Ctx → Nat → Nat → SurfaceExpr → List Ty → List ResolvedTok →
         Except ParseErr (SurfaceExpr × List ResolvedTok)
-      | _, _, acc, [], rest => .ok (acc, rest)
-      | 0, _, _, _ :: _, _ => .error .fuelExhausted
-      | _+1, _, _, _ :: _, [] => .error .empty
-      | n+1, reserve, acc, expected :: expectedRest, rest =>
+      | _, _, _, acc, [], rest => .ok (acc, rest)
+      | _, 0, _, _, _ :: _, _ => .error .fuelExhausted
+      | _, _+1, _, _, _ :: _, [] => .error .empty
+      | ctx, n+1, reserve, acc, expected :: expectedRest, rest =>
           if decide (rest.length <= reserve) then
             .error .empty
           else
             let argReserve := reserve + expectedRest.length
             let parsed :=
               match expected with
-              | .arr _ _ => parseSurfaceExprExpected n argReserve expected rest
-              | _ => parseSurfaceExprAux n argReserve rest
+              | .arr _ _ => parseSurfaceExprExpected ctx n argReserve expected rest
+              | _ => parseSurfaceExprAux ctx n argReserve rest
             match parsed with
             | .error e => .error e
             | .ok (arg, rest') =>
-                collectExactArgsExact n reserve (.app acc arg) expectedRest rest'
+                collectExactArgsExact ctx n reserve (.app acc arg) expectedRest rest'
 
-    def parseSurfaceExprExpected : Nat → Nat → Ty → List ResolvedTok →
+    def parseSurfaceExprExpected : Ctx → Nat → Nat → Ty → List ResolvedTok →
         Except ParseErr (SurfaceExpr × List ResolvedTok)
-      | 0, _, _, _ => .error .fuelExhausted
-      | _+1, _, _, [] => .error .empty
-      | n+1, reserve, expected, head :: rest =>
+      | _, 0, _, _, _ => .error .fuelExhausted
+      | _, _+1, _, _, [] => .error .empty
+      | ctx, n+1, reserve, expected, head :: rest =>
+          match expected, head.atom with
+          | .arr dom cod, .syntax .zhe =>
+              match rest with
+              | v :: rest' =>
+                  match asVarName? v with
+                  | some name =>
+                      match parseSurfaceExprExpected ((name, dom) :: ctx) n reserve cod rest' with
+                      | .ok (body, rest'') => .ok (.binder .lambda name body, rest'')
+                      | .error e => .error e
+                  | none => .error (expectedVariableErr head)
+              | [] => .error (expectedVariableErr head)
+          | _, _ =>
           match exactExpectedStart? expected head with
           | some (tok, args) =>
-              match collectExactArgsExact n reserve (.atom tok) args rest with
+              match collectExactArgsExact ctx n reserve (.atom tok) args rest with
               | .ok result => .ok result
               | .error _ =>
-                  match parseSurfaceExprAux n reserve (head :: rest) with
+                  match parseSurfaceExprAux ctx n reserve (head :: rest) with
                   | .ok result =>
-                      if typedExprMatches expected result.1 then
+                      if surfaceExprMatchesTypeWithCtx ctx expected result.1 then
                         .ok result
                       else
-                        .error (expectedTypeErr expected head result.1)
+                        .error (expectedTypeErrWithCtx ctx expected head result.1)
                   | .error e => .error e
           | none =>
-              match parseSurfaceExprAux n reserve (head :: rest) with
+              match parseSurfaceExprAux ctx n reserve (head :: rest) with
               | .ok result =>
-                  if typedExprMatches expected result.1 then
+                  if surfaceExprMatchesTypeWithCtx ctx expected result.1 then
                     .ok result
                   else
-                    .error (expectedTypeErr expected head result.1)
+                    .error (expectedTypeErrWithCtx ctx expected head result.1)
               | .error e => .error e
 
-  def parsePostfixApplications : Nat → Nat → SurfaceExpr → List ResolvedTok →
+  def parsePostfixApplications : Ctx → Nat → Nat → SurfaceExpr → List ResolvedTok →
       Except ParseErr (SurfaceExpr × List ResolvedTok)
-    | 0, _, _, _ => .error .fuelExhausted
-    | _+1, _, acc, [] => .ok (acc, [])
-    | n+1, reserve, acc, head :: rest =>
+    | _, 0, _, _, _ => .error .fuelExhausted
+    | _, _+1, _, acc, [] => .ok (acc, [])
+    | ctx, n+1, reserve, acc, head :: rest =>
         if isCloseBracketTok head then
           .ok (acc, head :: rest)
         else if isApplicationMarkerTok head then
-          match parseSurfaceExprAux n reserve rest with
+          match parseSurfaceExprAux ctx n reserve rest with
           | .ok (arg, rest') =>
               if decide (reserve <= rest'.length) then
-                parsePostfixApplications n reserve (.marker head (.app acc arg)) rest'
+                parsePostfixApplications ctx n reserve (.marker head (.app acc arg)) rest'
               else
                 .ok (acc, head :: rest)
           | .error _ => .ok (acc, head :: rest)
           else
-            match surfaceExprType? acc with
+            let parseBareLambdaArg :=
+              if decide ((head :: rest).length <= reserve) then
+                .ok (acc, head :: rest)
+              else
+                match parseSurfaceExprAux ctx n reserve (head :: rest) with
+                | .ok (arg, rest') =>
+                    parsePostfixApplications ctx n reserve (.app acc arg) rest'
+                | .error _ => .ok (acc, head :: rest)
+            match surfaceExprTypeWithCtx? ctx acc with
             | some (.arr expected _) =>
                 if decide ((head :: rest).length <= reserve) then
                   .ok (acc, head :: rest)
                 else
-                  match parseSurfaceExprExpected n reserve expected (head :: rest) with
-                  | .ok (arg, rest') => parsePostfixApplications n reserve (.app acc arg) rest'
-                  | .error _ => .ok (acc, head :: rest)
-            | _ => .ok (acc, head :: rest)
+                  match parseSurfaceExprExpected ctx n reserve expected (head :: rest) with
+                  | .ok (arg, rest') => parsePostfixApplications ctx n reserve (.app acc arg) rest'
+                  | .error _ =>
+                      match lambdaParts? acc with
+                      | some _ => parseBareLambdaArg
+                      | none => .ok (acc, head :: rest)
+            | _ =>
+                match lambdaParts? acc with
+                | some _ => parseBareLambdaArg
+                | none => .ok (acc, head :: rest)
   end
 
 def leftoverAtomsErr : List ResolvedTok → ParseErr
@@ -456,7 +550,7 @@ def leftoverAtomsErr : List ResolvedTok → ParseErr
 
 def parseSurfaceResolved (rs : List ResolvedTok) : Except ParseErr SurfaceExpr :=
   let fuel := rs.length * 2 + 1
-  match parseSurfaceExprAux fuel 0 rs with
+  match parseSurfaceExprAux [] fuel 0 rs with
   | .error e => .error e
   | .ok (expr, []) => .ok expr
   | .ok (.atom tok, leftover@(_ :: _)) =>

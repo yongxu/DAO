@@ -201,6 +201,10 @@ def symbolicCatalogueHead? (tok : ResolvedTok) (arity : Nat) : Option OperatorId
       | none => none
   | _ => none
 
+def checkedAbs? (ctx : Ctx) (name : String) (dom : Ty) (body : Tm) : Option Tm :=
+  let abs := .abs name dom body
+  if (typeCheck ctx abs).isSome then some abs else none
+
 def elabSurfaceExprWithCtx (ctx : Ctx) : SurfaceExpr → Except ElabErr Tm
   | .atom tok => atomToTmAt tok
   | .app (.atom tok) a =>
@@ -239,6 +243,32 @@ def elabSurfaceExprWithCtx (ctx : Ctx) : SurfaceExpr → Except ElabErr Tm
           | .ok tf, .ok tc => .ok (.app tf tc)
           | .error e, _ => .error e
           | _, .error e => .error e
+  | .app (.binder .lambda name body) x =>
+      match elabSurfaceExprWithCtx ctx x with
+      | .error e => .error e
+      | .ok tx =>
+          match typeCheck ctx tx with
+          | none => .error .empty
+          | some dom =>
+              match elabSurfaceExprWithCtx ((name, dom) :: ctx) body with
+              | .error e => .error e
+              | .ok tb =>
+                  match checkedAbs? ctx name dom tb with
+                  | some tf => .ok (.app tf tx)
+                  | none => .error .empty
+  | .app (.grouped _ _ (.binder .lambda name body)) x =>
+      match elabSurfaceExprWithCtx ctx x with
+      | .error e => .error e
+      | .ok tx =>
+          match typeCheck ctx tx with
+          | none => .error .empty
+          | some dom =>
+              match elabSurfaceExprWithCtx ((name, dom) :: ctx) body with
+              | .error e => .error e
+              | .ok tb =>
+                  match checkedAbs? ctx name dom tb with
+                  | some tf => .ok (.app tf tx)
+                  | none => .error .empty
   | .app f x =>
       match elabSurfaceExprWithCtx ctx f, elabSurfaceExprWithCtx ctx x with
       | .ok tf, .ok tx => .ok (.app tf tx)
@@ -250,19 +280,70 @@ def elabSurfaceExprWithCtx (ctx : Ctx) : SurfaceExpr → Except ElabErr Tm
   | .binder .lambda name body =>
       match elabSurfaceExprWithCtx ((name, .hex) :: ctx) body with
       | .ok tHex =>
-          let hexAbs := .abs name .hex tHex
-          if (typeCheck ctx hexAbs).isSome then
-            .ok hexAbs
-          else
-            match elabSurfaceExprWithCtx ((name, .bool) :: ctx) body with
-            | .ok tBool =>
-                let boolAbs := .abs name .bool tBool
-                if (typeCheck ctx boolAbs).isSome then .ok boolAbs else .ok hexAbs
-            | .error _ => .ok hexAbs
-      | .error hexErr =>
+          match checkedAbs? ctx name .hex tHex with
+          | some abs => .ok abs
+          | none =>
+              match elabSurfaceExprWithCtx ((name, .bool) :: ctx) body with
+              | .ok tBool =>
+                  match checkedAbs? ctx name .bool tBool with
+                  | some abs => .ok abs
+                  | none =>
+                      match elabSurfaceExprWithCtx ((name, .arr .hex .hex) :: ctx) body with
+                      | .ok tHH =>
+                          match checkedAbs? ctx name (.arr .hex .hex) tHH with
+                          | some abs => .ok abs
+                          | none =>
+                              match elabSurfaceExprWithCtx ((name, .arr .hex .bool) :: ctx) body with
+                              | .ok tHB =>
+                                  match checkedAbs? ctx name (.arr .hex .bool) tHB with
+                                  | some abs => .ok abs
+                                  | none =>
+                                      match elabSurfaceExprWithCtx ((name, .arr .bool .bool) :: ctx) body with
+                                      | .ok tBB =>
+                                          match checkedAbs? ctx name (.arr .bool .bool) tBB with
+                                          | some abs => .ok abs
+                                          | none =>
+                                              match elabSurfaceExprWithCtx ((name, .arr .bool .hex) :: ctx) body with
+                                              | .ok tBH =>
+                                                  match checkedAbs? ctx name (.arr .bool .hex) tBH with
+                                                  | some abs => .ok abs
+                                                  | none => .error .empty
+                                              | .error e => .error e
+                                      | .error e => .error e
+                              | .error e => .error e
+                      | .error e => .error e
+              | .error e => .error e
+      | .error _ =>
           match elabSurfaceExprWithCtx ((name, .bool) :: ctx) body with
-          | .ok tBool => .ok (.abs name .bool tBool)
-          | .error _ => .error hexErr
+          | .ok tBool =>
+              match checkedAbs? ctx name .bool tBool with
+              | some abs => .ok abs
+              | none =>
+                  match elabSurfaceExprWithCtx ((name, .arr .hex .hex) :: ctx) body with
+                  | .ok tHH =>
+                      match checkedAbs? ctx name (.arr .hex .hex) tHH with
+                      | some abs => .ok abs
+                      | none =>
+                          match elabSurfaceExprWithCtx ((name, .arr .hex .bool) :: ctx) body with
+                          | .ok tHB =>
+                              match checkedAbs? ctx name (.arr .hex .bool) tHB with
+                              | some abs => .ok abs
+                              | none =>
+                                  match elabSurfaceExprWithCtx ((name, .arr .bool .bool) :: ctx) body with
+                                  | .ok tBB =>
+                                      match checkedAbs? ctx name (.arr .bool .bool) tBB with
+                                      | some abs => .ok abs
+                                      | none =>
+                                          match elabSurfaceExprWithCtx ((name, .arr .bool .hex) :: ctx) body with
+                                          | .ok tBH =>
+                                              match checkedAbs? ctx name (.arr .bool .hex) tBH with
+                                              | some abs => .ok abs
+                                              | none => .error .empty
+                                          | .error e => .error e
+                                  | .error e => .error e
+                          | .error e => .error e
+                  | .error e => .error e
+          | .error e => .error e
   | .binder .forallHex name body =>
       match elabSurfaceExprWithCtx ((name, .hex) :: ctx) body with
       | .ok t => .ok (.app .forallH (.abs name .hex t))
@@ -272,8 +353,8 @@ def elabSurfaceExprWithCtx (ctx : Ctx) : SurfaceExpr → Except ElabErr Tm
       | .ok tv =>
           let dom :=
             match typeCheck ctx tv with
-            | some .bool => .bool
-            | _ => .hex
+            | some ty => ty
+            | none => .hex
           match elabSurfaceExprWithCtx ((name, dom) :: ctx) body with
           | .ok tb => .ok (.app (.abs name dom tb) tv)
           | .error e => .error e
