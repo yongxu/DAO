@@ -1,10 +1,11 @@
 /-
 # Dispatch — route from the opcode-tag cell to the appropriate executeBlock
 
-This file implements the **dispatch tree** that fetch invokes after it has
-deposited the next instruction's tag cell into `META.cur`.  The dispatch tree
-inspects the tag cell, decides which of the 12 opcodes it represents, and
-performs an unconditional `jump` to that opcode's executeBlock entry-offset.
+This file implements the current **pre-swap dispatch tree** that fetch invokes
+after it has deposited the next instruction's tag cell into `META.cur`.  The
+tree covers tags 0..11.  After `YiInstr.swap` was added at tag 12, this file
+remains a verified scaffold for the legacy 12-way geometry; the full 13-way
+dispatch tree is intentionally deferred with the rest of Phase C.
 
 For Option-F per-parameter blocks (`setShi sh`, `flipYao i`,
 `branchYaoEq i j t`, `branchShiEq sh t`), dispatch must also consume the
@@ -22,6 +23,7 @@ when control is transferred to its entry offset:
 | ------------- | ----------------------------------------------------------- |
 | `META.cur`    | the **tag cell** of the next instruction to execute         |
 |               | i.e. `cellFromIdx ⟨k, _⟩` for some `k ∈ {0..11}`            |
+|               | (`swap`, tag 12, is outside this scaffold)                  |
 | `META.history`| the **param cells** of this instruction, prepended to the   |
 |               | rest of the encoded META state (per `MetaInterp.lean §4`).  |
 | `META.pc`     | `dispatchOffset`                                            |
@@ -42,7 +44,7 @@ instruction restores it.  The per-block local-effect lemmas in
 `Block_*.lean` already abstract over this restoration step (they take
 `cur` as a free variable).
 
-## §1  Dispatch tree shape — 4-way hex × 3-way Shi
+## §1  Dispatch tree shape — legacy 4-way hex × 3-way Shi
 
 The opcode-tag cell is `cellFromIdx ⟨k, _⟩` for `k ∈ {0..11}`.  Per
 `WenyanSelfInterp.cellFromIdx`:
@@ -108,9 +110,11 @@ new `META.cur` to route to the right pre-compiled (op, param) block.
     Stubs included; full bodies are Phase D work because the Nat-target
     branches (`branchYaoEq`, `branchShiEq`) require dynamic decode (same
     arithmetic gap as `Block_Jump.lean`).
-  * **Routing proofs for the other 11 cases** — same shape as the halt
-    case, mostly mechanical; one case is sufficient to certify the
-    architecture.
+  * **Routing proofs for the other legacy 11 cases** — same shape as the
+    halt case, mostly mechanical; one case is sufficient to certify the
+    scaffold architecture.
+  * **Tag 12 / `swap` routing** — requires replacing this legacy 4×3
+    geometry with a full 13-way tree.
   * **Composition with fetch** — the precise pre-state contract documented
     in §0 must be discharged by `fetchProg` (Phase B follow-up).
 -/
@@ -127,6 +131,7 @@ open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Bagua.Cell192
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
+open SSBX.Foundation.Wen.WenyanSelfInterp.YiInstrEnc
 open SSBX.Foundation.Wen.MetaInterp
 open SSBX.Foundation.Wen.MetaInterp.ExecuteBlock
 
@@ -226,7 +231,7 @@ def dispatchTree (offsets : DispatchOffsets) (dispatchBase : Nat) : List YiInstr
   let L_hex3   := dispatchBase + 7
   let L_hex0   := dispatchBase + 12
   let L_hex1   := dispatchBase + 15
-  -- y2-test (compare y_2 to y_6 = known yang for tags 0..11)
+  -- y2-test (compare y_2 to y_6 = known yang for legacy tags 0..11)
   [ YiInstr.branchYaoEq ⟨1, by omega⟩ ⟨5, by omega⟩ L_y2yang
   , YiInstr.jump L_y2yin ]
   ++
@@ -296,31 +301,170 @@ theorem subDispatchSetShi_length (a b c : Nat) :
   unfold subDispatchSetShi
   simp [dispatchShi]
 
+/-- Encoding fact: the Shi-component of `encShi sh` is `sh` itself.  Used
+    to discharge the routing proof for `subDispatchSetShi`. -/
+private theorem encShi_shi (sh : Shi) : (encShi sh).2 = sh := by
+  cases sh <;> rfl
+
+/-- **Routing lemma for `subDispatchSetShi`**: starting from a META state
+    whose `cur` is anything (typically the setShi tag cell), `pc = 0`,
+    `prog = subDispatchSetShi jiOff jinOff weiOff`, and `history` begins
+    with `encShi sh` followed by `rest`, after the appropriate number of
+    fuel steps (2 for `ji`, 3 for `jin`, 4 for `wei`) META lands at the
+    correct branch offset, with `cur = encShi sh`, `history = rest`, and
+    `halted = false`.
+
+    The fuel count varies by case because `branchShiEq` short-circuits as
+    soon as it matches; `wei` falls through both `branchShiEq`s before the
+    final `jump` fires. -/
+theorem subDispatchSetShi_routes
+    (sh : Shi) (jiOff jinOff weiOff : Nat)
+    (cur : Cell192) (rest : List Cell192) :
+    let μ : YiState :=
+      { cur := cur
+        history := encShi sh :: rest
+        pc := 0
+        prog := subDispatchSetShi jiOff jinOff weiOff
+        halted := false }
+    let fuel : Nat := match sh with | .ji => 2 | .jin => 3 | .wei => 4
+    let μ' := μ.runFuel fuel
+    let target : Nat := match sh with
+      | .ji => jiOff | .jin => jinOff | .wei => weiOff
+    μ'.pc = target
+    ∧ μ'.cur = encShi sh
+    ∧ μ'.history = rest
+    ∧ μ'.halted = false := by
+  -- Step 0 (pop): cur := encShi sh, history := rest, pc := 1.
+  -- Step 1 (branchShiEq ji jiOff): test (encShi sh).2 = ji.
+  -- Step 2 (branchShiEq jin jinOff): test (encShi sh).2 = jin.
+  -- Step 3 (jump weiOff): unconditional.
+  cases sh <;>
+    refine ⟨?_, ?_, ?_, ?_⟩ <;>
+      simp [YiState.runFuel, YiState.step, YiState.execute,
+            subDispatchSetShi, dispatchShi, encShi_shi]
+
+/-! ### § 4.1  flipYao 6-way sub-dispatch -/
+
 /-- The flipYao sub-dispatch table.  Routes to one of six pre-compiled
-    `executeBlock_flipYao i ...` blocks based on the param cell's `hex_idx`.
+    `executeBlock_flipYao i ...` blocks based on the param cell's index
+    `i ∈ Fin 6`.
 
-    Implementing the 6-way dispatch on a single `Cell192` requires reading
-    the param cell's `hex_idx` from META.cur — but `branchYaoEq` only
-    compares yaos pairwise, so a 6-way decision tree on (y1, y2, y3) is
-    needed.  We provide the structural shape (a 3-level binary tree of
-    `branchYaoEq` against `y_5` known yin) and document the wiring; the
-    full body is **deferred** to a follow-up because the param cell here
-    does NOT come from a known-tag-shape constraint (param cells encode a
-    `Fin 6` via `cellFromIdx ⟨i.val, _⟩`, so y4..y6 may not all be yin
-    for i ≥ 16 — but i.val < 6 < 16, so y4..y6 ARE all yin; the dispatch
-    is structurally implementable).
+    The param cell is `encFin6 i = cellFromIdx ⟨i.val, _⟩`, with
+    `i.val ∈ {0..5}`.  Decomposing via `cellFromIdx`:
 
-    For the scaffold we provide the **wrapper only** — `[pop, jump weiOff]`
-    as a no-op placeholder so the type checks.  The full 6-way tree is a
-    Phase D refinement. -/
-def subDispatchFlipYao (off0 _off1 _off2 _off3 _off4 _off5 : Nat) : List YiInstr :=
-  -- Placeholder: pops the param cell, jumps unconditionally to off0.
-  -- The full 6-way tree should branch on (y1, y2, y3) — left as Phase D.
+      hex_idx = i.val / 3 ∈ {0, 1}     (0 for i ∈ {0,1,2}, 1 for i ∈ {3,4,5})
+      shi_idx = i.val % 3 ∈ {0, 1, 2}  (0=ji, 1=jin, 2=wei)
+
+    `Hexagram.fromIdx ⟨0, _⟩` = all yang; `fromIdx ⟨1, _⟩` = y1=yin,
+    y2..y6=yang.  So we can decide hex_idx by comparing `y1` and `y6`:
+    they are equal (both yang) for hex_idx = 0, unequal for hex_idx = 1.
+
+    Layout (offsets relative to the dispatch base):
+
+      +0 : pop                                     — pop param cell into cur
+      +1 : branchYaoEq 0 5  (base + 3)             — y1 = y6 → hex 0
+      +2 : jump (base + 6)                         — else hex 1
+      +3 : branchShiEq Shi.ji  off0                — hex 0 / ji
+      +4 : branchShiEq Shi.jin off1                — hex 0 / jin
+      +5 : jump off2                               — hex 0 / wei
+      +6 : branchShiEq Shi.ji  off3                — hex 1 / ji
+      +7 : branchShiEq Shi.jin off4                — hex 1 / jin
+      +8 : jump off5                               — hex 1 / wei
+
+    Length = 9 instructions.
+
+    `dispatchBase` is the absolute pc where this sub-dispatch starts inside
+    `metaInterpProg`; the two intra-fragment branch targets above
+    (`base + 3`, `base + 6`) need it. -/
+def subDispatchFlipYao (dispatchBase : Nat)
+    (off0 off1 off2 off3 off4 off5 : Nat) : List YiInstr :=
   [ YiInstr.pop
-  , YiInstr.jump off0 ]
+  , YiInstr.branchYaoEq ⟨0, by omega⟩ ⟨5, by omega⟩ (dispatchBase + 3)
+  , YiInstr.jump (dispatchBase + 6)
+  , YiInstr.branchShiEq Shi.ji  off0
+  , YiInstr.branchShiEq Shi.jin off1
+  , YiInstr.jump off2
+  , YiInstr.branchShiEq Shi.ji  off3
+  , YiInstr.branchShiEq Shi.jin off4
+  , YiInstr.jump off5 ]
 
-theorem subDispatchFlipYao_length (a b c d e f : Nat) :
-    (subDispatchFlipYao a b c d e f).length = 2 := rfl
+theorem subDispatchFlipYao_length (base a b c d e f : Nat) :
+    (subDispatchFlipYao base a b c d e f).length = 9 := rfl
+
+/-- **Routing lemma for `subDispatchFlipYao`**: starting from a META state
+    whose `cur` is anything (typically the flipYao tag), `pc = 0`,
+    `prog = subDispatchFlipYao 0 off0 off1 off2 off3 off4 off5`, and
+    `history` begins with `encFin6 i` followed by `rest`, after the
+    appropriate number of fuel steps META lands at the correct
+    `off_{i.val}`, with `cur = encFin6 i`, `history = rest`, and
+    `halted = false`.
+
+    Fuel counts (per i):
+      i=0 (hex0/ji):  3   pop, branchYao take, branchShi ji take
+      i=1 (hex0/jin): 4   pop, branchYao take, branchShi ji fall, branchShi jin take
+      i=2 (hex0/wei): 5   pop, branchYao take, ji fall, jin fall, jump
+      i=3 (hex1/ji):  4   pop, branchYao fall, jump, branchShi ji take
+      i=4 (hex1/jin): 5   pop, branchYao fall, jump, ji fall, branchShi jin take
+      i=5 (hex1/wei): 6   pop, branchYao fall, jump, ji fall, jin fall, jump
+
+    `dispatchBase` is fixed to 0 here so the intra-fragment targets
+    (`base+3`, `base+6`) point to instructions 3 and 6 of the fragment
+    itself when the fragment is run as a stand-alone program.
+
+    Proof strategy: each of the six cases unfolds `encFin6` and its
+    `cellFromIdx` decomposition all the way down to `Yao.fromIdx` /
+    `Shi.fromIdx` literals; from there `simp` normalizes the
+    `branchYaoEq` / `branchShiEq` conditions and the routing falls out
+    by pure reduction. -/
+theorem subDispatchFlipYao_routes
+    (i : Fin 6) (off0 off1 off2 off3 off4 off5 : Nat)
+    (cur : Cell192) (rest : List Cell192) :
+    let μ : YiState :=
+      { cur := cur
+        history := encFin6 i :: rest
+        pc := 0
+        prog := subDispatchFlipYao 0 off0 off1 off2 off3 off4 off5
+        halted := false }
+    let fuel : Nat := match i.val with
+      | 0 => 3 | 1 => 4 | 2 => 5 | 3 => 4 | 4 => 5 | _ => 6
+    let μ' := μ.runFuel fuel
+    let target : Nat := match i.val with
+      | 0 => off0 | 1 => off1 | 2 => off2 | 3 => off3 | 4 => off4 | _ => off5
+    μ'.pc = target
+    ∧ μ'.cur = encFin6 i
+    ∧ μ'.history = rest
+    ∧ μ'.halted = false := by
+  match i with
+  | ⟨0, _⟩ =>
+    refine ⟨?_, ?_, ?_, ?_⟩ <;>
+      simp [YiState.runFuel, YiState.step, YiState.execute,
+            subDispatchFlipYao, Hexagram.yaoAt,
+            encFin6, cellFromIdx, Hexagram.fromIdx, Yao.fromIdx, Shi.fromIdx]
+  | ⟨1, _⟩ =>
+    refine ⟨?_, ?_, ?_, ?_⟩ <;>
+      simp [YiState.runFuel, YiState.step, YiState.execute,
+            subDispatchFlipYao, Hexagram.yaoAt,
+            encFin6, cellFromIdx, Hexagram.fromIdx, Yao.fromIdx, Shi.fromIdx]
+  | ⟨2, _⟩ =>
+    refine ⟨?_, ?_, ?_, ?_⟩ <;>
+      simp [YiState.runFuel, YiState.step, YiState.execute,
+            subDispatchFlipYao, Hexagram.yaoAt,
+            encFin6, cellFromIdx, Hexagram.fromIdx, Yao.fromIdx, Shi.fromIdx]
+  | ⟨3, _⟩ =>
+    refine ⟨?_, ?_, ?_, ?_⟩ <;>
+      simp [YiState.runFuel, YiState.step, YiState.execute,
+            subDispatchFlipYao, Hexagram.yaoAt,
+            encFin6, cellFromIdx, Hexagram.fromIdx, Yao.fromIdx, Shi.fromIdx]
+  | ⟨4, _⟩ =>
+    refine ⟨?_, ?_, ?_, ?_⟩ <;>
+      simp [YiState.runFuel, YiState.step, YiState.execute,
+            subDispatchFlipYao, Hexagram.yaoAt,
+            encFin6, cellFromIdx, Hexagram.fromIdx, Yao.fromIdx, Shi.fromIdx]
+  | ⟨5, _⟩ =>
+    refine ⟨?_, ?_, ?_, ?_⟩ <;>
+      simp [YiState.runFuel, YiState.step, YiState.execute,
+            subDispatchFlipYao, Hexagram.yaoAt,
+            encFin6, cellFromIdx, Hexagram.fromIdx, Yao.fromIdx, Shi.fromIdx]
 
 /-! ## § 5  Concrete routing proof — the `halt` case
 
@@ -405,6 +549,397 @@ theorem dispatchTree_routes_halt
     simp [YiState.runFuel, YiState.step, YiState.execute,
           dispatchTree, dispatchShi, haltTag_shi,
           Hexagram.yaoAt, haltTag_yao.1, haltTag_yao.2.1, haltTag_yao.2.2.2.2.2]
+
+/-! ## § 5b  Routing proofs for the remaining 11 opcodes
+
+The following 11 theorems are mechanical analogues of
+`dispatchTree_routes_halt`, one per non-halt opcode tag.  Each follows the
+same template:
+  * a `<op>Tag` cell (= `cellFromIdx ⟨k, _⟩` for the right `k`)
+  * a `<op>Tag_yao` lemma enumerating (y1..y6) for that hex_idx
+  * a `<op>Tag_shi` lemma giving the Shi component
+  * a `dispatchTree_routes_<op>` lemma stating `runFuel n` lands at the
+    correct entry-offset, with `cur`, `history`, `halted` preserved.
+The fuel `n` ranges from 3 to 6 (vs. 7 for halt) depending on path length.
+-/
+
+/-! ### nop  (k=0, hex_idx=0, shi=ji) -/
+
+def nopTag : Cell192 := cellFromIdx ⟨0, by omega⟩
+
+private theorem nopTag_yao : nopTag.1.y1 = Yao.yang
+                           ∧ nopTag.1.y2 = Yao.yang
+                           ∧ nopTag.1.y3 = Yao.yang
+                           ∧ nopTag.1.y4 = Yao.yang
+                           ∧ nopTag.1.y5 = Yao.yang
+                           ∧ nopTag.1.y6 = Yao.yang := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> decide
+
+private theorem nopTag_shi : nopTag.2 = Shi.ji := by
+  unfold nopTag cellFromIdx
+  rfl
+
+theorem dispatchTree_routes_nop
+    (offsets : DispatchOffsets) (history : List Cell192) :
+    let μ : YiState :=
+      { cur := nopTag
+        history := history
+        pc := 0
+        prog := dispatchTree offsets 0
+        halted := false }
+    let μ' := μ.runFuel 3
+    μ'.pc = offsets.nop_offset
+    ∧ μ'.cur = nopTag
+    ∧ μ'.history = history
+    ∧ μ'.halted = false := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+    simp [YiState.runFuel, YiState.step, YiState.execute,
+          dispatchTree, dispatchShi, nopTag_shi,
+          Hexagram.yaoAt, nopTag_yao.1, nopTag_yao.2.1, nopTag_yao.2.2.2.2.2]
+
+/-! ### setShi  (k=1, hex_idx=0, shi=jin) -/
+
+def setShiTag : Cell192 := cellFromIdx ⟨1, by omega⟩
+
+private theorem setShiTag_yao : setShiTag.1.y1 = Yao.yang
+                              ∧ setShiTag.1.y2 = Yao.yang
+                              ∧ setShiTag.1.y3 = Yao.yang
+                              ∧ setShiTag.1.y4 = Yao.yang
+                              ∧ setShiTag.1.y5 = Yao.yang
+                              ∧ setShiTag.1.y6 = Yao.yang := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> decide
+
+private theorem setShiTag_shi : setShiTag.2 = Shi.jin := by
+  unfold setShiTag cellFromIdx
+  rfl
+
+theorem dispatchTree_routes_setShi
+    (offsets : DispatchOffsets) (history : List Cell192) :
+    let μ : YiState :=
+      { cur := setShiTag
+        history := history
+        pc := 0
+        prog := dispatchTree offsets 0
+        halted := false }
+    let μ' := μ.runFuel 4
+    μ'.pc = offsets.setShi_dispatch_offset
+    ∧ μ'.cur = setShiTag
+    ∧ μ'.history = history
+    ∧ μ'.halted = false := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+    simp [YiState.runFuel, YiState.step, YiState.execute,
+          dispatchTree, dispatchShi, setShiTag_shi,
+          Hexagram.yaoAt, setShiTag_yao.1, setShiTag_yao.2.1,
+          setShiTag_yao.2.2.2.2.2]
+
+/-! ### flipYao  (k=2, hex_idx=0, shi=wei) -/
+
+def flipYaoTag : Cell192 := cellFromIdx ⟨2, by omega⟩
+
+private theorem flipYaoTag_yao : flipYaoTag.1.y1 = Yao.yang
+                               ∧ flipYaoTag.1.y2 = Yao.yang
+                               ∧ flipYaoTag.1.y3 = Yao.yang
+                               ∧ flipYaoTag.1.y4 = Yao.yang
+                               ∧ flipYaoTag.1.y5 = Yao.yang
+                               ∧ flipYaoTag.1.y6 = Yao.yang := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> decide
+
+private theorem flipYaoTag_shi : flipYaoTag.2 = Shi.wei := by
+  unfold flipYaoTag cellFromIdx
+  rfl
+
+theorem dispatchTree_routes_flipYao
+    (offsets : DispatchOffsets) (history : List Cell192) :
+    let μ : YiState :=
+      { cur := flipYaoTag
+        history := history
+        pc := 0
+        prog := dispatchTree offsets 0
+        halted := false }
+    let μ' := μ.runFuel 5
+    μ'.pc = offsets.flipYao_dispatch_offset
+    ∧ μ'.cur = flipYaoTag
+    ∧ μ'.history = history
+    ∧ μ'.halted = false := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+    simp [YiState.runFuel, YiState.step, YiState.execute,
+          dispatchTree, dispatchShi, flipYaoTag_shi,
+          Hexagram.yaoAt, flipYaoTag_yao.1, flipYaoTag_yao.2.1,
+          flipYaoTag_yao.2.2.2.2.2]
+
+/-! ### hu  (k=3, hex_idx=1, shi=ji) -/
+
+def huTag : Cell192 := cellFromIdx ⟨3, by omega⟩
+
+private theorem huTag_yao : huTag.1.y1 = Yao.yin
+                          ∧ huTag.1.y2 = Yao.yang
+                          ∧ huTag.1.y3 = Yao.yang
+                          ∧ huTag.1.y4 = Yao.yang
+                          ∧ huTag.1.y5 = Yao.yang
+                          ∧ huTag.1.y6 = Yao.yang := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> decide
+
+private theorem huTag_shi : huTag.2 = Shi.ji := by
+  unfold huTag cellFromIdx
+  rfl
+
+theorem dispatchTree_routes_hu
+    (offsets : DispatchOffsets) (history : List Cell192) :
+    let μ : YiState :=
+      { cur := huTag
+        history := history
+        pc := 0
+        prog := dispatchTree offsets 0
+        halted := false }
+    let μ' := μ.runFuel 4
+    μ'.pc = offsets.hu_offset
+    ∧ μ'.cur = huTag
+    ∧ μ'.history = history
+    ∧ μ'.halted = false := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+    simp [YiState.runFuel, YiState.step, YiState.execute,
+          dispatchTree, dispatchShi, huTag_shi,
+          Hexagram.yaoAt, huTag_yao.1, huTag_yao.2.1, huTag_yao.2.2.2.2.2]
+
+/-! ### cuo  (k=4, hex_idx=1, shi=jin) -/
+
+def cuoTag : Cell192 := cellFromIdx ⟨4, by omega⟩
+
+private theorem cuoTag_yao : cuoTag.1.y1 = Yao.yin
+                           ∧ cuoTag.1.y2 = Yao.yang
+                           ∧ cuoTag.1.y3 = Yao.yang
+                           ∧ cuoTag.1.y4 = Yao.yang
+                           ∧ cuoTag.1.y5 = Yao.yang
+                           ∧ cuoTag.1.y6 = Yao.yang := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> decide
+
+private theorem cuoTag_shi : cuoTag.2 = Shi.jin := by
+  unfold cuoTag cellFromIdx
+  rfl
+
+theorem dispatchTree_routes_cuo
+    (offsets : DispatchOffsets) (history : List Cell192) :
+    let μ : YiState :=
+      { cur := cuoTag
+        history := history
+        pc := 0
+        prog := dispatchTree offsets 0
+        halted := false }
+    let μ' := μ.runFuel 5
+    μ'.pc = offsets.cuo_offset
+    ∧ μ'.cur = cuoTag
+    ∧ μ'.history = history
+    ∧ μ'.halted = false := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+    simp [YiState.runFuel, YiState.step, YiState.execute,
+          dispatchTree, dispatchShi, cuoTag_shi,
+          Hexagram.yaoAt, cuoTag_yao.1, cuoTag_yao.2.1, cuoTag_yao.2.2.2.2.2]
+
+/-! ### zong  (k=5, hex_idx=1, shi=wei) -/
+
+def zongTag : Cell192 := cellFromIdx ⟨5, by omega⟩
+
+private theorem zongTag_yao : zongTag.1.y1 = Yao.yin
+                            ∧ zongTag.1.y2 = Yao.yang
+                            ∧ zongTag.1.y3 = Yao.yang
+                            ∧ zongTag.1.y4 = Yao.yang
+                            ∧ zongTag.1.y5 = Yao.yang
+                            ∧ zongTag.1.y6 = Yao.yang := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> decide
+
+private theorem zongTag_shi : zongTag.2 = Shi.wei := by
+  unfold zongTag cellFromIdx
+  rfl
+
+theorem dispatchTree_routes_zong
+    (offsets : DispatchOffsets) (history : List Cell192) :
+    let μ : YiState :=
+      { cur := zongTag
+        history := history
+        pc := 0
+        prog := dispatchTree offsets 0
+        halted := false }
+    let μ' := μ.runFuel 6
+    μ'.pc = offsets.zong_offset
+    ∧ μ'.cur = zongTag
+    ∧ μ'.history = history
+    ∧ μ'.halted = false := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+    simp [YiState.runFuel, YiState.step, YiState.execute,
+          dispatchTree, dispatchShi, zongTag_shi,
+          Hexagram.yaoAt, zongTag_yao.1, zongTag_yao.2.1, zongTag_yao.2.2.2.2.2]
+
+/-! ### branchYaoEq  (k=6, hex_idx=2, shi=ji) -/
+
+def branchYaoEqTag : Cell192 := cellFromIdx ⟨6, by omega⟩
+
+private theorem branchYaoEqTag_yao : branchYaoEqTag.1.y1 = Yao.yang
+                                   ∧ branchYaoEqTag.1.y2 = Yao.yin
+                                   ∧ branchYaoEqTag.1.y3 = Yao.yang
+                                   ∧ branchYaoEqTag.1.y4 = Yao.yang
+                                   ∧ branchYaoEqTag.1.y5 = Yao.yang
+                                   ∧ branchYaoEqTag.1.y6 = Yao.yang := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> decide
+
+private theorem branchYaoEqTag_shi : branchYaoEqTag.2 = Shi.ji := by
+  unfold branchYaoEqTag cellFromIdx
+  rfl
+
+theorem dispatchTree_routes_branchYaoEq
+    (offsets : DispatchOffsets) (history : List Cell192) :
+    let μ : YiState :=
+      { cur := branchYaoEqTag
+        history := history
+        pc := 0
+        prog := dispatchTree offsets 0
+        halted := false }
+    let μ' := μ.runFuel 4
+    μ'.pc = offsets.branchYaoEq_dispatch_offset
+    ∧ μ'.cur = branchYaoEqTag
+    ∧ μ'.history = history
+    ∧ μ'.halted = false := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+    simp [YiState.runFuel, YiState.step, YiState.execute,
+          dispatchTree, dispatchShi, branchYaoEqTag_shi,
+          Hexagram.yaoAt, branchYaoEqTag_yao.1, branchYaoEqTag_yao.2.1,
+          branchYaoEqTag_yao.2.2.2.2.2]
+
+/-! ### branchShiEq  (k=7, hex_idx=2, shi=jin) -/
+
+def branchShiEqTag : Cell192 := cellFromIdx ⟨7, by omega⟩
+
+private theorem branchShiEqTag_yao : branchShiEqTag.1.y1 = Yao.yang
+                                   ∧ branchShiEqTag.1.y2 = Yao.yin
+                                   ∧ branchShiEqTag.1.y3 = Yao.yang
+                                   ∧ branchShiEqTag.1.y4 = Yao.yang
+                                   ∧ branchShiEqTag.1.y5 = Yao.yang
+                                   ∧ branchShiEqTag.1.y6 = Yao.yang := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> decide
+
+private theorem branchShiEqTag_shi : branchShiEqTag.2 = Shi.jin := by
+  unfold branchShiEqTag cellFromIdx
+  rfl
+
+theorem dispatchTree_routes_branchShiEq
+    (offsets : DispatchOffsets) (history : List Cell192) :
+    let μ : YiState :=
+      { cur := branchShiEqTag
+        history := history
+        pc := 0
+        prog := dispatchTree offsets 0
+        halted := false }
+    let μ' := μ.runFuel 5
+    μ'.pc = offsets.branchShiEq_dispatch_offset
+    ∧ μ'.cur = branchShiEqTag
+    ∧ μ'.history = history
+    ∧ μ'.halted = false := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+    simp [YiState.runFuel, YiState.step, YiState.execute,
+          dispatchTree, dispatchShi, branchShiEqTag_shi,
+          Hexagram.yaoAt, branchShiEqTag_yao.1, branchShiEqTag_yao.2.1,
+          branchShiEqTag_yao.2.2.2.2.2]
+
+/-! ### jump  (k=8, hex_idx=2, shi=wei) -/
+
+def jumpTag : Cell192 := cellFromIdx ⟨8, by omega⟩
+
+private theorem jumpTag_yao : jumpTag.1.y1 = Yao.yang
+                            ∧ jumpTag.1.y2 = Yao.yin
+                            ∧ jumpTag.1.y3 = Yao.yang
+                            ∧ jumpTag.1.y4 = Yao.yang
+                            ∧ jumpTag.1.y5 = Yao.yang
+                            ∧ jumpTag.1.y6 = Yao.yang := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> decide
+
+private theorem jumpTag_shi : jumpTag.2 = Shi.wei := by
+  unfold jumpTag cellFromIdx
+  rfl
+
+theorem dispatchTree_routes_jump
+    (offsets : DispatchOffsets) (history : List Cell192) :
+    let μ : YiState :=
+      { cur := jumpTag
+        history := history
+        pc := 0
+        prog := dispatchTree offsets 0
+        halted := false }
+    let μ' := μ.runFuel 6
+    μ'.pc = offsets.jump_offset
+    ∧ μ'.cur = jumpTag
+    ∧ μ'.history = history
+    ∧ μ'.halted = false := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+    simp [YiState.runFuel, YiState.step, YiState.execute,
+          dispatchTree, dispatchShi, jumpTag_shi,
+          Hexagram.yaoAt, jumpTag_yao.1, jumpTag_yao.2.1, jumpTag_yao.2.2.2.2.2]
+
+/-! ### push  (k=9, hex_idx=3, shi=ji) -/
+
+def pushTag : Cell192 := cellFromIdx ⟨9, by omega⟩
+
+private theorem pushTag_yao : pushTag.1.y1 = Yao.yin
+                            ∧ pushTag.1.y2 = Yao.yin
+                            ∧ pushTag.1.y3 = Yao.yang
+                            ∧ pushTag.1.y4 = Yao.yang
+                            ∧ pushTag.1.y5 = Yao.yang
+                            ∧ pushTag.1.y6 = Yao.yang := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> decide
+
+private theorem pushTag_shi : pushTag.2 = Shi.ji := by
+  unfold pushTag cellFromIdx
+  rfl
+
+theorem dispatchTree_routes_push
+    (offsets : DispatchOffsets) (history : List Cell192) :
+    let μ : YiState :=
+      { cur := pushTag
+        history := history
+        pc := 0
+        prog := dispatchTree offsets 0
+        halted := false }
+    let μ' := μ.runFuel 5
+    μ'.pc = offsets.push_offset
+    ∧ μ'.cur = pushTag
+    ∧ μ'.history = history
+    ∧ μ'.halted = false := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+    simp [YiState.runFuel, YiState.step, YiState.execute,
+          dispatchTree, dispatchShi, pushTag_shi,
+          Hexagram.yaoAt, pushTag_yao.1, pushTag_yao.2.1, pushTag_yao.2.2.2.2.2]
+
+/-! ### pop  (k=10, hex_idx=3, shi=jin) -/
+
+def popTag : Cell192 := cellFromIdx ⟨10, by omega⟩
+
+private theorem popTag_yao : popTag.1.y1 = Yao.yin
+                           ∧ popTag.1.y2 = Yao.yin
+                           ∧ popTag.1.y3 = Yao.yang
+                           ∧ popTag.1.y4 = Yao.yang
+                           ∧ popTag.1.y5 = Yao.yang
+                           ∧ popTag.1.y6 = Yao.yang := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> decide
+
+private theorem popTag_shi : popTag.2 = Shi.jin := by
+  unfold popTag cellFromIdx
+  rfl
+
+theorem dispatchTree_routes_pop
+    (offsets : DispatchOffsets) (history : List Cell192) :
+    let μ : YiState :=
+      { cur := popTag
+        history := history
+        pc := 0
+        prog := dispatchTree offsets 0
+        halted := false }
+    let μ' := μ.runFuel 6
+    μ'.pc = offsets.pop_offset
+    ∧ μ'.cur = popTag
+    ∧ μ'.history = history
+    ∧ μ'.halted = false := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+    simp [YiState.runFuel, YiState.step, YiState.execute,
+          dispatchTree, dispatchShi, popTag_shi,
+          Hexagram.yaoAt, popTag_yao.1, popTag_yao.2.1, popTag_yao.2.2.2.2.2]
 
 /-! ## § 6  Routing-proof template for the other 11 cases
 

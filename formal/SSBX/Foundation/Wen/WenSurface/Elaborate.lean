@@ -6,8 +6,8 @@
 
 ## 当前范围
 
-- **算子**：38 个 exact operator 进入 theorem-backed `Stdlib` bodies；
-  其余 catalogue operator elaborates to symbolic catalogue normal forms。
+- **算子**：141 个 exact operator 进入 theorem-backed / Bool package bodies；
+  其余 catalogue operator elaborates to structural catalogue normal forms。
 - **常值**：「一」 → `.yi` primitive；64 卦名 / aliases → `.hexLit h`。
 - **组合**：显式 `SurfaceExpr.app` 左结合到 `Tm.app`。
 - **绑定**：Hex-only `者` lambda、`凡` forall、`令` let。
@@ -297,9 +297,16 @@ def inferTypeDetailed : Ctx → Tm → Except TypeDiag Ty
   | _, .orB       => .ok (.arr .bool (.arr .bool .bool))
   | _, .eqHex     => .ok (.arr .hex (.arr .hex .bool))
   | _, .forallH   => .ok (.arr (.arr .hex .bool) .bool)
+  | _, .uniqueH   => .ok (.arr (.arr .hex .bool) .bool)
+  | _, .exactly3H => .ok (.arr (.arr .hex .bool) .bool)
+  | _, .majorityH => .ok (.arr (.arr .hex .bool) .bool)
   | _, .cuoH      => .ok (.arr .hex .hex)
   | _, .zongH     => .ok (.arr .hex .hex)
   | _, .huH       => .ok (.arr .hex .hex)
+  | _, .cuoZongH  => .ok (.arr .hex .hex)
+  | _, .flip1H    => .ok (.arr .hex .hex)
+  | _, .flip2H    => .ok (.arr .hex .hex)
+  | _, .flip3H    => .ok (.arr .hex .hex)
   | ctx, .catalogue1 id a =>
       match inferTypeDetailed ctx a with
       | .error e => .error e

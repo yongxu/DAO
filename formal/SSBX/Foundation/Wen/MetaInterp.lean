@@ -3,7 +3,7 @@
 
 目标：建造 `metaInterpProg : List YiInstr` 满足
 `KleeneInternal.UniversalInterpSpec metaInterpProg`，从而 discharge
-`KleeneCarrier.universalInterpExists` 公理。
+`KleeneCarrier.universalInterpExists` 这一边界投影。
 
 ## 文件位置（roadmap）
 
@@ -11,13 +11,13 @@
   encoding 之 Lean 端定义 + decoding 函数 + round-trip lemmas
 - **Phase A.2-A.4**: prologue / counted-loop combinator / skip-one-instr
   （拆出独立文件或后续追加）
-- **Phase B** (per-opcode): 12 个 executeBlock + fetch + dispatch + writeback
+- **Phase B** (per-opcode): 13 个 executeBlock + fetch + dispatch + writeback
   （subagent 并行）
 - **Phase C** (integration): metaStep_simulates_step + UniversalInterpSpec
 
 ## 编码约束（cuo-equivariance ceiling）
 
-YiInstr 之 12 指令**无法构造绝对的 Hexagram 值**——只有 cur 之 transform
+YiInstr 之 13 指令**无法构造绝对的 Hexagram 值**——只有 cur 之 transform
 （hu/cuo/zong/flipYao）+ Shi 之绝对设置（setShi）。runtime cur 之初值是
 输入 h，编译期未知。故所有 register cells 之 Hex 部分必依赖于初始 cur，
 仅 Shi 部分可绝对控制。

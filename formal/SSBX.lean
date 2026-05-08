@@ -60,6 +60,8 @@ import SSBX.Foundation.Wen.MetaInterp.Block_Branches
 import SSBX.Foundation.Wen.MetaInterp.Block_PushPop
 import SSBX.Foundation.Wen.MetaInterp.Fetch
 import SSBX.Foundation.Wen.MetaInterp.Dispatch
+import SSBX.Foundation.Wen.MetaInterp.SubDispatch_BranchShiEq
+import SSBX.Foundation.Wen.MetaInterp.SubDispatch_BranchYaoEq
 import SSBX.Foundation.Wen.MetaInterp.OuterLoop
 import SSBX.Foundation.Wen.WenDef
 import SSBX.Foundation.Wen.WenyanParser
@@ -130,6 +132,8 @@ import SSBX.Foundation.Eight.WuXiang
 import SSBX.Foundation.Modern.RCauchy
 import SSBX.Foundation.Modern.Kolmogorov
 import SSBX.Foundation.Modern.Quantum
+import SSBX.Foundation.Modern.QuantumRelativityNoGo
+import SSBX.Foundation.Modern.QuantumRelativityIntegration
 import SSBX.Foundation.Modern.SUN
 
 -- Phase 4 主体续（自然演绎 / Lebesgue 积分 / 连续 ODE / 神经科学 / 完备性深化）

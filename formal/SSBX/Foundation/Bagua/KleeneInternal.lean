@@ -45,7 +45,7 @@ the remaining engineering (2) as a `Prop` so its dependency is explicit.
 - `UniversalInterpExists`, `SmnExists`, `KleeneFixedPointFromPrimitives`, and
   `BoolInverterCompilerFromUniversal` are stated as `Prop`, not proven.
   Witnesses require building the ~700-1000 line universal interpreter
-  (12-way dispatch + execute blocks + fetch/writeback in YiInstr).  See
+  (13-way dispatch + execute blocks + fetch/writeback in YiInstr).  See
   `WenyanSelfInterp.lean § 6b` for the existing partial scaffold.
 
 - The current `SmnSpec` is intentionally an explicit strong assumption.  The
@@ -53,8 +53,10 @@ the remaining engineering (2) as a `Prop` so its dependency is explicit.
   empty-stack test, so a generic "push arbitrary cells, then continue" prefix
   is not currently justified by the instruction set alone.
 
-- The full `kleene_recursion_axiom` remains in `GodelLi.lean`.  Its removal
-  requires the primitive/compiler `Prop`s below to be proven as theorems.
+- The full Kleene boundary is still assumed in `KleeneCarrier.lean` as a
+  single bundled axiom.  Removing it requires the primitive/compiler `Prop`s
+  below to be proven as theorems, plus a separate decision about the
+  cuo-restricted Church-Turing boundary.
 
 This file is the **formal scaffolding** that, once the primitives are proven
 (future work), makes the axiom removal mechanical.
@@ -144,6 +146,45 @@ theorem decLenProgInput_self (P : List YiInstr)
 theorem progEnc_append (P Q : List YiInstr) :
     ProgEnc.encProg (P ++ Q) = ProgEnc.encProg P ++ ProgEnc.encProg Q := by
   simp [ProgEnc.encProg, List.map_append]
+
+/-! ### § 1.2 Boundedness for jump targets
+
+  YiInstr's three control-flow ops (`branchYaoEq`, `branchShiEq`, `jump`) carry a
+  `Nat` target field.  A YiInstr-implemented universal interpreter cannot read an
+  arbitrary multi-cell base-192 encoding of such targets at runtime, because the
+  ISA has no multiplication primitive.  Per-(opcode × parameter-value) Option-F
+  dispatch handles only single-cell targets, i.e. `target < 192`.
+
+  This restriction is the structural counterpart to `ProgLenBounded`: together
+  they delimit the class of programs for which a bounded universal interpreter
+  is realisable in pure YiInstr without ISA extension. -/
+
+/-- A single instruction's jump-target field, if any, is below 192. -/
+def JumpTargetsBoundedInstr : YiInstr → Prop
+  | YiInstr.branchYaoEq _ _ t => t < 192
+  | YiInstr.branchShiEq _   t => t < 192
+  | YiInstr.jump            t => t < 192
+  | _ => True
+
+/-- Every instruction in `P` has its jump-target field below 192. -/
+def JumpTargetsBounded (P : List YiInstr) : Prop :=
+  ∀ i ∈ P, JumpTargetsBoundedInstr i
+
+/-- The class of programs for which a YiInstr universal interpreter is
+    realisable: program length's `encodeNat` prefix fits in one cell, AND
+    every jump target fits in one cell.  Lean-side any `P : List YiInstr`
+    we actually construct in this codebase satisfies this bound. -/
+def ProgBounded (P : List YiInstr) : Prop :=
+  ProgLenBounded P ∧ JumpTargetsBounded P
+
+/-- The empty program is trivially bounded. -/
+theorem progBounded_nil : ProgBounded ([] : List YiInstr) := by
+  refine ⟨?_, ?_⟩
+  · -- ProgLenBounded []: the encoding of length 0 is `[]`.
+    show (NatCell.encodeNat ([] : List YiInstr).length).length < 192
+    simp [NatCell.encodeNat, List.length_nil]
+  · intro i hi
+    cases hi
 
 /-! ## § 2 Bool readout convention
 
@@ -237,6 +278,38 @@ theorem universalInterpSpec_empty_input {U : List YiInstr}
     (hU : UniversalInterpSpec U) (h : Hexagram) :
     HaltsWith U h (ProgEnc.encProg ([] : List YiInstr)) := by
   exact (hU [] h).mp (halts_empty_prog h)
+
+/-! ### § 4.1 Bounded universal interpreter spec
+
+  The realisable variant: `U` correctly simulates `P` on `h` for every
+  bounded `P` (length-prefix and jump targets within one Cell192).  Pure
+  YiInstr cannot realise the unbounded variant because the ISA lacks
+  multiplication, but the Lean-side universe of programs we ever construct
+  in this codebase satisfies the bound. -/
+
+/-- **Bounded universal interpreter** spec: same correctness as
+    `UniversalInterpSpec` but only required for `ProgBounded P`.  A
+    metaInterpProg constructed in pure YiInstr satisfies this restricted
+    form. -/
+def UniversalInterpSpecBounded (U : List YiInstr) : Prop :=
+  ∀ (P : List YiInstr) (h : Hexagram),
+    ProgBounded P → (Halts P h ↔ HaltsWith U h (ProgEnc.encProg P))
+
+/-- Existence form for a bounded universal interpreter witness. -/
+def UniversalInterpExistsBounded : Prop :=
+  ∃ U : List YiInstr, UniversalInterpSpecBounded U
+
+/-- Trivially, the unbounded spec implies the bounded one (the bounded
+    requirement is weaker). -/
+theorem universalInterpSpec_to_bounded {U : List YiInstr}
+    (hU : UniversalInterpSpec U) : UniversalInterpSpecBounded U := by
+  intro P h _
+  exact hU P h
+
+theorem universalInterpExists_to_bounded :
+    UniversalInterpExists → UniversalInterpExistsBounded := by
+  intro ⟨U, hU⟩
+  exact ⟨U, universalInterpSpec_to_bounded hU⟩
 
 /-- **s-m-n parameterization** spec: a Lean function `subst` such that
     `subst P input_cells` is a YiInstr program that, when run, behaves as

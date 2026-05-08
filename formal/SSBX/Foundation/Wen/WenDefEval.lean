@@ -37,24 +37,29 @@ Value :=
 -/
 import SSBX.Foundation.Wen.WenDef
 import SSBX.Foundation.Yi.YiCore
+import SSBX.Foundation.Bagua.BaguaAlgebra
 
 namespace SSBX.Foundation.Wen.WenDefEval
 
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Yi.YiCore
 open SSBX.Foundation.Wen.WenDef
+open SSBX.Foundation.Bagua.BaguaAlgebra
 
 /-! ## § 1  Builtin 标记 -/
 
 /-- 求值时之 builtin tag。 -/
 inductive Builtin : Type
   | jia | notB | andB | orB | eqHex | forallH | cuoH | zongH | huH
+  | uniqueH | exactly3H | majorityH
+  | cuoZongH | flip1H | flip2H | flip3H
 deriving DecidableEq, Repr
 
 /-- builtin 之 arity（满足后产 result）。 -/
 def Builtin.arity : Builtin → Nat
   | .jia | .andB | .orB | .eqHex => 2
-  | .notB | .forallH | .cuoH | .zongH | .huH => 1
+  | .notB | .forallH | .uniqueH | .exactly3H | .majorityH | .cuoH | .zongH | .huH
+  | .cuoZongH | .flip1H | .flip2H | .flip3H => 1
 
 /-! ## § 2  Value -/
 
@@ -81,6 +86,20 @@ def Env.lookup : Env → String → Option Value
 /-- 64 元 hex 上之 ∀: 检查 64 hex 之 predicate 全 true. -/
 def forallHex (p : Hexagram → Bool) : Bool :=
   (List.range 64).all (fun k => p (Hexagram.fromIdx ⟨k % 64, Nat.mod_lt _ (by omega)⟩))
+
+def countHex (p : Hexagram → Bool) : Nat :=
+  (List.range 64).foldl
+    (fun n k => if p (Hexagram.fromIdx ⟨k % 64, Nat.mod_lt _ (by omega)⟩) then n + 1 else n)
+    0
+
+def uniqueHex (p : Hexagram → Bool) : Bool :=
+  countHex p == 1
+
+def exactly3Hex (p : Hexagram → Bool) : Bool :=
+  countHex p == 3
+
+def majorityHex (p : Hexagram → Bool) : Bool :=
+  32 < countHex p
 
 /-! ## § 4  evaluator -/
 
@@ -118,9 +137,16 @@ mutual
     | _+1,    _,   .orB          => some (.builtinV .orB [])
     | _+1,    _,   .eqHex        => some (.builtinV .eqHex [])
     | _+1,    _,   .forallH      => some (.builtinV .forallH [])
+    | _+1,    _,   .uniqueH      => some (.builtinV .uniqueH [])
+    | _+1,    _,   .exactly3H    => some (.builtinV .exactly3H [])
+    | _+1,    _,   .majorityH    => some (.builtinV .majorityH [])
     | _+1,    _,   .cuoH         => some (.builtinV .cuoH [])
     | _+1,    _,   .zongH        => some (.builtinV .zongH [])
     | _+1,    _,   .huH          => some (.builtinV .huH [])
+    | _+1,    _,   .cuoZongH     => some (.builtinV .cuoZongH [])
+    | _+1,    _,   .flip1H       => some (.builtinV .flip1H [])
+    | _+1,    _,   .flip2H       => some (.builtinV .flip2H [])
+    | _+1,    _,   .flip3H       => some (.builtinV .flip3H [])
     | fuel+1, env, .catalogue1 id a => do
         let va ← evalFuel fuel env a
         some (.catalogueV id (SSBX.Text.OperatorSignatures.fullSignatureFor id).kind [va])
@@ -145,8 +171,27 @@ mutual
     | _+1,    .cuoH,   [.hexV h]            => some (.hexV h.cuo)
     | _+1,    .zongH,  [.hexV h]            => some (.hexV h.zong)
     | _+1,    .huH,    [.hexV h]            => some (.hexV h.hu)
+    | _+1,    .cuoZongH, [.hexV h]          => some (.hexV h.cuoZong)
+    | _+1,    .flip1H, [.hexV h]            => some (.hexV (dongInner h))
+    | _+1,    .flip2H, [.hexV h]            => some (.hexV (huaInner h))
+    | _+1,    .flip3H, [.hexV h]            => some (.hexV (bianInner h))
     | fuel+1, .forallH, [p]                 =>
         some (.boolV (forallHex (fun h =>
+          match applyFuel fuel p (.hexV h) with
+          | some (.boolV b) => b
+          | _               => false)))
+    | fuel+1, .uniqueH, [p]                 =>
+        some (.boolV (uniqueHex (fun h =>
+          match applyFuel fuel p (.hexV h) with
+          | some (.boolV b) => b
+          | _               => false)))
+    | fuel+1, .exactly3H, [p]               =>
+        some (.boolV (exactly3Hex (fun h =>
+          match applyFuel fuel p (.hexV h) with
+          | some (.boolV b) => b
+          | _               => false)))
+    | fuel+1, .majorityH, [p]               =>
+        some (.boolV (majorityHex (fun h =>
           match applyFuel fuel p (.hexV h) with
           | some (.boolV b) => b
           | _               => false)))
@@ -290,6 +335,41 @@ theorem fanReverseBody_eq_cuo (h : Hexagram) :
     denoteHexFun Stdlib.fanReverseBody h = some h.cuo :=
   cuoBody_eq_cuo h
 
+theorem hexIdBody_eq_id (h : Hexagram) :
+    denoteHexFun Stdlib.hexIdBody h = some h := by
+  cases h with
+  | mk y1 y2 y3 y4 y5 y6 =>
+    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+    all_goals native_decide
+
+theorem cuoZongBody_eq_cuoZong (h : Hexagram) :
+    denoteHexFun Stdlib.cuoZongBody h = some h.cuoZong := by
+  cases h with
+  | mk y1 y2 y3 y4 y5 y6 =>
+    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+    all_goals native_decide
+
+theorem flip1Body_eq_dongInner (h : Hexagram) :
+    denoteHexFun Stdlib.flip1Body h = some (dongInner h) := by
+  cases h with
+  | mk y1 y2 y3 y4 y5 y6 =>
+    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+    all_goals native_decide
+
+theorem flip2Body_eq_huaInner (h : Hexagram) :
+    denoteHexFun Stdlib.flip2Body h = some (huaInner h) := by
+  cases h with
+  | mk y1 y2 y3 y4 y5 y6 =>
+    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+    all_goals native_decide
+
+theorem flip3Body_eq_bianInner (h : Hexagram) :
+    denoteHexFun Stdlib.flip3Body h = some (bianInner h) := by
+  cases h with
+  | mk y1 y2 y3 y4 y5 y6 =>
+    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+    all_goals native_decide
+
 /-- 「同 «一» «一»」denotes true (恒等于自身). -/
 example :
     denoteBool (.app (.app Stdlib.tongBody .yi) .yi) = some true := by native_decide
@@ -328,6 +408,25 @@ example :
     denoteBool (.app Stdlib.noneHBody
       (.abs "h" .hex (.app (.app .eqHex (.var "h")) .yi)))
       = some false := by native_decide
+
+example :
+    denoteBool (.app Stdlib.uniqueHBody
+      (.abs "h" .hex (.app (.app .eqHex (.var "h")) .yi)))
+      = some true := by native_decide
+
+example :
+    denoteBool (.app Stdlib.exactly3HBody
+      (.abs "h" .hex
+        (.app (.app .orB (.app (.app .eqHex (.var "h")) .yi))
+          (.app (.app .orB
+            (.app (.app .eqHex (.var "h")) (.hexLit Hexagram.qian)))
+            (.app (.app .eqHex (.var "h")) (.hexLit Hexagram.kun))))))
+      = some true := by native_decide
+
+example :
+    denoteBool (.app Stdlib.majorityHBody
+      (.abs "h" .hex (.boolLit true)))
+      = some true := by native_decide
 
 example :
     denoteHex
