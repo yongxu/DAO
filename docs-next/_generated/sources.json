@@ -1,5 +1,5 @@
 {
-  "count": 392,
+  "count": 393,
   "include_archive": false,
   "sources": [
     {
@@ -15,15 +15,15 @@
       "suffix": ".md"
     },
     {
-      "bytes": 21799,
+      "bytes": 21811,
       "path": "README.md",
-      "sha256": "8202ad6294a38f753fb58db59ba5a2688f24e00cfc8a93e96debeae0b3c8e6ce",
+      "sha256": "2419447468d25d8a2360f10297af858f0e27005c41bd522fe77f2dbebc50b1bc",
       "suffix": ".md"
     },
     {
-      "bytes": 47463,
+      "bytes": 47448,
       "path": "WenyanSurface.lean",
-      "sha256": "0c3de975667093cf7db5519ee7ebfc43f7507fd64d3c9c0b8478edd98df72c35",
+      "sha256": "d40395c3a589e7c2fc7d1ec96a89533b7077a5f5d0033eacd45b632ccf83b248",
       "suffix": ".lean"
     },
     {
@@ -255,9 +255,15 @@
       "suffix": ".md"
     },
     {
-      "bytes": 1010,
+      "bytes": 1106,
       "path": "docs-next/40_reference_参考/README.md",
-      "sha256": "243aa96041fa027fe0d3b49c4a16fe45957fade732bb6ad2e818e10d5d957578",
+      "sha256": "c7ff920c2d330c89833c07fce499e3f27b9d0d8d841d67d5ca979b7585bccdc4",
+      "suffix": ".md"
+    },
+    {
+      "bytes": 23706,
+      "path": "docs-next/40_reference_参考/bagua-operator-name-candidates.md",
+      "sha256": "bc5a4a8fa3df1d752ae07b31d57a575a9107425be316cd1d15bd1350a730b52a",
       "suffix": ".md"
     },
     {
@@ -291,9 +297,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 1946,
+      "bytes": 2019,
       "path": "docs-next/40_reference_参考/ziwen-language.md",
-      "sha256": "aed45279c54f4b31bf9d8553c22143d33af17e32d0091db1d522c845dca113d7",
+      "sha256": "03f05e6e4282a7b48f1da7e24357e005f8775c29e90006a900bf560e3a954479",
       "suffix": ".md"
     },
     {
@@ -321,9 +327,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 1611,
+      "bytes": 1691,
       "path": "docs-next/50_maintenance/release-checklist.md",
-      "sha256": "cff5fb4ee25205ba09d61224a5015ae86669e032750b8237c39be8ed013eb5fc",
+      "sha256": "a94d98a7172ebd0c61ec8c821887077ee0b8a7238d3dff5dde344cd0149f6f48",
       "suffix": ".md"
     },
     {
@@ -1101,9 +1107,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 31245,
+      "bytes": 35040,
       "path": "formal/SSBX/Foundation/Wen/WenDef.lean",
-      "sha256": "c850c446df8a10d38d94372130e1b236fefcbb3b90649ca0c137a271e68a846f",
+      "sha256": "16743d8540ad32efa361f4bd0a3e8cf96317ec03942680aec397ed768fd721e6",
       "suffix": ".lean"
     },
     {
@@ -1113,9 +1119,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 24692,
+      "bytes": 26199,
       "path": "formal/SSBX/Foundation/Wen/WenDefEval.lean",
-      "sha256": "55e7eb872ec677cc310730805fd3f3369f837019a348e280a453e6c3fc407e4d",
+      "sha256": "59d3efd5116f26d2140575b1eeb766cccb1b1e8966b078d4f5004bc4fe9359ae",
       "suffix": ".lean"
     },
     {
@@ -1131,33 +1137,33 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 16026,
+      "bytes": 17211,
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Elaborate.lean",
-      "sha256": "b6391212fc2b2e2fee16e04f7dfca33f2e98446509de8521d940000430b02fef",
+      "sha256": "18c06d65024c7a6a53c611d72de39c3058d40926893debc95c95e12812e16c14",
       "suffix": ".lean"
     },
     {
-      "bytes": 37474,
+      "bytes": 38910,
       "path": "formal/SSBX/Foundation/Wen/WenSurface/EndToEnd.lean",
-      "sha256": "f3da12e0e57db847ed01f9e9192b1f819ac05ef948d682806025801fbe98b948",
+      "sha256": "9f2b82fa1c0627df4c69d885d16f7edbba7dcc5f6c67129536244a2508970859",
       "suffix": ".lean"
     },
     {
-      "bytes": 10611,
+      "bytes": 11606,
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Lex.lean",
-      "sha256": "ab264e83f8391ee0dec139d734d90e18f5ffe0a0a7742607a2f233624d388822",
+      "sha256": "f241eec1a844c3f03c0f05a744c2b326fa82c3a95f83457e4b0c10eef20185ed",
       "suffix": ".lean"
     },
     {
-      "bytes": 36088,
+      "bytes": 39968,
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Reading.lean",
-      "sha256": "acd3f4937bb7214240ebb0f234ac7b6443f7fb096b5f87630ac3dc5fbd1cd0d3",
+      "sha256": "f3e1fc455bca60f601a164abbeadcd53e40d449d5674c343369fc1026dd97c17",
       "suffix": ".lean"
     },
     {
-      "bytes": 43010,
+      "bytes": 43783,
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Semantics.lean",
-      "sha256": "535908ebf75a1b1c78e4349fef2a781c8fa10119f1f902ae74eaa7193757d034",
+      "sha256": "7a095c0f86be0163e6a4cd72508b9b92e385293e48866483ddae8a10ee389d22",
       "suffix": ".lean"
     },
     {
@@ -1185,9 +1191,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 15797,
+      "bytes": 18574,
       "path": "formal/SSBX/Foundation/Wen/WenyanParser.lean",
-      "sha256": "b58ab62f2b83551cd81485664e15cf0aa8f870f03865d4b1cfe3c0c9f1a110a6",
+      "sha256": "6822e4d2259e4f5efe5468f67668f6f72569ae013e9ccc54bf5f77ea12fae828",
       "suffix": ".lean"
     },
     {
@@ -1359,9 +1365,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 16959,
+      "bytes": 17055,
       "path": "formal/SSBX/Text/OperatorCellMap.lean",
-      "sha256": "10fd722a1e3d6ea49c97eef6b00466c3efe8d92e85b72b9309c48a0b76e4204f",
+      "sha256": "13dfc903cc9f598ba5942ddc306a17ebd3896a8132a2fac8cf210fc8f3ce1dc0",
       "suffix": ".lean"
     },
     {
@@ -1707,15 +1713,15 @@
       "suffix": ".md"
     },
     {
-      "bytes": 3428,
+      "bytes": 3605,
       "path": "formal/SSBX/notes/wensurface-roadmap.md",
-      "sha256": "bbc5c452ee8f166dc363b258803658ae346525ad25754dd495b94ec2ae84e1ad",
+      "sha256": "08a3a28e4e012fd659161dbe8c796703d6d164b2fcb932c1ec600ab5ecd29f2c",
       "suffix": ".md"
     },
     {
-      "bytes": 14925,
+      "bytes": 14979,
       "path": "formal/SSBX/notes/wensurface-syntax-spec.md",
-      "sha256": "85992727b6644476a991adc371dcda3460163e12bbce6028f5f4b1de1af54a72",
+      "sha256": "2cf1ca26f968d195396f1b32a14c5ebb02a097589728871cd3fac3f67d4839fc",
       "suffix": ".md"
     },
     {
@@ -1803,9 +1809,9 @@
       "suffix": ".svg"
     },
     {
-      "bytes": 184225,
+      "bytes": 184335,
       "path": "wenyan-operators.md",
-      "sha256": "ed73fe47d8fb7d630f3a25e81c6a4d8f9af7ff3a4ecb6d56712badb3b62962be",
+      "sha256": "68e6e60ae580105c8dd656fc1126a3ca812d295bbef8a5728adb1b906a5cc499",
       "suffix": ".md"
     },
     {
@@ -2199,15 +2205,15 @@
       "suffix": ".md"
     },
     {
-      "bytes": 16070,
+      "bytes": 16202,
       "path": "义理/边界/可的边界 · 感行证.md",
-      "sha256": "6193aaf8002db32b3b298624eebd7a8a9196572dbd281b259dc30a8b71db514b",
+      "sha256": "608246cdac5e6df8018df32829cd2ff50e8d9ca4df8589d73a9caa5f87350df1",
       "suffix": ".md"
     },
     {
-      "bytes": 14293,
+      "bytes": 14359,
       "path": "义理/边界/可知边界 · 语言与理.md",
-      "sha256": "c48935d2e47e506de61047dbe61de1a82201895f3db911227677e6d00ce887da",
+      "sha256": "d1ee7704475412826d1aaa5caff7117bac9976283048b965c32d867ab0e63f10",
       "suffix": ".md"
     },
     {
@@ -2301,9 +2307,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 14014,
+      "bytes": 14069,
       "path": "义理/量子时空互补 · 从一到测.md",
-      "sha256": "7680e52b77ef9b09afe7d6312892a241b2765967e27c4cfd3c4c0392e85f2569",
+      "sha256": "c94b07fea8a8ba956b6e6f0ef121d305cba4b144b1bf28a86c5b14dac7a1f2fa",
       "suffix": ".md"
     },
     {

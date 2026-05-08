@@ -256,6 +256,18 @@ example :
   by native_decide
 
 example :
+    (match wenyanCompile "曰 乾 乾" with
+     | .ok typed => typed.ty = .catalogue .textAct
+     | _ => false) = true :=
+  by native_decide
+
+example :
+    (match wenyanCompile "曰 真 真" with
+     | .error (.elab (.typeMismatch (.argumentMismatch .hex .bool))) => true
+     | _ => false) = true :=
+  by native_decide
+
+example :
     (match wenyanCompile "或 乾" with
      | .error (.resolve (.ambiguous "或" 0 candidates)) => candidates.length == 2
      | _ => false) = true :=

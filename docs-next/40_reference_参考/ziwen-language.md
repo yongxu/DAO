@@ -44,4 +44,4 @@
 - 再看 `Foundation/Wen` 与 `Text` 相关 Lean 模块。
 - 若涉及 quine、自宿主或自解释，保留路线状态，不写成全系统已自证。
 - 若涉及旧文「文道一也」，应同时参考 `../30_crosswalk_互证/claim-status.md`。
-- 若涉及 `wenyan-surface`，区分完整 Ziwen v0 规范与当前可执行子集；catalogue-only 算子只能写成 `known-not-executable`。
+- 若涉及 `wenyan-surface`，区分完整 Ziwen v0 规范与当前可执行子集；当前 371 个 catalogue 算子均可执行，但 54 个只落为 structural catalogue normal form，不写成 exact 文本专义。

@@ -4024,7 +4024,7 @@ Lean 已机器检查的消歧样例包括：`之` 在名词间、动词后、路
 - Lean 完成度分层：`OperatorCellMap.lean` 已用 `functionalCompletionRows` 固化 8 个 complete 层、4 个 tracked 层、0 个 pending 层；因此 371 × 192 的 coverage / indexing、371 个 conservative full signatures、71,232 个 operator-cell semantic rows、以及 31 gap word 的 25/6 promotion partition 均已有机器检查入口。14 个 signature seed、3 个 cell-transform family laws / 4 个 enabled catalogue ids、31 gap policies、4 行 semantic lower-bound audit 仍作为子账本 tracked。
 - Lean semantic lower-bound audit：`OperatorCellMap.lean` 已证明 lower-bound audit 的 scope 为 `[3, 7, 12, 27]`，并证明 `27 < 71,232`；这把“覆盖网格”与“真正要 theorem 化的语义族”明确拆开。
 - Lean 多义读法层：`OperatorReadings.lean` 已证明 82 个 surface row / 193 个 reading；catalogue 同形表为 60 组 / 81 个 surface entry / 189 个 reading，且全部 linked 到 `OperatorId`，并补入多组唯一 / 保歧义上下文样例；所有 reading 均有 precedence 与 expected type metadata，construction metadata 当前覆盖 13 个 reading。
-- Lean signature coverage：`Text/OperatorSignatures.lean` 已给全部 371 个 catalogue operator 建 conservative signature row；其中 14 个为 seed override，357 个为逐 `OperatorId` 的 catalogue-shape signature row。该层完成 arity/type-shape 覆盖，但仍不声称所有算子已有可执行 denotation。
+- Lean signature coverage：`Text/OperatorSignatures.lean` 已给全部 371 个 catalogue operator 建 conservative signature row；其中 14 个为 seed override，357 个为逐 `OperatorId` 的 catalogue-shape signature row。该层完成 arity/type-shape 覆盖；WenSurface evaluator 另行提供 317 个 exact/theorem-backed row 与 54 个 structural catalogue normal form。
 - Lean operator-cell semantics：`Text/OperatorCellSemantics.lean` 已给 71,232 个 `(OperatorId, Cell192)` pair 建 theorem-level semantic row；状态计数为 768 个 family-backed / executable cell-transform rows、1,920 个 exact seed-signature rows、68,544 个 catalogue-shape signature rows。新增的 executable rows 只来自 `T-6 反` 作为 `hexCuo` 的保守 alias；该层证明 pair 覆盖，不手写 71,232 个定理。
 - Lean gap promotion：`Text/OperatorAnchors.lean` 已把 31 个 hexagram gap words 分成 25 个 catalogue-admission candidates 与 6 个不升格项；`待/争/蓄/塞/备/从/临/决/断/饰/养/过/险/附/感/壮/难/遇/困/归/丰/远/悦/信/阻` 可升通用算子，`丽/井/鼎/震` 保留卦象专属，`大/小` 保留参数词。
 - Lean signature seed：`Text/OperatorSignatures.lean` 仍保留 `之/而/以/故/反/復/错/综/互/损/益` 等高价值入口的 14 个 seed rows，供高置信 override 与 pair semantics 分类使用。
@@ -4056,7 +4056,7 @@ Lean 已机器检查的消歧样例包括：`之` 在名词间、动词后、路
 - [ ] **反状态层 involution** — 给具体 state-space 后证明 `反 ∘ 反 = id`
 - [ ] **递归 / 不动点** — 把 `X 之又 X` 从有限 iter 扩展到 fix/termination 语义
 - [ ] **错综群作用** — `Cell192` 层已补 `hexCuo` / `hexZong` 的交换与复合二阶恒等；`OperatorFamilySemantics.lean` 已给 `错/综/互` 建参数化 family semantics。后续仍需 `hu`/flip 共轭细律与 interpretation-level obstruction
-- [x] **算子的精确类型签名覆盖** — `OperatorSignatures.lean` 已有全 371 conservative signature rows：14 个 seed override + 357 个逐 `OperatorId` catalogue-shape rows；后续若要更强，是继续把 catalogue-shape rows 接到 domain-specific denotation / state types / effect types
+- [x] **算子的精确类型签名覆盖** — `OperatorSignatures.lean` 已有全 371 conservative signature rows：14 个 seed override + 357 个逐 `OperatorId` catalogue-shape rows；WenSurface 已能执行全部 371 个 operator，其中 54 个 structural catalogue normal form 仍需后续接到 domain-specific denotation / state types / effect types
 - [ ] **错综结构的群论分析** — 64 卦在 (错, 综) 作用下的精确轨道分类
 - [ ] **算子优先级表** — `OperatorReading` 已有 precedence / type expectation / construction metadata；后续需接入 parser 策略，用于 disambiguate (e.g. 反 vs. 反求, 化 vs. 化性)
 - [ ] **算子的 effect system** — pure / IO / state-changing 算子区分

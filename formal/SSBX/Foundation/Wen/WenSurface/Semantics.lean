@@ -417,11 +417,18 @@ denotations.
 -/
 def catalogueStructuralBodyFor (sig : CoveredOperatorSignature) : Tm :=
   match sig.arity with
-  | 1 => .abs "a" .hex (.catalogue1 sig.id (.var "a"))
-  | 2 => .abs "a" .hex (.abs "b" .hex (.catalogue2 sig.id (.var "a") (.var "b")))
-  | 3 => .abs "a" .hex
-      (.abs "b" .hex
-        (.abs "c" .hex (.catalogue3 sig.id (.var "a") (.var "b") (.var "c"))))
+  | 1 =>
+      .abs "a" (catalogueExpectedArgTy sig.kind 0)
+        (.catalogue1 sig.id (.var "a"))
+  | 2 =>
+      .abs "a" (catalogueExpectedArgTy sig.kind 0)
+        (.abs "b" (catalogueExpectedArgTy sig.kind 1)
+          (.catalogue2 sig.id (.var "a") (.var "b")))
+  | 3 =>
+      .abs "a" (catalogueExpectedArgTy sig.kind 0)
+        (.abs "b" (catalogueExpectedArgTy sig.kind 1)
+          (.abs "c" (catalogueExpectedArgTy sig.kind 2)
+            (.catalogue3 sig.id (.var "a") (.var "b") (.var "c"))))
   | _ => .yi
 
 def catalogueStructuralSemanticsFor (id : OperatorId) : ExecutableSemantics :=

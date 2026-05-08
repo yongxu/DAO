@@ -302,7 +302,7 @@ scripts/generate_monad_dag.py && scripts/render_monad_dag.sh
 `wenyan-surface` 是当前可执行的 WenSurface 子集入口：它支持 tokens、resolve、AST、
 typecheck、JSON、explain、operator catalogue 和 coverage inspect modes。失败诊断返回非零
 exit code；全部 371 个 catalogue 算子可执行。无 theorem-backed Hex/Bool denotation
-的算子返回 `Catalogue[...]` symbolic normal form，不伪装成 Hex/Bool 结果。
+的算子返回 `Catalogue[...]` structural catalogue normal form，不伪装成 Hex/Bool 结果。
 路线状态见 `formal/SSBX/notes/wensurface-roadmap.md`。
 
 ---

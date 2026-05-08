@@ -131,6 +131,37 @@ deriving DecidableEq, Repr
 /-- 上下文：变量名 → 类型。 -/
 abbrev Ctx := List (String × Ty)
 
+/--
+Conservative argument type expected by structural catalogue normal forms.
+
+This is not a domain semantics claim. It only prevents catalogue wrappers from
+accepting arguments outside their coarse signature shape.
+-/
+def catalogueExpectedArgTy (kind : SignatureKind) (pos : Nat) : Ty :=
+  match kind with
+  | .propUnary => .bool
+  | .propImp
+  | .propConnective
+  | .binaryModal => .bool
+  | .quantifier => .arr .hex .bool
+  | .app => if pos = 0 then .arr .hex .hex else .hex
+  | .endoComp => .arr .hex .hex
+  | _ => .hex
+
+def catalogueArgTypesOk (sig : CoveredOperatorSignature) : List Ty → Bool
+  | [a] =>
+      decide (sig.arity = 1) && decide (a = catalogueExpectedArgTy sig.kind 0)
+  | [a, b] =>
+      decide (sig.arity = 2)
+        && decide (a = catalogueExpectedArgTy sig.kind 0)
+        && decide (b = catalogueExpectedArgTy sig.kind 1)
+  | [a, b, c] =>
+      decide (sig.arity = 3)
+        && decide (a = catalogueExpectedArgTy sig.kind 0)
+        && decide (b = catalogueExpectedArgTy sig.kind 1)
+        && decide (c = catalogueExpectedArgTy sig.kind 2)
+  | _ => false
+
 /-- 在上下文中查找变量类型。 -/
 def Ctx.lookup : Ctx → String → Option Ty
   | [], _ => none
@@ -190,23 +221,47 @@ def typeCheck : Ctx → Tm → Option Ty
   | _, .flip6C    => some (.arr .cell .cell)
   | ctx, .catalogue1 id a =>
       let sig := fullSignatureFor id
-      if sig.arity = 1 && (typeCheck ctx a).isSome then
-        some (.catalogue sig.kind)
-      else
-        none
+      match typeCheck ctx a with
+      | some ta =>
+          if catalogueArgTypesOk sig [ta] then
+            some (.catalogue sig.kind)
+          else
+            none
+      | none => none
   | ctx, .catalogue2 id a b =>
       let sig := fullSignatureFor id
-      if sig.arity = 2 && (typeCheck ctx a).isSome && (typeCheck ctx b).isSome then
-        some (.catalogue sig.kind)
-      else
-        none
+      match typeCheck ctx a, typeCheck ctx b with
+      | some ta, some tb =>
+          if catalogueArgTypesOk sig [ta, tb] then
+            some (.catalogue sig.kind)
+          else
+            none
+      | _, _ => none
   | ctx, .catalogue3 id a b c =>
       let sig := fullSignatureFor id
-      if sig.arity = 3 && (typeCheck ctx a).isSome && (typeCheck ctx b).isSome
-          && (typeCheck ctx c).isSome then
-        some (.catalogue sig.kind)
-      else
-        none
+      match typeCheck ctx a, typeCheck ctx b, typeCheck ctx c with
+      | some ta, some tb, some tc =>
+          if catalogueArgTypesOk sig [ta, tb, tc] then
+            some (.catalogue sig.kind)
+          else
+            none
+      | _, _, _ => none
+
+example :
+    typeCheck [] (.catalogue2 .E_2 (.hexLit Hexagram.qian) (.hexLit Hexagram.qian))
+      = some (.catalogue .textAct) := by native_decide
+
+example :
+    typeCheck [] (.catalogue2 .E_2 (.boolLit true) (.boolLit true)) = none := by
+  native_decide
+
+example :
+    typeCheck [] (.catalogue2 .P_23 (.boolLit true) (.boolLit false))
+      = some (.catalogue .propConnective) := by native_decide
+
+example :
+    typeCheck [] (.catalogue2 .P_23 (.hexLit Hexagram.qian) (.hexLit Hexagram.kun))
+      = none := by native_decide
 
 /-! ## § 4  命名空间 -/
 

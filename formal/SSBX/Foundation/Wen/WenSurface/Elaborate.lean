@@ -331,21 +331,48 @@ def inferTypeDetailed : Ctx → Tm → Except TypeDiag Ty
   | ctx, .catalogue1 id a =>
       match inferTypeDetailed ctx a with
       | .error e => .error e
-      | .ok _ =>
+      | .ok ta =>
           let sig := fullSignatureFor id
-          if sig.arity = 1 then .ok (.catalogue sig.kind) else .error (.expectedFunction (.catalogue sig.kind))
+          if sig.arity = 1 then
+            let expected := catalogueExpectedArgTy sig.kind 0
+            if ta = expected then .ok (.catalogue sig.kind)
+            else .error (.argumentMismatch expected ta)
+          else
+            .error (.expectedFunction (.catalogue sig.kind))
   | ctx, .catalogue2 id a b =>
       match inferTypeDetailed ctx a, inferTypeDetailed ctx b with
-      | .ok _, .ok _ =>
+      | .ok ta, .ok tb =>
           let sig := fullSignatureFor id
-          if sig.arity = 2 then .ok (.catalogue sig.kind) else .error (.expectedFunction (.catalogue sig.kind))
+          if sig.arity = 2 then
+            let expectedA := catalogueExpectedArgTy sig.kind 0
+            let expectedB := catalogueExpectedArgTy sig.kind 1
+            if ta = expectedA then
+              if tb = expectedB then .ok (.catalogue sig.kind)
+              else .error (.argumentMismatch expectedB tb)
+            else
+              .error (.argumentMismatch expectedA ta)
+          else
+            .error (.expectedFunction (.catalogue sig.kind))
       | .error e, _ => .error e
       | _, .error e => .error e
   | ctx, .catalogue3 id a b c =>
       match inferTypeDetailed ctx a, inferTypeDetailed ctx b, inferTypeDetailed ctx c with
-      | .ok _, .ok _, .ok _ =>
+      | .ok ta, .ok tb, .ok tc =>
           let sig := fullSignatureFor id
-          if sig.arity = 3 then .ok (.catalogue sig.kind) else .error (.expectedFunction (.catalogue sig.kind))
+          if sig.arity = 3 then
+            let expectedA := catalogueExpectedArgTy sig.kind 0
+            let expectedB := catalogueExpectedArgTy sig.kind 1
+            let expectedC := catalogueExpectedArgTy sig.kind 2
+            if ta = expectedA then
+              if tb = expectedB then
+                if tc = expectedC then .ok (.catalogue sig.kind)
+                else .error (.argumentMismatch expectedC tc)
+              else
+                .error (.argumentMismatch expectedB tb)
+            else
+              .error (.argumentMismatch expectedA ta)
+          else
+            .error (.expectedFunction (.catalogue sig.kind))
       | .error e, _, _ => .error e
       | _, .error e, _ => .error e
       | _, _, .error e => .error e

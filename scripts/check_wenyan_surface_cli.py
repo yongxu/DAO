@@ -82,6 +82,7 @@ CASES = [
     ("器", {"ok": True, "kind": "hex", "idx": 17}),
     ("鼎", {"ok": True, "kind": "hex", "idx": 17}),
     ("大壯", {"ok": True, "kind": "hex", "idx": 48}),
+    ("曰 乾 乾", {"ok": True, "kind": "catalogue", "operatorCode": "E-2", "operatorTitle": "曰", "signatureKind": "TEXT", "arity": 2}),
 ]
 
 NEGATIVE_CASES = [
@@ -96,6 +97,7 @@ NEGATIVE_CASES = [
     ("大", {"phase": "unsupported", "code": "unpromoted_hexagram_gap", "surface": "大", "startCol": 0, "endCol": 1}),
     ("乾 之 坤", {"phase": "type", "code": "type_mismatch", "expectedType": "function", "actualType": "Hex"}),
     ("不 乾", {"phase": "type", "code": "type_mismatch", "expectedType": "Bool", "actualType": "Hex"}),
+    ("曰 真 真", {"phase": "type", "code": "type_mismatch", "expectedType": "Hex", "actualType": "Bool"}),
     ("或 者 甲 同 甲 一", {"phase": "resolve", "code": "ambiguous_reading", "surface": "或", "startCol": 0, "endCol": 1, "candidateCount": 2}),
     ("故 假 假", {"phase": "resolve", "code": "ambiguous_reading", "surface": "故", "startCol": 0, "endCol": 1, "candidateCount": 3}),
     ("反 乾", {"phase": "resolve", "code": "ambiguous_reading", "surface": "反", "startCol": 0, "endCol": 1, "candidateCount": 3}),

@@ -8,9 +8,9 @@
 
 - 371 个 `OperatorId` 全部可登记、可查 signature、可诊断支持状态。
 - 82 个 surface / 193 个 reading 可被 resolver 说明或报告歧义。
-- 371 个 `OperatorId` 全部进入 evaluator：33 个 theorem-backed exact rows，
-  338 个 catalogue-shape symbolic normal forms。
-- catalogue-shape operator 返回 `Catalogue[...]` symbolic result，不伪装成 Hex/Bool denotation。
+- 371 个 `OperatorId` 全部进入 evaluator：317 个 exact/theorem-backed rows，
+  54 个 structural catalogue normal forms。
+- structural catalogue operator 返回 `Catalogue[...]` result，可 type-check / evaluate，但不伪装成 exact Hex/Bool 文本专义 denotation。
 - `baguaWen` 的 22-token 受控 IL parser 仍独立冻结。
 
 ## 里程碑状态
@@ -22,8 +22,8 @@
 | M2 表驱动 resolver | done | runtime 走 `allSurfaceReadings` / operator forms / executable registry；`resolveStdlibOp` 仅作 legacy witness。 |
 | M3 字面值扩展 | done | `一` + 64 卦名 + conservative 繁简 alias；未 promotion gap 只诊断。 |
 | M4 核心语法能力 | done for Hex | `者 甲 E`、`凡 甲 E`、`令 甲 V E` 支持 Hex binder；Bool binder 留后续。 |
-| M5 可执行语义扩展 | done | 33 个 exact executable：早期 Hex/Bool 核心 + exact Hex transforms + 第一批逻辑/恒等/量词 aliases。 |
-| M6 全目录覆盖 | done | 371 operator 全部 registry/signature 可查、可 symbolic-eval；0 个 known-not-executable。 |
+| M5 可执行语义扩展 | done | 317 个 exact/theorem-backed executable：早期 Hex/Bool 核心、exact Hex transforms、逻辑/恒等/量词 aliases、carrier rows 等。 |
+| M6 全目录覆盖 | done | 371 operator 全部 registry/signature 可查、可执行；54 个非 exact row 只落为 structural catalogue normal form；0 个 known-not-executable。 |
 | M7 CLI 产品化 | done | `--tokens`、`--resolve`、`--ast`、`--typecheck`、`--json`、`--explain`、`--operator`、`--operators`、`--coverage`；失败返回非零。 |
 
 ## 验收命令
@@ -39,11 +39,12 @@ scripts/check_wenyan_surface_cli.py
 ## 边界
 
 - `known-not-executable` / `unsupported` filter 仅保留作 CLI 兼容词；当前 operator catalogue 返回 0 行。
-- 非 exact row 的 evaluator 语义是 symbolic catalogue normal form，仍不承诺 Hex/Bool denotation。
+- 非 exact row 的 evaluator 语义是 structural catalogue normal form，仍不承诺 exact Hex/Bool denotation。
 - 多义 surface 不因某个 reading 已有 evaluator 语义而自动消歧；除保留的 v1 核心 surface 外，
   只有候选语义完全同体时才自动选择，否则返回 ambiguity。
-- `而`/S-2 已有 exact `Hex → Hex` endomap composition 语义；当前 surface 需显式写
-  `者` lambda 作为 endomap 参数，裸写 `而 推 損 一` 尚未作为 operator-section 语法接入。
+- `而`/S-2 已有 exact `Hex → Hex` endomap composition 语义；支持显式 `者` lambda，
+  也支持 theorem-backed exact function section，如 `而 推 損 一`。它仍是 Hex endomap composition，
+  不是多态 Bool/function compose。
 - `推/益/损/損` 等可在 `WenDefEval` 求值，不代表都能 compile 到 L0 `YiInstr`；`WenDefCompile` 的 cuo-equivariance ceiling 仍有效。
 - 完整 Ziwen v0 仍以 `ziwen-spec.md` 为未来目标，不由 WenSurface 当前子集承诺。
 
