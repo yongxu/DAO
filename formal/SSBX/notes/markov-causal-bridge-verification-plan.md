@@ -9,7 +9,10 @@
 | `formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean` | tagged 物理语言非坍缩边界 |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityWenBoundary.lean` | `192 × 371` 文构造覆盖与 tagged 边界相容性 |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean` | 当前 machine-checked Lean 骨架 |
+| `formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean` | 三状态 concrete bridge witness |
+| `formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean` | `71232` operator-cell grid bridge process |
 | `formal/SSBX/notes/markov-causal-bridge-plan.md` | 探索计划与完成记录 |
+| `formal/SSBX/notes/unification-stepwise-plan.md` | 逐步完善到候选统一的阶段路线 |
 | `义理/文构造完备与直相加边界.md` | 对 `current-language no-go` 旧说法的边界修正 |
 | `义理/Markov因果桥 · 大统一最小验证构造.md` | 义理边界与 theorem 锚点说明 |
 
@@ -20,6 +23,8 @@
 - [x] `markov_causal_bridge_summary` 已关闭有限过程双读、测量-事件对齐、两面保留、同根非同一、tagged physical-language noncollapse 保持。
 - [x] `MeasurementEventBridge.toBridgeTerm` 已把本层桥接到上一层 tag-level `BridgeTerm`。
 - [x] `wen_constructive_boundary_summary` 已确认 `192 × 371` 文构造覆盖不受 tagged-language 边界否定。
+- [x] `concrete_bridge_summary` 已给出三状态 `prepared → evolved → measured` concrete bridge witness。
+- [x] `operator_cell_grid_markov_causal_bridge_summary` 已把 `371 × 192 = 71232` operator-cell grid 用作 finite process 状态空间。
 - [x] 首次新 worktree 原生构建的 `mathlib4` 克隆阻塞已记录为基础设施失败，不当作 theorem 失败。
 - [ ] 尚未验证任何概率归一化、Born rule、量子通道、干涉、因果偏序、度规恢复或经验闭合。
 
@@ -30,8 +35,10 @@
 ```bash
 lake build SSBX.Foundation.Modern.QuantumRelativityWenBoundary
 lake build SSBX.Foundation.Modern.QuantumRelativityMarkovBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityConcreteBridge
+lake build SSBX.Foundation.Modern.OperatorCellGridMarkovBridge
 lake build SSBX
-git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean formal/SSBX/Foundation/Modern/QuantumRelativityIntegration.lean formal/SSBX/Foundation/Modern/QuantumRelativityWenBoundary.lean formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean formal/SSBX.lean formal/SSBX/notes/markov-causal-bridge-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md docs-next/10_formal_形式/modern.md '义理/文构造完备与直相加边界.md' '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/量子与相对论直统一不可能 · 当前语言NoGo.md' '义理/量子与相对论整合方向 · 从桥到新理论.md' '义理/量子时空互补 · 从一到测.md'
+git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean formal/SSBX/Foundation/Modern/QuantumRelativityIntegration.lean formal/SSBX/Foundation/Modern/QuantumRelativityWenBoundary.lean formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean formal/SSBX.lean formal/SSBX/notes/markov-causal-bridge-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md formal/SSBX/notes/unification-stepwise-plan.md docs-next/10_formal_形式/modern.md '义理/文构造完备与直相加边界.md' '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/量子与相对论直统一不可能 · 当前语言NoGo.md' '义理/量子与相对论整合方向 · 从桥到新理论.md' '义理/量子时空互补 · 从一到测.md'
 ```
 
 通过标准：
@@ -46,7 +53,7 @@ git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean for
 状态词自审命令：
 
 ```bash
-rg -n "待处理|future|deferred|部分相关|佛|唯识|analogy|unchecked|planned|build pending|not run|not edited|failure-to-close" formal/SSBX/notes/markov-causal-bridge-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md '义理/Markov因果桥 · 大统一最小验证构造.md'
+rg -n "待处理|future|deferred|部分相关|佛|唯识|analogy|unchecked|planned|build pending|not run|not edited|failure-to-close" formal/SSBX/notes/markov-causal-bridge-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md formal/SSBX/notes/unification-stepwise-plan.md '义理/Markov因果桥 · 大统一最小验证构造.md'
 ```
 
 ## Theorem 锚点审计
@@ -63,13 +70,15 @@ rg -n "待处理|future|deferred|部分相关|佛|唯识|analogy|unchecked|plann
 | 上层桥项投影 | `MeasurementEventBridge.toBridgeTerm`、`measurement_event_bridge_term_keeps_faces` | `machineChecked` |
 | 中介路线边界 | `MarkovCausalRoute`、`markov_causal_route_is_framework_route` | `machineChecked` |
 | 文构造边界修正 | `wen_constructive_boundary_summary` | `machineChecked` |
+| concrete bridge witness | `concrete_bridge_summary` | `machineChecked` |
+| operator-cell grid bridge | `operator_cell_grid_markov_causal_bridge_summary` | `machineChecked` |
 | tagged-language noncollapse 保持 | `markov_bridge_not_direct_language_addition` | `machineChecked` |
 | 公开摘要 | `markov_causal_bridge_summary` | `machineChecked` |
 
 审计命令：
 
 ```bash
-rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean
+rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean
 ```
 
 ## 边界审计
@@ -102,7 +111,7 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
 
 | 阶段 | 目标 | 验证出口 |
 |---|---|---|
-| V1 | 给出一个具体有限实例 | `example` 或 theorem 展示非空 `FiniteProcess` 与 `MeasurementEventBridge` |
+| V1 | 给出一个具体有限实例 | 已由 `concrete_bridge_summary` 与 `operator_cell_grid_markov_causal_bridge_summary` 关闭 |
 | V2 | 从 `Nat` 权重升级到有限概率核 | 证明每个状态的权重总和非零或归一化接口 |
 | V3 | 加强路径权重 | 证明路径权重与一步权重有组合关系 |
 | V4 | 加强因果结构 | 增加反身/传递/反对称或局部有限性中的一个，并标明边界 |
@@ -130,8 +139,10 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
 ```bash
 lake build SSBX.Foundation.Modern.QuantumRelativityMarkovBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityWenBoundary
+lake build SSBX.Foundation.Modern.QuantumRelativityConcreteBridge
+lake build SSBX.Foundation.Modern.OperatorCellGridMarkovBridge
 lake build SSBX
-git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean formal/SSBX/Foundation/Modern/QuantumRelativityIntegration.lean formal/SSBX/Foundation/Modern/QuantumRelativityWenBoundary.lean formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean formal/SSBX.lean formal/SSBX/notes/markov-causal-bridge-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md docs-next/10_formal_形式/modern.md '义理/文构造完备与直相加边界.md' '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/量子与相对论直统一不可能 · 当前语言NoGo.md' '义理/量子与相对论整合方向 · 从桥到新理论.md' '义理/量子时空互补 · 从一到测.md'
+git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean formal/SSBX/Foundation/Modern/QuantumRelativityIntegration.lean formal/SSBX/Foundation/Modern/QuantumRelativityWenBoundary.lean formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean formal/SSBX.lean formal/SSBX/notes/markov-causal-bridge-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md formal/SSBX/notes/unification-stepwise-plan.md docs-next/10_formal_形式/modern.md '义理/文构造完备与直相加边界.md' '义理/Markov因果桥 · 大统一最小验证构造.md' '义理/量子与相对论直统一不可能 · 当前语言NoGo.md' '义理/量子与相对论整合方向 · 从桥到新理论.md' '义理/量子时空互补 · 从一到测.md'
 ```
 
-备注：`lake build SSBX` 仍会输出既有 Wen 模块的 unused simp args linter 警告；本轮新增 Markov / WenBoundary 模块无警告。
+备注：`lake build SSBX` 仍会输出既有 Wen 模块的 unused simp args linter 警告；本轮新增 Markov / WenBoundary / ConcreteBridge / OperatorCellGrid 模块无警告。
