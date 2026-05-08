@@ -2,7 +2,7 @@
 # WenSurface.Semantics — executable semantics registry
 
 This module separates exact stdlib denotations from total catalogue-shape
-execution.  Thirty-three high-value `OperatorId`s use theorem-backed `WenDef.Tm`
+execution.  Thirty-eight high-value `OperatorId`s use theorem-backed `WenDef.Tm`
 bodies; every remaining catalogue row gets a conservative, signature-shaped
 `WenDef.Tm` so CLI support is total without confusing it with exact text
 semantics.
@@ -47,7 +47,9 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .N_3  => some ⟨.N_3,  Stdlib.buBody, 1, "弗: Bool negation alias"⟩
   | .N_4  => some ⟨.N_4,  Stdlib.buBody, 1, "勿: Bool negation alias"⟩
   | .N_5  => some ⟨.N_5,  Stdlib.buBody, 1, "毋: Bool negation alias"⟩
+  | .N_6  => some ⟨.N_6,  Stdlib.buBody, 1, "反: proposition-level Bool negation"⟩
   | .K_1  => some ⟨.K_1,  Stdlib.impBody, 2, "故: Bool implication"⟩
+  | .K_8  => some ⟨.K_8,  Stdlib.hexApplyBody, 2, "以: Hex endomap instrument application"⟩
   | .S_3  => some ⟨.S_3,  Stdlib.impBody, 2, "則/则: Bool implication"⟩
   | .S_7  => some ⟨.S_7,  Stdlib.impBody, 2, "故: sequential implication alias"⟩
   | .Z_1  => some ⟨.Z_1,  Stdlib.impBody, 2, "因: Bool implication"⟩
@@ -60,10 +62,13 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .P_5  => some ⟨.P_5,  Stdlib.neqHexBody, 2, "異/异: Mohist disequality alias"⟩
   | .Q_2  => some ⟨.Q_2,  Stdlib.fanBody, 1, "皆: finite forall over Hex"⟩
   | .Q_4  => some ⟨.Q_4,  Stdlib.noneHBody, 1, "莫: finite no-witness quantifier over Hex"⟩
+  | .M_2  => some ⟨.M_2,  Stdlib.existsHBody, 1, "或: finite modal/exists over Hex"⟩
   | .Q_5  => some ⟨.Q_5,  Stdlib.existsHBody, 1, "或: finite exists over Hex"⟩
   | .Q_6  => some ⟨.Q_6,  Stdlib.existsHBody, 1, "有: finite exists over Hex"⟩
   | .Q_7  => some ⟨.Q_7,  Stdlib.noneHBody, 1, "無/无: finite no-witness quantifier over Hex"⟩
+  | .A_11 => some ⟨.A_11, .andB, 2, "既...又... / 一...且...: Bool conjunction"⟩
   | .A_12 => some ⟨.A_12, .andB, 2, "且: Bool conjunction"⟩
+  | .S_1  => some ⟨.S_1,  Stdlib.hexApplyBody, 2, "之: Hex endomap application/projection"⟩
   | .S_2  => some ⟨.S_2,  Stdlib.endoCompBody, 2,
       "而: Hex endomap composition; surface currently requires explicit Hex→Hex terms"⟩
   | _     => none
@@ -71,8 +76,9 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
 /-- The exact theorem-backed subset, kept separate from total shape semantics. -/
 def theoremBackedOperatorIds : List OperatorId :=
   [.T_10, .R_8, .N_1, .M_1, .I_1, .Q_1, .T_12, .T_13, .Z_5, .Z_6, .Z_3, .T_6]
-    ++ [.N_3, .N_4, .N_5, .K_1, .S_3, .S_7, .Z_1, .I_3, .I_4, .I_5, .P_4,
-        .N_2, .N_7, .P_5, .Q_2, .Q_4, .Q_5, .Q_6, .Q_7, .A_12, .S_2]
+    ++ [.N_3, .N_4, .N_5, .N_6, .K_1, .K_8, .S_3, .S_7, .Z_1, .I_3, .I_4,
+        .I_5, .P_4, .N_2, .N_7, .P_5, .Q_2, .Q_4, .M_2, .Q_5, .Q_6, .Q_7,
+        .A_11, .A_12, .S_1, .S_2]
 
 def isTheoremBackedOperator (id : OperatorId) : Bool :=
   (theoremBackedSemanticsFor? id).isSome
@@ -110,7 +116,7 @@ def catalogueRelationShapeBody : Nat → Tm
 Conservative total fallback by catalogue signature shape.
 
 These bodies are executable and type-checkable, but they are intentionally
-weaker than the 33 exact rows above: they witness the catalogue shape as a total
+weaker than the 38 exact rows above: they witness the catalogue shape as a total
 interpreter operation, not a full doctrinal/textual denotation.
 -/
 def catalogueShapeBodyFor (sig : CoveredOperatorSignature) : Tm :=
@@ -196,7 +202,7 @@ theorem executableOperatorIds_length :
     executableOperatorIds.length = 371 := by native_decide
 
 theorem theoremBackedOperatorIds_length :
-    theoremBackedOperatorIds.length = 33 := by native_decide
+    theoremBackedOperatorIds.length = 38 := by native_decide
 
 theorem executableOperatorIds_registered :
     executableOperatorIds.all isCatalogueOperator = true := by native_decide
@@ -219,7 +225,7 @@ theorem operatorRegistryCoverage_summary :
     operatorRegistryEntries.length = 371
       ∧ executableRegistryEntries.length = 371
       ∧ executableOperatorIds.length = 371
-      ∧ theoremBackedOperatorIds.length = 33
+      ∧ theoremBackedOperatorIds.length = 38
       ∧ executableOperatorIds.all isCatalogueOperator = true
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).id = id)
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).signature.id = id) := by
@@ -234,8 +240,9 @@ theorem operatorRegistryCoverage_summary :
     ⟩
 
 example : (executableSemanticsFor? .Z_5).isSome = true := by native_decide
-example : (theoremBackedSemanticsFor? .S_1).isSome = false := by native_decide
+example : (theoremBackedSemanticsFor? .S_1).isSome = true := by native_decide
 example : (executableSemanticsFor? .S_1).isSome = true := by native_decide
+example : (theoremBackedSemanticsFor? .K_8).isSome = true := by native_decide
 example : (executableSemanticsFor? .Q_5).isSome = true := by native_decide
 example : (executableSemanticsFor? .A_12).isSome = true := by native_decide
 example : (operatorSemanticsRegistry .T_10).isSome = true := by native_decide

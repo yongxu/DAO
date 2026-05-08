@@ -144,7 +144,7 @@ String  ──[«解程»]──→  List YiInstr  ──[init+runFuel]──→
 | M1 v3.1 · 字符级 lex 反演 + universal String round-trip | `Foundation/Wen/WenyanParserGeneral.lean § lexN_printProg_thm, parseN_printProg_inverse_universal` |
 | M2 多步求值器 + 端到端 | `Foundation/Wen/WenEval.lean § «端到端_乾», «端到端_坤», «端到端_否»` |
 | M3-甲 Lean 块语法 | `Foundation/Wen/WenyanSyntax.lean § daoJudgeBlock_eq_daoJudgeProg` (by `rfl`) |
-| L1 typed lambda (371 executable catalogue rows; 33 theorem-backed exact rows) | `Foundation/Wen/WenDef.lean § Stdlib` + `Foundation/Wen/WenSurface/Semantics.lean § executableSemanticsFor?` |
+| L1 typed lambda (371 executable catalogue rows; 38 theorem-backed exact rows) | `Foundation/Wen/WenDef.lean § Stdlib` + `Foundation/Wen/WenSurface/Semantics.lean § executableSemanticsFor?` |
 | L1 ⟶ Lean 求值 | `Foundation/Wen/WenDefEval.lean § tui_eq_sheng (∀ 64 hex)` |
 | L1 ⟶ L0 编译 (cuo-equivariant subset) | `Foundation/Wen/WenDefCompile.lean § {idProg, add32Prog, cuoProg}_correct` |
 | 反射层: 判型良 / 判停 / 验程 | `Foundation/Wen/WenyanReflect.lean § «文核同源»` |
