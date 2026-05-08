@@ -1144,6 +1144,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportAlgebraBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityStepwiseUnificationBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleChannelBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityTwoRouteEnumerationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityWenBoundary.lean"
@@ -1208,6 +1209,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportAlgebraBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityStepwiseUnificationBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleChannelBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityTwoRouteEnumerationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityWenBoundary.lean"
@@ -3625,6 +3627,66 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeAssociativityBridge.lean"
           ],
           "symbol": "operatorCellGrid_no_channel_diagonal_identity"
+        }
+      ]
+    },
+    {
+      "document": "义理/sum-over-middle通道组合候选 · Markov桥S15.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleChannelBridge.lean"
+          ],
+          "symbol": "SumOverMiddleChannelBoundaryClosed"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleChannelBridge.lean"
+          ],
+          "symbol": "SumOverMiddleChannelComposition"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleChannelBridge.lean"
+          ],
+          "symbol": "TwoStepReachableViaList"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleChannelBridge.lean"
+          ],
+          "symbol": "concrete_prepared_measured_not_one_step"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleChannelBridge.lean"
+          ],
+          "symbol": "concrete_sumOverMiddle_prepared_measured_amplitude"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleChannelBridge.lean"
+          ],
+          "symbol": "list_sum_ne_zero_has_nonzero_entry"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleChannelBridge.lean"
+          ],
+          "symbol": "sumOverMiddleChannelAmplitude"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleChannelBridge.lean"
+          ],
+          "symbol": "sumOverMiddle_support_implies_two_step"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleChannelBridge.lean"
+          ],
+          "symbol": "sum_over_middle_channel_bridge_summary"
         }
       ]
     },

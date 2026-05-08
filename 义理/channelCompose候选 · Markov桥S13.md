@@ -2,7 +2,7 @@
 
 **前置**：[Born分布边界候选 · Markov桥S12](Born分布边界候选%20·%20Markov桥S12.md) · [经典Markov与量子振幅分层 · Markov桥S4](经典Markov与量子振幅分层%20·%20Markov桥S4.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
-**后继**：[channelCompose结合律候选 · Markov桥S14](channelCompose结合律候选%20·%20Markov桥S14.md) 已关闭 pointwise `channelCompose` 的 associativity boundary，并记录 diagonal identity obstruction。
+**后继**：[channelCompose结合律候选 · Markov桥S14](channelCompose结合律候选%20·%20Markov桥S14.md) 已关闭 pointwise `channelCompose` 的 associativity boundary，并记录 diagonal identity obstruction；[sum-over-middle通道组合候选 · Markov桥S15](sum-over-middle通道组合候选%20·%20Markov桥S15.md) 已关闭 finite middle-list composition 的 two-step boundary。
 
 **Lean 锚点**：
 
@@ -114,7 +114,7 @@ born_distribution_boundary
 channelCompose
 ```
 
-S14 已完成 pointwise associativity，并证明当前 support-respecting skeleton 中 diagonal identity 会被 no-self-step process 阻塞。下一轮自然升级是从 pointwise composition 进入 sum-over-middle composition、probability distribution push-forward，或从 finite channel candidate 进入 unitary/CPTP ledger。
+S14 已完成 pointwise associativity，并证明当前 support-respecting skeleton 中 diagonal identity 会被 no-self-step process 阻塞。S15 已从 pointwise composition 进入 sum-over-middle composition，并证明非零 endpoint sum 只能推出 two-step support；后续自然升级是 probability distribution push-forward，或从 finite channel candidate 进入 unitary/CPTP ledger。
 
 ---
 

@@ -4,7 +4,7 @@
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
-    "Foundation/Modern": 67,
+    "Foundation/Modern": 68,
     "Foundation/Wen": 51,
     "Foundation/Yi": 2,
     "Model": 2,
@@ -183,6 +183,7 @@
         "SSBX.Foundation.Modern.QuantumRelativityBornDistributionBridge",
         "SSBX.Foundation.Modern.QuantumRelativityChannelComposeBridge",
         "SSBX.Foundation.Modern.QuantumRelativityChannelComposeAssociativityBridge",
+        "SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleChannelBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -201,10 +202,10 @@
         "SSBX.Foundation.Modern.IIDWlln",
         "SSBX.Foundation.Modern.BochnerPL"
       ],
-      "lines": 193,
+      "lines": 194,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "9c7bb7401dd4fd9b321c9833023371ba9e38395f1c40115c74c85c5999712b31"
+      "sha256": "e63a1f6dd080c60870cf39a8c7745610cb9be878f8fb22933a9f7057bdc0f9e9"
     },
     {
       "cluster": "root",
@@ -12528,6 +12529,88 @@
       "module": "SSBX.Foundation.Modern.QuantumRelativityStepwiseUnificationBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityStepwiseUnificationBridge.lean",
       "sha256": "9ce719d8ae973d4eac895f5363564d6ec3d595fd9e27052157edbd55036e8b40"
+    },
+    {
+      "cluster": "Foundation/Modern",
+      "declaration_count": 17,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "list_sum_ne_zero_has_nonzero_entry"
+        },
+        {
+          "kind": "def",
+          "name": "sumOverMiddleChannelAmplitude"
+        },
+        {
+          "kind": "def",
+          "name": "TwoStepReachableViaList"
+        },
+        {
+          "kind": "theorem",
+          "name": "sumOverMiddle_support_implies_two_step"
+        },
+        {
+          "kind": "structure",
+          "name": "SumOverMiddleChannelComposition"
+        },
+        {
+          "kind": "def",
+          "name": "sumOverMiddleChannelComposition"
+        },
+        {
+          "kind": "theorem",
+          "name": "sumOverMiddleChannelComposition_boundary"
+        },
+        {
+          "kind": "theorem",
+          "name": "sumOverMiddleChannelComposition_support"
+        },
+        {
+          "kind": "def",
+          "name": "SumOverMiddleChannelBoundaryClosed"
+        },
+        {
+          "kind": "theorem",
+          "name": "sum_over_middle_channel_boundary_closed"
+        },
+        {
+          "kind": "def",
+          "name": "concreteStepAmplitude"
+        },
+        {
+          "kind": "def",
+          "name": "concreteStepAmplitudeSkeleton"
+        },
+        {
+          "kind": "def",
+          "name": "concreteStepQuantumChannelSkeleton"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_sumOverMiddle_prepared_measured_amplitude"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_prepared_measured_not_one_step"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_sumOverMiddle_prepared_measured_two_step"
+        },
+        {
+          "kind": "theorem",
+          "name": "sum_over_middle_channel_bridge_summary"
+        }
+      ],
+      "imports": [
+        "Mathlib.Tactic",
+        "SSBX.Foundation.Modern.QuantumRelativityChannelComposeAssociativityBridge"
+      ],
+      "lines": 252,
+      "module": "SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleChannelBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleChannelBridge.lean",
+      "sha256": "0ec5bb4956ba51dc83bfde7b1972c6552ca6b46ab4de4a569cb35f4c1f7a55de"
     },
     {
       "cluster": "Foundation/Modern",

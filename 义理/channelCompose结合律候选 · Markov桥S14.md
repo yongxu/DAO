@@ -2,6 +2,8 @@
 
 **前置**：[channelCompose候选 · Markov桥S13](channelCompose候选%20·%20Markov桥S13.md) · [路径组合与因果约束 · Markov桥S3](路径组合与因果约束%20·%20Markov桥S3.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
+**后继**：[sum-over-middle通道组合候选 · Markov桥S15](sum-over-middle通道组合候选%20·%20Markov桥S15.md) 已关闭 finite middle-list composition 的 two-step support boundary。
+
 **Lean 锚点**：
 
 | 层 | 文件 | 内容 | 状态 |
