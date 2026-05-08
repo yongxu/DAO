@@ -253,6 +253,8 @@ CLI_CASES = [
     (["--operator", "S-13"], "executable note: 者: binder particle anchor as identity; no binding semantics"),
     (["--operator", "S-14"], "executable note: 也: predication/finality particle anchor as identity; no assertion semantics"),
     (["--operator", "S-16"], "executable note: 所: nominalization particle anchor as identity; no nominalization semantics"),
+    (["--operator", "H-7"], "executable note: 名: name-assignment anchor as identity; no naming/reference semantics"),
+    (["--operator", "P-19"], "executable note: 名: Mohist name-class anchor as identity; no naming/reference semantics"),
     (["--operator", "R-1"], "executable note: exact Bool relation/predicate package"),
     (["--operator", "LIJ-9"], "executable note: exact Bool relation/predicate package"),
     (["--operator", "Y-2"], "compound surfaces: 五行"),
@@ -264,7 +266,7 @@ CLI_CASES = [
     (["--coverage"], "operators: 371 registered / 371 executable"),
     (["--coverage"], "operator forms: 371 ids with at least one form"),
     (["--help"], "wenyan-surface --json --operators [all|executable|known-not-executable|unsupported]"),
-    (["--help"], "296 exact/theorem-backed; 75 structural catalogue"),
+    (["--help"], "298 exact/theorem-backed; 73 structural catalogue"),
     (["--help"], "0 symbolic catalogue-shape"),
 ]
 

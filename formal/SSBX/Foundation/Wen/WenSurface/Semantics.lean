@@ -2,7 +2,7 @@
 # WenSurface.Semantics — executable semantics registry
 
 This module separates exact stdlib denotations from total catalogue
-execution.  Two hundred ninety-six `OperatorId`s use exact `WenDef.Tm` bodies:
+execution.  Two hundred ninety-eight `OperatorId`s use exact `WenDef.Tm` bodies:
 the original high-value stdlib rows, the ObjectEndo/ObjectMap/OpUnary Hex
 transform package, finite Hex pair/list carriers, finite Hex quantifiers, finite Hex motion/process rows,
 plus the Bool relation/predicate package.  Every
@@ -151,6 +151,7 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .H_4  => some ⟨.H_4,  Stdlib.hexIdBody, 1, "機/机: extractor anchor as identity; no opportunity semantics"⟩
   | .H_5  => some ⟨.H_5,  Stdlib.pairHBody, 2, "法: Hex pair carrier constructor; no law/norm semantics"⟩
   | .H_6  => some ⟨.H_6,  Stdlib.hexIdBody, 1, "象: extractor anchor as identity; no image semantics"⟩
+  | .H_7  => some ⟨.H_7,  Stdlib.hexIdBody, 1, "名: name-assignment anchor as identity; no naming/reference semantics"⟩
   | .P_2  => some ⟨.P_2,  Stdlib.hexIdBody, 1, "體/体: Mohist part extractor anchor as identity; no part-whole semantics"⟩
   | .P_3  => some ⟨.P_3,  Stdlib.list1HBody, 1, "兼: singleton Hex aggregate carrier; no universal inclusion semantics"⟩
   | .P_6  => some ⟨.P_6,  Stdlib.hexIdBody, 1, "久: temporal extractor anchor as identity; no duration semantics"⟩
@@ -161,6 +162,7 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .P_12 => some ⟨.P_12, Stdlib.hexIdBody, 1, "中: Mohist middle-point anchor as identity; no geometry semantics"⟩
   | .P_13 => some ⟨.P_13, Stdlib.pairHBody, 2, "圜/圆: Hex pair carrier constructor; no geometric semantics"⟩
   | .P_18 => some ⟨.P_18, Stdlib.hexIdBody, 1, "法: Mohist model extractor anchor as identity; no rule semantics"⟩
+  | .P_19 => some ⟨.P_19, Stdlib.hexIdBody, 1, "名: Mohist name-class anchor as identity; no naming/reference semantics"⟩
   | .P_21 => some ⟨.P_21, Stdlib.hexIdBody, 1, "辭/辞: text/proposition anchor as identity; no argument-content semantics"⟩
   | .P_22 => some ⟨.P_22, Stdlib.pairHBody, 2, "說/说: Hex pair carrier constructor; no rhetorical semantics"⟩
   | .P_24 => some ⟨.P_24, Stdlib.hexIdBody, 1, "類/类: Mohist class extractor anchor as identity; no taxonomy semantics"⟩
@@ -359,9 +361,9 @@ def coreTheoremBackedOperatorIds : List OperatorId :=
         .C_2, .C_4, .C_5, .C_6, .C_7, .C_8,
         .T_1, .T_2, .T_3, .T_4, .T_5, .T_7, .T_8, .T_9, .T_11, .T_14, .T_15,
         .B_1, .B_2, .B_3, .B_4, .B_5, .B_6, .B_7,
-        .I_2, .I_6, .I_8, .H_1, .H_2, .H_3, .H_4, .H_5, .H_6,
+        .I_2, .I_6, .I_8, .H_1, .H_2, .H_3, .H_4, .H_5, .H_6, .H_7,
         .P_2, .P_3, .P_6, .P_7, .P_9, .P_10,
-        .P_11, .P_12, .P_13, .P_18, .P_21, .P_22, .P_24, .G_2, .G_4, .G_5, .G_8, .G_9,
+        .P_11, .P_12, .P_13, .P_18, .P_19, .P_21, .P_22, .P_24, .G_2, .G_4, .G_5, .G_8, .G_9,
         .D_1, .D_4, .D_8, .E_1, .E_4, .E_5, .E_6, .E_7, .E_8, .E_9,
         .H_8, .L_3, .L_5, .L_9, .L_10, .L_12, .L_13, .L_15,
         .Y_1, .Y_3, .Y_4, .Y_5, .Y_6, .Y_7, .Y_8, .Y_10, .Y_11, .Y_12,
@@ -398,7 +400,7 @@ def structuralCatalogueOperatorIds : List OperatorId :=
 Structural total fallback for catalogue rows.
 
 These bodies are executable and type-checkable, but intentionally weaker than
-the 296 exact rows above: they preserve the operator id, signature kind, and
+the 298 exact rows above: they preserve the operator id, signature kind, and
 evaluated arguments as a catalogue value instead of projecting fake Hex/Bool
 results.
 -/
@@ -473,10 +475,10 @@ theorem executableOperatorIds_length :
     executableOperatorIds.length = 371 := by native_decide
 
 theorem coreTheoremBackedOperatorIds_length :
-    coreTheoremBackedOperatorIds.length = 250 := by native_decide
+    coreTheoremBackedOperatorIds.length = 252 := by native_decide
 
 theorem theoremBackedOperatorIds_length :
-    theoremBackedOperatorIds.length = 296 := by native_decide
+    theoremBackedOperatorIds.length = 298 := by native_decide
 
 theorem theoremBackedOperatorIds_nodup :
     theoremBackedOperatorIds.Nodup := by native_decide
@@ -486,7 +488,7 @@ theorem theoremBackedOperatorIds_all_semantics :
   native_decide
 
 theorem structuralCatalogueOperatorIds_length :
-    structuralCatalogueOperatorIds.length = 75 := by native_decide
+    structuralCatalogueOperatorIds.length = 73 := by native_decide
 
 theorem structuralCatalogueOperatorIds_all_not_theorem_backed :
     structuralCatalogueOperatorIds.all (fun id => (theoremBackedSemanticsFor? id).isNone) = true := by
@@ -517,8 +519,8 @@ theorem operatorRegistryCoverage_summary :
     operatorRegistryEntries.length = 371
       ∧ executableRegistryEntries.length = 371
       ∧ executableOperatorIds.length = 371
-      ∧ theoremBackedOperatorIds.length = 296
-      ∧ structuralCatalogueOperatorIds.length = 75
+      ∧ theoremBackedOperatorIds.length = 298
+      ∧ structuralCatalogueOperatorIds.length = 73
       ∧ theoremBackedOperatorIds.length + structuralCatalogueOperatorIds.length = 371
       ∧ executableOperatorIds.all isCatalogueOperator = true
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).id = id)
@@ -549,6 +551,8 @@ example : (theoremBackedSemanticsFor? .E_9).isSome = true := by native_decide
 example : (theoremBackedSemanticsFor? .S_13).isSome = true := by native_decide
 example : (theoremBackedSemanticsFor? .S_14).isSome = true := by native_decide
 example : (theoremBackedSemanticsFor? .S_16).isSome = true := by native_decide
+example : (theoremBackedSemanticsFor? .H_7).isSome = true := by native_decide
+example : (theoremBackedSemanticsFor? .P_19).isSome = true := by native_decide
 example : (theoremBackedSemanticsFor? .Y_2).isSome = false := by native_decide
 example : (operatorSemanticsRegistry .T_10).isSome = true := by native_decide
 example : parseArityFor .S_1 = 2 := by native_decide
