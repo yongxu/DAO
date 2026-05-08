@@ -16,7 +16,7 @@ cuo-equivariant 子集 commute 作 future work）。
 - cue-aware resolver + explicit `SurfaceExpr` AST
 - 64 卦名 / aliases + Bool literals + Hex-only binders
 - executable registry 覆盖全部 371 个 OperatorId
-- 266 个 exact/theorem-backed operator 可求 Hex/Bool/Pair/List；其余 catalogue rows 求 structural normal form
+- 278 个 exact/theorem-backed operator 可求 Hex/Bool/Pair/List；其余 catalogue rows 求 structural normal form
 - unpromoted gap form 只诊断，不伪造 denotation
 
 ## 状态
@@ -608,6 +608,42 @@ example :
   by native_decide
 example :
     (theoremBackedSemanticsFor? OperatorId.Z_35).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.G_2).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.G_4).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Z_23).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.X_1).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.ZHU_10).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.SUN_1).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.SUN_5).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.ZA_5).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.LIJ_5).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.ZA_7).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.ZA_3).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.ZA_11).isSome = true :=
   by native_decide
 example :
     (theoremBackedSemanticsFor? OperatorId.C_5).isSome = true :=
