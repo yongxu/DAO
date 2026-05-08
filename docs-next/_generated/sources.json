@@ -1,5 +1,5 @@
 {
-  "count": 333,
+  "count": 335,
   "include_archive": false,
   "sources": [
     {
@@ -351,9 +351,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 6248,
+      "bytes": 6301,
       "path": "formal/SSBX.lean",
-      "sha256": "cf825f742be348b029d58c061bc7753f4adf18507d45b7a3ef19687ba8285739",
+      "sha256": "359916016a86b00b11af8bc108b84be78aa98cde9bf1978b2c7b48d2c0033898",
       "suffix": ".lean"
     },
     {
@@ -837,9 +837,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 24463,
+      "bytes": 24828,
       "path": "formal/SSBX/Foundation/Wen/MetaInterp.lean",
-      "sha256": "ff23c79dbed08ffa3965d8d807f08089aa7b5ab337880c86903100d2b60b9891",
+      "sha256": "fe48400dbb79df46564b853707353bcf6310ebd41e0fbf6507e6d28931612920",
       "suffix": ".lean"
     },
     {
@@ -912,6 +912,12 @@
       "bytes": 16362,
       "path": "formal/SSBX/Foundation/Wen/MetaInterp/SubDispatch_BranchYaoEq.lean",
       "sha256": "6c8acfadd49d0a2c265db6c99af4ab30493ff04e9fe9b6fbeddca7cc9f407524",
+      "suffix": ".lean"
+    },
+    {
+      "bytes": 8330,
+      "path": "formal/SSBX/Foundation/Wen/MetaInterp/TargetContract.lean",
+      "sha256": "43c1d02b531142f5c7f35d1b46339001639271f26cf801d8593d54ee21b5acbf",
       "suffix": ".lean"
     },
     {
@@ -1476,6 +1482,12 @@
       "bytes": 17821,
       "path": "formal/SSBX/notes/pending-interfaces.md",
       "sha256": "a2ffcb6f3cd04f42dcb9cb5d4b5453901260c39cbd739ac0443ba9b181767c3e",
+      "suffix": ".md"
+    },
+    {
+      "bytes": 3602,
+      "path": "formal/SSBX/notes/phase1-target-definition.md",
+      "sha256": "7ba5d132915047e1d3a9e8e3b14c6184926e234154787ad99e05f5bc3010aef8",
       "suffix": ".md"
     },
     {

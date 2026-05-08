@@ -1060,6 +1060,130 @@
       ]
     },
     {
+      "document": "formal/SSBX/notes/phase1-target-definition.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Wen/MetaInterp/TargetContract.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenyanSelfInterp.lean"
+          ],
+          "symbol": "AllEncodable"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/Cell192.lean"
+          ],
+          "symbol": "Cell192"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/MetaInterp/TargetContract.lean"
+          ],
+          "symbol": "FramedMetaInterpTargetSpec"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/MetaInterp/TargetContract.lean"
+          ],
+          "symbol": "FramedProgramRoundTrip"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/MetaInterp/TargetContract.lean"
+          ],
+          "symbol": "FullBridgeTarget"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "Halts"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/KleeneInternal.lean"
+          ],
+          "symbol": "HaltsWith"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "KleeneInverter"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/MetaInterp/TargetContract.lean"
+          ],
+          "symbol": "LeanChecksYiSemantics"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/KleeneInternal.lean"
+          ],
+          "symbol": "LenProgInput"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/MetaInterp/TargetContract.lean"
+          ],
+          "symbol": "MetaInterpTargetSpec"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/KleeneInternal.lean"
+          ],
+          "symbol": "ProgLenBounded"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/MetaInterp/TargetContract.lean"
+          ],
+          "symbol": "ProgramEncodingRoundTrip"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/KleeneInternal.lean"
+          ],
+          "symbol": "UniversalInterpSpec"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
+          ],
+          "symbol": "YiInstr"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/GodelLi.lean"
+          ],
+          "symbol": "kleene_recursion_axiom"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean",
+            "formal/SSBX/Foundation/Bagua/FuelDiscipline.lean",
+            "formal/SSBX/Pending/Examples.lean"
+          ],
+          "symbol": "run"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
+          ],
+          "symbol": "runFuel"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/MetaInterp/TargetContract.lean"
+          ],
+          "symbol": "target_contract_phase1_summary"
+        }
+      ]
+    },
+    {
       "document": "formal/SSBX/notes/run-boundary.md",
       "lean_path_mentions": [],
       "symbol_hits": [

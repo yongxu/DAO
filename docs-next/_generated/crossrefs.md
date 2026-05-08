@@ -77,6 +77,7 @@
 | formal/SSBX/notes/monad-root-plan.md | 2 | 3 |
 | formal/SSBX/notes/parse-print-roadmap.md | 0 | 0 |
 | formal/SSBX/notes/pending-interfaces.md | 1 | 6 |
+| formal/SSBX/notes/phase1-target-definition.md | 1 | 19 |
 | formal/SSBX/notes/run-boundary.md | 0 | 8 |
 | formal/SSBX/notes/tier3-quine-roadmap.md | 1 | 15 |
 | formal/SSBX/notes/truth-ledger-boundary.md | 0 | 20 |

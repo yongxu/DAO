@@ -5,7 +5,7 @@
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
     "Foundation/Modern": 35,
-    "Foundation/Wen": 51,
+    "Foundation/Wen": 52,
     "Foundation/Yi": 2,
     "Model": 2,
     "Pending": 2,
@@ -90,6 +90,7 @@
         "SSBX.Foundation.Wen.MetaInterp.SubDispatch_BranchShiEq",
         "SSBX.Foundation.Wen.MetaInterp.SubDispatch_BranchYaoEq",
         "SSBX.Foundation.Wen.MetaInterp.OuterLoop",
+        "SSBX.Foundation.Wen.MetaInterp.TargetContract",
         "SSBX.Foundation.Wen.WenDef",
         "SSBX.Foundation.Wen.WenyanParser",
         "SSBX.Foundation.Wen.WenEval",
@@ -168,10 +169,10 @@
         "SSBX.Foundation.Modern.IIDWlln",
         "SSBX.Foundation.Modern.BochnerPL"
       ],
-      "lines": 160,
+      "lines": 161,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "cf825f742be348b029d58c061bc7753f4adf18507d45b7a3ef19687ba8285739"
+      "sha256": "359916016a86b00b11af8bc108b84be78aa98cde9bf1978b2c7b48d2c0033898"
     },
     {
       "cluster": "root",
@@ -13176,10 +13177,10 @@
         "SSBX.Foundation.Wen.WenyanSelfInterp",
         "SSBX.Foundation.Bagua.KleeneInternal"
       ],
-      "lines": 593,
+      "lines": 599,
       "module": "SSBX.Foundation.Wen.MetaInterp",
       "path": "formal/SSBX/Foundation/Wen/MetaInterp.lean",
-      "sha256": "ff23c79dbed08ffa3965d8d807f08089aa7b5ab337880c86903100d2b60b9891"
+      "sha256": "fe48400dbb79df46564b853707353bcf6310ebd41e0fbf6507e6d28931612920"
     },
     {
       "cluster": "Foundation/Wen",
@@ -14002,6 +14003,149 @@
       "module": "SSBX.Foundation.Wen.MetaInterp.SubDispatch_BranchYaoEq",
       "path": "formal/SSBX/Foundation/Wen/MetaInterp/SubDispatch_BranchYaoEq.lean",
       "sha256": "6c8acfadd49d0a2c265db6c99af4ab30493ff04e9fe9b6fbeddca7cc9f407524"
+    },
+    {
+      "cluster": "Foundation/Wen",
+      "declaration_count": 32,
+      "declarations": [
+        {
+          "kind": "inductive",
+          "name": "ProofPhase"
+        },
+        {
+          "kind": "def",
+          "name": "proofPhaseRank"
+        },
+        {
+          "kind": "theorem",
+          "name": "lean_target_before_wenyan_witness"
+        },
+        {
+          "kind": "inductive",
+          "name": "TargetStatus"
+        },
+        {
+          "kind": "inductive",
+          "name": "TargetItem"
+        },
+        {
+          "kind": "def",
+          "name": "targetStatus"
+        },
+        {
+          "kind": "theorem",
+          "name": "strict_yiinstr_cic_equivalence_is_non_goal"
+        },
+        {
+          "kind": "theorem",
+          "name": "bounded_meta_interpreter_remains_target"
+        },
+        {
+          "kind": "theorem",
+          "name": "full_universal_interpreter_remains_target"
+        },
+        {
+          "kind": "def",
+          "name": "LeanChecksYiSemantics"
+        },
+        {
+          "kind": "theorem",
+          "name": "lean_checks_yi_semantics"
+        },
+        {
+          "kind": "def",
+          "name": "ProgramEncodingRoundTrip"
+        },
+        {
+          "kind": "theorem",
+          "name": "program_encoding_roundtrip"
+        },
+        {
+          "kind": "def",
+          "name": "FramedProgramRoundTrip"
+        },
+        {
+          "kind": "theorem",
+          "name": "framed_program_roundtrip"
+        },
+        {
+          "kind": "def",
+          "name": "UniversalInterpreterTarget"
+        },
+        {
+          "kind": "def",
+          "name": "BoundedUniversalInterpreterTarget"
+        },
+        {
+          "kind": "def",
+          "name": "MetaInterpTargetSpec"
+        },
+        {
+          "kind": "def",
+          "name": "FramedMetaInterpTargetSpec"
+        },
+        {
+          "kind": "def",
+          "name": "SmnCompilerTarget"
+        },
+        {
+          "kind": "def",
+          "name": "DiagonalCompilerTarget"
+        },
+        {
+          "kind": "def",
+          "name": "CuoRestrictedChurchTuringTarget"
+        },
+        {
+          "kind": "def",
+          "name": "WenyanUniversalWitnessTarget"
+        },
+        {
+          "kind": "def",
+          "name": "WenyanBoundedUniversalWitnessTarget"
+        },
+        {
+          "kind": "def",
+          "name": "WenyanHistoryFixedPointTarget"
+        },
+        {
+          "kind": "def",
+          "name": "FullBridgeTarget"
+        },
+        {
+          "kind": "theorem",
+          "name": "full_bridge_target_implies_kleene_inverter"
+        },
+        {
+          "kind": "theorem",
+          "name": "full_universal_target_implies_bounded_target"
+        },
+        {
+          "kind": "theorem",
+          "name": "full_universal_witness_satisfies_meta_interp_target"
+        },
+        {
+          "kind": "theorem",
+          "name": "wenyan_history_target_implies_halting_fixedpoint"
+        },
+        {
+          "kind": "theorem",
+          "name": "to"
+        },
+        {
+          "kind": "theorem",
+          "name": "target_contract_phase1_summary"
+        }
+      ],
+      "imports": [
+        "SSBX.Foundation.Wen.MetaInterp",
+        "SSBX.Foundation.Wen.WenyanFramedProg",
+        "SSBX.Foundation.Wen.WenyanQuineKleene"
+      ],
+      "lines": 227,
+      "module": "SSBX.Foundation.Wen.MetaInterp.TargetContract",
+      "path": "formal/SSBX/Foundation/Wen/MetaInterp/TargetContract.lean",
+      "sha256": "43c1d02b531142f5c7f35d1b46339001639271f26cf801d8593d54ee21b5acbf"
     },
     {
       "cluster": "Foundation/Wen",

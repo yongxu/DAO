@@ -1,5 +1,5 @@
 {
-  "count": 148,
+  "count": 149,
   "documents": [
     {
       "headings": [
@@ -3070,6 +3070,48 @@
       "sha256": "a2ffcb6f3cd04f42dcb9cb5d4b5453901260c39cbd739ac0443ba9b181767c3e",
       "summary": "本文只给 6 个 `PendingName` 的落地接口方案，不改变名册语义。",
       "title": "PendingName 经验接口落地方案"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "Phase 1 Target Definition"
+        },
+        {
+          "level": 2,
+          "title": "前置"
+        },
+        {
+          "level": 2,
+          "title": "Lean 锚点"
+        },
+        {
+          "level": 2,
+          "title": "Claim"
+        },
+        {
+          "level": 2,
+          "title": "边界声明"
+        },
+        {
+          "level": 2,
+          "title": "完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "主定理入口"
+        },
+        {
+          "level": 2,
+          "title": "验证命令"
+        }
+      ],
+      "lines": 66,
+      "links": [],
+      "path": "formal/SSBX/notes/phase1-target-definition.md",
+      "sha256": "7ba5d132915047e1d3a9e8e3b14c6184926e234154787ad99e05f5bc3010aef8",
+      "summary": "- Lean 靶文件：`formal/SSBX/Foundation/Wen/MetaInterp/TargetContract.lean`",
+      "title": "Phase 1 Target Definition"
     },
     {
       "headings": [
