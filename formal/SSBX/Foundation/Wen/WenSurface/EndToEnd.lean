@@ -207,6 +207,8 @@ example :
 
 example : (wenyanInterp "大壯").toOption = (wenyanInterp "大壮").toOption := by native_decide
 
+example : (wenyanInterp "器").toOption = resolveHexConst "鼎" := by native_decide
+
 example : (wenyanInterp "鼎").toOption = resolveHexConst "鼎" := by native_decide
 
 example : (wenyanInterp "鼎 乾").toOption = none := by native_decide
@@ -251,6 +253,18 @@ example :
 
 example :
     (wenyanInterpHexList "五行 乾").toOption = some [Hexagram.qian] :=
+  by native_decide
+
+example :
+    (match wenyanCompile "曰 乾 乾" with
+     | .ok typed => typed.ty = .catalogue .textAct
+     | _ => false) = true :=
+  by native_decide
+
+example :
+    (match wenyanCompile "曰 真 真" with
+     | .error (.elab (.typeMismatch (.argumentMismatch .hex .bool))) => true
+     | _ => false) = true :=
   by native_decide
 
 example :
@@ -863,6 +877,17 @@ example :
 example :
     (theoremBackedSemanticsFor? OperatorId.Z_17).isSome = true :=
   by native_decide
+example : (wenyanInterp "静 乾").toOption = some Hexagram.qian := by native_decide
+example : (wenyanInterp "恒 乾").toOption = some Hexagram.qian := by native_decide
+example : (wenyanInterp "不动 乾").toOption = some Hexagram.qian := by native_decide
+example : (wenyanInterp "錯綜 乾").toOption = some Hexagram.qian.cuoZong := by native_decide
+example : (wenyanInterp "交错 乾").toOption = some Hexagram.qian.cuoZong := by native_decide
+example : (wenyanInterp "复 乾").toOption = some Hexagram.qian := by native_decide
+example : (wenyanInterp "归一 乾").toOption = some Hexagram.qian := by native_decide
+example : (wenyanInterp "展 乾").toOption = some («生» Hexagram.qian) := by native_decide
+example : (wenyanInterp "初动 乾").toOption = some (dongInner Hexagram.qian) := by native_decide
+example : (wenyanInterp "承变 乾").toOption = some (huaInner Hexagram.qian) := by native_decide
+example : (wenyanInterp "际变 乾").toOption = some (bianInner Hexagram.qian) := by native_decide
 example :
     (wenyanCompile "改").toOption.map (·.ty) = some (.arr .hex .hex) :=
   by native_decide

@@ -546,6 +546,139 @@
       "symbol_hits": []
     },
     {
+      "document": "docs-next/40_reference_参考/bagua-operator-name-candidates.md",
+      "lean_path_mentions": [
+        "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean",
+        "formal/SSBX/Foundation/Bagua/Cell192.lean",
+        "formal/SSBX/Text/OperatorAnchors.lean",
+        "formal/SSBX/Text/OperatorInstructionSemantics.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "JianMode"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "bian"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "bianInner"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "bianOuter"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean",
+            "formal/SSBX/Foundation/Eight/ShuSuan.lean"
+          ],
+          "symbol": "chong"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "cuoZong"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/WenDef.lean"
+          ],
+          "symbol": "cuoZongBody"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean",
+            "formal/SSBX/Foundation/Wen/Kernel.lean"
+          ],
+          "symbol": "dong"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "dongInner"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "dongOuter"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "fenToSiXiang"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "fenToTrigram"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "fenToYi"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "grandCycle"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "guiyi"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "hammingDist"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "heShang"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "heToTaiji"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "heToYi"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean"
+          ],
+          "symbol": "heXia"
+        }
+      ]
+    },
+    {
       "document": "docs-next/40_reference_参考/glossary.md",
       "lean_path_mentions": [],
       "symbol_hits": [

@@ -395,7 +395,7 @@ Structured candidate output should include:
 - column span;
 - `OperatorId` / code;
 - fixity;
-- support status: `executable` or `known-not-executable`;
+- support status: executable, with exact-vs-structural catalogue detail when available;
 - expected argument types when available.
 
 ## 16. Error Taxonomy
@@ -483,7 +483,7 @@ New negative examples:
 一 同 一 同 一
 推 乾 之
 乾 之 坤       -- parse ok, type error
-五行 （乾）    -- parse ok, unsupported operator
+五行 （乾）    -- parse/typecheck ok as structural catalogue normal form
 ```
 
 ## 19. CLI Contract

@@ -97,8 +97,8 @@ theorem relationPredicateBoolSemanticsFor?_all :
       (fun id => (relationPredicateBoolSemanticsFor? id).isSome) = true := by
   native_decide
 
-/-- Exact theorem-backed operator registry. -/
-def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
+/-- Direct exact operator registry before total structural fallback. -/
+def coreTheoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .T_10 => some ⟨.T_10, Stdlib.tuiBody, 1, "推: Hex increment / 生"⟩
   | .R_8  => some ⟨.R_8,  Stdlib.biBody, 2, "比: current v1 equality approximation"⟩
   | .N_1  => some ⟨.N_1,  Stdlib.buBody, 1, "不: Bool negation"⟩
@@ -316,7 +316,7 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .N_7  => some ⟨.N_7,  Stdlib.neqHexBody, 2, "異/异: Hex disequality"⟩
   | .N_8  => some ⟨.N_8,  Stdlib.pairHBody, 2, "別/别: binary object distinction carrier"⟩
   | .P_5  => some ⟨.P_5,  Stdlib.neqHexBody, 2, "異/异: Mohist disequality alias"⟩
-  | .P_23 => some ⟨.P_23, .andB, 2, "辯/辩: proposition connective carrier as Bool conjunction; no debate semantics"⟩
+  | .P_23 => some ⟨.P_23, Stdlib.xorBBody, 2, "辯/辨/辩: Bool discrimination as exclusive-or"⟩
   | .Q_2  => some ⟨.Q_2,  Stdlib.fanBody, 1, "皆: finite forall over Hex"⟩
   | .Q_4  => some ⟨.Q_4,  Stdlib.noneHBody, 1, "莫: finite no-witness quantifier over Hex"⟩
   | .M_2  => some ⟨.M_2,  Stdlib.existsHBody, 1, "或: finite modal/exists over Hex"⟩
@@ -405,16 +405,7 @@ def coreTheoremBackedOperatorIds : List OperatorId :=
         .S_1, .S_2, .S_4, .S_5, .S_6, .S_8, .S_9, .S_10, .S_11, .S_12,
         .S_13, .S_14, .S_16, .S_17, .S_18, .S_19]
 
-def theoremBackedOperatorIds : List OperatorId :=
-  coreTheoremBackedOperatorIds ++ relationPredicateBoolOperatorIds
-
-def isTheoremBackedOperator (id : OperatorId) : Bool :=
-  (theoremBackedSemanticsFor? id).isSome
-
-def structuralCatalogueOperatorIds : List OperatorId :=
-  allOperatorIds.filter (fun id => (theoremBackedSemanticsFor? id).isNone)
-
-/-! ## § 1.5 Structural catalogue semantics -/
+/-! ## § 1.3 Structural catalogue semantics -/
 
 /--
 Structural total fallback for catalogue rows.
@@ -422,15 +413,22 @@ Structural total fallback for catalogue rows.
 These bodies are executable and type-checkable, but intentionally weaker than
 the 317 exact rows above: they preserve the operator id, signature kind, and
 evaluated arguments as a catalogue value instead of projecting fake Hex/Bool
-results.
+denotations.
 -/
 def catalogueStructuralBodyFor (sig : CoveredOperatorSignature) : Tm :=
   match sig.arity with
-  | 1 => .abs "a" .hex (.catalogue1 sig.id (.var "a"))
-  | 2 => .abs "a" .hex (.abs "b" .hex (.catalogue2 sig.id (.var "a") (.var "b")))
-  | 3 => .abs "a" .hex
-      (.abs "b" .hex
-        (.abs "c" .hex (.catalogue3 sig.id (.var "a") (.var "b") (.var "c"))))
+  | 1 =>
+      .abs "a" (catalogueExpectedArgTy sig.kind 0)
+        (.catalogue1 sig.id (.var "a"))
+  | 2 =>
+      .abs "a" (catalogueExpectedArgTy sig.kind 0)
+        (.abs "b" (catalogueExpectedArgTy sig.kind 1)
+          (.catalogue2 sig.id (.var "a") (.var "b")))
+  | 3 =>
+      .abs "a" (catalogueExpectedArgTy sig.kind 0)
+        (.abs "b" (catalogueExpectedArgTy sig.kind 1)
+          (.abs "c" (catalogueExpectedArgTy sig.kind 2)
+            (.catalogue3 sig.id (.var "a") (.var "b") (.var "c"))))
   | _ => .yi
 
 def catalogueStructuralSemanticsFor (id : OperatorId) : ExecutableSemantics :=
@@ -441,6 +439,29 @@ def catalogueStructuralSemanticsFor (id : OperatorId) : ExecutableSemantics :=
   , note := "structural catalogue normal form for "
       ++ id.code ++ " " ++ id.title ++ " ("
       ++ sig.kind.key ++ "/" ++ toString sig.arity ++ ")" }
+
+/-- Exact/core rows only; structural catalogue normal forms stay out of theorem-backed semantics. -/
+def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
+  | id => coreTheoremBackedSemanticsFor? id
+
+def theoremBackedOperatorIds : List OperatorId :=
+  coreTheoremBackedOperatorIds ++ relationPredicateBoolOperatorIds
+
+def isTheoremBackedOperator (id : OperatorId) : Bool :=
+  (theoremBackedSemanticsFor? id).isSome
+
+def structuralCatalogueOperatorIds : List OperatorId :=
+  allOperatorIds.filter (fun id => (theoremBackedSemanticsFor? id).isNone)
+
+/-! ## § 1.4 Total structural catalogue semantics -/
+
+/-
+Conservative total fallback by catalogue signature.
+
+These bodies are executable and type-checkable, but they are intentionally weaker
+than exact rows: they preserve evaluated catalogue values instead of
+claiming full doctrinal/textual denotations.
+-/
 
 /-- Total execution registry used by WenSurface. -/
 def executableSemanticsFor? (id : OperatorId) : Option ExecutableSemantics :=

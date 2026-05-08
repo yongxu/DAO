@@ -47,6 +47,7 @@
 | docs-next/30_crosswalk_互证/old-to-new.md | 0 | 4 |
 | docs-next/30_crosswalk_互证/theory-to-lean.md | 0 | 0 |
 | docs-next/40_reference_参考/README.md | 0 | 0 |
+| docs-next/40_reference_参考/bagua-operator-name-candidates.md | 4 | 20 |
 | docs-next/40_reference_参考/glossary.md | 0 | 1 |
 | docs-next/40_reference_参考/glyphs-registry.md | 4 | 0 |
 | docs-next/40_reference_参考/historical-sources.md | 0 | 0 |

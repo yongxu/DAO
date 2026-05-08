@@ -8,6 +8,7 @@
 |---|---|
 | 找旧文去向 | [史料冻结指针](historical-sources.md) |
 | 查算子 | [算子参考](operators.md) |
+| 校对八卦算子命名 | [八卦算子命名候选表](bagua-operator-name-candidates.md) |
 | 查字元名册 | [字元与名册](glyphs-registry.md) |
 | 查六表 | [六表参考](six-tables.md) |
 | 查字文语言 | [字文语言](ziwen-language.md) |

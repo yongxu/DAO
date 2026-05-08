@@ -14,6 +14,7 @@ import json
 import os
 import re
 import shutil
+import subprocess
 import sys
 import tempfile
 from dataclasses import dataclass
@@ -71,8 +72,22 @@ def should_skip(path: Path, root: Path, include_archive: bool) -> bool:
     return False
 
 
+def git_tracked_files(root: Path) -> set[str] | None:
+    try:
+        proc = subprocess.run(
+            ["git", "-C", str(root), "ls-files", "-z"],
+            check=True,
+            capture_output=True,
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return None
+    entries = proc.stdout.decode("utf-8").split("\0")
+    return {entry for entry in entries if entry}
+
+
 def files(root: Path, suffixes: tuple[str, ...], include_archive: bool = False) -> list[Path]:
     out: list[Path] = []
+    tracked = git_tracked_files(root)
     for current, dirs, filenames in os.walk(root):
         current_path = Path(current)
         dirs[:] = [
@@ -84,6 +99,8 @@ def files(root: Path, suffixes: tuple[str, ...], include_archive: bool = False) 
         for filename in filenames:
             path = current_path / filename
             if path.suffix not in suffixes:
+                continue
+            if tracked is not None and rel(path, root) not in tracked:
                 continue
             if should_skip(path, root, include_archive):
                 continue

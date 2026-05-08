@@ -6,8 +6,8 @@
 
 ## 当前范围
 
-- **算子**：168 个 exact operator 进入 theorem-backed / Bool / carrier package bodies；
-  其余 catalogue operator elaborates to structural catalogue normal forms。
+- **算子**：317 个 exact/theorem-backed operator 进入精确 `WenDef.Tm` bodies；
+  其余 54 个 catalogue operator elaborates to structural catalogue normal forms。
 - **常值**：「一」 → `.yi` primitive；64 卦名 / aliases → `.hexLit h`。
 - **组合**：显式 `SurfaceExpr.app` 左结合到 `Tm.app`。
 - **绑定**：Hex-only `者` lambda、`凡` forall、`令` let。
@@ -308,6 +308,9 @@ def inferTypeDetailed : Ctx → Tm → Except TypeDiag Ty
   | _, .flip1H    => .ok (.arr .hex .hex)
   | _, .flip2H    => .ok (.arr .hex .hex)
   | _, .flip3H    => .ok (.arr .hex .hex)
+  | _, .flip4H    => .ok (.arr .hex .hex)
+  | _, .flip5H    => .ok (.arr .hex .hex)
+  | _, .flip6H    => .ok (.arr .hex .hex)
   | _, .pairH     => .ok (.arr .hex (.arr .hex (.prod .hex .hex)))
   | _, .dupH      => .ok (.arr .hex (.prod .hex .hex))
   | _, .list1H    => .ok (.arr .hex (.list .hex))
@@ -328,21 +331,48 @@ def inferTypeDetailed : Ctx → Tm → Except TypeDiag Ty
   | ctx, .catalogue1 id a =>
       match inferTypeDetailed ctx a with
       | .error e => .error e
-      | .ok _ =>
+      | .ok ta =>
           let sig := fullSignatureFor id
-          if sig.arity = 1 then .ok (.catalogue sig.kind) else .error (.expectedFunction (.catalogue sig.kind))
+          if sig.arity = 1 then
+            let expected := catalogueExpectedArgTy sig.kind 0
+            if ta = expected then .ok (.catalogue sig.kind)
+            else .error (.argumentMismatch expected ta)
+          else
+            .error (.expectedFunction (.catalogue sig.kind))
   | ctx, .catalogue2 id a b =>
       match inferTypeDetailed ctx a, inferTypeDetailed ctx b with
-      | .ok _, .ok _ =>
+      | .ok ta, .ok tb =>
           let sig := fullSignatureFor id
-          if sig.arity = 2 then .ok (.catalogue sig.kind) else .error (.expectedFunction (.catalogue sig.kind))
+          if sig.arity = 2 then
+            let expectedA := catalogueExpectedArgTy sig.kind 0
+            let expectedB := catalogueExpectedArgTy sig.kind 1
+            if ta = expectedA then
+              if tb = expectedB then .ok (.catalogue sig.kind)
+              else .error (.argumentMismatch expectedB tb)
+            else
+              .error (.argumentMismatch expectedA ta)
+          else
+            .error (.expectedFunction (.catalogue sig.kind))
       | .error e, _ => .error e
       | _, .error e => .error e
   | ctx, .catalogue3 id a b c =>
       match inferTypeDetailed ctx a, inferTypeDetailed ctx b, inferTypeDetailed ctx c with
-      | .ok _, .ok _, .ok _ =>
+      | .ok ta, .ok tb, .ok tc =>
           let sig := fullSignatureFor id
-          if sig.arity = 3 then .ok (.catalogue sig.kind) else .error (.expectedFunction (.catalogue sig.kind))
+          if sig.arity = 3 then
+            let expectedA := catalogueExpectedArgTy sig.kind 0
+            let expectedB := catalogueExpectedArgTy sig.kind 1
+            let expectedC := catalogueExpectedArgTy sig.kind 2
+            if ta = expectedA then
+              if tb = expectedB then
+                if tc = expectedC then .ok (.catalogue sig.kind)
+                else .error (.argumentMismatch expectedC tc)
+              else
+                .error (.argumentMismatch expectedB tb)
+            else
+              .error (.argumentMismatch expectedA ta)
+          else
+            .error (.expectedFunction (.catalogue sig.kind))
       | .error e, _, _ => .error e
       | _, .error e, _ => .error e
       | _, _, .error e => .error e

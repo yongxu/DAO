@@ -169,6 +169,59 @@ def parseNumeral (s : String) : Option Nat :=
 
 /-! ## § 4  Parser -/
 
+def isNopAlias : String → Bool
+  | "不動" | "静" | "靜" | "恒" | "常" | "守" | "定"
+  | "止" | "安" | "寂" | "息" | "平" | "和" | "一"
+  | "正" | "立" | "成" | "還" | "还" => true
+  | _ => false
+
+def isSetShiAlias : String → Bool
+  | "設時" | "设" | "設" | "置" | "置时" | "置時" | "定时" | "定時"
+  | "定" | "令" | "更" | "易" | "移" | "转" | "轉" | "调" | "調"
+  | "时" | "時" => true
+  | _ => false
+
+def isFlipYaoAlias : String → Bool
+  | "翻" | "動" | "动" | "動爻" | "动爻" | "變" | "变" | "變爻" | "变爻"
+  | "易" | "改" | "反" | "转" | "轉" | "换" | "換" | "倒" | "更" => true
+  | _ => false
+
+def isBranchYaoEqAlias : String → Bool
+  | "侔" | "比" | "同" | "等" | "伦" | "倫" | "校" | "较" | "較" => true
+  | _ => false
+
+def isBranchShiEqAlias : String → Bool
+  | "会" | "會" | "侔" | "比" | "同" | "等" => true
+  | _ => false
+
+/-- Alias parser for the newer single-glyph/default instruction names.
+    Canonical tokens are still handled by the direct clauses below, so the
+    pretty-printer round-trip remains stable. -/
+def parseInstrAlias (op : String) (rest : List Tok) : Option (YiInstr × List Tok) :=
+  match rest with
+  | .cjk yi :: .cjk yj :: .cjk "至" :: .cjk n :: rest' =>
+      if isBranchYaoEqAlias op then
+        match parseYao yi, parseYao yj, parseNumeral n with
+        | some i, some j, some t => some (.branchYaoEq i j t, rest')
+        | _, _, _ => none
+      else none
+  | .cjk s :: .cjk "至" :: .cjk n :: rest' =>
+      if isBranchShiEqAlias op then
+        match parseShi s, parseNumeral n with
+        | some shi, some t => some (.branchShiEq shi t, rest')
+        | _, _ => none
+      else none
+  | .cjk a :: rest' =>
+      match (if isSetShiAlias op then parseShi a else none) with
+      | some shi => some (.setShi shi, rest')
+      | none =>
+          match (if isFlipYaoAlias op then parseYao a else none) with
+          | some yao => some (.flipYao yao, rest')
+          | none =>
+              if isNopAlias op then some (.nop, rest) else none
+  | _ =>
+      if isNopAlias op then some (.nop, rest) else none
+
 /-- 解析单条指令。返回 (指令, 剩余 tokens)。结构匹配 13 主字。 -/
 def parseInstr : List Tok → Option (YiInstr × List Tok)
   | .cjk "不动" :: rest => some (.nop, rest)
@@ -199,6 +252,7 @@ def parseInstr : List Tok → Option (YiInstr × List Tok)
       match parseNumeral n with
       | some t => some (.jump t, rest)
       | none   => none
+  | .cjk op :: rest => parseInstrAlias op rest
   | _ => none
 
 /-- Fuel-bounded program parser. Public `parseProg` supplies `toks.length` fuel. -/
@@ -228,6 +282,19 @@ def parseProg (toks : List Tok) : Option (List YiInstr) :=
 /-- 顶层入口：String → Option (List YiInstr)。 -/
 def «解程» (s : String) : Option (List YiInstr) :=
   (lex s).bind parseProg
+
+example : «解程» "«静»" = some [.nop] := by native_decide
+example : «解程» "«一»" = some [.nop] := by native_decide
+example : «解程» "«置» «今»" = some [.setShi .jin] := by native_decide
+example : «解程» "«翻» «三爻»" = some [.flipYao ⟨2, by omega⟩] := by native_decide
+example :
+    «解程» "«侔» «三爻» «四爻» «至» «三»" =
+      some [.branchYaoEq ⟨2, by omega⟩ ⟨3, by omega⟩ 3] := by
+  native_decide
+example :
+    «解程» "«会» «今» «至» «三»" =
+      some [.branchShiEq .jin 3] := by
+  native_decide
 
 /-! ## § 5  Pretty-printer (印) -/
 
