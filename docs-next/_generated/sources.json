@@ -1,5 +1,5 @@
 {
-  "count": 388,
+  "count": 390,
   "include_archive": false,
   "sources": [
     {
@@ -99,9 +99,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 2796,
+      "bytes": 2843,
       "path": "docs-next/10_formal_形式/modern.md",
-      "sha256": "bcb03216803f643a2d53ae6daa0793bce915efafedc8024b18be03fd9e22a6fe",
+      "sha256": "f40afb34aea962c8d7f54074f350eef25bd9dcc89a4903e36a5a84e99b7cd8ae",
       "suffix": ".md"
     },
     {
@@ -351,9 +351,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 8022,
+      "bytes": 8095,
       "path": "formal/SSBX.lean",
-      "sha256": "8e2833bc61e79a9cd62801896d3ef78500b3cfc5728e32095a98cd902cd48f32",
+      "sha256": "92bbc901815ce38f929129d6643fc82a8a2b354494c0900ff01b2d02452046fb",
       "suffix": ".lean"
     },
     {
@@ -888,6 +888,12 @@
       "bytes": 6586,
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportBridge.lean",
       "sha256": "6575908692a178b475cc0081f9950a041c59f7df354616c34cee7bba374e21a4",
+      "suffix": ".lean"
+    },
+    {
+      "bytes": 5048,
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityStepwiseUnificationBridge.lean",
+      "sha256": "9ce719d8ae973d4eac895f5363564d6ec3d595fd9e27052157edbd55036e8b40",
       "suffix": ".lean"
     },
     {
@@ -1623,15 +1629,15 @@
       "suffix": ".md"
     },
     {
-      "bytes": 43779,
+      "bytes": 45659,
       "path": "formal/SSBX/notes/markov-causal-bridge-plan.md",
-      "sha256": "46a1efd5068e7d3caaf77843b30de62b3bafee5b5330246e24d34584a4df3090",
+      "sha256": "227aec7730a91547c312c64e57943d51d49cb32cd228e1bbb3d420cea5ecf5e3",
       "suffix": ".md"
     },
     {
-      "bytes": 30894,
+      "bytes": 31925,
       "path": "formal/SSBX/notes/markov-causal-bridge-verification-plan.md",
-      "sha256": "517da3c7c339e3877b084126ea1d36e923e1755d0b8d7d85dcd8150b6e666e0b",
+      "sha256": "88ac0bde025f614a297bfc8d5be0d7d26006bb4aa33bf3a6d9bd1c28dc1d193e",
       "suffix": ".md"
     },
     {
@@ -1683,9 +1689,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 60297,
+      "bytes": 61321,
       "path": "formal/SSBX/notes/unification-stepwise-plan.md",
-      "sha256": "4e301b01b5bd1422d9c08b07a347767405eb0be9067eee0b3b160fc2b090ca01",
+      "sha256": "de90daefe52bfc6b8616edb5c3081dcd93e3adb29d22477ddf5ff15290bafadc",
       "suffix": ".md"
     },
     {
@@ -1887,9 +1893,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 57816,
+      "bytes": 59300,
       "path": "义理/Markov因果桥 · 大统一最小验证构造.md",
-      "sha256": "b6fda8a26586a820b9a2c4e69cebbf170aa6d1414248740047946268feb02d6b",
+      "sha256": "4e609f4161f7a4582cd905c77f8a5b5d7955fe463be62ac32854988cecebf0d8",
       "suffix": ".md"
     },
     {
@@ -1983,9 +1989,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 5665,
+      "bytes": 5772,
       "path": "义理/作用量相位律候选 · Markov桥S5r.md",
-      "sha256": "d65f942703dc1ceccf9441f8e6f0a82eb9413c952f38e1d5837cb808e77fd931",
+      "sha256": "4e749a7179820bbcfbf51e9c65b17e169fd5f9ec5fbc376be963ad0382f3b09c",
       "suffix": ".md"
     },
     {
@@ -2256,6 +2262,12 @@
       "bytes": 17043,
       "path": "义理/边界/量的边界 · 数测度.md",
       "sha256": "0f58baf44cb1cd3c81848c7d73e2b580cc89fa97d38c186206f14ebdec5c6b06",
+      "suffix": ".md"
+    },
+    {
+      "bytes": 5516,
+      "path": "义理/逐步统一候选摘要 · Markov桥S8.md",
+      "sha256": "b895ce41c7f953dbbbcd045e1201ffb42ced0af53faa1b02484f59d30e74c16b",
       "suffix": ".md"
     },
     {

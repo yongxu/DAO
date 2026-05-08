@@ -1004,6 +1004,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityPathQuotientBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportAlgebraBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityStepwiseUnificationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityTwoRouteEnumerationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityWenBoundary.lean"
@@ -1043,6 +1044,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityPathQuotientBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportAlgebraBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityStepwiseUnificationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityTwoRouteEnumerationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityWenBoundary.lean"
@@ -6332,6 +6334,48 @@
             "formal/SSBX/Foundation/Modern/LiangBoundary.lean"
           ],
           "symbol": "quantity_boundary_complete"
+        }
+      ]
+    },
+    {
+      "document": "义理/逐步统一候选摘要 · Markov桥S8.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityStepwiseUnificationBridge.lean"
+          ],
+          "symbol": "ClosedByStepwiseS5r"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityStepwiseUnificationBridge.lean"
+          ],
+          "symbol": "PendingBeyondS5r"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityStepwiseUnificationBridge.lean"
+          ],
+          "symbol": "gridProcess"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityStepwiseUnificationBridge.lean"
+          ],
+          "symbol": "pending_boundary_not_closed_by_s5r"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityStepwiseUnificationBridge.lean"
+          ],
+          "symbol": "stepwise_unification_candidate_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityStepwiseUnificationBridge.lean"
+          ],
+          "symbol": "twoRouteQuotientSupport"
         }
       ]
     },

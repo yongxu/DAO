@@ -73,8 +73,8 @@
 | formal/SSBX/notes/PositionOperatorGraph.md | 0 | 5 |
 | formal/SSBX/notes/atom-naming.md | 0 | 0 |
 | formal/SSBX/notes/baguaWen-spec.md | 0 | 0 |
-| formal/SSBX/notes/markov-causal-bridge-plan.md | 27 | 1 |
-| formal/SSBX/notes/markov-causal-bridge-verification-plan.md | 26 | 20 |
+| formal/SSBX/notes/markov-causal-bridge-plan.md | 28 | 1 |
+| formal/SSBX/notes/markov-causal-bridge-verification-plan.md | 27 | 20 |
 | formal/SSBX/notes/math-axiom-map.md | 0 | 0 |
 | formal/SSBX/notes/metainterp-isa-gap.md | 0 | 0 |
 | formal/SSBX/notes/monad-root-plan.md | 2 | 3 |
@@ -168,6 +168,7 @@
 | 义理/边界/证的边界 · 命题系统证书.md | 0 | 6 |
 | 义理/边界/边界总图谱 · 知感行证名量测推.md | 0 | 10 |
 | 义理/边界/量的边界 · 数测度.md | 0 | 15 |
+| 义理/逐步统一候选摘要 · Markov桥S8.md | 0 | 6 |
 | 义理/道桥接_ProcessAligned_Dao_ShengshengBuxi.md | 2 | 0 |
 | 义理/量子与相对论整合方向 · 从桥到新理论.md | 0 | 8 |
 | 义理/量子与相对论直统一不可能 · 当前语言NoGo.md | 0 | 15 |

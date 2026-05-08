@@ -1,6 +1,6 @@
 # Markov因果桥 · 大统一最小验证构造
 
-**前置**：[量子与相对论整合方向 · 从桥到新理论](量子与相对论整合方向%20·%20从桥到新理论.md) · [文构造完备与直相加边界](文构造完备与直相加边界.md) · [有限概率核接口 · Markov桥S2](有限概率核接口%20·%20Markov桥S2.md) · [路径组合与因果约束 · Markov桥S3](路径组合与因果约束%20·%20Markov桥S3.md) · [经典Markov与量子振幅分层 · Markov桥S4](经典Markov与量子振幅分层%20·%20Markov桥S4.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [非零路径振幅候选 · Markov桥S5b](非零路径振幅候选%20·%20Markov桥S5b.md) · [双路径相消候选 · Markov桥S5c](双路径相消候选%20·%20Markov桥S5c.md) · [离散相位标记候选 · Markov桥S5d](离散相位标记候选%20·%20Markov桥S5d.md) · [离散作用量相位候选 · Markov桥S5e](离散作用量相位候选%20·%20Markov桥S5e.md) · [有限路径族求和候选 · Markov桥S5f](有限路径族求和候选%20·%20Markov桥S5f.md) · [有限路径族求和代数候选 · Markov桥S5g](有限路径族求和代数候选%20·%20Markov桥S5g.md) · [端点索引路径族候选 · Markov桥S5h](端点索引路径族候选%20·%20Markov桥S5h.md) · [端点支撑规范化候选 · Markov桥S5i](端点支撑规范化候选%20·%20Markov桥S5i.md) · [双路径枚举候选 · Markov桥S5j](双路径枚举候选%20·%20Markov桥S5j.md) · [路径身份键候选 · Markov桥S5k](路径身份键候选%20·%20Markov桥S5k.md) · [有限键商候选 · Markov桥S5l](有限键商候选%20·%20Markov桥S5l.md) · [路径商类候选 · Markov桥S5m](路径商类候选%20·%20Markov桥S5m.md) · [规范代表元候选 · Markov桥S5n](规范代表元候选%20·%20Markov桥S5n.md) · [商支撑枚举候选 · Markov桥S5o](商支撑枚举候选%20·%20Markov桥S5o.md) · [商支撑代数候选 · Markov桥S5p](商支撑代数候选%20·%20Markov桥S5p.md) · [观测账本候选 · Markov桥S5q](观测账本候选%20·%20Markov桥S5q.md) · [作用量相位律候选 · Markov桥S5r](作用量相位律候选%20·%20Markov桥S5r.md) · [量子与相对论直统一不可能 · 当前语言NoGo](量子与相对论直统一不可能%20·%20当前语言NoGo.md) · [`markov-causal-bridge-plan`](../formal/SSBX/notes/markov-causal-bridge-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
+**前置**：[量子与相对论整合方向 · 从桥到新理论](量子与相对论整合方向%20·%20从桥到新理论.md) · [文构造完备与直相加边界](文构造完备与直相加边界.md) · [有限概率核接口 · Markov桥S2](有限概率核接口%20·%20Markov桥S2.md) · [路径组合与因果约束 · Markov桥S3](路径组合与因果约束%20·%20Markov桥S3.md) · [经典Markov与量子振幅分层 · Markov桥S4](经典Markov与量子振幅分层%20·%20Markov桥S4.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [非零路径振幅候选 · Markov桥S5b](非零路径振幅候选%20·%20Markov桥S5b.md) · [双路径相消候选 · Markov桥S5c](双路径相消候选%20·%20Markov桥S5c.md) · [离散相位标记候选 · Markov桥S5d](离散相位标记候选%20·%20Markov桥S5d.md) · [离散作用量相位候选 · Markov桥S5e](离散作用量相位候选%20·%20Markov桥S5e.md) · [有限路径族求和候选 · Markov桥S5f](有限路径族求和候选%20·%20Markov桥S5f.md) · [有限路径族求和代数候选 · Markov桥S5g](有限路径族求和代数候选%20·%20Markov桥S5g.md) · [端点索引路径族候选 · Markov桥S5h](端点索引路径族候选%20·%20Markov桥S5h.md) · [端点支撑规范化候选 · Markov桥S5i](端点支撑规范化候选%20·%20Markov桥S5i.md) · [双路径枚举候选 · Markov桥S5j](双路径枚举候选%20·%20Markov桥S5j.md) · [路径身份键候选 · Markov桥S5k](路径身份键候选%20·%20Markov桥S5k.md) · [有限键商候选 · Markov桥S5l](有限键商候选%20·%20Markov桥S5l.md) · [路径商类候选 · Markov桥S5m](路径商类候选%20·%20Markov桥S5m.md) · [规范代表元候选 · Markov桥S5n](规范代表元候选%20·%20Markov桥S5n.md) · [商支撑枚举候选 · Markov桥S5o](商支撑枚举候选%20·%20Markov桥S5o.md) · [商支撑代数候选 · Markov桥S5p](商支撑代数候选%20·%20Markov桥S5p.md) · [观测账本候选 · Markov桥S5q](观测账本候选%20·%20Markov桥S5q.md) · [作用量相位律候选 · Markov桥S5r](作用量相位律候选%20·%20Markov桥S5r.md) · [逐步统一候选摘要 · Markov桥S8](逐步统一候选摘要%20·%20Markov桥S8.md) · [量子与相对论直统一不可能 · 当前语言NoGo](量子与相对论直统一不可能%20·%20当前语言NoGo.md) · [`markov-causal-bridge-plan`](../formal/SSBX/notes/markov-causal-bridge-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
 **Lean 锚点**：
 
@@ -39,6 +39,7 @@
 | S5p 商支撑代数候选 | `Foundation/Modern/QuantumRelativityQuotientSupportAlgebraBridge.lean` | `quotient_support_algebra_bridge_summary` 关闭 quotient-support algebra 与 cancellation stability | `machineChecked` |
 | S5q 观测账本候选 | `Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean` | `observable_ledger_bridge_summary` 关闭 pending observable ledger boundary | `machineChecked` |
 | S5r 作用量相位律候选 | `Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean` | `action_phase_law_bridge_summary` 关闭 finite action-to-phase law candidate | `machineChecked` |
+| S8 逐步统一候选摘要 | `Foundation/Modern/QuantumRelativityStepwiseUnificationBridge.lean` | `stepwise_unification_candidate_summary` 合取当前已关闭结构与 pending boundary list | `machineChecked` |
 
 > 本文回答第三个问题：
 >
@@ -79,11 +80,12 @@
   + 商支撑代数候选 witness
   + 观测账本候选 witness
   + 作用量相位律候选 witness
+  + 逐步统一候选摘要
   + 仍服从 tagged physical-language noncollapse
   + 不否定 192 × 371 文构造覆盖
 ```
 
-这不是量子引力理论，也不是“大统一已经完成”。它只把上一层的“中介桥方向”推进为一个候选最小构造：同一个有限过程对象可以被双读，终端状态可以同时被读为测量结果与事件记录，非终端 Markov 行可带有限分母候选，显式 path witness 可以组合成可达 / 因果读法，classical Markov 层与 quantum amplitude/channel candidate 层被形式地区分，并且 path amplitude、相消 witness、Born-shaped boundary、非零 path-amplitude witness、two-path finite cancellation witness、discrete phase-label witness、edge-action phase accumulation witness、finite path-family sum witness、finite path-sum algebra witness、endpoint-indexed finite family witness、endpoint support normalization witness、two-route toy enumeration witness、visible path-key witness、finite visible-key quotient candidate、visible-key quotient class witness、two-route canonical representative witness、finite quotient-support witness、quotient-support algebra witness、pending observable ledger witness 与 finite action-to-phase law witness 可以作为候选接口被记录。
+这不是量子引力理论，也不是“大统一已经完成”。它只把上一层的“中介桥方向”推进为一个候选最小构造：同一个有限过程对象可以被双读，终端状态可以同时被读为测量结果与事件记录，非终端 Markov 行可带有限分母候选，显式 path witness 可以组合成可达 / 因果读法，classical Markov 层与 quantum amplitude/channel candidate 层被形式地区分，并且 path amplitude、相消 witness、Born-shaped boundary、非零 path-amplitude witness、two-path finite cancellation witness、discrete phase-label witness、edge-action phase accumulation witness、finite path-family sum witness、finite path-sum algebra witness、endpoint-indexed finite family witness、endpoint support normalization witness、two-route toy enumeration witness、visible path-key witness、finite visible-key quotient candidate、visible-key quotient class witness、two-route canonical representative witness、finite quotient-support witness、quotient-support algebra witness、pending observable ledger witness 与 finite action-to-phase law witness 可以作为候选接口被记录；S8 把这些已关闭结构的当前核心合取为 stepwise summary theorem，并显式列出未关闭边界。
 
 公开摘要为：
 
@@ -138,6 +140,7 @@ theorem markov_causal_bridge_summary :
 | quotient-support algebra candidate | `machineChecked` typed skeleton | `quotient_support_algebra_bridge_summary` 证明 append / permutation / reverse stability、duplicate zero-sum cancellation 与 two-route algebraic stability |
 | observable ledger candidate | `machineChecked` typed skeleton | `observable_ledger_bridge_summary` 证明 two-route cancellation 可登记为 pending observable entry，且 pending entry 不等于 empirical closure |
 | finite action-to-phase law candidate | `machineChecked` typed skeleton | `action_phase_law_bridge_summary` 证明 action index `0/1` 导出 `1/-1`，在 quotient support 上相消并接回 pending ledger |
+| stepwise unification candidate summary | `machineChecked` theorem | `stepwise_unification_candidate_summary` 合取当前 finite bridge / probability / grid / action-phase / ledger boundaries |
 | sum-one 概率律 / Born rule | 未纳入本轮 | S2 尚未证明行权重求和等于分母，也没有振幅平方律 |
 | 真实干涉、真实 quantum channel law、Born rule 推导 | 未纳入本轮 | S5/S5b/S5c/S5d/S5e/S5f/S5g/S5h/S5i/S5j/S5k/S5l/S5m/S5n/S5o/S5p/S5q/S5r 已开候选接口；还需要 unitary/CPTP、连续相位/作用量动力学、general choice function、general all-path enumeration、一般 path integral、可测预言 theorem 或 Markov 到 Born 的推导 |
 | Lorentzian geometry / 度规恢复 | 未纳入本轮 | 初版只保留事件与可达因果接口 |
@@ -265,6 +268,8 @@ typed skeleton / machineChecked in this branch：
 | action-phase support cancellation | `two_route_action_phase_support_amplitude_cancels`、`two_route_action_phase_support_born_weight_zero` | `machineChecked` theorem |
 | action-phase ledger entry | `twoRouteActionPhaseObservableLedgerEntry`、`two_route_action_phase_observable_ledger_not_empirically_closed` | `machineChecked` theorem |
 | S5r 公开摘要 | `action_phase_law_bridge_summary` | `machineChecked` theorem |
+| pending boundary list | `PendingBeyondS5r`、`ClosedByStepwiseS5r` | `machineChecked` typed skeleton |
+| S8 公开摘要 | `stepwise_unification_candidate_summary` | `machineChecked` theorem |
 
 未纳入本轮：
 
@@ -279,7 +284,7 @@ typed skeleton / machineChecked in this branch：
 | 度规与曲率 | 未纳入本轮 | 需要几何极限或额外重建结构 |
 | 经验闭合 | 未纳入本轮 | S5q 已有 pending observable ledger entry；尚无外部数据、误差模型、阈值与数据判准 |
 
-正面闭合范围：**Markov-因果桥的最小 typed skeleton、S2 有限概率核接口、S3 路径/因果约束、S4 Markov/amplitude-channel 分层候选、S5 interference/Born-shaped candidate、S5b nonzero path-amplitude candidate、S5c two-path finite cancellation candidate、S5d discrete phase-label candidate、S5e discrete edge-action phase candidate、S5f finite path-family sum candidate、S5g finite path-sum algebra candidate、S5h endpoint-indexed finite family candidate、S5i endpoint support normalization candidate、S5j two-route toy enumeration candidate、S5k visible path-key candidate、S5l finite visible-key quotient candidate、S5m visible-key quotient class candidate、S5n displayed canonical representative candidate、S5o finite quotient-support candidate、S5p quotient-support algebra candidate、S5q observable ledger candidate boundary 与 S5r finite action-to-phase law candidate 已在 Lean 中关闭。它已经把有限过程双读、测量-事件对齐、同根非同一、tagged-language noncollapse 保持、非终端行分母非零、权重上界、path witness 组合、一步 no-self-loop、layer separation、channel 到 S2 边界的投影、path amplitude candidate、相消 witness、`ampProb` boundary、非零候选振幅到 valid / Reachable / causalBefore 的边界、同端点不同中间态两路径候选相消、`zero/pi` 离散相位标签到 `1/-1` 的候选导出、edge phase increments 到 path phase 的累积、relative phase `pi`、edge-action-induced cancellation、finite same-endpoint path family sum、append / permutation / reverse stability、endpoint-indexed conversion、amplitude-complete filter preservation、duplicate handling boundary、toy source/target middle enumeration、visible path-key boundary、toy source/target key completeness、key-compatible amplitude descent、finite key duplicate compensation、two-route key-level cancellation、quotient class construction、two-route quotient completeness、displayed representative completeness、quotient-support cancellation、quotient-support algebraic stability、pending observable ledger boundary 与 finite action index law 都压成了可检查 theorem。**
+正面闭合范围：**Markov-因果桥的最小 typed skeleton、S2 有限概率核接口、S3 路径/因果约束、S4 Markov/amplitude-channel 分层候选、S5 interference/Born-shaped candidate、S5b nonzero path-amplitude candidate、S5c two-path finite cancellation candidate、S5d discrete phase-label candidate、S5e discrete edge-action phase candidate、S5f finite path-family sum candidate、S5g finite path-sum algebra candidate、S5h endpoint-indexed finite family candidate、S5i endpoint support normalization candidate、S5j two-route toy enumeration candidate、S5k visible path-key candidate、S5l finite visible-key quotient candidate、S5m visible-key quotient class candidate、S5n displayed canonical representative candidate、S5o finite quotient-support candidate、S5p quotient-support algebra candidate、S5q observable ledger candidate boundary、S5r finite action-to-phase law candidate 与 S8 stepwise summary 已在 Lean 中关闭。它已经把有限过程双读、测量-事件对齐、同根非同一、tagged-language noncollapse 保持、非终端行分母非零、权重上界、path witness 组合、一步 no-self-loop、layer separation、channel 到 S2 边界的投影、path amplitude candidate、相消 witness、`ampProb` boundary、非零候选振幅到 valid / Reachable / causalBefore 的边界、同端点不同中间态两路径候选相消、`zero/pi` 离散相位标签到 `1/-1` 的候选导出、edge phase increments 到 path phase 的累积、relative phase `pi`、edge-action-induced cancellation、finite same-endpoint path family sum、append / permutation / reverse stability、endpoint-indexed conversion、amplitude-complete filter preservation、duplicate handling boundary、toy source/target middle enumeration、visible path-key boundary、toy source/target key completeness、key-compatible amplitude descent、finite key duplicate compensation、two-route key-level cancellation、quotient class construction、two-route quotient completeness、displayed representative completeness、quotient-support cancellation、quotient-support algebraic stability、pending observable ledger boundary、finite action index law 与 current stepwise summary 都压成了可检查 theorem。**
 
 尚未闭合的范围同样应实事求是列出：sum-one 概率律、Born rule 从 Markov 桥的推导、真实干涉律、真实 quantum channel law、完整因果偏序、度规恢复、数据校准或经验闭合仍需要后续结构；这不削弱 S5c/S5d/S5e/S5f/S5g/S5h/S5i/S5j/S5k/S5l/S5m/S5n/S5o/S5p/S5q/S5r 的正面推进，只防止把候选边界误读成已完成的物理定律。同时，本轮结论不否定 `192 × 371` 文构造覆盖。
 
@@ -468,6 +473,7 @@ theorem markov_bridge_same_one_not_identity :
 | 商支撑代数候选 | quotient-support append / permutation / reverse / duplicate cancellation stability | S5p 已关闭候选接口 |
 | 观测账本候选 | two-route quotient-support cancellation 登记为 pending observable ledger entry | S5q 已关闭候选接口 |
 | 作用量相位律候选 | finite action index `0/1` 导出 `1/-1`，并在 quotient support 上相消 | S5r 已关闭候选接口 |
+| 逐步统一候选摘要 | 当前已关闭 finite bridge / probability / grid / action-phase / ledger boundaries 的合取摘要 | S8 已关闭当前摘要 |
 | 真实干涉律 | 一般 path integral、连续相位/作用量演化与可测相消 | 未纳入本轮 |
 | 因果局部性 | 下一步只依赖局部过去或邻域 | 未纳入本轮 |
 | 因果集接口 | 加入偏序、局部有限性与事件网络公理 | 未纳入本轮 |
@@ -502,6 +508,7 @@ theorem markov_bridge_same_one_not_identity :
 -> quotient-support algebra candidate
 -> observable ledger candidate
 -> finite action-to-phase law candidate
+-> stepwise unification candidate summary
 -> 连续相位/作用量律 / 一般 path integral / 真实干涉律 / 真实 channel law
 -> 几何与经验接口
 ```
@@ -548,6 +555,7 @@ theorem markov_bridge_same_one_not_identity :
 | 2026-05-08 | quotient-support algebra candidate | failure retained / success | 新增 `QuantumRelativityQuotientSupportAlgebraBridge.lean` 与《商支撑代数候选 · Markov桥S5p》；第一次 build 因显式 `twoRouteProcess` 类型标注解析到不同 namespace 失败，修正后关闭 append / permutation / reverse stability、duplicate zero-sum cancellation 与 two-route algebraic stability |
 | 2026-05-09 | observable ledger candidate boundary | success | 新增 `QuantumRelativityObservableLedgerBridge.lean` 与《观测账本候选 · Markov桥S5q》，关闭 pending observable ledger entry、zero sum/weight 与 pending-not-empirically-closed boundary |
 | 2026-05-09 | finite action-to-phase law candidate | failure retained / success | 新增 `QuantumRelativityActionPhaseLawBridge.lean` 与《作用量相位律候选 · Markov桥S5r》；第一次 build 因 quotient readback 展开失败，修正后关闭 action index `0/1` 到 `1/-1` 的 quotient-support cancellation 与 pending ledger registration |
+| 2026-05-09 | stepwise unification candidate summary | failure retained / success | 新增 `QuantumRelativityStepwiseUnificationBridge.lean` 与《逐步统一候选摘要 · Markov桥S8》；第一次 build 因 namespace/defeq 解析失败，修正后关闭 current stepwise summary |
 
 ---
 
@@ -581,6 +589,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityQuotientSupportBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityQuotientSupportAlgebraBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityObservableLedgerBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityActionPhaseLawBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityStepwiseUnificationBridge
 lake build SSBX
 ```
 
@@ -592,4 +601,4 @@ git diff --check --
 
 一句话总结：
 
-> Markov 因果桥不是最终统一理论，而是把“测量结果成为事件”压成有限、双投影、可验证的 skeleton；本轮已关闭抽象桥、三状态 concrete witness、`71232` operator-cell grid bridge、S2 有限概率核分母接口、S3 路径/因果约束、S4 量子振幅-通道候选分层、S5 干涉 / Born-shaped 候选接口、S5b 非零路径振幅候选 witness、S5c 双路径有限相消候选、S5d 离散相位标记候选、S5e 离散作用量相位候选、S5f 有限路径族求和候选、S5g 有限路径族求和代数候选、S5h 端点索引路径族候选、S5i 端点支撑规范化候选、S5j 双路径枚举候选、S5k 路径身份键候选、S5l 有限键商候选、S5m 路径商类候选、S5n 规范代表元候选、S5o 商支撑枚举候选、S5p 商支撑代数候选、S5q 观测账本候选与 S5r 作用量相位律候选，下一轮处理更一般 action law、连续相位/作用量律、一般 path integral、真实干涉律、真实 channel law、完整因果集、几何极限与带数据校准的经验接口。
+> Markov 因果桥不是最终统一理论，而是把“测量结果成为事件”压成有限、双投影、可验证的 skeleton；本轮已关闭抽象桥、三状态 concrete witness、`71232` operator-cell grid bridge、S2 有限概率核分母接口、S3 路径/因果约束、S4 量子振幅-通道候选分层、S5 干涉 / Born-shaped 候选接口、S5b 非零路径振幅候选 witness、S5c 双路径有限相消候选、S5d 离散相位标记候选、S5e 离散作用量相位候选、S5f 有限路径族求和候选、S5g 有限路径族求和代数候选、S5h 端点索引路径族候选、S5i 端点支撑规范化候选、S5j 双路径枚举候选、S5k 路径身份键候选、S5l 有限键商候选、S5m 路径商类候选、S5n 规范代表元候选、S5o 商支撑枚举候选、S5p 商支撑代数候选、S5q 观测账本候选、S5r 作用量相位律候选与 S8 逐步统一候选摘要，后续处理更一般 action law、连续相位/作用量律、一般 path integral、真实干涉律、真实 channel law、完整因果集、几何极限与带数据校准的经验接口。
