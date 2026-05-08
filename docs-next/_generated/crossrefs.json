@@ -982,32 +982,73 @@
       "lean_path_mentions": [
         "formal/SSBX.lean",
         "formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityCanonicalRepresentativeBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityPathIdentityBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityPathQuotientBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportAlgebraBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityStepwiseUnificationBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityTwoRouteEnumerationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityWenBoundary.lean"
       ],
-      "symbol_hits": []
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Yi/Yi.lean"
+          ],
+          "symbol": "pi"
+        }
+      ]
     },
     {
       "document": "formal/SSBX/notes/markov-causal-bridge-verification-plan.md",
       "lean_path_mentions": [
-        "formal/SSBX.lean",
         "formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityCanonicalRepresentativeBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean",
-        "formal/SSBX/Foundation/Modern/QuantumRelativityIntegration.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityPathIdentityBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityPathQuotientBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportAlgebraBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityStepwiseUnificationBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityTwoRouteEnumerationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityWenBoundary.lean"
       ],
       "symbol_hits": [
@@ -1016,6 +1057,12 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityIntegration.lean"
           ],
           "symbol": "BridgeTerm"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean"
+          ],
+          "symbol": "action_phase_law_bridge_summary"
         },
         {
           "paths": [
@@ -1031,6 +1078,12 @@
         },
         {
           "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityCanonicalRepresentativeBridge.lean"
+          ],
+          "symbol": "canonical_representative_bridge_summary"
+        },
+        {
+          "paths": [
             "formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean"
           ],
           "symbol": "causalBefore"
@@ -1043,9 +1096,57 @@
         },
         {
           "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean"
+          ],
+          "symbol": "discrete_action_phase_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean"
+          ],
+          "symbol": "discrete_phase_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean"
+          ],
+          "symbol": "endpoint_indexed_path_family_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean"
+          ],
+          "symbol": "endpoint_support_normalization_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean"
+          ],
+          "symbol": "finite_key_quotient_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
+          ],
+          "symbol": "finite_path_sum_algebra_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean"
+          ],
+          "symbol": "finite_path_sum_bridge_summary"
+        },
+        {
+          "paths": [
             "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean"
           ],
           "symbol": "finite_probability_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
+          ],
+          "symbol": "finite_probability_normalization_bridge_summary"
         },
         {
           "paths": [
@@ -1067,21 +1168,9 @@
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean"
+            "formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean"
           ],
-          "symbol": "operator_cell_grid_markov_causal_bridge_summary"
-        },
-        {
-          "paths": [
-            "formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean"
-          ],
-          "symbol": "path_causal_bridge_summary"
-        },
-        {
-          "paths": [
-            "formal/SSBX/Foundation/Modern/QuantumRelativityWenBoundary.lean"
-          ],
-          "symbol": "wen_constructive_boundary_summary"
+          "symbol": "observable_ledger_bridge_summary"
         }
       ]
     },
@@ -1457,16 +1546,7 @@
     },
     {
       "document": "formal/SSBX/notes/unification-stepwise-plan.md",
-      "lean_path_mentions": [
-        "formal/SSBX.lean",
-        "formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean",
-        "formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean",
-        "formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean",
-        "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean",
-        "formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean",
-        "formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean",
-        "formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean"
-      ],
+      "lean_path_mentions": [],
       "symbol_hits": []
     },
     {
@@ -2523,20 +2603,7 @@
     },
     {
       "document": "义理/Markov因果桥 · 大统一最小验证构造.md",
-      "lean_path_mentions": [
-        "formal/SSBX.lean",
-        "formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean",
-        "formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean",
-        "formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean",
-        "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean",
-        "formal/SSBX/Foundation/Modern/QuantumRelativityIntegration.lean",
-        "formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean",
-        "formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean",
-        "formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean",
-        "formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean",
-        "formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean",
-        "formal/SSBX/Foundation/Modern/QuantumRelativityWenBoundary.lean"
-      ],
+      "lean_path_mentions": [],
       "symbol_hits": [
         {
           "paths": [
@@ -2576,6 +2643,12 @@
         },
         {
           "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean"
+          ],
+          "symbol": "action_phase_law_bridge_summary"
+        },
+        {
+          "paths": [
             "formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean"
           ],
           "symbol": "amplitude_channel_bridge_summary"
@@ -2594,6 +2667,12 @@
         },
         {
           "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityCanonicalRepresentativeBridge.lean"
+          ],
+          "symbol": "canonical_representative_bridge_summary"
+        },
+        {
+          "paths": [
             "formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean"
           ],
           "symbol": "causalBefore"
@@ -2606,57 +2685,45 @@
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean"
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean"
           ],
-          "symbol": "finite_probability_bridge_summary"
+          "symbol": "discrete_action_phase_bridge_summary"
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean"
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean"
           ],
-          "symbol": "interference_bridge_summary"
+          "symbol": "discrete_phase_bridge_summary"
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean"
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean"
           ],
-          "symbol": "markov_bridge_keeps_quantum_and_relativity_faces"
+          "symbol": "endpoint_indexed_path_family_bridge_summary"
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean"
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean"
           ],
-          "symbol": "markov_bridge_not_direct_language_addition"
+          "symbol": "endpoint_support_normalization_bridge_summary"
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean"
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean"
           ],
-          "symbol": "markov_bridge_same_one_not_identity"
+          "symbol": "finite_key_quotient_bridge_summary"
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean"
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
           ],
-          "symbol": "markov_causal_bridge_summary"
+          "symbol": "finite_path_sum_algebra_bridge_summary"
         },
         {
           "paths": [
-            "formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean"
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean"
           ],
-          "symbol": "measurement_event_alignment"
-        },
-        {
-          "paths": [
-            "formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean"
-          ],
-          "symbol": "measurement_event_bridge_term_keeps_faces"
-        },
-        {
-          "paths": [
-            "formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean"
-          ],
-          "symbol": "nonzero_path_amplitude_bridge_summary"
+          "symbol": "finite_path_sum_bridge_summary"
         }
       ]
     },
@@ -3239,6 +3306,84 @@
       ]
     },
     {
+      "document": "义理/作用量相位律候选 · Markov桥S5r.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean"
+          ],
+          "symbol": "QuotientActionPhaseLawCandidate"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean"
+          ],
+          "symbol": "actionIndexAmplitude"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean"
+          ],
+          "symbol": "actionIndexPhase"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean"
+          ],
+          "symbol": "action_phase_law_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean"
+          ],
+          "symbol": "quotientActionPhaseAmplitude"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean"
+          ],
+          "symbol": "twoRouteActionPhaseKeyAmplitudeCandidate"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean"
+          ],
+          "symbol": "twoRouteActionPhaseObservableLedgerEntry"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean"
+          ],
+          "symbol": "twoRouteQuotientActionPhaseLaw"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean"
+          ],
+          "symbol": "two_route_action_phase_support_amplitude_cancels"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean"
+          ],
+          "symbol": "two_route_action_phase_support_born_weight_zero"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean"
+          ],
+          "symbol": "two_route_lower_quotient_action_index"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean"
+          ],
+          "symbol": "two_route_upper_quotient_action_index"
+        }
+      ]
+    },
+    {
       "document": "义理/几何位 · 从元到形.md",
       "lean_path_mentions": [
         "formal/SSBX/Foundation/Eight/XingWei.lean"
@@ -3371,11 +3516,295 @@
       ]
     },
     {
+      "document": "义理/双路径枚举候选 · Markov桥S5j.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityTwoRouteEnumerationBridge.lean"
+          ],
+          "symbol": "endpointIndexedMiddleList"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityTwoRouteEnumerationBridge.lean"
+          ],
+          "symbol": "twoRouteSourceTargetMiddleEnumeration"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityTwoRouteEnumerationBridge.lean"
+          ],
+          "symbol": "two_route_endpoint_indexed_middle_list_eq"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityTwoRouteEnumerationBridge.lean"
+          ],
+          "symbol": "two_route_enumeration_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityTwoRouteEnumerationBridge.lean"
+          ],
+          "symbol": "two_route_source_target_middle_complete"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityTwoRouteEnumerationBridge.lean"
+          ],
+          "symbol": "two_route_source_target_middle_mem_endpoint_family"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityTwoRouteEnumerationBridge.lean"
+          ],
+          "symbol": "two_route_source_target_middle_upper_or_lower"
+        }
+      ]
+    },
+    {
+      "document": "义理/双路径相消候选 · Markov桥S5c.md",
+      "lean_path_mentions": [
+        "formal/SSBX.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean"
+      ],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean"
+          ],
+          "symbol": "SameEndpointTwoStepPair"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean"
+          ],
+          "symbol": "TwoStepPathAmplitudeCandidate"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean"
+          ],
+          "symbol": "TwoStepPathWitness"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean"
+          ],
+          "symbol": "discrete_action_phase_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean"
+          ],
+          "symbol": "discrete_phase_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean"
+          ],
+          "symbol": "twoRouteFiniteProbabilityKernel"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean"
+          ],
+          "symbol": "twoRoutePathAmplitudeSkeleton"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean"
+          ],
+          "symbol": "twoRouteProcess"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean"
+          ],
+          "symbol": "twoRouteQuantumChannelSkeleton"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean"
+          ],
+          "symbol": "two_path_interference_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean"
+          ],
+          "symbol": "two_route_cancelled_born_weight_zero"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean"
+          ],
+          "symbol": "two_route_lower_amplitude"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean"
+          ],
+          "symbol": "two_route_pair_amplitude_cancels"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean"
+          ],
+          "symbol": "two_route_paths_distinct_middle"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean"
+          ],
+          "symbol": "two_route_paths_same_endpoints"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean"
+          ],
+          "symbol": "two_route_upper_amplitude"
+        }
+      ]
+    },
+    {
+      "document": "义理/商支撑代数候选 · Markov桥S5p.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportAlgebraBridge.lean"
+          ],
+          "symbol": "appendQuotientSupports"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportAlgebraBridge.lean"
+          ],
+          "symbol": "duplicateQuotientSupport"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportAlgebraBridge.lean"
+          ],
+          "symbol": "quotient_support_algebra_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportAlgebraBridge.lean"
+          ],
+          "symbol": "quotient_support_amplitude_sum_append"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportAlgebraBridge.lean"
+          ],
+          "symbol": "quotient_support_amplitude_sum_perm"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportAlgebraBridge.lean"
+          ],
+          "symbol": "quotient_support_amplitude_sum_reverse"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportAlgebraBridge.lean"
+          ],
+          "symbol": "quotient_support_duplicate_born_weight_zero_of_canceling"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportAlgebraBridge.lean"
+          ],
+          "symbol": "quotient_support_duplicate_cancels_of_canceling"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportAlgebraBridge.lean"
+          ],
+          "symbol": "reverseQuotientSupport"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportAlgebraBridge.lean"
+          ],
+          "symbol": "two_route_double_quotient_support_amplitude_cancels"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportAlgebraBridge.lean"
+          ],
+          "symbol": "two_route_reversed_quotient_support_amplitude_cancels"
+        }
+      ]
+    },
+    {
+      "document": "义理/商支撑枚举候选 · Markov桥S5o.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportBridge.lean"
+          ],
+          "symbol": "quotientSupportAmplitudeSum"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportBridge.lean"
+          ],
+          "symbol": "quotientSupportBornWeight"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportBridge.lean"
+          ],
+          "symbol": "quotientSupportVisibleKeys"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportBridge.lean"
+          ],
+          "symbol": "quotient_support_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportBridge.lean"
+          ],
+          "symbol": "two_route_quotient_support_amplitude_sum_cancels"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportBridge.lean"
+          ],
+          "symbol": "two_route_quotient_support_born_weight_zero"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportBridge.lean"
+          ],
+          "symbol": "two_route_quotient_support_visible_keys_eq"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportBridge.lean"
+          ],
+          "symbol": "two_route_source_target_quotient_support_complete"
+        }
+      ]
+    },
+    {
       "document": "义理/干涉与测量律候选 · Markov桥S5.md",
       "lean_path_mentions": [
         "formal/SSBX.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean",
-        "formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean"
+        "formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean"
       ],
       "symbol_hits": [
         {
@@ -3440,6 +3869,18 @@
         },
         {
           "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean"
+          ],
+          "symbol": "discrete_action_phase_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean"
+          ],
+          "symbol": "discrete_phase_bridge_summary"
+        },
+        {
+          "paths": [
             "formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean"
           ],
           "symbol": "interference_bridge_summary"
@@ -3461,6 +3902,12 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean"
           ],
           "symbol": "operatorCellGridPathAmplitudeSkeleton"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean"
+          ],
+          "symbol": "two_path_interference_bridge_summary"
         }
       ]
     },
@@ -3552,6 +3999,84 @@
       ]
     },
     {
+      "document": "义理/有限概率归一化候选 · Markov桥S9.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
+          ],
+          "symbol": "FiniteRowSupportNormalization"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
+          ],
+          "symbol": "HasFiniteRowSupportNormalization"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
+          ],
+          "symbol": "PendingBeyondS9"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
+          ],
+          "symbol": "concreteFiniteRowSupportNormalization"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
+          ],
+          "symbol": "concrete_normalized_row_total_candidate_eq_one"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
+          ],
+          "symbol": "finite_probability_normalization_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
+          ],
+          "symbol": "normalizedMass"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
+          ],
+          "symbol": "normalizedRowTotalCandidate"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
+          ],
+          "symbol": "operatorCellGridFiniteRowSupportNormalization"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
+          ],
+          "symbol": "operatorCellGrid_normalized_row_total_candidate_eq_one"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
+          ],
+          "symbol": "pending_boundary_not_closed_by_s9"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean"
+          ],
+          "symbol": "rowWeightSum"
+        }
+      ]
+    },
+    {
       "document": "义理/有限概率核接口 · Markov桥S2.md",
       "lean_path_mentions": [
         "formal/SSBX.lean",
@@ -3630,6 +4155,276 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean"
           ],
           "symbol": "operatorCellGrid_nonterminal_row_normalizable"
+        }
+      ]
+    },
+    {
+      "document": "义理/有限路径族求和代数候选 · Markov桥S5g.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
+          ],
+          "symbol": "appendFiniteTwoStepPathFamilies"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean"
+          ],
+          "symbol": "endpoint_indexed_path_family_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean"
+          ],
+          "symbol": "endpoint_support_normalization_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
+          ],
+          "symbol": "finite_path_family_amplitude_sum_append"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
+          ],
+          "symbol": "finite_path_family_amplitude_sum_perm"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
+          ],
+          "symbol": "finite_path_family_amplitude_sum_reverse"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
+          ],
+          "symbol": "finite_path_family_append_cancels_of_canceling_summands"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
+          ],
+          "symbol": "finite_path_family_born_weight_append_boundary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
+          ],
+          "symbol": "finite_path_family_born_weight_perm"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
+          ],
+          "symbol": "finite_path_family_born_weight_reverse"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
+          ],
+          "symbol": "finite_path_sum_algebra_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
+          ],
+          "symbol": "reverseFiniteTwoStepPathFamily"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
+          ],
+          "symbol": "two_route_double_family_amplitude_cancels"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
+          ],
+          "symbol": "two_route_reversed_family_amplitude_cancels"
+        }
+      ]
+    },
+    {
+      "document": "义理/有限路径族求和候选 · Markov桥S5f.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean"
+          ],
+          "symbol": "FiniteTwoStepPathFamily"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean"
+          ],
+          "symbol": "HasFiniteTwoStepPathFamily"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean"
+          ],
+          "symbol": "finitePathFamilyAmplitudeSum"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean"
+          ],
+          "symbol": "finitePathFamilyBornWeight"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean"
+          ],
+          "symbol": "finite_path_family_born_boundary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
+          ],
+          "symbol": "finite_path_sum_algebra_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean"
+          ],
+          "symbol": "finite_path_sum_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean"
+          ],
+          "symbol": "twoRouteUpperLowerFamily"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean"
+          ],
+          "symbol": "two_route_family_paths_share_endpoints"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean"
+          ],
+          "symbol": "two_route_family_sum_eq_pair_sum"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean"
+          ],
+          "symbol": "two_route_finite_family_amplitude_cancels"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean"
+          ],
+          "symbol": "two_route_finite_family_born_weight_zero"
+        }
+      ]
+    },
+    {
+      "document": "义理/有限键商候选 · Markov桥S5l.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean"
+          ],
+          "symbol": "PathAmplitudeFactorsThroughKey"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean"
+          ],
+          "symbol": "TwoStepKeyAmplitudeCandidate"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean"
+          ],
+          "symbol": "TwoStepPathKeyEquivalent"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean"
+          ],
+          "symbol": "endpointIndexedKeyList"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean"
+          ],
+          "symbol": "endpoint_indexed_key_sum_eq_path_sum_of_factor"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean"
+          ],
+          "symbol": "finite_key_quotient_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean"
+          ],
+          "symbol": "key_equivalent_paths_amplitude_eq"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean"
+          ],
+          "symbol": "twoStepKeyAmplitudeSum"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean"
+          ],
+          "symbol": "two_route_duplicated_key_born_weight_zero"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean"
+          ],
+          "symbol": "two_route_key_amplitude_sum_cancels"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean"
+          ],
+          "symbol": "two_route_key_born_weight_zero"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean"
+          ],
+          "symbol": "two_step_key_amplitude_sum_duplicate"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean"
+          ],
+          "symbol": "two_step_key_duplicate_born_weight_zero_of_canceling"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean"
+          ],
+          "symbol": "two_step_path_key_equiv_refl"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean"
+          ],
+          "symbol": "two_step_path_key_equiv_symm"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean"
+          ],
+          "symbol": "two_step_path_key_equiv_trans"
         }
       ]
     },
@@ -3780,6 +4575,330 @@
             "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
           ],
           "symbol": "daoJudge"
+        }
+      ]
+    },
+    {
+      "document": "义理/离散作用量相位候选 · Markov桥S5e.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean"
+          ],
+          "symbol": "HasTwoStepEdgePhaseCandidate"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean"
+          ],
+          "symbol": "TwoStepEdgePhaseCandidate"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean"
+          ],
+          "symbol": "discretePhaseAdd"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean"
+          ],
+          "symbol": "discretePhaseRelative"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean"
+          ],
+          "symbol": "discrete_action_phase_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean"
+          ],
+          "symbol": "edgePhaseInducedTwoStepAmplitudeCandidate"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean"
+          ],
+          "symbol": "edgePhaseInducedTwoStepPhaseCandidate"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean"
+          ],
+          "symbol": "finite_path_sum_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean"
+          ],
+          "symbol": "twoRouteDiscreteActionCandidate"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean"
+          ],
+          "symbol": "twoRouteEdgePhase"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean"
+          ],
+          "symbol": "two_route_edge_action_cancelled_born_weight_zero"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean"
+          ],
+          "symbol": "two_route_edge_action_pair_amplitude_cancels"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean"
+          ],
+          "symbol": "two_route_edge_action_phase_difference"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean"
+          ],
+          "symbol": "two_route_lower_accumulated_phase"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean"
+          ],
+          "symbol": "two_route_upper_accumulated_phase"
+        }
+      ]
+    },
+    {
+      "document": "义理/离散相位标记候选 · Markov桥S5d.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean"
+          ],
+          "symbol": "DiscretePhase"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean"
+          ],
+          "symbol": "TwoStepPhaseCandidate"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean"
+          ],
+          "symbol": "discretePhaseAmplitude"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean"
+          ],
+          "symbol": "discrete_action_phase_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean"
+          ],
+          "symbol": "discrete_phase_amplitudes_cancel"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean"
+          ],
+          "symbol": "discrete_phase_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean"
+          ],
+          "symbol": "phaseInducedTwoStepAmplitudeCandidate"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean"
+          ],
+          "symbol": "two_route_lower_phase"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean"
+          ],
+          "symbol": "two_route_lower_phase_amplitude"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean"
+          ],
+          "symbol": "two_route_phase_cancelled_born_weight_zero"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean"
+          ],
+          "symbol": "two_route_phase_pair_amplitude_cancels"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean"
+          ],
+          "symbol": "two_route_upper_phase"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean"
+          ],
+          "symbol": "two_route_upper_phase_amplitude"
+        }
+      ]
+    },
+    {
+      "document": "义理/端点支撑规范化候选 · Markov桥S5i.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean"
+          ],
+          "symbol": "EndpointFamilyFilterComplete"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean"
+          ],
+          "symbol": "duplicateEndpointIndexedTwoStepPathFamily"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean"
+          ],
+          "symbol": "endpoint_indexed_family_duplicate_born_weight_zero_of_canceling"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean"
+          ],
+          "symbol": "endpoint_indexed_family_duplicate_cancels_of_canceling"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean"
+          ],
+          "symbol": "endpoint_indexed_family_duplicate_sum"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean"
+          ],
+          "symbol": "endpoint_indexed_family_filter_born_weight_eq_of_removed_zero"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean"
+          ],
+          "symbol": "endpoint_indexed_family_filter_sum_eq_of_removed_zero"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean"
+          ],
+          "symbol": "endpoint_support_normalization_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean"
+          ],
+          "symbol": "filterEndpointIndexedTwoStepPathFamily"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean"
+          ],
+          "symbol": "two_route_duplicated_endpoint_family_amplitude_cancels"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean"
+          ],
+          "symbol": "two_route_filtered_endpoint_family_amplitude_cancels"
+        }
+      ]
+    },
+    {
+      "document": "义理/端点索引路径族候选 · Markov桥S5h.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean"
+          ],
+          "symbol": "EndpointIndexedTwoStepPathFamily"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean"
+          ],
+          "symbol": "EndpointPair"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean"
+          ],
+          "symbol": "EndpointTwoStepPath"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean"
+          ],
+          "symbol": "HasEndpointIndexedTwoStepPathFamily"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean"
+          ],
+          "symbol": "endpointIndexedFamilyOfFinitePathFamily"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean"
+          ],
+          "symbol": "endpoint_indexed_family_born_weight_of_finite_family"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean"
+          ],
+          "symbol": "endpoint_indexed_family_sum_of_finite_family"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean"
+          ],
+          "symbol": "endpoint_indexed_path_family_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean"
+          ],
+          "symbol": "finite_family_has_endpoint_indexed_family"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean"
+          ],
+          "symbol": "two_route_endpoint_indexed_family_amplitude_cancels"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean"
+          ],
+          "symbol": "two_route_endpoint_indexed_family_born_weight_zero"
         }
       ]
     },
@@ -4077,6 +5196,174 @@
       "symbol_hits": []
     },
     {
+      "document": "义理/观测账本候选 · Markov桥S5q.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean"
+          ],
+          "symbol": "EmpiricallyClosed"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean"
+          ],
+          "symbol": "ObservableLedgerEntry"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean"
+          ],
+          "symbol": "ObservableLedgerPending"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean"
+          ],
+          "symbol": "observable_ledger_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean"
+          ],
+          "symbol": "pending_not_empirically_closed"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean"
+          ],
+          "symbol": "twoRouteCancellationObservableLedgerEntry"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean"
+          ],
+          "symbol": "two_route_observable_ledger_amplitude_zero"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean"
+          ],
+          "symbol": "two_route_observable_ledger_not_empirically_closed"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean"
+          ],
+          "symbol": "two_route_observable_ledger_weight_zero"
+        }
+      ]
+    },
+    {
+      "document": "义理/规范代表元候选 · Markov桥S5n.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityCanonicalRepresentativeBridge.lean"
+          ],
+          "symbol": "CanonicalRepresentativeFor"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityCanonicalRepresentativeBridge.lean"
+          ],
+          "symbol": "canonical_representative_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityCanonicalRepresentativeBridge.lean"
+          ],
+          "symbol": "two_route_lower_canonical_represents"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityCanonicalRepresentativeBridge.lean"
+          ],
+          "symbol": "two_route_source_target_canonical_representative_complete"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityCanonicalRepresentativeBridge.lean"
+          ],
+          "symbol": "two_route_source_target_has_canonical_representative"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityCanonicalRepresentativeBridge.lean"
+          ],
+          "symbol": "two_route_upper_canonical_represents"
+        }
+      ]
+    },
+    {
+      "document": "义理/路径商类候选 · Markov桥S5m.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathQuotientBridge.lean"
+          ],
+          "symbol": "TwoStepPathKeyQuotient"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathQuotientBridge.lean"
+          ],
+          "symbol": "path_quotient_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathQuotientBridge.lean"
+          ],
+          "symbol": "quotientKeyAmplitude"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathQuotientBridge.lean"
+          ],
+          "symbol": "quotientVisibleKey"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathQuotientBridge.lean"
+          ],
+          "symbol": "quotient_key_amplitude_matches_path_of_factor"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathQuotientBridge.lean"
+          ],
+          "symbol": "same_key_implies_same_quotient_class"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathQuotientBridge.lean"
+          ],
+          "symbol": "twoStepPathKeySetoid"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathQuotientBridge.lean"
+          ],
+          "symbol": "twoStepPathQuotientClass"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathQuotientBridge.lean"
+          ],
+          "symbol": "two_route_source_target_quotient_complete"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathQuotientBridge.lean"
+          ],
+          "symbol": "two_route_upper_lower_quotient_classes_distinct"
+        }
+      ]
+    },
+    {
       "document": "义理/路径组合与因果约束 · Markov桥S3.md",
       "lean_path_mentions": [
         "formal/SSBX.lean",
@@ -4155,6 +5442,66 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean"
           ],
           "symbol": "path_causal_bridge_summary"
+        }
+      ]
+    },
+    {
+      "document": "义理/路径身份键候选 · Markov桥S5k.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathIdentityBridge.lean"
+          ],
+          "symbol": "TwoStepPathKey"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathIdentityBridge.lean"
+          ],
+          "symbol": "path_identity_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathIdentityBridge.lean"
+          ],
+          "symbol": "twoRouteSourceTargetKeyEnumeration"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathIdentityBridge.lean"
+          ],
+          "symbol": "twoStepPathKey"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathIdentityBridge.lean"
+          ],
+          "symbol": "two_route_source_target_key_mem_enumeration"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathIdentityBridge.lean"
+          ],
+          "symbol": "two_route_upper_lower_keys_distinct"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathIdentityBridge.lean"
+          ],
+          "symbol": "two_step_path_key_eq_middle"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathIdentityBridge.lean"
+          ],
+          "symbol": "two_step_path_key_eq_start"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathIdentityBridge.lean"
+          ],
+          "symbol": "two_step_path_key_eq_stop"
         }
       ]
     },
@@ -5071,6 +6418,48 @@
       ]
     },
     {
+      "document": "义理/逐步统一候选摘要 · Markov桥S8.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityStepwiseUnificationBridge.lean"
+          ],
+          "symbol": "ClosedByStepwiseS5r"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityStepwiseUnificationBridge.lean"
+          ],
+          "symbol": "PendingBeyondS5r"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityStepwiseUnificationBridge.lean"
+          ],
+          "symbol": "gridProcess"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityStepwiseUnificationBridge.lean"
+          ],
+          "symbol": "pending_boundary_not_closed_by_s5r"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityStepwiseUnificationBridge.lean"
+          ],
+          "symbol": "stepwise_unification_candidate_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityStepwiseUnificationBridge.lean"
+          ],
+          "symbol": "twoRouteQuotientSupport"
+        }
+      ]
+    },
+    {
       "document": "义理/道桥接_ProcessAligned_Dao_ShengshengBuxi.md",
       "lean_path_mentions": [
         "formal/SSBX/Foundation/Core/Alignment.lean",
@@ -5372,7 +6761,10 @@
       "document": "义理/非零路径振幅候选 · Markov桥S5b.md",
       "lean_path_mentions": [
         "formal/SSBX.lean",
-        "formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean"
+        "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean"
       ],
       "symbol_hits": [
         {
@@ -5386,6 +6778,18 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean"
           ],
           "symbol": "concrete_prepared_measured_path_nonzero_amplitude"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean"
+          ],
+          "symbol": "discrete_action_phase_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean"
+          ],
+          "symbol": "discrete_phase_bridge_summary"
         },
         {
           "paths": [
@@ -5410,6 +6814,12 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean"
           ],
           "symbol": "nonzero_path_amplitude_implies_valid"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityTwoPathInterferenceBridge.lean"
+          ],
+          "symbol": "two_path_interference_bridge_summary"
         },
         {
           "paths": [
