@@ -255,6 +255,12 @@ CLI_CASES = [
     (["--operator", "S-16"], "executable note: 所: nominalization particle anchor as identity; no nominalization semantics"),
     (["--operator", "H-7"], "executable note: 名: name-assignment anchor as identity; no naming/reference semantics"),
     (["--operator", "P-19"], "executable note: 名: Mohist name-class anchor as identity; no naming/reference semantics"),
+    (["--operator", "SUN-12"], "executable note: 分合: parts/whole paired facet carrier via duplicate Hex; no military formation semantics"),
+    (["--operator", "ZA-4"], "executable note: 官分: role-partition paired facet carrier via duplicate Hex; no organ/office semantics"),
+    (["--operator", "X-5"], "executable note: 分: social role-partition paired facet carrier via duplicate Hex; no hierarchy/conflict semantics"),
+    (["--operator", "X-8"], "executable note: 別/别: social distinction paired facet carrier via duplicate Hex; no stratification semantics"),
+    (["--operator", "L-6"], "executable note: 二柄: paired-handle carrier via duplicate Hex; no reward/punishment governance semantics"),
+    (["--operator", "Y-9"], "executable note: 神: singleton Hex aggregate carrier; no emergence/coherence physiology semantics"),
     (["--operator", "R-1"], "executable note: exact Bool relation/predicate package"),
     (["--operator", "LIJ-9"], "executable note: exact Bool relation/predicate package"),
     (["--operator", "Y-2"], "compound surfaces: 五行"),
@@ -266,7 +272,7 @@ CLI_CASES = [
     (["--coverage"], "operators: 371 registered / 371 executable"),
     (["--coverage"], "operator forms: 371 ids with at least one form"),
     (["--help"], "wenyan-surface --json --operators [all|executable|known-not-executable|unsupported]"),
-    (["--help"], "298 exact/theorem-backed; 73 structural catalogue"),
+    (["--help"], "304 exact/theorem-backed; 67 structural catalogue"),
     (["--help"], "0 symbolic catalogue-shape"),
 ]
 
