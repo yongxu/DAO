@@ -74,8 +74,8 @@
 | formal/SSBX/notes/PositionOperatorGraph.md | 0 | 5 |
 | formal/SSBX/notes/atom-naming.md | 0 | 0 |
 | formal/SSBX/notes/baguaWen-spec.md | 0 | 0 |
-| formal/SSBX/notes/markov-causal-bridge-plan.md | 31 | 4 |
-| formal/SSBX/notes/markov-causal-bridge-verification-plan.md | 30 | 20 |
+| formal/SSBX/notes/markov-causal-bridge-plan.md | 32 | 4 |
+| formal/SSBX/notes/markov-causal-bridge-verification-plan.md | 31 | 20 |
 | formal/SSBX/notes/math-axiom-map.md | 0 | 0 |
 | formal/SSBX/notes/metainterp-isa-gap.md | 0 | 0 |
 | formal/SSBX/notes/monad-root-plan.md | 2 | 3 |
@@ -95,6 +95,7 @@
 | ziwen-spec.md | 0 | 11 |
 | 义理/A_经典易传.md | 0 | 1 |
 | 义理/B_六征体系.md | 0 | 0 |
+| 义理/Born分布边界候选 · Markov桥S12.md | 0 | 9 |
 | 义理/Born权重条件归一候选 · Markov桥S11.md | 0 | 10 |
 | 义理/C_实虚史真.md | 0 | 0 |
 | 义理/Cell192_BaguaTuring_理层全集与不完备.md | 5 | 0 |

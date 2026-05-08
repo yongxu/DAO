@@ -2,6 +2,8 @@
 
 **前置**：[归一化质量求和候选 · Markov桥S10](归一化质量求和候选%20·%20Markov桥S10.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
+**后继**：[Born分布边界候选 · Markov桥S12](Born分布边界候选%20·%20Markov桥S12.md) 已把本文件的 conditional list law 装入 finite probability distribution interface。
+
 **Lean 锚点**：
 
 | 层 | 文件 | 内容 | 状态 |
@@ -99,7 +101,7 @@ S11 第一次证明试探：
 
 ## 二 · 下一步
 
-S11 之后按当前顺序进入：
+S11 之后的 finite distribution packaging 已由 S12 完成：
 
 ```text
 born_distribution_boundary

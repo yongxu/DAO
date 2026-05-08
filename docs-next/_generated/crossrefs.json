@@ -1117,6 +1117,7 @@
         "formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityBornDistributionBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityBornWeightNormalizationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityCanonicalRepresentativeBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean",
@@ -1178,6 +1179,7 @@
         "formal/SSBX/Foundation/Modern/OperatorCellGridMarkovBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityActionPhaseLawBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityBornDistributionBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityBornWeightNormalizationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityCanonicalRepresentativeBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean",
@@ -1230,6 +1232,12 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityAmplitudeChannelBridge.lean"
           ],
           "symbol": "amplitude_channel_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityBornDistributionBridge.lean"
+          ],
+          "symbol": "born_distribution_bridge_summary"
         },
         {
           "paths": [
@@ -1320,12 +1328,6 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean"
           ],
           "symbol": "markov_causal_bridge_summary"
-        },
-        {
-          "paths": [
-            "formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean"
-          ],
-          "symbol": "nonzero_path_amplitude_bridge_summary"
         }
       ]
     },
@@ -2201,6 +2203,66 @@
       "symbol_hits": []
     },
     {
+      "document": "义理/Born分布边界候选 · Markov桥S12.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityBornDistributionBridge.lean"
+          ],
+          "symbol": "BornDistributionBoundary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityBornDistributionBridge.lean"
+          ],
+          "symbol": "BornDistributionBoundaryClosed"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityBornDistributionBridge.lean"
+          ],
+          "symbol": "FiniteProbabilityDistributionInterface"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityBornDistributionBridge.lean"
+          ],
+          "symbol": "amplitudeSupportAmplitudeSum"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityBornDistributionBridge.lean"
+          ],
+          "symbol": "bornDistributionBoundary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityBornDistributionBridge.lean"
+          ],
+          "symbol": "bornFiniteProbabilityDistribution"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityBornDistributionBridge.lean"
+          ],
+          "symbol": "born_distribution_boundary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityBornDistributionBridge.lean"
+          ],
+          "symbol": "born_distribution_boundary_closed"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityBornDistributionBridge.lean"
+          ],
+          "symbol": "born_distribution_bridge_summary"
+        }
+      ]
+    },
+    {
       "document": "义理/Born权重条件归一候选 · Markov桥S11.md",
       "lean_path_mentions": [],
       "symbol_hits": [
@@ -2888,6 +2950,12 @@
         },
         {
           "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityBornDistributionBridge.lean"
+          ],
+          "symbol": "born_distribution_bridge_summary"
+        },
+        {
+          "paths": [
             "formal/SSBX/Foundation/Modern/QuantumRelativityBornWeightNormalizationBridge.lean"
           ],
           "symbol": "born_weight_normalization_bridge_summary"
@@ -2951,12 +3019,6 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean"
           ],
           "symbol": "finite_key_quotient_bridge_summary"
-        },
-        {
-          "paths": [
-            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean"
-          ],
-          "symbol": "finite_path_sum_algebra_bridge_summary"
         }
       ]
     },

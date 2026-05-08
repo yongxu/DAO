@@ -1,5 +1,5 @@
 {
-  "count": 180,
+  "count": 181,
   "documents": [
     {
       "headings": [
@@ -826,7 +826,7 @@
         "../_generated/registry-index.md"
       ],
       "path": "docs-next/10_formal_形式/modern.md",
-      "sha256": "929485fbd6ef2d546ebd391635e3fae0be6dbe8d84bdadea97295e2a91dc6b5a",
+      "sha256": "73723306679cbfafd12989759a99323780f47c32342acf1bb8f0dc817141b990",
       "summary": "`Foundation/Modern` 收纳现代数学、逻辑、概率、物理与神经相关桥接。它让项目概念能与现代形式工具对话，但不把所有外部理论都重新证明一遍。",
       "title": "Foundation/Modern"
     },
@@ -3009,12 +3009,16 @@
         {
           "level": 3,
           "title": "2026-05-09 · S11 Born 权重条件归一候选"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-09 · S12 Born 分布边界候选"
         }
       ],
-      "lines": 478,
+      "lines": 489,
       "links": [],
       "path": "formal/SSBX/notes/markov-causal-bridge-plan.md",
-      "sha256": "be1b6bee6356391b55e1cb5b0277d17cef78bb8607c3dbc242c19582674f1167",
+      "sha256": "fee296b9f601b152f5c4ae8010628ac440e5434928c3c2e2e690850ff1569028",
       "summary": "目标：用最省力的有限构造，尝试把“中介桥”从方向定理推进到可验证骨架。核心不是先造完整量子引力，而是先证明同一个有限过程结构可以同时读成 Markov/测量过程与因果事件结构。",
       "title": "Markov-Causal Bridge Plan"
     },
@@ -3053,10 +3057,10 @@
           "title": "当前命令记录"
         }
       ],
-      "lines": 334,
+      "lines": 341,
       "links": [],
       "path": "formal/SSBX/notes/markov-causal-bridge-verification-plan.md",
-      "sha256": "ed8063d03dcf43c94d9a9a6e4b16685718226572c22b5272976b739ecb3cd649",
+      "sha256": "a8f97708329e0e52592ee94d09bd793018f4eef7438401b1ff2ea4e55ed022d2",
       "summary": "目标：把 Markov-因果桥从“已能构建的 typed skeleton”推进到可重复验证的研究程序。本文只定义验证流程，不新增物理 claim。",
       "title": "Markov-Causal Bridge Verification Plan"
     },
@@ -3676,6 +3680,10 @@
         },
         {
           "level": 2,
+          "title": "S12 · Born 分布边界候选"
+        },
+        {
+          "level": 2,
           "title": "失败记录追加区"
         },
         {
@@ -3683,10 +3691,10 @@
           "title": "统一用语正名"
         }
       ],
-      "lines": 936,
+      "lines": 967,
       "links": [],
       "path": "formal/SSBX/notes/unification-stepwise-plan.md",
-      "sha256": "e5220227a322040f7b7c2a25d46740facb9b2a397f1032f846cdbf5fcffec6e9",
+      "sha256": "c3350fe5f89fc4e94e8c2d203924f958ca2d9a2d2a389b274fcc2cb7081adc6c",
       "summary": "目标：把 Markov-因果桥从最小 typed skeleton 推进为逐步增强的验证程序。本文把“统一”限定为已经关闭或计划关闭的形式接口；量子引力、Born rule、度规恢复和经验闭合分别作为后续结构单独推进。",
       "title": "大统一逐步验证路线"
     },
@@ -6450,6 +6458,45 @@
       "headings": [
         {
           "level": 1,
+          "title": "Born分布边界候选 · Markov桥S12"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 失败记录"
+        },
+        {
+          "level": 2,
+          "title": "二 · 下一步"
+        },
+        {
+          "level": 2,
+          "title": "三 · Validation Command"
+        }
+      ],
+      "lines": 115,
+      "links": [
+        "Born权重条件归一候选%20·%20Markov桥S11.md",
+        "归一化质量求和候选%20·%20Markov桥S10.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
+      ],
+      "path": "义理/Born分布边界候选 · Markov桥S12.md",
+      "sha256": "3d4c743f1762d55316c5e99361acc4a7b798fc8d50540c47122bcce1f084f9b1",
+      "summary": "**前置**：[Born权重条件归一候选 · Markov桥S11](Born权重条件归一候选%20·%20Markov桥S11.md) · [归一化质量求和候选 · Markov桥S10](归一化质量求和候选%20·%20Markov桥S10.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "Born分布边界候选 · Markov桥S12"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
           "title": "Born权重条件归一候选 · Markov桥S11"
         },
         {
@@ -6473,15 +6520,16 @@
           "title": "三 · Validation Command"
         }
       ],
-      "lines": 118,
+      "lines": 120,
       "links": [
         "归一化质量求和候选%20·%20Markov桥S10.md",
         "干涉与测量律候选%20·%20Markov桥S5.md",
         "../formal/SSBX/notes/unification-stepwise-plan.md",
-        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md",
+        "Born分布边界候选%20·%20Markov桥S12.md"
       ],
       "path": "义理/Born权重条件归一候选 · Markov桥S11.md",
-      "sha256": "007bf65a4f5515e1298e07ecfa5cc657b592687777e80f7341f2127f8ef18a2c",
+      "sha256": "7b07acf82b12b65cf7c6342f54d41fc7ac182e6c9f6183c72241a8264409c2bf",
       "summary": "**前置**：[归一化质量求和候选 · Markov桥S10](归一化质量求和候选%20·%20Markov桥S10.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
       "title": "Born权重条件归一候选 · Markov桥S11"
     },
@@ -7979,7 +8027,7 @@
           "title": "八 · Validation Command"
         }
       ],
-      "lines": 619,
+      "lines": 623,
       "links": [
         "量子与相对论整合方向%20·%20从桥到新理论.md",
         "文构造完备与直相加边界.md",
@@ -8010,7 +8058,7 @@
         "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
       ],
       "path": "义理/Markov因果桥 · 大统一最小验证构造.md",
-      "sha256": "bed8e25ead704ea182f3990a756a6887d8f34df8d8da51005a181761a3ef6c00",
+      "sha256": "d3665e249e8e3a47b5591525198e46629a02a2dc0d98fe3978ce758ccba02eb2",
       "summary": "**前置**：[量子与相对论整合方向 · 从桥到新理论](量子与相对论整合方向%20·%20从桥到新理论.md) · [文构造完备与直相加边界](文构造完备与直相加边界.md) · [有限概率核接口 · Markov桥S2](有限概率核接口%20·%20Markov桥S2.md) · [路径组合与因果约束 · Markov桥S3](路径组合与因果约束%20·%20Markov桥S3.md) · [经典Markov与量子振幅分层 · Markov桥S4](经典Markov与量子振幅分层%20·%20Markov桥S4.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [非零路径振幅候选 · Markov桥S5b](非零路径振幅候选%20·%20Markov桥S5b.md) · [双路径相消候选 · Markov桥S5c](双路径相消候选%20·%20Markov桥S5c.md) · [离散相位标记候选 · Markov桥S5d](离散相位标记候选%20·%20Markov桥S5d.md) · [离散作用量相位候选 · Markov桥S5e](离散作用量相位候选%20·%20Markov桥S5e.md) · [有限路径族求和候选 · Markov桥S5f](有限路径族求和候选%20·%20Markov桥S5f.md) · [有限路径族求和代数候选 · Markov桥S5g](有限路径族求和代数候选%20·%20Markov桥S5g.md) · [端点索引路径族候选 · Markov桥S5h](端点索引路径族候选%20·%20Markov桥S5h.md) · [端点支撑规范化候选 · Markov桥S5i](端点支撑规范化候选%20·%20Markov桥S5i.md) · [双路径枚举候选 · Markov桥S5j](双路径枚举候选%20·%20Markov桥S5j.md) · [路径身份键候选 · Markov桥S5k](路径身份键候选%20·%20Markov桥S5k.md) · [有限键商候选 · Markov桥S5l](有限键商候选%20·%20Markov桥S5l.md) · [路径商类候选 · Markov桥S5m](路径商类候选%20·%20Markov桥S5m.md) · [规范代表元候选 · Markov桥S5n](规范代表元候选%20·%20Markov桥S5n.md) · [商支撑枚举候选 · Markov桥S5o](商支撑枚举候选%20·%20Markov桥S5o.md) · [商支撑代数候选 · Markov桥S5p](商支撑代数候选%20·%20Markov桥S5p.md) · [观测账本候选 · Markov桥S5q](观测账本候选%20·%20Markov桥S5q.md) · [作用量相位律候选 · Markov桥S5r](作用量相位律候选%20·%20Markov桥S5r.md) · [逐步统一候选摘要 · Markov桥S8](逐步统一候选摘要%20·%20Markov桥S8.md) · [量子与相对论直统一不可能 · 当前语言NoGo](量子与相对论直统一不可能%20·%20当前语言NoGo.md) · [`markov-causal-bridge-plan`](../formal/SSBX/notes/markov-causal-bridge-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
       "title": "Markov因果桥 · 大统一最小验证构造"
     },
@@ -11762,7 +11810,7 @@
         "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
       ],
       "path": "义理/有限概率核接口 · Markov桥S2.md",
-      "sha256": "4efe37cf5b73dccc54305e6f93be61567efc259e9813d79d72732a4204b34d82",
+      "sha256": "9d1ea6debe4581e9fcdda2dc174d291e1a0a6ee9de2750cd44b538cd8ea29fb2",
       "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [路径组合与因果约束 · Markov桥S3](路径组合与因果约束%20·%20Markov桥S3.md) · [经典Markov与量子振幅分层 · Markov桥S4](经典Markov与量子振幅分层%20·%20Markov桥S4.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [非零路径振幅候选 · Markov桥S5b](非零路径振幅候选%20·%20Markov桥S5b.md) · [文构造完备与直相加边界](文构造完备与直相加边界.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
       "title": "有限概率核接口 · Markov桥S2"
     },
@@ -13914,12 +13962,13 @@
         "有限概率归一化候选%20·%20Markov桥S9.md",
         "归一化质量求和候选%20·%20Markov桥S10.md",
         "Born权重条件归一候选%20·%20Markov桥S11.md",
+        "Born分布边界候选%20·%20Markov桥S12.md",
         "../formal/SSBX/notes/unification-stepwise-plan.md",
         "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
       ],
       "path": "义理/逐步统一候选摘要 · Markov桥S8.md",
-      "sha256": "617baadebd69d7d0997b9117d37106a3fdd9c0745e6ab5cf1984c13751fdffcd",
-      "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [作用量相位律候选 · Markov桥S5r](作用量相位律候选%20·%20Markov桥S5r.md) · [观测账本候选 · Markov桥S5q](观测账本候选%20·%20Markov桥S5q.md) · [有限概率归一化候选 · Markov桥S9](有限概率归一化候选%20·%20Markov桥S9.md) · [归一化质量求和候选 · Markov桥S10](归一化质量求和候选%20·%20Markov桥S10.md) · [Born权重条件归一候选 · Markov桥S11](Born权重条件归一候选%20·%20Markov桥S11.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "sha256": "672ef49500162da086076c34be53052f507d4c5adfa377d09ca4d09d6afc2d3e",
+      "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [作用量相位律候选 · Markov桥S5r](作用量相位律候选%20·%20Markov桥S5r.md) · [观测账本候选 · Markov桥S5q](观测账本候选%20·%20Markov桥S5q.md) · [有限概率归一化候选 · Markov桥S9](有限概率归一化候选%20·%20Markov桥S9.md) · [归一化质量求和候选 · Markov桥S10](归一化质量求和候选%20·%20Markov桥S10.md) · [Born权重条件归一候选 · Markov桥S11](Born权重条件归一候选%20·%20Markov桥S11.md) · [Born分布边界候选 · Markov桥S12](Born分布边界候选%20·%20Markov桥S12.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
       "title": "逐步统一候选摘要 · Markov桥S8"
     },
     {
