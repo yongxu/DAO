@@ -8,7 +8,7 @@
 
 - 371 个 `OperatorId` 全部可登记、可查 signature、可诊断支持状态。
 - 82 个 surface / 193 个 reading 可被 resolver 说明或报告歧义。
-- 只有 theorem-backed registry 中的 12 个 operator 进入 evaluator。
+- 只有 theorem-backed registry 中的 33 个 operator 进入 evaluator。
 - catalogue-only operator 在 CLI 中报告 `known-not-executable`，不伪造结果。
 - `baguaWen` 的 22-token 受控 IL parser 仍独立冻结。
 
@@ -21,8 +21,8 @@
 | M2 表驱动 resolver | done | runtime 走 `allSurfaceReadings` / operator forms / executable registry；`resolveStdlibOp` 仅作 legacy witness。 |
 | M3 字面值扩展 | done | `一` + 64 卦名 + conservative 繁简 alias；未 promotion gap 只诊断。 |
 | M4 核心语法能力 | done for Hex | `者 甲 E`、`凡 甲 E`、`令 甲 V E` 支持 Hex binder；Bool binder 留后续。 |
-| M5 可执行语义扩展 | done for current subset | 12 个 executable：早期 8 个 + `错/錯`、`综/綜`、`互`、`反`。 |
-| M6 全目录覆盖 | done as catalogue coverage | 371 operator 全部 registry/signature 可查；359 个当前 known-not-executable。 |
+| M5 可执行语义扩展 | done for current subset | 33 个 executable：早期 Hex/Bool 核心 + exact Hex transforms + 第一批逻辑/恒等/量词 aliases。 |
+| M6 全目录覆盖 | done as catalogue coverage | 371 operator 全部 registry/signature 可查；338 个当前 known-not-executable。 |
 | M7 CLI 产品化 | done | `--tokens`、`--resolve`、`--ast`、`--typecheck`、`--json`、`--explain`、`--operator`、`--operators`、`--coverage`；失败返回非零。 |
 
 ## 验收命令

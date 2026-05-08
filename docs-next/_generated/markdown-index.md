@@ -8,7 +8,7 @@
 | Title | Lines | Path |
 | --- | --- | --- |
 | 生生不息 · Shēngshēng-Bùxī | 468 | `README.en.md` |
-| SSBX · Formal Specification | 581 | `README.formal.md` |
+| SSBX · Formal Specification | 582 | `README.formal.md` |
 | 生生不息 | 422 | `README.md` |
 | 起步 | 15 | `docs-next/00_start/README.md` |
 | 形式路径 | 17 | `docs-next/00_start/formal-path.md` |

@@ -225,7 +225,7 @@ example :
 
 example :
     (match wenyanCompile "或 乾" with
-     | .error (.resolve (.ambiguous "或" 0 candidates)) => candidates.length == 2
+     | .error (.elab (.typeMismatch (.argumentMismatch (.arr .hex .bool) .hex))) => true
      | _ => false) = true :=
   by native_decide
 
@@ -238,6 +238,52 @@ example :
 example : (parseSurface "乾 之 坤").toOption.isSome = true := by native_decide
 
 example : (wenyanCompile "乾 之 坤").toOption = none := by native_decide
+
+/-! ### promoted logic / identity catalogue operators -/
+
+example :
+    (wenyanInterpBool "則 真 假").toOption = some false :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "故 假 假").toOption = some true :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "且 真 假").toOption = some false :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "弗 真").toOption = some false :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "勿 假").toOption = some true :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "是 乾 乾").toOption = some true :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "非 乾 坤").toOption = some true :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "異 乾 乾").toOption = some false :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "皆 者 甲 同 甲 甲").toOption = some true :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "或 者 甲 同 甲 一").toOption = some true :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "莫 者 甲 同 甲 一").toOption = some false :=
+  by native_decide
 
 theorem canonicalHexNames_interpret_to_xuGua :
     canonicalHexNameRows.all
