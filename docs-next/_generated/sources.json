@@ -1,5 +1,5 @@
 {
-  "count": 286,
+  "count": 290,
   "include_archive": false,
   "sources": [
     {
@@ -351,15 +351,21 @@
       "suffix": ".md"
     },
     {
-      "bytes": 5470,
+      "bytes": 5551,
       "path": "formal/SSBX.lean",
-      "sha256": "0fe350757e20844dc1a111b09f73aa4f19b5d7cc0bcbc47a1aea0a4074cd307b",
+      "sha256": "4740db41385a73c3ee2222c61402e45ffd737b8b95e4801ff45ce5001d6470e8",
       "suffix": ".lean"
     },
     {
       "bytes": 17844,
       "path": "formal/SSBX/Core.lean",
       "sha256": "7a10362f80f15525978603e67ffa82747296082474800dbebbac439a086877c0",
+      "suffix": ".lean"
+    },
+    {
+      "bytes": 490,
+      "path": "formal/SSBX/Foundation/Bagua/AxiomCheck.lean",
+      "sha256": "fa5e85aad65cde2ba158c145fa958b6707702d5dc993b3cbc655d5b3a9b48138",
       "suffix": ".lean"
     },
     {
@@ -393,9 +399,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 5770,
+      "bytes": 6259,
       "path": "formal/SSBX/Foundation/Bagua/CuoInvariance.lean",
-      "sha256": "27cfa4e1c934a24f94fdd8f2b0971c89c17a7d557fd6ab41bbb7154162a64108",
+      "sha256": "1e6e48caa9f834e12802e4fc8dacca0dc74f7c653975377b01bcb276f8e4cb8b",
       "suffix": ".lean"
     },
     {
@@ -405,9 +411,15 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 57839,
+      "bytes": 54921,
       "path": "formal/SSBX/Foundation/Bagua/GodelLi.lean",
-      "sha256": "6bd796481ba957fa4fefc2e860cfae46b36897fab7e1af7f795903b078bd5f28",
+      "sha256": "9fc1472a91fcf7849e70a9b5baf0130807b86a2e6d12ece49a9e07cc6b2029c4",
+      "suffix": ".lean"
+    },
+    {
+      "bytes": 8911,
+      "path": "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean",
+      "sha256": "fc0a4d205c4b24e342fe82851261b00061c507313a2501528dbaa858c6d721b2",
       "suffix": ".lean"
     },
     {
@@ -420,6 +432,12 @@
       "bytes": 8849,
       "path": "formal/SSBX/Foundation/Bagua/Newman.lean",
       "sha256": "0b8e21474b60d1e44c132397077b783079c7c85c31bc538be6a0759c325561fd",
+      "suffix": ".lean"
+    },
+    {
+      "bytes": 3608,
+      "path": "formal/SSBX/Foundation/Bagua/SoundnessProbe.lean",
+      "sha256": "1c871ac4be505de2006ba7b0c3b9a12e7f1f04c70c421aa9df905bd29948ddf8",
       "suffix": ".lean"
     },
     {
@@ -609,9 +627,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 13321,
+      "bytes": 13580,
       "path": "formal/SSBX/Foundation/Modern/DaoLi.lean",
-      "sha256": "2143bc5deed82749d6f874d591b128f8cffead588db358c816d67556d6036b41",
+      "sha256": "f000b60081c20e774d4a3f798ea12f9e1760eeb1f85c5ecaeb4393edcb32ca94",
       "suffix": ".lean"
     },
     {
@@ -741,6 +759,12 @@
       "suffix": ".lean"
     },
     {
+      "bytes": 15160,
+      "path": "formal/SSBX/Foundation/Wen/MetaInterp.lean",
+      "sha256": "274ea9052c69610fae916649000e986ebcb323a15042dc103414678be9c895d9",
+      "suffix": ".lean"
+    },
+    {
       "bytes": 33081,
       "path": "formal/SSBX/Foundation/Wen/Operators.lean",
       "sha256": "ddb2947a3845b27d35e333aa5d2e8ac048ba7114acd10a95e8a0acf80121c828",
@@ -783,9 +807,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 19213,
+      "bytes": 19702,
       "path": "formal/SSBX/Foundation/Wen/WenSurface/EndToEnd.lean",
-      "sha256": "52444bc09f8c0ff81e811ebb5ee7f9a352a2827318787688540456de94055a0b",
+      "sha256": "671cbc65e431c7789ef5a3a5c8084f89cd5c2b234e772f085d884d829a3e3dc7",
       "suffix": ".lean"
     },
     {
@@ -795,15 +819,15 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 32920,
+      "bytes": 33359,
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Reading.lean",
-      "sha256": "1937a80e4520f46c6d324b496a500cd995b8ef156f95b5e932ecf412880a9a50",
+      "sha256": "c672310689b1b87ad3985c2f713027dd59880aba8d2c0f6cc5ed39df1631374c",
       "suffix": ".lean"
     },
     {
-      "bytes": 10042,
+      "bytes": 10101,
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Semantics.lean",
-      "sha256": "22a766a89c25f37b2e81dd787e77061844f32d035b89bcfe8ee438f7a21b55fb",
+      "sha256": "af71d95dee3dd66ca3df48fa2f812ed33b188e58d0c7c19ecea167b5d5ab62f6",
       "suffix": ".lean"
     },
     {
@@ -1329,9 +1353,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 3026,
+      "bytes": 3428,
       "path": "formal/SSBX/notes/wensurface-roadmap.md",
-      "sha256": "4ce1d0acaf77dba156d2597f892eaccc4e179a5f24444361c3af05d2c896356c",
+      "sha256": "bbc5c452ee8f166dc363b258803658ae346525ad25754dd495b94ec2ae84e1ad",
       "suffix": ".md"
     },
     {

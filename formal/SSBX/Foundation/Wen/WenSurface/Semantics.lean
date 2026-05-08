@@ -64,7 +64,8 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .Q_6  => some ⟨.Q_6,  Stdlib.existsHBody, 1, "有: finite exists over Hex"⟩
   | .Q_7  => some ⟨.Q_7,  Stdlib.noneHBody, 1, "無/无: finite no-witness quantifier over Hex"⟩
   | .A_12 => some ⟨.A_12, .andB, 2, "且: Bool conjunction"⟩
-  | .S_2  => some ⟨.S_2,  Stdlib.endoCompBody, 2, "而: Hex endomap composition"⟩
+  | .S_2  => some ⟨.S_2,  Stdlib.endoCompBody, 2,
+      "而: Hex endomap composition; surface currently requires explicit Hex→Hex terms"⟩
   | _     => none
 
 /-- The exact theorem-backed subset, kept separate from total shape semantics. -/

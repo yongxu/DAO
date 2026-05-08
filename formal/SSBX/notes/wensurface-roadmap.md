@@ -40,6 +40,10 @@ scripts/check_wenyan_surface_cli.py
 
 - `known-not-executable` / `unsupported` filter 仅保留作 CLI 兼容词；当前 operator catalogue 返回 0 行。
 - 非 exact row 的 evaluator 语义是 symbolic catalogue normal form，仍不承诺 Hex/Bool denotation。
+- 多义 surface 不因某个 reading 已有 evaluator 语义而自动消歧；除保留的 v1 核心 surface 外，
+  只有候选语义完全同体时才自动选择，否则返回 ambiguity。
+- `而`/S-2 已有 exact `Hex → Hex` endomap composition 语义；当前 surface 需显式写
+  `者` lambda 作为 endomap 参数，裸写 `而 推 損 一` 尚未作为 operator-section 语法接入。
 - `推/益/损/損` 等可在 `WenDefEval` 求值，不代表都能 compile 到 L0 `YiInstr`；`WenDefCompile` 的 cuo-equivariance ceiling 仍有效。
 - 完整 Ziwen v0 仍以 `ziwen-spec.md` 为未来目标，不由 WenSurface 当前子集承诺。
 

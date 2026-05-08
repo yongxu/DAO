@@ -28,8 +28,8 @@ CASES = [
     ("則 真 假", {"ok": True, "kind": "bool", "value": False}),
     ("且 真 假", {"ok": True, "kind": "bool", "value": False}),
     ("非 乾 坤", {"ok": True, "kind": "bool", "value": True}),
-    ("或 者 甲 同 甲 一", {"ok": True, "kind": "bool", "value": True}),
     ("莫 者 甲 同 甲 一", {"ok": True, "kind": "bool", "value": False}),
+    ("（而 者 甲 推 甲 者 甲 損 甲） 之 一", {"ok": True, "kind": "hex", "idx": 1}),
     ("比", {"ok": True, "kind": "hex", "idx": 47}),
     ("同 比 比", {"ok": True, "kind": "bool", "value": True}),
     ("比 乾 坤", {"ok": True, "kind": "bool", "value": False}),
@@ -49,6 +49,10 @@ NEGATIVE_CASES = [
     ("大", {"phase": "unsupported", "code": "unpromoted_hexagram_gap", "surface": "大", "startCol": 0, "endCol": 1}),
     ("乾 之 坤", {"phase": "type", "code": "type_mismatch", "expectedType": "function", "actualType": "Hex"}),
     ("不 乾", {"phase": "type", "code": "type_mismatch", "expectedType": "Bool", "actualType": "Hex"}),
+    ("或 者 甲 同 甲 一", {"phase": "resolve", "code": "ambiguous_reading", "surface": "或", "startCol": 0, "endCol": 1, "candidateCount": 2}),
+    ("故 假 假", {"phase": "resolve", "code": "ambiguous_reading", "surface": "故", "startCol": 0, "endCol": 1, "candidateCount": 3}),
+    ("反 乾", {"phase": "resolve", "code": "ambiguous_reading", "surface": "反", "startCol": 0, "endCol": 1, "candidateCount": 3}),
+    ("而 推 損 一", {"phase": "parse", "code": "empty_expression"}),
     ("（推 一", {"phase": "parse", "code": "unmatched_open_bracket", "surface": "（", "startCol": 0, "endCol": 1}),
     ("推 一）", {"phase": "parse", "code": "unmatched_close_bracket", "surface": "）", "startCol": 3, "endCol": 4}),
 ]
@@ -106,6 +110,14 @@ JSON_CLI_CASES = [
         "executableOperators": 371,
         "knownNotExecutableOperators": 0,
     }),
+    (["--json", "--operators", "unsupported"], {
+        "mode": "operators",
+        "filter": "unsupported",
+        "count": 0,
+        "operatorsRegistered": 371,
+        "executableOperators": 371,
+        "knownNotExecutableOperators": 0,
+    }),
     (["--json", "--coverage"], {
         "mode": "coverage",
         "surfaceCount": 82,
@@ -120,6 +132,7 @@ JSON_CLI_CASES = [
 NEGATIVE_CLI_CASES = [
     (["--tokens", "abc"], "lex error"),
     (["--resolve", "瓜"], "no known reading"),
+    (["--resolve", "或"], "is ambiguous"),
     (["--ast", "推 乾 之"], "leftover token"),
     (["--ast", "（推 一"], "unmatched open bracket"),
     (["--ast", "推 一）"], "unmatched close bracket"),

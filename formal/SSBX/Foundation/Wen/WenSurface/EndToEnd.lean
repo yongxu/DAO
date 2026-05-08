@@ -227,7 +227,7 @@ example :
 
 example :
     (match wenyanCompile "或 乾" with
-     | .error (.elab (.typeMismatch (.argumentMismatch (.arr .hex .bool) .hex))) => true
+     | .error (.resolve (.ambiguous "或" 0 candidates)) => candidates.length == 2
      | _ => false) = true :=
   by native_decide
 
@@ -248,7 +248,9 @@ example :
   by native_decide
 
 example :
-    (wenyanInterpBool "故 假 假").toOption = some true :=
+    (match wenyanCompile "故 假 假" with
+     | .error (.resolve (.ambiguous "故" 0 candidates)) => candidates.length == 3
+     | _ => false) = true :=
   by native_decide
 
 example :
@@ -280,7 +282,9 @@ example :
   by native_decide
 
 example :
-    (wenyanInterpBool "或 者 甲 同 甲 一").toOption = some true :=
+    (match wenyanCompile "或 者 甲 同 甲 一" with
+     | .error (.resolve (.ambiguous "或" 0 candidates)) => candidates.length == 2
+     | _ => false) = true :=
   by native_decide
 
 example :
@@ -411,7 +415,17 @@ example : (wenyanInterp "错 乾").toOption = some Hexagram.kun := by native_dec
 example : (wenyanInterp "錯 乾").toOption = some Hexagram.kun := by native_decide
 example : (wenyanInterp "综 乾").toOption = some Hexagram.qian := by native_decide
 example : (wenyanInterp "互 坤").toOption = some Hexagram.kun := by native_decide
-example : (wenyanInterp "反 乾").toOption = some Hexagram.kun := by native_decide
+example :
+    (match wenyanCompile "反 乾" with
+     | .error (.resolve (.ambiguous "反" 0 candidates)) => candidates.length == 3
+     | _ => false) = true :=
+  by native_decide
+
+example :
+    (wenyanInterp "（而 者 甲 推 甲 者 甲 損 甲） 之 一").toOption = some «一» :=
+  by native_decide
+
+example : (wenyanInterp "而 推 損 一").toOption = none := by native_decide
 
 /-! ## § 6.3 prefix binder / let forms -/
 
