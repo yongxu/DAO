@@ -21,7 +21,7 @@
 | M1 语法前端重构 | done | `SurfaceExpr`、`parseSurface`、显式 `之` marker、尾随 `之` 错误。 |
 | M2 表驱动 resolver | done | runtime 走 `allSurfaceReadings` / operator forms / executable registry；`resolveStdlibOp` 仅作 legacy witness。 |
 | M3 字面值扩展 | done | `一` + 64 卦名 + conservative 繁简 alias；未 promotion gap 只诊断。 |
-| M4 核心语法能力 | done for Hex | `者 甲 E`、`凡 甲 E`、`令 甲 V E` 支持 Hex binder；Bool binder 留后续。 |
+| M4 核心语法能力 | done | `者 甲 E`、`凡 甲 E`、`令 甲 V E` 支持 Hex；`者`/`令` 已支持 Bool 与常用函数域推断。 |
 | M5 可执行语义扩展 | done | 317 个 exact/theorem-backed executable：早期 Hex/Bool 核心、exact Hex transforms、逻辑/恒等/量词 aliases、carrier rows 等。 |
 | M6 全目录覆盖 | done | 371 operator 全部 registry/signature 可查、可执行；54 个非 exact row 只落为 structural catalogue normal form；0 个 known-not-executable。 |
 | M7 CLI 产品化 | done | `--tokens`、`--resolve`、`--ast`、`--typecheck`、`--json`、`--explain`、`--operator`、`--operators`、`--coverage`；失败返回非零。 |
@@ -45,6 +45,11 @@ scripts/check_wenyan_surface_cli.py
 - `而`/S-2 已有 exact `Hex → Hex` endomap composition 语义；支持显式 `者` lambda，
   也支持 theorem-backed exact function section，如 `而 推 損 一`。它仍是 Hex endomap composition，
   不是多态 Bool/function compose。
+- `同`/`比` 支持受控 relation infix：`A 同 B`、`A 比 B` desugar 为既有 prefix
+  application；关系链如 `一 同 一 同 一` 作为 non-associative syntax error。
+- `者` binder 无显式类型标注；parser/elaborator 只在有限候选域中推断
+  `Hex`、`Bool`、`Hex → Hex`、`Hex → Bool`、`Bool → Bool`、`Bool → Hex`。
+  `凡` 仍是 Hex universe quantifier，不是多态 forall。
 - `推/益/损/損` 等可在 `WenDefEval` 求值，不代表都能 compile 到 L0 `YiInstr`；`WenDefCompile` 的 cuo-equivariance ceiling 仍有效。
 - 完整 Ziwen v0 仍以 `ziwen-spec.md` 为未来目标，不由 WenSurface 当前子集承诺。
 
@@ -53,5 +58,7 @@ scripts/check_wenyan_surface_cli.py
 括号、优先级、infix/operator mixfix 的设计合同见
 `formal/SSBX/notes/wensurface-syntax-spec.md`。该 spec 保持 catalogue coverage
 与 theorem-backed evaluator 分离，目标是用表驱动 Pratt parser 扩展当前
-prefix-only 前端。S1 已落地：`（ E ）` 与 `( E )` 可 token/parse 为 grouped
-AST，并在 elaboration 时透明求值。
+prefix-first 前端。S1 已落地：`（ E ）` 与 `( E )` 可 token/parse 为 grouped
+AST，并在 elaboration 时透明求值。另已完成 binder 正规化与 relation infix：
+Bool binder、函数值 binder、exact operator 所需 predicate/function 参数位置的 `者`
+解析、以及 `同`/`比` infix 均可运行。

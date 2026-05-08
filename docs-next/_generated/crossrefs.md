@@ -86,8 +86,8 @@
 | formal/SSBX/notes/truth-ledger-boundary.md | 0 | 20 |
 | formal/SSBX/notes/unification-stepwise-plan.md | 0 | 0 |
 | formal/SSBX/notes/v14-roadmap.md | 0 | 0 |
-| formal/SSBX/notes/wensurface-roadmap.md | 0 | 7 |
-| formal/SSBX/notes/wensurface-syntax-spec.md | 0 | 4 |
+| formal/SSBX/notes/wensurface-roadmap.md | 0 | 8 |
+| formal/SSBX/notes/wensurface-syntax-spec.md | 0 | 5 |
 | formal/SSBX/notes/zero-axiom-roadmap.md | 1 | 20 |
 | formal/SSBX/notes/zhouyi-position-operator-report.md | 0 | 20 |
 | formal/SSBX/notes/自释与自证.md | 0 | 0 |

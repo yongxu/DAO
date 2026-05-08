@@ -28,10 +28,10 @@
         "SSBX.Foundation.Wen.WenSurface.EndToEnd",
         "SSBX.Foundation.Wen.WenSurface.Coverage"
       ],
-      "lines": 1167,
+      "lines": 1173,
       "module": "WenyanSurface.lean",
       "path": "WenyanSurface.lean",
-      "sha256": "d40395c3a589e7c2fc7d1ec96a89533b7077a5f5d0033eacd45b632ccf83b248"
+      "sha256": "ee1f83eda11c04774f51e63b598a8319f8a2670761615d7e4fef7c4296419878"
     },
     {
       "cluster": "root",
@@ -18406,7 +18406,7 @@
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 15,
+      "declaration_count": 17,
       "declarations": [
         {
           "kind": "inductive",
@@ -18458,6 +18458,14 @@
         },
         {
           "kind": "def",
+          "name": "checkedAbs?"
+        },
+        {
+          "kind": "def",
+          "name": "elabSurfaceExprWithCtx"
+        },
+        {
+          "kind": "def",
           "name": "elabSurfaceExpr"
         },
         {
@@ -18474,10 +18482,10 @@
         "SSBX.Foundation.Wen.WenDef",
         "SSBX.Foundation.Wen.WenDefEval"
       ],
-      "lines": 430,
+      "lines": 533,
       "module": "SSBX.Foundation.Wen.WenSurface.Elaborate",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Elaborate.lean",
-      "sha256": "18c06d65024c7a6a53c611d72de39c3058d40926893debc95c95e12812e16c14"
+      "sha256": "62b90ec452c1b8711b114b2a8b15e0b8bf48cdefea45b802c28ae17a7fd8247f"
     },
     {
       "cluster": "Foundation/Wen",
@@ -18539,14 +18547,14 @@
       "imports": [
         "SSBX.Foundation.Wen.WenSurface.Elaborate"
       ],
-      "lines": 1093,
+      "lines": 1188,
       "module": "SSBX.Foundation.Wen.WenSurface.EndToEnd",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/EndToEnd.lean",
-      "sha256": "9f2b82fa1c0627df4c69d885d16f7edbba7dcc5f6c67129536244a2508970859"
+      "sha256": "0bbd60c805bfda8bbab29880756929f02d8c919774b57570fc4dade71902a47b"
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 16,
+      "declaration_count": 17,
       "declarations": [
         {
           "kind": "structure",
@@ -18563,6 +18571,10 @@
         {
           "kind": "def",
           "name": "isAsciiSpace"
+        },
+        {
+          "kind": "def",
+          "name": "isWenSpace"
         },
         {
           "kind": "def",
@@ -18616,14 +18628,14 @@
       "imports": [
         "SSBX.Text.WenyanOperators"
       ],
-      "lines": 289,
+      "lines": 306,
       "module": "SSBX.Foundation.Wen.WenSurface.Lex",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Lex.lean",
-      "sha256": "f241eec1a844c3f03c0f05a744c2b326fa82c3a95f83457e4b0c10eef20185ed"
+      "sha256": "949ea909ce1991bd0a9c031f1b1a6037181802c564dce3c9ba3897ee3b0a1e44"
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 71,
+      "declaration_count": 72,
       "declarations": [
         {
           "kind": "inductive",
@@ -18871,6 +18883,10 @@
         },
         {
           "kind": "def",
+          "name": "argumentStartCue?"
+        },
+        {
+          "kind": "def",
           "name": "computeCues"
         },
         {
@@ -18918,10 +18934,10 @@
         "SSBX.Text.OperatorReadings",
         "SSBX.Foundation.Yi.YiCore"
       ],
-      "lines": 958,
+      "lines": 1010,
       "module": "SSBX.Foundation.Wen.WenSurface.Reading",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Reading.lean",
-      "sha256": "f3e1fc455bca60f601a164abbeadcd53e40d449d5674c343369fc1026dd97c17"
+      "sha256": "777c23fe010d9e5f02732265812dd917228ea771e71b381f0f331e1c0c8089f3"
     },
     {
       "cluster": "Foundation/Wen",
@@ -19116,7 +19132,7 @@
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 34,
+      "declaration_count": 44,
       "declarations": [
         {
           "kind": "inductive",
@@ -19152,6 +19168,14 @@
         },
         {
           "kind": "def",
+          "name": "isRelationInfixOperator"
+        },
+        {
+          "kind": "def",
+          "name": "relationInfixTok?"
+        },
+        {
+          "kind": "def",
           "name": "isCloseBracketTok"
         },
         {
@@ -19176,7 +19200,27 @@
         },
         {
           "kind": "def",
+          "name": "binderDomainCandidates"
+        },
+        {
+          "kind": "def",
+          "name": "binderDomainCandidatesWith"
+        },
+        {
+          "kind": "def",
+          "name": "atomSurfaceTypeWithCtx?"
+        },
+        {
+          "kind": "def",
           "name": "atomSurfaceType?"
+        },
+        {
+          "kind": "def",
+          "name": "surfaceExprTypeWithCtx?"
+        },
+        {
+          "kind": "def",
+          "name": "lambdaTypeWithCtx?"
         },
         {
           "kind": "def",
@@ -19184,11 +19228,23 @@
         },
         {
           "kind": "def",
+          "name": "surfaceExprMatchesTypeWithCtx"
+        },
+        {
+          "kind": "def",
           "name": "typedExprMatches"
         },
         {
           "kind": "def",
+          "name": "expectedTypeErrWithCtx"
+        },
+        {
+          "kind": "def",
           "name": "expectedTypeErr"
+        },
+        {
+          "kind": "def",
+          "name": "lambdaParts?"
         },
         {
           "kind": "def",
@@ -19259,10 +19315,10 @@
         "SSBX.Foundation.Wen.WenSurface.Semantics",
         "SSBX.Foundation.Wen.WenSurface.Reading"
       ],
-      "lines": 519,
+      "lines": 664,
       "module": "SSBX.Foundation.Wen.WenSurface.Syntax",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Syntax.lean",
-      "sha256": "29db89955627110b0ab675870f6af667032e14fd1abd5b243a1fb20438dda684"
+      "sha256": "b60ee75d535fa3c9b60566513a5e8816144f0dd6ae17130214c8babdd276973d"
     },
     {
       "cluster": "Foundation/Wen",

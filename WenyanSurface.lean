@@ -359,6 +359,8 @@ private def errShow : WenSurfaceErr → String
       s!"parse error at col {col}: unexpected application marker \"{surface}\""
   | .parse (.unpromotedHexagramGap surface col) =>
       s!"parse error at col {col}: surface \"{surface}\" is a tracked hexagram gap, not an executable operator"
+  | .parse (.nonassocInfix surface col) =>
+      s!"parse error at col {col}: non-associative infix operator \"{surface}\" must be bracketed"
   | .parse (.typeMismatch expected actual surface col) =>
       s!"type error at col {col}: expected {tyShow expected}, got {tyShow actual} from \"{surface}\""
   | .parse (.leftoverAtoms n surface col) =>
@@ -408,6 +410,7 @@ private def errCode : WenSurfaceErr → String
   | .parse (.expectedVariable _ _) => "expected_variable"
   | .parse (.unexpectedApplicationMarker _ _) => "unexpected_application_marker"
   | .parse (.unpromotedHexagramGap _ _) => "unpromoted_hexagram_gap"
+  | .parse (.nonassocInfix _ _) => "nonassoc_infix"
   | .parse (.typeMismatch _ _ _ _) => "type_mismatch"
   | .parse (.leftoverAtoms _ _ _) => "leftover_tokens"
   | .elab (.unsupportedOp _ _ _) => "unsupported_operator"
@@ -449,6 +452,8 @@ private def parseErrShow : ParseErr → String
       s!"parse error at col {col}: unexpected application marker \"{surface}\""
   | .unpromotedHexagramGap surface col =>
       s!"parse error at col {col}: surface \"{surface}\" is a tracked hexagram gap, not an executable operator"
+  | .nonassocInfix surface col =>
+      s!"parse error at col {col}: non-associative infix operator \"{surface}\" must be bracketed"
   | .typeMismatch expected actual surface col =>
       s!"type error at col {col}: expected {tyShow expected}, got {tyShow actual} from \"{surface}\""
   | .leftoverAtoms n surface col =>
@@ -683,6 +688,7 @@ private def errExtraFields : WenSurfaceErr → List (String × String)
       ]
   | .parse (.unexpectedApplicationMarker surface col) => errLocationFields surface col
   | .parse (.unpromotedHexagramGap surface col) => errLocationFields surface col
+  | .parse (.nonassocInfix surface col) => errLocationFields surface col
   | .parse (.typeMismatch expected actual surface col) =>
       errLocationFields surface col ++
         [ jsonFieldString "expectedType" (tyShow expected)

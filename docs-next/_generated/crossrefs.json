@@ -1732,6 +1732,12 @@
             "formal/SSBX/Foundation/Wen/Operators.lean"
           ],
           "symbol": "之"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Operators.lean"
+          ],
+          "symbol": "者"
         }
       ]
     },
@@ -1762,6 +1768,12 @@
             "formal/SSBX/Foundation/Wen/WenDef.lean"
           ],
           "symbol": "Tm"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Wen/Operators.lean"
+          ],
+          "symbol": "同"
         }
       ]
     },

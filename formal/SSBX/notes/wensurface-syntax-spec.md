@@ -1,7 +1,9 @@
 # WenSurface Syntax Spec: brackets, precedence, infix, mixfix
 
 Status: design spec and implementation tracker for the next WenSurface parser.
-S0-S1 are implemented; S2+ remain design contracts.  This document defines the
+S0-S1 are implemented, binder domain inference has been regularized for Bool
+and common function values, and S4 relation infix forms are implemented for
+`同`/`比`.  S2/S3/S6/S7 remain design contracts.  This document defines the
 contract that the next parser should satisfy while preserving the current
 `wenyan-surface` behavior.
 
@@ -266,6 +268,10 @@ Examples:
 literal unless prefix arguments make the operator reading viable.  In led
 position after a left expression, `比` may use its infix operator form.
 
+Status: implemented by desugaring relation infix to existing curried
+application AST: `A 同 B` becomes `同 A B`, and `A 比 B` becomes `比 A B`.
+Relation chains such as `一 同 一 同 一` are rejected as non-associative syntax.
+
 ## 11. Prefix Forms
 
 All currently executable prefix forms remain accepted:
@@ -359,7 +365,10 @@ Scope rule:
 
 - binder body consumes the lowest precedence expression;
 - brackets can restrict body extent;
-- binder variables are still Hex-only until Bool binders are explicitly added.
+- unannotated `者` binders are inferred over a finite domain list:
+  `Hex`, `Bool`, `Hex → Hex`, `Hex → Bool`, `Bool → Bool`, `Bool → Hex`;
+- expected-function contexts parse `者` bodies under the expected argument
+  type, so predicate/function arguments can be written directly.
 
 Examples:
 
@@ -367,6 +376,9 @@ Examples:
 凡 甲 甲 同 甲
 凡 甲 （甲 同 甲）
 令 甲 乾 （甲 同 乾）
+者 甲 不 甲 真
+者 甲 甲 推
+而 者 甲 甲 者 甲 推 甲
 ```
 
 The first two examples should parse to equivalent Bool expressions once infix
@@ -516,10 +528,11 @@ Example JSON fields for an infix form:
 |---|---|---|---|
 | S0 | done | Add this spec and preserve current parser | docs-only |
 | S1 | done | Tokenize brackets and add grouped AST | current tests + bracket parse tests |
+| S1b | done | Regularize Bool/function binder inference | `者 甲 不 甲 真`, `者 甲 甲 推`, predicate/function args |
 | S2 | next | Add syntax registry for existing prefix forms | old parser behavior reproduced through registry |
 | S3 | pending | Replace parser core with Pratt parser | all old examples pass, better parse errors |
-| S4 | pending | Promote `同` and `比` infix forms | prefix and infix both pass |
-| S5 | pending | Add nonassoc diagnostics and precedence JSON | `A 同 B 同 C` fails structurally |
+| S4 | done | Promote `同` and `比` infix forms | prefix and infix both pass |
+| S5 | partial | Add nonassoc diagnostics and precedence JSON | relation chains fail structurally; precedence JSON pending |
 | S6 | pending | Add bounded mixfix parser machinery | catalogue-only mixfix can parse and diagnose unsupported |
 | S7 | pending | Broaden syntax entries across 371 operators | all registered forms parse or diagnose ambiguity |
 
@@ -541,4 +554,5 @@ python3 scripts/docs_next.py check --strict
 - Which catalogue-only mixfix forms should be used as the first parser test.
 - How much source-span data should be carried in `SurfaceExpr` versus only in
   tokens.
-- Whether Bool binders should be added before or after infix/mixfix.
+- Whether binder inference should remain a fixed finite list or grow explicit
+  type annotation syntax before infix/mixfix expands further.

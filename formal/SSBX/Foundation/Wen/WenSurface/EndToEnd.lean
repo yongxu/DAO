@@ -177,6 +177,22 @@ example : (wenyanInterpBool "比 一 一").toOption = some true := by native_dec
 /-- 「比 乾 坤」 → false. -/
 example : (wenyanInterpBool "比 乾 坤").toOption = some false := by native_decide
 
+/-! ### Relation infix forms -/
+
+example : (wenyanInterpBool "一 同 一").toOption = some true := by native_decide
+
+example : (wenyanInterpBool "推 乾 同 一").toOption = some true := by native_decide
+
+example : (wenyanInterpBool "（推 乾） 同 一").toOption = some true := by native_decide
+
+example : (wenyanInterpBool "乾 比 坤").toOption = some false := by native_decide
+
+example :
+    (match wenyanCompile "一 同 一 同 一" with
+     | .error (.parse (.nonassocInfix "同" 6)) => true
+     | _ => false) = true :=
+  by native_decide
+
 /-! ### Hex/operator surface collision tests
 
   「比」「益」「损/損」既可作已执行算子，也可作卦名。parser 在 prefix

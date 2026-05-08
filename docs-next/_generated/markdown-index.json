@@ -408,7 +408,7 @@
         "./README.formal.md"
       ],
       "path": "README.md",
-      "sha256": "2419447468d25d8a2360f10297af858f0e27005c41bd522fe77f2dbebc50b1bc",
+      "sha256": "fa2167356845d7cf25615cc92b4ac9a594dc21d656db0b4e0c31639f466391fc",
       "summary": "> 🌐 **中文** · [English](./README.en.md) · [形式 / Formal](./README.formal.md)",
       "title": "生生不息"
     },
@@ -3741,10 +3741,10 @@
           "title": "下一阶段语法设计"
         }
       ],
-      "lines": 57,
+      "lines": 64,
       "links": [],
       "path": "formal/SSBX/notes/wensurface-roadmap.md",
-      "sha256": "08a3a28e4e012fd659161dbe8c796703d6d164b2fcb932c1ec600ab5ecd29f2c",
+      "sha256": "62058a635a2f672dd387fde21f799f4c6c1b806d920c5ab65c72f25134b781af",
       "summary": "本页记录 `wenyan-surface` 的实现边界。它是 `ziwen-spec.md` 的可执行子集前端，不宣称覆盖完整 Ziwen v0：当前没有 layout token、语句块、函数定义、match、数字/树等通用语言结构。",
       "title": "WenSurface 路线状态"
     },
@@ -3839,10 +3839,10 @@
           "title": "21. Open Decisions"
         }
       ],
-      "lines": 544,
+      "lines": 558,
       "links": [],
       "path": "formal/SSBX/notes/wensurface-syntax-spec.md",
-      "sha256": "2cf1ca26f968d195396f1b32a14c5ebb02a097589728871cd3fac3f67d4839fc",
+      "sha256": "5b18e7140846520b9a83305f57e0cf245801eb7eda0177e2f43ed4c775995aab",
       "summary": "Status: design spec and implementation tracker for the next WenSurface parser.",
       "title": "WenSurface Syntax Spec: brackets, precedence, infix, mixfix"
     },
