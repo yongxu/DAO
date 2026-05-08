@@ -242,6 +242,14 @@ CLI_CASES = [
     (["--operator", "F-8"], "executable note: 入: inbound flow as Hex endomap application; no boundary topology"),
     (["--operator", "P-23"], "executable note: 辯/辩: proposition connective carrier as Bool conjunction; no debate semantics"),
     (["--operator", "S-19"], "executable note: 的: explicit modifier application as Hex endomap application; no modern-grammar semantics"),
+    (["--operator", "P-21"], "executable note: 辭/辞: text/proposition anchor as identity; no argument-content semantics"),
+    (["--operator", "E-1"], "executable note: 書/书: text-record anchor as identity; no writing semantics"),
+    (["--operator", "E-4"], "executable note: 諱/讳: taboo-text anchor as identity; no historiographic omission semantics"),
+    (["--operator", "E-5"], "executable note: 譏/讥: critical-text anchor as identity; no critique semantics"),
+    (["--operator", "E-6"], "executable note: 與/与: recognition-text anchor as identity; no Spring-Autumn judgment semantics"),
+    (["--operator", "E-7"], "executable note: 削: deletion-text anchor as identity; no redaction semantics"),
+    (["--operator", "E-8"], "executable note: 筆/笔: inscription-text anchor as identity; no recording semantics"),
+    (["--operator", "E-9"], "executable note: 褒/貶: appraisal-text anchor as identity; no praise/blame semantics"),
     (["--operator", "R-1"], "executable note: exact Bool relation/predicate package"),
     (["--operator", "LIJ-9"], "executable note: exact Bool relation/predicate package"),
     (["--operator", "Y-2"], "compound surfaces: 五行"),
@@ -253,7 +261,7 @@ CLI_CASES = [
     (["--coverage"], "operators: 371 registered / 371 executable"),
     (["--coverage"], "operator forms: 371 ids with at least one form"),
     (["--help"], "wenyan-surface --json --operators [all|executable|known-not-executable|unsupported]"),
-    (["--help"], "285 exact/theorem-backed; 86 structural catalogue"),
+    (["--help"], "293 exact/theorem-backed; 78 structural catalogue"),
     (["--help"], "0 symbolic catalogue-shape"),
 ]
 
