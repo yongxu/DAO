@@ -64,6 +64,9 @@ inductive Value : Type
   | boolV    (b : Bool)                                        : Value
   | closV    (env : List (String × Value)) (n : String) (body : Tm) : Value
   | builtinV (b : Builtin) (args : List Value)                 : Value
+  | catalogueV (id : SSBX.Text.WenyanOperators.OperatorId)
+      (kind : SSBX.Text.OperatorSignatures.SignatureKind)
+      (args : List Value)                                      : Value
 deriving Repr
 
 abbrev Env := List (String × Value)
@@ -118,6 +121,18 @@ mutual
     | _+1,    _,   .cuoH         => some (.builtinV .cuoH [])
     | _+1,    _,   .zongH        => some (.builtinV .zongH [])
     | _+1,    _,   .huH          => some (.builtinV .huH [])
+    | fuel+1, env, .catalogue1 id a => do
+        let va ← evalFuel fuel env a
+        some (.catalogueV id (SSBX.Text.OperatorSignatures.fullSignatureFor id).kind [va])
+    | fuel+1, env, .catalogue2 id a b => do
+        let va ← evalFuel fuel env a
+        let vb ← evalFuel fuel env b
+        some (.catalogueV id (SSBX.Text.OperatorSignatures.fullSignatureFor id).kind [va, vb])
+    | fuel+1, env, .catalogue3 id a b c => do
+        let va ← evalFuel fuel env a
+        let vb ← evalFuel fuel env b
+        let vc ← evalFuel fuel env c
+        some (.catalogueV id (SSBX.Text.OperatorSignatures.fullSignatureFor id).kind [va, vb, vc])
 
   /-- Fuel-bounded builtin 求值. -/
   def applyBuiltinFuel : Nat → Builtin → List Value → Option Value
@@ -181,6 +196,25 @@ def denoteHexPred (t : Tm) (h : Hexagram) : Option Bool :=
       | some (.boolV b) => some b
       | _               => none
   | none => none
+
+/-- Hex → Hex → Bool 之 Tm: binary relation denotation. -/
+def denoteHexRel (t : Tm) (a b : Hexagram) : Option Bool :=
+  match eval [] t with
+  | some v =>
+      match apply v (.hexV a) with
+      | some v' =>
+          match apply v' (.hexV b) with
+          | some (.boolV out) => some out
+          | _                 => none
+      | _ => none
+  | none => none
+
+def denoteCatalogue (t : Tm) :
+    Option (SSBX.Text.WenyanOperators.OperatorId ×
+      SSBX.Text.OperatorSignatures.SignatureKind × List Value) :=
+  match eval [] t with
+  | some (.catalogueV id kind args) => some (id, kind, args)
+  | _ => none
 
 /-! ## § 6  builtin 等价：.jia/.yi/.eqHex ⟷ YiCore -/
 
@@ -268,6 +302,39 @@ example :
 /-- 「不」之 denotation 即 boolean negation. -/
 example : denoteBool (.app .notB (.boolLit true)) = some false := by native_decide
 example : denoteBool (.app .notB (.boolLit false)) = some true := by native_decide
+
+/-! ### Promoted logic alias bodies -/
+
+example :
+    denoteBool (.app (.app Stdlib.impBody (.boolLit true)) (.boolLit false))
+      = some false := by native_decide
+
+example :
+    denoteBool (.app (.app Stdlib.impBody (.boolLit false)) (.boolLit false))
+      = some true := by native_decide
+
+example :
+    denoteHexRel Stdlib.neqHexBody «一» «一» = some false := by native_decide
+
+example :
+    denoteHexRel Stdlib.neqHexBody «一» Hexagram.qian = some true := by native_decide
+
+example :
+    denoteBool (.app Stdlib.existsHBody
+      (.abs "h" .hex (.app (.app .eqHex (.var "h")) .yi)))
+      = some true := by native_decide
+
+example :
+    denoteBool (.app Stdlib.noneHBody
+      (.abs "h" .hex (.app (.app .eqHex (.var "h")) .yi)))
+      = some false := by native_decide
+
+example :
+    denoteHex
+      (.app
+        (.app (.app Stdlib.endoCompBody Stdlib.tuiBody) Stdlib.sunBody)
+        .yi)
+      = some «一» := by native_decide
 
 /-- 「凡 (λh. 同 h h)」denotes true (反身性 universally). -/
 theorem self_eq_all_true : denoteBool selfEqAll = some true := by native_decide

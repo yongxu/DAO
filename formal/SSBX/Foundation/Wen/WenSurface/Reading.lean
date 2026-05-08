@@ -9,7 +9,8 @@
 
 解析层默认走 cue-aware resolver：先识别语法 marker / binder / 字面值，
 再走 registry-backed executable surface map，最后落到 `OperatorReadings` catalogue。
-catalogue-only operator 可以被说明和诊断，但不会被 evaluator 偷接语义。
+non-exact catalogue operator 可以进入 symbolic evaluator，但不会被伪装成
+Hex/Bool denotation。
 
 ## 状态
 
@@ -228,6 +229,12 @@ def executableCatalogueReadingsForGlyph (glyph : Glyph) : List OperatorReading :
     | some id => (executableSemanticsFor? id).isSome
     | none => false)
 
+def theoremBackedCatalogueReadingsForGlyph (glyph : Glyph) : List OperatorReading :=
+  (catalogueReadingsForGlyph glyph).filter (fun r =>
+    match r.operator? with
+    | some id => isTheoremBackedOperator id
+    | none => false)
+
 def executableOperatorFormReadingsForGlyph (glyph : Glyph) : List OperatorReading :=
   (operatorFormIdsForGlyph glyph).filterMap (fun id =>
     if (executableSemanticsFor? id).isSome then
@@ -235,19 +242,71 @@ def executableOperatorFormReadingsForGlyph (glyph : Glyph) : List OperatorReadin
     else
       none)
 
+def theoremBackedOperatorFormReadingsForGlyph (glyph : Glyph) : List OperatorReading :=
+  (operatorFormIdsForGlyph glyph).filterMap (fun id =>
+    if isTheoremBackedOperator id then
+      some (catalogueReading glyph id.code id.title (some id) .prefix [.expectedObject])
+    else
+      none)
+
+def executableSemanticsForReading? (r : OperatorReading) : Option ExecutableSemantics :=
+  r.operator?.bind executableSemanticsFor?
+
+def sameExecutableSemantics (sem : ExecutableSemantics) (r : OperatorReading) : Bool :=
+  match executableSemanticsForReading? r with
+  | some sem' => sem'.arity == sem.arity && decide (sem'.body = sem.body)
+  | none => false
+
+/--
+Choose a surface reading when all executable candidates collapse to the same
+typed body.  This keeps true homographic aliases such as `故` (K-1/S-7) usable
+without pretending that different bodies, such as object-level and proposition-
+level `反`, have been disambiguated.
+-/
+def uniqueExecutableReadingBySemantics : List OperatorReading → Option OperatorReading
+  | [] => none
+  | r :: rest =>
+      match executableSemanticsForReading? r with
+      | none => none
+      | some sem =>
+          if rest.all (sameExecutableSemantics sem) then some r else none
+
 def uniqueExecutableCatalogueReading (glyph : Glyph) : Option OperatorReading :=
-  match executableCatalogueReadingsForGlyph glyph with
-  | [r] => some r
-  | _ => none
+  let exact := theoremBackedCatalogueReadingsForGlyph glyph
+  match uniqueExecutableReadingBySemantics exact with
+  | some r => some r
+  | none =>
+      if exact.isEmpty then
+        uniqueExecutableReadingBySemantics (executableCatalogueReadingsForGlyph glyph)
+      else
+        none
 
 def uniqueExecutableReadingForGlyph (glyph : Glyph) : Option OperatorReading :=
-  match executableCatalogueReadingsForGlyph glyph with
-  | [r] => some r
-  | [] =>
-      match executableOperatorFormReadingsForGlyph glyph with
-      | [r] => some r
-      | _ => none
-  | _ => none
+  let exactCatalogue := theoremBackedCatalogueReadingsForGlyph glyph
+  match uniqueExecutableReadingBySemantics exactCatalogue with
+  | some r => some r
+  | none =>
+      if exactCatalogue.isEmpty then
+        let exactForms := theoremBackedOperatorFormReadingsForGlyph glyph
+        match uniqueExecutableReadingBySemantics exactForms with
+        | some r => some r
+        | none =>
+            if exactForms.isEmpty then
+              match resolveHexConst glyph with
+              | some _ => none
+              | none =>
+                  let catalogue := executableCatalogueReadingsForGlyph glyph
+                  match uniqueExecutableReadingBySemantics catalogue with
+                  | some r => some r
+                  | none =>
+                      if catalogue.isEmpty then
+                        uniqueExecutableReadingBySemantics (executableOperatorFormReadingsForGlyph glyph)
+                      else
+                        none
+            else
+              none
+      else
+        none
 
 def resolveCatalogueByTable (t : GlyphTok) : Except ResolveErr ResolvedTok :=
   if isUnpromotedHexagramGap t.surface then

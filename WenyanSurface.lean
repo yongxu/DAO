@@ -23,6 +23,7 @@ import SSBX.Foundation.Wen.WenSurface.Coverage
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Yi.YiCore
 open SSBX.Foundation.Wen.WenSurface
+open SSBX.Foundation.Wen.WenDefEval
 open SSBX.Text.WenyanOperators
 open SSBX.Text.OperatorReadings
 open SSBX.Text.OperatorSignatures
@@ -88,6 +89,7 @@ private def signatureEvidenceShow : SignatureEvidence → String
 private def tyShow : SSBX.Foundation.Wen.WenDef.Ty → String
   | .hex => "Hex"
   | .bool => "Bool"
+  | .catalogue kind => "Catalogue[" ++ kind.key ++ "]"
   | .arr a b => "(" ++ tyShow a ++ " -> " ++ tyShow b ++ ")"
 
 private def typeDiagShow : TypeDiag → String
@@ -170,7 +172,7 @@ private def operatorSummaryLine (id : OperatorId) : String :=
 
 private def operatorsOutput (filter : String) : String :=
   if !(operatorListFilterValid filter) then
-    s!"operators: unknown filter \"{filter}\"; expected all, executable, or known-not-executable"
+    s!"operators: unknown filter \"{filter}\"; expected all, executable, known-not-executable, or unsupported"
   else
     let ids := operatorListIds filter
     let header :=
@@ -346,6 +348,17 @@ private def typeOutput (src : String) : String :=
   match wenyanCompile src with
   | .ok typed => s!"type {tyShow typed.ty}\nterm {repr typed.tm}"
   | .error e => errShow e
+
+private def catalogueRun? (src : String) : Option (OperatorId × SignatureKind × Nat) :=
+  match wenyanCompile src with
+  | .error _ => none
+  | .ok typed =>
+      match denoteCatalogue typed.tm with
+      | some (id, kind, args) => some (id, kind, args.length)
+      | none => none
+
+private def catalogueRunShow (id : OperatorId) (kind : SignatureKind) (arity : Nat) : String :=
+  s!"catalogue {id.code} {id.title} kind {kind.key} args {arity}"
 
 private def jsonEscape (s : String) : String :=
   String.join <| s.toList.map fun c =>
@@ -625,9 +638,20 @@ private def jsonOutput (src : String) : String :=
   | .ok h =>
       "{\"ok\":true,\"kind\":\"hex\",\"idx\":" ++ toString (Hexagram.toIdx h).val ++ "}"
   | .error eHex =>
-      match wenyanInterpBool src with
-      | .ok b => "{\"ok\":true,\"kind\":\"bool\",\"value\":" ++ toString b ++ "}"
-      | .error _ => errJson eHex
+    match wenyanInterpBool src with
+    | .ok b => "{\"ok\":true,\"kind\":\"bool\",\"value\":" ++ toString b ++ "}"
+    | .error _ =>
+        match catalogueRun? src with
+        | some (id, kind, arity) =>
+            jsonObject
+              [ jsonFieldBool "ok" true
+              , jsonFieldString "kind" "catalogue"
+              , jsonFieldString "operatorCode" id.code
+              , jsonFieldString "operatorTitle" id.title
+              , jsonFieldString "signatureKind" kind.key
+              , jsonFieldNat "arity" arity
+              ]
+        | none => errJson eHex
 
 private def programOk (src : String) : Bool :=
   match wenyanInterp src with
@@ -635,7 +659,7 @@ private def programOk (src : String) : Bool :=
   | .error _ =>
       match wenyanInterpBool src with
       | .ok _ => true
-      | .error _ => false
+      | .error _ => (catalogueRun? src).isSome
 
 private def tokensOk (src : String) : Bool :=
   match lexWen src with
@@ -672,7 +696,10 @@ private def runProgram (src : String) : String :=
   | .error eHex =>
     match wenyanInterpBool src with
     | .ok b => s!"bool {b}"
-    | .error _ => errShow eHex   -- show the original (Hex-attempt) error
+    | .error _ =>
+        match catalogueRun? src with
+        | some (id, kind, arity) => catalogueRunShow id kind arity
+        | none => errShow eHex   -- show the original (Hex-attempt) error
 
 private def explainOutput (src : String) : String :=
   String.intercalate "\n\n"
@@ -762,7 +789,7 @@ private def operatorsJsonOutput (filter : String) : String :=
       [ jsonFieldBool "ok" false
       , jsonFieldString "phase" "operators"
       , jsonFieldString "code" "unknown_operator_filter"
-      , jsonFieldString "message" s!"operators: unknown filter \"{filter}\"; expected all, executable, or known-not-executable"
+      , jsonFieldString "message" s!"operators: unknown filter \"{filter}\"; expected all, executable, known-not-executable, or unsupported"
       , jsonFieldString "filter" filter
       ]
   else
@@ -821,7 +848,8 @@ private def usage : String :=
      "       wenyan-surface --help",
      "",
      "Surface vocabulary:",
-     "  Executable operators: 推 比 不 必 同 凡 損 损 益 错 錯 综 綜 互 反",
+     "  Executable operators: 371 rows (33 theorem-backed exact; 338 symbolic catalogue-shape)",
+     "  Examples include: 推 比 不 必 同 凡 損 损 益 错 錯 综 綜 互 反 則 且 非 或 莫",
      "  Hex consts: 一 乾 坤 plus canonical 64 hexagram names",
      "  Bool consts: 真 假",
      "  Grouping: （ E ） and ( E )",

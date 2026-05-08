@@ -64,7 +64,7 @@ theorem coverage_counts :
 theorem wenSurface_operator_catalogue_counts :
     fullOperatorSignatures.length = 371
       ∧ operatorRegistryEntries.length = 371
-      ∧ executableRegistryEntries.length = 12
+      ∧ executableRegistryEntries.length = 371
       ∧ allOperatorIds.all (fun id => !(operatorForms id).isEmpty) = true := by
   exact
     ⟨ fullOperatorSignatures_length
@@ -97,7 +97,7 @@ theorem wenSurface_registry_summary :
       ∧ fullOperatorSignatures.length = 371
       ∧ allOperatorCellSemanticRows.length = 71232
       ∧ operatorRegistryEntries.length = 371
-      ∧ executableRegistryEntries.length = 12
+      ∧ executableRegistryEntries.length = 371
       ∧ allOperatorIds.all (fun id => !(operatorForms id).isEmpty) = true
       ∧ executableOperatorIds.all isCatalogueOperator = true
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).signature.id = id) := by
@@ -131,11 +131,12 @@ theorem wenSurface_reuses_operator_cell_semantic_summary :
   , (operator_cell_semantic_coverage_summary).2.2.1
   ⟩
 
-/-! ## § 3 Current execution gate examples -/
+/-! ## § 3 Current execution examples -/
 
 example : (operatorRegistryEntryFor .T_10).executable?.isSome = true := by native_decide
 example : (operatorRegistryEntryFor .Z_5).executable?.isSome = true := by native_decide
-example : (operatorRegistryEntryFor .R_1).executable?.isNone = true := by native_decide
+example : (operatorRegistryEntryFor .R_1).executable?.isSome = true := by native_decide
+example : isTheoremBackedOperator .R_1 = false := by native_decide
 example : (operatorRegistryEntryFor .S_1).signature.arity = 2 := by native_decide
 
 end SSBX.Foundation.Wen.WenSurface

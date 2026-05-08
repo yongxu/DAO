@@ -8,8 +8,8 @@
 | Title | Lines | Path |
 | --- | --- | --- |
 | 生生不息 · Shēngshēng-Bùxī | 468 | `README.en.md` |
-| SSBX · Formal Specification | 581 | `README.formal.md` |
-| 生生不息 | 422 | `README.md` |
+| SSBX · Formal Specification | 583 | `README.formal.md` |
+| 生生不息 | 423 | `README.md` |
 | 起步 | 15 | `docs-next/00_start/README.md` |
 | 形式路径 | 17 | `docs-next/00_start/formal-path.md` |
 | 维护路径 | 15 | `docs-next/00_start/maintenance-path.md` |
@@ -83,7 +83,7 @@
 | Tier 3 Quine Roadmap | 136 | `formal/SSBX/notes/tier3-quine-roadmap.md` |
 | Truth / ClaimLedger / Absolute claim strength audit | 240 | `formal/SSBX/notes/truth-ledger-boundary.md` |
 | v14 形式证明骨架 · 三分原则与 roadmap | 65 | `formal/SSBX/notes/v14-roadmap.md` |
-| WenSurface 路线状态 | 51 | `formal/SSBX/notes/wensurface-roadmap.md` |
+| WenSurface 路线状态 | 52 | `formal/SSBX/notes/wensurface-roadmap.md` |
 | WenSurface Syntax Spec: brackets, precedence, infix, mixfix | 544 | `formal/SSBX/notes/wensurface-syntax-spec.md` |
 | zero-axiom roadmap for `kleene_recursion_axiom` | 265 | `formal/SSBX/notes/zero-axiom-roadmap.md` |
 | 周易位与算子对照报告 | 378 | `formal/SSBX/notes/zhouyi-position-operator-report.md` |
