@@ -1,7 +1,7 @@
 /-
 # UnityBoundary — 统一 / 理限 / 文限
 
-Companion: `义理/统一边界 · 从理到文.md`
+Companion: `义理/边界/统一边界 · 从理到文.md`
 
 本文件只形式化一个薄的边界命题：
 

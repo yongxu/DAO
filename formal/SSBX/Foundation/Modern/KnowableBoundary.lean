@@ -1,14 +1,14 @@
 /-
 # KnowableBoundary — 可知边界 / 语言边界 / 可描述之理
 
-Companion: `义理/可知边界 · 语言与理.md`
+Companion: `义理/边界/可知边界 · 语言与理.md`
 
 本文件形式化一条薄命题：
 
 1. 语言的边界就是可描述之理的边界；
 2. 边界之内，可说即以理可描述；
 3. 边界之外，不可说；若仍作为 utterance 出现，也不是理；
-4. 可感 / 不可感 等其他“可”的边界由 `KeBoundary.lean` 承接；本文件只保留
+4. 可感 / 不可感 等其他“可”的边界由相邻边界文件承接；本文件只保留
    defer anchor，说明它们不属于本文的可知边界。
 -/
 import SSBX.Foundation.Modern.UnityBoundary
@@ -108,8 +108,8 @@ theorem beyond_boundary_utterance_is_non_li
 
 /-! ## § 4 Other ke-boundaries are deferred from this file -/
 
-/-- 其他“可”的边界：可感、不可感、可行、不可行、可证、不可证等。
-    本文件只枚举其待处理位；`KeBoundary.lean` 承接处理。 -/
+/-- 其他“可”的边界：可感、不可感、可行、不可行、可证、不可证、
+    可测、不可测、可名、不可名等。本文件只枚举其留项位；相邻边界文件承接处理。 -/
 inductive DeferredKeBoundary : Type
   | feelable
   | unfeelable
@@ -117,12 +117,16 @@ inductive DeferredKeBoundary : Type
   | unactionable
   | provable
   | unprovable
+  | measurable
+  | unmeasurable
+  | nameable
+  | unnameable
   deriving Repr, DecidableEq
 
 /-- 本文件不处理这些非可知轴的边界。 -/
 def handledHere (_b : DeferredKeBoundary) : Bool := false
 
-/-- 可感 / 可行 / 可证等边界在本文件中全部 deferred。 -/
+/-- 可感 / 可行 / 可证 / 可测 / 可名等边界在本文件中全部 deferred。 -/
 theorem deferred_ke_boundaries_are_not_handled_here (b : DeferredKeBoundary) :
     handledHere b = false := by
   cases b <;> rfl
@@ -134,7 +138,7 @@ theorem deferred_ke_boundaries_are_not_handled_here (b : DeferredKeBoundary) :
     (2) 可说 iff 是理 iff 可知；
     (3) 界外不可说且非理；
     (4) 界外若被强作话语，也不是理性话语；
-    (5) 可感 / 可行 / 可证等非可知轴边界 deferred。 -/
+    (5) 可感 / 可行 / 可证 / 可测 / 可名等非可知轴边界 deferred。 -/
 theorem knowable_boundary_summary :
     (∀ w : LanguageExpression, ∀ l : DescribableLiExpression,
       languageBoundary w = describableLiBoundary l)
