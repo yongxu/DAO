@@ -1,0 +1,130 @@
+# Markov-Causal Bridge Verification Plan
+
+目标：把 Markov-因果桥从“已能构建的 typed skeleton”推进到可重复验证的研究程序。本文只定义验证流程，不新增物理 claim。
+
+关联文件：
+
+| 文件 | 作用 |
+|---|---|
+| `formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean` | 当前 machine-checked Lean 骨架 |
+| `formal/SSBX/notes/markov-causal-bridge-plan.md` | 探索计划与完成记录 |
+| `义理/Markov因果桥 · 大统一最小验证构造.md` | 义理边界与 theorem 锚点说明 |
+
+## 当前验证结论
+
+- [x] `QuantumRelativityMarkovBridge.lean` 可单独构建。
+- [x] `SSBX` 顶层入口可构建并导入新模块。
+- [x] `markov_causal_bridge_summary` 已关闭有限过程双读、测量-事件对齐、两面保留、同根非同一、no-go 保持。
+- [x] `MeasurementEventBridge.toBridgeTerm` 已把本层桥接到上一层 tag-level `BridgeTerm`。
+- [x] 首次新 worktree 原生构建的 `mathlib4` 克隆阻塞已记录为基础设施失败，不当作 theorem 失败。
+- [ ] 尚未验证任何概率归一化、Born rule、量子通道、干涉、因果偏序、度规恢复或经验闭合。
+
+## 每次变更的最低验证门槛
+
+任何改动触及本桥相关 Lean 或文档时，至少执行：
+
+```bash
+lake build SSBX.Foundation.Modern.QuantumRelativityMarkovBridge
+lake build SSBX
+git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean formal/SSBX.lean formal/SSBX/notes/markov-causal-bridge-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md docs-next/10_formal_形式/modern.md '义理/Markov因果桥 · 大统一最小验证构造.md'
+```
+
+通过标准：
+
+| 门槛 | 通过标准 | 失败处理 |
+|---|---|---|
+| 目标模块构建 | `Build completed successfully` | 修 Lean；若失败来自依赖或网络，记录为 infra failure |
+| 顶层入口构建 | `lake build SSBX` 通过 | 检查 import 顺序、命名冲突、旧模块影响 |
+| 格式检查 | `git diff --check` 无输出 | 修尾随空格、冲突标记、缩进问题 |
+| 状态词自审 | 无 stale `unchecked/planned/build pending` | 更新文档状态或撤回对应勾选 |
+
+状态词自审命令：
+
+```bash
+rg -n "待处理|future|deferred|部分相关|佛|唯识|analogy|unchecked|planned|build pending|not run|not edited|failure-to-close" formal/SSBX/notes/markov-causal-bridge-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md '义理/Markov因果桥 · 大统一最小验证构造.md'
+```
+
+## Theorem 锚点审计
+
+每次修改后确认这些锚点仍存在：
+
+| 层 | 锚点 | 当前状态 |
+|---|---|---|
+| 有限载体 | `FiniteProcess`、`state_code_within_bound` | `machineChecked` |
+| 路径与可达 | `ProcessPath`、`Reachable`、`path_implies_reachable` | `machineChecked` |
+| Markov 读法 | `MarkovKernelSkeleton`、`positive_weight_implies_step`、`pathWeight` | `machineChecked` |
+| 因果读法 | `CausalEvent`、`causalBefore`、`step_implies_causal_before` | `machineChecked` |
+| 测量-事件对齐 | `MeasurementEventBridge`、`measurement_event_alignment` | `machineChecked` |
+| 上层桥项投影 | `MeasurementEventBridge.toBridgeTerm`、`measurement_event_bridge_term_keeps_faces` | `machineChecked` |
+| 中介路线边界 | `MarkovCausalRoute`、`markov_causal_route_is_framework_route` | `machineChecked` |
+| no-go 保持 | `markov_bridge_not_direct_language_addition` | `machineChecked` |
+| 公开摘要 | `markov_causal_bridge_summary` | `machineChecked` |
+
+审计命令：
+
+```bash
+rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean
+```
+
+## 边界审计
+
+本桥当前只能说：
+
+```text
+同一个有限过程骨架
+  可以有 Markov / 测量读法
+  可以有因果 / 事件读法
+  终端状态可以对齐成测量候选与事件记录
+  并且不取消当前语言 direct-addition no-go
+```
+
+本桥当前不能说：
+
+| 禁止提前声称 | 原因 |
+|---|---|
+| 已证明量子引力 | 没有动力学、连续极限、量子场或引力方程 |
+| 已推出 Born rule | `Nat` 权重不是归一化概率，也不是振幅 |
+| 已表达干涉 | 没有相位、复幅、路径相消 |
+| 已恢复时空度规 | 没有 Lorentzian geometry 或 metric recovery theorem |
+| 已给经验预言 | 没有 pending ledger、观测量或数据判准 |
+
+文档中若出现这些强 claim，必须降级为 `未纳入本轮` 或新增相应 formal structure 后再验证。
+
+## 下一轮升级验证路线
+
+每一步都必须新增 Lean 锚点、更新义理边界、记录成功或失败。
+
+| 阶段 | 目标 | 验证出口 |
+|---|---|---|
+| V1 | 给出一个具体有限实例 | `example` 或 theorem 展示非空 `FiniteProcess` 与 `MeasurementEventBridge` |
+| V2 | 从 `Nat` 权重升级到有限概率核 | 证明每个状态的权重总和非零或归一化接口 |
+| V3 | 加强路径权重 | 证明路径权重与一步权重有组合关系 |
+| V4 | 加强因果结构 | 增加反身/传递/反对称或局部有限性中的一个，并标明边界 |
+| V5 | 引入 quantum channel / amplitude skeleton | 明确 classical Markov 与 quantum amplitude 的差异，不偷换 Born rule |
+| V6 | 经验接口 | 把候选可测差异写入 pending ledger，而不是直接宣称实验闭合 |
+
+## 失败记录模板
+
+失败不能删除，应写入探索计划或本文：
+
+```text
+日期：
+目标：
+命令 / theorem：
+失败类型：Lean proof failure / build failure / infra failure / conceptual overclaim
+失败原因：
+保留结论：
+下一步：
+```
+
+## 当前命令记录
+
+已执行并通过：
+
+```bash
+lake build SSBX.Foundation.Modern.QuantumRelativityMarkovBridge
+lake build SSBX
+git diff --check -- formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean formal/SSBX.lean formal/SSBX/notes/markov-causal-bridge-plan.md formal/SSBX/notes/markov-causal-bridge-verification-plan.md docs-next/10_formal_形式/modern.md '义理/Markov因果桥 · 大统一最小验证构造.md'
+```
+
+备注：`lake build SSBX` 仍会输出既有 Wen 模块的 unused simp args linter 警告；本轮新增 Markov 模块无警告。
