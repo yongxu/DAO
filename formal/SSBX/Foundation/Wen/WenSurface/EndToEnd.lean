@@ -434,7 +434,42 @@ example :
       = some (.arr .hex .hex) :=
   by native_decide
 
+example :
+    (wenyanCompile "推").toOption.map (·.ty)
+      = some (.arr .hex .hex) :=
+  by native_decide
+
+example :
+    (wenyanCompile "不").toOption.map (·.ty)
+      = some (.arr .bool .bool) :=
+  by native_decide
+
+example :
+    (wenyanCompile "同 乾").toOption.map (·.ty)
+      = some (.arr .hex .bool) :=
+  by native_decide
+
+example :
+    (wenyanCompile "（推）").toOption.map (·.ty)
+      = some (.arr .hex .hex) :=
+  by native_decide
+
+example :
+    (wenyanCompile "（同 乾）").toOption.map (·.ty)
+      = some (.arr .hex .bool) :=
+  by native_decide
+
+example : (wenyanInterpBool "（同 乾） 乾").toOption = some true := by native_decide
+
+example : (wenyanInterp "者 甲 推 甲 乾").toOption = some «一» := by native_decide
+
 example : (wenyanCompile "而 不 不 真").toOption.isNone = true := by native_decide
+
+example :
+    (match wenyanCompile "在 乾" with
+     | .error (.parse .empty) => true
+     | _ => false) = true :=
+  by native_decide
 
 /-! ## § 6.3 prefix binder / let forms -/
 
