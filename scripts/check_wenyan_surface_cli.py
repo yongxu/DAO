@@ -61,6 +61,7 @@ CASES = [
     ("識 乾", {"ok": True, "kind": "bool", "value": True}),
     ("大一 乾", {"ok": True, "kind": "bool", "value": True}),
     ("偶 乾 坤", {"ok": True, "kind": "hexPair", "values": [{"idx": 0, "label": " («乾»)"}, {"idx": 63, "label": " («坤»)"}]}),
+    ("偕 乾 坤", {"ok": True, "kind": "hexPair", "values": [{"idx": 0, "label": " («乾»)"}, {"idx": 63, "label": " («坤»)"}]}),
     ("兩 乾", {"ok": True, "kind": "hexPair", "values": [{"idx": 0, "label": " («乾»)"}, {"idx": 0, "label": " («乾»)"}]}),
     ("聚 乾", {"ok": True, "kind": "hexList", "values": [{"idx": 0, "label": " («乾»)"}]}),
     ("散 聚 乾", {"ok": True, "kind": "hex", "idx": 0}),
@@ -121,6 +122,8 @@ CLI_CASES = [
     (["--operator", "D-2"], "executable note: 再: repeat a Hex endomap once"),
     (["--operator", "Z-10"], "executable note: 藏: concealment transition"),
     (["--operator", "R-12"], "executable note: 偶/耦: Hex pair carrier constructor"),
+    (["--operator", "R-14"], "executable note: 與/与: Hex pair carrier constructor"),
+    (["--operator", "R-15"], "executable note: 偕: Hex pair carrier constructor"),
     (["--operator", "Z-18"], "executable note: 散: first Hex projection from a list carrier"),
     (["--operator", "R-1"], "executable note: exact Bool relation/predicate package"),
     (["--operator", "LIJ-9"], "executable note: exact Bool relation/predicate package"),
@@ -133,7 +136,7 @@ CLI_CASES = [
     (["--coverage"], "operators: 371 registered / 371 executable"),
     (["--coverage"], "operator forms: 371 ids with at least one form"),
     (["--help"], "wenyan-surface --json --operators [all|executable|known-not-executable|unsupported]"),
-    (["--help"], "166 exact/theorem-backed; 205 structural catalogue"),
+    (["--help"], "168 exact/theorem-backed; 203 structural catalogue"),
     (["--help"], "0 symbolic catalogue-shape"),
 ]
 

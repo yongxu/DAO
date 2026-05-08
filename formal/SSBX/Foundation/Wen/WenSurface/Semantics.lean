@@ -2,7 +2,7 @@
 # WenSurface.Semantics — executable semantics registry
 
 This module separates exact stdlib denotations from total catalogue
-execution.  One hundred sixty-six `OperatorId`s use exact `WenDef.Tm` bodies:
+execution.  One hundred sixty-eight `OperatorId`s use exact `WenDef.Tm` bodies:
 the original high-value stdlib rows, the ObjectEndo/ObjectMap/OpUnary Hex
 transform package, finite Hex pair/list carriers, finite Hex quantifiers, finite Hex motion/process rows,
 plus the Bool relation/predicate package.  Every
@@ -115,6 +115,8 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .R_11 => some ⟨.R_11, Stdlib.hexIdBody, 1, "對/对: Hex identity as paired alignment anchor"⟩
   | .R_12 => some ⟨.R_12, Stdlib.pairHBody, 2, "偶/耦: Hex pair carrier constructor"⟩
   | .R_13 => some ⟨.R_13, Stdlib.pairHBody, 2, "並/并: Hex pair carrier constructor"⟩
+  | .R_14 => some ⟨.R_14, Stdlib.pairHBody, 2, "與/与: Hex pair carrier constructor"⟩
+  | .R_15 => some ⟨.R_15, Stdlib.pairHBody, 2, "偕: Hex pair carrier constructor"⟩
   | .C_2  => some ⟨.C_2,  Stdlib.pairHBody, 2, "包: Hex pair carrier constructor"⟩
   | .T_1  => some ⟨.T_1,  Stdlib.flip2Body, 1, "化: Hex y2 transform / inner hua"⟩
   | .T_2  => some ⟨.T_2,  Stdlib.flip3Body, 1, "變/变: Hex y3 transform / inner bian"⟩
@@ -225,7 +227,7 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
 /-- The exact theorem-backed subset, kept separate from structural catalogue semantics. -/
 def coreTheoremBackedOperatorIds : List OperatorId :=
   [.T_10, .R_8, .N_1, .M_1, .I_1, .Q_1, .T_12, .T_13, .Z_5, .Z_6, .Z_3, .T_6]
-    ++ [.R_6, .R_11, .R_12, .R_13, .C_2,
+    ++ [.R_6, .R_11, .R_12, .R_13, .R_14, .R_15, .C_2,
         .T_1, .T_2, .T_4, .T_5, .T_7, .T_8, .T_9, .T_14, .T_15,
         .B_3, .B_4, .B_5, .B_6, .I_2, .I_6, .I_8, .P_9, .D_1, .D_4, .L_9, .L_10,
         .Y_3, .Y_4, .Y_5, .Y_17, .Y_18, .Z_2, .Z_8, .Z_9, .Z_12, .Z_13,
@@ -253,7 +255,7 @@ def structuralCatalogueOperatorIds : List OperatorId :=
 Structural total fallback for catalogue rows.
 
 These bodies are executable and type-checkable, but intentionally weaker than
-the 166 exact rows above: they preserve the operator id, signature kind, and
+the 168 exact rows above: they preserve the operator id, signature kind, and
 evaluated arguments as a catalogue value instead of projecting fake Hex/Bool
 results.
 -/
@@ -328,10 +330,10 @@ theorem executableOperatorIds_length :
     executableOperatorIds.length = 371 := by native_decide
 
 theorem coreTheoremBackedOperatorIds_length :
-    coreTheoremBackedOperatorIds.length = 120 := by native_decide
+    coreTheoremBackedOperatorIds.length = 122 := by native_decide
 
 theorem theoremBackedOperatorIds_length :
-    theoremBackedOperatorIds.length = 166 := by native_decide
+    theoremBackedOperatorIds.length = 168 := by native_decide
 
 theorem theoremBackedOperatorIds_nodup :
     theoremBackedOperatorIds.Nodup := by native_decide
@@ -341,7 +343,7 @@ theorem theoremBackedOperatorIds_all_semantics :
   native_decide
 
 theorem structuralCatalogueOperatorIds_length :
-    structuralCatalogueOperatorIds.length = 205 := by native_decide
+    structuralCatalogueOperatorIds.length = 203 := by native_decide
 
 theorem structuralCatalogueOperatorIds_all_not_theorem_backed :
     structuralCatalogueOperatorIds.all (fun id => (theoremBackedSemanticsFor? id).isNone) = true := by
@@ -372,8 +374,8 @@ theorem operatorRegistryCoverage_summary :
     operatorRegistryEntries.length = 371
       ∧ executableRegistryEntries.length = 371
       ∧ executableOperatorIds.length = 371
-      ∧ theoremBackedOperatorIds.length = 166
-      ∧ structuralCatalogueOperatorIds.length = 205
+      ∧ theoremBackedOperatorIds.length = 168
+      ∧ structuralCatalogueOperatorIds.length = 203
       ∧ theoremBackedOperatorIds.length + structuralCatalogueOperatorIds.length = 371
       ∧ executableOperatorIds.all isCatalogueOperator = true
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).id = id)

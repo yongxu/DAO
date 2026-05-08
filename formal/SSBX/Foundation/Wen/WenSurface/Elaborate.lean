@@ -6,7 +6,7 @@
 
 ## 当前范围
 
-- **算子**：166 个 exact operator 进入 theorem-backed / Bool / carrier package bodies；
+- **算子**：168 个 exact operator 进入 theorem-backed / Bool / carrier package bodies；
   其余 catalogue operator elaborates to structural catalogue normal forms。
 - **常值**：「一」 → `.yi` primitive；64 卦名 / aliases → `.hexLit h`。
 - **组合**：显式 `SurfaceExpr.app` 左结合到 `Tm.app`。
@@ -290,6 +290,7 @@ def inferTypeDetailed : Ctx → Tm → Except TypeDiag Ty
       | .ok actual => .error (.expectedFunction actual)
   | _, .hexLit _  => .ok .hex
   | _, .boolLit _ => .ok .bool
+  | _, .cellLit _ => .ok .cell
   | _, .jia       => .ok (.arr .hex (.arr .hex .hex))
   | _, .yi        => .ok .hex
   | _, .notB      => .ok (.arr .bool .bool)
@@ -312,6 +313,18 @@ def inferTypeDetailed : Ctx → Tm → Except TypeDiag Ty
   | _, .list1H    => .ok (.arr .hex (.list .hex))
   | _, .list2H    => .ok (.arr .hex (.arr .hex (.list .hex)))
   | _, .headH     => .ok (.arr (.list .hex) .hex)
+  | _, .eqCell    => .ok (.arr .cell (.arr .cell .bool))
+  | _, .cuoC      => .ok (.arr .cell .cell)
+  | _, .zongC     => .ok (.arr .cell .cell)
+  | _, .huC       => .ok (.arr .cell .cell)
+  | _, .shiNextC  => .ok (.arr .cell .cell)
+  | _, .shiPrevC  => .ok (.arr .cell .cell)
+  | _, .flip1C    => .ok (.arr .cell .cell)
+  | _, .flip2C    => .ok (.arr .cell .cell)
+  | _, .flip3C    => .ok (.arr .cell .cell)
+  | _, .flip4C    => .ok (.arr .cell .cell)
+  | _, .flip5C    => .ok (.arr .cell .cell)
+  | _, .flip6C    => .ok (.arr .cell .cell)
   | ctx, .catalogue1 id a =>
       match inferTypeDetailed ctx a with
       | .error e => .error e

@@ -49,12 +49,14 @@ Path 丙 § 风险 3 之完全缓解：
 0 sorry / 0 axiom. 仅类型层；operational semantics 见 M2.
 -/
 import SSBX.Foundation.Yi.Yi
+import SSBX.Foundation.Bagua.Cell192
 import SSBX.Foundation.Bagua.BaguaWenSpec
 import SSBX.Text.OperatorSignatures
 
 namespace SSBX.Foundation.Wen.WenDef
 
 open SSBX.Foundation.Yi.Yi
+open SSBX.Foundation.Bagua.Cell192
 open SSBX.Foundation.Bagua.BaguaWenSpec
 open SSBX.Text.WenyanOperators
 open SSBX.Text.OperatorSignatures
@@ -65,6 +67,7 @@ open SSBX.Text.OperatorSignatures
 inductive Ty : Type
   | hex
   | bool
+  | cell
   | catalogue (kind : SignatureKind)
   | prod (fst snd : Ty)
   | list (elem : Ty)
@@ -80,6 +83,7 @@ inductive Tm : Type
   | app     (f x : Tm)                 : Tm
   | hexLit  (h : Hexagram)             : Tm
   | boolLit (b : Bool)                 : Tm
+  | cellLit (c : Cell192)              : Tm
   | jia                                : Tm  -- 加 :  Hex → Hex → Hex
   | yi                                 : Tm  -- 一 :  Hex
   | notB                               : Tm  -- 不 :  Bool → Bool
@@ -102,6 +106,18 @@ inductive Tm : Type
   | list1H                             : Tm  -- singleton : Hex → List Hex
   | list2H                             : Tm  -- pair-list : Hex → Hex → List Hex
   | headH                              : Tm  -- head : List Hex → Hex
+  | eqCell                             : Tm  -- Cell → Cell → Bool
+  | cuoC                               : Tm  -- Cell → Cell, preserve 时
+  | zongC                              : Tm  -- Cell → Cell, preserve 时
+  | huC                                : Tm  -- Cell → Cell, preserve 时
+  | shiNextC                           : Tm  -- Cell → Cell, 时态前进
+  | shiPrevC                           : Tm  -- Cell → Cell, 时态后退
+  | flip1C                             : Tm  -- Cell → Cell, y1 flip
+  | flip2C                             : Tm  -- Cell → Cell, y2 flip
+  | flip3C                             : Tm  -- Cell → Cell, y3 flip
+  | flip4C                             : Tm  -- Cell → Cell, y4 flip
+  | flip5C                             : Tm  -- Cell → Cell, y5 flip
+  | flip6C                             : Tm  -- Cell → Cell, y6 flip
   | catalogue1 (id : OperatorId) (a : Tm) : Tm
   | catalogue2 (id : OperatorId) (a b : Tm) : Tm
   | catalogue3 (id : OperatorId) (a b c : Tm) : Tm
@@ -131,6 +147,7 @@ def typeCheck : Ctx → Tm → Option Ty
       | _, _ => none
   | _, .hexLit _  => some .hex
   | _, .boolLit _ => some .bool
+  | _, .cellLit _ => some .cell
   | _, .jia       => some (.arr .hex (.arr .hex .hex))
   | _, .yi        => some .hex
   | _, .notB      => some (.arr .bool .bool)
@@ -153,6 +170,18 @@ def typeCheck : Ctx → Tm → Option Ty
   | _, .list1H    => some (.arr .hex (.list .hex))
   | _, .list2H    => some (.arr .hex (.arr .hex (.list .hex)))
   | _, .headH     => some (.arr (.list .hex) .hex)
+  | _, .eqCell    => some (.arr .cell (.arr .cell .bool))
+  | _, .cuoC      => some (.arr .cell .cell)
+  | _, .zongC     => some (.arr .cell .cell)
+  | _, .huC       => some (.arr .cell .cell)
+  | _, .shiNextC  => some (.arr .cell .cell)
+  | _, .shiPrevC  => some (.arr .cell .cell)
+  | _, .flip1C    => some (.arr .cell .cell)
+  | _, .flip2C    => some (.arr .cell .cell)
+  | _, .flip3C    => some (.arr .cell .cell)
+  | _, .flip4C    => some (.arr .cell .cell)
+  | _, .flip5C    => some (.arr .cell .cell)
+  | _, .flip6C    => some (.arr .cell .cell)
   | ctx, .catalogue1 id a =>
       let sig := fullSignatureFor id
       if sig.arity = 1 && (typeCheck ctx a).isSome then
@@ -757,6 +786,66 @@ def headHDef : WenDef where
   validName      := by native_decide
   bodyTypechecks := by native_decide
 
+/-! ### Cell192 carrier helpers -/
+
+def eqCellBody : Tm := .eqCell
+
+theorem eqCellBody_typed :
+    typeCheck [] eqCellBody = some (.arr .cell (.arr .cell .bool)) := by
+  native_decide
+
+def eqCellDef : WenDef where
+  name           := "eqCell"
+  body           := eqCellBody
+  bodyType       := .arr .cell (.arr .cell .bool)
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def cuoCBody : Tm := .cuoC
+def zongCBody : Tm := .zongC
+def huCBody : Tm := .huC
+def shiNextCBody : Tm := .shiNextC
+def shiPrevCBody : Tm := .shiPrevC
+def flip1CBody : Tm := .flip1C
+def flip2CBody : Tm := .flip2C
+def flip3CBody : Tm := .flip3C
+def flip4CBody : Tm := .flip4C
+def flip5CBody : Tm := .flip5C
+def flip6CBody : Tm := .flip6C
+
+theorem cuoCBody_typed : typeCheck [] cuoCBody = some (.arr .cell .cell) := by native_decide
+theorem zongCBody_typed : typeCheck [] zongCBody = some (.arr .cell .cell) := by native_decide
+theorem huCBody_typed : typeCheck [] huCBody = some (.arr .cell .cell) := by native_decide
+theorem shiNextCBody_typed : typeCheck [] shiNextCBody = some (.arr .cell .cell) := by native_decide
+theorem shiPrevCBody_typed : typeCheck [] shiPrevCBody = some (.arr .cell .cell) := by native_decide
+theorem flip1CBody_typed : typeCheck [] flip1CBody = some (.arr .cell .cell) := by native_decide
+theorem flip2CBody_typed : typeCheck [] flip2CBody = some (.arr .cell .cell) := by native_decide
+theorem flip3CBody_typed : typeCheck [] flip3CBody = some (.arr .cell .cell) := by native_decide
+theorem flip4CBody_typed : typeCheck [] flip4CBody = some (.arr .cell .cell) := by native_decide
+theorem flip5CBody_typed : typeCheck [] flip5CBody = some (.arr .cell .cell) := by native_decide
+theorem flip6CBody_typed : typeCheck [] flip6CBody = some (.arr .cell .cell) := by native_decide
+
+def cellEndoDef (name : String) (body : Tm)
+    (validName : isValidName name = true)
+    (bodyTypechecks : typeCheck [] body = some (.arr .cell .cell)) : WenDef where
+  name := name
+  body := body
+  bodyType := .arr .cell .cell
+  validName := validName
+  bodyTypechecks := by simpa using bodyTypechecks
+
+def cuoCDef : WenDef := cellEndoDef "cuoC" cuoCBody (by native_decide) cuoCBody_typed
+def zongCDef : WenDef := cellEndoDef "zongC" zongCBody (by native_decide) zongCBody_typed
+def huCDef : WenDef := cellEndoDef "huC" huCBody (by native_decide) huCBody_typed
+def shiNextCDef : WenDef := cellEndoDef "shiNextC" shiNextCBody (by native_decide) shiNextCBody_typed
+def shiPrevCDef : WenDef := cellEndoDef "shiPrevC" shiPrevCBody (by native_decide) shiPrevCBody_typed
+def flip1CDef : WenDef := cellEndoDef "flip1C" flip1CBody (by native_decide) flip1CBody_typed
+def flip2CDef : WenDef := cellEndoDef "flip2C" flip2CBody (by native_decide) flip2CBody_typed
+def flip3CDef : WenDef := cellEndoDef "flip3C" flip3CBody (by native_decide) flip3CBody_typed
+def flip4CDef : WenDef := cellEndoDef "flip4C" flip4CBody (by native_decide) flip4CBody_typed
+def flip5CDef : WenDef := cellEndoDef "flip5C" flip5CBody (by native_decide) flip5CBody_typed
+def flip6CDef : WenDef := cellEndoDef "flip6C" flip6CBody (by native_decide) flip6CBody_typed
+
 /-! ### Stdlib 总表 -/
 
 /-- 当前 stdlib 中已合度且类型化之 wenyan-ops 定义。 -/
@@ -767,9 +856,11 @@ def all : List WenDef :=
   , impDef, neqHexDef, existsHDef, noneHDef
   , uniqueHDef, exactly3HDef, majorityHDef, endoCompDef, hexApplyDef
   , boolMarkerDef, repeatOnceDef, eachHDef
-  , pairHDef, dupHDef, list1HDef, list2HDef, headHDef ]
+  , pairHDef, dupHDef, list1HDef, list2HDef, headHDef
+  , eqCellDef, cuoCDef, zongCDef, huCDef, shiNextCDef, shiPrevCDef
+  , flip1CDef, flip2CDef, flip3CDef, flip4CDef, flip5CDef, flip6CDef ]
 
-theorem all_length : all.length = 34 := by native_decide
+theorem all_length : all.length = 46 := by native_decide
 
 theorem all_names :
     all.map WenDef.name =
@@ -779,7 +870,9 @@ theorem all_names :
       , "imp", "neqHex", "existsH", "noneH"
       , "uniqueH", "exactly3H", "majorityH", "endoComp", "hexApply"
       , "boolMarker", "repeatOnce", "eachH"
-      , "pairH", "dupH", "list1H", "list2H", "headH" ] := by
+      , "pairH", "dupH", "list1H", "list2H", "headH"
+      , "eqCell", "cuoC", "zongC", "huC", "shiNextC", "shiPrevC"
+      , "flip1C", "flip2C", "flip3C", "flip4C", "flip5C", "flip6C" ] := by
   native_decide
 
 theorem all_distinct_names : (all.map WenDef.name).Nodup := by native_decide
