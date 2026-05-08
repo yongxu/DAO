@@ -50,6 +50,7 @@ import SSBX.Foundation.Wen.Operators
 import SSBX.Foundation.Wen.Kernel
 import SSBX.Foundation.Wen.WenyanText
 import SSBX.Foundation.Wen.WenyanSelfInterp
+import SSBX.Foundation.Wen.MetaInterp
 import SSBX.Foundation.Wen.WenDef
 import SSBX.Foundation.Wen.WenyanParser
 import SSBX.Foundation.Wen.WenEval
