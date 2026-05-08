@@ -2,10 +2,10 @@
 # WenSurface.Semantics — executable semantics registry
 
 This module separates exact stdlib denotations from total catalogue-shape
-execution.  Thirty-eight high-value `OperatorId`s use theorem-backed `WenDef.Tm`
-bodies; every remaining catalogue row gets a conservative, signature-shaped
-`WenDef.Tm` so CLI support is total without confusing it with exact text
-semantics.
+execution.  Eighty-four `OperatorId`s use exact `WenDef.Tm` bodies: the original
+high-value stdlib rows plus the Bool relation/predicate package.  Every
+remaining catalogue row gets a conservative, signature-shaped `WenDef.Tm` so
+CLI support is total without confusing it with exact text semantics.
 -/
 import SSBX.Foundation.Wen.WenDef
 import SSBX.Text.OperatorSignatures
@@ -29,6 +29,71 @@ deriving Repr, DecidableEq
 
 /-- Public registry API: catalogue operator id → executable denotation, if any. -/
 abbrev OperatorSemanticsRegistry := OperatorId → Option ExecutableSemantics
+
+/-! ## § 1.1 Bool relation/predicate package -/
+
+def hexPredTrueBody : Tm :=
+  .abs "x" .hex (.boolLit true)
+
+theorem hexPredTrueBody_typed :
+    typeCheck [] hexPredTrueBody = some (.arr .hex .bool) := by native_decide
+
+def hexRelEqBody : Tm :=
+  .eqHex
+
+theorem hexRelEqBody_typed :
+    typeCheck [] hexRelEqBody = some (.arr .hex (.arr .hex .bool)) := by native_decide
+
+def relationPredicateBoolOperatorIds : List OperatorId :=
+  [ .R_1, .R_2, .R_3, .R_4, .R_7, .R_9, .R_10
+  , .C_1, .C_3
+  , .F_12
+  , .B_8
+  , .K_2, .K_3, .K_4
+  , .I_9
+  , .P_1, .P_14, .P_15, .P_16, .P_17, .P_20
+  , .G_3, .G_6, .G_10
+  , .D_5, .D_6, .D_7
+  , .L_4
+  , .Y_20
+  , .Z_4, .Z_14, .Z_15, .Z_39, .Z_40
+  , .ZHU_1
+  , .CHU_10
+  , .LIJ_6, .LIJ_9
+  , .ZA_13, .ZA_14, .ZA_15, .ZA_16, .ZA_17, .ZA_18, .ZA_19, .ZA_20
+  ]
+
+theorem relationPredicateBoolOperatorIds_length :
+    relationPredicateBoolOperatorIds.length = 46 := by native_decide
+
+theorem relationPredicateBoolOperatorIds_nodup :
+    relationPredicateBoolOperatorIds.Nodup := by native_decide
+
+def relationPredicateBoolBodyForArity? : Nat → Option Tm
+  | 1 => some hexPredTrueBody
+  | 2 => some hexRelEqBody
+  | _ => none
+
+def relationPredicateBoolSemanticsFor? (id : OperatorId) : Option ExecutableSemantics :=
+  if decide (id ∈ relationPredicateBoolOperatorIds) then
+    let sig := fullSignatureFor id
+    match relationPredicateBoolBodyForArity? sig.arity with
+    | some body =>
+        some
+          { id := id
+          , body := body
+          , arity := sig.arity
+          , note := "exact Bool relation/predicate package for "
+              ++ id.code ++ " " ++ id.title ++ " ("
+              ++ sig.kind.key ++ "/" ++ toString sig.arity ++ ")" }
+    | none => none
+  else
+    none
+
+theorem relationPredicateBoolSemanticsFor?_all :
+    relationPredicateBoolOperatorIds.all
+      (fun id => (relationPredicateBoolSemanticsFor? id).isSome) = true := by
+  native_decide
 
 /-- Exact theorem-backed operator registry. -/
 def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
@@ -71,14 +136,17 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .S_1  => some ⟨.S_1,  Stdlib.hexApplyBody, 2, "之: Hex endomap application/projection"⟩
   | .S_2  => some ⟨.S_2,  Stdlib.endoCompBody, 2,
       "而: Hex endomap composition; surface currently requires explicit Hex→Hex terms"⟩
-  | _     => none
+  | id    => relationPredicateBoolSemanticsFor? id
 
 /-- The exact theorem-backed subset, kept separate from total shape semantics. -/
-def theoremBackedOperatorIds : List OperatorId :=
+def coreTheoremBackedOperatorIds : List OperatorId :=
   [.T_10, .R_8, .N_1, .M_1, .I_1, .Q_1, .T_12, .T_13, .Z_5, .Z_6, .Z_3, .T_6]
     ++ [.N_3, .N_4, .N_5, .N_6, .K_1, .K_8, .S_3, .S_7, .Z_1, .I_3, .I_4,
         .I_5, .P_4, .N_2, .N_7, .P_5, .Q_2, .Q_4, .M_2, .Q_5, .Q_6, .Q_7,
         .A_11, .A_12, .S_1, .S_2]
+
+def theoremBackedOperatorIds : List OperatorId :=
+  coreTheoremBackedOperatorIds ++ relationPredicateBoolOperatorIds
 
 def isTheoremBackedOperator (id : OperatorId) : Bool :=
   (theoremBackedSemanticsFor? id).isSome
@@ -116,7 +184,7 @@ def catalogueRelationShapeBody : Nat → Tm
 Conservative total fallback by catalogue signature shape.
 
 These bodies are executable and type-checkable, but they are intentionally
-weaker than the 38 exact rows above: they witness the catalogue shape as a total
+weaker than the 84 exact rows above: they witness the catalogue shape as a total
 interpreter operation, not a full doctrinal/textual denotation.
 -/
 def catalogueShapeBodyFor (sig : CoveredOperatorSignature) : Tm :=
@@ -201,8 +269,18 @@ def executableRegistryEntries : List OperatorRegistryEntry :=
 theorem executableOperatorIds_length :
     executableOperatorIds.length = 371 := by native_decide
 
+theorem coreTheoremBackedOperatorIds_length :
+    coreTheoremBackedOperatorIds.length = 38 := by native_decide
+
 theorem theoremBackedOperatorIds_length :
-    theoremBackedOperatorIds.length = 38 := by native_decide
+    theoremBackedOperatorIds.length = 84 := by native_decide
+
+theorem theoremBackedOperatorIds_nodup :
+    theoremBackedOperatorIds.Nodup := by native_decide
+
+theorem theoremBackedOperatorIds_all_semantics :
+    theoremBackedOperatorIds.all (fun id => (theoremBackedSemanticsFor? id).isSome) = true := by
+  native_decide
 
 theorem executableOperatorIds_registered :
     executableOperatorIds.all isCatalogueOperator = true := by native_decide
@@ -225,7 +303,7 @@ theorem operatorRegistryCoverage_summary :
     operatorRegistryEntries.length = 371
       ∧ executableRegistryEntries.length = 371
       ∧ executableOperatorIds.length = 371
-      ∧ theoremBackedOperatorIds.length = 38
+      ∧ theoremBackedOperatorIds.length = 84
       ∧ executableOperatorIds.all isCatalogueOperator = true
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).id = id)
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).signature.id = id) := by
@@ -245,6 +323,9 @@ example : (executableSemanticsFor? .S_1).isSome = true := by native_decide
 example : (theoremBackedSemanticsFor? .K_8).isSome = true := by native_decide
 example : (executableSemanticsFor? .Q_5).isSome = true := by native_decide
 example : (executableSemanticsFor? .A_12).isSome = true := by native_decide
+example : (theoremBackedSemanticsFor? .R_1).isSome = true := by native_decide
+example : (theoremBackedSemanticsFor? .LIJ_9).isSome = true := by native_decide
+example : (theoremBackedSemanticsFor? .Y_2).isSome = false := by native_decide
 example : (operatorSemanticsRegistry .T_10).isSome = true := by native_decide
 example : parseArityFor .S_1 = 2 := by native_decide
 

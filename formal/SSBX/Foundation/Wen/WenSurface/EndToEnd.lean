@@ -15,7 +15,7 @@ cuo-equivariant 子集 commute 作 future work）。
 - cue-aware resolver + explicit `SurfaceExpr` AST
 - 64 卦名 / aliases + Bool literals + Hex-only binders
 - executable registry 覆盖全部 371 个 OperatorId
-- 38 个 theorem-backed operator 可求 Hex/Bool；其余 catalogue rows 求 symbolic normal form
+- 84 个 exact/theorem-backed operator 可求 Hex/Bool；其余 catalogue rows 求 symbolic normal form
 - unpromoted gap form 只诊断，不伪造 denotation
 
 ## 状态
@@ -215,9 +215,15 @@ example :
 
 example :
     (match wenyanCompile "在 乾 坤" with
-     | .ok typed => typed.ty = .catalogue SignatureKind.relation
+     | .ok typed => typed.ty = .bool
      | _ => false) = true :=
   by native_decide
+
+example : (wenyanInterpBool "在 乾 乾").toOption = some true := by native_decide
+example : (wenyanInterpBool "在 乾 坤").toOption = some false := by native_decide
+example : (wenyanInterpBool "含 乾 坤").toOption = some false := by native_decide
+example : (wenyanInterpBool "識 乾").toOption = some true := by native_decide
+example : (wenyanInterpBool "大一 乾").toOption = some true := by native_decide
 
 example :
     (match wenyanCompile "五行 乾" with
@@ -471,7 +477,7 @@ example :
 
 example :
     (match wenyanCompile "在 乾" with
-     | .error (.parse .empty) => true
+     | .ok typed => typed.ty = .arr .hex .bool
      | _ => false) = true :=
   by native_decide
 

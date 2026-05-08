@@ -1018,7 +1018,7 @@ private def usage : String :=
      "       wenyan-surface --help",
      "",
      "Surface vocabulary:",
-     "  Executable operators: 371 rows (38 theorem-backed exact; 333 symbolic catalogue-shape)",
+     "  Executable operators: 371 rows (84 exact/theorem-backed; 287 symbolic catalogue-shape)",
      "  Examples include: 推 比 不 必 同 凡 損 损 益 错 錯 综 綜 互 反 則 且 非 或 莫",
      "  Hex consts: 一 乾 坤 plus canonical 64 hexagram names",
      "  Bool consts: 真 假",

@@ -6,7 +6,7 @@
 
 ## 当前范围
 
-- **算子**：38 个 exact operator 进入 theorem-backed `Stdlib` bodies；
+- **算子**：84 个 exact operator 进入 theorem-backed / Bool package bodies；
   其余 catalogue operator elaborates to symbolic catalogue normal forms。
 - **常值**：「一」 → `.yi` primitive；64 卦名 / aliases → `.hexLit h`。
 - **组合**：显式 `SurfaceExpr.app` 左结合到 `Tm.app`。

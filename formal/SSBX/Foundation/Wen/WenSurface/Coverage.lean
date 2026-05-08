@@ -136,7 +136,7 @@ theorem wenSurface_reuses_operator_cell_semantic_summary :
 example : (operatorRegistryEntryFor .T_10).executable?.isSome = true := by native_decide
 example : (operatorRegistryEntryFor .Z_5).executable?.isSome = true := by native_decide
 example : (operatorRegistryEntryFor .R_1).executable?.isSome = true := by native_decide
-example : isTheoremBackedOperator .R_1 = false := by native_decide
+example : isTheoremBackedOperator .R_1 = true := by native_decide
 example : (operatorRegistryEntryFor .S_1).signature.arity = 2 := by native_decide
 
 end SSBX.Foundation.Wen.WenSurface
