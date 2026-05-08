@@ -120,7 +120,52 @@ noncomputable def ketMinus : Qubit :=
 theorem hadamard_creates_superposition_skeleton :
     ∃ q : Qubit, q = ketPlus := ⟨ketPlus, rfl⟩
 
-/-! ## § 6 与 Trigram 之桥（3-qubit basis）-/
+/-! ## § 6 Born rule（computational basis 之有限版） -/
+
+/-- 单一 complex amplitude 之 Born 权重：模平方。 -/
+def ampProb (z : ℂ) : ℝ := Complex.normSq z
+
+/-- 测得 computational basis `|0⟩` 之权重。 -/
+def bornProb0 (ψ : Qubit) : ℝ := ampProb (ψ 0)
+
+/-- 测得 computational basis `|1⟩` 之权重。 -/
+def bornProb1 (ψ : Qubit) : ℝ := ampProb (ψ 1)
+
+/-- computational-basis Born 权重之总和。 -/
+def bornTotal (ψ : Qubit) : ℝ := bornProb0 ψ + bornProb1 ψ
+
+/-- `ψ` 对 computational-basis 测量归一化。 -/
+def computationalBasisNormalized (ψ : Qubit) : Prop := bornTotal ψ = 1
+
+/-- Born 权重非负：`|0⟩` 分支。 -/
+theorem bornProb0_nonneg (ψ : Qubit) : 0 ≤ bornProb0 ψ :=
+  Complex.normSq_nonneg (ψ 0)
+
+/-- Born 权重非负：`|1⟩` 分支。 -/
+theorem bornProb1_nonneg (ψ : Qubit) : 0 ≤ bornProb1 ψ :=
+  Complex.normSq_nonneg (ψ 1)
+
+/-- 归一化 qubit 的 computational-basis Born 权重和为 1。 -/
+theorem bornTotal_of_normalized {ψ : Qubit} (hψ : computationalBasisNormalized ψ) :
+    bornProb0 ψ + bornProb1 ψ = 1 := hψ
+
+/-- `|0⟩` 的 Born 权重为 `(1, 0)`。 -/
+theorem born_ket0 :
+    bornProb0 ket0 = 1 ∧ bornProb1 ket0 = 0 ∧ computationalBasisNormalized ket0 := by
+  simp [computationalBasisNormalized, bornTotal, bornProb0, bornProb1, ampProb, ket0]
+
+/-- `|1⟩` 的 Born 权重为 `(0, 1)`。 -/
+theorem born_ket1 :
+    bornProb0 ket1 = 0 ∧ bornProb1 ket1 = 1 ∧ computationalBasisNormalized ket1 := by
+  simp [computationalBasisNormalized, bornTotal, bornProb0, bornProb1, ampProb, ket1]
+
+/-- **one-qubit computational-basis Born rule**：
+    任一归一化 qubit 在 `{|0⟩, |1⟩}` 测量下给出一个二值概率分布。 -/
+theorem computational_basis_born_rule (ψ : Qubit) (hψ : computationalBasisNormalized ψ) :
+    0 ≤ bornProb0 ψ ∧ 0 ≤ bornProb1 ψ ∧ bornProb0 ψ + bornProb1 ψ = 1 :=
+  ⟨bornProb0_nonneg ψ, bornProb1_nonneg ψ, bornTotal_of_normalized hψ⟩
+
+/-! ## § 7 与 Trigram 之桥（3-qubit basis）-/
 
 /-- **3-qubit basis state index**：Trigram → Fin 8（按 BaguaAlgebra 之 Sheng 之 ofTrigram 之 dual）。
     简化版：直接用 (Yao 之 Bool 表示) 之三元组合。 -/
@@ -145,7 +190,7 @@ theorem kun_to_seven :
     Trigram.toFin8 SSBX.Foundation.Yi.Yi.Trigram.kun = 7 := by
   rfl
 
-/-! ## § 7 cuo ≅ X ⊗ X ⊗ X 之 anchor
+/-! ## § 8 cuo ≅ X ⊗ X ⊗ X 之 anchor
 
 **项目主张**（连接 P17 之 cuo-equivariance）：
 Trigram 之 cuo 算子 = 三 qubit 上之 Pauli X⊗X⊗X 矩阵之作用。
@@ -164,7 +209,7 @@ theorem cuo_via_fin8 (t : SSBX.Foundation.Yi.Yi.Trigram) :
   | mk y1 y2 y3 =>
     cases y1 <;> cases y2 <;> cases y3 <;> rfl
 
-/-! ## § 8 算子与位：动 / 化 / 变 / 综 的 basis-index 证明 -/
+/-! ## § 9 算子与位：动 / 化 / 变 / 综 的 basis-index 证明 -/
 
 /-- 初爻位翻转：basis index 之最高 bit 翻转。 -/
 def flipInitialIndex : Fin 8 → Fin 8
@@ -264,7 +309,7 @@ theorem operator_position_index_alignment :
           = reversePositionIndex (Trigram.toFin8 t)) := by
   exact ⟨dong_via_fin8, hua_via_fin8, bian_via_fin8, cuo_via_fin8, zong_via_fin8⟩
 
-/-! ## § 9 公开摘要 -/
+/-! ## § 10 公开摘要 -/
 
 /-- **量子总摘要**：
     (1) Qubit = Fin 2 → ℂ
@@ -278,7 +323,8 @@ theorem operator_position_index_alignment :
     (9) 坤 ↦ 7
     (10) cuo 在 Fin 8 上即 b ↦ 7-b（X⊗X⊗X 之 basis 表示）
     (11) Pauli X 在 Yao basis 上等于 Yao.neg
-    (12) 动/化/变/综 对齐 3-qubit basis index 之位操作 -/
+    (12) computational-basis Born rule 给二值归一概率分布
+    (13) 动/化/变/综 对齐 3-qubit basis index 之位操作 -/
 theorem quantum_summary :
     pauliX * pauliX = (1 : Matrix (Fin 2) (Fin 2) ℂ)
     ∧ pauliZ * pauliZ = (1 : Matrix (Fin 2) (Fin 2) ℂ)
@@ -288,6 +334,8 @@ theorem quantum_summary :
     ∧ Trigram.toFin8 SSBX.Foundation.Yi.Yi.Trigram.kun = 7
     ∧ (∀ y : SSBX.Foundation.Yi.Yi.Yao,
         Matrix.mulVec pauliX (Yao.toQubit y) = Yao.toQubit y.neg)
+    ∧ (∀ ψ : Qubit, computationalBasisNormalized ψ →
+        0 ≤ bornProb0 ψ ∧ 0 ≤ bornProb1 ψ ∧ bornProb0 ψ + bornProb1 ψ = 1)
     ∧ (∀ t : SSBX.Foundation.Yi.Yi.Trigram,
         Trigram.toFin8 (dong t) = flipInitialIndex (Trigram.toFin8 t))
     ∧ (∀ t : SSBX.Foundation.Yi.Yi.Trigram,
@@ -299,6 +347,7 @@ theorem quantum_summary :
           = reversePositionIndex (Trigram.toFin8 t)) :=
   ⟨pauliX_squared, pauliZ_squared, pauliX_apply_ket0, pauliX_apply_ket1,
    qian_to_zero, kun_to_seven, pauliX_apply_yao_basis,
+   computational_basis_born_rule,
    dong_via_fin8, hua_via_fin8, bian_via_fin8, zong_via_fin8⟩
 
 end SSBX.Foundation.Modern.Quantum
