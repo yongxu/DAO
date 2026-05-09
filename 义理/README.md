@@ -64,6 +64,12 @@
 | [心智 · 从元到识.md](心智%20·%20从元到识.md) | 唯识四分 · 心学四端 · 注意力函子 · K3 心理三态 + **神经科学接口 + Husserl 时间意识三相** | 能 → 见 → 自证 → 证自证 + 神经 + 时间 | FenSi ≅ Bool² 四象 · SiDuan → 四正卦 · Att functor · XinZ ≅ TriV · Hopfield-like · TimePhase ≅ 三爻 | `XinZhi.lean` ✓ 51 声明（+ Modern 先行）|
 | [物理 · 从元到象.md](物理%20·%20从元到象.md) | qubit basis · 对偶 · 守恒 · Z/2 自旋 · SU(3) 弱类比之严格界限 | 列 → 位 → 反 → 守 → 量 | Yao ≅ Bool / Trigram ≅ Bool³ / cuo² = id / yinCount mod 2 | `WuXiang.lean` ✓ 23 声明 |
 
+### 现代专题 · 结构边界补篇
+
+| 文件 | 主题 | Lean 配套 |
+|------|------|---|
+| [物间事三位一体 · 时空事件.md](物间事三位一体%20·%20时空事件.md) | 物 / 间 / 事 三面完整性、互异性与 carrier + spacetime + event 往返等价 | `WuJianShiTrinity.lean` |
+
 ## 三类映射之分判
 
 | 类 | 性质 | 收录体系 | 严格度 |

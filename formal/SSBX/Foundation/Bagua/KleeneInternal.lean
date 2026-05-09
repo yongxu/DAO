@@ -45,7 +45,7 @@ the remaining engineering (2) as a `Prop` so its dependency is explicit.
 - `UniversalInterpExists`, `SmnExists`, `KleeneFixedPointFromPrimitives`, and
   `BoolInverterCompilerFromUniversal` are stated as `Prop`, not proven.
   Witnesses require building the ~700-1000 line universal interpreter
-  (13-way dispatch + execute blocks + fetch/writeback in YiInstr).  See
+  (12-way dispatch + execute blocks + fetch/writeback in YiInstr).  See
   `WenyanSelfInterp.lean § 6b` for the existing partial scaffold.
 
 - The current `SmnSpec` is intentionally an explicit strong assumption.  The
@@ -53,10 +53,8 @@ the remaining engineering (2) as a `Prop` so its dependency is explicit.
   empty-stack test, so a generic "push arbitrary cells, then continue" prefix
   is not currently justified by the instruction set alone.
 
-- The full Kleene boundary is still assumed in `KleeneCarrier.lean` as a
-  single bundled axiom.  Removing it requires the primitive/compiler `Prop`s
-  below to be proven as theorems, plus a separate decision about the
-  cuo-restricted Church-Turing boundary.
+- The full `kleene_recursion_axiom` remains in `GodelLi.lean`.  Its removal
+  requires the primitive/compiler `Prop`s below to be proven as theorems.
 
 This file is the **formal scaffolding** that, once the primitives are proven
 (future work), makes the axiom removal mechanical.

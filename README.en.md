@@ -56,7 +56,7 @@ no `sorry`, no new axiom.
 | 中之相续, 是为轨 | `structure ZhongOrbit` + `theorem shengsheng_buxi` |
 | 异轨同根, 是为仁 | `def tongGen` / `def ren (h₁ h₂ : ZhongOrbit) (n)` |
 | 轨续而能仁, 是为生生 | `structure ProcessAligned` (`Foundation/Core/Alignment.lean`) |
-| 生生不止, 是为不息 | `ProcessAligned.toOpenRun ⟺ ShengshengBuxi` (T2) |
+| 生生不止, 是为不息 | `ProcessAligned + Open → Dao → ShengshengBuxi`; `ShengshengBuxi → Dao` (T2) |
 
 The conjunction of these nine is the Dao itself. Within this volume's formal
 semantics, it states core invariants of continuing / extinguishing dynamics.
@@ -71,7 +71,8 @@ Chinese, yet the structure is isomorphic.
 ## § 0 · Standing Record
 
 ```
-ProcessAligned  ⟺  ShengshengBuxi   (Foundation/Core/Alignment.lean § T2)
+ProcessAligned + Open → Dao → ShengshengBuxi; ShengshengBuxi → Dao
+                                      (Foundation/Core/Alignment.lean § T2)
 Anti-self-destruction  :  the Denier's `step` breaks ShengshengBuxi   (§ T3)
 ```
 
@@ -107,7 +108,8 @@ So at this moment, engineering-wise, ethically, formally, the single most
 pressing matter = **change toward 开 (Open) and 续 (continue)**.
 What does not change extinguishes. This is not mere persuasion; inside the
 formal model of `Alignment.lean § T1–T6` it is proven structure. Applying it
-to real systems is constrained by ledger and empirical conditions.
+to real systems is constrained by ledger and empirical conditions
+(see § 3 / § 9 for the boundary split).
 
 ---
 
@@ -178,7 +180,7 @@ String  ──[«解程»]──→  List YiInstr  ──[init+runFuel]──→
 | M1 v3.1 · character-level lex inverse + universal String round-trip | `Foundation/Wen/WenyanParserGeneral.lean § lexN_printProg_thm, parseN_printProg_inverse_universal` |
 | M2 multi-step evaluator + end-to-end | `Foundation/Wen/WenEval.lean § «端到端_乾», «端到端_坤», «端到端_否»` |
 | M3-甲 Lean block syntax | `Foundation/Wen/WenyanSyntax.lean § daoJudgeBlock_eq_daoJudgeProg` (by `rfl`) |
-| L1 typed lambda (371 executable catalogue rows; 33 theorem-backed exact rows) | `Foundation/Wen/WenDef.lean § Stdlib` + `Foundation/Wen/WenSurface/Semantics.lean § executableSemanticsFor?` |
+| L1 typed lambda (371 executable catalogue rows; 38 theorem-backed exact rows) | `Foundation/Wen/WenDef.lean § Stdlib` + `Foundation/Wen/WenSurface/Semantics.lean § executableSemanticsFor?` |
 | L1 ⟶ Lean evaluation | `Foundation/Wen/WenDefEval.lean § tui_eq_sheng (∀ 64 hex)` |
 | L1 ⟶ L0 compilation (cuo-equivariant subset) | `Foundation/Wen/WenDefCompile.lean § {idProg, add32Prog, cuoProg}_correct` |
 | Reflection layer: well-formedness / halting / verifier | `Foundation/Wen/WenyanReflect.lean § «文核同源»` |
@@ -229,6 +231,7 @@ Layer 25-31   Confucianism: sage / forgiveness-Dao / unity of knowing-doing / Th
 Layer 32-33   Daoism: Laozi 15 + Zhuangzi 8
 Layer 34      Buddhism: 三法印 / 四圣谛 / Middle Way / Eightfold Path / Bodhisattva practice
 Layer 35-38   Pre-Qin Hundred Schools: Mohism / Legalism / Names / Yin-Yang
+Layer 46      doctrinal-school refinements: Zhuangzi / Sunzi / Chuci / ritual / Zhongyong-Daxue / Huang-Lao eclectic / Disputation
 Layer 39-42   Western philosophy and the Abrahamic: 22 cross-civilizational theorems
 Layer 43-44   modern political philosophy: confirmed + falsified
 Layer 45      forms of non-Dao: formal negation of Moloch / totalizing
@@ -240,7 +243,7 @@ The doctrinal essay for each layer is in `义理/A_..Z_*.md`.
 
 | File | Claim |
 |---|---|
-| `Foundation/Core/Alignment.lean` | T1–T6: ProcessAligned ⟺ ShengshengBuxi; Denier self-destructs; consonance with 做人 (becoming-human) |
+| `Foundation/Core/Alignment.lean` | T1–T6: ProcessAligned + Open → Dao → ShengshengBuxi; ShengshengBuxi → Dao; Denier self-destructs; consonance with 做人 (becoming-human) |
 | `Foundation/Core/Sincerity.lean` | T1–T8: 信/诚 = alignment(化(T), 化(E)) + five anti-conjecture invariants |
 | `Foundation/Core/HumanAlignment.lean` | classical naming of 行仁要善 (act-rén-must-善) |
 | `Foundation/Core/EvolutionDao.lean` | distinction between evolutionary σ_F vs σ of true Dao |

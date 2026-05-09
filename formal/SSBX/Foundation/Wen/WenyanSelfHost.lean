@@ -18,15 +18,14 @@
 ## Tier
 
   Tier 2 — «微核源» 64 条指令；«微核自验» + «微核自释» 俱证。
-  Tier 3 之 完整 13 路 dispatch + handlers (~500+ instr, full self-interpreter)
+  Tier 3 之 完整 12 路 dispatch + handlers (~500 instr, full self-interpreter)
   乃 future work，此处所立 是 publication-worthy proof of concept：
   即「文 之 字 之 字 串 既 well-formed 且 自身 round-trips through encoding，且
   以 该 程 在 易 之 自动机 上 执行 收敛 到 halted state」。
 
 ## 设计要点
 
-  «微核源» 非 占位符 — 是 一段「展练原十二字」 之 程序（`swap` 为后加
-  ISA 字，此 PoC 暂不要求覆盖）：
+  «微核源» 非 占位符 — 是 一段「展练十二字」 之 程序：
     阶段一  推 入 始格 + 错 + 综 + 互  (4 instr)
     阶段二  翻爻 0..5 之 链              (6 instr)
     阶段三  比爻 测 + 比时 测 之 链      (≈ 12 instr)
@@ -34,7 +33,7 @@
     阶段五  设时 之 三态遍历 + 终         (≈ 7 instr)
     阶段六  «不动» 之 padding + 终结      (≈ 27 instr)
 
-  其原十二构造子皆有出现至少一次。
+  其十二构造子皆有出现至少一次。
 
   «判型良_basic» 之 形 同 WenyanParser.validProg —
   对 三 个 Nat-参数 构造子（branchYaoEq / branchShiEq / jump）要求
@@ -320,7 +319,7 @@ theorem «微核源_not_runtime_quine_qian» :
   decodes back to itself, and it executes to completion on the underlying 易
   自动机 — all proven by native_decide, no axioms, no sorries.
 
-  Tier 3（完整 ~500+-line quine 之 13 路 dispatch table）作为 future work：
+  Tier 3（完整 ~500-line quine 之 12 路 dispatch table）作为 future work：
   其架构已在 WenyanSelfInterp § 6b 之 metaInterpProg roadmap 中描述。 -/
 
 /-- 公开摘要：自宿主之四相俱完备。 -/

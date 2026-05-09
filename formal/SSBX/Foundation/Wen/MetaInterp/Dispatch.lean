@@ -1,11 +1,10 @@
 /-
 # Dispatch — route from the opcode-tag cell to the appropriate executeBlock
 
-This file implements the current **pre-swap dispatch tree** that fetch invokes
-after it has deposited the next instruction's tag cell into `META.cur`.  The
-tree covers tags 0..11.  After `YiInstr.swap` was added at tag 12, this file
-remains a verified scaffold for the legacy 12-way geometry; the full 13-way
-dispatch tree is intentionally deferred with the rest of Phase C.
+This file implements the **dispatch tree** that fetch invokes after it has
+deposited the next instruction's tag cell into `META.cur`.  The dispatch tree
+inspects the tag cell, decides which of the 12 opcodes it represents, and
+performs an unconditional `jump` to that opcode's executeBlock entry-offset.
 
 For Option-F per-parameter blocks (`setShi sh`, `flipYao i`,
 `branchYaoEq i j t`, `branchShiEq sh t`), dispatch must also consume the
@@ -23,7 +22,6 @@ when control is transferred to its entry offset:
 | ------------- | ----------------------------------------------------------- |
 | `META.cur`    | the **tag cell** of the next instruction to execute         |
 |               | i.e. `cellFromIdx ⟨k, _⟩` for some `k ∈ {0..11}`            |
-|               | (`swap`, tag 12, is outside this scaffold)                  |
 | `META.history`| the **param cells** of this instruction, prepended to the   |
 |               | rest of the encoded META state (per `MetaInterp.lean §4`).  |
 | `META.pc`     | `dispatchOffset`                                            |
@@ -44,7 +42,7 @@ instruction restores it.  The per-block local-effect lemmas in
 `Block_*.lean` already abstract over this restoration step (they take
 `cur` as a free variable).
 
-## §1  Dispatch tree shape — legacy 4-way hex × 3-way Shi
+## §1  Dispatch tree shape — 4-way hex × 3-way Shi
 
 The opcode-tag cell is `cellFromIdx ⟨k, _⟩` for `k ∈ {0..11}`.  Per
 `WenyanSelfInterp.cellFromIdx`:
@@ -110,11 +108,9 @@ new `META.cur` to route to the right pre-compiled (op, param) block.
     Stubs included; full bodies are Phase D work because the Nat-target
     branches (`branchYaoEq`, `branchShiEq`) require dynamic decode (same
     arithmetic gap as `Block_Jump.lean`).
-  * **Routing proofs for the other legacy 11 cases** — same shape as the
-    halt case, mostly mechanical; one case is sufficient to certify the
-    scaffold architecture.
-  * **Tag 12 / `swap` routing** — requires replacing this legacy 4×3
-    geometry with a full 13-way tree.
+  * **Routing proofs for the other 11 cases** — same shape as the halt
+    case, mostly mechanical; one case is sufficient to certify the
+    architecture.
   * **Composition with fetch** — the precise pre-state contract documented
     in §0 must be discharged by `fetchProg` (Phase B follow-up).
 -/
@@ -231,7 +227,7 @@ def dispatchTree (offsets : DispatchOffsets) (dispatchBase : Nat) : List YiInstr
   let L_hex3   := dispatchBase + 7
   let L_hex0   := dispatchBase + 12
   let L_hex1   := dispatchBase + 15
-  -- y2-test (compare y_2 to y_6 = known yang for legacy tags 0..11)
+  -- y2-test (compare y_2 to y_6 = known yang for tags 0..11)
   [ YiInstr.branchYaoEq ⟨1, by omega⟩ ⟨5, by omega⟩ L_y2yang
   , YiInstr.jump L_y2yin ]
   ++

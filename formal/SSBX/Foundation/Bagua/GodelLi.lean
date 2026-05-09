@@ -448,11 +448,6 @@ theorem cuoState_step (s : YiState) :
         | nil => simp
         | cons head rest => simp [cuoCell]
       | halt => rfl
-      | swap =>
-        unfold YiState.execute cuoState
-        cases h_hist : s.history with
-        | nil => simp
-        | cons head rest => simp [cuoCell]
 
 /-- runFuel commutes with cuoState (any fuel). -/
 theorem cuoState_runFuel (s : YiState) (n : Nat) :
@@ -637,20 +632,30 @@ theorem halts_undecidable_under_kleene (h_kleene : KleeneInverter) :
     rw [hb] at h_true
     contradiction
 
-/-! ## § 5 无条件版本之承载层
+/-! ## § 5 公理化版本：完整 Halting 不可判定 -/
 
-  **本节移至 `KleeneCarrier.lean`**.  原 `axiom kleene_recursion_axiom :
-  KleeneInverter` 已收口为单一 bundled boundary axiom
-  `kleeneBoundary`；其四个投影（`universalInterpExists` / `smnExists` /
-  `kleeneFromPrimitives` / `allDecidersAreYiComputable`）与
-  `KleeneInternal.path_to_zero_axiom` 之分解一一对应。
+/-- **Kleene 递归公理**：捕获 Church-Turing 论题对 BaguaTuring 之应用。
 
-  原"无条件"主定理（如 `halts_undecidable_internally`、`rice_four_images`、
-  `rice_uniform`、`daoJudge_not_universal` 等）皆从 `_under_kleene` 之
-  条件版（本文件 §4–§9，0 axiom）+ `KleeneCarrier.kleene_recursion`
-  派生，名字保持一致，调用点请改 import `KleeneCarrier`。
+    本公理在 `KleeneInternal.lean` 中被精确分解为四个独立 `Prop`：
+    - `UniversalInterpExists`     (≈ 700 行 YiInstr 通用解释器)
+    - `SmnExists`                 (≈ 50 行 cell-pushing 子程序)
+    - `KleeneFromPrimitives`      (≈ 100 行 Kleene 对角构造)
+    - `AllDecidersAreYiComputable` (Church-Turing 论题之 Lean 形式)
 
-  本文件本节起仅保留 0-axiom 之条件版定理（`*_under_kleene`）。 -/
+    定理 `KleeneInternal.path_to_zero_axiom` 已严格证明：四者合则
+    `KleeneInverter` 可证为定理（即此公理可去）。本轮保留此公理，因前两件
+    primitives 之 Lean 实现仍是约 750 行机械工程（`WenyanSelfInterp § 6b`
+    已完成 ≈ 15% 之 fetch-decode-execute scaffold）。
+
+    此公理 + KleeneInternal 合：道理二分 之精确形式落位（道认可理之 CT 论题）。 -/
+axiom kleene_recursion_axiom : KleeneInverter
+
+/-- **理之不完备主定理**（无条件版）：在 Kleene 递归公理下，Halts 不可由任何
+    Lean Bool 函数判定。这是 Gödel 不完备 / Halting 不可判 之 192 形态。 -/
+theorem halts_undecidable_internally :
+    ¬ ∃ decide : List YiInstr → Hexagram → Bool,
+        ∀ P h, decide P h = true ↔ Halts P h :=
+  halts_undecidable_under_kleene kleene_recursion_axiom
 
 /-! ## § 6 衍生推论：从 KleeneInverter 直接推出之诸不可判性 -/
 
@@ -721,10 +726,19 @@ theorem halts_at_fixed_undecidable_under_kleene
     have ht : decide_h D = true := h_dec_iff.mpr hh
     rw [hb] at ht; contradiction
 
-/-! ### § 6.1 无条件版本已移至 `KleeneCarrier.lean`
+/-! ### § 6.1 无条件版本（使用 kleene_recursion_axiom） -/
 
-  `not_halts_undecidable` / `halts_at_fixed_undecidable` 现在
-  `KleeneCarrier` 命名空间内，从 `KleeneCarrier.kleene_recursion` 派生。 -/
+/-- 无条件 ¬Halts 不可判。 -/
+theorem not_halts_undecidable :
+    ¬ ∃ decide : List YiInstr → Hexagram → Bool,
+        ∀ P h, decide P h = true ↔ ¬ Halts P h :=
+  not_halts_undecidable_under_kleene kleene_recursion_axiom
+
+/-- 无条件「固定 h 之 Halts 不可判」。 -/
+theorem halts_at_fixed_undecidable (h₀ : Hexagram) :
+    ¬ ∃ decide : List YiInstr → Bool,
+        ∀ P, decide P = true ↔ Halts P h₀ :=
+  halts_at_fixed_undecidable_under_kleene kleene_recursion_axiom h₀
 
 /-! ## § 7 Rice 风味实例：均一性质之不可判
 
@@ -861,11 +875,31 @@ theorem halts_on_some_no_undecidable_under_kleene (h_kleene : KleeneInverter) :
     · intro _
       rfl
 
-/-! ### § 7.1 无条件版本已移至 `KleeneCarrier.lean`
+/-! ### § 7.1 无条件版本（使用 kleene_recursion_axiom） -/
 
-  `halts_on_some_undecidable` / `halts_on_none_undecidable` /
-  `halts_on_all_undecidable` / `halts_on_some_no_undecidable` 之无条件版
-  皆移至 `KleeneCarrier` 命名空间。 -/
+/-- 无条件「Π_some 不可判」。 -/
+theorem halts_on_some_undecidable :
+    ¬ ∃ decide_some : List YiInstr → Bool,
+        ∀ P, decide_some P = true ↔ ∃ h, Halts P h :=
+  halts_on_some_undecidable_under_kleene kleene_recursion_axiom
+
+/-- 无条件「Π_none 不可判」。 -/
+theorem halts_on_none_undecidable :
+    ¬ ∃ decide_none : List YiInstr → Bool,
+        ∀ P, decide_none P = true ↔ ∀ h, ¬ Halts P h :=
+  halts_on_none_undecidable_under_kleene kleene_recursion_axiom
+
+/-- 无条件「Π_all 不可判」。 -/
+theorem halts_on_all_undecidable :
+    ¬ ∃ decide_all : List YiInstr → Bool,
+        ∀ P, decide_all P = true ↔ ∀ h, Halts P h :=
+  halts_on_all_undecidable_under_kleene kleene_recursion_axiom
+
+/-- 无条件「Π_some_no 不可判」。 -/
+theorem halts_on_some_no_undecidable :
+    ¬ ∃ decide_some_no : List YiInstr → Bool,
+        ∀ P, decide_some_no P = true ↔ ∃ h, ¬ Halts P h :=
+  halts_on_some_no_undecidable_under_kleene kleene_recursion_axiom
 
 /-! ### § 7.2 Rice 四象总览
 
@@ -897,7 +931,13 @@ theorem rice_four_images_under_kleene (h_kleene : KleeneInverter) :
    halts_on_some_no_undecidable_under_kleene h_kleene,
    halts_on_none_undecidable_under_kleene h_kleene⟩
 
--- `rice_four_images`（无条件版）已移至 `KleeneCarrier.lean`.
+/-- **Rice 四象总定理**（无条件版）。 -/
+theorem rice_four_images :
+    (¬ ∃ d : List YiInstr → Bool, ∀ P, d P = true ↔ ∀ h, Halts P h)
+    ∧ (¬ ∃ d : List YiInstr → Bool, ∀ P, d P = true ↔ ∃ h, Halts P h)
+    ∧ (¬ ∃ d : List YiInstr → Bool, ∀ P, d P = true ↔ ∃ h, ¬ Halts P h)
+    ∧ (¬ ∃ d : List YiInstr → Bool, ∀ P, d P = true ↔ ∀ h, ¬ Halts P h) :=
+  rice_four_images_under_kleene kleene_recursion_axiom
 
 /-! ## § 8 公开摘要：理之不完备性集成 -/
 
@@ -1004,7 +1044,13 @@ theorem rice_uniform_under_kleene (h_kleene : KleeneInverter)
       rw [h_eq, he] at h_spec_ne
       exact h_spec_ne rfl
 
--- `rice_uniform`（无条件版）已移至 `KleeneCarrier.lean`.
+/-- **Rice uniform**（无条件版）。 -/
+theorem rice_uniform
+    (Phi : (Hexagram → Prop) → Bool)
+    (h_dist : Phi (fun _ => True) ≠ Phi (fun _ => False)) :
+    ¬ ∃ decide_Phi : List YiInstr → Bool,
+        ∀ P, decide_Phi P = true ↔ Phi (Halts P) = true :=
+  rice_uniform_under_kleene kleene_recursion_axiom Phi h_dist
 
 /-! ### § 9.1 道判机不可通用化
 
@@ -1028,7 +1074,11 @@ theorem daoJudge_not_universal_under_kleene (h_kleene : KleeneInverter) :
   exact ⟨fun hd => (h_enc P h).mp (of_decide_eq_true hd),
          fun hh => decide_eq_true ((h_enc P h).mpr hh)⟩
 
--- `daoJudge_not_universal`（无条件版）已移至 `KleeneCarrier.lean`.
+/-- **道判机不可通用化**（无条件版）。 -/
+theorem daoJudge_not_universal :
+    ¬ ∃ enc : List YiInstr → Hexagram → Hexagram,
+        ∀ P h, daoJudge (enc P h) = Shi.ji ↔ Halts P h :=
+  daoJudge_not_universal_under_kleene kleene_recursion_axiom
 
 /-- **对偶版本**：以 Shi.wei 为「halts」之判决亦不可通用化。 -/
 theorem daoJudge_wei_not_universal_under_kleene (h_kleene : KleeneInverter) :
@@ -1040,7 +1090,11 @@ theorem daoJudge_wei_not_universal_under_kleene (h_kleene : KleeneInverter) :
   exact ⟨fun hd => (h_enc P h).mp (of_decide_eq_true hd),
          fun hh => decide_eq_true ((h_enc P h).mpr hh)⟩
 
--- `daoJudge_wei_not_universal`（无条件版）已移至 `KleeneCarrier.lean`.
+/-- **对偶**（无条件版）。 -/
+theorem daoJudge_wei_not_universal :
+    ¬ ∃ enc : List YiInstr → Hexagram → Hexagram,
+        ∀ P h, daoJudge (enc P h) = Shi.wei ↔ Halts P h :=
+  daoJudge_wei_not_universal_under_kleene kleene_recursion_axiom
 
 /-! ### § 9.2 Rice 四象由 uniform 重导（确认覆盖关系）
 

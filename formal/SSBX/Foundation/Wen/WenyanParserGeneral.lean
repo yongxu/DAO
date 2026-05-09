@@ -20,7 +20,7 @@ theorem parseProgN_tokensOfProg :
 故等式定理无法直证。本文：
 
 1. 重新形式化 parser 为 fuel-bounded `parseProgFuel` / `parseProgN`（结构递归）
-2. 在 token-level 证 13 案 inversion (`parseInstr_tokensOfInstr_app`)
+2. 在 token-level 证 12 案 inversion (`parseInstr_tokensOfInstr_app`)
 3. 在 program-level 证 inversion (`parseProgN_tokensOfProg`) — by structural induction
 
 ## 主公示
@@ -235,7 +235,6 @@ def tokensOfInstr : YiInstr → List Tok
   | .hu   => [Tok.cjk "互"]
   | .cuo  => [Tok.cjk "错"]
   | .zong => [Tok.cjk "综"]
-  | .swap => [Tok.cjk "易"]
   | .push => [Tok.cjk "推"]
   | .pop  => [Tok.cjk "取"]
   | .halt => [Tok.cjk "终"]
@@ -372,7 +371,6 @@ def printInstrChars : YiInstr → List Char
   | .hu   => ['«', '互', '»']
   | .cuo  => ['«', '错', '»']
   | .zong => ['«', '综', '»']
-  | .swap => ['«', '易', '»']
   | .push => ['«', '推', '»']
   | .pop  => ['«', '取', '»']
   | .halt => ['«', '终', '»']
@@ -395,7 +393,6 @@ theorem printInstr_toList (i : YiInstr) (h : validInstr i = true) :
   | hu   => decide
   | cuo  => decide
   | zong => decide
-  | swap => decide
   | push => decide
   | pop  => decide
   | halt => decide
@@ -427,7 +424,7 @@ theorem printInstr_toList (i : YiInstr) (h : validInstr i = true) :
 
 /-- 单条指令 lex 所需 fuel 数 (= 括号组 + 内空格). -/
 def instrLexFuel : YiInstr → Nat
-  | .nop  | .hu  | .cuo | .zong | .swap | .push | .pop | .halt => 1
+  | .nop  | .hu  | .cuo | .zong | .push | .pop | .halt => 1
   | .setShi _   | .flipYao _ => 3
   | .jump _ => 5
   | .branchShiEq _ _ => 7
@@ -556,11 +553,6 @@ theorem lexFuel_printInstrChars_app
       rw [lexFuel_bracket_split ['综'] tail n
             (by intro c hc; simp at hc; subst hc; decide)]
       rfl
-  | swap =>
-      show lexFuel (n + 1) (('«' :: ['易'] ++ ['»']) ++ tail) = _
-      rw [lexFuel_bracket_split ['易'] tail n
-            (by intro c hc; simp at hc; subst hc; decide)]
-      rfl
   | push =>
       show lexFuel (n + 1) (('«' :: ['推'] ++ ['»']) ++ tail) = _
       rw [lexFuel_bracket_split ['推'] tail n
@@ -679,7 +671,7 @@ theorem lexFuel_printInstrChars_app
                  Function.comp_def, show String.ofList ['至'] = "至" from rfl,
                  show String.ofList ['跳'] = "跳" from rfl]
 
-/-! ## § 6  parseInstr inversion (13 案，with append) -/
+/-! ## § 6  parseInstr inversion (12 案，with append) -/
 
 /-- 单条指令之 parser 逆 (with append)：吃 tokensOfInstr i ++ rest 后留 rest. -/
 theorem parseInstr_tokensOfInstr_app (i : YiInstr) (rest : List Tok) (h : validInstr i = true) :
@@ -689,7 +681,6 @@ theorem parseInstr_tokensOfInstr_app (i : YiInstr) (rest : List Tok) (h : validI
   | hu   => rfl
   | cuo  => rfl
   | zong => rfl
-  | swap => rfl
   | push => rfl
   | pop  => rfl
   | halt => rfl
@@ -987,7 +978,6 @@ private theorem progLexFuel_le_length (p : List YiInstr) (h : validProg p = true
           | hu   => decide
           | cuo  => decide
           | zong => decide
-          | swap => decide
           | push => decide
           | pop  => decide
           | halt => decide
@@ -1023,7 +1013,6 @@ private theorem progLexFuel_le_length (p : List YiInstr) (h : validProg p = true
             | hu   => decide
             | cuo  => decide
             | zong => decide
-            | swap => decide
             | push => decide
             | pop  => decide
             | halt => decide
@@ -1097,7 +1086,7 @@ theorem testPrograms_lexN_agrees_lex :
 theorem daoJudgeProg_roundtripN :
     «解程N» («印程» daoJudgeProg) = some daoJudgeProg := by native_decide
 
-/-- 13 构造子代表之单例 round-trip 在新 parser. -/
+/-- 12 构造子代表之单例 round-trip 在新 parser. -/
 theorem allKindReprs_singleton_roundtripN :
     allKindReprs.all (fun i => «解程N» (printInstr i) = some [i]) = true := by
   native_decide
@@ -1127,7 +1116,7 @@ theorem numeralRange_branchShiEq_roundtripN :
   之 lex 串接归纳，**已闭合** (无 hypothesis)。证明结构 § 2.5 + § 5.5 + § 5.6 + § 9：
   - § 2.5 lex 之 fuel 单调与括号组分离 (lexFuel_mono, lexFuel_bracket_group, ...)
   - § 5.5 printInstr 之 List Char 桥 (printInstrChars + printInstr_toList)
-  - § 5.6 13-构造子之 lexFuel append 主柱 (lexFuel_printInstrChars_app)
+  - § 5.6 12-构造子之 lexFuel append 主柱 (lexFuel_printInstrChars_app)
   - § 9   按 List YiInstr 结构归纳 (progLexFuel + lexFuel_printProg_exact +
           progLexFuel_le_length + lexN_printProg_thm)
 

@@ -63,6 +63,7 @@ import SSBX.Foundation.Wen.MetaInterp.Dispatch
 import SSBX.Foundation.Wen.MetaInterp.SubDispatch_BranchShiEq
 import SSBX.Foundation.Wen.MetaInterp.SubDispatch_BranchYaoEq
 import SSBX.Foundation.Wen.MetaInterp.OuterLoop
+import SSBX.Foundation.Wen.MetaInterp.TargetContract
 import SSBX.Foundation.Wen.WenDef
 import SSBX.Foundation.Wen.WenyanParser
 import SSBX.Foundation.Wen.WenEval
@@ -111,7 +112,6 @@ import SSBX.Foundation.Bagua.BaguaTuring
 import SSBX.Foundation.Bagua.Newman
 import SSBX.Foundation.Bagua.KleeneInternal
 import SSBX.Foundation.Bagua.GodelLi
-import SSBX.Foundation.Bagua.KleeneCarrier
 import SSBX.Foundation.Bagua.BaguaWenSpec
 import SSBX.Text.OperatorAnchors
 import SSBX.Text.OperatorCellMap
@@ -200,6 +200,8 @@ import SSBX.Foundation.Modern.HexagramPosition
 import SSBX.Truth.SelfDescription
 import SSBX.Foundation.Modern.CatExt
 import SSBX.Foundation.Modern.DaoLi
+import SSBX.Foundation.Modern.HistoryTapeStructure
+import SSBX.Foundation.Modern.WuJianShiTrinity
 
 -- Phase 4 深化（Yoneda 全引理 / Lebesgue 深 (MCT/DCT/Fubini) / Picard-Lindelöf 一般化）
 import SSBX.Foundation.Modern.YonedaFull
