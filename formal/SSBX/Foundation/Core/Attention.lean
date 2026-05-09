@@ -11,6 +11,8 @@ Claim formalized here:
 -/
 import SSBX.Foundation.Core.HumanAlignment
 
+set_option maxRecDepth 1024
+
 namespace SSBX.Foundation.Core.Attention
 
 open SSBX.Roster

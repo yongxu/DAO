@@ -7,6 +7,7 @@ SSBX item must return to the unique root `一元` through a face and a single
 registered glyph.
 -/
 import SSBX.Foundation.Core.Monism
+import SSBX.Foundation.Bagua.BenZheng
 import SSBX.Truth.ClaimLedger
 
 namespace SSBX.Foundation.Core.MonadRoot
@@ -535,6 +536,21 @@ def atomCore : AtomName -> CoreAtom
   | .«高» => .«模»
   | .«黑» => .«法»
   | .«恶» => .«邪»
+  -- BenZheng-related (14 new): default cores for R3 mode + R4 flip + R5 shi + 16-grid sub-modes
+  | .«健» => .«法»  -- R3 乾 mode (健行不息)
+  | .«悦» => .«心»  -- R3 兑 mode (悦感)
+  | .«起» => .«动»  -- R3 震 mode (起动)
+  | .«止» => .«闭»  -- R3 艮 mode (止息)
+  | .«顺» => .«法»  -- R3 坤 mode (顺势)
+  | .«改» => .«变»  -- R4 flip y1
+  | .«化» => .«变»  -- R4 flip y2
+  | .«迁» => .«动»  -- R5 shiNext
+  | .«溯» => .«动»  -- R5 shiPrev
+  | .«萌» => .«生»  -- 16-grid 動之微
+  | .«长» => .«续»  -- 16-grid 動之进
+  | .«缘» => .«法»  -- 16-grid 間之微
+  | .«兆» => .«法»  -- 16-grid 事之微
+  | .«趋» => .«模»  -- 16-grid 事之进
 
 def CoreDerives (c : CoreAtom) (a : AtomName) : Prop :=
   atomCore a = c
@@ -881,6 +897,22 @@ def atomPrimaryFace : AtomName -> Face
   | .«高» => .«模面»
   | .«黑» => .«文面»
   | .«恶» => .«价值面»
+  -- BenZheng-related (14 new): primary face under existing 12-Face system
+  -- (P5 will rework to Mian = Ben × Zheng = 16; this is interim for build)
+  | .«健» => .«真理面»  -- 乾健 = 真理性
+  | .«悦» => .«心面»     -- 兑悦 = 心之喜
+  | .«起» => .«物面»     -- 震起 = 物之初动
+  | .«止» => .«文面»     -- 艮止 = 律法止息
+  | .«顺» => .«真理面»  -- 坤顺 = 顺道
+  | .«改» => .«物面»     -- R4 flip y1 = 改物
+  | .«化» => .«物面»     -- R4 flip y2 = 化物
+  | .«迁» => .«物面»     -- 时迁
+  | .«溯» => .«物面»     -- 时溯
+  | .«萌» => .«生面»     -- 萌动 = 生之始
+  | .«长» => .«生面»     -- 长 = 生之续
+  | .«缘» => .«文面»     -- 缘 = 关系律法
+  | .«兆» => .«文面»     -- 兆 = 事兆
+  | .«趋» => .«模面»     -- 趋势 = 模型/向
 
 /-- Extra faces record polysemy and cross-domain reuse without breaking single-root reachability. -/
 def atomExtraFaces : AtomName -> List Face
@@ -924,6 +956,50 @@ theorem atom_primary_face_mem (a : AtomName) :
 theorem all_atoms_have_face (a : AtomName) :
     ∃ f, BelongsToFace a f :=
   ⟨atomPrimaryFace a, atom_primary_face_mem a⟩
+
+/-! ## Mian = Ben × Zheng = 16 cells (新核心)
+
+  Face → Mian projection: 12 of 16 cells covered (4 事-row cells reserved
+  for future event-substrate atoms). Each Face maps deterministically to one
+  (Ben, Zheng) pair per the docs/sanben-sijieduan-grid.md mapping.
+
+  `atomPrimaryMian` is derived from `atomPrimaryFace` via `Face.toMian`.
+  Future refactor: invert this, make Mian primary and Face derived. -/
+
+namespace Face
+
+/-- 12-Face → 16-Mian: faithful injection (12 cells used, 4 事-row reserved). -/
+def toMian : Face → SSBX.Foundation.Bagua.BenZheng.Mian
+  | .«物面»     => (.wu, .jiFaint)     -- 物之微 = "动" cell
+  | .«注意面»   => (.wu, .shiForce)    -- 物之进 = "行" cell
+  | .«模面»     => (.wu, .jiOccasion)  -- 物之转 = "化" cell
+  | .«文面»     => (.wu, .shiTime)     -- 物之久 = "流" cell
+  | .«生面»     => (.dong, .jiFaint)   -- 動之微 = "萌" cell
+  | .«心面»     => (.dong, .shiForce)  -- 動之进 = "长" cell
+  | .«理面»     => (.dong, .jiOccasion)-- 動之转 = "发" cell
+  | .«价值面»   => (.dong, .shiTime)   -- 動之久 = "续" cell
+  | .«人面»     => (.jian, .jiFaint)   -- 間之微 = "缘" cell
+  | .«审校面»   => (.jian, .shiForce)  -- 間之进 = "通" cell
+  | .«证明面»   => (.jian, .jiOccasion)-- 間之转 = "会" cell
+  | .«真理面»   => (.jian, .shiTime)   -- 間之久 = "系" cell
+
+end Face
+
+/-- 每个登记字的"主归 Mian" (新核心：4 本 × 4 征 = 16 cell)。
+    derived from `atomPrimaryFace` via `Face.toMian`. -/
+def atomPrimaryMian (a : AtomName) : SSBX.Foundation.Bagua.BenZheng.Mian :=
+  (atomPrimaryFace a).toMian
+
+/-- 每个登记字的"附归 Mian" (允许多义跨 cell). -/
+def atomExtraMians (a : AtomName) : List SSBX.Foundation.Bagua.BenZheng.Mian :=
+  (atomExtraFaces a).map Face.toMian
+
+def atomMians (a : AtomName) : List SSBX.Foundation.Bagua.BenZheng.Mian :=
+  atomPrimaryMian a :: atomExtraMians a
+
+theorem all_atoms_have_mian (a : AtomName) :
+    atomPrimaryMian a ∈ atomMians a := by
+  simp [atomMians]
 
 /-- Formal non-atom roster nodes.  Atom symbols are represented by `MonadNode.atom`. -/
 inductive FormalNode where

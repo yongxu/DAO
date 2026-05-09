@@ -1,5 +1,21 @@
 # 底层根系图：关系与算子
 
+> **状态（2026-05-10 重大重构）**：新本体核心已落 Lean。
+>
+> - **新核心**：[`formal/SSBX/Foundation/Bagua/BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) — 4 本 (物動間事) + 4 征 (幾勢機時) + Mian = Ben×Zheng = 16 + Quadrant + 全部 invariants (cuo/zong/hu 在 4 象限上的行为)
+> - **字根表**：[`formal/SSBX/Text/LayerCharacterMap.lean`](../../formal/SSBX/Text/LayerCharacterMap.lean) — R1-L0 + Rh 全部 66 字 ground truth
+> - **JianMode → Virtue**：[`formal/SSBX/Foundation/Yi/Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) Virtue.displayChar 给出 健/顺/起/入/险/显/止/悦
+> - **MonadRoot.atomPrimaryMian**：每 atom 现在有 16-cell 主归 (derived from Face via Face.toMian projection)
+> - **Kernel.kernelDanZiMian**：27 KernelDanZi 字也有 Mian 映射
+>
+> **删除的 legacy**：
+> - `inductive Face` 12-枚举 — 仍存在作 backward-compat label，未来 P5b 完全删除
+> - `JianMode` → 重命名为 `Virtue`
+> - `formal/SSBX/Foundation/Jian/JianOntology.lean` — 整个文件已删
+> - `formal/SSBX/Core.lean` 中 GammaProcess 的 3-元 placeholder 类型（OnticRoot/Manifestation/DynamicMark/StaticFace/Gate/EventResult/CompositeForm）— 已删
+>
+> **本文 §2.4–§2.6 / §4 中关于"3 本 / 3 显 / 3 征 / 12 face / JianMode"的旧叙述已 stale**——以 [BenZheng.lean](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) 为新真理来源。
+
 本文先把根下三到四层的关系和算子摊平。它不是替代 `MonadRoot.lean`、`Yuan.lean`、`Yi.lean` 或 `BaguaAlgebra.lean`，而是给这些文件之间的底层读法一个统一坐标。
 
 

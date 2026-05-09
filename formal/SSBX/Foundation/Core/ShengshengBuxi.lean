@@ -12,6 +12,8 @@ import SSBX.Core
 import SSBX.Roster
 import SSBX.Foundation.Core.MonadRoot
 
+set_option maxRecDepth 1024
+
 namespace SSBX.Foundation.Core.ShengshengBuxi
 
 open SSBX.Core.GammaProcess

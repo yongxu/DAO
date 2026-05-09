@@ -269,7 +269,7 @@ def positionWordAnchor : OperatorId := .G_5
 structure TrigramOperatorAnchor where
   trigram : Trigram
   name : String
-  mode : JianMode
+  mode : Virtue
   catalogueIds : List OperatorId
   semanticIds : List OperatorId
   missingForms : List String
@@ -304,7 +304,7 @@ theorem trigramOperatorAnchors_cover_all :
 
 theorem trigramOperatorAnchors_modes :
     trigramOperatorAnchors.map (·.mode) =
-      trigramOperatorAnchors.map (fun a => a.trigram.jianMode) := by
+      trigramOperatorAnchors.map (fun a => a.trigram.virtue) := by
   native_decide
 
 /-! ## § 6 64 hexagram operator anchors -/

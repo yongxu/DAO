@@ -94,9 +94,10 @@ import SSBX.Foundation.Wen.AlignmentFailures
 import SSBX.Foundation.Wen.EconGame
 
 -- Foundation/Jian — 间之核（14 字粒子核）
-import SSBX.Foundation.Jian.JianOntology
+-- (JianOntology.lean deleted 2026-05-10: replaced by BenZheng.lean — 4 本/4 征/16-grid 取代 3 本/3 显/3 征)
 import SSBX.Foundation.Jian.Jian
 import SSBX.Foundation.Jian.JianSTLC
+import SSBX.Foundation.Bagua.BenZheng  -- new ontological core
 import SSBX.Foundation.Jian.JianMinimality
 import SSBX.Foundation.Jian.JianModeKernel
 import SSBX.Foundation.Jian.JianYiBridge

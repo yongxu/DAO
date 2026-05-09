@@ -758,7 +758,7 @@ end Trigram
   hexagram receives a 间生论 reading. -/
 
 /-- 间生论 ontological mode — fundamental category of inter-spatial existence. -/
-inductive JianMode : Type
+inductive Virtue : Type
   | sheng   -- 乾健 续/生 (continuation, generation)
   | shou    -- 坤顺 受/成 (reception, form-completion)
   | yuan    -- 震动 元/几 (initial motion, trace)
@@ -769,10 +769,10 @@ inductive JianMode : Type
   | kai     -- 兑悦 开/通/美 (opening, flow, beauty)
   deriving Repr, DecidableEq, BEq
 
-namespace JianMode
+namespace Virtue
 
 /-- Inverse map: each mode picks out its canonical trigram. -/
-def toTrigram : JianMode → Trigram
+def toTrigram : Virtue → Trigram
   | sheng => Trigram.qian
   | shou  => Trigram.kun
   | yuan  => Trigram.zhen
@@ -782,12 +782,21 @@ def toTrigram : JianMode → Trigram
   | ju    => Trigram.gen
   | kai   => Trigram.dui
 
-end JianMode
+/-- 卦德显字: 8 trigram virtue 之"显字"。
+    与 docs-next/10_formal_形式/layer-character-map.md 的 R3 八卦 mode 字对齐:
+    乾(健) / 坤(顺) / 震(起) / 巽(入) / 坎(险) / 离(显) / 艮(止) / 兑(悦). -/
+def displayChar : Virtue → String
+  | sheng => "健" | shou => "顺"
+  | yuan  => "起" | shen => "入"
+  | sai   => "险" | xian => "显"
+  | ju    => "止" | kai  => "悦"
+
+end Virtue
 
 namespace Trigram
 
 /-- Each trigram's 间生论 mode. -/
-def jianMode : Trigram → JianMode
+def virtue : Trigram → Virtue
   | t =>
     if t = qian then .sheng
     else if t = kun then .shou
@@ -801,34 +810,34 @@ def jianMode : Trigram → JianMode
 
 /-! ### Per-trigram mode -/
 
-theorem qian_jianMode : qian.jianMode = .sheng := rfl
-theorem kun_jianMode  : kun.jianMode  = .shou  := rfl
-theorem zhen_jianMode : zhen.jianMode = .yuan  := rfl
-theorem xun_jianMode  : xun.jianMode  = .shen  := rfl
-theorem kan_jianMode  : kan.jianMode  = .sai   := rfl
-theorem li_jianMode   : li.jianMode   = .xian  := rfl
-theorem gen_jianMode  : gen.jianMode  = .ju    := rfl
-theorem dui_jianMode  : dui.jianMode  = .kai   := rfl
+theorem qian_virtue : qian.virtue = .sheng := rfl
+theorem kun_virtue  : kun.virtue  = .shou  := rfl
+theorem zhen_virtue : zhen.virtue = .yuan  := rfl
+theorem xun_virtue  : xun.virtue  = .shen  := rfl
+theorem kan_virtue  : kan.virtue  = .sai   := rfl
+theorem li_virtue   : li.virtue   = .xian  := rfl
+theorem gen_virtue  : gen.virtue  = .ju    := rfl
+theorem dui_virtue  : dui.virtue  = .kai   := rfl
 
-/-- Right-inverse: starting from any of the 8 named trigrams, jianMode then
+/-- Right-inverse: starting from any of the 8 named trigrams, virtue then
     toTrigram returns the same trigram. -/
-theorem jianMode_toTrigram (t : Trigram) : t.jianMode.toTrigram = t := by
+theorem virtue_toTrigram (t : Trigram) : t.virtue.toTrigram = t := by
   cases t with
   | mk y1 y2 y3 =>
     cases y1 <;> cases y2 <;> cases y3 <;>
-      simp [jianMode, JianMode.toTrigram, qian, kun, zhen, xun, kan, li, gen, dui]
+      simp [virtue, Virtue.toTrigram, qian, kun, zhen, xun, kan, li, gen, dui]
 
 end Trigram
 
-namespace JianMode
+namespace Virtue
 
 /-- Left-inverse: every mode's trigram has that mode. -/
-theorem toTrigram_jianMode (m : JianMode) : m.toTrigram.jianMode = m := by
+theorem toTrigram_virtue (m : Virtue) : m.toTrigram.virtue = m := by
   cases m <;> rfl
 
 /-- **General**: any two distinct modes are non-equal. 一 parametric lemma
     取代 28 surface 不等式. -/
-theorem distinct_modes (a b : JianMode) (h : a ≠ b) : a ≠ b := h
+theorem distinct_modes (a b : Virtue) (h : a ≠ b) : a ≠ b := h
 
 /-- The 8 modes are pairwise distinct (28 inequalities) — direct via `decide`
     over the finite type. Replaces the prior 28-conjunct manual proof. -/
@@ -842,7 +851,7 @@ theorem eight_distinct_modes :
     xian ≠ ju ∧ xian ≠ kai ∧
     ju ≠ kai := by decide
 
-/-! ### V_4 operators lifted to JianMode
+/-! ### V_4 operators lifted to Virtue
 
   错 (cuo) on modes — pairs each mode with its "complementary" mode, the same
   way 错 on trigrams pairs each trigram with its yao-wise negation.
@@ -858,7 +867,7 @@ theorem eight_distinct_modes :
 -/
 
 /-- 错 on a mode (the complementary / yao-flipped dual). -/
-def cuo : JianMode → JianMode
+def cuo : Virtue → Virtue
   | sheng => shou
   | shou  => sheng
   | yuan  => shen
@@ -869,7 +878,7 @@ def cuo : JianMode → JianMode
   | kai   => ju
 
 /-- 综 on a mode (the reverse-yao dual). -/
-def zong : JianMode → JianMode
+def zong : Virtue → Virtue
   | sheng => sheng
   | shou  => shou
   | sai   => sai
@@ -879,12 +888,12 @@ def zong : JianMode → JianMode
   | shen  => kai
   | kai   => shen
 
-theorem cuo_cuo (m : JianMode) : m.cuo.cuo = m := by cases m <;> rfl
-theorem zong_zong (m : JianMode) : m.zong.zong = m := by cases m <;> rfl
+theorem cuo_cuo (m : Virtue) : m.cuo.cuo = m := by cases m <;> rfl
+theorem zong_zong (m : Virtue) : m.zong.zong = m := by cases m <;> rfl
 
-/-- 错 and 综 commute on JianMode (since 错 has period 2 and 综 has finite-order
+/-- 错 and 综 commute on Virtue (since 错 has period 2 and 综 has finite-order
     structure, V_4 is abelian). -/
-theorem cuo_zong_comm (m : JianMode) : m.cuo.zong = m.zong.cuo := by
+theorem cuo_zong_comm (m : Virtue) : m.cuo.zong = m.zong.cuo := by
   cases m <;> rfl
 
 /-- The 4 错-dual pairs as direct equalities. -/
@@ -902,24 +911,24 @@ theorem zong_swaps :
     yuan.zong = ju ∧ ju.zong = yuan ∧ shen.zong = kai ∧ kai.zong = shen :=
   ⟨rfl, rfl, rfl, rfl⟩
 
-end JianMode
+end Virtue
 
 namespace Trigram
 
 /-- 错 on trigrams commutes with the mode projection: the mode of 错 t is
     the 错 of t's mode. -/
-theorem cuo_jianMode (t : Trigram) : t.cuo.jianMode = t.jianMode.cuo := by
+theorem cuo_virtue (t : Trigram) : t.cuo.virtue = t.virtue.cuo := by
   cases t with
   | mk y1 y2 y3 =>
     cases y1 <;> cases y2 <;> cases y3 <;>
-      simp [Trigram.cuo, jianMode, JianMode.cuo, qian, kun, dui, li, zhen, xun, kan, gen, Yao.neg]
+      simp [Trigram.cuo, virtue, Virtue.cuo, qian, kun, dui, li, zhen, xun, kan, gen, Yao.neg]
 
 /-- 综 on trigrams commutes with the mode projection. -/
-theorem zong_jianMode (t : Trigram) : t.zong.jianMode = t.jianMode.zong := by
+theorem zong_virtue (t : Trigram) : t.zong.virtue = t.virtue.zong := by
   cases t with
   | mk y1 y2 y3 =>
     cases y1 <;> cases y2 <;> cases y3 <;>
-      simp [Trigram.zong, jianMode, JianMode.zong, qian, kun, dui, li, zhen, xun, kan, gen]
+      simp [Trigram.zong, virtue, Virtue.zong, qian, kun, dui, li, zhen, xun, kan, gen]
 
 end Trigram
 
@@ -945,8 +954,8 @@ theorem oplus_outer (a b : Trigram) : (oplus a b).outerTrigram = b := by
 
 /-- A hexagram's 间生论 reading: (内 mode, 外 mode).
     内 ↔ 本 / 自身 / 起.  外 ↔ 用 / 显 / 应. -/
-def reading (h : Hexagram) : JianMode × JianMode :=
-  (h.innerTrigram.jianMode, h.outerTrigram.jianMode)
+def reading (h : Hexagram) : Virtue × Virtue :=
+  (h.innerTrigram.virtue, h.outerTrigram.virtue)
 
 /-! ### Canonical hexagram readings -/
 
@@ -1001,21 +1010,21 @@ theorem doubled_reading_iff (h : Hexagram) :
   unfold reading
   constructor
   · rintro ⟨m, hm⟩
-    have h1 : h.innerTrigram.jianMode = m := by
+    have h1 : h.innerTrigram.virtue = m := by
       have := congrArg Prod.fst hm
       simpa using this
-    have h2 : h.outerTrigram.jianMode = m := by
+    have h2 : h.outerTrigram.virtue = m := by
       have := congrArg Prod.snd hm
       simpa using this
     have := h1.trans h2.symm
-    -- jianMode is injective on the 8 named trigrams; using the bijection
+    -- virtue is injective on the 8 named trigrams; using the bijection
     -- inverse we recover h.innerTrigram = h.outerTrigram.
-    have hinv1 := Trigram.jianMode_toTrigram h.innerTrigram
-    have hinv2 := Trigram.jianMode_toTrigram h.outerTrigram
+    have hinv1 := Trigram.virtue_toTrigram h.innerTrigram
+    have hinv2 := Trigram.virtue_toTrigram h.outerTrigram
     rw [this] at hinv1
     exact hinv1.symm.trans hinv2
   · intro heq
-    refine ⟨h.innerTrigram.jianMode, ?_⟩
+    refine ⟨h.innerTrigram.virtue, ?_⟩
     rw [heq]
 
 /-! ### 八重卦: the 8 doubled hexagrams (内卦 = 外卦)
@@ -1075,13 +1084,13 @@ theorem zong_outerTrigram (h : Hexagram) : h.zong.outerTrigram = h.innerTrigram.
 theorem cuo_reading (h : Hexagram) :
     h.cuo.reading = (h.reading.1.cuo, h.reading.2.cuo) := by
   unfold reading
-  rw [cuo_innerTrigram, cuo_outerTrigram, Trigram.cuo_jianMode, Trigram.cuo_jianMode]
+  rw [cuo_innerTrigram, cuo_outerTrigram, Trigram.cuo_virtue, Trigram.cuo_virtue]
 
 /-- 综 on a hexagram swaps inner/outer modes AND applies 综 to each. -/
 theorem zong_reading (h : Hexagram) :
     h.zong.reading = (h.reading.2.zong, h.reading.1.zong) := by
   unfold reading
-  rw [zong_innerTrigram, zong_outerTrigram, Trigram.zong_jianMode, Trigram.zong_jianMode]
+  rw [zong_innerTrigram, zong_outerTrigram, Trigram.zong_virtue, Trigram.zong_virtue]
 
 /-- 错综 on a hexagram: combine both — swap and apply (错 then 综) to each. -/
 theorem cuoZong_reading (h : Hexagram) :

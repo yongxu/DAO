@@ -222,6 +222,10 @@ def glyphSenses : List GlyphSense :=
   senseOfGlyph "居", senseOfGlyph "處", senseOfGlyph "处", senseOfGlyph "聚", senseOfGlyph "集", senseOfGlyph "引", senseOfGlyph "攝", senseOfGlyph "摄", senseOfGlyph "蘊", senseOfGlyph "蕴",
   senseOfGlyph "萌", senseOfGlyph "兆", senseOfGlyph "苗", senseOfGlyph "占", senseOfGlyph "卜", senseOfGlyph "演", senseOfGlyph "譬", senseOfGlyph "喻", senseOfGlyph "觀", senseOfGlyph "察",
   senseOfGlyph "明", senseOfGlyph "悟", senseOfGlyph "識",
+  -- BenZheng 新字: R3 mode + R5 shi + 16-grid sub-modes
+  senseOfGlyph "健", senseOfGlyph "悦", senseOfGlyph "顺",
+  senseOfGlyph "迁", senseOfGlyph "溯",
+  senseOfGlyph "长", senseOfGlyph "缘", senseOfGlyph "趋",
   ] ++ recoveredMissingGlyphSenses ++
   [
   mk "生" 2 .operator, mk "生" 3 .generated, mk "之" 2 .particle, mk "之" 3 .operator, mk "真" 2 .generated, mk "中" 2 .operator, mk "正" 2 .operator, mk "行" 2 .operator,

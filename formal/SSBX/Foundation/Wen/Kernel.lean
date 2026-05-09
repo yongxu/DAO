@@ -3038,6 +3038,19 @@ theorem covers_renmian : ∃ z : KernelDanZi, kernelDanZiFace z = .«人面» :=
 theorem covers_wenmian : ∃ z : KernelDanZi, kernelDanZiFace z = .«文面» :=
   ⟨.xing, rfl⟩
 
+/-! ### Layer 19b: 16-Mian mapping (Kernel 单字 → BenZheng.Mian)
+
+  新核心。Mian = Ben × Zheng = 16 cells. derived from kernelDanZiFace via Face.toMian.
+  Future: invert dependency (Mian primary, Face derived). -/
+
+open SSBX.Foundation.Core.MonadRoot in
+def kernelDanZiMian (z : KernelDanZi) : SSBX.Foundation.Bagua.BenZheng.Mian :=
+  Face.toMian (kernelDanZiFace z)
+
+theorem kernelDanZi_total_mian : ∀ z : KernelDanZi, ∃ m, kernelDanZiMian z = m := by
+  intro z
+  exact ⟨kernelDanZiMian z, rfl⟩
+
 /-! ### Layer 20: Roster.allAtoms registration (Kernel 单字 → AtomName) -/
 
 open SSBX.Roster in
