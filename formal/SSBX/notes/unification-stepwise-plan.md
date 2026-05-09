@@ -55,6 +55,7 @@
 -> 有限相位演化候选
 -> 连续作用量泛函候选
 -> 路径空间作用量泛函候选
+-> 有限作用量极值候选
 -> 几何候选接口
 -> 经验 pending ledger
 -> 更强统一摘要 theorem
@@ -114,6 +115,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityActionAmplitudeMeasurementBri
 lake build SSBX.Foundation.Modern.QuantumRelativityFinitePhaseEvolutionBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityContinuousActionFunctionalBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityPathSpaceActionFunctionalBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityFiniteActionExtremumBridge
 lake build SSBX
 git diff --check --
 ```
@@ -125,7 +127,7 @@ git diff --check --
 | 项 | 内容 |
 |---|---|
 | Lean 出口 | 保持 `markov_causal_bridge_summary`、`measurement_event_alignment`、`markov_bridge_not_direct_language_addition` 为 `machineChecked` |
-| 文档出口 | 本文件与验证计划明确列出未关闭项：stochastic semantics、general all-path enumeration、path integral、general Hamiltonian/unitary amplitude dynamics、smooth/infinite-dimensional path-space action functional、general Hilbert measurement、POVM/PVM、decoherence、physical unitary/CPTP/Kraus/density channel law、干涉、因果偏序、度规恢复、经验闭合；finite row sum-one boundary 已由 S9 后续关闭，Markov/amplitude compatibility 下的 Born rule derivation 已由 S18 关闭，finite path-weight multiplication 已由 S19 关闭，nontrivial finite quantum-channel law 已由 S20 关闭，one-qubit computational-basis measurement weights 已由 S21 关闭，finite action branch to measurement weights chain 已由 S22 关闭，finite period-two phase evolution 已由 S23 关闭，displayed continuous action-coordinate functional 已由 S24 关闭，finite path-space action functional 已由 S25 关闭 |
+| 文档出口 | 本文件与验证计划明确列出未关闭项：stochastic semantics、general all-path enumeration、path integral、general Hamiltonian/unitary amplitude dynamics、smooth/infinite-dimensional path-space action functional、continuous variation space、stationary action principle、general Hilbert measurement、POVM/PVM、decoherence、physical unitary/CPTP/Kraus/density channel law、干涉、因果偏序、度规恢复、经验闭合；finite row sum-one boundary 已由 S9 后续关闭，Markov/amplitude compatibility 下的 Born rule derivation 已由 S18 关闭，finite path-weight multiplication 已由 S19 关闭，nontrivial finite quantum-channel law 已由 S20 关闭，one-qubit computational-basis measurement weights 已由 S21 关闭，finite action branch to measurement weights chain 已由 S22 关闭，finite period-two phase evolution 已由 S23 关闭，displayed continuous action-coordinate functional 已由 S24 关闭，finite path-space action functional 已由 S25 关闭，finite action extremum boundary 已由 S26 关闭 |
 | 失败记录 | 若发现文档中有强于 theorem 的终局统一或量子引力完成等 claim，记录为 `conceptual mismatch`，并改回对应结构层级 |
 | 当前正名 | Markov-因果桥当前是最小可验证中介构造；更强的物理大统一读法需要后续 theorem 合取后再命名 |
 
@@ -1366,6 +1368,44 @@ path_space_action_functional_bridge_summary。
 | `two_route_path_space_action_support_amplitude_cancels` | `QuantumRelativityPathSpaceActionFunctionalBridge.lean` | path-space action-induced quotient-support amplitude sum 为 `0` |
 | `path_space_action_functional_bridge_summary` | `QuantumRelativityPathSpaceActionFunctionalBridge.lean` | S25 finite path-space action functional boundary 已关闭 |
 
+## S26 · 有限作用量极值候选
+
+目标：把 S25 的 two-route finite path-space action values 推到 displayed finite support 上的 action-gap / finite-minimum boundary。S26 不证明 smooth/infinite-dimensional path-space action functional、continuous variation space、stationary action principle、Euler-Lagrange equations、Hamiltonian generator、continuous-time unitary group、general Schrödinger dynamics、general path integral 或 general Hilbert measurement；它只证明 two-route quotient support 上 lower action 比 upper action 大 `1`，upper 是 finite action minimum，lower 不是。
+
+| 项 | 内容 |
+|---|---|
+| Lean 出口 | `finite_action_extremum_bridge_summary` |
+| 最低 theorem 形态 | 合取 `TwoRouteFiniteActionExtremumClosed`、S25 path-space action boundary、S24 continuous action boundary、S5r action-phase law、S23 finite phase evolution、S22/S21 measurement boundary、pending ledger 与 Wen coverage |
+| 失败记录 | 若构建失败，记录是否为 list membership、quotient class rewrite、Real order proof 或 namespace resolution；当前设计避免把 finite support minimum 误读为 stationary action principle |
+| 文档更新 | 已新增《有限作用量极值候选 · Markov桥S26》 |
+| 后续结构 | smooth/infinite-dimensional path-space action functional、continuous variation space、stationary action principle、Euler-Lagrange equations、Hamiltonian generator、continuous-time unitary group、self-adjoint operator semantics、general Schrödinger dynamics、general path integral、general Hilbert measurement、PVM/POVM、decoherence 与 empirical closure |
+
+通过判准：
+
+```text
+finiteActionGap；
+FiniteActionMinimumOnSupport；
+two_route_upper_in_action_extremum_support；
+two_route_lower_in_action_extremum_support；
+two_route_upper_to_lower_action_gap；
+two_route_lower_to_upper_action_gap；
+two_route_lower_action_eq_upper_plus_one；
+two_route_upper_is_finite_action_minimum；
+two_route_lower_not_finite_action_minimum；
+finite_action_extremum_bridge_summary。
+```
+
+当前状态：
+
+| theorem | 文件 | 读法 |
+|---|---|---|
+| `finiteActionGap`、`FiniteActionMinimumOnSupport` | `QuantumRelativityFiniteActionExtremumBridge.lean` | finite quotient support 上的 action gap 与 minimum predicate |
+| `two_route_upper_to_lower_action_gap`、`two_route_lower_to_upper_action_gap` | `QuantumRelativityFiniteActionExtremumBridge.lean` | upper/lower action difference 分别为 `1` 与 `-1` |
+| `two_route_lower_action_eq_upper_plus_one` | `QuantumRelativityFiniteActionExtremumBridge.lean` | lower action 等于 upper action 加 `1` |
+| `two_route_upper_is_finite_action_minimum` | `QuantumRelativityFiniteActionExtremumBridge.lean` | upper 是 displayed finite support 上的 action minimum |
+| `two_route_lower_not_finite_action_minimum` | `QuantumRelativityFiniteActionExtremumBridge.lean` | lower 不是 displayed finite support 上的 action minimum |
+| `finite_action_extremum_bridge_summary` | `QuantumRelativityFiniteActionExtremumBridge.lean` | S26 finite action extremum boundary 已关闭 |
+
 ## 失败记录追加区
 
 失败记录格式沿用验证计划，并允许追加在此区：
@@ -1426,6 +1466,7 @@ path_space_action_functional_bridge_summary。
 | 2026-05-09 | S23 | failure retained / success | 第一次 proof 试探中 normalization preservation 的 `simp` 留下 `bornProb0 ψ + bornProb1 ψ = 1`；改用 `simpa ... using hψ` 后关闭 finite phase evolution -> Born-weight preservation boundary |
 | 2026-05-09 | S24 | failure retained / success | 第一次 build 中 `branch_continuous_action_value_matches_index` 用 `rfl` 失败；改用 `norm_num` 展开 coercion 与 displayed action functional 后关闭 continuous action functional -> sampled phase boundary |
 | 2026-05-09 | S25 | failure retained / success | 第一次 build 中未 open `QuantumRelativityPathIdentityBridge`，导致 `twoStepPathKey` 无法解析和展开；补 namespace 后关闭 finite path-space action functional candidate、S5r action-index compatibility、S24 sample compatibility 与 quotient-support action-induced cancellation |
+| 2026-05-09 | S26 | failure retained / success | 第一次 build 中 `rw [hq]` 已关闭 reflexive order goal，后续 `exact le_rfl` 变成 no goals；同时文件末尾需先关闭 `noncomputable section` 再关闭 namespace。修正后新增 finite action extremum boundary，关闭 lower-minus-upper action gap、upper finite minimum 与 lower non-minimum |
 
 ## 统一用语正名
 
@@ -1433,9 +1474,9 @@ path_space_action_functional_bridge_summary。
 
 | 词 | 在本路线中的含义 | 结构依据 |
 |---|---|---|
-| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S25 已关闭的 summary theorem 与路线日志 |
-| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8-S25 pending list |
-| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary`、`normalized_mass_bridge_summary`、`born_weight_normalization_bridge_summary`、`born_distribution_bridge_summary`、`channel_compose_bridge_summary`、`channel_compose_associativity_bridge_summary`、`sum_over_middle_channel_bridge_summary`、`sum_over_middle_born_distribution_bridge_summary`、`unitary_cptp_ledger_bridge_summary`、`born_rule_derivation_bridge_summary`、`path_weight_multiplication_bridge_summary`、`nontrivial_quantum_channel_law_bridge_summary`、`born_measurement_bridge_summary`、`action_amplitude_measurement_bridge_summary`、`finite_phase_evolution_bridge_summary`、`continuous_action_functional_bridge_summary`、`path_space_action_functional_bridge_summary` |
+| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S26 已关闭的 summary theorem 与路线日志 |
+| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8-S26 pending list |
+| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary`、`normalized_mass_bridge_summary`、`born_weight_normalization_bridge_summary`、`born_distribution_bridge_summary`、`channel_compose_bridge_summary`、`channel_compose_associativity_bridge_summary`、`sum_over_middle_channel_bridge_summary`、`sum_over_middle_born_distribution_bridge_summary`、`unitary_cptp_ledger_bridge_summary`、`born_rule_derivation_bridge_summary`、`path_weight_multiplication_bridge_summary`、`nontrivial_quantum_channel_law_bridge_summary`、`born_measurement_bridge_summary`、`action_amplitude_measurement_bridge_summary`、`finite_phase_evolution_bridge_summary`、`continuous_action_functional_bridge_summary`、`path_space_action_functional_bridge_summary`、`finite_action_extremum_bridge_summary` |
 
 推荐正名句：
 

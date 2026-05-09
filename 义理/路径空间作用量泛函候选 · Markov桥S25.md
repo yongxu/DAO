@@ -2,6 +2,8 @@
 
 **前置**：[作用量相位律候选 · Markov桥S5r](作用量相位律候选%20·%20Markov桥S5r.md) · [有限相位演化候选 · Markov桥S23](有限相位演化候选%20·%20Markov桥S23.md) · [连续作用量泛函候选 · Markov桥S24](连续作用量泛函候选%20·%20Markov桥S24.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
+**后续**：[有限作用量极值候选 · Markov桥S26](有限作用量极值候选%20·%20Markov桥S26.md) 已把本页的 finite path-space action values 推到 displayed finite support 上的 action-gap 与 finite-minimum boundary。
+
 **Lean 锚点**：
 
 | 层 | 文件 | 内容 | 状态 |
@@ -66,7 +68,8 @@ theorem path_space_action_functional_bridge_summary :
 | 项 | 原因 |
 |---|---|
 | smooth or infinite-dimensional path-space action functional | 当前只处理 finite visible-key quotient path space |
-| variational principle | 没有 stationarity、variation 或 boundary-condition theorem |
+| finite action extremum | 已由 S26 承接；本页只给出 path-space action values 与 action-phase handoff |
+| variational principle | S26 只给 finite support minimum；仍没有 stationarity、variation 或 boundary-condition theorem |
 | Euler-Lagrange equations | 没有从作用量极值得到运动方程 |
 | Hamiltonian generator | 没有 Legendre transform、self-adjoint generator 或动力学生成律 |
 | continuous-time unitary group | 没有 `U(t+s)=U(t)U(s)`、强连续性或 Stone theorem |
@@ -117,6 +120,7 @@ finite quotient path support
 
 ```text
 smooth / infinite-dimensional path space
+finite support extremum
 variational principle
 Euler-Lagrange equations
 Hamiltonian / unitary dynamics
@@ -138,7 +142,7 @@ S25 第一次 build：
 结果：目标模块 build 通过
 ```
 
-本轮设计时保留的边界是：不把 finite quotient support 写成 smooth path space，也不把 `S([path]) = 0/1` 写成物理作用量原理。若后续要推进，需要先新增 path manifold、variation 或 Hamiltonian semantics。
+本轮设计时保留的边界是：不把 finite quotient support 写成 smooth path space，也不把 `S([path]) = 0/1` 写成物理作用量原理。有限支撑上的 action extremum 已由 S26 承接；若后续要推进，需要先新增 path manifold、variation 或 Hamiltonian semantics。
 
 Lean 层若出现构建失败，应记录在本文并保留失败原因；当前目标模块的验证命令为：
 

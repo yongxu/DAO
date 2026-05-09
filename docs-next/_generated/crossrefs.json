@@ -1147,6 +1147,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityPathIdentityBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityPathQuotientBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityPathSpaceActionFunctionalBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityPathWeightMultiplicationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportAlgebraBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportBridge.lean",
@@ -1221,6 +1222,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityPathIdentityBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityPathQuotientBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityPathSpaceActionFunctionalBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityPathWeightMultiplicationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportAlgebraBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportBridge.lean",
@@ -6274,6 +6276,78 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityPathWeightMultiplicationBridge.lean"
           ],
           "symbol": "path_weight_multiplication_bridge_summary"
+        }
+      ]
+    },
+    {
+      "document": "义理/路径空间作用量泛函候选 · Markov桥S25.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathSpaceActionFunctionalBridge.lean"
+          ],
+          "symbol": "FinitePathSpaceActionFunctionalCandidate"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathSpaceActionFunctionalBridge.lean"
+          ],
+          "symbol": "branch_path_space_action_value_eq_continuous_action_value"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathSpaceActionFunctionalBridge.lean"
+          ],
+          "symbol": "path_space_action_functional_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathSpaceActionFunctionalBridge.lean"
+          ],
+          "symbol": "path_space_action_sampled_amplitude_eq_action_phase_amplitude"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathSpaceActionFunctionalBridge.lean"
+          ],
+          "symbol": "quotientSupportPathSpaceActionAmplitudeSum_eq_action_phase_sum"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathSpaceActionFunctionalBridge.lean"
+          ],
+          "symbol": "twoRoutePathSpaceActionFunctional"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathSpaceActionFunctionalBridge.lean"
+          ],
+          "symbol": "two_route_lower_path_space_action_value"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathSpaceActionFunctionalBridge.lean"
+          ],
+          "symbol": "two_route_path_space_action_index_matches_action_phase_law"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathSpaceActionFunctionalBridge.lean"
+          ],
+          "symbol": "two_route_path_space_action_support_amplitude_cancels"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathSpaceActionFunctionalBridge.lean"
+          ],
+          "symbol": "two_route_path_space_action_support_born_weight_zero"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathSpaceActionFunctionalBridge.lean"
+          ],
+          "symbol": "two_route_upper_path_space_action_value"
         }
       ]
     },

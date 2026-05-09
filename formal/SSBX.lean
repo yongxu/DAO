@@ -177,6 +177,7 @@ import SSBX.Foundation.Modern.QuantumRelativityActionAmplitudeMeasurementBridge
 import SSBX.Foundation.Modern.QuantumRelativityFinitePhaseEvolutionBridge
 import SSBX.Foundation.Modern.QuantumRelativityContinuousActionFunctionalBridge
 import SSBX.Foundation.Modern.QuantumRelativityPathSpaceActionFunctionalBridge
+import SSBX.Foundation.Modern.QuantumRelativityFiniteActionExtremumBridge
 import SSBX.Foundation.Modern.SUN
 
 -- Phase 4 主体续（自然演绎 / Lebesgue 积分 / 连续 ODE / 神经科学 / 完备性深化）

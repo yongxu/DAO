@@ -4,7 +4,7 @@
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
-    "Foundation/Modern": 77,
+    "Foundation/Modern": 78,
     "Foundation/Wen": 51,
     "Foundation/Yi": 2,
     "Model": 2,
@@ -29,10 +29,10 @@
         "SSBX.Foundation.Wen.WenSurface.Coverage",
         "SSBX.Foundation.Wen.WenDefCompile"
       ],
-      "lines": 1849,
+      "lines": 1856,
       "module": "WenyanSurface.lean",
       "path": "WenyanSurface.lean",
-      "sha256": "23b10dcfcc7be7f4ab1749041b5208ba07a25cdcf7aa0994b13f9c535b0f286a"
+      "sha256": "54f8d151849b8322e72cd2ae9a4a056486d8ce2f410413aa456b24a67e360222"
     },
     {
       "cluster": "root",
@@ -195,6 +195,7 @@
         "SSBX.Foundation.Modern.QuantumRelativityFinitePhaseEvolutionBridge",
         "SSBX.Foundation.Modern.QuantumRelativityContinuousActionFunctionalBridge",
         "SSBX.Foundation.Modern.QuantumRelativityPathSpaceActionFunctionalBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityFiniteActionExtremumBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -217,10 +218,10 @@
         "SSBX.Foundation.Modern.KeBoundary",
         "SSBX.Foundation.Modern.QuantumSpacetime"
       ],
-      "lines": 210,
+      "lines": 211,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "b88062a21fe627803717d8c6b8db1c8518386bad6833692d84eaa26b55b3d259"
+      "sha256": "8b4349a2b01d27c7395ab4c115c12f0bc439c5dc9bfb60249d45a45d316079b7"
     },
     {
       "cluster": "root",
@@ -12907,6 +12908,100 @@
     },
     {
       "cluster": "Foundation/Modern",
+      "declaration_count": 20,
+      "declarations": [
+        {
+          "kind": "structure",
+          "name": "FinitePathSpaceActionFunctionalCandidate"
+        },
+        {
+          "kind": "def",
+          "name": "pathSpaceActionSampledAmplitude"
+        },
+        {
+          "kind": "def",
+          "name": "quotientSupportPathSpaceActionAmplitudeSum"
+        },
+        {
+          "kind": "def",
+          "name": "quotientSupportPathSpaceActionBornWeight"
+        },
+        {
+          "kind": "def",
+          "name": "twoRoutePathSpaceActionFunctional"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_upper_path_space_action_value"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_lower_path_space_action_value"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_path_space_action_index_matches_action_phase_law"
+        },
+        {
+          "kind": "def",
+          "name": "branchPathQuotientClass"
+        },
+        {
+          "kind": "theorem",
+          "name": "branch_path_space_action_value_eq_continuous_action_value"
+        },
+        {
+          "kind": "theorem",
+          "name": "path_space_action_sampled_amplitude_eq_action_phase_amplitude"
+        },
+        {
+          "kind": "theorem",
+          "name": "quotientSupportPathSpaceActionAmplitudeSum_eq_action_phase_sum"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_path_space_action_support_amplitude_cancels"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_path_space_action_support_born_weight_zero"
+        },
+        {
+          "kind": "def",
+          "name": "FinitePathSpaceActionFunctionalClosed"
+        },
+        {
+          "kind": "theorem",
+          "name": "finite_path_space_action_functional_closed"
+        },
+        {
+          "kind": "inductive",
+          "name": "PendingBeyondS25"
+        },
+        {
+          "kind": "def",
+          "name": "ClosedByStepwiseS25"
+        },
+        {
+          "kind": "theorem",
+          "name": "pending_boundary_not_closed_by_s25"
+        },
+        {
+          "kind": "theorem",
+          "name": "path_space_action_functional_bridge_summary"
+        }
+      ],
+      "imports": [
+        "Mathlib.Tactic",
+        "SSBX.Foundation.Modern.QuantumRelativityContinuousActionFunctionalBridge"
+      ],
+      "lines": 244,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityPathSpaceActionFunctionalBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityPathSpaceActionFunctionalBridge.lean",
+      "sha256": "ec294a705fb5e2fa8d3106458e28147ced1a70ed8f14f2567768d6c69ccafd89"
+    },
+    {
+      "cluster": "Foundation/Modern",
       "declaration_count": 25,
       "declarations": [
         {
@@ -19181,7 +19276,7 @@
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 50,
+      "declaration_count": 72,
       "declarations": [
         {
           "kind": "def",
@@ -19324,24 +19419,12 @@
           "name": "flip6Prog_denotes"
         },
         {
-          "kind": "structure",
-          "name": "CompiledHexFun"
-        },
-        {
           "kind": "def",
-          "name": "program"
-        },
-        {
-          "kind": "def",
-          "name": "fuel"
+          "name": "runHexProg"
         },
         {
           "kind": "def",
           "name": "runHexSteps"
-        },
-        {
-          "kind": "def",
-          "name": "runCompiledHexFun"
         },
         {
           "kind": "def",
@@ -19354,6 +19437,106 @@
         {
           "kind": "def",
           "name": "compileHexFunCertified?"
+        },
+        {
+          "kind": "theorem",
+          "name": "compileHexFun_id"
+        },
+        {
+          "kind": "theorem",
+          "name": "compileHexFun_cuo"
+        },
+        {
+          "kind": "theorem",
+          "name": "compileHexFun_zong"
+        },
+        {
+          "kind": "theorem",
+          "name": "compileHexFun_hu"
+        },
+        {
+          "kind": "theorem",
+          "name": "compileHexFun_cuoZong"
+        },
+        {
+          "kind": "theorem",
+          "name": "compileHexFun_flip1"
+        },
+        {
+          "kind": "theorem",
+          "name": "compileHexFun_flip6"
+        },
+        {
+          "kind": "def",
+          "name": "cuoAfterZongBody"
+        },
+        {
+          "kind": "theorem",
+          "name": "cuoAfterZongBody_typed"
+        },
+        {
+          "kind": "theorem",
+          "name": "compileHexFun_cuoAfterZong"
+        },
+        {
+          "kind": "def",
+          "name": "cuoAfterZongCombinatorBody"
+        },
+        {
+          "kind": "theorem",
+          "name": "cuoAfterZongCombinatorBody_typed"
+        },
+        {
+          "kind": "theorem",
+          "name": "compileHexFun_cuoAfterZongCombinator"
+        },
+        {
+          "kind": "theorem",
+          "name": "compileHexFun_id_denotes"
+        },
+        {
+          "kind": "theorem",
+          "name": "compileHexFun_cuo_denotes"
+        },
+        {
+          "kind": "theorem",
+          "name": "compileHexFun_cuoAfterZong_denotes"
+        },
+        {
+          "kind": "theorem",
+          "name": "compileHexFun_cuoAfterZongCombinator_denotes"
+        },
+        {
+          "kind": "theorem",
+          "name": "compileHexFun_reject_tui"
+        },
+        {
+          "kind": "theorem",
+          "name": "compileHexFun_reject_sun"
+        },
+        {
+          "kind": "theorem",
+          "name": "compileHexFun_reject_jia"
+        },
+        {
+          "kind": "theorem",
+          "name": "compileHexFun_reject_catalogue"
+        },
+        {
+          "kind": "theorem",
+          "name": "compileHexFun_reject_bool"
+        },
+        {
+          "kind": "theorem",
+          "name": "compileHexFun_reject_pair"
+        },
+        {
+          "kind": "theorem",
+          "name": "compileHexFun_reject_list"
+        },
+        {
+          "kind": "theorem",
+          "name": "compileHexFun_reject_cell"
         },
         {
           "kind": "theorem",
@@ -19388,10 +19571,10 @@
         "SSBX.Foundation.Bagua.BaguaTuring",
         "SSBX.Foundation.Wen.WenDefEval"
       ],
-      "lines": 521,
+      "lines": 610,
       "module": "SSBX.Foundation.Wen.WenDefCompile",
       "path": "formal/SSBX/Foundation/Wen/WenDefCompile.lean",
-      "sha256": "b1b3f9b8062aef8121f59c81b40ce6ccd76779e8c5698b25b74b602ad610faba"
+      "sha256": "1ea5815eef4557db9a868ae0479d8ebf34160bd4fe3daefc81759e2e126df859"
     },
     {
       "cluster": "Foundation/Wen",
@@ -19758,10 +19941,10 @@
         "SSBX.Text.OperatorCellMap",
         "SSBX.Text.OperatorCellSemantics"
       ],
-      "lines": 214,
+      "lines": 262,
       "module": "SSBX.Foundation.Wen.WenSurface.Coverage",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Coverage.lean",
-      "sha256": "f9501afa080a74728da381a796d0f98d9932c08fd6520322d9cb246eb03684ad"
+      "sha256": "112a4be66cfd79d6fa14be35a8f90d02aa3b2caa293502de575c60a42aa07a2c"
     },
     {
       "cluster": "Foundation/Wen",
@@ -19841,10 +20024,10 @@
         "SSBX.Foundation.Wen.WenDef",
         "SSBX.Foundation.Wen.WenDefEval"
       ],
-      "lines": 534,
+      "lines": 537,
       "module": "SSBX.Foundation.Wen.WenSurface.Elaborate",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Elaborate.lean",
-      "sha256": "1514b37d36147bbd290c49f2b47484fed8ebe623b47f48f782d85992cb52d9fd"
+      "sha256": "06d45a60f00f9939ebfe02737dd7f70fe9268fb6d2217408846866ccf109c018"
     },
     {
       "cluster": "Foundation/Wen",
@@ -19906,10 +20089,10 @@
       "imports": [
         "SSBX.Foundation.Wen.WenSurface.Elaborate"
       ],
-      "lines": 1212,
+      "lines": 1238,
       "module": "SSBX.Foundation.Wen.WenSurface.EndToEnd",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/EndToEnd.lean",
-      "sha256": "0fadf56ade4406f9253436a3b1976d29fb37dc7a281c5f94338f2263cd6a6c10"
+      "sha256": "39f66e2cd4581114ccbf768fba653bd6c38573f17180bd6e45056562a527a9a0"
     },
     {
       "cluster": "Foundation/Wen",
@@ -19994,7 +20177,7 @@
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 72,
+      "declaration_count": 76,
       "declarations": [
         {
           "kind": "inductive",
@@ -20182,6 +20365,10 @@
         },
         {
           "kind": "def",
+          "name": "resolveCatalogueByTableAllowAmbiguous"
+        },
+        {
+          "kind": "def",
           "name": "resolveOne"
         },
         {
@@ -20266,11 +20453,23 @@
         },
         {
           "kind": "def",
+          "name": "resolveOneWithCuesAllowAmbiguous"
+        },
+        {
+          "kind": "def",
           "name": "resolveWithCuesAux"
         },
         {
           "kind": "def",
           "name": "resolveWithCues"
+        },
+        {
+          "kind": "def",
+          "name": "resolveWithCuesAllowAmbiguousAux"
+        },
+        {
+          "kind": "def",
+          "name": "resolveWithCuesAllowAmbiguous"
         },
         {
           "kind": "theorem",
@@ -20293,14 +20492,14 @@
         "SSBX.Text.OperatorReadings",
         "SSBX.Foundation.Yi.YiCore"
       ],
-      "lines": 1010,
+      "lines": 1094,
       "module": "SSBX.Foundation.Wen.WenSurface.Reading",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Reading.lean",
-      "sha256": "777c23fe010d9e5f02732265812dd917228ea771e71b381f0f331e1c0c8089f3"
+      "sha256": "8c80f711ea9ec982cd5f6afb23f078a9270c4f6645b46dcd04c6878f83d91877"
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 117,
+      "declaration_count": 138,
       "declarations": [
         {
           "kind": "structure",
@@ -20365,6 +20564,26 @@
         {
           "kind": "def",
           "name": "allDomainGapKinds"
+        },
+        {
+          "kind": "inductive",
+          "name": "DomainGapDetailKind"
+        },
+        {
+          "kind": "def",
+          "name": "key"
+        },
+        {
+          "kind": "def",
+          "name": "label"
+        },
+        {
+          "kind": "def",
+          "name": "note"
+        },
+        {
+          "kind": "def",
+          "name": "allDomainGapDetailKinds"
         },
         {
           "kind": "def",
@@ -20508,6 +20727,10 @@
         },
         {
           "kind": "def",
+          "name": "domainGapDetailKindForCarrierKind"
+        },
+        {
+          "kind": "def",
           "name": "operatorDomainGapKind?"
         },
         {
@@ -20517,6 +20740,14 @@
         {
           "kind": "def",
           "name": "domainGapOperatorIds"
+        },
+        {
+          "kind": "def",
+          "name": "operatorDomainGapDetailKind?"
+        },
+        {
+          "kind": "def",
+          "name": "domainGapDetailKindOperatorIds"
         },
         {
           "kind": "def",
@@ -20668,6 +20899,54 @@
         },
         {
           "kind": "theorem",
+          "name": "domainGapDetail_applicationMechanic_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainGapDetail_identityNoop_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainGapDetail_projectionModel_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainGapDetail_pairCarrierLaw_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainGapDetail_facetCarrierLaw_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainGapDetail_singletonAggregateLaw_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainGapDetail_binaryAggregateLaw_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainGapDetail_ternaryAggregateLaw_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainGapDetail_listProjectionLaw_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainGapDetail_predicateModel_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainGapDetail_truthMarkerModel_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainGapDetail_catalogueShape_length"
+        },
+        {
+          "kind": "theorem",
           "name": "catalogueShape_assignment_length"
         },
         {
@@ -20732,6 +21011,10 @@
         },
         {
           "kind": "theorem",
+          "name": "domainGapDetailKindPartition_counts"
+        },
+        {
+          "kind": "theorem",
           "name": "exactTheoremBackedStrongOperatorIds_no_domain_gap"
         },
         {
@@ -20776,14 +21059,14 @@
         "SSBX.Text.OperatorSignatures",
         "SSBX.Text.WenyanOperators"
       ],
-      "lines": 1192,
+      "lines": 1368,
       "module": "SSBX.Foundation.Wen.WenSurface.Semantics",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Semantics.lean",
-      "sha256": "e59b042eadb2b5eac09540263700f3b7bff2b0dd372f3267ff9489ea3dbadbf2"
+      "sha256": "df01924bfaffdd73b33321c1f32c1b0b9aea9c2a8ae78e66ea2d9bef2688d018"
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 60,
+      "declaration_count": 66,
       "declarations": [
         {
           "kind": "inductive",
@@ -20979,6 +21262,22 @@
         },
         {
           "kind": "def",
+          "name": "expectedFunctionCue?"
+        },
+        {
+          "kind": "def",
+          "name": "readingHasExactExpectedType"
+        },
+        {
+          "kind": "def",
+          "name": "readingMatchesExpectedFunction"
+        },
+        {
+          "kind": "def",
+          "name": "expectedFunctionResolvedTok?"
+        },
+        {
+          "kind": "def",
           "name": "asVarName?"
         },
         {
@@ -21023,6 +21322,14 @@
         },
         {
           "kind": "def",
+          "name": "firstAmbiguousResolved?"
+        },
+        {
+          "kind": "def",
+          "name": "parseSurfaceResolvedOrResolveErr"
+        },
+        {
+          "kind": "def",
           "name": "parseSurface"
         }
       ],
@@ -21030,10 +21337,10 @@
         "SSBX.Foundation.Wen.WenSurface.Semantics",
         "SSBX.Foundation.Wen.WenSurface.Reading"
       ],
-      "lines": 778,
+      "lines": 841,
       "module": "SSBX.Foundation.Wen.WenSurface.Syntax",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Syntax.lean",
-      "sha256": "064362902e265a1ac239d83b8000fc9acf7b8124fc9f783ac92dea3e87d562b6"
+      "sha256": "c8bbe02202391549a1766b109b675327c1259bed22ec3e45dfacd15228e44f08"
     },
     {
       "cluster": "Foundation/Wen",

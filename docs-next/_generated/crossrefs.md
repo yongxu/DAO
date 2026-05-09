@@ -74,8 +74,8 @@
 | formal/SSBX/notes/PositionOperatorGraph.md | 0 | 5 |
 | formal/SSBX/notes/atom-naming.md | 0 | 0 |
 | formal/SSBX/notes/baguaWen-spec.md | 0 | 0 |
-| formal/SSBX/notes/markov-causal-bridge-plan.md | 44 | 4 |
-| formal/SSBX/notes/markov-causal-bridge-verification-plan.md | 43 | 20 |
+| formal/SSBX/notes/markov-causal-bridge-plan.md | 45 | 4 |
+| formal/SSBX/notes/markov-causal-bridge-verification-plan.md | 44 | 20 |
 | formal/SSBX/notes/math-axiom-map.md | 0 | 0 |
 | formal/SSBX/notes/metainterp-isa-gap.md | 0 | 0 |
 | formal/SSBX/notes/monad-root-plan.md | 2 | 3 |
@@ -167,6 +167,7 @@
 | 义理/规范代表元候选 · Markov桥S5n.md | 0 | 6 |
 | 义理/路径商类候选 · Markov桥S5m.md | 0 | 10 |
 | 义理/路径权重乘法候选 · Markov桥S19.md | 0 | 5 |
+| 义理/路径空间作用量泛函候选 · Markov桥S25.md | 0 | 11 |
 | 义理/路径组合与因果约束 · Markov桥S3.md | 3 | 13 |
 | 义理/路径身份键候选 · Markov桥S5k.md | 0 | 9 |
 | 义理/边界/README.md | 0 | 13 |

@@ -2,7 +2,7 @@
 
 **前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [观测账本候选 · Markov桥S5q](观测账本候选%20·%20Markov桥S5q.md) · [商支撑代数候选 · Markov桥S5p](商支撑代数候选%20·%20Markov桥S5p.md) · [离散作用量相位候选 · Markov桥S5e](离散作用量相位候选%20·%20Markov桥S5e.md) · [逐步统一候选摘要 · Markov桥S8](逐步统一候选摘要%20·%20Markov桥S8.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
-**后续**：[作用相位到测量权重链 · Markov桥S22](作用相位到测量权重链%20·%20Markov桥S22.md) 已把本页的 finite action branch / action index 接到 one-qubit measurement-event weights；[连续作用量泛函候选 · Markov桥S24](连续作用量泛函候选%20·%20Markov桥S24.md) 已把本页的 `0/1` action index 接到 displayed continuous action-coordinate functional 的采样值。
+**后续**：[作用相位到测量权重链 · Markov桥S22](作用相位到测量权重链%20·%20Markov桥S22.md) 已把本页的 finite action branch / action index 接到 one-qubit measurement-event weights；[连续作用量泛函候选 · Markov桥S24](连续作用量泛函候选%20·%20Markov桥S24.md) 已把本页的 `0/1` action index 接到 displayed continuous action-coordinate functional 的采样值；[路径空间作用量泛函候选 · Markov桥S25](路径空间作用量泛函候选%20·%20Markov桥S25.md) 与 [有限作用量极值候选 · Markov桥S26](有限作用量极值候选%20·%20Markov桥S26.md) 已把 action values 推到 finite quotient path space 与 finite support minimum。
 
 **Lean 锚点**：
 
@@ -79,7 +79,8 @@ theorem action_phase_law_bridge_summary :
 |---|---|---|
 | displayed continuous action functional | 已由 S24 承接 | S24 给出 `S(t)=t` 的 continuous action-coordinate functional，并在 `0/1` 采样点回到本页 action index |
 | finite quotient path-space action functional | 已由 S25 承接 | S25 把本页 action index 接到 two-route quotient path classes 上的 action values |
-| smooth or infinite-dimensional path-space action functional | 后续结构 | 仍未处理路径流形、变分或极值 |
+| finite action extremum | 已由 S26 承接 | S26 证明 two-route finite quotient support 上 upper 是 action minimum，lower 不是 |
+| smooth or infinite-dimensional path-space action functional | 后续结构 | 仍未处理路径流形、continuous variation 或 stationary action principle |
 | Hamiltonian / unitary dynamics | 后续结构 | 仍未给出动力学生成律 |
 | path integral | 后续结构 | 仍需要一般路径空间、求和/积分与极限 |
 | Born rule derivation | 后续结构 | 仍只记录 Born-shaped candidate weight |

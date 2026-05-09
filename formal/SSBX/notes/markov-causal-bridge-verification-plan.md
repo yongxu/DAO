@@ -50,6 +50,7 @@
 | `formal/SSBX/Foundation/Modern/QuantumRelativityFinitePhaseEvolutionBridge.lean` | S23 finite period-two phase evolution boundary |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityContinuousActionFunctionalBridge.lean` | S24 displayed continuous action-coordinate functional boundary |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityPathSpaceActionFunctionalBridge.lean` | S25 finite path-space action functional boundary |
+| `formal/SSBX/Foundation/Modern/QuantumRelativityFiniteActionExtremumBridge.lean` | S26 finite action extremum boundary |
 | `formal/SSBX/notes/markov-causal-bridge-plan.md` | 探索计划与完成记录 |
 | `formal/SSBX/notes/unification-stepwise-plan.md` | 逐步完善到候选统一的阶段路线 |
 | `义理/文构造完备与直相加边界.md` | 对 `current-language no-go` 旧说法的正名 |
@@ -93,6 +94,7 @@
 | `义理/有限相位演化候选 · Markov桥S23.md` | S23 finite phase evolution companion 文档 |
 | `义理/连续作用量泛函候选 · Markov桥S24.md` | S24 displayed continuous action-coordinate functional companion 文档 |
 | `义理/路径空间作用量泛函候选 · Markov桥S25.md` | S25 finite path-space action functional companion 文档 |
+| `义理/有限作用量极值候选 · Markov桥S26.md` | S26 finite action extremum companion 文档 |
 
 ## 当前验证结论
 
@@ -142,6 +144,7 @@
 - [x] `finite_phase_evolution_bridge_summary` 已关闭 finite phase-evolution boundary：branch-indexed `1/-1` phase operation 生成 S22 qubits，并保持 Born weights / normalized measurement-weight interface。
 - [x] `continuous_action_functional_bridge_summary` 已关闭 displayed continuous action-coordinate functional boundary：`S(t)=t` 连续，branch samples 回到 finite action index、phase amplitude 与 S23 Born-weight preservation。
 - [x] `path_space_action_functional_bridge_summary` 已关闭 finite path-space action functional boundary：two-route quotient path classes 的 action values 接回 S5r action index、S24 sampling 与 quotient-support cancellation。
+- [x] `finite_action_extremum_bridge_summary` 已关闭 finite action extremum boundary：two-route quotient support 上 upper/lower action gap 为 `1`，upper 是 finite action minimum，lower 不是。
 - [x] 首次新 worktree 原生构建的 `mathlib4` 克隆阻塞已记录为基础设施失败，不当作 theorem 失败。
 - [ ] 尚未验证一般 Hilbert measurement、POVM/PVM、smooth/infinite-dimensional path-space action functional、Euler-Lagrange/Hamiltonian/unitary amplitude dynamics、measurement postulate semantics、decoherence、general all-path enumeration、一般 path integral、真实可测干涉律、physical unitary / CPTP / Kraus / density-matrix channel law、完整因果偏序、局部有限 causal set、度规恢复、数据校准、可测预言 theorem 或经验闭合。
 
@@ -193,6 +196,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityActionAmplitudeMeasurementBri
 lake build SSBX.Foundation.Modern.QuantumRelativityFinitePhaseEvolutionBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityContinuousActionFunctionalBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityPathSpaceActionFunctionalBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityFiniteActionExtremumBridge
 lake build SSBX
 git diff --check --
 ```
@@ -267,6 +271,7 @@ rg -n "待处理|future|deferred|部分相关|佛|唯识|analogy|unchecked|plann
 | finite phase evolution boundary | `finite_phase_evolution_bridge_summary` | `machineChecked` |
 | displayed continuous action functional boundary | `continuous_action_functional_bridge_summary` | `machineChecked` |
 | finite path-space action functional boundary | `path_space_action_functional_bridge_summary` | `machineChecked` |
+| finite action extremum boundary | `finite_action_extremum_bridge_summary` | `machineChecked` |
 | tagged-language noncollapse 保持 | `markov_bridge_not_direct_language_addition` | `machineChecked` |
 | 公开摘要 | `markov_causal_bridge_summary` | `machineChecked` |
 
@@ -315,6 +320,7 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
   可以把 branch-indexed finite phase evolution 接到 S22 qubits，并保持 Born weights / normalized measurement-weight interface
   可以把 displayed continuous action-coordinate functional `S(t)=t` 的两个采样点接回 finite action index、phase amplitude 与 S23 Born-weight preservation
   可以把 finite visible-key quotient path space 上的 action functional 接回 S5r action index、S24 sampling 与 quotient-support cancellation
+  可以在 two-route quotient support 上证明 lower-minus-upper action gap 为 1，upper 是 finite action minimum，lower 不是
   同时保持当前 tagged 物理语言 noncollapse 边界
 ```
 
@@ -323,9 +329,9 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
 | 后续结构 | 当前缺口 |
 |---|---|
 | 量子引力 | 还需要动力学、连续极限、量子场或引力方程 |
-| Born rule 推导 | S18 已关闭 Markov/amplitude compatibility 下的 finite typed-skeleton derivation，S23 已关闭 finite phase preservation，S24/S25 已关闭 displayed action sampling 与 finite path-space action handoff；还需要 general Hamiltonian/unitary amplitude dynamics、测量语义、decoherence 与经验闭合 |
+| Born rule 推导 | S18 已关闭 Markov/amplitude compatibility 下的 finite typed-skeleton derivation，S23 已关闭 finite phase preservation，S24/S25/S26 已关闭 displayed action sampling、finite path-space action handoff 与 finite action extremum；还需要 general Hamiltonian/unitary amplitude dynamics、测量语义、decoherence 与经验闭合 |
 | 路径权重乘法 | S19 已关闭 finite kernel path 的 append weight law；还需要 stochastic independence semantics、general all-path enumeration 与 path integral |
-| 真实干涉律 | S5/S5b/S5c/S5d/S5e/S5f/S5g/S5h/S5i/S5j/S5k/S5l/S5m/S5n/S5o/S5p/S5q/S5r 与 S24/S25 已有 path amplitude、非零 witness、two-path finite cancellation candidate、discrete phase-label candidate、edge-action phase accumulation candidate、finite path-family sum candidate、finite path-sum algebra candidate、endpoint-indexed finite family candidate、endpoint support normalization candidate、two-route toy enumeration candidate、visible path-key candidate、finite visible-key quotient candidate、visible-key quotient class candidate、two-route canonical representative candidate、finite quotient-support candidate、quotient-support algebra candidate、pending observable ledger boundary、finite action-to-phase law candidate、displayed continuous action-coordinate functional 与 finite path-space action functional；还需要 smooth/infinite-dimensional path-space action functional、general choice function、general all-path enumeration、一般 path integral、continuous-time dynamics、可测预言 theorem 或经验闭合 |
+| 真实干涉律 | S5/S5b/S5c/S5d/S5e/S5f/S5g/S5h/S5i/S5j/S5k/S5l/S5m/S5n/S5o/S5p/S5q/S5r 与 S24/S25/S26 已有 path amplitude、非零 witness、two-path finite cancellation candidate、discrete phase-label candidate、edge-action phase accumulation candidate、finite path-family sum candidate、finite path-sum algebra candidate、endpoint-indexed finite family candidate、endpoint support normalization candidate、two-route toy enumeration candidate、visible path-key candidate、finite visible-key quotient candidate、visible-key quotient class candidate、two-route canonical representative candidate、finite quotient-support candidate、quotient-support algebra candidate、pending observable ledger boundary、finite action-to-phase law candidate、displayed continuous action-coordinate functional、finite path-space action functional 与 finite action extremum boundary；还需要 smooth/infinite-dimensional path-space action functional、general choice function、general all-path enumeration、一般 path integral、continuous-time dynamics、可测预言 theorem 或经验闭合 |
 | 非平凡 finite quantum-channel law | S20 已关闭 nonzero channel amplitude -> step / classical support / Born-shaped boundary；还需要 physical unitary/CPTP/Kraus/density-matrix law |
 | 完整因果集或时空度规 | S3 已关闭一步 no-self-loop；还需要偏序全公理、Lorentzian geometry 或 metric recovery theorem |
 | 经验预言 | S5q 已给出 pending observable ledger entry；还需要外部数据、观测量、误差模型、阈值或数据判准 |
@@ -379,6 +385,7 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
 | V23 | 引入 finite phase evolution boundary | 已由 `finite_phase_evolution_bridge_summary` 关闭 branch-indexed `1/-1` phase operation -> S22 qubits -> Born-weight preservation；Hamiltonian generator、continuous unitary group、general Schrödinger dynamics、general path integral 与 empirical closure 仍 pending |
 | V24 | 引入 displayed continuous action functional boundary | 已由 `continuous_action_functional_bridge_summary` 关闭 `S(t)=t` continuous action-coordinate functional -> branch samples -> finite phase evolution -> Born preservation；finite quotient path-space action functional 已由 V25 承接，smooth/infinite-dimensional path-space action functional、Euler-Lagrange、Hamiltonian generator、continuous-time unitary group、general path integral 与 empirical closure 仍 pending |
 | V25 | 引入 finite path-space action functional boundary | 已由 `path_space_action_functional_bridge_summary` 关闭 finite visible-key quotient path space action functional -> S5r action index -> S24 sampling -> quotient-support cancellation；smooth/infinite-dimensional path-space action functional、Euler-Lagrange、Hamiltonian generator、continuous-time unitary group、general path integral 与 empirical closure 仍 pending |
+| V26 | 引入 finite action extremum boundary | 已由 `finite_action_extremum_bridge_summary` 关闭 two-route finite quotient support 上的 action gap、upper finite minimum 与 lower non-minimum；continuous variation space、stationary action principle、Euler-Lagrange、Hamiltonian generator、continuous-time unitary group、general path integral 与 empirical closure 仍 pending |
 
 ## 失败记录模板
 

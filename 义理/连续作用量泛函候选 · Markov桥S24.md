@@ -2,7 +2,7 @@
 
 **前置**：[作用量相位律候选 · Markov桥S5r](作用量相位律候选%20·%20Markov桥S5r.md) · [有限相位演化候选 · Markov桥S23](有限相位演化候选%20·%20Markov桥S23.md) · [作用相位到测量权重链 · Markov桥S22](作用相位到测量权重链%20·%20Markov桥S22.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
-**后续**：[路径空间作用量泛函候选 · Markov桥S25](路径空间作用量泛函候选%20·%20Markov桥S25.md) 已把本页的 continuous action-coordinate samples 接到 finite visible-key quotient path space。
+**后续**：[路径空间作用量泛函候选 · Markov桥S25](路径空间作用量泛函候选%20·%20Markov桥S25.md) 已把本页的 continuous action-coordinate samples 接到 finite visible-key quotient path space；[有限作用量极值候选 · Markov桥S26](有限作用量极值候选%20·%20Markov桥S26.md) 已进一步给出 displayed finite support 上的 action-gap / minimum boundary。
 
 **Lean 锚点**：
 
