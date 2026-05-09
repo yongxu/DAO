@@ -8,8 +8,8 @@
 
 - 371 个 `OperatorId` 全部可登记、可查 signature、可诊断支持状态。
 - 82 个 surface / 193 个 reading 可被 resolver 说明或报告歧义。
-- 371 个 `OperatorId` 全部进入 evaluator：367 个 exact/theorem-backed rows，
-  4 个 structural catalogue normal forms。
+- 371 个 `OperatorId` 全部进入 evaluator：371 个 theorem-backed rows，
+  0 个 structural catalogue normal forms。
 - structural catalogue operator 返回 `Catalogue[...]` result，可 type-check / evaluate，但不伪装成 exact Hex/Bool 文本专义 denotation。
 - `baguaWen` 的 22-token 受控 IL parser 仍独立冻结。
 
@@ -22,8 +22,8 @@
 | M2 表驱动 resolver | done | runtime 走 `allSurfaceReadings` / operator forms / executable registry；`resolveStdlibOp` 仅作 legacy witness。 |
 | M3 字面值扩展 | done | `一` + 64 卦名 + conservative 繁简 alias；未 promotion gap 只诊断。 |
 | M4 核心语法能力 | done | `者 甲 E`、`凡 甲 E`、`令 甲 V E` 支持 Hex；`者`/`令` 已支持 Bool 与常用函数域推断。 |
-| M5 可执行语义扩展 | done | 367 个 exact/theorem-backed executable：早期 Hex/Bool 核心、exact Hex transforms、逻辑/恒等/量词 aliases、context application、state/process edge carriers、carrier rows 等。 |
-| M6 全目录覆盖 | done | 371 operator 全部 registry/signature 可查、可执行；4 个非 exact row 只落为 structural catalogue normal form；0 个 known-not-executable。剩余 4 个已按 signature kind 入账：2 state-transition、2 trajectory。 |
+| M5 可执行语义扩展 | done | 371 个 theorem-backed executable：早期 Hex/Bool 核心、exact Hex transforms、逻辑/恒等/量词 aliases、context application、state/process edge carriers、carrier rows 等。 |
+| M6 全目录覆盖 | done | 371 operator 全部 registry/signature 可查、可执行；0 个 row 只落为 structural catalogue normal form；0 个 known-not-executable；catalogue-shape-only 清零。 |
 | M7 CLI 产品化 | done | `--tokens`、`--resolve`、`--ast`、`--typecheck`、`--json`、`--explain`、`--operator`、`--operators`、`--coverage`；失败返回非零。 |
 
 ## 验收命令
@@ -39,7 +39,7 @@ scripts/check_wenyan_surface_cli.py
 ## 边界
 
 - `known-not-executable` / `unsupported` filter 仅保留作 CLI 兼容词；当前 operator catalogue 返回 0 行。
-- 非 exact row 的 evaluator 语义是 structural catalogue normal form，仍不承诺 exact Hex/Bool denotation。
+- 非 text-domain-exact row 的 evaluator 语义是 typed structural carrier，仍不承诺完整领域 denotation。
 - 多义 surface 不因某个 reading 已有 evaluator 语义而自动消歧；除保留的 v1 核心 surface 外，
   只有候选语义完全同体时才自动选择，否则返回 ambiguity。
 - `而`/S-2 已有 exact `Hex → Hex` endomap composition 语义；支持显式 `者` lambda，

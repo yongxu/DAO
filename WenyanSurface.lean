@@ -340,7 +340,7 @@ private def coverageOutput : String :=
     ]
 
 private def operatorListFilterExpected : String :=
-  "all, executable, theorem-backed, exact, exact-structural-helper, structural, structural-carrier, catalogue-normal-form, identity-noop, projection-anchor, pair-carrier, duplicate-facet, singleton-aggregate, binary-aggregate, list-projection, application-carrier, predicate-anchor, truth-marker, application-helper-only, identity-noop-only, projection-anchor-only, carrier-constructor-only, predicate-anchor-only, truth-marker-only, catalogue-shape-only, bridgeable, known-not-executable, or unsupported"
+  "all, executable, theorem-backed, exact, exact-structural-helper, structural, structural-carrier, catalogue-normal-form, identity-noop, projection-anchor, pair-carrier, duplicate-facet, singleton-aggregate, binary-aggregate, ternary-aggregate, list-projection, application-carrier, predicate-anchor, truth-marker, application-helper-only, identity-noop-only, projection-anchor-only, carrier-constructor-only, predicate-anchor-only, truth-marker-only, catalogue-shape-only, bridgeable, known-not-executable, or unsupported"
 
 private def operatorCarrierKindFilter? (filter : String) : Option StructuralCarrierKind :=
   allStructuralCarrierKinds.find? (fun kind => kind.key == filter)
@@ -1736,16 +1736,16 @@ private def usage : String :=
      "       wenyan-surface --json --compile-yi <PROGRAM>",
      "       wenyan-surface --json --explain <PROGRAM>",
      "       wenyan-surface --json --operator <OP-ID>",
-     "       wenyan-surface --json --operators [all|executable|theorem-backed|exact|exact-structural-helper|structural|structural-carrier|catalogue-normal-form|identity-noop|projection-anchor|pair-carrier|duplicate-facet|singleton-aggregate|binary-aggregate|list-projection|application-carrier|predicate-anchor|truth-marker|application-helper-only|identity-noop-only|projection-anchor-only|carrier-constructor-only|predicate-anchor-only|truth-marker-only|catalogue-shape-only|bridgeable|known-not-executable|unsupported]",
+     "       wenyan-surface --json --operators [all|executable|theorem-backed|exact|exact-structural-helper|structural|structural-carrier|catalogue-normal-form|identity-noop|projection-anchor|pair-carrier|duplicate-facet|singleton-aggregate|binary-aggregate|ternary-aggregate|list-projection|application-carrier|predicate-anchor|truth-marker|application-helper-only|identity-noop-only|projection-anchor-only|carrier-constructor-only|predicate-anchor-only|truth-marker-only|catalogue-shape-only|bridgeable|known-not-executable|unsupported]",
      "       wenyan-surface --json --coverage",
      "       wenyan-surface --explain <PROGRAM>",
      "       wenyan-surface --operator <OP-ID>",
-     "       wenyan-surface --operators [all|executable|theorem-backed|exact|exact-structural-helper|structural|structural-carrier|catalogue-normal-form|identity-noop|projection-anchor|pair-carrier|duplicate-facet|singleton-aggregate|binary-aggregate|list-projection|application-carrier|predicate-anchor|truth-marker|application-helper-only|identity-noop-only|projection-anchor-only|carrier-constructor-only|predicate-anchor-only|truth-marker-only|catalogue-shape-only|bridgeable|known-not-executable|unsupported]",
+     "       wenyan-surface --operators [all|executable|theorem-backed|exact|exact-structural-helper|structural|structural-carrier|catalogue-normal-form|identity-noop|projection-anchor|pair-carrier|duplicate-facet|singleton-aggregate|binary-aggregate|ternary-aggregate|list-projection|application-carrier|predicate-anchor|truth-marker|application-helper-only|identity-noop-only|projection-anchor-only|carrier-constructor-only|predicate-anchor-only|truth-marker-only|catalogue-shape-only|bridgeable|known-not-executable|unsupported]",
      "       wenyan-surface --coverage",
      "       wenyan-surface --help",
      "",
      "Surface vocabulary:",
-     "  Executable operators: 371 rows (367 theorem-backed bodies = 122 exact + 245 exact structural helpers + 0 structural carriers; 4 catalogue normal forms)",
+     "  Executable operators: 371 rows (371 theorem-backed bodies = 122 exact + 249 exact structural helpers + 0 structural carriers; 0 catalogue normal forms)",
      "  Examples include: 推 比 不 必 同 凡 損 损 益 错 錯 综 綜 互 反 則 且 非 或 莫",
      "  Hex consts: 一 乾 坤 plus canonical 64 hexagram names",
      "  Bool consts: 真 假",
