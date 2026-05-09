@@ -885,6 +885,37 @@ theorem structuralCarrierOperatorIds_length :
 theorem domainGapOperatorIds_length :
     domainGapOperatorIds.length = 251 := by native_decide
 
+theorem domainGap_applicationHelperOnly_length :
+    (domainGapKindOperatorIds .applicationHelperOnly).length = 12 := by native_decide
+
+theorem domainGap_identityNoopOnly_length :
+    (domainGapKindOperatorIds .identityNoopOnly).length = 18 := by native_decide
+
+theorem domainGap_projectionAnchorOnly_length :
+    (domainGapKindOperatorIds .projectionAnchorOnly).length = 102 := by native_decide
+
+theorem domainGap_carrierConstructorOnly_length :
+    (domainGapKindOperatorIds .carrierConstructorOnly).length = 52 := by native_decide
+
+theorem domainGap_predicateAnchorOnly_length :
+    (domainGapKindOperatorIds .predicateAnchorOnly).length = 9 := by native_decide
+
+theorem domainGap_truthMarkerOnly_length :
+    (domainGapKindOperatorIds .truthMarkerOnly).length = 4 := by native_decide
+
+theorem domainGap_catalogueShapeOnly_length :
+    (domainGapKindOperatorIds .catalogueShapeOnly).length = 54 := by native_decide
+
+theorem domainGapKindPartition_counts :
+    (domainGapKindOperatorIds .applicationHelperOnly).length
+      + (domainGapKindOperatorIds .identityNoopOnly).length
+      + (domainGapKindOperatorIds .projectionAnchorOnly).length
+      + (domainGapKindOperatorIds .carrierConstructorOnly).length
+      + (domainGapKindOperatorIds .predicateAnchorOnly).length
+      + (domainGapKindOperatorIds .truthMarkerOnly).length
+      + (domainGapKindOperatorIds .catalogueShapeOnly).length = domainGapOperatorIds.length := by
+  native_decide
+
 theorem exactTheoremBackedStrongOperatorIds_no_domain_gap :
     exactTheoremBackedStrongOperatorIds.all (fun id => (operatorDomainGapKind? id).isNone) = true := by
   native_decide

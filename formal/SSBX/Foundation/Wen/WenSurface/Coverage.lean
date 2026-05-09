@@ -71,6 +71,13 @@ theorem wenSurface_operator_catalogue_counts :
       ∧ structuralCarrierOperatorIds.length = 111
       ∧ catalogueNormalFormOperatorIds.length = 54
       ∧ domainGapOperatorIds.length = 251
+      ∧ (domainGapKindOperatorIds .applicationHelperOnly).length = 12
+      ∧ (domainGapKindOperatorIds .identityNoopOnly).length = 18
+      ∧ (domainGapKindOperatorIds .projectionAnchorOnly).length = 102
+      ∧ (domainGapKindOperatorIds .carrierConstructorOnly).length = 52
+      ∧ (domainGapKindOperatorIds .predicateAnchorOnly).length = 9
+      ∧ (domainGapKindOperatorIds .truthMarkerOnly).length = 4
+      ∧ (domainGapKindOperatorIds .catalogueShapeOnly).length = 54
       ∧ allOperatorIds.all (fun id => !(operatorForms id).isEmpty) = true := by
   exact
     ⟨ fullOperatorSignatures_length
@@ -82,6 +89,13 @@ theorem wenSurface_operator_catalogue_counts :
     , structuralCarrierOperatorIds_length
     , catalogueNormalFormOperatorIds_length
     , domainGapOperatorIds_length
+    , domainGap_applicationHelperOnly_length
+    , domainGap_identityNoopOnly_length
+    , domainGap_projectionAnchorOnly_length
+    , domainGap_carrierConstructorOnly_length
+    , domainGap_predicateAnchorOnly_length
+    , domainGap_truthMarkerOnly_length
+    , domainGap_catalogueShapeOnly_length
     , by native_decide
     ⟩
 
@@ -116,6 +130,13 @@ theorem wenSurface_registry_summary :
       ∧ structuralCarrierOperatorIds.length = 111
       ∧ catalogueNormalFormOperatorIds.length = 54
       ∧ domainGapOperatorIds.length = 251
+      ∧ (domainGapKindOperatorIds .applicationHelperOnly).length = 12
+      ∧ (domainGapKindOperatorIds .identityNoopOnly).length = 18
+      ∧ (domainGapKindOperatorIds .projectionAnchorOnly).length = 102
+      ∧ (domainGapKindOperatorIds .carrierConstructorOnly).length = 52
+      ∧ (domainGapKindOperatorIds .predicateAnchorOnly).length = 9
+      ∧ (domainGapKindOperatorIds .truthMarkerOnly).length = 4
+      ∧ (domainGapKindOperatorIds .catalogueShapeOnly).length = 54
       ∧ allOperatorIds.all (fun id => !(operatorForms id).isEmpty) = true
       ∧ executableOperatorIds.all isCatalogueOperator = true
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).signature.id = id) := by
@@ -132,6 +153,13 @@ theorem wenSurface_registry_summary :
     , structuralCarrierOperatorIds_length
     , catalogueNormalFormOperatorIds_length
     , domainGapOperatorIds_length
+    , domainGap_applicationHelperOnly_length
+    , domainGap_identityNoopOnly_length
+    , domainGap_projectionAnchorOnly_length
+    , domainGap_carrierConstructorOnly_length
+    , domainGap_predicateAnchorOnly_length
+    , domainGap_truthMarkerOnly_length
+    , domainGap_catalogueShapeOnly_length
     , by native_decide
     , executableOperatorIds_registered
     , wenSurface_registry_total_signature

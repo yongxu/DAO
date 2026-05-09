@@ -323,6 +323,7 @@ private def coverageOutput : String :=
     , s!"operators: {operatorRegistryEntries.length} registered / {executableRegistryEntries.length} executable"
     , s!"semantic ledger: {theoremBackedOperatorIds.length} theorem-backed / {exactTheoremBackedStrongOperatorIds.length} exact / {exactStructuralHelperStrongOperatorIds.length} exact-structural-helper / {structuralCarrierOperatorIds.length} structural-carrier / {catalogueNormalFormOperatorIds.length} catalogue-normal-form"
     , s!"domain gaps: {domainGapOperatorIds.length} operators pending full domain semantics"
+    , s!"domain gap ledger: {(domainGapKindOperatorIds .applicationHelperOnly).length} application-helper / {(domainGapKindOperatorIds .identityNoopOnly).length} identity-noop / {(domainGapKindOperatorIds .projectionAnchorOnly).length} projection-anchor / {(domainGapKindOperatorIds .carrierConstructorOnly).length} carrier-constructor / {(domainGapKindOperatorIds .predicateAnchorOnly).length} predicate-anchor / {(domainGapKindOperatorIds .truthMarkerOnly).length} truth-marker / {(domainGapKindOperatorIds .catalogueShapeOnly).length} catalogue-shape"
     , s!"bagua bridgeable: {baguaBridgeableOperatorIds.length} operators"
     , s!"operator forms: {formBackedCount} ids with at least one form"
     , s!"operator-cell rows: {SSBX.Text.OperatorCellMap.allOperatorCells.length}"
@@ -1517,6 +1518,13 @@ private def operatorsJsonOutput (filter : String) : String :=
       , jsonFieldNat "structuralCarrierOperators" structuralCarrierOperatorIds.length
       , jsonFieldNat "catalogueNormalFormOperators" catalogueNormalFormOperatorIds.length
       , jsonFieldNat "domainGapOperators" domainGapOperatorIds.length
+      , jsonFieldNat "domainGapApplicationHelperOperators" (domainGapKindOperatorIds .applicationHelperOnly).length
+      , jsonFieldNat "domainGapIdentityNoopOperators" (domainGapKindOperatorIds .identityNoopOnly).length
+      , jsonFieldNat "domainGapProjectionAnchorOperators" (domainGapKindOperatorIds .projectionAnchorOnly).length
+      , jsonFieldNat "domainGapCarrierConstructorOperators" (domainGapKindOperatorIds .carrierConstructorOnly).length
+      , jsonFieldNat "domainGapPredicateAnchorOperators" (domainGapKindOperatorIds .predicateAnchorOnly).length
+      , jsonFieldNat "domainGapTruthMarkerOperators" (domainGapKindOperatorIds .truthMarkerOnly).length
+      , jsonFieldNat "domainGapCatalogueShapeOperators" (domainGapKindOperatorIds .catalogueShapeOnly).length
       , jsonFieldNat "baguaBridgeableOperators" baguaBridgeableOperatorIds.length
       , jsonFieldRaw "operators" (jsonArray (ids.map operatorSummaryJson))
       ]
@@ -1539,6 +1547,13 @@ private def coverageJsonOutput : String :=
     , jsonFieldNat "structuralCarrierOperators" structuralCarrierOperatorIds.length
     , jsonFieldNat "catalogueNormalFormOperators" catalogueNormalFormOperatorIds.length
     , jsonFieldNat "domainGapOperators" domainGapOperatorIds.length
+    , jsonFieldNat "domainGapApplicationHelperOperators" (domainGapKindOperatorIds .applicationHelperOnly).length
+    , jsonFieldNat "domainGapIdentityNoopOperators" (domainGapKindOperatorIds .identityNoopOnly).length
+    , jsonFieldNat "domainGapProjectionAnchorOperators" (domainGapKindOperatorIds .projectionAnchorOnly).length
+    , jsonFieldNat "domainGapCarrierConstructorOperators" (domainGapKindOperatorIds .carrierConstructorOnly).length
+    , jsonFieldNat "domainGapPredicateAnchorOperators" (domainGapKindOperatorIds .predicateAnchorOnly).length
+    , jsonFieldNat "domainGapTruthMarkerOperators" (domainGapKindOperatorIds .truthMarkerOnly).length
+    , jsonFieldNat "domainGapCatalogueShapeOperators" (domainGapKindOperatorIds .catalogueShapeOnly).length
     , jsonFieldNat "baguaBridgeableOperators" baguaBridgeableOperatorIds.length
     , jsonFieldNat "operatorFormBackedCount" formBackedCount
     , jsonFieldNat "operatorCellRows" (SSBX.Text.OperatorCellMap.allOperatorCells.length)
