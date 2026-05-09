@@ -7,8 +7,10 @@ import SSBX.Text.OperatorSignatures
 
 This file gives every `OperatorId × Cell192` pair a machine-checkable semantic
 row.  It does not hand-write 71,232 denotational theorems.  Each row carries the
-total text-level signature coverage, plus executable `Cell192` transform data
-when the operator family is one of the currently exact cell transforms.
+total text-level signature coverage and a conservative machine denotation. Exact
+`Cell192` transform operators carry their concrete output cell; every remaining
+operator carries a signature-preserving cell carrier denotation, intentionally
+weaker than a domain-specific meaning.
 -/
 
 namespace SSBX.Text.OperatorCellSemantics
@@ -21,6 +23,7 @@ open SSBX.Text.OperatorSignatures
 /-- Semantic evidence attached to one operator-cell pair. -/
 inductive OperatorCellSemanticEvidence where
   | familyBackedDenotation
+  | signatureCarrierDenotation
   | exactSignatureShape
   | catalogueSignatureShape
   deriving Repr, DecidableEq, BEq
@@ -28,14 +31,15 @@ inductive OperatorCellSemanticEvidence where
 /-- Family namespace for denotations used by operator-cell rows. -/
 inductive OperatorFamilyId where
   | cellTransform (kind : CellTransformKind)
+  | signatureCarrier (kind : SignatureKind)
   deriving Repr, DecidableEq, BEq
 
 /--
 Denotation evidence for one operator-cell pair.
 
-`outputCell?` is present only for families that execute as a concrete `Cell192`
-transform. Future text-level families may be family-backed without producing a
-direct cell output.
+`outputCell?` is present for the exact transform rows and for conservative
+signature carriers. For carrier rows it is the unchanged input cell: a total
+machine denotation over the Bagua grid, not a claim of richer domain semantics.
 -/
 structure OperatorCellDenotation where
   family : OperatorFamilyId
@@ -56,16 +60,16 @@ def operatorCellDenotationFor? (id : OperatorId) (cell : Cell192) :
   match cellTransformForOperator? id with
   | some kind =>
       some { family := .cellTransform kind, outputCell? := some (kind.apply cell) }
-  | none => none
-
-def semanticEvidenceFor (id : OperatorId) (cell : Cell192) :
-    OperatorCellSemanticEvidence :=
-  match operatorCellDenotationFor? id cell with
-  | some _ => .familyBackedDenotation
   | none =>
-      match (fullSignatureFor id).evidence with
-      | .seedOverride => .exactSignatureShape
-      | .catalogueShape => .catalogueSignatureShape
+      some
+        { family := .signatureCarrier (fullSignatureFor id).kind
+        , outputCell? := some cell }
+
+def semanticEvidenceFor (id : OperatorId) (_cell : Cell192) :
+    OperatorCellSemanticEvidence :=
+  match cellTransformForOperator? id with
+  | some _ => .familyBackedDenotation
+  | none => .signatureCarrierDenotation
 
 def operatorCellSemanticRow (id : OperatorId) (cell : Cell192) :
     OperatorCellSemanticRow :=
@@ -89,6 +93,14 @@ def allOperatorCellSemanticPairs : List (OperatorId × Cell192) :=
 def familyBackedDenotationRows : List OperatorCellSemanticRow :=
   allOperatorCellSemanticRows.filter
     (fun row => row.evidence == OperatorCellSemanticEvidence.familyBackedDenotation)
+
+def signatureCarrierDenotationRows : List OperatorCellSemanticRow :=
+  allOperatorCellSemanticRows.filter
+    (fun row => row.evidence == OperatorCellSemanticEvidence.signatureCarrierDenotation)
+
+def machineDenotationRows : List OperatorCellSemanticRow :=
+  allOperatorCellSemanticRows.filter
+    (fun row => row.denotation?.isSome)
 
 def executableCellTransformRows : List OperatorCellSemanticRow :=
   familyBackedDenotationRows
@@ -117,25 +129,40 @@ theorem familyBackedDenotationRows_length :
     familyBackedDenotationRows.length = 8256 := by
   native_decide
 
+theorem signatureCarrierDenotationRows_length :
+    signatureCarrierDenotationRows.length = 62976 := by
+  native_decide
+
+theorem machineDenotationRows_length :
+    machineDenotationRows.length = 71232 := by
+  native_decide
+
 theorem executableCellTransformRows_length :
     executableCellTransformRows.length = 8256 := by
   rw [executableCellTransformRows, familyBackedDenotationRows_length]
 
 theorem exactSignatureShapeRows_length :
-    exactSignatureShapeRows.length = 1152 := by
+    exactSignatureShapeRows.length = 0 := by
   native_decide
 
 theorem catalogueSignatureShapeRows_length :
-    catalogueSignatureShapeRows.length = 61824 := by
+    catalogueSignatureShapeRows.length = 0 := by
   native_decide
 
 theorem operatorCellSemanticStatus_counts_sum :
     executableCellTransformRows.length
+      + signatureCarrierDenotationRows.length
       + exactSignatureShapeRows.length
       + catalogueSignatureShapeRows.length
       = allOperatorCellSemanticRows.length := by
-  rw [executableCellTransformRows_length, exactSignatureShapeRows_length,
-    catalogueSignatureShapeRows_length, allOperatorCellSemanticRows_length]
+  rw [executableCellTransformRows_length, signatureCarrierDenotationRows_length,
+    exactSignatureShapeRows_length, catalogueSignatureShapeRows_length,
+    allOperatorCellSemanticRows_length]
+
+theorem operatorCellSemanticRow_has_denotation (id : OperatorId) (cell : Cell192) :
+    (operatorCellSemanticRow id cell).denotation?.isSome = true := by
+  unfold operatorCellSemanticRow operatorCellDenotationFor?
+  split <;> rfl
 
 theorem operatorCellSemanticRow_signature_id (id : OperatorId) (cell : Cell192) :
     (operatorCellSemanticRow id cell).signature.id = id := by
@@ -161,6 +188,19 @@ theorem operatorCellSemanticRows_signature_complete
       ⟨id, allOperatorIds_complete id,
         List.mem_map.mpr ⟨cell, Cell192.mem_all cell, rfl⟩⟩
   · exact operatorCellSemanticRow_signature_id id cell
+
+theorem operatorCellSemanticRows_denotation_complete
+    (id : OperatorId) (cell : Cell192) :
+    ∃ row, row ∈ allOperatorCellSemanticRows
+      ∧ row.id = id
+      ∧ row.cell = cell
+      ∧ row.denotation?.isSome = true := by
+  refine ⟨operatorCellSemanticRow id cell, ?_, rfl, rfl, ?_⟩
+  · unfold allOperatorCellSemanticRows operatorCellSemanticRowsFor
+    exact List.mem_flatMap.mpr
+      ⟨id, allOperatorIds_complete id,
+        List.mem_map.mpr ⟨cell, Cell192.mem_all cell, rfl⟩⟩
+  · exact operatorCellSemanticRow_has_denotation id cell
 
 theorem operatorCellSemanticRows_cuo_executable (cell : Cell192) :
     (operatorCellSemanticRow .Z_5 cell).evidence =
@@ -222,25 +262,29 @@ theorem operatorCellSemanticRows_fan_denotation (cell : Cell192) :
     (operatorCellSemanticRow .T_6 cell).denotation?.isSome = true := by
   rfl
 
-theorem operatorCellSemanticRows_R_1_signature_only (cell : Cell192) :
+theorem operatorCellSemanticRows_R_1_signature_carrier (cell : Cell192) :
     (operatorCellSemanticRow .R_1 cell).evidence =
-      OperatorCellSemanticEvidence.catalogueSignatureShape := by
-  rfl
+      OperatorCellSemanticEvidence.signatureCarrierDenotation
+      ∧ (operatorCellSemanticRow .R_1 cell).denotation?.isSome = true := by
+  constructor <;> rfl
 
 /--
-Summary: all 71,232 pairs have theorem-level semantic coverage rows; exact
-cell execution is attached only where a current cell-transform family exists.
-The remaining rows split between exact seed-signature obligations and
-catalogue-shape signature obligations.
+Summary: all 71,232 pairs have theorem-level semantic coverage rows and machine
+denotations. Exact cell execution is attached only where a current
+cell-transform family exists; the remaining rows are conservative
+signature-carrier denotations.
 -/
 theorem operator_cell_semantic_coverage_summary :
     allOperatorCellSemanticRows.length = 71232
     ∧ allOperatorCellSemanticPairs.length = 71232
+    ∧ machineDenotationRows.length = 71232
     ∧ familyBackedDenotationRows.length = 8256
+    ∧ signatureCarrierDenotationRows.length = 62976
     ∧ executableCellTransformRows.length = 8256
-    ∧ exactSignatureShapeRows.length = 1152
-    ∧ catalogueSignatureShapeRows.length = 61824
+    ∧ exactSignatureShapeRows.length = 0
+    ∧ catalogueSignatureShapeRows.length = 0
     ∧ executableCellTransformRows.length
+        + signatureCarrierDenotationRows.length
         + exactSignatureShapeRows.length
         + catalogueSignatureShapeRows.length
         = allOperatorCellSemanticRows.length
@@ -261,7 +305,9 @@ theorem operator_cell_semantic_coverage_summary :
   exact
     ⟨ allOperatorCellSemanticRows_length
     , allOperatorCellSemanticPairs_length
+    , machineDenotationRows_length
     , familyBackedDenotationRows_length
+    , signatureCarrierDenotationRows_length
     , executableCellTransformRows_length
     , exactSignatureShapeRows_length
     , catalogueSignatureShapeRows_length

@@ -1431,7 +1431,6 @@ private def yiInstrShow : YiInstr → String
   | .push => "push"
   | .pop => "pop"
   | .halt => "halt"
-  | .swap => "swap"
 
 private def yiProgramShow (program : List YiInstr) : String :=
   "[" ++ String.intercalate ", " (program.map yiInstrShow) ++ "]"

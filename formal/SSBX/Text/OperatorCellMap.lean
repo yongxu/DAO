@@ -153,6 +153,8 @@ Machine-checkable summary for the text/Bagua bridge:
 * the total coverage grid has 71,232 rows.
 * every operator-cell pair is present in that grid.
 * the more specific `OperatorAnchors` layer still covers every `Cell192`.
+* every operator-cell pair has a conservative machine denotation, while exact
+  cell-transform execution remains separately counted.
 -/
 theorem operator_cell_bagua_summary :
     allOperatorIds.length = 371
@@ -270,8 +272,8 @@ Functional completion ledger for the current text/Bagua bridge.
 The first five rows are complete for the current catalogue and Bagua universe.
 The tracked rows retain seed / policy subledgers.  The requested completion
 rows are explicit: all 371 operators have conservative signature coverage, all
-71,232 operator-cell pairs have semantic rows, and the 31 gap words have a
-25/6 promotion partition.
+71,232 operator-cell pairs have machine denotation rows, and the 31 gap words
+have a 25/6 promotion partition.
 -/
 def functionalCompletionRows : List CompletionRow :=
   [ { layer := .catalogueOperators, mark := .complete, scope := 371 }
@@ -400,10 +402,12 @@ theorem functional_completion_summary :
     ∧ l0InstructionClauseKinds.length = 12
     ∧ operatorCellCandidateBindings.length = 7
     ∧ allOperatorCellSemanticRows.length = 71232
+    ∧ machineDenotationRows.length = 71232
     ∧ familyBackedDenotationRows.length = 8256
+    ∧ signatureCarrierDenotationRows.length = 62976
     ∧ executableCellTransformRows.length = 8256
-    ∧ exactSignatureShapeRows.length = 1152
-    ∧ catalogueSignatureShapeRows.length = 61824
+    ∧ exactSignatureShapeRows.length = 0
+    ∧ catalogueSignatureShapeRows.length = 0
     ∧ semanticLowerBoundRows.length = 4
     ∧ semanticLowerBoundRows.map (·.scope) = [10, 7, 12, 27]
     ∧ 27 < allOperatorCells.length
@@ -441,7 +445,9 @@ theorem functional_completion_summary :
     , l0InstructionClauseKinds_length
     , operatorCellCandidateBindings_length
     , allOperatorCellSemanticRows_length
+    , machineDenotationRows_length
     , familyBackedDenotationRows_length
+    , signatureCarrierDenotationRows_length
     , executableCellTransformRows_length
     , exactSignatureShapeRows_length
     , catalogueSignatureShapeRows_length

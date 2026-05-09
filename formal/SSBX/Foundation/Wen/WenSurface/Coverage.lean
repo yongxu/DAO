@@ -4,7 +4,8 @@
 This module does not duplicate the text catalogue proofs.  It imports the
 existing coverage ledgers and exposes the counts that matter to WenSurface:
 surface readings are resolvable/diagnosable, all 371 operator ids have total
-signatures, and only registry-marked rows are executable.
+signatures, every operator-cell row has a conservative machine denotation, and
+exact cell transforms remain separately counted.
 -/
 import SSBX.Foundation.Wen.WenSurface.Semantics
 import SSBX.Foundation.Wen.WenSurface.Reading
@@ -301,10 +302,14 @@ theorem wenSurface_reuses_bagua_grid_summary :
 theorem wenSurface_reuses_operator_cell_semantic_summary :
     allOperatorCellSemanticRows.length = 71232
       ∧ allOperatorCellSemanticPairs.length = 71232
-      ∧ familyBackedDenotationRows.length = 8256 :=
-  ⟨ (operator_cell_semantic_coverage_summary).1
-  , (operator_cell_semantic_coverage_summary).2.1
-  , (operator_cell_semantic_coverage_summary).2.2.1
+      ∧ machineDenotationRows.length = 71232
+      ∧ executableCellTransformRows.length = 8256
+      ∧ signatureCarrierDenotationRows.length = 62976 :=
+  ⟨ allOperatorCellSemanticRows_length
+  , allOperatorCellSemanticPairs_length
+  , machineDenotationRows_length
+  , executableCellTransformRows_length
+  , signatureCarrierDenotationRows_length
   ⟩
 
 /-! ## § 3 Current execution examples -/
