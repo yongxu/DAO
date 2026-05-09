@@ -16,37 +16,15 @@ open SSBX.Roster
 open SSBX.Truth
 open SSBX.Truth.ClaimLedger
 open SSBX.Foundation.Core.Monism
+open SSBX.Foundation.Bagua.BenZheng  -- Ben / Zheng / Mian / Quadrant 新核心
 
-/-- `Face` is not a second root.  It is a projection of the one root. -/
-inductive Face where
-  | «文面» | «物面» | «生面» | «理面» | «心面» | «人面»
-  | «模面» | «审校面» | «价值面» | «证明面» | «注意面» | «真理面»
-  deriving DecidableEq, Repr
-
-namespace Face
-
-def label : Face -> String
-  | .«文面» => "文面"
-  | .«物面» => "物面"
-  | .«生面» => "生面"
-  | .«理面» => "理面"
-  | .«心面» => "心面"
-  | .«人面» => "人面"
-  | .«模面» => "模面"
-  | .«审校面» => "审校面"
-  | .«价值面» => "价值面"
-  | .«证明面» => "证明面"
-  | .«注意面» => "注意面"
-  | .«真理面» => "真理面"
-
-end Face
-
-def allFaces : List Face :=
-  [.«文面», .«物面», .«生面», .«理面», .«心面», .«人面»,
-   .«模面», .«审校面», .«价值面», .«证明面», .«注意面», .«真理面»]
-
-theorem all_faces_complete (f : Face) : f ∈ allFaces := by
-  cases f <;> decide
+-- DELETED 2026-05-10 (P5b): `inductive Face` 12-枚举 + `Face.label` + `allFaces` + `all_faces_complete` + `Face.toMian`
+-- 全部被 `Mian = Ben × Zheng = 16` 取代 (见 SSBX.Foundation.Bagua.BenZheng).
+-- 旧 face 名 (物面/生面/etc.) 通过 (Ben, Zheng) 元组直接表达：
+--   物面=(.wu,.jiFaint), 注意面=(.wu,.shiForce), 模面=(.wu,.jiOccasion), 文面=(.wu,.shiTime),
+--   生面=(.dong,.jiFaint), 心面=(.dong,.shiForce), 理面=(.dong,.jiOccasion), 价值面=(.dong,.shiTime),
+--   人面=(.jian,.jiFaint), 审校面=(.jian,.shiForce), 证明面=(.jian,.jiOccasion), 真理面=(.jian,.shiTime).
+-- 4 个 事-row cells (兆/趋/变/史) 留作未来 事-substrate atoms 注册。
 
 
 /-- Core glyphs are the compressed lexical layer between faces and all registered atoms. -/
@@ -562,444 +540,400 @@ theorem atom_core_glyph_registered (a : AtomName) : CoreAtom.glyph (atomCore a) 
   cases a <;> decide
 
 /-- The enforced primary face of every registered single glyph. -/
-def atomPrimaryFace : AtomName -> Face
-  | .«显» => .«文面»
-  | .«未» => .«文面»
-  | .«尽» => .«文面»
-  | .«间» => .«文面»
-  | .«可» => .«文面»
-  | .«生» => .«生面»
-  | .«续» => .«生面»
-  | .«开» => .«生面»
-  | .«闭» => .«生面»
-  | .«绝» => .«生面»
-  | .«断» => .«生面»
-  | .«达» => .«生面»
-  | .«候» => .«文面»
-  | .«新» => .«文面»
-  | .«场» => .«物面»
-  | .«焦» => .«心面»
-  | .«物» => .«物面»
-  | .«境» => .«物面»
-  | .«系» => .«物面»
-  | .«心» => .«心面»
-  | .«身» => .«物面»
-  | .«态» => .«物面»
-  | .«状» => .«物面»
-  | .«维» => .«生面»
-  | .«形» => .«物面»
-  | .«相» => .«物面»
-  | .«因» => .«物面»
-  | .«结» => .«物面»
-  | .«据» => .«物面»
-  | .«证» => .«证明面»
-  | .«迹» => .«物面»
-  | .«史» => .«物面»
-  | .«积» => .«物面»
-  | .«精» => .«物面»
-  | .«气» => .«物面»
-  | .«耦» => .«模面»
-  | .«神» => .«物面»
-  | .«合» => .«文面»
-  | .«法» => .«文面»
-  | .«悖» => .«文面»
-  | .«入» => .«文面»
-  | .«待» => .«文面»
-  | .«行» => .«文面»
-  | .«成» => .«文面»
-  | .«冻» => .«生面»
-  | .«修» => .«生面»
-  | .«复» => .«生面»
-  | .«转» => .«生面»
-  | .«动» => .«物面»
-  | .«元» => .«证明面»
-  | .«几» => .«物面»
-  | .«权» => .«模面»
-  | .«重» => .«模面»
-  | .«差» => .«模面»
-  | .«势» => .«模面»
-  | .«强» => .«模面»
-  | .«向» => .«模面»
-  | .«临» => .«物面»
-  | .«岐» => .«物面»
-  | .«机» => .«模面»
-  | .«扰» => .«物面»
-  | .«变» => .«物面»
-  | .«应» => .«生面»
-  | .«伤» => .«物面»
-  | .«散» => .«物面»
-  | .«坍» => .«物面»
-  | .«径» => .«物面»
-  | .«返» => .«物面»
-  | .«限» => .«生面»
-  | .«暂» => .«生面»
-  | .«稳» => .«生面»
-  | .«展» => .«生面»
-  | .«审» => .«审校面»
-  | .«校» => .«审校面»
-  | .«验» => .«审校面»
-  | .«异» => .«审校面»
-  | .«众» => .«审校面»
-  | .«互» => .«审校面»
-  | .«受» => .«审校面»
-  | .«独» => .«审校面»
-  | .«查» => .«审校面»
-  | .«源» => .«审校面»
-  | .«执» => .«审校面»
-  | .«著» => .«审校面»
-  | .«黜» => .«审校面»
-  | .«蔽» => .«审校面»
-  | .«程» => .«审校面»
-  | .«败» => .«审校面»
-  | .«伪» => .«审校面»
-  | .«似» => .«审校面»
-  | .«实» => .«审校面»
-  | .«真» => .«真理面»
-  | .«通» => .«生面»
-  | .«流» => .«生面»
-  | .«和» => .«生面»
-  | .«平» => .«生面»
-  | .«危» => .«价值面»
-  | .«正» => .«价值面»
-  | .«邪» => .«价值面»
-  | .«夺» => .«价值面»
-  | .«依» => .«价值面»
-  | .«压» => .«价值面»
-  | .«护» => .«生面»
-  | .«存» => .«生面»
-  | .«偏» => .«价值面»
-  | .«同» => .«价值面»
-  | .«筛» => .«价值面»
-  | .«放» => .«价值面»
-  | .«抑» => .«价值面»
-  | .«汰» => .«价值面»
-  | .«益» => .«价值面»
-  | .«损» => .«价值面»
-  | .«险» => .«价值面»
-  | .«率» => .«模面»
-  | .«阈» => .«模面»
-  | .«效» => .«模面»
-  | .«责» => .«模面»
-  | .«好» => .«价值面»
-  | .«坏» => .«价值面»
-  | .«自» => .«物面»
-  | .«由» => .«价值面»
-  | .«繁» => .«价值面»
-  | .«荣» => .«价值面»
-  | .«义» => .«价值面»
-  | .«善» => .«价值面»
-  | .«己» => .«价值面»
-  | .«共» => .«价值面»
-  | .«仁» => .«价值面»
-  | .«道» => .«价值面»
-  | .«度» => .«真理面»
-  | .«期» => .«真理面»
-  | .«及» => .«文面»
-  | .«外» => .«文面»
-  | .«序» => .«文面»
-  | .«周» => .«真理面»
-  | .«回» => .«审校面»
-  | .«观» => .«审校面»
-  | .«照» => .«审校面»
-  | .«辨» => .«理面»
-  | .«识» => .«理面»
-  | .«知» => .«理面»
-  | .«智» => .«理面»
-  | .«感» => .«心面»
-  | .«择» => .«心面»
-  | .«情» => .«心面»
-  | .«礼» => .«人面»
-  | .«信» => .«人面»
-  | .«性» => .«人面»
-  | .«能» => .«生面»
-  | .«归» => .«证明面»
-  | .«轨» => .«理面»
-  | .«息» => .«生面»
-  | .«迫» => .«价值面»
-  | .«替» => .«物面»
-  | .«基» => .«物面»
-  | .«线» => .«物面»
-  | .«域» => .«物面»
-  | .«试» => .«真理面»
-  | .«定» => .«真理面»
-  | .«再» => .«生面»
-  | .«关» => .«生面»
-  | .«格» => .«物面»
-  | .«模» => .«模面»
-  | .«面» => .«模面»
-  | .«评» => .«模面»
-  | .«价» => .«模面»
-  | .«础» => .«模面»
-  | .«科» => .«模面»
-  | .«学» => .«模面»
-  | .«逻» => .«证明面»
-  | .«辑» => .«证明面»
-  | .«构» => .«证明面»
-  | .«造» => .«证明面»
-  | .«纳» => .«证明面»
-  | .«一» => .«证明面»
-  | .«论» => .«证明面»
-  | .«普» => .«证明面»
-  | .«遍» => .«证明面»
-  | .«理» => .«证明面»
-  | .«算» => .«证明面»
-  | .«演» => .«证明面»
-  | .«明» => .«证明面»
-  | .«天» => .«真理面»
-  | .«子» => .«生面»
-  | .«之» => .«文面»
-  | .«人» => .«人面»
-  | .«世» => .«物面»
-  | .«界» => .«物面»
-  | .«对» => .«物面»
-  | .«聚» => .«心面»
-  | .«意» => .«心面»
-  | .«图» => .«心面»
-  | .«控» => .«人面»
-  | .«齐» => .«人面»
-  | .«做» => .«人面»
-  | .«目» => .«人面»
-  | .«标» => .«人面»
-  | .«为» => .«文面»
-  | .«制» => .«人面»
-  | .«层» => .«人面»
-  | .«注» => .«注意面»
-  | .«调» => .«注意面»
-  | .«门» => .«注意面»
-  | .«分» => .«注意面»
-  | .«配» => .«注意面»
-  | .«持» => .«注意面»
-  | .«竞» => .«注意面»
-  | .«争» => .«注意面»
-  | .«记» => .«注意面»
-  | .«忆» => .«注意面»
-  | .«上» => .«注意面»
-  | .«下» => .«注意面»
-  | .«而» => .«文面»
-  | .«工» => .«注意面»
-  | .«作» => .«注意面»
-  | .«底» => .«物面»
-  | .«露» => .«文面»
-  | .«隙» => .«文面»
-  | .«发» => .«生面»
-  | .«凝» => .«物面»
-  | .«剖» => .«模面»
-  | .«所» => .«文面»
-  | .«是» => .«真理面»
-  | .«洽» => .«文面»
-  | .«者» => .«文面»
-  | .«也» => .«文面»
-  | .«于» => .«文面»
-  | .«於» => .«文面»
-  | .«已» => .«文面»
-  | .«七» => .«模面»
-  | .«三» => .«模面»
-  | .«不» => .«文面»
-  | .«与» => .«文面»
-  | .«中» => .«价值面»
-  | .«乃» => .«文面»
-  | .«九» => .«模面»
-  | .«事» => .«物面»
-  | .«二» => .«模面»
-  | .«五» => .«模面»
-  | .«亦» => .«文面»
-  | .«仍» => .«文面»
-  | .«以» => .«文面»
-  | .«件» => .«物面»
-  | .«位» => .«模面»
-  | .«例» => .«物面»
-  | .«保» => .«价值面»
-  | .«值» => .«模面»
-  | .«全» => .«模面»
-  | .«八» => .«模面»
-  | .«六» => .«模面»
-  | .«其» => .«文面»
-  | .«册» => .«文面»
-  | .«冒» => .«审校面»
-  | .«准» => .«证明面»
-  | .«凡» => .«文面»
-  | .«出» => .«生面»
-  | .«判» => .«审校面»
-  | .«别» => .«文面»
-  | .«前» => .«文面»
-  | .«十» => .«模面»
-  | .«卷» => .«文面»
-  | .«原» => .«证明面»
-  | .«口» => .«文面»
-  | .«古» => .«文面»
-  | .«句» => .«文面»
-  | .«只» => .«文面»
-  | .«名» => .«文面»
-  | .«含» => .«文面»
-  | .«四» => .«模面»
-  | .«型» => .«模面»
-  | .«增» => .«生面»
-  | .«始» => .«证明面»
-  | .«字» => .«文面»
-  | .«守» => .«文面»
-  | .«完» => .«证明面»
-  | .«导» => .«理面»
-  | .«尺» => .«模面»
-  | .«常» => .«价值面»
-  | .«式» => .«证明面»
-  | .«当» => .«文面»
-  | .«录» => .«文面»
-  | .«律» => .«文面»
-  | .«得» => .«证明面»
-  | .«微» => .«理面»
-  | .«德» => .«价值面»
-  | .«指» => .«理面»
-  | .«推» => .«理面»
-  | .«收» => .«证明面»
-  | .«故» => .«文面»
-  | .«整» => .«证明面»
-  | .«文» => .«文面»
-  | .«易» => .«理面»
-  | .«有» => .«文面»
-  | .«本» => .«文面»
-  | .«束» => .«证明面»
-  | .«极» => .«模面»
-  | .«染» => .«文面»
-  | .«根» => .«证明面»
-  | .«此» => .«文面»
-  | .«渲» => .«文面»
-  | .«版» => .«文面»
-  | .«皆» => .«文面»
-  | .«空» => .«模面»
-  | .«立» => .«证明面»
-  | .«箱» => .«文面»
-  | .«篇» => .«文面»
-  | .«籍» => .«文面»
-  | .«类» => .«模面»
-  | .«终» => .«文面»
-  | .«经» => .«理面»
-  | .«缺» => .«文面»
-  | .«美» => .«价值面»
-  | .«背» => .«价值面»
-  | .«致» => .«理面»
-  | .«补» => .«文面»
-  | .«表» => .«文面»
-  | .«见» => .«审校面»
-  | .«言» => .«文面»
-  | .«语» => .«文面»
-  | .«诸» => .«文面»
-  | .«谓» => .«文面»
-  | .«象» => .«模面»
-  | .«连» => .«理面»
-  | .«述» => .«文面»
-  | .«递» => .«证明面»
-  | .«遇» => .«心面»
-  | .«量» => .«模面»
-  | .«锚» => .«证明面»
-  | .«随» => .«理面»
-  | .«非» => .«文面»
-  | .«项» => .«模面»
-  | .«高» => .«模面»
-  | .«黑» => .«文面»
-  | .«恶» => .«价值面»
-  -- BenZheng-related (14 new): primary face under existing 12-Face system
+def atomPrimaryMian : AtomName -> Mian
+  | .«显» => ((.wu, .shiTime) : Mian)
+  | .«未» => ((.wu, .shiTime) : Mian)
+  | .«尽» => ((.wu, .shiTime) : Mian)
+  | .«间» => ((.wu, .shiTime) : Mian)
+  | .«可» => ((.wu, .shiTime) : Mian)
+  | .«生» => ((.dong, .jiFaint) : Mian)
+  | .«续» => ((.dong, .jiFaint) : Mian)
+  | .«开» => ((.dong, .jiFaint) : Mian)
+  | .«闭» => ((.dong, .jiFaint) : Mian)
+  | .«绝» => ((.dong, .jiFaint) : Mian)
+  | .«断» => ((.dong, .jiFaint) : Mian)
+  | .«达» => ((.dong, .jiFaint) : Mian)
+  | .«候» => ((.wu, .shiTime) : Mian)
+  | .«新» => ((.wu, .shiTime) : Mian)
+  | .«场» => ((.wu, .jiFaint) : Mian)
+  | .«焦» => ((.dong, .shiForce) : Mian)
+  | .«物» => ((.wu, .jiFaint) : Mian)
+  | .«境» => ((.wu, .jiFaint) : Mian)
+  | .«系» => ((.wu, .jiFaint) : Mian)
+  | .«心» => ((.dong, .shiForce) : Mian)
+  | .«身» => ((.wu, .jiFaint) : Mian)
+  | .«态» => ((.wu, .jiFaint) : Mian)
+  | .«状» => ((.wu, .jiFaint) : Mian)
+  | .«维» => ((.dong, .jiFaint) : Mian)
+  | .«形» => ((.wu, .jiFaint) : Mian)
+  | .«相» => ((.wu, .jiFaint) : Mian)
+  | .«因» => ((.wu, .jiFaint) : Mian)
+  | .«结» => ((.wu, .jiFaint) : Mian)
+  | .«据» => ((.wu, .jiFaint) : Mian)
+  | .«证» => ((.jian, .jiOccasion) : Mian)
+  | .«迹» => ((.wu, .jiFaint) : Mian)
+  | .«史» => ((.wu, .jiFaint) : Mian)
+  | .«积» => ((.wu, .jiFaint) : Mian)
+  | .«精» => ((.wu, .jiFaint) : Mian)
+  | .«气» => ((.wu, .jiFaint) : Mian)
+  | .«耦» => ((.wu, .jiOccasion) : Mian)
+  | .«神» => ((.wu, .jiFaint) : Mian)
+  | .«合» => ((.wu, .shiTime) : Mian)
+  | .«法» => ((.wu, .shiTime) : Mian)
+  | .«悖» => ((.wu, .shiTime) : Mian)
+  | .«入» => ((.wu, .shiTime) : Mian)
+  | .«待» => ((.wu, .shiTime) : Mian)
+  | .«行» => ((.wu, .shiTime) : Mian)
+  | .«成» => ((.wu, .shiTime) : Mian)
+  | .«冻» => ((.dong, .jiFaint) : Mian)
+  | .«修» => ((.dong, .jiFaint) : Mian)
+  | .«复» => ((.dong, .jiFaint) : Mian)
+  | .«转» => ((.dong, .jiFaint) : Mian)
+  | .«动» => ((.wu, .jiFaint) : Mian)
+  | .«元» => ((.jian, .jiOccasion) : Mian)
+  | .«几» => ((.wu, .jiFaint) : Mian)
+  | .«权» => ((.wu, .jiOccasion) : Mian)
+  | .«重» => ((.wu, .jiOccasion) : Mian)
+  | .«差» => ((.wu, .jiOccasion) : Mian)
+  | .«势» => ((.wu, .jiOccasion) : Mian)
+  | .«强» => ((.wu, .jiOccasion) : Mian)
+  | .«向» => ((.wu, .jiOccasion) : Mian)
+  | .«临» => ((.wu, .jiFaint) : Mian)
+  | .«岐» => ((.wu, .jiFaint) : Mian)
+  | .«机» => ((.wu, .jiOccasion) : Mian)
+  | .«扰» => ((.wu, .jiFaint) : Mian)
+  | .«变» => ((.wu, .jiFaint) : Mian)
+  | .«应» => ((.dong, .jiFaint) : Mian)
+  | .«伤» => ((.wu, .jiFaint) : Mian)
+  | .«散» => ((.wu, .jiFaint) : Mian)
+  | .«坍» => ((.wu, .jiFaint) : Mian)
+  | .«径» => ((.wu, .jiFaint) : Mian)
+  | .«返» => ((.wu, .jiFaint) : Mian)
+  | .«限» => ((.dong, .jiFaint) : Mian)
+  | .«暂» => ((.dong, .jiFaint) : Mian)
+  | .«稳» => ((.dong, .jiFaint) : Mian)
+  | .«展» => ((.dong, .jiFaint) : Mian)
+  | .«审» => ((.jian, .shiForce) : Mian)
+  | .«校» => ((.jian, .shiForce) : Mian)
+  | .«验» => ((.jian, .shiForce) : Mian)
+  | .«异» => ((.jian, .shiForce) : Mian)
+  | .«众» => ((.jian, .shiForce) : Mian)
+  | .«互» => ((.jian, .shiForce) : Mian)
+  | .«受» => ((.jian, .shiForce) : Mian)
+  | .«独» => ((.jian, .shiForce) : Mian)
+  | .«查» => ((.jian, .shiForce) : Mian)
+  | .«源» => ((.jian, .shiForce) : Mian)
+  | .«执» => ((.jian, .shiForce) : Mian)
+  | .«著» => ((.jian, .shiForce) : Mian)
+  | .«黜» => ((.jian, .shiForce) : Mian)
+  | .«蔽» => ((.jian, .shiForce) : Mian)
+  | .«程» => ((.jian, .shiForce) : Mian)
+  | .«败» => ((.jian, .shiForce) : Mian)
+  | .«伪» => ((.jian, .shiForce) : Mian)
+  | .«似» => ((.jian, .shiForce) : Mian)
+  | .«实» => ((.jian, .shiForce) : Mian)
+  | .«真» => ((.jian, .shiTime) : Mian)
+  | .«通» => ((.dong, .jiFaint) : Mian)
+  | .«流» => ((.dong, .jiFaint) : Mian)
+  | .«和» => ((.dong, .jiFaint) : Mian)
+  | .«平» => ((.dong, .jiFaint) : Mian)
+  | .«危» => ((.dong, .shiTime) : Mian)
+  | .«正» => ((.dong, .shiTime) : Mian)
+  | .«邪» => ((.dong, .shiTime) : Mian)
+  | .«夺» => ((.dong, .shiTime) : Mian)
+  | .«依» => ((.dong, .shiTime) : Mian)
+  | .«压» => ((.dong, .shiTime) : Mian)
+  | .«护» => ((.dong, .jiFaint) : Mian)
+  | .«存» => ((.dong, .jiFaint) : Mian)
+  | .«偏» => ((.dong, .shiTime) : Mian)
+  | .«同» => ((.dong, .shiTime) : Mian)
+  | .«筛» => ((.dong, .shiTime) : Mian)
+  | .«放» => ((.dong, .shiTime) : Mian)
+  | .«抑» => ((.dong, .shiTime) : Mian)
+  | .«汰» => ((.dong, .shiTime) : Mian)
+  | .«益» => ((.dong, .shiTime) : Mian)
+  | .«损» => ((.dong, .shiTime) : Mian)
+  | .«险» => ((.dong, .shiTime) : Mian)
+  | .«率» => ((.wu, .jiOccasion) : Mian)
+  | .«阈» => ((.wu, .jiOccasion) : Mian)
+  | .«效» => ((.wu, .jiOccasion) : Mian)
+  | .«责» => ((.wu, .jiOccasion) : Mian)
+  | .«好» => ((.dong, .shiTime) : Mian)
+  | .«坏» => ((.dong, .shiTime) : Mian)
+  | .«自» => ((.wu, .jiFaint) : Mian)
+  | .«由» => ((.dong, .shiTime) : Mian)
+  | .«繁» => ((.dong, .shiTime) : Mian)
+  | .«荣» => ((.dong, .shiTime) : Mian)
+  | .«义» => ((.dong, .shiTime) : Mian)
+  | .«善» => ((.dong, .shiTime) : Mian)
+  | .«己» => ((.dong, .shiTime) : Mian)
+  | .«共» => ((.dong, .shiTime) : Mian)
+  | .«仁» => ((.dong, .shiTime) : Mian)
+  | .«道» => ((.dong, .shiTime) : Mian)
+  | .«度» => ((.jian, .shiTime) : Mian)
+  | .«期» => ((.jian, .shiTime) : Mian)
+  | .«及» => ((.wu, .shiTime) : Mian)
+  | .«外» => ((.wu, .shiTime) : Mian)
+  | .«序» => ((.wu, .shiTime) : Mian)
+  | .«周» => ((.jian, .shiTime) : Mian)
+  | .«回» => ((.jian, .shiForce) : Mian)
+  | .«观» => ((.jian, .shiForce) : Mian)
+  | .«照» => ((.jian, .shiForce) : Mian)
+  | .«辨» => ((.dong, .jiOccasion) : Mian)
+  | .«识» => ((.dong, .jiOccasion) : Mian)
+  | .«知» => ((.dong, .jiOccasion) : Mian)
+  | .«智» => ((.dong, .jiOccasion) : Mian)
+  | .«感» => ((.dong, .shiForce) : Mian)
+  | .«择» => ((.dong, .shiForce) : Mian)
+  | .«情» => ((.dong, .shiForce) : Mian)
+  | .«礼» => ((.jian, .jiFaint) : Mian)
+  | .«信» => ((.jian, .jiFaint) : Mian)
+  | .«性» => ((.jian, .jiFaint) : Mian)
+  | .«能» => ((.dong, .jiFaint) : Mian)
+  | .«归» => ((.jian, .jiOccasion) : Mian)
+  | .«轨» => ((.dong, .jiOccasion) : Mian)
+  | .«息» => ((.dong, .jiFaint) : Mian)
+  | .«迫» => ((.dong, .shiTime) : Mian)
+  | .«替» => ((.wu, .jiFaint) : Mian)
+  | .«基» => ((.wu, .jiFaint) : Mian)
+  | .«线» => ((.wu, .jiFaint) : Mian)
+  | .«域» => ((.wu, .jiFaint) : Mian)
+  | .«试» => ((.jian, .shiTime) : Mian)
+  | .«定» => ((.jian, .shiTime) : Mian)
+  | .«再» => ((.dong, .jiFaint) : Mian)
+  | .«关» => ((.dong, .jiFaint) : Mian)
+  | .«格» => ((.wu, .jiFaint) : Mian)
+  | .«模» => ((.wu, .jiOccasion) : Mian)
+  | .«面» => ((.wu, .jiOccasion) : Mian)
+  | .«评» => ((.wu, .jiOccasion) : Mian)
+  | .«价» => ((.wu, .jiOccasion) : Mian)
+  | .«础» => ((.wu, .jiOccasion) : Mian)
+  | .«科» => ((.wu, .jiOccasion) : Mian)
+  | .«学» => ((.wu, .jiOccasion) : Mian)
+  | .«逻» => ((.jian, .jiOccasion) : Mian)
+  | .«辑» => ((.jian, .jiOccasion) : Mian)
+  | .«构» => ((.jian, .jiOccasion) : Mian)
+  | .«造» => ((.jian, .jiOccasion) : Mian)
+  | .«纳» => ((.jian, .jiOccasion) : Mian)
+  | .«一» => ((.jian, .jiOccasion) : Mian)
+  | .«论» => ((.jian, .jiOccasion) : Mian)
+  | .«普» => ((.jian, .jiOccasion) : Mian)
+  | .«遍» => ((.jian, .jiOccasion) : Mian)
+  | .«理» => ((.jian, .jiOccasion) : Mian)
+  | .«算» => ((.jian, .jiOccasion) : Mian)
+  | .«演» => ((.jian, .jiOccasion) : Mian)
+  | .«明» => ((.jian, .jiOccasion) : Mian)
+  | .«天» => ((.jian, .shiTime) : Mian)
+  | .«子» => ((.dong, .jiFaint) : Mian)
+  | .«之» => ((.wu, .shiTime) : Mian)
+  | .«人» => ((.jian, .jiFaint) : Mian)
+  | .«世» => ((.wu, .jiFaint) : Mian)
+  | .«界» => ((.wu, .jiFaint) : Mian)
+  | .«对» => ((.wu, .jiFaint) : Mian)
+  | .«聚» => ((.dong, .shiForce) : Mian)
+  | .«意» => ((.dong, .shiForce) : Mian)
+  | .«图» => ((.dong, .shiForce) : Mian)
+  | .«控» => ((.jian, .jiFaint) : Mian)
+  | .«齐» => ((.jian, .jiFaint) : Mian)
+  | .«做» => ((.jian, .jiFaint) : Mian)
+  | .«目» => ((.jian, .jiFaint) : Mian)
+  | .«标» => ((.jian, .jiFaint) : Mian)
+  | .«为» => ((.wu, .shiTime) : Mian)
+  | .«制» => ((.jian, .jiFaint) : Mian)
+  | .«层» => ((.jian, .jiFaint) : Mian)
+  | .«注» => ((.wu, .shiForce) : Mian)
+  | .«调» => ((.wu, .shiForce) : Mian)
+  | .«门» => ((.wu, .shiForce) : Mian)
+  | .«分» => ((.wu, .shiForce) : Mian)
+  | .«配» => ((.wu, .shiForce) : Mian)
+  | .«持» => ((.wu, .shiForce) : Mian)
+  | .«竞» => ((.wu, .shiForce) : Mian)
+  | .«争» => ((.wu, .shiForce) : Mian)
+  | .«记» => ((.wu, .shiForce) : Mian)
+  | .«忆» => ((.wu, .shiForce) : Mian)
+  | .«上» => ((.wu, .shiForce) : Mian)
+  | .«下» => ((.wu, .shiForce) : Mian)
+  | .«而» => ((.wu, .shiTime) : Mian)
+  | .«工» => ((.wu, .shiForce) : Mian)
+  | .«作» => ((.wu, .shiForce) : Mian)
+  | .«底» => ((.wu, .jiFaint) : Mian)
+  | .«露» => ((.wu, .shiTime) : Mian)
+  | .«隙» => ((.wu, .shiTime) : Mian)
+  | .«发» => ((.dong, .jiFaint) : Mian)
+  | .«凝» => ((.wu, .jiFaint) : Mian)
+  | .«剖» => ((.wu, .jiOccasion) : Mian)
+  | .«所» => ((.wu, .shiTime) : Mian)
+  | .«是» => ((.jian, .shiTime) : Mian)
+  | .«洽» => ((.wu, .shiTime) : Mian)
+  | .«者» => ((.wu, .shiTime) : Mian)
+  | .«也» => ((.wu, .shiTime) : Mian)
+  | .«于» => ((.wu, .shiTime) : Mian)
+  | .«於» => ((.wu, .shiTime) : Mian)
+  | .«已» => ((.wu, .shiTime) : Mian)
+  | .«七» => ((.wu, .jiOccasion) : Mian)
+  | .«三» => ((.wu, .jiOccasion) : Mian)
+  | .«不» => ((.wu, .shiTime) : Mian)
+  | .«与» => ((.wu, .shiTime) : Mian)
+  | .«中» => ((.dong, .shiTime) : Mian)
+  | .«乃» => ((.wu, .shiTime) : Mian)
+  | .«九» => ((.wu, .jiOccasion) : Mian)
+  | .«事» => ((.wu, .jiFaint) : Mian)
+  | .«二» => ((.wu, .jiOccasion) : Mian)
+  | .«五» => ((.wu, .jiOccasion) : Mian)
+  | .«亦» => ((.wu, .shiTime) : Mian)
+  | .«仍» => ((.wu, .shiTime) : Mian)
+  | .«以» => ((.wu, .shiTime) : Mian)
+  | .«件» => ((.wu, .jiFaint) : Mian)
+  | .«位» => ((.wu, .jiOccasion) : Mian)
+  | .«例» => ((.wu, .jiFaint) : Mian)
+  | .«保» => ((.dong, .shiTime) : Mian)
+  | .«值» => ((.wu, .jiOccasion) : Mian)
+  | .«全» => ((.wu, .jiOccasion) : Mian)
+  | .«八» => ((.wu, .jiOccasion) : Mian)
+  | .«六» => ((.wu, .jiOccasion) : Mian)
+  | .«其» => ((.wu, .shiTime) : Mian)
+  | .«册» => ((.wu, .shiTime) : Mian)
+  | .«冒» => ((.jian, .shiForce) : Mian)
+  | .«准» => ((.jian, .jiOccasion) : Mian)
+  | .«凡» => ((.wu, .shiTime) : Mian)
+  | .«出» => ((.dong, .jiFaint) : Mian)
+  | .«判» => ((.jian, .shiForce) : Mian)
+  | .«别» => ((.wu, .shiTime) : Mian)
+  | .«前» => ((.wu, .shiTime) : Mian)
+  | .«十» => ((.wu, .jiOccasion) : Mian)
+  | .«卷» => ((.wu, .shiTime) : Mian)
+  | .«原» => ((.jian, .jiOccasion) : Mian)
+  | .«口» => ((.wu, .shiTime) : Mian)
+  | .«古» => ((.wu, .shiTime) : Mian)
+  | .«句» => ((.wu, .shiTime) : Mian)
+  | .«只» => ((.wu, .shiTime) : Mian)
+  | .«名» => ((.wu, .shiTime) : Mian)
+  | .«含» => ((.wu, .shiTime) : Mian)
+  | .«四» => ((.wu, .jiOccasion) : Mian)
+  | .«型» => ((.wu, .jiOccasion) : Mian)
+  | .«增» => ((.dong, .jiFaint) : Mian)
+  | .«始» => ((.jian, .jiOccasion) : Mian)
+  | .«字» => ((.wu, .shiTime) : Mian)
+  | .«守» => ((.wu, .shiTime) : Mian)
+  | .«完» => ((.jian, .jiOccasion) : Mian)
+  | .«导» => ((.dong, .jiOccasion) : Mian)
+  | .«尺» => ((.wu, .jiOccasion) : Mian)
+  | .«常» => ((.dong, .shiTime) : Mian)
+  | .«式» => ((.jian, .jiOccasion) : Mian)
+  | .«当» => ((.wu, .shiTime) : Mian)
+  | .«录» => ((.wu, .shiTime) : Mian)
+  | .«律» => ((.wu, .shiTime) : Mian)
+  | .«得» => ((.jian, .jiOccasion) : Mian)
+  | .«微» => ((.dong, .jiOccasion) : Mian)
+  | .«德» => ((.dong, .shiTime) : Mian)
+  | .«指» => ((.dong, .jiOccasion) : Mian)
+  | .«推» => ((.dong, .jiOccasion) : Mian)
+  | .«收» => ((.jian, .jiOccasion) : Mian)
+  | .«故» => ((.wu, .shiTime) : Mian)
+  | .«整» => ((.jian, .jiOccasion) : Mian)
+  | .«文» => ((.wu, .shiTime) : Mian)
+  | .«易» => ((.dong, .jiOccasion) : Mian)
+  | .«有» => ((.wu, .shiTime) : Mian)
+  | .«本» => ((.wu, .shiTime) : Mian)
+  | .«束» => ((.jian, .jiOccasion) : Mian)
+  | .«极» => ((.wu, .jiOccasion) : Mian)
+  | .«染» => ((.wu, .shiTime) : Mian)
+  | .«根» => ((.jian, .jiOccasion) : Mian)
+  | .«此» => ((.wu, .shiTime) : Mian)
+  | .«渲» => ((.wu, .shiTime) : Mian)
+  | .«版» => ((.wu, .shiTime) : Mian)
+  | .«皆» => ((.wu, .shiTime) : Mian)
+  | .«空» => ((.wu, .jiOccasion) : Mian)
+  | .«立» => ((.jian, .jiOccasion) : Mian)
+  | .«箱» => ((.wu, .shiTime) : Mian)
+  | .«篇» => ((.wu, .shiTime) : Mian)
+  | .«籍» => ((.wu, .shiTime) : Mian)
+  | .«类» => ((.wu, .jiOccasion) : Mian)
+  | .«终» => ((.wu, .shiTime) : Mian)
+  | .«经» => ((.dong, .jiOccasion) : Mian)
+  | .«缺» => ((.wu, .shiTime) : Mian)
+  | .«美» => ((.dong, .shiTime) : Mian)
+  | .«背» => ((.dong, .shiTime) : Mian)
+  | .«致» => ((.dong, .jiOccasion) : Mian)
+  | .«补» => ((.wu, .shiTime) : Mian)
+  | .«表» => ((.wu, .shiTime) : Mian)
+  | .«见» => ((.jian, .shiForce) : Mian)
+  | .«言» => ((.wu, .shiTime) : Mian)
+  | .«语» => ((.wu, .shiTime) : Mian)
+  | .«诸» => ((.wu, .shiTime) : Mian)
+  | .«谓» => ((.wu, .shiTime) : Mian)
+  | .«象» => ((.wu, .jiOccasion) : Mian)
+  | .«连» => ((.dong, .jiOccasion) : Mian)
+  | .«述» => ((.wu, .shiTime) : Mian)
+  | .«递» => ((.jian, .jiOccasion) : Mian)
+  | .«遇» => ((.dong, .shiForce) : Mian)
+  | .«量» => ((.wu, .jiOccasion) : Mian)
+  | .«锚» => ((.jian, .jiOccasion) : Mian)
+  | .«随» => ((.dong, .jiOccasion) : Mian)
+  | .«非» => ((.wu, .shiTime) : Mian)
+  | .«项» => ((.wu, .jiOccasion) : Mian)
+  | .«高» => ((.wu, .jiOccasion) : Mian)
+  | .«黑» => ((.wu, .shiTime) : Mian)
+  | .«恶» => ((.dong, .shiTime) : Mian)
+  -- BenZheng-related (14 new): primary face under existing 12-Mian system
   -- (P5 will rework to Mian = Ben × Zheng = 16; this is interim for build)
-  | .«健» => .«真理面»  -- 乾健 = 真理性
-  | .«悦» => .«心面»     -- 兑悦 = 心之喜
-  | .«起» => .«物面»     -- 震起 = 物之初动
-  | .«止» => .«文面»     -- 艮止 = 律法止息
-  | .«顺» => .«真理面»  -- 坤顺 = 顺道
-  | .«改» => .«物面»     -- R4 flip y1 = 改物
-  | .«化» => .«物面»     -- R4 flip y2 = 化物
-  | .«迁» => .«物面»     -- 时迁
-  | .«溯» => .«物面»     -- 时溯
-  | .«萌» => .«生面»     -- 萌动 = 生之始
-  | .«长» => .«生面»     -- 长 = 生之续
-  | .«缘» => .«文面»     -- 缘 = 关系律法
-  | .«兆» => .«文面»     -- 兆 = 事兆
-  | .«趋» => .«模面»     -- 趋势 = 模型/向
+  | .«健» => ((.jian, .shiTime) : Mian)  -- 乾健 = 真理性
+  | .«悦» => ((.dong, .shiForce) : Mian)     -- 兑悦 = 心之喜
+  | .«起» => ((.wu, .jiFaint) : Mian)     -- 震起 = 物之初动
+  | .«止» => ((.wu, .shiTime) : Mian)     -- 艮止 = 律法止息
+  | .«顺» => ((.jian, .shiTime) : Mian)  -- 坤顺 = 顺道
+  | .«改» => ((.wu, .jiFaint) : Mian)     -- R4 flip y1 = 改物
+  | .«化» => ((.wu, .jiFaint) : Mian)     -- R4 flip y2 = 化物
+  | .«迁» => ((.wu, .jiFaint) : Mian)     -- 时迁
+  | .«溯» => ((.wu, .jiFaint) : Mian)     -- 时溯
+  | .«萌» => ((.dong, .jiFaint) : Mian)     -- 萌动 = 生之始
+  | .«长» => ((.dong, .jiFaint) : Mian)     -- 长 = 生之续
+  | .«缘» => ((.wu, .shiTime) : Mian)     -- 缘 = 关系律法
+  | .«兆» => ((.wu, .shiTime) : Mian)     -- 兆 = 事兆
+  | .«趋» => ((.wu, .jiOccasion) : Mian)     -- 趋势 = 模型/向
 
 /-- Extra faces record polysemy and cross-domain reuse without breaking single-root reachability. -/
-def atomExtraFaces : AtomName -> List Face
-  | .«生» => [.«价值面», .«模面»]
-  | .«开» => [.«价值面», .«真理面»]
-  | .«闭» => [.«价值面», .«真理面»]
-  | .«正» => [.«审校面», .«真理面»]
-  | .«邪» => [.«审校面», .«真理面»]
-  | .«真» => [.«审校面», .«价值面»]
-  | .«道» => [.«价值面», .«真理面»]
-  | .«人» => [.«心面», .«价值面»]
-  | .«聚» => [.«注意面»]
-  | .«焦» => [.«注意面»]
-  | .«意» => [.«注意面», .«价值面»]
-  | .«识» => [.«注意面», .«审校面»]
-  | .«注» => [.«心面»]
-  | .«模» => [.«物面», .«证明面»]
-  | .«证» => [.«审校面», .«真理面»]
-  | .«理» => [.«真理面»]
-  | .«一» => [.«真理面»]
-  | .«元» => [.«真理面»]
-  | .«面» => [.«证明面»]
-  | .«天» => [.«生面», .«物面»]
-  | .«子» => [.«物面», .«心面», .«人面»]
-  | .«之» => [.«证明面»]
-  | .«所» => [.«真理面»]
-  | .«是» => [.«文面»]
-  | .«洽» => [.«审校面»]
+def atomExtraMians : AtomName -> List Mian
+  | .«生» => [((.dong, .shiTime) : Mian), ((.wu, .jiOccasion) : Mian)]
+  | .«开» => [((.dong, .shiTime) : Mian), ((.jian, .shiTime) : Mian)]
+  | .«闭» => [((.dong, .shiTime) : Mian), ((.jian, .shiTime) : Mian)]
+  | .«正» => [((.jian, .shiForce) : Mian), ((.jian, .shiTime) : Mian)]
+  | .«邪» => [((.jian, .shiForce) : Mian), ((.jian, .shiTime) : Mian)]
+  | .«真» => [((.jian, .shiForce) : Mian), ((.dong, .shiTime) : Mian)]
+  | .«道» => [((.dong, .shiTime) : Mian), ((.jian, .shiTime) : Mian)]
+  | .«人» => [((.dong, .shiForce) : Mian), ((.dong, .shiTime) : Mian)]
+  | .«聚» => [((.wu, .shiForce) : Mian)]
+  | .«焦» => [((.wu, .shiForce) : Mian)]
+  | .«意» => [((.wu, .shiForce) : Mian), ((.dong, .shiTime) : Mian)]
+  | .«识» => [((.wu, .shiForce) : Mian), ((.jian, .shiForce) : Mian)]
+  | .«注» => [((.dong, .shiForce) : Mian)]
+  | .«模» => [((.wu, .jiFaint) : Mian), ((.jian, .jiOccasion) : Mian)]
+  | .«证» => [((.jian, .shiForce) : Mian), ((.jian, .shiTime) : Mian)]
+  | .«理» => [((.jian, .shiTime) : Mian)]
+  | .«一» => [((.jian, .shiTime) : Mian)]
+  | .«元» => [((.jian, .shiTime) : Mian)]
+  | .«面» => [((.jian, .jiOccasion) : Mian)]
+  | .«天» => [((.dong, .jiFaint) : Mian), ((.wu, .jiFaint) : Mian)]
+  | .«子» => [((.wu, .jiFaint) : Mian), ((.dong, .shiForce) : Mian), ((.jian, .jiFaint) : Mian)]
+  | .«之» => [((.jian, .jiOccasion) : Mian)]
+  | .«所» => [((.jian, .shiTime) : Mian)]
+  | .«是» => [((.wu, .shiTime) : Mian)]
+  | .«洽» => [((.jian, .shiForce) : Mian)]
   | _ => []
 
-def atomFaces (a : AtomName) : List Face :=
-  atomPrimaryFace a :: atomExtraFaces a
-
-def BelongsToFace (a : AtomName) (f : Face) : Prop :=
-  f ∈ atomFaces a
-
-theorem atom_primary_face_mem (a : AtomName) :
-    BelongsToFace a (atomPrimaryFace a) := by
-  simp [BelongsToFace, atomFaces]
-
-theorem all_atoms_have_face (a : AtomName) :
-    ∃ f, BelongsToFace a f :=
-  ⟨atomPrimaryFace a, atom_primary_face_mem a⟩
-
-/-! ## Mian = Ben × Zheng = 16 cells (新核心)
-
-  Face → Mian projection: 12 of 16 cells covered (4 事-row cells reserved
-  for future event-substrate atoms). Each Face maps deterministically to one
-  (Ben, Zheng) pair per the docs/sanben-sijieduan-grid.md mapping.
-
-  `atomPrimaryMian` is derived from `atomPrimaryFace` via `Face.toMian`.
-  Future refactor: invert this, make Mian primary and Face derived. -/
-
-namespace Face
-
-/-- 12-Face → 16-Mian: faithful injection (12 cells used, 4 事-row reserved). -/
-def toMian : Face → SSBX.Foundation.Bagua.BenZheng.Mian
-  | .«物面»     => (.wu, .jiFaint)     -- 物之微 = "动" cell
-  | .«注意面»   => (.wu, .shiForce)    -- 物之进 = "行" cell
-  | .«模面»     => (.wu, .jiOccasion)  -- 物之转 = "化" cell
-  | .«文面»     => (.wu, .shiTime)     -- 物之久 = "流" cell
-  | .«生面»     => (.dong, .jiFaint)   -- 動之微 = "萌" cell
-  | .«心面»     => (.dong, .shiForce)  -- 動之进 = "长" cell
-  | .«理面»     => (.dong, .jiOccasion)-- 動之转 = "发" cell
-  | .«价值面»   => (.dong, .shiTime)   -- 動之久 = "续" cell
-  | .«人面»     => (.jian, .jiFaint)   -- 間之微 = "缘" cell
-  | .«审校面»   => (.jian, .shiForce)  -- 間之进 = "通" cell
-  | .«证明面»   => (.jian, .jiOccasion)-- 間之转 = "会" cell
-  | .«真理面»   => (.jian, .shiTime)   -- 間之久 = "系" cell
-
-end Face
-
-/-- 每个登记字的"主归 Mian" (新核心：4 本 × 4 征 = 16 cell)。
-    derived from `atomPrimaryFace` via `Face.toMian`. -/
-def atomPrimaryMian (a : AtomName) : SSBX.Foundation.Bagua.BenZheng.Mian :=
-  (atomPrimaryFace a).toMian
-
-/-- 每个登记字的"附归 Mian" (允许多义跨 cell). -/
-def atomExtraMians (a : AtomName) : List SSBX.Foundation.Bagua.BenZheng.Mian :=
-  (atomExtraFaces a).map Face.toMian
-
-def atomMians (a : AtomName) : List SSBX.Foundation.Bagua.BenZheng.Mian :=
+def atomMians (a : AtomName) : List Mian :=
   atomPrimaryMian a :: atomExtraMians a
 
+def BelongsToMian (a : AtomName) (m : Mian) : Prop :=
+  m ∈ atomMians a
+
+theorem atom_primary_mian_mem (a : AtomName) :
+    BelongsToMian a (atomPrimaryMian a) := by
+  simp [BelongsToMian, atomMians]
+
 theorem all_atoms_have_mian (a : AtomName) :
-    atomPrimaryMian a ∈ atomMians a := by
-  simp [atomMians]
+    ∃ m, BelongsToMian a m :=
+  ⟨atomPrimaryMian a, atom_primary_mian_mem a⟩
 
 /-- Formal non-atom roster nodes.  Atom symbols are represented by `MonadNode.atom`. -/
 inductive FormalNode where
@@ -1022,7 +956,7 @@ end FormalNode
 /-- The single-root DAG node universe. -/
 inductive MonadNode where
   | root : MonadNode
-  | face : Face -> MonadNode
+  | mian : Mian -> MonadNode
   | core : CoreAtom -> MonadNode
   | atom : AtomName -> MonadNode
   | formal : FormalNode -> MonadNode
@@ -1194,8 +1128,8 @@ end StructureNode
 
 /-- Immediate edges of the single-root DAG. -/
 def DirectEdge : MonadNode -> MonadNode -> Prop
-  | .root, .face _ => True
-  | .face f, .core c => f ∈ atomFaces (CoreAtom.glyph c)
+  | .root, .mian _ => True
+  | .mian f, .core c => f ∈ atomMians (CoreAtom.glyph c)
   | .core c, .atom a => atomCore a = c
   | .atom a, .formal n => a ∈ formalAtoms n
   | .atom a, .construction k => a = constructionPrimaryAtom k
@@ -1208,13 +1142,13 @@ inductive Reachable : MonadNode -> MonadNode -> Prop
   | tail {a b c : MonadNode} : Reachable a b -> DirectEdge b c -> Reachable a c
 
 /-- Root-to-face path. -/
-def faceRootPath (f : Face) : Reachable «一元» (.face f) :=
+def mianRootPath (f : Mian) : Reachable «一元» (.mian f) :=
   Reachable.tail (Reachable.refl «一元») (by simp [«一元», DirectEdge])
 
 /-- Root-to-core-atom path via the core glyph's primary face. -/
 def coreRootPath (c : CoreAtom) : Reachable «一元» (.core c) :=
-  Reachable.tail (faceRootPath (atomPrimaryFace (CoreAtom.glyph c)))
-    (by simp [DirectEdge, atomFaces])
+  Reachable.tail (mianRootPath (atomPrimaryMian (CoreAtom.glyph c)))
+    (by simp [DirectEdge, atomMians])
 
 /-- Root-to-atom path via the atom's core atom. -/
 def atomRootPath (a : AtomName) : Reachable «一元» (.atom a) :=
@@ -1260,8 +1194,8 @@ theorem structures_return_atom_and_root (s : StructureNode) :
   · exact Reachable.tail (atomRootPath (StructureNode.primaryAtom s))
       (structures_return_single_atom s)
 
-theorem all_faces_from_root : ∀ f : Face, Reachable «一元» (.face f) :=
-  faceRootPath
+theorem all_mians_from_root : ∀ f : Mian, Reachable «一元» (.mian f) :=
+  mianRootPath
 
 theorem all_core_atoms_reachable_from_root : ∀ c : CoreAtom, Reachable «一元» (.core c) :=
   coreRootPath
@@ -1322,7 +1256,7 @@ theorem all_formal_nodes_complete (n : FormalNode) : n ∈ allFormalNodes := by
 
 def allMonadNodes : List MonadNode :=
   [.root] ++
-  (allFaces.map MonadNode.face) ++
+  (Mian.all.map MonadNode.mian) ++
   (allCoreAtoms.map MonadNode.core) ++
   (allAtoms.map MonadNode.atom) ++
   (allFormalNodes.map MonadNode.formal) ++
@@ -1348,12 +1282,12 @@ theorem unique_root : OnlyRoot MonadDAG «一元» := by
   · intro n _ hn
     cases n with
     | root => rfl
-    | face f =>
+    | mian m =>
         exfalso
         exact hn ⟨.root, by simp [DirectEdge]⟩
     | core c =>
         exfalso
-        exact hn ⟨.face (atomPrimaryFace (CoreAtom.glyph c)), by simp [DirectEdge, atomFaces]⟩
+        exact hn ⟨.mian (atomPrimaryMian (CoreAtom.glyph c)), by simp [DirectEdge, atomMians]⟩
     | atom a =>
         exfalso
         exact hn ⟨.core (atomCore a), by simp [DirectEdge]⟩
@@ -1369,15 +1303,15 @@ theorem unique_root : OnlyRoot MonadDAG «一元» := by
 
 def distance : MonadNode -> Nat
   | .root => 0
-  | .face _ => 1
+  | .mian _ => 1
   | .core _ => 2
   | .atom _ => 3
   | .formal _ => 4
   | .construction _ => 4
   | .claim _ => 5
 
-def IsFace : MonadNode -> Prop
-  | .face _ => True
+def IsMian : MonadNode -> Prop
+  | .mian _ => True
   | _ => False
 
 def IsCoreAtom : MonadNode -> Prop
@@ -1389,9 +1323,9 @@ def IsAtom : MonadNode -> Prop
   | _ => False
 
 theorem near_root_constraint (x : MonadNode) :
-    distance x ≤ 2 -> x = «一元» ∨ IsFace x ∨ IsCoreAtom x := by
+    distance x ≤ 2 -> x = «一元» ∨ IsMian x ∨ IsCoreAtom x := by
   intro h
-  cases x <;> simp [distance, IsFace, IsCoreAtom, «一元»] at h ⊢
+  cases x <;> simp [distance, IsMian, IsCoreAtom, «一元»] at h ⊢
 
 /-- Acyclicity witness: every direct edge strictly increases monadic distance. -/
 def AcyclicByRank (_dag : List MonadNode) : Prop :=

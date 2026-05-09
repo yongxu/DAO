@@ -2958,94 +2958,98 @@ theorem shared_all_map :
   simp [kernelMonadRootShared] at hz
   rcases hz with h|h|h|h|h|h|h|h|h <;> subst h <;> rfl
 
-/-! ### Layer 19: 12-面 face mapping (Kernel 单字 → MonadRoot.Face) -/
+/-! ### Layer 19: 16-cell mian mapping (Kernel 单字 → BenZheng.Mian) -/
 
-open SSBX.Foundation.Core.MonadRoot in
-/-- 凡 KernelDanZi 字 都 assignable to one of MonadRoot's 12 面.
-    Distribution per v13.2 卷〇 一元 → 12 面 architecture.
-    For 26 of 27 字, mapping matches MonadRoot.atomPrimaryFace; 恶 (Kernel-独有) gets 价值面 by semantic affinity (opposite of 善). -/
-def kernelDanZiFace : KernelDanZi → Face
+open SSBX.Foundation.Core.MonadRoot SSBX.Foundation.Bagua.BenZheng in
+/-- 凡 KernelDanZi 字 都 assignable to one of 16 Mian cells.
+    Distribution per BenZheng 4本 × 4征 architecture.
+    For 26 of 27 字, mapping matches MonadRoot.atomPrimaryMian; 恶 (Kernel-独有) maps semantically. -/
+def kernelDanZiFace : KernelDanZi → Mian
   -- 证明面: 一/元 — root + first display (理 below: also 证明面 per MonadRoot)
-  | .yiOne     => .«证明面»
-  | .yuan      => .«证明面»
+  | .yiOne     => ((.jian, .jiOccasion) : Mian)
+  | .yuan      => ((.jian, .jiOccasion) : Mian)
   -- 物面 (4): 动/几/散/积 — substantive process material
-  | .dong      => .«物面»
-  | .ji        => .«物面»
-  | .san       => .«物面»
-  | .jiAccum   => .«物面»
+  | .dong      => ((.wu, .jiFaint) : Mian)
+  | .ji        => ((.wu, .jiFaint) : Mian)
+  | .san       => ((.wu, .jiFaint) : Mian)
+  | .jiAccum   => ((.wu, .jiFaint) : Mian)
   -- 模面 (3): 极/势/机 — structural pattern / boundary
-  | .extreme   => .«模面»
-  | .shi       => .«模面»
-  | .jiTurning => .«模面»
+  | .extreme   => ((.wu, .jiOccasion) : Mian)
+  | .shi       => ((.wu, .jiOccasion) : Mian)
+  | .jiTurning => ((.wu, .jiOccasion) : Mian)
   -- 价值面 (7): 中/美/德/仁/义/善/恶 — values / 中-axis
-  | .middle    => .«价值面»
-  | .mei       => .«价值面»
-  | .de        => .«价值面»
-  | .ren       => .«价值面»
-  | .yi        => .«价值面»
-  | .shan      => .«价值面»
-  | .eVice     => .«价值面»
+  | .middle    => ((.dong, .shiTime) : Mian)
+  | .mei       => ((.dong, .shiTime) : Mian)
+  | .de        => ((.dong, .shiTime) : Mian)
+  | .ren       => ((.dong, .shiTime) : Mian)
+  | .yi        => ((.dong, .shiTime) : Mian)
+  | .shan      => ((.dong, .shiTime) : Mian)
+  | .eVice     => ((.dong, .shiTime) : Mian)
   -- 生面 (3): 和/生/息 — generation / cessation
-  | .he        => .«生面»
-  | .sheng     => .«生面»
-  | .xi        => .«生面»
+  | .he        => ((.dong, .jiFaint) : Mian)
+  | .sheng     => ((.dong, .jiFaint) : Mian)
+  | .xi        => ((.dong, .jiFaint) : Mian)
   -- 心面 (3): 聚/心/情 — focal / heart / relational
-  | .ju        => .«心面»
-  | .xin       => .«心面»
-  | .qing      => .«心面»
+  | .ju        => ((.dong, .shiForce) : Mian)
+  | .xin       => ((.dong, .shiForce) : Mian)
+  | .qing      => ((.dong, .shiForce) : Mian)
   -- 理面 (1): 智 — recognition
-  | .zhi       => .«理面»
+  | .zhi       => ((.dong, .jiOccasion) : Mian)
   -- 证明面 (3 with li): 一/元/理 — root + first display + coherent pattern (per MonadRoot)
-  | .li        => .«证明面»
+  | .li        => ((.jian, .jiOccasion) : Mian)
   -- 人面 (2): 礼/信 — relational form / coherence
-  | .liRitual  => .«人面»
-  | .xinTrust  => .«人面»
+  | .liRitual  => ((.jian, .jiFaint) : Mian)
+  | .xinTrust  => ((.jian, .jiFaint) : Mian)
   -- 文面 (1): 行 — action / conduct
-  | .xing      => .«文面»
+  | .xing      => ((.wu, .shiTime) : Mian)
   -- 心面 (additional, Layer 24): 意 — heart's projection toward future
-  | .yiIntent  => .«心面»
+  | .yiIntent  => ((.dong, .shiForce) : Mian)
 
 /-- 凡 KernelDanZi 字 都 has a face — total function (no None). -/
 theorem kernelDanZi_total_face : ∀ z : KernelDanZi, ∃ f, kernelDanZiFace z = f := by
   intro z
   exact ⟨kernelDanZiFace z, rfl⟩
 
-/-- 12 faces 之 当前 occupancy (Kernel 之 字 在 8/12 faces; 4 空 待 layer 20+):
-    占: 证明面/物面/模面/价值面/生面/心面/理面/人面/文面 (9 actually);
-    空: 审校面/注意面/真理面 (3, 待 future layers). -/
-def kernelOccupiedFaces : List SSBX.Foundation.Core.MonadRoot.Face :=
-  [.«证明面», .«物面», .«模面», .«价值面», .«生面», .«心面», .«理面», .«人面», .«文面»]
+open SSBX.Foundation.Bagua.BenZheng in
+/-- 9 of 16 cells occupied by Kernel 字 (4 事-row cells + 3 others 待 future layers).
+    旧名: 证明面/物面/模面/价值面/生面/心面/理面/人面/文面 → 新坐标 (jian.jiOccasion / wu.jiFaint / etc.) -/
+def kernelOccupiedFaces : List Mian :=
+  [((.jian, .jiOccasion) : Mian), ((.wu, .jiFaint) : Mian), ((.wu, .jiOccasion) : Mian), ((.dong, .shiTime) : Mian), ((.dong, .jiFaint) : Mian), ((.dong, .shiForce) : Mian), ((.dong, .jiOccasion) : Mian), ((.jian, .jiFaint) : Mian), ((.wu, .shiTime) : Mian)]
 
 theorem kernelOccupiedFaces_count : kernelOccupiedFaces.length = 9 := rfl
 
+section CoversTheorems
+open SSBX.Foundation.Bagua.BenZheng
+
 /-- 凡 occupied face f, ∃ KernelDanZi z, kernelDanZiFace z = f. -/
-theorem covers_zhengmingmian : ∃ z : KernelDanZi, kernelDanZiFace z = .«证明面» :=
+theorem covers_zhengmingmian : ∃ z : KernelDanZi, kernelDanZiFace z = ((.jian, .jiOccasion) : Mian) :=
   ⟨.yiOne, rfl⟩
-theorem covers_wumian : ∃ z : KernelDanZi, kernelDanZiFace z = .«物面» :=
+theorem covers_wumian : ∃ z : KernelDanZi, kernelDanZiFace z = ((.wu, .jiFaint) : Mian) :=
   ⟨.dong, rfl⟩
-theorem covers_momian : ∃ z : KernelDanZi, kernelDanZiFace z = .«模面» :=
+theorem covers_momian : ∃ z : KernelDanZi, kernelDanZiFace z = ((.wu, .jiOccasion) : Mian) :=
   ⟨.extreme, rfl⟩
-theorem covers_jiazhimian : ∃ z : KernelDanZi, kernelDanZiFace z = .«价值面» :=
+theorem covers_jiazhimian : ∃ z : KernelDanZi, kernelDanZiFace z = ((.dong, .shiTime) : Mian) :=
   ⟨.middle, rfl⟩
-theorem covers_shengmian : ∃ z : KernelDanZi, kernelDanZiFace z = .«生面» :=
+theorem covers_shengmian : ∃ z : KernelDanZi, kernelDanZiFace z = ((.dong, .jiFaint) : Mian) :=
   ⟨.he, rfl⟩
-theorem covers_xinmian : ∃ z : KernelDanZi, kernelDanZiFace z = .«心面» :=
+theorem covers_xinmian : ∃ z : KernelDanZi, kernelDanZiFace z = ((.dong, .shiForce) : Mian) :=
   ⟨.ju, rfl⟩
-theorem covers_limian : ∃ z : KernelDanZi, kernelDanZiFace z = .«理面» :=
+theorem covers_limian : ∃ z : KernelDanZi, kernelDanZiFace z = ((.dong, .jiOccasion) : Mian) :=
   ⟨.zhi, rfl⟩
-theorem covers_renmian : ∃ z : KernelDanZi, kernelDanZiFace z = .«人面» :=
+theorem covers_renmian : ∃ z : KernelDanZi, kernelDanZiFace z = ((.jian, .jiFaint) : Mian) :=
   ⟨.liRitual, rfl⟩
-theorem covers_wenmian : ∃ z : KernelDanZi, kernelDanZiFace z = .«文面» :=
+theorem covers_wenmian : ∃ z : KernelDanZi, kernelDanZiFace z = ((.wu, .shiTime) : Mian) :=
   ⟨.xing, rfl⟩
+
+end CoversTheorems
 
 /-! ### Layer 19b: 16-Mian mapping (Kernel 单字 → BenZheng.Mian)
 
-  新核心。Mian = Ben × Zheng = 16 cells. derived from kernelDanZiFace via Face.toMian.
-  Future: invert dependency (Mian primary, Face derived). -/
+  新核心。Mian = Ben × Zheng = 16 cells. derived from kernelDanZiFace via Mian.toMian.
+  Future: invert dependency (Mian primary, Mian derived). -/
 
-open SSBX.Foundation.Core.MonadRoot in
-def kernelDanZiMian (z : KernelDanZi) : SSBX.Foundation.Bagua.BenZheng.Mian :=
-  Face.toMian (kernelDanZiFace z)
+/-- `kernelDanZiMian` 现在等价于 `kernelDanZiFace`，因为 P5b 已把 Face 替换为 Mian. -/
+def kernelDanZiMian : KernelDanZi → SSBX.Foundation.Bagua.BenZheng.Mian := kernelDanZiFace
 
 theorem kernelDanZi_total_mian : ∀ z : KernelDanZi, ∃ m, kernelDanZiMian z = m := by
   intro z
@@ -3108,7 +3112,7 @@ theorem eVice_in_roster : kernelDanZiToAtom .eVice = some .«恶» := rfl
 theorem all_kernel_danzi_registered (z : KernelDanZi) : (kernelDanZiToAtom z).isSome := by
   cases z <;> rfl
 
-/-! ### Layer 20.5: Face consistency check (Kernel-internal vs MonadRoot) -/
+/-! ### Layer 20.5: Mian consistency check (Kernel-internal vs MonadRoot) -/
 
 /-! ### Layer 23: 古文虚字 operators ↔ kernel definitions
 
@@ -3218,40 +3222,40 @@ section FaceConsistency
 open SSBX.Roster
 open SSBX.Foundation.Core.MonadRoot
 
-/-- For 26 registered 字, kernelDanZiFace agrees with MonadRoot.atomPrimaryFace
+/-- For 26 registered 字, kernelDanZiFace agrees with MonadRoot.atomPrimaryMian
     composed through kernelDanZiToAtom. (Sample check; not full theorem since
     each case is a separate `rfl` and writing them all is tedious.)
 
     Demonstration on a few key 单字: -/
 theorem face_consistent_dong :
-    kernelDanZiFace .dong = atomPrimaryFace .«动» := rfl
+    kernelDanZiFace .dong = atomPrimaryMian .«动» := rfl
 
 theorem face_consistent_xing :
-    kernelDanZiFace .xing = atomPrimaryFace .«行» := rfl
+    kernelDanZiFace .xing = atomPrimaryMian .«行» := rfl
 
 theorem face_consistent_yiOne :
-    kernelDanZiFace .yiOne = atomPrimaryFace .«一» := rfl
+    kernelDanZiFace .yiOne = atomPrimaryMian .«一» := rfl
 
 theorem face_consistent_yuan :
-    kernelDanZiFace .yuan = atomPrimaryFace .«元» := rfl
+    kernelDanZiFace .yuan = atomPrimaryMian .«元» := rfl
 
 theorem face_consistent_ren :
-    kernelDanZiFace .ren = atomPrimaryFace .«仁» := rfl
+    kernelDanZiFace .ren = atomPrimaryMian .«仁» := rfl
 
 theorem face_consistent_li :
-    kernelDanZiFace .li = atomPrimaryFace .«理» := rfl
+    kernelDanZiFace .li = atomPrimaryMian .«理» := rfl
 
 theorem face_consistent_xin :
-    kernelDanZiFace .xin = atomPrimaryFace .«心» := rfl
+    kernelDanZiFace .xin = atomPrimaryMian .«心» := rfl
 
 theorem face_consistent_ju :
-    kernelDanZiFace .ju = atomPrimaryFace .«聚» := rfl
+    kernelDanZiFace .ju = atomPrimaryMian .«聚» := rfl
 
 theorem face_consistent_sheng :
-    kernelDanZiFace .sheng = atomPrimaryFace .«生» := rfl
+    kernelDanZiFace .sheng = atomPrimaryMian .«生» := rfl
 
 theorem face_consistent_yiIntent :
-    kernelDanZiFace .yiIntent = atomPrimaryFace .«意» := rfl
+    kernelDanZiFace .yiIntent = atomPrimaryMian .«意» := rfl
 
 end FaceConsistency
 
