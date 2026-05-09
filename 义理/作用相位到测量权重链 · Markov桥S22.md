@@ -62,7 +62,8 @@ theorem action_amplitude_measurement_bridge_summary :
 
 | 项 | 原因 |
 |---|---|
-| continuous action functional | 仍只有 finite action index `0/1` |
+| displayed continuous action functional | 已由 S24 承接；S22 本身仍只有 finite action index `0/1` |
+| general path-space action functional | 未引入路径空间泛函、变分或极值结构 |
 | Hamiltonian dynamics / unitary time evolution | 没有连续时间演化算子或 Schrödinger 方程 |
 | general path integral | 没有一般 all-path enumeration 或极限求和 |
 | general Hilbert measurement | S21/S22 仍限定 one-qubit computational basis |

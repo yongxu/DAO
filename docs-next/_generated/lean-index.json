@@ -29,10 +29,10 @@
         "SSBX.Foundation.Wen.WenSurface.Coverage",
         "SSBX.Foundation.Wen.WenDefCompile"
       ],
-      "lines": 1820,
+      "lines": 1849,
       "module": "WenyanSurface.lean",
       "path": "WenyanSurface.lean",
-      "sha256": "c4c8899413ceb9effdf10a7b00eff00d84859e8d603d5a863fb0e71bb1690119"
+      "sha256": "f3e8f8b030ff7e0a27973337dad48a0f76dfe0dc3baa96b86ff33609eadfb73c"
     },
     {
       "cluster": "root",
@@ -193,6 +193,7 @@
         "SSBX.Foundation.Modern.QuantumRelativityBornMeasurementBridge",
         "SSBX.Foundation.Modern.QuantumRelativityActionAmplitudeMeasurementBridge",
         "SSBX.Foundation.Modern.QuantumRelativityFinitePhaseEvolutionBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityContinuousActionFunctionalBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -215,10 +216,10 @@
         "SSBX.Foundation.Modern.KeBoundary",
         "SSBX.Foundation.Modern.QuantumSpacetime"
       ],
-      "lines": 208,
+      "lines": 209,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "f007efa7ec3a44e566e052361b0def7bf0f5c55d0a4dca4d6461e4b2c04740a0"
+      "sha256": "053143ca320ea7b333b397b4ae8845b6d8847d93dbb2817ee29541f82f0e38a4"
     },
     {
       "cluster": "root",
@@ -18349,7 +18350,7 @@
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 171,
+      "declaration_count": 174,
       "declarations": [
         {
           "kind": "inductive",
@@ -18805,6 +18806,18 @@
         },
         {
           "kind": "def",
+          "name": "hexPredApplyBody"
+        },
+        {
+          "kind": "theorem",
+          "name": "hexPredApplyBody_typed"
+        },
+        {
+          "kind": "def",
+          "name": "hexPredApplyDef"
+        },
+        {
+          "kind": "def",
           "name": "pairHBody"
         },
         {
@@ -19042,10 +19055,10 @@
         "SSBX.Foundation.Bagua.BaguaWenSpec",
         "SSBX.Text.OperatorSignatures"
       ],
-      "lines": 1012,
+      "lines": 1028,
       "module": "SSBX.Foundation.Wen.WenDef",
       "path": "formal/SSBX/Foundation/Wen/WenDef.lean",
-      "sha256": "16743d8540ad32efa361f4bd0a3e8cf96317ec03942680aec397ed768fd721e6"
+      "sha256": "842d54873773ffa3673a44438aadfa87f063a2bf42e8c15a68473d209fa1466b"
     },
     {
       "cluster": "Foundation/Wen",
@@ -19622,10 +19635,10 @@
         "SSBX.Text.OperatorCellMap",
         "SSBX.Text.OperatorCellSemantics"
       ],
-      "lines": 194,
+      "lines": 214,
       "module": "SSBX.Foundation.Wen.WenSurface.Coverage",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Coverage.lean",
-      "sha256": "90b96c17a72213b6875a77bf8077c1a3ea95dccea0a4e16fc2f31c3ff14c65ea"
+      "sha256": "9805bb198cb38b9c1c09160fc76461e567d7826978221129766da94076120ffa"
     },
     {
       "cluster": "Foundation/Wen",
@@ -19708,7 +19721,7 @@
       "lines": 533,
       "module": "SSBX.Foundation.Wen.WenSurface.Elaborate",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Elaborate.lean",
-      "sha256": "62b90ec452c1b8711b114b2a8b15e0b8bf48cdefea45b802c28ae17a7fd8247f"
+      "sha256": "f0a7523bf965d27a8f9d70947387a29ee22ef98a76c0f864986381132ff4bab3"
     },
     {
       "cluster": "Foundation/Wen",
@@ -19770,10 +19783,10 @@
       "imports": [
         "SSBX.Foundation.Wen.WenSurface.Elaborate"
       ],
-      "lines": 1188,
+      "lines": 1196,
       "module": "SSBX.Foundation.Wen.WenSurface.EndToEnd",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/EndToEnd.lean",
-      "sha256": "0bbd60c805bfda8bbab29880756929f02d8c919774b57570fc4dade71902a47b"
+      "sha256": "ea6f39fa096a29dc05b80ee6433f4c98cc53d123b52cd3e5a6fbc846d04e73dc"
     },
     {
       "cluster": "Foundation/Wen",
@@ -20164,7 +20177,7 @@
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 101,
+      "declaration_count": 117,
       "declarations": [
         {
           "kind": "structure",
@@ -20384,6 +20397,10 @@
         },
         {
           "kind": "def",
+          "name": "catalogueShapeSignatureKindOperatorIds"
+        },
+        {
+          "kind": "def",
           "name": "executableSemanticsFor?"
         },
         {
@@ -20528,6 +20545,66 @@
         },
         {
           "kind": "theorem",
+          "name": "catalogueShape_assignment_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "catalogueShape_binding_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "catalogueShape_debind_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "catalogueShape_decomposer_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "catalogueShape_domainProcess_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "catalogueShape_domainRule_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "catalogueShape_modifier_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "catalogueShape_partition_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "catalogueShape_protocol_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "catalogueShape_response_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "catalogueShape_signal_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "catalogueShape_stateTransition_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "catalogueShape_textAct_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "catalogueShape_trajectory_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "catalogueShapeSignatureKindPartition_counts"
+        },
+        {
+          "kind": "theorem",
           "name": "domainGapKindPartition_counts"
         },
         {
@@ -20576,10 +20653,10 @@
         "SSBX.Text.OperatorSignatures",
         "SSBX.Text.WenyanOperators"
       ],
-      "lines": 1060,
+      "lines": 1148,
       "module": "SSBX.Foundation.Wen.WenSurface.Semantics",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Semantics.lean",
-      "sha256": "925e89fb548032fdb4ca860c4ae68df1e98d445b94ce5fa88dd90a96fc9dc384"
+      "sha256": "48f23227a13b8aed99d01538c2d59ed6bf4b17e2bd8742a9d361dff945e1ed6f"
     },
     {
       "cluster": "Foundation/Wen",

@@ -2,6 +2,8 @@
 
 **前置**：[作用量相位律候选 · Markov桥S5r](作用量相位律候选%20·%20Markov桥S5r.md) · [作用相位到测量权重链 · Markov桥S22](作用相位到测量权重链%20·%20Markov桥S22.md) · [概率幅到测量权重 · Markov桥S21](概率幅到测量权重%20·%20Markov桥S21.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
+**后续**：[连续作用量泛函候选 · Markov桥S24](连续作用量泛函候选%20·%20Markov桥S24.md) 已把本页的 finite phase operation 接到 displayed continuous action-coordinate functional 的两个采样点。
+
 **Lean 锚点**：
 
 | 层 | 文件 | 内容 | 状态 |
@@ -108,7 +110,7 @@ on one-qubit computational-basis state
 它不是完整物理动力学。完整物理级还需要：
 
 ```text
-Hamiltonian or action functional
+path-space action functional
 continuous unitary/CPTP evolution
 general Hilbert measurement
 data-bearing observable predictions

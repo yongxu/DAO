@@ -2,7 +2,7 @@
 
 **前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [观测账本候选 · Markov桥S5q](观测账本候选%20·%20Markov桥S5q.md) · [商支撑代数候选 · Markov桥S5p](商支撑代数候选%20·%20Markov桥S5p.md) · [离散作用量相位候选 · Markov桥S5e](离散作用量相位候选%20·%20Markov桥S5e.md) · [逐步统一候选摘要 · Markov桥S8](逐步统一候选摘要%20·%20Markov桥S8.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
-**后续**：[作用相位到测量权重链 · Markov桥S22](作用相位到测量权重链%20·%20Markov桥S22.md) 已把本页的 finite action branch / action index 接到 one-qubit measurement-event weights。
+**后续**：[作用相位到测量权重链 · Markov桥S22](作用相位到测量权重链%20·%20Markov桥S22.md) 已把本页的 finite action branch / action index 接到 one-qubit measurement-event weights；[连续作用量泛函候选 · Markov桥S24](连续作用量泛函候选%20·%20Markov桥S24.md) 已把本页的 `0/1` action index 接到 displayed continuous action-coordinate functional 的采样值。
 
 **Lean 锚点**：
 
@@ -77,7 +77,8 @@ theorem action_phase_law_bridge_summary :
 
 | 轴 | 状态 | 说明 |
 |---|---|---|
-| continuous action functional | 后续结构 | S5r 只处理 finite period-two action index |
+| displayed continuous action functional | 已由 S24 承接 | S24 给出 `S(t)=t` 的 continuous action-coordinate functional，并在 `0/1` 采样点回到本页 action index |
+| general path-space action functional | 后续结构 | 仍未处理路径空间上的作用量泛函、变分或极值 |
 | Hamiltonian / unitary dynamics | 后续结构 | 仍未给出动力学生成律 |
 | path integral | 后续结构 | 仍需要一般路径空间、求和/积分与极限 |
 | Born rule derivation | 后续结构 | 仍只记录 Born-shaped candidate weight |
@@ -110,7 +111,7 @@ finite action-to-phase law
 -> stepwise unification candidate summary
 ```
 
-S22 已经补上其中一条后续链：
+S22/S24 已经补上两条后续链：
 
 ```text
 finite action-to-phase law
@@ -119,14 +120,13 @@ finite action-to-phase law
 -> measurement-event weights
 ```
 
-再往后可以继续：
-
 ```text
 finite action-to-phase law
--> continuous phase/action law candidate
+-> displayed continuous action-coordinate functional
+-> sampled finite phase evolution
 ```
 
-两条线都必须保持 machine-checked theorem 和失败记录。
+再往后可以继续 path-space action functional、Euler-Lagrange、Hamiltonian/unitary dynamics 与 path integral。每条线都必须保持 machine-checked theorem 和失败记录。
 
 ---
 
