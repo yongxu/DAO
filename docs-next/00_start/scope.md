@@ -15,4 +15,4 @@
 - 不删除或移动旧 `义理/`、`史料/`、`formal/SSBX/notes/`。
 - 不把 `史料/` 改写成当前规范。
 - 不把 web 前端切到 `docs-next`。
-- 不承诺 warning-free build；当前口径是 build passes with warnings。
+- 当前口径是 full build warning-free；若新增 warning，应在维护页说明原因或清理。

@@ -60,7 +60,7 @@ formal/SSBX/
 ## 构建
 
 ```bash
-/Users/ren/.elan/bin/lake build
+/Users/ren/.elan/bin/lake build SSBX
 ```
 
 顶层 module：`SSBX.lean`（按簇分组导入）。

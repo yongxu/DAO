@@ -5,17 +5,22 @@
 ## 常规顺序
 
 1. 修改 Lean、旧文或人工 docs。
-2. 运行 Lean 构建，确认形式层可检查。
-3. 运行 docs-next 生成脚本，刷新 `docs-next/_generated/`。
-4. 检查生成索引是否反映预期变化。
-5. 更新人工页中的入口、读法或状态说明。
+2. 运行受影响模块的 Lean 目标构建，确认局部形式层可检查。
+3. 发布或跨簇改动时运行 full build。
+4. 运行 docs-next 生成脚本，刷新 `docs-next/_generated/`。
+5. 检查生成索引是否反映预期变化。
+6. 更新人工页中的入口、读法或状态说明。
 
 ## 推荐命令
 
 ```bash
+scripts/link_lake_packages.sh /path/to/source-worktree
 /Users/ren/.elan/bin/lake build
+/Users/ren/.elan/bin/lake build SSBX
 python3 scripts/docs_next.py build
 ```
+
+第一条只在新 worktree 缺少 `.lake/packages` 时需要；第二条是默认目标构建；第三条是 full build。
 
 必要时再运行审计搜索：
 

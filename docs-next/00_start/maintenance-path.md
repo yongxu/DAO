@@ -5,10 +5,12 @@
 ## 顺序
 
 1. 先运行 `git status --short`，确认没有误覆盖别人改动。
-2. 修改 Lean 后先跑 `/Users/ren/.elan/bin/lake build`。
-3. 修改文档源或索引规则后跑 `python3 scripts/docs_next.py build --out docs-next/_generated --clean`。
-4. 提交前跑 `python3 scripts/docs_next.py check --out docs-next/_generated --strict`。
-5. 按 `../50_maintenance/release-checklist.md` 做最后核对。
+2. 新 worktree 若没有 `.lake/packages`，先跑 `scripts/link_lake_packages.sh /path/to/source-worktree` 复用已有 Lake 依赖。
+3. 修改 Lean 后先跑受影响模块的目标构建，例如 `/Users/ren/.elan/bin/lake build +SSBX.Core`。
+4. 跨簇、顶层聚合、信任边界或发布前，再跑 `/Users/ren/.elan/bin/lake build SSBX`。
+5. 修改文档源或索引规则后跑 `python3 scripts/docs_next.py build --out docs-next/_generated --clean`。
+6. 提交前跑 `python3 scripts/docs_next.py check --out docs-next/_generated --strict`。
+7. 按 `../50_maintenance/release-checklist.md` 做最后核对。
 
 ## 边界
 

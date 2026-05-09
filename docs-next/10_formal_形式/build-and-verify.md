@@ -1,11 +1,12 @@
 # 构建与核验
 
-本页说明形式层如何读构建结果。机器事实以最新 `lake build`、Lean 源文件与 `../_generated/` 为准；人工文档只给出核验口径。
+本页说明形式层如何读构建结果。机器事实以最新目标构建、full build、Lean 源文件与 `../_generated/` 为准；人工文档只给出核验口径。
 
 ## 当前口径
 
-- `lake build` 已恢复通过。
-- 当前仍有 unused `simp` argument warnings；这些是警告，不是证明缺口本身。
+- full build 使用 `lake build SSBX`；发布前必须通过。
+- 日常维护优先构建受影响目标，例如 `lake build +SSBX.Foundation.Wen.MetaInterp.TargetContract` 或 `lake build +SSBX.Core`。不要把裸 `lake build` 当作每次小改后的默认动作。
+- 当前 full build 无 warning。
 - live `sorry`、`admit`、`unsafe` 不应存在。
 - 唯一显式 axiom 是 `kleene_recursion_axiom`。
 - 唯一 opaque 是 `theOne`。
@@ -15,11 +16,12 @@
 
 ## 建议核验顺序
 
-1. 运行 `lake build`，先确认 Lean 层能通过。
-2. 查看警告是否只是 unused `simp` argument 一类维护警告。
-3. 查 [../_generated/lean-index.md](../_generated/lean-index.md)，确认模块是否被索引到。
-4. 查 [../_generated/trust-boundary.md](../_generated/trust-boundary.md)，确认 axiom、opaque、partial def 没有扩张。
-5. 查 [../_generated/claim-index.md](../_generated/claim-index.md)，区分 machineChecked、modelComputed、ledgerDependent。
+1. 运行受影响模块的目标构建，例如 `lake build +SSBX.Foundation.Wen.MetaInterp.TargetContract`，先确认局部 Lean 层能通过。
+2. 若改动跨越顶层聚合、信任边界、发布入口或多个簇，再运行 `lake build SSBX` 做 full build。
+3. 若出现新增 warning，先判断它是否只是 unused `simp` argument 一类维护警告。
+4. 查 [../_generated/lean-index.md](../_generated/lean-index.md)，确认模块是否被索引到。
+5. 查 [../_generated/trust-boundary.md](../_generated/trust-boundary.md)，确认 axiom、opaque、partial def 没有扩张。
+6. 查 [../_generated/claim-index.md](../_generated/claim-index.md)，区分 machineChecked、modelComputed、ledgerDependent。
 
 ## 通过不等于全闭合
 
@@ -34,7 +36,7 @@
 
 ## 警告处理
 
-unused `simp` argument warnings 通常表示证明脚本里有多余的 simp 参数。处理它们可以提高可维护性，但在当前口径下不改变 theorem 的成立状态。
+unused `simp` argument warnings 通常表示证明脚本里有多余的 simp 参数。处理它们可以提高可维护性，但不改变 theorem 的成立状态。
 
 若新增 warning，应先判断它是否影响：
 

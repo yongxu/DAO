@@ -4,7 +4,7 @@
 
 ## 构建
 
-- `lake build` 通过。
+- `lake build SSBX` 通过。
 - `lake build wenyan-surface` 通过。
 - `scripts/check_wenyan_surface_cli.py` 通过。
 - `python3 scripts/docs_next.py build` 通过。

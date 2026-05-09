@@ -74,8 +74,8 @@
 | formal/SSBX/notes/PositionOperatorGraph.md | 0 | 5 |
 | formal/SSBX/notes/atom-naming.md | 0 | 0 |
 | formal/SSBX/notes/baguaWen-spec.md | 0 | 0 |
-| formal/SSBX/notes/markov-causal-bridge-plan.md | 38 | 4 |
-| formal/SSBX/notes/markov-causal-bridge-verification-plan.md | 37 | 20 |
+| formal/SSBX/notes/markov-causal-bridge-plan.md | 40 | 4 |
+| formal/SSBX/notes/markov-causal-bridge-verification-plan.md | 39 | 20 |
 | formal/SSBX/notes/math-axiom-map.md | 0 | 0 |
 | formal/SSBX/notes/metainterp-isa-gap.md | 0 | 0 |
 | formal/SSBX/notes/monad-root-plan.md | 2 | 3 |
@@ -163,7 +163,8 @@
 | 义理/观测账本候选 · Markov桥S5q.md | 0 | 9 |
 | 义理/规范代表元候选 · Markov桥S5n.md | 0 | 6 |
 | 义理/路径商类候选 · Markov桥S5m.md | 0 | 10 |
-| 义理/路径组合与因果约束 · Markov桥S3.md | 3 | 12 |
+| 义理/路径权重乘法候选 · Markov桥S19.md | 0 | 5 |
+| 义理/路径组合与因果约束 · Markov桥S3.md | 3 | 13 |
 | 义理/路径身份键候选 · Markov桥S5k.md | 0 | 9 |
 | 义理/边界/README.md | 0 | 13 |
 | 义理/边界/可的边界 · 感行证.md | 1 | 8 |
@@ -185,6 +186,7 @@
 | 义理/量子与相对论直统一不可能 · 当前语言NoGo.md | 0 | 15 |
 | 义理/量子时空互补 · 从一到测.md | 1 | 13 |
 | 义理/量子物理语言 · 从虚到测.md | 0 | 8 |
+| 义理/非平凡量子通道律候选 · Markov桥S20.md | 0 | 8 |
 | 义理/非零路径振幅候选 · Markov桥S5b.md | 5 | 11 |
 | 六表_实虚史真/表一_六征本表.md | 0 | 0 |
 | 六表_实虚史真/表三_实虚modal三态.md | 0 | 0 |

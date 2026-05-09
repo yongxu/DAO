@@ -174,7 +174,7 @@ theorem subDispatchBranchYaoEqPerJ_routes_j1
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute,
           subDispatchBranchYaoEqPerJ, Hexagram.yaoAt,
-          encFin6_1_y1_eq_y6, encFin6_1_shi, encFin6_1_shi_ne_ji]
+          encFin6_1_y1_eq_y6, encFin6_1_shi]
 
 /-- Routing for `j.val = 2`: lands at `off2`. -/
 theorem subDispatchBranchYaoEqPerJ_routes_j2
@@ -194,8 +194,7 @@ theorem subDispatchBranchYaoEqPerJ_routes_j2
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute,
           subDispatchBranchYaoEqPerJ, Hexagram.yaoAt,
-          encFin6_2_y1_eq_y6, encFin6_2_shi,
-          encFin6_2_shi_ne_ji, encFin6_2_shi_ne_jin]
+          encFin6_2_y1_eq_y6, encFin6_2_shi]
 
 /-- Routing for `j.val = 3`: lands at `off3`. -/
 theorem subDispatchBranchYaoEqPerJ_routes_j3
@@ -235,7 +234,7 @@ theorem subDispatchBranchYaoEqPerJ_routes_j4
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute,
           subDispatchBranchYaoEqPerJ, Hexagram.yaoAt,
-          encFin6_4_y1_ne_y6, encFin6_4_shi, encFin6_4_shi_ne_ji]
+          encFin6_4_y1_ne_y6, encFin6_4_shi]
 
 /-- Routing for `j.val = 5`: lands at `off5`. -/
 theorem subDispatchBranchYaoEqPerJ_routes_j5
@@ -255,8 +254,7 @@ theorem subDispatchBranchYaoEqPerJ_routes_j5
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute,
           subDispatchBranchYaoEqPerJ, Hexagram.yaoAt,
-          encFin6_5_y1_ne_y6, encFin6_5_shi,
-          encFin6_5_shi_ne_ji, encFin6_5_shi_ne_jin]
+          encFin6_5_y1_ne_y6, encFin6_5_shi]
 
 /-! ## § 5  Routing correctness for the outer i-dispatcher
 
@@ -304,7 +302,7 @@ theorem subDispatchBranchYaoEq_routes_i1
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute,
           subDispatchBranchYaoEq, Hexagram.yaoAt,
-          encFin6_1_y1_eq_y6, encFin6_1_shi, encFin6_1_shi_ne_ji]
+          encFin6_1_y1_eq_y6, encFin6_1_shi]
 
 /-- Routing for `i.val = 2`: lands at `iSubBase2`. -/
 theorem subDispatchBranchYaoEq_routes_i2
@@ -325,8 +323,7 @@ theorem subDispatchBranchYaoEq_routes_i2
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute,
           subDispatchBranchYaoEq, Hexagram.yaoAt,
-          encFin6_2_y1_eq_y6, encFin6_2_shi,
-          encFin6_2_shi_ne_ji, encFin6_2_shi_ne_jin]
+          encFin6_2_y1_eq_y6, encFin6_2_shi]
 
 /-- Routing for `i.val = 3`: lands at `iSubBase3`. -/
 theorem subDispatchBranchYaoEq_routes_i3
@@ -368,7 +365,7 @@ theorem subDispatchBranchYaoEq_routes_i4
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute,
           subDispatchBranchYaoEq, Hexagram.yaoAt,
-          encFin6_4_y1_ne_y6, encFin6_4_shi, encFin6_4_shi_ne_ji]
+          encFin6_4_y1_ne_y6, encFin6_4_shi]
 
 /-- Routing for `i.val = 5`: lands at `iSubBase5`. -/
 theorem subDispatchBranchYaoEq_routes_i5
@@ -389,7 +386,6 @@ theorem subDispatchBranchYaoEq_routes_i5
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute,
           subDispatchBranchYaoEq, Hexagram.yaoAt,
-          encFin6_5_y1_ne_y6, encFin6_5_shi,
-          encFin6_5_shi_ne_ji, encFin6_5_shi_ne_jin]
+          encFin6_5_y1_ne_y6, encFin6_5_shi]
 
 end SSBX.Foundation.Wen.MetaInterp.SubDispatch_BranchYaoEq

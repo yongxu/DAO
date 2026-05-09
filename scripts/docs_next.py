@@ -326,7 +326,16 @@ def claim_index(root: Path) -> tuple[dict, str]:
 
 def operator_index(root: Path) -> tuple[dict, str]:
     path = root / "formal/SSBX/Text/WenyanOperators.lean"
-    text = read(path)
+    operator_paths = [
+        path,
+        root / "formal/SSBX/Text/WenyanOperators/Core.lean",
+        root / "formal/SSBX/Text/WenyanOperators/Group.lean",
+        root / "formal/SSBX/Text/WenyanOperators/Code.lean",
+        root / "formal/SSBX/Text/WenyanOperators/Title.lean",
+        root / "formal/SSBX/Text/WenyanOperators/Forms.lean",
+        root / "formal/SSBX/Text/WenyanOperators/Table.lean",
+    ]
+    text = "\n".join(read(p) for p in operator_paths if p.exists())
     groups = lean_cases_map(text, "OperatorId.group")
     group_keys = lean_cases_map(text, "OperatorGroup.key")
     group_names = lean_cases_map(text, "OperatorGroup.zhName")
@@ -422,6 +431,7 @@ def operator_index(root: Path) -> tuple[dict, str]:
     ]
     data = {
         "source": rel(path, root),
+        "sources": [rel(p, root) for p in operator_paths if p.exists()],
         "signature_source": rel(sig_path, root),
         "count": len(rows),
         "groups": group_rows,
@@ -432,7 +442,10 @@ def operator_index(root: Path) -> tuple[dict, str]:
         "counts_by_action_bit": action_counts,
         "operators": rows,
     }
-    md = provenance("Wenyan Operator Index", [rel(path, root), rel(sig_path, root), "wenyan-operators.md"])
+    md = provenance(
+        "Wenyan Operator Index",
+        [rel(p, root) for p in operator_paths if p.exists()] + [rel(sig_path, root), "wenyan-operators.md"],
+    )
     md += f"- Operators: {len(rows)}\n\n"
     md += md_table(
         ["Group", "Key", "Name", "Action Position", "Count"],

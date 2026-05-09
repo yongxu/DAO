@@ -7,7 +7,7 @@ package        : ssbx
 language       : Lean 4 v4.30.0-rc2
 upstream       : Mathlib master (HEAD)
 build target   : @[default_target] lean_lib SSBX (srcDir = "formal")
-build status   : 2867 jobs ✓        sorry : 0        axiom : 1        opaque : 1
+build status   : 2917 jobs ✓        sorry : 0        axiom : 1        opaque : 1
 partial defs   : 1 top-level executable definition (not an additional axiom)
 trust base     : Lean kernel + Mathlib HEAD
 namespace root : SSBX
@@ -475,8 +475,8 @@ theorem li_cannot_encode_dao : ∀ N, ∃ n > N, Nonempty (Sheng n)        (DaoL
 
 ```
 ∀ commit ∈ main:
-  lake build                  ⇒  exit 0
-  jobs(lake build)            =  2867
+  lake build                  ⇒  smoke target exit 0
+  lake build SSBX             ⇒  full library exit 0
   count(sorry, formal/)       =  0
   count(axiom, formal/)       =  1          (kleene_recursion_axiom; cuo-restricted)
   count(opaque, formal/)      =  1          (theOne; carries Field/dong/origin/alive)
@@ -487,7 +487,7 @@ theorem li_cannot_encode_dao : ∀ N, ∃ n > N, Nonempty (Sheng n)        (DaoL
 
 ```bash
 $ lake build SSBX                           # full library
-$ lake build SSBX.Foundation.Wen.DaoSource  # single module
+$ lake build +SSBX.Foundation.Wen.DaoSource # single module
 $ scripts/generate_monad_dag.py             # regen «一»-DAG
 $ scripts/render_monad_dag.sh               # render to SVG
 ```
@@ -569,7 +569,7 @@ wenyan operators          371   (`Text/WenyanOperators.lean` OperatorId catalogu
 
 ```
 trust:    Lean kernel (v4.30.0-rc2) + Mathlib HEAD
-machine:  2867 build jobs · 0 sorry · 1 axiom (kleene_recursion_axiom; cuo-restricted)
+machine:  2917 build jobs · 0 sorry · 1 axiom (kleene_recursion_axiom; cuo-restricted)
 opaque:   1 (theOne)
 partial:  1 top-level executable partial def (BaguaTuring.run nontermination boundary)
 ledger:   DAG / roster / operator / layer / essay correspondences are sync claims

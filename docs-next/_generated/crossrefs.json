@@ -1136,12 +1136,14 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityNontrivialChannelLawBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityNormalizedMassBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityPathIdentityBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityPathQuotientBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityPathWeightMultiplicationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportAlgebraBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityStepwiseUnificationBridge.lean",
@@ -1204,12 +1206,14 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityMarkovBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityNoGo.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityNontrivialChannelLawBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityNonzeroPathAmplitudeBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityNormalizedMassBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityObservableLedgerBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityPathIdentityBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityPathQuotientBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityPathWeightMultiplicationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportAlgebraBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityQuotientSupportBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityStepwiseUnificationBridge.lean",
@@ -1729,7 +1733,7 @@
       "symbol_hits": [
         {
           "paths": [
-            "formal/SSBX/Text/WenyanOperators.lean"
+            "formal/SSBX/Text/WenyanOperators/Core.lean"
           ],
           "symbol": "OperatorId"
         },
@@ -1789,7 +1793,7 @@
         },
         {
           "paths": [
-            "formal/SSBX/Text/WenyanOperators.lean"
+            "formal/SSBX/Text/WenyanOperators/Core.lean"
           ],
           "symbol": "OperatorId"
         },
@@ -6067,6 +6071,42 @@
       ]
     },
     {
+      "document": "义理/路径权重乘法候选 · Markov桥S19.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathWeightMultiplicationBridge.lean"
+          ],
+          "symbol": "KernelEdge"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathWeightMultiplicationBridge.lean"
+          ],
+          "symbol": "KernelPath"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathWeightMultiplicationBridge.lean"
+          ],
+          "symbol": "concrete_two_step_path_weight_multiplicative"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathWeightMultiplicationBridge.lean"
+          ],
+          "symbol": "current_pathWeight_compose_multiplicative"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathWeightMultiplicationBridge.lean"
+          ],
+          "symbol": "path_weight_multiplication_bridge_summary"
+        }
+      ]
+    },
+    {
       "document": "义理/路径组合与因果约束 · Markov桥S3.md",
       "lean_path_mentions": [
         "formal/SSBX.lean",
@@ -6145,6 +6185,12 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityPathCausalBridge.lean"
           ],
           "symbol": "path_causal_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathWeightMultiplicationBridge.lean"
+          ],
+          "symbol": "path_weight_multiplication_bridge_summary"
         }
       ]
     },
@@ -7457,6 +7503,60 @@
             "formal/SSBX/Foundation/Modern/SUN.lean"
           ],
           "symbol": "sun_bagua_weak_analogy_strict_bound"
+        }
+      ]
+    },
+    {
+      "document": "义理/非平凡量子通道律候选 · Markov桥S20.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityNontrivialChannelLawBridge.lean"
+          ],
+          "symbol": "NontrivialChannelAmplitudeWitness"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityNontrivialChannelLawBridge.lean"
+          ],
+          "symbol": "concreteEvolvedMeasuredChannelWitness"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityNontrivialChannelLawBridge.lean"
+          ],
+          "symbol": "concretePreparedEvolvedChannelWitness"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityNontrivialChannelLawBridge.lean"
+          ],
+          "symbol": "concrete_evolved_measured_nontrivial_channel_law"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityNontrivialChannelLawBridge.lean"
+          ],
+          "symbol": "concrete_nontrivial_sum_over_middle_channel_law"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityNontrivialChannelLawBridge.lean"
+          ],
+          "symbol": "concrete_prepared_evolved_nontrivial_channel_law"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityNontrivialChannelLawBridge.lean"
+          ],
+          "symbol": "nontrivial_channel_amplitude_law"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityNontrivialChannelLawBridge.lean"
+          ],
+          "symbol": "nontrivial_quantum_channel_law_bridge_summary"
         }
       ]
     },

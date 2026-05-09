@@ -8222,5 +8222,14 @@
     }
   ],
   "signature_source": "formal/SSBX/Text/OperatorSignatures.lean",
-  "source": "formal/SSBX/Text/WenyanOperators.lean"
+  "source": "formal/SSBX/Text/WenyanOperators.lean",
+  "sources": [
+    "formal/SSBX/Text/WenyanOperators.lean",
+    "formal/SSBX/Text/WenyanOperators/Core.lean",
+    "formal/SSBX/Text/WenyanOperators/Group.lean",
+    "formal/SSBX/Text/WenyanOperators/Code.lean",
+    "formal/SSBX/Text/WenyanOperators/Title.lean",
+    "formal/SSBX/Text/WenyanOperators/Forms.lean",
+    "formal/SSBX/Text/WenyanOperators/Table.lean"
+  ]
 }

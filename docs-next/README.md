@@ -12,7 +12,7 @@
 
 ## 当前机器口径
 
-- `lake build` 已恢复通过；当前仍有 unused `simp` argument warnings。
+- `lake build SSBX` 已恢复通过；当前 full build 无 warning。
 - live trust boundary 以 [trust-boundary](./_generated/trust-boundary.md) 为准。
 - claim 状态以 [claim-index](./_generated/claim-index.md) 为准。
 - 模块与声明索引以 [lean-index](./_generated/lean-index.md) 为准。

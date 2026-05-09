@@ -588,12 +588,10 @@ private theorem decNat_encNat_app (n : Nat) (rest : List Cell192)
   simp only [Nat.min_eq_left (by omega : (NatCell.encodeNat n).length ≤ 191)]
   have h_take : (NatCell.encodeNat n ++ rest).take (NatCell.encodeNat n).length
     = NatCell.encodeNat n := by
-    simp [List.take_append, List.take_of_length_le]
+    simp
   have h_drop : (NatCell.encodeNat n ++ rest).drop (NatCell.encodeNat n).length = rest := by
-    simp [List.drop_append]
-  have h_le : (NatCell.encodeNat n).length ≤ (NatCell.encodeNat n ++ rest).length := by
-    simp [List.length_append]
-  simp [h_le, h_take, h_drop, NatCell.decode_encode]
+    simp
+  simp [h_take, h_drop, NatCell.decode_encode]
 
 /-- **C.1 主定理**: `decFramedProg (encFramedProg p ++ rest) = some (p, rest)` for AllEncodable p. -/
 theorem decFramedProg_encFramedProg (p : List YiInstr) (h_enc : AllEncodable p)

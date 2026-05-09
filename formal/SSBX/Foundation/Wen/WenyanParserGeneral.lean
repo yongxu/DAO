@@ -139,7 +139,7 @@ theorem lexFuel_mono : ∀ (n m : Nat) (cs : List Char) (out : List Tok),
               · split at hn
                 · -- '«'
                   rename_i hws hopen
-                  simp only [hws, hopen, ite_true, ite_false]
+                  simp only [hopen, ite_true]
                   generalize hsplit : splitOnClose rest = sp at hn ⊢
                   obtain ⟨inner, after⟩ := sp
                   cases after with
@@ -587,12 +587,7 @@ theorem lexFuel_printInstrChars_app
       rw [show n + 2 = (n + 1) + 1 from rfl, lexFuel_skip_space _ (n + 1)]
       rw [lexFuel_printShiChars s tail n]
       simp only [tokensOfInstr, List.cons_append, List.nil_append, Option.map_map,
-                 Function.comp_def, show String.ofList ['设', '时'] = "设时" from rfl,
-                 show String.ofList ['翻', '爻'] = "翻爻" from rfl,
-                 show String.ofList ['比', '爻'] = "比爻" from rfl,
-                 show String.ofList ['比', '时'] = "比时" from rfl,
-                 show String.ofList ['至'] = "至" from rfl,
-                 show String.ofList ['跳'] = "跳" from rfl]
+                 Function.comp_def, show String.ofList ['设', '时'] = "设时" from rfl]
   | flipYao i =>
       simp only [printInstrChars, instrLexFuel]
       have heq : (['«', '翻', '爻', '»', ' '] : List Char) ++ printYaoChars i ++ tail
@@ -603,12 +598,7 @@ theorem lexFuel_printInstrChars_app
       rw [show n + 2 = (n + 1) + 1 from rfl, lexFuel_skip_space _ (n + 1)]
       rw [lexFuel_printYaoChars i tail n]
       simp only [tokensOfInstr, List.cons_append, List.nil_append, Option.map_map,
-                 Function.comp_def, show String.ofList ['设', '时'] = "设时" from rfl,
-                 show String.ofList ['翻', '爻'] = "翻爻" from rfl,
-                 show String.ofList ['比', '爻'] = "比爻" from rfl,
-                 show String.ofList ['比', '时'] = "比时" from rfl,
-                 show String.ofList ['至'] = "至" from rfl,
-                 show String.ofList ['跳'] = "跳" from rfl]
+                 Function.comp_def, show String.ofList ['翻', '爻'] = "翻爻" from rfl]
   | branchYaoEq i j t =>
       simp only [validInstr, decide_eq_true_eq] at h
       obtain ⟨h1, h64⟩ := h
@@ -642,12 +632,8 @@ theorem lexFuel_printInstrChars_app
       -- numeral
       rw [lexFuel_printNumeralChars t h1 h64 tail n]
       simp only [tokensOfInstr, List.cons_append, List.nil_append, Option.map_map,
-                 Function.comp_def, show String.ofList ['设', '时'] = "设时" from rfl,
-                 show String.ofList ['翻', '爻'] = "翻爻" from rfl,
-                 show String.ofList ['比', '爻'] = "比爻" from rfl,
-                 show String.ofList ['比', '时'] = "比时" from rfl,
-                 show String.ofList ['至'] = "至" from rfl,
-                 show String.ofList ['跳'] = "跳" from rfl]
+                 Function.comp_def, show String.ofList ['比', '爻'] = "比爻" from rfl,
+                 show String.ofList ['至'] = "至" from rfl]
   | branchShiEq s t =>
       simp only [validInstr, decide_eq_true_eq] at h
       obtain ⟨h1, h64⟩ := h
@@ -669,12 +655,8 @@ theorem lexFuel_printInstrChars_app
       rw [show n + 2 = (n + 1) + 1 from rfl, lexFuel_skip_space _ (n + 1)]
       rw [lexFuel_printNumeralChars t h1 h64 tail n]
       simp only [tokensOfInstr, List.cons_append, List.nil_append, Option.map_map,
-                 Function.comp_def, show String.ofList ['设', '时'] = "设时" from rfl,
-                 show String.ofList ['翻', '爻'] = "翻爻" from rfl,
-                 show String.ofList ['比', '爻'] = "比爻" from rfl,
-                 show String.ofList ['比', '时'] = "比时" from rfl,
-                 show String.ofList ['至'] = "至" from rfl,
-                 show String.ofList ['跳'] = "跳" from rfl]
+                 Function.comp_def, show String.ofList ['比', '时'] = "比时" from rfl,
+                 show String.ofList ['至'] = "至" from rfl]
   | jump t =>
       simp only [validInstr, decide_eq_true_eq] at h
       obtain ⟨h1, h64⟩ := h
@@ -694,11 +676,7 @@ theorem lexFuel_printInstrChars_app
       rw [show n + 2 = (n + 1) + 1 from rfl, lexFuel_skip_space _ (n + 1)]
       rw [lexFuel_printNumeralChars t h1 h64 tail n]
       simp only [tokensOfInstr, List.cons_append, List.nil_append, Option.map_map,
-                 Function.comp_def, show String.ofList ['设', '时'] = "设时" from rfl,
-                 show String.ofList ['翻', '爻'] = "翻爻" from rfl,
-                 show String.ofList ['比', '爻'] = "比爻" from rfl,
-                 show String.ofList ['比', '时'] = "比时" from rfl,
-                 show String.ofList ['至'] = "至" from rfl,
+                 Function.comp_def, show String.ofList ['至'] = "至" from rfl,
                  show String.ofList ['跳'] = "跳" from rfl]
 
 /-! ## § 6  parseInstr inversion (13 案，with append) -/

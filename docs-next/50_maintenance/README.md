@@ -1,6 +1,6 @@
 # 维护手册
 
-本节记录 docs-next 与形式层同步时的最低维护口径。它不替代脚本、CI 或 Lean 构建；机器事实优先来自 `lake build`、审计脚本与 `../_generated/`。
+本节记录 docs-next 与形式层同步时的最低维护口径。它不替代脚本、CI 或 Lean 构建；机器事实优先来自目标构建、`lake build SSBX`、审计脚本与 `../_generated/`。
 
 ## 构建检查
 
@@ -8,6 +8,7 @@
 
 ```bash
 /Users/ren/.elan/bin/lake build
+/Users/ren/.elan/bin/lake build SSBX
 rg -n "\\bsorry\\b|\\badmit\\b|\\bunsafe\\b|#allow_unsafe" formal
 rg -n "\\baxiom\\b|\\bopaque\\b|partial def" formal
 ```

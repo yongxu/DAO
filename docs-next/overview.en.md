@@ -10,7 +10,7 @@ This directory is the staging area for a rebuilt documentation set. It does not 
 
 ## Current Verification Policy
 
-The Lean build now completes, with warnings. Trust-boundary facts are generated in [_generated/trust-boundary.md](./_generated/trust-boundary.md):
+The Lean full build now completes without warnings. Trust-boundary facts are generated in [_generated/trust-boundary.md](./_generated/trust-boundary.md):
 
 - one live axiom: `kleene_recursion_axiom`;
 - one opaque sealed witness: `theOne`;

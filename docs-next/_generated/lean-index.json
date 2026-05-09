@@ -4,12 +4,12 @@
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
-    "Foundation/Modern": 71,
+    "Foundation/Modern": 73,
     "Foundation/Wen": 51,
     "Foundation/Yi": 2,
     "Model": 2,
     "Pending": 2,
-    "Text": 13,
+    "Text": 46,
     "Truth": 6,
     "other": 2,
     "root": 3
@@ -26,12 +26,13 @@
       ],
       "imports": [
         "SSBX.Foundation.Wen.WenSurface.EndToEnd",
-        "SSBX.Foundation.Wen.WenSurface.Coverage"
+        "SSBX.Foundation.Wen.WenSurface.Coverage",
+        "SSBX.Foundation.Wen.WenDefCompile"
       ],
-      "lines": 1430,
+      "lines": 1638,
       "module": "WenyanSurface.lean",
       "path": "WenyanSurface.lean",
-      "sha256": "02f15d1a329010803a72c0eac5aec5b1ffad0a8373d3cb8d0506f11aab858688"
+      "sha256": "28fe7c9f1e9ae650155916d6118b883a9ed4bb08b055a5f047cd21b8906ce23f"
     },
     {
       "cluster": "root",
@@ -188,6 +189,7 @@
         "SSBX.Foundation.Modern.QuantumRelativityUnitaryCPTPLedgerBridge",
         "SSBX.Foundation.Modern.QuantumRelativityBornRuleDerivationBridge",
         "SSBX.Foundation.Modern.QuantumRelativityPathWeightMultiplicationBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityNontrivialChannelLawBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -210,10 +212,10 @@
         "SSBX.Foundation.Modern.KeBoundary",
         "SSBX.Foundation.Modern.QuantumSpacetime"
       ],
-      "lines": 204,
+      "lines": 205,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "86a6bf7beda30bafb98af9bb087b472be3e75914df1a6074fe41dbe887bc79dd"
+      "sha256": "e4bf008bf914c72a00e1fb44a28c42cd3b7afb99e9564c8f59254ed8761f5597"
     },
     {
       "cluster": "root",
@@ -12006,6 +12008,104 @@
     },
     {
       "cluster": "Foundation/Modern",
+      "declaration_count": 21,
+      "declarations": [
+        {
+          "kind": "structure",
+          "name": "NontrivialChannelAmplitudeWitness"
+        },
+        {
+          "kind": "def",
+          "name": "amplitude"
+        },
+        {
+          "kind": "theorem",
+          "name": "step"
+        },
+        {
+          "kind": "theorem",
+          "name": "classical_support"
+        },
+        {
+          "kind": "theorem",
+          "name": "born_weight_boundary"
+        },
+        {
+          "kind": "theorem",
+          "name": "nontrivial_channel_amplitude_law"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_prepared_evolved_channel_amplitude"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_evolved_measured_channel_amplitude"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_prepared_evolved_channel_amplitude_nonzero"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_evolved_measured_channel_amplitude_nonzero"
+        },
+        {
+          "kind": "def",
+          "name": "concretePreparedEvolvedChannelWitness"
+        },
+        {
+          "kind": "def",
+          "name": "concreteEvolvedMeasuredChannelWitness"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_prepared_evolved_nontrivial_channel_law"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_evolved_measured_nontrivial_channel_law"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_nontrivial_sum_over_middle_channel_law"
+        },
+        {
+          "kind": "def",
+          "name": "NontrivialQuantumChannelLawClosed"
+        },
+        {
+          "kind": "theorem",
+          "name": "nontrivial_quantum_channel_law_closed"
+        },
+        {
+          "kind": "inductive",
+          "name": "PendingBeyondS20"
+        },
+        {
+          "kind": "def",
+          "name": "ClosedByStepwiseS20"
+        },
+        {
+          "kind": "theorem",
+          "name": "pending_boundary_not_closed_by_s20"
+        },
+        {
+          "kind": "theorem",
+          "name": "nontrivial_quantum_channel_law_bridge_summary"
+        }
+      ],
+      "imports": [
+        "Mathlib.Tactic",
+        "SSBX.Foundation.Modern.QuantumRelativityPathWeightMultiplicationBridge"
+      ],
+      "lines": 285,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityNontrivialChannelLawBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityNontrivialChannelLawBridge.lean",
+      "sha256": "37d342c8afc698407fcee7bbf13208174740b8cd2e684df48d5ff5758dc617da"
+    },
+    {
+      "cluster": "Foundation/Modern",
       "declaration_count": 15,
       "declarations": [
         {
@@ -12426,6 +12526,119 @@
       "module": "SSBX.Foundation.Modern.QuantumRelativityPathQuotientBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityPathQuotientBridge.lean",
       "sha256": "7cf635b5c435e0ecb1bc3cdf3154ba32b59561efd075db8c65699427d1ed9b0b"
+    },
+    {
+      "cluster": "Foundation/Modern",
+      "declaration_count": 25,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "current_pathWeight_compose_multiplicative"
+        },
+        {
+          "kind": "structure",
+          "name": "KernelEdge"
+        },
+        {
+          "kind": "def",
+          "name": "weight"
+        },
+        {
+          "kind": "theorem",
+          "name": "step"
+        },
+        {
+          "kind": "inductive",
+          "name": "KernelPath"
+        },
+        {
+          "kind": "def",
+          "name": "weight"
+        },
+        {
+          "kind": "def",
+          "name": "append"
+        },
+        {
+          "kind": "def",
+          "name": "toProcessPath"
+        },
+        {
+          "kind": "def",
+          "name": "toComposableProcessPaths"
+        },
+        {
+          "kind": "theorem",
+          "name": "append_reachable"
+        },
+        {
+          "kind": "theorem",
+          "name": "append_causal_before"
+        },
+        {
+          "kind": "theorem",
+          "name": "weight_append"
+        },
+        {
+          "kind": "def",
+          "name": "concretePreparedEvolvedEdge"
+        },
+        {
+          "kind": "def",
+          "name": "concreteEvolvedMeasuredEdge"
+        },
+        {
+          "kind": "def",
+          "name": "concretePreparedEvolvedKernelPath"
+        },
+        {
+          "kind": "def",
+          "name": "concreteEvolvedMeasuredKernelPath"
+        },
+        {
+          "kind": "def",
+          "name": "concretePreparedMeasuredKernelPath"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_prepared_measured_kernel_path_weight"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_two_step_path_weight_multiplicative"
+        },
+        {
+          "kind": "inductive",
+          "name": "PendingBeyondS19"
+        },
+        {
+          "kind": "def",
+          "name": "ClosedByStepwiseS19"
+        },
+        {
+          "kind": "theorem",
+          "name": "pending_boundary_not_closed_by_s19"
+        },
+        {
+          "kind": "def",
+          "name": "PathWeightMultiplicationBoundaryClosed"
+        },
+        {
+          "kind": "theorem",
+          "name": "path_weight_multiplication_boundary_closed"
+        },
+        {
+          "kind": "theorem",
+          "name": "path_weight_multiplication_bridge_summary"
+        }
+      ],
+      "imports": [
+        "SSBX.Foundation.Modern.QuantumRelativityBornRuleDerivationBridge"
+      ],
+      "lines": 239,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityPathWeightMultiplicationBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityPathWeightMultiplicationBridge.lean",
+      "sha256": "39476b28d08b2708975630c2513a91e0e70b94bc11720bd547dc274104bd1b39"
     },
     {
       "cluster": "Foundation/Modern",
@@ -16996,10 +17209,10 @@
       "imports": [
         "SSBX.Foundation.Wen.MetaInterp.ExecuteBlock"
       ],
-      "lines": 395,
+      "lines": 391,
       "module": "SSBX.Foundation.Wen.MetaInterp.SubDispatch_BranchYaoEq",
       "path": "formal/SSBX/Foundation/Wen/MetaInterp/SubDispatch_BranchYaoEq.lean",
-      "sha256": "6c8acfadd49d0a2c265db6c99af4ab30493ff04e9fe9b6fbeddca7cc9f407524"
+      "sha256": "a7715be51985fd29619a06b32f05226ef00c1d82fe42126260f907ed49eb99b6"
     },
     {
       "cluster": "Foundation/Wen",
@@ -18566,7 +18779,7 @@
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 23,
+      "declaration_count": 50,
       "declarations": [
         {
           "kind": "def",
@@ -18634,6 +18847,114 @@
         },
         {
           "kind": "theorem",
+          "name": "cuoProg_denotes"
+        },
+        {
+          "kind": "def",
+          "name": "zongProg"
+        },
+        {
+          "kind": "theorem",
+          "name": "zongProg_denotes"
+        },
+        {
+          "kind": "def",
+          "name": "huProg"
+        },
+        {
+          "kind": "theorem",
+          "name": "huProg_denotes"
+        },
+        {
+          "kind": "def",
+          "name": "cuoZongProg"
+        },
+        {
+          "kind": "theorem",
+          "name": "cuoZongProg_denotes"
+        },
+        {
+          "kind": "def",
+          "name": "flip1Prog"
+        },
+        {
+          "kind": "def",
+          "name": "flip2Prog"
+        },
+        {
+          "kind": "def",
+          "name": "flip3Prog"
+        },
+        {
+          "kind": "def",
+          "name": "flip4Prog"
+        },
+        {
+          "kind": "def",
+          "name": "flip5Prog"
+        },
+        {
+          "kind": "def",
+          "name": "flip6Prog"
+        },
+        {
+          "kind": "theorem",
+          "name": "flip1Prog_denotes"
+        },
+        {
+          "kind": "theorem",
+          "name": "flip2Prog_denotes"
+        },
+        {
+          "kind": "theorem",
+          "name": "flip3Prog_denotes"
+        },
+        {
+          "kind": "theorem",
+          "name": "flip4Prog_denotes"
+        },
+        {
+          "kind": "theorem",
+          "name": "flip5Prog_denotes"
+        },
+        {
+          "kind": "theorem",
+          "name": "flip6Prog_denotes"
+        },
+        {
+          "kind": "structure",
+          "name": "CompiledHexFun"
+        },
+        {
+          "kind": "def",
+          "name": "program"
+        },
+        {
+          "kind": "def",
+          "name": "fuel"
+        },
+        {
+          "kind": "def",
+          "name": "runHexSteps"
+        },
+        {
+          "kind": "def",
+          "name": "runCompiledHexFun"
+        },
+        {
+          "kind": "def",
+          "name": "compileHexFun?"
+        },
+        {
+          "kind": "def",
+          "name": "compiledHexFunAgrees"
+        },
+        {
+          "kind": "def",
+          "name": "compileHexFunCertified?"
+        },
+        {
+          "kind": "theorem",
           "name": "flipPos_cuo_equivariant"
         },
         {
@@ -18665,10 +18986,10 @@
         "SSBX.Foundation.Bagua.BaguaTuring",
         "SSBX.Foundation.Wen.WenDefEval"
       ],
-      "lines": 283,
+      "lines": 521,
       "module": "SSBX.Foundation.Wen.WenDefCompile",
       "path": "formal/SSBX/Foundation/Wen/WenDefCompile.lean",
-      "sha256": "9192fb7b805e92524ecaa67088a0826af00fd13bf653e23459d1907454cb026d"
+      "sha256": "b1b3f9b8062aef8121f59c81b40ce6ccd76779e8c5698b25b74b602ad610faba"
     },
     {
       "cluster": "Foundation/Wen",
@@ -18999,10 +19320,10 @@
         "SSBX.Text.OperatorCellMap",
         "SSBX.Text.OperatorCellSemantics"
       ],
-      "lines": 142,
+      "lines": 162,
       "module": "SSBX.Foundation.Wen.WenSurface.Coverage",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Coverage.lean",
-      "sha256": "070b8832d01a7ba9132092f5bfe51fe11c156e3daf130577eae2006a42edb628"
+      "sha256": "7aef4fd1d2db71d26b4d83a3d52cc504f3f29acf556ec0ae0e1418188ee1073b"
     },
     {
       "cluster": "Foundation/Wen",
@@ -19541,7 +19862,7 @@
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 44,
+      "declaration_count": 73,
       "declarations": [
         {
           "kind": "structure",
@@ -19550,6 +19871,42 @@
         {
           "kind": "abbrev",
           "name": "OperatorSemanticsRegistry"
+        },
+        {
+          "kind": "inductive",
+          "name": "SemanticStrength"
+        },
+        {
+          "kind": "def",
+          "name": "key"
+        },
+        {
+          "kind": "def",
+          "name": "label"
+        },
+        {
+          "kind": "def",
+          "name": "note"
+        },
+        {
+          "kind": "inductive",
+          "name": "StructuralCarrierKind"
+        },
+        {
+          "kind": "def",
+          "name": "key"
+        },
+        {
+          "kind": "def",
+          "name": "label"
+        },
+        {
+          "kind": "def",
+          "name": "note"
+        },
+        {
+          "kind": "def",
+          "name": "allStructuralCarrierKinds"
         },
         {
           "kind": "def",
@@ -19625,6 +19982,58 @@
         },
         {
           "kind": "def",
+          "name": "exactTypedHelperOperatorIds"
+        },
+        {
+          "kind": "def",
+          "name": "exactIdentityNoopOperatorIds"
+        },
+        {
+          "kind": "def",
+          "name": "exactStructuralHelperOperatorIds"
+        },
+        {
+          "kind": "def",
+          "name": "structuralCarrierKindForBody?"
+        },
+        {
+          "kind": "def",
+          "name": "isStructuralCarrierBody"
+        },
+        {
+          "kind": "def",
+          "name": "operatorStructuralCarrierKind?"
+        },
+        {
+          "kind": "def",
+          "name": "structuralCarrierKindOperatorIds"
+        },
+        {
+          "kind": "def",
+          "name": "operatorSemanticStrength"
+        },
+        {
+          "kind": "def",
+          "name": "semanticStrengthOperatorIds"
+        },
+        {
+          "kind": "def",
+          "name": "exactTheoremBackedStrongOperatorIds"
+        },
+        {
+          "kind": "def",
+          "name": "exactStructuralHelperStrongOperatorIds"
+        },
+        {
+          "kind": "def",
+          "name": "structuralCarrierOperatorIds"
+        },
+        {
+          "kind": "def",
+          "name": "catalogueNormalFormOperatorIds"
+        },
+        {
+          "kind": "def",
           "name": "executableSemanticsFor?"
         },
         {
@@ -19689,6 +20098,34 @@
         },
         {
           "kind": "theorem",
+          "name": "catalogueNormalFormOperatorIds_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "exactStructuralHelperOperatorIds_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "exactStructuralHelperOperatorIds_nodup"
+        },
+        {
+          "kind": "theorem",
+          "name": "exactTheoremBackedStrongOperatorIds_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "exactStructuralHelperStrongOperatorIds_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "structuralCarrierOperatorIds_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "semanticStrengthPartition_counts"
+        },
+        {
+          "kind": "theorem",
           "name": "structuralCatalogueOperatorIds_all_not_theorem_backed"
         },
         {
@@ -19725,10 +20162,10 @@
         "SSBX.Text.OperatorSignatures",
         "SSBX.Text.WenyanOperators"
       ],
-      "lines": 609,
+      "lines": 872,
       "module": "SSBX.Foundation.Wen.WenSurface.Semantics",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Semantics.lean",
-      "sha256": "7a095c0f86be0163e6a4cd72508b9b92e385293e48866483ddae8a10ee389d22"
+      "sha256": "cd55031ff8d2bdc301653a5aeb73b6ef7356510bf2dbec1f4042413a19065422"
     },
     {
       "cluster": "Foundation/Wen",
@@ -20640,10 +21077,10 @@
         "SSBX.Foundation.Wen.WenyanParser",
         "Mathlib.Tactic.IntervalCases"
       ],
-      "lines": 1165,
+      "lines": 1143,
       "module": "SSBX.Foundation.Wen.WenyanParserGeneral",
       "path": "formal/SSBX/Foundation/Wen/WenyanParserGeneral.lean",
-      "sha256": "500ac803c027e9d31b07afa8abc219431ce057be218c8ecd047103fc88c262e2"
+      "sha256": "11cb82b4dae6302941f233e3062fb79c5d5e9c72917ae2ca96a6ee66065e297f"
     },
     {
       "cluster": "Foundation/Wen",
@@ -21561,10 +21998,10 @@
       "imports": [
         "SSBX.Foundation.Bagua.BaguaTuring"
       ],
-      "lines": 967,
+      "lines": 965,
       "module": "SSBX.Foundation.Wen.WenyanSelfInterp",
       "path": "formal/SSBX/Foundation/Wen/WenyanSelfInterp.lean",
-      "sha256": "bbdc7067f4b4e2e51fbd5c6ae01c4e19409a2b7b13c3fd971923e3ee0e2219ef"
+      "sha256": "6ab5467681714477f6f8a97317af765313edb8797a2cb2005474bfb16f157bd9"
     },
     {
       "cluster": "Foundation/Wen",
@@ -26557,7 +26994,3388 @@
     },
     {
       "cluster": "Text",
-      "declaration_count": 17,
+      "declaration_count": 0,
+      "declarations": [],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Audit"
+      ],
+      "lines": 8,
+      "module": "SSBX.Text.WenyanOperators",
+      "path": "formal/SSBX/Text/WenyanOperators.lean",
+      "sha256": "473b34f189ce6e6db77b5eccc67f1e2deebebd59139546f22938e758f0116bd0"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 2,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "allOperatorIds_complete"
+        },
+        {
+          "kind": "theorem",
+          "name": "operator_table_complete"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Audit.R",
+        "SSBX.Text.WenyanOperators.Audit.C",
+        "SSBX.Text.WenyanOperators.Audit.T",
+        "SSBX.Text.WenyanOperators.Audit.F",
+        "SSBX.Text.WenyanOperators.Audit.B",
+        "SSBX.Text.WenyanOperators.Audit.Q",
+        "SSBX.Text.WenyanOperators.Audit.K",
+        "SSBX.Text.WenyanOperators.Audit.M",
+        "SSBX.Text.WenyanOperators.Audit.N",
+        "SSBX.Text.WenyanOperators.Audit.I",
+        "SSBX.Text.WenyanOperators.Audit.S",
+        "SSBX.Text.WenyanOperators.Audit.H",
+        "SSBX.Text.WenyanOperators.Audit.P",
+        "SSBX.Text.WenyanOperators.Audit.G",
+        "SSBX.Text.WenyanOperators.Audit.A",
+        "SSBX.Text.WenyanOperators.Audit.D",
+        "SSBX.Text.WenyanOperators.Audit.E",
+        "SSBX.Text.WenyanOperators.Audit.L",
+        "SSBX.Text.WenyanOperators.Audit.Y",
+        "SSBX.Text.WenyanOperators.Audit.X",
+        "SSBX.Text.WenyanOperators.Audit.Z",
+        "SSBX.Text.WenyanOperators.Audit.ZHU",
+        "SSBX.Text.WenyanOperators.Audit.SUN",
+        "SSBX.Text.WenyanOperators.Audit.CHU",
+        "SSBX.Text.WenyanOperators.Audit.LIJ",
+        "SSBX.Text.WenyanOperators.Audit.ZA"
+      ],
+      "lines": 778,
+      "module": "SSBX.Text.WenyanOperators.Audit",
+      "path": "formal/SSBX/Text/WenyanOperators/Audit.lean",
+      "sha256": "267131b1371d21263758805f0487feb32c59621f9bc621095377fe6f62b231a3"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 40,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "mem_A_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_A_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_A_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_A_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_A_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_A_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_A_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_A_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_A_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_A_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_A_11"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_A_12"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_A_13"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_A_14"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_A_15"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_A_16"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_A_17"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_A_18"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_A_19"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_A_20"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_A_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_A_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_A_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_A_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_A_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_A_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_A_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_A_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_A_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_A_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_A_11"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_A_12"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_A_13"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_A_14"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_A_15"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_A_16"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_A_17"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_A_18"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_A_19"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_A_20"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Table"
+      ],
+      "lines": 127,
+      "module": "SSBX.Text.WenyanOperators.Audit.A",
+      "path": "formal/SSBX/Text/WenyanOperators/Audit/A.lean",
+      "sha256": "3f7753bd883552d47e485e251a3f880cab2a2f43306f01ff5e4427f5a0c7f771"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 16,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "mem_B_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_B_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_B_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_B_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_B_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_B_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_B_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_B_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_B_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_B_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_B_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_B_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_B_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_B_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_B_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_B_8"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Table"
+      ],
+      "lines": 55,
+      "module": "SSBX.Text.WenyanOperators.Audit.B",
+      "path": "formal/SSBX/Text/WenyanOperators/Audit/B.lean",
+      "sha256": "27c8188f77ad60486b1695977f9d11a553067b64f843178cdbe6ba3d45764118"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 16,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "mem_C_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_C_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_C_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_C_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_C_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_C_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_C_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_C_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_C_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_C_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_C_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_C_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_C_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_C_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_C_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_C_8"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Table"
+      ],
+      "lines": 55,
+      "module": "SSBX.Text.WenyanOperators.Audit.C",
+      "path": "formal/SSBX/Text/WenyanOperators/Audit/C.lean",
+      "sha256": "d200064996b2b422e34385ee5c0ba68091b6795e5ca4ef27dc526a8773474ecc"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 20,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "mem_CHU_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_CHU_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_CHU_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_CHU_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_CHU_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_CHU_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_CHU_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_CHU_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_CHU_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_CHU_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_CHU_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_CHU_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_CHU_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_CHU_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_CHU_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_CHU_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_CHU_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_CHU_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_CHU_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_CHU_10"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Table"
+      ],
+      "lines": 67,
+      "module": "SSBX.Text.WenyanOperators.Audit.CHU",
+      "path": "formal/SSBX/Text/WenyanOperators/Audit/CHU.lean",
+      "sha256": "07e831e899c5780ecfa203744ff14ed7d3ed7d12e3bfdc24eaafb9bdc43705b8"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 20,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "mem_D_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_D_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_D_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_D_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_D_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_D_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_D_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_D_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_D_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_D_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_D_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_D_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_D_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_D_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_D_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_D_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_D_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_D_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_D_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_D_10"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Table"
+      ],
+      "lines": 67,
+      "module": "SSBX.Text.WenyanOperators.Audit.D",
+      "path": "formal/SSBX/Text/WenyanOperators/Audit/D.lean",
+      "sha256": "3320d93cd553508eb891d06248ae4aa6ab37f9a9fd074bc8fe78bc9907ddd6e7"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 18,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "mem_E_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_E_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_E_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_E_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_E_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_E_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_E_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_E_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_E_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_E_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_E_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_E_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_E_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_E_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_E_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_E_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_E_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_E_9"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Table"
+      ],
+      "lines": 61,
+      "module": "SSBX.Text.WenyanOperators.Audit.E",
+      "path": "formal/SSBX/Text/WenyanOperators/Audit/E.lean",
+      "sha256": "a99dce4b96570f81b781139bde15887d5660b42e91212da872bc4fd3df20a5af"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 24,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "mem_F_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_F_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_F_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_F_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_F_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_F_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_F_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_F_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_F_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_F_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_F_11"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_F_12"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_F_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_F_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_F_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_F_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_F_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_F_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_F_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_F_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_F_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_F_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_F_11"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_F_12"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Table"
+      ],
+      "lines": 79,
+      "module": "SSBX.Text.WenyanOperators.Audit.F",
+      "path": "formal/SSBX/Text/WenyanOperators/Audit/F.lean",
+      "sha256": "0485f1ed9b160c089eb507d77fdd0f91afab28615aaa83ada9601518d1a5f252"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 22,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "mem_G_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_G_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_G_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_G_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_G_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_G_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_G_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_G_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_G_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_G_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_G_11"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_G_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_G_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_G_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_G_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_G_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_G_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_G_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_G_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_G_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_G_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_G_11"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Table"
+      ],
+      "lines": 73,
+      "module": "SSBX.Text.WenyanOperators.Audit.G",
+      "path": "formal/SSBX/Text/WenyanOperators/Audit/G.lean",
+      "sha256": "24494aa7ecf5925072ccd676d3b4f0de198b49c69625d1c02726b4c52393cb40"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 16,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "mem_H_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_H_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_H_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_H_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_H_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_H_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_H_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_H_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_H_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_H_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_H_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_H_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_H_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_H_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_H_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_H_8"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Table"
+      ],
+      "lines": 55,
+      "module": "SSBX.Text.WenyanOperators.Audit.H",
+      "path": "formal/SSBX/Text/WenyanOperators/Audit/H.lean",
+      "sha256": "009f22a254f604d1e7375243e2aff1f0f4271420da17d4809adf9d2d6dee5032"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 18,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "mem_I_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_I_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_I_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_I_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_I_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_I_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_I_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_I_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_I_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_I_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_I_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_I_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_I_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_I_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_I_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_I_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_I_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_I_9"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Table"
+      ],
+      "lines": 61,
+      "module": "SSBX.Text.WenyanOperators.Audit.I",
+      "path": "formal/SSBX/Text/WenyanOperators/Audit/I.lean",
+      "sha256": "a5681d506e9c0b149d5382b31241837dd625c2a4f34b2ae42d68c6164055b646"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 16,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "mem_K_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_K_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_K_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_K_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_K_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_K_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_K_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_K_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_K_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_K_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_K_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_K_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_K_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_K_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_K_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_K_8"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Table"
+      ],
+      "lines": 55,
+      "module": "SSBX.Text.WenyanOperators.Audit.K",
+      "path": "formal/SSBX/Text/WenyanOperators/Audit/K.lean",
+      "sha256": "f0c893cc7e1956bf5160881af23b1f6d5ac59b7b9af27faed8915a582c498c39"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 32,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "mem_L_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_L_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_L_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_L_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_L_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_L_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_L_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_L_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_L_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_L_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_L_11"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_L_12"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_L_13"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_L_14"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_L_15"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_L_16"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_L_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_L_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_L_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_L_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_L_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_L_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_L_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_L_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_L_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_L_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_L_11"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_L_12"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_L_13"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_L_14"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_L_15"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_L_16"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Table"
+      ],
+      "lines": 103,
+      "module": "SSBX.Text.WenyanOperators.Audit.L",
+      "path": "formal/SSBX/Text/WenyanOperators/Audit/L.lean",
+      "sha256": "1b95f62029371659e3346ec0c5a53f66a542dda716bcac6900d88090ff7273cc"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 28,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "mem_LIJ_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_LIJ_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_LIJ_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_LIJ_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_LIJ_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_LIJ_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_LIJ_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_LIJ_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_LIJ_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_LIJ_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_LIJ_11"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_LIJ_12"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_LIJ_13"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_LIJ_14"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_LIJ_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_LIJ_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_LIJ_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_LIJ_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_LIJ_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_LIJ_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_LIJ_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_LIJ_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_LIJ_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_LIJ_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_LIJ_11"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_LIJ_12"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_LIJ_13"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_LIJ_14"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Table"
+      ],
+      "lines": 91,
+      "module": "SSBX.Text.WenyanOperators.Audit.LIJ",
+      "path": "formal/SSBX/Text/WenyanOperators/Audit/LIJ.lean",
+      "sha256": "13eedeb211f9d232cf3a4126d0abc05f913a3ce4f5cb1aa62d8e5fcd6d307749"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 16,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "mem_M_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_M_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_M_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_M_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_M_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_M_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_M_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_M_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_M_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_M_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_M_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_M_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_M_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_M_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_M_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_M_8"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Table"
+      ],
+      "lines": 55,
+      "module": "SSBX.Text.WenyanOperators.Audit.M",
+      "path": "formal/SSBX/Text/WenyanOperators/Audit/M.lean",
+      "sha256": "2adc95f4bd3476364fdcd05a07b2d7936b1eab0d344bdd6cb907afe4b548fb2f"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 16,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "mem_N_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_N_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_N_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_N_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_N_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_N_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_N_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_N_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_N_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_N_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_N_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_N_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_N_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_N_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_N_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_N_8"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Table"
+      ],
+      "lines": 55,
+      "module": "SSBX.Text.WenyanOperators.Audit.N",
+      "path": "formal/SSBX/Text/WenyanOperators/Audit/N.lean",
+      "sha256": "8037e728591d99e6ca2d6332a6f671849c68f1947309078ebf2d2d6bdfc0854f"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 48,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "mem_P_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_P_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_P_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_P_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_P_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_P_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_P_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_P_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_P_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_P_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_P_11"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_P_12"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_P_13"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_P_14"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_P_15"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_P_16"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_P_17"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_P_18"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_P_19"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_P_20"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_P_21"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_P_22"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_P_23"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_P_24"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_P_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_P_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_P_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_P_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_P_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_P_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_P_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_P_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_P_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_P_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_P_11"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_P_12"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_P_13"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_P_14"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_P_15"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_P_16"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_P_17"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_P_18"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_P_19"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_P_20"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_P_21"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_P_22"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_P_23"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_P_24"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Table"
+      ],
+      "lines": 151,
+      "module": "SSBX.Text.WenyanOperators.Audit.P",
+      "path": "formal/SSBX/Text/WenyanOperators/Audit/P.lean",
+      "sha256": "fa0d2db64fb27c23972e5a65a3cc7edc3ae00e532945817fdf79dd0624eac30a"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 16,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "mem_Q_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Q_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Q_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Q_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Q_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Q_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Q_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Q_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Q_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Q_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Q_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Q_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Q_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Q_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Q_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Q_8"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Table"
+      ],
+      "lines": 55,
+      "module": "SSBX.Text.WenyanOperators.Audit.Q",
+      "path": "formal/SSBX/Text/WenyanOperators/Audit/Q.lean",
+      "sha256": "717a8a69a590978feecdc39252d71601a945a25742e72d093dad7ddf0bcf60c5"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 30,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "mem_R_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_R_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_R_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_R_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_R_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_R_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_R_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_R_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_R_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_R_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_R_11"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_R_12"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_R_13"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_R_14"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_R_15"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_R_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_R_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_R_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_R_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_R_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_R_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_R_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_R_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_R_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_R_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_R_11"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_R_12"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_R_13"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_R_14"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_R_15"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Table"
+      ],
+      "lines": 97,
+      "module": "SSBX.Text.WenyanOperators.Audit.R",
+      "path": "formal/SSBX/Text/WenyanOperators/Audit/R.lean",
+      "sha256": "acbdf1341635fef039098bc15813e3703c11bb504f427a6b32d39df29a806cec"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 40,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "mem_S_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_S_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_S_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_S_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_S_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_S_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_S_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_S_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_S_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_S_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_S_11"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_S_12"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_S_13"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_S_14"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_S_15"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_S_16"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_S_17"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_S_18"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_S_19"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_S_20"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_S_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_S_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_S_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_S_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_S_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_S_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_S_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_S_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_S_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_S_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_S_11"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_S_12"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_S_13"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_S_14"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_S_15"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_S_16"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_S_17"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_S_18"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_S_19"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_S_20"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Table"
+      ],
+      "lines": 127,
+      "module": "SSBX.Text.WenyanOperators.Audit.S",
+      "path": "formal/SSBX/Text/WenyanOperators/Audit/S.lean",
+      "sha256": "36e97a869840adc1bf83870be913f6f02ef222dbbcccb504caedd6576f3ce81a"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 28,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "mem_SUN_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_SUN_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_SUN_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_SUN_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_SUN_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_SUN_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_SUN_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_SUN_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_SUN_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_SUN_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_SUN_11"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_SUN_12"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_SUN_13"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_SUN_14"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_SUN_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_SUN_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_SUN_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_SUN_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_SUN_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_SUN_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_SUN_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_SUN_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_SUN_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_SUN_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_SUN_11"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_SUN_12"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_SUN_13"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_SUN_14"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Table"
+      ],
+      "lines": 91,
+      "module": "SSBX.Text.WenyanOperators.Audit.SUN",
+      "path": "formal/SSBX/Text/WenyanOperators/Audit/SUN.lean",
+      "sha256": "1025ee0277170f9de2dbdfa291a342f789675263f5e8ed29a02c93c4dfdde5aa"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 30,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "mem_T_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_T_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_T_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_T_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_T_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_T_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_T_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_T_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_T_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_T_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_T_11"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_T_12"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_T_13"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_T_14"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_T_15"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_T_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_T_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_T_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_T_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_T_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_T_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_T_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_T_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_T_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_T_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_T_11"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_T_12"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_T_13"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_T_14"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_T_15"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Table"
+      ],
+      "lines": 97,
+      "module": "SSBX.Text.WenyanOperators.Audit.T",
+      "path": "formal/SSBX/Text/WenyanOperators/Audit/T.lean",
+      "sha256": "e39191eb0c6c68b9ea2cac2655b729756233f5c659f42e21646afbffaca02434"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 32,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "mem_X_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_X_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_X_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_X_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_X_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_X_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_X_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_X_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_X_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_X_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_X_11"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_X_12"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_X_13"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_X_14"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_X_15"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_X_16"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_X_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_X_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_X_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_X_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_X_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_X_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_X_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_X_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_X_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_X_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_X_11"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_X_12"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_X_13"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_X_14"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_X_15"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_X_16"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Table"
+      ],
+      "lines": 103,
+      "module": "SSBX.Text.WenyanOperators.Audit.X",
+      "path": "formal/SSBX/Text/WenyanOperators/Audit/X.lean",
+      "sha256": "b88a05a1164094ce3ab312ebdaf98026a3f66e7f07efe25f2b994c42f31c01a8"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 56,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "mem_Y_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Y_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Y_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Y_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Y_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Y_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Y_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Y_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Y_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Y_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Y_11"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Y_12"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Y_13"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Y_14"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Y_15"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Y_16"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Y_17"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Y_18"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Y_19"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Y_20"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Y_21"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Y_22"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Y_23"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Y_24"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Y_25"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Y_26"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Y_27"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Y_28"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Y_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Y_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Y_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Y_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Y_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Y_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Y_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Y_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Y_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Y_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Y_11"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Y_12"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Y_13"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Y_14"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Y_15"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Y_16"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Y_17"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Y_18"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Y_19"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Y_20"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Y_21"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Y_22"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Y_23"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Y_24"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Y_25"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Y_26"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Y_27"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Y_28"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Table"
+      ],
+      "lines": 175,
+      "module": "SSBX.Text.WenyanOperators.Audit.Y",
+      "path": "formal/SSBX/Text/WenyanOperators/Audit/Y.lean",
+      "sha256": "8776b89e51750bc6b3fff73d545ecd26afe24adcfdc15a8ba233558246de9d39"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 80,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "mem_Z_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_11"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_12"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_13"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_14"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_15"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_16"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_17"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_18"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_19"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_20"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_21"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_22"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_23"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_24"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_25"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_26"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_27"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_28"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_29"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_30"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_31"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_32"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_33"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_34"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_35"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_36"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_37"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_38"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_39"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_Z_40"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_11"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_12"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_13"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_14"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_15"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_16"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_17"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_18"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_19"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_20"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_21"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_22"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_23"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_24"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_25"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_26"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_27"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_28"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_29"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_30"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_31"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_32"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_33"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_34"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_35"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_36"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_37"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_38"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_39"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_Z_40"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Table"
+      ],
+      "lines": 247,
+      "module": "SSBX.Text.WenyanOperators.Audit.Z",
+      "path": "formal/SSBX/Text/WenyanOperators/Audit/Z.lean",
+      "sha256": "9dc50553fa236687581cace34264cca5c9ac4aaa629b485837f3775dc15ad97f"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 40,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "mem_ZA_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZA_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZA_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZA_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZA_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZA_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZA_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZA_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZA_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZA_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZA_11"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZA_12"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZA_13"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZA_14"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZA_15"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZA_16"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZA_17"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZA_18"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZA_19"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZA_20"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZA_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZA_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZA_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZA_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZA_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZA_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZA_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZA_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZA_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZA_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZA_11"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZA_12"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZA_13"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZA_14"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZA_15"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZA_16"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZA_17"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZA_18"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZA_19"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZA_20"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Table"
+      ],
+      "lines": 127,
+      "module": "SSBX.Text.WenyanOperators.Audit.ZA",
+      "path": "formal/SSBX/Text/WenyanOperators/Audit/ZA.lean",
+      "sha256": "9710b9c656ba4d9e946cb57f5d16dfb9a243498155883b44c12bd89c3f3ab07a"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 24,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "mem_ZHU_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZHU_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZHU_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZHU_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZHU_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZHU_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZHU_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZHU_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZHU_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZHU_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZHU_11"
+        },
+        {
+          "kind": "theorem",
+          "name": "mem_ZHU_12"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZHU_1"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZHU_2"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZHU_3"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZHU_4"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZHU_5"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZHU_6"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZHU_7"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZHU_8"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZHU_9"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZHU_10"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZHU_11"
+        },
+        {
+          "kind": "theorem",
+          "name": "covered_ZHU_12"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Table"
+      ],
+      "lines": 79,
+      "module": "SSBX.Text.WenyanOperators.Audit.ZHU",
+      "path": "formal/SSBX/Text/WenyanOperators/Audit/ZHU.lean",
+      "sha256": "06e5638675854488b09d054c30a16bce865628085bac5b2c25e495d0cea3852e"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 1,
+      "declarations": [
+        {
+          "kind": "def",
+          "name": "OperatorId.code"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Core"
+      ],
+      "lines": 378,
+      "module": "SSBX.Text.WenyanOperators.Code",
+      "path": "formal/SSBX/Text/WenyanOperators/Code.lean",
+      "sha256": "5a262af2795d8b9b5d4f8ef88f99922c9f6fb3aea106d8f93fec3d5655eadaa3"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 7,
       "declarations": [
         {
           "kind": "inductive",
@@ -26586,23 +30404,54 @@
         {
           "kind": "structure",
           "name": "OperatorEntry"
-        },
-        {
-          "kind": "def",
-          "name": "OperatorId.group"
-        },
-        {
-          "kind": "def",
-          "name": "OperatorId.code"
-        },
-        {
-          "kind": "def",
-          "name": "OperatorId.title"
-        },
+        }
+      ],
+      "imports": [
+        "SSBX.Text.Glyph"
+      ],
+      "lines": 173,
+      "module": "SSBX.Text.WenyanOperators.Core",
+      "path": "formal/SSBX/Text/WenyanOperators/Core.lean",
+      "sha256": "06298de38617b9b7f4c39dfc1eaa4f2ab4df4ad8b1b2130f0741a2757eedca2e"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 1,
+      "declarations": [
         {
           "kind": "def",
           "name": "operatorForms"
-        },
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Core"
+      ],
+      "lines": 380,
+      "module": "SSBX.Text.WenyanOperators.Forms",
+      "path": "formal/SSBX/Text/WenyanOperators/Forms.lean",
+      "sha256": "db7328ff83f25d831d1fe01788eef70cbe641f75db00c767c1d62a216b936197"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 1,
+      "declarations": [
+        {
+          "kind": "def",
+          "name": "OperatorId.group"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Core"
+      ],
+      "lines": 378,
+      "module": "SSBX.Text.WenyanOperators.Group",
+      "path": "formal/SSBX/Text/WenyanOperators/Group.lean",
+      "sha256": "0cbe4c1d9349a5e4fd0be7eb0206d1a6db3df5d90c9e170a52541a830b8d3546"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 4,
+      "declarations": [
         {
           "kind": "def",
           "name": "operatorEntry"
@@ -26618,23 +30467,35 @@
         {
           "kind": "def",
           "name": "CoveredOperator"
-        },
-        {
-          "kind": "theorem",
-          "name": "allOperatorIds_complete"
-        },
-        {
-          "kind": "theorem",
-          "name": "operator_table_complete"
         }
       ],
       "imports": [
-        "SSBX.Text.Glyph"
+        "SSBX.Text.WenyanOperators.Group",
+        "SSBX.Text.WenyanOperators.Code",
+        "SSBX.Text.WenyanOperators.Title",
+        "SSBX.Text.WenyanOperators.Forms"
       ],
-      "lines": 1745,
-      "module": "SSBX.Text.WenyanOperators",
-      "path": "formal/SSBX/Text/WenyanOperators.lean",
-      "sha256": "b4df8ea2c36e3263ba6cda332288efb37fb99d2d193944efe7873a2516e5fd9b"
+      "lines": 84,
+      "module": "SSBX.Text.WenyanOperators.Table",
+      "path": "formal/SSBX/Text/WenyanOperators/Table.lean",
+      "sha256": "7d5afbfef7b62f7d75166e6eeb398737fbbdac69da8c2fbbcb676619d3376fbb"
+    },
+    {
+      "cluster": "Text",
+      "declaration_count": 1,
+      "declarations": [
+        {
+          "kind": "def",
+          "name": "OperatorId.title"
+        }
+      ],
+      "imports": [
+        "SSBX.Text.WenyanOperators.Core"
+      ],
+      "lines": 378,
+      "module": "SSBX.Text.WenyanOperators.Title",
+      "path": "formal/SSBX/Text/WenyanOperators/Title.lean",
+      "sha256": "e9cf49de57728d98a76927e6fe9444f945c9f7c8ffe17f121a90ba1520ae7649"
     },
     {
       "cluster": "Truth",
@@ -27145,10 +31006,10 @@
       "imports": [
         "Lake"
       ],
-      "lines": 15,
+      "lines": 20,
       "module": "lakefile.lean",
       "path": "lakefile.lean",
-      "sha256": "dc82b873629917f168328b7585d3939117e86f136506ba73d129eec2d16b71a6"
+      "sha256": "98a90d8f98364ac198c2e846eb90b49ff6f95b78868257262ecaa8de8f6d5b5c"
     }
   ]
 }
