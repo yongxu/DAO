@@ -1,6 +1,6 @@
 # 大统一逐步验证路线
 
-目标：把 Markov-因果桥从最小 typed skeleton 推进为逐步增强的验证程序。本文把“统一”限定为已经关闭或计划关闭的形式接口；量子引力、Born rule、度规恢复和经验闭合分别作为后续结构单独推进。
+目标：把 Markov-因果桥从最小 typed skeleton 推进为逐步增强的验证程序。本文把“统一”限定为已经关闭或计划关闭的形式接口；量子引力、amplitude dynamics、measurement semantics、度规恢复和经验闭合分别作为后续结构单独推进。
 
 依据文档：
 
@@ -47,6 +47,7 @@
 -> sum-over-middle 通道组合候选
 -> composed support 的 Born/probability boundary
 -> unitary/CPTP ledger
+-> Born rule 推导候选
 -> 几何候选接口
 -> 经验 pending ledger
 -> 更强统一摘要 theorem
@@ -98,6 +99,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityChannelComposeAssociativityBr
 lake build SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleChannelBridge
 lake build SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleBornBoundaryBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityUnitaryCPTPLedgerBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityBornRuleDerivationBridge
 lake build SSBX
 git diff --check --
 ```
@@ -109,7 +111,7 @@ git diff --check --
 | 项 | 内容 |
 |---|---|
 | Lean 出口 | 保持 `markov_causal_bridge_summary`、`measurement_event_alignment`、`markov_bridge_not_direct_language_addition` 为 `machineChecked` |
-| 文档出口 | 本文件与验证计划明确列出未关闭项：Born rule 从桥的推导、真实 quantum channel law、干涉、因果偏序、度规恢复、经验闭合；finite row sum-one boundary 已由 S9 后续关闭 |
+| 文档出口 | 本文件与验证计划明确列出未关闭项：amplitude dynamics、measurement semantics、decoherence、真实 quantum channel law、干涉、因果偏序、度规恢复、经验闭合；finite row sum-one boundary 已由 S9 后续关闭，Markov/amplitude compatibility 下的 Born rule derivation 已由 S18 关闭 |
 | 失败记录 | 若发现文档中有强于 theorem 的终局统一或量子引力完成等 claim，记录为 `conceptual mismatch`，并改回对应结构层级 |
 | 当前正名 | Markov-因果桥当前是最小可验证中介构造；更强的物理大统一读法需要后续 theorem 合取后再命名 |
 
@@ -805,7 +807,7 @@ Lean 只关闭一个几何候选接口；
 | 最低 theorem 形态 | 合取 `FiniteSumOneProbabilityBoundaryClosed`、concrete/grid finite probability projection、`71232` grid length、`PendingBeyondS9` 与 Wen coverage |
 | 失败记录 | 已记录 list-sum / `Fin` singleton / Rat coercion failure；修正为直接分支证明 |
 | 文档更新 | 已新增《有限概率归一化候选 · Markov桥S9》 |
-| 后续结构 | Born rule derivation、amplitude/Born normalized support、unitary/CPTP、metric recovery 与 empirical closure 继续 pending |
+| 后续结构 | Markov/amplitude compatibility 下的 Born rule derivation 已由 S18 承接；unitary/CPTP、metric recovery 与 empirical closure 继续 pending |
 
 通过判准：
 
@@ -1071,6 +1073,42 @@ unitary_cptp_ledger_bridge_summary。
 | `unitary_cptp_ledger_required_but_not_closed_by_s17` | `QuantumRelativityUnitaryCPTPLedgerBridge.lean` | Hilbert/Kraus/density/CPTP 等物理项 required but not closed |
 | `unitary_cptp_ledger_bridge_summary` | `QuantumRelativityUnitaryCPTPLedgerBridge.lean` | S17 ledger boundary 已关闭 |
 
+## S18 · Born rule 推导候选
+
+目标：把 S9/S10 Markov row probability law、S11/S12 Born distribution boundary 与 S4/S5 amplitude bridge 接起来。S18 证明：若同一 row support 上有 `MarkovAmplitudeCompatibility`，即 `ampProb amplitude = normalizedMass`，则 Markov row normalization 推出 normalized amplitude support，并接入 S12 finite Born distribution boundary。
+
+| 项 | 内容 |
+|---|---|
+| Lean 出口 | `born_rule_derivation_bridge_summary` |
+| 最低 theorem 形态 | 合取 `BornDistributionBoundaryClosed`、`SumOverMiddleBornDistributionBoundaryClosed`、`MarkovAmplitudeBornRuleDerivationClosed`、concrete prepared-row witness 与 Wen coverage |
+| 失败记录 | Rat-to-Real list sum cast、`List.map_map` composition shape、concrete row support projection 展开均已记录 |
+| 文档更新 | 已新增《Born rule推导候选 · Markov桥S18》 |
+| 后续结构 | amplitude dynamics、measurement semantics、decoherence、unitary/CPTP、metric recovery 与 empirical closure |
+
+通过判准：
+
+```text
+list_map_rat_sum_cast；
+realNormalizedMassSum_eq_one；
+MarkovAmplitudeCompatibility；
+markov_amplitude_support_normalized；
+born_candidate_weights_match_markov_masses；
+markov_amplitude_born_rule_derivation；
+concrete_prepared_born_rule_from_markov_amplitude_bridge；
+born_rule_derivation_bridge_summary。
+```
+
+当前状态：
+
+| theorem | 文件 | 读法 |
+|---|---|---|
+| `MarkovAmplitudeCompatibility` | `QuantumRelativityBornRuleDerivationBridge.lean` | Markov row support、amplitude support 与 `ampProb = normalizedMass` 的兼容接口 |
+| `markov_amplitude_support_normalized` | `QuantumRelativityBornRuleDerivationBridge.lean` | compatibility + Markov row normalization 推出 amplitude support normalized |
+| `born_candidate_weights_match_markov_masses` | `QuantumRelativityBornRuleDerivationBridge.lean` | S5 candidateWeight 在 support 上等于 Markov normalizedMass |
+| `markov_amplitude_born_rule_derivation` | `QuantumRelativityBornRuleDerivationBridge.lean` | compatibility 下接入 S12 Born distribution boundary |
+| `concrete_prepared_born_rule_from_markov_amplitude_bridge` | `QuantumRelativityBornRuleDerivationBridge.lean` | concrete prepared row witness |
+| `born_rule_derivation_bridge_summary` | `QuantumRelativityBornRuleDerivationBridge.lean` | S18 Born-rule derivation boundary 已关闭 |
+
 ## 失败记录追加区
 
 失败记录格式沿用验证计划，并允许追加在此区：
@@ -1123,6 +1161,7 @@ unitary_cptp_ledger_bridge_summary。
 | 2026-05-09 | S15 | failure retained / success | 第一次 sum-over-middle support proof 试探中 `List.mem_map` 等式方向写反；改为 `rw [hbeq]` 并展开 `QuantumAmplitudeSupport` 后关闭 finite middle-list composition 的 two-step boundary |
 | 2026-05-09 | S16 | failure retained / success | concrete dependent existential witness 展开到 structure fields 时触发 `whnf` heartbeat timeout；保留 generic closed boundary 与 concrete normalized `[1]` input，关闭 composed Born boundary |
 | 2026-05-09 | S17 | success | 新增 unitary/CPTP ledger boundary；S13-S16 current skeleton items closed，physical Hilbert/Kraus/density/CPTP items required but not closed |
+| 2026-05-09 | S18 | failure retained / success | 第一次 build 中 Rat list sum cast、`List.map_map` composition shape 与 concrete row support projection 展开失败；补 `list_map_rat_sum_cast`、改用 composition shape、展开 `concreteFiniteRowSupportNormalization` 后关闭 Markov/amplitude compatibility 下的 Born-rule derivation |
 
 ## 统一用语正名
 
@@ -1130,9 +1169,9 @@ unitary_cptp_ledger_bridge_summary。
 
 | 词 | 在本路线中的含义 | 结构依据 |
 |---|---|---|
-| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S17 已关闭的 summary theorem 与路线日志 |
-| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8-S17 pending list |
-| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary`、`normalized_mass_bridge_summary`、`born_weight_normalization_bridge_summary`、`born_distribution_bridge_summary`、`channel_compose_bridge_summary`、`channel_compose_associativity_bridge_summary`、`sum_over_middle_channel_bridge_summary`、`sum_over_middle_born_distribution_bridge_summary`、`unitary_cptp_ledger_bridge_summary` |
+| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S18 已关闭的 summary theorem 与路线日志 |
+| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8-S18 pending list |
+| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary`、`normalized_mass_bridge_summary`、`born_weight_normalization_bridge_summary`、`born_distribution_bridge_summary`、`channel_compose_bridge_summary`、`channel_compose_associativity_bridge_summary`、`sum_over_middle_channel_bridge_summary`、`sum_over_middle_born_distribution_bridge_summary`、`unitary_cptp_ledger_bridge_summary`、`born_rule_derivation_bridge_summary` |
 
 推荐正名句：
 
@@ -1140,6 +1179,6 @@ unitary_cptp_ledger_bridge_summary。
 本路线追求逐步增强的形式统一候选；
 每一步以 Lean 出口、文档锚点和失败记录实事求是地确认含义；
 已经关闭的 summary theorem 就是当前阶段的统一内容，
-尚未闭合的 Born rule 推导、真实 quantum channel law、几何恢复、数据校准与经验闭合
+尚未闭合的 amplitude dynamics、measurement semantics、decoherence、真实 quantum channel law、几何恢复、数据校准与经验闭合
 作为后续结构继续推进。
 ```

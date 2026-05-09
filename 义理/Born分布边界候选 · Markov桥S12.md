@@ -2,7 +2,7 @@
 
 **前置**：[Born权重条件归一候选 · Markov桥S11](Born权重条件归一候选%20·%20Markov桥S11.md) · [归一化质量求和候选 · Markov桥S10](归一化质量求和候选%20·%20Markov桥S10.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
-**后继**：[channelCompose候选 · Markov桥S13](channelCompose候选%20·%20Markov桥S13.md) 已给 current channel skeleton 增加候选 composition operation。
+**后继**：[channelCompose候选 · Markov桥S13](channelCompose候选%20·%20Markov桥S13.md) 已给 current channel skeleton 增加候选 composition operation；[Born rule推导候选 · Markov桥S18](Born%20rule推导候选%20·%20Markov桥S18.md) 已把 Markov row probability 与 amplitude bridge compatibility 接到本文件的 finite Born distribution boundary。
 
 **Lean 锚点**：
 
@@ -69,7 +69,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityBornDistributionBridge
 
 | 轴 | 状态 |
 |---|---|
-| Born-rule derivation | `ClosedByStepwiseS12 .bornRuleDerivation = false` |
+| Born-rule derivation | S18 已关闭 Markov/amplitude compatibility 下的 finite typed-skeleton derivation；S12 本文件内仍不处理 |
 | channel composition | `ClosedByStepwiseS12 .channelComposition = false` |
 | continuous action law | `ClosedByStepwiseS12 .continuousActionLaw = false` |
 | general path integral | `ClosedByStepwiseS12 .generalPathIntegral = false` |
@@ -78,7 +78,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityBornDistributionBridge
 | metric recovery | `ClosedByStepwiseS12 .metricRecovery = false` |
 | empirical closure | `ClosedByStepwiseS12 .empiricalClosure = false` |
 
-本轮闭合范围：**把 conditional Born-weight law 装入 finite probability distribution interface**。这不是 Born rule 推导，也不是 channel composition、unitary/CPTP 动力学、路径积分、度规恢复或经验闭合。
+本轮闭合范围：**把 conditional Born-weight law 装入 finite probability distribution interface**。Born rule 从 Markov/amplitude compatibility 的推导已由 S18 承接；S12 本身不证明 channel composition、unitary/CPTP 动力学、路径积分、度规恢复或经验闭合。
 
 ---
 

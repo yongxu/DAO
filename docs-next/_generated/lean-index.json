@@ -186,6 +186,7 @@
         "SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleChannelBridge",
         "SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleBornBoundaryBridge",
         "SSBX.Foundation.Modern.QuantumRelativityUnitaryCPTPLedgerBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityBornRuleDerivationBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -208,10 +209,10 @@
         "SSBX.Foundation.Modern.KeBoundary",
         "SSBX.Foundation.Modern.QuantumSpacetime"
       ],
-      "lines": 202,
+      "lines": 203,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "98141ac777be8e17298513f446c2de00262fc81bbbcaeeefc28de767f4b4f7ac"
+      "sha256": "5f55c2a371b012dd32fa0fe12cd2d6f5dd5fc77a6475e47e27c56fb1878ac7ba"
     },
     {
       "cluster": "root",

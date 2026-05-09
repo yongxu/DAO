@@ -99,9 +99,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 3281,
+      "bytes": 3327,
       "path": "docs-next/10_formal_形式/modern.md",
-      "sha256": "99485d3c65b679b470c1b34457dfb7618c7de879a0d9856b4d0dcd594116a9db",
+      "sha256": "d5066694dc518ac2980c9c8cc8adf02a2e8446bd2f438d06211a8ecfa9cf5a8f",
       "suffix": ".md"
     },
     {
@@ -357,9 +357,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 9019,
+      "bytes": 9091,
       "path": "formal/SSBX.lean",
-      "sha256": "98141ac777be8e17298513f446c2de00262fc81bbbcaeeefc28de767f4b4f7ac",
+      "sha256": "5f55c2a371b012dd32fa0fe12cd2d6f5dd5fc77a6475e47e27c56fb1878ac7ba",
       "suffix": ".lean"
     },
     {
@@ -1689,15 +1689,15 @@
       "suffix": ".md"
     },
     {
-      "bytes": 59713,
+      "bytes": 61719,
       "path": "formal/SSBX/notes/markov-causal-bridge-plan.md",
-      "sha256": "6b0f8031a1684d1c01948432ea7d3759adeac2c90d70238c47c188935755162a",
+      "sha256": "5fd2310c6fc75fe74fa02affc6ca265f4dea94f5d57c8bc3074aee950dfe7aae",
       "suffix": ".md"
     },
     {
-      "bytes": 41058,
+      "bytes": 42306,
       "path": "formal/SSBX/notes/markov-causal-bridge-verification-plan.md",
-      "sha256": "e06ca6e4a89758eab1d824da05f6cd057349ed710a73407e9b2d4c148ee94f73",
+      "sha256": "07152a276a1f08f5209712e7ea045df563e2b44e82330a304f0c68a0f8b7c57e",
       "suffix": ".md"
     },
     {
@@ -1749,9 +1749,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 80967,
+      "bytes": 84038,
       "path": "formal/SSBX/notes/unification-stepwise-plan.md",
-      "sha256": "1e3839f448155dcddf647ddc7e0a01ed753186fb3d79e89fb919604157bb467c",
+      "sha256": "15f81caf2e101d46873fc77995eb7cb7b028a1ed6df25ecb9378d66b588826cf",
       "suffix": ".md"
     },
     {
@@ -1881,9 +1881,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 5380,
+      "bytes": 5709,
       "path": "义理/Born分布边界候选 · Markov桥S12.md",
-      "sha256": "66f0b4b155fccb347e596364ae4e5533a34c9302710c227ee21f6192d2c31a24",
+      "sha256": "00c46601fe187dcf373d95b11ad77ec72ccaae0b2b190f3e353ceff89c6966d6",
       "suffix": ".md"
     },
     {
@@ -1965,9 +1965,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 71780,
+      "bytes": 73420,
       "path": "义理/Markov因果桥 · 大统一最小验证构造.md",
-      "sha256": "5d4b590586fea1055e6854cf1e3952760d90ec715ee4d7d81a210abb7b010db1",
+      "sha256": "1d81f1e0955d1057ecbbee29b77b68d5b2473ffa212dbeadd76aed51f83b9c7a",
       "suffix": ".md"
     },
     {
@@ -2079,9 +2079,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 4751,
+      "bytes": 5040,
       "path": "义理/unitary-CPTP账本边界 · Markov桥S17.md",
-      "sha256": "39e7cd413afa80d8e723a35a84ee80f300bfdb233d291ddc0d43b663844e0098",
+      "sha256": "8bdbc2a2764aca4b5d1d5ba71b089e27518532c6c1c12eb563b6d63b0d772e70",
       "suffix": ".md"
     },
     {

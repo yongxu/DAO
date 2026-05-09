@@ -2,6 +2,8 @@
 
 **前置**：[sum-over-middle Born边界候选 · Markov桥S16](sum-over-middle%20Born边界候选%20·%20Markov桥S16.md) · [channelCompose结合律候选 · Markov桥S14](channelCompose结合律候选%20·%20Markov桥S14.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
+**后继**：[Born rule推导候选 · Markov桥S18](Born%20rule推导候选%20·%20Markov桥S18.md) 已关闭 Markov/amplitude compatibility 下的 finite typed-skeleton Born-rule derivation；physical unitary/CPTP channel law 仍按本文件 ledger 保留为 required but not closed。
+
 **Lean 锚点**：
 
 | 层 | 文件 | 内容 | 状态 |
