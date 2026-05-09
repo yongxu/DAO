@@ -332,6 +332,51 @@ theorem middle_upper_adjacent :
 theorem lower_upper_separated :
     layerRelation .xia .shang = .separated := rfl
 
+/-- Local readings of `间` needed by this file. -/
+inductive JianReading where
+  | betweenLayers
+  | endpointInterval
+  deriving Repr, DecidableEq
+
+/--
+In this module, `乾坤之间` is read as the between-ness of the three
+vertical layers, not as an endpoint interval object.
+-/
+def qianKunJianReading : JianReading :=
+  .betweenLayers
+
+/-- The three layers displayed by the local `乾坤之间` reading. -/
+def qianKunJianLayers : List VerticalLayer :=
+  [.xia, .zhong, .shang]
+
+theorem qianKunJianReading_is_between_layers :
+    qianKunJianReading = .betweenLayers := rfl
+
+theorem qianKunJianReading_not_endpoint_interval :
+    qianKunJianReading ≠ .endpointInterval := by
+  intro h
+  cases h
+
+theorem qianKunJianLayers_complete (l : VerticalLayer) :
+    l ∈ qianKunJianLayers := by
+  cases l <;> simp [qianKunJianLayers]
+
+theorem qian_kun_jian_between_layers_summary :
+    qianKunJianReading = .betweenLayers
+      ∧ qianKunJianReading ≠ .endpointInterval
+      ∧ (∀ l : VerticalLayer, l ∈ qianKunJianLayers)
+      ∧ layerRelation .xia .zhong = .adjacent
+      ∧ layerRelation .zhong .shang = .adjacent
+      ∧ layerRelation .xia .shang = .separated := by
+  exact
+    ⟨ qianKunJianReading_is_between_layers
+    , qianKunJianReading_not_endpoint_interval
+    , qianKunJianLayers_complete
+    , lower_middle_adjacent
+    , middle_upper_adjacent
+    , lower_upper_separated
+    ⟩
+
 /-- Existing 合 operators indexed by the layer being removed. -/
 def removeLayer : VerticalLayer → Trigram → SiXiang
   | .xia, t => heXia t
@@ -356,6 +401,9 @@ theorem qian_kun_yuan_yao_layer_summary :
       ∧ (∀ l : VerticalLayer,
           layerYao Trigram.qian l = Yao.yang ∧ layerYao Trigram.kun l = Yao.yin)
       ∧ (∀ l : VerticalLayer, layerYao Trigram.qian l ≠ layerYao Trigram.kun l)
+      ∧ qianKunJianReading = .betweenLayers
+      ∧ qianKunJianReading ≠ .endpointInterval
+      ∧ (∀ l : VerticalLayer, l ∈ qianKunJianLayers)
       ∧ (∀ i : Fin 3,
           layerOfTrigramIndex i = .xia
             ∨ layerOfTrigramIndex i = .zhong
@@ -372,6 +420,9 @@ theorem qian_kun_yuan_yao_layer_summary :
     , qianKunTrigrams_eq
     , fun l => ⟨qian_layers_are_yang l, kun_layers_are_yin l⟩
     , qian_kun_layers_differ
+    , qianKunJianReading_is_between_layers
+    , qianKunJianReading_not_endpoint_interval
+    , qianKunJianLayers_complete
     , layerOfTrigramIndex_complete
     , lower_middle_adjacent
     , middle_upper_adjacent
@@ -410,6 +461,9 @@ theorem history_tape_structure_summary :
     ∧ qianKunTrigrams = (Trigram.qian, Trigram.kun)
     ∧ (∀ l : VerticalLayer,
         layerYao Trigram.qian l = Yao.yang ∧ layerYao Trigram.kun l = Yao.yin)
+    ∧ qianKunJianReading = .betweenLayers
+    ∧ qianKunJianReading ≠ .endpointInterval
+    ∧ (∀ l : VerticalLayer, l ∈ qianKunJianLayers)
     ∧ (∀ l : VerticalLayer, ∀ s : SiXiang, ∀ y : Yuan,
         removeLayer l (fenAtLayer l s y) = s)
     ∧ fullOperatorSignatures.length = 371
@@ -428,6 +482,9 @@ theorem history_tape_structure_summary :
     , qianKunYuanPoles_eq
     , qianKunTrigrams_eq
     , fun l => ⟨qian_layers_are_yang l, kun_layers_are_yin l⟩
+    , qianKunJianReading_is_between_layers
+    , qianKunJianReading_not_endpoint_interval
+    , qianKunJianLayers_complete
     , removeLayer_fenAtLayer
     , fullOperatorSignatures_length
     , l0InstructionClauseKinds_length
