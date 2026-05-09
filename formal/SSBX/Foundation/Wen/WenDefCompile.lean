@@ -380,6 +380,26 @@ theorem cuoAfterZongCombinatorBody_typed :
 theorem compileHexFun_cuoAfterZongCombinator :
     compileHexFun? cuoAfterZongCombinatorBody = some [.zong, .cuo, .halt] := by rfl
 
+/-- Surface `而 反 综`: deferred `反` as object-level `.cuoH`. -/
+def fanAfterZongCombinatorBody : Tm :=
+  .app (.app Stdlib.endoCompBody Stdlib.fanReverseBody) Stdlib.zongBody
+
+theorem fanAfterZongCombinatorBody_typed :
+    typeCheck [] fanAfterZongCombinatorBody = some (.arr .hex .hex) := by native_decide
+
+theorem compileHexFun_fanAfterZongCombinator :
+    compileHexFun? fanAfterZongCombinatorBody = some [.zong, .cuo, .halt] := by rfl
+
+/-- Surface `再 反`: exact one-repeat helper over the object-level `反`. -/
+def repeatFanBody : Tm :=
+  .app Stdlib.repeatOnceBody Stdlib.fanReverseBody
+
+theorem repeatFanBody_typed :
+    typeCheck [] repeatFanBody = some (.arr .hex .hex) := by native_decide
+
+theorem compileHexFun_repeatFan :
+    compileHexFun? repeatFanBody = some [.cuo, .cuo, .halt] := by rfl
+
 theorem compileHexFun_id_denotes (h : Hexagram) :
     some (runHexProg [.halt] h) = denoteHexFun Stdlib.hexIdBody h := by
   rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
@@ -401,6 +421,19 @@ theorem compileHexFun_cuoAfterZong_denotes (h : Hexagram) :
 theorem compileHexFun_cuoAfterZongCombinator_denotes (h : Hexagram) :
     some (runHexProg [.zong, .cuo, .halt] h) =
       denoteHexFun cuoAfterZongCombinatorBody h := by
+  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
+  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+    native_decide
+
+theorem compileHexFun_fanAfterZongCombinator_denotes (h : Hexagram) :
+    some (runHexProg [.zong, .cuo, .halt] h) =
+      denoteHexFun fanAfterZongCombinatorBody h := by
+  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
+  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+    native_decide
+
+theorem compileHexFun_repeatFan_denotes (h : Hexagram) :
+    some (runHexProg [.cuo, .cuo, .halt] h) = denoteHexFun repeatFanBody h := by
   rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
   cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
     native_decide
@@ -448,6 +481,16 @@ example :
 example :
     (match compileHexFunCertified? cuoAfterZongCombinatorBody with
     | some prog => compiledHexFunAgrees cuoAfterZongCombinatorBody prog
+    | none => false) = true := by native_decide
+
+example :
+    (match compileHexFunCertified? fanAfterZongCombinatorBody with
+    | some prog => compiledHexFunAgrees fanAfterZongCombinatorBody prog
+    | none => false) = true := by native_decide
+
+example :
+    (match compileHexFunCertified? repeatFanBody with
+    | some prog => compiledHexFunAgrees repeatFanBody prog
     | none => false) = true := by native_decide
 
 theorem compileHexFun_reject_tui :

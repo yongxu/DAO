@@ -990,6 +990,10 @@ example :
       = some (.arr .hex .hex) :=
   by native_decide
 
+example : (wenyanInterp "而 反 综 一").toOption = some «一».zong.cuo := by native_decide
+
+example : (wenyanInterp "再 反 一").toOption = some «一».cuo.cuo := by native_decide
+
 example :
     (wenyanCompile "而 推 損").toOption.map (·.ty)
       = some (.arr .hex .hex) :=

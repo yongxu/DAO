@@ -10,12 +10,14 @@ ledger splits them into strong exact denotations and structural carrier/anchor
 denotations without pretending every row has full text-domain semantics.
 -/
 import SSBX.Foundation.Wen.WenDef
+import SSBX.Foundation.Wen.WenDefEval
 import SSBX.Text.OperatorSignatures
 import SSBX.Text.WenyanOperators
 
 namespace SSBX.Foundation.Wen.WenSurface
 
 open SSBX.Foundation.Wen.WenDef
+open SSBX.Foundation.Wen.WenDefEval
 open SSBX.Text.WenyanOperators
 open SSBX.Text.OperatorSignatures
 
@@ -700,10 +702,10 @@ def coreTheoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .A_18 => some ⟨.A_18, Stdlib.hexIdBody, 1, "將/将: aspect anchor as identity; no prospective-time semantics"⟩
   | .A_19 => some ⟨.A_19, Stdlib.hexIdBody, 1, "方: aspect anchor as identity; no progressive-time semantics"⟩
   | .A_20 => some ⟨.A_20, Stdlib.hexIdBody, 1, "嘗/尝: aspect anchor as identity; no experiential-time semantics"⟩
-  | .S_4  => some ⟨.S_4,  Stdlib.boolMarkerBody, 1, "若: truth-core conditional marker"⟩
-  | .S_5  => some ⟨.S_5,  Stdlib.boolMarkerBody, 1, "雖/虽: truth-core concessive marker"⟩
-  | .S_6  => some ⟨.S_6,  Stdlib.boolMarkerBody, 1, "然: truth-core discourse marker"⟩
-  | .S_8  => some ⟨.S_8,  Stdlib.boolMarkerBody, 1, "乃: truth-core sequential marker"⟩
+  | .S_4  => some ⟨.S_4,  Stdlib.boolMarkerBody, 1, "若: Bool identity marker; no discourse semantics"⟩
+  | .S_5  => some ⟨.S_5,  Stdlib.boolMarkerBody, 1, "雖/虽: Bool identity marker; no concessive discourse semantics"⟩
+  | .S_6  => some ⟨.S_6,  Stdlib.boolMarkerBody, 1, "然: Bool identity marker; no discourse semantics"⟩
+  | .S_8  => some ⟨.S_8,  Stdlib.boolMarkerBody, 1, "乃: Bool identity marker; no sequential discourse semantics"⟩
   | .S_9  => some ⟨.S_9,  Stdlib.hexIdBody, 1, "既: aspect anchor as identity; no completed-time semantics"⟩
   | .S_10 => some ⟨.S_10, Stdlib.hexIdBody, 1, "將/将: aspect anchor as identity; no prospective-time semantics"⟩
   | .S_11 => some ⟨.S_11, Stdlib.hexIdBody, 1, "方: aspect anchor as identity; no progressive-time semantics"⟩
@@ -807,8 +809,28 @@ to count as exact WenDef semantics, even though it is still not a full domain
 model of the classical term.
 -/
 def exactTypedHelperOperatorIds : List OperatorId :=
-  [.S_1, .S_19, .S_4, .S_5, .S_6, .S_8,
-   .F_1, .F_2, .F_7, .F_8, .K_6, .K_7, .K_8, .L_7, .Z_29, .Z_32]
+  [.S_1, .S_19,
+   .F_1, .F_2, .F_7, .F_8, .K_6, .K_7, .K_8, .L_7]
+
+/-- Application-mechanic rows whose exact denotation is just applying a supplied
+Hex endomap.  These close the operator-level application wrapper itself, while
+still leaving path, command, instrument, and grammar uses in the domain-gap
+ledger.
+-/
+def exactApplicationMechanicStrongOperatorIds : List OperatorId :=
+  [.Z_29, .Z_32]
+
+/-- Truth-marker rows whose exact denotation is only Bool identity.
+
+These are theorem-backed by `boolMarkerBody_eq_id`; this deliberately does not
+claim full discourse, concessive, conditional, or sequential semantics.
+-/
+def exactTruthMarkerOperatorIds : List OperatorId :=
+  [.S_4, .S_5, .S_6, .S_8]
+
+theorem truthMarkerBoolIdentity_denotes (b : Bool) :
+    denoteBool (.app Stdlib.boolMarkerBody (.boolLit b)) = some b :=
+  boolMarkerBody_eq_id b
 
 /-- Theorem-backed identity/no-op rows where the note already claims the exact
 WenDef behavior is to preserve the Hex state.
@@ -903,7 +925,11 @@ def structuralCarrierKindOperatorIds (kind : StructuralCarrierKind) : List Opera
 def operatorSemanticStrength (id : OperatorId) : SemanticStrength :=
   match theoremBackedSemanticsFor? id with
   | some sem =>
-      if decide (id ∈ exactStructuralHelperOperatorIds) then
+      if decide (id ∈ exactApplicationMechanicStrongOperatorIds) then
+        .exactTheoremBacked
+      else if decide (id ∈ exactTruthMarkerOperatorIds) then
+        .exactTheoremBacked
+      else if decide (id ∈ exactStructuralHelperOperatorIds) then
         .exactStructuralHelper
       else if isStructuralCarrierBody sem.body then
         .structuralCarrier
@@ -1066,10 +1092,22 @@ theorem catalogueNormalFormOperatorIds_length :
     catalogueNormalFormOperatorIds.length = 0 := by native_decide
 
 theorem exactStructuralHelperOperatorIds_length :
-    exactStructuralHelperOperatorIds.length = 249 := by native_decide
+    exactStructuralHelperOperatorIds.length = 243 := by native_decide
 
 theorem exactStructuralHelperOperatorIds_nodup :
     exactStructuralHelperOperatorIds.Nodup := by native_decide
+
+theorem exactApplicationMechanicStrongOperatorIds_length :
+    exactApplicationMechanicStrongOperatorIds.length = 2 := by native_decide
+
+theorem exactApplicationMechanicStrongOperatorIds_nodup :
+    exactApplicationMechanicStrongOperatorIds.Nodup := by native_decide
+
+theorem exactTruthMarkerOperatorIds_length :
+    exactTruthMarkerOperatorIds.length = 4 := by native_decide
+
+theorem exactTruthMarkerOperatorIds_nodup :
+    exactTruthMarkerOperatorIds.Nodup := by native_decide
 
 theorem exactCarrierConstructorOperatorIds_length :
     exactCarrierConstructorOperatorIds.length = 104 := by native_decide
@@ -1090,19 +1128,19 @@ theorem exactPredicateAnchorOperatorIds_nodup :
     exactPredicateAnchorOperatorIds.Nodup := by native_decide
 
 theorem exactTheoremBackedStrongOperatorIds_length :
-    exactTheoremBackedStrongOperatorIds.length = 122 := by native_decide
+    exactTheoremBackedStrongOperatorIds.length = 128 := by native_decide
 
 theorem exactStructuralHelperStrongOperatorIds_length :
-    exactStructuralHelperStrongOperatorIds.length = 249 := by native_decide
+    exactStructuralHelperStrongOperatorIds.length = 243 := by native_decide
 
 theorem structuralCarrierOperatorIds_length :
     structuralCarrierOperatorIds.length = 0 := by native_decide
 
 theorem domainGapOperatorIds_length :
-    domainGapOperatorIds.length = 249 := by native_decide
+    domainGapOperatorIds.length = 243 := by native_decide
 
 theorem domainGap_applicationHelperOnly_length :
-    (domainGapKindOperatorIds .applicationHelperOnly).length = 12 := by native_decide
+    (domainGapKindOperatorIds .applicationHelperOnly).length = 10 := by native_decide
 
 theorem domainGap_identityNoopOnly_length :
     (domainGapKindOperatorIds .identityNoopOnly).length = 18 := by native_decide
@@ -1117,13 +1155,13 @@ theorem domainGap_predicateAnchorOnly_length :
     (domainGapKindOperatorIds .predicateAnchorOnly).length = 9 := by native_decide
 
 theorem domainGap_truthMarkerOnly_length :
-    (domainGapKindOperatorIds .truthMarkerOnly).length = 4 := by native_decide
+    (domainGapKindOperatorIds .truthMarkerOnly).length = 0 := by native_decide
 
 theorem domainGap_catalogueShapeOnly_length :
     (domainGapKindOperatorIds .catalogueShapeOnly).length = 0 := by native_decide
 
 theorem domainGapDetail_applicationMechanic_length :
-    (domainGapDetailKindOperatorIds .applicationMechanic).length = 12 := by native_decide
+    (domainGapDetailKindOperatorIds .applicationMechanic).length = 10 := by native_decide
 
 theorem domainGapDetail_identityNoop_length :
     (domainGapDetailKindOperatorIds .identityNoop).length = 18 := by native_decide
@@ -1153,7 +1191,7 @@ theorem domainGapDetail_predicateModel_length :
     (domainGapDetailKindOperatorIds .predicateModel).length = 9 := by native_decide
 
 theorem domainGapDetail_truthMarkerModel_length :
-    (domainGapDetailKindOperatorIds .truthMarkerModel).length = 4 := by native_decide
+    (domainGapDetailKindOperatorIds .truthMarkerModel).length = 0 := by native_decide
 
 theorem domainGapDetail_catalogueShape_length :
     (domainGapDetailKindOperatorIds .catalogueShape).length = 0 := by native_decide
@@ -1247,6 +1285,40 @@ theorem exactTheoremBackedStrongOperatorIds_no_domain_gap :
     exactTheoremBackedStrongOperatorIds.all (fun id => (operatorDomainGapKind? id).isNone) = true := by
   native_decide
 
+theorem exactApplicationMechanicStrongOperatorIds_all_hex_apply_body :
+    exactApplicationMechanicStrongOperatorIds.all
+      (fun id =>
+        match theoremBackedSemanticsFor? id with
+        | some sem => decide (sem.body = Stdlib.hexApplyBody)
+        | none => false) = true := by
+  native_decide
+
+theorem exactApplicationMechanicStrongOperatorIds_all_exactTheoremBackedStrong :
+    exactApplicationMechanicStrongOperatorIds.all
+      (fun id => decide (operatorSemanticStrength id = .exactTheoremBacked)) = true := by
+  native_decide
+
+theorem exactApplicationMechanicStrongOperatorIds_all_no_domain_gap :
+    exactApplicationMechanicStrongOperatorIds.all (fun id => (operatorDomainGapKind? id).isNone) = true := by
+  native_decide
+
+theorem exactTruthMarkerOperatorIds_all_bool_identity_body :
+    exactTruthMarkerOperatorIds.all
+      (fun id =>
+        match theoremBackedSemanticsFor? id with
+        | some sem => decide (sem.body = Stdlib.boolMarkerBody)
+        | none => false) = true := by
+  native_decide
+
+theorem exactTruthMarkerOperatorIds_all_exactTheoremBackedStrong :
+    exactTruthMarkerOperatorIds.all
+      (fun id => decide (operatorSemanticStrength id = .exactTheoremBacked)) = true := by
+  native_decide
+
+theorem exactTruthMarkerOperatorIds_all_no_domain_gap :
+    exactTruthMarkerOperatorIds.all (fun id => (operatorDomainGapKind? id).isNone) = true := by
+  native_decide
+
 theorem semanticStrengthPartition_counts :
     exactTheoremBackedStrongOperatorIds.length
       + exactStructuralHelperStrongOperatorIds.length
@@ -1286,7 +1358,7 @@ theorem operatorRegistryCoverage_summary :
       ∧ theoremBackedOperatorIds.length = 371
       ∧ structuralCatalogueOperatorIds.length = 0
       ∧ catalogueNormalFormOperatorIds.length = 0
-      ∧ domainGapOperatorIds.length = 249
+      ∧ domainGapOperatorIds.length = 243
       ∧ exactTheoremBackedStrongOperatorIds.length
         + exactStructuralHelperStrongOperatorIds.length
         + structuralCarrierOperatorIds.length
@@ -1314,7 +1386,9 @@ example : (executableSemanticsFor? .Z_5).isSome = true := by native_decide
 example : (theoremBackedSemanticsFor? .S_1).isSome = true := by native_decide
 example : (executableSemanticsFor? .S_1).isSome = true := by native_decide
 example : operatorSemanticStrength .S_1 = .exactStructuralHelper := by native_decide
-example : operatorSemanticStrength .S_4 = .exactStructuralHelper := by native_decide
+example : operatorSemanticStrength .S_4 = .exactTheoremBacked := by native_decide
+example : operatorSemanticStrength .Z_29 = .exactTheoremBacked := by native_decide
+example : operatorSemanticStrength .Z_32 = .exactTheoremBacked := by native_decide
 example : operatorSemanticStrength .K_6 = .exactStructuralHelper := by native_decide
 example : operatorSemanticStrength .Y_17 = .exactStructuralHelper := by native_decide
 example : operatorSemanticStrength .R_12 = .exactStructuralHelper := by native_decide
@@ -1329,11 +1403,17 @@ example : operatorStructuralCarrierKind? .R_12 = some .pairCarrier := by native_
 example : operatorStructuralCarrierKind? .E_2 = some .pairCarrier := by native_decide
 example : operatorStructuralCarrierKind? .X_16 = some .ternaryAggregateCarrier := by native_decide
 example : operatorDomainGapKind? .S_1 = some .applicationHelperOnly := by native_decide
+example : operatorDomainGapKind? .S_4 = none := by native_decide
+example : operatorDomainGapKind? .Z_29 = none := by native_decide
+example : operatorDomainGapKind? .Z_32 = none := by native_decide
 example : operatorDomainGapKind? .R_12 = some .carrierConstructorOnly := by native_decide
 example : operatorDomainGapKind? .E_2 = some .carrierConstructorOnly := by native_decide
 example : operatorDomainGapKind? .X_16 = some .carrierConstructorOnly := by native_decide
 example : operatorDomainGapKind? .I_1 = none := by native_decide
 example : operatorDomainGapDetailKind? .S_1 = some .applicationMechanic := by native_decide
+example : operatorDomainGapDetailKind? .S_4 = none := by native_decide
+example : operatorDomainGapDetailKind? .Z_29 = none := by native_decide
+example : operatorDomainGapDetailKind? .Z_32 = none := by native_decide
 example : operatorDomainGapDetailKind? .R_12 = some .pairCarrierLaw := by native_decide
 example : operatorDomainGapDetailKind? .E_2 = some .pairCarrierLaw := by native_decide
 example : operatorDomainGapDetailKind? .X_16 = some .ternaryAggregateLaw := by native_decide
