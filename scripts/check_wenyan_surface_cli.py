@@ -156,6 +156,9 @@ CLI_CASES = [
     (["--typecheck", "而 者 甲 甲 者 甲 推 甲"], "type (Hex -> Hex)"),
     (["--typecheck", "三"], "type ((Hex -> Bool) -> Bool)"),
     (["--typecheck", "在 乾"], "type (Hex -> Bool)"),
+    (["--compile-yi", "错"], "yi program: [cuo, halt]"),
+    (["--compile-yi", "而 错 综"], "yi program: [zong, cuo, halt]"),
+    (["--compile-yi", "者 甲 甲"], "yi program: [halt]"),
     (["--typecheck", "偶 乾 坤"], "type (Hex * Hex)"),
     (["--typecheck", "聚 乾"], "type List[Hex]"),
     (["--typecheck", "（推）"], "type (Hex -> Hex)"),
@@ -337,6 +340,7 @@ CLI_CASES = [
     (["--coverage"], "operators: 371 registered / 371 executable"),
     (["--coverage"], "operator forms: 371 ids with at least one form"),
     (["--help"], "wenyan-surface --json --operators [all|executable|known-not-executable|unsupported]"),
+    (["--help"], "wenyan-surface --json --compile-yi <PROGRAM>"),
     (["--help"], "317 exact/theorem-backed; 54 structural catalogue normal forms"),
 ]
 
@@ -347,6 +351,20 @@ JSON_CLI_CASES = [
     (["--json", "--ast", "（推 一）"], {"mode": "ast", "syntaxFormCount": 0}),
     (["--json", "--ast", "一 同 一"], {"mode": "ast", "syntaxFormCount": 1}),
     (["--json", "--typecheck", "同 一 一"], {"mode": "typecheck", "type": "Bool"}),
+    (["--json", "--compile-yi", "错"], {
+        "mode": "compile-yi",
+        "type": "(Hex -> Hex)",
+        "program": ["cuo", "halt"],
+        "fuel": 2,
+        "validated": True,
+    }),
+    (["--json", "--compile-yi", "而 错 综"], {
+        "mode": "compile-yi",
+        "type": "(Hex -> Hex)",
+        "program": ["zong", "cuo", "halt"],
+        "fuel": 3,
+        "validated": True,
+    }),
     (["--json", "--explain", "推 一"], {"mode": "explain"}),
     (["--json", "--explain", "一 同 一"], {"mode": "explain"}),
     (["--json", "--operator", "Y-2"], {
@@ -410,6 +428,8 @@ NEGATIVE_CLI_CASES = [
     (["--ast", "（推 一"], "unmatched open bracket"),
     (["--ast", "推 一）"], "unmatched close bracket"),
     (["--typecheck", "不 乾"], "type error"),
+    (["--compile-yi", "推"], "not compilable"),
+    (["--compile-yi", "推 一"], "expected (Hex -> Hex)"),
     (["--explain", "或 真"], "Suggestions:"),
     (["--operator", "NOPE"], "no such catalogue OperatorId"),
     (["--operators", "bad"], "unknown filter"),
@@ -607,6 +627,20 @@ def main() -> int:
     ):
         failures.append(f"ambiguous explain JSON: expected cue suggestions, got {ambiguous_explain!r}")
 
+    bad_compile_completed = run_cli(["--json", "--compile-yi", "推"], allow_failure=True)
+    bad_compile = json.loads(bad_compile_completed.stdout)
+    if bad_compile_completed.returncode == 0:
+        failures.append("bad compile JSON: expected nonzero exit")
+    if bad_compile.get("ok") is not False or bad_compile.get("code") != "not_l0_compilable":
+        failures.append(f"bad compile JSON: unexpected JSON {bad_compile!r}")
+
+    bad_compile_type_completed = run_cli(["--json", "--compile-yi", "推 一"], allow_failure=True)
+    bad_compile_type = json.loads(bad_compile_type_completed.stdout)
+    if bad_compile_type_completed.returncode == 0:
+        failures.append("bad compile type JSON: expected nonzero exit")
+    if bad_compile_type.get("ok") is not False or bad_compile_type.get("code") != "not_hex_to_hex":
+        failures.append(f"bad compile type JSON: unexpected JSON {bad_compile_type!r}")
+
     empty_stdin = run_cli([], allow_failure=True)
     if empty_stdin.returncode == 0 or "Usage:" not in empty_stdin.stdout:
         failures.append(f"empty stdin: expected usage with nonzero exit, got {empty_stdin!r}")
@@ -623,7 +657,7 @@ def main() -> int:
         + len(CLI_CASES)
         + len(NEGATIVE_CLI_CASES)
         + len(JSON_CLI_CASES)
-        + 4
+        + 6
     )
     print(f"wenyan-surface CLI smoke passed ({total} cases)")
     return 0

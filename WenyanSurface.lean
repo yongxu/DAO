@@ -19,9 +19,14 @@ grouping and elaborate transparently.
 -/
 import SSBX.Foundation.Wen.WenSurface.EndToEnd
 import SSBX.Foundation.Wen.WenSurface.Coverage
+import SSBX.Foundation.Wen.WenDefCompile
 
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Yi.YiCore
+open SSBX.Foundation.Bagua.BaguaTuring
+open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Wen.WenDef
+open SSBX.Foundation.Wen.WenDefCompile
 open SSBX.Foundation.Wen.WenSurface
 open SSBX.Foundation.Wen.WenDefEval
 open SSBX.Text.WenyanOperators
@@ -1160,6 +1165,102 @@ private def typecheckOk (src : String) : Bool :=
   | .ok _ => true
   | .error _ => false
 
+private def shiShow : Shi → String
+  | .ji => "已"
+  | .jin => "今"
+  | .wei => "未"
+
+private def yiInstrShow : YiInstr → String
+  | .nop => "nop"
+  | .setShi s => "setShi " ++ shiShow s
+  | .flipYao i => s!"flipYao {i.val + 1}"
+  | .hu => "hu"
+  | .cuo => "cuo"
+  | .zong => "zong"
+  | .branchYaoEq i j target => s!"branchYaoEq {i.val + 1} {j.val + 1} {target}"
+  | .branchShiEq s target => s!"branchShiEq {shiShow s} {target}"
+  | .jump target => s!"jump {target}"
+  | .push => "push"
+  | .pop => "pop"
+  | .halt => "halt"
+  | .swap => "swap"
+
+private def yiProgramShow (program : List YiInstr) : String :=
+  "[" ++ String.intercalate ", " (program.map yiInstrShow) ++ "]"
+
+private def compileYiExpectedTy : Ty := .arr .hex .hex
+
+private def compileYiTypeErrJson (actual : Ty) : String :=
+  jsonObject
+    [ jsonFieldBool "ok" false
+    , jsonFieldString "phase" "compile"
+    , jsonFieldString "code" "not_hex_to_hex"
+    , jsonFieldString "message" s!"compile-yi: expected {tyShow compileYiExpectedTy}, got {tyShow actual}"
+    , jsonFieldString "expectedType" (tyShow compileYiExpectedTy)
+    , jsonFieldString "actualType" (tyShow actual)
+    ]
+
+private def compileYiNotCompilableJson (typed : TypedTm) : String :=
+  jsonObject
+    [ jsonFieldBool "ok" false
+    , jsonFieldString "phase" "compile"
+    , jsonFieldString "code" "not_l0_compilable"
+    , jsonFieldString "message" "compile-yi: known Wen evaluator term is not compilable to the current frozen Bagua L0 exact subset"
+    , jsonFieldString "type" (tyShow typed.ty)
+    , jsonFieldString "support" "wen-executable-not-bagua-l0"
+    , jsonFieldString "term" (reprStr typed.tm)
+    ]
+
+private def compileYiJsonOutput (src : String) : String :=
+  match wenyanCompile src with
+  | .error e => errJson e
+  | .ok typed =>
+      if typed.ty = compileYiExpectedTy then
+        match compileHexFunCertified? typed.tm with
+        | some c =>
+            let program := c.program
+            jsonObject
+              [ jsonFieldBool "ok" true
+              , jsonFieldString "mode" "compile-yi"
+              , jsonFieldString "type" (tyShow typed.ty)
+              , jsonFieldString "compiler" "WenDefCompile.compileHexFunCertified?"
+              , jsonFieldRaw "program" (jsonArray (program.map (fun instr => jsonString (yiInstrShow instr))))
+              , jsonFieldNat "instructionCount" program.length
+              , jsonFieldNat "stepCount" c.steps.length
+              , jsonFieldNat "fuel" c.fuel
+              , jsonFieldBool "validated" (compiledHexFunAgrees c)
+              , jsonFieldString "note" c.note
+              , jsonFieldString "term" (reprStr typed.tm)
+              ]
+        | none => compileYiNotCompilableJson typed
+      else
+        compileYiTypeErrJson typed.ty
+
+private def compileYiOutput (src : String) : String :=
+  match wenyanCompile src with
+  | .error e => errShow e
+  | .ok typed =>
+      if typed.ty = compileYiExpectedTy then
+        match compileHexFunCertified? typed.tm with
+        | some c =>
+            String.intercalate "\n"
+              [ "yi program: " ++ yiProgramShow c.program
+              , s!"fuel: {c.fuel}"
+              , "validated: " ++ toString (compiledHexFunAgrees c)
+              , "note: " ++ c.note
+              , "compiler: WenDefCompile.compileHexFunCertified?"
+              ]
+        | none =>
+            "compile-yi error: known Wen evaluator term is not compilable to the current frozen Bagua L0 exact subset"
+      else
+        s!"compile-yi error: expected {tyShow compileYiExpectedTy}, got {tyShow typed.ty}"
+
+private def compileYiOk (src : String) : Bool :=
+  match wenyanCompile src with
+  | .error _ => false
+  | .ok typed =>
+      decide (typed.ty = compileYiExpectedTy) && (compileHexFunCertified? typed.tm).isSome
+
 private def exitCode (ok : Bool) : UInt32 :=
   if ok then 0 else 1
 
@@ -1317,11 +1418,13 @@ private def usage : String :=
      "       wenyan-surface --resolve <PROGRAM>",
      "       wenyan-surface --ast <PROGRAM>",
      "       wenyan-surface --typecheck <PROGRAM>",
+     "       wenyan-surface --compile-yi <PROGRAM>",
      "       wenyan-surface --json <PROGRAM>",
      "       wenyan-surface --json --tokens <PROGRAM>",
      "       wenyan-surface --json --resolve <PROGRAM>",
      "       wenyan-surface --json --ast <PROGRAM>",
      "       wenyan-surface --json --typecheck <PROGRAM>",
+     "       wenyan-surface --json --compile-yi <PROGRAM>",
      "       wenyan-surface --json --explain <PROGRAM>",
      "       wenyan-surface --json --operator <OP-ID>",
      "       wenyan-surface --json --operators [all|executable|known-not-executable|unsupported]",
@@ -1348,7 +1451,8 @@ private def usage : String :=
      "  wenyan-surface '損 乾'         # «乾» − 1 = «坤»",
      "  wenyan-surface '同 一 一'      # bool true",
      "  wenyan-surface '不 同 一 乾'   # bool true",
-     "  wenyan-surface '之又 不 真'    # bool true (双重否定)"]
+     "  wenyan-surface '之又 不 真'    # bool true (双重否定)",
+     "  wenyan-surface --compile-yi '错' # compile exact Hex→Hex to Bagua YiInstr"]
 
 def main (args : List String) : IO UInt32 := do
   match args with
@@ -1367,6 +1471,9 @@ def main (args : List String) : IO UInt32 := do
   | ["--typecheck", src] =>
     IO.println (typeOutput src)
     return exitCode (typecheckOk src)
+  | ["--compile-yi", src] =>
+    IO.println (compileYiOutput src)
+    return exitCode (compileYiOk src)
   | ["--json", "--tokens", src] | ["--tokens", "--json", src] =>
     IO.println (tokensJsonOutput src)
     return exitCode (tokensOk src)
@@ -1379,6 +1486,9 @@ def main (args : List String) : IO UInt32 := do
   | ["--json", "--typecheck", src] | ["--typecheck", "--json", src] =>
     IO.println (typeJsonOutput src)
     return exitCode (typecheckOk src)
+  | ["--json", "--compile-yi", src] | ["--compile-yi", "--json", src] =>
+    IO.println (compileYiJsonOutput src)
+    return exitCode (compileYiOk src)
   | ["--json", "--explain", src] | ["--explain", "--json", src] =>
     IO.println (explainJsonOutput src)
     return exitCode (programOk src)
