@@ -2,11 +2,11 @@
 # WenSurface.Semantics — executable semantics registry
 
 This module separates theorem-backed stdlib denotations from total catalogue
-execution.  Three hundred thirty-eight `OperatorId`s use explicit `WenDef.Tm`
+execution.  Three hundred sixty-seven `OperatorId`s use explicit `WenDef.Tm`
 bodies: the original high-value stdlib rows, ObjectEndo/ObjectMap/OpUnary Hex
 transforms, finite Hex carrier rows, finite Hex quantifiers, finite motion /
 process rows, plus the Bool relation/predicate package.  The semantic strength
-ledger splits those 338 rows into strong exact denotations and structural
+ledger splits those 367 rows into strong exact denotations and structural
 carrier/anchor denotations.  Every remaining catalogue row gets a structural
 catalogue constructor `WenDef.Tm` so CLI support is total without confusing it
 with exact text semantics.
@@ -362,15 +362,20 @@ def coreTheoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .P_21 => some ⟨.P_21, Stdlib.hexIdBody, 1, "辭/辞: text/proposition anchor as identity; no argument-content semantics"⟩
   | .P_22 => some ⟨.P_22, Stdlib.pairHBody, 2, "說/说: Hex pair carrier constructor; no rhetorical semantics"⟩
   | .P_24 => some ⟨.P_24, Stdlib.hexIdBody, 1, "類/类: Mohist class extractor anchor as identity; no taxonomy semantics"⟩
+  | .G_1  => some ⟨.G_1,  Stdlib.pairHBody, 2, "指: Names-school designation pair carrier; no reference semantics"⟩
   | .G_2  => some ⟨.G_2,  Stdlib.hexIdBody, 1, "物: concrete object anchor as identity; no ontology semantics"⟩
   | .G_4  => some ⟨.G_4,  Stdlib.hexIdBody, 1, "實/实: concrete actuality anchor as identity; no ontology semantics"⟩
   | .G_5  => some ⟨.G_5,  Stdlib.hexIdBody, 1, "位: position extractor anchor as identity; no role ontology"⟩
+  | .G_7  => some ⟨.G_7,  Stdlib.pairHBody, 2, "離/离: separability pair carrier; no Jianbaili ontology"⟩
   | .G_8  => some ⟨.G_8,  Stdlib.pairHBody, 2, "兼/合: Names-school binary constructor carrier; no ontology semantics"⟩
   | .G_9  => some ⟨.G_9,  Stdlib.dupHBody, 1, "別/别: Names-school facet carrier via duplicate Hex; no separation semantics"⟩
+  | .G_11 => some ⟨.G_11, Stdlib.pairHBody, 2, "命: naming assignment pair carrier; no mandate/reference semantics"⟩
   | .D_1  => some ⟨.D_1,  Stdlib.hexIdBody, 1, "一: numeric unity as identity"⟩
   | .D_4  => some ⟨.D_4,  Stdlib.dupHBody, 1, "兩/两: duplicate a Hex into a pair carrier"⟩
   | .D_8  => some ⟨.D_8,  Stdlib.pairHBody, 2, "餘/余: Hex pair carrier constructor; no arithmetic remainder"⟩
   | .E_1  => some ⟨.E_1,  Stdlib.hexIdBody, 1, "書/书: text-record anchor as identity; no writing semantics"⟩
+  | .E_2  => some ⟨.E_2,  Stdlib.pairHBody, 2, "曰: text-act pair carrier; no speech-act/content semantics"⟩
+  | .E_3  => some ⟨.E_3,  Stdlib.pairHBody, 2, "稱/称: appellation assignment pair carrier; no naming/reference semantics"⟩
   | .E_4  => some ⟨.E_4,  Stdlib.hexIdBody, 1, "諱/讳: taboo-text anchor as identity; no historiographic omission semantics"⟩
   | .E_5  => some ⟨.E_5,  Stdlib.hexIdBody, 1, "譏/讥: critical-text anchor as identity; no critique semantics"⟩
   | .E_6  => some ⟨.E_6,  Stdlib.hexIdBody, 1, "與/与: recognition-text anchor as identity; no Spring-Autumn judgment semantics"⟩
@@ -378,10 +383,12 @@ def coreTheoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .E_8  => some ⟨.E_8,  Stdlib.hexIdBody, 1, "筆/笔: inscription-text anchor as identity; no recording semantics"⟩
   | .E_9  => some ⟨.E_9,  Stdlib.hexIdBody, 1, "褒/貶: appraisal-text anchor as identity; no praise/blame semantics"⟩
   | .H_8  => some ⟨.H_8,  Stdlib.dupHBody, 1, "體/体與用: paired facet carrier via duplicate Hex; no essence/function decomposition"⟩
+  | .L_1  => some ⟨.L_1,  Stdlib.pairHBody, 2, "法: Legalist rule pair carrier; no legal-norm semantics"⟩
   | .L_5  => some ⟨.L_5,  Stdlib.list1HBody, 1, "參同/参同: singleton Hex list carrier; no verification semantics"⟩
   | .L_2  => some ⟨.L_2,  Stdlib.pairHBody, 2, "術/术: Legalist technique process edge carrier; no administrative method semantics"⟩
   | .L_3  => some ⟨.L_3,  Stdlib.hexIdBody, 1, "勢/势: Legalist power-position extractor anchor as identity; no governance semantics"⟩
   | .L_6  => some ⟨.L_6,  Stdlib.dupHBody, 1, "二柄: paired-handle carrier via duplicate Hex; no reward/punishment governance semantics"⟩
+  | .L_8  => some ⟨.L_8,  Stdlib.pairHBody, 2, "任: assignment/responsibility pair carrier; no administrative delegation semantics"⟩
   | .L_9  => some ⟨.L_9,  Stdlib.hexIdBody, 1, "守: governance hold as identity"⟩
   | .L_10 => some ⟨.L_10, Stdlib.hexIdBody, 1, "靜/静: governance stillness as identity"⟩
   | .L_12 => some ⟨.L_12, Stdlib.hexIdBody, 1, "利: benefit extractor anchor as identity; no utility semantics"⟩
@@ -422,8 +429,10 @@ def coreTheoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .X_4  => some ⟨.X_4,  Stdlib.list1HBody, 1, "群: singleton Hex list carrier; no social grouping semantics"⟩
   | .X_5  => some ⟨.X_5,  Stdlib.dupHBody, 1, "分: social role-partition paired facet carrier via duplicate Hex; no hierarchy/conflict semantics"⟩
   | .X_6  => some ⟨.X_6,  Stdlib.list1HBody, 1, "礼: ritual constructor carrier as singleton Hex list; no ritual-order semantics"⟩
+  | .X_7  => some ⟨.X_7,  Stdlib.pairHBody, 2, "義/义: social norm pair carrier; no ethical-rule semantics"⟩
   | .X_8  => some ⟨.X_8,  Stdlib.dupHBody, 1, "別/别: social distinction paired facet carrier via duplicate Hex; no stratification semantics"⟩
   | .X_9  => some ⟨.X_9,  Stdlib.list1HBody, 1, "制: social constructor carrier as singleton Hex list; no institutional semantics"⟩
+  | .X_10 => some ⟨.X_10, Stdlib.pairHBody, 2, "隆/殺: ritual degree modifier pair carrier; no graded-ritual semantics"⟩
   | .X_12 => some ⟨.X_12, Stdlib.dupHBody, 1, "名分: name-role partition paired facet carrier via duplicate Hex; no social-name semantics"⟩
   | .X_13 => some ⟨.X_13, Stdlib.pairHBody, 2, "解蔽: unblocking transition edge carrier; no epistemic-cultivation semantics"⟩
   | .X_14 => some ⟨.X_14, Stdlib.list2HBody, 2, "積/积: two-input aggregate carrier; no arithmetic accumulation"⟩
@@ -490,21 +499,41 @@ def coreTheoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .SUN_5 => some ⟨.SUN_5, Stdlib.hexIdBody, 1, "奇: military process anchor as identity; no tactical-surprise semantics"⟩
   | .SUN_7 => some ⟨.SUN_7, Stdlib.hexIdBody, 1, "迂: indirect-route anchor as identity; no tactical path semantics"⟩
   | .SUN_8 => some ⟨.SUN_8, Stdlib.hexIdBody, 1, "直: direct-route anchor as identity; no tactical path semantics"⟩
+  | .SUN_9 => some ⟨.SUN_9, Stdlib.pairHBody, 2, "詭/诡: deceptive signal pair carrier; no tactical deception semantics"⟩
+  | .SUN_10 => some ⟨.SUN_10, Stdlib.pairHBody, 2, "示: visible-form signal pair carrier; no signaling semantics"⟩
   | .SUN_12 => some ⟨.SUN_12, Stdlib.dupHBody, 1, "分合: parts/whole paired facet carrier via duplicate Hex; no military formation semantics"⟩
+  | .SUN_13 => some ⟨.SUN_13, Stdlib.pairHBody, 2, "速: speed modifier pair carrier; no tactical tempo semantics"⟩
   | .SUN_14 => some ⟨.SUN_14, Stdlib.pairHBody, 2, "知: military intelligence extractor carrier; no epistemic semantics"⟩
+  | .CHU_1 => some ⟨.CHU_1, Stdlib.pairHBody, 2, "招: summons/response pair carrier; no ritual-summoning semantics"⟩
+  | .CHU_3 => some ⟨.CHU_3, Stdlib.pairHBody, 2, "遊/游: Chu-ci trajectory pair carrier; no mythic-journey semantics"⟩
   | .CHU_4 => some ⟨.CHU_4, Stdlib.hexIdBody, 1, "登: Chu-ci ascent extractor anchor as identity; no elevation semantics"⟩
   | .CHU_5 => some ⟨.CHU_5, Stdlib.pairHBody, 2, "望: Chu-ci vantage extractor carrier; no visual semantics"⟩
+  | .CHU_7 => some ⟨.CHU_7, Stdlib.pairHBody, 2, "反顧/反顾: retrospective trajectory pair carrier; no mythic-return semantics"⟩
+  | .CHU_8 => some ⟨.CHU_8, Stdlib.pairHBody, 2, "紉/纫: binding pair carrier; no virtue-binding semantics"⟩
   | .CHU_9 => some ⟨.CHU_9, Stdlib.list1HBody, 1, "集: singleton Hex list carrier"⟩
+  | .ZHU_4 => some ⟨.ZHU_4, Stdlib.pairHBody, 2, "忘: debinding pair carrier; no Zhuangzi forgetting semantics"⟩
   | .ZHU_5 => some ⟨.ZHU_5, Stdlib.dupHBody, 1, "喪/丧: debinding paired facet carrier via duplicate Hex; no Zhuangzi self-loss semantics"⟩
   | .ZHU_3 => some ⟨.ZHU_3, Stdlib.pairHBody, 2, "逍遙/逍遥: free-wandering process edge carrier; no Zhuangzi freedom semantics"⟩
   | .ZHU_6 => some ⟨.ZHU_6, Stdlib.pairHBody, 2, "物化: transformation-with-things process edge carrier; no Zhuangzi metamorphosis semantics"⟩
   | .ZHU_7 => some ⟨.ZHU_7, Stdlib.pairHBody, 2, "因: following-along process edge carrier; no adaptive-process semantics"⟩
+  | .ZHU_8 => some ⟨.ZHU_8, Stdlib.pairHBody, 2, "解: partition/release pair carrier; no Zhuangzi solution semantics"⟩
+  | .ZHU_11 => some ⟨.ZHU_11, Stdlib.pairHBody, 2, "鏡/镜: responsive mirror pair carrier; no empty-mind response semantics"⟩
+  | .ZHU_12 => some ⟨.ZHU_12, Stdlib.pairHBody, 2, "筌: debinding/instrument pair carrier; no fishtrap-word semantics"⟩
+  | .LIJ_1 => some ⟨.LIJ_1, Stdlib.pairHBody, 2, "序: ritual sequence protocol pair carrier; no protocol semantics"⟩
+  | .LIJ_2 => some ⟨.LIJ_2, Stdlib.pairHBody, 2, "敬: ritual-attitude protocol pair carrier; no reverence semantics"⟩
+  | .LIJ_3 => some ⟨.LIJ_3, Stdlib.pairHBody, 2, "辭/辞: ritual speech-act pair carrier; no liturgical speech semantics"⟩
   | .LIJ_4 => some ⟨.LIJ_4, Stdlib.hexIdBody, 1, "位: ritual role-position extractor anchor as identity; no ritual ontology"⟩
   | .LIJ_7 => some ⟨.LIJ_7, Stdlib.hexIdBody, 1, "中: ritual equilibrium extractor anchor as identity; no affective semantics"⟩
   | .LIJ_8 => some ⟨.LIJ_8, Stdlib.pairHBody, 2, "和: ritual harmonization process edge carrier; no affective/ritual semantics"⟩
+  | .LIJ_10 => some ⟨.LIJ_10, Stdlib.pairHBody, 2, "慎: ritual caution rule pair carrier; no prudential semantics"⟩
   | .LIJ_11 => some ⟨.LIJ_11, Stdlib.hexIdBody, 1, "獨/独: ritual solitude extractor anchor as identity; no individuation semantics"⟩
   | .LIJ_12 => some ⟨.LIJ_12, Stdlib.pairHBody, 2, "格: ritual rectification process edge carrier; no normative-formation semantics"⟩
+  | .LIJ_13 => some ⟨.LIJ_13, Stdlib.pairHBody, 2, "齊/齐: ritual alignment rule pair carrier; no ritual-regulation semantics"⟩
+  | .LIJ_14 => some ⟨.LIJ_14, Stdlib.pairHBody, 2, "平: ritual balance rule pair carrier; no leveling semantics"⟩
+  | .ZA_1 => some ⟨.ZA_1, Stdlib.pairHBody, 2, "虛/虚: Huang-Lao debinding pair carrier; no emptying-cultivation semantics"⟩
   | .ZA_6 => some ⟨.ZA_6, Stdlib.hexIdBody, 1, "時/时: monthly-order time anchor as identity; no calendrical semantics"⟩
+  | .ZA_8 => some ⟨.ZA_8, Stdlib.pairHBody, 2, "察今: adaptive rule pair carrier; no historical-comparison semantics"⟩
+  | .ZA_10 => some ⟨.ZA_10, Stdlib.pairHBody, 2, "應/应: strategic response pair carrier; no response-law semantics"⟩
   | .SUN_11 => some ⟨.SUN_11, Stdlib.pairHBody, 2, "致人: military initiative process edge carrier; no tactical-control semantics"⟩
   | .CHU_6 => some ⟨.CHU_6, Stdlib.pairHBody, 2, "降: Chu-ci descent process edge carrier; no mythic-descent semantics"⟩
   | .N_3  => some ⟨.N_3,  Stdlib.buBody, 1, "弗: Bool negation alias"⟩
@@ -598,21 +627,21 @@ def coreTheoremBackedOperatorIds : List OperatorId :=
         .B_1, .B_2, .B_3, .B_4, .B_5, .B_6, .B_7,
         .I_2, .I_6, .I_8, .H_1, .H_2, .H_3, .H_4, .H_5, .H_6, .H_7,
         .P_2, .P_3, .P_6, .P_7, .P_8, .P_9, .P_10,
-        .P_11, .P_12, .P_13, .P_18, .P_19, .P_21, .P_22, .P_24, .G_2, .G_4, .G_5, .G_8, .G_9,
-        .D_1, .D_4, .D_8, .E_1, .E_4, .E_5, .E_6, .E_7, .E_8, .E_9,
-        .H_8, .L_2, .L_3, .L_5, .L_6, .L_9, .L_10, .L_12, .L_13, .L_14, .L_15, .L_16,
+        .P_11, .P_12, .P_13, .P_18, .P_19, .P_21, .P_22, .P_24, .G_1, .G_2, .G_4, .G_5, .G_7, .G_8, .G_9, .G_11,
+        .D_1, .D_4, .D_8, .E_1, .E_2, .E_3, .E_4, .E_5, .E_6, .E_7, .E_8, .E_9,
+        .H_8, .L_1, .L_2, .L_3, .L_5, .L_6, .L_8, .L_9, .L_10, .L_12, .L_13, .L_14, .L_15, .L_16,
         .Y_1, .Y_2, .Y_3, .Y_4, .Y_5, .Y_6, .Y_7, .Y_8, .Y_9, .Y_10, .Y_11, .Y_12,
         .Y_13, .Y_14, .Y_15, .Y_16, .Y_17, .Y_18, .Y_19, .Y_21, .Y_22, .Y_23, .Y_24,
-        .Y_25, .Y_26, .Y_27, .Y_28, .X_1, .X_2, .X_3, .X_4, .X_5, .X_6, .X_8, .X_9, .X_12, .X_13, .X_14, .X_15,
+        .Y_25, .Y_26, .Y_27, .Y_28, .X_1, .X_2, .X_3, .X_4, .X_5, .X_6, .X_7, .X_8, .X_9, .X_10, .X_12, .X_13, .X_14, .X_15,
         .Z_2, .Z_7, .Z_8, .Z_9, .Z_12, .Z_13,
         .Z_16, .Z_17, .Z_18, .Z_19, .Z_20, .Z_21, .Z_22, .Z_23, .Z_24, .Z_25, .Z_26, .Z_27,
         .Z_28, .Z_29, .Z_30, .Z_31, .Z_32, .Z_33, .Z_34, .Z_35,
         .F_1, .F_2, .F_3, .F_4, .F_5, .F_6, .F_7, .F_8, .F_9, .F_10, .F_11,
         .L_11, .LIJ_5, .SUN_1, .SUN_5, .SUN_6, .SUN_7, .SUN_8,
         .Z_10, .Z_11, .Z_36, .Z_37, .Z_38,
-        .ZA_2, .ZA_3, .ZA_4, .ZA_5, .ZA_7, .ZA_9, .ZA_11, .ZA_12, .ZHU_3, .ZHU_5, .ZHU_6, .ZHU_7, .ZHU_9, .ZHU_10,
-        .SUN_2, .SUN_3, .SUN_4, .SUN_11, .SUN_12, .SUN_14, .CHU_4, .CHU_5, .CHU_6, .CHU_9,
-        .LIJ_4, .LIJ_7, .LIJ_8, .LIJ_11, .LIJ_12, .ZA_6]
+        .ZA_1, .ZA_2, .ZA_3, .ZA_4, .ZA_5, .ZA_7, .ZA_8, .ZA_9, .ZA_10, .ZA_11, .ZA_12, .ZHU_3, .ZHU_4, .ZHU_5, .ZHU_6, .ZHU_7, .ZHU_8, .ZHU_9, .ZHU_10, .ZHU_11, .ZHU_12,
+        .SUN_2, .SUN_3, .SUN_4, .SUN_9, .SUN_10, .SUN_11, .SUN_12, .SUN_13, .SUN_14, .CHU_1, .CHU_3, .CHU_4, .CHU_5, .CHU_6, .CHU_7, .CHU_8, .CHU_9,
+        .LIJ_1, .LIJ_2, .LIJ_3, .LIJ_4, .LIJ_7, .LIJ_8, .LIJ_10, .LIJ_11, .LIJ_12, .LIJ_13, .LIJ_14, .ZA_6]
     ++ [.N_3, .N_4, .N_5, .N_6, .K_1, .K_5, .K_6, .K_7, .K_8, .L_7, .S_3, .S_7, .Z_1, .I_3, .I_4,
         .I_5, .I_7, .P_4, .N_2, .N_7, .N_8, .P_5, .P_23, .Q_2, .Q_4, .M_2, .Q_5, .Q_6, .Q_7,
         .Q_3, .Q_8, .D_2, .D_3, .D_9, .D_10, .M_3, .M_4, .M_5, .M_6, .M_7, .M_8,
@@ -627,7 +656,7 @@ def coreTheoremBackedOperatorIds : List OperatorId :=
 Structural total fallback for catalogue rows.
 
 These bodies are executable and type-checkable, but intentionally weaker than
-the 338 exact rows above: they preserve the operator id, signature kind, and
+the 367 exact rows above: they preserve the operator id, signature kind, and
 evaluated arguments as a catalogue value instead of projecting fake Hex/Bool
 denotations.
 -/
@@ -693,11 +722,12 @@ These are exact as carrier mechanics, not as full domain semantics.
 def exactCarrierConstructorOperatorIds : List OperatorId :=
   [.R_12, .R_13, .R_14, .R_15, .C_2, .T_3, .T_11, .H_5,
    .P_3, .P_8, .P_11, .P_13, .P_22, .G_8, .G_9, .D_4, .D_8,
-   .H_8, .L_2, .L_5, .L_6, .L_13, .L_14, .Y_1, .Y_2, .Y_9,
+   .H_8, .L_1, .L_2, .L_5, .L_6, .L_8, .L_13, .L_14, .Y_1, .Y_2, .Y_9,
    .L_16, .Y_16, .Y_19, .Y_21, .Y_22, .Y_28, .X_2, .X_4, .X_5, .X_6, .X_8, .X_9, .X_12,
    .X_13, .X_14, .X_15, .Z_7, .Z_16, .Z_17, .Z_18, .Z_19, .Z_20, .Z_21, .Z_25, .Z_28, .Z_30,
-   .ZA_4, .ZA_9, .ZA_12, .SUN_2, .SUN_11, .SUN_12, .SUN_14, .CHU_5,
-   .CHU_6, .CHU_9, .ZHU_3, .ZHU_5, .ZHU_6, .ZHU_7, .LIJ_8, .LIJ_12, .K_5, .I_7, .N_8]
+   .ZA_1, .ZA_4, .ZA_8, .ZA_9, .ZA_10, .ZA_12, .SUN_2, .SUN_9, .SUN_10, .SUN_11, .SUN_12, .SUN_13, .SUN_14, .CHU_1, .CHU_3, .CHU_5,
+   .CHU_6, .CHU_7, .CHU_8, .CHU_9, .ZHU_3, .ZHU_4, .ZHU_5, .ZHU_6, .ZHU_7, .ZHU_8, .ZHU_11, .ZHU_12,
+   .G_1, .G_7, .G_11, .E_2, .E_3, .X_7, .X_10, .LIJ_1, .LIJ_2, .LIJ_3, .LIJ_8, .LIJ_10, .LIJ_12, .LIJ_13, .LIJ_14, .K_5, .I_7, .N_8]
 
 def exactProjectionAnchorOperatorIds : List OperatorId :=
   allOperatorIds.filter (fun id =>
@@ -887,10 +917,10 @@ theorem executableOperatorIds_length :
     executableOperatorIds.length = 371 := by native_decide
 
 theorem coreTheoremBackedOperatorIds_length :
-    coreTheoremBackedOperatorIds.length = 292 := by native_decide
+    coreTheoremBackedOperatorIds.length = 321 := by native_decide
 
 theorem theoremBackedOperatorIds_length :
-    theoremBackedOperatorIds.length = 338 := by native_decide
+    theoremBackedOperatorIds.length = 367 := by native_decide
 
 theorem theoremBackedOperatorIds_nodup :
     theoremBackedOperatorIds.Nodup := by native_decide
@@ -900,19 +930,19 @@ theorem theoremBackedOperatorIds_all_semantics :
   native_decide
 
 theorem structuralCatalogueOperatorIds_length :
-    structuralCatalogueOperatorIds.length = 33 := by native_decide
+    structuralCatalogueOperatorIds.length = 4 := by native_decide
 
 theorem catalogueNormalFormOperatorIds_length :
-    catalogueNormalFormOperatorIds.length = 33 := by native_decide
+    catalogueNormalFormOperatorIds.length = 4 := by native_decide
 
 theorem exactStructuralHelperOperatorIds_length :
-    exactStructuralHelperOperatorIds.length = 216 := by native_decide
+    exactStructuralHelperOperatorIds.length = 245 := by native_decide
 
 theorem exactStructuralHelperOperatorIds_nodup :
     exactStructuralHelperOperatorIds.Nodup := by native_decide
 
 theorem exactCarrierConstructorOperatorIds_length :
-    exactCarrierConstructorOperatorIds.length = 71 := by native_decide
+    exactCarrierConstructorOperatorIds.length = 100 := by native_decide
 
 theorem exactCarrierConstructorOperatorIds_nodup :
     exactCarrierConstructorOperatorIds.Nodup := by native_decide
@@ -933,7 +963,7 @@ theorem exactTheoremBackedStrongOperatorIds_length :
     exactTheoremBackedStrongOperatorIds.length = 122 := by native_decide
 
 theorem exactStructuralHelperStrongOperatorIds_length :
-    exactStructuralHelperStrongOperatorIds.length = 216 := by native_decide
+    exactStructuralHelperStrongOperatorIds.length = 245 := by native_decide
 
 theorem structuralCarrierOperatorIds_length :
     structuralCarrierOperatorIds.length = 0 := by native_decide
@@ -951,7 +981,7 @@ theorem domainGap_projectionAnchorOnly_length :
     (domainGapKindOperatorIds .projectionAnchorOnly).length = 102 := by native_decide
 
 theorem domainGap_carrierConstructorOnly_length :
-    (domainGapKindOperatorIds .carrierConstructorOnly).length = 71 := by native_decide
+    (domainGapKindOperatorIds .carrierConstructorOnly).length = 100 := by native_decide
 
 theorem domainGap_predicateAnchorOnly_length :
     (domainGapKindOperatorIds .predicateAnchorOnly).length = 9 := by native_decide
@@ -960,49 +990,49 @@ theorem domainGap_truthMarkerOnly_length :
     (domainGapKindOperatorIds .truthMarkerOnly).length = 4 := by native_decide
 
 theorem domainGap_catalogueShapeOnly_length :
-    (domainGapKindOperatorIds .catalogueShapeOnly).length = 33 := by native_decide
+    (domainGapKindOperatorIds .catalogueShapeOnly).length = 4 := by native_decide
 
 theorem catalogueShape_assignment_length :
-    (catalogueShapeSignatureKindOperatorIds .assignment).length = 4 := by native_decide
+    (catalogueShapeSignatureKindOperatorIds .assignment).length = 0 := by native_decide
 
 theorem catalogueShape_binding_length :
-    (catalogueShapeSignatureKindOperatorIds .binding).length = 1 := by native_decide
+    (catalogueShapeSignatureKindOperatorIds .binding).length = 0 := by native_decide
 
 theorem catalogueShape_debind_length :
-    (catalogueShapeSignatureKindOperatorIds .debind).length = 3 := by native_decide
+    (catalogueShapeSignatureKindOperatorIds .debind).length = 0 := by native_decide
 
 theorem catalogueShape_decomposer_length :
-    (catalogueShapeSignatureKindOperatorIds .decomposer).length = 1 := by native_decide
+    (catalogueShapeSignatureKindOperatorIds .decomposer).length = 0 := by native_decide
 
 theorem catalogueShape_domainProcess_length :
     (catalogueShapeSignatureKindOperatorIds .domainProcess).length = 0 := by native_decide
 
 theorem catalogueShape_domainRule_length :
-    (catalogueShapeSignatureKindOperatorIds .domainRule).length = 6 := by native_decide
+    (catalogueShapeSignatureKindOperatorIds .domainRule).length = 0 := by native_decide
 
 theorem catalogueShape_modifier_length :
-    (catalogueShapeSignatureKindOperatorIds .modifier).length = 2 := by native_decide
+    (catalogueShapeSignatureKindOperatorIds .modifier).length = 0 := by native_decide
 
 theorem catalogueShape_partition_length :
-    (catalogueShapeSignatureKindOperatorIds .partition).length = 1 := by native_decide
+    (catalogueShapeSignatureKindOperatorIds .partition).length = 0 := by native_decide
 
 theorem catalogueShape_protocol_length :
-    (catalogueShapeSignatureKindOperatorIds .protocol).length = 2 := by native_decide
+    (catalogueShapeSignatureKindOperatorIds .protocol).length = 0 := by native_decide
 
 theorem catalogueShape_response_length :
-    (catalogueShapeSignatureKindOperatorIds .response).length = 3 := by native_decide
+    (catalogueShapeSignatureKindOperatorIds .response).length = 0 := by native_decide
 
 theorem catalogueShape_signal_length :
-    (catalogueShapeSignatureKindOperatorIds .signal).length = 2 := by native_decide
+    (catalogueShapeSignatureKindOperatorIds .signal).length = 0 := by native_decide
 
 theorem catalogueShape_stateTransition_length :
     (catalogueShapeSignatureKindOperatorIds .stateTransition).length = 2 := by native_decide
 
 theorem catalogueShape_textAct_length :
-    (catalogueShapeSignatureKindOperatorIds .textAct).length = 2 := by native_decide
+    (catalogueShapeSignatureKindOperatorIds .textAct).length = 0 := by native_decide
 
 theorem catalogueShape_trajectory_length :
-    (catalogueShapeSignatureKindOperatorIds .trajectory).length = 4 := by native_decide
+    (catalogueShapeSignatureKindOperatorIds .trajectory).length = 2 := by native_decide
 
 theorem catalogueShapeSignatureKindPartition_counts :
     (catalogueShapeSignatureKindOperatorIds .assignment).length
@@ -1072,9 +1102,9 @@ theorem operatorRegistryCoverage_summary :
     operatorRegistryEntries.length = 371
       ∧ executableRegistryEntries.length = 371
       ∧ executableOperatorIds.length = 371
-      ∧ theoremBackedOperatorIds.length = 338
-      ∧ structuralCatalogueOperatorIds.length = 33
-      ∧ catalogueNormalFormOperatorIds.length = 33
+      ∧ theoremBackedOperatorIds.length = 367
+      ∧ structuralCatalogueOperatorIds.length = 4
+      ∧ catalogueNormalFormOperatorIds.length = 4
       ∧ domainGapOperatorIds.length = 249
       ∧ exactTheoremBackedStrongOperatorIds.length
         + exactStructuralHelperStrongOperatorIds.length
@@ -1111,12 +1141,13 @@ example : operatorSemanticStrength .D_4 = .exactStructuralHelper := by native_de
 example : operatorSemanticStrength .Z_18 = .exactStructuralHelper := by native_decide
 example : operatorSemanticStrength .A_16 = .exactStructuralHelper := by native_decide
 example : operatorSemanticStrength .B_8 = .exactStructuralHelper := by native_decide
+example : operatorSemanticStrength .E_2 = .exactStructuralHelper := by native_decide
 example : operatorStructuralCarrierKind? .S_1 = some .applicationCarrier := by native_decide
 example : operatorStructuralCarrierKind? .R_12 = some .pairCarrier := by native_decide
-example : operatorStructuralCarrierKind? .E_2 = some .catalogueNormalForm := by native_decide
+example : operatorStructuralCarrierKind? .E_2 = some .pairCarrier := by native_decide
 example : operatorDomainGapKind? .S_1 = some .applicationHelperOnly := by native_decide
 example : operatorDomainGapKind? .R_12 = some .carrierConstructorOnly := by native_decide
-example : operatorDomainGapKind? .E_2 = some .catalogueShapeOnly := by native_decide
+example : operatorDomainGapKind? .E_2 = some .carrierConstructorOnly := by native_decide
 example : operatorDomainGapKind? .I_1 = none := by native_decide
 example : (theoremBackedSemanticsFor? .K_8).isSome = true := by native_decide
 example : (executableSemanticsFor? .Q_5).isSome = true := by native_decide

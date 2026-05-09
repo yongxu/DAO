@@ -65,24 +65,24 @@ theorem wenSurface_operator_catalogue_counts :
     fullOperatorSignatures.length = 371
       ∧ operatorRegistryEntries.length = 371
       ∧ executableRegistryEntries.length = 371
-      ∧ theoremBackedOperatorIds.length = 338
+      ∧ theoremBackedOperatorIds.length = 367
       ∧ exactTheoremBackedStrongOperatorIds.length = 122
-      ∧ exactStructuralHelperStrongOperatorIds.length = 216
+      ∧ exactStructuralHelperStrongOperatorIds.length = 245
       ∧ structuralCarrierOperatorIds.length = 0
-      ∧ catalogueNormalFormOperatorIds.length = 33
+      ∧ catalogueNormalFormOperatorIds.length = 4
       ∧ domainGapOperatorIds.length = 249
       ∧ (domainGapKindOperatorIds .applicationHelperOnly).length = 12
       ∧ (domainGapKindOperatorIds .identityNoopOnly).length = 18
       ∧ (domainGapKindOperatorIds .projectionAnchorOnly).length = 102
-      ∧ (domainGapKindOperatorIds .carrierConstructorOnly).length = 71
+      ∧ (domainGapKindOperatorIds .carrierConstructorOnly).length = 100
       ∧ (domainGapKindOperatorIds .predicateAnchorOnly).length = 9
       ∧ (domainGapKindOperatorIds .truthMarkerOnly).length = 4
-      ∧ (domainGapKindOperatorIds .catalogueShapeOnly).length = 33
+      ∧ (domainGapKindOperatorIds .catalogueShapeOnly).length = 4
       ∧ (catalogueShapeSignatureKindOperatorIds .stateTransition).length = 2
       ∧ (catalogueShapeSignatureKindOperatorIds .domainProcess).length = 0
-      ∧ (catalogueShapeSignatureKindOperatorIds .domainRule).length = 6
-      ∧ (catalogueShapeSignatureKindOperatorIds .assignment).length = 4
-      ∧ (catalogueShapeSignatureKindOperatorIds .trajectory).length = 4
+      ∧ (catalogueShapeSignatureKindOperatorIds .domainRule).length = 0
+      ∧ (catalogueShapeSignatureKindOperatorIds .assignment).length = 0
+      ∧ (catalogueShapeSignatureKindOperatorIds .trajectory).length = 2
       ∧ allOperatorIds.all (fun id => !(operatorForms id).isEmpty) = true := by
   exact
     ⟨ fullOperatorSignatures_length
@@ -134,24 +134,24 @@ theorem wenSurface_registry_summary :
       ∧ allOperatorCellSemanticRows.length = 71232
       ∧ operatorRegistryEntries.length = 371
       ∧ executableRegistryEntries.length = 371
-      ∧ theoremBackedOperatorIds.length = 338
+      ∧ theoremBackedOperatorIds.length = 367
       ∧ exactTheoremBackedStrongOperatorIds.length = 122
-      ∧ exactStructuralHelperStrongOperatorIds.length = 216
+      ∧ exactStructuralHelperStrongOperatorIds.length = 245
       ∧ structuralCarrierOperatorIds.length = 0
-      ∧ catalogueNormalFormOperatorIds.length = 33
+      ∧ catalogueNormalFormOperatorIds.length = 4
       ∧ domainGapOperatorIds.length = 249
       ∧ (domainGapKindOperatorIds .applicationHelperOnly).length = 12
       ∧ (domainGapKindOperatorIds .identityNoopOnly).length = 18
       ∧ (domainGapKindOperatorIds .projectionAnchorOnly).length = 102
-      ∧ (domainGapKindOperatorIds .carrierConstructorOnly).length = 71
+      ∧ (domainGapKindOperatorIds .carrierConstructorOnly).length = 100
       ∧ (domainGapKindOperatorIds .predicateAnchorOnly).length = 9
       ∧ (domainGapKindOperatorIds .truthMarkerOnly).length = 4
-      ∧ (domainGapKindOperatorIds .catalogueShapeOnly).length = 33
+      ∧ (domainGapKindOperatorIds .catalogueShapeOnly).length = 4
       ∧ (catalogueShapeSignatureKindOperatorIds .stateTransition).length = 2
       ∧ (catalogueShapeSignatureKindOperatorIds .domainProcess).length = 0
-      ∧ (catalogueShapeSignatureKindOperatorIds .domainRule).length = 6
-      ∧ (catalogueShapeSignatureKindOperatorIds .assignment).length = 4
-      ∧ (catalogueShapeSignatureKindOperatorIds .trajectory).length = 4
+      ∧ (catalogueShapeSignatureKindOperatorIds .domainRule).length = 0
+      ∧ (catalogueShapeSignatureKindOperatorIds .assignment).length = 0
+      ∧ (catalogueShapeSignatureKindOperatorIds .trajectory).length = 2
       ∧ allOperatorIds.all (fun id => !(operatorForms id).isEmpty) = true
       ∧ executableOperatorIds.all isCatalogueOperator = true
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).signature.id = id) := by
