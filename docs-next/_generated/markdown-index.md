@@ -76,8 +76,8 @@
 | Position Operator Graph | 23 | `formal/SSBX/notes/PositionOperatorGraph.md` |
 | 单字命名 · 核心收束与接口映射表 | 147 | `formal/SSBX/notes/atom-naming.md` |
 | baguaWen · 受控文规范（Frozen for M1） | 161 | `formal/SSBX/notes/baguaWen-spec.md` |
-| Markov-Causal Bridge Plan | 586 | `formal/SSBX/notes/markov-causal-bridge-plan.md` |
-| Markov-Causal Bridge Verification Plan | 400 | `formal/SSBX/notes/markov-causal-bridge-verification-plan.md` |
+| Markov-Causal Bridge Plan | 597 | `formal/SSBX/notes/markov-causal-bridge-plan.md` |
+| Markov-Causal Bridge Verification Plan | 407 | `formal/SSBX/notes/markov-causal-bridge-verification-plan.md` |
 | 数学公设字元生成与接口映射 | 95 | `formal/SSBX/notes/math-axiom-map.md` |
 | MetaInterp ISA Expressivity Gap — Phase C Architecture Note | 154 | `formal/SSBX/notes/metainterp-isa-gap.md` |
 | 单根回归：一元生成完备工程计划 | 179 | `formal/SSBX/notes/monad-root-plan.md` |
@@ -86,7 +86,7 @@
 | BaguaTuring run boundary | 21 | `formal/SSBX/notes/run-boundary.md` |
 | Tier 3 Quine Roadmap | 136 | `formal/SSBX/notes/tier3-quine-roadmap.md` |
 | Truth / ClaimLedger / Absolute claim strength audit | 240 | `formal/SSBX/notes/truth-ledger-boundary.md` |
-| 大统一逐步验证路线 | 1257 | `formal/SSBX/notes/unification-stepwise-plan.md` |
+| 大统一逐步验证路线 | 1293 | `formal/SSBX/notes/unification-stepwise-plan.md` |
 | v14 形式证明骨架 · 三分原则与 roadmap | 65 | `formal/SSBX/notes/v14-roadmap.md` |
 | WenSurface 路线状态 | 64 | `formal/SSBX/notes/wensurface-roadmap.md` |
 | WenSurface Syntax Spec: brackets, precedence, infix, mixfix | 579 | `formal/SSBX/notes/wensurface-syntax-spec.md` |
@@ -112,7 +112,7 @@
 | K · 完备性审计 · 集合自省 | 345 | `义理/K_完备性审计.md` |
 | L · 文道一也：图灵完备 · 以文自释 · 可执文言 · 微核 | 639 | `义理/L_文道一也_自释与微核.md` |
 | M · 证明报告 · 理之不完备 · GodelLi 形式化 | 384 | `义理/M_证明报告_192_理之不完备.md` |
-| Markov因果桥 · 大统一最小验证构造 | 688 | `义理/Markov因果桥 · 大统一最小验证构造.md` |
+| Markov因果桥 · 大统一最小验证构造 | 696 | `义理/Markov因果桥 · 大统一最小验证构造.md` |
 | N · 儒家从元到圣 · Kernel.lean Layers 13–31 之 形式对应 | 372 | `义理/N_儒家从元到圣.md` |
 | O · 进化非道者生存——三视证 | 455 | `义理/O_进化非道者生存_三视证.md` |
 | P · 道家从无到化 · Kernel.lean Layers 32–33 之 形式对应 | 274 | `义理/P_道家从无到化.md` |

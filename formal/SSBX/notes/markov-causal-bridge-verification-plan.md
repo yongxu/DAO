@@ -45,6 +45,7 @@
 | `formal/SSBX/Foundation/Modern/QuantumRelativityBornRuleDerivationBridge.lean` | S18 Born rule from Markov/amplitude compatibility bridge |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityPathWeightMultiplicationBridge.lean` | S19 finite path-weight multiplication boundary |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityNontrivialChannelLawBridge.lean` | S20 nontrivial finite quantum-channel law boundary |
+| `formal/SSBX/Foundation/Modern/QuantumRelativityBornMeasurementBridge.lean` | S21 one-qubit computational-basis Born measurement weights boundary |
 | `formal/SSBX/notes/markov-causal-bridge-plan.md` | 探索计划与完成记录 |
 | `formal/SSBX/notes/unification-stepwise-plan.md` | 逐步完善到候选统一的阶段路线 |
 | `义理/文构造完备与直相加边界.md` | 对 `current-language no-go` 旧说法的正名 |
@@ -83,6 +84,7 @@
 | `义理/Born rule推导候选 · Markov桥S18.md` | S18 Born-rule derivation companion 文档 |
 | `义理/路径权重乘法候选 · Markov桥S19.md` | S19 path-weight multiplication companion 文档 |
 | `义理/非平凡量子通道律候选 · Markov桥S20.md` | S20 nontrivial finite quantum-channel law companion 文档 |
+| `义理/概率幅到测量权重 · Markov桥S21.md` | S21 one-qubit computational-basis Born measurement weights companion 文档 |
 
 ## 当前验证结论
 
@@ -127,8 +129,9 @@
 - [x] `born_rule_derivation_bridge_summary` 已关闭 Born rule 从 Markov/amplitude bridge 的 finite typed-skeleton derivation：Markov row probability 与 `ampProb` compatibility 推出 normalized amplitude support，并接入 finite Born distribution boundary。
 - [x] `path_weight_multiplication_bridge_summary` 已关闭 path-weight multiplication candidate：finite kernel path append 的权重等于左右路径权重乘积，并接回 S3 reachability / causalBefore。
 - [x] `nontrivial_quantum_channel_law_bridge_summary` 已关闭 nontrivial finite quantum-channel law：非零 channel amplitude 推出 step / carried classical support / Born-shaped boundary，并给 concrete bridge 非零二步组合 witness。
+- [x] `born_measurement_bridge_summary` 已关闭 one-qubit computational-basis Born measurement weights：normalized qubit 的两个 displayed weights 非负且和为 `1`。
 - [x] 首次新 worktree 原生构建的 `mathlib4` 克隆阻塞已记录为基础设施失败，不当作 theorem 失败。
-- [ ] 尚未验证 amplitude dynamics、measurement postulate semantics、decoherence、continuous phase/action law、general all-path enumeration、一般 path integral、真实可测干涉律、physical unitary / CPTP / Kraus / density-matrix channel law、完整因果偏序、局部有限 causal set、度规恢复、数据校准、可测预言 theorem 或经验闭合。
+- [ ] 尚未验证一般 Hilbert measurement、POVM/PVM、amplitude dynamics、measurement postulate semantics、decoherence、continuous phase/action law、general all-path enumeration、一般 path integral、真实可测干涉律、physical unitary / CPTP / Kraus / density-matrix channel law、完整因果偏序、局部有限 causal set、度规恢复、数据校准、可测预言 theorem 或经验闭合。
 
 ## 每次变更的最低验证门槛
 
@@ -173,6 +176,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityUnitaryCPTPLedgerBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityBornRuleDerivationBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityPathWeightMultiplicationBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityNontrivialChannelLawBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityBornMeasurementBridge
 lake build SSBX
 git diff --check --
 ```
@@ -242,6 +246,7 @@ rg -n "待处理|future|deferred|部分相关|佛|唯识|analogy|unchecked|plann
 | Born rule derivation from Markov/amplitude bridge | `born_rule_derivation_bridge_summary` | `machineChecked` |
 | finite path-weight multiplication boundary | `path_weight_multiplication_bridge_summary` | `machineChecked` |
 | nontrivial finite quantum-channel law | `nontrivial_quantum_channel_law_bridge_summary` | `machineChecked` |
+| one-qubit Born measurement weights | `born_measurement_bridge_summary` | `machineChecked` |
 | tagged-language noncollapse 保持 | `markov_bridge_not_direct_language_addition` | `machineChecked` |
 | 公开摘要 | `markov_causal_bridge_summary` | `machineChecked` |
 
@@ -344,6 +349,7 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
 | V18 | 引入 Born rule from Markov/amplitude compatibility bridge | 已由 `born_rule_derivation_bridge_summary` 关闭 finite typed-skeleton derivation；amplitude dynamics、measurement semantics、unitary/CPTP、metric recovery 与 empirical closure 仍 pending |
 | V19 | 引入 path-weight multiplication bridge | 已由 `path_weight_multiplication_bridge_summary` 关闭 finite kernel path append weight law；stochastic semantics、general all-path enumeration、path integral 与 empirical closure 仍 pending |
 | V20 | 引入 nontrivial finite quantum-channel law bridge | 已由 `nontrivial_quantum_channel_law_bridge_summary` 关闭非零 channel amplitude law；physical unitary/CPTP/Kraus/density-matrix law、amplitude dynamics 与 empirical closure 仍 pending |
+| V21 | 引入 one-qubit computational-basis Born measurement weights bridge | 已由 `born_measurement_bridge_summary` 关闭 normalized qubit 的二值测量权重非负与 sum-one；一般 Hilbert measurement、POVM/PVM、decoherence 与 measurement problem 仍 pending |
 
 ## 失败记录模板
 
@@ -393,8 +399,9 @@ lake build SSBX.Foundation.Modern.QuantumRelativityStepwiseUnificationBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityBornRuleDerivationBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityPathWeightMultiplicationBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityNontrivialChannelLawBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityBornMeasurementBridge
 lake build SSBX
 git diff --check --
 ```
 
-备注：`lake build SSBX` 仍会输出既有 Wen 模块的 unused simp args linter 警告；本轮新增 Markov 桥系列模块，包括 S20 `QuantumRelativityNontrivialChannelLawBridge`，目标模块自身无新增警告。
+备注：`lake build SSBX` 仍会输出既有 Wen 模块的 unused simp args linter 警告；本轮新增 Markov 桥系列模块，包括 S21 `QuantumRelativityBornMeasurementBridge`，目标模块自身无新增警告。

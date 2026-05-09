@@ -50,6 +50,7 @@
 -> Born rule 推导候选
 -> 路径权重乘法候选
 -> 非平凡量子通道律候选
+-> 概率幅到测量权重候选
 -> 几何候选接口
 -> 经验 pending ledger
 -> 更强统一摘要 theorem
@@ -104,6 +105,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityUnitaryCPTPLedgerBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityBornRuleDerivationBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityPathWeightMultiplicationBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityNontrivialChannelLawBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityBornMeasurementBridge
 lake build SSBX
 git diff --check --
 ```
@@ -115,7 +117,7 @@ git diff --check --
 | 项 | 内容 |
 |---|---|
 | Lean 出口 | 保持 `markov_causal_bridge_summary`、`measurement_event_alignment`、`markov_bridge_not_direct_language_addition` 为 `machineChecked` |
-| 文档出口 | 本文件与验证计划明确列出未关闭项：stochastic semantics、general all-path enumeration、path integral、amplitude dynamics、measurement semantics、decoherence、physical unitary/CPTP/Kraus/density channel law、干涉、因果偏序、度规恢复、经验闭合；finite row sum-one boundary 已由 S9 后续关闭，Markov/amplitude compatibility 下的 Born rule derivation 已由 S18 关闭，finite path-weight multiplication 已由 S19 关闭，nontrivial finite quantum-channel law 已由 S20 关闭 |
+| 文档出口 | 本文件与验证计划明确列出未关闭项：stochastic semantics、general all-path enumeration、path integral、amplitude dynamics、general Hilbert measurement、POVM/PVM、decoherence、physical unitary/CPTP/Kraus/density channel law、干涉、因果偏序、度规恢复、经验闭合；finite row sum-one boundary 已由 S9 后续关闭，Markov/amplitude compatibility 下的 Born rule derivation 已由 S18 关闭，finite path-weight multiplication 已由 S19 关闭，nontrivial finite quantum-channel law 已由 S20 关闭，one-qubit computational-basis measurement weights 已由 S21 关闭 |
 | 失败记录 | 若发现文档中有强于 theorem 的终局统一或量子引力完成等 claim，记录为 `conceptual mismatch`，并改回对应结构层级 |
 | 当前正名 | Markov-因果桥当前是最小可验证中介构造；更强的物理大统一读法需要后续 theorem 合取后再命名 |
 
@@ -1180,6 +1182,39 @@ nontrivial_quantum_channel_law_bridge_summary。
 | `concrete_nontrivial_sum_over_middle_channel_law` | `QuantumRelativityNontrivialChannelLawBridge.lean` | concrete prepared -> measured composed amplitude `1`，并接 two-step witness 与 normalized `[1]` support |
 | `nontrivial_quantum_channel_law_bridge_summary` | `QuantumRelativityNontrivialChannelLawBridge.lean` | S20 nontrivial finite quantum-channel law boundary 已关闭 |
 
+## S21 · 概率幅到测量权重候选
+
+目标：把 `Quantum.lean` 中 one-qubit computational-basis Born rule 接入 Markov bridge 主线。S21 不证明一般 Hilbert measurement、POVM/PVM、decoherence 或测量问题；它只证明 normalized qubit 的两个 computational-basis measurement weights 非负且和为 `1`。
+
+| 项 | 内容 |
+|---|---|
+| Lean 出口 | `born_measurement_bridge_summary` |
+| 最低 theorem 形态 | 合取 `ComputationalBasisBornMeasurementClosed`、S18 Markov/amplitude Born derivation、S20 nontrivial channel law、pending ledger 与 Wen coverage |
+| 失败记录 | 本轮实现未出现 Lean 证明失败；边界保留为一般测量理论 pending |
+| 文档更新 | 已新增《概率幅到测量权重 · Markov桥S21》 |
+| 后续结构 | 一般 Hilbert measurement、PVM/POVM、spectral semantics、decoherence、measurement problem 与 empirical closure |
+
+通过判准：
+
+```text
+ComputationalBasisMeasurementWeights；
+computational_basis_weight0_eq_ampProb；
+computational_basis_weight1_eq_ampProb；
+born_rule_gives_normalized_measurement_weights；
+computational_basis_measurement_weights_normalized；
+born_measurement_bridge_summary。
+```
+
+当前状态：
+
+| theorem | 文件 | 读法 |
+|---|---|---|
+| `computational_basis_weight0_eq_ampProb` | `QuantumRelativityBornMeasurementBridge.lean` | `|0⟩` 分支权重等于 `ampProb (ψ 0)` |
+| `computational_basis_weight1_eq_ampProb` | `QuantumRelativityBornMeasurementBridge.lean` | `|1⟩` 分支权重等于 `ampProb (ψ 1)` |
+| `born_rule_gives_normalized_measurement_weights` | `QuantumRelativityBornMeasurementBridge.lean` | normalized qubit 的二值 measurement weights 非负且和为 `1` |
+| `computational_basis_measurement_weights_normalized` | `QuantumRelativityBornMeasurementBridge.lean` | record 接口下的 normalized measurement weights |
+| `born_measurement_bridge_summary` | `QuantumRelativityBornMeasurementBridge.lean` | S21 one-qubit Born measurement boundary 已关闭 |
+
 ## 失败记录追加区
 
 失败记录格式沿用验证计划，并允许追加在此区：
@@ -1235,6 +1270,7 @@ nontrivial_quantum_channel_law_bridge_summary。
 | 2026-05-09 | S18 | failure retained / success | 第一次 build 中 Rat list sum cast、`List.map_map` composition shape 与 concrete row support projection 展开失败；补 `list_map_rat_sum_cast`、改用 composition shape、展开 `concreteFiniteRowSupportNormalization` 后关闭 Markov/amplitude compatibility 下的 Born-rule derivation |
 | 2026-05-09 | S19 | failure retained / success | 第一次 build 中 indexed inductive `refl` 分支写成带参数形式，且 concrete `KernelPath.refl` 未显式指定 `K := concreteKernel`；修正后关闭 finite kernel path 的 weight append law |
 | 2026-05-09 | S20 | failure retained / success | 第一次 build 中 `AmplitudeSupportNormalized` namespace 漏 open；dependent Born existential witness 展开触发 `whnf` heartbeat timeout，改为合取 S16 closed boundary 与 concrete normalized support 后关闭 nontrivial finite quantum-channel law |
+| 2026-05-09 | S21 | success | 新增 one-qubit computational-basis Born measurement weights bridge；关闭 normalized qubit 的 `bornProb0` / `bornProb1` 非负与 sum-one，仍不证明一般 Hilbert measurement、POVM/PVM、decoherence 或 measurement problem |
 
 ## 统一用语正名
 
@@ -1242,9 +1278,9 @@ nontrivial_quantum_channel_law_bridge_summary。
 
 | 词 | 在本路线中的含义 | 结构依据 |
 |---|---|---|
-| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S20 已关闭的 summary theorem 与路线日志 |
-| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8-S20 pending list |
-| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary`、`normalized_mass_bridge_summary`、`born_weight_normalization_bridge_summary`、`born_distribution_bridge_summary`、`channel_compose_bridge_summary`、`channel_compose_associativity_bridge_summary`、`sum_over_middle_channel_bridge_summary`、`sum_over_middle_born_distribution_bridge_summary`、`unitary_cptp_ledger_bridge_summary`、`born_rule_derivation_bridge_summary`、`path_weight_multiplication_bridge_summary`、`nontrivial_quantum_channel_law_bridge_summary` |
+| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S21 已关闭的 summary theorem 与路线日志 |
+| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8-S21 pending list |
+| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary`、`normalized_mass_bridge_summary`、`born_weight_normalization_bridge_summary`、`born_distribution_bridge_summary`、`channel_compose_bridge_summary`、`channel_compose_associativity_bridge_summary`、`sum_over_middle_channel_bridge_summary`、`sum_over_middle_born_distribution_bridge_summary`、`unitary_cptp_ledger_bridge_summary`、`born_rule_derivation_bridge_summary`、`path_weight_multiplication_bridge_summary`、`nontrivial_quantum_channel_law_bridge_summary`、`born_measurement_bridge_summary` |
 
 推荐正名句：
 

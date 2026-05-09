@@ -172,6 +172,7 @@ import SSBX.Foundation.Modern.QuantumRelativityUnitaryCPTPLedgerBridge
 import SSBX.Foundation.Modern.QuantumRelativityBornRuleDerivationBridge
 import SSBX.Foundation.Modern.QuantumRelativityPathWeightMultiplicationBridge
 import SSBX.Foundation.Modern.QuantumRelativityNontrivialChannelLawBridge
+import SSBX.Foundation.Modern.QuantumRelativityBornMeasurementBridge
 import SSBX.Foundation.Modern.SUN
 
 -- Phase 4 主体续（自然演绎 / Lebesgue 积分 / 连续 ODE / 神经科学 / 完备性深化）

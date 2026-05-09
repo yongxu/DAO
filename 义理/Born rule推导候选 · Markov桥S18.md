@@ -68,7 +68,7 @@ required but not closed：
 | metric recovery | required but not closed |
 | empirical closure | required but not closed |
 
-本轮闭合范围：**Born rule 从 Markov row probability 与 amplitude bridge compatibility 的有限 typed-skeleton 推导**。
+本轮闭合范围：**Born rule 从 Markov row probability 与 amplitude bridge compatibility 的有限 typed-skeleton 推导**。S21 后续把 one-qubit computational-basis 版本接到显式 measurement weights：`bornProb0` / `bornProb1` 非负且和为 `1`。
 
 ---
 

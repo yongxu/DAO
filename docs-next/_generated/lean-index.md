@@ -28,7 +28,7 @@
 | Module | Cluster | Imports | Decls | Lines | Path |
 | --- | --- | --- | --- | --- | --- |
 | WenyanSurface.lean | other | 3 | 1 | 1638 | `WenyanSurface.lean` |
-| SSBX | root | 172 | 0 | 205 | `formal/SSBX.lean` |
+| SSBX | root | 173 | 0 | 206 | `formal/SSBX.lean` |
 | SSBX.Core | root | 0 | 111 | 648 | `formal/SSBX/Core.lean` |
 | SSBX.Foundation.Bagua.AxiomCheck | Foundation/Bagua | 1 | 0 | 18 | `formal/SSBX/Foundation/Bagua/AxiomCheck.lean` |
 | SSBX.Foundation.Bagua.BaguaAlgebra | Foundation/Bagua | 1 | 120 | 734 | `formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean` |
@@ -173,7 +173,7 @@
 | SSBX.Foundation.Wen.WenSurface.EndToEnd | Foundation/Wen | 1 | 13 | 1188 | `formal/SSBX/Foundation/Wen/WenSurface/EndToEnd.lean` |
 | SSBX.Foundation.Wen.WenSurface.Lex | Foundation/Wen | 1 | 17 | 306 | `formal/SSBX/Foundation/Wen/WenSurface/Lex.lean` |
 | SSBX.Foundation.Wen.WenSurface.Reading | Foundation/Wen | 6 | 72 | 1010 | `formal/SSBX/Foundation/Wen/WenSurface/Reading.lean` |
-| SSBX.Foundation.Wen.WenSurface.Semantics | Foundation/Wen | 3 | 73 | 872 | `formal/SSBX/Foundation/Wen/WenSurface/Semantics.lean` |
+| SSBX.Foundation.Wen.WenSurface.Semantics | Foundation/Wen | 3 | 76 | 894 | `formal/SSBX/Foundation/Wen/WenSurface/Semantics.lean` |
 | SSBX.Foundation.Wen.WenSurface.Syntax | Foundation/Wen | 2 | 60 | 778 | `formal/SSBX/Foundation/Wen/WenSurface/Syntax.lean` |
 | SSBX.Foundation.Wen.WenyanFramedProg | Foundation/Wen | 2 | 4 | 36 | `formal/SSBX/Foundation/Wen/WenyanFramedProg.lean` |
 | SSBX.Foundation.Wen.WenyanLambdaBridge | Foundation/Wen | 2 | 27 | 194 | `formal/SSBX/Foundation/Wen/WenyanLambdaBridge.lean` |

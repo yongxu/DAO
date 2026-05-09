@@ -32,7 +32,7 @@
       "lines": 1638,
       "module": "WenyanSurface.lean",
       "path": "WenyanSurface.lean",
-      "sha256": "28fe7c9f1e9ae650155916d6118b883a9ed4bb08b055a5f047cd21b8906ce23f"
+      "sha256": "4d6697edb500a9a76b21c76c810086d4d88cfd3088bf485739eacf0bcf65084c"
     },
     {
       "cluster": "root",
@@ -190,6 +190,7 @@
         "SSBX.Foundation.Modern.QuantumRelativityBornRuleDerivationBridge",
         "SSBX.Foundation.Modern.QuantumRelativityPathWeightMultiplicationBridge",
         "SSBX.Foundation.Modern.QuantumRelativityNontrivialChannelLawBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityBornMeasurementBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -212,10 +213,10 @@
         "SSBX.Foundation.Modern.KeBoundary",
         "SSBX.Foundation.Modern.QuantumSpacetime"
       ],
-      "lines": 205,
+      "lines": 206,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "e4bf008bf914c72a00e1fb44a28c42cd3b7afb99e9564c8f59254ed8761f5597"
+      "sha256": "5de93eb3c9c1bfc4e801fed2e1b08a264ffd19b84bb15b604c342b8dd33da1f8"
     },
     {
       "cluster": "root",
@@ -19323,7 +19324,7 @@
       "lines": 162,
       "module": "SSBX.Foundation.Wen.WenSurface.Coverage",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Coverage.lean",
-      "sha256": "7aef4fd1d2db71d26b4d83a3d52cc504f3f29acf556ec0ae0e1418188ee1073b"
+      "sha256": "24f420933a48be21a763dc0de95c85e2c15e0240f773af6ec2359d3ae99d22af"
     },
     {
       "cluster": "Foundation/Wen",
@@ -19862,7 +19863,7 @@
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 73,
+      "declaration_count": 76,
       "declarations": [
         {
           "kind": "structure",
@@ -19990,6 +19991,10 @@
         },
         {
           "kind": "def",
+          "name": "exactCarrierConstructorOperatorIds"
+        },
+        {
+          "kind": "def",
           "name": "exactStructuralHelperOperatorIds"
         },
         {
@@ -20110,6 +20115,14 @@
         },
         {
           "kind": "theorem",
+          "name": "exactCarrierConstructorOperatorIds_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "exactCarrierConstructorOperatorIds_nodup"
+        },
+        {
+          "kind": "theorem",
           "name": "exactTheoremBackedStrongOperatorIds_length"
         },
         {
@@ -20162,10 +20175,10 @@
         "SSBX.Text.OperatorSignatures",
         "SSBX.Text.WenyanOperators"
       ],
-      "lines": 872,
+      "lines": 894,
       "module": "SSBX.Foundation.Wen.WenSurface.Semantics",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Semantics.lean",
-      "sha256": "cd55031ff8d2bdc301653a5aeb73b6ef7356510bf2dbec1f4042413a19065422"
+      "sha256": "91cfac7a07a3ca86b1eec9b4111f16b150051b03ab2af271699a86a1e37c54a4"
     },
     {
       "cluster": "Foundation/Wen",

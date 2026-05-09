@@ -73,7 +73,7 @@ theorem nontrivial_quantum_channel_law_bridge_summary :
 | dynamics / measurement semantics | required but not closed | 不证明 amplitude dynamics、measurement postulate、decoherence |
 | path integral / empirical closure | required but not closed | 不证明一般路径积分、metric recovery、数据校准或经验闭合 |
 
-本轮闭合范围：**finite support-respecting quantum-channel skeleton 的非平凡非零通道律**。
+本轮闭合范围：**finite support-respecting quantum-channel skeleton 的非平凡非零通道律**。S21 后续把 Born rule 的 one-qubit computational-basis 版本接到显式 measurement weights。
 
 ---
 
