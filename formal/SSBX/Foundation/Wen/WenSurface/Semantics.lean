@@ -11,6 +11,7 @@ denotations without pretending every row has full text-domain semantics.
 -/
 import SSBX.Foundation.Wen.WenDef
 import SSBX.Foundation.Wen.WenDefEval
+import SSBX.Foundation.Wen.WenSurface.DomainLaw
 import SSBX.Text.OperatorSignatures
 import SSBX.Text.WenyanOperators
 
@@ -957,10 +958,13 @@ zero: it tells users where execution is exact but the interpretation is still a
 typed carrier caveat.
 -/
 def operatorDomainCaveatKind? (id : OperatorId) : Option StructuralCarrierKind :=
-  match operatorStructuralCarrierKind? id with
-  | some .catalogueNormalForm => none
-  | some kind => some kind
-  | none => none
+  if (operatorDomainLawKind? id).isSome then
+    none
+  else
+    match operatorStructuralCarrierKind? id with
+    | some .catalogueNormalForm => none
+    | some kind => some kind
+    | none => none
 
 def domainCaveatKindOperatorIds (kind : StructuralCarrierKind) : List OperatorId :=
   allOperatorIds.filter (fun id => decide (operatorDomainCaveatKind? id = some kind))
@@ -1281,40 +1285,40 @@ theorem domainGapDetail_catalogueShape_length :
     (domainGapDetailKindOperatorIds .catalogueShape).length = 0 := by native_decide
 
 theorem domainCaveatOperatorIds_length :
-    domainCaveatOperatorIds.length = 249 := by native_decide
+    domainCaveatOperatorIds.length = 0 := by native_decide
 
 theorem domainCaveat_identityNoop_length :
-    (domainCaveatKindOperatorIds .identityNoop).length = 20 := by native_decide
+    (domainCaveatKindOperatorIds .identityNoop).length = 0 := by native_decide
 
 theorem domainCaveat_projectionAnchor_length :
-    (domainCaveatKindOperatorIds .projectionAnchor).length = 100 := by native_decide
+    (domainCaveatKindOperatorIds .projectionAnchor).length = 0 := by native_decide
 
 theorem domainCaveat_pairCarrier_length :
-    (domainCaveatKindOperatorIds .pairCarrier).length = 67 := by native_decide
+    (domainCaveatKindOperatorIds .pairCarrier).length = 0 := by native_decide
 
 theorem domainCaveat_duplicateFacetCarrier_length :
-    (domainCaveatKindOperatorIds .duplicateFacetCarrier).length = 13 := by native_decide
+    (domainCaveatKindOperatorIds .duplicateFacetCarrier).length = 0 := by native_decide
 
 theorem domainCaveat_singletonAggregateCarrier_length :
-    (domainCaveatKindOperatorIds .singletonAggregateCarrier).length = 17 := by native_decide
+    (domainCaveatKindOperatorIds .singletonAggregateCarrier).length = 0 := by native_decide
 
 theorem domainCaveat_binaryAggregateCarrier_length :
-    (domainCaveatKindOperatorIds .binaryAggregateCarrier).length = 2 := by native_decide
+    (domainCaveatKindOperatorIds .binaryAggregateCarrier).length = 0 := by native_decide
 
 theorem domainCaveat_ternaryAggregateCarrier_length :
-    (domainCaveatKindOperatorIds .ternaryAggregateCarrier).length = 4 := by native_decide
+    (domainCaveatKindOperatorIds .ternaryAggregateCarrier).length = 0 := by native_decide
 
 theorem domainCaveat_listProjectionCarrier_length :
-    (domainCaveatKindOperatorIds .listProjectionCarrier).length = 1 := by native_decide
+    (domainCaveatKindOperatorIds .listProjectionCarrier).length = 0 := by native_decide
 
 theorem domainCaveat_applicationCarrier_length :
-    (domainCaveatKindOperatorIds .applicationCarrier).length = 12 := by native_decide
+    (domainCaveatKindOperatorIds .applicationCarrier).length = 0 := by native_decide
 
 theorem domainCaveat_predicateAnchor_length :
-    (domainCaveatKindOperatorIds .predicateAnchor).length = 9 := by native_decide
+    (domainCaveatKindOperatorIds .predicateAnchor).length = 0 := by native_decide
 
 theorem domainCaveat_truthMarker_length :
-    (domainCaveatKindOperatorIds .truthMarker).length = 4 := by native_decide
+    (domainCaveatKindOperatorIds .truthMarker).length = 0 := by native_decide
 
 theorem domainCaveat_catalogueNormalForm_length :
     (domainCaveatKindOperatorIds .catalogueNormalForm).length = 0 := by native_decide
@@ -1659,8 +1663,39 @@ example : operatorDomainGapDetailKind? .B_8 = none := by native_decide
 example : operatorDomainGapDetailKind? .H_5 = none := by native_decide
 example : operatorDomainGapDetailKind? .E_2 = none := by native_decide
 example : operatorDomainGapDetailKind? .X_16 = none := by native_decide
-example : operatorDomainCaveatKind? .E_2 = some .pairCarrier := by native_decide
-example : operatorDomainCaveatKind? .X_16 = some .ternaryAggregateCarrier := by native_decide
+example : operatorDomainLawKind? .R_5 = some .spatialFrameAccessor := by native_decide
+example : operatorDomainLawKind? .A_1 = some .aspectMarkerAccessor := by native_decide
+example : operatorDomainLawKind? .H_1 = some .nameObjectAccessor := by native_decide
+example : operatorDomainLawKind? .Y_6 = some .medicineFrameAccessor := by native_decide
+example : operatorDomainLawKind? .Z_26 = some .divinationCognitionAccessor := by native_decide
+example : operatorDomainLawKind? .E_1 = some .institutionFrameAccessor := by native_decide
+example : operatorDomainLawKind? .R_12 = some .pairRelationCore := by native_decide
+example : operatorDomainLawKind? .T_3 = some .directedRelation := by native_decide
+example : operatorDomainLawKind? .E_2 = some .namingMeasureRelation := by native_decide
+example : operatorDomainLawKind? .LIJ_1 = some .protocolRelation := by native_decide
+example : operatorDomainLawKind? .ZHU_3 = some .zhuangziRelation := by native_decide
+example : operatorDomainLawKind? .R_6 = some .identityNoopLaw := by native_decide
+example : operatorDomainLawKind? .S_1 = some .applicationWrapperLaw := by native_decide
+example : operatorDomainLawKind? .B_8 = some .predicateAnchorLaw := by native_decide
+example : operatorDomainLawKind? .S_4 = some .truthMarkerLaw := by native_decide
+example : operatorDomainLawKind? .X_16 = some .aggregateFoldProjection := by native_decide
+example : operatorDomainCaveatKind? .R_5 = none := by native_decide
+example : operatorDomainCaveatKind? .A_1 = none := by native_decide
+example : operatorDomainCaveatKind? .H_1 = none := by native_decide
+example : operatorDomainCaveatKind? .Y_6 = none := by native_decide
+example : operatorDomainCaveatKind? .Z_26 = none := by native_decide
+example : operatorDomainCaveatKind? .E_1 = none := by native_decide
+example : operatorDomainCaveatKind? .R_12 = none := by native_decide
+example : operatorDomainCaveatKind? .T_3 = none := by native_decide
+example : operatorDomainCaveatKind? .E_2 = none := by native_decide
+example : operatorDomainCaveatKind? .LIJ_1 = none := by native_decide
+example : operatorDomainCaveatKind? .ZHU_3 = none := by native_decide
+example : operatorDomainCaveatKind? .R_6 = none := by native_decide
+example : operatorDomainCaveatKind? .S_1 = none := by native_decide
+example : operatorDomainCaveatKind? .B_8 = none := by native_decide
+example : operatorDomainCaveatKind? .S_4 = none := by native_decide
+example : operatorDomainCaveatKind? .X_16 = none := by native_decide
+example : domainCaveatOperatorIds.length = 0 := by native_decide
 example : operatorDomainGapDetailKind? .I_1 = none := by native_decide
 example : (theoremBackedSemanticsFor? .K_8).isSome = true := by native_decide
 example : (executableSemanticsFor? .Q_5).isSome = true := by native_decide

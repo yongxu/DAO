@@ -80,6 +80,7 @@ import SSBX.Foundation.Wen.WenyanLambdaRoute
 import SSBX.Foundation.Wen.WenyanLambdaBridge
 import SSBX.Foundation.Wen.WenSurface.Lex
 import SSBX.Foundation.Wen.WenSurface.Reading
+import SSBX.Foundation.Wen.WenSurface.DomainLaw
 import SSBX.Foundation.Wen.WenSurface.Semantics
 import SSBX.Foundation.Wen.WenSurface.Syntax
 import SSBX.Foundation.Wen.WenSurface.Elaborate
