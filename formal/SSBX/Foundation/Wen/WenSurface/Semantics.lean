@@ -69,6 +69,95 @@ def note : SemanticStrength → String
 
 end SemanticStrength
 
+/-- Fine-grained carrier kind for executable rows that are not full exact semantics.
+
+This is deliberately orthogonal to `SemanticStrength`: exact helper rows may
+still expose the carrier body kind, theorem-backed structural rows are
+classified by their carrier body, and catalogue-only rows use the
+catalogue-normal-form kind.
+-/
+inductive StructuralCarrierKind where
+  | identityNoop
+  | projectionAnchor
+  | pairCarrier
+  | duplicateFacetCarrier
+  | singletonAggregateCarrier
+  | binaryAggregateCarrier
+  | listProjectionCarrier
+  | applicationCarrier
+  | predicateAnchor
+  | truthMarker
+  | catalogueNormalForm
+deriving Repr, DecidableEq
+
+namespace StructuralCarrierKind
+
+def key : StructuralCarrierKind → String
+  | .identityNoop => "identity-noop"
+  | .projectionAnchor => "projection-anchor"
+  | .pairCarrier => "pair-carrier"
+  | .duplicateFacetCarrier => "duplicate-facet"
+  | .singletonAggregateCarrier => "singleton-aggregate"
+  | .binaryAggregateCarrier => "binary-aggregate"
+  | .listProjectionCarrier => "list-projection"
+  | .applicationCarrier => "application-carrier"
+  | .predicateAnchor => "predicate-anchor"
+  | .truthMarker => "truth-marker"
+  | .catalogueNormalForm => "catalogue-normal-form"
+
+def label : StructuralCarrierKind → String
+  | .identityNoop => "identity/no-op"
+  | .projectionAnchor => "projection anchor"
+  | .pairCarrier => "pair carrier"
+  | .duplicateFacetCarrier => "duplicate facet carrier"
+  | .singletonAggregateCarrier => "singleton aggregate carrier"
+  | .binaryAggregateCarrier => "binary aggregate carrier"
+  | .listProjectionCarrier => "list projection carrier"
+  | .applicationCarrier => "application carrier"
+  | .predicateAnchor => "predicate anchor"
+  | .truthMarker => "truth marker"
+  | .catalogueNormalForm => "catalogue normal form"
+
+def note : StructuralCarrierKind → String
+  | .identityNoop =>
+      "exact Hex identity/no-op body; not a full domain model by itself"
+  | .projectionAnchor =>
+      "Hex identity/projection anchor; executable but not a domain model"
+  | .pairCarrier =>
+      "Hex pair constructor; preserves two arguments without pair-domain semantics"
+  | .duplicateFacetCarrier =>
+      "Hex duplicate/facet constructor; preserves one argument as paired facets"
+  | .singletonAggregateCarrier =>
+      "singleton Hex aggregate; list carrier without aggregate-domain semantics"
+  | .binaryAggregateCarrier =>
+      "two-input Hex aggregate; list carrier without accumulation semantics"
+  | .listProjectionCarrier =>
+      "projection from a Hex list carrier"
+  | .applicationCarrier =>
+      "Hex endomap application carrier; applies a supplied transform"
+  | .predicateAnchor =>
+      "Bool predicate anchor; typed as a predicate without domain predicate semantics"
+  | .truthMarker =>
+      "Bool marker body; typed truth marker without discourse semantics"
+  | .catalogueNormalForm =>
+      "signature-preserving catalogue value without full domain denotation"
+
+end StructuralCarrierKind
+
+def allStructuralCarrierKinds : List StructuralCarrierKind :=
+  [ .identityNoop
+  , .projectionAnchor
+  , .pairCarrier
+  , .duplicateFacetCarrier
+  , .singletonAggregateCarrier
+  , .binaryAggregateCarrier
+  , .listProjectionCarrier
+  , .applicationCarrier
+  , .predicateAnchor
+  , .truthMarker
+  , .catalogueNormalForm
+  ]
+
 /-! ## § 1.1 Bool relation/predicate package -/
 
 def hexPredTrueBody : Tm :=
@@ -490,22 +579,77 @@ def isTheoremBackedOperator (id : OperatorId) : Bool :=
 def structuralCatalogueOperatorIds : List OperatorId :=
   allOperatorIds.filter (fun id => (theoremBackedSemanticsFor? id).isNone)
 
+/-! ## § 1.3 Semantic strength and carrier kind ledger -/
+
+/-- Theorem-backed helper rows whose existing `WenDef.Tm` body is exact enough
+to count as exact WenDef semantics, even though it is still not a full domain
+model of the classical term.
+-/
+def exactTypedHelperOperatorIds : List OperatorId :=
+  [.S_1, .S_19, .S_4, .S_5, .S_6, .S_8]
+
+/-- Theorem-backed identity/no-op rows where the note already claims the exact
+WenDef behavior is to preserve the Hex state.
+-/
+def exactIdentityNoopOperatorIds : List OperatorId :=
+  [.R_6, .T_7, .T_8, .F_11, .I_2, .P_9, .L_9, .L_10, .L_11,
+   .ZA_2, .SUN_6, .Z_12, .Z_13]
+
+def exactStructuralHelperOperatorIds : List OperatorId :=
+  exactTypedHelperOperatorIds ++ exactIdentityNoopOperatorIds
+
 /-- Exact `WenDef.Tm` bodies that are deliberately carrier/anchor semantics. -/
+def structuralCarrierKindForBody? (body : Tm) : Option StructuralCarrierKind :=
+  if decide (body = Stdlib.hexIdBody) then
+    some .projectionAnchor
+  else if decide (body = Stdlib.pairHBody) then
+    some .pairCarrier
+  else if decide (body = Stdlib.dupHBody) then
+    some .duplicateFacetCarrier
+  else if decide (body = Stdlib.list1HBody) then
+    some .singletonAggregateCarrier
+  else if decide (body = Stdlib.list2HBody) then
+    some .binaryAggregateCarrier
+  else if decide (body = Stdlib.headHBody) then
+    some .listProjectionCarrier
+  else if decide (body = Stdlib.hexApplyBody) then
+    some .applicationCarrier
+  else if decide (body = hexPredTrueBody) then
+    some .predicateAnchor
+  else if decide (body = Stdlib.boolMarkerBody) then
+    some .truthMarker
+  else
+    none
+
 def isStructuralCarrierBody (body : Tm) : Bool :=
-  decide (body = Stdlib.hexIdBody)
-    || decide (body = Stdlib.pairHBody)
-    || decide (body = Stdlib.dupHBody)
-    || decide (body = Stdlib.list1HBody)
-    || decide (body = Stdlib.list2HBody)
-    || decide (body = Stdlib.headHBody)
-    || decide (body = Stdlib.hexApplyBody)
-    || decide (body = hexPredTrueBody)
-    || decide (body = Stdlib.boolMarkerBody)
+  (structuralCarrierKindForBody? body).isSome
+
+/-- Fine-grained carrier kind, including exact helper rows and catalogue normal
+forms.  This answers "what kind of executable support is this?" independently
+from the stronger/coarser semantic strength.
+-/
+def operatorStructuralCarrierKind? (id : OperatorId) : Option StructuralCarrierKind :=
+  match theoremBackedSemanticsFor? id with
+  | some sem =>
+      if decide (id ∈ exactIdentityNoopOperatorIds) then
+        some .identityNoop
+      else
+        structuralCarrierKindForBody? sem.body
+  | none =>
+      if decide (id ∈ allOperatorIds) then
+        some .catalogueNormalForm
+      else
+        none
+
+def structuralCarrierKindOperatorIds (kind : StructuralCarrierKind) : List OperatorId :=
+  allOperatorIds.filter (fun id => decide (operatorStructuralCarrierKind? id = some kind))
 
 def operatorSemanticStrength (id : OperatorId) : SemanticStrength :=
   match theoremBackedSemanticsFor? id with
   | some sem =>
-      if isStructuralCarrierBody sem.body then
+      if decide (id ∈ exactStructuralHelperOperatorIds) then
+        .exactTheoremBacked
+      else if isStructuralCarrierBody sem.body then
         .structuralCarrier
       else
         .exactTheoremBacked
@@ -604,11 +748,17 @@ theorem structuralCatalogueOperatorIds_length :
 theorem catalogueNormalFormOperatorIds_length :
     catalogueNormalFormOperatorIds.length = 54 := by native_decide
 
+theorem exactStructuralHelperOperatorIds_length :
+    exactStructuralHelperOperatorIds.length = 19 := by native_decide
+
+theorem exactStructuralHelperOperatorIds_nodup :
+    exactStructuralHelperOperatorIds.Nodup := by native_decide
+
 theorem exactTheoremBackedStrongOperatorIds_length :
-    exactTheoremBackedStrongOperatorIds.length = 120 := by native_decide
+    exactTheoremBackedStrongOperatorIds.length = 139 := by native_decide
 
 theorem structuralCarrierOperatorIds_length :
-    structuralCarrierOperatorIds.length = 197 := by native_decide
+    structuralCarrierOperatorIds.length = 178 := by native_decide
 
 theorem semanticStrengthPartition_counts :
     exactTheoremBackedStrongOperatorIds.length
@@ -672,6 +822,12 @@ theorem operatorRegistryCoverage_summary :
 example : (executableSemanticsFor? .Z_5).isSome = true := by native_decide
 example : (theoremBackedSemanticsFor? .S_1).isSome = true := by native_decide
 example : (executableSemanticsFor? .S_1).isSome = true := by native_decide
+example : operatorSemanticStrength .S_1 = .exactTheoremBacked := by native_decide
+example : operatorSemanticStrength .S_4 = .exactTheoremBacked := by native_decide
+example : operatorSemanticStrength .A_16 = .structuralCarrier := by native_decide
+example : operatorStructuralCarrierKind? .S_1 = some .applicationCarrier := by native_decide
+example : operatorStructuralCarrierKind? .R_12 = some .pairCarrier := by native_decide
+example : operatorStructuralCarrierKind? .E_2 = some .catalogueNormalForm := by native_decide
 example : (theoremBackedSemanticsFor? .K_8).isSome = true := by native_decide
 example : (executableSemanticsFor? .Q_5).isSome = true := by native_decide
 example : (executableSemanticsFor? .A_12).isSome = true := by native_decide

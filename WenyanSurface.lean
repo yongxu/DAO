@@ -261,6 +261,14 @@ private def operatorBridgeableToBaguaL0 (id : OperatorId) : Bool :=
 private def baguaBridgeableOperatorIds : List OperatorId :=
   allOperatorIds.filter operatorBridgeableToBaguaL0
 
+private def carrierKindLines (id : OperatorId) : List String :=
+  match operatorStructuralCarrierKind? id with
+  | some kind =>
+      [ "carrier kind: " ++ kind.key
+      , "carrier note: " ++ kind.note
+      ]
+  | none => []
+
 private def operatorOutput (code : String) : String :=
   match operatorByCode? code with
   | none => s!"operator {code}: no such catalogue OperatorId"
@@ -295,7 +303,7 @@ private def operatorOutput (code : String) : String :=
          , "semantic note: " ++ (operatorSemanticStrength id).note
          , "bagua bridge: " ++ (if bridgeable then "bagua-l0-yi" else "none")
          , "executable: " ++ executable
-         ] ++ compoundLine)
+         ] ++ carrierKindLines id ++ compoundLine)
 
 private def coverageOutput : String :=
   let readingCount :=
@@ -313,7 +321,10 @@ private def coverageOutput : String :=
     ]
 
 private def operatorListFilterExpected : String :=
-  "all, executable, theorem-backed, exact, structural, structural-carrier, catalogue-normal-form, bridgeable, known-not-executable, or unsupported"
+  "all, executable, theorem-backed, exact, structural, structural-carrier, catalogue-normal-form, identity-noop, projection-anchor, pair-carrier, duplicate-facet, singleton-aggregate, binary-aggregate, list-projection, application-carrier, predicate-anchor, truth-marker, bridgeable, known-not-executable, or unsupported"
+
+private def operatorCarrierKindFilter? (filter : String) : Option StructuralCarrierKind :=
+  allStructuralCarrierKinds.find? (fun kind => kind.key == filter)
 
 private def operatorListFilterValid (filter : String) : Bool :=
   filter == "all"
@@ -323,6 +334,7 @@ private def operatorListFilterValid (filter : String) : Bool :=
     || filter == "structural"
     || filter == "structural-carrier"
     || filter == "catalogue-normal-form"
+    || (operatorCarrierKindFilter? filter).isSome
     || filter == "bridgeable"
     || filter == "known-not-executable"
     || filter == "unsupported"
@@ -341,14 +353,18 @@ private def operatorListIds (filter : String) : List OperatorId :=
     structuralCarrierOperatorIds
   else if filter == "catalogue-normal-form" then
     catalogueNormalFormOperatorIds
-  else if filter == "structural" then
-    allOperatorIds.filter (fun id => !decide (operatorSemanticStrength id = .exactTheoremBacked))
-  else if filter == "bridgeable" then
-    baguaBridgeableOperatorIds
-  else if operatorListFilterIsKnownNotExecutable filter then
-    allOperatorIds.filter (fun id => !(isExecutableOperator id))
   else
-    allOperatorIds
+    match operatorCarrierKindFilter? filter with
+    | some kind => structuralCarrierKindOperatorIds kind
+    | none =>
+        if filter == "structural" then
+          allOperatorIds.filter (fun id => !decide (operatorSemanticStrength id = .exactTheoremBacked))
+        else if filter == "bridgeable" then
+          baguaBridgeableOperatorIds
+        else if operatorListFilterIsKnownNotExecutable filter then
+          allOperatorIds.filter (fun id => !(isExecutableOperator id))
+        else
+          allOperatorIds
 
 private def operatorSupportKind (id : OperatorId) : String :=
   if isExecutableOperator id then "executable" else "known-not-executable"
@@ -358,7 +374,11 @@ private def operatorSummaryLine (id : OperatorId) : String :=
   let forms := operatorForms id |>.map (fun sense => sense.glyph)
   let formsShow := if forms.isEmpty then "(none)" else String.intercalate " " forms
   let bridge := if operatorBridgeableToBaguaL0 id then "\tbridge=bagua-l0-yi" else ""
-  s!"{id.code}\t{id.title}\t{operatorSupportKind id}\tsemantic={(operatorSemanticStrength id).key}\tarity={sig.arity}\tforms={formsShow}{bridge}"
+  let carrier :=
+    match operatorStructuralCarrierKind? id with
+    | some kind => s!"\tcarrier={kind.key}"
+    | none => ""
+  s!"{id.code}\t{id.title}\t{operatorSupportKind id}\tsemantic={(operatorSemanticStrength id).key}{carrier}\tarity={sig.arity}\tforms={formsShow}{bridge}"
 
 private def operatorsOutput (filter : String) : String :=
   if !(operatorListFilterValid filter) then
@@ -1367,8 +1387,20 @@ private def operatorJsonOutput (code : String) : String :=
               ]
         | none => "null"
       let strength := operatorSemanticStrength id
+      let carrierKindFields :=
+        match operatorStructuralCarrierKind? id with
+        | some kind =>
+            [ jsonFieldString "carrierKind" kind.key
+            , jsonFieldString "carrierKindLabel" kind.label
+            , jsonFieldString "carrierKindNote" kind.note
+            ]
+        | none =>
+            [ jsonFieldRaw "carrierKind" "null"
+            , jsonFieldRaw "carrierKindLabel" "null"
+            , jsonFieldRaw "carrierKindNote" "null"
+            ]
       let bridgeable := operatorBridgeableToBaguaL0 id
-      jsonObject
+      jsonObject <|
         [ jsonFieldBool "ok" true
         , jsonFieldString "mode" "operator"
         , jsonFieldString "operatorCode" id.code
@@ -1390,7 +1422,8 @@ private def operatorJsonOutput (code : String) : String :=
         , jsonFieldString "semanticStrength" strength.key
         , jsonFieldString "semanticStrengthLabel" strength.label
         , jsonFieldString "semanticStrengthNote" strength.note
-        , jsonFieldBool "bridgeableL0" bridgeable
+        ] ++ carrierKindFields ++
+        [ jsonFieldBool "bridgeableL0" bridgeable
         , jsonFieldRaw "bridgeTarget" (if bridgeable then jsonString "bagua-l0-yi" else "null")
         , jsonFieldRaw "executableSemantics" executableJson
         ]
@@ -1401,12 +1434,17 @@ private def operatorSummaryJson (id : OperatorId) : String :=
   let compoundForms :=
     operatorCompoundSurfaceIds.filterMap (fun row =>
       if row.snd = id then some row.fst else none)
+  let carrierKind :=
+    match operatorStructuralCarrierKind? id with
+    | some kind => jsonString kind.key
+    | none => "null"
   jsonObject
     [ jsonFieldString "operatorCode" id.code
     , jsonFieldString "operatorTitle" id.title
     , jsonFieldBool "executable" (isExecutableOperator id)
     , jsonFieldString "support" (operatorSupportKind id)
     , jsonFieldString "semanticStrength" (operatorSemanticStrength id).key
+    , jsonFieldRaw "carrierKind" carrierKind
     , jsonFieldBool "bridgeableL0" (operatorBridgeableToBaguaL0 id)
     , jsonFieldRaw "forms" (jsonArray (glyphForms.map jsonString))
     , jsonFieldRaw "compoundSurfaces" (jsonArray (compoundForms.map jsonString))
@@ -1435,6 +1473,7 @@ private def operatorsJsonOutput (filter : String) : String :=
       , jsonFieldNat "knownNotExecutableOperators" (operatorRegistryEntries.length - executableRegistryEntries.length)
       , jsonFieldNat "theoremBackedOperators" theoremBackedOperatorIds.length
       , jsonFieldNat "exactTheoremBackedOperators" exactTheoremBackedStrongOperatorIds.length
+      , jsonFieldNat "exactStructuralHelperOperators" exactStructuralHelperOperatorIds.length
       , jsonFieldNat "structuralCarrierOperators" structuralCarrierOperatorIds.length
       , jsonFieldNat "catalogueNormalFormOperators" catalogueNormalFormOperatorIds.length
       , jsonFieldNat "baguaBridgeableOperators" baguaBridgeableOperatorIds.length
@@ -1455,6 +1494,7 @@ private def coverageJsonOutput : String :=
     , jsonFieldNat "executableOperators" executableRegistryEntries.length
     , jsonFieldNat "theoremBackedOperators" theoremBackedOperatorIds.length
     , jsonFieldNat "exactTheoremBackedOperators" exactTheoremBackedStrongOperatorIds.length
+    , jsonFieldNat "exactStructuralHelperOperators" exactStructuralHelperOperatorIds.length
     , jsonFieldNat "structuralCarrierOperators" structuralCarrierOperatorIds.length
     , jsonFieldNat "catalogueNormalFormOperators" catalogueNormalFormOperatorIds.length
     , jsonFieldNat "baguaBridgeableOperators" baguaBridgeableOperatorIds.length
@@ -1482,16 +1522,16 @@ private def usage : String :=
      "       wenyan-surface --json --compile-yi <PROGRAM>",
      "       wenyan-surface --json --explain <PROGRAM>",
      "       wenyan-surface --json --operator <OP-ID>",
-     "       wenyan-surface --json --operators [all|executable|theorem-backed|exact|structural|structural-carrier|catalogue-normal-form|bridgeable|known-not-executable|unsupported]",
+     "       wenyan-surface --json --operators [all|executable|theorem-backed|exact|structural|structural-carrier|catalogue-normal-form|identity-noop|projection-anchor|pair-carrier|duplicate-facet|singleton-aggregate|binary-aggregate|list-projection|application-carrier|predicate-anchor|truth-marker|bridgeable|known-not-executable|unsupported]",
      "       wenyan-surface --json --coverage",
      "       wenyan-surface --explain <PROGRAM>",
      "       wenyan-surface --operator <OP-ID>",
-     "       wenyan-surface --operators [all|executable|theorem-backed|exact|structural|structural-carrier|catalogue-normal-form|bridgeable|known-not-executable|unsupported]",
+     "       wenyan-surface --operators [all|executable|theorem-backed|exact|structural|structural-carrier|catalogue-normal-form|identity-noop|projection-anchor|pair-carrier|duplicate-facet|singleton-aggregate|binary-aggregate|list-projection|application-carrier|predicate-anchor|truth-marker|bridgeable|known-not-executable|unsupported]",
      "       wenyan-surface --coverage",
      "       wenyan-surface --help",
      "",
      "Surface vocabulary:",
-     "  Executable operators: 371 rows (317 theorem-backed bodies = 120 exact + 197 structural carriers; 54 catalogue normal forms)",
+     "  Executable operators: 371 rows (317 theorem-backed bodies = 139 exact + 178 structural carriers; 54 catalogue normal forms; 19 exact structural helpers)",
      "  Examples include: 推 比 不 必 同 凡 損 损 益 错 錯 综 綜 互 反 則 且 非 或 莫",
      "  Hex consts: 一 乾 坤 plus canonical 64 hexagram names",
      "  Bool consts: 真 假",
