@@ -18,3 +18,7 @@ lean_lib SSBXCore where
 lean_exe «wenyan-surface» where
   root := `WenyanSurface
   supportInterpreter := true
+
+lean_exe wenyan where
+  root := `Wenyan
+  supportInterpreter := true

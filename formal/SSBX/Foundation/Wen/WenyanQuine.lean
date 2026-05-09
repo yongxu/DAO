@@ -59,4 +59,9 @@ export SSBX.Foundation.Wen.WenyanLambdaBridge.LamRoute.JianLambdaHistoryBackend
 export SSBX.Foundation.Wen.WenyanLambdaBridge.LamRoute.JianLambdaQuotationBackend
   (finishes_tier3 gives_tier3_quine)
 
+export SSBX.Foundation.Wen.WenyanLambdaBridge.LamRoute
+  (constJianLambdaHistoryBackend
+   constJianLambdaHistoryBackend_gives_tier3_quine
+   constJianLambdaHistoryBackend_finishes_tier3)
+
 end SSBX.Foundation.Wen.WenyanQuine
