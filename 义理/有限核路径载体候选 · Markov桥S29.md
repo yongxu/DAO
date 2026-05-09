@@ -131,7 +131,7 @@ rg -n "全局 path enumeration|arbitrary-length causal interval|full causal set 
 
 ## 三 · 下一步
 
-S29 后续应拆成：
+S29 后续应拆成；第一步已由 S30 承接：
 
 ```text
 displayed carrier
@@ -140,3 +140,5 @@ displayed carrier
 -> endpoint-indexed all-path enumeration
 -> only then discuss global finite causal interval
 ```
+
+S30 已给 `KernelPath` 本身定义 recursive point carrier，并证明它生成 canonical `DisplayedKernelPathCarrier`。再下一步应转向 endpoint-indexed finite carrier family 和 two-route toy completeness boundary。

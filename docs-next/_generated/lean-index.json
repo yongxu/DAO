@@ -4,7 +4,7 @@
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
-    "Foundation/Modern": 88,
+    "Foundation/Modern": 89,
     "Foundation/Wen": 51,
     "Foundation/Yi": 2,
     "Model": 2,
@@ -199,6 +199,7 @@
         "SSBX.Foundation.Modern.QuantumRelativityFiniteCausalLocalityBridge",
         "SSBX.Foundation.Modern.QuantumRelativityFiniteCausalIntervalBridge",
         "SSBX.Foundation.Modern.QuantumRelativityFiniteKernelPathCarrierBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityKernelPathRecursiveCarrierBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -221,10 +222,10 @@
         "SSBX.Foundation.Modern.KeBoundary",
         "SSBX.Foundation.Modern.QuantumSpacetime"
       ],
-      "lines": 214,
+      "lines": 215,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "fa5595127b450f0a494b90c6ac2be4ff5942e365e82c46756c585f711c799ff6"
+      "sha256": "b671c2c6bff137816e4caad1dcd7c9f8242e11fec92b361d5b11f714d1ecd06d"
     },
     {
       "cluster": "root",
@@ -11845,6 +11846,245 @@
       "module": "SSBX.Foundation.Modern.QuantumRelativityFiniteCausalLocalityBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalLocalityBridge.lean",
       "sha256": "9f706f27212868b16a7e46adc38459fb6403eee3e8316fa00c6c0a2237f1e151"
+    },
+    {
+      "cluster": "Foundation/Modern",
+      "declaration_count": 56,
+      "declarations": [
+        {
+          "kind": "structure",
+          "name": "DisplayedKernelPathCarrier"
+        },
+        {
+          "kind": "def",
+          "name": "weight"
+        },
+        {
+          "kind": "theorem",
+          "name": "weight_eq_path_weight"
+        },
+        {
+          "kind": "theorem",
+          "name": "reachable"
+        },
+        {
+          "kind": "theorem",
+          "name": "causal_before"
+        },
+        {
+          "kind": "def",
+          "name": "FiniteKernelPathCarrierClosed"
+        },
+        {
+          "kind": "theorem",
+          "name": "finite_kernel_path_carrier_closed"
+        },
+        {
+          "kind": "structure",
+          "name": "SoundKernelTwoStepPathLocalIntervalCandidate"
+        },
+        {
+          "kind": "def",
+          "name": "toKernelPath"
+        },
+        {
+          "kind": "theorem",
+          "name": "start_mem"
+        },
+        {
+          "kind": "theorem",
+          "name": "middle_mem"
+        },
+        {
+          "kind": "theorem",
+          "name": "stop_mem"
+        },
+        {
+          "kind": "def",
+          "name": "toDisplayedCarrier"
+        },
+        {
+          "kind": "theorem",
+          "name": "step_law"
+        },
+        {
+          "kind": "theorem",
+          "name": "causal_law"
+        },
+        {
+          "kind": "theorem",
+          "name": "displayed_carrier_causal_before"
+        },
+        {
+          "kind": "def",
+          "name": "KernelPathLocalIntervalSoundClosed"
+        },
+        {
+          "kind": "theorem",
+          "name": "kernel_path_local_interval_sound_closed"
+        },
+        {
+          "kind": "def",
+          "name": "concretePreparedMeasuredKernelCarrier"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_kernel_carrier_points"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_kernel_carrier_matches_s28_interval"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_kernel_carrier_weight"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_kernel_carrier_causal_before"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_kernel_carrier_interval_respects_local_future"
+        },
+        {
+          "kind": "def",
+          "name": "concreteKernelPathLocalInterval"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_kernel_path_local_interval_step_law"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_kernel_path_local_interval_causal_law"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteKernel"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteSourceUpperEdge"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteUpperTargetEdge"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteSourceLowerEdge"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteLowerTargetEdge"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteSourceUpperKernelPath"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteUpperTargetKernelPath"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteSourceLowerKernelPath"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteLowerTargetKernelPath"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteUpperKernelPath"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteLowerKernelPath"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteUpperKernelCarrier"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteLowerKernelCarrier"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_upper_kernel_carrier_weight"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_lower_kernel_carrier_weight"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_upper_kernel_carrier_causal_before"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_lower_kernel_carrier_causal_before"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_upper_kernel_carrier_middle_in_s28_interval"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_lower_kernel_carrier_middle_in_s28_interval"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteUpperKernelPathLocalInterval"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteLowerKernelPathLocalInterval"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_upper_kernel_path_local_interval_step_law"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_lower_kernel_path_local_interval_step_law"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_upper_kernel_path_local_interval_causal_law"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_lower_kernel_path_local_interval_causal_law"
+        },
+        {
+          "kind": "inductive",
+          "name": "PendingBeyondS29"
+        },
+        {
+          "kind": "def",
+          "name": "ClosedByStepwiseS29"
+        },
+        {
+          "kind": "theorem",
+          "name": "pending_boundary_not_closed_by_s29"
+        },
+        {
+          "kind": "theorem",
+          "name": "finite_kernel_path_carrier_bridge_summary"
+        }
+      ],
+      "imports": [
+        "Mathlib.Tactic",
+        "SSBX.Foundation.Modern.QuantumRelativityFiniteCausalIntervalBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityPathWeightMultiplicationBridge"
+      ],
+      "lines": 471,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityFiniteKernelPathCarrierBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKernelPathCarrierBridge.lean",
+      "sha256": "95b70efe7346ed578824103c7f086e337e85c0d0c2bdacdcc282c18545db219f"
     },
     {
       "cluster": "Foundation/Modern",

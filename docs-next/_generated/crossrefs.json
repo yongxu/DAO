@@ -1134,6 +1134,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteActionExtremumBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalIntervalBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalLocalityBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKernelPathCarrierBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean",
@@ -1218,6 +1219,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteActionExtremumBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalIntervalBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalLocalityBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKernelPathCarrierBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean",
@@ -4971,6 +4973,54 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalLocalityBridge.lean"
           ],
           "symbol": "step_depends_on_local_future"
+        }
+      ]
+    },
+    {
+      "document": "义理/有限核路径载体候选 · Markov桥S29.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKernelPathCarrierBridge.lean"
+          ],
+          "symbol": "DisplayedKernelPathCarrier"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKernelPathCarrierBridge.lean"
+          ],
+          "symbol": "SoundKernelTwoStepPathLocalIntervalCandidate"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKernelPathCarrierBridge.lean"
+          ],
+          "symbol": "concretePreparedMeasuredKernelCarrier"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKernelPathCarrierBridge.lean"
+          ],
+          "symbol": "finite_kernel_path_carrier_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKernelPathCarrierBridge.lean"
+          ],
+          "symbol": "kernel_path_local_interval_sound_closed"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKernelPathCarrierBridge.lean"
+          ],
+          "symbol": "twoRouteLowerKernelCarrier"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKernelPathCarrierBridge.lean"
+          ],
+          "symbol": "twoRouteUpperKernelCarrier"
         }
       ]
     },
