@@ -2,6 +2,8 @@
 
 **前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [观测账本候选 · Markov桥S5q](观测账本候选%20·%20Markov桥S5q.md) · [商支撑代数候选 · Markov桥S5p](商支撑代数候选%20·%20Markov桥S5p.md) · [离散作用量相位候选 · Markov桥S5e](离散作用量相位候选%20·%20Markov桥S5e.md) · [逐步统一候选摘要 · Markov桥S8](逐步统一候选摘要%20·%20Markov桥S8.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
+**后续**：[作用相位到测量权重链 · Markov桥S22](作用相位到测量权重链%20·%20Markov桥S22.md) 已把本页的 finite action branch / action index 接到 one-qubit measurement-event weights。
+
 **Lean 锚点**：
 
 | 层 | 文件 | 内容 | 状态 |
@@ -106,6 +108,15 @@ S5r 的当前摘要增强已由 S8 承接：
 ```text
 finite action-to-phase law
 -> stepwise unification candidate summary
+```
+
+S22 已经补上其中一条后续链：
+
+```text
+finite action-to-phase law
+-> action amplitude
+-> normalized one-qubit state
+-> measurement-event weights
 ```
 
 再往后可以继续：

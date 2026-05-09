@@ -2,6 +2,8 @@
 
 **前置**：[Born rule推导候选 · Markov桥S18](Born%20rule推导候选%20·%20Markov桥S18.md) · [非平凡量子通道律候选 · Markov桥S20](非平凡量子通道律候选%20·%20Markov桥S20.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
+**后续**：[作用相位到测量权重链 · Markov桥S22](作用相位到测量权重链%20·%20Markov桥S22.md) 已把 S5r 的 finite action branch 接到本页的 one-qubit measurement-weight 边界。
+
 **Lean 锚点**：
 
 | 层 | 文件 | 内容 | 状态 |
@@ -67,7 +69,7 @@ theorem born_measurement_bridge_summary :
 | 测量问题 | 不是当前 typed skeleton 可直接解决的问题 |
 | 经验闭合 | 需要数据校准、观测记录与误差模型 |
 
-本轮闭合范围：**computational basis / one qubit / normalized state 下，从概率幅 `ampProb` 到二值测量权重的非负归一边界**。
+本轮闭合范围：**computational basis / one qubit / normalized state 下，从概率幅 `ampProb` 到二值测量权重的非负归一边界**。S22 在此基础上加入 finite action branch 来源，但仍沿用本页的 one-qubit computational-basis 测量接口。
 
 ---
 

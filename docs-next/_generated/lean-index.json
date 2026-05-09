@@ -4,7 +4,7 @@
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
-    "Foundation/Modern": 73,
+    "Foundation/Modern": 75,
     "Foundation/Wen": 51,
     "Foundation/Yi": 2,
     "Model": 2,
@@ -29,10 +29,10 @@
         "SSBX.Foundation.Wen.WenSurface.Coverage",
         "SSBX.Foundation.Wen.WenDefCompile"
       ],
-      "lines": 1638,
+      "lines": 1692,
       "module": "WenyanSurface.lean",
       "path": "WenyanSurface.lean",
-      "sha256": "4d6697edb500a9a76b21c76c810086d4d88cfd3088bf485739eacf0bcf65084c"
+      "sha256": "d6a89d15b4f183dd663ece9e0fa4143a45767866ad2889f58a26200a4f2e45ca"
     },
     {
       "cluster": "root",
@@ -191,6 +191,7 @@
         "SSBX.Foundation.Modern.QuantumRelativityPathWeightMultiplicationBridge",
         "SSBX.Foundation.Modern.QuantumRelativityNontrivialChannelLawBridge",
         "SSBX.Foundation.Modern.QuantumRelativityBornMeasurementBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityActionAmplitudeMeasurementBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -213,10 +214,10 @@
         "SSBX.Foundation.Modern.KeBoundary",
         "SSBX.Foundation.Modern.QuantumSpacetime"
       ],
-      "lines": 206,
+      "lines": 207,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "5de93eb3c9c1bfc4e801fed2e1b08a264ffd19b84bb15b604c342b8dd33da1f8"
+      "sha256": "8d1b3dcfc3c3c324e752158f91959e0a54a881bf755a276b6f03d300f8b7cef2"
     },
     {
       "cluster": "root",
@@ -10097,6 +10098,129 @@
       "declaration_count": 27,
       "declarations": [
         {
+          "kind": "inductive",
+          "name": "ActionMeasurementBranch"
+        },
+        {
+          "kind": "def",
+          "name": "actionIndex"
+        },
+        {
+          "kind": "def",
+          "name": "phase"
+        },
+        {
+          "kind": "def",
+          "name": "amplitude"
+        },
+        {
+          "kind": "theorem",
+          "name": "upper_action_index"
+        },
+        {
+          "kind": "theorem",
+          "name": "lower_action_index"
+        },
+        {
+          "kind": "theorem",
+          "name": "upper_amplitude"
+        },
+        {
+          "kind": "theorem",
+          "name": "lower_amplitude"
+        },
+        {
+          "kind": "def",
+          "name": "negKet1"
+        },
+        {
+          "kind": "def",
+          "name": "actionBranchQubit"
+        },
+        {
+          "kind": "theorem",
+          "name": "action_branch_upper_qubit_amplitude0"
+        },
+        {
+          "kind": "theorem",
+          "name": "action_branch_lower_qubit_amplitude1"
+        },
+        {
+          "kind": "theorem",
+          "name": "negKet1_computational_basis_normalized"
+        },
+        {
+          "kind": "theorem",
+          "name": "action_branch_qubit_normalized"
+        },
+        {
+          "kind": "theorem",
+          "name": "action_branch_born_measurement_weights"
+        },
+        {
+          "kind": "inductive",
+          "name": "ActionMeasurementOutcome"
+        },
+        {
+          "kind": "def",
+          "name": "actionBranchOutcomeWeight"
+        },
+        {
+          "kind": "theorem",
+          "name": "action_branch_outcome_weights_normalized"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_action_indices_match_measurement_branches"
+        },
+        {
+          "kind": "def",
+          "name": "ActionDrivenAmplitudeDynamicsClosed"
+        },
+        {
+          "kind": "theorem",
+          "name": "action_driven_amplitude_dynamics_closed"
+        },
+        {
+          "kind": "def",
+          "name": "ActionToBornMeasurementChainClosed"
+        },
+        {
+          "kind": "theorem",
+          "name": "action_to_born_measurement_chain_closed"
+        },
+        {
+          "kind": "inductive",
+          "name": "PendingBeyondS22"
+        },
+        {
+          "kind": "def",
+          "name": "ClosedByStepwiseS22"
+        },
+        {
+          "kind": "theorem",
+          "name": "pending_boundary_not_closed_by_s22"
+        },
+        {
+          "kind": "theorem",
+          "name": "action_amplitude_measurement_bridge_summary"
+        }
+      ],
+      "imports": [
+        "Mathlib.Tactic",
+        "SSBX.Foundation.Modern.QuantumRelativityActionPhaseLawBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityBornMeasurementBridge"
+      ],
+      "lines": 257,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityActionAmplitudeMeasurementBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityActionAmplitudeMeasurementBridge.lean",
+      "sha256": "6bf8c403d7d1cdace8b299951cbbadedd4acc6dbe4039674684c04b7c915b7be"
+    },
+    {
+      "cluster": "Foundation/Modern",
+      "declaration_count": 27,
+      "declarations": [
+        {
           "kind": "def",
           "name": "actionIndexPhase"
         },
@@ -10372,6 +10496,72 @@
       "module": "SSBX.Foundation.Modern.QuantumRelativityBornDistributionBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityBornDistributionBridge.lean",
       "sha256": "40b8bf85d101cc91a85736f43b39c7d6d1820be6b18060e28635f17531d03065"
+    },
+    {
+      "cluster": "Foundation/Modern",
+      "declaration_count": 13,
+      "declarations": [
+        {
+          "kind": "structure",
+          "name": "ComputationalBasisMeasurementWeights"
+        },
+        {
+          "kind": "def",
+          "name": "computationalBasisMeasurementWeights"
+        },
+        {
+          "kind": "def",
+          "name": "MeasurementWeightsNormalized"
+        },
+        {
+          "kind": "theorem",
+          "name": "computational_basis_weight0_eq_ampProb"
+        },
+        {
+          "kind": "theorem",
+          "name": "computational_basis_weight1_eq_ampProb"
+        },
+        {
+          "kind": "theorem",
+          "name": "born_rule_gives_normalized_measurement_weights"
+        },
+        {
+          "kind": "theorem",
+          "name": "computational_basis_measurement_weights_normalized"
+        },
+        {
+          "kind": "def",
+          "name": "ComputationalBasisBornMeasurementClosed"
+        },
+        {
+          "kind": "theorem",
+          "name": "computational_basis_born_measurement_closed"
+        },
+        {
+          "kind": "inductive",
+          "name": "PendingBeyondS21"
+        },
+        {
+          "kind": "def",
+          "name": "ClosedByStepwiseS21"
+        },
+        {
+          "kind": "theorem",
+          "name": "pending_boundary_not_closed_by_s21"
+        },
+        {
+          "kind": "theorem",
+          "name": "born_measurement_bridge_summary"
+        }
+      ],
+      "imports": [
+        "Mathlib.Tactic",
+        "SSBX.Foundation.Modern.QuantumRelativityNontrivialChannelLawBridge"
+      ],
+      "lines": 128,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityBornMeasurementBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityBornMeasurementBridge.lean",
+      "sha256": "16a1b1faa6420c2f9c2d756500094f26cdf70e2a8ff6a59b741ace36d06793eb"
     },
     {
       "cluster": "Foundation/Modern",
@@ -18994,7 +19184,7 @@
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 49,
+      "declaration_count": 57,
       "declarations": [
         {
           "kind": "inductive",
@@ -19126,6 +19316,26 @@
         },
         {
           "kind": "theorem",
+          "name": "pairHBody_eq_pair"
+        },
+        {
+          "kind": "theorem",
+          "name": "dupHBody_eq_dup"
+        },
+        {
+          "kind": "theorem",
+          "name": "list1HBody_eq_singleton"
+        },
+        {
+          "kind": "theorem",
+          "name": "list2HBody_eq_pairList"
+        },
+        {
+          "kind": "theorem",
+          "name": "headHBody_list1_eq_id"
+        },
+        {
+          "kind": "theorem",
           "name": "tui_eq_sheng"
         },
         {
@@ -19186,6 +19396,18 @@
         },
         {
           "kind": "theorem",
+          "name": "boolMarkerBody_eq_id"
+        },
+        {
+          "kind": "theorem",
+          "name": "hexApplyBody_tui_eq_sheng"
+        },
+        {
+          "kind": "theorem",
+          "name": "hexApplyBody_sun_eq_decrement"
+        },
+        {
+          "kind": "theorem",
           "name": "self_eq_all_true"
         },
         {
@@ -19199,10 +19421,10 @@
         "SSBX.Foundation.Bagua.BaguaAlgebra",
         "SSBX.Foundation.Bagua.Cell192"
       ],
-      "lines": 669,
+      "lines": 708,
       "module": "SSBX.Foundation.Wen.WenDefEval",
       "path": "formal/SSBX/Foundation/Wen/WenDefEval.lean",
-      "sha256": "59d3efd5116f26d2140575b1eeb766cccb1b1e8966b078d4f5004bc4fe9359ae"
+      "sha256": "9c4ed4a57d618171c4a9a0f4c94a565a709b846c3a1aea1c245a6cb6bc0131cb"
     },
     {
       "cluster": "Foundation/Wen",
@@ -19321,10 +19543,10 @@
         "SSBX.Text.OperatorCellMap",
         "SSBX.Text.OperatorCellSemantics"
       ],
-      "lines": 162,
+      "lines": 194,
       "module": "SSBX.Foundation.Wen.WenSurface.Coverage",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Coverage.lean",
-      "sha256": "24f420933a48be21a763dc0de95c85e2c15e0240f773af6ec2359d3ae99d22af"
+      "sha256": "277c46ce48ff1998d979a7f91bb3362f87c152e550937ea48d8228e597025ea1"
     },
     {
       "cluster": "Foundation/Wen",
@@ -19863,7 +20085,7 @@
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 76,
+      "declaration_count": 98,
       "declarations": [
         {
           "kind": "structure",
@@ -19908,6 +20130,26 @@
         {
           "kind": "def",
           "name": "allStructuralCarrierKinds"
+        },
+        {
+          "kind": "inductive",
+          "name": "DomainGapKind"
+        },
+        {
+          "kind": "def",
+          "name": "key"
+        },
+        {
+          "kind": "def",
+          "name": "label"
+        },
+        {
+          "kind": "def",
+          "name": "note"
+        },
+        {
+          "kind": "def",
+          "name": "allDomainGapKinds"
         },
         {
           "kind": "def",
@@ -19995,6 +20237,10 @@
         },
         {
           "kind": "def",
+          "name": "exactProjectionAnchorOperatorIds"
+        },
+        {
+          "kind": "def",
           "name": "exactStructuralHelperOperatorIds"
         },
         {
@@ -20036,6 +20282,22 @@
         {
           "kind": "def",
           "name": "catalogueNormalFormOperatorIds"
+        },
+        {
+          "kind": "def",
+          "name": "domainGapKindForCarrierKind"
+        },
+        {
+          "kind": "def",
+          "name": "operatorDomainGapKind?"
+        },
+        {
+          "kind": "def",
+          "name": "domainGapKindOperatorIds"
+        },
+        {
+          "kind": "def",
+          "name": "domainGapOperatorIds"
         },
         {
           "kind": "def",
@@ -20123,6 +20385,14 @@
         },
         {
           "kind": "theorem",
+          "name": "exactProjectionAnchorOperatorIds_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "exactProjectionAnchorOperatorIds_nodup"
+        },
+        {
+          "kind": "theorem",
           "name": "exactTheoremBackedStrongOperatorIds_length"
         },
         {
@@ -20132,6 +20402,46 @@
         {
           "kind": "theorem",
           "name": "structuralCarrierOperatorIds_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainGapOperatorIds_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainGap_applicationHelperOnly_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainGap_identityNoopOnly_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainGap_projectionAnchorOnly_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainGap_carrierConstructorOnly_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainGap_predicateAnchorOnly_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainGap_truthMarkerOnly_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainGap_catalogueShapeOnly_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainGapKindPartition_counts"
+        },
+        {
+          "kind": "theorem",
+          "name": "exactTheoremBackedStrongOperatorIds_no_domain_gap"
         },
         {
           "kind": "theorem",
@@ -20175,10 +20485,10 @@
         "SSBX.Text.OperatorSignatures",
         "SSBX.Text.WenyanOperators"
       ],
-      "lines": 894,
+      "lines": 1047,
       "module": "SSBX.Foundation.Wen.WenSurface.Semantics",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Semantics.lean",
-      "sha256": "91cfac7a07a3ca86b1eec9b4111f16b150051b03ab2af271699a86a1e37c54a4"
+      "sha256": "e1c3d97013382cd5ebd9f32b864d9c9cc0ede89251f1de5d31b3b53c77262d13"
     },
     {
       "cluster": "Foundation/Wen",

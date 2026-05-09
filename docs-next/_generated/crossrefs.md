@@ -74,8 +74,8 @@
 | formal/SSBX/notes/PositionOperatorGraph.md | 0 | 5 |
 | formal/SSBX/notes/atom-naming.md | 0 | 0 |
 | formal/SSBX/notes/baguaWen-spec.md | 0 | 0 |
-| formal/SSBX/notes/markov-causal-bridge-plan.md | 40 | 4 |
-| formal/SSBX/notes/markov-causal-bridge-verification-plan.md | 39 | 20 |
+| formal/SSBX/notes/markov-causal-bridge-plan.md | 42 | 4 |
+| formal/SSBX/notes/markov-causal-bridge-verification-plan.md | 41 | 20 |
 | formal/SSBX/notes/math-axiom-map.md | 0 | 0 |
 | formal/SSBX/notes/metainterp-isa-gap.md | 0 | 0 |
 | formal/SSBX/notes/monad-root-plan.md | 2 | 3 |
@@ -131,6 +131,7 @@
 | 义理/sum-over-middle通道组合候选 · Markov桥S15.md | 0 | 9 |
 | 义理/unitary-CPTP账本边界 · Markov桥S17.md | 0 | 8 |
 | 义理/人类命运共同体_共同体之证.md | 5 | 12 |
+| 义理/作用相位到测量权重链 · Markov桥S22.md | 0 | 8 |
 | 义理/作用量相位律候选 · Markov桥S5r.md | 0 | 12 |
 | 义理/几何位 · 从元到形.md | 1 | 13 |
 | 义理/动力 · 从元到行.md | 1 | 6 |
@@ -150,6 +151,7 @@
 | 义理/有限路径族求和代数候选 · Markov桥S5g.md | 0 | 14 |
 | 义理/有限路径族求和候选 · Markov桥S5f.md | 0 | 12 |
 | 义理/有限键商候选 · Markov桥S5l.md | 0 | 16 |
+| 义理/概率幅到测量权重 · Markov桥S21.md | 0 | 6 |
 | 义理/物理 · 从元到象.md | 3 | 20 |
 | 义理/生态 · 从元到生.md | 0 | 2 |
 | 义理/离散作用量相位候选 · Markov桥S5e.md | 0 | 15 |
