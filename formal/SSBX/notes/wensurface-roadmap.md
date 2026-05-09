@@ -8,8 +8,8 @@
 
 - 371 个 `OperatorId` 全部可登记、可查 signature、可诊断支持状态。
 - 82 个 surface / 193 个 reading 可被 resolver 说明或报告歧义。
-- 371 个 `OperatorId` 全部进入 evaluator：319 个 exact/theorem-backed rows，
-  52 个 structural catalogue normal forms。
+- 371 个 `OperatorId` 全部进入 evaluator：330 个 exact/theorem-backed rows，
+  41 个 structural catalogue normal forms。
 - structural catalogue operator 返回 `Catalogue[...]` result，可 type-check / evaluate，但不伪装成 exact Hex/Bool 文本专义 denotation。
 - `baguaWen` 的 22-token 受控 IL parser 仍独立冻结。
 
@@ -22,8 +22,8 @@
 | M2 表驱动 resolver | done | runtime 走 `allSurfaceReadings` / operator forms / executable registry；`resolveStdlibOp` 仅作 legacy witness。 |
 | M3 字面值扩展 | done | `一` + 64 卦名 + conservative 繁简 alias；未 promotion gap 只诊断。 |
 | M4 核心语法能力 | done | `者 甲 E`、`凡 甲 E`、`令 甲 V E` 支持 Hex；`者`/`令` 已支持 Bool 与常用函数域推断。 |
-| M5 可执行语义扩展 | done | 319 个 exact/theorem-backed executable：早期 Hex/Bool 核心、exact Hex transforms、逻辑/恒等/量词 aliases、context application、carrier rows 等。 |
-| M6 全目录覆盖 | done | 371 operator 全部 registry/signature 可查、可执行；52 个非 exact row 只落为 structural catalogue normal form；0 个 known-not-executable。剩余 52 个已按 signature kind 入账：13 state-transition、8 domain-process、6 domain-rule、4 assignment、4 trajectory，其余为小类。 |
+| M5 可执行语义扩展 | done | 330 个 exact/theorem-backed executable：早期 Hex/Bool 核心、exact Hex transforms、逻辑/恒等/量词 aliases、context application、state-transition edge carriers、carrier rows 等。 |
+| M6 全目录覆盖 | done | 371 operator 全部 registry/signature 可查、可执行；41 个非 exact row 只落为 structural catalogue normal form；0 个 known-not-executable。剩余 41 个已按 signature kind 入账：2 state-transition、8 domain-process、6 domain-rule、4 assignment、4 trajectory，其余为小类。 |
 | M7 CLI 产品化 | done | `--tokens`、`--resolve`、`--ast`、`--typecheck`、`--json`、`--explain`、`--operator`、`--operators`、`--coverage`；失败返回非零。 |
 
 ## 验收命令
