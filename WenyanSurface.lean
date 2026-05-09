@@ -253,6 +253,14 @@ private def typeDiagShow : TypeDiag → String
   | .argumentMismatch expected actual =>
       s!"expected argument type {tyShow expected}, got {tyShow actual}"
 
+private def operatorBridgeableToBaguaL0 (id : OperatorId) : Bool :=
+  match theoremBackedSemanticsFor? id with
+  | some sem => (compileHexFunCertified? sem.body).isSome
+  | none => false
+
+private def baguaBridgeableOperatorIds : List OperatorId :=
+  allOperatorIds.filter operatorBridgeableToBaguaL0
+
 private def operatorOutput (code : String) : String :=
   match operatorByCode? code with
   | none => s!"operator {code}: no such catalogue OperatorId"
@@ -275,6 +283,7 @@ private def operatorOutput (code : String) : String :=
             s!"yes\nexecutable note: {sem.note}\nexecutable arity: {sem.arity}"
         | none =>
             "no\nstatus: known but not executable yet"
+      let bridgeable := operatorBridgeableToBaguaL0 id
       String.intercalate "\n"
         ([ s!"operator {id.code} {id.title}"
          , formLine
@@ -282,6 +291,9 @@ private def operatorOutput (code : String) : String :=
          , s!"signature arity: {sig.arity}"
          , s!"signature evidence: {signatureEvidenceShow sig.evidence}"
          , s!"signature note: {sig.note}"
+         , "semantic strength: " ++ (operatorSemanticStrength id).key
+         , "semantic note: " ++ (operatorSemanticStrength id).note
+         , "bagua bridge: " ++ (if bridgeable then "bagua-l0-yi" else "none")
          , "executable: " ++ executable
          ] ++ compoundLine)
 
@@ -293,14 +305,25 @@ private def coverageOutput : String :=
   String.intercalate "\n"
     [ s!"surface readings: {allSurfaceReadings.length} surfaces / {readingCount} readings"
     , s!"operators: {operatorRegistryEntries.length} registered / {executableRegistryEntries.length} executable"
+    , s!"semantic ledger: {theoremBackedOperatorIds.length} theorem-backed / {exactTheoremBackedStrongOperatorIds.length} exact / {structuralCarrierOperatorIds.length} structural-carrier / {catalogueNormalFormOperatorIds.length} catalogue-normal-form"
+    , s!"bagua bridgeable: {baguaBridgeableOperatorIds.length} operators"
     , s!"operator forms: {formBackedCount} ids with at least one form"
     , s!"operator-cell rows: {SSBX.Text.OperatorCellMap.allOperatorCells.length}"
     , s!"operator-cell semantic rows: {SSBX.Text.OperatorCellSemantics.allOperatorCellSemanticRows.length}"
     ]
 
+private def operatorListFilterExpected : String :=
+  "all, executable, theorem-backed, exact, structural, structural-carrier, catalogue-normal-form, bridgeable, known-not-executable, or unsupported"
+
 private def operatorListFilterValid (filter : String) : Bool :=
   filter == "all"
     || filter == "executable"
+    || filter == "theorem-backed"
+    || filter == "exact"
+    || filter == "structural"
+    || filter == "structural-carrier"
+    || filter == "catalogue-normal-form"
+    || filter == "bridgeable"
     || filter == "known-not-executable"
     || filter == "unsupported"
 
@@ -310,6 +333,18 @@ private def operatorListFilterIsKnownNotExecutable (filter : String) : Bool :=
 private def operatorListIds (filter : String) : List OperatorId :=
   if filter == "executable" then
     allOperatorIds.filter isExecutableOperator
+  else if filter == "theorem-backed" then
+    theoremBackedOperatorIds
+  else if filter == "exact" then
+    exactTheoremBackedStrongOperatorIds
+  else if filter == "structural-carrier" then
+    structuralCarrierOperatorIds
+  else if filter == "catalogue-normal-form" then
+    catalogueNormalFormOperatorIds
+  else if filter == "structural" then
+    allOperatorIds.filter (fun id => !decide (operatorSemanticStrength id = .exactTheoremBacked))
+  else if filter == "bridgeable" then
+    baguaBridgeableOperatorIds
   else if operatorListFilterIsKnownNotExecutable filter then
     allOperatorIds.filter (fun id => !(isExecutableOperator id))
   else
@@ -322,11 +357,12 @@ private def operatorSummaryLine (id : OperatorId) : String :=
   let sig := fullSignatureFor id
   let forms := operatorForms id |>.map (fun sense => sense.glyph)
   let formsShow := if forms.isEmpty then "(none)" else String.intercalate " " forms
-  s!"{id.code}\t{id.title}\t{operatorSupportKind id}\tarity={sig.arity}\tforms={formsShow}"
+  let bridge := if operatorBridgeableToBaguaL0 id then "\tbridge=bagua-l0-yi" else ""
+  s!"{id.code}\t{id.title}\t{operatorSupportKind id}\tsemantic={(operatorSemanticStrength id).key}\tarity={sig.arity}\tforms={formsShow}{bridge}"
 
 private def operatorsOutput (filter : String) : String :=
   if !(operatorListFilterValid filter) then
-    s!"operators: unknown filter \"{filter}\"; expected all, executable, known-not-executable, or unsupported"
+    s!"operators: unknown filter \"{filter}\"; expected {operatorListFilterExpected}"
   else
     let ids := operatorListIds filter
     let header :=
@@ -1330,6 +1366,8 @@ private def operatorJsonOutput (code : String) : String :=
               , jsonFieldString "note" sem.note
               ]
         | none => "null"
+      let strength := operatorSemanticStrength id
+      let bridgeable := operatorBridgeableToBaguaL0 id
       jsonObject
         [ jsonFieldBool "ok" true
         , jsonFieldString "mode" "operator"
@@ -1349,6 +1387,11 @@ private def operatorJsonOutput (code : String) : String :=
         , jsonFieldBool "executable" entry.executable?.isSome
         , jsonFieldString "support"
             (if entry.executable?.isSome then "executable" else "known-not-executable")
+        , jsonFieldString "semanticStrength" strength.key
+        , jsonFieldString "semanticStrengthLabel" strength.label
+        , jsonFieldString "semanticStrengthNote" strength.note
+        , jsonFieldBool "bridgeableL0" bridgeable
+        , jsonFieldRaw "bridgeTarget" (if bridgeable then jsonString "bagua-l0-yi" else "null")
         , jsonFieldRaw "executableSemantics" executableJson
         ]
 
@@ -1363,6 +1406,8 @@ private def operatorSummaryJson (id : OperatorId) : String :=
     , jsonFieldString "operatorTitle" id.title
     , jsonFieldBool "executable" (isExecutableOperator id)
     , jsonFieldString "support" (operatorSupportKind id)
+    , jsonFieldString "semanticStrength" (operatorSemanticStrength id).key
+    , jsonFieldBool "bridgeableL0" (operatorBridgeableToBaguaL0 id)
     , jsonFieldRaw "forms" (jsonArray (glyphForms.map jsonString))
     , jsonFieldRaw "compoundSurfaces" (jsonArray (compoundForms.map jsonString))
     , jsonFieldNat "signatureArity" sig.arity
@@ -1375,7 +1420,7 @@ private def operatorsJsonOutput (filter : String) : String :=
       [ jsonFieldBool "ok" false
       , jsonFieldString "phase" "operators"
       , jsonFieldString "code" "unknown_operator_filter"
-      , jsonFieldString "message" s!"operators: unknown filter \"{filter}\"; expected all, executable, known-not-executable, or unsupported"
+      , jsonFieldString "message" s!"operators: unknown filter \"{filter}\"; expected {operatorListFilterExpected}"
       , jsonFieldString "filter" filter
       ]
   else
@@ -1388,6 +1433,11 @@ private def operatorsJsonOutput (filter : String) : String :=
       , jsonFieldNat "operatorsRegistered" operatorRegistryEntries.length
       , jsonFieldNat "executableOperators" executableRegistryEntries.length
       , jsonFieldNat "knownNotExecutableOperators" (operatorRegistryEntries.length - executableRegistryEntries.length)
+      , jsonFieldNat "theoremBackedOperators" theoremBackedOperatorIds.length
+      , jsonFieldNat "exactTheoremBackedOperators" exactTheoremBackedStrongOperatorIds.length
+      , jsonFieldNat "structuralCarrierOperators" structuralCarrierOperatorIds.length
+      , jsonFieldNat "catalogueNormalFormOperators" catalogueNormalFormOperatorIds.length
+      , jsonFieldNat "baguaBridgeableOperators" baguaBridgeableOperatorIds.length
       , jsonFieldRaw "operators" (jsonArray (ids.map operatorSummaryJson))
       ]
 
@@ -1403,6 +1453,11 @@ private def coverageJsonOutput : String :=
     , jsonFieldNat "readingCount" readingCount
     , jsonFieldNat "operatorsRegistered" operatorRegistryEntries.length
     , jsonFieldNat "executableOperators" executableRegistryEntries.length
+    , jsonFieldNat "theoremBackedOperators" theoremBackedOperatorIds.length
+    , jsonFieldNat "exactTheoremBackedOperators" exactTheoremBackedStrongOperatorIds.length
+    , jsonFieldNat "structuralCarrierOperators" structuralCarrierOperatorIds.length
+    , jsonFieldNat "catalogueNormalFormOperators" catalogueNormalFormOperatorIds.length
+    , jsonFieldNat "baguaBridgeableOperators" baguaBridgeableOperatorIds.length
     , jsonFieldNat "operatorFormBackedCount" formBackedCount
     , jsonFieldNat "operatorCellRows" (SSBX.Text.OperatorCellMap.allOperatorCells.length)
     , jsonFieldNat "operatorCellSemanticRows" (SSBX.Text.OperatorCellSemantics.allOperatorCellSemanticRows.length)
@@ -1427,16 +1482,16 @@ private def usage : String :=
      "       wenyan-surface --json --compile-yi <PROGRAM>",
      "       wenyan-surface --json --explain <PROGRAM>",
      "       wenyan-surface --json --operator <OP-ID>",
-     "       wenyan-surface --json --operators [all|executable|known-not-executable|unsupported]",
+     "       wenyan-surface --json --operators [all|executable|theorem-backed|exact|structural|structural-carrier|catalogue-normal-form|bridgeable|known-not-executable|unsupported]",
      "       wenyan-surface --json --coverage",
      "       wenyan-surface --explain <PROGRAM>",
      "       wenyan-surface --operator <OP-ID>",
-     "       wenyan-surface --operators [all|executable|known-not-executable|unsupported]",
+     "       wenyan-surface --operators [all|executable|theorem-backed|exact|structural|structural-carrier|catalogue-normal-form|bridgeable|known-not-executable|unsupported]",
      "       wenyan-surface --coverage",
      "       wenyan-surface --help",
      "",
      "Surface vocabulary:",
-     "  Executable operators: 371 rows (317 exact/theorem-backed; 54 structural catalogue normal forms)",
+     "  Executable operators: 371 rows (317 theorem-backed bodies = 120 exact + 197 structural carriers; 54 catalogue normal forms)",
      "  Examples include: 推 比 不 必 同 凡 損 损 益 错 錯 综 綜 互 反 則 且 非 或 莫",
      "  Hex consts: 一 乾 坤 plus canonical 64 hexagram names",
      "  Bool consts: 真 假",

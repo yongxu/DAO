@@ -1,13 +1,15 @@
 /-
 # WenSurface.Semantics — executable semantics registry
 
-This module separates exact stdlib denotations from total catalogue
-execution.  Three hundred seventeen `OperatorId`s use exact `WenDef.Tm` bodies:
-the original high-value stdlib rows, the ObjectEndo/ObjectMap/OpUnary Hex
-transform package, finite Hex pair/list carriers, finite Hex quantifiers, finite Hex motion/process rows,
-plus the Bool relation/predicate package.  Every
-remaining catalogue row gets a structural catalogue constructor `WenDef.Tm` so
-CLI support is total without confusing it with exact text semantics.
+This module separates theorem-backed stdlib denotations from total catalogue
+execution.  Three hundred seventeen `OperatorId`s use explicit `WenDef.Tm`
+bodies: the original high-value stdlib rows, ObjectEndo/ObjectMap/OpUnary Hex
+transforms, finite Hex carrier rows, finite Hex quantifiers, finite motion /
+process rows, plus the Bool relation/predicate package.  The semantic strength
+ledger splits those 317 rows into strong exact denotations and structural
+carrier/anchor denotations.  Every remaining catalogue row gets a structural
+catalogue constructor `WenDef.Tm` so CLI support is total without confusing it
+with exact text semantics.
 -/
 import SSBX.Foundation.Wen.WenDef
 import SSBX.Text.OperatorSignatures
@@ -31,6 +33,41 @@ deriving Repr, DecidableEq
 
 /-- Public registry API: catalogue operator id → executable denotation, if any. -/
 abbrev OperatorSemanticsRegistry := OperatorId → Option ExecutableSemantics
+
+/-- User-facing semantic strength ledger.
+
+`executable` only says a row has a `WenDef.Tm` denotation.  This strength
+separates strong exact rows from conservative carrier rows and catalogue normal
+forms, so total execution does not pretend every row has full doctrinal
+semantics.
+-/
+inductive SemanticStrength where
+  | exactTheoremBacked
+  | structuralCarrier
+  | catalogueNormalForm
+deriving Repr, DecidableEq
+
+namespace SemanticStrength
+
+def key : SemanticStrength → String
+  | .exactTheoremBacked => "exact-theorem-backed"
+  | .structuralCarrier => "structural-carrier"
+  | .catalogueNormalForm => "catalogue-normal-form"
+
+def label : SemanticStrength → String
+  | .exactTheoremBacked => "exact theorem-backed"
+  | .structuralCarrier => "structural carrier"
+  | .catalogueNormalForm => "structural catalogue normal form"
+
+def note : SemanticStrength → String
+  | .exactTheoremBacked =>
+      "exact WenDef body with theorem-backed or finite-domain denotation"
+  | .structuralCarrier =>
+      "executable carrier/anchor body; useful for typed composition but awaiting stronger domain denotation"
+  | .catalogueNormalForm =>
+      "signature-preserving catalogue value; diagnosable and executable without fake Hex/Bool semantics"
+
+end SemanticStrength
 
 /-! ## § 1.1 Bool relation/predicate package -/
 
@@ -453,6 +490,39 @@ def isTheoremBackedOperator (id : OperatorId) : Bool :=
 def structuralCatalogueOperatorIds : List OperatorId :=
   allOperatorIds.filter (fun id => (theoremBackedSemanticsFor? id).isNone)
 
+/-- Exact `WenDef.Tm` bodies that are deliberately carrier/anchor semantics. -/
+def isStructuralCarrierBody (body : Tm) : Bool :=
+  decide (body = Stdlib.hexIdBody)
+    || decide (body = Stdlib.pairHBody)
+    || decide (body = Stdlib.dupHBody)
+    || decide (body = Stdlib.list1HBody)
+    || decide (body = Stdlib.list2HBody)
+    || decide (body = Stdlib.headHBody)
+    || decide (body = Stdlib.hexApplyBody)
+    || decide (body = hexPredTrueBody)
+    || decide (body = Stdlib.boolMarkerBody)
+
+def operatorSemanticStrength (id : OperatorId) : SemanticStrength :=
+  match theoremBackedSemanticsFor? id with
+  | some sem =>
+      if isStructuralCarrierBody sem.body then
+        .structuralCarrier
+      else
+        .exactTheoremBacked
+  | none => .catalogueNormalForm
+
+def semanticStrengthOperatorIds (strength : SemanticStrength) : List OperatorId :=
+  allOperatorIds.filter (fun id => decide (operatorSemanticStrength id = strength))
+
+def exactTheoremBackedStrongOperatorIds : List OperatorId :=
+  semanticStrengthOperatorIds .exactTheoremBacked
+
+def structuralCarrierOperatorIds : List OperatorId :=
+  semanticStrengthOperatorIds .structuralCarrier
+
+def catalogueNormalFormOperatorIds : List OperatorId :=
+  semanticStrengthOperatorIds .catalogueNormalForm
+
 /-! ## § 1.4 Total structural catalogue semantics -/
 
 /-
@@ -531,6 +601,21 @@ theorem theoremBackedOperatorIds_all_semantics :
 theorem structuralCatalogueOperatorIds_length :
     structuralCatalogueOperatorIds.length = 54 := by native_decide
 
+theorem catalogueNormalFormOperatorIds_length :
+    catalogueNormalFormOperatorIds.length = 54 := by native_decide
+
+theorem exactTheoremBackedStrongOperatorIds_length :
+    exactTheoremBackedStrongOperatorIds.length = 120 := by native_decide
+
+theorem structuralCarrierOperatorIds_length :
+    structuralCarrierOperatorIds.length = 197 := by native_decide
+
+theorem semanticStrengthPartition_counts :
+    exactTheoremBackedStrongOperatorIds.length
+      + structuralCarrierOperatorIds.length
+      + catalogueNormalFormOperatorIds.length = 371 := by
+  native_decide
+
 theorem structuralCatalogueOperatorIds_all_not_theorem_backed :
     structuralCatalogueOperatorIds.all (fun id => (theoremBackedSemanticsFor? id).isNone) = true := by
   native_decide
@@ -562,6 +647,10 @@ theorem operatorRegistryCoverage_summary :
       ∧ executableOperatorIds.length = 371
       ∧ theoremBackedOperatorIds.length = 317
       ∧ structuralCatalogueOperatorIds.length = 54
+      ∧ catalogueNormalFormOperatorIds.length = 54
+      ∧ exactTheoremBackedStrongOperatorIds.length
+        + structuralCarrierOperatorIds.length
+        + catalogueNormalFormOperatorIds.length = 371
       ∧ theoremBackedOperatorIds.length + structuralCatalogueOperatorIds.length = 371
       ∧ executableOperatorIds.all isCatalogueOperator = true
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).id = id)
@@ -572,6 +661,8 @@ theorem operatorRegistryCoverage_summary :
     , executableOperatorIds_length
     , theoremBackedOperatorIds_length
     , structuralCatalogueOperatorIds_length
+    , catalogueNormalFormOperatorIds_length
+    , semanticStrengthPartition_counts
     , executablePartition_counts
     , executableOperatorIds_registered
     , operatorRegistryEntryFor_id
