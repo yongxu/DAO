@@ -1674,6 +1674,12 @@ example : operatorDomainLawKind? .T_3 = some .directedRelation := by native_deci
 example : operatorDomainLawKind? .E_2 = some .namingMeasureRelation := by native_decide
 example : operatorDomainLawKind? .LIJ_1 = some .protocolRelation := by native_decide
 example : operatorDomainLawKind? .ZHU_3 = some .zhuangziRelation := by native_decide
+example : operatorDomainLawKind? .T_10 = some .exactHexTransform := by native_decide
+example : operatorDomainLawKind? .Z_5 = some .exactHexTransform := by native_decide
+example : operatorDomainLawKind? .R_1 = some .boolRelationPredicate := by native_decide
+example : operatorDomainLawKind? .I_1 = some .hexEqualityLaw := by native_decide
+example : operatorDomainLawKind? .Q_1 = some .finiteQuantifierLaw := by native_decide
+example : operatorDomainLawKind? .S_2 = some .endomapControlLaw := by native_decide
 example : operatorDomainLawKind? .R_6 = some .identityNoopLaw := by native_decide
 example : operatorDomainLawKind? .S_1 = some .applicationWrapperLaw := by native_decide
 example : operatorDomainLawKind? .B_8 = some .predicateAnchorLaw := by native_decide

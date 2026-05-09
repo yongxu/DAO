@@ -91,7 +91,7 @@ theorem wenSurface_operator_catalogue_counts :
       ∧ (domainGapDetailKindOperatorIds .predicateModel).length = 0
       ∧ (domainGapDetailKindOperatorIds .truthMarkerModel).length = 0
       ∧ (domainGapDetailKindOperatorIds .catalogueShape).length = 0
-      ∧ domainLawOperatorIds.length = 249
+      ∧ domainLawOperatorIds.length = 364
       ∧ domainCaveatOperatorIds.length = 0
       ∧ (domainCaveatKindOperatorIds .identityNoop).length = 0
       ∧ (domainCaveatKindOperatorIds .projectionAnchor).length = 0
@@ -212,7 +212,7 @@ theorem wenSurface_registry_summary :
       ∧ (domainGapDetailKindOperatorIds .predicateModel).length = 0
       ∧ (domainGapDetailKindOperatorIds .truthMarkerModel).length = 0
       ∧ (domainGapDetailKindOperatorIds .catalogueShape).length = 0
-      ∧ domainLawOperatorIds.length = 249
+      ∧ domainLawOperatorIds.length = 364
       ∧ domainCaveatOperatorIds.length = 0
       ∧ (domainCaveatKindOperatorIds .identityNoop).length = 0
       ∧ (domainCaveatKindOperatorIds .projectionAnchor).length = 0
