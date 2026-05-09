@@ -285,6 +285,14 @@ private def domainGapLines (id : OperatorId) : List String :=
       ]
   | none => []
 
+private def domainCaveatLines (id : OperatorId) : List String :=
+  match operatorDomainCaveatKind? id with
+  | some caveat =>
+      [ "domain caveat: " ++ caveat.key
+      , "domain caveat note: " ++ caveat.note
+      ]
+  | none => []
+
 private def operatorOutput (code : String) : String :=
   match operatorByCode? code with
   | none => s!"operator {code}: no such catalogue OperatorId"
@@ -319,7 +327,7 @@ private def operatorOutput (code : String) : String :=
          , "semantic note: " ++ (operatorSemanticStrength id).note
          , "bagua bridge: " ++ (if bridgeable then "bagua-l0-yi" else "none")
          , "executable: " ++ executable
-         ] ++ carrierKindLines id ++ domainGapLines id ++ compoundLine)
+         ] ++ carrierKindLines id ++ domainGapLines id ++ domainCaveatLines id ++ compoundLine)
 
 private def coverageOutput : String :=
   let readingCount :=
@@ -330,8 +338,10 @@ private def coverageOutput : String :=
     [ s!"surface readings: {allSurfaceReadings.length} surfaces / {readingCount} readings"
     , s!"operators: {operatorRegistryEntries.length} registered / {executableRegistryEntries.length} executable"
     , s!"semantic ledger: {theoremBackedOperatorIds.length} theorem-backed / {exactTheoremBackedStrongOperatorIds.length} exact / {exactStructuralHelperStrongOperatorIds.length} exact-structural-helper / {structuralCarrierOperatorIds.length} structural-carrier / {catalogueNormalFormOperatorIds.length} catalogue-normal-form"
-    , s!"domain gaps: {domainGapOperatorIds.length} operators pending full domain semantics"
+    , s!"domain gaps: {domainGapOperatorIds.length} operators without exact executable mechanics"
     , s!"domain gap ledger: {(domainGapKindOperatorIds .applicationHelperOnly).length} application-helper / {(domainGapKindOperatorIds .identityNoopOnly).length} identity-noop / {(domainGapKindOperatorIds .projectionAnchorOnly).length} projection-anchor / {(domainGapKindOperatorIds .carrierConstructorOnly).length} carrier-constructor / {(domainGapKindOperatorIds .predicateAnchorOnly).length} predicate-anchor / {(domainGapKindOperatorIds .truthMarkerOnly).length} truth-marker / {(domainGapKindOperatorIds .catalogueShapeOnly).length} catalogue-shape"
+    , s!"domain caveats: {domainCaveatOperatorIds.length} exact carrier/anchor rows without full domain laws"
+    , s!"domain caveat ledger: {(domainCaveatKindOperatorIds .applicationCarrier).length} application / {(domainCaveatKindOperatorIds .identityNoop).length} identity-noop / {(domainCaveatKindOperatorIds .projectionAnchor).length} projection / {(domainCaveatKindOperatorIds .pairCarrier).length} pair / {(domainCaveatKindOperatorIds .duplicateFacetCarrier).length} duplicate / {(domainCaveatKindOperatorIds .singletonAggregateCarrier).length} singleton / {(domainCaveatKindOperatorIds .binaryAggregateCarrier).length} binary / {(domainCaveatKindOperatorIds .ternaryAggregateCarrier).length} ternary / {(domainCaveatKindOperatorIds .listProjectionCarrier).length} list-projection / {(domainCaveatKindOperatorIds .predicateAnchor).length} predicate / {(domainCaveatKindOperatorIds .truthMarker).length} truth-marker"
     , s!"catalogue-shape ledger: {(catalogueShapeSignatureKindOperatorIds .stateTransition).length} state-transition / {(catalogueShapeSignatureKindOperatorIds .domainProcess).length} domain-process / {(catalogueShapeSignatureKindOperatorIds .domainRule).length} domain-rule / {(catalogueShapeSignatureKindOperatorIds .assignment).length} assignment / {(catalogueShapeSignatureKindOperatorIds .trajectory).length} trajectory / {(catalogueShapeSignatureKindOperatorIds .debind).length} debind / {(catalogueShapeSignatureKindOperatorIds .response).length} response / {(catalogueShapeSignatureKindOperatorIds .modifier).length} modifier / {(catalogueShapeSignatureKindOperatorIds .protocol).length} protocol / {(catalogueShapeSignatureKindOperatorIds .signal).length} signal / {(catalogueShapeSignatureKindOperatorIds .binding).length} binding / {(catalogueShapeSignatureKindOperatorIds .decomposer).length} decomposer / {(catalogueShapeSignatureKindOperatorIds .partition).length} partition / {(catalogueShapeSignatureKindOperatorIds .textAct).length} text-act"
     , s!"bagua bridgeable: {baguaBridgeableOperatorIds.length} operators"
     , s!"operator forms: {formBackedCount} ids with at least one form"
@@ -340,7 +350,7 @@ private def coverageOutput : String :=
     ]
 
 private def operatorListFilterExpected : String :=
-  "all, executable, theorem-backed, exact, exact-structural-helper, structural, structural-carrier, catalogue-normal-form, identity-noop, projection-anchor, pair-carrier, duplicate-facet, singleton-aggregate, binary-aggregate, ternary-aggregate, list-projection, application-carrier, predicate-anchor, truth-marker, application-helper-only, identity-noop-only, projection-anchor-only, carrier-constructor-only, predicate-anchor-only, truth-marker-only, catalogue-shape-only, bridgeable, known-not-executable, or unsupported"
+  "all, executable, theorem-backed, exact, exact-structural-helper, structural, structural-carrier, catalogue-normal-form, domain-caveat, identity-noop, projection-anchor, pair-carrier, duplicate-facet, singleton-aggregate, binary-aggregate, ternary-aggregate, list-projection, application-carrier, predicate-anchor, truth-marker, application-helper-only, identity-noop-only, projection-anchor-only, carrier-constructor-only, predicate-anchor-only, truth-marker-only, catalogue-shape-only, bridgeable, known-not-executable, or unsupported"
 
 private def operatorCarrierKindFilter? (filter : String) : Option StructuralCarrierKind :=
   allStructuralCarrierKinds.find? (fun kind => kind.key == filter)
@@ -357,6 +367,7 @@ private def operatorListFilterValid (filter : String) : Bool :=
     || filter == "structural"
     || filter == "structural-carrier"
     || filter == "catalogue-normal-form"
+    || filter == "domain-caveat"
     || (operatorCarrierKindFilter? filter).isSome
     || (operatorDomainGapKindFilter? filter).isSome
     || filter == "bridgeable"
@@ -379,6 +390,8 @@ private def operatorListIds (filter : String) : List OperatorId :=
     structuralCarrierOperatorIds
   else if filter == "catalogue-normal-form" then
     catalogueNormalFormOperatorIds
+  else if filter == "domain-caveat" then
+    domainCaveatOperatorIds
   else
     match operatorCarrierKindFilter? filter with
     | some kind => structuralCarrierKindOperatorIds kind
@@ -411,7 +424,11 @@ private def operatorSummaryLine (id : OperatorId) : String :=
     match operatorDomainGapKind? id with
     | some gap => s!"\tgap={gap.key}"
     | none => ""
-  s!"{id.code}\t{id.title}\t{operatorSupportKind id}\tsemantic={(operatorSemanticStrength id).key}{carrier}{domainGap}\tarity={sig.arity}\tforms={formsShow}{bridge}"
+  let domainCaveat :=
+    match operatorDomainCaveatKind? id with
+    | some caveat => s!"\tcaveat={caveat.key}"
+    | none => ""
+  s!"{id.code}\t{id.title}\t{operatorSupportKind id}\tsemantic={(operatorSemanticStrength id).key}{carrier}{domainGap}{domainCaveat}\tarity={sig.arity}\tforms={formsShow}{bridge}"
 
 private def operatorsOutput (filter : String) : String :=
   if !(operatorListFilterValid filter) then
@@ -1571,6 +1588,18 @@ private def operatorJsonOutput (code : String) : String :=
             , jsonFieldRaw "domainGapLabel" "null"
             , jsonFieldRaw "domainGapNote" "null"
             ]
+      let domainCaveatFields :=
+        match operatorDomainCaveatKind? id with
+        | some caveat =>
+            [ jsonFieldString "domainCaveatKind" caveat.key
+            , jsonFieldString "domainCaveatLabel" caveat.label
+            , jsonFieldString "domainCaveatNote" caveat.note
+            ]
+        | none =>
+            [ jsonFieldRaw "domainCaveatKind" "null"
+            , jsonFieldRaw "domainCaveatLabel" "null"
+            , jsonFieldRaw "domainCaveatNote" "null"
+            ]
       let bridgeable := operatorBridgeableToBaguaL0 id
       jsonObject <|
         [ jsonFieldBool "ok" true
@@ -1594,7 +1623,7 @@ private def operatorJsonOutput (code : String) : String :=
         , jsonFieldString "semanticStrength" strength.key
         , jsonFieldString "semanticStrengthLabel" strength.label
         , jsonFieldString "semanticStrengthNote" strength.note
-        ] ++ carrierKindFields ++ domainGapFields ++
+        ] ++ carrierKindFields ++ domainGapFields ++ domainCaveatFields ++
         [ jsonFieldBool "bridgeableL0" bridgeable
         , jsonFieldRaw "bridgeTarget" (if bridgeable then jsonString "bagua-l0-yi" else "null")
         , jsonFieldRaw "executableSemantics" executableJson
@@ -1614,6 +1643,10 @@ private def operatorSummaryJson (id : OperatorId) : String :=
     match operatorDomainGapKind? id with
     | some gap => jsonString gap.key
     | none => "null"
+  let domainCaveat :=
+    match operatorDomainCaveatKind? id with
+    | some caveat => jsonString caveat.key
+    | none => "null"
   jsonObject
     [ jsonFieldString "operatorCode" id.code
     , jsonFieldString "operatorTitle" id.title
@@ -1622,6 +1655,7 @@ private def operatorSummaryJson (id : OperatorId) : String :=
     , jsonFieldString "semanticStrength" (operatorSemanticStrength id).key
     , jsonFieldRaw "carrierKind" carrierKind
     , jsonFieldRaw "domainGapKind" domainGap
+    , jsonFieldRaw "domainCaveatKind" domainCaveat
     , jsonFieldBool "bridgeableL0" (operatorBridgeableToBaguaL0 id)
     , jsonFieldRaw "forms" (jsonArray (glyphForms.map jsonString))
     , jsonFieldRaw "compoundSurfaces" (jsonArray (compoundForms.map jsonString))
@@ -1661,6 +1695,18 @@ private def operatorsJsonOutput (filter : String) : String :=
       , jsonFieldNat "domainGapPredicateAnchorOperators" (domainGapKindOperatorIds .predicateAnchorOnly).length
       , jsonFieldNat "domainGapTruthMarkerOperators" (domainGapKindOperatorIds .truthMarkerOnly).length
       , jsonFieldNat "domainGapCatalogueShapeOperators" (domainGapKindOperatorIds .catalogueShapeOnly).length
+      , jsonFieldNat "domainCaveatOperators" domainCaveatOperatorIds.length
+      , jsonFieldNat "domainCaveatApplicationOperators" (domainCaveatKindOperatorIds .applicationCarrier).length
+      , jsonFieldNat "domainCaveatIdentityNoopOperators" (domainCaveatKindOperatorIds .identityNoop).length
+      , jsonFieldNat "domainCaveatProjectionAnchorOperators" (domainCaveatKindOperatorIds .projectionAnchor).length
+      , jsonFieldNat "domainCaveatPairCarrierOperators" (domainCaveatKindOperatorIds .pairCarrier).length
+      , jsonFieldNat "domainCaveatDuplicateFacetOperators" (domainCaveatKindOperatorIds .duplicateFacetCarrier).length
+      , jsonFieldNat "domainCaveatSingletonAggregateOperators" (domainCaveatKindOperatorIds .singletonAggregateCarrier).length
+      , jsonFieldNat "domainCaveatBinaryAggregateOperators" (domainCaveatKindOperatorIds .binaryAggregateCarrier).length
+      , jsonFieldNat "domainCaveatTernaryAggregateOperators" (domainCaveatKindOperatorIds .ternaryAggregateCarrier).length
+      , jsonFieldNat "domainCaveatListProjectionOperators" (domainCaveatKindOperatorIds .listProjectionCarrier).length
+      , jsonFieldNat "domainCaveatPredicateOperators" (domainCaveatKindOperatorIds .predicateAnchor).length
+      , jsonFieldNat "domainCaveatTruthMarkerOperators" (domainCaveatKindOperatorIds .truthMarker).length
       , jsonFieldNat "catalogueShapeStateTransitionOperators" (catalogueShapeSignatureKindOperatorIds .stateTransition).length
       , jsonFieldNat "catalogueShapeDomainProcessOperators" (catalogueShapeSignatureKindOperatorIds .domainProcess).length
       , jsonFieldNat "catalogueShapeDomainRuleOperators" (catalogueShapeSignatureKindOperatorIds .domainRule).length
@@ -1704,6 +1750,18 @@ private def coverageJsonOutput : String :=
     , jsonFieldNat "domainGapPredicateAnchorOperators" (domainGapKindOperatorIds .predicateAnchorOnly).length
     , jsonFieldNat "domainGapTruthMarkerOperators" (domainGapKindOperatorIds .truthMarkerOnly).length
     , jsonFieldNat "domainGapCatalogueShapeOperators" (domainGapKindOperatorIds .catalogueShapeOnly).length
+    , jsonFieldNat "domainCaveatOperators" domainCaveatOperatorIds.length
+    , jsonFieldNat "domainCaveatApplicationOperators" (domainCaveatKindOperatorIds .applicationCarrier).length
+    , jsonFieldNat "domainCaveatIdentityNoopOperators" (domainCaveatKindOperatorIds .identityNoop).length
+    , jsonFieldNat "domainCaveatProjectionAnchorOperators" (domainCaveatKindOperatorIds .projectionAnchor).length
+    , jsonFieldNat "domainCaveatPairCarrierOperators" (domainCaveatKindOperatorIds .pairCarrier).length
+    , jsonFieldNat "domainCaveatDuplicateFacetOperators" (domainCaveatKindOperatorIds .duplicateFacetCarrier).length
+    , jsonFieldNat "domainCaveatSingletonAggregateOperators" (domainCaveatKindOperatorIds .singletonAggregateCarrier).length
+    , jsonFieldNat "domainCaveatBinaryAggregateOperators" (domainCaveatKindOperatorIds .binaryAggregateCarrier).length
+    , jsonFieldNat "domainCaveatTernaryAggregateOperators" (domainCaveatKindOperatorIds .ternaryAggregateCarrier).length
+    , jsonFieldNat "domainCaveatListProjectionOperators" (domainCaveatKindOperatorIds .listProjectionCarrier).length
+    , jsonFieldNat "domainCaveatPredicateOperators" (domainCaveatKindOperatorIds .predicateAnchor).length
+    , jsonFieldNat "domainCaveatTruthMarkerOperators" (domainCaveatKindOperatorIds .truthMarker).length
     , jsonFieldNat "catalogueShapeStateTransitionOperators" (catalogueShapeSignatureKindOperatorIds .stateTransition).length
     , jsonFieldNat "catalogueShapeDomainProcessOperators" (catalogueShapeSignatureKindOperatorIds .domainProcess).length
     , jsonFieldNat "catalogueShapeDomainRuleOperators" (catalogueShapeSignatureKindOperatorIds .domainRule).length
@@ -1743,11 +1801,11 @@ private def usage : String :=
      "       wenyan-surface --json --compile-yi <PROGRAM>",
      "       wenyan-surface --json --explain <PROGRAM>",
      "       wenyan-surface --json --operator <OP-ID>",
-     "       wenyan-surface --json --operators [all|executable|theorem-backed|exact|exact-structural-helper|structural|structural-carrier|catalogue-normal-form|identity-noop|projection-anchor|pair-carrier|duplicate-facet|singleton-aggregate|binary-aggregate|ternary-aggregate|list-projection|application-carrier|predicate-anchor|truth-marker|application-helper-only|identity-noop-only|projection-anchor-only|carrier-constructor-only|predicate-anchor-only|truth-marker-only|catalogue-shape-only|bridgeable|known-not-executable|unsupported]",
+     "       wenyan-surface --json --operators [all|executable|theorem-backed|exact|exact-structural-helper|structural|structural-carrier|catalogue-normal-form|domain-caveat|identity-noop|projection-anchor|pair-carrier|duplicate-facet|singleton-aggregate|binary-aggregate|ternary-aggregate|list-projection|application-carrier|predicate-anchor|truth-marker|application-helper-only|identity-noop-only|projection-anchor-only|carrier-constructor-only|predicate-anchor-only|truth-marker-only|catalogue-shape-only|bridgeable|known-not-executable|unsupported]",
      "       wenyan-surface --json --coverage",
      "       wenyan-surface --explain <PROGRAM>",
      "       wenyan-surface --operator <OP-ID>",
-     "       wenyan-surface --operators [all|executable|theorem-backed|exact|exact-structural-helper|structural|structural-carrier|catalogue-normal-form|identity-noop|projection-anchor|pair-carrier|duplicate-facet|singleton-aggregate|binary-aggregate|ternary-aggregate|list-projection|application-carrier|predicate-anchor|truth-marker|application-helper-only|identity-noop-only|projection-anchor-only|carrier-constructor-only|predicate-anchor-only|truth-marker-only|catalogue-shape-only|bridgeable|known-not-executable|unsupported]",
+     "       wenyan-surface --operators [all|executable|theorem-backed|exact|exact-structural-helper|structural|structural-carrier|catalogue-normal-form|domain-caveat|identity-noop|projection-anchor|pair-carrier|duplicate-facet|singleton-aggregate|binary-aggregate|ternary-aggregate|list-projection|application-carrier|predicate-anchor|truth-marker|application-helper-only|identity-noop-only|projection-anchor-only|carrier-constructor-only|predicate-anchor-only|truth-marker-only|catalogue-shape-only|bridgeable|known-not-executable|unsupported]",
      "       wenyan-surface --coverage",
      "       wenyan-surface --help",
      "",

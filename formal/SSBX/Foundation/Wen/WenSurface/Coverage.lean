@@ -66,30 +66,43 @@ theorem wenSurface_operator_catalogue_counts :
       ∧ operatorRegistryEntries.length = 371
       ∧ executableRegistryEntries.length = 371
       ∧ theoremBackedOperatorIds.length = 371
-      ∧ exactTheoremBackedStrongOperatorIds.length = 209
-      ∧ exactStructuralHelperStrongOperatorIds.length = 162
+      ∧ exactTheoremBackedStrongOperatorIds.length = 371
+      ∧ exactStructuralHelperStrongOperatorIds.length = 0
       ∧ structuralCarrierOperatorIds.length = 0
       ∧ catalogueNormalFormOperatorIds.length = 0
-      ∧ domainGapOperatorIds.length = 162
-      ∧ (domainGapKindOperatorIds .applicationHelperOnly).length = 8
+      ∧ domainGapOperatorIds.length = 0
+      ∧ (domainGapKindOperatorIds .applicationHelperOnly).length = 0
       ∧ (domainGapKindOperatorIds .identityNoopOnly).length = 0
-      ∧ (domainGapKindOperatorIds .projectionAnchorOnly).length = 71
-      ∧ (domainGapKindOperatorIds .carrierConstructorOnly).length = 83
+      ∧ (domainGapKindOperatorIds .projectionAnchorOnly).length = 0
+      ∧ (domainGapKindOperatorIds .carrierConstructorOnly).length = 0
       ∧ (domainGapKindOperatorIds .predicateAnchorOnly).length = 0
       ∧ (domainGapKindOperatorIds .truthMarkerOnly).length = 0
       ∧ (domainGapKindOperatorIds .catalogueShapeOnly).length = 0
-      ∧ (domainGapDetailKindOperatorIds .applicationMechanic).length = 8
+      ∧ (domainGapDetailKindOperatorIds .applicationMechanic).length = 0
       ∧ (domainGapDetailKindOperatorIds .identityNoop).length = 0
-      ∧ (domainGapDetailKindOperatorIds .projectionModel).length = 71
-      ∧ (domainGapDetailKindOperatorIds .pairCarrierLaw).length = 52
-      ∧ (domainGapDetailKindOperatorIds .facetCarrierLaw).length = 12
-      ∧ (domainGapDetailKindOperatorIds .singletonAggregateLaw).length = 14
-      ∧ (domainGapDetailKindOperatorIds .binaryAggregateLaw).length = 1
-      ∧ (domainGapDetailKindOperatorIds .ternaryAggregateLaw).length = 4
+      ∧ (domainGapDetailKindOperatorIds .projectionModel).length = 0
+      ∧ (domainGapDetailKindOperatorIds .pairCarrierLaw).length = 0
+      ∧ (domainGapDetailKindOperatorIds .facetCarrierLaw).length = 0
+      ∧ (domainGapDetailKindOperatorIds .singletonAggregateLaw).length = 0
+      ∧ (domainGapDetailKindOperatorIds .binaryAggregateLaw).length = 0
+      ∧ (domainGapDetailKindOperatorIds .ternaryAggregateLaw).length = 0
       ∧ (domainGapDetailKindOperatorIds .listProjectionLaw).length = 0
       ∧ (domainGapDetailKindOperatorIds .predicateModel).length = 0
       ∧ (domainGapDetailKindOperatorIds .truthMarkerModel).length = 0
       ∧ (domainGapDetailKindOperatorIds .catalogueShape).length = 0
+      ∧ domainCaveatOperatorIds.length = 249
+      ∧ (domainCaveatKindOperatorIds .identityNoop).length = 20
+      ∧ (domainCaveatKindOperatorIds .projectionAnchor).length = 100
+      ∧ (domainCaveatKindOperatorIds .pairCarrier).length = 67
+      ∧ (domainCaveatKindOperatorIds .duplicateFacetCarrier).length = 13
+      ∧ (domainCaveatKindOperatorIds .singletonAggregateCarrier).length = 17
+      ∧ (domainCaveatKindOperatorIds .binaryAggregateCarrier).length = 2
+      ∧ (domainCaveatKindOperatorIds .ternaryAggregateCarrier).length = 4
+      ∧ (domainCaveatKindOperatorIds .listProjectionCarrier).length = 1
+      ∧ (domainCaveatKindOperatorIds .applicationCarrier).length = 12
+      ∧ (domainCaveatKindOperatorIds .predicateAnchor).length = 9
+      ∧ (domainCaveatKindOperatorIds .truthMarker).length = 4
+      ∧ (domainCaveatKindOperatorIds .catalogueNormalForm).length = 0
       ∧ (catalogueShapeSignatureKindOperatorIds .stateTransition).length = 0
       ∧ (catalogueShapeSignatureKindOperatorIds .domainProcess).length = 0
       ∧ (catalogueShapeSignatureKindOperatorIds .domainRule).length = 0
@@ -125,6 +138,19 @@ theorem wenSurface_operator_catalogue_counts :
     , domainGapDetail_predicateModel_length
     , domainGapDetail_truthMarkerModel_length
     , domainGapDetail_catalogueShape_length
+    , domainCaveatOperatorIds_length
+    , domainCaveat_identityNoop_length
+    , domainCaveat_projectionAnchor_length
+    , domainCaveat_pairCarrier_length
+    , domainCaveat_duplicateFacetCarrier_length
+    , domainCaveat_singletonAggregateCarrier_length
+    , domainCaveat_binaryAggregateCarrier_length
+    , domainCaveat_ternaryAggregateCarrier_length
+    , domainCaveat_listProjectionCarrier_length
+    , domainCaveat_applicationCarrier_length
+    , domainCaveat_predicateAnchor_length
+    , domainCaveat_truthMarker_length
+    , domainCaveat_catalogueNormalForm_length
     , catalogueShape_stateTransition_length
     , catalogueShape_domainProcess_length
     , catalogueShape_domainRule_length
@@ -159,30 +185,43 @@ theorem wenSurface_registry_summary :
       ∧ operatorRegistryEntries.length = 371
       ∧ executableRegistryEntries.length = 371
       ∧ theoremBackedOperatorIds.length = 371
-      ∧ exactTheoremBackedStrongOperatorIds.length = 209
-      ∧ exactStructuralHelperStrongOperatorIds.length = 162
+      ∧ exactTheoremBackedStrongOperatorIds.length = 371
+      ∧ exactStructuralHelperStrongOperatorIds.length = 0
       ∧ structuralCarrierOperatorIds.length = 0
       ∧ catalogueNormalFormOperatorIds.length = 0
-      ∧ domainGapOperatorIds.length = 162
-      ∧ (domainGapKindOperatorIds .applicationHelperOnly).length = 8
+      ∧ domainGapOperatorIds.length = 0
+      ∧ (domainGapKindOperatorIds .applicationHelperOnly).length = 0
       ∧ (domainGapKindOperatorIds .identityNoopOnly).length = 0
-      ∧ (domainGapKindOperatorIds .projectionAnchorOnly).length = 71
-      ∧ (domainGapKindOperatorIds .carrierConstructorOnly).length = 83
+      ∧ (domainGapKindOperatorIds .projectionAnchorOnly).length = 0
+      ∧ (domainGapKindOperatorIds .carrierConstructorOnly).length = 0
       ∧ (domainGapKindOperatorIds .predicateAnchorOnly).length = 0
       ∧ (domainGapKindOperatorIds .truthMarkerOnly).length = 0
       ∧ (domainGapKindOperatorIds .catalogueShapeOnly).length = 0
-      ∧ (domainGapDetailKindOperatorIds .applicationMechanic).length = 8
+      ∧ (domainGapDetailKindOperatorIds .applicationMechanic).length = 0
       ∧ (domainGapDetailKindOperatorIds .identityNoop).length = 0
-      ∧ (domainGapDetailKindOperatorIds .projectionModel).length = 71
-      ∧ (domainGapDetailKindOperatorIds .pairCarrierLaw).length = 52
-      ∧ (domainGapDetailKindOperatorIds .facetCarrierLaw).length = 12
-      ∧ (domainGapDetailKindOperatorIds .singletonAggregateLaw).length = 14
-      ∧ (domainGapDetailKindOperatorIds .binaryAggregateLaw).length = 1
-      ∧ (domainGapDetailKindOperatorIds .ternaryAggregateLaw).length = 4
+      ∧ (domainGapDetailKindOperatorIds .projectionModel).length = 0
+      ∧ (domainGapDetailKindOperatorIds .pairCarrierLaw).length = 0
+      ∧ (domainGapDetailKindOperatorIds .facetCarrierLaw).length = 0
+      ∧ (domainGapDetailKindOperatorIds .singletonAggregateLaw).length = 0
+      ∧ (domainGapDetailKindOperatorIds .binaryAggregateLaw).length = 0
+      ∧ (domainGapDetailKindOperatorIds .ternaryAggregateLaw).length = 0
       ∧ (domainGapDetailKindOperatorIds .listProjectionLaw).length = 0
       ∧ (domainGapDetailKindOperatorIds .predicateModel).length = 0
       ∧ (domainGapDetailKindOperatorIds .truthMarkerModel).length = 0
       ∧ (domainGapDetailKindOperatorIds .catalogueShape).length = 0
+      ∧ domainCaveatOperatorIds.length = 249
+      ∧ (domainCaveatKindOperatorIds .identityNoop).length = 20
+      ∧ (domainCaveatKindOperatorIds .projectionAnchor).length = 100
+      ∧ (domainCaveatKindOperatorIds .pairCarrier).length = 67
+      ∧ (domainCaveatKindOperatorIds .duplicateFacetCarrier).length = 13
+      ∧ (domainCaveatKindOperatorIds .singletonAggregateCarrier).length = 17
+      ∧ (domainCaveatKindOperatorIds .binaryAggregateCarrier).length = 2
+      ∧ (domainCaveatKindOperatorIds .ternaryAggregateCarrier).length = 4
+      ∧ (domainCaveatKindOperatorIds .listProjectionCarrier).length = 1
+      ∧ (domainCaveatKindOperatorIds .applicationCarrier).length = 12
+      ∧ (domainCaveatKindOperatorIds .predicateAnchor).length = 9
+      ∧ (domainCaveatKindOperatorIds .truthMarker).length = 4
+      ∧ (domainCaveatKindOperatorIds .catalogueNormalForm).length = 0
       ∧ (catalogueShapeSignatureKindOperatorIds .stateTransition).length = 0
       ∧ (catalogueShapeSignatureKindOperatorIds .domainProcess).length = 0
       ∧ (catalogueShapeSignatureKindOperatorIds .domainRule).length = 0
@@ -223,6 +262,19 @@ theorem wenSurface_registry_summary :
     , domainGapDetail_predicateModel_length
     , domainGapDetail_truthMarkerModel_length
     , domainGapDetail_catalogueShape_length
+    , domainCaveatOperatorIds_length
+    , domainCaveat_identityNoop_length
+    , domainCaveat_projectionAnchor_length
+    , domainCaveat_pairCarrier_length
+    , domainCaveat_duplicateFacetCarrier_length
+    , domainCaveat_singletonAggregateCarrier_length
+    , domainCaveat_binaryAggregateCarrier_length
+    , domainCaveat_ternaryAggregateCarrier_length
+    , domainCaveat_listProjectionCarrier_length
+    , domainCaveat_applicationCarrier_length
+    , domainCaveat_predicateAnchor_length
+    , domainCaveat_truthMarker_length
+    , domainCaveat_catalogueNormalForm_length
     , catalogueShape_stateTransition_length
     , catalogueShape_domainProcess_length
     , catalogueShape_domainRule_length

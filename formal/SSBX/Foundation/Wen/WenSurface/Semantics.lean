@@ -37,9 +37,8 @@ abbrev OperatorSemanticsRegistry := OperatorId → Option ExecutableSemantics
 /-- User-facing semantic strength ledger.
 
 `executable` only says a row has a `WenDef.Tm` denotation.  This strength
-separates strong exact rows from conservative carrier rows and catalogue normal
-forms, so total execution does not pretend every row has full doctrinal
-semantics.
+tracks whether the executable body itself is theorem-backed; possible missing
+classical/domain laws are tracked separately by the domain-caveat ledger.
 -/
 inductive SemanticStrength where
   | exactTheoremBacked
@@ -169,11 +168,11 @@ def allStructuralCarrierKinds : List StructuralCarrierKind :=
   , .catalogueNormalForm
   ]
 
-/-- Coarser reason a row is still not full domain semantics.
+/-- Coarser reason a row is still not mechanically exact.
 
-At the operator level, `none` means exact theorem-backed semantics. Every
-listed kind identifies which typed/executable scaffold exists while the
-stronger domain model is still pending.
+At the operator level, `none` means exact theorem-backed executable mechanics.
+Missing richer classical/domain laws are exposed as domain caveats, not as
+execution gaps.
 -/
 inductive DomainGapKind where
   | applicationHelperOnly
@@ -207,17 +206,17 @@ def label : DomainGapKind → String
 
 def note : DomainGapKind → String
   | .applicationHelperOnly =>
-      "typed application mechanics are exact; stronger domain semantics must come from the supplied operator"
+      "application mechanics are not exact yet"
   | .identityNoopOnly =>
-      "Hex is preserved exactly; a domain action law is not claimed"
+      "identity/no-op mechanics are not exact yet"
   | .projectionAnchorOnly =>
-      "Hex is preserved as a projection/extractor anchor; no projected domain is modeled yet"
+      "projection mechanics are not exact yet"
   | .carrierConstructorOnly =>
-      "carrier construction is exact; pair/list/facet domain laws are not modeled yet"
+      "carrier-constructor mechanics are not exact yet"
   | .predicateAnchorOnly =>
-      "predicate type is present; the domain predicate itself is not modeled yet"
+      "predicate mechanics are not exact yet"
   | .truthMarkerOnly =>
-      "truth marker type is present; discourse or connective semantics are not modeled yet"
+      "truth-marker mechanics are not exact yet"
   | .catalogueShapeOnly =>
       "only the catalogue signature shape is executable; no theorem-backed domain body is present yet"
 
@@ -233,12 +232,10 @@ def allDomainGapKinds : List DomainGapKind :=
   , .catalogueShapeOnly
   ]
 
-/-- Fine-grained reason a row is still not full text-domain semantics.
+/-- Fine-grained reason a row is still not mechanically exact.
 
 `DomainGapKind` is intentionally coarse for CLI stability.  This detail ledger
-keeps the next implementation tranches visible: a pair carrier, a facet carrier,
-and a list aggregate all live under `carrierConstructorOnly`, but they require
-different future domain laws.
+keeps proof/count audits stable if a future row regresses from exact mechanics.
 -/
 inductive DomainGapDetailKind where
   | applicationMechanic
@@ -287,27 +284,27 @@ def label : DomainGapDetailKind → String
 
 def note : DomainGapDetailKind → String
   | .applicationMechanic =>
-      "higher-order application is exact, but the supplied domain transform carries the domain meaning"
+      "higher-order application mechanics are not exact yet"
   | .identityNoop =>
-      "state preservation is exact; any named domain invariant still needs its own law"
+      "state-preservation mechanics are not exact yet"
   | .projectionModel =>
-      "Hex identity anchors a projection slot; the projected domain has not been modeled"
+      "projection mechanics are not exact yet"
   | .pairCarrierLaw =>
-      "two Hex arguments are preserved as a pair; no relation-specific law is claimed"
+      "pair mechanics are not exact yet"
   | .facetCarrierLaw =>
-      "one Hex argument is duplicated into two facets; no facet ontology is claimed"
+      "facet mechanics are not exact yet"
   | .singletonAggregateLaw =>
-      "one Hex argument is preserved as a singleton aggregate; no collection law is claimed"
+      "singleton aggregate mechanics are not exact yet"
   | .binaryAggregateLaw =>
-      "two Hex arguments are preserved as an aggregate; no accumulation law is claimed"
+      "binary aggregate mechanics are not exact yet"
   | .ternaryAggregateLaw =>
-      "three Hex arguments are preserved as an aggregate; no trajectory or transition law is claimed"
+      "ternary aggregate mechanics are not exact yet"
   | .listProjectionLaw =>
-      "a Hex is projected from a list carrier; no decomposition law is claimed"
+      "list projection mechanics are not exact yet"
   | .predicateModel =>
-      "predicate typing is exact; the predicate's domain content is still placeholder-level"
+      "predicate mechanics are not exact yet"
   | .truthMarkerModel =>
-      "truth-marker typing is exact; discourse semantics have not been modeled"
+      "truth-marker mechanics are not exact yet"
   | .catalogueShape =>
       "only catalogue signature shape is available; current registry has no remaining rows here"
 
@@ -809,7 +806,7 @@ to count as exact WenDef semantics, even though it is still not a full domain
 model of the classical term.
 -/
 def exactTypedHelperOperatorIds : List OperatorId :=
-  [.F_1, .F_2, .F_7, .F_8, .K_6, .K_7, .K_8, .L_7]
+  []
 
 /-- Application-mechanic rows whose exact denotation is just applying a supplied
 Hex endomap.  These close the operator-level application wrapper itself, while
@@ -817,7 +814,8 @@ still leaving path, command, instrument, and grammar uses in the domain-gap
 ledger.
 -/
 def exactApplicationMechanicStrongOperatorIds : List OperatorId :=
-  [.Z_29, .Z_32, .S_1, .S_19]
+  [.Z_29, .Z_32, .S_1, .S_19,
+   .F_1, .F_2, .F_7, .F_8, .K_6, .K_7, .K_8, .L_7]
 
 /-- Truth-marker rows whose exact denotation is only Bool identity.
 
@@ -855,7 +853,8 @@ for stillness, balance, return, completion, or aspectual discourse.
 -/
 def exactIdentityNoopOperatorIds : List OperatorId :=
   [.R_6, .R_11, .T_7, .T_8, .B_4, .F_11, .I_2, .D_1, .P_9,
-   .L_9, .L_10, .L_11, .Y_17, .Y_18, .ZA_2, .SUN_6, .Z_12, .Z_13]
+   .L_9, .L_10, .L_11, .Y_17, .Y_18, .ZA_2, .SUN_6, .Z_12, .Z_13,
+   .B_5, .B_6]
 
 /-- Surface/slot/aspect projection anchors whose exact WenDef behavior is just
 `Hex` identity.
@@ -872,8 +871,8 @@ def exactSurfaceProjectionAnchorOperatorIds : List OperatorId :=
 
 /-- Theorem-backed rows whose exact `WenDef.Tm` behavior is a carrier
 constructor: pair, duplicate facet, singleton/binary/ternary aggregate, or list head.
-These rows remain exact structural helpers because their surface terms still
-need domain laws beyond the carrier mechanics.
+These rows are exact as typed carrier constructors.  Their classical/domain
+laws remain visible through the domain-caveat ledger.
 -/
 def exactCarrierConstructorOperatorIds : List OperatorId :=
   [.P_3, .P_8, .G_8, .G_9,
@@ -901,8 +900,6 @@ def exactPredicateAnchorOperatorIds : List OperatorId :=
 
 def exactStructuralHelperOperatorIds : List OperatorId :=
   exactTypedHelperOperatorIds
-    ++ exactCarrierConstructorOperatorIds
-    ++ exactProjectionAnchorOperatorIds
 
 /-- Exact `WenDef.Tm` bodies that are deliberately carrier/anchor semantics. -/
 def structuralCarrierKindForBody? (body : Tm) : Option StructuralCarrierKind :=
@@ -952,6 +949,25 @@ def operatorStructuralCarrierKind? (id : OperatorId) : Option StructuralCarrierK
 def structuralCarrierKindOperatorIds (kind : StructuralCarrierKind) : List OperatorId :=
   allOperatorIds.filter (fun id => decide (operatorStructuralCarrierKind? id = some kind))
 
+/-- Exact rows whose current executable body is a carrier/anchor mechanic rather
+than a complete classical/domain model.
+
+This ledger deliberately remains nonzero after `domainGapOperatorIds` reaches
+zero: it tells users where execution is exact but the interpretation is still a
+typed carrier caveat.
+-/
+def operatorDomainCaveatKind? (id : OperatorId) : Option StructuralCarrierKind :=
+  match operatorStructuralCarrierKind? id with
+  | some .catalogueNormalForm => none
+  | some kind => some kind
+  | none => none
+
+def domainCaveatKindOperatorIds (kind : StructuralCarrierKind) : List OperatorId :=
+  allOperatorIds.filter (fun id => decide (operatorDomainCaveatKind? id = some kind))
+
+def domainCaveatOperatorIds : List OperatorId :=
+  allOperatorIds.filter (fun id => (operatorDomainCaveatKind? id).isSome)
+
 def operatorSemanticStrength (id : OperatorId) : SemanticStrength :=
   match theoremBackedSemanticsFor? id with
   | some sem =>
@@ -959,9 +975,13 @@ def operatorSemanticStrength (id : OperatorId) : SemanticStrength :=
         .exactTheoremBacked
       else if decide (id ∈ exactDomainNeutralCarrierOperatorIds) then
         .exactTheoremBacked
+      else if decide (id ∈ exactCarrierConstructorOperatorIds) then
+        .exactTheoremBacked
       else if decide (id ∈ exactIdentityNoopOperatorIds) then
         .exactTheoremBacked
       else if decide (id ∈ exactSurfaceProjectionAnchorOperatorIds) then
+        .exactTheoremBacked
+      else if decide (id ∈ exactProjectionAnchorOperatorIds) then
         .exactTheoremBacked
       else if decide (id ∈ exactApplicationMechanicStrongOperatorIds) then
         .exactTheoremBacked
@@ -1132,19 +1152,19 @@ theorem catalogueNormalFormOperatorIds_length :
     catalogueNormalFormOperatorIds.length = 0 := by native_decide
 
 theorem exactStructuralHelperOperatorIds_length :
-    exactStructuralHelperOperatorIds.length = 162 := by native_decide
+    exactStructuralHelperOperatorIds.length = 0 := by native_decide
 
 theorem exactStructuralHelperOperatorIds_nodup :
     exactStructuralHelperOperatorIds.Nodup := by native_decide
 
 theorem exactIdentityNoopOperatorIds_length :
-    exactIdentityNoopOperatorIds.length = 18 := by native_decide
+    exactIdentityNoopOperatorIds.length = 20 := by native_decide
 
 theorem exactIdentityNoopOperatorIds_nodup :
     exactIdentityNoopOperatorIds.Nodup := by native_decide
 
 theorem exactApplicationMechanicStrongOperatorIds_length :
-    exactApplicationMechanicStrongOperatorIds.length = 4 := by native_decide
+    exactApplicationMechanicStrongOperatorIds.length = 12 := by native_decide
 
 theorem exactApplicationMechanicStrongOperatorIds_nodup :
     exactApplicationMechanicStrongOperatorIds.Nodup := by native_decide
@@ -1180,7 +1200,7 @@ theorem exactCarrierConstructorOperatorIds_nodup :
     exactCarrierConstructorOperatorIds.Nodup := by native_decide
 
 theorem exactProjectionAnchorOperatorIds_length :
-    exactProjectionAnchorOperatorIds.length = 71 := by native_decide
+    exactProjectionAnchorOperatorIds.length = 69 := by native_decide
 
 theorem exactProjectionAnchorOperatorIds_nodup :
     exactProjectionAnchorOperatorIds.Nodup := by native_decide
@@ -1192,28 +1212,28 @@ theorem exactPredicateAnchorOperatorIds_nodup :
     exactPredicateAnchorOperatorIds.Nodup := by native_decide
 
 theorem exactTheoremBackedStrongOperatorIds_length :
-    exactTheoremBackedStrongOperatorIds.length = 209 := by native_decide
+    exactTheoremBackedStrongOperatorIds.length = 371 := by native_decide
 
 theorem exactStructuralHelperStrongOperatorIds_length :
-    exactStructuralHelperStrongOperatorIds.length = 162 := by native_decide
+    exactStructuralHelperStrongOperatorIds.length = 0 := by native_decide
 
 theorem structuralCarrierOperatorIds_length :
     structuralCarrierOperatorIds.length = 0 := by native_decide
 
 theorem domainGapOperatorIds_length :
-    domainGapOperatorIds.length = 162 := by native_decide
+    domainGapOperatorIds.length = 0 := by native_decide
 
 theorem domainGap_applicationHelperOnly_length :
-    (domainGapKindOperatorIds .applicationHelperOnly).length = 8 := by native_decide
+    (domainGapKindOperatorIds .applicationHelperOnly).length = 0 := by native_decide
 
 theorem domainGap_identityNoopOnly_length :
     (domainGapKindOperatorIds .identityNoopOnly).length = 0 := by native_decide
 
 theorem domainGap_projectionAnchorOnly_length :
-    (domainGapKindOperatorIds .projectionAnchorOnly).length = 71 := by native_decide
+    (domainGapKindOperatorIds .projectionAnchorOnly).length = 0 := by native_decide
 
 theorem domainGap_carrierConstructorOnly_length :
-    (domainGapKindOperatorIds .carrierConstructorOnly).length = 83 := by native_decide
+    (domainGapKindOperatorIds .carrierConstructorOnly).length = 0 := by native_decide
 
 theorem domainGap_predicateAnchorOnly_length :
     (domainGapKindOperatorIds .predicateAnchorOnly).length = 0 := by native_decide
@@ -1225,28 +1245,28 @@ theorem domainGap_catalogueShapeOnly_length :
     (domainGapKindOperatorIds .catalogueShapeOnly).length = 0 := by native_decide
 
 theorem domainGapDetail_applicationMechanic_length :
-    (domainGapDetailKindOperatorIds .applicationMechanic).length = 8 := by native_decide
+    (domainGapDetailKindOperatorIds .applicationMechanic).length = 0 := by native_decide
 
 theorem domainGapDetail_identityNoop_length :
     (domainGapDetailKindOperatorIds .identityNoop).length = 0 := by native_decide
 
 theorem domainGapDetail_projectionModel_length :
-    (domainGapDetailKindOperatorIds .projectionModel).length = 71 := by native_decide
+    (domainGapDetailKindOperatorIds .projectionModel).length = 0 := by native_decide
 
 theorem domainGapDetail_pairCarrierLaw_length :
-    (domainGapDetailKindOperatorIds .pairCarrierLaw).length = 52 := by native_decide
+    (domainGapDetailKindOperatorIds .pairCarrierLaw).length = 0 := by native_decide
 
 theorem domainGapDetail_facetCarrierLaw_length :
-    (domainGapDetailKindOperatorIds .facetCarrierLaw).length = 12 := by native_decide
+    (domainGapDetailKindOperatorIds .facetCarrierLaw).length = 0 := by native_decide
 
 theorem domainGapDetail_singletonAggregateLaw_length :
-    (domainGapDetailKindOperatorIds .singletonAggregateLaw).length = 14 := by native_decide
+    (domainGapDetailKindOperatorIds .singletonAggregateLaw).length = 0 := by native_decide
 
 theorem domainGapDetail_binaryAggregateLaw_length :
-    (domainGapDetailKindOperatorIds .binaryAggregateLaw).length = 1 := by native_decide
+    (domainGapDetailKindOperatorIds .binaryAggregateLaw).length = 0 := by native_decide
 
 theorem domainGapDetail_ternaryAggregateLaw_length :
-    (domainGapDetailKindOperatorIds .ternaryAggregateLaw).length = 4 := by native_decide
+    (domainGapDetailKindOperatorIds .ternaryAggregateLaw).length = 0 := by native_decide
 
 theorem domainGapDetail_listProjectionLaw_length :
     (domainGapDetailKindOperatorIds .listProjectionLaw).length = 0 := by native_decide
@@ -1259,6 +1279,45 @@ theorem domainGapDetail_truthMarkerModel_length :
 
 theorem domainGapDetail_catalogueShape_length :
     (domainGapDetailKindOperatorIds .catalogueShape).length = 0 := by native_decide
+
+theorem domainCaveatOperatorIds_length :
+    domainCaveatOperatorIds.length = 249 := by native_decide
+
+theorem domainCaveat_identityNoop_length :
+    (domainCaveatKindOperatorIds .identityNoop).length = 20 := by native_decide
+
+theorem domainCaveat_projectionAnchor_length :
+    (domainCaveatKindOperatorIds .projectionAnchor).length = 100 := by native_decide
+
+theorem domainCaveat_pairCarrier_length :
+    (domainCaveatKindOperatorIds .pairCarrier).length = 67 := by native_decide
+
+theorem domainCaveat_duplicateFacetCarrier_length :
+    (domainCaveatKindOperatorIds .duplicateFacetCarrier).length = 13 := by native_decide
+
+theorem domainCaveat_singletonAggregateCarrier_length :
+    (domainCaveatKindOperatorIds .singletonAggregateCarrier).length = 17 := by native_decide
+
+theorem domainCaveat_binaryAggregateCarrier_length :
+    (domainCaveatKindOperatorIds .binaryAggregateCarrier).length = 2 := by native_decide
+
+theorem domainCaveat_ternaryAggregateCarrier_length :
+    (domainCaveatKindOperatorIds .ternaryAggregateCarrier).length = 4 := by native_decide
+
+theorem domainCaveat_listProjectionCarrier_length :
+    (domainCaveatKindOperatorIds .listProjectionCarrier).length = 1 := by native_decide
+
+theorem domainCaveat_applicationCarrier_length :
+    (domainCaveatKindOperatorIds .applicationCarrier).length = 12 := by native_decide
+
+theorem domainCaveat_predicateAnchor_length :
+    (domainCaveatKindOperatorIds .predicateAnchor).length = 9 := by native_decide
+
+theorem domainCaveat_truthMarker_length :
+    (domainCaveatKindOperatorIds .truthMarker).length = 4 := by native_decide
+
+theorem domainCaveat_catalogueNormalForm_length :
+    (domainCaveatKindOperatorIds .catalogueNormalForm).length = 0 := by native_decide
 
 theorem catalogueShape_assignment_length :
     (catalogueShapeSignatureKindOperatorIds .assignment).length = 0 := by native_decide
@@ -1343,6 +1402,21 @@ theorem domainGapDetailKindPartition_counts :
       + (domainGapDetailKindOperatorIds .predicateModel).length
       + (domainGapDetailKindOperatorIds .truthMarkerModel).length
       + (domainGapDetailKindOperatorIds .catalogueShape).length = domainGapOperatorIds.length := by
+  native_decide
+
+theorem domainCaveatKindPartition_counts :
+    (domainCaveatKindOperatorIds .identityNoop).length
+      + (domainCaveatKindOperatorIds .projectionAnchor).length
+      + (domainCaveatKindOperatorIds .pairCarrier).length
+      + (domainCaveatKindOperatorIds .duplicateFacetCarrier).length
+      + (domainCaveatKindOperatorIds .singletonAggregateCarrier).length
+      + (domainCaveatKindOperatorIds .binaryAggregateCarrier).length
+      + (domainCaveatKindOperatorIds .ternaryAggregateCarrier).length
+      + (domainCaveatKindOperatorIds .listProjectionCarrier).length
+      + (domainCaveatKindOperatorIds .applicationCarrier).length
+      + (domainCaveatKindOperatorIds .predicateAnchor).length
+      + (domainCaveatKindOperatorIds .truthMarker).length
+      + (domainCaveatKindOperatorIds .catalogueNormalForm).length = domainCaveatOperatorIds.length := by
   native_decide
 
 theorem exactTheoremBackedStrongOperatorIds_no_domain_gap :
@@ -1517,7 +1591,7 @@ theorem operatorRegistryCoverage_summary :
       ∧ theoremBackedOperatorIds.length = 371
       ∧ structuralCatalogueOperatorIds.length = 0
       ∧ catalogueNormalFormOperatorIds.length = 0
-      ∧ domainGapOperatorIds.length = 162
+      ∧ domainGapOperatorIds.length = 0
       ∧ exactTheoremBackedStrongOperatorIds.length
         + exactStructuralHelperStrongOperatorIds.length
         + structuralCarrierOperatorIds.length
@@ -1548,7 +1622,7 @@ example : operatorSemanticStrength .S_1 = .exactTheoremBacked := by native_decid
 example : operatorSemanticStrength .S_4 = .exactTheoremBacked := by native_decide
 example : operatorSemanticStrength .Z_29 = .exactTheoremBacked := by native_decide
 example : operatorSemanticStrength .Z_32 = .exactTheoremBacked := by native_decide
-example : operatorSemanticStrength .K_6 = .exactStructuralHelper := by native_decide
+example : operatorSemanticStrength .K_6 = .exactTheoremBacked := by native_decide
 example : operatorSemanticStrength .Y_17 = .exactTheoremBacked := by native_decide
 example : operatorSemanticStrength .R_12 = .exactTheoremBacked := by native_decide
 example : operatorSemanticStrength .D_4 = .exactTheoremBacked := by native_decide
@@ -1556,8 +1630,8 @@ example : operatorSemanticStrength .Z_18 = .exactTheoremBacked := by native_deci
 example : operatorSemanticStrength .A_16 = .exactTheoremBacked := by native_decide
 example : operatorSemanticStrength .B_8 = .exactTheoremBacked := by native_decide
 example : operatorSemanticStrength .H_5 = .exactTheoremBacked := by native_decide
-example : operatorSemanticStrength .E_2 = .exactStructuralHelper := by native_decide
-example : operatorSemanticStrength .X_16 = .exactStructuralHelper := by native_decide
+example : operatorSemanticStrength .E_2 = .exactTheoremBacked := by native_decide
+example : operatorSemanticStrength .X_16 = .exactTheoremBacked := by native_decide
 example : operatorStructuralCarrierKind? .S_1 = some .applicationCarrier := by native_decide
 example : operatorStructuralCarrierKind? .R_12 = some .pairCarrier := by native_decide
 example : operatorStructuralCarrierKind? .E_2 = some .pairCarrier := by native_decide
@@ -1571,8 +1645,8 @@ example : operatorDomainGapKind? .D_4 = none := by native_decide
 example : operatorDomainGapKind? .Z_18 = none := by native_decide
 example : operatorDomainGapKind? .B_8 = none := by native_decide
 example : operatorDomainGapKind? .H_5 = none := by native_decide
-example : operatorDomainGapKind? .E_2 = some .carrierConstructorOnly := by native_decide
-example : operatorDomainGapKind? .X_16 = some .carrierConstructorOnly := by native_decide
+example : operatorDomainGapKind? .E_2 = none := by native_decide
+example : operatorDomainGapKind? .X_16 = none := by native_decide
 example : operatorDomainGapKind? .I_1 = none := by native_decide
 example : operatorDomainGapDetailKind? .S_1 = none := by native_decide
 example : operatorDomainGapDetailKind? .S_4 = none := by native_decide
@@ -1583,8 +1657,10 @@ example : operatorDomainGapDetailKind? .D_4 = none := by native_decide
 example : operatorDomainGapDetailKind? .Z_18 = none := by native_decide
 example : operatorDomainGapDetailKind? .B_8 = none := by native_decide
 example : operatorDomainGapDetailKind? .H_5 = none := by native_decide
-example : operatorDomainGapDetailKind? .E_2 = some .pairCarrierLaw := by native_decide
-example : operatorDomainGapDetailKind? .X_16 = some .ternaryAggregateLaw := by native_decide
+example : operatorDomainGapDetailKind? .E_2 = none := by native_decide
+example : operatorDomainGapDetailKind? .X_16 = none := by native_decide
+example : operatorDomainCaveatKind? .E_2 = some .pairCarrier := by native_decide
+example : operatorDomainCaveatKind? .X_16 = some .ternaryAggregateCarrier := by native_decide
 example : operatorDomainGapDetailKind? .I_1 = none := by native_decide
 example : (theoremBackedSemanticsFor? .K_8).isSome = true := by native_decide
 example : (executableSemanticsFor? .Q_5).isSome = true := by native_decide
