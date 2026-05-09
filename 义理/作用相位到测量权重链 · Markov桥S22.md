@@ -2,6 +2,8 @@
 
 **前置**：[作用量相位律候选 · Markov桥S5r](作用量相位律候选%20·%20Markov桥S5r.md) · [Born rule推导候选 · Markov桥S18](Born%20rule推导候选%20·%20Markov桥S18.md) · [概率幅到测量权重 · Markov桥S21](概率幅到测量权重%20·%20Markov桥S21.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
+**后续**：[有限相位演化候选 · Markov桥S23](有限相位演化候选%20·%20Markov桥S23.md) 已把本页的 displayed action amplitude 升级为 finite period-two phase evolution candidate。
+
 **Lean 锚点**：
 
 | 层 | 文件 | 内容 | 状态 |

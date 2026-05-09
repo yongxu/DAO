@@ -47,6 +47,7 @@
 | `formal/SSBX/Foundation/Modern/QuantumRelativityNontrivialChannelLawBridge.lean` | S20 nontrivial finite quantum-channel law boundary |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityBornMeasurementBridge.lean` | S21 one-qubit computational-basis Born measurement weights boundary |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityActionAmplitudeMeasurementBridge.lean` | S22 finite action branch to Born measurement weights chain |
+| `formal/SSBX/Foundation/Modern/QuantumRelativityFinitePhaseEvolutionBridge.lean` | S23 finite period-two phase evolution boundary |
 | `formal/SSBX/notes/markov-causal-bridge-plan.md` | 探索计划与完成记录 |
 | `formal/SSBX/notes/unification-stepwise-plan.md` | 逐步完善到候选统一的阶段路线 |
 | `义理/文构造完备与直相加边界.md` | 对 `current-language no-go` 旧说法的正名 |
@@ -87,6 +88,7 @@
 | `义理/非平凡量子通道律候选 · Markov桥S20.md` | S20 nontrivial finite quantum-channel law companion 文档 |
 | `义理/概率幅到测量权重 · Markov桥S21.md` | S21 one-qubit computational-basis Born measurement weights companion 文档 |
 | `义理/作用相位到测量权重链 · Markov桥S22.md` | S22 finite action branch to Born measurement weights companion 文档 |
+| `义理/有限相位演化候选 · Markov桥S23.md` | S23 finite phase evolution companion 文档 |
 
 ## 当前验证结论
 
@@ -133,8 +135,9 @@
 - [x] `nontrivial_quantum_channel_law_bridge_summary` 已关闭 nontrivial finite quantum-channel law：非零 channel amplitude 推出 step / carried classical support / Born-shaped boundary，并给 concrete bridge 非零二步组合 witness。
 - [x] `born_measurement_bridge_summary` 已关闭 one-qubit computational-basis Born measurement weights：normalized qubit 的两个 displayed weights 非负且和为 `1`。
 - [x] `action_amplitude_measurement_bridge_summary` 已关闭 finite action-to-measurement chain：action branch 推出 action amplitude、normalized qubit 与 measurement-event weights。
+- [x] `finite_phase_evolution_bridge_summary` 已关闭 finite phase-evolution boundary：branch-indexed `1/-1` phase operation 生成 S22 qubits，并保持 Born weights / normalized measurement-weight interface。
 - [x] 首次新 worktree 原生构建的 `mathlib4` 克隆阻塞已记录为基础设施失败，不当作 theorem 失败。
-- [ ] 尚未验证一般 Hilbert measurement、POVM/PVM、完整 amplitude dynamics、measurement postulate semantics、decoherence、continuous phase/action law、general all-path enumeration、一般 path integral、真实可测干涉律、physical unitary / CPTP / Kraus / density-matrix channel law、完整因果偏序、局部有限 causal set、度规恢复、数据校准、可测预言 theorem 或经验闭合。
+- [ ] 尚未验证一般 Hilbert measurement、POVM/PVM、general Hamiltonian/unitary amplitude dynamics、measurement postulate semantics、decoherence、continuous phase/action law、general all-path enumeration、一般 path integral、真实可测干涉律、physical unitary / CPTP / Kraus / density-matrix channel law、完整因果偏序、局部有限 causal set、度规恢复、数据校准、可测预言 theorem 或经验闭合。
 
 ## 每次变更的最低验证门槛
 
@@ -181,6 +184,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityPathWeightMultiplicationBridg
 lake build SSBX.Foundation.Modern.QuantumRelativityNontrivialChannelLawBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityBornMeasurementBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityActionAmplitudeMeasurementBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityFinitePhaseEvolutionBridge
 lake build SSBX
 git diff --check --
 ```
@@ -252,6 +256,7 @@ rg -n "待处理|future|deferred|部分相关|佛|唯识|analogy|unchecked|plann
 | nontrivial finite quantum-channel law | `nontrivial_quantum_channel_law_bridge_summary` | `machineChecked` |
 | one-qubit Born measurement weights | `born_measurement_bridge_summary` | `machineChecked` |
 | finite action-to-measurement chain | `action_amplitude_measurement_bridge_summary` | `machineChecked` |
+| finite phase evolution boundary | `finite_phase_evolution_bridge_summary` | `machineChecked` |
 | tagged-language noncollapse 保持 | `markov_bridge_not_direct_language_addition` | `machineChecked` |
 | 公开摘要 | `markov_causal_bridge_summary` | `machineChecked` |
 
@@ -303,7 +308,7 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
 | 后续结构 | 当前缺口 |
 |---|---|
 | 量子引力 | 还需要动力学、连续极限、量子场或引力方程 |
-| Born rule 推导 | S18 已关闭 Markov/amplitude compatibility 下的 finite typed-skeleton derivation；还需要 amplitude dynamics、测量语义、decoherence 与经验闭合 |
+| Born rule 推导 | S18 已关闭 Markov/amplitude compatibility 下的 finite typed-skeleton derivation，S23 已关闭 finite phase preservation；还需要 general Hamiltonian/unitary amplitude dynamics、测量语义、decoherence 与经验闭合 |
 | 路径权重乘法 | S19 已关闭 finite kernel path 的 append weight law；还需要 stochastic independence semantics、general all-path enumeration 与 path integral |
 | 真实干涉律 | S5/S5b/S5c/S5d/S5e/S5f/S5g/S5h/S5i/S5j/S5k/S5l/S5m/S5n/S5o/S5p/S5q/S5r 已有 path amplitude、非零 witness、two-path finite cancellation candidate、discrete phase-label candidate、edge-action phase accumulation candidate、finite path-family sum candidate、finite path-sum algebra candidate、endpoint-indexed finite family candidate、endpoint support normalization candidate、two-route toy enumeration candidate、visible path-key candidate、finite visible-key quotient candidate、visible-key quotient class candidate、two-route canonical representative candidate、finite quotient-support candidate、quotient-support algebra candidate、pending observable ledger boundary 与 finite action-to-phase law candidate；还需要 general choice function、general all-path enumeration、一般 path integral、连续相位动力学、可测预言 theorem 或经验闭合 |
 | 非平凡 finite quantum-channel law | S20 已关闭 nonzero channel amplitude -> step / classical support / Born-shaped boundary；还需要 physical unitary/CPTP/Kraus/density-matrix law |
@@ -351,11 +356,12 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
 | V15 | 引入 sum-over-middle channel composition | 已由 `sum_over_middle_channel_bridge_summary` 关闭 finite middle-list endpoint amplitude 与 two-step support boundary；composed support probability/Born boundary、unitary/CPTP ledger 与 empirical closure 仍 pending |
 | V16 | 引入 sum-over-middle Born boundary | 已由 `sum_over_middle_born_distribution_bridge_summary` 关闭 composed endpoint support 到 finite Born distribution boundary 的条件式接口；unitary/CPTP ledger 与 empirical closure 仍 pending |
 | V17 | 引入 unitary/CPTP ledger boundary | 已由 `unitary_cptp_ledger_bridge_summary` 关闭 required-but-not-closed ledger；真正的 unitary/CPTP law、metric recovery 与 empirical closure 仍 pending |
-| V18 | 引入 Born rule from Markov/amplitude compatibility bridge | 已由 `born_rule_derivation_bridge_summary` 关闭 finite typed-skeleton derivation；amplitude dynamics、measurement semantics、unitary/CPTP、metric recovery 与 empirical closure 仍 pending |
+| V18 | 引入 Born rule from Markov/amplitude compatibility bridge | 已由 `born_rule_derivation_bridge_summary` 关闭 finite typed-skeleton derivation；general Hamiltonian/unitary amplitude dynamics、measurement semantics、unitary/CPTP、metric recovery 与 empirical closure 仍 pending |
 | V19 | 引入 path-weight multiplication bridge | 已由 `path_weight_multiplication_bridge_summary` 关闭 finite kernel path append weight law；stochastic semantics、general all-path enumeration、path integral 与 empirical closure 仍 pending |
-| V20 | 引入 nontrivial finite quantum-channel law bridge | 已由 `nontrivial_quantum_channel_law_bridge_summary` 关闭非零 channel amplitude law；physical unitary/CPTP/Kraus/density-matrix law、amplitude dynamics 与 empirical closure 仍 pending |
+| V20 | 引入 nontrivial finite quantum-channel law bridge | 已由 `nontrivial_quantum_channel_law_bridge_summary` 关闭非零 channel amplitude law；physical unitary/CPTP/Kraus/density-matrix law、general Hamiltonian/unitary amplitude dynamics 与 empirical closure 仍 pending |
 | V21 | 引入 one-qubit computational-basis Born measurement weights bridge | 已由 `born_measurement_bridge_summary` 关闭 normalized qubit 的二值测量权重非负与 sum-one；一般 Hilbert measurement、POVM/PVM、decoherence 与 measurement problem 仍 pending |
 | V22 | 引入 finite action branch to Born measurement weights chain | 已由 `action_amplitude_measurement_bridge_summary` 关闭 finite action branch -> action amplitude -> normalized qubit -> measurement-event weights；Hamiltonian/unitary dynamics、general path integral 与 empirical closure 仍 pending |
+| V23 | 引入 finite phase evolution boundary | 已由 `finite_phase_evolution_bridge_summary` 关闭 branch-indexed `1/-1` phase operation -> S22 qubits -> Born-weight preservation；Hamiltonian generator、continuous unitary group、general Schrödinger dynamics、general path integral 与 empirical closure 仍 pending |
 
 ## 失败记录模板
 
@@ -407,8 +413,9 @@ lake build SSBX.Foundation.Modern.QuantumRelativityPathWeightMultiplicationBridg
 lake build SSBX.Foundation.Modern.QuantumRelativityNontrivialChannelLawBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityBornMeasurementBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityActionAmplitudeMeasurementBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityFinitePhaseEvolutionBridge
 lake build SSBX
 git diff --check --
 ```
 
-备注：`lake build SSBX` 仍会输出既有 Wen 模块的 unused simp args linter 警告；本轮新增 Markov 桥系列模块，包括 S22 `QuantumRelativityActionAmplitudeMeasurementBridge`，目标模块自身无新增警告。
+备注：`lake build SSBX` 仍会输出既有 Wen 模块的 unused simp args linter 警告；本轮新增 Markov 桥系列模块，包括 S23 `QuantumRelativityFinitePhaseEvolutionBridge`，目标模块自身无新增警告。

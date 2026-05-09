@@ -1,6 +1,6 @@
 # 大统一逐步验证路线
 
-目标：把 Markov-因果桥从最小 typed skeleton 推进为逐步增强的验证程序。本文把“统一”限定为已经关闭或计划关闭的形式接口；量子引力、amplitude dynamics、measurement semantics、度规恢复和经验闭合分别作为后续结构单独推进。
+目标：把 Markov-因果桥从最小 typed skeleton 推进为逐步增强的验证程序。本文把“统一”限定为已经关闭或计划关闭的形式接口；量子引力、general Hamiltonian/unitary amplitude dynamics、measurement semantics、度规恢复和经验闭合分别作为后续结构单独推进。
 
 依据文档：
 
@@ -52,6 +52,7 @@
 -> 非平凡量子通道律候选
 -> 概率幅到测量权重候选
 -> 作用相位到测量权重链
+-> 有限相位演化候选
 -> 几何候选接口
 -> 经验 pending ledger
 -> 更强统一摘要 theorem
@@ -108,6 +109,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityPathWeightMultiplicationBridg
 lake build SSBX.Foundation.Modern.QuantumRelativityNontrivialChannelLawBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityBornMeasurementBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityActionAmplitudeMeasurementBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityFinitePhaseEvolutionBridge
 lake build SSBX
 git diff --check --
 ```
@@ -119,7 +121,7 @@ git diff --check --
 | 项 | 内容 |
 |---|---|
 | Lean 出口 | 保持 `markov_causal_bridge_summary`、`measurement_event_alignment`、`markov_bridge_not_direct_language_addition` 为 `machineChecked` |
-| 文档出口 | 本文件与验证计划明确列出未关闭项：stochastic semantics、general all-path enumeration、path integral、完整 amplitude dynamics、general Hilbert measurement、POVM/PVM、decoherence、physical unitary/CPTP/Kraus/density channel law、干涉、因果偏序、度规恢复、经验闭合；finite row sum-one boundary 已由 S9 后续关闭，Markov/amplitude compatibility 下的 Born rule derivation 已由 S18 关闭，finite path-weight multiplication 已由 S19 关闭，nontrivial finite quantum-channel law 已由 S20 关闭，one-qubit computational-basis measurement weights 已由 S21 关闭，finite action branch to measurement weights chain 已由 S22 关闭 |
+| 文档出口 | 本文件与验证计划明确列出未关闭项：stochastic semantics、general all-path enumeration、path integral、general Hamiltonian/unitary amplitude dynamics、general Hilbert measurement、POVM/PVM、decoherence、physical unitary/CPTP/Kraus/density channel law、干涉、因果偏序、度规恢复、经验闭合；finite row sum-one boundary 已由 S9 后续关闭，Markov/amplitude compatibility 下的 Born rule derivation 已由 S18 关闭，finite path-weight multiplication 已由 S19 关闭，nontrivial finite quantum-channel law 已由 S20 关闭，one-qubit computational-basis measurement weights 已由 S21 关闭，finite action branch to measurement weights chain 已由 S22 关闭，finite period-two phase evolution 已由 S23 关闭 |
 | 失败记录 | 若发现文档中有强于 theorem 的终局统一或量子引力完成等 claim，记录为 `conceptual mismatch`，并改回对应结构层级 |
 | 当前正名 | Markov-因果桥当前是最小可验证中介构造；更强的物理大统一读法需要后续 theorem 合取后再命名 |
 
@@ -1092,7 +1094,7 @@ unitary_cptp_ledger_bridge_summary。
 | 最低 theorem 形态 | 合取 `BornDistributionBoundaryClosed`、`SumOverMiddleBornDistributionBoundaryClosed`、`MarkovAmplitudeBornRuleDerivationClosed`、concrete prepared-row witness 与 Wen coverage |
 | 失败记录 | Rat-to-Real list sum cast、`List.map_map` composition shape、concrete row support projection 展开均已记录 |
 | 文档更新 | 已新增《Born rule推导候选 · Markov桥S18》 |
-| 后续结构 | amplitude dynamics、measurement semantics、decoherence、unitary/CPTP、metric recovery 与 empirical closure |
+| 后续结构 | general Hamiltonian/unitary amplitude dynamics、measurement semantics、decoherence、unitary/CPTP、metric recovery 与 empirical closure |
 
 通过判准：
 
@@ -1128,7 +1130,7 @@ born_rule_derivation_bridge_summary。
 | 最低 theorem 形态 | 合取 `PathWeightMultiplicationBoundaryClosed`、concrete two-step weight witness、S3 reachability / causalBefore、pending ledger 与 Wen coverage |
 | 失败记录 | indexed inductive `refl` 分支参数与 concrete `KernelPath.refl` 的 `K := concreteKernel` 显式参数失败均已记录 |
 | 文档更新 | 已新增《路径权重乘法候选 · Markov桥S19》 |
-| 后续结构 | stochastic independence semantics、general all-path enumeration、path integral、amplitude dynamics、unitary/CPTP、metric recovery 与 empirical closure |
+| 后续结构 | stochastic independence semantics、general all-path enumeration、path integral、general Hamiltonian/unitary amplitude dynamics、unitary/CPTP、metric recovery 与 empirical closure |
 
 通过判准：
 
@@ -1161,7 +1163,7 @@ path_weight_multiplication_bridge_summary。
 | 最低 theorem 形态 | 合取 `NontrivialQuantumChannelLawClosed`、S12/S16 Born boundary、S19 path-weight law、pending ledger 与 Wen coverage |
 | 失败记录 | `AmplitudeSupportNormalized` namespace 漏 open；dependent Born existential witness 展开触发 `whnf` heartbeat timeout，改为合取 S16 closed boundary 与 concrete normalized support |
 | 文档更新 | 已新增《非平凡量子通道律候选 · Markov桥S20》 |
-| 后续结构 | Hilbert carrier、linear operator semantics、unitary evolution、CPTP、Kraus、density matrix、amplitude dynamics、measurement semantics、metric recovery 与 empirical closure |
+| 后续结构 | Hilbert carrier、linear operator semantics、unitary evolution、CPTP、Kraus、density matrix、general Hamiltonian/unitary amplitude dynamics、measurement semantics、metric recovery 与 empirical closure |
 
 通过判准：
 
@@ -1250,6 +1252,42 @@ action_amplitude_measurement_bridge_summary。
 | `two_route_action_indices_match_measurement_branches` | `QuantumRelativityActionAmplitudeMeasurementBridge.lean` | S5r two-route action indices 与 S22 branches 对齐 |
 | `action_amplitude_measurement_bridge_summary` | `QuantumRelativityActionAmplitudeMeasurementBridge.lean` | S22 finite action-to-measurement chain 已关闭 |
 
+## S23 · 有限相位演化候选
+
+目标：把 S22 的 displayed action amplitude 升级成 finite period-two phase evolution candidate。S23 不证明 Hamiltonian generator、continuous-time unitary group、Schrödinger dynamics、general path integral 或 general Hilbert measurement；它只证明 branch-indexed `1/-1` phase operation 可生成 S22 的 action-induced qubits，并保持 computational-basis Born weights。
+
+| 项 | 内容 |
+|---|---|
+| Lean 出口 | `finite_phase_evolution_bridge_summary` |
+| 最低 theorem 形态 | 合取 `FinitePhaseEvolutionClosed`、S22 action-to-measurement chain、S21 measurement boundary、pending ledger 与 Wen coverage |
+| 失败记录 | 初次 proof 试探中 normalization preservation 的 `simp` 留下 `bornProb0 ψ + bornProb1 ψ = 1`；改为 `simpa ... using hψ` 后通过 |
+| 文档更新 | 已新增《有限相位演化候选 · Markov桥S23》 |
+| 后续结构 | Hamiltonian generator、continuous-time unitary group、self-adjoint operator semantics、general Schrödinger dynamics、general path integral、general Hilbert measurement、PVM/POVM、decoherence 与 empirical closure |
+
+通过判准：
+
+```text
+phaseEvolveBranch；
+phase_evolve_upper_is_identity；
+phase_evolve_lower_period_two；
+phase_evolution_reaches_action_branch_qubits；
+phase_evolve_branch_bornProb0_preserved；
+phase_evolve_branch_bornProb1_preserved；
+phase_evolve_branch_measurement_weights_normalized；
+finite_phase_evolution_bridge_summary。
+```
+
+当前状态：
+
+| theorem | 文件 | 读法 |
+|---|---|---|
+| `phase_evolve_upper_is_identity` | `QuantumRelativityFinitePhaseEvolutionBridge.lean` | upper branch finite phase 为 identity |
+| `phase_evolve_lower_period_two` | `QuantumRelativityFinitePhaseEvolutionBridge.lean` | lower branch finite phase 连续作用两次回到原 state |
+| `phase_evolution_reaches_action_branch_qubits` | `QuantumRelativityFinitePhaseEvolutionBridge.lean` | finite phase evolution 生成 S22 的 `ket0 / negKet1` action-induced qubits |
+| `phase_evolve_branch_bornProb0_preserved`、`phase_evolve_branch_bornProb1_preserved` | `QuantumRelativityFinitePhaseEvolutionBridge.lean` | finite phase 不改变 computational-basis Born weights |
+| `phase_evolve_branch_measurement_weights_normalized` | `QuantumRelativityFinitePhaseEvolutionBridge.lean` | normalized input 经 finite phase evolution 后仍接入 S21 measurement-weight interface |
+| `finite_phase_evolution_bridge_summary` | `QuantumRelativityFinitePhaseEvolutionBridge.lean` | S23 finite phase-evolution boundary 已关闭 |
+
 ## 失败记录追加区
 
 失败记录格式沿用验证计划，并允许追加在此区：
@@ -1307,6 +1345,7 @@ action_amplitude_measurement_bridge_summary。
 | 2026-05-09 | S20 | failure retained / success | 第一次 build 中 `AmplitudeSupportNormalized` namespace 漏 open；dependent Born existential witness 展开触发 `whnf` heartbeat timeout，改为合取 S16 closed boundary 与 concrete normalized support 后关闭 nontrivial finite quantum-channel law |
 | 2026-05-09 | S21 | success | 新增 one-qubit computational-basis Born measurement weights bridge；关闭 normalized qubit 的 `bornProb0` / `bornProb1` 非负与 sum-one，仍不证明一般 Hilbert measurement、POVM/PVM、decoherence 或 measurement problem |
 | 2026-05-09 | S22 | failure retained / success | 第一次 build 因 namespace 未 open 导致 `DiscretePhase` 与 quotient/two-route names 解析失败；修正后关闭 finite action branch -> action amplitude -> normalized qubit -> measurement-event weights chain |
+| 2026-05-09 | S23 | failure retained / success | 第一次 proof 试探中 normalization preservation 的 `simp` 留下 `bornProb0 ψ + bornProb1 ψ = 1`；改用 `simpa ... using hψ` 后关闭 finite phase evolution -> Born-weight preservation boundary |
 
 ## 统一用语正名
 
@@ -1314,9 +1353,9 @@ action_amplitude_measurement_bridge_summary。
 
 | 词 | 在本路线中的含义 | 结构依据 |
 |---|---|---|
-| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S22 已关闭的 summary theorem 与路线日志 |
-| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8-S22 pending list |
-| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary`、`normalized_mass_bridge_summary`、`born_weight_normalization_bridge_summary`、`born_distribution_bridge_summary`、`channel_compose_bridge_summary`、`channel_compose_associativity_bridge_summary`、`sum_over_middle_channel_bridge_summary`、`sum_over_middle_born_distribution_bridge_summary`、`unitary_cptp_ledger_bridge_summary`、`born_rule_derivation_bridge_summary`、`path_weight_multiplication_bridge_summary`、`nontrivial_quantum_channel_law_bridge_summary`、`born_measurement_bridge_summary`、`action_amplitude_measurement_bridge_summary` |
+| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S23 已关闭的 summary theorem 与路线日志 |
+| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8-S23 pending list |
+| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary`、`normalized_mass_bridge_summary`、`born_weight_normalization_bridge_summary`、`born_distribution_bridge_summary`、`channel_compose_bridge_summary`、`channel_compose_associativity_bridge_summary`、`sum_over_middle_channel_bridge_summary`、`sum_over_middle_born_distribution_bridge_summary`、`unitary_cptp_ledger_bridge_summary`、`born_rule_derivation_bridge_summary`、`path_weight_multiplication_bridge_summary`、`nontrivial_quantum_channel_law_bridge_summary`、`born_measurement_bridge_summary`、`action_amplitude_measurement_bridge_summary`、`finite_phase_evolution_bridge_summary` |
 
 推荐正名句：
 
@@ -1324,6 +1363,6 @@ action_amplitude_measurement_bridge_summary。
 本路线追求逐步增强的形式统一候选；
 每一步以 Lean 出口、文档锚点和失败记录实事求是地确认含义；
 已经关闭的 summary theorem 就是当前阶段的统一内容，
-尚未闭合的 stochastic semantics、general all-path enumeration、path integral、amplitude dynamics、measurement semantics、decoherence、physical unitary/CPTP/Kraus/density channel law、几何恢复、数据校准与经验闭合
+尚未闭合的 stochastic semantics、general all-path enumeration、path integral、general Hamiltonian/unitary amplitude dynamics、measurement semantics、decoherence、physical unitary/CPTP/Kraus/density channel law、几何恢复、数据校准与经验闭合
 作为后续结构继续推进。
 ```

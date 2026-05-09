@@ -2,7 +2,7 @@
 
 **前置**：[Born rule推导候选 · Markov桥S18](Born%20rule推导候选%20·%20Markov桥S18.md) · [非平凡量子通道律候选 · Markov桥S20](非平凡量子通道律候选%20·%20Markov桥S20.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
-**后续**：[作用相位到测量权重链 · Markov桥S22](作用相位到测量权重链%20·%20Markov桥S22.md) 已把 S5r 的 finite action branch 接到本页的 one-qubit measurement-weight 边界。
+**后续**：[作用相位到测量权重链 · Markov桥S22](作用相位到测量权重链%20·%20Markov桥S22.md) 已把 S5r 的 finite action branch 接到本页的 one-qubit measurement-weight 边界；[有限相位演化候选 · Markov桥S23](有限相位演化候选%20·%20Markov桥S23.md) 进一步证明 finite phase evolution 保持本页的 Born weights。
 
 **Lean 锚点**：
 

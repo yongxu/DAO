@@ -1133,6 +1133,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePhaseEvolutionBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean",
@@ -1205,6 +1206,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePhaseEvolutionBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean",
@@ -4920,6 +4922,72 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean"
           ],
           "symbol": "operatorCellGrid_nonterminal_row_normalizable"
+        }
+      ]
+    },
+    {
+      "document": "义理/有限相位演化候选 · Markov桥S23.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePhaseEvolutionBridge.lean"
+          ],
+          "symbol": "finite_phase_evolution_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePhaseEvolutionBridge.lean"
+          ],
+          "symbol": "phaseEvolveBranch"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePhaseEvolutionBridge.lean"
+          ],
+          "symbol": "phase_evolution_reaches_action_branch_qubits"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePhaseEvolutionBridge.lean"
+          ],
+          "symbol": "phase_evolve_branch_bornProb0_preserved"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePhaseEvolutionBridge.lean"
+          ],
+          "symbol": "phase_evolve_branch_bornProb1_preserved"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePhaseEvolutionBridge.lean"
+          ],
+          "symbol": "phase_evolve_branch_measurement_weights_normalized"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePhaseEvolutionBridge.lean"
+          ],
+          "symbol": "phase_evolve_lower_ket1"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePhaseEvolutionBridge.lean"
+          ],
+          "symbol": "phase_evolve_lower_period_two"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePhaseEvolutionBridge.lean"
+          ],
+          "symbol": "phase_evolve_upper_is_identity"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePhaseEvolutionBridge.lean"
+          ],
+          "symbol": "phase_evolve_upper_ket0"
         }
       ]
     },
