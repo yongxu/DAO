@@ -65,19 +65,19 @@ theorem wenSurface_operator_catalogue_counts :
     fullOperatorSignatures.length = 371
       ∧ operatorRegistryEntries.length = 371
       ∧ executableRegistryEntries.length = 371
-      ∧ theoremBackedOperatorIds.length = 317
-      ∧ exactTheoremBackedStrongOperatorIds.length = 120
+      ∧ theoremBackedOperatorIds.length = 319
+      ∧ exactTheoremBackedStrongOperatorIds.length = 122
       ∧ exactStructuralHelperStrongOperatorIds.length = 197
       ∧ structuralCarrierOperatorIds.length = 0
-      ∧ catalogueNormalFormOperatorIds.length = 54
-      ∧ domainGapOperatorIds.length = 251
+      ∧ catalogueNormalFormOperatorIds.length = 52
+      ∧ domainGapOperatorIds.length = 249
       ∧ (domainGapKindOperatorIds .applicationHelperOnly).length = 12
       ∧ (domainGapKindOperatorIds .identityNoopOnly).length = 18
       ∧ (domainGapKindOperatorIds .projectionAnchorOnly).length = 102
       ∧ (domainGapKindOperatorIds .carrierConstructorOnly).length = 52
       ∧ (domainGapKindOperatorIds .predicateAnchorOnly).length = 9
       ∧ (domainGapKindOperatorIds .truthMarkerOnly).length = 4
-      ∧ (domainGapKindOperatorIds .catalogueShapeOnly).length = 54
+      ∧ (domainGapKindOperatorIds .catalogueShapeOnly).length = 52
       ∧ allOperatorIds.all (fun id => !(operatorForms id).isEmpty) = true := by
   exact
     ⟨ fullOperatorSignatures_length
@@ -124,19 +124,19 @@ theorem wenSurface_registry_summary :
       ∧ allOperatorCellSemanticRows.length = 71232
       ∧ operatorRegistryEntries.length = 371
       ∧ executableRegistryEntries.length = 371
-      ∧ theoremBackedOperatorIds.length = 317
-      ∧ exactTheoremBackedStrongOperatorIds.length = 120
+      ∧ theoremBackedOperatorIds.length = 319
+      ∧ exactTheoremBackedStrongOperatorIds.length = 122
       ∧ exactStructuralHelperStrongOperatorIds.length = 197
       ∧ structuralCarrierOperatorIds.length = 0
-      ∧ catalogueNormalFormOperatorIds.length = 54
-      ∧ domainGapOperatorIds.length = 251
+      ∧ catalogueNormalFormOperatorIds.length = 52
+      ∧ domainGapOperatorIds.length = 249
       ∧ (domainGapKindOperatorIds .applicationHelperOnly).length = 12
       ∧ (domainGapKindOperatorIds .identityNoopOnly).length = 18
       ∧ (domainGapKindOperatorIds .projectionAnchorOnly).length = 102
       ∧ (domainGapKindOperatorIds .carrierConstructorOnly).length = 52
       ∧ (domainGapKindOperatorIds .predicateAnchorOnly).length = 9
       ∧ (domainGapKindOperatorIds .truthMarkerOnly).length = 4
-      ∧ (domainGapKindOperatorIds .catalogueShapeOnly).length = 54
+      ∧ (domainGapKindOperatorIds .catalogueShapeOnly).length = 52
       ∧ allOperatorIds.all (fun id => !(operatorForms id).isEmpty) = true
       ∧ executableOperatorIds.all isCatalogueOperator = true
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).signature.id = id) := by

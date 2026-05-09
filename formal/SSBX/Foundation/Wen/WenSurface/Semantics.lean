@@ -2,11 +2,11 @@
 # WenSurface.Semantics — executable semantics registry
 
 This module separates theorem-backed stdlib denotations from total catalogue
-execution.  Three hundred seventeen `OperatorId`s use explicit `WenDef.Tm`
+execution.  Three hundred nineteen `OperatorId`s use explicit `WenDef.Tm`
 bodies: the original high-value stdlib rows, ObjectEndo/ObjectMap/OpUnary Hex
 transforms, finite Hex carrier rows, finite Hex quantifiers, finite motion /
 process rows, plus the Bool relation/predicate package.  The semantic strength
-ledger splits those 317 rows into strong exact denotations and structural
+ledger splits those 319 rows into strong exact denotations and structural
 carrier/anchor denotations.  Every remaining catalogue row gets a structural
 catalogue constructor `WenDef.Tm` so CLI support is total without confusing it
 with exact text semantics.
@@ -559,10 +559,12 @@ def coreTheoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .S_12 => some ⟨.S_12, Stdlib.hexIdBody, 1, "嘗/尝: aspect anchor as identity; no experiential-time semantics"⟩
   | .S_13 => some ⟨.S_13, Stdlib.hexIdBody, 1, "者: binder particle anchor as identity; no binding semantics"⟩
   | .S_14 => some ⟨.S_14, Stdlib.hexIdBody, 1, "也: predication/finality particle anchor as identity; no assertion semantics"⟩
+  | .S_15 => some ⟨.S_15, Stdlib.hexPredApplyBody, 2, "于/於: finite Hex context predicate application"⟩
   | .S_16 => some ⟨.S_16, Stdlib.hexIdBody, 1, "所: nominalization particle anchor as identity; no nominalization semantics"⟩
   | .S_17 => some ⟨.S_17, Stdlib.hexIdBody, 1, "未: aspect anchor as identity; no future/negation semantics"⟩
   | .S_18 => some ⟨.S_18, Stdlib.hexIdBody, 1, "已: aspect anchor as identity; no completed-time semantics"⟩
   | .S_19 => some ⟨.S_19, Stdlib.hexApplyBody, 2, "的: explicit modifier application as Hex endomap application; no modern-grammar semantics"⟩
+  | .S_20 => some ⟨.S_20, Stdlib.hexPredApplyBody, 2, "地: situated Hex context predicate application"⟩
   | .S_1  => some ⟨.S_1,  Stdlib.hexApplyBody, 2, "之: Hex endomap application/projection"⟩
   | .S_2  => some ⟨.S_2,  Stdlib.endoCompBody, 2,
       "而: Hex endomap composition; surface currently requires explicit Hex→Hex terms"⟩
@@ -598,7 +600,7 @@ def coreTheoremBackedOperatorIds : List OperatorId :=
         .A_1, .A_2, .A_3, .A_4, .A_5, .A_6, .A_7, .A_8, .A_9, .A_10,
         .A_11, .A_12, .A_13, .A_14, .A_15, .A_16, .A_17, .A_18, .A_19, .A_20,
         .S_1, .S_2, .S_4, .S_5, .S_6, .S_8, .S_9, .S_10, .S_11, .S_12,
-        .S_13, .S_14, .S_16, .S_17, .S_18, .S_19]
+        .S_13, .S_14, .S_15, .S_16, .S_17, .S_18, .S_19, .S_20]
 
 /-! ## § 1.3 Structural catalogue semantics -/
 
@@ -606,7 +608,7 @@ def coreTheoremBackedOperatorIds : List OperatorId :=
 Structural total fallback for catalogue rows.
 
 These bodies are executable and type-checkable, but intentionally weaker than
-the 317 exact rows above: they preserve the operator id, signature kind, and
+the 319 exact rows above: they preserve the operator id, signature kind, and
 evaluated arguments as a catalogue value instead of projecting fake Hex/Bool
 denotations.
 -/
@@ -861,10 +863,10 @@ theorem executableOperatorIds_length :
     executableOperatorIds.length = 371 := by native_decide
 
 theorem coreTheoremBackedOperatorIds_length :
-    coreTheoremBackedOperatorIds.length = 271 := by native_decide
+    coreTheoremBackedOperatorIds.length = 273 := by native_decide
 
 theorem theoremBackedOperatorIds_length :
-    theoremBackedOperatorIds.length = 317 := by native_decide
+    theoremBackedOperatorIds.length = 319 := by native_decide
 
 theorem theoremBackedOperatorIds_nodup :
     theoremBackedOperatorIds.Nodup := by native_decide
@@ -874,10 +876,10 @@ theorem theoremBackedOperatorIds_all_semantics :
   native_decide
 
 theorem structuralCatalogueOperatorIds_length :
-    structuralCatalogueOperatorIds.length = 54 := by native_decide
+    structuralCatalogueOperatorIds.length = 52 := by native_decide
 
 theorem catalogueNormalFormOperatorIds_length :
-    catalogueNormalFormOperatorIds.length = 54 := by native_decide
+    catalogueNormalFormOperatorIds.length = 52 := by native_decide
 
 theorem exactStructuralHelperOperatorIds_length :
     exactStructuralHelperOperatorIds.length = 197 := by native_decide
@@ -904,7 +906,7 @@ theorem exactPredicateAnchorOperatorIds_nodup :
     exactPredicateAnchorOperatorIds.Nodup := by native_decide
 
 theorem exactTheoremBackedStrongOperatorIds_length :
-    exactTheoremBackedStrongOperatorIds.length = 120 := by native_decide
+    exactTheoremBackedStrongOperatorIds.length = 122 := by native_decide
 
 theorem exactStructuralHelperStrongOperatorIds_length :
     exactStructuralHelperStrongOperatorIds.length = 197 := by native_decide
@@ -913,7 +915,7 @@ theorem structuralCarrierOperatorIds_length :
     structuralCarrierOperatorIds.length = 0 := by native_decide
 
 theorem domainGapOperatorIds_length :
-    domainGapOperatorIds.length = 251 := by native_decide
+    domainGapOperatorIds.length = 249 := by native_decide
 
 theorem domainGap_applicationHelperOnly_length :
     (domainGapKindOperatorIds .applicationHelperOnly).length = 12 := by native_decide
@@ -934,7 +936,7 @@ theorem domainGap_truthMarkerOnly_length :
     (domainGapKindOperatorIds .truthMarkerOnly).length = 4 := by native_decide
 
 theorem domainGap_catalogueShapeOnly_length :
-    (domainGapKindOperatorIds .catalogueShapeOnly).length = 54 := by native_decide
+    (domainGapKindOperatorIds .catalogueShapeOnly).length = 52 := by native_decide
 
 theorem domainGapKindPartition_counts :
     (domainGapKindOperatorIds .applicationHelperOnly).length
@@ -986,10 +988,10 @@ theorem operatorRegistryCoverage_summary :
     operatorRegistryEntries.length = 371
       ∧ executableRegistryEntries.length = 371
       ∧ executableOperatorIds.length = 371
-      ∧ theoremBackedOperatorIds.length = 317
-      ∧ structuralCatalogueOperatorIds.length = 54
-      ∧ catalogueNormalFormOperatorIds.length = 54
-      ∧ domainGapOperatorIds.length = 251
+      ∧ theoremBackedOperatorIds.length = 319
+      ∧ structuralCatalogueOperatorIds.length = 52
+      ∧ catalogueNormalFormOperatorIds.length = 52
+      ∧ domainGapOperatorIds.length = 249
       ∧ exactTheoremBackedStrongOperatorIds.length
         + exactStructuralHelperStrongOperatorIds.length
         + structuralCarrierOperatorIds.length
@@ -1042,7 +1044,9 @@ example : (theoremBackedSemanticsFor? .E_1).isSome = true := by native_decide
 example : (theoremBackedSemanticsFor? .E_9).isSome = true := by native_decide
 example : (theoremBackedSemanticsFor? .S_13).isSome = true := by native_decide
 example : (theoremBackedSemanticsFor? .S_14).isSome = true := by native_decide
+example : (theoremBackedSemanticsFor? .S_15).isSome = true := by native_decide
 example : (theoremBackedSemanticsFor? .S_16).isSome = true := by native_decide
+example : (theoremBackedSemanticsFor? .S_20).isSome = true := by native_decide
 example : (theoremBackedSemanticsFor? .H_7).isSome = true := by native_decide
 example : (theoremBackedSemanticsFor? .P_19).isSome = true := by native_decide
 example : (theoremBackedSemanticsFor? .X_5).isSome = true := by native_decide

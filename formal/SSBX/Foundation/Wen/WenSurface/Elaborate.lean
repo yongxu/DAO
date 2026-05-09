@@ -6,8 +6,8 @@
 
 ## 当前范围
 
-- **算子**：317 个 exact/theorem-backed operator 进入精确 `WenDef.Tm` bodies；
-  其余 54 个 catalogue operator elaborates to structural catalogue normal forms。
+- **算子**：319 个 exact/theorem-backed operator 进入精确 `WenDef.Tm` bodies；
+  其余 52 个 catalogue operator elaborates to structural catalogue normal forms。
 - **常值**：「一」 → `.yi` primitive；64 卦名 / aliases → `.hexLit h`。
 - **组合**：显式 `SurfaceExpr.app` 左结合到 `Tm.app`。
 - **绑定**：`者` lambda / `令` let 支持 Hex-first, Bool fallback；

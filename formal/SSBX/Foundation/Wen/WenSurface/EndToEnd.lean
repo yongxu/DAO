@@ -16,7 +16,7 @@ cuo-equivariant 子集 commute 作 future work）。
 - cue-aware resolver + explicit `SurfaceExpr` AST
 - 64 卦名 / aliases + Bool literals + Hex-first/Bool-fallback lambdas and lets
 - executable registry 覆盖全部 371 个 OperatorId
-- 317 个 exact/theorem-backed operator 可求 Hex/Bool/Pair/List；其余 catalogue rows 求 structural normal form
+- 319 个 exact/theorem-backed operator 可求 Hex/Bool/Pair/List；其余 catalogue rows 求 structural normal form
 - unpromoted gap form 只诊断，不伪造 denotation
 
 ## 状态
@@ -434,6 +434,14 @@ example :
 
 example :
     (wenyanInterpBool "同 （推 一） （推 一）").toOption = some true :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "于 同 乾 乾").toOption = some true :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "地 同 乾 坤").toOption = some false :=
   by native_decide
 
 example : (wenyanInterp "（推 一").toOption = none := by native_decide

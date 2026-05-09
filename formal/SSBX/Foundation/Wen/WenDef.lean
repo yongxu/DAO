@@ -837,6 +837,22 @@ def eachHDef : WenDef where
   validName      := by native_decide
   bodyTypechecks := by native_decide
 
+def hexPredApplyBody : Tm :=
+  .abs "p" (.arr .hex .bool)
+    (.abs "x" .hex (.app (.var "p") (.var "x")))
+
+theorem hexPredApplyBody_typed :
+    typeCheck [] hexPredApplyBody =
+      some (.arr (.arr .hex .bool) (.arr .hex .bool)) := by
+  native_decide
+
+def hexPredApplyDef : WenDef where
+  name           := "hexPredApply"
+  body           := hexPredApplyBody
+  bodyType       := .arr (.arr .hex .bool) (.arr .hex .bool)
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
 /-! ### Hex pair/list carrier helpers -/
 
 def pairHBody : Tm := .pairH
@@ -970,12 +986,12 @@ def all : List WenDef :=
   , hexIdDef, cuoZongDef, flip1Def, flip2Def, flip3Def, flip4Def, flip5Def, flip6Def
   , impDef, xorBDef, neqHexDef, existsHDef, noneHDef
   , uniqueHDef, exactly3HDef, majorityHDef, endoCompDef, hexApplyDef
-  , boolMarkerDef, repeatOnceDef, eachHDef
+  , boolMarkerDef, repeatOnceDef, eachHDef, hexPredApplyDef
   , pairHDef, dupHDef, list1HDef, list2HDef, headHDef
   , eqCellDef, cuoCDef, zongCDef, huCDef, shiNextCDef, shiPrevCDef
   , flip1CDef, flip2CDef, flip3CDef, flip4CDef, flip5CDef, flip6CDef ]
 
-theorem all_length : all.length = 50 := by native_decide
+theorem all_length : all.length = 51 := by native_decide
 
 theorem all_names :
     all.map WenDef.name =
@@ -984,7 +1000,7 @@ theorem all_names :
       , "hexId", "cuoZong", "flip1", "flip2", "flip3", "flip4", "flip5", "flip6"
       , "imp", "xorB", "neqHex", "existsH", "noneH"
       , "uniqueH", "exactly3H", "majorityH", "endoComp", "hexApply"
-      , "boolMarker", "repeatOnce", "eachH"
+      , "boolMarker", "repeatOnce", "eachH", "hexPredApply"
       , "pairH", "dupH", "list1H", "list2H", "headH"
       , "eqCell", "cuoC", "zongC", "huC", "shiNextC", "shiPrevC"
       , "flip1C", "flip2C", "flip3C", "flip4C", "flip5C", "flip6C" ] := by
