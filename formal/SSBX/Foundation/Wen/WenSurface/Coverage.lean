@@ -65,11 +65,21 @@ theorem wenSurface_operator_catalogue_counts :
     fullOperatorSignatures.length = 371
       ∧ operatorRegistryEntries.length = 371
       ∧ executableRegistryEntries.length = 371
+      ∧ theoremBackedOperatorIds.length = 317
+      ∧ exactTheoremBackedStrongOperatorIds.length = 139
+      ∧ exactStructuralHelperOperatorIds.length = 19
+      ∧ structuralCarrierOperatorIds.length = 178
+      ∧ catalogueNormalFormOperatorIds.length = 54
       ∧ allOperatorIds.all (fun id => !(operatorForms id).isEmpty) = true := by
   exact
     ⟨ fullOperatorSignatures_length
     , operatorRegistryEntries_length
     , executableRegistryEntries_length
+    , theoremBackedOperatorIds_length
+    , exactTheoremBackedStrongOperatorIds_length
+    , exactStructuralHelperOperatorIds_length
+    , structuralCarrierOperatorIds_length
+    , catalogueNormalFormOperatorIds_length
     , by native_decide
     ⟩
 
@@ -98,6 +108,11 @@ theorem wenSurface_registry_summary :
       ∧ allOperatorCellSemanticRows.length = 71232
       ∧ operatorRegistryEntries.length = 371
       ∧ executableRegistryEntries.length = 371
+      ∧ theoremBackedOperatorIds.length = 317
+      ∧ exactTheoremBackedStrongOperatorIds.length = 139
+      ∧ exactStructuralHelperOperatorIds.length = 19
+      ∧ structuralCarrierOperatorIds.length = 178
+      ∧ catalogueNormalFormOperatorIds.length = 54
       ∧ allOperatorIds.all (fun id => !(operatorForms id).isEmpty) = true
       ∧ executableOperatorIds.all isCatalogueOperator = true
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).signature.id = id) := by
@@ -108,6 +123,11 @@ theorem wenSurface_registry_summary :
     , allOperatorCellSemanticRows_length
     , operatorRegistryEntries_length
     , executableRegistryEntries_length
+    , theoremBackedOperatorIds_length
+    , exactTheoremBackedStrongOperatorIds_length
+    , exactStructuralHelperOperatorIds_length
+    , structuralCarrierOperatorIds_length
+    , catalogueNormalFormOperatorIds_length
     , by native_decide
     , executableOperatorIds_registered
     , wenSurface_registry_total_signature

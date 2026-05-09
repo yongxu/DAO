@@ -19,9 +19,14 @@ grouping and elaborate transparently.
 -/
 import SSBX.Foundation.Wen.WenSurface.EndToEnd
 import SSBX.Foundation.Wen.WenSurface.Coverage
+import SSBX.Foundation.Wen.WenDefCompile
 
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Yi.YiCore
+open SSBX.Foundation.Bagua.BaguaTuring
+open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Wen.WenDef
+open SSBX.Foundation.Wen.WenDefCompile
 open SSBX.Foundation.Wen.WenSurface
 open SSBX.Foundation.Wen.WenDefEval
 open SSBX.Text.WenyanOperators
@@ -248,6 +253,22 @@ private def typeDiagShow : TypeDiag → String
   | .argumentMismatch expected actual =>
       s!"expected argument type {tyShow expected}, got {tyShow actual}"
 
+private def operatorBridgeableToBaguaL0 (id : OperatorId) : Bool :=
+  match theoremBackedSemanticsFor? id with
+  | some sem => (compileHexFunCertified? sem.body).isSome
+  | none => false
+
+private def baguaBridgeableOperatorIds : List OperatorId :=
+  allOperatorIds.filter operatorBridgeableToBaguaL0
+
+private def carrierKindLines (id : OperatorId) : List String :=
+  match operatorStructuralCarrierKind? id with
+  | some kind =>
+      [ "carrier kind: " ++ kind.key
+      , "carrier note: " ++ kind.note
+      ]
+  | none => []
+
 private def operatorOutput (code : String) : String :=
   match operatorByCode? code with
   | none => s!"operator {code}: no such catalogue OperatorId"
@@ -270,6 +291,7 @@ private def operatorOutput (code : String) : String :=
             s!"yes\nexecutable note: {sem.note}\nexecutable arity: {sem.arity}"
         | none =>
             "no\nstatus: known but not executable yet"
+      let bridgeable := operatorBridgeableToBaguaL0 id
       String.intercalate "\n"
         ([ s!"operator {id.code} {id.title}"
          , formLine
@@ -277,8 +299,11 @@ private def operatorOutput (code : String) : String :=
          , s!"signature arity: {sig.arity}"
          , s!"signature evidence: {signatureEvidenceShow sig.evidence}"
          , s!"signature note: {sig.note}"
+         , "semantic strength: " ++ (operatorSemanticStrength id).key
+         , "semantic note: " ++ (operatorSemanticStrength id).note
+         , "bagua bridge: " ++ (if bridgeable then "bagua-l0-yi" else "none")
          , "executable: " ++ executable
-         ] ++ compoundLine)
+         ] ++ carrierKindLines id ++ compoundLine)
 
 private def coverageOutput : String :=
   let readingCount :=
@@ -288,14 +313,29 @@ private def coverageOutput : String :=
   String.intercalate "\n"
     [ s!"surface readings: {allSurfaceReadings.length} surfaces / {readingCount} readings"
     , s!"operators: {operatorRegistryEntries.length} registered / {executableRegistryEntries.length} executable"
+    , s!"semantic ledger: {theoremBackedOperatorIds.length} theorem-backed / {exactTheoremBackedStrongOperatorIds.length} exact / {structuralCarrierOperatorIds.length} structural-carrier / {catalogueNormalFormOperatorIds.length} catalogue-normal-form"
+    , s!"bagua bridgeable: {baguaBridgeableOperatorIds.length} operators"
     , s!"operator forms: {formBackedCount} ids with at least one form"
     , s!"operator-cell rows: {SSBX.Text.OperatorCellMap.allOperatorCells.length}"
     , s!"operator-cell semantic rows: {SSBX.Text.OperatorCellSemantics.allOperatorCellSemanticRows.length}"
     ]
 
+private def operatorListFilterExpected : String :=
+  "all, executable, theorem-backed, exact, structural, structural-carrier, catalogue-normal-form, identity-noop, projection-anchor, pair-carrier, duplicate-facet, singleton-aggregate, binary-aggregate, list-projection, application-carrier, predicate-anchor, truth-marker, bridgeable, known-not-executable, or unsupported"
+
+private def operatorCarrierKindFilter? (filter : String) : Option StructuralCarrierKind :=
+  allStructuralCarrierKinds.find? (fun kind => kind.key == filter)
+
 private def operatorListFilterValid (filter : String) : Bool :=
   filter == "all"
     || filter == "executable"
+    || filter == "theorem-backed"
+    || filter == "exact"
+    || filter == "structural"
+    || filter == "structural-carrier"
+    || filter == "catalogue-normal-form"
+    || (operatorCarrierKindFilter? filter).isSome
+    || filter == "bridgeable"
     || filter == "known-not-executable"
     || filter == "unsupported"
 
@@ -305,10 +345,26 @@ private def operatorListFilterIsKnownNotExecutable (filter : String) : Bool :=
 private def operatorListIds (filter : String) : List OperatorId :=
   if filter == "executable" then
     allOperatorIds.filter isExecutableOperator
-  else if operatorListFilterIsKnownNotExecutable filter then
-    allOperatorIds.filter (fun id => !(isExecutableOperator id))
+  else if filter == "theorem-backed" then
+    theoremBackedOperatorIds
+  else if filter == "exact" then
+    exactTheoremBackedStrongOperatorIds
+  else if filter == "structural-carrier" then
+    structuralCarrierOperatorIds
+  else if filter == "catalogue-normal-form" then
+    catalogueNormalFormOperatorIds
   else
-    allOperatorIds
+    match operatorCarrierKindFilter? filter with
+    | some kind => structuralCarrierKindOperatorIds kind
+    | none =>
+        if filter == "structural" then
+          allOperatorIds.filter (fun id => !decide (operatorSemanticStrength id = .exactTheoremBacked))
+        else if filter == "bridgeable" then
+          baguaBridgeableOperatorIds
+        else if operatorListFilterIsKnownNotExecutable filter then
+          allOperatorIds.filter (fun id => !(isExecutableOperator id))
+        else
+          allOperatorIds
 
 private def operatorSupportKind (id : OperatorId) : String :=
   if isExecutableOperator id then "executable" else "known-not-executable"
@@ -317,11 +373,16 @@ private def operatorSummaryLine (id : OperatorId) : String :=
   let sig := fullSignatureFor id
   let forms := operatorForms id |>.map (fun sense => sense.glyph)
   let formsShow := if forms.isEmpty then "(none)" else String.intercalate " " forms
-  s!"{id.code}\t{id.title}\t{operatorSupportKind id}\tarity={sig.arity}\tforms={formsShow}"
+  let bridge := if operatorBridgeableToBaguaL0 id then "\tbridge=bagua-l0-yi" else ""
+  let carrier :=
+    match operatorStructuralCarrierKind? id with
+    | some kind => s!"\tcarrier={kind.key}"
+    | none => ""
+  s!"{id.code}\t{id.title}\t{operatorSupportKind id}\tsemantic={(operatorSemanticStrength id).key}{carrier}\tarity={sig.arity}\tforms={formsShow}{bridge}"
 
 private def operatorsOutput (filter : String) : String :=
   if !(operatorListFilterValid filter) then
-    s!"operators: unknown filter \"{filter}\"; expected all, executable, known-not-executable, or unsupported"
+    s!"operators: unknown filter \"{filter}\"; expected {operatorListFilterExpected}"
   else
     let ids := operatorListIds filter
     let header :=
@@ -1160,6 +1221,102 @@ private def typecheckOk (src : String) : Bool :=
   | .ok _ => true
   | .error _ => false
 
+private def shiShow : Shi → String
+  | .ji => "已"
+  | .jin => "今"
+  | .wei => "未"
+
+private def yiInstrShow : YiInstr → String
+  | .nop => "nop"
+  | .setShi s => "setShi " ++ shiShow s
+  | .flipYao i => s!"flipYao {i.val + 1}"
+  | .hu => "hu"
+  | .cuo => "cuo"
+  | .zong => "zong"
+  | .branchYaoEq i j target => s!"branchYaoEq {i.val + 1} {j.val + 1} {target}"
+  | .branchShiEq s target => s!"branchShiEq {shiShow s} {target}"
+  | .jump target => s!"jump {target}"
+  | .push => "push"
+  | .pop => "pop"
+  | .halt => "halt"
+  | .swap => "swap"
+
+private def yiProgramShow (program : List YiInstr) : String :=
+  "[" ++ String.intercalate ", " (program.map yiInstrShow) ++ "]"
+
+private def compileYiExpectedTy : Ty := .arr .hex .hex
+
+private def compileYiTypeErrJson (actual : Ty) : String :=
+  jsonObject
+    [ jsonFieldBool "ok" false
+    , jsonFieldString "phase" "compile"
+    , jsonFieldString "code" "not_hex_to_hex"
+    , jsonFieldString "message" s!"compile-yi: expected {tyShow compileYiExpectedTy}, got {tyShow actual}"
+    , jsonFieldString "expectedType" (tyShow compileYiExpectedTy)
+    , jsonFieldString "actualType" (tyShow actual)
+    ]
+
+private def compileYiNotCompilableJson (typed : TypedTm) : String :=
+  jsonObject
+    [ jsonFieldBool "ok" false
+    , jsonFieldString "phase" "compile"
+    , jsonFieldString "code" "not_l0_compilable"
+    , jsonFieldString "message" "compile-yi: known Wen evaluator term is not compilable to the current frozen Bagua L0 exact subset"
+    , jsonFieldString "type" (tyShow typed.ty)
+    , jsonFieldString "support" "wen-executable-not-bagua-l0"
+    , jsonFieldString "term" (reprStr typed.tm)
+    ]
+
+private def compileYiJsonOutput (src : String) : String :=
+  match wenyanCompile src with
+  | .error e => errJson e
+  | .ok typed =>
+      if typed.ty = compileYiExpectedTy then
+        match compileHexFunCertified? typed.tm with
+        | some c =>
+            let program := c.program
+            jsonObject
+              [ jsonFieldBool "ok" true
+              , jsonFieldString "mode" "compile-yi"
+              , jsonFieldString "type" (tyShow typed.ty)
+              , jsonFieldString "compiler" "WenDefCompile.compileHexFunCertified?"
+              , jsonFieldRaw "program" (jsonArray (program.map (fun instr => jsonString (yiInstrShow instr))))
+              , jsonFieldNat "instructionCount" program.length
+              , jsonFieldNat "stepCount" c.steps.length
+              , jsonFieldNat "fuel" c.fuel
+              , jsonFieldBool "validated" (compiledHexFunAgrees c)
+              , jsonFieldString "note" c.note
+              , jsonFieldString "term" (reprStr typed.tm)
+              ]
+        | none => compileYiNotCompilableJson typed
+      else
+        compileYiTypeErrJson typed.ty
+
+private def compileYiOutput (src : String) : String :=
+  match wenyanCompile src with
+  | .error e => errShow e
+  | .ok typed =>
+      if typed.ty = compileYiExpectedTy then
+        match compileHexFunCertified? typed.tm with
+        | some c =>
+            String.intercalate "\n"
+              [ "yi program: " ++ yiProgramShow c.program
+              , s!"fuel: {c.fuel}"
+              , "validated: " ++ toString (compiledHexFunAgrees c)
+              , "note: " ++ c.note
+              , "compiler: WenDefCompile.compileHexFunCertified?"
+              ]
+        | none =>
+            "compile-yi error: known Wen evaluator term is not compilable to the current frozen Bagua L0 exact subset"
+      else
+        s!"compile-yi error: expected {tyShow compileYiExpectedTy}, got {tyShow typed.ty}"
+
+private def compileYiOk (src : String) : Bool :=
+  match wenyanCompile src with
+  | .error _ => false
+  | .ok typed =>
+      decide (typed.ty = compileYiExpectedTy) && (compileHexFunCertified? typed.tm).isSome
+
 private def exitCode (ok : Bool) : UInt32 :=
   if ok then 0 else 1
 
@@ -1229,7 +1386,21 @@ private def operatorJsonOutput (code : String) : String :=
               , jsonFieldString "note" sem.note
               ]
         | none => "null"
-      jsonObject
+      let strength := operatorSemanticStrength id
+      let carrierKindFields :=
+        match operatorStructuralCarrierKind? id with
+        | some kind =>
+            [ jsonFieldString "carrierKind" kind.key
+            , jsonFieldString "carrierKindLabel" kind.label
+            , jsonFieldString "carrierKindNote" kind.note
+            ]
+        | none =>
+            [ jsonFieldRaw "carrierKind" "null"
+            , jsonFieldRaw "carrierKindLabel" "null"
+            , jsonFieldRaw "carrierKindNote" "null"
+            ]
+      let bridgeable := operatorBridgeableToBaguaL0 id
+      jsonObject <|
         [ jsonFieldBool "ok" true
         , jsonFieldString "mode" "operator"
         , jsonFieldString "operatorCode" id.code
@@ -1248,6 +1419,12 @@ private def operatorJsonOutput (code : String) : String :=
         , jsonFieldBool "executable" entry.executable?.isSome
         , jsonFieldString "support"
             (if entry.executable?.isSome then "executable" else "known-not-executable")
+        , jsonFieldString "semanticStrength" strength.key
+        , jsonFieldString "semanticStrengthLabel" strength.label
+        , jsonFieldString "semanticStrengthNote" strength.note
+        ] ++ carrierKindFields ++
+        [ jsonFieldBool "bridgeableL0" bridgeable
+        , jsonFieldRaw "bridgeTarget" (if bridgeable then jsonString "bagua-l0-yi" else "null")
         , jsonFieldRaw "executableSemantics" executableJson
         ]
 
@@ -1257,11 +1434,18 @@ private def operatorSummaryJson (id : OperatorId) : String :=
   let compoundForms :=
     operatorCompoundSurfaceIds.filterMap (fun row =>
       if row.snd = id then some row.fst else none)
+  let carrierKind :=
+    match operatorStructuralCarrierKind? id with
+    | some kind => jsonString kind.key
+    | none => "null"
   jsonObject
     [ jsonFieldString "operatorCode" id.code
     , jsonFieldString "operatorTitle" id.title
     , jsonFieldBool "executable" (isExecutableOperator id)
     , jsonFieldString "support" (operatorSupportKind id)
+    , jsonFieldString "semanticStrength" (operatorSemanticStrength id).key
+    , jsonFieldRaw "carrierKind" carrierKind
+    , jsonFieldBool "bridgeableL0" (operatorBridgeableToBaguaL0 id)
     , jsonFieldRaw "forms" (jsonArray (glyphForms.map jsonString))
     , jsonFieldRaw "compoundSurfaces" (jsonArray (compoundForms.map jsonString))
     , jsonFieldNat "signatureArity" sig.arity
@@ -1274,7 +1458,7 @@ private def operatorsJsonOutput (filter : String) : String :=
       [ jsonFieldBool "ok" false
       , jsonFieldString "phase" "operators"
       , jsonFieldString "code" "unknown_operator_filter"
-      , jsonFieldString "message" s!"operators: unknown filter \"{filter}\"; expected all, executable, known-not-executable, or unsupported"
+      , jsonFieldString "message" s!"operators: unknown filter \"{filter}\"; expected {operatorListFilterExpected}"
       , jsonFieldString "filter" filter
       ]
   else
@@ -1287,6 +1471,12 @@ private def operatorsJsonOutput (filter : String) : String :=
       , jsonFieldNat "operatorsRegistered" operatorRegistryEntries.length
       , jsonFieldNat "executableOperators" executableRegistryEntries.length
       , jsonFieldNat "knownNotExecutableOperators" (operatorRegistryEntries.length - executableRegistryEntries.length)
+      , jsonFieldNat "theoremBackedOperators" theoremBackedOperatorIds.length
+      , jsonFieldNat "exactTheoremBackedOperators" exactTheoremBackedStrongOperatorIds.length
+      , jsonFieldNat "exactStructuralHelperOperators" exactStructuralHelperOperatorIds.length
+      , jsonFieldNat "structuralCarrierOperators" structuralCarrierOperatorIds.length
+      , jsonFieldNat "catalogueNormalFormOperators" catalogueNormalFormOperatorIds.length
+      , jsonFieldNat "baguaBridgeableOperators" baguaBridgeableOperatorIds.length
       , jsonFieldRaw "operators" (jsonArray (ids.map operatorSummaryJson))
       ]
 
@@ -1302,6 +1492,12 @@ private def coverageJsonOutput : String :=
     , jsonFieldNat "readingCount" readingCount
     , jsonFieldNat "operatorsRegistered" operatorRegistryEntries.length
     , jsonFieldNat "executableOperators" executableRegistryEntries.length
+    , jsonFieldNat "theoremBackedOperators" theoremBackedOperatorIds.length
+    , jsonFieldNat "exactTheoremBackedOperators" exactTheoremBackedStrongOperatorIds.length
+    , jsonFieldNat "exactStructuralHelperOperators" exactStructuralHelperOperatorIds.length
+    , jsonFieldNat "structuralCarrierOperators" structuralCarrierOperatorIds.length
+    , jsonFieldNat "catalogueNormalFormOperators" catalogueNormalFormOperatorIds.length
+    , jsonFieldNat "baguaBridgeableOperators" baguaBridgeableOperatorIds.length
     , jsonFieldNat "operatorFormBackedCount" formBackedCount
     , jsonFieldNat "operatorCellRows" (SSBX.Text.OperatorCellMap.allOperatorCells.length)
     , jsonFieldNat "operatorCellSemanticRows" (SSBX.Text.OperatorCellSemantics.allOperatorCellSemanticRows.length)
@@ -1317,23 +1513,25 @@ private def usage : String :=
      "       wenyan-surface --resolve <PROGRAM>",
      "       wenyan-surface --ast <PROGRAM>",
      "       wenyan-surface --typecheck <PROGRAM>",
+     "       wenyan-surface --compile-yi <PROGRAM>",
      "       wenyan-surface --json <PROGRAM>",
      "       wenyan-surface --json --tokens <PROGRAM>",
      "       wenyan-surface --json --resolve <PROGRAM>",
      "       wenyan-surface --json --ast <PROGRAM>",
      "       wenyan-surface --json --typecheck <PROGRAM>",
+     "       wenyan-surface --json --compile-yi <PROGRAM>",
      "       wenyan-surface --json --explain <PROGRAM>",
      "       wenyan-surface --json --operator <OP-ID>",
-     "       wenyan-surface --json --operators [all|executable|known-not-executable|unsupported]",
+     "       wenyan-surface --json --operators [all|executable|theorem-backed|exact|structural|structural-carrier|catalogue-normal-form|identity-noop|projection-anchor|pair-carrier|duplicate-facet|singleton-aggregate|binary-aggregate|list-projection|application-carrier|predicate-anchor|truth-marker|bridgeable|known-not-executable|unsupported]",
      "       wenyan-surface --json --coverage",
      "       wenyan-surface --explain <PROGRAM>",
      "       wenyan-surface --operator <OP-ID>",
-     "       wenyan-surface --operators [all|executable|known-not-executable|unsupported]",
+     "       wenyan-surface --operators [all|executable|theorem-backed|exact|structural|structural-carrier|catalogue-normal-form|identity-noop|projection-anchor|pair-carrier|duplicate-facet|singleton-aggregate|binary-aggregate|list-projection|application-carrier|predicate-anchor|truth-marker|bridgeable|known-not-executable|unsupported]",
      "       wenyan-surface --coverage",
      "       wenyan-surface --help",
      "",
      "Surface vocabulary:",
-     "  Executable operators: 371 rows (317 exact/theorem-backed; 54 structural catalogue normal forms)",
+     "  Executable operators: 371 rows (317 theorem-backed bodies = 139 exact + 178 structural carriers; 54 catalogue normal forms; 19 exact structural helpers)",
      "  Examples include: 推 比 不 必 同 凡 損 损 益 错 錯 综 綜 互 反 則 且 非 或 莫",
      "  Hex consts: 一 乾 坤 plus canonical 64 hexagram names",
      "  Bool consts: 真 假",
@@ -1348,7 +1546,8 @@ private def usage : String :=
      "  wenyan-surface '損 乾'         # «乾» − 1 = «坤»",
      "  wenyan-surface '同 一 一'      # bool true",
      "  wenyan-surface '不 同 一 乾'   # bool true",
-     "  wenyan-surface '之又 不 真'    # bool true (双重否定)"]
+     "  wenyan-surface '之又 不 真'    # bool true (双重否定)",
+     "  wenyan-surface --compile-yi '错' # compile exact Hex→Hex to Bagua YiInstr"]
 
 def main (args : List String) : IO UInt32 := do
   match args with
@@ -1367,6 +1566,9 @@ def main (args : List String) : IO UInt32 := do
   | ["--typecheck", src] =>
     IO.println (typeOutput src)
     return exitCode (typecheckOk src)
+  | ["--compile-yi", src] =>
+    IO.println (compileYiOutput src)
+    return exitCode (compileYiOk src)
   | ["--json", "--tokens", src] | ["--tokens", "--json", src] =>
     IO.println (tokensJsonOutput src)
     return exitCode (tokensOk src)
@@ -1379,6 +1581,9 @@ def main (args : List String) : IO UInt32 := do
   | ["--json", "--typecheck", src] | ["--typecheck", "--json", src] =>
     IO.println (typeJsonOutput src)
     return exitCode (typecheckOk src)
+  | ["--json", "--compile-yi", src] | ["--compile-yi", "--json", src] =>
+    IO.println (compileYiJsonOutput src)
+    return exitCode (compileYiOk src)
   | ["--json", "--explain", src] | ["--explain", "--json", src] =>
     IO.println (explainJsonOutput src)
     return exitCode (programOk src)

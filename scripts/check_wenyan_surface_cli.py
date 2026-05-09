@@ -156,6 +156,9 @@ CLI_CASES = [
     (["--typecheck", "而 者 甲 甲 者 甲 推 甲"], "type (Hex -> Hex)"),
     (["--typecheck", "三"], "type ((Hex -> Bool) -> Bool)"),
     (["--typecheck", "在 乾"], "type (Hex -> Bool)"),
+    (["--compile-yi", "错"], "yi program: [cuo, halt]"),
+    (["--compile-yi", "而 错 综"], "yi program: [zong, cuo, halt]"),
+    (["--compile-yi", "者 甲 甲"], "yi program: [halt]"),
     (["--typecheck", "偶 乾 坤"], "type (Hex * Hex)"),
     (["--typecheck", "聚 乾"], "type List[Hex]"),
     (["--typecheck", "（推）"], "type (Hex -> Hex)"),
@@ -330,14 +333,30 @@ CLI_CASES = [
     (["--operator", "LIJ-9"], "executable note: exact Bool relation/predicate package"),
     (["--operator", "Y-2"], "compound surfaces: 五行"),
     (["--operator", "E-2"], "executable note: structural catalogue normal form"),
+    (["--operator", "E-2"], "carrier kind: catalogue-normal-form"),
+    (["--operator", "R-12"], "carrier kind: pair-carrier"),
+    (["--operator", "S-1"], "semantic strength: exact-theorem-backed"),
+    (["--operator", "S-1"], "carrier kind: application-carrier"),
     (["--operators", "executable"], "operators executable: 371 shown; 371 registered / 371 executable"),
     (["--operators", "known-not-executable"], "operators known-not-executable: 0 shown; 371 registered / 371 executable"),
     (["--operators", "unsupported"], "operators unsupported: 0 shown; 371 registered / 371 executable"),
     (["--coverage"], "surface readings: 82 surfaces / 193 readings"),
     (["--coverage"], "operators: 371 registered / 371 executable"),
+    (["--coverage"], "semantic ledger: 317 theorem-backed / 139 exact / 178 structural-carrier / 54 catalogue-normal-form"),
+    (["--coverage"], "bagua bridgeable: 134 operators"),
     (["--coverage"], "operator forms: 371 ids with at least one form"),
-    (["--help"], "wenyan-surface --json --operators [all|executable|known-not-executable|unsupported]"),
-    (["--help"], "317 exact/theorem-backed; 54 structural catalogue normal forms"),
+    (["--operators", "bridgeable"], "operators bridgeable: 134 shown; 371 registered / 371 executable"),
+    (["--operators", "bridgeable"], "bridge=bagua-l0-yi"),
+    (["--operators", "theorem-backed"], "operators theorem-backed: 317 shown; 371 registered / 371 executable"),
+    (["--operators", "exact"], "operators exact: 139 shown; 371 registered / 371 executable"),
+    (["--operators", "structural-carrier"], "operators structural-carrier: 178 shown; 371 registered / 371 executable"),
+    (["--operators", "catalogue-normal-form"], "operators catalogue-normal-form: 54 shown; 371 registered / 371 executable"),
+    (["--operators", "identity-noop"], "operators identity-noop: 13 shown; 371 registered / 371 executable"),
+    (["--operators", "identity-noop"], "carrier=identity-noop"),
+    (["--operators", "application-carrier"], "carrier=application-carrier"),
+    (["--help"], "wenyan-surface --json --operators [all|executable|theorem-backed|exact|structural|structural-carrier|catalogue-normal-form|identity-noop|projection-anchor|pair-carrier|duplicate-facet|singleton-aggregate|binary-aggregate|list-projection|application-carrier|predicate-anchor|truth-marker|bridgeable|known-not-executable|unsupported]"),
+    (["--help"], "wenyan-surface --json --compile-yi <PROGRAM>"),
+    (["--help"], "317 theorem-backed bodies = 139 exact + 178 structural carriers; 54 catalogue normal forms; 19 exact structural helpers"),
 ]
 
 JSON_CLI_CASES = [
@@ -347,6 +366,20 @@ JSON_CLI_CASES = [
     (["--json", "--ast", "（推 一）"], {"mode": "ast", "syntaxFormCount": 0}),
     (["--json", "--ast", "一 同 一"], {"mode": "ast", "syntaxFormCount": 1}),
     (["--json", "--typecheck", "同 一 一"], {"mode": "typecheck", "type": "Bool"}),
+    (["--json", "--compile-yi", "错"], {
+        "mode": "compile-yi",
+        "type": "(Hex -> Hex)",
+        "program": ["cuo", "halt"],
+        "fuel": 2,
+        "validated": True,
+    }),
+    (["--json", "--compile-yi", "而 错 综"], {
+        "mode": "compile-yi",
+        "type": "(Hex -> Hex)",
+        "program": ["zong", "cuo", "halt"],
+        "fuel": 3,
+        "validated": True,
+    }),
     (["--json", "--explain", "推 一"], {"mode": "explain"}),
     (["--json", "--explain", "一 同 一"], {"mode": "explain"}),
     (["--json", "--operator", "Y-2"], {
@@ -354,6 +387,7 @@ JSON_CLI_CASES = [
         "operatorCode": "Y-2",
         "support": "executable",
         "executable": True,
+        "carrierKind": "singleton-aggregate",
     }),
     (["--json", "--operator", "I-1"], {
         "mode": "operator",
@@ -361,6 +395,18 @@ JSON_CLI_CASES = [
         "support": "executable",
         "executable": True,
         "syntaxEntryCount": 2,
+    }),
+    (["--json", "--operator", "R-12"], {
+        "mode": "operator",
+        "operatorCode": "R-12",
+        "carrierKind": "pair-carrier",
+        "semanticStrength": "structural-carrier",
+    }),
+    (["--json", "--operator", "S-1"], {
+        "mode": "operator",
+        "operatorCode": "S-1",
+        "carrierKind": "application-carrier",
+        "semanticStrength": "exact-theorem-backed",
     }),
     (["--json", "--operators", "executable"], {
         "mode": "operators",
@@ -386,12 +432,41 @@ JSON_CLI_CASES = [
         "executableOperators": 371,
         "knownNotExecutableOperators": 0,
     }),
+    (["--json", "--operators", "bridgeable"], {
+        "mode": "operators",
+        "filter": "bridgeable",
+        "count": 134,
+        "operatorsRegistered": 371,
+        "executableOperators": 371,
+        "baguaBridgeableOperators": 134,
+    }),
+    (["--json", "--operators", "catalogue-normal-form"], {
+        "mode": "operators",
+        "filter": "catalogue-normal-form",
+        "count": 54,
+        "operatorsRegistered": 371,
+        "executableOperators": 371,
+        "catalogueNormalFormOperators": 54,
+    }),
+    (["--json", "--operators", "identity-noop"], {
+        "mode": "operators",
+        "filter": "identity-noop",
+        "count": 13,
+        "operatorsRegistered": 371,
+        "executableOperators": 371,
+    }),
     (["--json", "--coverage"], {
         "mode": "coverage",
         "surfaceCount": 82,
         "readingCount": 193,
         "operatorsRegistered": 371,
         "executableOperators": 371,
+        "theoremBackedOperators": 317,
+        "exactTheoremBackedOperators": 139,
+        "exactStructuralHelperOperators": 19,
+        "structuralCarrierOperators": 178,
+        "catalogueNormalFormOperators": 54,
+        "baguaBridgeableOperators": 134,
         "operatorCellRows": 71232,
         "operatorCellSemanticRows": 71232,
     }),
@@ -410,6 +485,8 @@ NEGATIVE_CLI_CASES = [
     (["--ast", "（推 一"], "unmatched open bracket"),
     (["--ast", "推 一）"], "unmatched close bracket"),
     (["--typecheck", "不 乾"], "type error"),
+    (["--compile-yi", "推"], "not compilable"),
+    (["--compile-yi", "推 一"], "expected (Hex -> Hex)"),
     (["--explain", "或 真"], "Suggestions:"),
     (["--operator", "NOPE"], "no such catalogue OperatorId"),
     (["--operators", "bad"], "unknown filter"),
@@ -607,6 +684,20 @@ def main() -> int:
     ):
         failures.append(f"ambiguous explain JSON: expected cue suggestions, got {ambiguous_explain!r}")
 
+    bad_compile_completed = run_cli(["--json", "--compile-yi", "推"], allow_failure=True)
+    bad_compile = json.loads(bad_compile_completed.stdout)
+    if bad_compile_completed.returncode == 0:
+        failures.append("bad compile JSON: expected nonzero exit")
+    if bad_compile.get("ok") is not False or bad_compile.get("code") != "not_l0_compilable":
+        failures.append(f"bad compile JSON: unexpected JSON {bad_compile!r}")
+
+    bad_compile_type_completed = run_cli(["--json", "--compile-yi", "推 一"], allow_failure=True)
+    bad_compile_type = json.loads(bad_compile_type_completed.stdout)
+    if bad_compile_type_completed.returncode == 0:
+        failures.append("bad compile type JSON: expected nonzero exit")
+    if bad_compile_type.get("ok") is not False or bad_compile_type.get("code") != "not_hex_to_hex":
+        failures.append(f"bad compile type JSON: unexpected JSON {bad_compile_type!r}")
+
     empty_stdin = run_cli([], allow_failure=True)
     if empty_stdin.returncode == 0 or "Usage:" not in empty_stdin.stdout:
         failures.append(f"empty stdin: expected usage with nonzero exit, got {empty_stdin!r}")
@@ -623,7 +714,7 @@ def main() -> int:
         + len(CLI_CASES)
         + len(NEGATIVE_CLI_CASES)
         + len(JSON_CLI_CASES)
-        + 4
+        + 6
     )
     print(f"wenyan-surface CLI smoke passed ({total} cases)")
     return 0

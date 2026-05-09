@@ -44,15 +44,17 @@ YiInstr 之 12 条原语皆与「错」(全爻取反) 通约：
   ·  桥 引理：`flipPos 5 h = «加» (fromIdx 32) h` —— 由 toIdx XOR 等价于 mod 64 加
   ·  Tm 等价：`add32Prog_denotes` : YiInstr 输出 = denoteHexFun add32Body h
 
-### Tier 2：«错» 之直接 compile
-  ·  YiInstr `[cuo, halt]`（`cuoProg`）—— 直接对应 Hexagram.cuo
-  ·  注：Tm 无 .cuo primitive，故无 Tm 源；此例仅展示 YiInstr 端原始能力
+### Tier 2：exact Hex transform 之直接 compile
+  ·  Tm `.cuoH/.zongH/.huH/.cuoZongH/.flip{1..6}H`
+     → YiInstr straight-line 程序
+  ·  `compileHexFunCertified?` 暴露保守桥：仅返回经 64 卦验证的 Hex → Hex 程序
 
 ## 未尽之业 (future work)
 
 由 cuo-symmetry，Tier B (生 = 加 «一») 与 Tier A (常 «一») 皆不可表。
-完整 `compileHexFun : Tm → Option (List YiInstr)` 须先识别「Tm 是否 cuo-equivariant」，
-该判定本身可决（64 元枚举），但 compile 之机制须严格限制于 cuo-equivariant 子集。
+完整 `compileHexFun : Tm → Option (List YiInstr)` 须严格限制于可由 L0 原语表达的
+cuo-equivariant 子集。本文之 `compileHexFunCertified?` 先覆盖 straight-line exact
+Hex transform chain，并以 64 卦 finite validation 作执行边界。
 
 替代方案：扩展 YiInstr 加 absolute yao test (`branchYaoYang i t`) 或加 hexLit-style 常量
 载入 — 此皆破 cuo-symmetry，得任意 Hex → Hex compile 能力。本文不行此路，留作 future work。
@@ -148,6 +150,242 @@ def cuoProg : List YiInstr := [.cuo, .halt]
 theorem cuoProg_correct (h : Hexagram) :
     ((YiState.init h cuoProg).runFuel 2).cur.1 = h.cuo := by
   rfl
+
+/-- 「错」compile 之 Tm 等价。 -/
+theorem cuoProg_denotes (h : Hexagram) :
+    some ((YiState.init h cuoProg).runFuel 2).cur.1 = denoteHexFun Stdlib.cuoBody h := by
+  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
+  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+    native_decide
+
+/-- 「综」之 YiInstr 程序。 -/
+def zongProg : List YiInstr := [.zong, .halt]
+
+theorem zongProg_denotes (h : Hexagram) :
+    some ((YiState.init h zongProg).runFuel 2).cur.1 = denoteHexFun Stdlib.zongBody h := by
+  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
+  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+    native_decide
+
+/-- 「互」之 YiInstr 程序。 -/
+def huProg : List YiInstr := [.hu, .halt]
+
+theorem huProg_denotes (h : Hexagram) :
+    some ((YiState.init h huProg).runFuel 2).cur.1 = denoteHexFun Stdlib.huBody h := by
+  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
+  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+    native_decide
+
+/-- 「错综」之 YiInstr 程序：按定义先错后综。 -/
+def cuoZongProg : List YiInstr := [.cuo, .zong, .halt]
+
+theorem cuoZongProg_denotes (h : Hexagram) :
+    some ((YiState.init h cuoZongProg).runFuel 3).cur.1 =
+      denoteHexFun Stdlib.cuoZongBody h := by
+  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
+  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+    native_decide
+
+private def fin0 : Fin 6 := ⟨0, by omega⟩
+private def fin1 : Fin 6 := ⟨1, by omega⟩
+private def fin2 : Fin 6 := ⟨2, by omega⟩
+private def fin3 : Fin 6 := ⟨3, by omega⟩
+private def fin4 : Fin 6 := ⟨4, by omega⟩
+private def fin5 : Fin 6 := ⟨5, by omega⟩
+
+/-- 单爻翻转程序。 -/
+def flip1Prog : List YiInstr := [.flipYao fin0, .halt]
+def flip2Prog : List YiInstr := [.flipYao fin1, .halt]
+def flip3Prog : List YiInstr := [.flipYao fin2, .halt]
+def flip4Prog : List YiInstr := [.flipYao fin3, .halt]
+def flip5Prog : List YiInstr := [.flipYao fin4, .halt]
+def flip6Prog : List YiInstr := [.flipYao fin5, .halt]
+
+theorem flip1Prog_denotes (h : Hexagram) :
+    some ((YiState.init h flip1Prog).runFuel 2).cur.1 = denoteHexFun Stdlib.flip1Body h := by
+  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
+  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+    native_decide
+
+theorem flip2Prog_denotes (h : Hexagram) :
+    some ((YiState.init h flip2Prog).runFuel 2).cur.1 = denoteHexFun Stdlib.flip2Body h := by
+  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
+  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+    native_decide
+
+theorem flip3Prog_denotes (h : Hexagram) :
+    some ((YiState.init h flip3Prog).runFuel 2).cur.1 = denoteHexFun Stdlib.flip3Body h := by
+  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
+  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+    native_decide
+
+theorem flip4Prog_denotes (h : Hexagram) :
+    some ((YiState.init h flip4Prog).runFuel 2).cur.1 = denoteHexFun Stdlib.flip4Body h := by
+  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
+  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+    native_decide
+
+theorem flip5Prog_denotes (h : Hexagram) :
+    some ((YiState.init h flip5Prog).runFuel 2).cur.1 = denoteHexFun Stdlib.flip5Body h := by
+  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
+  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+    native_decide
+
+theorem flip6Prog_denotes (h : Hexagram) :
+    some ((YiState.init h flip6Prog).runFuel 2).cur.1 = denoteHexFun Stdlib.flip6Body h := by
+  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
+  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+    native_decide
+
+/-! ## § 3b  A conservative executable bridge -/
+
+/-- A straight-line L0 program for a closed L1 `Hex → Hex` term.
+    `steps` omits the final `halt`; `program` appends it uniformly. -/
+structure CompiledHexFun where
+  source : Tm
+  steps : List YiInstr
+  note : String
+deriving Repr
+
+namespace CompiledHexFun
+
+def program (c : CompiledHexFun) : List YiInstr :=
+  c.steps ++ [.halt]
+
+def fuel (c : CompiledHexFun) : Nat :=
+  c.steps.length + 1
+
+end CompiledHexFun
+
+def runHexSteps (steps : List YiInstr) (h : Hexagram) : Hexagram :=
+  ((YiState.init h (steps ++ [.halt])).runFuel (steps.length + 1)).cur.1
+
+def runCompiledHexFun (c : CompiledHexFun) (h : Hexagram) : Hexagram :=
+  runHexSteps c.steps h
+
+private def appendNote (a b : String) : String :=
+  if a = "" then b else if b = "" then a else a ++ " ; " ++ b
+
+private def tmNodeCount : Tm → Nat
+  | .abs _ _ body => tmNodeCount body + 1
+  | .app f x => tmNodeCount f + tmNodeCount x + 1
+  | .catalogue1 _ a => tmNodeCount a + 1
+  | .catalogue2 _ a b => tmNodeCount a + tmNodeCount b + 1
+  | .catalogue3 _ a b c => tmNodeCount a + tmNodeCount b + tmNodeCount c + 1
+  | _ => 1
+
+mutual
+  private def compileHexStepsFuel? : Nat → Tm → Option (List YiInstr × String)
+    | 0, _ => none
+    | fuel+1, .abs x .hex body =>
+        compileHexBodyFuel? fuel x body
+    | fuel+1, .app (.app comp f) g =>
+        if comp = Stdlib.endoCompBody then do
+          let (gSteps, gNote) ← compileHexStepsFuel? fuel g
+          let (fSteps, fNote) ← compileHexStepsFuel? fuel f
+          some (gSteps ++ fSteps, appendNote gNote fNote)
+        else
+          none
+    | fuel+1, .app rpt f =>
+        if rpt = Stdlib.repeatOnceBody then do
+          let (steps, note) ← compileHexStepsFuel? fuel f
+          some (steps ++ steps, appendNote note note)
+        else if rpt = Stdlib.hexApplyBody then
+          compileHexStepsFuel? fuel f
+        else
+          match rpt, f with
+          | .jia, .hexLit h =>
+              if h = hex32 then
+                some ([.flipYao fin5], "add32")
+              else if h = Hexagram.qian then
+                some ([], "add0")
+              else
+                none
+          | _, _ => none
+    | _+1, .cuoH => some ([.cuo], "cuo")
+    | _+1, .zongH => some ([.zong], "zong")
+    | _+1, .huH => some ([.hu], "hu")
+    | _+1, .cuoZongH => some ([.cuo, .zong], "cuoZong")
+    | _+1, .flip1H => some ([.flipYao fin0], "flip1")
+    | _+1, .flip2H => some ([.flipYao fin1], "flip2")
+    | _+1, .flip3H => some ([.flipYao fin2], "flip3")
+    | _+1, .flip4H => some ([.flipYao fin3], "flip4")
+    | _+1, .flip5H => some ([.flipYao fin4], "flip5")
+    | _+1, .flip6H => some ([.flipYao fin5], "flip6")
+    | _+1, _ => none
+
+  private def compileHexBodyFuel? : Nat → String → Tm → Option (List YiInstr × String)
+    | 0, _, _ => none
+    | _+1, x, .var y =>
+        if x = y then some ([], "id") else none
+    | fuel+1, x, .app f (.var y) =>
+        if x = y then
+          compileHexStepsFuel? fuel f
+        else
+          none
+    | fuel+1, x, .app f arg => do
+        let (argSteps, argNote) ← compileHexBodyFuel? fuel x arg
+        let (fSteps, fNote) ← compileHexStepsFuel? fuel f
+        some (argSteps ++ fSteps, appendNote argNote fNote)
+    | _+1, _, _ => none
+end
+
+private def compileHexSteps? (t : Tm) : Option (List YiInstr × String) :=
+  compileHexStepsFuel? (tmNodeCount t + 3) t
+
+/-- Syntactic conservative compiler for exact `Hex → Hex` fragments. -/
+def compileHexFun? (t : Tm) : Option CompiledHexFun := do
+  let (steps, note) ← compileHexSteps? t
+  match typeCheck [] t with
+  | some (.arr .hex .hex) => some { source := t, steps := steps, note := note }
+  | _ => none
+
+/-- Runtime finite validation of the bridge over all 64 hexagrams. -/
+def compiledHexFunAgrees (c : CompiledHexFun) : Bool :=
+  Hexagram.allHex.all fun h =>
+    match denoteHexFun c.source h with
+    | some out => decide (runCompiledHexFun c h = out)
+    | none => false
+
+/-- Public safe bridge: only return programs that validate against `denoteHexFun`. -/
+def compileHexFunCertified? (t : Tm) : Option CompiledHexFun :=
+  match compileHexFun? t with
+  | some c => if compiledHexFunAgrees c then some c else none
+  | none => none
+
+example : (match compileHexFunCertified? Stdlib.hexIdBody with
+    | some c => compiledHexFunAgrees c
+    | none => false) = true := by native_decide
+
+example : (match compileHexFunCertified? Stdlib.cuoBody with
+    | some c => compiledHexFunAgrees c
+    | none => false) = true := by native_decide
+
+example : (match compileHexFunCertified? Stdlib.zongBody with
+    | some c => compiledHexFunAgrees c
+    | none => false) = true := by native_decide
+
+example : (match compileHexFunCertified? Stdlib.huBody with
+    | some c => compiledHexFunAgrees c
+    | none => false) = true := by native_decide
+
+example : (match compileHexFunCertified? Stdlib.cuoZongBody with
+    | some c => compiledHexFunAgrees c
+    | none => false) = true := by native_decide
+
+example : (match compileHexFunCertified? Stdlib.flip1Body with
+    | some c => compiledHexFunAgrees c
+    | none => false) = true := by native_decide
+
+example : (match compileHexFunCertified? Stdlib.flip6Body with
+    | some c => compiledHexFunAgrees c
+    | none => false) = true := by native_decide
+
+example : (compileHexFunCertified? Stdlib.tuiBody).isNone = true := by native_decide
+
+example : (compileHexFunCertified? Stdlib.sunBody).isNone = true := by native_decide
+
+example : (compileHexFunCertified? (.boolLit true)).isNone = true := by native_decide
 
 /-! ## § 4  错对称 之 形式见证 (cuo-symmetry as a structural lemma)
 
