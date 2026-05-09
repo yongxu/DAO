@@ -2,6 +2,8 @@
 
 **前置**：[路径空间作用量泛函候选 · Markov桥S25](路径空间作用量泛函候选%20·%20Markov桥S25.md) · [连续作用量泛函候选 · Markov桥S24](连续作用量泛函候选%20·%20Markov桥S24.md) · [作用量相位律候选 · Markov桥S5r](作用量相位律候选%20·%20Markov桥S5r.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
+**后续**：[有限因果局部性候选 · Markov桥S27](有限因果局部性候选%20·%20Markov桥S27.md) 已把 S3 的 one-step causal boundary 推到 finite localFuture list，并接回本页的 S26 summary。
+
 **Lean 锚点**：
 
 | 层 | 文件 | 内容 | 状态 |

@@ -1131,6 +1131,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteActionExtremumBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean",
@@ -1206,6 +1207,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteActionExtremumBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumBridge.lean",
@@ -4760,6 +4762,66 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityWenBoundary.lean"
           ],
           "symbol": "wen_constructive_coverage_192_371"
+        }
+      ]
+    },
+    {
+      "document": "义理/有限作用量极值候选 · Markov桥S26.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteActionExtremumBridge.lean"
+          ],
+          "symbol": "FiniteActionMinimumOnSupport"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteActionExtremumBridge.lean"
+          ],
+          "symbol": "finiteActionGap"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteActionExtremumBridge.lean"
+          ],
+          "symbol": "finite_action_extremum_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteActionExtremumBridge.lean"
+          ],
+          "symbol": "two_route_lower_in_action_extremum_support"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteActionExtremumBridge.lean"
+          ],
+          "symbol": "two_route_lower_not_finite_action_minimum"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteActionExtremumBridge.lean"
+          ],
+          "symbol": "two_route_lower_to_upper_action_gap"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteActionExtremumBridge.lean"
+          ],
+          "symbol": "two_route_upper_in_action_extremum_support"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteActionExtremumBridge.lean"
+          ],
+          "symbol": "two_route_upper_is_finite_action_minimum"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteActionExtremumBridge.lean"
+          ],
+          "symbol": "two_route_upper_to_lower_action_gap"
         }
       ]
     },
