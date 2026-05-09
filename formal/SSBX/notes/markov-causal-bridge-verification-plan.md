@@ -52,6 +52,7 @@
 | `formal/SSBX/Foundation/Modern/QuantumRelativityPathSpaceActionFunctionalBridge.lean` | S25 finite path-space action functional boundary |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityFiniteActionExtremumBridge.lean` | S26 finite action extremum boundary |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalLocalityBridge.lean` | S27 finite causal locality boundary |
+| `formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalIntervalBridge.lean` | S28 finite two-step causal interval boundary |
 | `formal/SSBX/notes/markov-causal-bridge-plan.md` | 探索计划与完成记录 |
 | `formal/SSBX/notes/unification-stepwise-plan.md` | 逐步完善到候选统一的阶段路线 |
 | `义理/文构造完备与直相加边界.md` | 对 `current-language no-go` 旧说法的正名 |
@@ -97,6 +98,7 @@
 | `义理/路径空间作用量泛函候选 · Markov桥S25.md` | S25 finite path-space action functional companion 文档 |
 | `义理/有限作用量极值候选 · Markov桥S26.md` | S26 finite action extremum companion 文档 |
 | `义理/有限因果局部性候选 · Markov桥S27.md` | S27 finite causal locality companion 文档 |
+| `义理/有限因果区间候选 · Markov桥S28.md` | S28 finite two-step causal interval companion 文档 |
 
 ## 当前验证结论
 
@@ -148,8 +150,9 @@
 - [x] `path_space_action_functional_bridge_summary` 已关闭 finite path-space action functional boundary：two-route quotient path classes 的 action values 接回 S5r action index、S24 sampling 与 quotient-support cancellation。
 - [x] `finite_action_extremum_bridge_summary` 已关闭 finite action extremum boundary：two-route quotient support 上 upper/lower action gap 为 `1`，upper 是 finite action minimum，lower 不是。
 - [x] `finite_causal_locality_bridge_summary` 已关闭 finite causal locality boundary：finite localFuture list 精确覆盖 one-step support，positive kernel weight 目标落在局部未来邻域。
+- [x] `finite_causal_interval_bridge_summary` 已关闭 finite two-step causal interval boundary：displayed middle list 的 step/causal/localFuture handoff 已形式化，concrete 与 two-route interval witness 已给出。
 - [x] 首次新 worktree 原生构建的 `mathlib4` 克隆阻塞已记录为基础设施失败，不当作 theorem 失败。
-- [ ] 尚未验证一般 Hilbert measurement、POVM/PVM、smooth/infinite-dimensional path-space action functional、Euler-Lagrange/Hamiltonian/unitary amplitude dynamics、measurement postulate semantics、decoherence、general all-path enumeration、一般 path integral、真实可测干涉律、physical unitary / CPTP / Kraus / density-matrix channel law、完整因果偏序、局部有限 causal set、度规恢复、数据校准、可测预言 theorem 或经验闭合。
+- [ ] 尚未验证一般 Hilbert measurement、POVM/PVM、smooth/infinite-dimensional path-space action functional、Euler-Lagrange/Hamiltonian/unitary amplitude dynamics、measurement postulate semantics、decoherence、general all-path enumeration、一般 path integral、真实可测干涉律、physical unitary / CPTP / Kraus / density-matrix channel law、完整因果偏序、arbitrary-length causal interval、full causal set local finiteness、度规恢复、数据校准、可测预言 theorem 或经验闭合。
 
 ## 每次变更的最低验证门槛
 
@@ -201,6 +204,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityContinuousActionFunctionalBri
 lake build SSBX.Foundation.Modern.QuantumRelativityPathSpaceActionFunctionalBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityFiniteActionExtremumBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityFiniteCausalLocalityBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityFiniteCausalIntervalBridge
 lake build SSBX
 git diff --check --
 ```
@@ -277,6 +281,7 @@ rg -n "待处理|future|deferred|部分相关|佛|唯识|analogy|unchecked|plann
 | finite path-space action functional boundary | `path_space_action_functional_bridge_summary` | `machineChecked` |
 | finite action extremum boundary | `finite_action_extremum_bridge_summary` | `machineChecked` |
 | finite causal locality boundary | `finite_causal_locality_bridge_summary` | `machineChecked` |
+| finite two-step causal interval boundary | `finite_causal_interval_bridge_summary` | `machineChecked` |
 | tagged-language noncollapse 保持 | `markov_bridge_not_direct_language_addition` | `machineChecked` |
 | 公开摘要 | `markov_causal_bridge_summary` | `machineChecked` |
 
@@ -339,7 +344,7 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
 | 路径权重乘法 | S19 已关闭 finite kernel path 的 append weight law；还需要 stochastic independence semantics、general all-path enumeration 与 path integral |
 | 真实干涉律 | S5/S5b/S5c/S5d/S5e/S5f/S5g/S5h/S5i/S5j/S5k/S5l/S5m/S5n/S5o/S5p/S5q/S5r 与 S24/S25/S26 已有 path amplitude、非零 witness、two-path finite cancellation candidate、discrete phase-label candidate、edge-action phase accumulation candidate、finite path-family sum candidate、finite path-sum algebra candidate、endpoint-indexed finite family candidate、endpoint support normalization candidate、two-route toy enumeration candidate、visible path-key candidate、finite visible-key quotient candidate、visible-key quotient class candidate、two-route canonical representative candidate、finite quotient-support candidate、quotient-support algebra candidate、pending observable ledger boundary、finite action-to-phase law candidate、displayed continuous action-coordinate functional、finite path-space action functional 与 finite action extremum boundary；还需要 smooth/infinite-dimensional path-space action functional、general choice function、general all-path enumeration、一般 path integral、continuous-time dynamics、可测预言 theorem 或经验闭合 |
 | 非平凡 finite quantum-channel law | S20 已关闭 nonzero channel amplitude -> step / classical support / Born-shaped boundary；还需要 physical unitary/CPTP/Kraus/density-matrix law |
-| 完整因果集或时空度规 | S3 已关闭一步 no-self-loop，S27 已关闭 finite one-step localFuture locality；还需要偏序全公理、局部有限 causal interval、Lorentzian geometry 或 metric recovery theorem |
+| 完整因果集或时空度规 | S3 已关闭一步 no-self-loop，S27 已关闭 finite one-step localFuture locality，S28 已关闭 displayed two-step causal interval candidate；还需要偏序全公理、arbitrary-length causal interval、full causal set local finiteness、Lorentzian geometry 或 metric recovery theorem |
 | 经验预言 | S5q 已给出 pending observable ledger entry；还需要外部数据、观测量、误差模型、阈值或数据判准 |
 
 文档若使用这些更强术语，应同步补上相应 formal structure 与验证记录；没有新增结构时，按当前已闭合 theorem 命名。
@@ -353,7 +358,7 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
 | V1 | 给出一个具体有限实例 | 已由 `concrete_bridge_summary` 与 `operator_cell_grid_markov_causal_bridge_summary` 关闭 |
 | V2 | 从 `Nat` 权重升级到有限概率核 | 已由 `finite_probability_bridge_summary` 关闭 finite denominator / bounded weights interface |
 | V3 | 加强路径 / 因果组合 | 已由 `path_causal_bridge_summary` 关闭 path witness composition；`pathWeight` 乘法已由 S19 精化层承接 |
-| V4 | 加强因果结构 | S3 已关闭 code-successor/no-self-loop，S27 已关闭 finite localFuture locality；完整偏序、局部有限 causal interval、light cone 与 metric recovery 仍 pending |
+| V4 | 加强因果结构 | S3 已关闭 code-successor/no-self-loop，S27 已关闭 finite localFuture locality，S28 已关闭 displayed two-step causal interval candidate；完整偏序、arbitrary-length causal interval、full causal set local finiteness、light cone 与 metric recovery 仍 pending |
 | V5 | 引入 quantum channel / amplitude skeleton | 已由 `amplitude_channel_bridge_summary` 关闭候选接口；真实 channel law 仍 pending |
 | V6 | 引入 path amplitude / interference / Born-shaped candidate | 已由 `interference_bridge_summary` 关闭候选接口；真实干涉律和 Born-rule derivation 仍 pending |
 | V6b | 引入 nonzero path-amplitude candidate witness | 已由 `nonzero_path_amplitude_bridge_summary` 关闭非零候选接口；真实相位律、一般路径求和和可测干涉仍 pending |
@@ -393,6 +398,7 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
 | V25 | 引入 finite path-space action functional boundary | 已由 `path_space_action_functional_bridge_summary` 关闭 finite visible-key quotient path space action functional -> S5r action index -> S24 sampling -> quotient-support cancellation；smooth/infinite-dimensional path-space action functional、Euler-Lagrange、Hamiltonian generator、continuous-time unitary group、general path integral 与 empirical closure 仍 pending |
 | V26 | 引入 finite action extremum boundary | 已由 `finite_action_extremum_bridge_summary` 关闭 two-route finite quotient support 上的 action gap、upper finite minimum 与 lower non-minimum；continuous variation space、stationary action principle、Euler-Lagrange、Hamiltonian generator、continuous-time unitary group、general path integral 与 empirical closure 仍 pending |
 | V27 | 引入 finite causal locality boundary | 已由 `finite_causal_locality_bridge_summary` 关闭 finite localFuture list、one-step support equivalence、nonlocal no-step 与 kernel locality；full causal set axioms、local finite intervals、light cone、Lorentzian locality、metric recovery 与 empirical closure 仍 pending |
+| V28 | 引入 finite two-step causal interval boundary | 已由 `finite_causal_interval_bridge_summary` 关闭 displayed middle list、step/causal readback、localFuture handoff、concrete interval 与 two-route interval witness；full causal set axioms、arbitrary-length causal intervals、global local finiteness、light cone、Lorentzian locality、metric recovery 与 empirical closure 仍 pending |
 
 ## 失败记录模板
 

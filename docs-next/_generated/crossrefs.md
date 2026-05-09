@@ -74,7 +74,7 @@
 | formal/SSBX/notes/PositionOperatorGraph.md | 0 | 5 |
 | formal/SSBX/notes/atom-naming.md | 0 | 0 |
 | formal/SSBX/notes/baguaWen-spec.md | 0 | 0 |
-| formal/SSBX/notes/markov-causal-bridge-plan.md | 47 | 2 |
+| formal/SSBX/notes/markov-causal-bridge-plan.md | 47 | 4 |
 | formal/SSBX/notes/markov-causal-bridge-verification-plan.md | 46 | 20 |
 | formal/SSBX/notes/math-axiom-map.md | 0 | 0 |
 | formal/SSBX/notes/metainterp-isa-gap.md | 0 | 0 |
@@ -97,7 +97,7 @@
 | 义理/B_六征体系.md | 0 | 0 |
 | 义理/Born rule推导候选 · Markov桥S18.md | 0 | 8 |
 | 义理/Born分布边界候选 · Markov桥S12.md | 0 | 9 |
-| 义理/Born权重条件归一候选 · Markov桥S11.md | 0 | 1 |
+| 义理/Born权重条件归一候选 · Markov桥S11.md | 0 | 10 |
 | 义理/C_实虚史真.md | 0 | 0 |
 | 义理/Cell192_BaguaTuring_理层全集与不完备.md | 5 | 0 |
 | 义理/D_算子代数.md | 1 | 0 |
@@ -128,10 +128,10 @@
 | 义理/channelCompose候选 · Markov桥S13.md | 0 | 9 |
 | 义理/channelCompose结合律候选 · Markov桥S14.md | 0 | 7 |
 | 义理/sum-over-middle Born边界候选 · Markov桥S16.md | 0 | 8 |
-| 义理/sum-over-middle通道组合候选 · Markov桥S15.md | 0 | 1 |
+| 义理/sum-over-middle通道组合候选 · Markov桥S15.md | 0 | 9 |
 | 义理/unitary-CPTP账本边界 · Markov桥S17.md | 0 | 8 |
 | 义理/人类命运共同体_共同体之证.md | 5 | 12 |
-| 义理/作用相位到测量权重链 · Markov桥S22.md | 0 | 1 |
+| 义理/作用相位到测量权重链 · Markov桥S22.md | 0 | 8 |
 | 义理/作用量相位律候选 · Markov桥S5r.md | 0 | 12 |
 | 义理/几何位 · 从元到形.md | 1 | 13 |
 | 义理/动力 · 从元到行.md | 1 | 6 |
@@ -140,7 +140,7 @@
 | 义理/商支撑代数候选 · Markov桥S5p.md | 0 | 11 |
 | 义理/商支撑枚举候选 · Markov桥S5o.md | 0 | 8 |
 | 义理/干涉与测量律候选 · Markov桥S5.md | 6 | 17 |
-| 义理/归一化质量求和候选 · Markov桥S10.md | 0 | 1 |
+| 义理/归一化质量求和候选 · Markov桥S10.md | 0 | 9 |
 | 义理/形式逻辑 · 从元到推.md | 1 | 0 |
 | 义理/心智 · 从元到识.md | 1 | 2 |
 | 义理/拓扑 · 从元到障.md | 0 | 0 |
@@ -148,13 +148,13 @@
 | 义理/文构造完备与直相加边界.md | 0 | 7 |
 | 义理/有限作用量极值候选 · Markov桥S26.md | 0 | 9 |
 | 义理/有限因果局部性候选 · Markov桥S27.md | 0 | 10 |
-| 义理/有限概率归一化候选 · Markov桥S9.md | 0 | 1 |
+| 义理/有限概率归一化候选 · Markov桥S9.md | 0 | 13 |
 | 义理/有限概率核接口 · Markov桥S2.md | 3 | 12 |
 | 义理/有限相位演化候选 · Markov桥S23.md | 0 | 10 |
 | 义理/有限路径族求和代数候选 · Markov桥S5g.md | 0 | 14 |
 | 义理/有限路径族求和候选 · Markov桥S5f.md | 0 | 12 |
 | 义理/有限键商候选 · Markov桥S5l.md | 0 | 16 |
-| 义理/概率幅到测量权重 · Markov桥S21.md | 0 | 2 |
+| 义理/概率幅到测量权重 · Markov桥S21.md | 0 | 6 |
 | 义理/物理 · 从元到象.md | 3 | 20 |
 | 义理/生态 · 从元到生.md | 0 | 2 |
 | 义理/离散作用量相位候选 · Markov桥S5e.md | 0 | 15 |
@@ -168,7 +168,7 @@
 | 义理/观测账本候选 · Markov桥S5q.md | 0 | 9 |
 | 义理/规范代表元候选 · Markov桥S5n.md | 0 | 6 |
 | 义理/路径商类候选 · Markov桥S5m.md | 0 | 10 |
-| 义理/路径权重乘法候选 · Markov桥S19.md | 0 | 1 |
+| 义理/路径权重乘法候选 · Markov桥S19.md | 0 | 5 |
 | 义理/路径空间作用量泛函候选 · Markov桥S25.md | 0 | 11 |
 | 义理/路径组合与因果约束 · Markov桥S3.md | 3 | 13 |
 | 义理/路径身份键候选 · Markov桥S5k.md | 0 | 9 |

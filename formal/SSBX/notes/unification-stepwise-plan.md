@@ -57,6 +57,7 @@
 -> 路径空间作用量泛函候选
 -> 有限作用量极值候选
 -> 有限因果局部性候选
+-> 有限因果区间候选
 -> 几何候选接口
 -> 经验 pending ledger
 -> 更强统一摘要 theorem
@@ -118,6 +119,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityContinuousActionFunctionalBri
 lake build SSBX.Foundation.Modern.QuantumRelativityPathSpaceActionFunctionalBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityFiniteActionExtremumBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityFiniteCausalLocalityBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityFiniteCausalIntervalBridge
 lake build SSBX
 git diff --check --
 ```
@@ -129,7 +131,7 @@ git diff --check --
 | 项 | 内容 |
 |---|---|
 | Lean 出口 | 保持 `markov_causal_bridge_summary`、`measurement_event_alignment`、`markov_bridge_not_direct_language_addition` 为 `machineChecked` |
-| 文档出口 | 本文件与验证计划明确列出未关闭项：stochastic semantics、general all-path enumeration、path integral、general Hamiltonian/unitary amplitude dynamics、smooth/infinite-dimensional path-space action functional、continuous variation space、stationary action principle、general Hilbert measurement、POVM/PVM、decoherence、physical unitary/CPTP/Kraus/density channel law、干涉、完整因果偏序、局部有限 causal interval、light cone、Lorentzian geometry、度规恢复、经验闭合；finite row sum-one boundary 已由 S9 后续关闭，Markov/amplitude compatibility 下的 Born rule derivation 已由 S18 关闭，finite path-weight multiplication 已由 S19 关闭，nontrivial finite quantum-channel law 已由 S20 关闭，one-qubit computational-basis measurement weights 已由 S21 关闭，finite action branch to measurement weights chain 已由 S22 关闭，finite period-two phase evolution 已由 S23 关闭，displayed continuous action-coordinate functional 已由 S24 关闭，finite path-space action functional 已由 S25 关闭，finite action extremum boundary 已由 S26 关闭，finite causal locality boundary 已由 S27 关闭 |
+| 文档出口 | 本文件与验证计划明确列出未关闭项：stochastic semantics、general all-path enumeration、path integral、general Hamiltonian/unitary amplitude dynamics、smooth/infinite-dimensional path-space action functional、continuous variation space、stationary action principle、general Hilbert measurement、POVM/PVM、decoherence、physical unitary/CPTP/Kraus/density channel law、干涉、完整因果偏序、arbitrary-length causal interval、full causal set local finiteness、light cone、Lorentzian geometry、度规恢复、经验闭合；finite row sum-one boundary 已由 S9 后续关闭，Markov/amplitude compatibility 下的 Born rule derivation 已由 S18 关闭，finite path-weight multiplication 已由 S19 关闭，nontrivial finite quantum-channel law 已由 S20 关闭，one-qubit computational-basis measurement weights 已由 S21 关闭，finite action branch to measurement weights chain 已由 S22 关闭，finite period-two phase evolution 已由 S23 关闭，displayed continuous action-coordinate functional 已由 S24 关闭，finite path-space action functional 已由 S25 关闭，finite action extremum boundary 已由 S26 关闭，finite causal locality boundary 已由 S27 关闭，displayed two-step causal interval boundary 已由 S28 关闭 |
 | 失败记录 | 若发现文档中有强于 theorem 的终局统一或量子引力完成等 claim，记录为 `conceptual mismatch`，并改回对应结构层级 |
 | 当前正名 | Markov-因果桥当前是最小可验证中介构造；更强的物理大统一读法需要后续 theorem 合取后再命名 |
 
@@ -1410,7 +1412,7 @@ finite_action_extremum_bridge_summary。
 
 ## S27 · 有限因果局部性候选
 
-目标：把 S3 的 one-step causal boundary 推到 finite localFuture list。S27 不证明 full causal set axioms、local finite causal interval、light cone、Lorentzian locality、metric recovery、relativistic field locality 或 empirical closure；它只证明 `localFuture` 精确覆盖 one-step support，非局部目标不能一步转移，positive Markov kernel weight 必须落在 localFuture。
+目标：把 S3 的 one-step causal boundary 推到 finite localFuture list。S27 不证明 full causal set axioms、arbitrary-length causal interval、global local finiteness、light cone、Lorentzian locality、metric recovery、relativistic field locality 或 empirical closure；它只证明 `localFuture` 精确覆盖 one-step support，非局部目标不能一步转移，positive Markov kernel weight 必须落在 localFuture。displayed two-step interval 由 S28 承接。
 
 | 项 | 内容 |
 |---|---|
@@ -1418,7 +1420,7 @@ finite_action_extremum_bridge_summary。
 | 最低 theorem 形态 | 合取 `FiniteCausalLocalityClosed`、S26 finite action extremum、S25 path-space action、S3 path causal boundary、concrete/grid code-successor 与 Wen coverage |
 | 失败记录 | 若构建失败，记录是否为 list membership decidability、`Fin` proof-term mismatch、grid successor bound 或 namespace resolution；当前设计避免把 finite localFuture 误读为 Lorentzian locality |
 | 文档更新 | 已新增《有限因果局部性候选 · Markov桥S27》 |
-| 后续结构 | full causal set axioms、local finite causal intervals、light cone、Lorentzian manifold locality、metric recovery、relativistic field locality、general path integral、general measurement semantics、decoherence 与 empirical closure |
+| 后续结构 | full causal set axioms、arbitrary-length causal intervals、global local finiteness、light cone、Lorentzian manifold locality、metric recovery、relativistic field locality、general path integral、general measurement semantics、decoherence 与 empirical closure |
 
 通过判准：
 
@@ -1444,6 +1446,44 @@ finite_causal_locality_bridge_summary。
 | `kernel_positive_weight_implies_local_future` | `QuantumRelativityFiniteCausalLocalityBridge.lean` | positive kernel weight respects localFuture |
 | `concreteCausalLocalFuture`、`operatorCellGridCausalLocalFuture` | `QuantumRelativityFiniteCausalLocalityBridge.lean` | concrete/grid witness 均有 finite localFuture boundary |
 | `finite_causal_locality_bridge_summary` | `QuantumRelativityFiniteCausalLocalityBridge.lean` | S27 finite causal locality boundary 已关闭 |
+
+## S28 · 有限因果区间候选
+
+目标：把 S27 的 one-step localFuture locality 加厚为 displayed two-step causal interval candidate。S28 不证明 full causal set axioms、任意长度 causal interval、全局 local finiteness、light cone、Lorentzian locality、metric recovery 或 empirical closure；它只证明固定端点之间的 finite middle list 对 `step a m ∧ step m c` sound/complete，并 respect localFuture。
+
+| 项 | 内容 |
+|---|---|
+| Lean 出口 | `finite_causal_interval_bridge_summary` |
+| 最低 theorem 形态 | 合取 `FiniteCausalIntervalClosed`、S27 finite causal locality、S26 finite action extremum、S25 path-space action、two-route same-endpoint pair 与 Wen coverage |
+| 失败记录 | 若构建失败，记录是否为 list membership simplification、twoRoute namespace、localFuture handoff 或 overclaim mismatch；当前设计避免把 displayed interval 误读为完整 causal set local finiteness |
+| 文档更新 | 已新增《有限因果区间候选 · Markov桥S28》 |
+| 后续结构 | full causal set axioms、arbitrary-length causal intervals、global local finiteness、light cone、Lorentzian manifold locality、metric recovery、relativistic field locality、general path integral、general measurement semantics、decoherence 与 empirical closure |
+
+通过判准：
+
+```text
+FiniteTwoStepCausalIntervalCandidate；
+closedTwoStepIntervalPoints；
+interval_middle_step_law；
+interval_middle_causal_law；
+LocalTwoStepIntervalRespectsLocalFuture；
+interval_respects_local_future；
+concretePreparedMeasuredInterval；
+twoRouteSourceTargetInterval；
+two_route_interval_has_two_distinct_middles；
+finite_causal_interval_bridge_summary。
+```
+
+当前状态：
+
+| theorem | 文件 | 读法 |
+|---|---|---|
+| `FiniteTwoStepCausalIntervalCandidate` | `QuantumRelativityFiniteCausalIntervalBridge.lean` | 固定端点之间有 displayed finite middle list |
+| `interval_middle_step_law`、`interval_middle_causal_law` | `QuantumRelativityFiniteCausalIntervalBridge.lean` | middle list 成员给出左右 step 与左右 causalBefore |
+| `interval_respects_local_future` | `QuantumRelativityFiniteCausalIntervalBridge.lean` | displayed interval respects S27 localFuture |
+| `concretePreparedMeasuredInterval` | `QuantumRelativityFiniteCausalIntervalBridge.lean` | concrete chain 的 middle 为 `[evolved]` |
+| `twoRouteSourceTargetInterval` | `QuantumRelativityFiniteCausalIntervalBridge.lean` | two-route source/target 的 middle 为 `[upper, lower]` |
+| `finite_causal_interval_bridge_summary` | `QuantumRelativityFiniteCausalIntervalBridge.lean` | S28 displayed two-step causal interval boundary 已关闭 |
 
 ## 失败记录追加区
 
@@ -1507,6 +1547,7 @@ finite_causal_locality_bridge_summary。
 | 2026-05-09 | S25 | failure retained / success | 第一次 build 中未 open `QuantumRelativityPathIdentityBridge`，导致 `twoStepPathKey` 无法解析和展开；补 namespace 后关闭 finite path-space action functional candidate、S5r action-index compatibility、S24 sample compatibility 与 quotient-support action-induced cancellation |
 | 2026-05-09 | S26 | failure retained / success | 第一次 build 中 `rw [hq]` 已关闭 reflexive order goal，后续 `exact le_rfl` 变成 no goals；同时文件末尾需先关闭 `noncomputable section` 再关闭 namespace。修正后新增 finite action extremum boundary，关闭 lower-minus-upper action gap、upper finite minimum 与 lower non-minimum |
 | 2026-05-09 | S27 | failure retained / success | 第一次 build 中 concrete nonlocal membership 缺少自动 decidability，且 grid singleton `Fin` list equality 暴露 proof-term mismatch；改为显式 empty-list nonmembership 与 grid initial localFuture length boundary。第二次 build 中 singleton length 需补 `rfl` 后关闭 finite causal locality boundary |
+| 2026-05-09 | S28 | failure retained / success | 第一次 build 中 singleton/list membership 的 `simp` 未关闭 impossible cases 与 direct membership cases；第二次 build 中 `List.mem_cons_of_mem` 显式实参形状不匹配；改为 membership-to-equality/disjunction、`List.mem_singleton_self`、`List.mem_cons_self` 与 `List.mem_cons_of_mem _ proof` 后关闭 displayed two-step causal interval boundary |
 
 ## 统一用语正名
 
@@ -1514,9 +1555,9 @@ finite_causal_locality_bridge_summary。
 
 | 词 | 在本路线中的含义 | 结构依据 |
 |---|---|---|
-| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S27 已关闭的 summary theorem 与路线日志 |
-| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8-S27 pending list |
-| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary`、`normalized_mass_bridge_summary`、`born_weight_normalization_bridge_summary`、`born_distribution_bridge_summary`、`channel_compose_bridge_summary`、`channel_compose_associativity_bridge_summary`、`sum_over_middle_channel_bridge_summary`、`sum_over_middle_born_distribution_bridge_summary`、`unitary_cptp_ledger_bridge_summary`、`born_rule_derivation_bridge_summary`、`path_weight_multiplication_bridge_summary`、`nontrivial_quantum_channel_law_bridge_summary`、`born_measurement_bridge_summary`、`action_amplitude_measurement_bridge_summary`、`finite_phase_evolution_bridge_summary`、`continuous_action_functional_bridge_summary`、`path_space_action_functional_bridge_summary`、`finite_action_extremum_bridge_summary`、`finite_causal_locality_bridge_summary` |
+| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S28 已关闭的 summary theorem 与路线日志 |
+| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8-S28 pending list |
+| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary`、`normalized_mass_bridge_summary`、`born_weight_normalization_bridge_summary`、`born_distribution_bridge_summary`、`channel_compose_bridge_summary`、`channel_compose_associativity_bridge_summary`、`sum_over_middle_channel_bridge_summary`、`sum_over_middle_born_distribution_bridge_summary`、`unitary_cptp_ledger_bridge_summary`、`born_rule_derivation_bridge_summary`、`path_weight_multiplication_bridge_summary`、`nontrivial_quantum_channel_law_bridge_summary`、`born_measurement_bridge_summary`、`action_amplitude_measurement_bridge_summary`、`finite_phase_evolution_bridge_summary`、`continuous_action_functional_bridge_summary`、`path_space_action_functional_bridge_summary`、`finite_action_extremum_bridge_summary`、`finite_causal_locality_bridge_summary`、`finite_causal_interval_bridge_summary` |
 
 推荐正名句：
 

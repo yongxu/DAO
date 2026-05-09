@@ -2,6 +2,8 @@
 
 **前置**：[路径组合与因果约束 · Markov桥S3](路径组合与因果约束%20·%20Markov桥S3.md) · [有限作用量极值候选 · Markov桥S26](有限作用量极值候选%20·%20Markov桥S26.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
+**后续**：[有限因果区间候选 · Markov桥S28](有限因果区间候选%20·%20Markov桥S28.md) 已把本页的 one-step localFuture locality 加厚为 displayed two-step causal interval candidate。
+
 **Lean 锚点**：
 
 | 层 | 文件 | 内容 | 状态 |
@@ -64,7 +66,8 @@ theorem finite_causal_locality_bridge_summary :
 
 | 项 | 原因 |
 |---|---|
-| full causal set axioms | 本轮只处理 one-step localFuture，不证明完整反身、传递、反对称与局部有限 causal interval |
+| local finite interval candidate | 已由 S28 承接为 displayed two-step causal interval candidate；仍非全局 causal set local finiteness |
+| full causal set axioms | 本轮只处理 one-step localFuture，不证明完整反身、传递、反对称或任意长度 causal interval |
 | light cone / Lorentzian locality | 没有连续时空、锥结构、度规或 Lorentzian manifold |
 | metric recovery | 没有从有限可达结构恢复距离或曲率 |
 | relativistic field locality | 没有场、算符代数或 spacelike commutativity |
@@ -105,7 +108,7 @@ positive kernel weight respects that support
 
 ```text
 causal set axioms
-local finite intervals
+arbitrary-length finite intervals
 light cones
 Lorentzian metric
 relativistic field locality

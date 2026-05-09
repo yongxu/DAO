@@ -2,7 +2,7 @@
 
 **前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [有限概率核接口 · Markov桥S2](有限概率核接口%20·%20Markov桥S2.md) · [经典Markov与量子振幅分层 · Markov桥S4](经典Markov与量子振幅分层%20·%20Markov桥S4.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [非零路径振幅候选 · Markov桥S5b](非零路径振幅候选%20·%20Markov桥S5b.md) · [路径权重乘法候选 · Markov桥S19](路径权重乘法候选%20·%20Markov桥S19.md) · [文构造完备与直相加边界](文构造完备与直相加边界.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
-**后续**：[有限因果局部性候选 · Markov桥S27](有限因果局部性候选%20·%20Markov桥S27.md) 已把本页的 one-step causal boundary 加厚为 finite localFuture list：`step a b ↔ b ∈ localFuture a`。
+**后续**：[有限因果局部性候选 · Markov桥S27](有限因果局部性候选%20·%20Markov桥S27.md) 已把本页的 one-step causal boundary 加厚为 finite localFuture list：`step a b ↔ b ∈ localFuture a`。[有限因果区间候选 · Markov桥S28](有限因果区间候选%20·%20Markov桥S28.md) 进一步给出 displayed two-step causal interval candidate。
 
 **Lean 锚点**：
 
@@ -107,7 +107,7 @@ S3 关闭的是 path witness composition 与最小 no-self-loop 方向性；
 |---|---|---|
 | reachability 传递闭包全律 | 未纳入本轮 | 本轮只组合显式 witness，不重写 `Reachable` 定义 |
 | causalBefore 偏序公理 | 未纳入本轮 | 反身、传递、反对称需下一层结构 |
-| 局部有限 causal set | 未纳入本轮 | 尚未证明每个 causal interval 有有限 cardinality |
+| 局部有限 causal set | 未纳入本轮 | S28 只关闭 displayed two-step interval candidate；尚未证明任意 causal interval 有有限 cardinality |
 | 几何恢复 | 未纳入本轮 | 没有 metric、topology、manifold 或 continuum limit |
 
 本轮闭合范围：**S3 已在 Lean 中关闭 path witness composition 与 code-successor/no-self-loop 局部方向性；S19 已关闭有限 kernel path 的 pathWeight multiplication typed skeleton。完整因果偏序、局部有限 causal set、light cone、Lorentzian geometry、metric recovery 或经验闭合仍未关闭。**
