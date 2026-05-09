@@ -1,5 +1,20 @@
 # 底层根系图：关系与算子
 
+> **状态（2026-05-09 更新）**：本文是**结构地图**——只定义 R-line（生成线）/ M-line（名册线）/ 内容线 三轴的层级和算子拓扑。三组配套文件分别承担：
+> - 字根定本：[layer-character-map.md](layer-character-map.md) — 每字推荐 + 备选 + 理由
+> - 全景图：[layer-axis-graph.md](layer-axis-graph.md) — 三轴汇聚图 + Mermaid 图谱
+> - 代码 ground truth：[`LayerCharacterMap.lean`](../../formal/SSBX/Text/LayerCharacterMap.lean) — 解释器查表函数 + 往返定理
+>
+> 旧工作稿 [bagua-operator-name-candidates.md](../40_reference_参考/bagua-operator-name-candidates.md) 已降级为 archive pointer。
+>
+> **本文 §2.4–§2.6 的部分 default 字已被新决定覆盖**（不在本文重写，由上面三个文件接管）：
+> - R3 八卦 mode 字：`生/开/显/元/申/塞/居/守` → **`健/悦/显/起/入/险/止/顺`**（说卦回归）
+> - R3 dong default：`动` → `改`（裸 `动` 不再直落坐标）
+> - R4 flip4 / flip5 default：`待定` → **`临 / 主`**
+> - R5 shiNext / shiPrev：未定 → **`迁 / 溯`**
+> - R1 阳/阴 义理读：未定 → **`实 / 虚`**（邵雍《观物外篇》）
+> - R2 四象单字：未定 → **`春 / 夏 / 秋 / 冬`**（邵雍先天图）
+
 本文先把根下三到四层的关系和算子摊平。它不是替代 `MonadRoot.lean`、`Yuan.lean`、`Yi.lean` 或 `BaguaAlgebra.lean`，而是给这些文件之间的底层读法一个统一坐标。
 
 
