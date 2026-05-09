@@ -218,20 +218,36 @@ theorem fen_he_expresses_structure
     , structureExpr_built_from_yao (splitByOperators ops e)
     ⟩
 
-/-! ## § 5 乾坤之间 and 上/中/下 layers -/
+/-! ## § 5 乾坤、一、元、爻 and 上/中/下 layers -/
 
-/-- A typed-skeleton interval whose endpoints are 乾 and 坤. -/
-structure QianKunInterval where
-  start : Trigram
-  stop : Trigram
-  start_is_qian : start = Trigram.qian
-  stop_is_kun : stop = Trigram.kun
+/-- The unique "一" root used before a yao distinction is introduced. -/
+abbrev RootOne : Type := Unit
 
-def qianKunInterval : QianKunInterval :=
-  { start := Trigram.qian
-    stop := Trigram.kun
-    start_is_qian := rfl
-    stop_is_kun := rfl }
+def rootOne : RootOne := ()
+
+theorem root_one_unique (x : RootOne) :
+    x = rootOne := by
+  cases x
+  rfl
+
+/-- At this layer, 元 is definitionally 爻. -/
+theorem yuan_is_yao :
+    Yuan = Yao :=
+  yuan_eq_yao
+
+/-- 乾坤 at the root layer is the yang/yin pair of Yuan/Yao values. -/
+def qianKunYuanPoles : Yuan × Yuan :=
+  (Yao.yang, Yao.yin)
+
+/-- 乾坤 at the trigram layer is the all-yang/all-yin pair. -/
+def qianKunTrigrams : Trigram × Trigram :=
+  (Trigram.qian, Trigram.kun)
+
+theorem qianKunYuanPoles_eq :
+    qianKunYuanPoles = (Yao.yang, Yao.yin) := rfl
+
+theorem qianKunTrigrams_eq :
+    qianKunTrigrams = (Trigram.qian, Trigram.kun) := rfl
 
 /-- The three vertical layers of one trigram: 下 / 中 / 上. -/
 inductive VerticalLayer where
@@ -285,6 +301,14 @@ theorem qian_kun_layers_differ (l : VerticalLayer) :
     layerYao Trigram.qian l ≠ layerYao Trigram.kun l := by
   cases l <;> decide
 
+theorem qian_layers_are_yang (l : VerticalLayer) :
+    layerYao Trigram.qian l = Yao.yang := by
+  cases l <;> rfl
+
+theorem kun_layers_are_yin (l : VerticalLayer) :
+    layerYao Trigram.kun l = Yao.yin := by
+  cases l <;> rfl
+
 /-- Relations among the three vertical layers. -/
 inductive LayerRelation where
   | same
@@ -324,10 +348,14 @@ theorem removeLayer_fenAtLayer (l : VerticalLayer) (s : SiXiang) (y : Yuan) :
     removeLayer l (fenAtLayer l s y) = s := by
   cases l <;> cases s <;> rfl
 
-theorem qian_kun_interval_layer_summary :
-    qianKunInterval.start = Trigram.qian
-      ∧ qianKunInterval.stop = Trigram.kun
-      ∧ (∀ l : VerticalLayer, layerYao qianKunInterval.start l ≠ layerYao qianKunInterval.stop l)
+theorem qian_kun_yuan_yao_layer_summary :
+    (∀ x : RootOne, x = rootOne)
+      ∧ Yuan = Yao
+      ∧ qianKunYuanPoles = (Yao.yang, Yao.yin)
+      ∧ qianKunTrigrams = (Trigram.qian, Trigram.kun)
+      ∧ (∀ l : VerticalLayer,
+          layerYao Trigram.qian l = Yao.yang ∧ layerYao Trigram.kun l = Yao.yin)
+      ∧ (∀ l : VerticalLayer, layerYao Trigram.qian l ≠ layerYao Trigram.kun l)
       ∧ (∀ i : Fin 3,
           layerOfTrigramIndex i = .xia
             ∨ layerOfTrigramIndex i = .zhong
@@ -338,8 +366,11 @@ theorem qian_kun_interval_layer_summary :
       ∧ (∀ l : VerticalLayer, ∀ s : SiXiang, ∀ y : Yuan,
           removeLayer l (fenAtLayer l s y) = s) := by
   exact
-    ⟨ qianKunInterval.start_is_qian
-    , qianKunInterval.stop_is_kun
+    ⟨ root_one_unique
+    , yuan_is_yao
+    , qianKunYuanPoles_eq
+    , qianKunTrigrams_eq
+    , fun l => ⟨qian_layers_are_yang l, kun_layers_are_yin l⟩
     , qian_kun_layers_differ
     , layerOfTrigramIndex_complete
     , lower_middle_adjacent
@@ -373,9 +404,12 @@ theorem history_tape_structure_summary :
           operatorSeqAct ops = .fen
             ∧ nameAct name = .he
             ∧ WellFormedNamedStructure (namedByHe name (splitByOperators ops e)))
-    ∧ qianKunInterval.start = Trigram.qian
-    ∧ qianKunInterval.stop = Trigram.kun
-    ∧ (∀ l : VerticalLayer, layerYao qianKunInterval.start l ≠ layerYao qianKunInterval.stop l)
+    ∧ (∀ x : RootOne, x = rootOne)
+    ∧ Yuan = Yao
+    ∧ qianKunYuanPoles = (Yao.yang, Yao.yin)
+    ∧ qianKunTrigrams = (Trigram.qian, Trigram.kun)
+    ∧ (∀ l : VerticalLayer,
+        layerYao Trigram.qian l = Yao.yang ∧ layerYao Trigram.kun l = Yao.yin)
     ∧ (∀ l : VerticalLayer, ∀ s : SiXiang, ∀ y : Yuan,
         removeLayer l (fenAtLayer l s y) = s)
     ∧ fullOperatorSignatures.length = 371
@@ -389,9 +423,11 @@ theorem history_tape_structure_summary :
     , operator_sequences_are_fen
     , names_are_he
     , fen_he_expresses_structure
-    , qianKunInterval.start_is_qian
-    , qianKunInterval.stop_is_kun
-    , qian_kun_layers_differ
+    , root_one_unique
+    , yuan_is_yao
+    , qianKunYuanPoles_eq
+    , qianKunTrigrams_eq
+    , fun l => ⟨qian_layers_are_yang l, kun_layers_are_yin l⟩
     , removeLayer_fenAtLayer
     , fullOperatorSignatures_length
     , l0InstructionClauseKinds_length
