@@ -54,11 +54,12 @@ def wenyanCompile (s : String) : Except WenSurfaceErr TypedTm :=
   match lexWen s with
   | .error e => .error (.lex e)
   | .ok toks =>
-    match resolveWithCues toks with
+    match resolveWithCuesAllowAmbiguous toks with
     | .error e => .error (.resolve e)
     | .ok rs =>
-      match parseSurfaceResolved rs with
-      | .error e => .error (.parse e)
+      match parseSurfaceResolvedOrResolveErr rs with
+      | .error (.inl e) => .error (.resolve e)
+      | .error (.inr e) => .error (.parse e)
       | .ok expr =>
         match elabSurfaceTyped expr with
         | .error e => .error (.elab e)
@@ -939,6 +940,16 @@ example :
     (wenyanInterpBool "反 真").toOption = some false :=
   by native_decide
 
+example :
+    (wenyanCompile "反").toOption = none :=
+  by native_decide
+
+example :
+    (match wenyanCompile "反" with
+     | .error (.resolve (.ambiguous "反" 0 candidates)) => candidates.length == 3
+     | _ => false) = true :=
+  by native_decide
+
 /-! ## § 6.26 exact Bool / finite quantifier promotions -/
 
 example : (wenyanInterpBool "遂 真 假").toOption = some false := by native_decide
@@ -963,6 +974,21 @@ example :
 example : (wenyanInterp "而 推 損 一").toOption = some «一» := by native_decide
 
 example : (wenyanInterp "而 损 推 一").toOption = some «一» := by native_decide
+
+example :
+    (wenyanCompile "而 反 推").toOption.map (·.ty)
+      = some (.arr .hex .hex) :=
+  by native_decide
+
+example :
+    (wenyanCompile "而 推 反").toOption.map (·.ty)
+      = some (.arr .hex .hex) :=
+  by native_decide
+
+example :
+    (wenyanCompile "再 反").toOption.map (·.ty)
+      = some (.arr .hex .hex) :=
+  by native_decide
 
 example :
     (wenyanCompile "而 推 損").toOption.map (·.ty)

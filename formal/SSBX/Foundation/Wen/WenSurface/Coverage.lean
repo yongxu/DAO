@@ -78,6 +78,18 @@ theorem wenSurface_operator_catalogue_counts :
       ∧ (domainGapKindOperatorIds .predicateAnchorOnly).length = 9
       ∧ (domainGapKindOperatorIds .truthMarkerOnly).length = 4
       ∧ (domainGapKindOperatorIds .catalogueShapeOnly).length = 0
+      ∧ (domainGapDetailKindOperatorIds .applicationMechanic).length = 12
+      ∧ (domainGapDetailKindOperatorIds .identityNoop).length = 18
+      ∧ (domainGapDetailKindOperatorIds .projectionModel).length = 102
+      ∧ (domainGapDetailKindOperatorIds .pairCarrierLaw).length = 67
+      ∧ (domainGapDetailKindOperatorIds .facetCarrierLaw).length = 13
+      ∧ (domainGapDetailKindOperatorIds .singletonAggregateLaw).length = 17
+      ∧ (domainGapDetailKindOperatorIds .binaryAggregateLaw).length = 2
+      ∧ (domainGapDetailKindOperatorIds .ternaryAggregateLaw).length = 4
+      ∧ (domainGapDetailKindOperatorIds .listProjectionLaw).length = 1
+      ∧ (domainGapDetailKindOperatorIds .predicateModel).length = 9
+      ∧ (domainGapDetailKindOperatorIds .truthMarkerModel).length = 4
+      ∧ (domainGapDetailKindOperatorIds .catalogueShape).length = 0
       ∧ (catalogueShapeSignatureKindOperatorIds .stateTransition).length = 0
       ∧ (catalogueShapeSignatureKindOperatorIds .domainProcess).length = 0
       ∧ (catalogueShapeSignatureKindOperatorIds .domainRule).length = 0
@@ -101,6 +113,18 @@ theorem wenSurface_operator_catalogue_counts :
     , domainGap_predicateAnchorOnly_length
     , domainGap_truthMarkerOnly_length
     , domainGap_catalogueShapeOnly_length
+    , domainGapDetail_applicationMechanic_length
+    , domainGapDetail_identityNoop_length
+    , domainGapDetail_projectionModel_length
+    , domainGapDetail_pairCarrierLaw_length
+    , domainGapDetail_facetCarrierLaw_length
+    , domainGapDetail_singletonAggregateLaw_length
+    , domainGapDetail_binaryAggregateLaw_length
+    , domainGapDetail_ternaryAggregateLaw_length
+    , domainGapDetail_listProjectionLaw_length
+    , domainGapDetail_predicateModel_length
+    , domainGapDetail_truthMarkerModel_length
+    , domainGapDetail_catalogueShape_length
     , catalogueShape_stateTransition_length
     , catalogueShape_domainProcess_length
     , catalogueShape_domainRule_length
@@ -147,6 +171,18 @@ theorem wenSurface_registry_summary :
       ∧ (domainGapKindOperatorIds .predicateAnchorOnly).length = 9
       ∧ (domainGapKindOperatorIds .truthMarkerOnly).length = 4
       ∧ (domainGapKindOperatorIds .catalogueShapeOnly).length = 0
+      ∧ (domainGapDetailKindOperatorIds .applicationMechanic).length = 12
+      ∧ (domainGapDetailKindOperatorIds .identityNoop).length = 18
+      ∧ (domainGapDetailKindOperatorIds .projectionModel).length = 102
+      ∧ (domainGapDetailKindOperatorIds .pairCarrierLaw).length = 67
+      ∧ (domainGapDetailKindOperatorIds .facetCarrierLaw).length = 13
+      ∧ (domainGapDetailKindOperatorIds .singletonAggregateLaw).length = 17
+      ∧ (domainGapDetailKindOperatorIds .binaryAggregateLaw).length = 2
+      ∧ (domainGapDetailKindOperatorIds .ternaryAggregateLaw).length = 4
+      ∧ (domainGapDetailKindOperatorIds .listProjectionLaw).length = 1
+      ∧ (domainGapDetailKindOperatorIds .predicateModel).length = 9
+      ∧ (domainGapDetailKindOperatorIds .truthMarkerModel).length = 4
+      ∧ (domainGapDetailKindOperatorIds .catalogueShape).length = 0
       ∧ (catalogueShapeSignatureKindOperatorIds .stateTransition).length = 0
       ∧ (catalogueShapeSignatureKindOperatorIds .domainProcess).length = 0
       ∧ (catalogueShapeSignatureKindOperatorIds .domainRule).length = 0
@@ -175,6 +211,18 @@ theorem wenSurface_registry_summary :
     , domainGap_predicateAnchorOnly_length
     , domainGap_truthMarkerOnly_length
     , domainGap_catalogueShapeOnly_length
+    , domainGapDetail_applicationMechanic_length
+    , domainGapDetail_identityNoop_length
+    , domainGapDetail_projectionModel_length
+    , domainGapDetail_pairCarrierLaw_length
+    , domainGapDetail_facetCarrierLaw_length
+    , domainGapDetail_singletonAggregateLaw_length
+    , domainGapDetail_binaryAggregateLaw_length
+    , domainGapDetail_ternaryAggregateLaw_length
+    , domainGapDetail_listProjectionLaw_length
+    , domainGapDetail_predicateModel_length
+    , domainGapDetail_truthMarkerModel_length
+    , domainGapDetail_catalogueShape_length
     , catalogueShape_stateTransition_length
     , catalogueShape_domainProcess_length
     , catalogueShape_domainRule_length

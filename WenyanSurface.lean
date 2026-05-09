@@ -565,6 +565,8 @@ private def atomShow : ResolvedAtom → String
       match r.operator? with
       | some id => s!"op[{id.code}:{id.title}]"
       | none => s!"op[pending:{r.label}]"
+  | .ambiguousOp candidates =>
+      s!"ambiguous[{candidates.length}]"
   | .hexOrOp h r =>
       match r.operator? with
       | some id => s!"hex-or-op[hex={(Hexagram.toIdx h).val};op={id.code}:{id.title}]"
@@ -1076,6 +1078,12 @@ private def atomJson : ResolvedAtom → String
         [ jsonFieldString "kind" "operator"
         , jsonFieldRaw "reading" (readingJson r)
         ]
+  | .ambiguousOp candidates =>
+      jsonObject
+        [ jsonFieldString "kind" "ambiguous"
+        , jsonFieldNat "candidateCount" candidates.length
+        , jsonFieldRaw "candidates" (jsonArray (candidates.map readingJson))
+        ]
   | .hexOrOp h r =>
       jsonObject
         [ jsonFieldString "kind" "hexOrOp"
@@ -1423,8 +1431,7 @@ private def compileYiJsonOutput (src : String) : String :=
   | .ok typed =>
       if typed.ty = compileYiExpectedTy then
         match compileHexFunCertified? typed.tm with
-        | some c =>
-            let program := c.program
+        | some program =>
             jsonObject
               [ jsonFieldBool "ok" true
               , jsonFieldString "mode" "compile-yi"
@@ -1432,10 +1439,10 @@ private def compileYiJsonOutput (src : String) : String :=
               , jsonFieldString "compiler" "WenDefCompile.compileHexFunCertified?"
               , jsonFieldRaw "program" (jsonArray (program.map (fun instr => jsonString (yiInstrShow instr))))
               , jsonFieldNat "instructionCount" program.length
-              , jsonFieldNat "stepCount" c.steps.length
-              , jsonFieldNat "fuel" c.fuel
-              , jsonFieldBool "validated" (compiledHexFunAgrees c)
-              , jsonFieldString "note" c.note
+              , jsonFieldNat "stepCount" (program.length - 1)
+              , jsonFieldNat "fuel" program.length
+              , jsonFieldBool "validated" (compiledHexFunAgrees typed.tm program)
+              , jsonFieldString "note" "certified straight-line exact Hex transform subset"
               , jsonFieldString "term" (reprStr typed.tm)
               ]
         | none => compileYiNotCompilableJson typed
@@ -1448,12 +1455,12 @@ private def compileYiOutput (src : String) : String :=
   | .ok typed =>
       if typed.ty = compileYiExpectedTy then
         match compileHexFunCertified? typed.tm with
-        | some c =>
+        | some program =>
             String.intercalate "\n"
-              [ "yi program: " ++ yiProgramShow c.program
-              , s!"fuel: {c.fuel}"
-              , "validated: " ++ toString (compiledHexFunAgrees c)
-              , "note: " ++ c.note
+              [ "yi program: " ++ yiProgramShow program
+              , s!"fuel: {program.length}"
+              , "validated: " ++ toString (compiledHexFunAgrees typed.tm program)
+              , "note: certified straight-line exact Hex transform subset"
               , "compiler: WenDefCompile.compileHexFunCertified?"
               ]
         | none =>

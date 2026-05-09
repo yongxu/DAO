@@ -48,6 +48,7 @@ inductive ResolvedAtom where
   | boolConst   (b : Bool)
   | varName     (name : String)
   | catalogueOp (reading : OperatorReading)
+  | ambiguousOp (candidates : List OperatorReading)
   | hexOrOp     (h : Hexagram) (reading : OperatorReading)
   | syntax      (marker : SyntaxMarker)
   | appMarker             -- 「之」 等不发射 Tm 的 surface marker
@@ -382,6 +383,22 @@ def resolveCatalogueByTable (t : GlyphTok) : Except ResolveErr ResolvedTok :=
     | [r] => .ok ⟨t, .catalogueOp r⟩
     | rs  => .error (.ambiguous t.surface t.startCol rs)
 
+def resolveCatalogueByTableAllowAmbiguous (t : GlyphTok)
+    : Except ResolveErr ResolvedTok :=
+  if isUnpromotedHexagramGap t.surface then
+    .error (.unpromotedHexagramGap t.surface t.startCol)
+  else
+    let readings := catalogueOrOperatorFormReadingsForGlyph t.surface
+    match readings with
+    | [] =>
+        let knownReadings := readingsForGlyph t.surface
+        if knownReadings.isEmpty then
+          .error (.noReading t.surface t.startCol)
+        else
+          .error (.knownButUnsupported t.surface t.startCol knownReadings)
+    | [r] => .ok ⟨t, .catalogueOp r⟩
+    | rs  => .ok ⟨t, .ambiguousOp rs⟩
+
 /-! ## § 3  Resolver -/
 
 /-- 单 token resolver。优先级：iterate (「之又」) → appMarker (「之」) → bool 常值 →
@@ -450,6 +467,7 @@ def ResolvedAtom.opId? : ResolvedAtom → Option OperatorId
   | .boolConst _   => none
   | .varName _     => none
   | .catalogueOp r => r.operator?
+  | .ambiguousOp _ => none
   | .hexOrOp _ r   => r.operator?
   | .syntax _      => none
   | .appMarker     => none
@@ -801,6 +819,44 @@ def resolveOneWithCues (toks : List GlyphTok) (i : Nat) (t : GlyphTok)
             | some h => .ok ⟨t, .hexConst h⟩
             | none   => resolveCatalogueByTable t
 
+def resolveOneWithCuesAllowAmbiguous (toks : List GlyphTok) (i : Nat) (t : GlyphTok)
+    : Except ResolveErr ResolvedTok :=
+  if isOpenBracketSurface t.surface then
+    .ok ⟨t, .openBracket⟩
+  else if isCloseBracketSurface t.surface then
+    .ok ⟨t, .closeBracket⟩
+  else if isIterateConstruction t.surface then
+    .ok ⟨t, .iterate⟩
+  else
+  match resolveBoolConst t.surface with
+  | some b => .ok ⟨t, .boolConst b⟩
+  | none =>
+    match resolveSyntaxMarker t.surface with
+    | some marker => .ok ⟨t, .syntax marker⟩
+    | none =>
+    match resolveVarName t.surface with
+    | some name => .ok ⟨t, .varName name⟩
+    | none =>
+      let cues := computeCues toks i
+      match uniqueCatalogueReading t.surface cues with
+      | some r =>
+          match resolveHexConst t.surface with
+          | some h => .ok ⟨t, .hexOrOp h r⟩
+          | none   => .ok ⟨t, .catalogueOp r⟩
+      | none =>
+        if isApplicationMarker t.surface then
+          .ok ⟨t, .appMarker⟩
+        else
+          match uniqueExecutableReadingForGlyph t.surface with
+          | some r =>
+              match resolveHexConst t.surface with
+              | some h => .ok ⟨t, .hexOrOp h r⟩
+              | none   => .ok ⟨t, .catalogueOp r⟩
+          | none =>
+            match resolveHexConst t.surface with
+            | some h => .ok ⟨t, .hexConst h⟩
+            | none   => resolveCatalogueByTableAllowAmbiguous t
+
 /-- 全 token 列表 cue-aware resolver。结构递归 on index. -/
 def resolveWithCuesAux (toks : List GlyphTok)
     : Nat → List GlyphTok → Except ResolveErr (List ResolvedTok)
@@ -818,6 +874,24 @@ def resolveWithCuesAux (toks : List GlyphTok)
 def resolveWithCues (toks : List GlyphTok)
     : Except ResolveErr (List ResolvedTok) :=
   resolveWithCuesAux toks 0 toks
+
+def resolveWithCuesAllowAmbiguousAux (toks : List GlyphTok)
+    : Nat → List GlyphTok → Except ResolveErr (List ResolvedTok)
+  | _, []       => .ok []
+  | i, t :: ts  =>
+    match resolveOneWithCuesAllowAmbiguous toks i t with
+    | .error e => .error e
+    | .ok r =>
+      match resolveWithCuesAllowAmbiguousAux toks (i + 1) ts with
+      | .error e  => .error e
+      | .ok rs    => .ok (r :: rs)
+
+/-- Resolver variant used by the parser: unselected catalogue ambiguity is
+    carried as an atom so expected-type parsing can refine it later.  The
+    public resolve path remains strict via `resolveWithCues`. -/
+def resolveWithCuesAllowAmbiguous (toks : List GlyphTok)
+    : Except ResolveErr (List ResolvedTok) :=
+  resolveWithCuesAllowAmbiguousAux toks 0 toks
 
 /-! ### § 7.1  Cue 计算 sanity 例子 -/
 
@@ -936,6 +1010,16 @@ example :
 example :
     opIdsOfCues [⟨"反", 0, 1, false⟩, ⟨"乾", 2, 1, false⟩]
       = some [some OperatorId.T_6, none] :=
+  by native_decide
+
+example :
+    (match resolveWithCuesAllowAmbiguous [⟨"反", 0, 1, false⟩] with
+     | .ok [⟨_, .ambiguousOp candidates⟩] => candidates.length == 3
+     | _ => false) = true :=
+  by native_decide
+
+example :
+    (resolveWithCues [⟨"反", 0, 1, false⟩]).toOption.isNone = true :=
   by native_decide
 
 example :

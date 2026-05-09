@@ -239,29 +239,15 @@ theorem flip6Prog_denotes (h : Hexagram) :
 
 /-! ## § 3b  A conservative executable bridge -/
 
-/-- A straight-line L0 program for a closed L1 `Hex → Hex` term.
-    `steps` omits the final `halt`; `program` appends it uniformly. -/
-structure CompiledHexFun where
-  source : Tm
-  steps : List YiInstr
-  note : String
-deriving Repr
+/-- Run a complete straight-line Hex program.  The compiler below returns lists
+    that already include the final `halt`; `prog.length` is therefore enough
+    fuel for this subset. -/
+def runHexProg (prog : List YiInstr) (h : Hexagram) : Hexagram :=
+  ((YiState.init h prog).runFuel prog.length).cur.1
 
-namespace CompiledHexFun
-
-def program (c : CompiledHexFun) : List YiInstr :=
-  c.steps ++ [.halt]
-
-def fuel (c : CompiledHexFun) : Nat :=
-  c.steps.length + 1
-
-end CompiledHexFun
-
+/-- Internal helper: run steps that omit the final `halt`. -/
 def runHexSteps (steps : List YiInstr) (h : Hexagram) : Hexagram :=
-  ((YiState.init h (steps ++ [.halt])).runFuel (steps.length + 1)).cur.1
-
-def runCompiledHexFun (c : CompiledHexFun) (h : Hexagram) : Hexagram :=
-  runHexSteps c.steps h
+  runHexProg (steps ++ [.halt]) h
 
 private def appendNote (a b : String) : String :=
   if a = "" then b else if b = "" then a else a ++ " ; " ++ b
@@ -293,15 +279,7 @@ mutual
         else if rpt = Stdlib.hexApplyBody then
           compileHexStepsFuel? fuel f
         else
-          match rpt, f with
-          | .jia, .hexLit h =>
-              if h = hex32 then
-                some ([.flipYao fin5], "add32")
-              else if h = Hexagram.qian then
-                some ([], "add0")
-              else
-                none
-          | _, _ => none
+          none
     | _+1, .cuoH => some ([.cuo], "cuo")
     | _+1, .zongH => some ([.zong], "zong")
     | _+1, .huH => some ([.hu], "hu")
@@ -318,11 +296,6 @@ mutual
     | 0, _, _ => none
     | _+1, x, .var y =>
         if x = y then some ([], "id") else none
-    | fuel+1, x, .app f (.var y) =>
-        if x = y then
-          compileHexStepsFuel? fuel f
-        else
-          none
     | fuel+1, x, .app f arg => do
         let (argSteps, argNote) ← compileHexBodyFuel? fuel x arg
         let (fSteps, fNote) ← compileHexStepsFuel? fuel f
@@ -333,59 +306,175 @@ end
 private def compileHexSteps? (t : Tm) : Option (List YiInstr × String) :=
   compileHexStepsFuel? (tmNodeCount t + 3) t
 
-/-- Syntactic conservative compiler for exact `Hex → Hex` fragments. -/
-def compileHexFun? (t : Tm) : Option CompiledHexFun := do
-  let (steps, note) ← compileHexSteps? t
+/-- Syntactic conservative compiler for closed, typeable straight-line
+    `Hex → Hex` fragments.
+
+    Accepted shapes:
+    * identity lambdas (`λx:Hex. x`);
+    * the primitive endomorphisms `.cuoH`, `.zongH`, `.huH`, `.cuoZongH`,
+      `.flip1H` ... `.flip6H`;
+    * simple application chains such as `λx. f (g x)`, when every stage is in
+      this same fragment;
+    * exact helper combinators for composition, one-repeat, and explicit
+      endomap application when their operands are in this same fragment.
+
+    Everything else is rejected, including `tui`, `sun`, `.jia`, catalogue
+    wrappers, Bool/pair/list terms, and Cell terms. -/
+def compileHexFun? (t : Tm) : Option (List YiInstr) := do
+  let (steps, _) ← compileHexSteps? t
   match typeCheck [] t with
-  | some (.arr .hex .hex) => some { source := t, steps := steps, note := note }
+  | some (.arr .hex .hex) => some (steps ++ [.halt])
   | _ => none
 
 /-- Runtime finite validation of the bridge over all 64 hexagrams. -/
-def compiledHexFunAgrees (c : CompiledHexFun) : Bool :=
+def compiledHexFunAgrees (t : Tm) (prog : List YiInstr) : Bool :=
   Hexagram.allHex.all fun h =>
-    match denoteHexFun c.source h with
-    | some out => decide (runCompiledHexFun c h = out)
+    match denoteHexFun t h with
+    | some out => decide (runHexProg prog h = out)
     | none => false
 
 /-- Public safe bridge: only return programs that validate against `denoteHexFun`. -/
-def compileHexFunCertified? (t : Tm) : Option CompiledHexFun :=
+def compileHexFunCertified? (t : Tm) : Option (List YiInstr) :=
   match compileHexFun? t with
-  | some c => if compiledHexFunAgrees c then some c else none
+  | some prog => if compiledHexFunAgrees t prog then some prog else none
   | none => none
 
-example : (match compileHexFunCertified? Stdlib.hexIdBody with
-    | some c => compiledHexFunAgrees c
+theorem compileHexFun_id :
+    compileHexFun? Stdlib.hexIdBody = some [.halt] := by rfl
+
+theorem compileHexFun_cuo :
+    compileHexFun? Stdlib.cuoBody = some [.cuo, .halt] := by rfl
+
+theorem compileHexFun_zong :
+    compileHexFun? Stdlib.zongBody = some [.zong, .halt] := by rfl
+
+theorem compileHexFun_hu :
+    compileHexFun? Stdlib.huBody = some [.hu, .halt] := by rfl
+
+theorem compileHexFun_cuoZong :
+    compileHexFun? Stdlib.cuoZongBody = some [.cuo, .zong, .halt] := by rfl
+
+theorem compileHexFun_flip1 :
+    compileHexFun? Stdlib.flip1Body = some [.flipYao fin0, .halt] := by rfl
+
+theorem compileHexFun_flip6 :
+    compileHexFun? Stdlib.flip6Body = some [.flipYao fin5, .halt] := by rfl
+
+/-- Simple composition example: `λx. cuo (zong x)`. -/
+def cuoAfterZongBody : Tm :=
+  .abs "x" .hex (.app .cuoH (.app .zongH (.var "x")))
+
+theorem cuoAfterZongBody_typed :
+    typeCheck [] cuoAfterZongBody = some (.arr .hex .hex) := by native_decide
+
+theorem compileHexFun_cuoAfterZong :
+    compileHexFun? cuoAfterZongBody = some [.zong, .cuo, .halt] := by rfl
+
+/-- Surface `而 错 综`: exact endomap composition without eta expansion. -/
+def cuoAfterZongCombinatorBody : Tm :=
+  .app (.app Stdlib.endoCompBody Stdlib.cuoBody) Stdlib.zongBody
+
+theorem cuoAfterZongCombinatorBody_typed :
+    typeCheck [] cuoAfterZongCombinatorBody = some (.arr .hex .hex) := by native_decide
+
+theorem compileHexFun_cuoAfterZongCombinator :
+    compileHexFun? cuoAfterZongCombinatorBody = some [.zong, .cuo, .halt] := by rfl
+
+theorem compileHexFun_id_denotes (h : Hexagram) :
+    some (runHexProg [.halt] h) = denoteHexFun Stdlib.hexIdBody h := by
+  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
+  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+    native_decide
+
+theorem compileHexFun_cuo_denotes (h : Hexagram) :
+    some (runHexProg [.cuo, .halt] h) = denoteHexFun Stdlib.cuoBody h := by
+  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
+  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+    native_decide
+
+theorem compileHexFun_cuoAfterZong_denotes (h : Hexagram) :
+    some (runHexProg [.zong, .cuo, .halt] h) = denoteHexFun cuoAfterZongBody h := by
+  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
+  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+    native_decide
+
+theorem compileHexFun_cuoAfterZongCombinator_denotes (h : Hexagram) :
+    some (runHexProg [.zong, .cuo, .halt] h) =
+      denoteHexFun cuoAfterZongCombinatorBody h := by
+  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
+  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+    native_decide
+
+example :
+    (match compileHexFunCertified? Stdlib.hexIdBody with
+    | some prog => compiledHexFunAgrees Stdlib.hexIdBody prog
     | none => false) = true := by native_decide
 
-example : (match compileHexFunCertified? Stdlib.cuoBody with
-    | some c => compiledHexFunAgrees c
+example :
+    (match compileHexFunCertified? Stdlib.cuoBody with
+    | some prog => compiledHexFunAgrees Stdlib.cuoBody prog
     | none => false) = true := by native_decide
 
-example : (match compileHexFunCertified? Stdlib.zongBody with
-    | some c => compiledHexFunAgrees c
+example :
+    (match compileHexFunCertified? Stdlib.zongBody with
+    | some prog => compiledHexFunAgrees Stdlib.zongBody prog
     | none => false) = true := by native_decide
 
-example : (match compileHexFunCertified? Stdlib.huBody with
-    | some c => compiledHexFunAgrees c
+example :
+    (match compileHexFunCertified? Stdlib.huBody with
+    | some prog => compiledHexFunAgrees Stdlib.huBody prog
     | none => false) = true := by native_decide
 
-example : (match compileHexFunCertified? Stdlib.cuoZongBody with
-    | some c => compiledHexFunAgrees c
+example :
+    (match compileHexFunCertified? Stdlib.cuoZongBody with
+    | some prog => compiledHexFunAgrees Stdlib.cuoZongBody prog
     | none => false) = true := by native_decide
 
-example : (match compileHexFunCertified? Stdlib.flip1Body with
-    | some c => compiledHexFunAgrees c
+example :
+    (match compileHexFunCertified? Stdlib.flip1Body with
+    | some prog => compiledHexFunAgrees Stdlib.flip1Body prog
     | none => false) = true := by native_decide
 
-example : (match compileHexFunCertified? Stdlib.flip6Body with
-    | some c => compiledHexFunAgrees c
+example :
+    (match compileHexFunCertified? Stdlib.flip6Body with
+    | some prog => compiledHexFunAgrees Stdlib.flip6Body prog
     | none => false) = true := by native_decide
 
-example : (compileHexFunCertified? Stdlib.tuiBody).isNone = true := by native_decide
+example :
+    (match compileHexFunCertified? cuoAfterZongBody with
+    | some prog => compiledHexFunAgrees cuoAfterZongBody prog
+    | none => false) = true := by native_decide
 
-example : (compileHexFunCertified? Stdlib.sunBody).isNone = true := by native_decide
+example :
+    (match compileHexFunCertified? cuoAfterZongCombinatorBody with
+    | some prog => compiledHexFunAgrees cuoAfterZongCombinatorBody prog
+    | none => false) = true := by native_decide
 
-example : (compileHexFunCertified? (.boolLit true)).isNone = true := by native_decide
+theorem compileHexFun_reject_tui :
+    (compileHexFunCertified? Stdlib.tuiBody).isNone = true := by native_decide
+
+theorem compileHexFun_reject_sun :
+    (compileHexFunCertified? Stdlib.sunBody).isNone = true := by native_decide
+
+theorem compileHexFun_reject_jia :
+    (compileHexFunCertified? (.app .jia .yi)).isNone = true := by native_decide
+
+theorem compileHexFun_reject_catalogue :
+    (compileHexFunCertified?
+      (.catalogue2 .E_2 (.hexLit Hexagram.qian) (.hexLit Hexagram.qian))).isNone = true := by
+  native_decide
+
+theorem compileHexFun_reject_bool :
+    (compileHexFunCertified? Stdlib.boolMarkerBody).isNone = true := by native_decide
+
+theorem compileHexFun_reject_pair :
+    (compileHexFunCertified? Stdlib.pairHBody).isNone = true := by native_decide
+
+theorem compileHexFun_reject_list :
+    (compileHexFunCertified? Stdlib.list1HBody).isNone = true := by native_decide
+
+theorem compileHexFun_reject_cell :
+    (compileHexFunCertified? Stdlib.cuoCBody).isNone = true := by native_decide
 
 /-! ## § 4  错对称 之 形式见证 (cuo-symmetry as a structural lemma)
 

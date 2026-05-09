@@ -231,6 +231,101 @@ def allDomainGapKinds : List DomainGapKind :=
   , .catalogueShapeOnly
   ]
 
+/-- Fine-grained reason a row is still not full text-domain semantics.
+
+`DomainGapKind` is intentionally coarse for CLI stability.  This detail ledger
+keeps the next implementation tranches visible: a pair carrier, a facet carrier,
+and a list aggregate all live under `carrierConstructorOnly`, but they require
+different future domain laws.
+-/
+inductive DomainGapDetailKind where
+  | applicationMechanic
+  | identityNoop
+  | projectionModel
+  | pairCarrierLaw
+  | facetCarrierLaw
+  | singletonAggregateLaw
+  | binaryAggregateLaw
+  | ternaryAggregateLaw
+  | listProjectionLaw
+  | predicateModel
+  | truthMarkerModel
+  | catalogueShape
+deriving Repr, DecidableEq
+
+namespace DomainGapDetailKind
+
+def key : DomainGapDetailKind → String
+  | .applicationMechanic => "application-mechanic"
+  | .identityNoop => "identity-noop"
+  | .projectionModel => "projection-model"
+  | .pairCarrierLaw => "pair-carrier-law"
+  | .facetCarrierLaw => "facet-carrier-law"
+  | .singletonAggregateLaw => "singleton-aggregate-law"
+  | .binaryAggregateLaw => "binary-aggregate-law"
+  | .ternaryAggregateLaw => "ternary-aggregate-law"
+  | .listProjectionLaw => "list-projection-law"
+  | .predicateModel => "predicate-model"
+  | .truthMarkerModel => "truth-marker-model"
+  | .catalogueShape => "catalogue-shape"
+
+def label : DomainGapDetailKind → String
+  | .applicationMechanic => "application mechanic"
+  | .identityNoop => "identity/no-op"
+  | .projectionModel => "projection model"
+  | .pairCarrierLaw => "pair carrier law"
+  | .facetCarrierLaw => "facet carrier law"
+  | .singletonAggregateLaw => "singleton aggregate law"
+  | .binaryAggregateLaw => "binary aggregate law"
+  | .ternaryAggregateLaw => "ternary aggregate law"
+  | .listProjectionLaw => "list projection law"
+  | .predicateModel => "predicate model"
+  | .truthMarkerModel => "truth marker model"
+  | .catalogueShape => "catalogue shape"
+
+def note : DomainGapDetailKind → String
+  | .applicationMechanic =>
+      "higher-order application is exact, but the supplied domain transform carries the domain meaning"
+  | .identityNoop =>
+      "state preservation is exact; any named domain invariant still needs its own law"
+  | .projectionModel =>
+      "Hex identity anchors a projection slot; the projected domain has not been modeled"
+  | .pairCarrierLaw =>
+      "two Hex arguments are preserved as a pair; no relation-specific law is claimed"
+  | .facetCarrierLaw =>
+      "one Hex argument is duplicated into two facets; no facet ontology is claimed"
+  | .singletonAggregateLaw =>
+      "one Hex argument is preserved as a singleton aggregate; no collection law is claimed"
+  | .binaryAggregateLaw =>
+      "two Hex arguments are preserved as an aggregate; no accumulation law is claimed"
+  | .ternaryAggregateLaw =>
+      "three Hex arguments are preserved as an aggregate; no trajectory or transition law is claimed"
+  | .listProjectionLaw =>
+      "a Hex is projected from a list carrier; no decomposition law is claimed"
+  | .predicateModel =>
+      "predicate typing is exact; the predicate's domain content is still placeholder-level"
+  | .truthMarkerModel =>
+      "truth-marker typing is exact; discourse semantics have not been modeled"
+  | .catalogueShape =>
+      "only catalogue signature shape is available; current registry has no remaining rows here"
+
+end DomainGapDetailKind
+
+def allDomainGapDetailKinds : List DomainGapDetailKind :=
+  [ .applicationMechanic
+  , .identityNoop
+  , .projectionModel
+  , .pairCarrierLaw
+  , .facetCarrierLaw
+  , .singletonAggregateLaw
+  , .binaryAggregateLaw
+  , .ternaryAggregateLaw
+  , .listProjectionLaw
+  , .predicateModel
+  , .truthMarkerModel
+  , .catalogueShape
+  ]
+
 /-! ## § 1.1 Bool relation/predicate package -/
 
 def hexPredTrueBody : Tm :=
@@ -845,6 +940,20 @@ def domainGapKindForCarrierKind : StructuralCarrierKind → DomainGapKind
   | .truthMarker => .truthMarkerOnly
   | .catalogueNormalForm => .catalogueShapeOnly
 
+def domainGapDetailKindForCarrierKind : StructuralCarrierKind → DomainGapDetailKind
+  | .identityNoop => .identityNoop
+  | .projectionAnchor => .projectionModel
+  | .pairCarrier => .pairCarrierLaw
+  | .duplicateFacetCarrier => .facetCarrierLaw
+  | .singletonAggregateCarrier => .singletonAggregateLaw
+  | .binaryAggregateCarrier => .binaryAggregateLaw
+  | .ternaryAggregateCarrier => .ternaryAggregateLaw
+  | .listProjectionCarrier => .listProjectionLaw
+  | .applicationCarrier => .applicationMechanic
+  | .predicateAnchor => .predicateModel
+  | .truthMarker => .truthMarkerModel
+  | .catalogueNormalForm => .catalogueShape
+
 def operatorDomainGapKind? (id : OperatorId) : Option DomainGapKind :=
   if decide (operatorSemanticStrength id = .exactTheoremBacked) then
     none
@@ -858,6 +967,17 @@ def domainGapKindOperatorIds (kind : DomainGapKind) : List OperatorId :=
 
 def domainGapOperatorIds : List OperatorId :=
   allOperatorIds.filter (fun id => (operatorDomainGapKind? id).isSome)
+
+def operatorDomainGapDetailKind? (id : OperatorId) : Option DomainGapDetailKind :=
+  if decide (operatorSemanticStrength id = .exactTheoremBacked) then
+    none
+  else
+    match operatorStructuralCarrierKind? id with
+    | some kind => some (domainGapDetailKindForCarrierKind kind)
+    | none => some .catalogueShape
+
+def domainGapDetailKindOperatorIds (kind : DomainGapDetailKind) : List OperatorId :=
+  allOperatorIds.filter (fun id => decide (operatorDomainGapDetailKind? id = some kind))
 
 /-! ## § 1.3.1 Catalogue-shape remainder by signature kind -/
 
@@ -1002,6 +1122,42 @@ theorem domainGap_truthMarkerOnly_length :
 theorem domainGap_catalogueShapeOnly_length :
     (domainGapKindOperatorIds .catalogueShapeOnly).length = 0 := by native_decide
 
+theorem domainGapDetail_applicationMechanic_length :
+    (domainGapDetailKindOperatorIds .applicationMechanic).length = 12 := by native_decide
+
+theorem domainGapDetail_identityNoop_length :
+    (domainGapDetailKindOperatorIds .identityNoop).length = 18 := by native_decide
+
+theorem domainGapDetail_projectionModel_length :
+    (domainGapDetailKindOperatorIds .projectionModel).length = 102 := by native_decide
+
+theorem domainGapDetail_pairCarrierLaw_length :
+    (domainGapDetailKindOperatorIds .pairCarrierLaw).length = 67 := by native_decide
+
+theorem domainGapDetail_facetCarrierLaw_length :
+    (domainGapDetailKindOperatorIds .facetCarrierLaw).length = 13 := by native_decide
+
+theorem domainGapDetail_singletonAggregateLaw_length :
+    (domainGapDetailKindOperatorIds .singletonAggregateLaw).length = 17 := by native_decide
+
+theorem domainGapDetail_binaryAggregateLaw_length :
+    (domainGapDetailKindOperatorIds .binaryAggregateLaw).length = 2 := by native_decide
+
+theorem domainGapDetail_ternaryAggregateLaw_length :
+    (domainGapDetailKindOperatorIds .ternaryAggregateLaw).length = 4 := by native_decide
+
+theorem domainGapDetail_listProjectionLaw_length :
+    (domainGapDetailKindOperatorIds .listProjectionLaw).length = 1 := by native_decide
+
+theorem domainGapDetail_predicateModel_length :
+    (domainGapDetailKindOperatorIds .predicateModel).length = 9 := by native_decide
+
+theorem domainGapDetail_truthMarkerModel_length :
+    (domainGapDetailKindOperatorIds .truthMarkerModel).length = 4 := by native_decide
+
+theorem domainGapDetail_catalogueShape_length :
+    (domainGapDetailKindOperatorIds .catalogueShape).length = 0 := by native_decide
+
 theorem catalogueShape_assignment_length :
     (catalogueShapeSignatureKindOperatorIds .assignment).length = 0 := by native_decide
 
@@ -1070,6 +1226,21 @@ theorem domainGapKindPartition_counts :
       + (domainGapKindOperatorIds .predicateAnchorOnly).length
       + (domainGapKindOperatorIds .truthMarkerOnly).length
       + (domainGapKindOperatorIds .catalogueShapeOnly).length = domainGapOperatorIds.length := by
+  native_decide
+
+theorem domainGapDetailKindPartition_counts :
+    (domainGapDetailKindOperatorIds .applicationMechanic).length
+      + (domainGapDetailKindOperatorIds .identityNoop).length
+      + (domainGapDetailKindOperatorIds .projectionModel).length
+      + (domainGapDetailKindOperatorIds .pairCarrierLaw).length
+      + (domainGapDetailKindOperatorIds .facetCarrierLaw).length
+      + (domainGapDetailKindOperatorIds .singletonAggregateLaw).length
+      + (domainGapDetailKindOperatorIds .binaryAggregateLaw).length
+      + (domainGapDetailKindOperatorIds .ternaryAggregateLaw).length
+      + (domainGapDetailKindOperatorIds .listProjectionLaw).length
+      + (domainGapDetailKindOperatorIds .predicateModel).length
+      + (domainGapDetailKindOperatorIds .truthMarkerModel).length
+      + (domainGapDetailKindOperatorIds .catalogueShape).length = domainGapOperatorIds.length := by
   native_decide
 
 theorem exactTheoremBackedStrongOperatorIds_no_domain_gap :
@@ -1162,6 +1333,11 @@ example : operatorDomainGapKind? .R_12 = some .carrierConstructorOnly := by nati
 example : operatorDomainGapKind? .E_2 = some .carrierConstructorOnly := by native_decide
 example : operatorDomainGapKind? .X_16 = some .carrierConstructorOnly := by native_decide
 example : operatorDomainGapKind? .I_1 = none := by native_decide
+example : operatorDomainGapDetailKind? .S_1 = some .applicationMechanic := by native_decide
+example : operatorDomainGapDetailKind? .R_12 = some .pairCarrierLaw := by native_decide
+example : operatorDomainGapDetailKind? .E_2 = some .pairCarrierLaw := by native_decide
+example : operatorDomainGapDetailKind? .X_16 = some .ternaryAggregateLaw := by native_decide
+example : operatorDomainGapDetailKind? .I_1 = none := by native_decide
 example : (theoremBackedSemanticsFor? .K_8).isSome = true := by native_decide
 example : (executableSemanticsFor? .Q_5).isSome = true := by native_decide
 example : (executableSemanticsFor? .A_12).isSome = true := by native_decide

@@ -76,6 +76,7 @@ def atomToTm : ResolvedAtom → Except ElabErr Tm
           | some sem => .ok sem.body
           | none     => .error (.unsupportedOp id "" 0)
       | none => .error .empty
+  | .ambiguousOp _ => .error .empty
   | .hexOrOp h _ =>
       if h = «一» then .ok .yi else .ok (.hexLit h)
   | .syntax _    => .error .empty
@@ -116,6 +117,8 @@ mutual
       .ok (.var name, rest)
     | _+1,  .hexOrOp h _ :: rest               =>
       .ok ((if h = «一» then .yi else .hexLit h), rest)
+    | _+1,  .ambiguousOp _ :: _                =>
+      .error .empty
     | _+1,  .syntax _ :: _                     =>
       .error .empty
     | _+1,  .openBracket :: _                  =>

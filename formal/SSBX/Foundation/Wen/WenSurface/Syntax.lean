@@ -12,6 +12,7 @@ namespace SSBX.Foundation.Wen.WenSurface
 
 open SSBX.Foundation.Wen.WenDef
 open SSBX.Text.WenyanOperators
+open SSBX.Text.OperatorReadings
 
 /-! ## § 1 AST -/
 
@@ -341,6 +342,35 @@ def exactExpectedStart? (expected : Ty) (head : ResolvedTok)
       | none => none
   | none => none
 
+def expectedFunctionCue? : Ty → Option ContextCue
+  | .arr .hex .hex => some .expectedObject
+  | .arr .bool .bool => some .expectedProp
+  | _ => none
+
+def readingHasExactExpectedType (expected : Ty) (r : OperatorReading) : Bool :=
+  match r.operator? with
+  | some id =>
+      match exactOperatorType? id with
+      | some ty => decide (ty = expected)
+      | none => false
+  | none => false
+
+def readingMatchesExpectedFunction (expected : Ty) (r : OperatorReading) : Bool :=
+  let cueMatches :=
+    match expectedFunctionCue? expected with
+    | some cue => readingSatisfiesCue r cue
+    | none => true
+  readingHasExactExpectedType expected r && cueMatches
+
+def expectedFunctionResolvedTok? (expected : Ty) (head : ResolvedTok)
+    : Option ResolvedTok :=
+  match head.atom with
+  | .ambiguousOp candidates =>
+      match candidates.filter (readingMatchesExpectedFunction expected) with
+      | [r] => some { head with atom := .catalogueOp r }
+      | _ => none
+  | _ => none
+
 def asVarName? (t : ResolvedTok) : Option String :=
   match t.atom with
   | .varName n => some n
@@ -525,6 +555,7 @@ mutual
                       match collectSurfaceArgs ctx allowInfix n (.atom head) (parseArityFor id) rest with
                       | .ok (expr, rest') => parsePostfixApplications ctx allowInfix n reserve expr rest'
                       | .error e => .error e
+      | .ambiguousOp _ => .error .empty
       | .hexConst _ => parsePostfixApplications ctx allowInfix n reserve (.atom head) rest
       | .boolConst _ => parsePostfixApplications ctx allowInfix n reserve (.atom head) rest
       | .varName _ => parsePostfixApplications ctx allowInfix n reserve (.atom head) rest
@@ -585,7 +616,8 @@ mutual
       | _, _, 0, _, _, _ => .error .fuelExhausted
       | _, _, _+1, _, _, [] => .error .empty
       | ctx, allowInfix, n+1, reserve, expected, head :: rest =>
-          match expected, head.atom with
+          let expectedHead := (expectedFunctionResolvedTok? expected head).getD head
+          match expected, expectedHead.atom with
           | .arr dom cod, .syntax .zhe =>
               match rest with
               | v :: rest' =>
@@ -597,25 +629,25 @@ mutual
                   | none => .error (expectedVariableErr head)
               | [] => .error (expectedVariableErr head)
           | _, _ =>
-          match exactExpectedStart? expected head with
+          match exactExpectedStart? expected expectedHead with
           | some (tok, args) =>
               match collectExactArgsExact ctx allowInfix n reserve (.atom tok) args rest with
               | .ok result => .ok result
               | .error _ =>
-                  match parseSurfaceExprAux ctx allowInfix n reserve (head :: rest) with
+                  match parseSurfaceExprAux ctx allowInfix n reserve (expectedHead :: rest) with
                   | .ok result =>
                       if surfaceExprMatchesTypeWithCtx ctx expected result.1 then
                         .ok result
                       else
-                        .error (expectedTypeErrWithCtx ctx expected head result.1)
+                        .error (expectedTypeErrWithCtx ctx expected expectedHead result.1)
                   | .error e => .error e
           | none =>
-              match parseSurfaceExprAux ctx allowInfix n reserve (head :: rest) with
+              match parseSurfaceExprAux ctx allowInfix n reserve (expectedHead :: rest) with
               | .ok result =>
                   if surfaceExprMatchesTypeWithCtx ctx expected result.1 then
                     .ok result
                   else
-                    .error (expectedTypeErrWithCtx ctx expected head result.1)
+                    .error (expectedTypeErrWithCtx ctx expected expectedHead result.1)
               | .error e => .error e
 
   def parsePostfixApplications : Ctx → Bool → Nat → Nat → SurfaceExpr → List ResolvedTok →
@@ -708,15 +740,33 @@ def parseSurfaceResolved (rs : List ResolvedTok) : Except ParseErr SurfaceExpr :
             .error (leftoverAtomsErr leftover)
       | .ok (_, leftover) => .error (leftoverAtomsErr leftover)
 
+def firstAmbiguousResolved? : List ResolvedTok → Option (GlyphTok × List OperatorReading)
+  | [] => none
+  | t :: rest =>
+      match t.atom with
+      | .ambiguousOp candidates => some (t.tok, candidates)
+      | _ => firstAmbiguousResolved? rest
+
+def parseSurfaceResolvedOrResolveErr (rs : List ResolvedTok)
+    : Except (ResolveErr ⊕ ParseErr) SurfaceExpr :=
+  match parseSurfaceResolved rs with
+  | .ok expr => .ok expr
+  | .error e =>
+      match firstAmbiguousResolved? rs with
+      | some (tok, candidates) =>
+          .error (.inl (.ambiguous tok.surface tok.startCol candidates))
+      | none => .error (.inr e)
+
 def parseSurface (s : String) : Except (LexErr ⊕ ResolveErr ⊕ ParseErr) SurfaceExpr :=
   match lexWen s with
   | .error e => .error (.inl e)
   | .ok toks =>
-      match resolveWithCues toks with
+      match resolveWithCuesAllowAmbiguous toks with
       | .error e => .error (.inr (.inl e))
       | .ok rs =>
-          match parseSurfaceResolved rs with
-          | .error e => .error (.inr (.inr e))
+          match parseSurfaceResolvedOrResolveErr rs with
+          | .error (.inl e) => .error (.inr (.inl e))
+          | .error (.inr e) => .error (.inr (.inr e))
           | .ok expr => .ok expr
 
 /-! ## § 4 Sanity -/
@@ -748,6 +798,9 @@ example : (parseSurface "一 同 一 同 一").toOption.isNone = true := by nati
 
 example : (parseSurface "而 推 損 一").toOption.isSome = true := by native_decide
 example : (parseSurface "而 損 推").toOption.isSome = true := by native_decide
+example : (parseSurface "而 反 推").toOption.isSome = true := by native_decide
+example : (parseSurface "而 推 反").toOption.isSome = true := by native_decide
+example : (parseSurface "再 反").toOption.isSome = true := by native_decide
 example : (parseSurface "推").toOption.isSome = true := by native_decide
 example : (parseSurface "不").toOption.isSome = true := by native_decide
 example : (parseSurface "同 乾").toOption.isSome = true := by native_decide
@@ -774,5 +827,15 @@ example :
     (match parseSurface "之" with
     | .error (.inr (.inr (.expectedExpression 1))) => true
     | _ => false) = true := by native_decide
+
+example :
+    (match parseSurface "反" with
+     | .error (.inr (.inl (.ambiguous "反" 0 candidates))) => candidates.length == 3
+     | _ => false) = true := by native_decide
+
+example :
+    (match parseSurface "或 乾" with
+     | .error (.inr (.inl (.ambiguous "或" 0 candidates))) => candidates.length == 2
+     | _ => false) = true := by native_decide
 
 end SSBX.Foundation.Wen.WenSurface
