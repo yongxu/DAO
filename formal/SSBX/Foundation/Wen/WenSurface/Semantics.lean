@@ -809,8 +809,7 @@ to count as exact WenDef semantics, even though it is still not a full domain
 model of the classical term.
 -/
 def exactTypedHelperOperatorIds : List OperatorId :=
-  [.S_1, .S_19,
-   .F_1, .F_2, .F_7, .F_8, .K_6, .K_7, .K_8, .L_7]
+  [.F_1, .F_2, .F_7, .F_8, .K_6, .K_7, .K_8, .L_7]
 
 /-- Application-mechanic rows whose exact denotation is just applying a supplied
 Hex endomap.  These close the operator-level application wrapper itself, while
@@ -818,7 +817,7 @@ still leaving path, command, instrument, and grammar uses in the domain-gap
 ledger.
 -/
 def exactApplicationMechanicStrongOperatorIds : List OperatorId :=
-  [.Z_29, .Z_32]
+  [.Z_29, .Z_32, .S_1, .S_19]
 
 /-- Truth-marker rows whose exact denotation is only Bool identity.
 
@@ -842,12 +841,34 @@ def exactCarrierMechanicStrongOperatorIds : List OperatorId :=
   [.R_12, .R_13, .R_14, .R_15, .C_2, .T_3, .T_11,
    .K_5, .I_7, .N_8, .D_4, .Z_16, .Z_17, .Z_18, .Z_19]
 
-/-- Theorem-backed identity/no-op rows where the note already claims the exact
-WenDef behavior is to preserve the Hex state.
+/-- Domain-neutral carrier rows where the note explicitly denies the tempting
+domain reading, leaving only the pair/list carrier operation.
+-/
+def exactDomainNeutralCarrierOperatorIds : List OperatorId :=
+  [.H_5, .P_11, .P_13, .P_22, .D_8, .CHU_9]
+
+/-- Theorem-backed identity/no-op rows whose exact WenDef behavior is just
+`Hex` identity.
+
+This closes the no-op mechanics only.  It does not claim richer domain models
+for stillness, balance, return, completion, or aspectual discourse.
 -/
 def exactIdentityNoopOperatorIds : List OperatorId :=
   [.R_6, .R_11, .T_7, .T_8, .B_4, .F_11, .I_2, .D_1, .P_9,
    .L_9, .L_10, .L_11, .Y_17, .Y_18, .ZA_2, .SUN_6, .Z_12, .Z_13]
+
+/-- Surface/slot/aspect projection anchors whose exact WenDef behavior is just
+`Hex` identity.
+
+These rows are exact as carrier-preserving projection particles.  The names do
+not assert temporal, spatial, binding, assertion, or nominalization laws.
+-/
+def exactSurfaceProjectionAnchorOperatorIds : List OperatorId :=
+  [.R_5, .C_4, .C_5, .C_6, .C_7, .C_8,
+   .B_1, .B_2, .B_7,
+   .A_1, .A_2, .A_3, .A_7, .A_8, .A_9, .A_10, .A_15,
+   .A_16, .A_17, .A_18, .A_19, .A_20,
+   .S_9, .S_10, .S_11, .S_12, .S_13, .S_14, .S_16, .S_17, .S_18]
 
 /-- Theorem-backed rows whose exact `WenDef.Tm` behavior is a carrier
 constructor: pair, duplicate facet, singleton/binary/ternary aggregate, or list head.
@@ -855,13 +876,12 @@ These rows remain exact structural helpers because their surface terms still
 need domain laws beyond the carrier mechanics.
 -/
 def exactCarrierConstructorOperatorIds : List OperatorId :=
-  [.H_5,
-   .P_3, .P_8, .P_11, .P_13, .P_22, .G_8, .G_9, .D_8,
+  [.P_3, .P_8, .G_8, .G_9,
    .H_8, .L_1, .L_2, .L_5, .L_6, .L_8, .L_13, .L_14, .Y_1, .Y_2, .Y_9,
    .L_16, .Y_16, .Y_19, .Y_21, .Y_22, .Y_28, .X_2, .X_4, .X_5, .X_6, .X_8, .X_9, .X_11, .X_12,
    .X_13, .X_14, .X_15, .X_16, .Z_7, .Z_20, .Z_21, .Z_25, .Z_28, .Z_30,
    .ZA_1, .ZA_4, .ZA_8, .ZA_9, .ZA_10, .ZA_12, .SUN_2, .SUN_9, .SUN_10, .SUN_11, .SUN_12, .SUN_13, .SUN_14, .CHU_1, .CHU_2, .CHU_3, .CHU_5,
-   .CHU_6, .CHU_7, .CHU_8, .CHU_9, .ZHU_2, .ZHU_3, .ZHU_4, .ZHU_5, .ZHU_6, .ZHU_7, .ZHU_8, .ZHU_11, .ZHU_12,
+   .CHU_6, .CHU_7, .CHU_8, .ZHU_2, .ZHU_3, .ZHU_4, .ZHU_5, .ZHU_6, .ZHU_7, .ZHU_8, .ZHU_11, .ZHU_12,
    .G_1, .G_7, .G_11, .E_2, .E_3, .X_7, .X_10, .LIJ_1, .LIJ_2, .LIJ_3, .LIJ_8, .LIJ_10, .LIJ_12, .LIJ_13, .LIJ_14]
 
 def exactProjectionAnchorOperatorIds : List OperatorId :=
@@ -870,6 +890,7 @@ def exactProjectionAnchorOperatorIds : List OperatorId :=
     | some sem =>
         decide (sem.body = Stdlib.hexIdBody)
           && !decide (id ∈ exactIdentityNoopOperatorIds)
+          && !decide (id ∈ exactSurfaceProjectionAnchorOperatorIds)
     | none => false)
 
 def exactPredicateAnchorOperatorIds : List OperatorId :=
@@ -880,10 +901,8 @@ def exactPredicateAnchorOperatorIds : List OperatorId :=
 
 def exactStructuralHelperOperatorIds : List OperatorId :=
   exactTypedHelperOperatorIds
-    ++ exactIdentityNoopOperatorIds
     ++ exactCarrierConstructorOperatorIds
     ++ exactProjectionAnchorOperatorIds
-    ++ exactPredicateAnchorOperatorIds
 
 /-- Exact `WenDef.Tm` bodies that are deliberately carrier/anchor semantics. -/
 def structuralCarrierKindForBody? (body : Tm) : Option StructuralCarrierKind :=
@@ -938,7 +957,15 @@ def operatorSemanticStrength (id : OperatorId) : SemanticStrength :=
   | some sem =>
       if decide (id ∈ exactCarrierMechanicStrongOperatorIds) then
         .exactTheoremBacked
+      else if decide (id ∈ exactDomainNeutralCarrierOperatorIds) then
+        .exactTheoremBacked
+      else if decide (id ∈ exactIdentityNoopOperatorIds) then
+        .exactTheoremBacked
+      else if decide (id ∈ exactSurfaceProjectionAnchorOperatorIds) then
+        .exactTheoremBacked
       else if decide (id ∈ exactApplicationMechanicStrongOperatorIds) then
+        .exactTheoremBacked
+      else if decide (id ∈ exactPredicateAnchorOperatorIds) then
         .exactTheoremBacked
       else if decide (id ∈ exactTruthMarkerOperatorIds) then
         .exactTheoremBacked
@@ -1105,16 +1132,28 @@ theorem catalogueNormalFormOperatorIds_length :
     catalogueNormalFormOperatorIds.length = 0 := by native_decide
 
 theorem exactStructuralHelperOperatorIds_length :
-    exactStructuralHelperOperatorIds.length = 228 := by native_decide
+    exactStructuralHelperOperatorIds.length = 162 := by native_decide
 
 theorem exactStructuralHelperOperatorIds_nodup :
     exactStructuralHelperOperatorIds.Nodup := by native_decide
 
+theorem exactIdentityNoopOperatorIds_length :
+    exactIdentityNoopOperatorIds.length = 18 := by native_decide
+
+theorem exactIdentityNoopOperatorIds_nodup :
+    exactIdentityNoopOperatorIds.Nodup := by native_decide
+
 theorem exactApplicationMechanicStrongOperatorIds_length :
-    exactApplicationMechanicStrongOperatorIds.length = 2 := by native_decide
+    exactApplicationMechanicStrongOperatorIds.length = 4 := by native_decide
 
 theorem exactApplicationMechanicStrongOperatorIds_nodup :
     exactApplicationMechanicStrongOperatorIds.Nodup := by native_decide
+
+theorem exactSurfaceProjectionAnchorOperatorIds_length :
+    exactSurfaceProjectionAnchorOperatorIds.length = 31 := by native_decide
+
+theorem exactSurfaceProjectionAnchorOperatorIds_nodup :
+    exactSurfaceProjectionAnchorOperatorIds.Nodup := by native_decide
 
 theorem exactTruthMarkerOperatorIds_length :
     exactTruthMarkerOperatorIds.length = 4 := by native_decide
@@ -1128,14 +1167,20 @@ theorem exactCarrierMechanicStrongOperatorIds_length :
 theorem exactCarrierMechanicStrongOperatorIds_nodup :
     exactCarrierMechanicStrongOperatorIds.Nodup := by native_decide
 
+theorem exactDomainNeutralCarrierOperatorIds_length :
+    exactDomainNeutralCarrierOperatorIds.length = 6 := by native_decide
+
+theorem exactDomainNeutralCarrierOperatorIds_nodup :
+    exactDomainNeutralCarrierOperatorIds.Nodup := by native_decide
+
 theorem exactCarrierConstructorOperatorIds_length :
-    exactCarrierConstructorOperatorIds.length = 89 := by native_decide
+    exactCarrierConstructorOperatorIds.length = 83 := by native_decide
 
 theorem exactCarrierConstructorOperatorIds_nodup :
     exactCarrierConstructorOperatorIds.Nodup := by native_decide
 
 theorem exactProjectionAnchorOperatorIds_length :
-    exactProjectionAnchorOperatorIds.length = 102 := by native_decide
+    exactProjectionAnchorOperatorIds.length = 71 := by native_decide
 
 theorem exactProjectionAnchorOperatorIds_nodup :
     exactProjectionAnchorOperatorIds.Nodup := by native_decide
@@ -1147,31 +1192,31 @@ theorem exactPredicateAnchorOperatorIds_nodup :
     exactPredicateAnchorOperatorIds.Nodup := by native_decide
 
 theorem exactTheoremBackedStrongOperatorIds_length :
-    exactTheoremBackedStrongOperatorIds.length = 143 := by native_decide
+    exactTheoremBackedStrongOperatorIds.length = 209 := by native_decide
 
 theorem exactStructuralHelperStrongOperatorIds_length :
-    exactStructuralHelperStrongOperatorIds.length = 228 := by native_decide
+    exactStructuralHelperStrongOperatorIds.length = 162 := by native_decide
 
 theorem structuralCarrierOperatorIds_length :
     structuralCarrierOperatorIds.length = 0 := by native_decide
 
 theorem domainGapOperatorIds_length :
-    domainGapOperatorIds.length = 228 := by native_decide
+    domainGapOperatorIds.length = 162 := by native_decide
 
 theorem domainGap_applicationHelperOnly_length :
-    (domainGapKindOperatorIds .applicationHelperOnly).length = 10 := by native_decide
+    (domainGapKindOperatorIds .applicationHelperOnly).length = 8 := by native_decide
 
 theorem domainGap_identityNoopOnly_length :
-    (domainGapKindOperatorIds .identityNoopOnly).length = 18 := by native_decide
+    (domainGapKindOperatorIds .identityNoopOnly).length = 0 := by native_decide
 
 theorem domainGap_projectionAnchorOnly_length :
-    (domainGapKindOperatorIds .projectionAnchorOnly).length = 102 := by native_decide
+    (domainGapKindOperatorIds .projectionAnchorOnly).length = 71 := by native_decide
 
 theorem domainGap_carrierConstructorOnly_length :
-    (domainGapKindOperatorIds .carrierConstructorOnly).length = 89 := by native_decide
+    (domainGapKindOperatorIds .carrierConstructorOnly).length = 83 := by native_decide
 
 theorem domainGap_predicateAnchorOnly_length :
-    (domainGapKindOperatorIds .predicateAnchorOnly).length = 9 := by native_decide
+    (domainGapKindOperatorIds .predicateAnchorOnly).length = 0 := by native_decide
 
 theorem domainGap_truthMarkerOnly_length :
     (domainGapKindOperatorIds .truthMarkerOnly).length = 0 := by native_decide
@@ -1180,22 +1225,22 @@ theorem domainGap_catalogueShapeOnly_length :
     (domainGapKindOperatorIds .catalogueShapeOnly).length = 0 := by native_decide
 
 theorem domainGapDetail_applicationMechanic_length :
-    (domainGapDetailKindOperatorIds .applicationMechanic).length = 10 := by native_decide
+    (domainGapDetailKindOperatorIds .applicationMechanic).length = 8 := by native_decide
 
 theorem domainGapDetail_identityNoop_length :
-    (domainGapDetailKindOperatorIds .identityNoop).length = 18 := by native_decide
+    (domainGapDetailKindOperatorIds .identityNoop).length = 0 := by native_decide
 
 theorem domainGapDetail_projectionModel_length :
-    (domainGapDetailKindOperatorIds .projectionModel).length = 102 := by native_decide
+    (domainGapDetailKindOperatorIds .projectionModel).length = 71 := by native_decide
 
 theorem domainGapDetail_pairCarrierLaw_length :
-    (domainGapDetailKindOperatorIds .pairCarrierLaw).length = 57 := by native_decide
+    (domainGapDetailKindOperatorIds .pairCarrierLaw).length = 52 := by native_decide
 
 theorem domainGapDetail_facetCarrierLaw_length :
     (domainGapDetailKindOperatorIds .facetCarrierLaw).length = 12 := by native_decide
 
 theorem domainGapDetail_singletonAggregateLaw_length :
-    (domainGapDetailKindOperatorIds .singletonAggregateLaw).length = 15 := by native_decide
+    (domainGapDetailKindOperatorIds .singletonAggregateLaw).length = 14 := by native_decide
 
 theorem domainGapDetail_binaryAggregateLaw_length :
     (domainGapDetailKindOperatorIds .binaryAggregateLaw).length = 1 := by native_decide
@@ -1207,7 +1252,7 @@ theorem domainGapDetail_listProjectionLaw_length :
     (domainGapDetailKindOperatorIds .listProjectionLaw).length = 0 := by native_decide
 
 theorem domainGapDetail_predicateModel_length :
-    (domainGapDetailKindOperatorIds .predicateModel).length = 9 := by native_decide
+    (domainGapDetailKindOperatorIds .predicateModel).length = 0 := by native_decide
 
 theorem domainGapDetail_truthMarkerModel_length :
     (domainGapDetailKindOperatorIds .truthMarkerModel).length = 0 := by native_decide
@@ -1321,6 +1366,28 @@ theorem exactApplicationMechanicStrongOperatorIds_all_no_domain_gap :
     exactApplicationMechanicStrongOperatorIds.all (fun id => (operatorDomainGapKind? id).isNone) = true := by
   native_decide
 
+theorem exactSurfaceProjectionAnchorOperatorIds_all_hex_id_body :
+    exactSurfaceProjectionAnchorOperatorIds.all
+      (fun id =>
+        match theoremBackedSemanticsFor? id with
+        | some sem => decide (sem.body = Stdlib.hexIdBody)
+        | none => false) = true := by
+  native_decide
+
+theorem exactSurfaceProjectionAnchorOperatorIds_all_projection_kind :
+    exactSurfaceProjectionAnchorOperatorIds.all
+      (fun id => decide (operatorStructuralCarrierKind? id = some .projectionAnchor)) = true := by
+  native_decide
+
+theorem exactSurfaceProjectionAnchorOperatorIds_all_exactTheoremBackedStrong :
+    exactSurfaceProjectionAnchorOperatorIds.all
+      (fun id => decide (operatorSemanticStrength id = .exactTheoremBacked)) = true := by
+  native_decide
+
+theorem exactSurfaceProjectionAnchorOperatorIds_all_no_domain_gap :
+    exactSurfaceProjectionAnchorOperatorIds.all (fun id => (operatorDomainGapKind? id).isNone) = true := by
+  native_decide
+
 theorem exactCarrierMechanicStrongOperatorIds_all_exactTheoremBackedStrong :
     exactCarrierMechanicStrongOperatorIds.all
       (fun id => decide (operatorSemanticStrength id = .exactTheoremBacked)) = true := by
@@ -1342,12 +1409,64 @@ theorem exactCarrierMechanicStrongOperatorIds_all_no_domain_gap :
     exactCarrierMechanicStrongOperatorIds.all (fun id => (operatorDomainGapKind? id).isNone) = true := by
   native_decide
 
+theorem exactDomainNeutralCarrierOperatorIds_all_carrier_kind :
+    exactDomainNeutralCarrierOperatorIds.all
+      (fun id =>
+        match operatorStructuralCarrierKind? id with
+        | some .pairCarrier => true
+        | some .singletonAggregateCarrier => true
+        | _ => false) = true := by
+  native_decide
+
+theorem exactDomainNeutralCarrierOperatorIds_all_exactTheoremBackedStrong :
+    exactDomainNeutralCarrierOperatorIds.all
+      (fun id => decide (operatorSemanticStrength id = .exactTheoremBacked)) = true := by
+  native_decide
+
+theorem exactDomainNeutralCarrierOperatorIds_all_no_domain_gap :
+    exactDomainNeutralCarrierOperatorIds.all (fun id => (operatorDomainGapKind? id).isNone) = true := by
+  native_decide
+
+theorem exactIdentityNoopOperatorIds_all_hex_id_body :
+    exactIdentityNoopOperatorIds.all
+      (fun id =>
+        match theoremBackedSemanticsFor? id with
+        | some sem => decide (sem.body = Stdlib.hexIdBody)
+        | none => false) = true := by
+  native_decide
+
+theorem exactIdentityNoopOperatorIds_all_exactTheoremBackedStrong :
+    exactIdentityNoopOperatorIds.all
+      (fun id => decide (operatorSemanticStrength id = .exactTheoremBacked)) = true := by
+  native_decide
+
+theorem exactIdentityNoopOperatorIds_all_no_domain_gap :
+    exactIdentityNoopOperatorIds.all (fun id => (operatorDomainGapKind? id).isNone) = true := by
+  native_decide
+
 theorem exactTruthMarkerOperatorIds_all_bool_identity_body :
     exactTruthMarkerOperatorIds.all
       (fun id =>
         match theoremBackedSemanticsFor? id with
         | some sem => decide (sem.body = Stdlib.boolMarkerBody)
         | none => false) = true := by
+  native_decide
+
+theorem exactPredicateAnchorOperatorIds_all_predicate_body :
+    exactPredicateAnchorOperatorIds.all
+      (fun id =>
+        match theoremBackedSemanticsFor? id with
+        | some sem => decide (sem.body = hexPredTrueBody)
+        | none => false) = true := by
+  native_decide
+
+theorem exactPredicateAnchorOperatorIds_all_exactTheoremBackedStrong :
+    exactPredicateAnchorOperatorIds.all
+      (fun id => decide (operatorSemanticStrength id = .exactTheoremBacked)) = true := by
+  native_decide
+
+theorem exactPredicateAnchorOperatorIds_all_no_domain_gap :
+    exactPredicateAnchorOperatorIds.all (fun id => (operatorDomainGapKind? id).isNone) = true := by
   native_decide
 
 theorem exactTruthMarkerOperatorIds_all_exactTheoremBackedStrong :
@@ -1398,7 +1517,7 @@ theorem operatorRegistryCoverage_summary :
       ∧ theoremBackedOperatorIds.length = 371
       ∧ structuralCatalogueOperatorIds.length = 0
       ∧ catalogueNormalFormOperatorIds.length = 0
-      ∧ domainGapOperatorIds.length = 228
+      ∧ domainGapOperatorIds.length = 162
       ∧ exactTheoremBackedStrongOperatorIds.length
         + exactStructuralHelperStrongOperatorIds.length
         + structuralCarrierOperatorIds.length
@@ -1425,40 +1544,45 @@ theorem operatorRegistryCoverage_summary :
 example : (executableSemanticsFor? .Z_5).isSome = true := by native_decide
 example : (theoremBackedSemanticsFor? .S_1).isSome = true := by native_decide
 example : (executableSemanticsFor? .S_1).isSome = true := by native_decide
-example : operatorSemanticStrength .S_1 = .exactStructuralHelper := by native_decide
+example : operatorSemanticStrength .S_1 = .exactTheoremBacked := by native_decide
 example : operatorSemanticStrength .S_4 = .exactTheoremBacked := by native_decide
 example : operatorSemanticStrength .Z_29 = .exactTheoremBacked := by native_decide
 example : operatorSemanticStrength .Z_32 = .exactTheoremBacked := by native_decide
 example : operatorSemanticStrength .K_6 = .exactStructuralHelper := by native_decide
-example : operatorSemanticStrength .Y_17 = .exactStructuralHelper := by native_decide
+example : operatorSemanticStrength .Y_17 = .exactTheoremBacked := by native_decide
 example : operatorSemanticStrength .R_12 = .exactTheoremBacked := by native_decide
 example : operatorSemanticStrength .D_4 = .exactTheoremBacked := by native_decide
 example : operatorSemanticStrength .Z_18 = .exactTheoremBacked := by native_decide
-example : operatorSemanticStrength .A_16 = .exactStructuralHelper := by native_decide
-example : operatorSemanticStrength .B_8 = .exactStructuralHelper := by native_decide
+example : operatorSemanticStrength .A_16 = .exactTheoremBacked := by native_decide
+example : operatorSemanticStrength .B_8 = .exactTheoremBacked := by native_decide
+example : operatorSemanticStrength .H_5 = .exactTheoremBacked := by native_decide
 example : operatorSemanticStrength .E_2 = .exactStructuralHelper := by native_decide
 example : operatorSemanticStrength .X_16 = .exactStructuralHelper := by native_decide
 example : operatorStructuralCarrierKind? .S_1 = some .applicationCarrier := by native_decide
 example : operatorStructuralCarrierKind? .R_12 = some .pairCarrier := by native_decide
 example : operatorStructuralCarrierKind? .E_2 = some .pairCarrier := by native_decide
 example : operatorStructuralCarrierKind? .X_16 = some .ternaryAggregateCarrier := by native_decide
-example : operatorDomainGapKind? .S_1 = some .applicationHelperOnly := by native_decide
+example : operatorDomainGapKind? .S_1 = none := by native_decide
 example : operatorDomainGapKind? .S_4 = none := by native_decide
 example : operatorDomainGapKind? .Z_29 = none := by native_decide
 example : operatorDomainGapKind? .Z_32 = none := by native_decide
 example : operatorDomainGapKind? .R_12 = none := by native_decide
 example : operatorDomainGapKind? .D_4 = none := by native_decide
 example : operatorDomainGapKind? .Z_18 = none := by native_decide
+example : operatorDomainGapKind? .B_8 = none := by native_decide
+example : operatorDomainGapKind? .H_5 = none := by native_decide
 example : operatorDomainGapKind? .E_2 = some .carrierConstructorOnly := by native_decide
 example : operatorDomainGapKind? .X_16 = some .carrierConstructorOnly := by native_decide
 example : operatorDomainGapKind? .I_1 = none := by native_decide
-example : operatorDomainGapDetailKind? .S_1 = some .applicationMechanic := by native_decide
+example : operatorDomainGapDetailKind? .S_1 = none := by native_decide
 example : operatorDomainGapDetailKind? .S_4 = none := by native_decide
 example : operatorDomainGapDetailKind? .Z_29 = none := by native_decide
 example : operatorDomainGapDetailKind? .Z_32 = none := by native_decide
 example : operatorDomainGapDetailKind? .R_12 = none := by native_decide
 example : operatorDomainGapDetailKind? .D_4 = none := by native_decide
 example : operatorDomainGapDetailKind? .Z_18 = none := by native_decide
+example : operatorDomainGapDetailKind? .B_8 = none := by native_decide
+example : operatorDomainGapDetailKind? .H_5 = none := by native_decide
 example : operatorDomainGapDetailKind? .E_2 = some .pairCarrierLaw := by native_decide
 example : operatorDomainGapDetailKind? .X_16 = some .ternaryAggregateLaw := by native_decide
 example : operatorDomainGapDetailKind? .I_1 = none := by native_decide
