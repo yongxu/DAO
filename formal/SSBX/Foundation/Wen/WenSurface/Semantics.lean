@@ -601,8 +601,21 @@ def exactIdentityNoopOperatorIds : List OperatorId :=
   [.R_6, .R_11, .T_7, .T_8, .B_4, .F_11, .I_2, .D_1, .P_9,
    .L_9, .L_10, .L_11, .Y_17, .Y_18, .ZA_2, .SUN_6, .Z_12, .Z_13]
 
+/-- Theorem-backed rows whose exact `WenDef.Tm` behavior is a carrier
+constructor: pair, duplicate facet, singleton/binary aggregate, or list head.
+These are exact as carrier mechanics, not as full domain semantics.
+-/
+def exactCarrierConstructorOperatorIds : List OperatorId :=
+  [.R_12, .R_13, .R_14, .R_15, .C_2, .T_3, .T_11, .H_5,
+   .P_3, .P_11, .P_13, .P_22, .G_8, .G_9, .D_4, .D_8,
+   .H_8, .L_5, .L_6, .L_13, .L_14, .Y_1, .Y_2, .Y_9,
+   .Y_21, .Y_22, .X_4, .X_5, .X_6, .X_8, .X_9, .X_12,
+   .X_14, .Z_7, .Z_16, .Z_17, .Z_18, .Z_19, .Z_21, .Z_30,
+   .ZA_4, .ZA_9, .ZA_12, .SUN_2, .SUN_12, .SUN_14, .CHU_5,
+   .CHU_9, .ZHU_5, .K_5, .I_7, .N_8]
+
 def exactStructuralHelperOperatorIds : List OperatorId :=
-  exactTypedHelperOperatorIds ++ exactIdentityNoopOperatorIds
+  exactTypedHelperOperatorIds ++ exactIdentityNoopOperatorIds ++ exactCarrierConstructorOperatorIds
 
 /-- Exact `WenDef.Tm` bodies that are deliberately carrier/anchor semantics. -/
 def structuralCarrierKindForBody? (body : Tm) : Option StructuralCarrierKind :=
@@ -758,19 +771,25 @@ theorem catalogueNormalFormOperatorIds_length :
     catalogueNormalFormOperatorIds.length = 54 := by native_decide
 
 theorem exactStructuralHelperOperatorIds_length :
-    exactStructuralHelperOperatorIds.length = 34 := by native_decide
+    exactStructuralHelperOperatorIds.length = 86 := by native_decide
 
 theorem exactStructuralHelperOperatorIds_nodup :
     exactStructuralHelperOperatorIds.Nodup := by native_decide
+
+theorem exactCarrierConstructorOperatorIds_length :
+    exactCarrierConstructorOperatorIds.length = 52 := by native_decide
+
+theorem exactCarrierConstructorOperatorIds_nodup :
+    exactCarrierConstructorOperatorIds.Nodup := by native_decide
 
 theorem exactTheoremBackedStrongOperatorIds_length :
     exactTheoremBackedStrongOperatorIds.length = 120 := by native_decide
 
 theorem exactStructuralHelperStrongOperatorIds_length :
-    exactStructuralHelperStrongOperatorIds.length = 34 := by native_decide
+    exactStructuralHelperStrongOperatorIds.length = 86 := by native_decide
 
 theorem structuralCarrierOperatorIds_length :
-    structuralCarrierOperatorIds.length = 163 := by native_decide
+    structuralCarrierOperatorIds.length = 111 := by native_decide
 
 theorem semanticStrengthPartition_counts :
     exactTheoremBackedStrongOperatorIds.length
@@ -840,6 +859,9 @@ example : operatorSemanticStrength .S_1 = .exactStructuralHelper := by native_de
 example : operatorSemanticStrength .S_4 = .exactStructuralHelper := by native_decide
 example : operatorSemanticStrength .K_6 = .exactStructuralHelper := by native_decide
 example : operatorSemanticStrength .Y_17 = .exactStructuralHelper := by native_decide
+example : operatorSemanticStrength .R_12 = .exactStructuralHelper := by native_decide
+example : operatorSemanticStrength .D_4 = .exactStructuralHelper := by native_decide
+example : operatorSemanticStrength .Z_18 = .exactStructuralHelper := by native_decide
 example : operatorSemanticStrength .A_16 = .structuralCarrier := by native_decide
 example : operatorStructuralCarrierKind? .S_1 = some .applicationCarrier := by native_decide
 example : operatorStructuralCarrierKind? .R_12 = some .pairCarrier := by native_decide

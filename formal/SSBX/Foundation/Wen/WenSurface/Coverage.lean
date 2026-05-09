@@ -67,8 +67,8 @@ theorem wenSurface_operator_catalogue_counts :
       ∧ executableRegistryEntries.length = 371
       ∧ theoremBackedOperatorIds.length = 317
       ∧ exactTheoremBackedStrongOperatorIds.length = 120
-      ∧ exactStructuralHelperStrongOperatorIds.length = 34
-      ∧ structuralCarrierOperatorIds.length = 163
+      ∧ exactStructuralHelperStrongOperatorIds.length = 86
+      ∧ structuralCarrierOperatorIds.length = 111
       ∧ catalogueNormalFormOperatorIds.length = 54
       ∧ allOperatorIds.all (fun id => !(operatorForms id).isEmpty) = true := by
   exact
@@ -110,8 +110,8 @@ theorem wenSurface_registry_summary :
       ∧ executableRegistryEntries.length = 371
       ∧ theoremBackedOperatorIds.length = 317
       ∧ exactTheoremBackedStrongOperatorIds.length = 120
-      ∧ exactStructuralHelperStrongOperatorIds.length = 34
-      ∧ structuralCarrierOperatorIds.length = 163
+      ∧ exactStructuralHelperStrongOperatorIds.length = 86
+      ∧ structuralCarrierOperatorIds.length = 111
       ∧ catalogueNormalFormOperatorIds.length = 54
       ∧ allOperatorIds.all (fun id => !(operatorForms id).isEmpty) = true
       ∧ executableOperatorIds.all isCatalogueOperator = true
