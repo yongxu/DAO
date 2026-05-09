@@ -14,6 +14,8 @@ namespace SSBX.Foundation.Wen.WenSurface
 open SSBX.Foundation.Wen.WenDef
 open SSBX.Foundation.Wen.WenDefEval
 open SSBX.Foundation.Yi.Yi
+open SSBX.Foundation.Yi.YiCore
+open SSBX.Foundation.Bagua.BaguaAlgebra
 open SSBX.Text.WenyanOperators
 
 /-! ## Domain-law kinds -/
@@ -30,6 +32,19 @@ inductive DomainLawKind where
   | namingMeasureRelation
   | protocolRelation
   | zhuangziRelation
+  | exactHexTransform
+  | boolRelationPredicate
+  | hexEqualityLaw
+  | hexDisequalityLaw
+  | boolNegationLaw
+  | boolImplicationLaw
+  | boolConjunctionLaw
+  | boolDiscriminationLaw
+  | finiteQuantifierLaw
+  | finiteModalPredicateLaw
+  | contextPredicateApplicationLaw
+  | endomapControlLaw
+  | focusUniqueQuantifierLaw
   | identityNoopLaw
   | applicationWrapperLaw
   | predicateAnchorLaw
@@ -57,6 +72,19 @@ def key : DomainLawKind → String
   | .namingMeasureRelation => "naming-measure-relation"
   | .protocolRelation => "protocol-relation"
   | .zhuangziRelation => "zhuangzi-relation"
+  | .exactHexTransform => "exact-hex-transform"
+  | .boolRelationPredicate => "bool-relation-predicate"
+  | .hexEqualityLaw => "hex-equality-law"
+  | .hexDisequalityLaw => "hex-disequality-law"
+  | .boolNegationLaw => "bool-negation-law"
+  | .boolImplicationLaw => "bool-implication-law"
+  | .boolConjunctionLaw => "bool-conjunction-law"
+  | .boolDiscriminationLaw => "bool-discrimination-law"
+  | .finiteQuantifierLaw => "finite-quantifier-law"
+  | .finiteModalPredicateLaw => "finite-modal-predicate-law"
+  | .contextPredicateApplicationLaw => "context-predicate-application-law"
+  | .endomapControlLaw => "endomap-control-law"
+  | .focusUniqueQuantifierLaw => "focus-unique-quantifier-law"
   | .identityNoopLaw => "identity-noop-law"
   | .applicationWrapperLaw => "application-wrapper-law"
   | .predicateAnchorLaw => "predicate-anchor-law"
@@ -81,6 +109,19 @@ def label : DomainLawKind → String
   | .namingMeasureRelation => "naming/measure relation"
   | .protocolRelation => "protocol relation"
   | .zhuangziRelation => "Zhuangzi relation"
+  | .exactHexTransform => "exact Hex transform"
+  | .boolRelationPredicate => "Bool relation/predicate"
+  | .hexEqualityLaw => "Hex equality law"
+  | .hexDisequalityLaw => "Hex disequality law"
+  | .boolNegationLaw => "Bool negation law"
+  | .boolImplicationLaw => "Bool implication law"
+  | .boolConjunctionLaw => "Bool conjunction law"
+  | .boolDiscriminationLaw => "Bool discrimination law"
+  | .finiteQuantifierLaw => "finite quantifier law"
+  | .finiteModalPredicateLaw => "finite modal predicate law"
+  | .contextPredicateApplicationLaw => "context predicate application law"
+  | .endomapControlLaw => "Hex endomap control law"
+  | .focusUniqueQuantifierLaw => "focus/unique quantifier law"
   | .identityNoopLaw => "identity/no-op law"
   | .applicationWrapperLaw => "application wrapper law"
   | .predicateAnchorLaw => "predicate anchor law"
@@ -116,6 +157,32 @@ def note : DomainLawKind → String
       "domain law: protocol rows denote ordered Hex pair relations for institutional roles"
   | .zhuangziRelation =>
       "domain law: Zhuangzi rows denote ordered Hex pair relations without reducing their doctrine"
+  | .exactHexTransform =>
+      "domain law: exact unary Hex transform rows denote their registered finite Hex transform"
+  | .boolRelationPredicate =>
+      "domain law: relation/predicate rows denote the exact Bool relation package"
+  | .hexEqualityLaw =>
+      "domain law: equality rows denote exact Hex equality"
+  | .hexDisequalityLaw =>
+      "domain law: disequality rows denote exact Hex disequality"
+  | .boolNegationLaw =>
+      "domain law: negation rows denote exact Bool negation"
+  | .boolImplicationLaw =>
+      "domain law: implication rows denote exact truth-functional implication"
+  | .boolConjunctionLaw =>
+      "domain law: conjunction rows denote exact truth-functional conjunction"
+  | .boolDiscriminationLaw =>
+      "domain law: discrimination rows denote exact truth-functional exclusive-or"
+  | .finiteQuantifierLaw =>
+      "domain law: quantifier rows denote exact finite Hex predicate quantifiers"
+  | .finiteModalPredicateLaw =>
+      "domain law: non-edge modal predicate rows denote exact finite Hex predicate quantifiers"
+  | .contextPredicateApplicationLaw =>
+      "domain law: context rows denote exact Hex predicate application, not full binder grammar"
+  | .endomapControlLaw =>
+      "domain law: control rows denote exact Hex endomap composition/repetition"
+  | .focusUniqueQuantifierLaw =>
+      "domain law: focus row denotes exact finite unique-existence over Hex predicates"
   | .identityNoopLaw =>
       "domain law: identity/no-op rows preserve the Hex carrier exactly"
   | .applicationWrapperLaw =>
@@ -153,6 +220,19 @@ def allDomainLawKinds : List DomainLawKind :=
   , .namingMeasureRelation
   , .protocolRelation
   , .zhuangziRelation
+  , .exactHexTransform
+  , .boolRelationPredicate
+  , .hexEqualityLaw
+  , .hexDisequalityLaw
+  , .boolNegationLaw
+  , .boolImplicationLaw
+  , .boolConjunctionLaw
+  , .boolDiscriminationLaw
+  , .finiteQuantifierLaw
+  , .finiteModalPredicateLaw
+  , .contextPredicateApplicationLaw
+  , .endomapControlLaw
+  , .focusUniqueQuantifierLaw
   , .identityNoopLaw
   , .applicationWrapperLaw
   , .predicateAnchorLaw
@@ -557,6 +637,355 @@ theorem zhuangziRelation_denotes_pair (id : OperatorId) (left right : Hexagram) 
       some (zhuangziRelation id left right) :=
   pairHBody_eq_pair left right
 
+/-! ## Exact Hex transform laws -/
+
+def hexIncrementTransformOperatorIds : List OperatorId :=
+  [.T_10, .T_15, .B_3, .Y_3, .Z_9, .F_3, .F_5, .F_9, .F_10, .Z_11, .Z_36]
+
+def hexBenefitIncrementTransformOperatorIds : List OperatorId :=
+  [.T_13]
+
+def hexDecrementTransformOperatorIds : List OperatorId :=
+  [.T_12, .T_14, .Y_4, .Y_5, .Z_8, .Z_22, .F_4, .F_6, .Z_10, .Z_37]
+
+def hexCuoTransformOperatorIds : List OperatorId :=
+  [.T_4, .Z_5, .Z_31]
+
+def hexFanReverseTransformOperatorIds : List OperatorId :=
+  [.T_6]
+
+def hexZongTransformOperatorIds : List OperatorId :=
+  [.T_9, .Z_6]
+
+def hexHuTransformOperatorIds : List OperatorId :=
+  [.I_6, .Z_2, .Z_3]
+
+def hexCuoZongTransformOperatorIds : List OperatorId :=
+  [.I_8, .Z_33]
+
+def hexFlip1TransformOperatorIds : List OperatorId :=
+  [.T_5]
+
+def hexFlip2TransformOperatorIds : List OperatorId :=
+  [.T_1]
+
+def hexFlip3TransformOperatorIds : List OperatorId :=
+  [.T_2]
+
+def exactHexTransformOperatorIds : List OperatorId :=
+  hexIncrementTransformOperatorIds
+    ++ hexBenefitIncrementTransformOperatorIds
+    ++ hexDecrementTransformOperatorIds
+    ++ hexCuoTransformOperatorIds
+    ++ hexFanReverseTransformOperatorIds
+    ++ hexZongTransformOperatorIds
+    ++ hexHuTransformOperatorIds
+    ++ hexCuoZongTransformOperatorIds
+    ++ hexFlip1TransformOperatorIds
+    ++ hexFlip2TransformOperatorIds
+    ++ hexFlip3TransformOperatorIds
+
+def hexIncrementTransform (_id : OperatorId) (h : Hexagram) : Hexagram := «生» h
+
+theorem hexIncrementTransform_denotes_tui (id : OperatorId) (h : Hexagram) :
+    denoteHexFun Stdlib.tuiBody h = some (hexIncrementTransform id h) := by
+  unfold hexIncrementTransform
+  exact tui_eq_sheng h
+
+def hexBenefitIncrementTransform (_id : OperatorId) (h : Hexagram) : Hexagram := «生» h
+
+theorem hexBenefitIncrementTransform_denotes_yiBenefit (id : OperatorId) (h : Hexagram) :
+    denoteHexFun Stdlib.yiBenefitBody h = some (hexBenefitIncrementTransform id h) := by
+  unfold hexBenefitIncrementTransform
+  exact yiBenefit_eq_sheng h
+
+def hexDecrementTransform (_id : OperatorId) (h : Hexagram) : Hexagram :=
+  «加» Hexagram.kun h
+
+theorem hexDecrementTransform_denotes_sun (id : OperatorId) (h : Hexagram) :
+    denoteHexFun Stdlib.sunBody h = some (hexDecrementTransform id h) := by
+  unfold hexDecrementTransform
+  exact sun_eq_decrement h
+
+def hexCuoTransform (_id : OperatorId) (h : Hexagram) : Hexagram := h.cuo
+
+theorem hexCuoTransform_denotes_cuo (id : OperatorId) (h : Hexagram) :
+    denoteHexFun Stdlib.cuoBody h = some (hexCuoTransform id h) := by
+  unfold hexCuoTransform
+  exact cuoBody_eq_cuo h
+
+def hexFanReverseTransform (_id : OperatorId) (h : Hexagram) : Hexagram := h.cuo
+
+theorem hexFanReverseTransform_denotes_cuo (id : OperatorId) (h : Hexagram) :
+    denoteHexFun Stdlib.fanReverseBody h = some (hexFanReverseTransform id h) := by
+  unfold hexFanReverseTransform
+  exact fanReverseBody_eq_cuo h
+
+def hexZongTransform (_id : OperatorId) (h : Hexagram) : Hexagram := h.zong
+
+theorem hexZongTransform_denotes_zong (id : OperatorId) (h : Hexagram) :
+    denoteHexFun Stdlib.zongBody h = some (hexZongTransform id h) := by
+  unfold hexZongTransform
+  exact zongBody_eq_zong h
+
+def hexHuTransform (_id : OperatorId) (h : Hexagram) : Hexagram := h.hu
+
+theorem hexHuTransform_denotes_hu (id : OperatorId) (h : Hexagram) :
+    denoteHexFun Stdlib.huBody h = some (hexHuTransform id h) := by
+  unfold hexHuTransform
+  exact huBody_eq_hu h
+
+def hexCuoZongTransform (_id : OperatorId) (h : Hexagram) : Hexagram := h.cuoZong
+
+theorem hexCuoZongTransform_denotes_cuoZong (id : OperatorId) (h : Hexagram) :
+    denoteHexFun Stdlib.cuoZongBody h = some (hexCuoZongTransform id h) := by
+  unfold hexCuoZongTransform
+  exact cuoZongBody_eq_cuoZong h
+
+def hexFlip1Transform (_id : OperatorId) (h : Hexagram) : Hexagram := dongInner h
+
+theorem hexFlip1Transform_denotes_flip1 (id : OperatorId) (h : Hexagram) :
+    denoteHexFun Stdlib.flip1Body h = some (hexFlip1Transform id h) := by
+  unfold hexFlip1Transform
+  exact flip1Body_eq_dongInner h
+
+def hexFlip2Transform (_id : OperatorId) (h : Hexagram) : Hexagram := huaInner h
+
+theorem hexFlip2Transform_denotes_flip2 (id : OperatorId) (h : Hexagram) :
+    denoteHexFun Stdlib.flip2Body h = some (hexFlip2Transform id h) := by
+  unfold hexFlip2Transform
+  exact flip2Body_eq_huaInner h
+
+def hexFlip3Transform (_id : OperatorId) (h : Hexagram) : Hexagram := bianInner h
+
+theorem hexFlip3Transform_denotes_flip3 (id : OperatorId) (h : Hexagram) :
+    denoteHexFun Stdlib.flip3Body h = some (hexFlip3Transform id h) := by
+  unfold hexFlip3Transform
+  exact flip3Body_eq_bianInner h
+
+/-! ## Exact Bool relation and connective laws -/
+
+def boolRelationPredicateOperatorIds : List OperatorId :=
+  [.R_1, .R_2, .R_3, .R_4, .R_7, .R_9, .R_10,
+   .C_1, .C_3, .F_12, .K_2, .K_3, .K_4, .I_9,
+   .P_1, .P_14, .P_15, .P_16, .P_17, .P_20,
+   .G_10, .L_4, .Y_20, .Z_4, .Z_14, .Z_15, .Z_40,
+   .ZHU_1, .CHU_10, .LIJ_6, .LIJ_9,
+   .ZA_15, .ZA_16, .ZA_17, .ZA_18, .ZA_19, .ZA_20]
+
+def hexEqualityLawOperatorIds : List OperatorId :=
+  [.R_8, .I_1, .I_3, .I_4, .I_5, .P_4]
+
+def hexDisequalityLawOperatorIds : List OperatorId :=
+  [.N_2, .N_7, .P_5]
+
+def boolNegationLawOperatorIds : List OperatorId :=
+  [.N_1, .N_3, .N_4, .N_5, .N_6]
+
+def boolImplicationLawOperatorIds : List OperatorId :=
+  [.K_1, .S_3, .S_7, .A_4, .Z_1]
+
+def boolConjunctionLawOperatorIds : List OperatorId :=
+  [.A_11, .A_12, .A_13]
+
+def boolDiscriminationLawOperatorIds : List OperatorId :=
+  [.P_23]
+
+def boolRelationPredicate (_id : OperatorId) (a b : Hexagram) : Bool :=
+  decide (a = b)
+
+theorem boolRelationPredicate_denotes_eqHex (id : OperatorId) (a b : Hexagram) :
+    denoteHexRel Stdlib.tongBody a b = some (boolRelationPredicate id a b) := by
+  unfold boolRelationPredicate
+  cases a with
+  | mk a1 a2 a3 a4 a5 a6 =>
+    cases b with
+    | mk b1 b2 b3 b4 b5 b6 =>
+      cases a1 <;> cases a2 <;> cases a3 <;> cases a4 <;> cases a5 <;> cases a6 <;>
+      cases b1 <;> cases b2 <;> cases b3 <;> cases b4 <;> cases b5 <;> cases b6 <;>
+      native_decide
+
+def hexEqualityLaw (_id : OperatorId) (a b : Hexagram) : Bool :=
+  decide (a = b)
+
+theorem hexEqualityLaw_denotes_tong (id : OperatorId) (a b : Hexagram) :
+    denoteHexRel Stdlib.tongBody a b = some (hexEqualityLaw id a b) := by
+  unfold hexEqualityLaw
+  cases a with
+  | mk a1 a2 a3 a4 a5 a6 =>
+    cases b with
+    | mk b1 b2 b3 b4 b5 b6 =>
+      cases a1 <;> cases a2 <;> cases a3 <;> cases a4 <;> cases a5 <;> cases a6 <;>
+      cases b1 <;> cases b2 <;> cases b3 <;> cases b4 <;> cases b5 <;> cases b6 <;>
+      native_decide
+
+theorem hexEqualityLaw_denotes_bi (id : OperatorId) (a b : Hexagram) :
+    denoteHexRel Stdlib.biBody a b = some (hexEqualityLaw id a b) := by
+  unfold hexEqualityLaw
+  cases a with
+  | mk a1 a2 a3 a4 a5 a6 =>
+    cases b with
+    | mk b1 b2 b3 b4 b5 b6 =>
+      cases a1 <;> cases a2 <;> cases a3 <;> cases a4 <;> cases a5 <;> cases a6 <;>
+      cases b1 <;> cases b2 <;> cases b3 <;> cases b4 <;> cases b5 <;> cases b6 <;>
+      native_decide
+
+def hexDisequalityLaw (_id : OperatorId) (a b : Hexagram) : Bool :=
+  decide (a ≠ b)
+
+theorem hexDisequalityLaw_denotes_neq (id : OperatorId) (a b : Hexagram) :
+    denoteHexRel Stdlib.neqHexBody a b = some (hexDisequalityLaw id a b) := by
+  unfold hexDisequalityLaw
+  cases a with
+  | mk a1 a2 a3 a4 a5 a6 =>
+    cases b with
+    | mk b1 b2 b3 b4 b5 b6 =>
+      cases a1 <;> cases a2 <;> cases a3 <;> cases a4 <;> cases a5 <;> cases a6 <;>
+      cases b1 <;> cases b2 <;> cases b3 <;> cases b4 <;> cases b5 <;> cases b6 <;>
+      native_decide
+
+def boolNegationLaw (_id : OperatorId) (b : Bool) : Bool := !b
+
+theorem boolNegationLaw_denotes_not (id : OperatorId) (b : Bool) :
+    denoteBool (.app Stdlib.buBody (.boolLit b)) = some (boolNegationLaw id b) := by
+  unfold boolNegationLaw
+  cases b <;> native_decide
+
+def boolImplicationLaw (_id : OperatorId) (p q : Bool) : Bool := (!p) || q
+
+theorem boolImplicationLaw_denotes_imp (id : OperatorId) (p q : Bool) :
+    denoteBool (.app (.app Stdlib.impBody (.boolLit p)) (.boolLit q)) =
+      some (boolImplicationLaw id p q) := by
+  unfold boolImplicationLaw
+  cases p <;> cases q <;> native_decide
+
+def boolConjunctionLaw (_id : OperatorId) (p q : Bool) : Bool := p && q
+
+theorem boolConjunctionLaw_denotes_and (id : OperatorId) (p q : Bool) :
+    denoteBool (.app (.app .andB (.boolLit p)) (.boolLit q)) =
+      some (boolConjunctionLaw id p q) := by
+  unfold boolConjunctionLaw
+  cases p <;> cases q <;> native_decide
+
+def boolDiscriminationLaw (_id : OperatorId) (p q : Bool) : Bool :=
+  (p && !q) || (!p && q)
+
+theorem boolDiscriminationLaw_denotes_xor (id : OperatorId) (p q : Bool) :
+    denoteBool (.app (.app Stdlib.xorBBody (.boolLit p)) (.boolLit q)) =
+      some (boolDiscriminationLaw id p q) := by
+  unfold boolDiscriminationLaw
+  cases p <;> cases q <;> native_decide
+
+/-! ## Finite quantifier and endomap-control laws -/
+
+def finiteQuantifierLawOperatorIds : List OperatorId :=
+  [.Q_1, .Q_2, .Q_4, .Q_5, .Q_6, .Q_7, .Q_8, .D_3, .D_9, .D_10]
+
+def finiteModalPredicateLawOperatorIds : List OperatorId :=
+  [.M_1, .M_2]
+
+def contextPredicateApplicationLawOperatorIds : List OperatorId :=
+  [.S_15, .S_20]
+
+def endomapControlLawOperatorIds : List OperatorId :=
+  [.S_2, .A_5, .A_6, .D_2]
+
+def focusUniqueQuantifierLawOperatorIds : List OperatorId :=
+  [.A_14]
+
+def finiteQuantifierLawBodyFor? : OperatorId → Option Tm
+  | .Q_1 => some Stdlib.fanBody
+  | .Q_2 => some Stdlib.fanBody
+  | .Q_4 => some Stdlib.noneHBody
+  | .Q_5 => some Stdlib.existsHBody
+  | .Q_6 => some Stdlib.existsHBody
+  | .Q_7 => some Stdlib.noneHBody
+  | .Q_8 => some Stdlib.uniqueHBody
+  | .D_3 => some Stdlib.exactly3HBody
+  | .D_9 => some Stdlib.fanBody
+  | .D_10 => some Stdlib.majorityHBody
+  | _ => none
+
+def finiteModalPredicateLawBodyFor? : OperatorId → Option Tm
+  | .M_1 => some Stdlib.biModalBody
+  | .M_2 => some Stdlib.existsHBody
+  | _ => none
+
+def contextPredicateApplicationLawBodyFor? : OperatorId → Option Tm
+  | .S_15 => some Stdlib.hexPredApplyBody
+  | .S_20 => some Stdlib.hexPredApplyBody
+  | _ => none
+
+def endomapControlLawBodyFor? : OperatorId → Option Tm
+  | .S_2 => some Stdlib.endoCompBody
+  | .A_5 => some Stdlib.repeatOnceBody
+  | .A_6 => some Stdlib.repeatOnceBody
+  | .D_2 => some Stdlib.repeatOnceBody
+  | _ => none
+
+def focusUniqueQuantifierLawBodyFor? : OperatorId → Option Tm
+  | .A_14 => some Stdlib.uniqueHBody
+  | _ => none
+
+def finiteHexPredicateQuantifierTy : Ty :=
+  .arr (.arr .hex .bool) .bool
+
+def hexPredicateApplicationTy : Ty :=
+  .arr (.arr .hex .bool) (.arr .hex .bool)
+
+def hexEndomapTy : Ty :=
+  .arr .hex .hex
+
+def hexEndomapRepeatTy : Ty :=
+  .arr hexEndomapTy hexEndomapTy
+
+def hexEndomapCompositionTy : Ty :=
+  .arr hexEndomapTy (.arr hexEndomapTy hexEndomapTy)
+
+theorem finiteQuantifierLawBodies_typed :
+    finiteQuantifierLawOperatorIds.all
+      (fun id =>
+        match finiteQuantifierLawBodyFor? id with
+        | some body => decide (typeCheck [] body = some finiteHexPredicateQuantifierTy)
+        | none => false) = true := by
+  native_decide
+
+theorem finiteModalPredicateLawBodies_typed :
+    finiteModalPredicateLawOperatorIds.all
+      (fun id =>
+        match finiteModalPredicateLawBodyFor? id with
+        | some body => decide (typeCheck [] body = some finiteHexPredicateQuantifierTy)
+        | none => false) = true := by
+  native_decide
+
+theorem contextPredicateApplicationLawBodies_typed :
+    contextPredicateApplicationLawOperatorIds.all
+      (fun id =>
+        match contextPredicateApplicationLawBodyFor? id with
+        | some body => decide (typeCheck [] body = some hexPredicateApplicationTy)
+        | none => false) = true := by
+  native_decide
+
+theorem endomapControlLawBodies_typed :
+    endomapControlLawOperatorIds.all
+      (fun id =>
+        match endomapControlLawBodyFor? id with
+        | some body =>
+            if decide (id = .S_2) then
+              decide (typeCheck [] body = some hexEndomapCompositionTy)
+            else
+              decide (typeCheck [] body = some hexEndomapRepeatTy)
+        | none => false) = true := by
+  native_decide
+
+theorem focusUniqueQuantifierLawBodies_typed :
+    focusUniqueQuantifierLawOperatorIds.all
+      (fun id =>
+        match focusUniqueQuantifierLawBodyFor? id with
+        | some body => decide (typeCheck [] body = some finiteHexPredicateQuantifierTy)
+        | none => false) = true := by
+  native_decide
+
 /-! ## Remaining narrow carrier laws -/
 
 def identityNoopLawOperatorIds : List OperatorId :=
@@ -679,6 +1108,19 @@ def domainLawKindOperatorIds : DomainLawKind → List OperatorId
   | .namingMeasureRelation => namingMeasureRelationOperatorIds
   | .protocolRelation => protocolRelationOperatorIds
   | .zhuangziRelation => zhuangziRelationOperatorIds
+  | .exactHexTransform => exactHexTransformOperatorIds
+  | .boolRelationPredicate => boolRelationPredicateOperatorIds
+  | .hexEqualityLaw => hexEqualityLawOperatorIds
+  | .hexDisequalityLaw => hexDisequalityLawOperatorIds
+  | .boolNegationLaw => boolNegationLawOperatorIds
+  | .boolImplicationLaw => boolImplicationLawOperatorIds
+  | .boolConjunctionLaw => boolConjunctionLawOperatorIds
+  | .boolDiscriminationLaw => boolDiscriminationLawOperatorIds
+  | .finiteQuantifierLaw => finiteQuantifierLawOperatorIds
+  | .finiteModalPredicateLaw => finiteModalPredicateLawOperatorIds
+  | .contextPredicateApplicationLaw => contextPredicateApplicationLawOperatorIds
+  | .endomapControlLaw => endomapControlLawOperatorIds
+  | .focusUniqueQuantifierLaw => focusUniqueQuantifierLawOperatorIds
   | .identityNoopLaw => identityNoopLawOperatorIds
   | .applicationWrapperLaw => applicationWrapperLawOperatorIds
   | .predicateAnchorLaw => predicateAnchorLawOperatorIds
@@ -714,6 +1156,32 @@ def operatorDomainLawKind? (id : OperatorId) : Option DomainLawKind :=
     some .protocolRelation
   else if decide (id ∈ zhuangziRelationOperatorIds) then
     some .zhuangziRelation
+  else if decide (id ∈ exactHexTransformOperatorIds) then
+    some .exactHexTransform
+  else if decide (id ∈ boolRelationPredicateOperatorIds) then
+    some .boolRelationPredicate
+  else if decide (id ∈ hexEqualityLawOperatorIds) then
+    some .hexEqualityLaw
+  else if decide (id ∈ hexDisequalityLawOperatorIds) then
+    some .hexDisequalityLaw
+  else if decide (id ∈ boolNegationLawOperatorIds) then
+    some .boolNegationLaw
+  else if decide (id ∈ boolImplicationLawOperatorIds) then
+    some .boolImplicationLaw
+  else if decide (id ∈ boolConjunctionLawOperatorIds) then
+    some .boolConjunctionLaw
+  else if decide (id ∈ boolDiscriminationLawOperatorIds) then
+    some .boolDiscriminationLaw
+  else if decide (id ∈ finiteQuantifierLawOperatorIds) then
+    some .finiteQuantifierLaw
+  else if decide (id ∈ finiteModalPredicateLawOperatorIds) then
+    some .finiteModalPredicateLaw
+  else if decide (id ∈ contextPredicateApplicationLawOperatorIds) then
+    some .contextPredicateApplicationLaw
+  else if decide (id ∈ endomapControlLawOperatorIds) then
+    some .endomapControlLaw
+  else if decide (id ∈ focusUniqueQuantifierLawOperatorIds) then
+    some .focusUniqueQuantifierLaw
   else if decide (id ∈ identityNoopLawOperatorIds) then
     some .identityNoopLaw
   else if decide (id ∈ applicationWrapperLawOperatorIds) then
@@ -743,7 +1211,7 @@ def domainLawOperatorIds : List OperatorId :=
   allOperatorIds.filter (fun id => (operatorDomainLawKind? id).isSome)
 
 theorem allDomainLawKinds_length :
-    allDomainLawKinds.length = 22 := by native_decide
+    allDomainLawKinds.length = 35 := by native_decide
 
 theorem spatialFrameAccessorOperatorIds_length :
     spatialFrameAccessorOperatorIds.length = 9 := by native_decide
@@ -777,6 +1245,78 @@ theorem protocolRelationOperatorIds_length :
 
 theorem zhuangziRelationOperatorIds_length :
     zhuangziRelationOperatorIds.length = 4 := by native_decide
+
+theorem exactHexTransformOperatorIds_length :
+    exactHexTransformOperatorIds.length = 36 := by native_decide
+
+theorem exactHexTransformOperatorIds_nodup :
+    exactHexTransformOperatorIds.Nodup := by native_decide
+
+theorem boolRelationPredicateOperatorIds_length :
+    boolRelationPredicateOperatorIds.length = 37 := by native_decide
+
+theorem boolRelationPredicateOperatorIds_nodup :
+    boolRelationPredicateOperatorIds.Nodup := by native_decide
+
+theorem hexEqualityLawOperatorIds_length :
+    hexEqualityLawOperatorIds.length = 6 := by native_decide
+
+theorem hexEqualityLawOperatorIds_nodup :
+    hexEqualityLawOperatorIds.Nodup := by native_decide
+
+theorem hexDisequalityLawOperatorIds_length :
+    hexDisequalityLawOperatorIds.length = 3 := by native_decide
+
+theorem hexDisequalityLawOperatorIds_nodup :
+    hexDisequalityLawOperatorIds.Nodup := by native_decide
+
+theorem boolNegationLawOperatorIds_length :
+    boolNegationLawOperatorIds.length = 5 := by native_decide
+
+theorem boolNegationLawOperatorIds_nodup :
+    boolNegationLawOperatorIds.Nodup := by native_decide
+
+theorem boolImplicationLawOperatorIds_length :
+    boolImplicationLawOperatorIds.length = 5 := by native_decide
+
+theorem boolImplicationLawOperatorIds_nodup :
+    boolImplicationLawOperatorIds.Nodup := by native_decide
+
+theorem boolConjunctionLawOperatorIds_length :
+    boolConjunctionLawOperatorIds.length = 3 := by native_decide
+
+theorem boolConjunctionLawOperatorIds_nodup :
+    boolConjunctionLawOperatorIds.Nodup := by native_decide
+
+theorem boolDiscriminationLawOperatorIds_length :
+    boolDiscriminationLawOperatorIds.length = 1 := by native_decide
+
+theorem finiteQuantifierLawOperatorIds_length :
+    finiteQuantifierLawOperatorIds.length = 10 := by native_decide
+
+theorem finiteQuantifierLawOperatorIds_nodup :
+    finiteQuantifierLawOperatorIds.Nodup := by native_decide
+
+theorem finiteModalPredicateLawOperatorIds_length :
+    finiteModalPredicateLawOperatorIds.length = 2 := by native_decide
+
+theorem finiteModalPredicateLawOperatorIds_nodup :
+    finiteModalPredicateLawOperatorIds.Nodup := by native_decide
+
+theorem contextPredicateApplicationLawOperatorIds_length :
+    contextPredicateApplicationLawOperatorIds.length = 2 := by native_decide
+
+theorem contextPredicateApplicationLawOperatorIds_nodup :
+    contextPredicateApplicationLawOperatorIds.Nodup := by native_decide
+
+theorem endomapControlLawOperatorIds_length :
+    endomapControlLawOperatorIds.length = 4 := by native_decide
+
+theorem endomapControlLawOperatorIds_nodup :
+    endomapControlLawOperatorIds.Nodup := by native_decide
+
+theorem focusUniqueQuantifierLawOperatorIds_length :
+    focusUniqueQuantifierLawOperatorIds.length = 1 := by native_decide
 
 theorem identityNoopLawOperatorIds_length :
     identityNoopLawOperatorIds.length = 20 := by native_decide
@@ -812,7 +1352,7 @@ theorem aggregateFoldProjectionOperatorIds_length :
     aggregateFoldProjectionOperatorIds.length = 7 := by native_decide
 
 theorem domainLawOperatorIds_length :
-    domainLawOperatorIds.length = 249 := by native_decide
+    domainLawOperatorIds.length = 364 := by native_decide
 
 theorem domainLawOperatorIds_nodup :
     domainLawOperatorIds.Nodup := by native_decide
@@ -829,6 +1369,19 @@ theorem domainLawKindPartition_counts :
       + (domainLawKindOperatorIds .namingMeasureRelation).length
       + (domainLawKindOperatorIds .protocolRelation).length
       + (domainLawKindOperatorIds .zhuangziRelation).length
+      + (domainLawKindOperatorIds .exactHexTransform).length
+      + (domainLawKindOperatorIds .boolRelationPredicate).length
+      + (domainLawKindOperatorIds .hexEqualityLaw).length
+      + (domainLawKindOperatorIds .hexDisequalityLaw).length
+      + (domainLawKindOperatorIds .boolNegationLaw).length
+      + (domainLawKindOperatorIds .boolImplicationLaw).length
+      + (domainLawKindOperatorIds .boolConjunctionLaw).length
+      + (domainLawKindOperatorIds .boolDiscriminationLaw).length
+      + (domainLawKindOperatorIds .finiteQuantifierLaw).length
+      + (domainLawKindOperatorIds .finiteModalPredicateLaw).length
+      + (domainLawKindOperatorIds .contextPredicateApplicationLaw).length
+      + (domainLawKindOperatorIds .endomapControlLaw).length
+      + (domainLawKindOperatorIds .focusUniqueQuantifierLaw).length
       + (domainLawKindOperatorIds .identityNoopLaw).length
       + (domainLawKindOperatorIds .applicationWrapperLaw).length
       + (domainLawKindOperatorIds .predicateAnchorLaw).length
@@ -859,6 +1412,22 @@ example : operatorDomainLawKind? .T_3 = some .directedRelation := by native_deci
 example : operatorDomainLawKind? .E_2 = some .namingMeasureRelation := by native_decide
 example : operatorDomainLawKind? .LIJ_1 = some .protocolRelation := by native_decide
 example : operatorDomainLawKind? .ZHU_3 = some .zhuangziRelation := by native_decide
+example : operatorDomainLawKind? .T_10 = some .exactHexTransform := by native_decide
+example : operatorDomainLawKind? .T_13 = some .exactHexTransform := by native_decide
+example : operatorDomainLawKind? .Z_5 = some .exactHexTransform := by native_decide
+example : operatorDomainLawKind? .T_1 = some .exactHexTransform := by native_decide
+example : operatorDomainLawKind? .R_1 = some .boolRelationPredicate := by native_decide
+example : operatorDomainLawKind? .I_1 = some .hexEqualityLaw := by native_decide
+example : operatorDomainLawKind? .N_2 = some .hexDisequalityLaw := by native_decide
+example : operatorDomainLawKind? .N_1 = some .boolNegationLaw := by native_decide
+example : operatorDomainLawKind? .K_1 = some .boolImplicationLaw := by native_decide
+example : operatorDomainLawKind? .A_12 = some .boolConjunctionLaw := by native_decide
+example : operatorDomainLawKind? .P_23 = some .boolDiscriminationLaw := by native_decide
+example : operatorDomainLawKind? .Q_1 = some .finiteQuantifierLaw := by native_decide
+example : operatorDomainLawKind? .M_1 = some .finiteModalPredicateLaw := by native_decide
+example : operatorDomainLawKind? .S_15 = some .contextPredicateApplicationLaw := by native_decide
+example : operatorDomainLawKind? .S_2 = some .endomapControlLaw := by native_decide
+example : operatorDomainLawKind? .A_14 = some .focusUniqueQuantifierLaw := by native_decide
 example : operatorDomainLawKind? .R_6 = some .identityNoopLaw := by native_decide
 example : operatorDomainLawKind? .S_1 = some .applicationWrapperLaw := by native_decide
 example : operatorDomainLawKind? .B_8 = some .predicateAnchorLaw := by native_decide
