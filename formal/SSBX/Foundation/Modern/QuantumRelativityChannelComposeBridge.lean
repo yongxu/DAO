@@ -16,7 +16,6 @@ This is a candidate composition interface for the current skeleton.  It is not
 a theorem that physical quantum channels are unitary, CPTP, Kraus-composable,
 or empirically closed.
 -/
-import Mathlib.Tactic
 import SSBX.Foundation.Modern.QuantumRelativityBornDistributionBridge
 
 namespace SSBX.Foundation.Modern.QuantumRelativityChannelComposeBridge

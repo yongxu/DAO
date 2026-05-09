@@ -20,7 +20,6 @@ This is a finite distribution boundary for already normalized amplitude
 supports.  It does not derive the Born rule and does not assert that the
 support came from physical dynamics.
 -/
-import Mathlib.Tactic
 import SSBX.Foundation.Modern.QuantumRelativityBornWeightNormalizationBridge
 
 namespace SSBX.Foundation.Modern.QuantumRelativityBornDistributionBridge

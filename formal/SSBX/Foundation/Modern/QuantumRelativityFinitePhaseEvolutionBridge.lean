@@ -16,7 +16,6 @@ This is still a typed skeleton.  It is not a Hamiltonian generator theorem, not
 a continuous unitary group, not a general Schrödinger dynamics result, not a
 path integral, not general Hilbert measurement, and not empirical closure.
 -/
-import Mathlib.Tactic
 import SSBX.Foundation.Modern.QuantumRelativityActionAmplitudeMeasurementBridge
 
 namespace SSBX.Foundation.Modern.QuantumRelativityFinitePhaseEvolutionBridge

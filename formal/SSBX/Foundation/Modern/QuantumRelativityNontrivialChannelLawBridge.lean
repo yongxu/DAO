@@ -18,7 +18,7 @@ This is a finite support-respecting typed skeleton.  It is not a Hilbert-space
 unitary theorem, not a CPTP/Kraus/density-matrix theorem, not a dynamics law,
 and not empirical closure.
 -/
-import Mathlib.Tactic
+import Mathlib.Tactic.NormNum
 import SSBX.Foundation.Modern.QuantumRelativityPathWeightMultiplicationBridge
 
 namespace SSBX.Foundation.Modern.QuantumRelativityNontrivialChannelLawBridge

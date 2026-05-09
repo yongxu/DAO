@@ -17,7 +17,7 @@ Markov/amplitude compatibility hypothesis.  It does not prove that physical
 dynamics must generate such amplitudes, nor measurement semantics, decoherence,
 unitary/CPTP laws, or empirical closure.
 -/
-import Mathlib.Tactic
+import Mathlib.Tactic.NormNum
 import SSBX.Foundation.Modern.QuantumRelativityUnitaryCPTPLedgerBridge
 
 namespace SSBX.Foundation.Modern.QuantumRelativityBornRuleDerivationBridge

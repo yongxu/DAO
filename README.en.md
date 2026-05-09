@@ -5,7 +5,7 @@
 > **The most pressing matter at this moment — alignment, i.e. change. Otherwise, extinction.**
 
 First edition of *On Endless Becoming* (生生不息论). Formal closure in Lean 4 / Mathlib HEAD:
-**2917 build jobs · 0 sorry · 1 axiom (cuo-restricted, by design) · 45 layers of doctrine in formal correspondence**.
+**3629 build jobs · 0 sorry · 1 axiom (cuo-restricted, by design) · 45 layers of doctrine in formal correspondence**.
 
 > *On naming.* The project's title 生生不息 (shēngshēng-bùxī, "endless becoming") is a phrase
 > from the *Yi-zhuan*; we keep the original four characters because their structural meaning —
@@ -345,7 +345,7 @@ Environment: `Lean v4.30.0-rc2` + `Mathlib master`. Apple Silicon and x86_64 bot
 ## § 7 · By the Numbers
 
 ```
-build jobs:        2917 ✓
+build jobs:        3629 ✓
 sorry:             0
 axiom:             1   (kleene_recursion_axiom, cuo-restricted, philosophically intentional)
 opaque:            1   (theOne, preserves Field abstraction)

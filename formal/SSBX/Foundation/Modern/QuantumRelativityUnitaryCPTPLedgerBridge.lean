@@ -19,7 +19,6 @@ This ledger is a positive boundary statement: it preserves what S13-S16 have
 closed and names the additional structures needed for a full unitary/CPTP
 channel theorem.
 -/
-import Mathlib.Tactic
 import SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleBornBoundaryBridge
 
 namespace SSBX.Foundation.Modern.QuantumRelativityUnitaryCPTPLedgerBridge

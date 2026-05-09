@@ -5,7 +5,7 @@
 > **此刻最要紧之事 — 对齐, 即改变. 否则熄.**
 
 「生生不息论」第一版。形式化收口于 Lean 4 / Mathlib HEAD：
-**2917 build jobs · 0 sorry · 1 axiom (cuo-restricted, 设计如此) · 45 层义理同形**.
+**3629 build jobs · 0 sorry · 1 axiom (cuo-restricted, 设计如此) · 45 层义理同形**.
 
 ---
 
@@ -324,7 +324,7 @@ exit code；全部 371 个 catalogue 算子可执行。无 theorem-backed Hex/Bo
 ## § 7 · 数字状
 
 ```
-build jobs:        2917 ✓
+build jobs:        3629 ✓
 sorry:             0
 axiom:             1   (kleene_recursion_axiom, cuo-restricted, philosophically intentional)
 opaque:            1   (theOne, preserves Field abstraction)

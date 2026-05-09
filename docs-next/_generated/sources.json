@@ -1,23 +1,23 @@
 {
-  "count": 460,
+  "count": 462,
   "include_archive": false,
   "sources": [
     {
       "bytes": 25864,
       "path": "README.en.md",
-      "sha256": "03474facc63173d8f78678208951d891ca92dd513e118685f185918ce6e43f89",
+      "sha256": "f22eb71e5649f8d3b37798d45f1f6d04f88c19ef45c8b1a828169215ebff5486",
       "suffix": ".md"
     },
     {
       "bytes": 24811,
       "path": "README.formal.md",
-      "sha256": "75e00ea20ddb1530adc88c8c7527c8828ec0ec09b96c0a5cd8fa56b93a618a15",
+      "sha256": "240bfbc2d98b0f06034d764e2e942c6e63b26c9dd5addc3f81eba2d9fecb9e49",
       "suffix": ".md"
     },
     {
       "bytes": 21831,
       "path": "README.md",
-      "sha256": "7263bf58b99f16f10f2f28c19aabd637998a52d5e447c6c4b323ee3cae200e95",
+      "sha256": "9ef76294f07bcf3d335023d31be0d79ed345b2c865e903b54e344e59b9bdfcaf",
       "suffix": ".md"
     },
     {
@@ -759,9 +759,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 8935,
+      "bytes": 1322,
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityActionAmplitudeMeasurementBridge.lean",
-      "sha256": "6bf8c403d7d1cdace8b299951cbbadedd4acc6dbe4039674684c04b7c915b7be",
+      "sha256": "cc7c297d0d1556d8b83cf5fd3ec1b76a1a84e15bdbba6f1ea3e89dcd8763f5ba",
       "suffix": ".lean"
     },
     {
@@ -777,27 +777,27 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 7527,
+      "bytes": 7505,
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityBornDistributionBridge.lean",
-      "sha256": "40b8bf85d101cc91a85736f43b39c7d6d1820be6b18060e28635f17531d03065",
+      "sha256": "73c299e9d3f58c825bfbdac402a3f1ba3a350164febbb57f31792cffc0deddd9",
       "suffix": ".lean"
     },
     {
-      "bytes": 4874,
+      "bytes": 1318,
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityBornMeasurementBridge.lean",
-      "sha256": "16a1b1faa6420c2f9c2d756500094f26cdf70e2a8ff6a59b741ace36d06793eb",
+      "sha256": "366251d536a7ef6f3cad71c7c6c4126474943c30d6da2d29d77b6fc1a2226937",
       "suffix": ".lean"
     },
     {
-      "bytes": 12996,
+      "bytes": 13004,
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityBornRuleDerivationBridge.lean",
-      "sha256": "b17cfe9f35e623daf7ef5fecf1b5e391ee032afd8c7f66e422fbbfdb8bc48199",
+      "sha256": "1c2aa88b843c16e7afdcaa9f8282929a4932a547c69c6be7fd7f0687b14f3dd8",
       "suffix": ".lean"
     },
     {
-      "bytes": 7030,
+      "bytes": 1969,
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityBornWeightNormalizationBridge.lean",
-      "sha256": "658e88866a03dab413e9164bcf2359cd31081fecf083f8e9d76598d1fa33deca",
+      "sha256": "06b5aae920e9a803459c3e3c04f352801bd4e7bdc4d3c71c24832481deb167f1",
       "suffix": ".lean"
     },
     {
@@ -807,15 +807,15 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 6175,
+      "bytes": 6183,
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeAssociativityBridge.lean",
-      "sha256": "30c1a2fec42aecd04a0c227fa56201033fdd8a3a6c00f74c4db9beab4964e874",
+      "sha256": "98c49edfe075d5c18b4cd13aada29df3751f0b91a7f5ee2dbfb0c083ecd67edf",
       "suffix": ".lean"
     },
     {
-      "bytes": 7409,
+      "bytes": 7387,
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeBridge.lean",
-      "sha256": "9a5eb96ea5d210df8da09ed7ee2c51864d17d8f30ea5e9b92f952bd6366b9f76",
+      "sha256": "5a4baa8ce11f0fdb28088d9c26fb75ee70a6833d9fc59bc72d3c1466cf41aad4",
       "suffix": ".lean"
     },
     {
@@ -825,9 +825,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 9504,
+      "bytes": 9512,
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityContinuousActionFunctionalBridge.lean",
-      "sha256": "556da44466bb354aaa34049cd1516e3509eaaae533637ad0e5805a135cbe5311",
+      "sha256": "ff40d254306d1abfe07789dfea97610560e29a80e3dce4e4d6f975d432431eba",
       "suffix": ".lean"
     },
     {
@@ -861,6 +861,12 @@
       "suffix": ".lean"
     },
     {
+      "bytes": 11761,
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalLocalityBridge.lean",
+      "sha256": "9f706f27212868b16a7e46adc38459fb6403eee3e8316fa00c6c0a2237f1e151",
+      "suffix": ".lean"
+    },
+    {
       "bytes": 13400,
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean",
       "sha256": "918d19e574cdf5e76955f04510f49879b4573da7c6e49248c2f4b448c2d36bfe",
@@ -879,9 +885,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 7146,
+      "bytes": 7124,
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePhaseEvolutionBridge.lean",
-      "sha256": "8fe56cb508d51ba615db85ce5791ee6ac997ca6afbcb9f47832b9ee705716295",
+      "sha256": "89e4c9e3842ccc2200f662417c415dae42a418da5c49233d112574a17dc179d3",
       "suffix": ".lean"
     },
     {
@@ -891,9 +897,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 12581,
+      "bytes": 1859,
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean",
-      "sha256": "52629a83a3e570e163e05ea9b1563928c00bde6f64d6ae40f3691ef3d701d6bd",
+      "sha256": "9584538e9d08268a325aaf408c2c3cd3e100b25d2136861315aa7a502b99d35d",
       "suffix": ".lean"
     },
     {
@@ -921,9 +927,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 12126,
+      "bytes": 12134,
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityNontrivialChannelLawBridge.lean",
-      "sha256": "37d342c8afc698407fcee7bbf13208174740b8cd2e684df48d5ff5758dc617da",
+      "sha256": "92474547943fbec95ddc7705d5e6790c025dfb0227fafbd34d1fae684da5f236",
       "suffix": ".lean"
     },
     {
@@ -933,9 +939,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 6377,
+      "bytes": 1850,
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityNormalizedMassBridge.lean",
-      "sha256": "03899079e04961838d8226d42f14c4605596e14e7c980be5aae848ba917d2912",
+      "sha256": "85b9ff2e39401d7440a934d491bc04d2a7f14a126b18265ab09277b58ce7470c",
       "suffix": ".lean"
     },
     {
@@ -963,15 +969,15 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 10489,
+      "bytes": 10497,
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityPathSpaceActionFunctionalBridge.lean",
-      "sha256": "ec294a705fb5e2fa8d3106458e28147ced1a70ed8f14f2567768d6c69ccafd89",
+      "sha256": "e49629195b47679f4f8c508069a9999abaf344ce6b37560a666ac66a3304d0de",
       "suffix": ".lean"
     },
     {
-      "bytes": 9108,
+      "bytes": 1644,
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityPathWeightMultiplicationBridge.lean",
-      "sha256": "39476b28d08b2708975630c2513a91e0e70b94bc11720bd547dc274104bd1b39",
+      "sha256": "4fdf977cdc4d21a9ac738c028f661ef1c062571a505a8399dbb06fe2f0e612a3",
       "suffix": ".lean"
     },
     {
@@ -993,15 +999,15 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 8517,
+      "bytes": 8495,
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleBornBoundaryBridge.lean",
-      "sha256": "8162d5204783c8e18cd6cec98690db846c7a68ebb58014b5034ece221bb48a61",
+      "sha256": "0384847571e4257b1036e98ea18004c02dc1113dc743ccbd39739526216dac89",
       "suffix": ".lean"
     },
     {
-      "bytes": 10749,
+      "bytes": 2174,
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleChannelBridge.lean",
-      "sha256": "0ec5bb4956ba51dc83bfde7b1972c6552ca6b46ab4de4a569cb35f4c1f7a55de",
+      "sha256": "a9493a10a254642b13e1ef1fa5007118b311a13596dbaf7b482665e9278ee766",
       "suffix": ".lean"
     },
     {
@@ -1017,9 +1023,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 4250,
+      "bytes": 4228,
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityUnitaryCPTPLedgerBridge.lean",
-      "sha256": "05162343d79c9755107f0eaa6a7f0b3e82474e69c5b644301a81684d2dc4627c",
+      "sha256": "8b1f7022a35cc37457167d3ae092bb1d30cf572988d812e459b53da80558530c",
       "suffix": ".lean"
     },
     {
@@ -1233,9 +1239,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 12375,
+      "bytes": 12361,
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Coverage.lean",
-      "sha256": "68c8e99ec32743a3468cf0faec02bb3864c5c435a054e912004bfc1cc548cd51",
+      "sha256": "12680fdc990cab6c2d6d94d6a07c1056c0a74b078f5c5b403a075455663fd410",
       "suffix": ".lean"
     },
     {
@@ -1263,9 +1269,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 85239,
+      "bytes": 92402,
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Semantics.lean",
-      "sha256": "5a9d00efd774d57d85746ee9a97038df46539ec880aed650b0e090fe05bc14bf",
+      "sha256": "5c2d8931d51e2bbf2d4d9926c45cb89769e05cec7769c6afdb7ee87445dc4dba",
       "suffix": ".lean"
     },
     {
@@ -2442,6 +2448,12 @@
       "bytes": 6576,
       "path": "义理/有限作用量极值候选 · Markov桥S26.md",
       "sha256": "62a7f66846e8307647f92769a787d32319644b87d7d468af434448807711e5fa",
+      "suffix": ".md"
+    },
+    {
+      "bytes": 6223,
+      "path": "义理/有限因果局部性候选 · Markov桥S27.md",
+      "sha256": "b7e14c90a2f95be8c6d0b177b12c336fd1998bf3968719ab74fec9c56e91ddcd",
       "suffix": ".md"
     },
     {

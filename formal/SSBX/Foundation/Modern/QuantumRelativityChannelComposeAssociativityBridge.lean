@@ -16,7 +16,7 @@ This is not a unitary/CPTP identity theorem.  It records why the current
 support-respecting skeleton cannot accept the usual diagonal identity channel
 without additional structure.
 -/
-import Mathlib.Tactic
+import Mathlib.Tactic.NormNum
 import SSBX.Foundation.Modern.QuantumRelativityChannelComposeBridge
 
 namespace SSBX.Foundation.Modern.QuantumRelativityChannelComposeAssociativityBridge

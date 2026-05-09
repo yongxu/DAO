@@ -16,7 +16,6 @@ distribution boundary:
 This remains a conditional finite boundary.  It does not derive the Born rule,
 unitary/CPTP channel law, path integral, or empirical closure.
 -/
-import Mathlib.Tactic
 import SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleChannelBridge
 
 namespace SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleBornBoundaryBridge

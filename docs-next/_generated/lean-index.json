@@ -4,7 +4,7 @@
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
-    "Foundation/Modern": 79,
+    "Foundation/Modern": 80,
     "Foundation/Wen": 51,
     "Foundation/Yi": 2,
     "Model": 2,
@@ -10100,126 +10100,22 @@
     },
     {
       "cluster": "Foundation/Modern",
-      "declaration_count": 27,
+      "declaration_count": 1,
       "declarations": [
-        {
-          "kind": "inductive",
-          "name": "ActionMeasurementBranch"
-        },
-        {
-          "kind": "def",
-          "name": "actionIndex"
-        },
-        {
-          "kind": "def",
-          "name": "phase"
-        },
-        {
-          "kind": "def",
-          "name": "amplitude"
-        },
-        {
-          "kind": "theorem",
-          "name": "upper_action_index"
-        },
-        {
-          "kind": "theorem",
-          "name": "lower_action_index"
-        },
-        {
-          "kind": "theorem",
-          "name": "upper_amplitude"
-        },
-        {
-          "kind": "theorem",
-          "name": "lower_amplitude"
-        },
-        {
-          "kind": "def",
-          "name": "negKet1"
-        },
-        {
-          "kind": "def",
-          "name": "actionBranchQubit"
-        },
-        {
-          "kind": "theorem",
-          "name": "action_branch_upper_qubit_amplitude0"
-        },
-        {
-          "kind": "theorem",
-          "name": "action_branch_lower_qubit_amplitude1"
-        },
-        {
-          "kind": "theorem",
-          "name": "negKet1_computational_basis_normalized"
-        },
-        {
-          "kind": "theorem",
-          "name": "action_branch_qubit_normalized"
-        },
-        {
-          "kind": "theorem",
-          "name": "action_branch_born_measurement_weights"
-        },
-        {
-          "kind": "inductive",
-          "name": "ActionMeasurementOutcome"
-        },
-        {
-          "kind": "def",
-          "name": "actionBranchOutcomeWeight"
-        },
-        {
-          "kind": "theorem",
-          "name": "action_branch_outcome_weights_normalized"
-        },
-        {
-          "kind": "theorem",
-          "name": "two_route_action_indices_match_measurement_branches"
-        },
-        {
-          "kind": "def",
-          "name": "ActionDrivenAmplitudeDynamicsClosed"
-        },
-        {
-          "kind": "theorem",
-          "name": "action_driven_amplitude_dynamics_closed"
-        },
-        {
-          "kind": "def",
-          "name": "ActionToBornMeasurementChainClosed"
-        },
-        {
-          "kind": "theorem",
-          "name": "action_to_born_measurement_chain_closed"
-        },
-        {
-          "kind": "inductive",
-          "name": "PendingBeyondS22"
-        },
-        {
-          "kind": "def",
-          "name": "ClosedByStepwiseS22"
-        },
-        {
-          "kind": "theorem",
-          "name": "pending_boundary_not_closed_by_s22"
-        },
         {
           "kind": "theorem",
           "name": "action_amplitude_measurement_bridge_summary"
         }
       ],
       "imports": [
-        "Mathlib.Tactic",
         "SSBX.Foundation.Modern.QuantumRelativityActionPhaseLawBridge",
-        "SSBX.Foundation.Modern.QuantumRelativityBornMeasurementBridge"
+        "SSBX.Foundation.Modern.QuantumRelativityBornMeasurementBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityActionAmplitudeMeasurementBridge.Core"
       ],
-      "lines": 257,
+      "lines": 32,
       "module": "SSBX.Foundation.Modern.QuantumRelativityActionAmplitudeMeasurementBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityActionAmplitudeMeasurementBridge.lean",
-      "sha256": "6bf8c403d7d1cdace8b299951cbbadedd4acc6dbe4039674684c04b7c915b7be"
+      "sha256": "cc7c297d0d1556d8b83cf5fd3ec1b76a1a84e15bdbba6f1ea3e89dcd8763f5ba"
     },
     {
       "cluster": "Foundation/Modern",
@@ -10494,79 +10390,30 @@
         }
       ],
       "imports": [
-        "Mathlib.Tactic",
         "SSBX.Foundation.Modern.QuantumRelativityBornWeightNormalizationBridge"
       ],
-      "lines": 198,
+      "lines": 197,
       "module": "SSBX.Foundation.Modern.QuantumRelativityBornDistributionBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityBornDistributionBridge.lean",
-      "sha256": "40b8bf85d101cc91a85736f43b39c7d6d1820be6b18060e28635f17531d03065"
+      "sha256": "73c299e9d3f58c825bfbdac402a3f1ba3a350164febbb57f31792cffc0deddd9"
     },
     {
       "cluster": "Foundation/Modern",
-      "declaration_count": 13,
+      "declaration_count": 1,
       "declarations": [
-        {
-          "kind": "structure",
-          "name": "ComputationalBasisMeasurementWeights"
-        },
-        {
-          "kind": "def",
-          "name": "computationalBasisMeasurementWeights"
-        },
-        {
-          "kind": "def",
-          "name": "MeasurementWeightsNormalized"
-        },
-        {
-          "kind": "theorem",
-          "name": "computational_basis_weight0_eq_ampProb"
-        },
-        {
-          "kind": "theorem",
-          "name": "computational_basis_weight1_eq_ampProb"
-        },
-        {
-          "kind": "theorem",
-          "name": "born_rule_gives_normalized_measurement_weights"
-        },
-        {
-          "kind": "theorem",
-          "name": "computational_basis_measurement_weights_normalized"
-        },
-        {
-          "kind": "def",
-          "name": "ComputationalBasisBornMeasurementClosed"
-        },
-        {
-          "kind": "theorem",
-          "name": "computational_basis_born_measurement_closed"
-        },
-        {
-          "kind": "inductive",
-          "name": "PendingBeyondS21"
-        },
-        {
-          "kind": "def",
-          "name": "ClosedByStepwiseS21"
-        },
-        {
-          "kind": "theorem",
-          "name": "pending_boundary_not_closed_by_s21"
-        },
         {
           "kind": "theorem",
           "name": "born_measurement_bridge_summary"
         }
       ],
       "imports": [
-        "Mathlib.Tactic",
-        "SSBX.Foundation.Modern.QuantumRelativityNontrivialChannelLawBridge"
+        "SSBX.Foundation.Modern.QuantumRelativityNontrivialChannelLawBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityBornMeasurementBridge.Core"
       ],
-      "lines": 128,
+      "lines": 32,
       "module": "SSBX.Foundation.Modern.QuantumRelativityBornMeasurementBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityBornMeasurementBridge.lean",
-      "sha256": "16a1b1faa6420c2f9c2d756500094f26cdf70e2a8ff6a59b741ace36d06793eb"
+      "sha256": "366251d536a7ef6f3cad71c7c6c4126474943c30d6da2d29d77b6fc1a2226937"
     },
     {
       "cluster": "Foundation/Modern",
@@ -10646,87 +10493,31 @@
         }
       ],
       "imports": [
-        "Mathlib.Tactic",
+        "Mathlib.Tactic.NormNum",
         "SSBX.Foundation.Modern.QuantumRelativityUnitaryCPTPLedgerBridge"
       ],
       "lines": 328,
       "module": "SSBX.Foundation.Modern.QuantumRelativityBornRuleDerivationBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityBornRuleDerivationBridge.lean",
-      "sha256": "b17cfe9f35e623daf7ef5fecf1b5e391ee032afd8c7f66e422fbbfdb8bc48199"
+      "sha256": "1c2aa88b843c16e7afdcaa9f8282929a4932a547c69c6be7fd7f0687b14f3dd8"
     },
     {
       "cluster": "Foundation/Modern",
-      "declaration_count": 15,
+      "declaration_count": 1,
       "declarations": [
-        {
-          "kind": "def",
-          "name": "amplitudeSupportWeightSum"
-        },
-        {
-          "kind": "def",
-          "name": "AmplitudeSupportNormalized"
-        },
-        {
-          "kind": "def",
-          "name": "bornCandidateBoundarySupport"
-        },
-        {
-          "kind": "def",
-          "name": "bornCandidateWeightSum"
-        },
-        {
-          "kind": "theorem",
-          "name": "bornCandidateWeightSum_eq_amplitudeSupportWeightSum"
-        },
-        {
-          "kind": "theorem",
-          "name": "born_weight_nonnegative_and_sum_one_if_normalized"
-        },
-        {
-          "kind": "def",
-          "name": "ConditionalBornWeightNormalizationBoundaryClosed"
-        },
-        {
-          "kind": "theorem",
-          "name": "conditional_born_weight_normalization_boundary_closed"
-        },
-        {
-          "kind": "def",
-          "name": "unitAmplitudeSupport"
-        },
-        {
-          "kind": "theorem",
-          "name": "unit_amplitude_support_normalized"
-        },
-        {
-          "kind": "theorem",
-          "name": "unit_amplitude_support_born_weight_law"
-        },
-        {
-          "kind": "inductive",
-          "name": "PendingBeyondS11"
-        },
-        {
-          "kind": "def",
-          "name": "ClosedByStepwiseS11"
-        },
-        {
-          "kind": "theorem",
-          "name": "pending_boundary_not_closed_by_s11"
-        },
         {
           "kind": "theorem",
           "name": "born_weight_normalization_bridge_summary"
         }
       ],
       "imports": [
-        "Mathlib.Tactic",
-        "SSBX.Foundation.Modern.QuantumRelativityNormalizedMassBridge"
+        "SSBX.Foundation.Modern.QuantumRelativityNormalizedMassBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityBornWeightNormalizationBridge.Core"
       ],
-      "lines": 181,
+      "lines": 42,
       "module": "SSBX.Foundation.Modern.QuantumRelativityBornWeightNormalizationBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityBornWeightNormalizationBridge.lean",
-      "sha256": "658e88866a03dab413e9164bcf2359cd31081fecf083f8e9d76598d1fa33deca"
+      "sha256": "06b5aae920e9a803459c3e3c04f352801bd4e7bdc4d3c71c24832481deb167f1"
     },
     {
       "cluster": "Foundation/Modern",
@@ -10819,13 +10610,13 @@
         }
       ],
       "imports": [
-        "Mathlib.Tactic",
+        "Mathlib.Tactic.NormNum",
         "SSBX.Foundation.Modern.QuantumRelativityChannelComposeBridge"
       ],
       "lines": 151,
       "module": "SSBX.Foundation.Modern.QuantumRelativityChannelComposeAssociativityBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeAssociativityBridge.lean",
-      "sha256": "30c1a2fec42aecd04a0c227fa56201033fdd8a3a6c00f74c4db9beab4964e874"
+      "sha256": "98c49edfe075d5c18b4cd13aada29df3751f0b91a7f5ee2dbfb0c083ecd67edf"
     },
     {
       "cluster": "Foundation/Modern",
@@ -10881,13 +10672,12 @@
         }
       ],
       "imports": [
-        "Mathlib.Tactic",
         "SSBX.Foundation.Modern.QuantumRelativityBornDistributionBridge"
       ],
-      "lines": 186,
+      "lines": 185,
       "module": "SSBX.Foundation.Modern.QuantumRelativityChannelComposeBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeBridge.lean",
-      "sha256": "9a5eb96ea5d210df8da09ed7ee2c51864d17d8f30ea5e9b92f952bd6366b9f76"
+      "sha256": "5a4baa8ce11f0fdb28088d9c26fb75ee70a6833d9fc59bc72d3c1466cf41aad4"
     },
     {
       "cluster": "Foundation/Modern",
@@ -11061,13 +10851,13 @@
         }
       ],
       "imports": [
-        "Mathlib.Tactic",
+        "Mathlib.Tactic.NormNum",
         "SSBX.Foundation.Modern.QuantumRelativityFinitePhaseEvolutionBridge"
       ],
       "lines": 249,
       "module": "SSBX.Foundation.Modern.QuantumRelativityContinuousActionFunctionalBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityContinuousActionFunctionalBridge.lean",
-      "sha256": "556da44466bb354aaa34049cd1516e3509eaaae533637ad0e5805a135cbe5311"
+      "sha256": "ff40d254306d1abfe07789dfea97610560e29a80e3dce4e4d6f975d432431eba"
     },
     {
       "cluster": "Foundation/Modern",
@@ -11513,6 +11303,141 @@
     },
     {
       "cluster": "Foundation/Modern",
+      "declaration_count": 30,
+      "declarations": [
+        {
+          "kind": "structure",
+          "name": "FiniteCausalLocalFutureCandidate"
+        },
+        {
+          "kind": "theorem",
+          "name": "local_future_iff_step"
+        },
+        {
+          "kind": "theorem",
+          "name": "step_depends_on_local_future"
+        },
+        {
+          "kind": "theorem",
+          "name": "local_future_implies_causal_before"
+        },
+        {
+          "kind": "theorem",
+          "name": "nonlocal_not_one_step"
+        },
+        {
+          "kind": "def",
+          "name": "KernelRespectsLocalFuture"
+        },
+        {
+          "kind": "theorem",
+          "name": "kernel_positive_weight_implies_local_future"
+        },
+        {
+          "kind": "def",
+          "name": "concreteLocalFuture"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_local_future_sound"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_local_future_complete"
+        },
+        {
+          "kind": "def",
+          "name": "concreteCausalLocalFuture"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_local_future_iff_step"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_kernel_respects_local_future"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_prepared_local_future"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_evolved_local_future"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_measured_local_future"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_nonlocal_measured_not_step_to_prepared"
+        },
+        {
+          "kind": "def",
+          "name": "operatorCellGridLocalFuture"
+        },
+        {
+          "kind": "theorem",
+          "name": "operatorCellGrid_local_future_sound"
+        },
+        {
+          "kind": "theorem",
+          "name": "operatorCellGrid_local_future_complete"
+        },
+        {
+          "kind": "def",
+          "name": "operatorCellGridCausalLocalFuture"
+        },
+        {
+          "kind": "theorem",
+          "name": "operatorCellGrid_local_future_iff_step"
+        },
+        {
+          "kind": "theorem",
+          "name": "operatorCellGrid_kernel_respects_local_future"
+        },
+        {
+          "kind": "theorem",
+          "name": "operatorCellGrid_initial_local_future_length"
+        },
+        {
+          "kind": "def",
+          "name": "FiniteCausalLocalityClosed"
+        },
+        {
+          "kind": "theorem",
+          "name": "finite_causal_locality_closed"
+        },
+        {
+          "kind": "inductive",
+          "name": "PendingBeyondS27"
+        },
+        {
+          "kind": "def",
+          "name": "ClosedByStepwiseS27"
+        },
+        {
+          "kind": "theorem",
+          "name": "pending_boundary_not_closed_by_s27"
+        },
+        {
+          "kind": "theorem",
+          "name": "finite_causal_locality_bridge_summary"
+        }
+      ],
+      "imports": [
+        "Mathlib.Tactic",
+        "SSBX.Foundation.Modern.QuantumRelativityFiniteActionExtremumBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityPathCausalBridge"
+      ],
+      "lines": 315,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityFiniteCausalLocalityBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalLocalityBridge.lean",
+      "sha256": "9f706f27212868b16a7e46adc38459fb6403eee3e8316fa00c6c0a2237f1e151"
+    },
+    {
+      "cluster": "Foundation/Modern",
       "declaration_count": 27,
       "declarations": [
         {
@@ -11844,13 +11769,12 @@
         }
       ],
       "imports": [
-        "Mathlib.Tactic",
         "SSBX.Foundation.Modern.QuantumRelativityActionAmplitudeMeasurementBridge"
       ],
-      "lines": 180,
+      "lines": 179,
       "module": "SSBX.Foundation.Modern.QuantumRelativityFinitePhaseEvolutionBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePhaseEvolutionBridge.lean",
-      "sha256": "8fe56cb508d51ba615db85ce5791ee6ac997ca6afbcb9f47832b9ee705716295"
+      "sha256": "89e4c9e3842ccc2200f662417c415dae42a418da5c49233d112574a17dc179d3"
     },
     {
       "cluster": "Foundation/Modern",
@@ -11948,117 +11872,21 @@
     },
     {
       "cluster": "Foundation/Modern",
-      "declaration_count": 25,
+      "declaration_count": 1,
       "declarations": [
-        {
-          "kind": "def",
-          "name": "rowWeightSum"
-        },
-        {
-          "kind": "def",
-          "name": "normalizedMass"
-        },
-        {
-          "kind": "def",
-          "name": "normalizedRowTotalCandidate"
-        },
-        {
-          "kind": "structure",
-          "name": "FiniteRowSupportNormalization"
-        },
-        {
-          "kind": "theorem",
-          "name": "rowWeightSum_eq_rowTotal"
-        },
-        {
-          "kind": "def",
-          "name": "HasFiniteRowSupportNormalization"
-        },
-        {
-          "kind": "theorem",
-          "name": "normalized_row_total_candidate_eq_one_of_complete"
-        },
-        {
-          "kind": "def",
-          "name": "concreteRowSupport"
-        },
-        {
-          "kind": "theorem",
-          "name": "concrete_row_support_sound"
-        },
-        {
-          "kind": "theorem",
-          "name": "concrete_row_support_complete"
-        },
-        {
-          "kind": "theorem",
-          "name": "concrete_row_weight_sum_eq_rowTotal"
-        },
-        {
-          "kind": "def",
-          "name": "concreteFiniteRowSupportNormalization"
-        },
-        {
-          "kind": "theorem",
-          "name": "concrete_normalized_row_total_candidate_eq_one"
-        },
-        {
-          "kind": "def",
-          "name": "operatorCellGridRowSupport"
-        },
-        {
-          "kind": "theorem",
-          "name": "operatorCellGrid_row_support_sound"
-        },
-        {
-          "kind": "theorem",
-          "name": "operatorCellGrid_row_support_complete"
-        },
-        {
-          "kind": "theorem",
-          "name": "operatorCellGrid_row_weight_sum_eq_rowTotal"
-        },
-        {
-          "kind": "def",
-          "name": "operatorCellGridFiniteRowSupportNormalization"
-        },
-        {
-          "kind": "theorem",
-          "name": "operatorCellGrid_normalized_row_total_candidate_eq_one"
-        },
-        {
-          "kind": "inductive",
-          "name": "PendingBeyondS9"
-        },
-        {
-          "kind": "def",
-          "name": "ClosedByStepwiseS9"
-        },
-        {
-          "kind": "theorem",
-          "name": "pending_boundary_not_closed_by_s9"
-        },
-        {
-          "kind": "def",
-          "name": "FiniteSumOneProbabilityBoundaryClosed"
-        },
-        {
-          "kind": "theorem",
-          "name": "finite_sum_one_probability_boundary_closed"
-        },
         {
           "kind": "theorem",
           "name": "finite_probability_normalization_bridge_summary"
         }
       ],
       "imports": [
-        "Mathlib.Tactic",
-        "SSBX.Foundation.Modern.QuantumRelativityStepwiseUnificationBridge"
+        "SSBX.Foundation.Modern.QuantumRelativityStepwiseUnificationBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityNormalizationBridge.Core"
       ],
-      "lines": 316,
+      "lines": 41,
       "module": "SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityNormalizationBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteProbabilityNormalizationBridge.lean",
-      "sha256": "52629a83a3e570e163e05ea9b1563928c00bde6f64d6ae40f3691ef3d701d6bd"
+      "sha256": "9584538e9d08268a325aaf408c2c3cd3e100b25d2136861315aa7a502b99d35d"
     },
     {
       "cluster": "Foundation/Modern",
@@ -12550,13 +12378,13 @@
         }
       ],
       "imports": [
-        "Mathlib.Tactic",
+        "Mathlib.Tactic.NormNum",
         "SSBX.Foundation.Modern.QuantumRelativityPathWeightMultiplicationBridge"
       ],
       "lines": 285,
       "module": "SSBX.Foundation.Modern.QuantumRelativityNontrivialChannelLawBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityNontrivialChannelLawBridge.lean",
-      "sha256": "37d342c8afc698407fcee7bbf13208174740b8cd2e684df48d5ff5758dc617da"
+      "sha256": "92474547943fbec95ddc7705d5e6790c025dfb0227fafbd34d1fae684da5f236"
     },
     {
       "cluster": "Foundation/Modern",
@@ -12633,61 +12461,21 @@
     },
     {
       "cluster": "Foundation/Modern",
-      "declaration_count": 11,
+      "declaration_count": 1,
       "declarations": [
-        {
-          "kind": "def",
-          "name": "normalizedMassSum"
-        },
-        {
-          "kind": "theorem",
-          "name": "normalizedMassSum_eq_normalizedRowTotalCandidate"
-        },
-        {
-          "kind": "theorem",
-          "name": "normalizedMass_sum_one"
-        },
-        {
-          "kind": "theorem",
-          "name": "concrete_normalizedMass_sum_one"
-        },
-        {
-          "kind": "theorem",
-          "name": "operatorCellGrid_normalizedMass_sum_one"
-        },
-        {
-          "kind": "inductive",
-          "name": "PendingBeyondS10"
-        },
-        {
-          "kind": "def",
-          "name": "ClosedByStepwiseS10"
-        },
-        {
-          "kind": "theorem",
-          "name": "pending_boundary_not_closed_by_s10"
-        },
-        {
-          "kind": "def",
-          "name": "FiniteNormalizedMassBoundaryClosed"
-        },
-        {
-          "kind": "theorem",
-          "name": "finite_normalized_mass_boundary_closed"
-        },
         {
           "kind": "theorem",
           "name": "normalized_mass_bridge_summary"
         }
       ],
       "imports": [
-        "Mathlib.Tactic",
-        "SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityNormalizationBridge"
+        "SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityNormalizationBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityNormalizedMassBridge.Core"
       ],
-      "lines": 174,
+      "lines": 42,
       "module": "SSBX.Foundation.Modern.QuantumRelativityNormalizedMassBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityNormalizedMassBridge.lean",
-      "sha256": "03899079e04961838d8226d42f14c4605596e14e7c980be5aae848ba917d2912"
+      "sha256": "85b9ff2e39401d7440a934d491bc04d2a7f14a126b18265ab09277b58ce7470c"
     },
     {
       "cluster": "Foundation/Modern",
@@ -13067,126 +12855,31 @@
         }
       ],
       "imports": [
-        "Mathlib.Tactic",
+        "Mathlib.Tactic.NormNum",
         "SSBX.Foundation.Modern.QuantumRelativityContinuousActionFunctionalBridge"
       ],
       "lines": 244,
       "module": "SSBX.Foundation.Modern.QuantumRelativityPathSpaceActionFunctionalBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityPathSpaceActionFunctionalBridge.lean",
-      "sha256": "ec294a705fb5e2fa8d3106458e28147ced1a70ed8f14f2567768d6c69ccafd89"
+      "sha256": "e49629195b47679f4f8c508069a9999abaf344ce6b37560a666ac66a3304d0de"
     },
     {
       "cluster": "Foundation/Modern",
-      "declaration_count": 25,
+      "declaration_count": 1,
       "declarations": [
-        {
-          "kind": "theorem",
-          "name": "current_pathWeight_compose_multiplicative"
-        },
-        {
-          "kind": "structure",
-          "name": "KernelEdge"
-        },
-        {
-          "kind": "def",
-          "name": "weight"
-        },
-        {
-          "kind": "theorem",
-          "name": "step"
-        },
-        {
-          "kind": "inductive",
-          "name": "KernelPath"
-        },
-        {
-          "kind": "def",
-          "name": "weight"
-        },
-        {
-          "kind": "def",
-          "name": "append"
-        },
-        {
-          "kind": "def",
-          "name": "toProcessPath"
-        },
-        {
-          "kind": "def",
-          "name": "toComposableProcessPaths"
-        },
-        {
-          "kind": "theorem",
-          "name": "append_reachable"
-        },
-        {
-          "kind": "theorem",
-          "name": "append_causal_before"
-        },
-        {
-          "kind": "theorem",
-          "name": "weight_append"
-        },
-        {
-          "kind": "def",
-          "name": "concretePreparedEvolvedEdge"
-        },
-        {
-          "kind": "def",
-          "name": "concreteEvolvedMeasuredEdge"
-        },
-        {
-          "kind": "def",
-          "name": "concretePreparedEvolvedKernelPath"
-        },
-        {
-          "kind": "def",
-          "name": "concreteEvolvedMeasuredKernelPath"
-        },
-        {
-          "kind": "def",
-          "name": "concretePreparedMeasuredKernelPath"
-        },
-        {
-          "kind": "theorem",
-          "name": "concrete_prepared_measured_kernel_path_weight"
-        },
-        {
-          "kind": "theorem",
-          "name": "concrete_two_step_path_weight_multiplicative"
-        },
-        {
-          "kind": "inductive",
-          "name": "PendingBeyondS19"
-        },
-        {
-          "kind": "def",
-          "name": "ClosedByStepwiseS19"
-        },
-        {
-          "kind": "theorem",
-          "name": "pending_boundary_not_closed_by_s19"
-        },
-        {
-          "kind": "def",
-          "name": "PathWeightMultiplicationBoundaryClosed"
-        },
-        {
-          "kind": "theorem",
-          "name": "path_weight_multiplication_boundary_closed"
-        },
         {
           "kind": "theorem",
           "name": "path_weight_multiplication_bridge_summary"
         }
       ],
       "imports": [
-        "SSBX.Foundation.Modern.QuantumRelativityBornRuleDerivationBridge"
+        "SSBX.Foundation.Modern.QuantumRelativityBornRuleDerivationBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityPathWeightMultiplicationBridge.Core"
       ],
-      "lines": 239,
+      "lines": 36,
       "module": "SSBX.Foundation.Modern.QuantumRelativityPathWeightMultiplicationBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityPathWeightMultiplicationBridge.lean",
-      "sha256": "39476b28d08b2708975630c2513a91e0e70b94bc11720bd547dc274104bd1b39"
+      "sha256": "4fdf977cdc4d21a9ac738c028f661ef1c062571a505a8399dbb06fe2f0e612a3"
     },
     {
       "cluster": "Foundation/Modern",
@@ -13431,95 +13124,30 @@
         }
       ],
       "imports": [
-        "Mathlib.Tactic",
         "SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleChannelBridge"
       ],
-      "lines": 182,
+      "lines": 181,
       "module": "SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleBornBoundaryBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleBornBoundaryBridge.lean",
-      "sha256": "8162d5204783c8e18cd6cec98690db846c7a68ebb58014b5034ece221bb48a61"
+      "sha256": "0384847571e4257b1036e98ea18004c02dc1113dc743ccbd39739526216dac89"
     },
     {
       "cluster": "Foundation/Modern",
-      "declaration_count": 17,
+      "declaration_count": 1,
       "declarations": [
-        {
-          "kind": "theorem",
-          "name": "list_sum_ne_zero_has_nonzero_entry"
-        },
-        {
-          "kind": "def",
-          "name": "sumOverMiddleChannelAmplitude"
-        },
-        {
-          "kind": "def",
-          "name": "TwoStepReachableViaList"
-        },
-        {
-          "kind": "theorem",
-          "name": "sumOverMiddle_support_implies_two_step"
-        },
-        {
-          "kind": "structure",
-          "name": "SumOverMiddleChannelComposition"
-        },
-        {
-          "kind": "def",
-          "name": "sumOverMiddleChannelComposition"
-        },
-        {
-          "kind": "theorem",
-          "name": "sumOverMiddleChannelComposition_boundary"
-        },
-        {
-          "kind": "theorem",
-          "name": "sumOverMiddleChannelComposition_support"
-        },
-        {
-          "kind": "def",
-          "name": "SumOverMiddleChannelBoundaryClosed"
-        },
-        {
-          "kind": "theorem",
-          "name": "sum_over_middle_channel_boundary_closed"
-        },
-        {
-          "kind": "def",
-          "name": "concreteStepAmplitude"
-        },
-        {
-          "kind": "def",
-          "name": "concreteStepAmplitudeSkeleton"
-        },
-        {
-          "kind": "def",
-          "name": "concreteStepQuantumChannelSkeleton"
-        },
-        {
-          "kind": "theorem",
-          "name": "concrete_sumOverMiddle_prepared_measured_amplitude"
-        },
-        {
-          "kind": "theorem",
-          "name": "concrete_prepared_measured_not_one_step"
-        },
-        {
-          "kind": "theorem",
-          "name": "concrete_sumOverMiddle_prepared_measured_two_step"
-        },
         {
           "kind": "theorem",
           "name": "sum_over_middle_channel_bridge_summary"
         }
       ],
       "imports": [
-        "Mathlib.Tactic",
-        "SSBX.Foundation.Modern.QuantumRelativityChannelComposeAssociativityBridge"
+        "SSBX.Foundation.Modern.QuantumRelativityChannelComposeAssociativityBridge",
+        "SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleChannelBridge.Core"
       ],
-      "lines": 252,
+      "lines": 46,
       "module": "SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleChannelBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativitySumOverMiddleChannelBridge.lean",
-      "sha256": "0ec5bb4956ba51dc83bfde7b1972c6552ca6b46ab4de4a569cb35f4c1f7a55de"
+      "sha256": "a9493a10a254642b13e1ef1fa5007118b311a13596dbaf7b482665e9278ee766"
     },
     {
       "cluster": "Foundation/Modern",
@@ -13773,13 +13401,12 @@
         }
       ],
       "imports": [
-        "Mathlib.Tactic",
         "SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleBornBoundaryBridge"
       ],
-      "lines": 115,
+      "lines": 114,
       "module": "SSBX.Foundation.Modern.QuantumRelativityUnitaryCPTPLedgerBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityUnitaryCPTPLedgerBridge.lean",
-      "sha256": "05162343d79c9755107f0eaa6a7f0b3e82474e69c5b644301a81684d2dc4627c"
+      "sha256": "8b1f7022a35cc37457167d3ae092bb1d30cf572988d812e459b53da80558530c"
     },
     {
       "cluster": "Foundation/Modern",
@@ -20051,7 +19678,7 @@
       "lines": 262,
       "module": "SSBX.Foundation.Wen.WenSurface.Coverage",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Coverage.lean",
-      "sha256": "68c8e99ec32743a3468cf0faec02bb3864c5c435a054e912004bfc1cc548cd51"
+      "sha256": "12680fdc990cab6c2d6d94d6a07c1056c0a74b078f5c5b403a075455663fd410"
     },
     {
       "cluster": "Foundation/Wen",
@@ -20606,7 +20233,7 @@
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 151,
+      "declaration_count": 178,
       "declarations": [
         {
           "kind": "structure",
@@ -20782,7 +20409,19 @@
         },
         {
           "kind": "def",
+          "name": "exactCarrierMechanicStrongOperatorIds"
+        },
+        {
+          "kind": "def",
+          "name": "exactDomainNeutralCarrierOperatorIds"
+        },
+        {
+          "kind": "def",
           "name": "exactIdentityNoopOperatorIds"
+        },
+        {
+          "kind": "def",
+          "name": "exactSurfaceProjectionAnchorOperatorIds"
         },
         {
           "kind": "def",
@@ -20950,6 +20589,14 @@
         },
         {
           "kind": "theorem",
+          "name": "exactIdentityNoopOperatorIds_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "exactIdentityNoopOperatorIds_nodup"
+        },
+        {
+          "kind": "theorem",
           "name": "exactApplicationMechanicStrongOperatorIds_length"
         },
         {
@@ -20958,11 +20605,35 @@
         },
         {
           "kind": "theorem",
+          "name": "exactSurfaceProjectionAnchorOperatorIds_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "exactSurfaceProjectionAnchorOperatorIds_nodup"
+        },
+        {
+          "kind": "theorem",
           "name": "exactTruthMarkerOperatorIds_length"
         },
         {
           "kind": "theorem",
           "name": "exactTruthMarkerOperatorIds_nodup"
+        },
+        {
+          "kind": "theorem",
+          "name": "exactCarrierMechanicStrongOperatorIds_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "exactCarrierMechanicStrongOperatorIds_nodup"
+        },
+        {
+          "kind": "theorem",
+          "name": "exactDomainNeutralCarrierOperatorIds_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "exactDomainNeutralCarrierOperatorIds_nodup"
         },
         {
           "kind": "theorem",
@@ -21166,7 +20837,71 @@
         },
         {
           "kind": "theorem",
+          "name": "exactSurfaceProjectionAnchorOperatorIds_all_hex_id_body"
+        },
+        {
+          "kind": "theorem",
+          "name": "exactSurfaceProjectionAnchorOperatorIds_all_projection_kind"
+        },
+        {
+          "kind": "theorem",
+          "name": "exactSurfaceProjectionAnchorOperatorIds_all_exactTheoremBackedStrong"
+        },
+        {
+          "kind": "theorem",
+          "name": "exactSurfaceProjectionAnchorOperatorIds_all_no_domain_gap"
+        },
+        {
+          "kind": "theorem",
+          "name": "exactCarrierMechanicStrongOperatorIds_all_exactTheoremBackedStrong"
+        },
+        {
+          "kind": "theorem",
+          "name": "exactCarrierMechanicStrongOperatorIds_all_carrier_kind"
+        },
+        {
+          "kind": "theorem",
+          "name": "exactCarrierMechanicStrongOperatorIds_all_no_domain_gap"
+        },
+        {
+          "kind": "theorem",
+          "name": "exactDomainNeutralCarrierOperatorIds_all_carrier_kind"
+        },
+        {
+          "kind": "theorem",
+          "name": "exactDomainNeutralCarrierOperatorIds_all_exactTheoremBackedStrong"
+        },
+        {
+          "kind": "theorem",
+          "name": "exactDomainNeutralCarrierOperatorIds_all_no_domain_gap"
+        },
+        {
+          "kind": "theorem",
+          "name": "exactIdentityNoopOperatorIds_all_hex_id_body"
+        },
+        {
+          "kind": "theorem",
+          "name": "exactIdentityNoopOperatorIds_all_exactTheoremBackedStrong"
+        },
+        {
+          "kind": "theorem",
+          "name": "exactIdentityNoopOperatorIds_all_no_domain_gap"
+        },
+        {
+          "kind": "theorem",
           "name": "exactTruthMarkerOperatorIds_all_bool_identity_body"
+        },
+        {
+          "kind": "theorem",
+          "name": "exactPredicateAnchorOperatorIds_all_predicate_body"
+        },
+        {
+          "kind": "theorem",
+          "name": "exactPredicateAnchorOperatorIds_all_exactTheoremBackedStrong"
+        },
+        {
+          "kind": "theorem",
+          "name": "exactPredicateAnchorOperatorIds_all_no_domain_gap"
         },
         {
           "kind": "theorem",
@@ -21219,10 +20954,10 @@
         "SSBX.Text.OperatorSignatures",
         "SSBX.Text.WenyanOperators"
       ],
-      "lines": 1448,
+      "lines": 1616,
       "module": "SSBX.Foundation.Wen.WenSurface.Semantics",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Semantics.lean",
-      "sha256": "5a9d00efd774d57d85746ee9a97038df46539ec880aed650b0e090fe05bc14bf"
+      "sha256": "5c2d8931d51e2bbf2d4d9926c45cb89769e05cec7769c6afdb7ee87445dc4dba"
     },
     {
       "cluster": "Foundation/Wen",

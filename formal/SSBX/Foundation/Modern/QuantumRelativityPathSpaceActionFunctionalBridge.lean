@@ -21,7 +21,7 @@ smooth or infinite-dimensional path-space action functional, not a variational
 principle, not an Euler-Lagrange theorem, not a Hamiltonian generator theorem,
 not a continuous unitary group, not a path integral, and not empirical closure.
 -/
-import Mathlib.Tactic
+import Mathlib.Tactic.NormNum
 import SSBX.Foundation.Modern.QuantumRelativityContinuousActionFunctionalBridge
 
 namespace SSBX.Foundation.Modern.QuantumRelativityPathSpaceActionFunctionalBridge

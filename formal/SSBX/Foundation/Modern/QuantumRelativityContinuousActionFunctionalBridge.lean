@@ -20,7 +20,7 @@ general path-space action functional, not an Euler-Lagrange theorem, not a
 Hamiltonian generator theorem, not a continuous unitary group, not a path
 integral, and not empirical closure.
 -/
-import Mathlib.Tactic
+import Mathlib.Tactic.NormNum
 import SSBX.Foundation.Modern.QuantumRelativityFinitePhaseEvolutionBridge
 
 namespace SSBX.Foundation.Modern.QuantumRelativityContinuousActionFunctionalBridge

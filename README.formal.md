@@ -7,7 +7,7 @@ package        : ssbx
 language       : Lean 4 v4.30.0-rc2
 upstream       : Mathlib master (HEAD)
 build target   : @[default_target] lean_lib SSBX (srcDir = "formal")
-build status   : 2917 jobs ✓        sorry : 0        axiom : 1        opaque : 1
+build status   : 3629 jobs ✓        sorry : 0        axiom : 1        opaque : 1
 partial defs   : 1 top-level executable definition (not an additional axiom)
 trust base     : Lean kernel + Mathlib HEAD
 namespace root : SSBX
@@ -569,7 +569,7 @@ wenyan operators          371   (`Text/WenyanOperators.lean` OperatorId catalogu
 
 ```
 trust:    Lean kernel (v4.30.0-rc2) + Mathlib HEAD
-machine:  2917 build jobs · 0 sorry · 1 axiom (kleene_recursion_axiom; cuo-restricted)
+machine:  3629 build jobs · 0 sorry · 1 axiom (kleene_recursion_axiom; cuo-restricted)
 opaque:   1 (theOne)
 partial:  1 top-level executable partial def (BaguaTuring.run nontermination boundary)
 ledger:   DAG / roster / operator / layer / essay correspondences are sync claims
