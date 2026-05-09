@@ -112,7 +112,7 @@ rg -n "全局 path enumeration|arbitrary-length causal interval|full causal set 
 
 ## 五 · 下一步
 
-S30 后的自然推进顺序：
+S30 后的自然推进顺序中，第一步已由 S31 承接：
 
 ```text
 recursive carrier
@@ -121,7 +121,7 @@ recursive carrier
 -> finite all-path support boundary
 ```
 
-下一步最省力目标不是一般 path integral，而是对 two-route source/target 证明：
+S31 已把 recursive carriers 包成 endpoint-indexed finite carrier family，并读回 two-route carrier/weight lists。下一步最省力目标不是一般 path integral，而是对 two-route source/target 证明：
 
 ```text
 the recursively generated carrier family is exactly the displayed two-route family

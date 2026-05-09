@@ -123,6 +123,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityFiniteCausalLocalityBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityFiniteCausalIntervalBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityFiniteKernelPathCarrierBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityKernelPathRecursiveCarrierBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityEndpointIndexedRecursiveCarrierBridge
 lake build SSBX
 git diff --check --
 ```
@@ -1488,6 +1489,7 @@ finite_causal_interval_bridge_summary。
 | `twoRouteSourceTargetInterval` | `QuantumRelativityFiniteCausalIntervalBridge.lean` | two-route source/target 的 middle 为 `[upper, lower]` |
 | `finite_causal_interval_bridge_summary` | `QuantumRelativityFiniteCausalIntervalBridge.lean` | S28 displayed two-step causal interval boundary 已关闭 |
 | `kernel_path_recursive_carrier_bridge_summary` | `QuantumRelativityKernelPathRecursiveCarrierBridge.lean` | S30 recursive finite kernel path carrier boundary 已关闭 |
+| `endpoint_indexed_recursive_carrier_bridge_summary` | `QuantumRelativityEndpointIndexedRecursiveCarrierBridge.lean` | S31 endpoint-indexed recursive carrier family boundary 已关闭 |
 
 ## S29 · 有限核路径载体候选
 
@@ -1566,6 +1568,43 @@ kernel_path_recursive_carrier_bridge_summary。
 | `twoRouteRecursiveKernelCarrierFamily` | `QuantumRelativityKernelPathRecursiveCarrierBridge.lean` | two-route upper/lower 形成 finite recursive carrier family |
 | `kernel_path_recursive_carrier_bridge_summary` | `QuantumRelativityKernelPathRecursiveCarrierBridge.lean` | S30 recursive kernel path carrier boundary 已关闭 |
 
+## S31 · 端点索引递归载体族候选
+
+目标：把 S30 的 recursive carriers 包成 endpoint-indexed finite carrier family。S31 不证明 all-path completeness、global path enumeration、arbitrary-length causal intervals、general path integral、Lorentzian geometry、metric recovery 或 empirical closure；它只证明 family member 共享端点读法、two-route carrier/weight lists 与 displayed weight sum。
+
+| 项 | 内容 |
+|---|---|
+| Lean 出口 | `endpoint_indexed_recursive_carrier_bridge_summary` |
+| 最低 theorem 形态 | 合取 `EndpointIndexedRecursiveCarrierFamilyClosed`、`TwoRouteEndpointIndexedRecursiveFamilyClosed`、S30 recursive carrier boundary、twoRoute carrier/weight list 与 Wen coverage |
+| 失败记录 | 若构建失败，记录是否为 dependent list member、carrier list simplification、weight sum simplification 或 overclaim mismatch |
+| 文档更新 | 已新增《端点索引递归载体族候选 · Markov桥S31》 |
+| 后续结构 | two-route toy carrier-family completeness、finite all-path support boundary、general all-path enumeration、path integral 与 empirical closure |
+
+通过判准：
+
+```text
+EndpointIndexedRecursiveKernelCarrierFamily；
+EndpointIndexedRecursiveKernelCarrierFamily.member_start_mem；
+EndpointIndexedRecursiveKernelCarrierFamily.member_stop_mem；
+EndpointIndexedRecursiveKernelCarrierFamily.member_causal_before；
+EndpointIndexedRecursiveKernelCarrierFamily.member_weight_readback；
+twoRouteEndpointIndexedRecursiveCarrierFamily；
+two_route_endpoint_indexed_recursive_family_carriers；
+two_route_endpoint_indexed_recursive_family_weights；
+two_route_endpoint_indexed_recursive_family_weight_sum；
+endpoint_indexed_recursive_carrier_bridge_summary。
+```
+
+当前状态：
+
+| theorem | 文件 | 读法 |
+|---|---|---|
+| `EndpointIndexedRecursiveKernelCarrierFamily` | `QuantumRelativityEndpointIndexedRecursiveCarrierBridge.lean` | recursive carriers 可包成同端点 finite family |
+| `member_start_mem`、`member_stop_mem`、`member_causal_before`、`member_weight_readback` | `QuantumRelativityEndpointIndexedRecursiveCarrierBridge.lean` | 任意 member 可读回 shared endpoints、causalBefore 与 path weight |
+| `twoRouteEndpointIndexedRecursiveCarrierFamily` | `QuantumRelativityEndpointIndexedRecursiveCarrierBridge.lean` | two-route upper/lower carriers 被端点索引 |
+| `two_route_endpoint_indexed_recursive_family_weight_sum` | `QuantumRelativityEndpointIndexedRecursiveCarrierBridge.lean` | two-route displayed carrier weights 总和为 `2` |
+| `endpoint_indexed_recursive_carrier_bridge_summary` | `QuantumRelativityEndpointIndexedRecursiveCarrierBridge.lean` | S31 endpoint-indexed recursive carrier family boundary 已关闭 |
+
 ## 失败记录追加区
 
 失败记录格式沿用验证计划，并允许追加在此区：
@@ -1631,6 +1670,7 @@ kernel_path_recursive_carrier_bridge_summary。
 | 2026-05-09 | S28 | failure retained / success | 第一次 build 中 singleton/list membership 的 `simp` 未关闭 impossible cases 与 direct membership cases；第二次 build 中 `List.mem_cons_of_mem` 显式实参形状不匹配；改为 membership-to-equality/disjunction、`List.mem_singleton_self`、`List.mem_cons_self` 与 `List.mem_cons_of_mem _ proof` 后关闭 displayed two-step causal interval boundary |
 | 2026-05-09 | S29 | success | 新增 finite kernel path displayed carrier candidate 与 sound two-step path-local interval；关闭 displayed carrier 的 weight/causal readback、concrete carrier 到 S28 interval points、two-route upper/lower carrier weight boundary |
 | 2026-05-09 | S30 | failure retained / success | 第一次 build 中 indexed `KernelPath` induction 的 `refl` 分支不接受显式参数，且若干 list equality 目标在 `simp` 后仍需 `rfl` 收尾；修正后关闭 constructor-recursive points、endpoint membership、append carrier readback 与 two-route recursive carrier family boundary |
+| 2026-05-09 | S31 | success | 新增 endpoint-indexed recursive carrier family candidate；关闭 member endpoint/causal readback、two-route carrier/weight lists 与 displayed weight sum |
 
 ## 统一用语正名
 
@@ -1638,9 +1678,9 @@ kernel_path_recursive_carrier_bridge_summary。
 
 | 词 | 在本路线中的含义 | 结构依据 |
 |---|---|---|
-| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S30 已关闭的 summary theorem 与路线日志 |
-| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8-S30 pending list |
-| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary`、`normalized_mass_bridge_summary`、`born_weight_normalization_bridge_summary`、`born_distribution_bridge_summary`、`channel_compose_bridge_summary`、`channel_compose_associativity_bridge_summary`、`sum_over_middle_channel_bridge_summary`、`sum_over_middle_born_distribution_bridge_summary`、`unitary_cptp_ledger_bridge_summary`、`born_rule_derivation_bridge_summary`、`path_weight_multiplication_bridge_summary`、`nontrivial_quantum_channel_law_bridge_summary`、`born_measurement_bridge_summary`、`action_amplitude_measurement_bridge_summary`、`finite_phase_evolution_bridge_summary`、`continuous_action_functional_bridge_summary`、`path_space_action_functional_bridge_summary`、`finite_action_extremum_bridge_summary`、`finite_causal_locality_bridge_summary`、`finite_causal_interval_bridge_summary`、`finite_kernel_path_carrier_bridge_summary`、`kernel_path_recursive_carrier_bridge_summary` |
+| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S31 已关闭的 summary theorem 与路线日志 |
+| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8-S31 pending list |
+| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary`、`normalized_mass_bridge_summary`、`born_weight_normalization_bridge_summary`、`born_distribution_bridge_summary`、`channel_compose_bridge_summary`、`channel_compose_associativity_bridge_summary`、`sum_over_middle_channel_bridge_summary`、`sum_over_middle_born_distribution_bridge_summary`、`unitary_cptp_ledger_bridge_summary`、`born_rule_derivation_bridge_summary`、`path_weight_multiplication_bridge_summary`、`nontrivial_quantum_channel_law_bridge_summary`、`born_measurement_bridge_summary`、`action_amplitude_measurement_bridge_summary`、`finite_phase_evolution_bridge_summary`、`continuous_action_functional_bridge_summary`、`path_space_action_functional_bridge_summary`、`finite_action_extremum_bridge_summary`、`finite_causal_locality_bridge_summary`、`finite_causal_interval_bridge_summary`、`finite_kernel_path_carrier_bridge_summary`、`kernel_path_recursive_carrier_bridge_summary`、`endpoint_indexed_recursive_carrier_bridge_summary` |
 
 推荐正名句：
 

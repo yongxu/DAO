@@ -4,7 +4,7 @@
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
-    "Foundation/Modern": 89,
+    "Foundation/Modern": 90,
     "Foundation/Wen": 51,
     "Foundation/Yi": 2,
     "Model": 2,
@@ -200,6 +200,7 @@
         "SSBX.Foundation.Modern.QuantumRelativityFiniteCausalIntervalBridge",
         "SSBX.Foundation.Modern.QuantumRelativityFiniteKernelPathCarrierBridge",
         "SSBX.Foundation.Modern.QuantumRelativityKernelPathRecursiveCarrierBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityEndpointIndexedRecursiveCarrierBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -222,10 +223,10 @@
         "SSBX.Foundation.Modern.KeBoundary",
         "SSBX.Foundation.Modern.QuantumSpacetime"
       ],
-      "lines": 215,
+      "lines": 216,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "b671c2c6bff137816e4caad1dcd7c9f8242e11fec92b361d5b11f714d1ecd06d"
+      "sha256": "c8ffb70c965a14f39393e745e2996d3402b198d536aeed4a39a44367b1f5a126"
     },
     {
       "cluster": "root",
@@ -12809,6 +12810,188 @@
       "module": "SSBX.Foundation.Modern.QuantumRelativityInterferenceBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityInterferenceBridge.lean",
       "sha256": "9233d0ad1b07f2716d8c3737d0c8beb5c49e9ba5c70eba82c1d137b2ce6effdc"
+    },
+    {
+      "cluster": "Foundation/Modern",
+      "declaration_count": 42,
+      "declarations": [
+        {
+          "kind": "def",
+          "name": "kernelPathTargets"
+        },
+        {
+          "kind": "def",
+          "name": "kernelPathPoints"
+        },
+        {
+          "kind": "theorem",
+          "name": "kernelPathTargets_refl"
+        },
+        {
+          "kind": "theorem",
+          "name": "kernelPathTargets_snoc"
+        },
+        {
+          "kind": "theorem",
+          "name": "kernelPathPoints_refl"
+        },
+        {
+          "kind": "theorem",
+          "name": "kernelPathPoints_snoc"
+        },
+        {
+          "kind": "theorem",
+          "name": "kernelPath_start_mem"
+        },
+        {
+          "kind": "theorem",
+          "name": "kernelPath_stop_mem"
+        },
+        {
+          "kind": "theorem",
+          "name": "kernelPathTargets_append"
+        },
+        {
+          "kind": "theorem",
+          "name": "kernelPathPoints_append"
+        },
+        {
+          "kind": "def",
+          "name": "recursiveKernelPathCarrier"
+        },
+        {
+          "kind": "theorem",
+          "name": "recursive_kernel_path_carrier_points"
+        },
+        {
+          "kind": "theorem",
+          "name": "recursive_kernel_path_carrier_weight"
+        },
+        {
+          "kind": "theorem",
+          "name": "recursive_kernel_path_carrier_reachable"
+        },
+        {
+          "kind": "theorem",
+          "name": "recursive_kernel_path_carrier_causal_before"
+        },
+        {
+          "kind": "theorem",
+          "name": "recursive_kernel_path_carrier_append_points"
+        },
+        {
+          "kind": "def",
+          "name": "RecursiveKernelPathCarrierClosed"
+        },
+        {
+          "kind": "theorem",
+          "name": "recursive_kernel_path_carrier_closed"
+        },
+        {
+          "kind": "def",
+          "name": "KernelPathAppendCarrierClosed"
+        },
+        {
+          "kind": "theorem",
+          "name": "kernel_path_append_carrier_closed"
+        },
+        {
+          "kind": "def",
+          "name": "concreteRecursiveKernelCarrier"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_recursive_kernel_carrier_points"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_recursive_kernel_carrier_matches_s29"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_recursive_kernel_carrier_weight"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteUpperRecursiveKernelCarrier"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteLowerRecursiveKernelCarrier"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_upper_recursive_kernel_carrier_points"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_lower_recursive_kernel_carrier_points"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_upper_recursive_kernel_carrier_matches_s29"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_lower_recursive_kernel_carrier_matches_s29"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_upper_recursive_kernel_carrier_weight"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_lower_recursive_kernel_carrier_weight"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteRecursiveKernelCarrierFamily"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_recursive_kernel_carrier_family_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_recursive_kernel_carrier_family_carriers"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_recursive_kernel_carrier_family_weights"
+        },
+        {
+          "kind": "def",
+          "name": "FiniteRecursiveKernelCarrierFamilyClosed"
+        },
+        {
+          "kind": "theorem",
+          "name": "finite_recursive_kernel_carrier_family_closed"
+        },
+        {
+          "kind": "inductive",
+          "name": "PendingBeyondS30"
+        },
+        {
+          "kind": "def",
+          "name": "ClosedByStepwiseS30"
+        },
+        {
+          "kind": "theorem",
+          "name": "pending_boundary_not_closed_by_s30"
+        },
+        {
+          "kind": "theorem",
+          "name": "kernel_path_recursive_carrier_bridge_summary"
+        }
+      ],
+      "imports": [
+        "Mathlib.Tactic",
+        "SSBX.Foundation.Modern.QuantumRelativityFiniteKernelPathCarrierBridge"
+      ],
+      "lines": 379,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityKernelPathRecursiveCarrierBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityKernelPathRecursiveCarrierBridge.lean",
+      "sha256": "3172e22a9568de493a5ef2ea0fc4d75bb6b5cabe98f584f7f3e22e99680a6bed"
     },
     {
       "cluster": "Foundation/Modern",
