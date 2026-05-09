@@ -9,7 +9,7 @@ This file gives every `OperatorId × Cell192` pair a machine-checkable semantic
 row.  It does not hand-write 71,232 denotational theorems.  Each row carries the
 total text-level signature coverage and a conservative machine denotation. Exact
 `Cell192` transform operators carry their concrete output cell; every remaining
-operator carries a signature-preserving cell carrier denotation, intentionally
+operator carries a signature-preserving support-cell carrier, intentionally
 weaker than a domain-specific meaning.
 -/
 
@@ -20,65 +20,80 @@ open SSBX.Text.WenyanOperators
 open SSBX.Text.OperatorFamilySemantics
 open SSBX.Text.OperatorSignatures
 
-/-- Semantic evidence attached to one operator-cell pair. -/
-inductive OperatorCellSemanticEvidence where
-  | familyBackedDenotation
-  | signatureCarrierDenotation
-  | exactSignatureShape
-  | catalogueSignatureShape
-  deriving Repr, DecidableEq, BEq
-
-/-- Family namespace for denotations used by operator-cell rows. -/
-inductive OperatorFamilyId where
-  | cellTransform (kind : CellTransformKind)
-  | signatureCarrier (kind : SignatureKind)
+/-- Machine-denotation kind attached to one operator-cell pair. -/
+inductive OperatorCellDenotationKind where
+  | exactCellTransform
+  | signatureCarrier
   deriving Repr, DecidableEq, BEq
 
 /--
-Denotation evidence for one operator-cell pair.
+Total denotation evidence for one operator-cell pair.
 
-`outputCell?` is present for the exact transform rows and for conservative
-signature carriers. For carrier rows it is the unchanged input cell: a total
-machine denotation over the Bagua grid, not a claim of richer domain semantics.
+Exact transform rows record both the input and output cell. Signature-carrier
+rows keep only a support cell plus the operator's signature kind; they are total
+machine support over the Bagua grid, not a claim of richer domain semantics.
 -/
-structure OperatorCellDenotation where
-  family : OperatorFamilyId
-  outputCell? : Option Cell192
+inductive OperatorCellDenotation where
+  | exactTransform (kind : CellTransformKind) (input output : Cell192)
+  | signatureCarrier (signatureKind : SignatureKind) (supportCell : Cell192)
   deriving Repr, DecidableEq
+
+namespace OperatorCellDenotation
+
+def kind : OperatorCellDenotation → OperatorCellDenotationKind
+  | .exactTransform .. => .exactCellTransform
+  | .signatureCarrier .. => .signatureCarrier
+
+def supportCell : OperatorCellDenotation → Cell192
+  | .exactTransform _ input _ => input
+  | .signatureCarrier _ supportCell => supportCell
+
+def transformedCell? : OperatorCellDenotation → Option Cell192
+  | .exactTransform _ _ output => some output
+  | .signatureCarrier .. => none
+
+def isExactTransform (denotation : OperatorCellDenotation) : Bool :=
+  denotation.kind == OperatorCellDenotationKind.exactCellTransform
+
+def isSignatureCarrier (denotation : OperatorCellDenotation) : Bool :=
+  denotation.kind == OperatorCellDenotationKind.signatureCarrier
+
+end OperatorCellDenotation
 
 structure OperatorCellSemanticRow where
   id : OperatorId
   cell : Cell192
   signature : CoveredOperatorSignature
-  denotation? : Option OperatorCellDenotation
+  denotation : OperatorCellDenotation
   cellTransform? : Option Cell192
-  evidence : OperatorCellSemanticEvidence
+  denotationKind : OperatorCellDenotationKind
   deriving Repr
 
-def operatorCellDenotationFor? (id : OperatorId) (cell : Cell192) :
-    Option OperatorCellDenotation :=
+def operatorCellDenotationFor (id : OperatorId) (cell : Cell192) :
+    OperatorCellDenotation :=
   match cellTransformForOperator? id with
   | some kind =>
-      some { family := .cellTransform kind, outputCell? := some (kind.apply cell) }
-  | none =>
-      some
-        { family := .signatureCarrier (fullSignatureFor id).kind
-        , outputCell? := some cell }
+      .exactTransform kind cell (kind.apply cell)
+  | none => .signatureCarrier (fullSignatureFor id).kind cell
 
-def semanticEvidenceFor (id : OperatorId) (_cell : Cell192) :
-    OperatorCellSemanticEvidence :=
-  match cellTransformForOperator? id with
-  | some _ => .familyBackedDenotation
-  | none => .signatureCarrierDenotation
+/-- Compatibility wrapper for callers that still expect an optional denotation. -/
+def operatorCellDenotationFor? (id : OperatorId) (cell : Cell192) :
+    Option OperatorCellDenotation :=
+  some (operatorCellDenotationFor id cell)
+
+def operatorCellDenotationKindFor (id : OperatorId) (cell : Cell192) :
+    OperatorCellDenotationKind :=
+  (operatorCellDenotationFor id cell).kind
 
 def operatorCellSemanticRow (id : OperatorId) (cell : Cell192) :
     OperatorCellSemanticRow :=
+  let denotation := operatorCellDenotationFor id cell
   { id := id
   , cell := cell
   , signature := fullSignatureFor id
-  , denotation? := operatorCellDenotationFor? id cell
-  , cellTransform? := applyCellTransformForOperator? id cell
-  , evidence := semanticEvidenceFor id cell }
+  , denotation := denotation
+  , cellTransform? := denotation.transformedCell?
+  , denotationKind := denotation.kind }
 
 def operatorCellSemanticRowsFor (id : OperatorId) : List OperatorCellSemanticRow :=
   Cell192.all.map (operatorCellSemanticRow id)
@@ -90,28 +105,31 @@ def allOperatorCellSemanticRows : List OperatorCellSemanticRow :=
 def allOperatorCellSemanticPairs : List (OperatorId × Cell192) :=
   allOperatorCellSemanticRows.map (fun row => (row.id, row.cell))
 
-def familyBackedDenotationRows : List OperatorCellSemanticRow :=
+def exactCellTransformDenotationRows : List OperatorCellSemanticRow :=
   allOperatorCellSemanticRows.filter
-    (fun row => row.evidence == OperatorCellSemanticEvidence.familyBackedDenotation)
+    (fun row => row.denotationKind == OperatorCellDenotationKind.exactCellTransform)
+
+/-- Legacy alias: exact cell-transform rows were formerly called family-backed. -/
+def familyBackedDenotationRows : List OperatorCellSemanticRow :=
+  exactCellTransformDenotationRows
 
 def signatureCarrierDenotationRows : List OperatorCellSemanticRow :=
   allOperatorCellSemanticRows.filter
-    (fun row => row.evidence == OperatorCellSemanticEvidence.signatureCarrierDenotation)
+    (fun row => row.denotationKind == OperatorCellDenotationKind.signatureCarrier)
 
 def machineDenotationRows : List OperatorCellSemanticRow :=
-  allOperatorCellSemanticRows.filter
-    (fun row => row.denotation?.isSome)
+  allOperatorCellSemanticRows
 
 def executableCellTransformRows : List OperatorCellSemanticRow :=
-  familyBackedDenotationRows
+  exactCellTransformDenotationRows
 
+/-- Legacy empty list: shape-only rows are no longer part of the core denotation API. -/
 def exactSignatureShapeRows : List OperatorCellSemanticRow :=
-  allOperatorCellSemanticRows.filter
-    (fun row => row.evidence == OperatorCellSemanticEvidence.exactSignatureShape)
+  []
 
+/-- Legacy empty list: shape-only rows are no longer part of the core denotation API. -/
 def catalogueSignatureShapeRows : List OperatorCellSemanticRow :=
-  allOperatorCellSemanticRows.filter
-    (fun row => row.evidence == OperatorCellSemanticEvidence.catalogueSignatureShape)
+  []
 
 theorem operatorCellSemanticRowsFor_length (id : OperatorId) :
     (operatorCellSemanticRowsFor id).length = 192 := by
@@ -125,9 +143,13 @@ theorem allOperatorCellSemanticPairs_length :
     allOperatorCellSemanticPairs.length = 71232 := by
   rw [allOperatorCellSemanticPairs, List.length_map, allOperatorCellSemanticRows_length]
 
+theorem exactCellTransformDenotationRows_length :
+    exactCellTransformDenotationRows.length = 8256 := by
+  native_decide
+
 theorem familyBackedDenotationRows_length :
     familyBackedDenotationRows.length = 8256 := by
-  native_decide
+  rw [familyBackedDenotationRows, exactCellTransformDenotationRows_length]
 
 theorem signatureCarrierDenotationRows_length :
     signatureCarrierDenotationRows.length = 62976 := by
@@ -135,11 +157,11 @@ theorem signatureCarrierDenotationRows_length :
 
 theorem machineDenotationRows_length :
     machineDenotationRows.length = 71232 := by
-  native_decide
+  rw [machineDenotationRows, allOperatorCellSemanticRows_length]
 
 theorem executableCellTransformRows_length :
     executableCellTransformRows.length = 8256 := by
-  rw [executableCellTransformRows, familyBackedDenotationRows_length]
+  rw [executableCellTransformRows, exactCellTransformDenotationRows_length]
 
 theorem exactSignatureShapeRows_length :
     exactSignatureShapeRows.length = 0 := by
@@ -149,19 +171,24 @@ theorem catalogueSignatureShapeRows_length :
     catalogueSignatureShapeRows.length = 0 := by
   native_decide
 
+theorem operatorCellDenotationKind_partition_counts :
+    exactCellTransformDenotationRows.length
+      + signatureCarrierDenotationRows.length
+      = allOperatorCellSemanticRows.length := by
+  rw [exactCellTransformDenotationRows_length, signatureCarrierDenotationRows_length,
+    allOperatorCellSemanticRows_length]
+
 theorem operatorCellSemanticStatus_counts_sum :
     executableCellTransformRows.length
       + signatureCarrierDenotationRows.length
-      + exactSignatureShapeRows.length
-      + catalogueSignatureShapeRows.length
       = allOperatorCellSemanticRows.length := by
   rw [executableCellTransformRows_length, signatureCarrierDenotationRows_length,
-    exactSignatureShapeRows_length, catalogueSignatureShapeRows_length,
     allOperatorCellSemanticRows_length]
 
-theorem operatorCellSemanticRow_has_denotation (id : OperatorId) (cell : Cell192) :
-    (operatorCellSemanticRow id cell).denotation?.isSome = true := by
-  unfold operatorCellSemanticRow operatorCellDenotationFor?
+theorem operatorCellSemanticRow_denotation_supportCell
+    (id : OperatorId) (cell : Cell192) :
+    (operatorCellSemanticRow id cell).denotation.supportCell = cell := by
+  unfold operatorCellSemanticRow operatorCellDenotationFor
   split <;> rfl
 
 theorem operatorCellSemanticRow_signature_id (id : OperatorId) (cell : Cell192) :
@@ -194,99 +221,96 @@ theorem operatorCellSemanticRows_denotation_complete
     ∃ row, row ∈ allOperatorCellSemanticRows
       ∧ row.id = id
       ∧ row.cell = cell
-      ∧ row.denotation?.isSome = true := by
+      ∧ row.denotation.supportCell = cell := by
   refine ⟨operatorCellSemanticRow id cell, ?_, rfl, rfl, ?_⟩
   · unfold allOperatorCellSemanticRows operatorCellSemanticRowsFor
     exact List.mem_flatMap.mpr
       ⟨id, allOperatorIds_complete id,
         List.mem_map.mpr ⟨cell, Cell192.mem_all cell, rfl⟩⟩
-  · exact operatorCellSemanticRow_has_denotation id cell
+  · exact operatorCellSemanticRow_denotation_supportCell id cell
 
 theorem operatorCellSemanticRows_cuo_executable (cell : Cell192) :
-    (operatorCellSemanticRow .Z_5 cell).evidence =
-      OperatorCellSemanticEvidence.familyBackedDenotation
+    (operatorCellSemanticRow .Z_5 cell).denotationKind =
+      OperatorCellDenotationKind.exactCellTransform
       ∧ (operatorCellSemanticRow .Z_5 cell).cellTransform? = some (Cell192.hexCuo cell) := by
   constructor <;> rfl
 
 theorem operatorCellSemanticRows_zong_executable (cell : Cell192) :
-    (operatorCellSemanticRow .Z_6 cell).evidence =
-      OperatorCellSemanticEvidence.familyBackedDenotation
+    (operatorCellSemanticRow .Z_6 cell).denotationKind =
+      OperatorCellDenotationKind.exactCellTransform
       ∧ (operatorCellSemanticRow .Z_6 cell).cellTransform? = some (Cell192.hexZong cell) := by
   constructor <;> rfl
 
 theorem operatorCellSemanticRows_hu_executable (cell : Cell192) :
-    (operatorCellSemanticRow .Z_3 cell).evidence =
-      OperatorCellSemanticEvidence.familyBackedDenotation
+    (operatorCellSemanticRow .Z_3 cell).denotationKind =
+      OperatorCellDenotationKind.exactCellTransform
       ∧ (operatorCellSemanticRow .Z_3 cell).cellTransform? = some (Cell192.hexHu cell) := by
   constructor <;> rfl
 
 theorem operatorCellSemanticRows_fan_executable (cell : Cell192) :
-    (operatorCellSemanticRow .T_6 cell).evidence =
-      OperatorCellSemanticEvidence.familyBackedDenotation
+    (operatorCellSemanticRow .T_6 cell).denotationKind =
+      OperatorCellDenotationKind.exactCellTransform
       ∧ (operatorCellSemanticRow .T_6 cell).cellTransform? = some (Cell192.hexCuo cell) := by
   constructor <;> rfl
 
 theorem operatorCellSemanticRows_tui_executable (cell : Cell192) :
-    (operatorCellSemanticRow .T_10 cell).evidence =
-      OperatorCellSemanticEvidence.familyBackedDenotation
+    (operatorCellSemanticRow .T_10 cell).denotationKind =
+      OperatorCellDenotationKind.exactCellTransform
       ∧ (operatorCellSemanticRow .T_10 cell).cellTransform? =
           some (SSBX.Foundation.Yi.YiCore.«生» cell.1, cell.2) := by
   constructor <;> rfl
 
 theorem operatorCellSemanticRows_sun_executable (cell : Cell192) :
-    (operatorCellSemanticRow .T_12 cell).evidence =
-      OperatorCellSemanticEvidence.familyBackedDenotation
+    (operatorCellSemanticRow .T_12 cell).denotationKind =
+      OperatorCellDenotationKind.exactCellTransform
       ∧ (operatorCellSemanticRow .T_12 cell).cellTransform? =
           some (SSBX.Foundation.Yi.YiCore.«加» SSBX.Foundation.Yi.Yi.Hexagram.kun cell.1, cell.2) := by
   constructor <;> rfl
 
 theorem operatorCellSemanticRows_hua_executable (cell : Cell192) :
-    (operatorCellSemanticRow .T_1 cell).evidence =
-      OperatorCellSemanticEvidence.familyBackedDenotation
+    (operatorCellSemanticRow .T_1 cell).denotationKind =
+      OperatorCellDenotationKind.exactCellTransform
       ∧ (operatorCellSemanticRow .T_1 cell).cellTransform? = some (Cell192.flip2 cell) := by
   constructor <;> rfl
 
 theorem operatorCellSemanticRows_bian_executable (cell : Cell192) :
-    (operatorCellSemanticRow .T_2 cell).evidence =
-      OperatorCellSemanticEvidence.familyBackedDenotation
+    (operatorCellSemanticRow .T_2 cell).denotationKind =
+      OperatorCellDenotationKind.exactCellTransform
       ∧ (operatorCellSemanticRow .T_2 cell).cellTransform? = some (Cell192.flip3 cell) := by
   constructor <;> rfl
 
 theorem operatorCellSemanticRows_fanOperator_executable (cell : Cell192) :
-    (operatorCellSemanticRow .Z_31 cell).evidence =
-      OperatorCellSemanticEvidence.familyBackedDenotation
+    (operatorCellSemanticRow .Z_31 cell).denotationKind =
+      OperatorCellDenotationKind.exactCellTransform
       ∧ (operatorCellSemanticRow .Z_31 cell).cellTransform? = some (Cell192.hexCuo cell) := by
   constructor <;> rfl
 
 theorem operatorCellSemanticRows_fan_denotation (cell : Cell192) :
-    (operatorCellSemanticRow .T_6 cell).denotation?.isSome = true := by
+    (operatorCellSemanticRow .T_6 cell).denotationKind =
+      OperatorCellDenotationKind.exactCellTransform := by
   rfl
 
 theorem operatorCellSemanticRows_R_1_signature_carrier (cell : Cell192) :
-    (operatorCellSemanticRow .R_1 cell).evidence =
-      OperatorCellSemanticEvidence.signatureCarrierDenotation
-      ∧ (operatorCellSemanticRow .R_1 cell).denotation?.isSome = true := by
+    (operatorCellSemanticRow .R_1 cell).denotationKind =
+      OperatorCellDenotationKind.signatureCarrier
+      ∧ (operatorCellSemanticRow .R_1 cell).denotation.supportCell = cell := by
   constructor <;> rfl
 
 /--
-Summary: all 71,232 pairs have theorem-level semantic coverage rows and machine
-denotations. Exact cell execution is attached only where a current
-cell-transform family exists; the remaining rows are conservative
+Summary: all 71,232 pairs have theorem-level semantic coverage rows and total
+machine denotations. Exact cell execution is attached only where a current
+cell-transform family exists; the remaining rows are support-cell
 signature-carrier denotations.
 -/
 theorem operator_cell_semantic_coverage_summary :
     allOperatorCellSemanticRows.length = 71232
     ∧ allOperatorCellSemanticPairs.length = 71232
     ∧ machineDenotationRows.length = 71232
-    ∧ familyBackedDenotationRows.length = 8256
+    ∧ exactCellTransformDenotationRows.length = 8256
     ∧ signatureCarrierDenotationRows.length = 62976
     ∧ executableCellTransformRows.length = 8256
-    ∧ exactSignatureShapeRows.length = 0
-    ∧ catalogueSignatureShapeRows.length = 0
-    ∧ executableCellTransformRows.length
+    ∧ exactCellTransformDenotationRows.length
         + signatureCarrierDenotationRows.length
-        + exactSignatureShapeRows.length
-        + catalogueSignatureShapeRows.length
         = allOperatorCellSemanticRows.length
     ∧ (∀ id : OperatorId, (operatorCellSemanticRowsFor id).length = 192)
     ∧ (∀ id : OperatorId, ∀ cell : Cell192,
@@ -306,18 +330,40 @@ theorem operator_cell_semantic_coverage_summary :
     ⟨ allOperatorCellSemanticRows_length
     , allOperatorCellSemanticPairs_length
     , machineDenotationRows_length
-    , familyBackedDenotationRows_length
+    , exactCellTransformDenotationRows_length
     , signatureCarrierDenotationRows_length
     , executableCellTransformRows_length
-    , exactSignatureShapeRows_length
-    , catalogueSignatureShapeRows_length
-    , operatorCellSemanticStatus_counts_sum
+    , operatorCellDenotationKind_partition_counts
     , operatorCellSemanticRowsFor_length
     , operatorCellSemanticRows_signature_complete
     , fun cell => (operatorCellSemanticRows_cuo_executable cell).2
     , fun cell => (operatorCellSemanticRows_zong_executable cell).2
     , fun cell => (operatorCellSemanticRows_hu_executable cell).2
     , fun cell => (operatorCellSemanticRows_fan_executable cell).2
+    ⟩
+
+theorem operatorCellDenotation_total_summary :
+    allOperatorCellSemanticRows.length = 71232
+    ∧ machineDenotationRows.length = 71232
+    ∧ exactCellTransformDenotationRows.length = 8256
+    ∧ signatureCarrierDenotationRows.length = 62976
+    ∧ exactCellTransformDenotationRows.length
+        + signatureCarrierDenotationRows.length
+        = machineDenotationRows.length
+    ∧ (∀ id : OperatorId, ∀ cell : Cell192,
+        ∃ row, row ∈ allOperatorCellSemanticRows
+          ∧ row.id = id
+          ∧ row.cell = cell
+          ∧ row.denotation.supportCell = cell) := by
+  exact
+    ⟨ allOperatorCellSemanticRows_length
+    , machineDenotationRows_length
+    , exactCellTransformDenotationRows_length
+    , signatureCarrierDenotationRows_length
+    , by
+        rw [exactCellTransformDenotationRows_length,
+          signatureCarrierDenotationRows_length, machineDenotationRows_length]
+    , operatorCellSemanticRows_denotation_complete
     ⟩
 
 end SSBX.Text.OperatorCellSemantics

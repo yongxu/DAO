@@ -303,11 +303,13 @@ theorem wenSurface_reuses_operator_cell_semantic_summary :
     allOperatorCellSemanticRows.length = 71232
       ∧ allOperatorCellSemanticPairs.length = 71232
       ∧ machineDenotationRows.length = 71232
+      ∧ exactCellTransformDenotationRows.length = 8256
       ∧ executableCellTransformRows.length = 8256
       ∧ signatureCarrierDenotationRows.length = 62976 :=
   ⟨ allOperatorCellSemanticRows_length
   , allOperatorCellSemanticPairs_length
   , machineDenotationRows_length
+  , exactCellTransformDenotationRows_length
   , executableCellTransformRows_length
   , signatureCarrierDenotationRows_length
   ⟩

@@ -403,11 +403,9 @@ theorem functional_completion_summary :
     ∧ operatorCellCandidateBindings.length = 7
     ∧ allOperatorCellSemanticRows.length = 71232
     ∧ machineDenotationRows.length = 71232
-    ∧ familyBackedDenotationRows.length = 8256
+    ∧ exactCellTransformDenotationRows.length = 8256
     ∧ signatureCarrierDenotationRows.length = 62976
     ∧ executableCellTransformRows.length = 8256
-    ∧ exactSignatureShapeRows.length = 0
-    ∧ catalogueSignatureShapeRows.length = 0
     ∧ semanticLowerBoundRows.length = 4
     ∧ semanticLowerBoundRows.map (·.scope) = [10, 7, 12, 27]
     ∧ 27 < allOperatorCells.length
@@ -446,11 +444,9 @@ theorem functional_completion_summary :
     , operatorCellCandidateBindings_length
     , allOperatorCellSemanticRows_length
     , machineDenotationRows_length
-    , familyBackedDenotationRows_length
+    , exactCellTransformDenotationRows_length
     , signatureCarrierDenotationRows_length
     , executableCellTransformRows_length
-    , exactSignatureShapeRows_length
-    , catalogueSignatureShapeRows_length
     , semanticLowerBoundRows_length
     , semanticLowerBoundRows_scopes
     , parameterizedSemanticFamilies_lt_operatorCellGrid
