@@ -69,6 +69,14 @@ private def hexPairShow (p : Hexagram × Hexagram) : String :=
 private def hexListShow (xs : List Hexagram) : String :=
   "list [" ++ String.intercalate ", " (xs.map hexBrief) ++ "]"
 
+private def shiShow : Shi → String
+  | .ji => "已"
+  | .jin => "今"
+  | .wei => "未"
+
+private def cellBrief (c : Cell192) : String :=
+  s!"{hexBrief c.1}@{shiShow c.2}"
+
 private def readingSupportShow
     (r : SSBX.Text.OperatorReadings.OperatorReading) : String :=
   match r.operator? with
@@ -598,16 +606,46 @@ private def typeOutput (src : String) : String :=
   | .ok typed => s!"type {tyShow typed.ty}\nterm {repr typed.tm}"
   | .error e => errShow e
 
-private def catalogueRun? (src : String) : Option (OperatorId × SignatureKind × Nat) :=
+private def evalValue? (src : String) : Except WenSurfaceErr (Ty × Value) :=
   match wenyanCompile src with
-  | .error _ => none
+  | .error e => .error e
   | .ok typed =>
-      match denoteCatalogue typed.tm with
-      | some (id, kind, args) => some (id, kind, args.length)
-      | none => none
+      match eval [] typed.tm with
+      | some value => .ok (typed.ty, value)
+      | none => .error (.denoteFailed typed.ty typed.ty)
 
-private def catalogueRunShow (id : OperatorId) (kind : SignatureKind) (arity : Nat) : String :=
-  s!"catalogue {id.code} {id.title} kind {kind.key} args {arity}"
+private def valueInlineFuel : Nat → Value → String
+  | 0, _ => "..."
+  | _+1, .hexV h => "hex " ++ hexBrief h
+  | _+1, .boolV b => s!"bool {b}"
+  | _+1, .cellV c => "cell " ++ cellBrief c
+  | fuel+1, .pairV a b =>
+      "pair (" ++ valueInlineFuel fuel a ++ ") (" ++ valueInlineFuel fuel b ++ ")"
+  | fuel+1, .listV xs =>
+      "list [" ++ String.intercalate ", " (xs.map (valueInlineFuel fuel)) ++ "]"
+  | _+1, .closV _ name _ =>
+      s!"function <closure λ{name}>"
+  | fuel+1, .builtinV b args =>
+      s!"function <builtin {reprStr b}; applied {args.length}/{Builtin.arity b}>"
+        ++ if args.isEmpty then "" else " args [" ++ String.intercalate ", " (args.map (valueInlineFuel fuel)) ++ "]"
+  | fuel+1, .catalogueV id kind args =>
+      s!"catalogue {id.code} {id.title} kind {kind.key} args {args.length}"
+        ++ if args.isEmpty then "" else " [" ++ String.intercalate ", " (args.map (valueInlineFuel fuel)) ++ "]"
+
+private def valueInline (v : Value) : String :=
+  valueInlineFuel 8 v
+
+private def valueShow (ty : Ty) (v : Value) : String :=
+  match v with
+  | .catalogueV id kind args =>
+      s!"catalogue {id.code} {id.title} kind {kind.key} args {args.length}"
+        ++ if args.isEmpty then "" else "\nargs " ++ valueInline (.listV args)
+  | _ =>
+      "value " ++ valueInline v ++ "\n" ++
+      "type " ++ tyShow ty
+
+private def catalogueRunShow (id : OperatorId) (kind : SignatureKind) (args : List Value) : String :=
+  valueShow (.catalogue kind) (.catalogueV id kind args)
 
 private def jsonEscape (s : String) : String :=
   String.join <| s.toList.map fun c =>
@@ -648,6 +686,70 @@ private def hexPairJson (p : Hexagram × Hexagram) : String :=
 
 private def hexListJson (xs : List Hexagram) : String :=
   jsonArray (xs.map hexJson)
+
+private def cellJson (c : Cell192) : String :=
+  jsonObject
+    [ jsonFieldRaw "hex" (hexJson c.1)
+    , jsonFieldString "shi" (shiShow c.2)
+    ]
+
+private def valueJsonFuel : Nat → Value → String
+  | 0, _ =>
+      jsonObject [jsonFieldString "kind" "truncated"]
+  | _+1, .hexV h =>
+      jsonObject
+        [ jsonFieldString "kind" "hex"
+        , jsonFieldNat "idx" (Hexagram.toIdx h).val
+        , jsonFieldString "label" (hexLabel h)
+        ]
+  | _+1, .boolV b =>
+      jsonObject
+        [ jsonFieldString "kind" "bool"
+        , jsonFieldBool "value" b
+        ]
+  | _+1, .cellV c =>
+      jsonObject
+        [ jsonFieldString "kind" "cell"
+        , jsonFieldRaw "value" (cellJson c)
+        ]
+  | fuel+1, .pairV a b =>
+      jsonObject
+        [ jsonFieldString "kind" "pair"
+        , jsonFieldRaw "fst" (valueJsonFuel fuel a)
+        , jsonFieldRaw "snd" (valueJsonFuel fuel b)
+        ]
+  | fuel+1, .listV xs =>
+      jsonObject
+        [ jsonFieldString "kind" "list"
+        , jsonFieldRaw "values" (jsonArray (xs.map (valueJsonFuel fuel)))
+        ]
+  | _+1, .closV _ name _ =>
+      jsonObject
+        [ jsonFieldString "kind" "function"
+        , jsonFieldString "functionKind" "closure"
+        , jsonFieldString "binder" name
+        ]
+  | fuel+1, .builtinV b args =>
+      jsonObject
+        [ jsonFieldString "kind" "function"
+        , jsonFieldString "functionKind" "builtin"
+        , jsonFieldString "builtin" (reprStr b)
+        , jsonFieldNat "appliedArgs" args.length
+        , jsonFieldNat "arity" (Builtin.arity b)
+        , jsonFieldRaw "args" (jsonArray (args.map (valueJsonFuel fuel)))
+        ]
+  | fuel+1, .catalogueV id kind args =>
+      jsonObject
+        [ jsonFieldString "kind" "catalogue"
+        , jsonFieldString "operatorCode" id.code
+        , jsonFieldString "operatorTitle" id.title
+        , jsonFieldString "signatureKind" kind.key
+        , jsonFieldNat "arity" args.length
+        , jsonFieldRaw "args" (jsonArray (args.map (valueJsonFuel fuel)))
+        ]
+
+private def valueJson (v : Value) : String :=
+  valueJsonFuel 8 v
 
 private def endColOfSurface (startCol : Nat) (surface : String) : Nat :=
   startCol + surface.toList.length
@@ -1196,17 +1298,42 @@ private def jsonOutput (src : String) : String :=
               , jsonFieldRaw "values" (hexListJson xs)
               ]
         | .error _ =>
-            match catalogueRun? src with
-            | some (id, kind, arity) =>
+            match evalValue? src with
+            | .ok (ty, value) =>
+              match value with
+              | .catalogueV id kind args =>
                 jsonObject
                   [ jsonFieldBool "ok" true
                   , jsonFieldString "kind" "catalogue"
                   , jsonFieldString "operatorCode" id.code
                   , jsonFieldString "operatorTitle" id.title
                   , jsonFieldString "signatureKind" kind.key
-                  , jsonFieldNat "arity" arity
+                  , jsonFieldNat "arity" args.length
+                  , jsonFieldRaw "args" (jsonArray (args.map valueJson))
+                  , jsonFieldRaw "value" (valueJson value)
                   ]
-            | none => errJson eHex
+              | .closV _ _ _ =>
+                jsonObject
+                  [ jsonFieldBool "ok" true
+                  , jsonFieldString "kind" "function"
+                  , jsonFieldString "type" (tyShow ty)
+                  , jsonFieldRaw "value" (valueJson value)
+                  ]
+              | .builtinV _ _ =>
+                jsonObject
+                  [ jsonFieldBool "ok" true
+                  , jsonFieldString "kind" "function"
+                  , jsonFieldString "type" (tyShow ty)
+                  , jsonFieldRaw "value" (valueJson value)
+                  ]
+              | _ =>
+                jsonObject
+                  [ jsonFieldBool "ok" true
+                  , jsonFieldString "kind" "value"
+                  , jsonFieldString "type" (tyShow ty)
+                  , jsonFieldRaw "value" (valueJson value)
+                  ]
+            | .error _ => errJson eHex
 
 private def programOk (src : String) : Bool :=
   match wenyanInterp src with
@@ -1216,11 +1343,14 @@ private def programOk (src : String) : Bool :=
       | .ok _ => true
       | .error _ =>
           match wenyanInterpHexPair src with
-          | .ok _ => true
-          | .error _ =>
-              match wenyanInterpHexList src with
               | .ok _ => true
-              | .error _ => (catalogueRun? src).isSome
+              | .error _ =>
+                  match wenyanInterpHexList src with
+                  | .ok _ => true
+                  | .error _ =>
+                      match evalValue? src with
+                      | .ok _ => true
+                      | .error _ => false
 
 private def tokensOk (src : String) : Bool :=
   match lexWen src with
@@ -1244,11 +1374,6 @@ private def typecheckOk (src : String) : Bool :=
   match wenyanCompile src with
   | .ok _ => true
   | .error _ => false
-
-private def shiShow : Shi → String
-  | .ji => "已"
-  | .jin => "今"
-  | .wei => "未"
 
 private def yiInstrShow : YiInstr → String
   | .nop => "nop"
@@ -1360,9 +1485,12 @@ private def runProgram (src : String) : String :=
         match wenyanInterpHexList src with
         | .ok xs => hexListShow xs
         | .error _ =>
-            match catalogueRun? src with
-            | some (id, kind, arity) => catalogueRunShow id kind arity
-            | none => errShow eHex   -- show the original (Hex-attempt) error
+            match evalValue? src with
+            | .ok (ty, value) =>
+                match value with
+                | .catalogueV id kind args => catalogueRunShow id kind args
+                | _ => valueShow ty value
+            | .error _ => errShow eHex   -- show the original (Hex-attempt) error
 
 private def explainOutput (src : String) : String :=
   String.intercalate "\n\n"

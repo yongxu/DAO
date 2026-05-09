@@ -16,7 +16,19 @@ import sys
 REPO_ROOT = Path(__file__).resolve().parents[1]
 BUILT_BIN = REPO_ROOT / ".lake" / "build" / "bin" / "wenyan-surface"
 
+QIAN_VALUE = {"kind": "hex", "idx": 0, "label": " («乾»)"}
+E2_QIAN_QIAN_VALUE = {
+    "kind": "catalogue",
+    "operatorCode": "E-2",
+    "operatorTitle": "曰",
+    "signatureKind": "TEXT",
+    "arity": 2,
+    "args": [QIAN_VALUE, QIAN_VALUE],
+}
+
 CASES = [
+    ("推", {"ok": True, "kind": "function", "type": "(Hex -> Hex)", "value": {"kind": "function", "functionKind": "closure", "binder": "x"}}),
+    ("在 乾", {"ok": True, "kind": "function", "type": "(Hex -> Bool)", "value": {"kind": "function", "functionKind": "builtin", "builtin": "SSBX.Foundation.Wen.WenDefEval.Builtin.eqHex", "appliedArgs": 1, "arity": 2, "args": [QIAN_VALUE]}}),
     ("推 一", {"ok": True, "kind": "hex", "idx": 2}),
     ("損 乾", {"ok": True, "kind": "hex", "idx": 63}),
     ("同 一 一", {"ok": True, "kind": "bool", "value": True}),
@@ -100,7 +112,7 @@ CASES = [
     ("器", {"ok": True, "kind": "hex", "idx": 17}),
     ("鼎", {"ok": True, "kind": "hex", "idx": 17}),
     ("大壯", {"ok": True, "kind": "hex", "idx": 48}),
-    ("曰 乾 乾", {"ok": True, "kind": "catalogue", "operatorCode": "E-2", "operatorTitle": "曰", "signatureKind": "TEXT", "arity": 2}),
+    ("曰 乾 乾", {"ok": True, **E2_QIAN_QIAN_VALUE, "value": E2_QIAN_QIAN_VALUE}),
 ]
 
 NEGATIVE_CASES = [
@@ -122,7 +134,6 @@ NEGATIVE_CASES = [
     ("或 真", {"phase": "resolve", "code": "ambiguous_reading", "surface": "或", "startCol": 0, "endCol": 1, "candidateCount": 2}),
     ("故 假 假", {"phase": "resolve", "code": "ambiguous_reading", "surface": "故", "startCol": 0, "endCol": 1, "candidateCount": 3}),
     ("而 不 不 真", {"phase": "type", "code": "type_mismatch", "expectedType": "(Hex -> Hex)", "actualType": "(Bool -> Bool)", "surface": "不", "startCol": 2, "endCol": 3}),
-    ("在 乾", {"phase": "denote", "code": "denote_failed", "expectedType": "Hex", "actualType": "(Hex -> Bool)"}),
     ("凡 甲 不 甲", {"phase": "type", "code": "type_mismatch", "expectedType": "Bool", "actualType": "Hex"}),
     ("一 同 一 同 一", {"phase": "parse", "code": "nonassoc_infix", "surface": "同", "startCol": 6, "endCol": 7}),
     ("（推 一", {"phase": "parse", "code": "unmatched_open_bracket", "surface": "（", "startCol": 0, "endCol": 1}),
@@ -144,6 +155,7 @@ CLI_CASES = [
     (["--typecheck", "同 一 一"], "type Bool"),
     (["--typecheck", "（推 一）"], "type Hex"),
     (["--typecheck", "推"], "type (Hex -> Hex)"),
+    (["推"], "function <closure λx>"),
     (["--typecheck", "改"], "type (Hex -> Hex)"),
     (["--typecheck", "不"], "type (Bool -> Bool)"),
     (["--typecheck", "同 乾"], "type (Hex -> Bool)"),
@@ -336,6 +348,7 @@ CLI_CASES = [
     (["--operator", "E-2"], "executable note: structural catalogue normal form"),
     (["--operator", "E-2"], "carrier kind: catalogue-normal-form"),
     (["--operator", "E-2"], "domain gap: catalogue-shape-only"),
+    (["曰 乾 乾"], "args list [hex idx 0 («乾»), hex idx 0 («乾»)]"),
     (["--operator", "R-12"], "semantic strength: exact-structural-helper"),
     (["--operator", "R-12"], "carrier kind: pair-carrier"),
     (["--operator", "R-12"], "domain gap: carrier-constructor-only"),
