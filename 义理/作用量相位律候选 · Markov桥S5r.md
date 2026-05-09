@@ -78,7 +78,8 @@ theorem action_phase_law_bridge_summary :
 | 轴 | 状态 | 说明 |
 |---|---|---|
 | displayed continuous action functional | 已由 S24 承接 | S24 给出 `S(t)=t` 的 continuous action-coordinate functional，并在 `0/1` 采样点回到本页 action index |
-| general path-space action functional | 后续结构 | 仍未处理路径空间上的作用量泛函、变分或极值 |
+| finite quotient path-space action functional | 已由 S25 承接 | S25 把本页 action index 接到 two-route quotient path classes 上的 action values |
+| smooth or infinite-dimensional path-space action functional | 后续结构 | 仍未处理路径流形、变分或极值 |
 | Hamiltonian / unitary dynamics | 后续结构 | 仍未给出动力学生成律 |
 | path integral | 后续结构 | 仍需要一般路径空间、求和/积分与极限 |
 | Born rule derivation | 后续结构 | 仍只记录 Born-shaped candidate weight |
@@ -111,7 +112,7 @@ finite action-to-phase law
 -> stepwise unification candidate summary
 ```
 
-S22/S24 已经补上两条后续链：
+S22/S24/S25 已经补上三条后续链：
 
 ```text
 finite action-to-phase law
@@ -124,9 +125,13 @@ finite action-to-phase law
 finite action-to-phase law
 -> displayed continuous action-coordinate functional
 -> sampled finite phase evolution
+
+finite action-to-phase law
+-> finite quotient path-space action functional
+-> quotient-support action-induced cancellation
 ```
 
-再往后可以继续 path-space action functional、Euler-Lagrange、Hamiltonian/unitary dynamics 与 path integral。每条线都必须保持 machine-checked theorem 和失败记录。
+再往后可以继续 smooth/infinite-dimensional path-space action functional、Euler-Lagrange、Hamiltonian/unitary dynamics 与 path integral。每条线都必须保持 machine-checked theorem 和失败记录。
 
 ---
 

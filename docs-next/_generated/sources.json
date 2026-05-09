@@ -1,5 +1,5 @@
 {
-  "count": 454,
+  "count": 456,
   "include_archive": false,
   "sources": [
     {
@@ -21,9 +21,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 82235,
+      "bytes": 82289,
       "path": "WenyanSurface.lean",
-      "sha256": "f3e8f8b030ff7e0a27973337dad48a0f76dfe0dc3baa96b86ff33609eadfb73c",
+      "sha256": "23b10dcfcc7be7f4ab1749041b5208ba07a25cdcf7aa0994b13f9c535b0f286a",
       "suffix": ".lean"
     },
     {
@@ -99,9 +99,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 3626,
+      "bytes": 3679,
       "path": "docs-next/10_formal_形式/modern.md",
-      "sha256": "3be159347d40e85a3328bae71dd8df2cdced3c2663a28100e19be9601f43b0f0",
+      "sha256": "57f6b62ec2a37eaca5d95c42054f5cef4b6d937a305b2978711b41813fa36ac2",
       "suffix": ".md"
     },
     {
@@ -357,9 +357,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 9546,
+      "bytes": 9625,
       "path": "formal/SSBX.lean",
-      "sha256": "053143ca320ea7b333b397b4ae8845b6d8847d93dbb2817ee29541f82f0e38a4",
+      "sha256": "b88062a21fe627803717d8c6b8db1c8518386bad6833692d84eaa26b55b3d259",
       "suffix": ".lean"
     },
     {
@@ -825,6 +825,12 @@
       "suffix": ".lean"
     },
     {
+      "bytes": 9504,
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityContinuousActionFunctionalBridge.lean",
+      "sha256": "556da44466bb354aaa34049cd1516e3509eaaae533637ad0e5805a135cbe5311",
+      "suffix": ".lean"
+    },
+    {
       "bytes": 11371,
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean",
       "sha256": "8c8eb9fc01650bf3606bbda879b7ff54303d30de55069f5b8bffad1538a906db",
@@ -1191,9 +1197,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 35570,
+      "bytes": 36164,
       "path": "formal/SSBX/Foundation/Wen/WenDef.lean",
-      "sha256": "842d54873773ffa3673a44438aadfa87f063a2bf42e8c15a68473d209fa1466b",
+      "sha256": "bc68c2c65fdc8c0cf07b1a261252dd1bff1c98b062af565931809f99457fa202",
       "suffix": ".lean"
     },
     {
@@ -1203,9 +1209,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 27656,
+      "bytes": 28025,
       "path": "formal/SSBX/Foundation/Wen/WenDefEval.lean",
-      "sha256": "9c4ed4a57d618171c4a9a0f4c94a565a709b846c3a1aea1c245a6cb6bc0131cb",
+      "sha256": "5b7f09d9b69618db38f739e98481ecd638f3d8be1ecff531312469ab890c45c9",
       "suffix": ".lean"
     },
     {
@@ -1215,21 +1221,21 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 9523,
+      "bytes": 9521,
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Coverage.lean",
-      "sha256": "9805bb198cb38b9c1c09160fc76461e567d7826978221129766da94076120ffa",
+      "sha256": "f9501afa080a74728da381a796d0f98d9932c08fd6520322d9cb246eb03684ad",
       "suffix": ".lean"
     },
     {
-      "bytes": 22839,
+      "bytes": 22881,
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Elaborate.lean",
-      "sha256": "f0a7523bf965d27a8f9d70947387a29ee22ef98a76c0f864986381132ff4bab3",
+      "sha256": "1514b37d36147bbd290c49f2b47484fed8ebe623b47f48f782d85992cb52d9fd",
       "suffix": ".lean"
     },
     {
-      "bytes": 41758,
+      "bytes": 42163,
       "path": "formal/SSBX/Foundation/Wen/WenSurface/EndToEnd.lean",
-      "sha256": "ea6f39fa096a29dc05b80ee6433f4c98cc53d123b52cd3e5a6fbc846d04e73dc",
+      "sha256": "0fadf56ade4406f9253436a3b1976d29fb37dc7a281c5f94338f2263cd6a6c10",
       "suffix": ".lean"
     },
     {
@@ -1245,9 +1251,9 @@
       "suffix": ".lean"
     },
     {
-      "bytes": 68668,
+      "bytes": 73919,
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Semantics.lean",
-      "sha256": "48f23227a13b8aed99d01538c2d59ed6bf4b17e2bd8742a9d361dff945e1ed6f",
+      "sha256": "e59b042eadb2b5eac09540263700f3b7bff2b0dd372f3267ff9489ea3dbadbf2",
       "suffix": ".lean"
     },
     {
@@ -1923,15 +1929,15 @@
       "suffix": ".md"
     },
     {
-      "bytes": 73690,
+      "bytes": 76562,
       "path": "formal/SSBX/notes/markov-causal-bridge-plan.md",
-      "sha256": "e8c345bd151390ea78c333f7f4e74dbfd2acca77bca1b9993a7f9de441258355",
+      "sha256": "94bda38a3afa515bf2c0783aec73ef7f0e58e3773469f53d3df6156b2c00b286",
       "suffix": ".md"
     },
     {
-      "bytes": 49374,
+      "bytes": 50931,
       "path": "formal/SSBX/notes/markov-causal-bridge-verification-plan.md",
-      "sha256": "983b1a88d1e19d65e0600261ad65ec05590fed48194b5be41c40da7f0b0df6d6",
+      "sha256": "213dd5df634ad3d3dc9574701fcf56800ac10e40f5cd6063bce90a35bd4a29c2",
       "suffix": ".md"
     },
     {
@@ -1983,9 +1989,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 102567,
+      "bytes": 106637,
       "path": "formal/SSBX/notes/unification-stepwise-plan.md",
-      "sha256": "412dc2466023b588ecf37fee96c126eb955030c480e0667f7f29496b1a4fc376",
+      "sha256": "3e6fc64d2e3ad8ebd18b767909c542a0b41942d26bd3f3a9f2cc275b57aee78b",
       "suffix": ".md"
     },
     {
@@ -1995,9 +2001,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 4419,
+      "bytes": 4298,
       "path": "formal/SSBX/notes/wensurface-roadmap.md",
-      "sha256": "44e00770c673ba76082068220fd253d87e9fa4fecd35658d2a72f19849e6e58d",
+      "sha256": "73d1b8133ac70970b29c342e14c7931d5f214cf4eed786473805477788ec487d",
       "suffix": ".md"
     },
     {
@@ -2205,9 +2211,9 @@
       "suffix": ".md"
     },
     {
-      "bytes": 83642,
+      "bytes": 86016,
       "path": "义理/Markov因果桥 · 大统一最小验证构造.md",
-      "sha256": "9464e75020290277fe475879d100021acd6b76837f61b8c2ab75373dd5584715",
+      "sha256": "11994728174dbf6b2aa8ffe005a14697fe16ac94b0a0cc4926c260760f66a579",
       "suffix": ".md"
     },
     {
@@ -2331,15 +2337,15 @@
       "suffix": ".md"
     },
     {
-      "bytes": 6170,
+      "bytes": 6296,
       "path": "义理/作用相位到测量权重链 · Markov桥S22.md",
-      "sha256": "8bd681fc73b25f96600f07b966518789ab8639b374e41e54c4e3f87fdca41dc8",
+      "sha256": "8e6376c22cc2bf6ce7c62d87f591af3f9ec4d7b1b265a4f1aaa99698576793bb",
       "suffix": ".md"
     },
     {
-      "bytes": 6697,
+      "bytes": 7013,
       "path": "义理/作用量相位律候选 · Markov桥S5r.md",
-      "sha256": "ba6b784fe5edaeee9d0d2209a7074ce336a3e4c63d10d0602abde378b0c5b483",
+      "sha256": "223b49d04d710825f4ffcdf61082a8deb27b4b54640f9360eee4e696f3efbe9e",
       "suffix": ".md"
     },
     {
@@ -2640,6 +2646,12 @@
       "bytes": 17043,
       "path": "义理/边界/量的边界 · 数测度.md",
       "sha256": "0f58baf44cb1cd3c81848c7d73e2b580cc89fa97d38c186206f14ebdec5c6b06",
+      "suffix": ".md"
+    },
+    {
+      "bytes": 6895,
+      "path": "义理/连续作用量泛函候选 · Markov桥S24.md",
+      "sha256": "82e8243a10a32f88e8bb7633f33351f4f62c9362104661fbc4055ddf9bd52f9f",
       "suffix": ".md"
     },
     {

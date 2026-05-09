@@ -4,7 +4,7 @@
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
-    "Foundation/Modern": 76,
+    "Foundation/Modern": 77,
     "Foundation/Wen": 51,
     "Foundation/Yi": 2,
     "Model": 2,
@@ -32,7 +32,7 @@
       "lines": 1849,
       "module": "WenyanSurface.lean",
       "path": "WenyanSurface.lean",
-      "sha256": "f3e8f8b030ff7e0a27973337dad48a0f76dfe0dc3baa96b86ff33609eadfb73c"
+      "sha256": "23b10dcfcc7be7f4ab1749041b5208ba07a25cdcf7aa0994b13f9c535b0f286a"
     },
     {
       "cluster": "root",
@@ -194,6 +194,7 @@
         "SSBX.Foundation.Modern.QuantumRelativityActionAmplitudeMeasurementBridge",
         "SSBX.Foundation.Modern.QuantumRelativityFinitePhaseEvolutionBridge",
         "SSBX.Foundation.Modern.QuantumRelativityContinuousActionFunctionalBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityPathSpaceActionFunctionalBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -216,10 +217,10 @@
         "SSBX.Foundation.Modern.KeBoundary",
         "SSBX.Foundation.Modern.QuantumSpacetime"
       ],
-      "lines": 209,
+      "lines": 210,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "053143ca320ea7b333b397b4ae8845b6d8847d93dbb2817ee29541f82f0e38a4"
+      "sha256": "b88062a21fe627803717d8c6b8db1c8518386bad6833692d84eaa26b55b3d259"
     },
     {
       "cluster": "root",
@@ -10962,6 +10963,112 @@
     },
     {
       "cluster": "Foundation/Modern",
+      "declaration_count": 23,
+      "declarations": [
+        {
+          "kind": "structure",
+          "name": "ContinuousActionFunctionalCandidate"
+        },
+        {
+          "kind": "def",
+          "name": "displayedContinuousActionFunctional"
+        },
+        {
+          "kind": "theorem",
+          "name": "displayed_continuous_action_functional_continuous"
+        },
+        {
+          "kind": "def",
+          "name": "branchActionTime"
+        },
+        {
+          "kind": "def",
+          "name": "branchContinuousActionValue"
+        },
+        {
+          "kind": "theorem",
+          "name": "upper_continuous_action_value"
+        },
+        {
+          "kind": "theorem",
+          "name": "lower_continuous_action_value"
+        },
+        {
+          "kind": "theorem",
+          "name": "branch_continuous_action_value_matches_index"
+        },
+        {
+          "kind": "def",
+          "name": "continuousActionSampledAmplitude"
+        },
+        {
+          "kind": "theorem",
+          "name": "continuous_action_sampled_amplitude_eq_branch_amplitude"
+        },
+        {
+          "kind": "def",
+          "name": "continuousActionPhaseEvolveBranch"
+        },
+        {
+          "kind": "theorem",
+          "name": "continuous_action_phase_evolve_eq_finite_phase_evolve"
+        },
+        {
+          "kind": "theorem",
+          "name": "continuous_action_phase_evolution_reaches_action_branch_qubits"
+        },
+        {
+          "kind": "theorem",
+          "name": "continuous_action_phase_evolve_bornProb0_preserved"
+        },
+        {
+          "kind": "theorem",
+          "name": "continuous_action_phase_evolve_bornProb1_preserved"
+        },
+        {
+          "kind": "theorem",
+          "name": "continuous_action_phase_evolve_normalization_preserved"
+        },
+        {
+          "kind": "theorem",
+          "name": "continuous_action_phase_evolve_measurement_weights_normalized"
+        },
+        {
+          "kind": "def",
+          "name": "ContinuousActionFunctionalClosed"
+        },
+        {
+          "kind": "theorem",
+          "name": "continuous_action_functional_closed"
+        },
+        {
+          "kind": "inductive",
+          "name": "PendingBeyondS24"
+        },
+        {
+          "kind": "def",
+          "name": "ClosedByStepwiseS24"
+        },
+        {
+          "kind": "theorem",
+          "name": "pending_boundary_not_closed_by_s24"
+        },
+        {
+          "kind": "theorem",
+          "name": "continuous_action_functional_bridge_summary"
+        }
+      ],
+      "imports": [
+        "Mathlib.Tactic",
+        "SSBX.Foundation.Modern.QuantumRelativityFinitePhaseEvolutionBridge"
+      ],
+      "lines": 249,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityContinuousActionFunctionalBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityContinuousActionFunctionalBridge.lean",
+      "sha256": "556da44466bb354aaa34049cd1516e3509eaaae533637ad0e5805a135cbe5311"
+    },
+    {
+      "cluster": "Foundation/Modern",
       "declaration_count": 27,
       "declarations": [
         {
@@ -18350,7 +18457,7 @@
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 174,
+      "declaration_count": 177,
       "declarations": [
         {
           "kind": "inductive",
@@ -18866,6 +18973,18 @@
         },
         {
           "kind": "def",
+          "name": "list3HBody"
+        },
+        {
+          "kind": "theorem",
+          "name": "list3HBody_typed"
+        },
+        {
+          "kind": "def",
+          "name": "list3HDef"
+        },
+        {
+          "kind": "def",
           "name": "headHBody"
         },
         {
@@ -19055,10 +19174,10 @@
         "SSBX.Foundation.Bagua.BaguaWenSpec",
         "SSBX.Text.OperatorSignatures"
       ],
-      "lines": 1028,
+      "lines": 1044,
       "module": "SSBX.Foundation.Wen.WenDef",
       "path": "formal/SSBX/Foundation/Wen/WenDef.lean",
-      "sha256": "842d54873773ffa3673a44438aadfa87f063a2bf42e8c15a68473d209fa1466b"
+      "sha256": "bc68c2c65fdc8c0cf07b1a261252dd1bff1c98b062af565931809f99457fa202"
     },
     {
       "cluster": "Foundation/Wen",
@@ -19276,7 +19395,7 @@
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 57,
+      "declaration_count": 58,
       "declarations": [
         {
           "kind": "inductive",
@@ -19424,6 +19543,10 @@
         },
         {
           "kind": "theorem",
+          "name": "list3HBody_eq_tripleList"
+        },
+        {
+          "kind": "theorem",
           "name": "headHBody_list1_eq_id"
         },
         {
@@ -19513,10 +19636,10 @@
         "SSBX.Foundation.Bagua.BaguaAlgebra",
         "SSBX.Foundation.Bagua.Cell192"
       ],
-      "lines": 708,
+      "lines": 716,
       "module": "SSBX.Foundation.Wen.WenDefEval",
       "path": "formal/SSBX/Foundation/Wen/WenDefEval.lean",
-      "sha256": "9c4ed4a57d618171c4a9a0f4c94a565a709b846c3a1aea1c245a6cb6bc0131cb"
+      "sha256": "5b7f09d9b69618db38f739e98481ecd638f3d8be1ecff531312469ab890c45c9"
     },
     {
       "cluster": "Foundation/Wen",
@@ -19638,7 +19761,7 @@
       "lines": 214,
       "module": "SSBX.Foundation.Wen.WenSurface.Coverage",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Coverage.lean",
-      "sha256": "9805bb198cb38b9c1c09160fc76461e567d7826978221129766da94076120ffa"
+      "sha256": "f9501afa080a74728da381a796d0f98d9932c08fd6520322d9cb246eb03684ad"
     },
     {
       "cluster": "Foundation/Wen",
@@ -19718,10 +19841,10 @@
         "SSBX.Foundation.Wen.WenDef",
         "SSBX.Foundation.Wen.WenDefEval"
       ],
-      "lines": 533,
+      "lines": 534,
       "module": "SSBX.Foundation.Wen.WenSurface.Elaborate",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Elaborate.lean",
-      "sha256": "f0a7523bf965d27a8f9d70947387a29ee22ef98a76c0f864986381132ff4bab3"
+      "sha256": "1514b37d36147bbd290c49f2b47484fed8ebe623b47f48f782d85992cb52d9fd"
     },
     {
       "cluster": "Foundation/Wen",
@@ -19783,10 +19906,10 @@
       "imports": [
         "SSBX.Foundation.Wen.WenSurface.Elaborate"
       ],
-      "lines": 1196,
+      "lines": 1212,
       "module": "SSBX.Foundation.Wen.WenSurface.EndToEnd",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/EndToEnd.lean",
-      "sha256": "ea6f39fa096a29dc05b80ee6433f4c98cc53d123b52cd3e5a6fbc846d04e73dc"
+      "sha256": "0fadf56ade4406f9253436a3b1976d29fb37dc7a281c5f94338f2263cd6a6c10"
     },
     {
       "cluster": "Foundation/Wen",
@@ -20653,10 +20776,10 @@
         "SSBX.Text.OperatorSignatures",
         "SSBX.Text.WenyanOperators"
       ],
-      "lines": 1148,
+      "lines": 1192,
       "module": "SSBX.Foundation.Wen.WenSurface.Semantics",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Semantics.lean",
-      "sha256": "48f23227a13b8aed99d01538c2d59ed6bf4b17e2bd8742a9d361dff945e1ed6f"
+      "sha256": "e59b042eadb2b5eac09540263700f3b7bff2b0dd372f3267ff9489ea3dbadbf2"
     },
     {
       "cluster": "Foundation/Wen",

@@ -1126,6 +1126,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeAssociativityBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityContinuousActionFunctionalBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean",
@@ -1199,6 +1200,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeAssociativityBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityChannelComposeBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityConcreteBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityContinuousActionFunctionalBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean",
@@ -1323,6 +1325,12 @@
         },
         {
           "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityContinuousActionFunctionalBridge.lean"
+          ],
+          "symbol": "continuous_action_functional_bridge_summary"
+        },
+        {
+          "paths": [
             "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean"
           ],
           "symbol": "discrete_action_phase_bridge_summary"
@@ -1344,12 +1352,6 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean"
           ],
           "symbol": "endpoint_support_normalization_bridge_summary"
-        },
-        {
-          "paths": [
-            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean"
-          ],
-          "symbol": "finite_key_quotient_bridge_summary"
         }
       ]
     },
@@ -7333,6 +7335,84 @@
             "formal/SSBX/Foundation/Modern/LiangBoundary.lean"
           ],
           "symbol": "quantity_boundary_complete"
+        }
+      ]
+    },
+    {
+      "document": "义理/连续作用量泛函候选 · Markov桥S24.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityContinuousActionFunctionalBridge.lean"
+          ],
+          "symbol": "ContinuousActionFunctionalCandidate"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityContinuousActionFunctionalBridge.lean"
+          ],
+          "symbol": "branchContinuousActionValue"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityContinuousActionFunctionalBridge.lean"
+          ],
+          "symbol": "branch_continuous_action_value_matches_index"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityContinuousActionFunctionalBridge.lean"
+          ],
+          "symbol": "continuous_action_functional_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityContinuousActionFunctionalBridge.lean"
+          ],
+          "symbol": "continuous_action_phase_evolution_reaches_action_branch_qubits"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityContinuousActionFunctionalBridge.lean"
+          ],
+          "symbol": "continuous_action_phase_evolve_bornProb0_preserved"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityContinuousActionFunctionalBridge.lean"
+          ],
+          "symbol": "continuous_action_phase_evolve_bornProb1_preserved"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityContinuousActionFunctionalBridge.lean"
+          ],
+          "symbol": "continuous_action_phase_evolve_eq_finite_phase_evolve"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityContinuousActionFunctionalBridge.lean"
+          ],
+          "symbol": "continuous_action_phase_evolve_measurement_weights_normalized"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityContinuousActionFunctionalBridge.lean"
+          ],
+          "symbol": "continuous_action_sampled_amplitude_eq_branch_amplitude"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityContinuousActionFunctionalBridge.lean"
+          ],
+          "symbol": "displayedContinuousActionFunctional"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityContinuousActionFunctionalBridge.lean"
+          ],
+          "symbol": "displayed_continuous_action_functional_continuous"
         }
       ]
     },

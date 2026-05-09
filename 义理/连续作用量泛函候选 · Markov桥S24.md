@@ -2,6 +2,8 @@
 
 **前置**：[作用量相位律候选 · Markov桥S5r](作用量相位律候选%20·%20Markov桥S5r.md) · [有限相位演化候选 · Markov桥S23](有限相位演化候选%20·%20Markov桥S23.md) · [作用相位到测量权重链 · Markov桥S22](作用相位到测量权重链%20·%20Markov桥S22.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
+**后续**：[路径空间作用量泛函候选 · Markov桥S25](路径空间作用量泛函候选%20·%20Markov桥S25.md) 已把本页的 continuous action-coordinate samples 接到 finite visible-key quotient path space。
+
 **Lean 锚点**：
 
 | 层 | 文件 | 内容 | 状态 |
@@ -62,7 +64,8 @@ theorem continuous_action_functional_bridge_summary :
 
 | 项 | 原因 |
 |---|---|
-| general path-space action functional | 当前只处理 displayed real action coordinate，不处理 path space 上的泛函 |
+| finite quotient path-space action functional | 已由 S25 承接；本页只处理 displayed real action coordinate |
+| smooth or infinite-dimensional path-space action functional | 当前没有 path manifold、variation 或 measure structure |
 | Euler-Lagrange equations | 没有变分、极值、边界条件或 stationarity theorem |
 | Hamiltonian generator | 没有 Legendre transform、self-adjoint generator 或动力学生成律 |
 | continuous-time unitary group | 没有 `U(t+s)=U(t)U(s)`、强连续性或 Stone theorem |
