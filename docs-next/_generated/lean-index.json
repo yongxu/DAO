@@ -4,7 +4,7 @@
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
-    "Foundation/Modern": 70,
+    "Foundation/Modern": 71,
     "Foundation/Wen": 51,
     "Foundation/Yi": 2,
     "Model": 2,
@@ -187,6 +187,7 @@
         "SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleBornBoundaryBridge",
         "SSBX.Foundation.Modern.QuantumRelativityUnitaryCPTPLedgerBridge",
         "SSBX.Foundation.Modern.QuantumRelativityBornRuleDerivationBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityPathWeightMultiplicationBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -209,10 +210,10 @@
         "SSBX.Foundation.Modern.KeBoundary",
         "SSBX.Foundation.Modern.QuantumSpacetime"
       ],
-      "lines": 203,
+      "lines": 204,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "5f55c2a371b012dd32fa0fe12cd2d6f5dd5fc77a6475e47e27c56fb1878ac7ba"
+      "sha256": "86a6bf7beda30bafb98af9bb087b472be3e75914df1a6074fe41dbe887bc79dd"
     },
     {
       "cluster": "root",
@@ -10368,6 +10369,92 @@
       "module": "SSBX.Foundation.Modern.QuantumRelativityBornDistributionBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityBornDistributionBridge.lean",
       "sha256": "40b8bf85d101cc91a85736f43b39c7d6d1820be6b18060e28635f17531d03065"
+    },
+    {
+      "cluster": "Foundation/Modern",
+      "declaration_count": 18,
+      "declarations": [
+        {
+          "kind": "theorem",
+          "name": "list_map_sum_eq_of_mem"
+        },
+        {
+          "kind": "theorem",
+          "name": "list_map_rat_sum_cast"
+        },
+        {
+          "kind": "def",
+          "name": "realNormalizedMassSum"
+        },
+        {
+          "kind": "theorem",
+          "name": "realNormalizedMassSum_eq_one"
+        },
+        {
+          "kind": "structure",
+          "name": "MarkovAmplitudeCompatibility"
+        },
+        {
+          "kind": "theorem",
+          "name": "markov_amplitude_support_normalized"
+        },
+        {
+          "kind": "theorem",
+          "name": "born_candidate_weights_match_markov_masses"
+        },
+        {
+          "kind": "theorem",
+          "name": "markov_amplitude_born_rule_derivation"
+        },
+        {
+          "kind": "def",
+          "name": "concretePreparedAmplitudeOf"
+        },
+        {
+          "kind": "def",
+          "name": "concretePreparedMarkovAmplitudeCompatibility"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_prepared_markov_amplitude_support_normalized"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_prepared_born_rule_from_markov_amplitude_bridge"
+        },
+        {
+          "kind": "inductive",
+          "name": "PendingBeyondS18"
+        },
+        {
+          "kind": "def",
+          "name": "ClosedByStepwiseS18"
+        },
+        {
+          "kind": "theorem",
+          "name": "pending_boundary_not_closed_by_s18"
+        },
+        {
+          "kind": "def",
+          "name": "MarkovAmplitudeBornRuleDerivationClosed"
+        },
+        {
+          "kind": "theorem",
+          "name": "markov_amplitude_born_rule_derivation_closed"
+        },
+        {
+          "kind": "theorem",
+          "name": "born_rule_derivation_bridge_summary"
+        }
+      ],
+      "imports": [
+        "Mathlib.Tactic",
+        "SSBX.Foundation.Modern.QuantumRelativityUnitaryCPTPLedgerBridge"
+      ],
+      "lines": 328,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityBornRuleDerivationBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityBornRuleDerivationBridge.lean",
+      "sha256": "b17cfe9f35e623daf7ef5fecf1b5e391ee032afd8c7f66e422fbbfdb8bc48199"
     },
     {
       "cluster": "Foundation/Modern",

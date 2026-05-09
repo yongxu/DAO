@@ -1,6 +1,6 @@
 # 路径组合与因果约束 · Markov桥S3
 
-**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [有限概率核接口 · Markov桥S2](有限概率核接口%20·%20Markov桥S2.md) · [经典Markov与量子振幅分层 · Markov桥S4](经典Markov与量子振幅分层%20·%20Markov桥S4.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [非零路径振幅候选 · Markov桥S5b](非零路径振幅候选%20·%20Markov桥S5b.md) · [文构造完备与直相加边界](文构造完备与直相加边界.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
+**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [有限概率核接口 · Markov桥S2](有限概率核接口%20·%20Markov桥S2.md) · [经典Markov与量子振幅分层 · Markov桥S4](经典Markov与量子振幅分层%20·%20Markov桥S4.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [非零路径振幅候选 · Markov桥S5b](非零路径振幅候选%20·%20Markov桥S5b.md) · [路径权重乘法候选 · Markov桥S19](路径权重乘法候选%20·%20Markov桥S19.md) · [文构造完备与直相加边界](文构造完备与直相加边界.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
 **Lean 锚点**：
 
@@ -13,6 +13,7 @@
 | code-successor 约束 | `Foundation/Modern/QuantumRelativityPathCausalBridge.lean` | `CodeSuccessorStep`、`CodeMonotoneStep`、`code_successor_step_monotone` | `machineChecked` |
 | no-self-loop 约束 | `Foundation/Modern/QuantumRelativityPathCausalBridge.lean` | `code_monotone_step_no_self_loop`、`concrete_no_self_step`、`operatorCellGrid_no_self_step` | `machineChecked` |
 | S3 公开摘要 | `Foundation/Modern/QuantumRelativityPathCausalBridge.lean` | `path_causal_bridge_summary` | `machineChecked` |
+| S19 路径权重乘法 | `Foundation/Modern/QuantumRelativityPathWeightMultiplicationBridge.lean` | `KernelPath.weight_append`、`path_weight_multiplication_bridge_summary` | `machineChecked` |
 
 ---
 
@@ -66,7 +67,7 @@ theorem path_causal_bridge_summary :
 | concrete bridge code-successor | `machineChecked` | `prepared -> evolved -> measured` 每一步 code 加一 |
 | `71232` grid code-successor | `machineChecked` | successor index 每一步 code 加一 |
 | 一步自环排除 | `machineChecked` | code-monotone step 不可能有 `step a a` |
-| pathWeight 乘法律 | 未纳入本轮 | `pathWeight` 仍是占位接口 |
+| pathWeight 乘法律 | `machineChecked` theorem | S19 保留旧 `pathWeight = 1` 的 placeholder law，并新增 `KernelPath.weight_append` 关闭有限 kernel path weight multiplication |
 | 振幅干涉读法 | S3 未纳入；S5/S5b 已开候选接口 | S3 path composition 不被解释为路径振幅叠加或相消；S5/S5b 只记录 candidate，不证明真实干涉律 |
 | 完整可达传递闭包 | 未纳入本轮 | 本轮只组合显式 path witness |
 | 完整因果偏序 / causal set | 未纳入本轮 | 尚未证明反身、传递、反对称、局部有限全公理 |
@@ -95,19 +96,19 @@ S3 关闭的是 path witness composition 与最小 no-self-loop 方向性；
 | 局部方向 | `CodeSuccessorStep`、`CodeMonotoneStep` | 一步转移推进有限 code |
 | 排除自环 | `code_monotone_step_no_self_loop` | code-monotone step 排除 `step a a` |
 | concrete/grid 实例 | `concrete_code_successor_step`、`operatorCellGrid_code_successor_step` | S1 witness 继续承载 S3 约束 |
+| pathWeight multiplication | `KernelPath.weight_append`、`path_weight_multiplication_bridge_summary` | 已由 S19 关闭有限 kernel path 的权重乘法 |
 | 公开摘要 | `path_causal_bridge_summary` | S3 合取 path composition、local causal constraint 与 S2 bridge facts |
 
 未纳入本轮：
 
 | 轴 | 状态 | 说明 |
 |---|---|---|
-| pathWeight 乘法 | 未纳入本轮 | 尚未定义路径列表或权重乘积语义 |
 | reachability 传递闭包全律 | 未纳入本轮 | 本轮只组合显式 witness，不重写 `Reachable` 定义 |
 | causalBefore 偏序公理 | 未纳入本轮 | 反身、传递、反对称需下一层结构 |
 | 局部有限 causal set | 未纳入本轮 | 尚未证明每个 causal interval 有有限 cardinality |
 | 几何恢复 | 未纳入本轮 | 没有 metric、topology、manifold 或 continuum limit |
 
-本轮闭合范围：**S3 已在 Lean 中关闭 path witness composition 与 code-successor/no-self-loop 局部方向性；它不关闭 pathWeight 乘法、完整因果偏序、局部有限 causal set、light cone、Lorentzian geometry、metric recovery 或经验闭合。**
+本轮闭合范围：**S3 已在 Lean 中关闭 path witness composition 与 code-successor/no-self-loop 局部方向性；S19 已关闭有限 kernel path 的 pathWeight multiplication typed skeleton。完整因果偏序、局部有限 causal set、light cone、Lorentzian geometry、metric recovery 或经验闭合仍未关闭。**
 
 ---
 
@@ -175,8 +176,9 @@ S3 之后，最省力的推进顺序是：
 | 阶段 | 目标 | 本文状态 |
 |---|---|---|
 | S4 | classical Markov 与 quantum amplitude 分层 | 已由《经典Markov与量子振幅分层 · Markov桥S4》关闭候选接口；S3 path composition 本身仍不表达干涉 |
-| S5 | 干涉与 Born-rule-shaped candidate | 已由《干涉与测量律候选 · Markov桥S5》关闭候选接口；真实干涉律与 Born rule 推导仍未纳入 |
+| S5 | 干涉与 Born-rule-shaped candidate | 已由《干涉与测量律候选 · Markov桥S5》关闭候选接口；真实干涉律仍未纳入，Born rule typed-skeleton derivation 已由 S18 承接 |
 | S5b | 非零 path-amplitude candidate witness | 已由《非零路径振幅候选 · Markov桥S5b》关闭候选接口；相位律、路径求和与可测相消仍未纳入 |
+| S19 | 路径权重乘法候选 | 已由《路径权重乘法候选 · Markov桥S19》关闭 finite kernel path 的 weight append law |
 | S6 | 几何与度规候选接口 | 未纳入本轮 |
 | S7 | 经验 pending ledger | S5q 已关闭最小 pending observable ledger；数据接口仍未纳入本轮 |
 

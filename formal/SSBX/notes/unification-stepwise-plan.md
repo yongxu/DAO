@@ -48,6 +48,7 @@
 -> composed support 的 Born/probability boundary
 -> unitary/CPTP ledger
 -> Born rule 推导候选
+-> 路径权重乘法候选
 -> 几何候选接口
 -> 经验 pending ledger
 -> 更强统一摘要 theorem
@@ -100,6 +101,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleChannelBridge
 lake build SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleBornBoundaryBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityUnitaryCPTPLedgerBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityBornRuleDerivationBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityPathWeightMultiplicationBridge
 lake build SSBX
 git diff --check --
 ```
@@ -111,7 +113,7 @@ git diff --check --
 | 项 | 内容 |
 |---|---|
 | Lean 出口 | 保持 `markov_causal_bridge_summary`、`measurement_event_alignment`、`markov_bridge_not_direct_language_addition` 为 `machineChecked` |
-| 文档出口 | 本文件与验证计划明确列出未关闭项：amplitude dynamics、measurement semantics、decoherence、真实 quantum channel law、干涉、因果偏序、度规恢复、经验闭合；finite row sum-one boundary 已由 S9 后续关闭，Markov/amplitude compatibility 下的 Born rule derivation 已由 S18 关闭 |
+| 文档出口 | 本文件与验证计划明确列出未关闭项：stochastic semantics、general all-path enumeration、path integral、amplitude dynamics、measurement semantics、decoherence、真实 quantum channel law、干涉、因果偏序、度规恢复、经验闭合；finite row sum-one boundary 已由 S9 后续关闭，Markov/amplitude compatibility 下的 Born rule derivation 已由 S18 关闭，finite path-weight multiplication 已由 S19 关闭 |
 | 失败记录 | 若发现文档中有强于 theorem 的终局统一或量子引力完成等 claim，记录为 `conceptual mismatch`，并改回对应结构层级 |
 | 当前正名 | Markov-因果桥当前是最小可验证中介构造；更强的物理大统一读法需要后续 theorem 合取后再命名 |
 
@@ -185,8 +187,8 @@ Markov 权重与一步转移的支持关系仍保留。
 | Lean 出口 | `path_causal_bridge_summary` |
 | 最低 theorem 形态 | `ComposableProcessPaths`、`composed_path_reachable`、`composed_path_causal_before`、`code_monotone_step_no_self_loop` |
 | 失败记录 | 若组合律与现有 `ProcessPath` 不匹配，记录为 structure mismatch，不重写历史结论 |
-| 文档更新 | 说明新增 path witness composition 与 code-successor/no-self-loop 约束；未证明的因果集公理继续列为未纳入 |
-| 后续结构 | spacetime、light cone、Lorentzian metric 或完整 causal set theory 需要额外结构与 theorem |
+| 文档更新 | 说明新增 path witness composition 与 code-successor/no-self-loop 约束；path-weight multiplication 已由 S19 承接，未证明的因果集公理继续列为未纳入 |
+| 后续结构 | stochastic semantics、general all-path enumeration、path integral、spacetime、light cone、Lorentzian metric 或完整 causal set theory 需要额外结构与 theorem |
 
 通过判准：
 
@@ -203,6 +205,7 @@ Markov 权重与一步转移的支持关系仍保留。
 | `composed_path_reachable` | `QuantumRelativityPathCausalBridge.lean` | 两段有效 path witness 可组合成外端点可达 |
 | `composed_path_causal_before` | `QuantumRelativityPathCausalBridge.lean` | 组合 path witness 可读成外端点 `causalBefore` |
 | `code_monotone_step_no_self_loop` | `QuantumRelativityPathCausalBridge.lean` | code-monotone 一步转移排除自环 |
+| `path_weight_multiplication_bridge_summary` | `QuantumRelativityPathWeightMultiplicationBridge.lean` | S19 已关闭 finite kernel path 的 weight append law |
 
 ## S4 · 经典 Markov 与量子 amplitude 分层
 
@@ -1109,6 +1112,39 @@ born_rule_derivation_bridge_summary。
 | `concrete_prepared_born_rule_from_markov_amplitude_bridge` | `QuantumRelativityBornRuleDerivationBridge.lean` | concrete prepared row witness |
 | `born_rule_derivation_bridge_summary` | `QuantumRelativityBornRuleDerivationBridge.lean` | S18 Born-rule derivation boundary 已关闭 |
 
+## S19 · 路径权重乘法候选
+
+目标：把 S3 中旧 `pathWeight` 占位接口推进为可计算的 finite kernel path weight。S19 保留旧 `pathWeight = 1` 的 placeholder multiplication，同时新增 `KernelEdge` / `KernelPath` 精化层：路径权重是有限 edge weights product，append composition 的权重等于左右路径权重乘积。
+
+| 项 | 内容 |
+|---|---|
+| Lean 出口 | `path_weight_multiplication_bridge_summary` |
+| 最低 theorem 形态 | 合取 `PathWeightMultiplicationBoundaryClosed`、concrete two-step weight witness、S3 reachability / causalBefore、pending ledger 与 Wen coverage |
+| 失败记录 | indexed inductive `refl` 分支参数与 concrete `KernelPath.refl` 的 `K := concreteKernel` 显式参数失败均已记录 |
+| 文档更新 | 已新增《路径权重乘法候选 · Markov桥S19》 |
+| 后续结构 | stochastic independence semantics、general all-path enumeration、path integral、amplitude dynamics、unitary/CPTP、metric recovery 与 empirical closure |
+
+通过判准：
+
+```text
+current_pathWeight_compose_multiplicative；
+KernelEdge；
+KernelPath.weight；
+KernelPath.append；
+KernelPath.weight_append；
+concrete_two_step_path_weight_multiplicative；
+path_weight_multiplication_bridge_summary。
+```
+
+当前状态：
+
+| theorem | 文件 | 读法 |
+|---|---|---|
+| `current_pathWeight_compose_multiplicative` | `QuantumRelativityPathWeightMultiplicationBridge.lean` | 旧 endpoint-only `pathWeight = 1` placeholder law |
+| `KernelPath.weight_append` | `QuantumRelativityPathWeightMultiplicationBridge.lean` | finite kernel path append 的 weight multiplication law |
+| `concrete_two_step_path_weight_multiplicative` | `QuantumRelativityPathWeightMultiplicationBridge.lean` | concrete prepared/evolved/measured 二步路径权重乘法 |
+| `path_weight_multiplication_bridge_summary` | `QuantumRelativityPathWeightMultiplicationBridge.lean` | S19 path-weight multiplication boundary 已关闭 |
+
 ## 失败记录追加区
 
 失败记录格式沿用验证计划，并允许追加在此区：
@@ -1162,6 +1198,7 @@ born_rule_derivation_bridge_summary。
 | 2026-05-09 | S16 | failure retained / success | concrete dependent existential witness 展开到 structure fields 时触发 `whnf` heartbeat timeout；保留 generic closed boundary 与 concrete normalized `[1]` input，关闭 composed Born boundary |
 | 2026-05-09 | S17 | success | 新增 unitary/CPTP ledger boundary；S13-S16 current skeleton items closed，physical Hilbert/Kraus/density/CPTP items required but not closed |
 | 2026-05-09 | S18 | failure retained / success | 第一次 build 中 Rat list sum cast、`List.map_map` composition shape 与 concrete row support projection 展开失败；补 `list_map_rat_sum_cast`、改用 composition shape、展开 `concreteFiniteRowSupportNormalization` 后关闭 Markov/amplitude compatibility 下的 Born-rule derivation |
+| 2026-05-09 | S19 | failure retained / success | 第一次 build 中 indexed inductive `refl` 分支写成带参数形式，且 concrete `KernelPath.refl` 未显式指定 `K := concreteKernel`；修正后关闭 finite kernel path 的 weight append law |
 
 ## 统一用语正名
 
@@ -1169,9 +1206,9 @@ born_rule_derivation_bridge_summary。
 
 | 词 | 在本路线中的含义 | 结构依据 |
 |---|---|---|
-| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S18 已关闭的 summary theorem 与路线日志 |
-| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8-S18 pending list |
-| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary`、`normalized_mass_bridge_summary`、`born_weight_normalization_bridge_summary`、`born_distribution_bridge_summary`、`channel_compose_bridge_summary`、`channel_compose_associativity_bridge_summary`、`sum_over_middle_channel_bridge_summary`、`sum_over_middle_born_distribution_bridge_summary`、`unitary_cptp_ledger_bridge_summary`、`born_rule_derivation_bridge_summary` |
+| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S19 已关闭的 summary theorem 与路线日志 |
+| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8-S19 pending list |
+| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary`、`normalized_mass_bridge_summary`、`born_weight_normalization_bridge_summary`、`born_distribution_bridge_summary`、`channel_compose_bridge_summary`、`channel_compose_associativity_bridge_summary`、`sum_over_middle_channel_bridge_summary`、`sum_over_middle_born_distribution_bridge_summary`、`unitary_cptp_ledger_bridge_summary`、`born_rule_derivation_bridge_summary`、`path_weight_multiplication_bridge_summary` |
 
 推荐正名句：
 
@@ -1179,6 +1216,6 @@ born_rule_derivation_bridge_summary。
 本路线追求逐步增强的形式统一候选；
 每一步以 Lean 出口、文档锚点和失败记录实事求是地确认含义；
 已经关闭的 summary theorem 就是当前阶段的统一内容，
-尚未闭合的 amplitude dynamics、measurement semantics、decoherence、真实 quantum channel law、几何恢复、数据校准与经验闭合
+尚未闭合的 stochastic semantics、general all-path enumeration、path integral、amplitude dynamics、measurement semantics、decoherence、真实 quantum channel law、几何恢复、数据校准与经验闭合
 作为后续结构继续推进。
 ```
