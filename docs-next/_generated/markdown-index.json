@@ -1,5 +1,5 @@
 {
-  "count": 199,
+  "count": 200,
   "documents": [
     {
       "headings": [
@@ -834,7 +834,7 @@
         "../_generated/registry-index.md"
       ],
       "path": "docs-next/10_formal_形式/modern.md",
-      "sha256": "8b1118fba9237a63473d9b734fb2c80cffcaa103d734ad35f994e593c7f511eb",
+      "sha256": "0d3adcd3491e2787bc917a18fdd19d7fd3cbedfd05439c28ad18e473e509c458",
       "summary": "`Foundation/Modern` 收纳现代数学、逻辑、概率、物理与神经相关桥接。它让项目概念能与现代形式工具对话，但不把所有外部理论都重新证明一遍。",
       "title": "Foundation/Modern"
     },
@@ -3097,12 +3097,16 @@
         {
           "level": 3,
           "title": "2026-05-09 · S31 端点索引递归载体族候选"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-09 · S32 双路径递归载体族完备候选"
         }
       ],
-      "lines": 727,
+      "lines": 738,
       "links": [],
       "path": "formal/SSBX/notes/markov-causal-bridge-plan.md",
-      "sha256": "3e9df7ec1507f16ec5347582095d3a1a4d15c565845c58ffb1de632829602516",
+      "sha256": "e0084e0c6496badd99e5037296ab7e4bc326fd4de3316b8535d2777435691202",
       "summary": "目标：用最省力的有限构造，尝试把“中介桥”从方向定理推进到可验证骨架。核心不是先造完整量子引力，而是先证明同一个有限过程结构可以同时读成 Markov/测量过程与因果事件结构。",
       "title": "Markov-Causal Bridge Plan"
     },
@@ -3141,10 +3145,10 @@
           "title": "当前命令记录"
         }
       ],
-      "lines": 476,
+      "lines": 481,
       "links": [],
       "path": "formal/SSBX/notes/markov-causal-bridge-verification-plan.md",
-      "sha256": "136b6ca1195ab6b5e38c3d31c9b3fca6920d2a91c788291f081c3ec8fefb8f32",
+      "sha256": "40013a75c1bf4fa6d4f43954730c73bb9fa1f90ca75d899771e4d3053ec2ebae",
       "summary": "目标：把 Markov-因果桥从“已能构建的 typed skeleton”推进到可重复验证的研究程序。本文只定义验证流程，不新增物理 claim。",
       "title": "Markov-Causal Bridge Verification Plan"
     },
@@ -3844,6 +3848,10 @@
         },
         {
           "level": 2,
+          "title": "S32 · 双路径递归载体族完备候选"
+        },
+        {
+          "level": 2,
           "title": "失败记录追加区"
         },
         {
@@ -3851,10 +3859,10 @@
           "title": "统一用语正名"
         }
       ],
-      "lines": 1693,
+      "lines": 1729,
       "links": [],
       "path": "formal/SSBX/notes/unification-stepwise-plan.md",
-      "sha256": "992b60902a022ec3a5d43acc84ba8d8ef873ea6d8fcdd2f104bfea063c2d0898",
+      "sha256": "b91d50e97156dc449449b63b51e334fde0d6c40ead15b7f0a5b37d2c498f0e2c",
       "summary": "目标：把 Markov-因果桥从最小 typed skeleton 推进为逐步增强的验证程序。本文把“统一”限定为已经关闭或计划关闭的形式接口；量子引力、general Hamiltonian/unitary amplitude dynamics、measurement semantics、度规恢复和经验闭合分别作为后续结构单独推进。",
       "title": "大统一逐步验证路线"
     },
@@ -8228,7 +8236,7 @@
           "title": "八 · Validation Command"
         }
       ],
-      "lines": 781,
+      "lines": 790,
       "links": [
         "量子与相对论整合方向%20·%20从桥到新理论.md",
         "文构造完备与直相加边界.md",
@@ -8271,13 +8279,14 @@
         "有限核路径载体候选%20·%20Markov桥S29.md",
         "递归核路径载体候选%20·%20Markov桥S30.md",
         "端点索引递归载体族候选%20·%20Markov桥S31.md",
+        "双路径递归载体族完备候选%20·%20Markov桥S32.md",
         "量子与相对论直统一不可能%20·%20当前语言NoGo.md",
         "../formal/SSBX/notes/markov-causal-bridge-plan.md",
         "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
       ],
       "path": "义理/Markov因果桥 · 大统一最小验证构造.md",
-      "sha256": "d41a4b27cd0bce439eba5e99979f56747d27660e0616bd70d1abf30f34680dbf",
-      "summary": "**前置**：[量子与相对论整合方向 · 从桥到新理论](量子与相对论整合方向%20·%20从桥到新理论.md) · [文构造完备与直相加边界](文构造完备与直相加边界.md) · [有限概率核接口 · Markov桥S2](有限概率核接口%20·%20Markov桥S2.md) · [路径组合与因果约束 · Markov桥S3](路径组合与因果约束%20·%20Markov桥S3.md) · [经典Markov与量子振幅分层 · Markov桥S4](经典Markov与量子振幅分层%20·%20Markov桥S4.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [非零路径振幅候选 · Markov桥S5b](非零路径振幅候选%20·%20Markov桥S5b.md) · [双路径相消候选 · Markov桥S5c](双路径相消候选%20·%20Markov桥S5c.md) · [离散相位标记候选 · Markov桥S5d](离散相位标记候选%20·%20Markov桥S5d.md) · [离散作用量相位候选 · Markov桥S5e](离散作用量相位候选%20·%20Markov桥S5e.md) · [有限路径族求和候选 · Markov桥S5f](有限路径族求和候选%20·%20Markov桥S5f.md) · [有限路径族求和代数候选 · Markov桥S5g](有限路径族求和代数候选%20·%20Markov桥S5g.md) · [端点索引路径族候选 · Markov桥S5h](端点索引路径族候选%20·%20Markov桥S5h.md) · [端点支撑规范化候选 · Markov桥S5i](端点支撑规范化候选%20·%20Markov桥S5i.md) · [双路径枚举候选 · Markov桥S5j](双路径枚举候选%20·%20Markov桥S5j.md) · [路径身份键候选 · Markov桥S5k](路径身份键候选%20·%20Markov桥S5k.md) · [有限键商候选 · Markov桥S5l](有限键商候选%20·%20Markov桥S5l.md) · [路径商类候选 · Markov桥S5m](路径商类候选%20·%20Markov桥S5m.md) · [规范代表元候选 · Markov桥S5n](规范代表元候选%20·%20Markov桥S5n.md) · [商支撑枚举候选 · Markov桥S5o](商支撑枚举候选%20·%20Markov桥S5o.md) · [商支撑代数候选 · Markov桥S5p](商支撑代数候选%20·%20Markov桥S5p.md) · [观测账本候选 · Markov桥S5q](观测账本候选%20·%20Markov桥S5q.md) · [作用量相位律候选 · Markov桥S5r](作用量相位律候选%20·%20Markov桥S5r.md) · [逐步统一候选摘要 · Markov桥S8](逐步统一候选摘要%20·%20Markov桥S8.md) · [sum-over-middle通道组合候选 · Markov桥S15](sum-over-middle通道组合候选%20·%20Markov桥S15.md) · [sum-over-middle Born边界候选 · Markov桥S16](sum-over-middle%20Born边界候选%20·%20Markov桥S16.md) · [unitary-CPTP账本边界 · Markov桥S17](unitary-CPTP账本边界%20·%20Markov桥S17.md) · [Born rule推导候选 · Markov桥S18](Born%20rule推导候选%20·%20Markov桥S18.md) · [路径权重乘法候选 · Markov桥S19](路径权重乘法候选%20·%20Markov桥S19.md) · [非平凡量子通道律候选 · Markov桥S20](非平凡量子通道律候选%20·%20Markov桥S20.md) · [概率幅到测量权重 · Markov桥S21](概率幅到测量权重%20·%20Markov桥S21.md) · [作用相位到测量权重链 · Markov桥S22](作用相位到测量权重链%20·%20Markov桥S22.md) · [有限相位演化候选 · Markov桥S23](有限相位演化候选%20·%20Markov桥S23.md) · [连续作用量泛函候选 · Markov桥S24](连续作用量泛函候选%20·%20Markov桥S24.md) · [路径空间作用量泛函候选 · Markov桥S25](路径空间作用量泛函候选%20·%20Markov桥S25.md) · [有限作用量极值候选 · Markov桥S26](有限作用量极值候选%20·%20Markov桥S26.md) · [有限因果局部性候选 · Markov桥S27](有限因果局部性候选%20·%20Markov桥S27.md) · [有限因果区间候选 · Markov桥S28](有限因果区间候选%20·%20Markov桥S28.md) · [有限核路径载体候选 · Markov桥S29](有限核路径载体候选%20·%20Markov桥S29.md) · [递归核路径载体候选 · Markov桥S30](递归核路径载体候选%20·%20Markov桥S30.md) · [端点索引递归载体族候选 · Markov桥S31](端点索引递归载体族候选%20·%20Markov桥S31.md) · [量子与相对论直统一不可能 · 当前语言NoGo](量子与相对论直统一不可能%20·%20当前语言NoGo.md) · [`markov-causal-bridge-plan`](../formal/SSBX/notes/markov-causal-bridge-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "sha256": "375fe64c65a361eebe0b937addea9bbeee03a3d64fd94c96146c32172b93d1ee",
+      "summary": "**前置**：[量子与相对论整合方向 · 从桥到新理论](量子与相对论整合方向%20·%20从桥到新理论.md) · [文构造完备与直相加边界](文构造完备与直相加边界.md) · [有限概率核接口 · Markov桥S2](有限概率核接口%20·%20Markov桥S2.md) · [路径组合与因果约束 · Markov桥S3](路径组合与因果约束%20·%20Markov桥S3.md) · [经典Markov与量子振幅分层 · Markov桥S4](经典Markov与量子振幅分层%20·%20Markov桥S4.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [非零路径振幅候选 · Markov桥S5b](非零路径振幅候选%20·%20Markov桥S5b.md) · [双路径相消候选 · Markov桥S5c](双路径相消候选%20·%20Markov桥S5c.md) · [离散相位标记候选 · Markov桥S5d](离散相位标记候选%20·%20Markov桥S5d.md) · [离散作用量相位候选 · Markov桥S5e](离散作用量相位候选%20·%20Markov桥S5e.md) · [有限路径族求和候选 · Markov桥S5f](有限路径族求和候选%20·%20Markov桥S5f.md) · [有限路径族求和代数候选 · Markov桥S5g](有限路径族求和代数候选%20·%20Markov桥S5g.md) · [端点索引路径族候选 · Markov桥S5h](端点索引路径族候选%20·%20Markov桥S5h.md) · [端点支撑规范化候选 · Markov桥S5i](端点支撑规范化候选%20·%20Markov桥S5i.md) · [双路径枚举候选 · Markov桥S5j](双路径枚举候选%20·%20Markov桥S5j.md) · [路径身份键候选 · Markov桥S5k](路径身份键候选%20·%20Markov桥S5k.md) · [有限键商候选 · Markov桥S5l](有限键商候选%20·%20Markov桥S5l.md) · [路径商类候选 · Markov桥S5m](路径商类候选%20·%20Markov桥S5m.md) · [规范代表元候选 · Markov桥S5n](规范代表元候选%20·%20Markov桥S5n.md) · [商支撑枚举候选 · Markov桥S5o](商支撑枚举候选%20·%20Markov桥S5o.md) · [商支撑代数候选 · Markov桥S5p](商支撑代数候选%20·%20Markov桥S5p.md) · [观测账本候选 · Markov桥S5q](观测账本候选%20·%20Markov桥S5q.md) · [作用量相位律候选 · Markov桥S5r](作用量相位律候选%20·%20Markov桥S5r.md) · [逐步统一候选摘要 · Markov桥S8](逐步统一候选摘要%20·%20Markov桥S8.md) · [sum-over-middle通道组合候选 · Markov桥S15](sum-over-middle通道组合候选%20·%20Markov桥S15.md) · [sum-over-middle Born边界候选 · Markov桥S16](sum-over-middle%20Born边界候选%20·%20Markov桥S16.md) · [unitary-CPTP账本边界 · Markov桥S17](unitary-CPTP账本边界%20·%20Markov桥S17.md) · [Born rule推导候选 · Markov桥S18](Born%20rule推导候选%20·%20Markov桥S18.md) · [路径权重乘法候选 · Markov桥S19](路径权重乘法候选%20·%20Markov桥S19.md) · [非平凡量子通道律候选 · Markov桥S20](非平凡量子通道律候选%20·%20Markov桥S20.md) · [概率幅到测量权重 · Markov桥S21](概率幅到测量权重%20·%20Markov桥S21.md) · [作用相位到测量权重链 · Markov桥S22](作用相位到测量权重链%20·%20Markov桥S22.md) · [有限相位演化候选 · Markov桥S23](有限相位演化候选%20·%20Markov桥S23.md) · [连续作用量泛函候选 · Markov桥S24](连续作用量泛函候选%20·%20Markov桥S24.md) · [路径空间作用量泛函候选 · Markov桥S25](路径空间作用量泛函候选%20·%20Markov桥S25.md) · [有限作用量极值候选 · Markov桥S26](有限作用量极值候选%20·%20Markov桥S26.md) · [有限因果局部性候选 · Markov桥S27](有限因果局部性候选%20·%20Markov桥S27.md) · [有限因果区间候选 · Markov桥S28](有限因果区间候选%20·%20Markov桥S28.md) · [有限核路径载体候选 · Markov桥S29](有限核路径载体候选%20·%20Markov桥S29.md) · [递归核路径载体候选 · Markov桥S30](递归核路径载体候选%20·%20Markov桥S30.md) · [端点索引递归载体族候选 · Markov桥S31](端点索引递归载体族候选%20·%20Markov桥S31.md) · [双路径递归载体族完备候选 · Markov桥S32](双路径递归载体族完备候选%20·%20Markov桥S32.md) · [量子与相对论直统一不可能 · 当前语言NoGo](量子与相对论直统一不可能%20·%20当前语言NoGo.md) · [`markov-causal-bridge-plan`](../formal/SSBX/notes/markov-causal-bridge-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
       "title": "Markov因果桥 · 大统一最小验证构造"
     },
     {
@@ -13069,6 +13078,40 @@
       "sha256": "cffd34ff79a64aa7cd01eb98bfab4bb76ee4101afbc6d0be2b5cbc8c9a45c5ea",
       "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [端点支撑规范化候选 · Markov桥S5i](端点支撑规范化候选%20·%20Markov桥S5i.md) · [有限路径族求和代数候选 · Markov桥S5g](有限路径族求和代数候选%20·%20Markov桥S5g.md) · [有限路径族求和候选 · Markov桥S5f](有限路径族求和候选%20·%20Markov桥S5f.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
       "title": "端点索引路径族候选 · Markov桥S5h"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "端点索引递归载体族候选 · Markov桥S31"
+        },
+        {
+          "level": 2,
+          "title": "一 · 本轮闭合"
+        },
+        {
+          "level": 2,
+          "title": "二 · 形式出口"
+        },
+        {
+          "level": 2,
+          "title": "三 · 边界"
+        },
+        {
+          "level": 2,
+          "title": "四 · 验证"
+        },
+        {
+          "level": 2,
+          "title": "五 · 下一步"
+        }
+      ],
+      "lines": 106,
+      "links": [],
+      "path": "义理/端点索引递归载体族候选 · Markov桥S31.md",
+      "sha256": "21e126789eb3d3ea7d93e14f7227d9214e52ef8016ccece1c6ed0c2c53a7c19f",
+      "summary": "S31 把 S30 的 recursive carriers 包装成 endpoint-indexed finite family：",
+      "title": "端点索引递归载体族候选 · Markov桥S31"
     },
     {
       "headings": [

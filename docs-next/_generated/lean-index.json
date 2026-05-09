@@ -4,7 +4,7 @@
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
-    "Foundation/Modern": 90,
+    "Foundation/Modern": 91,
     "Foundation/Wen": 51,
     "Foundation/Yi": 2,
     "Model": 2,
@@ -201,6 +201,7 @@
         "SSBX.Foundation.Modern.QuantumRelativityFiniteKernelPathCarrierBridge",
         "SSBX.Foundation.Modern.QuantumRelativityKernelPathRecursiveCarrierBridge",
         "SSBX.Foundation.Modern.QuantumRelativityEndpointIndexedRecursiveCarrierBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityTwoRouteDisplayedCarrierCompletenessBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -223,10 +224,10 @@
         "SSBX.Foundation.Modern.KeBoundary",
         "SSBX.Foundation.Modern.QuantumSpacetime"
       ],
-      "lines": 216,
+      "lines": 217,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "c8ffb70c965a14f39393e745e2996d3402b198d536aeed4a39a44367b1f5a126"
+      "sha256": "e2101fbe9af182f3fd90a221e5993620dde350882a2aa4f72382a96822345b51"
     },
     {
       "cluster": "root",
@@ -11394,6 +11395,108 @@
       "module": "SSBX.Foundation.Modern.QuantumRelativityEndpointIndexedPathFamilyBridge",
       "path": "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean",
       "sha256": "b8dbea9c9298090c76bd73470b8d8361f9f63fe99869f47b65739fe7f11bbb85"
+    },
+    {
+      "cluster": "Foundation/Modern",
+      "declaration_count": 22,
+      "declarations": [
+        {
+          "kind": "structure",
+          "name": "EndpointIndexedRecursiveKernelCarrierFamily"
+        },
+        {
+          "kind": "def",
+          "name": "carrierLists"
+        },
+        {
+          "kind": "def",
+          "name": "weights"
+        },
+        {
+          "kind": "def",
+          "name": "weightSum"
+        },
+        {
+          "kind": "theorem",
+          "name": "member_start_mem"
+        },
+        {
+          "kind": "theorem",
+          "name": "member_stop_mem"
+        },
+        {
+          "kind": "theorem",
+          "name": "member_causal_before"
+        },
+        {
+          "kind": "theorem",
+          "name": "member_weight_readback"
+        },
+        {
+          "kind": "def",
+          "name": "EndpointIndexedRecursiveCarrierFamilyClosed"
+        },
+        {
+          "kind": "theorem",
+          "name": "endpoint_indexed_recursive_carrier_family_closed"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteEndpointIndexedRecursiveCarrierFamily"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_endpoint_indexed_recursive_family_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_endpoint_indexed_recursive_family_carriers"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_endpoint_indexed_recursive_family_weights"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_endpoint_indexed_recursive_family_weight_sum"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_endpoint_indexed_recursive_family_member_causal"
+        },
+        {
+          "kind": "def",
+          "name": "TwoRouteEndpointIndexedRecursiveFamilyClosed"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_endpoint_indexed_recursive_family_closed"
+        },
+        {
+          "kind": "inductive",
+          "name": "PendingBeyondS31"
+        },
+        {
+          "kind": "def",
+          "name": "ClosedByStepwiseS31"
+        },
+        {
+          "kind": "theorem",
+          "name": "pending_boundary_not_closed_by_s31"
+        },
+        {
+          "kind": "theorem",
+          "name": "endpoint_indexed_recursive_carrier_bridge_summary"
+        }
+      ],
+      "imports": [
+        "Mathlib.Tactic",
+        "SSBX.Foundation.Modern.QuantumRelativityKernelPathRecursiveCarrierBridge"
+      ],
+      "lines": 241,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityEndpointIndexedRecursiveCarrierBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedRecursiveCarrierBridge.lean",
+      "sha256": "4f090acb6d41abad44eeef0c56b5436e60d8a90ec37a6b3447f6e7b49fd47507"
     },
     {
       "cluster": "Foundation/Modern",

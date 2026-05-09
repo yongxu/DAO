@@ -1130,6 +1130,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedRecursiveCarrierBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteActionExtremumBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalIntervalBridge.lean",
@@ -1216,6 +1217,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityDiscreteActionBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityDiscretePhaseBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedRecursiveCarrierBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteActionExtremumBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalIntervalBridge.lean",
@@ -6042,6 +6044,72 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean"
           ],
           "symbol": "two_route_endpoint_indexed_family_born_weight_zero"
+        }
+      ]
+    },
+    {
+      "document": "义理/端点索引递归载体族候选 · Markov桥S31.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedRecursiveCarrierBridge.lean"
+          ],
+          "symbol": "EndpointIndexedRecursiveKernelCarrierFamily"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedRecursiveCarrierBridge.lean"
+          ],
+          "symbol": "endpoint_indexed_recursive_carrier_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedRecursiveCarrierBridge.lean"
+          ],
+          "symbol": "member_causal_before"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedRecursiveCarrierBridge.lean"
+          ],
+          "symbol": "member_start_mem"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedRecursiveCarrierBridge.lean"
+          ],
+          "symbol": "member_stop_mem"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedRecursiveCarrierBridge.lean"
+          ],
+          "symbol": "member_weight_readback"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedRecursiveCarrierBridge.lean"
+          ],
+          "symbol": "twoRouteEndpointIndexedRecursiveCarrierFamily"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedRecursiveCarrierBridge.lean"
+          ],
+          "symbol": "two_route_endpoint_indexed_recursive_family_carriers"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedRecursiveCarrierBridge.lean"
+          ],
+          "symbol": "two_route_endpoint_indexed_recursive_family_weight_sum"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedRecursiveCarrierBridge.lean"
+          ],
+          "symbol": "two_route_endpoint_indexed_recursive_family_weights"
         }
       ]
     },

@@ -74,8 +74,8 @@
 | formal/SSBX/notes/PositionOperatorGraph.md | 0 | 5 |
 | formal/SSBX/notes/atom-naming.md | 0 | 0 |
 | formal/SSBX/notes/baguaWen-spec.md | 0 | 0 |
-| formal/SSBX/notes/markov-causal-bridge-plan.md | 50 | 5 |
-| formal/SSBX/notes/markov-causal-bridge-verification-plan.md | 49 | 20 |
+| formal/SSBX/notes/markov-causal-bridge-plan.md | 51 | 5 |
+| formal/SSBX/notes/markov-causal-bridge-verification-plan.md | 50 | 20 |
 | formal/SSBX/notes/math-axiom-map.md | 0 | 0 |
 | formal/SSBX/notes/metainterp-isa-gap.md | 0 | 0 |
 | formal/SSBX/notes/monad-root-plan.md | 2 | 3 |
@@ -163,6 +163,7 @@
 | 义理/离散相位标记候选 · Markov桥S5d.md | 0 | 13 |
 | 义理/端点支撑规范化候选 · Markov桥S5i.md | 0 | 11 |
 | 义理/端点索引路径族候选 · Markov桥S5h.md | 0 | 11 |
+| 义理/端点索引递归载体族候选 · Markov桥S31.md | 0 | 10 |
 | 义理/算子别名总表.md | 1 | 20 |
 | 义理/类与映 · 从元到映.md | 1 | 4 |
 | 义理/经典Markov与量子振幅分层 · Markov桥S4.md | 4 | 18 |

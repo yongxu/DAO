@@ -56,6 +56,7 @@
 | `formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKernelPathCarrierBridge.lean` | S29 finite kernel path carrier boundary |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityKernelPathRecursiveCarrierBridge.lean` | S30 recursive finite kernel path carrier boundary |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedRecursiveCarrierBridge.lean` | S31 endpoint-indexed recursive carrier family boundary |
+| `formal/SSBX/Foundation/Modern/QuantumRelativityTwoRouteDisplayedCarrierCompletenessBridge.lean` | S32 two-route displayed carrier family completeness boundary |
 | `formal/SSBX/notes/markov-causal-bridge-plan.md` | 探索计划与完成记录 |
 | `formal/SSBX/notes/unification-stepwise-plan.md` | 逐步完善到候选统一的阶段路线 |
 | `义理/文构造完备与直相加边界.md` | 对 `current-language no-go` 旧说法的正名 |
@@ -105,6 +106,7 @@
 | `义理/有限核路径载体候选 · Markov桥S29.md` | S29 finite kernel path carrier companion 文档 |
 | `义理/递归核路径载体候选 · Markov桥S30.md` | S30 recursive finite kernel path carrier companion 文档 |
 | `义理/端点索引递归载体族候选 · Markov桥S31.md` | S31 endpoint-indexed recursive carrier family companion 文档 |
+| `义理/双路径递归载体族完备候选 · Markov桥S32.md` | S32 two-route displayed carrier family completeness companion 文档 |
 
 ## 当前验证结论
 
@@ -215,6 +217,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityFiniteCausalIntervalBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityFiniteKernelPathCarrierBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityKernelPathRecursiveCarrierBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityEndpointIndexedRecursiveCarrierBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityTwoRouteDisplayedCarrierCompletenessBridge
 lake build SSBX
 git diff --check --
 ```
@@ -295,6 +298,7 @@ rg -n "待处理|future|deferred|部分相关|佛|唯识|analogy|unchecked|plann
 | finite kernel path carrier boundary | `finite_kernel_path_carrier_bridge_summary` | `machineChecked` |
 | recursive kernel path carrier boundary | `kernel_path_recursive_carrier_bridge_summary` | `machineChecked` |
 | endpoint-indexed recursive carrier family boundary | `endpoint_indexed_recursive_carrier_bridge_summary` | `machineChecked` |
+| two-route displayed carrier completeness boundary | `two_route_displayed_carrier_completeness_bridge_summary` | `machineChecked` |
 | tagged-language noncollapse 保持 | `markov_bridge_not_direct_language_addition` | `machineChecked` |
 | 公开摘要 | `markov_causal_bridge_summary` | `machineChecked` |
 
@@ -415,6 +419,7 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
 | V29 | 引入 finite kernel path displayed carrier boundary | 已由 `finite_kernel_path_carrier_bridge_summary` 关闭 displayed carrier、path weight readback、causal readback 与 sound two-step path-local interval；global path enumeration、arbitrary-length causal intervals、full causal set local finiteness、general path integral、Lorentzian geometry、metric recovery 与 empirical closure 仍 pending |
 | V30 | 引入 recursive kernel path carrier boundary | 已由 `kernel_path_recursive_carrier_bridge_summary` 关闭 constructor-recursive path targets/points、endpoint membership、append carrier readback 与 two-route recursive carrier family；global path enumeration、arbitrary-length causal intervals、full causal set local finiteness、general path integral、Lorentzian geometry、metric recovery 与 empirical closure 仍 pending |
 | V31 | 引入 endpoint-indexed recursive carrier family boundary | 已由 `endpoint_indexed_recursive_carrier_bridge_summary` 关闭 endpoint-indexed family member readback、two-route carrier/weight lists 与 displayed weight sum；all-path completeness、global path enumeration、arbitrary-length causal intervals、general path integral、Lorentzian geometry、metric recovery 与 empirical closure 仍 pending |
+| V32 | 引入 two-route displayed carrier family completeness boundary | 已由 `two_route_displayed_carrier_completeness_bridge_summary` 关闭 displayed family upper/lower membership、member cases、carrier cases 与 weight-one law；arbitrary endpoint completeness、all KernelPath enumeration、general path integral、Lorentzian geometry、metric recovery 与 empirical closure 仍 pending |
 
 ## 失败记录模板
 

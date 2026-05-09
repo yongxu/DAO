@@ -96,11 +96,11 @@ rg -n "all-path completeness|global path enumeration|arbitrary-length causal int
 
 ## 五 · 下一步
 
-下一步最省力目标：
+下一步最省力目标已由 S32 承接：
 
 ```text
 endpoint-indexed recursive carrier family
 -> two-route toy carrier-family completeness boundary
 ```
 
-也就是只在 toy `twoRouteProcess` 上证明 source/target 的 displayed endpoint-indexed recursive family 正好覆盖 upper/lower 两条二步 route；仍不推广到任意有限过程。
+S32 已只在 toy `twoRouteProcess` 上证明 source/target 的 displayed endpoint-indexed recursive family 正好覆盖 upper/lower 两条 displayed route；仍不推广到任意有限过程，也不证明 all `KernelPath` inhabitant enumeration。
