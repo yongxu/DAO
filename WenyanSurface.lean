@@ -313,7 +313,7 @@ private def coverageOutput : String :=
   String.intercalate "\n"
     [ s!"surface readings: {allSurfaceReadings.length} surfaces / {readingCount} readings"
     , s!"operators: {operatorRegistryEntries.length} registered / {executableRegistryEntries.length} executable"
-    , s!"semantic ledger: {theoremBackedOperatorIds.length} theorem-backed / {exactTheoremBackedStrongOperatorIds.length} exact / {structuralCarrierOperatorIds.length} structural-carrier / {catalogueNormalFormOperatorIds.length} catalogue-normal-form"
+    , s!"semantic ledger: {theoremBackedOperatorIds.length} theorem-backed / {exactTheoremBackedStrongOperatorIds.length} exact / {exactStructuralHelperStrongOperatorIds.length} exact-structural-helper / {structuralCarrierOperatorIds.length} structural-carrier / {catalogueNormalFormOperatorIds.length} catalogue-normal-form"
     , s!"bagua bridgeable: {baguaBridgeableOperatorIds.length} operators"
     , s!"operator forms: {formBackedCount} ids with at least one form"
     , s!"operator-cell rows: {SSBX.Text.OperatorCellMap.allOperatorCells.length}"
@@ -321,7 +321,7 @@ private def coverageOutput : String :=
     ]
 
 private def operatorListFilterExpected : String :=
-  "all, executable, theorem-backed, exact, structural, structural-carrier, catalogue-normal-form, identity-noop, projection-anchor, pair-carrier, duplicate-facet, singleton-aggregate, binary-aggregate, list-projection, application-carrier, predicate-anchor, truth-marker, bridgeable, known-not-executable, or unsupported"
+  "all, executable, theorem-backed, exact, exact-structural-helper, structural, structural-carrier, catalogue-normal-form, identity-noop, projection-anchor, pair-carrier, duplicate-facet, singleton-aggregate, binary-aggregate, list-projection, application-carrier, predicate-anchor, truth-marker, bridgeable, known-not-executable, or unsupported"
 
 private def operatorCarrierKindFilter? (filter : String) : Option StructuralCarrierKind :=
   allStructuralCarrierKinds.find? (fun kind => kind.key == filter)
@@ -331,6 +331,7 @@ private def operatorListFilterValid (filter : String) : Bool :=
     || filter == "executable"
     || filter == "theorem-backed"
     || filter == "exact"
+    || filter == "exact-structural-helper"
     || filter == "structural"
     || filter == "structural-carrier"
     || filter == "catalogue-normal-form"
@@ -349,6 +350,8 @@ private def operatorListIds (filter : String) : List OperatorId :=
     theoremBackedOperatorIds
   else if filter == "exact" then
     exactTheoremBackedStrongOperatorIds
+  else if filter == "exact-structural-helper" then
+    exactStructuralHelperStrongOperatorIds
   else if filter == "structural-carrier" then
     structuralCarrierOperatorIds
   else if filter == "catalogue-normal-form" then
@@ -1473,7 +1476,7 @@ private def operatorsJsonOutput (filter : String) : String :=
       , jsonFieldNat "knownNotExecutableOperators" (operatorRegistryEntries.length - executableRegistryEntries.length)
       , jsonFieldNat "theoremBackedOperators" theoremBackedOperatorIds.length
       , jsonFieldNat "exactTheoremBackedOperators" exactTheoremBackedStrongOperatorIds.length
-      , jsonFieldNat "exactStructuralHelperOperators" exactStructuralHelperOperatorIds.length
+      , jsonFieldNat "exactStructuralHelperOperators" exactStructuralHelperStrongOperatorIds.length
       , jsonFieldNat "structuralCarrierOperators" structuralCarrierOperatorIds.length
       , jsonFieldNat "catalogueNormalFormOperators" catalogueNormalFormOperatorIds.length
       , jsonFieldNat "baguaBridgeableOperators" baguaBridgeableOperatorIds.length
@@ -1494,7 +1497,7 @@ private def coverageJsonOutput : String :=
     , jsonFieldNat "executableOperators" executableRegistryEntries.length
     , jsonFieldNat "theoremBackedOperators" theoremBackedOperatorIds.length
     , jsonFieldNat "exactTheoremBackedOperators" exactTheoremBackedStrongOperatorIds.length
-    , jsonFieldNat "exactStructuralHelperOperators" exactStructuralHelperOperatorIds.length
+    , jsonFieldNat "exactStructuralHelperOperators" exactStructuralHelperStrongOperatorIds.length
     , jsonFieldNat "structuralCarrierOperators" structuralCarrierOperatorIds.length
     , jsonFieldNat "catalogueNormalFormOperators" catalogueNormalFormOperatorIds.length
     , jsonFieldNat "baguaBridgeableOperators" baguaBridgeableOperatorIds.length
@@ -1522,16 +1525,16 @@ private def usage : String :=
      "       wenyan-surface --json --compile-yi <PROGRAM>",
      "       wenyan-surface --json --explain <PROGRAM>",
      "       wenyan-surface --json --operator <OP-ID>",
-     "       wenyan-surface --json --operators [all|executable|theorem-backed|exact|structural|structural-carrier|catalogue-normal-form|identity-noop|projection-anchor|pair-carrier|duplicate-facet|singleton-aggregate|binary-aggregate|list-projection|application-carrier|predicate-anchor|truth-marker|bridgeable|known-not-executable|unsupported]",
+     "       wenyan-surface --json --operators [all|executable|theorem-backed|exact|exact-structural-helper|structural|structural-carrier|catalogue-normal-form|identity-noop|projection-anchor|pair-carrier|duplicate-facet|singleton-aggregate|binary-aggregate|list-projection|application-carrier|predicate-anchor|truth-marker|bridgeable|known-not-executable|unsupported]",
      "       wenyan-surface --json --coverage",
      "       wenyan-surface --explain <PROGRAM>",
      "       wenyan-surface --operator <OP-ID>",
-     "       wenyan-surface --operators [all|executable|theorem-backed|exact|structural|structural-carrier|catalogue-normal-form|identity-noop|projection-anchor|pair-carrier|duplicate-facet|singleton-aggregate|binary-aggregate|list-projection|application-carrier|predicate-anchor|truth-marker|bridgeable|known-not-executable|unsupported]",
+     "       wenyan-surface --operators [all|executable|theorem-backed|exact|exact-structural-helper|structural|structural-carrier|catalogue-normal-form|identity-noop|projection-anchor|pair-carrier|duplicate-facet|singleton-aggregate|binary-aggregate|list-projection|application-carrier|predicate-anchor|truth-marker|bridgeable|known-not-executable|unsupported]",
      "       wenyan-surface --coverage",
      "       wenyan-surface --help",
      "",
      "Surface vocabulary:",
-     "  Executable operators: 371 rows (317 theorem-backed bodies = 139 exact + 178 structural carriers; 54 catalogue normal forms; 19 exact structural helpers)",
+     "  Executable operators: 371 rows (317 theorem-backed bodies = 120 exact + 34 exact structural helpers + 163 structural carriers; 54 catalogue normal forms)",
      "  Examples include: 推 比 不 必 同 凡 損 损 益 错 錯 综 綜 互 反 則 且 非 或 莫",
      "  Hex consts: 一 乾 坤 plus canonical 64 hexagram names",
      "  Bool consts: 真 假",

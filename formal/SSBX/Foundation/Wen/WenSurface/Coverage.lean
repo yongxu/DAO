@@ -66,9 +66,9 @@ theorem wenSurface_operator_catalogue_counts :
       ∧ operatorRegistryEntries.length = 371
       ∧ executableRegistryEntries.length = 371
       ∧ theoremBackedOperatorIds.length = 317
-      ∧ exactTheoremBackedStrongOperatorIds.length = 139
-      ∧ exactStructuralHelperOperatorIds.length = 19
-      ∧ structuralCarrierOperatorIds.length = 178
+      ∧ exactTheoremBackedStrongOperatorIds.length = 120
+      ∧ exactStructuralHelperStrongOperatorIds.length = 34
+      ∧ structuralCarrierOperatorIds.length = 163
       ∧ catalogueNormalFormOperatorIds.length = 54
       ∧ allOperatorIds.all (fun id => !(operatorForms id).isEmpty) = true := by
   exact
@@ -77,7 +77,7 @@ theorem wenSurface_operator_catalogue_counts :
     , executableRegistryEntries_length
     , theoremBackedOperatorIds_length
     , exactTheoremBackedStrongOperatorIds_length
-    , exactStructuralHelperOperatorIds_length
+    , exactStructuralHelperStrongOperatorIds_length
     , structuralCarrierOperatorIds_length
     , catalogueNormalFormOperatorIds_length
     , by native_decide
@@ -109,9 +109,9 @@ theorem wenSurface_registry_summary :
       ∧ operatorRegistryEntries.length = 371
       ∧ executableRegistryEntries.length = 371
       ∧ theoremBackedOperatorIds.length = 317
-      ∧ exactTheoremBackedStrongOperatorIds.length = 139
-      ∧ exactStructuralHelperOperatorIds.length = 19
-      ∧ structuralCarrierOperatorIds.length = 178
+      ∧ exactTheoremBackedStrongOperatorIds.length = 120
+      ∧ exactStructuralHelperStrongOperatorIds.length = 34
+      ∧ structuralCarrierOperatorIds.length = 163
       ∧ catalogueNormalFormOperatorIds.length = 54
       ∧ allOperatorIds.all (fun id => !(operatorForms id).isEmpty) = true
       ∧ executableOperatorIds.all isCatalogueOperator = true
@@ -125,7 +125,7 @@ theorem wenSurface_registry_summary :
     , executableRegistryEntries_length
     , theoremBackedOperatorIds_length
     , exactTheoremBackedStrongOperatorIds_length
-    , exactStructuralHelperOperatorIds_length
+    , exactStructuralHelperStrongOperatorIds_length
     , structuralCarrierOperatorIds_length
     , catalogueNormalFormOperatorIds_length
     , by native_decide

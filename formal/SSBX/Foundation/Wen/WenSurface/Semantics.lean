@@ -43,6 +43,7 @@ semantics.
 -/
 inductive SemanticStrength where
   | exactTheoremBacked
+  | exactStructuralHelper
   | structuralCarrier
   | catalogueNormalForm
 deriving Repr, DecidableEq
@@ -51,17 +52,21 @@ namespace SemanticStrength
 
 def key : SemanticStrength → String
   | .exactTheoremBacked => "exact-theorem-backed"
+  | .exactStructuralHelper => "exact-structural-helper"
   | .structuralCarrier => "structural-carrier"
   | .catalogueNormalForm => "catalogue-normal-form"
 
 def label : SemanticStrength → String
   | .exactTheoremBacked => "exact theorem-backed"
+  | .exactStructuralHelper => "exact structural helper"
   | .structuralCarrier => "structural carrier"
   | .catalogueNormalForm => "structural catalogue normal form"
 
 def note : SemanticStrength → String
   | .exactTheoremBacked =>
       "exact WenDef body with theorem-backed or finite-domain denotation"
+  | .exactStructuralHelper =>
+      "exact WenDef helper/carrier body; theorem-backed as a typed helper, not full domain semantics"
   | .structuralCarrier =>
       "executable carrier/anchor body; useful for typed composition but awaiting stronger domain denotation"
   | .catalogueNormalForm =>
@@ -586,14 +591,15 @@ to count as exact WenDef semantics, even though it is still not a full domain
 model of the classical term.
 -/
 def exactTypedHelperOperatorIds : List OperatorId :=
-  [.S_1, .S_19, .S_4, .S_5, .S_6, .S_8]
+  [.S_1, .S_19, .S_4, .S_5, .S_6, .S_8,
+   .F_1, .F_2, .F_7, .F_8, .K_6, .K_7, .K_8, .L_7, .Z_29, .Z_32]
 
 /-- Theorem-backed identity/no-op rows where the note already claims the exact
 WenDef behavior is to preserve the Hex state.
 -/
 def exactIdentityNoopOperatorIds : List OperatorId :=
-  [.R_6, .T_7, .T_8, .F_11, .I_2, .P_9, .L_9, .L_10, .L_11,
-   .ZA_2, .SUN_6, .Z_12, .Z_13]
+  [.R_6, .R_11, .T_7, .T_8, .B_4, .F_11, .I_2, .D_1, .P_9,
+   .L_9, .L_10, .L_11, .Y_17, .Y_18, .ZA_2, .SUN_6, .Z_12, .Z_13]
 
 def exactStructuralHelperOperatorIds : List OperatorId :=
   exactTypedHelperOperatorIds ++ exactIdentityNoopOperatorIds
@@ -648,7 +654,7 @@ def operatorSemanticStrength (id : OperatorId) : SemanticStrength :=
   match theoremBackedSemanticsFor? id with
   | some sem =>
       if decide (id ∈ exactStructuralHelperOperatorIds) then
-        .exactTheoremBacked
+        .exactStructuralHelper
       else if isStructuralCarrierBody sem.body then
         .structuralCarrier
       else
@@ -660,6 +666,9 @@ def semanticStrengthOperatorIds (strength : SemanticStrength) : List OperatorId 
 
 def exactTheoremBackedStrongOperatorIds : List OperatorId :=
   semanticStrengthOperatorIds .exactTheoremBacked
+
+def exactStructuralHelperStrongOperatorIds : List OperatorId :=
+  semanticStrengthOperatorIds .exactStructuralHelper
 
 def structuralCarrierOperatorIds : List OperatorId :=
   semanticStrengthOperatorIds .structuralCarrier
@@ -749,19 +758,23 @@ theorem catalogueNormalFormOperatorIds_length :
     catalogueNormalFormOperatorIds.length = 54 := by native_decide
 
 theorem exactStructuralHelperOperatorIds_length :
-    exactStructuralHelperOperatorIds.length = 19 := by native_decide
+    exactStructuralHelperOperatorIds.length = 34 := by native_decide
 
 theorem exactStructuralHelperOperatorIds_nodup :
     exactStructuralHelperOperatorIds.Nodup := by native_decide
 
 theorem exactTheoremBackedStrongOperatorIds_length :
-    exactTheoremBackedStrongOperatorIds.length = 139 := by native_decide
+    exactTheoremBackedStrongOperatorIds.length = 120 := by native_decide
+
+theorem exactStructuralHelperStrongOperatorIds_length :
+    exactStructuralHelperStrongOperatorIds.length = 34 := by native_decide
 
 theorem structuralCarrierOperatorIds_length :
-    structuralCarrierOperatorIds.length = 178 := by native_decide
+    structuralCarrierOperatorIds.length = 163 := by native_decide
 
 theorem semanticStrengthPartition_counts :
     exactTheoremBackedStrongOperatorIds.length
+      + exactStructuralHelperStrongOperatorIds.length
       + structuralCarrierOperatorIds.length
       + catalogueNormalFormOperatorIds.length = 371 := by
   native_decide
@@ -799,6 +812,7 @@ theorem operatorRegistryCoverage_summary :
       ∧ structuralCatalogueOperatorIds.length = 54
       ∧ catalogueNormalFormOperatorIds.length = 54
       ∧ exactTheoremBackedStrongOperatorIds.length
+        + exactStructuralHelperStrongOperatorIds.length
         + structuralCarrierOperatorIds.length
         + catalogueNormalFormOperatorIds.length = 371
       ∧ theoremBackedOperatorIds.length + structuralCatalogueOperatorIds.length = 371
@@ -822,8 +836,10 @@ theorem operatorRegistryCoverage_summary :
 example : (executableSemanticsFor? .Z_5).isSome = true := by native_decide
 example : (theoremBackedSemanticsFor? .S_1).isSome = true := by native_decide
 example : (executableSemanticsFor? .S_1).isSome = true := by native_decide
-example : operatorSemanticStrength .S_1 = .exactTheoremBacked := by native_decide
-example : operatorSemanticStrength .S_4 = .exactTheoremBacked := by native_decide
+example : operatorSemanticStrength .S_1 = .exactStructuralHelper := by native_decide
+example : operatorSemanticStrength .S_4 = .exactStructuralHelper := by native_decide
+example : operatorSemanticStrength .K_6 = .exactStructuralHelper := by native_decide
+example : operatorSemanticStrength .Y_17 = .exactStructuralHelper := by native_decide
 example : operatorSemanticStrength .A_16 = .structuralCarrier := by native_decide
 example : operatorStructuralCarrierKind? .S_1 = some .applicationCarrier := by native_decide
 example : operatorStructuralCarrierKind? .R_12 = some .pairCarrier := by native_decide
