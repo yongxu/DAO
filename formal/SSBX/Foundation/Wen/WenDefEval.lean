@@ -399,13 +399,33 @@ example :
     denoteHexPair (.app (.app .pairH (.hexLit Hexagram.qian)) (.hexLit Hexagram.kun))
       = some (Hexagram.qian, Hexagram.kun) := by native_decide
 
+theorem pairHBody_eq_pair (a b : Hexagram) :
+    denoteHexPair (.app (.app Stdlib.pairHBody (.hexLit a)) (.hexLit b)) = some (a, b) := by
+  rfl
+
+theorem dupHBody_eq_dup (h : Hexagram) :
+    denoteHexPair (.app Stdlib.dupHBody (.hexLit h)) = some (h, h) := by
+  rfl
+
 example :
     denoteHexList (.app .list1H (.hexLit Hexagram.qian))
       = some [Hexagram.qian] := by native_decide
 
+theorem list1HBody_eq_singleton (h : Hexagram) :
+    denoteHexList (.app Stdlib.list1HBody (.hexLit h)) = some [h] := by
+  rfl
+
+theorem list2HBody_eq_pairList (a b : Hexagram) :
+    denoteHexList (.app (.app Stdlib.list2HBody (.hexLit a)) (.hexLit b)) = some [a, b] := by
+  rfl
+
 example :
     denoteHex (.app .headH (.app .list1H (.hexLit Hexagram.qian)))
       = some Hexagram.qian := by native_decide
+
+theorem headHBody_list1_eq_id (h : Hexagram) :
+    denoteHex (.app Stdlib.headHBody (.app Stdlib.list1HBody (.hexLit h))) = some h := by
+  rfl
 
 example :
     denoteCell (.cellLit (Hexagram.qian, Shi.jin)) =
@@ -548,6 +568,10 @@ example :
 example : denoteBool (.app .notB (.boolLit true)) = some false := by native_decide
 example : denoteBool (.app .notB (.boolLit false)) = some true := by native_decide
 
+theorem boolMarkerBody_eq_id (b : Bool) :
+    denoteBool (.app Stdlib.boolMarkerBody (.boolLit b)) = some b := by
+  cases b <;> native_decide
+
 /-! ### Promoted logic alias bodies -/
 
 example :
@@ -612,9 +636,24 @@ example :
     denoteHex (.app (.app Stdlib.hexApplyBody Stdlib.tuiBody) .yi)
       = some («生» «一») := by native_decide
 
+theorem hexApplyBody_tui_eq_sheng (h : Hexagram) :
+    denoteHex (.app (.app Stdlib.hexApplyBody Stdlib.tuiBody) (.hexLit h)) = some («生» h) := by
+  cases h with
+  | mk y1 y2 y3 y4 y5 y6 =>
+    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+    all_goals native_decide
+
 example :
     denoteHex (.app (.app Stdlib.hexApplyBody Stdlib.sunBody) .yi)
       = some («加» Hexagram.kun «一») := by native_decide
+
+theorem hexApplyBody_sun_eq_decrement (h : Hexagram) :
+    denoteHex (.app (.app Stdlib.hexApplyBody Stdlib.sunBody) (.hexLit h)) =
+      some («加» Hexagram.kun h) := by
+  cases h with
+  | mk y1 y2 y3 y4 y5 y6 =>
+    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+    all_goals native_decide
 
 /-- 「凡 (λh. 同 h h)」denotes true (反身性 universally). -/
 theorem self_eq_all_true : denoteBool selfEqAll = some true := by native_decide
