@@ -368,7 +368,11 @@ CLI_CASES = [
     (["--operators", "identity-noop"], "carrier=identity-noop"),
     (["--operators", "application-carrier"], "operators application-carrier: 12 shown; 371 registered / 371 executable"),
     (["--operators", "application-carrier"], "carrier=application-carrier"),
-    (["--help"], "wenyan-surface --json --operators [all|executable|theorem-backed|exact|exact-structural-helper|structural|structural-carrier|catalogue-normal-form|identity-noop|projection-anchor|pair-carrier|duplicate-facet|singleton-aggregate|binary-aggregate|list-projection|application-carrier|predicate-anchor|truth-marker|bridgeable|known-not-executable|unsupported]"),
+    (["--operators", "application-helper-only"], "operators application-helper-only: 12 shown; 371 registered / 371 executable"),
+    (["--operators", "carrier-constructor-only"], "operators carrier-constructor-only: 52 shown; 371 registered / 371 executable"),
+    (["--operators", "carrier-constructor-only"], "gap=carrier-constructor-only"),
+    (["--operators", "catalogue-shape-only"], "operators catalogue-shape-only: 54 shown; 371 registered / 371 executable"),
+    (["--help"], "wenyan-surface --json --operators [all|executable|theorem-backed|exact|exact-structural-helper|structural|structural-carrier|catalogue-normal-form|identity-noop|projection-anchor|pair-carrier|duplicate-facet|singleton-aggregate|binary-aggregate|list-projection|application-carrier|predicate-anchor|truth-marker|application-helper-only|identity-noop-only|projection-anchor-only|carrier-constructor-only|predicate-anchor-only|truth-marker-only|catalogue-shape-only|bridgeable|known-not-executable|unsupported]"),
     (["--help"], "wenyan-surface --json --compile-yi <PROGRAM>"),
     (["--help"], "317 theorem-backed bodies = 120 exact + 86 exact structural helpers + 111 structural carriers; 54 catalogue normal forms"),
 ]
@@ -470,6 +474,14 @@ JSON_CLI_CASES = [
         "count": 18,
         "operatorsRegistered": 371,
         "executableOperators": 371,
+    }),
+    (["--json", "--operators", "carrier-constructor-only"], {
+        "mode": "operators",
+        "filter": "carrier-constructor-only",
+        "count": 52,
+        "operatorsRegistered": 371,
+        "executableOperators": 371,
+        "domainGapOperators": 251,
     }),
     (["--json", "--operators", "exact-structural-helper"], {
         "mode": "operators",

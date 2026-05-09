@@ -330,10 +330,13 @@ private def coverageOutput : String :=
     ]
 
 private def operatorListFilterExpected : String :=
-  "all, executable, theorem-backed, exact, exact-structural-helper, structural, structural-carrier, catalogue-normal-form, identity-noop, projection-anchor, pair-carrier, duplicate-facet, singleton-aggregate, binary-aggregate, list-projection, application-carrier, predicate-anchor, truth-marker, bridgeable, known-not-executable, or unsupported"
+  "all, executable, theorem-backed, exact, exact-structural-helper, structural, structural-carrier, catalogue-normal-form, identity-noop, projection-anchor, pair-carrier, duplicate-facet, singleton-aggregate, binary-aggregate, list-projection, application-carrier, predicate-anchor, truth-marker, application-helper-only, identity-noop-only, projection-anchor-only, carrier-constructor-only, predicate-anchor-only, truth-marker-only, catalogue-shape-only, bridgeable, known-not-executable, or unsupported"
 
 private def operatorCarrierKindFilter? (filter : String) : Option StructuralCarrierKind :=
   allStructuralCarrierKinds.find? (fun kind => kind.key == filter)
+
+private def operatorDomainGapKindFilter? (filter : String) : Option DomainGapKind :=
+  allDomainGapKinds.find? (fun kind => kind.key == filter)
 
 private def operatorListFilterValid (filter : String) : Bool :=
   filter == "all"
@@ -345,6 +348,7 @@ private def operatorListFilterValid (filter : String) : Bool :=
     || filter == "structural-carrier"
     || filter == "catalogue-normal-form"
     || (operatorCarrierKindFilter? filter).isSome
+    || (operatorDomainGapKindFilter? filter).isSome
     || filter == "bridgeable"
     || filter == "known-not-executable"
     || filter == "unsupported"
@@ -369,14 +373,17 @@ private def operatorListIds (filter : String) : List OperatorId :=
     match operatorCarrierKindFilter? filter with
     | some kind => structuralCarrierKindOperatorIds kind
     | none =>
-        if filter == "structural" then
-          allOperatorIds.filter (fun id => !decide (operatorSemanticStrength id = .exactTheoremBacked))
-        else if filter == "bridgeable" then
-          baguaBridgeableOperatorIds
-        else if operatorListFilterIsKnownNotExecutable filter then
-          allOperatorIds.filter (fun id => !(isExecutableOperator id))
-        else
-          allOperatorIds
+        match operatorDomainGapKindFilter? filter with
+        | some kind => domainGapKindOperatorIds kind
+        | none =>
+            if filter == "structural" then
+              allOperatorIds.filter (fun id => !decide (operatorSemanticStrength id = .exactTheoremBacked))
+            else if filter == "bridgeable" then
+              baguaBridgeableOperatorIds
+            else if operatorListFilterIsKnownNotExecutable filter then
+              allOperatorIds.filter (fun id => !(isExecutableOperator id))
+            else
+              allOperatorIds
 
 private def operatorSupportKind (id : OperatorId) : String :=
   if isExecutableOperator id then "executable" else "known-not-executable"
@@ -1557,11 +1564,11 @@ private def usage : String :=
      "       wenyan-surface --json --compile-yi <PROGRAM>",
      "       wenyan-surface --json --explain <PROGRAM>",
      "       wenyan-surface --json --operator <OP-ID>",
-     "       wenyan-surface --json --operators [all|executable|theorem-backed|exact|exact-structural-helper|structural|structural-carrier|catalogue-normal-form|identity-noop|projection-anchor|pair-carrier|duplicate-facet|singleton-aggregate|binary-aggregate|list-projection|application-carrier|predicate-anchor|truth-marker|bridgeable|known-not-executable|unsupported]",
+     "       wenyan-surface --json --operators [all|executable|theorem-backed|exact|exact-structural-helper|structural|structural-carrier|catalogue-normal-form|identity-noop|projection-anchor|pair-carrier|duplicate-facet|singleton-aggregate|binary-aggregate|list-projection|application-carrier|predicate-anchor|truth-marker|application-helper-only|identity-noop-only|projection-anchor-only|carrier-constructor-only|predicate-anchor-only|truth-marker-only|catalogue-shape-only|bridgeable|known-not-executable|unsupported]",
      "       wenyan-surface --json --coverage",
      "       wenyan-surface --explain <PROGRAM>",
      "       wenyan-surface --operator <OP-ID>",
-     "       wenyan-surface --operators [all|executable|theorem-backed|exact|exact-structural-helper|structural|structural-carrier|catalogue-normal-form|identity-noop|projection-anchor|pair-carrier|duplicate-facet|singleton-aggregate|binary-aggregate|list-projection|application-carrier|predicate-anchor|truth-marker|bridgeable|known-not-executable|unsupported]",
+     "       wenyan-surface --operators [all|executable|theorem-backed|exact|exact-structural-helper|structural|structural-carrier|catalogue-normal-form|identity-noop|projection-anchor|pair-carrier|duplicate-facet|singleton-aggregate|binary-aggregate|list-projection|application-carrier|predicate-anchor|truth-marker|application-helper-only|identity-noop-only|projection-anchor-only|carrier-constructor-only|predicate-anchor-only|truth-marker-only|catalogue-shape-only|bridgeable|known-not-executable|unsupported]",
      "       wenyan-surface --coverage",
      "       wenyan-surface --help",
      "",
