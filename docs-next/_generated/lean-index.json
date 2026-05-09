@@ -4,7 +4,7 @@
     "Foundation/Core": 14,
     "Foundation/Eight": 8,
     "Foundation/Jian": 6,
-    "Foundation/Modern": 87,
+    "Foundation/Modern": 88,
     "Foundation/Wen": 51,
     "Foundation/Yi": 2,
     "Model": 2,
@@ -29,10 +29,10 @@
         "SSBX.Foundation.Wen.WenSurface.Coverage",
         "SSBX.Foundation.Wen.WenDefCompile"
       ],
-      "lines": 1856,
+      "lines": 1914,
       "module": "WenyanSurface.lean",
       "path": "WenyanSurface.lean",
-      "sha256": "b27595dfd9127f219ce2e93e7a548acd998313a224a4b87327de1c469fb97c74"
+      "sha256": "451fd0e8bf87aa85b2bc63bbdafe776b2019ec13be6295c3ec6ffe541777fa9c"
     },
     {
       "cluster": "root",
@@ -198,6 +198,7 @@
         "SSBX.Foundation.Modern.QuantumRelativityFiniteActionExtremumBridge",
         "SSBX.Foundation.Modern.QuantumRelativityFiniteCausalLocalityBridge",
         "SSBX.Foundation.Modern.QuantumRelativityFiniteCausalIntervalBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityFiniteKernelPathCarrierBridge",
         "SSBX.Foundation.Modern.SUN",
         "SSBX.Foundation.Modern.NaturalDeduction",
         "SSBX.Foundation.Modern.Lebesgue",
@@ -220,10 +221,10 @@
         "SSBX.Foundation.Modern.KeBoundary",
         "SSBX.Foundation.Modern.QuantumSpacetime"
       ],
-      "lines": 213,
+      "lines": 214,
       "module": "SSBX",
       "path": "formal/SSBX.lean",
-      "sha256": "66d99223ddef1c823f2163e040780401afe594af202a363b383bdcbf8fc5852c"
+      "sha256": "fa5595127b450f0a494b90c6ac2be4ff5942e365e82c46756c585f711c799ff6"
     },
     {
       "cluster": "root",
@@ -11553,6 +11554,165 @@
     },
     {
       "cluster": "Foundation/Modern",
+      "declaration_count": 36,
+      "declarations": [
+        {
+          "kind": "structure",
+          "name": "FiniteTwoStepCausalIntervalCandidate"
+        },
+        {
+          "kind": "def",
+          "name": "closedTwoStepIntervalPoints"
+        },
+        {
+          "kind": "theorem",
+          "name": "left_endpoint_mem_closed_interval"
+        },
+        {
+          "kind": "theorem",
+          "name": "right_endpoint_mem_closed_interval"
+        },
+        {
+          "kind": "theorem",
+          "name": "middle_mem_closed_interval"
+        },
+        {
+          "kind": "theorem",
+          "name": "interval_middle_step_law"
+        },
+        {
+          "kind": "theorem",
+          "name": "interval_middle_causal_law"
+        },
+        {
+          "kind": "def",
+          "name": "LocalTwoStepIntervalRespectsLocalFuture"
+        },
+        {
+          "kind": "theorem",
+          "name": "interval_respects_local_future"
+        },
+        {
+          "kind": "def",
+          "name": "concretePreparedMeasuredInterval"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_prepared_measured_interval_middle"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_prepared_measured_closed_interval_points"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_evolved_between_prepared_measured"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_prepared_measured_interval_respects_local_future"
+        },
+        {
+          "kind": "theorem",
+          "name": "concrete_prepared_measured_middle_causal_law"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteLocalFuture"
+        },
+        {
+          "kind": "theorem",
+          "name": "twoRoute_local_future_sound"
+        },
+        {
+          "kind": "theorem",
+          "name": "twoRoute_local_future_complete"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteCausalLocalFuture"
+        },
+        {
+          "kind": "theorem",
+          "name": "twoRoute_local_future_iff_step"
+        },
+        {
+          "kind": "theorem",
+          "name": "twoRoute_kernel_respects_local_future"
+        },
+        {
+          "kind": "def",
+          "name": "twoRouteSourceTargetInterval"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_source_target_interval_middle"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_source_target_closed_interval_points"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_upper_between_source_target"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_lower_between_source_target"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_source_target_interval_respects_local_future"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_interval_has_two_distinct_middles"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_source_target_middle_complete"
+        },
+        {
+          "kind": "theorem",
+          "name": "two_route_source_target_middle_causal_law"
+        },
+        {
+          "kind": "def",
+          "name": "FiniteCausalIntervalClosed"
+        },
+        {
+          "kind": "theorem",
+          "name": "finite_causal_interval_closed"
+        },
+        {
+          "kind": "inductive",
+          "name": "PendingBeyondS28"
+        },
+        {
+          "kind": "def",
+          "name": "ClosedByStepwiseS28"
+        },
+        {
+          "kind": "theorem",
+          "name": "pending_boundary_not_closed_by_s28"
+        },
+        {
+          "kind": "theorem",
+          "name": "finite_causal_interval_bridge_summary"
+        }
+      ],
+      "imports": [
+        "Mathlib.Tactic",
+        "SSBX.Foundation.Modern.QuantumRelativityFiniteCausalLocalityBridge",
+        "SSBX.Foundation.Modern.QuantumRelativityTwoPathInterferenceBridge"
+      ],
+      "lines": 392,
+      "module": "SSBX.Foundation.Modern.QuantumRelativityFiniteCausalIntervalBridge",
+      "path": "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalIntervalBridge.lean",
+      "sha256": "0d95f2ccf7d3ae1dce8b7e8685ad4b62b1631462d92808942de0e6e6f7512c73"
+    },
+    {
+      "cluster": "Foundation/Modern",
       "declaration_count": 30,
       "declarations": [
         {
@@ -20275,10 +20435,10 @@
         "SSBX.Text.OperatorCellMap",
         "SSBX.Text.OperatorCellSemantics"
       ],
-      "lines": 262,
+      "lines": 314,
       "module": "SSBX.Foundation.Wen.WenSurface.Coverage",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Coverage.lean",
-      "sha256": "12680fdc990cab6c2d6d94d6a07c1056c0a74b078f5c5b403a075455663fd410"
+      "sha256": "52b57d32863fb7b82a1f75d0187608715f35d76a417c3b37354604c37dd9979a"
     },
     {
       "cluster": "Foundation/Wen",
@@ -20833,7 +20993,7 @@
     },
     {
       "cluster": "Foundation/Wen",
-      "declaration_count": 178,
+      "declaration_count": 195,
       "declarations": [
         {
           "kind": "structure",
@@ -21054,6 +21214,18 @@
         {
           "kind": "def",
           "name": "structuralCarrierKindOperatorIds"
+        },
+        {
+          "kind": "def",
+          "name": "operatorDomainCaveatKind?"
+        },
+        {
+          "kind": "def",
+          "name": "domainCaveatKindOperatorIds"
+        },
+        {
+          "kind": "def",
+          "name": "domainCaveatOperatorIds"
         },
         {
           "kind": "def",
@@ -21353,6 +21525,58 @@
         },
         {
           "kind": "theorem",
+          "name": "domainCaveatOperatorIds_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainCaveat_identityNoop_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainCaveat_projectionAnchor_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainCaveat_pairCarrier_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainCaveat_duplicateFacetCarrier_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainCaveat_singletonAggregateCarrier_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainCaveat_binaryAggregateCarrier_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainCaveat_ternaryAggregateCarrier_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainCaveat_listProjectionCarrier_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainCaveat_applicationCarrier_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainCaveat_predicateAnchor_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainCaveat_truthMarker_length"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainCaveat_catalogueNormalForm_length"
+        },
+        {
+          "kind": "theorem",
           "name": "catalogueShape_assignment_length"
         },
         {
@@ -21418,6 +21642,10 @@
         {
           "kind": "theorem",
           "name": "domainGapDetailKindPartition_counts"
+        },
+        {
+          "kind": "theorem",
+          "name": "domainCaveatKindPartition_counts"
         },
         {
           "kind": "theorem",
@@ -21554,10 +21782,10 @@
         "SSBX.Text.OperatorSignatures",
         "SSBX.Text.WenyanOperators"
       ],
-      "lines": 1616,
+      "lines": 1692,
       "module": "SSBX.Foundation.Wen.WenSurface.Semantics",
       "path": "formal/SSBX/Foundation/Wen/WenSurface/Semantics.lean",
-      "sha256": "5c2d8931d51e2bbf2d4d9926c45cb89769e05cec7769c6afdb7ee87445dc4dba"
+      "sha256": "91017e6a66ecdbd3fc0155d3b338545745100f472113f8cb9c8421ec5ca3eaa4"
     },
     {
       "cluster": "Foundation/Wen",

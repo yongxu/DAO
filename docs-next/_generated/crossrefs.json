@@ -1132,6 +1132,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteActionExtremumBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalIntervalBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalLocalityBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean",
@@ -1162,6 +1163,12 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityWenBoundary.lean"
       ],
       "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathWeightMultiplicationBridge/Core.lean"
+          ],
+          "symbol": "KernelPath"
+        },
         {
           "paths": [
             "formal/SSBX/Foundation/Modern/Quantum.lean"
@@ -1209,6 +1216,7 @@
         "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteActionExtremumBridge.lean",
+        "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalIntervalBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalLocalityBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKeyQuotientBridge.lean",
         "formal/SSBX/Foundation/Modern/QuantumRelativityFinitePathSumAlgebraBridge.lean",
@@ -1244,6 +1252,12 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityIntegration.lean"
           ],
           "symbol": "BridgeTerm"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathWeightMultiplicationBridge/Core.lean"
+          ],
+          "symbol": "KernelPath"
         },
         {
           "paths": [
@@ -1352,12 +1366,6 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedPathFamilyBridge.lean"
           ],
           "symbol": "endpoint_indexed_path_family_bridge_summary"
-        },
-        {
-          "paths": [
-            "formal/SSBX/Foundation/Modern/QuantumRelativityEndpointSupportNormalizationBridge.lean"
-          ],
-          "symbol": "endpoint_support_normalization_bridge_summary"
         }
       ]
     },
@@ -4254,6 +4262,7 @@
         },
         {
           "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalIntervalBridge.lean",
             "formal/SSBX/Foundation/Modern/QuantumRelativityTwoRouteEnumerationBridge.lean"
           ],
           "symbol": "two_route_source_target_middle_complete"
@@ -4824,6 +4833,78 @@
             "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteActionExtremumBridge.lean"
           ],
           "symbol": "two_route_upper_to_lower_action_gap"
+        }
+      ]
+    },
+    {
+      "document": "义理/有限因果区间候选 · Markov桥S28.md",
+      "lean_path_mentions": [],
+      "symbol_hits": [
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalIntervalBridge.lean"
+          ],
+          "symbol": "FiniteTwoStepCausalIntervalCandidate"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityPathWeightMultiplicationBridge/Core.lean"
+          ],
+          "symbol": "KernelPath"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalIntervalBridge.lean"
+          ],
+          "symbol": "LocalTwoStepIntervalRespectsLocalFuture"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalIntervalBridge.lean"
+          ],
+          "symbol": "closedTwoStepIntervalPoints"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalIntervalBridge.lean"
+          ],
+          "symbol": "concretePreparedMeasuredInterval"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalIntervalBridge.lean"
+          ],
+          "symbol": "finite_causal_interval_bridge_summary"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalIntervalBridge.lean"
+          ],
+          "symbol": "interval_middle_causal_law"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalIntervalBridge.lean"
+          ],
+          "symbol": "interval_middle_step_law"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalIntervalBridge.lean"
+          ],
+          "symbol": "interval_respects_local_future"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalIntervalBridge.lean"
+          ],
+          "symbol": "twoRouteSourceTargetInterval"
+        },
+        {
+          "paths": [
+            "formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalIntervalBridge.lean"
+          ],
+          "symbol": "two_route_interval_has_two_distinct_middles"
         }
       ]
     },

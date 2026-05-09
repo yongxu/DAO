@@ -2,6 +2,8 @@
 
 **前置**：[路径组合与因果约束 · Markov桥S3](路径组合与因果约束%20·%20Markov桥S3.md) · [有限因果局部性候选 · Markov桥S27](有限因果局部性候选%20·%20Markov桥S27.md) · [双路径相消候选 · Markov桥S5c](双路径相消候选%20·%20Markov桥S5c.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
+**后续**：[有限核路径载体候选 · Markov桥S29](有限核路径载体候选%20·%20Markov桥S29.md) 已把本页的 displayed interval points 接到 S19 finite `KernelPath` carrier / weight / causal readback。
+
 **Lean 锚点**：
 
 | 层 | 文件 | 内容 | 状态 |

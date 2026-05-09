@@ -74,8 +74,8 @@
 | formal/SSBX/notes/PositionOperatorGraph.md | 0 | 5 |
 | formal/SSBX/notes/atom-naming.md | 0 | 0 |
 | formal/SSBX/notes/baguaWen-spec.md | 0 | 0 |
-| formal/SSBX/notes/markov-causal-bridge-plan.md | 47 | 4 |
-| formal/SSBX/notes/markov-causal-bridge-verification-plan.md | 46 | 20 |
+| formal/SSBX/notes/markov-causal-bridge-plan.md | 48 | 5 |
+| formal/SSBX/notes/markov-causal-bridge-verification-plan.md | 47 | 20 |
 | formal/SSBX/notes/math-axiom-map.md | 0 | 0 |
 | formal/SSBX/notes/metainterp-isa-gap.md | 0 | 0 |
 | formal/SSBX/notes/monad-root-plan.md | 2 | 3 |
@@ -147,6 +147,7 @@
 | 义理/数与算术 · 从元到数.md | 1 | 0 |
 | 义理/文构造完备与直相加边界.md | 0 | 7 |
 | 义理/有限作用量极值候选 · Markov桥S26.md | 0 | 9 |
+| 义理/有限因果区间候选 · Markov桥S28.md | 0 | 11 |
 | 义理/有限因果局部性候选 · Markov桥S27.md | 0 | 10 |
 | 义理/有限概率归一化候选 · Markov桥S9.md | 0 | 13 |
 | 义理/有限概率核接口 · Markov桥S2.md | 3 | 12 |

@@ -56,6 +56,7 @@
 - [x] S26 有限作用量极值候选已闭合：two-route quotient support 上的 action gap、upper finite minimum 与 lower non-minimum boundary 已形式化
 - [x] S27 有限因果局部性候选已闭合：finite localFuture list 精确覆盖 one-step support，positive kernel weight 目标落在局部未来邻域
 - [x] S28 有限因果区间候选已闭合：displayed two-step causal interval 的 middle list 有 sound/complete 边界，并 respect localFuture
+- [x] S29 有限核路径载体候选已闭合：finite `KernelPath` 可附 displayed carrier list，并保留 causal readback 与 path weight
 
 ## 打勾规则
 
@@ -250,6 +251,7 @@ theorem markov_causal_bridge_summary :
 | `formal/SSBX/Foundation/Modern/QuantumRelativityFiniteActionExtremumBridge.lean` | S26 finite action extremum boundary |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalLocalityBridge.lean` | S27 finite causal locality boundary |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityFiniteCausalIntervalBridge.lean` | S28 finite two-step causal interval boundary |
+| `formal/SSBX/Foundation/Modern/QuantumRelativityFiniteKernelPathCarrierBridge.lean` | S29 finite kernel path displayed carrier boundary |
 | `formal/SSBX/notes/markov-causal-bridge-verification-plan.md` | 回归验证、边界审计、失败记录与下一轮升级验证路线 |
 | `formal/SSBX/notes/unification-stepwise-plan.md` | 逐步完善到候选统一的阶段路线 |
 | `义理/文构造完备与直相加边界.md` | 用户提出 `192 × 371` 修正后的边界说明 |
@@ -296,6 +298,7 @@ theorem markov_causal_bridge_summary :
 | `义理/有限作用量极值候选 · Markov桥S26.md` | S26 companion 文档，记录 finite action gap / minimum / non-minimum boundary |
 | `义理/有限因果局部性候选 · Markov桥S27.md` | S27 companion 文档，记录 finite localFuture / one-step support locality boundary |
 | `义理/有限因果区间候选 · Markov桥S28.md` | S28 companion 文档，记录 displayed two-step causal interval / localFuture handoff boundary |
+| `义理/有限核路径载体候选 · Markov桥S29.md` | S29 companion 文档，记录 finite KernelPath carrier / weight / causal readback boundary |
 | `formal/SSBX.lean` | 已加入顶层 import |
 | `docs-next/10_formal_形式/modern.md` | 已登记 Modern 模块 |
 
@@ -304,6 +307,8 @@ theorem markov_causal_bridge_summary :
 Markov 因果桥目前是最省力的第一块脚手架。它能把“过程、转移、路径、测量、事件、因果”放进同一个有限结构里。S4 已经把经典 Markov 层与量子振幅 / 通道候选层分开，S5 已经把 path amplitude、相消候选和 Born-shaped boundary 接上，S5b 已经给出非零候选振幅 witness 并把它投回 valid / Reachable / causalBefore，S5c 已经给出同端点、不同中间态的 two-path finite cancellation candidate，S5d 已经给出 discrete phase-label candidate，S5e 已经把 path phase 推到 edge increments 的有限累积，S5f 已经把 two-path sum 推到 finite path-family sum，S5g 已经补上 append / permutation / reverse stability，S5h 已经把同端点 ledger 收进 endpoint-indexed family，S5i 已经补上 amplitude-complete filter 与 duplicate handling boundary，S5j 已经关闭 two-route toy source/target middle enumeration，S5k 已经补上 visible path-key boundary，S5l 已经补上 finite visible-key quotient candidate，S5m 已经构造 visible-key quotient class，S5n 已经补上 two-route canonical representatives，S5o 已经补上 finite quotient-support enumeration，S5p 已经补上 quotient-support algebra，S5q 已经把 quotient-support cancellation 登记为 pending observable ledger entry，S5r 已经把 finite action-to-phase law 接到 quotient support 与 pending ledger，S8 已经把当前已关闭结构合取为 stepwise unification candidate summary，S9 已经把 concrete 与 grid kernel 的有限行归一化为 `1`，S10 已经把逐项 `normalizedMass` 的有限和证明为 `1`，S11 已经关闭 normalized amplitude support 条件下的 candidateWeight 非负与 sum-one，S12 已经把 amplitude support / amplitude sum / candidateWeight projection 装入 finite probability distribution interface，S13 已经关闭 current skeleton 的 `channelCompose`，S14 已经关闭 pointwise `channelCompose` 的 associativity 并记录 diagonal identity obstruction，S15 已经关闭 finite sum-over-middle composition 的 two-step boundary，S16 已经把 composed endpoint amplitude support 条件式接到 finite Born distribution boundary，S17 已经把 unitary/CPTP physical channel law 缺口登记为 required-but-not-closed ledger，S18 已经把 Markov row probability 与 amplitude bridge compatibility 推到 finite Born distribution boundary，S19 已经关闭 finite kernel path 的 path-weight multiplication law，S20 已经关闭 finite support-respecting nonzero channel law，S21 已经关闭 one-qubit computational-basis Born measurement weights boundary，S22 已经把 finite action branch 接到 action amplitude、normalized qubit 与 measurement-event weights，S23 已经把 branch-indexed finite phase evolution 接到 S22 qubits 与 Born-weight preservation，S24 已经把 displayed continuous action-coordinate functional `S(t)=t` 的两个采样点接回 finite action index、phase amplitude 与 S23 Born-weight preservation，S25 已经把 finite visible-key quotient path space 上的 action functional 接回 S5r action index、S24 sampling 与 quotient-support cancellation，S26 已经把 two-route quotient support 上的 action values 推到 finite gap / upper minimum / lower non-minimum boundary，S27 已经把 one-step support 推到 finite localFuture locality boundary；后续应处理一般 Hilbert measurement、POVM/PVM、stochastic semantics、general all-path enumeration、smooth/infinite-dimensional path-space action functional、Euler-Lagrange/Hamiltonian/unitary amplitude dynamics、完整测量语义、可测预言 ledger、一般 path integral、physical unitary/CPTP/Kraus/density channel law、完整 causal set、Lorentzian geometry 或度规恢复。
 
 S28 已把 S27 的 one-step localFuture 加厚为 displayed two-step causal interval candidate：固定端点之间的 middle list 可证明 sound/complete，并且每个 middle 均 respect localFuture。它仍不证明 full causal set axioms、arbitrary-length causal intervals、light cone、Lorentzian geometry、metric recovery 或 empirical closure。
+
+S29 已把 S19 的 finite `KernelPath` 与 S28 displayed interval points 接上：kernel path 可附 displayed finite carrier list，读回 `Reachable` / `causalBefore`，并保留 path weight。它仍不证明 global path enumeration、arbitrary-length causal intervals、full causal set local finiteness、path integral、Lorentzian geometry 或 empirical closure。
 
 ## 探索日志
 
@@ -689,3 +694,11 @@ S28 已把 S27 的 one-step localFuture 加厚为 displayed two-step causal inte
 - 成功：关闭 `finite_causal_interval_bridge_summary`；S28 接回 S27 locality、S26 finite action extremum、S25 path-space action 与 S5c same-endpoint pair。
 - 失败记录：第一次 build 中 singleton/list membership 的 `simp` 未关闭 impossible cases 与 direct membership cases；第二次 build 中 `List.mem_cons_of_mem` 显式实参形状不匹配。改为 membership-to-equality/disjunction、`List.mem_singleton_self`、`List.mem_cons_self` 与 `List.mem_cons_of_mem _ proof` 后关闭。
 - 保留边界：S28 只证明 displayed two-step causal interval candidate；不证明 full causal set axioms、arbitrary-length causal intervals、全局 local finiteness、light cone、Lorentzian manifold locality、metric recovery、relativistic field locality 或 empirical closure。
+
+### 2026-05-09 · S29 有限核路径载体候选
+
+- 成功：新增 `QuantumRelativityFiniteKernelPathCarrierBridge.lean`，定义 `DisplayedKernelPathCarrier`。
+- 成功：关闭 `DisplayedKernelPathCarrier.reachable`、`DisplayedKernelPathCarrier.causal_before` 与 `DisplayedKernelPathCarrier.weight_eq_path_weight`；finite `KernelPath` 的 displayed carrier 保留 causal readback 与 path weight。
+- 成功：新增 `concretePreparedMeasuredKernelCarrier`、`twoRouteUpperKernelCarrier` 与 `twoRouteLowerKernelCarrier`；concrete carrier 接回 S28 closed interval points，two-route upper/lower carrier 权重均为 `1`。
+- 成功：关闭 `finite_kernel_path_carrier_bridge_summary`；S29 接回 S28 interval 与 S19 path-weight multiplication boundary。
+- 保留边界：S29 只证明 displayed carrier interface；不证明 global path enumeration、arbitrary-length causal intervals、full causal set local finiteness、general path integral、Lorentzian geometry、metric recovery 或 empirical closure。

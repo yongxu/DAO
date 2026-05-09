@@ -58,6 +58,7 @@
 -> 有限作用量极值候选
 -> 有限因果局部性候选
 -> 有限因果区间候选
+-> 有限核路径载体候选
 -> 几何候选接口
 -> 经验 pending ledger
 -> 更强统一摘要 theorem
@@ -120,6 +121,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityPathSpaceActionFunctionalBrid
 lake build SSBX.Foundation.Modern.QuantumRelativityFiniteActionExtremumBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityFiniteCausalLocalityBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityFiniteCausalIntervalBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityFiniteKernelPathCarrierBridge
 lake build SSBX
 git diff --check --
 ```
@@ -1485,6 +1487,44 @@ finite_causal_interval_bridge_summary。
 | `twoRouteSourceTargetInterval` | `QuantumRelativityFiniteCausalIntervalBridge.lean` | two-route source/target 的 middle 为 `[upper, lower]` |
 | `finite_causal_interval_bridge_summary` | `QuantumRelativityFiniteCausalIntervalBridge.lean` | S28 displayed two-step causal interval boundary 已关闭 |
 
+## S29 · 有限核路径载体候选
+
+目标：把 S19 的 finite `KernelPath` 与 S28 的 displayed interval points 接起来。S29 不证明 global path enumeration、arbitrary-length causal intervals、full causal set local finiteness、general path integral、Lorentzian geometry、metric recovery 或 empirical closure；它只证明 finite `KernelPath` 可附 displayed carrier list，保留 path weight 与 causal readback，并补一个单条二步 kernel path 的 sound path-local interval。
+
+| 项 | 内容 |
+|---|---|
+| Lean 出口 | `finite_kernel_path_carrier_bridge_summary` |
+| 最低 theorem 形态 | 合取 `FiniteKernelPathCarrierClosed`、`KernelPathLocalIntervalSoundClosed`、S28 interval boundary、S19 path-weight boundary、concrete/twoRoute displayed carriers 与 Wen coverage |
+| 失败记录 | 若构建失败，记录是否为 `KernelPath` namespace、carrier/list membership、twoRoute kernel edge positivity 或 overclaim mismatch；当前设计避免把 displayed carrier 误读为 all-path enumeration |
+| 文档更新 | 已新增《有限核路径载体候选 · Markov桥S29》 |
+| 后续结构 | recursive `KernelPath.points`、finite path family carriers、endpoint-indexed all-path enumeration、arbitrary-length causal intervals、global local finiteness、path integral、Lorentzian geometry 与 empirical closure |
+
+通过判准：
+
+```text
+DisplayedKernelPathCarrier；
+DisplayedKernelPathCarrier.reachable；
+DisplayedKernelPathCarrier.causal_before；
+DisplayedKernelPathCarrier.weight_eq_path_weight；
+SoundKernelTwoStepPathLocalIntervalCandidate；
+kernel_path_local_interval_sound_closed；
+concretePreparedMeasuredKernelCarrier；
+twoRouteUpperKernelCarrier；
+twoRouteLowerKernelCarrier；
+finite_kernel_path_carrier_bridge_summary。
+```
+
+当前状态：
+
+| theorem | 文件 | 读法 |
+|---|---|---|
+| `DisplayedKernelPathCarrier` | `QuantumRelativityFiniteKernelPathCarrierBridge.lean` | finite kernel path 可附 displayed carrier list |
+| `DisplayedKernelPathCarrier.reachable`、`causal_before` | `QuantumRelativityFiniteKernelPathCarrierBridge.lean` | displayed carrier 读回 Reachable / causalBefore |
+| `SoundKernelTwoStepPathLocalIntervalCandidate` | `QuantumRelativityFiniteKernelPathCarrierBridge.lean` | 单条二步 kernel path 有 sound path-local interval |
+| `concretePreparedMeasuredKernelCarrier` | `QuantumRelativityFiniteKernelPathCarrierBridge.lean` | concrete carrier 接回 S28 closed interval points |
+| `twoRouteUpperKernelCarrier`、`twoRouteLowerKernelCarrier` | `QuantumRelativityFiniteKernelPathCarrierBridge.lean` | two-route upper/lower carriers 权重均为 `1` |
+| `finite_kernel_path_carrier_bridge_summary` | `QuantumRelativityFiniteKernelPathCarrierBridge.lean` | S29 finite kernel path carrier boundary 已关闭 |
+
 ## 失败记录追加区
 
 失败记录格式沿用验证计划，并允许追加在此区：
@@ -1548,6 +1588,7 @@ finite_causal_interval_bridge_summary。
 | 2026-05-09 | S26 | failure retained / success | 第一次 build 中 `rw [hq]` 已关闭 reflexive order goal，后续 `exact le_rfl` 变成 no goals；同时文件末尾需先关闭 `noncomputable section` 再关闭 namespace。修正后新增 finite action extremum boundary，关闭 lower-minus-upper action gap、upper finite minimum 与 lower non-minimum |
 | 2026-05-09 | S27 | failure retained / success | 第一次 build 中 concrete nonlocal membership 缺少自动 decidability，且 grid singleton `Fin` list equality 暴露 proof-term mismatch；改为显式 empty-list nonmembership 与 grid initial localFuture length boundary。第二次 build 中 singleton length 需补 `rfl` 后关闭 finite causal locality boundary |
 | 2026-05-09 | S28 | failure retained / success | 第一次 build 中 singleton/list membership 的 `simp` 未关闭 impossible cases 与 direct membership cases；第二次 build 中 `List.mem_cons_of_mem` 显式实参形状不匹配；改为 membership-to-equality/disjunction、`List.mem_singleton_self`、`List.mem_cons_self` 与 `List.mem_cons_of_mem _ proof` 后关闭 displayed two-step causal interval boundary |
+| 2026-05-09 | S29 | success | 新增 finite kernel path displayed carrier candidate 与 sound two-step path-local interval；关闭 displayed carrier 的 weight/causal readback、concrete carrier 到 S28 interval points、two-route upper/lower carrier weight boundary |
 
 ## 统一用语正名
 
@@ -1555,9 +1596,9 @@ finite_causal_interval_bridge_summary。
 
 | 词 | 在本路线中的含义 | 结构依据 |
 |---|---|---|
-| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S28 已关闭的 summary theorem 与路线日志 |
-| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8-S28 pending list |
-| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary`、`normalized_mass_bridge_summary`、`born_weight_normalization_bridge_summary`、`born_distribution_bridge_summary`、`channel_compose_bridge_summary`、`channel_compose_associativity_bridge_summary`、`sum_over_middle_channel_bridge_summary`、`sum_over_middle_born_distribution_bridge_summary`、`unitary_cptp_ledger_bridge_summary`、`born_rule_derivation_bridge_summary`、`path_weight_multiplication_bridge_summary`、`nontrivial_quantum_channel_law_bridge_summary`、`born_measurement_bridge_summary`、`action_amplitude_measurement_bridge_summary`、`finite_phase_evolution_bridge_summary`、`continuous_action_functional_bridge_summary`、`path_space_action_functional_bridge_summary`、`finite_action_extremum_bridge_summary`、`finite_causal_locality_bridge_summary`、`finite_causal_interval_bridge_summary` |
+| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S29 已关闭的 summary theorem 与路线日志 |
+| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8-S29 pending list |
+| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary`、`normalized_mass_bridge_summary`、`born_weight_normalization_bridge_summary`、`born_distribution_bridge_summary`、`channel_compose_bridge_summary`、`channel_compose_associativity_bridge_summary`、`sum_over_middle_channel_bridge_summary`、`sum_over_middle_born_distribution_bridge_summary`、`unitary_cptp_ledger_bridge_summary`、`born_rule_derivation_bridge_summary`、`path_weight_multiplication_bridge_summary`、`nontrivial_quantum_channel_law_bridge_summary`、`born_measurement_bridge_summary`、`action_amplitude_measurement_bridge_summary`、`finite_phase_evolution_bridge_summary`、`continuous_action_functional_bridge_summary`、`path_space_action_functional_bridge_summary`、`finite_action_extremum_bridge_summary`、`finite_causal_locality_bridge_summary`、`finite_causal_interval_bridge_summary`、`finite_kernel_path_carrier_bridge_summary` |
 
 推荐正名句：
 
