@@ -185,6 +185,7 @@ import SSBX.Foundation.Modern.QuantumRelativityFiniteKernelPathCarrierBridge
 import SSBX.Foundation.Modern.QuantumRelativityKernelPathRecursiveCarrierBridge
 import SSBX.Foundation.Modern.QuantumRelativityEndpointIndexedRecursiveCarrierBridge
 import SSBX.Foundation.Modern.QuantumRelativityTwoRouteDisplayedCarrierCompletenessBridge
+import SSBX.Foundation.Modern.QuantumRelativityTwoRouteKernelPathEnumerationBridge
 import SSBX.Foundation.Modern.SUN
 
 -- Phase 4 主体续（自然演绎 / Lebesgue 积分 / 连续 ODE / 神经科学 / 完备性深化）

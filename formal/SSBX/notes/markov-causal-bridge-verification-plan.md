@@ -57,6 +57,7 @@
 | `formal/SSBX/Foundation/Modern/QuantumRelativityKernelPathRecursiveCarrierBridge.lean` | S30 recursive finite kernel path carrier boundary |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityEndpointIndexedRecursiveCarrierBridge.lean` | S31 endpoint-indexed recursive carrier family boundary |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityTwoRouteDisplayedCarrierCompletenessBridge.lean` | S32 two-route displayed carrier family completeness boundary |
+| `formal/SSBX/Foundation/Modern/QuantumRelativityTwoRouteKernelPathEnumerationBridge.lean` | S33 two-route all-KernelPath carrier enumeration boundary |
 | `formal/SSBX/notes/markov-causal-bridge-plan.md` | 探索计划与完成记录 |
 | `formal/SSBX/notes/unification-stepwise-plan.md` | 逐步完善到候选统一的阶段路线 |
 | `义理/文构造完备与直相加边界.md` | 对 `current-language no-go` 旧说法的正名 |
@@ -107,6 +108,7 @@
 | `义理/递归核路径载体候选 · Markov桥S30.md` | S30 recursive finite kernel path carrier companion 文档 |
 | `义理/端点索引递归载体族候选 · Markov桥S31.md` | S31 endpoint-indexed recursive carrier family companion 文档 |
 | `义理/双路径递归载体族完备候选 · Markov桥S32.md` | S32 two-route displayed carrier family completeness companion 文档 |
+| `义理/双路径KernelPath枚举候选 · Markov桥S33.md` | S33 two-route all-KernelPath carrier enumeration companion 文档 |
 
 ## 当前验证结论
 
@@ -160,6 +162,10 @@
 - [x] `finite_causal_locality_bridge_summary` 已关闭 finite causal locality boundary：finite localFuture list 精确覆盖 one-step support，positive kernel weight 目标落在局部未来邻域。
 - [x] `finite_causal_interval_bridge_summary` 已关闭 finite two-step causal interval boundary：displayed middle list 的 step/causal/localFuture handoff 已形式化，concrete 与 two-route interval witness 已给出。
 - [x] `finite_kernel_path_carrier_bridge_summary` 已关闭 finite kernel path displayed carrier boundary：finite `KernelPath` 可附 displayed carrier，保留 weight / causal readback，并给出 sound two-step path-local interval。
+- [x] `kernel_path_recursive_carrier_bridge_summary` 已关闭 recursive finite kernel path carrier boundary：finite `KernelPath` 的 targets/points 可由 constructors 递归生成，并给出 append carrier readback。
+- [x] `endpoint_indexed_recursive_carrier_bridge_summary` 已关闭 endpoint-indexed recursive carrier family boundary：two-route recursive carriers 可包成同端点 displayed family，并读回 carrier/weight lists。
+- [x] `two_route_displayed_carrier_completeness_bridge_summary` 已关闭 two-route displayed family completeness boundary：displayed family 成员恰好落在 upper/lower，且权重为 `1`。
+- [x] `two_route_kernel_path_enumeration_bridge_summary` 已关闭 two-route all-`KernelPath` carrier enumeration boundary：任意 `KernelPath twoRouteKernel source target` 的 `kernelPathPoints` 只能是 upper route 或 lower route，并可读回 S32 displayed carrier family。
 - [x] 首次新 worktree 原生构建的 `mathlib4` 克隆阻塞已记录为基础设施失败，不当作 theorem 失败。
 - [ ] 尚未验证一般 Hilbert measurement、POVM/PVM、smooth/infinite-dimensional path-space action functional、Euler-Lagrange/Hamiltonian/unitary amplitude dynamics、measurement postulate semantics、decoherence、general all-path enumeration、一般 path integral、真实可测干涉律、physical unitary / CPTP / Kraus / density-matrix channel law、完整因果偏序、arbitrary-length causal interval、full causal set local finiteness、度规恢复、数据校准、可测预言 theorem 或经验闭合。
 
@@ -218,6 +224,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityFiniteKernelPathCarrierBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityKernelPathRecursiveCarrierBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityEndpointIndexedRecursiveCarrierBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityTwoRouteDisplayedCarrierCompletenessBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityTwoRouteKernelPathEnumerationBridge
 lake build SSBX
 git diff --check --
 ```
@@ -299,6 +306,7 @@ rg -n "待处理|future|deferred|部分相关|佛|唯识|analogy|unchecked|plann
 | recursive kernel path carrier boundary | `kernel_path_recursive_carrier_bridge_summary` | `machineChecked` |
 | endpoint-indexed recursive carrier family boundary | `endpoint_indexed_recursive_carrier_bridge_summary` | `machineChecked` |
 | two-route displayed carrier completeness boundary | `two_route_displayed_carrier_completeness_bridge_summary` | `machineChecked` |
+| two-route all-KernelPath carrier enumeration boundary | `two_route_kernel_path_enumeration_bridge_summary` | `machineChecked` |
 | tagged-language noncollapse 保持 | `markov_bridge_not_direct_language_addition` | `machineChecked` |
 | 公开摘要 | `markov_causal_bridge_summary` | `machineChecked` |
 
@@ -420,6 +428,7 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
 | V30 | 引入 recursive kernel path carrier boundary | 已由 `kernel_path_recursive_carrier_bridge_summary` 关闭 constructor-recursive path targets/points、endpoint membership、append carrier readback 与 two-route recursive carrier family；global path enumeration、arbitrary-length causal intervals、full causal set local finiteness、general path integral、Lorentzian geometry、metric recovery 与 empirical closure 仍 pending |
 | V31 | 引入 endpoint-indexed recursive carrier family boundary | 已由 `endpoint_indexed_recursive_carrier_bridge_summary` 关闭 endpoint-indexed family member readback、two-route carrier/weight lists 与 displayed weight sum；all-path completeness、global path enumeration、arbitrary-length causal intervals、general path integral、Lorentzian geometry、metric recovery 与 empirical closure 仍 pending |
 | V32 | 引入 two-route displayed carrier family completeness boundary | 已由 `two_route_displayed_carrier_completeness_bridge_summary` 关闭 displayed family upper/lower membership、member cases、carrier cases 与 weight-one law；arbitrary endpoint completeness、all KernelPath enumeration、general path integral、Lorentzian geometry、metric recovery 与 empirical closure 仍 pending |
+| V33 | 引入 two-route all-KernelPath carrier enumeration boundary | 已由 `two_route_kernel_path_enumeration_bridge_summary` 关闭任意 `KernelPath twoRouteKernel source target` 的 recursive carrier upper/lower normal form、weight-one law 与 S32 displayed family readback；arbitrary finite-process enumeration、general path integral、Lorentzian geometry、metric recovery 与 empirical closure 仍 pending |
 
 ## 失败记录模板
 

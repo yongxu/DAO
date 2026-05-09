@@ -93,12 +93,12 @@ rg -n "all KernelPath enumeration|global path enumeration|arbitrary endpoint com
 下一步：显式展开 endpoint-indexed family 与 recursive family，并补 `QuantumRelativityMarkovBridge` open。
 ```
 
-## 五 · 下一步
+## 五 · 后续
 
-下一步若继续推进，需要决定是否尝试真正证明：
+S33 已承接并关闭更强的 toy source/target `KernelPath` carrier enumeration：
 
 ```text
 all KernelPath twoRouteKernel source target inhabitants reduce to upper/lower
 ```
 
-这比 S32 更强，因为它不只是检查 displayed family 的 members，而是要分析 indexed `KernelPath` inhabitant 的所有可能构造形态。
+见《双路径KernelPath枚举候选 · Markov桥S33》。S32 自身仍只读作 displayed family completeness；S33 才把任意同端点 `KernelPath` 的递归 carrier 也归约到 upper/lower。

@@ -103,4 +103,4 @@ endpoint-indexed recursive carrier family
 -> two-route toy carrier-family completeness boundary
 ```
 
-S32 已只在 toy `twoRouteProcess` 上证明 source/target 的 displayed endpoint-indexed recursive family 正好覆盖 upper/lower 两条 displayed route；仍不推广到任意有限过程，也不证明 all `KernelPath` inhabitant enumeration。
+S32 已只在 toy `twoRouteProcess` 上证明 source/target 的 displayed endpoint-indexed recursive family 正好覆盖 upper/lower 两条 displayed route；S33 继续证明任意 `KernelPath twoRouteKernel source target` 的 recursive carrier 也只能是 upper/lower。二者都仍不推广到任意有限过程。
