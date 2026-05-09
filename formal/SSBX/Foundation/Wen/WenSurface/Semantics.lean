@@ -163,6 +163,70 @@ def allStructuralCarrierKinds : List StructuralCarrierKind :=
   , .catalogueNormalForm
   ]
 
+/-- Coarser reason a row is still not full domain semantics.
+
+At the operator level, `none` means exact theorem-backed semantics. Every
+listed kind identifies which typed/executable scaffold exists while the
+stronger domain model is still pending.
+-/
+inductive DomainGapKind where
+  | applicationHelperOnly
+  | identityNoopOnly
+  | projectionAnchorOnly
+  | carrierConstructorOnly
+  | predicateAnchorOnly
+  | truthMarkerOnly
+  | catalogueShapeOnly
+deriving Repr, DecidableEq
+
+namespace DomainGapKind
+
+def key : DomainGapKind → String
+  | .applicationHelperOnly => "application-helper-only"
+  | .identityNoopOnly => "identity-noop-only"
+  | .projectionAnchorOnly => "projection-anchor-only"
+  | .carrierConstructorOnly => "carrier-constructor-only"
+  | .predicateAnchorOnly => "predicate-anchor-only"
+  | .truthMarkerOnly => "truth-marker-only"
+  | .catalogueShapeOnly => "catalogue-shape-only"
+
+def label : DomainGapKind → String
+  | .applicationHelperOnly => "application helper only"
+  | .identityNoopOnly => "identity/no-op only"
+  | .projectionAnchorOnly => "projection anchor only"
+  | .carrierConstructorOnly => "carrier constructor only"
+  | .predicateAnchorOnly => "predicate anchor only"
+  | .truthMarkerOnly => "truth marker only"
+  | .catalogueShapeOnly => "catalogue shape only"
+
+def note : DomainGapKind → String
+  | .applicationHelperOnly =>
+      "typed application mechanics are exact; stronger domain semantics must come from the supplied operator"
+  | .identityNoopOnly =>
+      "Hex is preserved exactly; a domain action law is not claimed"
+  | .projectionAnchorOnly =>
+      "Hex is preserved as a projection/extractor anchor; no projected domain is modeled yet"
+  | .carrierConstructorOnly =>
+      "carrier construction is exact; pair/list/facet domain laws are not modeled yet"
+  | .predicateAnchorOnly =>
+      "predicate type is present; the domain predicate itself is not modeled yet"
+  | .truthMarkerOnly =>
+      "truth marker type is present; discourse or connective semantics are not modeled yet"
+  | .catalogueShapeOnly =>
+      "only the catalogue signature shape is executable; no theorem-backed domain body is present yet"
+
+end DomainGapKind
+
+def allDomainGapKinds : List DomainGapKind :=
+  [ .applicationHelperOnly
+  , .identityNoopOnly
+  , .projectionAnchorOnly
+  , .carrierConstructorOnly
+  , .predicateAnchorOnly
+  , .truthMarkerOnly
+  , .catalogueShapeOnly
+  ]
+
 /-! ## § 1.1 Bool relation/predicate package -/
 
 def hexPredTrueBody : Tm :=
@@ -689,6 +753,33 @@ def structuralCarrierOperatorIds : List OperatorId :=
 def catalogueNormalFormOperatorIds : List OperatorId :=
   semanticStrengthOperatorIds .catalogueNormalForm
 
+def domainGapKindForCarrierKind : StructuralCarrierKind → DomainGapKind
+  | .identityNoop => .identityNoopOnly
+  | .projectionAnchor => .projectionAnchorOnly
+  | .pairCarrier => .carrierConstructorOnly
+  | .duplicateFacetCarrier => .carrierConstructorOnly
+  | .singletonAggregateCarrier => .carrierConstructorOnly
+  | .binaryAggregateCarrier => .carrierConstructorOnly
+  | .listProjectionCarrier => .carrierConstructorOnly
+  | .applicationCarrier => .applicationHelperOnly
+  | .predicateAnchor => .predicateAnchorOnly
+  | .truthMarker => .truthMarkerOnly
+  | .catalogueNormalForm => .catalogueShapeOnly
+
+def operatorDomainGapKind? (id : OperatorId) : Option DomainGapKind :=
+  if decide (operatorSemanticStrength id = .exactTheoremBacked) then
+    none
+  else
+    match operatorStructuralCarrierKind? id with
+    | some kind => some (domainGapKindForCarrierKind kind)
+    | none => some .catalogueShapeOnly
+
+def domainGapKindOperatorIds (kind : DomainGapKind) : List OperatorId :=
+  allOperatorIds.filter (fun id => decide (operatorDomainGapKind? id = some kind))
+
+def domainGapOperatorIds : List OperatorId :=
+  allOperatorIds.filter (fun id => (operatorDomainGapKind? id).isSome)
+
 /-! ## § 1.4 Total structural catalogue semantics -/
 
 /-
@@ -791,6 +882,13 @@ theorem exactStructuralHelperStrongOperatorIds_length :
 theorem structuralCarrierOperatorIds_length :
     structuralCarrierOperatorIds.length = 111 := by native_decide
 
+theorem domainGapOperatorIds_length :
+    domainGapOperatorIds.length = 251 := by native_decide
+
+theorem exactTheoremBackedStrongOperatorIds_no_domain_gap :
+    exactTheoremBackedStrongOperatorIds.all (fun id => (operatorDomainGapKind? id).isNone) = true := by
+  native_decide
+
 theorem semanticStrengthPartition_counts :
     exactTheoremBackedStrongOperatorIds.length
       + exactStructuralHelperStrongOperatorIds.length
@@ -830,6 +928,7 @@ theorem operatorRegistryCoverage_summary :
       ∧ theoremBackedOperatorIds.length = 317
       ∧ structuralCatalogueOperatorIds.length = 54
       ∧ catalogueNormalFormOperatorIds.length = 54
+      ∧ domainGapOperatorIds.length = 251
       ∧ exactTheoremBackedStrongOperatorIds.length
         + exactStructuralHelperStrongOperatorIds.length
         + structuralCarrierOperatorIds.length
@@ -845,6 +944,7 @@ theorem operatorRegistryCoverage_summary :
     , theoremBackedOperatorIds_length
     , structuralCatalogueOperatorIds_length
     , catalogueNormalFormOperatorIds_length
+    , domainGapOperatorIds_length
     , semanticStrengthPartition_counts
     , executablePartition_counts
     , executableOperatorIds_registered
@@ -866,6 +966,10 @@ example : operatorSemanticStrength .A_16 = .structuralCarrier := by native_decid
 example : operatorStructuralCarrierKind? .S_1 = some .applicationCarrier := by native_decide
 example : operatorStructuralCarrierKind? .R_12 = some .pairCarrier := by native_decide
 example : operatorStructuralCarrierKind? .E_2 = some .catalogueNormalForm := by native_decide
+example : operatorDomainGapKind? .S_1 = some .applicationHelperOnly := by native_decide
+example : operatorDomainGapKind? .R_12 = some .carrierConstructorOnly := by native_decide
+example : operatorDomainGapKind? .E_2 = some .catalogueShapeOnly := by native_decide
+example : operatorDomainGapKind? .I_1 = none := by native_decide
 example : (theoremBackedSemanticsFor? .K_8).isSome = true := by native_decide
 example : (executableSemanticsFor? .Q_5).isSome = true := by native_decide
 example : (executableSemanticsFor? .A_12).isSome = true := by native_decide

@@ -269,6 +269,14 @@ private def carrierKindLines (id : OperatorId) : List String :=
       ]
   | none => []
 
+private def domainGapLines (id : OperatorId) : List String :=
+  match operatorDomainGapKind? id with
+  | some gap =>
+      [ "domain gap: " ++ gap.key
+      , "domain gap note: " ++ gap.note
+      ]
+  | none => []
+
 private def operatorOutput (code : String) : String :=
   match operatorByCode? code with
   | none => s!"operator {code}: no such catalogue OperatorId"
@@ -303,7 +311,7 @@ private def operatorOutput (code : String) : String :=
          , "semantic note: " ++ (operatorSemanticStrength id).note
          , "bagua bridge: " ++ (if bridgeable then "bagua-l0-yi" else "none")
          , "executable: " ++ executable
-         ] ++ carrierKindLines id ++ compoundLine)
+         ] ++ carrierKindLines id ++ domainGapLines id ++ compoundLine)
 
 private def coverageOutput : String :=
   let readingCount :=
@@ -314,6 +322,7 @@ private def coverageOutput : String :=
     [ s!"surface readings: {allSurfaceReadings.length} surfaces / {readingCount} readings"
     , s!"operators: {operatorRegistryEntries.length} registered / {executableRegistryEntries.length} executable"
     , s!"semantic ledger: {theoremBackedOperatorIds.length} theorem-backed / {exactTheoremBackedStrongOperatorIds.length} exact / {exactStructuralHelperStrongOperatorIds.length} exact-structural-helper / {structuralCarrierOperatorIds.length} structural-carrier / {catalogueNormalFormOperatorIds.length} catalogue-normal-form"
+    , s!"domain gaps: {domainGapOperatorIds.length} operators pending full domain semantics"
     , s!"bagua bridgeable: {baguaBridgeableOperatorIds.length} operators"
     , s!"operator forms: {formBackedCount} ids with at least one form"
     , s!"operator-cell rows: {SSBX.Text.OperatorCellMap.allOperatorCells.length}"
@@ -381,7 +390,11 @@ private def operatorSummaryLine (id : OperatorId) : String :=
     match operatorStructuralCarrierKind? id with
     | some kind => s!"\tcarrier={kind.key}"
     | none => ""
-  s!"{id.code}\t{id.title}\t{operatorSupportKind id}\tsemantic={(operatorSemanticStrength id).key}{carrier}\tarity={sig.arity}\tforms={formsShow}{bridge}"
+  let domainGap :=
+    match operatorDomainGapKind? id with
+    | some gap => s!"\tgap={gap.key}"
+    | none => ""
+  s!"{id.code}\t{id.title}\t{operatorSupportKind id}\tsemantic={(operatorSemanticStrength id).key}{carrier}{domainGap}\tarity={sig.arity}\tforms={formsShow}{bridge}"
 
 private def operatorsOutput (filter : String) : String :=
   if !(operatorListFilterValid filter) then
@@ -1402,6 +1415,18 @@ private def operatorJsonOutput (code : String) : String :=
             , jsonFieldRaw "carrierKindLabel" "null"
             , jsonFieldRaw "carrierKindNote" "null"
             ]
+      let domainGapFields :=
+        match operatorDomainGapKind? id with
+        | some gap =>
+            [ jsonFieldString "domainGapKind" gap.key
+            , jsonFieldString "domainGapLabel" gap.label
+            , jsonFieldString "domainGapNote" gap.note
+            ]
+        | none =>
+            [ jsonFieldRaw "domainGapKind" "null"
+            , jsonFieldRaw "domainGapLabel" "null"
+            , jsonFieldRaw "domainGapNote" "null"
+            ]
       let bridgeable := operatorBridgeableToBaguaL0 id
       jsonObject <|
         [ jsonFieldBool "ok" true
@@ -1425,7 +1450,7 @@ private def operatorJsonOutput (code : String) : String :=
         , jsonFieldString "semanticStrength" strength.key
         , jsonFieldString "semanticStrengthLabel" strength.label
         , jsonFieldString "semanticStrengthNote" strength.note
-        ] ++ carrierKindFields ++
+        ] ++ carrierKindFields ++ domainGapFields ++
         [ jsonFieldBool "bridgeableL0" bridgeable
         , jsonFieldRaw "bridgeTarget" (if bridgeable then jsonString "bagua-l0-yi" else "null")
         , jsonFieldRaw "executableSemantics" executableJson
@@ -1441,6 +1466,10 @@ private def operatorSummaryJson (id : OperatorId) : String :=
     match operatorStructuralCarrierKind? id with
     | some kind => jsonString kind.key
     | none => "null"
+  let domainGap :=
+    match operatorDomainGapKind? id with
+    | some gap => jsonString gap.key
+    | none => "null"
   jsonObject
     [ jsonFieldString "operatorCode" id.code
     , jsonFieldString "operatorTitle" id.title
@@ -1448,6 +1477,7 @@ private def operatorSummaryJson (id : OperatorId) : String :=
     , jsonFieldString "support" (operatorSupportKind id)
     , jsonFieldString "semanticStrength" (operatorSemanticStrength id).key
     , jsonFieldRaw "carrierKind" carrierKind
+    , jsonFieldRaw "domainGapKind" domainGap
     , jsonFieldBool "bridgeableL0" (operatorBridgeableToBaguaL0 id)
     , jsonFieldRaw "forms" (jsonArray (glyphForms.map jsonString))
     , jsonFieldRaw "compoundSurfaces" (jsonArray (compoundForms.map jsonString))
@@ -1479,6 +1509,7 @@ private def operatorsJsonOutput (filter : String) : String :=
       , jsonFieldNat "exactStructuralHelperOperators" exactStructuralHelperStrongOperatorIds.length
       , jsonFieldNat "structuralCarrierOperators" structuralCarrierOperatorIds.length
       , jsonFieldNat "catalogueNormalFormOperators" catalogueNormalFormOperatorIds.length
+      , jsonFieldNat "domainGapOperators" domainGapOperatorIds.length
       , jsonFieldNat "baguaBridgeableOperators" baguaBridgeableOperatorIds.length
       , jsonFieldRaw "operators" (jsonArray (ids.map operatorSummaryJson))
       ]
@@ -1500,6 +1531,7 @@ private def coverageJsonOutput : String :=
     , jsonFieldNat "exactStructuralHelperOperators" exactStructuralHelperStrongOperatorIds.length
     , jsonFieldNat "structuralCarrierOperators" structuralCarrierOperatorIds.length
     , jsonFieldNat "catalogueNormalFormOperators" catalogueNormalFormOperatorIds.length
+    , jsonFieldNat "domainGapOperators" domainGapOperatorIds.length
     , jsonFieldNat "baguaBridgeableOperators" baguaBridgeableOperatorIds.length
     , jsonFieldNat "operatorFormBackedCount" formBackedCount
     , jsonFieldNat "operatorCellRows" (SSBX.Text.OperatorCellMap.allOperatorCells.length)

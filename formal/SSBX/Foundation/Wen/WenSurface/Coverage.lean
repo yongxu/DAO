@@ -70,6 +70,7 @@ theorem wenSurface_operator_catalogue_counts :
       ∧ exactStructuralHelperStrongOperatorIds.length = 86
       ∧ structuralCarrierOperatorIds.length = 111
       ∧ catalogueNormalFormOperatorIds.length = 54
+      ∧ domainGapOperatorIds.length = 251
       ∧ allOperatorIds.all (fun id => !(operatorForms id).isEmpty) = true := by
   exact
     ⟨ fullOperatorSignatures_length
@@ -80,6 +81,7 @@ theorem wenSurface_operator_catalogue_counts :
     , exactStructuralHelperStrongOperatorIds_length
     , structuralCarrierOperatorIds_length
     , catalogueNormalFormOperatorIds_length
+    , domainGapOperatorIds_length
     , by native_decide
     ⟩
 
@@ -113,6 +115,7 @@ theorem wenSurface_registry_summary :
       ∧ exactStructuralHelperStrongOperatorIds.length = 86
       ∧ structuralCarrierOperatorIds.length = 111
       ∧ catalogueNormalFormOperatorIds.length = 54
+      ∧ domainGapOperatorIds.length = 251
       ∧ allOperatorIds.all (fun id => !(operatorForms id).isEmpty) = true
       ∧ executableOperatorIds.all isCatalogueOperator = true
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).signature.id = id) := by
@@ -128,6 +131,7 @@ theorem wenSurface_registry_summary :
     , exactStructuralHelperStrongOperatorIds_length
     , structuralCarrierOperatorIds_length
     , catalogueNormalFormOperatorIds_length
+    , domainGapOperatorIds_length
     , by native_decide
     , executableOperatorIds_registered
     , wenSurface_registry_total_signature
