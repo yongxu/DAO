@@ -800,6 +800,11 @@ def domainGapKindOperatorIds (kind : DomainGapKind) : List OperatorId :=
 def domainGapOperatorIds : List OperatorId :=
   allOperatorIds.filter (fun id => (operatorDomainGapKind? id).isSome)
 
+/-! ## § 1.3.1 Catalogue-shape remainder by signature kind -/
+
+def catalogueShapeSignatureKindOperatorIds (kind : SignatureKind) : List OperatorId :=
+  catalogueNormalFormOperatorIds.filter (fun id => decide ((fullSignatureFor id).kind = kind))
+
 /-! ## § 1.4 Total structural catalogue semantics -/
 
 /-
@@ -937,6 +942,66 @@ theorem domainGap_truthMarkerOnly_length :
 
 theorem domainGap_catalogueShapeOnly_length :
     (domainGapKindOperatorIds .catalogueShapeOnly).length = 52 := by native_decide
+
+theorem catalogueShape_assignment_length :
+    (catalogueShapeSignatureKindOperatorIds .assignment).length = 4 := by native_decide
+
+theorem catalogueShape_binding_length :
+    (catalogueShapeSignatureKindOperatorIds .binding).length = 1 := by native_decide
+
+theorem catalogueShape_debind_length :
+    (catalogueShapeSignatureKindOperatorIds .debind).length = 3 := by native_decide
+
+theorem catalogueShape_decomposer_length :
+    (catalogueShapeSignatureKindOperatorIds .decomposer).length = 1 := by native_decide
+
+theorem catalogueShape_domainProcess_length :
+    (catalogueShapeSignatureKindOperatorIds .domainProcess).length = 8 := by native_decide
+
+theorem catalogueShape_domainRule_length :
+    (catalogueShapeSignatureKindOperatorIds .domainRule).length = 6 := by native_decide
+
+theorem catalogueShape_modifier_length :
+    (catalogueShapeSignatureKindOperatorIds .modifier).length = 2 := by native_decide
+
+theorem catalogueShape_partition_length :
+    (catalogueShapeSignatureKindOperatorIds .partition).length = 1 := by native_decide
+
+theorem catalogueShape_protocol_length :
+    (catalogueShapeSignatureKindOperatorIds .protocol).length = 2 := by native_decide
+
+theorem catalogueShape_response_length :
+    (catalogueShapeSignatureKindOperatorIds .response).length = 3 := by native_decide
+
+theorem catalogueShape_signal_length :
+    (catalogueShapeSignatureKindOperatorIds .signal).length = 2 := by native_decide
+
+theorem catalogueShape_stateTransition_length :
+    (catalogueShapeSignatureKindOperatorIds .stateTransition).length = 13 := by native_decide
+
+theorem catalogueShape_textAct_length :
+    (catalogueShapeSignatureKindOperatorIds .textAct).length = 2 := by native_decide
+
+theorem catalogueShape_trajectory_length :
+    (catalogueShapeSignatureKindOperatorIds .trajectory).length = 4 := by native_decide
+
+theorem catalogueShapeSignatureKindPartition_counts :
+    (catalogueShapeSignatureKindOperatorIds .assignment).length
+      + (catalogueShapeSignatureKindOperatorIds .binding).length
+      + (catalogueShapeSignatureKindOperatorIds .debind).length
+      + (catalogueShapeSignatureKindOperatorIds .decomposer).length
+      + (catalogueShapeSignatureKindOperatorIds .domainProcess).length
+      + (catalogueShapeSignatureKindOperatorIds .domainRule).length
+      + (catalogueShapeSignatureKindOperatorIds .modifier).length
+      + (catalogueShapeSignatureKindOperatorIds .partition).length
+      + (catalogueShapeSignatureKindOperatorIds .protocol).length
+      + (catalogueShapeSignatureKindOperatorIds .response).length
+      + (catalogueShapeSignatureKindOperatorIds .signal).length
+      + (catalogueShapeSignatureKindOperatorIds .stateTransition).length
+      + (catalogueShapeSignatureKindOperatorIds .textAct).length
+      + (catalogueShapeSignatureKindOperatorIds .trajectory).length
+        = catalogueNormalFormOperatorIds.length := by
+  native_decide
 
 theorem domainGapKindPartition_counts :
     (domainGapKindOperatorIds .applicationHelperOnly).length

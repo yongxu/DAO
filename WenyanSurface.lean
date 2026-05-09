@@ -332,6 +332,7 @@ private def coverageOutput : String :=
     , s!"semantic ledger: {theoremBackedOperatorIds.length} theorem-backed / {exactTheoremBackedStrongOperatorIds.length} exact / {exactStructuralHelperStrongOperatorIds.length} exact-structural-helper / {structuralCarrierOperatorIds.length} structural-carrier / {catalogueNormalFormOperatorIds.length} catalogue-normal-form"
     , s!"domain gaps: {domainGapOperatorIds.length} operators pending full domain semantics"
     , s!"domain gap ledger: {(domainGapKindOperatorIds .applicationHelperOnly).length} application-helper / {(domainGapKindOperatorIds .identityNoopOnly).length} identity-noop / {(domainGapKindOperatorIds .projectionAnchorOnly).length} projection-anchor / {(domainGapKindOperatorIds .carrierConstructorOnly).length} carrier-constructor / {(domainGapKindOperatorIds .predicateAnchorOnly).length} predicate-anchor / {(domainGapKindOperatorIds .truthMarkerOnly).length} truth-marker / {(domainGapKindOperatorIds .catalogueShapeOnly).length} catalogue-shape"
+    , s!"catalogue-shape ledger: {(catalogueShapeSignatureKindOperatorIds .stateTransition).length} state-transition / {(catalogueShapeSignatureKindOperatorIds .domainProcess).length} domain-process / {(catalogueShapeSignatureKindOperatorIds .domainRule).length} domain-rule / {(catalogueShapeSignatureKindOperatorIds .assignment).length} assignment / {(catalogueShapeSignatureKindOperatorIds .trajectory).length} trajectory / {(catalogueShapeSignatureKindOperatorIds .debind).length} debind / {(catalogueShapeSignatureKindOperatorIds .response).length} response / {(catalogueShapeSignatureKindOperatorIds .modifier).length} modifier / {(catalogueShapeSignatureKindOperatorIds .protocol).length} protocol / {(catalogueShapeSignatureKindOperatorIds .signal).length} signal / {(catalogueShapeSignatureKindOperatorIds .binding).length} binding / {(catalogueShapeSignatureKindOperatorIds .decomposer).length} decomposer / {(catalogueShapeSignatureKindOperatorIds .partition).length} partition / {(catalogueShapeSignatureKindOperatorIds .textAct).length} text-act"
     , s!"bagua bridgeable: {baguaBridgeableOperatorIds.length} operators"
     , s!"operator forms: {formBackedCount} ids with at least one form"
     , s!"operator-cell rows: {SSBX.Text.OperatorCellMap.allOperatorCells.length}"
@@ -1653,6 +1654,20 @@ private def operatorsJsonOutput (filter : String) : String :=
       , jsonFieldNat "domainGapPredicateAnchorOperators" (domainGapKindOperatorIds .predicateAnchorOnly).length
       , jsonFieldNat "domainGapTruthMarkerOperators" (domainGapKindOperatorIds .truthMarkerOnly).length
       , jsonFieldNat "domainGapCatalogueShapeOperators" (domainGapKindOperatorIds .catalogueShapeOnly).length
+      , jsonFieldNat "catalogueShapeStateTransitionOperators" (catalogueShapeSignatureKindOperatorIds .stateTransition).length
+      , jsonFieldNat "catalogueShapeDomainProcessOperators" (catalogueShapeSignatureKindOperatorIds .domainProcess).length
+      , jsonFieldNat "catalogueShapeDomainRuleOperators" (catalogueShapeSignatureKindOperatorIds .domainRule).length
+      , jsonFieldNat "catalogueShapeAssignmentOperators" (catalogueShapeSignatureKindOperatorIds .assignment).length
+      , jsonFieldNat "catalogueShapeTrajectoryOperators" (catalogueShapeSignatureKindOperatorIds .trajectory).length
+      , jsonFieldNat "catalogueShapeDebindOperators" (catalogueShapeSignatureKindOperatorIds .debind).length
+      , jsonFieldNat "catalogueShapeResponseOperators" (catalogueShapeSignatureKindOperatorIds .response).length
+      , jsonFieldNat "catalogueShapeModifierOperators" (catalogueShapeSignatureKindOperatorIds .modifier).length
+      , jsonFieldNat "catalogueShapeProtocolOperators" (catalogueShapeSignatureKindOperatorIds .protocol).length
+      , jsonFieldNat "catalogueShapeSignalOperators" (catalogueShapeSignatureKindOperatorIds .signal).length
+      , jsonFieldNat "catalogueShapeBindingOperators" (catalogueShapeSignatureKindOperatorIds .binding).length
+      , jsonFieldNat "catalogueShapeDecomposerOperators" (catalogueShapeSignatureKindOperatorIds .decomposer).length
+      , jsonFieldNat "catalogueShapePartitionOperators" (catalogueShapeSignatureKindOperatorIds .partition).length
+      , jsonFieldNat "catalogueShapeTextActOperators" (catalogueShapeSignatureKindOperatorIds .textAct).length
       , jsonFieldNat "baguaBridgeableOperators" baguaBridgeableOperatorIds.length
       , jsonFieldRaw "operators" (jsonArray (ids.map operatorSummaryJson))
       ]
@@ -1682,6 +1697,20 @@ private def coverageJsonOutput : String :=
     , jsonFieldNat "domainGapPredicateAnchorOperators" (domainGapKindOperatorIds .predicateAnchorOnly).length
     , jsonFieldNat "domainGapTruthMarkerOperators" (domainGapKindOperatorIds .truthMarkerOnly).length
     , jsonFieldNat "domainGapCatalogueShapeOperators" (domainGapKindOperatorIds .catalogueShapeOnly).length
+    , jsonFieldNat "catalogueShapeStateTransitionOperators" (catalogueShapeSignatureKindOperatorIds .stateTransition).length
+    , jsonFieldNat "catalogueShapeDomainProcessOperators" (catalogueShapeSignatureKindOperatorIds .domainProcess).length
+    , jsonFieldNat "catalogueShapeDomainRuleOperators" (catalogueShapeSignatureKindOperatorIds .domainRule).length
+    , jsonFieldNat "catalogueShapeAssignmentOperators" (catalogueShapeSignatureKindOperatorIds .assignment).length
+    , jsonFieldNat "catalogueShapeTrajectoryOperators" (catalogueShapeSignatureKindOperatorIds .trajectory).length
+    , jsonFieldNat "catalogueShapeDebindOperators" (catalogueShapeSignatureKindOperatorIds .debind).length
+    , jsonFieldNat "catalogueShapeResponseOperators" (catalogueShapeSignatureKindOperatorIds .response).length
+    , jsonFieldNat "catalogueShapeModifierOperators" (catalogueShapeSignatureKindOperatorIds .modifier).length
+    , jsonFieldNat "catalogueShapeProtocolOperators" (catalogueShapeSignatureKindOperatorIds .protocol).length
+    , jsonFieldNat "catalogueShapeSignalOperators" (catalogueShapeSignatureKindOperatorIds .signal).length
+    , jsonFieldNat "catalogueShapeBindingOperators" (catalogueShapeSignatureKindOperatorIds .binding).length
+    , jsonFieldNat "catalogueShapeDecomposerOperators" (catalogueShapeSignatureKindOperatorIds .decomposer).length
+    , jsonFieldNat "catalogueShapePartitionOperators" (catalogueShapeSignatureKindOperatorIds .partition).length
+    , jsonFieldNat "catalogueShapeTextActOperators" (catalogueShapeSignatureKindOperatorIds .textAct).length
     , jsonFieldNat "baguaBridgeableOperators" baguaBridgeableOperatorIds.length
     , jsonFieldNat "operatorFormBackedCount" formBackedCount
     , jsonFieldNat "operatorCellRows" (SSBX.Text.OperatorCellMap.allOperatorCells.length)

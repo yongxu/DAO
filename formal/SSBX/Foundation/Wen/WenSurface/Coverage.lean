@@ -78,6 +78,11 @@ theorem wenSurface_operator_catalogue_counts :
       ∧ (domainGapKindOperatorIds .predicateAnchorOnly).length = 9
       ∧ (domainGapKindOperatorIds .truthMarkerOnly).length = 4
       ∧ (domainGapKindOperatorIds .catalogueShapeOnly).length = 52
+      ∧ (catalogueShapeSignatureKindOperatorIds .stateTransition).length = 13
+      ∧ (catalogueShapeSignatureKindOperatorIds .domainProcess).length = 8
+      ∧ (catalogueShapeSignatureKindOperatorIds .domainRule).length = 6
+      ∧ (catalogueShapeSignatureKindOperatorIds .assignment).length = 4
+      ∧ (catalogueShapeSignatureKindOperatorIds .trajectory).length = 4
       ∧ allOperatorIds.all (fun id => !(operatorForms id).isEmpty) = true := by
   exact
     ⟨ fullOperatorSignatures_length
@@ -96,6 +101,11 @@ theorem wenSurface_operator_catalogue_counts :
     , domainGap_predicateAnchorOnly_length
     , domainGap_truthMarkerOnly_length
     , domainGap_catalogueShapeOnly_length
+    , catalogueShape_stateTransition_length
+    , catalogueShape_domainProcess_length
+    , catalogueShape_domainRule_length
+    , catalogueShape_assignment_length
+    , catalogueShape_trajectory_length
     , by native_decide
     ⟩
 
@@ -137,6 +147,11 @@ theorem wenSurface_registry_summary :
       ∧ (domainGapKindOperatorIds .predicateAnchorOnly).length = 9
       ∧ (domainGapKindOperatorIds .truthMarkerOnly).length = 4
       ∧ (domainGapKindOperatorIds .catalogueShapeOnly).length = 52
+      ∧ (catalogueShapeSignatureKindOperatorIds .stateTransition).length = 13
+      ∧ (catalogueShapeSignatureKindOperatorIds .domainProcess).length = 8
+      ∧ (catalogueShapeSignatureKindOperatorIds .domainRule).length = 6
+      ∧ (catalogueShapeSignatureKindOperatorIds .assignment).length = 4
+      ∧ (catalogueShapeSignatureKindOperatorIds .trajectory).length = 4
       ∧ allOperatorIds.all (fun id => !(operatorForms id).isEmpty) = true
       ∧ executableOperatorIds.all isCatalogueOperator = true
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).signature.id = id) := by
@@ -160,6 +175,11 @@ theorem wenSurface_registry_summary :
     , domainGap_predicateAnchorOnly_length
     , domainGap_truthMarkerOnly_length
     , domainGap_catalogueShapeOnly_length
+    , catalogueShape_stateTransition_length
+    , catalogueShape_domainProcess_length
+    , catalogueShape_domainRule_length
+    , catalogueShape_assignment_length
+    , catalogueShape_trajectory_length
     , by native_decide
     , executableOperatorIds_registered
     , wenSurface_registry_total_signature
