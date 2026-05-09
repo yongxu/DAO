@@ -48,6 +48,7 @@ def «判型良一» : YiInstr → Bool
   | .branchYaoEq _ _ t => decide (1 ≤ t ∧ t ≤ 64)
   | .branchShiEq _ t   => decide (1 ≤ t ∧ t ≤ 64)
   | .jump t            => decide (1 ≤ t ∧ t ≤ 64)
+  | .swap              => true
   | _ => true
 
 /-- 整程合度反射：每条指令皆合度。 -/

@@ -3,7 +3,7 @@ import SSBX.Foundation.Bagua.BaguaTuring
 /-!
 # OperatorInstructionSemantics — L0 instruction semantic clause ledger
 
-This file records a compact, parameter-erased ledger for the 12 `YiInstr`
+This file records a compact, parameter-erased ledger for the 13 `YiInstr`
 constructors from `BaguaTuring`.  Pure/current-cell instructions expose a
 `Cell192 → Cell192` effect and are checked against `YiState.execute` on `cur`.
 State/control instructions are recorded at state/control level and intentionally
@@ -32,11 +32,12 @@ inductive L0InstructionClauseKind where
   | push
   | pop
   | halt
+  | swap
   deriving Repr, DecidableEq, BEq
 
 namespace L0InstructionClauseKind
 
-/-- Concrete constructor erasure into the 12 clause kinds. -/
+/-- Concrete constructor erasure into the 13 clause kinds. -/
 def ofInstr : YiInstr → L0InstructionClauseKind
   | .nop => .nop
   | .setShi _ => .setShi
@@ -50,6 +51,7 @@ def ofInstr : YiInstr → L0InstructionClauseKind
   | .push => .push
   | .pop => .pop
   | .halt => .halt
+  | .swap => .swap
 
 /-- A representative concrete instruction for each parameter-erased kind. -/
 def sample : L0InstructionClauseKind → YiInstr
@@ -65,6 +67,7 @@ def sample : L0InstructionClauseKind → YiInstr
   | .push => .push
   | .pop => .pop
   | .halt => .halt
+  | .swap => .swap
 
 theorem ofInstr_sample (k : L0InstructionClauseKind) :
     ofInstr k.sample = k := by
@@ -75,10 +78,10 @@ end L0InstructionClauseKind
 /-- The complete L0 instruction clause-kind ledger. -/
 def l0InstructionClauseKinds : List L0InstructionClauseKind :=
   [.nop, .setShi, .flipYao, .hu, .cuo, .zong,
-   .branchYaoEq, .branchShiEq, .jump, .push, .pop, .halt]
+   .branchYaoEq, .branchShiEq, .jump, .push, .pop, .halt, .swap]
 
 theorem l0InstructionClauseKinds_length :
-    l0InstructionClauseKinds.length = 12 := by
+    l0InstructionClauseKinds.length = 13 := by
   native_decide
 
 theorem l0InstructionClauseKinds_nodup :
@@ -106,6 +109,7 @@ def clauseLevel : L0InstructionClauseKind → InstructionSemanticLevel
   | .push => .stateControl
   | .pop => .stateControl
   | .halt => .stateControl
+  | .swap => .stateControl
 
 def isCurrentCellClause (k : L0InstructionClauseKind) : Bool :=
   clauseLevel k == InstructionSemanticLevel.currentCell
@@ -130,7 +134,7 @@ def l0InstructionSemanticClauses : List L0InstructionSemanticClause :=
   l0InstructionClauseKinds.map semanticClauseFor
 
 theorem l0InstructionSemanticClauses_length :
-    l0InstructionSemanticClauses.length = 12 := by
+    l0InstructionSemanticClauses.length = 13 := by
   rw [l0InstructionSemanticClauses, List.length_map, l0InstructionClauseKinds_length]
 
 theorem currentCellClauseKinds_length :
@@ -138,7 +142,7 @@ theorem currentCellClauseKinds_length :
   native_decide
 
 theorem stateControlClauseKinds_length :
-    (l0InstructionClauseKinds.filter isStateControlClause).length = 6 := by
+    (l0InstructionClauseKinds.filter isStateControlClause).length = 7 := by
   native_decide
 
 /-! ## § 3 Concrete current-cell endomaps -/
@@ -160,6 +164,7 @@ def instructionCellEndomap? : YiInstr → Option (Cell192 → Cell192)
   | .push => none
   | .pop => none
   | .halt => none
+  | .swap => none
 
 theorem nop_cell_effect_matches_execute (s : YiState) :
     (YiState.execute .nop s).cur = id s.cur := by
@@ -229,6 +234,10 @@ theorem halt_no_cell_endomap :
     instructionCellEndomap? .halt = none := by
   rfl
 
+theorem swap_no_cell_endomap :
+    instructionCellEndomap? .swap = none := by
+  rfl
+
 theorem stateControlClause_no_cell_endomap
     (instr : YiInstr)
     (h : clauseLevel (L0InstructionClauseKind.ofInstr instr) =
@@ -238,16 +247,16 @@ theorem stateControlClause_no_cell_endomap
   all_goals rfl
 
 /--
-Summary: there are exactly 12 L0 clause kinds.  Six expose current-cell
-endomaps matching `YiState.execute` on `cur`; six are state/control clauses and
+Summary: there are exactly 13 L0 clause kinds.  Six expose current-cell
+endomaps matching `YiState.execute` on `cur`; seven are state/control clauses and
 do not expose a `Cell192` endomap.
 -/
 theorem l0_instruction_semantic_clause_summary :
-    l0InstructionClauseKinds.length = 12
+    l0InstructionClauseKinds.length = 13
     ∧ l0InstructionClauseKinds.Nodup
-    ∧ l0InstructionSemanticClauses.length = 12
+    ∧ l0InstructionSemanticClauses.length = 13
     ∧ (l0InstructionClauseKinds.filter isCurrentCellClause).length = 6
-    ∧ (l0InstructionClauseKinds.filter isStateControlClause).length = 6
+    ∧ (l0InstructionClauseKinds.filter isStateControlClause).length = 7
     ∧ (∀ instr : YiInstr, ∀ f : Cell192 → Cell192, ∀ s : YiState,
         instructionCellEndomap? instr = some f →
           (YiState.execute instr s).cur = f s.cur)

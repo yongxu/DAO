@@ -1,7 +1,11 @@
 # WenSurface Syntax Spec: brackets, precedence, infix, mixfix
 
 Status: design spec and implementation tracker for the next WenSurface parser.
-S0-S1 are implemented; S2+ remain design contracts.  This document defines the
+S0-S1 are implemented, binder domain inference has been regularized for Bool
+and common function values, and S4 relation infix forms are implemented for
+`同`/`比`.  S5 relation-chain diagnostics and relation infix JSON metadata are
+also implemented.  S2 now has inspectable registry data, while the parser still
+uses the legacy arity/type path.  S3/S6/S7 remain design contracts.  This document defines the
 contract that the next parser should satisfy while preserving the current
 `wenyan-surface` behavior.
 
@@ -155,6 +159,12 @@ Registry lookup must be context-sensitive:
 - after a left expression: infix, postfix, application marker;
 - inside a mixfix pattern: expected literal delimiter or expression hole.
 
+Status: `SurfaceAssoc`, `PatternPart`, `SurfaceForm`, and
+`SurfaceSyntaxEntry` now exist in `WenSurface.Syntax`.  The first registry view
+contains every `operatorForms` prefix entry plus the implemented relation infix
+forms for `同` and `比`.  `--json --operator CODE` exposes these as
+`syntaxEntries`.  Parser dispatch is not yet driven by the registry.
+
 ## 7. Precedence
 
 Precedence values are parser-internal contracts.  They are not philosophical
@@ -244,6 +254,10 @@ Diagnostics should include:
 - expected matching bracket;
 - whether an expression was expected inside the bracket.
 
+Status: empty input and empty grouped expressions now report
+`expected_expression` with a concrete column instead of generic `.empty` or
+unmatched close-bracket fallout.
+
 ## 10. Infix Forms
 
 The first infix promotion should be limited to executable relation operators:
@@ -265,6 +279,14 @@ Examples:
 `比` is also a hexagram name.  In expression-start position, `比` may be a
 literal unless prefix arguments make the operator reading viable.  In led
 position after a left expression, `比` may use its infix operator form.
+
+Status: implemented by desugaring relation infix to existing curried
+application AST: `A 同 B` becomes `同 A B`, and `A 比 B` becomes `比 A B`.
+Relation chains such as `一 同 一 同 一` are rejected as non-associative syntax.
+`--json --ast` and nested `--json --explain.ast` include a structured `tree`
+for the normalized `SurfaceExpr`, plus a `syntaxForms` entry for each detected
+source infix form with `fixity`, `precedence`, `assoc`, source span, and
+desugaring metadata.
 
 ## 11. Prefix Forms
 
@@ -359,7 +381,10 @@ Scope rule:
 
 - binder body consumes the lowest precedence expression;
 - brackets can restrict body extent;
-- binder variables are still Hex-only until Bool binders are explicitly added.
+- unannotated `者` binders are inferred over a finite domain list:
+  `Hex`, `Bool`, `Hex → Hex`, `Hex → Bool`, `Bool → Bool`, `Bool → Hex`;
+- expected-function contexts parse `者` bodies under the expected argument
+  type, so predicate/function arguments can be written directly.
 
 Examples:
 
@@ -367,6 +392,9 @@ Examples:
 凡 甲 甲 同 甲
 凡 甲 （甲 同 甲）
 令 甲 乾 （甲 同 乾）
+者 甲 不 甲 真
+者 甲 甲 推
+而 者 甲 甲 者 甲 推 甲
 ```
 
 The first two examples should parse to equivalent Bool expressions once infix
@@ -395,7 +423,7 @@ Structured candidate output should include:
 - column span;
 - `OperatorId` / code;
 - fixity;
-- support status: `executable` or `known-not-executable`;
+- support status: executable, with exact-vs-structural catalogue detail when available;
 - expected argument types when available.
 
 ## 16. Error Taxonomy
@@ -422,6 +450,9 @@ inductive ParseErr where
 
 CLI JSON should preserve the phase as `parse` for syntax failures and
 `unsupported` for successful parse plus missing executable semantics.
+
+Status: `expectedExpression` is implemented for empty input, empty brackets,
+and marker/construction forms missing their body.
 
 ## 17. Desugaring
 
@@ -483,7 +514,7 @@ New negative examples:
 一 同 一 同 一
 推 乾 之
 乾 之 坤       -- parse ok, type error
-五行 （乾）    -- parse ok, unsupported operator
+五行 （乾）    -- parse/typecheck ok as structural catalogue normal form
 ```
 
 ## 19. CLI Contract
@@ -492,7 +523,9 @@ Inspection modes should show syntax-form data:
 
 - `--tokens`: bracket tokens and delimiter tokens;
 - `--resolve`: candidate readings and syntax entries;
-- `--ast`: grouped/operatorForm/fixity nodes;
+- `--ast`: a structured `tree` for grouped/application/binder nodes, plus
+  additive `syntaxForms` metadata when an implemented form is currently
+  represented by desugared `.app`;
 - `--typecheck`: type mismatch with grouped source spans;
 - `--json`: stable fields for fixity, precedence, associativity, and support.
 
@@ -516,10 +549,11 @@ Example JSON fields for an infix form:
 |---|---|---|---|
 | S0 | done | Add this spec and preserve current parser | docs-only |
 | S1 | done | Tokenize brackets and add grouped AST | current tests + bracket parse tests |
-| S2 | next | Add syntax registry for existing prefix forms | old parser behavior reproduced through registry |
+| S1b | done | Regularize Bool/function binder inference | `者 甲 不 甲 真`, `者 甲 甲 推`, predicate/function args |
+| S2 | partial | Add syntax registry for existing prefix forms | registry data and CLI exposure exist; parser dispatch still legacy |
 | S3 | pending | Replace parser core with Pratt parser | all old examples pass, better parse errors |
-| S4 | pending | Promote `同` and `比` infix forms | prefix and infix both pass |
-| S5 | pending | Add nonassoc diagnostics and precedence JSON | `A 同 B 同 C` fails structurally |
+| S4 | done | Promote `同` and `比` infix forms | prefix and infix both pass |
+| S5 | done | Add nonassoc diagnostics and precedence JSON | relation chains fail structurally; relation infix JSON exposes precedence/assoc |
 | S6 | pending | Add bounded mixfix parser machinery | catalogue-only mixfix can parse and diagnose unsupported |
 | S7 | pending | Broaden syntax entries across 371 operators | all registered forms parse or diagnose ambiguity |
 
@@ -541,4 +575,5 @@ python3 scripts/docs_next.py check --strict
 - Which catalogue-only mixfix forms should be used as the first parser test.
 - How much source-span data should be carried in `SurfaceExpr` versus only in
   tokens.
-- Whether Bool binders should be added before or after infix/mixfix.
+- Whether binder inference should remain a fixed finite list or grow explicit
+  type annotation syntax before infix/mixfix expands further.

@@ -55,6 +55,10 @@ def isCJKBasic (c : Char) : Bool :=
 def isAsciiSpace (c : Char) : Bool :=
   c == ' ' || c == '\t' || c == '\n' || c == '\r'
 
+/-- WenSurface whitespace includes ASCII whitespace plus ideographic space. -/
+def isWenSpace (c : Char) : Bool :=
+  isAsciiSpace c || c == '　'
+
 /-- Grouping punctuation accepted by the WenSurface parser. -/
 def isBracketChar (c : Char) : Bool :=
   c == '（' || c == '）' || c == '(' || c == ')'
@@ -88,7 +92,24 @@ def operatorCompoundSurfaceIds : List (String × OperatorId) :=
   , ("物化", .ZHU_6), ("天理", .ZHU_9), ("致人", .SUN_11), ("分合", .SUN_12)
   , ("上下", .CHU_2), ("未變", .CHU_10), ("未变", .CHU_10)
   , ("大一", .ZA_13), ("同異", .ZA_16), ("同异", .ZA_16)
-  , ("兩可", .ZA_17), ("两可", .ZA_17), ("正名", .ZA_18) ]
+  , ("兩可", .ZA_17), ("两可", .ZA_17), ("正名", .ZA_18)
+  , ("不動", .L_10), ("不动", .L_10)
+  , ("錯綜", .I_8), ("错综", .I_8), ("綜錯", .I_8), ("综错", .I_8)
+  , ("反覆", .Z_33), ("反复", .Z_33), ("交錯", .Z_33), ("交错", .Z_33)
+  , ("歸一", .T_7), ("归一", .T_7), ("歸極", .T_7), ("归极", .T_7)
+  , ("總歸", .T_7), ("总归", .T_7), ("復歸", .T_7), ("复归", .T_7)
+  , ("展開", .T_15), ("展开", .T_15)
+  , ("動初", .T_5), ("动初", .T_5), ("初動", .T_5), ("初动", .T_5)
+  , ("初變", .T_5), ("初变", .T_5)
+  , ("翻初", .T_5)
+  , ("動中", .T_1), ("动中", .T_1), ("動二", .T_1), ("动二", .T_1)
+  , ("二變", .T_1), ("二变", .T_1), ("承變", .T_1), ("承变", .T_1)
+  , ("中化", .T_1), ("中變", .T_1), ("中变", .T_1)
+  , ("翻中", .T_1)
+  , ("動上", .T_2), ("动上", .T_2), ("動三", .T_2), ("动三", .T_2)
+  , ("三變", .T_2), ("三变", .T_2), ("際變", .T_2), ("际变", .T_2)
+  , ("內極", .T_2), ("内极", .T_2), ("上變", .T_2), ("上变", .T_2)
+  , ("翻上", .T_2) ]
 
 /-- 多字 wenyan surface。
     包含构式/目录复词，以及完整卦名中不能被拆为单字的 surface。
@@ -123,7 +144,7 @@ def lexFuel : Nat → Nat → List Char → Except LexErr (List GlyphTok)
   | 0,     _,   _              => .error .fuelExhausted
   | _+1,   _,   []             => .ok []
   | n+1,   col, c :: rest      =>
-    if isAsciiSpace c then
+    if isWenSpace c then
       lexFuel n (col + 1) rest
     else if isBracketChar c then
       match lexFuel n (col + 1) rest with
@@ -157,6 +178,11 @@ example :
 /-- 双 CJK 之间空格 skip：col 因空格 +1. -/
 example :
     (lexWen "推 一").toOption = some [⟨"推", 0, 1, false⟩, ⟨"一", 2, 1, false⟩] :=
+  by native_decide
+
+/-- 全角空格也按 WenSurface 空白处理，col 仍按 codepoint 前进. -/
+example :
+    (lexWen "推　一").toOption = some [⟨"推", 0, 1, false⟩, ⟨"一", 2, 1, false⟩] :=
   by native_decide
 
 /-- 三字相邻无空格. -/
@@ -229,6 +255,14 @@ example :
 
 /-- 全空白. -/
 example : (lexWen "   ").toOption = some [] := by native_decide
+
+example : (lexWen "　").toOption = some [] := by native_decide
+
+/-- Wenyan punctuation is still rejected until the parser has an explicit policy. -/
+example :
+    (["。", "，", "、", "；", "：", "？", "！"].all
+      (fun p => (lexWen ("推" ++ p ++ "一")).toOption.isNone)) = true :=
+  by native_decide
 
 /-- Stdlib 6 算子 surface 各自单独 lex. -/
 example :

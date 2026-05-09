@@ -1,5 +1,5 @@
 {
-  "count": 130,
+  "count": 186,
   "documents": [
     {
       "headings": [
@@ -408,7 +408,7 @@
         "./README.formal.md"
       ],
       "path": "README.md",
-      "sha256": "43ad17aaa0f11f06b4032c0b95b2b244280c1072f7bbc1dfc87d790d2fd00442",
+      "sha256": "fa2167356845d7cf25615cc92b4ac9a594dc21d656db0b4e0c31639f466391fc",
       "summary": "> 🌐 **中文** · [English](./README.en.md) · [形式 / Formal](./README.formal.md)",
       "title": "生生不息"
     },
@@ -826,7 +826,7 @@
         "../_generated/registry-index.md"
       ],
       "path": "docs-next/10_formal_形式/modern.md",
-      "sha256": "2dfb3fbca66c41ca77645554cf3b2d42cc77fdbdefb3079d73595db4d5ba5a9a",
+      "sha256": "99485d3c65b679b470c1b34457dfb7618c7de879a0d9856b4d0dcd594116a9db",
       "summary": "`Foundation/Modern` 收纳现代数学、逻辑、概率、物理与神经相关桥接。它让项目概念能与现代形式工具对话，但不把所有外部理论都重新证明一遍。",
       "title": "Foundation/Modern"
     },
@@ -1889,10 +1889,11 @@
           "title": "使用规则"
         }
       ],
-      "lines": 23,
+      "lines": 24,
       "links": [
         "historical-sources.md",
         "operators.md",
+        "bagua-operator-name-candidates.md",
         "glyphs-registry.md",
         "six-tables.md",
         "ziwen-language.md",
@@ -1901,9 +1902,71 @@
         "../20_theory_义理/README.md"
       ],
       "path": "docs-next/40_reference_参考/README.md",
-      "sha256": "243aa96041fa027fe0d3b49c4a16fe45957fade732bb6ad2e818e10d5d957578",
+      "sha256": "c7ff920c2d330c89833c07fce499e3f27b9d0d8d841d67d5ca979b7585bccdc4",
       "summary": "本区放新版文档的索引性参考，不改写史料正文。历史文档保持 frozen；新版只给入口、范围和替代关系。",
       "title": "参考"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "八卦算子命名候选表"
+        },
+        {
+          "level": 2,
+          "title": "当前结论"
+        },
+        {
+          "level": 2,
+          "title": "当前代码落地口径"
+        },
+        {
+          "level": 2,
+          "title": "完整校对主表"
+        },
+        {
+          "level": 3,
+          "title": "T3 八卦值与模式锚点"
+        },
+        {
+          "level": 3,
+          "title": "T3 横向变换与判别"
+        },
+        {
+          "level": 3,
+          "title": "T3 纵向、生成、复合"
+        },
+        {
+          "level": 3,
+          "title": "T6 / Hexagram / Cell192 层"
+        },
+        {
+          "level": 3,
+          "title": "L0 BaguaWen 指令锚点"
+        },
+        {
+          "level": 2,
+          "title": "理论范式后备字库"
+        },
+        {
+          "level": 2,
+          "title": "单字替代矩阵"
+        },
+        {
+          "level": 2,
+          "title": "冲突字与处理建议"
+        },
+        {
+          "level": 2,
+          "title": "推荐 promotion 顺序"
+        }
+      ],
+      "lines": 203,
+      "links": [],
+      "path": "docs-next/40_reference_参考/bagua-operator-name-candidates.md",
+      "sha256": "bc5a4a8fa3df1d752ae07b31d57a575a9107425be316cd1d15bd1350a730b52a",
+      "summary": "> 校对状态：工作稿。Lean 事实以 `formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean`、`formal/SSBX/Foundation/Bagua/Cell192.lean`、`formal/SSBX/Text/OperatorAnchors.lean`、`formal/SSBX/Text/OperatorInstructionSemantics.lean` 为准。",
+      "title": "八卦算子命名候选表"
     },
     {
       "headings": [
@@ -2069,7 +2132,7 @@
       "lines": 47,
       "links": [],
       "path": "docs-next/40_reference_参考/ziwen-language.md",
-      "sha256": "aed45279c54f4b31bf9d8553c22143d33af17e32d0091db1d522c845dca113d7",
+      "sha256": "03f05e6e4282a7b48f1da7e24357e005f8775c29e90006a900bf560e3a954479",
       "summary": "字文语言的完整未来规范在根目录 `ziwen-spec.md`。当前可执行 surface 子集是",
       "title": "字文语言"
     },
@@ -2248,7 +2311,7 @@
       "lines": 49,
       "links": [],
       "path": "docs-next/50_maintenance/release-checklist.md",
-      "sha256": "cff5fb4ee25205ba09d61224a5015ae86669e032750b8237c39be8ed013eb5fc",
+      "sha256": "a94d98a7172ebd0c61ec8c821887077ee0b8a7238d3dff5dde344cd0149f6f48",
       "summary": "本表用于 docs-next 或形式层同步前的最低检查。它不替代 CI。",
       "title": "发布检查表"
     },
@@ -2777,6 +2840,254 @@
       "headings": [
         {
           "level": 1,
+          "title": "Markov-Causal Bridge Plan"
+        },
+        {
+          "level": 2,
+          "title": "当前状态"
+        },
+        {
+          "level": 2,
+          "title": "打勾规则"
+        },
+        {
+          "level": 2,
+          "title": "结果记录规则"
+        },
+        {
+          "level": 2,
+          "title": "核心设想"
+        },
+        {
+          "level": 2,
+          "title": "探索方向"
+        },
+        {
+          "level": 3,
+          "title": "A. 有限过程载体"
+        },
+        {
+          "level": 3,
+          "title": "B. Markov 读法"
+        },
+        {
+          "level": 3,
+          "title": "C. 因果读法"
+        },
+        {
+          "level": 3,
+          "title": "D. 测量-事件对齐"
+        },
+        {
+          "level": 3,
+          "title": "E. 与既有中介桥层对接"
+        },
+        {
+          "level": 3,
+          "title": "F. 后续升级"
+        },
+        {
+          "level": 2,
+          "title": "第一轮最小目标"
+        },
+        {
+          "level": 2,
+          "title": "文件清单"
+        },
+        {
+          "level": 2,
+          "title": "当前判断"
+        },
+        {
+          "level": 2,
+          "title": "探索日志"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-08 · 开局"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-08 · 逐步完善轮"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-08 · S2 有限概率核接口"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-08 · S3 路径组合与局部因果约束"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-08 · S4 经典 Markov 与量子振幅分层"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-08 · S5 干涉与测量律候选"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-08 · S5b 非零路径振幅候选"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-08 · S5c 双路径相消候选"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-08 · S5d 离散相位标记候选"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-08 · S5e 离散作用量相位候选"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-08 · S5f 有限路径族求和候选"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-08 · S5g 有限路径族求和代数候选"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-08 · S5h 端点索引路径族候选"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-08 · S5i 端点支撑规范化候选"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-08 · S5j 双路径枚举候选"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-08 · S5k 路径身份键候选"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-08 · S5l 有限键商候选"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-08 · S5m 路径商类候选"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-08 · S5n 规范代表元候选"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-08 · S5o 商支撑枚举候选"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-08 · S5p 商支撑代数候选"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-09 · S5q 观测账本候选"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-09 · S5r 作用量相位律候选"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-09 · S8 逐步统一候选摘要"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-09 · S9 有限概率归一化候选"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-09 · S10 归一化质量求和候选"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-09 · S11 Born 权重条件归一候选"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-09 · S12 Born 分布边界候选"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-09 · S13 channelCompose 候选"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-09 · S14 channelCompose 结合律候选"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-09 · S15 sum-over-middle 通道组合候选"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-09 · S16 sum-over-middle Born 边界候选"
+        },
+        {
+          "level": 3,
+          "title": "2026-05-09 · S17 unitary/CPTP 账本边界"
+        }
+      ],
+      "lines": 548,
+      "links": [],
+      "path": "formal/SSBX/notes/markov-causal-bridge-plan.md",
+      "sha256": "6b0f8031a1684d1c01948432ea7d3759adeac2c90d70238c47c188935755162a",
+      "summary": "目标：用最省力的有限构造，尝试把“中介桥”从方向定理推进到可验证骨架。核心不是先造完整量子引力，而是先证明同一个有限过程结构可以同时读成 Markov/测量过程与因果事件结构。",
+      "title": "Markov-Causal Bridge Plan"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "Markov-Causal Bridge Verification Plan"
+        },
+        {
+          "level": 2,
+          "title": "当前验证结论"
+        },
+        {
+          "level": 2,
+          "title": "每次变更的最低验证门槛"
+        },
+        {
+          "level": 2,
+          "title": "Theorem 锚点审计"
+        },
+        {
+          "level": 2,
+          "title": "边界审计"
+        },
+        {
+          "level": 2,
+          "title": "下一轮升级验证路线"
+        },
+        {
+          "level": 2,
+          "title": "失败记录模板"
+        },
+        {
+          "level": 2,
+          "title": "当前命令记录"
+        }
+      ],
+      "lines": 375,
+      "links": [],
+      "path": "formal/SSBX/notes/markov-causal-bridge-verification-plan.md",
+      "sha256": "e06ca6e4a89758eab1d824da05f6cd057349ed710a73407e9b2d4c148ee94f73",
+      "summary": "目标：把 Markov-因果桥从“已能构建的 typed skeleton”推进到可重复验证的研究程序。本文只定义验证流程，不新增物理 claim。",
+      "title": "Markov-Causal Bridge Verification Plan"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
           "title": "数学公设字元生成与接口映射"
         },
         {
@@ -2804,6 +3115,70 @@
       "sha256": "39f4db525eb17fb8856f2b1cefcce15e80a306dd20d710d2f0fe368278659e57",
       "summary": "本文是 [`Foundation/Core/MathAxiomMap.lean`](../Foundation/Core/MathAxiomMap.lean) 之人类可读伴随，含数学公设字元生成大表与\"完备数学\"之限定命题。",
       "title": "数学公设字元生成与接口映射"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "MetaInterp ISA Expressivity Gap — Phase C Architecture Note"
+        },
+        {
+          "level": 2,
+          "title": "Summary"
+        },
+        {
+          "level": 2,
+          "title": "The gap"
+        },
+        {
+          "level": 2,
+          "title": "Why dup/swap is needed"
+        },
+        {
+          "level": 2,
+          "title": "What this means for `universalInterpExists`"
+        },
+        {
+          "level": 2,
+          "title": "Paths forward"
+        },
+        {
+          "level": 3,
+          "title": "Path 1 — Extend YiInstr ISA (recommended for full discharge)"
+        },
+        {
+          "level": 3,
+          "title": "Path 2 — Restrict `UniversalInterpSpec` to a sim.cur-free subset"
+        },
+        {
+          "level": 3,
+          "title": "Path 3 — Accept `universalInterpExists` as permanent axiom"
+        },
+        {
+          "level": 3,
+          "title": "Path 4 — Different simulation strategy"
+        },
+        {
+          "level": 2,
+          "title": "Recommendation"
+        },
+        {
+          "level": 2,
+          "title": "See also"
+        }
+      ],
+      "lines": 154,
+      "links": [
+        "../Foundation/Bagua/BaguaTuring.lean",
+        "/Users/ren/.claude/plans/sparkling-floating-perlis.md",
+        "../Foundation/Wen/MetaInterp/Fetch.lean",
+        "../Foundation/Wen/MetaInterp/ExecuteBlock.lean",
+        "../Foundation/Bagua/KleeneCarrier.lean"
+      ],
+      "path": "formal/SSBX/notes/metainterp-isa-gap.md",
+      "sha256": "b0ae2d01951087f071a1518d23be572df5d894528d31589aa076ddcd05f56449",
+      "summary": "**Date**: 2026-05-08",
+      "title": "MetaInterp ISA Expressivity Gap — Phase C Architecture Note"
     },
     {
       "headings": [
@@ -3201,6 +3576,172 @@
       "headings": [
         {
           "level": 1,
+          "title": "大统一逐步验证路线"
+        },
+        {
+          "level": 2,
+          "title": "总原则"
+        },
+        {
+          "level": 2,
+          "title": "S0 · 基线重审"
+        },
+        {
+          "level": 2,
+          "title": "S1 · 非空有限实例"
+        },
+        {
+          "level": 2,
+          "title": "S2 · 有限概率核接口"
+        },
+        {
+          "level": 2,
+          "title": "S3 · 路径组合与局部因果约束"
+        },
+        {
+          "level": 2,
+          "title": "S4 · 经典 Markov 与量子 amplitude 分层"
+        },
+        {
+          "level": 2,
+          "title": "S5 · 干涉与测量律候选"
+        },
+        {
+          "level": 2,
+          "title": "S5b · 非零路径振幅候选"
+        },
+        {
+          "level": 2,
+          "title": "S5c · 双路径相消候选"
+        },
+        {
+          "level": 2,
+          "title": "S5d · 离散相位标记候选"
+        },
+        {
+          "level": 2,
+          "title": "S5e · 离散作用量相位候选"
+        },
+        {
+          "level": 2,
+          "title": "S5f · 有限路径族求和候选"
+        },
+        {
+          "level": 2,
+          "title": "S5g · 有限路径族求和代数候选"
+        },
+        {
+          "level": 2,
+          "title": "S5h · 端点索引路径族候选"
+        },
+        {
+          "level": 2,
+          "title": "S5i · 端点支撑规范化候选"
+        },
+        {
+          "level": 2,
+          "title": "S5j · 双路径枚举候选"
+        },
+        {
+          "level": 2,
+          "title": "S5k · 路径身份键候选"
+        },
+        {
+          "level": 2,
+          "title": "S5l · 有限键商候选"
+        },
+        {
+          "level": 2,
+          "title": "S5m · 路径商类候选"
+        },
+        {
+          "level": 2,
+          "title": "S5n · 规范代表元候选"
+        },
+        {
+          "level": 2,
+          "title": "S5o · 商支撑枚举候选"
+        },
+        {
+          "level": 2,
+          "title": "S5p · 商支撑代数候选"
+        },
+        {
+          "level": 2,
+          "title": "S5q · 观测账本候选"
+        },
+        {
+          "level": 2,
+          "title": "S5r · 作用量相位律候选"
+        },
+        {
+          "level": 2,
+          "title": "S6 · 几何与度规候选接口"
+        },
+        {
+          "level": 2,
+          "title": "S7 · 经验 pending ledger"
+        },
+        {
+          "level": 2,
+          "title": "S8 · 统一摘要 theorem"
+        },
+        {
+          "level": 2,
+          "title": "S9 · 有限概率归一化候选"
+        },
+        {
+          "level": 2,
+          "title": "S10 · 归一化质量求和候选"
+        },
+        {
+          "level": 2,
+          "title": "S11 · Born 权重条件归一候选"
+        },
+        {
+          "level": 2,
+          "title": "S12 · Born 分布边界候选"
+        },
+        {
+          "level": 2,
+          "title": "S13 · channelCompose 候选"
+        },
+        {
+          "level": 2,
+          "title": "S14 · channelCompose 结合律与 identity obstruction"
+        },
+        {
+          "level": 2,
+          "title": "S15 · sum-over-middle 通道组合候选"
+        },
+        {
+          "level": 2,
+          "title": "S16 · sum-over-middle Born 边界候选"
+        },
+        {
+          "level": 2,
+          "title": "S17 · unitary/CPTP 账本边界"
+        },
+        {
+          "level": 2,
+          "title": "失败记录追加区"
+        },
+        {
+          "level": 2,
+          "title": "统一用语正名"
+        }
+      ],
+      "lines": 1145,
+      "links": [],
+      "path": "formal/SSBX/notes/unification-stepwise-plan.md",
+      "sha256": "1e3839f448155dcddf647ddc7e0a01ed753186fb3d79e89fb919604157bb467c",
+      "summary": "目标：把 Markov-因果桥从最小 typed skeleton 推进为逐步增强的验证程序。本文把“统一”限定为已经关闭或计划关闭的形式接口；量子引力、Born rule、度规恢复和经验闭合分别作为后续结构单独推进。",
+      "title": "大统一逐步验证路线"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
           "title": "v14 形式证明骨架 · 三分原则与 roadmap"
         },
         {
@@ -3264,10 +3805,10 @@
           "title": "下一阶段语法设计"
         }
       ],
-      "lines": 56,
+      "lines": 64,
       "links": [],
       "path": "formal/SSBX/notes/wensurface-roadmap.md",
-      "sha256": "bbc5c452ee8f166dc363b258803658ae346525ad25754dd495b94ec2ae84e1ad",
+      "sha256": "62058a635a2f672dd387fde21f799f4c6c1b806d920c5ab65c72f25134b781af",
       "summary": "本页记录 `wenyan-surface` 的实现边界。它是 `ziwen-spec.md` 的可执行子集前端，不宣称覆盖完整 Ziwen v0：当前没有 layout token、语句块、函数定义、match、数字/树等通用语言结构。",
       "title": "WenSurface 路线状态"
     },
@@ -3362,10 +3903,10 @@
           "title": "21. Open Decisions"
         }
       ],
-      "lines": 544,
+      "lines": 579,
       "links": [],
       "path": "formal/SSBX/notes/wensurface-syntax-spec.md",
-      "sha256": "85992727b6644476a991adc371dcda3460163e12bbce6028f5f4b1de1af54a72",
+      "sha256": "29f67a7c7ae7320032389c17e518ce77d4e19fa6705869414c6f13046750eefc",
       "summary": "Status: design spec and implementation tracker for the next WenSurface parser.",
       "title": "WenSurface Syntax Spec: brackets, precedence, infix, mixfix"
     },
@@ -5657,7 +6198,7 @@
       "lines": 4083,
       "links": [],
       "path": "wenyan-operators.md",
-      "sha256": "ed73fe47d8fb7d630f3a25e81c6a4d8f9af7ff3a4ecb6d56712badb3b62962be",
+      "sha256": "68e6e60ae580105c8dd656fc1126a3ca812d295bbef8a5728adb1b906a5cc499",
       "summary": "*目的*：从文言文中识别出**本身即作算子用的字** — 不是描述对象的名词，而是作用于结构、产生新结构的操作。这些字在经典中早已构成一套有内在算法结构的语言；任务是把它分类、签名化、暴露其代数。",
       "title": "文言文算子集 — 结构与变形的字"
     },
@@ -5952,6 +6493,86 @@
       "sha256": "bf653156607946f056a481ce7ff862ed64d860c3ebd6f044c7ff41a21c4f0a6a",
       "summary": "由 `表一_六征本表.md` 之 **三对 × 三位** 结构反推之四级 mapping。",
       "title": "B · 项目六征体系（一级一对）"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "Born分布边界候选 · Markov桥S12"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 失败记录"
+        },
+        {
+          "level": 2,
+          "title": "二 · 下一步"
+        },
+        {
+          "level": 2,
+          "title": "三 · Validation Command"
+        }
+      ],
+      "lines": 117,
+      "links": [
+        "Born权重条件归一候选%20·%20Markov桥S11.md",
+        "归一化质量求和候选%20·%20Markov桥S10.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md",
+        "channelCompose候选%20·%20Markov桥S13.md"
+      ],
+      "path": "义理/Born分布边界候选 · Markov桥S12.md",
+      "sha256": "66f0b4b155fccb347e596364ae4e5533a34c9302710c227ee21f6192d2c31a24",
+      "summary": "**前置**：[Born权重条件归一候选 · Markov桥S11](Born权重条件归一候选%20·%20Markov桥S11.md) · [归一化质量求和候选 · Markov桥S10](归一化质量求和候选%20·%20Markov桥S10.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "Born分布边界候选 · Markov桥S12"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "Born权重条件归一候选 · Markov桥S11"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 失败记录"
+        },
+        {
+          "level": 2,
+          "title": "二 · 下一步"
+        },
+        {
+          "level": 2,
+          "title": "三 · Validation Command"
+        }
+      ],
+      "lines": 120,
+      "links": [
+        "归一化质量求和候选%20·%20Markov桥S10.md",
+        "干涉与测量律候选%20·%20Markov桥S5.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md",
+        "Born分布边界候选%20·%20Markov桥S12.md"
+      ],
+      "path": "义理/Born权重条件归一候选 · Markov桥S11.md",
+      "sha256": "7b07acf82b12b65cf7c6342f54d41fc7ac182e6c9f6183c72241a8264409c2bf",
+      "summary": "**前置**：[归一化质量求和候选 · Markov桥S10](归一化质量求和候选%20·%20Markov桥S10.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "Born权重条件归一候选 · Markov桥S11"
     },
     {
       "headings": [
@@ -6256,6 +6877,10 @@
         },
         {
           "level": 2,
+          "title": "完成度审计"
+        },
+        {
+          "level": 2,
           "title": "主表（双栏类比）"
         },
         {
@@ -6295,10 +6920,14 @@
           "title": "主判"
         }
       ],
-      "lines": 149,
-      "links": [],
+      "lines": 163,
+      "links": [
+        "物理%20·%20从元到象.md",
+        "量子物理语言%20·%20从虚到测.md",
+        "量子时空互补%20·%20从一到测.md"
+      ],
       "path": "义理/F_物理现象学.md",
-      "sha256": "0df59880dbd28bd3f934bf720067b01e2c5c6d30e860ceeeceedcca787fac26a",
+      "sha256": "7f4dc270d6175280c2b737e2203f10affe599ded5ee2aab3be18bc4dc39dc62a",
       "summary": "由 `daoli-v12-cross-cultural.md`、`daoli-v12-physics-emergence.md`、`wenyan-operators.md` 整合。",
       "title": "F · 物理／现象学旁证"
     },
@@ -7387,6 +8016,95 @@
       "sha256": "5adef910b02c267a929f2330f81beec0cc3c0ae4565b281996abb03ef7728e50",
       "summary": "**文件**：`formal/SSBX/Foundation/Bagua/GodelLi.lean`",
       "title": "M · 证明报告 · 理之不完备 · GodelLi 形式化"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "Markov因果桥 · 大统一最小验证构造"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 边界声明"
+        },
+        {
+          "level": 2,
+          "title": "〇二 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 最小载体：有限过程"
+        },
+        {
+          "level": 2,
+          "title": "二 · Markov 读法"
+        },
+        {
+          "level": 2,
+          "title": "三 · 因果读法"
+        },
+        {
+          "level": 2,
+          "title": "四 · 测量-事件对齐"
+        },
+        {
+          "level": 2,
+          "title": "五 · 与中介桥层对接"
+        },
+        {
+          "level": 2,
+          "title": "六 · Exploration Directions"
+        },
+        {
+          "level": 2,
+          "title": "七 · Result Log"
+        },
+        {
+          "level": 2,
+          "title": "八 · Validation Command"
+        }
+      ],
+      "lines": 667,
+      "links": [
+        "量子与相对论整合方向%20·%20从桥到新理论.md",
+        "文构造完备与直相加边界.md",
+        "有限概率核接口%20·%20Markov桥S2.md",
+        "路径组合与因果约束%20·%20Markov桥S3.md",
+        "经典Markov与量子振幅分层%20·%20Markov桥S4.md",
+        "干涉与测量律候选%20·%20Markov桥S5.md",
+        "非零路径振幅候选%20·%20Markov桥S5b.md",
+        "双路径相消候选%20·%20Markov桥S5c.md",
+        "离散相位标记候选%20·%20Markov桥S5d.md",
+        "离散作用量相位候选%20·%20Markov桥S5e.md",
+        "有限路径族求和候选%20·%20Markov桥S5f.md",
+        "有限路径族求和代数候选%20·%20Markov桥S5g.md",
+        "端点索引路径族候选%20·%20Markov桥S5h.md",
+        "端点支撑规范化候选%20·%20Markov桥S5i.md",
+        "双路径枚举候选%20·%20Markov桥S5j.md",
+        "路径身份键候选%20·%20Markov桥S5k.md",
+        "有限键商候选%20·%20Markov桥S5l.md",
+        "路径商类候选%20·%20Markov桥S5m.md",
+        "规范代表元候选%20·%20Markov桥S5n.md",
+        "商支撑枚举候选%20·%20Markov桥S5o.md",
+        "商支撑代数候选%20·%20Markov桥S5p.md",
+        "观测账本候选%20·%20Markov桥S5q.md",
+        "作用量相位律候选%20·%20Markov桥S5r.md",
+        "逐步统一候选摘要%20·%20Markov桥S8.md",
+        "sum-over-middle通道组合候选%20·%20Markov桥S15.md",
+        "sum-over-middle%20Born边界候选%20·%20Markov桥S16.md",
+        "unitary-CPTP账本边界%20·%20Markov桥S17.md",
+        "量子与相对论直统一不可能%20·%20当前语言NoGo.md",
+        "../formal/SSBX/notes/markov-causal-bridge-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
+      ],
+      "path": "义理/Markov因果桥 · 大统一最小验证构造.md",
+      "sha256": "5d4b590586fea1055e6854cf1e3952760d90ec715ee4d7d81a210abb7b010db1",
+      "summary": "**前置**：[量子与相对论整合方向 · 从桥到新理论](量子与相对论整合方向%20·%20从桥到新理论.md) · [文构造完备与直相加边界](文构造完备与直相加边界.md) · [有限概率核接口 · Markov桥S2](有限概率核接口%20·%20Markov桥S2.md) · [路径组合与因果约束 · Markov桥S3](路径组合与因果约束%20·%20Markov桥S3.md) · [经典Markov与量子振幅分层 · Markov桥S4](经典Markov与量子振幅分层%20·%20Markov桥S4.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [非零路径振幅候选 · Markov桥S5b](非零路径振幅候选%20·%20Markov桥S5b.md) · [双路径相消候选 · Markov桥S5c](双路径相消候选%20·%20Markov桥S5c.md) · [离散相位标记候选 · Markov桥S5d](离散相位标记候选%20·%20Markov桥S5d.md) · [离散作用量相位候选 · Markov桥S5e](离散作用量相位候选%20·%20Markov桥S5e.md) · [有限路径族求和候选 · Markov桥S5f](有限路径族求和候选%20·%20Markov桥S5f.md) · [有限路径族求和代数候选 · Markov桥S5g](有限路径族求和代数候选%20·%20Markov桥S5g.md) · [端点索引路径族候选 · Markov桥S5h](端点索引路径族候选%20·%20Markov桥S5h.md) · [端点支撑规范化候选 · Markov桥S5i](端点支撑规范化候选%20·%20Markov桥S5i.md) · [双路径枚举候选 · Markov桥S5j](双路径枚举候选%20·%20Markov桥S5j.md) · [路径身份键候选 · Markov桥S5k](路径身份键候选%20·%20Markov桥S5k.md) · [有限键商候选 · Markov桥S5l](有限键商候选%20·%20Markov桥S5l.md) · [路径商类候选 · Markov桥S5m](路径商类候选%20·%20Markov桥S5m.md) · [规范代表元候选 · Markov桥S5n](规范代表元候选%20·%20Markov桥S5n.md) · [商支撑枚举候选 · Markov桥S5o](商支撑枚举候选%20·%20Markov桥S5o.md) · [商支撑代数候选 · Markov桥S5p](商支撑代数候选%20·%20Markov桥S5p.md) · [观测账本候选 · Markov桥S5q](观测账本候选%20·%20Markov桥S5q.md) · [作用量相位律候选 · Markov桥S5r](作用量相位律候选%20·%20Markov桥S5r.md) · [逐步统一候选摘要 · Markov桥S8](逐步统一候选摘要%20·%20Markov桥S8.md) · [sum-over-middle通道组合候选 · Markov桥S15](sum-over-middle通道组合候选%20·%20Markov桥S15.md) · [sum-over-middle Born边界候选 · Markov桥S16](sum-over-middle%20Born边界候选%20·%20Markov桥S16.md) · [unitary-CPTP账本边界 · Markov桥S17](unitary-CPTP账本边界%20·%20Markov桥S17.md) · [量子与相对论直统一不可能 · 当前语言NoGo](量子与相对论直统一不可能%20·%20当前语言NoGo.md) · [`markov-causal-bridge-plan`](../formal/SSBX/notes/markov-causal-bridge-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "Markov因果桥 · 大统一最小验证构造"
     },
     {
       "headings": [
@@ -9327,6 +10045,194 @@
       "headings": [
         {
           "level": 1,
+          "title": "channelCompose候选 · Markov桥S13"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 失败记录"
+        },
+        {
+          "level": 2,
+          "title": "二 · 下一步"
+        },
+        {
+          "level": 2,
+          "title": "三 · Validation Command"
+        }
+      ],
+      "lines": 127,
+      "links": [
+        "Born分布边界候选%20·%20Markov桥S12.md",
+        "经典Markov与量子振幅分层%20·%20Markov桥S4.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md",
+        "channelCompose结合律候选%20·%20Markov桥S14.md",
+        "sum-over-middle通道组合候选%20·%20Markov桥S15.md"
+      ],
+      "path": "义理/channelCompose候选 · Markov桥S13.md",
+      "sha256": "d586409dc5817a8fd742e918d45fee343be61d6acc119d803a8fa91ee8b57a69",
+      "summary": "**前置**：[Born分布边界候选 · Markov桥S12](Born分布边界候选%20·%20Markov桥S12.md) · [经典Markov与量子振幅分层 · Markov桥S4](经典Markov与量子振幅分层%20·%20Markov桥S4.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "channelCompose候选 · Markov桥S13"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "channelCompose结合律候选 · Markov桥S14"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · Identity Obstruction"
+        },
+        {
+          "level": 2,
+          "title": "二 · Validation Command"
+        }
+      ],
+      "lines": 92,
+      "links": [
+        "channelCompose候选%20·%20Markov桥S13.md",
+        "路径组合与因果约束%20·%20Markov桥S3.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md",
+        "sum-over-middle通道组合候选%20·%20Markov桥S15.md"
+      ],
+      "path": "义理/channelCompose结合律候选 · Markov桥S14.md",
+      "sha256": "660c59a55ed3b732bf30d97f18404f8c681030c76247522d2f072d619df9262d",
+      "summary": "**前置**：[channelCompose候选 · Markov桥S13](channelCompose候选%20·%20Markov桥S13.md) · [路径组合与因果约束 · Markov桥S3](路径组合与因果约束%20·%20Markov桥S3.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "channelCompose结合律候选 · Markov桥S14"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "sum-over-middle Born边界候选 · Markov桥S16"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 失败记录"
+        },
+        {
+          "level": 2,
+          "title": "二 · Validation Command"
+        }
+      ],
+      "lines": 98,
+      "links": [
+        "sum-over-middle通道组合候选%20·%20Markov桥S15.md",
+        "Born分布边界候选%20·%20Markov桥S12.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md",
+        "unitary-CPTP账本边界%20·%20Markov桥S17.md"
+      ],
+      "path": "义理/sum-over-middle Born边界候选 · Markov桥S16.md",
+      "sha256": "c93a56420278197cef5e27ca14b6583916ac12413d9be664dc782d3a17560326",
+      "summary": "**前置**：[sum-over-middle通道组合候选 · Markov桥S15](sum-over-middle通道组合候选%20·%20Markov桥S15.md) · [Born分布边界候选 · Markov桥S12](Born分布边界候选%20·%20Markov桥S12.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "sum-over-middle Born边界候选 · Markov桥S16"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "sum-over-middle通道组合候选 · Markov桥S15"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 为什么不是 S13 的重复"
+        },
+        {
+          "level": 2,
+          "title": "二 · 失败记录"
+        },
+        {
+          "level": 2,
+          "title": "三 · Validation Command"
+        }
+      ],
+      "lines": 119,
+      "links": [
+        "channelCompose结合律候选%20·%20Markov桥S14.md",
+        "经典Markov与量子振幅分层%20·%20Markov桥S4.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md",
+        "sum-over-middle%20Born边界候选%20·%20Markov桥S16.md"
+      ],
+      "path": "义理/sum-over-middle通道组合候选 · Markov桥S15.md",
+      "sha256": "6b00a014828167e9e5e9d2e043cf742d528eb788f2605ec3bbf50d972b1f327f",
+      "summary": "**前置**：[channelCompose结合律候选 · Markov桥S14](channelCompose结合律候选%20·%20Markov桥S14.md) · [经典Markov与量子振幅分层 · Markov桥S4](经典Markov与量子振幅分层%20·%20Markov桥S4.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "sum-over-middle通道组合候选 · Markov桥S15"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "unitary-CPTP账本边界 · Markov桥S17"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 边界读法"
+        },
+        {
+          "level": 2,
+          "title": "二 · Validation Command"
+        }
+      ],
+      "lines": 92,
+      "links": [
+        "sum-over-middle%20Born边界候选%20·%20Markov桥S16.md",
+        "channelCompose结合律候选%20·%20Markov桥S14.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
+      ],
+      "path": "义理/unitary-CPTP账本边界 · Markov桥S17.md",
+      "sha256": "39e7cd413afa80d8e723a35a84ee80f300bfdb233d291ddc0d43b663844e0098",
+      "summary": "**前置**：[sum-over-middle Born边界候选 · Markov桥S16](sum-over-middle%20Born边界候选%20·%20Markov桥S16.md) · [channelCompose结合律候选 · Markov桥S14](channelCompose结合律候选%20·%20Markov桥S14.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "unitary-CPTP账本边界 · Markov桥S17"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
           "title": "人类命运共同体——共同体之证"
         },
         {
@@ -9448,6 +10354,48 @@
       "sha256": "921c7d87aa0c9da5f01f07103ec9e9770ef00940dffc81e57522b39a72c81e0b",
       "summary": "**文件**：`formal/SSBX/Foundation/Core/Renlei.lean`",
       "title": "人类命运共同体——共同体之证"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "作用量相位律候选 · Markov桥S5r"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 失败记录"
+        },
+        {
+          "level": 2,
+          "title": "二 · 下一步"
+        },
+        {
+          "level": 2,
+          "title": "三 · Validation Command"
+        }
+      ],
+      "lines": 128,
+      "links": [
+        "Markov因果桥%20·%20大统一最小验证构造.md",
+        "观测账本候选%20·%20Markov桥S5q.md",
+        "商支撑代数候选%20·%20Markov桥S5p.md",
+        "离散作用量相位候选%20·%20Markov桥S5e.md",
+        "逐步统一候选摘要%20·%20Markov桥S8.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
+      ],
+      "path": "义理/作用量相位律候选 · Markov桥S5r.md",
+      "sha256": "4e749a7179820bbcfbf51e9c65b17e169fd5f9ec5fbc376be963ad0382f3b09c",
+      "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [观测账本候选 · Markov桥S5q](观测账本候选%20·%20Markov桥S5q.md) · [商支撑代数候选 · Markov桥S5p](商支撑代数候选%20·%20Markov桥S5p.md) · [离散作用量相位候选 · Markov桥S5e](离散作用量相位候选%20·%20Markov桥S5e.md) · [逐步统一候选摘要 · Markov桥S8](逐步统一候选摘要%20·%20Markov桥S8.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "作用量相位律候选 · Markov桥S5r"
     },
     {
       "headings": [
@@ -9844,6 +10792,270 @@
       "headings": [
         {
           "level": 1,
+          "title": "双路径枚举候选 · Markov桥S5j"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 为什么这不是一般路径积分"
+        },
+        {
+          "level": 2,
+          "title": "二 · S5k 承接与下一步"
+        },
+        {
+          "level": 2,
+          "title": "三 · Validation Command"
+        }
+      ],
+      "lines": 138,
+      "links": [
+        "Markov因果桥%20·%20大统一最小验证构造.md",
+        "端点支撑规范化候选%20·%20Markov桥S5i.md",
+        "端点索引路径族候选%20·%20Markov桥S5h.md",
+        "路径身份键候选%20·%20Markov桥S5k.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
+      ],
+      "path": "义理/双路径枚举候选 · Markov桥S5j.md",
+      "sha256": "9bb039652a2dd023d54fc19bd1af6d5d382a141b8b1b00e15303422cacfbb9f7",
+      "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [端点支撑规范化候选 · Markov桥S5i](端点支撑规范化候选%20·%20Markov桥S5i.md) · [端点索引路径族候选 · Markov桥S5h](端点索引路径族候选%20·%20Markov桥S5h.md) · [路径身份键候选 · Markov桥S5k](路径身份键候选%20·%20Markov桥S5k.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "双路径枚举候选 · Markov桥S5j"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "双路径相消候选 · Markov桥S5c"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 边界声明"
+        },
+        {
+          "level": 2,
+          "title": "〇二 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 为什么需要 `TwoStepPathWitness`"
+        },
+        {
+          "level": 2,
+          "title": "二 · two-route toy witness"
+        },
+        {
+          "level": 2,
+          "title": "三 · 有限相消与 Born-shaped boundary"
+        },
+        {
+          "level": 2,
+          "title": "四 · Validation Command"
+        }
+      ],
+      "lines": 203,
+      "links": [
+        "Markov因果桥%20·%20大统一最小验证构造.md",
+        "离散相位标记候选%20·%20Markov桥S5d.md",
+        "离散作用量相位候选%20·%20Markov桥S5e.md",
+        "非零路径振幅候选%20·%20Markov桥S5b.md",
+        "干涉与测量律候选%20·%20Markov桥S5.md",
+        "经典Markov与量子振幅分层%20·%20Markov桥S4.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
+      ],
+      "path": "义理/双路径相消候选 · Markov桥S5c.md",
+      "sha256": "3941d4911119e583e4ab85c0678a59af70c596249f44900c94f3d0a6989a3171",
+      "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [离散相位标记候选 · Markov桥S5d](离散相位标记候选%20·%20Markov桥S5d.md) · [离散作用量相位候选 · Markov桥S5e](离散作用量相位候选%20·%20Markov桥S5e.md) · [非零路径振幅候选 · Markov桥S5b](非零路径振幅候选%20·%20Markov桥S5b.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [经典Markov与量子振幅分层 · Markov桥S4](经典Markov与量子振幅分层%20·%20Markov桥S4.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "双路径相消候选 · Markov桥S5c"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "商支撑代数候选 · Markov桥S5p"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 失败记录"
+        },
+        {
+          "level": 2,
+          "title": "二 · 下一步"
+        },
+        {
+          "level": 2,
+          "title": "三 · Validation Command"
+        }
+      ],
+      "lines": 124,
+      "links": [
+        "Markov因果桥%20·%20大统一最小验证构造.md",
+        "商支撑枚举候选%20·%20Markov桥S5o.md",
+        "规范代表元候选%20·%20Markov桥S5n.md",
+        "观测账本候选%20·%20Markov桥S5q.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
+      ],
+      "path": "义理/商支撑代数候选 · Markov桥S5p.md",
+      "sha256": "31c6d9af44b0e66ffb299cf32241041209ee63c7c787b52c91b4cf5c6c8243b9",
+      "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [商支撑枚举候选 · Markov桥S5o](商支撑枚举候选%20·%20Markov桥S5o.md) · [规范代表元候选 · Markov桥S5n](规范代表元候选%20·%20Markov桥S5n.md) · [观测账本候选 · Markov桥S5q](观测账本候选%20·%20Markov桥S5q.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "商支撑代数候选 · Markov桥S5p"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "商支撑枚举候选 · Markov桥S5o"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 为什么这一步重要"
+        },
+        {
+          "level": 2,
+          "title": "二 · 下一步"
+        },
+        {
+          "level": 2,
+          "title": "三 · Validation Command"
+        }
+      ],
+      "lines": 132,
+      "links": [
+        "Markov因果桥%20·%20大统一最小验证构造.md",
+        "规范代表元候选%20·%20Markov桥S5n.md",
+        "路径商类候选%20·%20Markov桥S5m.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
+      ],
+      "path": "义理/商支撑枚举候选 · Markov桥S5o.md",
+      "sha256": "cc89bd0d54af9fad08208e6f14512a392b59c2e8b66a19d4ede44da428c5e5c6",
+      "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [规范代表元候选 · Markov桥S5n](规范代表元候选%20·%20Markov桥S5n.md) · [路径商类候选 · Markov桥S5m](路径商类候选%20·%20Markov桥S5m.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "商支撑枚举候选 · Markov桥S5o"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "干涉与测量律候选 · Markov桥S5"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 边界声明"
+        },
+        {
+          "level": 2,
+          "title": "〇二 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 路径振幅候选"
+        },
+        {
+          "level": 2,
+          "title": "二 · 干涉候选"
+        },
+        {
+          "level": 2,
+          "title": "三 · Born-shaped boundary"
+        },
+        {
+          "level": 2,
+          "title": "四 · Validation Command"
+        }
+      ],
+      "lines": 180,
+      "links": [
+        "Markov因果桥%20·%20大统一最小验证构造.md",
+        "双路径相消候选%20·%20Markov桥S5c.md",
+        "非零路径振幅候选%20·%20Markov桥S5b.md",
+        "经典Markov与量子振幅分层%20·%20Markov桥S4.md",
+        "路径组合与因果约束%20·%20Markov桥S3.md",
+        "有限概率核接口%20·%20Markov桥S2.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
+      ],
+      "path": "义理/干涉与测量律候选 · Markov桥S5.md",
+      "sha256": "534111dd6062a6522f5e4f6413dfae40d40651af33af6594d82520ff9f81ac3a",
+      "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [双路径相消候选 · Markov桥S5c](双路径相消候选%20·%20Markov桥S5c.md) · [非零路径振幅候选 · Markov桥S5b](非零路径振幅候选%20·%20Markov桥S5b.md) · [经典Markov与量子振幅分层 · Markov桥S4](经典Markov与量子振幅分层%20·%20Markov桥S4.md) · [路径组合与因果约束 · Markov桥S3](路径组合与因果约束%20·%20Markov桥S3.md) · [有限概率核接口 · Markov桥S2](有限概率核接口%20·%20Markov桥S2.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "干涉与测量律候选 · Markov桥S5"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "归一化质量求和候选 · Markov桥S10"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 失败记录"
+        },
+        {
+          "level": 2,
+          "title": "二 · 下一步"
+        },
+        {
+          "level": 2,
+          "title": "三 · Validation Command"
+        }
+      ],
+      "lines": 128,
+      "links": [
+        "有限概率归一化候选%20·%20Markov桥S9.md",
+        "逐步统一候选摘要%20·%20Markov桥S8.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md",
+        "Born权重条件归一候选%20·%20Markov桥S11.md"
+      ],
+      "path": "义理/归一化质量求和候选 · Markov桥S10.md",
+      "sha256": "9b91472200a2efdd3e1ec801fc21ed471b95853650915bf2a95e35f05b26f4f2",
+      "summary": "**前置**：[有限概率归一化候选 · Markov桥S9](有限概率归一化候选%20·%20Markov桥S9.md) · [逐步统一候选摘要 · Markov桥S8](逐步统一候选摘要%20·%20Markov桥S8.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "归一化质量求和候选 · Markov桥S10"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
           "title": "形式逻辑 · 从元到推"
         },
         {
@@ -10127,13 +11339,15 @@
           "title": "十八、结语 · 道之三态成证"
         }
       ],
-      "lines": 974,
+      "lines": 976,
       "links": [
+        "边界/%E6%8E%A8%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%89%8D%E8%A7%84%E5%88%99%E7%BB%93.md",
+        "边界/%E5%9B%9B%E7%95%8C%E4%B8%8D%E6%B7%B7%E5%90%8C%20%C2%B7%20%E6%B5%8B%E9%87%8F%E6%8E%A8%E6%84%9F.md",
         "../formal/SSBX/Foundation/Eight/LuoJi.lean"
       ],
       "path": "义理/形式逻辑 · 从元到推.md",
-      "sha256": "482a120f0ff042e3e2c76435984aef46273cde1628f3a563548df14899170fd4",
-      "summary": "四级生成 A–G 七体系给八卦之**结构**（爻、卦、群作用），",
+      "sha256": "e94e0ee335e3d748eb049ea024eb61ef98b4b16de2978db12ae2ef72152e0bb8",
+      "summary": "**相关边界**：[推的边界 · 前规则结](边界/%E6%8E%A8%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%89%8D%E8%A7%84%E5%88%99%E7%BB%93.md) · [四界不混同 · 测量推感](边界/%E5%9B%9B%E7%95%8C%E4%B8%8D%E6%B7%B7%E5%90%8C%20%C2%B7%20%E6%B5%8B%E9%87%8F%E6%8E%A8%E6%84%9F.md)",
       "title": "形式逻辑 · 从元到推"
     },
     {
@@ -10257,6 +11471,7 @@
       ],
       "lines": 440,
       "links": [
+        "边界/%E6%84%9F%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%8F%97%E8%A7%89%E7%8E%B0.md",
         "F_物理现象学.md",
         "I_八卦全集.md",
         "形式逻辑%20·%20从元到推.md",
@@ -10268,8 +11483,8 @@
         "../formal/SSBX/Foundation/Eight/XinZhi.lean"
       ],
       "path": "义理/心智 · 从元到识.md",
-      "sha256": "d6ca51d2352a652bdb92b6e61e029719d62841bb3b206e97e17848bfff200ddb",
-      "summary": "**前置**：[F](F_物理现象学.md) · [I](I_八卦全集.md) · [推](形式逻辑%20·%20从元到推.md) · [测](统计%20·%20从元到测.md) · [类](类与映%20·%20从元到映.md)",
+      "sha256": "47579932b1b5f6fc9e78f00a1973a7476a136c85b48548ce73caf73a0e9dd440",
+      "summary": "**前置**：[感的边界 · 受觉现](边界/%E6%84%9F%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%8F%97%E8%A7%89%E7%8E%B0.md) · [F](F_物理现象学.md) · [I](I_八卦全集.md) · [推](形式逻辑%20·%20从元到推.md) · [测](统计%20·%20从元到测.md) · [类](类与映%20·%20从元到映.md)",
       "title": "心智 · 从元到识"
     },
     {
@@ -10703,7 +11918,271 @@
       "headings": [
         {
           "level": 1,
+          "title": "文构造完备与直相加边界"
+        },
+        {
+          "level": 2,
+          "title": "〇 · 新边界句"
+        },
+        {
+          "level": 2,
+          "title": "一 · 192 × 371 的机器锚点"
+        },
+        {
+          "level": 2,
+          "title": "二 · 原 theorem 的正确范围"
+        },
+        {
+          "level": 2,
+          "title": "三 · 相容性 theorem"
+        },
+        {
+          "level": 2,
+          "title": "四 · 对 Markov 因果桥的影响"
+        },
+        {
+          "level": 2,
+          "title": "五 · Validation"
+        }
+      ],
+      "lines": 175,
+      "links": [
+        "量子与相对论直统一不可能%20·%20当前语言NoGo.md",
+        "Markov因果桥%20·%20大统一最小验证构造.md"
+      ],
+      "path": "义理/文构造完备与直相加边界.md",
+      "sha256": "4e70b576e33766d9fe7d0b984b2197f65ca0b1eb31517e8540c1b663a351e1d7",
+      "summary": "**前置**：[量子与相对论直统一不可能 · 当前语言NoGo](量子与相对论直统一不可能%20·%20当前语言NoGo.md) · [Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md)",
+      "title": "文构造完备与直相加边界"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "有限概率归一化候选 · Markov桥S9"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 失败记录"
+        },
+        {
+          "level": 2,
+          "title": "二 · 下一步"
+        },
+        {
+          "level": 2,
+          "title": "三 · Validation Command"
+        }
+      ],
+      "lines": 120,
+      "links": [
+        "有限概率核接口%20·%20Markov桥S2.md",
+        "逐步统一候选摘要%20·%20Markov桥S8.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md",
+        "归一化质量求和候选%20·%20Markov桥S10.md"
+      ],
+      "path": "义理/有限概率归一化候选 · Markov桥S9.md",
+      "sha256": "5b6df82d3ffd85c935571ae6182969c0d9ab5ff0abaabdc2a0b4609496f6c20d",
+      "summary": "**前置**：[有限概率核接口 · Markov桥S2](有限概率核接口%20·%20Markov桥S2.md) · [逐步统一候选摘要 · Markov桥S8](逐步统一候选摘要%20·%20Markov桥S8.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "有限概率归一化候选 · Markov桥S9"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "有限概率核接口 · Markov桥S2"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 边界声明"
+        },
+        {
+          "level": 2,
+          "title": "〇二 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 为什么这一步足够小"
+        },
+        {
+          "level": 2,
+          "title": "二 · concrete 与 grid 的读法"
+        },
+        {
+          "level": 2,
+          "title": "三 · 下一步"
+        },
+        {
+          "level": 2,
+          "title": "四 · Validation Command"
+        }
+      ],
+      "lines": 186,
+      "links": [
+        "Markov因果桥%20·%20大统一最小验证构造.md",
+        "路径组合与因果约束%20·%20Markov桥S3.md",
+        "经典Markov与量子振幅分层%20·%20Markov桥S4.md",
+        "干涉与测量律候选%20·%20Markov桥S5.md",
+        "非零路径振幅候选%20·%20Markov桥S5b.md",
+        "文构造完备与直相加边界.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
+      ],
+      "path": "义理/有限概率核接口 · Markov桥S2.md",
+      "sha256": "9d1ea6debe4581e9fcdda2dc174d291e1a0a6ee9de2750cd44b538cd8ea29fb2",
+      "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [路径组合与因果约束 · Markov桥S3](路径组合与因果约束%20·%20Markov桥S3.md) · [经典Markov与量子振幅分层 · Markov桥S4](经典Markov与量子振幅分层%20·%20Markov桥S4.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [非零路径振幅候选 · Markov桥S5b](非零路径振幅候选%20·%20Markov桥S5b.md) · [文构造完备与直相加边界](文构造完备与直相加边界.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "有限概率核接口 · Markov桥S2"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "有限路径族求和代数候选 · Markov桥S5g"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 为什么这一步比 S5f 更强"
+        },
+        {
+          "level": 2,
+          "title": "二 · 后续承接"
+        },
+        {
+          "level": 2,
+          "title": "三 · Validation Command"
+        }
+      ],
+      "lines": 161,
+      "links": [
+        "Markov因果桥%20·%20大统一最小验证构造.md",
+        "端点支撑规范化候选%20·%20Markov桥S5i.md",
+        "端点索引路径族候选%20·%20Markov桥S5h.md",
+        "有限路径族求和候选%20·%20Markov桥S5f.md",
+        "离散作用量相位候选%20·%20Markov桥S5e.md",
+        "双路径相消候选%20·%20Markov桥S5c.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
+      ],
+      "path": "义理/有限路径族求和代数候选 · Markov桥S5g.md",
+      "sha256": "70375724d60f5e0ab3342365c45ef82e57f92a8e892f2972c2b4e7a161dde6b2",
+      "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [端点支撑规范化候选 · Markov桥S5i](端点支撑规范化候选%20·%20Markov桥S5i.md) · [端点索引路径族候选 · Markov桥S5h](端点索引路径族候选%20·%20Markov桥S5h.md) · [有限路径族求和候选 · Markov桥S5f](有限路径族求和候选%20·%20Markov桥S5f.md) · [离散作用量相位候选 · Markov桥S5e](离散作用量相位候选%20·%20Markov桥S5e.md) · [双路径相消候选 · Markov桥S5c](双路径相消候选%20·%20Markov桥S5c.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "有限路径族求和代数候选 · Markov桥S5g"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "有限路径族求和候选 · Markov桥S5f"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 为什么这一步比 S5e 更强"
+        },
+        {
+          "level": 2,
+          "title": "二 · 后续承接"
+        },
+        {
+          "level": 2,
+          "title": "三 · Validation Command"
+        }
+      ],
+      "lines": 145,
+      "links": [
+        "Markov因果桥%20·%20大统一最小验证构造.md",
+        "有限路径族求和代数候选%20·%20Markov桥S5g.md",
+        "离散作用量相位候选%20·%20Markov桥S5e.md",
+        "离散相位标记候选%20·%20Markov桥S5d.md",
+        "双路径相消候选%20·%20Markov桥S5c.md",
+        "非零路径振幅候选%20·%20Markov桥S5b.md",
+        "干涉与测量律候选%20·%20Markov桥S5.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
+      ],
+      "path": "义理/有限路径族求和候选 · Markov桥S5f.md",
+      "sha256": "e55f054b44f7f7b6a377b8499cbbbf77b6fd98ffeb8d20d6872d2fd6651b733a",
+      "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [有限路径族求和代数候选 · Markov桥S5g](有限路径族求和代数候选%20·%20Markov桥S5g.md) · [离散作用量相位候选 · Markov桥S5e](离散作用量相位候选%20·%20Markov桥S5e.md) · [离散相位标记候选 · Markov桥S5d](离散相位标记候选%20·%20Markov桥S5d.md) · [双路径相消候选 · Markov桥S5c](双路径相消候选%20·%20Markov桥S5c.md) · [非零路径振幅候选 · Markov桥S5b](非零路径振幅候选%20·%20Markov桥S5b.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "有限路径族求和候选 · Markov桥S5f"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "有限键商候选 · Markov桥S5l"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 为什么这仍不是真正 quotient"
+        },
+        {
+          "level": 2,
+          "title": "二 · S5m 承接与下一步"
+        },
+        {
+          "level": 2,
+          "title": "三 · Validation Command"
+        }
+      ],
+      "lines": 141,
+      "links": [
+        "Markov因果桥%20·%20大统一最小验证构造.md",
+        "路径身份键候选%20·%20Markov桥S5k.md",
+        "双路径枚举候选%20·%20Markov桥S5j.md",
+        "路径商类候选%20·%20Markov桥S5m.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
+      ],
+      "path": "义理/有限键商候选 · Markov桥S5l.md",
+      "sha256": "cf475ac70cc6c283c5763a7679afc97fcd89521c9340409546a771c3dd0a9daf",
+      "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [路径身份键候选 · Markov桥S5k](路径身份键候选%20·%20Markov桥S5k.md) · [双路径枚举候选 · Markov桥S5j](双路径枚举候选%20·%20Markov桥S5j.md) · [路径商类候选 · Markov桥S5m](路径商类候选%20·%20Markov桥S5m.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "有限键商候选 · Markov桥S5l"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
           "title": "物理 · 从元到象"
+        },
+        {
+          "level": 2,
+          "title": "〇、完成度审计"
         },
         {
           "level": 2,
@@ -10751,7 +12230,7 @@
         },
         {
           "level": 2,
-          "title": "十二、不入本文之边界（明示）"
+          "title": "十二、未纳入本轮之边界（明示）"
         },
         {
           "level": 2,
@@ -10782,11 +12261,15 @@
           "title": "13.6 Lean 形式化 · `WuXiang.lean` ✓"
         },
         {
+          "level": 3,
+          "title": "13.7 Lean 形式化 · `Quantum.lean` ✓"
+        },
+        {
           "level": 2,
           "title": "十四、结语 · 象之三态"
         }
       ],
-      "lines": 333,
+      "lines": 397,
       "links": [
         "F_物理现象学.md",
         "G_完整算子系统_八卦互通与归一.md",
@@ -10796,10 +12279,12 @@
         "类与映%20·%20从元到映.md",
         "动力%20·%20从元到行.md",
         "../formal/SSBX/Foundation/Eight/WuXiang.lean",
+        "../formal/SSBX/Foundation/Modern/Quantum.lean",
+        "../formal/SSBX/Foundation/Modern/QuantumSpacetime.lean",
         "../formal/SSBX/Foundation/Eight/WuXiang.lean"
       ],
       "path": "义理/物理 · 从元到象.md",
-      "sha256": "9734b2bd328a981c4302d6e474a6fe284a0afcd74bef1b47ea6e8aa240bf9583",
+      "sha256": "8b82cad8e3e948f4cbc83d30bd2d3e733f8f8d4cc0d35e94006165d46267304a",
       "summary": "**前置**：[F](F_物理现象学.md) · [G](G_完整算子系统_八卦互通与归一.md) · [I](I_八卦全集.md) · [测](统计%20·%20从元到测.md) · [形](几何位%20·%20从元到形.md) · [类](类与映%20·%20从元到映.md) · [动](动力%20·%20从元到行.md)",
       "title": "物理 · 从元到象"
     },
@@ -10935,6 +12420,177 @@
       "sha256": "7f730380aea0e43f8739c94abbb19f3c95e0392effa7f7b90c088fe4ced2e4e6",
       "summary": "**前置**：[J](J_理之不完备_哥德尔在192.md) · [O](O_进化非道者生存_三视证.md) · [R](R_与生生不息对齐之必然.md) · [W](W_非道之形式.md) · [类](类与映%20·%20从元到映.md) · [动](动力%20·%20从元到行.md)",
       "title": "生态 · 从元到生"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "离散作用量相位候选 · Markov桥S5e"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 为什么这一步比 S5d 更强"
+        },
+        {
+          "level": 2,
+          "title": "二 · 后续承接"
+        },
+        {
+          "level": 2,
+          "title": "三 · Validation Command"
+        }
+      ],
+      "lines": 167,
+      "links": [
+        "Markov因果桥%20·%20大统一最小验证构造.md",
+        "有限路径族求和候选%20·%20Markov桥S5f.md",
+        "离散相位标记候选%20·%20Markov桥S5d.md",
+        "双路径相消候选%20·%20Markov桥S5c.md",
+        "非零路径振幅候选%20·%20Markov桥S5b.md",
+        "干涉与测量律候选%20·%20Markov桥S5.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
+      ],
+      "path": "义理/离散作用量相位候选 · Markov桥S5e.md",
+      "sha256": "4863cae02106e53db2016619f2b45626679aacde2941f05aabc8879645b3f1fd",
+      "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [有限路径族求和候选 · Markov桥S5f](有限路径族求和候选%20·%20Markov桥S5f.md) · [离散相位标记候选 · Markov桥S5d](离散相位标记候选%20·%20Markov桥S5d.md) · [双路径相消候选 · Markov桥S5c](双路径相消候选%20·%20Markov桥S5c.md) · [非零路径振幅候选 · Markov桥S5b](非零路径振幅候选%20·%20Markov桥S5b.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "离散作用量相位候选 · Markov桥S5e"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "离散相位标记候选 · Markov桥S5d"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 边界声明"
+        },
+        {
+          "level": 2,
+          "title": "〇二 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 为什么这一步比 S5c 更强"
+        },
+        {
+          "level": 2,
+          "title": "二 · Validation Command"
+        }
+      ],
+      "lines": 163,
+      "links": [
+        "Markov因果桥%20·%20大统一最小验证构造.md",
+        "离散作用量相位候选%20·%20Markov桥S5e.md",
+        "双路径相消候选%20·%20Markov桥S5c.md",
+        "非零路径振幅候选%20·%20Markov桥S5b.md",
+        "干涉与测量律候选%20·%20Markov桥S5.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
+      ],
+      "path": "义理/离散相位标记候选 · Markov桥S5d.md",
+      "sha256": "e601b7659f792fccf184d2b8c29dbb9a94ff9e604d62aa9604a9ac9b013836d4",
+      "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [离散作用量相位候选 · Markov桥S5e](离散作用量相位候选%20·%20Markov桥S5e.md) · [双路径相消候选 · Markov桥S5c](双路径相消候选%20·%20Markov桥S5c.md) · [非零路径振幅候选 · Markov桥S5b](非零路径振幅候选%20·%20Markov桥S5b.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "离散相位标记候选 · Markov桥S5d"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "端点支撑规范化候选 · Markov桥S5i"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 为什么这是规范化而不是路径积分"
+        },
+        {
+          "level": 2,
+          "title": "二 · 重复项边界"
+        },
+        {
+          "level": 2,
+          "title": "三 · 下一步"
+        },
+        {
+          "level": 2,
+          "title": "四 · Validation Command"
+        }
+      ],
+      "lines": 152,
+      "links": [
+        "Markov因果桥%20·%20大统一最小验证构造.md",
+        "双路径枚举候选%20·%20Markov桥S5j.md",
+        "端点索引路径族候选%20·%20Markov桥S5h.md",
+        "有限路径族求和代数候选%20·%20Markov桥S5g.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
+      ],
+      "path": "义理/端点支撑规范化候选 · Markov桥S5i.md",
+      "sha256": "c5aa65c31463dd5f6a18336106643a3b8058748a1fe7ef38a14e1997f047665d",
+      "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [双路径枚举候选 · Markov桥S5j](双路径枚举候选%20·%20Markov桥S5j.md) · [端点索引路径族候选 · Markov桥S5h](端点索引路径族候选%20·%20Markov桥S5h.md) · [有限路径族求和代数候选 · Markov桥S5g](有限路径族求和代数候选%20·%20Markov桥S5g.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "端点支撑规范化候选 · Markov桥S5i"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "端点索引路径族候选 · Markov桥S5h"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 为什么这一步比 S5g 更强"
+        },
+        {
+          "level": 2,
+          "title": "二 · 下一步"
+        },
+        {
+          "level": 2,
+          "title": "三 · Validation Command"
+        }
+      ],
+      "lines": 155,
+      "links": [
+        "Markov因果桥%20·%20大统一最小验证构造.md",
+        "端点支撑规范化候选%20·%20Markov桥S5i.md",
+        "有限路径族求和代数候选%20·%20Markov桥S5g.md",
+        "有限路径族求和候选%20·%20Markov桥S5f.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
+      ],
+      "path": "义理/端点索引路径族候选 · Markov桥S5h.md",
+      "sha256": "cffd34ff79a64aa7cd01eb98bfab4bb76ee4101afbc6d0be2b5cbc8c9a45c5ea",
+      "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [端点支撑规范化候选 · Markov桥S5i](端点支撑规范化候选%20·%20Markov桥S5i.md) · [有限路径族求和代数候选 · Markov桥S5g](有限路径族求和代数候选%20·%20Markov桥S5g.md) · [有限路径族求和候选 · Markov桥S5f](有限路径族求和候选%20·%20Markov桥S5f.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "端点索引路径族候选 · Markov桥S5h"
     },
     {
       "headings": [
@@ -11119,6 +12775,61 @@
       "sha256": "bb1c6b1ebd52fdeb2e1dbc62daf071546a070d9957be31ecb3ebcbf68e65a245",
       "summary": "**前置**：[A](A_经典易传.md) · [D](D_算子代数.md) · [G](G_完整算子系统_八卦互通与归一.md) · [I](I_八卦全集.md) · [数](数与算术%20·%20从元到数.md) · [推](形式逻辑%20·%20从元到推.md) · [形](几何位%20·%20从元到形.md)",
       "title": "类与映 · 从元到映"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "经典Markov与量子振幅分层 · Markov桥S4"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 边界声明"
+        },
+        {
+          "level": 2,
+          "title": "〇二 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 为什么要分层"
+        },
+        {
+          "level": 2,
+          "title": "二 · 支持精化"
+        },
+        {
+          "level": 2,
+          "title": "三 · zero placeholder 的意义"
+        },
+        {
+          "level": 2,
+          "title": "四 · 与既有 Quantum.lean 的关系"
+        },
+        {
+          "level": 2,
+          "title": "五 · Validation Command"
+        }
+      ],
+      "lines": 198,
+      "links": [
+        "Markov因果桥%20·%20大统一最小验证构造.md",
+        "有限概率核接口%20·%20Markov桥S2.md",
+        "路径组合与因果约束%20·%20Markov桥S3.md",
+        "干涉与测量律候选%20·%20Markov桥S5.md",
+        "非零路径振幅候选%20·%20Markov桥S5b.md",
+        "量子物理语言%20·%20从虚到测.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
+      ],
+      "path": "义理/经典Markov与量子振幅分层 · Markov桥S4.md",
+      "sha256": "16bd74f8b52ef8d8f731689fa766a7cba2b88ca0e09df9e79ecfac92136284be",
+      "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [有限概率核接口 · Markov桥S2](有限概率核接口%20·%20Markov桥S2.md) · [路径组合与因果约束 · Markov桥S3](路径组合与因果约束%20·%20Markov桥S3.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [非零路径振幅候选 · Markov桥S5b](非零路径振幅候选%20·%20Markov桥S5b.md) · [量子物理语言 · 从虚到测](量子物理语言%20·%20从虚到测.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "经典Markov与量子振幅分层 · Markov桥S4"
     },
     {
       "headings": [
@@ -11439,14 +13150,1060 @@
           "title": "二十、结语 · 道之三态成测"
         }
       ],
-      "lines": 1052,
+      "lines": 1054,
       "links": [
+        "边界/%E6%B5%8B%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E8%A7%82%E9%AA%8C%E8%AF%BB.md",
         "../formal/SSBX/Foundation/Eight/TongJi.lean"
       ],
       "path": "义理/统计 · 从元到测.md",
-      "sha256": "3a3e03179fce6caa97d47e5da6ffcca2041333a868466d746433846c62d74955",
+      "sha256": "461b8e196cf692d7459007c255a6228de6643e2ab55664b354db7b4d16ff16b3",
       "summary": "四级生成 A–G 给八卦之**结构**（爻、卦、群作用）；",
       "title": "统计 · 从元到测"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "观测账本候选 · Markov桥S5q"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 失败记录"
+        },
+        {
+          "level": 2,
+          "title": "二 · 下一步"
+        },
+        {
+          "level": 2,
+          "title": "三 · Validation Command"
+        }
+      ],
+      "lines": 128,
+      "links": [
+        "Markov因果桥%20·%20大统一最小验证构造.md",
+        "商支撑代数候选%20·%20Markov桥S5p.md",
+        "商支撑枚举候选%20·%20Markov桥S5o.md",
+        "作用量相位律候选%20·%20Markov桥S5r.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
+      ],
+      "path": "义理/观测账本候选 · Markov桥S5q.md",
+      "sha256": "67cb60aaf6cdfdc3b09d1aec05f16d0ed9d579030a89086cb39421dd9a7b439a",
+      "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [商支撑代数候选 · Markov桥S5p](商支撑代数候选%20·%20Markov桥S5p.md) · [商支撑枚举候选 · Markov桥S5o](商支撑枚举候选%20·%20Markov桥S5o.md) · [作用量相位律候选 · Markov桥S5r](作用量相位律候选%20·%20Markov桥S5r.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "观测账本候选 · Markov桥S5q"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "规范代表元候选 · Markov桥S5n"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 为什么这不是一般选择函数"
+        },
+        {
+          "level": 2,
+          "title": "二 · 下一步"
+        },
+        {
+          "level": 2,
+          "title": "三 · Validation Command"
+        }
+      ],
+      "lines": 114,
+      "links": [
+        "Markov因果桥%20·%20大统一最小验证构造.md",
+        "路径商类候选%20·%20Markov桥S5m.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
+      ],
+      "path": "义理/规范代表元候选 · Markov桥S5n.md",
+      "sha256": "a6866c2a7389a8cddc966729a0910e1a814137c281893982ee789e4fc69f4342",
+      "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [路径商类候选 · Markov桥S5m](路径商类候选%20·%20Markov桥S5m.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "规范代表元候选 · Markov桥S5n"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "路径商类候选 · Markov桥S5m"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 这次比 S5l 多了什么"
+        },
+        {
+          "level": 2,
+          "title": "二 · 下一步"
+        },
+        {
+          "level": 2,
+          "title": "三 · Validation Command"
+        }
+      ],
+      "lines": 134,
+      "links": [
+        "Markov因果桥%20·%20大统一最小验证构造.md",
+        "规范代表元候选%20·%20Markov桥S5n.md",
+        "有限键商候选%20·%20Markov桥S5l.md",
+        "路径身份键候选%20·%20Markov桥S5k.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
+      ],
+      "path": "义理/路径商类候选 · Markov桥S5m.md",
+      "sha256": "fdf83b7d5879754e38155a158586e3f832cd819a8d972e03c6cb73e8c6f92c74",
+      "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [规范代表元候选 · Markov桥S5n](规范代表元候选%20·%20Markov桥S5n.md) · [有限键商候选 · Markov桥S5l](有限键商候选%20·%20Markov桥S5l.md) · [路径身份键候选 · Markov桥S5k](路径身份键候选%20·%20Markov桥S5k.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "路径商类候选 · Markov桥S5m"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "路径组合与因果约束 · Markov桥S3"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 边界声明"
+        },
+        {
+          "level": 2,
+          "title": "〇二 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 为什么这一步足够小"
+        },
+        {
+          "level": 2,
+          "title": "二 · 局部因果约束"
+        },
+        {
+          "level": 2,
+          "title": "三 · 下一步"
+        },
+        {
+          "level": 2,
+          "title": "四 · Validation Command"
+        }
+      ],
+      "lines": 198,
+      "links": [
+        "Markov因果桥%20·%20大统一最小验证构造.md",
+        "有限概率核接口%20·%20Markov桥S2.md",
+        "经典Markov与量子振幅分层%20·%20Markov桥S4.md",
+        "干涉与测量律候选%20·%20Markov桥S5.md",
+        "非零路径振幅候选%20·%20Markov桥S5b.md",
+        "文构造完备与直相加边界.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
+      ],
+      "path": "义理/路径组合与因果约束 · Markov桥S3.md",
+      "sha256": "c98810607862f6958259a5374578cd4d4ea73299de89eebb886a8d0ebd0ef867",
+      "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [有限概率核接口 · Markov桥S2](有限概率核接口%20·%20Markov桥S2.md) · [经典Markov与量子振幅分层 · Markov桥S4](经典Markov与量子振幅分层%20·%20Markov桥S4.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [非零路径振幅候选 · Markov桥S5b](非零路径振幅候选%20·%20Markov桥S5b.md) · [文构造完备与直相加边界](文构造完备与直相加边界.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "路径组合与因果约束 · Markov桥S3"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "路径身份键候选 · Markov桥S5k"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 为什么这不是 quotient"
+        },
+        {
+          "level": 2,
+          "title": "二 · S5l 承接与下一步"
+        },
+        {
+          "level": 2,
+          "title": "三 · Validation Command"
+        }
+      ],
+      "lines": 148,
+      "links": [
+        "Markov因果桥%20·%20大统一最小验证构造.md",
+        "双路径枚举候选%20·%20Markov桥S5j.md",
+        "端点支撑规范化候选%20·%20Markov桥S5i.md",
+        "有限键商候选%20·%20Markov桥S5l.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
+      ],
+      "path": "义理/路径身份键候选 · Markov桥S5k.md",
+      "sha256": "eac35dee25e2e48383d1f1b6fdf4b27950fdb7c8f2ef1eb5920dc204addaa162",
+      "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [双路径枚举候选 · Markov桥S5j](双路径枚举候选%20·%20Markov桥S5j.md) · [端点支撑规范化候选 · Markov桥S5i](端点支撑规范化候选%20·%20Markov桥S5i.md) · [有限键商候选 · Markov桥S5l](有限键商候选%20·%20Markov桥S5l.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "路径身份键候选 · Markov桥S5k"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "边界文档索引"
+        },
+        {
+          "level": 2,
+          "title": "〇 · 总入口"
+        },
+        {
+          "level": 2,
+          "title": "一 · 八界"
+        },
+        {
+          "level": 2,
+          "title": "二 · 四界"
+        },
+        {
+          "level": 2,
+          "title": "三 · 验证"
+        }
+      ],
+      "lines": 47,
+      "links": [
+        "边界总图谱%20·%20知感行证名量测推.md",
+        "统一边界%20·%20从理到文.md",
+        "可知边界%20·%20语言与理.md",
+        "可的边界%20·%20感行证.md",
+        "知的边界%20·%20明辨述.md",
+        "感的边界%20·%20受觉现.md",
+        "行的边界%20·%20能境作效.md",
+        "证的边界%20·%20命题系统证书.md",
+        "名的边界%20·%20指称定名.md",
+        "量的边界%20·%20数测度.md",
+        "测的边界%20·%20观验读.md",
+        "推的边界%20·%20前规则结.md",
+        "四界不混同%20·%20测量推感.md"
+      ],
+      "path": "义理/边界/README.md",
+      "sha256": "32585c2029d7ce67f4484546f3e0f3aa4a95f7f102a45362ec145059fff94eb1",
+      "summary": "本文件夹收束当前已完成的边界文档。Lean 模块仍保留在 `formal/SSBX/Foundation/Modern/`，这里负责解释、映射、完成度审计和验证入口。",
+      "title": "边界文档索引"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "可的边界 · 感行证"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "〇 · 边界声明"
+        },
+        {
+          "level": 2,
+          "title": "一 · “可”的轴"
+        },
+        {
+          "level": 2,
+          "title": "二 · 可感 / 不可感"
+        },
+        {
+          "level": 2,
+          "title": "三 · 可行 / 不可行"
+        },
+        {
+          "level": 2,
+          "title": "四 · 可证 / 不可证"
+        },
+        {
+          "level": 2,
+          "title": "五 · 三组边界的关系"
+        },
+        {
+          "level": 2,
+          "title": "六 · 承接前文留项"
+        },
+        {
+          "level": 2,
+          "title": "七 · 主定理"
+        },
+        {
+          "level": 2,
+          "title": "八 · 结论"
+        },
+        {
+          "level": 2,
+          "title": "九 · Lean 证明入口"
+        }
+      ],
+      "lines": 427,
+      "links": [
+        "README.md",
+        "%E8%BE%B9%E7%95%8C%E6%80%BB%E5%9B%BE%E8%B0%B1%20%C2%B7%20%E7%9F%A5%E6%84%9F%E8%A1%8C%E8%AF%81%E5%90%8D%E9%87%8F%E6%B5%8B%E6%8E%A8.md",
+        "%E5%8F%AF%E7%9F%A5%E8%BE%B9%E7%95%8C%20%C2%B7%20%E8%AF%AD%E8%A8%80%E4%B8%8E%E7%90%86.md",
+        "%E6%84%9F%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%8F%97%E8%A7%89%E7%8E%B0.md",
+        "%E8%A1%8C%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E8%83%BD%E5%A2%83%E4%BD%9C%E6%95%88.md",
+        "%E8%AF%81%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%91%BD%E9%A2%98%E7%B3%BB%E7%BB%9F%E8%AF%81%E4%B9%A6.md",
+        "%E5%90%8D%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%8C%87%E7%A7%B0%E5%AE%9A%E5%90%8D.md",
+        "%E9%87%8F%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%95%B0%E6%B5%8B%E5%BA%A6.md",
+        "%E7%BB%9F%E4%B8%80%E8%BE%B9%E7%95%8C%20%C2%B7%20%E4%BB%8E%E7%90%86%E5%88%B0%E6%96%87.md",
+        "../心智%20·%20从元到识.md",
+        "../动力%20·%20从元到行.md",
+        "../形式逻辑%20·%20从元到推.md",
+        "%E6%84%9F%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%8F%97%E8%A7%89%E7%8E%B0.md",
+        "%E5%8F%AF%E7%9F%A5%E8%BE%B9%E7%95%8C%20%C2%B7%20%E8%AF%AD%E8%A8%80%E4%B8%8E%E7%90%86.md",
+        "%E9%87%8F%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%95%B0%E6%B5%8B%E5%BA%A6.md",
+        "%E5%90%8D%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%8C%87%E7%A7%B0%E5%AE%9A%E5%90%8D.md"
+      ],
+      "path": "义理/边界/可的边界 · 感行证.md",
+      "sha256": "608246cdac5e6df8018df32829cd2ff50e8d9ca4df8589d73a9caa5f87350df1",
+      "summary": "**前置**：[边界文档索引](README.md) · [边界总图谱 · 知感行证名量测推](%E8%BE%B9%E7%95%8C%E6%80%BB%E5%9B%BE%E8%B0%B1%20%C2%B7%20%E7%9F%A5%E6%84%9F%E8%A1%8C%E8%AF%81%E5%90%8D%E9%87%8F%E6%B5%8B%E6%8E%A8.md) · [可知边界 · 语言与理](%E5%8F%AF%E7%9F%A5%E8%BE%B9%E7%95%8C%20%C2%B7%20%E8%AF%AD%E8%A8%80%E4%B8%8E%E7%90%86.md) · [感的边界 · 受觉现](%E6%84%9F%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%8F%97%E8%A7%89%E7%8E%B0.md) · [行的边界 · 能境作效](%E8%A1%8C%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E8%83%BD%E5%A2%83%E4%BD%9C%E6%95%88.md) · [证的边界 · 命题系统证书](%E8%AF%81%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%91%BD%E9%A2%98%E7%B3%BB%E7%BB%9F%E8%AF%81%E4%B9%A6.md) · [名的边界 · 指称定名](%E5%90%8D%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%8C%87%E7%A7%B0%E5%AE%9A%E5%90%8D.md) · [量的边界 · 数测度](%E9%87%8F%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%95%B0%E6%B5%8B%E5%BA%A6.md) · [统一边界 · 从理到文](%E7%BB%9F%E4%B8%80%E8%BE%B9%E7%95%8C%20%C2%B7%20%E4%BB%8E%E7%90%86%E5%88%B0%E6%96%87.md) · [心智 · 从元到识](../心智%20·%20从元到识.md) · [动力 · 从元到行](../动力%20·%20从元到行.md) · [形式逻辑 · 从元到推](../形式逻辑%20·%20从元到推.md)",
+      "title": "可的边界 · 感行证"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "可知边界 · 语言与理"
+        },
+        {
+          "level": 2,
+          "title": "〇 · 边界声明"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 为什么语言边界就是理边界"
+        },
+        {
+          "level": 2,
+          "title": "二 · 可说、是理、可知三者同界"
+        },
+        {
+          "level": 2,
+          "title": "三 · 边界之外，不可说"
+        },
+        {
+          "level": 2,
+          "title": "四 · 说了也非理"
+        },
+        {
+          "level": 2,
+          "title": "五 · 这是可知的边界"
+        },
+        {
+          "level": 2,
+          "title": "六 · 可感 / 可行 / 可证的承接"
+        },
+        {
+          "level": 2,
+          "title": "七 · 结论"
+        },
+        {
+          "level": 2,
+          "title": "八 · Lean 证明入口"
+        }
+      ],
+      "lines": 427,
+      "links": [
+        "README.md",
+        "%E8%BE%B9%E7%95%8C%E6%80%BB%E5%9B%BE%E8%B0%B1%20%C2%B7%20%E7%9F%A5%E6%84%9F%E8%A1%8C%E8%AF%81%E5%90%8D%E9%87%8F%E6%B5%8B%E6%8E%A8.md",
+        "%E7%BB%9F%E4%B8%80%E8%BE%B9%E7%95%8C%20%C2%B7%20%E4%BB%8E%E7%90%86%E5%88%B0%E6%96%87.md",
+        "../L_文道一也_自释与微核.md",
+        "../K_完备性审计.md",
+        "../形式逻辑%20·%20从元到推.md",
+        "%E5%8F%AF%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%84%9F%E8%A1%8C%E8%AF%81.md",
+        "%E5%8F%AF%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%84%9F%E8%A1%8C%E8%AF%81.md",
+        "%E5%8F%AF%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%84%9F%E8%A1%8C%E8%AF%81.md",
+        "%E9%87%8F%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%95%B0%E6%B5%8B%E5%BA%A6.md",
+        "%E5%90%8D%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%8C%87%E7%A7%B0%E5%AE%9A%E5%90%8D.md",
+        "%E5%8F%AF%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%84%9F%E8%A1%8C%E8%AF%81.md",
+        "%E9%87%8F%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%95%B0%E6%B5%8B%E5%BA%A6.md",
+        "%E5%90%8D%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%8C%87%E7%A7%B0%E5%AE%9A%E5%90%8D.md",
+        "%E9%87%8F%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%95%B0%E6%B5%8B%E5%BA%A6.md",
+        "%E5%90%8D%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%8C%87%E7%A7%B0%E5%AE%9A%E5%90%8D.md"
+      ],
+      "path": "义理/边界/可知边界 · 语言与理.md",
+      "sha256": "d1ee7704475412826d1aaa5caff7117bac9976283048b965c32d867ab0e63f10",
+      "summary": "**前置**：[边界文档索引](README.md) · [边界总图谱 · 知感行证名量测推](%E8%BE%B9%E7%95%8C%E6%80%BB%E5%9B%BE%E8%B0%B1%20%C2%B7%20%E7%9F%A5%E6%84%9F%E8%A1%8C%E8%AF%81%E5%90%8D%E9%87%8F%E6%B5%8B%E6%8E%A8.md) · [统一边界 · 从理到文](%E7%BB%9F%E4%B8%80%E8%BE%B9%E7%95%8C%20%C2%B7%20%E4%BB%8E%E7%90%86%E5%88%B0%E6%96%87.md) · [L 文道一也](../L_文道一也_自释与微核.md) · [K 完备性审计](../K_完备性审计.md) · [形式逻辑 · 从元到推](../形式逻辑%20·%20从元到推.md)",
+      "title": "可知边界 · 语言与理"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "名的边界 · 指称定名"
+        },
+        {
+          "level": 2,
+          "title": "〇 · 边界声明"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 主映射"
+        },
+        {
+          "level": 2,
+          "title": "二 · 为什么名不是知"
+        },
+        {
+          "level": 2,
+          "title": "三 · 为什么名不是证"
+        },
+        {
+          "level": 2,
+          "title": "四 · Handoff"
+        },
+        {
+          "level": 2,
+          "title": "五 · 主定理"
+        }
+      ],
+      "lines": 172,
+      "links": [
+        "README.md",
+        "%E8%BE%B9%E7%95%8C%E6%80%BB%E5%9B%BE%E8%B0%B1%20%C2%B7%20%E7%9F%A5%E6%84%9F%E8%A1%8C%E8%AF%81%E5%90%8D%E9%87%8F%E6%B5%8B%E6%8E%A8.md",
+        "%E5%8F%AF%E7%9F%A5%E8%BE%B9%E7%95%8C%20%C2%B7%20%E8%AF%AD%E8%A8%80%E4%B8%8E%E7%90%86.md",
+        "%E5%8F%AF%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%84%9F%E8%A1%8C%E8%AF%81.md",
+        "%E7%9F%A5%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%98%8E%E8%BE%A8%E8%BF%B0.md"
+      ],
+      "path": "义理/边界/名的边界 · 指称定名.md",
+      "sha256": "a20483de57f4004fd734647907d77b58fe8e1eab4f48f6315d1f028550405e42",
+      "summary": "**前置**：[边界文档索引](README.md) · [边界总图谱 · 知感行证名量测推](%E8%BE%B9%E7%95%8C%E6%80%BB%E5%9B%BE%E8%B0%B1%20%C2%B7%20%E7%9F%A5%E6%84%9F%E8%A1%8C%E8%AF%81%E5%90%8D%E9%87%8F%E6%B5%8B%E6%8E%A8.md) · [可知边界 · 语言与理](%E5%8F%AF%E7%9F%A5%E8%BE%B9%E7%95%8C%20%C2%B7%20%E8%AF%AD%E8%A8%80%E4%B8%8E%E7%90%86.md) · [可的边界 · 感行证](%E5%8F%AF%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%84%9F%E8%A1%8C%E8%AF%81.md) · [知的边界 · 明辨述](%E7%9F%A5%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%98%8E%E8%BE%A8%E8%BF%B0.md)",
+      "title": "名的边界 · 指称定名"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "四界不混同 · 测量推感"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "〇 · 边界声明"
+        },
+        {
+          "level": 2,
+          "title": "一 · 四界表"
+        },
+        {
+          "level": 2,
+          "title": "二 · 结论"
+        }
+      ],
+      "lines": 99,
+      "links": [
+        "README.md",
+        "%E8%BE%B9%E7%95%8C%E6%80%BB%E5%9B%BE%E8%B0%B1%20%C2%B7%20%E7%9F%A5%E6%84%9F%E8%A1%8C%E8%AF%81%E5%90%8D%E9%87%8F%E6%B5%8B%E6%8E%A8.md",
+        "%E9%87%8F%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%95%B0%E6%B5%8B%E5%BA%A6.md",
+        "%E6%B5%8B%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E8%A7%82%E9%AA%8C%E8%AF%BB.md",
+        "%E6%8E%A8%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%89%8D%E8%A7%84%E5%88%99%E7%BB%93.md",
+        "%E6%84%9F%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%8F%97%E8%A7%89%E7%8E%B0.md",
+        "%E9%87%8F%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%95%B0%E6%B5%8B%E5%BA%A6.md",
+        "%E6%B5%8B%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E8%A7%82%E9%AA%8C%E8%AF%BB.md",
+        "%E6%8E%A8%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%89%8D%E8%A7%84%E5%88%99%E7%BB%93.md",
+        "%E6%84%9F%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%8F%97%E8%A7%89%E7%8E%B0.md"
+      ],
+      "path": "义理/边界/四界不混同 · 测量推感.md",
+      "sha256": "a8fc6c387d17981573ff8a75c01eb28f3d9f03ef7feec5b11b8707253815b081",
+      "summary": "**前置**：[边界文档索引](README.md) · [边界总图谱 · 知感行证名量测推](%E8%BE%B9%E7%95%8C%E6%80%BB%E5%9B%BE%E8%B0%B1%20%C2%B7%20%E7%9F%A5%E6%84%9F%E8%A1%8C%E8%AF%81%E5%90%8D%E9%87%8F%E6%B5%8B%E6%8E%A8.md) · [量的边界 · 数测度](%E9%87%8F%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%95%B0%E6%B5%8B%E5%BA%A6.md) · [测的边界 · 观验读](%E6%B5%8B%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E8%A7%82%E9%AA%8C%E8%AF%BB.md) · [推的边界 · 前规则结](%E6%8E%A8%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%89%8D%E8%A7%84%E5%88%99%E7%BB%93.md) · [感的边界 · 受觉现](%E6%84%9F%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%8F%97%E8%A7%89%E7%8E%B0.md)",
+      "title": "四界不混同 · 测量推感"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "感的边界 · 受觉现"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "〇 · 边界声明"
+        },
+        {
+          "level": 2,
+          "title": "一 · 五条感轴"
+        },
+        {
+          "level": 2,
+          "title": "二 · 完整感受流程"
+        },
+        {
+          "level": 2,
+          "title": "三 · 主定理"
+        },
+        {
+          "level": 2,
+          "title": "四 · 结论"
+        }
+      ],
+      "lines": 196,
+      "links": [
+        "README.md",
+        "%E8%BE%B9%E7%95%8C%E6%80%BB%E5%9B%BE%E8%B0%B1%20%C2%B7%20%E7%9F%A5%E6%84%9F%E8%A1%8C%E8%AF%81%E5%90%8D%E9%87%8F%E6%B5%8B%E6%8E%A8.md",
+        "%E5%8F%AF%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%84%9F%E8%A1%8C%E8%AF%81.md",
+        "../心智%20·%20从元到识.md",
+        "%E5%9B%9B%E7%95%8C%E4%B8%8D%E6%B7%B7%E5%90%8C%20%C2%B7%20%E6%B5%8B%E9%87%8F%E6%8E%A8%E6%84%9F.md"
+      ],
+      "path": "义理/边界/感的边界 · 受觉现.md",
+      "sha256": "e7e029c5cfa8471ab32a4360e103d46a159ab403a57c08ca91dc522bc01aa247",
+      "summary": "**前置**：[边界文档索引](README.md) · [边界总图谱 · 知感行证名量测推](%E8%BE%B9%E7%95%8C%E6%80%BB%E5%9B%BE%E8%B0%B1%20%C2%B7%20%E7%9F%A5%E6%84%9F%E8%A1%8C%E8%AF%81%E5%90%8D%E9%87%8F%E6%B5%8B%E6%8E%A8.md) · [可的边界 · 感行证](%E5%8F%AF%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%84%9F%E8%A1%8C%E8%AF%81.md) · [心智 · 从元到识](../心智%20·%20从元到识.md) · [四界不混同 · 测量推感](%E5%9B%9B%E7%95%8C%E4%B8%8D%E6%B7%B7%E5%90%8C%20%C2%B7%20%E6%B5%8B%E9%87%8F%E6%8E%A8%E6%84%9F.md)",
+      "title": "感的边界 · 受觉现"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "推的边界 · 前规则结"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "〇 · 边界声明"
+        },
+        {
+          "level": 2,
+          "title": "一 · 五条推轴"
+        },
+        {
+          "level": 2,
+          "title": "二 · 完整推理流程"
+        },
+        {
+          "level": 2,
+          "title": "三 · 最小推理锚点：故 / Modus Ponens"
+        },
+        {
+          "level": 2,
+          "title": "四 · 测量记录不是推断命题"
+        },
+        {
+          "level": 2,
+          "title": "五 · 主定理"
+        },
+        {
+          "level": 2,
+          "title": "六 · 结论"
+        }
+      ],
+      "lines": 249,
+      "links": [
+        "README.md",
+        "%E8%BE%B9%E7%95%8C%E6%80%BB%E5%9B%BE%E8%B0%B1%20%C2%B7%20%E7%9F%A5%E6%84%9F%E8%A1%8C%E8%AF%81%E5%90%8D%E9%87%8F%E6%B5%8B%E6%8E%A8.md",
+        "../形式逻辑%20·%20从元到推.md",
+        "%E8%AF%81%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%91%BD%E9%A2%98%E7%B3%BB%E7%BB%9F%E8%AF%81%E4%B9%A6.md",
+        "../统计%20·%20从元到测.md",
+        "%E6%B5%8B%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E8%A7%82%E9%AA%8C%E8%AF%BB.md",
+        "%E5%9B%9B%E7%95%8C%E4%B8%8D%E6%B7%B7%E5%90%8C%20%C2%B7%20%E6%B5%8B%E9%87%8F%E6%8E%A8%E6%84%9F.md"
+      ],
+      "path": "义理/边界/推的边界 · 前规则结.md",
+      "sha256": "add505480366e9a6cfd390cb7d1c436ef2c9bbf3d5d152095deed756e974c9dd",
+      "summary": "**前置**：[边界文档索引](README.md) · [边界总图谱 · 知感行证名量测推](%E8%BE%B9%E7%95%8C%E6%80%BB%E5%9B%BE%E8%B0%B1%20%C2%B7%20%E7%9F%A5%E6%84%9F%E8%A1%8C%E8%AF%81%E5%90%8D%E9%87%8F%E6%B5%8B%E6%8E%A8.md) · [形式逻辑 · 从元到推](../形式逻辑%20·%20从元到推.md) · [证的边界 · 命题系统证书](%E8%AF%81%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%91%BD%E9%A2%98%E7%B3%BB%E7%BB%9F%E8%AF%81%E4%B9%A6.md) · [统计 · 从元到测](../统计%20·%20从元到测.md) · [测的边界 · 观验读](%E6%B5%8B%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E8%A7%82%E9%AA%8C%E8%AF%BB.md) · [四界不混同 · 测量推感](%E5%9B%9B%E7%95%8C%E4%B8%8D%E6%B7%B7%E5%90%8C%20%C2%B7%20%E6%B5%8B%E9%87%8F%E6%8E%A8%E6%84%9F.md)",
+      "title": "推的边界 · 前规则结"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "测的边界 · 观验读"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "〇 · 边界声明"
+        },
+        {
+          "level": 2,
+          "title": "一 · 为什么“测”不是“量”"
+        },
+        {
+          "level": 2,
+          "title": "二 · 六条“测”轴"
+        },
+        {
+          "level": 2,
+          "title": "三 · 可观：对象进入窗口"
+        },
+        {
+          "level": 2,
+          "title": "四 · 可接：接口不是愿望"
+        },
+        {
+          "level": 2,
+          "title": "五 · 有法：测量必须有问法"
+        },
+        {
+          "level": 2,
+          "title": "六 · 已校：无参照，不成测"
+        },
+        {
+          "level": 2,
+          "title": "七 · 可读：输出必须落成读数"
+        },
+        {
+          "level": 2,
+          "title": "八 · 可记：读数要进入记录"
+        },
+        {
+          "level": 2,
+          "title": "九 · 完整测量流程"
+        },
+        {
+          "level": 2,
+          "title": "十 · 测止于记录，推另起"
+        },
+        {
+          "level": 2,
+          "title": "十一 · 主定理"
+        },
+        {
+          "level": 2,
+          "title": "十二 · 结论"
+        }
+      ],
+      "lines": 516,
+      "links": [
+        "README.md",
+        "%E8%BE%B9%E7%95%8C%E6%80%BB%E5%9B%BE%E8%B0%B1%20%C2%B7%20%E7%9F%A5%E6%84%9F%E8%A1%8C%E8%AF%81%E5%90%8D%E9%87%8F%E6%B5%8B%E6%8E%A8.md",
+        "%E5%9B%9B%E7%95%8C%E4%B8%8D%E6%B7%B7%E5%90%8C%20%C2%B7%20%E6%B5%8B%E9%87%8F%E6%8E%A8%E6%84%9F.md",
+        "%E9%87%8F%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%95%B0%E6%B5%8B%E5%BA%A6.md",
+        "%E6%8E%A8%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%89%8D%E8%A7%84%E5%88%99%E7%BB%93.md",
+        "%E6%84%9F%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%8F%97%E8%A7%89%E7%8E%B0.md",
+        "../统计%20·%20从元到测.md",
+        "../量子物理语言%20·%20从虚到测.md",
+        "../量子时空互补%20·%20从一到测.md"
+      ],
+      "path": "义理/边界/测的边界 · 观验读.md",
+      "sha256": "9a5f51c6da0d6d2d05cfb44961169b7eb1e46d921fc37def812e80d3e1e56f64",
+      "summary": "**前置**：[边界文档索引](README.md) · [边界总图谱 · 知感行证名量测推](%E8%BE%B9%E7%95%8C%E6%80%BB%E5%9B%BE%E8%B0%B1%20%C2%B7%20%E7%9F%A5%E6%84%9F%E8%A1%8C%E8%AF%81%E5%90%8D%E9%87%8F%E6%B5%8B%E6%8E%A8.md) · [四界不混同 · 测量推感](%E5%9B%9B%E7%95%8C%E4%B8%8D%E6%B7%B7%E5%90%8C%20%C2%B7%20%E6%B5%8B%E9%87%8F%E6%8E%A8%E6%84%9F.md) · [量的边界 · 数测度](%E9%87%8F%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%95%B0%E6%B5%8B%E5%BA%A6.md) · [推的边界 · 前规则结](%E6%8E%A8%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%89%8D%E8%A7%84%E5%88%99%E7%BB%93.md) · [感的边界 · 受觉现](%E6%84%9F%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%8F%97%E8%A7%89%E7%8E%B0.md) · [统计 · 从元到测](../统计%20·%20从元到测.md) · [量子物理语言 · 从虚到测](../量子物理语言%20·%20从虚到测.md) · [量子时空互补 · 从一到测](../量子时空互补%20·%20从一到测.md)",
+      "title": "测的边界 · 观验读"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "知的边界 · 明辨述"
+        },
+        {
+          "level": 2,
+          "title": "〇 · 边界声明"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 主映射"
+        },
+        {
+          "level": 2,
+          "title": "二 · 为什么知不是名"
+        },
+        {
+          "level": 2,
+          "title": "三 · 为什么知不是证"
+        },
+        {
+          "level": 2,
+          "title": "四 · 主定理"
+        }
+      ],
+      "lines": 157,
+      "links": [
+        "README.md",
+        "%E8%BE%B9%E7%95%8C%E6%80%BB%E5%9B%BE%E8%B0%B1%20%C2%B7%20%E7%9F%A5%E6%84%9F%E8%A1%8C%E8%AF%81%E5%90%8D%E9%87%8F%E6%B5%8B%E6%8E%A8.md",
+        "%E5%8F%AF%E7%9F%A5%E8%BE%B9%E7%95%8C%20%C2%B7%20%E8%AF%AD%E8%A8%80%E4%B8%8E%E7%90%86.md",
+        "%E5%8F%AF%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%84%9F%E8%A1%8C%E8%AF%81.md",
+        "%E5%90%8D%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%8C%87%E7%A7%B0%E5%AE%9A%E5%90%8D.md"
+      ],
+      "path": "义理/边界/知的边界 · 明辨述.md",
+      "sha256": "bcbfe26d75ce3aff6b6ef71b48ab36817d691c841af264e0042190b7c34f0834",
+      "summary": "**前置**：[边界文档索引](README.md) · [边界总图谱 · 知感行证名量测推](%E8%BE%B9%E7%95%8C%E6%80%BB%E5%9B%BE%E8%B0%B1%20%C2%B7%20%E7%9F%A5%E6%84%9F%E8%A1%8C%E8%AF%81%E5%90%8D%E9%87%8F%E6%B5%8B%E6%8E%A8.md) · [可知边界 · 语言与理](%E5%8F%AF%E7%9F%A5%E8%BE%B9%E7%95%8C%20%C2%B7%20%E8%AF%AD%E8%A8%80%E4%B8%8E%E7%90%86.md) · [可的边界 · 感行证](%E5%8F%AF%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%84%9F%E8%A1%8C%E8%AF%81.md) · [名的边界 · 指称定名](%E5%90%8D%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%8C%87%E7%A7%B0%E5%AE%9A%E5%90%8D.md)",
+      "title": "知的边界 · 明辨述"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "统一边界 · 从理到文"
+        },
+        {
+          "level": 2,
+          "title": "〇 · 边界声明"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 统一是什么"
+        },
+        {
+          "level": 2,
+          "title": "二 · 为什么统一不能是信息描述"
+        },
+        {
+          "level": 2,
+          "title": "三 · 理的极限是什么"
+        },
+        {
+          "level": 2,
+          "title": "四 · 文字表达的极限是什么"
+        },
+        {
+          "level": 2,
+          "title": "五 · 为什么理限与文限一致"
+        },
+        {
+          "level": 2,
+          "title": "六 · 统一、理、文的三层关系"
+        },
+        {
+          "level": 2,
+          "title": "七 · 对“证明”的重新定位"
+        },
+        {
+          "level": 2,
+          "title": "八 · 主定理"
+        },
+        {
+          "level": 2,
+          "title": "九 · 结论"
+        },
+        {
+          "level": 2,
+          "title": "十 · Lean 证明入口"
+        }
+      ],
+      "lines": 419,
+      "links": [
+        "README.md",
+        "../量子时空互补%20·%20从一到测.md",
+        "../K_完备性审计.md",
+        "../L_文道一也_自释与微核.md",
+        "../形式逻辑%20·%20从元到推.md",
+        "../统计%20·%20从元到测.md"
+      ],
+      "path": "义理/边界/统一边界 · 从理到文.md",
+      "sha256": "1c5af0798438229c4b2bda4a12e77ef53f5d1b6ac9ff27d56915f062837604ce",
+      "summary": "**前置**：[边界文档索引](README.md) · [量子时空互补 · 从一到测](../量子时空互补%20·%20从一到测.md) · [K 完备性审计](../K_完备性审计.md) · [L 文道一也](../L_文道一也_自释与微核.md) · [形式逻辑 · 从元到推](../形式逻辑%20·%20从元到推.md) · [统计 · 从元到测](../统计%20·%20从元到测.md)",
+      "title": "统一边界 · 从理到文"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "行的边界 · 能境作效"
+        },
+        {
+          "level": 2,
+          "title": "〇 · 边界声明"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 主映射"
+        },
+        {
+          "level": 2,
+          "title": "二 · 为什么行不是知"
+        },
+        {
+          "level": 2,
+          "title": "三 · 为什么行不是证"
+        },
+        {
+          "level": 2,
+          "title": "四 · 主定理"
+        }
+      ],
+      "lines": 140,
+      "links": [
+        "README.md",
+        "%E8%BE%B9%E7%95%8C%E6%80%BB%E5%9B%BE%E8%B0%B1%20%C2%B7%20%E7%9F%A5%E6%84%9F%E8%A1%8C%E8%AF%81%E5%90%8D%E9%87%8F%E6%B5%8B%E6%8E%A8.md",
+        "%E5%8F%AF%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%84%9F%E8%A1%8C%E8%AF%81.md",
+        "../动力%20·%20从元到行.md",
+        "%E7%9F%A5%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%98%8E%E8%BE%A8%E8%BF%B0.md"
+      ],
+      "path": "义理/边界/行的边界 · 能境作效.md",
+      "sha256": "82891193453024bbdaf178133f337eec066fb2f14d799db70c20a6dfd3dc4692",
+      "summary": "**前置**：[边界文档索引](README.md) · [边界总图谱 · 知感行证名量测推](%E8%BE%B9%E7%95%8C%E6%80%BB%E5%9B%BE%E8%B0%B1%20%C2%B7%20%E7%9F%A5%E6%84%9F%E8%A1%8C%E8%AF%81%E5%90%8D%E9%87%8F%E6%B5%8B%E6%8E%A8.md) · [可的边界 · 感行证](%E5%8F%AF%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%84%9F%E8%A1%8C%E8%AF%81.md) · [动力 · 从元到行](../动力%20·%20从元到行.md) · [知的边界 · 明辨述](%E7%9F%A5%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%98%8E%E8%BE%A8%E8%BF%B0.md)",
+      "title": "行的边界 · 能境作效"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "证的边界 · 命题系统证书"
+        },
+        {
+          "level": 2,
+          "title": "〇 · 边界声明"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 主映射"
+        },
+        {
+          "level": 2,
+          "title": "二 · 为什么证不是一般推"
+        },
+        {
+          "level": 2,
+          "title": "三 · 为什么证不是知"
+        },
+        {
+          "level": 2,
+          "title": "四 · 主定理"
+        }
+      ],
+      "lines": 140,
+      "links": [
+        "README.md",
+        "%E8%BE%B9%E7%95%8C%E6%80%BB%E5%9B%BE%E8%B0%B1%20%C2%B7%20%E7%9F%A5%E6%84%9F%E8%A1%8C%E8%AF%81%E5%90%8D%E9%87%8F%E6%B5%8B%E6%8E%A8.md",
+        "%E5%8F%AF%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%84%9F%E8%A1%8C%E8%AF%81.md",
+        "../形式逻辑%20·%20从元到推.md",
+        "%E6%8E%A8%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%89%8D%E8%A7%84%E5%88%99%E7%BB%93.md"
+      ],
+      "path": "义理/边界/证的边界 · 命题系统证书.md",
+      "sha256": "b7016acd0a5d6e43ad06eb3d8ab45fff8e906b5b789271fffa99aa5c1762ad34",
+      "summary": "**前置**：[边界文档索引](README.md) · [边界总图谱 · 知感行证名量测推](%E8%BE%B9%E7%95%8C%E6%80%BB%E5%9B%BE%E8%B0%B1%20%C2%B7%20%E7%9F%A5%E6%84%9F%E8%A1%8C%E8%AF%81%E5%90%8D%E9%87%8F%E6%B5%8B%E6%8E%A8.md) · [可的边界 · 感行证](%E5%8F%AF%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%84%9F%E8%A1%8C%E8%AF%81.md) · [形式逻辑 · 从元到推](../形式逻辑%20·%20从元到推.md) · [推的边界 · 前规则结](%E6%8E%A8%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%89%8D%E8%A7%84%E5%88%99%E7%BB%93.md)",
+      "title": "证的边界 · 命题系统证书"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "边界总图谱 · 知感行证名量测推"
+        },
+        {
+          "level": 2,
+          "title": "〇 · 边界声明"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 八界表"
+        },
+        {
+          "level": 2,
+          "title": "二 · 不是线性阶梯"
+        },
+        {
+          "level": 2,
+          "title": "三 · Lean 中的总图谱"
+        },
+        {
+          "level": 2,
+          "title": "四 · 读法"
+        },
+        {
+          "level": 2,
+          "title": "五 · 验证"
+        }
+      ],
+      "lines": 182,
+      "links": [
+        "README.md",
+        "%E7%BB%9F%E4%B8%80%E8%BE%B9%E7%95%8C%20%C2%B7%20%E4%BB%8E%E7%90%86%E5%88%B0%E6%96%87.md",
+        "%E5%8F%AF%E7%9F%A5%E8%BE%B9%E7%95%8C%20%C2%B7%20%E8%AF%AD%E8%A8%80%E4%B8%8E%E7%90%86.md",
+        "%E5%8F%AF%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%84%9F%E8%A1%8C%E8%AF%81.md",
+        "%E5%9B%9B%E7%95%8C%E4%B8%8D%E6%B7%B7%E5%90%8C%20%C2%B7%20%E6%B5%8B%E9%87%8F%E6%8E%A8%E6%84%9F.md",
+        "%E7%9F%A5%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%98%8E%E8%BE%A8%E8%BF%B0.md",
+        "%E6%84%9F%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%8F%97%E8%A7%89%E7%8E%B0.md",
+        "%E8%A1%8C%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E8%83%BD%E5%A2%83%E4%BD%9C%E6%95%88.md",
+        "%E8%AF%81%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%91%BD%E9%A2%98%E7%B3%BB%E7%BB%9F%E8%AF%81%E4%B9%A6.md",
+        "%E5%90%8D%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%8C%87%E7%A7%B0%E5%AE%9A%E5%90%8D.md",
+        "%E9%87%8F%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%95%B0%E6%B5%8B%E5%BA%A6.md",
+        "%E6%B5%8B%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E8%A7%82%E9%AA%8C%E8%AF%BB.md",
+        "%E6%8E%A8%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%89%8D%E8%A7%84%E5%88%99%E7%BB%93.md"
+      ],
+      "path": "义理/边界/边界总图谱 · 知感行证名量测推.md",
+      "sha256": "71a65fe52255dca8ca1c2d9c4682151795f734595bed3e2fbd2223dadc455b6c",
+      "summary": "**前置**：[边界文档索引](README.md) · [统一边界 · 从理到文](%E7%BB%9F%E4%B8%80%E8%BE%B9%E7%95%8C%20%C2%B7%20%E4%BB%8E%E7%90%86%E5%88%B0%E6%96%87.md) · [可知边界 · 语言与理](%E5%8F%AF%E7%9F%A5%E8%BE%B9%E7%95%8C%20%C2%B7%20%E8%AF%AD%E8%A8%80%E4%B8%8E%E7%90%86.md) · [可的边界 · 感行证](%E5%8F%AF%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%84%9F%E8%A1%8C%E8%AF%81.md) · [四界不混同 · 测量推感](%E5%9B%9B%E7%95%8C%E4%B8%8D%E6%B7%B7%E5%90%8C%20%C2%B7%20%E6%B5%8B%E9%87%8F%E6%8E%A8%E6%84%9F.md)",
+      "title": "边界总图谱 · 知感行证名量测推"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "量的边界 · 数测度"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "〇 · 边界声明"
+        },
+        {
+          "level": 2,
+          "title": "一 · 为什么“量”不能只作一个词"
+        },
+        {
+          "level": 2,
+          "title": "二 · 数量：值，不是测量本身"
+        },
+        {
+          "level": 2,
+          "title": "三 · 度量：尺度，不是概率"
+        },
+        {
+          "level": 2,
+          "title": "四 · 测度：事件域、可加、归一"
+        },
+        {
+          "level": 2,
+          "title": "五 · 测量：接口输出，不等于测度可测"
+        },
+        {
+          "level": 2,
+          "title": "六 · Born rule：从概率幅到测量权重"
+        },
+        {
+          "level": 2,
+          "title": "七 · 量词：没有论域，就没有全称"
+        },
+        {
+          "level": 2,
+          "title": "八 · 可测 / 不可测的承接"
+        },
+        {
+          "level": 2,
+          "title": "九 · 主定理"
+        },
+        {
+          "level": 2,
+          "title": "十 · 结论"
+        }
+      ],
+      "lines": 487,
+      "links": [
+        "README.md",
+        "%E8%BE%B9%E7%95%8C%E6%80%BB%E5%9B%BE%E8%B0%B1%20%C2%B7%20%E7%9F%A5%E6%84%9F%E8%A1%8C%E8%AF%81%E5%90%8D%E9%87%8F%E6%B5%8B%E6%8E%A8.md",
+        "%E5%9B%9B%E7%95%8C%E4%B8%8D%E6%B7%B7%E5%90%8C%20%C2%B7%20%E6%B5%8B%E9%87%8F%E6%8E%A8%E6%84%9F.md",
+        "%E6%B5%8B%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E8%A7%82%E9%AA%8C%E8%AF%BB.md",
+        "%E6%8E%A8%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%89%8D%E8%A7%84%E5%88%99%E7%BB%93.md",
+        "%E6%84%9F%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%8F%97%E8%A7%89%E7%8E%B0.md",
+        "%E5%90%8D%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%8C%87%E7%A7%B0%E5%AE%9A%E5%90%8D.md",
+        "../统计%20·%20从元到测.md",
+        "../量子物理语言%20·%20从虚到测.md",
+        "../量子时空互补%20·%20从一到测.md",
+        "%E5%8F%AF%E7%9F%A5%E8%BE%B9%E7%95%8C%20%C2%B7%20%E8%AF%AD%E8%A8%80%E4%B8%8E%E7%90%86.md",
+        "%E5%8F%AF%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%84%9F%E8%A1%8C%E8%AF%81.md",
+        "%E6%B5%8B%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E8%A7%82%E9%AA%8C%E8%AF%BB.md"
+      ],
+      "path": "义理/边界/量的边界 · 数测度.md",
+      "sha256": "0f58baf44cb1cd3c81848c7d73e2b580cc89fa97d38c186206f14ebdec5c6b06",
+      "summary": "**前置**：[边界文档索引](README.md) · [边界总图谱 · 知感行证名量测推](%E8%BE%B9%E7%95%8C%E6%80%BB%E5%9B%BE%E8%B0%B1%20%C2%B7%20%E7%9F%A5%E6%84%9F%E8%A1%8C%E8%AF%81%E5%90%8D%E9%87%8F%E6%B5%8B%E6%8E%A8.md) · [四界不混同 · 测量推感](%E5%9B%9B%E7%95%8C%E4%B8%8D%E6%B7%B7%E5%90%8C%20%C2%B7%20%E6%B5%8B%E9%87%8F%E6%8E%A8%E6%84%9F.md) · [测的边界 · 观验读](%E6%B5%8B%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E8%A7%82%E9%AA%8C%E8%AF%BB.md) · [推的边界 · 前规则结](%E6%8E%A8%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%89%8D%E8%A7%84%E5%88%99%E7%BB%93.md) · [感的边界 · 受觉现](%E6%84%9F%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E5%8F%97%E8%A7%89%E7%8E%B0.md) · [名的边界 · 指称定名](%E5%90%8D%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%8C%87%E7%A7%B0%E5%AE%9A%E5%90%8D.md) · [统计 · 从元到测](../统计%20·%20从元到测.md) · [量子物理语言 · 从虚到测](../量子物理语言%20·%20从虚到测.md) · [量子时空互补 · 从一到测](../量子时空互补%20·%20从一到测.md) · [可知边界 · 语言与理](%E5%8F%AF%E7%9F%A5%E8%BE%B9%E7%95%8C%20%C2%B7%20%E8%AF%AD%E8%A8%80%E4%B8%8E%E7%90%86.md) · [可的边界 · 感行证](%E5%8F%AF%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%84%9F%E8%A1%8C%E8%AF%81.md)",
+      "title": "量的边界 · 数测度"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "逐步统一候选摘要 · Markov桥S8"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 失败记录"
+        },
+        {
+          "level": 2,
+          "title": "二 · Validation Command"
+        }
+      ],
+      "lines": 114,
+      "links": [
+        "Markov因果桥%20·%20大统一最小验证构造.md",
+        "作用量相位律候选%20·%20Markov桥S5r.md",
+        "观测账本候选%20·%20Markov桥S5q.md",
+        "有限概率归一化候选%20·%20Markov桥S9.md",
+        "归一化质量求和候选%20·%20Markov桥S10.md",
+        "Born权重条件归一候选%20·%20Markov桥S11.md",
+        "Born分布边界候选%20·%20Markov桥S12.md",
+        "channelCompose候选%20·%20Markov桥S13.md",
+        "channelCompose结合律候选%20·%20Markov桥S14.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
+      ],
+      "path": "义理/逐步统一候选摘要 · Markov桥S8.md",
+      "sha256": "48bac3e0dfa547b6affecc73655020a77ae6fbdcc6be25f0557c4dae75d5205c",
+      "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [作用量相位律候选 · Markov桥S5r](作用量相位律候选%20·%20Markov桥S5r.md) · [观测账本候选 · Markov桥S5q](观测账本候选%20·%20Markov桥S5q.md) · [有限概率归一化候选 · Markov桥S9](有限概率归一化候选%20·%20Markov桥S9.md) · [归一化质量求和候选 · Markov桥S10](归一化质量求和候选%20·%20Markov桥S10.md) · [Born权重条件归一候选 · Markov桥S11](Born权重条件归一候选%20·%20Markov桥S11.md) · [Born分布边界候选 · Markov桥S12](Born分布边界候选%20·%20Markov桥S12.md) · [channelCompose候选 · Markov桥S13](channelCompose候选%20·%20Markov桥S13.md) · [channelCompose结合律候选 · Markov桥S14](channelCompose结合律候选%20·%20Markov桥S14.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "逐步统一候选摘要 · Markov桥S8"
     },
     {
       "headings": [
@@ -11496,6 +14253,368 @@
       "sha256": "ede3f40acf50f5f8c942dc620127bd2231cef328055e39619a099b696a639b49",
       "summary": "**配套形式化**：",
       "title": "道桥接：ProcessAligned → Dao → ShengshengBuxi"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "量子与相对论整合方向 · 从桥到新理论"
+        },
+        {
+          "level": 2,
+          "title": "〇 · 边界声明"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 为什么不是三条旧路"
+        },
+        {
+          "level": 2,
+          "title": "二 · 中介层应是什么"
+        },
+        {
+          "level": 2,
+          "title": "三 · 从我们的框架看，桥在“测”"
+        },
+        {
+          "level": 2,
+          "title": "四 · 中介理论需要三层投影"
+        },
+        {
+          "level": 2,
+          "title": "五 · 研究路线图"
+        },
+        {
+          "level": 3,
+          "title": "1. 固定中介载体"
+        },
+        {
+          "level": 3,
+          "title": "2. 定义双投影"
+        },
+        {
+          "level": 3,
+          "title": "3. 写兼容律"
+        },
+        {
+          "level": 3,
+          "title": "4. 做双极限恢复"
+        },
+        {
+          "level": 3,
+          "title": "5. 给出新预言"
+        },
+        {
+          "level": 3,
+          "title": "6. 回到“测”"
+        },
+        {
+          "level": 2,
+          "title": "六 · 主定理入口"
+        }
+      ],
+      "lines": 338,
+      "links": [
+        "文构造完备与直相加边界.md",
+        "量子与相对论直统一不可能%20·%20当前语言NoGo.md",
+        "量子时空互补%20·%20从一到测.md",
+        "量子物理语言%20·%20从虚到测.md",
+        "统计%20·%20从元到测.md",
+        "边界/%E7%BB%9F%E4%B8%80%E8%BE%B9%E7%95%8C%20%C2%B7%20%E4%BB%8E%E7%90%86%E5%88%B0%E6%96%87.md"
+      ],
+      "path": "义理/量子与相对论整合方向 · 从桥到新理论.md",
+      "sha256": "16d36bd3456b993d94dbc57f5fccc9eea50af69ce8205d03c6063f5edb517d48",
+      "summary": "**前置**：[文构造完备与直相加边界](文构造完备与直相加边界.md) · [量子与相对论直统一不可能 · 当前语言NoGo](量子与相对论直统一不可能%20·%20当前语言NoGo.md) · [量子时空互补 · 从一到测](量子时空互补%20·%20从一到测.md) · [量子物理语言 · 从虚到测](量子物理语言%20·%20从虚到测.md) · [统计 · 从元到测](统计%20·%20从元到测.md) · [统一边界 · 从理到文](边界/%E7%BB%9F%E4%B8%80%E8%BE%B9%E7%95%8C%20%C2%B7%20%E4%BB%8E%E7%90%86%E5%88%B0%E6%96%87.md)",
+      "title": "量子与相对论整合方向 · 从桥到新理论"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "量子与相对论直相加边界 · Tagged语言非坍缩"
+        },
+        {
+          "level": 2,
+          "title": "〇 · 边界声明"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 把“现成两套语言相加”说清楚"
+        },
+        {
+          "level": 2,
+          "title": "二 · 直接统一项为何不存在"
+        },
+        {
+          "level": 2,
+          "title": "三 · 同根不等于同一"
+        },
+        {
+          "level": 2,
+          "title": "四 · 这个边界没有证明什么"
+        },
+        {
+          "level": 2,
+          "title": "五 · 主定理入口"
+        }
+      ],
+      "lines": 220,
+      "links": [
+        "文构造完备与直相加边界.md",
+        "量子与相对论整合方向%20·%20从桥到新理论.md",
+        "量子时空互补%20·%20从一到测.md",
+        "量子物理语言%20·%20从虚到测.md",
+        "边界/%E7%BB%9F%E4%B8%80%E8%BE%B9%E7%95%8C%20%C2%B7%20%E4%BB%8E%E7%90%86%E5%88%B0%E6%96%87.md",
+        "物理%20·%20从元到象.md",
+        "量子与相对论整合方向%20·%20从桥到新理论.md",
+        "量子与相对论整合方向%20·%20从桥到新理论.md",
+        "文构造完备与直相加边界.md",
+        "量子与相对论整合方向%20·%20从桥到新理论.md"
+      ],
+      "path": "义理/量子与相对论直统一不可能 · 当前语言NoGo.md",
+      "sha256": "f7d64813708b7939c1d2d51d56dd48dd1726b29e001fcc392bd5952f014e6090",
+      "summary": "**前置**：[文构造完备与直相加边界](文构造完备与直相加边界.md) · [量子与相对论整合方向 · 从桥到新理论](量子与相对论整合方向%20·%20从桥到新理论.md) · [量子时空互补 · 从一到测](量子时空互补%20·%20从一到测.md) · [量子物理语言 · 从虚到测](量子物理语言%20·%20从虚到测.md) · [统一边界 · 从理到文](边界/%E7%BB%9F%E4%B8%80%E8%BE%B9%E7%95%8C%20%C2%B7%20%E4%BB%8E%E7%90%86%E5%88%B0%E6%96%87.md) · [物理 · 从元到象](物理%20·%20从元到象.md)",
+      "title": "量子与相对论直相加边界 · Tagged语言非坍缩"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "量子时空互补 · 从一到测"
+        },
+        {
+          "level": 2,
+          "title": "〇 · 边界声明"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 总论：一有二面"
+        },
+        {
+          "level": 2,
+          "title": "二 · 主映射表"
+        },
+        {
+          "level": 2,
+          "title": "三 · 量子空间不是普通空间"
+        },
+        {
+          "level": 2,
+          "title": "四 · 为什么当前不能直接“统一”"
+        },
+        {
+          "level": 2,
+          "title": "五 · 测量极限：把一/实虚压成可读结果"
+        },
+        {
+          "level": 2,
+          "title": "六 · 八卦态为什么是测量极限的一种"
+        },
+        {
+          "level": 2,
+          "title": "七 · 与 Born rule 的关系"
+        },
+        {
+          "level": 2,
+          "title": "八 · 结论"
+        },
+        {
+          "level": 2,
+          "title": "九 · Lean 证明入口"
+        }
+      ],
+      "lines": 374,
+      "links": [
+        "文构造完备与直相加边界.md",
+        "量子与相对论直统一不可能%20·%20当前语言NoGo.md",
+        "量子与相对论整合方向%20·%20从桥到新理论.md",
+        "量子物理语言%20·%20从虚到测.md",
+        "边界/%E6%B5%8B%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E8%A7%82%E9%AA%8C%E8%AF%BB.md",
+        "边界/%E9%87%8F%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%95%B0%E6%B5%8B%E5%BA%A6.md",
+        "物理%20·%20从元到象.md",
+        "边界/%E7%BB%9F%E4%B8%80%E8%BE%B9%E7%95%8C%20%C2%B7%20%E4%BB%8E%E7%90%86%E5%88%B0%E6%96%87.md",
+        "F_物理现象学.md",
+        "统计%20·%20从元到测.md",
+        "I_八卦全集.md",
+        "量子与相对论直统一不可能%20·%20当前语言NoGo.md"
+      ],
+      "path": "义理/量子时空互补 · 从一到测.md",
+      "sha256": "c94b07fea8a8ba956b6e6f0ef121d305cba4b144b1bf28a86c5b14dac7a1f2fa",
+      "summary": "**前置**：[文构造完备与直相加边界](文构造完备与直相加边界.md) · [量子与相对论直统一不可能 · 当前语言NoGo](量子与相对论直统一不可能%20·%20当前语言NoGo.md) · [量子与相对论整合方向 · 从桥到新理论](量子与相对论整合方向%20·%20从桥到新理论.md) · [量子物理语言 · 从虚到测](量子物理语言%20·%20从虚到测.md) · [测的边界 · 观验读](边界/%E6%B5%8B%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E8%A7%82%E9%AA%8C%E8%AF%BB.md) · [量的边界 · 数测度](边界/%E9%87%8F%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%95%B0%E6%B5%8B%E5%BA%A6.md) · [物理 · 从元到象](物理%20·%20从元到象.md) · [统一边界 · 从理到文](边界/%E7%BB%9F%E4%B8%80%E8%BE%B9%E7%95%8C%20%C2%B7%20%E4%BB%8E%E7%90%86%E5%88%B0%E6%96%87.md) · [F 物理现象学](F_物理现象学.md) · [测](统计%20·%20从元到测.md) · [I 八卦全集](I_八卦全集.md)",
+      "title": "量子时空互补 · 从一到测"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "量子物理语言 · 从虚到测"
+        },
+        {
+          "level": 2,
+          "title": "〇 · 边界声明"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 总论：量子语言为何强"
+        },
+        {
+          "level": 2,
+          "title": "二 · 主映射表"
+        },
+        {
+          "level": 2,
+          "title": "三 · 第一洞见：虚不是无，而是可投影的结构"
+        },
+        {
+          "level": 2,
+          "title": "四 · 第二洞见：测量不是旁观，而是开闭转换"
+        },
+        {
+          "level": 2,
+          "title": "五 · 第三洞见：波粒二象不是二选一，而是互补显现"
+        },
+        {
+          "level": 2,
+          "title": "六 · 第四洞见：非对易是“认识顺序”的硬边界"
+        },
+        {
+          "level": 2,
+          "title": "七 · 第五洞见：纠缠说明“部分”不是总能先于“整体”"
+        },
+        {
+          "level": 2,
+          "title": "八 · 第六洞见：量子化是“连续可能”经闸口落成离散值"
+        },
+        {
+          "level": 2,
+          "title": "九 · 与易 / 八卦层的严格接口"
+        },
+        {
+          "level": 3,
+          "title": "9.1 Yao ≅ qubit computational basis"
+        },
+        {
+          "level": 3,
+          "title": "9.2 Trigram ≅ 3-qubit basis"
+        },
+        {
+          "level": 3,
+          "title": "9.3 cuo ≅ X⊗X⊗X"
+        },
+        {
+          "level": 3,
+          "title": "9.4 SU(3) 的警戒线"
+        },
+        {
+          "level": 2,
+          "title": "十 · 量子语言激活的框架轴"
+        },
+        {
+          "level": 2,
+          "title": "十一 · 一个框架式推导：从虚到测"
+        },
+        {
+          "level": 2,
+          "title": "十二 · 另一个推导：非对易为何是边界"
+        },
+        {
+          "level": 2,
+          "title": "十三 · 量子语言不该被怎样滥用"
+        },
+        {
+          "level": 2,
+          "title": "十四 · 与本仓现有文件的关系"
+        },
+        {
+          "level": 2,
+          "title": "十五 · 未纳入本轮的形式化层"
+        },
+        {
+          "level": 2,
+          "title": "十六 · 总结"
+        }
+      ],
+      "lines": 585,
+      "links": [
+        "边界/%E6%B5%8B%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E8%A7%82%E9%AA%8C%E8%AF%BB.md",
+        "边界/%E9%87%8F%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%95%B0%E6%B5%8B%E5%BA%A6.md",
+        "物理%20·%20从元到象.md",
+        "量子时空互补%20·%20从一到测.md",
+        "F_物理现象学.md",
+        "G_完整算子系统_八卦互通与归一.md",
+        "统计%20·%20从元到测.md",
+        "类与映%20·%20从元到映.md"
+      ],
+      "path": "义理/量子物理语言 · 从虚到测.md",
+      "sha256": "6885933aedc931a938a8cf124619626c1a74315a660f208af40edc9a28e01e40",
+      "summary": "**前置**：[测的边界 · 观验读](边界/%E6%B5%8B%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E8%A7%82%E9%AA%8C%E8%AF%BB.md) · [量的边界 · 数测度](边界/%E9%87%8F%E7%9A%84%E8%BE%B9%E7%95%8C%20%C2%B7%20%E6%95%B0%E6%B5%8B%E5%BA%A6.md) · [物理 · 从元到象](物理%20·%20从元到象.md) · [量子时空互补 · 从一到测](量子时空互补%20·%20从一到测.md) · [F 物理现象学](F_物理现象学.md) · [G 算子系统](G_完整算子系统_八卦互通与归一.md) · [测](统计%20·%20从元到测.md) · [类](类与映%20·%20从元到映.md)",
+      "title": "量子物理语言 · 从虚到测"
+    },
+    {
+      "headings": [
+        {
+          "level": 1,
+          "title": "非零路径振幅候选 · Markov桥S5b"
+        },
+        {
+          "level": 2,
+          "title": "〇 · Claim Block"
+        },
+        {
+          "level": 2,
+          "title": "〇一 · 边界声明"
+        },
+        {
+          "level": 2,
+          "title": "〇二 · 完成度审计"
+        },
+        {
+          "level": 2,
+          "title": "一 · 为什么这一步是最省力推进"
+        },
+        {
+          "level": 2,
+          "title": "二 · indicator skeleton 的读法"
+        },
+        {
+          "level": 2,
+          "title": "三 · 下一步"
+        },
+        {
+          "level": 2,
+          "title": "四 · Validation Command"
+        }
+      ],
+      "lines": 172,
+      "links": [
+        "Markov因果桥%20·%20大统一最小验证构造.md",
+        "双路径相消候选%20·%20Markov桥S5c.md",
+        "干涉与测量律候选%20·%20Markov桥S5.md",
+        "经典Markov与量子振幅分层%20·%20Markov桥S4.md",
+        "路径组合与因果约束%20·%20Markov桥S3.md",
+        "../formal/SSBX/notes/unification-stepwise-plan.md",
+        "../formal/SSBX/notes/markov-causal-bridge-verification-plan.md"
+      ],
+      "path": "义理/非零路径振幅候选 · Markov桥S5b.md",
+      "sha256": "8613bcbd4d2b51bab25b6c6d972e61b62d9746d62efdac8db9a5cf3febf0251e",
+      "summary": "**前置**：[Markov因果桥 · 大统一最小验证构造](Markov因果桥%20·%20大统一最小验证构造.md) · [双路径相消候选 · Markov桥S5c](双路径相消候选%20·%20Markov桥S5c.md) · [干涉与测量律候选 · Markov桥S5](干涉与测量律候选%20·%20Markov桥S5.md) · [经典Markov与量子振幅分层 · Markov桥S4](经典Markov与量子振幅分层%20·%20Markov桥S4.md) · [路径组合与因果约束 · Markov桥S3](路径组合与因果约束%20·%20Markov桥S3.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)",
+      "title": "非零路径振幅候选 · Markov桥S5b"
     },
     {
       "headings": [

@@ -227,16 +227,17 @@ structure SemanticLowerBoundRow where
 /--
 Current lower-bound audit for theorem families:
 
-* 3 exact cell-transform families: 错 / 综 / 互, with `T_6` as a
-  conservative alias for the `错`/`hexCuo` cell-level family.
+* 10 exact cell-transform families: identity, next/prev, 错 / 综 / 互,
+  cuo-zong, and three line flips; equivalently the V4 transforms,
+  single-yao flips, identity, and mod-64 successor/predecessor.
 * 7 concrete `Cell192` reachability generators: six line flips plus one time edge.
-* 12 BaguaWen L0 instruction clauses.
+* 13 BaguaWen L0 instruction clauses.
 * 27 core text-level semantic families from the parameterized kernel draft.
 -/
 def semanticLowerBoundRows : List SemanticLowerBoundRow :=
-  [ { kind := .exactCellTransformFamilies, scope := 3 }
+  [ { kind := .exactCellTransformFamilies, scope := 10 }
   , { kind := .cell192ReachabilityGenerators, scope := 7 }
-  , { kind := .l0InstructionClauses, scope := 12 }
+  , { kind := .l0InstructionClauses, scope := 13 }
   , { kind := .coreTextSemanticFamilies, scope := 27 }
   ]
 
@@ -245,7 +246,7 @@ theorem semanticLowerBoundRows_length :
   native_decide
 
 theorem semanticLowerBoundRows_scopes :
-    semanticLowerBoundRows.map (·.scope) = [3, 7, 12, 27] := by
+    semanticLowerBoundRows.map (·.scope) = [10, 7, 13, 27] := by
   native_decide
 
 theorem parameterizedSemanticFamilies_lt_operatorCellGrid :
@@ -283,7 +284,7 @@ def functionalCompletionRows : List CompletionRow :=
   , { layer := .hexagramGapPromotions, mark := .complete, scope := 25 }
   , { layer := .hexagramGapPolicies, mark := .tracked, scope := 31 }
   , { layer := .exactSignatureSeeds, mark := .tracked, scope := 14 }
-  , { layer := .cellTransformFamilyLaws, mark := .tracked, scope := 3 }
+  , { layer := .cellTransformFamilyLaws, mark := .tracked, scope := 10 }
   , { layer := .semanticLowerBoundAudit, mark := .tracked, scope := 4 }
   ]
 
@@ -329,7 +330,7 @@ theorem functionalCompletionTrackedRows_eq :
     functionalCompletionTrackedRows =
       [ { layer := .hexagramGapPolicies, mark := .tracked, scope := 31 }
       , { layer := .exactSignatureSeeds, mark := .tracked, scope := 14 }
-      , { layer := .cellTransformFamilyLaws, mark := .tracked, scope := 3 }
+      , { layer := .cellTransformFamilyLaws, mark := .tracked, scope := 10 }
       , { layer := .semanticLowerBoundAudit, mark := .tracked, scope := 4 }
       ] := by
   native_decide
@@ -392,19 +393,19 @@ theorem functional_completion_summary :
     ∧ fullOperatorSignatures.length = 371
     ∧ seedOverrideSignatureRows.length = 14
     ∧ catalogueShapeSignatureRows.length = 357
-    ∧ cellTransformKinds.length = 3
-    ∧ cellTransformOperatorIds.length = 4
-    ∧ cellTransformOperatorIds.all (fun id => decide (id ∈ signedOperatorIds)) = true
+    ∧ cellTransformKinds.length = 10
+    ∧ cellTransformOperatorIds.length = 43
+    ∧ cellTransformOperatorIds.all (fun id => decide ((fullSignatureFor id).id = id)) = true
     ∧ Cell192Generator.all.length = 7
-    ∧ l0InstructionClauseKinds.length = 12
+    ∧ l0InstructionClauseKinds.length = 13
     ∧ operatorCellCandidateBindings.length = 7
     ∧ allOperatorCellSemanticRows.length = 71232
-    ∧ familyBackedDenotationRows.length = 768
-    ∧ executableCellTransformRows.length = 768
-    ∧ exactSignatureShapeRows.length = 1920
-    ∧ catalogueSignatureShapeRows.length = 68544
+    ∧ familyBackedDenotationRows.length = 8256
+    ∧ executableCellTransformRows.length = 8256
+    ∧ exactSignatureShapeRows.length = 1152
+    ∧ catalogueSignatureShapeRows.length = 61824
     ∧ semanticLowerBoundRows.length = 4
-    ∧ semanticLowerBoundRows.map (·.scope) = [3, 7, 12, 27]
+    ∧ semanticLowerBoundRows.map (·.scope) = [10, 7, 13, 27]
     ∧ 27 < allOperatorCells.length
     ∧ functionalCompletionCompleteRows.length = 8
     ∧ functionalCompletionTrackedRows.length = 4
@@ -435,7 +436,7 @@ theorem functional_completion_summary :
     , catalogueShapeSignatureRows_length
     , cellTransformKinds_length
     , cellTransformOperatorIds_length
-    , cellTransformOperatorIds_have_signature_seed
+    , cellTransformOperatorIds_have_catalogue_signature
     , Cell192Generator.all_length
     , l0InstructionClauseKinds_length
     , operatorCellCandidateBindings_length

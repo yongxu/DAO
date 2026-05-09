@@ -26,9 +26,12 @@ Path 丙 § 风险 3 之完全缓解：
               orB  (或):  Bool → Bool → Bool
               eqHex (同): Hex → Hex → Bool
               forallH (凡): (Hex → Bool) → Bool      -- 64-fold ∀，有限可决
+              uniqueH / exactly3H / majorityH: finite Hex counters
               cuoH (错): Hex → Hex
               zongH (综): Hex → Hex
               huH (互): Hex → Hex
+              cuoZongH: Hex → Hex
+              flip1H/flip2H/flip3H/flip4H/flip5H/flip6H: Hex → Hex
 
 命名约定:
   · 天干 10 字（甲乙丙丁戊己庚辛壬癸）— 中性变量名
@@ -46,12 +49,14 @@ Path 丙 § 风险 3 之完全缓解：
 0 sorry / 0 axiom. 仅类型层；operational semantics 见 M2.
 -/
 import SSBX.Foundation.Yi.Yi
+import SSBX.Foundation.Bagua.Cell192
 import SSBX.Foundation.Bagua.BaguaWenSpec
 import SSBX.Text.OperatorSignatures
 
 namespace SSBX.Foundation.Wen.WenDef
 
 open SSBX.Foundation.Yi.Yi
+open SSBX.Foundation.Bagua.Cell192
 open SSBX.Foundation.Bagua.BaguaWenSpec
 open SSBX.Text.WenyanOperators
 open SSBX.Text.OperatorSignatures
@@ -62,19 +67,23 @@ open SSBX.Text.OperatorSignatures
 inductive Ty : Type
   | hex
   | bool
+  | cell
   | catalogue (kind : SignatureKind)
+  | prod (fst snd : Ty)
+  | list (elem : Ty)
   | arr (dom cod : Ty)
 deriving DecidableEq, Repr
 
 /-! ## § 2  项 -/
 
-/-- 文之项：λ + app + var + 字面值 + 10 个内核 primitives。 -/
+/-- 文之项：λ + app + var + 字面值 + core primitives。 -/
 inductive Tm : Type
   | var     (n : String)               : Tm
   | abs     (n : String) (t : Ty) (body : Tm) : Tm
   | app     (f x : Tm)                 : Tm
   | hexLit  (h : Hexagram)             : Tm
   | boolLit (b : Bool)                 : Tm
+  | cellLit (c : Cell192)              : Tm
   | jia                                : Tm  -- 加 :  Hex → Hex → Hex
   | yi                                 : Tm  -- 一 :  Hex
   | notB                               : Tm  -- 不 :  Bool → Bool
@@ -82,9 +91,36 @@ inductive Tm : Type
   | orB                                : Tm  -- 或 :  Bool → Bool → Bool
   | eqHex                              : Tm  -- 同 :  Hex → Hex → Bool
   | forallH                            : Tm  -- 凡 :  (Hex → Bool) → Bool
+  | uniqueH                            : Tm  -- 唯 :  (Hex → Bool) → Bool
+  | exactly3H                          : Tm  -- 三 :  (Hex → Bool) → Bool
+  | majorityH                          : Tm  -- 過半 : (Hex → Bool) → Bool
   | cuoH                               : Tm  -- 错 :  Hex → Hex
   | zongH                              : Tm  -- 综 :  Hex → Hex
   | huH                                : Tm  -- 互 :  Hex → Hex
+  | cuoZongH                           : Tm  -- 错综 : Hex → Hex
+  | flip1H                             : Tm  -- 初爻 flip : Hex → Hex
+  | flip2H                             : Tm  -- 二爻 flip : Hex → Hex
+  | flip3H                             : Tm  -- 三爻 flip : Hex → Hex
+  | flip4H                             : Tm  -- 四爻 flip : Hex → Hex
+  | flip5H                             : Tm  -- 五爻 flip : Hex → Hex
+  | flip6H                             : Tm  -- 上爻 flip : Hex → Hex
+  | pairH                              : Tm  -- pair : Hex → Hex → Hex×Hex
+  | dupH                               : Tm  -- dup : Hex → Hex×Hex
+  | list1H                             : Tm  -- singleton : Hex → List Hex
+  | list2H                             : Tm  -- pair-list : Hex → Hex → List Hex
+  | headH                              : Tm  -- head : List Hex → Hex
+  | eqCell                             : Tm  -- Cell → Cell → Bool
+  | cuoC                               : Tm  -- Cell → Cell, preserve 时
+  | zongC                              : Tm  -- Cell → Cell, preserve 时
+  | huC                                : Tm  -- Cell → Cell, preserve 时
+  | shiNextC                           : Tm  -- Cell → Cell, 时态前进
+  | shiPrevC                           : Tm  -- Cell → Cell, 时态后退
+  | flip1C                             : Tm  -- Cell → Cell, y1 flip
+  | flip2C                             : Tm  -- Cell → Cell, y2 flip
+  | flip3C                             : Tm  -- Cell → Cell, y3 flip
+  | flip4C                             : Tm  -- Cell → Cell, y4 flip
+  | flip5C                             : Tm  -- Cell → Cell, y5 flip
+  | flip6C                             : Tm  -- Cell → Cell, y6 flip
   | catalogue1 (id : OperatorId) (a : Tm) : Tm
   | catalogue2 (id : OperatorId) (a b : Tm) : Tm
   | catalogue3 (id : OperatorId) (a b c : Tm) : Tm
@@ -94,6 +130,37 @@ deriving DecidableEq, Repr
 
 /-- 上下文：变量名 → 类型。 -/
 abbrev Ctx := List (String × Ty)
+
+/--
+Conservative argument type expected by structural catalogue normal forms.
+
+This is not a domain semantics claim. It only prevents catalogue wrappers from
+accepting arguments outside their coarse signature shape.
+-/
+def catalogueExpectedArgTy (kind : SignatureKind) (pos : Nat) : Ty :=
+  match kind with
+  | .propUnary => .bool
+  | .propImp
+  | .propConnective
+  | .binaryModal => .bool
+  | .quantifier => .arr .hex .bool
+  | .app => if pos = 0 then .arr .hex .hex else .hex
+  | .endoComp => .arr .hex .hex
+  | _ => .hex
+
+def catalogueArgTypesOk (sig : CoveredOperatorSignature) : List Ty → Bool
+  | [a] =>
+      decide (sig.arity = 1) && decide (a = catalogueExpectedArgTy sig.kind 0)
+  | [a, b] =>
+      decide (sig.arity = 2)
+        && decide (a = catalogueExpectedArgTy sig.kind 0)
+        && decide (b = catalogueExpectedArgTy sig.kind 1)
+  | [a, b, c] =>
+      decide (sig.arity = 3)
+        && decide (a = catalogueExpectedArgTy sig.kind 0)
+        && decide (b = catalogueExpectedArgTy sig.kind 1)
+        && decide (c = catalogueExpectedArgTy sig.kind 2)
+  | _ => false
 
 /-- 在上下文中查找变量类型。 -/
 def Ctx.lookup : Ctx → String → Option Ty
@@ -114,6 +181,7 @@ def typeCheck : Ctx → Tm → Option Ty
       | _, _ => none
   | _, .hexLit _  => some .hex
   | _, .boolLit _ => some .bool
+  | _, .cellLit _ => some .cell
   | _, .jia       => some (.arr .hex (.arr .hex .hex))
   | _, .yi        => some .hex
   | _, .notB      => some (.arr .bool .bool)
@@ -121,28 +189,79 @@ def typeCheck : Ctx → Tm → Option Ty
   | _, .orB       => some (.arr .bool (.arr .bool .bool))
   | _, .eqHex     => some (.arr .hex (.arr .hex .bool))
   | _, .forallH   => some (.arr (.arr .hex .bool) .bool)
+  | _, .uniqueH   => some (.arr (.arr .hex .bool) .bool)
+  | _, .exactly3H => some (.arr (.arr .hex .bool) .bool)
+  | _, .majorityH => some (.arr (.arr .hex .bool) .bool)
   | _, .cuoH      => some (.arr .hex .hex)
   | _, .zongH     => some (.arr .hex .hex)
   | _, .huH       => some (.arr .hex .hex)
+  | _, .cuoZongH  => some (.arr .hex .hex)
+  | _, .flip1H    => some (.arr .hex .hex)
+  | _, .flip2H    => some (.arr .hex .hex)
+  | _, .flip3H    => some (.arr .hex .hex)
+  | _, .flip4H    => some (.arr .hex .hex)
+  | _, .flip5H    => some (.arr .hex .hex)
+  | _, .flip6H    => some (.arr .hex .hex)
+  | _, .pairH     => some (.arr .hex (.arr .hex (.prod .hex .hex)))
+  | _, .dupH      => some (.arr .hex (.prod .hex .hex))
+  | _, .list1H    => some (.arr .hex (.list .hex))
+  | _, .list2H    => some (.arr .hex (.arr .hex (.list .hex)))
+  | _, .headH     => some (.arr (.list .hex) .hex)
+  | _, .eqCell    => some (.arr .cell (.arr .cell .bool))
+  | _, .cuoC      => some (.arr .cell .cell)
+  | _, .zongC     => some (.arr .cell .cell)
+  | _, .huC       => some (.arr .cell .cell)
+  | _, .shiNextC  => some (.arr .cell .cell)
+  | _, .shiPrevC  => some (.arr .cell .cell)
+  | _, .flip1C    => some (.arr .cell .cell)
+  | _, .flip2C    => some (.arr .cell .cell)
+  | _, .flip3C    => some (.arr .cell .cell)
+  | _, .flip4C    => some (.arr .cell .cell)
+  | _, .flip5C    => some (.arr .cell .cell)
+  | _, .flip6C    => some (.arr .cell .cell)
   | ctx, .catalogue1 id a =>
       let sig := fullSignatureFor id
-      if sig.arity = 1 && (typeCheck ctx a).isSome then
-        some (.catalogue sig.kind)
-      else
-        none
+      match typeCheck ctx a with
+      | some ta =>
+          if catalogueArgTypesOk sig [ta] then
+            some (.catalogue sig.kind)
+          else
+            none
+      | none => none
   | ctx, .catalogue2 id a b =>
       let sig := fullSignatureFor id
-      if sig.arity = 2 && (typeCheck ctx a).isSome && (typeCheck ctx b).isSome then
-        some (.catalogue sig.kind)
-      else
-        none
+      match typeCheck ctx a, typeCheck ctx b with
+      | some ta, some tb =>
+          if catalogueArgTypesOk sig [ta, tb] then
+            some (.catalogue sig.kind)
+          else
+            none
+      | _, _ => none
   | ctx, .catalogue3 id a b c =>
       let sig := fullSignatureFor id
-      if sig.arity = 3 && (typeCheck ctx a).isSome && (typeCheck ctx b).isSome
-          && (typeCheck ctx c).isSome then
-        some (.catalogue sig.kind)
-      else
-        none
+      match typeCheck ctx a, typeCheck ctx b, typeCheck ctx c with
+      | some ta, some tb, some tc =>
+          if catalogueArgTypesOk sig [ta, tb, tc] then
+            some (.catalogue sig.kind)
+          else
+            none
+      | _, _, _ => none
+
+example :
+    typeCheck [] (.catalogue2 .E_2 (.hexLit Hexagram.qian) (.hexLit Hexagram.qian))
+      = some (.catalogue .textAct) := by native_decide
+
+example :
+    typeCheck [] (.catalogue2 .E_2 (.boolLit true) (.boolLit true)) = none := by
+  native_decide
+
+example :
+    typeCheck [] (.catalogue2 .P_23 (.boolLit true) (.boolLit false))
+      = some (.catalogue .propConnective) := by native_decide
+
+example :
+    typeCheck [] (.catalogue2 .P_23 (.hexLit Hexagram.qian) (.hexLit Hexagram.kun))
+      = none := by native_decide
 
 /-! ## § 4  命名空间 -/
 
@@ -411,6 +530,103 @@ def fanReverseDef : WenDef where
   validName      := by native_decide
   bodyTypechecks := by native_decide
 
+def hexIdBody : Tm :=
+  .abs "x" .hex (.var "x")
+
+theorem hexIdBody_typed :
+    typeCheck [] hexIdBody = some (.arr .hex .hex) := by native_decide
+
+def hexIdDef : WenDef where
+  name           := "hexId"
+  body           := hexIdBody
+  bodyType       := .arr .hex .hex
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def cuoZongBody : Tm := .cuoZongH
+
+theorem cuoZongBody_typed :
+    typeCheck [] cuoZongBody = some (.arr .hex .hex) := by native_decide
+
+def cuoZongDef : WenDef where
+  name           := "cuoZong"
+  body           := cuoZongBody
+  bodyType       := .arr .hex .hex
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def flip1Body : Tm := .flip1H
+
+theorem flip1Body_typed :
+    typeCheck [] flip1Body = some (.arr .hex .hex) := by native_decide
+
+def flip1Def : WenDef where
+  name           := "flip1"
+  body           := flip1Body
+  bodyType       := .arr .hex .hex
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def flip2Body : Tm := .flip2H
+
+theorem flip2Body_typed :
+    typeCheck [] flip2Body = some (.arr .hex .hex) := by native_decide
+
+def flip2Def : WenDef where
+  name           := "flip2"
+  body           := flip2Body
+  bodyType       := .arr .hex .hex
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def flip3Body : Tm := .flip3H
+
+theorem flip3Body_typed :
+    typeCheck [] flip3Body = some (.arr .hex .hex) := by native_decide
+
+def flip3Def : WenDef where
+  name           := "flip3"
+  body           := flip3Body
+  bodyType       := .arr .hex .hex
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def flip4Body : Tm := .flip4H
+
+theorem flip4Body_typed :
+    typeCheck [] flip4Body = some (.arr .hex .hex) := by native_decide
+
+def flip4Def : WenDef where
+  name           := "flip4"
+  body           := flip4Body
+  bodyType       := .arr .hex .hex
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def flip5Body : Tm := .flip5H
+
+theorem flip5Body_typed :
+    typeCheck [] flip5Body = some (.arr .hex .hex) := by native_decide
+
+def flip5Def : WenDef where
+  name           := "flip5"
+  body           := flip5Body
+  bodyType       := .arr .hex .hex
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def flip6Body : Tm := .flip6H
+
+theorem flip6Body_typed :
+    typeCheck [] flip6Body = some (.arr .hex .hex) := by native_decide
+
+def flip6Def : WenDef where
+  name           := "flip6"
+  body           := flip6Body
+  bodyType       := .arr .hex .hex
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
 /-! ### Logic and identity aliases promoted from catalogue-only rows
 
   These bodies reuse the existing `Bool`, `Hex`, and finite `forallH` core.
@@ -429,6 +645,24 @@ theorem impBody_typed :
 def impDef : WenDef where
   name           := "imp"
   body           := impBody
+  bodyType       := .arr .bool (.arr .bool .bool)
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def xorBBody : Tm :=
+  .abs "p" .bool
+    (.abs "q" .bool
+      (.app
+        (.app .orB
+          (.app (.app .andB (.var "p")) (.app .notB (.var "q"))))
+        (.app (.app .andB (.app .notB (.var "p"))) (.var "q"))))
+
+theorem xorBBody_typed :
+    typeCheck [] xorBBody = some (.arr .bool (.arr .bool .bool)) := by native_decide
+
+def xorBDef : WenDef where
+  name           := "xorB"
+  body           := xorBBody
   bodyType       := .arr .bool (.arr .bool .bool)
   validName      := by native_decide
   bodyTypechecks := by native_decide
@@ -481,6 +715,42 @@ def noneHDef : WenDef where
   validName      := by native_decide
   bodyTypechecks := by native_decide
 
+def uniqueHBody : Tm := .uniqueH
+
+theorem uniqueHBody_typed :
+    typeCheck [] uniqueHBody = some (.arr (.arr .hex .bool) .bool) := by native_decide
+
+def uniqueHDef : WenDef where
+  name           := "uniqueH"
+  body           := uniqueHBody
+  bodyType       := .arr (.arr .hex .bool) .bool
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def exactly3HBody : Tm := .exactly3H
+
+theorem exactly3HBody_typed :
+    typeCheck [] exactly3HBody = some (.arr (.arr .hex .bool) .bool) := by native_decide
+
+def exactly3HDef : WenDef where
+  name           := "exactly3H"
+  body           := exactly3HBody
+  bodyType       := .arr (.arr .hex .bool) .bool
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def majorityHBody : Tm := .majorityH
+
+theorem majorityHBody_typed :
+    typeCheck [] majorityHBody = some (.arr (.arr .hex .bool) .bool) := by native_decide
+
+def majorityHDef : WenDef where
+  name           := "majorityH"
+  body           := majorityHBody
+  bodyType       := .arr (.arr .hex .bool) .bool
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
 def endoCompBody : Tm :=
   .abs "f" (.arr .hex .hex)
     (.abs "g" (.arr .hex .hex)
@@ -516,21 +786,208 @@ def hexApplyDef : WenDef where
   validName      := by native_decide
   bodyTypechecks := by native_decide
 
+/-! ### Structural truth/motion helpers -/
+
+def boolMarkerBody : Tm :=
+  .abs "p" .bool (.var "p")
+
+theorem boolMarkerBody_typed :
+    typeCheck [] boolMarkerBody = some (.arr .bool .bool) := by native_decide
+
+def boolMarkerDef : WenDef where
+  name           := "boolMarker"
+  body           := boolMarkerBody
+  bodyType       := .arr .bool .bool
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def repeatOnceBody : Tm :=
+  .abs "f" (.arr .hex .hex)
+    (.abs "x" .hex (.app (.var "f") (.app (.var "f") (.var "x"))))
+
+theorem repeatOnceBody_typed :
+    typeCheck [] repeatOnceBody =
+      some (.arr (.arr .hex .hex) (.arr .hex .hex)) := by native_decide
+
+def repeatOnceDef : WenDef where
+  name           := "repeatOnce"
+  body           := repeatOnceBody
+  bodyType       := .arr (.arr .hex .hex) (.arr .hex .hex)
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def eachHBody : Tm :=
+  .abs "dom" (.arr .hex .bool)
+    (.abs "p" (.arr .hex .bool)
+      (.app .forallH
+        (.abs "x" .hex
+          (.app
+            (.app impBody (.app (.var "dom") (.var "x")))
+            (.app (.var "p") (.var "x"))))))
+
+theorem eachHBody_typed :
+    typeCheck [] eachHBody =
+      some (.arr (.arr .hex .bool) (.arr (.arr .hex .bool) .bool)) := by
+  native_decide
+
+def eachHDef : WenDef where
+  name           := "eachH"
+  body           := eachHBody
+  bodyType       := .arr (.arr .hex .bool) (.arr (.arr .hex .bool) .bool)
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+/-! ### Hex pair/list carrier helpers -/
+
+def pairHBody : Tm := .pairH
+
+theorem pairHBody_typed :
+    typeCheck [] pairHBody = some (.arr .hex (.arr .hex (.prod .hex .hex))) := by
+  native_decide
+
+def pairHDef : WenDef where
+  name           := "pairH"
+  body           := pairHBody
+  bodyType       := .arr .hex (.arr .hex (.prod .hex .hex))
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def dupHBody : Tm := .dupH
+
+theorem dupHBody_typed :
+    typeCheck [] dupHBody = some (.arr .hex (.prod .hex .hex)) := by native_decide
+
+def dupHDef : WenDef where
+  name           := "dupH"
+  body           := dupHBody
+  bodyType       := .arr .hex (.prod .hex .hex)
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def list1HBody : Tm := .list1H
+
+theorem list1HBody_typed :
+    typeCheck [] list1HBody = some (.arr .hex (.list .hex)) := by native_decide
+
+def list1HDef : WenDef where
+  name           := "list1H"
+  body           := list1HBody
+  bodyType       := .arr .hex (.list .hex)
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def list2HBody : Tm := .list2H
+
+theorem list2HBody_typed :
+    typeCheck [] list2HBody = some (.arr .hex (.arr .hex (.list .hex))) := by
+  native_decide
+
+def list2HDef : WenDef where
+  name           := "list2H"
+  body           := list2HBody
+  bodyType       := .arr .hex (.arr .hex (.list .hex))
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def headHBody : Tm := .headH
+
+theorem headHBody_typed :
+    typeCheck [] headHBody = some (.arr (.list .hex) .hex) := by native_decide
+
+def headHDef : WenDef where
+  name           := "headH"
+  body           := headHBody
+  bodyType       := .arr (.list .hex) .hex
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+/-! ### Cell192 carrier helpers -/
+
+def eqCellBody : Tm := .eqCell
+
+theorem eqCellBody_typed :
+    typeCheck [] eqCellBody = some (.arr .cell (.arr .cell .bool)) := by
+  native_decide
+
+def eqCellDef : WenDef where
+  name           := "eqCell"
+  body           := eqCellBody
+  bodyType       := .arr .cell (.arr .cell .bool)
+  validName      := by native_decide
+  bodyTypechecks := by native_decide
+
+def cuoCBody : Tm := .cuoC
+def zongCBody : Tm := .zongC
+def huCBody : Tm := .huC
+def shiNextCBody : Tm := .shiNextC
+def shiPrevCBody : Tm := .shiPrevC
+def flip1CBody : Tm := .flip1C
+def flip2CBody : Tm := .flip2C
+def flip3CBody : Tm := .flip3C
+def flip4CBody : Tm := .flip4C
+def flip5CBody : Tm := .flip5C
+def flip6CBody : Tm := .flip6C
+
+theorem cuoCBody_typed : typeCheck [] cuoCBody = some (.arr .cell .cell) := by native_decide
+theorem zongCBody_typed : typeCheck [] zongCBody = some (.arr .cell .cell) := by native_decide
+theorem huCBody_typed : typeCheck [] huCBody = some (.arr .cell .cell) := by native_decide
+theorem shiNextCBody_typed : typeCheck [] shiNextCBody = some (.arr .cell .cell) := by native_decide
+theorem shiPrevCBody_typed : typeCheck [] shiPrevCBody = some (.arr .cell .cell) := by native_decide
+theorem flip1CBody_typed : typeCheck [] flip1CBody = some (.arr .cell .cell) := by native_decide
+theorem flip2CBody_typed : typeCheck [] flip2CBody = some (.arr .cell .cell) := by native_decide
+theorem flip3CBody_typed : typeCheck [] flip3CBody = some (.arr .cell .cell) := by native_decide
+theorem flip4CBody_typed : typeCheck [] flip4CBody = some (.arr .cell .cell) := by native_decide
+theorem flip5CBody_typed : typeCheck [] flip5CBody = some (.arr .cell .cell) := by native_decide
+theorem flip6CBody_typed : typeCheck [] flip6CBody = some (.arr .cell .cell) := by native_decide
+
+def cellEndoDef (name : String) (body : Tm)
+    (validName : isValidName name = true)
+    (bodyTypechecks : typeCheck [] body = some (.arr .cell .cell)) : WenDef where
+  name := name
+  body := body
+  bodyType := .arr .cell .cell
+  validName := validName
+  bodyTypechecks := by simpa using bodyTypechecks
+
+def cuoCDef : WenDef := cellEndoDef "cuoC" cuoCBody (by native_decide) cuoCBody_typed
+def zongCDef : WenDef := cellEndoDef "zongC" zongCBody (by native_decide) zongCBody_typed
+def huCDef : WenDef := cellEndoDef "huC" huCBody (by native_decide) huCBody_typed
+def shiNextCDef : WenDef := cellEndoDef "shiNextC" shiNextCBody (by native_decide) shiNextCBody_typed
+def shiPrevCDef : WenDef := cellEndoDef "shiPrevC" shiPrevCBody (by native_decide) shiPrevCBody_typed
+def flip1CDef : WenDef := cellEndoDef "flip1C" flip1CBody (by native_decide) flip1CBody_typed
+def flip2CDef : WenDef := cellEndoDef "flip2C" flip2CBody (by native_decide) flip2CBody_typed
+def flip3CDef : WenDef := cellEndoDef "flip3C" flip3CBody (by native_decide) flip3CBody_typed
+def flip4CDef : WenDef := cellEndoDef "flip4C" flip4CBody (by native_decide) flip4CBody_typed
+def flip5CDef : WenDef := cellEndoDef "flip5C" flip5CBody (by native_decide) flip5CBody_typed
+def flip6CDef : WenDef := cellEndoDef "flip6C" flip6CBody (by native_decide) flip6CBody_typed
+
 /-! ### Stdlib 总表 -/
 
 /-- 当前 stdlib 中已合度且类型化之 wenyan-ops 定义。 -/
 def all : List WenDef :=
   [ tuiDef, biDef, buDef, biModalDef, tongDef, fanDef, sunDef, yiBenefitDef
   , cuoDef, zongDef, huDef, fanReverseDef
-  , impDef, neqHexDef, existsHDef, noneHDef, endoCompDef, hexApplyDef ]
+  , hexIdDef, cuoZongDef, flip1Def, flip2Def, flip3Def, flip4Def, flip5Def, flip6Def
+  , impDef, xorBDef, neqHexDef, existsHDef, noneHDef
+  , uniqueHDef, exactly3HDef, majorityHDef, endoCompDef, hexApplyDef
+  , boolMarkerDef, repeatOnceDef, eachHDef
+  , pairHDef, dupHDef, list1HDef, list2HDef, headHDef
+  , eqCellDef, cuoCDef, zongCDef, huCDef, shiNextCDef, shiPrevCDef
+  , flip1CDef, flip2CDef, flip3CDef, flip4CDef, flip5CDef, flip6CDef ]
 
-theorem all_length : all.length = 18 := by native_decide
+theorem all_length : all.length = 50 := by native_decide
 
 theorem all_names :
     all.map WenDef.name =
       [ "tui", "bi", "bu", "biModal", "tong", "fan", "sun", "yiBenefit"
       , "cuo", "zong", "hu", "fanReverse"
-      , "imp", "neqHex", "existsH", "noneH", "endoComp", "hexApply" ] := by
+      , "hexId", "cuoZong", "flip1", "flip2", "flip3", "flip4", "flip5", "flip6"
+      , "imp", "xorB", "neqHex", "existsH", "noneH"
+      , "uniqueH", "exactly3H", "majorityH", "endoComp", "hexApply"
+      , "boolMarker", "repeatOnce", "eachH"
+      , "pairH", "dupH", "list1H", "list2H", "headH"
+      , "eqCell", "cuoC", "zongC", "huC", "shiNextC", "shiPrevC"
+      , "flip1C", "flip2C", "flip3C", "flip4C", "flip5C", "flip6C" ] := by
   native_decide
 
 theorem all_distinct_names : (all.map WenDef.name).Nodup := by native_decide

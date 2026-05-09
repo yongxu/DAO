@@ -2,8 +2,8 @@
 # wenyan-surface — CLI for the WenSurface interpreter
 
 Reads a wenyan program from stdin or a single argv argument, runs it through
-`SSBX.Foundation.Wen.WenSurface.wenyanInterp` (and `wenyanInterpBool` as a
-fallback for Bool-typed programs), and prints the result.
+`SSBX.Foundation.Wen.WenSurface.wenyanInterp`, with Bool and finite carrier
+fallbacks, and prints the result.
 
 Examples:
   echo '推 一'         | wenyan-surface
@@ -54,6 +54,15 @@ private def hexLabel (h : Hexagram) : String :=
 private def hexShow (h : Hexagram) : String :=
   let idx := (Hexagram.toIdx h).val
   s!"hex idx {idx}{hexLabel h}\n{hexDiagram h}"
+
+private def hexBrief (h : Hexagram) : String :=
+  s!"idx {(Hexagram.toIdx h).val}{hexLabel h}"
+
+private def hexPairShow (p : Hexagram × Hexagram) : String :=
+  s!"pair ({hexBrief p.1}) ({hexBrief p.2})"
+
+private def hexListShow (xs : List Hexagram) : String :=
+  "list [" ++ String.intercalate ", " (xs.map hexBrief) ++ "]"
 
 private def readingSupportShow
     (r : SSBX.Text.OperatorReadings.OperatorReading) : String :=
@@ -226,7 +235,10 @@ private def signatureEvidenceShow : SignatureEvidence → String
 private def tyShow : SSBX.Foundation.Wen.WenDef.Ty → String
   | .hex => "Hex"
   | .bool => "Bool"
+  | .cell => "Cell"
   | .catalogue kind => "Catalogue[" ++ kind.key ++ "]"
+  | .prod a b => "(" ++ tyShow a ++ " * " ++ tyShow b ++ ")"
+  | .list a => "List[" ++ tyShow a ++ "]"
   | .arr a b => "(" ++ tyShow a ++ " -> " ++ tyShow b ++ ")"
 
 private def typeDiagShow : TypeDiag → String
@@ -333,6 +345,8 @@ private def errShow : WenSurfaceErr → String
       s!"resolve error at col {col}: surface \"{surface}\" is a tracked hexagram gap but is not promoted to executable semantics"
   | .parse .empty =>
       "parse error: empty / incomplete expression"
+  | .parse (.expectedExpression col) =>
+      s!"parse error at col {col}: expected expression"
   | .parse .fuelExhausted =>
       "parse error: fuel exhausted (program too deeply nested?)"
   | .parse (.unmatchedOpenBracket surface col) =>
@@ -347,6 +361,8 @@ private def errShow : WenSurfaceErr → String
       s!"parse error at col {col}: unexpected application marker \"{surface}\""
   | .parse (.unpromotedHexagramGap surface col) =>
       s!"parse error at col {col}: surface \"{surface}\" is a tracked hexagram gap, not an executable operator"
+  | .parse (.nonassocInfix surface col) =>
+      s!"parse error at col {col}: non-associative infix operator \"{surface}\" must be bracketed"
   | .parse (.typeMismatch expected actual surface col) =>
       s!"type error at col {col}: expected {tyShow expected}, got {tyShow actual} from \"{surface}\""
   | .parse (.leftoverAtoms n surface col) =>
@@ -389,6 +405,7 @@ private def errCode : WenSurfaceErr → String
   | .resolve (.knownButUnsupported _ _ _) => "known_but_unsupported"
   | .resolve (.unpromotedHexagramGap _ _) => "unpromoted_hexagram_gap"
   | .parse .empty => "empty_expression"
+  | .parse (.expectedExpression _) => "expected_expression"
   | .parse .fuelExhausted => "parse_fuel_exhausted"
   | .parse (.unmatchedOpenBracket _ _) => "unmatched_open_bracket"
   | .parse (.unmatchedCloseBracket _ _) => "unmatched_close_bracket"
@@ -396,6 +413,7 @@ private def errCode : WenSurfaceErr → String
   | .parse (.expectedVariable _ _) => "expected_variable"
   | .parse (.unexpectedApplicationMarker _ _) => "unexpected_application_marker"
   | .parse (.unpromotedHexagramGap _ _) => "unpromoted_hexagram_gap"
+  | .parse (.nonassocInfix _ _) => "nonassoc_infix"
   | .parse (.typeMismatch _ _ _ _) => "type_mismatch"
   | .parse (.leftoverAtoms _ _ _) => "leftover_tokens"
   | .elab (.unsupportedOp _ _ _) => "unsupported_operator"
@@ -424,6 +442,7 @@ private def resolveErrShow : ResolveErr → String
 
 private def parseErrShow : ParseErr → String
   | .empty => "parse error: empty / incomplete expression"
+  | .expectedExpression col => s!"parse error at col {col}: expected expression"
   | .fuelExhausted => "parse error: fuel exhausted"
   | .unmatchedOpenBracket surface col =>
       s!"parse error at col {col}: unmatched open bracket \"{surface}\""
@@ -437,6 +456,8 @@ private def parseErrShow : ParseErr → String
       s!"parse error at col {col}: unexpected application marker \"{surface}\""
   | .unpromotedHexagramGap surface col =>
       s!"parse error at col {col}: surface \"{surface}\" is a tracked hexagram gap, not an executable operator"
+  | .nonassocInfix surface col =>
+      s!"parse error at col {col}: non-associative infix operator \"{surface}\" must be bracketed"
   | .typeMismatch expected actual surface col =>
       s!"type error at col {col}: expected {tyShow expected}, got {tyShow actual} from \"{surface}\""
   | .leftoverAtoms n surface col =>
@@ -531,6 +552,18 @@ private def jsonFieldBool (key : String) (value : Bool) : String × String :=
 private def jsonFieldRaw (key value : String) : String × String :=
   (key, value)
 
+private def hexJson (h : Hexagram) : String :=
+  jsonObject
+    [ jsonFieldNat "idx" (Hexagram.toIdx h).val
+    , jsonFieldString "label" (hexLabel h)
+    ]
+
+private def hexPairJson (p : Hexagram × Hexagram) : String :=
+  jsonArray [hexJson p.1, hexJson p.2]
+
+private def hexListJson (xs : List Hexagram) : String :=
+  jsonArray (xs.map hexJson)
+
 private def endColOfSurface (startCol : Nat) (surface : String) : Nat :=
   startCol + surface.toList.length
 
@@ -580,6 +613,127 @@ private def operatorIdJsonFields (id : OperatorId) : List (String × String) :=
   [ jsonFieldString "operatorCode" id.code
   , jsonFieldString "operatorTitle" id.title
   ]
+
+private def optMin (a b : Option Nat) : Option Nat :=
+  match a, b with
+  | some x, some y => some (Nat.min x y)
+  | some x, none => some x
+  | none, some y => some y
+  | none, none => none
+
+private def optMax (a b : Option Nat) : Option Nat :=
+  match a, b with
+  | some x, some y => some (Nat.max x y)
+  | some x, none => some x
+  | none, some y => some y
+  | none, none => none
+
+private def resolvedTokEndCol (t : ResolvedTok) : Nat :=
+  t.tok.startCol + t.tok.width
+
+mutual
+  private def surfaceExprStartCol? : SurfaceExpr → Option Nat
+    | .atom tok => some tok.tok.startCol
+    | .app f x => optMin (surfaceExprStartCol? f) (surfaceExprStartCol? x)
+    | .seq items => surfaceExprListStartCol? items
+    | .marker tok body => optMin (some tok.tok.startCol) (surfaceExprStartCol? body)
+    | .binder _ _ body => surfaceExprStartCol? body
+    | .letBind _ value body => optMin (surfaceExprStartCol? value) (surfaceExprStartCol? body)
+    | .construction _ items => surfaceExprListStartCol? items
+    | .grouped openTok _ _ => some openTok.tok.startCol
+
+  private def surfaceExprListStartCol? : List SurfaceExpr → Option Nat
+    | [] => none
+    | item :: rest => optMin (surfaceExprStartCol? item) (surfaceExprListStartCol? rest)
+end
+
+mutual
+  private def surfaceExprEndCol? : SurfaceExpr → Option Nat
+    | .atom tok => some (resolvedTokEndCol tok)
+    | .app f x => optMax (surfaceExprEndCol? f) (surfaceExprEndCol? x)
+    | .seq items => surfaceExprListEndCol? items
+    | .marker tok body => optMax (some (resolvedTokEndCol tok)) (surfaceExprEndCol? body)
+    | .binder _ _ body => surfaceExprEndCol? body
+    | .letBind _ value body => optMax (surfaceExprEndCol? value) (surfaceExprEndCol? body)
+    | .construction _ items => surfaceExprListEndCol? items
+    | .grouped _ closeTok _ => some (resolvedTokEndCol closeTok)
+
+  private def surfaceExprListEndCol? : List SurfaceExpr → Option Nat
+    | [] => none
+    | item :: rest => optMax (surfaceExprEndCol? item) (surfaceExprListEndCol? rest)
+end
+
+private def surfaceExprJson (expr : SurfaceExpr) : String :=
+  let spanFields :=
+    match surfaceExprStartCol? expr, surfaceExprEndCol? expr with
+    | some startCol, some endCol =>
+        [ jsonFieldNat "startCol" startCol
+        , jsonFieldNat "endCol" endCol
+        ]
+    | _, _ => []
+  jsonObject <| spanFields ++ [jsonFieldString "ast" (reprStr expr)]
+
+private def relationInfixSyntaxJson? (expr : SurfaceExpr) : Option String :=
+  match expr with
+  | .app (.app (.atom opTok) lhs) rhs =>
+      match relationInfixTok? opTok with
+      | none => none
+      | some normalizedOp =>
+          match normalizedOp.atom.operatorId?, surfaceExprEndCol? lhs, surfaceExprStartCol? rhs with
+          | some id, some lhsEndCol, some rhsStartCol =>
+              if decide (lhsEndCol <= opTok.tok.startCol ∧ opTok.tok.startCol < rhsStartCol) then
+                let spanFields :=
+                  match surfaceExprStartCol? expr, surfaceExprEndCol? expr with
+                  | some startCol, some endCol =>
+                      [ jsonFieldNat "startCol" startCol
+                      , jsonFieldNat "endCol" endCol
+                      ]
+                  | _, _ => []
+                some <| jsonObject <|
+                  [ jsonFieldString "node" "operatorForm"
+                  , jsonFieldString "surface" normalizedOp.tok.surface
+                  , jsonFieldString "syntaxForm" "infix"
+                  , jsonFieldString "fixity" "infix"
+                  , jsonFieldNat "precedence" 40
+                  , jsonFieldString "assoc" "nonassoc"
+                  , jsonFieldString "desugaredTo" "curriedApplication"
+                  , jsonFieldNat "operatorStartCol" opTok.tok.startCol
+                  , jsonFieldNat "operatorEndCol" (resolvedTokEndCol opTok)
+                  , jsonFieldRaw "args" (jsonArray [surfaceExprJson lhs, surfaceExprJson rhs])
+                  ] ++ operatorIdJsonFields id ++ spanFields
+              else
+                none
+          | _, _, _ => none
+  | _ => none
+
+mutual
+  private def syntaxFormsJsonFuel : Nat → SurfaceExpr → List String
+    | 0, _ => []
+    | fuel+1, expr =>
+        let children :=
+          match expr with
+          | .atom _ => []
+          | .app f x => syntaxFormsJsonFuel fuel f ++ syntaxFormsJsonFuel fuel x
+          | .seq items => syntaxFormsListJsonFuel fuel items
+          | .marker _ body => syntaxFormsJsonFuel fuel body
+          | .binder _ _ body => syntaxFormsJsonFuel fuel body
+          | .letBind _ value body =>
+              syntaxFormsJsonFuel fuel value ++ syntaxFormsJsonFuel fuel body
+          | .construction _ items => syntaxFormsListJsonFuel fuel items
+          | .grouped _ _ body => syntaxFormsJsonFuel fuel body
+        match relationInfixSyntaxJson? expr with
+        | some form => form :: children
+        | none => children
+
+  private def syntaxFormsListJsonFuel : Nat → List SurfaceExpr → List String
+    | 0, _ => []
+    | _+1, [] => []
+    | fuel+1, item :: rest =>
+        syntaxFormsJsonFuel fuel item ++ syntaxFormsListJsonFuel fuel rest
+end
+
+private def syntaxFormsJson (fuel : Nat) (expr : SurfaceExpr) : List String :=
+  syntaxFormsJsonFuel fuel expr
 
 private def readingJson
     (r : SSBX.Text.OperatorReadings.OperatorReading) : String :=
@@ -647,6 +801,10 @@ private def errExtraFields : WenSurfaceErr → List (String × String)
         , jsonFieldRaw "candidates" (readingsJson readings)
         ]
   | .resolve (.unpromotedHexagramGap surface col) => errLocationFields surface col
+  | .parse (.expectedExpression col) =>
+      [ jsonFieldNat "startCol" col
+      , jsonFieldNat "endCol" col
+      ]
   | .parse (.expectedVariable surface col) => errLocationFields surface col
   | .parse (.unmatchedOpenBracket surface col) => errLocationFields surface col
   | .parse (.unmatchedCloseBracket surface col) => errLocationFields surface col
@@ -659,6 +817,7 @@ private def errExtraFields : WenSurfaceErr → List (String × String)
       ]
   | .parse (.unexpectedApplicationMarker surface col) => errLocationFields surface col
   | .parse (.unpromotedHexagramGap surface col) => errLocationFields surface col
+  | .parse (.nonassocInfix surface col) => errLocationFields surface col
   | .parse (.typeMismatch expected actual surface col) =>
       errLocationFields surface col ++
         [ jsonFieldString "expectedType" (tyShow expected)
@@ -757,6 +916,126 @@ private def resolvedTokJson (t : ResolvedTok) : String :=
     , jsonFieldRaw "atom" (atomJson t.atom)
     ]
 
+private def binderKindJsonString : BinderKind → String
+  | .lambda => "lambda"
+  | .forallHex => "forallHex"
+
+private def surfaceExprSpanFields (expr : SurfaceExpr) : List (String × String) :=
+  match surfaceExprStartCol? expr, surfaceExprEndCol? expr with
+  | some startCol, some endCol =>
+      [ jsonFieldNat "startCol" startCol
+      , jsonFieldNat "endCol" endCol
+      ]
+  | _, _ => []
+
+mutual
+  private def surfaceExprTreeJsonFuel : Nat → SurfaceExpr → String
+    | 0, expr =>
+        jsonObject <|
+          [ jsonFieldString "node" "fuelExhausted"
+          , jsonFieldString "ast" (reprStr expr)
+          ] ++ surfaceExprSpanFields expr
+    | fuel+1, expr =>
+        match expr with
+        | .atom tok =>
+            jsonObject <|
+              [ jsonFieldString "node" "atom"
+              , jsonFieldRaw "token" (resolvedTokJson tok)
+              ] ++ surfaceExprSpanFields expr
+        | .app f x =>
+            jsonObject <|
+              [ jsonFieldString "node" "app"
+              , jsonFieldRaw "function" (surfaceExprTreeJsonFuel fuel f)
+              , jsonFieldRaw "argument" (surfaceExprTreeJsonFuel fuel x)
+              ] ++ surfaceExprSpanFields expr
+        | .seq items =>
+            jsonObject <|
+              [ jsonFieldString "node" "seq"
+              , jsonFieldRaw "items" (jsonArray (surfaceExprTreeListJsonFuel fuel items))
+              ] ++ surfaceExprSpanFields expr
+        | .marker tok body =>
+            jsonObject <|
+              [ jsonFieldString "node" "marker"
+              , jsonFieldRaw "marker" (resolvedTokJson tok)
+              , jsonFieldRaw "body" (surfaceExprTreeJsonFuel fuel body)
+              ] ++ surfaceExprSpanFields expr
+        | .binder kind name body =>
+            jsonObject <|
+              [ jsonFieldString "node" "binder"
+              , jsonFieldString "kind" (binderKindJsonString kind)
+              , jsonFieldString "name" name
+              , jsonFieldRaw "body" (surfaceExprTreeJsonFuel fuel body)
+              ] ++ surfaceExprSpanFields expr
+        | .letBind name value body =>
+            jsonObject <|
+              [ jsonFieldString "node" "letBind"
+              , jsonFieldString "name" name
+              , jsonFieldRaw "value" (surfaceExprTreeJsonFuel fuel value)
+              , jsonFieldRaw "body" (surfaceExprTreeJsonFuel fuel body)
+              ] ++ surfaceExprSpanFields expr
+        | .construction name items =>
+            jsonObject <|
+              [ jsonFieldString "node" "construction"
+              , jsonFieldString "name" name
+              , jsonFieldRaw "items" (jsonArray (surfaceExprTreeListJsonFuel fuel items))
+              ] ++ surfaceExprSpanFields expr
+        | .grouped openTok closeTok body =>
+            jsonObject <|
+              [ jsonFieldString "node" "grouped"
+              , jsonFieldRaw "open" (resolvedTokJson openTok)
+              , jsonFieldRaw "close" (resolvedTokJson closeTok)
+              , jsonFieldRaw "body" (surfaceExprTreeJsonFuel fuel body)
+              ] ++ surfaceExprSpanFields expr
+
+  private def surfaceExprTreeListJsonFuel : Nat → List SurfaceExpr → List String
+    | 0, _ => []
+    | _+1, [] => []
+    | fuel+1, item :: rest =>
+        surfaceExprTreeJsonFuel fuel item :: surfaceExprTreeListJsonFuel fuel rest
+end
+
+private def surfaceExprTreeJson (fuel : Nat) (expr : SurfaceExpr) : String :=
+  surfaceExprTreeJsonFuel fuel expr
+
+private def surfaceAssocJsonString : SurfaceAssoc → String :=
+  SurfaceAssoc.label
+
+private def patternPartJson : PatternPart → String
+  | .lit surface =>
+      jsonObject
+        [ jsonFieldString "kind" "lit"
+        , jsonFieldString "surface" surface
+        ]
+  | .hole name minPrec =>
+      jsonObject
+        [ jsonFieldString "kind" "hole"
+        , jsonFieldString "name" name
+        , jsonFieldNat "minPrec" minPrec
+        ]
+
+private def surfaceFormJson (form : SurfaceForm) : String :=
+  let common :=
+    [ jsonFieldString "fixity" (SurfaceForm.fixityLabel form)
+    , jsonFieldNat "precedence" (SurfaceForm.precedence form)
+    ]
+  match form with
+  | .prefix _ => jsonObject common
+  | .infix _ assoc =>
+      jsonObject <| common ++ [jsonFieldString "assoc" (surfaceAssocJsonString assoc)]
+  | .postfix _ => jsonObject common
+  | .mixfix pattern _ =>
+      jsonObject <|
+        common ++ [jsonFieldRaw "pattern" (jsonArray (pattern.map patternPartJson))]
+
+private def surfaceSyntaxEntryJson (entry : SurfaceSyntaxEntry) : String :=
+  jsonObject
+    [ jsonFieldString "operatorCode" entry.id.code
+    , jsonFieldString "operatorTitle" entry.id.title
+    , jsonFieldString "surface" entry.surface
+    , jsonFieldRaw "form" (surfaceFormJson entry.form)
+    , jsonFieldString "note" entry.note
+    ]
+
 private def tokensJsonOutput (src : String) : String :=
   match lexWen src with
   | .ok toks =>
@@ -783,10 +1062,15 @@ private def resolveJsonOutput (src : String) : String :=
 private def astJsonOutput (src : String) : String :=
   match parseSurface src with
   | .ok ast =>
+      let fuel := src.toList.length + 10
+      let syntaxForms := syntaxFormsJson fuel ast
       jsonObject
         [ jsonFieldBool "ok" true
         , jsonFieldString "mode" "ast"
         , jsonFieldString "ast" (reprStr ast)
+        , jsonFieldRaw "tree" (surfaceExprTreeJson fuel ast)
+        , jsonFieldNat "syntaxFormCount" syntaxForms.length
+        , jsonFieldRaw "syntaxForms" (jsonArray syntaxForms)
         ]
   | .error (.inl e) => errJson (.lex e)
   | .error (.inr (.inl e)) => errJson (.resolve e)
@@ -811,17 +1095,33 @@ private def jsonOutput (src : String) : String :=
     match wenyanInterpBool src with
     | .ok b => "{\"ok\":true,\"kind\":\"bool\",\"value\":" ++ toString b ++ "}"
     | .error _ =>
-        match catalogueRun? src with
-        | some (id, kind, arity) =>
+      match wenyanInterpHexPair src with
+      | .ok p =>
+          jsonObject
+            [ jsonFieldBool "ok" true
+            , jsonFieldString "kind" "hexPair"
+            , jsonFieldRaw "values" (hexPairJson p)
+            ]
+      | .error _ =>
+        match wenyanInterpHexList src with
+        | .ok xs =>
             jsonObject
               [ jsonFieldBool "ok" true
-              , jsonFieldString "kind" "catalogue"
-              , jsonFieldString "operatorCode" id.code
-              , jsonFieldString "operatorTitle" id.title
-              , jsonFieldString "signatureKind" kind.key
-              , jsonFieldNat "arity" arity
+              , jsonFieldString "kind" "hexList"
+              , jsonFieldRaw "values" (hexListJson xs)
               ]
-        | none => errJson eHex
+        | .error _ =>
+            match catalogueRun? src with
+            | some (id, kind, arity) =>
+                jsonObject
+                  [ jsonFieldBool "ok" true
+                  , jsonFieldString "kind" "catalogue"
+                  , jsonFieldString "operatorCode" id.code
+                  , jsonFieldString "operatorTitle" id.title
+                  , jsonFieldString "signatureKind" kind.key
+                  , jsonFieldNat "arity" arity
+                  ]
+            | none => errJson eHex
 
 private def programOk (src : String) : Bool :=
   match wenyanInterp src with
@@ -829,7 +1129,13 @@ private def programOk (src : String) : Bool :=
   | .error _ =>
       match wenyanInterpBool src with
       | .ok _ => true
-      | .error _ => (catalogueRun? src).isSome
+      | .error _ =>
+          match wenyanInterpHexPair src with
+          | .ok _ => true
+          | .error _ =>
+              match wenyanInterpHexList src with
+              | .ok _ => true
+              | .error _ => (catalogueRun? src).isSome
 
 private def tokensOk (src : String) : Bool :=
   match lexWen src with
@@ -860,16 +1166,22 @@ private def exitCode (ok : Bool) : UInt32 :=
 /-! ## Run a single program -/
 
 private def runProgram (src : String) : String :=
-  -- Try Hex first; if that fails for a denote reason, try Bool.
+  -- Try concrete exact values first; if those fail, fall back to catalogue form.
   match wenyanInterp src with
   | .ok h => hexShow h
   | .error eHex =>
     match wenyanInterpBool src with
     | .ok b => s!"bool {b}"
     | .error _ =>
-        match catalogueRun? src with
-        | some (id, kind, arity) => catalogueRunShow id kind arity
-        | none => errShow eHex   -- show the original (Hex-attempt) error
+      match wenyanInterpHexPair src with
+      | .ok p => hexPairShow p
+      | .error _ =>
+        match wenyanInterpHexList src with
+        | .ok xs => hexListShow xs
+        | .error _ =>
+            match catalogueRun? src with
+            | some (id, kind, arity) => catalogueRunShow id kind arity
+            | none => errShow eHex   -- show the original (Hex-attempt) error
 
 private def explainOutput (src : String) : String :=
   String.intercalate "\n\n"
@@ -905,6 +1217,7 @@ private def operatorJsonOutput (code : String) : String :=
       let entry := operatorRegistryEntryFor id
       let sig := entry.signature
       let glyphForms := operatorForms id |>.map (fun sense => sense.glyph)
+      let syntaxEntries := surfaceSyntaxEntriesForOperator id
       let compoundForms :=
         operatorCompoundSurfaceIds.filterMap (fun row =>
           if row.snd = id then some row.fst else none)
@@ -923,6 +1236,8 @@ private def operatorJsonOutput (code : String) : String :=
         , jsonFieldString "operatorTitle" id.title
         , jsonFieldRaw "forms" (jsonArray (glyphForms.map jsonString))
         , jsonFieldRaw "compoundSurfaces" (jsonArray (compoundForms.map jsonString))
+        , jsonFieldNat "syntaxEntryCount" syntaxEntries.length
+        , jsonFieldRaw "syntaxEntries" (jsonArray (syntaxEntries.map surfaceSyntaxEntryJson))
         , jsonFieldRaw "signature"
             (jsonObject
               [ jsonFieldString "kind" (reprStr sig.kind)
@@ -1018,7 +1333,7 @@ private def usage : String :=
      "       wenyan-surface --help",
      "",
      "Surface vocabulary:",
-     "  Executable operators: 371 rows (84 exact/theorem-backed; 287 symbolic catalogue-shape)",
+     "  Executable operators: 371 rows (317 exact/theorem-backed; 54 structural catalogue normal forms)",
      "  Examples include: 推 比 不 必 同 凡 損 损 益 错 錯 综 綜 互 反 則 且 非 或 莫",
      "  Hex consts: 一 乾 坤 plus canonical 64 hexagram names",
      "  Bool consts: 真 假",

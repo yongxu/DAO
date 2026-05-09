@@ -144,7 +144,7 @@ String  ──[«解程»]──→  List YiInstr  ──[init+runFuel]──→
 | M1 v3.1 · 字符级 lex 反演 + universal String round-trip | `Foundation/Wen/WenyanParserGeneral.lean § lexN_printProg_thm, parseN_printProg_inverse_universal` |
 | M2 多步求值器 + 端到端 | `Foundation/Wen/WenEval.lean § «端到端_乾», «端到端_坤», «端到端_否»` |
 | M3-甲 Lean 块语法 | `Foundation/Wen/WenyanSyntax.lean § daoJudgeBlock_eq_daoJudgeProg` (by `rfl`) |
-| L1 typed lambda (371 executable catalogue rows; 38 theorem-backed exact rows) | `Foundation/Wen/WenDef.lean § Stdlib` + `Foundation/Wen/WenSurface/Semantics.lean § executableSemanticsFor?` |
+| L1 typed lambda (371 executable catalogue rows; 317 theorem-backed exact rows) | `Foundation/Wen/WenDef.lean § Stdlib` + `Foundation/Wen/WenSurface/Semantics.lean § executableSemanticsFor?` |
 | L1 ⟶ Lean 求值 | `Foundation/Wen/WenDefEval.lean § tui_eq_sheng (∀ 64 hex)` |
 | L1 ⟶ L0 编译 (cuo-equivariant subset) | `Foundation/Wen/WenDefCompile.lean § {idProg, add32Prog, cuoProg}_correct` |
 | 反射层: 判型良 / 判停 / 验程 | `Foundation/Wen/WenyanReflect.lean § «文核同源»` |
@@ -302,7 +302,7 @@ scripts/generate_monad_dag.py && scripts/render_monad_dag.sh
 `wenyan-surface` 是当前可执行的 WenSurface 子集入口：它支持 tokens、resolve、AST、
 typecheck、JSON、explain、operator catalogue 和 coverage inspect modes。失败诊断返回非零
 exit code；全部 371 个 catalogue 算子可执行。无 theorem-backed Hex/Bool denotation
-的算子返回 `Catalogue[...]` symbolic normal form，不伪装成 Hex/Bool 结果。
+的算子返回 `Catalogue[...]` structural catalogue normal form，不伪装成 Hex/Bool 结果。
 路线状态见 `formal/SSBX/notes/wensurface-roadmap.md`。
 
 ---

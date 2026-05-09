@@ -1,4 +1,5 @@
 import SSBX.Foundation.Bagua.Cell192
+import SSBX.Foundation.Yi.YiCore
 import SSBX.Text.OperatorSignatures
 
 /-!
@@ -13,56 +14,94 @@ generating pair-specific theorems for every operator-cell row.
 namespace SSBX.Text.OperatorFamilySemantics
 
 open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Yi.Yi
+open SSBX.Foundation.Yi.YiCore
 open SSBX.Text.WenyanOperators
 open SSBX.Text.OperatorSignatures
 
 /-- Cell-uniform transformations with exact operator-family anchors. -/
 inductive CellTransformKind where
+  | id
+  | next64
+  | prev64
   | cuo
   | zong
   | hu
+  | cuoZong
+  | flip1
+  | flip2
+  | flip3
   deriving Repr, DecidableEq, BEq
 
 namespace CellTransformKind
 
 def operatorId : CellTransformKind → OperatorId
+  | .id => .R_6
+  | .next64 => .T_10
+  | .prev64 => .T_12
   | .cuo => .Z_5
   | .zong => .Z_6
   | .hu => .Z_3
+  | .cuoZong => .Z_33
+  | .flip1 => .T_5
+  | .flip2 => .T_1
+  | .flip3 => .T_2
 
 def apply : CellTransformKind → Cell192 → Cell192
+  | .id, c => c
+  | .next64, c => («生» c.1, c.2)
+  | .prev64, c => («加» Hexagram.kun c.1, c.2)
   | .cuo, c => Cell192.hexCuo c
   | .zong, c => Cell192.hexZong c
   | .hu, c => Cell192.hexHu c
+  | .cuoZong, c => (c.1.cuoZong, c.2)
+  | .flip1, c => Cell192.flip1 c
+  | .flip2, c => Cell192.flip2 c
+  | .flip3, c => Cell192.flip3 c
 
 end CellTransformKind
 
 def cellTransformKinds : List CellTransformKind :=
-  [.cuo, .zong, .hu]
+  [.id, .next64, .prev64, .cuo, .zong, .hu, .cuoZong, .flip1, .flip2, .flip3]
 
 def cellTransformOperatorIds : List OperatorId :=
-  [.Z_5, .Z_6, .Z_3, .T_6]
+  [ .R_6, .R_11, .T_1, .T_2, .T_4, .T_5, .T_6, .T_7, .T_8, .T_9, .T_10
+  , .T_12, .T_13, .T_14, .T_15, .B_3, .B_4, .B_5, .B_6, .I_2, .I_6, .I_8
+  , .P_9, .D_1, .L_9, .L_10, .Y_3, .Y_4, .Y_5, .Y_17, .Y_18, .Z_2, .Z_3
+  , .Z_5, .Z_6, .Z_8, .Z_9, .Z_12, .Z_13, .Z_22, .Z_31, .Z_33, .ZA_2 ]
 
 def cellTransformForOperator? : OperatorId → Option CellTransformKind
-  | .Z_5 => some .cuo
+  | .R_6 | .R_11 | .T_7 | .T_8 | .B_4 | .B_5 | .B_6 | .I_2 | .P_9 | .D_1
+  | .L_9 | .L_10 | .Y_17 | .Y_18 | .Z_12 | .Z_13 | .ZA_2 => some .id
+  | .T_10 | .T_13 | .T_15 | .B_3 | .Y_3 | .Z_9 => some .next64
+  | .T_12 | .T_14 | .Y_4 | .Y_5 | .Z_8 | .Z_22 => some .prev64
+  | .T_4 | .T_6 | .Z_5 | .Z_31 => some .cuo
   | .Z_6 => some .zong
-  | .Z_3 => some .hu
-  | .T_6 => some .cuo
+  | .T_9 => some .zong
+  | .I_6 | .Z_2 | .Z_3 => some .hu
+  | .I_8 | .Z_33 => some .cuoZong
+  | .T_5 => some .flip1
+  | .T_1 => some .flip2
+  | .T_2 => some .flip3
   | _ => none
 
 def applyCellTransformForOperator? (id : OperatorId) (c : Cell192) : Option Cell192 :=
   (cellTransformForOperator? id).map (fun k => k.apply c)
 
 theorem cellTransformKinds_length :
-    cellTransformKinds.length = 3 := by
+    cellTransformKinds.length = 10 := by
   native_decide
 
 theorem cellTransformOperatorIds_eq :
-    cellTransformOperatorIds = [.Z_5, .Z_6, .Z_3, .T_6] := by
+    cellTransformOperatorIds =
+      [ .R_6, .R_11, .T_1, .T_2, .T_4, .T_5, .T_6, .T_7, .T_8, .T_9, .T_10
+      , .T_12, .T_13, .T_14, .T_15, .B_3, .B_4, .B_5, .B_6, .I_2, .I_6, .I_8
+      , .P_9, .D_1, .L_9, .L_10, .Y_3, .Y_4, .Y_5, .Y_17, .Y_18, .Z_2, .Z_3
+      , .Z_5, .Z_6, .Z_8, .Z_9, .Z_12, .Z_13, .Z_22, .Z_31, .Z_33, .ZA_2 ] := by
   native_decide
 
 theorem cellTransformOperatorIds_length :
-    cellTransformOperatorIds.length = 4 := by
+    cellTransformOperatorIds.length = 43 := by
   native_decide
 
 theorem cellTransformOperatorIds_nodup :
@@ -73,9 +112,18 @@ theorem cellTransformOperatorIds_catalogue_members :
     cellTransformOperatorIds.all (fun id => decide (id ∈ allOperatorIds)) = true := by
   native_decide
 
-theorem cellTransformOperatorIds_have_signature_seed :
-    cellTransformOperatorIds.all (fun id => decide (id ∈ signedOperatorIds)) = true := by
+theorem cellTransformOperatorIds_have_catalogue_signature :
+    cellTransformOperatorIds.all (fun id => decide ((fullSignatureFor id).id = id)) = true := by
   native_decide
+
+theorem cellTransformForOperator?_id :
+    cellTransformForOperator? .R_6 = some .id := rfl
+
+theorem cellTransformForOperator?_next64 :
+    cellTransformForOperator? .T_10 = some .next64 := rfl
+
+theorem cellTransformForOperator?_prev64 :
+    cellTransformForOperator? .T_12 = some .prev64 := rfl
 
 theorem cellTransformForOperator?_cuo :
     cellTransformForOperator? .Z_5 = some .cuo := rfl
@@ -89,6 +137,30 @@ theorem cellTransformForOperator?_hu :
 theorem cellTransformForOperator?_fan :
     cellTransformForOperator? .T_6 = some .cuo := rfl
 
+theorem cellTransformForOperator?_fanOperator :
+    cellTransformForOperator? .Z_31 = some .cuo := rfl
+
+theorem cellTransformForOperator?_cuoZong :
+    cellTransformForOperator? .Z_33 = some .cuoZong := rfl
+
+theorem cellTransformForOperator?_flip1 :
+    cellTransformForOperator? .T_5 = some .flip1 := rfl
+
+theorem cellTransformForOperator?_flip2 :
+    cellTransformForOperator? .T_1 = some .flip2 := rfl
+
+theorem cellTransformForOperator?_flip3 :
+    cellTransformForOperator? .T_2 = some .flip3 := rfl
+
+theorem applyCellTransformForOperator?_id (c : Cell192) :
+    applyCellTransformForOperator? .R_6 c = some c := rfl
+
+theorem applyCellTransformForOperator?_next64 (c : Cell192) :
+    applyCellTransformForOperator? .T_10 c = some («生» c.1, c.2) := rfl
+
+theorem applyCellTransformForOperator?_prev64 (c : Cell192) :
+    applyCellTransformForOperator? .T_12 c = some («加» Hexagram.kun c.1, c.2) := rfl
+
 theorem applyCellTransformForOperator?_cuo (c : Cell192) :
     applyCellTransformForOperator? .Z_5 c = some (Cell192.hexCuo c) := rfl
 
@@ -100,6 +172,21 @@ theorem applyCellTransformForOperator?_hu (c : Cell192) :
 
 theorem applyCellTransformForOperator?_fan (c : Cell192) :
     applyCellTransformForOperator? .T_6 c = some (Cell192.hexCuo c) := rfl
+
+theorem applyCellTransformForOperator?_fanOperator (c : Cell192) :
+    applyCellTransformForOperator? .Z_31 c = some (Cell192.hexCuo c) := rfl
+
+theorem applyCellTransformForOperator?_cuoZong (c : Cell192) :
+    applyCellTransformForOperator? .Z_33 c = some (c.1.cuoZong, c.2) := rfl
+
+theorem applyCellTransformForOperator?_flip1 (c : Cell192) :
+    applyCellTransformForOperator? .T_5 c = some (Cell192.flip1 c) := rfl
+
+theorem applyCellTransformForOperator?_flip2 (c : Cell192) :
+    applyCellTransformForOperator? .T_1 c = some (Cell192.flip2 c) := rfl
+
+theorem applyCellTransformForOperator?_flip3 (c : Cell192) :
+    applyCellTransformForOperator? .T_2 c = some (Cell192.flip3 c) := rfl
 
 theorem cellTransform_preserves_shi (k : CellTransformKind) (c : Cell192) :
     (k.apply c).2 = c.2 := by
@@ -126,18 +213,22 @@ theorem cuo_zong_family_composite_involutive (c : Cell192) :
   Cell192.hexCuoZong_hexCuoZong c
 
 /--
-Summary: three operator families currently have parameterized `Cell192`
-semantics, with four catalogue ids enabled because `反` is a conservative alias
-for the same cell-level reversal as `错`.  These laws range over all cells; they
+Summary: ten operator families currently have parameterized `Cell192`
+semantics, with forty-three catalogue ids enabled where the surface row has a
+conservative exact Hex transform anchor.  These laws range over all cells; they
 do not introduce pair-specific theorem rows.
 -/
 theorem cell_transform_family_summary :
-    cellTransformKinds.length = 3
-    ∧ cellTransformOperatorIds.length = 4
-    ∧ cellTransformOperatorIds = [.Z_5, .Z_6, .Z_3, .T_6]
+    cellTransformKinds.length = 10
+    ∧ cellTransformOperatorIds.length = 43
+    ∧ cellTransformOperatorIds =
+      [ .R_6, .R_11, .T_1, .T_2, .T_4, .T_5, .T_6, .T_7, .T_8, .T_9, .T_10
+      , .T_12, .T_13, .T_14, .T_15, .B_3, .B_4, .B_5, .B_6, .I_2, .I_6, .I_8
+      , .P_9, .D_1, .L_9, .L_10, .Y_3, .Y_4, .Y_5, .Y_17, .Y_18, .Z_2, .Z_3
+      , .Z_5, .Z_6, .Z_8, .Z_9, .Z_12, .Z_13, .Z_22, .Z_31, .Z_33, .ZA_2 ]
     ∧ cellTransformOperatorIds.Nodup
     ∧ cellTransformOperatorIds.all (fun id => decide (id ∈ allOperatorIds)) = true
-    ∧ cellTransformOperatorIds.all (fun id => decide (id ∈ signedOperatorIds)) = true
+    ∧ cellTransformOperatorIds.all (fun id => decide ((fullSignatureFor id).id = id)) = true
     ∧ (∀ k : CellTransformKind, ∀ c : Cell192, (k.apply c).2 = c.2)
     ∧ (∀ c : Cell192, CellTransformKind.cuo.apply (CellTransformKind.cuo.apply c) = c)
     ∧ (∀ c : Cell192, CellTransformKind.zong.apply (CellTransformKind.zong.apply c) = c)
@@ -150,7 +241,7 @@ theorem cell_transform_family_summary :
     , cellTransformOperatorIds_eq
     , cellTransformOperatorIds_nodup
     , cellTransformOperatorIds_catalogue_members
-    , cellTransformOperatorIds_have_signature_seed
+    , cellTransformOperatorIds_have_catalogue_signature
     , cellTransform_preserves_shi
     , cuo_family_involutive
     , zong_family_involutive

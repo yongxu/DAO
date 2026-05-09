@@ -2,32 +2,14 @@
   "records": [
     {
       "kind": "partial def",
-      "line": 162,
+      "line": 168,
       "name": "run",
       "path": "formal/SSBX/Foundation/Bagua/BaguaTuring.lean"
     },
     {
       "kind": "axiom",
-      "line": 54,
-      "name": "universalInterpExists",
-      "path": "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
-    },
-    {
-      "kind": "axiom",
-      "line": 65,
-      "name": "smnExists",
-      "path": "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
-    },
-    {
-      "kind": "axiom",
-      "line": 75,
-      "name": "kleeneFromPrimitives",
-      "path": "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
-    },
-    {
-      "kind": "axiom",
-      "line": 87,
-      "name": "allDecidersAreYiComputable",
+      "line": 59,
+      "name": "kleeneBoundary",
       "path": "formal/SSBX/Foundation/Bagua/KleeneCarrier.lean"
     },
     {

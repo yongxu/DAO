@@ -16,7 +16,7 @@ Lean 4 之 `«...»` 是 *identifier 引号*（用以容纳含特殊字符之标
 
 ## 设计
 
-  · `notation`         — 11 atomic instr / 3 shi / 6 yao 位（直接铸 token → 值）
+  · `notation`         — 12 atomic instr / 3 shi / 6 yao 位（直接铸 token → 值）
   · `syntax + macro`   — 比爻 / 比时 / 跳 三 至-特例（带 Nat 参数）
   · `程` 块            — sepBy(term, "；") → List YiInstr
 
@@ -61,12 +61,13 @@ notation "四爻" => (⟨3, by omega⟩ : Fin 6)
 notation "五爻" => (⟨4, by omega⟩ : Fin 6)
 notation "上爻" => (⟨5, by omega⟩ : Fin 6)
 
-/-! ## § 3  指令字 — atomic 7 -/
+/-! ## § 3  指令字 — atomic 8 -/
 
 notation "不动" => YiInstr.nop
 notation "互"   => YiInstr.hu
 notation "错"   => YiInstr.cuo
 notation "综"   => YiInstr.zong
+notation "易"   => YiInstr.swap
 notation "推"   => YiInstr.push
 notation "取"   => YiInstr.pop
 notation "终"   => YiInstr.halt
@@ -105,6 +106,7 @@ example : (YiInstr.halt : YiInstr) = 终   := rfl
 example : (YiInstr.hu   : YiInstr) = 互   := rfl
 example : (YiInstr.cuo  : YiInstr) = 错   := rfl
 example : (YiInstr.zong : YiInstr) = 综   := rfl
+example : (YiInstr.swap : YiInstr) = 易   := rfl
 example : (YiInstr.push : YiInstr) = 推   := rfl
 example : (YiInstr.pop  : YiInstr) = 取   := rfl
 

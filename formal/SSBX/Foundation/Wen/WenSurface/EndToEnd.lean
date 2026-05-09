@@ -5,17 +5,18 @@
   · `wenyanCompile : String → Except WenSurfaceErr TypedTm`
   · `wenyanInterp : String → Except WenSurfaceErr Hexagram`
   · `wenyanInterpBool : String → Except WenSurfaceErr Bool`
+  · `wenyanInterpHexPair` / `wenyanInterpHexList` for exact carrier values
 
-求值复用既有 [WenDefEval.denoteHex / denoteBool](../WenDefEval.lean)，
+求值复用既有 [WenDefEval.denoteHex / denoteBool / denoteHexPair / denoteHexList](../WenDefEval.lean)，
 不走 baguaWen IL（保留 [WenDefCompile.lean](../WenDefCompile.lean) 的
 cuo-equivariant 子集 commute 作 future work）。
 
 ## 当前范围
 
 - cue-aware resolver + explicit `SurfaceExpr` AST
-- 64 卦名 / aliases + Bool literals + Hex-only binders
+- 64 卦名 / aliases + Bool literals + Hex-first/Bool-fallback lambdas and lets
 - executable registry 覆盖全部 371 个 OperatorId
-- 84 个 exact/theorem-backed operator 可求 Hex/Bool；其余 catalogue rows 求 symbolic normal form
+- 317 个 exact/theorem-backed operator 可求 Hex/Bool/Pair/List；其余 catalogue rows 求 structural normal form
 - unpromoted gap form 只诊断，不伪造 denotation
 
 ## 状态
@@ -28,6 +29,7 @@ namespace SSBX.Foundation.Wen.WenSurface
 
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Yi.YiCore
+open SSBX.Foundation.Bagua.BaguaAlgebra
 open SSBX.Foundation.Wen.WenDef
 open SSBX.Foundation.Wen.WenDefEval
 open SSBX.Text.WenyanOperators
@@ -83,6 +85,22 @@ def wenyanInterpBool (s : String) : Except WenSurfaceErr Bool :=
     match denoteBool typed.tm with
     | some b => .ok b
     | none   => .error (.denoteFailed .bool typed.ty)
+
+def wenyanInterpHexPair (s : String) : Except WenSurfaceErr (Hexagram × Hexagram) :=
+  match wenyanCompile s with
+  | .error e => .error e
+  | .ok typed =>
+    match denoteHexPair typed.tm with
+    | some p => .ok p
+    | none   => .error (.denoteFailed (.prod .hex .hex) typed.ty)
+
+def wenyanInterpHexList (s : String) : Except WenSurfaceErr (List Hexagram) :=
+  match wenyanCompile s with
+  | .error e => .error e
+  | .ok typed =>
+    match denoteHexList typed.tm with
+    | some xs => .ok xs
+    | none    => .error (.denoteFailed (.list .hex) typed.ty)
 
 /-! ## § 3  端到端 sanity 例子 -/
 
@@ -159,6 +177,22 @@ example : (wenyanInterpBool "比 一 一").toOption = some true := by native_dec
 /-- 「比 乾 坤」 → false. -/
 example : (wenyanInterpBool "比 乾 坤").toOption = some false := by native_decide
 
+/-! ### Relation infix forms -/
+
+example : (wenyanInterpBool "一 同 一").toOption = some true := by native_decide
+
+example : (wenyanInterpBool "推 乾 同 一").toOption = some true := by native_decide
+
+example : (wenyanInterpBool "（推 乾） 同 一").toOption = some true := by native_decide
+
+example : (wenyanInterpBool "乾 比 坤").toOption = some false := by native_decide
+
+example :
+    (match wenyanCompile "一 同 一 同 一" with
+     | .error (.parse (.nonassocInfix "同" 6)) => true
+     | _ => false) = true :=
+  by native_decide
+
 /-! ### Hex/operator surface collision tests
 
   「比」「益」「损/損」既可作已执行算子，也可作卦名。parser 在 prefix
@@ -188,6 +222,8 @@ example :
   by native_decide
 
 example : (wenyanInterp "大壯").toOption = (wenyanInterp "大壮").toOption := by native_decide
+
+example : (wenyanInterp "器").toOption = resolveHexConst "鼎" := by native_decide
 
 example : (wenyanInterp "鼎").toOption = resolveHexConst "鼎" := by native_decide
 
@@ -227,7 +263,23 @@ example : (wenyanInterpBool "大一 乾").toOption = some true := by native_deci
 
 example :
     (match wenyanCompile "五行 乾" with
-     | .ok typed => typed.ty = .catalogue SignatureKind.constructor
+     | .ok typed => typed.ty = .list .hex
+     | _ => false) = true :=
+  by native_decide
+
+example :
+    (wenyanInterpHexList "五行 乾").toOption = some [Hexagram.qian] :=
+  by native_decide
+
+example :
+    (match wenyanCompile "曰 乾 乾" with
+     | .ok typed => typed.ty = .catalogue .textAct
+     | _ => false) = true :=
+  by native_decide
+
+example :
+    (match wenyanCompile "曰 真 真" with
+     | .error (.elab (.typeMismatch (.argumentMismatch .hex .bool))) => true
      | _ => false) = true :=
   by native_decide
 
@@ -288,9 +340,7 @@ example :
   by native_decide
 
 example :
-    (match wenyanCompile "或 者 甲 同 甲 一" with
-     | .error (.resolve (.ambiguous "或" 0 candidates)) => candidates.length == 2
-     | _ => false) = true :=
+    (wenyanInterpBool "或 者 甲 同 甲 一").toOption = some true :=
   by native_decide
 
 example :
@@ -421,11 +471,466 @@ example : (wenyanInterp "错 乾").toOption = some Hexagram.kun := by native_dec
 example : (wenyanInterp "錯 乾").toOption = some Hexagram.kun := by native_decide
 example : (wenyanInterp "综 乾").toOption = some Hexagram.qian := by native_decide
 example : (wenyanInterp "互 坤").toOption = some Hexagram.kun := by native_decide
+example : (wenyanInterp "改 乾").toOption = some (dongInner Hexagram.qian) := by native_decide
+example : (wenyanInterp "轉 乾").toOption = some Hexagram.qian.zong := by native_decide
+example : (wenyanInterp "伸 乾").toOption = some («生» Hexagram.qian) := by native_decide
+example : (wenyanInterp "屈 乾").toOption = some («加» Hexagram.kun Hexagram.qian) := by native_decide
+example : (wenyanInterp "起 乾").toOption = some («生» Hexagram.qian) := by native_decide
+example : (wenyanInterp "止 乾").toOption = some Hexagram.qian := by native_decide
+example : (wenyanInterp "進 乾").toOption = some («生» Hexagram.qian) := by native_decide
+example : (wenyanInterp "退 乾").toOption = some («加» Hexagram.kun Hexagram.qian) := by native_decide
 example :
-    (match wenyanCompile "反 乾" with
-     | .error (.resolve (.ambiguous "反" 0 candidates)) => candidates.length == 3
-     | _ => false) = true :=
+    (theoremBackedSemanticsFor? OperatorId.F_1).isSome = true :=
   by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.F_2).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.F_7).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.F_8).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.F_11).isSome = true :=
+  by native_decide
+example : (wenyanInterp "藏 乾").toOption = some («加» Hexagram.kun Hexagram.qian) := by native_decide
+example : (wenyanInterp "露 乾").toOption = some («生» Hexagram.qian) := by native_decide
+example : (wenyanInterp "明 乾").toOption = some («生» Hexagram.qian) := by native_decide
+example : (wenyanInterp "蔽 乾").toOption = some («加» Hexagram.kun Hexagram.qian) := by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.M_5).isSome = true :=
+  by native_decide
+example : (wenyanInterp "使 推 乾").toOption = some («生» Hexagram.qian) := by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.K_7).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.L_7).isSome = true :=
+  by native_decide
+example : (wenyanInterpBool "若 真").toOption = some true := by native_decide
+example : (wenyanInterp "再 推 乾").toOption = some («生» («生» Hexagram.qian)) := by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.A_6).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Q_3).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.D_9).isSome = true :=
+  by native_decide
+example : (wenyanInterpBool "宜 真 假").toOption = some false := by native_decide
+example : (wenyanInterpBool "能 假 真").toOption = some true := by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.M_7).isSome = true :=
+  by native_decide
+example :
+    (wenyanCompile "偶 乾 坤").toOption.map (·.ty) =
+      some (.prod .hex .hex) :=
+  by native_decide
+example :
+    (wenyanInterpHexPair "偶 乾 坤").toOption =
+      some (Hexagram.qian, Hexagram.kun) :=
+  by native_decide
+example :
+    (wenyanInterpHexPair "偕 乾 坤").toOption =
+      some (Hexagram.qian, Hexagram.kun) :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.R_14).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.T_3).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.T_11).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.K_5).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.N_8).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.I_7).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.P_11).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.P_13).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.P_22).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.D_8).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.L_5).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.X_4).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Z_7).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Z_21).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.X_14).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Z_19).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.CHU_9).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.H_8).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Y_1).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Y_6).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Y_7).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Y_8).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Y_10).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Y_11).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Y_12).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Y_13).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Y_14).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Y_15).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Y_21).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Y_22).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Y_23).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Y_24).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Y_25).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Y_26).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Y_27).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Z_26).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Z_27).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Z_34).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Z_35).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.G_2).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.G_4).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Z_23).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.X_1).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.ZHU_10).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.SUN_1).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.SUN_5).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.ZA_5).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.LIJ_5).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.ZA_7).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.ZA_3).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.ZA_11).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.C_5).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.C_6).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.B_1).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.B_7).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.R_5).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.C_4).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.C_7).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.C_8).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.B_2).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.P_10).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.P_12).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.G_8).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.P_3).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.L_13).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.G_9).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.H_1).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.H_2).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.H_3).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.H_4).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.H_5).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.H_6).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.P_2).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.P_6).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.P_7).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.P_18).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.P_24).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.G_5).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.L_3).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.L_12).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.L_15).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Z_24).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.ZHU_9).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.SUN_2).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.SUN_3).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.SUN_4).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.SUN_14).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.CHU_4).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.CHU_5).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.LIJ_4).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.LIJ_7).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.LIJ_11).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.ZA_6).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.S_9).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.S_10).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.S_11).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.S_12).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.S_17).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.S_18).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.S_19).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.P_23).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.A_1).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.A_2).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.A_3).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.A_7).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.A_8).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.A_9).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.A_10).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.A_15).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.A_16).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.A_17).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.A_18).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.A_19).isSome = true :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.A_20).isSome = true :=
+  by native_decide
+example :
+    (wenyanInterpHexPair "兩 乾").toOption =
+      some (Hexagram.qian, Hexagram.qian) :=
+  by native_decide
+example :
+    (wenyanInterpHexList "聚 乾").toOption = some [Hexagram.qian] :=
+  by native_decide
+example :
+    (wenyanInterp "散 聚 乾").toOption = some Hexagram.qian :=
+  by native_decide
+example :
+    (theoremBackedSemanticsFor? OperatorId.Z_17).isSome = true :=
+  by native_decide
+example : (wenyanInterp "静 乾").toOption = some Hexagram.qian := by native_decide
+example : (wenyanInterp "恒 乾").toOption = some Hexagram.qian := by native_decide
+example : (wenyanInterp "不动 乾").toOption = some Hexagram.qian := by native_decide
+example : (wenyanInterp "錯綜 乾").toOption = some Hexagram.qian.cuoZong := by native_decide
+example : (wenyanInterp "交错 乾").toOption = some Hexagram.qian.cuoZong := by native_decide
+example : (wenyanInterp "复 乾").toOption = some Hexagram.qian := by native_decide
+example : (wenyanInterp "归一 乾").toOption = some Hexagram.qian := by native_decide
+example : (wenyanInterp "展 乾").toOption = some («生» Hexagram.qian) := by native_decide
+example : (wenyanInterp "初动 乾").toOption = some (dongInner Hexagram.qian) := by native_decide
+example : (wenyanInterp "承变 乾").toOption = some (huaInner Hexagram.qian) := by native_decide
+example : (wenyanInterp "际变 乾").toOption = some (bianInner Hexagram.qian) := by native_decide
+example :
+    (wenyanCompile "改").toOption.map (·.ty) = some (.arr .hex .hex) :=
+  by native_decide
+example :
+    (wenyanInterp "化 乾").toOption = some (huaInner Hexagram.qian) :=
+  by native_decide
+example :
+    (wenyanInterp "反 乾").toOption = some Hexagram.qian.cuo :=
+  by native_decide
+example :
+    (wenyanInterpBool "反 真").toOption = some false :=
+  by native_decide
+
+/-! ## § 6.26 exact Bool / finite quantifier promotions -/
+
+example : (wenyanInterpBool "遂 真 假").toOption = some false := by native_decide
+example : (wenyanInterpBool "但 真 假").toOption = some false := by native_decide
+example : (wenyanInterpBool "過半 者 甲 真").toOption = some true := by native_decide
+
+example :
+    (wenyanCompile "三").toOption.map (·.ty) =
+      some (.arr (.arr .hex .bool) .bool) :=
+  by native_decide
+
+example :
+    (theoremBackedSemanticsFor? OperatorId.Q_8).isSome = true := by native_decide
+
+example :
+    (theoremBackedSemanticsFor? OperatorId.D_10).isSome = true := by native_decide
 
 example :
     (wenyanInterp "（而 者 甲 推 甲 者 甲 損 甲） 之 一").toOption = some «一» :=
@@ -470,6 +975,69 @@ example : (wenyanInterpBool "（同 乾） 乾").toOption = some true := by nati
 example : (wenyanInterp "者 甲 推 甲 乾").toOption = some «一» := by native_decide
 
 example :
+    (wenyanCompile "者 甲 甲").toOption.map (·.ty)
+      = some (.arr .hex .hex) :=
+  by native_decide
+
+example :
+    (wenyanCompile "者 甲 不 甲").toOption.map (·.ty)
+      = some (.arr .bool .bool) :=
+  by native_decide
+
+example :
+    (wenyanCompile "者 甲 甲 之 乾").toOption.map (·.ty)
+      = some (.arr (.arr .hex .hex) .hex) :=
+  by native_decide
+
+example :
+    (wenyanCompile "者 甲 甲 之 真").toOption.map (·.ty)
+      = some (.arr (.arr .bool .bool) .bool) :=
+  by native_decide
+
+example :
+    (wenyanCompile "者 甲 同 甲 甲").toOption.map (·.ty)
+      = some (.arr .hex .bool) :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "者 甲 甲 真").toOption = some true :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "者 甲 不 甲 真").toOption = some false :=
+  by native_decide
+
+example :
+    (wenyanCompile "者 甲 甲 推").toOption.map (·.ty)
+      = some (.arr .hex .hex) :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "（者 甲 不 甲） 之 真").toOption = some false :=
+  by native_decide
+
+example :
+    (wenyanInterp "（者 甲 甲 之 乾） 之 推").toOption = some «一» :=
+  by native_decide
+
+example :
+    (wenyanInterp "（者 甲 甲 之 一） 之 推").toOption = some («生» «一») :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "（者 甲 甲 之 真） 之 不").toOption = some false :=
+  by native_decide
+
+example :
+    (wenyanCompile "而 者 甲 甲 者 甲 推 甲").toOption.map (·.ty)
+      = some (.arr .hex .hex) :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "各 者 甲 真 者 甲 同 甲 甲").toOption = some true :=
+  by native_decide
+
+example :
     (match wenyanCompile "而 不 不 真" with
      | .error (.parse (.typeMismatch (.arr .hex .hex) (.arr .bool .bool) "不" 2)) => true
      | _ => false) = true :=
@@ -493,6 +1061,24 @@ example :
 
 example :
     (wenyanInterp "令 甲 乾 推 甲").toOption = some «一» :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "令 甲 真 不 甲").toOption = some false :=
+  by native_decide
+
+example :
+    (wenyanInterp "令 甲 （推） （甲 之 乾）").toOption = some «一» :=
+  by native_decide
+
+example :
+    (wenyanInterpBool "令 甲 （不） （甲 之 真）").toOption = some false :=
+  by native_decide
+
+example :
+    (match wenyanCompile "凡 甲 不 甲" with
+     | .error (.elab (.typeMismatch (.argumentMismatch .bool .hex))) => true
+     | _ => false) = true :=
   by native_decide
 
 /-! ## § 6.5  之又 iteration construction (Phase D)
@@ -532,30 +1118,31 @@ theorem v1_endToEnd_summary :
 
 /-! ## § 7  Phase C cue resolution 端到端 sanity
 
-  cue-aware resolver (`resolveWithCues`) 与 simple resolver (`resolveSimple`)
-  在不含「之」的 stdlib 流上完全等价 —— 这里给一组 atom 序列见证.
+  cue-aware resolver (`resolveWithCues`) 在明显 argument 起点处会比
+  simple resolver 选择更精确的同字 reading；因此这里固定 operator-id
+  序列，而不要求 atom constructor 与 simple 路径逐字相同。
 
   含「之」时，cue 路径将「之」消歧为 S_1 catalogue（v1 路径里是 appMarker），
   parser 将其保留成 explicit marker，elab 时透明处理。本节 verify
   resolveWithCues 之 atom 序列正确性，与 cue → unique reading 桥定理. -/
 
-/-- 不含「之」的程序：cue-aware resolve 之 atom 序列与 simple resolve 一致.
-    通过这一 bridge，「推 一」之意义不依赖路径选择. -/
+/-- 不含「之」的程序：cue-aware resolve 仍选中 `推` 的 T_10 reading. -/
 example :
     let toks : List GlyphTok :=
       [⟨"推", 0, 1, false⟩, ⟨"一", 2, 1, false⟩]
-    ((resolveWithCues toks).toOption.map (fun rs => rs.map (·.atom)))
-      = ((resolveSimple toks).toOption.map (fun rs => rs.map (·.atom))) :=
+    ((resolveWithCues toks).toOption.map (fun rs => rs.map (·.atom |> ResolvedAtom.opId?)))
+      = some [some OperatorId.T_10, none] :=
   by native_decide
 
-/-- 「推 一」之 cue resolve 序列同 v1 resolve 序列（atom 等价）. -/
+/-- 基础 stdlib token 仍按原 OperatorId 序列解析. -/
 example :
     let toks : List GlyphTok :=
       [⟨"推", 0, 1, false⟩, ⟨"比", 2, 1, false⟩, ⟨"不", 4, 1, false⟩,
        ⟨"必", 6, 1, false⟩, ⟨"同", 8, 1, false⟩, ⟨"凡", 10, 1, false⟩,
        ⟨"一", 12, 1, false⟩]
-    ((resolveWithCues toks).toOption.map (fun rs => rs.map (·.atom)))
-      = ((resolveSimple toks).toOption.map (fun rs => rs.map (·.atom))) :=
+    ((resolveWithCues toks).toOption.map (fun rs => rs.map (·.atom |> ResolvedAtom.opId?)))
+      = some [some OperatorId.T_10, some OperatorId.R_8, some OperatorId.N_1,
+          some OperatorId.M_1, some OperatorId.I_1, some OperatorId.Q_1, none] :=
   by native_decide
 
 /-- 「推 之 一」cue resolve 比 v1 resolve 多识：「之」拿到 S_1 catalogue.

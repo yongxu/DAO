@@ -22,7 +22,7 @@ Token 集见 `Bagua.BaguaWenSpec.reservedTokens`。
 程     ::= 句*
 句     ::= 命 sep
 sep    ::= 「；」 | 「;」
-命     ::= «不动» | «互» | «错» | «综» | «推» | «取» | «终»
+命     ::= «不动» | «互» | «错» | «综» | «易» | «推» | «取» | «终»
         | «设时» 时
         | «翻爻» 爻
         | «比爻» 爻 爻 «至» 数
@@ -169,12 +169,66 @@ def parseNumeral (s : String) : Option Nat :=
 
 /-! ## § 4  Parser -/
 
-/-- 解析单条指令。返回 (指令, 剩余 tokens)。结构匹配 12 主字。 -/
+def isNopAlias : String → Bool
+  | "不動" | "静" | "靜" | "恒" | "常" | "守" | "定"
+  | "止" | "安" | "寂" | "息" | "平" | "和" | "一"
+  | "正" | "立" | "成" | "還" | "还" => true
+  | _ => false
+
+def isSetShiAlias : String → Bool
+  | "設時" | "设" | "設" | "置" | "置时" | "置時" | "定时" | "定時"
+  | "定" | "令" | "更" | "易" | "移" | "转" | "轉" | "调" | "調"
+  | "时" | "時" => true
+  | _ => false
+
+def isFlipYaoAlias : String → Bool
+  | "翻" | "動" | "动" | "動爻" | "动爻" | "變" | "变" | "變爻" | "变爻"
+  | "易" | "改" | "反" | "转" | "轉" | "换" | "換" | "倒" | "更" => true
+  | _ => false
+
+def isBranchYaoEqAlias : String → Bool
+  | "侔" | "比" | "同" | "等" | "伦" | "倫" | "校" | "较" | "較" => true
+  | _ => false
+
+def isBranchShiEqAlias : String → Bool
+  | "会" | "會" | "侔" | "比" | "同" | "等" => true
+  | _ => false
+
+/-- Alias parser for the newer single-glyph/default instruction names.
+    Canonical tokens are still handled by the direct clauses below, so the
+    pretty-printer round-trip remains stable. -/
+def parseInstrAlias (op : String) (rest : List Tok) : Option (YiInstr × List Tok) :=
+  match rest with
+  | .cjk yi :: .cjk yj :: .cjk "至" :: .cjk n :: rest' =>
+      if isBranchYaoEqAlias op then
+        match parseYao yi, parseYao yj, parseNumeral n with
+        | some i, some j, some t => some (.branchYaoEq i j t, rest')
+        | _, _, _ => none
+      else none
+  | .cjk s :: .cjk "至" :: .cjk n :: rest' =>
+      if isBranchShiEqAlias op then
+        match parseShi s, parseNumeral n with
+        | some shi, some t => some (.branchShiEq shi t, rest')
+        | _, _ => none
+      else none
+  | .cjk a :: rest' =>
+      match (if isSetShiAlias op then parseShi a else none) with
+      | some shi => some (.setShi shi, rest')
+      | none =>
+          match (if isFlipYaoAlias op then parseYao a else none) with
+          | some yao => some (.flipYao yao, rest')
+          | none =>
+              if isNopAlias op then some (.nop, rest) else none
+  | _ =>
+      if isNopAlias op then some (.nop, rest) else none
+
+/-- 解析单条指令。返回 (指令, 剩余 tokens)。结构匹配 13 主字。 -/
 def parseInstr : List Tok → Option (YiInstr × List Tok)
   | .cjk "不动" :: rest => some (.nop, rest)
   | .cjk "互"   :: rest => some (.hu, rest)
   | .cjk "错"   :: rest => some (.cuo, rest)
   | .cjk "综"   :: rest => some (.zong, rest)
+  | .cjk "易"   :: rest => some (.swap, rest)
   | .cjk "推"   :: rest => some (.push, rest)
   | .cjk "取"   :: rest => some (.pop, rest)
   | .cjk "终"   :: rest => some (.halt, rest)
@@ -198,6 +252,7 @@ def parseInstr : List Tok → Option (YiInstr × List Tok)
       match parseNumeral n with
       | some t => some (.jump t, rest)
       | none   => none
+  | .cjk op :: rest => parseInstrAlias op rest
   | _ => none
 
 /-- Fuel-bounded program parser. Public `parseProg` supplies `toks.length` fuel. -/
@@ -227,6 +282,19 @@ def parseProg (toks : List Tok) : Option (List YiInstr) :=
 /-- 顶层入口：String → Option (List YiInstr)。 -/
 def «解程» (s : String) : Option (List YiInstr) :=
   (lex s).bind parseProg
+
+example : «解程» "«静»" = some [.nop] := by native_decide
+example : «解程» "«一»" = some [.nop] := by native_decide
+example : «解程» "«置» «今»" = some [.setShi .jin] := by native_decide
+example : «解程» "«翻» «三爻»" = some [.flipYao ⟨2, by omega⟩] := by native_decide
+example :
+    «解程» "«侔» «三爻» «四爻» «至» «三»" =
+      some [.branchYaoEq ⟨2, by omega⟩ ⟨3, by omega⟩ 3] := by
+  native_decide
+example :
+    «解程» "«会» «今» «至» «三»" =
+      some [.branchShiEq .jin 3] := by
+  native_decide
 
 /-! ## § 5  Pretty-printer (印) -/
 
@@ -264,6 +332,7 @@ def printInstr : YiInstr → String
   | .hu   => "«互»"
   | .cuo  => "«错»"
   | .zong => "«综»"
+  | .swap => "«易»"
   | .push => "«推»"
   | .pop  => "«取»"
   | .halt => "«终»"
@@ -291,6 +360,7 @@ def validInstr : YiInstr → Bool
   | .branchYaoEq _ _ t => decide (1 ≤ t ∧ t ≤ 64)
   | .branchShiEq _ t   => decide (1 ≤ t ∧ t ≤ 64)
   | .jump t            => decide (1 ≤ t ∧ t ≤ 64)
+  | .swap              => true
   | _ => true
 
 /-- 整程合度：每条指令皆合度。 -/
@@ -311,12 +381,12 @@ theorem daoJudgeProg_print :
 theorem daoJudgeProg_roundtrip :
     «解程» («印程» daoJudgeProg) = some daoJudgeProg := by native_decide
 
-/-! ## § 8  扩展 round-trip：所有 12 构造子 + 全 param 值 -/
+/-! ## § 8  扩展 round-trip：所有 13 构造子 + 全 param 值 -/
 
-/-- 12 构造子之代表（每构造子至少一例，含全部 6 爻位 / 3 时态 / 范围内 Nat 参数）。 -/
+/-- 13 构造子之代表（每构造子至少一例，含全部 6 爻位 / 3 时态 / 范围内 Nat 参数）。 -/
 def allKindReprs : List YiInstr := [
   .nop,
-  .hu, .cuo, .zong,
+  .hu, .cuo, .zong, .swap,
   .push, .pop,
   .halt,
   .setShi .ji, .setShi .jin, .setShi .wei,
@@ -328,7 +398,7 @@ def allKindReprs : List YiInstr := [
   .jump 1, .jump 10, .jump 32, .jump 64
 ]
 
-/-- 12 构造子代表之单例 round-trip：每例 print 后 parse 回原指令. -/
+/-- 13 构造子代表之单例 round-trip：每例 print 后 parse 回原指令. -/
 theorem allKindReprs_singleton_roundtrip :
     allKindReprs.all (fun i => «解程» (printInstr i) = some [i]) = true := by
   native_decide
@@ -345,10 +415,10 @@ def yaoRange : List (Fin 6) := [
 /-- 所有时态。用于穷尽合法单指令 universe。 -/
 def shiRange : List Shi := [.ji, .jin, .wei]
 
-/-- 所有合度单指令，共 2576 条。
+/-- 所有合度单指令，共 2577 条。
 
 构成：
-  * 7 条无参指令
+  * 8 条无参指令
   * 3 条 `setShi`
   * 6 条 `flipYao`
   * 6 * 6 * 64 条 `branchYaoEq`
@@ -356,7 +426,7 @@ def shiRange : List Shi := [.ji, .jin, .wei]
   * 64 条 `jump`
 -/
 def validInstrUniverse : List YiInstr :=
-  [.nop, .hu, .cuo, .zong, .push, .pop, .halt]
+  [.nop, .hu, .cuo, .zong, .swap, .push, .pop, .halt]
   ++ shiRange.map .setShi
   ++ yaoRange.map .flipYao
   ++ (List.flatMap
@@ -371,7 +441,7 @@ def validInstrUniverse : List YiInstr :=
   ++ numeralRange.map YiInstr.jump
 
 theorem validInstrUniverse_length :
-    validInstrUniverse.length = 2576 := by native_decide
+    validInstrUniverse.length = 2577 := by native_decide
 
 theorem validInstrUniverse_all_valid :
     validInstrUniverse.all validInstr = true := by native_decide
@@ -436,10 +506,10 @@ theorem testPrograms_roundtrip :
     · 引理 3: parseNumeral (printNumeral 之 inner) = some n  当 n ∈ [1, 64]
               （n ∈ [1,9] / n=10 / n ∈ [11,19] / n ∈ [20,60] (multiples) / n ∈ [21,64] 五例）
     · 引理 4: lex 之 concatenation: lex (s₁ ++ "；" ++ s₂) = lex s₁ ++ [.sep] ++ lex s₂
-    · 引理 5: parseInstr 之 print-逆: 12 构造子各一证
+    · 引理 5: parseInstr 之 print-逆: 13 构造子各一证
     · 主定理: 由引理 4-5 + induction on List YiInstr
 
-  当前以 native_decide 见证测试集（足覆盖 12 构造子 + 全 1..64 数词），
+  当前以 native_decide 见证测试集（足覆盖 13 构造子 + 全 1..64 数词），
   足够实用；完全一般化留待 v3.
 -/
 
