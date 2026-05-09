@@ -2,6 +2,9 @@
 .lake/
 build/
 
+# Generated documentation indices
+docs-next/_generated/
+
 # Python
 __pycache__/
 *.pyc

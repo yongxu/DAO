@@ -199,6 +199,8 @@ import SSBX.Foundation.Modern.HexagramPosition
 import SSBX.Truth.SelfDescription
 import SSBX.Foundation.Modern.CatExt
 import SSBX.Foundation.Modern.DaoLi
+import SSBX.Foundation.Modern.HistoryTapeStructure
+import SSBX.Foundation.Modern.WuJianShiTrinity
 
 -- Phase 4 深化（Yoneda 全引理 / Lebesgue 深 (MCT/DCT/Fubini) / Picard-Lindelöf 一般化）
 import SSBX.Foundation.Modern.YonedaFull

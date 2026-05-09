@@ -22,6 +22,7 @@
 - subagents 不跑 build。subagents 只做实现、分析、文件级检查或轻量命令，并在返回时说明改了哪些文件、做了哪些非 build 验证。
 - 等所有 subagents 的结果回到主线程并完成集成后，再由主线程统一决定是否跑一次 build。
 - 如果改动只涉及文档、注释、计划或其他不影响构建产物的内容，默认不跑 build，除非任务明确要求。
+- 每次工作结束merge回local main
 
 ## Parallel Work
 
