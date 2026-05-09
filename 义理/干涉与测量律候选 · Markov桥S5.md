@@ -112,7 +112,7 @@ S5 关闭的是 interference-shaped 和 Born-rule-shaped candidate interface；
 | 真实量子通道律 | 未纳入本轮 | S5 仍不证明 unitary/CPTP/Kraus/density law |
 | 经验预测 | 未纳入本轮 | 没有数据接口或实验判准 |
 
-本轮闭合范围：**S5 已在 Lean 中关闭 path-amplitude candidate、candidate composition equation、destructive-interference typed witness 与 Born-rule-shaped boundary；S5b 后续关闭非零 path-amplitude candidate witness 与 valid/reachable/causalBefore 边界；S5c 后续关闭 two-path finite cancellation candidate；S5d 后续关闭 discrete phase-label candidate；S5e 后续关闭 discrete edge-action phase accumulation candidate；它们仍不关闭真实干涉、Born rule 推导、物理相位动力学、unitary/CPTP channel law、decoherence 或经验闭合。**
+本轮闭合范围：**S5 已在 Lean 中关闭 path-amplitude candidate、candidate composition equation、destructive-interference typed witness 与 Born-rule-shaped boundary；S5b 后续关闭非零 path-amplitude candidate witness 与 valid/reachable/causalBefore 边界；S5c 后续关闭 two-path finite cancellation candidate；S5d 后续关闭 discrete phase-label candidate；S5e 后续关闭 discrete edge-action phase accumulation candidate；S20 后续关闭 finite nontrivial quantum-channel law candidate；它们仍不关闭真实干涉、Born rule 推导、物理相位动力学、physical Hilbert/unitary/CPTP/Kraus/density-matrix channel law、decoherence 或经验闭合。**
 
 ---
 

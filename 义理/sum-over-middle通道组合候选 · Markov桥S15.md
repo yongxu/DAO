@@ -2,7 +2,7 @@
 
 **前置**：[channelCompose结合律候选 · Markov桥S14](channelCompose结合律候选%20·%20Markov桥S14.md) · [经典Markov与量子振幅分层 · Markov桥S4](经典Markov与量子振幅分层%20·%20Markov桥S4.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
-**后继**：[sum-over-middle Born边界候选 · Markov桥S16](sum-over-middle%20Born边界候选%20·%20Markov桥S16.md) 已关闭 composed endpoint amplitude support 到 finite Born distribution boundary 的条件式接口。
+**后继**：[sum-over-middle Born边界候选 · Markov桥S16](sum-over-middle%20Born边界候选%20·%20Markov桥S16.md) 已关闭 composed endpoint amplitude support 到 finite Born distribution boundary 的条件式接口；[非平凡量子通道律候选 · Markov桥S20](非平凡量子通道律候选%20·%20Markov桥S20.md) 已把本文件的 concrete nonzero channel witness 升级为 finite support-respecting nonzero channel law。
 
 **Lean 锚点**：
 

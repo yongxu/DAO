@@ -114,7 +114,7 @@ born_distribution_boundary
 channelCompose
 ```
 
-S14 已完成 pointwise associativity，并证明当前 support-respecting skeleton 中 diagonal identity 会被 no-self-step process 阻塞。S15 已从 pointwise composition 进入 sum-over-middle composition，并证明非零 endpoint sum 只能推出 two-step support；后续自然升级是 probability distribution push-forward，或从 finite channel candidate 进入 unitary/CPTP ledger。
+S14 已完成 pointwise associativity，并证明当前 support-respecting skeleton 中 diagonal identity 会被 no-self-step process 阻塞。S15 已从 pointwise composition 进入 sum-over-middle composition，并证明非零 endpoint sum 只能推出 two-step support；S20 已把 concrete nonzero channel witness 升级为 finite support-respecting nonzero channel law。physical unitary/CPTP/Kraus/density-matrix law 仍需额外结构。
 
 ---
 

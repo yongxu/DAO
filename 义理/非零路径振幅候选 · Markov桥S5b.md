@@ -31,7 +31,7 @@ S5b 的主张很窄：
 = nonzero path-amplitude candidate boundary
 ```
 
-它不证明真实相位动力学，不证明路径积分，不证明真实干涉律，不证明 Born rule 从 Markov 桥推出，不证明 unitary/CPTP channel law，不证明 decoherence 或经验闭合。S5c 后续把其中一个缺口收窄为 two-path finite cancellation candidate；S5d 后续把相反振幅收窄为 discrete phase-label candidate；S5e 后续把 path phase 收窄为 edge increments 的有限累积。
+它不证明真实相位动力学，不证明路径积分，不证明真实干涉律，不证明 Born rule 从 Markov 桥推出，不证明物理 Hilbert/unitary/CPTP/Kraus/density-matrix 通道律，不证明 decoherence 或经验闭合。S5c 后续把其中一个缺口收窄为 two-path finite cancellation candidate；S5d 后续把相反振幅收窄为 discrete phase-label candidate；S5e 后续把 path phase 收窄为 edge increments 的有限累积；S20 后续把有限、非零、support-respecting quantum-channel law candidate 单独关闭。
 
 公开摘要为：
 
@@ -68,7 +68,8 @@ theorem nonzero_path_amplitude_bridge_summary :
 | 离散作用量相位候选 | S5b 未纳入；S5e 已开单独接口 | `discrete_action_phase_bridge_summary` 关闭 edge increments 到 path phase 与 relative phase `pi` |
 | 真实干涉律 | 未纳入本轮 | S5c 仍没有相位动力学、path integral、可测差异或实验判准 |
 | Born rule 推导 | 未纳入本轮 | 仍只保留 `ampProb` 形状，不从 Markov 权重推出测量概率律 |
-| 真实 quantum channel law | 未纳入本轮 | 没有 CPTP、Kraus、density matrix 或 trace preservation |
+| 有限非平凡 quantum-channel law candidate | S5b 未纳入；S20 已开单独接口 | `nontrivial_quantum_channel_law_bridge_summary` 关闭非零 channel amplitude、classical support 与 Born-shaped finite boundary |
+| 物理 Hilbert/unitary/CPTP/Kraus/density-matrix 通道律 | 未纳入本轮 | 没有 Hilbert space、unitary/CPTP、Kraus、density matrix 或 trace preservation 语义 |
 | 经验闭合 | 未纳入本轮 | 没有观测量 ledger、数据判准或实验接口 |
 
 边界句：
@@ -108,7 +109,7 @@ S5b 关闭的是非零 path-amplitude candidate witness 与 path/causal boundary
 | Born rule 从桥推导 | 未纳入本轮 | `ampProb` boundary 仍不是 derivation |
 | 经验预测 | 未纳入本轮 | 没有 observation ledger |
 
-本轮闭合范围：**S5b 已在 Lean 中关闭“非零 path amplitude -> valid path -> Reachable / causalBefore”的候选边界，并给 concrete bridge 一个非零 path-amplitude witness；S5c 后续关闭 two-path finite cancellation candidate；S5d 后续关闭 discrete phase-label candidate；S5e 后续关闭 discrete edge-action phase accumulation candidate；它们不关闭连续相位/作用量动力学、一般路径求和、真实干涉律、Born rule 推导、unitary/CPTP channel law、decoherence 或经验闭合。**
+本轮闭合范围：**S5b 已在 Lean 中关闭“非零 path amplitude -> valid path -> Reachable / causalBefore”的候选边界，并给 concrete bridge 一个非零 path-amplitude witness；S5c 后续关闭 two-path finite cancellation candidate；S5d 后续关闭 discrete phase-label candidate；S5e 后续关闭 discrete edge-action phase accumulation candidate；S20 后续关闭 finite nontrivial quantum-channel law candidate；它们不关闭连续相位/作用量动力学、一般路径求和、真实干涉律、Born rule 推导、物理 Hilbert/unitary/CPTP/Kraus/density-matrix 通道律、decoherence 或经验闭合。**
 
 ---
 

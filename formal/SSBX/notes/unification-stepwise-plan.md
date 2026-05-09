@@ -49,6 +49,7 @@
 -> unitary/CPTP ledger
 -> Born rule 推导候选
 -> 路径权重乘法候选
+-> 非平凡量子通道律候选
 -> 几何候选接口
 -> 经验 pending ledger
 -> 更强统一摘要 theorem
@@ -102,6 +103,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleBornBoundaryBrid
 lake build SSBX.Foundation.Modern.QuantumRelativityUnitaryCPTPLedgerBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityBornRuleDerivationBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityPathWeightMultiplicationBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityNontrivialChannelLawBridge
 lake build SSBX
 git diff --check --
 ```
@@ -113,7 +115,7 @@ git diff --check --
 | 项 | 内容 |
 |---|---|
 | Lean 出口 | 保持 `markov_causal_bridge_summary`、`measurement_event_alignment`、`markov_bridge_not_direct_language_addition` 为 `machineChecked` |
-| 文档出口 | 本文件与验证计划明确列出未关闭项：stochastic semantics、general all-path enumeration、path integral、amplitude dynamics、measurement semantics、decoherence、真实 quantum channel law、干涉、因果偏序、度规恢复、经验闭合；finite row sum-one boundary 已由 S9 后续关闭，Markov/amplitude compatibility 下的 Born rule derivation 已由 S18 关闭，finite path-weight multiplication 已由 S19 关闭 |
+| 文档出口 | 本文件与验证计划明确列出未关闭项：stochastic semantics、general all-path enumeration、path integral、amplitude dynamics、measurement semantics、decoherence、physical unitary/CPTP/Kraus/density channel law、干涉、因果偏序、度规恢复、经验闭合；finite row sum-one boundary 已由 S9 后续关闭，Markov/amplitude compatibility 下的 Born rule derivation 已由 S18 关闭，finite path-weight multiplication 已由 S19 关闭，nontrivial finite quantum-channel law 已由 S20 关闭 |
 | 失败记录 | 若发现文档中有强于 theorem 的终局统一或量子引力完成等 claim，记录为 `conceptual mismatch`，并改回对应结构层级 |
 | 当前正名 | Markov-因果桥当前是最小可验证中介构造；更强的物理大统一读法需要后续 theorem 合取后再命名 |
 
@@ -919,7 +921,7 @@ born_distribution_bridge_summary。
 
 ## S13 · channelCompose 候选
 
-目标：给 S4 的 `QuantumChannelSkeleton` 加入最小 composition operation。S13 不证明物理 unitary/CPTP channel law，只证明 current skeleton 的候选组合保持 support-to-step soundness。
+目标：给 S4 的 `QuantumChannelSkeleton` 加入最小 composition operation。S13 不证明物理 Hilbert/unitary/CPTP/Kraus/density-matrix channel law，只证明 current skeleton 的候选组合保持 support-to-step soundness。
 
 | 项 | 内容 |
 |---|---|
@@ -1048,7 +1050,7 @@ sum_over_middle_born_distribution_bridge_summary。
 
 ## S17 · unitary/CPTP 账本边界
 
-目标：把 S13-S16 已关闭 channel/probability skeleton 与 physical unitary/CPTP channel law 的缺口放入同一个 typed ledger。S17 不证明 physical channel law，只关闭 required-but-not-closed ledger。
+目标：把 S13-S16 已关闭 channel/probability skeleton 与 physical Hilbert/unitary/CPTP/Kraus/density-matrix channel law 的缺口放入同一个 typed ledger。S17 不证明 physical channel law，只关闭 required-but-not-closed ledger。
 
 | 项 | 内容 |
 |---|---|
@@ -1056,7 +1058,7 @@ sum_over_middle_born_distribution_bridge_summary。
 | 最低 theorem 形态 | 合取 `BornDistributionBoundaryClosed`、`SumOverMiddleChannelBoundaryClosed`、`SumOverMiddleBornDistributionBoundaryClosed`、current closed items、unitary/CPTP required-but-not-closed items 与 Wen coverage |
 | 失败记录 | 无 Lean proof failure；ledger items 均为 finite inductive cases |
 | 文档更新 | 已新增《unitary-CPTP账本边界 · Markov桥S17》 |
-| 后续结构 | 真正关闭 unitary/CPTP、metric recovery 与 empirical closure |
+| 后续结构 | 非平凡 finite channel law 已由 S20 承接；physical unitary/CPTP/Kraus/density-matrix law、metric recovery 与 empirical closure 仍需额外结构 |
 
 通过判准：
 
@@ -1145,6 +1147,39 @@ path_weight_multiplication_bridge_summary。
 | `concrete_two_step_path_weight_multiplicative` | `QuantumRelativityPathWeightMultiplicationBridge.lean` | concrete prepared/evolved/measured 二步路径权重乘法 |
 | `path_weight_multiplication_bridge_summary` | `QuantumRelativityPathWeightMultiplicationBridge.lean` | S19 path-weight multiplication boundary 已关闭 |
 
+## S20 · 非平凡量子通道律候选
+
+目标：把 S15 中已有的 concrete nonzero channel witness 升级为独立的 finite support-respecting channel law。S20 不证明 physical unitary/CPTP/Kraus/density-matrix theorem；它证明当前 `QuantumChannelSkeleton` 中只要展示非零 amplitude，就推出 process step、carried classical support 与 Born-shaped boundary，并给 concrete bridge 一个非零二步组合 witness。
+
+| 项 | 内容 |
+|---|---|
+| Lean 出口 | `nontrivial_quantum_channel_law_bridge_summary` |
+| 最低 theorem 形态 | 合取 `NontrivialQuantumChannelLawClosed`、S12/S16 Born boundary、S19 path-weight law、pending ledger 与 Wen coverage |
+| 失败记录 | `AmplitudeSupportNormalized` namespace 漏 open；dependent Born existential witness 展开触发 `whnf` heartbeat timeout，改为合取 S16 closed boundary 与 concrete normalized support |
+| 文档更新 | 已新增《非平凡量子通道律候选 · Markov桥S20》 |
+| 后续结构 | Hilbert carrier、linear operator semantics、unitary evolution、CPTP、Kraus、density matrix、amplitude dynamics、measurement semantics、metric recovery 与 empirical closure |
+
+通过判准：
+
+```text
+NontrivialChannelAmplitudeWitness；
+nontrivial_channel_amplitude_law；
+concrete_prepared_evolved_nontrivial_channel_law；
+concrete_evolved_measured_nontrivial_channel_law；
+concrete_nontrivial_sum_over_middle_channel_law；
+nontrivial_quantum_channel_law_bridge_summary。
+```
+
+当前状态：
+
+| theorem | 文件 | 读法 |
+|---|---|---|
+| `nontrivial_channel_amplitude_law` | `QuantumRelativityNontrivialChannelLawBridge.lean` | nonzero channel amplitude -> step / classical support / Born-shaped boundary |
+| `concrete_prepared_evolved_nontrivial_channel_law` | `QuantumRelativityNontrivialChannelLawBridge.lean` | concrete prepared -> evolved amplitude `1` 的非零通道律 |
+| `concrete_evolved_measured_nontrivial_channel_law` | `QuantumRelativityNontrivialChannelLawBridge.lean` | concrete evolved -> measured amplitude `1` 的非零通道律 |
+| `concrete_nontrivial_sum_over_middle_channel_law` | `QuantumRelativityNontrivialChannelLawBridge.lean` | concrete prepared -> measured composed amplitude `1`，并接 two-step witness 与 normalized `[1]` support |
+| `nontrivial_quantum_channel_law_bridge_summary` | `QuantumRelativityNontrivialChannelLawBridge.lean` | S20 nontrivial finite quantum-channel law boundary 已关闭 |
+
 ## 失败记录追加区
 
 失败记录格式沿用验证计划，并允许追加在此区：
@@ -1166,10 +1201,10 @@ path_weight_multiplication_bridge_summary。
 |---|---|---|---|
 | 2026-05-08 | S0 | plan | 本文件新增逐步验证路线；不新增物理 claim |
 | 2026-05-08 | S1 | success | 新增 concrete 三状态 witness 与 `71232` operator-cell grid bridge；仍不证明 sum-one 概率律、Born rule、几何恢复或经验闭合 |
-| 2026-05-08 | S2 | success | 新增 finite probability-kernel denominator interface；关闭非终端行分母非零与权重上界，仍不证明 sum-one 概率律、Born rule、真实 quantum channel law 或经验闭合 |
+| 2026-05-08 | S2 | success | 新增 finite probability-kernel denominator interface；关闭非终端行分母非零与权重上界，仍不证明 sum-one 概率律、Born rule、physical unitary/CPTP/Kraus/density-matrix channel law 或经验闭合 |
 | 2026-05-08 | S3 | success | 新增 path composition and local causal constraints；关闭组合 path witness 的可达/因果读法与 concrete/grid no-self-loop，仍不证明完整偏序、局部有限 causal set、light cone 或 metric recovery |
-| 2026-05-08 | S4 | success | 新增 classical Markov / quantum amplitude-channel 分层接口；关闭 layer separation、channel candidate 到 S2 边界的投影与非零振幅支持精化，仍不证明干涉、Born rule 推导、unitary/CPTP channel law 或经验闭合 |
-| 2026-05-08 | S5 | success | 新增 path amplitude / interference / Born-shaped candidate interface；关闭候选组合等式、相消 witness 与 `ampProb` boundary，仍不证明真实干涉律、Born rule 推导、unitary/CPTP channel law 或经验闭合 |
+| 2026-05-08 | S4 | success | 新增 classical Markov / quantum amplitude-channel 分层接口；关闭 layer separation、channel candidate 到 S2 边界的投影与非零振幅支持精化，仍不证明干涉、Born rule 推导、physical Hilbert/unitary/CPTP/Kraus/density-matrix channel law 或经验闭合 |
+| 2026-05-08 | S5 | success | 新增 path amplitude / interference / Born-shaped candidate interface；关闭候选组合等式、相消 witness 与 `ampProb` boundary，仍不证明真实干涉律、Born rule 推导、physical Hilbert/unitary/CPTP/Kraus/density-matrix channel law 或经验闭合 |
 | 2026-05-08 | S5b | success | 新增 nonzero path-amplitude candidate witness；关闭非零候选振幅到 valid / Reachable / causalBefore 的边界，仍不证明相位律、路径求和、真实干涉律或经验闭合 |
 | 2026-05-08 | S5c | success | 新增 two-path finite cancellation candidate；关闭 same-endpoint / different-middle two-step pair 的 `1 + (-1) = 0` 与 Born-shaped zero boundary，仍不证明 path integral、相位动力学、真实干涉律或经验闭合 |
 | 2026-05-08 | S5d | success | 新增 discrete phase-label candidate；关闭 `zero/pi` 到 `1/-1` 的映射、upper/lower phase labels 与 phase-induced two-path cancellation，仍不证明 continuous phase、action/Hamiltonian law、path integral 或经验闭合 |
@@ -1192,13 +1227,14 @@ path_weight_multiplication_bridge_summary。
 | 2026-05-09 | S10 | failure retained / success | direct concrete/grid 展开 proof 可过但不够结构化；改为泛型 `normalizedMassSum_eq_normalizedRowTotalCandidate`，关闭 `normalizedMass_sum_one` 与 concrete/grid normalized mass sum-one boundary |
 | 2026-05-09 | S11 | failure retained / success | `simp` 不能直接改写 `(candidateWeight ∘ bornRuleCandidate)` 的 list sum；改用 list induction 后关闭 conditional Born-weight normalization boundary |
 | 2026-05-09 | S12 | failure retained / success | `simp [bornDistributionBoundary]` 未自动拆出 dependent distribution fields；改为显式 existential witness 后关闭 finite Born distribution boundary |
-| 2026-05-09 | S13 | success | `channelCompose` stdin 试探一次通过；关闭 current skeleton 的 channel composition candidate，仍不证明 physical unitary/CPTP channel law |
+| 2026-05-09 | S13 | success | `channelCompose` stdin 试探一次通过；关闭 current skeleton 的 channel composition candidate，仍不证明 physical Hilbert/unitary/CPTP/Kraus/density-matrix channel law |
 | 2026-05-09 | S14 | failure retained / success | 第一次 identity obstruction 试探中未展开 `QuantumAmplitudeSupport` 导致 rewrite 找不到目标；展开 support 后关闭 pointwise associativity 与 diagonal identity obstruction |
 | 2026-05-09 | S15 | failure retained / success | 第一次 sum-over-middle support proof 试探中 `List.mem_map` 等式方向写反；改为 `rw [hbeq]` 并展开 `QuantumAmplitudeSupport` 后关闭 finite middle-list composition 的 two-step boundary |
 | 2026-05-09 | S16 | failure retained / success | concrete dependent existential witness 展开到 structure fields 时触发 `whnf` heartbeat timeout；保留 generic closed boundary 与 concrete normalized `[1]` input，关闭 composed Born boundary |
 | 2026-05-09 | S17 | success | 新增 unitary/CPTP ledger boundary；S13-S16 current skeleton items closed，physical Hilbert/Kraus/density/CPTP items required but not closed |
 | 2026-05-09 | S18 | failure retained / success | 第一次 build 中 Rat list sum cast、`List.map_map` composition shape 与 concrete row support projection 展开失败；补 `list_map_rat_sum_cast`、改用 composition shape、展开 `concreteFiniteRowSupportNormalization` 后关闭 Markov/amplitude compatibility 下的 Born-rule derivation |
 | 2026-05-09 | S19 | failure retained / success | 第一次 build 中 indexed inductive `refl` 分支写成带参数形式，且 concrete `KernelPath.refl` 未显式指定 `K := concreteKernel`；修正后关闭 finite kernel path 的 weight append law |
+| 2026-05-09 | S20 | failure retained / success | 第一次 build 中 `AmplitudeSupportNormalized` namespace 漏 open；dependent Born existential witness 展开触发 `whnf` heartbeat timeout，改为合取 S16 closed boundary 与 concrete normalized support 后关闭 nontrivial finite quantum-channel law |
 
 ## 统一用语正名
 
@@ -1206,9 +1242,9 @@ path_weight_multiplication_bridge_summary。
 
 | 词 | 在本路线中的含义 | 结构依据 |
 |---|---|---|
-| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S19 已关闭的 summary theorem 与路线日志 |
-| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8-S19 pending list |
-| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary`、`normalized_mass_bridge_summary`、`born_weight_normalization_bridge_summary`、`born_distribution_bridge_summary`、`channel_compose_bridge_summary`、`channel_compose_associativity_bridge_summary`、`sum_over_middle_channel_bridge_summary`、`sum_over_middle_born_distribution_bridge_summary`、`unitary_cptp_ledger_bridge_summary`、`born_rule_derivation_bridge_summary`、`path_weight_multiplication_bridge_summary` |
+| 逐步统一 | 多个形式接口逐步合取到同一个候选 bridge summary | S0-S20 已关闭的 summary theorem 与路线日志 |
+| 候选统一 | Lean 中有更强的 typed skeleton，且把未闭合经验项接入 pending ledger | `FiniteProcess`、S2-S5r 候选接口、S5q/S5r pending ledger boundary、S8-S20 pending list |
+| 最小统一摘要 | 已关闭 theorem 的保守合取，作为当前阶段的统一读法 | `stepwise_unification_candidate_summary`、`finite_probability_normalization_bridge_summary`、`normalized_mass_bridge_summary`、`born_weight_normalization_bridge_summary`、`born_distribution_bridge_summary`、`channel_compose_bridge_summary`、`channel_compose_associativity_bridge_summary`、`sum_over_middle_channel_bridge_summary`、`sum_over_middle_born_distribution_bridge_summary`、`unitary_cptp_ledger_bridge_summary`、`born_rule_derivation_bridge_summary`、`path_weight_multiplication_bridge_summary`、`nontrivial_quantum_channel_law_bridge_summary` |
 
 推荐正名句：
 
@@ -1216,6 +1252,6 @@ path_weight_multiplication_bridge_summary。
 本路线追求逐步增强的形式统一候选；
 每一步以 Lean 出口、文档锚点和失败记录实事求是地确认含义；
 已经关闭的 summary theorem 就是当前阶段的统一内容，
-尚未闭合的 stochastic semantics、general all-path enumeration、path integral、amplitude dynamics、measurement semantics、decoherence、真实 quantum channel law、几何恢复、数据校准与经验闭合
+尚未闭合的 stochastic semantics、general all-path enumeration、path integral、amplitude dynamics、measurement semantics、decoherence、physical unitary/CPTP/Kraus/density channel law、几何恢复、数据校准与经验闭合
 作为后续结构继续推进。
 ```

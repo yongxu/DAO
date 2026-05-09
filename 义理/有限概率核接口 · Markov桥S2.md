@@ -60,7 +60,7 @@ theorem finite_probability_bridge_summary :
 | sum-one 概率律 | S9-S12 已后续关闭有限条件版本 | 本文件 S2 只证明分母接口；`finite_probability_normalization_bridge_summary` 已证明 concrete/grid 非终端行归一，`normalized_mass_bridge_summary` 已证明逐项 normalized mass 求和为 `1`，`born_weight_normalization_bridge_summary` 已证明 normalized amplitude support 条件下的 candidateWeight law，`born_distribution_bridge_summary` 已把该 law 装入 finite probability distribution interface |
 | Born rule | 未纳入本轮 | 尚未从振幅范数推出测量概率 |
 | quantum amplitude / channel candidate | S2 未纳入；S4 已开单独接口 | 见《经典Markov与量子振幅分层 · Markov桥S4》；S2 finite mass 不等于振幅或 Born 概率 |
-| 真实 quantum channel law | 未纳入本轮 | 尚未证明 unitarity、CPTP、Kraus 或 density-matrix law |
+| physical unitary/CPTP/Kraus/density-matrix channel law | 未纳入本轮 | S20 已关闭 finite support-respecting nonzero channel law；本文件仍不证明 unitarity、CPTP、Kraus 或 density-matrix law |
 | 干涉、度规、经验闭合 | 未纳入本轮 | S3/S4/S5/S5b 已分别处理路径、候选分层、干涉/Born-shaped candidate 与非零 witness；真实干涉律、几何和经验闭合仍需后续层 |
 
 边界句：

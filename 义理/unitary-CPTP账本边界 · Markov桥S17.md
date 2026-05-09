@@ -2,7 +2,7 @@
 
 **前置**：[sum-over-middle Born边界候选 · Markov桥S16](sum-over-middle%20Born边界候选%20·%20Markov桥S16.md) · [channelCompose结合律候选 · Markov桥S14](channelCompose结合律候选%20·%20Markov桥S14.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
-**后继**：[Born rule推导候选 · Markov桥S18](Born%20rule推导候选%20·%20Markov桥S18.md) 已关闭 Markov/amplitude compatibility 下的 finite typed-skeleton Born-rule derivation；physical unitary/CPTP channel law 仍按本文件 ledger 保留为 required but not closed。
+**后继**：[Born rule推导候选 · Markov桥S18](Born%20rule推导候选%20·%20Markov桥S18.md) 已关闭 Markov/amplitude compatibility 下的 finite typed-skeleton Born-rule derivation；[非平凡量子通道律候选 · Markov桥S20](非平凡量子通道律候选%20·%20Markov桥S20.md) 已关闭 finite support-respecting nonzero channel law。physical unitary/CPTP/Kraus/density-matrix law 仍按本文件 ledger 保留为 required but not closed。
 
 **Lean 锚点**：
 
@@ -23,7 +23,7 @@ S17 的主张：
 ```text
 S13-S16 close useful channel/probability typed skeletons.
 
-Physical unitary/CPTP channel law requires more:
+Physical Hilbert/unitary/CPTP/Kraus/density-matrix channel law requires more:
 Hilbert carrier, linear operators, inner product preservation,
 density matrices, complete positivity, trace preservation,
 Kraus semantics, unitary evolution law, and empirical calibration.
@@ -75,7 +75,7 @@ required but not closed / machineChecked ledger：
 | unitary evolution law | `unitaryEvolutionLaw` | required but not closed |
 | empirical calibration | `empiricalCalibration` | required but not closed |
 
-本轮闭合范围：**把当前 channel/probability skeleton 已关闭项与 physical unitary/CPTP law 未关闭项放入同一个可检查 ledger**。
+本轮闭合范围：**把当前 channel/probability skeleton 已关闭项与 physical unitary/CPTP law 未关闭项放入同一个可检查 ledger**。S20 后续关闭了非零 channel amplitude 的 finite law，但不改变本文件对 Hilbert / CPTP / Kraus / density-matrix law 的 required-but-not-closed 判断。
 
 ---
 

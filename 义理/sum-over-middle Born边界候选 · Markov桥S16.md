@@ -2,7 +2,7 @@
 
 **前置**：[sum-over-middle通道组合候选 · Markov桥S15](sum-over-middle通道组合候选%20·%20Markov桥S15.md) · [Born分布边界候选 · Markov桥S12](Born分布边界候选%20·%20Markov桥S12.md) · [`unification-stepwise-plan`](../formal/SSBX/notes/unification-stepwise-plan.md) · [`markov-causal-bridge-verification-plan`](../formal/SSBX/notes/markov-causal-bridge-verification-plan.md)
 
-**后继**：[unitary-CPTP账本边界 · Markov桥S17](unitary-CPTP账本边界%20·%20Markov桥S17.md) 已把 S13-S16 已关闭 skeleton 与 physical channel law 未关闭项放入同一个 ledger。
+**后继**：[unitary-CPTP账本边界 · Markov桥S17](unitary-CPTP账本边界%20·%20Markov桥S17.md) 已把 S13-S16 已关闭 skeleton 与 physical channel law 未关闭项放入同一个 ledger；[非平凡量子通道律候选 · Markov桥S20](非平凡量子通道律候选%20·%20Markov桥S20.md) 已复用本文件的 composed Born boundary，并关闭 finite support-respecting nonzero channel law。
 
 **Lean 锚点**：
 

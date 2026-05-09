@@ -31,7 +31,7 @@ S5b nonzero path-amplitude candidate
 = two-path cancellation candidate boundary
 ```
 
-它不证明路径积分，不证明真实相位动力学，不证明 Born rule 从 Markov 桥推出，不证明 unitary/CPTP channel law，不证明 decoherence，也不证明经验闭合。
+它不证明路径积分，不证明真实相位动力学，不证明 Born rule 从 Markov 桥推出，不证明 physical Hilbert/unitary/CPTP/Kraus/density-matrix channel law，不证明 decoherence，也不证明经验闭合。
 S5d 后续把 `1/-1` 候选振幅改写为 `zero/pi` 离散 phase labels 导出的振幅；S5e 后续把 path phase 改写为 edge increments 的有限累积。
 
 正面结论是：
@@ -131,7 +131,7 @@ S5c 关闭的是 middle-preserving two-step finite cancellation candidate；
 | decoherence / measurement model | 未纳入本轮 | 没有环境、密度矩阵或测量仪器模型 |
 | empirical closure | 未纳入本轮 | S5q 已补 pending observable ledger；仍没有数据接口、误差模型或实验闭合 |
 
-本轮闭合范围：**S5c 已在 Lean 中关闭“同端点、不同中间态的两条 two-step candidate paths 可携带 `1` 与 `-1`，其有限和为 `0`，并且相消后的 Born-shaped candidate weight 为 `0`”这个 typed skeleton；S5d 后续关闭 discrete phase-label candidate；S5e 后续关闭 discrete edge-action phase accumulation candidate；它们不关闭一般路径积分、连续相位/作用量动力学、Born rule 推导、unitary/CPTP channel law、decoherence 或经验闭合。**
+本轮闭合范围：**S5c 已在 Lean 中关闭“同端点、不同中间态的两条 two-step candidate paths 可携带 `1` 与 `-1`，其有限和为 `0`，并且相消后的 Born-shaped candidate weight 为 `0`”这个 typed skeleton；S5d 后续关闭 discrete phase-label candidate；S5e 后续关闭 discrete edge-action phase accumulation candidate；S20 后续关闭 finite nontrivial quantum-channel law candidate；它们不关闭一般路径积分、连续相位/作用量动力学、Born rule 推导、physical Hilbert/unitary/CPTP/Kraus/density-matrix channel law、decoherence 或经验闭合。**
 
 ---
 

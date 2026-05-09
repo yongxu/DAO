@@ -63,7 +63,7 @@ required but not closed：
 | dynamics generating amplitudes | `ClosedByStepwiseS18 .amplitudeConstructionFromDynamics = false` |
 | measurement postulate semantics | required but not closed |
 | decoherence boundary | required but not closed |
-| unitary/CPTP channel law | required but not closed |
+| physical Hilbert/unitary/CPTP/Kraus/density-matrix channel law | required but not closed |
 | general path integral | required but not closed |
 | metric recovery | required but not closed |
 | empirical closure | required but not closed |
@@ -76,7 +76,7 @@ required but not closed：
 
 S18 解决的是 S12 之后留下的形式缺口：S12 只说“若 amplitude support 已归一，则 Born weights 成为有限概率分布”；S18 进一步证明“若这个 amplitude support 来自一个已归一 Markov row，并逐点满足 `ampProb = normalizedMass`，则归一化不是额外假设，而由 Markov row law 推出”。
 
-这不是经验物理的最终 Born rule。还没有证明真实动力学必然给出这些 amplitude、没有测量公设语义、没有 decoherence、没有 unitary/CPTP channel law，也没有实验数据闭合。
+这不是经验物理的最终 Born rule。还没有证明真实动力学必然给出这些 amplitude、没有测量公设语义、没有 decoherence、没有 physical Hilbert/unitary/CPTP/Kraus/density-matrix channel law，也没有实验数据闭合。
 
 ---
 

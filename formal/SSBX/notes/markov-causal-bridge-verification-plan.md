@@ -44,6 +44,7 @@
 | `formal/SSBX/Foundation/Modern/QuantumRelativityUnitaryCPTPLedgerBridge.lean` | S17 unitary/CPTP physical channel-law ledger boundary |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityBornRuleDerivationBridge.lean` | S18 Born rule from Markov/amplitude compatibility bridge |
 | `formal/SSBX/Foundation/Modern/QuantumRelativityPathWeightMultiplicationBridge.lean` | S19 finite path-weight multiplication boundary |
+| `formal/SSBX/Foundation/Modern/QuantumRelativityNontrivialChannelLawBridge.lean` | S20 nontrivial finite quantum-channel law boundary |
 | `formal/SSBX/notes/markov-causal-bridge-plan.md` | 探索计划与完成记录 |
 | `formal/SSBX/notes/unification-stepwise-plan.md` | 逐步完善到候选统一的阶段路线 |
 | `义理/文构造完备与直相加边界.md` | 对 `current-language no-go` 旧说法的正名 |
@@ -81,6 +82,7 @@
 | `义理/unitary-CPTP账本边界 · Markov桥S17.md` | S17 unitary/CPTP ledger companion 文档 |
 | `义理/Born rule推导候选 · Markov桥S18.md` | S18 Born-rule derivation companion 文档 |
 | `义理/路径权重乘法候选 · Markov桥S19.md` | S19 path-weight multiplication companion 文档 |
+| `义理/非平凡量子通道律候选 · Markov桥S20.md` | S20 nontrivial finite quantum-channel law companion 文档 |
 
 ## 当前验证结论
 
@@ -124,8 +126,9 @@
 - [x] `unitary_cptp_ledger_bridge_summary` 已关闭 unitary/CPTP ledger boundary：当前 skeleton 已关闭项与 physical channel law required-but-not-closed 项已合取。
 - [x] `born_rule_derivation_bridge_summary` 已关闭 Born rule 从 Markov/amplitude bridge 的 finite typed-skeleton derivation：Markov row probability 与 `ampProb` compatibility 推出 normalized amplitude support，并接入 finite Born distribution boundary。
 - [x] `path_weight_multiplication_bridge_summary` 已关闭 path-weight multiplication candidate：finite kernel path append 的权重等于左右路径权重乘积，并接回 S3 reachability / causalBefore。
+- [x] `nontrivial_quantum_channel_law_bridge_summary` 已关闭 nontrivial finite quantum-channel law：非零 channel amplitude 推出 step / carried classical support / Born-shaped boundary，并给 concrete bridge 非零二步组合 witness。
 - [x] 首次新 worktree 原生构建的 `mathlib4` 克隆阻塞已记录为基础设施失败，不当作 theorem 失败。
-- [ ] 尚未验证 amplitude dynamics、measurement postulate semantics、decoherence、continuous phase/action law、general all-path enumeration、一般 path integral、真实可测干涉律、unitary / CPTP quantum channel law、完整因果偏序、局部有限 causal set、度规恢复、数据校准、可测预言 theorem 或经验闭合。
+- [ ] 尚未验证 amplitude dynamics、measurement postulate semantics、decoherence、continuous phase/action law、general all-path enumeration、一般 path integral、真实可测干涉律、physical unitary / CPTP / Kraus / density-matrix channel law、完整因果偏序、局部有限 causal set、度规恢复、数据校准、可测预言 theorem 或经验闭合。
 
 ## 每次变更的最低验证门槛
 
@@ -169,6 +172,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativitySumOverMiddleBornBoundaryBrid
 lake build SSBX.Foundation.Modern.QuantumRelativityUnitaryCPTPLedgerBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityBornRuleDerivationBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityPathWeightMultiplicationBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityNontrivialChannelLawBridge
 lake build SSBX
 git diff --check --
 ```
@@ -237,6 +241,7 @@ rg -n "待处理|future|deferred|部分相关|佛|唯识|analogy|unchecked|plann
 | unitary/CPTP ledger boundary | `unitary_cptp_ledger_bridge_summary` | `machineChecked` |
 | Born rule derivation from Markov/amplitude bridge | `born_rule_derivation_bridge_summary` | `machineChecked` |
 | finite path-weight multiplication boundary | `path_weight_multiplication_bridge_summary` | `machineChecked` |
+| nontrivial finite quantum-channel law | `nontrivial_quantum_channel_law_bridge_summary` | `machineChecked` |
 | tagged-language noncollapse 保持 | `markov_bridge_not_direct_language_addition` | `machineChecked` |
 | 公开摘要 | `markov_causal_bridge_summary` | `machineChecked` |
 
@@ -276,9 +281,10 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
   可以组合当前 QuantumChannelSkeleton：逐点相乘 amplitude，保留左侧 classical boundary，并保持 support-to-step soundness
   可以对 finite middle-list 做 sum-over-middle composition，并把非零 endpoint sum 投到 two-step reachability
   可以把已归一的 composed endpoint amplitude support 接到 finite Born distribution boundary
-  可以把 physical unitary/CPTP channel law 缺口作为 required-but-not-closed ledger 项登记
+  可以把 physical Hilbert/unitary/CPTP/Kraus/density-matrix channel law 缺口作为 required-but-not-closed ledger 项登记
   可以在 Markov row probability 与 amplitude bridge compatibility 下推出 normalized amplitude support，并接入 finite Born distribution boundary
   可以在 finite kernel path 上证明 append path weight 等于左右 path weight 乘积，并接回 S3 reachability / causalBefore
+  可以把非零 channel amplitude 投到 process step、carried classical support 与 Born-shaped boundary，并给 concrete bridge 非零二步组合 witness
   同时保持当前 tagged 物理语言 noncollapse 边界
 ```
 
@@ -290,7 +296,7 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
 | Born rule 推导 | S18 已关闭 Markov/amplitude compatibility 下的 finite typed-skeleton derivation；还需要 amplitude dynamics、测量语义、decoherence 与经验闭合 |
 | 路径权重乘法 | S19 已关闭 finite kernel path 的 append weight law；还需要 stochastic independence semantics、general all-path enumeration 与 path integral |
 | 真实干涉律 | S5/S5b/S5c/S5d/S5e/S5f/S5g/S5h/S5i/S5j/S5k/S5l/S5m/S5n/S5o/S5p/S5q/S5r 已有 path amplitude、非零 witness、two-path finite cancellation candidate、discrete phase-label candidate、edge-action phase accumulation candidate、finite path-family sum candidate、finite path-sum algebra candidate、endpoint-indexed finite family candidate、endpoint support normalization candidate、two-route toy enumeration candidate、visible path-key candidate、finite visible-key quotient candidate、visible-key quotient class candidate、two-route canonical representative candidate、finite quotient-support candidate、quotient-support algebra candidate、pending observable ledger boundary 与 finite action-to-phase law candidate；还需要 general choice function、general all-path enumeration、一般 path integral、连续相位动力学、可测预言 theorem 或经验闭合 |
-| 真实 quantum channel law | S4 的 `QuantumChannelSkeleton` 是 candidate interface；S13-S17 已给出 pointwise composition、associativity/identity obstruction、finite sum-over-middle boundary、conditional composed Born boundary 与 required ledger；还需要真正关闭 unitary evolution、CPTP、Kraus 或 density-matrix law |
+| 非平凡 finite quantum-channel law | S20 已关闭 nonzero channel amplitude -> step / classical support / Born-shaped boundary；还需要 physical unitary/CPTP/Kraus/density-matrix law |
 | 完整因果集或时空度规 | S3 已关闭一步 no-self-loop；还需要偏序全公理、Lorentzian geometry 或 metric recovery theorem |
 | 经验预言 | S5q 已给出 pending observable ledger entry；还需要外部数据、观测量、误差模型、阈值或数据判准 |
 
@@ -337,6 +343,7 @@ rg -n "theorem|structure|def" formal/SSBX/Foundation/Modern/QuantumRelativityMar
 | V17 | 引入 unitary/CPTP ledger boundary | 已由 `unitary_cptp_ledger_bridge_summary` 关闭 required-but-not-closed ledger；真正的 unitary/CPTP law、metric recovery 与 empirical closure 仍 pending |
 | V18 | 引入 Born rule from Markov/amplitude compatibility bridge | 已由 `born_rule_derivation_bridge_summary` 关闭 finite typed-skeleton derivation；amplitude dynamics、measurement semantics、unitary/CPTP、metric recovery 与 empirical closure 仍 pending |
 | V19 | 引入 path-weight multiplication bridge | 已由 `path_weight_multiplication_bridge_summary` 关闭 finite kernel path append weight law；stochastic semantics、general all-path enumeration、path integral 与 empirical closure 仍 pending |
+| V20 | 引入 nontrivial finite quantum-channel law bridge | 已由 `nontrivial_quantum_channel_law_bridge_summary` 关闭非零 channel amplitude law；physical unitary/CPTP/Kraus/density-matrix law、amplitude dynamics 与 empirical closure 仍 pending |
 
 ## 失败记录模板
 
@@ -385,8 +392,9 @@ lake build SSBX.Foundation.Modern.QuantumRelativityActionPhaseLawBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityStepwiseUnificationBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityBornRuleDerivationBridge
 lake build SSBX.Foundation.Modern.QuantumRelativityPathWeightMultiplicationBridge
+lake build SSBX.Foundation.Modern.QuantumRelativityNontrivialChannelLawBridge
 lake build SSBX
 git diff --check --
 ```
 
-备注：`lake build SSBX` 仍会输出既有 Wen 模块的 unused simp args linter 警告；本轮新增 Markov 桥系列模块，包括 S19 `QuantumRelativityPathWeightMultiplicationBridge`，目标模块自身无新增警告。
+备注：`lake build SSBX` 仍会输出既有 Wen 模块的 unused simp args linter 警告；本轮新增 Markov 桥系列模块，包括 S20 `QuantumRelativityNontrivialChannelLawBridge`，目标模块自身无新增警告。
