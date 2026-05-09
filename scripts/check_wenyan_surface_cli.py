@@ -367,7 +367,7 @@ CLI_CASES = [
     (["--operators", "unsupported"], "operators unsupported: 0 shown; 371 registered / 371 executable"),
     (["--coverage"], "surface readings: 82 surfaces / 193 readings"),
     (["--coverage"], "operators: 371 registered / 371 executable"),
-    (["--coverage"], "semantic ledger: 317 theorem-backed / 120 exact / 188 exact-structural-helper / 9 structural-carrier / 54 catalogue-normal-form"),
+    (["--coverage"], "semantic ledger: 317 theorem-backed / 120 exact / 197 exact-structural-helper / 0 structural-carrier / 54 catalogue-normal-form"),
     (["--coverage"], "domain gaps: 251 operators pending full domain semantics"),
     (["--coverage"], "domain gap ledger: 12 application-helper / 18 identity-noop / 102 projection-anchor / 52 carrier-constructor / 9 predicate-anchor / 4 truth-marker / 54 catalogue-shape"),
     (["--coverage"], "bagua bridgeable: 134 operators"),
@@ -376,8 +376,8 @@ CLI_CASES = [
     (["--operators", "bridgeable"], "bridge=bagua-l0-yi"),
     (["--operators", "theorem-backed"], "operators theorem-backed: 317 shown; 371 registered / 371 executable"),
     (["--operators", "exact"], "operators exact: 120 shown; 371 registered / 371 executable"),
-    (["--operators", "exact-structural-helper"], "operators exact-structural-helper: 188 shown; 371 registered / 371 executable"),
-    (["--operators", "structural-carrier"], "operators structural-carrier: 9 shown; 371 registered / 371 executable"),
+    (["--operators", "exact-structural-helper"], "operators exact-structural-helper: 197 shown; 371 registered / 371 executable"),
+    (["--operators", "structural-carrier"], "operators structural-carrier: 0 shown; 371 registered / 371 executable"),
     (["--operators", "catalogue-normal-form"], "operators catalogue-normal-form: 54 shown; 371 registered / 371 executable"),
     (["--operators", "identity-noop"], "operators identity-noop: 18 shown; 371 registered / 371 executable"),
     (["--operators", "identity-noop"], "carrier=identity-noop"),
@@ -389,7 +389,7 @@ CLI_CASES = [
     (["--operators", "catalogue-shape-only"], "operators catalogue-shape-only: 54 shown; 371 registered / 371 executable"),
     (["--help"], "wenyan-surface --json --operators [all|executable|theorem-backed|exact|exact-structural-helper|structural|structural-carrier|catalogue-normal-form|identity-noop|projection-anchor|pair-carrier|duplicate-facet|singleton-aggregate|binary-aggregate|list-projection|application-carrier|predicate-anchor|truth-marker|application-helper-only|identity-noop-only|projection-anchor-only|carrier-constructor-only|predicate-anchor-only|truth-marker-only|catalogue-shape-only|bridgeable|known-not-executable|unsupported]"),
     (["--help"], "wenyan-surface --json --compile-yi <PROGRAM>"),
-    (["--help"], "317 theorem-backed bodies = 120 exact + 188 exact structural helpers + 9 structural carriers; 54 catalogue normal forms"),
+    (["--help"], "317 theorem-backed bodies = 120 exact + 197 exact structural helpers + 0 structural carriers; 54 catalogue normal forms"),
 ]
 
 JSON_CLI_CASES = [
@@ -501,7 +501,7 @@ JSON_CLI_CASES = [
     (["--json", "--operators", "exact-structural-helper"], {
         "mode": "operators",
         "filter": "exact-structural-helper",
-        "count": 188,
+        "count": 197,
         "operatorsRegistered": 371,
         "executableOperators": 371,
     }),
@@ -513,8 +513,8 @@ JSON_CLI_CASES = [
         "executableOperators": 371,
         "theoremBackedOperators": 317,
         "exactTheoremBackedOperators": 120,
-        "exactStructuralHelperOperators": 188,
-        "structuralCarrierOperators": 9,
+        "exactStructuralHelperOperators": 197,
+        "structuralCarrierOperators": 0,
         "catalogueNormalFormOperators": 54,
         "domainGapOperators": 251,
         "domainGapApplicationHelperOperators": 12,

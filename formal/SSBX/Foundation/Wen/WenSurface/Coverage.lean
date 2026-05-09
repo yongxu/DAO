@@ -67,8 +67,8 @@ theorem wenSurface_operator_catalogue_counts :
       ∧ executableRegistryEntries.length = 371
       ∧ theoremBackedOperatorIds.length = 317
       ∧ exactTheoremBackedStrongOperatorIds.length = 120
-      ∧ exactStructuralHelperStrongOperatorIds.length = 188
-      ∧ structuralCarrierOperatorIds.length = 9
+      ∧ exactStructuralHelperStrongOperatorIds.length = 197
+      ∧ structuralCarrierOperatorIds.length = 0
       ∧ catalogueNormalFormOperatorIds.length = 54
       ∧ domainGapOperatorIds.length = 251
       ∧ (domainGapKindOperatorIds .applicationHelperOnly).length = 12
@@ -126,8 +126,8 @@ theorem wenSurface_registry_summary :
       ∧ executableRegistryEntries.length = 371
       ∧ theoremBackedOperatorIds.length = 317
       ∧ exactTheoremBackedStrongOperatorIds.length = 120
-      ∧ exactStructuralHelperStrongOperatorIds.length = 188
-      ∧ structuralCarrierOperatorIds.length = 9
+      ∧ exactStructuralHelperStrongOperatorIds.length = 197
+      ∧ structuralCarrierOperatorIds.length = 0
       ∧ catalogueNormalFormOperatorIds.length = 54
       ∧ domainGapOperatorIds.length = 251
       ∧ (domainGapKindOperatorIds .applicationHelperOnly).length = 12

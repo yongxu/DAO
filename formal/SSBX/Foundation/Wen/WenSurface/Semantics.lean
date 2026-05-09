@@ -686,11 +686,18 @@ def exactProjectionAnchorOperatorIds : List OperatorId :=
           && !decide (id ∈ exactIdentityNoopOperatorIds)
     | none => false)
 
+def exactPredicateAnchorOperatorIds : List OperatorId :=
+  allOperatorIds.filter (fun id =>
+    match theoremBackedSemanticsFor? id with
+    | some sem => decide (sem.body = hexPredTrueBody)
+    | none => false)
+
 def exactStructuralHelperOperatorIds : List OperatorId :=
   exactTypedHelperOperatorIds
     ++ exactIdentityNoopOperatorIds
     ++ exactCarrierConstructorOperatorIds
     ++ exactProjectionAnchorOperatorIds
+    ++ exactPredicateAnchorOperatorIds
 
 /-- Exact `WenDef.Tm` bodies that are deliberately carrier/anchor semantics. -/
 def structuralCarrierKindForBody? (body : Tm) : Option StructuralCarrierKind :=
@@ -873,7 +880,7 @@ theorem catalogueNormalFormOperatorIds_length :
     catalogueNormalFormOperatorIds.length = 54 := by native_decide
 
 theorem exactStructuralHelperOperatorIds_length :
-    exactStructuralHelperOperatorIds.length = 188 := by native_decide
+    exactStructuralHelperOperatorIds.length = 197 := by native_decide
 
 theorem exactStructuralHelperOperatorIds_nodup :
     exactStructuralHelperOperatorIds.Nodup := by native_decide
@@ -890,14 +897,20 @@ theorem exactProjectionAnchorOperatorIds_length :
 theorem exactProjectionAnchorOperatorIds_nodup :
     exactProjectionAnchorOperatorIds.Nodup := by native_decide
 
+theorem exactPredicateAnchorOperatorIds_length :
+    exactPredicateAnchorOperatorIds.length = 9 := by native_decide
+
+theorem exactPredicateAnchorOperatorIds_nodup :
+    exactPredicateAnchorOperatorIds.Nodup := by native_decide
+
 theorem exactTheoremBackedStrongOperatorIds_length :
     exactTheoremBackedStrongOperatorIds.length = 120 := by native_decide
 
 theorem exactStructuralHelperStrongOperatorIds_length :
-    exactStructuralHelperStrongOperatorIds.length = 188 := by native_decide
+    exactStructuralHelperStrongOperatorIds.length = 197 := by native_decide
 
 theorem structuralCarrierOperatorIds_length :
-    structuralCarrierOperatorIds.length = 9 := by native_decide
+    structuralCarrierOperatorIds.length = 0 := by native_decide
 
 theorem domainGapOperatorIds_length :
     domainGapOperatorIds.length = 251 := by native_decide
@@ -1011,7 +1024,7 @@ example : operatorSemanticStrength .R_12 = .exactStructuralHelper := by native_d
 example : operatorSemanticStrength .D_4 = .exactStructuralHelper := by native_decide
 example : operatorSemanticStrength .Z_18 = .exactStructuralHelper := by native_decide
 example : operatorSemanticStrength .A_16 = .exactStructuralHelper := by native_decide
-example : operatorSemanticStrength .B_8 = .structuralCarrier := by native_decide
+example : operatorSemanticStrength .B_8 = .exactStructuralHelper := by native_decide
 example : operatorStructuralCarrierKind? .S_1 = some .applicationCarrier := by native_decide
 example : operatorStructuralCarrierKind? .R_12 = some .pairCarrier := by native_decide
 example : operatorStructuralCarrierKind? .E_2 = some .catalogueNormalForm := by native_decide
