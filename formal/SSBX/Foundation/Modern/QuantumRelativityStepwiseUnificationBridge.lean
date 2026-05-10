@@ -57,7 +57,7 @@ theorem pending_boundary_not_closed_by_s5r
 
 /-! ## § 2 Current final summary -/
 
-/-- Local alias for the checked `71232` operator-cell grid process. -/
+/-- Local alias for the checked `94976` operator-cell grid process. -/
 abbrev gridProcess :=
   SSBX.Foundation.Modern.OperatorCellGridMarkovBridge.operatorCellGridProcess
 
@@ -66,7 +66,7 @@ abbrev twoRouteQuotientSupport :=
   QuantumRelativityPathQuotientBridge.twoRouteSourceTargetQuotientEnumeration
 
 /-- Public summary for the current branch:
-    the concrete Markov-causal bridge, finite probability boundary, `71232`
+    the concrete Markov-causal bridge, finite probability boundary, `94976`
     operator-cell grid, S5r action-phase quotient-support cancellation, and
     pending observable ledger boundary are all machine-checked and can be
     conjoined as the current stepwise unification candidate.  The larger
@@ -77,7 +77,7 @@ theorem stepwise_unification_candidate_summary :
     ∧ MeasurementEventsAlign concreteMeasurementBridge
     ∧ HasFiniteProbabilityProjection concreteProcess
     ∧ HasFiniteProbabilityProjection gridProcess
-    ∧ allOperatorCells.length = 71232
+    ∧ allOperatorCells.length = 94976
     ∧ TwoRouteActionPhaseLawBoundaryComplete
     ∧ quotientSupportActionPhaseAmplitudeSum twoRouteQuotientActionPhaseLaw
       twoRouteQuotientSupport = 0

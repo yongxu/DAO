@@ -12,7 +12,7 @@ open SSBX.Text.OperatorCellMap
 /-! ## Public summary -/
 
 /-- Public summary for S9:
-    concrete and `71232` grid finite probability kernels now have explicit row
+    concrete and `94976` grid finite probability kernels now have explicit row
     supports whose displayed weight sums equal row denominators.  Consequently,
     every non-terminal row has normalized-row-total candidate `1`.  This closes
     only the finite row sum-one boundary; Born-rule derivation, continuous
@@ -22,7 +22,7 @@ theorem finite_probability_normalization_bridge_summary :
     FiniteSumOneProbabilityBoundaryClosed
     ∧ HasFiniteProbabilityProjection concreteProcess
     ∧ HasFiniteProbabilityProjection operatorCellGridProcess
-    ∧ allOperatorCells.length = 71232
+    ∧ allOperatorCells.length = 94976
     ∧ (∀ b : PendingBeyondS9, ClosedByStepwiseS9 b = false)
     ∧ WenConstructiveCoverage := by
   rcases finite_probability_bridge_summary with
