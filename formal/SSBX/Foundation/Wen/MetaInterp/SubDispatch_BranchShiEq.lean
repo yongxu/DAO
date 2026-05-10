@@ -90,7 +90,7 @@ theorem subDispatchBranchShiEq_routes_dao
     ∧ μ'.halted = false := by
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute,
-          subDispatchBranchShiEq, encShi_shi, Shi.dao, Shi.ji, Shi.jin, Shi.wei]
+          subDispatchBranchShiEq, encShi_shi, Shi.dao, Shi.ji, Shi.jin]
 
 /-! ## § 2  Routing — `s = ji`
 
@@ -119,7 +119,7 @@ theorem subDispatchBranchShiEq_routes_ji
     ∧ μ'.halted = false := by
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute,
-          subDispatchBranchShiEq, encShi_shi, Shi.dao, Shi.ji, Shi.jin, Shi.wei]
+          subDispatchBranchShiEq, encShi_shi, Shi.dao, Shi.ji, Shi.jin]
 
 /-! ## § 3  Routing — `s = jin`
 
@@ -150,7 +150,7 @@ theorem subDispatchBranchShiEq_routes_jin
     ∧ μ'.halted = false := by
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute,
-          subDispatchBranchShiEq, encShi_shi, Shi.dao, Shi.ji, Shi.jin, Shi.wei]
+          subDispatchBranchShiEq, encShi_shi, Shi.dao, Shi.ji, Shi.jin]
 
 /-! ## § 4  Routing — `s = wei`
 

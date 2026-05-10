@@ -994,7 +994,7 @@ private theorem progLexFuel_le_length (p : List YiInstr) (h : validProg p = true
           | pop  => decide
           | halt => decide
           | setShi s =>
-              cases s <;> simp [printInstrChars, printShiChars, instrLexFuel]
+              cases s; simp [printInstrChars, printShiChars, instrLexFuel]
           | flipYao i =>
               match i with
               | ⟨0, _⟩ => simp [printInstrChars, printYaoChars, instrLexFuel]
@@ -1028,7 +1028,7 @@ private theorem progLexFuel_le_length (p : List YiInstr) (h : validProg p = true
             | push => decide
             | pop  => decide
             | halt => decide
-            | setShi s => cases s <;> simp [printInstrChars, printShiChars, instrLexFuel]
+            | setShi s => cases s; simp [printInstrChars, printShiChars, instrLexFuel]
             | flipYao i =>
                 match i with
                 | ⟨0, _⟩ => simp [printInstrChars, printYaoChars, instrLexFuel]
