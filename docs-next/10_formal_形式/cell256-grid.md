@@ -448,7 +448,7 @@ $$\bigsqcup_{s \in \mathcal{S}} \{(h, s) : h \in \mathcal{H}\} = \mathcal{R}_8, 
 
 每 quadrant 16 hex × 4 Shi = 64 cells per quadrant × 4 quadrants = 256.
 
-详见 [`表六_256格全表.md`](表六_256格全表.md) — per-cell 表，含 (hex, shi) ⊕ 形式 type ⊕ (因, 果) ⊕ V₄ orbit 等多列。
+> **全 256 cell 逐格枚举请见** [`表六_256格全表.md`](../../六表_实虚史真/表六_256格全表.md) **§ 4** — 256 行 (#1..#256) × 10 列 (`#`, King Wen 序, Hex 中文, 内卦 + 外卦 Trigram, 6-yao OX 串, Shi, (因, 果), 8-char OX 字面量, 简称), 按 BenZheng 4 象限 (本本 / 本征 / 征本 / 征征 各 64 cells) 分组, 每卦 4 Shi (道 → 已 → 未 → 今) 连续排列。
 
 ---
 
