@@ -35,6 +35,8 @@
 
 本文给出完整逻辑链与证据表。已由 Lean 形式化的部分包括：`T₃/T₆` 的穷尽、互通、算子闭合、`Cell192 = Hexagram × Shi` 的 192 格穷尽、`BaguaTuring` 的程序状态与解释器、`Halts` 谓词、非平凡停/不停见证、有限燃料不完备、Kleene 条件下的 Halting 不可判、Rice 型推论与 `daoJudge` 不可通用化。边界也要明说：完整 `YiInstr` 内部 Gödel 编号、universal interpreter 与 quine 去公理化，仍列为后续工程；现有主结论以 `kleene_recursion_axiom : KleeneInverter` 捕获该元层事实。
 
+**R5 收口（2026-05-10）**：[`Cell192Stratify.lean`](../formal/SSBX/Foundation/Bagua/Cell192Stratify.lean) 把 yi-as-meta-framework.md § 4.1 的自相似 R-hierarchy（R1..R5）显式落地——一个文件 ~550 LOC，0 sorry / 0 新 axiom，包含：(i) BenZheng 4-quadrant + Mian 投影到 R5（Mian 仅在 benZheng 象限有 label-语义，保持单一身份）；(ii) `(Z/2)⁶ × Z/3` 群作用 simply-transitive on R5（经 Hexagram XOR + Shi cycle）；(iii) 位置-算子树 = `Sheng 6 × Shi ≃ R5`（复用 BaguaAlgebra）；(iv) `cuo = P` / `zong = T` / `hu = Y` 的物理 anchoring 显式于 `parity` / `timeReversal` / `yComb`；(v) xuGua 序扩展到 192 元 (`xuGua192`)。**剩余 quine 去公理化仍是后续工程**——但 R5 的代数 / 投影 / 树 / 序结构现已稳定，下一步编译器（Phase C）改造可直接基于 `R5_complete` 摘要定理之各分量构建语义解释。
+
 ---
 
 ## 一、理层全集的精确定义

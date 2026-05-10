@@ -49,7 +49,7 @@ the remaining engineering (2) as a `Prop` so its dependency is explicit.
   `WenyanSelfInterp.lean § 6b` for the existing partial scaffold.
 
 - The current `SmnSpec` is intentionally an explicit strong assumption.  The
-  existing `YiInstr` core has no `Cell192` literal instruction or safe
+  existing `YiInstr` core has no `Cell256` literal instruction or safe
   empty-stack test, so a generic "push arbitrary cells, then continue" prefix
   is not currently justified by the instruction set alone.
 
@@ -65,7 +65,7 @@ import SSBX.Foundation.Bagua.GodelLi
 namespace SSBX.Foundation.Bagua.KleeneInternal
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
 open SSBX.Foundation.Bagua.GodelLi
@@ -75,7 +75,7 @@ open SSBX.Foundation.Bagua.GodelLi
 /-- Initial YiState with custom history (the "input tape").  Standard
     `YiState.init` sets history := [].  For meta-interpretation, we need the
     input encoding to be present at startup. -/
-def RunWith (h : Hexagram) (prog : List YiInstr) (input : List Cell192) : YiState :=
+def RunWith (h : Hexagram) (prog : List YiInstr) (input : List Cell256) : YiState :=
   { cur := (h, Shi.jin), history := input, pc := 0, prog := prog, halted := false }
 
 /-- `RunWith` agrees with `YiState.init` when input is empty. -/
@@ -83,7 +83,7 @@ theorem runWith_empty (h : Hexagram) (prog : List YiInstr) :
     RunWith h prog [] = YiState.init h prog := rfl
 
 /-- Halting predicate for a state with custom input. -/
-def HaltsWith (prog : List YiInstr) (h : Hexagram) (input : List Cell192) : Prop :=
+def HaltsWith (prog : List YiInstr) (h : Hexagram) (input : List Cell256) : Prop :=
   ∃ n : Nat, ((RunWith h prog input).runFuel n).halted = true
 
 /-- For empty input, `HaltsWith` reduces to `Halts`. -/
@@ -115,16 +115,16 @@ theorem progEnc_decodes_self (P : List YiInstr) (h_enc : ProgEnc.AllEncodable P)
     saturation.  This is the explicit finite-bound side condition behind the
     "length-delimited ProgEnc" route. -/
 def ProgLenBounded (P : List YiInstr) : Prop :=
-  (NatCell.encodeNat P.length).length < 192
+  (NatCell.encodeNat P.length).length < 256
 
 /-- A length-delimited program input: first encode `P.length`, then the raw
     program body. -/
-def LenProgInput (P : List YiInstr) : List Cell192 :=
+def LenProgInput (P : List YiInstr) : List Cell256 :=
   YiInstrEnc.encNat P.length ++ ProgEnc.encProg P
 
 /-- Lean-side decoder for `LenProgInput`: read the instruction count, then
     decode exactly that many instructions. -/
-def decLenProgInput (input : List Cell192) : Option (List YiInstr × List Cell192) :=
+def decLenProgInput (input : List Cell256) : Option (List YiInstr × List Cell256) :=
   match YiInstrEnc.decNat input with
   | some (n, rest) => ProgEnc.decInstrs n rest
   | none => none
@@ -149,22 +149,22 @@ theorem progEnc_append (P Q : List YiInstr) :
 
   YiInstr's three control-flow ops (`branchYaoEq`, `branchShiEq`, `jump`) carry a
   `Nat` target field.  A YiInstr-implemented universal interpreter cannot read an
-  arbitrary multi-cell base-192 encoding of such targets at runtime, because the
+  arbitrary multi-cell base-256 encoding of such targets at runtime, because the
   ISA has no multiplication primitive.  Per-(opcode × parameter-value) Option-F
-  dispatch handles only single-cell targets, i.e. `target < 192`.
+  dispatch handles only single-cell targets, i.e. `target < 256`.
 
   This restriction is the structural counterpart to `ProgLenBounded`: together
   they delimit the class of programs for which a bounded universal interpreter
   is realisable in pure YiInstr without ISA extension. -/
 
-/-- A single instruction's jump-target field, if any, is below 192. -/
+/-- A single instruction's jump-target field, if any, is below 256. -/
 def JumpTargetsBoundedInstr : YiInstr → Prop
-  | YiInstr.branchYaoEq _ _ t => t < 192
-  | YiInstr.branchShiEq _   t => t < 192
-  | YiInstr.jump            t => t < 192
+  | YiInstr.branchYaoEq _ _ t => t < 256
+  | YiInstr.branchShiEq _   t => t < 256
+  | YiInstr.jump            t => t < 256
   | _ => True
 
-/-- Every instruction in `P` has its jump-target field below 192. -/
+/-- Every instruction in `P` has its jump-target field below 256. -/
 def JumpTargetsBounded (P : List YiInstr) : Prop :=
   ∀ i ∈ P, JumpTargetsBoundedInstr i
 
@@ -179,7 +179,7 @@ def ProgBounded (P : List YiInstr) : Prop :=
 theorem progBounded_nil : ProgBounded ([] : List YiInstr) := by
   refine ⟨?_, ?_⟩
   · -- ProgLenBounded []: the encoding of length 0 is `[]`.
-    show (NatCell.encodeNat ([] : List YiInstr).length).length < 192
+    show (NatCell.encodeNat ([] : List YiInstr).length).length < 256
     simp [NatCell.encodeNat, List.length_nil]
   · intro i hi
     cases hi
@@ -194,18 +194,24 @@ theorem progBounded_nil : ProgBounded ([] : List YiInstr) := by
 
   The convention matches `daoJudge`'s `Shi.ji ↔ isTian` interpretation. -/
 
-/-- Bool readout from a final state's Shi component. -/
+/-- Bool readout from a final state's Shi component.
+
+    Post-V₄ migration: `Shi.dao` is also a "non-output" marker (the V₄ identity,
+    used as a "永真 anchor" / timeless element, not a Boolean verdict).
+    Both `.jin` and `.dao` map to `false` for the readout, but
+    `BoolOutputDefined` excludes both from the "halted-with-real-answer" set. -/
 def BoolFromShi (s : YiState) : Bool :=
   match s.cur.2 with
   | Shi.ji  => true
   | Shi.wei => false
   | Shi.jin => false  -- treated as false; mid-computation indicates an error
+  | Shi.dao => false  -- V₄ identity; treated as false, not a valid answer
 
-/-- A halted decider must have committed to a real Bool output.  `Shi.jin`
-    remains the machine's initial/mid-computation marker, not a valid final
-    Boolean result. -/
+/-- A halted decider must have committed to a real Bool output.  Neither
+    `Shi.jin` (mid-computation marker) nor `Shi.dao` (V₄ identity / timeless
+    anchor) is a valid final Boolean result. -/
 def BoolOutputDefined (s : YiState) : Prop :=
-  s.cur.2 ≠ Shi.jin
+  s.cur.2 ≠ Shi.jin ∧ s.cur.2 ≠ Shi.dao
 
 theorem boolFromShi_true_iff_ji (s : YiState) :
     BoolFromShi s = true ↔ s.cur.2 = Shi.ji := by
@@ -280,7 +286,7 @@ theorem universalInterpSpec_empty_input {U : List YiInstr}
 /-! ### § 4.1 Bounded universal interpreter spec
 
   The realisable variant: `U` correctly simulates `P` on `h` for every
-  bounded `P` (length-prefix and jump targets within one Cell192).  Pure
+  bounded `P` (length-prefix and jump targets within one Cell256).  Pure
   YiInstr cannot realise the unbounded variant because the ISA lacks
   multiplication, but the Lean-side universe of programs we ever construct
   in this codebase satisfies the bound. -/
@@ -314,23 +320,23 @@ theorem universalInterpExists_to_bounded :
     `P` would when run with `input_cells` already on its history.
 
     A tempting implementation is `subst P input = pushList input ++ P`, but
-    this is not currently available for arbitrary `Cell192`: `YiInstr` has
+    this is not currently available for arbitrary `Cell256`: `YiInstr` has
     relative hex transformations and `setShi`, not hex literals or absolute
     yao tests.  Proving this spec therefore needs either a new literal/macro
     layer, or a different self-encoding construction.
 
     Together with `UniversalInterpExists`, this gives Kleene's recursion. -/
-def SmnSpec (subst : List YiInstr → List Cell192 → List YiInstr) : Prop :=
-  ∀ (P : List YiInstr) (input : List Cell192) (h : Hexagram),
+def SmnSpec (subst : List YiInstr → List Cell256 → List YiInstr) : Prop :=
+  ∀ (P : List YiInstr) (input : List Cell256) (h : Hexagram),
     HaltsWith P h input ↔ Halts (subst P input) h
 
 /-- Existence form for an s-m-n specialization compiler witness. -/
 def SmnExists : Prop :=
-  ∃ subst : List YiInstr → List Cell192 → List YiInstr, SmnSpec subst
+  ∃ subst : List YiInstr → List Cell256 → List YiInstr, SmnSpec subst
 
 /-- Immediate sanity check for any s-m-n witness: specializing empty input
     cannot change halting behavior. -/
-theorem smnSpec_empty_input {subst : List YiInstr → List Cell192 → List YiInstr}
+theorem smnSpec_empty_input {subst : List YiInstr → List Cell256 → List YiInstr}
     (hsubst : SmnSpec subst) (P : List YiInstr) (h : Hexagram) :
     Halts (subst P []) h ↔ Halts P h :=
   (hsubst P [] h).symm.trans (haltsWith_empty P h)

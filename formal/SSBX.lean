@@ -107,7 +107,14 @@ import SSBX.Foundation.Yi.YiCore
 
 -- Foundation/Bagua — 八卦 / 192 / Gödel-Rice / 风险缓解
 import SSBX.Foundation.Bagua.BaguaAlgebra
-import SSBX.Foundation.Bagua.Cell192
+import SSBX.Foundation.Bagua.Cell192  -- legacy (3-state Shi); WenyanSelfInterp/MetaInterp 仍依赖. TODO: 迁移到 Cell256/Cell128
+import SSBX.Foundation.Bagua.Cell128  -- R5 中间层 (Hexagram × YinBit, 128 cells, 印 算子)
+import SSBX.Foundation.Hierarchy.R5_Wuyao  -- R₅ strict (Z/2)⁵ = 32 carrier (Mian × Bool)
+import SSBX.Foundation.Hierarchy.LiftProject  -- Uniform Lift/Project pairs across R₀..R₈
+import SSBX.Foundation.Hierarchy.Operators.Atomic  -- XOR subgroup re-export (yin/tou/flipᵢ/hexCuo)
+import SSBX.Foundation.Hierarchy.Operators.V4Outer  -- V₄ Klein-four outer (zong/cuoZong/hu)
+import SSBX.Foundation.Bagua.Cell256  -- R6 闭合层 (Hexagram × Shi V₄, 256 cells, 投 算子)
+import SSBX.Foundation.Bagua.Cell256Stratify  -- R5/R6 双层 stratification + R6_complete bundle
 import SSBX.Foundation.Bagua.BaguaTuring
 import SSBX.Foundation.Bagua.Newman
 import SSBX.Foundation.Bagua.KleeneInternal
@@ -118,6 +125,9 @@ import SSBX.Text.OperatorCellMap
 import SSBX.Foundation.Bagua.ChunkedDecide
 import SSBX.Foundation.Bagua.CuoInvariance
 import SSBX.Foundation.Bagua.FuelDiscipline
+
+-- Foundation/Notation — `OX["..."]` 8-char Cell256 string literal macro
+import SSBX.Foundation.Notation.OXNotation
 
 -- Foundation/Eight — 八衍：数 / 推 / 测 / 形 / 类 / 动 / 识 / 象
 import SSBX.Foundation.Eight.ShuSuan

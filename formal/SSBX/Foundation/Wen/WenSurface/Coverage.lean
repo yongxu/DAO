@@ -31,7 +31,7 @@ theorem wenSurface_reading_catalogue_counts :
 theorem wenSurface_hex_literal_counts :
     canonicalHexNames.length = 64
       ∧ canonicalHexNameRows.length = 64
-      ∧ canonicalHexNameRows.map Prod.snd = SSBX.Foundation.Bagua.Cell192.xuGua
+      ∧ canonicalHexNameRows.map Prod.snd = SSBX.Foundation.Bagua.Cell256.xuGua
       ∧ hexagramGapPromotions.length = 25
       ∧ hexagramUnpromotedGapForms = ["丽", "井", "鼎", "震", "大", "小"]
       ∧ (canonicalHexNames.filter (fun s => decide (s.toList.length > 1))).all
@@ -52,8 +52,8 @@ theorem coverage_counts :
     allSurfaceReadings.length = 82
       ∧ (allSurfaceReadings.map (fun e => e.readings.length)).foldl Nat.add 0 = 193
       ∧ allOperatorIds.length = 371
-      ∧ SSBX.Text.OperatorCellMap.allOperatorCells.length = 71232
-      ∧ allOperatorCellSemanticRows.length = 71232 := by
+      ∧ SSBX.Text.OperatorCellMap.allOperatorCells.length = 94976
+      ∧ allOperatorCellSemanticRows.length = 94976 := by
   exact
     ⟨ all_surface_readings_count
     , all_surface_total_reading_count
@@ -167,8 +167,8 @@ theorem wenSurface_operator_compound_surface_lex_coverage :
   operatorCompoundSurfaces_lex_as_single
 
 theorem wenSurface_operator_cell_catalogue_counts :
-    allOperatorCellSemanticRows.length = 71232
-      ∧ allOperatorCellSemanticPairs.length = 71232 := by
+    allOperatorCellSemanticRows.length = 94976
+      ∧ allOperatorCellSemanticPairs.length = 94976 := by
   exact
     ⟨ allOperatorCellSemanticRows_length
     , allOperatorCellSemanticPairs_length
@@ -184,7 +184,7 @@ theorem wenSurface_registry_summary :
     allSurfaceReadings.length = 82
       ∧ (allSurfaceReadings.map (fun e => e.readings.length)).foldl Nat.add 0 = 193
       ∧ fullOperatorSignatures.length = 371
-      ∧ allOperatorCellSemanticRows.length = 71232
+      ∧ allOperatorCellSemanticRows.length = 94976
       ∧ operatorRegistryEntries.length = 371
       ∧ executableRegistryEntries.length = 371
       ∧ theoremBackedOperatorIds.length = 371
@@ -292,20 +292,20 @@ theorem wenSurface_registry_summary :
 
 theorem wenSurface_reuses_bagua_grid_summary :
     allOperatorIds.length = 371
-      ∧ SSBX.Foundation.Bagua.Cell192.Cell192.all.length = 192
-      ∧ SSBX.Text.OperatorCellMap.allOperatorCells.length = 71232 :=
+      ∧ SSBX.Foundation.Bagua.Cell256.Cell256.all.length = 256
+      ∧ SSBX.Text.OperatorCellMap.allOperatorCells.length = 94976 :=
   ⟨ allOperatorIds_length
-  , SSBX.Foundation.Bagua.Cell192.Cell192.all_length
+  , SSBX.Foundation.Bagua.Cell256.Cell256.all_length
   , allOperatorCells_length
   ⟩
 
 theorem wenSurface_reuses_operator_cell_semantic_summary :
-    allOperatorCellSemanticRows.length = 71232
-      ∧ allOperatorCellSemanticPairs.length = 71232
-      ∧ machineDenotationRows.length = 71232
-      ∧ exactCellTransformDenotationRows.length = 8256
-      ∧ executableCellTransformRows.length = 8256
-      ∧ signatureCarrierDenotationRows.length = 62976 :=
+    allOperatorCellSemanticRows.length = 94976
+      ∧ allOperatorCellSemanticPairs.length = 94976
+      ∧ machineDenotationRows.length = 94976
+      ∧ exactCellTransformDenotationRows.length = 11008
+      ∧ executableCellTransformRows.length = 11008
+      ∧ signatureCarrierDenotationRows.length = 83968 :=
   ⟨ allOperatorCellSemanticRows_length
   , allOperatorCellSemanticPairs_length
   , machineDenotationRows_length

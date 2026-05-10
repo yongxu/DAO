@@ -1,13 +1,33 @@
 /-
 # BaguaTuring — 文程序、解释器、是道非道判机
 
-The interpreter for 文 (wenyan-encoded YiInstr programs) operating on Cell192.
+The interpreter for 文 (wenyan-encoded YiInstr programs) operating on Cell256.
 
 The capstone: a Lean-verified Dao judge that, given a hexagram input, runs as a
 YiProg and outputs whether the hexagram is 天道 (tian) or 心道 (xin) — answering
 "是道非道" within the system.
 
-## Phases (continuing from Cell192.lean's §1–5)
+## Phase F.2 migration note (Cell192 → Cell256)
+
+Previously this module operated on Cell192 = Hexagram × Shi where Shi was a
+Z/3 cyclic group `{已, 今, 未}`. After Phase F doctrine alignment, Shi is the
+V₄ Klein four-group `{道, 已, 今, 未}` (Cell256 = Hexagram × Shi V₄, 256 cells).
+
+Behavioural changes:
+  - `YiInstr.setShi` accepts the new 4-state `Shi` (including `.dao`).
+  - `YiInstr.branchShiEq` similarly admits 4 possible discriminants.
+  - `shiNext` (the state-stepper helper) used to be the Z/3 cycle
+    已→今→未→已. V₄ has no canonical cyclic order, so we replace it with
+    `Shi.cuo` (the 因-axis involution `dao↔已, 今↔未`). This is deterministic
+    and total but order-2 rather than order-3.
+  - Cardinality jumps 192 → 256.
+
+The 道判机 verdict semantics are unchanged: 天道 ↦ `Shi.ji`, 心道 ↦ `Shi.wei`.
+The new identity element `Shi.dao` is reachable as a verdict value but is not
+emitted by `daoJudgeProg`; correctness theorems remain stated in terms of
+`{Shi.ji, Shi.wei}`.
+
+## Phases (continuing from Cell256.lean's §1–5)
   § 4   YiInstr inductive (文 instruction set)
   § 5   YiState + structurally-recursive `runFuel` + executable `partial def run`
   § 6   daoJudge: a YiProg that judges 是道非道
@@ -15,7 +35,7 @@ YiProg and outputs whether the hexagram is 天道 (tian) or 心道 (xin) — ans
        + TC discussion
 
 ## TC argument
-  - State is unbounded (history : List Cell192 grows without limit)
+  - State is unbounded (history : List Cell256 grows without limit)
   - Branching is data-dependent (branchYaoEq)
   - Jumps are unbounded (jump target : Nat)
   - Composition is unbounded (prog : List YiInstr of any length)
@@ -23,13 +43,13 @@ YiProg and outputs whether the hexagram is 天道 (tian) or 心道 (xin) — ans
   These four primitives give universal computation. Specifically, any Minsky
   machine can be encoded by translating its instructions into YiInstr.
 -/
-import SSBX.Foundation.Bagua.Cell192
+import SSBX.Foundation.Bagua.Cell256
 
 namespace SSBX.Foundation.Bagua.BaguaTuring
 
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Bagua.BaguaAlgebra
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 
 /-! ## § 4 YiInstr — wenyan instruction set -/
 
@@ -37,7 +57,7 @@ open SSBX.Foundation.Bagua.Cell192
 inductive YiInstr : Type
   /-- 不动: do nothing, advance pc. -/
   | nop
-  /-- 设时态: set 时态 component of cur. -/
+  /-- 设时态: set 时态 component of cur (V₄, 4 possible values incl. `dao`). -/
   | setShi (s : Shi)
   /-- 翻爻: flip the i-th yao of cur's hexagram. -/
   | flipYao (i : Fin 6)
@@ -95,15 +115,15 @@ namespace SSBX.Foundation.Bagua.BaguaTuring
 
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Bagua.BaguaAlgebra
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 
 /-! ## § 5 YiState + Interpreter -/
 
 /-- Execution state: current cell, unbounded history (the 带), program counter,
     program, and halted flag. -/
 structure YiState where
-  cur     : Cell192
-  history : List Cell192   -- ← 无界记忆
+  cur     : Cell256
+  history : List Cell256   -- ← 无界记忆
   pc      : Nat
   prog    : List YiInstr
   halted  : Bool
@@ -111,7 +131,12 @@ structure YiState where
 
 namespace YiState
 
-/-- Initial state: hexagram h, time = 今, empty history, pc=0, given prog. -/
+/-- Initial state: hexagram h, time = 今, empty history, pc=0, given prog.
+
+    Note: we initialise to `Shi.jin` (今, the V₄ "PT" element), preserving the
+    pre-migration semantics where the initial Shi was 今. The new identity
+    `Shi.dao` is intentionally NOT used as the init Shi — that would represent
+    a "timeless" anchor unfit for the temporal entry-point of execution. -/
 def init (h : Hexagram) (prog : List YiInstr) : YiState :=
   { cur := (h, Shi.jin), history := [], pc := 0, prog := prog, halted := false }
 
@@ -164,6 +189,31 @@ partial def run (s : YiState) : YiState :=
 
 end YiState
 
+/-! ## § 5b shiNext — V₄ stepper (post-Phase F.2, replaces Z/3 cycle)
+
+  Pre-migration `shiNext` was the Z/3 cycle 已→今→未→已 on the legacy Cell192.
+  V₄ has no canonical cyclic order, so we replace it with the `Shi.cuo`
+  involution (因-axis toggle: 道↔已, 今↔未). This is the most natural
+  "single deterministic step" on the V₄ group:
+
+    - Order-2 rather than order-3 (`shiNext (shiNext c) = c`).
+    - Preserves the Hexagram component (`(shiNext c).1 = c.1`).
+    - Total and decidable.
+
+  Downstream callers expecting Z/3-cycle semantics need to update; the new
+  contract is documented at each public boundary. -/
+
+/-- 时态 single-step on the cell: V₄ `cuo` involution on the Shi component
+    (因-axis toggle 道↔已, 今↔未). Preserves the Hexagram. -/
+def shiNext (c : Cell256) : Cell256 := (c.1, c.2.cuo)
+
+theorem shiNext_preserves_hex (c : Cell256) : (shiNext c).1 = c.1 := rfl
+
+/-- `shiNext` is now an involution (V₄ `cuo` is order-2), no longer order-3. -/
+theorem shiNext_shiNext (c : Cell256) : shiNext (shiNext c) = c := by
+  rcases c with ⟨h, s⟩
+  simp [shiNext, Shi.cuo_cuo]
+
 /-! ## § 6 道判机 — the Dao judge
 
   A YiProg that, given a hexagram input, judges whether it's 天道 or 心道.
@@ -172,6 +222,10 @@ end YiState
   The program tests y3 vs y4 and writes the verdict into 时态:
     天道  ↔  Shi.ji  (已 — settled, in-Dao)
     心道  ↔  Shi.wei (未 — unsettled, not-in-Dao yet)
+
+  Note: although Shi V₄ now has a 4th state `Shi.dao`, the verdict semantics
+  remain a clean binary {Shi.ji, Shi.wei}. The `Shi.dao` element is reserved
+  for the V₄ identity / "永真 anchor" use cases elsewhere in the system.
 -/
 
 /-- The 道判机 program (5 wenyan instructions). -/

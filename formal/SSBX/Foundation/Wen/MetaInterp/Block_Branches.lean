@@ -99,7 +99,7 @@ import SSBX.Foundation.Wen.MetaInterp.ExecuteBlock
 namespace SSBX.Foundation.Wen.MetaInterp.ExecuteBlock
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.MetaInterp
 
@@ -151,7 +151,7 @@ theorem executeBlock_branchShiEq_second (sh : Shi) (t : Nat)
     the branch-taken case is deferred (see §0). -/
 theorem executeBlock_branchShiEq_local_effect_fallthrough
     (sh : Shi) (t : Nat) (h : Hexagram) (sh₀ : Shi)
-    (history : List Cell192) (fetchOffset offset : Nat)
+    (history : List Cell256) (fetchOffset offset : Nat)
     (h_neq : sh₀ ≠ sh) :
     let μ : YiState :=
       { cur := (h, sh₀)
@@ -282,7 +282,7 @@ theorem executeBlock_branchYaoEq_second (i j : Fin 6) (t : Nat)
     Same structural shape as `executeBlock_branchShiEq_local_effect_fallthrough`. -/
 theorem executeBlock_branchYaoEq_local_effect_fallthrough
     (i j : Fin 6) (t : Nat) (h : Hexagram) (sh : Shi)
-    (history : List Cell192) (fetchOffset offset : Nat)
+    (history : List Cell256) (fetchOffset offset : Nat)
     (h_neq : h.yaoAt i ≠ h.yaoAt j) :
     let μ : YiState :=
       { cur := (h, sh)

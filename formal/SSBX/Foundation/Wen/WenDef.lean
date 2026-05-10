@@ -47,16 +47,26 @@ Path 丙 § 风险 3 之完全缓解：
 ## 状态
 
 0 sorry / 0 axiom. 仅类型层；operational semantics 见 M2.
+
+## Phase F.2 migration note (Cell192 → Cell256)
+
+Was: `cellLit : Cell192 → Tm` (192 cells, Z/3 `Shi`).
+Now: `cellLit : Cell256 → Tm` (256 cells, V₄ Klein `Shi`).
+
+The cell-endo builtin tags `.shiNextC` / `.shiPrevC` keep their syntactic
+identity here (this is the typed-λ surface; only types change). Their
+operational semantics are defined elsewhere (`WenDefEval`); under V₄ both
+collapse to the `Shi.cuo` involution because V₄ involutions are self-inverse.
 -/
 import SSBX.Foundation.Yi.Yi
-import SSBX.Foundation.Bagua.Cell192
+import SSBX.Foundation.Bagua.Cell256
 import SSBX.Foundation.Bagua.BaguaWenSpec
 import SSBX.Text.OperatorSignatures
 
 namespace SSBX.Foundation.Wen.WenDef
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Bagua.BaguaWenSpec
 open SSBX.Text.WenyanOperators
 open SSBX.Text.OperatorSignatures
@@ -83,7 +93,7 @@ inductive Tm : Type
   | app     (f x : Tm)                 : Tm
   | hexLit  (h : Hexagram)             : Tm
   | boolLit (b : Bool)                 : Tm
-  | cellLit (c : Cell192)              : Tm
+  | cellLit (c : Cell256)              : Tm
   | jia                                : Tm  -- 加 :  Hex → Hex → Hex
   | yi                                 : Tm  -- 一 :  Hex
   | notB                               : Tm  -- 不 :  Bool → Bool
@@ -114,8 +124,8 @@ inductive Tm : Type
   | cuoC                               : Tm  -- Cell → Cell, preserve 时
   | zongC                              : Tm  -- Cell → Cell, preserve 时
   | huC                                : Tm  -- Cell → Cell, preserve 时
-  | shiNextC                           : Tm  -- Cell → Cell, 时态前进
-  | shiPrevC                           : Tm  -- Cell → Cell, 时态后退
+  | shiNextC                           : Tm  -- Cell → Cell, 时态单步 (V₄ Shi.cuo)
+  | shiPrevC                           : Tm  -- Cell → Cell, 时态单步 (V₄ Shi.cuo, self-inverse)
   | flip1C                             : Tm  -- Cell → Cell, y1 flip
   | flip2C                             : Tm  -- Cell → Cell, y2 flip
   | flip3C                             : Tm  -- Cell → Cell, y3 flip
@@ -633,7 +643,8 @@ def flip6Def : WenDef where
 
   These bodies reuse the existing `Bool`, `Hex`, and finite `forallH` core.
   They deliberately avoid catalogue rows that require new carriers such as
-  `Cell192`, paths, text acts, modal frames, or domain-specific state.
+  `Cell256` (was `Cell192` pre-Phase F.2), paths, text acts, modal frames,
+  or domain-specific state.
 -/
 
 def impBody : Tm :=
@@ -933,7 +944,7 @@ def headHDef : WenDef where
   validName      := by native_decide
   bodyTypechecks := by native_decide
 
-/-! ### Cell192 carrier helpers -/
+/-! ### Cell256 carrier helpers (post Phase F.2 migration; was `Cell192`) -/
 
 def eqCellBody : Tm := .eqCell
 

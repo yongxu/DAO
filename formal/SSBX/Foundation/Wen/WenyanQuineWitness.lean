@@ -10,12 +10,12 @@ Concrete raw runtime quine witnesses.  These keep the Tier 3 target as
 namespace SSBX.Foundation.Wen.WenyanQuineWitness
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
 
 /-- The encoded instruction tag for `push`. -/
-def pushCell : Cell192 := cellFromIdx ⟨9, by omega⟩
+def pushCell : Cell256 := cellFromIdx ⟨9, by omega⟩
 
 /-- Uniform push-only quine source. -/
 def pushQuineSource (n : Nat) : List YiInstr :=

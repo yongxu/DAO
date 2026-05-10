@@ -12,7 +12,7 @@ multi-cell builders must emit the desired cells in reverse execution order.
 namespace SSBX.Foundation.Wen.WenyanQuineEmitter
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
 
@@ -33,7 +33,7 @@ theorem flipIfDiff_length_le (src target : Hexagram) (i : Fin 6) :
   split <;> simp
 
 /-- Program fragment which sets `cur` from a known cell to `target`, then pushes. -/
-def emitCellFrom (cur target : Cell192) : List YiInstr :=
+def emitCellFrom (cur target : Cell256) : List YiInstr :=
   flipIfDiff cur.1 target.1 yao0 ++
   flipIfDiff cur.1 target.1 yao1 ++
   flipIfDiff cur.1 target.1 yao2 ++
@@ -42,7 +42,7 @@ def emitCellFrom (cur target : Cell192) : List YiInstr :=
   flipIfDiff cur.1 target.1 yao5 ++
   [YiInstr.setShi target.2, YiInstr.push]
 
-theorem emitCellFrom_length_le (cur target : Cell192) :
+theorem emitCellFrom_length_le (cur target : Cell256) :
     (emitCellFrom cur target).length ≤ 8 := by
   have h0 := flipIfDiff_length_le cur.1 target.1 yao0
   have h1 := flipIfDiff_length_le cur.1 target.1 yao1
@@ -54,7 +54,7 @@ theorem emitCellFrom_length_le (cur target : Cell192) :
   omega
 
 /-- Execution state for checking a single-cell emitter fragment. -/
-def emitCellInit (cur target : Cell192) (oldHistory : List Cell192) : YiState :=
+def emitCellInit (cur target : Cell256) (oldHistory : List Cell256) : YiState :=
   { cur := cur
   , history := oldHistory
   , pc := 0
@@ -63,16 +63,16 @@ def emitCellInit (cur target : Cell192) (oldHistory : List Cell192) : YiState :=
 
 /-- A zero-flip concrete check. -/
 theorem emitCellFrom_correct_zero_flip :
-    let cur : Cell192 := (Hexagram.qian, Shi.jin)
-    let target : Cell192 := (Hexagram.qian, Shi.ji)
+    let cur : Cell256 := (Hexagram.qian, Shi.jin)
+    let target : Cell256 := (Hexagram.qian, Shi.ji)
     ((emitCellInit cur target []).runFuel (emitCellFrom cur target).length).cur = target
       ∧ ((emitCellInit cur target []).runFuel (emitCellFrom cur target).length).history = [target] := by
   native_decide
 
 /-- A one-flip concrete check. -/
 theorem emitCellFrom_correct_one_flip :
-    let cur : Cell192 := (Hexagram.qian, Shi.jin)
-    let target : Cell192 :=
+    let cur : Cell256 := (Hexagram.qian, Shi.jin)
+    let target : Cell256 :=
       ({ Hexagram.qian with y1 := Yao.yin }, Shi.wei)
     ((emitCellInit cur target []).runFuel (emitCellFrom cur target).length).cur = target
       ∧ ((emitCellInit cur target []).runFuel (emitCellFrom cur target).length).history = [target] := by
@@ -80,8 +80,8 @@ theorem emitCellFrom_correct_one_flip :
 
 /-- A six-flip concrete check. -/
 theorem emitCellFrom_correct_six_flips :
-    let cur : Cell192 := (Hexagram.qian, Shi.jin)
-    let target : Cell192 := (Hexagram.kun, Shi.wei)
+    let cur : Cell256 := (Hexagram.qian, Shi.jin)
+    let target : Cell256 := (Hexagram.kun, Shi.wei)
     ((emitCellInit cur target []).runFuel (emitCellFrom cur target).length).cur = target
       ∧ ((emitCellInit cur target []).runFuel (emitCellFrom cur target).length).history = [target] := by
   native_decide

@@ -171,7 +171,7 @@ import SSBX.Foundation.Wen.MetaInterp
 namespace SSBX.Foundation.Wen.MetaInterp.ExecuteBlock
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
 open SSBX.Foundation.Wen.MetaInterp
@@ -269,7 +269,7 @@ theorem executeBlock_nop_second (offset fetchOffset : Nat) :
     simulation lemma once the surrounding `metaInterpProg` is assembled
     and the loop invariant `METAcur = (regHex, Shi.jin)` is locked in. -/
 theorem executeBlock_nop_local_effect
-    (regHex : Hexagram) (history : List Cell192) (fetchOffset offset : Nat) :
+    (regHex : Hexagram) (history : List Cell256) (fetchOffset offset : Nat) :
     let μ : YiState :=
       { cur := (regHex, Shi.jin)
         history := history
@@ -351,7 +351,7 @@ theorem executeBlock_halt_first (offset fetchOffset : Nat) :
     to true; cur, history, pc are preserved (in the local sense — pc
     does not advance because halt sets halted before pc-update). -/
 theorem executeBlock_halt_local_effect
-    (cur : Cell192) (history : List Cell192) (offset fetchOffset : Nat) :
+    (cur : Cell256) (history : List Cell256) (offset fetchOffset : Nat) :
     let μ : YiState :=
       { cur := cur
         history := history

@@ -21,7 +21,7 @@ implement the compiler fields for the existing lambda calculus.
 namespace SSBX.Foundation.Wen.WenyanLambdaBridge
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
 open SSBX.Foundation.Wen.WenyanQuineSpec
@@ -47,11 +47,12 @@ def quoteFin6 (i : Fin 6) : Lam := quoteNat i.val
 
 def quoteShi (s : Shi) : Lam :=
   match s with
+  | Shi.dao => sym "shi.dao"
   | Shi.ji => sym "shi.ji"
   | Shi.jin => sym "shi.jin"
   | Shi.wei => sym "shi.wei"
 
-def quoteCell (c : Cell192) : Lam :=
+def quoteCell (c : Cell256) : Lam :=
   app2 (sym "cell") (quoteNat (cellToIdx c).val) (quoteShi c.2)
 
 /-- Quote a Yi instruction as lambda data.  The encoding is intentionally

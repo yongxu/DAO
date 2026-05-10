@@ -10,7 +10,7 @@ import SSBX.Foundation.Wen.WenyanSelfInterp
 namespace SSBX.Foundation.Wen.WenyanQuineSpec
 
 open SSBX.Foundation.Bagua.BaguaTuring
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Wen.WenyanSelfInterp
 
 /-- Raw quine-run target: running `init` for `fuel` leaves exactly the encoded

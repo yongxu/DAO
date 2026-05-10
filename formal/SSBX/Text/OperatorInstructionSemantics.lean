@@ -5,7 +5,7 @@ import SSBX.Foundation.Bagua.BaguaTuring
 
 This file records a compact, parameter-erased ledger for the 12 `YiInstr`
 constructors from `BaguaTuring`.  Pure/current-cell instructions expose a
-`Cell192 → Cell192` effect and are checked against `YiState.execute` on `cur`.
+`Cell256 → Cell256` effect and are checked against `YiState.execute` on `cur`.
 State/control instructions are recorded at state/control level and intentionally
 do not expose a cell endomap.
 -/
@@ -13,7 +13,7 @@ do not expose a cell endomap.
 namespace SSBX.Text.OperatorInstructionSemantics
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Bagua.BaguaTuring
 
 /-! ## § 1 Clause kinds -/
@@ -147,13 +147,13 @@ theorem stateControlClauseKinds_length :
 Concrete current-cell effect for instructions that operate purely on `cur`.
 State/control instructions deliberately return `none`.
 -/
-def instructionCellEndomap? : YiInstr → Option (Cell192 → Cell192)
+def instructionCellEndomap? : YiInstr → Option (Cell256 → Cell256)
   | .nop => some id
   | .setShi sh => some (fun c => (c.1, sh))
   | .flipYao i => some (fun c => (c.1.flipPos i, c.2))
-  | .hu => some Cell192.hexHu
-  | .cuo => some Cell192.hexCuo
-  | .zong => some Cell192.hexZong
+  | .hu => some Cell256.hexHu
+  | .cuo => some Cell256.hexCuo
+  | .zong => some Cell256.hexZong
   | .branchYaoEq _ _ _ => none
   | .branchShiEq _ _ => none
   | .jump _ => none
@@ -174,19 +174,19 @@ theorem flipYao_cell_effect_matches_execute (i : Fin 6) (s : YiState) :
   rfl
 
 theorem hu_cell_effect_matches_execute (s : YiState) :
-    (YiState.execute .hu s).cur = Cell192.hexHu s.cur := by
+    (YiState.execute .hu s).cur = Cell256.hexHu s.cur := by
   rfl
 
 theorem cuo_cell_effect_matches_execute (s : YiState) :
-    (YiState.execute .cuo s).cur = Cell192.hexCuo s.cur := by
+    (YiState.execute .cuo s).cur = Cell256.hexCuo s.cur := by
   rfl
 
 theorem zong_cell_effect_matches_execute (s : YiState) :
-    (YiState.execute .zong s).cur = Cell192.hexZong s.cur := by
+    (YiState.execute .zong s).cur = Cell256.hexZong s.cur := by
   rfl
 
 theorem instructionCellEndomap?_matches_execute
-    (instr : YiInstr) (f : Cell192 → Cell192) (s : YiState) :
+    (instr : YiInstr) (f : Cell256 → Cell256) (s : YiState) :
     instructionCellEndomap? instr = some f →
       (YiState.execute instr s).cur = f s.cur := by
   cases instr <;> intro h <;> simp [instructionCellEndomap?] at h ⊢
@@ -240,7 +240,7 @@ theorem stateControlClause_no_cell_endomap
 /--
 Summary: there are exactly 12 L0 clause kinds.  Six expose current-cell
 endomaps matching `YiState.execute` on `cur`; six are state/control clauses and
-do not expose a `Cell192` endomap.
+do not expose a `Cell256` endomap.
 -/
 theorem l0_instruction_semantic_clause_summary :
     l0InstructionClauseKinds.length = 12
@@ -248,7 +248,7 @@ theorem l0_instruction_semantic_clause_summary :
     ∧ l0InstructionSemanticClauses.length = 12
     ∧ (l0InstructionClauseKinds.filter isCurrentCellClause).length = 6
     ∧ (l0InstructionClauseKinds.filter isStateControlClause).length = 6
-    ∧ (∀ instr : YiInstr, ∀ f : Cell192 → Cell192, ∀ s : YiState,
+    ∧ (∀ instr : YiInstr, ∀ f : Cell256 → Cell256, ∀ s : YiState,
         instructionCellEndomap? instr = some f →
           (YiState.execute instr s).cur = f s.cur)
     ∧ (∀ instr : YiInstr,

@@ -38,7 +38,7 @@ interpreter — any future surface-alias parser should consult it as ground trut
 
 import SSBX.Foundation.Yi.Yi
 import SSBX.Foundation.Bagua.BaguaAlgebra
-import SSBX.Foundation.Bagua.Cell192
+import SSBX.Foundation.Bagua.Cell256
 import SSBX.Text.OperatorAnchors
 
 /-! ## R1 — Yao essence (阳/阴 → 实/虚)
@@ -194,7 +194,7 @@ inductive ShiTransition : Type
 
 namespace ShiTransition
 
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 
 def char : ShiTransition → String
   | .next => "迁"
@@ -205,11 +205,13 @@ def fromChar (s : String) : Option ShiTransition :=
   else if s = "溯" then some .prev
   else none
 
-/-- Apply a shi transition to a Shi value. -/
+/-- Apply a shi transition to a Shi value. Under V₄, both `.next` and `.prev`
+    collapse to `Shi.cuo` (V₄ involution = self-inverse). The legacy Z/3
+    cycle (next^[3]=id) was replaced by cuo^[2]=id. -/
 def apply (t : ShiTransition) (s : Shi) : Shi :=
   match t with
-  | .next => s.next
-  | .prev => s.prev
+  | .next => s.cuo
+  | .prev => s.cuo
 
 theorem char_roundtrip (t : ShiTransition) :
     fromChar t.char = some t := by

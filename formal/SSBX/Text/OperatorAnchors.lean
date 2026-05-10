@@ -21,7 +21,7 @@ namespace SSBX.Text.OperatorAnchors
 
 open SSBX.Text.WenyanOperators
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Bagua.BaguaWenSpec
 
@@ -154,12 +154,13 @@ structure ShiAnchor where
   deriving Repr
 
 def shiAnchors : List ShiAnchor :=
-  [ { shi := .ji,  token := "已" }
+  [ { shi := .dao, token := "道" }
+  , { shi := .ji,  token := "已" }
   , { shi := .jin, token := "今" }
   , { shi := .wei, token := "未" }
   ]
 
-theorem shiAnchors_length : shiAnchors.length = 3 := by native_decide
+theorem shiAnchors_length : shiAnchors.length = 4 := by native_decide
 
 theorem shiAnchors_cover_all : shiAnchors.map (·.shi) = Shi.all := by
   native_decide
@@ -209,7 +210,7 @@ def reservedTokenAnchors : List ReservedTokenAnchor :=
   [{ token := atKeyword, kind := AnchorKind.targetMarker }]
 
 theorem reservedTokenAnchors_length :
-    reservedTokenAnchors.length = 22 := by
+    reservedTokenAnchors.length = 23 := by
   native_decide
 
 theorem reservedTokenAnchor_tokens_eq_reservedTokens :
@@ -708,7 +709,7 @@ structure CellOperatorAnchor where
 
 namespace CellOperatorAnchor
 
-def cell (a : CellOperatorAnchor) : Cell192 :=
+def cell (a : CellOperatorAnchor) : Cell256 :=
   (a.hexagramAnchor.hexagram, a.shi)
 
 def hexagramNumber (a : CellOperatorAnchor) : Nat :=
@@ -716,24 +717,24 @@ def hexagramNumber (a : CellOperatorAnchor) : Nat :=
 
 end CellOperatorAnchor
 
-/-- The 64 hexagram anchors lifted across the three `Shi` states. -/
+/-- The 64 hexagram anchors lifted across the four `Shi` states (V₄). -/
 def cellOperatorAnchors : List CellOperatorAnchor :=
   hexagramOperatorAnchors.flatMap fun h =>
     shiAnchors.map fun s => { hexagramAnchor := h, shi := s.shi }
 
-def anchoredCells : List Cell192 :=
+def anchoredCells : List Cell256 :=
   cellOperatorAnchors.map CellOperatorAnchor.cell
 
-def cellCovered (c : Cell192) : Bool :=
+def cellCovered (c : Cell256) : Bool :=
   anchoredCells.any fun d => d == c
 
 theorem cellOperatorAnchors_length :
-    cellOperatorAnchors.length = 192 := by
+    cellOperatorAnchors.length = 256 := by
   native_decide
 
-theorem cellOperatorAnchors_length_eq_cell192 :
-    cellOperatorAnchors.length = Cell192.all.length := by
-  rw [cellOperatorAnchors_length, Cell192.all_length]
+theorem cellOperatorAnchors_length_eq_cell256 :
+    cellOperatorAnchors.length = Cell256.all.length := by
+  rw [cellOperatorAnchors_length, Cell256.all_length]
 
 theorem anchoredCells_nodup :
     anchoredCells.Nodup := by
@@ -744,7 +745,7 @@ theorem cellOperatorAnchor_hexagram_numbers_range :
       (fun a => decide (1 <= a.hexagramNumber ∧ a.hexagramNumber <= 64)) = true := by
   native_decide
 
-theorem cellOperatorAnchors_cover_all (c : Cell192) :
+theorem cellOperatorAnchors_cover_all (c : Cell256) :
     cellCovered c = true := by
   rcases c with ⟨⟨y1, y2, y3, y4, y5, y6⟩, s⟩
   cases y1 <;> cases y2 <;> cases y3 <;>
@@ -753,7 +754,7 @@ theorem cellOperatorAnchors_cover_all (c : Cell192) :
 
 /--
 Machine-checkable summary: reserved tokens, L0 instructions, Shi, yao
-positions, position relations, all 64 `xuGua` positions, and all 192
+positions, position relations, all 64 `xuGua` positions, and all 256
 hexagram-time cells now have explicit anchor rows.
 -/
 theorem bagua_operator_anchor_summary :
@@ -779,11 +780,11 @@ theorem bagua_operator_anchor_summary :
         (fun s => !hexagramUnpromotedGapForms.contains s) = true
     ∧ hexagramNearMissAnchors.length = 7
     ∧ hexagramNearMissForms.all (fun s => hexagramMissingVocabulary.contains s) = true
-    ∧ cellOperatorAnchors.length = Cell192.all.length
+    ∧ cellOperatorAnchors.length = Cell256.all.length
     ∧ anchoredCells.Nodup
     ∧ cellOperatorAnchors.all
         (fun a => decide (1 <= a.hexagramNumber ∧ a.hexagramNumber <= 64)) = true
-    ∧ (∀ c : Cell192, cellCovered c = true) := by
+    ∧ (∀ c : Cell256, cellCovered c = true) := by
   exact
     ⟨ by rw [reservedTokenAnchors_length, reservedTokens_length]
     , reservedTokenAnchor_tokens_eq_reservedTokens
@@ -805,7 +806,7 @@ theorem bagua_operator_anchor_summary :
     , hexagramPromotedGapForms_exclude_unpromoted
     , hexagramNearMissAnchors_length
     , hexagramNearMissForms_are_missing
-    , cellOperatorAnchors_length_eq_cell192
+    , cellOperatorAnchors_length_eq_cell256
     , anchoredCells_nodup
     , cellOperatorAnchor_hexagram_numbers_range
     , cellOperatorAnchors_cover_all

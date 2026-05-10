@@ -21,29 +21,30 @@
 
   1. **Pop tag cell**：META.cur := tag cell；history 上前进 1 cell.
   2. **Dispatch on tag value (0..11)**：tag cell = `cellFromIdx ⟨k, _⟩`，
-     其 hex 部分 = `Hexagram.fromIdx ⟨k/3, _⟩`，shi 部分 = Shi index `k%3`.
-     tags 0..11 之 hex idx ∈ {0, 1, 2, 3}（k/3）；shi ∈ {ji, jin, wei}（k%3）.
-     ⟹ 用 (y1, y2) 之 2-bit 判 hex_idx；用 branchShiEq 判 Shi.
+     其 hex 部分 = `Hexagram.fromIdx ⟨k/4, _⟩`，shi 部分 = Shi index `k%4`.
+     tags 0..11 之 hex idx ∈ {0, 1, 2}（k/4 with base-256）；
+     shi ∈ {dao, ji, jin, wei}（k%4）.
+     ⟹ 用 (y1, y2) 之 2-bit 判 hex_idx；用 branchShiEq 判 Shi (4-way).
   3. **Per-opcode block**：pop 适当数量之 cell（0..4），跳至 exit.
 
-  ## tag 编码对照表
+  ## tag 编码对照表 (post Phase F base-256: k/4 → hex_idx, k%4 → shi_idx)
 
   | tag | 操作          | hex_idx (y2 y1) | shi  | 跟随 cell 数 |
   |-----|---------------|-----------------|------|------------|
-  | 0   | nop           | 0 (00)          | ji   | 0          |
-  | 1   | setShi        | 0 (00)          | jin  | 1          |
-  | 2   | flipYao       | 0 (00)          | wei  | 1          |
-  | 3   | hu            | 1 (01)          | ji   | 0          |
-  | 4   | cuo           | 1 (01)          | jin  | 0          |
-  | 5   | zong          | 1 (01)          | wei  | 0          |
-  | 6   | branchYaoEq   | 2 (10)          | ji   | 2 + encNat |
-  | 7   | branchShiEq   | 2 (10)          | jin  | 1 + encNat |
-  | 8   | jump          | 2 (10)          | wei  | encNat     |
-  | 9   | push          | 3 (11)          | ji   | 0          |
-  | 10  | pop           | 3 (11)          | jin  | 0          |
-  | 11  | halt          | 3 (11)          | wei  | 0          |
+  | 0   | nop           | 0 (00)          | dao  | 0          |
+  | 1   | setShi        | 0 (00)          | ji   | 1          |
+  | 2   | flipYao       | 0 (00)          | jin  | 1          |
+  | 3   | hu            | 0 (00)          | wei  | 0          |
+  | 4   | cuo           | 1 (01)          | dao  | 0          |
+  | 5   | zong          | 1 (01)          | ji   | 0          |
+  | 6   | branchYaoEq   | 1 (01)          | jin  | 2 + encNat |
+  | 7   | branchShiEq   | 1 (01)          | wei  | 1 + encNat |
+  | 8   | jump          | 2 (10)          | dao  | encNat     |
+  | 9   | push          | 2 (10)          | ji   | 0          |
+  | 10  | pop           | 2 (10)          | jin  | 0          |
+  | 11  | halt          | 2 (10)          | wei  | 0          |
 
-  注：tags 0..11 之 hex idx < 4 < 16，故 y3, y4, y5, y6 均为 yang。
+  注：tags 0..11 之 hex idx < 3 < 16，故 y3, y4, y5, y6 均为 yang。
   比较 y_i 与 y_3 (=yang) 即可判 y_i 是否 yang。
 
   ## 已证 / 未证
@@ -60,7 +61,7 @@
 
   上层 fetch loop 调用 `skipOneInstr` 应满足：
     - 调用前 META.history 顶部为 `encInstr i ++ tail`
-    - i 满足 `Encodable`（Nat 参数 < 192^∞，实际程序中始终满足）
+    - i 满足 `Encodable`（Nat 参数 < 256^∞，实际程序中始终满足）
     - 调用后 META.history 顶部为 `tail`，pc = offset + skipOneInstr.length
 -/
 import SSBX.Foundation.Wen.MetaInterp
@@ -68,7 +69,7 @@ import SSBX.Foundation.Wen.MetaInterp
 namespace SSBX.Foundation.Wen.MetaInterp.SkipInstr
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
 open SSBX.Foundation.Wen.MetaInterp
@@ -164,7 +165,7 @@ theorem encInstr_zeroArity_length (i : YiInstr) (h : IsZeroArity i) :
 
     We don't fix metaProg's full structure; we only require that
     `metaProg[offset]? = some YiInstr.pop`. -/
-private def preState (cur : Cell192) (i : YiInstr) (tail : List Cell192)
+private def preState (cur : Cell256) (i : YiInstr) (tail : List Cell256)
     (metaProg : List YiInstr) (offset : Nat) : YiState :=
   { cur := cur
     history := YiInstrEnc.encInstr i ++ tail
@@ -173,7 +174,7 @@ private def preState (cur : Cell192) (i : YiInstr) (tail : List Cell192)
     halted := false }
 
 /-- For zero-arity ops, extract the tag cell explicitly. -/
-def zeroArityTag (i : YiInstr) (h : IsZeroArity i) : Cell192 :=
+def zeroArityTag (i : YiInstr) (h : IsZeroArity i) : Cell256 :=
   match i, h with
   | .nop,  _ => cellFromIdx ⟨0,  by omega⟩
   | .hu,   _ => cellFromIdx ⟨3,  by omega⟩
@@ -199,8 +200,8 @@ theorem encInstr_zeroArity_eq (i : YiInstr) (h : IsZeroArity i) :
     Premise: `metaProg[offset]? = some YiInstr.pop` (skipOneInstr placed
     correctly at offset). -/
 theorem skipOneInstr_simulates_zeroArity
-    (cur : Cell192) (i : YiInstr) (h_zero : IsZeroArity i)
-    (tail : List Cell192) (metaProg : List YiInstr) (offset : Nat)
+    (cur : Cell256) (i : YiInstr) (h_zero : IsZeroArity i)
+    (tail : List Cell256) (metaProg : List YiInstr) (offset : Nat)
     (h_progAt : metaProg[offset]? = some YiInstr.pop) :
     let s₀ := preState cur i tail metaProg offset
     let s₁ := s₀.runFuel 1
@@ -280,8 +281,8 @@ theorem skipOneInstr_simulates_zeroArity
 /-- Standalone simulation: when `skipOneInstr 0` is the entire program and
     we run from `offset = 0`, the prog-lookup hypothesis is automatic. -/
 theorem skipOneInstr_simulates_standalone
-    (cur : Cell192) (i : YiInstr) (h_zero : IsZeroArity i)
-    (tail : List Cell192) :
+    (cur : Cell256) (i : YiInstr) (h_zero : IsZeroArity i)
+    (tail : List Cell256) :
     let s₀ : YiState :=
       { cur := cur
         history := YiInstrEnc.encInstr i ++ tail

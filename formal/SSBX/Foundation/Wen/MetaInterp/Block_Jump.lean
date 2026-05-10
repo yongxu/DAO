@@ -48,7 +48,7 @@ invariant `META.cur = (regHex, Shi.jin)`.
 * **Param-cell decoding.**  Before any of the above, the block must
   decode `encNat t` from the program-tail prefix to obtain the runtime
   value `t`.  The encoding is length-prefixed: 1 length cell + N digit
-  cells, each base-192.  Decoding requires inspecting the length cell
+  cells, each base-256.  Decoding requires inspecting the length cell
   and walking through N digits while reconstructing the Nat value
   somewhere accessible to the subsequent push loop.
 
@@ -59,7 +59,7 @@ invariant `META.cur = (regHex, Shi.jin)`.
   `t` materialized as `t` data cells + 1 marker on a fresh counter
   region of META.history.  This depends on a counted-loop combinator
   with a non-empty body that walks the digit cells, plus an arithmetic
-  layer for base-192 reconstruction (currently absent: YiInstr cannot
+  layer for base-256 reconstruction (currently absent: YiInstr cannot
   multiply or do general arithmetic; the decoder must instead unary-
   expand each digit, which is exponential in the digit value but works
   for small jump targets).
@@ -116,7 +116,7 @@ import SSBX.Foundation.Wen.MetaInterp.ExecuteBlock
 namespace SSBX.Foundation.Wen.MetaInterp.ExecuteBlock
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
 open SSBX.Foundation.Wen.MetaInterp
@@ -176,7 +176,7 @@ history just lands at fetchOffset with everything else unchanged.
 /-- **Local effect** of the jump skeleton: a 1-fuel run lands at
     `fetchOffset` and preserves cur, history, halted. -/
 theorem executeBlock_jump_local_effect
-    (cur : Cell192) (history : List Cell192) (fetchOffset offset : Nat) :
+    (cur : Cell256) (history : List Cell256) (fetchOffset offset : Nat) :
     let μ : YiState :=
       { cur := cur
         history := history
@@ -250,10 +250,10 @@ To prove it, the implementer would need to:
      `jump fetchOffset`.
 
 3. **Address the arithmetic gap**: YiInstr has no native multiplication,
-   so base-192 decode of `encNat t` requires either an exponential
+   so base-256 decode of `encNat t` requires either an exponential
    unary-expansion blow-up, or a structural restriction to "1-cell
-   targets" (`t < 192`), where the digit value can be unary-expanded by
-   192-way dispatch.  Either choice deserves a separate design
+   targets" (`t < 256`), where the digit value can be unary-expanded by
+   256-way dispatch.  Either choice deserves a separate design
    sub-document before implementation begins.
 
 For now, this file ships only the trivial subcase (proven) and the

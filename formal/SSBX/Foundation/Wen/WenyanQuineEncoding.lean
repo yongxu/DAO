@@ -4,7 +4,7 @@ namespace SSBX.Foundation.Wen.WenyanQuineEncoding
 
 open WenyanSelfInterp
 open SSBX.Foundation.Bagua.BaguaTuring
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 
 /-!
 Raw program-encoding boundary lemmas for the quine work.
@@ -32,7 +32,7 @@ theorem allEncodable_replicate_push (n : Nat) :
   trivial
 
 /-- Program-level decoder witness for a raw replicated-`push` program. -/
-theorem decInstrs_encProg_replicate_push (n : Nat) (rest : List Cell192) :
+theorem decInstrs_encProg_replicate_push (n : Nat) (rest : List Cell256) :
     ProgEnc.decInstrs (List.replicate n YiInstr.push).length
       (ProgEnc.encProg (List.replicate n YiInstr.push) ++ rest) =
         some (List.replicate n YiInstr.push, rest) := by

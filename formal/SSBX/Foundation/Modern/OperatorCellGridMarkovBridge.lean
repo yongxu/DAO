@@ -1,10 +1,10 @@
 /-
-# OperatorCellGridMarkovBridge — 71232 operator-cell grid as a bridge process
+# OperatorCellGridMarkovBridge — 94976 operator-cell grid as a bridge process
 
 Companion:
 `formal/SSBX/notes/unification-stepwise-plan.md`
 
-This module connects the checked `371 × 192 = 71232` operator-cell coverage
+This module connects the checked `371 × 256 = 94976` operator-cell coverage
 grid to the abstract Markov/causal bridge interface.
 
 It remains a finite typed skeleton:
@@ -20,7 +20,7 @@ import SSBX.Foundation.Modern.QuantumRelativityWenBoundary
 
 namespace SSBX.Foundation.Modern.OperatorCellGridMarkovBridge
 
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Modern.QuantumSpacetime
 open SSBX.Foundation.Modern.QuantumRelativityNoGo
 open SSBX.Foundation.Modern.QuantumRelativityIntegration
@@ -31,7 +31,7 @@ open SSBX.Text.WenyanOperators
 
 /-! ## § 1 Grid-indexed process states -/
 
-/-- The 371 × 192 Wen operator-cell grid, used as a finite process state space. -/
+/-- The 371 × 256 Wen operator-cell grid, used as a finite process state space. -/
 abbrev OperatorCellGridState : Type :=
   Fin allOperatorCells.length
 
@@ -130,14 +130,14 @@ theorem operatorCellGridPath_reachable :
 /-! ## § 3 Public summary -/
 
 /-- Public summary:
-    the checked `371 × 192` Wen operator-cell grid itself can be used as a
+    the checked `371 × 256` Wen operator-cell grid itself can be used as a
     finite Markov/causal bridge process.  This closes only the grid-indexed
     finite skeleton; it still does not prove probability normalization, Born
     rule, quantum channels, metric recovery, or empirical closure. -/
 theorem operator_cell_grid_markov_causal_bridge_summary :
     allOperatorIds.length = 371
-    ∧ Cell192.all.length = 192
-    ∧ allOperatorCells.length = 71232
+    ∧ Cell256.all.length = 256
+    ∧ allOperatorCells.length = 94976
     ∧ WenConstructiveCoverage
     ∧ (∀ s : OperatorCellGridState,
         operatorCellAtState s ∈ allOperatorCells)
@@ -157,7 +157,7 @@ theorem operator_cell_grid_markov_causal_bridge_summary :
      hSameOne, hNotIdentity, hNotDirect⟩
   exact
     ⟨ allOperatorIds_length
-    , Cell192.all_length
+    , Cell256.all_length
     , allOperatorCells_length
     , wen_constructive_coverage_192_371
     , operatorCellAtState_mem_allOperatorCells

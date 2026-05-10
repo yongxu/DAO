@@ -18,7 +18,7 @@ import SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityBridge
 
 namespace SSBX.Foundation.Modern.QuantumRelativityPathCausalBridge
 
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Modern.QuantumRelativityMarkovBridge
 open SSBX.Foundation.Modern.QuantumRelativityConcreteBridge
 open SSBX.Foundation.Modern.OperatorCellGridMarkovBridge
@@ -126,7 +126,7 @@ theorem operatorCellGrid_no_self_step (a : OperatorCellGridState) :
 
 /-- Public summary for S3:
     path composition gives reachability and causal-before at the typed skeleton
-    level, while the concrete and `371 × 192` grid instances satisfy a local
+    level, while the concrete and `371 × 256` grid instances satisfy a local
     code-successor constraint that excludes one-step self loops.  This does not
     prove a full causal set, spacetime geometry, light-cone structure, or metric
     recovery. -/
@@ -143,7 +143,7 @@ theorem path_causal_bridge_summary :
     ∧ (∀ a : OperatorCellGridState, ¬ operatorCellGridProcess.step a a)
     ∧ HasFiniteProbabilityProjection concreteProcess
     ∧ HasFiniteProbabilityProjection operatorCellGridProcess
-    ∧ allOperatorCells.length = 71232
+    ∧ allOperatorCells.length = 94976
     ∧ WenConstructiveCoverage := by
   rcases finite_probability_bridge_summary with
     ⟨hConcreteProb, hGridProb, _hConcreteRows, _hGridRows, _hConcreteBound,

@@ -33,7 +33,7 @@ import SSBX.Foundation.Bagua.BaguaTuring
 namespace SSBX.Foundation.Bagua.BaguaWenSpec
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Bagua.BaguaTuring
 
 /-! ## § 1  12 主字 -/
@@ -62,17 +62,24 @@ theorem primaryTokens_length : primaryTokens.length = 12 := by native_decide
 
 theorem primaryTokens_nodup : primaryTokens.Nodup := by native_decide
 
-/-! ## § 2  3 时态 -/
+/-! ## § 2  4 时态 (Phase F.2: V₄ Klein)
 
-/-- 时态三字。 -/
+  Pre-migration this layer had 3 时态 tokens (`已 / 今 / 未`) tied to a Z/3
+  cyclic `Shi`. After Phase F doctrine alignment `Shi` is V₄ Klein with
+  4 elements `{道, 已, 今, 未}`, so `shiToken` must handle a 4th case and
+  `shiTokens` lists 4 entries. The `道` token denotes the V₄ identity
+  (永真 / cross-temporal anchor). -/
+
+/-- 时态四字 (V₄). -/
 def shiToken : Shi → String
+  | .dao => "道"
   | .ji  => "已"
   | .jin => "今"
   | .wei => "未"
 
-def shiTokens : List String := ["已", "今", "未"]
+def shiTokens : List String := ["道", "已", "今", "未"]
 
-theorem shiTokens_length : shiTokens.length = 3 := by native_decide
+theorem shiTokens_length : shiTokens.length = 4 := by native_decide
 
 /-! ## § 3  6 爻位 -/
 
@@ -89,11 +96,14 @@ theorem yaoTokens_nodup : yaoTokens.Nodup := by native_decide
 /-- 跳转目标关键字。 -/
 def atKeyword : String := "至"
 
-/-- 全部保留 token（不含数词）。M1 parser 遇任何不在此表的 CJK token 即拒。 -/
+/-- 全部保留 token（不含数词）。M1 parser 遇任何不在此表的 CJK token 即拒。
+
+    Phase F.2: 23 = 12 主字 + 4 时态 (V₄) + 6 爻位 + 1 关键字「至」(was 22 在
+    legacy Z/3 时代). -/
 def reservedTokens : List String :=
   primaryTokens ++ shiTokens ++ yaoTokens ++ [atKeyword]
 
-theorem reservedTokens_length : reservedTokens.length = 22 := by native_decide
+theorem reservedTokens_length : reservedTokens.length = 23 := by native_decide
 
 theorem reservedTokens_nodup : reservedTokens.Nodup := by native_decide
 

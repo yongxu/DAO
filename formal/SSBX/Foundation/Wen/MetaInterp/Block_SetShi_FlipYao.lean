@@ -26,8 +26,9 @@ Rather than adopt a destructive walk (Option D) or per-block scratch
 implicitly by the existing `Block_HuCuoZong.lean` worked blocks:
 
   > **Per-(opcode × parameter-value) compilation.**  The dispatcher
-  > emits one block per concrete `(opcode, param)` pair: 3 blocks for
-  > `setShi` (one per `Shi`), 6 blocks for `flipYao` (one per `Fin 6`).
+  > emits one block per concrete `(opcode, param)` pair: 4 blocks for
+  > `setShi` (one per `Shi` — now V₄ Klein 4 with `dao/ji/jin/wei`),
+  > 6 blocks for `flipYao` (one per `Fin 6`).
   > Each block is therefore parameterized at the *Lean* level by the
   > runtime operand, so it does not need to read the param cell at
   > runtime — fetch+dispatch route control to the right pre-compiled
@@ -35,7 +36,7 @@ implicitly by the existing `Block_HuCuoZong.lean` worked blocks:
   > `executeBlock_setShi (sh : Shi) (offset fetchOffset : Nat)`.
 
 Trade-off: the meta-program grows with the number of (op, param) pairs
-(11 + 3 + 6 = 20 blocks vs 12 for tag-only dispatch), but per-block
+(11 + 4 + 6 = 21 blocks vs 12 for tag-only dispatch), but per-block
 proofs become trivial cur-mirroring — exactly the pattern proven for
 `hu`/`cuo`/`zong`.  This keeps Phase B local-effect lemmas honest and
 defers the destructive-walk question to whichever Phase C dispatcher
@@ -63,7 +64,7 @@ import SSBX.Foundation.Wen.MetaInterp.ExecuteBlock
 namespace SSBX.Foundation.Wen.MetaInterp.ExecuteBlock
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.MetaInterp
 
@@ -74,8 +75,10 @@ open SSBX.Foundation.Wen.MetaInterp
     two-instruction program; the Shi transform is applied to META.cur via
     the surrounding loop invariant that maintains `META.cur = sim.cur`.
 
-    There are 3 such blocks (one per `Shi` value); fetch+dispatch routes
-    control to the right one based on the runtime param cell. -/
+    There are 4 such blocks (one per `Shi` value: dao, ji, jin, wei —
+    the V₄ Klein 4-group); fetch+dispatch routes control to the right
+    one based on the runtime param cell.  Note that `setShi Shi.dao`
+    is now a valid target (V₄ identity). -/
 def executeBlock_setShi (sh : Shi) (_offset fetchOffset : Nat) : List YiInstr :=
   [ YiInstr.setShi sh
   , YiInstr.jump fetchOffset
@@ -99,7 +102,7 @@ theorem executeBlock_setShi_second (sh : Shi) (offset fetchOffset : Nat) :
     itself there is no history modification). -/
 theorem executeBlock_setShi_local_effect
     (sh : Shi) (h : Hexagram) (sh₀ : Shi)
-    (history : List Cell192) (fetchOffset offset : Nat) :
+    (history : List Cell256) (fetchOffset offset : Nat) :
     let μ : YiState :=
       { cur := (h, sh₀)
         history := history
@@ -163,7 +166,7 @@ theorem executeBlock_flipYao_second (i : Fin 6) (offset fetchOffset : Nat) :
     `(h.flipPos i, sh)` and jumps to fetchOffset. -/
 theorem executeBlock_flipYao_local_effect
     (i : Fin 6) (h : Hexagram) (sh : Shi)
-    (history : List Cell192) (fetchOffset offset : Nat) :
+    (history : List Cell256) (fetchOffset offset : Nat) :
     let μ : YiState :=
       { cur := (h, sh)
         history := history

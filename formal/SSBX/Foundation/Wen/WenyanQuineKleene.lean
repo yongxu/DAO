@@ -20,7 +20,7 @@ import SSBX.Foundation.Wen.WenyanSelfInterp
 namespace SSBX.Foundation.Wen.WenyanQuineKleene
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Bagua.GodelLi
 open SSBX.Foundation.Bagua.KleeneInternal

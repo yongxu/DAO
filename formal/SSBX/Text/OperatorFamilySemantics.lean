@@ -1,19 +1,19 @@
-import SSBX.Foundation.Bagua.Cell192
+import SSBX.Foundation.Bagua.Cell256
 import SSBX.Foundation.Yi.YiCore
 import SSBX.Text.OperatorSignatures
 
 /-!
-# OperatorFamilySemantics — parametric family laws over Cell192
+# OperatorFamilySemantics — parametric family laws over Cell256
 
 This file proves family-level semantics for a small set of catalogue operators
-whose meaning is already represented by uniform `Cell192` transformations.  It
+whose meaning is already represented by uniform `Cell256` transformations.  It
 is intentionally parametric: one theorem ranges over all cells, instead of
 generating pair-specific theorems for every operator-cell row.
 -/
 
 namespace SSBX.Text.OperatorFamilySemantics
 
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Yi.YiCore
 open SSBX.Text.WenyanOperators
@@ -47,17 +47,17 @@ def operatorId : CellTransformKind → OperatorId
   | .flip2 => .T_1
   | .flip3 => .T_2
 
-def apply : CellTransformKind → Cell192 → Cell192
+def apply : CellTransformKind → Cell256 → Cell256
   | .id, c => c
   | .next64, c => («生» c.1, c.2)
   | .prev64, c => («加» Hexagram.kun c.1, c.2)
-  | .cuo, c => Cell192.hexCuo c
-  | .zong, c => Cell192.hexZong c
-  | .hu, c => Cell192.hexHu c
+  | .cuo, c => Cell256.hexCuo c
+  | .zong, c => Cell256.hexZong c
+  | .hu, c => Cell256.hexHu c
   | .cuoZong, c => (c.1.cuoZong, c.2)
-  | .flip1, c => Cell192.flip1 c
-  | .flip2, c => Cell192.flip2 c
-  | .flip3, c => Cell192.flip3 c
+  | .flip1, c => Cell256.flip1 c
+  | .flip2, c => Cell256.flip2 c
+  | .flip3, c => Cell256.flip3 c
 
 end CellTransformKind
 
@@ -85,7 +85,7 @@ def cellTransformForOperator? : OperatorId → Option CellTransformKind
   | .T_2 => some .flip3
   | _ => none
 
-def applyCellTransformForOperator? (id : OperatorId) (c : Cell192) : Option Cell192 :=
+def applyCellTransformForOperator? (id : OperatorId) (c : Cell256) : Option Cell256 :=
   (cellTransformForOperator? id).map (fun k => k.apply c)
 
 theorem cellTransformKinds_length :
@@ -152,68 +152,68 @@ theorem cellTransformForOperator?_flip2 :
 theorem cellTransformForOperator?_flip3 :
     cellTransformForOperator? .T_2 = some .flip3 := rfl
 
-theorem applyCellTransformForOperator?_id (c : Cell192) :
+theorem applyCellTransformForOperator?_id (c : Cell256) :
     applyCellTransformForOperator? .R_6 c = some c := rfl
 
-theorem applyCellTransformForOperator?_next64 (c : Cell192) :
+theorem applyCellTransformForOperator?_next64 (c : Cell256) :
     applyCellTransformForOperator? .T_10 c = some («生» c.1, c.2) := rfl
 
-theorem applyCellTransformForOperator?_prev64 (c : Cell192) :
+theorem applyCellTransformForOperator?_prev64 (c : Cell256) :
     applyCellTransformForOperator? .T_12 c = some («加» Hexagram.kun c.1, c.2) := rfl
 
-theorem applyCellTransformForOperator?_cuo (c : Cell192) :
-    applyCellTransformForOperator? .Z_5 c = some (Cell192.hexCuo c) := rfl
+theorem applyCellTransformForOperator?_cuo (c : Cell256) :
+    applyCellTransformForOperator? .Z_5 c = some (Cell256.hexCuo c) := rfl
 
-theorem applyCellTransformForOperator?_zong (c : Cell192) :
-    applyCellTransformForOperator? .Z_6 c = some (Cell192.hexZong c) := rfl
+theorem applyCellTransformForOperator?_zong (c : Cell256) :
+    applyCellTransformForOperator? .Z_6 c = some (Cell256.hexZong c) := rfl
 
-theorem applyCellTransformForOperator?_hu (c : Cell192) :
-    applyCellTransformForOperator? .Z_3 c = some (Cell192.hexHu c) := rfl
+theorem applyCellTransformForOperator?_hu (c : Cell256) :
+    applyCellTransformForOperator? .Z_3 c = some (Cell256.hexHu c) := rfl
 
-theorem applyCellTransformForOperator?_fan (c : Cell192) :
-    applyCellTransformForOperator? .T_6 c = some (Cell192.hexCuo c) := rfl
+theorem applyCellTransformForOperator?_fan (c : Cell256) :
+    applyCellTransformForOperator? .T_6 c = some (Cell256.hexCuo c) := rfl
 
-theorem applyCellTransformForOperator?_fanOperator (c : Cell192) :
-    applyCellTransformForOperator? .Z_31 c = some (Cell192.hexCuo c) := rfl
+theorem applyCellTransformForOperator?_fanOperator (c : Cell256) :
+    applyCellTransformForOperator? .Z_31 c = some (Cell256.hexCuo c) := rfl
 
-theorem applyCellTransformForOperator?_cuoZong (c : Cell192) :
+theorem applyCellTransformForOperator?_cuoZong (c : Cell256) :
     applyCellTransformForOperator? .Z_33 c = some (c.1.cuoZong, c.2) := rfl
 
-theorem applyCellTransformForOperator?_flip1 (c : Cell192) :
-    applyCellTransformForOperator? .T_5 c = some (Cell192.flip1 c) := rfl
+theorem applyCellTransformForOperator?_flip1 (c : Cell256) :
+    applyCellTransformForOperator? .T_5 c = some (Cell256.flip1 c) := rfl
 
-theorem applyCellTransformForOperator?_flip2 (c : Cell192) :
-    applyCellTransformForOperator? .T_1 c = some (Cell192.flip2 c) := rfl
+theorem applyCellTransformForOperator?_flip2 (c : Cell256) :
+    applyCellTransformForOperator? .T_1 c = some (Cell256.flip2 c) := rfl
 
-theorem applyCellTransformForOperator?_flip3 (c : Cell192) :
-    applyCellTransformForOperator? .T_2 c = some (Cell192.flip3 c) := rfl
+theorem applyCellTransformForOperator?_flip3 (c : Cell256) :
+    applyCellTransformForOperator? .T_2 c = some (Cell256.flip3 c) := rfl
 
-theorem cellTransform_preserves_shi (k : CellTransformKind) (c : Cell192) :
+theorem cellTransform_preserves_shi (k : CellTransformKind) (c : Cell256) :
     (k.apply c).2 = c.2 := by
   cases k <;> rcases c with ⟨h, s⟩ <;> rfl
 
-theorem cuo_family_involutive (c : Cell192) :
+theorem cuo_family_involutive (c : Cell256) :
     CellTransformKind.cuo.apply (CellTransformKind.cuo.apply c) = c :=
-  Cell192.hexCuo_hexCuo c
+  Cell256.hexCuo_hexCuo c
 
-theorem zong_family_involutive (c : Cell192) :
+theorem zong_family_involutive (c : Cell256) :
     CellTransformKind.zong.apply (CellTransformKind.zong.apply c) = c :=
-  Cell192.hexZong_hexZong c
+  Cell256.hexZong_hexZong c
 
-theorem cuo_zong_family_comm (c : Cell192) :
+theorem cuo_zong_family_comm (c : Cell256) :
     CellTransformKind.cuo.apply (CellTransformKind.zong.apply c)
       = CellTransformKind.zong.apply (CellTransformKind.cuo.apply c) :=
-  Cell192.hexCuo_hexZong_comm c
+  Cell256.hexCuo_hexZong_comm c
 
-theorem cuo_zong_family_composite_involutive (c : Cell192) :
+theorem cuo_zong_family_composite_involutive (c : Cell256) :
     CellTransformKind.cuo.apply
       (CellTransformKind.zong.apply
         (CellTransformKind.cuo.apply
           (CellTransformKind.zong.apply c))) = c :=
-  Cell192.hexCuoZong_hexCuoZong c
+  Cell256.hexCuoZong_hexCuoZong c
 
 /--
-Summary: ten operator families currently have parameterized `Cell192`
+Summary: ten operator families currently have parameterized `Cell256`
 semantics, with forty-three catalogue ids enabled where the surface row has a
 conservative exact Hex transform anchor.  These laws range over all cells; they
 do not introduce pair-specific theorem rows.
@@ -229,10 +229,10 @@ theorem cell_transform_family_summary :
     ∧ cellTransformOperatorIds.Nodup
     ∧ cellTransformOperatorIds.all (fun id => decide (id ∈ allOperatorIds)) = true
     ∧ cellTransformOperatorIds.all (fun id => decide ((fullSignatureFor id).id = id)) = true
-    ∧ (∀ k : CellTransformKind, ∀ c : Cell192, (k.apply c).2 = c.2)
-    ∧ (∀ c : Cell192, CellTransformKind.cuo.apply (CellTransformKind.cuo.apply c) = c)
-    ∧ (∀ c : Cell192, CellTransformKind.zong.apply (CellTransformKind.zong.apply c) = c)
-    ∧ (∀ c : Cell192,
+    ∧ (∀ k : CellTransformKind, ∀ c : Cell256, (k.apply c).2 = c.2)
+    ∧ (∀ c : Cell256, CellTransformKind.cuo.apply (CellTransformKind.cuo.apply c) = c)
+    ∧ (∀ c : Cell256, CellTransformKind.zong.apply (CellTransformKind.zong.apply c) = c)
+    ∧ (∀ c : Cell256,
         CellTransformKind.cuo.apply (CellTransformKind.zong.apply c)
           = CellTransformKind.zong.apply (CellTransformKind.cuo.apply c)) := by
   exact

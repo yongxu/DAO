@@ -34,7 +34,7 @@ namespace SSBX.Foundation.Bagua.GodelLi
 
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Bagua.BaguaAlgebra
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Bagua.BaguaTuring
 
 /-! ## § 1 Halts predicate (Σ₁) -/
@@ -312,11 +312,11 @@ theorem phase2_summary :
   cuo 交换，setShi/branchShiEq 仅作用于 Shi（cuo 不触），history 操作
   保 cuo-关系。 -/
 
-/-- Apply `cuo` to a Cell192's hexagram component (Shi unchanged). -/
-def cuoCell (c : Cell192) : Cell192 := (c.1.cuo, c.2)
+/-- Apply `cuo` to a Cell256's hexagram component (Shi unchanged). -/
+def cuoCell (c : Cell256) : Cell256 := (c.1.cuo, c.2)
 
 /-- cuo is involutive on cells. -/
-theorem cuoCell_cuoCell (c : Cell192) : cuoCell (cuoCell c) = c := by
+theorem cuoCell_cuoCell (c : Cell256) : cuoCell (cuoCell c) = c := by
   unfold cuoCell
   simp [Hexagram.cuo_cuo]
 

@@ -16,14 +16,14 @@ length obstruction that prevents closing the literal-emitter fixed point.
 namespace SSBX.Foundation.Wen.WenyanQuineConcreteSearch
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
 open SSBX.Foundation.Wen.WenyanQuineEmitter
 open SSBX.Foundation.Wen.WenyanQuineHistory
 open SSBX.Foundation.Wen.WenyanQuineWitness
 
-def searchStart : Cell192 := (Hexagram.qian, Shi.jin)
+def searchStart : Cell256 := (Hexagram.qian, Shi.jin)
 
 /-! ## Direct non-push-only candidate -/
 
@@ -41,14 +41,19 @@ def directNonPushFuel : Nat := directNonPushSource.length + 2
 
 /--
 The smallest direct non-`push`-only candidate emits the changed current cell.
-Its first output is therefore `cellFromIdx 0`, while its program encoding starts
-with the `setShi` tag `cellFromIdx 1`.
+Its first output is therefore `cellFromIdx 1` (= (qian, ji) in V₄ Cell256 indexing),
+while its program encoding starts with the `setShi` tag `cellFromIdx 1` followed
+by `encShi Shi.ji = cellFromIdx 1` and `push = cellFromIdx 9`.
+
+Note: post-Phase F.2 (Cell192 → Cell256), Shi indexing is V₄: dao=0, ji=1, jin=2,
+wei=3. searchStart = (qian, jin) → cellToIdx = 0·4+2 = 2. After setShi Shi.ji,
+cur = (qian, ji) → cellToIdx = 0·4+1 = 1. (Pre-migration Z/3 used 0·3+0 = 0.)
 -/
 theorem direct_non_push_failed_shape :
     (directNonPushInit.runFuel directNonPushFuel).history =
-      [cellFromIdx ⟨0, by omega⟩] ∧
+      [cellFromIdx ⟨1, by omega⟩] ∧
     ProgEnc.encProg directNonPushSource =
-      [cellFromIdx ⟨1, by omega⟩, cellFromIdx ⟨0, by omega⟩,
+      [cellFromIdx ⟨1, by omega⟩, cellFromIdx ⟨1, by omega⟩,
        cellFromIdx ⟨9, by omega⟩] ∧
     (directNonPushInit.runFuel directNonPushFuel).history ≠
       ProgEnc.encProg directNonPushSource := by
@@ -63,7 +68,7 @@ literal emitter route.
 -/
 def seedSource : List YiInstr := directNonPushSource
 
-def generatedTarget : List Cell192 := ProgEnc.encProg seedSource
+def generatedTarget : List Cell256 := ProgEnc.encProg seedSource
 
 def generatedSource : List YiInstr :=
   emitCellsFrom searchStart generatedTarget
@@ -97,13 +102,13 @@ theorem generated_not_self_encoding :
 
 /-! ## General gate for the literal emitter fixed point -/
 
-theorem emitCellFrom_length_ge_two (cur target : Cell192) :
+theorem emitCellFrom_length_ge_two (cur target : Cell256) :
     2 ≤ (emitCellFrom cur target).length := by
   simp only [emitCellFrom, List.length_append, List.length_cons, List.length_nil]
   omega
 
 theorem emitCellsInOrderFrom_length_ge_two_mul
-    (start : Cell192) (targets : List Cell192) :
+    (start : Cell256) (targets : List Cell256) :
     2 * targets.length ≤ (emitCellsInOrderFrom start targets).length := by
   induction targets generalizing start with
   | nil =>
@@ -116,7 +121,7 @@ theorem emitCellsInOrderFrom_length_ge_two_mul
       omega
 
 theorem emitCellsFrom_length_ge_two_mul
-    (start : Cell192) (targets : List Cell192) :
+    (start : Cell256) (targets : List Cell256) :
     2 * targets.length ≤ (emitCellsFrom start targets).length := by
   unfold emitCellsFrom
   have h := emitCellsInOrderFrom_length_ge_two_mul start targets.reverse
@@ -153,7 +158,7 @@ would require the source to have at least two instructions per emitted cell,
 while raw instruction encoding has at least one cell per instruction.
 -/
 theorem literal_emitter_fixed_point_obstruction
-    (start : Cell192) (targets : List Cell192) (h_nonempty : targets ≠ []) :
+    (start : Cell256) (targets : List Cell256) (h_nonempty : targets ≠ []) :
     ProgEnc.encProg (emitCellsFrom start targets) ≠ targets := by
   intro hfix
   have h_emit := emitCellsFrom_length_ge_two_mul start targets

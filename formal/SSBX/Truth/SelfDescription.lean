@@ -8,7 +8,7 @@ that give it mathematical content.
 -/
 import SSBX.Truth.Adequacy
 import SSBX.Foundation.Bagua.BaguaAlgebra
-import SSBX.Foundation.Bagua.Cell192
+import SSBX.Foundation.Bagua.Cell256
 import SSBX.Foundation.Modern.HexagramPosition
 
 namespace SSBX.Truth.SelfDescription
@@ -22,7 +22,7 @@ open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Yi.Yi.Trigram
 open SSBX.Foundation.Yi.Yi.Hexagram
 open SSBX.Foundation.Bagua.BaguaAlgebra
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Modern.HexagramPosition
 
 /-! ## § 1 Objects of self-description -/
@@ -30,8 +30,8 @@ open SSBX.Foundation.Modern.HexagramPosition
 inductive BitPositionObject where
   | yin | yang
   | yaoOne | yaoTwo | yaoThree | yaoFour | yaoFive | yaoSix
-  | trigram | hexagram | cell192
-  | shiPast | shiPresent | shiFuture
+  | trigram | hexagram | cell256
+  | shiEternal | shiPast | shiPresent | shiFuture
   | wellPosition | centralPosition | responsePosition | neighborPosition
   | supportPosition | ridingPosition
   deriving DecidableEq, Repr
@@ -76,7 +76,8 @@ def bitPositionForms : BitPositionObject -> List GlyphSense
   | .yaoSix => textToSenses "六位"
   | .trigram => textToSenses "三位八象"
   | .hexagram => textToSenses "六位六十四象"
-  | .cell192 => textToSenses "格六十四三期"
+  | .cell256 => textToSenses "格六十四四期"
+  | .shiEternal => textToSenses "道期"
   | .shiPast => textToSenses "已期"
   | .shiPresent => textToSenses "中期"
   | .shiFuture => textToSenses "未期"
@@ -145,7 +146,8 @@ def BitPositionVerified : BitPositionObject -> Prop
   | .yaoSix => ∀ h : Hexagram, atPos h ⟨5, by decide⟩ = h.y6
   | .trigram => Trigram.all.length = 8 ∧ ∀ t : Trigram, t ∈ Trigram.all
   | .hexagram => Hexagram.allHex.length = 64 ∧ ∀ h : Hexagram, h ∈ Hexagram.allHex
-  | .cell192 => Cell192.all.length = 192 ∧ ∀ c : Cell192, c ∈ Cell192.all
+  | .cell256 => Cell256.all.length = 256 ∧ ∀ c : Cell256, c ∈ Cell256.all
+  | .shiEternal => Shi.dao ∈ Shi.all
   | .shiPast => Shi.ji ∈ Shi.all
   | .shiPresent => Shi.jin ∈ Shi.all
   | .shiFuture => Shi.wei ∈ Shi.all
@@ -221,8 +223,11 @@ theorem bit_position_verified (b : BitPositionObject) :
       exact ⟨rfl, trigram_mem_all⟩
   | hexagram =>
       exact ⟨Hexagram.allHex_count, hexagram_mem_allHex⟩
-  | cell192 =>
-      exact ⟨Cell192.all_length, Cell192.mem_all⟩
+  | cell256 =>
+      exact ⟨Cell256.all_length, Cell256.mem_all⟩
+  | shiEternal =>
+      change Shi.dao ∈ Shi.all
+      simp [Shi.all]
   | shiPast =>
       change Shi.ji ∈ Shi.all
       simp [Shi.all]
@@ -265,8 +270,8 @@ theorem position_semantics_complete : PositionSemanticsComplete := by
 def allBitPositionObjects : List BitPositionObject := [
   .yin, .yang,
   .yaoOne, .yaoTwo, .yaoThree, .yaoFour, .yaoFive, .yaoSix,
-  .trigram, .hexagram, .cell192,
-  .shiPast, .shiPresent, .shiFuture,
+  .trigram, .hexagram, .cell256,
+  .shiEternal, .shiPast, .shiPresent, .shiFuture,
   .wellPosition, .centralPosition, .responsePosition, .neighborPosition,
   .supportPosition, .ridingPosition
 ]
@@ -313,8 +318,8 @@ def HexagramOperatorComplete : Prop :=
     ∧ (∀ a b : Hexagram, ∃ f : Hexagram → Hexagram, f a = b)
     ∧ (∀ a b : Hexagram, hexHammingDist a b ≤ 6)
 
-def Cell192OperatorComplete : Prop :=
-  ∀ a b : Cell192, ∃ f : Cell192 → Cell192, f a = b
+def Cell256OperatorComplete : Prop :=
+  ∀ a b : Cell256, ∃ f : Cell256 → Cell256, f a = b
 
 def OperatorCatalogueComplete : Prop :=
   (∀ id : OperatorId, CoveredOperator id)
@@ -322,7 +327,7 @@ def OperatorCatalogueComplete : Prop :=
     ∧ (∀ i : DerivedInterface, CoveredDerivedInterface i)
     ∧ TrigramOperatorComplete
     ∧ HexagramOperatorComplete
-    ∧ Cell192OperatorComplete
+    ∧ Cell256OperatorComplete
 
 def PositionAwareCompleteOperatorSet : Prop :=
   PositionSemanticsComplete ∧ OperatorCatalogueComplete
@@ -335,18 +340,12 @@ theorem hexagram_operator_complete : HexagramOperatorComplete :=
 
 theorem shi_operator_complete (a b : Shi) :
     ∃ f : Shi → Shi, f a = b := by
-  cases a <;> cases b
-  · exact ⟨id, rfl⟩
-  · exact ⟨Shi.next, rfl⟩
-  · exact ⟨Shi.prev, rfl⟩
-  · exact ⟨Shi.prev, rfl⟩
-  · exact ⟨id, rfl⟩
-  · exact ⟨Shi.next, rfl⟩
-  · exact ⟨Shi.next, rfl⟩
-  · exact ⟨Shi.prev, rfl⟩
-  · exact ⟨id, rfl⟩
+  -- For any pair (a, b) of V₄ elements there exists a constant function
+  -- s ↦ b. This is the trivial witness (V₄ is finite, so any pointwise
+  -- mapping is realizable).
+  exact ⟨fun _ => b, rfl⟩
 
-theorem cell192_operator_complete : Cell192OperatorComplete := by
+theorem cell256_operator_complete : Cell256OperatorComplete := by
   intro a b
   rcases a with ⟨ha, sa⟩
   rcases b with ⟨hb, sb⟩
@@ -361,7 +360,7 @@ theorem operator_catalogue_complete : OperatorCatalogueComplete :=
     SSBX.Text.Completeness.derived_interfaces_complete,
     trigram_operator_complete,
     hexagram_operator_complete,
-    cell192_operator_complete⟩
+    cell256_operator_complete⟩
 
 theorem position_aware_complete_operator_set :
     PositionAwareCompleteOperatorSet :=

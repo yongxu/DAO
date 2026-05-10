@@ -21,7 +21,7 @@ namespace SSBX.Foundation.Modern.HistoryTapeStructure
 
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Core.Yuan
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Bagua.BaguaAlgebra
 open SSBX.Foundation.Modern.MingBoundary
@@ -32,7 +32,7 @@ open SSBX.Text.OperatorSignatures
 /-! ## § 1 史带：YiState.history as an unbounded list -/
 
 /-- The "史带" at the executable L0 layer is the `history` list of cells. -/
-abbrev HistoryTape : Type := List Cell192
+abbrev HistoryTape : Type := List Cell256
 
 /-- Read the tape component from an interpreter state. -/
 def stateTape (s : YiState) : HistoryTape :=
@@ -53,7 +53,7 @@ theorem pop_empty_halts (s : YiState) (h : stateTape s = []) :
       subst history
       rfl
 
-theorem pop_reads_head_cell_from_tape (s : YiState) (c : Cell192) (rest : HistoryTape)
+theorem pop_reads_head_cell_from_tape (s : YiState) (c : Cell256) (rest : HistoryTape)
     (h : stateTape s = c :: rest) :
     stateTape (YiState.execute YiInstr.pop s) = rest
       ∧ (YiState.execute YiInstr.pop s).cur = c := by
@@ -65,11 +65,11 @@ theorem pop_reads_head_cell_from_tape (s : YiState) (c : Cell192) (rest : Histor
 
 /-! ## § 2 爻根：cells bottom out in six Yuan/Yao values -/
 
-/-- The yao trace carried by a 192-cell. -/
-def cellYuanTrace (c : Cell192) : List Yuan :=
+/-- The yao trace carried by a 256-cell. -/
+def cellYuanTrace (c : Cell256) : List Yuan :=
   c.1.toDuoYuan
 
-theorem cellYuanTrace_length (c : Cell192) :
+theorem cellYuanTrace_length (c : Cell256) :
     (cellYuanTrace c).length = 6 := by
   rcases c with ⟨h, _s⟩
   exact hex_toDuoYuan_length h
@@ -435,7 +435,7 @@ theorem qian_kun_yuan_yao_layer_summary :
 /--
 Machine-checkable summary of the narrow claim:
 
-* `history` is a `List Cell192` tape and push/pop act on its head.
+* `history` is a `List Cell256` tape and push/pop act on its head.
 * each cell has a six-yao trace.
 * `fen` builds the three-yao trigram spine from Yuan/Yao inputs.
 * recursive structure expressions have only yao/root leaves.
@@ -444,7 +444,7 @@ Machine-checkable summary of the narrow claim:
 theorem history_tape_structure_summary :
     (∀ s : YiState, stateTape s = s.history)
     ∧ (∀ s : YiState, stateTape (YiState.execute YiInstr.push s) = s.cur :: stateTape s)
-    ∧ (∀ c : Cell192, (cellYuanTrace c).length = 6)
+    ∧ (∀ c : Cell256, (cellYuanTrace c).length = 6)
     ∧ (∀ y1 y2 y3 : Yuan,
         fenToTrigram (fenToSiXiang (fenToYi () y1) y2) y3 = ⟨y1, y2, y3⟩)
     ∧ (∀ e : StructureExpr, BuiltFromYao e)

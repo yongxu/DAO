@@ -15,7 +15,7 @@ route does not depend on halting equivalence.
 namespace SSBX.Foundation.Wen.WenyanLambdaRoute
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Bagua.KleeneInternal
 open SSBX.Foundation.Wen.WenyanSelfInterp

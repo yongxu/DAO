@@ -54,7 +54,7 @@ end SSBX.Foundation.Bagua.BaguaTuring
 namespace SSBX.Foundation.Wen.WenyanParser
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Bagua.BaguaTuring
 
 /-! ## § 1  Token 类型 -/
@@ -124,6 +124,7 @@ def lex (s : String) : Option (List Tok) := lexAux s.toList
 /-! ## § 3  时态 / 爻位 / 数词 -/
 
 def parseShi : String → Option Shi
+  | "道" => some .dao
   | "已" => some .ji
   | "今" => some .jin
   | "未" => some .wei
@@ -316,6 +317,7 @@ def printNumeral (n : Nat) : String :=
   else "«?»"
 
 def printShi : Shi → String
+  | .dao => "«道»"
   | .ji  => "«已»"
   | .jin => "«今»"
   | .wei => "«未»"
@@ -386,12 +388,12 @@ def allKindReprs : List YiInstr := [
   .hu, .cuo, .zong,
   .push, .pop,
   .halt,
-  .setShi .ji, .setShi .jin, .setShi .wei,
+  .setShi .dao, .setShi .ji, .setShi .jin, .setShi .wei,
   .flipYao ⟨0, by omega⟩, .flipYao ⟨1, by omega⟩, .flipYao ⟨2, by omega⟩,
   .flipYao ⟨3, by omega⟩, .flipYao ⟨4, by omega⟩, .flipYao ⟨5, by omega⟩,
   .branchYaoEq ⟨0, by omega⟩ ⟨5, by omega⟩ 1,
   .branchYaoEq ⟨2, by omega⟩ ⟨3, by omega⟩ 64,
-  .branchShiEq .ji 1,   .branchShiEq .jin 32, .branchShiEq .wei 64,
+  .branchShiEq .dao 1, .branchShiEq .ji 1,   .branchShiEq .jin 32, .branchShiEq .wei 64,
   .jump 1, .jump 10, .jump 32, .jump 64
 ]
 
@@ -410,16 +412,16 @@ def yaoRange : List (Fin 6) := [
 ]
 
 /-- 所有时态。用于穷尽合法单指令 universe。 -/
-def shiRange : List Shi := [.ji, .jin, .wei]
+def shiRange : List Shi := [.dao, .ji, .jin, .wei]
 
-/-- 所有合度单指令，共 2576 条。
+/-- 所有合度单指令，共 2641 条。
 
 构成：
   * 7 条无参指令
-  * 3 条 `setShi`
+  * 4 条 `setShi`
   * 6 条 `flipYao`
   * 6 * 6 * 64 条 `branchYaoEq`
-  * 3 * 64 条 `branchShiEq`
+  * 4 * 64 条 `branchShiEq`
   * 64 条 `jump`
 -/
 def validInstrUniverse : List YiInstr :=
@@ -438,7 +440,7 @@ def validInstrUniverse : List YiInstr :=
   ++ numeralRange.map YiInstr.jump
 
 theorem validInstrUniverse_length :
-    validInstrUniverse.length = 2576 := by native_decide
+    validInstrUniverse.length = 2641 := by native_decide
 
 theorem validInstrUniverse_all_valid :
     validInstrUniverse.all validInstr = true := by native_decide

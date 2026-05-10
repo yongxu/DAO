@@ -10,7 +10,7 @@
 
   § 1   «判型良_basic»：基本结构合度判定（self-contained，不依赖 WenyanParser）
   § 2   «微核源»：Tier 2 之 「文之试金石」 程序（约 60 instr，结构性运用十二字）
-  § 3   «微核数»：«微核源» 在 Cell192 字 之 编码
+  § 3   «微核数»：«微核源» 在 Cell256 字 之 编码
   § 4   «微核自验» 主定理：«判型良_basic» = true ∧ encProg/decInstrs round-trip
   § 5   «微核自释»：«微核源» 在初态 (Hexagram.qian) 上 之 执行 trace 收敛于 halted
   § 6   §文之至 — 四相俱
@@ -55,7 +55,7 @@ import SSBX.Foundation.Wen.WenyanParserGeneral
 namespace SSBX.Foundation.Wen.WenyanSelfHost
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
 open SSBX.Foundation.Wen.WenyanParser
@@ -92,7 +92,7 @@ def «判型良_basic» (p : List YiInstr) : Bool := p.all «判型良_instr»
     阶段 七 — 不动 padding (确保 ≥ 60)      (20 instr)
 
   All targets 在 1..64 之范围内，使 «判型良_basic» 通过；
-  All instructions 之 encoding 之 Nat 参数 之 digits length < 192，使
+  All instructions 之 encoding 之 Nat 参数 之 digits length < 256，使
   Encodable holds — 故 ProgEnc.decInstrs 之 round-trip 可证。
 
   程序设计为：从 (Hexagram.qian, Shi.jin) 始，约 65-80 步内 reach .halt
@@ -179,8 +179,8 @@ theorem «微核源_length» : «微核源».length = 64 := by native_decide
 
 /-! ## § 3  «微核数» — 文 之 数 -/
 
-/-- «微核数» — «微核源» 之 Cell192 字串 编码。 -/
-def «微核数» : List Cell192 := ProgEnc.encProg «微核源»
+/-- «微核数» — «微核源» 之 Cell256 字串 编码。 -/
+def «微核数» : List Cell256 := ProgEnc.encProg «微核源»
 
 /-! ## § 4  «微核自验» — 文 之 形 + 文 之 数 + 文 之 解 -/
 
@@ -195,11 +195,11 @@ theorem «微核源_validProg_eq_basic» :
 /-- Parser 侧之合度判定亦接受 «微核源»。 -/
 theorem «微核源_validProg» : validProg «微核源» = true := by native_decide
 
-/-- AllEncodable «微核源»：每条指令皆 encodable (Nat targets all ∈ 1..64 < 192).
+/-- AllEncodable «微核源»：每条指令皆 encodable (Nat targets all ∈ 1..64 < 256).
 
     Proof strategy: enumerate the program elementwise via `List.mem_cons`,
     showing each is either a no-Nat-param instruction (Encodable trivially `True`)
-    or one of 6 concrete Nat-param instructions whose target ≤ 64 < 192. -/
+    or one of 6 concrete Nat-param instructions whose target ≤ 64 < 256. -/
 theorem «微核源_AllEncodable» : ProgEnc.AllEncodable «微核源» := by
   intro i hi
   -- «微核源» 是 字面 List；hi 之展开 即 64 个 disjunction
@@ -212,7 +212,7 @@ theorem «微核源_AllEncodable» : ProgEnc.AllEncodable «微核源» := by
               | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
               | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
               | rfl | rfl | rfl | rfl <;>
-    (first | trivial | (show (NatCell.encodeNat _).length < 192; native_decide))
+    (first | trivial | (show (NatCell.encodeNat _).length < 256; native_decide))
 
 /-- (b) «decInstrs |微核源| 微核数 = some (微核源, [])» — 文之数 round-trips 回 文。
     由 `ProgEnc.decInstrs_encProg`（程序级 round-trip 定理）+ AllEncodable 见证。 -/
@@ -297,7 +297,7 @@ theorem «微核源_not_runtime_quine_qian» :
   ║                  · 由 «微核源_well_formed» 见证                  ║
   ║                                                                  ║
   ║    文 之 数  ——  «微核数 = ProgEnc.encProg 微核源» 是其编码     ║
-  ║                  · List Cell192 形式（base-192）                 ║
+  ║                  · List Cell256 形式（base-256）                 ║
   ║                                                                  ║
   ║    文 之 解  ——  «decInstrs |微核源| 微核数 = some (微核源, [])» ║
   ║                  · 编码 round-trips back to 源                   ║

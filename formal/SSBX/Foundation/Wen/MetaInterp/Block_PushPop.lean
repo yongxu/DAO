@@ -81,7 +81,7 @@ import SSBX.Foundation.Wen.MetaInterp.ExecuteBlock
 namespace SSBX.Foundation.Wen.MetaInterp.ExecuteBlock
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
 open SSBX.Foundation.Wen.MetaInterp
@@ -145,7 +145,7 @@ theorem executeBlock_push_third (offset fetchOffset : Nat) :
     leaves META with `cur` unchanged, two copies of the original cur
     prepended to history, and `pc = fetchOffset`. -/
 theorem executeBlock_push_local_effect
-    (cur : Cell192) (history : List Cell192)
+    (cur : Cell256) (history : List Cell256)
     (offset fetchOffset : Nat) :
     let μ : YiState :=
       { cur := cur
@@ -255,7 +255,7 @@ theorem executeBlock_pop_first (offset fetchOffset : Nat) :
     untouched.  This mirrors the sim-side `pop` behaviour when
     `sim.history = []`. -/
 theorem executeBlock_pop_empty_local_effect
-    (cur : Cell192) (history : List Cell192)
+    (cur : Cell256) (history : List Cell256)
     (offset fetchOffset : Nat) :
     let μ : YiState :=
       { cur := cur

@@ -44,7 +44,7 @@ import Mathlib.Tactic.IntervalCases
 namespace SSBX.Foundation.Wen.WenyanParserGeneral
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanParser
 
@@ -198,6 +198,7 @@ theorem lexFuel_sep_fullwidth (cs : List Char) (n : Nat) :
 /-- 单个 时态 之 token. -/
 def tokOfShi (s : Shi) : Tok :=
   match s with
+  | .dao => Tok.cjk "道"
   | .ji  => Tok.cjk "已"
   | .jin => Tok.cjk "今"
   | .wei => Tok.cjk "未"
@@ -287,7 +288,7 @@ theorem parseNumeral_numeralInner (n : Nat) (h1 : 1 ≤ n) (h64 : n ≤ 64) :
 
 /-- 时态 parser 之 print-逆。 -/
 theorem parseShi_shi (s : Shi) :
-    parseShi (match s with | .ji => "已" | .jin => "今" | .wei => "未") = some s := by
+    parseShi (match s with | .dao => "道" | .ji => "已" | .jin => "今" | .wei => "未") = some s := by
   cases s <;> rfl
 
 /-- 爻位 parser 之 print-逆。 -/
@@ -320,6 +321,7 @@ theorem tokOfYao_eq (i : Fin 6) :
 
 /-- 时态 之 char 列表表示. -/
 def printShiChars : Shi → List Char
+  | .dao => ['«', '道', '»']
   | .ji  => ['«', '已', '»']
   | .jin => ['«', '今', '»']
   | .wei => ['«', '未', '»']
@@ -464,6 +466,11 @@ private theorem lexFuel_printShiChars
     lexFuel (n + 1) (printShiChars s ++ tail)
       = (lexFuel n tail).map (fun toks => tokOfShi s :: toks) := by
   cases s with
+  | dao =>
+      show lexFuel (n + 1) (('«' :: ['道'] ++ ['»']) ++ tail) = _
+      rw [lexFuel_bracket_split ['道'] tail n
+            (by intro c hc; simp at hc; subst hc; decide)]
+      rfl
   | ji =>
       show lexFuel (n + 1) (('«' :: ['已'] ++ ['»']) ++ tail) = _
       rw [lexFuel_bracket_split ['已'] tail n

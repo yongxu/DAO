@@ -17,7 +17,7 @@ import SSBX.Foundation.Bagua.BaguaTuring
 namespace SSBX.Foundation.Bagua.FuelDiscipline
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Bagua.BaguaTuring
 
 /-! ## § 1  有界执行结构 -/
@@ -35,7 +35,7 @@ def run (p : List YiInstr) (h : Hexagram) (n : Nat) : BoundedExec p h n :=
 
 /-- 末态之 cur 卦时。 -/
 def curOf {p : List YiInstr} {h : Hexagram} {n : Nat}
-    (b : BoundedExec p h n) : Cell192 := b.finalState.cur
+    (b : BoundedExec p h n) : Cell256 := b.finalState.cur
 
 /-- 末态是否已止。 -/
 def haltedOf {p : List YiInstr} {h : Hexagram} {n : Nat}

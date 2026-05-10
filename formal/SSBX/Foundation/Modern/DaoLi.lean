@@ -39,7 +39,7 @@ open SSBX.Foundation.Eight.LuoJi
 /-! ## § 1 道-理二分 (Dao-Li Bifurcation) — 集中陈述
 
 K § 三 之精确形式落位：
-  - **道 ⊨ 理之元定理** (meta-completeness)：Lean（道层）能证明关于 YiInstr/Cell192
+  - **道 ⊨ 理之元定理** (meta-completeness)：Lean（道层）能证明关于 YiInstr/Cell256
     系统（理层）之元定理（停机不可判等）。
   - **理 ⊭ 道** (Li-cannot-self-prove)：YiInstr 程序皆为有限 List，不能枚举
     `Sheng : ℕ → Type` 之 ω-tower（每深度皆有非空层）。

@@ -60,7 +60,7 @@ import SSBX.Foundation.Wen.WenyanReflect
 namespace SSBX.Foundation.Wen.DaoSource
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanParser
 open SSBX.Foundation.Wen.WenyanReflect

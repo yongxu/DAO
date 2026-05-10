@@ -35,7 +35,7 @@ import SSBX.Foundation.Wen.WenyanParser
 namespace SSBX.Foundation.Wen.WenyanReflect
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Bagua.BaguaWenSpec
 open SSBX.Foundation.Wen.WenyanParser

@@ -43,11 +43,12 @@ import SSBX.Foundation.Bagua.BaguaTuring
 namespace SSBX.Foundation.Wen.WenyanSyntax
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Bagua.BaguaTuring
 
-/-! ## § 1  时态三字 -/
+/-! ## § 1  时态四字 (V₄ Klein) -/
 
+notation "道" => Shi.dao
 notation "已" => Shi.ji
 notation "今" => Shi.jin
 notation "未" => Shi.wei

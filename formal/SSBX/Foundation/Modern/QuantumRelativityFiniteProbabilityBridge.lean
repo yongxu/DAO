@@ -16,7 +16,7 @@ import SSBX.Foundation.Modern.OperatorCellGridMarkovBridge
 
 namespace SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityBridge
 
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Modern.QuantumRelativityMarkovBridge
 open SSBX.Foundation.Modern.QuantumRelativityConcreteBridge
 open SSBX.Foundation.Modern.OperatorCellGridMarkovBridge
@@ -191,7 +191,7 @@ theorem operatorCellGrid_nonterminal_row_normalizable
 /-! ## § 4 Public summary -/
 
 /-- Public summary for S2:
-    both the toy concrete bridge and the full `371 × 192` operator-cell grid
+    both the toy concrete bridge and the full `371 × 256` operator-cell grid
     bridge have finite probability-kernel interfaces.  This only closes finite
     denominators and bounded weights; it does not prove Born rule, quantum
     channels, interference, metric recovery, or empirical closure. -/
@@ -211,8 +211,8 @@ theorem finite_probability_bridge_summary :
         operatorCellGridFiniteProbabilityKernel.weight a b
           ≤ operatorCellGridFiniteProbabilityKernel.rowTotal a)
     ∧ allOperatorIds.length = 371
-    ∧ Cell192.all.length = 192
-    ∧ allOperatorCells.length = 71232
+    ∧ Cell256.all.length = 256
+    ∧ allOperatorCells.length = 94976
     ∧ WenConstructiveCoverage := by
   exact
     ⟨ ⟨concreteFiniteProbabilityKernel⟩
@@ -224,7 +224,7 @@ theorem finite_probability_bridge_summary :
     , concreteFiniteProbabilityKernel.weight_le_rowTotal
     , operatorCellGridFiniteProbabilityKernel.weight_le_rowTotal
     , allOperatorIds_length
-    , Cell192.all_length
+    , Cell256.all_length
     , allOperatorCells_length
     , wen_constructive_coverage_192_371
     ⟩

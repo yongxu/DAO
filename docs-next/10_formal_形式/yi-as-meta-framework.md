@@ -189,17 +189,34 @@
 
 第四个观察：**整个系统在不同 R 层上呈 (Z/2)ⁿ 的自相似结构**。
 
-### 4.1 每层都是 (Z/2)ⁿ
+### 4.1 每层都是 (Z/2)ⁿ — strict uniform R₀..R₈
 
-| 层 | 结构 | 元素数 |
-|---|---|---|
-| R1 (爻) | (Z/2)¹ | 2 (阴/阳) |
-| R2 (四象) | (Z/2)² | 4 |
-| R3 (八卦) | (Z/2)³ | 8 = 4 本 + 4 征 |
-| R4 (六十四卦) | (Z/2)⁶ | 64 = 4 quadrant × 16 |
-| R5 (Cell192) | (Z/2)⁶ × Z/3 | 192 |
+| 层 | 结构 | 元素数 | 当层新引入的"元" |
+|---|---|---|---|
+| R0 (太极) | (Z/2)⁰ | 1 | (Unit / 无极) |
+| R1 (爻/两仪) | (Z/2)¹ | 2 (阴/阳) | **爻** (yao) |
+| R2 (四象) | (Z/2)² | 4 | (2 爻复合) |
+| R3 (八卦) | (Z/2)³ | 8 = 4 本 + 4 征 | (3 爻复合) |
+| **R4 (面 Mian)** | **(Z/2)⁴** | **16 = Ben × Zheng** | **(4 yao / 16 命)** |
+| **R5 (五爻 provisional)** | **(Z/2)⁵** | **32** | **(5 yao, 无传统 anchor)** |
+| R6 (六十四卦) | (Z/2)⁶ | 64 = 4 quadrant × 16 | chong (6 爻 = 重卦) — = 3 步 lift composite |
+| **R7** | **(Z/2)⁷** | **128 = 64 × 2** | **因 (yīn, past-trace bit)** |
+| **R8 (256-Cell)** | **(Z/2)⁸** | **256 = 128 × 2 = 64 × 4** | **果 (guǒ, future-projection bit)** |
 
-每层都是同一种代数结构在更高维度的重复。**严格代数自相似**。
+每层都是同一种代数结构在更高维度的重复。**严格代数自相似——R₀..R₈ 全 (Z/2)ⁿ 闭合，无任何非 (Z/2) 因子，no jumps**。
+
+> **R₀..R₈ strict uniform 闭合（v2.1，2026-05-10）**：
+> - 早期 v1 之 R₃ → R₄ 是 +3 bit chong 跳跃（跳过 (Z/2)⁴=16 与 (Z/2)⁵=32），v1 称 R₄ = Hexagram。
+> - **v2.1 修正**: 显式纳入 R₀ (太极, Unit), R₄ (面 Mian = Ben×Zheng = 16, 已 anchor in code), R₅ (五爻 provisional = 32, 无传统 Yi anchor)。重号: 旧 R₄ → R₆ (Hexagram), 旧 R₅ → R₇ (Cell128), 旧 R₆ → R₈ (Cell256)。
+> - chong (重) 现是 R₃ → R₄ → R₅ → R₆ 之 3-step lift composite (非 jump)。
+>
+> Shi V₄ = {道, 已, 今, 未} **at R₈** 由 (因, 果) ∈ Bool² emerge (R₇ ⊗ R₈ 双 axis):
+> - 道 = (因=0, 果=0) — V₄ 单位元 = 跨时空永真
+> - 已 = (因=1, 果=0) — 过去封闭
+> - 未 = (因=0, 果=1) — 未来开放
+> - 今 = (因=1, 果=1) — PT 交汇 = "现在"
+>
+> R₈ = (Z/2)⁸ = 256 是真闭合。详见 [`yi-RO-hierarchy-v2.md`](yi-RO-hierarchy-v2.md) (definitive R₀..R₈) + [`yi-calculus-theorem.md`](yi-calculus-theorem.md) Theorems H–K。命名 因/果/印/投 + R₅ "五爻" 皆 provisional；备选 印/投 (Husserl 现象学) / 始/终 (Yi-native 系辞「原始要终」) / 持/期 (现象学直译) / R₅ 接/临/渐。Lean 已落 `Cell128.lean` (R₇) + `Cell256.lean` (R₈) + `Cell256Stratify.lean` (R₀..R₈ abbrevs + R8_complete bundle, 0 sorry / 0 项目自定义 axiom)。
 
 ### 4.2 为什么 n=3 是魔数
 
@@ -213,13 +230,25 @@
 
 **8 是 self-describing system 的 minimum complete generator**。这是 (Z/2)³ 上 zong + cuo 群作用的代数事实，不是审美选择。
 
-### 4.3 R5 加 Z/3 的特殊地位
+### 4.3 R5 / R6 拆层 — 因 + 果 双 axis 的 V₄ closure
 
-R5 = 64 × 3 (Cell192) 引入第 3 个轴：时态 Shi {已, 今, 未}。
+R5 引入第 7 个 axis（因 yīn, past-trace bit），R6 引入第 8 个 axis（果 guǒ, future-projection bit）。Shi V₄ = {道, 已, 今, 未} 是 R5⊗R6 双层之 emergent，非单层 atom。
 
-这个 Z/3 不来自 (Z/2)ⁿ family——它是**正交的、独立的 ontology axis**。原因：时态有"前/中/后"三个 mode，不是二元的。
+**关键修正（2026-05-10）**：之前两次都犯了层级压缩错误：
+1. 第一版（Cell192）把时态编为 Z/3 cyclic {已, 今, 未} — 丧失「道」V₄ 单位元
+2. 第二版（短暂 Cell256）把 V₄ 当 R5 单层 4-ctor inductive — 仍把 (Z/2)² 压缩到一层
 
-如果把 真值 axis (上/中/下 = 真/未知/假) 也独立出来，得到第 4 axis Z/3。然后 4 本 × 4 阶段 × Shi × ZhenJia = 12 × 9 = 108 cells（详 [`sanben-sijieduan-grid.md`](sanben-sijieduan-grid.md)）。
+正确的 (Z/2)ⁿ 自相似规律下，每个独立 binary axis 是一个独立 R-layer。时态空间的二维分解：
+- **过去印记** π：携带 / 不携带 past trace（→ R5 因 axis）
+- **未来投影** φ：投射 / 不投射 future（→ R6 果 axis）
+
+二维独立 → (π, φ) ∈ {0,1}² → 4 个 Shi state at R6：道 = (0,0)（V₄ identity）、已 = (1,0)、未 = (0,1)、今 = (1,1)。
+
+修正后，R-hierarchy R1..R6 **全 (Z/2)ⁿ 闭合**。R6 = 256 = (Z/2)⁸ 与 ASCII 8-bit cardinality 同构，是**任何 self-describing system 在 binary 上的最小完备 closure**。详见 [`yi-calculus-theorem.md`](yi-calculus-theorem.md) Theorems H–K。
+
+> 命名 因/果 是 provisional：候选还有 印/投（现象学 Husserl retention/protention，与 XinZhi.lean 三相直对接）、始/终（Yi-native 系辞「原始要终」）、持/期（现象学直译）。等 Lean 落 R5/R6 后回看。
+
+> 真值 axis (真/未知/假) 同理：若强行视为 Z/3，应重审是否 binary 二维 (是否有信念 × 是否有反例)。「不知真假」(疑/玄/悬/惑/待) 类似道——也是 V₄ 单位元等价物。详 [`sanben-sijieduan-grid.md`](sanben-sijieduan-grid.md) 重审中。
 
 ---
 

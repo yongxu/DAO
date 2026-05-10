@@ -18,7 +18,7 @@ Hex/Bool denotation。
 -/
 import SSBX.Foundation.Wen.WenSurface.Lex
 import SSBX.Foundation.Wen.WenSurface.Semantics
-import SSBX.Foundation.Bagua.Cell192
+import SSBX.Foundation.Bagua.Cell256
 import SSBX.Text.OperatorAnchors
 import SSBX.Text.OperatorReadings
 import SSBX.Foundation.Yi.YiCore
@@ -30,7 +30,7 @@ open SSBX.Text.WenyanOperators
 open SSBX.Text.OperatorReadings
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Yi.YiCore
-open SSBX.Foundation.Bagua.Cell192
+open SSBX.Foundation.Bagua.Cell256
 open SSBX.Text.OperatorAnchors
 
 /-! ## § 1  Resolved 类型 -/
@@ -80,7 +80,7 @@ def surfaceVarNames : List String :=
 def resolveVarName : Glyph → Option String
   | g => if surfaceVarNames.contains g then some g else none
 
-/-- Canonical surface hexagram names, aligned with `Cell192.xuGua`.
+/-- Canonical surface hexagram names, aligned with `Cell256.xuGua`.
     The traditional `鼎` is retained as an alias; the default single-glyph
     surface for hexagram 50 is `器` to avoid the unpromoted gap-form conflict. -/
 def canonicalHexNames : List String :=
