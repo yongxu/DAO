@@ -196,22 +196,191 @@ theorem all_hexagrams_in_dao (h : Hexagram) : h.inDao = true :=
 
 end DaTong
 
+/-! ## § 6 R₁ Yao — 善 / 恶 (the simplest cell-level binary)
+
+In Kernel.lean: `shan ≡ middle` (善 = 中, the unfixed state) and `eVice ≡
+extreme` (恶 = 极, the fixed state). At Cell layer, "fixed by XOR-with-0"
+is automatic (origin), but the doctrinal yin/yang reading is more natural:
+
+- 善 ↔ 阳 (Yao.yang) — the manifest, the moving-forward
+- 恶 ↔ 阴 (Yao.yin) — the recessive, the stalled
+
+This is metaphorical: at R₁ the (Z/2)¹ algebra makes 阴 the origin/identity
+(see L1_Yao.lean) so the dynamic intuition runs INVERSE to the cell-algebra
+intuition. We name accordingly with documentation. -/
+
+namespace ShanE
+
+def «善» : Yao := Yao.yang
+def «恶» : Yao := Yao.yin
+
+theorem shan_e_distinct : «善» ≠ «恶» := by decide
+
+end ShanE
+
+/-! ## § 7 R₂ SiXiang — 喜怒哀乐 (the four emotions of 中庸)
+
+《中庸》"喜怒哀乐之未发，谓之中；发而皆中节，谓之和". The four primary
+emotions fit naturally into the 4-element SiXiang structure.
+
+  喜 (joy)     → 太阳 (taiYang, full yang)
+  怒 (anger)   → 少阴 (shaoYin, yang-going-down)
+  哀 (sorrow)  → 少阳 (shaoYang, yin-rising)
+  乐 (delight) → 太阴 (taiYin, full yin)
+-/
+
+namespace XiNuAiLe
+
+open SSBX.Foundation.Bagua.BaguaAlgebra
+
+def «喜» : SiXiang := SiXiang.taiYang
+def «怒» : SiXiang := SiXiang.shaoYin
+def «哀» : SiXiang := SiXiang.shaoYang
+def «乐» : SiXiang := SiXiang.taiYin
+
+theorem xi_nu_ai_le_distinct :
+    «喜» ≠ «怒» ∧ «喜» ≠ «哀» ∧ «喜» ≠ «乐» ∧
+    «怒» ≠ «哀» ∧ «怒» ≠ «乐» ∧ «哀» ≠ «乐» := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  all_goals decide
+
+end XiNuAiLe
+
+/-! ## § 8 R₂ SiXiang — 元亨利贞 (the four virtues of 乾卦)
+
+《周易·乾·彖》"元亨利贞". The four cardinal virtues of 乾 — the same
+4-element structure as 喜怒哀乐 but a different labeling.
+
+  元 (origin/spring)     → 太阳 (full yang, the head)
+  亨 (smooth/summer)     → 少阳 (yang in motion)
+  利 (benefit/autumn)    → 少阴 (yin in maturation)
+  贞 (correctness/winter)→ 太阴 (full yin, the held)
+-/
+
+namespace YuanHengLiZhen
+
+open SSBX.Foundation.Bagua.BaguaAlgebra
+
+def «元» : SiXiang := SiXiang.taiYang
+def «亨» : SiXiang := SiXiang.shaoYang
+def «利» : SiXiang := SiXiang.shaoYin
+def «贞» : SiXiang := SiXiang.taiYin
+
+theorem yuan_heng_li_zhen_distinct :
+    «元» ≠ «亨» ∧ «元» ≠ «利» ∧ «元» ≠ «贞» ∧
+    «亨» ≠ «利» ∧ «亨» ≠ «贞» ∧ «利» ≠ «贞» := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  all_goals decide
+
+end YuanHengLiZhen
+
+/-! ## § 9 R₃ Trigram — 三纲 + 三才
+
+### 大学 三纲
+《大学》"大学之道，在明明德，在亲民，在止于至善".
+
+  明明德      → 离 ☲ (illumination of inner brightness)
+  亲民        → 兑 ☱ (joyful contact with the people)
+  止于至善    → 艮 ☶ (resting in highest good)
+
+### 三才 — the three forces
+
+  天 → 乾 ☰
+  地 → 坤 ☷
+  人 → 艮 ☶ (mountain — the centered, the still — the human poised between)
+-/
+
+namespace SanGang
+
+def «明明德» : Trigram := Trigram.li
+def «亲民»   : Trigram := Trigram.dui
+def «止于至善» : Trigram := Trigram.gen
+
+def all : List Trigram := [«明明德», «亲民», «止于至善»]
+
+theorem sangang_count : all.length = 3 := rfl
+
+theorem sangang_distinct :
+    «明明德» ≠ «亲民» ∧ «明明德» ≠ «止于至善» ∧ «亲民» ≠ «止于至善» := by
+  refine ⟨?_, ?_, ?_⟩
+  all_goals decide
+
+end SanGang
+
+namespace SanCai
+
+def «天» : Trigram := Trigram.qian
+def «地» : Trigram := Trigram.kun
+def «人» : Trigram := Trigram.gen
+
+theorem sancai_distinct :
+    «天» ≠ «地» ∧ «天» ≠ «人» ∧ «地» ≠ «人» := by
+  refine ⟨?_, ?_, ?_⟩
+  all_goals decide
+
+end SanCai
+
+/-! ## § 10 What stays as Kernel.lean abstract predicate (NOT lifted to cells)
+
+The following Confucian concepts in Kernel.lean (~50 abstract theorems) do
+NOT have a natural cell-level position because they describe **dynamics over
+orbits** rather than static positions. They remain as Field-level predicates,
+and our cell-layer work does not replace them:
+
+| Concept | 类型 | 为何不 lift |
+|---|---|---|
+| 動 / dong | axiom on Field → Field | the foundational dynamics axiom |
+| 中 / middle | predicate `dong s ≠ s` | property of states, not a state |
+| 极 / extreme | predicate `dong s = s` | property of states |
+| 几 / ji | iter-of-dong | sequence, not a state |
+| 势 / shi | accumulated direction | derived dynamics |
+| 机 / jiTurning | critical point | event-on-orbit |
+| 聚 / 散 / 和 / 美 / 德 / 理 / 心 / 情 / 积 | various predicates | properties of orbits |
+| 圣人 / isShengRen | predicate over Xin | role under window |
+| 内圣 / 外王 | derived predicates | orbital configurations |
+| 恕道 / 推己及人 / 己所不欲 | cross-orbit relation | not a single state |
+| 知行合一 / 反身而诚 | composition theorem | dynamics + closure |
+| 慎独 / 至诚无息 / 致中和 | universal-quantified | over n : Nat |
+| 见贤思齐 / 过则勿惮改 | event-predicates | over orbit history |
+| 自强不息 / 厚德载物 | order-2 predicates | over Field structure |
+| 学而时习之 / 温故知新 | iteration laws | orbit-level |
+| 三人行 / 君子和而不同 | multi-orbit relations | configuration over Field |
+| 性善 / 性恶 | semantic equivalence | 善 = 中, 恶 = 极 (kernel-level) |
+| ~22 论孟中庸引文 | various | each is a specific orbit-level theorem |
+
+**Total liftable to cells**: ~30 concepts (五常 5, 四端 4, 八目 8, 五伦 5,
+善恶 2, 喜怒哀乐 4, 元亨利贞 4, 三纲 3, 三才 3, 大同 anchors 4 + universal,
+五常归道 1). The remaining ~70 stay correctly in `Kernel.lean` as
+Field-level dynamics. This is a HONEST division of labor, not a gap.
+-/
+
 /-! ## § 5 Public summary -/
 
-/-- Public summary bundling the four families. -/
+/-- Public summary bundling all nine families across R₁..R₆. -/
 theorem confucian_summary :
-    -- R₃ 四端: 4 distinct trigrams agreeing with XinZhi.SiDuan.toTrigram
+    -- R₁ 善恶
+    ShanE.«善» = Yao.yang ∧ ShanE.«恶» = Yao.yin ∧
+    -- R₂ 喜怒哀乐
+    XiNuAiLe.«喜» = SSBX.Foundation.Bagua.BaguaAlgebra.SiXiang.taiYang ∧
+    -- R₂ 元亨利贞
+    YuanHengLiZhen.«元» = SSBX.Foundation.Bagua.BaguaAlgebra.SiXiang.taiYang ∧
+    -- R₃ 四端
     SiDuan.«恻隐» = Trigram.li ∧
     SiDuan.«羞恶» = Trigram.kan ∧
     SiDuan.«辞让» = Trigram.zhen ∧
     SiDuan.«是非» = Trigram.dui ∧
-    -- R₃ 大学八目: 8 trigrams covering 八卦
+    -- R₃ 三纲
+    SanGang.all.length = 3 ∧
+    -- R₃ 三才
+    SanCai.«天» = Trigram.qian ∧
+    SanCai.«地» = Trigram.kun ∧
+    -- R₃ 大学八目
     BaMu.all.length = 8 ∧
-    -- R₅ 五伦: 5 distinct L5 generators
+    -- R₅ 五伦
     WuLun.all.length = 5 ∧
-    -- R₆ 大同: every Hexagram inDao
+    -- R₆ 大同
     (∀ h : Hexagram, h.inDao = true) := by
-  refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, ?_⟩
+  refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, ?_⟩
   exact DaTong.all_hexagrams_in_dao
 
 end SSBX.Foundation.Lang.Confucian
