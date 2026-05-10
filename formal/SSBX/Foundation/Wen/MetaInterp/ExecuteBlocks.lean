@@ -36,6 +36,7 @@ META.halted and falls through to the surrounding `haltProg`).  See
 -/
 import SSBX.Foundation.Wen.MetaInterp.ExecuteBlock
 import SSBX.Foundation.Wen.MetaInterp.Block_HuCuoZong
+import SSBX.Foundation.Wen.MetaInterp.Block_SetShi_FlipYao
 
 namespace SSBX.Foundation.Wen.MetaInterp.ExecuteBlocks
 namespace Aggregate
@@ -164,7 +165,92 @@ theorem executeBlock_cuo_local_effect
     ∧ μ'.halted = false := by
   refine ⟨?_, ?_, ?_, ?_⟩ <;> rfl
 
-/-! ## § 5  Agreement with existing namespaced copies
+/-! ## § 5  setShi (parameterized by sh : Shi)
+
+    `setShi sh` is a pure cur-transform: it rewrites `cur.2 := sh`.
+    Like hu/cuo, the loop invariant `META.cur ≡ sim.cur` makes the
+    local effect provable by `rfl`. -/
+
+def executeBlock_setShi (sh : Shi) (fetchOffset : Nat) : List YiInstr :=
+  [ YiInstr.setShi sh
+  , YiInstr.jump fetchOffset ]
+
+theorem executeBlock_setShi_length (sh : Shi) (fetchOffset : Nat) :
+    (executeBlock_setShi sh fetchOffset).length = 2 := rfl
+
+/-- **Tier C local effect** for `setShi sh`: from cur = `(h, sh₀)`,
+    running the 2-step block leaves cur = `(h, sh)` and pc = fetchOffset. -/
+theorem executeBlock_setShi_local_effect
+    (sh : Shi) (h : Hexagram) (sh₀ : Shi) (history : List Cell256)
+    (fetchOffset : Nat) :
+    let μ : YiState :=
+      { cur := (h, sh₀)
+        history := history
+        pc := 0
+        prog := executeBlock_setShi sh fetchOffset
+        halted := false }
+    let μ' := μ.runFuel 2
+    μ'.cur = (h, sh)
+    ∧ μ'.history = history
+    ∧ μ'.pc = fetchOffset
+    ∧ μ'.halted = false := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> rfl
+
+/-! ## § 6  flipYao (parameterized by i : Fin 6) -/
+
+def executeBlock_flipYao (i : Fin 6) (fetchOffset : Nat) : List YiInstr :=
+  [ YiInstr.flipYao i
+  , YiInstr.jump fetchOffset ]
+
+theorem executeBlock_flipYao_length (i : Fin 6) (fetchOffset : Nat) :
+    (executeBlock_flipYao i fetchOffset).length = 2 := rfl
+
+/-- **Tier C local effect** for `flipYao i`: from cur = `(h, sh)`,
+    running the 2-step block leaves cur = `(h.flipPos i, sh)`
+    and pc = fetchOffset. -/
+theorem executeBlock_flipYao_local_effect
+    (i : Fin 6) (h : Hexagram) (sh : Shi) (history : List Cell256)
+    (fetchOffset : Nat) :
+    let μ : YiState :=
+      { cur := (h, sh)
+        history := history
+        pc := 0
+        prog := executeBlock_flipYao i fetchOffset
+        halted := false }
+    let μ' := μ.runFuel 2
+    μ'.cur = (h.flipPos i, sh)
+    ∧ μ'.history = history
+    ∧ μ'.pc = fetchOffset
+    ∧ μ'.halted = false := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> rfl
+
+/-! ## § 7  zong -/
+
+def executeBlock_zong (fetchOffset : Nat) : List YiInstr :=
+  [ YiInstr.zong
+  , YiInstr.jump fetchOffset ]
+
+theorem executeBlock_zong_length (fetchOffset : Nat) :
+    (executeBlock_zong fetchOffset).length = 2 := rfl
+
+/-- **Tier C local effect** for `zong`: see `executeBlock_hu_local_effect`. -/
+theorem executeBlock_zong_local_effect
+    (h : Hexagram) (sh : Shi) (history : List Cell256)
+    (fetchOffset : Nat) :
+    let μ : YiState :=
+      { cur := (h, sh)
+        history := history
+        pc := 0
+        prog := executeBlock_zong fetchOffset
+        halted := false }
+    let μ' := μ.runFuel 2
+    μ'.cur = (Hexagram.zong h, sh)
+    ∧ μ'.history = history
+    ∧ μ'.pc = fetchOffset
+    ∧ μ'.halted = false := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> rfl
+
+/-! ## § 8  Agreement with existing namespaced copies
 
 These trivial lemmas confirm the aggregated definitions are *syntactically
 identical* to the ones in `ExecuteBlock` (nop/halt) and `Block_HuCuoZong`
@@ -186,6 +272,20 @@ theorem executeBlock_hu_eq (offset fetchOffset : Nat) :
 theorem executeBlock_cuo_eq (offset fetchOffset : Nat) :
     executeBlock_cuo offset fetchOffset =
       executeBlock_cuo offset fetchOffset := rfl
+
+/-- The aggregated `executeBlock_setShi` agrees pointwise with the one in
+    `Block_SetShi_FlipYao` (modulo the unused `offset` parameter there). -/
+theorem executeBlock_setShi_eq (sh : Shi) (offset fetchOffset : Nat) :
+    executeBlock_setShi sh fetchOffset =
+      SSBX.Foundation.Wen.MetaInterp.ExecuteBlock.executeBlock_setShi sh offset fetchOffset := rfl
+
+theorem executeBlock_flipYao_eq (i : Fin 6) (offset fetchOffset : Nat) :
+    executeBlock_flipYao i fetchOffset =
+      SSBX.Foundation.Wen.MetaInterp.ExecuteBlock.executeBlock_flipYao i offset fetchOffset := rfl
+
+theorem executeBlock_zong_eq (offset fetchOffset : Nat) :
+    executeBlock_zong fetchOffset =
+      SSBX.Foundation.Wen.MetaInterp.ExecuteBlock.executeBlock_zong offset fetchOffset := rfl
 
 end Aggregate
 end SSBX.Foundation.Wen.MetaInterp.ExecuteBlocks

@@ -59,6 +59,7 @@ import SSBX.Foundation.Wen.MetaInterp.Block_SetShi_FlipYao
 import SSBX.Foundation.Wen.MetaInterp.Block_Jump
 import SSBX.Foundation.Wen.MetaInterp.Block_Branches
 import SSBX.Foundation.Wen.MetaInterp.Block_PushPop
+import SSBX.Foundation.Wen.MetaInterp.ExecuteBlocksHard
 import SSBX.Foundation.Wen.MetaInterp.Fetch
 import SSBX.Foundation.Wen.MetaInterp.FetchProg
 import SSBX.Foundation.Wen.MetaInterp.Dispatch
