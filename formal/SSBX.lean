@@ -153,6 +153,7 @@ import SSBX.Foundation.Lang.Demo  -- 生生不息 / 道法自然 / R₂⊃R₁×
 import SSBX.Foundation.Lang.DaoJudge  -- 解释器+道判机: language closed in 128 cells
 import SSBX.Foundation.Lang.Wuchang   -- 仁义礼智信 named constants + 五常归一 theorem
 import SSBX.Foundation.Lang.Names     -- 64 卦 + R₄/R₅/R₇/R₈ name functions (字 → cell, cell → 字)
+import SSBX.Foundation.Lang.Confucian -- 四端/八目/五伦/大同 named cells in R₃/R₅/R₆
 
 -- Foundation/Eight — 八衍：数 / 推 / 测 / 形 / 类 / 动 / 识 / 象
 import SSBX.Foundation.Eight.ShuSuan
