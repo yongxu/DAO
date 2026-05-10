@@ -87,7 +87,8 @@ def fromIdx : Fin 4 → Shi
   | ⟨2, _⟩ => .jin
   | ⟨3, _⟩ => .wei
 
-theorem toIdx_fromIdx (s : Shi) : fromIdx s.toIdx = s := by cases s <;> rfl
+theorem toIdx_fromIdx (s : Shi) : fromIdx s.toIdx = s := by
+  rcases s with ⟨y, g⟩; cases y <;> cases g <;> rfl
 
 theorem fromIdx_toIdx (i : Fin 4) : (fromIdx i).toIdx = i := by
   match i with
@@ -615,7 +616,7 @@ theorem metaInterpProg_setShi_correct (h : Hexagram) (sh : Shi) :
     ((YiState.init h (metaInterpProg_setShi sh)).runFuel 2).cur = (h, sh)
     ∧ ((YiState.init h (metaInterpProg_setShi sh)).runFuel 2).pc = 1
     ∧ ((YiState.init h (metaInterpProg_setShi sh)).runFuel 2).halted = true := by
-  refine ⟨?_, ?_, ?_⟩ <;> (cases sh <;> rfl)
+  refine ⟨?_, ?_, ?_⟩ <;> (rcases sh with ⟨y, g⟩ <;> cases y <;> cases g <;> rfl)
 
 def metaInterpProg_flipYao (i : Fin 6) : List YiInstr :=
   [YiInstr.flipYao i, YiInstr.halt]
@@ -861,7 +862,7 @@ theorem metaInterpStepPc_branchShiEq_taken (h hex : Hexagram) (sh : Shi) :
     (s.runFuel 5).pc = 5
     ∧ (s.runFuel 5).history = [gcur]
     ∧ (s.runFuel 5).halted = true := by
-  refine ⟨?_, ?_, ?_⟩ <;> (cases sh <;> rfl)
+  refine ⟨?_, ?_, ?_⟩ <;> (rcases sh with ⟨y, g⟩ <;> cases y <;> cases g <;> rfl)
 
 theorem metaInterpStepPc_branchShiEq_notTaken_jin_dao (h hex : Hexagram) :
     let gcur : Cell256 := (hex, Shi.dao)

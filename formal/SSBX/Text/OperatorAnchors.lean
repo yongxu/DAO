@@ -747,9 +747,9 @@ theorem cellOperatorAnchor_hexagram_numbers_range :
 
 theorem cellOperatorAnchors_cover_all (c : Cell256) :
     cellCovered c = true := by
-  rcases c with ⟨⟨y1, y2, y3, y4, y5, y6⟩, s⟩
+  rcases c with ⟨⟨y1, y2, y3, y4, y5, y6⟩, sy, sg⟩
   cases y1 <;> cases y2 <;> cases y3 <;>
-    cases y4 <;> cases y5 <;> cases y6 <;> cases s <;>
+    cases y4 <;> cases y5 <;> cases y6 <;> cases sy <;> cases sg <;>
     native_decide
 
 /--

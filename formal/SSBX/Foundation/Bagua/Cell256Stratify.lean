@@ -268,14 +268,16 @@ theorem xor_dao_left (s : Shi) : xor .dao s = s := rfl
 
 /-- 道 是 XOR 单位元（右）. -/
 theorem xor_dao_right (s : Shi) : xor s .dao = s := by
-  cases s <;> rfl
+  rcases s with ⟨y, g⟩; cases y <;> cases g <;> rfl
 
 /-- 自消律：xor (xor a b) a = b（即 V₄ 之每元素为自身逆元）. -/
 theorem xor_xor_left (a b : Shi) : xor (xor a b) a = b := by
-  cases a <;> cases b <;> rfl
+  rcases a with ⟨ya, ga⟩ <;> rcases b with ⟨yb, gb⟩ <;>
+    cases ya <;> cases ga <;> cases yb <;> cases gb <;> rfl
 
 theorem xor_comm (a b : Shi) : xor a b = xor b a := by
-  cases a <;> cases b <;> rfl
+  rcases a with ⟨ya, ga⟩ <;> rcases b with ⟨yb, gb⟩ <;>
+    cases ya <;> cases ga <;> cases yb <;> cases gb <;> rfl
 
 end SSBX.Foundation.Bagua.Cell256.Shi
 
@@ -331,8 +333,8 @@ def R8.mian? (c : R8) : Option Mian :=
 /-- Mian 的特权命题：R8.mian? c = some _ ↔ c.quadrant = benZheng. -/
 theorem R8.mian?_isSome_iff_benZheng (c : R8) :
     (R8.mian? c).isSome = true ↔ c.1.quadrant = .benZheng := by
-  rcases c with ⟨⟨y1, y2, y3, y4, y5, y6⟩, s⟩
-  cases s <;>
+  rcases c with ⟨⟨y1, y2, y3, y4, y5, y6⟩, sy, sg⟩
+  cases sy <;> cases sg <;>
     (cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;> decide)
 
 /-! ### 算子对 R8.quadrant 的作用 -/

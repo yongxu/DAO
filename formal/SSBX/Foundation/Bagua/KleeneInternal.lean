@@ -215,12 +215,15 @@ def BoolOutputDefined (s : YiState) : Prop :=
 
 theorem boolFromShi_true_iff_ji (s : YiState) :
     BoolFromShi s = true ↔ s.cur.2 = Shi.ji := by
-  cases hshi : s.cur.2 <;> simp [BoolFromShi, hshi]
+  rcases h : s.cur.2 with ⟨y, g⟩
+  cases y <;> cases g <;> simp [BoolFromShi, h, Shi.ji]
 
 theorem boolFromShi_false_iff_wei_of_defined (s : YiState)
     (hdef : BoolOutputDefined s) :
     BoolFromShi s = false ↔ s.cur.2 = Shi.wei := by
-  cases hshi : s.cur.2 <;> simp [BoolFromShi, BoolOutputDefined, hshi] at hdef ⊢
+  rcases h : s.cur.2 with ⟨y, g⟩
+  cases y <;> cases g <;>
+    simp [BoolFromShi, BoolOutputDefined, h, Shi.dao, Shi.jin, Shi.wei] at hdef ⊢
 
 /-! ## § 3 YiComputable: precise computability witness -/
 
