@@ -112,6 +112,7 @@ import SSBX.Foundation.Hierarchy.R5_Wuyao  -- R₅ strict (Z/2)⁵ = 32 carrier 
 import SSBX.Foundation.Hierarchy.LiftProject  -- Uniform Lift/Project pairs across R₀..R₈
 import SSBX.Foundation.Hierarchy.Operators.Atomic  -- XOR subgroup re-export (yin/tou/flipᵢ/hexCuo)
 import SSBX.Foundation.Hierarchy.Operators.V4Outer  -- V₄ Klein-four outer (zong/cuoZong/hu)
+import SSBX.Foundation.Hierarchy.RHierarchy  -- R₀..R₈ index-named alias umbrella
 import SSBX.Foundation.Bagua.Cell256  -- R6 闭合层 (Hexagram × Shi V₄, 256 cells, 投 算子)
 import SSBX.Foundation.Bagua.Cell256Stratify  -- R5/R6 双层 stratification + R6_complete bundle
 import SSBX.Foundation.Bagua.BaguaTuring
