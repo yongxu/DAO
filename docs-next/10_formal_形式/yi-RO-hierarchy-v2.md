@@ -603,6 +603,39 @@ def ε (f : R8 → R8) : R8 := f oooooooo
 theorem ε_ι (c : R8) : ε (ι c) = c := ...
 ```
 
+### 9.4 Lean implementation map (post-Cell256 / Hierarchy refactor, 2026-05-10)
+
+定本的 R-hierarchy 与 V₄ Shi 已全部 Lean 落地, 本节给出 doctrine concept ↔ source file 之精确 map.
+
+- **R₀..R₈ (Z/2)ⁿ uniform layers**:
+  - R₀ Taiji = `Unit` (implicit, Lean stdlib)
+  - R₁ Yao = `Bool`, in [`formal/SSBX/Foundation/Yi/Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean)
+  - R₂ SiXiang in [`formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean`](../../formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean)
+  - R₃ Trigram in [`formal/SSBX/Foundation/Yi/Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean)
+  - R₄ Mian = Ben × Zheng (16 = (Z/2)⁴) in [`formal/SSBX/Foundation/Bagua/BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean)
+  - R₅ Wuyao = Mian × Bool (32 = (Z/2)⁵) in [`formal/SSBX/Foundation/Hierarchy/R5_Wuyao.lean`](../../formal/SSBX/Foundation/Hierarchy/R5_Wuyao.lean)
+  - R₆ Hexagram (64 = (Z/2)⁶) in [`formal/SSBX/Foundation/Yi/Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean)
+  - R₇ Cell128 = Hexagram × YinBit (128 = (Z/2)⁷) in [`formal/SSBX/Foundation/Bagua/Cell128.lean`](../../formal/SSBX/Foundation/Bagua/Cell128.lean)
+  - R₈ Cell256 = Hexagram × Shi (256 = (Z/2)⁸) in [`formal/SSBX/Foundation/Bagua/Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean)
+
+- **Algebraic spine** (Phase A): `Cell{128,256}` carry Add/Zero/Neg/Sub + SMul,
+  with origin = (qian, dao) = V₄ identity, plus Cayley `ι/ε` homomorphism.
+
+- **Operators inner/outer**:
+  - Atomic XOR-subgroup ops in [`Foundation/Hierarchy/Operators/Atomic.lean`](../../formal/SSBX/Foundation/Hierarchy/Operators/Atomic.lean)
+  - V₄ outer permutations (`zong` / `hu` / `cuoZong`) in [`Foundation/Hierarchy/Operators/V4Outer.lean`](../../formal/SSBX/Foundation/Hierarchy/Operators/V4Outer.lean)
+
+- **Lift/Project uniform API**: [`Foundation/Hierarchy/LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) (8 R-layer pairs, each with `proj_lift_id_Rn` retract lemma)
+
+- **OX notation**: [`Foundation/Notation/OXNotation.lean`](../../formal/SSBX/Foundation/Notation/OXNotation.lean) provides `OX["xxxxxxxx"]` macro
+  (8-char `o`/`x` string → Cell256 literal; `o` = yang/false, `x` = yin/true; positions 7/8 encode YinBit/GuoBit → Shi)
+
+- **Self-description witness**: [`formal/SSBX/Truth/SelfDescription.lean`](../../formal/SSBX/Truth/SelfDescription.lean)
+  `Cell256OperatorComplete` theorem (V₄ extension of legacy 192-cell version)
+
+- **R₈ closure bundle**: `R8_complete` in [`Foundation/Bagua/Cell256Stratify.lean`](../../formal/SSBX/Foundation/Bagua/Cell256Stratify.lean)
+  depends only on `propext` + `native_decide` axes (no project axioms).
+
 ---
 
 ## 第十部分：哲学结 + 开放方向

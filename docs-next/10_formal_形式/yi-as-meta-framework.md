@@ -191,19 +191,21 @@
 
 ### 4.1 每层都是 (Z/2)ⁿ — strict uniform R₀..R₈
 
-| 层 | 结构 | 元素数 | 当层新引入的"元" |
-|---|---|---|---|
-| R0 (太极) | (Z/2)⁰ | 1 | (Unit / 无极) |
-| R1 (爻/两仪) | (Z/2)¹ | 2 (阴/阳) | **爻** (yao) |
-| R2 (四象) | (Z/2)² | 4 | (2 爻复合) |
-| R3 (八卦) | (Z/2)³ | 8 = 4 本 + 4 征 | (3 爻复合) |
-| **R4 (面 Mian)** | **(Z/2)⁴** | **16 = Ben × Zheng** | **(4 yao / 16 命)** |
-| **R5 (五爻 provisional)** | **(Z/2)⁵** | **32** | **(5 yao, 无传统 anchor)** |
-| R6 (六十四卦) | (Z/2)⁶ | 64 = 4 quadrant × 16 | chong (6 爻 = 重卦) — = 3 步 lift composite |
-| **R7** | **(Z/2)⁷** | **128 = 64 × 2** | **因 (yīn, past-trace bit)** |
-| **R8 (256-Cell)** | **(Z/2)⁸** | **256 = 128 × 2 = 64 × 4** | **果 (guǒ, future-projection bit)** |
+| 层 | 结构 | 元素数 | 当层新引入的"元" | Lean 文件 |
+|---|---|---|---|---|
+| R0 (太极) | (Z/2)⁰ | 1 | (Unit / 无极) | (Lean stdlib `Unit`) |
+| R1 (爻/两仪) | (Z/2)¹ | 2 (阴/阳) | **爻** (yao) | [`Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) |
+| R2 (四象) | (Z/2)² | 4 | (2 爻复合) | [`BaguaAlgebra.lean`](../../formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean) |
+| R3 (八卦) | (Z/2)³ | 8 = 4 本 + 4 征 | (3 爻复合) | [`Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean), [`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) |
+| **R4 (面 Mian)** | **(Z/2)⁴** | **16 = Ben × Zheng** | **(4 yao / 16 命)** | [`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) |
+| **R5 (五爻 provisional)** | **(Z/2)⁵** | **32** | **(5 yao, 无传统 anchor)** | [`Hierarchy/R5_Wuyao.lean`](../../formal/SSBX/Foundation/Hierarchy/R5_Wuyao.lean) |
+| R6 (六十四卦) | (Z/2)⁶ | 64 = 4 quadrant × 16 | chong (6 爻 = 重卦) — = 3 步 lift composite | [`Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) |
+| **R7** | **(Z/2)⁷** | **128 = 64 × 2** | **因 (yīn, past-trace bit)** | [`Cell128.lean`](../../formal/SSBX/Foundation/Bagua/Cell128.lean) |
+| **R8 (256-Cell)** | **(Z/2)⁸** | **256 = 128 × 2 = 64 × 4** | **果 (guǒ, future-projection bit)** | [`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean), [`Cell256Stratify.lean`](../../formal/SSBX/Foundation/Bagua/Cell256Stratify.lean) |
 
 每层都是同一种代数结构在更高维度的重复。**严格代数自相似——R₀..R₈ 全 (Z/2)ⁿ 闭合，无任何非 (Z/2) 因子，no jumps**。
+
+> **Lean infrastructure (cross-cutting)**: `Foundation/Hierarchy/` 子目录提供 uniform 接口 — [`LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) (8 R-layer lift/project pairs), [`Operators/Atomic.lean`](../../formal/SSBX/Foundation/Hierarchy/Operators/Atomic.lean) (XOR 子群 re-export), [`Operators/V4Outer.lean`](../../formal/SSBX/Foundation/Hierarchy/Operators/V4Outer.lean) (zong/hu/cuoZong V₄ 外对称). [`Foundation/Notation/OXNotation.lean`](../../formal/SSBX/Foundation/Notation/OXNotation.lean) 提供 `OX["xxxxxxxx"]` 8-char macro (Cell256 字面量). `R8_complete` bundle in [`Cell256Stratify.lean`](../../formal/SSBX/Foundation/Bagua/Cell256Stratify.lean) 仅依赖 propext + native_decide 公理 (无项目自定义 axiom).
 
 > **R₀..R₈ strict uniform 闭合（v2.1，2026-05-10）**：
 > - 早期 v1 之 R₃ → R₄ 是 +3 bit chong 跳跃（跳过 (Z/2)⁴=16 与 (Z/2)⁵=32），v1 称 R₄ = Hexagram。

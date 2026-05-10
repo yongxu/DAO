@@ -31,9 +31,18 @@ formal/SSBX/
 │   │   └── JianYiBridge.lean
 │   ├── Yi/                       # 易之代数
 │   │   ├── Yi.lean、YiCore.lean
-│   ├── Bagua/                    # 八卦 · 192 · Gödel/Rice
-│   │   ├── BaguaAlgebra.lean、Cell192.lean、BaguaTuring.lean
+│   ├── Bagua/                    # 八卦 · 64/128/256 · Gödel/Rice
+│   │   ├── BaguaAlgebra.lean、BenZheng.lean、BaguaTuring.lean
+│   │   ├── Cell128.lean (R₇)、Cell256.lean (R₈)、Cell256Stratify.lean
 │   │   ├── Newman.lean、KleeneInternal.lean、GodelLi.lean
+│   ├── Hierarchy/                # R-hierarchy uniform infrastructure (R₀..R₈)
+│   │   ├── R5_Wuyao.lean         # R₅ = Mian × Bool = (Z/2)⁵ = 32
+│   │   ├── LiftProject.lean      # 8 R-layer Lift/Project pairs + retract lemmas
+│   │   └── Operators/
+│   │       ├── Atomic.lean       # XOR 子群 (atomic involutions, abelian)
+│   │       └── V4Outer.lean      # V₄ 外对称 (zong / hu / cuoZong, non-XOR)
+│   ├── Notation/                 # 符号 / surface 编码
+│   │   └── OXNotation.lean       # `OX["xxxxxxxx"]` 8-char Cell256 字面量 macro
 │   └── Eight/                    # 八衍：数 / 推 / 测 / 形 / 类 / 动 / 识 / 象
 │       ├── ShuSuan.lean、LuoJi.lean、TongJi.lean、XingWei.lean
 │       └── LeiYing.lean、DongLi.lean、XinZhi.lean、WuXiang.lean

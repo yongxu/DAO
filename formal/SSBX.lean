@@ -107,7 +107,6 @@ import SSBX.Foundation.Yi.YiCore
 
 -- Foundation/Bagua — 八卦 / 192 / Gödel-Rice / 风险缓解
 import SSBX.Foundation.Bagua.BaguaAlgebra
-import SSBX.Foundation.Bagua.Cell192  -- legacy (3-state Shi); WenyanSelfInterp/MetaInterp 仍依赖. TODO: 迁移到 Cell256/Cell128
 import SSBX.Foundation.Bagua.Cell128  -- R5 中间层 (Hexagram × YinBit, 128 cells, 印 算子)
 import SSBX.Foundation.Hierarchy.R5_Wuyao  -- R₅ strict (Z/2)⁵ = 32 carrier (Mian × Bool)
 import SSBX.Foundation.Hierarchy.LiftProject  -- Uniform Lift/Project pairs across R₀..R₈
