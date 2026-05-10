@@ -27,12 +27,14 @@ Builds on Yi.lean and BaguaAlgebra.lean.
 -/
 import SSBX.Foundation.Yi.Yi
 import SSBX.Foundation.Bagua.BaguaAlgebra
+import SSBX.Foundation.Bagua.Cell128
 
 namespace SSBX.Foundation.Bagua.Cell256
 
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Yi.Yi.Trigram
 open SSBX.Foundation.Bagua.BaguaAlgebra
+open SSBX.Foundation.Bagua.Cell128 (YinBit)
 
 /-! ## § 1 Shi (时态) — V₄ Klein 四群 = {道, 已, 今, 未}
 
@@ -44,10 +46,11 @@ open SSBX.Foundation.Bagua.BaguaAlgebra
   **命名 caveats (provisional)**: 因/果 / 印/投 暂用，备选 印/投 (Husserl) /
   始/终 (Yi-native) / 持/期 (现象学) — 详 yi-calculus-theorem.md §16. -/
 
-/-- R5 atom: 因 (yīn) — past-trace bit. Provisional naming. -/
-abbrev YinBit : Type := Bool
+/-- R6 atom: 果 (guǒ) — future-projection bit. Provisional naming.
 
-/-- R6 atom: 果 (guǒ) — future-projection bit. Provisional naming. -/
+    `YinBit` is imported from `SSBX.Foundation.Bagua.Cell128` (R₇ origin):
+    Cell128 introduces 因 first, then Cell256 = Cell128 × GuoBit pairs it
+    with 果 to form Shi V₄. -/
 abbrev GuoBit : Type := Bool
 
 /-- 时态: V₄ 四态 道 / 已 / 今 / 未. 同构于 (YinBit, GuoBit) ∈ Bool².
