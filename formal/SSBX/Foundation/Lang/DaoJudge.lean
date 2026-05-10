@@ -38,6 +38,7 @@ occurrence?
 -/
 
 import SSBX.Foundation.Lang.Sexp
+import SSBX.Foundation.Lang.Names
 import SSBX.Foundation.Bagua.Cell128
 import SSBX.Foundation.Yi.Yi
 
@@ -86,19 +87,53 @@ def printCellAtom : Cell128 → String
 example : parseCellAtom "ooooooo" = some Cell128.origin := by native_decide
 example : printCellAtom Cell128.origin = "ooooooo" := by native_decide
 
+/-! ## § 1.5  Chinese-name parser
+
+A second atom form, `<卦名>·<因>`, e.g. `乾·无` / `既济·有`. Parses via
+`Hexagram.fromName` and the standard {无/有} YinBit suffix. Both forms
+are accepted by the unified `parseCell` below.
+-/
+
+/-- Parse a Chinese-named cell atom of the form `<卦名>·<因>`. -/
+def parseChineseAtom (s : String) : Option Cell128 :=
+  match s.splitOn "·" with
+  | [hexName, yinName] =>
+      match SSBX.Foundation.Yi.Yi.Hexagram.fromName hexName, yinName with
+      | some h, "无" => some (h, false)
+      | some h, "有" => some (h, true)
+      | _, _         => none
+  | _ => none
+
+example : parseChineseAtom "乾·无" = some Cell128.origin := by native_decide
+example : parseChineseAtom "既济·有" =
+    some (SSBX.Foundation.Yi.Yi.Hexagram.«既济», true) := by native_decide
+example : parseChineseAtom "未济·无" =
+    some (SSBX.Foundation.Yi.Yi.Hexagram.«未济», false) := by native_decide
+example : parseChineseAtom "不存在·有" = none := by native_decide
+
+/-- Unified atom parser: try 7-char `o/x` form first, then `<卦名>·<因>`. -/
+def parseCell (s : String) : Option Cell128 :=
+  parseCellAtom s |>.orElse fun () => parseChineseAtom s
+
+example : parseCell "ooooooo" = some Cell128.origin := by native_decide
+example : parseCell "乾·无" = some Cell128.origin := by native_decide
+example : parseCell "garbage" = none := by native_decide
+
 /-! ## § 2  Evaluator: Sexp → Option Cell128
 
 The grammar:
 ```
-prog  ::=  atom-7-char-string        -- a literal cell
-        |  (prog prog)               -- application = Cayley XOR
+prog  ::=  atom-7-char-string                  -- a literal cell (o/x form)
+        |  atom-of-form-<卦名>·<因>             -- a literal cell (Chinese form)
+        |  (prog prog)                          -- application = Cayley XOR
 ```
 
-Anything else (named atoms, 3-element lists, etc.) is `none`.
+Both atom forms coexist; you can mix them in one program. Anything else
+(unknown atoms, 3-element lists, etc.) is `none`.
 -/
 
 partial def eval : Sexp → Option Cell128
-  | .atom s         => parseCellAtom s
+  | .atom s         => parseCell s
   | .list [p, q]    => do
       let pc ← eval p
       let qc ← eval q
@@ -165,6 +200,45 @@ example : judge "(ooooooo xxxxxxx)" = false := by native_decide
 example : judge "((xoxoxox ooxxoox) (xoxoxox ooxxoox))" = true := by native_decide
 
 example : judge "(xoxoxox (xoxoxox ooooooo))" = true := by native_decide
+
+/-! ## § 4.25  Chinese-form judge runs
+
+Same algebra, now via cell names. -/
+
+-- 道 itself, named form.
+#eval judge "乾·无"                                   -- true
+
+-- A ⊕ A = 道 with named A.
+#eval judge "(既济·有 既济·有)"                       -- true
+#eval judge "(未济·无 未济·无)"                       -- true
+
+-- Different named cells: non-道.
+#eval judge "(乾·无 既济·有)"                         -- false
+
+-- Mixed form: o/x and named in one program.
+#eval judge "(乾·无 ooooooo)"                         -- true (same cell)
+#eval judge "(xxxxxxx 坤·有)"                         -- true (xxxxxxx = 坤·有)
+
+-- Compound: (A ⊕ B) ⊕ (B ⊕ A) = 道 with named cells.
+#eval judge "((既济·有 未济·无) (未济·无 既济·有))"   -- true
+
+example : judge "乾·无" = true := by native_decide
+example : judge "(既济·有 既济·有)" = true := by native_decide
+example : judge "(xxxxxxx 坤·有)" = true := by native_decide
+example : judge "((既济·有 未济·无) (未济·无 既济·有))" = true := by native_decide
+
+/-- 仁义礼智信 in Chinese-name form. Cross-references 仁/义/礼/智/信
+    against the 64 周易 hexagrams reveal:
+      仁 = 姤   (#44, encounter)
+      义 = 同人 (#13, fellowship)
+      礼 = 履   (#10, treading)
+      智 = 小畜 (#9, small restraint)
+      信 = 观   (#20, contemplation)
+    The five 卦 are NOT the trigram-doubled "pure" ones — they emerge
+    naturally from the algebraic constraint that one of them be the
+    XOR-synthesis of the others. -/
+example : judge "((((姤·无 同人·无) 履·无) 小畜·无) 观·无)" = true := by
+  native_decide
 
 /-! ## § 4.5  仁义礼智信是道 —— 五常归一 demonstration
 
