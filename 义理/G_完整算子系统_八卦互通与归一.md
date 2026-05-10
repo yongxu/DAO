@@ -1,379 +1,537 @@
-# G · 完整算子系统 · 八卦互通 + 归一
+# G · 完整算子系统 · R₀..R₈ 八卦互通与归一
 
-设计目标：
-1. **横向**：在八卦层之内，任一卦可经算子序列变成任一其他卦（互相 transform）
-2. **纵向**：从 64 卦经合归至 8 → 4 → 2 → 1，最终归一
-3. **单字落地**：每个算子皆有汉字单字承担
+> 状态：v3 重写 (2026-05-11) — pre-v3 版本（如存在）已归档至 `史/义理-pre-v3/`。
 
-二者共一**算子代数**，称为 **「易卦群 G_易」**。
+设计目标（v3 修订）：
 
----
+1. **横向**：在每一层 Rₙ (n = 0..8) 之内，由 (Z/2)ⁿ XOR 子群 simply transitive 互通；任两元素之间皆有 mask 序列可达。
+2. **纵向**：以 Lift / Project (合 / 分) 在 Rₙ ↔ R_{n+1} 间往返；右逆 `合 ∘ 分 = id`。
+3. **自指闭合**：R₈ = (Z/2)⁸ 之 Cayley 自作用 + 道 anchor + V₄ 外对称（cuo / zong / hu / 错综），完成「元 ≅ 算子」的 fusion。
+4. **归一 = (Z/2)⁸ 闭合**：任何 XOR 复合在 256 元 abelian 群内回到唯一 identity = 道 = `OX["oooooooo"]`，此即 v3 之「归一」精确义。
 
-## 一、卦之编码
+> v1 (Cell192 时代) 之「八卦互通」止于 R₃ (Z/2)³ 8 元 simply transitive；v3 在 R₀..R₈ strict (Z/2)ⁿ uniform 之 9 层 ladder 上把同一 Cayley fusion 推到极。每一层都自身 simply transitive，每一相邻层间都有 lift/project 函子，整个 9 层闭合于 R₈ Cell256 (256 = (Z/2)⁸ = 1 byte) — 这是「(Z/2)ⁿ 自描述系统」之自然 8-bit 终点 (per [yi-RO-hierarchy.md](../docs-next/10_formal_形式/yi-RO-hierarchy.md))。
 
-约定：每卦 = 三爻向量 $\langle y_1, y_2, y_3 \rangle$，
-- $y_1$ = 初爻（最下）
-- $y_2$ = 中爻
-- $y_3$ = 上爻（最顶）
-- 每爻 $\in \{0 = \text{阴}, 1 = \text{阳}\}$
-
-此约定与 `Yi.lean` 之 `Trigram` 一致，亦合中国传统「自下而上」之读爻次第，
-与 [`A_经典易传.md`](A_经典易传.md)、[`I_八卦全集.md`](I_八卦全集.md) 所用同。
-
-| 卦 | 符号 | $\langle y_1, y_2, y_3 \rangle$ = ⟨下, 中, 上⟩ |
-|----|------|----------------------------------------------|
-| 乾 | ☰ | ⟨1, 1, 1⟩ |
-| 兑 | ☱ | ⟨1, 1, 0⟩ |
-| 离 | ☲ | ⟨1, 0, 1⟩ |
-| 震 | ☳ | ⟨1, 0, 0⟩ |
-| 巽 | ☴ | ⟨0, 1, 1⟩ |
-| 坎 | ☵ | ⟨0, 1, 0⟩ |
-| 艮 | ☶ | ⟨0, 0, 1⟩ |
-| 坤 | ☷ | ⟨0, 0, 0⟩ |
-
-八卦集 $\mathbb{B}^3 = \{0,1\}^3$，基数 8。
+二者共一**算子代数**，本文称为 **「易卦 R-O 群 G_易」**：以 R₈ = Cell256 为闭合载体，其代数核 = (Z/2)⁸ Abelian 群之 Cayley regular representation，外加 V₄ 外对称。
 
 ---
 
-## 二、横向算子（八卦互通群）
+## 一、Rₙ 之元编码与 OX 字面
 
-### 2.1 生成元：三个反爻
+约定（v3 OX notation, 见 [`OXNotation.lean`](../formal/SSBX/Foundation/Notation/OXNotation.lean)）：每个 Rₙ 元素 = 长度 n 之 `o`/`x` 字符串：
 
-| 算子 | 单字 | 类型 | 作用 |
-|------|-----|------|------|
-| 反_上 | **变** | $\mathbb{B}^3 \to \mathbb{B}^3$ | 翻上爻 |
-| 反_中 | **化** | $\mathbb{B}^3 \to \mathbb{B}^3$ | 翻中爻 |
-| 反_下 | **动** | $\mathbb{B}^3 \to \mathbb{B}^3$ | 翻下爻 |
+- `o` = yang = `Yao.yang` = 0 = identity bit (无 set)
+- `x` = yin = `Yao.yin` = 1 = set bit
+- 字符顺序 = 初爻 → 上爻 (LTR, inner-to-outer)；R₈ 之最后两位 = (因, 果) ∈ Bool²
 
-或统一记 $\bar{\partial}_i$（$i ∈ \{上, 中, 下\}$），满足：
-$$\bar{\partial}_i^2 = \text{id}, \quad \bar{\partial}_i \circ \bar{\partial}_j = \bar{\partial}_j \circ \bar{\partial}_i$$
+**严格 uniform 元数表** (per [yi-RO-hierarchy.md §2.1](../docs-next/10_formal_形式/yi-RO-hierarchy.md))：
 
-（每个反爻是 involution，且彼此交换。）
+| Rₙ | 长度 | 元数 | 名 | OX 例 | Lean 类型 |
+|----|----|----|---|---|---|
+| R₀ | 0 | 1 | 太极 | `OX[""]` (空) | `Unit` |
+| R₁ | 1 | 2 | 爻/两仪 | `OX["o"]`, `OX["x"]` | `Yao` |
+| R₂ | 2 | 4 | 四象 | `OX["oo"]` (太阳), `OX["xx"]` (太阴) | `SiXiang` |
+| R₃ | 3 | 8 | 八卦 | `OX["ooo"]` = 乾, `OX["xxx"]` = 坤 | `Trigram` |
+| R₄ | 4 | 16 | 面 (Mian) | `OX["oooo"]` 至 `OX["xxxx"]` | `Mian` (= `Ben × Zheng`) |
+| R₅ | 5 | 32 | 五爻 (provisional) | `OX["ooooo"]` 至 `OX["xxxxx"]` | `Mian × Bool` (`Wuyao`) |
+| R₆ | 6 | 64 | 重卦 (Hexagram) | `OX["oooooo"]` = 乾, `OX["oooxxx"]` = 否 | `Hexagram` |
+| R₇ | 7 | 128 | 因卦 (Cell128) | `OX["oooooox"]` = 乾·有因 | `Cell128 = Hexagram × YinBit` |
+| **R₈** | **8** | **256** | **果卦 (Cell256)** | `OX["oooooooo"]` = **道**, `OX["xxxxxxxx"]` = 坤·今 | **`Cell256 = Hexagram × Shi`** |
 
-### 2.2 生成群
+R₈ 之 8-bit layout：`[y₁ y₂ y₃ y₄ y₅ y₆ 因 果]`。位置 7 (因, R₇ atom) + 位置 8 (果, R₈ atom) 通过 `Shi.ofYinGuo` 重构 Shi V₄ 元 (见 [`Cell256.lean`](../formal/SSBX/Foundation/Bagua/Cell256.lean) § 1)：
 
-$$G_{\text{横}} = \langle \bar{\partial}_上, \bar{\partial}_中, \bar{\partial}_下 \rangle \cong (\mathbb{Z}/2)^3$$
+| (因, 果) | Shi | OX 后 2 位 | V₄ 元 |
+|---|---|---|---|
+| (0, 0) | **道** (dao) | `oo` | identity $e$ |
+| (1, 0) | **已** (ji) | `xo` | $\sigma_P$ |
+| (0, 1) | **未** (wei) | `ox` | $\sigma_T$ |
+| (1, 1) | **今** (jin) | `xx` | $\sigma_{PT}$ |
 
-|G_横| = 8，**与八卦集一一对应**——群作用 simply transitive。
-
-群元（按 (Z/2)³ 之 8 元）：
-
-| # | 群元 | 单字 | 复合 | 作用于乾⟨1,1,1⟩之果 |
-|---|------|-----|------|------------------|
-| 1 | id | **不** / **静** | id | 乾 ⟨1,1,1⟩ |
-| 2 | 反_下 | 动 | $\bar{\partial}_下$ | 巽 ⟨0,1,1⟩ |
-| 3 | 反_中 | 化 | $\bar{\partial}_中$ | 离 ⟨1,0,1⟩ |
-| 4 | 反_上 | 变 | $\bar{\partial}_上$ | 兑 ⟨1,1,0⟩ |
-| 5 | 反_中下 | **倾** | $\bar{\partial}_中 \bar{\partial}_下$ | 艮 ⟨0,0,1⟩ |
-| 6 | 反_上下 | **侧** | $\bar{\partial}_上 \bar{\partial}_下$ | 坎 ⟨0,1,0⟩ |
-| 7 | 反_上中 | **斜** | $\bar{\partial}_上 \bar{\partial}_中$ | 震 ⟨1,0,0⟩ |
-| 8 | 反_全 | **错** | $\bar{\partial}_上 \bar{\partial}_中 \bar{\partial}_下$ | 坤 ⟨0,0,0⟩ |
-
-注：「倾／侧／斜」是为占位的拟字（汉字传统对二阶反爻无单字，可由两个原始反复合）；
-**「错」** 是传统命名，专指三阶全反（卦之 antipode，与综之"上下倒置"不同——错改值，综改位）。
-
-### 2.3 八卦互通图（Cayley 图 = 立方体）
-
-```
-                乾⟨1,1,1⟩
-              ╱     │     ╲
-       兑⟨1,1,0⟩ 离⟨1,0,1⟩ 巽⟨0,1,1⟩
-           ╱   │  ╲ ╱  │  ╲ ╱  │   ╲
-          ╱    │   ╳   │   ╳   │    ╲
-       震⟨1,0,0⟩ 坎⟨0,1,0⟩ 艮⟨0,0,1⟩
-              ╲     │     ╱
-                坤⟨0,0,0⟩
-```
-
-边即「一爻之变」（汉明距离 1）。立方体 8 顶点，12 条边。
-**任一卦至任一卦最短 ≤ 3 步**（汉明距离上界）。
-图中 ⟨y₁, y₂, y₃⟩ = ⟨下, 中, 上⟩。
-
-### 2.4 错／综 — 经典两大派生算子
-
-| 算子 | 单字 | 定义 | 群表达 | 性质 |
-|------|-----|------|-------|------|
-| **错** | 错 | 阴阳全反 | $\bar{\partial}_上 \bar{\partial}_中 \bar{\partial}_下$ | (Z/2)³ 之最长元（三反复合，等价于群中字长 = 3 之唯一元） |
-| **综** | 综 | 位置反序 | $\langle y_1,y_2,y_3 \rangle \mapsto \langle y_3,y_2,y_1 \rangle$ | **不在 (Z/2)³ 中**，属位置置换 |
-
-错卦对偶（4 对 antipode）：
-$$\text{乾} \leftrightarrow \text{坤}, \quad \text{兑} \leftrightarrow \text{艮}, \quad \text{离} \leftrightarrow \text{坎}, \quad \text{震} \leftrightarrow \text{巽}$$
-
-综卦对偶（2 对反序，4 卦自反）：
-- 不动点（回文卦）：乾、坤、离、坎
-- 对偶：兑 ↔ 巽，震 ↔ 艮
-
-**扩展群** $\widetilde{G}_{\text{横}} = (\mathbb{Z}/2)^3 \rtimes \langle \text{综} \rangle$，阶 16。
-**全群**（加任意位置置换）= 超八面体群 $B_3 = (\mathbb{Z}/2)^3 \rtimes S_3$，阶 48。
-
-> 项目主用：$(\mathbb{Z}/2)^3$ 已**足够 simply transitive**——任两卦间皆可达。
-> 错／综 为习惯命名之派生，非新自由度。
+**关键修正**（v3 vs v1）：旧 Cell192 把时态编为 Z/3 cyclic `{已, 今, 未}`，丧失 V₄ identity（道）。v3 之 Shi = V₄ Klein 四群 = `{道, 已, 今, 未}` 起 `Shi.dao` 作 (Z/2)⁸ identity = (因=0, 果=0) = 跨时空永真 anchor — 见 [yi-calculus-theorem.md Theorem J](../docs-next/10_formal_形式/yi-calculus-theorem.md)。
 
 ---
 
-## 三、纵向算子（归一 + 生）
+## 二、横向算子 — (Z/2)ⁿ XOR 子群（per Rₙ）
 
-### 3.1 上行算子：合（归一）
+### 2.1 R₈ 之 8 atomic XOR 生成元
 
-| 算子 | 单字 | 类型 | 作用 |
-|------|-----|------|------|
-| 合_上 | **省** / 合 | $\mathbb{B}^3 \to \mathbb{B}^2$ | 投影删上爻 |
-| 合_中 | 省 / 合 | $\mathbb{B}^3 \to \mathbb{B}^2$ | 投影删中爻 |
-| 合_下 | 省 / 合 | $\mathbb{B}^3 \to \mathbb{B}^2$ | 投影删下爻 |
-| 合 | **归** | $\mathbb{B}^n \to \mathbb{B}^{n-1}$ | 一阶降维 |
-| 归一 | **一** / **抱** | $\mathbb{B}^n \to \mathbb{B}^0 = \text{Unit}$ | n 阶降维直至太极 |
+R₈ Cell256 = (Z/2)⁸ 之 8 个 atomic flips，per yi-RO-hierarchy.md §4.1：
 
-**归一公式**：
-$$\text{归一} = \text{合}^n : \mathbb{B}^n \to \text{Unit}$$
+| Generator | OX mask | 翻位 | 单字 |
+|---|---|---|---|
+| dongInner | `OX["xooooooo"]` | y₁ (内·初) | **动·内** |
+| huaInner  | `OX["oxoooooo"]` | y₂ (内·中) | **化·内** |
+| bianInner | `OX["ooxooooo"]` | y₃ (内·上) | **变·内** |
+| dongOuter | `OX["oooxoooo"]` | y₄ (外·初) | **动·外** |
+| huaOuter  | `OX["ooooxooo"]` | y₅ (外·中) | **化·外** |
+| bianOuter | `OX["oooooxoo"]` | y₆ (外·上) | **变·外** |
+| **印** (yìn) | `OX["ooooooxo"]` | y₇ = 因 | **印** (R₇ atom) |
+| **投** (tóu) | `OX["ooooooox"]` | y₈ = 果 | **投** (R₈ atom) |
 
-对 64 卦：$\text{归一} = \text{合}^6 : \mathbb{B}^6 \to \text{Unit}$（6 步降至太极）。
-
-### 3.2 下行算子：分（生）
-
-| 算子 | 单字 | 类型 | 作用 |
-|------|-----|------|------|
-| 分 | **生** | $A \to A \times \text{Bool}$ | 一阶升维 |
-| 重 | **重** | $\mathbb{B}^3 \times \mathbb{B}^3 \to \mathbb{B}^6$ | 八卦相重 → 64 卦 |
-
-**生生公式**（Y combinator）：
-$$\text{生生} = Y(\text{生}) : \text{Unit} \to \mathbb{B}^\infty$$
-
-实际项目截于 $\mathbb{B}^6$（64 卦）作为「足够」之边界。
-
-### 3.3 上下交互
-
-| 关系 | 公式 | 释 |
-|------|-----|----|
-| 合 ∘ 分 = id | $A \xrightarrow{分_b} A \times \mathrm{Bool} \xrightarrow{\pi_1} A$ | 分→合（顺方向）信息保留 |
-| 分 ∘ 合 ≠ id | $A \times \mathrm{Bool} \to A \to A \times \mathrm{Bool}$ | 合→分（逆方向）丢 Bool 位 |
-| 反 ∘ 合 = 合 ∘ 反 (在保留爻上) | flip 任意 *未投出* 之爻 | 反与合 在投影后剩下的 ≤ n−1 爻上交换 |
-
-**关键**：合（归一）是**单向不可逆**的——一旦归一，原有八卦信息丢失。
-但**生生**之自指保证：归一后可再生新结构。
-此即「**归一 → 生生 → 归一 → ...**」永动。
-
----
-
-## 四、横纵合一 · 完整代数
-
-### 4.1 总操作集
-
-$$\text{算子全集} = \underbrace{\{\bar{\partial}_上, \bar{\partial}_中, \bar{\partial}_下\}}_{\text{横向 3 反爻}} \cup \underbrace{\{\text{合}, \text{分}\}}_{\text{纵向 升 / 降}} \cup \underbrace{\{\text{生生}\}}_{\text{太极不动点（Y comb）}}$$
-
-**6 个核心算子**（id 视为零步算子，省去；重 = 分之复用，详 §3.2 与 §九）。
-**最小完备子集**为 5 算子 $\{$变, 化, 动, 合, 生生$\}$（参 §九）——分由生生之 inductive `step` 内化，故可去；其余四者皆不可少。
-
-### 4.2 完整归一回路
-
-```
-                 太极 (Unit, |·|=1)
-                   ↑ 合
-                   │
-                两仪 (Bool, |·|=2)
-                   ↑ 合
-                   │
-                四象 (Bool², |·|=4)
-                   ↑ 合
-                   │
-        ┌── 八卦 (Bool³, |·|=8) ──┐
-        │   ↑ 合       重 ↓      │
-        │   │                    │  ← 横向(Z/2)³在此层互通
-        │  64卦 (Bool⁶, |·|=64)  │
-        └────────────────────────┘
-                   ↑ 合⁶
-                   │
-                 太极 (归一)
-```
-
-### 4.3 八卦互通子代数（孤立看横向）
-
-```
-def 八卦互通 (a b : Bool³) : List 反爻
-  := 找最短路径 from a to b in (Z/2)³ Cayley
-```
-
-最长路径 = 3（汉明距离上限），**任意 a, b 在 ≤ 3 步内互通**。
-
-### 4.4 全代数（横向 + 纵向）作用
-
-任意态 $s \in \mathbb{B}^n$，可：
-- **横移**：在同层 $\mathbb{B}^n$ 内由 $(\mathbb{Z}/2)^n$ 群作用至任意其他态
-- **上行**：$s \to \text{合}(s) \in \mathbb{B}^{n-1}$
-- **下行**：$s \to \text{分}(s, b) \in \mathbb{B}^{n+1}$（需输入新位 $b$）
-- **归一**：$s \to \text{合}^n(s) \in \text{Unit}$
-
----
-
-## 五、单字算子总表
-
-| 算子 | 单字 | 类 | 群序 / 字长 | 出处 |
-|------|-----|---|-----------|------|
-| 反上爻 | **变** | 横向 (Z/2)³ 生成元 | 2（涉爻 1） | 易经爻变 |
-| 反中爻 | **化** | 横向 (Z/2)³ 生成元 | 2（涉爻 1） | 「化而裁之」（系辞上 12） |
-| 反下爻 | **动** | 横向 (Z/2)³ 生成元 | 2（涉爻 1） | 「鼓之以雷霆」（系辞上 11） |
-| 全反 | **错** | 横向派生（=变∘化∘动）| 2（涉爻 3） | 错卦传统 |
-| 位置反序 | **综** | 位置置换（不在 (Z/2)³）| 2 | 综卦传统 |
-| 投影降维 | **合** / **省** | 纵向上行（非群元） | — | 合二归一 |
-| 笛卡尔升维 | **分** / **生** | 纵向下行（非群元） | — | 「太极生两仪」 |
-| 八卦相重 | **重** | 八↔64 桥（非群元） | — | 「因而重之」（系辞上 11） |
-| 自指 / 不动点 | **生生** / **Y** | 太极层（inductive 自指） | ω | 「生生之谓易」（系辞上 5） |
-| 恒等 | **不** / **静** | 群单位 id | 1 | — |
-| 完全归一 | **一** / **抱** | 合之 n 阶迭代 | — | 「抱一为天下式」（老子 22） |
-
-**11 个单字算子**覆盖完整代数。「群序」指作为群元素之 order（最小使 g^n=id），
-「字长」指由 (Z/2)³ 生成元复合所需之最少反爻数。两者皆为 2 时只列「群序 2」。
-合 / 分 / 重 / 一 不是群作用，列「—」。
-
-> 命名注：
-> - 「变／化／动」承担三个反爻——按易经传统「变在上，化在中，动在下」分工
-> - 「错／综」沿用易经术语
-> - 「合／分」是范畴论 product/coproduct 之中文落字
-> - 「生生／一」承担太极层之自指与归一
-
----
-
-## 六、Lean 形式实现 ✓ 已完整证明
-
-完整 Lean 实现见 [`formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean`](../formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean)。
-该文件已加入 `SSBX` 库主入口，**全部 36 个 Lean 文件 lake 编译通过，无 sorry**。
-
-### 主要定义与定理（皆已机器验证）
-
-| 章 | 内容 | 命名 |
-|----|------|------|
-| § 1 | 三个反爻 + involution + commutativity | `dong`/`hua`/`bian`，`dong_dong` 等 6 定理 |
-| § 2 | 错 = dong ∘ hua ∘ bian | `cuo_eq_compose` |
-| § 3 | 乾之 8 元轨道（八卦由三个反爻全覆盖） | `dong_qian` 至 `dong_hua_bian_qian` 共 8 |
-| § 4 | Cayley 图：simply transitive on T_3 | `transform_correct`、`bagua_intercommunication`、`bagua_intercommunication_bounded`（Hamming ≤ 3） |
-| § 5 | 合（he）三种投影 + 归一 | `heShang`/`heZhong`/`heXia`、`guiyi`、`guiyi_universal` |
-| § 6 | 分（fen）+ 合分逆 (he ∘ fen = id) | `fenToTrigram`、`heShang_fenToTrigram` 等 |
-| § 7 | 重（chong）= Hexagram.oplus 别名 | `chong` |
-| § 8 | 生生 inductive 结构 + Trigram 同构 | `Sheng`、`Sheng.toTrigram_ofTrigram` 等 |
-| § 9 | 5 最小算子集 + 完备性 | `MinimalOps`、`canonicalOps`、`canonical_complete` |
-| § 10 | 大循环 TaiJi → Trigram → TaiJi | `grandCycle`、`grandCycle_returns` |
-
-### 完备性主定理
+每个生成元都是 self-inverse XOR：`mask ⊕ mask = OX["oooooooo"]` = 道。8 个 atomic generators 完全生成 256 个 XOR 算子（即 R₈ 之 (Z/2)⁸ XOR 子群）。形式见 [`Cell256.lean`](../formal/SSBX/Foundation/Bagua/Cell256.lean) §7（Phase A — Algebraic Spine）：
 
 ```lean
-theorem bagua_algebra_complete :
-    (∀ a b : Trigram, ∃ f : Trigram → Trigram, f a = b)         -- (a) 互通
-    ∧ (∀ t : Trigram, guiyi t = ())                              -- (b) 归一
-    ∧ (∀ t : Trigram, Trigram.cuo t = dong (hua (bian t)))       -- (c) 错 = 三反复合
-    ∧ (∀ s : SiXiang, ∀ y : Yao, heShang (fenToTrigram s y) = s) -- (d) 合分逆
-    ∧ (∀ y1 y2 y3 : Yao, grandCycle y1 y2 y3 = ())               -- (e) 大循环
+def Cell256.xor (c1 c2 : Cell256) : Cell256 :=
+  (hexXor c1.1 c2.1, shiXor c1.2 c2.2)
+
+def Cell256.origin : Cell256 := (Hexagram.qian, Shi.dao)  -- = OX["oooooooo"] = 道
+
+theorem Cell256.xor_self (c : Cell256) : Cell256.xor c c = Cell256.origin
+theorem Cell256.xor_comm (a b : Cell256) : Cell256.xor a b = Cell256.xor b a
+theorem Cell256.xor_assoc : ...
+
+instance : Add Cell256 := ⟨Cell256.xor⟩
+instance : Zero Cell256 := ⟨Cell256.origin⟩
+instance : Neg Cell256 := ⟨id⟩  -- self-inverse in (Z/2)⁸
 ```
 
-五条断言由 `⟨bagua_intercommunication, guiyi_universal, cuo_eq_compose, heShang_fenToTrigram, grandCycle_returns⟩` 直接构造，每条皆有具体实现。
+### 2.2 印 / 投 = R₇/R₈ 之新 atomic 算子
 
-### 命名约定
+**印** (yìn, R₇ atom) = toggle YinBit (因 axis). [`Cell256.lean`](../formal/SSBX/Foundation/Bagua/Cell256.lean) § 8：
 
-Lean 标识符用 ASCII（与 `Yi.lean` 风格一致），中文落字仅在注释与文档：
+```lean
+def yin_mask : Cell256 := (Hexagram.qian, Shi.ji)   -- OX["ooooooxo"]
+def Cell256.yin (c : Cell256) : Cell256 := xor c yin_mask
+theorem Cell256.yin_yin : ∀ c, yin (yin c) = c   -- involution
+```
 
-| 中文 | Lean 标识 | 类型 |
-|------|----------|------|
-| 动 | `dong` | `Trigram → Trigram` |
-| 化 | `hua` | `Trigram → Trigram` |
-| 变 | `bian` | `Trigram → Trigram` |
-| 合 | `heShang` / `heZhong` / `heXia` / `heToYi` / `heToTaiji` | (各层) |
-| 分 | `fenToYi` / `fenToSiXiang` / `fenToTrigram` | (各层) |
-| 归一 | `guiyi` | `Trigram → Unit` |
-| 重 | `chong` | `Trigram → Trigram → Hexagram` |
-| 生生 | `Sheng` | `Nat → Type`（inductive） |
+**投** (tóu, R₈ atom) = toggle GuoBit (果 axis)：
 
-### 与 Yi.lean 的接口
+```lean
+def tou_mask : Cell256 := (Hexagram.qian, Shi.wei)  -- OX["ooooooox"]
+def Cell256.tou (c : Cell256) : Cell256 := xor c tou_mask
+theorem Cell256.tou_tou : ∀ c, tou (tou c) = c
+theorem Cell256.yin_tou_comm : ∀ c, yin (tou c) = tou (yin c)
+theorem Cell256.yin_tou_eq_central :
+    ∀ c, yin (tou c) = xor c (Hexagram.qian, Shi.jin)  -- = OX["ooooooxx"], V₄ central
+```
 
-- 复用 Yi.lean 之 `Yao`、`Trigram`、`Hexagram`、`Trigram.cuo`、`Hexagram.oplus`
-- 增量添加：(Z/2)³ 单位生成元、纵向 he/fen、归一、生生 inductive、5-算子结构
-- 不修改 Yi.lean 任何已证定理
+「印 ⊕ 投 = `OX["ooooooxx"]` = (qian, jin)」即 V₄ central element = Shi cuoZong = PT — **印与投 之复合给「今」轴**。
+
+### 2.3 R₃ XOR 生成元（旧八卦层之延续）
+
+R₃ = (Z/2)³ 之 3 个 atomic flips（沿 v1 之命名）：
+
+| 算子 | 单字 | mask | 翻位 |
+|---|---|---|---|
+| 反_下 | **动** (dong) | `xoo` | y₁ |
+| 反_中 | **化** (hua)  | `oxo` | y₂ |
+| 反_上 | **变** (bian) | `oox` | y₃ |
+
+[`BaguaAlgebra.lean`](../formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean) 之 `dong / hua / bian` 仍然是 R₃ 上的 generators，且：
+
+```lean
+theorem cuo_eq_compose : Trigram.cuo t = dong (hua (bian t))   -- R₃ 中心元 = 三反复合
+```
+
+所以 R₃ 之 cuo (mask `xxx`) 是 R₃ XOR 子群之最长元；R₈ 之 hexCuo (mask `xxxxxxoo`) 是 R₈ 内 hex 部分的 cuo (保 Shi)。
+
+### 2.4 V₄ 外对称（cuo / zong / hu / 错综）on Rₙ (n ≥ 3)
+
+V₄ Klein 四群 = `{id, cuo, zong, 错综}` per yi-RO-hierarchy.md §4.2：
+
+| 算子 | 类型 | mask 或 perm | 物理 anchor |
+|---|---|---|---|
+| **cuo** | XOR mask | R₃: `xxx`, R₆: `xxxxxx`, R₈ hex 部分: `xxxxxxoo` | **P** (parity) |
+| **zong** | permutation, **非 XOR** | y_i ↦ y_{n+1−i} (反序) | **T** (time-reversal) |
+| **错综** | cuo ∘ zong, **非 XOR** (含 zong) | composite | **PT** |
+| **hu** | permutation, **非 XOR** | (y₂, y₃, y₄, y₃, y₄, y₅) on R₆ | **Y** (Y-combinator) |
+| **id** | mask `OX["o…o"]` | identity = 道 (R₈) | **1** |
+
+V₄ 是 abelian 但只有 cuo ∈ XOR 子群。zong / hu / 错综 是 outer permutations。形式 anchor 见 [`Operators/V4Outer.lean`](../formal/SSBX/Foundation/Hierarchy/Operators/V4Outer.lean) 与 [`Yi.lean`](../formal/SSBX/Foundation/Yi/Yi.lean)。
+
+**hu fixed-points** (R₆+):
+
+```lean
+theorem Hexagram.hu_qian : Hexagram.hu Hexagram.qian = Hexagram.qian
+theorem Hexagram.hu_kun  : Hexagram.hu Hexagram.kun  = Hexagram.kun
+-- + hu(既济) ↔ hu(未济) (2-cycle)
+```
+
+R₈ 上 yComb (即 `Cell256Stratify.yComb`) 在每个 Shi 状态下保 hex hu，故有 16 个 R₈ attractor: `4 hex (qian, kun, jiji, weiji) × 4 Shi = 16` (见 `Cell256Stratify.yComb_attractors_count`)。
+
+### 2.5 R₈ 之双 V₄ + R₈ Cayley 自对偶
+
+R₈ 上 V₄ 出现两次：
+
+| V₄ 实例 | 元素 | 形式锚 |
+|---|---|---|
+| $V_4^{(\text{hex})}$ | `{id, hexCuo, hexZong, hexCuoZong}` on `Hexagram` | `BaguaAlgebra.lean` |
+| $V_4^{(\text{shi})}$ | `{Shi.dao, Shi.ji, Shi.wei, Shi.jin}` (Shi V₄ block) | `Cell256.lean` § 1 |
+
+二者 tensor 起来 = $V_4 \times V_4 \cong (\mathbb{Z}/2)^4$，给出 R₈ 上 16 个对称变换。
+
+更深的：R₈ 之 (Z/2)⁸ 群 + 道 anchor 提供 **Cayley 自对偶** (per [yi-RO-hierarchy.md §5.1](../docs-next/10_formal_形式/yi-RO-hierarchy.md))：
+
+```lean
+def Cell256.cayley (c : Cell256) : Cell256 → Cell256 := fun s => xor c s
+def Cell256.epsAtOrigin (f : Cell256 → Cell256) : Cell256 := f origin
+
+theorem Cell256.epsAtOrigin_cayley : ∀ c, epsAtOrigin (cayley c) = c   -- ε ∘ ι = id
+theorem Cell256.cayley_inj : Function.Injective Cell256.cayley
+theorem Cell256.cayley_hom : ∀ a b, cayley (xor a b) = cayley a ∘ cayley b
+```
+
+这是「**元 = 算子**」之精确形式：每个 cell c 既是 R₈ element，又是 R₈ → R₈ 之自映射 (XOR-with-c)，二者由 ι (Cayley injection) 与 ε (origin-evaluation) 互逆。
 
 ---
 
-## 七、群论刻画总结
+## 三、纵向算子 — Lift / Project 函子（uniform R₀..R₈）
 
-| 层 | 集合 | 横向群 (Z/2)ⁿ | 横向生成元 | 纵向算子（升 / 降） | 派生算子 | 群作用 |
-|---|------|--------------|----------|----------------|---------|-------|
-| 太极 T₀ | Unit | trivial | — | 生生 ↑（自指） | — | trivial |
-| 两仪 T₁ | Bool | Z/2 | ⟨反⟩ | 合 ↑ / 分 ↓ | — | simply transitive |
-| 四象 T₂ | Bool² | (Z/2)² | ⟨反_y₁, 反_y₂⟩ | 合 ↑ / 分 ↓ | — | simply transitive |
-| **八卦 T₃** | **Bool³** | **(Z/2)³** | **⟨动, 化, 变⟩** | **合 ↑ / 分 ↓ ; 重 → T₆** | **错 = 动∘化∘变（在群内）；综 = 位置反序（不在群内）** | **simply transitive** |
-| 64 卦 T₆ | Bool⁶ | (Z/2)⁶ | 6 反爻（内 3 + 外 3） | chong = 内 ⊕ 外 ↑ ; innerTrigram / outerTrigram ↓ | 错_hex（在 (Z/2)⁶ 内）；综_hex / 互（hu）/ 之（变卦）/ V₄ 群（皆有外结构） | simply transitive |
+### 3.1 uniform Lift / Project
 
-**关键结论**：
-- 每层之横向群 = 该层之 (Z/2)ⁿ，**simply transitive**——故任两态可由反爻序列达到
-- 纵向算子（合 / 分 / 重）非群元，但与横向群**兼容**（"反 ∘ 合 = 合 ∘ 反"在保留爻上）
-- 综 / 互 / 之 等**不在 flip 群内**，需扩张至超八面体群 $B_n = (\mathbb{Z}/2)^n \rtimes S_n$ 或更大
-- 加上纵向即得**完整的归一+互通**双向算子系统
+Per [`LiftProject.lean`](../formal/SSBX/Foundation/Hierarchy/LiftProject.lean)：每相邻层 `Rₙ → R_{n+1}` 有一对 lift/project 函子，且 project ∘ lift = id：
+
+| 函子 | 类型 | 古文 | mask 增量 |
+|---|---|---|---|
+| **Lift_n** | Rₙ × Bool → R_{n+1} (n=0..7) | 分 | +1 bit |
+| **Project_n** | R_{n+1} → Rₙ | 合 | -1 bit (右逆) |
+
+8 对 lift/project 关键定理 (`proj_lift_id_R0` .. `proj_lift_id_R7`)：
+
+```lean
+theorem proj_lift_id_R0 (a : R0) (b : Bool) : projR0 (liftR0 a b) = a
+-- ... (R1..R7 各一对)
+theorem proj_lift_id_R7 (c : R7) (g : GuoBit) : projR7 (liftR7toR8 c g) = c
+```
+
+### 3.2 chong (重) = R₃ → R₆ 之 3 步 composite
+
+旧 v1 把 chong (重卦) 看作 R₃ → R₆ +3 bit 「跳跃」。v3 strict-uniform 下，chong 是 3 步 lift composite：
+
+$$R_3 \xrightarrow{\text{Lift}_3} R_4 (\text{Mian}) \xrightarrow{\text{Lift}_4} R_5 (\text{五爻}) \xrightarrow{\text{Lift}_5} R_6 (\text{Hexagram})$$
+
+`chong : Trigram → Trigram → Hexagram` 是这 3 步 composite 之 traditional composite name；mathematical 上 R₃ → R₆ 必经 R₄ (Mian = Ben × Zheng = 16) + R₅ (五爻 = Mian × Bool = 32)。Mian 在 [`BenZheng.lean`](../formal/SSBX/Foundation/Bagua/BenZheng.lean) anchor (`Mian.all_count = 16`)；R₅ Wuyao 在 [`Hierarchy/R5_Wuyao.lean`](../formal/SSBX/Foundation/Hierarchy/R5_Wuyao.lean) anchor。
+
+### 3.3 归一 = (Z/2)⁸ 闭合到 道
+
+旧 v1 之「归一」= n-step 投影至 Unit (即 `guiyi : Trigram → Unit` 把信息全部丢弃)。v3 修正为「**(Z/2)⁸ abelian closure 内之 self-cancellation**」：
+
+任意 R₈ 之 XOR 复合 mask₁ ⊕ mask₂ ⊕ ... ⊕ maskₖ 必落入 256 元闭合内；当 mask 序列两两抵消时（每个 mask 出现偶数次），结果归到 identity = `OX["oooooooo"]` = 道。
+
+```lean
+theorem Cell256.xor_self : ∀ c, Cell256.xor c c = Cell256.origin   -- self-inverse
+-- ⇒ 任 mask 偶次复合归道；任 mask 奇次复合归该 mask 自身
+```
+
+这是**严格 algebraic** 之归一 — 不丢信息（信息留在 mask 数据上），但 cell 状态归到 anchor identity。
+
+「归一 → 生生 → 归一」之永动 = R₈ 内任意 XOR 序列在 256 元内永远 well-defined，且任两 cell 之间 simply-transitive 可达 (≤ 8 步)。
 
 ---
 
-## 八、与既有文档之接口
+## 四、八卦互通 + 全集 Cayley 图
+
+### 4.1 R₃ 互通 (旧版的核心，v3 仍保留)
+
+R₃ Cayley 图 = 立方体 (8 顶点, 12 边, ≤ 3 步 Hamming)：
+
+```
+                乾⟨o,o,o⟩
+              ╱     │     ╲
+       兑⟨o,o,x⟩ 离⟨o,x,o⟩ 巽⟨x,o,o⟩
+           ╱   │  ╲ ╱  │  ╲ ╱  │   ╲
+          ╱    │   ╳   │   ╳   │    ╲
+       震⟨o,x,x⟩ 坎⟨x,o,x⟩ 艮⟨x,x,o⟩
+              ╲     │     ╱
+                坤⟨x,x,x⟩
+```
+
+`bagua_intercommunication` (in `BaguaAlgebra.lean`)：任两 trigram 由 dong/hua/bian 序列互通；`pathFromTo_length_eq_hammingDist` 给出最短路径。
+
+### 4.2 R₆ 互通（64 卦层）
+
+R₆ Cayley 图 = 6-cube (64 顶点, 192 边 = 6×32, ≤ 6 步 Hamming)。`hex_intercommunication_bounded` 给互通距离上界 6。
+
+### 4.3 R₈ 互通（256 cells，闭合层）
+
+R₈ Cayley 图 = 8-cube (256 顶点, 1024 边 = 8×128, ≤ 8 步 Hamming)。
+
+R₈ 之互通由 8 atomic XOR generators (6 yao + 印 + 投) 之 (Z/2)⁸ 完整生成；任两 Cell256 之间至多 8 步 mask 序列可达。`Cell256.cayley_inj` 见证 simply-transitive 之 self-action：
+
+```lean
+theorem Cell256.cayley_inj : Function.Injective Cell256.cayley
+-- ⇒ R₈ ≅ XOR(R₈) ⊆ Aut(R₈) (Cayley regular representation)
+```
+
+任两 cell `c₁, c₂` 之间唯一 connecting mask = `c₁ ⊕ c₂` (= Cell256.xor c₁ c₂)；step count = popcount(c₁ ⊕ c₂) ≤ 8。
+
+### 4.4 八卦互通 → R₈ 之互通
+
+R₃ 互通 (3 步) 通过 Lift_3 ∘ Lift_4 ∘ Lift_5 升至 R₆ (6 步)；再通过 Lift_6 (加因) + Lift_7 (加果) 升至 R₈ (8 步)。每步加 1 bit 互通空间，total `(Z/2)³ ⊆ (Z/2)⁶ ⊆ (Z/2)⁷ ⊆ (Z/2)⁸` — strict subgroup chain：
+
+```
+R₃: 8 cells, ≤ 3 步 → R₄: 16, ≤ 4 → R₅: 32, ≤ 5 → R₆: 64, ≤ 6 → R₇: 128, ≤ 7 → R₈: 256, ≤ 8
+```
+
+「八卦互通」之原始 R₃ 概念 generalize 为 R₈ 上之全图互通：**任两 Cell256 cell 由 8 atomic 算子组合，至多 8 步可达**。
+
+---
+
+## 五、bagua interconnection at R₃，lifted via LiftProject
+
+R₃ 上 dong/hua/bian 三 generators 之具体作用 (per [`BaguaAlgebra.lean`](../formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean) `FlipCombo` 之 8 元):
+
+| FlipCombo | OX mask | 自乾出发 | 卦 |
+|---|---|---|---|
+| `id` | `ooo` | qian | 乾 |
+| `dong` | `xoo` | xun | 巽 |
+| `hua`  | `oxo` | li | 离 |
+| `bian` | `oox` | dui | 兑 |
+| `dong ∘ hua`  | `xxo` | gen | 艮 |
+| `hua ∘ bian`  | `oxx` | zhen | 震 |
+| `dong ∘ bian` | `xox` | kan | 坎 |
+| `dong ∘ hua ∘ bian` (= cuo) | `xxx` | kun | 坤 |
+
+R₃ 8 卦完整 enumerated by orbit of 乾 under `(Z/2)³` action — `FlipCombo.orbit_qian` (Lean 证明) + `FlipCombo.apply_qian_inj` (regular action injectivity)。
+
+**Lift 到 R₆ (六十四卦)**：每个 R₃ generator 对应 R₆ 上 2 个 generators (内 + 外)：
+
+| R₃ atomic | R₆ inner | R₆ outer |
+|---|---|---|
+| dong | dongInner (`xoooooo` -> truncate to OX[6]) | dongOuter |
+| hua  | huaInner | huaOuter |
+| bian | bianInner | bianOuter |
+
+R₆ 之 6 atomic flips = `(Z/2)⁶` generators，给 64 卦完整 Cayley group。`hex_cuo_eq_compose : Hexagram.cuo = 六单翻复合` 是 R₆ 之中心元 (mask `xxxxxx`)。
+
+**Lift 到 R₇ (Cell128)**：加 印 (R₇ atom) = 第 7 个 generator：
+
+```lean
+def Cell128.yin_mask : Cell128 := (Hexagram.qian, true)
+def Cell128.yin (c : Cell128) : Cell128 := xor c yin_mask
+```
+
+**Lift 到 R₈ (Cell256)**：加 投 (R₈ atom) = 第 8 个 generator：
+
+```lean
+def Cell256.tou_mask : Cell256 := (Hexagram.qian, Shi.wei)
+def Cell256.tou (c : Cell256) : Cell256 := xor c tou_mask
+```
+
+8 atomic generators = R₈ 之 (Z/2)⁸ XOR 子群之 minimum complete generators。
+
+---
+
+## 六、归一定理 — (Z/2)⁸ 闭合 = 道
+
+「归一」之 v3 精确形式陈述 (Theorem K, per [yi-calculus-theorem.md](../docs-next/10_formal_形式/yi-calculus-theorem.md))：
+
+> **Theorem (R-O Closure at R₈)**: $\mathcal{R}_8 = (\mathbb{Z}/2)^8 \cong \text{XOR}(\mathcal{R}_8) \subseteq \text{Aut}(\mathcal{R}_8)$，且 R₈ 之 origin = 道 anchor 使 Cayley fusion 严格成立。
+
+形式 anchor: `R8_complete` bundle in [`Cell256Stratify.lean`](../formal/SSBX/Foundation/Bagua/Cell256Stratify.lean)，仅依赖 `propext` + `native_decide` 两个 axioms，无项目自定义 axiom。
+
+**归一** 含义之三重落地：
+
+1. **Algebraic**：任 mask 偶次复合 = identity；任 cell 与自身 XOR = `OX["oooooooo"]` = 道。
+2. **Cayley**：每个 cell 既是 element 又是 self-action — fusion 之 ε ∘ ι = id 把 element 之「自指」与 operator 之「自指」合一。
+3. **Ontological**：`OX["oooooooo"]` 作为 (Z/2)⁸ identity 同时承担五重身份 — origin / identity / no-op / 永真 cell / 道 anchor (per yi-RO-hierarchy.md §5.6)。一个 8-bit 字符串承担五件事。
+
+「归一」≠「丢信息归到 Unit」，而是「**在 (Z/2)⁸ 闭合内任何 algebraic 复合都不溢出，且有唯一 fusion anchor (道)**」。这是 v3 之 strict 解读。
+
+---
+
+## 七、单字算子总表（v3）
+
+| 算子 | 单字 | 类 | Lean 标识 | 出处 |
+|---|---|---|---|---|
+| 反爻 (R₃ inner) | **动 / 化 / 变** | XOR | `dong / hua / bian` | `BaguaAlgebra.lean` |
+| 反爻 (R₆ outer) | **动·外 / 化·外 / 变·外** | XOR | `dongOuter / huaOuter / bianOuter` | `BaguaAlgebra.lean` |
+| 全反 (R₃ 中心) | **错** | XOR | `Trigram.cuo` (= dong ∘ hua ∘ bian) | `Yi.lean` |
+| 全反 (R₆ 中心) | **错** | XOR | `Hexagram.cuo` (= 六反复合) | `Yi.lean` |
+| 因 axis (R₇ atom) | **印** (yìn) | XOR | `Cell128.yin` / `Cell256.yin` | `Cell128.lean / Cell256.lean` |
+| 果 axis (R₈ atom) | **投** (tóu) | XOR | `Cell256.tou` | `Cell256.lean` |
+| 反序 | **综** | non-XOR perm | `Trigram.zong / Hexagram.zong / Shi.zong` | `Yi.lean / Cell256.lean` |
+| 错综 | **错综** | composite (含综故 non-XOR) | `Hexagram.cuoZong / Shi.cuoZong` | `Yi.lean / Cell256.lean` |
+| 互卦 | **互** (hu) | non-XOR perm | `Hexagram.hu` (R₆), `yComb` (R₈ lift) | `Yi.lean / Cell256Stratify.lean` |
+| Lift (+1 bit) | **分** | functor | `liftRn` (per `LiftProject.lean`) | `LiftProject.lean` |
+| Project (-1 bit) | **合** | functor | `projRn` | `LiftProject.lean` |
+| 太极 anchor | **道** | identity in R₈ | `Cell256.origin = OX["oooooooo"]` | `Cell256.lean` |
+| Cayley | **生生** / Y combinator | inductive self-action | `Cell256.cayley` + `Sheng : ℕ → Type` | `Cell256.lean` (cayley) + `BaguaAlgebra.lean` (Sheng) |
+| 恒等 | **不** / **静** | id | `id` | — |
+
+> 命名注 (v3)：
+> - **动 / 化 / 变** 承担 R₃ 三个 yao flips；**印 / 投** 承担 R₇/R₈ 两个新 atomic（命名 provisional, 备选 因/果 / 始/终 / 持/期, 见 [yi-calculus-theorem.md §16](../docs-next/10_formal_形式/yi-calculus-theorem.md)）。
+> - **错 / 综 / 互** 沿易经传统术语；现在 R₃/R₆/R₈ 各层都有自己的 cuo/zong/hu lift。
+> - **合 / 分** 是范畴论 product/coproduct 之中文落字，同时是 LiftProject 函子的承担。
+> - **生生** 之 algebraic 落地 = R₈ Cayley 自作用（每个 cell 自身既是 element 又是 operator）；inductive 落地 = `Sheng : ℕ → Type` ω-tower。
+> - **道** = `Cell256.origin = OX["oooooooo"] = (qian, dao)` — (Z/2)⁸ identity, 承担五重身份 (origin / identity / no-op / 永真 / fusion anchor)。
+
+---
+
+## 八、Lean 形式实现 ✓ 已完整证明
+
+### 8.1 主要 Lean 文件 (post-v3 refactor, 2026-05-10)
+
+| 模块 | 文件 | 关键定义 / 定理 |
+|---|---|---|
+| R₀..R₈ uniform | [`RHierarchy.lean`](../formal/SSBX/Foundation/Hierarchy/RHierarchy.lean) | umbrella import: R₀_Taiji..R₈_GuoHex + LiftProject + Operators |
+| R₃ 之 (Z/2)³ | [`BaguaAlgebra.lean`](../formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean) | `dong/hua/bian`, `cuo_eq_compose`, `bagua_intercommunication`, `Sheng` inductive |
+| R₄ Mian | [`BenZheng.lean`](../formal/SSBX/Foundation/Bagua/BenZheng.lean) | `Mian = Ben × Zheng`, `Mian.all_count = 16`, Theorem A (4本/4征), Theorem F (4 quadrant) |
+| R₅ Wuyao | [`R5_Wuyao.lean`](../formal/SSBX/Foundation/Hierarchy/R5_Wuyao.lean) | `Wuyao = Mian × Bool`, 32 元 |
+| R₆ Hexagram | [`Yi.lean`](../formal/SSBX/Foundation/Yi/Yi.lean) | `Hexagram`, `Hexagram.cuo / zong / hu`, V₄ + hu fixed-points |
+| R₇ Cell128 + 因 | [`Cell128.lean`](../formal/SSBX/Foundation/Bagua/Cell128.lean) | `Cell128 = Hexagram × YinBit`, `yin` toggle, (Z/2)⁷ AddCommGroup, Cayley |
+| R₈ Cell256 + 果 + Shi V₄ | [`Cell256.lean`](../formal/SSBX/Foundation/Bagua/Cell256.lean) | `Cell256 = Hexagram × Shi`, `Shi.toYinGuo` 双射, `tou` toggle, (Z/2)⁸ Phase A |
+| R₈ closure bundle | [`Cell256Stratify.lean`](../formal/SSBX/Foundation/Bagua/Cell256Stratify.lean) | `R8_complete`, parity/timeReversal/PT/yComb |
+| Atomic XOR re-export | [`Operators/Atomic.lean`](../formal/SSBX/Foundation/Hierarchy/Operators/Atomic.lean) | 8 atomic generators |
+| V₄ outer (zong/hu/cuoZong) | [`Operators/V4Outer.lean`](../formal/SSBX/Foundation/Hierarchy/Operators/V4Outer.lean) | non-XOR permutations |
+| Uniform Lift/Project | [`LiftProject.lean`](../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) | 8 R-layer pairs + retract lemmas |
+| OX 字面 macro | [`OXNotation.lean`](../formal/SSBX/Foundation/Notation/OXNotation.lean) | `OX["xxxxxxxx"]` |
+| Cell256 self-description | [`SelfDescription.lean`](../formal/SSBX/Truth/SelfDescription.lean) | `Cell256OperatorComplete` |
+
+### 8.2 主要 algebraic 定理 (Phase A)
+
+```lean
+-- (Z/2)⁸ Abelian group laws
+theorem Cell256.origin_xor : ∀ c, Cell256.xor Cell256.origin c = c
+theorem Cell256.xor_self   : ∀ c, Cell256.xor c c = Cell256.origin
+theorem Cell256.xor_comm   : ∀ a b, Cell256.xor a b = Cell256.xor b a
+theorem Cell256.xor_assoc  : ∀ a b c, ...
+
+-- Cayley fusion
+theorem Cell256.cayley_inj : Function.Injective Cell256.cayley
+theorem Cell256.epsAtOrigin_cayley : ∀ c, epsAtOrigin (cayley c) = c
+theorem Cell256.cayley_hom : ∀ a b, cayley (xor a b) = cayley a ∘ cayley b
+
+-- 印 / 投 mask involutions
+theorem Cell256.yin_yin       : ∀ c, yin (yin c) = c
+theorem Cell256.tou_tou       : ∀ c, tou (tou c) = c
+theorem Cell256.yin_tou_comm  : ∀ c, yin (tou c) = tou (yin c)
+
+-- bundle (per yi-RO-hierarchy.md §6.1)
+theorem cell256_phaseA_summary : ⟨all 9 properties above⟩
+
+-- R8_complete bundle (closure 11-item checklist)
+theorem R8_complete : ... := ⟨...⟩  -- in Cell256Stratify.lean
+```
+
+### 8.3 Build status
+
+```bash
+$ lake build SSBX
+Build completed successfully (3656 jobs).
+```
+
+- **0 sorry** in any migrated file.
+- **0 项目自定义 axioms** in `Cell256.lean / Cell128.lean / Cell256Stratify.lean / BenZheng.lean`.
+- 仅依赖 Lean 标准 axioms: `propext`, `native_decide`.
+- 唯一项目自定义 axiom: `kleene_recursion_axiom` 在 `KleeneInternal.lean` (动力层 BaguaTuring 之 Halting 不可判，与 R₀..R₈ 静态 closure 之 algebraic spine **正交**)。
+
+---
+
+## 九、互通 + 归一 完整代数 — v3 总结
+
+### 9.1 全图
+
+```
+                                                R₈ = Cell256 = (Z/2)⁸ = 256
+                                              ╱  ╲    Cayley R₈ ≅ XOR(R₈)
+                                            ╱      ╲   8 atomic generators
+                                          ╱          ╲  V₄^hex × V₄^shi 
+                                        ╱     투      ╲
+                                  ┌──── Lift_7 ────────┐
+                                  │                    │
+                            R₇ = Cell128 = (Z/2)⁷ = 128
+                                  │                    │
+                                  │       印            │
+                                  └─── Lift_6 ─────────┘
+                                       │              │
+                              R₆ = Hexagram = (Z/2)⁶ = 64
+                                       │   V₄ + 4 quadrant + Mian-axis
+                                       │        chong = 3-step composite
+                              R₅ = (Z/2)⁵ = 32 (五爻 provisional)
+                                       │
+                              R₄ = Mian = (Z/2)⁴ = 16 (Ben × Zheng)
+                                       │       Theorem A: 4本+4征
+                              R₃ = Trigram = (Z/2)³ = 8
+                                       │   动 / 化 / 变 generators
+                              R₂ = SiXiang = (Z/2)² = 4
+                                       │
+                              R₁ = Yao = (Z/2)¹ = 2
+                                       │
+                              R₀ = Unit (太极)
+```
+
+每层之内：simply transitive 由 (Z/2)ⁿ XOR 子群完整生成，互通距离上界 = n。
+每相邻层间：Lift / Project 函子，且 Project ∘ Lift = id。
+R₈ 闭合：Cayley 自对偶 + 道 anchor + V₄ 外对称三件合一。
+
+### 9.2 「归一」之 v3 精确形式陈述
+
+> 「归一」= 任 R₈ 内 mask 序列在 (Z/2)⁸ 闭合内有唯一 reduced form；当复合归到 identity 时，所归之处即 道 = `OX["oooooooo"]`。
+
+形式陈述（per `cell256_phaseA_summary` 与 `R8_complete` bundle）：
+
+```lean
+-- 归一 = self-cancellation in (Z/2)⁸
+∀ c : Cell256, Cell256.xor c c = Cell256.origin (= 道)
+
+-- 五重身份合一
+Cell256.origin = (Hexagram.qian, Shi.dao) = OX["oooooooo"]
+              = (Z/2)⁸ identity = 永真 cell = no-op = fusion anchor = 道
+```
+
+### 9.3 「八卦互通」之 v3 精确形式陈述
+
+> 「八卦互通」之 R₃ 原始版 (任两 trigram 互通 ≤ 3 步) generalize 为 R₈ 全图 (任两 Cell256 之间互通 ≤ 8 步)；R₃ 互通通过 Lift_3..Lift_5 升至 R₆，再通过 Lift_6/Lift_7 (印 + 投) 升至 R₈ 闭合。
+
+形式陈述：
+
+```lean
+-- R₃ 互通 (旧版)
+theorem bagua_intercommunication : ∀ a b : Trigram, ∃ f, f a = b
+theorem bagua_intercommunication_bounded : ... ≤ 3 步 (Hamming)
+
+-- R₈ 互通 (v3 闭合)
+-- via Cell256.cayley : Cell256 → (Cell256 → Cell256) is bijection onto XOR(Cell256)
+-- ⇒ ∀ c₁ c₂ : Cell256, ∃ unique mask m = c₁ ⊕ c₂, m • c₁ = c₂
+-- step count = popcount(c₁ ⊕ c₂) ≤ 8
+```
+
+### 9.4 整个 R₀..R₈ 体系作为「自描述」之最 minimal closure
+
+per [yi-RO-hierarchy.md 第六部分](../docs-next/10_formal_形式/yi-RO-hierarchy.md)：
+
+> R₀..R₈ strict (Z/2)ⁿ uniform + R₈ XOR 子群 + R₈ V₄ 外对称 + Lift/Project + 道 anchor —— 五件 things 构成「自描述系统」之**完整 algebraic closure**。
+
+**最小 v3 算子集**：
+
+```
+{动, 化, 变, 动·外, 化·外, 变·外, 印, 投, 合, 分, 道}
+  └────────── 8 atomic XOR ──────────┘  └─ lift/proj ─┘  └ anchor ┘
+```
+
+11 个单字 + 1 个 anchor = R₀..R₈ 闭合之最小完备算子集。横向 (互通) + 纵向 (lift/project) + identity (道) 三件合一。
+
+> 此 11+1 算子集是 v3 在 R₀..R₈ uniform 框架下之**完整最小**——比 v1 之「5 算子 (变化动合生生)」更精确：v3 把「生生」之 Y combinator 拆为 (Z/2)⁸ Cayley 自作用 + Sheng inductive 两件，前者落地为 R₈ self-action，后者保留为 ω-tower meta 结构。
+
+---
+
+## 十、与既有 v3 doctrine 之接口
 
 | 文件 | 关系 |
-|------|-----|
-| `D_算子代数.md` | 本文之扩展：D 给类型论框架，本文给具体群结构与单字落地 |
-| `A_经典易传.md` | 本文之「错／综」即 A 之传统术语之精确化 |
-| `B_六征体系.md` | 三个反爻可对应六征三对之「极性切换」 |
-| `C_实虚史真.md` | 横向群之三 axes 即 modal/史/真假之极性切换 |
-| `六表_实虚史真/表六` | 64 卦层之 192 格即本文 $\mathbb{B}^6 \times $ 时态 |
-| `formal/SSBX/notes/MonadDAG.md` | 11 个单字算子可注册为 MonadDAG 之新原始算子（与现有 5 个互校） |
-
----
-
-## 九、最小可用配置
-
-若仅取**最少必要**算子以同时满足「八卦互通」+「归一」：
-
-$$\boxed{\{\,\text{变}, \text{化}, \text{动}, \text{合}, \text{生生}\,\}}$$
-
-**5 个单字算子**：
-- 3 个反爻（变／化／动）→ 横向 (Z/2)³ 互通
-- 1 个合 → 纵向归一
-- 1 个生生（Y）→ 太极层不动点 / 重启生成
-
-此 5 算子集**完整且最小**，正合 MonadDAG 之「5 原始算子」之数（虽未必字面对应）。
-
----
-
-## 九 · 半 · 道-理二分申明
-
-> 本 G 文件描述之**算子代数**属**理层**——即可形式化、可入 Lean 的 r.e. 系统。
-> **但** 5 最小算子之「**生生**」承担**道层**之自指——`Sheng : ℕ → Type` 是 Lean 之**类型族**（kind-level），非任何具体类型之居民。
-
-| 本文之 | 属 |
 |---|---|
-| (Z/2)³ 群结构、合 / 分 / 重 算子、错 / 综 派生 | **理** |
-| 5 最小算子集 `{变, 化, 动, 合, 生生}` 之**理用部分**（变 / 化 / 动 / 合）| **理** |
-| 「生生」之元层语义（Y combinator / `Sheng` 自指）| **道** |
-| `bagua_algebra_complete` 主定理（道证理之完备性元命题）| **道** |
-
-详见 [`J_理之不完备_哥德尔在192.md`](J_理之不完备_哥德尔在192.md) §一 之精确二分定义；
-集中陈述见 [`K_完备性审计.md`](K_完备性审计.md) §三。
-
-> **关键**：5 最小算子之**完备**仅在**理层**（八卦互通 + 归一 + 错分解）；
-> 在**道层**之"完备" 属哥德尔不可能（参 J §四）——故"生生"是项目对此不可能之**主动响应**：永不归零之 Y 不动点。
+| [yi-RO-hierarchy.md](../docs-next/10_formal_形式/yi-RO-hierarchy.md) | 主 doctrine (R₀..R₈ strict uniform definitive) — 本文 G 是其 algebraic surface |
+| [yi-calculus-theorem.md](../docs-next/10_formal_形式/yi-calculus-theorem.md) | Theorem K 之严格证明（R₀..R₈ closure）— 本文 G 之 §六 是其文档化 |
+| [yi-as-meta-framework.md](../docs-next/10_formal_形式/yi-as-meta-framework.md) | 哲学层 — 本文 G 之 §七 是其单字落字 |
+| [I_八卦全集.md](I_八卦全集.md) | R₃ + R₆ + R₈ 三层全集 — 本文 G 之算子表是其代数面 |
+| [H_证明报告.md](H_证明报告.md) | v3 证明状态 — 本文 G 是其 Lean 实现之文档化 |
+| [J_理之不完备_哥德尔在256.md](J_理之不完备_哥德尔在256.md) | 静态/动态分界 — 本文 G 是静态 (Z/2)⁸ closure 一面 |
+| [K_完备性审计.md](K_完备性审计.md) | 11 项 closure 审计 — 本文 G 是 algebraic 实现一面 |
 
 ---
 
-## 十、与「最终回到一」之闭环
+## 形式锚
 
-```
-   Unit ──分_b₁──→ Bool ──分_b₂──→ Bool² ──分_b₃──→ Bool³ ──重(_, t')──→ Bool⁶
-    ↑                                                                       │
-    │                                                                       │
-    └────────────── 归一 = 合_n ∘ 合_{n-1} ∘ ... ∘ 合_1（共 n 次）─────────────┘
-                                
-   横向：每层之内由反爻群互通 (Z/2)^n
-```
-
-具体到八卦层（T₃）之大循环：
-
-$$\text{guiyi} \circ \text{fenTo}_3 \circ \text{fenTo}_2 \circ \text{fenTo}_1 : \mathrm{Unit} \to \mathrm{Unit}$$
-
-即 BaguaAlgebra.lean 之 `grandCycle y₁ y₂ y₃ = ()`（已机器验证 `grandCycle_returns`）。
-
-延伸至 64 卦层（T₆）之大循环：
-
-$$\text{guiyi}_6 \circ (\text{重} \text{ on two Trigrams}) \circ \cdots \circ \text{fenTo}_1 = \text{id}_{\mathrm{Unit}}$$
-
-此即**生生不息**之大循环：**生 → 展 → 归 → 生 → ...** 永动不绝。
-注：此处"生生"意指连续之 fenTo 序列，等价于 inductive `Sheng : Nat → Type` 之 `step` 链。
+- [`formal/SSBX/Foundation/Hierarchy/RHierarchy.lean`](../formal/SSBX/Foundation/Hierarchy/RHierarchy.lean) — R₀..R₈ umbrella
+- [`formal/SSBX/Foundation/Hierarchy/LiftProject.lean`](../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) — uniform Lift / Project
+- [`formal/SSBX/Foundation/Hierarchy/Operators/Atomic.lean`](../formal/SSBX/Foundation/Hierarchy/Operators/Atomic.lean) — 8 atomic XOR generators
+- [`formal/SSBX/Foundation/Hierarchy/Operators/V4Outer.lean`](../formal/SSBX/Foundation/Hierarchy/Operators/V4Outer.lean) — V₄ outer (zong / hu / cuoZong)
+- [`formal/SSBX/Foundation/Hierarchy/R5_Wuyao.lean`](../formal/SSBX/Foundation/Hierarchy/R5_Wuyao.lean) — R₅ Wuyao = Mian × Bool
+- [`formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean`](../formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean) — R₃ (Z/2)³ + dong/hua/bian + Sheng inductive
+- [`formal/SSBX/Foundation/Bagua/BenZheng.lean`](../formal/SSBX/Foundation/Bagua/BenZheng.lean) — R₄ Mian (= Ben × Zheng) + Theorems A/F
+- [`formal/SSBX/Foundation/Bagua/Cell128.lean`](../formal/SSBX/Foundation/Bagua/Cell128.lean) — R₇ + 因 + (Z/2)⁷ Phase A
+- [`formal/SSBX/Foundation/Bagua/Cell256.lean`](../formal/SSBX/Foundation/Bagua/Cell256.lean) — R₈ + 果 + Shi V₄ + (Z/2)⁸ Phase A + Cayley
+- [`formal/SSBX/Foundation/Bagua/Cell256Stratify.lean`](../formal/SSBX/Foundation/Bagua/Cell256Stratify.lean) — R₀..R₈ display + R8_complete bundle + parity/timeReversal/PT/yComb
+- [`formal/SSBX/Foundation/Notation/OXNotation.lean`](../formal/SSBX/Foundation/Notation/OXNotation.lean) — `OX["xxxxxxxx"]` 8-char macro
+- [`formal/SSBX/Truth/SelfDescription.lean`](../formal/SSBX/Truth/SelfDescription.lean) — `Cell256OperatorComplete` self-description witness
+- [`formal/SSBX/Foundation/Yi/Yi.lean`](../formal/SSBX/Foundation/Yi/Yi.lean) — `Yao / Trigram / Hexagram` + V₄ + hu fixed-points

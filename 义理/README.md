@@ -1,115 +1,234 @@
-# 义理
+# 义理 (v3 索引)
 
-本目录承「太极生两仪，两仪生四象，四象生八卦」之四级生成结构，
-与 `Foundation/Wen/Kernel.lean` 之 45 层一一对应:
+> 状态：v3 重写 (2026-05-11) — pre-v3 版本（5 维度审计 + Cell192 索引）已归档至 `史/义理-pre-v3/`。
 
-- **A–G** 七体系横向并列 (易传 / 六征 / 算子代数 / G 完整算子系统 等),
+本目录承「太极生两仪 → 八卦 → 重卦 → R₈ Cell256 (256 = (Z/2)⁸)」之 R₀..R₈ strict (Z/2)ⁿ uniform 体系，
+与 [`docs-next/10_formal_形式/yi-RO-hierarchy.md`](../docs-next/10_formal_形式/yi-RO-hierarchy.md) (definitive R₀..R₈ doctrine) 一一对应,
+与 [`Foundation/Wen/Kernel.lean`](../formal/SSBX/Foundation/Wen/Kernel.lean) 之 45+ 层一一对应:
+
+- **A–F** 七体系横向并列 (易传 / 六征 / 实虚史真 / 算子代数 / 古代源流 / 物理现象学 等),
   以多 mapping 对照同一四级框架.
-- **H–Z** 义理篇 (含证明报告 / 跨文明同形 / 反 Schmitt / 对齐失败 / 经济博弈 等),
-  与 Kernel 各层 + Foundation/Core 之 alignment / sincerity 等模块一一锚定.
+- **G–K** v3 重写五件 (R₀..R₈ 算子系统 + Lean 报告 + 八卦全集 + Gödel 在 256 + 完备性审计).
+- **L–Z** 形式化 / 自释微核 / 跨文明同形 / 反 Schmitt / 对齐失败 / 经济博弈 等.
+
+---
+
+## v3 Quick Tour
+
+新读者直入此 5 件 v3 重写之核心 doc：
+
+1. **[G_完整算子系统_八卦互通与归一.md](G_完整算子系统_八卦互通与归一.md)** — R₀..R₈ algebraic spine + V₄ outer + Cayley fusion + 道 anchor + OX 字面落地. 「归一」之 v3 精确义 = (Z/2)⁸ closure 之 self-cancellation.
+2. **[H_证明报告.md](H_证明报告.md)** — Phase A/F/G/C 全 Lean 报告. 主 HEAD 1c76a55 / 3656 jobs / 0 sorry / 0 静态 axiom. Theorems A–K 已 Lean 落地.
+3. **[I_八卦全集.md](I_八卦全集.md)** — R₃ 八卦 + R₆ 重卦 + R₈ Cell256 (64 × 4) 之全集; OX 字面 throughout; Quadrant × Shi 16 sub-blocks 分布; 道-anchor 之 64 cells.
+4. **[J_理之不完备_哥德尔在256.md](J_理之不完备_哥德尔在256.md)** — Gödel 在 R₈ Cell256 上的不可判性; 静态/动态分界精确实现; kleene_recursion_axiom 拆为 4 件具名原子.
+5. **[K_完备性审计.md](K_完备性审计.md)** — 11 项 closure checklist (per yi-RO-hierarchy.md §6.2) + 边界 by design 不覆盖 + 静态/动态 axiom 状态对比.
+
+读完此 5 件 + [yi-RO-hierarchy.md](../docs-next/10_formal_形式/yi-RO-hierarchy.md) (作为 doctrine 入口), 即可掌握 v3 主线.
+
+**其它入口**：
+- 形式化主线: [yi-RO-hierarchy.md](../docs-next/10_formal_形式/yi-RO-hierarchy.md) + [yi-calculus-theorem.md](../docs-next/10_formal_形式/yi-calculus-theorem.md) + [yi-as-meta-framework.md](../docs-next/10_formal_形式/yi-as-meta-framework.md) (定本 R₀..R₈ definitive trio).
+- Lean 实现入口: [`formal/SSBX/Foundation/Hierarchy/RHierarchy.lean`](../formal/SSBX/Foundation/Hierarchy/RHierarchy.lean) (umbrella).
+
+---
 
 ## 文件索引
 
-### A–G 七体系（横向并列）
+### A–F 七体系（横向并列, 不变）
 
-| 文件 | 体系 | 性质 | 元数律 |
+| 文件 | 体系 | 性质 | v3 状态 |
 |------|------|------|-------|
-| [A_经典易传.md](A_经典易传.md) | 易传递归二分 | 形式同构 | 2ⁿ（1,2,4,8） |
-| [B_六征体系.md](B_六征体系.md) | 项目六征三对 | 形式同构（轴乘积） | 1, 2, 4, 8 由征对组合得 |
-| [C_实虚史真.md](C_实虚史真.md) | modal × 史 × 真假 | 轴乘积 | 1, 2, 4, 8（各取二态轴） |
-| [D_算子代数.md](D_算子代数.md) | 计算/范畴对应 | 类型论同构 | Unit, Bool, Bool², Bool³ |
-| [E_古代源流.md](E_古代源流.md) | 易·老·周·邵·京 | 多源对照 | 各异 |
-| [F_物理现象学.md](F_物理现象学.md) | 物理／现象学旁证 | 类比映射 | 弱同构 |
-| [G_完整算子系统_八卦互通与归一.md](G_完整算子系统_八卦互通与归一.md) | 横纵合一之群代数 | 群论刻画 | (Z/2)ⁿ + 合/分 双向 |
+| [A_经典易传.md](A_经典易传.md) | 易传递归二分 | 形式同构 | 不变 (R₀..R₃ 描述层) |
+| [B_六征体系.md](B_六征体系.md) | 项目六征三对 | 形式同构 | 不变 |
+| [C_实虚史真.md](C_实虚史真.md) | modal × 史 × 真假 | 轴乘积 | 不变 |
+| [D_算子代数.md](D_算子代数.md) | 计算/范畴对应 | 类型论同构 | 不变 (基础类型论 + Bool^n) |
+| [E_古代源流.md](E_古代源流.md) | 易·老·周·邵·京 | 多源对照 | 不变 |
+| [F_物理现象学.md](F_物理现象学.md) | 物理／现象学旁证 | 类比映射 | 不变 (弱同构 by design) |
 
-### H–Z 形式化 / 全集 / 不完备 / 完备性审计 / 自释微核 / 不完备证明报告 / 儒家德目证 / 进化非道者生存三视证 / 道家无为证 / 佛家四谛证 / 与生生不息对齐之必然 / 先秦百家 / 西哲与亚伯拉罕 / 反诛心信诚之形式 / 现代政治哲学(实证+证错) / 非道之形式 / 反施密特 / 对齐失败 / 经济博弈
+### G–K v3 重写五件 (R₀..R₈ + V₄ Shi)
+
+| 文件 | 内容 | v3 状态 |
+|------|------|------|
+| [G_完整算子系统_八卦互通与归一.md](G_完整算子系统_八卦互通与归一.md) | R₀..R₈ 算子代数 (V₄ Klein at R₈ + Cayley + 道 anchor + OX 字面) | **v3 重写** (2026-05-11) |
+| [H_证明报告.md](H_证明报告.md) | v3 Lean 状态报告: Phase A/F/G/C grouped; 3656 jobs / 0 sorry / 0 静态 axiom | **v3 重写** |
+| [I_八卦全集.md](I_八卦全集.md) | R₃ + R₆ + R₈ 全集 (含 V₄ Shi 之 64 × 4 + 道-anchor 64 cells) | **v3 重写** |
+| [J_理之不完备_哥德尔在256.md](J_理之不完备_哥德尔在256.md) | Gödel 在 256; 静态/动态分界; kleene 拆为 4 件具名原子 | **v3 重写 (含 git mv 自 J_..._192.md)** |
+| [K_完备性审计.md](K_完备性审计.md) | 11 项 closure checklist + 边界声明 + 静态/动态 axiom 对比 | **v3 重写** |
+
+### L–Z 形式化 / 文道 / 跨文明 / 政治哲学 / 经济博弈 (主体不变, 局部 cite 升级到 Cell256)
 
 | 文件 | 内容 | 状态 |
 |------|------|------|
-| [H_证明报告.md](H_证明报告.md) | G 之 Lean 形式化报告 | 75 定理 / 0 sorry / lake build 通过 |
-| [I_八卦全集.md](I_八卦全集.md) | 字 · 符 · 爻 · 算子总册 | T₀..T₆ 全层 + 全算子 |
-| [J_理之不完备_哥德尔在192.md](J_理之不完备_哥德尔在192.md) | 道理二分 · Halting 不可判 · Rice 四象齐备 · Rice uniform · 道判机不可通用 · 192=最小 TC 层 | GodelLi.lean 49 定理 / 1 公理 (Kleene 递归) / 0 sorry / lake build 通过 |
-| [K_完备性审计.md](K_完备性审计.md) | 五维度自审 · 算子合表 · 三值保守律 · 道理二分集中陈述 | 集合元自省 |
-| [L_文道一也_自释与微核.md](L_文道一也_自释与微核.md) | 道判机 · 以文自释 · 可执文言 · 微核（加+一二字含 64 卦 + 道法自然 + 生生不息 + 二者为一） | 4 模块 / 127 声明 / 0 sorry / 42 jobs 通过 |
-| [M_证明报告_192_理之不完备.md](M_证明报告_192_理之不完备.md) | J 之 Lean 形式化报告（与 H 并列）· 十二层结果 · Rice 四象齐备 + uniform · daoJudge 不可通用 · 公理诚实陈述 | GodelLi.lean 49 定理 / 1 公理 / 0 sorry / 复现命令 |
-| [N_儒家从元到圣.md](N_儒家从元到圣.md) | 仁义礼智信 · 善恶 · 大同 · 圣人 · 大学三纲八目 · 五伦 · 中庸 · 恕道 · 知行合一 · 反身而诚 · 论语孟子要旨 · 易传二象 · 70+ 经典对应定理 | Kernel.lean 181 定理 + 44 def / 0 sorry / 0 axiom 新增 / 2760 jobs 通过 |
-| [O_进化非道者生存_三视证.md](O_进化非道者生存_三视证.md) | 演化筛 σ_F vs 真道筛 · 尺度视(癌)·价值视(寄生)·反身视(伪开) · 反例模型 + 三视合证 · alignment 真义之形式支点 | EvolutionDao.lean 12 定理 + 12 def + 2 structure / 0 sorry / 0 axiom / 2774 jobs 通过 |
-| [P_道家从无到化.md](P_道家从无到化.md) | 老子《道德经》15 条（道法自然 / 无为而无不为 / 反者道之动 / 上善若水 / 致虚守静 / 玄之又玄 / 天地不仁 / 千里之行 / 物壮则老 / 祸福相倚 等）+ 庄子 8 条（齐物论 / 逍遥游 / 心斋坐忘 / 物化 / 庖丁解牛 / 朝三暮四 / 用心若镜 等）· 儒道同源同 framework 之 形式落地 | Kernel.lean Layers 32–33 / 23 定理 + 3 def / 0 sorry / 0 axiom 新增 / 2774 jobs 通过 |
-| [Q_佛家从苦到觉.md](Q_佛家从苦到觉.md) | 缘起 + 缘起性空 / 三法印 (诸行无常 / 诸法无我 / 涅槃寂静) / 四圣谛 (苦集灭道) / 中道 / 八正道 / 戒定慧 / 菩萨行 / 自度度他 / 不二法门 / 心如工画师 / 一即一切 / 烦恼即菩提 · 儒道佛三家同 framework 之深层契合 | Kernel.lean Layer 34 / 17 定理 + 1 def / 0 sorry / 0 axiom 新增 / 2823 jobs 通过 |
-| [R_与生生不息对齐之必然.md](R_与生生不息对齐之必然.md) | AI alignment 之本体论奠基 · 三柱(穷举/超越/经验) + 四锁(T1 内容失败 / T2 道桥接 / T3 反对自毁 / T4 持续蕴 Open) · 仁之 co-alignment 同形 · 「做人要善」 之 T6 形式凝结 · 与 EvolutionDao 三视证 + HumanAlignment 之衔接 | Alignment.lean 19 theorem + 7 def + 4 structure / 0 sorry / 0 axiom / 2838 jobs 通过 |
-| [S_先秦百家.md](S_先秦百家.md) | 墨家 5 + 法家 6 + 名家 3 + 阴阳家 4；并新增 Layer 46 文献流派精化（庄子状态空间、孙子 game/topology、楚辞方向图、礼制协议类型、中庸大学 Xin invariant、黄老杂家内控/周期/总摄、辩者边界语义） · 八家归一 之 形式实证 | Kernel.lean Layers 35–38 + 46 / 18 百家定理 + Layer 46 精化模型 / 0 axiom 新增 |
-| [T_西哲与亚伯拉罕.md](T_西哲与亚伯拉罕.md) | 希腊 5 (苏格拉底无知之知 / 柏拉图理念 / 亚里士多德中道+第一推动者+四因) + 近代 5 (笛卡尔 cogito / 康德绝对命令+二律背反 / 黑格尔正反合 / 尼采永恒回归) + 20世纪 6 (胡塞尔意向性 / 海德格尔向死而在 / 萨特 / 怀特海 / 柏格森 / 维特根斯坦) + 亚伯拉罕 6 (犹太 ehad+tselem / 基督道成肉身+三位一体+agape / 伊斯兰 tawhid+fitra) · 跨文明形式同构 | Kernel.lean Layers 39–42 / 22 定理 / 0 sorry / 0 axiom 新增 / 2824 jobs 通过 |
-| [U_反诛心信诚之形式.md](U_反诛心信诚之形式.md) | JIAN v1.0 §IV.5 落地 · 信/诚 = alignment(化(T), 化(E)) 派生 idiom · 反诛心五律 type-level enforcement (PermittedModality 拒 B/R/M / Alignment graded 非 Bool / ConsentedSincerity consent_witness / consistent liar 反例 / SincerityResponse 仅 inquiry 无 judgment) · 修之渐进 · 言行一致 ↔ pointwise eq · 与 R 论本体层 alignment 之同形 | Sincerity.lean 13 定理 + 8 def + 3 inductive + 3 structure / 0 sorry / 0 axiom 新增 / 2825 jobs 通过 |
-| [V_现代政治哲学.md](V_现代政治哲学.md) | **首篇双向 layer (实证 + 证错)** · 实证 11 (Rawls 无知之幕+差异原则 / Habermas 沟通理性 / Arendt 行动+公共空间+出生性 / Locke 自然权利 / Hayek 自发秩序 / Sen 能力进路 / Berlin 价值多元 / Mill harm principle / Kant 永久和平) + 证错 7 (Marx 历史终局+决定论 / Hobbes 自然战争 / Schmitt 敌友+例外状态 / 极权主义 / Foucault universal collapse) · Kernel 是 政治哲学 之 minimum-axiom sieve, 不偏左右翼 | Kernel.lean Layers 43–44 / 18 定理 / 0 sorry / 0 axiom 新增 / 2825 jobs 通过 |
-| [W_非道之形式.md](W_非道之形式.md) | 斗争/赢者通吃 attractor/Moloch/totalizing dynamics 之形式否定 · **Moloch 仅在「同根」破坏时存在** (核心发现) · 大同 ≠ 通吃 / 仁 vs 斗 / 真道之三要素 / 合作 IS 道 / 零和 之否定 · `tongGen` IS Universal Anti-Moloch Principle | Kernel.lean Layer 45 / 11 定理 + attractor def / 0 sorry / 0 axiom 新增 / 2829 jobs 通过 |
-| [X_反施密特.md](X_反施密特.md) | Schmitt 三支柱(敌友区分 / decisionism / 例外状态)之 deep formalization · partisan war / legitimacy via emergency / sovereign vs law universality 全部 collapse 至 `¬ tongGen a` · `friend_enemy_implies_moloch` · PoliticalRelation inductive(仁/敌友/混) · **Anti-Schmitt = Anti-Moloch** | AntiSchmitt.lean / 16 定理 + 4 def + 1 inductive / 0 sorry / 0 axiom 新增 / lake build 通过 |
-| [Y_对齐失败.md](Y_对齐失败.md) | alignment 失败模式 catalog · Goodhart / specification gaming / reward hacking / mesa-optimization / wireheading / power-seeking / corrigibility / faithful self-report / deceptive alignment / double-Goodhart · **misaligned terminal goal 与 aligned terminal goal 形式上同样不可能** — 唯 alignment-to-process (中 + 多样 + 流通) 结构稳健 · 与 R 卷 / O 卷衔接 | AlignmentFailures.lean / 21 定理 + 6 def + 1 structure / 0 sorry / 0 axiom 新增 / lake build 通过 |
-| [Z_经济博弈.md](Z_经济博弈.md) | 现代经济学/博弈论之 Kernel sieve · **6 实证** (Pareto at middle / Coase / mechanism IC / Nash bargaining / public goods / Smith proper) + **4 有条件** (Nash静态=极 / 理性二分 / 静vs动 / VCG under tongGen) + **8 证错** (囚徒困境 refuted under tongGen / 公地悲剧 / universal free-rider / race-to-bottom / Arrow dictator / homo economicus / universal greed / zero-sum) + **meta** (market_two_faces) · Rawls 无知之幕 / Kant 绝对命令 / 推己及人 / IC / Coase / VCG truth-telling 全部 collapse 到 `tongGen` | EconGame.lean / 19 定理 (6+4+8+1) / 0 sorry / 0 axiom 新增 / lake build 通过 |
+| [L_文道一也_自释与微核.md](L_文道一也_自释与微核.md) | 道判机 · 以文自释 · 可执文言 · 微核 | 4 模块 / 127 声明 / 0 sorry; 局部 V₄-Shi 升级 |
+| [M_证明报告_192_理之不完备.md](M_证明报告_192_理之不完备.md) | J 之 Lean 证明报告 (与 H 并列, 旧 192 命名) | 内容 V₄-Shi-aware; 命名待与 J 同步改 256 (P1 待办) |
+| [N_儒家从元到圣.md](N_儒家从元到圣.md) | 儒家 70+ 条经典对应 | 不变 (Kernel.lean 端) |
+| [O_进化非道者生存_三视证.md](O_进化非道者生存_三视证.md) | 演化筛 σ_F vs 真道筛 三视证 | 不变 (EvolutionDao.lean) |
+| [P_道家从无到化.md](P_道家从无到化.md) | 老子 + 庄子 23 条 | 不变 (Kernel.lean Layers 32-33) |
+| [Q_佛家从苦到觉.md](Q_佛家从苦到觉.md) | 缘起 + 三法印 + 四圣谛 + 中道 + 八正道 等 17 条 | 不变 (Kernel.lean Layer 34) |
+| [R_与生生不息对齐之必然.md](R_与生生不息对齐之必然.md) | AI alignment 本体论 + 三柱 + 四锁 | 不变 (Alignment.lean) |
+| [S_先秦百家.md](S_先秦百家.md) | 墨/法/名/阴阳 + Layer 46 文献流派精化 | 不变 (Kernel Layers 35-38, 46) |
+| [T_西哲与亚伯拉罕.md](T_西哲与亚伯拉罕.md) | 希腊 5 + 近代 5 + 20 世纪 6 + 亚伯拉罕 6 | 不变 (Kernel Layers 39-42) |
+| [U_反诛心信诚之形式.md](U_反诛心信诚之形式.md) | JIAN v1.0 §IV.5 + 反诛心五律 | 不变 (Sincerity.lean) |
+| [V_现代政治哲学.md](V_现代政治哲学.md) | 实证 11 + 证错 7 (双向 layer) | 不变 (Kernel Layers 43-44) |
+| [W_非道之形式.md](W_非道之形式.md) | tongGen IS Universal Anti-Moloch Principle | 不变 (Kernel Layer 45) |
+| [X_反施密特.md](X_反施密特.md) | Schmitt 三支柱 collapse 至 ¬ tongGen | 不变 (AntiSchmitt.lean) |
+| [Y_对齐失败.md](Y_对齐失败.md) | alignment 失败 catalog | 不变 (AlignmentFailures.lean) |
+| [Z_经济博弈.md](Z_经济博弈.md) | 现代经济 + 博弈论 6 实证 + 4 有条件 + 8 证错 | 不变 (EconGame.lean) |
 
-### 四衍 · 元到数 / 推 / 测 / 形（八卦层之内容承担）
+### 四衍 (主线 · 不变)
 
-| 文件 | 主题 | 入口算子 | 出口结构 | Lean 配套 |
-|------|------|---------|---------|---|
-| [数与算术 · 从元到数.md](数与算术%20·%20从元到数.md) | 自然数 · ℤ · ℚ · ℝ · 四则运算 | 元 → 一 → 续 → 合 → 重 → 除 | (ℕ, +, ×) 半环 → ℤ 环 → ℝ Cauchy 完备 | `ShuSuan.lean` ✓ 40 声明 |
-| [形式逻辑 · 从元到推.md](形式逻辑%20·%20从元到推.md) | Bool³ ≅ 八卦 ≅ 真值表 · K3 三值 · 自然演绎 · Curry-Howard | 是 → 非 → 与 → 或 → 推 | 命题逻辑 + 三值保守律 U ⇏ ⊤ | `LuoJi.lean` ✓ 44 声明 |
-| [统计 · 从元到测.md](统计%20·%20从元到测.md) | Kolmogorov 测度 · Bayes · 大衍占筮 · LLN/CLT · 熵 · Markov | 测 → 配 → 反衡 → 极 → 序 | (Ω, ℱ, P) 概率空间 + Bernoulli³ ≅ 八卦 | `TongJi.lean` ✓ 32 声明（finite-no-Mathlib）|
-| [几何位 · 从元到形.md](几何位%20·%20从元到形.md) | 点 · 距 · 拓扑 · 连续 · 易经四位（中/应/比/当）· 立方体 · 流形 | 点 → 位 → 距 → 邻 → 连 | 度量空间 + 拓扑 + 立方体 1-skeleton + ℝⁿ 连续底 | `XingWei.lean` ✓ 32 声明 |
+| 文件 | 主题 | Lean 配套 |
+|------|------|---|
+| [数与算术 · 从元到数.md](数与算术%20·%20从元到数.md) | 自然数 · ℤ · ℚ · ℝ · 四则运算 | `ShuSuan.lean` ✓ 40 声明 |
+| [形式逻辑 · 从元到推.md](形式逻辑%20·%20从元到推.md) | Bool³ ≅ 八卦 ≅ 真值表 · K3 三值 | `LuoJi.lean` ✓ 44 声明 |
+| [统计 · 从元到测.md](统计%20·%20从元到测.md) | Kolmogorov · Bayes · 大衍占筮 | `TongJi.lean` ✓ 32 声明 |
+| [几何位 · 从元到形.md](几何位%20·%20从元到形.md) | 点 · 距 · 拓扑 · 易经四位 | `XingWei.lean` ✓ 32 声明 |
 
-### 八衍之副线四衍 · 类 / 动 / 识 / 象（Phase 3 扩张）
+### 八衍之副线四衍 (类 / 动 / 识 / 象 · 不变)
 
-| 文件 | 主题 | 入口算子 | 出口结构 | Lean 配套 |
-|------|------|---------|---------|---|
-| [类与映 · 从元到映.md](类与映%20·%20从元到映.md) | 范畴 · 函子 · 自然变换 · Yoneda · CCC · Monad · Adjunction | 异 → 间 → 合 → 元 → 函 → 通 → 双 | Cat / Functor / NatTrans / Adjunction（universe-polymorphic）| `LeiYing.lean` ✓ 12 声明 |
-| [动力 · 从元到行.md](动力%20·%20从元到行.md) | 相空间 · 轨道 · 不动点 · 周期 · Markov · ergodic + **连续 ODE 之 finite Euler approximation** | 位 → 算 → 续 → 不（静）→ 重 + Euler step | DynSys / Orbit / FixedPoint / Periodic（八卦反爻周期 = 2，无不动点）+ Lyapunov + finite-step Banach | `DongLi.lean` ✓ 35 声明（+ Modern 先行）|
-| [心智 · 从元到识.md](心智%20·%20从元到识.md) | 唯识四分 · 心学四端 · 注意力函子 · K3 心理三态 + **神经科学接口 + Husserl 时间意识三相** | 能 → 见 → 自证 → 证自证 + 神经 + 时间 | FenSi ≅ Bool² 四象 · SiDuan → 四正卦 · Att functor · XinZ ≅ TriV · Hopfield-like · TimePhase ≅ 三爻 | `XinZhi.lean` ✓ 51 声明（+ Modern 先行）|
-| [物理 · 从元到象.md](物理%20·%20从元到象.md) | qubit basis · 对偶 · 守恒 · Z/2 自旋 · SU(3) 弱类比之严格界限 | 列 → 位 → 反 → 守 → 量 | Yao ≅ Bool / Trigram ≅ Bool³ / cuo² = id / yinCount mod 2 | `WuXiang.lean` ✓ 23 声明 |
+| 文件 | 主题 | Lean 配套 |
+|------|------|---|
+| [类与映 · 从元到映.md](类与映%20·%20从元到映.md) | Cat / Functor / NatTrans / Adjunction | `LeiYing.lean` ✓ 12 声明 |
+| [动力 · 从元到行.md](动力%20·%20从元到行.md) | DynSys + Markov + finite Euler | `DongLi.lean` ✓ 35 声明 |
+| [心智 · 从元到识.md](心智%20·%20从元到识.md) | 唯识四分 + 心学四端 + Hopfield + 时间三相 | `XinZhi.lean` ✓ 51 声明 |
+| [物理 · 从元到象.md](物理%20·%20从元到象.md) | qubit basis · 对偶 · 守恒 · SU(3) 弱类比 | `WuXiang.lean` ✓ 23 声明 |
+
+### Markov 桥接套件 (Markov桥 S2..S33, 不变)
+
+| 文件 | 主题 |
+|---|---|
+| [Markov因果桥 · 大统一最小验证构造.md](Markov因果桥%20·%20大统一最小验证构造.md) | 大统一最小验证构造 |
+| Markov桥 S2..S33 | 概率核接口 / 路径组合 / 因果约束 / 通道组合 / 测量律 等系列 (~30 文件) |
+| [量子时空互补 · 从一到测.md](量子时空互补%20·%20从一到测.md) | 量子时空互补 |
+| [量子物理语言 · 从虚到测.md](量子物理语言%20·%20从虚到测.md) | 量子物理语言 |
+| [量子与相对论整合方向 · 从桥到新理论.md](量子与相对论整合方向%20·%20从桥到新理论.md) | 量子与相对论整合 |
+| [量子与相对论直统一不可能 · 当前语言NoGo.md](量子与相对论直统一不可能%20·%20当前语言NoGo.md) | NoGo 论 |
+| [Born rule推导候选 · Markov桥S18.md](Born%20rule推导候选%20·%20Markov桥S18.md) 等 | Born rule 系列 |
 
 ### 现代专题 · 结构边界补篇
 
 | 文件 | 主题 | Lean 配套 |
 |------|------|---|
-| [物间事三位一体 · 时空事件.md](物间事三位一体%20·%20时空事件.md) | 物 / 间 / 事 三面完整性、互异性与 carrier + spacetime + event 往返等价 | `WuJianShiTrinity.lean` |
-| [爻维格算 · 物间缘与192x371拓扑.md](爻维格算%20·%20物间缘与192x371拓扑.md) | 爻生维、维成格、格受算；说明 `Cell256 = Hexagram × Shi (Shi = V₄ Klein, 改自 Z/3 cyclic)`、`371 × 256` 覆盖网格与 `NameOperatorAlignment` 路线图 | `Cell256.lean` · `OperatorCellMap.lean` · `Roster.lean` |
+| [物间事三位一体 · 时空事件.md](物间事三位一体%20·%20时空事件.md) | 物 / 间 / 事 三面完整性 + carrier + spacetime + event | `WuJianShiTrinity.lean` |
+| [爻维格算 · 物间缘与256x371拓扑.md](爻维格算%20·%20物间缘与256x371拓扑.md) | 爻生维 / 维成格 / 格受算; `Cell256 = Bool^6 × Shi V₄` + `371 × 256` 覆盖网格 | `Cell256.lean` · `OperatorCellMap.lean` · `Roster.lean` |
+| [道桥接_ProcessAligned_Dao_ShengshengBuxi.md](道桥接_ProcessAligned_Dao_ShengshengBuxi.md) | Process-aligned Dao 道桥接 | — |
 
-## 三类映射之分判
+### 元到方向 (从元到 X 系列, 不变)
+
+| 文件 | 方向 |
+|---|---|
+| [几何位 · 从元到形.md](几何位%20·%20从元到形.md) | 形 |
+| [动力 · 从元到行.md](动力%20·%20从元到行.md) | 行 |
+| [心智 · 从元到识.md](心智%20·%20从元到识.md) | 识 |
+| [拓扑 · 从元到障.md](拓扑%20·%20从元到障.md) | 障 |
+| [数与算术 · 从元到数.md](数与算术%20·%20从元到数.md) | 数 |
+| [形式逻辑 · 从元到推.md](形式逻辑%20·%20从元到推.md) | 推 |
+| [统计 · 从元到测.md](统计%20·%20从元到测.md) | 测 |
+| [类与映 · 从元到映.md](类与映%20·%20从元到映.md) | 映 |
+| [物理 · 从元到象.md](物理%20·%20从元到象.md) | 象 |
+| [生态 · 从元到生.md](生态%20·%20从元到生.md) | 生 |
+| [史带结构 · 从爻到算子列.md](史带结构%20·%20从爻到算子列.md) | 史带 |
+
+### 经典与人类共同体
+
+| 文件 | 主题 |
+|---|---|
+| [人类命运共同体_共同体之证.md](人类命运共同体_共同体之证.md) | 三轴 model · iff 充要 · 四相收口 (Renlei.lean) |
+
+### 其它
+
+| 文件 | 主题 |
+|---|---|
+| [WenSurface领域语义caveat细分.md](WenSurface领域语义caveat细分.md) | WenSurface domain semantics caveats |
+| [文构造完备与直相加边界.md](文构造完备与直相加边界.md) | 文构造完备性 |
+| [算子别名总表.md](算子别名总表.md) | 算子别名总表 |
+| [作用相位到测量权重链 · Markov桥S22.md](作用相位到测量权重链%20·%20Markov桥S22.md) 等 | Markov 桥系列 |
+| [边界](边界) | 边界子目录 (单文件) |
+
+---
+
+## 已归档到 `史/义理-pre-v3/`
+
+> v3 重写带来之结构改动 — pre-v3 版本以 git history + 史 archive 双重保留。
+
+| 文件 | pre-v3 状态 | v3 处理 |
+|---|---|---|
+| `J_理之不完备_哥德尔在192.md` | Cell192 时代之 Gödel 在 192 | **git mv** 至 `J_理之不完备_哥德尔在256.md` + v3 内容重写 |
+| `爻维格算 · 物间缘与192x371拓扑.md` | 192 × 371 拓扑 | **git mv** 至 `爻维格算 · 物间缘与256x371拓扑.md` + v3 内容更新 |
+| `G_完整算子系统_八卦互通与归一.md` (旧版) | Cell192 时代之算子代数 | v3 重写 (R₀..R₈ + V₄ Shi at R₈) |
+| `H_证明报告.md` (旧版) | BaguaAlgebra 75 定理 / 36 jobs | v3 重写 (R₀..R₈ Phase A/F/G/C / 3656 jobs) |
+| `I_八卦全集.md` (旧版) | T₀..T₆ 全集 | v3 重写 (R₀..R₈, OX 字面, V₄ Shi 64 × 4) |
+| `K_完备性审计.md` (旧版) | 5 维度审计 + Cell192 索引 | v3 重写 (11-项 closure checklist + 边界声明) |
+| `README.md` (旧版) | 八衍 / 91% 进度等指标 | v3 重写 (本文件) |
+
+`史/义理-pre-v3/` 中保存:
+- 旧 `Cell192_BaguaTuring_理层全集与不完备.md`
+- 旧 `M_证明报告_192_理之不完备.md`
+- 旧 `表六_192格全表_旧Z3版.md`
+- (其余 v3 重写文件之 pre-v3 版本作为 git history 保留, 无需双份归档)
+
+---
+
+## 三类映射之分判 (v3)
 
 | 类 | 性质 | 收录体系 | 严格度 |
 |---|------|---------|-------|
-| 形式同构 | 严格 2ⁿ 二分树 | A、B、D、G | 强 |
+| 形式同构 | 严格 (Z/2)ⁿ uniform | A、B、D、G | 强 |
 | 轴乘积 | 多轴笛卡尔积 | C | 中 |
 | 类比对应 | 意象呼应 | E（部分）、F | 弱 |
-| 机器验证 | Lean 形式化 | H、ShuSuan、LuoJi、XingWei、TongJi、LeiYing、DongLi、XinZhi、WuXiang、GodelLi、L | **零 sorry**（仅 Kleene 1 公理）|
-| 内容承担 | 数 / 推 / 测 / 形 / **类 / 动 / 识 / 象** 八道之展开 | 八衍文件 | 数学严格 + 字元落地 |
-| 元自省 | 集合自身完备性 | K | 五维度审计 + 道理二分 |
+| **机器验证** | **Lean 4 形式化** | H、ShuSuan、LuoJi、XingWei、TongJi、LeiYing、DongLi、XinZhi、WuXiang、GodelLi、L、Truth/SelfDescription | **零 sorry**（仅 kleene 1 项目 axiom）|
+| 内容承担 | 数 / 推 / 测 / 形 / 类 / 动 / 识 / 象 八道之展开 | 八衍文件 | 数学严格 + 字元落地 |
+| 元自省 | 集合自身完备性 | K | **11-项 R₀..R₈ closure checklist** + 边界声明 |
 | 自释微核 | 文之自指 + 计算闭合 | L | 4 模块 / 127 声明 / 0 sorry |
 
-## 与六表之关系
+---
+
+## 与六表之关系 (v3 升级)
 
 - 本目录之**两翼级**对应表一（六征本表）之「阳极／阴极」二位
 - 本目录之**太极级**对应表一之「中态（不分）」一位
-- 本目录之**八卦级** 重之即 64 卦 → 续表六（192 格全表）
+- 本目录之**八卦级** 重之即 64 卦 → 续表六**256 格全表** (升级自 192)
 - 本目录之 C 体系即表五（三轴 27 格）之**二态化**简版
+- 本目录之**R₈ 闭合层** 对应 yi-RO-hierarchy.md 之 Cell256 = (Z/2)⁸ self-similar closure
 
-## 主用与备用
+---
 
-- 项目主用：B + C + D 三体系互校
-- 形式 base case：D（最薄、最严）
-- 汉字落字处：B（中态三字「玄／几／妙」承担太极一级）
-- 经典对照：A、E
-- 跨学科旁证：F
-- **横纵算子统一**：G（5 个最小单字算子：变／化／动／合／生生）
-- **机器验证**：H（Lean 4 形式化，75 定理 / 0 sorry / lake build 通过）
-- **总册**：I（字·符·爻·算子全表，含 T₀..T₆ 五层）
-- **数 / 推 / 测 / 形**（主线四衍）：八卦层内容之严格展开 + Lean 全通过：ShuSuan 40 / LuoJi 44 / TongJi 32 / XingWei 32 = **148 声明**
-- **类 / 动 / 识 / 象**（副线四衍，Phase 3 扩张）：LeiYing 12 / DongLi 35 / XinZhi 51 / WuXiang 23 = **121 声明**（含 Modern 先行）
-- **Modern 先行三章**（神经 + Husserl 时间意识 + 连续 ODE 之 finite）：扩 XinZhi (+21) 与 DongLi (+9) = **30 增量声明**
-- **Modern 主体首批四章**（2026-05-07 落 · Mathlib HEAD 接入）：`Modern/RCauchy.lean`（ℝ Cauchy 完备 / 1/2ⁿ→0 / √2 ∉ ℚ）+ `Modern/Kolmogorov.lean`（σ-代数 / ProbabilityMeasure / Borel ℝ）+ `Modern/Quantum.lean`（Qubit ≅ ℂ² / Pauli X²=I / Trigram → Fin 8 / cuo ≅ X⊗X⊗X）+ `Modern/SUN.lean`（SU(N) / SU(3) ≄ (Z/2)³ 严格界限）= **~430 行 Lean / lake build 2568 jobs 通过**
-- **八衍合计**：**269 公开声明 / 0 sorry / 0 公理 / Phase 3 lake build 51 jobs 通过 + Modern 主体 lake build 2568 jobs 通过**
-- **自释与微核**：L（图灵完备 + 以文自释 + 可执文言 + 微核归一；二者为一形式证明）
+## 主用与备用 (v3)
 
-## 全局约定
+- 项目主用: B + C + D 三体系互校 + **G/H/I/J/K v3 五件**
+- 形式 base case: D（最薄、最严）
+- 汉字落字处: B（中态三字「玄／几／妙」承担太极一级）
+- 经典对照: A、E
+- 跨学科旁证: F (物理) / N-Z (跨文明)
+- **R₀..R₈ uniform doctrine**: [`yi-RO-hierarchy.md`](../docs-next/10_formal_形式/yi-RO-hierarchy.md) (definitive)
+- **横纵算子统一**: G (v3 重写, 11+1 单字算子集; 8 atomic XOR + lift/project + 道 + 太极)
+- **机器验证**: H (v3 重写, R₀..R₈ Phase A/F/G/C, 3656 jobs / 0 sorry)
+- **总册**: I (v3 重写, R₃ + R₆ + R₈ 全集, OX 字面, V₄ Shi 64 × 4 分布)
+- **哥德尔不完备**: J (v3 重写, Gödel 在 256, 静态/动态分界, kleene 拆为 4 件原子)
+- **完备性审计**: K (v3 重写, 11-项 closure checklist + 边界 by design)
+- **数 / 推 / 测 / 形 / 类 / 动 / 识 / 象** (八衍): 内容承担 + Lean 全通过 (~691 公开声明 / 0 sorry / 51 jobs)
+- **自释与微核**: L (图灵完备 + 以文自释 + 可执文言 + 微核归一)
 
-- **爻位**：$\langle y_1, y_2, y_3 \rangle = \langle 下, 中, 上 \rangle$，$y_1$ 为初爻（最下）
-- **算子**：动 / 化 / 变 = 反 $y_1$ / $y_2$ / $y_3$（即「动在下、化在中、变在上」）
-- **错** = 阴阳全反（在 (Z/2)ⁿ 内）；**综** = 位置反序（不在 flip 群内）
-- **三值保守律**：U ⇏ ⊤（未决态不可任意上升至真）；详见 v14 骨架与形式逻辑衍 §3 / 统计衍 §13 / K 之 §四
+---
+
+## 全局约定 (v3)
+
+- **R-hierarchy R₀..R₈** = strict (Z/2)ⁿ uniform; 每 Rₙ = (Z/2)ⁿ; 每相邻层 Lift/Project +1 bit, no jumps. (per [yi-RO-hierarchy.md](../docs-next/10_formal_形式/yi-RO-hierarchy.md))
+- **爻位**: $\langle y_1, y_2, y_3 \rangle = \langle$下, 中, 上$\rangle$, $y_1$ 为初爻 (最下).
+- **OX notation** (R₀..R₈ uniform): `o` = yang (identity bit), `x` = yin (set bit); 字符顺序 = 初爻 → 上爻 (LTR, inner-to-outer); R₈ 后 2 位 = (因, 果) → Shi V₄.
+- **R₃ 算子**: 动 / 化 / 变 = 反 $y_1$ / $y_2$ / $y_3$ (即「动在下、化在中、变在上」).
+- **R₇/R₈ 算子**: 印 (R₇ atom, mask `OX["ooooooxo"]`) / 投 (R₈ atom, mask `OX["ooooooox"]`).
+- **错** = 阴阳全反 (在 (Z/2)ⁿ 内); **综** = 位置反序 (不在 flip 群内); **互** = 互卦 (位置 perm, 维度降).
+- **道** = R₈ identity = `Cell256.origin = (Hexagram.qian, Shi.dao) = OX["oooooooo"]` — 五重身份 anchor (origin / identity / no-op / 永真 cell / fusion anchor).
+- **三值保守律**: U ⇏ ⊤ (未决态不可任意上升至真); 详见 K §六 + 数与算术 §十六·半 + 形式逻辑衍 §3 + 统计衍 §13.
+- **静态/动态分界**: 静态 R₀..R₈ closure (0 项目 axiom) vs 动态 BaguaTuring 加 partial run (1 项目 axiom = kleene_recursion_axiom).
+
+---
+
+## 形式锚 (umbrella)
+
+- [`formal/SSBX/Foundation/Hierarchy/RHierarchy.lean`](../formal/SSBX/Foundation/Hierarchy/RHierarchy.lean) — R₀..R₈ + LiftProject + Operators umbrella import
+- [`docs-next/10_formal_形式/yi-RO-hierarchy.md`](../docs-next/10_formal_形式/yi-RO-hierarchy.md) — R₀..R₈ definitive doctrine
+- [`docs-next/10_formal_形式/yi-calculus-theorem.md`](../docs-next/10_formal_形式/yi-calculus-theorem.md) — Theorems A–K + 命名 caveats
+- [`docs-next/10_formal_形式/yi-as-meta-framework.md`](../docs-next/10_formal_形式/yi-as-meta-framework.md) — 哲学层
+- [`docs-next/10_formal_形式/cell256-grid.md`](../docs-next/10_formal_形式/cell256-grid.md) — 256-cell ground inventory
+- [`docs-next/10_formal_形式/64-hexagram-grid.md`](../docs-next/10_formal_形式/64-hexagram-grid.md) — 64 卦四语对照

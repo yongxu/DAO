@@ -1,476 +1,860 @@
-# 三本 / 四本 × 四阶段 — 内容线 grid (R₄ Mian = 4本×4征 canonical)
+# 三本 × 四阶段：12 格内容映射
 
-> 状态：v3 定本 (2026-05-11)
-> 父文档：[yi-RO-hierarchy.md](yi-RO-hierarchy.md) (R₀..R₈ definitive, §3.4 R₄ Mian = Ben×Zheng)
->
-> 作用：把内容线之 **本 (root) × 阶段 (phase)** 网格定位到 R₀..R₈ strict-uniform 之 R₄ Mian 层。
->
-> **canonical (2026-05-10/11)** ：
->   - **R₄ Mian = Ben × Zheng = 4 × 4 = 16** (BenZheng.lean) — 这是当前 Lean 落地的 first-class 16-命之载体
->   - 旧 「3 本 (物/動/間) × 4 阶段 (差/识/间/事) = 12 格」**legacy view**, 已折叠到 4 本 / 4 征：物 / 動 / 間 / 事 = 4 本 (zong-fixed substrates), 幾 / 勢 / 機 / 時 = 4 征 (zong-mobile marks)
->
-> **配套 v3 兄弟文档**：[yi-bagua.md](yi-bagua.md) (Yi+Bagua+R-hier hub) · [cell256-grid.md](cell256-grid.md) (R₈ 256-格全表) · [shi-v4.md](shi-v4.md) (V₄ Shi) · [r5-wuyao-provisional.md](r5-wuyao-provisional.md) · [r7-yin-r8-guo.md](r7-yin-r8-guo.md) (R₇/R₈ 因/果) · [lift-project.md](lift-project.md) · [ox-notation.md](ox-notation.md) · [64-hexagram-grid.md](64-hexagram-grid.md) (R₆ 64-quadrant)
-> 形式锚：[`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) (`Ben/Zheng/Mian` — canonical 16-命) · [`表一_六征本表.md`](../../docs/表一_六征本表.md) (per-cell 16 命表)
+> 状态：v3 (2026-05-11) — 与 main @ 1c76a55 对齐。本文是 R₃ trigram-level 的 12 格内容映射；它**正交于** v2.1 R-hierarchy 之 R₄ Mian = Ben × Zheng (16) — 后者是 (Z/2)⁴ algebraic spine 的 first-class 层，详 [yi-RO-hierarchy.md §3.4](yi-RO-hierarchy.md#34-r₄--面-mian-) 与 [`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean)。
+> 作用：替代旧"12 面"读法。"面"只是这 12 个的**集合名** —— 12 个格子本身已经有更准确的名字（物 / 注意 / 模 / 文 / 生 / 心 / 理 / 价值 / 人 / 审校 / 证明 / 真理）。本文写出 (1) 三本 各自意涵 + (2) 四阶段 各自意涵 + (3) 12 个格子的四语对照 + (4) 行/列/对角等所有内部关系。
+> 配套：[layer-character-map.md](layer-character-map.md) / [layer-axis-graph.md](layer-axis-graph.md) / [`LayerCharacterMap.lean`](../../formal/SSBX/Text/LayerCharacterMap.lean) / [yi-RO-hierarchy.md](yi-RO-hierarchy.md) (R₀..R₈ doctrine)。
+> 形式锚：[`JianOntology.lean`](../../formal/SSBX/Foundation/Jian/JianOntology.lean)（三本）+ [root-layer-map.md §0](root-layer-map.md)（四阶段）+ [`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean)（R₄ Mian = (Z/2)⁴ next-up enrichment）。
 
----
+## 0a. 与 R₄ Mian 的关系（v3 加注）
 
-## 0. R-hierarchy 定位 — 本表的 4 个 mathematical 解读
+12 = 3 × 4（三本 × 四阶段）是 R₃ trigram-level 之内容映射；它**不是** R₃ algebraic 群 8 = (Z/2)³ 的 group quotient，而是 trigram 之**含义投影**。
 
-```
-R₀ (1) → R₁ (2) → R₂ (4) → R₃ (8) → R₄ (16) ← 本表主角
-                                       ↓
-                                       4 本 × 4 征 = 16 命 (Mian)
-```
+下一阶 algebraic spine 是 R₄ Mian = Ben × Zheng = (Z/2)² × (Z/2)² = (Z/2)⁴ = 16，由 [`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) 形式落地。Mian 之 16 命：
+- Ben (4 substrate) = zong-fixed trigrams = (Z/2)² (本 = 物 / 動 / 間 / 事，与本文三本 + "事" 一致)
+- Zheng (4 mark) = zong-mobile trigrams = (Z/2)² (征 = 幾 / 勢 / 機 / 時)
 
-| 视角 | 行轴 | 列轴 | 总元数 | 在 R-hierarchy 之位置 |
-|---|---|---|---|---|
-| **canonical 4本×4征 (Mian)** | 4 本 (物/動/間/事) | 4 征 (幾/勢/機/時) | **16** | **R₄** = (Z/2)⁴ ✓ |
-| legacy 3本×4阶段 (12-grid) | 3 本 (物/動/間) | 4 阶段 (差/识/间/事) | 12 | 不直接 fit (R-hierarchy 是 (Z/2)ⁿ 自相似, 12 = 3×4 含 Z/3 因子) |
-| 4本×4阶段 (12 升 16) | 4 本 (物/動/間/事) | 4 阶段 (差/识/间/事) | 16 | R₄ alternate axis |
-| 4本×Shi V₄ (R₄ × R₈ Shi 投影) | 4 本 | 4 Shi (道/已/今/未) | 16 | R₄ × R₈-Shi-projection |
-
-**当前 canonical**: 4本×4征 = Mian (BenZheng.lean) — 这是 BenZheng + R₄ Lean 落地之 ground truth。
+所以本文 12 格是 R₃ trigram 之 内容投影; R₄ Mian 16 命是 R₃ trigram 之 zong-orbit 4+4 算子拆分; 二者在 trigram 上**正交但相容** —— 详 [position-operator-tree.md §3](position-operator-tree.md) 与 [yi-RO-hierarchy.md §3.4](yi-RO-hierarchy.md#34-r₄--面-mian-)。
 
 ---
 
-# 第一部分：canonical R₄ Mian = 4 本 × 4 征 = 16 命
+## 0. 全局生成式
 
-## 1.1 4 本 (Ben) — zong-fixed substrate trigrams
-
-R₃ Theorem A (BenZheng.lean): 8 trigrams = 4 zong-fixed (本) + 4 zong-mobile (征)。
-
-```lean
-inductive Ben : Type
-  | wu      -- 物 ↔ 乾 (☰)
-  | dong    -- 動 ↔ 离 (☲)
-  | jian    -- 間 ↔ 坎 (☵)
-  | shi     -- 事 ↔ 坤 (☷)
-
-def Ben.toTrigram : Ben → Trigram
-  | .wu   => Trigram.qian
-  | .dong => Trigram.li
-  | .jian => Trigram.kan
-  | .shi  => Trigram.kun
-
-def Ben.char : Ben → String
-  | .wu   => "物"
-  | .dong => "动"
-  | .jian => "间"
-  | .shi  => "事"
+```
+                          一元 (root)
+                              │
+                              ▼
+        ┌─────────────────────┴─────────────────────┐
+        │                                           │
+   ─三本投射─→                              ─四阶段投射─→
+        │                                           │
+        ▼                                           ▼
+  {物, 動, 間}                            {差, 识, 间, 事}
+        │                                           │
+        └────────────── × (笛卡尔积) ──────────────┘
+                              │
+                              ▼
+                ┌──────────┬──────────┬──────────┬──────────┐
+                │  (物,差) │  (物,识) │  (物,间) │  (物,事) │
+                │   = 物    │  = 注意  │   = 模    │   = 文    │
+                ├──────────┼──────────┼──────────┼──────────┤
+                │  (動,差) │  (動,识) │  (動,间) │  (動,事) │
+                │   = 生    │   = 心    │   = 理    │  = 价值  │
+                ├──────────┼──────────┼──────────┼──────────┤
+                │  (間,差) │  (間,识) │  (間,间) │  (間,事) │
+                │   = 人    │  = 审校  │  = 证明  │  = 真理  │
+                └──────────┴──────────┴──────────┴──────────┘
+                              │
+                          12 = 3 × 4
+                          (可证 cardinality, not 设计常数)
 ```
 
-| Ben | 卦 | symbol | yao tuple | 形式 reading |
-|---|---|---|---|---|
-| 物 (wu) | 乾 | ☰ | (yang, yang, yang) | substantive / entity / ⊤ |
-| 動 (dong) | 离 | ☲ | (yang, yin, yang) | processual / rewrite ⟶ |
-| 間 (jian) | 坎 | ☵ | (yin, yang, yin) | relational / morphism ∘ |
-| 事 (shi) | 坤 | ☷ | (yin, yin, yin) | enacted / void ⊥ |
+---
 
-**关键修正**: 传统 3-本 (物/動/間) **缺第 4 个 zong-fixed trigram** (坤 = 事)。新 4-本视角把「事」纳入 — 与 Yi 古文 (乾 / 坤 二极) 对齐。
+# 第一部分：三本（内容根）
 
-## 1.2 4 征 (Zheng) — zong-mobile mark trigrams
+三本是从 一元 投射出的**三个内容范畴**——回答"我们在谈什么样的东西"。形式来自 [`JianOntology.lean`](../../formal/SSBX/Foundation/Jian/JianOntology.lean) 的 `JianRoot` inductive。
 
-```lean
-inductive Zheng : Type
-  | jiFaint    -- 幾 ↔ 巽 (☴)
-  | shiForce   -- 勢 ↔ 震 (☳)
-  | jiOccasion -- 機 ↔ 兑 (☱)
-  | shiTime    -- 時 ↔ 艮 (☶)
+## 1.1 物 (wu) — 实在的承载者
 
-def Zheng.toTrigram : Zheng → Trigram
-  | .jiFaint    => Trigram.xun
-  | .shiForce   => Trigram.zhen
-  | .jiOccasion => Trigram.dui
-  | .shiTime    => Trigram.gen
-```
+**核心定义**：可被定位、承载状态、可作为变化所栖之物的项。
 
-| Zheng | 卦 | symbol | yao tuple | 形式 reading |
-|---|---|---|---|---|
-| 幾 (jīFaint) | 巽 | ☴ | (yin, yang, yang) | nascent / d/dt at t→0⁺ |
-| 勢 (shìForce) | 震 | ☳ | (yang, yin, yin) | momentum / d/dt at t≫0 |
-| 機 (jīOccasion) | 兑 | ☱ | (yang, yang, yin) | impulse / δ(t-t*) |
-| 時 (shíTime) | 艮 | ☶ | (yin, yin, yang) | step / H(t-t*) |
-
-zong-orbit: {震↔艮}, {巽↔兑}.
-
-## 1.3 R₄ Mian = Ben × Zheng = 16 命 (BenZheng.lean)
-
-```lean
-abbrev Mian : Type := Ben × Zheng
--- |Mian| = 4 × 4 = 16 = (Z/2)⁴
-
-def Mian.all : List Mian := Ben.all.flatMap (fun b => Zheng.all.map (fun z => (b, z)))
-theorem Mian.all_count : Mian.all.length = 16 := by native_decide
-```
-
-### 1.3.1 16 命 全表（Ben × Zheng → label）
-
-```lean
-def Mian.label : Mian → String
-  | (.wu,   .jiFaint)    => "动"  -- 物之微
-  | (.wu,   .shiForce)   => "行"  -- 物之进
-  | (.wu,   .jiOccasion) => "化"  -- 物之转
-  | (.wu,   .shiTime)    => "流"  -- 物之久
-  | (.dong, .jiFaint)    => "萌"  -- 動之微
-  | (.dong, .shiForce)   => "长"  -- 動之进
-  | (.dong, .jiOccasion) => "发"  -- 動之转
-  | (.dong, .shiTime)    => "续"  -- 動之久
-  | (.jian, .jiFaint)    => "缘"  -- 間之微
-  | (.jian, .shiForce)   => "通"  -- 間之进
-  | (.jian, .jiOccasion) => "会"  -- 間之转
-  | (.jian, .shiTime)    => "系"  -- 間之久
-  | (.shi,  .jiFaint)    => "兆"  -- 事之微
-  | (.shi,  .shiForce)   => "趋"  -- 事之进
-  | (.shi,  .jiOccasion) => "变"  -- 事之转
-  | (.shi,  .shiTime)    => "史"  -- 事之久
-```
-
-### 1.3.2 4 × 4 grid 布局
-
-|  | 幾 (微) | 勢 (进) | 機 (转) | 時 (久) |
-|---|---|---|---|---|
-| **物 (wu)** | 动 | 行 | 化 | 流 |
-| **動 (dong)** | 萌 | 长 | 发 | 续 |
-| **間 (jian)** | 缘 | 通 | 会 | 系 |
-| **事 (shi)** | 兆 | 趋 | 变 | 史 |
-
-每 cell = 1 命 = (本, 征) ∈ Mian。 4 × 4 = 16 命。
-
-### 1.3.3 行 / 列 解读
-
-**行 (Ben fixed, Zheng varies)**: 一个 substrate 在 4 phase 之展开：
-
-| 行 | 微 → 进 → 转 → 久 |
+| 系统 | 名 |
 |---|---|
-| 物 | 动 → 行 → 化 → 流 |
-| 動 | 萌 → 长 → 发 → 续 |
-| 間 | 缘 → 通 → 会 → 系 |
-| 事 | 兆 → 趋 → 变 → 史 |
+| 古文 | 物 / 体 / 实 / 形 |
+| 当代汉语 | 实体 / 物体 / 客体 |
+| 英文 | substantive / entity / individual |
+| 形式逻辑 | term / individual / domain element |
+| 经典出处 | 《周易·乾》"万物资始"；《老子》"实其腹"；Aristotle *substantia* |
 
-**列 (Zheng fixed, Ben varies)**: 一个 phase 在 4 substrate 之并置：
+**判别试金石**：能问"它在哪/它是什么"的就是 物。
+- 一块石头 ✓ — 在某处的承载者
+- "运动" ✗ — 不是承载者，是过程（属 動）
+- "之间" ✗ — 不是承载者，是关系（属 間）
 
-| 列 | 物 / 動 / 間 / 事 |
+**形式上**：在 [first-order logic](https://en.wikipedia.org/wiki/First-order_logic) 中是论域 \|M\| 的一个元素；在 [type theory](https://en.wikipedia.org/wiki/Type_theory) 中是某个 sort 的 inhabitant。
+
+## 1.2 動 (dong) — 连续的过程
+
+**核心定义**：变化、推进、生成、流转本身——不依赖某物存在而存在的"过程性"。
+
+| 系统 | 名 |
 |---|---|
-| 幾 (微) | 动 / 萌 / 缘 / 兆 |
-| 勢 (进) | 行 / 长 / 通 / 趋 |
-| 機 (转) | 化 / 发 / 会 / 变 |
-| 時 (久) | 流 / 续 / 系 / 史 |
+| 古文 | 動 / 行 / 化 / 流 |
+| 当代汉语 | 过程 / 变化 / 运动 |
+| 英文 | processual / process / becoming |
+| 形式逻辑 | reduction / transition / derivation step |
+| 经典出处 | 《周易·系辞》"生生之谓易"；《老子》"道生一"；Heraclitus *panta rhei* |
 
-详 [`表一_六征本表.md`](../../docs/表一_六征本表.md) (per-cell 16 命之 古文 / 现代 / 形式逻辑 / 物理 anchoring)。
+**判别试金石**：能问"它怎么发生 / 多长时间"的就是 動。
+- "燃烧" ✓ — 是过程
+- "火焰" ✗ — 是物（承载燃烧的实体）
+- "燃烧之间的关联" ✗ — 是 間
+
+**形式上**：在 [operational semantics](https://en.wikipedia.org/wiki/Operational_semantics) 中是状态转移 σ → σ′；在 [proof theory](https://en.wikipedia.org/wiki/Proof_theory) 中是推理步骤；在 [rewriting system](https://en.wikipedia.org/wiki/Rewriting) 中是 rewrite step →ᵦ。
+
+## 1.3 間 (jian) — 关系的空间
+
+**核心定义**：项与项之间的 interval / gap / coupling / dependency；既不是项也不是过程，是**项之相关性**本身。
+
+| 系统 | 名 |
+|---|---|
+| 古文 | 間 / 际 / 关 / 緣 |
+| 当代汉语 | 关系 / 关联 / 间隔 |
+| 英文 | relational / inter-being / between-ness |
+| 形式逻辑 | relation R ⊆ A × B / morphism |
+| 经典出处 | 《周易·系辞》"乾坤其易之缊邪"；Buber *I-Thou*；relational ontology (Whitehead) |
+
+**判别试金石**：能问"它把谁和谁连/分开"的就是 間。
+- "父子之伦" ✓ — 把父和子连接
+- "父" 或 "子" ✗ — 是物
+- "教育的过程" ✗ — 是動
+
+**形式上**：在 [relational algebra](https://en.wikipedia.org/wiki/Relational_algebra) 中是 binary relation；在 [graph theory](https://en.wikipedia.org/wiki/Graph_theory) 中是 edge；在 [category theory](https://en.wikipedia.org/wiki/Category_theory) 中是 morphism。
+
+## 1.4 三本之间的关系
+
+三本不是平行无关的并列，而是有内在张力：
+
+```
+       物 ──────依赖──────→ 動
+       ↑                     ↓
+       │                     │
+       │    間 ←─构成 / 桥接─┘
+       │
+       └──── 間 也建构物的"是其所是"
+```
+
+### 1.4.1 物 与 動
+
+- **物之所以稳定**：靠 動 的反复（重复某模式才"是同一物"）
+- **動之所以可定位**：靠 物 的承载（某事必发生在某物身上）
+- **形式上**：在 process algebra 里是 (state, transition) 的对偶；在 category theory 里是 (object, morphism) 的双重性
+
+### 1.4.2 動 与 間
+
+- **動需要 間**：变化必发生在某关系之中（A 变到 B 已预设 A 与 B 之间有"可变换"关系）
+- **間刻画 動**：哪些过程可发生由哪些关系预设决定
+- **形式上**：transition system = (states, transitions, relation between transitions)；动力系统的"轨道"是 動 在 間 上的展开
+
+### 1.4.3 物 与 間
+
+- **間需要 物**：关系总是某些物之间的（empty relation 是退化情形）
+- **物被 間 个体化**：A 之所以是 A 而不是 B，靠它的关系网与众不同（Leibniz' principle of identity of indiscernibles）
+- **形式上**：graph = (V, E)，V 物 与 E 間 互为前提
+
+### 1.4.4 三本不可还原性
+
+虽然三者互为前提，但**任何一个不能完全还原为其它二者**：
+- 把 物 还原为关系（structuralism 的极端立场）→ 失去"承载者"，所有关系飘空
+- 把 動 还原为物的状态序列 → 失去"流"，连续性变成离散点
+- 把 間 还原为物的属性 → 失去"之间"的本体性，回到唯名论
+
+所以 [`JianOntology.lean`](../../formal/SSBX/Foundation/Jian/JianOntology.lean) 把 `JianRoot` 设为 3 构造子的 inductive，是**三足鼎立**的形式承诺。
 
 ---
 
-## 1.4 R₄ 在 R-hierarchy 中之上下游
+# 第二部分：四阶段（本体读法）
+
+四阶段是"差异如何成为可说之物"的四级提升。来自 [root-layer-map.md §0](root-layer-map.md) 的本体读法。
+
+## 2.1 差 (cha) — raw distinction
+
+**核心定义**：尚未被分辨、尚未被命名的最原始的"差"——"这与那"的最纯粹的对待。
+
+| 系统 | 名 |
+|---|---|
+| 古文 | 差 / 异 / 别 / 分 |
+| 当代汉语 | 差异 / 区别 / 分别 |
+| 英文 | distinction / differentiation / différance |
+| 形式逻辑 | bit / atomic difference / Yao polarity |
+| 经典出处 | 《周易》"太极生两仪"；Saussure 之 *différence*；Spencer-Brown *Laws of Form* "draw a distinction" |
+
+**形式锚**：在 [`Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) 中是 `Yao = {yang, yin}` 的最原始 bit。差 是 R1 之事。
+
+**关键性质**：差 还没"被识"——只是"在那里"。还没有命名、还没有指称、还没有判断。是 ontology 的零点。
+
+## 2.2 识 (shi) — marked / nameable
+
+**核心定义**：差 被指认、可标记、可命名——"这一差异是这个差异，那一差异是那个差异"。开始有了 reference。
+
+| 系统 | 名 |
+|---|---|
+| 古文 | 识 / 名 / 指 / 标 |
+| 当代汉语 | 标识 / 命名 / 识别 / 指称 |
+| 英文 | marking / nameable / addressed / individuated |
+| 形式逻辑 | reference / variable binding / name introduction |
+| 经典出处 | 《老子》"无名天地之始，有名万物之母"；Frege 之 *Sinn/Bedeutung*；Saul Kripke *naming and necessity* |
+
+**形式锚**：[`AtomName`](../../formal/SSBX/Roster.lean) inductive 的每一个登记字——是"已被识"的具体实现。识 是 M-line 之事。
+
+**关键性质**：识 把"无差别的差"变成"有指称的差"。这是从纯 ontology 到 epistemology 的桥。
+
+## 2.3 间 (jian) — structured
+
+**核心定义**：已被识的差**互相之间**有了结构、相依、相接、相对——开始构成"系统"或"模型"。
+
+| 系统 | 名 |
+|---|---|
+| 古文 | 間 / 联 / 结 / 配 |
+| 当代汉语 | 结构 / 关系 / 相干 / 系统 |
+| 英文 | structured / inter-related / systematic |
+| 形式逻辑 | structure / interpretation / system |
+| 经典出处 | 《周易》"方以类聚，物以群分"；Aristotle 的 *taxis*；structuralism (Lévi-Strauss) |
+
+**形式锚**：[`JianOntology.lean`](../../formal/SSBX/Foundation/Jian/JianOntology.lean) 的 三本 / 三显 / 三征 整体——是已被识的差进入"关系空间"。间 是 内容线 之事。
+
+**关键性质**：间 把"孤立可识的差"组织成"互联的系统"。这是从语词到语法的桥。
+
+**注意**：阶段名"间"与本体名"間"用同一字（间）——这不是巧合：本体的 間 在自身阶段（识→间）下达到自我表达。
+
+## 2.4 事 (shi-event) — enacted / actualized
+
+**核心定义**：已结构的关系**在某一时态、位点、变换中真正发生**——不只是抽象有效，而是 ledger 上有一笔。
+
+| 系统 | 名 |
+|---|---|
+| 古文 | 事 / 行 / 历 / 用 |
+| 当代汉语 | 事件 / 发生 / 实现 / 落地 |
+| 英文 | enacted / actualized / instantiated / event |
+| 形式逻辑 | trace / execution / event / commitment |
+| 经典出处 | 《周易》"显诸仁，藏诸用"；Whitehead 的 *actual occasion*；event-driven semantics |
+
+**形式锚**：[`Cell256`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) 之间的 transition —— 是"事之发生"的最小可审计形态。事 是 R₈ 之事（v2.1 重号；旧 v1 称 R5；Cell192 已删，由 Cell256 = Hexagram × Shi V₄ 替代）。
+
+**关键性质**：事 把"系统层面有效的关系"变成"时空中真实发生的事件"。这是从结构到历史的桥。
+
+## 2.5 四阶段之关系
+
+四阶段不是平起平坐的列举——是一条**单调上升**的认识链：
 
 ```
-R₃ (8) Trigram = 4 本 + 4 征
-       │
-       lift_3 (+1 bit)
-       ↓
-R₄ (16) Mian = Ben × Zheng = 4 × 4   ← 本表主角
-       │
-       lift_4 (+1 bit)
-       ↓
-R₅ (32) Wuyao = Mian × Bool (provisional)
-       │
-       lift_5 (+1 bit)
-       ↓
-R₆ (64) Hexagram = (Z/2)⁶
+差 ──识─→ 识  ──结构化─→ 间  ──落地─→ 事
+ │                                       │
+ │    pre-conceptual    ↑↑↑     post-conceptual
+ │
+ └ ontological zero    fully-actualized ┘
 ```
 
-详 [lift-project.md](lift-project.md) (uniform Lift / Project + retract lemmas).
+### 2.5.1 单调升级
 
-R₄ → R₆ 之 chong (重) = 3 步 lift composite (R₄ → R₅ → R₆), 给出 64 卦之 4-quadrant on Hexagram (16 hex / quadrant): 详 [64-hexagram-grid.md](64-hexagram-grid.md).
+每一阶段**严格包含**前一阶段的所有内容：
+
+- `识 ⊃ 差`：被识的必先有差
+- `间 ⊃ 识`：被结构的必先被识
+- `事 ⊃ 间`：被落地的必先被结构
+
+反过来不行——许多差永远不被识，许多识永远不进入结构，许多结构永远不落地为事。
+
+### 2.5.2 算子化
+
+阶段间的提升对应**特定算子**：
+- `差 → 识`：命名算子 (naming) — 形式上是 binding 操作
+- `识 → 间`：模型化算子 (modeling) — 形式上是 product / pairing
+- `间 → 事`：实例化算子 (instantiation) — 形式上是 evaluation / commitment
+
+### 2.5.3 反向降级
+
+也存在**降级算子**（每级降一阶）：
+- `事 → 间`：抽象 (abstraction)
+- `间 → 识`：解结构 (forgetting structure)
+- `识 → 差`：去名 (un-naming, unmark)
+
+每对升降算子大致互逆——但有信息损失方向（升级一般保 information，降级一般丢）。
+
+### 2.5.4 与本体读法的对应
+
+本体读法 ([root-layer-map.md §0](root-layer-map.md)) 的四阶段对应到 [`MonadDAG`](../../formal/SSBX/notes/MonadDAG.md) 的层次：
+
+| 阶段 | 本体义 | DAG 锚 | 系统层 |
+|---|---|---|---|
+| 差 | 一处差异 | (R1) `Yao` | bit |
+| 识 | 可命名 | (M3) `AtomName` | lexicon |
+| 间 | 可结构化 | (内容线) 三本/三显/三征 | system |
+| 事 | 可发生 | (R₈) `Cell256` transition | history |
 
 ---
 
-# 第二部分：legacy 3 本 × 4 阶段 = 12 格 view (folded into 4 本)
+# 第三部分：12 格名册（四语对照）
 
-> **legacy view, see 4 本 / 4 征 for canonical**
+## 3.1 全表
 
-旧版本把内容线写为 3 本 (物 / 動 / 間) × 4 阶段 (差 / 识 / 间 / 事) = 12 格。这个视角**有保留价值**, 但它**不直接对应 R-hierarchy 之 (Z/2)ⁿ 自相似** (12 = 3 × 4 含 Z/3 因子)。
+| 坐标 | 名 | 古文 | 当代 | 英文 | 形式逻辑 |
+|---|---|---|---|---|---|
+| (物, 差) | **物** | 体 / 形 / 实 | 实体 / 物体 | entity / individual | term / individual constant |
+| (物, 识) | **注意** | 注 / 凝 / 主 | 注意 / 聚焦 | attention / reference | variable binding / valuation |
+| (物, 间) | **模** | 象 / 模 / 范 | 模型 / 结构 | model / schema | structure ⟨M, I⟩ / interpretation |
+| (物, 事) | **文** | 文 / 辞 / 录 | 文本 / 文献 | text / corpus | wff / sequent / proof term |
+| (動, 差) | **生** | 生 / 始 / 萌 | 生成 / 萌发 | genesis / emergence | production rule / rewrite step |
+| (動, 识) | **心** | 心 / 感 / 知 | 感知 / 心智 | perception / cognition | judgment Γ⊢A / observable |
+| (動, 间) | **理** | 理 / 法 / 致 | 推理 / 逻辑 | reasoning / inference | inference rule / deduction |
+| (動, 事) | **价值** | 善 / 义 / 利 | 价值 / 评价 | value / utility | utility function / preference |
+| (間, 差) | **人** | 人 / 伦 / 仁 | 人际 / 伦理 | inter-being / dyad | binary relation R(x,y) |
+| (間, 识) | **审校** | 审 / 校 / 验 | 审查 / 校验 | verification / audit | type-check / model-check |
+| (間, 间) | **证明** | 证 / 据 / 立 | 证明 / 论证 | proof / demonstration | derivation / proof term |
+| (間, 事) | **真理** | 真 / 道 / 是 | 真理 / 实在 | truth / validity | M ⊨ φ / soundness |
 
-折叠路径：
-- 3 本 (物 / 動 / 間) → 4 本 (物 / 動 / 間 / **事**)：补加 「事」 (zong-fixed Trigram = 坤) 作为 zong-fixed 4-tuple 之第 4 元
-- 4 阶段 (差 / 识 / 间 / 事) 之 「事」与 4 本之 「事」**字相同但语义不同**：阶段「事」= enacted phase, 本「事」= 坤 substrate
-- 解决方案：阶段 axis 不再用 「事」字，改用 4 征 (幾 / 勢 / 機 / 時) 作为 phase axis
+## 3.2 四语 3×4 网格速览
 
-新格局 (canonical R₄)：4 本 × 4 征 = 16 命，无字符歧义。
-
-## 2.1 旧 3 本 × 4 阶段 12 格 — 简表
+### 古文（最简一字）
 
 |  | 差 | 识 | 间 | 事 |
 |---|---|---|---|---|
-| 物 | 物 (实体) | 注意 | 模 | 文 |
-| 動 | 生 | 心 | 理 | 价值 |
-| 間 | 人 | 审校 | 证明 | 真理 |
+| 物 | 体 | 注 | 象 | 文 |
+| 動 | 生 | 心 | 理 | 善 |
+| 間 | 人 | 审 | 证 | 真 |
 
-详 [layer-character-map.md](layer-character-map.md) (R0–L0 字根映射) + [layer-axis-graph.md](layer-axis-graph.md) (三轴汇聚)。
+### 当代汉语（标准双字）
 
-## 2.2 旧 4 阶段定义 — 还原读法
+|  | 差 | 识 | 间 | 事 |
+|---|---|---|---|---|
+| 物 | 实体 | 注意 | 模型 | 文本 |
+| 動 | 生成 | 感知 | 推理 | 价值 |
+| 間 | 人际 | 校验 | 证明 | 真理 |
 
-| 阶段 | 古文 | 当代 | 形式 |
-|---|---|---|---|
-| 差 (cha) | 差 / 异 / 别 | distinction / différance | bit / atomic difference |
-| 识 (shi) | 识 / 名 / 指 | marking / nameable | reference / variable binding |
-| 间 (jian) | 間 / 联 / 结 | structured / inter-related | structure ⟨M, I⟩ / interpretation |
-| 事 (shi-event) | 事 / 行 / 用 | enacted / actualized | trace / execution / event |
+### 英文（canonical noun）
 
-升级链: 差 → 识 → 间 → 事 (单调认识链, 严格包含). 详 [root-layer-map.md §0](root-layer-map.md).
+|  | raw | marked | structured | enacted |
+|---|---|---|---|---|
+| substantive | entity | reference | model | text |
+| processual | genesis | perception | inference | value |
+| relational | relation | verification | proof | truth |
 
-## 2.3 折叠到 canonical 4 本 × 4 征
+### 形式逻辑（最近形式锚）
 
-| 旧 (3 本 × 4 阶段) | 新 (4 本 × 4 征) | 备注 |
-|---|---|---|
-| 物 / 動 / 間 (3 本) | 物 / 動 / 間 / **事** (4 本 = 4 zong-fixed) | 补 「事」 (= 坤 substrate) |
-| 差 / 识 / 间 / 事 (4 阶段) | 幾 / 勢 / 機 / 時 (4 征 = 4 zong-mobile) | phase axis 改用 4 征, 避字符撞 |
-
-**对应**:
-
-| 旧阶段 | 新征 | 物理 anchoring |
-|---|---|---|
-| 差 (raw distinction) | 幾 (jīFaint, 微) | 萌动初起 = d/dt at t→0⁺ |
-| 识 (marked) | 勢 (shìForce, 进) | 已识则有势 = 持续动量 |
-| 间 (structured) | 機 (jīOccasion, 转) | 结构化 = phase 转换点 |
-| 事 (enacted) | 時 (shíTime, 久) | 落地 = 持久态 = step H(t-t*) |
-
-折叠后, **旧 12-grid 之 12 格** 嵌入新 16-grid 中之 12 cells (3 本 × 4 征), 留 4 cells (事 行 之 4 命 = 兆/趋/变/史) 作为新增。
-
-阶段之时态升级链 (差→识→间→事) 在新视角下读为「征之 4 phase」 — 同一个 zong-orbit pair 中之 4 个时态 representative. 详见 [yi-as-meta-framework.md §3](yi-as-meta-framework.md) 4 mark = 谐振子 phase plane 4 quadrant。
+|  | raw distinction | nameable | structured | enacted |
+|---|---|---|---|---|
+| substantive | individual / term | reference / valuation | structure 𝓜 = ⟨M, I⟩ | wff / proof term |
+| processual | derivation step / →ᵦ | judgment Γ⊢A | inference rule | utility function |
+| relational | binary predicate R(x,y) | type-check / decide | proof tree | ⊨ / soundness |
 
 ---
 
-# 第三部分：4 阶段 (时态 / 时间过程) 之 R-hierarchy 解读
+# 第四部分：三行（每个 本 的演化）
 
-如果坚持 4 阶段视角不折叠到 4 征，它在 R-hierarchy 中如何定位？
+每行展示一个 本 在四阶段下的完整演化曲线。
 
-## 3.1 阶段 ≠ Shi V₄ — 但相关
+## 4.1 物 行：物 → 注意 → 模 → 文
 
-V₄ Shi = {道, 已, 今, 未} 是 R₈ 之 (因, 果) emergence (R₇ ⊗ R₈ 双 axis), **不**等于阶段 (差/识/间/事).
-
-| 阶段 | 是否 = Shi | 关系 |
-|---|---|---|
-| 差 (raw) | ≠ | 阶段是「认识升级链」, Shi 是「时态」 |
-| 识 (marked) | ≠ | 阶段 = epistemic state, Shi = causal state |
-| 间 (structured) | ≠ | 阶段 = formal state, Shi = (因, 果) state |
-| 事 (enacted) | ≈ Shi.ji ∪ Shi.jin | 「已发生」近 P-row + PT-row |
-
-阶段是**认识升级链** (epistemic ascent: 差 → 识 → 间 → 事), Shi 是**时态状态** (temporal state: 道 / 已 / 未 / 今). 两者**正交**。
-
-## 3.2 4 阶段作为 R₄ 的 alternate Z-coord (不 canonical)
-
-如果暂搁 R₄ Mian 之 canonical 定义 (Ben × Zheng), 把 4 阶段 (差/识/间/事) 作为 R₄ 之 Z-coord:
+**主题**：实体如何从生硬给出走到永久记录。
 
 ```
-R₄_alt = Ben × SiJieduan = 4 × 4 = 16
+       (差)              (识)               (间)              (事)
+       物 ───注意操作───→ 注意 ───模型化───→ 模 ───实例化───→ 文
+   bare entity     attended-to     entity-in-relation   recorded entity
 ```
 
-数学上是 R₄ = (Z/2)⁴ 之另一种 4-axis 选择。但 BenZheng.lean 已 commit 到 Ben × Zheng — 此 alternate 仅作 conceptual 参考, 不进入 Lean。
+### 4.1.1 物 → 注意：从存在到被注意
 
-详 [yi-RO-hierarchy.md §3.4](yi-RO-hierarchy.md): R₄ = Mian = Ben × Zheng 是 canonical (Z/2)⁴ anchor。
+- **算子**：注意算子（pick out / refer to）
+- **古文**：物 → 凝（凝其神于此物）
+- **形式上**：从 universe 元素 e ∈ \|M\| 提升到 reference v(x) = e
+- **关键**：物本身不需要任何主体存在——但"注意到这个物"必有主体
 
-## 3.3 4 阶段作为 R₈ Shi 之 projection？— 不 canonical
+**例**：
+- 房间里有一把椅子（物，即使无人也存在）
+- 我注意到那把椅子（注意，需主体）
 
-理论上可把阶段映射到 Shi:
-- 差 → 道 (V₄ identity = atemporal raw)
-- 识 → 已 (P, marked = past closed)
-- 间 → 未 (T, structured = future open potential)
-- 事 → 今 (PT, enacted = present)
+### 4.1.2 注意 → 模：从被注意到结构化
 
-但这是**临时 conceptual 映射**, 非数学等价: 阶段是 epistemic 之 4-step ascent, Shi 是 V₄ 之 4-state symmetry。在 Lean 中保持区分: `SiJieduan : Type` (legacy 12-grid axis) ≠ `Shi : Type` (V₄ Klein on Cell256).
+- **算子**：建模算子（modeling / structuring）
+- **古文**：凝 → 象（凝注于象，象则成模）
+- **形式上**：从单点 reference 上升到 structure ⟨M, I⟩——多个 reference 互相关联
+- **关键**：单独被注意的物还没结构；要有"关系网"才是模
+
+**例**：
+- 椅子（被注意）+ 桌子（被注意）+ "椅围桌"（关系）= 餐厅模型
+- 几个变量 + 它们之间的方程 = 数学模型
+
+### 4.1.3 模 → 文：从结构化到永久记录
+
+- **算子**：实例化 / 文字化算子（commit to text）
+- **古文**：象 → 文（成象在天，垂文于地）
+- **形式上**：从 abstract structure 实例化为 well-formed expression
+- **关键**：模可以是抽象的、未写下的；文是 commit 到 ledger 的具体记号
+
+**例**：
+- 牛顿力学（模）→ 《自然哲学的数学原理》（文）
+- 数据 schema（模）→ JSON 文档（文）
+
+### 4.1.4 物 行的整体走向
+
+物 行 是**实体的物化路径**——从"存在"到"被注意"到"被理解"到"被记录"。这是西方 ontology 主流（substance ontology）的标准发展曲线：从 *ousia* 到 *eidos* 到 *logos*。
 
 ---
 
-# 第四部分：6 行 / 6 列 — 4 × 4 内部关系
+## 4.2 動 行：生 → 心 → 理 → 价值
 
-## 4.1 行邻接（同 Ben，相邻 Zheng）
+**主题**：变化如何从原始萌动走到伦理判断。
 
-每行之 4 命构成「一个 substrate 之 4 phase 演化」:
+```
+       (差)              (识)               (间)              (事)
+       生 ───感知操作───→ 心 ───规律化───→ 理 ───落地评判───→ 价值
+   raw genesis    sensed change    logic of process     judged event
+```
 
-| 行 | 升级链 |
+### 4.2.1 生 → 心：从涌动到被感
+
+- **算子**：感受算子（sense / perceive）
+- **古文**：生 → 感（生有感，感在心）
+- **形式上**：从 derivation step 提升到 judgment Γ ⊢ A——变化变成可宣告的事态
+- **关键**：变化本身不需要被感受；但要进入认识就必须先被某主体感
+
+**例**：
+- 沼气在自燃（生，无感）
+- 我感到温度上升（心，有感）
+- 程序状态从 σ 转到 σ′（生）→ 我观察到栈 +1（心，observable）
+
+### 4.2.2 心 → 理：从感到规律
+
+- **算子**：归纳/演绎算子（reason about）
+- **古文**：感 → 理（感而通之，则有理）
+- **形式上**：从 single judgment 上升到 inference rule —— 多个 judgment 间的连接
+- **关键**：单次感知还不是理；多次感知中找出可重复的关联才是理
+
+**例**：
+- 多次观察到太阳东升（多个 心 / 感知）→ 万有引力定律（理）
+- 多次执行某算法（动作 sequence）→ 算法的 invariant（推理）
+
+### 4.2.3 理 → 价值：从规律到伦理
+
+- **算子**：评价算子（valuate / judge）
+- **古文**：理 → 善（理而后能别善恶；《大学》"格物致知诚意正心"链）
+- **形式上**：从 inference rule 转为 utility/preference function——客观规律加上主体偏好
+- **关键**：理本身是 value-free 的（"事实如何"）；价值是把理对接到"应当如何"
+
+**例**：
+- 经济学规律（理）→ 政策评价（价值）
+- 算法可行性（理）→ 算法是否伦理（价值，比如歧视性 ML 模型）
+
+### 4.2.4 動 行的整体走向
+
+動 行是**过程的伦理化路径**——从"发生"到"被感"到"被律"到"被判"。这是道德哲学主流（特别是儒家与德性伦理）的发展曲线：《大学》的 "格物→致知→诚意→正心" 大致就是 生→心→理→价值 的升华。
+
+---
+
+## 4.3 間 行：人 → 审校 → 证明 → 真理
+
+**主题**：关系如何从具体人际走到永恒真理。
+
+```
+       (差)              (识)               (间)              (事)
+       人 ───互校操作───→ 审校 ───形证操作───→ 证明 ───立真操作───→ 真理
+   raw relation     audited relation    proven meta-relation    eternal truth
+```
+
+### 4.3.1 人 → 审校：从人际到互审
+
+- **算子**：互审算子（cross-check / audit）
+- **古文**：人 → 审（人各有所见，必互审而后定）
+- **形式上**：从 binary relation R(a, b) 提升到 type-check 或 model-check
+- **关键**：单条人际关系是直接的；要它"被识"就必须经互审/确认
+
+**例**：
+- A 信任 B（人，未审）
+- A 审查 B 是否真值得信（审校）
+- 程序 e 与类型 A 的潜在关联（人）→ type-check Γ ⊢ e : A（审校）
+
+### 4.3.2 审校 → 证明：从互审到形证
+
+- **算子**：证明算子（formal demonstration）
+- **古文**：审 → 证（审其真伪而后证之以辞）
+- **形式上**：从 single check / decision 上升到 derivation tree——多次 type-check 串成完整 proof
+- **关键**：单次 check 只能"过/不过"；证明把 check 串成完整论证
+
+**例**：
+- 单条数学验证（审校）→ 完整数学证明（证明）
+- 单元测试通过（审校）→ Hoare logic proof of correctness（证明）
+
+### 4.3.3 证明 → 真理：从形证到立真
+
+- **算子**：立真算子（establish as truth）
+- **古文**：证 → 真（证之以辞，立之以名，定之以体）
+- **形式上**：从 single derivation 上升到 universal soundness 或 model satisfaction across all worlds
+- **关键**：单个证明只立此一断言；真理是在所有相关场景中皆立
+
+**例**：
+- 一个特定证明 → 数学定理（在所有解释中皆真）
+- Coq 的具体 proof term → soundness theorem of the calculus
+
+### 4.3.4 間 行的整体走向
+
+間 行是**关系的真理化路径**——从"具体接触"到"互验"到"形证"到"立真"。这是逻辑学主流（特别是 proof theory + model theory 双轨）的发展曲线：从 dyadic relation 到 verified consistency 到 derived theorem 到 universal validity。
+
+---
+
+# 第五部分：四列（每个阶段的横向意义）
+
+每列展示三个本在同一阶段下的并行投影。
+
+## 5.1 差 列：物 / 生 / 人
+
+**主题**：raw distinction 在三个本上的最直接表达——pre-conceptual 的"给定"。
+
+| 本 | 差 列 | 含义 |
+|---|---|---|
+| 物 | **物** | 实体本身被给出，但尚未被命名 |
+| 動 | **生** | 变化本身在发生，但尚未被察觉 |
+| 間 | **人** | 关系本身在那里，但尚未被审视 |
+
+### 横向共性
+
+差 列的三格都是**未中介的 ontological zero**：
+- 都是直接对待
+- 都不需要主体承担
+- 都最近根（in MonadDAG terms, closest to root）
+
+### 形式实测
+
+实际登记字数（[atom-naming.md](../../formal/SSBX/notes/atom-naming.md)）：
+- 物 行 物：43
+- 動 行 生：31
+- 間 行 人：11
+
+总 85 个 atom 在 差 列——是字根最密集的层之一。这印证了"差"是 ontology 的真起点。
+
+## 5.2 识 列：注意 / 心 / 审校
+
+**主题**：marked / addressed —— 主体活动让差变成"可指可名"。
+
+| 本 | 识 列 | 含义 |
+|---|---|---|
+| 物 | **注意** | 主体把对象 picks out |
+| 動 | **心** | 主体 feels 变化 |
+| 間 | **审校** | 主体 cross-checks 关系 |
+
+### 横向共性
+
+识 列的三格都是**主体动作**：
+- 都需要主体存在
+- 都把"在那里"提升到"对我在那里"
+- 都是 epistemology 的入口
+
+注意 / 心 / 审校 在 [atom-naming.md](../../formal/SSBX/notes/atom-naming.md) 里被原作者归为同一群"心智 / 注意"——这种自发归类正反映了它们处于同一列。
+
+### 形式上
+
+这一列对应到 [`AtomName`](../../formal/SSBX/Roster.lean) inductive 的整个 lexical 层——每个登记字本质上是一个 (本, 差) 被 (主体, 识) 操作后的产物。M-line 之所以叫"名册线"，正因为它就是 识 列的形式化。
+
+## 5.3 间 列：模 / 理 / 证明
+
+**主题**：structured —— 形式系统建立内部秩序。
+
+| 本 | 间 列 | 含义 |
+|---|---|---|
+| 物 | **模** | 实体被建模 |
+| 動 | **理** | 过程被规律化 |
+| 間 | **证明** | 关系被形证 |
+
+### 横向共性
+
+间 列的三格都是**形式机制**：
+- 都需要至少两项以上才有意义（单一项不能"被结构"）
+- 都引入"系统性"
+- 都是 formal logic 的真正栖身处
+
+### 形式上
+
+这是整个 SSBX 系统**最重的工作量**所在——所有的 [`FormalNode`](../../formal/SSBX/Foundation/Core/MonadRoot.lean)、`ConstructionId`、`ClaimId` 都在这一列工作。
+
+| 间 列 | 主要文件 |
 |---|---|
-| 物 | 动 → 行 → 化 → 流 (物之微 → 进 → 转 → 久) |
-| 動 | 萌 → 长 → 发 → 续 |
-| 間 | 缘 → 通 → 会 → 系 |
-| 事 | 兆 → 趋 → 变 → 史 |
+| 模 (物-间) | [`Monism.lean`](../../formal/SSBX/Foundation/Core/Monism.lean) 之 ConstructionId 阶段 / [`MetaInterp.lean`](../../formal/SSBX/Foundation/Wen/MetaInterp.lean) |
+| 理 (動-间) | [`Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) / [`BaguaAlgebra.lean`](../../formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean) 的算子代数 |
+| 证明 (間-间) | 所有 `theorem` 命题 + Lean 的 proof term 系统 |
 
-## 4.2 列邻接（同 Zheng，相邻 Ben）
+## 5.4 事 列：文 / 价值 / 真理
 
-每列之 4 命构成「一个 phase 在 4 substrate 之并置」:
+**主题**：enacted / final —— commit 到 ledger 的永久产物。
 
-| 列 | 三本 + 事 在此 phase |
+| 本 | 事 列 | 含义 |
+|---|---|---|
+| 物 | **文** | 实体在事件中被永久记录 |
+| 動 | **价值** | 过程在事件中被永久评判 |
+| 間 | **真理** | 关系在事件中被永久立证 |
+
+### 横向共性
+
+事 列的三格都是**最终 commit**：
+- 都是"被定下来"的产物
+- 都跨越特定时刻而 persist
+- 都对应 [`ClaimId`](../../formal/SSBX/Truth/Basic.lean) 系统的某个面向
+
+### 形式上
+
+这一列对应到系统的"持久化"机制：
+- 文 → [`Roster.lean`](../../formal/SSBX/Roster.lean) 的 GenName / RecName / PendingName 三类持久符号
+- 价值 → 价值评价 claims 在 [`Truth/Basic.lean`](../../formal/SSBX/Truth/Basic.lean) 的部分
+- 真理 → `Truth.SemanticAdequacy` + `every_registered_claim_has_semantics` 定理
+
+事 列总和一定程度上**= ClaimId 集合**——这是为什么 `Truth.ClaimLedger` 叫 "ledger"。
+
+---
+
+# 第六部分：12 格之间的关系
+
+## 6.1 行邻接（同 本 相邻阶段）
+
+每行的 4 格构成一条**单调升级链**：
+
+| 本 | 升级链 | 关键算子 |
+|---|---|---|
+| 物 | 物 →(注意算子)→ 注意 →(建模算子)→ 模 →(文字化算子)→ 文 | naming, modeling, inscription |
+| 動 | 生 →(感知算子)→ 心 →(归纳算子)→ 理 →(评价算子)→ 价值 | perception, induction, valuation |
+| 間 | 人 →(互审算子)→ 审校 →(证明算子)→ 证明 →(立真算子)→ 真理 | audit, formalize, validate |
+
+**性质**：每条链上每对相邻格之间存在**升降算子对**，大致 left-adjoint / right-adjoint 关系（升级保信息，降级损失结构）。
+
+## 6.2 列邻接（同 阶段 相邻 本）
+
+每列的 3 格在同一阶段下并存，**三个 本 互相牵连**：
+
+```
+差 列：    物 ─┬─ 生 ─┬─ 人
+              │       │
+              ↑承载   ↑参与
+              │       │
+              └───間构成───┘
+
+识 列：    注意 ─┬─ 心 ─┬─ 审校
+                │       │
+                注意一般针对物
+                心一般感受动
+                审校一般针对关系
+                但三者可以指同一对象 (物有动有间)
+```
+
+**性质**：同一对象（如一个人际事件）可以同时被三本捕捉——比如某人际冲突 = 人（间-差）+ 心（动-识）+ 审校（间-识）。
+
+## 6.3 主对角线：物 → 心 → 证明 → ?
+
+主对角线 (差,差) → (识,识) → (间,间) → (事,事) 在 3×4 网格上不是闭合的（行数 ≠ 列数），但取最对角的 3 格：
+
+| 坐标 | 名 | 主义 |
+|---|---|---|
+| (物, 差) | **物** | 实体之最具实体性 |
+| (動, 识) | **心** | 过程之最被觉察 |
+| (間, 间) | **证明** | 关系之最被结构化 |
+
+这是**每个本的"主义之处"** —— 物 在差时最 物，動 在识时最 動（"動 之被识"是 動 的核心 — 没被识的 動 几乎不算 動），間 在间时最 間（"關係之关系"是 間 之 essence）。
+
+## 6.4 反对角线：文 → 理 → 人
+
+反对角 (物,事) → (動,间) → (間,差) 的三格：
+
+| 坐标 | 名 | 反义读 |
+|---|---|---|
+| (物, 事) | **文** | 实体被永久记录到事件层 |
+| (動, 间) | **理** | 过程被结构化到形式层 |
+| (間, 差) | **人** | 关系下降到最具体的"人际" |
+
+这是 **"本之溢出"** —— 每个本被推到非自身的最远阶段。物 被推到 事（最远离物的"活"层）、動 被推到 间（最远离動的"静"层）、間 被推到 差（最远离間的"原始"层）。
+
+## 6.5 cuo / 对待：本-阶段全反
+
+如果定义 cuo 类型对待：
+- 本 取反: 物 ↔ 間（或 物 ↔ 動 — 二选一）
+- 阶段 取反: 差 ↔ 事，识 ↔ 间
+
+最显著的对待对：
+
+| 对 | 名对 | 关系 |
+|---|---|---|
+| (物, 差) ↔ (間, 事) | **物 ↔ 真理** | 实体之 raw vs 关系之 终极 |
+| (動, 差) ↔ (間, 事) | **生 ↔ 真理** | 萌动 vs 永真 |
+| (物, 事) ↔ (間, 差) | **文 ↔ 人** | 死文 vs 活人 |
+| (動, 识) ↔ (間, 间) | **心 ↔ 证明** | 主观感受 vs 客观证立 |
+
+最后一对 **心 ↔ 证明** 是哲学传统里最长寿的对待——主观 vs 客观、内在 vs 外在、phenomenology vs formalism。
+
+## 6.6 跨网格 cross-references
+
+同一字根可同时出现在多个格：
+
+### 案例：「真」字
+- (間, 事) = **真理**——主位
+- 但 真 也是 [`CoreAtom`](../../formal/SSBX/Foundation/Core/MonadRoot.lean) 之一，可派生 实 / 伪 等
+- 在 文 格 里 真 也作为登记字之一（"真"作为名字出现，不是作为 cell 名）
+
+### 案例：「间」字
+- 阶段名 = 第三阶段（间 stage）
+- 本名 = 第三本（間 root）
+- 两个字相同——是有意的：間 在 间 阶段达到自我表达 (間, 间) = **证明**
+
+### 案例：「事」字
+- 阶段名 = 第四阶段（事 stage）
+- 但目前 没有名为「事」的格——因为 (X, 事) 已是 文 / 价值 / 真理
+- 「事」可能是未登记的 conceptual anchor（[layer-character-map.md §F](layer-character-map.md) 有讨论）
+
+---
+
+# 第七部分：与其它系统的接合
+
+## 7.1 与生成线 (R-line)
+
+| 12 格 | R-line 锚 |
 |---|---|
-| 幾 (微) | 物之动, 動之萌, 間之缘, 事之兆 |
-| 勢 (进) | 物之行, 動之长, 間之通, 事之趋 |
-| 機 (转) | 物之化, 動之发, 間之会, 事之变 |
-| 時 (久) | 物之流, 動之续, 間之系, 事之史 |
+| 物 (物-差) | R₀–R₈ 任一层的元素都"是物" |
+| 注意 (物-识) | M3 [AtomName](../../formal/SSBX/Roster.lean) lookup |
+| 模 (物-间) | [`Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) / [`BaguaAlgebra.lean`](../../formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean) 的代数结构 |
+| 文 (物-事) | 原始 [`Roster`](../../formal/SSBX/Roster.lean) 全体 + 文档 |
+| 生 (動-差) | [`Sheng.step`](../../formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean) 算子 |
+| 心 (動-识) | observable / 状态 trace |
+| 理 (動-间) | R₃ 横向算子（dong/hua/bian/cuo/zong）+ R₈ 时态算子（V₄ Shi cuo / 印 / 投）|
+| 价值 (動-事) | 评价 claims，未独立形式化 |
+| 人 (間-差) | edges between AtomNames（DirectEdge）|
+| 审校 (間-识) | [`MissingGlyphs`](../../formal/SSBX/Foundation/Core/MissingGlyphs.lean) 类型校验 |
+| 证明 (間-间) | Lean theorem / proof term |
+| 真理 (間-事) | [`Truth.ClaimLedger`](../../formal/SSBX/Truth/ClaimLedger.lean) ⊨ |
 
-## 4.3 对角线 — 自我对应
+## 7.2 与名册线 (M-line)
 
-Ben 与 Zheng 之间无 canonical bijection — 都是 4 元 set 但语义异质 (substrate vs phase)。
+整个名册线 (M0 → M4) **就是 识 列在四阶段进一步细分**——M-line 的 5 层是 识 阶段内部的层级（root → face → core → atom → formal）。
 
-「自我相应」对角:
-- (物, 幾) = 「动」: 物 substrate 在 微 phase = "物之初起" = 物自我之 micro 表达
-- (動, 勢) = 「长」: 動 substrate 在 进 phase = "持续动量" = 動自我之 macro 表达
-- (間, 機) = 「会」: 間 substrate 在 转 phase = "枢纽连接" = 間自我之 critical point
-- (事, 時) = 「史」: 事 substrate 在 久 phase = "永久记录" = 事自我之 finalization
+把名册线放进 12 格里，它**位于 注意 / 心 / 审校 三格的合集**——再加 形式化 后产物（formal/construction/claim）属于 模 / 理 / 证明 三格。
 
-这 4 cells 是「每本之 essence phase」 — substrate 在自身最 expressive phase 上。
+## 7.3 与内容线
 
-## 4.4 cuo / zong on Mian (in Lean)
+内容线 = 三本 → 三显 → 三征。三本 已经是 12 格的行轴；三显 / 三征 是**三本进入 间 列后的细分**：
+
+| 本 | 三显 (间-列细分) | 三征 (间-列再细分) |
+|---|---|---|
+| 物 | 位 (position) | 幾 (contingency) |
+| 動 | 場 (field) | 勢 (tendency) |
+| 間 | 際 (interface) | 機 (occasion) |
+
+所以 內容线 主要工作在 间 列 (模/理/证明) 内部展开。
+
+## 7.4 与本体读法
+
+本体读法 = 差 / 识 / 间 / 事 四阶段 —— **就是 12 格的列轴**。本体读法不是一条独立的线，而是 12 格的横轴本身。
+
+---
+
+# 第八部分：Code refactor 路径
+
+## 8.1 当前状态
+
+[`MonadRoot.lean:20-23`](../../formal/SSBX/Foundation/Core/MonadRoot.lean) 当前定义：
 
 ```lean
--- BaguaAlgebra.lean 之 Trigram 算子 lift to Ben/Zheng:
--- cuo: 全反 6 yao on hex; on Trigram: ⟨t.y1.neg, t.y2.neg, t.y3.neg⟩
--- 在 Ben/Zheng 上: cuo 保 isZongFixed → cuo on Mian = 4-pair Ben swap × 4-pair Zheng swap
+inductive Face where
+  | «文面» | «物面» | «生面» | «理面» | «心面» | «人面»
+  | «模面» | «审校面» | «价值面» | «证明面» | «注意面» | «真理面»
 ```
 
-由 BenZheng.lean `cuo_preserves_isZongFixed`, cuo 保 Ben 集合且保 Zheng 集合, 同时在每 set 内部 swap (本之 cuo: 物↔事 / 動↔間 ; 征之 cuo: 幾↔機 / 勢↔時)。
+这是 12 个枚举构造子，**没有内部结构**——12 是个 magic number。
 
-类似 zong / cuoZong 在 Mian 上之 V₄ 作用 — 详 [`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) §4 Trigram-level invariants。
+## 8.2 建议重构
+
+```lean
+/-- 三本：内容线 root，物/動/間 -/
+inductive SanBen where
+  | «物» | «動» | «間»
+  deriving DecidableEq, Repr, BEq
+
+/-- 四阶段：本体读法，差/识/间/事 -/
+inductive SiJieduan where
+  | «差» | «识» | «间» | «事»
+  deriving DecidableEq, Repr, BEq
+
+/-- 12 格：三本 × 四阶段。"面" 这个集合名作为 abbrev 保留，
+    但每格的 label 用其原本的好名字，不带"面"后缀。 -/
+abbrev Mian : Type := SanBen × SiJieduan
+
+namespace Mian
+
+/-- 12 格各自的标准名（不带"面"）。 -/
+def label : Mian → String
+  | (.«物», .«差») => "物"
+  | (.«物», .«识») => "注意"
+  | (.«物», .«间») => "模"
+  | (.«物», .«事») => "文"
+  | (.«動», .«差») => "生"
+  | (.«動», .«识») => "心"
+  | (.«動», .«间») => "理"
+  | (.«動», .«事») => "价值"
+  | (.«間», .«差») => "人"
+  | (.«間», .«识») => "审校"
+  | (.«間», .«间») => "证明"
+  | (.«間», .«事») => "真理"
+
+end Mian
+
+/-- Cardinality 是可证的，不是设计常数。 -/
+theorem mian_cardinality : (SanBen.all ×ˢ SiJieduan.all).length = 12 := by
+  native_decide
+```
+
+## 8.3 迁移成本
+
+- **Face inductive 改写**：1 处类型定义
+- **Face.label 改写**：12 处 label
+- **allFaces / all_faces_complete**：保持不变（用 `(SanBen.all ×ˢ SiJieduan.all)`）
+- **atomPrimaryFace**：~333 处需要从单 face 改为 (本, 阶段) 双坐标——**这是真正的成本**
+- **atomExtraFaces**：约 24 处类似改造
+
+总共约 369 处机械改动 + 333 处人类决策审视。建议**分两阶段**：
+
+### 阶段 1（自动可迁移）
+
+把现有的 12 个 face 名直接映射到 12 格坐标：
+```
+«文面» → (.«物», .«事»)
+«物面» → (.«物», .«差»)
+«生面» → (.«動», .«差»)
+... etc
+```
+
+这一步纯机械替换，编译还能通过。
+
+### 阶段 2（人类审视）
+
+逐个看 ~333 字，判断**它是否还属于原坐标**——比如发现某字归 `物面` 但其实更适合 `(動, 差) = 生`，则改坐标。这是审视，不是机械。
+
+## 8.4 编译影响
+
+`Face` 改成 `abbrev` of `SanBen × SiJieduan` 后，所有 `Face.casesOn` 自动展开到 12 个 product cases——`atomPrimaryFace` 和 `atomFaces` 函数仍是 total pattern match，覆盖性自动检查。
+
+`DirectEdge` 的 `face → core` 边也自动改为 `(本, 阶段) → core`——含义不变，只是实现层多一层 product 投影。
 
 ---
 
-# 第五部分：与 R₆ 4-quadrant 之 lift / project
+# 第九部分：开放问题
 
-## 5.1 R₄ → R₆ chong lift
+1. **「事」字本身**：四阶段名"事"目前是 conceptual anchor，未登记 [`AtomName`](../../formal/SSBX/Roster.lean)。是否应该 register？
 
-R₄ Mian = (本_inner, 征_inner) | (本_outer, 征_outer)?。其实不是这样: R₆ Hexagram = inner_trigram × outer_trigram = 8 × 8 = 64. 4 quadrant on R₆ = (inner_isZongFixed, outer_isZongFixed) ∈ Bool²:
+2. **「缘」之归位**：[layer-character-map.md §G](layer-character-map.md) 讨论的"缘"目前不属任何已 register 层。在 12 格里它最像 (間, 差) — 但 (間, 差) 已经是「人」。是否将 缘 作为 (間, 差) 的 alias？还是需要新增一个 (間, ?) 阶段？
 
-```
-本本: inner ∈ Ben, outer ∈ Ben      → 4 × 4 = 16 hex
-本征: inner ∈ Ben, outer ∈ Zheng    → 4 × 4 = 16 hex
-征本: inner ∈ Zheng, outer ∈ Ben    → 4 × 4 = 16 hex
-征征: inner ∈ Zheng, outer ∈ Zheng  → 4 × 4 = 16 hex
-total: 64 ✓
-```
+3. **三显 / 三征 与 12 格的精确对应**：上文 §7.3 把它们都放在 间 列，但每本 在 间 列只占 1 格——三显 / 三征 各 3 项怎么塞进 1 格？建议是：三显 = (本, 间) 的内部展开，三征 = (本, 间) 进一步细分。需要更精确的形式接合。
 
-**R₄ Mian 之 16 命** ⊂ **本本 quadrant** of R₆ ? — 不是。R₄ Mian 有 (Ben, Zheng) 二元 mixing；R₆ 之 4 quadrant 是 (innerType, outerType) 之 4 组合。两者维度不同：
+4. **价值 与 真理 的差异**：(動, 事) = 价值 与 (間, 事) = 真理 都是"事"列。前者是过程的最终评判，后者是关系的最终立证。但 utility function 与 model satisfaction 在 deontic logic 里是一回事——价值/真理这条边可能比看起来更模糊。
 
-| Layer | 维度 | size |
-|---|---|---|
-| R₄ Mian | (Ben, Zheng) | 16 |
-| R₆ Hex 4-quadrant | (inner_isBen, outer_isBen) | 4 |
-| R₆ 本征 quadrant | (Ben_inner, Zheng_outer) | 16 |
+5. **是否只有 4 个阶段**：差 / 识 / 间 / 事 是当前选择。是否还有更早或更晚的阶段？比如"无"（pre-差）或"忘"（post-事）？目前看不到必需，但保留作为开放问题。
 
-**所以 R₆ 本征 quadrant ≅ R₄ Mian** 之 cardinality 巧合, but inner/outer roles 不同。
-
-## 5.2 R₆ 4 quadrant 是 R₄ Mian × Mian 之 isMixed projection
-
-更精确：R₆ 本征 quadrant = 16 hex with (inner ∈ Ben, outer ∈ Zheng) = 4 × 4 = 16, same as R₄ Mian cardinality but two different (Ben, Zheng) selections (inner + outer). 详 [64-hexagram-grid.md §3 本征 16](64-hexagram-grid.md)。
-
-## 5.3 R₈ 上 之 R₄ × Shi V₄ projection
-
-R₈ Cell256 = Hexagram × Shi = 64 × 4 = 256. 投影到 (Mian × Shi):
-- 取 Hex inner_trigram → Ben (if zongFixed) or Zheng (if mobile)
-- Hex outer_trigram → Ben/Zheng 同上
-- 给一个 (innerType, outerType) ∈ Mian × Mian inflation
-
-不直接是 R₄ × Shi V₄ = 16 × 4 = 64 — 因为 R₄ Mian 是单 trigram-pair 之 (Ben, Zheng) 不对称组合, 不是 hex 之 (inner, outer) 选择。
+6. **本可否扩展到 4 或 5**：三本是当前选择。古文里有 "天 / 地 / 人" 三才（也是 3）、"金 / 木 / 水 / 火 / 土" 五行（5）等多种 base 划分。如果系统某天发现 物/動/間 不够，可能要扩。
 
 ---
 
-# 第六部分：跨语言对应 (4 本 × 4 征)
+# 附录：与其它文件的关系
 
-## 6.1 古文（最简一字）
-
-|  | 幾 | 勢 | 機 | 時 |
-|---|---|---|---|---|
-| 物 | 动 | 行 | 化 | 流 |
-| 動 | 萌 | 长 | 发 | 续 |
-| 間 | 缘 | 通 | 会 | 系 |
-| 事 | 兆 | 趋 | 变 | 史 |
-
-## 6.2 当代汉语（标准双字）
-
-|  | 微细 | 进展 | 转折 | 持久 |
-|---|---|---|---|---|
-| 实体 | 萌动 | 进行 | 化转 | 流变 |
-| 过程 | 萌发 | 增长 | 发起 | 持续 |
-| 关系 | 因缘 | 联通 | 会合 | 维系 |
-| 事件 | 征兆 | 趋势 | 变化 | 历史 |
-
-## 6.3 形式逻辑 / category theory
-
-|  | initial | continuing | critical-point | persistent |
-|---|---|---|---|---|
-| substantive | nascent value | accumulating value | rewriting value | persisting value |
-| processual | budding step | extending derivation | branching reduction | invariant trajectory |
-| relational | new edge | propagating edge | critical morphism | preserved diagram |
-| event | triggered event | progressing event | branching event | committed event |
-
-详 [`表一_六征本表.md`](../../docs/表一_六征本表.md)。
+| 文件 | 关系 |
+|---|---|
+| [root-layer-map.md](root-layer-map.md) | 本文是 §0 本体读法 + §4 内容线的细化展开 |
+| [layer-character-map.md](layer-character-map.md) | 本文是 §三轴并存（§A-§I）的体系化整理 |
+| [layer-axis-graph.md](layer-axis-graph.md) | 本文是 §6 三轴汇聚的 12 格 instance |
+| [yi-RO-hierarchy.md](yi-RO-hierarchy.md) | v2.1 R₀..R₈ doctrine — 把 R₄ Mian = Ben × Zheng = (Z/2)⁴ 显式纳入 R-spine |
+| [`JianOntology.lean`](../../formal/SSBX/Foundation/Jian/JianOntology.lean) | 三本（物/動/間）的 ground truth |
+| [`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) | R₄ Mian = Ben × Zheng 的 ground truth — 是本文 12 格在 R-line 上的 next-up enrichment |
+| [`MonadRoot.lean`](../../formal/SSBX/Foundation/Core/MonadRoot.lean) | 当前 12 face 的 ground truth (待重构为 SanBen × SiJieduan) |
+| [`Roster.lean`](../../formal/SSBX/Roster.lean) | ~333 atomName，每个需要在 12 格中找位置 |
+| [atom-naming.md](../../formal/SSBX/notes/atom-naming.md) | 工作稿中的 atom 归类，自发地用了 12 格的近似结构 |
 
 ---
 
-# 第七部分：Code refactor 路径
+## 形式锚
 
-## 7.1 当前状态 (post-2026-05-10)
-
-- BenZheng.lean: `Ben`, `Zheng`, `Mian = Ben × Zheng` 已 first-class 落地
-- `Mian.label` 16 entries, `Mian.all_count = 16` by native_decide
-- 旧 `MonadRoot.lean Face inductive (12 ctors)` 已删除 (P5b — Face 完全删除)
-- 旧 `JianOntology.lean OnticRoot/Manifestation/DynamicMark` (3-元 placeholder) 已 deprecated, 4 本 / 4 征 是 primary
-
-## 7.2 仍在使用的 12 / 16 grid
-
-- `表一_六征本表.md`: per-cell 16 命表 (canonical 4本×4征)
-- 旧 12-grid (3 本 × 4 阶段) 概念在 `layer-character-map.md` / `root-layer-map.md` 中保留作 conceptual companion, 但 Lean 锚是 4本×4征 / 16 Mian
-
-## 7.3 命名约定
-
-| 概念 | Lean type | 说明 |
-|---|---|---|
-| 本 (substrate) | `Ben` (4 ctors) | 物 / 動 / 間 / 事 — zong-fixed trigrams |
-| 征 (mark) | `Zheng` (4 ctors) | 幾 / 勢 / 機 / 時 — zong-mobile trigrams |
-| 命 (cell) | `Mian = Ben × Zheng` | 16 命之载体 (R₄) |
-| 阶段 (legacy) | (no Lean type, conceptual) | 差 / 识 / 间 / 事 — 在 layer-character-map.md |
-| Shi (V₄ 时态) | `Shi` (4 ctors) | 道 / 已 / 今 / 未 — V₄ Klein at R₈ |
-
-注意：「事」字在 Ben (= 坤 substrate) 与 阶段 (= enacted) 中**相同字, 不同 type** — 在 Lean 不混淆 (Ben.shi vs SiJieduan.shi if defined)。docs 中需明确区分。
-
-## 7.4 迁移建议
-
-旧 atom 字典从 12-face 迁到 4本×4征+(R₄ Mian):
-```
-旧: «文面» / «物面» / «生面» / ... / «真理面»  (12 ctors, 单一 face axis)
-新: (Ben.X, Zheng.Y) ∈ Mian                  (16 cells, 双 axis)
-```
-
-旧 12-grid 字 (物/注意/模/文/生/心/理/价值/人/审校/证明/真理) 不直接 1-to-1 对应到 16 命 (动/行/化/流/萌/...). 这 12 字 reside in **layer-character-map.md** 作为「内容线 epistemic ascent」, 与 4 本 × 4 征 之 mathematical Mian **正交**。
-
----
-
-# 第八部分：开放问题
-
-1. **legacy 12-grid 与 canonical 16-Mian 之 reconciliation**：12 grid (3 本 × 4 阶段, 字根映射) 与 16 Mian (4 本 × 4 征, R₄ ontology) 是 conceptually different axes — 一个是 epistemic ascent, 一个是 substrate × mark dynamic phase。是否值得维护双 grid？建议保留二者 (12 在 layer-character-map.md, 16 在本文 + BenZheng.lean), 显式标注差异。
-
-2. **「事」字之消歧**：Ben.shi (坤, substrate) vs SiJieduan.shi (enacted, phase). Lean 中通过 namespace 区分; docs 中需明示。
-
-3. **R₄ 之 Z-coord canonical 选**：BenZheng.lean commit 到 (Ben, Zheng). 是否考虑 alternative R₄ axis (e.g., Ben × SiJieduan = 4 × 4)? — 当前不需要; canonical 已 stable。
-
-4. **R₅ Wuyao 与 16-Mian 之 lift**: R₅ = Mian × Bool = 32. R₅ 之 32 cells 之 ontological 内容是什么？详 [r5-wuyao-provisional.md](r5-wuyao-provisional.md)。
-
-5. **Shi V₄ 与 4 阶段 之关系**: §3.3 conceptual 映射不 canonical。是否值得在某层 explicit 形式化阶段-到-Shi 之 mapping？目前看 Shi 与 SiJieduan 是 orthogonal axes, 不必要。
-
----
-
-# 附：与其它 v3 文档之关系
-
-| 文档 | 主题 | 与本文关系 |
-|---|---|---|
-| [yi-RO-hierarchy.md](yi-RO-hierarchy.md) §3.4 | R₄ Mian definitive | parent specification |
-| [yi-calculus-theorem.md](yi-calculus-theorem.md) Theorem A/B/C/D | 4+4 强制 + substrate=∫ + mark=phase | 4 本 / 4 征之 mathematical 根据 |
-| [yi-bagua.md](yi-bagua.md) | Yi+Bagua+R-hier hub | R₄ Mian context navigation |
-| [64-hexagram-grid.md](64-hexagram-grid.md) | R₆ 4-quadrant on hex | downstream R₆: 16 hex / quadrant via 4 本 / 4 征 |
-| [cell256-grid.md](cell256-grid.md) | R₈ 256-格全表 | R₄ × Shi V₄ projection 在 Cell256 中 |
-| [shi-v4.md](shi-v4.md) | V₄ Shi 专文 | §3 区分 SiJieduan vs Shi |
-| [r5-wuyao-provisional.md](r5-wuyao-provisional.md) | R₅ provisional | R₅ = Mian × Bool 是 R₄ 之 lift |
-| [r7-yin-r8-guo.md](r7-yin-r8-guo.md) | R₇/R₈ atomic axes | upstream Cell256 context |
-| [lift-project.md](lift-project.md) | uniform Lift / Project | R₃ → R₄ → R₅ → R₆ chong composite |
-| [ox-notation.md](ox-notation.md) | OX literal | 8-char OX → Cell256 |
-| [layer-character-map.md](layer-character-map.md) | R0–L0 字根 | legacy 12-grid 字根来源 |
-| [root-layer-map.md](root-layer-map.md) §0 | 本体读法 | legacy 4 阶段 (差/识/间/事) anchor |
-| [layer-axis-graph.md](layer-axis-graph.md) | 三轴汇聚图 | conceptual companion |
-| [`表一_六征本表.md`](../../docs/表一_六征本表.md) | 16 命之 per-cell 表 | full label expansion |
-| [`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) | Ben/Zheng/Mian | ground truth Lean |
+- [`formal/SSBX/Foundation/Jian/JianOntology.lean`](../../formal/SSBX/Foundation/Jian/JianOntology.lean) — `JianRoot` (3 ctors: 物/動/間)
+- [`formal/SSBX/Foundation/Core/MonadRoot.lean`](../../formal/SSBX/Foundation/Core/MonadRoot.lean) — `Face` 12 inductive (待重构为 SanBen × SiJieduan)
+- [`formal/SSBX/Foundation/Bagua/BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) — R₄ Mian = (Z/2)⁴ next-up enrichment
+- [`formal/SSBX/Foundation/Bagua/Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) — R₈ 闭合层；transition 是"事之发生"的最小可审计形态
+- [`formal/SSBX/Roster.lean`](../../formal/SSBX/Roster.lean) — ~333 AtomName 之 register

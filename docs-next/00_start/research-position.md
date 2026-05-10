@@ -466,16 +466,16 @@ $$\mathcal{S} = \{道, 已, 今, 未\} \cong \text{YinBit} \times \text{GuoBit} 
 - R₈ 上有**双 V₄ tensor**: $V_4^{\text{hex}} \times V_4^{\text{shi}} \cong (\mathbb{Z}/2)^4$, 给 R₈ 上 16 个对称变换。
 - Shi V₄ 之 emergent 性质（R₇ + R₈ 双 axis）正是「时态空间不是单一 cyclic 概念而是 (过去印记 × 未来投影) 二维独立 tensor」之 algebraic 实现。
 
-**Lean status**：✅ Lean 已证 — `Shi` inductive (4 ctors) + `Shi.toYinGuo : Shi → YinBit × GuoBit` 双射 in [`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean)；V₄ involutions `Shi.cuo / .zong / .cuoZong` in [`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) + [`Cell256Stratify.lean`](../../formal/SSBX/Foundation/Bagua/Cell256Stratify.lean) (Theorem J)。
+**Lean status**：✅ Lean 已证 — **Phase C (commit 90c34f0) `Shi := YinBit × GuoBit` abbrev**, 4 时态名作 `@[match_pattern] def` in [`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean)；`Shi.toYinGuo / .ofYinGuo` 现在 collapse to `id`；V₄ involutions `Shi.cuo / .zong / .cuoZong` 仍在 [`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) + [`Cell256Stratify.lean`](../../formal/SSBX/Foundation/Bagua/Cell256Stratify.lean) (Theorem J)。
 
 ```lean
-inductive Shi : Type | dao | ji | jin | wei
+-- Phase C (2026-05-11): inductive → abbrev Bool × Bool
+abbrev Shi : Type := YinBit × GuoBit
 
-def Shi.toYinGuo : Shi → YinBit × GuoBit
-  | .dao => (false, false)  -- (无因, 无果) = V₄ identity = 道
-  | .ji  => (true,  false)  -- (有因, 无果) = past closed
-  | .wei => (false, true)   -- (无因, 有果) = future open
-  | .jin => (true,  true)   -- (有因, 有果) = PT, present
+@[match_pattern] def Shi.dao : Shi := (false, false)  -- V₄ identity = 道
+@[match_pattern] def Shi.ji  : Shi := (true,  false)  -- P (past closed)
+@[match_pattern] def Shi.jin : Shi := (true,  true)   -- PT (present)
+@[match_pattern] def Shi.wei : Shi := (false, true)   -- T (future open)
 ```
 
 **论文题目**：*"Klein four-group structure of temporality: dao as V₄ identity in self-describing closures"*

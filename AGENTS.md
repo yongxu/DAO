@@ -1,17 +1,15 @@
 # Agent Instructions
 
+> 状态：v3 (2026-05-11) — 项目 R₀..R₈ strict (Z/2)ⁿ uniform, V₄ Klein Shi, Cell256, 道 = (qian, dao) = `OX["oooooooo"]`. 旧 Cell192 / Z/3 Shi / 旧 R-编号 已归档至 `史/`，不再被入口索引。
+
 本文件约束所有在本仓库工作的 agents。进入任务前先读本文件，并把这些规则传给后续开启的 subagents。
 
-## Codebase Layout (v3, 2026-05-11)
+## v3 Doctrine and Archive Pointers
 
-- 本体已收口于 **Cell256 / V₄ Klein Shi {道, 已, 今, 未} / strict-uniform R₀..R₈**。
-- 旧 `Foundation/Bagua/Cell192.lean` 已删除；替换为 `Cell128.lean` (R₇) + `Cell256.lean` (R₈)。
-- 新 `Foundation/Hierarchy/`（R₀..R₈ alias files + `LiftProject.lean` + `Operators/{Atomic,V4Outer}.lean`，由 `RHierarchy.lean` umbrella 入口聚合）是 R-阶梯 uniform 基础设施。
-- 新 `Foundation/Notation/OXNotation.lean` 提供 `OX["xxxxxxxx"]` 8-char Cell256 字面量 macro。
-- 闭合 bundle 是 `R8_complete`（在 `Cell256Stratify.lean`），axes 仅依赖 `propext + native_decide`，不增加 project-level axiom。
-- 当前 build：3656 jobs · 0 sorry · 1 axiom (`kleene_recursion_axiom`, cuo-restricted) · 1 opaque (`theOne`) · 1 partial def (`BaguaTuring.run`).
-- 定本 doctrine 文档：`docs-next/00_start/final-theory.md` + `docs-next/10_formal_形式/yi-RO-hierarchy.md`。
-- 三 README 同步：`README.md` (中) / `README.en.md` (英) / `README.formal.md` (Lean 规约)。
+- **Canonical doctrine**: [`docs-next/10_formal_形式/yi-RO-hierarchy.md`](./docs-next/10_formal_形式/yi-RO-hierarchy.md). 任何关于 R-hierarchy / V₄ Shi / Cell256 / 道 anchor 之结构主张必须以此为准, 不要援引旧 v1 / v2 文件。
+- **Pre-v3 archive**: [`史/`](./史/README.md). 仅当确实需要 v2 (Cell192 / Z/3 Shi / R₁..R₆) 之具体形式时才进入; 否则不读、不引、不更新; **不要把 `史/` 之内容作为新文档之依据**。
+- **Citable historical**: [`史料/`](./史料/) 是 v9–v14 各代手稿之研究档案 (与 `史/` 不同, 仍可援引)。
+- 涉及 Cell-carrier 的代码改动: 必为 `Cell256` (不是 `Cell192`); 若发现遗留 `Cell192` 命名, 在该次任务范围内一并迁移 (或报告给主线程)。
 
 ## Goal: Elegance
 

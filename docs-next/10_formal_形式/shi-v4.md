@@ -21,19 +21,22 @@
     - 已 = (1, 0) — 过去封闭 (有因, 无果)
     - 未 = (0, 1) — 未来开放 (无因, 有果)
     - 今 = (1, 1) — PT 交汇 (因果俱在) -/
-inductive Shi : Type
-  | dao   -- 道 (eternal / V₄ identity)
-  | ji    -- 已 (past)
-  | jin   -- 今 (present, PT)
-  | wei   -- 未 (future)
-  deriving Repr, DecidableEq, BEq
+abbrev Shi : Type := YinBit × GuoBit       -- Phase C (2026-05-11): abbrev for Bool × Bool
+
+namespace Shi
+
+@[match_pattern] def dao : Shi := (false, false)  -- 道 (eternal / V₄ identity)
+@[match_pattern] def ji  : Shi := (true,  false)  -- 已 (past)
+@[match_pattern] def jin : Shi := (true,  true)   -- 今 (present, PT)
+@[match_pattern] def wei : Shi := (false, true)   -- 未 (future)
 ```
 
-**关键点**：
+**关键点（Phase C 后）**：
 
-- 4 个 ctor，无更多。`Shi` 是有限闭合 inductive。
-- 命名采用拼音缩写 (dao/ji/jin/wei)，避免 Lean 4 lexer 拒绝裸 CJK identifier。
-- `deriving Repr, DecidableEq, BEq` 自动给出 `=`-decidability —— 任意 Shi 命题（等式 / 大小比较）可由 `decide` 闭合。
+- `Shi` 在 Phase C (commit 90c34f0) 已从 `inductive Shi { dao, ji, jin, wei }` 改写为 **`abbrev Shi := Bool × Bool`**。 V₄ 群结构现在 *literally* 是 componentwise XOR。
+- 4 个名字 `dao/ji/jin/wei` 仍存在，但作为 `@[match_pattern] def`s — 既保留了 `match s with | Shi.dao => ...` 既有 pattern 语法，又能让 Shi 直接复用 `Bool × Bool` 的算子。
+- `Shi.toYinGuo / ofYinGuo` 双射收敛为 `id`（abbrev 之后无需 bijection layer）。
+- 任意 Shi 命题（等式 / 大小比较）仍由 `decide` 闭合（Bool × Bool 是 DecidableEq）。
 
 ### 1.2 大小
 
@@ -103,7 +106,7 @@ theorem toYinGuo_ofYinGuo (yg : YinBit × GuoBit) : toYinGuo (ofYinGuo yg) = yg 
 
 (摘自 `Cell256.lean` § 1)
 
-每个由 `cases s <;> rfl` 闭合 — 因为定义本身就是 ctor-by-ctor 直接对应。
+**Phase C (2026-05-11) 后**：因为 `Shi := YinBit × GuoBit` abbrev，`toYinGuo / ofYinGuo` 退化为 `id` —— 等价于 `rfl` 即闭合。但 4 个 `@[match_pattern] def` (dao/ji/jin/wei) 仍可让 `cases s <;> rfl` 或 `rcases s with ⟨y, g⟩; cases y <;> cases g` 形式工作（后者是 abbrev 之后的等价骨架，亦由 reflexivity 立闭合）。
 
 ### 2.3 完整对应表
 
@@ -201,7 +204,7 @@ def cuoZong : Shi → Shi
 
 ## 第四部分：V₄ 结构定理 (Structure Theorems)
 
-以下定理全部来自 [`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) § 1，`by cases s <;> rfl` 一行闭合 — 因为 4 ctor + reflexivity 即足。
+以下定理全部来自 [`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) § 1，`by cases s <;> rfl` 一行闭合 — 因为 4 ctor + reflexivity 即足。（**Phase C 后**：因 Shi 是 abbrev `Bool × Bool`，等价 `by rcases s with ⟨y, g⟩; cases y <;> cases g <;> rfl`；前者在 `@[match_pattern]` 加持下仍工作。）
 
 ### 4.1 三个 involution 律
 
@@ -553,11 +556,15 @@ namespace SSBX.Foundation.Bagua.Cell256
 /-- R6 atom: 果 (guǒ) — future-projection bit. Provisional naming. -/
 abbrev GuoBit : Type := Bool
 
-inductive Shi : Type
-  | dao | ji | jin | wei
-  deriving Repr, DecidableEq, BEq
+-- Phase C (2026-05-11, commit 90c34f0): inductive → abbrev Bool × Bool
+abbrev Shi : Type := YinBit × GuoBit
 
 namespace Shi
+
+@[match_pattern] def dao : Shi := (false, false)
+@[match_pattern] def ji  : Shi := (true,  false)
+@[match_pattern] def jin : Shi := (true,  true)
+@[match_pattern] def wei : Shi := (false, true)
 
 def all : List Shi := [dao, ji, jin, wei]
 theorem all_length : all.length = 4 := rfl

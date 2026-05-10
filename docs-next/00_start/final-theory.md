@@ -137,7 +137,7 @@ end SSBX.Foundation.Hierarchy.R8
 | 模块 | 文件 | 角色 |
 |---|---|---|
 | R₇ Cell128 | [`Cell128.lean`](../../formal/SSBX/Foundation/Bagua/Cell128.lean) | `Cell128 = Hexagram × YinBit`; canonical `YinBit := Bool`; `yin` toggle |
-| R₈ Cell256 | [`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) | `Cell256 = Hexagram × Shi`; `Shi` inductive (4 ctors); `Shi.toYinGuo` 双射; `tou` toggle; `cayley` Cayley action |
+| R₈ Cell256 | [`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) | `Cell256 = Hexagram × Shi`; **Phase C (2026-05-11) `Shi := YinBit × GuoBit` abbrev**, 4 ctor 下放为 `@[match_pattern] def`; `toYinGuo / ofYinGuo` ≡ `id`; `tou` toggle; `cayley` Cayley action |
 | R₀..R₈ closure bundle | [`Cell256Stratify.lean`](../../formal/SSBX/Foundation/Bagua/Cell256Stratify.lean) | `R8_complete` 总定理；axiom audit = {`propext`, `native_decide`} |
 | Lift / Project (8 layers) | [`LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) | `Lift_n : R_n → Bool → R_{n+1}`, `Project_n : R_{n+1} → R_n`, `proj_lift_id_Rn` retract |
 | Atomic XOR ops | [`Operators/Atomic.lean`](../../formal/SSBX/Foundation/Hierarchy/Operators/Atomic.lean) | re-export of XOR-subgroup atoms (反/dong/hua/bian/flip*/印/投) |

@@ -178,9 +178,12 @@ open SSBX.Foundation.Bagua.Cell128 (YinBit)
     with 果 to form Shi V₄. -/
 abbrev GuoBit : Type := Bool
 
-inductive Shi : Type
-  | dao | ji | jin | wei
-  deriving Repr, DecidableEq, BEq
+-- Phase C (2026-05-11): Shi 改为 abbrev for Bool × Bool, 4 个 ctor 下放为 @[match_pattern] def
+abbrev Shi : Type := YinBit × GuoBit
+@[match_pattern] def Shi.dao : Shi := (false, false)
+@[match_pattern] def Shi.ji  : Shi := (true,  false)
+@[match_pattern] def Shi.jin : Shi := (true,  true)
+@[match_pattern] def Shi.wei : Shi := (false, true)
 
 -- ... Shi V₄ 定义 (详 shi-v4.md)
 
@@ -698,8 +701,13 @@ end SSBX.Foundation.Bagua.Cell128
 namespace SSBX.Foundation.Bagua.Cell256
 
 -- § 1 Shi V₄ + (因, 果) tensor (详见 shi-v4.md)
+-- Phase C (2026-05-11): Shi 为 abbrev Bool × Bool
 abbrev GuoBit : Type := Bool
-inductive Shi : Type | dao | ji | jin | wei
+abbrev Shi : Type := YinBit × GuoBit
+@[match_pattern] def Shi.dao : Shi := (false, false)
+@[match_pattern] def Shi.ji  : Shi := (true,  false)
+@[match_pattern] def Shi.jin : Shi := (true,  true)
+@[match_pattern] def Shi.wei : Shi := (false, true)
 -- ... cuo / zong / cuoZong / toYinGuo / ofYinGuo / yin / tou
 -- (see shi-v4.md for full details)
 

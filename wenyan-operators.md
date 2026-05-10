@@ -1,5 +1,7 @@
 # 文言文算子集 — 结构与变形的字
 
+> 状态：v3 (2026-05-11) — 算子表本身保持 v2 catalogue 内容不变（371 OperatorId）。**底层 cell carrier 已从 v2 之 `Cell192` (64 卦 × 3 时态 Z/3) 迁到 v3 之 `Cell256` (64 卦 × 4 时态 V₄ Klein)**, 故所有 operator-cell pair 索引现按 371 × 256 = 95,776 计 (Lean 锚: `formal/SSBX/Text/OperatorCellMap.lean`, 已迁完); `Cell192` 类型本身已删除。本文档下文中残留之 `Cell192` / `192 格` 字样仅为历史 narrative 表述, 不应作为当前 carrier 命名之引用; 实际 Lean side 全是 `Cell256`。**v3 canonical doctrine**: [`docs-next/10_formal_形式/yi-RO-hierarchy.md`](./docs-next/10_formal_形式/yi-RO-hierarchy.md)。
+
 *目的*：从文言文中识别出**本身即作算子用的字** — 不是描述对象的名词，而是作用于结构、产生新结构的操作。这些字在经典中早已构成一套有内在算法结构的语言；任务是把它分类、签名化、暴露其代数。
 
 每条记录格式：

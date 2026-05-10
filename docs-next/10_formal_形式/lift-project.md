@@ -1,368 +1,272 @@
-# Lift / Project — R₀..R₈ uniform 升降函子
+# Lift / Project — 跨层 R₀ ↔ R₈ uniform API + retract lemmas
 
-> 状态：v3 定本 (2026-05-11)
-> 父文档：[yi-RO-hierarchy.md](yi-RO-hierarchy.md) (R₀..R₈ strict-uniform doctrine)
-> 配套：[ox-notation.md](ox-notation.md) · [shi-v4.md](shi-v4.md) · [r5-wuyao-provisional.md](r5-wuyao-provisional.md) · [r7-yin-r8-guo.md](r7-yin-r8-guo.md)
-> 形式锚：[`Foundation/Hierarchy/LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean)
-
----
-
-## 第一部分：核心思想 (Core Idea)
-
-R-hierarchy 是 strict-uniform (Z/2)ⁿ —— 每层 R_n 之大小恰为 2ⁿ，每升一层加 1 binary axis。Lift / Project 函子把这「+1 bit / -1 bit」的层间关系**显式形式化**为 8 对 (Lift, Project) 函数 + 8 条 `proj ∘ lift = id` 引理。
-
-```
-R₀ ──liftR0toR1──→ R₁ ──liftR1toR2──→ R₂ ──liftR2toR3──→ R₃ ──liftR3toR4──→ R₄
- ↑                  ↑                  ↑                  ↑                  ↑
- projR1toR0       projR2toR1         projR3toR2         projR4toR3         projR5toR4
-                                                                            │
-                                                                            ▼
-                                                                            R₅
-                                                                            │
-                                                                          liftR5toR6 / projR6toR5
-                                                                            │
-                                                                            ▼
-R₅ ──liftR5toR6──→ R₆ ──liftR6toR7──→ R₇ ──liftR7toR8──→ R₈
-```
-
-每一对的核心定理 ([`LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) § 1–9)：
-
-```
-proj_lift_id_Rn :  ∀ rₙ extraBit, projR(n+1)toRn (liftRntoR(n+1) rₙ extraBit) = rₙ
-```
-
-即 **proj ∘ lift = id**, 是 retract（faithful injection R_n ↪ R_{n+1}）。
+> 状态：v3 canonical (2026-05-11) — R₀..R₈ strict (Z/2)ⁿ uniform 之**升降函子对** 8 套：每对 (Rₙ, Rₙ₊₁) 都有 `liftRntoR{n+1}` (+1 bit) 与 `projR{n+1}toRn` (-1 bit)，并伴 `proj_lift_id_R{n}` retract lemma 给出 faithful Rₙ ↪ Rₙ₊₁。
+> 角色：本文是 R-层之"梯级 API"专文。R-hierarchy doctrine 见 [`yi-RO-hierarchy.md`](yi-RO-hierarchy.md) § 3；R₈ 闭合层之 algebraic spine 见 [`cell256-algebra.md`](cell256-algebra.md)；Cell256 之 256 元清单见 [`cell256-grid.md`](cell256-grid.md)。
+> 形式锚：[`LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) 全文 (8 pair, 8 retract lemmas, `liftProject_summary` bundle)；[`RHierarchy.lean`](../../formal/SSBX/Foundation/Hierarchy/RHierarchy.lean) umbrella import。
 
 ---
 
-## 第二部分：R-layer abbrevations
+## 0. 一句话总纲
+
+> **每加 1 bit 上一层，每丢 1 bit 下一层；下行后再上行 = 原数据**（faithful injection）。R-hierarchy 是 8 个这样的 lift/project pair 顺次串成。`chong` (重) 不是 +3 bit jump，而是 **R₃ → R₄ → R₅ → R₆** 之 3-step composite。
+
+---
+
+## 1. R-layer abbreviations
 
 [`LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) § 0：
 
 ```lean
-namespace SSBX.Foundation.Hierarchy.LiftProject
-
-/-- R₀ = 太极 = Unit. -/
-abbrev R0 : Type := Unit
-/-- R₁ = 两仪 = Yao. -/
-abbrev R1 : Type := Yao
-/-- R₂ = 四象 = SiXiang. -/
-abbrev R2 : Type := SiXiang
-/-- R₃ = 八卦 = Trigram. -/
-abbrev R3 : Type := Trigram
-/-- R₄ = 16-命 = Mian = Ben × Zheng. -/
-abbrev R4 : Type := Mian
-/-- R₅ = 32-五爻 = Wuyao = Mian × Bool. -/
-abbrev R5 : Type := Wuyao
-/-- R₆ = 六十四卦 = Hexagram. -/
-abbrev R6 : Type := Hexagram
-/-- R₇ = 128-格 = Cell128 = Hexagram × YinBit. -/
-abbrev R7 : Type := Cell128
-/-- R₈ = 256-格 = Cell256 = Hexagram × Shi. -/
-abbrev R8 : Type := Cell256
+abbrev R0 : Type := Unit                    -- 太极 (1)
+abbrev R1 : Type := Yao                     -- 两仪 (2 = (Z/2)¹)
+abbrev R2 : Type := SiXiang                 -- 四象 (4 = (Z/2)²)
+abbrev R3 : Type := Trigram                 -- 八卦 (8 = (Z/2)³)
+abbrev R4 : Type := Mian                    -- 16-命 = Ben × Zheng (16 = (Z/2)⁴)
+abbrev R5 : Type := Wuyao                   -- 32-五爻 = Mian × Bool (32 = (Z/2)⁵)
+abbrev R6 : Type := Hexagram                -- 六十四卦 (64 = (Z/2)⁶)
+abbrev R7 : Type := Cell128                 -- 128-格 = Hexagram × YinBit (128 = (Z/2)⁷)
+abbrev R8 : Type := Cell256                 -- 256-格 = Hexagram × Shi (256 = (Z/2)⁸)
 ```
 
-每层基数：
-
-| Layer | Type | size |
-|---|---|---|
-| R₀ | `Unit` | 1 |
-| R₁ | `Yao` | 2 |
-| R₂ | `SiXiang` | 4 |
-| R₃ | `Trigram` | 8 |
-| R₄ | `Mian = Ben × Zheng` | 16 |
-| R₅ | `Wuyao = Mian × Bool` | 32 |
-| R₆ | `Hexagram` | 64 |
-| R₇ | `Cell128 = Hexagram × YinBit` | 128 |
-| R₈ | `Cell256 = Hexagram × Shi` | 256 |
+每层 size = 2^index。
 
 ---
 
-## 第三部分：8 对 Lift / Project (with retract laws)
+## 2. uniform 之 8 个 lift / project pair
 
-### 3.1 R₀ ↔ R₁
+每对 (Rₙ, Rₙ₊₁) 给出：
 
-[`LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) § 1：
+```
+liftRntoR{n+1} : Rₙ → <new bit type> → Rₙ₊₁    -- 加 1 bit
+projR{n+1}toRn : Rₙ₊₁ → Rₙ                      -- 丢 1 bit
+proj_lift_id_R{n} : ∀ rₙ b, proj (lift rₙ b) = rₙ    -- retract: faithful Rₙ ↪ Rₙ₊₁
+```
+
+| layer pair | new bit | 加在哪 |
+|---|---|---|
+| R₀ ↔ R₁ | Yao | 引入第一个 binary distinction |
+| R₁ ↔ R₂ | Yao | y₂ |
+| R₂ ↔ R₃ | Yao | y₃ |
+| R₃ ↔ R₄ | Yao | y₄ — split via Ben/Zheng (详 § 4) |
+| R₄ ↔ R₅ | Bool | 五爻 bit (Mian extension) |
+| R₅ ↔ R₆ | Yao | y₆ |
+| R₆ ↔ R₇ | YinBit (= Bool) | 因 axis (R₇ atom) |
+| R₇ ↔ R₈ | GuoBit (= Bool) | 果 axis (R₈ atom) — 与 YinBit 一并封 Shi |
+
+---
+
+## 3. R₀ ↔ R₃ — 简单尾部
+
+### 3.1 R₀ ↔ R₁ (太极 ↔ 两仪)
 
 ```lean
-/-- 太极 ↪ 两仪: lift the Unit root by attaching a Yao. -/
 def liftR0toR1 (_ : R0) (y : Yao) : R1 := y
-
-/-- 两仪 ↠ 太极: forget the Yao. -/
 def projR1toR0 (_ : R1) : R0 := ()
-
-theorem proj_lift_id_R0 (r0 : R0) (y : Yao) :
-    projR1toR0 (liftR0toR1 r0 y) = r0 := rfl
+theorem proj_lift_id_R0 (r0 : R0) (y : Yao) : projR1toR0 (liftR0toR1 r0 y) = r0 := rfl
 ```
 
-最简单一对：从 Unit 升到 Yao 加一 binary axis；project 丢弃 yao。`rfl` 直接闭合（Unit 之唯一 inhabitant）。
+R₀ 是 Unit (1 元)，lift 完全由 Yao 决定；project 总返回 `()`。
 
-### 3.2 R₁ ↔ R₂
-
-[`LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) § 2：
+### 3.2 R₁ ↔ R₂ (爻 ↔ 四象)
 
 ```lean
-/-- 两仪 ↪ 四象: extend a Yao by a 2nd Yao. -/
 def liftR1toR2 (y1 : R1) (y2 : Yao) : R2 := ⟨y1, y2⟩
-
-/-- 四象 ↠ 两仪: forget the 2nd Yao (keep y1). -/
 def projR2toR1 (s : R2) : R1 := s.y1
-
-theorem proj_lift_id_R1 (y1 : R1) (y2 : Yao) :
-    projR2toR1 (liftR1toR2 y1 y2) = y1 := rfl
+theorem proj_lift_id_R1 (y1 : R1) (y2 : Yao) : projR2toR1 (liftR1toR2 y1 y2) = y1 := rfl
 ```
 
-SiXiang 是 record `⟨y1, y2⟩`；retract 取 `.y1`。
+四象是 SiXiang `⟨y1, y2⟩`；project 取 y₁，完全失 y₂。
 
-### 3.3 R₂ ↔ R₃
-
-[`LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) § 3：
+### 3.3 R₂ ↔ R₃ (四象 ↔ 八卦)
 
 ```lean
-/-- 四象 ↪ 八卦: extend a SiXiang by a 3rd Yao. -/
 def liftR2toR3 (s : R2) (y3 : Yao) : R3 := ⟨s.y1, s.y2, y3⟩
-
-/-- 八卦 ↠ 四象: forget the 3rd Yao (keep y1, y2). -/
 def projR3toR2 (t : R3) : R2 := ⟨t.y1, t.y2⟩
-
-theorem proj_lift_id_R2 (s : R2) (y3 : Yao) :
-    projR3toR2 (liftR2toR3 s y3) = s := by
-  cases s; rfl
+theorem proj_lift_id_R2 (s : R2) (y3 : Yao) : projR3toR2 (liftR2toR3 s y3) = s
 ```
 
-### 3.4 R₃ ↔ R₄ (Trigram ↔ Mian)
+八卦 = trigram `⟨y1, y2, y3⟩`；project 取 (y₁, y₂)。
 
-[`LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) § 4：
+---
 
-R₃ → R₄ 是**最复杂**一对，因为 Mian = Ben × Zheng 用 enum-style ctor 而非 yao tuple。设计选择如下 (来自源文件 docstring)：
+## 4. R₃ ↔ R₄ — 设计选择 (Trigram ↔ Mian)
 
-```
-|R₃| = 8 = 2³ but |R₄| = 16 = 2⁴, so the R₃ → R₄ lift takes one extra Yao
-(the 4th bit). Mian = Ben × Zheng has the canonical decomposition
+|R₃| = 8 = 2³ but |R₄| = 16 = 2⁴；R₃ → R₄ lift 需加 1 个 extra Yao。**Mian = Ben × Zheng** 是 (Z/2)² × (Z/2)² = (Z/2)⁴ 之 anchor（详 [`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) § 5）。
 
-  Ben   ≅ Yao²   (4 inhabitants)
-  Zheng ≅ Yao²   (4 inhabitants)
+[`LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) § 4 docstring：
 
-We choose: split Trigram's 3 yaos as `(y1, y2)` → Ben and `(y3, extra)` →
-Zheng. The projection drops the `extra` bit and recovers the trigram from
-the Ben-pair plus the first Zheng-bit.
-```
+> Strategy: encode Yao²-pairs as Ben/Zheng via canonical 2-bit bijections.
+> - (y1, y2) → Ben      (4 inhabitants)
+> - (y3, extra) → Zheng (4 inhabitants)
+> - Project drops `extra` (the 4th yao) and recovers a trigram.
 
-#### Yao² ↔ Ben 双射
+### 4.1 Yao² ↔ Ben canonical bijection
 
 ```lean
-/-- Yao² → Ben canonical bijection.
-    (yang, yang) → wu   / (yang, yin) → dong
-    (yin,  yang) → jian / (yin,  yin) → shi -/
 def benFromYao (y1 y2 : Yao) : Ben :=
   match y1, y2 with
-  | .yang, .yang => .wu
-  | .yang, .yin  => .dong
-  | .yin,  .yang => .jian
-  | .yin,  .yin  => .shi
+  | .yang, .yang => .wu     -- 物
+  | .yang, .yin  => .dong   -- 動
+  | .yin,  .yang => .jian   -- 間
+  | .yin,  .yin  => .shi    -- 事
 
-def benToYao1 : Ben → Yao
-  | .wu | .dong => .yang
-  | .jian | .shi => .yin
+def benToYao1 : Ben → Yao | .wu | .dong => .yang | .jian | .shi => .yin
+def benToYao2 : Ben → Yao | .wu | .jian => .yang | .dong | .shi => .yin
 
-def benToYao2 : Ben → Yao
-  | .wu | .jian => .yang
-  | .dong | .shi => .yin
-
-theorem benFromYao_yao1 (y1 y2 : Yao) : benToYao1 (benFromYao y1 y2) = y1 := by
-  cases y1 <;> cases y2 <;> rfl
-
-theorem benFromYao_yao2 (y1 y2 : Yao) : benToYao2 (benFromYao y1 y2) = y2 := by
-  cases y1 <;> cases y2 <;> rfl
+theorem benFromYao_yao1 (y1 y2 : Yao) : benToYao1 (benFromYao y1 y2) = y1
+theorem benFromYao_yao2 (y1 y2 : Yao) : benToYao2 (benFromYao y1 y2) = y2
 ```
 
-#### Yao² ↔ Zheng 双射
+### 4.2 Yao² ↔ Zheng canonical bijection
 
 ```lean
-/-- Yao² → Zheng canonical bijection.
-    (yang, yang) → jiFaint    / (yang, yin) → shiForce
-    (yin,  yang) → jiOccasion / (yin,  yin) → shiTime -/
 def zhengFromYao (y3 y4 : Yao) : Zheng :=
   match y3, y4 with
-  | .yang, .yang => .jiFaint
-  | .yang, .yin  => .shiForce
-  | .yin,  .yang => .jiOccasion
-  | .yin,  .yin  => .shiTime
+  | .yang, .yang => .jiFaint     -- 幾
+  | .yang, .yin  => .shiForce    -- 勢
+  | .yin,  .yang => .jiOccasion  -- 機
+  | .yin,  .yin  => .shiTime     -- 時
 
-def zhengToYao1 : Zheng → Yao
-  | .jiFaint | .shiForce => .yang
-  | .jiOccasion | .shiTime => .yin
+def zhengToYao1 : Zheng → Yao | .jiFaint | .shiForce => .yang | .jiOccasion | .shiTime => .yin
+def zhengToYao2 : Zheng → Yao | .jiFaint | .jiOccasion => .yang | .shiForce | .shiTime => .yin
 
-def zhengToYao2 : Zheng → Yao
-  | .jiFaint | .jiOccasion => .yang
-  | .shiForce | .shiTime => .yin
-
-theorem zhengFromYao_yao1 (y3 y4 : Yao) :
-    zhengToYao1 (zhengFromYao y3 y4) = y3 := by
-  cases y3 <;> cases y4 <;> rfl
-
-theorem zhengFromYao_yao2 (y3 y4 : Yao) :
-    zhengToYao2 (zhengFromYao y3 y4) = y4 := by
-  cases y3 <;> cases y4 <;> rfl
+theorem zhengFromYao_yao1 / yao2 ...
 ```
 
-#### R₃ ↔ R₄ Lift / Project
+### 4.3 lift / project R₃ ↔ R₄
 
 ```lean
-/-- 八卦 ↪ 命: combine Trigram + extra Yao into Mian = Ben × Zheng.
-    (y1, y2) → Ben, (y3, extra) → Zheng. -/
 def liftR3toR4 (t : R3) (y4 : Yao) : R4 :=
   (benFromYao t.y1 t.y2, zhengFromYao t.y3 y4)
 
-/-- 命 ↠ 八卦: extract trigram y1, y2 from Ben, y3 from Zheng (drop y4). -/
 def projR4toR3 (m : R4) : R3 :=
   ⟨benToYao1 m.1, benToYao2 m.1, zhengToYao1 m.2⟩
 
 theorem proj_lift_id_R3 (t : R3) (y4 : Yao) :
-    projR4toR3 (liftR3toR4 t y4) = t := by
-  cases t with
-  | mk y1 y2 y3 =>
-    simp [projR4toR3, liftR3toR4,
-          benFromYao_yao1, benFromYao_yao2, zhengFromYao_yao1]
+    projR4toR3 (liftR3toR4 t y4) = t
 ```
 
-注意：retract 仅 drop `y4`（即 R₄ 中的 extra bit = Zheng 之 second yao），其它 3 个 yao 通过 `benTo*` / `zhengToYao1` 完整恢复。
+**关键设计取舍**：(y₁, y₂) → Ben，(y₃, extra) → Zheng；project 丢 extra（即 4th yao），不丢 trigram 的任意 1 yao。这是 canonical 选择；其他 partition (例如 (y₁, y₃) → Ben + (y₂, extra) → Zheng) 也合法 — 选 (y₁,y₂) + (y₃,extra) 是因为它最自然地把 trigram "前 2 yao = base / 后 1 yao + extra = mark" 对接 Ben/Zheng 之 4-本/4-征 划分。
 
-### 3.5 R₄ ↔ R₅ (Mian ↔ Wuyao)
+---
 
-R₄ → R₅ 之 Lift / Project 在 [`R5_Wuyao.lean`](../../formal/SSBX/Foundation/Hierarchy/R5_Wuyao.lean) § 3 定义，[`LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) § 5 重新 export：
+## 5. R₄ ↔ R₅ — Mian ↔ Wuyao
+
+R₅ = Wuyao = Mian × Bool（[`R5_Wuyao.lean`](../../formal/SSBX/Foundation/Hierarchy/R5_Wuyao.lean)）；本 lift 加 Bool 即可：
 
 ```lean
--- 在 R5_Wuyao.lean § 3 中:
-def liftR4toR5 (m : Mian) (b : Bool) : Wuyao := (m, b)
-def projR5toR4 (w : Wuyao) : Mian := w.1
-theorem proj_lift_id_R4 (m : Mian) (b : Bool) :
-    projR5toR4 (liftR4toR5 m b) = m := rfl
-
--- 在 LiftProject.lean § 5 中重新 export:
-def liftR4toR5 (m : R4) (b : Bool) : R5 := R5_Wuyao.liftR4toR5 m b
-def projR5toR4 (w : R5) : R4 := R5_Wuyao.projR5toR4 w
+def liftR4toR5 (m : R4) (b : Bool) : R5 := R5_Wuyao.liftR4toR5 m b   -- = (m, b)
+def projR5toR4 (w : R5) : R4 := R5_Wuyao.projR5toR4 w                 -- = w.1
 
 theorem proj_lift_id_R4 (m : R4) (b : Bool) :
-    projR5toR4 (liftR4toR5 m b) = m :=
-  R5_Wuyao.proj_lift_id_R4 m b
+    projR5toR4 (liftR4toR5 m b) = m
 ```
 
-最简：Wuyao = Mian × Bool 之 product-type，lift 加一 Bool，project 取第一分量。
+`R5_Wuyao` 中之 `flip5` (= toggle Bool) 是 R₅ 的 atomic XOR generator。
 
-详见 [r5-wuyao-provisional.md](r5-wuyao-provisional.md)。
+---
 
-### 3.6 R₅ ↔ R₆ (Wuyao ↔ Hexagram)
+## 6. R₅ ↔ R₆ — Wuyao ↔ Hexagram
 
-[`LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) § 6：
+[`LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) § 6 之策略：
 
-R₅ → R₆ 之 Lift 把 (Mian × Bool) 之 5 bits 与一 extra Yao 拼成 Hexagram 之 6 yaos。设计如下 (源文件 docstring)：
-
-```
-Concrete: y1 = ben.bit1, y2 = ben.bit2, y3 = zheng.bit1, y4 = zheng.bit2,
-y5 = Bool→Yao (false→yang, true→yin), y6 = extra.
-```
-
-#### Bool ↔ Yao helpers
+> y1 = ben.bit1, y2 = ben.bit2, y3 = zheng.bit1, y4 = zheng.bit2, y5 = Bool→Yao (false→yang, true→yin), y6 = extra.
 
 ```lean
-/-- Bool → Yao canonical: false = yang (default), true = yin. -/
 def boolToYao (b : Bool) : Yao := if b then .yin else .yang
-
-/-- Yao → Bool inverse. -/
 def yaoToBool (y : Yao) : Bool := match y with | .yang => false | .yin => true
 
-theorem yaoToBool_boolToYao (b : Bool) : yaoToBool (boolToYao b) = b := by
-  cases b <;> rfl
-```
+theorem yaoToBool_boolToYao (b : Bool) : yaoToBool (boolToYao b) = b
 
-#### R₅ ↔ R₆ Lift / Project
-
-```lean
-/-- 五爻 ↪ 六爻: combine Wuyao (32 cells = 5 bits) with a 6th Yao to form
-    a Hexagram (64 cells = 6 bits).
-
-    Layout: y1, y2 ← ben (Mian.1) bit-pair; y3, y4 ← zheng (Mian.2) bit-pair;
-    y5 ← Bool bit; y6 ← extra Yao. -/
 def liftR5toR6 (w : R5) (y6 : Yao) : R6 :=
-  let m := w.1
-  let b := w.2
+  let m := w.1; let b := w.2
   ⟨benToYao1 m.1, benToYao2 m.1, zhengToYao1 m.2, zhengToYao2 m.2,
    boolToYao b, y6⟩
 
-/-- 六爻 ↠ 五爻: drop y6, decode (y1, y2) → Ben, (y3, y4) → Zheng,
-    y5 → Bool. -/
 def projR6toR5 (h : R6) : R5 :=
   ((benFromYao h.y1 h.y2, zhengFromYao h.y3 h.y4), yaoToBool h.y5)
 
--- helpers needed for retract proof:
-theorem benFromYao_benToYao (b : Ben) :
-    benFromYao (benToYao1 b) (benToYao2 b) = b := by
-  cases b <;> rfl
-
-theorem zhengFromYao_zhengToYao (z : Zheng) :
-    zhengFromYao (zhengToYao1 z) (zhengToYao2 z) = z := by
-  cases z <;> rfl
-
 theorem proj_lift_id_R5 (w : R5) (y6 : Yao) :
-    projR6toR5 (liftR5toR6 w y6) = w := by
-  rcases w with ⟨⟨b, z⟩, bit⟩
-  simp [projR6toR5, liftR5toR6,
-        benFromYao_benToYao, zhengFromYao_zhengToYao,
-        yaoToBool_boolToYao]
+    projR6toR5 (liftR5toR6 w y6) = w
 ```
 
-注意：retract 仅丢 `y6`（hexagram 之 top yao），所有 5 个底部 bits 完整恢复。
-
-### 3.7 R₆ ↔ R₇ (Hexagram ↔ Cell128)
-
-[`LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) § 7：
+5 bits 之 Wuyao 直接 unpack 进 hex 之 y₁..y₅；y₆ 是 lift 添加的 extra。**关键 round-trip helper** 是 `benFromYao_benToYao` 与 `zhengFromYao_zhengToYao`：
 
 ```lean
-/-- 六爻 ↪ 128-格: attach YinBit (R5/R7 atom 因 bit). -/
-def liftR6toR7 (h : R6) (y : SSBX.Foundation.Bagua.Cell128.YinBit) : R7 := (h, y)
+theorem benFromYao_benToYao (b : Ben) :
+    benFromYao (benToYao1 b) (benToYao2 b) = b
 
-/-- 128-格 ↠ 六爻: drop YinBit. -/
+theorem zhengFromYao_zhengToYao (z : Zheng) :
+    zhengFromYao (zhengToYao1 z) (zhengToYao2 z) = z
+```
+
+二者都是 4-case `cases <;> rfl`。
+
+---
+
+## 7. R₆ ↔ R₇ — Hexagram ↔ Cell128 (加 因 / YinBit)
+
+```lean
+def liftR6toR7 (h : R6) (y : Cell128.YinBit) : R7 := (h, y)
 def projR7toR6 (c : R7) : R6 := c.1
 
-theorem proj_lift_id_R6 (h : R6) (y : SSBX.Foundation.Bagua.Cell128.YinBit) :
+theorem proj_lift_id_R6 (h : R6) (y : Cell128.YinBit) :
     projR7toR6 (liftR6toR7 h y) = h := rfl
 ```
 
-最简：Cell128 = Hexagram × YinBit，lift 加 YinBit，project 取 .1。
+R₇ atom = 因 (YinBit) — 详 [`yin-tou-operators.md`](yin-tou-operators.md) § 1。这是最简单的 product extension。
 
-### 3.8 R₇ ↔ R₈ (Cell128 ↔ Cell256)
+---
 
-[`LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) § 8：
+## 8. R₇ ↔ R₈ — Cell128 ↔ Cell256 (加 果 / GuoBit, 封装 Shi)
 
-R₇ → R₈ 之 lift 把 Cell128 之 (Hexagram, YinBit) 中的 YinBit 与新 GuoBit 拼成 Shi V₄：
+R₈ = Cell256 = Hexagram × Shi；R₇ = Cell128 = Hexagram × YinBit。Shi ≅ YinBit × GuoBit (详 [`v4-shi.md`](v4-shi.md) § 3)。所以 R₇ → R₈ lift 需要 attach 一个 GuoBit，然后 package 成 Shi：
 
 ```lean
-/-- 128-格 ↪ 256-格: attach GuoBit to YinBit, package as Shi. -/
-def liftR7toR8 (c : R7) (g : SSBX.Foundation.Bagua.Cell256.GuoBit) : R8 :=
+def liftR7toR8 (c : R7) (g : Cell256.GuoBit) : R8 :=
   (c.1, Shi.ofYinGuo (c.2, g))
 
-/-- 256-格 ↠ 128-格: extract YinBit from Shi (drop GuoBit). -/
 def projR8toR7 (c : R8) : R7 :=
   (c.1, (Shi.toYinGuo c.2).1)
 
-theorem proj_lift_id_R7 (c : R7) (g : SSBX.Foundation.Bagua.Cell256.GuoBit) :
+theorem proj_lift_id_R7 (c : R7) (g : Cell256.GuoBit) :
     projR8toR7 (liftR7toR8 c g) = c := by
   rcases c with ⟨h, y⟩
   simp [projR8toR7, liftR7toR8, Shi.toYinGuo_ofYinGuo]
 ```
 
-注意：retract 通过 `Shi.toYinGuo_ofYinGuo` （[shi-v4.md](shi-v4.md) § 2.2）恢复 (因, 果) ↔ Shi 双射的 right inverse。
+证明用了 `Shi.toYinGuo_ofYinGuo` (one of the 双射 round-trip lemmas)。这是 8 个 retract 中**唯一**需要 V₄ tools (Shi 之 (因, 果) 双射)，其余都是 trivial structural projection。
 
 ---
 
-## 第四部分：8-对 Public Summary
+## 9. chong (重) — 现在 = R₃ → R₄ → R₅ → R₆ 之 3-step composite
 
-[`LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) § 9 把 8 条 retract law bundle 起来：
+旧 v1 把 `chong : R₃ × R₃ → R₆` 看作 +3 bit "jump"，跳过 R₄ / R₅。
+
+v3 strict-uniform 下：
+
+```
+chong : R₃ → R₆ 之实质 = 3 步 +1 bit lift composite
+        R₃ → R₄ → R₅ → R₆
+        =     +1 bit  +1 bit  +1 bit
+```
+
+具体在 [`LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) 中可这样组合：
 
 ```lean
-/-- 8-pair lift/project retract summary: every consecutive R-layer pair
-    has `proj ∘ lift = id` (faithful Rₙ ↪ R_{n+1}). -/
+example (t : R3) (y4 y6 : Yao) (b : Bool) : R6 :=
+  liftR5toR6 (liftR4toR5 (liftR3toR4 t y4) b) y6
+```
+
+或用 `BaguaAlgebra.lean` 之 traditional `chong inner outer = Hexagram.oplus inner outer`（直接拼两个 trigram → hex）— 二者都 produce R₆ Hexagram，但 v3 的 doctrine 强调**strict uniform 视角下 chong 是 lift composite**。详 [`yi-RO-hierarchy.md`](yi-RO-hierarchy.md) § 3.9。
+
+---
+
+## 10. 8-pair retract 摘要定理
+
+[`LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) § 9 之 `liftProject_summary`：
+
+```lean
 theorem liftProject_summary :
     (∀ r0 y, projR1toR0 (liftR0toR1 r0 y) = r0)
     ∧ (∀ y1 y2, projR2toR1 (liftR1toR2 y1 y2) = y1)
@@ -371,302 +275,101 @@ theorem liftProject_summary :
     ∧ (∀ m b, projR5toR4 (liftR4toR5 m b) = m)
     ∧ (∀ w y6, projR6toR5 (liftR5toR6 w y6) = w)
     ∧ (∀ h y, projR7toR6 (liftR6toR7 h y) = h)
-    ∧ (∀ c g, projR8toR7 (liftR7toR8 c g) = c) :=
-  ⟨proj_lift_id_R0,
-   proj_lift_id_R1,
-   proj_lift_id_R2,
-   proj_lift_id_R3,
-   proj_lift_id_R4,
-   proj_lift_id_R5,
-   proj_lift_id_R6,
-   proj_lift_id_R7⟩
+    ∧ (∀ c g, projR8toR7 (liftR7toR8 c g) = c)
 ```
 
-这是 R-hierarchy strict-uniform 之 **形式化 hand-off 接口** —— 任何下游 doctrine 引用「R 层之 retract 可达」时，可直接 `liftProject_summary` 返回 8 条全证。
+8 项 retracts 全证 — 整 R-hierarchy 之 strict uniform `(Rₙ ↪ Rₙ₊₁)` faithful injection 链完全闭合。
 
 ---
 
-## 第五部分：Chong (重) — R₃ → R₆ 之 3 步 composite
+## 11. RHierarchy umbrella
 
-### 5.1 旧 v1 vs v2.1 之差
-
-旧 v1 把 R₃ → 重卦 (R₄ in v1) 看作单 +3 bit 之「chong 跳跃」， 跳过 (Z/2)⁴ 与 (Z/2)⁵。
-
-v2.1 strict-uniform 下 chong **不是基础 lift**，而是 3 步 +1 bit 之 composite (per [yi-RO-hierarchy.md](yi-RO-hierarchy.md) § 3.9)：
-
-$$\text{chong} : R_3 \times R_3 \to R_6 \quad \cong \quad R_3 \xrightarrow{\text{liftR3toR4}} R_4 \xrightarrow{\text{liftR4toR5}} R_5 \xrightarrow{\text{liftR5toR6}} R_6$$
-
-### 5.2 3 步 lift 之参数
-
-```
-liftR3toR4 :  R₃ × Yao  → R₄    (extra y4)
-liftR4toR5 :  R₄ × Bool → R₅    (extra Bool / 5th yao)
-liftR5toR6 :  R₅ × Yao  → R₆    (extra y6 / 6th yao)
-```
-
-合计参数：1 个 R₃ + (1 yao + 1 Bool + 1 yao) = 3 个 binary bits = 加到 hexagram 之 outer 3 yaos。
-
-### 5.3 chong 之 3 步分解
-
-R₆ Hexagram 之 6 yaos 分为 inner trigram (y₁ y₂ y₃) + outer trigram (y₄ y₅ y₆)。chong 把 inner trigram 与 outer trigram 拼起来。在 strict-uniform 视角下：
-
-| 步 | input | output | 意义 |
-|---|---|---|---|
-| 1 (R₃→R₄) | inner trigram + y₄ | Mian (Ben × Zheng) | 加 outer trigram 之 first yao |
-| 2 (R₄→R₅) | Mian + Bool | Wuyao | 加 outer trigram 之 second yao (encoded as Bool) |
-| 3 (R₅→R₆) | Wuyao + y₆ | Hexagram | 加 outer trigram 之 third yao |
-
-详见 [r5-wuyao-provisional.md](r5-wuyao-provisional.md) § 4 chong 分解。
-
-### 5.4 chong (existing R₆ ctor) 与 3-step composite 之关系
-
-R₆ Hexagram 已有 ctor `chong : Trigram → Trigram → Hexagram` (在 [`Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) 中)。3-step composite 之 lift 与 chong ctor **不直接 definitional equal**，但二者**计算同 64 个 hexagrams**（仅 bit 之内部排列不同）。
-
-具体见 [`LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) § 6 之 layout 注释：
-
-```
-Concrete: y1 = ben.bit1, y2 = ben.bit2, y3 = zheng.bit1, y4 = zheng.bit2,
-y5 = Bool→Yao (false→yang, true→yin), y6 = extra.
-```
-
-— 即 R₅→R₆ lift 之 hexagram 之 y₁..y₅ 来自 Mian + Bool 之 5 bits encoding，y₆ 是 extra。这与传统 chong（inner⊕outer trigram）之 layout 不直接相同，但每个组合都精确对应 64 hexagrams 中之一。
-
----
-
-## 第六部分：Cross-layer XOR action (lift 与 XOR 交换)
-
-### 6.1 命题
-
-设 R_n 之 group law 为 ⊕_n (XOR)。对任意 lift `liftRntoR(n+1) : R_n × X → R_{n+1}` 与对应的 X 之 group law ⊕_X：
-
-$$\text{liftRntoR(n+1)}\, (a \oplus_n b)\, (x \oplus_X y) \;=\; \text{liftRntoR(n+1)}\, a\, x \;\oplus_{n+1}\; \text{liftRntoR(n+1)}\, b\, y$$
-
-即 lift 是 group homomorphism (R_n × X) → R_{n+1}。
-
-### 6.2 R₆ ↔ R₇ 之具体例
-
-R₇ = Cell128 = Hexagram × YinBit。Cell128 之 XOR ([`Cell128.lean`](../../formal/SSBX/Foundation/Bagua/Cell128.lean) § 6.3)：
+[`RHierarchy.lean`](../../formal/SSBX/Foundation/Hierarchy/RHierarchy.lean) 是 R-index 之**一站式 import**：
 
 ```lean
-/-- Cell128 XOR = (hexXor on Hexagram, Bool.xor on YinBit). -/
-def xor (c1 c2 : Cell128) : Cell128 :=
-  (hexXor c1.1 c2.1, Bool.xor c1.2 c2.2)
+-- R-index alias shims (R₀..R₈)
+import SSBX.Foundation.Hierarchy.R0_Taiji
+import SSBX.Foundation.Hierarchy.R1_Yao
+import SSBX.Foundation.Hierarchy.R2_SiXiang
+import SSBX.Foundation.Hierarchy.R3_Trigram
+import SSBX.Foundation.Hierarchy.R4_Mian
+import SSBX.Foundation.Hierarchy.R5_Wuyao
+import SSBX.Foundation.Hierarchy.R6_Hexagram
+import SSBX.Foundation.Hierarchy.R7_YinHex
+import SSBX.Foundation.Hierarchy.R8_GuoHex
+
+-- Cross-cutting structure
+import SSBX.Foundation.Hierarchy.LiftProject
+import SSBX.Foundation.Hierarchy.Operators.Atomic
+import SSBX.Foundation.Hierarchy.Operators.V4Outer
 ```
 
-这正是 product group structure — Hexagram 部分用 hexXor，YinBit 部分用 Bool.xor，二者独立。
+下游模块只需 `import SSBX.Foundation.Hierarchy.RHierarchy` 即得：
+- 9 个 R-index 别名（R₀..R₈ shims）
+- 全 8 套 lift / project pairs + retract lemmas
+- 全 atomic XOR ops + V4Outer perms
+- 全相关 docstrings
 
-`liftR6toR7 (h, y) = (h, y)` 之 group hom 性来自 product group 之定义，不需特别证明 — 是 *trivially homomorphic*。
-
-### 6.3 R₇ ↔ R₈ 之具体例
-
-R₈ = Cell256 = Hexagram × Shi。Cell256 之 XOR ([`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) § 7.4)：
-
-```lean
-/-- Cell256 XOR = (hexXor on Hexagram, shiXor on Shi). -/
-def xor (c1 c2 : Cell256) : Cell256 :=
-  (hexXor c1.1 c2.1, shiXor c1.2 c2.2)
-```
-
-Shi 之 XOR 通过 (因, 果) 之 component-wise Bool XOR：
-
-```lean
-/-- Shi XOR via componentwise Bool XOR on (因, 果). -/
-def shiXor (s1 s2 : Shi) : Shi :=
-  let (y1, g1) := Shi.toYinGuo s1
-  let (y2, g2) := Shi.toYinGuo s2
-  Shi.ofYinGuo (Bool.xor y1 y2, Bool.xor g1 g2)
-```
-
-`liftR7toR8` 把 (c, g) 包成 `(c.1, Shi.ofYinGuo (c.2, g))` — 通过 `Shi.toYinGuo_ofYinGuo` 双射，product XOR 与 Shi XOR 互相 commute。
-
-### 6.4 各层 XOR 群结构总览
-
-| Layer | XOR 实现 | identity |
-|---|---|---|
-| R₀ | trivial | `()` |
-| R₁ | `Yao.xor` | `Yao.yang` |
-| R₂ | yao²-componentwise | `(yang, yang)` |
-| R₃ | yao³-componentwise | `(yang, yang, yang)` = 乾 |
-| R₄ | Mian as (Ben, Zheng) — encoded via Yao² | `(.wu, .jiFaint)` |
-| R₅ | (Mian XOR, Bool XOR) | `(.wu, .jiFaint)`-paired-with-`false` |
-| R₆ | `Hexagram.xor` (yao⁶-componentwise) | `Hexagram.qian` |
-| R₇ | `Cell128.xor` = `(hexXor, Bool.xor)` | `(qian, false)` |
-| R₈ | `Cell256.xor` = `(hexXor, shiXor)` | `(qian, dao)` = origin |
-
-详见 [`Cell128.lean`](../../formal/SSBX/Foundation/Bagua/Cell128.lean) § 6 / [`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) § 7。
+每个 `R{n}_*.lean` shim 是**纯 re-export**（无新逻辑）— 它们的存在是为了 R-index discoverability（读者可直接 `R7.yin` / `R8.tou` 而不需 `Cell128.yin` / `Cell256.tou`）。
 
 ---
 
-## 第七部分：算法层 (Iterated Lifts)
+## 12. retract = id 是 faithful injection 的精确含义
 
-### 7.1 R₀ → R₈ 之全 lift 链
+`proj ∘ lift = id` 定理告诉我们：
 
-由 8 对 lift 顺次复合，可从 R₀ (Unit) 加 8 个 binary bits 一次走到 R₈ (Cell256)：
+- **lift 是 injective**: 若 `lift r b = lift r' b'`，则 `proj (lift r b) = proj (lift r' b')`，即 `r = r'`（再用 + bit 也可推 `b = b'`）。
+- **Rₙ ↪ Rₙ₊₁ faithful**: 把 `b = default` 之 lift 看作嵌入 `e_n : Rₙ → Rₙ₊₁` 即 `e_n r := lift r default`；`proj ∘ e_n = id` 是 retract。
+- **Rₙ 是 Rₙ₊₁ 的 retract**: 范畴论术语，意味 `Rₙ` 在升降序列中**信息无损**。
 
-```
-R₀ × Yao × Yao × Yao × Yao × Bool × Yao × YinBit × GuoBit  →  R₈
-
-(*, y₁, y₂, y₃, y₄, b, y₆, yi, gu) ↦ ...
-```
-
-合计 8 个 input bits（前 6 为 hexagram yaos，后 2 为 Shi 之 因/果），匹配 R₈ = (Z/2)⁸ 之 size。
-
-### 7.2 R₈ → R₀ 之全 project 链
-
-由 8 对 project 顺次复合，从 R₈ 一路丢到 R₀：
-
-```
-R₈ → R₇ → R₆ → R₅ → R₄ → R₃ → R₂ → R₁ → R₀
-```
-
-每步丢一 bit，最终得到 R₀ = Unit 之 唯一元素 `()`。
-
-### 7.3 Project ∘ Lift = id_R₀ 之多步版
-
-8 条 retract law 通过 `proj_lift_id_Rn` 逐步 chain 起来即得：
-
-```
-projR1toR0 (liftR0toR1 r y) = r
-↓ + projR2toR1 (liftR1toR2 _ _) = _
-↓ + ...
-↓ + projR8toR7 (liftR7toR8 _ _) = _
-↓ ⇒
-∀ r0 y₁ y₂ y₃ y₄ b y₆ yi gu,
-  projR1toR0 ∘ projR2toR1 ∘ ... ∘ projR8toR7 ∘
-  liftR7toR8 ∘ ... ∘ liftR1toR2 ∘ liftR0toR1
-    r₀ y₁ y₂ y₃ y₄ b y₆ yi gu = r₀
-```
-
-— 即 R₀ 在 8 步 lift + project 之后保留不变。在 R-hierarchy 内任意层之 retract 可由 8 条原子 retract law 复合得到。
+对反方向 `lift ∘ proj = id` **不**成立 — 因为 lift 自带 1 bit 之自由度，proj 必须丢这个 bit，所以 round-trip 后那个 bit "重新选默认值" 不会等于原来。这是 **product type 的不对称信息 flow** 之精确写法。
 
 ---
 
-## 第八部分：边界 (Boundaries)
+## 13. 与 algebraic spine 之关系
 
-### 8.1 Lift / Project **不**做的事
+`Cell128.lean` / `Cell256.lean` 之 Phase A spine（详 [`cell256-algebra.md`](cell256-algebra.md)）给的是 **Rₙ 内部** 的 (Z/2)ⁿ Abelian 群结构 + Cayley fusion。
 
-| 不做 | 原因 |
+`LiftProject.lean` 给的是 **Rₙ 与 Rₙ₊₁ 之间** 的 functorial relation — uniform +1 bit lift / -1 bit project + retract。
+
+两者结合 = R₀..R₈ 之**完整 strict-uniform abelian closure**：
+
+| 维度 | 来源 |
 |---|---|
-| 不刻画 V₄ outer 算子 (zong / hu) 之 lift | 那是 `Operators/V4Outer.lean`，与 strict-uniform 之 binary axis 无关 |
-| 不刻画 cross-layer 算子 (例如 R₃ → R₆ 之 chong) | chong 是 3 步 lift composite，本文 § 5 |
-| 不刻画 dual-Lift (即 R_n → R_{n+1} × R_{n+1}) | 不在 strict-uniform 之 single-bit-axis 范围 |
-| 不接 GL(8, F₂) 类 non-XOR linear | 那破坏 bit-position semantic，不在 R-hierarchy 之 algebraic closure 中 |
+| 元数 = 2ⁿ | `Cell{128,256}.all_length` |
+| (Z/2)ⁿ AddCommGroup | `Cell{128,256}` Phase A spine |
+| Cayley `ι/ε` | `cayley_inj / epsAtOrigin_cayley` |
+| layer-内 atomic ops (XOR) | `Atomic.lean` |
+| layer-内 V₄ outer ops | `V4Outer.lean` |
+| **layer-间 lift / project** | **本文 / LiftProject.lean** |
 
-### 8.2 不在 Lift / Project 之内 (但相邻)
-
-- **Cayley 自作用** (R_n × R_n → R_n): 不是 lift / project，是 within-layer XOR action ([`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) § 7.6)。
-- **印 / 投 mask form**: 不是 lift，是 within-R₈ XOR with fixed mask ([`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) § 8)。
-- **R₈ → BenZheng quadrant projection** (`R8.quadrant` in [`Cell256Stratify.lean`](../../formal/SSBX/Foundation/Bagua/Cell256Stratify.lean) § 3): 不是 strict-uniform retract — 是 R₈ 对 R₃ 之 4-class quotient projection。
+[`Cell256Stratify.lean`](../../formal/SSBX/Foundation/Bagua/Cell256Stratify.lean) 之 `R8_complete` bundle 把所有这些保证一起 ack 出来。
 
 ---
 
-## 附录 A：8-对 Lift / Project Lean 签名摘要
+## 14. 与其他文档之关系
 
-来自 [`LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean)：
-
-```lean
-namespace SSBX.Foundation.Hierarchy.LiftProject
-
-abbrev R0 : Type := Unit
-abbrev R1 : Type := Yao
-abbrev R2 : Type := SiXiang
-abbrev R3 : Type := Trigram
-abbrev R4 : Type := Mian
-abbrev R5 : Type := Wuyao
-abbrev R6 : Type := Hexagram
-abbrev R7 : Type := Cell128
-abbrev R8 : Type := Cell256
-
--- § 1 R₀ ↔ R₁
-def liftR0toR1 (_ : R0) (y : Yao) : R1
-def projR1toR0 (_ : R1) : R0
-theorem proj_lift_id_R0 : ∀ r0 y, projR1toR0 (liftR0toR1 r0 y) = r0
-
--- § 2 R₁ ↔ R₂
-def liftR1toR2 (y1 : R1) (y2 : Yao) : R2
-def projR2toR1 (s : R2) : R1
-theorem proj_lift_id_R1 : ∀ y1 y2, projR2toR1 (liftR1toR2 y1 y2) = y1
-
--- § 3 R₂ ↔ R₃
-def liftR2toR3 (s : R2) (y3 : Yao) : R3
-def projR3toR2 (t : R3) : R2
-theorem proj_lift_id_R2 : ∀ s y3, projR3toR2 (liftR2toR3 s y3) = s
-
--- § 4 R₃ ↔ R₄
-def benFromYao (y1 y2 : Yao) : Ben
-def benToYao1 : Ben → Yao
-def benToYao2 : Ben → Yao
-def zhengFromYao (y3 y4 : Yao) : Zheng
-def zhengToYao1 : Zheng → Yao
-def zhengToYao2 : Zheng → Yao
-def liftR3toR4 (t : R3) (y4 : Yao) : R4
-def projR4toR3 (m : R4) : R3
-theorem proj_lift_id_R3 : ∀ t y4, projR4toR3 (liftR3toR4 t y4) = t
-
--- § 5 R₄ ↔ R₅
-def liftR4toR5 (m : R4) (b : Bool) : R5
-def projR5toR4 (w : R5) : R4
-theorem proj_lift_id_R4 : ∀ m b, projR5toR4 (liftR4toR5 m b) = m
-
--- § 6 R₅ ↔ R₆
-def boolToYao (b : Bool) : Yao
-def yaoToBool (y : Yao) : Bool
-def liftR5toR6 (w : R5) (y6 : Yao) : R6
-def projR6toR5 (h : R6) : R5
-theorem proj_lift_id_R5 : ∀ w y6, projR6toR5 (liftR5toR6 w y6) = w
-
--- § 7 R₆ ↔ R₇
-def liftR6toR7 (h : R6) (y : YinBit) : R7
-def projR7toR6 (c : R7) : R6
-theorem proj_lift_id_R6 : ∀ h y, projR7toR6 (liftR6toR7 h y) = h
-
--- § 8 R₇ ↔ R₈
-def liftR7toR8 (c : R7) (g : GuoBit) : R8
-def projR8toR7 (c : R8) : R7
-theorem proj_lift_id_R7 : ∀ c g, projR8toR7 (liftR7toR8 c g) = c
-
--- § 9 Public summary
-theorem liftProject_summary : ∧ over all 8 retract laws
-
-end SSBX.Foundation.Hierarchy.LiftProject
-```
-
-## 附录 B：Cell128 / Cell256 之 ε / cayley pair (与 Lift/Project 之关系)
-
-[`Cell128.lean`](../../formal/SSBX/Foundation/Bagua/Cell128.lean) § 6.5 与 [`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) § 7.6 各自定义了 within-layer 之 Cayley 自作用：
-
-```lean
--- Cell128:
-def cayley (c : Cell128) : Cell128 → Cell128 := fun s => xor c s
-def epsAtOrigin (f : Cell128 → Cell128) : Cell128 := f origin
-@[simp] theorem epsAtOrigin_cayley (c : Cell128) :
-    epsAtOrigin (cayley c) = c := by ...
-
--- Cell256 (analogous):
-def cayley (c : Cell256) : Cell256 → Cell256 := fun s => xor c s
-def epsAtOrigin (f : Cell256 → Cell256) : Cell256 := f origin
-@[simp] theorem epsAtOrigin_cayley (c : Cell256) :
-    epsAtOrigin (cayley c) = c := by ...
-```
-
-这是 **within-layer R-O fusion**（state ↔ operator 同基数），**不是** cross-layer Lift / Project。两类 retract law 名义相似但作用对象不同：
-
-| Retract law | Source | Target | 作用 |
-|---|---|---|---|
-| `proj_lift_id_Rn` | (R_n, extra bit) | R_n | cross-layer (向下) |
-| `epsAtOrigin_cayley` | R_n | R_n | within-layer (Cayley fusion) |
-
-详见 [yi-RO-hierarchy.md](yi-RO-hierarchy.md) § 5 Cayley 自对偶。
-
-## 附录 C：与其它文档之关系
-
-| 文档 | 与本文关系 |
+| 文档 | 关系 |
 |---|---|
-| [yi-RO-hierarchy.md](yi-RO-hierarchy.md) | parent doctrine — Lift/Project 是 § 4.3 cross-layer 函子之 Lean 落地 |
-| [yi-calculus-theorem.md](yi-calculus-theorem.md) | Theorem K 之 Lean 落地（R₀..R₈ 全 (Z/2)ⁿ closure 经 8-pair retract） |
-| [ox-notation.md](ox-notation.md) | OX 字面量 ↔ R₈; lift/project 给出向 R₇..R₀ 之投影 |
-| [shi-v4.md](shi-v4.md) | R₇ → R₈ lift 经 `Shi.ofYinGuo` 加 GuoBit |
-| [r5-wuyao-provisional.md](r5-wuyao-provisional.md) | R₄ ↔ R₅ ↔ R₆ 三 lift 之中介，详见专文 |
-| [r7-yin-r8-guo.md](r7-yin-r8-guo.md) | R₆ → R₇ lift 加 因 (YinBit); R₇ → R₈ lift 加 果 (GuoBit via Shi) |
-| [`LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) | **本文档之 ground truth source** |
-| [`R5_Wuyao.lean`](../../formal/SSBX/Foundation/Hierarchy/R5_Wuyao.lean) | R₄ ↔ R₅ 之 source-of-truth (`liftR4toR5` / `projR5toR4`) |
+| [`yi-RO-hierarchy.md`](yi-RO-hierarchy.md) § 3.0–3.9 | 每层 R₀..R₈ 之 doctrine 总论（含 lift 描述） |
+| [`yi-RO-hierarchy.md`](yi-RO-hierarchy.md) § 4.3 | Cross-layer Lift / Project 函子之 doctrine 表 |
+| [`cell256-grid.md`](cell256-grid.md) | Cell256 256 元清单 + R-layer 基数 |
+| [`cell256-algebra.md`](cell256-algebra.md) | layer-内 (Z/2)ⁿ AddCommGroup spine |
+| [`yin-tou-operators.md`](yin-tou-operators.md) | R₇ / R₈ atom 之 因 / 果 binary axes |
+| [`v4-shi.md`](v4-shi.md) | R₇ ↔ R₈ lift 中 Shi V₄ 之 (因, 果) packaging |
+| [`yi-calculus-theorem.md`](yi-calculus-theorem.md) Theorem K | R-hierarchy 全 (Z/2)ⁿ closure |
+
+---
+
+## 形式锚 (Lean modules)
+
+- [`formal/SSBX/Foundation/Hierarchy/LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) — R₀..R₈ abbrev + 8 lift/project pairs + 8 retract lemmas + `liftProject_summary`
+- [`formal/SSBX/Foundation/Hierarchy/RHierarchy.lean`](../../formal/SSBX/Foundation/Hierarchy/RHierarchy.lean) — umbrella import (R₀..R₈ shims + LiftProject + Operators)
+- [`formal/SSBX/Foundation/Hierarchy/R5_Wuyao.lean`](../../formal/SSBX/Foundation/Hierarchy/R5_Wuyao.lean) — R₅ Wuyao = Mian × Bool 之主文件 (independent module)
+- [`formal/SSBX/Foundation/Hierarchy/R0_Taiji.lean`](../../formal/SSBX/Foundation/Hierarchy/R0_Taiji.lean) ... [`R8_GuoHex.lean`](../../formal/SSBX/Foundation/Hierarchy/R8_GuoHex.lean) — 9 个 R-index re-export shims
+- [`formal/SSBX/Foundation/Bagua/BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) — `Ben / Zheng / Mian / Quadrant` (R₃ 4+4 分 + R₄ Mian anchor)
+- [`formal/SSBX/Foundation/Bagua/Cell128.lean`](../../formal/SSBX/Foundation/Bagua/Cell128.lean) — `Cell128 = Hexagram × YinBit` (R₇)
+- [`formal/SSBX/Foundation/Bagua/Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) — `Cell256 = Hexagram × Shi` (R₈), `Shi.ofYinGuo / toYinGuo`
+- [`formal/SSBX/Foundation/Bagua/Cell256Stratify.lean`](../../formal/SSBX/Foundation/Bagua/Cell256Stratify.lean) — 平行 `liftR7toR8 / projR8toR7` + R-layer 基数定理 + `R8_complete`
+- [`formal/SSBX/Foundation/Yi/Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) — `Yao / SiXiang / Trigram / Hexagram`
+- [`formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean`](../../formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean) — `chong = Hexagram.oplus`, `fenToTrigram`, traditional R₂/R₃ algebra
