@@ -507,11 +507,141 @@ def unitOpenCriteria : OpenCriteria unitProcess where
 theorem unitProcess_open : Open unitProcess unitOpenCriteria () := by
   exact ⟨trivial, unitProcess_has_interval, trivial, trivial, trivial⟩
 
--- DELETED 2026-05-10: OnticRoot/Manifestation/DynamicMark/Gate/EventResult/CompositeForm
--- 这些 3-元 placeholder 类型 (~135 行) 已被 SSBX.Foundation.Bagua.BenZheng 中的
--- 4 本 (Ben) / 4 征 (Zheng) / Mian = Ben×Zheng = 16 / Quadrant 取代。
--- 旧 JianOntology.lean 也已删除。新核心见 BenZheng.lean。
--- StaticFace 因仅服务于 Manifestation/DynamicMark 也一并删除。
+inductive OnticRoot where
+  | wu
+  | dong
+  | jian
+  deriving DecidableEq, Repr
+
+namespace OnticRoot
+
+def dimension : OnticRoot -> String
+  | .wu => "0-dimensional discreteness"
+  | .dong => "n-dimensional process extension"
+  | .jian => "topological relation without intrinsic metric"
+
+end OnticRoot
+
+inductive Manifestation where
+  | wei
+  | chang
+  | ji
+  deriving DecidableEq, Repr
+
+namespace Manifestation
+
+def visibleRoots : Manifestation -> List OnticRoot
+  | .wei => [.wu, .jian]
+  | .chang => [.dong, .wu]
+  | .ji => [.jian, .dong]
+
+def bracketedRoot : Manifestation -> OnticRoot
+  | .wei => .dong
+  | .chang => .jian
+  | .ji => .wu
+
+def shape : Manifestation -> String
+  | .wei => "pointed position"
+  | .chang => "extended medium"
+  | .ji => "contact interface"
+
+theorem visible_roots_pair (m : Manifestation) :
+    (visibleRoots m).length = 2 := by
+  cases m <;> rfl
+
+theorem bracketed_root_not_visible (m : Manifestation) :
+    bracketedRoot m ∉ visibleRoots m := by
+  cases m <;> decide
+
+end Manifestation
+
+inductive StaticFace where
+  | noPersistentSplit
+  | pointOnField
+  | contactBoundary
+  deriving DecidableEq, Repr
+
+inductive DynamicMark where
+  | ji
+  | shi
+  | jiMoment
+  deriving DecidableEq, Repr
+
+namespace DynamicMark
+
+def ofManifestation : Manifestation -> DynamicMark
+  | .wei => .ji
+  | .chang => .shi
+  | .ji => .jiMoment
+
+def staticFaceOf : Manifestation -> StaticFace
+  | .wei => .noPersistentSplit
+  | .chang => .pointOnField
+  | .ji => .contactBoundary
+
+def expansionMode : DynamicMark -> String
+  | .ji => "foundational seed at the zero-dimensional limit"
+  | .shi => "ji extended through a continuous medium"
+  | .jiMoment => "ji gathered through topological routing"
+
+theorem wei_mark_is_foundational :
+    ofManifestation .wei = .ji :=
+  rfl
+
+end DynamicMark
+
+inductive Gate where
+  | open
+  | closed
+  deriving DecidableEq, Repr
+
+inductive EventResult where
+  | life
+  | extinction
+  | formation
+  | reversal
+  | turning
+  | keeping
+  deriving DecidableEq, Repr
+
+namespace Gate
+
+def result : DynamicMark -> Gate -> EventResult
+  | .ji, .open => .life
+  | .ji, .closed => .extinction
+  | .shi, .open => .formation
+  | .shi, .closed => .reversal
+  | .jiMoment, .open => .turning
+  | .jiMoment, .closed => .keeping
+
+theorem gate_binary (g : Gate) : g = .open ∨ g = .closed := by
+  cases g <;> simp
+
+end Gate
+
+inductive CompositeForm where
+  | network
+  | body
+  | flow
+  deriving DecidableEq, Repr
+
+namespace CompositeForm
+
+def parts : CompositeForm -> Manifestation × Manifestation
+  | .network => (.wei, .ji)
+  | .body => (.wei, .chang)
+  | .flow => (.chang, .ji)
+
+def feedbackTarget : CompositeForm -> Manifestation
+  | .network => .wei
+  | .body => .chang
+  | .flow => .ji
+
+theorem parts_distinct (c : CompositeForm) :
+    (parts c).1 ≠ (parts c).2 := by
+  cases c <;> decide
+
+end CompositeForm
 
 end GammaProcess
 

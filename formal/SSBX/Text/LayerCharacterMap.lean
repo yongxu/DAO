@@ -1,33 +1,50 @@
 /-
-# LayerCharacterMap — 层级单字映射 (R1 → L0 + Rh 16-grid)
+# LayerCharacterMap — 层级单字映射 (R1 → L0)
 
-Code-level ground truth for character readings across all generation/structure
-layers. Companion to:
-- docs-next/10_formal_形式/layer-character-map.md
-- docs-next/10_formal_形式/sanben-sijieduan-grid.md
-- docs-next/10_formal_形式/64-hexagram-grid.md
+This file is the code-level source of truth for the recommended single-character
+readings of each element and operator across the generation line (R1 → R5),
+plus the L0 BaguaWen VM instructions.
+
+It is a companion to:
+- docs-next/10_formal_形式/layer-character-map.md (full analysis with备选 reasons)
+- docs-next/10_formal_形式/layer-axis-graph.md (visual map, three-axis convergence)
+- docs-next/10_formal_形式/root-layer-map.md (structural layer map)
+
+## Principle
+
+"字恰当高于冲突" — appropriate character beats conflict-avoidance. Where a
+truly authoritative reading conflicts with another use, prefer the authoritative
+reading and resolve via type/context.
 
 ## Coverage
 
-* R1 — Yao essence (实/虚)
-* R2 — SiXiang seasons (春/夏/秋/冬)
-* R3 — Trigram virtue (健/悦/显/起/入/险/止/顺) via Virtue.displayChar
-* R3 — Trigram literal (乾/兑/离/震/巽/坎/艮/坤)
-* R4 — 6-yao flip (改/化/变/临/主/极)
-* R5 — Shi transitions (迁/溯)
-* L0 — VM instruction aliases (静/置/翻/互/错/综/侔/会/跳/推/取/终)
-* Rh — Ben/Zheng/Mian (4+4+16 = 24 chars from BenZheng.lean)
+* `Yao.essenceChar`            — R1 阳/阴 → 实/虚 (邵雍《观物外篇》)
+* `SiXiang.seasonChar`         — R2 四象 → 春/夏/秋/冬 (邵雍先天图)
+* `Trigram.virtueChar`         — R3 八卦 → 健/悦/显/起/入/险/止/顺 (说卦回归)
+* `Trigram.literalChar`        — R3 八卦 → 乾/兑/离/震/巽/坎/艮/坤 (canonical)
+* `flipPositionChar`           — R4 6 爻 flip → 改/化/变/临/主/极
+* `ShiTransition.char`         — R5 shi 转换 → 迁/溯
+* `YiInstrKind.modernAlias`    — L0 12 instructions → 静/置/翻/...
 
-Total: 2 + 4 + 8 + 8 + 6 + 2 + 12 + 4 + 4 + 16 = 66 entries
+## Status
+
+These are *recommended aliases*. The parser/Lex layer should accept them on top
+of existing primary tokens (e.g., `不动` for `.nop`). Existing token paths in
+`SSBX.Text.OperatorAnchors` are unchanged for backward compatibility.
+
+The `allLayerChars` table at the bottom is a unified inspection point for the
+interpreter — any future surface-alias parser should consult it as ground truth.
 -/
-import SSBX.Foundation.Bagua.BenZheng
+
+import SSBX.Foundation.Yi.Yi
+import SSBX.Foundation.Bagua.BaguaAlgebra
 import SSBX.Foundation.Bagua.Cell192
 import SSBX.Text.OperatorAnchors
 
--- All Trigram/Yao/Hexagram extensions are at top-level (NOT inside LayerCharacterMap).
--- LayerCharacterMap namespace is reserved for the inspection table at the end.
+/-! ## R1 — Yao essence (阳/阴 → 实/虚)
 
-/-! ## R1 — Yao essence (阳/阴 → 实/虚) -/
+   邵雍《观物外篇》"阳为实，阴为虚"。
+   这是 R1 (一处差异之两端) 的义理读法。 -/
 
 namespace SSBX.Foundation.Yi.Yi.Yao
 
@@ -46,15 +63,23 @@ theorem essence_roundtrip (y : Yao) :
 
 end SSBX.Foundation.Yi.Yi.Yao
 
-/-! ## R2 — SiXiang seasons (邵雍先天图四时) -/
+/-! ## R2 — SiXiang seasons (邵雍先天图四象配四时)
+
+   邵雍《皇极经世》：
+   - 太阳之时为夏
+   - 少阴之时为秋
+   - 少阳之时为春
+   - 太阴之时为冬 -/
 
 namespace SSBX.Foundation.Bagua.BaguaAlgebra.SiXiang
+
+open SSBX.Foundation.Yi.Yi
 
 def seasonChar (s : SiXiang) : String :=
   if s = SiXiang.taiYang then "夏"
   else if s = SiXiang.shaoYin then "秋"
   else if s = SiXiang.shaoYang then "春"
-  else "冬"
+  else "冬"  -- taiYin
 
 def fromSeasonChar (s : String) : Option SiXiang :=
   if s = "夏" then some SiXiang.taiYang
@@ -65,42 +90,26 @@ def fromSeasonChar (s : String) : Option SiXiang :=
 
 end SSBX.Foundation.Bagua.BaguaAlgebra.SiXiang
 
-/-! ## R3 — Trigram literal char (8 canonical names) -/
+/-! ## R3 — Trigram virtue (说卦传性德, conflict-aware substitutions)
+
+   《说卦传》原文：乾健、坤顺、震动、巽入、坎陷、离丽、艮止、兑说也。
+
+   本表对原文做三处替换以避免系统内冲突：
+   - 震：动 → 起 (因 `dong` 已是 R3 flip y1 算子；《说卦》"震起"为次义)
+   - 离：丽 → 显 (因 `丽` 与 30 卦撞名；`显` 与 Sheng.toTrigram manifest 同向)
+   - 兑：说 → 悦 (现代汉字写法) -/
 
 namespace SSBX.Foundation.Yi.Yi.Trigram
 
-def literalChar (t : Trigram) : String :=
-  if t = qian then "乾"
-  else if t = dui then "兑"
-  else if t = li then "离"
-  else if t = zhen then "震"
-  else if t = xun then "巽"
-  else if t = kan then "坎"
-  else if t = gen then "艮"
-  else "坤"
-
-def fromLiteralChar (s : String) : Option Trigram :=
-  if s = "乾" then some qian
-  else if s = "兑" || s = "兌" then some dui
-  else if s = "离" || s = "離" then some li
-  else if s = "震" then some zhen
-  else if s = "巽" then some xun
-  else if s = "坎" then some kan
-  else if s = "艮" then some gen
-  else if s = "坤" then some kun
-  else none
-
-end SSBX.Foundation.Yi.Yi.Trigram
-
-/-! ## R3 — Trigram virtue (via Virtue.displayChar)
-
-   Note: Trigram → Virtue → displayChar 链路。
-   `Trigram.virtue` 在 Yi.lean 已定义；`Virtue.displayChar` 也在 Yi.lean. -/
-
-namespace SSBX.Foundation.Yi.Yi.Trigram
-
-/-- Convenience: trigram virtue char in one step. -/
-def virtueChar (t : Trigram) : String := t.virtue.displayChar
+def virtueChar (t : Trigram) : String :=
+  if t = qian then "健"
+  else if t = dui then "悦"
+  else if t = li then "显"
+  else if t = zhen then "起"
+  else if t = xun then "入"
+  else if t = kan then "险"
+  else if t = gen then "止"
+  else "顺"  -- kun
 
 def fromVirtueChar (s : String) : Option Trigram :=
   if s = "健" then some qian
@@ -113,17 +122,34 @@ def fromVirtueChar (s : String) : Option Trigram :=
   else if s = "顺" then some kun
   else none
 
+/-- Each trigram's canonical literal character (the trigram name itself). -/
+def literalChar (t : Trigram) : String :=
+  if t = qian then "乾"
+  else if t = dui then "兑"
+  else if t = li then "离"
+  else if t = zhen then "震"
+  else if t = xun then "巽"
+  else if t = kan then "坎"
+  else if t = gen then "艮"
+  else "坤"
+
 theorem virtue_roundtrip (t : Trigram) :
     fromVirtueChar t.virtueChar = some t := by
-  cases t with
-  | mk y1 y2 y3 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> rfl
+  rcases t with ⟨y1, y2, y3⟩
+  cases y1 <;> cases y2 <;> cases y3 <;> rfl
 
 end SSBX.Foundation.Yi.Yi.Trigram
 
-/-! ## R4 — 6-yao flip position chars (改/化/变/临/主/极)
+/-! ## R4 — Hexagram 6-yao flip position chars
 
-   These live in the LayerCharacterMap namespace as standalone helpers. -/
+   六爻位翻转字: 改/化/变/临/主/极 (Fin 6, 0-indexed)
+
+   - flip[0] (改) — 初爻 (与 R3 dong 一致)
+   - flip[1] (化) — 二爻 (与 R3 hua 一致)
+   - flip[2] (变) — 三爻 (与 R3 bian 一致)
+   - flip[3] (临) — 四爻 (近君位 / 临察；19 临卦同字)
+   - flip[4] (主) — 五爻 (君位 / 主导；九五之尊)
+   - flip[5] (极) — 上爻 (亢龙有悔之极位) -/
 
 namespace SSBX.Text.LayerCharacterMap
 
@@ -148,23 +174,27 @@ def fromFlipPositionChar (s : String) : Option (Fin 6) :=
 theorem flipPosition_roundtrip (n : Fin 6) :
     fromFlipPositionChar (flipPositionChar n) = some n := by
   match n with
-  | ⟨0, _⟩ => rfl | ⟨1, _⟩ => rfl | ⟨2, _⟩ => rfl
-  | ⟨3, _⟩ => rfl | ⟨4, _⟩ => rfl | ⟨5, _⟩ => rfl
+  | ⟨0, _⟩ => rfl
+  | ⟨1, _⟩ => rfl
+  | ⟨2, _⟩ => rfl
+  | ⟨3, _⟩ => rfl
+  | ⟨4, _⟩ => rfl
+  | ⟨5, _⟩ => rfl
 
 end SSBX.Text.LayerCharacterMap
 
-/-! ## R5 — Shi transitions (迁/溯) -/
+/-! ## R5 — Shi transition chars (迁 / 溯) -/
 
 namespace SSBX.Text.LayerCharacterMap
 
-open SSBX.Foundation.Bagua.Cell192
-
 inductive ShiTransition : Type
-  | next  -- 迁
-  | prev  -- 溯
+  | next  -- 迁: 已 → 今 → 未 → 已
+  | prev  -- 溯: 已 ← 今 ← 未 ← 已
   deriving Repr, DecidableEq, BEq
 
 namespace ShiTransition
+
+open SSBX.Foundation.Bagua.Cell192
 
 def char : ShiTransition → String
   | .next => "迁"
@@ -175,6 +205,7 @@ def fromChar (s : String) : Option ShiTransition :=
   else if s = "溯" then some .prev
   else none
 
+/-- Apply a shi transition to a Shi value. -/
 def apply (t : ShiTransition) (s : Shi) : Shi :=
   match t with
   | .next => s.next
@@ -188,7 +219,10 @@ end ShiTransition
 
 end SSBX.Text.LayerCharacterMap
 
-/-! ## L0 — VM instruction modern aliases (静/置/翻/互/错/综/侔/会/跳/推/取/终) -/
+/-! ## L0 — Modern instruction aliases (静/置/翻/...)
+
+   These are aliases on top of the existing `YiInstrKind.token` tokens
+   (`不动 / 设时 / 翻爻 / 比爻 / 比时`), which remain unchanged. -/
 
 namespace SSBX.Text.OperatorAnchors.YiInstrKind
 
@@ -227,14 +261,22 @@ theorem modernAlias_roundtrip (k : YiInstrKind) :
 
 end SSBX.Text.OperatorAnchors.YiInstrKind
 
-/-! ## Rh — Ben/Zheng/Mian fromChar (chars 与 char 已在 BenZheng.lean 定义) -/
-
--- Ben.fromChar、Zheng.fromChar、Mian.label 已在 BenZheng.lean 定义。
--- 此处不重复，仅引入到 LayerCharacterMap 的 inspection table。
-
-/-! ## Aggregate inspection table -/
-
 namespace SSBX.Text.LayerCharacterMap
+
+open SSBX.Text.OperatorAnchors
+
+theorem allKinds_modernAliases_distinct :
+    (yiInstrKinds.map YiInstrKind.modernAlias).Nodup := by
+  native_decide
+
+theorem allKinds_modernAliases_length_12 :
+    (yiInstrKinds.map YiInstrKind.modernAlias).length = 12 := by
+  native_decide
+
+/-! ## Aggregate inspection table
+
+   `allLayerChars` is the single ground-truth list for any future
+   surface-alias parser. -/
 
 structure LayerChar where
   layer  : String
@@ -244,15 +286,15 @@ structure LayerChar where
   deriving Repr
 
 def allLayerChars : List LayerChar :=
-  -- R1 (2)
+  -- R1: yao essence (2)
   [ ⟨"R1", "essence", "Yao.yang",  "实"⟩
   , ⟨"R1", "essence", "Yao.yin",   "虚"⟩
-  -- R2 (4)
+  -- R2: sixiang seasons (4)
   , ⟨"R2", "season",  "SiXiang.taiYang",  "夏"⟩
   , ⟨"R2", "season",  "SiXiang.shaoYin",  "秋"⟩
   , ⟨"R2", "season",  "SiXiang.shaoYang", "春"⟩
   , ⟨"R2", "season",  "SiXiang.taiYin",   "冬"⟩
-  -- R3 virtue (8)
+  -- R3: trigram virtues (8)
   , ⟨"R3", "virtue",  "Trigram.qian", "健"⟩
   , ⟨"R3", "virtue",  "Trigram.dui",  "悦"⟩
   , ⟨"R3", "virtue",  "Trigram.li",   "显"⟩
@@ -261,7 +303,7 @@ def allLayerChars : List LayerChar :=
   , ⟨"R3", "virtue",  "Trigram.kan",  "险"⟩
   , ⟨"R3", "virtue",  "Trigram.gen",  "止"⟩
   , ⟨"R3", "virtue",  "Trigram.kun",  "顺"⟩
-  -- R3 literal (8)
+  -- R3: trigram literals (8)
   , ⟨"R3", "literal", "Trigram.qian", "乾"⟩
   , ⟨"R3", "literal", "Trigram.dui",  "兑"⟩
   , ⟨"R3", "literal", "Trigram.li",   "离"⟩
@@ -270,17 +312,17 @@ def allLayerChars : List LayerChar :=
   , ⟨"R3", "literal", "Trigram.kan",  "坎"⟩
   , ⟨"R3", "literal", "Trigram.gen",  "艮"⟩
   , ⟨"R3", "literal", "Trigram.kun",  "坤"⟩
-  -- R4 flip (6)
+  -- R4: 6-yao flip positions (6)
   , ⟨"R4", "flip", "flip[0]初爻", "改"⟩
   , ⟨"R4", "flip", "flip[1]二爻", "化"⟩
   , ⟨"R4", "flip", "flip[2]三爻", "变"⟩
   , ⟨"R4", "flip", "flip[3]四爻", "临"⟩
   , ⟨"R4", "flip", "flip[4]五爻", "主"⟩
   , ⟨"R4", "flip", "flip[5]上爻", "极"⟩
-  -- R5 (2)
+  -- R5: shi transitions (2)
   , ⟨"R5", "shi-transition", "ShiTransition.next", "迁"⟩
   , ⟨"R5", "shi-transition", "ShiTransition.prev", "溯"⟩
-  -- L0 (12)
+  -- L0: VM instruction aliases (12)
   , ⟨"L0", "instr", "YiInstrKind.nop",          "静"⟩
   , ⟨"L0", "instr", "YiInstrKind.setShi",       "置"⟩
   , ⟨"L0", "instr", "YiInstrKind.flipYao",      "翻"⟩
@@ -293,37 +335,11 @@ def allLayerChars : List LayerChar :=
   , ⟨"L0", "instr", "YiInstrKind.push",         "推"⟩
   , ⟨"L0", "instr", "YiInstrKind.pop",          "取"⟩
   , ⟨"L0", "instr", "YiInstrKind.halt",         "终"⟩
-  -- Rh: Ben (4)
-  , ⟨"Rh", "ben", "Ben.wu",   "物"⟩
-  , ⟨"Rh", "ben", "Ben.dong", "动"⟩
-  , ⟨"Rh", "ben", "Ben.jian", "间"⟩
-  , ⟨"Rh", "ben", "Ben.shi",  "事"⟩
-  -- Rh: Zheng (4)
-  , ⟨"Rh", "zheng", "Zheng.jiFaint",    "几"⟩
-  , ⟨"Rh", "zheng", "Zheng.shiForce",   "势"⟩
-  , ⟨"Rh", "zheng", "Zheng.jiOccasion", "机"⟩
-  , ⟨"Rh", "zheng", "Zheng.shiTime",    "时"⟩
-  -- Rh: Mian 16-grid (16)
-  , ⟨"Rh", "mian", "(物,几)", "动"⟩
-  , ⟨"Rh", "mian", "(物,势)", "行"⟩
-  , ⟨"Rh", "mian", "(物,机)", "化"⟩
-  , ⟨"Rh", "mian", "(物,时)", "流"⟩
-  , ⟨"Rh", "mian", "(动,几)", "萌"⟩
-  , ⟨"Rh", "mian", "(动,势)", "长"⟩
-  , ⟨"Rh", "mian", "(动,机)", "发"⟩
-  , ⟨"Rh", "mian", "(动,时)", "续"⟩
-  , ⟨"Rh", "mian", "(间,几)", "缘"⟩
-  , ⟨"Rh", "mian", "(间,势)", "通"⟩
-  , ⟨"Rh", "mian", "(间,机)", "会"⟩
-  , ⟨"Rh", "mian", "(间,时)", "系"⟩
-  , ⟨"Rh", "mian", "(事,几)", "兆"⟩
-  , ⟨"Rh", "mian", "(事,势)", "趋"⟩
-  , ⟨"Rh", "mian", "(事,机)", "变"⟩
-  , ⟨"Rh", "mian", "(事,时)", "史"⟩
   ]
 
-theorem allLayerChars_length : allLayerChars.length = 66 := by native_decide
+theorem allLayerChars_length : allLayerChars.length = 42 := by native_decide
 
+/-- Filter by layer for inspection. -/
 def charsForLayer (layer : String) : List LayerChar :=
   allLayerChars.filter (fun c => c.layer = layer)
 
@@ -333,6 +349,5 @@ theorem r3_chars_count : (charsForLayer "R3").length = 16 := by native_decide
 theorem r4_chars_count : (charsForLayer "R4").length = 6  := by native_decide
 theorem r5_chars_count : (charsForLayer "R5").length = 2  := by native_decide
 theorem l0_chars_count : (charsForLayer "L0").length = 12 := by native_decide
-theorem rh_chars_count : (charsForLayer "Rh").length = 24 := by native_decide
 
 end SSBX.Text.LayerCharacterMap

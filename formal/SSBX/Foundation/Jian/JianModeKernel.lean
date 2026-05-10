@@ -1,11 +1,11 @@
 /-
-# Virtue ↔ Kernel — ontological-mode mapping to dynamical kernel
+# JianMode ↔ Kernel — ontological-mode mapping to dynamical kernel
 
-  The 8 Virtue atoms (sheng/shou/yuan/shen/sai/xian/ju/kai) live in the
+  The 8 JianMode atoms (sheng/shou/yuan/shen/sai/xian/ju/kai) live in the
   ontological/phenomenological layer. The Kernel (Foundation/Kernel.lean) lives
   in the dynamical layer: 動 / 中 / 极 / 几 / orbits.
 
-  This file maps each Virtue to its Kernel role, with the central asymmetry:
+  This file maps each JianMode to its Kernel role, with the central asymmetry:
 
     塞 (sai) — ALONE among the 8 — is the ONLY mode that lands in 极 (extreme).
     All 7 others are 中-modes: they exhibit `dong s ≠ s`, the rhythm continues.
@@ -27,7 +27,7 @@ open SSBX.Foundation.Wen.Kernel
 
 /-! ## § 1 KernelRole — the 8 dynamical roles -/
 
-/-- The 8 dynamical-layer roles, one per Virtue. -/
+/-- The 8 dynamical-layer roles, one per JianMode. -/
 inductive KernelRole : Type
   | continuation   -- sheng (乾): 動 continues into next 中-state
   | reception      -- shou (坤): the receiving form; "next state from 動"
@@ -39,18 +39,18 @@ inductive KernelRole : Type
   | aesthetic      -- kai (兑): 开/美 — aesthetic opening
   deriving Repr, DecidableEq, BEq
 
-/-! ## § 2 Virtue ↔ KernelRole bijection
+/-! ## § 2 JianMode ↔ KernelRole bijection
 
-  `kernelRole` defined inside `SSBX.Foundation.Yi.Yi.Virtue` for dot notation. -/
+  `kernelRole` defined inside `SSBX.Foundation.Yi.Yi.JianMode` for dot notation. -/
 
 end SSBX.Foundation.Jian.JianModeKernel
 
-namespace SSBX.Foundation.Yi.Yi.Virtue
+namespace SSBX.Foundation.Yi.Yi.JianMode
 
 open SSBX.Foundation.Jian.JianModeKernel (KernelRole)
 
 /-- Each ontological mode's dynamical role. -/
-def kernelRole : SSBX.Foundation.Yi.Yi.Virtue → KernelRole
+def kernelRole : SSBX.Foundation.Yi.Yi.JianMode → KernelRole
   | .sheng => .continuation
   | .shou  => .reception
   | .yuan  => .origin
@@ -60,7 +60,7 @@ def kernelRole : SSBX.Foundation.Yi.Yi.Virtue → KernelRole
   | .ju    => .gathering
   | .kai   => .aesthetic
 
-end SSBX.Foundation.Yi.Yi.Virtue
+end SSBX.Foundation.Yi.Yi.JianMode
 
 namespace SSBX.Foundation.Jian.JianModeKernel
 
@@ -70,7 +70,7 @@ open SSBX.Foundation.Wen.Kernel
 namespace KernelRole
 
 /-- Inverse: each role's mode. -/
-def virtue : KernelRole → Virtue
+def jianMode : KernelRole → JianMode
   | .continuation  => .sheng
   | .reception     => .shou
   | .origin        => .yuan
@@ -82,12 +82,12 @@ def virtue : KernelRole → Virtue
 
 end KernelRole
 
-/-- Bijection: Virtue ↔ KernelRole. -/
-theorem mode_role_left_inverse (m : Virtue) :
-    m.kernelRole.virtue = m := by cases m <;> rfl
+/-- Bijection: JianMode ↔ KernelRole. -/
+theorem mode_role_left_inverse (m : JianMode) :
+    m.kernelRole.jianMode = m := by cases m <;> rfl
 
 theorem mode_role_right_inverse (r : KernelRole) :
-    r.virtue.kernelRole = r := by cases r <;> rfl
+    r.jianMode.kernelRole = r := by cases r <;> rfl
 
 /-! ## § 3 The asymmetry: 塞 IS 极, all else is 中
 
@@ -109,12 +109,12 @@ theorem role_partition (r : KernelRole) :
     r.isExtreme = !r.isMiddle := by cases r <;> rfl
 
 /-- Only sai/塞 is extreme. -/
-theorem only_sai_extreme (m : Virtue) :
+theorem only_sai_extreme (m : JianMode) :
     m.kernelRole.isExtreme = true ↔ m = .sai := by
-  cases m <;> simp [Virtue.kernelRole, KernelRole.isExtreme]
+  cases m <;> simp [JianMode.kernelRole, KernelRole.isExtreme]
 
 /-- All non-sai modes are middle. -/
-theorem non_sai_is_middle (m : Virtue) (h : m ≠ .sai) :
+theorem non_sai_is_middle (m : JianMode) (h : m ≠ .sai) :
     m.kernelRole.isMiddle = true := by
   cases m <;> first | rfl | (exfalso; exact h rfl)
 
@@ -153,7 +153,7 @@ def kaiState (s : Field) : Prop := ∃ (heart : ZhongOrbit) (n : Nat),
 
 /-! ## § 5 Per-mode characterizing theorems
 
-  Cross-link the Virtue atom to its Field predicate. -/
+  Cross-link the JianMode atom to its Field predicate. -/
 
 /-- 塞 (sai) characterizes extremity. -/
 theorem sai_iff_extreme (s : Field) : saiState s ↔ extreme s := Iff.rfl
@@ -220,18 +220,18 @@ theorem sai_excludes_xian (s : Field) : ¬ (saiState s ∧ xianState s) := by
   intro ⟨h_sai, h_xian⟩
   exact (xian_implies_middle s h_xian) h_sai
 
-/-! ## § 7 Trigram-level reading: V_4 group action on Virtue lifts to roles
+/-! ## § 7 Trigram-level reading: V_4 group action on JianMode lifts to roles
 
-  V_4 (cuo/zong/cuoZong/id) acts on Virtue (defined in Yi.lean §11).
+  V_4 (cuo/zong/cuoZong/id) acts on JianMode (defined in Yi.lean §11).
   The action descends to KernelRole via the bijection. -/
 
 namespace KernelRole
 
-/-- 错 (cuo) on KernelRole — derived from Virtue.cuo via the bijection. -/
-def cuo (r : KernelRole) : KernelRole := r.virtue.cuo.kernelRole
+/-- 错 (cuo) on KernelRole — derived from JianMode.cuo via the bijection. -/
+def cuo (r : KernelRole) : KernelRole := r.jianMode.cuo.kernelRole
 
 /-- 综 (zong) on KernelRole. -/
-def zong (r : KernelRole) : KernelRole := r.virtue.zong.kernelRole
+def zong (r : KernelRole) : KernelRole := r.jianMode.zong.kernelRole
 
 /-- 错 is involutive. -/
 theorem cuo_cuo (r : KernelRole) : r.cuo.cuo = r := by
@@ -250,16 +250,16 @@ end KernelRole
 /-! ## § 8 Summary -/
 
 /-- The bridge:
-    8 Virtue atoms ↔ 8 KernelRole atoms (bijection)
+    8 JianMode atoms ↔ 8 KernelRole atoms (bijection)
     Among 8 modes, EXACTLY ONE (sai = 塞) characterizes 极
     The other 7 characterize various 中-properties (origin/orbit/heart/aesthetic)
-    V_4 group action on Virtue descends to KernelRole. -/
+    V_4 group action on JianMode descends to KernelRole. -/
 theorem bridge_summary :
     -- Bijection
-    (∀ m : Virtue, m.kernelRole.virtue = m) ∧
-    (∀ r : KernelRole, r.virtue.kernelRole = r) ∧
+    (∀ m : JianMode, m.kernelRole.jianMode = m) ∧
+    (∀ r : KernelRole, r.jianMode.kernelRole = r) ∧
     -- Exactly one extreme mode
-    (∀ m : Virtue, m.kernelRole.isExtreme = true ↔ m = .sai) ∧
+    (∀ m : JianMode, m.kernelRole.isExtreme = true ↔ m = .sai) ∧
     -- 错 is involutive on KernelRole
     (∀ r : KernelRole, r.cuo.cuo = r) :=
   ⟨mode_role_left_inverse,

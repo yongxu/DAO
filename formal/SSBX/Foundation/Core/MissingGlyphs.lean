@@ -16,7 +16,6 @@ namespace SSBX.Foundation.Core.MissingGlyphs
 open SSBX.Roster
 open SSBX.Foundation.Core.MonadRoot
 open SSBX.Foundation.Core.MathAxiomMap
-open SSBX.Foundation.Bagua.BenZheng  -- Ben/Zheng/Mian for cell tuples
 open SSBX.Text.Glyph
 open SSBX.Truth
 open SSBX.Truth.ClaimLedger
@@ -111,8 +110,8 @@ def valueAxiomAnchor : AtomName -> ClaimId
   | .«背» => .wrongDefinition
   | _ => .openValueAxiomClaim
 
-def recoveredMissingGlyphRootSummary : List (AtomName × CoreAtom × Mian) :=
-  recoveredMissingGlyphs.map (fun a => (a, atomCore a, atomPrimaryMian a))
+def recoveredMissingGlyphRootSummary : List (AtomName × CoreAtom × Face) :=
+  recoveredMissingGlyphs.map (fun a => (a, atomCore a, atomPrimaryFace a))
 
 theorem recovered_missing_glyphs_registered {a : AtomName} :
     a ∈ recoveredMissingGlyphs -> a ∈ allAtoms := by
@@ -177,12 +176,12 @@ theorem proof_language_pending_connected {a : AtomName} :
 theorem value_pending_connected_to_value_axioms {a : AtomName} :
     a ∈ valueAxiomPendingGlyphs ->
       admissionKind a = .valueAxiomPending ∧
-      atomPrimaryMian a = ((.dong, .shiTime) : Mian) ∧
+      atomPrimaryFace a = .«价值面» ∧
       claimEntry (valueAxiomAnchor a) ∈ allClaims := by
   intro h
   have hk : a ∈ valueAxiomPendingGlyphs -> admissionKind a = .valueAxiomPending := by
     cases a <;> native_decide
-  have hf : a ∈ valueAxiomPendingGlyphs -> atomPrimaryMian a = ((.dong, .shiTime) : Mian) := by
+  have hf : a ∈ valueAxiomPendingGlyphs -> atomPrimaryFace a = .«价值面» := by
     cases a <;> native_decide
   exact ⟨hk h, hf h, all_claims_have_entries (valueAxiomAnchor a)⟩
 
@@ -190,7 +189,7 @@ theorem text_only_pending_kept_textual {a : AtomName} :
     a ∈ textOnlyPendingGlyphs ->
       admissionKind a = .textOnlyPending ∧
       atomCore a = .«法» ∧
-      atomPrimaryMian a = ((.wu, .shiTime) : Mian) ∧
+      atomPrimaryFace a = .«文面» ∧
       ¬ HasObjectSemanticProof a := by
   cases a <;> native_decide
 
