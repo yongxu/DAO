@@ -62,8 +62,8 @@ inductive YiInstr : Type
 
 ```lean
 structure YiState where
-  cur     : Cell192            -- 当前卦时
-  history : List Cell192       -- 无界记忆带
+  cur     : Cell256            -- 当前卦时
+  history : List Cell256       -- 无界记忆带
   pc      : Nat                -- 行之指
   prog    : List YiInstr       -- 程文
   halted  : Bool               -- 止之标
@@ -102,7 +102,7 @@ def daoJudgeProg : List YiInstr :=
 
 | 原语 | 见证 |
 |------|------|
-| 无界存储 | `history : List Cell192` |
+| 无界存储 | `history : List Cell256` |
 | 数据依赖分支 | `branchYaoEq` / `branchShiEq` |
 | 无界跳转 | `jump (target : Nat)` |
 | 无界程序 | `prog : List YiInstr` |
@@ -122,14 +122,14 @@ def daoJudgeProg : List YiInstr :=
 ### 2.2 八节构造
 
 §1 · 原子双射
-- `Yao ↔ Fin 2`、`Shi ↔ Fin 3`、`Hexagram ↔ Fin 64`、`Cell192 ↔ Fin 192`
+- `Yao ↔ Fin 2`、`Shi ↔ Fin 4 (V₄ Klein 四元 {道,已,今,未}，v3 改自 Z/3 cyclic 三元)`、`Hexagram ↔ Fin 64`、`Cell256 ↔ Fin 256`
 - 八条来回（`toIdx_fromIdx` / `fromIdx_toIdx`）尽证
 
-§2 · `Nat ↔ List Cell192`
+§2 · `Nat ↔ List Cell256`
 - 基-192 LSB 数位
 - `decodeNat (encodeNat n) = n`（强归纳）
 
-§3 · `YiInstr ↔ List Cell192`
+§3 · `YiInstr ↔ List Cell256`
 - `encInstr` / `decInstr` 覆盖全 12 构造子
 - **9 条来回定理**（`nop, hu, cuo, zong, push, pop, halt, setShi, flipYao`）
 - **Nat-参数 3 项已证**（`jump, branchShiEq, branchYaoEq`）—— `decNat_encNat` 桥接
@@ -138,11 +138,11 @@ def daoJudgeProg : List YiInstr :=
 - `decNat_encNat`：`(encodeNat n).length < 192 → decNat (encNat n ++ rest) = some (n, rest)`
 - 关键引理：`list_take_left_eq` / `list_drop_left_eq` / `decNat_cellFromIdx_cons`
 
-§4 · `List YiInstr` / `YiState ↔ List Cell192`
+§4 · `List YiInstr` / `YiState ↔ List Cell256`
 - `ProgEnc.encProg`、`StateEnc.encState`：整个状态摊平为卦时之列
 
 §5 · META 解释器
-- `metaStep : YiState → List Cell192` 对编码数据之元操作
+- `metaStep : YiState → List Cell256` 对编码数据之元操作
 
 §6 · 模拟定理
 - `metaStep_cur_correct`：`(metaStep s).head? = some s.step.cur`
@@ -172,9 +172,9 @@ theorem wenyan_self_interp_complete :
   ∧ (∀ s : YiState, (encState s).length ≥ 1)
     -- 3. metaStep 与 step 在 cur 上一致
   ∧ (∀ s : YiState, (metaStep s).head? = some s.step.cur)
-    -- 4. Cell192 ↔ Fin 192 双射
-  ∧ (∀ c : Cell192, cellFromIdx (cellToIdx c) = c)
-    -- 5. Nat ↔ List Cell192 来回
+    -- 4. Cell256 ↔ Fin 256 双射
+  ∧ (∀ c : Cell256, cellFromIdx (cellToIdx c) = c)
+    -- 5. Nat ↔ List Cell256 来回
   ∧ (∀ n : Nat, decodeNat (encodeNat n) = n)
     -- 6-12. 7 个无参 instr 来回
   ∧ (∀ rest, decInstr (encInstr .nop  ++ rest) = some (.nop,  rest))
@@ -395,9 +395,9 @@ theorem «微核之至» :
 六十四卦 (Hexagram)
   × Shi (3 时态)
   ↓ 张积
-Cell192 (192 格)
+Cell256 (192 格)
   ↓ 编码
-List Cell192 (无界数据)
+List Cell256 (无界数据)
   ↓ 解释
 YiInstr 程序 (文之指令)
   ↓ 执行
@@ -572,7 +572,7 @@ def metaStep, selfPushProg
 def Quine.{quineProg, quineCur, quineInit}                 -- 新增
 def MetaInterp.{metaInterpProg_halt, metaInterpProg_nop,
                 metaInterpProg}                            -- 新增
-theorem 双射来回（Yao、Shi、Hexagram、Cell192、Nat 各两条）
+theorem 双射来回（Yao、Shi、Hexagram、Cell256、Nat 各两条）
         9 条 decInstr_encInstr_X 来回（参数无 Nat 之 instrs）
         decNat_encNat                                       ★（新增）
         decInstr_encInstr_jump                              ★（新增）

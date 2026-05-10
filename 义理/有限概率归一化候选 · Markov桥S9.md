@@ -30,7 +30,7 @@ finite probability kernel denominator interface
 = normalized-row-total candidate = 1
 ```
 
-这一步关闭的是 **finite row sum-one probability boundary**：concrete 三状态 kernel 与 `71232` operator-cell grid kernel 的每个非终端行，都有显式有限 row support，并且 row support 上的权重总和等于该行分母，因此 rational normalized-row-total candidate 为 `1`。
+这一步关闭的是 **finite row sum-one probability boundary**：concrete 三状态 kernel 与 `94976` operator-cell grid kernel 的每个非终端行，都有显式有限 row support，并且 row support 上的权重总和等于该行分母，因此 rational normalized-row-total candidate 为 `1`。
 
 公开摘要为：
 
@@ -39,7 +39,7 @@ theorem finite_probability_normalization_bridge_summary :
     FiniteSumOneProbabilityBoundaryClosed
     ∧ HasFiniteProbabilityProjection concreteProcess
     ∧ HasFiniteProbabilityProjection operatorCellGridProcess
-    ∧ allOperatorCells.length = 71232
+    ∧ allOperatorCells.length = 94976
     ∧ (∀ b : PendingBeyondS9, ClosedByStepwiseS9 b = false)
     ∧ WenConstructiveCoverage
 ```
@@ -62,7 +62,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityNormalizatio
 | row sum | `rowWeightSum`、`row_weight_sum_eq_rowTotal` | 显示支撑上的权重和等于行分母 |
 | rational mass candidate | `normalizedMass`、`normalizedRowTotalCandidate` | 候选概率质量使用 `Rat` 分母读法 |
 | concrete normalization | `concrete_normalized_row_total_candidate_eq_one` | concrete 非终端行归一为 `1` |
-| grid normalization | `operatorCellGrid_normalized_row_total_candidate_eq_one` | `71232` grid 非终端行归一为 `1` |
+| grid normalization | `operatorCellGrid_normalized_row_total_candidate_eq_one` | `94976` grid 非终端行归一为 `1` |
 | S9 boundary | `FiniteSumOneProbabilityBoundaryClosed` | finite sum-one row boundary 已闭合 |
 | pending after S9 | `PendingBeyondS9` | sum-one row boundary 不再列入 pending；更大物理边界仍 pending |
 

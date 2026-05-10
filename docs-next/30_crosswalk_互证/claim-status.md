@@ -1,5 +1,7 @@
 # Claim 状态读法
 
+> 状态：v3 定本 (2026-05-11) — Cell256 / V₄ Shi / 严格 uniform R₀..R₈
+
 `ClaimLedger` 把文本 claim、模型结果和形式证明放入同一张账本。它是审计工具，不是把所有 claim 自动升级为 theorem 的机制。
 
 ## 状态总览
@@ -40,6 +42,16 @@
 - `kleene_recursion_axiom` 相关结论依赖该 axiom。
 - `theOne` 是 opaque witness，不能当作可展开构造。
 - `YiState.run` 是 partial execution boundary，证明层优先用 fuel 版本。
+
+## Cell192 → Cell256 迁移对 claim 状态的影响 (2026-05-10/11)
+
+V₄ Shi / Cell256 升级后，与 Cell192 cardinality 直接绑定的 claim 已被替换或重号；本页的状态分类（`machineChecked` / `modelComputed` / `ledgerDependent`）与 Kind taxonomy 不依赖具体 cardinality，因此本页本身**不需要按 cell-cardinality 改写**。需要留意的具体迁移：
+
+- `Cell192OperatorComplete` → `Cell256OperatorComplete`（Self-description witness，仍 `machineChecked`）。
+- 旧 `R6_complete` / `R7_complete` bundle → **`R8_complete`** in `Cell256Stratify.lean`，axiom audit = `{propext, native_decide}`，**0 项目自定义 axiom**。
+- `wen_constructive_coverage_192_371` 等下游 cascade 引理保留旧名（避免重命名传播），但 cardinality 已升级到 `256 × 371 = 94976`（详见 `../30_crosswalk_互证/old-to-new.md` Cell192→Cell256 节）。
+
+具体 claim 列表与状态以 `../_generated/claim-index.md` 为准。
 
 ## 更新检查
 

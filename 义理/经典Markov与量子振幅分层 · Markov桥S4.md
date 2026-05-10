@@ -160,7 +160,7 @@ theorem channel_amplitude_support_implies_step ...
 
 ## 三 · zero placeholder 的意义
 
-concrete 与 `71232` grid 当前使用 zero amplitude skeleton：
+concrete 与 `94976` grid 当前使用 zero amplitude skeleton：
 
 ```text
 all amplitudes = 0

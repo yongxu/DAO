@@ -14,7 +14,9 @@
 | Lean 区域 | 可读作 | 不可读作 |
 |---|---|---|
 | `Foundation/Core` | 根源、生成、注意、人类对齐等基础构件 | 全部价值论已闭合 |
-| `Foundation/Bagua` | 八卦计算、Cell192、有限执行与不完备路线 | 无条件去公理化完成 |
+| `Foundation/Bagua` | 八卦计算、Cell128/Cell256、有限执行与不完备路线 | 无条件去公理化完成 |
+| `Foundation/Hierarchy` | R₀..R₈ 严格-uniform 阶梯 (R-index alias shims + LiftProject + Operators/{Atomic,V4Outer}) | v3 新增 |
+| `Foundation/Notation` | OX["..."] 8-字符 256-格 macro | v3 新增 |
 | `Foundation/Wen` | 文、算子、解释器、自释相关工程 | 文言自然语言全覆盖 |
 | `Foundation/Modern` | 现代数学和跨域接口的形式桥 | 经验科学结论已由 Lean 证明 |
 | `Text` | 字形、算子表、读法与完备性登记 | 每个传统训诂都已定本 |

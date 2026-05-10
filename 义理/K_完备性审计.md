@@ -12,10 +12,10 @@
 
 | 维度 | 已完备 | 待补 | 进度 |
 |------|------|------|-----|
-| 层级（layer） | T₀..T₆ × Z/3 = 192 | T_n 一般 / ω-tower 极限语义 | **85%** |
+| 层级（layer） | T₀..T₆ × V₄ = 192 | T_n 一般 / ω-tower 极限语义 | **85%** |
 | 算子（operators） | (Z/2)³ + ⋊⟨综⟩ + 合分重 + 生生 + 全集合表（I §十五）| V₄ / 互之 Lean 群论刻画 | **85%** |
 | 内容（content） | **八衍**：数 / 推 / 测 / 形 + **类 / 动 / 识 / 象** ✓ | 神经科学 / 量子叠加 / Mathlib 连续 | **90%** |
-| 形式化（formal） | BaguaAlgebra 75 + Cell192 + BaguaTuring + GodelLi 49 + **ShuSuan 40 + LuoJi 44 + XingWei 32 + TongJi 32 + LeiYing 12 + DongLi 35 + XinZhi 51 + WuXiang 23**（含 Modern 先行 +30）✓ | Mathlib 接入（连续测度 / ℝ Cauchy / 量子叠加 / 连续 ODE）| **93%** |
+| 形式化（formal） | BaguaAlgebra 75 + Cell256 + BaguaTuring + GodelLi 49 + **ShuSuan 40 + LuoJi 44 + XingWei 32 + TongJi 32 + LeiYing 12 + DongLi 35 + XinZhi 51 + WuXiang 23**（含 Modern 先行 +30）✓ | Mathlib 接入（连续测度 / ℝ Cauchy / 量子叠加 / 连续 ODE）| **93%** |
 | 边界（boundary） | J 之道-理二分 + U⇏⊤ 八衍全集中 + G/H/I 道理对接 + F 之 SU(3) 弱类比之严格界限（物理衍）| T₆ 截断 justification 集中 | **88%** |
 
 **合计完备度**：约 **93 ± 3%**（2026-05-07 实测，**Phase 3 副线四衍 + Modern 先行三章** 后）——**五维度全 ≥ 85% 完备**。主要待补在 **Mathlib 接入**（连续测度 / ℝ Cauchy 严格 Lean 证 / 量子叠加 / 连续 ODE），属 **Modern 主体**。Modern 之 **先行三章**（神经科学心智 / Husserl 时间意识 / 连续 ODE 之 finite Euler）已在 finite 层落地（XinZhi +21、DongLi +9 = 30 声明，0 sorry / 0 公理）。
@@ -53,7 +53,7 @@
 | T₃ | Trigram | 8 | A · B · C · D · G · I | `Trigram` (Yi.lean) |
 | T₄–T₅ | Bool⁴ / Bool⁵ | 16 / 32 | （未独立讨论） | — |
 | T₆ | Hexagram | 64 | A · D · G · I | `Hexagram` (Yi.lean) |
-| T₆ × Z/3 | Cell192 | 192 | J | `Cell192` (Cell192.lean) |
+| T₆ × V₄ | Cell256 | 192 | J | `Cell256` (Cell256.lean) |
 | 一般 T_n | Sheng n | 2ⁿ | （J 提及，未深入） | `Sheng : ℕ → Type` |
 | ω-tower | `Sheng : ℕ → Type` | ω | J | inductive family |
 
@@ -91,7 +91,7 @@
 | T₂ | 反_y₁ / 反_y₂ | 分 / 合 | 易（swap） | — |
 | T₃ | 动 / 化 / 变 | 分 / 合 / 重 | 错 / 综 / 互 / 之 | — |
 | T₆ | 6 反爻 | chong / 内/外 | 错_hex / 综_hex / 互 / 之 / V₄ | — |
-| T₆ × Z/3 | + 时移 next³ | + push / pop | + halt / branch | partial run |
+| T₆ × V₄ | + 时移 next³ | + push / pop | + halt / branch | partial run |
 
 **已完备**：T₃ 横纵算子全 Lean 验证；T₆ 横向 (Z/2)⁶ 完整。
 **待补**：T₆ 之 互/之/V₄ 之统一群论刻画（`zong_outside_flip_group` 已证综不在 (Z/2)³，但 V₄ 之超八面体扩张、互之降维投影未 Lean 验证）。
@@ -129,7 +129,7 @@
 |---|---|---|---:|---:|
 | Yao / Trigram / Hexagram + V₄ + YaoStar | ✓ 完备 | `Yi.lean` | 1975 | 298 |
 | (Z/2)³ + 合 / 分 / 重 / 生生 / 5 算子 | ✓ 完备 | `BaguaAlgebra.lean` | 734 | 75 (+1 private) |
-| 192 = T₆ × Z/3 + 序卦 | ✓ 完备 | `Cell192.lean` | 254 | (含主定理) |
+| 192 = T₆ × V₄ + 序卦 | ✓ 完备 | `Cell256.lean` | 254 | (含主定理) |
 | YiInstr + partial run + daoJudge | ✓ 完备 | `BaguaTuring.lean` | 288 | (含 TC 论证) |
 | **哥德尔 / Halting 不可判 + Rice 四象 + uniform + daoJudge 不可通用** | **✓ 完备** | `GodelLi.lean` | ~750 | **49 定理 (+1 公理 Kleene)** |
 | **数算（项目自字 + Galois + (Z/2)²≄Z/4）** | **✓ 完备** | `ShuSuan.lean` | ~280 | **40 (+0 公理 / 0 sorry)** |
@@ -170,7 +170,7 @@
 > **项目立场**：本集合**有意识地**不追求"哥德尔意义下的完备"。
 
 理由（参 J §五）：
-1. **道-理二分**之根本设定：道层（Lean kernel + `Sheng` ω-tower）**包含但不被包含于**理层（Cell192 + YiInstr + r.e. 系统）
+1. **道-理二分**之根本设定：道层（Lean kernel + `Sheng` ω-tower）**包含但不被包含于**理层（Cell256 + YiInstr + r.e. 系统）
 2. 一致 r.e. 系统**必然不完备**（哥德尔第一）——任何尝试形式化"全部"将落入此命定
 3. 故**项目主张**：
    - 在**理层**（每个具体形式化模块）追求**最大可形式化范围**（已达 ~3251 行 Lean 0 sorry）
@@ -236,7 +236,7 @@ $$\exists \psi \in \mathcal{L}_\text{道}, \quad \text{道} \not\vdash \psi \lan
 ### Phase 0（当前完成）
 
 - [x] A–M 十二层 + **八衍** + README + 此 K = **20 文件 + 1 索引**
-- [x] BaguaAlgebra 75 / Yi 298 / Cell192 / BaguaTuring / GodelLi 49 / ShuSuan 40 / LuoJi 44 / TongJi 32 / XingWei 32 / **LeiYing 12 / DongLi 35 / XinZhi 51 / WuXiang 23** = **691 公开声明 / 0 sorry / 1 公理 / 51 jobs**
+- [x] BaguaAlgebra 75 / Yi 298 / Cell256 / BaguaTuring / GodelLi 49 / ShuSuan 40 / LuoJi 44 / TongJi 32 / XingWei 32 / **LeiYing 12 / DongLi 35 / XinZhi 51 / WuXiang 23** = **691 公开声明 / 0 sorry / 1 公理 / 51 jobs**
 - [x] 全集爻序 / 算子 / 三值保守律 / 道理二分 之集中陈述（八衍全建）
 - [x] 自释微核 L（4 模块 / 127 声明 / 0 sorry / 42 jobs，文道一也）
 - [x] **Phase 3 副线四衍**（类 / 动 / 识 / 象）markdown + Lean 全建

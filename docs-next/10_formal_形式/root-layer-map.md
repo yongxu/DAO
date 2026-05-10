@@ -1,358 +1,201 @@
-# 底层根系图：关系与算子
+> 状态：v3 定本 (2026-05-11)。
+> 父文档：[yi-RO-hierarchy.md](yi-RO-hierarchy.md)（R₀..R₈ 严格 (Z/2)ⁿ uniform 之 definitive）
+> Lean 入口：[`RHierarchy.lean`](../../formal/SSBX/Foundation/Hierarchy/RHierarchy.lean)（umbrella import）
+> 相关 v3 文档：[ox-notation.md](ox-notation.md) · [shi-v4.md](shi-v4.md) · [r5-wuyao-provisional.md](r5-wuyao-provisional.md) · [r7-yin-r8-guo.md](r7-yin-r8-guo.md) · [lift-project.md](lift-project.md) · [cell256-grid.md](cell256-grid.md)
 
-> **状态（2026-05-09 更新）**：本文是**结构地图**——只定义 R-line（生成线）/ M-line（名册线）/ 内容线 三轴的层级和算子拓扑。三组配套文件分别承担：
-> - 字根定本：[layer-character-map.md](layer-character-map.md) — 每字推荐 + 备选 + 理由
-> - 全景图：[layer-axis-graph.md](layer-axis-graph.md) — 三轴汇聚图 + Mermaid 图谱
-> - 代码 ground truth：[`LayerCharacterMap.lean`](../../formal/SSBX/Text/LayerCharacterMap.lean) — 解释器查表函数 + 往返定理
->
-> 旧工作稿 [bagua-operator-name-candidates.md](../40_reference_参考/bagua-operator-name-candidates.md) 已降级为 archive pointer。
->
-> **本文 §2.4–§2.6 的部分 default 字已被新决定覆盖**（不在本文重写，由上面三个文件接管）：
-> - R3 八卦 mode 字：`生/开/显/元/申/塞/居/守` → **`健/悦/显/起/入/险/止/顺`**（说卦回归）
-> - R3 dong default：`动` → `改`（裸 `动` 不再直落坐标）
-> - R4 flip4 / flip5 default：`待定` → **`临 / 主`**
-> - R5 shiNext / shiPrev：未定 → **`迁 / 溯`**
-> - R1 阳/阴 义理读：未定 → **`实 / 虚`**（邵雍《观物外篇》）
-> - R2 四象单字：未定 → **`春 / 夏 / 秋 / 冬`**（邵雍先天图）
+# 根层映射 root-layer-map · v3
 
-本文先把根下三到四层的关系和算子摊平。它不是替代 `MonadRoot.lean`、`Yuan.lean`、`Yi.lean` 或 `BaguaAlgebra.lean`，而是给这些文件之间的底层读法一个统一坐标。
+> 本文是**结构地图**——把 R₀..R₈ 的 R-轴（layer-index）、M-轴（meta-content）、字根轴（layer-character）三者并置。
+> 历史变迁：v2 (2026-05-09) 含 R₁..R₆ + 192 格旧 surface；v3 (2026-05-11) 切换到 **R₀..R₈ + Cell256 + V₄ Klein Shi** 之 definitive 编号。
+> 不再保留 Cell192 / R₁..R₆ 顶层 claim — 仅在「历史修正」附录中作 archive pointer。
 
+---
 
-## 0. 本体读法：差、识、间、事
+## 0. 三轴并置定义
 
-若先不管现有文档分层，最底层应先按“差异如何成为可说之物”来读：
-
-```text
-太极 / 一元
-  -- 生 / 判 -->  两仪 / 爻 / 差异 difference
-  -- 识 / 见 -->  可被标记、可被指认的差异
-  -- 缘 / 间 -->  差异之间的关系、相接、距离、依赖
-  -- 成 / 行 -->  在时态和变换中落地的事
-```
-
-这里有四个边界：
-
-| 阶段 | 说法 | 不是 | 在当前形式系统中最接近的锚点 |
+| 轴 | 含义 | 锚定 | 是否定本 |
 |---|---|---|---|
-| 差 | 太极生两仪；一处差异开出阳/阴两端 | 两个实体先已存在 | `Yao = {yang, yin}` 与 `Yao.neg` |
-| 识 | 这个差异可以被分辨、标记、命名 | 另造一个本体根 | `AtomName`/读法登记，以及可枚举结构中的字段位 |
-| 间 / 缘 | 已被识的差异可以相对、相接、相依 | 简单的物对物连线 | `物-動-間` 的内容线、`DirectEdge`/transition edge 的关系读法 |
-| 事 | 关系在某一时态、位点或变换中发生并可记 | 静态名词 | `Cell192` 位点、transition、一条可审计记录 |
+| **R-轴**（layer index） | 严格 (Z/2)ⁿ uniform 层级，n = 0..8 | [`Foundation/Hierarchy/`](../../formal/SSBX/Foundation/Hierarchy/) | ✅ definitive (2026-05-10/11) |
+| **M-轴**（meta-content name） | 每层之内容名（Yao / SiXiang / Trigram / Mian / Wuyao / Hexagram / Cell128 / Cell256） | [`Foundation/Yi/`](../../formal/SSBX/Foundation/Yi/) + [`Foundation/Bagua/`](../../formal/SSBX/Foundation/Bagua/) | ✅ definitive |
+| **字根轴**（layer-character） | 每层 default 单字（义理读法） | [`Text/LayerCharacterMap.lean`](../../formal/SSBX/Text/LayerCharacterMap.lean) | ⚠ defaults subject to refinement (R₅ 五爻 + 因/果 命名 provisional) |
 
-所以“物”不是最先的原子；更底层的是“差”。“物”是差异被识、被稳定、可进入关系之后的一个承载项。“缘”也不宜先当作第三个根；它更像“被识之差之间能够相接/相依”的边。若要形式化成新字，再决定它是 `AtomName`、`CoreAtom`，还是某类 relation label。
+三轴**正交但同点**——同一 R-layer 之 M-name 与 character 是同一对象之不同 viewing。
 
-## 1. 先分清三条线
+---
 
-底层有三条容易混在一起的线：
+## 1. 主表：R-轴 / M-轴 / 字根 三者交叉
 
-| 线 | 问题 | 近根形状 | 机器锚点 |
+| R | size | M-name (内容轴) | 字根 (default 单字) | Hierarchy alias 文件 | Original-name 文件 |
+|---|---|---|---|---|---|
+| **R₀** | 1 | 太极 (Taiji) | 极 / 一 / 元 | [`R0_Taiji.lean`](../../formal/SSBX/Foundation/Hierarchy/R0_Taiji.lean) | (Lean stdlib `Unit`) |
+| **R₁** | 2 | 爻 / 两仪 (Yao) | 实 / 虚 (邵雍《观物外篇》) | [`R1_Yao.lean`](../../formal/SSBX/Foundation/Hierarchy/R1_Yao.lean) | [`Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) |
+| **R₂** | 4 | 四象 (SiXiang) | 春 / 夏 / 秋 / 冬 (邵雍先天图) | [`R2_SiXiang.lean`](../../formal/SSBX/Foundation/Hierarchy/R2_SiXiang.lean) | [`BaguaAlgebra.lean`](../../formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean) |
+| **R₃** | 8 | 八卦 (Trigram) | 健 / 悦 / 显 / 起 / 入 / 险 / 止 / 顺 (说卦回归) | [`R3_Trigram.lean`](../../formal/SSBX/Foundation/Hierarchy/R3_Trigram.lean) | [`Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) |
+| **R₄** | 16 | 面 (Mian) = Ben × Zheng | 物動間事 × 幾勢機時 (本×征 16-命) | [`R4_Mian.lean`](../../formal/SSBX/Foundation/Hierarchy/R4_Mian.lean) | [`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) |
+| **R₅** | 32 | 五爻 (Wuyao) = Mian × Bool | (provisional：暂用「五爻」描述名；候选 接 / 临 / 渐 / 进) | [`R5_Wuyao.lean`](../../formal/SSBX/Foundation/Hierarchy/R5_Wuyao.lean) | (与 alias 同文件) |
+| **R₆** | 64 | 重卦 (Hexagram) | 64 卦名（乾..坤） + 6 爻位字 改/化/变/临/主/极 | [`R6_Hexagram.lean`](../../formal/SSBX/Foundation/Hierarchy/R6_Hexagram.lean) | [`Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) |
+| **R₇** | 128 | 因卦 (Cell128) = Hexagram × YinBit | 因 (yīn) + 印 (yìn) — provisional | [`R7_YinHex.lean`](../../formal/SSBX/Foundation/Hierarchy/R7_YinHex.lean) | [`Cell128.lean`](../../formal/SSBX/Foundation/Bagua/Cell128.lean) |
+| **R₈** | 256 | 果卦 (Cell256) = Hexagram × Shi | 果 (guǒ) + 投 (tóu) + Shi V₄ {道, 已, 今, 未} — provisional | [`R8_GuoHex.lean`](../../formal/SSBX/Foundation/Hierarchy/R8_GuoHex.lean) | [`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) + [`Cell256Stratify.lean`](../../formal/SSBX/Foundation/Bagua/Cell256Stratify.lean) |
+
+**严格 uniform 守则**：`|Rₙ| = 2ⁿ`，每加一个 binary axis = 一个独立 R-layer。无跳跃，无压缩。
+
+---
+
+## 2. R-轴：(Z/2)ⁿ 严格 uniform 升降
+
+```text
+R₀ Unit (太极)
+   ↓ liftR0toR1 / projR1toR0
+R₁ Yao
+   ↓ liftR1toR2 / projR2toR1
+R₂ SiXiang  = Yao²
+   ↓ liftR2toR3 / projR3toR2
+R₃ Trigram  = Yao³
+   ↓ liftR3toR4 / projR4toR3            （此处编码 Trigram + 1 yao → Mian）
+R₄ Mian     = Ben × Zheng               (R₃ 重卦传统跳过此层之物理 anchor)
+   ↓ liftR4toR5 / projR5toR4
+R₅ Wuyao    = Mian × Bool               (provisional — 唯一无传统 Yi anchor)
+   ↓ liftR5toR6 / projR6toR5
+R₆ Hexagram = Yao⁶                       (传统重卦)
+   ↓ liftR6toR7 / projR7toR6
+R₇ Cell128  = Hexagram × YinBit         (+ 因)
+   ↓ liftR7toR8 / projR8toR7
+R₈ Cell256  = Hexagram × Shi             (+ 果, V₄ Klein 闭合)
+```
+
+每对 (Rₙ, R_{n+1}) 在 [`LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) 给出 `liftRntoR{n+1}` / `projR{n+1}toRn` + retract lemma `proj_lift_id_Rn`。
+
+详见 [lift-project.md](lift-project.md)。
+
+---
+
+## 3. M-轴：内容轴（meta-content names）
+
+M-axis 是「内容侧的命名 backbone」——它给每个 R-layer 一个 ontologically motivated 的名字（不是层号）。
+
+| R-axis | M-axis name | 古文出处 | 物理 anchor |
 |---|---|---|---|
-| 生成线 | 一个根如何展开为可变结构 | `太极 / 一元 -> 爻 -> 四象 -> 八卦 -> 六十四卦 -> 192格` | `Yuan.lean`、`Yi.lean`、`BaguaAlgebra.lean`、`Cell192.lean` |
-| 名册线 | 一个正式名字如何回根 | `一元 -> Face -> CoreAtom -> AtomName -> FormalNode / ClaimId` | `MonadRoot.lean`、`MonadDAG.md` |
-| 内容线 | 理论内容如何构造 | `Γ -> 三本(物/動/間) -> 三显 -> 三征 -> 开闭/合成 -> 生生不息论` | `Monism.lean` |
+| R₀ | 太极 / Wuji | 周敦颐「无极而太极」 | vacuum (no distinction) |
+| R₁ | 两仪 / Yao | 系辞「太极生两仪」 | qubit basis |
+| R₂ | 四象 / SiXiang | 系辞「两仪生四象」 | 2-qubit |
+| R₃ | 八卦 / Trigram | 系辞「四象生八卦」 | 3-qubit + V₄ outer |
+| R₄ | 面 / Mian = Ben × Zheng | 项目内 BenZheng 自创 | 4-qubit (本×征 16-命) |
+| R₅ | 五爻 / Wuyao | provisional descriptive | (transitional 5-qubit, 无传统 anchor) |
+| R₆ | 重卦 / Hexagram | 系辞「重卦」 | 6-qubit + V₄ outer |
+| R₇ | 因卦 / Cell128 | 因 (yīn, past-trace bit) — provisional | 7-qubit + past-cone marker |
+| R₈ | 果卦 / Cell256 | 果 (guǒ, future-projection bit) + Shi V₄ — provisional | 8-qubit + future-cone, V₄ Klein 闭合 |
 
-三条线不可互相代替：
+注：R₄ Mian 与 R₅ Wuyao 在 v2 之前隐式跳过，v3 重号下显式纳入。R₅ 是**唯一无传统 Yi anchor** 之层（mathematical 存在但 philosophical 上未独立刻画）。
 
-- `爻 / 阴阳` 是生成线的第一分化。
-- `Face / CoreAtom / AtomName` 是名册线的回根秩序。
-- `物 / 動 / 間` 是内容线的三本，不是名册线的 L1/L2。
-- `缘` 可以作为“关系边 / 依赖 / 相接”的义理读法，但当前底层 Lean 主干没有把 `缘`登记为核心单字；写作时应先说清它是解释名，还是要新增登记项。
+---
 
-## 2. 生成线：root 往下四层
+## 4. 字根轴：layer-character defaults
 
-生成线回答：从唯一根怎样长出可计算的易结构。
+**defaults subject to refinement** — 部分字（特别是 R₅ 五爻、R₇ 因/印、R₈ 果/投/Shi 之命名）属于 provisional naming，待 final 定。
 
-```text
-R0  太极 / 一元 / Unit
-    |  分 fen：引入一个爻
-    v
-R1  爻 / 两仪 / Yao = {阳, 阴}
-    |  分 fen：再引入一爻
-    v
-R2  四象 / SiXiang = Yao²
-    |  分 fen：再引入一爻
-    v
-R3  八卦 / Trigram = Yao³
-    |  重 chong：内卦 + 外卦
-    v
-R4  六十四卦 / Hexagram = Yao⁶
-    |  配时：卦 × 已今未
-    v
-R5  192格 / Cell192 = Hexagram × Shi
-```
-
-### 2.1 R0：太极 / 一元
-
-| 名 | 形式 | 作用 | 主要算子 |
+| Layer | 元素层 | 算子层 | Lean ground truth |
 |---|---|---|---|
-| 太极 / 一元 | `Unit` 或单根 `一元` | 生成线的唯一未分化点 | `fenToYi`、`guiyi`、`grandCycle` |
+| R₁ | 阳/阴 → **实/虚** (essence) | 易 (yi / Yao.neg) | `Yao.essenceChar` |
+| R₂ | 太阳/少阴/少阳/太阴 → **夏/秋/春/冬** | (lift R₁) | `SiXiang.seasonChar` |
+| R₃ | 乾兑离震巽坎艮坤 → **健/悦/显/起/入/险/止/顺** | 改/化/变（y₁/y₂/y₃ flip） + 错/综/互 | `Trigram.virtueChar` / `Trigram.literalChar` |
+| R₄ | (本 × 征 16-命; 暂无单字 default) | (lift R₃ + 第 4 yao) | (BenZheng 16-命 in [`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean)) |
+| R₅ | (无传统 anchor; provisional) | flip5 (toggle 第 5 yao) | [`R5_Wuyao.lean`](../../formal/SSBX/Foundation/Hierarchy/R5_Wuyao.lean) |
+| R₆ | 64 卦名 | 改/化/变/**临/主/极** (y₁..y₆ flip) + 错/综/互/错综 | `flipPositionChar` |
+| R₇ | (Hexagram + 因 bit) | **印 (yìn)** = toggle 因 | [`Cell128.lean`](../../formal/SSBX/Foundation/Bagua/Cell128.lean) `yin` |
+| R₈ | (Hexagram + Shi V₄) | **投 (tóu)** = toggle 果; Shi-side 错/综/错综 | [`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) `tou` + Shi V₄ ops |
 
-读法：
+**provisional flag 含义**：R₅ 命名（五爻 vs 接/临/渐/进）以及 R₇/R₈ 之因/果/印/投（vs 印/投/始/终/持/期）在 [pending.md](pending.md) 列为待 final 决定。
 
-- 在生成线里，`TaiJi` 是 `Unit`，只表示未分化的一点。
-- 在名册线里，`一元`是唯一根节点，所有正式登记项都要能回到它。
-- 二者可以同读为“唯一根”，但形式对象不同：一个是易生成层的 `Unit`，一个是 Monad DAG 的 root。
+---
 
-### 2.2 R1：爻 / 两仪 / 差
+## 5. 三轴之同一性（八卦层 R₃ 之 demonstration）
 
-| 名 | 形式 | 元素 | 基本关系 | 主要算子 |
-|---|---|---|---|---|
-| 爻 / 两仪 / 差 | `Yao` | `yang`、`yin` | 一处差异的两端；阴阳互反，不是 true/false | `Yao.neg`、`yi` |
+八卦层是三轴**唯一最早出现明确交点**的位置（R₀..R₂ 三轴几乎重合，R₃ 起开始分化）。
 
-关系：
-
-```text
-阳 --neg/易--> 阴
-阴 --neg/易--> 阳
-neg ∘ neg = id
-```
-
-这里的 `易`不是外加动作，而是爻自身的可变性：`Yuan := Yao`，`yi := Yao.neg`。义理上，这一层先读作 `difference`：不是先有两个物，而是先有一条可翻转的差。
-
-### 2.3 R2：四象
-
-| 名 | 形式 | 元素数 | 来路 | 去路 |
-|---|---|---:|---|---|
-| 四象 | `SiXiang` | 4 | `fenToSiXiang : LiangYi -> Yao -> SiXiang` | `heToYi : SiXiang -> LiangYi` |
-
-关系：
-
-```text
-两仪 + 新爻 --fen--> 四象
-四象 --heToYi/遗忘一位--> 两仪
-heToYi (fenToSiXiang y1 y2) = y1
-```
-
-四象层主要承担纵向展开/收束，不是当前横向算子最密的层。
-
-### 2.4 R3：八卦
-
-| 名 | 形式 | 元素数 | 横向算子 | 纵向算子 |
-|---|---|---:|---|---|
-| 八卦 | `Trigram` | 8 | `dong`、`hua`、`bian`、`cuo`、`zong` | `heShang`、`heZhong`、`heXia`、`guiyi` |
-
-三爻位：
-
-| 位 | Lean field | 单爻翻转 | 义理短名 |
+| 同一对象「乾」 | R-轴 | M-轴 | 字根轴 |
 |---|---|---|---|
-| 初 / 下 | `y1` | `dong` | 动 |
-| 中 | `y2` | `hua` | 化 |
-| 上 | `y3` | `bian` | 变 |
+| | R₃ 之 (阳, 阳, 阳) 状态 | M₃ 八卦 (Trigram) 的 `qian` 构造子 | 字根 `健`（义理读）+ `乾`（literal） |
+| Lean 锚 | `Trigram` (R₃ alias) | `Trigram.qian` (Yi.lean) | `Trigram.virtueChar .qian = "健"` |
 
-横向关系：
+三轴在每层都各自有 ground truth，但指向同一 algebraic 对象。
 
-```text
-八卦 = Yao³
-动 / 化 / 变：分别翻 y1 / y2 / y3
-每个翻转二次为恒等
-三者两两交换，生成 (Z/2)³
-错 = 动 ∘ 化 ∘ 变
-任意两卦相距至多 3 次单爻翻转
-```
+---
 
-纵向关系：
+## 6. 与「物动间事」内容线的关系
 
-```text
-八卦 --heShang/heZhong/heXia--> 四象
-四象 --heToYi--> 两仪
-两仪 --heToTaiji--> 太极
-八卦 --guiyi--> 太极
-```
+「**物 / 動 / 間 / 事**」属于**内容线**（[`JianOntology.lean`](../../formal/SSBX/Foundation/Jian/JianOntology.lean)），不在 R-轴 / M-轴 / 字根轴这三个 ground-truth 轴上：
 
-最小算子包在这一层可读成：
+- R-轴 = 形式 (Z/2)ⁿ 升降之 algebraic 阶梯
+- M-轴 = 内容侧元素名 backbone
+- 字根轴 = 单字 surface alias
+- 内容线（三本/三显/三征） = 范畴论 / 现象学 motivated 之独立 layer，**不替代 R-轴**
 
-```text
-{ 动, 化, 变, 合, 生 }
-```
+详见 [layer-axis-graph.md](layer-axis-graph.md) §7（内容线垂直结构）。
 
-其中 `动/化/变`管横向互通，`合`管向根收束，`生`管按深度继续展开。
+---
 
-### 2.5 R4：六十四卦
+## 7. 历史修正附录
 
-| 名 | 形式 | 元素数 | 生成 | 主要算子 |
-|---|---|---:|---|---|
-| 六十四卦 | `Hexagram` | 64 | `chong inner outer` 或六个 `Yao` | `cuo`、`zong`、`cuoZong`、`hu`、六个单爻翻转 |
+### v2 → v3 之主要重号
 
-结构：
-
-```text
-y1 y2 y3 = 内卦 / 下卦
-y4 y5 y6 = 外卦 / 上卦
-Hexagram = inner ⊕ outer
-```
-
-算子分两类：
-
-| 类 | 算子 | 作用 | 性质 |
-|---|---|---|---|
-| 整卦横向 | `cuo` | 六爻全反 | 二次为恒等 |
-| 整卦横向 | `zong` | 六爻反序 | 二次为恒等 |
-| 整卦横向 | `cuoZong` | 错后综 | 二次为恒等，且错综交换形成 V4 |
-| 内取 | `hu` | 取中四爻成互卦 | 乾、坤为互固定点 |
-| 单爻翻转 | `dongInner`、`huaInner`、`bianInner` | 翻 y1/y2/y3 | 各二次为恒等 |
-| 单爻翻转 | `dongOuter`、`huaOuter`、`bianOuter` | 翻 y4/y5/y6 | 各二次为恒等 |
-
-六十四卦层要注意：
-
-- `chong` / `oplus` 有内外次序，通常不可交换。
-- 六个单爻翻转生成 `(Z/2)^6`；任意两卦可在至多 6 次翻转内互达。
-- `错/综/互`是整卦结构算子，不等同于单个爻位的 `动/化/变`。
-
-### 2.6 R5：192格 / 事的格位
-
-| 名 | 形式 | 元素数 | 生成 | 横向/时态算子 |
-|---|---|---:|---|---|
-| 192格 | `Cell192 = Hexagram × Shi` | 192 | 64卦 × 已/今/未 | `shiNext`、`shiPrev`、`hexCuo`、`hexZong`、`hexHu`、`flip1..flip6` |
-
-关系：
-
-```text
-Shi = {已, 今, 未}
-已 --next--> 今 --next--> 未 --next--> 已
-Cell192 = Hexagram × Shi
-```
-
-Cell 层算子只是把卦层算子和时态算子提升到 `(Hexagram × Shi)`：
-
-| 算子 | 作用 | 保持不变的坐标 |
+| v2 surface (旧) | v3 (新) | 说明 |
 |---|---|---|
-| `shiNext` / `shiPrev` | 改时态 | 卦不变 |
-| `hexCuo` / `hexZong` / `hexHu` | 改卦 | 时态不变 |
-| `flip1..flip6` | 翻对应爻 | 时态不变 |
+| R₁..R₆ 顶层 | **R₀..R₈** | 显式纳入 R₀ Taiji + R₄ Mian + R₅ Wuyao；R₆ Hexagram → R₆，R₇ Cell128，R₈ Cell256 |
+| Cell192 | **Cell256** | Z/3 cyclic Shi 是层级压缩错误；V₄ Klein {道, 已, 今, 未} 才是正确 Shi 结构 |
+| 192 格 | **256 格** | 64 hex × 4 Shi (V₄) = 256 = (Z/2)⁸；道 = (因, 果) = (0, 0) = V₄ identity first-class 入本体 |
+| 已/今/未 (Z/3) | **道/已/今/未 (V₄)** | 道作为 V₄ identity 是 algebraic 必要，不是哲学附加 |
+| chong (R₃ → R₄ jump) | **chong (R₃ → R₄ → R₅ → R₆ 三步 composite)** | strict uniform 视角下 chong 是 lift 之 multi-step composite |
 
-若要把“事”放进底层图，`Cell192` 是当前最合适的形式近似：它不是单独一个名，而是“某卦在某时态的一个格位”。一条 transition 则是“事之发生”的最小可审计形态。
+### Cell192 完全弃用
 
-## 3. 名册线：root 往下四层
+- [`Cell192.lean`](../../formal/SSBX/Foundation/Bagua/Cell192.lean) — **已删除**（commit 8e4406e）
+- 与之配套的 `Cell192Stratify.lean`、表六_192格全表.md — 已弃用
+- 全部下游接入点已迁移到 Cell256 + Shi V₄
 
-名册线回答：一个正式名字或 claim 是否有回根路径。
+### Lean 重号
 
-```text
-M0  一元 / root
-    |
-M1  Face / 一元之面
-    |
-M2  CoreAtom / 核心单字
-    |
-M3  AtomName / 登记单字 / 名
-    |
-M4  FormalNode / ConstructionId / ClaimId
+```lean
+abbrev R0 := Unit
+abbrev R1 := Yao
+abbrev R2 := SiXiang
+abbrev R3 := Trigram
+abbrev R4 := Mian
+abbrev R5 := Wuyao        -- = Mian × Bool
+abbrev R6 := Hexagram
+abbrev R7 := Cell128      -- = Hexagram × YinBit
+abbrev R8 := Cell256      -- = Hexagram × Shi
 ```
 
-### 3.1 M1：Face
+详见 [`LiftProject.lean §0`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean)。
 
-`Face` 是一元的投影面，不是多个本体根。当前十二面为：
+---
 
-```text
-文面、物面、生面、理面、心面、人面、模面、审校面、价值面、证明面、注意面、真理面
-```
+## 8. 与其它 v3 文档之关系
 
-### 3.2 M2：CoreAtom
+| 文档 | 与本文关系 |
+|---|---|
+| [yi-RO-hierarchy.md](yi-RO-hierarchy.md) | **父文档** — R₀..R₈ definitive，本文 §1 主表是其结构性投影 |
+| [yi-calculus-theorem.md](yi-calculus-theorem.md) | Theorems A–K — 严格证明 R₀..R₈ closure |
+| [layer-axis-graph.md](layer-axis-graph.md) | Mermaid 图谱 — 本文 §1 之可视化 |
+| [position-operator-tree.md](position-operator-tree.md) | 8 yao 位置之算子树 |
+| [ox-notation.md](ox-notation.md) | `OX["xxxxxxxx"]` 8-char Cell256 字面量 macro |
+| [shi-v4.md](shi-v4.md) | Shi V₄ {道, 已, 今, 未} 详解 |
+| [r5-wuyao-provisional.md](r5-wuyao-provisional.md) | R₅ 命名候选 + 哲学 anchor 待定 |
+| [r7-yin-r8-guo.md](r7-yin-r8-guo.md) | R₇/R₈ 因/果 拆层之论证 |
+| [lift-project.md](lift-project.md) | 8 对 Lift/Project 函子之 retract lemma |
+| [cell256-grid.md](cell256-grid.md) | 256 格全表 (替代旧 192 格) |
+| [foundation-core.md](foundation-core.md) | Foundation 主目录布局 |
+| [module-map.md](module-map.md) | 模块簇职责 |
+| [pending.md](pending.md) | provisional / pending 边界 |
 
-`CoreAtom` 是核心单字层，压缩登记单字，使“名”不是直接散落到根上。
+## 9. Lean 入口速查
 
-读法：
-
-```text
-Face 给领域
-CoreAtom 给字根
-AtomName 给登记名
-FormalNode / ClaimId 给结构与断言
-```
-
-因此“名”若要在近根层出现，应放在 M3 `AtomName`，不是 M1 或 M2。
-
-### 3.3 M3：AtomName / 名
-
-`AtomName` 是登记单字层。它承担两件事：
-
-1. 每个登记字有主归面 `atomPrimaryFace`，必要时有额外归面 `atomExtraFaces`。
-2. 每个登记字有核心字根 `atomCore`。
-
-所以一个登记名的标准回根路径是：
-
-```text
-AtomName -> CoreAtom -> Face -> 一元
-```
-
-## 4. 内容线：物、动、间与“缘”
-
-内容线不是名册近根层，而是理论构造主干。
-
-当前机器主干写作：
-
-```text
-Γ 当前论域
-  -> 三本 / 物-動-間
-    -> 三显 / 位-場-際
-      -> 三征 / 幾-勢-機
-        -> 開閉闸口与網體流合成
-          -> 生生不息论
-```
-
-若要把用户语境中的“物间缘”纳入底层图，建议先作如下区分：
-
-| 字 | 建议读法 | 当前位置 |
-|---|---|---|
-| 物 | 可被定位、承载状态的项 | 内容线三本之一；名册线已有核心单字 `物` |
-| 动 | 变化 / 翻转 / 推进 | 内容线三本之一；生成线也有 `动`作为下爻翻转名 |
-| 间 | 项与项之间的 interval / gap / relation-space | 内容线三本之一；名册线登记为单字，但归属和核心映射按 `MonadRoot.lean` 为准 |
-| 缘 | 关系边、相接条件、依赖或 coupling 的解释名 | 当前不宜当作已登记核心层；若要正式化，应新增 `AtomName`/`CoreAtom` 或作为某类 `DirectEdge` / relation label |
-
-一句话：
-
-```text
-爻阴阳 = 生成最小差异
-识 = 差异被标记、可指认，不是另一个根
-物动间 = 内容构造三本：物是被稳定的承载项，动是变化，间是关系场
-缘 = 被识之差之间的相接/相依，需另定形式位置
-事 = 关系在时态和变换中落地，可近似读作 Cell192 位点或 transition
-名 = AtomName 登记层
-```
-
-## 5. 算子总表
-
-| 算子族 | 层 | 算子 | 类型形状 | 说明 |
-|---|---|---|---|---|
-| 原子反转 | R1 | `neg` / `yi` | `Yao -> Yao` | 阴阳互反，二次为恒等 |
-| 纵向展开 | R0-R3 | `fenToYi`、`fenToSiXiang`、`fenToTrigram` | 加一爻 | 从未分化逐步生成两仪、四象、八卦 |
-| 纵向收束 | R3-R0 | `heShang`、`heZhong`、`heXia`、`heToYi`、`heToTaiji`、`guiyi` | 遗忘/投影 | 从八卦逐步回太极 |
-| 八卦横向 | R3 | `dong`、`hua`、`bian` | `Trigram -> Trigram` | 三个单爻翻转，生成 `(Z/2)^3` |
-| 八卦整反 | R3 | `Trigram.cuo`、`Trigram.zong` | `Trigram -> Trigram` | 错为三翻合成，综为反序 |
-| 合成重卦 | R3→R4 | `chong` / `oplus` | `Trigram -> Trigram -> Hexagram` | 内外卦有序合成，通常不可交换 |
-| 重卦横向 | R4 | `Hexagram.cuo`、`zong`、`cuoZong`、`hu` | `Hexagram -> Hexagram` | 错、综、错综、互 |
-| 六爻翻转 | R4 | `dongInner`、`huaInner`、`bianInner`、`dongOuter`、`huaOuter`、`bianOuter` | `Hexagram -> Hexagram` | 六个单爻位翻转，生成 `(Z/2)^6` |
-| 时态循环 | R5 | `Shi.next`、`Shi.prev` | `Shi -> Shi` | 已今未三循环 |
-| Cell 提升 | R5 | `shiNext`、`shiPrev`、`hexCuo`、`hexZong`、`hexHu`、`flip1..flip6` | `Cell192 -> Cell192` | 在 192 格上移动一跳 |
-| 名册回根 | M0-M4 | `DirectEdge`、`Reachable` | DAG relation | 证明登记项、结构、claim 可回一元 |
-
-## 6. 推荐命名
-
-为了后续文档不再摇摆，建议底层统一用两套层号：
-
-### 生成层号 R
-
-```text
-R0 根 / 太极 / 一元
-R1 爻 / 两仪 / 阴阳 / 差
-R1a 识 / 可标记差异（义理读法；不单列 Lean 层）
-R2 四象
-R3 八卦
-R4 六十四卦
-R5 192格
-```
-
-### 名册层号 M
-
-```text
-M0 一元
-M1 面 / Face
-M2 核心单字 / CoreAtom
-M3 名 / 登记单字 / AtomName
-M4 正式项与 claim
-```
-
-这样可以同时保留两种直觉：
-
-- 说“底层生成”时，第一层就是 `爻 / 阴阳`。
-- 说“单根名册”时，第一层是 `Face`，第二层是 `CoreAtom`，第三层才是“名”。
-- 说“内容本体”时，进入的是 `物 / 動 / 間`，而不是把它误放成 root 的直属层。
+| 概念 | 入口 |
+|---|---|
+| umbrella | [`RHierarchy.lean`](../../formal/SSBX/Foundation/Hierarchy/RHierarchy.lean) |
+| 9 个 alias shim | [`R{0..8}_*.lean`](../../formal/SSBX/Foundation/Hierarchy/) |
+| Lift/Project | [`LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) |
+| atomic XOR ops | [`Operators/Atomic.lean`](../../formal/SSBX/Foundation/Hierarchy/Operators/Atomic.lean) |
+| V₄ outer ops | [`Operators/V4Outer.lean`](../../formal/SSBX/Foundation/Hierarchy/Operators/V4Outer.lean) |
+| OX 字面量 macro | [`Notation/OXNotation.lean`](../../formal/SSBX/Foundation/Notation/OXNotation.lean) |
+| 字根 ground truth | [`Text/LayerCharacterMap.lean`](../../formal/SSBX/Text/LayerCharacterMap.lean) |

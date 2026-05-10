@@ -40,7 +40,7 @@ theorem normalized_mass_bridge_summary :
     ∧ FiniteNormalizedMassBoundaryClosed
     ∧ HasFiniteProbabilityProjection concreteProcess
     ∧ HasFiniteProbabilityProjection operatorCellGridProcess
-    ∧ allOperatorCells.length = 71232
+    ∧ allOperatorCells.length = 94976
     ∧ (∀ b : PendingBeyondS10, ClosedByStepwiseS10 b = false)
     ∧ WenConstructiveCoverage
 ```
@@ -64,7 +64,7 @@ lake build SSBX.Foundation.Modern.QuantumRelativityNormalizedMassBridge
 | algebra bridge | `normalizedMassSum_eq_normalizedRowTotalCandidate` | 逐项除法求和等于 S9 的“先求和后除法”候选 |
 | classical probability law | `normalizedMass_sum_one` | 任一 normalizable row 若有 finite row support normalization，则 normalized masses 求和为 `1` |
 | concrete law | `concrete_normalizedMass_sum_one` | concrete 非终端行给出 rational probability law |
-| grid law | `operatorCellGrid_normalizedMass_sum_one` | `71232` grid 非终端行给出 rational probability law |
+| grid law | `operatorCellGrid_normalizedMass_sum_one` | `94976` grid 非终端行给出 rational probability law |
 | S10 boundary | `FiniteNormalizedMassBoundaryClosed` | concrete/grid normalized mass sum-one boundary 已闭合 |
 
 明确未关闭：

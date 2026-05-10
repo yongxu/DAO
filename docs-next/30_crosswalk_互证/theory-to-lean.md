@@ -13,7 +13,7 @@
 | 义理类别 | 首查位置 | 读法 |
 |---|---|---|
 | 四级生成、根源、开闭 | `Foundation/Core`、`Roster` | 看构造与名册登记，不直接推断价值结论 |
-| 六征、实虚史真、192 格 | `Foundation/Bagua`、`Text` | 看有限表、算子空间与 Cell192 相关模块 |
+| 六征、实虚史真、256 格 | `Foundation/Bagua`、`Foundation/Hierarchy`、`Text` | 看有限表、算子空间与 Cell128/Cell256 相关模块 (v3：原 Cell192 已删，由 Cell256 = Hexagram × V₄ Klein Shi 取代) |
 | 算子代数 | `Foundation/Bagua`、`Text/WenyanOperators` | 区分 algebra 证明与文字算子登记 |
 | 文道一也、自释 | `Foundation/Wen` | 区分解释器、parser、quine 路线和自然语言主张 |
 | 对齐、共同体、失败模式 | `Foundation/Core`、`Foundation/Wen`、`Truth` | 多数是 formal interface 或案例层，不宜扩成经验定律 |

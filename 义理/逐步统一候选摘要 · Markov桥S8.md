@@ -20,7 +20,7 @@ S8 的主张：
 ```text
 concrete Markov-causal bridge
 + finite probability boundary
-+ 71232 operator-cell grid
++ 94976 operator-cell grid
 + S5r action-phase quotient-support cancellation
 + S5q pending observable ledger
 + explicit pending list for larger physical tasks
@@ -40,7 +40,7 @@ theorem stepwise_unification_candidate_summary :
     ∧ MeasurementEventsAlign concreteMeasurementBridge
     ∧ HasFiniteProbabilityProjection concreteProcess
     ∧ HasFiniteProbabilityProjection gridProcess
-    ∧ allOperatorCells.length = 71232
+    ∧ allOperatorCells.length = 94976
     ∧ TwoRouteActionPhaseLawBoundaryComplete
     ∧ quotientSupportActionPhaseAmplitudeSum twoRouteQuotientActionPhaseLaw
       twoRouteQuotientSupport = 0
@@ -68,7 +68,7 @@ theorem stepwise_unification_candidate_summary :
 |---|---|---|
 | concrete bridge | `concrete_bridge_summary` | 三状态 Markov/因果桥仍可作为基础 witness |
 | finite probability | `finite_probability_bridge_summary` | concrete 与 grid 都有 finite probability boundary |
-| grid carrier | `allOperatorCells.length = 71232` | `192 × 371` operator-cell grid 接入 finite process |
+| grid carrier | `allOperatorCells.length = 94976` | `256 × 371` operator-cell grid 接入 finite process |
 | action-phase law | `TwoRouteActionPhaseLawBoundaryComplete` | finite action index `0/1` 导出 quotient-support cancellation |
 | pending ledger | `TwoRouteObservableLedgerBoundaryComplete` | cancellation 可登记为 pending observable ledger entry |
 | noncollapse boundary | `¬ DirectUnificationByAddition` | 保持 tagged-language noncollapse |

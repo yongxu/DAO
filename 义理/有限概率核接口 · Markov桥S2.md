@@ -11,7 +11,7 @@
 | 行可规格化 | `Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean` | `RowNormalizable` 与 `nonterminal_row_normalizable` | `machineChecked` |
 | 有限质量候选 | `Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean` | `finiteMassCandidate`、`finiteMassCandidate_denominator_positive_if_not_terminal` | `machineChecked` |
 | concrete 实例 | `Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean` | `concreteFiniteProbabilityKernel`、`concrete_prepared_row_normalizable`、`concrete_evolved_row_normalizable` | `machineChecked` |
-| `71232` grid 实例 | `Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean` | `operatorCellGridFiniteProbabilityKernel`、`operatorCellGrid_nonterminal_row_normalizable` | `machineChecked` |
+| `94976` grid 实例 | `Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean` | `operatorCellGridFiniteProbabilityKernel`、`operatorCellGrid_nonterminal_row_normalizable` | `machineChecked` |
 | S2 公开摘要 | `Foundation/Modern/QuantumRelativityFiniteProbabilityBridge.lean` | `finite_probability_bridge_summary` | `machineChecked` |
 
 ---
@@ -40,7 +40,7 @@ theorem finite_probability_bridge_summary :
     ∧ ...
     ∧ allOperatorIds.length = 371
     ∧ Cell192.all.length = 192
-    ∧ allOperatorCells.length = 71232
+    ∧ allOperatorCells.length = 94976
     ∧ WenConstructiveCoverage
 ```
 
@@ -53,7 +53,7 @@ theorem finite_probability_bridge_summary :
 | 说法 | 本文状态 | 精确含义 |
 |---|---|---|
 | concrete bridge 有有限概率核接口 | `machineChecked` | `prepared` 与 `evolved` 行分母为 `1`，终端 `measured` 行可停止 |
-| `71232` grid bridge 有有限概率核接口 | `machineChecked` | 非终端 successor 行分母为 `1`，末端行可停止 |
+| `94976` grid bridge 有有限概率核接口 | `machineChecked` | 非终端 successor 行分母为 `1`，末端行可停止 |
 | 非终端行可规格化 | `machineChecked` | `RowNormalizable` 只表示行分母非零 |
 | 权重受分母约束 | `machineChecked` | 每个 `weight a b ≤ rowTotal a` |
 | 有限质量候选 | `machineChecked` typed skeleton | `numerator / denominator` 作为候选接口 |
@@ -84,8 +84,8 @@ S2 关闭的是 finite denominator interface；
 | 行条件 | `RowNormalizable`、`nonterminal_row_normalizable` | 非终端行有非零分母 |
 | 质量候选 | `FiniteMassCandidate`、`finiteMassCandidate_denominator_positive_if_not_terminal` | `weight / rowTotal` 的候选分母可检查 |
 | concrete 实例 | `concreteFiniteProbabilityKernel` | 三状态实例接入 S2 |
-| grid 实例 | `operatorCellGridFiniteProbabilityKernel` | `371 × 192 = 71232` grid 接入 S2 |
-| 公开摘要 | `finite_probability_bridge_summary` | concrete、grid、`192 × 371` 覆盖同时保留 |
+| grid 实例 | `operatorCellGridFiniteProbabilityKernel` | `371 × 256 = 94976` grid 接入 S2 |
+| 公开摘要 | `finite_probability_bridge_summary` | concrete、grid、`256 × 371` 覆盖同时保留 |
 
 未纳入本轮：
 
@@ -109,7 +109,7 @@ S2 关闭的是 finite denominator interface；
 FiniteProcess
 + MarkovKernelSkeleton
 + concrete bridge
-+ 71232 operator-cell grid bridge
++ 94976 operator-cell grid bridge
 ```
 
 但 `MarkovKernelSkeleton.weight : State -> State -> Nat` 只说明离散权重，不说明它可以进入概率候选。S2 的最省力补强是增加一行分母：
@@ -144,7 +144,7 @@ finite mass candidate = numerator / denominator
 | `evolved` | `1` | 唯一步走向 `measured` |
 | `measured` | `0` | 终端行停止 |
 
-`71232` operator-cell grid bridge：
+`94976` operator-cell grid bridge：
 
 | 行 | rowTotal | 读法 |
 |---|---:|---|

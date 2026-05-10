@@ -2,6 +2,17 @@
 
 本文件约束所有在本仓库工作的 agents。进入任务前先读本文件，并把这些规则传给后续开启的 subagents。
 
+## Codebase Layout (v3, 2026-05-11)
+
+- 本体已收口于 **Cell256 / V₄ Klein Shi {道, 已, 今, 未} / strict-uniform R₀..R₈**。
+- 旧 `Foundation/Bagua/Cell192.lean` 已删除；替换为 `Cell128.lean` (R₇) + `Cell256.lean` (R₈)。
+- 新 `Foundation/Hierarchy/`（R₀..R₈ alias files + `LiftProject.lean` + `Operators/{Atomic,V4Outer}.lean`，由 `RHierarchy.lean` umbrella 入口聚合）是 R-阶梯 uniform 基础设施。
+- 新 `Foundation/Notation/OXNotation.lean` 提供 `OX["xxxxxxxx"]` 8-char Cell256 字面量 macro。
+- 闭合 bundle 是 `R8_complete`（在 `Cell256Stratify.lean`），axes 仅依赖 `propext + native_decide`，不增加 project-level axiom。
+- 当前 build：3656 jobs · 0 sorry · 1 axiom (`kleene_recursion_axiom`, cuo-restricted) · 1 opaque (`theOne`) · 1 partial def (`BaguaTuring.run`).
+- 定本 doctrine 文档：`docs-next/00_start/final-theory.md` + `docs-next/10_formal_形式/yi-RO-hierarchy.md`。
+- 三 README 同步：`README.md` (中) / `README.en.md` (英) / `README.formal.md` (Lean 规约)。
+
 ## Goal: Elegance
 
 当任务目标提到“优雅”时，按以下标准理解：在不牺牲正确性和可维护性的前提下，用尽量少的结构承载尽量清楚的意图。

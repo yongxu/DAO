@@ -33,7 +33,7 @@ S3 的主张很窄：
 = path composition and local causal constraint interface
 ```
 
-这一步不证明完整 path algebra，也不证明 causal set 的全部公理。它只把 S1/S2 的有限过程继续加厚为一个可组合路径接口，并在 concrete 与 `71232` grid witness 上验证最小局部方向性。
+这一步不证明完整 path algebra，也不证明 causal set 的全部公理。它只把 S1/S2 的有限过程继续加厚为一个可组合路径接口，并在 concrete 与 `94976` grid witness 上验证最小局部方向性。
 
 公开摘要为：
 
@@ -51,7 +51,7 @@ theorem path_causal_bridge_summary :
     ∧ (∀ a : OperatorCellGridState, ¬ operatorCellGridProcess.step a a)
     ∧ HasFiniteProbabilityProjection concreteProcess
     ∧ HasFiniteProbabilityProjection operatorCellGridProcess
-    ∧ allOperatorCells.length = 71232
+    ∧ allOperatorCells.length = 94976
     ∧ WenConstructiveCoverage
 ```
 
@@ -67,7 +67,7 @@ theorem path_causal_bridge_summary :
 | 组合 path witness 给出 reachability | `machineChecked` | 复用 `path_implies_reachable` |
 | 组合 path witness 给出 causalBefore | `machineChecked` | 因果读法仍是 `Reachable` 的事件投影 |
 | concrete bridge code-successor | `machineChecked` | `prepared -> evolved -> measured` 每一步 code 加一 |
-| `71232` grid code-successor | `machineChecked` | successor index 每一步 code 加一 |
+| `94976` grid code-successor | `machineChecked` | successor index 每一步 code 加一 |
 | 一步自环排除 | `machineChecked` | code-monotone step 不可能有 `step a a` |
 | pathWeight 乘法律 | `machineChecked` theorem | S19 保留旧 `pathWeight = 1` 的 placeholder law，并新增 `KernelPath.weight_append` 关闭有限 kernel path weight multiplication |
 | 振幅干涉读法 | S3 未纳入；S5/S5b 已开候选接口 | S3 path composition 不被解释为路径振幅叠加或相消；S5/S5b 只记录 candidate，不证明真实干涉律 |
@@ -167,7 +167,7 @@ def CodeMonotoneStep (P : FiniteProcess) : Prop :=
 CodeSuccessorStep -> CodeMonotoneStep -> no one-step self loop
 ```
 
-concrete witness 的 `prepared -> evolved -> measured` 和 `71232` grid 的 successor index 都满足该约束。
+concrete witness 的 `prepared -> evolved -> measured` 和 `94976` grid 的 successor index 都满足该约束。
 
 ---
 

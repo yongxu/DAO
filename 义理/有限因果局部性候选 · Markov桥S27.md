@@ -59,7 +59,7 @@ theorem finite_causal_locality_bridge_summary :
 | nonlocal exclusion | `nonlocal_not_one_step` | 不在局部未来 list 中则不能是一步 successor |
 | kernel locality | `kernel_positive_weight_implies_local_future` | 正 Markov 权重目标落在局部未来 list |
 | concrete local future | `concreteCausalLocalFuture` | `prepared -> [evolved]`、`evolved -> [measured]`、`measured -> []` |
-| grid local future | `operatorCellGridCausalLocalFuture` | `71232` grid 的 successor index 给出局部未来 list |
+| grid local future | `operatorCellGridCausalLocalFuture` | `94976` grid 的 successor index 给出局部未来 list |
 | S27 summary | `finite_causal_locality_bridge_summary` | S27 接回 S26/S25、S3 path causal boundary 与 Wen coverage |
 
 未纳入本轮：

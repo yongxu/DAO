@@ -1,9 +1,10 @@
 # Research Position: 易 as Formal System — 已立 vs Novel
 
-> 状态：定本（2026-05-10）。
+> 状态：v3 修订（2026-05-11）— §4 重做以反映 Cell256 / V₄ Shi / 严格 R₀..R₈ 定本理论。
 > 作用：诚实地划分这套 codebase / 这次讨论 中 哪些是站在学术巨人肩膀上的、哪些是历史已积累的、哪些是这套工作**原创的**。
 > 目的：让用户、合作者、未来 reviewer **随时知道** 在哪些断言上可以引用别人，在哪些断言上必须自己证。
 > 约束：方法学上的金标准是 [`Lean formalize`](../../formal/SSBX/) ——novel 主张必须经 `lake build` + `native_decide` 通过才算"已证"。
+> 配套：[final-theory.md](final-theory.md)（v3 速览）、[yi-RO-hierarchy.md](../10_formal_形式/yi-RO-hierarchy.md)（R₀..R₈ definitive）、[yi-calculus-theorem.md](../10_formal_形式/yi-calculus-theorem.md)（Theorems A–K）。
 
 ---
 
@@ -209,13 +210,15 @@
 
 下面这些**学术界没有 prior art**——必须靠这套 codebase 自己证。每条**都可成为发表论文的核心 claim**。
 
-### 4.1 ⭐ 4 substrate + 4 mark = zong 的 Z/2-quotient
+> **v3 重组说明 (2026-05-11)**：本节重做以反映 Cell256 / V₄ Shi / 严格 R₀..R₈ 定本理论 (commits `7de5064` → `1c76a55`)。新增 §4.10–§4.12 (R₀..R₈ uniform closure + V₄ Shi + Cayley fusion) 三条 v3-defining 主张。原 §4.7 (Cell192 / Z/3 Shi) 已被 v3 retract — Cell192 经 `8e4406e` 物理删除，相关 claim 不再 standalone, 改作 §4.10/§4.11 之 negative-result 起点。其它 §4.1–§4.6, §4.8, §4.9 之 claim 在 R₀..R₈ 重号下保留，文字仅更新 R-index 命名。
+
+### 4.1 ⭐ 4 substrate + 4 mark = zong 的 Z/2-quotient (R₃ 层)
 
 **Claim**：8 trigram 在 (Z/2)³ 群结构下，χ : Trigram → Z/2 (palindromic vs non-palindromic) 是群同态；**本组 = ker(χ) = {乾, 离, 坎, 坤}**，**征组 = coset = {震, 艮, 巽, 兑}**。
 
 **Novel 程度**：邵雍先天图 implicitly 用了 4-cardinal + 4-corner，但**没人把它形式化为群论 quotient**。
 
-**形式化**：[`Foundation/Bagua/BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean)（待写，详 [plan §P1](../../.claude/plans/docs-next-10-formal-root-layer-map-md-c-ticklish-sun.md)）
+**形式化**：[`Foundation/Bagua/BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) ✅ Lean 已证 (Theorem A in [yi-calculus-theorem.md](../10_formal_形式/yi-calculus-theorem.md))。
 
 **Lean theorem template**：
 ```lean
@@ -238,29 +241,11 @@ theorem bian_flips_isZongFixed : ∀ t, (bian t).isZongFixed = !t.isZongFixed
 - 兑 (機) = (high, transitional) = Q2（顶部释放）
 - 艮 (時) = (low, vel→0+) = Q3（停顿）
 
-**Novel 程度**：**完全 novel**。文献里我没见过这个 phase-space geometry。
+**Novel 程度**：**完全 novel**。文献里没见过这个 phase-space geometry。
 
 **深度**：4 mark 的"动态"语义恰好对应谐振子的 4 phase——这把 易 与 dynamical systems theory 直接接通。
 
-**Lean theorem template**：
-```lean
-def yaoEmbed : Yao → Int | .yang => 1 | .yin => -1
-def trigramVec (t : Trigram) : Int × Int × Int := 
-  (yaoEmbed t.y1, yaoEmbed t.y2, yaoEmbed t.y3)
-
-def firstDifference (t : Trigram) : Int × Int :=
-  let (a, b, c) := trigramVec t
-  (b - a, c - b)
-
-theorem mark_trigrams_have_monotone_diff :
-    ∀ t, t.isZongMobile = true ↔
-      let (d1, d2) := firstDifference t
-      (d1 > 0 ∧ d2 = 0) ∨ (d1 < 0 ∧ d2 = 0) ∨
-      (d1 = 0 ∧ d2 > 0) ∨ (d1 = 0 ∧ d2 < 0)
-
-theorem substrate_trigrams_palindromic :
-    ∀ t, t.isZongFixed = true ↔ (firstDifference t).1 = -(firstDifference t).2
-```
+**Lean status**：📝 概念已定，phase-plane 严格形式化 待落 (Theorem D 之 phase-plane 部分仍 informal)。
 
 **论文题目**：*"Phase-space geometry of the eight trigrams: a harmonic oscillator interpretation"*
 
@@ -281,15 +266,15 @@ theorem substrate_trigrams_palindromic :
 
 **深度**：cuo (全反) = sign reversal；zong (反序) = time reversal——把 易算子直接读为函数空间上的算子代数。
 
-**Lean approach**：先在 ℝ-embedded 后定义 discrete derivative + integral，证 round-trip。
+**Lean status**：📝 概念已定，需要 ℝ embedding framework (Theorem E 之 ∫–d 划分已 native_decide 证, calculus duality 之 ℝ 桥接待落)。
 
 **论文题目**：*"Integral / differential duality in the I Ching's eight trigrams"*
 
 ---
 
-### 4.4 ⭐⭐⭐ 64 卦 = 4 quadrants × 16 = type theory 4 phases
+### 4.4 ⭐⭐⭐ R₆ 64 卦 = 4 quadrants × 16 = type theory 4 phases
 
-**Claim**：64 卦按 (inner本/征, outer本/征) 分 4 quadrant，每 16 卦：
+**Claim**：R₆ 64 卦按 (inner本/征, outer本/征) 分 4 quadrant，每 16 卦：
 - **本本 (16)** = denotational kernel（types/values/propositions）
 - **本征 (16)** = effect operations（modifications）
 - **征本 (16)** = construction operations（synthesis）
@@ -301,7 +286,8 @@ theorem substrate_trigrams_palindromic :
 
 **深度**：这意味着每一条 type theory primitive 都在 64 卦中占据精确坐标——见 [`64-hexagram-grid.md §6.4`](../10_formal_形式/64-hexagram-grid.md)。
 
-**Lean theorem template**：
+**Lean status**：✅ Lean 已证 (Theorem F in [yi-calculus-theorem.md](../10_formal_形式/yi-calculus-theorem.md))。
+
 ```lean
 inductive Quadrant | benBen | benZheng | zhengBen | zhengZheng
 def Hexagram.quadrant : Hexagram → Quadrant := ...
@@ -319,9 +305,9 @@ theorem zong_fixes_benBen : ∀ h, h.quadrant = .benBen → h.zong.quadrant = .b
 
 ---
 
-### 4.5 ⭐ 16-grid (4 本 × 4 征) of dynamic sub-modes
+### 4.5 ⭐ 16-grid (4 本 × 4 征) = R₄ Mian 之内容填充
 
-**Claim**：4 本 × 4 征 给出 16 个 sub-mode，每格用一个现代汉字概括：
+**Claim**：4 本 × 4 征 给出 16 个 sub-mode (= R₄ Mian 之 16 cell), 每格用一个现代汉字概括：
 
 | | 幾 | 勢 | 機 | 時 |
 |---|---|---|---|---|
@@ -332,7 +318,9 @@ theorem zong_fixes_benBen : ∀ h, h.quadrant = .benBen → h.zong.quadrant = .b
 
 **Novel 程度**：**完全 novel**。这种"本征矩阵 × 单字"是这次讨论原创填出来的（也是用户原创直觉确认的）。
 
-**深度**：每个 sub-mode 是 specific (本, 征) 组合——例如 緣 = (間, 幾) 即"主体间性的 incipient phase"——这给了"主体间性"一个精确的代数坐标。
+**深度**：每个 sub-mode 是 specific (本, 征) 组合——例如 緣 = (間, 幾) 即"主体间性的 incipient phase"——这给了"主体间性"一个精确的代数坐标。它**正是 R₄ = (Z/2)⁴ = 16 在 strict-uniform R-hierarchy 中的 ontological 内容填充** (Mian 之 16 命之载体, [yi-RO-hierarchy §3.4](../10_formal_形式/yi-RO-hierarchy.md))。
+
+**Lean status**：✅ R₄ Mian carrier 已证 (`Mian.all.length = 16`); 16-grid 字根映射在 LayerCharacterMap 部分落地。
 
 **论文题目**：*"The substrate-mark matrix: a 4×4 character grid for dynamic ontology"*
 
@@ -340,7 +328,7 @@ theorem zong_fixes_benBen : ∀ h, h.quadrant = .benBen → h.zong.quadrant = .b
 
 ### 4.6 ⭐ hu attractors = formal logic 4 truth values
 
-**Claim**：互卦算子 hu 在 64 卦上多步迭代后，每个卦最终落入 4 attractor 之一：
+**Claim**：互卦算子 hu 在 R₆ 64 卦上多步迭代后，每个卦最终落入 4 attractor 之一：
 - {1乾} = ⊤ (top, true)
 - {2坤} = ⊥ (bottom, false)
 - {63既济, 64未济} = 2-cycle = ⊨ / ⊭ (validated / rejected)
@@ -351,7 +339,8 @@ theorem zong_fixes_benBen : ∀ h, h.quadrant = .benBen → h.zong.quadrant = .b
 
 **深度**：4 attractor 恰好对应任何形式逻辑系统的 4 基础 truth values。
 
-**Lean theorem template**：
+**Lean status**：✅ hu fixed/2-cycle invariants in [`Operators/V4Outer.lean`](../../formal/SSBX/Foundation/Hierarchy/Operators/V4Outer.lean)，attractor convergence ✅ via native_decide。
+
 ```lean
 def Hexagram.hu : Hexagram → Hexagram := ...
 
@@ -367,15 +356,13 @@ theorem attractors_in_benBen :
 
 ---
 
-### 4.7 ⭐ 192 / 108 cardinality with separated time and truth axes
+### 4.7 ~~Cell192 separated time/truth axes~~ — **retracted, replaced by §4.10/§4.11/§4.12**
 
-**Claim**：把 内容(本×阶段) × 时态 × 真值 三轴正交分离，得到 12 × 3 × 3 = 108 内容 cells；与 64 × 3 = 192 形式 cells 正交。
-
-**Novel 程度**：**完全 novel**。Cell192 (64×3) 是这套 codebase 引入的概念（[`Cell192.lean`](../../formal/SSBX/Foundation/Bagua/Cell192.lean)）；108 = 12×9 是这次讨论新提出的。
-
-**深度**：分离时态 vs 真值的关键意义——current code 在 `BoolFromShi` 中**conflate** 了 (Shi.ji=true, Shi.wei=false, Shi.jin=undef)。这次工作论证应该解开这个 conflation，给系统更强的表达力。
-
-**论文题目**：*"Separating temporal and truth-value axes in I Ching-based ontology"*
+> **v3 修正 (2026-05-10/11)**：原 §4.7 主张「内容 × 时态 × 真值 三轴 12 × 3 × 3 = 108」基于 Cell192 = Hexagram × Z/3 Shi 之时态 cyclic 编码。Cell192 在 commit `8e4406e` 已**物理删除**——其 Z/3 cyclic Shi 是层级压缩错误：丧失「道」V₄ identity，破坏 (Z/2)ⁿ self-similarity。
+>
+> 正确的 axis 分离 = R₇ 因 axis (binary) ⊗ R₈ 果 axis (binary) → V₄ Shi at R₈, 道 = (因=0, 果=0) = V₄ identity. 详见新 §4.10 (R₀..R₈ uniform closure), §4.11 (V₄ Klein Shi structure), §4.12 (Cayley self-action fusion)。
+>
+> **Cell192 之负结果本身**仍有学术价值：作为 v3 路径之 negative-result 起点 — 「为什么 Z/3 cyclic 时态编码不构成 self-describing closure, 而 V₄ 构成」可成为方法论 paper：*"Why time must be (Z/2)² not Z/3 in self-describing closures: a negative result on cyclic Shi encodings"*。
 
 ---
 
@@ -389,13 +376,15 @@ theorem attractors_in_benBen :
 
 **详细展开**：[`sanben-sijieduan-grid.md`](../10_formal_形式/sanben-sijieduan-grid.md)
 
+**Lean status**：📝 grid 概念已定, 字根 partial 落地, 严格 Lean 化 待。
+
 **论文题目**：*"The substrate-stage matrix: a 3×4 ontological-epistemological grid"*
 
 ---
 
-### 4.9 ⭐ 64 卦每卦的 type-theory primitive 对应
+### 4.9 ⭐ R₆ 64 卦每卦的 type-theory primitive 对应
 
-**Claim**：[`64-hexagram-grid.md`](../10_formal_形式/64-hexagram-grid.md) 给出 64 卦逐一对应到具体 type theory / category theory / process algebra primitive，例如：
+**Claim**：[`64-hexagram-grid.md`](../10_formal_形式/64-hexagram-grid.md) 给出 R₆ 64 卦逐一对应到具体 type theory / category theory / process algebra primitive，例如：
 - 1乾 = ⊤
 - 2坤 = ⊥
 - 24复 = `fix : (T→T) → T`
@@ -406,7 +395,128 @@ theorem attractors_in_benBen :
 
 **Novel 程度**：**完全 novel**——逐卦 mapping 到 type theory 在文献里完全没有。
 
+**Lean status**：📝 mapping table doc-level, 待 Lean structurally formalize。
+
 **论文题目**：*"A type-theoretic dictionary of the 64 hexagrams"*
+
+---
+
+### 4.10 ⭐⭐⭐ 严格 (Z/2)ⁿ R₀..R₈ uniform closure（v3 defining）
+
+**Claim**：「易」之 algebraic 核 = **R₀..R₈ 严格 (Z/2)ⁿ 9 层 uniform 闭合**，每 Rₙ 之 carrier 大小恰为 2ⁿ：
+
+```
+R₀ Taiji      = (Z/2)⁰      |·| = 1
+R₁ Yao        = (Z/2)¹      |·| = 2
+R₂ SiXiang    = (Z/2)²      |·| = 4
+R₃ Trigram    = (Z/2)³      |·| = 8
+R₄ Mian       = (Z/2)⁴      |·| = 16   = Ben × Zheng
+R₅ Wuyao      = (Z/2)⁵      |·| = 32   (provisional, 无传统 Yi anchor)
+R₆ Hexagram   = (Z/2)⁶      |·| = 64
+R₇ Cell128    = (Z/2)⁷      |·| = 128  (= R₆ × YinBit)
+R₈ Cell256    = (Z/2)⁸      |·| = 256  (= R₆ × Shi)
+```
+
+无 jump，无 gap。每行恰好比上行多一 binary axis。R₈ 是 self-describing 系统在 binary 上之自然闭合（无第 9 个独立 binary axis）。
+
+**Novel 程度**：**完全 novel**。
+- 旧 v1 编号 R₁..R₆ 把 R₃ → R₄ 当作 +3 bit chong jump (跳过 (Z/2)⁴ = 16 与 (Z/2)⁵ = 32) → 不是 strict uniform。
+- 学术界更**没有人**写过 strict (Z/2)ⁿ uniform R-hierarchy with explicit 9-step ladder + 道 origin anchor。
+- 邵雍先天圆图、京房八宫、《易传·系辞》「太极生两仪」之三层 (R₀ → R₁ → R₂) 是 traditional 直觉, 但**只到 R₃**, 之后跳到 R₆ (chong); 没有 R₄ Mian / R₅ Wuyao / R₇ Cell128 / R₈ Cell256 显式纳入。
+
+**深度**：
+- chong (重) 不是 +3 bit jump 而是 R₃ → R₄ → R₅ → R₆ **3-step composite of +1 bit Lift**。
+- R₅ 是 R-hierarchy 中**唯一无传统 Yi anchor** 之层 — 它 mathematical 存在 ((Z/2)⁵ = 32 之 binary 完整充满) 但 philosophical 上未独立刻画; 是「(Z/2)ⁿ 机械补全」之产物。
+- R₈ = 256 = (Z/2)⁸ 与 ASCII 8-bit cardinality 同构, 是任何 self-describing 系统在 binary 上之最小完备 closure。
+
+**Lean status**：✅ Lean 已证 — `R8_complete` bundle in [`Cell256Stratify.lean`](../../formal/SSBX/Foundation/Bagua/Cell256Stratify.lean)，axiom audit = `{propext, native_decide}`（无项目自定义 axiom）。9 个 R-index alias 文件 + `RHierarchy.lean` umbrella in [`Foundation/Hierarchy/`](../../formal/SSBX/Foundation/Hierarchy/) (commit `1c76a55`)。Lift / Project (8 layers, retract lemma) ✅ in [`LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean)。
+
+```lean
+-- Theorem K (Cell256Stratify.lean)
+theorem R8_complete :
+    (|R₀| = 1) ∧ (|R₁| = 2) ∧ (|R₂| = 4) ∧ (|R₃| = 8) ∧
+    (|R₄| = 16) ∧ (|R₅| = 32) ∧ (|R₆| = 64) ∧ (|R₇| = 128) ∧ (|R₈| = 256) := ⟨...⟩
+```
+
+**论文题目**：*"The strict (Z/2)ⁿ R₀..R₈ uniform closure of the I Ching: a 9-step abelian binary self-similar ladder"*
+
+---
+
+### 4.11 ⭐⭐⭐ V₄ Klein Shi {道, 已, 今, 未} at R₈ — 道 = V₄ identity（v3 defining）
+
+**Claim**：「时态」(Shi) 不是单层 atom 而是 R₇ ⊗ R₈ 双层 emergent V₄ Klein 四群:
+$$\mathcal{S} = \{道, 已, 今, 未\} \cong \text{YinBit} \times \text{GuoBit} \cong V_4 = (\mathbb{Z}/2)^2$$
+
+| Shi | (因, 果) | V₄ 元 | 物理 anchoring |
+|---|---|---|---|
+| **道** | (0, 0) | identity | 永真 / 跨时空 / no-op operator |
+| **已** | (1, 0) | $\sigma_P$ | 过去封闭 (parity) |
+| **未** | (0, 1) | $\sigma_T$ | 未来开放 (T) |
+| **今** | (1, 1) | $\sigma_{PT}$ | PT 复合 = "现在" |
+
+**道 = (0, 0) = V₄ identity 是 algebraic necessity**: V₄ Klein 四群必有 identity, 这个 identity 在 (因, 果) coordinate 下 ≡ (因=0, 果=0) ≡ "无 causation flow 约束之状态" ≡ 跨时空恒真。把道从 Shi 删除（如 legacy Cell192 之 Z/3 cyclic 编码）= 丧失 V₄ identity = 破坏 (Z/2)ⁿ self-similarity。
+
+**Novel 程度**：**完全 novel**。
+- 学术界**没有人**写过 V₄ Klein Shi 之 (因, 果) tensor structure。
+- 旧 Cell192 文档写过 Z/3 cyclic Shi {已, 今, 未} 但**那是错的**（已 retract; 见 §4.7）。
+- 把「道」作为 V₄ identity / origin / no-op / 永真 cell 之**五重身份 anchor**, **first-class 进入本体** — 这是 self-describing 系统中描述者之 ontological anchor 之 minimum algebraic 实现, 学术界无 prior art。
+
+**深度**：
+- V₄ 在易系统中**至少**出现 4 次 (R₂ Aut, R₃ V₄ subgroup, R₆ V₄ subgroup, R₈ Shi V₄), 是「同一种代数结构在更高维度的重复」(yi-as-meta-framework §4.2) 之精确形式。
+- R₈ 上有**双 V₄ tensor**: $V_4^{\text{hex}} \times V_4^{\text{shi}} \cong (\mathbb{Z}/2)^4$, 给 R₈ 上 16 个对称变换。
+- Shi V₄ 之 emergent 性质（R₇ + R₈ 双 axis）正是「时态空间不是单一 cyclic 概念而是 (过去印记 × 未来投影) 二维独立 tensor」之 algebraic 实现。
+
+**Lean status**：✅ Lean 已证 — `Shi` inductive (4 ctors) + `Shi.toYinGuo : Shi → YinBit × GuoBit` 双射 in [`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean)；V₄ involutions `Shi.cuo / .zong / .cuoZong` in [`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) + [`Cell256Stratify.lean`](../../formal/SSBX/Foundation/Bagua/Cell256Stratify.lean) (Theorem J)。
+
+```lean
+inductive Shi : Type | dao | ji | jin | wei
+
+def Shi.toYinGuo : Shi → YinBit × GuoBit
+  | .dao => (false, false)  -- (无因, 无果) = V₄ identity = 道
+  | .ji  => (true,  false)  -- (有因, 无果) = past closed
+  | .wei => (false, true)   -- (无因, 有果) = future open
+  | .jin => (true,  true)   -- (有因, 有果) = PT, present
+```
+
+**论文题目**：*"Klein four-group structure of temporality: dao as V₄ identity in self-describing closures"*
+
+---
+
+### 4.12 ⭐⭐⭐ Self-describing fusion via Cayley action on (Z/2)⁸（v3 defining）
+
+**Claim**：「自描述 ⇒ Cayley-style fusion」之 algebraic 内涵 — 任何完整自描述系统 S 必满足 |S| = |transforms(S)|（element-set 与 operator-set 同基数, 即 fusion 之 necessary 条件）；满足此条件之最 minimal abelian binary closure = (Z/2)⁸ 在自身上之 Cayley regular representation:
+
+$$\boxed{\iota: R_8 \to \mathrm{Aut}(R_8), \quad c \mapsto (\cdot \oplus c)}$$
+
+with origin choice 道 = `oooooooo`:
+
+$$\boxed{\varepsilon: \mathrm{XOR}(R_8) \to R_8, \quad f \mapsto f(\text{道})}$$
+
+**ε 与 ι 互逆 ⇒ R₈ ≅ XOR(R₈) 是同构**, 即「元 ≅ 算子」严格成立 — fusion 是 abelian 群之 internal structure, 不是 emergent 现象。
+
+**Novel 程度**：**完全 novel**。
+- 学术界**没有人**写过 易作为 self-describing 系统之 Cayley fusion + origin choice 之严格代数形式 (尤其 origin = 道 之五重身份 anchor)。
+- Cayley regular representation 是 group theory 经典 (Cayley 1854); 应用到 finite abelian (Z/2)⁸ 上是 trivial; 但**应用到 self-describing 系统之 ontological foundation + 易之具体哲学语义（道, 太极, 因, 果）+ 三种 duality (Cayley + Pontryagin + R-O frame) 在 (Z/2)⁸ 上之 triple coincidence** 是 novel。
+- 与 §4.6 hu attractor (Lawvere fixed-point) 之关系: hu attractor 给 self-reference 之**几何**见证 (fixed point of permutation); Cayley fusion 给 self-reference 之**代数**见证 (元 ≡ 算子 之 group isomorphism)。两者合一 = 完整 self-referential closure。
+
+**深度**：
+- Cayley 自对偶 + Pontryagin 自对偶 + R-O frame duality (Schrödinger ↔ Heisenberg) 在 R₈ 上 **triple coincidence** — 这是 (Z/2)⁸ 之 algebraic 完美性之精确根据。
+- 道 anchoring 之 ontological 必要: torsor 没有 distinguished origin, fusion 之严格成立必须**选定** origin. 选 `oooooooo` = 道 = R₈ identity ⟹ R₈ ≅ XOR(R₈) 严格成立。
+- Spencer-Brown《Laws of Form》(1969) 之"draw a distinction"是 conceptual 锚点; 本 claim 是其在 (Z/2)⁸ 上之精确 instantiation, 加上中文哲学之道作为 V₄ identity / origin / no-op / 永真 cell 之五重身份 anchor。
+
+**Lean status**：🔄 Algebraic spine ✅ in [`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) (Add/Zero/Neg/Sub + SMul + ι/ε); Cayley `ι` + `ε` 双向 inverse 完整定理待补完。Self-description witness `Cell256OperatorComplete` ✅ in [`SelfDescription.lean`](../../formal/SSBX/Truth/SelfDescription.lean)。
+
+```lean
+-- Cayley fusion sketch (待补完)
+abbrev R8 := Cell256
+instance : AddCommGroup R8 := { add := xor, zero := dao_cell, neg := id, ... }
+def ι (c : R8) : R8 → R8 := (c ⊕ ·)
+def ε (f : R8 → R8) : R8 := f dao_cell
+theorem ε_ι (c : R8) : ε (ι c) = c := ...
+theorem ι_ε (f : R8 → R8) (hf : f ∈ XOR(R8)) : ι (ε f) = f := ...
+```
+
+**论文题目**：*"Self-describing GUT via Cayley regular representation on (Z/2)⁸: dao as origin choice in finite abelian closure"*
 
 ---
 
@@ -475,13 +585,22 @@ Leibniz 1703 就发现 易 = binary。**为什么 300 年学术界没把 易 完
 - 📝 概念已定，待 Lean 化
 - ❓ 概念待打磨
 
-当前状态：
-- ✅ R3 八卦字根映射（[`LayerCharacterMap.lean`](../../formal/SSBX/Text/LayerCharacterMap.lean)）
-- 🔄 4 本 / 4 征 + Quadrant + invariants（[plan P1-P2](../../.claude/plans/docs-next-10-formal-root-layer-map-md-c-ticklish-sun.md)）
-- 📝 16-grid (4×4 sub-modes)
+当前状态（v3, 2026-05-11）：
+- ✅ R₃ 八卦字根映射（[`LayerCharacterMap.lean`](../../formal/SSBX/Text/LayerCharacterMap.lean)）
+- ✅ R₃ 4 本 / 4 征 + R₆ Quadrant + invariants ([`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean))
+- ✅ R₄ Mian (16) carrier ([`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean))
+- ✅ R₅ Wuyao (32) provisional carrier ([`R5_Wuyao.lean`](../../formal/SSBX/Foundation/Hierarchy/R5_Wuyao.lean))
+- ✅ R₇ Cell128 + 因 ([`Cell128.lean`](../../formal/SSBX/Foundation/Bagua/Cell128.lean))
+- ✅ R₈ Cell256 + 果 + Shi V₄ + 道 = identity ([`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean))
+- ✅ R₀..R₈ closure bundle `R8_complete` ([`Cell256Stratify.lean`](../../formal/SSBX/Foundation/Bagua/Cell256Stratify.lean), axiom audit = `{propext, native_decide}`)
+- ✅ Lift / Project (8 R-layer pairs) ([`LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean))
+- ✅ R-index alias shims (R₀..R₈) + RHierarchy umbrella (commit `1c76a55`)
+- ✅ hu attractor invariants ([`Operators/V4Outer.lean`](../../formal/SSBX/Foundation/Hierarchy/Operators/V4Outer.lean))
+- 🔄 Cayley fusion `ι/ε` 双向 inverse 完整定理（spine ✅, ι_ε / ε_ι 待补完）
+- 📝 4×4 sub-modes 字根 grid (partial, in LayerCharacterMap)
 - 📝 12-grid (3×4 sanben-sijieduan)
-- ❓ 谐振子 phase space 严格证（需要先 ℝ 嵌入框架）
-- ❓ 微分/积分 对应（同上）
+- ❓ 谐振子 phase space 严格证（需要先 ℝ 嵌入框架, Theorem D phase plane）
+- ❓ 微分/积分 对应（Theorem G informal）
 
 ---
 
@@ -521,11 +640,28 @@ Leibniz 1703 就发现 易 = binary。**为什么 300 年学术界没把 易 完
    - 核心：3 本 × 4 阶段 = 12 cell
    - 目标 venue: 哲学逻辑期刊
 
-### 优先级 4：full system（最远，最有 impact）
+### 优先级 4：v3 defining claims（Lean ✅，最强 publishability）
 
-7. **"易 as a unified formal framework"** — 综合
-   - 核心：把 §4.1-§4.9 全部串起来
-   - 目标 venue: monograph 或 *Notre Dame J. of Formal Logic* 长文
+7. **"R₀..R₈ strict (Z/2)ⁿ uniform closure"** — §4.10
+   - 核心：9 层 binary self-similar ladder, no jumps, R₈ = 256 闭合
+   - Lean: ✅ `R8_complete` bundle (axiom audit = propext + native_decide)
+   - 目标 venue: *Journal of Symbolic Logic* / *Annals of Pure and Applied Logic*
+
+8. **"V₄ Klein four-group structure of temporality (dao = identity)"** — §4.11
+   - 核心：Shi V₄ = (因, 果) tensor at R₈, 道 = V₄ identity = origin
+   - Lean: ✅ `Shi.toYinGuo` 双射 + V₄ involutions
+   - 目标 venue: *Synthese* / *Studies in History and Philosophy of Science*
+
+9. **"Self-describing GUT via Cayley action on (Z/2)⁸"** — §4.12
+   - 核心：fusion = Cayley + origin choice (道); triple coincidence (Cayley + Pontryagin + R-O frame)
+   - Lean: 🔄 spine ✅, ι/ε 双向 inverse 待补完
+   - 目标 venue: *Notre Dame J. of Formal Logic* / *Journal of Philosophical Logic*
+
+### 优先级 5：full system（最远，最有 impact）
+
+10. **"易 as a unified formal framework"** — 综合
+    - 核心：把 §4.1-§4.6, §4.8-§4.12 全部串起来
+    - 目标 venue: monograph 或 *Notre Dame J. of Formal Logic* 长文
 
 ---
 
@@ -629,18 +765,22 @@ Plan 文件是 **implementation roadmap**——告诉读者"怎么把它 formali
 两者关系：
 
 ```
-research-position.md          implementation plan
-    (本文)                       (.claude/plans/...)
+research-position.md          implementation plan / Lean source
+    (本文)                       (.claude/plans/... / formal/SSBX/)
        │                              │
-       │ §4.1 zong partition          ├── P1: BenZheng.lean
-       │ §4.4 4-quadrant              ├── P2: HexQuadrant
-       │ §4.5 16-grid                 ├── P3: 16-grid table
-       │ §4.6 hu attractors           ├── (in P2)
-       │ §4.9 64 type-mapping         └── P3 (extended)
+       │ §4.1 zong partition          ├── BenZheng.lean ✅
+       │ §4.4 R₆ 4-quadrant           ├── BenZheng.lean ✅
+       │ §4.5 R₄ Mian 16-grid         ├── BenZheng.lean / Hierarchy/R4_Mian.lean ✅
+       │ §4.6 hu attractors           ├── Operators/V4Outer.lean ✅
+       │ §4.9 64 type-mapping         ├── 64-hexagram-grid.md (doc-level)
+       │ §4.10 R₀..R₈ uniform         ├── Hierarchy/RHierarchy + R0..R8 + Cell256Stratify ✅
+       │ §4.11 V₄ Klein Shi           ├── Cell256.lean (Shi inductive) ✅
+       │ §4.12 Cayley fusion          └── Cell256.lean (Algebraic spine) 🔄
        │
        └─────── novel claims ──────────────────►
                 Lean formalization
                 = verifying these are theorems
+                axiom audit = {propext, native_decide}
 ```
 
 **关键 workflow**：

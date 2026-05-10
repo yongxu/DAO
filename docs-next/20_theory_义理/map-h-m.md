@@ -13,11 +13,11 @@ H-M 是形式化与自省段。它关心八卦代数、全集、192 格、不完
 | J | `义理/J_理之不完备_哥德尔在192.md` | 192 与不完备解释 | 是否依赖编码、公理、运行边界 |
 | K | `义理/K_完备性审计.md` | 元层审计 | 是否区分缺项、越界、重复、未证 |
 | L | `义理/L_文道一也_自释与微核.md` | 文言可执行与自释 | 是否混同解释器、自举和真理 claim |
-| M | `义理/M_证明报告_192_理之不完备.md` | 不完备形式报告 | 是否追到 `GodelLi` 与信任边界 |
+| M | `义理/M_证明报告_256_理之不完备.md` | 不完备形式报告 (v3 重号，原名 M_证明报告_192_理之不完备.md) | 是否追到 `GodelLi` 与信任边界 |
 
 ## H：八卦代数证明报告
 
-H 是证明报告，不是源码替代。它的任务是把形式层结论翻译成人类可读的义理语言。当前应把 `Foundation/Bagua` 作为主要落点，尤其关注 `BaguaAlgebra`、`CuoInvariance`、`Cell192` 等模块在 [../_generated/lean-index.md](../_generated/lean-index.md) 中的存在状态。
+H 是证明报告，不是源码替代。它的任务是把形式层结论翻译成人类可读的义理语言。当前应把 `Foundation/Bagua` + `Foundation/Hierarchy` 作为主要落点，尤其关注 `BaguaAlgebra`、`CuoInvariance`、`Cell128`、`Cell256`、`Cell256Stratify`、`RHierarchy` 等模块在 [../_generated/lean-index.md](../_generated/lean-index.md) 中的存在状态。(v3 重号：旧 Cell192 已删除，由 Cell256 + V₄ Klein Shi 取代。)
 
 阅读时分三层：
 

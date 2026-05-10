@@ -1,16 +1,47 @@
-# 64 卦四语对照表 + 4 象限分类 + 算子全 invariant
+# 64 卦四语对照表 + 4 象限分类 + 算子全 invariant — R₆ 层
 
-> 状态：定本（2026-05-10）。
-> 作用：把 64 卦按 (本本 / 本征 / 征本 / 征征) 4 象限分类，每卦给出 古文 / 现代汉语 / 形式逻辑 单字读法，并列出 cuo / zong / hu / single-yao flip 在 4 象限上的 invariant。
-> 配套：
-> - [sanben-sijieduan-grid.md](sanben-sijieduan-grid.md) — 12 格底层 (3 本 × 4 阶段)
-> - [layer-axis-graph.md](layer-axis-graph.md) — 三轴汇聚图
-> - [layer-character-map.md](layer-character-map.md) — R0–L0 字根映射
-> - [`BaguaAlgebra.lean`](../../formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean) / [`Cell192.lean`](../../formal/SSBX/Foundation/Bagua/Cell192.lean) — 形式锚
+> 状态：v3 定本 (2026-05-11)
+> 父文档：[yi-RO-hierarchy.md](yi-RO-hierarchy.md) (R₀..R₈ definitive)
+>
+> 作用：R₆ Hexagram = (Z/2)⁶ = 64 之**完整 4-象限分类表**。把 64 卦按 (本本 / 本征 / 征本 / 征征) BenZheng 4 象限分类，每卦给出 古文 / 现代汉语 / 形式逻辑 单字读法，列出 cuo / zong / hu / single-yao flip 在 4 象限上的 invariant。
+>
+> **R₀..R₈ 定位**: 64 = R₆ 是 Hexagram 层, **不是顶**。R-hierarchy 闭合在 R₈ Cell256 = 256 = (Z/2)⁸；R₆ → R₇ (Cell128, +因) → R₈ (Cell256, +果)。本表是 Hex side; 上溯到 R₈ 见 [cell256-grid.md](cell256-grid.md), 时态 V₄ Shi 见 [shi-v4.md](shi-v4.md)。
+>
+> 配套 v3 兄弟文档：[yi-bagua.md](yi-bagua.md) (Yi+Bagua+R-hier hub) · [cell256-grid.md](cell256-grid.md) (R₈ 256-格全表) · [shi-v4.md](shi-v4.md) (V₄ Shi) · [r7-yin-r8-guo.md](r7-yin-r8-guo.md) (因/果) · [r5-wuyao-provisional.md](r5-wuyao-provisional.md) · [lift-project.md](lift-project.md) · [ox-notation.md](ox-notation.md) · [sanben-sijieduan-grid.md](sanben-sijieduan-grid.md) (R₄ Mian)
+> 形式锚：[`Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) (Hexagram + cuo/zong/hu) · [`BaguaAlgebra.lean`](../../formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean) · [`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) (4 象限定义 + Theorem A/F)
 
 ---
 
-## 0. trigram-本/征 assignment
+## 0. R₆ 在 R₀..R₈ 之位置 — 不是顶
+
+```
+R₀ (1)  → R₁ (2) → R₂ (4) → R₃ (8) → R₄ (16) → R₅ (32) →
+                                                           ┌─→ R₆ (64) ← 本表
+                                                           │     ↓
+                                                           │   R₇ (128, +因)
+                                                           │     ↓
+                                                           └─→ R₈ (256, +果) — 闭合层
+```
+
+| R | 名 | 类型 | size | 关键 atom |
+|---|---|---|---|---|
+| R₀ | 太极 | Unit | 1 | (无) |
+| R₁ | 爻 | Yao | 2 | yang/yin |
+| R₂ | 四象 | SiXiang | 4 | (lift) |
+| R₃ | 八卦 | Trigram | 8 | 4 本 + 4 征 (BenZheng) |
+| R₄ | 面 Mian | Ben × Zheng | 16 | (Mian = Ben × Zheng) |
+| R₅ | 五爻 (provisional) | Wuyao | 32 | (无传统 anchor) |
+| **R₆** | **重卦 Hexagram** | **Hexagram** | **64** | **本表主角: 4 quadrant × 16** |
+| R₇ | 因卦 | Cell128 | 128 | + 因 (yīn, past-trace) |
+| R₈ | 果卦 | Cell256 | 256 | + 果 (guǒ, future-projection), Shi V₄ emerge |
+
+R₆ → R₇ lift = 加 1 bit (因)。R₇ → R₈ lift = 加 1 bit (果)。详 [r7-yin-r8-guo.md](r7-yin-r8-guo.md) + [lift-project.md](lift-project.md)。
+
+**关键观察**：每个 hex h ∈ R₆ 在 R₈ 中扩为 4 cells: (h, 道), (h, 已), (h, 今), (h, 未) — 4-fold lift via Shi V₄。详 [cell256-grid.md §1.1](cell256-grid.md)。
+
+---
+
+## 1. trigram-本/征 assignment (R₃)
 
 | trigram | 本/征 | 本/征 名 | 单字 | 现代义 | 形式义 |
 |---|---|---|---|---|---|
@@ -44,7 +75,7 @@ zong-mobile (征组)：{震↔艮, 巽↔兑}
 
 ---
 
-## 1. 本本 16（内外皆 zong-fixed substrate；最静态）
+## 2. 本本 16（内外皆 zong-fixed substrate；最静态）
 
 | # | 古字 | 现代 | 形式 | 卦象 (inner⊕outer) | 错 | 综 | 互 |
 |---|---|---|---|---|---|---|---|
@@ -69,7 +100,7 @@ zong-mobile (征组)：{震↔艮, 巽↔兑}
 
 ---
 
-## 2. 本征 16（内本-外征，"底盘稳，上面动"）
+## 3. 本征 16（内本-外征，"底盘稳，上面动"）
 
 | # | 古字 | 现代 | 形式 | 卦象 (inner⊕outer) | 错 | 综 | 互 |
 |---|---|---|---|---|---|---|---|
@@ -94,7 +125,7 @@ zong-mobile (征组)：{震↔艮, 巽↔兑}
 
 ---
 
-## 3. 征本 16（内征-外本，"底盘动，上面稳"）
+## 4. 征本 16（内征-外本，"底盘动，上面稳"）
 
 | # | 古字 | 现代 | 形式 | 卦象 (inner⊕outer) | 错 | 综 | 互 |
 |---|---|---|---|---|---|---|---|
@@ -119,7 +150,7 @@ zong-mobile (征组)：{震↔艮, 巽↔兑}
 
 ---
 
-## 4. 征征 16（内外皆 mark；最动态）
+## 5. 征征 16（内外皆 mark；最动态）
 
 | # | 古字 | 现代 | 形式 | 卦象 (inner⊕outer) | 错 | 综 | 互 |
 |---|---|---|---|---|---|---|---|
@@ -144,9 +175,11 @@ zong-mobile (征组)：{震↔艮, 巽↔兑}
 
 ---
 
-## 5. 算子在 4 象限上的全表 invariant
+## 6. 算子在 4 象限上的全表 invariant — Theorem A / F (BenZheng.lean)
 
-### 5.1 cuo（六爻全反）— 32 对，全部象限内换
+> 这是 [yi-calculus-theorem.md](yi-calculus-theorem.md) Theorem A (4+4 强制) 与 Theorem F (R₆ 4-quadrant 强制分解) 的 64-cell instantiation。Lean 全证明在 [`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) (`cuo_preserves_quadrant`, `zong_swap_*`, `hu_attractors_in_benBen`, `huaInner_preserves_quadrant`, `dongInner_flips_inner` 等 — 全 native_decide 可证).
+
+### 6.1 cuo（六爻全反）— 32 对，全部象限内换
 
 ```
 本本 (16) ──cuo──> 本本: 8 对
@@ -168,7 +201,7 @@ zong-mobile (征组)：{震↔艮, 巽↔兑}
 
 ✅ **cuo 永远在象限内** — 这是 (Z/2)³ 群结构的强 invariant。
 
-### 5.2 zong（六爻反序）— 28 对 + 8 self
+### 6.2 zong（六爻反序）— 28 对 + 8 self
 
 ```
 本本: 4 self-zong + 6 zong-pair
@@ -187,7 +220,7 @@ zong-mobile (征组)：{震↔艮, 巽↔兑}
 
 ✅ **zong 把 本征 ↔ 征本 完全交换** — 这是 zong 在 4-象限网格上的 Z/2 行动（本本/征征 自闭，本征/征本 互通）。
 
-### 5.3 hu（取中四爻）— hu-orbit 收敛到 4 个 attractor
+### 6.3 hu（取中四爻）— hu-orbit 收敛到 4 个 attractor
 
 hu 不是简单的对换，而是一个**收缩映射**——多次迭代 hu 后，多数卦最终落入 4 个 attractor 之一：
 
@@ -212,7 +245,7 @@ iteration 路径例：
 
 形式层面：hu 是 64 卦上的 **不动点提取算子**——它把任何 hex 抽象到其"内核 substrate 结构"。这正是 Y combinator / 不动点定理 在 64 卦上的具体形态。
 
-### 5.4 单爻 flip（改 / 化 / 变 / 临 / 主 / 极）
+### 6.4 单爻 flip（改 / 化 / 变 / 临 / 主 / 极）
 
 爻位 1-6 对应 6 个 single-yao flip：
 
@@ -239,11 +272,11 @@ iteration 路径例：
 
 ---
 
-## 6. 4 象限作为形式逻辑的"四相"
+## 7. 4 象限作为形式逻辑的"四相"
 
 这是本文最核心的洞察：4 象限对应于一个**完整 type-theoretic / category-theoretic 系统的 4 个 phase**。
 
-### 6.1 总览
+### 7.1 总览
 
 ```
 本本 (16) — value semantic kernel        — 类型与命题  (denotational)
@@ -258,7 +291,7 @@ iteration 路径例：
 3. 你能**造什么** （constructions, abstractions, generalizations）
 4. 你怎么**运行** （reductions, executions, dynamics）
 
-### 6.2 本本 = value semantic kernel（类型与命题）
+### 7.2 本本 = value semantic kernel（类型与命题）
 
 **主题**：denotational semantics 的核心——"什么是有的"。
 
@@ -289,7 +322,7 @@ iteration 路径例：
 - **完成度对偶**：63既济 ↔ 64未济 = decided ↔ undecided = complete ↔ partial
 - **可见度对偶**：35晋 ↔ 36明夷 = lift ↔ hide = covariant ↔ contravariant
 
-### 6.3 本征 = modification operations（效用与变换）
+### 7.3 本征 = modification operations（效用与变换）
 
 **主题**：effects on values——"怎么改它"。
 
@@ -322,7 +355,7 @@ iteration 路径例：
 
 这 16 个全是 "已有 value，做什么"的操作。
 
-### 6.4 征本 = construction operations（构造与合成）
+### 7.4 征本 = construction operations（构造与合成）
 
 **主题**：constructions from dynamics——"怎么造一个新的"。
 
@@ -355,7 +388,7 @@ iteration 路径例：
 
 这 16 个全是"用动态做什么新结构"——construction 的核心算子集。
 
-### 6.5 征征 = dynamical kernel（运行与求值）
+### 7.5 征征 = dynamical kernel（运行与求值）
 
 **主题**：pure dynamics——"怎么运行".
 
@@ -391,7 +424,7 @@ iteration 路径例：
 
 这 16 个全是"运行时发生什么"——dynamics 的核心算子集。
 
-### 6.6 4 象限恰好对应 Curry-Howard-Lambek 三角
+### 7.6 4 象限恰好对应 Curry-Howard-Lambek 三角
 
 | 象限 | 角色 | Curry-Howard-Lambek 对应 |
 |---|---|---|
@@ -402,7 +435,7 @@ iteration 路径例：
 
 这意味着**每个完整的形式系统（Type Theory / Logic / Category Theory / Process Algebra）都在 64 卦上有 4-象限自然分布**——绝非偶然。
 
-### 6.7 算子如何在四相之间移动
+### 7.7 算子如何在四相之间移动
 
 cuo / zong / hu / single-yao flip 不只是"把卦变成另一卦"，它们是**在 4 phase 之间的移动**：
 
@@ -420,47 +453,106 @@ cuo / zong / hu / single-yao flip 不只是"把卦变成另一卦"，它们是**
 - 从 effect 到 construction：zong (本征 ↔ 征本)
 - 从任何位置回 value-kernel：hu 多步迭代
 
-### 6.8 Lean 端的 type-class 化
+### 7.8 Lean 端的 type-class 化 — 已完成 (BenZheng.lean)
 
-把 4 象限直接做成 Lean type class：
+`Foundation/Bagua/BenZheng.lean` 给出 4-quadrant 之 first-class 形式化：
 
 ```lean
-inductive HexQuadrant
-  | benBen   -- 本本: value semantic kernel
-  | benZheng -- 本征: modification ops
-  | zhengBen -- 征本: construction ops
-  | zhengZheng -- 征征: dynamical kernel
-  deriving DecidableEq, Repr
+inductive Quadrant : Type
+  | benBen      -- 本本: value semantic kernel
+  | benZheng    -- 本征: modification ops
+  | zhengBen    -- 征本: construction ops
+  | zhengZheng  -- 征征: dynamical kernel
+  deriving Repr, DecidableEq, BEq
 
-def Hexagram.quadrant (h : Hexagram) : HexQuadrant :=
-  let innerIsBen := Trigram.isBen h.inner
-  let outerIsBen := Trigram.isBen h.outer
-  match innerIsBen, outerIsBen with
+def Hexagram.quadrant (h : Hexagram) : Quadrant :=
+  match h.innerTrigram.isZongFixed, h.outerTrigram.isZongFixed with
   | true,  true  => .benBen
   | true,  false => .benZheng
   | false, true  => .zhengBen
   | false, false => .zhengZheng
 
-theorem cuo_preserves_quadrant (h : Hexagram) :
-    h.cuo.quadrant = h.quadrant := by ...
+def Hexagram.quadrantList (q : Quadrant) : List Hexagram :=
+  allHex.filter (fun h => h.quadrant = q)
 
-theorem zong_swap_zheng (h : Hexagram) :
-    h.quadrant = .benZheng → h.zong.quadrant = .zhengBen := by ...
-theorem zong_swap_ben_self (h : Hexagram) :
-    h.quadrant = .benBen → h.zong.quadrant = .benBen := by ...
--- (and similar for zhengZheng self, zhengBen → benZheng)
+-- Cardinality (Theorem F)
+theorem benBen_count       : (Hexagram.quadrantList .benBen).length     = 16 := by native_decide
+theorem benZheng_count     : (Hexagram.quadrantList .benZheng).length   = 16 := by native_decide
+theorem zhengBen_count     : (Hexagram.quadrantList .zhengBen).length   = 16 := by native_decide
+theorem zhengZheng_count   : (Hexagram.quadrantList .zhengZheng).length = 16 := by native_decide
+theorem quadrant_partition_complete :
+    (Hexagram.quadrantList .benBen).length
+    + (Hexagram.quadrantList .benZheng).length
+    + (Hexagram.quadrantList .zhengBen).length
+    + (Hexagram.quadrantList .zhengZheng).length = 64 := by native_decide
 
-theorem hu_attractors :
-    ∀ h, ∃ n, (Hexagram.hu^[n] h) ∈ [Hexagram.qian, Hexagram.kun, Hexagram.jiJi, Hexagram.weiJi] := by ...
+-- 算子 invariants (Theorem A 之 R₆ instantiation)
+theorem cuo_preserves_quadrant (h : Hexagram) : h.cuo.quadrant = h.quadrant
+theorem zong_preserves_benBen     (h : Hexagram) : h.quadrant = .benBen     → h.zong.quadrant = .benBen
+theorem zong_preserves_zhengZheng (h : Hexagram) : h.quadrant = .zhengZheng → h.zong.quadrant = .zhengZheng
+theorem zong_swap_benZheng_to_zhengBen (h : Hexagram) :
+    h.quadrant = .benZheng → h.zong.quadrant = .zhengBen
+theorem zong_swap_zhengBen_to_benZheng (h : Hexagram) :
+    h.quadrant = .zhengBen → h.zong.quadrant = .benZheng
+
+-- 中爻 (huaInner = flip y2, huaOuter = flip y5) 保象限
+theorem huaInner_preserves_quadrant (h : Hexagram) : (huaInner h).quadrant = h.quadrant
+theorem huaOuter_preserves_quadrant (h : Hexagram) : (huaOuter h).quadrant = h.quadrant
+
+-- 其它 4 个 single-yao flip 跨 inner/outer 本/征
+theorem dongInner_flips_inner (h : Hexagram) : (dongInner h).innerTrigram.isZongFixed = !h.innerTrigram.isZongFixed
+theorem bianInner_flips_inner (h : Hexagram) : (bianInner h).innerTrigram.isZongFixed = !h.innerTrigram.isZongFixed
+theorem dongOuter_flips_outer (h : Hexagram) : (dongOuter h).outerTrigram.isZongFixed = !h.outerTrigram.isZongFixed
+theorem bianOuter_flips_outer (h : Hexagram) : (bianOuter h).outerTrigram.isZongFixed = !h.outerTrigram.isZongFixed
+
+-- hu attractors {1乾, 2坤, 63既济, 64未济} 全在本本
+theorem qian_quadrant   : Hexagram.qian.quadrant   = .benBen
+theorem kun_quadrant    : Hexagram.kun.quadrant    = .benBen
+theorem jiji_quadrant   : Hexagram.jiji.quadrant   = .benBen
+theorem weiji_quadrant  : Hexagram.weiji.quadrant  = .benBen
+theorem hu_attractors_in_benBen :
+    Hexagram.qian.quadrant = .benBen
+    ∧ Hexagram.kun.quadrant = .benBen
+    ∧ Hexagram.jiji.quadrant = .benBen
+    ∧ Hexagram.weiji.quadrant = .benBen
+theorem jiji_hu_eq_weiji  : Hexagram.jiji.hu = Hexagram.weiji
+theorem weiji_hu_eq_jiji  : Hexagram.weiji.hu = Hexagram.jiji
 ```
 
-这些 theorem 把"4 phase 是 (Z/2)³ 群结构强制的"从论证升级为 native_decide 可证。
+全部 native_decide 可证。**4 phase 是 (Z/2)³ + zong-orbit 强制的代数事实** — 不是 metaphysical 选择。
 
 ---
 
-## 7. 序卦传 / 杂卦传 在 4 象限上的分布
+## 8. 上溯到 R₇ / R₈ — 64 卦 × Shi V₄ 之 4-fold lift
 
-### 7.1 序卦传上下经分布
+R₆ 之每 hex h ∈ Hexagram 在 R₈ 中 lift 为 4 cells 通过 Shi V₄ = {道, 已, 今, 未}:
+
+```
+h ∈ R₆        Cell256 4-fold lift           (因, 果)
+              ┌─→ (h, 道)  V₄ identity      (0, 0)  跨时空永真
+              ├─→ (h, 已)  P / past-closed  (1, 0)
+h    ───────► ┤
+              ├─→ (h, 今)  PT / present     (1, 1)
+              └─→ (h, 未)  T / future-open  (0, 1)
+```
+
+每 hex 之 4 cells 是 R₆ → R₇ → R₈ 之 cumulative lift result。详 [cell256-grid.md](cell256-grid.md) §1.1 + [shi-v4.md](shi-v4.md)。
+
+**4 hu attractors 之 R₈ 道-anchor sub-set**:
+
+```
+{(乾, 道), (坤, 道), (既济, 道), (未济, 道)} ⊂ (本本, 道) super-cell ⊂ Cell256
+```
+
+是 R₈ 之**绝对 anchor**: hu fixed + V₄ identity 双重稳定。详 [cell256-grid.md §9.3](cell256-grid.md)。
+
+---
+
+---
+
+## 9. 序卦传 / 杂卦传 在 4 象限上的分布
+
+### 9.1 序卦传上下经分布
 
 序卦传分上下经：
 - 上经：1-30（30 卦）
@@ -481,19 +573,19 @@ theorem hu_attractors :
 - 下经讲"咸恒夫妇之道"——以 mark-mark 为主
 - 这印证了序卦传的"由静而动"宇宙发展观
 
-### 7.2 杂卦传配对全在 cuo / zong 关系内
+### 9.2 杂卦传配对全在 cuo / zong 关系内
 
 杂卦传把 64 卦排成 32 对，每对都是**主题对偶**：
 - 大部分对是 zong-pair（28 对）
 - 少数特殊对是 cuo-pair（4 对：1↔2、27↔28、29↔30、61↔62 = 4 双 self-zong）
 
-这正好对应我们 §5.1 + §5.2 的算子分析——杂卦传的 32 对就是我们 zong-pair (28) + 双 self-zong cuo-pair (4) 的并集。
+这正好对应我们 §6.1 + §6.2 的算子分析——杂卦传的 32 对就是我们 zong-pair (28) + 双 self-zong cuo-pair (4) 的并集。
 
 ---
 
-## 8. hu attractor 的特殊地位
+## 10. hu attractor 的特殊地位
 
-§5.3 已说 hu 的 4 attractors {1, 2, 63, 64} 都在本本象限。这 4 个有进一步的特殊地位：
+§6.3 已说 hu 的 4 attractors {1, 2, 63, 64} 都在本本象限。这 4 个有进一步的特殊地位：
 
 | 卦 | 特性 |
 |---|---|
@@ -518,34 +610,35 @@ theorem hu_attractors :
 
 ---
 
-## 9. 总结：64 卦 是完整形式系统的 64 个 primitive
+## 11. 总结：64 卦 = R₆ 之完整 4-quadrant primitive set
 
 每一卦都是一个具体的 formal-logic 算子或 type，4 象限给它们一个 phase 分类，cuo / zong / hu 给它们对偶 / 反序 / 抽象 三种关系。
 
-**这不是 64 个无关概念，是一个 (Z/2)³ × ... 的代数结构**：
-- 8 trigram = 4 substrate + 4 mark = (Z/2)³ 的 Z/2-quotient
-- 64 hexagram = 8 × 8 = (4+4) × (4+4) = 4 quadrants × 16
-- 算子 invariants 都是从 (Z/2)³ 群结构强制的
+**这不是 64 个无关概念，是一个 (Z/2)⁶ + V₄ outer 的代数结构**：
+- 8 trigram = 4 substrate + 4 mark = (Z/2)³ 的 zong-orbit 划分 (Theorem A)
+- 64 hexagram = 8 × 8 = (4+4) × (4+4) = 4 quadrants × 16 (Theorem F)
+- 算子 invariants 全部从 (Z/2)⁶ + V₄ 群结构强制 — 0 sorry / 0 axiom Lean 证
 
-这是为什么《周易》能成为中文形式思想的种子——它的代数结构本身就是完整的 4-phase formal system 的最小生成集。
+R₆ → R₇ → R₈：每 hex 在 R₈ 中扩为 4 cells via Shi V₄, 共 256. R-hierarchy 闭合。
+
+这是为什么《周易》能成为中文形式思想的种子——它的代数结构本身就是完整的 4-phase formal system 的最小生成集 + R₈ Cayley closure。
 
 ---
 
-## 10. 与现有 Lean 锚点的对接
+## 12. 与 Lean 锚点的对接
 
 | 概念 | Lean 锚 |
 |---|---|
 | 8 trigram | [`Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) `Trigram` 8 个 def |
-| 64 hex | [`Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) `Hexagram` + [`Cell192.lean`](../../formal/SSBX/Foundation/Bagua/Cell192.lean) `xuGua` |
-| cuo / zong / hu | [`Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) + [`BaguaAlgebra.lean`](../../formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean) |
+| 64 hex | [`Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) `Hexagram` + [`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) `xuGua` (King Wen 64-list) |
+| cuo / zong / hu | [`Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) (Hexagram.cuo/zong/cuoZong/hu) |
 | 6 flip 字（改化变临主极）| [`LayerCharacterMap.lean`](../../formal/SSBX/Text/LayerCharacterMap.lean) `flipPositionChar` |
-| 4 象限分类（待加） | TODO: `Hexagram.quadrant : Hexagram → HexQuadrant` |
-| 算子 invariant theorems | TODO: cuo_preserves_quadrant 等 |
+| **4 象限分类** | **[`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) `Quadrant` + `Hexagram.quadrant`** ✓ |
+| **算子 invariant theorems** | **[`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) `cuo_preserves_quadrant`, `zong_swap_*`, `hu_attractors_in_benBen` 等** ✓ |
+| R₇ 因 axis | [`Cell128.lean`](../../formal/SSBX/Foundation/Bagua/Cell128.lean) |
+| R₈ 果 axis + Shi V₄ | [`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) |
 
-**待办**：
-- [ ] 在 [`BaguaAlgebra.lean`](../../formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean) 添加 `Trigram.isBen` 谓词及 4 个 invariant theorem (§5.4 已草拟)
-- [ ] 在 [`Cell192.lean`](../../formal/SSBX/Foundation/Bagua/Cell192.lean) 添加 `Hexagram.quadrant` 函数及 cuo / zong / hu 在 quadrant 上的 invariant theorems
-- [ ] 把 64 卦的 古文 / 现代 / 形式 三语 label 加进 [`LayerCharacterMap.lean`](../../formal/SSBX/Text/LayerCharacterMap.lean) 作为新 dimension
+待办：把 64 卦的 古文 / 现代 / 形式 三语 label 加进 [`LayerCharacterMap.lean`](../../formal/SSBX/Text/LayerCharacterMap.lean) 作为新 dimension。
 
 ---
 

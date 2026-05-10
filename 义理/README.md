@@ -69,7 +69,7 @@
 | 文件 | 主题 | Lean 配套 |
 |------|------|---|
 | [物间事三位一体 · 时空事件.md](物间事三位一体%20·%20时空事件.md) | 物 / 间 / 事 三面完整性、互异性与 carrier + spacetime + event 往返等价 | `WuJianShiTrinity.lean` |
-| [爻维格算 · 物间缘与192x371拓扑.md](爻维格算%20·%20物间缘与192x371拓扑.md) | 爻生维、维成格、格受算；说明 `Cell192 = Bool^6 × Z/3`、`371 × 192` 覆盖网格与 `NameOperatorAlignment` 路线图 | `Cell192.lean` · `OperatorCellMap.lean` · `Roster.lean` |
+| [爻维格算 · 物间缘与192x371拓扑.md](爻维格算%20·%20物间缘与192x371拓扑.md) | 爻生维、维成格、格受算；说明 `Cell256 = Hexagram × Shi (Shi = V₄ Klein, 改自 Z/3 cyclic)`、`371 × 256` 覆盖网格与 `NameOperatorAlignment` 路线图 | `Cell256.lean` · `OperatorCellMap.lean` · `Roster.lean` |
 
 ## 三类映射之分判
 

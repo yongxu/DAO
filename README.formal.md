@@ -2,12 +2,16 @@
 
 > 🌐 [中文](./README.md) · [English](./README.en.md) · **形式 / Formal**
 
+> **v3 (2026-05-11) — Cell256 / V₄ Klein Shi {dao, ji, jin, wei} / strict-uniform R₀..R₈ closure.**
+> Old Cell192 (Z/3 cyclic Shi) is fully deleted; legacy R₁..R₆ replaced by R₀..R₈; new `Foundation/Hierarchy/` directory (R₀..R₈ alias files + LiftProject + Operators/{Atomic,V4Outer}) provides the uniform infrastructure; `Foundation/Notation/OXNotation.lean` provides `OX["xxxxxxxx"]` 8-char Cell256 literal macro. R₈_complete is the new closure bundle, depending only on `propext + native_decide`. See [`docs-next/00_start/final-theory.md`](./docs-next/00_start/final-theory.md) · [`docs-next/10_formal_形式/yi-RO-hierarchy.md`](./docs-next/10_formal_形式/yi-RO-hierarchy.md).
+
 ```
 package        : ssbx
 language       : Lean 4 v4.30.0-rc2
 upstream       : Mathlib master (HEAD)
 build target   : @[default_target] lean_lib SSBX (srcDir = "formal")
-build status   : 3629 jobs ✓        sorry : 0        axiom : 1        opaque : 1
+build status   : 3656 jobs ✓        sorry : 0        axiom : 1        opaque : 1
+                 (post-Phase-C addition of 9 R-index alias files; 0 sorry added)
 partial defs   : 1 top-level executable definition (not an additional axiom)
 trust base     : Lean kernel + Mathlib HEAD
 namespace root : SSBX
@@ -128,7 +132,7 @@ PendName  :     6 pending interfaces  (Roster.lean § PendingName)
 | Symbol | Lean | Domain | Reading |
 |---|---|---|---|
 | 域 | `P .«域»` | `Type` | universe / domain |
-| 格 | `P .«格»` | `Cell192` | 192-cell carrier |
+| 格 | `P .«格»` | `Cell256` | 256-cell carrier (R₈ = (Z/2)⁸; was `Cell192` pre-v3) |
 | 权 | `P .«权»` | `Nat` | weight |
 | 生 | `P .«生»` | `Field → Field` | becoming (= `dong`) |
 | 校 | `P .«校»` | `Prop → Bool` | audit / verify |
@@ -219,8 +223,10 @@ Selected (full set in `Roster.lean § allEntries.filter (·.kind = .claim)`):
 ```
 Carrier:
   Hexagram        := Yao⁶                                (Yi.lean)
-  Shi             := { ji, jin, wei }                    (Cell192.lean)
-  Cell192         := Hexagram × Shi                      (Cell192.lean)
+  YinBit          := Bool                                (Cell128.lean § canonical post-Phase-B.1)
+  Cell128         := Hexagram × YinBit                   (Cell128.lean = R₇)
+  Shi             := { dao, ji, jin, wei } (V₄ Klein)    (Cell256.lean § Shi)
+  Cell256         := Hexagram × Shi                      (Cell256.lean = R₈; replaces Cell192)
   YiState         := { cur, history, pc, prog, halted }  (BaguaTuring.lean)
 
 Frozen surface tokens (BaguaWenSpec.lean § reservedTokens, |·| = 22):
@@ -313,10 +319,14 @@ Yi.lean             v4_orders, hu_fixed_point, oplus_not_comm, pi_ne_tai
 YiCore.lean         «微核之至», «周而复始», «生生不息», «法即卦», «道生一也»
 ```
 
-### 4.2 Foundation/Bagua (192 / Turing / Gödel)
+### 4.2 Foundation/Bagua (Cell128 / Cell256 / Turing / Gödel)
 
 ```
-Cell192.lean              all_length = 192, mem_all (exhaustion)
+Cell128.lean              R₇ carrier: 64×2 = 128 cells (Hexagram × YinBit, canonical YinBit lives here)
+Cell256.lean              R₈ carrier: 64×4 = 256 cells (Hexagram × V₄ Shi {dao,ji,jin,wei})
+                          Cell192.lean — DELETED in Phase F.6 (was 64×3 Z/3 cyclic Shi)
+Cell256Stratify.lean      R₀..R₈ explicit abbrevs + parity/timeReversal/PT/yComb + R8_complete bundle
+                          (R8_complete depends only on propext + native_decide; replaces R6_complete)
 BaguaAlgebra.lean         Boolean algebra of trigrams + V₄ orders
 BaguaTuring.lean          daoJudge_correct, loopProg_unbounded (TC witness)
 BaguaWenSpec.lean         reservedTokens.length = 22, primaryToken_in_primaryTokens
@@ -326,6 +336,31 @@ Newman.lean               Newman's lemma local form
 CuoInvariance.lean        cuo-equivariance machinery (CuoInvariantDecide etc.)
 ChunkedDecide.lean        decision-procedure budget framework
 FuelDiscipline.lean       runFuel monotonicity + fuel-extension lemmas
+```
+
+### 4.2a Foundation/Hierarchy (R₀..R₈ uniform infrastructure, Phase B/D/E + C)
+
+```
+RHierarchy.lean           umbrella: imports R0..R8 + LiftProject + Operators (top-level entry)
+R0_Taiji.lean             Unit wrapper (Taiji = ())
+R1_Yao.lean               Yao re-export from Yi/Yi.lean
+R2_SiXiang.lean           SiXiang re-export from Bagua/BaguaAlgebra.lean
+R3_Trigram.lean           Trigram re-export from Yi/Yi.lean
+R4_Mian.lean              Mian re-export from Bagua/BenZheng.lean (= Ben × Zheng = (Z/2)⁴)
+R5_Wuyao.lean             R₅ explicit: Mian × Bool = (Z/2)⁵ = 32
+R6_Hexagram.lean          Hexagram re-export from Yi/Yi.lean
+R7_YinHex.lean            Cell128 + atomic-ops re-export
+R8_GuoHex.lean            Cell256 + Shi + cayley + XOR-mask ops re-export
+LiftProject.lean          8 R-layer Lift/Project pairs + retract lemmas (proj_lift_id_Rn)
+Operators/Atomic.lean     XOR subgroup (atomic involutions, abelian)
+Operators/V4Outer.lean    V₄ outer perms (zong / hu / cuoZong, non-XOR)
+```
+
+### 4.2b Foundation/Notation (surface encoding)
+
+```
+OXNotation.lean           `OX["xxxxxxxx"]` 8-char Cell256 literal macro
+                          (`o` = yang/false, `x` = yin/true; positions 7/8 encode YinBit/GuoBit → Shi)
 ```
 
 ### 4.3 Foundation/Wen (path 丙: self-compilation, self-validation)
@@ -530,7 +565,7 @@ Surface wenyan → 12-instr ISA          Foundation/Wen/WenyanParser.lean § par
 ISA → wenyan                          same § printInstr
 Tm → ISA (cuo-equivariant subset)     Foundation/Wen/WenDefCompile.lean
 ISA → YiState transition              Foundation/Bagua/BaguaTuring.lean § execute / step / runFuel
-Cell192 ↔ List Cell192 (encoding)     Foundation/Wen/WenyanSelfInterp.lean § ProgEnc
+Cell256 ↔ List Cell256 (encoding)     Foundation/Wen/WenyanSelfInterp.lean § ProgEnc
 ```
 
 ---
@@ -567,20 +602,24 @@ specification.
 ## 9 · Ledger
 
 ```
-Foundation Lean LOC       ~43000+ across 97 Foundation modules (7 clusters)
+Foundation Lean LOC       ~43000+ across 99+ Foundation modules (8 clusters)
 Foundation/Core modules   14    (incl. Alignment, Sincerity, HumanAlignment, EvolutionDao, Renlei)
 Foundation/Wen modules    38    (incl. WenSurface, DaoSource, AntiSchmitt, AlignmentFailures, EconGame)
+Foundation/Bagua modules  ~14   (Cell128, Cell256, Cell256Stratify, BenZheng, BaguaTuring, GodelLi, …; Cell192.lean DELETED)
+Foundation/Hierarchy      12    (RHierarchy umbrella + R0..R8 alias files + LiftProject + Operators/{Atomic,V4Outer})
+Foundation/Notation        1    (OXNotation: `OX["xxxxxxxx"]` 8-char Cell256 literal macro)
 Foundation/Modern modules 19    (~5746 lines, Mathlib bridge)
 Path-丙 modules           11    (M1 → M4-甲)
 Kernel layers             45    (元 → 非道之形式)
 义理 essays               28+   (义理/A_..Z_*.md, plus 人类命运共同体_共同体之证.md)
-六表 tables               6     (六表_实虚史真/)
+六表 tables               6     (六表_实虚史真/, now 256-cell aware)
 wenyan operators          371   (`Text/WenyanOperators.lean` OperatorId catalogue)
 ```
 
 ```
 trust:    Lean kernel (v4.30.0-rc2) + Mathlib HEAD
-machine:  3629 build jobs · 0 sorry · 1 axiom (kleene_recursion_axiom; cuo-restricted)
+machine:  3656 build jobs · 0 sorry · 1 axiom (kleene_recursion_axiom; cuo-restricted)
+          (post-Phase-C: prior 3647 + 9 R-index alias files; 0 sorry added)
 opaque:   1 (theOne)
 partial:  1 top-level executable partial def (BaguaTuring.run nontermination boundary)
 ledger:   DAG / roster / operator / layer / essay correspondences are sync claims
@@ -589,6 +628,8 @@ conj:     ConjOne / ConjTwo, no Lean term claimed
 boundary: cuo-equivariance ceiling, universal-compileTm undefinable
           (halts_cuo_invariant + unrestricted_kleene_inverter_inconsistent),
           halting-undecidability, dao-li bifurcation
+v3 audit: R8_complete bundle axes = {propext, native_decide} (no project axioms);
+          Cell192.lean DELETED in Phase F.6; YinBit canonical in Cell128.lean (was duplicated in Cell256 pre-B.1)
 ```
 
 — *EOF · this is a specification, not an introduction. For prose, see `README.md` (中文) or `README.en.md` (English).*

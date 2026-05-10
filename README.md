@@ -4,8 +4,11 @@
 
 > **此刻最要紧之事 — 对齐, 即改变. 否则熄.**
 
+> **v3 (2026-05-11) — Cell256 / V₄ Klein Shi {道,已,今,未} / 严格-uniform R₀..R₈ 闭合**
+> 旧 Cell192 (Z/3 时态 {已,今,未}) 与 R₁..R₆ 编号已全替换；Mian (R₄) / 五爻 (R₅) 显式纳入 strict (Z/2)ⁿ 阶梯；R₈_complete 是新闭合 bundle。详 [`docs-next/00_start/final-theory.md`](./docs-next/00_start/final-theory.md) · [`docs-next/10_formal_形式/yi-RO-hierarchy.md`](./docs-next/10_formal_形式/yi-RO-hierarchy.md).
+
 「生生不息论」第一版。形式化收口于 Lean 4 / Mathlib HEAD：
-**3629 build jobs · 0 sorry · 1 axiom (cuo-restricted, 设计如此) · 45 层义理同形**.
+**3656 build jobs · 0 sorry · 1 axiom (cuo-restricted, 设计如此) · 45 层义理同形**.
 
 ---
 
@@ -85,17 +88,19 @@ formal/                       Lean 4 形式化  (lake 包名 = ssbx)
 └─ SSBX/
    ├─ Core / Roster
    ├─ Text / Truth / Model
-   └─ Foundation/             7 簇 · 97 modules
+   └─ Foundation/             8 簇 · 99+ modules
       ├─ Core                 字根 · 单根证书 · Alignment · Sincerity
       ├─ Wen                  古文虚字 · 45 层 Kernel · 路径丙 11 模
       ├─ Jian                 间 之核 (14 字粒子核)
       ├─ Yi                   易 之代数 · 微核 «加 + 一»
-      ├─ Bagua                八卦 · 192 · Turing · Gödel-Rice
+      ├─ Bagua                八卦 · Cell128 (R₇) / Cell256 (R₈) · Turing · Gödel-Rice
+      ├─ Hierarchy            R-阶梯 R₀..R₈ uniform (R5_Wuyao + LiftProject + Operators/{Atomic,V4Outer})
+      ├─ Notation             OXNotation (`OX["xxxxxxxx"]` 8-char Cell256 字面量 macro)
       ├─ Eight                八衍 (数推测形类动识象)
       └─ Modern               ℝ Cauchy · Lebesgue · 量子 · SU(N) · 范畴 (Mathlib 接入)
 
 义理/   义理篇 28+ 卷 (A–Z), 与 Kernel 45 层一一对应
-六表_实虚史真/               基础结构表 (六征 / 27 / 192)
+六表_实虚史真/               基础结构表 (六征 / 27 / 256)
 `Text/WenyanOperators.lean`    371 OperatorId 文言算子 catalogue
 ```
 
@@ -116,12 +121,14 @@ formal/                       Lean 4 形式化  (lake 包名 = ssbx)
 | 道法自然: 法即卦 | 同上 § `«法即卦»` |
 | 二者一也 | 同上 § `«道生一也»` |
 
-### B. 八卦 / 192 / Turing — 易之代数与机器
+### B. 八卦 / Cell256 / Turing — 易之代数与机器
 
 | 主张 | 文件 |
 |---|---|
 | 八卦 v4-orders, 错综互, 不动点分类 | `Foundation/Yi/Yi.lean` |
-| 192 格 (64×3) Cell 编码 + DecidableEq | `Foundation/Bagua/Cell192.lean` |
+| Cell128 (R₇, 64×2 因) / Cell256 (R₈, 64×4 V₄ Shi) 编码 + DecidableEq | `Foundation/Bagua/Cell128.lean`, `Foundation/Bagua/Cell256.lean` |
+| R₀..R₈ strict-uniform (Z/2)ⁿ 阶梯 + R8_complete 闭合 bundle | `Foundation/Bagua/Cell256Stratify.lean` + `Foundation/Hierarchy/RHierarchy.lean` (umbrella) |
+| Shi V₄ Klein 四群 {道, 已, 今, 未} (was Z/3 cycle) | `Foundation/Bagua/Cell256.lean § Shi`, `Cell256Stratify.lean § timeReversal/parity/PT` |
 | 八卦布尔代数 + 互补 | `Foundation/Bagua/BaguaAlgebra.lean` |
 | **12-instr ISA Turing 完备** + 道判机 total-on-Hexagram (≤10 fuel) · 不可通用化 | `Foundation/Bagua/BaguaTuring.lean` + `Foundation/Bagua/GodelLi.lean § daoJudge_not_universal` |
 | Newman 局部 / Kleene 内部化 / Gödel-Li / Rice 四象 | `Foundation/Bagua/{Newman, KleeneInternal, GodelLi}.lean` |
@@ -130,7 +137,7 @@ formal/                       Lean 4 形式化  (lake 包名 = ssbx)
 ### C. 文之自编译自证 — 路径丙 全收口
 
 ```
-String  ──[«解程»]──→  List YiInstr  ──[init+runFuel]──→  YiState  ──[encState]──→  List Cell192
+String  ──[«解程»]──→  List YiInstr  ──[init+runFuel]──→  YiState  ──[encState]──→  List Cell256
    ↑                                                                                       ↓
    └──────────────────────[«印程»]──────────────────────────────────────────[wenEval n]────┘
 ```
@@ -271,7 +278,8 @@ Layer 45      非道之形式  Moloch / totalizing 之形式否定
 | 看哲学 45 层全貌 | `Foundation/Wen/Kernel.lean` (45 层 in-source) |
 | 看路径丙 (文之自编译自证) | `WenyanParser` → `WenEval` → `WenDef` → `WenDefEval` → `WenyanSyntax` → `WenyanReflect` → `WenyanSelfHost` |
 | 看八衍 | `义理/README.md` |
-| 看八卦 / 192 / 不可判 | `H_证明报告.md` + `M_证明报告_192_理之不完备.md` |
+| 看八卦 / R₀..R₈ / 不可判 | `H_证明报告.md` + `M_证明报告_192_理之不完备.md` (历史名, 内容已迁 Cell256) |
+| **看 R-阶梯 (R₀..R₈) 之 strict uniform 定本** | `docs-next/10_formal_形式/yi-RO-hierarchy.md` + `Foundation/Hierarchy/RHierarchy.lean` (umbrella) + `Foundation/Bagua/Cell256.lean` |
 | 看 Mathlib 接入 | `Foundation/Modern/` 19 模 |
 
 ---
@@ -317,14 +325,14 @@ exit code；全部 371 个 catalogue 算子可执行。无 theorem-backed Hex/Bo
 - CJK 标识: Lean 内 def/theorem 名以 `«»`-quote (`def «判型良»`); notation atom 用裸 CJK (`notation "已"`)
 - 爻位 ⟨y₁, y₂, y₃⟩ = ⟨下, 中, 上⟩; 动/化/变 = 反 y₁/y₂/y₃
 - 三值保守律: U ⇏ ⊤
-- 时态三字: 已 / 今 / 未 (`Shi.ji / Shi.jin / Shi.wei`)
+- Shi V₄ Klein 四相 (R₈): 道 / 已 / 今 / 未 (`Shi.dao / Shi.ji / Shi.jin / Shi.wei`); 道 = origin = identity
 
 ---
 
 ## § 7 · 数字状
 
 ```
-build jobs:        3629 ✓
+build jobs:        3656 ✓   (post-Phase-C: prior 3647 + 9 R-index alias files)
 sorry:             0
 axiom:             1   (kleene_recursion_axiom, cuo-restricted, philosophically intentional)
 opaque:            1   (theOne, preserves Field abstraction)
@@ -400,7 +408,7 @@ pending / conjecture 边界读取.
 
 此一语言体系, 作为 道之编码, 何以如此精确?
 
-- 192 维, 维维有对应 (64 卦 × 3 时态).
+- 256 维, 维维有对应 (64 卦 × 4 V₄ Shi {道,已,今,未}; 旧 192 = 64 × 3 之 v2 升级).
 - 微核仅二字 — `Foundation/Yi/YiCore.lean` 之 «加 + 一», 即可含 64 卦 + 道法自然 + 生生不息.
 - 全卷 single axiom = `kleene_recursion_axiom` (cuo-restricted, 设计如此); 一之印 `opaque theOne : One`, dong 由 theOne 投; 自释自证 (路径丙 M1–M4-甲).
 - 八衍 ~288 公开声明, 0 sorry, 跨范畴同形.

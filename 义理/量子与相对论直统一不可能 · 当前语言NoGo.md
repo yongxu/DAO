@@ -19,7 +19,7 @@
 > **“当前形式语言的主对象不同，所以不能用现成两套语言相加得到真正统一”能否证明为不可能？**
 >
 > 答：可以证明一个精确定义下的非坍缩：若“现成两套语言相加”被形式化为保持来源标签的 disjoint sum，而“真正统一”被要求为同一个当前 tagged 语言项同时属于量子语言与相对论语言，则这样的项不存在。
-> 这不是证明未来量子引力、新统一理论或文构造系统不可能。特别是，`192 × 371` 文构造覆盖不受这个边界否定；它只证明 tagged physical-language addition 不会自动生成同标签统一项。
+> 这不是证明未来量子引力、新统一理论或文构造系统不可能。特别是，`256 × 371` 文构造覆盖不受这个边界否定；它只证明 tagged physical-language addition 不会自动生成同标签统一项。
 
 ---
 
@@ -31,7 +31,7 @@
 |---|---|---|
 | 当前两套语言主对象不同 | `machineChecked` | `QuantumSubject` 与 `RelativitySubject` 分属不同 tagged summand |
 | 现成语言相加不能直接统一 | `machineChecked` | 不存在 `DirectCurrentUnifier` |
-| `192 × 371` 文构造覆盖 | `machineChecked` | `WenConstructiveCoverage` 与 tagged 边界相容 |
+| `256 × 371` 文构造覆盖 | `machineChecked` | `WenConstructiveCoverage` 与 tagged 边界相容 |
 | 二者仍可同根 | `machineChecked` | 任一交叉配对都投向同一个 `OneRoot` |
 | 二者不是当前 face identity | `machineChecked` | `¬ CurrentPhysicalUnity quantumSpace relativisticSpacetime` |
 | 未来中介新理论不可能 | 不由本文证明 | 方向骨架见 [量子与相对论整合方向 · 从桥到新理论](量子与相对论整合方向%20·%20从桥到新理论.md)，具体物理理论仍未纳入 |
@@ -57,7 +57,7 @@
 | 现成语言相加 | `CurrentLanguageTerm` | 保持量子 / 相对论来源标签的并和 |
 | 直接统一项 | `DirectCurrentUnifier` | 同一项同时是量子项与相对论项 |
 | tagged 非坍缩 | `tagged_addition_noncollapse` | 这样的当前 tagged 语言项不存在 |
-| 文构造覆盖相容 | `wen_constructive_boundary_summary` | `192 × 371` 覆盖不是本边界的否定对象 |
+| 文构造覆盖相容 | `wen_constructive_boundary_summary` | `256 × 371` 覆盖不是本边界的否定对象 |
 | 同根但非同一 | `every_cross_pair_same_one`、`every_cross_pair_not_current_physical_unity` | 可同指一世界，不可偷换成同一对象 |
 
 typed skeleton：
@@ -77,7 +77,7 @@ typed skeleton：
 | 新中介方向 | 另文给出方向骨架 | [量子与相对论整合方向 · 从桥到新理论](量子与相对论整合方向%20·%20从桥到新理论.md) 只给 `mediatedBridge` 与双投影结构；具体物理载体未纳入 |
 | 实验判准 | 未纳入本轮 | 本文没有经验数据接口 |
 
-本文闭合范围：**当前 tagged 物理语言的直接对象同一化非坍缩已证；`192 × 371` 文构造覆盖已另文确认相容；中介方向另文处理，具体中介物理理论仍未处理。**
+本文闭合范围：**当前 tagged 物理语言的直接对象同一化非坍缩已证；`256 × 371` 文构造覆盖已另文确认相容；中介方向另文处理，具体中介物理理论仍未处理。**
 
 ---
 
@@ -176,7 +176,7 @@ theorem every_cross_pair_not_current_physical_unity
 |---|---|
 | 未来量子引力不可能 | 新理论可能引入新对象、新态射、新动力学 |
 | 所有统一框架都失败 | 本文只处理当前 tagged 物理语言的直接 addition |
-| 文构造系统失败 | `192 × 371` 覆盖另有 machine-checked 锚点，且与本边界相容 |
+| 文构造系统失败 | `256 × 371` 覆盖另有 machine-checked 锚点，且与本边界相容 |
 | Hilbert 空间与时空流形永无桥接 | 桥接、函子、对应、近似极限都可能另行建模 |
 | 实验物理已经封闭 | 本文没有实验接口 |
 
@@ -188,7 +188,7 @@ theorem every_cross_pair_not_current_physical_unity
 “已经是同一个物理对象”
 ```
 
-要越过这个 tagged 边界，必须给出新的中介结构，而不是把现有两套主对象直接相加。`192 × 371` 文构造覆盖正是更强的构造基底候选，见 [文构造完备与直相加边界](文构造完备与直相加边界.md)。正向路线见 [量子与相对论整合方向 · 从桥到新理论](量子与相对论整合方向%20·%20从桥到新理论.md)：那一层只证明“方向应为 mediated bridge”，仍不把它冒充为量子引力或统一场论。
+要越过这个 tagged 边界，必须给出新的中介结构，而不是把现有两套主对象直接相加。`256 × 371` 文构造覆盖正是更强的构造基底候选，见 [文构造完备与直相加边界](文构造完备与直相加边界.md)。正向路线见 [量子与相对论整合方向 · 从桥到新理论](量子与相对论整合方向%20·%20从桥到新理论.md)：那一层只证明“方向应为 mediated bridge”，仍不把它冒充为量子引力或统一场论。
 
 ---
 

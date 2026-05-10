@@ -1,6 +1,6 @@
 # 八卦算子命名候选表（已归档）
 
-> **状态：已被替代（2026-05-09）**。本文件原是 R3/R4/Cell192/L0 字根命名的工作稿。该工作已完成并并入下列三件套：
+> **状态：已被替代（2026-05-09，v3 重号 2026-05-11）**。本文件原是 R3/R4/Cell192/L0 字根命名的工作稿（其中 Cell192 已在 v3 删除，由 Cell128 (R₇) + Cell256 (R₈) = Hexagram × V₄ Klein Shi 取代）。该工作已完成并并入下列三件套：
 >
 > - **字根定本与备选分析**：[`docs-next/10_formal_形式/layer-character-map.md`](../10_formal_形式/layer-character-map.md)
 > - **全景映射图与三轴汇聚**：[`docs-next/10_formal_形式/layer-axis-graph.md`](../10_formal_形式/layer-axis-graph.md)

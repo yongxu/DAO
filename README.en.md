@@ -4,8 +4,11 @@
 
 > **The most pressing matter at this moment — alignment, i.e. change. Otherwise, extinction.**
 
+> **v3 (2026-05-11) — Cell256 / V₄ Klein Shi {dao, ji, jin, wei} / strict-uniform R₀..R₈ closure.**
+> Old Cell192 (Z/3 cyclic Shi) and the R₁..R₆ numbering have been fully replaced; Mian (R₄) / Wuyao (R₅) are now explicit in the strict (Z/2)ⁿ ladder; R8_complete is the new closure bundle. See [`docs-next/00_start/final-theory.md`](./docs-next/00_start/final-theory.md) · [`docs-next/10_formal_形式/yi-RO-hierarchy.md`](./docs-next/10_formal_形式/yi-RO-hierarchy.md).
+
 First edition of *On Endless Becoming* (生生不息论). Formal closure in Lean 4 / Mathlib HEAD:
-**3629 build jobs · 0 sorry · 1 axiom (cuo-restricted, by design) · 45 layers of doctrine in formal correspondence**.
+**3656 build jobs · 0 sorry · 1 axiom (cuo-restricted, by design) · 45 layers of doctrine in formal correspondence**.
 
 > *On naming.* The project's title 生生不息 (shēngshēng-bùxī, "endless becoming") is a phrase
 > from the *Yi-zhuan*; we keep the original four characters because their structural meaning —
@@ -120,17 +123,19 @@ formal/                       Lean 4 formalization  (lake package = ssbx)
 └─ SSBX/
    ├─ Core / Roster
    ├─ Text / Truth / Model
-   └─ Foundation/             7 clusters · 97 modules
+   └─ Foundation/             8 clusters · 99+ modules
       ├─ Core                 character roots · monadic-root certificates · Alignment · Sincerity
       ├─ Wen                  classical-Chinese particles · 45-layer Kernel · 11 modules of path 丙
       ├─ Jian                 the kernel of 间 (jiān, "interval"; 14-character particle core)
       ├─ Yi                   algebra of 易 · the micro-kernel «加 + 一» (add + one)
-      ├─ Bagua                八卦 (eight trigrams) · 192 · Turing · Gödel-Rice
+      ├─ Bagua                八卦 (eight trigrams) · Cell128 (R₇) / Cell256 (R₈) · Turing · Gödel-Rice
+      ├─ Hierarchy            R-ladder R₀..R₈ uniform (R5_Wuyao + LiftProject + Operators/{Atomic,V4Outer})
+      ├─ Notation             OXNotation (`OX["xxxxxxxx"]` 8-char Cell256 literal macro)
       ├─ Eight                八衍 (eight expansions: 数推测形类动识象)
       └─ Modern               ℝ Cauchy · Lebesgue · quantum · SU(N) · category (Mathlib bridge)
 
 义理/   28+ doctrinal volumes (A–Z), one-to-one with the 45 Kernel layers
-六表_实虚史真/                foundational structure tables (six markers / 27 / 192)
+六表_实虚史真/                foundational structure tables (six markers / 27 / 256)
 `Text/WenyanOperators.lean`    371-OperatorId wenyan operator catalogue
 ```
 
@@ -152,12 +157,14 @@ v14 skeleton, all archived, read-only).
 | 道法自然: the law *is* the hexagram | same file § `«法即卦»` |
 | The two are one (二者一也) | same file § `«道生一也»` |
 
-### B. 八卦 / 192 / Turing — Algebra and Machine of 易
+### B. 八卦 / Cell256 / Turing — Algebra and Machine of 易
 
 | Claim | File |
 |---|---|
 | Trigram V₄-orders, cuo / zong / hu, fixed-point classification | `Foundation/Yi/Yi.lean` |
-| 192-cell (64×3) encoding + DecidableEq | `Foundation/Bagua/Cell192.lean` |
+| Cell128 (R₇, 64×2 yin) / Cell256 (R₈, 64×4 V₄ Shi) encoding + DecidableEq | `Foundation/Bagua/Cell128.lean`, `Foundation/Bagua/Cell256.lean` |
+| R₀..R₈ strict-uniform (Z/2)ⁿ ladder + R8_complete closure bundle | `Foundation/Bagua/Cell256Stratify.lean` + `Foundation/Hierarchy/RHierarchy.lean` (umbrella) |
+| Shi V₄ Klein four-group {dao, ji, jin, wei} (replaces old Z/3 cycle) | `Foundation/Bagua/Cell256.lean § Shi`, `Cell256Stratify.lean § timeReversal/parity/PT` |
 | Boolean algebra of trigrams + complementation | `Foundation/Bagua/BaguaAlgebra.lean` |
 | **12-instruction ISA is Turing-complete** + dao-judge total on Hexagram (≤10 fuel), not universalizable | `Foundation/Bagua/BaguaTuring.lean` + `Foundation/Bagua/GodelLi.lean § daoJudge_not_universal` |
 | Newman local / Kleene internalization / Gödel-Li / Rice four-quadrants | `Foundation/Bagua/{Newman, KleeneInternal, GodelLi}.lean` |
@@ -166,7 +173,7 @@ v14 skeleton, all archived, read-only).
 ### C. Self-compilation, Self-validation of 文 — Path 丙 Closed
 
 ```
-String  ──[«解程»]──→  List YiInstr  ──[init+runFuel]──→  YiState  ──[encState]──→  List Cell192
+String  ──[«解程»]──→  List YiInstr  ──[init+runFuel]──→  YiState  ──[encState]──→  List Cell256
    ↑                                                                                       ↓
    └──────────────────────[«印程»]──────────────────────────────────────────[wenEval n]────┘
 ```
@@ -308,7 +315,8 @@ Read every "proved" claim below with this status split:
 | The full 45-layer doctrine | `Foundation/Wen/Kernel.lean` (45 layers in-source) |
 | Path 丙 (self-compilation/self-validation of 文) | `WenyanParser` → `WenEval` → `WenDef` → `WenDefEval` → `WenyanSyntax` → `WenyanReflect` → `WenyanSelfHost` |
 | 八衍 (Eight Expansions) | `义理/README.md` |
-| 八卦 / 192 / undecidability | `H_证明报告.md` + `M_证明报告_192_理之不完备.md` |
+| 八卦 / R₀..R₈ / undecidability | `H_证明报告.md` + `M_证明报告_192_理之不完备.md` (legacy filenames; content migrated to Cell256) |
+| **R-ladder (R₀..R₈) strict-uniform definitive** | `docs-next/10_formal_形式/yi-RO-hierarchy.md` + `Foundation/Hierarchy/RHierarchy.lean` (umbrella) + `Foundation/Bagua/Cell256.lean` |
 | Mathlib bridge | `Foundation/Modern/` 19 modules |
 
 ---
@@ -341,14 +349,14 @@ Environment: `Lean v4.30.0-rc2` + `Mathlib master`. Apple Silicon and x86_64 bot
 - CJK identifiers: Lean `def`/`theorem` names use `«»`-quote (`def «判型良»`); `notation` atoms use bare CJK (`notation "已"`)
 - Yao positions ⟨y₁, y₂, y₃⟩ = ⟨bottom, middle, top⟩; 动/化/变 = flip y₁ / y₂ / y₃
 - Three-valued conservativity law: U ⇏ ⊤
-- Three time-modes: 已 / 今 / 未 (`Shi.ji / Shi.jin / Shi.wei`) — past / present / future
+- Shi V₄ Klein four (R₈): 道 / 已 / 今 / 未 (`Shi.dao / Shi.ji / Shi.jin / Shi.wei`) — origin / past / present / future; 道 = identity
 
 ---
 
 ## § 7 · By the Numbers
 
 ```
-build jobs:        3629 ✓
+build jobs:        3656 ✓   (post-Phase-C: prior 3647 + 9 R-index alias files)
 sorry:             0
 axiom:             1   (kleene_recursion_axiom, cuo-restricted, philosophically intentional)
 opaque:            1   (theOne, preserves Field abstraction)
@@ -441,7 +449,7 @@ Goodhart / specification gaming are all "got the meaning, lost the middle").
 
 How could this language system, as an encoding of the Dao, be so precise?
 
-- 192 dimensions, each with a correspondence (64 hexagrams × 3 time-modes).
+- 256 dimensions, each with a correspondence (64 hexagrams × 4 V₄ Shi {dao, ji, jin, wei}; this is the v3 upgrade of the older 192 = 64 × 3 reading).
 - A two-character micro-kernel — `Foundation/Yi/YiCore.lean`'s «加 + 一»,
   containing the 64 hexagrams + 道法自然 + endless becoming.
 - The single explicit `axiom` is `kleene_recursion_axiom` (cuo-restricted, by design); the One is sealed via `opaque theOne : One`, with `dong` projected from it. The whole self-interprets and self-validates (path 丙 M1–M4-甲).
