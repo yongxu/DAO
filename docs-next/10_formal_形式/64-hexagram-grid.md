@@ -1,12 +1,14 @@
 # 64 卦四语对照表 + 4 象限分类 + 算子全 invariant
 
-> 状态：定本（2026-05-10）。
+> 状态：v3 (2026-05-11) — 与 main @ 1c76a55 对齐。64 卦本身不变（仍是 R₆ = (Z/2)⁶）；本文对 (本本 / 本征 / 征本 / 征征) 4-quadrant 拆分与 cuo/zong/hu/flip invariants 都仍然成立。新增 §11 把每卦扩展到 Cell256（R₈）之 4 Shi-state 之 cell 拆分。
 > 作用：把 64 卦按 (本本 / 本征 / 征本 / 征征) 4 象限分类，每卦给出 古文 / 现代汉语 / 形式逻辑 单字读法，并列出 cuo / zong / hu / single-yao flip 在 4 象限上的 invariant。
 > 配套：
+> - [yi-RO-hierarchy.md](yi-RO-hierarchy.md) — R₀..R₈ definitive doctrine
+> - [cell256-grid.md](cell256-grid.md) — Cell256 (R₈) 256 格全表 (sibling, v3 并行写入)
 > - [sanben-sijieduan-grid.md](sanben-sijieduan-grid.md) — 12 格底层 (3 本 × 4 阶段)
 > - [layer-axis-graph.md](layer-axis-graph.md) — 三轴汇聚图
 > - [layer-character-map.md](layer-character-map.md) — R0–L0 字根映射
-> - [`BaguaAlgebra.lean`](../../formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean) / [`Cell192.lean`](../../formal/SSBX/Foundation/Bagua/Cell192.lean) — 形式锚
+> - [`BaguaAlgebra.lean`](../../formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean) / [`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) — 形式锚（Cell192 已删，由 Cell256 = Hexagram × Shi V₄ 替代，2026-05-10 commit 7de5064）
 
 ---
 
@@ -531,21 +533,63 @@ theorem hu_attractors :
 
 ---
 
+## 9.5 R₆ 之 1×1 = R₈ 之 4×1 — 64 卦在 Cell256 上的 Shi-state 分布（v3 新增）
+
+main @ 1c76a55 的形式 spine 把 64 卦从 R₆ "孤立 hexagram" 升到 R₈ "hex × Shi V₄ 之 cell"。每一卦在 Cell256 上对应**4 个 cell**（每个 hex 与 4 个 Shi-state 之 product）：
+
+| Shi | (因, 果) | mask 后 2 位 | V₄ 元 | 对应 R₈ cell（与乾合）|
+|---|---|---|---|---|
+| 道 | (0, 0) | `oo` | identity | `oooooooo` (`OX["oooooooo"]`) |
+| 已 | (1, 0) | `xo` | σ_P | `ooooooxo` |
+| 未 | (0, 1) | `ox` | σ_T | `ooooooox` |
+| 今 | (1, 1) | `xx` | σ_PT | `ooooooxx` |
+
+详见 [yi-RO-hierarchy.md §3.8](yi-RO-hierarchy.md#38-r₈--果卦-cell256--闭合层-was-v1-r) 与 [cell256-grid.md](cell256-grid.md)（v3 sibling，并行写入）。
+
+### 9.5.1 4-quadrant 之 Shi-state 完整 cross-product
+
+64 hex × 4 Shi = 256 cell 之 cross-product 之分布：
+
+| 象限 | hex 数 | × Shi V₄ | cell 数 |
+|---|---|---|---|
+| 本本 | 16 | × 4 | 64 |
+| 本征 | 16 | × 4 | 64 |
+| 征本 | 16 | × 4 | 64 |
+| 征征 | 16 | × 4 | 64 |
+| **总** | **64** | × 4 | **256** |
+
+### 9.5.2 invariant 在 R₈ 上的提升
+
+§5 的全部算子 invariant 都在 R₈ 上**提升**：
+
+- **R₈ cuo** = 8-bit XOR mask `xxxxxxoo` (R₆ 6-yao 全反, Shi 不动) — **永远象限内 + Shi 不动**
+- **印 (yìn)** = XOR mask `(qian, ji) = ooooooxo` — toggle Shi 的因 bit (V₄ 内 σ_P)
+- **投 (tóu)** = XOR mask `(qian, wei) = ooooooox` — toggle Shi 的果 bit (V₄ 内 σ_T)
+- **印 ⊕ 投** = mask `ooooooxx` — V₄ Shi 的 cuoZong (PT-element)
+- **Shi.cuo** (= V₄ cuo on Shi side) = 道↔今, 已↔未 — V₄ 内 σ_PT involution
+
+§5.1 之"cuo 永远在象限内"在 R₈ 上变成"R₈-cuo 永远在 (象限, Shi) 内 — Shi 也不动"；§5.4 之单爻 flip 的"中爻保 phase" 在 R₈ 上变成"R₈ 的中爻 flip + 印/投/印投 都不破坏 4-quadrant 分类"。
+
+---
+
 ## 10. 与现有 Lean 锚点的对接
 
 | 概念 | Lean 锚 |
 |---|---|
-| 8 trigram | [`Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) `Trigram` 8 个 def |
-| 64 hex | [`Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) `Hexagram` + [`Cell192.lean`](../../formal/SSBX/Foundation/Bagua/Cell192.lean) `xuGua` |
+| 8 trigram (R₃) | [`Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) `Trigram` 8 个 def |
+| 64 hex (R₆) | [`Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) `Hexagram` |
+| 256 cell (R₈) | [`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) `Cell256 = Hexagram × Shi V₄` |
+| Shi V₄ {道, 已, 今, 未} (R₈ side) | [`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) `inductive Shi` |
+| Mian = Ben × Zheng (R₄) | [`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) `abbrev Mian := Ben × Zheng` |
+| Quadrant (本本/本征/征本/征征) | [`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) `inductive Quadrant` + `Hexagram.quadrant` |
 | cuo / zong / hu | [`Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) + [`BaguaAlgebra.lean`](../../formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean) |
 | 6 flip 字（改化变临主极）| [`LayerCharacterMap.lean`](../../formal/SSBX/Text/LayerCharacterMap.lean) `flipPositionChar` |
-| 4 象限分类（待加） | TODO: `Hexagram.quadrant : Hexagram → HexQuadrant` |
-| 算子 invariant theorems | TODO: cuo_preserves_quadrant 等 |
+| 4 象限分类的 invariant theorems | [`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) `cuo_preserves_quadrant` 等 |
+| 印 / 投 (R₇/R₈ atom) | [`Cell128.lean`](../../formal/SSBX/Foundation/Bagua/Cell128.lean) `yin` / [`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) `tou` (XOR mask) |
 
 **待办**：
-- [ ] 在 [`BaguaAlgebra.lean`](../../formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean) 添加 `Trigram.isBen` 谓词及 4 个 invariant theorem (§5.4 已草拟)
-- [ ] 在 [`Cell192.lean`](../../formal/SSBX/Foundation/Bagua/Cell192.lean) 添加 `Hexagram.quadrant` 函数及 cuo / zong / hu 在 quadrant 上的 invariant theorems
 - [ ] 把 64 卦的 古文 / 现代 / 形式 三语 label 加进 [`LayerCharacterMap.lean`](../../formal/SSBX/Text/LayerCharacterMap.lean) 作为新 dimension
+- [ ] §11 R₈ extension 之 4 Shi-state quadrant cross-product 的 4-attractor 完整迭代分析
 
 ---
 
@@ -563,3 +607,16 @@ theorem hu_attractors :
 51震 52艮 53渐 54归妹 55丰 56旅 57巽 58兑 59涣 60节
 61中孚 62小过 63既济 64未济
 ```
+
+---
+
+## 形式锚
+
+- [`formal/SSBX/Foundation/Yi/Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) — `Trigram` (R₃) + `Hexagram` (R₆) + cuo / zong / hu
+- [`formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean`](../../formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean) — flip y_i / Sheng / chong
+- [`formal/SSBX/Foundation/Bagua/BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) — `Ben` / `Zheng` / `Mian` (R₄) + `Quadrant` + `cuo_preserves_quadrant` 等 invariant theorems
+- [`formal/SSBX/Foundation/Bagua/Cell128.lean`](../../formal/SSBX/Foundation/Bagua/Cell128.lean) — R₇ + 印 (yin) XOR mask
+- [`formal/SSBX/Foundation/Bagua/Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) — R₈ + 投 (tou) XOR mask + Shi V₄ {道, 已, 今, 未}
+- [`formal/SSBX/Foundation/Bagua/Cell256Stratify.lean`](../../formal/SSBX/Foundation/Bagua/Cell256Stratify.lean) — R₀..R₈ explicit + R8_complete bundle
+- [`formal/SSBX/Text/LayerCharacterMap.lean`](../../formal/SSBX/Text/LayerCharacterMap.lean) — `flipPositionChar` 改/化/变/临/主/极
+- [`formal/SSBX/Foundation/Notation/OXNotation.lean`](../../formal/SSBX/Foundation/Notation/OXNotation.lean) — `OX["xxxxxxxx"]` 8-char Cell256 字面 macro

@@ -1,9 +1,19 @@
 # 三本 × 四阶段：12 格内容映射
 
-> 状态：定本（2026-05-10 草拟）。
-> 作用：替代旧"12 面"读法。"面"只是这 12 个的**集合名**——12 个格子本身已经有更准确的名字（物 / 注意 / 模 / 文 / 生 / 心 / 理 / 价值 / 人 / 审校 / 证明 / 真理）。本文写出 (1) 三本 各自意涵 + (2) 四阶段 各自意涵 + (3) 12 个格子的四语对照 + (4) 行/列/对角等所有内部关系。
-> 配套：[layer-character-map.md](layer-character-map.md) / [layer-axis-graph.md](layer-axis-graph.md) / [`LayerCharacterMap.lean`](../../formal/SSBX/Text/LayerCharacterMap.lean)。
-> 形式锚：[`JianOntology.lean`](../../formal/SSBX/Foundation/Jian/JianOntology.lean)（三本）+ [root-layer-map.md §0](root-layer-map.md)（四阶段）。
+> 状态：v3 (2026-05-11) — 与 main @ 1c76a55 对齐。本文是 R₃ trigram-level 的 12 格内容映射；它**正交于** v2.1 R-hierarchy 之 R₄ Mian = Ben × Zheng (16) — 后者是 (Z/2)⁴ algebraic spine 的 first-class 层，详 [yi-RO-hierarchy.md §3.4](yi-RO-hierarchy.md#34-r₄--面-mian-) 与 [`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean)。
+> 作用：替代旧"12 面"读法。"面"只是这 12 个的**集合名** —— 12 个格子本身已经有更准确的名字（物 / 注意 / 模 / 文 / 生 / 心 / 理 / 价值 / 人 / 审校 / 证明 / 真理）。本文写出 (1) 三本 各自意涵 + (2) 四阶段 各自意涵 + (3) 12 个格子的四语对照 + (4) 行/列/对角等所有内部关系。
+> 配套：[layer-character-map.md](layer-character-map.md) / [layer-axis-graph.md](layer-axis-graph.md) / [`LayerCharacterMap.lean`](../../formal/SSBX/Text/LayerCharacterMap.lean) / [yi-RO-hierarchy.md](yi-RO-hierarchy.md) (R₀..R₈ doctrine)。
+> 形式锚：[`JianOntology.lean`](../../formal/SSBX/Foundation/Jian/JianOntology.lean)（三本）+ [root-layer-map.md §0](root-layer-map.md)（四阶段）+ [`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean)（R₄ Mian = (Z/2)⁴ next-up enrichment）。
+
+## 0a. 与 R₄ Mian 的关系（v3 加注）
+
+12 = 3 × 4（三本 × 四阶段）是 R₃ trigram-level 之内容映射；它**不是** R₃ algebraic 群 8 = (Z/2)³ 的 group quotient，而是 trigram 之**含义投影**。
+
+下一阶 algebraic spine 是 R₄ Mian = Ben × Zheng = (Z/2)² × (Z/2)² = (Z/2)⁴ = 16，由 [`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) 形式落地。Mian 之 16 命：
+- Ben (4 substrate) = zong-fixed trigrams = (Z/2)² (本 = 物 / 動 / 間 / 事，与本文三本 + "事" 一致)
+- Zheng (4 mark) = zong-mobile trigrams = (Z/2)² (征 = 幾 / 勢 / 機 / 時)
+
+所以本文 12 格是 R₃ trigram 之 内容投影; R₄ Mian 16 命是 R₃ trigram 之 zong-orbit 4+4 算子拆分; 二者在 trigram 上**正交但相容** —— 详 [position-operator-tree.md §3](position-operator-tree.md) 与 [yi-RO-hierarchy.md §3.4](yi-RO-hierarchy.md#34-r₄--面-mian-)。
 
 ---
 
@@ -209,7 +219,7 @@
 | 形式逻辑 | trace / execution / event / commitment |
 | 经典出处 | 《周易》"显诸仁，藏诸用"；Whitehead 的 *actual occasion*；event-driven semantics |
 
-**形式锚**：[`Cell192`](../../formal/SSBX/Foundation/Bagua/Cell192.lean) 之间的 transition——是"事之发生"的最小可审计形态。事 是 R5 之事。
+**形式锚**：[`Cell256`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) 之间的 transition —— 是"事之发生"的最小可审计形态。事 是 R₈ 之事（v2.1 重号；旧 v1 称 R5；Cell192 已删，由 Cell256 = Hexagram × Shi V₄ 替代）。
 
 **关键性质**：事 把"系统层面有效的关系"变成"时空中真实发生的事件"。这是从结构到历史的桥。
 
@@ -260,7 +270,7 @@
 | 差 | 一处差异 | (R1) `Yao` | bit |
 | 识 | 可命名 | (M3) `AtomName` | lexicon |
 | 间 | 可结构化 | (内容线) 三本/三显/三征 | system |
-| 事 | 可发生 | (R5) `Cell192` transition | history |
+| 事 | 可发生 | (R₈) `Cell256` transition | history |
 
 ---
 
@@ -683,13 +693,13 @@
 
 | 12 格 | R-line 锚 |
 |---|---|
-| 物 (物-差) | R0–R5 任一层的元素都"是物" |
+| 物 (物-差) | R₀–R₈ 任一层的元素都"是物" |
 | 注意 (物-识) | M3 [AtomName](../../formal/SSBX/Roster.lean) lookup |
 | 模 (物-间) | [`Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) / [`BaguaAlgebra.lean`](../../formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean) 的代数结构 |
 | 文 (物-事) | 原始 [`Roster`](../../formal/SSBX/Roster.lean) 全体 + 文档 |
 | 生 (動-差) | [`Sheng.step`](../../formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean) 算子 |
 | 心 (動-识) | observable / 状态 trace |
-| 理 (動-间) | R3 横向算子（dong/hua/bian/cuo/zong）+ R5 时态算子（迁/溯）|
+| 理 (動-间) | R₃ 横向算子（dong/hua/bian/cuo/zong）+ R₈ 时态算子（V₄ Shi cuo / 印 / 投）|
 | 价值 (動-事) | 评价 claims，未独立形式化 |
 | 人 (間-差) | edges between AtomNames（DirectEdge）|
 | 审校 (間-识) | [`MissingGlyphs`](../../formal/SSBX/Foundation/Core/MissingGlyphs.lean) 类型校验 |
@@ -832,7 +842,19 @@ theorem mian_cardinality : (SanBen.all ×ˢ SiJieduan.all).length = 12 := by
 | [root-layer-map.md](root-layer-map.md) | 本文是 §0 本体读法 + §4 内容线的细化展开 |
 | [layer-character-map.md](layer-character-map.md) | 本文是 §三轴并存（§A-§I）的体系化整理 |
 | [layer-axis-graph.md](layer-axis-graph.md) | 本文是 §6 三轴汇聚的 12 格 instance |
+| [yi-RO-hierarchy.md](yi-RO-hierarchy.md) | v2.1 R₀..R₈ doctrine — 把 R₄ Mian = Ben × Zheng = (Z/2)⁴ 显式纳入 R-spine |
 | [`JianOntology.lean`](../../formal/SSBX/Foundation/Jian/JianOntology.lean) | 三本（物/動/間）的 ground truth |
+| [`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) | R₄ Mian = Ben × Zheng 的 ground truth — 是本文 12 格在 R-line 上的 next-up enrichment |
 | [`MonadRoot.lean`](../../formal/SSBX/Foundation/Core/MonadRoot.lean) | 当前 12 face 的 ground truth (待重构为 SanBen × SiJieduan) |
 | [`Roster.lean`](../../formal/SSBX/Roster.lean) | ~333 atomName，每个需要在 12 格中找位置 |
 | [atom-naming.md](../../formal/SSBX/notes/atom-naming.md) | 工作稿中的 atom 归类，自发地用了 12 格的近似结构 |
+
+---
+
+## 形式锚
+
+- [`formal/SSBX/Foundation/Jian/JianOntology.lean`](../../formal/SSBX/Foundation/Jian/JianOntology.lean) — `JianRoot` (3 ctors: 物/動/間)
+- [`formal/SSBX/Foundation/Core/MonadRoot.lean`](../../formal/SSBX/Foundation/Core/MonadRoot.lean) — `Face` 12 inductive (待重构为 SanBen × SiJieduan)
+- [`formal/SSBX/Foundation/Bagua/BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) — R₄ Mian = (Z/2)⁴ next-up enrichment
+- [`formal/SSBX/Foundation/Bagua/Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) — R₈ 闭合层；transition 是"事之发生"的最小可审计形态
+- [`formal/SSBX/Roster.lean`](../../formal/SSBX/Roster.lean) — ~333 AtomName 之 register

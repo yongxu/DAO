@@ -1,6 +1,15 @@
 # Agent Instructions
 
+> 状态：v3 (2026-05-11) — 项目 R₀..R₈ strict (Z/2)ⁿ uniform, V₄ Klein Shi, Cell256, 道 = (qian, dao) = `OX["oooooooo"]`. 旧 Cell192 / Z/3 Shi / 旧 R-编号 已归档至 `史/`，不再被入口索引。
+
 本文件约束所有在本仓库工作的 agents。进入任务前先读本文件，并把这些规则传给后续开启的 subagents。
+
+## v3 Doctrine and Archive Pointers
+
+- **Canonical doctrine**: [`docs-next/10_formal_形式/yi-RO-hierarchy.md`](./docs-next/10_formal_形式/yi-RO-hierarchy.md). 任何关于 R-hierarchy / V₄ Shi / Cell256 / 道 anchor 之结构主张必须以此为准, 不要援引旧 v1 / v2 文件。
+- **Pre-v3 archive**: [`史/`](./史/README.md). 仅当确实需要 v2 (Cell192 / Z/3 Shi / R₁..R₆) 之具体形式时才进入; 否则不读、不引、不更新; **不要把 `史/` 之内容作为新文档之依据**。
+- **Citable historical**: [`史料/`](./史料/) 是 v9–v14 各代手稿之研究档案 (与 `史/` 不同, 仍可援引)。
+- 涉及 Cell-carrier 的代码改动: 必为 `Cell256` (不是 `Cell192`); 若发现遗留 `Cell192` 命名, 在该次任务范围内一并迁移 (或报告给主线程)。
 
 ## Goal: Elegance
 
