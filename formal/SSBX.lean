@@ -149,6 +149,7 @@ import SSBX.Foundation.Lang.L4_Mian
 import SSBX.Foundation.Lang.L5_Wuyao
 import SSBX.Foundation.Lang.L6_Hexagram
 import SSBX.Foundation.Lang.L7_Cell128
+import SSBX.Foundation.Lang.Demo  -- 生生不息 / 道法自然 / R₂⊃R₁×R₁ runnable demos
 
 -- Foundation/Eight — 八衍：数 / 推 / 测 / 形 / 类 / 动 / 识 / 象
 import SSBX.Foundation.Eight.ShuSuan
