@@ -103,6 +103,9 @@ theorem proj_lift_id_R2 (s : R2) (y3 : Yao) : projR3toR2 (liftR2toR3 s y3) = s
 ### 4.1 Yao² ↔ Ben canonical bijection
 
 ```lean
+/-- Yao² → Ben canonical bijection.
+    (yang, yang) → wu   / (yang, yin) → dong
+    (yin,  yang) → jian / (yin,  yin) → shi -/
 def benFromYao (y1 y2 : Yao) : Ben :=
   match y1, y2 with
   | .yang, .yang => .wu     -- 物
@@ -110,16 +113,29 @@ def benFromYao (y1 y2 : Yao) : Ben :=
   | .yin,  .yang => .jian   -- 間
   | .yin,  .yin  => .shi    -- 事
 
-def benToYao1 : Ben → Yao | .wu | .dong => .yang | .jian | .shi => .yin
-def benToYao2 : Ben → Yao | .wu | .jian => .yang | .dong | .shi => .yin
+def benToYao1 : Ben → Yao
+  | .wu | .dong => .yang
+  | .jian | .shi => .yin
 
-theorem benFromYao_yao1 (y1 y2 : Yao) : benToYao1 (benFromYao y1 y2) = y1
-theorem benFromYao_yao2 (y1 y2 : Yao) : benToYao2 (benFromYao y1 y2) = y2
+def benToYao2 : Ben → Yao
+  | .wu | .jian => .yang
+  | .dong | .shi => .yin
+
+theorem benFromYao_yao1 (y1 y2 : Yao) : benToYao1 (benFromYao y1 y2) = y1 := by
+  cases y1 <;> cases y2 <;> rfl
+
+theorem benFromYao_yao2 (y1 y2 : Yao) : benToYao2 (benFromYao y1 y2) = y2 := by
+  cases y1 <;> cases y2 <;> rfl
 ```
+
+两条 `benFromYao_yao*` 之证明都是 4-case `cases <;> rfl` —— 4 inhabitants 之每枚都 definitional 等。
 
 ### 4.2 Yao² ↔ Zheng canonical bijection
 
 ```lean
+/-- Yao² → Zheng canonical bijection.
+    (yang, yang) → jiFaint    / (yang, yin) → shiForce
+    (yin,  yang) → jiOccasion / (yin,  yin) → shiTime -/
 def zhengFromYao (y3 y4 : Yao) : Zheng :=
   match y3, y4 with
   | .yang, .yang => .jiFaint     -- 幾
@@ -127,24 +143,44 @@ def zhengFromYao (y3 y4 : Yao) : Zheng :=
   | .yin,  .yang => .jiOccasion  -- 機
   | .yin,  .yin  => .shiTime     -- 時
 
-def zhengToYao1 : Zheng → Yao | .jiFaint | .shiForce => .yang | .jiOccasion | .shiTime => .yin
-def zhengToYao2 : Zheng → Yao | .jiFaint | .jiOccasion => .yang | .shiForce | .shiTime => .yin
+def zhengToYao1 : Zheng → Yao
+  | .jiFaint | .shiForce => .yang
+  | .jiOccasion | .shiTime => .yin
 
-theorem zhengFromYao_yao1 / yao2 ...
+def zhengToYao2 : Zheng → Yao
+  | .jiFaint | .jiOccasion => .yang
+  | .shiForce | .shiTime => .yin
+
+theorem zhengFromYao_yao1 (y3 y4 : Yao) :
+    zhengToYao1 (zhengFromYao y3 y4) = y3 := by
+  cases y3 <;> cases y4 <;> rfl
+
+theorem zhengFromYao_yao2 (y3 y4 : Yao) :
+    zhengToYao2 (zhengFromYao y3 y4) = y4 := by
+  cases y3 <;> cases y4 <;> rfl
 ```
 
 ### 4.3 lift / project R₃ ↔ R₄
 
 ```lean
+/-- 八卦 ↪ 命: combine Trigram + extra Yao into Mian = Ben × Zheng.
+    (y1, y2) → Ben, (y3, extra) → Zheng. -/
 def liftR3toR4 (t : R3) (y4 : Yao) : R4 :=
   (benFromYao t.y1 t.y2, zhengFromYao t.y3 y4)
 
+/-- 命 ↠ 八卦: extract trigram y1, y2 from Ben, y3 from Zheng (drop y4). -/
 def projR4toR3 (m : R4) : R3 :=
   ⟨benToYao1 m.1, benToYao2 m.1, zhengToYao1 m.2⟩
 
 theorem proj_lift_id_R3 (t : R3) (y4 : Yao) :
-    projR4toR3 (liftR3toR4 t y4) = t
+    projR4toR3 (liftR3toR4 t y4) = t := by
+  cases t with
+  | mk y1 y2 y3 =>
+    simp [projR4toR3, liftR3toR4,
+          benFromYao_yao1, benFromYao_yao2, zhengFromYao_yao1]
 ```
+
+注意：retract 仅 drop `y4`（即 R₄ 中的 extra bit = Zheng 之 second yao），其它 3 个 yao 通过 `benTo*` / `zhengToYao1` 完整恢复。
 
 **关键设计取舍**：(y₁, y₂) → Ben，(y₃, extra) → Zheng；project 丢 extra（即 4th yao），不丢 trigram 的任意 1 yao。这是 canonical 选择；其他 partition (例如 (y₁, y₃) → Ben + (y₂, extra) → Zheng) 也合法 — 选 (y₁,y₂) + (y₃,extra) 是因为它最自然地把 trigram "前 2 yao = base / 后 1 yao + extra = mark" 对接 Ben/Zheng 之 4-本/4-征 划分。
 
@@ -172,32 +208,56 @@ theorem proj_lift_id_R4 (m : R4) (b : Bool) :
 
 > y1 = ben.bit1, y2 = ben.bit2, y3 = zheng.bit1, y4 = zheng.bit2, y5 = Bool→Yao (false→yang, true→yin), y6 = extra.
 
+#### Bool ↔ Yao helpers
+
 ```lean
+/-- Bool → Yao canonical: false = yang (default), true = yin. -/
 def boolToYao (b : Bool) : Yao := if b then .yin else .yang
+
+/-- Yao → Bool inverse. -/
 def yaoToBool (y : Yao) : Bool := match y with | .yang => false | .yin => true
 
-theorem yaoToBool_boolToYao (b : Bool) : yaoToBool (boolToYao b) = b
+theorem yaoToBool_boolToYao (b : Bool) : yaoToBool (boolToYao b) = b := by
+  cases b <;> rfl
+```
 
+#### R₅ ↔ R₆ Lift / Project
+
+```lean
+/-- 五爻 ↪ 六爻: combine Wuyao (32 cells = 5 bits) with a 6th Yao to form
+    a Hexagram (64 cells = 6 bits).
+
+    Layout: y1, y2 ← ben (Mian.1) bit-pair; y3, y4 ← zheng (Mian.2) bit-pair;
+    y5 ← Bool bit; y6 ← extra Yao. -/
 def liftR5toR6 (w : R5) (y6 : Yao) : R6 :=
-  let m := w.1; let b := w.2
+  let m := w.1
+  let b := w.2
   ⟨benToYao1 m.1, benToYao2 m.1, zhengToYao1 m.2, zhengToYao2 m.2,
    boolToYao b, y6⟩
 
+/-- 六爻 ↠ 五爻: drop y6, decode (y1, y2) → Ben, (y3, y4) → Zheng,
+    y5 → Bool. -/
 def projR6toR5 (h : R6) : R5 :=
   ((benFromYao h.y1 h.y2, zhengFromYao h.y3 h.y4), yaoToBool h.y5)
 
 theorem proj_lift_id_R5 (w : R5) (y6 : Yao) :
-    projR6toR5 (liftR5toR6 w y6) = w
+    projR6toR5 (liftR5toR6 w y6) = w := by
+  rcases w with ⟨⟨b, z⟩, bit⟩
+  simp [projR6toR5, liftR5toR6,
+        benFromYao_benToYao, zhengFromYao_zhengToYao,
+        yaoToBool_boolToYao]
 ```
 
-5 bits 之 Wuyao 直接 unpack 进 hex 之 y₁..y₅；y₆ 是 lift 添加的 extra。**关键 round-trip helper** 是 `benFromYao_benToYao` 与 `zhengFromYao_zhengToYao`：
+5 bits 之 Wuyao 直接 unpack 进 hex 之 y₁..y₅；y₆ 是 lift 添加的 extra。注意 retract 仅丢 `y6`（hexagram 之 top yao），所有 5 个底部 bits 完整恢复。**关键 round-trip helper** 是 `benFromYao_benToYao` 与 `zhengFromYao_zhengToYao`：
 
 ```lean
 theorem benFromYao_benToYao (b : Ben) :
-    benFromYao (benToYao1 b) (benToYao2 b) = b
+    benFromYao (benToYao1 b) (benToYao2 b) = b := by
+  cases b <;> rfl
 
 theorem zhengFromYao_zhengToYao (z : Zheng) :
-    zhengFromYao (zhengToYao1 z) (zhengToYao2 z) = z
+    zhengFromYao (zhengToYao1 z) (zhengToYao2 z) = z := by
+  cases z <;> rfl
 ```
 
 二者都是 4-case `cases <;> rfl`。
@@ -241,15 +301,29 @@ theorem proj_lift_id_R7 (c : R7) (g : Cell256.GuoBit) :
 
 ## 9. chong (重) — 现在 = R₃ → R₄ → R₅ → R₆ 之 3-step composite
 
-旧 v1 把 `chong : R₃ × R₃ → R₆` 看作 +3 bit "jump"，跳过 R₄ / R₅。
+### 9.1 旧 v1 vs v2.1 / v3 之差
 
-v3 strict-uniform 下：
+旧 v1 把 `chong : R₃ × R₃ → R₆` 看作单 +3 bit 之「chong 跳跃」，跳过 (Z/2)⁴ 与 (Z/2)⁵（即 R₄ / R₅ 不显式）。
+
+v2.1 / v3 strict-uniform 下 chong **不是基础 lift**，而是 3 步 +1 bit composite (per [`yi-RO-hierarchy.md`](yi-RO-hierarchy.md) § 3.9)：
+
+$$\text{chong} : R_3 \times R_3 \to R_6 \quad \cong \quad R_3 \xrightarrow{\text{liftR3toR4}} R_4 \xrightarrow{\text{liftR4toR5}} R_5 \xrightarrow{\text{liftR5toR6}} R_6$$
 
 ```
 chong : R₃ → R₆ 之实质 = 3 步 +1 bit lift composite
         R₃ → R₄ → R₅ → R₆
         =     +1 bit  +1 bit  +1 bit
 ```
+
+### 9.2 3 步 lift 之参数
+
+```
+liftR3toR4 :  R₃ × Yao  → R₄    (extra y4)
+liftR4toR5 :  R₄ × Bool → R₅    (extra Bool / 5th yao)
+liftR5toR6 :  R₅ × Yao  → R₆    (extra y6 / 6th yao)
+```
+
+合计参数：1 个 R₃ + (1 yao + 1 Bool + 1 yao) = 3 个 binary bits = 加到 hexagram 之 outer 3 yaos。
 
 具体在 [`LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) 中可这样组合：
 
@@ -258,7 +332,30 @@ example (t : R3) (y4 y6 : Yao) (b : Bool) : R6 :=
   liftR5toR6 (liftR4toR5 (liftR3toR4 t y4) b) y6
 ```
 
-或用 `BaguaAlgebra.lean` 之 traditional `chong inner outer = Hexagram.oplus inner outer`（直接拼两个 trigram → hex）— 二者都 produce R₆ Hexagram，但 v3 的 doctrine 强调**strict uniform 视角下 chong 是 lift composite**。详 [`yi-RO-hierarchy.md`](yi-RO-hierarchy.md) § 3.9。
+### 9.3 chong 之 3 步分解 (inner / outer trigram 视角)
+
+R₆ Hexagram 之 6 yaos 分为 inner trigram (y₁ y₂ y₃) + outer trigram (y₄ y₅ y₆)。chong 把 inner trigram 与 outer trigram 拼起来。在 strict-uniform 视角下：
+
+| 步 | input | output | 意义 |
+|---|---|---|---|
+| 1 (R₃→R₄) | inner trigram + y₄ | Mian (Ben × Zheng) | 加 outer trigram 之 first yao |
+| 2 (R₄→R₅) | Mian + Bool | Wuyao | 加 outer trigram 之 second yao (encoded as Bool) |
+| 3 (R₅→R₆) | Wuyao + y₆ | Hexagram | 加 outer trigram 之 third yao |
+
+详见 [`r5-wuyao-provisional.md`](r5-wuyao-provisional.md) § 4 chong 分解。
+
+### 9.4 chong (existing R₆ ctor) 与 3-step composite 之关系
+
+R₆ Hexagram 已有 ctor `chong : Trigram → Trigram → Hexagram` (在 [`Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) 中)，亦有 `BaguaAlgebra.lean` 之 traditional `chong inner outer = Hexagram.oplus inner outer`（直接拼两个 trigram → hex）。3-step composite 之 lift 与 chong ctor **不直接 definitional equal**，但二者**计算同 64 个 hexagrams**（仅 bit 之内部排列不同）。
+
+具体见 [`LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) § 6 之 layout 注释：
+
+```
+Concrete: y1 = ben.bit1, y2 = ben.bit2, y3 = zheng.bit1, y4 = zheng.bit2,
+y5 = Bool→Yao (false→yang, true→yin), y6 = extra.
+```
+
+— 即 R₅→R₆ lift 之 hexagram 之 y₁..y₅ 来自 Mian + Bool 之 5 bits encoding，y₆ 是 extra。这与传统 chong（inner⊕outer trigram）之 layout 不直接相同，但每个组合都精确对应 64 hexagrams 中之一。v3 的 doctrine 强调**strict uniform 视角下 chong 是 lift composite**。详 [`yi-RO-hierarchy.md`](yi-RO-hierarchy.md) § 3.9。
 
 ---
 
