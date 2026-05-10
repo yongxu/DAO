@@ -259,13 +259,13 @@ theorem daoJudge_correct (h : Hexagram) :
 theorem daoJudge_isTian (h : Hexagram) :
     daoJudge h = Shi.ji ↔ h.isTian = true := by
   rw [daoJudge_correct]
-  cases h.isTian <;> simp
+  cases h.isTian <;> simp [Shi.ji, Shi.wei]
 
 /-- Equivalent reading: 非道 (= 心道) iff verdict is .wei. -/
 theorem daoJudge_isXin (h : Hexagram) :
     daoJudge h = Shi.wei ↔ h.isXin = true := by
   rw [daoJudge_correct, Hexagram.isXin]
-  cases h.isTian <;> simp
+  cases h.isTian <;> simp [Shi.ji, Shi.wei]
 
 /-- 乾 (☰☰) is 天道. -/
 theorem daoJudge_qian : daoJudge Hexagram.qian = Shi.ji := by native_decide

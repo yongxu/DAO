@@ -63,7 +63,7 @@ theorem subDispatchBranchShiEq_length (a b c d : Nat) :
 /-- The Shi component of `encShi s` is exactly `s`.  This is the key fact
     making the outer dispatch route correctly. -/
 private theorem encShi_shi (s : Shi) : (encShi s).2 = s := by
-  cases s <;> rfl
+  rcases s with ⟨y, g⟩; cases y <;> cases g <;> rfl
 
 /-! ## § 1  Routing — `s = dao`
 
@@ -90,7 +90,7 @@ theorem subDispatchBranchShiEq_routes_dao
     ∧ μ'.halted = false := by
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute,
-          subDispatchBranchShiEq, encShi_shi]
+          subDispatchBranchShiEq, encShi_shi, Shi.dao, Shi.ji, Shi.jin, Shi.wei]
 
 /-! ## § 2  Routing — `s = ji`
 
@@ -119,7 +119,7 @@ theorem subDispatchBranchShiEq_routes_ji
     ∧ μ'.halted = false := by
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute,
-          subDispatchBranchShiEq, encShi_shi]
+          subDispatchBranchShiEq, encShi_shi, Shi.dao, Shi.ji, Shi.jin, Shi.wei]
 
 /-! ## § 3  Routing — `s = jin`
 
@@ -150,7 +150,7 @@ theorem subDispatchBranchShiEq_routes_jin
     ∧ μ'.halted = false := by
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute,
-          subDispatchBranchShiEq, encShi_shi]
+          subDispatchBranchShiEq, encShi_shi, Shi.dao, Shi.ji, Shi.jin, Shi.wei]
 
 /-! ## § 4  Routing — `s = wei`
 
@@ -183,6 +183,6 @@ theorem subDispatchBranchShiEq_routes_wei
     ∧ μ'.halted = false := by
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute,
-          subDispatchBranchShiEq, encShi_shi]
+          subDispatchBranchShiEq, encShi_shi, Shi.dao, Shi.ji, Shi.jin, Shi.wei]
 
 end SSBX.Foundation.Wen.MetaInterp.SubDispatch_BranchShiEq

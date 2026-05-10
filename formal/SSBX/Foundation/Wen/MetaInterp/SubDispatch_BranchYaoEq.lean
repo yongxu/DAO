@@ -191,7 +191,7 @@ theorem subDispatchBranchYaoEqPerJ_routes_j0
     ∧ μ'.history = tail
     ∧ μ'.halted = false := by
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
-    simp [YiState.runFuel, YiState.step, YiState.execute,
+    simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin, Shi.wei,
           subDispatchBranchYaoEqPerJ, Hexagram.yaoAt,
           encFin6_0_y1_eq_y6, encFin6_0_shi]
 
@@ -211,7 +211,7 @@ theorem subDispatchBranchYaoEqPerJ_routes_j1
     ∧ μ'.history = tail
     ∧ μ'.halted = false := by
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
-    simp [YiState.runFuel, YiState.step, YiState.execute,
+    simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin, Shi.wei,
           subDispatchBranchYaoEqPerJ, Hexagram.yaoAt,
           encFin6_1_y1_eq_y6, encFin6_1_shi, encFin6_1_shi_ne_dao]
 
@@ -231,7 +231,7 @@ theorem subDispatchBranchYaoEqPerJ_routes_j2
     ∧ μ'.history = tail
     ∧ μ'.halted = false := by
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
-    simp [YiState.runFuel, YiState.step, YiState.execute,
+    simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin, Shi.wei,
           subDispatchBranchYaoEqPerJ, Hexagram.yaoAt,
           encFin6_2_y1_eq_y6, encFin6_2_shi,
           encFin6_2_shi_ne_dao, encFin6_2_shi_ne_ji]
@@ -252,7 +252,7 @@ theorem subDispatchBranchYaoEqPerJ_routes_j3
     ∧ μ'.history = tail
     ∧ μ'.halted = false := by
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
-    simp [YiState.runFuel, YiState.step, YiState.execute,
+    simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin, Shi.wei,
           subDispatchBranchYaoEqPerJ, Hexagram.yaoAt,
           encFin6_3_y1_eq_y6, encFin6_3_shi,
           encFin6_3_shi_ne_dao, encFin6_3_shi_ne_ji, encFin6_3_shi_ne_jin]
@@ -273,7 +273,7 @@ theorem subDispatchBranchYaoEqPerJ_routes_j4
     ∧ μ'.history = tail
     ∧ μ'.halted = false := by
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
-    simp [YiState.runFuel, YiState.step, YiState.execute,
+    simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin, Shi.wei,
           subDispatchBranchYaoEqPerJ, Hexagram.yaoAt,
           encFin6_4_y1_ne_y6, encFin6_4_shi]
 
@@ -293,7 +293,7 @@ theorem subDispatchBranchYaoEqPerJ_routes_j5
     ∧ μ'.history = tail
     ∧ μ'.halted = false := by
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
-    simp [YiState.runFuel, YiState.step, YiState.execute,
+    simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin, Shi.wei,
           subDispatchBranchYaoEqPerJ, Hexagram.yaoAt,
           encFin6_5_y1_ne_y6, encFin6_5_shi, encFin6_5_shi_ne_dao]
 
@@ -320,7 +320,7 @@ theorem subDispatchBranchYaoEq_routes_i0
     ∧ μ'.history = tail
     ∧ μ'.halted = false := by
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
-    simp [YiState.runFuel, YiState.step, YiState.execute,
+    simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin, Shi.wei,
           subDispatchBranchYaoEq, Hexagram.yaoAt,
           encFin6_0_y1_eq_y6, encFin6_0_shi]
 
@@ -341,7 +341,7 @@ theorem subDispatchBranchYaoEq_routes_i1
     ∧ μ'.history = tail
     ∧ μ'.halted = false := by
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
-    simp [YiState.runFuel, YiState.step, YiState.execute,
+    simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin, Shi.wei,
           subDispatchBranchYaoEq, Hexagram.yaoAt,
           encFin6_1_y1_eq_y6, encFin6_1_shi, encFin6_1_shi_ne_dao]
 
@@ -362,7 +362,7 @@ theorem subDispatchBranchYaoEq_routes_i2
     ∧ μ'.history = tail
     ∧ μ'.halted = false := by
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
-    simp [YiState.runFuel, YiState.step, YiState.execute,
+    simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin, Shi.wei,
           subDispatchBranchYaoEq, Hexagram.yaoAt,
           encFin6_2_y1_eq_y6, encFin6_2_shi,
           encFin6_2_shi_ne_dao, encFin6_2_shi_ne_ji]
@@ -384,7 +384,7 @@ theorem subDispatchBranchYaoEq_routes_i3
     ∧ μ'.history = tail
     ∧ μ'.halted = false := by
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
-    simp [YiState.runFuel, YiState.step, YiState.execute,
+    simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin, Shi.wei,
           subDispatchBranchYaoEq, Hexagram.yaoAt,
           encFin6_3_y1_eq_y6, encFin6_3_shi,
           encFin6_3_shi_ne_dao, encFin6_3_shi_ne_ji, encFin6_3_shi_ne_jin]
@@ -406,7 +406,7 @@ theorem subDispatchBranchYaoEq_routes_i4
     ∧ μ'.history = tail
     ∧ μ'.halted = false := by
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
-    simp [YiState.runFuel, YiState.step, YiState.execute,
+    simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin, Shi.wei,
           subDispatchBranchYaoEq, Hexagram.yaoAt,
           encFin6_4_y1_ne_y6, encFin6_4_shi]
 
@@ -427,7 +427,7 @@ theorem subDispatchBranchYaoEq_routes_i5
     ∧ μ'.history = tail
     ∧ μ'.halted = false := by
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
-    simp [YiState.runFuel, YiState.step, YiState.execute,
+    simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin, Shi.wei,
           subDispatchBranchYaoEq, Hexagram.yaoAt,
           encFin6_5_y1_ne_y6, encFin6_5_shi, encFin6_5_shi_ne_dao]
 

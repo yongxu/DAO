@@ -576,7 +576,7 @@ theorem countedLoop_empty_simulates_n_iterations
           , prog := metaProg
           , halted := false } := by
       unfold YiState.step
-      simp [h_branch, YiState.execute]
+      simp [h_branch, YiState.execute, Shi.jin, Shi.wei]
     have hstep3 :
         ({ cur := (regHex, Shi.jin)
          , history := encCounter regHex k ++ tail

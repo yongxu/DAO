@@ -116,7 +116,7 @@ theorem primaryToken_in_primaryTokens (i : YiInstr) :
 
 /-- 公示：`shiToken` 之返回总在 `shiTokens` 表内。 -/
 theorem shiToken_in_shiTokens (s : Shi) : shiToken s ∈ shiTokens := by
-  cases s <;> simp [shiToken, shiTokens]
+  rcases s with ⟨y, g⟩; cases y <;> cases g <;> simp [shiToken, shiTokens, Shi.dao, Shi.ji, Shi.jin, Shi.wei]
 
 /-! ## § 6  数词范围
 

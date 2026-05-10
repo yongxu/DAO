@@ -289,7 +289,7 @@ theorem parseNumeral_numeralInner (n : Nat) (h1 : 1 ≤ n) (h64 : n ≤ 64) :
 /-- 时态 parser 之 print-逆。 -/
 theorem parseShi_shi (s : Shi) :
     parseShi (match s with | .dao => "道" | .ji => "已" | .jin => "今" | .wei => "未") = some s := by
-  cases s <;> rfl
+  rcases s with ⟨y, g⟩; cases y <;> cases g <;> rfl
 
 /-- 爻位 parser 之 print-逆。 -/
 theorem parseYao_yao (i : Fin 6) :
@@ -337,7 +337,7 @@ def printYaoChars : Fin 6 → List Char
   | _      => ['«', '?', '»']
 
 theorem printShi_toList (s : Shi) : (printShi s).toList = printShiChars s := by
-  cases s <;> rfl
+  rcases s with ⟨y, g⟩; cases y <;> cases g <;> rfl
 
 theorem printYao_toList (i : Fin 6) : (printYao i).toList = printYaoChars i := by
   match i with
@@ -398,7 +398,8 @@ theorem printInstr_toList (i : YiInstr) (h : validInstr i = true) :
   | push => decide
   | pop  => decide
   | halt => decide
-  | setShi s => cases s <;> decide
+  | setShi s =>
+      rcases s with ⟨y, g⟩; cases y <;> cases g <;> decide
   | flipYao i =>
       simp only [printInstr, printInstrChars, String.toList_append]
       rw [printYao_toList i]
@@ -435,7 +436,8 @@ def instrLexFuel : YiInstr → Nat
 /-- printShiChars 之 inner 不含 '»'. -/
 private theorem printShiChars_inner_no_close (s : Shi) :
     ∀ c ∈ (printShiChars s).tail.dropLast, c ≠ '»' := by
-  cases s <;> (intro c hc; simp [printShiChars] at hc; subst hc; decide)
+  rcases s with ⟨y, g⟩
+  cases y <;> cases g <;> (intro c hc; simp [printShiChars] at hc; subst hc; decide)
 
 /-- printYaoChars 之 inner 不含 '»'. -/
 private theorem printYaoChars_inner_no_close (i : Fin 6) :
@@ -465,23 +467,24 @@ private theorem lexFuel_printShiChars
     (s : Shi) (tail : List Char) (n : Nat) :
     lexFuel (n + 1) (printShiChars s ++ tail)
       = (lexFuel n tail).map (fun toks => tokOfShi s :: toks) := by
-  cases s with
-  | dao =>
+  rcases s with ⟨y, g⟩
+  cases y <;> cases g
+  case false.false =>  -- dao
       show lexFuel (n + 1) (('«' :: ['道'] ++ ['»']) ++ tail) = _
       rw [lexFuel_bracket_split ['道'] tail n
             (by intro c hc; simp at hc; subst hc; decide)]
       rfl
-  | ji =>
+  case true.false =>   -- ji
       show lexFuel (n + 1) (('«' :: ['已'] ++ ['»']) ++ tail) = _
       rw [lexFuel_bracket_split ['已'] tail n
             (by intro c hc; simp at hc; subst hc; decide)]
       rfl
-  | jin =>
+  case true.true =>    -- jin
       show lexFuel (n + 1) (('«' :: ['今'] ++ ['»']) ++ tail) = _
       rw [lexFuel_bracket_split ['今'] tail n
             (by intro c hc; simp at hc; subst hc; decide)]
       rfl
-  | wei =>
+  case false.true =>   -- wei
       show lexFuel (n + 1) (('«' :: ['未'] ++ ['»']) ++ tail) = _
       rw [lexFuel_bracket_split ['未'] tail n
             (by intro c hc; simp at hc; subst hc; decide)]
@@ -691,7 +694,8 @@ theorem parseInstr_tokensOfInstr_app (i : YiInstr) (rest : List Tok) (h : validI
   | push => rfl
   | pop  => rfl
   | halt => rfl
-  | setShi s => cases s <;> rfl
+  | setShi s =>
+      rcases s with ⟨y, g⟩; cases y <;> cases g <;> rfl
   | flipYao i =>
       match i with
       | ⟨0, _⟩ => rfl
@@ -717,7 +721,8 @@ theorem parseInstr_tokensOfInstr_app (i : YiInstr) (rest : List Tok) (h : validI
       obtain ⟨h1, h64⟩ := h
       have hnum := parseNumeral_numeralInner t h1 h64
       simp only [tokensOfInstr, List.cons_append, List.nil_append, parseInstr, tokOfShi, tokOfNum]
-      cases s <;> simp [parseShi, hnum]
+      rcases s with ⟨y, g⟩
+      cases y <;> cases g <;> simp [parseShi, hnum, Shi.dao, Shi.ji, Shi.jin, Shi.wei]
   | jump t =>
       simp [validInstr] at h
       obtain ⟨h1, h64⟩ := h

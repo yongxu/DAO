@@ -58,15 +58,19 @@ abbrev GuoBit : Type := Bool
     - 道 = (0, 0) — 永真，跨时空，V₄ 单位元
     - 已 = (1, 0) — 过去封闭 (有因, 无果)
     - 未 = (0, 1) — 未来开放 (无因, 有果)
-    - 今 = (1, 1) — PT 交汇 (因果俱在) -/
-inductive Shi : Type
-  | dao   -- 道 (eternal / V₄ identity)
-  | ji    -- 已 (past)
-  | jin   -- 今 (present, PT)
-  | wei   -- 未 (future)
-  deriving Repr, DecidableEq, BEq
+    - 今 = (1, 1) — PT 交汇 (因果俱在)
+
+    Now an `abbrev` of `YinBit × GuoBit` = `Bool × Bool`. The 4 named tags
+    `dao / ji / jin / wei` are `@[match_pattern]` defs so existing
+    pattern-matches `| .dao => ...` continue to work. -/
+abbrev Shi : Type := YinBit × GuoBit
 
 namespace Shi
+
+@[match_pattern] def dao : Shi := (false, false)
+@[match_pattern] def ji  : Shi := (true,  false)
+@[match_pattern] def jin : Shi := (true,  true)
+@[match_pattern] def wei : Shi := (false, true)
 
 /-- 全部 4 个时态. -/
 def all : List Shi := [dao, ji, jin, wei]
@@ -94,45 +98,37 @@ def cuoZong : Shi → Shi
   | .jin => .dao
   | .wei => .ji
 
-theorem cuo_cuo (s : Shi) : cuo (cuo s) = s := by cases s <;> rfl
-theorem zong_zong (s : Shi) : zong (zong s) = s := by cases s <;> rfl
-theorem cuoZong_cuoZong (s : Shi) : cuoZong (cuoZong s) = s := by cases s <;> rfl
+theorem cuo_cuo (s : Shi) : cuo (cuo s) = s := by
+  rcases s with ⟨y, g⟩; cases y <;> cases g <;> rfl
+theorem zong_zong (s : Shi) : zong (zong s) = s := by
+  rcases s with ⟨y, g⟩; cases y <;> cases g <;> rfl
+theorem cuoZong_cuoZong (s : Shi) : cuoZong (cuoZong s) = s := by
+  rcases s with ⟨y, g⟩; cases y <;> cases g <;> rfl
 
 /-- cuo 与 zong 交换（V₄ Abelian）. -/
 theorem cuo_zong_comm (s : Shi) : cuo (zong s) = zong (cuo s) := by
-  cases s <;> rfl
+  rcases s with ⟨y, g⟩; cases y <;> cases g <;> rfl
 
 /-- cuoZong = cuo ∘ zong （V₄ 复合）. -/
 theorem cuoZong_eq_compose (s : Shi) : cuoZong s = cuo (zong s) := by
-  cases s <;> rfl
+  rcases s with ⟨y, g⟩; cases y <;> cases g <;> rfl
 
 /-! ### Shi ↔ (YinBit × GuoBit) ≅ V₄ Klein 双射
 
   Shi 之 V₄ 结构通过 (因, 果) bit 显式暴露，对应 yi-RO-hierarchy.md 第六部分:
   Shi V₄ = R5⊗R6 emergence。 -/
 
-/-- Shi → (因, 果) ∈ Bool² 双射: dao=(0,0) / ji=(1,0) / wei=(0,1) / jin=(1,1). -/
-def toYinGuo : Shi → YinBit × GuoBit
-  | .dao => (false, false)  -- 道 = V₄ identity
-  | .ji  => (true,  false)  -- 已 = (有因, 无果)
-  | .wei => (false, true)   -- 未 = (无因, 有果)
-  | .jin => (true,  true)   -- 今 = PT 交汇 (因果俱在)
+/-- Shi → (因, 果) ∈ Bool² 双射. Identity since `Shi := YinBit × GuoBit`. -/
+def toYinGuo (s : Shi) : YinBit × GuoBit := s
 
-/-- (因, 果) ∈ Bool² → Shi 反向双射. -/
-def ofYinGuo : YinBit × GuoBit → Shi
-  | (false, false) => .dao
-  | (true,  false) => .ji
-  | (false, true)  => .wei
-  | (true,  true)  => .jin
+/-- (因, 果) ∈ Bool² → Shi 反向双射. Identity. -/
+def ofYinGuo (yg : YinBit × GuoBit) : Shi := yg
 
 /-- 双射 left: Shi → (因,果) → Shi = id. -/
-theorem ofYinGuo_toYinGuo (s : Shi) : ofYinGuo (toYinGuo s) = s := by
-  cases s <;> rfl
+theorem ofYinGuo_toYinGuo (s : Shi) : ofYinGuo (toYinGuo s) = s := rfl
 
 /-- 双射 right: (因,果) → Shi → (因,果) = id. -/
-theorem toYinGuo_ofYinGuo (yg : YinBit × GuoBit) : toYinGuo (ofYinGuo yg) = yg := by
-  rcases yg with ⟨y, g⟩
-  cases y <;> cases g <;> rfl
+theorem toYinGuo_ofYinGuo (yg : YinBit × GuoBit) : toYinGuo (ofYinGuo yg) = yg := rfl
 
 /-! ### 印 (yìn) / 投 (tóu) — O5/O6 atomic 算子
 
@@ -181,7 +177,8 @@ theorem mem_all (c : Cell256) : c ∈ all := by
   rcases c with ⟨h, s⟩
   unfold all
   refine List.mem_flatMap.mpr ⟨h, hexagram_mem_allHex h, ?_⟩
-  exact List.mem_map.mpr ⟨s, by cases s <;> simp [Shi.all], rfl⟩
+  exact List.mem_map.mpr ⟨s, by
+    rcases s with ⟨y, g⟩; cases y <;> cases g <;> simp [Shi.all, Shi.dao, Shi.ji, Shi.jin, Shi.wei], rfl⟩
 
 /-- Node counts for the root-to-256 prefix tree:
     root → 6 yao bit levels → 8th bit (Shi past) → 9th bit (Shi future) = 256.
@@ -460,20 +457,22 @@ def shiXor (s1 s2 : Shi) : Shi :=
   Shi.ofYinGuo (Bool.xor y1 y2, Bool.xor g1 g2)
 
 @[simp] theorem shiXor_dao_left (s : Shi) : shiXor Shi.dao s = s := by
-  cases s <;> rfl
+  rcases s with ⟨y, g⟩; cases y <;> cases g <;> rfl
 
 @[simp] theorem shiXor_dao_right (s : Shi) : shiXor s Shi.dao = s := by
-  cases s <;> rfl
+  rcases s with ⟨y, g⟩; cases y <;> cases g <;> rfl
 
 theorem shiXor_self (s : Shi) : shiXor s s = Shi.dao := by
-  cases s <;> rfl
+  rcases s with ⟨y, g⟩; cases y <;> cases g <;> rfl
 
 theorem shiXor_comm (s1 s2 : Shi) : shiXor s1 s2 = shiXor s2 s1 := by
-  cases s1 <;> cases s2 <;> rfl
+  rcases s1 with ⟨y1, g1⟩; rcases s2 with ⟨y2, g2⟩
+  cases y1 <;> cases g1 <;> cases y2 <;> cases g2 <;> rfl
 
 theorem shiXor_assoc (s1 s2 s3 : Shi) :
     shiXor (shiXor s1 s2) s3 = shiXor s1 (shiXor s2 s3) := by
-  cases s1 <;> cases s2 <;> cases s3 <;> rfl
+  rcases s1 with ⟨y1, g1⟩; rcases s2 with ⟨y2, g2⟩; rcases s3 with ⟨y3, g3⟩
+  cases y1 <;> cases g1 <;> cases y2 <;> cases g2 <;> cases y3 <;> cases g3 <;> rfl
 
 /-! ### § 7.4 Cell256 XOR -/
 
@@ -486,27 +485,27 @@ def origin : Cell256 := (Hexagram.qian, Shi.dao)
 
 @[simp] theorem origin_xor (c : Cell256) : xor origin c = c := by
   rcases c with ⟨h, s⟩
-  cases s <;> simp [xor, origin, hexXor_qian_left]
+  simp [xor, origin, hexXor_qian_left, shiXor_dao_left]
 
 @[simp] theorem xor_origin (c : Cell256) : xor c origin = c := by
   rcases c with ⟨h, s⟩
-  cases s <;> simp [xor, origin, hexXor_qian_right]
+  simp [xor, origin, hexXor_qian_right, shiXor_dao_right]
 
 theorem xor_self (c : Cell256) : xor c c = origin := by
   rcases c with ⟨h, s⟩
-  cases s <;> simp [xor, origin, hexXor_self, shiXor_self]
+  simp [xor, origin, hexXor_self, shiXor_self]
 
 theorem xor_comm (c1 c2 : Cell256) : xor c1 c2 = xor c2 c1 := by
   rcases c1 with ⟨h1, s1⟩
   rcases c2 with ⟨h2, s2⟩
-  cases s1 <;> cases s2 <;> simp [xor, hexXor_comm, shiXor_comm]
+  simp [xor, hexXor_comm, shiXor_comm]
 
 theorem xor_assoc (c1 c2 c3 : Cell256) :
     xor (xor c1 c2) c3 = xor c1 (xor c2 c3) := by
   rcases c1 with ⟨h1, s1⟩
   rcases c2 with ⟨h2, s2⟩
   rcases c3 with ⟨h3, s3⟩
-  cases s1 <;> cases s2 <;> cases s3 <;> simp [xor, hexXor_assoc, shiXor_assoc]
+  simp [xor, hexXor_assoc, shiXor_assoc]
 
 end Cell256
 
