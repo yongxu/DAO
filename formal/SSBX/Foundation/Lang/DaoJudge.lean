@@ -166,6 +166,33 @@ example : judge "((xoxoxox ooxxoox) (xoxoxox ooxxoox))" = true := by native_deci
 
 example : judge "(xoxoxox (xoxoxox ooooooo))" = true := by native_decide
 
+/-! ## § 4.5  仁义礼智信是道 —— 五常归一 demonstration
+
+Map the Five Confucian Constants (五常) onto Cell128 atoms via 五行:
+- 仁 (benevolence, 木): single-flip at y1  = `xoooooo`
+- 义 (righteousness, 金): single-flip at y2  = `oxooooo`
+- 礼 (propriety,  火): single-flip at y3  = `ooxoooo`
+- 智 (wisdom,    水): single-flip at y4  = `oooxooo`
+- 信 (trust,     土): combined flip y1+y2+y3+y4 = `xxxxooo`
+                       = 仁 ⊕ 义 ⊕ 礼 ⊕ 智  (the synthesis)
+
+`信` emerges as the algebraic synthesis of the other four. This is forced
+by the (Z/2)⁷ structure: for the five to balance to 道, one of them must
+be the XOR of the rest. The doctrine names this synthetic element **土**
+(earth, the centre that holds the four directions) and morally **信**
+(integrity, the centre that holds the four virtues).
+
+Verdict: 仁⊕义⊕礼⊕智⊕信 = 道. -/
+example :
+    judge "((((xoooooo oxooooo) ooxoooo) oooxooo) xxxxooo)" = true := by
+  native_decide
+
+/-- The 信-as-synthesis derivation: without 信, the other four leave a
+residue 四端未合 = `xxxxooo`. -/
+example :
+    judge "(((xoooooo oxooooo) ooxoooo) oooxooo)" = false := by
+  native_decide
+
 /-! ## § 5  Soundness as a finite list of test points
 
 The judge is decidable in finite time (just XOR the leaves). We exhibit
