@@ -136,6 +136,20 @@ import SSBX.Foundation.Bagua.FuelDiscipline
 -- Foundation/Notation — `OX["..."]` 8-char Cell256 string literal macro
 import SSBX.Foundation.Notation.OXNotation
 
+-- Foundation/Lang — R-hierarchy Lisp (yao/yuan dual programming language)
+import SSBX.Foundation.Lang.Sexp
+import SSBX.Foundation.Lang.Pattern
+import SSBX.Foundation.Lang.Rule
+import SSBX.Foundation.Lang.Eval
+import SSBX.Foundation.Lang.Core
+import SSBX.Foundation.Lang.L1_Yao
+import SSBX.Foundation.Lang.L2_SiXiang
+import SSBX.Foundation.Lang.L3_Trigram
+import SSBX.Foundation.Lang.L4_Mian
+import SSBX.Foundation.Lang.L5_Wuyao
+import SSBX.Foundation.Lang.L6_Hexagram
+import SSBX.Foundation.Lang.L7_Cell128
+
 -- Foundation/Eight — 八衍：数 / 推 / 测 / 形 / 类 / 动 / 识 / 象
 import SSBX.Foundation.Eight.ShuSuan
 import SSBX.Foundation.Eight.LuoJi
