@@ -241,8 +241,8 @@ open SSBX.Foundation.Bagua.BenZheng
 def name (m : Mian) : String :=
   m.fst.char ++ "·" ++ m.snd.char
 
-example : name (.thing, .jiFaint) = "物·几" := by native_decide
-example : name (.shi, .shiTime) = "事·时" := by native_decide
+example : name (.thing, .trace) = "物·几" := by native_decide
+example : name (.shi, .occasion) = "事·时" := by native_decide
 
 end SSBX.Foundation.Bagua.BenZheng.Mian
 
@@ -260,8 +260,8 @@ convention proposed (not canonical classical Yi). 32 names total.
 def name (w : Wuyao) : String :=
   Mian.name w.fst ++ "·" ++ (if w.snd then "显" else "隐")
 
-example : name ((.thing, .jiFaint), false) = "物·几·隐" := by native_decide
-example : name ((.shi, .shiTime), true) = "事·时·显" := by native_decide
+example : name ((.thing, .trace), false) = "物·几·隐" := by native_decide
+example : name ((.shi, .occasion), true) = "事·时·显" := by native_decide
 
 end SSBX.Foundation.Hierarchy.R5_Wuyao.Wuyao
 

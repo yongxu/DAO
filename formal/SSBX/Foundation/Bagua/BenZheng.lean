@@ -9,7 +9,7 @@
     Ben.thing (物), Ben.motion (動), Ben.interval (間), Ben.shi (事)
 
   4 征 (marks, directional) ↔ {wind, thunder, lake, mountain}
-    Zheng.jiFaint (幾), Zheng.shiForce (勢), Zheng.jiOccasion (機), Zheng.shiTime (時)
+    Zheng.trace (幾), Zheng.momentum (勢), Zheng.pivot (機), Zheng.occasion (時)
 
   Mian := Ben × Zheng = 16 cells
     label: 動/行/化/流/萌/长/发/续/缘/通/会/系/兆/趋/变/史
@@ -82,37 +82,37 @@ end Ben
 
 /-- 4 征: 幾 / 勢 / 機 / 時.
 
-    构造子用 jiFaint / shiForce / jiOccasion / shiTime 避免与 Ben.shi 冲突
+    构造子用 trace / momentum / pivot / occasion 避免与 Ben.shi 冲突
     (两个 namespace 都用裸 `shi` / `ji` 会产生歧义)。 -/
 inductive Zheng : Type
-  | jiFaint     -- 幾 (subtle trace)
-  | shiForce    -- 勢 (momentum)
-  | jiOccasion  -- 機 (occasion)
-  | shiTime     -- 時 (timing)
+  | trace     -- 幾 (subtle trace)
+  | momentum    -- 勢 (momentum)
+  | pivot  -- 機 (occasion)
+  | occasion     -- 時 (timing)
   deriving Repr, DecidableEq, BEq
 
 namespace Zheng
 
-def all : List Zheng := [.jiFaint, .shiForce, .jiOccasion, .shiTime]
+def all : List Zheng := [.trace, .momentum, .pivot, .occasion]
 
 /-- 征 → trigram 双射: 幾→巽, 勢→震, 機→兑, 時→艮. -/
 def toTrigram : Zheng → Trigram
-  | .jiFaint    => Trigram.wind
-  | .shiForce   => Trigram.thunder
-  | .jiOccasion => Trigram.lake
-  | .shiTime    => Trigram.mountain
+  | .trace    => Trigram.wind
+  | .momentum   => Trigram.thunder
+  | .pivot => Trigram.lake
+  | .occasion    => Trigram.mountain
 
 def char : Zheng → String
-  | .jiFaint    => "几"
-  | .shiForce   => "势"
-  | .jiOccasion => "机"
-  | .shiTime    => "时"
+  | .trace    => "几"
+  | .momentum   => "势"
+  | .pivot => "机"
+  | .occasion    => "时"
 
 def fromChar (s : String) : Option Zheng :=
-  if s = "几" || s = "幾" then some .jiFaint
-  else if s = "势" || s = "勢" then some .shiForce
-  else if s = "机" || s = "機" then some .jiOccasion
-  else if s = "时" || s = "時" then some .shiTime
+  if s = "几" || s = "幾" then some .trace
+  else if s = "势" || s = "勢" then some .momentum
+  else if s = "机" || s = "機" then some .pivot
+  else if s = "时" || s = "時" then some .occasion
   else none
 
 theorem char_roundtrip (z : Zheng) : fromChar z.char = some z := by
@@ -148,10 +148,10 @@ def benOf? (t : Trigram) : Option SSBX.Foundation.Bagua.BenZheng.Ben :=
 
 /-- Trigram → 征: 仅 4 个 zong-mobile trigram 有 Zheng. -/
 def zhengOf? (t : Trigram) : Option SSBX.Foundation.Bagua.BenZheng.Zheng :=
-  if t = wind  then some .jiFaint
-  else if t = thunder then some .shiForce
-  else if t = lake  then some .jiOccasion
-  else if t = mountain  then some .shiTime
+  if t = wind  then some .trace
+  else if t = thunder then some .momentum
+  else if t = lake  then some .pivot
+  else if t = mountain  then some .occasion
   else none
 
 end SSBX.Foundation.Yi.Yi.Trigram
@@ -239,22 +239,22 @@ theorem all_count : Mian.all.length = 16 := by native_decide
 
 /-- 16-cell label: 本×征 = 派生单字. -/
 def label : Mian → String
-  | (.thing,   .jiFaint)    => "动"  -- 物之微
-  | (.thing,   .shiForce)   => "行"  -- 物之进
-  | (.thing,   .jiOccasion) => "化"  -- 物之转
-  | (.thing,   .shiTime)    => "流"  -- 物之久
-  | (.motion, .jiFaint)    => "萌"  -- 動之微
-  | (.motion, .shiForce)   => "长"  -- 動之进
-  | (.motion, .jiOccasion) => "发"  -- 動之转
-  | (.motion, .shiTime)    => "续"  -- 動之久
-  | (.interval, .jiFaint)    => "缘"  -- 間之微
-  | (.interval, .shiForce)   => "通"  -- 間之进
-  | (.interval, .jiOccasion) => "会"  -- 間之转
-  | (.interval, .shiTime)    => "系"  -- 間之久
-  | (.shi,  .jiFaint)    => "兆"  -- 事之微
-  | (.shi,  .shiForce)   => "趋"  -- 事之进
-  | (.shi,  .jiOccasion) => "变"  -- 事之转
-  | (.shi,  .shiTime)    => "史"  -- 事之久
+  | (.thing,   .trace)    => "动"  -- 物之微
+  | (.thing,   .momentum)   => "行"  -- 物之进
+  | (.thing,   .pivot) => "化"  -- 物之转
+  | (.thing,   .occasion)    => "流"  -- 物之久
+  | (.motion, .trace)    => "萌"  -- 動之微
+  | (.motion, .momentum)   => "长"  -- 動之进
+  | (.motion, .pivot) => "发"  -- 動之转
+  | (.motion, .occasion)    => "续"  -- 動之久
+  | (.interval, .trace)    => "缘"  -- 間之微
+  | (.interval, .momentum)   => "通"  -- 間之进
+  | (.interval, .pivot) => "会"  -- 間之转
+  | (.interval, .occasion)    => "系"  -- 間之久
+  | (.shi,  .trace)    => "兆"  -- 事之微
+  | (.shi,  .momentum)   => "趋"  -- 事之进
+  | (.shi,  .pivot) => "变"  -- 事之转
+  | (.shi,  .occasion)    => "史"  -- 事之久
 
 end Mian
 

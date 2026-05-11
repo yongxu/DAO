@@ -8,13 +8,13 @@ encoding. 4 atomic single-bit-flip masks span the group.
 ## Bool encoding
 
 ```
-Ben.thing   ↔ (F,F)    Zheng.jiFaint    ↔ (F,F)
-Ben.motion ↔ (T,F)    Zheng.shiForce   ↔ (T,F)
-Ben.interval ↔ (F,T)    Zheng.jiOccasion ↔ (F,T)
-Ben.shi  ↔ (T,T)    Zheng.shiTime    ↔ (T,T)
+Ben.thing   ↔ (F,F)    Zheng.trace    ↔ (F,F)
+Ben.motion ↔ (T,F)    Zheng.momentum   ↔ (T,F)
+Ben.interval ↔ (F,T)    Zheng.pivot ↔ (F,T)
+Ben.shi  ↔ (T,T)    Zheng.occasion    ↔ (T,T)
 ```
 
-XOR is per-component `xor`. Origin = `(thing, jiFaint)` = (F,F,F,F).
+XOR is per-component `xor`. Origin = `(thing, trace)` = (F,F,F,F).
 
 ## Surface syntax
 
@@ -56,17 +56,17 @@ def benFromBits : Bool × Bool → Ben
 
 /-- Zheng → (Bool, Bool). -/
 def zhengToBits : Zheng → Bool × Bool
-  | .jiFaint    => (false, false)
-  | .shiForce   => (true,  false)
-  | .jiOccasion => (false, true)
-  | .shiTime    => (true,  true)
+  | .trace    => (false, false)
+  | .momentum   => (true,  false)
+  | .pivot => (false, true)
+  | .occasion    => (true,  true)
 
 /-- (Bool, Bool) → Zheng. -/
 def zhengFromBits : Bool × Bool → Zheng
-  | (false, false) => .jiFaint
-  | (true,  false) => .shiForce
-  | (false, true)  => .jiOccasion
-  | (true,  true)  => .shiTime
+  | (false, false) => .trace
+  | (true,  false) => .momentum
+  | (false, true)  => .pivot
+  | (true,  true)  => .occasion
 
 /-- XOR on Ben (componentwise). -/
 def benXor (a b : Ben) : Ben :=
@@ -85,7 +85,7 @@ def apply : Cell → Cell → Cell
   | (b1, z1), (b2, z2) => (benXor b1 b2, zhengXor z1 z2)
 
 /-- The (Z/2)⁴ origin. -/
-def origin : Cell := (.thing, .jiFaint)
+def origin : Cell := (.thing, .trace)
 
 /-! ## § 3 Cayley action laws -/
 
@@ -121,10 +121,10 @@ theorem print_parse_round_trip (c : Cell) : parseCell (printCell c) = .ok c := b
 
 /-- The 4 atomic single-bit-flip masks (yao bases of (Z/2)⁴). -/
 def atomicOps : List Cell :=
-  [ (.motion, .jiFaint)    -- flip Ben bit 0
-  , (.interval, .jiFaint)    -- flip Ben bit 1
-  , (.thing,   .shiForce)   -- flip Zheng bit 0
-  , (.thing,   .jiOccasion) -- flip Zheng bit 1
+  [ (.motion, .trace)    -- flip Ben bit 0
+  , (.interval, .trace)    -- flip Ben bit 1
+  , (.thing,   .momentum)   -- flip Zheng bit 0
+  , (.thing,   .pivot) -- flip Zheng bit 1
   ]
 
 instance : LangLayer Cell where
@@ -146,38 +146,38 @@ private def mianSexp (b : Ben) (z : Zheng) : Sexp :=
 /-- Atomic flip: 物几 → 动几 (toggle Ben bit 0). -/
 def flipBen0 : Rule :=
   Rule.named "flip-ben0"
-    (mianSexp .thing   .jiFaint)
-    (mianSexp .motion .jiFaint)
+    (mianSexp .thing   .trace)
+    (mianSexp .motion .trace)
 
 /-- Atomic flip: 物几 → 间几 (toggle Ben bit 1). -/
 def flipBen1 : Rule :=
   Rule.named "flip-ben1"
-    (mianSexp .thing   .jiFaint)
-    (mianSexp .interval .jiFaint)
+    (mianSexp .thing   .trace)
+    (mianSexp .interval .trace)
 
 /-- Atomic flip: 物几 → 物势 (toggle Zheng bit 0). -/
 def flipZheng0 : Rule :=
   Rule.named "flip-zheng0"
-    (mianSexp .thing .jiFaint)
-    (mianSexp .thing .shiForce)
+    (mianSexp .thing .trace)
+    (mianSexp .thing .momentum)
 
 /-- Atomic flip: 物几 → 物机 (toggle Zheng bit 1). -/
 def flipZheng1 : Rule :=
   Rule.named "flip-zheng1"
-    (mianSexp .thing .jiFaint)
-    (mianSexp .thing .jiOccasion)
+    (mianSexp .thing .trace)
+    (mianSexp .thing .pivot)
 
 /-- Compound example: 动几 → 动势 (advance Zheng bit 0 within Ben.motion row). -/
 def benDongAdvance : Rule :=
   Rule.named "ben-motion-advance"
-    (mianSexp .motion .jiFaint)
-    (mianSexp .motion .shiForce)
+    (mianSexp .motion .trace)
+    (mianSexp .motion .momentum)
 
 /-- Compound example: 动势 → 事势 (climb Ben column from motion to shi). -/
 def zhengShiForceClimb : Rule :=
   Rule.named "zheng-shiforce-climb"
-    (mianSexp .motion .shiForce)
-    (mianSexp .shi  .shiForce)
+    (mianSexp .motion .momentum)
+    (mianSexp .shi  .momentum)
 
 /-- Default rule list at L4: 4 atomic flips + 2 compound steps. -/
 def defaultRules : List Rule :=
@@ -187,19 +187,19 @@ def defaultRules : List Rule :=
 /-- Single step from origin reaches (动, 几). -/
 example :
     (Eval.runRules defaultRules (printCell origin) 1
-      == printCell (.motion, .jiFaint)) = true := by
+      == printCell (.motion, .trace)) = true := by
   native_decide
 
 /-- Two steps: origin → (动, 几) → (动, 势). -/
 example :
     (Eval.runRules defaultRules (printCell origin) 2
-      == printCell (.motion, .shiForce)) = true := by
+      == printCell (.motion, .momentum)) = true := by
   native_decide
 
 /-- Three steps reach (事, 势). -/
 example :
     (Eval.runRules defaultRules (printCell origin) 3
-      == printCell (.shi, .shiForce)) = true := by
+      == printCell (.shi, .momentum)) = true := by
   native_decide
 
 /-- runCell convenience produces an OK result. -/
@@ -207,7 +207,7 @@ example : (runCell (α := Cell) defaultRules origin 3).toOption.isSome = true :=
   native_decide
 
 /-- Round-trip on a non-trivial cell (间, 时). -/
-example : parseCell (printCell (.interval, .shiTime)) = .ok (.interval, .shiTime) := rfl
+example : parseCell (printCell (.interval, .occasion)) = .ok (.interval, .occasion) := rfl
 
 /-! ## § 7 L4 summary bundle -/
 

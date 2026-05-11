@@ -141,24 +141,24 @@ theorem benFromYao_yao2 (y1 y2 : Yao) : benToYao2 (benFromYao y1 y2) = y2 := by
   cases y1 <;> cases y2 <;> rfl
 
 /-- Yao² → Zheng canonical bijection.
-    (yang, yang) → jiFaint    / (yang, yin) → shiForce
-    (yin,  yang) → jiOccasion / (yin,  yin) → shiTime -/
+    (yang, yang) → trace    / (yang, yin) → momentum
+    (yin,  yang) → pivot / (yin,  yin) → occasion -/
 def zhengFromYao (y3 y4 : Yao) : Zheng :=
   match y3, y4 with
-  | .yang, .yang => .jiFaint
-  | .yang, .yin  => .shiForce
-  | .yin,  .yang => .jiOccasion
-  | .yin,  .yin  => .shiTime
+  | .yang, .yang => .trace
+  | .yang, .yin  => .momentum
+  | .yin,  .yang => .pivot
+  | .yin,  .yin  => .occasion
 
 /-- Zheng → Yao² inverse: extract the first bit (the trigram's y3). -/
 def zhengToYao1 : Zheng → Yao
-  | .jiFaint | .shiForce => .yang
-  | .jiOccasion | .shiTime => .yin
+  | .trace | .momentum => .yang
+  | .pivot | .occasion => .yin
 
 /-- Zheng → Yao² inverse: extract the second bit (the lifted "extra" bit). -/
 def zhengToYao2 : Zheng → Yao
-  | .jiFaint | .jiOccasion => .yang
-  | .shiForce | .shiTime => .yin
+  | .trace | .pivot => .yang
+  | .momentum | .occasion => .yin
 
 theorem zhengFromYao_yao1 (y3 y4 : Yao) :
     zhengToYao1 (zhengFromYao y3 y4) = y3 := by
