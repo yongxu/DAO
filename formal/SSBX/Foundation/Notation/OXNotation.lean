@@ -134,6 +134,11 @@ def xorBits (a b : OXBits8) : OXBits8 :=
   , b6 := Bool.xor a.b6 b.b6
   , b7 := Bool.xor a.b7 b.b7 }
 
+/-- All-`o` coordinate vector, the OX identity. -/
+def zeroBits : OXBits8 :=
+  { b0 := false, b1 := false, b2 := false, b3 := false
+  , b4 := false, b5 := false, b6 := false, b7 := false }
+
 /-- All-eight-bit mask, the coordinate form of `OX["xxxxxxxx"]`. -/
 def fullNegBits : OXBits8 :=
   { b0 := true, b1 := true, b2 := true, b3 := true
@@ -142,6 +147,40 @@ def fullNegBits : OXBits8 :=
 /-- Full OX bit-complement, computed as coordinate-wise XOR with the all-`x`
     mask. -/
 def bitComplement (b : OXBits8) : OXBits8 := xorBits b fullNegBits
+
+/-- OX coordinate XOR has the all-`o` vector as identity. -/
+theorem xorBits_zero_left (b : OXBits8) : xorBits zeroBits b = b := by
+  rcases b with ⟨b0, b1, b2, b3, b4, b5, b6, b7⟩
+  simp [xorBits, zeroBits]
+
+theorem xorBits_zero_right (b : OXBits8) : xorBits b zeroBits = b := by
+  rcases b with ⟨b0, b1, b2, b3, b4, b5, b6, b7⟩
+  simp [xorBits, zeroBits]
+
+/-- OX coordinate XOR is commutative. -/
+theorem xorBits_comm (a b : OXBits8) : xorBits a b = xorBits b a := by
+  rcases a with ⟨a0, a1, a2, a3, a4, a5, a6, a7⟩
+  rcases b with ⟨b0, b1, b2, b3, b4, b5, b6, b7⟩
+  simp [xorBits, Bool.xor_comm]
+
+/-- OX coordinate XOR is associative. -/
+theorem xorBits_assoc (a b c : OXBits8) :
+    xorBits (xorBits a b) c = xorBits a (xorBits b c) := by
+  rcases a with ⟨a0, a1, a2, a3, a4, a5, a6, a7⟩
+  rcases b with ⟨b0, b1, b2, b3, b4, b5, b6, b7⟩
+  rcases c with ⟨c0, c1, c2, c3, c4, c5, c6, c7⟩
+  simp [xorBits]
+
+/-- Every OX coordinate vector is self-inverse under coordinate XOR. -/
+theorem xorBits_self (b : OXBits8) : xorBits b b = zeroBits := by
+  rcases b with ⟨b0, b1, b2, b3, b4, b5, b6, b7⟩
+  simp [xorBits, zeroBits]
+
+/-- Full OX bit-complement is involutive. -/
+theorem bitComplement_involutive (b : OXBits8) :
+    bitComplement (bitComplement b) = b := by
+  unfold bitComplement
+  rw [xorBits_assoc, xorBits_self, xorBits_zero_right]
 
 /-- Boolean XOR translated into the Yao coordinate agrees with R₁ XOR. -/
 theorem yaoOfBool_xor (a b : Bool) :
@@ -180,6 +219,11 @@ theorem cellOfBits_bitComplement (b : OXBits8) :
 theorem ox_coordinate_complete_summary :
     (∀ c : R8, cellOfBits (bitsOfCell c) = c)
     ∧ (∀ b : OXBits8, bitsOfCell (cellOfBits b) = b)
+    ∧ (∀ b : OXBits8, xorBits zeroBits b = b)
+    ∧ (∀ a b c : OXBits8,
+        xorBits (xorBits a b) c = xorBits a (xorBits b c))
+    ∧ (∀ a b : OXBits8, xorBits a b = xorBits b a)
+    ∧ (∀ b : OXBits8, xorBits b b = zeroBits)
     ∧ (∀ a b : OXBits8,
         cellOfBits (xorBits a b) = R8.xor (cellOfBits a) (cellOfBits b))
     ∧ (∀ a b : R8,
@@ -187,10 +231,13 @@ theorem ox_coordinate_complete_summary :
     ∧ cellOfBits fullNegBits = (Hexagram.earth, Shi.jin)
     ∧ (∀ b : OXBits8,
         cellOfBits (bitComplement b) =
-          R8.xor (cellOfBits b) (Hexagram.earth, Shi.jin)) :=
+          R8.xor (cellOfBits b) (Hexagram.earth, Shi.jin))
+    ∧ (∀ b : OXBits8, bitComplement (bitComplement b) = b) :=
   ⟨cellOfBits_bitsOfCell, bitsOfCell_cellOfBits,
+   xorBits_zero_left, xorBits_assoc, xorBits_comm, xorBits_self,
    cellOfBits_xorBits, bitsOfCell_xor,
-   cellOfBits_fullNegBits, cellOfBits_bitComplement⟩
+   cellOfBits_fullNegBits, cellOfBits_bitComplement,
+   bitComplement_involutive⟩
 
 /-! ## § 2 Macro `OX["..."]` — parse-time validation + R8 term -/
 
