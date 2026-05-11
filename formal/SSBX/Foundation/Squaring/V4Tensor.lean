@@ -293,6 +293,33 @@ theorem xorOperatorComp_coe (F G : XorOperator) :
   simpa [xorOperatorComp, evalXorOperatorAtOrigin, asXorOperator] using
     cell_operator_comp a b
 
+/-- Internal represented-operator composition is associative. -/
+theorem xorOperatorComp_assoc (F G H : XorOperator) :
+    xorOperatorComp (xorOperatorComp F G) H =
+      xorOperatorComp F (xorOperatorComp G H) := by
+  simp [xorOperatorComp, R8.xor_assoc]
+
+/-- Internal represented-operator composition is commutative, because the
+    representing cells live in `(Z/2)^8`. -/
+theorem xorOperatorComp_comm (F G : XorOperator) :
+    xorOperatorComp F G = xorOperatorComp G F := by
+  simp [xorOperatorComp, R8.xor_comm]
+
+/-- The Way/origin represented operator is the identity for internal
+    represented-operator composition. -/
+theorem xorOperatorComp_origin_left (F : XorOperator) :
+    xorOperatorComp (asXorOperator R8.origin) F = F := by
+  simp [xorOperatorComp, R8.origin_xor]
+
+theorem xorOperatorComp_origin_right (F : XorOperator) :
+    xorOperatorComp F (asXorOperator R8.origin) = F := by
+  simp [xorOperatorComp, R8.xor_origin]
+
+/-- Every represented XOR operator is its own inverse internally. -/
+theorem xorOperatorComp_self (F : XorOperator) :
+    xorOperatorComp F F = asXorOperator R8.origin := by
+  simp [xorOperatorComp, R8.xor_self]
+
 /-- The equivalence `R8 ≃ XorOperator` preserves the same computation:
     composing represented operators is represented by XOR of their cells. -/
 theorem r8_equiv_xor_operator_map_xor (a b : R8) :
@@ -476,6 +503,12 @@ noncomputable def r8_equiv_mask_character_image : R8 ≃ MaskCharacterImage wher
 theorem r8_operator_character_duality_summary :
     Nonempty (R8 ≃ XorOperator)
     ∧ (∀ F G : XorOperator, (xorOperatorComp F G).1 = F.1 ∘ G.1)
+    ∧ (∀ F G H : XorOperator,
+        xorOperatorComp (xorOperatorComp F G) H =
+          xorOperatorComp F (xorOperatorComp G H))
+    ∧ (∀ F G : XorOperator, xorOperatorComp F G = xorOperatorComp G F)
+    ∧ (∀ F : XorOperator, xorOperatorComp (asXorOperator R8.origin) F = F)
+    ∧ (∀ F : XorOperator, xorOperatorComp F F = asXorOperator R8.origin)
     ∧ (∀ a b : R8,
         cellOperator (R8.xor a b) = cellOperator a ∘ cellOperator b)
     ∧ (∀ a b : R8,
@@ -488,6 +521,10 @@ theorem r8_operator_character_duality_summary :
           Bool.xor (maskCharacter mask a) (maskCharacter mask b)) :=
   ⟨⟨r8_equiv_xor_operator⟩,
    xorOperatorComp_coe,
+   xorOperatorComp_assoc,
+   xorOperatorComp_comm,
+   xorOperatorComp_origin_left,
+   xorOperatorComp_self,
    cell_operator_comp,
    r8_equiv_xor_operator_map_xor,
    cell_operator_self_inverse,
