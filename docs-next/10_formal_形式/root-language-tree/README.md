@@ -78,10 +78,13 @@
 ## Lean 验证入口
 
 ```bash
+python3 scripts/check_root_language_tree.py
 lake build SSBX.Foundation.Hierarchy.RootLanguageTree
 lake build SSBX.Foundation.Wen.RootRuleKernel
 lake build SSBX.Foundation.Wen.RootOperator
 ```
+
+`check_root_language_tree.py` 是本审阅包的轻量机器核对入口：它检查 `all-1023.md` 的 1023 行、R0-R8 各层计数、总表与分层表的一致性，以及 `r8-64/` 四个 64 行工作表是否机械对应 `layers/R8.md`。
 
 当前 summary theorem：
 

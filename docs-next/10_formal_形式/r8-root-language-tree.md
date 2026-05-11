@@ -674,6 +674,7 @@ proof of behavior from the rule
 | 阶段 | 要完成的东西 | 结果 |
 |---|---|---|
 | A | RootLanguageTree 类型与计数证明 | done: `RootLanguageTree.lean` 证明 511 / 1021 / 1022 / 1023 |
+| A2 | 1023 审名包机器核对 | done: `scripts/check_root_language_tree.py` 核对总表、R0-R8 分层与 R8 4×64 工作表 |
 | B | RootRule kernel | done: `RootRuleKernel.lean` 给出 quote/apply/compose/... 的 R8-visible 程序核 |
 | C | root-native operator boundary | done: `RootOperator.lean` 给出 mask / program / projection / alias 四类来源 |
 | C2 | root-native transform generator | pending: 从 root mask / root program 生成行为，不以历史 catalogue 数字为目标 |

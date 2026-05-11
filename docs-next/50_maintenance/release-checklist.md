@@ -7,6 +7,7 @@
 - `lake build SSBX` 通过。
 - `lake build wenyan-surface` 通过。
 - `scripts/check_wenyan_surface_cli.py` 通过。
+- `python3 scripts/check_root_language_tree.py` 通过。
 - `python3 scripts/docs_next.py build` 通过。
 - `../_generated/` 已刷新。
 - 没有意外改动生成文件以外的区域。
