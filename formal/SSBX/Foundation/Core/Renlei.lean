@@ -205,7 +205,7 @@ theorem aligned_realizes_truedao :
 
 /-- **合立**：存在一 model + path + Gamma 使 TrueDao 实成。
     具体见证：communityModel + communityPath + CommunityState.aligned. -/
-theorem «人类命运共同体_合立» :
+theorem community_holds :
     ∃ (M : Model) (D : DaoCriteria M) (p : D.Path) (g : M.Gamma),
       TrueDao M D p g :=
   ⟨communityModel, communityDao, communityPath,
@@ -213,14 +213,14 @@ theorem «人类命运共同体_合立» :
 
 /-- **有反**：存在 Gamma 使 TrueDao 不立（夺共续 之相）。
     具体见证：CommunityState.seized. -/
-theorem «人类命运共同体_有反» :
+theorem community_has_counter :
     ∃ (M : Model) (D : DaoCriteria M) (p : D.Path) (g : M.Gamma),
       ¬ TrueDao M D p g :=
   ⟨communityModel, communityDao, communityPath,
    CommunityState.seized, seized_fails_truedao⟩
 
 /-- **三模式失** （isolated / severed / seized 皆失）。 -/
-theorem «人类命运共同体_三模式失» :
+theorem community_three_modes_fail :
     (¬ TrueDao communityModel communityDao communityPath CommunityState.isolated) ∧
     (¬ TrueDao communityModel communityDao communityPath CommunityState.severed) ∧
     (¬ TrueDao communityModel communityDao communityPath CommunityState.seized) :=
@@ -230,7 +230,7 @@ theorem «人类命运共同体_三模式失» :
     （aligned 是 64 = 2^3 community states 中实成 TrueDao 之唯一 inhabitant，
     其余 7 状态皆有至少一轴 false，故失。这里只证 aligned 之实成，
     与 isolated / severed / seized 三个 minimal 失败模式作为 cross-cut 见证。） -/
-theorem «人类命运共同体_aligned_iff» (g : CommunityState) :
+theorem community_aligned_iff (g : CommunityState) :
     TrueDao communityModel communityDao communityPath g ↔ g = CommunityState.aligned := by
   constructor
   · intro h
@@ -256,7 +256,7 @@ theorem «人类命运共同体_aligned_iff» (g : CommunityState) :
     2. 有反（存在 g 使 TrueDao 不立）
     3. 当且仅当（TrueDao ↔ 三轴俱足）
     4. registry 一致（八字根皆 registered，deps 由 rfl 验） -/
-theorem «人类命运共同体_之证» :
+theorem community_proof :
     -- (1) 合立
     (∃ g : CommunityState,
         TrueDao communityModel communityDao communityPath g) ∧
@@ -270,7 +270,7 @@ theorem «人类命运共同体_之证» :
     ((entryOf (R .«道»)).deps = [G .«正续», R .«共开», G .«夺共续», R .«坏»]) :=
   ⟨⟨CommunityState.aligned, aligned_realizes_truedao⟩,
    ⟨CommunityState.seized, seized_fails_truedao⟩,
-   «人类命运共同体_aligned_iff»,
+   community_aligned_iff,
    renleiCommonDestinyDef.dao_deps⟩
 
 end SSBX.Foundation.Core.Renlei
