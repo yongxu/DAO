@@ -846,6 +846,61 @@ theorem metaInterpProg_dispatch_halt_executes_halt
   rw [hrun7]
   simp [hpc, hcur, hhist, hprog]
 
+/-- Halt-opcode semantic boundary.  Dispatch plus the concrete halt arm makes
+    the META VM halted while preserving the old encoded history.  The
+    simulated `.halt` step, by contrast, flips the encoded halted-flag cell
+    inside `encMetaHistory`.  This is why the halt arm is still a route/VM
+    witness rather than a `SemanticLoopObligations` witness. -/
+theorem metaInterpProg_halt_opcode_current_shape_vs_step
+    (regHex : Hexagram) (sim : YiState)
+    (h_halt_instr : sim.prog[sim.pc]? = some .halt)
+    (h_alive : sim.halted = false) :
+    let μ : YiState :=
+      { cur := Dispatch.haltTag
+        history := encMetaHistory regHex sim
+        pc := dispatchOffset
+        prog := metaInterpProg
+        halted := false }
+    let μ' := μ.runFuel 7
+    μ'.pc = haltOffset
+      ∧ μ'.cur = Dispatch.haltTag
+      ∧ μ'.history = encMetaHistory regHex sim
+      ∧ μ'.halted = true
+      ∧ encMetaHistory regHex sim =
+        encCounter regHex sim.pc ++
+        [encHaltedFlag regHex false] ++
+        encCounter regHex sim.history.length ++
+        sim.history ++
+        ProgEnc.encProg sim.prog
+      ∧ encMetaHistory regHex sim.step =
+        encCounter regHex sim.pc ++
+        [encHaltedFlag regHex true] ++
+        encCounter regHex sim.history.length ++
+        sim.history ++
+        ProgEnc.encProg sim.prog := by
+  have hroute := metaInterpProg_dispatch_halt_executes_halt
+    (encMetaHistory regHex sim)
+  have h_pre :
+      encMetaHistory regHex sim =
+        encCounter regHex sim.pc ++
+        [encHaltedFlag regHex false] ++
+        encCounter regHex sim.history.length ++
+        sim.history ++
+        ProgEnc.encProg sim.prog := by
+    unfold encMetaHistory
+    rw [h_alive]
+  have h_step :
+      encMetaHistory regHex sim.step =
+        encCounter regHex sim.pc ++
+        [encHaltedFlag regHex true] ++
+        encCounter regHex sim.history.length ++
+        sim.history ++
+        ProgEnc.encProg sim.prog :=
+    SSBX.Foundation.Wen.MetaInterp.ExecuteBlock.encMetaHistory_halt_step
+      regHex sim h_halt_instr h_alive
+  exact ⟨hroute.1, hroute.2.1, hroute.2.2.1, hroute.2.2.2.2,
+    h_pre, h_step⟩
+
 /-! ## § 6  Tier C — single-opcode end-to-end smoke
 
 Stretch goal.  Constructing a fully-encoded META start state for a
