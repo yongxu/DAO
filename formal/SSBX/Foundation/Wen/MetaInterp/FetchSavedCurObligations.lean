@@ -115,6 +115,31 @@ theorem restoredSavedCurFetch_nop_steady_fields
   refine ⟨fuel, ?_⟩
   exact ⟨h_post.history, h_post.halted, h_post.pc⟩
 
+/-- First-iteration field form: prepend the restored outer-loop jump before the
+steady fetch/dispatch/execute path. -/
+theorem restoredSavedCurFetch_nop_firstIteration_fields
+    (O : RestoredSavedCurFetchObligations)
+    (regHex : Hexagram) (sim : YiState)
+    (h_alive : sim.halted = false)
+    (h_nop : sim.prog[sim.pc]? = some .nop)
+    (h_curAligned : sim.cur = regDataCell regHex) :
+    ∃ fuel,
+      let μ' :=
+        (metaStateOf regHex sim restoredMetaInterpProg outerLoopOffset).runFuel fuel
+      μ'.history = encMetaHistory regHex sim.step
+        ∧ μ'.halted = false
+        ∧ μ'.pc = fetchOffset := by
+  obtain ⟨fetchFuel, h_fields⟩ :=
+    restoredSavedCurFetch_nop_steady_fields
+      O regHex sim h_alive h_nop h_curAligned
+  refine ⟨1 + fetchFuel, ?_⟩
+  rw [show 1 + fetchFuel = 1 + fetchFuel by rfl,
+    runFuel_add (metaStateOf regHex sim restoredMetaInterpProg outerLoopOffset) 1
+      fetchFuel]
+  simp [metaStateOf,
+    restoredMetaInterpProg_outerLoop_step sim.cur (encMetaHistory regHex sim)]
+  exact h_fields
+
 /-! ## Public summary -/
 
 theorem fetch_saved_cur_obligation_frontier_summary :
@@ -139,10 +164,22 @@ theorem fetch_saved_cur_obligation_frontier_summary :
                 fuel
             μ'.history = encMetaHistory regHex sim.step
               ∧ μ'.halted = false
+              ∧ μ'.pc = fetchOffset)
+    ∧ (RestoredSavedCurFetchObligations →
+      ∀ regHex sim,
+        sim.halted = false →
+        sim.prog[sim.pc]? = some .nop →
+        sim.cur = regDataCell regHex →
+          ∃ fuel,
+            let μ' :=
+              (metaStateOf regHex sim restoredMetaInterpProg outerLoopOffset).runFuel fuel
+            μ'.history = encMetaHistory regHex sim.step
+              ∧ μ'.halted = false
               ∧ μ'.pc = fetchOffset) := by
   exact
     ⟨ restoredSavedCurFetch_nop_to_BlockPost_at_fuel
     , restoredSavedCurFetch_nop_steady_fields
+    , restoredSavedCurFetch_nop_firstIteration_fields
     ⟩
 
 end SSBX.Foundation.Wen.MetaInterp.FetchSavedCurObligations

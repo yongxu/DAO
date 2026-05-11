@@ -195,6 +195,24 @@ theorem restoredMetaInterpProg_length :
     restoredBlock_pop_length,
     restoredBlock_halt_length]
 
+theorem restoredMetaInterpProg_outerLoop_at_offset :
+    restoredMetaInterpProg[outerLoopOffset]? =
+      some (YiInstr.jump fetchOffset) := rfl
+
+theorem restoredMetaInterpProg_outerLoop_step
+    (cur : R8) (history : List R8) :
+    ({ cur := cur
+      , history := history
+      , pc := outerLoopOffset
+      , prog := restoredMetaInterpProg
+      , halted := false } : YiState).runFuel 1 =
+      { cur := cur
+      , history := history
+      , pc := fetchOffset
+      , prog := restoredMetaInterpProg
+      , halted := false } := by
+  rfl
+
 theorem restoredMetaInterpProg_nop_restore_at_offset :
     restoredMetaInterpProg[block_nop_offset]? = some YiInstr.pop := rfl
 
@@ -343,6 +361,8 @@ theorem restoredMetaInterpProg_execute_nop_simulates_aligned
 
 theorem assembly_restore_plan_summary :
     restoredMetaInterpProg.length = 100
+    ∧ restoredMetaInterpProg[outerLoopOffset]? =
+        some (YiInstr.jump fetchOffset)
     ∧ restoredMetaInterpProg[block_nop_offset]? = some YiInstr.pop
     ∧ restoredMetaInterpProg[block_setShi_offset]? = some YiInstr.pop
     ∧ restoredMetaInterpProg[block_flipYao_offset]? = some YiInstr.pop
@@ -377,6 +397,7 @@ theorem assembly_restore_plan_summary :
             (μ.runFuel 2) false) := by
   exact
     ⟨ restoredMetaInterpProg_length
+    , restoredMetaInterpProg_outerLoop_at_offset
     , restoredMetaInterpProg_nop_restore_at_offset
     , restoredMetaInterpProg_setShi_restore_at_offset
     , restoredMetaInterpProg_flipYao_restore_at_offset
