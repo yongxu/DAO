@@ -5,7 +5,7 @@
 > interpreter grow from the R0..R8 formal theory instead of living beside it.
 > Lean anchors: `RootLanguageTree.lean`, `RootRuleKernel.lean`,
 > `RootOperator.lean`, `RootWord.lean`, `RootRuleInstructionBridge.lean`,
-> `BaguaTuring.lean`, `MetaInterp/Universal.lean`.
+> `RootWordRegistry.lean`, `BaguaTuring.lean`, `MetaInterp/Universal.lean`.
 
 ## 0. Decision
 
@@ -137,11 +137,15 @@ root code
 role
 CoreForm meaning
 optional YiInstr lowering
+English reading
+review status
 claim anchor
 ```
 
 The registry should be append-friendly: adding words extends the system without
-changing the interpreter core.
+changing the interpreter core. The seed registry should contain only the
+undivided `Way` anchor; broad 1023-row coverage belongs in a generated registry,
+not in a hand-maintained Lean file.
 
 ### Phase 4: self-interpreter alignment
 
