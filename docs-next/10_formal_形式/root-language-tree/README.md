@@ -54,7 +54,7 @@
 1. 有 canonical 字时先用 canonical，例如 R3 八卦、R6 六十四卦、R8 Shi V4。
 2. 没有稳定字时不强造，文言列保留 `ox`。
 3. operator 不再手写万行 transform；每个 operator row 都是 `lambda s, mask xor s` 的 interface reading。
-4. 371 / 11008 / 94976 属于解释层、展开层、coverage grid，不进入本组 root count。
+4. 遗留 operator catalogue 属于解释、别名、corpus 或审稿材料，不进入本组 root count。
 5. 这组文件是审字草案，不是最终定本；最终定字后再回写到 `LayerCharacterMap` / Lean。
 
 ## 配套说明

@@ -1,10 +1,10 @@
 # R8 Root Language Tree — 生成核、双重读法与语言边界
 
 > 状态：draft v0.1 (2026-05-11)
-> 角色：本文给出“完整语言树 root”的结构版 claim：exact cell transform 不应靠万行枚举表作为本体，而应由 R₀..R₈ 根树与生成规则给出；371 / 11008 / 94976 等表是解释层、索引层或展开层，不是最小本体。
+> 角色：本文给出“完整语言树 root”的结构版 claim：cell transform 不应靠历史 catalogue 或枚举表作为本体，而应由 R₀..R₈ 根树与生成规则给出；遗留算子目录只能作为解释、索引或审稿材料，不能规定 root 结构。
 > 前置：[`yi-RO-hierarchy.md`](yi-RO-hierarchy.md) · [`cell256-algebra.md`](cell256-algebra.md) · [`../00_start/final-claim-roadmap.md`](../00_start/final-claim-roadmap.md) · [`../../义理/文-R8投影规约.md`](../../义理/文-R8投影规约.md)
 > 审阅包：[`root-language-tree/README.md`](root-language-tree/README.md) — R₀..R₈ 共 1022 个 interface entries 的文言 / 中文 / English / formal logic 候选表。
-> Lean 锚点：[`RootLanguageTree.lean`](../../formal/SSBX/Foundation/Hierarchy/RootLanguageTree.lean) — `root_language_tree_summary` 证明 511 / 1021 / 1022 计数；[`RootRuleKernel.lean`](../../formal/SSBX/Foundation/Wen/RootRuleKernel.lean) — `root_rule_kernel_summary` 证明 root rules 的 R8-visible 程序核；[`RootRuleExamples.lean`](../../formal/SSBX/Foundation/Wen/RootRuleExamples.lean) — `root_rule_examples_summary` 固定例句目标行为；[`RootRuleDemoInterpreter.lean`](../../formal/SSBX/Foundation/Wen/RootRuleDemoInterpreter.lean) — `root_rule_demo_interpreter_summary` 给出最小 demo interpreter；[`R8ProjectionKernel.lean`](../../formal/SSBX/Foundation/Wen/R8ProjectionKernel.lean) — `r8_projection_kernel_summary` 给出通用 projection kernel；[`ExactCellTransformGenerator.lean`](../../formal/SSBX/Text/ExactCellTransformGenerator.lean) — `exact_cell_transform_generator_summary` 证明 exact transforms 由 43×256 生成；[`OperatorCatalogueLayering.lean`](../../formal/SSBX/Text/OperatorCatalogueLayering.lean) — `operator_catalogue_layering_summary` 证明 371 catalogue 的分层账本；[`R8AxisIndependence.lean`](../../formal/SSBX/Foundation/Wen/R8AxisIndependence.lean) — `r8_axis_independence_summary` 证明有限 XOR span 的 axis 恰当性接口。
+> Lean 锚点：[`RootLanguageTree.lean`](../../formal/SSBX/Foundation/Hierarchy/RootLanguageTree.lean) — `root_language_tree_summary` 证明 511 / 1021 / 1022 计数；[`RootRuleKernel.lean`](../../formal/SSBX/Foundation/Wen/RootRuleKernel.lean) — `root_rule_kernel_summary` 证明 root rules 的 R8-visible 程序核；[`RootRuleExamples.lean`](../../formal/SSBX/Foundation/Wen/RootRuleExamples.lean) — `root_rule_examples_summary` 固定例句目标行为；[`RootRuleDemoInterpreter.lean`](../../formal/SSBX/Foundation/Wen/RootRuleDemoInterpreter.lean) — `root_rule_demo_interpreter_summary` 给出最小 demo interpreter；[`R8ProjectionKernel.lean`](../../formal/SSBX/Foundation/Wen/R8ProjectionKernel.lean) — `r8_projection_kernel_summary` 给出通用 projection kernel；[`R8AxisIndependence.lean`](../../formal/SSBX/Foundation/Wen/R8AxisIndependence.lean) — `r8_axis_independence_summary` 证明有限 XOR span 的 axis 恰当性接口。
 
 ---
 
@@ -93,9 +93,9 @@ RootLanguageTree
 
 ---
 
-## 2. 为什么 exact cell transform 不该列成一万多行
+## 2. 为什么 cell transform 不该列成目录本体
 
-`43 × 256 = 11008` 这类 exact transform row 有工程价值，但不是本体。
+历史 catalogue 里的 transform row 有工程参考价值，但不能反过来规定本体。
 
 它的地位应当是：
 
@@ -139,23 +139,9 @@ returnDao(path) = fold_xor(path) = origin
 |---|---|
 | generated layer | 展开给机器检查、索引、查询 |
 | interpretation layer | 接到具体 Wen / 领域语义 |
-| coverage layer | 保证 catalogue 没漏项 |
-| audit layer | 记录哪些是 exact，哪些只是 carrier |
+| audit layer | 记录哪些定义已由 root rule 给出，哪些仍是别名、注释或待审材料 |
 
 因此，一万多行不应手写维护；它应由根规则生成、由测试验证、由文档解释。
-
-Lean skeleton 已落地于：
-
-```lean
-SSBX.Text.ExactCellTransformGenerator.exact_cell_transform_generator_summary
-```
-
-它证明：
-
-```text
-43 exact-transform operator ids × 256 R8 cells = 11008 generated exact rows
-11008 exact rows + 83968 signature-carrier rows = 94976 coverage rows
-```
 
 ---
 
@@ -402,47 +388,35 @@ newAxis ∉ span(priorAxes)
 
 ---
 
-## 5. 371、11008、94976 的正确地位
+## 5. 遗留 catalogue 的边界
 
-这些数不应被混入根本体。
+遗留 operator catalogue 不是 R8 之外的第二个本体空间，也不是 root tree 的 completeness target。
 
-| 数 | 来源 | 正确地位 |
-|---|---|---|
-| `256` | `|R8|` | Cell256 根核 |
-| `371` | Wen operator catalogue | 文义/语法算子索引 |
-| `11008` | `43 × 256` | exact cell transform 展开行 |
-| `94976` | `371 × 256` | operator-cell coverage grid |
-| `1021` | `R0 + 2×(R1..R8)` | 推荐本体语言根树 |
-| `1022` | `2×(R0..R8)` | 读法标记接口表 |
+它可以保留的用途是：
+
+| 用途 | 正确地位 |
+|---|---|
+| 文义索引 | 帮助把旧文档、古文候选、解释习惯接回 root rule |
+| 别名表 | 把多个名字映射到同一 root mask、program 或 projection |
+| 审稿材料 | 暂存尚未归入 root rule 的候选算子、词义和例句 |
+| 历史档案 | 记录旧系统如何工作，但不驱动 v3 root ontology |
 
 核心判断：
 
 ```text
-256 是 R8 root carrier。
-371 是解释层 catalogue。
-11008 是部分 exact transform 的生成展开。
-94976 是覆盖网格。
-1021/1022 是跨 R0..R8 的 root language tree 计数。
+R8 carrier 是 Cell256。
+R0..R8 root tree 的计数来自 strict binary hierarchy。
+operator catalogue 的大小不是结构不变量。
+coverage grid 的大小不是语义完备性。
 ```
 
-因此，371 不是 R8 之外的第二个本体空间；它是 Wen/operator naming layer。
-11008 不是应该手写的事实集合；它是规则展开。
-94976 不是完整语义；它是 coverage grid。
-
-Lean skeleton 已落地于：
-
-```lean
-SSBX.Text.OperatorCatalogueLayering.operator_catalogue_layering_summary
-```
-
-它证明：
+因此，当前项目不应再用某个历史目录大小作为 roadmap 阶段、Lean theorem 或 completeness slogan。若其中某些条目有用，应逐条迁移成：
 
 ```text
-371 catalogue ids = 43 exact-transform ids + 328 non-exact catalogue ids
-43 × 256 = 11008 exact rows
-328 × 256 = 83968 signature/domain-pending rows
-371 × 256 = 94976 coverage rows
+root mask / root program / interpretation alias / evidence note
 ```
+
+迁移后由 root-native 规则证明其行为，而不是由目录行数证明其地位。
 
 ---
 
@@ -528,7 +502,7 @@ return-to-dao / non-return condition
 
 推荐完整表述如下：
 
-> **R8-root language tree 是一套以 R₀..R₈ strict binary hierarchy 为根、以 cell/operator 双重读法为用、以 quote/apply/compose/if/equal/lookup/recurse/project/lift/returnDao 为规则的生成系统。它不是靠枚举所有表而完整，而是靠 root 与 rule 的闭合生成而完整。exact cell transforms 应由规则生成；371 个 operator 是 Wen 解释层 catalogue；94976 行是 coverage grid。任意可表达语言、函数、理论、证明、模型或科学 claim，若进入表达与审计，就必然表现为 R8 root 的组合、路径、程序、投影或高维 lift 的轨迹。高维不逃出 R8-root 框架，而是在自相似生长中增加 carrier；投影回 R8 时必须记录损失。因此，从语言结构上说，理论跑不出这个框架；跑出的只是不在当前解释器中的 carrier 或未登记的 scale。**
+> **R8-root language tree 是一套以 R₀..R₈ strict binary hierarchy 为根、以 cell/operator 双重读法为用、以 quote/apply/compose/if/equal/lookup/recurse/project/lift/returnDao 为规则的生成系统。它不是靠枚举所有表而完整，而是靠 root 与 rule 的闭合生成而完整。cell transforms 应由规则生成；遗留 operator catalogue 只能作为解释层、别名层或审稿材料，不能作为本体计数。任意可表达语言、函数、理论、证明、模型或科学 claim，若进入表达与审计，就必然表现为 R8 root 的组合、路径、程序、投影或高维 lift 的轨迹。高维不逃出 R8-root 框架，而是在自相似生长中增加 carrier；投影回 R8 时必须记录损失。因此，从语言结构上说，理论跑不出这个框架；跑出的只是不在当前解释器中的 carrier 或未登记的 scale。**
 
 这个 claim 的强点是：
 
@@ -546,7 +520,7 @@ scale-free 来自 root+rule 的自相似生长，不来自固定 256 表。
 
 当前可以稳妥公开说：
 
-> R₀..R₈ 已给出 strict `(Z/2)^n` root hierarchy；R8 = Cell256 对 XOR self-action 完备；每个 R8 cell 可经 Cayley 读为 exact XOR operator；复杂 Wen / Lisp / Program 结构可以作为 R8-root 组合进入投影规约。371 / 11008 / 94976 是解释层与展开层，不是根本体。
+> R₀..R₈ 已给出 strict `(Z/2)^n` root hierarchy；R8 = Cell256 对 XOR self-action 完备；每个 R8 cell 可经 Cayley 读为 exact XOR operator；复杂 Wen / Lisp / Program 结构可以作为 R8-root 组合进入投影规约。遗留 operator catalogue 可以作为解释层材料被审计迁移，但不是根本体。
 
 ### 9.2 最终 claim
 
@@ -563,7 +537,7 @@ scale-free 来自 root+rule 的自相似生长，不来自固定 256 表。
 全部物理理论已经统一证明。
 所有数学真理都可内部判定。
 所有函数 R8 → R8 都是一个 R8 cell。
-371 个 operator 都已有完整领域语义。
+遗留 operator catalogue 已经等于完整领域语义。
 ```
 
 正确说法是：
@@ -631,26 +605,24 @@ inductive RootRule
 
 ### 10.3 生成而非枚举
 
-应从：
+应从 root-native 规则生成行为：
 
 ```text
-for each exact operator family
-for each c : R8
-emit row(operator, c, operator.apply c)
+for each root mask / root program
+for each visible carrier element
+emit derived behavior by apply / compose / project
 ```
-
-生成 exact rows。
 
 手写文件只保留：
 
 ```text
-operator family definition
-root mask
+root rule definition
+root mask or program
 arity / role / domain notes
-proof that generated rows have expected count
+proof of behavior from the rule
 ```
 
-这样 `11008` 可以继续存在，但它的地位是 theorem / generated artifact，而不是本体。
+遗留 catalogue 若继续存在，只能作为 alias / corpus / audit input；它的目录大小不应成为 theorem 目标。
 
 ---
 
@@ -689,8 +661,8 @@ proof that generated rows have expected count
 |---|---|---|
 | A | RootLanguageTree 类型与计数证明 | done: `RootLanguageTree.lean` 证明 511 / 1021 / 1022 |
 | B | RootRule kernel | done: `RootRuleKernel.lean` 给出 quote/apply/compose/... 的 R8-visible 程序核 |
-| C | exact transform generator | done: `ExactCellTransformGenerator.lean` 证明 43×256=11008 由生成器得到 |
-| D | operator catalogue layering | done: `OperatorCatalogueLayering.lean` 证明 371 = 43 exact + 328 non-exact |
+| C | root-native transform generator | pending: 从 root mask / root program 生成行为，不以历史 catalogue 数字为目标 |
+| D | legacy catalogue quarantine | pending: 审计遗留条目，只把有用内容迁移成 alias / corpus / evidence note |
 | D2 | axis appropriateness checker | done: `R8AxisIndependence.lean` 给出有限 XOR span checker |
 | D3 | example corpus skeleton | done: `RootRuleExamples.lean` 固定“归道/双翻/损失/加轴”目标行为 |
 | D4 | projection kernel | done: `R8ProjectionKernel.lean` 给出通用 `ProjectionToR8 H` 与 kernel relation |
@@ -729,7 +701,7 @@ root language tree 与 exact cell transform 的本体结构已经闭合。
 | 不是物理大统一已证明 | 需要 carrier、方程、实验、校准 |
 | 不是所有数学真理可判定 | 不可判、独立、外部公理仍要进入 ledger |
 | 不是 R8 单 cell 装万物 | 万物以 Program / Path / Carrier / Projection 表达 |
-| 不是 371 即本体 | 371 是 catalogue，不是 root tree |
+| 不是目录即本体 | 遗留 catalogue 是材料，不是 root tree |
 
 最终的强 claim 应始终带着这个边界：
 

@@ -69,7 +69,7 @@ R₈ 最小核
 
 当前已经可以 defend 的版本：
 
-> **当前项目已经形式化了一套 R₀..R₈ strict-uniform 的最小代数核：R₈ = Cell256 = (Z/2)⁸，道 = origin = identity = no-op，R₈ 元与 R₈ XOR 自作用经 Cayley 双射融合。平方塔证明 R₈ 可读为 R₄ × R₄；文-R8投影规约证明：给定解释器后，任意句子都有 R₈ 可见投影、投影损失账本与归道检测接口。371 个文言算子 catalogue 与 256 个 R₈ cells 形成 94976 行覆盖网格，但该网格目前是覆盖与保守 machine denotation，不等于完整自然语言语义。**
+> **当前项目已经形式化了一套 R₀..R₈ strict-uniform 的最小代数核：R₈ = Cell256 = (Z/2)⁸，道 = origin = identity = no-op，R₈ 元与 R₈ XOR 自作用经 Cayley 双射融合。平方塔证明 R₈ 可读为 R₄ × R₄；文-R8投影规约证明：给定解释器后，任意句子都有 R₈ 可见投影、投影损失账本与归道检测接口。遗留文言算子 catalogue 可以作为审稿材料、别名表或例句来源被迁移，但它不是 root ontology，也不是完整自然语言语义。**
 
 ### 2.1 当前已完成
 
@@ -81,8 +81,7 @@ R₈ 最小核
 | Cayley 元-算子融合 | 已落地 | `R8.cayley`, `R8.cayley_inj`, `epsAtOrigin_cayley` |
 | R₈ = R₄ × R₄ | 已落地 | `SelfSimilarity.r8_eq_r4_squared` |
 | R₈ ≃ V₄⁴ | 已落地 | `V4Tensor.iso` |
-| 文言算子 catalogue | 已覆盖 | `allOperatorIds.length = 371`, `allOperatorIds.Nodup` |
-| operator-cell grid | 已覆盖 | `allOperatorCells.length = 94976` |
+| 遗留文言算子 catalogue | 待隔离审计 | 可作为 alias / corpus / evidence note，不作为 root count |
 | 文-R8投影规约 | 已有 typed skeleton | `R8ProjectionCalculus.lean` |
 | 量子接口 | 有 roadmap 与有限 bridge | `QuantumR8Bridge.lean`, `quantum-roadmap.md` |
 | Markov / Born / action bridge | 有 stepwise typed skeleton | `QuantumRelativity*.lean` S-series |
@@ -124,7 +123,7 @@ R₀..R₈ 对 strict binary algebraic closure 完备。
 | 真实 parser | `Sentence.source → WenSurface AST / WenNormalForm` |
 | 具体解释器 | `WenNormalForm → R8Semantics` 的可执行实例 |
 | 例句 corpus | “道总归道”“真可假假可真”“分而可合”等固定测试 |
-| 371 接入 | `OperatorId × R8 → R8Semantics` 的分层映射 |
+| 遗留 catalogue 迁移 | 将有用条目转成 root mask / root program / alias / evidence note |
 
 当前进展：
 
@@ -148,7 +147,7 @@ R₀..R₈ 对 strict binary algebraic closure 完备。
 | `recurse` | fuel / partial eval / fixed point |
 | `project` | 高维结构到 R₈ 可见投影 |
 
-这些原语应作为 Wen/Lisp kernel 的最小通用组合层，而不是 371 catalogue 的任意罗列。
+这些原语应作为 Wen/Lisp kernel 的最小通用组合层，而不是历史 catalogue 的任意罗列。
 
 ### 3.3 高维与连续层
 
@@ -225,17 +224,17 @@ inductive CoreForm
 
 目标：证明每个 kernel primitive 都有 R₈ encoding 与 `R8Semantics` 投影。
 
-### R3 · 371 catalogue 分层接入
+### R3 · Legacy catalogue quarantine
 
-不要声称 371 个都已完整专义。分三层接入：
+不要把历史 catalogue 当成本体阶段或 completeness target。它只能被隔离审计，并按用途迁移：
 
 | 层 | 内容 |
 |---|---|
-| exact cell transform | 已有 `43 × 256 = 11008` family-backed rows |
-| signature carrier | 有 arity / action-bit / structural carrier |
-| domain semantics pending | 需要文义 / 领域解释 |
+| alias | 旧名、文言候选、别名映射到 root mask 或 root program |
+| corpus | 有用例句进入 example tests / Wen corpus |
+| evidence note | 尚无 root-native 行为者保留为审稿材料，不进入主 claim |
 
-目标：每个 `OperatorId` 至少有 `R8Semantics.projected` 或 `slice` 的保守落点。
+目标：每个继续保留的旧条目，都必须说明它是 alias、corpus、evidence note，还是应删除的历史残留。
 
 ### R4 · Axis independence checker
 
