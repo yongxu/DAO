@@ -156,6 +156,13 @@ import SSBX.Foundation.Lang.Names     -- 64 卦 + R₄/R₅/R₇/R₈ name funct
 import SSBX.Foundation.Lang.Confucian -- 四端/八目/五伦/大同 named cells in R₃/R₅/R₆
 import SSBX.Foundation.Lang.Lexicon   -- canonical Chinese↔English↔bit-string mapping
 
+-- Foundation/Squaring — L-tower / V₄ tensor / stream coalgebra (self-similarity past R₈)
+import SSBX.Foundation.Squaring.V4Tensor
+import SSBX.Foundation.Squaring.L1
+import SSBX.Foundation.Squaring.RetractTower
+import SSBX.Foundation.Squaring.StreamCarrier
+import SSBX.Foundation.Squaring.ProfiniteLimit
+
 -- Foundation/Eight — 八衍：数 / 推 / 测 / 形 / 类 / 动 / 识 / 象
 import SSBX.Foundation.Eight.ShuSuan
 import SSBX.Foundation.Eight.LuoJi
