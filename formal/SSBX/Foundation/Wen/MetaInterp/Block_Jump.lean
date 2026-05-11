@@ -95,11 +95,17 @@ We provide:
 
 3. The last-instruction lemma (`executeBlock_jump_last`).
 
-4. A **simulation lemma for the trivial case** `t = sim.pc`, i.e., a
+4. A general **sim-side encoding bridge**:
+   `encMetaHistory_jump_step`.  It states the audited algebraic fact
+   that a simulated `jump t` rewrites the leading pc-counter prefix from
+   `encCounter regHex sim.pc` to `encCounter regHex t`, preserving the
+   halted flag, simulated history, and encoded program tail.
+
+5. A **simulation lemma for the trivial case** `t = sim.pc`, i.e., a
    "no-op jump" where the pc-counter encoding is unchanged — proven
    end-to-end as `executeBlock_jump_local_effect_trivial`.
 
-5. The general-case simulation lemma is **stated only as a docstring**
+6. The general-case block simulation lemma is **stated only as a docstring**
    (no `theorem` declaration, since we may not use `sorry` and we are
    not yet in a position to prove it).  The required sub-lemmas are
    itemized above.
@@ -189,6 +195,28 @@ theorem executeBlock_jump_local_effect
     ∧ μ'.pc = fetchOffset
     ∧ μ'.halted = false := by
   refine ⟨?_, ?_, ?_, ?_⟩ <;> rfl
+
+/-- **Sim-side bridge for general jump**: when the simulated ISA executes
+    `jump t`, the encoded META history rewrites exactly its pc-counter
+    prefix to `encCounter regHex t`; every non-pc region is preserved.
+
+    This closes the algebraic encoding side of the jump case.  The
+    concrete META block that performs this variable-length rewrite is
+    still deferred to the subroutine work described above. -/
+theorem encMetaHistory_jump_step
+    (regHex : Hexagram) (sim : YiState) (t : Nat)
+    (h_alive : sim.halted = false)
+    (h_jump : sim.prog[sim.pc]? = some (.jump t)) :
+    encMetaHistory regHex (sim.step) =
+      encCounter regHex t ++
+      [encHaltedFlag regHex sim.halted] ++
+      encCounter regHex sim.history.length ++
+      sim.history ++
+      ProgEnc.encProg sim.prog := by
+  have h_step : sim.step = { sim with pc := t } := by
+    simp [YiState.step, h_alive, h_jump, YiState.execute]
+  rw [h_step]
+  exact encMetaHistory_pc_set regHex sim t
 
 /-- **Sim-side bridge for the trivial case** (`t = sim.pc`): when the
     `jump`'s target equals the current pc, `sim.step` is the identity on

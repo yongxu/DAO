@@ -312,6 +312,248 @@ theorem metaInterpProg_fetch_routes_running_to_dispatch_at_fuel
 
 /-! ## § 5.5  Dispatch absolute-pc route lift -/
 
+/-- Assembly-specialized dispatch route for the nop tag. -/
+theorem metaInterpProg_dispatch_routes_nop_at_fuel
+    (history : List R8) :
+    let μ : YiState :=
+      { cur := Dispatch.nopTag
+        history := history
+        pc := dispatchOffset
+        prog := metaInterpProg
+        halted := false }
+    let μ' := μ.runFuel 3
+    μ'.pc = block_nop_offset
+      ∧ μ'.cur = Dispatch.nopTag
+      ∧ μ'.history = history
+      ∧ μ'.prog = metaInterpProg
+      ∧ μ'.halted = false := by
+  simpa [metaInterpDispatchOffsets] using
+    Dispatch.dispatchTree_routes_nop_at_segment
+      metaInterpDispatchOffsets dispatchOffset metaInterpProg history
+      (fun i hi => by
+        simpa [DispatchProg.dispatchProg] using
+          metaInterpProg_dispatchProg_at_offset i hi)
+
+/-- Assembly-specialized dispatch route for the setShi tag. -/
+theorem metaInterpProg_dispatch_routes_setShi_at_fuel
+    (history : List R8) :
+    let μ : YiState :=
+      { cur := Dispatch.setShiTag
+        history := history
+        pc := dispatchOffset
+        prog := metaInterpProg
+        halted := false }
+    let μ' := μ.runFuel 4
+    μ'.pc = block_setShi_offset
+      ∧ μ'.cur = Dispatch.setShiTag
+      ∧ μ'.history = history
+      ∧ μ'.prog = metaInterpProg
+      ∧ μ'.halted = false := by
+  simpa [metaInterpDispatchOffsets] using
+    Dispatch.dispatchTree_routes_setShi_at_segment
+      metaInterpDispatchOffsets dispatchOffset metaInterpProg history
+      (fun i hi => by
+        simpa [DispatchProg.dispatchProg] using
+          metaInterpProg_dispatchProg_at_offset i hi)
+
+/-- Assembly-specialized dispatch route for the flipYao tag. -/
+theorem metaInterpProg_dispatch_routes_flipYao_at_fuel
+    (history : List R8) :
+    let μ : YiState :=
+      { cur := Dispatch.flipYaoTag
+        history := history
+        pc := dispatchOffset
+        prog := metaInterpProg
+        halted := false }
+    let μ' := μ.runFuel 5
+    μ'.pc = block_flipYao_offset
+      ∧ μ'.cur = Dispatch.flipYaoTag
+      ∧ μ'.history = history
+      ∧ μ'.prog = metaInterpProg
+      ∧ μ'.halted = false := by
+  simpa [metaInterpDispatchOffsets] using
+    Dispatch.dispatchTree_routes_flipYao_at_segment
+      metaInterpDispatchOffsets dispatchOffset metaInterpProg history
+      (fun i hi => by
+        simpa [DispatchProg.dispatchProg] using
+          metaInterpProg_dispatchProg_at_offset i hi)
+
+/-- Assembly-specialized dispatch route for the interlace tag. -/
+theorem metaInterpProg_dispatch_routes_hu_at_fuel
+    (history : List R8) :
+    let μ : YiState :=
+      { cur := Dispatch.huTag
+        history := history
+        pc := dispatchOffset
+        prog := metaInterpProg
+        halted := false }
+    let μ' := μ.runFuel 6
+    μ'.pc = block_hu_offset
+      ∧ μ'.cur = Dispatch.huTag
+      ∧ μ'.history = history
+      ∧ μ'.prog = metaInterpProg
+      ∧ μ'.halted = false := by
+  simpa [metaInterpDispatchOffsets] using
+    Dispatch.dispatchTree_routes_hu_at_segment
+      metaInterpDispatchOffsets dispatchOffset metaInterpProg history
+      (fun i hi => by
+        simpa [DispatchProg.dispatchProg] using
+          metaInterpProg_dispatchProg_at_offset i hi)
+
+/-- Assembly-specialized dispatch route for the complement tag. -/
+theorem metaInterpProg_dispatch_routes_cuo_at_fuel
+    (history : List R8) :
+    let μ : YiState :=
+      { cur := Dispatch.cuoTag
+        history := history
+        pc := dispatchOffset
+        prog := metaInterpProg
+        halted := false }
+    let μ' := μ.runFuel 4
+    μ'.pc = block_cuo_offset
+      ∧ μ'.cur = Dispatch.cuoTag
+      ∧ μ'.history = history
+      ∧ μ'.prog = metaInterpProg
+      ∧ μ'.halted = false := by
+  simpa [metaInterpDispatchOffsets] using
+    Dispatch.dispatchTree_routes_cuo_at_segment
+      metaInterpDispatchOffsets dispatchOffset metaInterpProg history
+      (fun i hi => by
+        simpa [DispatchProg.dispatchProg] using
+          metaInterpProg_dispatchProg_at_offset i hi)
+
+/-- Assembly-specialized dispatch route for the reverse tag. -/
+theorem metaInterpProg_dispatch_routes_zong_at_fuel
+    (history : List R8) :
+    let μ : YiState :=
+      { cur := Dispatch.zongTag
+        history := history
+        pc := dispatchOffset
+        prog := metaInterpProg
+        halted := false }
+    let μ' := μ.runFuel 5
+    μ'.pc = block_zong_offset
+      ∧ μ'.cur = Dispatch.zongTag
+      ∧ μ'.history = history
+      ∧ μ'.prog = metaInterpProg
+      ∧ μ'.halted = false := by
+  simpa [metaInterpDispatchOffsets] using
+    Dispatch.dispatchTree_routes_zong_at_segment
+      metaInterpDispatchOffsets dispatchOffset metaInterpProg history
+      (fun i hi => by
+        simpa [DispatchProg.dispatchProg] using
+          metaInterpProg_dispatchProg_at_offset i hi)
+
+/-- Assembly-specialized dispatch route for the branchYaoEq tag. -/
+theorem metaInterpProg_dispatch_routes_branchYaoEq_at_fuel
+    (history : List R8) :
+    let μ : YiState :=
+      { cur := Dispatch.branchYaoEqTag
+        history := history
+        pc := dispatchOffset
+        prog := metaInterpProg
+        halted := false }
+    let μ' := μ.runFuel 6
+    μ'.pc = block_branchYaoEq_offset
+      ∧ μ'.cur = Dispatch.branchYaoEqTag
+      ∧ μ'.history = history
+      ∧ μ'.prog = metaInterpProg
+      ∧ μ'.halted = false := by
+  simpa [metaInterpDispatchOffsets] using
+    Dispatch.dispatchTree_routes_branchYaoEq_at_segment
+      metaInterpDispatchOffsets dispatchOffset metaInterpProg history
+      (fun i hi => by
+        simpa [DispatchProg.dispatchProg] using
+          metaInterpProg_dispatchProg_at_offset i hi)
+
+/-- Assembly-specialized dispatch route for the branchShiEq tag. -/
+theorem metaInterpProg_dispatch_routes_branchShiEq_at_fuel
+    (history : List R8) :
+    let μ : YiState :=
+      { cur := Dispatch.branchShiEqTag
+        history := history
+        pc := dispatchOffset
+        prog := metaInterpProg
+        halted := false }
+    let μ' := μ.runFuel 7
+    μ'.pc = block_branchShiEq_offset
+      ∧ μ'.cur = Dispatch.branchShiEqTag
+      ∧ μ'.history = history
+      ∧ μ'.prog = metaInterpProg
+      ∧ μ'.halted = false := by
+  simpa [metaInterpDispatchOffsets] using
+    Dispatch.dispatchTree_routes_branchShiEq_at_segment
+      metaInterpDispatchOffsets dispatchOffset metaInterpProg history
+      (fun i hi => by
+        simpa [DispatchProg.dispatchProg] using
+          metaInterpProg_dispatchProg_at_offset i hi)
+
+/-- Assembly-specialized dispatch route for the jump tag. -/
+theorem metaInterpProg_dispatch_routes_jump_at_fuel
+    (history : List R8) :
+    let μ : YiState :=
+      { cur := Dispatch.jumpTag
+        history := history
+        pc := dispatchOffset
+        prog := metaInterpProg
+        halted := false }
+    let μ' := μ.runFuel 3
+    μ'.pc = block_jump_offset
+      ∧ μ'.cur = Dispatch.jumpTag
+      ∧ μ'.history = history
+      ∧ μ'.prog = metaInterpProg
+      ∧ μ'.halted = false := by
+  simpa [metaInterpDispatchOffsets] using
+    Dispatch.dispatchTree_routes_jump_at_segment
+      metaInterpDispatchOffsets dispatchOffset metaInterpProg history
+      (fun i hi => by
+        simpa [DispatchProg.dispatchProg] using
+          metaInterpProg_dispatchProg_at_offset i hi)
+
+/-- Assembly-specialized dispatch route for the push tag. -/
+theorem metaInterpProg_dispatch_routes_push_at_fuel
+    (history : List R8) :
+    let μ : YiState :=
+      { cur := Dispatch.pushTag
+        history := history
+        pc := dispatchOffset
+        prog := metaInterpProg
+        halted := false }
+    let μ' := μ.runFuel 4
+    μ'.pc = block_push_offset
+      ∧ μ'.cur = Dispatch.pushTag
+      ∧ μ'.history = history
+      ∧ μ'.prog = metaInterpProg
+      ∧ μ'.halted = false := by
+  simpa [metaInterpDispatchOffsets] using
+    Dispatch.dispatchTree_routes_push_at_segment
+      metaInterpDispatchOffsets dispatchOffset metaInterpProg history
+      (fun i hi => by
+        simpa [DispatchProg.dispatchProg] using
+          metaInterpProg_dispatchProg_at_offset i hi)
+
+/-- Assembly-specialized dispatch route for the pop tag. -/
+theorem metaInterpProg_dispatch_routes_pop_at_fuel
+    (history : List R8) :
+    let μ : YiState :=
+      { cur := Dispatch.popTag
+        history := history
+        pc := dispatchOffset
+        prog := metaInterpProg
+        halted := false }
+    let μ' := μ.runFuel 5
+    μ'.pc = block_pop_offset
+      ∧ μ'.cur = Dispatch.popTag
+      ∧ μ'.history = history
+      ∧ μ'.prog = metaInterpProg
+      ∧ μ'.halted = false := by
+  simpa [metaInterpDispatchOffsets] using
+    Dispatch.dispatchTree_routes_pop_at_segment
+      metaInterpDispatchOffsets dispatchOffset metaInterpProg history
+      (fun i hi => by
+        simpa [DispatchProg.dispatchProg] using
+          metaInterpProg_dispatchProg_at_offset i hi)
+
 /-- Assembly-specialized dispatch route for the halt tag.  This is the first
     absolute-pc lift of a standalone dispatch theorem: starting at the dispatch
     segment inside `metaInterpProg`, the halt opcode tag routes to the halt

@@ -59,7 +59,8 @@ There are two dynamic paths:
   requires **dynamic pc-counter rewriting** from
   `encCounter regHex sim.pc` to `encCounter regHex t`, which is a
   multi-cell operation (could shorten or extend the counter).  This
-  is the same complication the eventual `Block_Jump.lean` will face.
+  pure encoding equality is now proved; the concrete META block that
+  performs the variable-length rewrite remains deferred.
 
 ## §0.2  What is proven in this file
 
@@ -72,6 +73,10 @@ For each block we provide:
   cur unchanged, pc → fetchOffset, history unchanged locally.
 - `encMetaHistory_<op>_fallthrough_step` — the sim-side bridge for the
   fall-through case: matches the `nop`-shape head-prepend.
+- `encMetaHistory_<op>_taken_step` — the sim-side bridge for the taken
+  case: rewrites the leading pc-counter prefix to `encCounter regHex t`
+  while preserving the halted flag, simulated history, and encoded
+  program tail.
 
 What is **deferred** (with a clear `/-! deferred -/` design note):
 
@@ -79,8 +84,6 @@ What is **deferred** (with a clear `/-! deferred -/` design note):
   absolute `t`).  Locally meaningless without the global metaProg
   context; the global statement requires the surrounding
   `metaInterpProg.extract` hypothesis and lives in Phase C.
-- The **branch-taken** sim-side bridge — multi-cell pc-counter rewrite,
-  same engineering challenge as `Block_Jump.lean`.
 - The combined `BlockPre → BlockPost` simulation lemma for both
   branches, which depends on the pieces above.
 
@@ -101,6 +104,7 @@ namespace SSBX.Foundation.Wen.MetaInterp.ExecuteBlock
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
+open SSBX.Foundation.Wen.WenyanSelfInterp
 open SSBX.Foundation.Wen.MetaInterp
 
 /-! ## § 1  branchShiEq block (parameterized by sh : Shi, t : Nat) -/
@@ -195,6 +199,26 @@ theorem encMetaHistory_branchShiEq_fallthrough_step
   rw [encCounter_succ]
   simp [List.cons_append]
 
+/-- **Sim-side bridge for `branchShiEq sh t` (taken)**: when the
+    simulated cur Shi equals `sh`, the simulated branch sets `pc := t`.
+    Encoding-wise this rewrites exactly the leading pc-counter prefix to
+    `encCounter regHex t`; all non-pc regions are preserved. -/
+theorem encMetaHistory_branchShiEq_taken_step
+    (regHex : Hexagram) (sim : YiState) (sh : Shi) (t : Nat)
+    (h_alive : sim.halted = false)
+    (h_branch : sim.prog[sim.pc]? = some (.branchShiEq sh t))
+    (h_eq : sim.cur.2 = sh) :
+    encMetaHistory regHex sim.step =
+      encCounter regHex t ++
+      [encHaltedFlag regHex sim.halted] ++
+      encCounter regHex sim.history.length ++
+      sim.history ++
+      ProgEnc.encProg sim.prog := by
+  have h_step : sim.step = { sim with pc := t } := by
+    simp [YiState.step, h_alive, h_branch, YiState.execute, h_eq]
+  rw [h_step]
+  exact encMetaHistory_pc_set regHex sim t
+
 /-! ### Deferred: `branchShiEq sh t` — branch-taken case
 
 The TRUE-branch case requires:
@@ -212,31 +236,9 @@ The TRUE-branch case requires:
   statement; it is properly stated only as part of the global
   `BlockPre → BlockPost` simulation lemma.
 
-* **Sim-side bridge**: when `sim.cur.2 = sh`, sim.step bumps `sim.pc`
-  from its current value to `t`.  The encoding-side equivalent is
-
-    encCounter regHex sim.pc  ↦  encCounter regHex t
-
-  This is a **multi-cell rewrite**: the counter is `t+1` cells long
-  vs the previous `sim.pc + 1` cells, which can shrink or grow.  No
-  simple `regDataCell ::` head-prepend captures it.  This is the same
-  engineering challenge `Block_Jump.lean` will face.
-
-The full statement (left as a comment for Phase C subagents):
-
-```lean
--- theorem encMetaHistory_branchShiEq_taken_step
---     (regHex : Hexagram) (sim : YiState) (sh : Shi) (t : Nat)
---     (h_alive : sim.halted = false)
---     (h_branch : sim.prog[sim.pc]? = some (.branchShiEq sh t))
---     (h_eq : sim.cur.2 = sh) :
---     encMetaHistory regHex sim.step =
---       encCounter regHex t ++
---       [encHaltedFlag regHex sim.halted] ++
---       encCounter regHex sim.history.length ++
---       sim.history ++
---       ProgEnc.encProg sim.prog := …
-```
+The sim-side encoding equality is no longer deferred; see
+`encMetaHistory_branchShiEq_taken_step` above.  What remains is the
+concrete META program that performs this variable-length rewrite.
 -/
 
 /-! ## § 2  branchYaoEq block (parameterized by i j : Fin 6, t : Nat) -/
@@ -322,10 +324,32 @@ theorem encMetaHistory_branchYaoEq_fallthrough_step
   rw [encCounter_succ]
   simp [List.cons_append]
 
+/-- **Sim-side bridge for `branchYaoEq i j t` (taken)**: when the two
+    selected yao are equal, the simulated branch sets `pc := t`.
+    Encoding-wise this rewrites exactly the leading pc-counter prefix to
+    `encCounter regHex t`; all non-pc regions are preserved. -/
+theorem encMetaHistory_branchYaoEq_taken_step
+    (regHex : Hexagram) (sim : YiState) (i j : Fin 6) (t : Nat)
+    (h_alive : sim.halted = false)
+    (h_branch : sim.prog[sim.pc]? = some (.branchYaoEq i j t))
+    (h_eq : sim.cur.1.yaoAt i = sim.cur.1.yaoAt j) :
+    encMetaHistory regHex sim.step =
+      encCounter regHex t ++
+      [encHaltedFlag regHex sim.halted] ++
+      encCounter regHex sim.history.length ++
+      sim.history ++
+      ProgEnc.encProg sim.prog := by
+  have h_step : sim.step = { sim with pc := t } := by
+    simp [YiState.step, h_alive, h_branch, YiState.execute, h_eq]
+  rw [h_step]
+  exact encMetaHistory_pc_set regHex sim t
+
 /-! ### Deferred: `branchYaoEq i j t` — branch-taken case
 
 Same shape as the `branchShiEq` deferred section: locally meaningless
-without the metaProg context, and sim-side bridge requires dynamic
-pc-counter rewrite (multi-cell, same as Block_Jump.lean). -/
+without the metaProg context.  The sim-side encoding equality is now
+proved as `encMetaHistory_branchYaoEq_taken_step`; the remaining work is
+the concrete META program that performs the variable-length pc-counter
+rewrite inside the global `metaInterpProg`. -/
 
 end SSBX.Foundation.Wen.MetaInterp.ExecuteBlock

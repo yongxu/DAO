@@ -451,6 +451,16 @@ private theorem step_branchYaoEq_not_taken
   rw [h_halted]
   simp [h_lookup, YiState.execute, h_ne, h_halted]
 
+private theorem step_branchYaoEq_taken
+    (s : YiState) (i j : Fin 6) (target : Nat)
+    (h_halted : s.halted = false)
+    (h_lookup : s.prog[s.pc]? = some (YiInstr.branchYaoEq i j target))
+    (h_eq : s.cur.1.yaoAt i = s.cur.1.yaoAt j) :
+    s.step = { s with pc := target, halted := false } := by
+  unfold YiState.step
+  rw [h_halted]
+  simp [h_lookup, YiState.execute, h_eq, h_halted]
+
 private theorem step_branchShiEq_not_taken
     (s : YiState) (sh : Shi) (target : Nat)
     (h_halted : s.halted = false)
@@ -460,6 +470,16 @@ private theorem step_branchShiEq_not_taken
   unfold YiState.step
   rw [h_halted]
   simp [h_lookup, YiState.execute, h_ne, h_halted]
+
+private theorem step_branchShiEq_taken
+    (s : YiState) (sh : Shi) (target : Nat)
+    (h_halted : s.halted = false)
+    (h_lookup : s.prog[s.pc]? = some (YiInstr.branchShiEq sh target))
+    (h_eq : s.cur.2 = sh) :
+    s.step = { s with pc := target, halted := false } := by
+  unfold YiState.step
+  rw [h_halted]
+  simp [h_lookup, YiState.execute, h_eq, h_halted]
 
 private theorem step_jump
     (s : YiState) (target : Nat)
@@ -879,6 +899,485 @@ theorem dispatchTree_routes_halt
     simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin, Shi.wei,
           dispatchTree, dispatchShi, haltTag_shi,
           Hexagram.yaoAt, haltTag_yao.2.1, haltTag_yao.2.2.2.2.2]
+
+/-- Segment-level nop routing. -/
+theorem dispatchTree_routes_nop_at_segment
+    (offsets : DispatchOffsets) (dispatchBase : Nat)
+    (metaProg : List YiInstr) (history : List R8)
+    (hseg : ∀ i (_hi : i < 16),
+      metaProg[dispatchBase + i]? =
+        (dispatchTree offsets dispatchBase)[i]?) :
+    let μ : YiState :=
+      { cur := nopTag, history := history, pc := dispatchBase,
+        prog := metaProg, halted := false }
+    let μ' := μ.runFuel 3
+    μ'.pc = offsets.nop_offset
+      ∧ μ'.cur = nopTag
+      ∧ μ'.history = history
+      ∧ μ'.prog = metaProg
+      ∧ μ'.halted = false := by
+  have h_lookup0 : metaProg[dispatchBase]? =
+      some (YiInstr.branchYaoEq ⟨1, by omega⟩ ⟨5, by omega⟩
+        (dispatchBase + 2)) := by
+    have h := hseg 0 (by decide)
+    simpa [dispatchTree] using h
+  have h_lookup2 : metaProg[dispatchBase + 2]? =
+      some (YiInstr.branchYaoEq ⟨0, by omega⟩ ⟨5, by omega⟩
+        (dispatchBase + 4)) := by
+    have h := hseg 2 (by decide)
+    simpa [dispatchTree] using h
+  have h_lookup4 : metaProg[dispatchBase + 4]? =
+      some (YiInstr.branchShiEq Shi.dao offsets.nop_offset) := by
+    have h := hseg 4 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
+    simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao,
+      h_lookup0, h_lookup2, h_lookup4, nopTag_shi,
+      Hexagram.yaoAt, nopTag_yao.1, nopTag_yao.2.1,
+      nopTag_yao.2.2.2.2.2]
+
+/-- Segment-level setShi routing. -/
+theorem dispatchTree_routes_setShi_at_segment
+    (offsets : DispatchOffsets) (dispatchBase : Nat)
+    (metaProg : List YiInstr) (history : List R8)
+    (hseg : ∀ i (_hi : i < 16),
+      metaProg[dispatchBase + i]? =
+        (dispatchTree offsets dispatchBase)[i]?) :
+    let μ : YiState :=
+      { cur := setShiTag, history := history, pc := dispatchBase,
+        prog := metaProg, halted := false }
+    let μ' := μ.runFuel 4
+    μ'.pc = offsets.setShi_dispatch_offset
+      ∧ μ'.cur = setShiTag
+      ∧ μ'.history = history
+      ∧ μ'.prog = metaProg
+      ∧ μ'.halted = false := by
+  have h_lookup0 : metaProg[dispatchBase]? =
+      some (YiInstr.branchYaoEq ⟨1, by omega⟩ ⟨5, by omega⟩
+        (dispatchBase + 2)) := by
+    have h := hseg 0 (by decide)
+    simpa [dispatchTree] using h
+  have h_lookup2 : metaProg[dispatchBase + 2]? =
+      some (YiInstr.branchYaoEq ⟨0, by omega⟩ ⟨5, by omega⟩
+        (dispatchBase + 4)) := by
+    have h := hseg 2 (by decide)
+    simpa [dispatchTree] using h
+  have h_lookup4 : metaProg[dispatchBase + 4]? =
+      some (YiInstr.branchShiEq Shi.dao offsets.nop_offset) := by
+    have h := hseg 4 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  have h_lookup5 : metaProg[dispatchBase + 5]? =
+      some (YiInstr.branchShiEq Shi.ji offsets.setShi_dispatch_offset) := by
+    have h := hseg 5 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
+    simp [YiState.runFuel, YiState.step, YiState.execute,
+      Shi.dao, Shi.ji,
+      h_lookup0, h_lookup2, h_lookup4, h_lookup5, setShiTag_shi,
+      Hexagram.yaoAt, setShiTag_yao.1, setShiTag_yao.2.1,
+      setShiTag_yao.2.2.2.2.2]
+
+/-- Segment-level flipYao routing. -/
+theorem dispatchTree_routes_flipYao_at_segment
+    (offsets : DispatchOffsets) (dispatchBase : Nat)
+    (metaProg : List YiInstr) (history : List R8)
+    (hseg : ∀ i (_hi : i < 16),
+      metaProg[dispatchBase + i]? =
+        (dispatchTree offsets dispatchBase)[i]?) :
+    let μ : YiState :=
+      { cur := flipYaoTag, history := history, pc := dispatchBase,
+        prog := metaProg, halted := false }
+    let μ' := μ.runFuel 5
+    μ'.pc = offsets.flipYao_dispatch_offset
+      ∧ μ'.cur = flipYaoTag
+      ∧ μ'.history = history
+      ∧ μ'.prog = metaProg
+      ∧ μ'.halted = false := by
+  have h_lookup0 : metaProg[dispatchBase]? =
+      some (YiInstr.branchYaoEq ⟨1, by omega⟩ ⟨5, by omega⟩
+        (dispatchBase + 2)) := by
+    have h := hseg 0 (by decide)
+    simpa [dispatchTree] using h
+  have h_lookup2 : metaProg[dispatchBase + 2]? =
+      some (YiInstr.branchYaoEq ⟨0, by omega⟩ ⟨5, by omega⟩
+        (dispatchBase + 4)) := by
+    have h := hseg 2 (by decide)
+    simpa [dispatchTree] using h
+  have h_lookup4 : metaProg[dispatchBase + 4]? =
+      some (YiInstr.branchShiEq Shi.dao offsets.nop_offset) := by
+    have h := hseg 4 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  have h_lookup5 : metaProg[dispatchBase + 5]? =
+      some (YiInstr.branchShiEq Shi.ji offsets.setShi_dispatch_offset) := by
+    have h := hseg 5 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  have h_lookup6 : metaProg[dispatchBase + 6]? =
+      some (YiInstr.branchShiEq Shi.jin offsets.flipYao_dispatch_offset) := by
+    have h := hseg 6 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
+    simp [YiState.runFuel, YiState.step, YiState.execute,
+      Shi.dao, Shi.ji, Shi.jin,
+      h_lookup0, h_lookup2, h_lookup4, h_lookup5, h_lookup6,
+      flipYaoTag_shi, Hexagram.yaoAt, flipYaoTag_yao.1,
+      flipYaoTag_yao.2.1, flipYaoTag_yao.2.2.2.2.2]
+
+/-- Segment-level interlace routing. -/
+theorem dispatchTree_routes_hu_at_segment
+    (offsets : DispatchOffsets) (dispatchBase : Nat)
+    (metaProg : List YiInstr) (history : List R8)
+    (hseg : ∀ i (_hi : i < 16),
+      metaProg[dispatchBase + i]? =
+        (dispatchTree offsets dispatchBase)[i]?) :
+    let μ : YiState :=
+      { cur := huTag, history := history, pc := dispatchBase,
+        prog := metaProg, halted := false }
+    let μ' := μ.runFuel 6
+    μ'.pc = offsets.hu_offset
+      ∧ μ'.cur = huTag
+      ∧ μ'.history = history
+      ∧ μ'.prog = metaProg
+      ∧ μ'.halted = false := by
+  have h_lookup0 : metaProg[dispatchBase]? =
+      some (YiInstr.branchYaoEq ⟨1, by omega⟩ ⟨5, by omega⟩
+        (dispatchBase + 2)) := by
+    have h := hseg 0 (by decide)
+    simpa [dispatchTree] using h
+  have h_lookup2 : metaProg[dispatchBase + 2]? =
+      some (YiInstr.branchYaoEq ⟨0, by omega⟩ ⟨5, by omega⟩
+        (dispatchBase + 4)) := by
+    have h := hseg 2 (by decide)
+    simpa [dispatchTree] using h
+  have h_lookup4 : metaProg[dispatchBase + 4]? =
+      some (YiInstr.branchShiEq Shi.dao offsets.nop_offset) := by
+    have h := hseg 4 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  have h_lookup5 : metaProg[dispatchBase + 5]? =
+      some (YiInstr.branchShiEq Shi.ji offsets.setShi_dispatch_offset) := by
+    have h := hseg 5 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  have h_lookup6 : metaProg[dispatchBase + 6]? =
+      some (YiInstr.branchShiEq Shi.jin offsets.flipYao_dispatch_offset) := by
+    have h := hseg 6 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  have h_lookup7 : metaProg[dispatchBase + 7]? =
+      some (YiInstr.jump offsets.hu_offset) := by
+    have h := hseg 7 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
+    simp [YiState.runFuel, YiState.step, YiState.execute,
+      Shi.dao, Shi.ji, Shi.jin, Shi.wei,
+      h_lookup0, h_lookup2, h_lookup4, h_lookup5, h_lookup6,
+      h_lookup7, huTag_shi, Hexagram.yaoAt, huTag_yao.1,
+      huTag_yao.2.1, huTag_yao.2.2.2.2.2]
+
+/-- Segment-level complement routing. -/
+theorem dispatchTree_routes_cuo_at_segment
+    (offsets : DispatchOffsets) (dispatchBase : Nat)
+    (metaProg : List YiInstr) (history : List R8)
+    (hseg : ∀ i (_hi : i < 16),
+      metaProg[dispatchBase + i]? =
+        (dispatchTree offsets dispatchBase)[i]?) :
+    let μ : YiState :=
+      { cur := cuoTag, history := history, pc := dispatchBase,
+        prog := metaProg, halted := false }
+    let μ' := μ.runFuel 4
+    μ'.pc = offsets.cuo_offset
+      ∧ μ'.cur = cuoTag
+      ∧ μ'.history = history
+      ∧ μ'.prog = metaProg
+      ∧ μ'.halted = false := by
+  have h_lookup0 : metaProg[dispatchBase]? =
+      some (YiInstr.branchYaoEq ⟨1, by omega⟩ ⟨5, by omega⟩
+        (dispatchBase + 2)) := by
+    have h := hseg 0 (by decide)
+    simpa [dispatchTree] using h
+  have h_lookup2 : metaProg[dispatchBase + 2]? =
+      some (YiInstr.branchYaoEq ⟨0, by omega⟩ ⟨5, by omega⟩
+        (dispatchBase + 4)) := by
+    have h := hseg 2 (by decide)
+    simpa [dispatchTree] using h
+  have h_lookup3 : metaProg[dispatchBase + 3]? =
+      some (YiInstr.jump (dispatchBase + 8)) := by
+    have h := hseg 3 (by decide)
+    simpa [dispatchTree] using h
+  have h_lookup8 : metaProg[dispatchBase + 8]? =
+      some (YiInstr.branchShiEq Shi.dao offsets.cuo_offset) := by
+    have h := hseg 8 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
+    simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao,
+      h_lookup0, h_lookup2, h_lookup3, h_lookup8, cuoTag_shi,
+      Hexagram.yaoAt, cuoTag_yao.1, cuoTag_yao.2.1,
+      cuoTag_yao.2.2.2.2.2]
+
+/-- Segment-level reverse routing. -/
+theorem dispatchTree_routes_zong_at_segment
+    (offsets : DispatchOffsets) (dispatchBase : Nat)
+    (metaProg : List YiInstr) (history : List R8)
+    (hseg : ∀ i (_hi : i < 16),
+      metaProg[dispatchBase + i]? =
+        (dispatchTree offsets dispatchBase)[i]?) :
+    let μ : YiState :=
+      { cur := zongTag, history := history, pc := dispatchBase,
+        prog := metaProg, halted := false }
+    let μ' := μ.runFuel 5
+    μ'.pc = offsets.zong_offset
+      ∧ μ'.cur = zongTag
+      ∧ μ'.history = history
+      ∧ μ'.prog = metaProg
+      ∧ μ'.halted = false := by
+  have h_lookup0 : metaProg[dispatchBase]? =
+      some (YiInstr.branchYaoEq ⟨1, by omega⟩ ⟨5, by omega⟩
+        (dispatchBase + 2)) := by
+    have h := hseg 0 (by decide)
+    simpa [dispatchTree] using h
+  have h_lookup2 : metaProg[dispatchBase + 2]? =
+      some (YiInstr.branchYaoEq ⟨0, by omega⟩ ⟨5, by omega⟩
+        (dispatchBase + 4)) := by
+    have h := hseg 2 (by decide)
+    simpa [dispatchTree] using h
+  have h_lookup3 : metaProg[dispatchBase + 3]? =
+      some (YiInstr.jump (dispatchBase + 8)) := by
+    have h := hseg 3 (by decide)
+    simpa [dispatchTree] using h
+  have h_lookup8 : metaProg[dispatchBase + 8]? =
+      some (YiInstr.branchShiEq Shi.dao offsets.cuo_offset) := by
+    have h := hseg 8 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  have h_lookup9 : metaProg[dispatchBase + 9]? =
+      some (YiInstr.branchShiEq Shi.ji offsets.zong_offset) := by
+    have h := hseg 9 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
+    simp [YiState.runFuel, YiState.step, YiState.execute,
+      Shi.dao, Shi.ji,
+      h_lookup0, h_lookup2, h_lookup3, h_lookup8, h_lookup9,
+      zongTag_shi, Hexagram.yaoAt, zongTag_yao.1,
+      zongTag_yao.2.1, zongTag_yao.2.2.2.2.2]
+
+/-- Segment-level branchYaoEq routing. -/
+theorem dispatchTree_routes_branchYaoEq_at_segment
+    (offsets : DispatchOffsets) (dispatchBase : Nat)
+    (metaProg : List YiInstr) (history : List R8)
+    (hseg : ∀ i (_hi : i < 16),
+      metaProg[dispatchBase + i]? =
+        (dispatchTree offsets dispatchBase)[i]?) :
+    let μ : YiState :=
+      { cur := branchYaoEqTag, history := history, pc := dispatchBase,
+        prog := metaProg, halted := false }
+    let μ' := μ.runFuel 6
+    μ'.pc = offsets.branchYaoEq_dispatch_offset
+      ∧ μ'.cur = branchYaoEqTag
+      ∧ μ'.history = history
+      ∧ μ'.prog = metaProg
+      ∧ μ'.halted = false := by
+  have h_lookup0 : metaProg[dispatchBase]? =
+      some (YiInstr.branchYaoEq ⟨1, by omega⟩ ⟨5, by omega⟩
+        (dispatchBase + 2)) := by
+    have h := hseg 0 (by decide)
+    simpa [dispatchTree] using h
+  have h_lookup2 : metaProg[dispatchBase + 2]? =
+      some (YiInstr.branchYaoEq ⟨0, by omega⟩ ⟨5, by omega⟩
+        (dispatchBase + 4)) := by
+    have h := hseg 2 (by decide)
+    simpa [dispatchTree] using h
+  have h_lookup3 : metaProg[dispatchBase + 3]? =
+      some (YiInstr.jump (dispatchBase + 8)) := by
+    have h := hseg 3 (by decide)
+    simpa [dispatchTree] using h
+  have h_lookup8 : metaProg[dispatchBase + 8]? =
+      some (YiInstr.branchShiEq Shi.dao offsets.cuo_offset) := by
+    have h := hseg 8 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  have h_lookup9 : metaProg[dispatchBase + 9]? =
+      some (YiInstr.branchShiEq Shi.ji offsets.zong_offset) := by
+    have h := hseg 9 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  have h_lookup10 : metaProg[dispatchBase + 10]? =
+      some (YiInstr.branchShiEq Shi.jin
+        offsets.branchYaoEq_dispatch_offset) := by
+    have h := hseg 10 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
+    simp [YiState.runFuel, YiState.step, YiState.execute,
+      Shi.dao, Shi.ji, Shi.jin,
+      h_lookup0, h_lookup2, h_lookup3, h_lookup8, h_lookup9,
+      h_lookup10, branchYaoEqTag_shi, Hexagram.yaoAt,
+      branchYaoEqTag_yao.1, branchYaoEqTag_yao.2.1,
+      branchYaoEqTag_yao.2.2.2.2.2]
+
+/-- Segment-level branchShiEq routing. -/
+theorem dispatchTree_routes_branchShiEq_at_segment
+    (offsets : DispatchOffsets) (dispatchBase : Nat)
+    (metaProg : List YiInstr) (history : List R8)
+    (hseg : ∀ i (_hi : i < 16),
+      metaProg[dispatchBase + i]? =
+        (dispatchTree offsets dispatchBase)[i]?) :
+    let μ : YiState :=
+      { cur := branchShiEqTag, history := history, pc := dispatchBase,
+        prog := metaProg, halted := false }
+    let μ' := μ.runFuel 7
+    μ'.pc = offsets.branchShiEq_dispatch_offset
+      ∧ μ'.cur = branchShiEqTag
+      ∧ μ'.history = history
+      ∧ μ'.prog = metaProg
+      ∧ μ'.halted = false := by
+  have h_lookup0 : metaProg[dispatchBase]? =
+      some (YiInstr.branchYaoEq ⟨1, by omega⟩ ⟨5, by omega⟩
+        (dispatchBase + 2)) := by
+    have h := hseg 0 (by decide)
+    simpa [dispatchTree] using h
+  have h_lookup2 : metaProg[dispatchBase + 2]? =
+      some (YiInstr.branchYaoEq ⟨0, by omega⟩ ⟨5, by omega⟩
+        (dispatchBase + 4)) := by
+    have h := hseg 2 (by decide)
+    simpa [dispatchTree] using h
+  have h_lookup3 : metaProg[dispatchBase + 3]? =
+      some (YiInstr.jump (dispatchBase + 8)) := by
+    have h := hseg 3 (by decide)
+    simpa [dispatchTree] using h
+  have h_lookup8 : metaProg[dispatchBase + 8]? =
+      some (YiInstr.branchShiEq Shi.dao offsets.cuo_offset) := by
+    have h := hseg 8 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  have h_lookup9 : metaProg[dispatchBase + 9]? =
+      some (YiInstr.branchShiEq Shi.ji offsets.zong_offset) := by
+    have h := hseg 9 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  have h_lookup10 : metaProg[dispatchBase + 10]? =
+      some (YiInstr.branchShiEq Shi.jin
+        offsets.branchYaoEq_dispatch_offset) := by
+    have h := hseg 10 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  have h_lookup11 : metaProg[dispatchBase + 11]? =
+      some (YiInstr.jump offsets.branchShiEq_dispatch_offset) := by
+    have h := hseg 11 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
+    simp [YiState.runFuel, YiState.step, YiState.execute,
+      Shi.dao, Shi.ji, Shi.jin, Shi.wei,
+      h_lookup0, h_lookup2, h_lookup3, h_lookup8, h_lookup9,
+      h_lookup10, h_lookup11, branchShiEqTag_shi, Hexagram.yaoAt,
+      branchShiEqTag_yao.1, branchShiEqTag_yao.2.1,
+      branchShiEqTag_yao.2.2.2.2.2]
+
+/-- Segment-level jump routing. -/
+theorem dispatchTree_routes_jump_at_segment
+    (offsets : DispatchOffsets) (dispatchBase : Nat)
+    (metaProg : List YiInstr) (history : List R8)
+    (hseg : ∀ i (_hi : i < 16),
+      metaProg[dispatchBase + i]? =
+        (dispatchTree offsets dispatchBase)[i]?) :
+    let μ : YiState :=
+      { cur := jumpTag, history := history, pc := dispatchBase,
+        prog := metaProg, halted := false }
+    let μ' := μ.runFuel 3
+    μ'.pc = offsets.jump_offset
+      ∧ μ'.cur = jumpTag
+      ∧ μ'.history = history
+      ∧ μ'.prog = metaProg
+      ∧ μ'.halted = false := by
+  have h_lookup0 : metaProg[dispatchBase]? =
+      some (YiInstr.branchYaoEq ⟨1, by omega⟩ ⟨5, by omega⟩
+        (dispatchBase + 2)) := by
+    have h := hseg 0 (by decide)
+    simpa [dispatchTree] using h
+  have h_lookup1 : metaProg[dispatchBase + 1]? =
+      some (YiInstr.jump (dispatchBase + 12)) := by
+    have h := hseg 1 (by decide)
+    simpa [dispatchTree] using h
+  have h_lookup12 : metaProg[dispatchBase + 12]? =
+      some (YiInstr.branchShiEq Shi.dao offsets.jump_offset) := by
+    have h := hseg 12 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
+    simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao,
+      h_lookup0, h_lookup1, h_lookup12, jumpTag_shi,
+      Hexagram.yaoAt, jumpTag_yao.2.1, jumpTag_yao.2.2.2.2.2]
+
+/-- Segment-level push routing. -/
+theorem dispatchTree_routes_push_at_segment
+    (offsets : DispatchOffsets) (dispatchBase : Nat)
+    (metaProg : List YiInstr) (history : List R8)
+    (hseg : ∀ i (_hi : i < 16),
+      metaProg[dispatchBase + i]? =
+        (dispatchTree offsets dispatchBase)[i]?) :
+    let μ : YiState :=
+      { cur := pushTag, history := history, pc := dispatchBase,
+        prog := metaProg, halted := false }
+    let μ' := μ.runFuel 4
+    μ'.pc = offsets.push_offset
+      ∧ μ'.cur = pushTag
+      ∧ μ'.history = history
+      ∧ μ'.prog = metaProg
+      ∧ μ'.halted = false := by
+  have h_lookup0 : metaProg[dispatchBase]? =
+      some (YiInstr.branchYaoEq ⟨1, by omega⟩ ⟨5, by omega⟩
+        (dispatchBase + 2)) := by
+    have h := hseg 0 (by decide)
+    simpa [dispatchTree] using h
+  have h_lookup1 : metaProg[dispatchBase + 1]? =
+      some (YiInstr.jump (dispatchBase + 12)) := by
+    have h := hseg 1 (by decide)
+    simpa [dispatchTree] using h
+  have h_lookup12 : metaProg[dispatchBase + 12]? =
+      some (YiInstr.branchShiEq Shi.dao offsets.jump_offset) := by
+    have h := hseg 12 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  have h_lookup13 : metaProg[dispatchBase + 13]? =
+      some (YiInstr.branchShiEq Shi.ji offsets.push_offset) := by
+    have h := hseg 13 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
+    simp [YiState.runFuel, YiState.step, YiState.execute,
+      Shi.dao, Shi.ji,
+      h_lookup0, h_lookup1, h_lookup12, h_lookup13, pushTag_shi,
+      Hexagram.yaoAt, pushTag_yao.2.1, pushTag_yao.2.2.2.2.2]
+
+/-- Segment-level pop routing. -/
+theorem dispatchTree_routes_pop_at_segment
+    (offsets : DispatchOffsets) (dispatchBase : Nat)
+    (metaProg : List YiInstr) (history : List R8)
+    (hseg : ∀ i (_hi : i < 16),
+      metaProg[dispatchBase + i]? =
+        (dispatchTree offsets dispatchBase)[i]?) :
+    let μ : YiState :=
+      { cur := popTag, history := history, pc := dispatchBase,
+        prog := metaProg, halted := false }
+    let μ' := μ.runFuel 5
+    μ'.pc = offsets.pop_offset
+      ∧ μ'.cur = popTag
+      ∧ μ'.history = history
+      ∧ μ'.prog = metaProg
+      ∧ μ'.halted = false := by
+  have h_lookup0 : metaProg[dispatchBase]? =
+      some (YiInstr.branchYaoEq ⟨1, by omega⟩ ⟨5, by omega⟩
+        (dispatchBase + 2)) := by
+    have h := hseg 0 (by decide)
+    simpa [dispatchTree] using h
+  have h_lookup1 : metaProg[dispatchBase + 1]? =
+      some (YiInstr.jump (dispatchBase + 12)) := by
+    have h := hseg 1 (by decide)
+    simpa [dispatchTree] using h
+  have h_lookup12 : metaProg[dispatchBase + 12]? =
+      some (YiInstr.branchShiEq Shi.dao offsets.jump_offset) := by
+    have h := hseg 12 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  have h_lookup13 : metaProg[dispatchBase + 13]? =
+      some (YiInstr.branchShiEq Shi.ji offsets.push_offset) := by
+    have h := hseg 13 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  have h_lookup14 : metaProg[dispatchBase + 14]? =
+      some (YiInstr.branchShiEq Shi.jin offsets.pop_offset) := by
+    have h := hseg 14 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
+    simp [YiState.runFuel, YiState.step, YiState.execute,
+      Shi.dao, Shi.ji, Shi.jin,
+      h_lookup0, h_lookup1, h_lookup12, h_lookup13, h_lookup14,
+      popTag_shi, Hexagram.yaoAt, popTag_yao.2.1,
+      popTag_yao.2.2.2.2.2]
 
 /-- Segment-level halt routing: if a `dispatchTree offsets dispatchBase`
     segment is spliced into a larger `metaProg` at `dispatchBase`, then the

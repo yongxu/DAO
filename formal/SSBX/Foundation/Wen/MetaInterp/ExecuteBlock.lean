@@ -310,6 +310,22 @@ theorem encMetaHistory_nop_step
   rw [encCounter_succ]
   simp [List.cons_append]
 
+/-! ## § 2.1  Encoding shape for pc-only updates -/
+
+/-- Replacing only the simulated pc rewrites exactly the leading
+    pc-counter prefix of `encMetaHistory`; halted flag, simulated history,
+    and encoded program tail are preserved. -/
+theorem encMetaHistory_pc_set
+    (regHex : Hexagram) (sim : YiState) (target : Nat) :
+    encMetaHistory regHex { sim with pc := target } =
+      encCounter regHex target ++
+      [encHaltedFlag regHex sim.halted] ++
+      encCounter regHex sim.history.length ++
+      sim.history ++
+      ProgEnc.encProg sim.prog := by
+  unfold encMetaHistory
+  rfl
+
 /-! ## § 3  Worked example: executeBlock_halt
 
 The `halt` opcode: sets `sim.halted := true`, no other change.

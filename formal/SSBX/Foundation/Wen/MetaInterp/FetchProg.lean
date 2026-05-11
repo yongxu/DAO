@@ -237,6 +237,53 @@ theorem fetchProg_branch_halted_false
   show (fetchProgHaltDetectEntry regHex sim metaProg offset false).pc + 1 = offset + 2
   rw [h_pc]
 
+/-! ### § 4a  Pc-counter peel hand-off into halt detection -/
+
+/-- After the counted-loop pc-counter peel, one real `pop` consumes the
+    exposed halted-flag cell into `META.cur`.  The resulting state is the
+    existing halt-detection entry shape, shifted so its branch lives after
+    the peel segment. -/
+theorem pcCounterPeelExit_pop_halted_flag_eq_haltDetectEntry_shifted
+    (regHex : Hexagram) (sim : YiState) (metaProg : List YiInstr)
+    (offset : Nat)
+    (h_pop : metaProg[offset + 3]? = some YiInstr.pop) :
+    (countedLoopEmptyExitState offset metaProg regHex
+      (Fetch.pcCounterTailAfterPeel regHex sim)).step =
+      fetchProgHaltDetectEntry regHex sim metaProg (offset + 3) sim.halted := by
+  unfold YiState.step
+  have h_halt :
+      (countedLoopEmptyExitState offset metaProg regHex
+        (Fetch.pcCounterTailAfterPeel regHex sim)).halted = false := rfl
+  rw [h_halt]
+  simp only [Bool.false_eq_true, if_false]
+  have h_prog :
+      (countedLoopEmptyExitState offset metaProg regHex
+        (Fetch.pcCounterTailAfterPeel regHex sim)).prog = metaProg := rfl
+  have h_pc :
+      (countedLoopEmptyExitState offset metaProg regHex
+        (Fetch.pcCounterTailAfterPeel regHex sim)).pc = offset + 3 := rfl
+  rw [h_prog, h_pc, h_pop]
+  unfold countedLoopEmptyExitState Fetch.pcCounterTailAfterPeel
+    fetchProgHaltDetectEntry encHaltedFlag haltedTrueCell haltedFalseCell
+  cases sim.halted <;> rfl
+
+/-- Exact-fuel composition from real fetch-entry through pc-counter peel,
+    then one `pop` that moves the halted flag into `META.cur` and lands at
+    the shifted halt-detection branch state. -/
+theorem fetchEntryState_pc_counter_peel_then_haltDetectEntry_shifted
+    (regHex : Hexagram) (sim : YiState) (metaProg : List YiInstr)
+    (offset : Nat)
+    (h_loop : MetaProgHasEmptyCountedLoopAt offset metaProg)
+    (h_pop : metaProg[offset + 3]? = some YiInstr.pop) :
+    (fetchEntryState regHex sim metaProg offset).runFuel (3 * sim.pc + 3)
+      = fetchProgHaltDetectEntry regHex sim metaProg (offset + 3) sim.halted := by
+  have hfuel : 3 * sim.pc + 3 = (3 * sim.pc + 2) + 1 := by omega
+  rw [hfuel, SSBX.Foundation.Bagua.GodelLi.runFuel_succ_right]
+  rw [Fetch.fetchEntryState_pc_counter_peel_exposes_halted_flag
+    offset metaProg h_loop regHex sim]
+  exact pcCounterPeelExit_pop_halted_flag_eq_haltDetectEntry_shifted
+    regHex sim metaProg offset h_pop
+
 /-! ## § 5  General routing — composed from a peel hypothesis
 
 These are the theorems Phase 2.3 truly needs.  The full walk

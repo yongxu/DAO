@@ -602,6 +602,18 @@ theorem encMetaHistory_eq_pcCounter_append_tail
   unfold encMetaHistory pcCounterTailAfterPeel
   simp [List.append_assoc]
 
+/-- A real fetch-entry state is exactly the empty counted-loop entry state
+    for the pc-counter peel, with `sim.cur` as the carried META cur and
+    the canonical tail below the pc-counter. -/
+theorem fetchEntryState_eq_countedLoopEmptyEntryState
+    (regHex : Hexagram) (sim : YiState) (metaProg : List YiInstr)
+    (offset : Nat) :
+    fetchEntryState regHex sim metaProg offset =
+      countedLoopEmptyEntryState offset metaProg sim.cur regHex sim.pc
+        (pcCounterTailAfterPeel regHex sim) := by
+  unfold fetchEntryState countedLoopEmptyEntryState
+  rw [encMetaHistory_eq_pcCounter_append_tail]
+
 /-- Peeling the pc-counter with the empty counted-loop lands exactly at the
     tail whose head is the halted-flag cell.  This is a route-independent
     bridge for constructing future `FetchProg` peel witnesses. -/
@@ -615,6 +627,19 @@ theorem pc_counter_peel_exposes_halted_flag
           (pcCounterTailAfterPeel regHex sim) := by
   exact countedLoop_empty_simulates_n_iterations offset metaProg h_loop cur regHex
     sim.pc (pcCounterTailAfterPeel regHex sim)
+
+/-- Field-facing form specialized to the real fetch-entry state.  After
+    the pc-counter peel, META is positioned at the counted-loop exit and
+    the halted-flag cell is exposed at the head of history. -/
+theorem fetchEntryState_pc_counter_peel_exposes_halted_flag
+    (offset : Nat) (metaProg : List YiInstr)
+    (h_loop : MetaProgHasEmptyCountedLoopAt offset metaProg)
+    (regHex : Hexagram) (sim : YiState) :
+    (fetchEntryState regHex sim metaProg offset).runFuel (3 * sim.pc + 2)
+      = countedLoopEmptyExitState offset metaProg regHex
+          (pcCounterTailAfterPeel regHex sim) := by
+  rw [fetchEntryState_eq_countedLoopEmptyEntryState]
+  exact pc_counter_peel_exposes_halted_flag offset metaProg h_loop sim.cur regHex sim
 
 /-- Field-facing form: after the pc-counter peel, the next history cell is the
     encoded halted flag, pc is at the counted-loop exit, and META remains alive. -/
