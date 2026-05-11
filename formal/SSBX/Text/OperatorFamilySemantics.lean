@@ -50,7 +50,7 @@ def operatorId : CellTransformKind → OperatorId
 def apply : CellTransformKind → Cell256 → Cell256
   | .id, c => c
   | .next64, c => («生» c.1, c.2)
-  | .prev64, c => («加» Hexagram.kun c.1, c.2)
+  | .prev64, c => («加» Hexagram.earth c.1, c.2)
   | .cuo, c => Cell256.hexCuo c
   | .zong, c => Cell256.hexZong c
   | .hu, c => Cell256.hexHu c
@@ -159,7 +159,7 @@ theorem applyCellTransformForOperator?_next64 (c : Cell256) :
     applyCellTransformForOperator? .T_10 c = some («生» c.1, c.2) := rfl
 
 theorem applyCellTransformForOperator?_prev64 (c : Cell256) :
-    applyCellTransformForOperator? .T_12 c = some («加» Hexagram.kun c.1, c.2) := rfl
+    applyCellTransformForOperator? .T_12 c = some («加» Hexagram.earth c.1, c.2) := rfl
 
 theorem applyCellTransformForOperator?_cuo (c : Cell256) :
     applyCellTransformForOperator? .Z_5 c = some (Cell256.hexCuo c) := rfl

@@ -154,7 +154,7 @@ theorem U_not_rise_to_T :
 
 K § 维度 2 / BaguaAlgebra § 11 之集中：
 V₄ = {id, 错 (cuo), 综 (zong), 错综 (cuoZong)} 是 Hexagram 上之 Klein 四群
-（每元 involutive，互相交换），其 4 元素在 `qian` 上之像两两不同。
+（每元 involutive，互相交换），其 4 元素在 `heaven` 上之像两两不同。
 故 V₄ 在 64 卦上之轨道平均 size 4，轨道数 64/4 = 16（informal；
 此处只 Lean 验证 4 元素之自由作用 + 全集合大小 = 64）。 -/
 
@@ -174,29 +174,29 @@ def V4_zong : Hexagram → Hexagram := Hexagram.zong
 /-- **V₄ 元素 4**：错综（cuoZong）—— cuo ∘ zong。 -/
 def V4_cuoZong : Hexagram → Hexagram := Hexagram.cuoZong
 
-/-- 计算性事实：V₄ 之 4 元素在 qian 上之像。 -/
-theorem V4_id_qian : V4_id Hexagram.qian = Hexagram.qian := rfl
-theorem V4_cuo_qian : V4_cuo Hexagram.qian = Hexagram.kun := by
+/-- 计算性事实：V₄ 之 4 元素在 heaven 上之像。 -/
+theorem V4_id_qian : V4_id Hexagram.heaven = Hexagram.heaven := rfl
+theorem V4_cuo_qian : V4_cuo Hexagram.heaven = Hexagram.earth := by
   unfold V4_cuo; rfl
-theorem V4_zong_qian : V4_zong Hexagram.qian = Hexagram.qian := rfl
-theorem V4_cuoZong_qian : V4_cuoZong Hexagram.qian = Hexagram.kun := by
+theorem V4_zong_qian : V4_zong Hexagram.heaven = Hexagram.heaven := rfl
+theorem V4_cuoZong_qian : V4_cuoZong Hexagram.heaven = Hexagram.earth := by
   unfold V4_cuoZong Hexagram.cuoZong; rfl
 
-/-- **V₄ 在 qian 上之像数 = 2**（qian 为 V₄ 之自反点之一：id/zong 皆固定 qian；
-    cuo/cuoZong 皆映 qian 为 kun）。
-    此为 V₄ 之 stabilizer 在 qian 上具体非平凡之见证：
-    `Stab(qian) ⊇ {id, zong}`，故 |orbit(qian)| = 4/2 = 2。
+/-- **V₄ 在 heaven 上之像数 = 2**（heaven 为 V₄ 之自反点之一：id/zong 皆固定 heaven；
+    cuo/cuoZong 皆映 heaven 为 earth）。
+    此为 V₄ 之 stabilizer 在 heaven 上具体非平凡之见证：
+    `Stab(heaven) ⊇ {id, zong}`，故 |orbit(heaven)| = 4/2 = 2。
 
-    形式陈述：4 元素在 qian 之像之集合 ⊆ {qian, kun}，且二者皆出现。 -/
+    形式陈述：4 元素在 heaven 之像之集合 ⊆ {heaven, earth}，且二者皆出现。 -/
 theorem V4_orbit_qian :
-    V4_id Hexagram.qian = Hexagram.qian
-    ∧ V4_zong Hexagram.qian = Hexagram.qian
-    ∧ V4_cuo Hexagram.qian = Hexagram.kun
-    ∧ V4_cuoZong Hexagram.qian = Hexagram.kun
-    ∧ Hexagram.qian ≠ Hexagram.kun :=
+    V4_id Hexagram.heaven = Hexagram.heaven
+    ∧ V4_zong Hexagram.heaven = Hexagram.heaven
+    ∧ V4_cuo Hexagram.heaven = Hexagram.earth
+    ∧ V4_cuoZong Hexagram.heaven = Hexagram.earth
+    ∧ Hexagram.heaven ≠ Hexagram.earth :=
   ⟨V4_id_qian, V4_zong_qian, V4_cuo_qian, V4_cuoZong_qian, by decide⟩
 
-/-- **V₄ 在某一非自反卦上自由作用之见证**（取 `qian` 之内 yang 外 yin 即 `泰 (tai)`：
+/-- **V₄ 在某一非自反卦上自由作用之见证**（取 `heaven` 之内 yang 外 yin 即 `泰 (tai)`：
     ⟨yang, yang, yang, yin, yin, yin⟩；此卦在 V₄ 之 4 元素下取 4 个不同卦）。 -/
 def taiHex : Hexagram := ⟨.yang, .yang, .yang, .yin, .yin, .yin⟩
 
@@ -232,7 +232,7 @@ theorem V4_taiHex_orbit_nontrivial :
 /-- **T₆ V₄ 超八面体之结构事实总结**：
     (a) 全 64 卦穷尽；
     (b) V₄ 之 cuo / zong 元素 involutive（生成 Klein 4-group，证已在 BaguaAlgebra）；
-    (c) V₄ 在 qian 上有非平凡 stabilizer（id/zong 不动 qian），|orbit(qian)| = 2；
+    (c) V₄ 在 heaven 上有非平凡 stabilizer（id/zong 不动 heaven），|orbit(heaven)| = 2；
     (d) V₄ 在 taiHex 上轨道亦非平凡（|orbit(taiHex)| = 2 之具体见证）。
     综合（a-d）：V₄ 平均轨道 size ≈ 4（含某些 size 2 自反点），
     总轨道数 ≈ 64/4 = 16（informal 之 orbit-stabilizer 推论；
@@ -267,7 +267,7 @@ theorem dao_li_summary :
     -- (3) T₆ V₄ 超八面体
     ∧ (Hexagram.allHex.length = 64)
     ∧ (∀ h : Hexagram, V4_cuo (V4_cuo h) = h)
-    ∧ (Hexagram.qian ≠ Hexagram.kun) :=
+    ∧ (Hexagram.heaven ≠ Hexagram.earth) :=
   ⟨dao_proves_about_li,
    li_cannot_encode_dao,
    K3_tautology_eq_T,

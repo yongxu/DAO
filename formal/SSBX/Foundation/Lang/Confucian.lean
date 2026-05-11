@@ -57,16 +57,16 @@ open SSBX.Foundation.Yi.Yi.Hexagram
 namespace SiDuan
 
 /-- 恻隐之心 = 仁之端 → 离 ☲ (illumination/warmth). -/
-def «恻隐» : Trigram := Trigram.li
+def «恻隐» : Trigram := Trigram.fire
 
 /-- 羞恶之心 = 义之端 → 坎 ☵ (water/danger/judgment). -/
-def «羞恶» : Trigram := Trigram.kan
+def «羞恶» : Trigram := Trigram.water
 
 /-- 辞让之心 = 礼之端 → 震 ☳ (thunder/initiation/yielding). -/
-def «辞让» : Trigram := Trigram.zhen
+def «辞让» : Trigram := Trigram.thunder
 
 /-- 是非之心 = 智之端 → 兑 ☱ (lake/clarity/discrimination). -/
-def «是非» : Trigram := Trigram.dui
+def «是非» : Trigram := Trigram.lake
 
 /-- These four aliases agree with the existing `SiDuan.toTrigram` mapping
 in `Foundation/Eight/XinZhi.lean`. -/
@@ -104,14 +104,14 @@ Alternative readings exist — this is a proposal.
 
 namespace BaMu
 
-def «格物»   : Trigram := Trigram.xun
-def «致知»   : Trigram := Trigram.li
-def «诚意»   : Trigram := Trigram.dui
-def «正心»   : Trigram := Trigram.gen
-def «修身»   : Trigram := Trigram.zhen
-def «齐家»   : Trigram := Trigram.kan
-def «治国»   : Trigram := Trigram.kun
-def «平天下» : Trigram := Trigram.qian
+def «格物»   : Trigram := Trigram.wind
+def «致知»   : Trigram := Trigram.fire
+def «诚意»   : Trigram := Trigram.lake
+def «正心»   : Trigram := Trigram.mountain
+def «修身»   : Trigram := Trigram.thunder
+def «齐家»   : Trigram := Trigram.water
+def «治国»   : Trigram := Trigram.earth
+def «平天下» : Trigram := Trigram.heaven
 
 /-- The 8 目 list. -/
 def all : List Trigram :=
@@ -121,8 +121,8 @@ theorem bamu_count : all.length = 8 := rfl
 
 /-- The 8 目 cover all 8 trigrams (bijection with 八卦) as a list permutation. -/
 theorem bamu_eq_perm_of_bagua : BaMu.all =
-    [Trigram.xun, Trigram.li, Trigram.dui, Trigram.gen,
-     Trigram.zhen, Trigram.kan, Trigram.kun, Trigram.qian] := rfl
+    [Trigram.wind, Trigram.fire, Trigram.lake, Trigram.mountain,
+     Trigram.thunder, Trigram.water, Trigram.earth, Trigram.heaven] := rfl
 
 /-- The 8 目 are pairwise distinct. -/
 theorem bamu_distinct : «格物» ≠ «致知» ∧ «格物» ≠ «诚意» ∧
@@ -292,9 +292,9 @@ end YuanHengLiZhen
 
 namespace SanGang
 
-def «明明德» : Trigram := Trigram.li
-def «亲民»   : Trigram := Trigram.dui
-def «止于至善» : Trigram := Trigram.gen
+def «明明德» : Trigram := Trigram.fire
+def «亲民»   : Trigram := Trigram.lake
+def «止于至善» : Trigram := Trigram.mountain
 
 def all : List Trigram := [«明明德», «亲民», «止于至善»]
 
@@ -309,9 +309,9 @@ end SanGang
 
 namespace SanCai
 
-def «天» : Trigram := Trigram.qian
-def «地» : Trigram := Trigram.kun
-def «人» : Trigram := Trigram.gen
+def «天» : Trigram := Trigram.heaven
+def «地» : Trigram := Trigram.earth
+def «人» : Trigram := Trigram.mountain
 
 theorem sancai_distinct :
     «天» ≠ «地» ∧ «天» ≠ «人» ∧ «地» ≠ «人» := by
@@ -365,15 +365,15 @@ theorem confucian_summary :
     -- R₂ 元亨利贞
     YuanHengLiZhen.«元» = SSBX.Foundation.Bagua.BaguaAlgebra.SiXiang.taiYang ∧
     -- R₃ 四端
-    SiDuan.«恻隐» = Trigram.li ∧
-    SiDuan.«羞恶» = Trigram.kan ∧
-    SiDuan.«辞让» = Trigram.zhen ∧
-    SiDuan.«是非» = Trigram.dui ∧
+    SiDuan.«恻隐» = Trigram.fire ∧
+    SiDuan.«羞恶» = Trigram.water ∧
+    SiDuan.«辞让» = Trigram.thunder ∧
+    SiDuan.«是非» = Trigram.lake ∧
     -- R₃ 三纲
     SanGang.all.length = 3 ∧
     -- R₃ 三才
-    SanCai.«天» = Trigram.qian ∧
-    SanCai.«地» = Trigram.kun ∧
+    SanCai.«天» = Trigram.heaven ∧
+    SanCai.«地» = Trigram.earth ∧
     -- R₃ 大学八目
     BaMu.all.length = 8 ∧
     -- R₅ 五伦

@@ -268,10 +268,10 @@ theorem daoJudge_isXin (h : Hexagram) :
   cases h.isTian <;> simp [Shi.ji, Shi.wei]
 
 /-- 乾 (☰☰) is 天道. -/
-theorem daoJudge_qian : daoJudge Hexagram.qian = Shi.ji := by native_decide
+theorem daoJudge_qian : daoJudge Hexagram.heaven = Shi.ji := by native_decide
 
 /-- 坤 (☷☷) is 天道. -/
-theorem daoJudge_kun : daoJudge Hexagram.kun = Shi.ji := by native_decide
+theorem daoJudge_kun : daoJudge Hexagram.earth = Shi.ji := by native_decide
 
 /-- 否 (天地否) is 心道 (y3=阳 ≠ y4=阴). -/
 theorem daoJudge_pi :
@@ -343,9 +343,9 @@ theorem loopProg_has_no_fuel_witness (h : Hexagram) :
     enters the halted state. This formally witnesses non-termination of the
     interpreter on `loopProg`. -/
 theorem loopProg_unbounded :
-    ∀ n : Nat, ¬((YiState.init Hexagram.qian loopProg).runFuel n).halted = true := by
+    ∀ n : Nat, ¬((YiState.init Hexagram.heaven loopProg).runFuel n).halted = true := by
   intro n hn
-  exact loopProg_has_no_fuel_witness Hexagram.qian ⟨n, hn⟩
+  exact loopProg_has_no_fuel_witness Hexagram.heaven ⟨n, hn⟩
 
 /-! ### § 7c 道判机 as a wenyan claim within the system
 
@@ -384,7 +384,7 @@ theorem dao_judge_complete :
     ∧ -- (3) terminates within fixed fuel
     (∀ h : Hexagram, ((YiState.init h daoJudgeProg).runFuel 10).halted = true)
     ∧ -- (4) loopProg is provably unbounded (non-halting at every fuel level)
-    (∀ n : Nat, ¬((YiState.init Hexagram.qian loopProg).runFuel n).halted = true) := by
+    (∀ n : Nat, ¬((YiState.init Hexagram.heaven loopProg).runFuel n).halted = true) := by
   refine ⟨?_, daoJudge_correct, daoJudgeProg_total_within_10, loopProg_unbounded⟩
   intro h
   rw [daoJudge_correct]

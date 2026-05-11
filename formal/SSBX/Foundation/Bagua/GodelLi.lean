@@ -276,12 +276,12 @@ theorem li_incomplete_finite :
     ¬ ∃ N : Nat, ∀ (P : List YiInstr) (h : Hexagram),
         Halts P h ↔ ((YiState.init h P).runFuel N).halted = true := by
   intro ⟨N, hN⟩
-  -- 取反例：slowProg N 在 qian 上
-  have h_halts : Halts (slowProg N) Hexagram.qian := halts_slowProg _ _
+  -- 取反例：slowProg N 在 heaven 上
+  have h_halts : Halts (slowProg N) Hexagram.heaven := halts_slowProg _ _
   have h_not_halted_at_N :
-      ((YiState.init Hexagram.qian (slowProg N)).runFuel N).halted = false :=
+      ((YiState.init Hexagram.heaven (slowProg N)).runFuel N).halted = false :=
     slowProg_runFuel_N_not_halted _ _
-  have := (hN (slowProg N) Hexagram.qian).mp h_halts
+  have := (hN (slowProg N) Hexagram.heaven).mp h_halts
   rw [h_not_halted_at_N] at this
   exact Bool.false_ne_true this
 
@@ -612,23 +612,23 @@ theorem halts_undecidable_under_kleene (h_kleene : KleeneInverter) :
         ∀ P h, decide P h = true ↔ Halts P h := by
   intro ⟨decide, hd⟩
   obtain ⟨D, hD⟩ := h_kleene decide (cuoInvariant_of_decides_halts decide hd)
-  -- 取 qian 作具体 hexagram
-  have h_iff_halts : decide D Hexagram.qian = true ↔ Halts D Hexagram.qian :=
-    hd D Hexagram.qian
-  have h_iff_invert : Halts D Hexagram.qian ↔ decide D Hexagram.qian = false :=
-    hD Hexagram.qian
+  -- 取 heaven 作具体 hexagram
+  have h_iff_halts : decide D Hexagram.heaven = true ↔ Halts D Hexagram.heaven :=
+    hd D Hexagram.heaven
+  have h_iff_invert : Halts D Hexagram.heaven ↔ decide D Hexagram.heaven = false :=
+    hD Hexagram.heaven
   -- 矛盾：decide D h = true ↔ Halts D h ↔ decide D h = false
-  cases hb : decide D Hexagram.qian with
+  cases hb : decide D Hexagram.heaven with
   | true =>
     -- decide = true → Halts → decide = false（矛盾）
-    have h_halts : Halts D Hexagram.qian := h_iff_halts.mp hb
-    have h_false : decide D Hexagram.qian = false := h_iff_invert.mp h_halts
+    have h_halts : Halts D Hexagram.heaven := h_iff_halts.mp hb
+    have h_false : decide D Hexagram.heaven = false := h_iff_invert.mp h_halts
     rw [hb] at h_false
     contradiction
   | false =>
     -- decide = false → Halts → decide = true（矛盾）
-    have h_halts : Halts D Hexagram.qian := h_iff_invert.mpr hb
-    have h_true : decide D Hexagram.qian = true := h_iff_halts.mpr h_halts
+    have h_halts : Halts D Hexagram.heaven := h_iff_invert.mpr hb
+    have h_true : decide D Hexagram.heaven = true := h_iff_halts.mpr h_halts
     rw [hb] at h_true
     contradiction
 
@@ -670,7 +670,7 @@ theorem not_halts_undecidable_under_kleene (h_kleene : KleeneInverter) :
     cuoInvariant_of_decides_not_halts decide_neg h_neg
   obtain ⟨D, hD⟩ := h_kleene (fun P h => !decide_neg P h)
     (cuoInvariant_not decide_neg h_cuo_neg)
-  let h := Hexagram.qian
+  let h := Hexagram.heaven
   have h_kleene_iff : Halts D h ↔ (!decide_neg D h) = false := hD h
   -- (!b) = false ↔ b = true
   have h_negbool : (!decide_neg D h) = false ↔ decide_neg D h = true := by
@@ -685,24 +685,24 @@ theorem not_halts_undecidable_under_kleene (h_kleene : KleeneInverter) :
   · exact h_halts (h_contra.mpr h_halts)
 
 /-- **固定 h，Halts 仍不可判**：即使输入六爻固定为乾，停机仍不可判。
-    证明：若 decide_qian 判 `Halts · qian`，由 KleeneInverter 取 D（用 decide 忽略 h）
+    证明：若 decide_qian 判 `Halts · heaven`，由 KleeneInverter 取 D（用 decide 忽略 h）
     导出矛盾。 -/
 theorem halts_at_qian_undecidable_under_kleene (h_kleene : KleeneInverter) :
     ¬ ∃ decide : List YiInstr → Bool,
-        ∀ P, decide P = true ↔ Halts P Hexagram.qian := by
+        ∀ P, decide P = true ↔ Halts P Hexagram.heaven := by
   intro ⟨decide_qian, h_dec⟩
   obtain ⟨D, hD⟩ := h_kleene (fun P _ => decide_qian P)
     (cuoInvariant_of_h_ignore decide_qian)
-  have h_kleene_iff : Halts D Hexagram.qian ↔ decide_qian D = false :=
-    hD Hexagram.qian
-  have h_dec_iff : decide_qian D = true ↔ Halts D Hexagram.qian := h_dec D
+  have h_kleene_iff : Halts D Hexagram.heaven ↔ decide_qian D = false :=
+    hD Hexagram.heaven
+  have h_dec_iff : decide_qian D = true ↔ Halts D Hexagram.heaven := h_dec D
   cases hb : decide_qian D with
   | true =>
-    have hh : Halts D Hexagram.qian := h_dec_iff.mp hb
+    have hh : Halts D Hexagram.heaven := h_dec_iff.mp hb
     have hf : decide_qian D = false := h_kleene_iff.mp hh
     rw [hb] at hf; contradiction
   | false =>
-    have hh : Halts D Hexagram.qian := h_kleene_iff.mpr hb
+    have hh : Halts D Hexagram.heaven := h_kleene_iff.mpr hb
     have ht : decide_qian D = true := h_dec_iff.mpr hh
     rw [hb] at ht; contradiction
 
@@ -776,14 +776,14 @@ theorem halts_on_some_undecidable_under_kleene (h_kleene : KleeneInverter) :
   | false =>
     -- decide_some D = false → ¬ ∃ h, Halts D h
     -- 但 Kleene 给：Halts D h ↔ (false = false) ↔ True，即 ∀ h, Halts D h
-    -- 取 qian：既 Halts 又 ¬ Halts
+    -- 取 heaven：既 Halts 又 ¬ Halts
     have h_no_some : ¬ ∃ h, Halts D h := by
       intro he
       have hT : decide_some D = true := (h_dec D).mpr he
       rw [hb] at hT
       contradiction
-    have h_qian : Halts D Hexagram.qian := (hD Hexagram.qian).mpr hb
-    exact h_no_some ⟨Hexagram.qian, h_qian⟩
+    have h_qian : Halts D Hexagram.heaven := (hD Hexagram.heaven).mpr hb
+    exact h_no_some ⟨Hexagram.heaven, h_qian⟩
 
 /-- **Π_none 不可判**（条件版）：「程序处处不停」不可由任何 Lean Bool
     函数判定。证明：直接对 (fun P _ => !decide_none P) 应用 KleeneInverter。 -/
@@ -797,11 +797,11 @@ theorem halts_on_none_undecidable_under_kleene (h_kleene : KleeneInverter) :
   cases hb : decide_none D with
   | true =>
     -- decide_none D = true → ∀ h, ¬ Halts D h (by h_dec)
-    -- 但 (!decide_none D) = !true = false，故 hD qian.mpr 给 Halts D qian
+    -- 但 (!decide_none D) = !true = false，故 hD heaven.mpr 给 Halts D heaven
     have h_all_no : ∀ h, ¬ Halts D h := (h_dec D).mp hb
     have h_kleene_eq : (!decide_none D) = false := by rw [hb]; decide
-    have h_qian_halt : Halts D Hexagram.qian := (hD Hexagram.qian).mpr h_kleene_eq
-    exact (h_all_no Hexagram.qian h_qian_halt).elim
+    have h_qian_halt : Halts D Hexagram.heaven := (hD Hexagram.heaven).mpr h_kleene_eq
+    exact (h_all_no Hexagram.heaven h_qian_halt).elim
   | false =>
     -- decide_none D = false → !decide_none D = true，故 hD h.mp 强迫 ¬ Halts D h
     have h_kl_all_no : ∀ h, ¬ Halts D h := by
@@ -826,8 +826,8 @@ theorem halts_on_all_undecidable_under_kleene (h_kleene : KleeneInverter) :
   | true =>
     -- decide_all D = true → ∀ h, Halts D h，但 Kleene 给 ∀ h, ¬ Halts D h
     have h_all_halt : ∀ h, Halts D h := (h_dec D).mp hb
-    have h_qian : Halts D Hexagram.qian := h_all_halt Hexagram.qian
-    have h_kl : Halts D Hexagram.qian ↔ decide_all D = false := hD Hexagram.qian
+    have h_qian : Halts D Hexagram.heaven := h_all_halt Hexagram.heaven
+    have h_kl : Halts D Hexagram.heaven ↔ decide_all D = false := hD Hexagram.heaven
     have hf : decide_all D = false := h_kl.mp h_qian
     rw [hb] at hf
     contradiction
@@ -1112,7 +1112,7 @@ theorem halts_on_some_via_uniform_under_kleene (h_kleene : KleeneInverter) :
     fun S => decide (∃ h, S h)
   have h_dist : Phi (fun _ => True) ≠ Phi (fun _ => False) := by
     have h_T : Phi (fun _ : Hexagram => True) = true :=
-      decide_eq_true ⟨Hexagram.qian, trivial⟩
+      decide_eq_true ⟨Hexagram.heaven, trivial⟩
     have h_F : Phi (fun _ : Hexagram => False) = false :=
       decide_eq_false (fun ⟨_, hf⟩ => hf)
     rw [h_T, h_F]; decide
@@ -1130,7 +1130,7 @@ theorem halts_on_none_via_uniform_under_kleene (h_kleene : KleeneInverter) :
     fun S => decide (∀ h, ¬ S h)
   have h_dist : Phi (fun _ => True) ≠ Phi (fun _ => False) := by
     have h_T : Phi (fun _ : Hexagram => True) = false :=
-      decide_eq_false (fun h => h Hexagram.qian trivial)
+      decide_eq_false (fun h => h Hexagram.heaven trivial)
     have h_F : Phi (fun _ : Hexagram => False) = true :=
       decide_eq_true (fun _ hf => hf)
     rw [h_T, h_F]; decide
@@ -1150,7 +1150,7 @@ theorem halts_on_all_via_uniform_under_kleene (h_kleene : KleeneInverter) :
     have h_T : Phi (fun _ : Hexagram => True) = true :=
       decide_eq_true (fun _ => trivial)
     have h_F : Phi (fun _ : Hexagram => False) = false :=
-      decide_eq_false (fun h => h Hexagram.qian)
+      decide_eq_false (fun h => h Hexagram.heaven)
     rw [h_T, h_F]; decide
   apply rice_uniform_under_kleene h_kleene Phi h_dist
   refine ⟨da, fun P => ?_⟩
@@ -1168,7 +1168,7 @@ theorem halts_on_some_no_via_uniform_under_kleene (h_kleene : KleeneInverter) :
     have h_T : Phi (fun _ : Hexagram => True) = false :=
       decide_eq_false (fun ⟨_, hf⟩ => hf trivial)
     have h_F : Phi (fun _ : Hexagram => False) = true :=
-      decide_eq_true ⟨Hexagram.qian, fun hf => hf⟩
+      decide_eq_true ⟨Hexagram.heaven, fun hf => hf⟩
     rw [h_T, h_F]; decide
   apply rice_uniform_under_kleene h_kleene Phi h_dist
   refine ⟨dsn, fun P => ?_⟩

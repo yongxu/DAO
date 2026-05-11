@@ -34,8 +34,8 @@ open SSBX.Foundation.Bagua.Cell128
 
 /-! ## § 1  生生不息 — 乾·无 → 坤·有 in 7 atomic flips
 
-We start at L7's `origin` (= `(qian, false)` = 乾·无) and walk through 7
-atomic generators of (Z/2)⁷. After 7 fuel steps the cell is `(kun, true)` =
+We start at L7's `origin` (= `(heaven, false)` = 乾·无) and walk through 7
+atomic generators of (Z/2)⁷. After 7 fuel steps the cell is `(earth, true)` =
 坤·有, the unique antipode. Each step uses a distinct atomic operator, so
 any of the 128! such walks is a valid witness; we use the canonical one
 (flip y1; y2; …; y6; then 印).
@@ -45,10 +45,10 @@ The "perpetual" part: since each atomic op is its own inverse, the same
 has no sink — every cell has 7 outgoing edges, all reversible.
 -/
 
-/-- Cell128 cell `(qian, false)` rendered as Sexp at L7. -/
+/-- Cell128 cell `(heaven, false)` rendered as Sexp at L7. -/
 private def qianWuSexp : Sexp := L7.printCell L7.origin
 
-/-- Cell128 cell `(kun, true)` rendered as Sexp at L7. -/
+/-- Cell128 cell `(earth, true)` rendered as Sexp at L7. -/
 private def kunYouSexp : Sexp :=
   L7.printCell ((⟨.yin, .yin, .yin, .yin, .yin, .yin⟩ : Hexagram), true)
 

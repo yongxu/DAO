@@ -239,32 +239,32 @@ def BaguaCat1 : TyCat where
   id_right _ := rfl
   assoc _ _ _ := rfl
 
-/-- **Hom 函子在 BaguaCat1 上 anchor**：固定 qian-lift，任意对象映为 Unit。 -/
+/-- **Hom 函子在 BaguaCat1 上 anchor**：固定 heaven-lift，任意对象映为 Unit。 -/
 theorem homFunctor_baguaLift_obj (X : ULift Trigram) :
-    (homFunctor BaguaCat1 (ULift.up Trigram.qian)).obj X = Unit := rfl
+    (homFunctor BaguaCat1 (ULift.up Trigram.heaven)).obj X = Unit := rfl
 
 /-! ## § 7 BaguaCat / HexagramCat 之 CCC vacuous instance
 
 由 BaguaCat 是 indiscrete (Hom = Unit)，任意对象皆 terminal / product / exp。
-随便挑 qian 作 terminal、prod、exp 即可。 -/
+随便挑 heaven 作 terminal、prod、exp 即可。 -/
 
-/-- **BaguaCat 之 CCC 数据**：terminal / prod / exp 皆任取（取 qian / 第一参数）。 -/
+/-- **BaguaCat 之 CCC 数据**：terminal / prod / exp 皆任取（取 heaven / 第一参数）。 -/
 def baguaCCC : CCCData BaguaCat where
-  terminal := Trigram.qian
+  terminal := Trigram.heaven
   prod     := fun X _ => X
   exp      := fun _ Y => Y
 
-/-- **HexagramCat 之 CCC 数据**：取 Hexagram.qian 作 terminal。 -/
+/-- **HexagramCat 之 CCC 数据**：取 Hexagram.heaven 作 terminal。 -/
 def hexagramCCC : CCCData HexagramCat where
-  terminal := SSBX.Foundation.Yi.Yi.Hexagram.qian
+  terminal := SSBX.Foundation.Yi.Yi.Hexagram.heaven
   prod     := fun X _ => X
   exp      := fun _ Y => Y
 
 /-- **BaguaCat indiscrete 性**：任意 Hom = Unit。 -/
 theorem bagua_hom_unit (X Y : BaguaCat.Obj) : BaguaCat.Hom X Y = Unit := rfl
 
-/-- **BaguaCat 任意对象皆 terminal**：唯一态射 X → qian。 -/
-theorem bagua_terminal_unique (X : BaguaCat.Obj) (f g : BaguaCat.Hom X qian) : f = g := by
+/-- **BaguaCat 任意对象皆 terminal**：唯一态射 X → heaven。 -/
+theorem bagua_terminal_unique (X : BaguaCat.Obj) (f g : BaguaCat.Hom X heaven) : f = g := by
   cases f
   cases g
   rfl
@@ -296,14 +296,14 @@ theorem catExt_summary :
     ∧ (∀ {σ α : Type} (m : State σ α),
         State.bind m (State.pure (σ := σ)) = m)
     -- (5) homFunctor obj
-    ∧ ((homFunctor BaguaCat1 (ULift.up Trigram.qian)).obj
-        (ULift.up Trigram.qian) = Unit)
-    -- (6) baguaCCC terminal = qian
-    ∧ (baguaCCC.terminal = Trigram.qian)
+    ∧ ((homFunctor BaguaCat1 (ULift.up Trigram.heaven)).obj
+        (ULift.up Trigram.heaven) = Unit)
+    -- (6) baguaCCC terminal = heaven
+    ∧ (baguaCCC.terminal = Trigram.heaven)
     -- (7) bagua Hom = Unit
-    ∧ (BaguaCat.Hom qian qian = Unit)
+    ∧ (BaguaCat.Hom heaven heaven = Unit)
     -- (8) hexagramCCC terminal
-    ∧ (hexagramCCC.terminal = SSBX.Foundation.Yi.Yi.Hexagram.qian) := by
+    ∧ (hexagramCCC.terminal = SSBX.Foundation.Yi.Yi.Hexagram.heaven) := by
   refine ⟨?_, ?_, rfl, rfl, ?_, ?_, rfl, rfl, rfl, rfl⟩
   · intro A B C f; rfl
   · intro A B C f; funext p; cases p; rfl

@@ -61,10 +61,10 @@ theorem judgeHalt_via_bounded (p : List YiInstr) (h : Hexagram) (n : Nat) :
 
 /-- 验证：daoJudgeProg 在乾卦输入 + 10 燃料下必止（与 BaguaTuring.daoJudgeProg_total_within_10
     精神一致）。 -/
-example : «合度判停» daoJudgeProg Hexagram.qian 10 = true := by native_decide
+example : «合度判停» daoJudgeProg Hexagram.heaven 10 = true := by native_decide
 
 /-- 验证：daoJudgeProg 在坤卦输入 + 10 燃料下必止。 -/
-example : «合度判停» daoJudgeProg Hexagram.kun 10 = true := by native_decide
+example : «合度判停» daoJudgeProg Hexagram.earth 10 = true := by native_decide
 
 /-! ## § 4  边界声明（命名而不证）
 

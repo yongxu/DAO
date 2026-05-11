@@ -88,7 +88,7 @@ end Tri
 
 inductive Term where
   | atom : Name -> Term
-  | gen : Name -> List Term -> Term
+  | mountain : Name -> List Term -> Term
   | prim : Name -> Term
   | recur : Name -> Term
   | pending : Name -> Term

@@ -504,7 +504,7 @@ theorem compileHexFun_reject_jia :
 
 theorem compileHexFun_reject_catalogue :
     (compileHexFunCertified?
-      (.catalogue2 .E_2 (.hexLit Hexagram.qian) (.hexLit Hexagram.qian))).isNone = true := by
+      (.catalogue2 .E_2 (.hexLit Hexagram.heaven) (.hexLit Hexagram.heaven))).isNone = true := by
   native_decide
 
 theorem compileHexFun_reject_bool :
@@ -624,7 +624,7 @@ theorem yaoAt_eq_cuo_invariant (h : Hexagram) (i j : Fin 6) :
 
 /-- 反例点：«生» 不与 cuo 通约 — 取 h = «乾» 则等式不成立。 -/
 theorem sheng_not_cuo_equivariant :
-    («生» Hexagram.qian).cuo ≠ «生» (Hexagram.qian.cuo) := by
+    («生» Hexagram.heaven).cuo ≠ «生» (Hexagram.heaven.cuo) := by
   native_decide
 
 /-! ## § 6  公示总结 -/
@@ -646,7 +646,7 @@ theorem compile_summary :
     ∧ -- (4) cuo-symmetry: flipPos 通约
     (∀ h : Hexagram, ∀ i : Fin 6, (h.flipPos i).cuo = (h.cuo).flipPos i)
     ∧ -- (5) «生» 之结构性不可 compile 见证
-    («生» Hexagram.qian).cuo ≠ «生» (Hexagram.qian.cuo)
+    («生» Hexagram.heaven).cuo ≠ «生» (Hexagram.heaven.cuo)
     := ⟨idProg_correct, add32Prog_correct, cuoProg_correct,
         flipPos_cuo_equivariant, sheng_not_cuo_equivariant⟩
 

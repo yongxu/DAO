@@ -20,7 +20,7 @@ Post-migration (base-256 encoding), `cellFromIdx ⟨k, _⟩` decomposes as:
   hex_idx = k / 4
   shi_idx = k % 4
 For k ∈ {0..5} = `Fin 6`:
-  i=0 → hex=0, shi=dao   (qian, all-yang;     y1=yang)
+  i=0 → hex=0, shi=dao   (heaven, all-yang;     y1=yang)
   i=1 → hex=0, shi=ji
   i=2 → hex=0, shi=jin
   i=3 → hex=0, shi=wei

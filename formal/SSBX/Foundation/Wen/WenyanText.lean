@@ -86,10 +86,10 @@ theorem «施判等同» (h : Hexagram) : «施» «道判之程» h = daoJudge 
 /-! ## § 5  验证 — 经卦皆可执 -/
 
 /-- 乾☰☰：天道。 -/
-theorem «乾天道» : «施» «道判之程» Hexagram.qian = «已» := by native_decide
+theorem «乾天道» : «施» «道判之程» Hexagram.heaven = «已» := by native_decide
 
 /-- 坤☷☷：天道。 -/
-theorem «坤天道» : «施» «道判之程» Hexagram.kun = «已» := by native_decide
+theorem «坤天道» : «施» «道判之程» Hexagram.earth = «已» := by native_decide
 
 /-- 否☰☷：心道。 -/
 theorem «否心道» :

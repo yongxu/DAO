@@ -26,12 +26,12 @@ R₇ atomic 算子: **印 (yìn)** = toggle 因 bit (Z/2 involution).
 ## Phase A — Algebraic Spine (Z/2)⁷
 本文件 § 6/§ 7 加 (Z/2)⁷ Abelian 群 + Cayley fusion + 印 重写为 XOR mask:
 - `Cell128.xor` = componentwise XOR (Hexagram XOR + Bool XOR)
-- `Cell128.origin` = (qian, false) = (Z/2)⁷ identity
+- `Cell128.origin` = (heaven, false) = (Z/2)⁷ identity
 - `AddCommGroup Cell128` instance — full Abelian group on 128 elements
 - `SMul Cell128 Cell128` self-action = Cayley regular representation
 - `cayley : Cell128 → (Cell128 → Cell128)` = injection into permutation group
 - `epsAtOrigin` = inverse-at-origin retraction
-- 印 (yin) = (· ⊕ yin_mask) where yin_mask = (qian, true) = `oooooooi`
+- 印 (yin) = (· ⊕ yin_mask) where yin_mask = (heaven, true) = `oooooooi`
 -/
 import SSBX.Foundation.Yi.Yi
 import SSBX.Foundation.Bagua.BaguaAlgebra
@@ -209,17 +209,17 @@ def hexXor (h1 h2 : Hexagram) : Hexagram :=
   ⟨yaoXor h1.y1 h2.y1, yaoXor h1.y2 h2.y2, yaoXor h1.y3 h2.y3,
    yaoXor h1.y4 h2.y4, yaoXor h1.y5 h2.y5, yaoXor h1.y6 h2.y6⟩
 
-@[simp] theorem hexXor_qian_left (h : Hexagram) : hexXor Hexagram.qian h = h := by
+@[simp] theorem hexXor_qian_left (h : Hexagram) : hexXor Hexagram.heaven h = h := by
   rcases h with ⟨_, _, _, _, _, _⟩
-  simp [hexXor, Hexagram.qian]
+  simp [hexXor, Hexagram.heaven]
 
-@[simp] theorem hexXor_qian_right (h : Hexagram) : hexXor h Hexagram.qian = h := by
+@[simp] theorem hexXor_qian_right (h : Hexagram) : hexXor h Hexagram.heaven = h := by
   rcases h with ⟨_, _, _, _, _, _⟩
-  simp [hexXor, Hexagram.qian]
+  simp [hexXor, Hexagram.heaven]
 
-theorem hexXor_self (h : Hexagram) : hexXor h h = Hexagram.qian := by
+theorem hexXor_self (h : Hexagram) : hexXor h h = Hexagram.heaven := by
   rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  simp [hexXor, Hexagram.qian, yaoXor_self]
+  simp [hexXor, Hexagram.heaven, yaoXor_self]
 
 theorem hexXor_comm (h1 h2 : Hexagram) : hexXor h1 h2 = hexXor h2 h1 := by
   rcases h1 with ⟨_, _, _, _, _, _⟩
@@ -239,8 +239,8 @@ theorem hexXor_assoc (h1 h2 h3 : Hexagram) :
 def xor (c1 c2 : Cell128) : Cell128 :=
   (hexXor c1.1 c2.1, Bool.xor c1.2 c2.2)
 
-/-- 道 cell at R₇ = (qian, false) = (Z/2)⁷ identity. -/
-def origin : Cell128 := (Hexagram.qian, false)
+/-- 道 cell at R₇ = (heaven, false) = (Z/2)⁷ identity. -/
+def origin : Cell128 := (Hexagram.heaven, false)
 
 @[simp] theorem origin_xor (c : Cell128) : xor origin c = c := by
   rcases c with ⟨h, b⟩
@@ -322,14 +322,14 @@ end Cell128
 /-! ## § 7 印 重写为 XOR mask (Phase A)
 
   Original `yin (h, b) = (h, !b)` toggles only the YinBit. We re-express this
-  as XOR with the canonical mask `yin_mask = (qian, true) = "oooooooi"`,
+  as XOR with the canonical mask `yin_mask = (heaven, true) = "oooooooi"`,
   showing `yin = (· ⊕ yin_mask)`. This is the form required for
   Cell256 mask-based 印/投 (where 印 and 投 each pick a different mask). -/
 
 namespace Cell128
 
 /-- 印 mask at R₇: only the YinBit (bit 7) is set. -/
-def yin_mask : Cell128 := (Hexagram.qian, true)
+def yin_mask : Cell128 := (Hexagram.heaven, true)
 
 /-- 印 (mask form): XOR with the YinBit-only mask. -/
 def yinM (c : Cell128) : Cell128 := xor c yin_mask

@@ -5,10 +5,10 @@
 
 ## 结构
 
-  4 本 (substrates, palindromic) ↔ {qian, li, kan, kun}
+  4 本 (substrates, palindromic) ↔ {heaven, fire, water, earth}
     Ben.wu (物), Ben.dong (動), Ben.jian (間), Ben.shi (事)
 
-  4 征 (marks, directional) ↔ {xun, zhen, dui, gen}
+  4 征 (marks, directional) ↔ {wind, thunder, lake, mountain}
     Zheng.jiFaint (幾), Zheng.shiForce (勢), Zheng.jiOccasion (機), Zheng.shiTime (時)
 
   Mian := Ben × Zheng = 16 cells
@@ -55,10 +55,10 @@ def all : List Ben := [.wu, .dong, .jian, .shi]
 
 /-- 本 → trigram 双射: 物→乾, 動→离, 間→坎, 事→坤. -/
 def toTrigram : Ben → Trigram
-  | .wu   => Trigram.qian
-  | .dong => Trigram.li
-  | .jian => Trigram.kan
-  | .shi  => Trigram.kun
+  | .wu   => Trigram.heaven
+  | .dong => Trigram.fire
+  | .jian => Trigram.water
+  | .shi  => Trigram.earth
 
 def char : Ben → String
   | .wu   => "物"
@@ -97,10 +97,10 @@ def all : List Zheng := [.jiFaint, .shiForce, .jiOccasion, .shiTime]
 
 /-- 征 → trigram 双射: 幾→巽, 勢→震, 機→兑, 時→艮. -/
 def toTrigram : Zheng → Trigram
-  | .jiFaint    => Trigram.xun
-  | .shiForce   => Trigram.zhen
-  | .jiOccasion => Trigram.dui
-  | .shiTime    => Trigram.gen
+  | .jiFaint    => Trigram.wind
+  | .shiForce   => Trigram.thunder
+  | .jiOccasion => Trigram.lake
+  | .shiTime    => Trigram.mountain
 
 def char : Zheng → String
   | .jiFaint    => "几"
@@ -140,18 +140,18 @@ def isZongMobile (t : Trigram) : Bool := !t.isZongFixed
 
 /-- Trigram → 本: 仅 4 个 zong-fixed trigram 有 Ben. -/
 def benOf? (t : Trigram) : Option SSBX.Foundation.Bagua.BenZheng.Ben :=
-  if t = qian then some .wu
-  else if t = li   then some .dong
-  else if t = kan  then some .jian
-  else if t = kun  then some .shi
+  if t = heaven then some .wu
+  else if t = fire   then some .dong
+  else if t = water  then some .jian
+  else if t = earth  then some .shi
   else none
 
 /-- Trigram → 征: 仅 4 个 zong-mobile trigram 有 Zheng. -/
 def zhengOf? (t : Trigram) : Option SSBX.Foundation.Bagua.BenZheng.Zheng :=
-  if t = xun  then some .jiFaint
-  else if t = zhen then some .shiForce
-  else if t = dui  then some .jiOccasion
-  else if t = gen  then some .shiTime
+  if t = wind  then some .jiFaint
+  else if t = thunder then some .shiForce
+  else if t = lake  then some .jiOccasion
+  else if t = mountain  then some .shiTime
   else none
 
 end SSBX.Foundation.Yi.Yi.Trigram
@@ -429,10 +429,10 @@ theorem bianOuter_flips_outer (h : Hexagram) :
 /-! ## § 11 hu attractors: {1乾, 2坤, 63既济, 64未济} 全在本本 -/
 
 /-- 乾 hu-fixed (本本). -/
-theorem qian_quadrant : Hexagram.qian.quadrant = .benBen := by native_decide
+theorem qian_quadrant : Hexagram.heaven.quadrant = .benBen := by native_decide
 
 /-- 坤 hu-fixed (本本). -/
-theorem kun_quadrant : Hexagram.kun.quadrant = .benBen := by native_decide
+theorem kun_quadrant : Hexagram.earth.quadrant = .benBen := by native_decide
 
 /-- 既济在本本. -/
 theorem jiji_quadrant : Hexagram.jiji.quadrant = .benBen := by native_decide
@@ -442,8 +442,8 @@ theorem weiji_quadrant : Hexagram.weiji.quadrant = .benBen := by native_decide
 
 /-- 4 个 hu attractor 都在本本 — 这是 64 卦最深的 substrate. -/
 theorem hu_attractors_in_benBen :
-    Hexagram.qian.quadrant = .benBen
-    ∧ Hexagram.kun.quadrant = .benBen
+    Hexagram.heaven.quadrant = .benBen
+    ∧ Hexagram.earth.quadrant = .benBen
     ∧ Hexagram.jiji.quadrant = .benBen
     ∧ Hexagram.weiji.quadrant = .benBen := by
   exact ⟨qian_quadrant, kun_quadrant, jiji_quadrant, weiji_quadrant⟩
@@ -456,20 +456,20 @@ theorem weiji_hu_eq_jiji : Hexagram.weiji.hu = Hexagram.jiji := by rfl
 /-! ## § 12 Sanity tests (concrete) -/
 
 -- cuo / 错卦 在象限内
-example : (Hexagram.cuo Hexagram.qian).quadrant = Hexagram.qian.quadrant := by
+example : (Hexagram.cuo Hexagram.heaven).quadrant = Hexagram.heaven.quadrant := by
   native_decide
 
 -- 11泰 ↔ 12否 by cuo, 都本本
-example : (chong Trigram.qian Trigram.kun).quadrant = .benBen := by native_decide
-example : (chong Trigram.kun Trigram.qian).quadrant = .benBen := by native_decide
+example : (chong Trigram.heaven Trigram.earth).quadrant = .benBen := by native_decide
+example : (chong Trigram.earth Trigram.heaven).quadrant = .benBen := by native_decide
 
 -- 34大壮 (内乾外震) 是本征
-example : (chong Trigram.qian Trigram.zhen).quadrant = .benZheng := by native_decide
+example : (chong Trigram.heaven Trigram.thunder).quadrant = .benZheng := by native_decide
 
 -- 25无妄 (内震外乾) 是征本
-example : (chong Trigram.zhen Trigram.qian).quadrant = .zhengBen := by native_decide
+example : (chong Trigram.thunder Trigram.heaven).quadrant = .zhengBen := by native_decide
 
 -- 51震 (内震外震) 是征征
-example : (chong Trigram.zhen Trigram.zhen).quadrant = .zhengZheng := by native_decide
+example : (chong Trigram.thunder Trigram.thunder).quadrant = .zhengZheng := by native_decide
 
 end SSBX.Foundation.Bagua.BenZheng

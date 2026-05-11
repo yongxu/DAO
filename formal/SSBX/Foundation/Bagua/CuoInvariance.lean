@@ -17,9 +17,9 @@ is cuo-equivariant on cur.
 If we DROPPED the `CuoInvariantDecide` precondition (call this
 `KleeneInverterUnrestricted`), we could feed it the non-cuo-invariant decider
 `λ _ h => h.y1 = .yang`.  The axiom would yield D with
-`Halts D h ↔ decide D h = false`.  At qian (y1 = yang), ¬Halts D qian.
-At kun = cuo qian (y1 = yin), Halts D kun.  But `halts_cuo_invariant` forces
-`Halts D qian ↔ Halts D kun`.  Contradiction.
+`Halts D h ↔ decide D h = false`.  At heaven (y1 = yang), ¬Halts D heaven.
+At earth = cuo heaven (y1 = yin), Halts D earth.  But `halts_cuo_invariant` forces
+`Halts D heaven ↔ Halts D earth`.  Contradiction.
 
 ## What this file delivers
 
@@ -64,22 +64,22 @@ def nonCuoInvariantDecide : List YiInstr → Hexagram → Bool :=
   fun _ h => match h.y1 with | .yang => true | .yin => false
 
 theorem nonCuoInvariantDecide_qian (P : List YiInstr) :
-    nonCuoInvariantDecide P Hexagram.qian = true := rfl
+    nonCuoInvariantDecide P Hexagram.heaven = true := rfl
 
 theorem nonCuoInvariantDecide_kun (P : List YiInstr) :
-    nonCuoInvariantDecide P Hexagram.kun = false := rfl
+    nonCuoInvariantDecide P Hexagram.earth = false := rfl
 
-/-- `kun = cuo qian` (proved by definitional equality). -/
-theorem kun_eq_cuo_qian : Hexagram.kun = Hexagram.qian.cuo := rfl
+/-- `earth = cuo heaven` (proved by definitional equality). -/
+theorem kun_eq_cuo_qian : Hexagram.earth = Hexagram.heaven.cuo := rfl
 
 /-- **MAIN INCONSISTENCY THEOREM**: the unrestricted form
     `KleeneInverterUnrestricted` is logically false in Lean.
 
     Sketch: take `decide _ h = (h.y1 = yang)` (non-cuo-invariant).
     `KleeneInverterUnrestricted` would give D with
-    `Halts D h ↔ decide D h = false`.  At `h = qian`: decide = true, so
-    ¬Halts D qian.  At `h = kun = cuo qian`: decide = false, so Halts D kun.
-    But `halts_cuo_invariant` gives `Halts D qian ↔ Halts D kun`.  Contradiction.
+    `Halts D h ↔ decide D h = false`.  At `h = heaven`: decide = true, so
+    ¬Halts D heaven.  At `h = earth = cuo heaven`: decide = false, so Halts D earth.
+    But `halts_cuo_invariant` gives `Halts D heaven ↔ Halts D earth`.  Contradiction.
 
     **Consequence**: any axiom of the form `axiom k : KleeneInverterUnrestricted`
     immediately collapses Lean to False.  This is why `kleene_recursion_axiom`
@@ -88,22 +88,22 @@ theorem unrestricted_kleene_inverter_inconsistent :
     ¬ KleeneInverterUnrestricted := by
   intro h_unrestricted
   obtain ⟨D, hD⟩ := h_unrestricted nonCuoInvariantDecide
-  have h_qian : Halts D Hexagram.qian ↔ nonCuoInvariantDecide D Hexagram.qian = false :=
-    hD Hexagram.qian
-  have h_kun : Halts D Hexagram.kun ↔ nonCuoInvariantDecide D Hexagram.kun = false :=
-    hD Hexagram.kun
+  have h_qian : Halts D Hexagram.heaven ↔ nonCuoInvariantDecide D Hexagram.heaven = false :=
+    hD Hexagram.heaven
+  have h_kun : Halts D Hexagram.earth ↔ nonCuoInvariantDecide D Hexagram.earth = false :=
+    hD Hexagram.earth
   rw [nonCuoInvariantDecide_qian] at h_qian
   rw [nonCuoInvariantDecide_kun] at h_kun
-  -- h_qian : Halts D qian ↔ true = false
-  have h_not_qian : ¬ Halts D Hexagram.qian := by
+  -- h_qian : Halts D heaven ↔ true = false
+  have h_not_qian : ¬ Halts D Hexagram.heaven := by
     intro hq
     exact Bool.noConfusion (h_qian.mp hq)
-  -- h_kun : Halts D kun ↔ false = false → Halts D kun
-  have h_kun_holds : Halts D Hexagram.kun := h_kun.mpr rfl
-  -- cuo-invariance: Halts D qian ↔ Halts D kun
-  have h_cuo_inv : Halts D Hexagram.qian ↔ Halts D Hexagram.kun := by
+  -- h_kun : Halts D earth ↔ false = false → Halts D earth
+  have h_kun_holds : Halts D Hexagram.earth := h_kun.mpr rfl
+  -- cuo-invariance: Halts D heaven ↔ Halts D earth
+  have h_cuo_inv : Halts D Hexagram.heaven ↔ Halts D Hexagram.earth := by
     rw [kun_eq_cuo_qian]
-    exact halts_cuo_invariant D Hexagram.qian
+    exact halts_cuo_invariant D Hexagram.heaven
   exact h_not_qian (h_cuo_inv.mpr h_kun_holds)
 
 /-! ## § 3 Public summary

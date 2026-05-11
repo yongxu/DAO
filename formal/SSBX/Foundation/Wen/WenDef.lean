@@ -260,7 +260,7 @@ def typeCheck : Ctx → Tm → Option Ty
       | _, _, _ => none
 
 example :
-    typeCheck [] (.catalogue2 .E_2 (.hexLit Hexagram.qian) (.hexLit Hexagram.qian))
+    typeCheck [] (.catalogue2 .E_2 (.hexLit Hexagram.heaven) (.hexLit Hexagram.heaven))
       = some (.catalogue .textAct) := by native_decide
 
 example :
@@ -272,7 +272,7 @@ example :
       = some (.catalogue .propConnective) := by native_decide
 
 example :
-    typeCheck [] (.catalogue2 .P_23 (.hexLit Hexagram.qian) (.hexLit Hexagram.kun))
+    typeCheck [] (.catalogue2 .P_23 (.hexLit Hexagram.heaven) (.hexLit Hexagram.earth))
       = none := by native_decide
 
 /-! ## § 4  命名空间 -/
@@ -457,7 +457,7 @@ def fanDef : WenDef where
 -/
 
 def sunBody : Tm :=
-  .abs "x" .hex (.app (.app .jia (.hexLit Hexagram.kun)) (.var "x"))
+  .abs "x" .hex (.app (.app .jia (.hexLit Hexagram.earth)) (.var "x"))
 
 theorem sunBody_typed :
     typeCheck [] sunBody = some (.arr .hex .hex) := by native_decide

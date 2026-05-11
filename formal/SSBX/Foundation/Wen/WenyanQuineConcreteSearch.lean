@@ -23,7 +23,7 @@ open SSBX.Foundation.Wen.WenyanQuineEmitter
 open SSBX.Foundation.Wen.WenyanQuineHistory
 open SSBX.Foundation.Wen.WenyanQuineWitness
 
-def searchStart : Cell256 := (Hexagram.qian, Shi.jin)
+def searchStart : Cell256 := (Hexagram.heaven, Shi.jin)
 
 /-! ## Direct non-push-only candidate -/
 
@@ -41,13 +41,13 @@ def directNonPushFuel : Nat := directNonPushSource.length + 2
 
 /--
 The smallest direct non-`push`-only candidate emits the changed current cell.
-Its first output is therefore `cellFromIdx 1` (= (qian, ji) in V₄ Cell256 indexing),
+Its first output is therefore `cellFromIdx 1` (= (heaven, ji) in V₄ Cell256 indexing),
 while its program encoding starts with the `setShi` tag `cellFromIdx 1` followed
 by `encShi Shi.ji = cellFromIdx 1` and `push = cellFromIdx 9`.
 
 Note: post-Phase F.2 (Cell192 → Cell256), Shi indexing is V₄: dao=0, ji=1, jin=2,
-wei=3. searchStart = (qian, jin) → cellToIdx = 0·4+2 = 2. After setShi Shi.ji,
-cur = (qian, ji) → cellToIdx = 0·4+1 = 1. (Pre-migration Z/3 used 0·3+0 = 0.)
+wei=3. searchStart = (heaven, jin) → cellToIdx = 0·4+2 = 2. After setShi Shi.ji,
+cur = (heaven, ji) → cellToIdx = 0·4+1 = 1. (Pre-migration Z/3 used 0·3+0 = 0.)
 -/
 theorem direct_non_push_failed_shape :
     (directNonPushInit.runFuel directNonPushFuel).history =

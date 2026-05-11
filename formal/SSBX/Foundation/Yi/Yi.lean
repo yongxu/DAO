@@ -6,10 +6,10 @@
 
   Phase 1 (this file):
     - Atom: 爻 (Yao) + neg
-    - Concrete types: Trigram (T_3), Hexagram (T_6) + 8 trigrams + qian/kun
+    - Concrete types: Trigram (T_3), Hexagram (T_6) + 8 trigrams + heaven/earth
     - V_4 operators: 错 (cuo), 综 (zong), 错综 (cuoZong), 互 (hu)
     - V_4 group properties: involutivity + commutativity
-    - Mutual hexagram fixed-point theorem: hu h = h ↔ h ∈ {qian, kun}
+    - Mutual hexagram fixed-point theorem: hu h = h ↔ h ∈ {heaven, earth}
     - Inner ⊕ outer composition + non-commutativity proof
     - Position structure (atPos, isYangPos, wellPos, 中/应/比)
 
@@ -17,7 +17,7 @@
     - 老少 modal layer (YaoStar) + δ variant operator
     - 说卦传 multi-valued σ projection
     - 序卦 transition system
-    - hu iteration convergence to {qian, kun}
+    - hu iteration convergence to {heaven, earth}
 -/
 
 namespace SSBX.Foundation.Yi.Yi
@@ -60,17 +60,17 @@ structure Trigram where
 namespace Trigram
 
 /-! ### The 8 trigrams (八卦) -/
-def qian : Trigram := ⟨.yang, .yang, .yang⟩  -- ☰ 天 (heaven)
-def dui  : Trigram := ⟨.yang, .yang, .yin⟩   -- ☱ 泽 (lake)
-def li   : Trigram := ⟨.yang, .yin, .yang⟩   -- ☲ 火 (fire)
-def zhen : Trigram := ⟨.yang, .yin, .yin⟩    -- ☳ 雷 (thunder)
-def xun  : Trigram := ⟨.yin, .yang, .yang⟩   -- ☴ 风 (wind)
-def kan  : Trigram := ⟨.yin, .yang, .yin⟩    -- ☵ 水 (water)
-def gen  : Trigram := ⟨.yin, .yin, .yang⟩    -- ☶ 山 (mountain)
-def kun  : Trigram := ⟨.yin, .yin, .yin⟩     -- ☷ 地 (earth)
+def heaven : Trigram := ⟨.yang, .yang, .yang⟩  -- ☰ 天 (heaven)
+def lake  : Trigram := ⟨.yang, .yang, .yin⟩   -- ☱ 泽 (lake)
+def fire   : Trigram := ⟨.yang, .yin, .yang⟩   -- ☲ 火 (fire)
+def thunder : Trigram := ⟨.yang, .yin, .yin⟩    -- ☳ 雷 (thunder)
+def wind  : Trigram := ⟨.yin, .yang, .yang⟩   -- ☴ 风 (wind)
+def water  : Trigram := ⟨.yin, .yang, .yin⟩    -- ☵ 水 (water)
+def mountain  : Trigram := ⟨.yin, .yin, .yang⟩    -- ☶ 山 (mountain)
+def earth  : Trigram := ⟨.yin, .yin, .yin⟩     -- ☷ 地 (earth)
 
 /-- All 8 trigrams. -/
-def all : List Trigram := [qian, dui, li, zhen, xun, kan, gen, kun]
+def all : List Trigram := [heaven, lake, fire, thunder, wind, water, mountain, earth]
 
 /-- Verify there are 8 trigrams. -/
 theorem all_length : all.length = 8 := rfl
@@ -114,11 +114,11 @@ namespace Hexagram
 
 /-! ### Foundational hexagrams (the two fixed points of 互) -/
 
-/-- 乾 (qian, ☰☰): all yang. Heaven over heaven. -/
-def qian : Hexagram := ⟨.yang, .yang, .yang, .yang, .yang, .yang⟩
+/-- 乾 (heaven, ☰☰): all yang. Heaven over heaven. -/
+def heaven : Hexagram := ⟨.yang, .yang, .yang, .yang, .yang, .yang⟩
 
-/-- 坤 (kun, ☷☷): all yin. Earth over earth. -/
-def kun : Hexagram := ⟨.yin, .yin, .yin, .yin, .yin, .yin⟩
+/-- 坤 (earth, ☷☷): all yin. Earth over earth. -/
+def earth : Hexagram := ⟨.yin, .yin, .yin, .yin, .yin, .yin⟩
 
 /-! ### V_4 group operators 错/综/错综/恒等 -/
 
@@ -168,11 +168,11 @@ theorem v4_orders (h : Hexagram) :
 
 /-! ### 互 fixed-point theorem -/
 
-/-- 互 fixed-point: H h = h ⟺ h ∈ {qian, kun}.
+/-- 互 fixed-point: H h = h ⟺ h ∈ {heaven, earth}.
     Proof: H h = h forces h.y1 = h.y2 = h.y3 = h.y4 = h.y5 = h.y6,
-    so all 6 yao agree — either all yang (qian) or all yin (kun). -/
+    so all 6 yao agree — either all yang (heaven) or all yin (earth). -/
 theorem hu_fixed_point (h : Hexagram) :
-    h.hu = h ↔ h = qian ∨ h = kun := by
+    h.hu = h ↔ h = heaven ∨ h = earth := by
   constructor
   · intro heq
     cases h with
@@ -180,20 +180,20 @@ theorem hu_fixed_point (h : Hexagram) :
       simp [hu, Hexagram.mk.injEq] at heq
       -- heq decomposes into componentwise equalities
       cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
-        simp_all [qian, kun]
+        simp_all [heaven, earth]
   · rintro (h | h) <;> rw [h] <;> rfl
 
 /-- 乾 is fixed by 互. -/
-theorem hu_qian : qian.hu = qian := rfl
+theorem hu_qian : heaven.hu = heaven := rfl
 
 /-- 坤 is fixed by 互. -/
-theorem hu_kun : kun.hu = kun := rfl
+theorem hu_kun : earth.hu = earth := rfl
 
 /-- 乾's 错 is 坤. -/
-theorem cuo_qian : qian.cuo = kun := rfl
+theorem cuo_qian : heaven.cuo = earth := rfl
 
 /-- 坤's 错 is 乾. -/
-theorem cuo_kun : kun.cuo = qian := rfl
+theorem cuo_kun : earth.cuo = heaven := rfl
 
 /-! ### Inner-outer composition ⊕ -/
 
@@ -208,7 +208,7 @@ def oplus (inner outer : Trigram) : Hexagram :=
      kunTri ⊕ qianTri = 泰 (earth over heaven, harmonized).) -/
 theorem oplus_not_comm :
     ∃ a b : Trigram, oplus a b ≠ oplus b a := by
-  refine ⟨Trigram.qian, Trigram.kun, ?_⟩
+  refine ⟨Trigram.heaven, Trigram.earth, ?_⟩
   intro h
   -- oplus qianTri kunTri = ⟨yang, yang, yang, yin, yin, yin⟩  (= 否)
   -- oplus kunTri qianTri = ⟨yin, yin, yin, yang, yang, yang⟩   (= 泰)
@@ -216,11 +216,11 @@ theorem oplus_not_comm :
   injection h with h1 _ _ _ _ _
   cases h1
 
-/-- 否 (pi): 天 (qian) over 地 (kun) → blocked. inner = 坤, outer = 乾. -/
-def pi : Hexagram := oplus Trigram.kun Trigram.qian
+/-- 否 (pi): 天 (heaven) over 地 (earth) → blocked. inner = 坤, outer = 乾. -/
+def pi : Hexagram := oplus Trigram.earth Trigram.heaven
 
-/-- 泰 (tai): 地 (kun) over 天 (qian) → harmonized. inner = 乾, outer = 坤. -/
-def tai : Hexagram := oplus Trigram.qian Trigram.kun
+/-- 泰 (tai): 地 (earth) over 天 (heaven) → harmonized. inner = 乾, outer = 坤. -/
+def tai : Hexagram := oplus Trigram.heaven Trigram.earth
 
 /-- 否 ≠ 泰 — the non-commutativity has concrete witness. -/
 theorem pi_ne_tai : pi ≠ tai := by
@@ -268,10 +268,10 @@ def biAdj (h : Hexagram) (i : Fin 5) : Yao × Yao :=
   (h.atPos ⟨i.val, by omega⟩, h.atPos ⟨i.val + 1, by omega⟩)
 
 /-- 乾 's middle position (5th yao = 0-indexed 4) is well-positioned (yang on yang pos). -/
-theorem qian_5th_wellPos : wellPos qian ⟨4, by omega⟩ = true := rfl
+theorem qian_5th_wellPos : wellPos heaven ⟨4, by omega⟩ = true := rfl
 
 /-- 坤 's middle position (5th yao = 0-indexed 4) is NOT well-positioned (yin on yang pos). -/
-theorem kun_5th_not_wellPos : wellPos kun ⟨4, by omega⟩ = false := rfl
+theorem kun_5th_not_wellPos : wellPos earth ⟨4, by omega⟩ = false := rfl
 
 /-! ### Type-hierarchy summary
 
@@ -282,7 +282,7 @@ theorem trigram_count : Trigram.all.length = 8 := rfl
 
 /-- The two 互-fixed hexagrams are exactly 乾 and 坤 (restated without Set notation). -/
 theorem two_hu_fixed_points (h : Hexagram) :
-    h.hu = h ↔ h = qian ∨ h = kun := hu_fixed_point h
+    h.hu = h ↔ h = heaven ∨ h = earth := hu_fixed_point h
 
 end Hexagram
 
@@ -394,10 +394,10 @@ def allLaoYang : HexagramStar where
   z5 := YaoStar.laoYang
   z6 := YaoStar.laoYang
 
-theorem allLaoYang_benGua : allLaoYang.benGua = Hexagram.qian := by
+theorem allLaoYang_benGua : allLaoYang.benGua = Hexagram.heaven := by
   decide
 
-theorem allLaoYang_bianGua : allLaoYang.bianGua = Hexagram.kun := by
+theorem allLaoYang_bianGua : allLaoYang.bianGua = Hexagram.earth := by
   decide
 
 /-- An all-老阴 cast: 本卦 = 坤, 变卦 = 乾. -/
@@ -409,10 +409,10 @@ def allLaoYin : HexagramStar where
   z5 := YaoStar.laoYin
   z6 := YaoStar.laoYin
 
-theorem allLaoYin_benGua : allLaoYin.benGua = Hexagram.kun := by
+theorem allLaoYin_benGua : allLaoYin.benGua = Hexagram.earth := by
   decide
 
-theorem allLaoYin_bianGua : allLaoYin.bianGua = Hexagram.qian := by
+theorem allLaoYin_bianGua : allLaoYin.bianGua = Hexagram.heaven := by
   decide
 
 end HexagramStar
@@ -441,66 +441,66 @@ namespace Trigram
     Multi-valued (lists; 巽 has both 风 and 木 in 象 category). -/
 def shuoGua : Trigram → SigmaCategory → List String
   | t, .xiang =>
-      if t = qian then ["天"]
-      else if t = kun then ["地"]
-      else if t = zhen then ["雷"]
-      else if t = xun then ["风", "木"]
-      else if t = kan then ["水"]
-      else if t = li then ["火"]
-      else if t = gen then ["山"]
-      else if t = dui then ["泽"]
+      if t = heaven then ["天"]
+      else if t = earth then ["地"]
+      else if t = thunder then ["雷"]
+      else if t = wind then ["风", "木"]
+      else if t = water then ["水"]
+      else if t = fire then ["火"]
+      else if t = mountain then ["山"]
+      else if t = lake then ["泽"]
       else []
   | t, .jia =>
-      if t = qian then ["父"]
-      else if t = kun then ["母"]
-      else if t = zhen then ["长男"]
-      else if t = xun then ["长女"]
-      else if t = kan then ["中男"]
-      else if t = li then ["中女"]
-      else if t = gen then ["少男"]
-      else if t = dui then ["少女"]
+      if t = heaven then ["父"]
+      else if t = earth then ["母"]
+      else if t = thunder then ["长男"]
+      else if t = wind then ["长女"]
+      else if t = water then ["中男"]
+      else if t = fire then ["中女"]
+      else if t = mountain then ["少男"]
+      else if t = lake then ["少女"]
       else []
   | t, .ti =>
-      if t = qian then ["首"]
-      else if t = kun then ["腹"]
-      else if t = zhen then ["足"]
-      else if t = xun then ["股"]
-      else if t = kan then ["耳"]
-      else if t = li then ["目"]
-      else if t = gen then ["手"]
-      else if t = dui then ["口"]
+      if t = heaven then ["首"]
+      else if t = earth then ["腹"]
+      else if t = thunder then ["足"]
+      else if t = wind then ["股"]
+      else if t = water then ["耳"]
+      else if t = fire then ["目"]
+      else if t = mountain then ["手"]
+      else if t = lake then ["口"]
       else []
   | t, .wu =>
-      if t = qian then ["马"]
-      else if t = kun then ["牛"]
-      else if t = zhen then ["龙"]
-      else if t = xun then ["鸡"]
-      else if t = kan then ["豕"]
-      else if t = li then ["雉"]
-      else if t = gen then ["狗"]
-      else if t = dui then ["羊"]
+      if t = heaven then ["马"]
+      else if t = earth then ["牛"]
+      else if t = thunder then ["龙"]
+      else if t = wind then ["鸡"]
+      else if t = water then ["豕"]
+      else if t = fire then ["雉"]
+      else if t = mountain then ["狗"]
+      else if t = lake then ["羊"]
       else []
 
 /-- 乾 in 象 category projects to 天. -/
-theorem shuoGua_qian_xiang : shuoGua qian .xiang = ["天"] := rfl
+theorem shuoGua_qian_xiang : shuoGua heaven .xiang = ["天"] := rfl
 
 /-- 巽 in 象 category is multi-valued: 风 AND 木. -/
-theorem shuoGua_xun_xiang_multi : shuoGua xun .xiang = ["风", "木"] := rfl
+theorem shuoGua_xun_xiang_multi : shuoGua wind .xiang = ["风", "木"] := rfl
 
 /-- 乾 across 4 categories gives 4 distinct symbols (multi-polymorphism). -/
 theorem shuoGua_qian_polymorphic :
-    shuoGua qian .xiang = ["天"] ∧
-    shuoGua qian .jia = ["父"] ∧
-    shuoGua qian .ti = ["首"] ∧
-    shuoGua qian .wu = ["马"] :=
+    shuoGua heaven .xiang = ["天"] ∧
+    shuoGua heaven .jia = ["父"] ∧
+    shuoGua heaven .ti = ["首"] ∧
+    shuoGua heaven .wu = ["马"] :=
   ⟨rfl, rfl, rfl, rfl⟩
 
 /-- 坤 across 4 categories. -/
 theorem shuoGua_kun_polymorphic :
-    shuoGua kun .xiang = ["地"] ∧
-    shuoGua kun .jia = ["母"] ∧
-    shuoGua kun .ti = ["腹"] ∧
-    shuoGua kun .wu = ["牛"] :=
+    shuoGua earth .xiang = ["地"] ∧
+    shuoGua earth .jia = ["母"] ∧
+    shuoGua earth .ti = ["腹"] ∧
+    shuoGua earth .wu = ["牛"] :=
   ⟨rfl, rfl, rfl, rfl⟩
 
 end Trigram
@@ -516,17 +516,17 @@ end Trigram
 
 namespace Hexagram
 
-/-- 屯 (zhun, ☵☳ — 水雷): 内 zhen, 外 kan. -/
-def zhun : Hexagram := oplus Trigram.zhen Trigram.kan
+/-- 屯 (zhun, ☵☳ — 水雷): 内 thunder, 外 water. -/
+def zhun : Hexagram := oplus Trigram.thunder Trigram.water
 
-/-- 蒙 (meng, ☶☵ — 山水): 内 kan, 外 gen. -/
-def meng : Hexagram := oplus Trigram.kan Trigram.gen
+/-- 蒙 (meng, ☶☵ — 山水): 内 water, 外 mountain. -/
+def meng : Hexagram := oplus Trigram.water Trigram.mountain
 
-/-- 需 (xu, ☵☰ — 水天): 内 qian, 外 kan. -/
-def xu : Hexagram := oplus Trigram.qian Trigram.kan
+/-- 需 (xu, ☵☰ — 水天): 内 heaven, 外 water. -/
+def xu : Hexagram := oplus Trigram.heaven Trigram.water
 
-/-- 讼 (song, ☰☵ — 天水): 内 kan, 外 qian. -/
-def song : Hexagram := oplus Trigram.kan Trigram.qian
+/-- 讼 (song, ☰☵ — 天水): 内 water, 外 heaven. -/
+def song : Hexagram := oplus Trigram.water Trigram.heaven
 
 /-- 序卦 one-step transition: link two consecutive hexagrams in the canonical sequence
     via either 综 (zong) or 错 (cuo). -/
@@ -537,8 +537,8 @@ inductive XuguaStep : Hexagram → Hexagram → Prop
   | byZong (h h' : Hexagram) : h.zong = h' → XuguaStep h h'
 
 /-- 乾 → 坤 by 错. (乾 is 综-self, must use 错.) -/
-theorem xugua_qian_kun : XuguaStep qian kun :=
-  .byCuo qian kun cuo_qian
+theorem xugua_qian_kun : XuguaStep heaven earth :=
+  .byCuo heaven earth cuo_qian
 
 /-- 屯 → 蒙 by 综. -/
 theorem xugua_zhun_meng : XuguaStep zhun meng :=
@@ -558,8 +558,8 @@ inductive XuguaStar : Hexagram → Hexagram → Prop
   | tail {a b c : Hexagram} : XuguaStar a b → XuguaStep b c → XuguaStar a c
 
 /-- 乾 reaches 坤 in the序卦. -/
-theorem xugua_qian_to_kun : XuguaStar qian kun :=
-  .tail (.refl qian) xugua_qian_kun
+theorem xugua_qian_to_kun : XuguaStar heaven earth :=
+  .tail (.refl heaven) xugua_qian_kun
 
 end Hexagram
 
@@ -620,7 +620,7 @@ theorem iterHu_period (h : Hexagram) : iterHu 4 h = iterHu 2 h := by
 
 /-- 互² h = 乾 ⟺ h.y3 = yang ∧ h.y4 = yang (middle pair both yang). -/
 theorem iterHu_2_eq_qian_iff (h : Hexagram) :
-    iterHu 2 h = qian ↔ h.y3 = .yang ∧ h.y4 = .yang := by
+    iterHu 2 h = heaven ↔ h.y3 = .yang ∧ h.y4 = .yang := by
   rw [iterHu_2_eq]
   constructor
   · intro heq
@@ -631,7 +631,7 @@ theorem iterHu_2_eq_qian_iff (h : Hexagram) :
 
 /-- 互² h = 坤 ⟺ h.y3 = yin ∧ h.y4 = yin (middle pair both yin). -/
 theorem iterHu_2_eq_kun_iff (h : Hexagram) :
-    iterHu 2 h = kun ↔ h.y3 = .yin ∧ h.y4 = .yin := by
+    iterHu 2 h = earth ↔ h.y3 = .yin ∧ h.y4 = .yin := by
   rw [iterHu_2_eq]
   constructor
   · intro heq
@@ -668,10 +668,10 @@ def jiji : Hexagram := ⟨.yang, .yin, .yang, .yin, .yang, .yin⟩
 def weiji : Hexagram := ⟨.yin, .yang, .yin, .yang, .yin, .yang⟩
 
 /-- 既济 = 离 ⊕ 坎 (内 离, 外 坎). -/
-theorem jiji_eq_oplus : jiji = oplus Trigram.li Trigram.kan := rfl
+theorem jiji_eq_oplus : jiji = oplus Trigram.fire Trigram.water := rfl
 
 /-- 未济 = 坎 ⊕ 离. -/
-theorem weiji_eq_oplus : weiji = oplus Trigram.kan Trigram.li := rfl
+theorem weiji_eq_oplus : weiji = oplus Trigram.water Trigram.fire := rfl
 
 /-- 既济 has every yao well-positioned. -/
 theorem jiji_wellPos_all (i : Fin 6) : wellPos jiji i = true := by
@@ -736,7 +736,7 @@ theorem shuoGua_total (t : Trigram) (c : SigmaCategory) :
     cases t with
     | mk y1 y2 y3 =>
       cases y1 <;> cases y2 <;> cases y3 <;>
-        simp [shuoGua, qian, kun, dui, li, zhen, xun, kan, gen]
+        simp [shuoGua, heaven, earth, lake, fire, thunder, wind, water, mountain]
 
 end Trigram
 
@@ -773,14 +773,14 @@ namespace JianMode
 
 /-- Inverse map: each mode picks out its canonical trigram. -/
 def toTrigram : JianMode → Trigram
-  | sheng => Trigram.qian
-  | shou  => Trigram.kun
-  | yuan  => Trigram.zhen
-  | shen  => Trigram.xun
-  | sai   => Trigram.kan
-  | xian  => Trigram.li
-  | ju    => Trigram.gen
-  | kai   => Trigram.dui
+  | sheng => Trigram.heaven
+  | shou  => Trigram.earth
+  | yuan  => Trigram.thunder
+  | shen  => Trigram.wind
+  | sai   => Trigram.water
+  | xian  => Trigram.fire
+  | ju    => Trigram.mountain
+  | kai   => Trigram.lake
 
 end JianMode
 
@@ -789,26 +789,26 @@ namespace Trigram
 /-- Each trigram's 间生论 mode. -/
 def jianMode : Trigram → JianMode
   | t =>
-    if t = qian then .sheng
-    else if t = kun then .shou
-    else if t = zhen then .yuan
-    else if t = xun then .shen
-    else if t = kan then .sai
-    else if t = li then .xian
-    else if t = gen then .ju
-    else if t = dui then .kai
+    if t = heaven then .sheng
+    else if t = earth then .shou
+    else if t = thunder then .yuan
+    else if t = wind then .shen
+    else if t = water then .sai
+    else if t = fire then .xian
+    else if t = mountain then .ju
+    else if t = lake then .kai
     else .sheng  -- unreachable on the 8 named trigrams
 
 /-! ### Per-trigram mode -/
 
-theorem qian_jianMode : qian.jianMode = .sheng := rfl
-theorem kun_jianMode  : kun.jianMode  = .shou  := rfl
-theorem zhen_jianMode : zhen.jianMode = .yuan  := rfl
-theorem xun_jianMode  : xun.jianMode  = .shen  := rfl
-theorem kan_jianMode  : kan.jianMode  = .sai   := rfl
-theorem li_jianMode   : li.jianMode   = .xian  := rfl
-theorem gen_jianMode  : gen.jianMode  = .ju    := rfl
-theorem dui_jianMode  : dui.jianMode  = .kai   := rfl
+theorem qian_jianMode : heaven.jianMode = .sheng := rfl
+theorem kun_jianMode  : earth.jianMode  = .shou  := rfl
+theorem zhen_jianMode : thunder.jianMode = .yuan  := rfl
+theorem xun_jianMode  : wind.jianMode  = .shen  := rfl
+theorem kan_jianMode  : water.jianMode  = .sai   := rfl
+theorem li_jianMode   : fire.jianMode   = .xian  := rfl
+theorem gen_jianMode  : mountain.jianMode  = .ju    := rfl
+theorem dui_jianMode  : lake.jianMode  = .kai   := rfl
 
 /-- Right-inverse: starting from any of the 8 named trigrams, jianMode then
     toTrigram returns the same trigram. -/
@@ -816,7 +816,7 @@ theorem jianMode_toTrigram (t : Trigram) : t.jianMode.toTrigram = t := by
   cases t with
   | mk y1 y2 y3 =>
     cases y1 <;> cases y2 <;> cases y3 <;>
-      simp [jianMode, JianMode.toTrigram, qian, kun, zhen, xun, kan, li, gen, dui]
+      simp [jianMode, JianMode.toTrigram, heaven, earth, thunder, wind, water, fire, mountain, lake]
 
 end Trigram
 
@@ -912,14 +912,14 @@ theorem cuo_jianMode (t : Trigram) : t.cuo.jianMode = t.jianMode.cuo := by
   cases t with
   | mk y1 y2 y3 =>
     cases y1 <;> cases y2 <;> cases y3 <;>
-      simp [Trigram.cuo, jianMode, JianMode.cuo, qian, kun, dui, li, zhen, xun, kan, gen, Yao.neg]
+      simp [Trigram.cuo, jianMode, JianMode.cuo, heaven, earth, lake, fire, thunder, wind, water, mountain, Yao.neg]
 
 /-- 综 on trigrams commutes with the mode projection. -/
 theorem zong_jianMode (t : Trigram) : t.zong.jianMode = t.jianMode.zong := by
   cases t with
   | mk y1 y2 y3 =>
     cases y1 <;> cases y2 <;> cases y3 <;>
-      simp [Trigram.zong, jianMode, JianMode.zong, qian, kun, dui, li, zhen, xun, kan, gen]
+      simp [Trigram.zong, jianMode, JianMode.zong, heaven, earth, lake, fire, thunder, wind, water, mountain]
 
 end Trigram
 
@@ -951,10 +951,10 @@ def reading (h : Hexagram) : JianMode × JianMode :=
 /-! ### Canonical hexagram readings -/
 
 /-- 乾 (☰☰) — pure 生续 (sheng over sheng): the creative principle. -/
-theorem qian_reading : qian.reading = (.sheng, .sheng) := rfl
+theorem qian_reading : heaven.reading = (.sheng, .sheng) := rfl
 
 /-- 坤 (☷☷) — pure 受成 (shou over shou): the receptive principle. -/
-theorem kun_reading : kun.reading = (.shou, .shou) := rfl
+theorem kun_reading : earth.reading = (.shou, .shou) := rfl
 
 /-- 屯 (zhun, ☵☳) — 元/几 inner, 塞 outer: 初动遇塞 (initial motion met by blockage,
     "difficulty at birth"). -/
@@ -1024,22 +1024,22 @@ theorem doubled_reading_iff (h : Hexagram) :
   the 8 "pure" expressions of each ontological mode. -/
 
 /-- 兌 (zhongDui, ☱☱): pure 开通悦. -/
-def zhongDui : Hexagram := oplus Trigram.dui Trigram.dui
+def zhongDui : Hexagram := oplus Trigram.lake Trigram.lake
 
 /-- 离 (zhongLi, ☲☲): pure 显心. -/
-def zhongLi : Hexagram := oplus Trigram.li Trigram.li
+def zhongLi : Hexagram := oplus Trigram.fire Trigram.fire
 
 /-- 震 (zhongZhen, ☳☳): pure 元几初动. -/
-def zhongZhen : Hexagram := oplus Trigram.zhen Trigram.zhen
+def zhongZhen : Hexagram := oplus Trigram.thunder Trigram.thunder
 
 /-- 巽 (zhongXun, ☴☴): pure 因渗入. -/
-def zhongXun : Hexagram := oplus Trigram.xun Trigram.xun
+def zhongXun : Hexagram := oplus Trigram.wind Trigram.wind
 
 /-- 坎 (zhongKan, ☵☵): pure 塞陷. -/
-def zhongKan : Hexagram := oplus Trigram.kan Trigram.kan
+def zhongKan : Hexagram := oplus Trigram.water Trigram.water
 
 /-- 艮 (zhongGen, ☶☶): pure 聚形止. -/
-def zhongGen : Hexagram := oplus Trigram.gen Trigram.gen
+def zhongGen : Hexagram := oplus Trigram.mountain Trigram.mountain
 
 theorem zhongDui_reading  : zhongDui.reading  = (.kai,  .kai)  := rfl
 theorem zhongLi_reading   : zhongLi.reading   = (.xian, .xian) := rfl
@@ -1092,7 +1092,7 @@ theorem cuoZong_reading (h : Hexagram) :
 /-! ### Sample structural readings via cuo/zong -/
 
 /-- 乾.cuo = 坤 — at reading level, sheng.cuo = shou. -/
-theorem qian_cuo_reading_kun : qian.cuo.reading = (.shou, .shou) := by
+theorem qian_cuo_reading_kun : heaven.cuo.reading = (.shou, .shou) := by
   rw [cuo_reading, qian_reading]; rfl
 
 /-- 屯.zong = 蒙 — at reading level, (yuan, sai) → (sai.zong, yuan.zong) = (sai, ju). -/
@@ -1345,10 +1345,10 @@ def polarity (h : Hexagram) : BodyMind :=
   else .balanced
 
 /-- 乾 is pure 身 (all yang). -/
-theorem qian_polarity_shen : qian.polarity = .shen := by decide
+theorem qian_polarity_shen : heaven.polarity = .shen := by decide
 
 /-- 坤 is pure 心 (all yin). -/
-theorem kun_polarity_xinShou : kun.polarity = .xinShou := by decide
+theorem kun_polarity_xinShou : earth.polarity = .xinShou := by decide
 
 /-- 既济 is BALANCED (3 yang, 3 yin). -/
 theorem jiji_polarity_balanced : jiji.polarity = .balanced := by decide

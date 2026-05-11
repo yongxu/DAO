@@ -32,10 +32,10 @@ abbrev Cell256 : Type := SSBX.Foundation.Bagua.Cell256.Cell256
   Hexagram-side propagation atoms (flip1..6 + hexCuo/hexZong/hexHu)
   plus the Shi-side atoms (shiCuo / shiZong / shiCuoZong). -/
 
-/-- 印 (yin): XOR with `yin_mask = (qian, ji)`; flips the 7th coord (YinBit). -/
+/-- 印 (yin): XOR with `yin_mask = (heaven, ji)`; flips the 7th coord (YinBit). -/
 def yin (c : Cell256) : Cell256 := Cell256.yin c
 
-/-- 投 (tou): XOR with `tou_mask = (qian, wei)`; flips the 8th coord (GuoBit). -/
+/-- 投 (tou): XOR with `tou_mask = (heaven, wei)`; flips the 8th coord (GuoBit). -/
 def tou (c : Cell256) : Cell256 := Cell256.tou c
 
 /-- flip1..6 + hexCuo/hexZong/hexHu propagated to Cell256. -/

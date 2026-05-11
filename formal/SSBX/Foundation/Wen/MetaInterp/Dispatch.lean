@@ -21,7 +21,7 @@ Klein 4-group and tags decompose as `(hex_idx ∈ {0,1,2}, shi_idx ∈ {0,1,2,3}
 with `cellFromIdx ⟨k, _⟩ = (Hexagram.fromIdx ⟨k/4, _⟩, Shi.fromIdx ⟨k%4, _⟩)`.
 
 Concretely for k ∈ {0..11}:
-  hex_idx 0 (qian, all yang):   k ∈ {0,1,2,3}  =  nop / setShi / flipYao / hu
+  hex_idx 0 (heaven, all yang):   k ∈ {0,1,2,3}  =  nop / setShi / flipYao / hu
   hex_idx 1 (y1=yin, rest yang): k ∈ {4,5,6,7}  = cuo / zong / branchYaoEq / branchShiEq
   hex_idx 2 (y2=yin, rest yang): k ∈ {8,9,10,11} = jump / push / pop / halt
 

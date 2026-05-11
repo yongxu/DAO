@@ -9,9 +9,9 @@ Encodes a `Cell256 = Hexagram × Shi` as an 8-character ASCII string of
                                   `o` → identity bit → `Yao.yang`,
                                   `x` →   set    bit → `Yao.yin`.
                                   This convention makes
-                                  `OX["oooooo··"] = Hexagram.qian` (the (Z/2)⁶
+                                  `OX["oooooo··"] = Hexagram.heaven` (the (Z/2)⁶
                                   identity / origin) and
-                                  `OX["xxxxxx··"] = Hexagram.kun`.
+                                  `OX["xxxxxx··"] = Hexagram.earth`.
   - char 6 : YinBit (因 axis, R5)   `o` → false, `x` → true.
   - char 7 : GuoBit (果 axis, R6)   `o` → false, `x` → true.
 
@@ -21,7 +21,7 @@ Encodes a `Cell256 = Hexagram × Shi` as an 8-character ASCII string of
     "ox" → 未 (wei)
     "xx" → 今 (jin, PT)
 
-So `OX["oooooooo"] = (Hexagram.qian, Shi.dao) = Cell256.origin`,
+So `OX["oooooooo"] = (Hexagram.heaven, Shi.dao) = Cell256.origin`,
 the (Z/2)⁸ identity element / 道 of the 256-cell algebra.
 
 Errors at parse time on any string of length ≠ 8 or containing chars
@@ -56,7 +56,7 @@ def cellOfString (s : String) : Cell256 :=
       (⟨yaoOfChar c0, yaoOfChar c1, yaoOfChar c2,
         yaoOfChar c3, yaoOfChar c4, yaoOfChar c5⟩,
        Shi.ofYinGuo (boolOfChar c6, boolOfChar c7))
-  | _ => (Hexagram.qian, Shi.dao)  -- unreachable when macro validates length
+  | _ => (Hexagram.heaven, Shi.dao)  -- unreachable when macro validates length
 
 /-! ## § 2 Macro `OX["..."]` — parse-time validation + Cell256 term -/
 
@@ -107,20 +107,20 @@ def expandOxLit : Macro := fun stx => do
 
 /-! ## § 3 Examples / tests — verifies macro evaluates by `rfl` -/
 
-/-- All-`o` 8-string = (qian, dao) = Cell256.origin = (Z/2)⁸ identity. -/
-example : OX["oooooooo"] = (Hexagram.qian, Shi.dao) := rfl
+/-- All-`o` 8-string = (heaven, dao) = Cell256.origin = (Z/2)⁸ identity. -/
+example : OX["oooooooo"] = (Hexagram.heaven, Shi.dao) := rfl
 
 /-- Char 7 = `x` flips YinBit only ⇒ Shi.ji (已). -/
-example : OX["ooooooxo"] = (Hexagram.qian, Shi.ji) := rfl
+example : OX["ooooooxo"] = (Hexagram.heaven, Shi.ji) := rfl
 
 /-- Char 8 = `x` flips GuoBit only ⇒ Shi.wei (未). -/
-example : OX["ooooooox"] = (Hexagram.qian, Shi.wei) := rfl
+example : OX["ooooooox"] = (Hexagram.heaven, Shi.wei) := rfl
 
 /-- Both Shi bits set ⇒ Shi.jin (今, PT central element). -/
-example : OX["ooooooxx"] = (Hexagram.qian, Shi.jin) := rfl
+example : OX["ooooooxx"] = (Hexagram.heaven, Shi.jin) := rfl
 
-/-- All-`x` Hexagram part = Hexagram.kun (all yin); Shi.jin (PT). -/
-example : OX["xxxxxxxx"] = (Hexagram.kun, Shi.jin) := rfl
+/-- All-`x` Hexagram part = Hexagram.earth (all yin); Shi.jin (PT). -/
+example : OX["xxxxxxxx"] = (Hexagram.earth, Shi.jin) := rfl
 
 /-- Hexagram only (Shi = dao): char 0 = y1 = `x` flips initial yao only.
     Result is Hexagram with y1 = yin, y2..y6 = yang. -/

@@ -30,7 +30,7 @@ have direct Cell256 analogues, dispatched here without touching the upstream.
 def applyKindOnCell256 : CellTransformKind → Cell256 → Cell256
   | .id, c => c
   | .next64, c => (SSBX.Foundation.Yi.YiCore.«生» c.1, c.2)
-  | .prev64, c => (SSBX.Foundation.Yi.YiCore.«加» SSBX.Foundation.Yi.Yi.Hexagram.kun c.1, c.2)
+  | .prev64, c => (SSBX.Foundation.Yi.YiCore.«加» SSBX.Foundation.Yi.Yi.Hexagram.earth c.1, c.2)
   | .cuo, c => Cell256.hexCuo c
   | .zong, c => Cell256.hexZong c
   | .hu, c => Cell256.hexHu c
@@ -283,7 +283,7 @@ theorem operatorCellSemanticRows_sun_executable (cell : Cell256) :
     (operatorCellSemanticRow .T_12 cell).denotationKind =
       OperatorCellDenotationKind.exactCellTransform
       ∧ (operatorCellSemanticRow .T_12 cell).cellTransform? =
-          some (SSBX.Foundation.Yi.YiCore.«加» SSBX.Foundation.Yi.Yi.Hexagram.kun cell.1, cell.2) := by
+          some (SSBX.Foundation.Yi.YiCore.«加» SSBX.Foundation.Yi.Yi.Hexagram.earth cell.1, cell.2) := by
   constructor <;> rfl
 
 theorem operatorCellSemanticRows_hua_executable (cell : Cell256) :

@@ -6,9 +6,9 @@ Cayley action is componentwise XOR (re-using `Cell128.hexXor`).
 
 ## Carrier convention
 
-Per Cell128.lean, **乾 (qian) = ⟨yang,yang,yang,yang,yang,yang⟩** is the
+Per Cell128.lean, **乾 (heaven) = ⟨yang,yang,yang,yang,yang,yang⟩** is the
 (Z/2)⁶ identity (all-yang = 0 in the Z/2-as-yang convention; cf. yaoXor:
-`yang ⊕ yang = yang`). So `origin = Hexagram.qian`. Note that yang here
+`yang ⊕ yang = yang`). So `origin = Hexagram.heaven`. Note that yang here
 plays the role of the additive zero (this matches Cell128's convention,
 NOT the more common "yang=1" reading).
 
@@ -45,7 +45,7 @@ abbrev Cell : Type := Hexagram
 def apply : Cell → Cell → Cell := hexXor
 
 /-- (Z/2)⁶ origin = 乾 (all-yang = identity, per Cell128 convention). -/
-def origin : Cell := Hexagram.qian
+def origin : Cell := Hexagram.heaven
 
 /-! ## § 2 Cayley action laws -/
 
@@ -149,11 +149,11 @@ def flip6Rule : Rule :=
 
 /-- Named transition: 乾 (all-yang) → 坤 (all-yin). -/
 def qianToKun : Rule :=
-  Rule.named "乾→坤" (hexSexp Hexagram.qian) (hexSexp Hexagram.kun)
+  Rule.named "乾→坤" (hexSexp Hexagram.heaven) (hexSexp Hexagram.earth)
 
 /-- Named transition: 坤 → 乾. -/
 def kunToQian : Rule :=
-  Rule.named "坤→乾" (hexSexp Hexagram.kun) (hexSexp Hexagram.qian)
+  Rule.named "坤→乾" (hexSexp Hexagram.earth) (hexSexp Hexagram.heaven)
 
 /-- Named transition: 既济 → 未济 (yao-by-yao swap pattern). -/
 def jijiToWeiji : Rule :=
@@ -169,20 +169,20 @@ def defaultRules : List Rule :=
 /-- 乾 → 坤 in one step (the named rule is reachable; pattern matches first
     on flip1 which converts 阳→阴 at y1). After enough fuel we reach 坤. -/
 example :
-    (Eval.runRules defaultRules (printCell Hexagram.qian) 6 == printCell Hexagram.kun) = true := by
+    (Eval.runRules defaultRules (printCell Hexagram.heaven) 6 == printCell Hexagram.earth) = true := by
   native_decide
 
 /-- 坤 → 乾 via the named rule (pattern is more specific than per-yao flips). -/
 example :
-    (Eval.runRules defaultRules (printCell Hexagram.kun) 1 == printCell Hexagram.qian) = true := by
+    (Eval.runRules defaultRules (printCell Hexagram.earth) 1 == printCell Hexagram.heaven) = true := by
   native_decide
 
 /-- runCell convenience: starting at 乾 returns OK. -/
-example : (runCell (α := Cell) defaultRules Hexagram.qian 1).toOption.isSome = true := by
+example : (runCell (α := Cell) defaultRules Hexagram.heaven 1).toOption.isSome = true := by
   native_decide
 
 /-- Round-trip via printCell ∘ parseCell at 乾. -/
-example : parseCell (printCell Hexagram.qian) = .ok Hexagram.qian :=
+example : parseCell (printCell Hexagram.heaven) = .ok Hexagram.heaven :=
   print_parse_round_trip _
 
 /-- Round-trip at 既济. -/

@@ -53,7 +53,7 @@ def hex_cuoZong (h : Hexagram) : Hexagram := Hexagram.cuoZong h
     operator, not as a V₄ member). -/
 def hex_hu (h : Hexagram) : Hexagram := Hexagram.hu h
 
-/-- 错 (cuo): yao-wise negation. Atomic-XOR (with kun mask), but included
+/-- 错 (cuo): yao-wise negation. Atomic-XOR (with earth mask), but included
     here as a V₄ generator for the Klein-four relations. -/
 def hex_cuo (h : Hexagram) : Hexagram := Hexagram.cuo h
 
@@ -120,7 +120,7 @@ theorem cell256_zong_involutive (c : Cell256) : cell256_zong (cell256_zong c) = 
   signature property. -/
 
 theorem hu_fixed_iff (h : Hexagram) :
-    hex_hu h = h ↔ h = Hexagram.qian ∨ h = Hexagram.kun :=
+    hex_hu h = h ↔ h = Hexagram.heaven ∨ h = Hexagram.earth :=
   Hexagram.hu_fixed_point h
 
 /-! ## § 7 Public summary — the V₄ Klein-four group property + outer hu
@@ -144,7 +144,7 @@ theorem v4_outer_summary :
     ∧ (∀ c : Cell128, cell128_zong (cell128_zong c) = c)
     ∧ (∀ c : Cell256, cell256_zong (cell256_zong c) = c)
     -- Sibling outer hu fixed-point characterisation
-    ∧ (∀ h : Hexagram, hex_hu h = h ↔ h = Hexagram.qian ∨ h = Hexagram.kun) :=
+    ∧ (∀ h : Hexagram, hex_hu h = h ↔ h = Hexagram.heaven ∨ h = Hexagram.earth) :=
   ⟨fun _ => rfl, cuo_involutive, zong_involutive, cuoZong_involutive,
    cuo_zong_commute, cuoZong_eq_cuo_zong,
    cell128_zong_involutive, cell256_zong_involutive,

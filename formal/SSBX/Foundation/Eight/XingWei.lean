@@ -183,10 +183,10 @@ abbrev ying : Hexagram → Fin 3 → Bool := yingResponds
 abbrev bi : Hexagram → Fin 5 → Yao × Yao := biAdj
 
 /-- **乾五位**当位（具体见证）。 -/
-theorem dang_qian_5 : dang Hexagram.qian ⟨4, by omega⟩ = true := qian_5th_wellPos
+theorem dang_qian_5 : dang Hexagram.heaven ⟨4, by omega⟩ = true := qian_5th_wellPos
 
 /-- **坤五位**不当位（阴爻在阳位）。 -/
-theorem dang_kun_5_not : dang Hexagram.kun ⟨4, by omega⟩ = false := kun_5th_not_wellPos
+theorem dang_kun_5_not : dang Hexagram.earth ⟨4, by omega⟩ = false := kun_5th_not_wellPos
 
 /-- **既济**全当位：六爻皆当其位。 -/
 theorem dang_jiji_all (i : Fin 6) : dang Hexagram.jiji i = true := jiji_wellPos_all i

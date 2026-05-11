@@ -91,7 +91,7 @@ end Pattern
   -- expect: some [("x", atom "yao")]
 #eval (Pattern.matchPattern (.atom "yao") (.atom "yao"))
   -- expect: some []
-#eval (Pattern.matchPattern (.atom "yao") (.atom "kun"))
+#eval (Pattern.matchPattern (.atom "yao") (.atom "earth"))
   -- expect: none
 #eval (Pattern.matchPattern
         (.list [.atom "yao", .atom "?x"])

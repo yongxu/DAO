@@ -505,13 +505,13 @@ example :
     opIdsOf "推 一" = some [some OperatorId.T_10, none] :=
   by native_decide
 
-/-- 「乾」 → hexConst Hexagram.qian. -/
+/-- 「乾」 → hexConst Hexagram.heaven. -/
 example : opIdsOf "乾" = some [none] := by native_decide
 
-/-- 「坤」 → hexConst Hexagram.kun. -/
+/-- 「坤」 → hexConst Hexagram.earth. -/
 example : opIdsOf "坤" = some [none] := by native_decide
 
-/-- 「推 乾」 → T_10 + qian. -/
+/-- 「推 乾」 → T_10 + heaven. -/
 example : opIdsOf "推 乾" = some [some OperatorId.T_10, none] := by native_decide
 
 /-- 「推 之 一」 → T_10 + appMarker + 一. -/
@@ -571,8 +571,8 @@ theorem hexNameAliasSurfaces_lex_as_single :
   native_decide
 
 example : resolveHexConst "一" = some «一»          := by native_decide
-example : resolveHexConst "乾" = some Hexagram.qian := by native_decide
-example : resolveHexConst "坤" = some Hexagram.kun  := by native_decide
+example : resolveHexConst "乾" = some Hexagram.heaven := by native_decide
+example : resolveHexConst "坤" = some Hexagram.earth  := by native_decide
 example : resolveHexConst "大壯" = resolveHexConst "大壮" := by native_decide
 example : resolveHexConst "器" = resolveHexConst "鼎" := by native_decide
 example : resolveHexConst "推" = none               := by native_decide

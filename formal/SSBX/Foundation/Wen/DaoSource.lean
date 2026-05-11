@@ -169,11 +169,11 @@ theorem «道源_文核同源» (h : Hexagram) :
   否 (天地否)：y3=阴, y4=阳, 不同 → 未 (心道)。 -/
 
 theorem «道源_乾_天道» :
-    ((YiState.init Hexagram.qian «道程»).runFuel 64).cur.2 = Shi.ji := by
+    ((YiState.init Hexagram.heaven «道程»).runFuel 64).cur.2 = Shi.ji := by
   native_decide
 
 theorem «道源_坤_天道» :
-    ((YiState.init Hexagram.kun «道程»).runFuel 64).cur.2 = Shi.ji := by
+    ((YiState.init Hexagram.earth «道程»).runFuel 64).cur.2 = Shi.ji := by
   native_decide
 
 /-- 否 = 天地否 = ⟨阴,阴,阴,阳,阳,阳⟩. -/

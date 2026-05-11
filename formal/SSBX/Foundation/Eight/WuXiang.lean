@@ -92,10 +92,10 @@ def Trigram.yinCount (t : Trigram) : Nat :=
   + (if t.y3 = .yin then 1 else 0)
 
 /-- **乾之 yinCount = 0**。 -/
-theorem yinCount_qian : Trigram.yinCount Trigram.qian = 0 := by decide
+theorem yinCount_qian : Trigram.yinCount Trigram.heaven = 0 := by decide
 
 /-- **坤之 yinCount = 3**。 -/
-theorem yinCount_kun : Trigram.yinCount Trigram.kun = 3 := by decide
+theorem yinCount_kun : Trigram.yinCount Trigram.earth = 3 := by decide
 
 /-- **错卦把 yinCount 之 mod 2 翻**：cuo 翻三爻，每爻奇偶反转，三次翻使 mod 2 总和反转（3 mod 2 = 1）。 -/
 theorem cuo_yinCount_mod2 (t : Trigram) :

@@ -31,7 +31,7 @@ vocabulary.
 
 ## R₆ disambiguation
 
-Pinyin collisions exist (qian = 乾/谦, kan = 坎/坎 (dup ok), kun = 坤/困,
+Pinyin collisions exist (heaven = 乾/谦, water = 坎/坎 (dup ok), earth = 坤/困,
 yi = 颐/益, …). To avoid ASCII ambiguity, the 64 individual defs use
 «»-quoted Chinese names (e.g. `Hexagram.«乾»`). Lean 4's stock lexer
 requires the brackets for CJK identifiers.
@@ -78,7 +78,7 @@ def «无妄» : Hexagram := ⟨.yang, .yin,  .yin,  .yang, .yang, .yang⟩
 def «大畜» : Hexagram := ⟨.yang, .yang, .yang, .yin,  .yin,  .yang⟩
 def «颐» : Hexagram := ⟨.yang, .yin,  .yin,  .yin,  .yin,  .yang⟩
 def «大过» : Hexagram := ⟨.yin,  .yang, .yang, .yang, .yang, .yin⟩
-def «坎H» : Hexagram := ⟨.yin,  .yang, .yin,  .yin,  .yang, .yin⟩  -- 坎 卦 (29) — H suffix to avoid clash with Trigram.kan
+def «坎H» : Hexagram := ⟨.yin,  .yang, .yin,  .yin,  .yang, .yin⟩  -- 坎 卦 (29) — H suffix to avoid clash with Trigram.water
 def «离H» : Hexagram := ⟨.yang, .yin,  .yang, .yang, .yin,  .yang⟩  -- 离 卦 (30)
 def «咸» : Hexagram := ⟨.yin,  .yin,  .yang, .yang, .yang, .yin⟩
 def «恒» : Hexagram := ⟨.yin,  .yang, .yang, .yang, .yin,  .yin⟩

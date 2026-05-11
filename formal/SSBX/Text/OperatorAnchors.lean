@@ -277,21 +277,21 @@ structure TrigramOperatorAnchor where
   deriving Repr
 
 def trigramOperatorAnchors : List TrigramOperatorAnchor :=
-  [ { trigram := Trigram.qian, name := "乾", mode := .sheng,
+  [ { trigram := Trigram.heaven, name := "乾", mode := .sheng,
       catalogueIds := [.F_10],       semanticIds := [],      missingForms := [] }
-  , { trigram := Trigram.dui,  name := "兑", mode := .kai,
+  , { trigram := Trigram.lake,  name := "兑", mode := .kai,
       catalogueIds := [],            semanticIds := [],      missingForms := ["悦"] }
-  , { trigram := Trigram.li,   name := "离", mode := .xian,
+  , { trigram := Trigram.fire,   name := "离", mode := .xian,
       catalogueIds := [],            semanticIds := [],      missingForms := ["丽", "附"] }
-  , { trigram := Trigram.zhen, name := "震", mode := .yuan,
+  , { trigram := Trigram.thunder, name := "震", mode := .yuan,
       catalogueIds := [.F_10],       semanticIds := [],      missingForms := ["震"] }
-  , { trigram := Trigram.xun,  name := "巽", mode := .shen,
+  , { trigram := Trigram.wind,  name := "巽", mode := .shen,
       catalogueIds := [.F_8, .Y_20], semanticIds := [],      missingForms := [] }
-  , { trigram := Trigram.kan,  name := "坎", mode := .sai,
+  , { trigram := Trigram.water,  name := "坎", mode := .sai,
       catalogueIds := [],            semanticIds := [],      missingForms := ["险"] }
-  , { trigram := Trigram.gen,  name := "艮", mode := .ju,
+  , { trigram := Trigram.mountain,  name := "艮", mode := .ju,
       catalogueIds := [.B_4],        semanticIds := [],      missingForms := [] }
-  , { trigram := Trigram.kun,  name := "坤", mode := .shou,
+  , { trigram := Trigram.earth,  name := "坤", mode := .shou,
       catalogueIds := [.C_3],        semanticIds := [],      missingForms := [] }
   ]
 

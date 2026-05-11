@@ -31,13 +31,13 @@ def emitCellsInit (start : Cell256) (targets oldHistory : List Cell256) : YiStat
   , prog := emitCellsFrom start targets
   , halted := false }
 
-def c0 : Cell256 := (Hexagram.qian, Shi.ji)
-def c1 : Cell256 := ({ Hexagram.qian with y1 := Yao.yin }, Shi.jin)
-def c2 : Cell256 := (Hexagram.kun, Shi.wei)
+def c0 : Cell256 := (Hexagram.heaven, Shi.ji)
+def c1 : Cell256 := ({ Hexagram.heaven with y1 := Yao.yin }, Shi.jin)
+def c2 : Cell256 := (Hexagram.earth, Shi.wei)
 
 /-- Concrete ordering check: final history is `[c0, c1, c2]`, not reversed. -/
 theorem emitCellsFrom_history_three :
-    let start : Cell256 := (Hexagram.qian, Shi.jin)
+    let start : Cell256 := (Hexagram.heaven, Shi.jin)
     let targets : List Cell256 := [c0, c1, c2]
     ((emitCellsInit start targets []).runFuel (emitCellsFrom start targets).length).history = targets := by
   native_decide

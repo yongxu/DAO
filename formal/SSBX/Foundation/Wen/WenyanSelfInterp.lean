@@ -698,8 +698,8 @@ def metaInterpProg_branchYaoEq (i j : Fin 6) (target : Nat) : List YiInstr :=
   [YiInstr.branchYaoEq i j target, YiInstr.halt, YiInstr.halt]
 
 theorem metaInterpProg_branchYaoEq_correct (i j : Fin 6) :
-    ((YiState.init Hexagram.qian (metaInterpProg_branchYaoEq i j 2)).runFuel 1).pc = 2
-    ∧ ((YiState.init Hexagram.qian (metaInterpProg_branchYaoEq i j 2)).runFuel 2).halted
+    ((YiState.init Hexagram.heaven (metaInterpProg_branchYaoEq i j 2)).runFuel 1).pc = 2
+    ∧ ((YiState.init Hexagram.heaven (metaInterpProg_branchYaoEq i j 2)).runFuel 2).halted
         = true := by
   refine ⟨?_, ?_⟩
   all_goals

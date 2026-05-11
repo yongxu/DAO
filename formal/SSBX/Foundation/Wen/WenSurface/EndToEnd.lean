@@ -130,18 +130,18 @@ example :
     (wenyanInterp chain).toOption = some «一» :=
   by native_decide
 
-/-- 「乾」→ Hexagram.qian (idx 0). -/
-example : (wenyanInterp "乾").toOption = some Hexagram.qian := by native_decide
+/-- 「乾」→ Hexagram.heaven (idx 0). -/
+example : (wenyanInterp "乾").toOption = some Hexagram.heaven := by native_decide
 
-/-- 「坤」→ Hexagram.kun (idx 63). -/
-example : (wenyanInterp "坤").toOption = some Hexagram.kun := by native_decide
+/-- 「坤」→ Hexagram.earth (idx 63). -/
+example : (wenyanInterp "坤").toOption = some Hexagram.earth := by native_decide
 
 /-- 「推 乾」→ «生» «乾» = «一»（idx 0 + 1 mod 64 = 1）. -/
 example : (wenyanInterp "推 乾").toOption = some «一» := by native_decide
 
 /-- 「推 坤」→ «生» «坤» = «乾»（idx 63 + 1 mod 64 = 0，周而复始）. -/
 example :
-    (wenyanInterp "推 坤").toOption = some Hexagram.qian :=
+    (wenyanInterp "推 坤").toOption = some Hexagram.heaven :=
   by native_decide
 
 /-! ### 「之」 应用标记测试（显式 AST marker，elab 时透明） -/
@@ -211,7 +211,7 @@ example :
   by native_decide
 
 example :
-    (wenyanInterp "益 乾").toOption = some («生» Hexagram.qian) :=
+    (wenyanInterp "益 乾").toOption = some («生» Hexagram.heaven) :=
   by native_decide
 
 example :
@@ -269,7 +269,7 @@ example :
   by native_decide
 
 example :
-    (wenyanInterpHexList "五行 乾").toOption = some [Hexagram.qian] :=
+    (wenyanInterpHexList "五行 乾").toOption = some [Hexagram.heaven] :=
   by native_decide
 
 example :
@@ -280,7 +280,7 @@ example :
 
 example :
     (wenyanInterpHexPair "曰 乾 乾").toOption =
-      some (Hexagram.qian, Hexagram.qian) :=
+      some (Hexagram.heaven, Hexagram.heaven) :=
   by native_decide
 
 example :
@@ -291,7 +291,7 @@ example :
 
 example :
     (wenyanInterpHexList "教 乾 坤 一").toOption =
-      some [Hexagram.qian, Hexagram.kun, «一»] :=
+      some [Hexagram.heaven, Hexagram.earth, «一»] :=
   by native_decide
 
 example :
@@ -476,34 +476,34 @@ theorem wenyan_tui_yi_eq_sheng :
 example : (wenyanInterp "益 一").toOption = some («生» «一») := by native_decide
 
 /-- 「損 一」 → «一» − 1 = idx 0 = «乾». -/
-example : (wenyanInterp "損 一").toOption = some Hexagram.qian := by native_decide
+example : (wenyanInterp "損 一").toOption = some Hexagram.heaven := by native_decide
 
 /-- 「損 乾」 → «乾» − 1 = idx -1 mod 64 = idx 63 = «坤». -/
-example : (wenyanInterp "損 乾").toOption = some Hexagram.kun := by native_decide
+example : (wenyanInterp "損 乾").toOption = some Hexagram.earth := by native_decide
 
 /-- 简体「损」也认得. -/
-example : (wenyanInterp "损 一").toOption = some Hexagram.qian := by native_decide
+example : (wenyanInterp "损 一").toOption = some Hexagram.heaven := by native_decide
 
 /-- 「益 损 一」 → ((一 − 1) + 1) = 一. -/
 example : (wenyanInterp "益 损 一").toOption = some «一» := by native_decide
 
 /-- 「损 益 乾」 → ((乾 + 1) − 1) = 乾. -/
-example : (wenyanInterp "损 益 乾").toOption = some Hexagram.qian := by native_decide
+example : (wenyanInterp "损 益 乾").toOption = some Hexagram.heaven := by native_decide
 
 /-! ## § 6.25 exact Hex transforms -/
 
-example : (wenyanInterp "错 乾").toOption = some Hexagram.kun := by native_decide
-example : (wenyanInterp "錯 乾").toOption = some Hexagram.kun := by native_decide
-example : (wenyanInterp "综 乾").toOption = some Hexagram.qian := by native_decide
-example : (wenyanInterp "互 坤").toOption = some Hexagram.kun := by native_decide
-example : (wenyanInterp "改 乾").toOption = some (dongInner Hexagram.qian) := by native_decide
-example : (wenyanInterp "轉 乾").toOption = some Hexagram.qian.zong := by native_decide
-example : (wenyanInterp "伸 乾").toOption = some («生» Hexagram.qian) := by native_decide
-example : (wenyanInterp "屈 乾").toOption = some («加» Hexagram.kun Hexagram.qian) := by native_decide
-example : (wenyanInterp "起 乾").toOption = some («生» Hexagram.qian) := by native_decide
-example : (wenyanInterp "止 乾").toOption = some Hexagram.qian := by native_decide
-example : (wenyanInterp "進 乾").toOption = some («生» Hexagram.qian) := by native_decide
-example : (wenyanInterp "退 乾").toOption = some («加» Hexagram.kun Hexagram.qian) := by native_decide
+example : (wenyanInterp "错 乾").toOption = some Hexagram.earth := by native_decide
+example : (wenyanInterp "錯 乾").toOption = some Hexagram.earth := by native_decide
+example : (wenyanInterp "综 乾").toOption = some Hexagram.heaven := by native_decide
+example : (wenyanInterp "互 坤").toOption = some Hexagram.earth := by native_decide
+example : (wenyanInterp "改 乾").toOption = some (dongInner Hexagram.heaven) := by native_decide
+example : (wenyanInterp "轉 乾").toOption = some Hexagram.heaven.zong := by native_decide
+example : (wenyanInterp "伸 乾").toOption = some («生» Hexagram.heaven) := by native_decide
+example : (wenyanInterp "屈 乾").toOption = some («加» Hexagram.earth Hexagram.heaven) := by native_decide
+example : (wenyanInterp "起 乾").toOption = some («生» Hexagram.heaven) := by native_decide
+example : (wenyanInterp "止 乾").toOption = some Hexagram.heaven := by native_decide
+example : (wenyanInterp "進 乾").toOption = some («生» Hexagram.heaven) := by native_decide
+example : (wenyanInterp "退 乾").toOption = some («加» Hexagram.earth Hexagram.heaven) := by native_decide
 example :
     (theoremBackedSemanticsFor? OperatorId.F_1).isSome = true :=
   by native_decide
@@ -519,14 +519,14 @@ example :
 example :
     (theoremBackedSemanticsFor? OperatorId.F_11).isSome = true :=
   by native_decide
-example : (wenyanInterp "藏 乾").toOption = some («加» Hexagram.kun Hexagram.qian) := by native_decide
-example : (wenyanInterp "露 乾").toOption = some («生» Hexagram.qian) := by native_decide
-example : (wenyanInterp "明 乾").toOption = some («生» Hexagram.qian) := by native_decide
-example : (wenyanInterp "蔽 乾").toOption = some («加» Hexagram.kun Hexagram.qian) := by native_decide
+example : (wenyanInterp "藏 乾").toOption = some («加» Hexagram.earth Hexagram.heaven) := by native_decide
+example : (wenyanInterp "露 乾").toOption = some («生» Hexagram.heaven) := by native_decide
+example : (wenyanInterp "明 乾").toOption = some («生» Hexagram.heaven) := by native_decide
+example : (wenyanInterp "蔽 乾").toOption = some («加» Hexagram.earth Hexagram.heaven) := by native_decide
 example :
     (theoremBackedSemanticsFor? OperatorId.M_5).isSome = true :=
   by native_decide
-example : (wenyanInterp "使 推 乾").toOption = some («生» Hexagram.qian) := by native_decide
+example : (wenyanInterp "使 推 乾").toOption = some («生» Hexagram.heaven) := by native_decide
 example :
     (theoremBackedSemanticsFor? OperatorId.K_7).isSome = true :=
   by native_decide
@@ -534,7 +534,7 @@ example :
     (theoremBackedSemanticsFor? OperatorId.L_7).isSome = true :=
   by native_decide
 example : (wenyanInterpBool "若 真").toOption = some true := by native_decide
-example : (wenyanInterp "再 推 乾").toOption = some («生» («生» Hexagram.qian)) := by native_decide
+example : (wenyanInterp "再 推 乾").toOption = some («生» («生» Hexagram.heaven)) := by native_decide
 example :
     (theoremBackedSemanticsFor? OperatorId.A_6).isSome = true :=
   by native_decide
@@ -555,11 +555,11 @@ example :
   by native_decide
 example :
     (wenyanInterpHexPair "偶 乾 坤").toOption =
-      some (Hexagram.qian, Hexagram.kun) :=
+      some (Hexagram.heaven, Hexagram.earth) :=
   by native_decide
 example :
     (wenyanInterpHexPair "偕 乾 坤").toOption =
-      some (Hexagram.qian, Hexagram.kun) :=
+      some (Hexagram.heaven, Hexagram.earth) :=
   by native_decide
 example :
     (theoremBackedSemanticsFor? OperatorId.R_14).isSome = true :=
@@ -905,36 +905,36 @@ example :
   by native_decide
 example :
     (wenyanInterpHexPair "兩 乾").toOption =
-      some (Hexagram.qian, Hexagram.qian) :=
+      some (Hexagram.heaven, Hexagram.heaven) :=
   by native_decide
 example :
-    (wenyanInterpHexList "聚 乾").toOption = some [Hexagram.qian] :=
+    (wenyanInterpHexList "聚 乾").toOption = some [Hexagram.heaven] :=
   by native_decide
 example :
-    (wenyanInterp "散 聚 乾").toOption = some Hexagram.qian :=
+    (wenyanInterp "散 聚 乾").toOption = some Hexagram.heaven :=
   by native_decide
 example :
     (theoremBackedSemanticsFor? OperatorId.Z_17).isSome = true :=
   by native_decide
-example : (wenyanInterp "静 乾").toOption = some Hexagram.qian := by native_decide
-example : (wenyanInterp "恒 乾").toOption = some Hexagram.qian := by native_decide
-example : (wenyanInterp "不动 乾").toOption = some Hexagram.qian := by native_decide
-example : (wenyanInterp "錯綜 乾").toOption = some Hexagram.qian.cuoZong := by native_decide
-example : (wenyanInterp "交错 乾").toOption = some Hexagram.qian.cuoZong := by native_decide
-example : (wenyanInterp "复 乾").toOption = some Hexagram.qian := by native_decide
-example : (wenyanInterp "归一 乾").toOption = some Hexagram.qian := by native_decide
-example : (wenyanInterp "展 乾").toOption = some («生» Hexagram.qian) := by native_decide
-example : (wenyanInterp "初动 乾").toOption = some (dongInner Hexagram.qian) := by native_decide
-example : (wenyanInterp "承变 乾").toOption = some (huaInner Hexagram.qian) := by native_decide
-example : (wenyanInterp "际变 乾").toOption = some (bianInner Hexagram.qian) := by native_decide
+example : (wenyanInterp "静 乾").toOption = some Hexagram.heaven := by native_decide
+example : (wenyanInterp "恒 乾").toOption = some Hexagram.heaven := by native_decide
+example : (wenyanInterp "不动 乾").toOption = some Hexagram.heaven := by native_decide
+example : (wenyanInterp "錯綜 乾").toOption = some Hexagram.heaven.cuoZong := by native_decide
+example : (wenyanInterp "交错 乾").toOption = some Hexagram.heaven.cuoZong := by native_decide
+example : (wenyanInterp "复 乾").toOption = some Hexagram.heaven := by native_decide
+example : (wenyanInterp "归一 乾").toOption = some Hexagram.heaven := by native_decide
+example : (wenyanInterp "展 乾").toOption = some («生» Hexagram.heaven) := by native_decide
+example : (wenyanInterp "初动 乾").toOption = some (dongInner Hexagram.heaven) := by native_decide
+example : (wenyanInterp "承变 乾").toOption = some (huaInner Hexagram.heaven) := by native_decide
+example : (wenyanInterp "际变 乾").toOption = some (bianInner Hexagram.heaven) := by native_decide
 example :
     (wenyanCompile "改").toOption.map (·.ty) = some (.arr .hex .hex) :=
   by native_decide
 example :
-    (wenyanInterp "化 乾").toOption = some (huaInner Hexagram.qian) :=
+    (wenyanInterp "化 乾").toOption = some (huaInner Hexagram.heaven) :=
   by native_decide
 example :
-    (wenyanInterp "反 乾").toOption = some Hexagram.qian.cuo :=
+    (wenyanInterp "反 乾").toOption = some Hexagram.heaven.cuo :=
   by native_decide
 example :
     (wenyanInterpBool "反 真").toOption = some false :=
@@ -1147,7 +1147,7 @@ example :
 
 /-- 「之又 推 乾」 = 推 (推 乾) = «生生» 2 «乾» = idx 2. -/
 example :
-    (wenyanInterp "之又 推 乾").toOption = some («生生» 2 Hexagram.qian) :=
+    (wenyanInterp "之又 推 乾").toOption = some («生生» 2 Hexagram.heaven) :=
   by native_decide
 
 /-- 之又 + 不 + 真 — 双重否定 = 真. -/

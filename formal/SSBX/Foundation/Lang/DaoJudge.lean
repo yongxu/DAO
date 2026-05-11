@@ -10,8 +10,8 @@ are all the same 128-cell carrier (Cell128 = Hexagram × YinBit = (Z/2)⁷).
   hexagram yao positions (`o` = yang = 0, `x` = yin = 1, matching the
   OXNotation convention from Cell256). The 7th char = YinBit (`o` = 无 =
   false, `x` = 有 = true).
-  - `ooooooo` = (qian, false) = 乾·无 = origin = 道
-  - `xxxxxxx` = (kun, true)  = 坤·有 = the antipode
+  - `ooooooo` = (heaven, false) = 乾·无 = origin = 道
+  - `xxxxxxx` = (earth, true)  = 坤·有 = the antipode
 
 - **句 (sentence)**: `(A B)` where A and B are programs. Reduction:
   evaluate A and B to cells, return `A ⊕ B` (Cell128 XOR). No other

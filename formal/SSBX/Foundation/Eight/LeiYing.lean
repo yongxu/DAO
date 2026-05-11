@@ -158,16 +158,16 @@ def idAdjunction (C : Cat.{u, v}) : Adjunction (idFunctor C) (idFunctor C) where
 /-! ## § 10 公开摘要 -/
 
 /-- **类映总摘要**：
-    (1) BaguaCat 是 Cat（八卦层 finite category）—— `BaguaCat.id qian = ()`
+    (1) BaguaCat 是 Cat（八卦层 finite category）—— `BaguaCat.id heaven = ()`
     (2) Trigram.all.length = 8（八卦穷尽）
-    (3) idFunctor BaguaCat 之 obj on qian = qian
-    (4) idFunctor BaguaCat ∘ idFunctor BaguaCat 之 obj on qian = qian
+    (3) idFunctor BaguaCat 之 obj on heaven = heaven
+    (4) idFunctor BaguaCat ∘ idFunctor BaguaCat 之 obj on heaven = heaven
     (5) Hexagram.allHex.length = 64（重卦穷尽） -/
 theorem leiying_summary :
-    (BaguaCat.id qian = ())
+    (BaguaCat.id heaven = ())
     ∧ (Trigram.all.length = 8)
-    ∧ ((idFunctor BaguaCat).obj qian = qian)
-    ∧ ((Functor.comp (idFunctor BaguaCat) (idFunctor BaguaCat)).obj qian = qian)
+    ∧ ((idFunctor BaguaCat).obj heaven = heaven)
+    ∧ ((Functor.comp (idFunctor BaguaCat) (idFunctor BaguaCat)).obj heaven = heaven)
     ∧ (Hexagram.allHex.length = 64) := by
   refine ⟨rfl, ?_, rfl, rfl, ?_⟩
   · decide

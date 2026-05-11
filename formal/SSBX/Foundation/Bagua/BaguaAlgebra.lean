@@ -86,17 +86,17 @@ theorem cuo_eq_compose (t : Trigram) :
 
 /-! ## § 3 Concrete 8-element orbit of 乾 under (Z/2)³ -/
 
-theorem id_qian      : qian = qian := rfl
-theorem dong_qian    : dong qian = xun := rfl       -- 巽 ⟨阴,阳,阳⟩
-theorem hua_qian     : hua qian = li := rfl         -- 离 ⟨阳,阴,阳⟩
-theorem bian_qian    : bian qian = dui := rfl       -- 兑 ⟨阳,阳,阴⟩
-theorem dong_hua_qian   : dong (hua qian) = gen := rfl   -- 艮 ⟨阴,阴,阳⟩
-theorem hua_bian_qian   : hua (bian qian) = zhen := rfl  -- 震 ⟨阳,阴,阴⟩
-theorem dong_bian_qian  : dong (bian qian) = kan := rfl  -- 坎 ⟨阴,阳,阴⟩
-theorem dong_hua_bian_qian : dong (hua (bian qian)) = kun := rfl  -- 坤 ⟨阴,阴,阴⟩
+theorem id_qian      : heaven = heaven := rfl
+theorem dong_qian    : dong heaven = wind := rfl       -- 巽 ⟨阴,阳,阳⟩
+theorem hua_qian     : hua heaven = fire := rfl         -- 离 ⟨阳,阴,阳⟩
+theorem bian_qian    : bian heaven = lake := rfl       -- 兑 ⟨阳,阳,阴⟩
+theorem dong_hua_qian   : dong (hua heaven) = mountain := rfl   -- 艮 ⟨阴,阴,阳⟩
+theorem hua_bian_qian   : hua (bian heaven) = thunder := rfl  -- 震 ⟨阳,阴,阴⟩
+theorem dong_bian_qian  : dong (bian heaven) = water := rfl  -- 坎 ⟨阴,阳,阴⟩
+theorem dong_hua_bian_qian : dong (hua (bian heaven)) = earth := rfl  -- 坤 ⟨阴,阴,阴⟩
 
 /-- 错 of 乾 is 坤 (witnessed via the compose decomposition). -/
-theorem cuo_qian_eq_kun : Trigram.cuo qian = kun := by
+theorem cuo_qian_eq_kun : Trigram.cuo heaven = earth := by
   rw [cuo_eq_compose]
   exact dong_hua_bian_qian
 
@@ -458,7 +458,7 @@ theorem bianOuter_via_chong (h : Hexagram) :
 theorem trigram_mem_all (t : Trigram) : t ∈ Trigram.all := by
   rcases t with ⟨y1, y2, y3⟩
   cases y1 <;> cases y2 <;> cases y3 <;>
-    simp [Trigram.all, qian, dui, li, zhen, xun, kan, gen, kun]
+    simp [Trigram.all, heaven, lake, fire, thunder, wind, water, mountain, earth]
 
 /-- Helper: every yao is in `[Yao.yang, Yao.yin]`. -/
 private theorem yao_in_yaos (y : Yao) : y ∈ ([Yao.yang, Yao.yin] : List Yao) := by
@@ -565,34 +565,34 @@ theorem chong_inner_outer (h : Hexagram) :
   We prove 综 is not equal to id, the three single flips, or 错 (the central
   element of (Z/2)³). The key witness is 乾: 综 fixes 乾, but every non-id
   element of (Z/2)³ moves 乾. Hence 综 ≠ any non-id (Z/2)³ element via 乾,
-  and 综 ≠ id via 兑 (since 综 dui = xun ≠ dui). -/
+  and 综 ≠ id via 兑 (since 综 lake = wind ≠ lake). -/
 
 /-- 综 fixes 乾 (palindrome). -/
-theorem zong_qian_eq_qian : Trigram.zong qian = qian := rfl
+theorem zong_qian_eq_qian : Trigram.zong heaven = heaven := rfl
 
 /-- Every non-id (Z/2)³ element moves 乾. -/
-theorem dong_qian_ne_qian : dong qian ≠ qian := by decide
-theorem hua_qian_ne_qian : hua qian ≠ qian := by decide
-theorem bian_qian_ne_qian : bian qian ≠ qian := by decide
+theorem dong_qian_ne_qian : dong heaven ≠ heaven := by decide
+theorem hua_qian_ne_qian : hua heaven ≠ heaven := by decide
+theorem bian_qian_ne_qian : bian heaven ≠ heaven := by decide
 
 /-- 综 ≠ id (witnessed by 兑 → 巽). -/
 theorem zong_ne_id : Trigram.zong ≠ id := fun h =>
-  absurd (congrFun h dui) (by decide)
+  absurd (congrFun h lake) (by decide)
 
-/-- 综 ≠ each of dong, hua, bian (witnessed by 乾, since 综 qian = qian but
+/-- 综 ≠ each of dong, hua, bian (witnessed by 乾, since 综 heaven = heaven but
     each flip moves 乾). -/
 theorem zong_ne_dong : Trigram.zong ≠ dong := fun h =>
-  absurd (congrFun h qian) (by decide)
+  absurd (congrFun h heaven) (by decide)
 
 theorem zong_ne_hua : Trigram.zong ≠ hua := fun h =>
-  absurd (congrFun h qian) (by decide)
+  absurd (congrFun h heaven) (by decide)
 
 theorem zong_ne_bian : Trigram.zong ≠ bian := fun h =>
-  absurd (congrFun h qian) (by decide)
+  absurd (congrFun h heaven) (by decide)
 
-/-- 综 ≠ 错 (witnessed by 乾, since 错 qian = kun but 综 qian = qian). -/
+/-- 综 ≠ 错 (witnessed by 乾, since 错 heaven = earth but 综 heaven = heaven). -/
 theorem zong_ne_cuo : (Trigram.zong : Trigram → Trigram) ≠ Trigram.cuo := fun h =>
-  absurd (congrFun h qian) (by decide)
+  absurd (congrFun h heaven) (by decide)
 
 /-- Summary: 综 is outside the (Z/2)³ flip group on Trigram. -/
 theorem zong_outside_flip_group :
@@ -637,21 +637,21 @@ theorem all_length : all.length = 8 := rfl
 
 /-- Orbit of 乾 under (Z/2)³: the 8 combos applied to 乾 yield exactly the 8 八卦. -/
 theorem orbit_qian :
-    apply id  qian = SSBX.Foundation.Yi.Yi.Trigram.qian ∧
-    apply d   qian = SSBX.Foundation.Yi.Yi.Trigram.xun  ∧
-    apply h   qian = SSBX.Foundation.Yi.Yi.Trigram.li   ∧
-    apply b   qian = SSBX.Foundation.Yi.Yi.Trigram.dui  ∧
-    apply dh  qian = SSBX.Foundation.Yi.Yi.Trigram.gen  ∧
-    apply hb  qian = SSBX.Foundation.Yi.Yi.Trigram.zhen ∧
-    apply db  qian = SSBX.Foundation.Yi.Yi.Trigram.kan  ∧
-    apply dhb qian = SSBX.Foundation.Yi.Yi.Trigram.kun :=
+    apply id  heaven = SSBX.Foundation.Yi.Yi.Trigram.heaven ∧
+    apply d   heaven = SSBX.Foundation.Yi.Yi.Trigram.wind  ∧
+    apply h   heaven = SSBX.Foundation.Yi.Yi.Trigram.fire   ∧
+    apply b   heaven = SSBX.Foundation.Yi.Yi.Trigram.lake  ∧
+    apply dh  heaven = SSBX.Foundation.Yi.Yi.Trigram.mountain  ∧
+    apply hb  heaven = SSBX.Foundation.Yi.Yi.Trigram.thunder ∧
+    apply db  heaven = SSBX.Foundation.Yi.Yi.Trigram.water  ∧
+    apply dhb heaven = SSBX.Foundation.Yi.Yi.Trigram.earth :=
   ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl⟩
 
 /-- Different combos applied to 乾 give different trigrams: the orbit is a
     bijection between (Z/2)³ and Trigram. This is the **simply transitive**
     (regular) action property. -/
 theorem apply_qian_inj :
-    Function.Injective (fun c : FlipCombo => c.apply qian) := by
+    Function.Injective (fun c : FlipCombo => c.apply heaven) := by
   intro c1 c2 hh
   cases c1 <;> cases c2 <;>
     first | rfl | (exfalso; revert hh; decide)
@@ -708,7 +708,7 @@ theorem bagua_algebra_phase2_complete :
        Trigram.zong ≠ hua ∧ Trigram.zong ≠ bian ∧
        (Trigram.zong : Trigram → Trigram) ≠ Trigram.cuo)
     -- (e8) (Z/2)³ acts simply transitively (regular)
-    ∧ (Function.Injective (fun c : FlipCombo => c.apply qian)) :=
+    ∧ (Function.Injective (fun c : FlipCombo => c.apply heaven)) :=
   ⟨trigram_mem_all,
    hexagram_mem_allHex,
    hammingDist_eq_zero_iff,

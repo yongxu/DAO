@@ -63,25 +63,25 @@ def emitCellInit (cur target : Cell256) (oldHistory : List Cell256) : YiState :=
 
 /-- A zero-flip concrete check. -/
 theorem emitCellFrom_correct_zero_flip :
-    let cur : Cell256 := (Hexagram.qian, Shi.jin)
-    let target : Cell256 := (Hexagram.qian, Shi.ji)
+    let cur : Cell256 := (Hexagram.heaven, Shi.jin)
+    let target : Cell256 := (Hexagram.heaven, Shi.ji)
     ((emitCellInit cur target []).runFuel (emitCellFrom cur target).length).cur = target
       ∧ ((emitCellInit cur target []).runFuel (emitCellFrom cur target).length).history = [target] := by
   native_decide
 
 /-- A one-flip concrete check. -/
 theorem emitCellFrom_correct_one_flip :
-    let cur : Cell256 := (Hexagram.qian, Shi.jin)
+    let cur : Cell256 := (Hexagram.heaven, Shi.jin)
     let target : Cell256 :=
-      ({ Hexagram.qian with y1 := Yao.yin }, Shi.wei)
+      ({ Hexagram.heaven with y1 := Yao.yin }, Shi.wei)
     ((emitCellInit cur target []).runFuel (emitCellFrom cur target).length).cur = target
       ∧ ((emitCellInit cur target []).runFuel (emitCellFrom cur target).length).history = [target] := by
   native_decide
 
 /-- A six-flip concrete check. -/
 theorem emitCellFrom_correct_six_flips :
-    let cur : Cell256 := (Hexagram.qian, Shi.jin)
-    let target : Cell256 := (Hexagram.kun, Shi.wei)
+    let cur : Cell256 := (Hexagram.heaven, Shi.jin)
+    let target : Cell256 := (Hexagram.earth, Shi.wei)
     ((emitCellInit cur target []).runFuel (emitCellFrom cur target).length).cur = target
       ∧ ((emitCellInit cur target []).runFuel (emitCellFrom cur target).length).history = [target] := by
   native_decide

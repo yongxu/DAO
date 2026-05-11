@@ -19,13 +19,13 @@ its atomic operator is **印 (yìn)**, already defined as `Cell128.yin` in
 Canonical printer uses 阳/阴 for yao positions and 有/无 for the YinBit.
 
 Examples:
-- `(cell128 阳 阳 阳 阳 阳 阳 无)` = `乾·无` = `(qian, false)` = R₇ origin.
-- `(cell128 阴 阴 阴 阴 阴 阴 有)` = `坤·有` = `(kun, true)` (target of demo).
+- `(cell128 阳 阳 阳 阳 阳 阳 无)` = `乾·无` = `(heaven, false)` = R₇ origin.
+- `(cell128 阴 阴 阴 阴 阴 阴 有)` = `坤·有` = `(earth, true)` (target of demo).
 
 ## Yao/Yuan duality at L7
 
 Apply = `Cell128.xor` (componentwise (Z/2)⁷ XOR), already proven involutive.
-Origin = `(qian, false)` = (Z/2)⁷ identity. Each cell c plays both roles
+Origin = `(heaven, false)` = (Z/2)⁷ identity. Each cell c plays both roles
 (value at L7, and operator `λ s ⇒ c ⊕ s`).
 
 ## Atomic operators (7 = 6 yao flips + 印)
@@ -65,7 +65,7 @@ abbrev Cell : Type := Cell128
     associative, and involutive in `Bagua/Cell128.lean`. -/
 def apply : Cell → Cell → Cell := SSBX.Foundation.Bagua.Cell128.Cell128.xor
 
-/-- The (Z/2)⁷ origin: `(qian, false)` = `乾·无`. -/
+/-- The (Z/2)⁷ origin: `(heaven, false)` = `乾·无`. -/
 def origin : Cell := SSBX.Foundation.Bagua.Cell128.Cell128.origin
 
 /-! ## § 2 Cayley action laws (delegate to Cell128 algebraic spine) -/
@@ -231,7 +231,7 @@ def rule_step7_yin : Rule :=
 
 /-- A standalone 印 rule on origin (toggle YinBit at `乾·无`). -/
 def rule_yin_at_qian : Rule :=
-  Rule.named "yin-at-qian"
+  Rule.named "yin-at-heaven"
     (.list [.atom "cell128", .atom "阳", .atom "阳", .atom "阳",
                               .atom "阳", .atom "阳", .atom "阳", .atom "无"])
     (.list [.atom "cell128", .atom "阳", .atom "阳", .atom "阳",
@@ -240,7 +240,7 @@ def rule_yin_at_qian : Rule :=
 /-- A standalone reverse 印 rule (toggle YinBit at `坤·有` back to `坤·无`).
     Useful for showing 印² = id reachability. -/
 def rule_yin_back_at_kun : Rule :=
-  Rule.named "yin-back-at-kun"
+  Rule.named "yin-back-at-earth"
     (.list [.atom "cell128", .atom "阴", .atom "阴", .atom "阴",
                               .atom "阴", .atom "阴", .atom "阴", .atom "有"])
     (.list [.atom "cell128", .atom "阴", .atom "阴", .atom "阴",
@@ -254,10 +254,10 @@ def defaultRules : List Rule :=
 
 /-! ## § 7 Smoke tests + reachability demo -/
 
-/-- Origin 乾·无 = `(qian, false)` = R₇ identity. -/
-def qianWu : Cell := (Hexagram.qian, false)
+/-- Origin 乾·无 = `(heaven, false)` = R₇ identity. -/
+def qianWu : Cell := (Hexagram.heaven, false)
 
-/-- The kun-with-trace cell 坤·有 = `(kun, true)` — terminal of the demo. -/
+/-- The earth-with-trace cell 坤·有 = `(earth, true)` — terminal of the demo. -/
 def kunYou : Cell := (⟨.yin, .yin, .yin, .yin, .yin, .yin⟩, true)
 
 /-- 1-step demo: from 乾·无 the first matching rule (`step1`) flips yao 1. -/
@@ -290,8 +290,8 @@ example :
 /-- Apply involutivity is decidable on demand at native speed. -/
 example : apply qianWu qianWu = origin := by native_decide
 
-/-- 印 mask XORed with origin gives `(qian, true)`. -/
-example : apply mask_yin origin = (Hexagram.qian, true) := by native_decide
+/-- 印 mask XORed with origin gives `(heaven, true)`. -/
+example : apply mask_yin origin = (Hexagram.heaven, true) := by native_decide
 
 /-! ## § 8 L7 summary bundle -/
 

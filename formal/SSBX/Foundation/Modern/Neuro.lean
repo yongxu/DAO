@@ -387,16 +387,16 @@ noncomputable def ratesToTrigram (θ : ℝ) (r1 r2 r3 : ℝ) : Trigram :=
 /-- **全 fire 三相 → 乾**：所有 firing rate > θ ⇒ Trigram = 乾。 -/
 theorem ratesToTrigram_qian (θ r1 r2 r3 : ℝ)
     (h1 : r1 > θ) (h2 : r2 > θ) (h3 : r3 > θ) :
-    ratesToTrigram θ r1 r2 r3 = Trigram.qian := by
-  unfold ratesToTrigram Trigram.qian
+    ratesToTrigram θ r1 r2 r3 = Trigram.heaven := by
+  unfold ratesToTrigram Trigram.heaven
   rw [rateToYao_yang_of_gt θ r1 h1, rateToYao_yang_of_gt θ r2 h2,
       rateToYao_yang_of_gt θ r3 h3]
 
 /-- **全 rest 三相 → 坤**：所有 firing rate ≤ θ ⇒ Trigram = 坤。 -/
 theorem ratesToTrigram_kun (θ r1 r2 r3 : ℝ)
     (h1 : r1 ≤ θ) (h2 : r2 ≤ θ) (h3 : r3 ≤ θ) :
-    ratesToTrigram θ r1 r2 r3 = Trigram.kun := by
-  unfold ratesToTrigram Trigram.kun
+    ratesToTrigram θ r1 r2 r3 = Trigram.earth := by
+  unfold ratesToTrigram Trigram.earth
   rw [rateToYao_yin_of_le θ r1 h1, rateToYao_yin_of_le θ r2 h2,
       rateToYao_yin_of_le θ r3 h3]
 
@@ -455,7 +455,7 @@ theorem neuro_summary :
         Filter.Tendsto (lifSolution V_rest V_0 τ) Filter.atTop (nhds V_rest))
     ∧ (∀ w b x : ℝ, -((-w * x - b))^2 ≤ 0)
     ∧ (∀ θ r1 r2 r3 : ℝ, r1 > θ → r2 > θ → r3 > θ →
-        ratesToTrigram θ r1 r2 r3 = Trigram.qian) :=
+        ratesToTrigram θ r1 r2 r3 = Trigram.heaven) :=
   ⟨sigmoid_zero, sigmoid_strictMono, hasDerivAt_sigmoid,
    tanhN_zero, tanhN_strictMono, hasDerivAt_tanhN,
    lifSolution_initial, lifSolution_satisfies_ODE,

@@ -182,12 +182,12 @@ def Trigram.toFin8 (t : SSBX.Foundation.Yi.Yi.Trigram) : Fin 8 :=
 
 /-- **乾 ↦ |000⟩ basis index**。 -/
 theorem qian_to_zero :
-    Trigram.toFin8 SSBX.Foundation.Yi.Yi.Trigram.qian = 0 := by
+    Trigram.toFin8 SSBX.Foundation.Yi.Yi.Trigram.heaven = 0 := by
   rfl
 
 /-- **坤 ↦ |111⟩ basis index**。 -/
 theorem kun_to_seven :
-    Trigram.toFin8 SSBX.Foundation.Yi.Yi.Trigram.kun = 7 := by
+    Trigram.toFin8 SSBX.Foundation.Yi.Yi.Trigram.earth = 7 := by
   rfl
 
 /-! ## § 8 cuo ≅ X ⊗ X ⊗ X 之 anchor
@@ -286,9 +286,9 @@ theorem zong_via_fin8 (t : SSBX.Foundation.Yi.Yi.Trigram) :
 
 /-- 乾出发时，三个位算子分别给出 4/2/1 的 basis 权重。 -/
 theorem qian_position_weights :
-    Trigram.toFin8 (dong SSBX.Foundation.Yi.Yi.Trigram.qian) = 4
-    ∧ Trigram.toFin8 (hua SSBX.Foundation.Yi.Yi.Trigram.qian) = 2
-    ∧ Trigram.toFin8 (bian SSBX.Foundation.Yi.Yi.Trigram.qian) = 1 := by
+    Trigram.toFin8 (dong SSBX.Foundation.Yi.Yi.Trigram.heaven) = 4
+    ∧ Trigram.toFin8 (hua SSBX.Foundation.Yi.Yi.Trigram.heaven) = 2
+    ∧ Trigram.toFin8 (bian SSBX.Foundation.Yi.Yi.Trigram.heaven) = 1 := by
   exact ⟨rfl, rfl, rfl⟩
 
 /-- **算子-位对齐总表**：动/化/变/错/综全落到 3-qubit basis index 的位操作。 -/
@@ -330,8 +330,8 @@ theorem quantum_summary :
     ∧ pauliZ * pauliZ = (1 : Matrix (Fin 2) (Fin 2) ℂ)
     ∧ Matrix.mulVec pauliX ket0 = ket1
     ∧ Matrix.mulVec pauliX ket1 = ket0
-    ∧ Trigram.toFin8 SSBX.Foundation.Yi.Yi.Trigram.qian = 0
-    ∧ Trigram.toFin8 SSBX.Foundation.Yi.Yi.Trigram.kun = 7
+    ∧ Trigram.toFin8 SSBX.Foundation.Yi.Yi.Trigram.heaven = 0
+    ∧ Trigram.toFin8 SSBX.Foundation.Yi.Yi.Trigram.earth = 7
     ∧ (∀ y : SSBX.Foundation.Yi.Yi.Yao,
         Matrix.mulVec pauliX (Yao.toQubit y) = Yao.toQubit y.neg)
     ∧ (∀ ψ : Qubit, computationalBasisNormalized ψ →

@@ -102,35 +102,35 @@ end SSBX.Foundation.Bagua.BaguaAlgebra.SiXiang
 namespace SSBX.Foundation.Yi.Yi.Trigram
 
 def virtueChar (t : Trigram) : String :=
-  if t = qian then "健"
-  else if t = dui then "悦"
-  else if t = li then "显"
-  else if t = zhen then "起"
-  else if t = xun then "入"
-  else if t = kan then "险"
-  else if t = gen then "止"
-  else "顺"  -- kun
+  if t = heaven then "健"
+  else if t = lake then "悦"
+  else if t = fire then "显"
+  else if t = thunder then "起"
+  else if t = wind then "入"
+  else if t = water then "险"
+  else if t = mountain then "止"
+  else "顺"  -- earth
 
 def fromVirtueChar (s : String) : Option Trigram :=
-  if s = "健" then some qian
-  else if s = "悦" then some dui
-  else if s = "显" then some li
-  else if s = "起" then some zhen
-  else if s = "入" then some xun
-  else if s = "险" then some kan
-  else if s = "止" then some gen
-  else if s = "顺" then some kun
+  if s = "健" then some heaven
+  else if s = "悦" then some lake
+  else if s = "显" then some fire
+  else if s = "起" then some thunder
+  else if s = "入" then some wind
+  else if s = "险" then some water
+  else if s = "止" then some mountain
+  else if s = "顺" then some earth
   else none
 
 /-- Each trigram's canonical literal character (the trigram name itself). -/
 def literalChar (t : Trigram) : String :=
-  if t = qian then "乾"
-  else if t = dui then "兑"
-  else if t = li then "离"
-  else if t = zhen then "震"
-  else if t = xun then "巽"
-  else if t = kan then "坎"
-  else if t = gen then "艮"
+  if t = heaven then "乾"
+  else if t = lake then "兑"
+  else if t = fire then "离"
+  else if t = thunder then "震"
+  else if t = wind then "巽"
+  else if t = water then "坎"
+  else if t = mountain then "艮"
   else "坤"
 
 theorem virtue_roundtrip (t : Trigram) :
@@ -297,23 +297,23 @@ def allLayerChars : List LayerChar :=
   , ⟨"R2", "season",  "SiXiang.shaoYang", "春"⟩
   , ⟨"R2", "season",  "SiXiang.taiYin",   "冬"⟩
   -- R3: trigram virtues (8)
-  , ⟨"R3", "virtue",  "Trigram.qian", "健"⟩
-  , ⟨"R3", "virtue",  "Trigram.dui",  "悦"⟩
-  , ⟨"R3", "virtue",  "Trigram.li",   "显"⟩
-  , ⟨"R3", "virtue",  "Trigram.zhen", "起"⟩
-  , ⟨"R3", "virtue",  "Trigram.xun",  "入"⟩
-  , ⟨"R3", "virtue",  "Trigram.kan",  "险"⟩
-  , ⟨"R3", "virtue",  "Trigram.gen",  "止"⟩
-  , ⟨"R3", "virtue",  "Trigram.kun",  "顺"⟩
+  , ⟨"R3", "virtue",  "Trigram.heaven", "健"⟩
+  , ⟨"R3", "virtue",  "Trigram.lake",  "悦"⟩
+  , ⟨"R3", "virtue",  "Trigram.fire",   "显"⟩
+  , ⟨"R3", "virtue",  "Trigram.thunder", "起"⟩
+  , ⟨"R3", "virtue",  "Trigram.wind",  "入"⟩
+  , ⟨"R3", "virtue",  "Trigram.water",  "险"⟩
+  , ⟨"R3", "virtue",  "Trigram.mountain",  "止"⟩
+  , ⟨"R3", "virtue",  "Trigram.earth",  "顺"⟩
   -- R3: trigram literals (8)
-  , ⟨"R3", "literal", "Trigram.qian", "乾"⟩
-  , ⟨"R3", "literal", "Trigram.dui",  "兑"⟩
-  , ⟨"R3", "literal", "Trigram.li",   "离"⟩
-  , ⟨"R3", "literal", "Trigram.zhen", "震"⟩
-  , ⟨"R3", "literal", "Trigram.xun",  "巽"⟩
-  , ⟨"R3", "literal", "Trigram.kan",  "坎"⟩
-  , ⟨"R3", "literal", "Trigram.gen",  "艮"⟩
-  , ⟨"R3", "literal", "Trigram.kun",  "坤"⟩
+  , ⟨"R3", "literal", "Trigram.heaven", "乾"⟩
+  , ⟨"R3", "literal", "Trigram.lake",  "兑"⟩
+  , ⟨"R3", "literal", "Trigram.fire",   "离"⟩
+  , ⟨"R3", "literal", "Trigram.thunder", "震"⟩
+  , ⟨"R3", "literal", "Trigram.wind",  "巽"⟩
+  , ⟨"R3", "literal", "Trigram.water",  "坎"⟩
+  , ⟨"R3", "literal", "Trigram.mountain",  "艮"⟩
+  , ⟨"R3", "literal", "Trigram.earth",  "坤"⟩
   -- R4: 6-yao flip positions (6)
   , ⟨"R4", "flip", "flip[0]初爻", "改"⟩
   , ⟨"R4", "flip", "flip[1]二爻", "化"⟩

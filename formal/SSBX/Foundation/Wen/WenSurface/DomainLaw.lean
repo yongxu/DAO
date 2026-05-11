@@ -700,7 +700,7 @@ theorem hexBenefitIncrementTransform_denotes_yiBenefit (id : OperatorId) (h : He
   exact yiBenefit_eq_sheng h
 
 def hexDecrementTransform (_id : OperatorId) (h : Hexagram) : Hexagram :=
-  «加» Hexagram.kun h
+  «加» Hexagram.earth h
 
 theorem hexDecrementTransform_denotes_sun (id : OperatorId) (h : Hexagram) :
     denoteHexFun Stdlib.sunBody h = some (hexDecrementTransform id h) := by

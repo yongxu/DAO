@@ -177,21 +177,21 @@ theorem parity_timeReversal_comm (c : R8) :
 /-- Y (Y-combinator / 互): hu lift 到 R8；保 Shi. -/
 def yComb (c : R8) : R8 := (Hexagram.hu c.1, c.2)
 
-/-- 乾 (qian) cell at any Shi is hu-fixed. -/
-theorem yComb_qian (s : Shi) : yComb (Hexagram.qian, s) = (Hexagram.qian, s) := by
+/-- 乾 (heaven) cell at any Shi is hu-fixed. -/
+theorem yComb_qian (s : Shi) : yComb (Hexagram.heaven, s) = (Hexagram.heaven, s) := by
   simp [yComb, Hexagram.hu_qian]
 
-/-- 坤 (kun) cell at any Shi is hu-fixed. -/
-theorem yComb_kun (s : Shi) : yComb (Hexagram.kun, s) = (Hexagram.kun, s) := by
+/-- 坤 (earth) cell at any Shi is hu-fixed. -/
+theorem yComb_kun (s : Shi) : yComb (Hexagram.earth, s) = (Hexagram.earth, s) := by
   simp [yComb, Hexagram.hu_kun]
 
 /-- Hexagram-level hu attractors {乾, 坤, 既济, 未济} lift 至 16 个 R8 attractor
     (4 hex × 4 Shi = 16). -/
 theorem yComb_attractors_count :
-    ([(Hexagram.qian, Shi.dao), (Hexagram.qian, Shi.ji),
-      (Hexagram.qian, Shi.jin), (Hexagram.qian, Shi.wei),
-      (Hexagram.kun, Shi.dao),  (Hexagram.kun, Shi.ji),
-      (Hexagram.kun, Shi.jin),  (Hexagram.kun, Shi.wei),
+    ([(Hexagram.heaven, Shi.dao), (Hexagram.heaven, Shi.ji),
+      (Hexagram.heaven, Shi.jin), (Hexagram.heaven, Shi.wei),
+      (Hexagram.earth, Shi.dao),  (Hexagram.earth, Shi.ji),
+      (Hexagram.earth, Shi.jin),  (Hexagram.earth, Shi.wei),
       (Hexagram.jiji, Shi.dao), (Hexagram.jiji, Shi.ji),
       (Hexagram.jiji, Shi.jin), (Hexagram.jiji, Shi.wei),
       (Hexagram.weiji, Shi.dao),(Hexagram.weiji, Shi.ji),
@@ -237,13 +237,13 @@ def xor (a b : Hexagram) : Hexagram :=
   ⟨Yao.xor a.y1 b.y1, Yao.xor a.y2 b.y2, Yao.xor a.y3 b.y3,
    Yao.xor a.y4 b.y4, Yao.xor a.y5 b.y5, Yao.xor a.y6 b.y6⟩
 
-/-- qian 为 XOR 单位元（右）. -/
-theorem xor_qian_right (a : Hexagram) : xor a Hexagram.qian = a := by
+/-- heaven 为 XOR 单位元（右）. -/
+theorem xor_qian_right (a : Hexagram) : xor a Hexagram.heaven = a := by
   rcases a with ⟨y1, y2, y3, y4, y5, y6⟩
   cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;> rfl
 
-/-- qian 为 XOR 单位元（左）. -/
-theorem xor_qian_left (a : Hexagram) : xor Hexagram.qian a = a := by
+/-- heaven 为 XOR 单位元（左）. -/
+theorem xor_qian_left (a : Hexagram) : xor Hexagram.heaven a = a := by
   rcases a with ⟨y1, y2, y3, y4, y5, y6⟩
   cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;> rfl
 
@@ -385,33 +385,33 @@ def R8Combo.all : List R8Combo := Cell256.all
 /-- |R8Combo| = 256. -/
 theorem R8Combo.all_length : R8Combo.all.length = 256 := Cell256.all_length
 
-/-- apply 在 anchor (qian, dao) 上的特化：(g_h, g_s) ↦ (g_h, g_s)
-    即 (qian, dao) 是 V₄ × (Z/2)⁶ 之 identity. -/
+/-- apply 在 anchor (heaven, dao) 上的特化：(g_h, g_s) ↦ (g_h, g_s)
+    即 (heaven, dao) 是 V₄ × (Z/2)⁶ 之 identity. -/
 theorem R8Combo.apply_at_qian_dao (g : R8Combo) :
-    g.apply (Hexagram.qian, Shi.dao) = (g.1, g.2) := by
+    g.apply (Hexagram.heaven, Shi.dao) = (g.1, g.2) := by
   rcases g with ⟨h, s⟩
   simp [R8Combo.apply, Hexagram.xor_qian_right, Shi.xor_dao_right]
 
-/-- **Surjectivity**：∀ c : R8, ∃ g, g.apply (qian, dao) = c. -/
+/-- **Surjectivity**：∀ c : R8, ∃ g, g.apply (heaven, dao) = c. -/
 theorem R8Combo.apply_qian_dao_surjective (c : R8) :
-    ∃ g : R8Combo, g.apply (Hexagram.qian, Shi.dao) = c := by
+    ∃ g : R8Combo, g.apply (Hexagram.heaven, Shi.dao) = c := by
   rcases c with ⟨h, s⟩
   refine ⟨(h, s), ?_⟩
   exact R8Combo.apply_at_qian_dao (h, s)
 
-/-- **Injectivity**：apply (qian, dao) 是 R8Combo → R8 的 injection. -/
+/-- **Injectivity**：apply (heaven, dao) 是 R8Combo → R8 的 injection. -/
 theorem R8Combo.apply_qian_dao_injective :
-    Function.Injective (fun g : R8Combo => g.apply (Hexagram.qian, Shi.dao)) := by
+    Function.Injective (fun g : R8Combo => g.apply (Hexagram.heaven, Shi.dao)) := by
   intro g1 g2 heq
   rcases g1 with ⟨h1, s1⟩
   rcases g2 with ⟨h2, s2⟩
   simp [R8Combo.apply_at_qian_dao] at heq
   exact Prod.mk.injEq _ _ _ _ |>.mpr heq
 
-/-- **Simply transitive**：对任意 c : R8，存在唯一的 g 满足 g.apply (qian, dao) = c. -/
+/-- **Simply transitive**：对任意 c : R8，存在唯一的 g 满足 g.apply (heaven, dao) = c. -/
 theorem R8Combo.apply_qian_dao_simply_transitive (c : R8) :
-    ∃ g : R8Combo, g.apply (Hexagram.qian, Shi.dao) = c
-      ∧ ∀ g' : R8Combo, g'.apply (Hexagram.qian, Shi.dao) = c → g' = g := by
+    ∃ g : R8Combo, g.apply (Hexagram.heaven, Shi.dao) = c
+      ∧ ∀ g' : R8Combo, g'.apply (Hexagram.heaven, Shi.dao) = c → g' = g := by
   obtain ⟨g, hg⟩ := R8Combo.apply_qian_dao_surjective c
   refine ⟨g, hg, ?_⟩
   intro g' hg'
@@ -427,15 +427,15 @@ theorem R8Combo.flip1_combo (c : R8) :
   cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
     cases s <;> rfl
 
-/-- shiCuo 对应 R8Combo (qian, ji) — Shi P-flip, hex 不动. -/
+/-- shiCuo 对应 R8Combo (heaven, ji) — Shi P-flip, hex 不动. -/
 theorem R8Combo.shiCuo_combo (c : R8) :
-    R8Combo.apply (Hexagram.qian, Shi.ji) c = Cell256.shiCuo c := by
+    R8Combo.apply (Hexagram.heaven, Shi.ji) c = Cell256.shiCuo c := by
   rcases c with ⟨h, s⟩
   simp [R8Combo.apply, Cell256.shiCuo, Shi.xor, Hexagram.xor_qian_left]
 
-/-- shiZong 对应 R8Combo (qian, wei). -/
+/-- shiZong 对应 R8Combo (heaven, wei). -/
 theorem R8Combo.shiZong_combo (c : R8) :
-    R8Combo.apply (Hexagram.qian, Shi.wei) c = Cell256.shiZong c := by
+    R8Combo.apply (Hexagram.heaven, Shi.wei) c = Cell256.shiZong c := by
   rcases c with ⟨h, s⟩
   simp [R8Combo.apply, Cell256.shiZong, Shi.xor, Hexagram.xor_qian_left]
 
@@ -478,7 +478,7 @@ theorem xuGua256_nodup : xuGua256.Nodup := by native_decide
 
 /-- xuGua256 之首：(乾, 道) — 永真起点. -/
 theorem xuGua256_head :
-    xuGua256.head? = some (Hexagram.qian, Shi.dao) := rfl
+    xuGua256.head? = some (Hexagram.heaven, Shi.dao) := rfl
 
 /-- xuGua256 之末：(未济, 未) — 开放未来终点. -/
 theorem xuGua256_last :
@@ -506,9 +506,9 @@ theorem R8_complete :
     ∧ (∀ c : R8, parity (parity c) = c)
     ∧ (∀ c : R8, timeReversal (timeReversal c) = c)
     ∧ (∀ c : R8, parity (timeReversal c) = timeReversal (parity c))
-    -- (4) 群作用 (Z/2)⁸ simply transitive on R8（经 anchor (qian, dao)）
-    ∧ Function.Injective (fun g : R8Combo => g.apply (Hexagram.qian, Shi.dao))
-    ∧ (∀ c : R8, ∃ g : R8Combo, g.apply (Hexagram.qian, Shi.dao) = c)
+    -- (4) 群作用 (Z/2)⁸ simply transitive on R8（经 anchor (heaven, dao)）
+    ∧ Function.Injective (fun g : R8Combo => g.apply (Hexagram.heaven, Shi.dao))
+    ∧ (∀ c : R8, ∃ g : R8Combo, g.apply (Hexagram.heaven, Shi.dao) = c)
     -- (5) BenZheng 投影 + Mian 特权
     ∧ (∀ c : R8, (R8.mian? c).isSome = true ↔ c.1.quadrant = .benZheng)
     -- (6) 位置-算子树双射

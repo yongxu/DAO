@@ -77,7 +77,7 @@ def cuoDyn : DynSys Trigram where step := Trigram.cuo
 
 /-- **dong 在 乾 上之 2-周期性**：iter 2 = id at 乾。 -/
 theorem dong_qian_period :
-    iter dongDyn 2 qian = qian := dong_dong qian
+    iter dongDyn 2 heaven = heaven := dong_dong heaven
 
 /-- **dong 在 Trigram 上无不动点**：不存在 t 使 dong t = t。 -/
 theorem dong_no_fixed : ¬ ∃ t : Trigram, IsFixed dongDyn t := by

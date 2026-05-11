@@ -57,13 +57,13 @@ theorem daojudge_print :
 /-- 乾卦 (all yang)：y3=y4=yang, branch 取，末态 Shi.ji（天道）. -/
 theorem daojudge_qian :
     let prog := («解程» «道判源»).getD []
-    ((YiState.init Hexagram.qian prog).runFuel 10).cur.2 = Shi.ji := by
+    ((YiState.init Hexagram.heaven prog).runFuel 10).cur.2 = Shi.ji := by
   native_decide
 
 /-- 坤卦 (all yin)：y3=y4=yin, branch 取，末态 Shi.ji（天道）. -/
 theorem daojudge_kun :
     let prog := («解程» «道判源»).getD []
-    ((YiState.init Hexagram.kun prog).runFuel 10).cur.2 = Shi.ji := by
+    ((YiState.init Hexagram.earth prog).runFuel 10).cur.2 = Shi.ji := by
   native_decide
 
 /-- 否卦 (天地否, y1..y3=yin / y4..y6=yang)：y3=yin ≠ yang=y4, branch 不取，

@@ -55,10 +55,10 @@ theorem wellPosCount_jiji : wellPosCount jiji = 6 := by native_decide
 theorem wellPosCount_weiji : wellPosCount weiji = 0 := by native_decide
 
 /-- **乾**: 三阳位当位（0,2,4）→ count = 3. -/
-theorem wellPosCount_qian : wellPosCount qian = 3 := by native_decide
+theorem wellPosCount_qian : wellPosCount heaven = 3 := by native_decide
 
 /-- **坤**: 三阴位当位（1,3,5）→ count = 3. -/
-theorem wellPosCount_kun : wellPosCount kun = 3 := by native_decide
+theorem wellPosCount_kun : wellPosCount earth = 3 := by native_decide
 
 /-- 六十四卦中存在 wellPosCount = 4 之卦。 -/
 theorem exists_wellPosCount_4 : ∃ h ∈ Hexagram.allHex, wellPosCount h = 4 := by
@@ -128,10 +128,10 @@ theorem centralYaos_jiji : centralYaos jiji = (.yin, .yang) := by native_decide
 theorem centralYaos_weiji : centralYaos weiji = (.yang, .yin) := by native_decide
 
 /-- **乾**之中爻 = (yang, yang)。 -/
-theorem centralYaos_qian : centralYaos qian = (.yang, .yang) := by native_decide
+theorem centralYaos_qian : centralYaos heaven = (.yang, .yang) := by native_decide
 
 /-- **坤**之中爻 = (yin, yin)。 -/
-theorem centralYaos_kun : centralYaos kun = (.yin, .yin) := by native_decide
+theorem centralYaos_kun : centralYaos earth = (.yin, .yin) := by native_decide
 
 /-- 中爻同正（二、五皆当其位）= 二阴五阳: 既济之模式。
     定义为 `centralYaos h = (yin, yang)` 之 Bool 见证。 -/
@@ -188,10 +188,10 @@ theorem respondsCount_jiji : respondsCount jiji = 3 := by native_decide
 theorem respondsCount_weiji : respondsCount weiji = 3 := by native_decide
 
 /-- **乾** 三对皆敌（六阳 → 各对皆同性 → 不应）。 -/
-theorem respondsCount_qian : respondsCount qian = 0 := by native_decide
+theorem respondsCount_qian : respondsCount heaven = 0 := by native_decide
 
 /-- **坤** 三对皆敌。 -/
-theorem respondsCount_kun : respondsCount kun = 0 := by native_decide
+theorem respondsCount_kun : respondsCount earth = 0 := by native_decide
 
 /-- 否 (pi) 之 respondsCount: 内坤外乾，三对皆相对（阴对阳）→ 全应。 -/
 theorem respondsCount_pi : respondsCount pi = 3 := by native_decide
@@ -237,10 +237,10 @@ def biCount (h : Hexagram) : Nat :=
   + (if biAdjSame h ⟨4, by omega⟩ then 1 else 0)
 
 /-- **乾** 五对皆同（六阳）。 -/
-theorem biCount_qian : biCount qian = 5 := by native_decide
+theorem biCount_qian : biCount heaven = 5 := by native_decide
 
 /-- **坤** 五对皆同（六阴）。 -/
-theorem biCount_kun : biCount kun = 5 := by native_decide
+theorem biCount_kun : biCount earth = 5 := by native_decide
 
 /-- **既济** 五对皆异 = 0（完美交替）。 -/
 theorem biCount_jiji : biCount jiji = 0 := by native_decide
@@ -256,7 +256,7 @@ theorem biCount_pi : biCount pi = 4 := by native_decide
 def biCountAt (k : Nat) : Nat :=
   Hexagram.allHex.countP (fun h => decide (biCount h = k))
 
-/-- biCount = 5 卦数 = 2 (qian, kun)。 -/
+/-- biCount = 5 卦数 = 2 (heaven, earth)。 -/
 theorem biCountAt_5 : biCountAt 5 = 2 := by native_decide
 
 /-- biCount = 0 卦数 = 2 (jiji, weiji — 完美交替之两种)。 -/
@@ -268,9 +268,9 @@ theorem biCountAt_total :
     + biCountAt 4 + biCountAt 5 = 64 := by
   native_decide
 
-/-- **biCount = 5 唯一者** 仅 qian 与 kun。 -/
+/-- **biCount = 5 唯一者** 仅 heaven 与 earth。 -/
 theorem biCount_5_iff_qian_kun (h : Hexagram) :
-    biCount h = 5 ↔ h = qian ∨ h = kun := by
+    biCount h = 5 ↔ h = heaven ∨ h = earth := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
@@ -317,12 +317,12 @@ def chengCount (h : Hexagram) : Nat :=
   + (if chengLi h ⟨4, by omega⟩ then 1 else 0)
 
 /-- **乾**: 无阴爻 → 无承无乘。 -/
-theorem chenCount_qian : chenCount qian = 0 := by native_decide
-theorem chengCount_qian : chengCount qian = 0 := by native_decide
+theorem chenCount_qian : chenCount heaven = 0 := by native_decide
+theorem chengCount_qian : chengCount heaven = 0 := by native_decide
 
 /-- **坤**: 无阳爻 → 无承无乘。 -/
-theorem chenCount_kun : chenCount kun = 0 := by native_decide
-theorem chengCount_kun : chengCount kun = 0 := by native_decide
+theorem chenCount_kun : chenCount earth = 0 := by native_decide
+theorem chengCount_kun : chengCount earth = 0 := by native_decide
 
 /-- **既济**: ⟨阳,阴,阳,阴,阳,阴⟩；五邻位交替 (yang,yin)/(yin,yang)，
     其中 (yang,yin) 对计 cheng (3 对：位 0,2,4)，
@@ -473,11 +473,11 @@ theorem posClass_jiji : posClass jiji = ((.yin, .yang), 3, 0) := by native_decid
 /-- weiji 之 posClass。 -/
 theorem posClass_weiji : posClass weiji = ((.yang, .yin), 3, 0) := by native_decide
 
-/-- qian 之 posClass。 -/
-theorem posClass_qian : posClass qian = ((.yang, .yang), 0, 5) := by native_decide
+/-- heaven 之 posClass。 -/
+theorem posClass_qian : posClass heaven = ((.yang, .yang), 0, 5) := by native_decide
 
-/-- kun 之 posClass。 -/
-theorem posClass_kun : posClass kun = ((.yin, .yin), 0, 5) := by native_decide
+/-- earth 之 posClass。 -/
+theorem posClass_kun : posClass earth = ((.yin, .yin), 0, 5) := by native_decide
 
 /-- pi 之 posClass。 -/
 theorem posClass_pi : posClass pi = ((.yin, .yang), 3, 4) := by native_decide
@@ -510,7 +510,7 @@ theorem posClass_not_injective :
     (1) wellPosCount 之 64 卦 enumeration（既济 = 6 唯一/未济 = 0 唯一）
     (2) 中爻四模式各 16 卦
     (3) respondsCount 分布 (8, 24, 24, 8)
-    (4) biCount = 5 唯一为 qian/kun；biCount = 0 唯一为 jiji/weiji
+    (4) biCount = 5 唯一为 heaven/earth；biCount = 0 唯一为 jiji/weiji
     (5) chenCount + chengCount + biCount = 5
     (6) cuo flips wellPos；cuo / zong 保 biCount, respondsCount
     (7) 几何字元 cardinalities = 2^k (k=1,2,3,6)

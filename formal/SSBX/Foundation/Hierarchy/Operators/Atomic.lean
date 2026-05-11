@@ -11,7 +11,7 @@ fixed mask on the underlying (Z/2)ⁿ carrier. Algebraically they form an
   (Cell256 lives at R₈ = (Z/2)⁸; yin toggles the 因/YinBit, tou toggles 果/GuoBit).
 - `flip1..flip6` — Cell128 single-yao toggles
   (Cell128 = Hexagram × YinBit at R₇; flipᵢ toggles the i-th yao).
-- `hexCuo` (Cell128) — Hexagram-level 错 = XOR with `kun` (the all-yin mask),
+- `hexCuo` (Cell128) — Hexagram-level 错 = XOR with `earth` (the all-yin mask),
   i.e. componentwise yao negation.
 
 ## Group property
@@ -37,10 +37,10 @@ open SSBX.Foundation.Bagua.Cell128
 
 /-! ## § 1 Cell256 atomic operators (R₈ level) -/
 
-/-- Cell256 印 (yìn): XOR with `(qian, ji)` mask (toggle YinBit / 因 axis). -/
+/-- Cell256 印 (yìn): XOR with `(heaven, ji)` mask (toggle YinBit / 因 axis). -/
 def cell256_yin (c : Cell256) : Cell256 := Cell256.yin c
 
-/-- Cell256 投 (tóu): XOR with `(qian, wei)` mask (toggle GuoBit / 果 axis). -/
+/-- Cell256 投 (tóu): XOR with `(heaven, wei)` mask (toggle GuoBit / 果 axis). -/
 def cell256_tou (c : Cell256) : Cell256 := Cell256.tou c
 
 /-! ## § 2 Cell128 atomic operators (R₇ level)
@@ -69,7 +69,7 @@ def cell128_yin (c : Cell128) : Cell128 :=
   SSBX.Foundation.Bagua.Cell128.yin c
 
 /-- Cell128 hexagram-level 错 (cuo): yao-wise negation = XOR with the
-    all-yin (kun) mask on the Hexagram component, preserving the YinBit.
+    all-yin (earth) mask on the Hexagram component, preserving the YinBit.
 
     This is the "atomic XOR-mask" form of `Hexagram.cuo` lifted to Cell128. -/
 def cell128_hexCuo (c : Cell128) : Cell128 :=

@@ -350,7 +350,7 @@ def xuGua : List Hexagram := [
 theorem xuGua_length : xuGua.length = 64 := by native_decide
 
 /-- The first hexagram in 序卦 is 乾. -/
-theorem xuGua_head : xuGua.head? = some Hexagram.qian := rfl
+theorem xuGua_head : xuGua.head? = some Hexagram.heaven := rfl
 
 /-- The last hexagram in 序卦 is 未济. -/
 theorem xuGua_last :
@@ -381,7 +381,7 @@ theorem cell256_summary :
   coordinates via `Shi.toYinGuo` / `Shi.ofYinGuo`.
 
   Components: (Hexagram = Yao⁶) gives (Z/2)⁶; Shi = (YinBit, GuoBit) gives
-  (Z/2)². Total: (Z/2)⁸ = 256 cells with `origin = (qian, dao)` as identity.
+  (Z/2)². Total: (Z/2)⁸ = 256 cells with `origin = (heaven, dao)` as identity.
 
   Strategy: prove every law componentwise on Yao (4-case) + Bool (8-case),
   lift to Hexagram and Shi, then to Cell256 by `cases`.
@@ -422,17 +422,17 @@ def hexXor (h1 h2 : Hexagram) : Hexagram :=
   ⟨yaoXor h1.y1 h2.y1, yaoXor h1.y2 h2.y2, yaoXor h1.y3 h2.y3,
    yaoXor h1.y4 h2.y4, yaoXor h1.y5 h2.y5, yaoXor h1.y6 h2.y6⟩
 
-@[simp] theorem hexXor_qian_left (h : Hexagram) : hexXor Hexagram.qian h = h := by
+@[simp] theorem hexXor_qian_left (h : Hexagram) : hexXor Hexagram.heaven h = h := by
   rcases h with ⟨_, _, _, _, _, _⟩
-  simp [hexXor, Hexagram.qian]
+  simp [hexXor, Hexagram.heaven]
 
-@[simp] theorem hexXor_qian_right (h : Hexagram) : hexXor h Hexagram.qian = h := by
+@[simp] theorem hexXor_qian_right (h : Hexagram) : hexXor h Hexagram.heaven = h := by
   rcases h with ⟨_, _, _, _, _, _⟩
-  simp [hexXor, Hexagram.qian]
+  simp [hexXor, Hexagram.heaven]
 
-theorem hexXor_self (h : Hexagram) : hexXor h h = Hexagram.qian := by
+theorem hexXor_self (h : Hexagram) : hexXor h h = Hexagram.heaven := by
   rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  simp [hexXor, Hexagram.qian, yaoXor_self]
+  simp [hexXor, Hexagram.heaven, yaoXor_self]
 
 theorem hexXor_comm (h1 h2 : Hexagram) : hexXor h1 h2 = hexXor h2 h1 := by
   rcases h1 with ⟨_, _, _, _, _, _⟩
@@ -480,8 +480,8 @@ theorem shiXor_assoc (s1 s2 s3 : Shi) :
 def xor (c1 c2 : Cell256) : Cell256 :=
   (hexXor c1.1 c2.1, shiXor c1.2 c2.2)
 
-/-- 道 cell at R₈ = (qian, dao) = (Z/2)⁸ identity. -/
-def origin : Cell256 := (Hexagram.qian, Shi.dao)
+/-- 道 cell at R₈ = (heaven, dao) = (Z/2)⁸ identity. -/
+def origin : Cell256 := (Hexagram.heaven, Shi.dao)
 
 @[simp] theorem origin_xor (c : Cell256) : xor origin c = c := by
   rcases c with ⟨h, s⟩
@@ -570,22 +570,22 @@ end Cell256
   Phase A re-expresses 印/投 at the **Cell256 level** as XOR with two
   canonical masks:
 
-    yin_mask = (qian, ji)  = `oooooooi`o  (only YinBit / 因 axis)
-    tou_mask = (qian, wei) = `oooooooo`i  (only GuoBit / 果 axis)
+    yin_mask = (heaven, ji)  = `oooooooi`o  (only YinBit / 因 axis)
+    tou_mask = (heaven, wei) = `oooooooo`i  (only GuoBit / 果 axis)
 
   Then `yin = (· ⊕ yin_mask)` and `tou = (· ⊕ tou_mask)` are mask-XOR
-  involutions. The two masks XOR to `(qian, jin) = "ooooooon"`, the V₄
+  involutions. The two masks XOR to `(heaven, jin) = "ooooooon"`, the V₄
   central element. -/
 
 namespace Cell256
 
 /-- 印 mask: only the YinBit (因 axis, R5 atom) is set.
-    `(qian, ji) = (qian, (1, 0)) = "oooooooi"`. -/
-def yin_mask : Cell256 := (Hexagram.qian, Shi.ji)
+    `(heaven, ji) = (heaven, (1, 0)) = "oooooooi"`. -/
+def yin_mask : Cell256 := (Hexagram.heaven, Shi.ji)
 
 /-- 投 mask: only the GuoBit (果 axis, R6 atom) is set.
-    `(qian, wei) = (qian, (0, 1)) = "ooooooox"`. -/
-def tou_mask : Cell256 := (Hexagram.qian, Shi.wei)
+    `(heaven, wei) = (heaven, (0, 1)) = "ooooooox"`. -/
+def tou_mask : Cell256 := (Hexagram.heaven, Shi.wei)
 
 /-- 印 (yìn) at Cell256: XOR with the YinBit-only mask. -/
 def yin (c : Cell256) : Cell256 := xor c yin_mask
@@ -609,16 +609,16 @@ theorem yin_tou_comm (c : Cell256) : yin (tou c) = tou (yin c) := by
   unfold yin tou
   rw [xor_assoc, xor_assoc, xor_comm tou_mask yin_mask]
 
-/-- 印 ∘ 投 = XOR with `(qian, jin)` = the V₄ central mask. -/
+/-- 印 ∘ 投 = XOR with `(heaven, jin)` = the V₄ central mask. -/
 theorem yin_tou_eq_central (c : Cell256) :
-    yin (tou c) = xor c (Hexagram.qian, Shi.jin) := by
+    yin (tou c) = xor c (Hexagram.heaven, Shi.jin) := by
   unfold yin tou
   rw [xor_assoc]
   congr 1
 
 /-- The two masks together generate the V₄ central element. -/
 theorem yin_mask_xor_tou_mask :
-    xor yin_mask tou_mask = (Hexagram.qian, Shi.jin) := by
+    xor yin_mask tou_mask = (Hexagram.heaven, Shi.jin) := by
   rfl
 
 end Cell256

@@ -241,13 +241,13 @@ def qianKunYuanPoles : Yuan × Yuan :=
 
 /-- 乾坤 at the trigram layer is the all-yang/all-yin pair. -/
 def qianKunTrigrams : Trigram × Trigram :=
-  (Trigram.qian, Trigram.kun)
+  (Trigram.heaven, Trigram.earth)
 
 theorem qianKunYuanPoles_eq :
     qianKunYuanPoles = (Yao.yang, Yao.yin) := rfl
 
 theorem qianKunTrigrams_eq :
-    qianKunTrigrams = (Trigram.qian, Trigram.kun) := rfl
+    qianKunTrigrams = (Trigram.heaven, Trigram.earth) := rfl
 
 /-- The three vertical layers of one trigram: 下 / 中 / 上. -/
 inductive VerticalLayer where
@@ -298,15 +298,15 @@ def layerYao (t : Trigram) : VerticalLayer → Yuan
   | .shang => t.y3
 
 theorem qian_kun_layers_differ (l : VerticalLayer) :
-    layerYao Trigram.qian l ≠ layerYao Trigram.kun l := by
+    layerYao Trigram.heaven l ≠ layerYao Trigram.earth l := by
   cases l <;> decide
 
 theorem qian_layers_are_yang (l : VerticalLayer) :
-    layerYao Trigram.qian l = Yao.yang := by
+    layerYao Trigram.heaven l = Yao.yang := by
   cases l <;> rfl
 
 theorem kun_layers_are_yin (l : VerticalLayer) :
-    layerYao Trigram.kun l = Yao.yin := by
+    layerYao Trigram.earth l = Yao.yin := by
   cases l <;> rfl
 
 /-- Relations among the three vertical layers. -/
@@ -397,10 +397,10 @@ theorem qian_kun_yuan_yao_layer_summary :
     (∀ x : RootOne, x = rootOne)
       ∧ Yuan = Yao
       ∧ qianKunYuanPoles = (Yao.yang, Yao.yin)
-      ∧ qianKunTrigrams = (Trigram.qian, Trigram.kun)
+      ∧ qianKunTrigrams = (Trigram.heaven, Trigram.earth)
       ∧ (∀ l : VerticalLayer,
-          layerYao Trigram.qian l = Yao.yang ∧ layerYao Trigram.kun l = Yao.yin)
-      ∧ (∀ l : VerticalLayer, layerYao Trigram.qian l ≠ layerYao Trigram.kun l)
+          layerYao Trigram.heaven l = Yao.yang ∧ layerYao Trigram.earth l = Yao.yin)
+      ∧ (∀ l : VerticalLayer, layerYao Trigram.heaven l ≠ layerYao Trigram.earth l)
       ∧ qianKunJianReading = .betweenLayers
       ∧ qianKunJianReading ≠ .endpointInterval
       ∧ (∀ l : VerticalLayer, l ∈ qianKunJianLayers)
@@ -458,9 +458,9 @@ theorem history_tape_structure_summary :
     ∧ (∀ x : RootOne, x = rootOne)
     ∧ Yuan = Yao
     ∧ qianKunYuanPoles = (Yao.yang, Yao.yin)
-    ∧ qianKunTrigrams = (Trigram.qian, Trigram.kun)
+    ∧ qianKunTrigrams = (Trigram.heaven, Trigram.earth)
     ∧ (∀ l : VerticalLayer,
-        layerYao Trigram.qian l = Yao.yang ∧ layerYao Trigram.kun l = Yao.yin)
+        layerYao Trigram.heaven l = Yao.yang ∧ layerYao Trigram.earth l = Yao.yin)
     ∧ qianKunJianReading = .betweenLayers
     ∧ qianKunJianReading ≠ .endpointInterval
     ∧ (∀ l : VerticalLayer, l ∈ qianKunJianLayers)

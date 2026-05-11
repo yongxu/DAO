@@ -11,10 +11,10 @@ XOR of the other four.** The doctrine names this synthetic element 信
 
 | 字 | 五行 | Cell128 atom | 算子 (Cayley yuan view) |
 | --- | --- | --- | --- |
-| 仁 | 木 | `(qian.flipY1, false)` = `xoooooo` | flip 初爻 (initiate) |
-| 义 | 金 | `(qian.flipY2, false)` = `oxooooo` | flip 二爻 (discriminate) |
-| 礼 | 火 | `(qian.flipY3, false)` = `ooxoooo` | flip 三爻 (manifest) |
-| 智 | 水 | `(qian.flipY4, false)` = `oooxooo` | flip 四爻 (perceive) |
+| 仁 | 木 | `(heaven.flipY1, false)` = `xoooooo` | flip 初爻 (initiate) |
+| 义 | 金 | `(heaven.flipY2, false)` = `oxooooo` | flip 二爻 (discriminate) |
+| 礼 | 火 | `(heaven.flipY3, false)` = `ooxoooo` | flip 三爻 (manifest) |
+| 智 | 水 | `(heaven.flipY4, false)` = `oooxooo` | flip 四爻 (perceive) |
 | 信 | 土 | = 仁 ⊕ 义 ⊕ 礼 ⊕ 智 = `xxxxooo` | flip y1+y2+y3+y4 (synthesize) |
 
 Yao positions y5, y6 (upper trigram tip) and the yin-bit (因) are left

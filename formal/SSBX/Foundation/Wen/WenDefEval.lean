@@ -393,14 +393,14 @@ example : denoteHex .yi = some «一» := by native_decide
 example :
     denoteBool (.app (.app .eqHex .yi) .yi) = some true := by native_decide
 
-/-- `.eqHex .yi (.hexLit Hexagram.qian)` denotes false (qian ≠ 一). -/
+/-- `.eqHex .yi (.hexLit Hexagram.heaven)` denotes false (heaven ≠ 一). -/
 example :
-    denoteBool (.app (.app .eqHex .yi) (.hexLit Hexagram.qian))
+    denoteBool (.app (.app .eqHex .yi) (.hexLit Hexagram.heaven))
       = some false := by native_decide
 
 example :
-    denoteHexPair (.app (.app .pairH (.hexLit Hexagram.qian)) (.hexLit Hexagram.kun))
-      = some (Hexagram.qian, Hexagram.kun) := by native_decide
+    denoteHexPair (.app (.app .pairH (.hexLit Hexagram.heaven)) (.hexLit Hexagram.earth))
+      = some (Hexagram.heaven, Hexagram.earth) := by native_decide
 
 theorem pairHBody_eq_pair (a b : Hexagram) :
     denoteHexPair (.app (.app Stdlib.pairHBody (.hexLit a)) (.hexLit b)) = some (a, b) := by
@@ -411,8 +411,8 @@ theorem dupHBody_eq_dup (h : Hexagram) :
   rfl
 
 example :
-    denoteHexList (.app .list1H (.hexLit Hexagram.qian))
-      = some [Hexagram.qian] := by native_decide
+    denoteHexList (.app .list1H (.hexLit Hexagram.heaven))
+      = some [Hexagram.heaven] := by native_decide
 
 theorem list1HBody_eq_singleton (h : Hexagram) :
     denoteHexList (.app Stdlib.list1HBody (.hexLit h)) = some [h] := by
@@ -428,27 +428,27 @@ theorem list3HBody_eq_tripleList (a b c : Hexagram) :
   rfl
 
 example :
-    denoteHex (.app .headH (.app .list1H (.hexLit Hexagram.qian)))
-      = some Hexagram.qian := by native_decide
+    denoteHex (.app .headH (.app .list1H (.hexLit Hexagram.heaven)))
+      = some Hexagram.heaven := by native_decide
 
 theorem headHBody_list1_eq_id (h : Hexagram) :
     denoteHex (.app Stdlib.headHBody (.app Stdlib.list1HBody (.hexLit h))) = some h := by
   rfl
 
 example :
-    denoteCell (.cellLit (Hexagram.qian, Shi.jin)) =
-      some (Hexagram.qian, Shi.jin) := by native_decide
+    denoteCell (.cellLit (Hexagram.heaven, Shi.jin)) =
+      some (Hexagram.heaven, Shi.jin) := by native_decide
 
 example :
-    denoteCellFun .cuoC (Hexagram.qian, Shi.jin) =
-      some (Hexagram.kun, Shi.jin) := by native_decide
+    denoteCellFun .cuoC (Hexagram.heaven, Shi.jin) =
+      some (Hexagram.earth, Shi.jin) := by native_decide
 
 example :
-    denoteCellFun .shiNextC (Hexagram.qian, Shi.jin) =
-      some (Hexagram.qian, Shi.wei) := by native_decide
+    denoteCellFun .shiNextC (Hexagram.heaven, Shi.jin) =
+      some (Hexagram.heaven, Shi.wei) := by native_decide
 
 example :
-    denoteCellRel .eqCell (Hexagram.qian, Shi.jin) (Hexagram.qian, Shi.jin) =
+    denoteCellRel .eqCell (Hexagram.heaven, Shi.jin) (Hexagram.heaven, Shi.jin) =
       some true := by native_decide
 
 /-! ## § 7  Stdlib correctness — 推 ⟷ 生 -/
@@ -461,10 +461,10 @@ theorem tui_eq_sheng (h : Hexagram) :
     cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
     all_goals native_decide
 
-/-- 損 之 denotation = mod-64 减一 (即 «加» Hexagram.kun).
+/-- 損 之 denotation = mod-64 减一 (即 «加» Hexagram.earth).
     «坤».toIdx = 63；(x + 63) mod 64 = (x − 1) mod 64. -/
 theorem sun_eq_decrement (h : Hexagram) :
-    denoteHexFun Stdlib.sunBody h = some («加» Hexagram.kun h) := by
+    denoteHexFun Stdlib.sunBody h = some («加» Hexagram.earth h) := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
@@ -569,7 +569,7 @@ example :
 
 /-- 「同 «一» «乾»」denotes false («一» ≠ «乾»). -/
 example :
-    denoteBool (.app (.app Stdlib.tongBody .yi) (.hexLit Hexagram.qian))
+    denoteBool (.app (.app Stdlib.tongBody .yi) (.hexLit Hexagram.heaven))
       = some false := by native_decide
 
 /-- 「不」之 denotation 即 boolean negation. -/
@@ -602,7 +602,7 @@ example :
     denoteHexRel Stdlib.neqHexBody «一» «一» = some false := by native_decide
 
 example :
-    denoteHexRel Stdlib.neqHexBody «一» Hexagram.qian = some true := by native_decide
+    denoteHexRel Stdlib.neqHexBody «一» Hexagram.heaven = some true := by native_decide
 
 example :
     denoteBool (.app Stdlib.existsHBody
@@ -624,8 +624,8 @@ example :
       (.abs "h" .hex
         (.app (.app .orB (.app (.app .eqHex (.var "h")) .yi))
           (.app (.app .orB
-            (.app (.app .eqHex (.var "h")) (.hexLit Hexagram.qian)))
-            (.app (.app .eqHex (.var "h")) (.hexLit Hexagram.kun))))))
+            (.app (.app .eqHex (.var "h")) (.hexLit Hexagram.heaven)))
+            (.app (.app .eqHex (.var "h")) (.hexLit Hexagram.earth))))))
       = some true := by native_decide
 
 example :
@@ -653,11 +653,11 @@ theorem hexApplyBody_tui_eq_sheng (h : Hexagram) :
 
 example :
     denoteHex (.app (.app Stdlib.hexApplyBody Stdlib.sunBody) .yi)
-      = some («加» Hexagram.kun «一») := by native_decide
+      = some («加» Hexagram.earth «一») := by native_decide
 
 theorem hexApplyBody_sun_eq_decrement (h : Hexagram) :
     denoteHex (.app (.app Stdlib.hexApplyBody Stdlib.sunBody) (.hexLit h)) =
-      some («加» Hexagram.kun h) := by
+      some («加» Hexagram.earth h) := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
@@ -686,12 +686,12 @@ example : «生生» 64 «一» = «一» := by exact «周而复始» «一»
 
 /-- wenyan 之 «推» 施于 «乾» 一次 = «生» «乾». -/
 example :
-    denoteHexFun Stdlib.tuiBody Hexagram.qian = some («生» Hexagram.qian) := by
+    denoteHexFun Stdlib.tuiBody Hexagram.heaven = some («生» Hexagram.heaven) := by
   native_decide
 
 /-- 由 «乾» 起 «推» 一次至 «一»（by «生施一即一»）. -/
 example :
-    denoteHexFun Stdlib.tuiBody Hexagram.qian = some «一» := by native_decide
+    denoteHexFun Stdlib.tuiBody Hexagram.heaven = some «一» := by native_decide
 
 /-! ## § 10  桥之总公示 -/
 
