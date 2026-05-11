@@ -373,6 +373,38 @@ theorem metaInterpProg_fetch_routes_halted_exact
   exact FetchProg.fetchProg_branch_halted_true regHex sim metaInterpProg
     fetchHaltDetectOffset dispatchOffset haltOffset h_branchAt
 
+/-- Exact assembly-specialized running fetch route from the real concrete
+    fetch-loop entry.  This composes the pc-counter peel prefix, the
+    halted-flag pop, the running branch, the placeholder walker, and the
+    dispatch jump.  It remains route-only: tag decode / canonical history
+    restoration are still separate obligations. -/
+theorem metaInterpProg_fetch_routes_running_to_dispatch_exact
+    (regHex : Hexagram) (sim : YiState)
+    (h_running : sim.halted = false) :
+    ((Fetch.fetchEntryState regHex sim metaInterpProg fetchOffset).runFuel
+      ((3 * sim.pc + 3) + (1 + (FetchProg.walkerLen + 1)))).pc =
+      dispatchOffset := by
+  let entry := Fetch.fetchEntryState regHex sim metaInterpProg fetchOffset
+  have h_peel : entry.runFuel (3 * sim.pc + 3) =
+      FetchProg.fetchProgHaltDetectEntry regHex sim metaInterpProg
+        fetchHaltDetectOffset false := by
+    simpa [entry, h_running] using
+      metaInterpProg_fetch_peel_to_haltDetect_at_fuel regHex sim
+  have h_add : ∀ k, entry.runFuel ((3 * sim.pc + 3) + k)
+              = (entry.runFuel (3 * sim.pc + 3)).runFuel k := by
+    intro k
+    induction k with
+    | zero => simp [YiState.runFuel]
+    | succ k ih =>
+        rw [show (3 * sim.pc + 3) + (k + 1) =
+              ((3 * sim.pc + 3) + k) + 1 by omega,
+            SSBX.Foundation.Bagua.GodelLi.runFuel_succ_right,
+            SSBX.Foundation.Bagua.GodelLi.runFuel_succ_right, ih]
+  rw [h_add, h_peel]
+  exact FetchProg.fetchProg_haltDetect_running_to_dispatch_at_fuel
+    regHex sim metaInterpProg fetchHaltDetectOffset dispatchOffset haltOffset
+    metaInterpProg_fetchProg_at_offset
+
 /-- Assembly-specialized halted fetch route for the inner halt-detection
     segment, with explicit peel fuel supplied by callers. -/
 theorem metaInterpProg_fetch_routes_halted_at_fuel
