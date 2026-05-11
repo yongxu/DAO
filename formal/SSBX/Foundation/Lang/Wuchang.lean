@@ -35,9 +35,9 @@ and balance to 道.
 
 ## Theorems
 
-- `wuchang_gui_dao` : 仁 ⊕ 义 ⊕ 礼 ⊕ 智 ⊕ 信 = origin
-- `xin_eq_synthesis` : 信 = 仁 ⊕ 义 ⊕ 礼 ⊕ 智 (definitional)
-- `siduan_bu_he` : 仁 ⊕ 义 ⊕ 礼 ⊕ 智 ≠ origin  (without 信, the four scatter)
+- `fiveConstants_return_dao` : 仁 ⊕ 义 ⊕ 礼 ⊕ 智 ⊕ 信 = origin
+- `integrity_eq_synthesis` : 信 = 仁 ⊕ 义 ⊕ 礼 ⊕ 智 (definitional)
+- `fourBuds_unbalanced` : 仁 ⊕ 义 ⊕ 礼 ⊕ 智 ≠ origin  (without 信, the four scatter)
 - `traditional_not_dao` : the trigram-doubled 五行→卦 placement does NOT XOR to 道
 -/
 
@@ -82,18 +82,18 @@ example : DaoJudge.printCellAtom integrity = "xxxxooo" := by native_decide
 /-! ## § 3  Theorems -/
 
 /-- 信 is the synthesis of the other four (definitional / `decide`). -/
-theorem xin_eq_synthesis :
+theorem integrity_eq_synthesis :
     integrity = Cell128.xor (Cell128.xor (Cell128.xor benevolence righteousness) propriety) wisdom := by
   decide
 
 /-- 五常归一: 仁⊕义⊕礼⊕智⊕信 = 道. -/
-theorem wuchang_gui_dao :
+theorem fiveConstants_return_dao :
     Cell128.xor (Cell128.xor (Cell128.xor (Cell128.xor benevolence righteousness) propriety) wisdom) integrity
       = Cell128.origin := by
   decide
 
 /-- 四端不合: without 信, the four don't balance. -/
-theorem siduan_bu_he :
+theorem fourBuds_unbalanced :
     Cell128.xor (Cell128.xor (Cell128.xor benevolence righteousness) propriety) wisdom ≠ Cell128.origin := by
   decide
 
@@ -104,14 +104,14 @@ plus the Cayley evaluator over a string program. -/
 
 /-- The 五常 program as a single Lisp string: left-associated XOR of
     仁义礼智信 in the canonical order. -/
-def wuchang_program : String :=
+def fiveConstants_program : String :=
   "((((xoooooo oxooooo) ooxoooo) oooxooo) xxxxooo)"
 
-theorem wuchang_program_is_dao : DaoJudge.judge wuchang_program = true := by
+theorem fiveConstants_program_is_dao : DaoJudge.judge fiveConstants_program = true := by
   native_decide
 
 /-- Without 信, the program leaves residue and is NOT 道. -/
-theorem siduan_program_not_dao :
+theorem fourBuds_program_not_dao :
     DaoJudge.judge "(((xoooooo oxooooo) ooxoooo) oooxooo)" = false := by
   native_decide
 
@@ -150,7 +150,7 @@ theorem traditional_not_dao :
 /-- The traditional placement actually XOR's to 礼_li. The doctrine "五行
 循环" is a Z/5 structure; (Z/2)⁷ doesn't accommodate it without an
 external twist. -/
-theorem traditional_xor_eq_li :
+theorem traditional_xor_eq_propriety :
     Cell128.xor (Cell128.xor (Cell128.xor (Cell128.xor benevolence righteousness) propriety) wisdom) integrity
       = propriety := by
   decide
@@ -159,7 +159,7 @@ end traditional
 
 /-! ## § 6  Public summary -/
 
-theorem wuchang_summary :
+theorem fiveConstants_summary :
     DaoJudge.printCellAtom benevolence = "xoooooo" ∧
     DaoJudge.printCellAtom righteousness = "oxooooo" ∧
     DaoJudge.printCellAtom propriety = "ooxoooo" ∧
@@ -167,7 +167,7 @@ theorem wuchang_summary :
     DaoJudge.printCellAtom integrity = "xxxxooo" ∧
     Cell128.xor (Cell128.xor (Cell128.xor (Cell128.xor benevolence righteousness) propriety) wisdom) integrity
       = Cell128.origin ∧
-    DaoJudge.judge wuchang_program = true := by
+    DaoJudge.judge fiveConstants_program = true := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   all_goals first | native_decide | decide
 
