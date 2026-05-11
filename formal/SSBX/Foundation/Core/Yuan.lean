@@ -44,10 +44,10 @@ theorem yuan_eq_yao : Yuan = Yao := rfl
   易 is not external to 元 — it IS 元's automorphism. -/
 
 /-- 易 (yì) on 元: the flip operation (alias for `Yao.neg`). -/
-def yi : Yuan → Yuan := Yao.neg
+def change : Yuan → Yuan := Yao.neg
 
 /-- 易 之 易 = id. The bit-flip is involutive — 易 carries no preferred direction. -/
-theorem yi_involutive (y : Yuan) : yi (yi y) = y := Yao.neg_neg y
+theorem change_involutive (y : Yuan) : change (change y) = y := Yao.neg_neg y
 
 /-- 元 has exactly two values, witnessing 两仪 = the duality of yang/yin. -/
 theorem yuan_two_values : ∀ y : Yuan, y = .yang ∨ y = .yin := by
@@ -56,7 +56,7 @@ theorem yuan_two_values : ∀ y : Yuan, y = .yang ∨ y = .yin := by
   · exact Or.inr rfl
 
 /-- 易 swaps the two 元 values (no fixed point). -/
-theorem yi_no_fixed_point (y : Yuan) : yi y ≠ y := by
+theorem change_no_fixed_point (y : Yuan) : change y ≠ y := by
   cases y <;> intro h <;> cases h
 
 /-! ## § 3 元 = 根/源/源头
@@ -102,10 +102,10 @@ open SSBX.Foundation.Yi.Yi
 theorem hex_toDuoYuan_length (h : Hexagram) : h.toDuoYuan.length = 6 := rfl
 
 /-- 因/果 chains: a 多元 is read causally as a sequence of 元-states.
-    The simplest causal arrow: each step's `yi` produces the next state. -/
+    The simplest causal arrow: each step's `change` produces the next state. -/
 def causalChain : Nat → Yuan → List Yuan
   | 0, y => [y]
-  | n+1, y => y :: causalChain n (yi y)
+  | n+1, y => y :: causalChain n (change y)
 
 theorem causalChain_length (n : Nat) (y : Yuan) :
     (causalChain n y).length = n + 1 := by
@@ -217,7 +217,7 @@ theorem chain_yuan_to_datong :
     -- 元 = 爻
     (Yuan = Yao) ∧
     -- 元 carries 易 (involutive, no fixed point)
-    (∀ y : Yuan, yi (yi y) = y ∧ yi y ≠ y) ∧
+    (∀ y : Yuan, change (change y) = y ∧ change y ≠ y) ∧
     -- 太极 = 元
     (TaiJi = Yuan) ∧
     -- 太极's 6-unfolding has the same cardinality as 道
@@ -228,7 +228,7 @@ theorem chain_yuan_to_datong :
     (∀ h : Hexagram, h.complement.inDao = true ∧ h.reverse.inDao = true) := by
   refine ⟨rfl, ?_, rfl, taiji_unfolds_to_dao, dao_count, ?_⟩
   · intro y
-    exact ⟨yi_involutive y, yi_no_fixed_point y⟩
+    exact ⟨change_involutive y, change_no_fixed_point y⟩
   · intro h
     exact ⟨hex_in_dao_bool h.complement, hex_in_dao_bool h.reverse⟩
 
