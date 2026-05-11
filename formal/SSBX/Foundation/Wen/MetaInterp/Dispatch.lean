@@ -432,6 +432,44 @@ hex_idx (= k/4) and shi_idx (= k%4):
 
 /-! ### nop  (k=0, hex_idx=0, shi=dao) -/
 
+/-! ### Segment-level route helpers
+
+The standalone route theorems below run with `pc = 0` and
+`prog = dispatchTree offsets 0`.  The universal-compose assembly needs the
+same facts after the dispatch tree has been spliced into a larger program at
+an absolute `dispatchBase`.  These tiny step lemmas keep that lift explicit:
+callers provide the local lookup at the absolute pc, and the VM step reduces
+to the corresponding branch or jump move. -/
+
+private theorem step_branchYaoEq_not_taken
+    (s : YiState) (i j : Fin 6) (target : Nat)
+    (h_halted : s.halted = false)
+    (h_lookup : s.prog[s.pc]? = some (YiInstr.branchYaoEq i j target))
+    (h_ne : s.cur.1.yaoAt i ≠ s.cur.1.yaoAt j) :
+    s.step = { s with pc := s.pc + 1, halted := false } := by
+  unfold YiState.step
+  rw [h_halted]
+  simp [h_lookup, YiState.execute, h_ne, h_halted]
+
+private theorem step_branchShiEq_not_taken
+    (s : YiState) (sh : Shi) (target : Nat)
+    (h_halted : s.halted = false)
+    (h_lookup : s.prog[s.pc]? = some (YiInstr.branchShiEq sh target))
+    (h_ne : s.cur.2 ≠ sh) :
+    s.step = { s with pc := s.pc + 1, halted := false } := by
+  unfold YiState.step
+  rw [h_halted]
+  simp [h_lookup, YiState.execute, h_ne, h_halted]
+
+private theorem step_jump
+    (s : YiState) (target : Nat)
+    (h_halted : s.halted = false)
+    (h_lookup : s.prog[s.pc]? = some (YiInstr.jump target)) :
+    s.step = { s with pc := target, halted := false } := by
+  unfold YiState.step
+  rw [h_halted]
+  simp [h_lookup, YiState.execute, h_halted]
+
 def nopTag : R8 := cellFromIdx ⟨0, by omega⟩
 
 private theorem nopTag_yao : nopTag.1.y1 = Yao.yang
@@ -841,5 +879,120 @@ theorem dispatchTree_routes_halt
     simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin, Shi.wei,
           dispatchTree, dispatchShi, haltTag_shi,
           Hexagram.yaoAt, haltTag_yao.2.1, haltTag_yao.2.2.2.2.2]
+
+/-- Segment-level halt routing: if a `dispatchTree offsets dispatchBase`
+    segment is spliced into a larger `metaProg` at `dispatchBase`, then the
+    halt tag follows the absolute-pc route through that segment and lands at
+    `offsets.halt_offset` in six fuel ticks.
+
+    This is the narrow F.7c lift from a standalone `pc = 0` dispatch proof to
+    an assembled-program route witness. -/
+theorem dispatchTree_routes_halt_at_segment
+    (offsets : DispatchOffsets) (dispatchBase : Nat)
+    (metaProg : List YiInstr) (history : List R8)
+    (hseg : ∀ i (_hi : i < 16),
+      metaProg[dispatchBase + i]? =
+        (dispatchTree offsets dispatchBase)[i]?) :
+    let μ : YiState :=
+      { cur := haltTag, history := history, pc := dispatchBase,
+        prog := metaProg, halted := false }
+    let μ' := μ.runFuel 6
+    μ'.pc = offsets.halt_offset
+      ∧ μ'.cur = haltTag
+      ∧ μ'.history = history
+      ∧ μ'.prog = metaProg
+      ∧ μ'.halted = false := by
+  let μ0 : YiState :=
+      { cur := haltTag, history := history, pc := dispatchBase,
+        prog := metaProg, halted := false }
+  have h_lookup0 : metaProg[dispatchBase]? =
+      some (YiInstr.branchYaoEq ⟨1, by omega⟩ ⟨5, by omega⟩
+        (dispatchBase + 2)) := by
+    have h := hseg 0 (by decide)
+    simpa [dispatchTree] using h
+  have h0 : μ0.step = { μ0 with pc := dispatchBase + 1, halted := false } := by
+    apply step_branchYaoEq_not_taken
+    · rfl
+    · exact h_lookup0
+    · show haltTag.1.yaoAt ⟨1, by omega⟩ ≠ haltTag.1.yaoAt ⟨5, by omega⟩
+      decide
+  let μ1 : YiState := { μ0 with pc := dispatchBase + 1, halted := false }
+  have hrun1 : μ0.runFuel 1 = μ1 := by
+    change (if μ0.halted then μ0 else μ0.step) = μ1
+    rw [show μ0.halted = false by rfl]
+    simp [h0, μ1]
+  have h_lookup1 : metaProg[dispatchBase + 1]? =
+      some (YiInstr.jump (dispatchBase + 12)) := by
+    have h := hseg 1 (by decide)
+    simpa [dispatchTree] using h
+  have h1 : μ1.step = { μ1 with pc := dispatchBase + 12, halted := false } := by
+    apply step_jump
+    · rfl
+    · exact h_lookup1
+  let μ2 : YiState := { μ1 with pc := dispatchBase + 12, halted := false }
+  have hrun2 : μ0.runFuel 2 = μ2 := by
+    rw [show (2 : Nat) = 1 + 1 from rfl,
+      SSBX.Foundation.Bagua.GodelLi.runFuel_succ_right, hrun1, h1]
+  have h_lookup12 : metaProg[dispatchBase + 12]? =
+      some (YiInstr.branchShiEq Shi.dao offsets.jump_offset) := by
+    have h := hseg 12 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  have h2 : μ2.step = { μ2 with pc := dispatchBase + 13, halted := false } := by
+    apply step_branchShiEq_not_taken
+    · rfl
+    · exact h_lookup12
+    · show haltTag.2 ≠ Shi.dao
+      decide
+  let μ3 : YiState := { μ2 with pc := dispatchBase + 13, halted := false }
+  have hrun3 : μ0.runFuel 3 = μ3 := by
+    rw [show (3 : Nat) = 2 + 1 from rfl,
+      SSBX.Foundation.Bagua.GodelLi.runFuel_succ_right, hrun2, h2]
+  have h_lookup13 : metaProg[dispatchBase + 13]? =
+      some (YiInstr.branchShiEq Shi.ji offsets.push_offset) := by
+    have h := hseg 13 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  have h3 : μ3.step = { μ3 with pc := dispatchBase + 14, halted := false } := by
+    apply step_branchShiEq_not_taken
+    · rfl
+    · exact h_lookup13
+    · show haltTag.2 ≠ Shi.ji
+      decide
+  let μ4 : YiState := { μ3 with pc := dispatchBase + 14, halted := false }
+  have hrun4 : μ0.runFuel 4 = μ4 := by
+    rw [show (4 : Nat) = 3 + 1 from rfl,
+      SSBX.Foundation.Bagua.GodelLi.runFuel_succ_right, hrun3, h3]
+  have h_lookup14 : metaProg[dispatchBase + 14]? =
+      some (YiInstr.branchShiEq Shi.jin offsets.pop_offset) := by
+    have h := hseg 14 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  have h4 : μ4.step = { μ4 with pc := dispatchBase + 15, halted := false } := by
+    apply step_branchShiEq_not_taken
+    · rfl
+    · exact h_lookup14
+    · show haltTag.2 ≠ Shi.jin
+      decide
+  let μ5 : YiState := { μ4 with pc := dispatchBase + 15, halted := false }
+  have hrun5 : μ0.runFuel 5 = μ5 := by
+    rw [show (5 : Nat) = 4 + 1 from rfl,
+      SSBX.Foundation.Bagua.GodelLi.runFuel_succ_right, hrun4, h4]
+  have h_lookup15 : metaProg[dispatchBase + 15]? =
+      some (YiInstr.jump offsets.halt_offset) := by
+    have h := hseg 15 (by decide)
+    simpa [dispatchTree, dispatchShi] using h
+  have h5 : μ5.step = { μ5 with pc := offsets.halt_offset, halted := false } := by
+    apply step_jump
+    · rfl
+    · exact h_lookup15
+  let μ6 : YiState := { μ5 with pc := offsets.halt_offset, halted := false }
+  have hrun6 : μ0.runFuel 6 = μ6 := by
+    rw [show (6 : Nat) = 5 + 1 from rfl,
+      SSBX.Foundation.Bagua.GodelLi.runFuel_succ_right, hrun5, h5]
+  change (μ0.runFuel 6).pc = offsets.halt_offset
+      ∧ (μ0.runFuel 6).cur = haltTag
+      ∧ (μ0.runFuel 6).history = history
+      ∧ (μ0.runFuel 6).prog = metaProg
+      ∧ (μ0.runFuel 6).halted = false
+  rw [hrun6]
+  simp [μ6, μ5, μ4, μ3, μ2, μ1, μ0]
 
 end SSBX.Foundation.Wen.MetaInterp.Dispatch

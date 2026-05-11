@@ -310,6 +310,81 @@ theorem metaInterpProg_fetch_routes_running_to_dispatch_at_fuel
     fetchOffset dispatchOffset haltOffset metaInterpProg_fetchProg_at_offset
     h_running h_pcInBounds M0 h_peel
 
+/-! ## § 5.5  Dispatch absolute-pc route lift -/
+
+/-- Assembly-specialized dispatch route for the halt tag.  This is the first
+    absolute-pc lift of a standalone dispatch theorem: starting at the dispatch
+    segment inside `metaInterpProg`, the halt opcode tag routes to the halt
+    block in six fuel ticks. -/
+theorem metaInterpProg_dispatch_routes_halt_at_fuel
+    (history : List R8) :
+    let μ : YiState :=
+      { cur := Dispatch.haltTag
+        history := history
+        pc := dispatchOffset
+        prog := metaInterpProg
+        halted := false }
+    let μ' := μ.runFuel 6
+    μ'.pc = haltOffset
+      ∧ μ'.cur = Dispatch.haltTag
+      ∧ μ'.history = history
+      ∧ μ'.prog = metaInterpProg
+      ∧ μ'.halted = false := by
+  exact Dispatch.dispatchTree_routes_halt_at_segment
+    metaInterpDispatchOffsets dispatchOffset metaInterpProg history
+    (fun i hi => by
+      simpa [DispatchProg.dispatchProg] using
+        metaInterpProg_dispatchProg_at_offset i hi)
+
+/-- One more fuel tick after `metaInterpProg_dispatch_routes_halt_at_fuel`
+    executes the concrete halt instruction at `haltOffset`.  This is still a
+    route/VM smoke witness, not a full semantic simulation theorem. -/
+theorem metaInterpProg_dispatch_halt_executes_halt
+    (history : List R8) :
+    let μ : YiState :=
+      { cur := Dispatch.haltTag
+        history := history
+        pc := dispatchOffset
+        prog := metaInterpProg
+        halted := false }
+    let μ' := μ.runFuel 7
+    μ'.pc = haltOffset
+      ∧ μ'.cur = Dispatch.haltTag
+      ∧ μ'.history = history
+      ∧ μ'.prog = metaInterpProg
+      ∧ μ'.halted = true := by
+  let μ : YiState :=
+      { cur := Dispatch.haltTag
+        history := history
+        pc := dispatchOffset
+        prog := metaInterpProg
+        halted := false }
+  let μ6 := μ.runFuel 6
+  have hroute := metaInterpProg_dispatch_routes_halt_at_fuel history
+  change (μ.runFuel 7).pc = haltOffset
+      ∧ (μ.runFuel 7).cur = Dispatch.haltTag
+      ∧ (μ.runFuel 7).history = history
+      ∧ (μ.runFuel 7).prog = metaInterpProg
+      ∧ (μ.runFuel 7).halted = true
+  have hpc : μ6.pc = haltOffset := hroute.1
+  have hcur : μ6.cur = Dispatch.haltTag := hroute.2.1
+  have hhist : μ6.history = history := hroute.2.2.1
+  have hprog : μ6.prog = metaInterpProg := hroute.2.2.2.1
+  have hhalt : μ6.halted = false := hroute.2.2.2.2
+  have h_lookup : μ6.prog[μ6.pc]? = some YiInstr.halt := by
+    rw [hprog, hpc]
+    rfl
+  have hstep : μ6.step = { μ6 with halted := true } := by
+    unfold YiState.step
+    rw [hhalt]
+    simp [h_lookup, YiState.execute]
+  have hrun7 : μ.runFuel 7 = { μ6 with halted := true } := by
+    rw [show (7 : Nat) = 6 + 1 from rfl,
+      SSBX.Foundation.Bagua.GodelLi.runFuel_succ_right]
+    exact hstep
+  rw [hrun7]
+  simp [hpc, hcur, hhist, hprog]
+
 /-! ## § 6  Tier C — single-opcode end-to-end smoke
 
 Stretch goal.  Constructing a fully-encoded META start state for a
