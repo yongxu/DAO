@@ -189,6 +189,13 @@ theorem encInstr_zeroArity_eq (i : YiInstr) (h : IsZeroArity i) :
     YiInstrEnc.encInstr i = [zeroArityTag i h] := by
   cases i <;> first | rfl | (exfalso; exact h)
 
+/-- For a zero-arity opcode at the source-program head, `encProg` begins
+    with exactly its tag cell. -/
+theorem encProg_cons_zeroArity_eq
+    (i : YiInstr) (h : IsZeroArity i) (p : List YiInstr) :
+    ProgEnc.encProg (i :: p) = zeroArityTag i h :: ProgEnc.encProg p := by
+  simp [ProgEnc.encProg, encInstr_zeroArity_eq i h]
+
 /-- **Main simulation lemma (zero-arity case)**: from a state with
     `encInstr i ++ tail` on history (i zero-arity), `pc = offset` pointing
     at the `skipOneInstr` pop instruction, after 1 fuel step:
@@ -272,6 +279,31 @@ theorem skipOneInstr_simulates_zeroArity
        ∧ (preState cur i tail metaProg offset).step.halted = false
   rw [h_step]
   exact ⟨rfl, rfl, rfl, rfl⟩
+
+/-- Program-tail-facing form: if a zero-arity opcode is at the head of an
+    encoded program tail, one `skipOneInstr` pop reads that tag into
+    `META.cur` and exposes the encoded source-program tail.  This is a real
+    read-tag micro-witness, not a full fetch/restore theorem. -/
+theorem skipOneInstr_simulates_encProg_cons_zeroArity
+    (cur : R8) (i : YiInstr) (h_zero : IsZeroArity i)
+    (p : List YiInstr) (rest : List R8)
+    (metaProg : List YiInstr) (offset : Nat)
+    (h_progAt : metaProg[offset]? = some YiInstr.pop) :
+    let s₀ : YiState :=
+      { cur := cur
+        history := ProgEnc.encProg (i :: p) ++ rest
+        pc := offset
+        prog := metaProg
+        halted := false }
+    let s₁ := s₀.runFuel 1
+    s₁.history = ProgEnc.encProg p ++ rest
+    ∧ s₁.cur = zeroArityTag i h_zero
+    ∧ s₁.pc = offset + 1
+    ∧ s₁.halted = false := by
+  have h := skipOneInstr_simulates_zeroArity cur i h_zero
+    (ProgEnc.encProg p ++ rest) metaProg offset h_progAt
+  have h_enc := encInstr_zeroArity_eq i h_zero
+  simpa [preState, h_enc, encProg_cons_zeroArity_eq i h_zero p, List.cons_append] using h
 
 /-! ## § 5 公开 wrapper：「standalone」simulation
 

@@ -489,6 +489,61 @@ def decInstrs : Nat → List R8 → Option (List YiInstr × List R8)
 def AllEncodable (p : List YiInstr) : Prop :=
   ∀ i ∈ p, YiInstrEnc.Encodable i
 
+theorem encProg_cons (head : YiInstr) (tail : List YiInstr) :
+    encProg (head :: tail) = YiInstrEnc.encInstr head ++ encProg tail := by
+  show ((head :: tail).map YiInstrEnc.encInstr).flatten =
+       YiInstrEnc.encInstr head ++ (tail.map YiInstrEnc.encInstr).flatten
+  simp [List.map_cons, List.flatten_cons]
+
+theorem encProg_append (p q : List YiInstr) :
+    encProg (p ++ q) = encProg p ++ encProg q := by
+  induction p with
+  | nil =>
+      simp [encProg]
+  | cons head tail ih =>
+      simp [encProg_cons, ih, List.append_assoc]
+
+/-- Split an encoded program at a source-level program counter.  This is the
+    pure encoding fact a real fetch/decode routine needs after it has walked
+    past the encoded prefix for `p.take pc`. -/
+theorem encProg_splitAt_get?
+    (p : List YiInstr) (pc : Nat) (instr : YiInstr)
+    (h_get : p[pc]? = some instr) :
+    encProg p =
+      encProg (p.take pc) ++
+      YiInstrEnc.encInstr instr ++
+      encProg (p.drop (pc + 1)) := by
+  induction p generalizing pc with
+  | nil =>
+      cases pc <;> simp at h_get
+  | cons head tail ih =>
+      cases pc with
+      | zero =>
+          simp at h_get
+          cases h_get
+          rw [encProg_cons]
+          show YiInstrEnc.encInstr instr ++ encProg tail =
+            encProg ([] : List YiInstr) ++ YiInstrEnc.encInstr instr ++ encProg tail
+          rw [show encProg ([] : List YiInstr) = [] by rfl]
+          rfl
+      | succ pc =>
+          simp at h_get
+          have h_tail := ih pc h_get
+          simp [encProg_cons, h_tail, List.append_assoc]
+
+/-- Once the encoded prefix before `pc` has been removed, decoding the next
+    instruction recovers the source instruction at `pc`. -/
+theorem decInstr_current_after_split
+    (p : List YiInstr) (pc : Nat) (instr : YiInstr)
+    (_h_get : p[pc]? = some instr)
+    (h_enc : YiInstrEnc.Encodable instr) (rest : List R8) :
+    YiInstrEnc.decInstr
+      (YiInstrEnc.encInstr instr ++
+        (encProg (p.drop (pc + 1)) ++ rest)) =
+      some (instr, encProg (p.drop (pc + 1)) ++ rest) := by
+  exact YiInstrEnc.decInstr_encInstr instr h_enc
+    (encProg (p.drop (pc + 1)) ++ rest)
+
 theorem decInstrs_encProg (p : List YiInstr) (h_enc : AllEncodable p)
     (rest : List R8) :
     decInstrs p.length (encProg p ++ rest) = some (p, rest) := by
