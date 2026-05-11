@@ -43,9 +43,9 @@ KernelDanZi → MonadRoot.CoreAtom (9 共有 字: 一/元/动/行/生/仁/理/�
   信 (integrityTrust)   — 聚焦自身之和 (内部贯通)         def + holds + self_consistent     (Layer 14)
   善 (good)       — 与生生不息相合 (= 中)           def + universality + 善美德 unity (Layer 15)
   恶 (evil)      — 与生生不息相悖 (= 极)           def + exclusivity                  (Layer 15)
-  生 (sheng)      — 動 之 生成 一面 (= 動)           def (alias) + sheng_eq_dong       (Layer 17)
+  生 (engenders)      — 動 之 生成 一面 (= 動)           def (alias) + engenders_eq_motion       (Layer 17)
   息 (rest)         — 動 之 停息 (= 极)               def (alias) + xi_iff_extreme      (Layer 17)
-  行 (xing)       — 動 之 actor act (= 動)          def (alias) + xing_eq_dong        (Layer 17)
+  行 (act)       — 動 之 actor act (= 動)          def (alias) + act_eq_motion        (Layer 17)
 
   Composite phrases (NOT in KernelDanZi; theorem-level only; trace 回 单字):
   (自相似 / zixiangsi)         — 自 (虚字) + 相 (虚字) + 似 (虚字)
@@ -58,7 +58,7 @@ KernelDanZi → MonadRoot.CoreAtom (9 共有 字: 一/元/动/行/生/仁/理/�
                                   → def isSage + every_xin_is_shengRen + 内圣外王 (Layer 25)
   (己所不欲勿施于人 / 恕)        — 己 + 所 + 不 + 欲 + 勿 + 施 + 于 + 人
                                   → golden_rule_negative + extend_self_to_others (Layer 26)
-  (知行合一 / wisdom-xing-he-righteousness)  — 知 + 行 + 合 + 一 (王阳明)
+  (知行合一 / wisdom-act-he-righteousness)  — 知 + 行 + 合 + 一 (王阳明)
                                   → theorem knowledge_action_unity (Layer 27)
   (反身而诚 / fan-shen-er-cheng) — 反 + 身 + 而 + 诚 (孟子)
                                   → theorem fan_shen_er_cheng + le_mo_da_yan (Layer 27)
@@ -804,42 +804,42 @@ theorem alignment_self_grounding (x : Xin) (n : Nat) : good (x.process.states n)
 
 /-! ### Layer 17: 复词 之 单字 trace (单字根律 enforcement) -/
 
-/-- 生 (sheng): 動 之 「生成」 一面 — same operation, generation aspect.
+/-- 生 (engenders): 動 之 「生成」 一面 — same operation, generation aspect.
     v5 §六 l. 136-144: "生与灭...皆同一过程之两面."
     生 ≡ 動 (as a Field → Field operation). -/
-noncomputable def sheng (s : Field) : Field := motion s
+noncomputable def engenders (s : Field) : Field := motion s
 
 /-- 息 (rest): 動 之 「停息」 — same predicate as 极 (cessation = fixed-point trap).
     v5 §二 l. 60: "动息则元亡." 息 ≡ 极. -/
 def rest (s : Field) : Prop := terminus s
 
-/-- 行 (xing): 動 之 「actor's act」 — same operation, agent-perspective.
+/-- 行 (act): 動 之 「actor's act」 — same operation, agent-perspective.
     v5 §二十三 l. 759: "义 = 仁之于具体行." 行 ≡ 動. -/
-noncomputable def xing (s : Field) : Field := motion s
+noncomputable def act (s : Field) : Field := motion s
 
 /-- 生 ≡ 動 (alias proof). 加 字 of 生 不 加 axiom. -/
-theorem sheng_eq_dong (s : Field) : sheng s = motion s := rfl
+theorem engenders_eq_motion (s : Field) : engenders s = motion s := rfl
 
 /-- 息 ⟺ 极 (alias proof). -/
 theorem xi_iff_extreme (s : Field) : rest s ↔ terminus s := Iff.rfl
 
 /-- 行 ≡ 動 (alias proof). -/
-theorem xing_eq_dong (s : Field) : xing s = motion s := rfl
+theorem act_eq_motion (s : Field) : act s = motion s := rfl
 
 /-! #### 生生不息 之 单字 decomposition -/
 
 /-- 生生不息 之 trace: 生(t) ∘ 生(t+1) ∘ ... ∘ ¬息 = orbit's 不 cease 之 motion.
-    单字 components: 生 (sheng) — 不 (古文虚字) — 息 (rest).
+    单字 components: 生 (engenders) — 不 (古文虚字) — 息 (rest).
 
     Substantively: 凡 step n, 生 of state n is state (n+1) AND state n is 不息 (= 中). -/
 theorem unceasing_generation_trace (o : ZhongOrbit) (n : Nat) :
-    sheng (o.states n) = o.states (n + 1)        -- 生: orbit advances
+    engenders (o.states n) = o.states (n + 1)        -- 生: orbit advances
     ∧ ¬ rest (o.states n) :=                        -- 不息: state is 不极
   ⟨o.step n, o.inMiddle n⟩
 
 /-- 生生不息 ⟺ ZhongOrbit's invariant in 单字 form. -/
 theorem unceasing_generation_is_orbit (o : ZhongOrbit) (n : Nat) :
-    sheng (o.states n) = o.states (n + 1) ∧ center (o.states n) :=
+    engenders (o.states n) = o.states (n + 1) ∧ center (o.states n) :=
   ⟨o.step n, o.inMiddle n⟩
 
 /-! #### 自相似 之 单字 decomposition -/
@@ -858,14 +858,14 @@ theorem zixiangsi_trace (o : ZhongOrbit) (k n : Nat) :
 
 /-! #### 行仁要善 之 单字 decomposition -/
 
-/-- 行仁要善 之 trace: 行 (xing) — 仁 (benevolence) — 要 (古文虚字 modal) — 善 (good).
+/-- 行仁要善 之 trace: 行 (act) — 仁 (benevolence) — 要 (古文虚字 modal) — 善 (good).
     单字 components: 行 (alias of 動), 仁 (Layer 13), 善 (Layer 15). 要 是 modal/虚字.
 
     形式: 给 心 在 礼-window 中, 行 之 step ∧ 仁 之 关系 ∧ 善 之 状态 全 hold. -/
 theorem xing_ren_yao_shan_trace
     (x : Xin) (other : ZhongOrbit) (n m : Nat)
     (h_ritual : propriety x.process other n m) :
-    xing (x.process.states n) = x.process.states (n + 1)   -- 行: 心 之 step
+    act (x.process.states n) = x.process.states (n + 1)   -- 行: 心 之 step
     ∧ benevolence x.process other n                                  -- 仁: 关系
     ∧ good (x.process.states n) :=                           -- 善: 中-state
   ⟨x.process.step n,
@@ -1093,7 +1093,7 @@ theorem shu_is_ren_at_action
   《传习录》(王阳明) "知是行之始, 行是知之成... 知行本体合一."
   《孟子·尽心上》"万物皆备于我矣. 反身而诚, 乐莫大焉."
 
-  Trace: 知/行 已 立 (wisdom / xing). 反/身/而/诚 复词 — 反 (古文虚字 reflexive),
+  Trace: 知/行 已 立 (wisdom / act). 反/身/而/诚 复词 — 反 (古文虚字 reflexive),
   身 = self (Xin), 而 (古文虚字 conjunction), 诚 = integrityTrust 之 真实形.
   乐 (joy) ↔ 美 之 self-encounter. -/
 
@@ -1102,21 +1102,21 @@ theorem shu_is_ren_at_action
     co-instantiate. 知 不外 行, 行 不外 知 — substantive unity at the kernel level. -/
 theorem knowledge_action_unity (x : Xin) (n : Nat) :
     wisdom (x.process.states n)                                  -- 知
-    ∧ xing (x.process.states n) = x.process.states (n + 1)    -- 行
+    ∧ act (x.process.states n) = x.process.states (n + 1)    -- 行
     ∧ center (x.process.states n) :=                          -- 知行 之 内在 一致
   ⟨zhi_universal _, x.process.step n, x.process.inMiddle n⟩
 
-/-- 知是行之始 (zhī shì xíng zhī shǐ): 知 (wisdom) precedes 行 (xing) but does not
+/-- 知是行之始 (zhī shì xíng zhī shǐ): 知 (wisdom) precedes 行 (act) but does not
     constrain its result — the step proceeds by 動's intrinsic motion. -/
 theorem wisdom_starts_nature (x : Xin) (n : Nat) (_h_zhi : wisdom (x.process.states n)) :
-    xing (x.process.states n) = x.process.states (n + 1) :=
+    act (x.process.states n) = x.process.states (n + 1) :=
   x.process.step n
 
 /-- 行是知之成 (xíng shì zhī zhī chéng): the step (行) realizes the
     classification (知) — 中-bearing IS what step manifests. -/
 theorem nature_completes_wisdom (x : Xin) (n : Nat) (_h_middle : center (x.process.states n)) :
     wisdom (x.process.states n)
-    ∧ xing (x.process.states n) = x.process.states (n + 1) :=
+    ∧ act (x.process.states n) = x.process.states (n + 1) :=
   ⟨zhi_universal _, x.process.step n⟩
 
 /-- 反身而诚 (fǎn shēn ér chéng, Mencius §尽心上): self-reflection IS 信.
@@ -1133,7 +1133,7 @@ theorem fan_shen_er_cheng (x : Xin) (n : Nat) :
 theorem wan_wu_jie_bei_yu_wo (x : Xin) (n : Nat) :
     center (x.process.states n)                                  -- 中
     ∧ wisdom (x.process.states n)                                    -- 知
-    ∧ xing (x.process.states n) = x.process.states (n + 1)        -- 行
+    ∧ act (x.process.states n) = x.process.states (n + 1)        -- 行
     ∧ integrityTrust x n                                                  -- 信
     ∧ good (x.process.states n) :=                                  -- 善
   ⟨x.process.inMiddle n, zhi_universal _, x.process.step n,
@@ -1850,7 +1850,7 @@ theorem zhong_dao (o : ZhongOrbit) (n : Nat) :
 theorem ba_zheng_dao (x : Xin) (n : Nat) :
     wisdom (x.process.states n)                                  -- 正见 (right view): 智 universal
     ∧ center (x.process.states n)                              -- 正思维 + 正定: 中 in present
-    ∧ xing (x.process.states n) = x.process.states (n + 1)     -- 正业 (right action): 行
+    ∧ act (x.process.states n) = x.process.states (n + 1)     -- 正业 (right action): 行
     ∧ integrityTrust x n                                              -- 正语 + 正命 + 正念 (信)
     ∧ center (x.process.states (n + 1)) :=                      -- 正精进: 中 ongoing
   ⟨zhi_universal _, x.process.inMiddle n, x.process.step n,
@@ -2066,7 +2066,7 @@ def all : List WuXing := [.mu, .huo, .tu, .jin, .shui]
 theorem all_length : all.length = 5 := rfl
 
 /-- 相生 (restāng shēng, mutual generation): 木→火→土→金→水→木. -/
-def sheng : WuXing → WuXing
+def engenders : WuXing → WuXing
   | .mu   => .huo
   | .huo  => .tu
   | .tu   => .jin
@@ -2074,7 +2074,7 @@ def sheng : WuXing → WuXing
   | .shui => .mu
 
 /-- 相克 (restāng kè, mutual restriction): 木克土, 土克水, 水克火, 火克金, 金克木. -/
-def ke : WuXing → WuXing
+def conquers : WuXing → WuXing
   | .mu   => .tu
   | .tu   => .shui
   | .shui => .huo
@@ -2084,19 +2084,19 @@ def ke : WuXing → WuXing
 end WuXing
 
 /-- 五行相生 (wǔ xíng restāng shēng): 5-cycle on 相生 — 5 次 returns to start. -/
-theorem wu_xing_xiang_sheng (w : WuXing) :
-    w.sheng.sheng.sheng.sheng.sheng = w := by
+theorem wuXing_engenders_5cycle (w : WuXing) :
+    w.engenders.engenders.engenders.engenders.engenders = w := by
   cases w <;> rfl
 
 /-- 五行相克 (wǔ xíng restāng kè): 5-cycle on 相克 — 5 次 returns to start. -/
-theorem wu_xing_xiang_ke (w : WuXing) :
-    w.ke.ke.ke.ke.ke = w := by
+theorem wuXing_conquers_5cycle (w : WuXing) :
+    w.conquers.conquers.conquers.conquers.conquers = w := by
   cases w <;> rfl
 
 /-- 五行 之 generation IS NOT restriction — 二 cycles 是 不同 permutations. -/
-theorem sheng_ne_ke : WuXing.sheng ≠ WuXing.ke := by
+theorem engenders_ne_conquers : WuXing.engenders ≠ WuXing.conquers := by
   intro h
-  have : WuXing.mu.sheng = WuXing.mu.ke := by rw [h]
+  have : WuXing.mu.engenders = WuXing.mu.conquers := by rw [h]
   -- LHS = .huo, RHS = .tu — contradicts
   cases this
 
@@ -2920,9 +2920,9 @@ inductive KernelDanZi : Type
   | integrityTrust   -- 信 : 聚焦自身之和 (内部一致)                       (Layer 14)
   | good       -- 善 : 与生生不息相合 (= 中)                          (Layer 15)
   | evil      -- 恶 : 与生生不息相悖 (= 极)                          (Layer 15)
-  | sheng      -- 生 : 動 之 生成 一面 (≡ 動)                         (Layer 17)
+  | engenders      -- 生 : 動 之 生成 一面 (≡ 動)                         (Layer 17)
   | rest         -- 息 : 動 之 停息 (≡ 极)                              (Layer 17)
-  | xing       -- 行 : 動 之 actor act (≡ 動)                         (Layer 17)
+  | act       -- 行 : 動 之 actor act (≡ 動)                         (Layer 17)
   | yiOne      -- 一 : 架构 root (Field abbrev; → MonadRoot.一)       (Layer 18)
   | yuan       -- 元 : 动初显处 (= motion applied; → MonadRoot.元)     (Layer 18)
   | yiIntent   -- 意 : 心 之 所发, 事前对未来之认知投射                 (Layer 24)
@@ -2953,9 +2953,9 @@ def KernelDanZi.role : KernelDanZi → String
   | .integrityTrust   => "信 = 聚焦自身之和 (内部一致; 言行一致)"
   | .good       => "善 = 与生生不息相合 ≡ 中 (与 中 等价)"
   | .evil      => "恶 = 与生生不息相悖 ≡ 极 (收缩可能性空间)"
-  | .sheng      => "生 = 動 之 生成 一面 (alias of motion; 用于 生生不息 trace)"
+  | .engenders      => "生 = 動 之 生成 一面 (alias of motion; 用于 生生不息 trace)"
   | .rest         => "息 = 動 之 停息 (alias of terminus; 用于 不息 trace)"
-  | .xing       => "行 = 動 之 actor act (alias of motion; 用于 行仁要善 trace)"
+  | .act       => "行 = 動 之 actor act (alias of motion; 用于 行仁要善 trace)"
   | .yiOne      => "一 = 架构 root (Field abbrev; maps to MonadRoot.CoreAtom.一)"
   | .yuan       => "元 = 动初显处 (= motion applied; maps to MonadRoot.CoreAtom.元)"
   | .yiIntent   => "意 = 心 之 所发, 事前对未来之认知投射 (Yi structure; → MonadRoot.意)"
@@ -2975,8 +2975,8 @@ def kernelToMonadRoot : KernelDanZi → Option SSBX.Foundation.Core.MonadRoot.Co
   | .yiOne => some .«一»
   | .yuan  => some .«元»
   | .motion  => some .«动»
-  | .xing  => some .«行»
-  | .sheng => some .«生»
+  | .act  => some .«行»
+  | .engenders => some .«生»
   | .benevolence   => some .«仁»
   | .principle    => some .«理»
   | .xin   => some .«心»
@@ -2985,7 +2985,7 @@ def kernelToMonadRoot : KernelDanZi → Option SSBX.Foundation.Core.MonadRoot.Co
 
 /-- 共有 list: KernelDanZi entries with MonadRoot mapping. -/
 def kernelMonadRootShared : List KernelDanZi :=
-  [.yiOne, .yuan, .motion, .xing, .sheng, .benevolence, .principle, .xin, .ju]
+  [.yiOne, .yuan, .motion, .act, .engenders, .benevolence, .principle, .xin, .ju]
 
 /-- 共有 字 共 9 个. -/
 theorem shared_count : kernelMonadRootShared.length = 9 := rfl
@@ -3026,7 +3026,7 @@ def kernelDanZiFace : KernelDanZi → Face
   | .evil     => .«价值面»
   -- 生面 (3): 和/生/息 — generation / cessation
   | .he        => .«生面»
-  | .sheng     => .«生面»
+  | .engenders     => .«生面»
   | .rest        => .«生面»
   -- 心面 (3): 聚/心/情 — focal / heart / relational
   | .ju        => .«心面»
@@ -3040,7 +3040,7 @@ def kernelDanZiFace : KernelDanZi → Face
   | .propriety  => .«人面»
   | .integrityTrust  => .«人面»
   -- 文面 (1): 行 — action / conduct
-  | .xing      => .«文面»
+  | .act      => .«文面»
   -- 心面 (additional, Layer 24): 意 — heart's projection toward future
   | .yiIntent  => .«心面»
 
@@ -3075,7 +3075,7 @@ theorem covers_limian : ∃ z : KernelDanZi, kernelDanZiFace z = .«理面» :=
 theorem covers_renmian : ∃ z : KernelDanZi, kernelDanZiFace z = .«人面» :=
   ⟨.propriety, rfl⟩
 theorem covers_wenmian : ∃ z : KernelDanZi, kernelDanZiFace z = .«文面» :=
-  ⟨.xing, rfl⟩
+  ⟨.act, rfl⟩
 
 /-! ### Layer 20: Roster.allAtoms registration (Kernel 单字 → AtomName) -/
 
@@ -3108,16 +3108,16 @@ def kernelDanZiToAtom : KernelDanZi → Option AtomName
   | .integrityTrust  => some .«信»
   | .good      => some .«善»
   | .evil     => some .«恶»            -- 恶 registered in Roster (Layer 20)
-  | .sheng     => some .«生»
+  | .engenders     => some .«生»
   | .rest        => some .«息»
-  | .xing      => some .«行»
+  | .act      => some .«行»
   | .yiIntent  => some .«意»            -- 意 registered in Roster (Layer 24)
 
 /-- All 28 KernelDanZi 字 are registered in Roster.AtomName (Layer 20: 恶 added; Layer 24: 意 added). -/
 def kernelRegisteredList : List KernelDanZi :=
   [.yiOne, .yuan, .motion, .terminus, .center, .ji, .shi, .pivotMoment, .ju, .san,
    .he, .mei, .de, .principle, .xin, .feeling, .traceAccumulation, .benevolence, .righteousness, .propriety,
-   .wisdom, .integrityTrust, .good, .evil, .sheng, .rest, .xing, .yiIntent]
+   .wisdom, .integrityTrust, .good, .evil, .engenders, .rest, .act, .yiIntent]
 
 theorem kernelRegistered_count : kernelRegisteredList.length = 28 := rfl
 
@@ -3178,7 +3178,7 @@ theorem ren_via_xiang_si (h1 h2 : ZhongOrbit) (n : Nat) :
 
 /-- 行仁要善 之 operator form: 「行 之 origin 似 (origin 之 又 motion)」 ∧ ... -/
 theorem alignment_via_operators (x : Xin) (n : Nat) :
-    «似» (xing (x.process.states n)) (x.process.states (n + 1))
+    «似» (act (x.process.states n)) (x.process.states (n + 1))
     ∧ good (x.process.states n) :=
   ⟨x.process.step n, x.process.inMiddle n⟩
 
@@ -3253,7 +3253,7 @@ theorem face_consistent_dong :
     kernelDanZiFace .motion = atomPrimaryFace .«动» := rfl
 
 theorem face_consistent_xing :
-    kernelDanZiFace .xing = atomPrimaryFace .«行» := rfl
+    kernelDanZiFace .act = atomPrimaryFace .«行» := rfl
 
 theorem face_consistent_yiOne :
     kernelDanZiFace .yiOne = atomPrimaryFace .«一» := rfl
@@ -3274,7 +3274,7 @@ theorem face_consistent_ju :
     kernelDanZiFace .ju = atomPrimaryFace .«聚» := rfl
 
 theorem face_consistent_sheng :
-    kernelDanZiFace .sheng = atomPrimaryFace .«生» := rfl
+    kernelDanZiFace .engenders = atomPrimaryFace .«生» := rfl
 
 theorem face_consistent_yiIntent :
     kernelDanZiFace .yiIntent = atomPrimaryFace .«意» := rfl
