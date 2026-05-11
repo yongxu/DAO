@@ -111,6 +111,7 @@ Self-similarity v1.1 补齐：[`SelfSimilarity.lean`](../../formal/SSBX/Foundati
 | **F.7c.1** | expose U.1/U.2/U.3 as no-sorry semantic-obligation interface + prove generic META halted padding | done | `SemanticLoopObligations`, `semantic_loop_obligation_frontier_summary`, `metaInterpProg_meta_halted_padding` |
 | **F.7c.2** | close unconditional zero-step compose and make Strategy-B fixed-parameter boundary machine-checkable | done | `metaInterpProg_simulates_zero_steps`, `StrategyBCompatibleProgram`, `universal_compose_current_boundary_summary` |
 | **F.7c.3** | strengthen pc=0 fetch scaffold from hand-off to exact dispatch route | done | `Fetch.fetchProtocol_simulates_pc0_to_dispatch` |
+| **F.7c.4** | expose exact-fuel route wrappers for concrete `FetchProg` peel witnesses | done | `fetchProg_routes_halted_at_fuel`, `fetchProg_routes_running_to_dispatch_at_fuel` |
 | **F.7c** | construct concrete U.1/U.2/U.3 semantic witnesses from fetch peel/decode + hard-block effects | pending | — |
 | **B.3** | Cell192 archive 引用扫尾（docs-next 之外）| pending | — |
 
@@ -183,7 +184,7 @@ Self-similarity v1.1 补齐：[`SelfSimilarity.lean`](../../formal/SSBX/Foundati
 commit 7de5064 之 status 说：
 > WenyanSelfInterp.lean dropped legacy dispatchProg + universalMetaInterp (base-192-specific routing); Phase 2.3 12/12 cur-effect simulation theorems retained. Re-derive base-256 dispatch in follow-up.
 
-这意味着 wenyan IL 可执行/ Phase 2.3 cur-effect 同步证明都仍在。base-256 structural assembly 已转移到 `MetaInterp/Assembly.lean`，exact-fuel composition frontier、zero-step/prologue compose、U.1/U.2/U.3 obligation interface 与 Strategy-B fixed-parameter boundary 已在 `MetaInterp/Universal.lean`；`Fetch.lean` 已把 pc=0 scaffold 推进到 exact dispatch route。full arbitrary-program universal compose 仍 pending，原因是 concrete fetch peel/decode、hard-block semantic effects、parameterized sub-dispatch 还未全部构造。
+这意味着 wenyan IL 可执行/ Phase 2.3 cur-effect 同步证明都仍在。base-256 structural assembly 已转移到 `MetaInterp/Assembly.lean`，exact-fuel composition frontier、zero-step/prologue compose、U.1/U.2/U.3 obligation interface 与 Strategy-B fixed-parameter boundary 已在 `MetaInterp/Universal.lean`；`Fetch.lean` 已把 pc=0 scaffold 推进到 exact dispatch route；`FetchProg.lean` 已暴露 halted/running peel-witness route 的 exact fuel。full arbitrary-program universal compose 仍 pending，原因是 concrete fetch peel/decode、hard-block semantic effects、parameterized sub-dispatch 还未全部构造。
 
 ### 5.4 docs-next 之外的 archive 引用
 
@@ -201,6 +202,7 @@ commit 7de5064 之 status 说：
 - [x] Phase F.7c.1: U.1/U.2/U.3 semantic-obligation interface + generic META halted-padding lemma
 - [x] Phase F.7c.2: zero-step/prologue compose + Strategy-B fixed-parameter boundary
 - [x] Phase F.7c.3: pc=0 fetch scaffold reaches dispatch route
+- [x] Phase F.7c.4: exact-fuel route wrappers for concrete FetchProg peel witnesses
 - [ ] Phase F.7c: construct concrete U.1/U.2/U.3 witnesses（重新对接 fetch peel/decode、hard-block semantic effects、parameterized sub-dispatch + arbitrary-program simulation）
 - [ ] 审查所有老 doc 的代码锚点是否还指向有效路径（Cell192 引用）
 

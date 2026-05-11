@@ -47,22 +47,18 @@ boundary inputs) are proven.
 - Tier A (must): ✓ — `fetchProg` defined with definite length
   `fetchProg_totalLen = 1 + walkerLen + 1` (concretely a numeral).
 - Tier B (try): ✓ — `fetchProg_length` shape lemma.
-- Tier C (try): partial — `fetchProg_routes_halted` proven for the
-  *degenerate* shape where META.cur already carries the halted-flag
-  cell at fetch entry.  The full version (which walks past pc-counter
-  first) is left as a `sorry` with a TODO marker.
-- Tier D (stretch): not attempted — both routing theorems with full
-  simulation traces are out of scope for one agent's slot.
+- Tier C (try): partial — halted/running route theorems are proven
+  after an explicit caller-supplied peel witness.  They are route-only:
+  they do not prove tag extraction or canonical history restoration.
+- Tier D (stretch): not attempted — full fetch correctness with real
+  peel/decode/restore traces remains out of scope for this scaffold.
 
-## Sorrys (≤ 4, all TODO(B.T4.B))
+## Remaining semantic gap
 
-  1. `fetchProg_routes_halted_general` — the full walk-then-detect
-     halted theorem.  Reduces to (D1) + (D2) from `Fetch.lean`.
-  2. `fetchProg_routes_running_to_dispatch` — the full
-     decode-and-route theorem.  Reduces to (D1)–(D7) from `Fetch.lean`.
-
-The other two budget slots are reserved for arithmetic glue if the
-shape lemmas need them; not used in this draft.
+`fetchProg_routes_halted_general` and
+`fetchProg_routes_running_to_dispatch` require an external peel witness.
+This isolates the missing work to the real pc-counter/halted-flag peel
+and later encProg decode/restore obligations from `Fetch.lean`.
 
 ## Interface for composing agents
 
@@ -344,21 +340,20 @@ private theorem walker_then_dispatch_jump
     halted-flag exposed in cur).  We then take 1 more fuel step
     through `branchShiEq Shi.ji` which (by `fetchProg_branch_halted_true`)
     routes to `haltOffset`.  Total fuel: `M0 + 1`. -/
-theorem fetchProg_routes_halted_general
+theorem fetchProg_routes_halted_at_fuel
     (regHex : Hexagram) (sim : YiState) (metaProg : List YiInstr)
     (offset dispatchOffset haltOffset : Nat)
-    (h_progStart : ∀ i (hi : i < fetchProg_totalLen),
+    (h_progStart : ∀ i (_hi : i < fetchProg_totalLen),
         metaProg[offset + i]? = (fetchProg dispatchOffset haltOffset)[i]?)
     (_h_halted : sim.halted = true)
-    (h_peel : ∃ M0 : Nat,
+    (M0 : Nat)
+    (h_peel :
         (fetchEntryState regHex sim metaProg offset).runFuel M0
         = fetchProgHaltDetectEntry regHex sim metaProg offset true) :
-    ∃ M : Nat,
-      ((fetchEntryState regHex sim metaProg offset).runFuel M).pc = haltOffset := by
-  obtain ⟨M0, hM0⟩ := h_peel
-  refine ⟨M0 + 1, ?_⟩
+    ((fetchEntryState regHex sim metaProg offset).runFuel (M0 + 1)).pc =
+      haltOffset := by
   -- runFuel (M0 + 1) = (runFuel M0).step
-  rw [SSBX.Foundation.Bagua.GodelLi.runFuel_succ_right, hM0]
+  rw [SSBX.Foundation.Bagua.GodelLi.runFuel_succ_right, h_peel]
   -- Need branch-instruction lookup: metaProg[offset+1]? = some (branchShiEq Shi.ji haltOffset)
   have h_branchAt : metaProg[offset + 1]? =
       some (YiInstr.branchShiEq Shi.ji haltOffset) := by
@@ -368,6 +363,22 @@ theorem fetchProg_routes_halted_general
   exact fetchProg_branch_halted_true regHex sim metaProg offset
     dispatchOffset haltOffset h_branchAt
 
+theorem fetchProg_routes_halted_general
+    (regHex : Hexagram) (sim : YiState) (metaProg : List YiInstr)
+    (offset dispatchOffset haltOffset : Nat)
+    (h_progStart : ∀ i (_hi : i < fetchProg_totalLen),
+        metaProg[offset + i]? = (fetchProg dispatchOffset haltOffset)[i]?)
+    (h_halted : sim.halted = true)
+    (h_peel : ∃ M0 : Nat,
+        (fetchEntryState regHex sim metaProg offset).runFuel M0
+        = fetchProgHaltDetectEntry regHex sim metaProg offset true) :
+    ∃ M : Nat,
+      ((fetchEntryState regHex sim metaProg offset).runFuel M).pc = haltOffset := by
+  obtain ⟨M0, hM0⟩ := h_peel
+  refine ⟨M0 + 1, ?_⟩
+  exact fetchProg_routes_halted_at_fuel regHex sim metaProg offset
+    dispatchOffset haltOffset h_progStart h_halted M0 hM0
+
 /-- The "fetch-when-not-halted" routing theorem.
 
     Composition: peel-witness `M0` reaches
@@ -375,20 +386,19 @@ theorem fetchProg_routes_halted_general
     branch (not taken, advances to offset+2), then `walkerLen` nops,
     then 1 final `jump dispatchOffset`.  Total fuel:
     `M0 + 1 + walkerLen + 1 = M0 + 10`. -/
-theorem fetchProg_routes_running_to_dispatch
+theorem fetchProg_routes_running_to_dispatch_at_fuel
     (regHex : Hexagram) (sim : YiState) (metaProg : List YiInstr)
     (offset dispatchOffset haltOffset : Nat)
-    (h_progStart : ∀ i (hi : i < fetchProg_totalLen),
+    (h_progStart : ∀ i (_hi : i < fetchProg_totalLen),
         metaProg[offset + i]? = (fetchProg dispatchOffset haltOffset)[i]?)
     (_h_running : sim.halted = false)
     (_h_pcInBounds : sim.pc < sim.prog.length)
-    (h_peel : ∃ M0 : Nat,
+    (M0 : Nat)
+    (h_peel :
         (fetchEntryState regHex sim metaProg offset).runFuel M0
         = fetchProgHaltDetectEntry regHex sim metaProg offset false) :
-    ∃ N : Nat,
-      ((fetchEntryState regHex sim metaProg offset).runFuel N).pc = dispatchOffset := by
-  obtain ⟨M0, hM0⟩ := h_peel
-  refine ⟨M0 + 1 + (walkerLen + 1), ?_⟩
+    ((fetchEntryState regHex sim metaProg offset).runFuel
+      (M0 + 1 + (walkerLen + 1))).pc = dispatchOffset := by
   -- Step A: runFuel (M0 + 1) reaches the post-branch state at pc = offset+2.
   -- Step B: runFuel (walkerLen + 1) further reaches dispatchOffset.
   -- We'll use runFuel_succ_right for the +1, then walker_then_dispatch_jump for walkerLen+1.
@@ -403,7 +413,7 @@ theorem fetchProg_routes_running_to_dispatch
   show (entry.runFuel (M0 + 1 + (walkerLen + 1))).pc = dispatchOffset
   -- runFuel (M0 + 1) entry = postPeel.step
   have hrun_M0_1 : entry.runFuel (M0 + 1) = postPeel.step := by
-    rw [SSBX.Foundation.Bagua.GodelLi.runFuel_succ_right, hM0]
+    rw [SSBX.Foundation.Bagua.GodelLi.runFuel_succ_right, h_peel]
   -- postPeel.step has pc = offset + 2 (by fetchProg_branch_halted_false)
   have h_postStep_pc : postPeel.step.pc = offset + 2 :=
     fetchProg_branch_halted_false regHex sim metaProg offset
@@ -490,5 +500,22 @@ theorem fetchProg_routes_running_to_dispatch
   rw [h_add', hrun_M0_1]
   exact walker_then_dispatch_jump postPeel.step offset dispatchOffset
     h_postStep_pc h_postStep_halted h_walkerSlots h_jumpAt
+
+theorem fetchProg_routes_running_to_dispatch
+    (regHex : Hexagram) (sim : YiState) (metaProg : List YiInstr)
+    (offset dispatchOffset haltOffset : Nat)
+    (h_progStart : ∀ i (_hi : i < fetchProg_totalLen),
+        metaProg[offset + i]? = (fetchProg dispatchOffset haltOffset)[i]?)
+    (h_running : sim.halted = false)
+    (h_pcInBounds : sim.pc < sim.prog.length)
+    (h_peel : ∃ M0 : Nat,
+        (fetchEntryState regHex sim metaProg offset).runFuel M0
+        = fetchProgHaltDetectEntry regHex sim metaProg offset false) :
+    ∃ N : Nat,
+      ((fetchEntryState regHex sim metaProg offset).runFuel N).pc = dispatchOffset := by
+  obtain ⟨M0, hM0⟩ := h_peel
+  refine ⟨M0 + 1 + (walkerLen + 1), ?_⟩
+  exact fetchProg_routes_running_to_dispatch_at_fuel regHex sim metaProg offset
+    dispatchOffset haltOffset h_progStart h_running h_pcInBounds M0 hM0
 
 end SSBX.Foundation.Wen.MetaInterp.FetchProg

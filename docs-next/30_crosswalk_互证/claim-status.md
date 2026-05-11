@@ -51,7 +51,7 @@
 
 | # | claim | status | 备注 |
 |---|---|---|---|
-| 16 | **Classical-language self-interpreter full semantic universal-compose theorem** | `pending` | embedded prologue U.0a、zero-step/prologue compose、exact-fuel U.0 composition frontier、U.1/U.2/U.3 obligation interface、generic META halted padding、Strategy-B fixed-parameter boundary 与 pc=0 fetch exact dispatch route 已 machineChecked；仍缺从 general concrete fetch peel/decode、hard-block semantic effects、parameterized sub-dispatch 构造 `SemanticLoopObligations`，以及 arbitrary-program simulation。详 `MetaInterp/Universal.lean` / `MetaInterp/Fetch.lean`。 |
+| 16 | **Classical-language self-interpreter full semantic universal-compose theorem** | `pending` | embedded prologue U.0a、zero-step/prologue compose、exact-fuel U.0 composition frontier、U.1/U.2/U.3 obligation interface、generic META halted padding、Strategy-B fixed-parameter boundary、pc=0 fetch exact dispatch route 与 `FetchProg` peel-witness exact-fuel routes 已 machineChecked；仍缺从 general concrete fetch peel/decode、hard-block semantic effects、parameterized sub-dispatch 构造 `SemanticLoopObligations`，以及 arbitrary-program simulation。详 `MetaInterp/Universal.lean` / `MetaInterp/Fetch*.lean`。 |
 | 17 | **Physical Pauli-string / analytic unitarity bridge** | `pending` | `QuantumR8Bridge.lean` 已给 one-bit basis、R₃ basis flips、R₈ regular representation 与 finite function-space carrier `R8 → ℂ`；未构造 physical Pauli-string system 或 inner-product/unitarity semantics。 |
 
 ## 审读规则
@@ -100,6 +100,7 @@ V₄ Shi / Cell256 升级后，与 Cell192 cardinality 直接绑定的 claim 已
 - [`formal/SSBX/Foundation/Wen/MetaInterp/Assembly.lean`](../../formal/SSBX/Foundation/Wen/MetaInterp/Assembly.lean) — `metaInterpProg_base256_structural_summary`
 - [`formal/SSBX/Foundation/Wen/MetaInterp/Universal.lean`](../../formal/SSBX/Foundation/Wen/MetaInterp/Universal.lean) — `metaInterpProg_simulates_zero_steps`, `semantic_compose_frontier_summary`, `semantic_loop_obligation_frontier_summary`, `metaInterpProg_meta_halted_padding`, `universal_compose_current_boundary_summary`
 - [`formal/SSBX/Foundation/Wen/MetaInterp/Fetch.lean`](../../formal/SSBX/Foundation/Wen/MetaInterp/Fetch.lean) — `fetchProtocol_simulates_pc0_to_dispatch`
+- [`formal/SSBX/Foundation/Wen/MetaInterp/FetchProg.lean`](../../formal/SSBX/Foundation/Wen/MetaInterp/FetchProg.lean) — `fetchProg_routes_halted_at_fuel`, `fetchProg_routes_running_to_dispatch_at_fuel`
 - [`formal/SSBX/Foundation/Squaring/SelfSimilarity.lean`](../../formal/SSBX/Foundation/Squaring/SelfSimilarity.lean) — `self_similarity_gap_summary`
 - [`formal/SSBX/Foundation/Squaring/V4Tensor.lean`](../../formal/SSBX/Foundation/Squaring/V4Tensor.lean) — `V4Tensor.r8_temporal_coordinate_summary`, `V4Tensor.r8_temporal_state_fiber_card_eq_64`, `cell_is_operator`
 - [`formal/SSBX/Foundation/Wen/ClassicalTextRHierarchyBridge.lean`](../../formal/SSBX/Foundation/Wen/ClassicalTextRHierarchyBridge.lean)
