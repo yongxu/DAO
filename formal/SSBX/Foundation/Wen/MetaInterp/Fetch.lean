@@ -133,6 +133,44 @@ structure FetchOutcome
   /-- META is still alive. -/
   halted     : μ'.halted = false
 
+/-- If a fetch routine has restored canonical history and placed the current
+    instruction tag in `META.cur`, then it satisfies `FetchOutcome`.  This
+    packages the target shape future concrete decode/restore proofs should
+    aim to reach. -/
+theorem fetchOutcome_restored_tag_state
+    (regHex : Hexagram) (sim : YiState) (metaProg : List YiInstr)
+    (dispatchOffset : Nat) (instr : YiInstr) (tag : R8)
+    (h_get : sim.prog[sim.pc]? = some instr)
+    (h_tag : (YiInstrEnc.encInstr instr).head? = some tag) :
+    FetchOutcome regHex sim metaProg dispatchOffset
+      { cur := tag
+        history := encMetaHistory regHex sim
+        pc := dispatchOffset
+        prog := metaProg
+        halted := false } := by
+  refine ⟨?_, rfl, rfl, rfl, rfl⟩
+  intro instr' h_instr'
+  rw [h_get] at h_instr'
+  cases h_instr'
+  simp [h_tag]
+
+/-- Zero-arity specialization of `fetchOutcome_restored_tag_state`, using the
+    `SkipInstr.zeroArityTag` name for the exposed opcode tag. -/
+theorem fetchOutcome_zeroArity_restored_tag_state
+    (regHex : Hexagram) (sim : YiState) (metaProg : List YiInstr)
+    (dispatchOffset : Nat) (instr : YiInstr)
+    (h_get : sim.prog[sim.pc]? = some instr)
+    (h_zero : IsZeroArity instr) :
+    FetchOutcome regHex sim metaProg dispatchOffset
+      { cur := zeroArityTag instr h_zero
+        history := encMetaHistory regHex sim
+        pc := dispatchOffset
+        prog := metaProg
+        halted := false } := by
+  exact fetchOutcome_restored_tag_state regHex sim metaProg dispatchOffset instr
+    (zeroArityTag instr h_zero) h_get
+    (by rw [encInstr_zeroArity_eq instr h_zero]; rfl)
+
 /-- `FetchHaltOutcome` describes the META state when fetch detects an
     out-of-bounds `sim.pc` (i.e., `sim.pc ≥ sim.prog.length`).  In this
     case sim halts and the meta-interpreter routes to a writeback
