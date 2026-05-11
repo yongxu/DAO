@@ -1494,4 +1494,117 @@ theorem dispatchTree_routes_halt_at_segment
   rw [hrun6]
   simp [μ6, μ5, μ4, μ3, μ2, μ1, μ0]
 
+/-! ### Instruction-indexed dispatch route
+
+The 12 route theorems above are the primitive facts.  The following
+definitions package the same table behind `YiInstr`, so later universal
+compose witnesses can case-split on the source instruction rather than
+manually selecting one of 12 theorem names.  Parameterized opcodes still route
+only to their Strategy-B sub-dispatch/default entry; their payload semantics
+remain a later obligation. -/
+
+def dispatchTagOfInstr : YiInstr → R8
+  | .nop => nopTag
+  | .setShi _ => setShiTag
+  | .flipYao _ => flipYaoTag
+  | .interlace => huTag
+  | .complement => cuoTag
+  | .reverse => zongTag
+  | .branchYaoEq _ _ _ => branchYaoEqTag
+  | .branchShiEq _ _ => branchShiEqTag
+  | .jump _ => jumpTag
+  | .push => pushTag
+  | .pop => popTag
+  | .halt => haltTag
+
+def dispatchFuelOfInstr : YiInstr → Nat
+  | .nop => 3
+  | .setShi _ => 4
+  | .flipYao _ => 5
+  | .interlace => 6
+  | .complement => 4
+  | .reverse => 5
+  | .branchYaoEq _ _ _ => 6
+  | .branchShiEq _ _ => 7
+  | .jump _ => 3
+  | .push => 4
+  | .pop => 5
+  | .halt => 6
+
+def dispatchTargetOfInstr (offsets : DispatchOffsets) : YiInstr → Nat
+  | .nop => offsets.nop_offset
+  | .setShi _ => offsets.setShi_dispatch_offset
+  | .flipYao _ => offsets.flipYao_dispatch_offset
+  | .interlace => offsets.hu_offset
+  | .complement => offsets.cuo_offset
+  | .reverse => offsets.zong_offset
+  | .branchYaoEq _ _ _ => offsets.branchYaoEq_dispatch_offset
+  | .branchShiEq _ _ => offsets.branchShiEq_dispatch_offset
+  | .jump _ => offsets.jump_offset
+  | .push => offsets.push_offset
+  | .pop => offsets.pop_offset
+  | .halt => offsets.halt_offset
+
+theorem encInstr_head?_eq_dispatchTagOfInstr (instr : YiInstr) :
+    (YiInstrEnc.encInstr instr).head? = some (dispatchTagOfInstr instr) := by
+  cases instr <;> rfl
+
+theorem dispatchTree_routes_instr_at_segment
+    (offsets : DispatchOffsets) (dispatchBase : Nat)
+    (metaProg : List YiInstr) (history : List R8) (instr : YiInstr)
+    (hseg : ∀ i (_ : i < 16),
+        metaProg[dispatchBase + i]? =
+          (dispatchTree offsets dispatchBase)[i]?) :
+    let μ : YiState :=
+      { cur := dispatchTagOfInstr instr
+        history := history
+        pc := dispatchBase
+        prog := metaProg
+        halted := false }
+    let μ' := μ.runFuel (dispatchFuelOfInstr instr)
+    μ'.pc = dispatchTargetOfInstr offsets instr
+      ∧ μ'.cur = dispatchTagOfInstr instr
+      ∧ μ'.history = history
+      ∧ μ'.prog = metaProg
+      ∧ μ'.halted = false := by
+  cases instr with
+  | nop =>
+      simpa [dispatchTagOfInstr, dispatchFuelOfInstr, dispatchTargetOfInstr] using
+        dispatchTree_routes_nop_at_segment offsets dispatchBase metaProg history hseg
+  | setShi sh =>
+      simpa [dispatchTagOfInstr, dispatchFuelOfInstr, dispatchTargetOfInstr] using
+        dispatchTree_routes_setShi_at_segment offsets dispatchBase metaProg history hseg
+  | flipYao i =>
+      simpa [dispatchTagOfInstr, dispatchFuelOfInstr, dispatchTargetOfInstr] using
+        dispatchTree_routes_flipYao_at_segment offsets dispatchBase metaProg history hseg
+  | interlace =>
+      simpa [dispatchTagOfInstr, dispatchFuelOfInstr, dispatchTargetOfInstr] using
+        dispatchTree_routes_hu_at_segment offsets dispatchBase metaProg history hseg
+  | complement =>
+      simpa [dispatchTagOfInstr, dispatchFuelOfInstr, dispatchTargetOfInstr] using
+        dispatchTree_routes_cuo_at_segment offsets dispatchBase metaProg history hseg
+  | reverse =>
+      simpa [dispatchTagOfInstr, dispatchFuelOfInstr, dispatchTargetOfInstr] using
+        dispatchTree_routes_zong_at_segment offsets dispatchBase metaProg history hseg
+  | branchYaoEq i j target =>
+      simpa [dispatchTagOfInstr, dispatchFuelOfInstr, dispatchTargetOfInstr] using
+        dispatchTree_routes_branchYaoEq_at_segment offsets dispatchBase
+          metaProg history hseg
+  | branchShiEq sh target =>
+      simpa [dispatchTagOfInstr, dispatchFuelOfInstr, dispatchTargetOfInstr] using
+        dispatchTree_routes_branchShiEq_at_segment offsets dispatchBase
+          metaProg history hseg
+  | jump target =>
+      simpa [dispatchTagOfInstr, dispatchFuelOfInstr, dispatchTargetOfInstr] using
+        dispatchTree_routes_jump_at_segment offsets dispatchBase metaProg history hseg
+  | push =>
+      simpa [dispatchTagOfInstr, dispatchFuelOfInstr, dispatchTargetOfInstr] using
+        dispatchTree_routes_push_at_segment offsets dispatchBase metaProg history hseg
+  | pop =>
+      simpa [dispatchTagOfInstr, dispatchFuelOfInstr, dispatchTargetOfInstr] using
+        dispatchTree_routes_pop_at_segment offsets dispatchBase metaProg history hseg
+  | halt =>
+      simpa [dispatchTagOfInstr, dispatchFuelOfInstr, dispatchTargetOfInstr] using
+        dispatchTree_routes_halt_at_segment offsets dispatchBase metaProg history hseg
+
 end SSBX.Foundation.Wen.MetaInterp.Dispatch

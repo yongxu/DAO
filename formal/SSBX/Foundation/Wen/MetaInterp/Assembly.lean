@@ -772,6 +772,31 @@ theorem metaInterpProg_dispatch_routes_halt_at_fuel
       simpa [DispatchProg.dispatchProg] using
         metaInterpProg_dispatchProg_at_offset i hi)
 
+/-- Instruction-indexed assembly-specialized dispatch route.  This is the
+    case-split wrapper around the 12 absolute-pc dispatch routes; for
+    parameterized opcodes it routes only to the current Strategy-B
+    sub-dispatch/default entry, not to arbitrary parameter-specific blocks. -/
+theorem metaInterpProg_dispatch_routes_instr_at_fuel
+    (history : List R8) (instr : YiInstr) :
+    let μ : YiState :=
+      { cur := Dispatch.dispatchTagOfInstr instr
+        history := history
+        pc := dispatchOffset
+        prog := metaInterpProg
+        halted := false }
+    let μ' := μ.runFuel (Dispatch.dispatchFuelOfInstr instr)
+    μ'.pc = Dispatch.dispatchTargetOfInstr metaInterpDispatchOffsets instr
+      ∧ μ'.cur = Dispatch.dispatchTagOfInstr instr
+      ∧ μ'.history = history
+      ∧ μ'.prog = metaInterpProg
+      ∧ μ'.halted = false := by
+  simpa [metaInterpDispatchOffsets] using
+    Dispatch.dispatchTree_routes_instr_at_segment
+      metaInterpDispatchOffsets dispatchOffset metaInterpProg history instr
+      (fun i hi => by
+        simpa [DispatchProg.dispatchProg] using
+          metaInterpProg_dispatchProg_at_offset i hi)
+
 /-- One more fuel tick after `metaInterpProg_dispatch_routes_halt_at_fuel`
     executes the concrete halt instruction at `haltOffset`.  This is still a
     route/VM smoke witness, not a full semantic simulation theorem. -/
