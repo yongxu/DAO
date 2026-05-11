@@ -17,6 +17,7 @@ import SSBX.Foundation.Wen.MetaInterp.ExecuteBlocksHard
 
 namespace SSBX.Foundation.Wen.MetaInterp.AssemblyRestorePlan
 
+open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.MetaInterp
@@ -60,40 +61,44 @@ theorem restorePrelude_length :
     restorePrelude.length = 1 := rfl
 
 def restoredBlock_nop : List YiInstr :=
-  withRestore (executeBlock_nop (bodyOffset block_nop_offset) fetchOffset)
+  withRestore
+    (ExecuteBlocks.Aggregate.executeBlock_nop (bodyOffset block_nop_offset) fetchOffset)
 
 def restoredBlock_setShi : List YiInstr :=
-  withRestore (executeBlock_setShi Shi.dao fetchOffset)
+  withRestore (ExecuteBlocks.Aggregate.executeBlock_setShi Shi.dao fetchOffset)
 
 def restoredBlock_flipYao : List YiInstr :=
-  withRestore (executeBlock_flipYao 0 fetchOffset)
+  withRestore (ExecuteBlocks.Aggregate.executeBlock_flipYao 0 fetchOffset)
 
 def restoredBlock_hu : List YiInstr :=
-  withRestore (executeBlock_hu (bodyOffset block_hu_offset) fetchOffset)
+  withRestore
+    (ExecuteBlocks.Aggregate.executeBlock_hu (bodyOffset block_hu_offset) fetchOffset)
 
 def restoredBlock_cuo : List YiInstr :=
-  withRestore (executeBlock_cuo (bodyOffset block_cuo_offset) fetchOffset)
+  withRestore
+    (ExecuteBlocks.Aggregate.executeBlock_cuo (bodyOffset block_cuo_offset) fetchOffset)
 
 def restoredBlock_zong : List YiInstr :=
-  withRestore (executeBlock_zong fetchOffset)
+  withRestore (ExecuteBlocks.Aggregate.executeBlock_zong fetchOffset)
 
 def restoredBlock_branchYaoEq : List YiInstr :=
-  withRestore (executeBlock_branchYaoEq 0 0 0 fetchOffset)
+  withRestore (ExecuteBlocksHard.executeBlock_branchYaoEq 0 0 0 fetchOffset)
 
 def restoredBlock_branchShiEq : List YiInstr :=
-  withRestore (executeBlock_branchShiEq Shi.dao 0 fetchOffset)
+  withRestore (ExecuteBlocksHard.executeBlock_branchShiEq Shi.dao 0 fetchOffset)
 
 def restoredBlock_jump : List YiInstr :=
-  withRestore (executeBlock_jump 0 fetchOffset)
+  withRestore (ExecuteBlocksHard.executeBlock_jump 0 fetchOffset)
 
 def restoredBlock_push : List YiInstr :=
-  withRestore (executeBlock_push fetchOffset)
+  withRestore (ExecuteBlocksHard.executeBlock_push fetchOffset)
 
 def restoredBlock_pop : List YiInstr :=
-  withRestore (executeBlock_pop fetchOffset)
+  withRestore (ExecuteBlocksHard.executeBlock_pop fetchOffset)
 
 def restoredBlock_halt : List YiInstr :=
-  withRestore (executeBlock_halt (bodyOffset block_pop_offset) fetchOffset)
+  withRestore
+    (ExecuteBlocks.Aggregate.executeBlock_halt (bodyOffset block_pop_offset) fetchOffset)
 
 theorem restoredBlock_nop_length :
     restoredBlock_nop.length = 3 := rfl
@@ -226,6 +231,88 @@ theorem restoredMetaInterpProg_pop_restore_at_offset :
 theorem restoredMetaInterpProg_halt_restore_at_offset :
     restoredMetaInterpProg[haltOffset]? = some YiInstr.pop := rfl
 
+/-! ## Restored dispatch routing -/
+
+/-- The restored dispatch tree is spliced into `restoredMetaInterpProg` at the
+same dispatch offset as the current Strategy-B assembly. -/
+theorem restoredMetaInterpProg_dispatchProg_at_offset :
+    ∀ i (_hi : i < 16),
+      restoredMetaInterpProg[dispatchOffset + i]? =
+        (DispatchProg.dispatchProg restoredDispatchOffsets dispatchOffset)[i]? := by
+  intro i hi
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  omega
+
+/-- Instruction-indexed dispatch routing for the restored layout. Dispatch
+lands on the restore prelude, not the block body. -/
+theorem restoredMetaInterpProg_dispatch_routes_instr_at_fuel
+    (history : List R8) (instr : YiInstr) :
+    let μ : YiState :=
+      { cur := dispatchTagOfInstr instr
+      , history := history
+      , pc := dispatchOffset
+      , prog := restoredMetaInterpProg
+      , halted := false }
+    let μ' := μ.runFuel (dispatchFuelOfInstr instr)
+    μ'.pc = dispatchTargetOfInstr restoredDispatchOffsets instr
+      ∧ μ'.cur = dispatchTagOfInstr instr
+      ∧ μ'.history = history
+      ∧ μ'.prog = restoredMetaInterpProg
+      ∧ μ'.halted = false := by
+  simpa using
+    dispatchTree_routes_instr_at_segment restoredDispatchOffsets dispatchOffset
+      restoredMetaInterpProg history instr restoredMetaInterpProg_dispatchProg_at_offset
+
+/-- Every instruction-indexed dispatch target in the restored layout begins
+with the uniform saved-current-cell restore prelude. -/
+theorem restoredMetaInterpProg_dispatchTarget_has_restore (instr : YiInstr) :
+    restoredMetaInterpProg[dispatchTargetOfInstr restoredDispatchOffsets instr]? =
+      some YiInstr.pop := by
+  cases instr <;> rfl
+
+theorem restoredMetaInterpProg_savedCur_target_yields_BlockPre
+    (regHex : Hexagram) (sim : YiState) (instr : YiInstr) :
+    ExecuteBlock.BlockPre regHex sim
+      (dispatchTargetOfInstr restoredDispatchOffsets instr + 1)
+      restoredMetaInterpProg
+      ((DispatchRestore.savedCurBlockEntryState regHex sim restoredMetaInterpProg
+        (dispatchTargetOfInstr restoredDispatchOffsets instr) instr).runFuel 1) := by
+  exact DispatchRestore.restoreSavedCur_yields_BlockPre
+    regHex sim restoredMetaInterpProg
+    (dispatchTargetOfInstr restoredDispatchOffsets instr) instr
+    (restoredMetaInterpProg_dispatchTarget_has_restore instr)
+
 /-! ## Public summary -/
 
 theorem assembly_restore_plan_summary :
@@ -241,7 +328,16 @@ theorem assembly_restore_plan_summary :
     ∧ restoredMetaInterpProg[block_jump_offset]? = some YiInstr.pop
     ∧ restoredMetaInterpProg[block_push_offset]? = some YiInstr.pop
     ∧ restoredMetaInterpProg[block_pop_offset]? = some YiInstr.pop
-    ∧ restoredMetaInterpProg[haltOffset]? = some YiInstr.pop := by
+    ∧ restoredMetaInterpProg[haltOffset]? = some YiInstr.pop
+    ∧ (∀ instr : YiInstr,
+        restoredMetaInterpProg[dispatchTargetOfInstr restoredDispatchOffsets instr]? =
+          some YiInstr.pop)
+    ∧ (∀ regHex sim instr,
+        ExecuteBlock.BlockPre regHex sim
+          (dispatchTargetOfInstr restoredDispatchOffsets instr + 1)
+          restoredMetaInterpProg
+          ((DispatchRestore.savedCurBlockEntryState regHex sim restoredMetaInterpProg
+            (dispatchTargetOfInstr restoredDispatchOffsets instr) instr).runFuel 1)) := by
   exact
     ⟨ restoredMetaInterpProg_length
     , restoredMetaInterpProg_nop_restore_at_offset
@@ -256,6 +352,8 @@ theorem assembly_restore_plan_summary :
     , restoredMetaInterpProg_push_restore_at_offset
     , restoredMetaInterpProg_pop_restore_at_offset
     , restoredMetaInterpProg_halt_restore_at_offset
+    , restoredMetaInterpProg_dispatchTarget_has_restore
+    , restoredMetaInterpProg_savedCur_target_yields_BlockPre
     ⟩
 
 end SSBX.Foundation.Wen.MetaInterp.AssemblyRestorePlan
