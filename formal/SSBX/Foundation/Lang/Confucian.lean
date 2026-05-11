@@ -70,7 +70,7 @@ def discernment : Trigram := Trigram.lake
 
 /-- These four aliases agree with the existing `SiDuan.toTrigram` mapping
 in `Foundation/Eight/XinZhi.lean`. -/
-theorem siduan_agrees_with_XinZhi :
+theorem fourBuds_agrees_with_XinZhi :
     compassion = SSBX.Foundation.Eight.XinZhi.SiDuan.toTrigram .compassion ∧
     shame = SSBX.Foundation.Eight.XinZhi.SiDuan.toTrigram .shame ∧
     yielding = SSBX.Foundation.Eight.XinZhi.SiDuan.toTrigram .yielding ∧
@@ -78,7 +78,7 @@ theorem siduan_agrees_with_XinZhi :
   refine ⟨rfl, rfl, rfl, rfl⟩
 
 /-- The 4 端 are pairwise distinct. -/
-theorem siduan_distinct :
+theorem fourBuds_distinct :
     compassion ≠ shame ∧ compassion ≠ yielding ∧ compassion ≠ discernment ∧
     shame ≠ yielding ∧ shame ≠ discernment ∧ yielding ≠ discernment := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
@@ -117,15 +117,15 @@ def pacifyWorld : Trigram := Trigram.heaven
 def all : List Trigram :=
   [investigateThings, extendKnowledge, sincereIntention, rectifyHeart, cultivateSelf, regulateFamily, governState, pacifyWorld]
 
-theorem bamu_count : all.length = 8 := rfl
+theorem eightAims_count : all.length = 8 := rfl
 
 /-- The 8 目 cover all 8 trigrams (bijection with 八卦) as a list permutation. -/
-theorem bamu_eq_perm_of_bagua : BaMu.all =
+theorem eightAims_eq_perm_of_bagua : BaMu.all =
     [Trigram.wind, Trigram.fire, Trigram.lake, Trigram.mountain,
      Trigram.thunder, Trigram.water, Trigram.earth, Trigram.heaven] := rfl
 
 /-- The 8 目 are pairwise distinct. -/
-theorem bamu_distinct : investigateThings ≠ extendKnowledge ∧ investigateThings ≠ sincereIntention ∧
+theorem eightAims_distinct : investigateThings ≠ extendKnowledge ∧ investigateThings ≠ sincereIntention ∧
     extendKnowledge ≠ sincereIntention ∧ cultivateSelf ≠ regulateFamily ∧ governState ≠ pacifyWorld := by
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
   all_goals decide
@@ -159,9 +159,9 @@ def friends : SSBX.Foundation.Lang.L5.Cell := SSBX.Foundation.Lang.L5.flipFifth
 def all : List SSBX.Foundation.Lang.L5.Cell :=
   [fatherSon, rulerSubject, husbandWife, brothers, friends]
 
-theorem wulun_count : all.length = 5 := rfl
+theorem fiveRelations_count : all.length = 5 := rfl
 
-theorem wulun_distinct :
+theorem fiveRelations_distinct :
     fatherSon ≠ rulerSubject ∧ fatherSon ≠ husbandWife ∧ fatherSon ≠ brothers ∧ fatherSon ≠ friends ∧
     rulerSubject ≠ husbandWife ∧ rulerSubject ≠ brothers ∧ rulerSubject ≠ friends ∧
     husbandWife ≠ brothers ∧ husbandWife ≠ friends ∧ brothers ≠ friends := by
@@ -209,7 +209,7 @@ namespace ShanE
 def good : Yao := Yao.yang
 def evil : Yao := Yao.yin
 
-theorem shan_e_distinct : good ≠ evil := by decide
+theorem good_evil_distinct : good ≠ evil := by decide
 
 end ShanE
 
@@ -233,7 +233,7 @@ def anger : SiXiang := SiXiang.lesserYin
 def sorrow : SiXiang := SiXiang.lesserYang
 def delight : SiXiang := SiXiang.greaterYin
 
-theorem xi_nu_ai_le_distinct :
+theorem joy_anger_sorrow_delight_distinct :
     joy ≠ anger ∧ joy ≠ sorrow ∧ joy ≠ delight ∧
     anger ≠ sorrow ∧ anger ≠ delight ∧ sorrow ≠ delight := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
@@ -261,7 +261,7 @@ def smoothVirtue : SiXiang := SiXiang.lesserYang
 def benefitVirtue : SiXiang := SiXiang.lesserYin
 def correctVirtue : SiXiang := SiXiang.greaterYin
 
-theorem yuan_heng_li_zhen_distinct :
+theorem originVirtues_distinct :
     originVirtue ≠ smoothVirtue ∧ originVirtue ≠ benefitVirtue ∧ originVirtue ≠ correctVirtue ∧
     smoothVirtue ≠ benefitVirtue ∧ smoothVirtue ≠ correctVirtue ∧ benefitVirtue ≠ correctVirtue := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
@@ -293,9 +293,9 @@ def restInGood : Trigram := Trigram.mountain
 
 def all : List Trigram := [illuminateVirtue, engagePeople, restInGood]
 
-theorem sangang_count : all.length = 3 := rfl
+theorem threeBonds_count : all.length = 3 := rfl
 
-theorem sangang_distinct :
+theorem threeBonds_distinct :
     illuminateVirtue ≠ engagePeople ∧ illuminateVirtue ≠ restInGood ∧ engagePeople ≠ restInGood := by
   refine ⟨?_, ?_, ?_⟩
   all_goals decide
@@ -308,7 +308,7 @@ def sky : Trigram := Trigram.heaven
 def ground : Trigram := Trigram.earth
 def human : Trigram := Trigram.mountain
 
-theorem sancai_distinct :
+theorem threePowers_distinct :
     sky ≠ ground ∧ sky ≠ human ∧ ground ≠ human := by
   refine ⟨?_, ?_, ?_⟩
   all_goals decide
