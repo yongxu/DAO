@@ -189,10 +189,10 @@ theorem dang_qian_5 : dang Hexagram.heaven ⟨4, by omega⟩ = true := qian_5th_
 theorem dang_kun_5_not : dang Hexagram.earth ⟨4, by omega⟩ = false := kun_5th_not_wellPos
 
 /-- **既济**全当位：六爻皆当其位。 -/
-theorem dang_jiji_all (i : Fin 6) : dang Hexagram.jiji i = true := jiji_wellPos_all i
+theorem dang_jiji_all (i : Fin 6) : dang Hexagram.complete i = true := jiji_wellPos_all i
 
 /-- **未济**全不当位：六爻皆不当其位。 -/
-theorem dang_weiji_none (i : Fin 6) : dang Hexagram.weiji i = false := weiji_wellPos_none i
+theorem dang_weiji_none (i : Fin 6) : dang Hexagram.incomplete i = false := weiji_wellPos_none i
 
 /-! ## § 7 公开摘要 -/
 

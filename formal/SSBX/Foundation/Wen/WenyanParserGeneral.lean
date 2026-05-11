@@ -760,8 +760,8 @@ theorem parseProgFuel_mono : ∀ (n m : Nat) (toks : List Tok) (out : List YiIns
           | cons t ts =>
               -- 用 generalize 把 parseInstr (t::ts) 抽出
               simp only [parseProgFuel] at hn ⊢
-              generalize hpi : parseInstr (t :: ts) = pi at hn ⊢
-              cases pi with
+              generalize hpi : parseInstr (t :: ts) = blocking at hn ⊢
+              cases blocking with
               | none => simp at hn
               | some pair =>
                   obtain ⟨i, rest⟩ := pair

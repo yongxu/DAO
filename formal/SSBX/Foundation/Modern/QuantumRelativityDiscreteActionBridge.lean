@@ -6,11 +6,11 @@ Companion:
 
 This module advances S5d by one conservative step:
 
-1. it adds a finite phase-composition operation on the existing `zero/pi`
+1. it adds a finite phase-composition operation on the existing `zero/blocking`
    labels;
 2. it assigns phase increments to individual supported edges;
 3. it accumulates a two-step path phase from its two edge phases;
-4. it proves that the two-route upper/lower paths acquire relative phase `pi`
+4. it proves that the two-route upper/lower paths acquire relative phase `blocking`
    and still induce finite two-path cancellation.
 
 This is only a discrete edge-action phase candidate.  It is not a continuous
@@ -39,24 +39,24 @@ is not a continuous phase group or a physical action law.
 -/
 def discretePhaseAdd : DiscretePhase -> DiscretePhase -> DiscretePhase
   | .zero, .zero => .zero
-  | .zero, .pi => .pi
-  | .pi, .zero => .pi
-  | .pi, .pi => .zero
+  | .zero, .blocking => .blocking
+  | .blocking, .zero => .blocking
+  | .blocking, .blocking => .zero
 
 theorem discrete_phase_add_zero_zero :
     discretePhaseAdd DiscretePhase.zero DiscretePhase.zero =
       DiscretePhase.zero := rfl
 
 theorem discrete_phase_add_zero_pi :
-    discretePhaseAdd DiscretePhase.zero DiscretePhase.pi =
-      DiscretePhase.pi := rfl
+    discretePhaseAdd DiscretePhase.zero DiscretePhase.blocking =
+      DiscretePhase.blocking := rfl
 
 theorem discrete_phase_add_pi_zero :
-    discretePhaseAdd DiscretePhase.pi DiscretePhase.zero =
-      DiscretePhase.pi := rfl
+    discretePhaseAdd DiscretePhase.blocking DiscretePhase.zero =
+      DiscretePhase.blocking := rfl
 
 theorem discrete_phase_add_pi_pi :
-    discretePhaseAdd DiscretePhase.pi DiscretePhase.pi =
+    discretePhaseAdd DiscretePhase.blocking DiscretePhase.blocking =
       DiscretePhase.zero := rfl
 
 /-- In the two-label setting, relative phase is phase composition. -/
@@ -111,7 +111,7 @@ def edgePhaseInducedTwoStepAmplitudeCandidate {P : FiniteProcess}
 /--
 Edge phase increments for the two-route toy process.
 
-The upper route has `zero + zero`; the lower route has `zero + pi`.
+The upper route has `zero + zero`; the lower route has `zero + blocking`.
 -/
 def twoRouteEdgePhase
     (a b : twoRouteProcess.State)
@@ -120,7 +120,7 @@ def twoRouteEdgePhase
   | TwoRouteState.source, TwoRouteState.upper => DiscretePhase.zero
   | TwoRouteState.upper, TwoRouteState.target => DiscretePhase.zero
   | TwoRouteState.source, TwoRouteState.lower => DiscretePhase.zero
-  | TwoRouteState.lower, TwoRouteState.target => DiscretePhase.pi
+  | TwoRouteState.lower, TwoRouteState.target => DiscretePhase.blocking
   | _, _ => DiscretePhase.zero
 
 /-- Discrete edge-action phase candidate for the two-route toy process. -/
@@ -150,7 +150,7 @@ theorem two_route_lower_left_edge_phase :
 theorem two_route_lower_right_edge_phase :
     twoRouteDiscreteActionCandidate.edgePhase
       TwoRouteState.lower TwoRouteState.target True.intro =
-        DiscretePhase.pi := by
+        DiscretePhase.blocking := by
   rfl
 
 /-- The upper route accumulates phase `zero`. -/
@@ -159,18 +159,18 @@ theorem two_route_upper_accumulated_phase :
       DiscretePhase.zero := by
   rfl
 
-/-- The lower route accumulates phase `pi`. -/
+/-- The lower route accumulates phase `blocking`. -/
 theorem two_route_lower_accumulated_phase :
     twoRouteDiscreteActionCandidate.pathPhase twoRouteLowerPath =
-      DiscretePhase.pi := by
+      DiscretePhase.blocking := by
   rfl
 
-/-- The lower path has relative phase `pi` against the upper path. -/
+/-- The lower path has relative phase `blocking` against the upper path. -/
 theorem two_route_edge_action_phase_difference :
     discretePhaseRelative
       (twoRouteDiscreteActionCandidate.pathPhase twoRouteUpperPath)
       (twoRouteDiscreteActionCandidate.pathPhase twoRouteLowerPath) =
-        DiscretePhase.pi := by
+        DiscretePhase.blocking := by
   rfl
 
 /-- Edge-action accumulation induces the S5d upper phase label. -/
@@ -184,7 +184,7 @@ theorem two_route_edge_action_upper_phase :
 theorem two_route_edge_action_lower_phase :
     (edgePhaseInducedTwoStepPhaseCandidate
       twoRouteDiscreteActionCandidate).phaseOf twoRouteLowerPath =
-        DiscretePhase.pi :=
+        DiscretePhase.blocking :=
   two_route_lower_accumulated_phase
 
 /-- The accumulated upper phase induces candidate amplitude `1`. -/
@@ -228,7 +228,7 @@ theorem two_route_edge_action_cancelled_born_weight_zero :
 /-- Public summary for S5e:
     the two-route phase labels can be accumulated from edge-action phase
     increments.  The upper path has accumulated phase `zero`, the lower path
-    has accumulated phase `pi`, their relative phase is `pi`, and the induced
+    has accumulated phase `blocking`, their relative phase is `blocking`, and the induced
     finite two-path amplitude still cancels with Born-shaped zero weight.
     This proves only a discrete edge-action phase candidate, not a continuous
     action principle, Hamiltonian law, path integral, Born-rule derivation,
@@ -240,11 +240,11 @@ theorem discrete_action_phase_bridge_summary :
     ∧ twoRouteDiscreteActionCandidate.pathPhase twoRouteUpperPath =
         DiscretePhase.zero
     ∧ twoRouteDiscreteActionCandidate.pathPhase twoRouteLowerPath =
-        DiscretePhase.pi
+        DiscretePhase.blocking
     ∧ discretePhaseRelative
         (twoRouteDiscreteActionCandidate.pathPhase twoRouteUpperPath)
         (twoRouteDiscreteActionCandidate.pathPhase twoRouteLowerPath) =
-          DiscretePhase.pi
+          DiscretePhase.blocking
     ∧ (edgePhaseInducedTwoStepPhaseCandidate
         twoRouteDiscreteActionCandidate).amplitude twoRouteUpperPath = 1
     ∧ (edgePhaseInducedTwoStepPhaseCandidate

@@ -244,18 +244,18 @@ abbrev chong (inner outer : Trigram) : Hexagram := Hexagram.oplus inner outer
 
 /-- Sheng (生生) hierarchy: starting from 太极 (depth 0), each step adds one yao. -/
 inductive Sheng : Nat → Type
-  | tai  : Sheng 0
+  | peace  : Sheng 0
   | step : ∀ {n}, Sheng n → Yao → Sheng (n + 1)
 
 namespace Sheng
 
 /-- Forgetful map from depth-3 Sheng to Trigram. -/
 def toTrigram : Sheng 3 → Trigram
-  | .step (.step (.step .tai a) b) c => ⟨a, b, c⟩
+  | .step (.step (.step .peace a) b) c => ⟨a, b, c⟩
 
 /-- Lifting map from Trigram to depth-3 Sheng. -/
 def ofTrigram (t : Trigram) : Sheng 3 :=
-  .step (.step (.step .tai t.y1) t.y2) t.y3
+  .step (.step (.step .peace t.y1) t.y2) t.y3
 
 /-- Round-trip: Trigram → Sheng → Trigram is the identity. -/
 theorem toTrigram_ofTrigram (t : Trigram) : toTrigram (ofTrigram t) = t := by
@@ -264,10 +264,10 @@ theorem toTrigram_ofTrigram (t : Trigram) : toTrigram (ofTrigram t) = t := by
 /-- Round-trip: Sheng 3 → Trigram → Sheng 3 is the identity. -/
 theorem ofTrigram_toTrigram (s : Sheng 3) : ofTrigram (toTrigram s) = s := by
   match s with
-  | .step (.step (.step .tai _) _) _ => rfl
+  | .step (.step (.step .peace _) _) _ => rfl
 
 /-- Sheng 0 has exactly one inhabitant (the unique 太极). -/
-theorem sheng_zero_unique (s : Sheng 0) : s = .tai := by
+theorem sheng_zero_unique (s : Sheng 0) : s = .peace := by
   cases s; rfl
 
 end Sheng
@@ -528,12 +528,12 @@ namespace Sheng
 
 /-- Forgetful map from depth-6 Sheng to Hexagram. -/
 def toHexagram : Sheng 6 → Hexagram
-  | .step (.step (.step (.step (.step (.step .tai a) b) c) d) e) f =>
+  | .step (.step (.step (.step (.step (.step .peace a) b) c) d) e) f =>
       ⟨a, b, c, d, e, f⟩
 
 /-- Lifting map from Hexagram to depth-6 Sheng. -/
 def ofHexagram (h : Hexagram) : Sheng 6 :=
-  .step (.step (.step (.step (.step (.step .tai h.y1) h.y2) h.y3) h.y4) h.y5) h.y6
+  .step (.step (.step (.step (.step (.step .peace h.y1) h.y2) h.y3) h.y4) h.y5) h.y6
 
 /-- Round-trip: Hexagram → Sheng 6 → Hexagram is the identity. -/
 theorem toHexagram_ofHexagram (h : Hexagram) :
@@ -544,7 +544,7 @@ theorem toHexagram_ofHexagram (h : Hexagram) :
 theorem ofHexagram_toHexagram (s : Sheng 6) :
     ofHexagram (toHexagram s) = s := by
   match s with
-  | .step (.step (.step (.step (.step (.step .tai _) _) _) _) _) _ => rfl
+  | .step (.step (.step (.step (.step (.step .peace _) _) _) _) _) _ => rfl
 
 end Sheng
 

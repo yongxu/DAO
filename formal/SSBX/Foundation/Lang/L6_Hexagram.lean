@@ -157,7 +157,7 @@ def kunToQian : Rule :=
 
 /-- Named transition: 既济 → 未济 (yao-by-yao swap pattern). -/
 def jijiToWeiji : Rule :=
-  Rule.named "既济→未济" (hexSexp Hexagram.jiji) (hexSexp Hexagram.weiji)
+  Rule.named "既济→未济" (hexSexp Hexagram.complete) (hexSexp Hexagram.incomplete)
 
 /-- Default rule list: 6 atomic flips + 3 named transitions. -/
 def defaultRules : List Rule :=
@@ -186,7 +186,7 @@ example : parseCell (printCell Hexagram.heaven) = .ok Hexagram.heaven :=
   print_parse_round_trip _
 
 /-- Round-trip at 既济. -/
-example : parseCell (printCell Hexagram.jiji) = .ok Hexagram.jiji :=
+example : parseCell (printCell Hexagram.complete) = .ok Hexagram.complete :=
   print_parse_round_trip _
 
 /-! ## § 8 L6 summary bundle -/

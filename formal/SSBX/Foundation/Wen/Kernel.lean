@@ -1394,7 +1394,7 @@ theorem sha_shen_cheng_ren
 
 /-! #### 论语 (Analects) -/
 
-/-- 学而时习之 (xué ér shí xí zhī, 《学而》"学而时习之, 不亦说乎"):
+/-- 学而时习之 (waitingé ér shí xí zhī, 《学而》"学而时习之, 不亦说乎"):
     "to learn and practice in time." Each step IS practice; iterating 動 from any
     moment yields the future state. Substantive: orbit's k-th step from time n
     equals the k-fold 动 (= ji k) applied to state n. -/
@@ -1539,7 +1539,7 @@ theorem xing_shan (x : Xin) (n : Nat) : shan (x.process.states n) :=
 
 /-! #### 中庸 (Doctrine of the Mean) -/
 
-/-- 不偏不倚 (bù piān bù yǐ, 《中庸》"中也者, 不偏不倚"):
+/-- 不偏不倚 (bù blockingān bù yǐ, 《中庸》"中也者, 不偏不倚"):
     "neither leaning nor tilted" — 中 ∧ 极 mutually exclusive. -/
 theorem zhong_yong_bu_pian_bu_yi (s : Field) : ¬ (middle s ∧ extreme s) :=
   zhi_exclusive s
@@ -1684,7 +1684,7 @@ theorem tian_di_bu_ren (f : ZhongField) (n : Nat) :
 
 /-! #### 玄 / 自指 / 千里之行 -/
 
-/-- 玄之又玄 (xuán zhī yòu xuán, 《道德经·1》"玄之又玄, 众妙之门"):
+/-- 玄之又玄 (waitingán zhī yòu waitingán, 《道德经·1》"玄之又玄, 众妙之门"):
     "mystery upon mystery — the gate of all wonders." 玄 之 iteration IS dong-iteration. -/
 theorem xuan_zhi_you_xuan (s : Field) (n : Nat) :
     ji (n + 1) s = dong (ji n s) := ji_self_reference n s
@@ -1858,7 +1858,7 @@ theorem ba_zheng_dao (x : Xin) (n : Nat) :
 
 /-! #### 戒定慧 (jiè dìng huì) -/
 
-/-- 戒定慧三学 (jiè dìng huì sān xué, three trainings):
+/-- 戒定慧三学 (jiè dìng huì sān waitingé, three trainings):
     戒 (sīla, ethics) + 定 (samādhi, concentration) + 慧 (prajñā, wisdom).
     Formally: xinTrust ∧ middle ∧ zhi. -/
 theorem jie_ding_hui (x : Xin) (n : Nat) :
@@ -2756,7 +2756,7 @@ theorem chuci_recall_absence (o : ZhongOrbit) (n : Nat) :
 
 /-- 社会协议类型：礼制不是单个动作，而是可类型化的 protocol。 -/
 inductive SocialProtocol
-  | xu     -- 序: ordering protocol
+  | waiting     -- 序: ordering protocol
   | wei    -- 位: position / role protocol
   | yiCeremony -- 仪: performed ceremony protocol
   | jie    -- 节: bounded timing / measure protocol

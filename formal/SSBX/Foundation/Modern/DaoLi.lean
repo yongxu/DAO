@@ -59,7 +59,7 @@ theorem dao_proves_about_li :
 /-- 辅助引理：`Sheng n` 在每个 n 处皆有 inhabitant（具体构造：全阴塔）。
     用于 `li_cannot_encode_dao` 之"无界深度"见证。 -/
 def shengAllYin : ∀ n : Nat, Sheng n
-  | 0 => Sheng.tai
+  | 0 => Sheng.peace
   | n + 1 => Sheng.step (shengAllYin n) Yao.yin
 
 /-- **理 ⊭ 道 之精确陈述**：`Sheng : ℕ → Type` 之 ω-tower 在每深度皆有
@@ -196,7 +196,7 @@ theorem V4_orbit_qian :
     ∧ Hexagram.heaven ≠ Hexagram.earth :=
   ⟨V4_id_qian, V4_zong_qian, V4_cuo_qian, V4_cuoZong_qian, by decide⟩
 
-/-- **V₄ 在某一非自反卦上自由作用之见证**（取 `heaven` 之内 yang 外 yin 即 `泰 (tai)`：
+/-- **V₄ 在某一非自反卦上自由作用之见证**（取 `heaven` 之内 yang 外 yin 即 `泰 (peace)`：
     ⟨yang, yang, yang, yin, yin, yin⟩；此卦在 V₄ 之 4 元素下取 4 个不同卦）。 -/
 def taiHex : Hexagram := ⟨.yang, .yang, .yang, .yin, .yin, .yin⟩
 

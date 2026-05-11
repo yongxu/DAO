@@ -216,14 +216,14 @@ theorem oplus_not_comm :
   injection h with h1 _ _ _ _ _
   cases h1
 
-/-- 否 (pi): 天 (heaven) over 地 (earth) → blocked. inner = 坤, outer = 乾. -/
-def pi : Hexagram := oplus Trigram.earth Trigram.heaven
+/-- 否 (blocking): 天 (heaven) over 地 (earth) → blocked. inner = 坤, outer = 乾. -/
+def blocking : Hexagram := oplus Trigram.earth Trigram.heaven
 
-/-- 泰 (tai): 地 (earth) over 天 (heaven) → harmonized. inner = 乾, outer = 坤. -/
-def tai : Hexagram := oplus Trigram.heaven Trigram.earth
+/-- 泰 (peace): 地 (earth) over 天 (heaven) → harmonized. inner = 乾, outer = 坤. -/
+def peace : Hexagram := oplus Trigram.heaven Trigram.earth
 
 /-- 否 ≠ 泰 — the non-commutativity has concrete witness. -/
-theorem pi_ne_tai : pi ≠ tai := by
+theorem pi_ne_tai : blocking ≠ peace := by
   intro h
   injection h with h1
   cases h1
@@ -516,17 +516,17 @@ end Trigram
 
 namespace Hexagram
 
-/-- 屯 (zhun, ☵☳ — 水雷): 内 thunder, 外 water. -/
-def zhun : Hexagram := oplus Trigram.thunder Trigram.water
+/-- 屯 (sprout, ☵☳ — 水雷): 内 thunder, 外 water. -/
+def sprout : Hexagram := oplus Trigram.thunder Trigram.water
 
-/-- 蒙 (meng, ☶☵ — 山水): 内 water, 外 mountain. -/
-def meng : Hexagram := oplus Trigram.water Trigram.mountain
+/-- 蒙 (naive, ☶☵ — 山水): 内 water, 外 mountain. -/
+def naive : Hexagram := oplus Trigram.water Trigram.mountain
 
-/-- 需 (xu, ☵☰ — 水天): 内 heaven, 外 water. -/
-def xu : Hexagram := oplus Trigram.heaven Trigram.water
+/-- 需 (waiting, ☵☰ — 水天): 内 heaven, 外 water. -/
+def waiting : Hexagram := oplus Trigram.heaven Trigram.water
 
-/-- 讼 (song, ☰☵ — 天水): 内 water, 外 heaven. -/
-def song : Hexagram := oplus Trigram.water Trigram.heaven
+/-- 讼 (dispute, ☰☵ — 天水): 内 water, 外 heaven. -/
+def dispute : Hexagram := oplus Trigram.water Trigram.heaven
 
 /-- 序卦 one-step transition: link two consecutive hexagrams in the canonical sequence
     via either 综 (zong) or 错 (cuo). -/
@@ -541,12 +541,12 @@ theorem xugua_qian_kun : XuguaStep heaven earth :=
   .byCuo heaven earth cuo_qian
 
 /-- 屯 → 蒙 by 综. -/
-theorem xugua_zhun_meng : XuguaStep zhun meng :=
-  .byZong zhun meng (by rfl)
+theorem xugua_zhun_meng : XuguaStep sprout naive :=
+  .byZong sprout naive (by rfl)
 
 /-- 需 → 讼 by 综. -/
-theorem xugua_xu_song : XuguaStep xu song :=
-  .byZong xu song (by rfl)
+theorem xugua_xu_song : XuguaStep waiting dispute :=
+  .byZong waiting dispute (by rfl)
 
 -- Note: in 序卦 cross-pair transitions (e.g., 蒙 → 需) follow neither pure 综 nor 错;
 -- they're "thematic" links. We omit them — the pair-internal 综/错 step is the
@@ -653,28 +653,28 @@ end Hexagram
 
 /-! ## § 9 既济 / 未济 — 当位 extremes
 
-  既济 (jiji, 水火): EVERY position well-positioned (perfect alignment).
-  未济 (weiji, 火水): NO position well-positioned (perfect misalignment).
+  既济 (complete, 水火): EVERY position well-positioned (perfect alignment).
+  未济 (incomplete, 火水): NO position well-positioned (perfect misalignment).
   These are 综 of each other — the canonical perfect/imperfect duality. -/
 
 namespace Hexagram
 
-/-- 既济 (jiji, ☵☲ — 水 over 火): 内 离, 外 坎.
+/-- 既济 (complete, ☵☲ — 水 over 火): 内 离, 外 坎.
     All 6 yao are well-positioned (yang at 1,3,5; yin at 2,4,6, 1-indexed). -/
-def jiji : Hexagram := ⟨.yang, .yin, .yang, .yin, .yang, .yin⟩
+def complete : Hexagram := ⟨.yang, .yin, .yang, .yin, .yang, .yin⟩
 
-/-- 未济 (weiji, ☲☵ — 火 over 水): 内 坎, 外 离.
+/-- 未济 (incomplete, ☲☵ — 火 over 水): 内 坎, 外 离.
     No yao is well-positioned. -/
-def weiji : Hexagram := ⟨.yin, .yang, .yin, .yang, .yin, .yang⟩
+def incomplete : Hexagram := ⟨.yin, .yang, .yin, .yang, .yin, .yang⟩
 
 /-- 既济 = 离 ⊕ 坎 (内 离, 外 坎). -/
-theorem jiji_eq_oplus : jiji = oplus Trigram.fire Trigram.water := rfl
+theorem jiji_eq_oplus : complete = oplus Trigram.fire Trigram.water := rfl
 
 /-- 未济 = 坎 ⊕ 离. -/
-theorem weiji_eq_oplus : weiji = oplus Trigram.water Trigram.fire := rfl
+theorem weiji_eq_oplus : incomplete = oplus Trigram.water Trigram.fire := rfl
 
 /-- 既济 has every yao well-positioned. -/
-theorem jiji_wellPos_all (i : Fin 6) : wellPos jiji i = true := by
+theorem jiji_wellPos_all (i : Fin 6) : wellPos complete i = true := by
   match i with
   | ⟨0, h⟩ => decide +revert
   | ⟨1, h⟩ => decide +revert
@@ -684,7 +684,7 @@ theorem jiji_wellPos_all (i : Fin 6) : wellPos jiji i = true := by
   | ⟨5, h⟩ => decide +revert
 
 /-- 未济 has NO yao well-positioned. -/
-theorem weiji_wellPos_none (i : Fin 6) : wellPos weiji i = false := by
+theorem weiji_wellPos_none (i : Fin 6) : wellPos incomplete i = false := by
   match i with
   | ⟨0, h⟩ => decide +revert
   | ⟨1, h⟩ => decide +revert
@@ -694,30 +694,30 @@ theorem weiji_wellPos_none (i : Fin 6) : wellPos weiji i = false := by
   | ⟨5, h⟩ => decide +revert
 
 /-- 既济 ↔ 未济 by 综 (reflection). -/
-theorem jiji_zong_weiji : jiji.zong = weiji := by rfl
+theorem jiji_zong_weiji : complete.zong = incomplete := by rfl
 
 /-- 既济 ↔ 未济 by 错 (negation). -/
-theorem jiji_cuo_weiji : jiji.cuo = weiji := by rfl
+theorem jiji_cuo_weiji : complete.cuo = incomplete := by rfl
 
 /-- 既济 ≠ 未济 (concrete witness of their distinction). -/
-theorem jiji_ne_weiji : jiji ≠ weiji := by
+theorem jiji_ne_weiji : complete ≠ incomplete := by
   intro h
   injection h with h1
   cases h1
 
 /-- 既济 互 互 = 既济 — 既济 is on a 2-period orbit. -/
-theorem jiji_iterHu_2 : iterHu 2 jiji = jiji := by rfl
+theorem jiji_iterHu_2 : iterHu 2 complete = complete := by rfl
 
 /-- 既济 is NOT 互-fixed (so it's the canonical period-2 example). -/
-theorem jiji_not_hu_fixed : jiji.hu ≠ jiji := by
+theorem jiji_not_hu_fixed : complete.hu ≠ complete := by
   intro heq
   injection heq with e1
   cases e1
 
 /-- 既济's 互 is 未济's 综⁻¹... actually it's simpler:
-    互 jiji = ⟨jiji.y2, jiji.y3, jiji.y4, jiji.y3, jiji.y4, jiji.y5⟩
-           = ⟨yin, yang, yin, yang, yin, yang⟩ = weiji. -/
-theorem jiji_hu_weiji : jiji.hu = weiji := by rfl
+    互 complete = ⟨complete.y2, complete.y3, complete.y4, complete.y3, complete.y4, complete.y5⟩
+           = ⟨yin, yang, yin, yang, yin, yang⟩ = incomplete. -/
+theorem jiji_hu_weiji : complete.hu = incomplete := by rfl
 
 end Hexagram
 
@@ -956,43 +956,43 @@ theorem qian_reading : heaven.reading = (.sheng, .sheng) := rfl
 /-- 坤 (☷☷) — pure 受成 (shou over shou): the receptive principle. -/
 theorem kun_reading : earth.reading = (.shou, .shou) := rfl
 
-/-- 屯 (zhun, ☵☳) — 元/几 inner, 塞 outer: 初动遇塞 (initial motion met by blockage,
+/-- 屯 (sprout, ☵☳) — 元/几 inner, 塞 outer: 初动遇塞 (initial motion met by blockage,
     "difficulty at birth"). -/
-theorem zhun_reading : zhun.reading = (.yuan, .sai) := rfl
+theorem zhun_reading : sprout.reading = (.yuan, .sai) := rfl
 
-/-- 蒙 (meng, ☶☵) — 塞 inner, 聚/形 outer: 塞而成形 (blockage gathered into form,
+/-- 蒙 (naive, ☶☵) — 塞 inner, 聚/形 outer: 塞而成形 (blockage gathered into form,
     "youthful folly" — undeveloped form). -/
-theorem meng_reading : meng.reading = (.sai, .ju) := rfl
+theorem meng_reading : naive.reading = (.sai, .ju) := rfl
 
-/-- 需 (xu, ☵☰) — 续 inner, 塞 outer: 生力遇塞 (generative force meets blockage,
+/-- 需 (waiting, ☵☰) — 续 inner, 塞 outer: 生力遇塞 (generative force meets blockage,
     "waiting"). -/
-theorem xu_reading : xu.reading = (.sheng, .sai) := rfl
+theorem xu_reading : waiting.reading = (.sheng, .sai) := rfl
 
-/-- 讼 (song, ☰☵) — 塞 inner, 续 outer: 塞而生力发外 (inner blockage forces outward,
+/-- 讼 (dispute, ☰☵) — 塞 inner, 续 outer: 塞而生力发外 (inner blockage forces outward,
     "conflict"). -/
-theorem song_reading : song.reading = (.sai, .sheng) := rfl
+theorem song_reading : dispute.reading = (.sai, .sheng) := rfl
 
-/-- 既济 (jiji, ☵☲) — 显/心 inner, 塞 outer: 心明在内 而塞在外 (inner manifest,
+/-- 既济 (complete, ☵☲) — 显/心 inner, 塞 outer: 心明在内 而塞在外 (inner manifest,
     outer obstructed) — completion through inner light. -/
-theorem jiji_reading : jiji.reading = (.xian, .sai) := rfl
+theorem jiji_reading : complete.reading = (.xian, .sai) := rfl
 
-/-- 未济 (weiji, ☲☵) — 塞 inner, 显/心 outer: 塞在内 而显在外 (inner obstructed,
+/-- 未济 (incomplete, ☲☵) — 塞 inner, 显/心 outer: 塞在内 而显在外 (inner obstructed,
     outer manifest) — incompletion despite outer brightness. -/
-theorem weiji_reading : weiji.reading = (.sai, .xian) := rfl
+theorem weiji_reading : incomplete.reading = (.sai, .xian) := rfl
 
-/-- 否 (pi, ☰☷) — 受 inner, 续 outer: 受顺在内 续力在外 — heaven over earth,
+/-- 否 (blocking, ☰☷) — 受 inner, 续 outer: 受顺在内 续力在外 — heaven over earth,
     "obstruction" (the two never meet). -/
-theorem pi_reading : pi.reading = (.shou, .sheng) := rfl
+theorem pi_reading : blocking.reading = (.shou, .sheng) := rfl
 
-/-- 泰 (tai, ☷☰) — 续 inner, 受 outer: 续力在内 受顺在外 — earth over heaven,
+/-- 泰 (peace, ☷☰) — 续 inner, 受 outer: 续力在内 受顺在外 — earth over heaven,
     "harmony" (the two interpenetrate). -/
-theorem tai_reading : tai.reading = (.sheng, .shou) := rfl
+theorem tai_reading : peace.reading = (.sheng, .shou) := rfl
 
 /-- 否 ↔ 泰 read as MIRROR-PAIR: same modes, swapped 内/外. -/
-theorem pi_tai_mirror : pi.reading = (tai.reading.2, tai.reading.1) := rfl
+theorem pi_tai_mirror : blocking.reading = (peace.reading.2, peace.reading.1) := rfl
 
 /-- 既济 ↔ 未济 read as mirror-pair. -/
-theorem jiji_weiji_mirror : jiji.reading = (weiji.reading.2, weiji.reading.1) := rfl
+theorem jiji_weiji_mirror : complete.reading = (incomplete.reading.2, incomplete.reading.1) := rfl
 
 /-- The 8 hexagrams whose reading is "(m, m)" for some m — i.e. 内卦 = 外卦.
     These are the 8 "重卦" (doubled hexagrams): 乾, 兑, 离, 震, 巽, 坎, 艮, 坤. -/
@@ -1096,15 +1096,15 @@ theorem qian_cuo_reading_kun : heaven.cuo.reading = (.shou, .shou) := by
   rw [cuo_reading, qian_reading]; rfl
 
 /-- 屯.zong = 蒙 — at reading level, (yuan, sai) → (sai.zong, yuan.zong) = (sai, ju). -/
-theorem zhun_zong_reading_meng : zhun.zong.reading = (.sai, .ju) := by
+theorem zhun_zong_reading_meng : sprout.zong.reading = (.sai, .ju) := by
   rw [zong_reading, zhun_reading]; rfl
 
 /-- 既济.cuo = 未济 — (xian, sai).cuo = (sai, xian). -/
-theorem jiji_cuo_reading_weiji : jiji.cuo.reading = (.sai, .xian) := by
+theorem jiji_cuo_reading_weiji : complete.cuo.reading = (.sai, .xian) := by
   rw [cuo_reading, jiji_reading]; rfl
 
 /-- 既济.zong = 未济 — (xian, sai) zong-swapped = (sai.zong, xian.zong) = (sai, xian). -/
-theorem jiji_zong_reading_weiji : jiji.zong.reading = (.sai, .xian) := by
+theorem jiji_zong_reading_weiji : complete.zong.reading = (.sai, .xian) := by
   rw [zong_reading, jiji_reading]; rfl
 
 end Hexagram
@@ -1351,10 +1351,10 @@ theorem qian_polarity_shen : heaven.polarity = .shen := by decide
 theorem kun_polarity_xinShou : earth.polarity = .xinShou := by decide
 
 /-- 既济 is BALANCED (3 yang, 3 yin). -/
-theorem jiji_polarity_balanced : jiji.polarity = .balanced := by decide
+theorem jiji_polarity_balanced : complete.polarity = .balanced := by decide
 
 /-- 未济 is also balanced. -/
-theorem weiji_polarity_balanced : weiji.polarity = .balanced := by decide
+theorem weiji_polarity_balanced : incomplete.polarity = .balanced := by decide
 
 end Hexagram
 
@@ -1907,7 +1907,7 @@ end WeiVerdict
 
 /-- Concrete oscillating example: 既济 cell alternating ascend/stable per step. -/
 def jiji_renDaoCell : RenDaoCell :=
-  ⟨Hexagram.jiji, by native_decide⟩
+  ⟨Hexagram.complete, by native_decide⟩
 
 def osc_jiji : WeiVerdict :=
   fun n => if n % 2 = 0 then ⟨jiji_renDaoCell, .ascend⟩ else ⟨jiji_renDaoCell, .stable⟩

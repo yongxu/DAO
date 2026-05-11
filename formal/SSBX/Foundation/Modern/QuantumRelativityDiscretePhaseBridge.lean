@@ -6,7 +6,7 @@ Companion:
 
 This module advances S5c by one conservative step:
 
-1. it adds a finite phase-label interface with two labels, `zero` and `pi`;
+1. it adds a finite phase-label interface with two labels, `zero` and `blocking`;
 2. it maps those labels to candidate amplitudes `1` and `-1`;
 3. it labels the two-route upper/lower paths with opposite phase labels;
 4. it proves that the phase-induced finite two-path amplitude cancels.
@@ -31,24 +31,24 @@ open SSBX.Foundation.Modern.QuantumRelativityWenBoundary
 /--
 A minimal finite phase label.
 
-`zero` and `pi` are only labels for the candidate amplitudes `1` and `-1`.
+`zero` and `blocking` are only labels for the candidate amplitudes `1` and `-1`.
 They are not a continuous phase group, an action functional, or a Hamiltonian
 evolution law.
 -/
 inductive DiscretePhase : Type
   | zero
-  | pi
+  | blocking
   deriving Repr, DecidableEq
 
 /-- Convert the two discrete phase labels into candidate complex amplitudes. -/
 def discretePhaseAmplitude : DiscretePhase -> ℂ
   | .zero => 1
-  | .pi => -1
+  | .blocking => -1
 
 /-- The two primitive phase labels induce opposite candidate amplitudes. -/
 theorem discrete_phase_amplitudes_cancel :
     discretePhaseAmplitude DiscretePhase.zero
-      + discretePhaseAmplitude DiscretePhase.pi = 0 := by
+      + discretePhaseAmplitude DiscretePhase.blocking = 0 := by
   norm_num [discretePhaseAmplitude]
 
 /-- A two-step phase candidate assigns a discrete phase label to each witness. -/
@@ -82,11 +82,11 @@ def phaseInducedTwoStepAmplitudeCandidate {P : FiniteProcess}
 
 /-! ## § 2 Two-route phase labels -/
 
-/-- The two-route phase label: upper has `zero`, lower has `pi`. -/
+/-- The two-route phase label: upper has `zero`, lower has `blocking`. -/
 def twoRoutePhaseOf
     (p : TwoStepPathWitness twoRouteProcess) : DiscretePhase :=
   if p.middle = TwoRouteState.upper then DiscretePhase.zero
-  else if p.middle = TwoRouteState.lower then DiscretePhase.pi
+  else if p.middle = TwoRouteState.lower then DiscretePhase.blocking
   else DiscretePhase.zero
 
 /-- Discrete phase candidate for the two-route toy process. -/
@@ -100,9 +100,9 @@ theorem two_route_upper_phase :
     twoRoutePhaseCandidate.phaseOf twoRouteUpperPath = DiscretePhase.zero := by
   simp [twoRoutePhaseCandidate, twoRoutePhaseOf, twoRouteUpperPath]
 
-/-- The lower path carries the `pi` phase label. -/
+/-- The lower path carries the `blocking` phase label. -/
 theorem two_route_lower_phase :
-    twoRoutePhaseCandidate.phaseOf twoRouteLowerPath = DiscretePhase.pi := by
+    twoRoutePhaseCandidate.phaseOf twoRouteLowerPath = DiscretePhase.blocking := by
   simp [twoRoutePhaseCandidate, twoRoutePhaseOf, twoRouteLowerPath]
 
 /-- The upper phase label induces candidate amplitude `1`. -/
@@ -151,7 +151,7 @@ theorem two_route_phase_cancelled_born_weight_zero :
 
 /-- Public summary for S5d:
     the two-route cancellation can be generated from finite phase labels:
-    upper carries `zero`, lower carries `pi`, the labels map to `1` and `-1`,
+    upper carries `zero`, lower carries `blocking`, the labels map to `1` and `-1`,
     and their finite two-path sum cancels with Born-shaped zero weight.  This
     proves only a discrete phase-label candidate, not a physical phase law,
     action principle, unitary/CPTP dynamics, path integral, decoherence, or
@@ -159,9 +159,9 @@ theorem two_route_phase_cancelled_born_weight_zero :
 theorem discrete_phase_bridge_summary :
     HasTwoStepPhaseCandidate twoRouteProcess
     ∧ (discretePhaseAmplitude DiscretePhase.zero
-        + discretePhaseAmplitude DiscretePhase.pi = 0)
+        + discretePhaseAmplitude DiscretePhase.blocking = 0)
     ∧ twoRoutePhaseCandidate.phaseOf twoRouteUpperPath = DiscretePhase.zero
-    ∧ twoRoutePhaseCandidate.phaseOf twoRouteLowerPath = DiscretePhase.pi
+    ∧ twoRoutePhaseCandidate.phaseOf twoRouteLowerPath = DiscretePhase.blocking
     ∧ twoRoutePhaseCandidate.amplitude twoRouteUpperPath = 1
     ∧ twoRoutePhaseCandidate.amplitude twoRouteLowerPath = -1
     ∧ twoStepPairAmplitudeSum

@@ -192,10 +192,10 @@ theorem yComb_attractors_count :
       (Hexagram.heaven, Shi.jin), (Hexagram.heaven, Shi.wei),
       (Hexagram.earth, Shi.dao),  (Hexagram.earth, Shi.ji),
       (Hexagram.earth, Shi.jin),  (Hexagram.earth, Shi.wei),
-      (Hexagram.jiji, Shi.dao), (Hexagram.jiji, Shi.ji),
-      (Hexagram.jiji, Shi.jin), (Hexagram.jiji, Shi.wei),
-      (Hexagram.weiji, Shi.dao),(Hexagram.weiji, Shi.ji),
-      (Hexagram.weiji, Shi.jin),(Hexagram.weiji, Shi.wei)
+      (Hexagram.complete, Shi.dao), (Hexagram.complete, Shi.ji),
+      (Hexagram.complete, Shi.jin), (Hexagram.complete, Shi.wei),
+      (Hexagram.incomplete, Shi.dao),(Hexagram.incomplete, Shi.ji),
+      (Hexagram.incomplete, Shi.jin),(Hexagram.incomplete, Shi.wei)
      ] : List R8).length = 16 := rfl
 
 /-! ### parity 通过 6 单爻 flip 之复合 -/
@@ -482,7 +482,7 @@ theorem xuGua256_head :
 
 /-- xuGua256 之末：(未济, 未) — 开放未来终点. -/
 theorem xuGua256_last :
-    xuGua256.getLast? = some (Hexagram.weiji, Shi.wei) := by native_decide
+    xuGua256.getLast? = some (Hexagram.incomplete, Shi.wei) := by native_decide
 
 /-- xuGua256 后继：Shi 内 V₄ 序（道→已→今→未），未→外跳到下卦的「道」. -/
 def xuGuaNext256 (c : R8) : Option R8 :=

@@ -152,7 +152,7 @@ def BitPositionVerified : BitPositionObject -> Prop
   | .shiPresent => Shi.jin ∈ Shi.all
   | .shiFuture => Shi.wei ∈ Shi.all
   | .wellPosition =>
-      wellPosCount jiji = 6 ∧ wellPosCount weiji = 0
+      wellPosCount complete = 6 ∧ wellPosCount incomplete = 0
         ∧ wellPosCountAt 0 + wellPosCountAt 1 + wellPosCountAt 2 + wellPosCountAt 3
             + wellPosCountAt 4 + wellPosCountAt 5 + wellPosCountAt 6 = 64
         ∧ ∀ h : Hexagram, ∀ i : Fin 6, wellPos h.cuo i = !(wellPos h i)
@@ -178,11 +178,11 @@ def BitPositionVerified : BitPositionObject -> Prop
         ∧ (∀ h : Hexagram, biCount h.cuo = biCount h)
         ∧ (∀ h : Hexagram, biCount h.zong = biCount h)
   | .supportPosition =>
-      chenCount jiji = 2 ∧ chenCount weiji = 3
+      chenCount complete = 2 ∧ chenCount incomplete = 3
         ∧ (∀ h : Hexagram, chenCount h + chengCount h + biCount h = 5)
         ∧ (∀ h : Hexagram, chenCount h.cuo = chengCount h)
   | .ridingPosition =>
-      chengCount jiji = 3 ∧ chengCount weiji = 2
+      chengCount complete = 3 ∧ chengCount incomplete = 2
         ∧ (∀ h : Hexagram, chenCount h + chengCount h + biCount h = 5)
         ∧ (∀ h : Hexagram, chengCount h.cuo = chenCount h)
 

@@ -435,23 +435,23 @@ theorem qian_quadrant : Hexagram.heaven.quadrant = .benBen := by native_decide
 theorem kun_quadrant : Hexagram.earth.quadrant = .benBen := by native_decide
 
 /-- 既济在本本. -/
-theorem jiji_quadrant : Hexagram.jiji.quadrant = .benBen := by native_decide
+theorem jiji_quadrant : Hexagram.complete.quadrant = .benBen := by native_decide
 
 /-- 未济在本本. -/
-theorem weiji_quadrant : Hexagram.weiji.quadrant = .benBen := by native_decide
+theorem weiji_quadrant : Hexagram.incomplete.quadrant = .benBen := by native_decide
 
 /-- 4 个 hu attractor 都在本本 — 这是 64 卦最深的 substrate. -/
 theorem hu_attractors_in_benBen :
     Hexagram.heaven.quadrant = .benBen
     ∧ Hexagram.earth.quadrant = .benBen
-    ∧ Hexagram.jiji.quadrant = .benBen
-    ∧ Hexagram.weiji.quadrant = .benBen := by
+    ∧ Hexagram.complete.quadrant = .benBen
+    ∧ Hexagram.incomplete.quadrant = .benBen := by
   exact ⟨qian_quadrant, kun_quadrant, jiji_quadrant, weiji_quadrant⟩
 
 /-- 既济 hu→ 未济, 未济 hu→ 既济: 2-cycle in 本本. -/
-theorem jiji_hu_eq_weiji : Hexagram.jiji.hu = Hexagram.weiji := by rfl
+theorem jiji_hu_eq_weiji : Hexagram.complete.hu = Hexagram.incomplete := by rfl
 
-theorem weiji_hu_eq_jiji : Hexagram.weiji.hu = Hexagram.jiji := by rfl
+theorem weiji_hu_eq_jiji : Hexagram.incomplete.hu = Hexagram.complete := by rfl
 
 /-! ## § 12 Sanity tests (concrete) -/
 
