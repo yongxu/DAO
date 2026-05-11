@@ -52,49 +52,49 @@ open SSBX.Foundation.Bagua.Cell128
 /-! ## § 1  五常 cells (Option A) -/
 
 /-- 仁 (benevolence, 木): flip 初爻. Cayley action moves yang→yin at y1. -/
-def «仁» : Cell128 :=
+def benevolence : Cell128 :=
   (⟨.yin, .yang, .yang, .yang, .yang, .yang⟩, false)
 
 /-- 义 (righteousness, 金): flip 二爻. -/
-def «义» : Cell128 :=
+def righteousness : Cell128 :=
   (⟨.yang, .yin, .yang, .yang, .yang, .yang⟩, false)
 
 /-- 礼 (propriety, 火): flip 三爻. -/
-def «礼» : Cell128 :=
+def propriety : Cell128 :=
   (⟨.yang, .yang, .yin, .yang, .yang, .yang⟩, false)
 
 /-- 智 (wisdom, 水): flip 四爻. -/
-def «智» : Cell128 :=
+def wisdom : Cell128 :=
   (⟨.yang, .yang, .yang, .yin, .yang, .yang⟩, false)
 
 /-- 信 (integrity, 土): flip y1..y4 simultaneously = 仁⊕义⊕礼⊕智. -/
-def «信» : Cell128 :=
+def integrity : Cell128 :=
   (⟨.yin, .yin, .yin, .yin, .yang, .yang⟩, false)
 
 /-! ## § 2  五常 → 字 (DaoJudge atom encoding) -/
 
-example : DaoJudge.printCellAtom «仁» = "xoooooo" := by native_decide
-example : DaoJudge.printCellAtom «义» = "oxooooo" := by native_decide
-example : DaoJudge.printCellAtom «礼» = "ooxoooo" := by native_decide
-example : DaoJudge.printCellAtom «智» = "oooxooo" := by native_decide
-example : DaoJudge.printCellAtom «信» = "xxxxooo" := by native_decide
+example : DaoJudge.printCellAtom benevolence = "xoooooo" := by native_decide
+example : DaoJudge.printCellAtom righteousness = "oxooooo" := by native_decide
+example : DaoJudge.printCellAtom propriety = "ooxoooo" := by native_decide
+example : DaoJudge.printCellAtom wisdom = "oooxooo" := by native_decide
+example : DaoJudge.printCellAtom integrity = "xxxxooo" := by native_decide
 
 /-! ## § 3  Theorems -/
 
 /-- 信 is the synthesis of the other four (definitional / `decide`). -/
 theorem xin_eq_synthesis :
-    «信» = Cell128.xor (Cell128.xor (Cell128.xor «仁» «义») «礼») «智» := by
+    integrity = Cell128.xor (Cell128.xor (Cell128.xor benevolence righteousness) propriety) wisdom := by
   decide
 
 /-- 五常归一: 仁⊕义⊕礼⊕智⊕信 = 道. -/
 theorem wuchang_gui_dao :
-    Cell128.xor (Cell128.xor (Cell128.xor (Cell128.xor «仁» «义») «礼») «智») «信»
+    Cell128.xor (Cell128.xor (Cell128.xor (Cell128.xor benevolence righteousness) propriety) wisdom) integrity
       = Cell128.origin := by
   decide
 
 /-- 四端不合: without 信, the four don't balance. -/
 theorem siduan_bu_he :
-    Cell128.xor (Cell128.xor (Cell128.xor «仁» «义») «礼») «智» ≠ Cell128.origin := by
+    Cell128.xor (Cell128.xor (Cell128.xor benevolence righteousness) propriety) wisdom ≠ Cell128.origin := by
   decide
 
 /-! ## § 4  五常 in the Lisp surface
@@ -123,27 +123,27 @@ Documented for completeness; proven NOT to balance to 道.
 namespace traditional
 
 /-- 仁 = 震䷲ (☳☳ = pure thunder, 木). -/
-def «仁_zhen» : Cell128 :=
+def benevolence : Cell128 :=
   (⟨.yang, .yin, .yin, .yang, .yin, .yin⟩, false)
 
 /-- 义 = 兑䷹ (☱☱ = pure lake, 金). -/
-def «义_dui» : Cell128 :=
+def righteousness : Cell128 :=
   (⟨.yang, .yang, .yin, .yang, .yang, .yin⟩, false)
 
 /-- 礼 = 离䷝ (☲☲ = pure fire, 火). -/
-def «礼_li» : Cell128 :=
+def propriety : Cell128 :=
   (⟨.yang, .yin, .yang, .yang, .yin, .yang⟩, false)
 
 /-- 智 = 坎䷜ (☵☵ = pure water, 水). -/
-def «智_kan» : Cell128 :=
+def wisdom : Cell128 :=
   (⟨.yin, .yang, .yin, .yin, .yang, .yin⟩, false)
 
 /-- 信 = 坤䷁ (☷☷ = pure earth, 土). -/
-def «信_kun» : Cell128 :=
+def integrity : Cell128 :=
   (⟨.yin, .yin, .yin, .yin, .yin, .yin⟩, false)
 
 theorem traditional_not_dao :
-    Cell128.xor (Cell128.xor (Cell128.xor (Cell128.xor «仁_zhen» «义_dui») «礼_li») «智_kan») «信_kun»
+    Cell128.xor (Cell128.xor (Cell128.xor (Cell128.xor benevolence righteousness) propriety) wisdom) integrity
       ≠ Cell128.origin := by
   decide
 
@@ -151,8 +151,8 @@ theorem traditional_not_dao :
 循环" is a Z/5 structure; (Z/2)⁷ doesn't accommodate it without an
 external twist. -/
 theorem traditional_xor_eq_li :
-    Cell128.xor (Cell128.xor (Cell128.xor (Cell128.xor «仁_zhen» «义_dui») «礼_li») «智_kan») «信_kun»
-      = «礼_li» := by
+    Cell128.xor (Cell128.xor (Cell128.xor (Cell128.xor benevolence righteousness) propriety) wisdom) integrity
+      = propriety := by
   decide
 
 end traditional
@@ -160,12 +160,12 @@ end traditional
 /-! ## § 6  Public summary -/
 
 theorem wuchang_summary :
-    DaoJudge.printCellAtom «仁» = "xoooooo" ∧
-    DaoJudge.printCellAtom «义» = "oxooooo" ∧
-    DaoJudge.printCellAtom «礼» = "ooxoooo" ∧
-    DaoJudge.printCellAtom «智» = "oooxooo" ∧
-    DaoJudge.printCellAtom «信» = "xxxxooo" ∧
-    Cell128.xor (Cell128.xor (Cell128.xor (Cell128.xor «仁» «义») «礼») «智») «信»
+    DaoJudge.printCellAtom benevolence = "xoooooo" ∧
+    DaoJudge.printCellAtom righteousness = "oxooooo" ∧
+    DaoJudge.printCellAtom propriety = "ooxoooo" ∧
+    DaoJudge.printCellAtom wisdom = "oooxooo" ∧
+    DaoJudge.printCellAtom integrity = "xxxxooo" ∧
+    Cell128.xor (Cell128.xor (Cell128.xor (Cell128.xor benevolence righteousness) propriety) wisdom) integrity
       = Cell128.origin ∧
     DaoJudge.judge wuchang_program = true := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
