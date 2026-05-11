@@ -80,7 +80,7 @@ V₄ Shi / Cell256 升级后，与 Cell192 cardinality 直接绑定的 claim 已
 
 - `Cell192OperatorComplete` → `Cell256OperatorComplete`（Self-description witness，仍 `machineChecked`）。
 - 旧 `R6_complete` / `R7_complete` bundle → **`R8_complete`** in `Cell256Stratify.lean`，axiom audit = `{propext, native_decide}`，**0 项目自定义 axiom**。
-- `wen_constructive_coverage_192_371` 等下游 cascade 引理保留旧名（避免重命名传播），但 cardinality 已升级到 `256 × 371 = 94976`（详见 `../30_crosswalk_互证/old-to-new.md` Cell192→Cell256 节）。
+- 旧 wen-constructive coverage 等下游 cascade 引理保留旧名（避免重命名传播），但现在只按 Cell256-indexed legacy audit inventory 读取；不作为 root ontology 或完整语义证据（详见 `../30_crosswalk_互证/old-to-new.md` Cell192→Cell256 节）。
 
 具体 claim 列表与状态以 `../_generated/claim-index.md` 为准。
 

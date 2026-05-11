@@ -338,11 +338,11 @@ typeCheck : Ctx → Tm → Option Ty                        -- total
 eval      : Tm → Tm                                      -- structural
 ```
 
-### 4.3 Operator catalogue — 371 OperatorId rows, Cell256-indexed
+### 4.3 Root-native operators and legacy catalogue quarantine
 
-L1 type-layer is in `WenDef.lean § Stdlib` (representative constructors: {tui, bi, bu, biModal, tong, fan, sun, yiBenefit, cuo, zong, hu, fanReverse, imp, neqHex, existsH, noneH, endoComp}); a subset of the surface particles (之 / 者 / 而 / 也 / 不 / 凡 / 自 / 相 / 似 / 要 etc.) is named in `Foundation/Wen/Operators.lean` with ASCII aliases. The full 371-OperatorId catalogue is machine-tracked in `Text/WenyanOperators.lean` and **`Text/OperatorCellMap.lean` (now indexed over the 256-cell `Cell256` carrier rather than the legacy `Cell192`)**.
+L1 type-layer is in `WenDef.lean § Stdlib` (representative constructors: {tui, bi, bu, biModal, tong, fan, sun, yiBenefit, cuo, zong, hu, fanReverse, imp, neqHex, existsH, noneH, endoComp}); a subset of the surface particles (之 / 者 / 而 / 也 / 不 / 凡 / 自 / 相 / 似 / 要 etc.) is named in `Foundation/Wen/Operators.lean` with ASCII aliases. The v3 structural entry is `Foundation/Wen/RootOperator.lean`: root-native operators are `mask`, `program`, `projection`, or `alias`.
 
-WenSurface exposes all 371 rows as executable entries: 38 rows have exact theorem-backed Hex/Bool denotation, and the rest evaluate to symbolic `Catalogue[...]` normal forms.
+The historical operator catalogue remains machine-tracked in `Text/WenyanOperators.lean` and related Text modules as legacy inventory. It may supply aliases, corpus rows, or evidence notes, but catalogue size is not root ontology and not a completeness proof.
 
 ### 4.4 Controlled Wenyan (M1 grammar)
 
@@ -457,7 +457,7 @@ DaoSource.lean            «道之自指» (form / parse / print / halt / semant
 WenSurface/Lex.lean        controlled-wenyan lex
 WenSurface/Reading.lean    operator readings table
 WenSurface/DomainLaw.lean  domain-law checks
-WenSurface/Semantics.lean  executableSemanticsFor? — 371 catalogue rows, 38 theorem-backed
+WenSurface/Semantics.lean  executableSemanticsFor? — legacy catalogue inventory; implementation only, not ontology
 WenSurface/Syntax.lean     surface syntax
 WenSurface/Elaborate.lean  surface elaboration
 WenSurface/EndToEnd.lean   canonicalHexNames_interpret_to_xuGua + CLI integration
@@ -536,14 +536,14 @@ Truth/SelfDescription.lean    Cell256OperatorComplete (was Cell192-version), ful
 Truth/Basic / ClaimLedger / Semantics / Adequacy / Absolute   claim grading machinery
 Model/Adequacy / ConcreteLedger                                model-side ledger
 Text/Glyph                                                     glyph layer
-Text/WenyanOperators                                           371-OperatorId catalogue
+Text/WenyanOperators                                           legacy operator catalogue inventory
 Text/OperatorReadings / OperatorSignatures                     operator readings + signatures
 Text/OperatorFamilySemantics / OperatorReachabilitySemantics   family / reachability semantics
 Text/OperatorInstructionSemantics                              operator → ISA instruction semantics
 Text/OperatorCellCandidateSemantics / OperatorCellSemantics    candidate + cell-level semantics (Cell256-indexed)
-Text/OperatorCellMap                                           total operator × cell index (371 × 256 = 95,776 pairs in v3, was 371 × 192 in v2)
+Text/OperatorCellMap                                           legacy operator × Cell256 index; audit inventory, not ontology
 Text/OperatorAnchors                                           xuGua-aligned operator anchors
-Text/Completeness                                              catalogue completeness theorems
+Text/Completeness                                              legacy inventory consistency theorems
 Pending/Interfaces / Examples                                  6 PendingName interfaces with kind = .pending
 ```
 
@@ -575,7 +575,7 @@ theorem xuGua_length        : xuGua.length = 64
 
 -- E. Self-description completeness (Truth/SelfDescription.lean)
 theorem cell256_operator_complete : ∀ a b : Cell256, ∃ f, f a = b
-theorem operator_catalogue_complete                                   -- 371-row catalogue completeness
+theorem root_operator_summary                                         -- root-native operator + legacy quarantine boundary
 theorem self_description_summary                                      -- complete self-description + position semantics + claim-boundary current
 
 -- F. Turing-completeness
@@ -766,8 +766,8 @@ MetaInterp Phase 2.3      16
 Kernel layers             45+   (元 → 非道之形式 + Layer 46 doctrinal refinements)
 义理 essays               90+   (义理/A_..Z_*.md, Eight-Expansions, 60+ Markov-bridge essays, 共同体)
 六表 tables               6     (六表_实虚史真/, including v3 表六_256格全表.md)
-wenyan operators          371   (`Text/WenyanOperators.lean` OperatorId catalogue; 38 theorem-backed exact + 333 catalogue normal form)
-operator × cell pairs     95,776 (= 371 × 256, Cell256-indexed, in `Text/OperatorCellMap.lean`; was 71,232 = 371 × 192 in v2)
+wenyan operators          legacy inventory (`Text/WenyanOperators.lean`; not root ontology)
+operator × cell pairs     legacy audit inventory (`Text/OperatorCellMap.lean`; not root ontology)
 ```
 
 ```

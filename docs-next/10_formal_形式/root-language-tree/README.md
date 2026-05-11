@@ -62,12 +62,14 @@
 - [naming-scheme.md](naming-scheme.md)：层级命名原则、备选及理由。
 - [manifest.md](manifest.md)：1022 计数清单。
 - [../r8-root-language-tree.md](../r8-root-language-tree.md)：root language tree 的理论总纲。
+- [../root-native-operators.md](../root-native-operators.md)：root-native operator 与 legacy catalogue quarantine。
 
 ## Lean 验证入口
 
 ```bash
 lake build SSBX.Foundation.Hierarchy.RootLanguageTree
 lake build SSBX.Foundation.Wen.RootRuleKernel
+lake build SSBX.Foundation.Wen.RootOperator
 ```
 
 当前 summary theorem：

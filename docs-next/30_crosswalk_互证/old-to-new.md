@@ -29,7 +29,7 @@
 | Shi 编码 | inductive 3 ctors，cyclic +1 mod 3 | Phase C: **`abbrev Shi := YinBit × GuoBit`**（4 名字 = `@[match_pattern] def`） |
 | `shiNext` | +1 mod 3 cycle | **`Shi.cuo` involution (V₄, period 2, self-inverse)** |
 | R-hierarchy 编号 | R₁..R₆，含 R₃→R₄ 之 +3 bit chong jump | **严格 uniform R₀..R₈，每层 +1 bit, no jumps** |
-| Cell-content 卡片基数 | 192 × 371 = 71232 | 256 × 371 = 94976 |
+| Cell-content 卡片基数 | legacy operator-cell grid | Cell256-indexed legacy audit inventory |
 | 道之地位 | 哲学附加 anchor (不在 Shi 内) | V₄ identity = (因=0, 果=0)，algebraic 必然 |
 | Self-description witness | `Cell192OperatorComplete` | **`Cell256OperatorComplete`** |
 | R-closure bundle | 旧 `R7_complete` (256 单层视角，已废) / `R6_complete` (192 视角) | **`R8_complete`**, depends only on `propext + native_decide` |
@@ -118,9 +118,8 @@ v3: Shi ↔ (YinBit × GuoBit) ∈ Bool²    -- Phase C: abbrev (非 inductive)
 
 ### 下游 (Modern/* 等) 级联
 
-`finite_probability_bridge_summary` / `wen_constructive_coverage_192_371` 等数值定理保留旧引理名（避免重命名级联），但 cardinal 内容已升级到 256：
+`finite_probability_bridge_summary` / 旧 wen-constructive coverage 等下游定理保留旧引理名（避免重命名级联），但现在只按 Cell256-indexed legacy audit inventory 读取：
 
-- `192 × 371 = 71232` → `256 × 371 = 94976`
 - 下游 cascade 包括 StepwiseUnification, NormalizedMass, FiniteProbabilityNormalization (Phase F.x.5, commit `0003224`)
 
 ### MetaInterp / SubDispatch 重构

@@ -87,7 +87,7 @@ lake build wenyan
 
 环境: `Lean v4.30.0-rc2` + `Mathlib master`. Apple Silicon (M-系列) / x86_64 通。Mathlib HEAD 较大, 首次拉取与冷 build 较慢, 后续增量 build 快。
 
-`wenyan-surface` 是当前可执行的 WenSurface 子集入口: 支持 tokens / resolve / AST / typecheck / JSON / explain / operator catalogue 与 coverage inspect modes; 失败诊断返回非零 exit code; 全部 371 个 catalogue 算子可执行 (其中 38 行有 theorem-backed Hex/Bool denotation, 其余以 `Catalogue[...]` structural 正常形式输出, 不伪装成 Hex/Bool 结果)。
+`wenyan-surface` 是当前可执行的 WenSurface 子集入口: 支持 tokens / resolve / AST / typecheck / JSON / explain / operator catalogue 与 coverage inspect modes; 失败诊断返回非零 exit code。operator catalogue 现在按 legacy inventory 读: 它是实现库存与迁移材料，不是 root ontology，也不是完整自然语言语义。
 
 `wenyan` 是 ziwen / 字文 v0 入口 (源码 `Wenyan.lean` + `WenyanSurface.lean`); 规范见 [`ziwen-spec.md`](./ziwen-spec.md)。
 
@@ -100,7 +100,7 @@ formal/                            Lean 4 形式化 (lake 包名 = ssbx; @[defau
 ├─ SSBX.lean                       顶层 import index
 └─ SSBX/
    ├─ Core / Roster / Pending      字根名册 + 核心生成项 + 待校接口
-   ├─ Text/                        字 / 算子 catalogue (含 OperatorCellMap, OperatorAnchors)
+   ├─ Text/                        字 / legacy operator inventory (含 OperatorCellMap, OperatorAnchors)
    ├─ Truth / Model                模型论与真值边界
    └─ Foundation/                  10 簇 · 100+ modules
       ├─ Core                      字根 · 单根证书 · Alignment / Sincerity / Renlei
@@ -132,7 +132,7 @@ formal/                            Lean 4 形式化 (lake 包名 = ssbx; @[defau
 
 - `Truth/SelfDescription.lean` 给出 `Cell256OperatorComplete` (任 256 cell 对皆有 reach), 是 v3 自描述完整性之总收口; 取代旧 192 版。
 - `Truth/{Basic, ClaimLedger, Semantics, Adequacy, Absolute}` + `Model/{Adequacy, ConcreteLedger}` 给出 claim 状态分级 (machineChecked / ledgerDependent / modelComputed / pending) 之机制层。
-- `Text/{Glyph, WenyanOperators, OperatorReadings, OperatorSignatures, OperatorFamilySemantics, OperatorReachabilitySemantics, OperatorInstructionSemantics, OperatorCellCandidateSemantics, OperatorCellSemantics, Completeness}` 是 371 OperatorId 之 catalogue + signature + executable / theorem-backed 分层; **`OperatorCellMap.lean` 已从旧 64 × 3 = 192 pair 迁到 64 × 4 = 256 (Cell256) 之 cartesian indexing**。
+- `Text/{Glyph, WenyanOperators, OperatorReadings, OperatorSignatures, OperatorFamilySemantics, OperatorReachabilitySemantics, OperatorInstructionSemantics, OperatorCellCandidateSemantics, OperatorCellSemantics, Completeness}` 是 legacy operator catalogue + signature + executable / theorem-backed 分层; 该层只作实现库存、别名、语料和审计材料，不作为 root ontology。
 
 **Pending**
 
@@ -372,7 +372,7 @@ Foundation/Wen:    38+ modules (含 WenSurface / AntiSchmitt / AlignmentFailures
 Kernel layers:     45+        元 → 非道之形式 + Layer 46 文献流派精化
 diagrams:          8 SVGs     Mermaid + ELK; MonadDAG 600+ 节点 / 800+ 边
 .md 义理篇:        90+        义理/A–Z* + 八衍 + 60+ Markov-桥义理 + 共同体
-WenSurface CLI:    371 catalogue 算子 (38 theorem-backed exact + 333 catalogue normal form)
+WenSurface CLI:    legacy catalogue inventory (implementation only; not ontology)
 六表:              6 (含 v3 新表六_256格全表.md)
 ```
 

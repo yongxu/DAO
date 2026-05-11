@@ -29,7 +29,7 @@ definitive 文本是 [yi-RO-hierarchy.md](yi-RO-hierarchy.md)（v2.1）。
 | **Foundation/Notation** | [`SSBX/Foundation/Notation/`](../../formal/SSBX/Foundation/Notation/) | **`OX["xxxxxxxx"]` 8-char Cell256 字面 macro** |
 | Foundation/Eight | [`SSBX/Foundation/Eight/`](../../formal/SSBX/Foundation/Eight/) | 八衍：动理 / 逻辑 / 数算 / 统计 / ... |
 | Foundation/Modern | [`SSBX/Foundation/Modern/`](../../formal/SSBX/Foundation/Modern/) | 现代数学 / 概率 / 逻辑 / 物理 / 神经科学 桥接 |
-| Text | [`SSBX/Text/`](../../formal/SSBX/Text/) | glyph / 算子 / 覆盖性 / OperatorAnchors / OperatorCellMap |
+| Text | [`SSBX/Text/`](../../formal/SSBX/Text/) | glyph / legacy operator inventory / 覆盖性 / OperatorAnchors / OperatorCellMap |
 | Truth | [`SSBX/Truth/`](../../formal/SSBX/Truth/) | claim ledger / semantic adequacy / SelfDescription |
 | Model | [`SSBX/Model/`](../../formal/SSBX/Model/) | 模型 adequacy / concrete ledger |
 
@@ -67,6 +67,7 @@ R₈ / Cell256 spine（v3 sibling docs，本轮并行写入）：
 - [operator-split.md](operator-split.md) — atomic inner/outer 算子拆分
 - [lift-project.md](lift-project.md) — R₀..R₈ Lift / Project pairs
 - [r8-root-language-tree.md](r8-root-language-tree.md) — R₀..R₈ root language tree、1021/1022 口径、root-rule roadmap
+- [root-native-operators.md](root-native-operators.md) — 根算子四类来源：mask / program / projection / alias；legacy catalogue quarantine
 - [root-language-tree/README.md](root-language-tree/README.md) — 1022-entry 文言 / 中文 / English / formal logic 审阅包
 
 R-line 与字根：

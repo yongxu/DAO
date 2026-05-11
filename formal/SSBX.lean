@@ -52,6 +52,7 @@ import SSBX.Foundation.Wen.WenyanText
 import SSBX.Foundation.Wen.R8ProjectionCalculus
 import SSBX.Foundation.Wen.R8ProjectionKernel
 import SSBX.Foundation.Wen.RootRuleKernel
+import SSBX.Foundation.Wen.RootOperator
 import SSBX.Foundation.Wen.R8AxisIndependence
 import SSBX.Foundation.Wen.RootRuleExamples
 import SSBX.Foundation.Wen.RootRuleDemoInterpreter

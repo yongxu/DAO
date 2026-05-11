@@ -81,7 +81,8 @@ R₈ 最小核
 | Cayley 元-算子融合 | 已落地 | `R8.cayley`, `R8.cayley_inj`, `epsAtOrigin_cayley` |
 | R₈ = R₄ × R₄ | 已落地 | `SelfSimilarity.r8_eq_r4_squared` |
 | R₈ ≃ V₄⁴ | 已落地 | `V4Tensor.iso` |
-| 遗留文言算子 catalogue | 待隔离审计 | 可作为 alias / corpus / evidence note，不作为 root count |
+| root-native operator | 已有 typed skeleton | `RootOperator.lean`, `root_operator_summary` |
+| 遗留文言算子 catalogue | 已有 quarantine 规则 | `legacy-catalogue-quarantine.md`; 逐条迁移未纳入本轮 |
 | 文-R8投影规约 | 已有 typed skeleton | `R8ProjectionCalculus.lean` |
 | 量子接口 | 有 roadmap 与有限 bridge | `QuantumR8Bridge.lean`, `quantum-roadmap.md` |
 | Markov / Born / action bridge | 有 stepwise typed skeleton | `QuantumRelativity*.lean` S-series |
@@ -130,9 +131,12 @@ R₀..R₈ 对 strict binary algebraic closure 完备。
 | 项 | 状态 |
 |---|---|
 | root-rule program kernel | done: [`RootRuleKernel.lean`](../../formal/SSBX/Foundation/Wen/RootRuleKernel.lean) |
+| root-native operator boundary | done: [`RootOperator.lean`](../../formal/SSBX/Foundation/Wen/RootOperator.lean) |
+| legacy catalogue quarantine protocol | done: [`legacy-catalogue-quarantine.md`](../50_maintenance/legacy-catalogue-quarantine.md) |
 | checked example corpus | done: [`RootRuleExamples.lean`](../../formal/SSBX/Foundation/Wen/RootRuleExamples.lean) |
 | demo interpreter | done as skeleton: [`RootRuleDemoInterpreter.lean`](../../formal/SSBX/Foundation/Wen/RootRuleDemoInterpreter.lean) |
 | full parser / full semantics | pending |
+| per-row legacy catalogue migration | pending |
 
 ### 3.2 通用程序规则
 
@@ -235,6 +239,8 @@ inductive CoreForm
 | evidence note | 尚无 root-native 行为者保留为审稿材料，不进入主 claim |
 
 目标：每个继续保留的旧条目，都必须说明它是 alias、corpus、evidence note，还是应删除的历史残留。
+
+状态：quarantine 规则已落地于 [`RootOperator.lean`](../../formal/SSBX/Foundation/Wen/RootOperator.lean) 与 [`legacy-catalogue-quarantine.md`](../50_maintenance/legacy-catalogue-quarantine.md)。逐条旧目录迁移仍未纳入本轮。
 
 ### R4 · Axis independence checker
 

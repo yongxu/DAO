@@ -661,8 +661,9 @@ proof of behavior from the rule
 |---|---|---|
 | A | RootLanguageTree 类型与计数证明 | done: `RootLanguageTree.lean` 证明 511 / 1021 / 1022 |
 | B | RootRule kernel | done: `RootRuleKernel.lean` 给出 quote/apply/compose/... 的 R8-visible 程序核 |
-| C | root-native transform generator | pending: 从 root mask / root program 生成行为，不以历史 catalogue 数字为目标 |
-| D | legacy catalogue quarantine | pending: 审计遗留条目，只把有用内容迁移成 alias / corpus / evidence note |
+| C | root-native operator boundary | done: `RootOperator.lean` 给出 mask / program / projection / alias 四类来源 |
+| C2 | root-native transform generator | pending: 从 root mask / root program 生成行为，不以历史 catalogue 数字为目标 |
+| D | legacy catalogue quarantine | protocol done: `LegacyCatalogueRole`; 逐条审计未纳入本轮 |
 | D2 | axis appropriateness checker | done: `R8AxisIndependence.lean` 给出有限 XOR span checker |
 | D3 | example corpus skeleton | done: `RootRuleExamples.lean` 固定“归道/双翻/损失/加轴”目标行为 |
 | D4 | projection kernel | done: `R8ProjectionKernel.lean` 给出通用 `ProjectionToR8 H` 与 kernel relation |
@@ -671,10 +672,10 @@ proof of behavior from the rule
 | G | truth-status ledger | claim 不再只是真/假，而有审计状态 |
 | H | science carriers | 概率、连续、量子、物理模型分层接入 |
 
-完成 A-D 后，可以说：
+完成 A-D 的 typed skeleton 后，可以说：
 
 ```text
-root language tree 与 exact cell transform 的本体结构已经闭合。
+root language tree 与 root-native operator boundary 的本体结构已经闭合。
 ```
 
 完成 E-G 后，可以说：

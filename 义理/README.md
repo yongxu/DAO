@@ -109,7 +109,7 @@
 | 文件 | 主题 | Lean 配套 |
 |------|------|---|
 | [物间事三位一体 · 时空事件.md](物间事三位一体%20·%20时空事件.md) | 物 / 间 / 事 三面完整性 + carrier + spacetime + event | `WuJianShiTrinity.lean` |
-| [爻维格算 · 物间缘与256x371拓扑.md](爻维格算%20·%20物间缘与256x371拓扑.md) | 爻生维 / 维成格 / 格受算; `Cell256 = Bool^6 × Shi V₄` + `371 × 256` 覆盖网格 | `Cell256.lean` · `OperatorCellMap.lean` · `Roster.lean` |
+| [根算子与目录隔离.md](根算子与目录隔离.md) | root-native operator 四类来源 + legacy catalogue quarantine | `RootOperator.lean` |
 | [道桥接_ProcessAligned_Dao_ShengshengBuxi.md](道桥接_ProcessAligned_Dao_ShengshengBuxi.md) | Process-aligned Dao 道桥接 | — |
 
 ### 元到方向 (从元到 X 系列, 不变)
@@ -153,7 +153,7 @@
 | 文件 | pre-v3 状态 | v3 处理 |
 |---|---|---|
 | `J_理之不完备_哥德尔在192.md` | Cell192 时代之 Gödel 在 192 | **git mv** 至 `J_理之不完备_哥德尔在256.md` + v3 内容重写 |
-| `爻维格算 · 物间缘与192x371拓扑.md` | 192 × 371 拓扑 | **git mv** 至 `爻维格算 · 物间缘与256x371拓扑.md` + v3 内容更新 |
+| 旧 operator-cell topology 文 | legacy grid topology | v3 后按 audit inventory 读，不作 root ontology |
 | `G_完整算子系统_八卦互通与归一.md` (旧版) | Cell192 时代之算子代数 | v3 重写 (R₀..R₈ + V₄ Shi at R₈) |
 | `H_证明报告.md` (旧版) | BaguaAlgebra 75 定理 / 36 jobs | v3 重写 (R₀..R₈ Phase A/F/G/C / 3656 jobs) |
 | `I_八卦全集.md` (旧版) | T₀..T₆ 全集 | v3 重写 (R₀..R₈, OX 字面, V₄ Shi 64 × 4) |

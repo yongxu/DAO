@@ -89,7 +89,7 @@ lake build wenyan
 
 Environment: `Lean v4.30.0-rc2` + `Mathlib master`. Apple Silicon (M-series) and x86_64 both work. Mathlib HEAD is large; first checkout and cold build are slow, subsequent incremental builds are fast.
 
-`wenyan-surface` is the currently-executable WenSurface subset entry point: tokens / resolve / AST / typecheck / JSON / explain / operator catalogue / coverage inspect modes; failure diagnostics return non-zero exit; all 371 catalogue operators are executable (38 of which have theorem-backed Hex/Bool denotation, the rest produce a `Catalogue[...]` structural normal form rather than fake Hex/Bool results).
+`wenyan-surface` is the currently-executable WenSurface subset entry point: tokens / resolve / AST / typecheck / JSON / explain / operator catalogue / coverage inspect modes; failure diagnostics return non-zero exit. The operator catalogue is now read as a legacy implementation inventory and migration material, not as root ontology or complete natural-language semantics.
 
 `wenyan` is the ziwen / 字文 v0 entry (sources `Wenyan.lean` + `WenyanSurface.lean`); the spec is in [`ziwen-spec.md`](./ziwen-spec.md).
 
@@ -102,7 +102,7 @@ formal/                            Lean 4 formalisation (lake package = ssbx; @[
 ├─ SSBX.lean                       top-level import index
 └─ SSBX/
    ├─ Core / Roster / Pending      character roots roster + core generated items + pending interfaces
-   ├─ Text/                        glyphs / operator catalogue (incl. OperatorCellMap, OperatorAnchors)
+   ├─ Text/                        glyphs / legacy operator inventory (incl. OperatorCellMap, OperatorAnchors)
    ├─ Truth / Model                model theory + truth-status boundary
    └─ Foundation/                  10 clusters · 100+ modules
       ├─ Core                      character roots · monadic-root certificates · Alignment / Sincerity / Renlei
@@ -134,7 +134,7 @@ formal/                            Lean 4 formalisation (lake package = ssbx; @[
 
 - `Truth/SelfDescription.lean` proves `Cell256OperatorComplete` (every pair of 256 cells has a function realising it); v3's overall self-description completeness statement, replacing the old 192 version.
 - `Truth/{Basic, ClaimLedger, Semantics, Adequacy, Absolute}` + `Model/{Adequacy, ConcreteLedger}` provide the claim status grading mechanism (machineChecked / ledgerDependent / modelComputed / pending).
-- `Text/{Glyph, WenyanOperators, OperatorReadings, OperatorSignatures, OperatorFamilySemantics, OperatorReachabilitySemantics, OperatorInstructionSemantics, OperatorCellCandidateSemantics, OperatorCellSemantics, Completeness}` are the 371-OperatorId catalogue + signature + executable / theorem-backed layers; **`OperatorCellMap.lean` has been migrated from the old 64 × 3 = 192 pair Cartesian indexing to 64 × 4 = 256 (Cell256)**.
+- `Text/{Glyph, WenyanOperators, OperatorReadings, OperatorSignatures, OperatorFamilySemantics, OperatorReachabilitySemantics, OperatorInstructionSemantics, OperatorCellCandidateSemantics, OperatorCellSemantics, Completeness}` are the legacy operator catalogue + signature + executable / theorem-backed layers; this layer is implementation inventory, alias material, corpus material, and audit input, not root ontology.
 
 **Pending**
 
@@ -393,7 +393,7 @@ Foundation/Squaring: 5 modules (V4Tensor / L1 / RetractTower / StreamCarrier / P
 Kernel layers:     45+        元 → forms-of-non-Dao + Layer 46 doctrinal-school refinements
 diagrams:          8 SVGs     Mermaid + ELK; MonadDAG 600+ nodes / 800+ edges
 Doctrinal .md:     90+        义理/A–Z* + Eight Expansions + 60+ Markov-bridge essays + Community
-WenSurface CLI:    371 catalogue operators (38 theorem-backed exact + 333 catalogue normal form)
+WenSurface CLI:    legacy catalogue inventory (implementation only; not ontology)
 六表 tables:       6 (incl. v3 new 表六_256格全表.md)
 ```
 

@@ -94,7 +94,7 @@ V₄ Klein 四群必有 identity → 道作为永真状态是 **代数必然性*
 | Z/3 Shi {已, 今, 未} (3-cycle) | V₄ Klein {道, 已, 今, 未} | 4 元 abelian Klein, 含 identity |
 | `shiNext : Shi → Shi` (+1 mod 3 cycle) | `Shi.cuo`, `Shi.zong`, `Shi.cuoZong` (V₄ involutions) | non-cyclic; involutive |
 | 192 = 64 × 3 | 256 = 64 × 4 | + 64 个道-cells 入本体 |
-| 192 × 371 = 71232 (旧 grid) | 256 × 371 = 94976 (新 grid) | 表六_192格全表 → 表六_256格全表 |
+| 旧 operator-cell grid | Cell256-indexed legacy audit inventory | 表六旧格全表 → 表六_256格全表；不作 root ontology |
 | R₁..R₆ 编号 (含 R₃→R₄ chong 跳跃 +3 bit) | **R₀..R₈ strict uniform** (each +1 bit) | no jumps; no gaps |
 | `Cell192.lean` (R₆ 闭合层) | **删除** (`8e4406e`) | physically removed from tree |
 | `R7_complete` bundle | `R8_complete` bundle | depends only on `propext` + `native_decide` |

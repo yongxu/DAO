@@ -18,7 +18,7 @@
 - 依赖 `kleene_recursion_axiom` 的说明仍带条件。
 - `theOne` 未被写成可展开构造。
 - `YiState.run` 未被写成 theorem-level total evaluator。
-- `wenyan-surface` 的 371 个 catalogue 算子均可执行；其中 317 个为 exact/theorem-backed，54 个只落为 structural catalogue normal form，不伪装成文本专义 evaluator。
+- `wenyan-surface` 的 operator catalogue 只按 legacy inventory / migration material 叙述；不把目录大小写成 root ontology、完整语义或 completeness 证据。
 
 ## Claim 与状态
 

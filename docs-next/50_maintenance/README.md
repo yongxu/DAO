@@ -35,6 +35,7 @@ rg -n "\\baxiom\\b|\\bopaque\\b|partial def" formal
 | 文档分层契约 | [docs-contract.md](docs-contract.md) |
 | 生成索引流程 | [generation-pipeline.md](generation-pipeline.md) |
 | 发布前检查 | [release-checklist.md](release-checklist.md) |
+| legacy catalogue quarantine | [legacy-catalogue-quarantine.md](legacy-catalogue-quarantine.md) |
 | 归档与替代 | [archive-policy.md](archive-policy.md) |
 
 ## 生成资产

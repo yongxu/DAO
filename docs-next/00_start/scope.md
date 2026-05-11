@@ -29,7 +29,7 @@
 | Phase A | Cell128 / Cell256 加 Add/Zero/Neg/Sub + SMul + Cayley ι/ε；印 / 投 改写为 XOR mask；origin = (qian, dao) = V₄ identity | 7de5064 |
 | Phase B/D/E | Foundation/Hierarchy/{R5_Wuyao, LiftProject, Operators/{Atomic,V4Outer}}.lean；Foundation/Notation/OXNotation.lean (`OX["xxxxxxxx"]` 8-char 字面) | 7de5064 |
 | Phase F.1–F.5 | Shi 自 3-元 {ji,jin,wei} 升 4-元 V₄ Klein {dao,ji,jin,wei}；shiNext 由 Z/3 cycle 改为 V₄ Shi.cuo involution；~50 下游文件 Cell192→Cell256 | 7de5064 |
-| Phase F.x.5 | Modern/* cascades 完成 192·371 → 256·371 (= 71232 → 94976) 数值迁移 | 0003224 |
+| Phase F.x.5 | Modern/* cascades 完成 legacy operator-cell grid 的 Cell256 迁移；该 grid 现按 audit inventory 读，不作 root ontology | 0003224 |
 | Phase F.6 / G / B.1 | 删除 Cell192.lean；doc sync 到 R₀..R₈；YinBit dedup（canonical 在 Cell128.lean） | 8e4406e |
 | Phase C | Foundation/Hierarchy/R{0..8}_*.lean 9 个 alias 文件 + RHierarchy.lean umbrella | 1c76a55 |
 
