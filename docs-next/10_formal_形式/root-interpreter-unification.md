@@ -220,6 +220,59 @@ composes already-proved pieces, and has a deletion path once the concrete fetch
 walker directly proves the saved-current outcome. It must not become a second
 interpreter or a place to hide semantic work.
 
+### Phase 4.2: saved-current fetch architecture
+
+The saved-current fetch walker must remain arbitrary in `sim.cur`.  Narrowing
+`RestoredSavedCurFetchObligations.running` to an aligned data-cell invariant
+would make the first `.nop` path easier, but it would not be universal compose.
+
+The single-stack constraint is real:
+
+```text
+fetch entry:
+  META.cur     = simulated current R8 cell
+  META.history = encMetaHistory regHex sim
+
+target handoff:
+  META.cur     = opcode tag
+  META.history = simulated current R8 cell :: encMetaHistory regHex sim
+```
+
+With only one `cur` register and one LIFO history stack, a direct `push` of the
+simulated current cell blocks access to the canonical history underneath it.
+Popping it again exposes the history, but then later pops overwrite `META.cur`.
+The correct long-term route is therefore a finite R8 control-state re-emitter,
+not an invariant shrink.
+
+The walker should be factored as:
+
+```text
+1. classify or encode the incoming simulated current R8 cell into finite control;
+2. deep-read the canonical history to locate and decode the opcode tag;
+3. rebuild the canonical `encMetaHistory regHex sim`;
+4. re-emit the saved simulated current cell onto history;
+5. restore `META.cur` to the decoded opcode tag and jump to restored dispatch.
+```
+
+This uses the same reason the whole system is finite and R8-native: an R8 cell
+has only 256 cases, so preserving an arbitrary current cell can be made explicit
+as a finite control contract.  That contract is an implementation technique for
+fetch.  It is not a new ontology layer, and it should eventually disappear
+behind:
+
+```text
+RestoredSavedCurFetchObligations.running
+```
+
+Acceptance anchors for this phase:
+
+| Step | Anchor |
+|---|---|
+| old restored fetch route remains boundary-only | `FetchSavedCurBoundary.restoredAssembly_running_fetch_not_savedCurOutcome` |
+| first executable target | `FetchSavedCurProg` standalone saved-current segment |
+| zero-arity smoke theorem | `fetchSavedCurProg_pc0_zeroArity_savedCurOutcome_at_fuel` |
+| full restored assembly switch | `AssemblyRestorePlan.restoredMetaInterpProg` no longer uses the old placeholder fetch walker |
+
 ### Phase 5: expansion discipline
 
 After the skeleton is stable, each new word must enter through the same gate:
@@ -233,6 +286,18 @@ After the skeleton is stable, each new word must enter through the same gate:
 This keeps the framework small while allowing the vocabulary to grow.
 
 ## 5. Immediate Work Queue
+
+For the current universal-compose track, F.7c.28 comes before broad registry
+expansion:
+
+1. Add `FetchSavedCurProg.lean` as a standalone saved-current fetch segment.
+2. Prove the pc=0 zero-arity saved-current smoke theorem without weakening
+   arbitrary `sim.cur`.
+3. Replace the restored layout's placeholder fetch only after the standalone
+   segment has a real saved-current outcome.
+4. Continue exact block witnesses and parameter sub-dispatch.
+
+For the root-language expansion track:
 
 1. Add `RootWord.lean` with the typed skeleton and `YiInstr` root-rule
    classification.
