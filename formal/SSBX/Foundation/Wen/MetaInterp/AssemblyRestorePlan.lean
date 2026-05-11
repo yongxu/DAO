@@ -483,6 +483,25 @@ theorem assembly_restore_plan_summary :
     restoredMetaInterpProg.length = 100
     ∧ restoredMetaInterpProg[outerLoopOffset]? =
         some (YiInstr.jump fetchOffset)
+    ∧ (∀ i (_hi : i < FetchProg.fetchProg_totalLen + 3),
+        restoredMetaInterpProg[fetchOffset + i]? =
+          (FetchProg.fetchProgWithPeel fetchOffset dispatchOffset haltOffset)[i]?)
+    ∧ (∀ i (_hi : i < FetchProg.fetchProg_totalLen),
+        restoredMetaInterpProg[fetchHaltDetectOffset + i]? =
+          (FetchProg.fetchProg dispatchOffset haltOffset)[i]?)
+    ∧ MetaProgHasEmptyCountedLoopAt fetchOffset restoredMetaInterpProg
+    ∧ restoredMetaInterpProg[fetchOffset + 3]? = some YiInstr.pop
+    ∧ (∀ regHex sim,
+        sim.halted = false →
+          (Fetch.fetchEntryState regHex sim restoredMetaInterpProg fetchOffset).runFuel
+            ((3 * sim.pc + 3) + (1 + (FetchProg.walkerLen + 1))) =
+            { cur := encHaltedFlag regHex false
+            , history := encCounter regHex sim.history.length ++
+                         sim.history ++
+                         ProgEnc.encProg sim.prog
+            , pc := dispatchOffset
+            , prog := restoredMetaInterpProg
+            , halted := false })
     ∧ restoredMetaInterpProg[block_nop_offset]? = some YiInstr.pop
     ∧ restoredMetaInterpProg[block_setShi_offset]? = some YiInstr.pop
     ∧ restoredMetaInterpProg[block_flipYao_offset]? = some YiInstr.pop
@@ -518,6 +537,11 @@ theorem assembly_restore_plan_summary :
   exact
     ⟨ restoredMetaInterpProg_length
     , restoredMetaInterpProg_outerLoop_at_offset
+    , restoredMetaInterpProg_fetchProgWithPeel_at_offset
+    , restoredMetaInterpProg_fetchProg_at_offset
+    , restoredMetaInterpProg_fetchPeel_loop_at_offset
+    , restoredMetaInterpProg_fetchPeel_pop_halted_flag_at_offset
+    , restoredMetaInterpProg_fetch_running_current_shape_exact
     , restoredMetaInterpProg_nop_restore_at_offset
     , restoredMetaInterpProg_setShi_restore_at_offset
     , restoredMetaInterpProg_flipYao_restore_at_offset
