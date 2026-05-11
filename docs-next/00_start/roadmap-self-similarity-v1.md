@@ -1,4 +1,4 @@
-> 状态：v1.9 (2026-05-11) — Phase R/K/L 后之 self-similarity roadmap 已完成一轮形式补齐；5.1/5.2 的 R-O represented-operator self-duality 与 finite Boolean character self-duality 已 machineChecked；F.7c.8 已补 pc-update encoding bridges、concrete fetch-with-peel splice、exact halted/running fetch routes、all-op absolute-pc dispatch routes 与 halt execution smoke witness；full arbitrary-program universal compose 仍 pending。
+> 状态：v1.10 (2026-05-11) — Phase R/K/L 后之 self-similarity roadmap 已完成一轮形式补齐；5.1/5.2 的 R-O represented-operator self-duality 与 finite Boolean character self-duality 已 machineChecked，并补 `XorOperator` internal composition、mask-coordinate character XOR 与 OX full-negation operator summary；F.7c.8 已补 pc-update encoding bridges、concrete fetch-with-peel splice、exact halted/running fetch routes、all-op absolute-pc dispatch routes 与 halt execution smoke witness；full arbitrary-program universal compose 仍 pending，当前阻塞点是 route-only fetch/dispatch 尚未恢复 canonical semantic-state invariant。
 
 # Roadmap — Self-similarity 形式化 (v1, post Phase R cutover)
 
@@ -19,7 +19,7 @@
 
 v1.1 本轮完成项：
 - `SelfSimilarity.lean` 补齐 R₁ 奠基步、R₆ 三路汇聚、R₈ ≃ R₇ × Bool。
-- `V4Tensor.lean` 补齐 R₈ = R₆ × trace bit × projection bit、temporal-state-indexed R₆ slices、每个 temporal-state fiber = 64、Way (道) origin/no-op、cell-as-operator、`R8 ≃ XorOperator`、operator composition = representative XOR、finite Boolean character image、OX negation masks。
+- `V4Tensor.lean` 补齐 R₈ = R₆ × trace bit × projection bit、temporal-state-indexed R₆ slices、每个 temporal-state fiber = 64、Way (道) origin/no-op、cell-as-operator、`R8 ≃ XorOperator`、operator composition = representative XOR、internal `XorOperator` composition、finite Boolean character image、mask-coordinate character XOR、OX full-negation masks。
 - `Kernel.lean` / `DaoJudge.lean` 补齐 post-Cayley collapse、R₇ Lisp closure、concrete bilingual identity。
 - 新增 `ClassicalTextRHierarchyBridge.lean` 与 `QuantumR8Bridge.lean`，只证明 direct typed skeleton；Quantum 桥已含有限函数空间 `R8 → ℂ` 与 faithful regular translation，但不宣称 physical Pauli-string / unitary semantics 已完成。
 - `MetaInterp/Assembly.lean` 已有 base-256 concrete dispatch/assembly structural summary；`MetaInterp/Universal.lean` 已证明 embedded prologue U.0a、zero-step/prologue compose，并把 U.0 改成 exact-fuel no-sorry composition from explicit loop/padding semantic obligations。
@@ -208,8 +208,12 @@ v1.1 本轮完成项：
 | `cell_is_operator : Function.Injective cellOperator` | 不同 cell 给出不同 translation operator |
 | `V4Tensor.r8_equiv_xor_operator` | `R8 ≃ XorOperator`，元与 represented operator 双射 |
 | `V4Tensor.cell_operator_comp` | 算子复合就是代表元之间的 XOR |
+| `V4Tensor.xorOperatorComp_coe` | represented operator 内部复合与函数复合一致 |
+| `V4Tensor.r8_equiv_xor_operator_map_xor` | `R8 ≃ XorOperator` 保持 XOR/复合计算 |
 | `V4Tensor.cell_operator_self_inverse` | 每个 represented operator 自逆 |
 | `V4Tensor.r8_equiv_mask_character_image` | R₈ 与 finite Boolean character image 双射 |
+| `V4Tensor.maskCharacter_xor_mask` | character 对 mask coordinate 也保持 XOR 计算 |
+| `V4Tensor.r8_negation_ox_operator_summary` | additive inverse、OX full-negation operator、自逆与 mask 分解 bundle |
 | `V4Tensor.ox_full_neg_mask_eq` | `OX["xxxxxxxx"]` 是 full 8-bit negation mask |
 | `V4Tensor.way_noop_operator` | Way (道) / origin 是 no-op operator |
 
@@ -310,6 +314,8 @@ v1.1 本轮完成项：
 | `r8_eq_r7_times_bool` | closed in `SelfSimilarity.lean` |
 | `cell_is_operator` | closed as injective `cellOperator` in `V4Tensor.lean` |
 | `V4Tensor.r8_operator_character_duality_summary` | closed: represented XOR operators + finite Boolean characters |
+| `V4Tensor.r8_character_duality_computation_summary` | closed: character XOR in both state and mask coordinates |
+| `V4Tensor.r8_negation_ox_operator_summary` | closed: additive inverse is self; full OX negation is a represented self-inverse operator |
 | `V4Tensor.fullNegOperator_involutive` / `V4Tensor.ox_full_neg_mask_eq` | closed: full 8-bit negation and OX mask reading |
 | Lisp closure in R₇ | closed as `eval_closed_in_r7` in `DaoJudge.lean` |
 | Sexp bilingual identity | closed for concrete WayJudge (`DaoJudge.lean`) parser identities |
@@ -319,7 +325,7 @@ v1.1 本轮完成项：
 - **实/虚 labeling per squaring step**：documentation-only；待有稳定计算行为后再考虑结构化。
 
 仍然 deferred 的架构性边界：
-- **Full arbitrary-program universal compose theorem for `metaInterpProg`**：路线明确，但不是一句 `simp` 能闭合。`MetaInterp/Assembly.lean` 已有 base-256 structural summary、fetch-with-peel segment witness、exact halted/running fetch routes、dispatch segment witness、all-op absolute-pc dispatch routes 与 7-fuel halt execution smoke witness；`MetaInterp/Universal.lean` 已有 zero-step/prologue compose、exact-fuel composition frontier、U.1/U.2/U.3 obligation interface 与 Strategy-B fixed-parameter boundary；`Fetch.lean` 已有 pc=0 scaffold exact dispatch route、`pc_counter_peel_history_head_is_halted_flag` 与 real fetch-entry counted-loop peel theorem；`FetchProg.lean` 已有 peel-witness exact-fuel route wrappers、shifted peel-to-halt-detect exact fuel witness、post-peel running route 与 `fetchProgWithPeel`；`Block_Jump.lean` / `Block_Branches.lean` 已有 sim-side pc-counter rewrite bridges。剩余是按顺序补：real fetch decode/restore；hard-block encoded-history semantic effects；parameterized sub-dispatch；最后由这些 witness 构造 `SemanticLoopObligations`。
+- **Full arbitrary-program universal compose theorem for `metaInterpProg`**：路线明确，但不是一句 `simp` 能闭合。`MetaInterp/Assembly.lean` 已有 base-256 structural summary、fetch-with-peel segment witness、exact halted/running fetch routes、dispatch segment witness、all-op absolute-pc dispatch routes 与 7-fuel halt execution smoke witness；`MetaInterp/Universal.lean` 已有 zero-step/prologue compose、exact-fuel composition frontier、U.1/U.2/U.3 obligation interface 与 Strategy-B fixed-parameter boundary，并已同步 `metaInterpProg.length = 88` fuel arithmetic；`Fetch.lean` 已有 pc=0 scaffold exact dispatch route、`pc_counter_peel_history_head_is_halted_flag` 与 real fetch-entry counted-loop peel theorem；`FetchProg.lean` 已有 peel-witness exact-fuel route wrappers、shifted peel-to-halt-detect exact fuel witness、post-peel running route 与 `fetchProgWithPeel`；`Block_Jump.lean` / `Block_Branches.lean` 已有 sim-side pc-counter rewrite bridges。当前真实阻塞点是 route-only fetch/dispatch 和 `SemanticLoopObligations` 需要的 canonical semantic-state invariant 不一致：fetch 到达 dispatch 时还没有 opcode tag extraction 与 `encMetaHistory` restoration，halt route 还没有 canonical halted-history writeback。剩余是按顺序补：real fetch decode/restore；hard-block encoded-history semantic effects；parameterized sub-dispatch；最后由这些 witness 构造 `SemanticLoopObligations`。
 - **Physical Pauli-string / analytic unitarity bridge**：`QuantumR8Bridge.lean` 已给 finite basis + `R8 → ℂ` regular function-space semantics；未宣称物理 Pauli-string 或 inner-product unitary 结构。
 
 ## 6 · 完整 commit log (Phase L/K/R)
@@ -399,7 +405,8 @@ Baseline before v1.1：`lake build SSBX` 曾在 Phase L/K/R cutover 后 clean。
 5. Way (道) 之 canonical 位置：`V4Tensor.way_origin_operator_summary`
 6. Cell-as-operator：`cellOperator`, `cell_is_operator`
 7. R-O represented-operator equivalence + finite Boolean character self-duality：`V4Tensor.r8_operator_character_duality_summary`
-8. Full OX negation mask reading：`V4Tensor.ox_full_neg_mask_eq`
-9. R₇ evaluator closure + concrete bilingual identity：`DaoJudge.way_judge_closure_bilingual_summary`
+8. Character two-coordinate XOR computation：`V4Tensor.r8_character_duality_computation_summary`
+9. Full OX negation operator reading：`V4Tensor.r8_negation_ox_operator_summary`
+10. R₇ evaluator closure + concrete bilingual identity：`DaoJudge.way_judge_closure_bilingual_summary`
 
 剩余边界不属于 self-similarity v1 核心：constructing `SemanticLoopObligations` for `metaInterpProg` from concrete fetch peel/decode and hard-block semantic effects、parameterized sub-dispatch arbitrary-program simulation、physical Pauli-string / analytic unitarity semantics。

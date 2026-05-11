@@ -2,7 +2,7 @@
 # Universal — universal-compose theorem for `metaInterpProg`
 
 This file states the **universal-compose interface** (B.T4.G.U0): the
-assembled `metaInterpProg : List YiInstr` of length 85 (see `Assembly.lean`)
+assembled `metaInterpProg : List YiInstr` of length 88 (see `Assembly.lean`)
 has an unconditional zero-step/prologue theorem, and the exact-fuel arbitrary
 program theorem is derived from explicit semantic obligations.
 
@@ -30,8 +30,8 @@ ticket).
 | `B.T4.G.U0a`       | proved | zero-step/prologue composition |
 | `B.T4.G.U1`        | obligation field | `PrologueProg.postPrologueContract`,                         |
 |                    |        | `Assembly.metaInterpProg_routes_outerLoop_to_fetch`,                 |
-|                    |        | `FetchProg.fetchProg_branch_*`,                                      |
-|                    |        | `DispatchProg.dispatchProg_routes_<op>` × 12,                        |
+|                    |        | `Assembly.metaInterpProg_fetch_routes_*_exact`,                      |
+|                    |        | `Assembly.metaInterpProg_dispatch_routes_<op>_at_fuel` × 12,         |
 |                    |        | `ExecuteBlocks.Aggregate.executeBlock_<op>_local_effect`             |
 | `B.T4.G.U2`        | obligation field | induction on iteration count `k`, applying U.1               |
 | `B.T4.G.U3`        | obligation field | halt-flag closure: once sim.halted, META loops in halt block |
@@ -53,7 +53,7 @@ open SSBX.Foundation.Wen.MetaInterp.Assembly
 /-! ## § 1  Universal-compose theorem (U.0) -/
 
 /-- A generous fuel bound: each simulated instruction takes at most
-    `metaInterpProg.length` (= 85) fuel ticks of META execution; the
+    `metaInterpProg.length` (= 88) fuel ticks of META execution; the
     additive `+ 5` accounts for a budget cushion.  This is an upper
     budget, not the exact fuel for the `n`-step semantic theorem. -/
 def metaFuelBound (n : Nat) : Nat := metaInterpProg.length * (n + 5)
@@ -93,7 +93,7 @@ theorem metaStart_runFuel_five_eq_postPrologue
   execute-block wave; `metaInterpProg_simulates` (U.0) below is derived from
   these obligations by composition. -/
 
-/-- Per-iteration fuel cost: bounded by `metaInterpProg.length` (= 85).
+/-- Per-iteration fuel cost: bounded by `metaInterpProg.length` (= 88).
     A single outer-loop iteration walks
     `outerLoop → fetch → dispatch → executeBlock → jump-back`, which
     touches every instruction at most once. -/
@@ -196,8 +196,10 @@ theorem metaInterpProg_meta_halted_padding_fields
 
     Discharge plan:
     - `metaInterpProg_routes_outerLoop_to_fetch` (1 fuel) → `pc = fetchOffset`.
-    - `FetchProg.fetchProg_routes_running_to_dispatch` → decode next opcode.
-    - `DispatchProg.dispatchProg_routes_<op>` → matching execute block.
+    - `Assembly.metaInterpProg_fetch_routes_running_to_dispatch_exact` →
+      decode next opcode.
+    - `Assembly.metaInterpProg_dispatch_routes_<op>_at_fuel` →
+      matching execute block.
     - `ExecuteBlocks.Aggregate.executeBlock_<op>_local_effect` → per-op effect.
     - Trailing `jump fetchOffset` → back to fetch for the next steady-state
       iteration; the outer-loop entry is only the first post-prologue entry. -/
@@ -272,12 +274,12 @@ theorem metaInterpProg_halts_when_sim_halts
     once `K_iter ≤ metaInterpProg.length` is exposed. -/
 theorem metaInterpProg_fuel_bound (n : Nat) :
     exactMetaFuel n ≤ metaFuelBound n := by
-  -- Pure arithmetic: metaInterpProg.length = 85 and
-  -- metaFuelBound n = 85 * (n + 5) = 85*n + 425 ≥ 85*n + 5.
+  -- Pure arithmetic: metaInterpProg.length = 88 and
+  -- metaFuelBound n = 88 * (n + 5) = 88*n + 440 ≥ 88*n + 5.
   unfold exactMetaFuel loopFuelPerIter metaFuelBound
   rw [metaInterpProg_length]
-  -- 5 + 85 * n ≤ 85 * (n + 5) = 85*n + 425.
-  have h1 : 85 * (n + 5) = 85 * n + 85 * 5 := Nat.mul_add 85 n 5
+  -- 5 + 88 * n ≤ 88 * (n + 5) = 88*n + 440.
+  have h1 : 88 * (n + 5) = 88 * n + 88 * 5 := Nat.mul_add 88 n 5
   omega
 
 /-! ## § 2.5  U.0 — Universal compose (derived from U.1–U.3) -/

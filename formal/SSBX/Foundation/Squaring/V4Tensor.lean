@@ -265,12 +265,46 @@ def r8_equiv_xor_operator : R8 ≃ XorOperator where
   left_inv := eval_asXorOperator
   right_inv := as_evalXorOperatorAtOrigin
 
+/-- Composition internal to the represented XOR-operator space. -/
+def xorOperatorComp (F G : XorOperator) : XorOperator :=
+  asXorOperator
+    (R8.xor (evalXorOperatorAtOrigin F) (evalXorOperatorAtOrigin G))
+
+/-- The represented-operator composition recovers the XOR of representatives
+    by evaluating at Way/origin. -/
+theorem xorOperatorComp_eval (F G : XorOperator) :
+    evalXorOperatorAtOrigin (xorOperatorComp F G) =
+      R8.xor (evalXorOperatorAtOrigin F) (evalXorOperatorAtOrigin G) := by
+  simp [xorOperatorComp]
+
 /-- Operator composition is the same computation as XOR of the representing
     cells.  This is the formal "self-representation" mechanism. -/
 theorem cell_operator_comp (a b : R8) :
     cellOperator (R8.xor a b) = cellOperator a ∘ cellOperator b := by
   funext s
   simp [cellOperator, Function.comp_apply, R8.xor_assoc, R8.xor_comm a b]
+
+/-- Internal represented-operator composition agrees with ordinary function
+    composition. -/
+theorem xorOperatorComp_coe (F G : XorOperator) :
+    (xorOperatorComp F G).1 = F.1 ∘ G.1 := by
+  rcases F with ⟨f, ⟨a, rfl⟩⟩
+  rcases G with ⟨g, ⟨b, rfl⟩⟩
+  simpa [xorOperatorComp, evalXorOperatorAtOrigin, asXorOperator] using
+    cell_operator_comp a b
+
+/-- The equivalence `R8 ≃ XorOperator` preserves the same computation:
+    composing represented operators is represented by XOR of their cells. -/
+theorem r8_equiv_xor_operator_map_xor (a b : R8) :
+    (r8_equiv_xor_operator (R8.xor a b)).1 =
+      (r8_equiv_xor_operator a).1 ∘ (r8_equiv_xor_operator b).1 :=
+  cell_operator_comp a b
+
+/-- Pointwise form of represented-operator composition. -/
+theorem cell_operator_comp_apply (a b s : R8) :
+    cellOperator a (cellOperator b s) = cellOperator (R8.xor a b) s := by
+  have h := congrFun (cell_operator_comp a b) s
+  simpa [Function.comp_apply] using h.symm
 
 /-- Every represented cell-operator is self-inverse. -/
 theorem cell_operator_self_inverse (c : R8) :
@@ -284,6 +318,12 @@ theorem cell_operator_self_inverse (c : R8) :
 theorem yao_neg_eq_xor_yin (y : Yao) :
     y.neg = R8.yaoXor y Yao.yin := by
   cases y <;> rfl
+
+/-- In the `(Z/2)^8` group, additive inverse is self; this is distinct from
+    full OX bit-complement below. -/
+theorem r8_additive_neg_is_self (c : R8) :
+    -c = c :=
+  R8.neg_def c
 
 /-- Hexagram complement is XOR with the all-yin hexagram mask. -/
 theorem hex_complement_eq_xor_earth (h : Hexagram) :
@@ -303,6 +343,12 @@ def fullNegMask : R8 := (Hexagram.earth, Shi.jin)
 
 /-- Full 8-bit negation as XOR with `xxxxxxxx`. -/
 def fullNegOperator (c : R8) : R8 := R8.xor c fullNegMask
+
+/-- Full OX negation is the cell-operator represented by the full mask. -/
+theorem fullNegOperator_eq_cellOperator_fullNegMask :
+    fullNegOperator = cellOperator fullNegMask := by
+  funext c
+  simp [fullNegOperator, cellOperator]
 
 theorem fullNegOperator_involutive (c : R8) :
     fullNegOperator (fullNegOperator c) = c := by
@@ -329,6 +375,32 @@ theorem ox_hex_neg_mask_eq :
 theorem ox_full_neg_mask_eq :
     OX["xxxxxxxx"] = fullNegMask := rfl
 
+/-- The full OX negation mask is the XOR of hexagram complement and
+    temporal PT masks. -/
+theorem ox_full_neg_mask_decomposes :
+    OX["xxxxxxxx"] = R8.xor OX["xxxxxxoo"] OX["ooooooxx"] := rfl
+
+/-- The full OX negation operator is the represented operator for
+    `OX["xxxxxxxx"]`. -/
+theorem fullNegOperator_eq_ox_full_neg_operator :
+    fullNegOperator = cellOperator OX["xxxxxxxx"] := by
+  rw [ox_full_neg_mask_eq]
+  exact fullNegOperator_eq_cellOperator_fullNegMask
+
+/-- The OX full-negation operator is self-inverse. -/
+theorem ox_full_neg_operator_involutive :
+    cellOperator OX["xxxxxxxx"] ∘ cellOperator OX["xxxxxxxx"] = id := by
+  rw [ox_full_neg_mask_eq]
+  exact cell_operator_self_inverse fullNegMask
+
+/-- Full OX negation decomposes as hexagram complement followed by temporal
+    PT flip; commutativity makes the order immaterial for represented XOR
+    operators. -/
+theorem ox_full_neg_operator_decomposes :
+    cellOperator OX["xxxxxxxx"] =
+      cellOperator OX["xxxxxxoo"] ∘ cellOperator OX["ooooooxx"] := by
+  rw [ox_full_neg_mask_decomposes, cell_operator_comp]
+
 /-! ## Mask characters: finite Boolean self-duality skeleton -/
 
 /-- `o/x` coordinate as a Boolean bit: yang/o is false; yin/x is true. -/
@@ -347,6 +419,9 @@ def r8Dot (mask state : R8) : Bool :=
   Bool.xor (yaoBit mask.1.y2 && yaoBit state.1.y2)
     (yaoBit mask.1.y1 && yaoBit state.1.y1)
 
+theorem r8Dot_comm : ∀ a b : R8, r8Dot a b = r8Dot b a := by
+  native_decide
+
 /-- The Boolean character represented by a mask.  `true` is the nontrivial
     sign bit; in ±1 notation it corresponds to `-1`. -/
 def maskCharacter (mask : R8) : R8 → Bool := fun state => r8Dot mask state
@@ -357,6 +432,19 @@ theorem maskCharacter_xor :
       maskCharacter mask (R8.xor a b) =
         Bool.xor (maskCharacter mask a) (maskCharacter mask b) := by
   native_decide
+
+/-- Mask characters also compute XOR in the mask coordinate. -/
+theorem maskCharacter_xor_mask (m n s : R8) :
+    maskCharacter (R8.xor m n) s =
+      Bool.xor (maskCharacter m s) (maskCharacter n s) := by
+  calc
+    maskCharacter (R8.xor m n) s = maskCharacter s (R8.xor m n) := by
+      exact r8Dot_comm (R8.xor m n) s
+    _ = Bool.xor (maskCharacter s m) (maskCharacter s n) :=
+      maskCharacter_xor s m n
+    _ = Bool.xor (maskCharacter m s) (maskCharacter n s) := by
+      rw [show maskCharacter s m = maskCharacter m s from r8Dot_comm s m,
+        show maskCharacter s n = maskCharacter n s from r8Dot_comm s n]
 
 /-- Different masks give different Boolean characters. -/
 theorem maskCharacter_injective : Function.Injective maskCharacter := by
@@ -387,18 +475,47 @@ noncomputable def r8_equiv_mask_character_image : R8 ≃ MaskCharacterImage wher
 
 theorem r8_operator_character_duality_summary :
     Nonempty (R8 ≃ XorOperator)
+    ∧ (∀ F G : XorOperator, (xorOperatorComp F G).1 = F.1 ∘ G.1)
     ∧ (∀ a b : R8,
         cellOperator (R8.xor a b) = cellOperator a ∘ cellOperator b)
+    ∧ (∀ a b : R8,
+        (r8_equiv_xor_operator (R8.xor a b)).1 =
+          (r8_equiv_xor_operator a).1 ∘ (r8_equiv_xor_operator b).1)
     ∧ (∀ c : R8, cellOperator c ∘ cellOperator c = id)
     ∧ Nonempty (R8 ≃ MaskCharacterImage)
     ∧ (∀ mask a b : R8,
         maskCharacter mask (R8.xor a b) =
           Bool.xor (maskCharacter mask a) (maskCharacter mask b)) :=
   ⟨⟨r8_equiv_xor_operator⟩,
+   xorOperatorComp_coe,
    cell_operator_comp,
+   r8_equiv_xor_operator_map_xor,
    cell_operator_self_inverse,
    ⟨r8_equiv_mask_character_image⟩,
    maskCharacter_xor⟩
+
+theorem r8_character_duality_computation_summary :
+    (∀ mask a b : R8,
+      maskCharacter mask (R8.xor a b) =
+        Bool.xor (maskCharacter mask a) (maskCharacter mask b))
+    ∧ (∀ m n s : R8,
+      maskCharacter (R8.xor m n) s =
+        Bool.xor (maskCharacter m s) (maskCharacter n s))
+    ∧ Function.Injective maskCharacter :=
+  ⟨maskCharacter_xor, maskCharacter_xor_mask, maskCharacter_injective⟩
+
+theorem r8_negation_ox_operator_summary :
+    (∀ c : R8, -c = c)
+    ∧ fullNegOperator = cellOperator OX["xxxxxxxx"]
+    ∧ cellOperator OX["xxxxxxxx"] ∘ cellOperator OX["xxxxxxxx"] = id
+    ∧ OX["xxxxxxxx"] = R8.xor OX["xxxxxxoo"] OX["ooooooxx"]
+    ∧ cellOperator OX["xxxxxxxx"] =
+        cellOperator OX["xxxxxxoo"] ∘ cellOperator OX["ooooooxx"] :=
+  ⟨r8_additive_neg_is_self,
+   fullNegOperator_eq_ox_full_neg_operator,
+   ox_full_neg_operator_involutive,
+   ox_full_neg_mask_decomposes,
+   ox_full_neg_operator_decomposes⟩
 
 def iso : R8 ≃+ (V4 × V4 × V4 × V4) where
   toFun := toV4Quad
