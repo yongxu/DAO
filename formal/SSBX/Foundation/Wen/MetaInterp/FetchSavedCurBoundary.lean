@@ -8,6 +8,7 @@ be re-read as `SavedCurFetchOutcome`.
 -/
 
 import SSBX.Foundation.Wen.MetaInterp.Assembly
+import SSBX.Foundation.Wen.MetaInterp.AssemblyRestorePlan
 import SSBX.Foundation.Wen.MetaInterp.FetchSavedCur
 
 namespace SSBX.Foundation.Wen.MetaInterp.FetchSavedCurBoundary
@@ -49,6 +50,26 @@ theorem currentAssembly_running_fetch_not_savedCurOutcome
   rw [h_shape] at h_history
   exact haltFlagTailAfterPeel_ne_savedCurHistory regHex sim h_history
 
+theorem restoredAssembly_running_fetch_not_savedCurOutcome
+    (regHex : Hexagram) (sim : YiState)
+    (h_running : sim.halted = false) :
+    let fuel := (3 * sim.pc + 3) + (1 + (FetchProg.walkerLen + 1))
+    let μ :=
+      (fetchEntryState regHex sim
+        AssemblyRestorePlan.restoredMetaInterpProg
+        AssemblyRestorePlan.fetchOffset).runFuel fuel
+    ¬ SavedCurFetchOutcome regHex sim
+        AssemblyRestorePlan.restoredMetaInterpProg
+        AssemblyRestorePlan.dispatchOffset μ := by
+  intro fuel μ h_saved
+  have h_shape :=
+    AssemblyRestorePlan.restoredMetaInterpProg_fetch_running_current_shape_exact
+      regHex sim h_running
+  have h_history := h_saved.history
+  dsimp [fuel, μ] at h_history
+  rw [h_shape] at h_history
+  exact haltFlagTailAfterPeel_ne_savedCurHistory regHex sim h_history
+
 /-! ## Public summary -/
 
 theorem fetch_saved_cur_boundary_summary :
@@ -57,7 +78,20 @@ theorem fetch_saved_cur_boundary_summary :
         let fuel := (3 * sim.pc + 3) + (1 + (FetchProg.walkerLen + 1))
         let μ :=
           (fetchEntryState regHex sim metaInterpProg fetchOffset).runFuel fuel
-        ¬ SavedCurFetchOutcome regHex sim metaInterpProg dispatchOffset μ) := by
-  exact currentAssembly_running_fetch_not_savedCurOutcome
+        ¬ SavedCurFetchOutcome regHex sim metaInterpProg dispatchOffset μ)
+    ∧ (∀ regHex sim,
+      sim.halted = false →
+        let fuel := (3 * sim.pc + 3) + (1 + (FetchProg.walkerLen + 1))
+        let μ :=
+          (fetchEntryState regHex sim
+            AssemblyRestorePlan.restoredMetaInterpProg
+            AssemblyRestorePlan.fetchOffset).runFuel fuel
+        ¬ SavedCurFetchOutcome regHex sim
+            AssemblyRestorePlan.restoredMetaInterpProg
+            AssemblyRestorePlan.dispatchOffset μ) := by
+  exact
+    ⟨ currentAssembly_running_fetch_not_savedCurOutcome
+    , restoredAssembly_running_fetch_not_savedCurOutcome
+    ⟩
 
 end SSBX.Foundation.Wen.MetaInterp.FetchSavedCurBoundary

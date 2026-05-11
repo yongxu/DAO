@@ -20,6 +20,7 @@ namespace SSBX.Foundation.Wen.MetaInterp.AssemblyRestorePlan
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
+open SSBX.Foundation.Wen.WenyanSelfInterp
 open SSBX.Foundation.Wen.MetaInterp
 open SSBX.Foundation.Wen.MetaInterp.Dispatch
 open SSBX.Foundation.Wen.MetaInterp.ExecuteBlocks.Aggregate
@@ -212,6 +213,125 @@ theorem restoredMetaInterpProg_outerLoop_step
       , prog := restoredMetaInterpProg
       , halted := false } := by
   rfl
+
+theorem restoredMetaInterpProg_fetchProgWithPeel_at_offset :
+    ∀ i (_hi : i < FetchProg.fetchProg_totalLen + 3),
+      restoredMetaInterpProg[fetchOffset + i]? =
+        (FetchProg.fetchProgWithPeel fetchOffset dispatchOffset haltOffset)[i]? := by
+  intro i hi
+  unfold FetchProg.fetchProg_totalLen FetchProg.walkerLen at hi
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  omega
+
+theorem restoredMetaInterpProg_fetchProg_at_offset :
+    ∀ i (_hi : i < FetchProg.fetchProg_totalLen),
+      restoredMetaInterpProg[fetchHaltDetectOffset + i]? =
+        (FetchProg.fetchProg dispatchOffset haltOffset)[i]? := by
+  intro i hi
+  unfold FetchProg.fetchProg_totalLen FetchProg.walkerLen at hi
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  omega
+
+theorem restoredMetaInterpProg_fetchPeel_loop_at_offset :
+    MetaProgHasEmptyCountedLoopAt fetchOffset restoredMetaInterpProg := by
+  refine ⟨?_, ?_, ?_⟩ <;> rfl
+
+theorem restoredMetaInterpProg_fetchPeel_pop_halted_flag_at_offset :
+    restoredMetaInterpProg[fetchOffset + 3]? = some YiInstr.pop := by
+  rfl
+
+theorem restoredMetaInterpProg_fetch_peel_to_haltDetect_at_fuel
+    (regHex : Hexagram) (sim : YiState) :
+    (Fetch.fetchEntryState regHex sim restoredMetaInterpProg fetchOffset).runFuel
+        (3 * sim.pc + 3) =
+      FetchProg.fetchProgHaltDetectEntry regHex sim restoredMetaInterpProg
+        fetchHaltDetectOffset sim.halted := by
+  simpa [fetchHaltDetectOffset] using
+    FetchProg.fetchEntryState_pc_counter_peel_then_haltDetectEntry_shifted
+      regHex sim restoredMetaInterpProg fetchOffset
+      restoredMetaInterpProg_fetchPeel_loop_at_offset
+      restoredMetaInterpProg_fetchPeel_pop_halted_flag_at_offset
+
+theorem restoredMetaInterpProg_fetch_running_current_shape_exact
+    (regHex : Hexagram) (sim : YiState)
+    (h_running : sim.halted = false) :
+    (Fetch.fetchEntryState regHex sim restoredMetaInterpProg fetchOffset).runFuel
+      ((3 * sim.pc + 3) + (1 + (FetchProg.walkerLen + 1))) =
+      { cur := encHaltedFlag regHex false
+      , history := encCounter regHex sim.history.length ++
+                   sim.history ++
+                   ProgEnc.encProg sim.prog
+      , pc := dispatchOffset
+      , prog := restoredMetaInterpProg
+      , halted := false } := by
+  let entry := Fetch.fetchEntryState regHex sim restoredMetaInterpProg fetchOffset
+  have h_peel : entry.runFuel (3 * sim.pc + 3) =
+      FetchProg.fetchProgHaltDetectEntry regHex sim restoredMetaInterpProg
+        fetchHaltDetectOffset false := by
+    simpa [entry, h_running] using
+      restoredMetaInterpProg_fetch_peel_to_haltDetect_at_fuel regHex sim
+  have h_add : ∀ k, entry.runFuel ((3 * sim.pc + 3) + k)
+              = (entry.runFuel (3 * sim.pc + 3)).runFuel k := by
+    intro k
+    induction k with
+    | zero => simp [YiState.runFuel]
+    | succ k ih =>
+        rw [show (3 * sim.pc + 3) + (k + 1) =
+              ((3 * sim.pc + 3) + k) + 1 by omega,
+            SSBX.Foundation.Bagua.GodelLi.runFuel_succ_right,
+            SSBX.Foundation.Bagua.GodelLi.runFuel_succ_right, ih]
+  rw [h_add, h_peel]
+  exact FetchProg.fetchProg_haltDetect_running_to_dispatch_state_at_fuel
+    regHex sim restoredMetaInterpProg fetchHaltDetectOffset dispatchOffset haltOffset
+    restoredMetaInterpProg_fetchProg_at_offset
 
 theorem restoredMetaInterpProg_nop_restore_at_offset :
     restoredMetaInterpProg[block_nop_offset]? = some YiInstr.pop := rfl
