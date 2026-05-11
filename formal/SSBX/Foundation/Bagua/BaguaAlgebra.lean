@@ -169,16 +169,16 @@ structure SiXiang where
 namespace SiXiang
 
 /-- 太阳 ⚌. -/
-def taiYang : SiXiang := ⟨.yang, .yang⟩
+def greaterYang : SiXiang := ⟨.yang, .yang⟩
 /-- 少阴 ⚍. -/
-def shaoYin : SiXiang := ⟨.yang, .yin⟩
+def lesserYin : SiXiang := ⟨.yang, .yin⟩
 /-- 少阳 ⚎. -/
-def shaoYang : SiXiang := ⟨.yin, .yang⟩
+def lesserYang : SiXiang := ⟨.yin, .yang⟩
 /-- 太阴 ⚏. -/
-def taiYin : SiXiang := ⟨.yin, .yin⟩
+def greaterYin : SiXiang := ⟨.yin, .yin⟩
 
 /-- All 4 four-images. -/
-def all : List SiXiang := [taiYang, shaoYin, shaoYang, taiYin]
+def all : List SiXiang := [greaterYang, lesserYin, lesserYang, greaterYin]
 
 /-- |四象| = 4. -/
 theorem all_length : all.length = 4 := rfl

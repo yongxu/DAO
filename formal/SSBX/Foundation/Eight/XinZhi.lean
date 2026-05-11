@@ -57,10 +57,10 @@ theorem fensi_all_length : FenSi.all.length = 4 := rfl
     - 自证 = (F, T) = 少阳（客对主，反观）
     - 证自证 = (F, F) = 太阴（客纯静）-/
 def FenSi.toSiXiang : FenSi → SiXiang
-  | .jian     => SiXiang.taiYang   -- ⟨阳, 阳⟩
-  | .xiang    => SiXiang.shaoYin   -- ⟨阳, 阴⟩
-  | .ziZheng  => SiXiang.shaoYang  -- ⟨阴, 阳⟩
-  | .zhengZi  => SiXiang.taiYin    -- ⟨阴, 阴⟩
+  | .jian     => SiXiang.greaterYang   -- ⟨阳, 阳⟩
+  | .xiang    => SiXiang.lesserYin   -- ⟨阳, 阴⟩
+  | .ziZheng  => SiXiang.lesserYang  -- ⟨阴, 阳⟩
+  | .zhengZi  => SiXiang.greaterYin    -- ⟨阴, 阴⟩
 
 /-- 四象 → 四分 之逆映射。 -/
 def SiXiang.toFenSi (s : SiXiang) : FenSi :=
@@ -82,8 +82,8 @@ theorem sixiang_fensi_roundtrip (s : SiXiang) :
   | mk y1 y2 =>
     cases y1 <;> cases y2 <;>
       simp [SiXiang.toFenSi, FenSi.toSiXiang,
-            SiXiang.taiYang, SiXiang.shaoYin,
-            SiXiang.shaoYang, SiXiang.taiYin]
+            SiXiang.greaterYang, SiXiang.lesserYin,
+            SiXiang.lesserYang, SiXiang.greaterYin]
 
 /-! ## § 3 心学四端 -/
 

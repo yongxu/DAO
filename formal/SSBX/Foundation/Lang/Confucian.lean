@@ -223,20 +223,20 @@ end ShanE
 《中庸》"喜怒哀乐之未发，谓之中；发而皆中节，谓之和". The four primary
 emotions fit naturally into the 4-element SiXiang structure.
 
-  喜 (joy)     → 太阳 (taiYang, full yang)
-  怒 (anger)   → 少阴 (shaoYin, yang-going-down)
-  哀 (sorrow)  → 少阳 (shaoYang, yin-rising)
-  乐 (delight) → 太阴 (taiYin, full yin)
+  喜 (joy)     → 太阳 (greaterYang, full yang)
+  怒 (anger)   → 少阴 (lesserYin, yang-going-down)
+  哀 (sorrow)  → 少阳 (lesserYang, yin-rising)
+  乐 (delight) → 太阴 (greaterYin, full yin)
 -/
 
 namespace XiNuAiLe
 
 open SSBX.Foundation.Bagua.BaguaAlgebra
 
-def «喜» : SiXiang := SiXiang.taiYang
-def «怒» : SiXiang := SiXiang.shaoYin
-def «哀» : SiXiang := SiXiang.shaoYang
-def «乐» : SiXiang := SiXiang.taiYin
+def «喜» : SiXiang := SiXiang.greaterYang
+def «怒» : SiXiang := SiXiang.lesserYin
+def «哀» : SiXiang := SiXiang.lesserYang
+def «乐» : SiXiang := SiXiang.greaterYin
 
 theorem xi_nu_ai_le_distinct :
     «喜» ≠ «怒» ∧ «喜» ≠ «哀» ∧ «喜» ≠ «乐» ∧
@@ -261,10 +261,10 @@ namespace YuanHengLiZhen
 
 open SSBX.Foundation.Bagua.BaguaAlgebra
 
-def «元» : SiXiang := SiXiang.taiYang
-def «亨» : SiXiang := SiXiang.shaoYang
-def «利» : SiXiang := SiXiang.shaoYin
-def «贞» : SiXiang := SiXiang.taiYin
+def «元» : SiXiang := SiXiang.greaterYang
+def «亨» : SiXiang := SiXiang.lesserYang
+def «利» : SiXiang := SiXiang.lesserYin
+def «贞» : SiXiang := SiXiang.greaterYin
 
 theorem yuan_heng_li_zhen_distinct :
     «元» ≠ «亨» ∧ «元» ≠ «利» ∧ «元» ≠ «贞» ∧
@@ -361,9 +361,9 @@ theorem confucian_summary :
     -- R₁ 善恶
     ShanE.«善» = Yao.yang ∧ ShanE.«恶» = Yao.yin ∧
     -- R₂ 喜怒哀乐
-    XiNuAiLe.«喜» = SSBX.Foundation.Bagua.BaguaAlgebra.SiXiang.taiYang ∧
+    XiNuAiLe.«喜» = SSBX.Foundation.Bagua.BaguaAlgebra.SiXiang.greaterYang ∧
     -- R₂ 元亨利贞
-    YuanHengLiZhen.«元» = SSBX.Foundation.Bagua.BaguaAlgebra.SiXiang.taiYang ∧
+    YuanHengLiZhen.«元» = SSBX.Foundation.Bagua.BaguaAlgebra.SiXiang.greaterYang ∧
     -- R₃ 四端
     SiDuan.«恻隐» = Trigram.fire ∧
     SiDuan.«羞恶» = Trigram.water ∧

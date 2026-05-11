@@ -236,13 +236,13 @@ example : MeasurableSpace DaYan := inferInstance
 /-- **DaYan 之 frequency 函数（→ ℝ≥0∞）**。 -/
 noncomputable def dayanFreq : DaYan → ℝ≥0∞
   | .laoYin   => 1 / 16
-  | .shaoYang => 5 / 16
-  | .shaoYin  => 7 / 16
+  | .lesserYang => 5 / 16
+  | .lesserYin  => 7 / 16
   | .laoYang  => 3 / 16
 
 /-- **频率之总和 = 1**（finite Σ）。 -/
 theorem dayanFreq_sum :
-    dayanFreq .laoYin + dayanFreq .shaoYang + dayanFreq .shaoYin + dayanFreq .laoYang = 1 := by
+    dayanFreq .laoYin + dayanFreq .lesserYang + dayanFreq .lesserYin + dayanFreq .laoYang = 1 := by
   unfold dayanFreq
   rw [ENNReal.div_add_div_same, ENNReal.div_add_div_same, ENNReal.div_add_div_same]
   rw [show (1 + 5 + 7 + 3 : ℝ≥0∞) = 16 by norm_num]
@@ -252,8 +252,8 @@ theorem dayanFreq_sum :
     P = (1/16)·δ_laoYin + (5/16)·δ_shaoYang + (7/16)·δ_shaoYin + (3/16)·δ_laoYang。 -/
 noncomputable def dayanMeasure : Measure DaYan :=
   dayanFreq .laoYin   • Measure.dirac .laoYin
-  + dayanFreq .shaoYang • Measure.dirac .shaoYang
-  + dayanFreq .shaoYin  • Measure.dirac .shaoYin
+  + dayanFreq .lesserYang • Measure.dirac .lesserYang
+  + dayanFreq .lesserYin  • Measure.dirac .lesserYin
   + dayanFreq .laoYang  • Measure.dirac .laoYang
 
 /-- **DaYan 测度之全集 = 1**（概率守恒）。 -/
@@ -274,12 +274,12 @@ theorem dayan_singleton_measure_laoYin :
   simp [Measure.add_apply, Measure.smul_apply, smul_eq_mul]
 
 theorem dayan_singleton_measure_shaoYang :
-    dayanMeasure {DaYan.shaoYang} = 5 / 16 := by
+    dayanMeasure {DaYan.lesserYang} = 5 / 16 := by
   unfold dayanMeasure dayanFreq
   simp [Measure.add_apply, Measure.smul_apply, smul_eq_mul]
 
 theorem dayan_singleton_measure_shaoYin :
-    dayanMeasure {DaYan.shaoYin} = 7 / 16 := by
+    dayanMeasure {DaYan.lesserYin} = 7 / 16 := by
   unfold dayanMeasure dayanFreq
   simp [Measure.add_apply, Measure.smul_apply, smul_eq_mul]
 
@@ -294,8 +294,8 @@ theorem dayan_freq_matches_measure (d : DaYan) :
     dayanMeasure {d} = (DaYan.shu d : ℝ≥0∞) / 16 := by
   cases d with
   | laoYin   => rw [dayan_singleton_measure_laoYin]; simp [DaYan.shu]
-  | shaoYang => rw [dayan_singleton_measure_shaoYang]; simp [DaYan.shu]
-  | shaoYin  => rw [dayan_singleton_measure_shaoYin]; simp [DaYan.shu]
+  | lesserYang => rw [dayan_singleton_measure_shaoYang]; simp [DaYan.shu]
+  | lesserYin  => rw [dayan_singleton_measure_shaoYin]; simp [DaYan.shu]
   | laoYang  => rw [dayan_singleton_measure_laoYang]; simp [DaYan.shu]
 
 /-! ## § 8 公开摘要 -/

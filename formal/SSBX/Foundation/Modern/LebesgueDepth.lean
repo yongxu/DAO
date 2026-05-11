@@ -250,14 +250,14 @@ open SSBX.Foundation.Eight.TongJi
 /-- **dayanMeasure 之 lintegral 展开式**：
     任意非负 measurable g : DaYan → ℝ≥0∞，
     ∫⁻ d, g d ∂dayanMeasure
-      = (1/16)·g(laoYin) + (5/16)·g(shaoYang) + (7/16)·g(shaoYin) + (3/16)·g(laoYang).
+      = (1/16)·g(laoYin) + (5/16)·g(lesserYang) + (7/16)·g(lesserYin) + (3/16)·g(laoYang).
 
     informal: dayanMeasure 是 Dirac 测度之加权和，故 lintegral 即加权值之和。 -/
 theorem dayan_lintegral_expand (g : DaYan → ℝ≥0∞) :
     ∫⁻ d, g d ∂dayanMeasure
       = dayanFreq DaYan.laoYin   * g DaYan.laoYin
-      + dayanFreq DaYan.shaoYang * g DaYan.shaoYang
-      + dayanFreq DaYan.shaoYin  * g DaYan.shaoYin
+      + dayanFreq DaYan.lesserYang * g DaYan.lesserYang
+      + dayanFreq DaYan.lesserYin  * g DaYan.lesserYin
       + dayanFreq DaYan.laoYang  * g DaYan.laoYang := by
   unfold dayanMeasure
   rw [lintegral_add_measure, lintegral_add_measure, lintegral_add_measure]

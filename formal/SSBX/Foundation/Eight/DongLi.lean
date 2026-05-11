@@ -117,17 +117,17 @@ theorem cuo_period_2 (t : Trigram) : IsPeriodic cuoDyn 2 t := by
 /-! ## § 5 Markov 链 之 Nat 计数版（接 TongJi 之大衍）-/
 
 /-- **大衍单步转移**：以 DaYan 之 4 状态投影到 Yao 之 2 状态。
-    laoYin → yang（必变）；shaoYang → yang；shaoYin → yin；laoYang → yin（必变）。 -/
+    laoYin → yang（必变）；lesserYang → yang；lesserYin → yin；laoYang → yin（必变）。 -/
 def daYanProject : SSBX.Foundation.Eight.TongJi.DaYan → Yao
   | .laoYin   => .yang  -- 老阴 → 之卦阳
-  | .shaoYang => .yang  -- 少阳 → 阳
-  | .shaoYin  => .yin   -- 少阴 → 阴
+  | .lesserYang => .yang  -- 少阳 → 阳
+  | .lesserYin  => .yin   -- 少阴 → 阴
   | .laoYang  => .yin   -- 老阳 → 之卦阴
 
 /-- **大衍投影确定**：每个 DaYan 唯一对应一 Yao（即 Markov 矩阵每行单点）。 -/
 theorem daYanProject_laoYin_yang : daYanProject .laoYin = .yang := rfl
-theorem daYanProject_shaoYang_yang : daYanProject .shaoYang = .yang := rfl
-theorem daYanProject_shaoYin_yin : daYanProject .shaoYin = .yin := rfl
+theorem daYanProject_shaoYang_yang : daYanProject .lesserYang = .yang := rfl
+theorem daYanProject_shaoYin_yin : daYanProject .lesserYin = .yin := rfl
 theorem daYanProject_laoYang_yin : daYanProject .laoYang = .yin := rfl
 
 /-! ## § 6 之卦动力（多老爻同变）-/

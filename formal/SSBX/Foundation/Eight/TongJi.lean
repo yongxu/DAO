@@ -30,8 +30,8 @@ open SSBX.Foundation.Bagua.BaguaAlgebra
 /-- **大衍四果**：占筮一爻之四种可能（按蓍数 6/7/8/9）。 -/
 inductive DaYan : Type
   | laoYin    -- 老阴 (6)：阴极 → 将变阳
-  | shaoYang  -- 少阳 (7)：阳之常
-  | shaoYin   -- 少阴 (8)：阴之常
+  | lesserYang  -- 少阳 (7)：阳之常
+  | lesserYin   -- 少阴 (8)：阴之常
   | laoYang   -- 老阳 (9)：阳极 → 将变阴
   deriving DecidableEq, Repr
 
@@ -41,8 +41,8 @@ namespace DaYan
     1/16 + 5/16 + 7/16 + 3/16 = 16/16 = 1. -/
 def shu : DaYan → Nat
   | laoYin   => 1
-  | shaoYang => 5
-  | shaoYin  => 7
+  | lesserYang => 5
+  | lesserYin  => 7
   | laoYang  => 3
 
 /-- 大衍之**共同分母**：16（即三变之每变 4 路 → 4³ = 64 ÷ 4 = 16）。 -/
@@ -51,15 +51,15 @@ def total : Nat := 16
 /-- 取一爻**本相**：将"老/少"投影到"阳/阴"之 Yao。 -/
 def toYao : DaYan → Yao
   | laoYin   => Yao.yin
-  | shaoYang => Yao.yang
-  | shaoYin  => Yao.yin
+  | lesserYang => Yao.yang
+  | lesserYin  => Yao.yin
   | laoYang  => Yao.yang
 
 /-- 是否"老"（即将变之爻）。 -/
 def isLao : DaYan → Bool
   | laoYin   => true
-  | shaoYang => false
-  | shaoYin  => false
+  | lesserYang => false
+  | lesserYin  => false
   | laoYang  => true
 
 end DaYan
@@ -70,12 +70,12 @@ open DaYan
 
 /-- **大衍分布之总和 = 分母**：1 + 5 + 7 + 3 = 16。 -/
 theorem daYan_sum_total :
-    shu laoYin + shu shaoYang + shu shaoYin + shu laoYang = total := by decide
+    shu laoYin + shu lesserYang + shu lesserYin + shu laoYang = total := by decide
 
 /-- **每果之具体频率**。 -/
 theorem laoYin_freq : shu laoYin = 1 := rfl
-theorem shaoYang_freq : shu shaoYang = 5 := rfl
-theorem shaoYin_freq : shu shaoYin = 7 := rfl
+theorem shaoYang_freq : shu lesserYang = 5 := rfl
+theorem shaoYin_freq : shu lesserYin = 7 := rfl
 theorem laoYang_freq : shu laoYang = 3 := rfl
 
 /-! ## § 3 阴阳平衡：P(yang) = P(yin) = 1/2
@@ -84,10 +84,10 @@ theorem laoYang_freq : shu laoYang = 3 := rfl
 其 yang / yin 投影后**严格等概率**——此即"阴阳互含"在概率层之承担。 -/
 
 /-- 阳爻总频率：少阳 + 老阳 = 5 + 3 = 8。 -/
-def yangShu : Nat := shu shaoYang + shu laoYang
+def yangShu : Nat := shu lesserYang + shu laoYang
 
 /-- 阴爻总频率：老阴 + 少阴 = 1 + 7 = 8。 -/
-def yinShu : Nat := shu laoYin + shu shaoYin
+def yinShu : Nat := shu laoYin + shu lesserYin
 
 /-- **阳频 = 8**。 -/
 theorem yang_eq_8 : yangShu = 8 := by decide
@@ -110,7 +110,7 @@ theorem yin_half : yinShu * 2 = total := by decide
 def laoShu : Nat := shu laoYin + shu laoYang
 
 /-- 少爻总频率：少阴 + 少阳 = 7 + 5 = 12。 -/
-def shaoShu : Nat := shu shaoYang + shu shaoYin
+def shaoShu : Nat := shu lesserYang + shu lesserYin
 
 /-- **老爻 = 4**。 -/
 theorem lao_eq_4 : laoShu = 4 := by decide
@@ -188,7 +188,7 @@ theorem suspended_ne_reject : Test.suspended ≠ Test.reject := by decide
 /-- **统计总摘要**：大衍 + 阴阳平衡 + 老爻 + 八卦 + 三值检验 之 bundle。 -/
 theorem tongji_summary :
     -- (1) 大衍分布合：1+5+7+3 = 16
-    (shu laoYin + shu shaoYang + shu shaoYin + shu laoYang = total)
+    (shu laoYin + shu lesserYang + shu lesserYin + shu laoYang = total)
     -- (2) 阴阳频率严格相等
     ∧ (yangShu = yinShu)
     -- (3) 阳频 1/2

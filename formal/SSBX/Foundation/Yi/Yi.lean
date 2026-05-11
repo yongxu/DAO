@@ -290,8 +290,8 @@ end Hexagram
 
   Per 周易 占筮 protocol: each cast 爻 carries a modal status —
     9 (老阳, laoYang)  : 阳 at maximum, ABOUT TO flip to 阴
-    7 (少阳, shaoYang) : 阳, stable
-    8 (少阴, shaoYin)  : 阴, stable
+    7 (少阳, lesserYang) : 阳, stable
+    8 (少阴, lesserYin)  : 阴, stable
     6 (老阴, laoYin)   : 阴 at maximum, ABOUT TO flip to 阳
 
   This layer is what makes 周易 dynamic. 占 reveals not the static 爻 but
@@ -300,8 +300,8 @@ end Hexagram
 
 inductive YaoStar : Type
   | laoYang   -- 9 老阳
-  | shaoYang  -- 7 少阳
-  | shaoYin   -- 8 少阴
+  | lesserYang  -- 7 少阳
+  | lesserYin   -- 8 少阴
   | laoYin    -- 6 老阴
   deriving Repr, DecidableEq, BEq
 
@@ -311,16 +311,16 @@ namespace YaoStar
     This gives 本卦 (cast hexagram). -/
 def proj : YaoStar → Yao
   | laoYang => Yao.yang
-  | shaoYang => Yao.yang
-  | shaoYin => Yao.yin
+  | lesserYang => Yao.yang
+  | lesserYin => Yao.yin
   | laoYin => Yao.yin
 
 /-- δ : the "after-divination" operator. 老 (extreme) yao flip; 少 (stable) yao remain.
     This gives 变卦 (transformed hexagram) when applied yao-wise. -/
 def delta : YaoStar → Yao
   | laoYang => Yao.yin    -- 老阳 → 阴
-  | shaoYang => Yao.yang
-  | shaoYin => Yao.yin
+  | lesserYang => Yao.yang
+  | lesserYin => Yao.yin
   | laoYin => Yao.yang    -- 老阴 → 阳
 
 /-- A 爻 is "old" (extreme/changing) iff old. -/
@@ -330,7 +330,7 @@ def isOld : YaoStar → Bool
 
 /-- A 爻 is "young" (stable) iff young. -/
 def isYoung : YaoStar → Bool
-  | shaoYang | shaoYin => true
+  | lesserYang | lesserYin => true
   | _ => false
 
 /-- Young yao: δ = proj (the cast yao stands; nothing to transform). -/

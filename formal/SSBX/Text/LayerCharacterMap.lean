@@ -76,16 +76,16 @@ namespace SSBX.Foundation.Bagua.BaguaAlgebra.SiXiang
 open SSBX.Foundation.Yi.Yi
 
 def seasonChar (s : SiXiang) : String :=
-  if s = SiXiang.taiYang then "夏"
-  else if s = SiXiang.shaoYin then "秋"
-  else if s = SiXiang.shaoYang then "春"
-  else "冬"  -- taiYin
+  if s = SiXiang.greaterYang then "夏"
+  else if s = SiXiang.lesserYin then "秋"
+  else if s = SiXiang.lesserYang then "春"
+  else "冬"  -- greaterYin
 
 def fromSeasonChar (s : String) : Option SiXiang :=
-  if s = "夏" then some SiXiang.taiYang
-  else if s = "秋" then some SiXiang.shaoYin
-  else if s = "春" then some SiXiang.shaoYang
-  else if s = "冬" then some SiXiang.taiYin
+  if s = "夏" then some SiXiang.greaterYang
+  else if s = "秋" then some SiXiang.lesserYin
+  else if s = "春" then some SiXiang.lesserYang
+  else if s = "冬" then some SiXiang.greaterYin
   else none
 
 end SSBX.Foundation.Bagua.BaguaAlgebra.SiXiang
@@ -292,10 +292,10 @@ def allLayerChars : List LayerChar :=
   [ ⟨"R1", "essence", "Yao.yang",  "实"⟩
   , ⟨"R1", "essence", "Yao.yin",   "虚"⟩
   -- R2: sixiang seasons (4)
-  , ⟨"R2", "season",  "SiXiang.taiYang",  "夏"⟩
-  , ⟨"R2", "season",  "SiXiang.shaoYin",  "秋"⟩
-  , ⟨"R2", "season",  "SiXiang.shaoYang", "春"⟩
-  , ⟨"R2", "season",  "SiXiang.taiYin",   "冬"⟩
+  , ⟨"R2", "season",  "SiXiang.greaterYang",  "夏"⟩
+  , ⟨"R2", "season",  "SiXiang.lesserYin",  "秋"⟩
+  , ⟨"R2", "season",  "SiXiang.lesserYang", "春"⟩
+  , ⟨"R2", "season",  "SiXiang.greaterYin",   "冬"⟩
   -- R3: trigram virtues (8)
   , ⟨"R3", "virtue",  "Trigram.heaven", "健"⟩
   , ⟨"R3", "virtue",  "Trigram.lake",  "悦"⟩
