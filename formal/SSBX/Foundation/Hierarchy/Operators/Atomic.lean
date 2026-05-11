@@ -7,8 +7,8 @@ fixed mask on the underlying (Z/2)ⁿ carrier. Algebraically they form an
 
 ## Members
 
-- `yin`, `tou` — Cell256 mask-XOR involutions
-  (Cell256 lives at R₈ = (Z/2)⁸; yin toggles the 因/YinBit, tou toggles 果/GuoBit).
+- `yin`, `project` — Cell256 mask-XOR involutions
+  (Cell256 lives at R₈ = (Z/2)⁸; yin toggles the 因/YinBit, project toggles 果/GuoBit).
 - `flip1..flip6` — Cell128 single-yao toggles
   (Cell128 = Hexagram × YinBit at R₇; flipᵢ toggles the i-th yao).
 - `hexCuo` (Cell128) — Hexagram-level 错 = XOR with `earth` (the all-yin mask),
@@ -41,7 +41,7 @@ open SSBX.Foundation.Bagua.Cell128
 def cell256_yin (c : Cell256) : Cell256 := Cell256.yin c
 
 /-- Cell256 投 (tóu): XOR with `(heaven, wei)` mask (toggle GuoBit / 果 axis). -/
-def cell256_tou (c : Cell256) : Cell256 := Cell256.tou c
+def cell256_tou (c : Cell256) : Cell256 := Cell256.project c
 
 /-! ## § 2 Cell128 atomic operators (R₇ level)
 
@@ -84,7 +84,7 @@ theorem cell256_yin_involutive (c : Cell256) : cell256_yin (cell256_yin c) = c :
   Cell256.yin_yin c
 
 theorem cell256_tou_involutive (c : Cell256) : cell256_tou (cell256_tou c) = c :=
-  Cell256.tou_tou c
+  Cell256.project_project c
 
 theorem cell128_flip1_involutive (c : Cell128) : cell128_flip1 (cell128_flip1 c) = c :=
   flip1_flip1 c

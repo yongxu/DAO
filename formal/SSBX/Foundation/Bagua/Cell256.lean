@@ -142,15 +142,15 @@ theorem toYinGuo_ofYinGuo (yg : YinBit × GuoBit) : toYinGuo (ofYinGuo yg) = yg 
 def yin (s : Shi) : Shi := s.complement
 
 /-- 投 (tóu): toggle GuoBit (果 axis). 等价于 Shi.reverse. -/
-def tou (s : Shi) : Shi := s.reverse
+def project (s : Shi) : Shi := s.reverse
 
 theorem yin_yin (s : Shi) : yin (yin s) = s := cuo_cuo s
-theorem tou_tou (s : Shi) : tou (tou s) = s := zong_zong s
-theorem yin_tou_comm (s : Shi) : yin (tou s) = tou (yin s) := cuo_zong_comm s
+theorem project_project (s : Shi) : project (project s) = s := zong_zong s
+theorem yin_tou_comm (s : Shi) : yin (project s) = project (yin s) := cuo_zong_comm s
 
 /-- 印 ∘ 投 = complementReverse = V₄ central element. -/
-theorem yin_tou_eq_cuoZong (s : Shi) : yin (tou s) = complementReverse s := by
-  unfold yin tou
+theorem yin_tou_eq_cuoZong (s : Shi) : yin (project s) = complementReverse s := by
+  unfold yin project
   exact (cuoZong_eq_compose s).symm
 
 end Shi
@@ -566,14 +566,14 @@ end Cell256
 
 /-! ## § 8 印/投 重写为 XOR mask (Phase A)
 
-  The legacy `Shi.yin / Shi.tou` (= `Shi.complement / Shi.reverse`) are V₄ wraps.
+  The legacy `Shi.yin / Shi.project` (= `Shi.complement / Shi.reverse`) are V₄ wraps.
   Phase A re-expresses 印/投 at the **Cell256 level** as XOR with two
   canonical masks:
 
     yin_mask = (heaven, ji)  = `oooooooi`o  (only YinBit / 因 axis)
-    tou_mask = (heaven, wei) = `oooooooo`i  (only GuoBit / 果 axis)
+    project_mask = (heaven, wei) = `oooooooo`i  (only GuoBit / 果 axis)
 
-  Then `yin = (· ⊕ yin_mask)` and `tou = (· ⊕ tou_mask)` are mask-XOR
+  Then `yin = (· ⊕ yin_mask)` and `project = (· ⊕ project_mask)` are mask-XOR
   involutions. The two masks XOR to `(heaven, jin) = "ooooooon"`, the V₄
   central element. -/
 
@@ -585,13 +585,13 @@ def yin_mask : Cell256 := (Hexagram.heaven, Shi.ji)
 
 /-- 投 mask: only the GuoBit (果 axis, R6 atom) is set.
     `(heaven, wei) = (heaven, (0, 1)) = "ooooooox"`. -/
-def tou_mask : Cell256 := (Hexagram.heaven, Shi.wei)
+def project_mask : Cell256 := (Hexagram.heaven, Shi.wei)
 
 /-- 印 (yìn) at Cell256: XOR with the YinBit-only mask. -/
 def yin (c : Cell256) : Cell256 := xor c yin_mask
 
 /-- 投 (tóu) at Cell256: XOR with the GuoBit-only mask. -/
-def tou (c : Cell256) : Cell256 := xor c tou_mask
+def project (c : Cell256) : Cell256 := xor c project_mask
 
 /-- 印 is involutive (mask is self-inverse). -/
 theorem yin_yin (c : Cell256) : yin (yin c) = c := by
@@ -599,26 +599,26 @@ theorem yin_yin (c : Cell256) : yin (yin c) = c := by
   rw [xor_assoc, xor_self, xor_origin]
 
 /-- 投 is involutive. -/
-theorem tou_tou (c : Cell256) : tou (tou c) = c := by
-  unfold tou
+theorem project_project (c : Cell256) : project (project c) = c := by
+  unfold project
   rw [xor_assoc, xor_self, xor_origin]
 
 /-- 印 and 投 commute (both are XOR-with-fixed-mask, and XOR is commutative
     + associative). -/
-theorem yin_tou_comm (c : Cell256) : yin (tou c) = tou (yin c) := by
-  unfold yin tou
-  rw [xor_assoc, xor_assoc, xor_comm tou_mask yin_mask]
+theorem yin_tou_comm (c : Cell256) : yin (project c) = project (yin c) := by
+  unfold yin project
+  rw [xor_assoc, xor_assoc, xor_comm project_mask yin_mask]
 
 /-- 印 ∘ 投 = XOR with `(heaven, jin)` = the V₄ central mask. -/
 theorem yin_tou_eq_central (c : Cell256) :
-    yin (tou c) = xor c (Hexagram.heaven, Shi.jin) := by
-  unfold yin tou
+    yin (project c) = xor c (Hexagram.heaven, Shi.jin) := by
+  unfold yin project
   rw [xor_assoc]
   congr 1
 
 /-- The two masks together generate the V₄ central element. -/
 theorem yin_mask_xor_tou_mask :
-    xor yin_mask tou_mask = (Hexagram.heaven, Shi.jin) := by
+    xor yin_mask project_mask = (Hexagram.heaven, Shi.jin) := by
   rfl
 
 end Cell256
@@ -637,10 +637,10 @@ theorem cell256_phaseA_summary :
     ∧ (∀ c : Cell256, Cell256.epsAtOrigin (Cell256.cayley c) = c)
     -- 印 / 投 mask involutions + commute
     ∧ (∀ c : Cell256, Cell256.yin (Cell256.yin c) = c)
-    ∧ (∀ c : Cell256, Cell256.tou (Cell256.tou c) = c)
-    ∧ (∀ c : Cell256, Cell256.yin (Cell256.tou c) = Cell256.tou (Cell256.yin c)) :=
+    ∧ (∀ c : Cell256, Cell256.project (Cell256.project c) = c)
+    ∧ (∀ c : Cell256, Cell256.yin (Cell256.project c) = Cell256.project (Cell256.yin c)) :=
   ⟨Cell256.origin_xor, Cell256.xor_self, Cell256.xor_comm, Cell256.xor_assoc,
    Cell256.cayley_inj, Cell256.epsAtOrigin_cayley,
-   Cell256.yin_yin, Cell256.tou_tou, Cell256.yin_tou_comm⟩
+   Cell256.yin_yin, Cell256.project_project, Cell256.yin_tou_comm⟩
 
 end SSBX.Foundation.Bagua.Cell256
