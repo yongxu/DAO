@@ -303,12 +303,12 @@ theorem shi_eq_eq {α : Sort _} (x y : α) : «是» x y ↔ x = y := Iff.rfl
 
 theorem shi_iff_si {α : Sort _} (x y : α) : «是» x y ↔ «似» x y := Iff.rfl
 
-/-! ### 系 (xi) — relational connection
+/-! ### 系 (rest) — relational connection
 
   「X 系 Y」 does not collapse X and Y by identity; it asserts an explicit
   relation between them.  This is the relational isness complement to 是. -/
 
-/-- 系 (xi): relational connection under a supplied relation. -/
+/-- 系 (rest): relational connection under a supplied relation. -/
 abbrev «系» {α : Sort _} (R : α → α → Prop) (x y : α) : Prop := R x y
 
 abbrev xiRelOp {α : Sort _} (R : α → α → Prop) (x y : α) : Prop := R x y

@@ -3,7 +3,7 @@
 
 These two opcodes are **fundamentally harder** than the cur-only blocks
 (`nop`, `interlace`, `complement`, `reverse`, `setShi`, `flipYao`) because they mutate
-`sim.history`, which is encoded in the **middle** of `META.history`:
+`sim.history`, which is encoded in the **center** of `META.history`:
 
 ```
 encMetaHistory regHex sim
@@ -49,7 +49,7 @@ For the **scaffold**:
     the top — which we capture in the local-effect lemma.
 
 The **general** simulation lemma (arbitrary `sim.history`, full
-middle-of-history mutation) is **deferred**; the deferred theorem
+center-of-history mutation) is **deferred**; the deferred theorem
 `executeBlock_pop_simulates` and `executeBlock_push_simulates` are
 **stated** as `Prop` definitions (so that future phases have a fixed
 target signature) but not proven.  Following the contract guidance from
@@ -71,7 +71,7 @@ For each block we provide:
 
 What's deferred to Phase C:
   - the general (non-empty sim.history) simulation;
-  - the destructive-walk middle-of-history mutation.
+  - the destructive-walk center-of-history mutation.
 
 The deferred lemmas appear as `Prop`-typed targets at the end of the
 file.

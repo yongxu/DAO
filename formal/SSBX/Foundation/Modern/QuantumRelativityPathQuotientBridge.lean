@@ -123,22 +123,22 @@ theorem two_route_upper_lower_quotient_classes_distinct :
   simp at hKey
   exact two_route_upper_lower_keys_distinct hKey
 
-/-- A source/target path with upper middle has the upper quotient class. -/
+/-- A source/target path with upper center has the upper quotient class. -/
 theorem two_route_source_target_upper_middle_quotient_class
     (p : TwoStepPathWitness twoRouteProcess)
     (hStart : p.start = TwoRouteState.source)
-    (hMiddle : p.middle = TwoRouteState.upper)
+    (hMiddle : p.center = TwoRouteState.upper)
     (hStop : p.stop = TwoRouteState.target) :
     twoStepPathQuotientClass p =
       twoStepPathQuotientClass twoRouteUpperPath := by
   exact same_key_implies_same_quotient_class
     (two_route_source_target_upper_middle_key p hStart hMiddle hStop)
 
-/-- A source/target path with lower middle has the lower quotient class. -/
+/-- A source/target path with lower center has the lower quotient class. -/
 theorem two_route_source_target_lower_middle_quotient_class
     (p : TwoStepPathWitness twoRouteProcess)
     (hStart : p.start = TwoRouteState.source)
-    (hMiddle : p.middle = TwoRouteState.lower)
+    (hMiddle : p.center = TwoRouteState.lower)
     (hStop : p.stop = TwoRouteState.target) :
     twoStepPathQuotientClass p =
       twoStepPathQuotientClass twoRouteLowerPath := by

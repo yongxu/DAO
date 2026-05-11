@@ -15,7 +15,7 @@ open SSBX.Foundation.Modern.QuantumRelativityWenBoundary
 /--
 Public summary for S15:
 pointwise channel composition and its associativity remain available, while
-sum-over-middle composition is closed as a finite two-step boundary.  The
+sum-over-center composition is closed as a finite two-step boundary.  The
 concrete process shows why this cannot simply be identified with the current
 one-step `QuantumChannelSkeleton`: the prepared-to-measured composed amplitude
 is nonzero, but prepared-to-measured is not a one-step edge.

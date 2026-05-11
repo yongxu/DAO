@@ -37,8 +37,8 @@ open SSBX.Foundation.Wen.Kernel
     Schmitt 强调此 二分 之 必然性 (排他穷尽). 我们 formalize 为 disjunction. -/
 def friendOrEnemy (h1 h2 : ZhongOrbit) (n : Nat) : Prop :=
   h1.states n = h2.states n  -- friend (collapse to same)
-  ∨ extreme (h1.states n)     -- enemy (h1 at 极)
-  ∨ extreme (h2.states n)     -- enemy (h2 at 极)
+  ∨ terminus (h1.states n)     -- enemy (h1 at 极)
+  ∨ terminus (h2.states n)     -- enemy (h2 at 极)
 
 /-- **第一定理**: 在 ZhongField 内, friend-enemy 二分 之 forced choice 不成立.
     存在 第三 option (仁): h1 ≠ h2 ∧ 双 中 ∧ ren-relation. -/
@@ -64,7 +64,7 @@ theorem friend_collapse_violates_plurality
 /-- 「敌 = 使他者 collapse 至 极」 之 reading 直接 violate 他者 之 inMiddle. -/
 theorem enemy_collapse_violates_inMiddle
     (other : ZhongOrbit) (n : Nat)
-    (h_enemy : extreme (other.states n)) :
+    (h_enemy : terminus (other.states n)) :
     False :=
   other.inMiddle n h_enemy
 
@@ -74,7 +74,7 @@ theorem enemy_collapse_violates_inMiddle
     存在 中-状态 s 与 t, action a 在 s 上 induce 极, 在 t 上不 induce 极.
     这恰是 tongGen 之 negation. -/
 def decisionistAsymmetry (a : Field → Field) : Prop :=
-  ∃ s t : Field, middle s ∧ middle t ∧ extreme (a s) ∧ ¬ extreme (a t)
+  ∃ s t : Field, center s ∧ center t ∧ terminus (a s) ∧ ¬ terminus (a t)
 
 /-- **第四定理**: decisionism (asymmetric sovereign action) 与 tongGen 形式 互斥. -/
 theorem decisionism_breaks_tongGen
@@ -96,7 +96,7 @@ theorem tongGen_excludes_decisionism
     亦即: 规则 不 universally apply — punctures tongGen on the 极-side.
     (与 decisionistAsymmetry 形式 等价.) -/
 def stateOfException (a : Field → Field) : Prop :=
-  ∃ s t : Field, middle s ∧ middle t ∧ extreme (a s) ∧ middle (a t)
+  ∃ s t : Field, center s ∧ center t ∧ terminus (a s) ∧ center (a t)
 
 /-- **第六定理**: state of exception 与 tongGen 形式 incompatible.
     例外 = 规则不 universally apply ⟹ 破 同根. -/
@@ -105,7 +105,7 @@ theorem state_of_exception_breaks_universality
     ¬ tongGen a := by
   intro h_tong
   obtain ⟨s, t, hs_mid, ht_mid, h_ext_s, h_mid_t⟩ := h_exc
-  -- a t is middle, hence not extreme; but tongGen forces extreme (a t) given extreme (a s)
+  -- a t is center, hence not terminus; but tongGen forces terminus (a t) given terminus (a s)
   exact (zhi_exclusive (a t)) ⟨h_mid_t, (h_tong s t hs_mid ht_mid).mp h_ext_s⟩
 
 /-- Sovereign exception 之 contrapositive: tongGen ⟹ 没有 例外. -/
@@ -126,8 +126,8 @@ def concreteOrderViaRen (h1 h2 : ZhongOrbit) (N : Nat) : Prop :=
 theorem concrete_order_via_ren
     (h1 h2 : ZhongOrbit) (N : Nat) (h_co : concreteOrderViaRen h1 h2 N) (n : Nat) (h_le : n ≤ N) :
     h1.states n ≠ h2.states n
-    ∧ ¬ extreme (h1.states n)
-    ∧ ¬ extreme (h2.states n) :=
+    ∧ ¬ terminus (h1.states n)
+    ∧ ¬ terminus (h2.states n) :=
   ⟨h_co n h_le, h1.inMiddle n, h2.inMiddle n⟩
 
 /-- **第八定理 (政治之本质 IS 仁, 非 enmity)**:
@@ -137,8 +137,8 @@ theorem political_essence_is_ren_not_enmity
     (f : ZhongField) (n : Nat) (i j : Fin f.k)
     (h_ne : (f.orbits i).states n ≠ (f.orbits j).states n) :
     ren (f.orbits i) (f.orbits j) n
-    ∧ ¬ extreme ((f.orbits i).states n)
-    ∧ ¬ extreme ((f.orbits j).states n) :=
+    ∧ ¬ terminus ((f.orbits i).states n)
+    ∧ ¬ terminus ((f.orbits j).states n) :=
   ⟨h_ne, (f.orbits i).inMiddle n, (f.orbits j).inMiddle n⟩
 
 /-! ## § 5  Partisan / 斗争之 self-destruction (universalized) -/
@@ -161,10 +161,10 @@ theorem partisan_war_self_destructive
 /-! ## § 6  紧急合法性 之 缺乏 grounding -/
 
 /-- **第十定理 legitimacy_via_emergency_lacks_grounding**:
-    "legitimacy that requires perpetual extreme state" — 即 orbit 必须 eventually
+    "legitimacy that requires perpetual terminus state" — 即 orbit 必须 eventually
     settle 至 极. 这与 race_to_bottom_refuted 同形式 — orbit 之 inMiddle 否定. -/
 theorem legitimacy_via_emergency_lacks_grounding (o : ZhongOrbit) :
-    ¬ (∃ N, ∀ n, n ≥ N → extreme (o.states n)) := by
+    ¬ (∃ N, ∀ n, n ≥ N → terminus (o.states n)) := by
   intro ⟨N, h⟩
   exact o.inMiddle N (h N (Nat.le_refl N))
 
@@ -197,8 +197,8 @@ theorem friend_enemy_implies_moloch
 /-- 政治分类 inductive — 至少 三 个 distinct categories. -/
 inductive PoliticalRelation : Type
   | friend          -- collapse to same
-  | enemy           -- collapse other to extreme
-  | renCompanion    -- distinct yet middle (仁)
+  | enemy           -- collapse other to terminus
+  | renCompanion    -- distinct yet center (仁)
   deriving DecidableEq
 
 /-- **第十三定理 political_third_option_total_count**:
@@ -225,8 +225,8 @@ theorem concrete_friend_enemy_inversion
     (∀ m, motion ((f.orbits i).states m) = (f.orbits i).states (m + 1))
     ∧ (∀ m, motion ((f.orbits j).states m) = (f.orbits j).states (m + 1))
     -- 异显: 中 + (potentially) distinct trace
-    ∧ middle ((f.orbits i).states n)
-    ∧ middle ((f.orbits j).states n) := by
+    ∧ center ((f.orbits i).states n)
+    ∧ center ((f.orbits j).states n) := by
   refine ⟨(f.orbits i).step, (f.orbits j).step, (f.orbits i).inMiddle n, (f.orbits j).inMiddle n⟩
 
 /-! ## § 11  综合: Anti-Schmitt 三位一体 (decisionism / exception / friend-enemy) -/

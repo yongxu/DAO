@@ -193,8 +193,8 @@ end DaTong
 
 /-! ## § 6 R₁ Yao — 善 / 恶 (the simplest cell-level binary)
 
-In Kernel.lean: `shan ≡ middle` (善 = 中, the unfixed state) and `eVice ≡
-extreme` (恶 = 极, the fixed state). At Cell layer, "fixed by XOR-with-0"
+In Kernel.lean: `good ≡ center` (善 = 中, the unfixed state) and `evil ≡
+terminus` (恶 = 极, the fixed state). At Cell layer, "fixed by XOR-with-0"
 is automatic (origin), but the doctrinal yin/yang reading is more natural:
 
 - 善 ↔ 阳 (Yao.yang) — the manifest, the moving-forward
@@ -325,13 +325,13 @@ and our cell-layer work does not replace them:
 | Concept | 类型 | 为何不 lift |
 |---|---|---|
 | 動 / motion | axiom on Field → Field | the foundational dynamics axiom |
-| 中 / middle | predicate `motion s ≠ s` | property of states, not a state |
-| 极 / extreme | predicate `motion s = s` | property of states |
+| 中 / center | predicate `motion s ≠ s` | property of states, not a state |
+| 极 / terminus | predicate `motion s = s` | property of states |
 | 几 / ji | iter-of-motion | sequence, not a state |
 | 势 / shi | accumulated direction | derived dynamics |
 | 机 / jiTurning | critical point | event-on-orbit |
 | 聚 / 散 / 和 / 美 / 德 / 理 / 心 / 情 / 积 | various predicates | properties of orbits |
-| 圣人 / isShengRen | predicate over Xin | role under window |
+| 圣人 / isSage | predicate over Xin | role under window |
 | 内圣 / 外王 | derived predicates | orbital configurations |
 | 恕道 / 推己及人 / 己所不欲 | cross-orbit relation | not a single state |
 | 知行合一 / 反身而诚 | composition theorem | dynamics + closure |

@@ -38,7 +38,7 @@ open SSBX.Foundation.Modern.QuantumRelativityWenBoundary
 
 /--
 Candidate quotient relation for two-step witnesses: two witnesses are
-equivalent when their visible `(start, middle, stop)` keys agree.
+equivalent when their visible `(start, center, stop)` keys agree.
 -/
 def TwoStepPathKeyEquivalent {P : FiniteProcess}
     (p q : TwoStepPathWitness P) : Prop :=
@@ -192,7 +192,7 @@ theorem two_step_key_duplicate_born_weight_zero_of_canceling
 /-- Displayed two-route key amplitude: upper key has `1`, lower key has `-1`. -/
 def twoRouteDisplayedKeyAmplitude
     (k : TwoStepPathKey twoRouteProcess) : ℂ :=
-  match k.start, k.middle, k.stop with
+  match k.start, k.center, k.stop with
   | TwoRouteState.source, TwoRouteState.upper, TwoRouteState.target => 1
   | TwoRouteState.source, TwoRouteState.lower, TwoRouteState.target => -1
   | _, _, _ => 0

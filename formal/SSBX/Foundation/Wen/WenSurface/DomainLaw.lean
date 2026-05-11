@@ -257,7 +257,7 @@ inductive SpatialAccessor where
   | interior
   | begin
   | finish
-  | extreme
+  | terminus
 deriving Repr, DecidableEq
 
 def SpatialAccessor.operatorId : SpatialAccessor → OperatorId
@@ -269,7 +269,7 @@ def SpatialAccessor.operatorId : SpatialAccessor → OperatorId
   | .interior => .C_8
   | .begin => .B_1
   | .finish => .B_2
-  | .extreme => .B_7
+  | .terminus => .B_7
 
 def spatialFrameAccessorOperatorIds : List OperatorId :=
   [.R_5, .C_4, .C_5, .C_6, .C_7, .C_8, .B_1, .B_2, .B_7]
@@ -355,7 +355,7 @@ inductive NameObjectAccessor where
   | duration
   | extent
   | endpoint
-  | middle
+  | center
   | model
   | nameClass
   | textContent
@@ -376,7 +376,7 @@ def NameObjectAccessor.operatorId : NameObjectAccessor → OperatorId
   | .duration => .P_6
   | .extent => .P_7
   | .endpoint => .P_10
-  | .middle => .P_12
+  | .center => .P_12
   | .model => .P_18
   | .nameClass => .P_19
   | .textContent => .P_21

@@ -2,9 +2,9 @@
 # QuantumRelativitySumOverMiddleBornBoundaryBridge -- S16 composed Born boundary
 
 Companion:
-`义理/sum-over-middle Born边界候选 · Markov桥S16.md`
+`义理/sum-over-center Born边界候选 · Markov桥S16.md`
 
-S16 connects S15 sum-over-middle channel composition to the S12 finite Born
+S16 connects S15 sum-over-center channel composition to the S12 finite Born
 distribution boundary:
 
 1. a finite endpoint-pair list is mapped to composed amplitudes;
@@ -31,14 +31,14 @@ open SSBX.Foundation.Modern.QuantumRelativityWenBoundary
 /-! ## § 1 Composed endpoint amplitude support -/
 
 /--
-Map a finite endpoint-pair support to the sum-over-middle amplitudes attached
+Map a finite endpoint-pair support to the sum-over-center amplitudes attached
 to those endpoints.
 -/
 def sumOverMiddleEndpointAmplitudeSupport {P : FiniteProcess}
-    (middle : List P.State) (left right : QuantumChannelSkeleton P)
+    (center : List P.State) (left right : QuantumChannelSkeleton P)
     (endpoints : List (P.State × P.State)) : List ℂ :=
   endpoints.map fun endpoint =>
-    sumOverMiddleChannelAmplitude middle left right endpoint.1 endpoint.2
+    sumOverMiddleChannelAmplitude center left right endpoint.1 endpoint.2
 
 /-! ## § 2 Conditional Born distribution boundary -/
 
@@ -47,13 +47,13 @@ Boundary object tying a finite endpoint support to its composed amplitude
 support and the S12 finite Born distribution boundary.
 -/
 structure SumOverMiddleBornDistributionBoundary {P : FiniteProcess}
-    (middle : List P.State) (left right : QuantumChannelSkeleton P) where
+    (center : List P.State) (left right : QuantumChannelSkeleton P) where
   endpointSupport : List (P.State × P.State)
   amplitudeSupport : List ℂ
   bornBoundary : BornDistributionBoundary
   amplitude_support_boundary :
     amplitudeSupport =
-      sumOverMiddleEndpointAmplitudeSupport middle left right endpointSupport
+      sumOverMiddleEndpointAmplitudeSupport center left right endpointSupport
   born_boundary_amplitude_support :
     bornBoundary.amplitudeSupport = amplitudeSupport
   born_boundary_sum_one :
@@ -64,20 +64,20 @@ Build the composed Born boundary from an already normalized composed amplitude
 support.
 -/
 def sumOverMiddleBornDistributionBoundary {P : FiniteProcess}
-    (middle : List P.State) (left right : QuantumChannelSkeleton P)
+    (center : List P.State) (left right : QuantumChannelSkeleton P)
     (endpointSupport : List (P.State × P.State))
     (h : AmplitudeSupportNormalized
-      (sumOverMiddleEndpointAmplitudeSupport middle left right endpointSupport)) :
-    SumOverMiddleBornDistributionBoundary middle left right where
+      (sumOverMiddleEndpointAmplitudeSupport center left right endpointSupport)) :
+    SumOverMiddleBornDistributionBoundary center left right where
   endpointSupport := endpointSupport
-  amplitudeSupport := sumOverMiddleEndpointAmplitudeSupport middle left right endpointSupport
+  amplitudeSupport := sumOverMiddleEndpointAmplitudeSupport center left right endpointSupport
   bornBoundary := bornDistributionBoundary
-    (sumOverMiddleEndpointAmplitudeSupport middle left right endpointSupport) h
+    (sumOverMiddleEndpointAmplitudeSupport center left right endpointSupport) h
   amplitude_support_boundary := rfl
   born_boundary_amplitude_support := rfl
   born_boundary_sum_one := by
     exact (bornFiniteProbabilityDistribution
-      (sumOverMiddleEndpointAmplitudeSupport middle left right endpointSupport) h).weight_sum_one
+      (sumOverMiddleEndpointAmplitudeSupport center left right endpointSupport) h).weight_sum_one
 
 /--
 Every normalized composed endpoint amplitude support induces the S12 finite
@@ -85,40 +85,40 @@ Born distribution boundary.
 -/
 theorem sum_over_middle_born_distribution_boundary
     {P : FiniteProcess}
-    (middle : List P.State) (left right : QuantumChannelSkeleton P)
+    (center : List P.State) (left right : QuantumChannelSkeleton P)
     (endpointSupport : List (P.State × P.State))
     (h : AmplitudeSupportNormalized
-      (sumOverMiddleEndpointAmplitudeSupport middle left right endpointSupport)) :
-    ∃ B : SumOverMiddleBornDistributionBoundary middle left right,
+      (sumOverMiddleEndpointAmplitudeSupport center left right endpointSupport)) :
+    ∃ B : SumOverMiddleBornDistributionBoundary center left right,
       B.endpointSupport = endpointSupport
         ∧ B.amplitudeSupport =
-          sumOverMiddleEndpointAmplitudeSupport middle left right endpointSupport
+          sumOverMiddleEndpointAmplitudeSupport center left right endpointSupport
         ∧ B.bornBoundary.amplitudeSupport = B.amplitudeSupport
         ∧ (B.bornBoundary.distribution.support.map
             B.bornBoundary.distribution.weight).sum = 1 := by
-  refine ⟨sumOverMiddleBornDistributionBoundary middle left right endpointSupport h,
+  refine ⟨sumOverMiddleBornDistributionBoundary center left right endpointSupport h,
     rfl, rfl, rfl, ?_⟩
-  exact (sumOverMiddleBornDistributionBoundary middle left right endpointSupport h).born_boundary_sum_one
+  exact (sumOverMiddleBornDistributionBoundary center left right endpointSupport h).born_boundary_sum_one
 
 /-- Closed conditional boundary for composed endpoint supports. -/
 def SumOverMiddleBornDistributionBoundaryClosed : Prop :=
   ∀ {P : FiniteProcess}
-      (middle : List P.State) (left right : QuantumChannelSkeleton P)
+      (center : List P.State) (left right : QuantumChannelSkeleton P)
       (endpointSupport : List (P.State × P.State)),
     AmplitudeSupportNormalized
-      (sumOverMiddleEndpointAmplitudeSupport middle left right endpointSupport) ->
-      ∃ B : SumOverMiddleBornDistributionBoundary middle left right,
+      (sumOverMiddleEndpointAmplitudeSupport center left right endpointSupport) ->
+      ∃ B : SumOverMiddleBornDistributionBoundary center left right,
         B.endpointSupport = endpointSupport
           ∧ B.amplitudeSupport =
-            sumOverMiddleEndpointAmplitudeSupport middle left right endpointSupport
+            sumOverMiddleEndpointAmplitudeSupport center left right endpointSupport
           ∧ B.bornBoundary.amplitudeSupport = B.amplitudeSupport
           ∧ (B.bornBoundary.distribution.support.map
               B.bornBoundary.distribution.weight).sum = 1
 
 theorem sum_over_middle_born_distribution_boundary_closed :
     SumOverMiddleBornDistributionBoundaryClosed := by
-  intro _P middle left right endpointSupport h
-  exact sum_over_middle_born_distribution_boundary middle left right endpointSupport h
+  intro _P center left right endpointSupport h
+  exact sum_over_middle_born_distribution_boundary center left right endpointSupport h
 
 /-! ## § 3 Concrete normalized composed support -/
 
@@ -149,7 +149,7 @@ theorem concrete_composed_endpoint_amplitude_support_normalized :
 
 /--
 Public summary for S16:
-S15 sum-over-middle composition can be connected to the S12 finite Born
+S15 sum-over-center composition can be connected to the S12 finite Born
 distribution boundary whenever the displayed composed endpoint amplitude
 support is already normalized.  The concrete composed endpoint support maps to
 `[1]`, so it satisfies that conditional boundary.

@@ -137,7 +137,7 @@ def complementReverse (h : Hexagram) : Hexagram := h.complement.reverse
 
 /-- 互 (interlace): the inner self-reference operator.
     H(h_1 h_2 h_3 h_4 h_5 h_6) = h_2 h_3 h_4 h_3 h_4 h_5
-    "What lies hidden within" — the 互卦 extracted from the middle 4 yao. -/
+    "What lies hidden within" — the 互卦 extracted from the center 4 yao. -/
 def interlace (h : Hexagram) : Hexagram :=
   ⟨h.y2, h.y3, h.y4, h.y3, h.y4, h.y5⟩
 
@@ -252,7 +252,7 @@ def wellPos (h : Hexagram) (i : Fin 6) : Bool :=
   | .yin, false => true
   | _, _ => false
 
-/-- 中位 (middle position): position 2 (下卦中) and position 5 (上卦中) — 1-indexed.
+/-- 中位 (center position): position 2 (下卦中) and position 5 (上卦中) — 1-indexed.
     0-indexed: positions 1 and 4. -/
 def isZhongPos (i : Fin 6) : Bool := i.val = 1 ∨ i.val = 4
 
@@ -267,10 +267,10 @@ def yingResponds (h : Hexagram) (i : Fin 3) : Bool :=
 def biAdj (h : Hexagram) (i : Fin 5) : Yao × Yao :=
   (h.atPos ⟨i.val, by omega⟩, h.atPos ⟨i.val + 1, by omega⟩)
 
-/-- 乾 's middle position (5th yao = 0-indexed 4) is well-positioned (yang on yang pos). -/
+/-- 乾 's center position (5th yao = 0-indexed 4) is well-positioned (yang on yang pos). -/
 theorem qian_5th_wellPos : wellPos heaven ⟨4, by omega⟩ = true := rfl
 
-/-- 坤 's middle position (5th yao = 0-indexed 4) is NOT well-positioned (yin on yang pos). -/
+/-- 坤 's center position (5th yao = 0-indexed 4) is NOT well-positioned (yin on yang pos). -/
 theorem kun_5th_not_wellPos : wellPos earth ⟨4, by omega⟩ = false := rfl
 
 /-! ### Type-hierarchy summary
@@ -315,7 +315,7 @@ def proj : YaoStar → Yao
   | lesserYin => Yao.yin
   | laoYin => Yao.yin
 
-/-- δ : the "after-divination" operator. 老 (extreme) yao flip; 少 (stable) yao remain.
+/-- δ : the "after-divination" operator. 老 (terminus) yao flip; 少 (stable) yao remain.
     This gives 变卦 (transformed hexagram) when applied yao-wise. -/
 def delta : YaoStar → Yao
   | laoYang => Yao.yin    -- 老阳 → 阴
@@ -323,7 +323,7 @@ def delta : YaoStar → Yao
   | lesserYin => Yao.yin
   | laoYin => Yao.yang    -- 老阴 → 阳
 
-/-- A 爻 is "old" (extreme/changing) iff old. -/
+/-- A 爻 is "old" (terminus/changing) iff old. -/
 def isOld : YaoStar → Bool
   | laoYang | laoYin => true
   | _ => false
@@ -565,12 +565,12 @@ end Hexagram
 
 /-! ## § 7 老阳→老阴 cycle witness
 
-  The deepest claim of 周易: 极 → 反 (extreme begets opposite).
+  The deepest claim of 周易: 极 → 反 (terminus begets opposite).
   Formally: δ ∘ proj⁻¹ at the "old" subtype is exactly Yao.neg. -/
 
 namespace YaoStar
 
-/-- The "extreme reverses" theorem: among old yao, δ flips polarity. -/
+/-- The "terminus reverses" theorem: among old yao, δ flips polarity. -/
 theorem extreme_reverses (y : YaoStar) (h : y.isOld = true) :
     y.delta ≠ y.proj := by
   rw [delta_old_eq_neg_proj y h]
@@ -592,7 +592,7 @@ end YaoStar
 
   This is the "everything reflects to the center" theorem: under repeated
   self-reference (互), all hexagrams collapse to a 2-element orbit determined
-  by the middle pair. Fixed point reached iff middle pair agrees. -/
+  by the center pair. Fixed point reached iff center pair agrees. -/
 
 namespace Hexagram
 
@@ -618,7 +618,7 @@ theorem iterHu_period (h : Hexagram) : iterHu 4 h = iterHu 2 h := by
   cases h
   rfl
 
-/-- 互² h = 乾 ⟺ h.y3 = yang ∧ h.y4 = yang (middle pair both yang). -/
+/-- 互² h = 乾 ⟺ h.y3 = yang ∧ h.y4 = yang (center pair both yang). -/
 theorem iterHu_2_eq_qian_iff (h : Hexagram) :
     iterHu 2 h = heaven ↔ h.y3 = .yang ∧ h.y4 = .yang := by
   rw [iterHu_2_eq]
@@ -629,7 +629,7 @@ theorem iterHu_2_eq_qian_iff (h : Hexagram) :
   · intro ⟨e3, e4⟩
     rw [e3, e4]; rfl
 
-/-- 互² h = 坤 ⟺ h.y3 = yin ∧ h.y4 = yin (middle pair both yin). -/
+/-- 互² h = 坤 ⟺ h.y3 = yin ∧ h.y4 = yin (center pair both yin). -/
 theorem iterHu_2_eq_kun_iff (h : Hexagram) :
     iterHu 2 h = earth ↔ h.y3 = .yin ∧ h.y4 = .yin := by
   rw [iterHu_2_eq]
@@ -640,7 +640,7 @@ theorem iterHu_2_eq_kun_iff (h : Hexagram) :
   · intro ⟨e3, e4⟩
     rw [e3, e4]; rfl
 
-/-- **极反 dynamics**: 互² h is a fixed point of 互 ⟺ middle pair agrees. -/
+/-- **极反 dynamics**: 互² h is a fixed point of 互 ⟺ center pair agrees. -/
 theorem iterHu_2_fixed_iff_middle_agrees (h : Hexagram) :
     (iterHu 2 h).interlace = iterHu 2 h ↔ h.y3 = h.y4 := by
   rw [hu_fixed_point]
@@ -1659,7 +1659,7 @@ end SanShen
   三知 (三知) — 《论语·季氏》epistemological grading
   三宝 (三宝) — Daoist alchemy: 神 (spirit) / 气 (qi) / 精 (essence)
   三谛 (三谛) — 天台宗 (Tiantai) Mahayana: 空 (emptiness) / 假 (provisional) / 中
-                 (middle/synthesis). NOTE: 中 here is SYNTHESIS not middle-tier;
+                 (center/synthesis). NOTE: 中 here is SYNTHESIS not center-tier;
                  same cardinality but structurally distinct framing. -/
 
 /-- 三知 — three modes of knowing (Confucius). -/
@@ -1678,14 +1678,14 @@ inductive SanBao : Type
 
 /-- 三谛 — Tiantai 三谛 (truth-aspects in Mahayana / Madhyamaka heritage).
     NOTE structural distinction:
-      In 道/理/我, the middle (理) is "between" tiers (an actual middle layer).
+      In 道/理/我, the center (理) is "between" tiers (an actual center layer).
       In 三谛, the 中 is the SYNTHESIS that holds 空 and 假 together (Madhyamaka
       "neither this nor that"). The bijection holds at cardinality (3=3), but
       the semantic emphasis differs. -/
 inductive SanDi : Type
   | kong   -- 空 (emptiness, voidness of self-nature)
   | jia    -- 假 (provisional/conventional, dependent appearance)
-  | zhong  -- 中 (middle / synthesis; 中观)
+  | zhong  -- 中 (center / synthesis; 中观)
   deriving Repr, DecidableEq, BEq
 
 namespace SanZhi
@@ -1753,9 +1753,9 @@ namespace SanDi
     假 (provisional appearance) ≅ 我/fiction (constructed/conventional)
     中 (synthesis 中观) ≅ 理/中道 (the synthesis position)
 
-    NOTE: 中 in 三谛 is "synthesis position" (Madhyamaka), 不是 "middle tier".
+    NOTE: 中 in 三谛 is "synthesis position" (Madhyamaka), 不是 "center tier".
     The cardinality bijection holds (3↔3), but semantically 中 is HIGHER than
-    a middle layer in some readings. We map to .ren for cardinality alignment;
+    a center layer in some readings. We map to .ren for cardinality alignment;
     this is a "best fit" rather than a structural identity. -/
 def toDaoLevel : SanDi → DaoLevel
   | kong  => .tian
@@ -1835,7 +1835,7 @@ theorem dao_aligned :
     SanDi.kong.toDaoLevel       = DaoLevel.tian :=
   ⟨rfl, rfl, rfl, rfl, rfl, rfl⟩
 
-/-- 理 = 人 = 依他起 = 报身 = 学而知 = 气 = 中 — middle layer, all aligned. -/
+/-- 理 = 人 = 依他起 = 报身 = 学而知 = 气 = 中 — center layer, all aligned. -/
 theorem li_aligned :
     SanCai.ren.toDaoLevel       = DaoLevel.ren ∧
     SanXing.yiTaQi.toDaoLevel   = DaoLevel.ren ∧
@@ -1938,12 +1938,12 @@ def flip : DaoLevel → DaoLevel
 /-- Flip is involutive (¬¬-elimination at tier level). -/
 theorem flip_flip (d : DaoLevel) : d.flip.flip = d := by cases d <;> rfl
 
-/-- Flip swaps the two extreme tiers. -/
+/-- Flip swaps the two terminus tiers. -/
 theorem flip_swaps_extremes :
     tian.flip = feiDao ∧ feiDao.flip = tian := ⟨rfl, rfl⟩
 
-/-- Flip fixes the two middle tiers (中道 / 心道 are not "negatable" — they
-    represent process-level claims, not extreme positions). -/
+/-- Flip fixes the two center tiers (中道 / 心道 are not "negatable" — they
+    represent process-level claims, not terminus positions). -/
 theorem flip_fixes_middles :
     ren.flip = ren ∧ xin.flip = xin := ⟨rfl, rfl⟩
 

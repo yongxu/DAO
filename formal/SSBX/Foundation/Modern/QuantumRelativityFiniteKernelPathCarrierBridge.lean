@@ -104,7 +104,7 @@ A sound path-local interval for a single two-step kernel path.
 
 Unlike S28 `FiniteTwoStepCausalIntervalCandidate`, this does not claim
 completeness for all middles between the endpoints.  It only says that the
-displayed middle is supported by two positive-weight kernel edges.
+displayed center is supported by two positive-weight kernel edges.
 -/
 structure SoundKernelTwoStepPathLocalIntervalCandidate
     {P : FiniteProcess}
@@ -357,11 +357,11 @@ theorem two_route_lower_kernel_carrier_causal_before :
   twoRouteLowerKernelCarrier.causal_before
 
 theorem two_route_upper_kernel_carrier_middle_in_s28_interval :
-    TwoRouteState.upper ∈ twoRouteSourceTargetInterval.middle :=
+    TwoRouteState.upper ∈ twoRouteSourceTargetInterval.center :=
   two_route_upper_between_source_target
 
 theorem two_route_lower_kernel_carrier_middle_in_s28_interval :
-    TwoRouteState.lower ∈ twoRouteSourceTargetInterval.middle :=
+    TwoRouteState.lower ∈ twoRouteSourceTargetInterval.center :=
   two_route_lower_between_source_target
 
 def twoRouteUpperKernelPathLocalInterval :

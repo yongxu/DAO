@@ -85,8 +85,8 @@ def phaseInducedTwoStepAmplitudeCandidate {P : FiniteProcess}
 /-- The two-route phase label: upper has `zero`, lower has `blocking`. -/
 def twoRoutePhaseOf
     (p : TwoStepPathWitness twoRouteProcess) : DiscretePhase :=
-  if p.middle = TwoRouteState.upper then DiscretePhase.zero
-  else if p.middle = TwoRouteState.lower then DiscretePhase.blocking
+  if p.center = TwoRouteState.upper then DiscretePhase.zero
+  else if p.center = TwoRouteState.lower then DiscretePhase.blocking
   else DiscretePhase.zero
 
 /-- Discrete phase candidate for the two-route toy process. -/

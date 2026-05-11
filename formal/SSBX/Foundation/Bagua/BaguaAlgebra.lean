@@ -14,12 +14,12 @@ This file adds the strictly finer (Z/2)³ structure: three single-bit flips
 
 ## Convention (matching Yi.lean)
   Trigram.y1 = 初爻 (bottom)
-  Trigram.y2 = 中爻 (middle)
+  Trigram.y2 = 中爻 (center)
   Trigram.y3 = 上爻 (top)
 
 ## Three single-bit flips (named in ASCII; Chinese in comments)
   motion (动) = flip y1 (initial / 下爻 changes)
-  hua  (化) = flip y2 (middle  / 中爻 transforms)
+  hua  (化) = flip y2 (center  / 中爻 transforms)
   bian (变) = flip y3 (top     / 上爻 changes)
 
 错 = motion ∘ hua ∘ bian (full negation = the central element of (Z/2)³).
@@ -48,7 +48,7 @@ open Trigram
 /-- motion (动): flip the initial (bottom) yao. -/
 def motion (t : Trigram) : Trigram := ⟨t.y1.neg, t.y2, t.y3⟩
 
-/-- hua (化): flip the middle yao. -/
+/-- hua (化): flip the center yao. -/
 def hua (t : Trigram) : Trigram := ⟨t.y1, t.y2.neg, t.y3⟩
 
 /-- bian (变): flip the top yao. -/
@@ -194,7 +194,7 @@ abbrev TaiJi : Type := Unit
 /-- heShang (合_上): drop the top yao. -/
 def heShang (t : Trigram) : SiXiang := ⟨t.y1, t.y2⟩
 
-/-- heZhong (合_中): drop the middle yao. -/
+/-- heZhong (合_中): drop the center yao. -/
 def heZhong (t : Trigram) : SiXiang := ⟨t.y1, t.y3⟩
 
 /-- heXia (合_下): drop the bottom yao. -/

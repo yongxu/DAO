@@ -26,14 +26,14 @@ open SSBX.Foundation.Wen.Kernel
 
   这 些 经济学 / 博弈论 之 命题 在 Kernel 中 形式 可证. -/
 
-/-- **Pareto efficiency at middle (帕累托效率之 ZhongField 实证)**:
+/-- **Pareto efficiency at center (帕累托效率之 ZhongField 实证)**:
     Pareto-optimality 之 minimal 形式: 不存在 一个 reallocation 让 一者 worse-off.
     在 ZhongField 之 中 中: 没有 orbit 在 极 — 故 无 orbit 是 「worse-off than 中」 之 状态.
     形式: 任 i, orbit_i 之 状态 在 中, 即 没人 在 极 (= 「无人 worse-off」).
     此 是 Pareto efficiency 之 structural minimum: 全 中 ⟹ 无 strict 改进 之 必要. -/
 theorem pareto_at_middle (f : ZhongField) (n : Nat) :
-    (∀ i : Fin f.k, middle ((f.orbits i).states n))                        -- 全 中 (no one in 极)
-    ∧ (∀ i : Fin f.k, ¬ extreme ((f.orbits i).states n)) :=                 -- 无 worse-off
+    (∀ i : Fin f.k, center ((f.orbits i).states n))                        -- 全 中 (no one in 极)
+    ∧ (∀ i : Fin f.k, ¬ terminus ((f.orbits i).states n)) :=                 -- 无 worse-off
   ⟨fun i => (f.orbits i).inMiddle n,
    fun i => (f.orbits i).inMiddle n⟩
 
@@ -42,12 +42,12 @@ theorem pareto_at_middle (f : ZhongField) (n : Nat) :
     可被 internalized. 形式 sieve: internalize externality = 重建 同根 (tongGen).
     在 同根 之 下, A 之 action 对 A 与 B 之 极-effect 等价 — 没有 「A 受益 / B 受损」
     之 asymmetric externality (此 即 `moloch_via_externality_refuted` 之 corollary).
-    形式: tongGen ∧ middle (a (h1 state)) ⟹ ¬ extreme (a (h2 state)). -/
+    形式: tongGen ∧ center (a (h1 state)) ⟹ ¬ terminus (a (h2 state)). -/
 theorem coase_internalizes_externality
     (a : Field → Field) (h_tongGen : tongGen a)
     (h1 h2 : ZhongOrbit) (n : Nat)
-    (h_local : middle (a (h1.states n))) :
-    ¬ extreme (a (h2.states n)) := by
+    (h_local : center (a (h1.states n))) :
+    ¬ terminus (a (h2.states n)) := by
   intro h_ext
   exact moloch_via_externality_refuted a h_tongGen h1 h2 n h_local h_ext
 
@@ -58,29 +58,29 @@ theorem coase_internalizes_externality
     故 agent 没有 incentive 偏离 truth (因 truth 之 reward 是 universal).  -/
 theorem mechanism_incentive_compatibility
     (a : Field → Field) (h_universal : tongGenMiddle a)
-    (s t : Field) (hs : middle s) (ht : middle t) :
-    middle (a s) ↔ middle (a t) :=
+    (s t : Field) (hs : center s) (ht : center t) :
+    center (a s) ↔ center (a t) :=
   h_universal s t hs ht
 
 /-- **Nash bargaining (合作博弈) 之 cooperation-as-道**:
     Nash bargaining solution 假设 cooperative 解 maximizes joint surplus.
-    在 Kernel 中, cooperation 之 形式 = `liRitual` (礼-window 内 ren). 本定理
+    在 Kernel 中, cooperation 之 形式 = `propriety` (礼-window 内 ren). 本定理
     重述 `cooperation_cong_dao`: 礼-window 内 双方 中 + 仁. 此 是 positive-sum
     之 形式: 没有 「分蛋糕 而 必有 winner / loser」 — 而是 二者 同 在 中.  -/
 theorem nash_bargaining_cong_dao
-    (h1 h2 : ZhongOrbit) (n m : Nat) (h_li : liRitual h1 h2 n m)
+    (h1 h2 : ZhongOrbit) (n m : Nat) (h_li : propriety h1 h2 n m)
     (k : Nat) (hk : k ≤ m) :
-    middle (h1.states (n + k))
-    ∧ middle (h2.states (n + k))
+    center (h1.states (n + k))
+    ∧ center (h2.states (n + k))
     ∧ ren h1 h2 (n + k) :=
   ⟨h1.inMiddle (n + k), h2.inMiddle (n + k), h_li k hk⟩
 
 /-- **Public goods provision via 礼-coordination (公共品 之 礼-维持)**:
     Public goods 之 contribution 在 「coordinated repeat」 之 下 stable.
     形式 sieve: 在 礼-window 内, 双方 之 仁 (= contribution-pattern 之 sustained
-    middle) 持续. 此 是 Olson 之 "logic of collective action" 之 positive 解.  -/
+    center) 持续. 此 是 Olson 之 "logic of collective action" 之 positive 解.  -/
 theorem public_goods_via_liRitual
-    (h1 h2 : ZhongOrbit) (n m : Nat) (h_li : liRitual h1 h2 n m) :
+    (h1 h2 : ZhongOrbit) (n m : Nat) (h_li : propriety h1 h2 n m) :
     ∀ k : Nat, k ≤ m → ren h1 h2 (n + k) := h_li
 
 /-- **Smith 看不见的手 之 proper reading (亚当·斯密 自发秩序)**:
@@ -106,7 +106,7 @@ theorem smith_invisible_hand_proper (f : ZhongField) (n : Nat) :
     则 s 必 是 极, 不 是 中. 「Nash eq. exists」 ≠ 「Nash eq. is 中」. -/
 theorem nash_equilibrium_static_is_extreme
     (s : Field) (h_fixed : motion s = s) :
-    extreme s ∧ ¬ middle s := by
+    terminus s ∧ ¬ center s := by
   refine ⟨h_fixed, ?_⟩
   intro h_mid
   exact h_mid h_fixed
@@ -118,7 +118,7 @@ theorem nash_equilibrium_static_is_extreme
     Conditional 形式 (即 strict 「全 决定」 reading 之 限制): rational choice
     总 produces 中 ∨ 极, NEVER 显 「悬置」 之 第三 option. 此 即 二值 之 局限. -/
 theorem rational_choice_only_binary (s : Field) :
-    middle s ∨ extreme s := zhi_universal s
+    center s ∨ terminus s := zhi_universal s
 
 /-- **Static equilibrium IS 极, dynamic equilibrium IS 中**:
     Equilibrium 之 经济学 standard reading 是 fixed-point. 但 ZhongOrbit 拒
@@ -128,7 +128,7 @@ theorem rational_choice_only_binary (s : Field) :
 theorem equilibrium_static_vs_dynamic
     (o : ZhongOrbit) (target : Field) (N : Nat) :
     ¬ (∀ n, n ≥ N → o.states n = target)                     -- static eq. impossible
-    ∧ (∀ n, middle (o.states n)) :=                          -- dynamic eq. (orbit-form) holds
+    ∧ (∀ n, center (o.states n)) :=                          -- dynamic eq. (orbit-form) holds
   ⟨ZhongOrbit.shi_no_telos o target N, o.inMiddle⟩
 
 /-- **VCG auction 之 efficiency conditional on tongGen (truth-telling)**:
@@ -138,8 +138,8 @@ theorem equilibrium_static_vs_dynamic
     Conditional: 在 tongGen 之 下, action 之 极-pattern 在 任何 中-states 上 等价.  -/
 theorem vcg_auction_efficient_under_tongGen
     (a : Field → Field) (h_tongGen : tongGen a)
-    (s t : Field) (hs : middle s) (ht : middle t) :
-    extreme (a s) ↔ extreme (a t) := h_tongGen s t hs ht
+    (s t : Field) (hs : center s) (ht : center t) :
+    terminus (a s) ↔ terminus (a t) := h_tongGen s t hs ht
 
 
 /-! ## 三 · 证错 (Refuted) — 8 条
@@ -165,21 +165,21 @@ theorem prisoners_dilemma_refuted_under_tongGen
 theorem tragedy_of_commons_refuted
     (a : Field → Field) (h_tongGen : tongGen a)
     (h1 h2 : ZhongOrbit) (n : Nat)
-    (h_local_rational : middle (a (h1.states n)))
-    (h_collapse_other : extreme (a (h2.states n))) :
+    (h_local_rational : center (a (h1.states n)))
+    (h_collapse_other : terminus (a (h2.states n))) :
     False := moloch_via_externality_refuted a h_tongGen h1 h2 n h_local_rational h_collapse_other
 
 /-- **Free-rider 之 universality 之 否定 (搭便车 之 universal form 之 refute)**:
-    「universal free-riding」 = 所有 agents 都 collapse 至 contribution-extreme.
+    「universal free-riding」 = 所有 agents 都 collapse 至 contribution-terminus.
     在 ZhongField 之 中, 不可能 同时 全 极 (= `moloch_endpoint_refuted`).  -/
 theorem universal_free_rider_refuted (f : ZhongField) :
-    ¬ (∃ n, ∀ i : Fin f.k, extreme ((f.orbits i).states n)) :=
+    ¬ (∃ n, ∀ i : Fin f.k, terminus ((f.orbits i).states n)) :=
   moloch_endpoint_refuted f
 
 /-- **Race-to-bottom in regulatory competition 之 否定 (竞次)**:
     Regulatory race-to-bottom 假设 orbit 永 滑向 极. 直接 = `race_to_bottom_refuted`. -/
 theorem regulatory_race_to_bottom_refuted (o : ZhongOrbit) :
-    ¬ (∃ N, ∀ n, n ≥ N → extreme (o.states n)) :=
+    ¬ (∃ N, ∀ n, n ≥ N → terminus (o.states n)) :=
   race_to_bottom_refuted o
 
 /-- **Arrow's impossibility 之 strict-dictator reading 之 否定**:
@@ -198,15 +198,15 @@ theorem arrow_dictator_refuted (f : ZhongField) (n : Nat) :
     形式 sieve: 任 Xin 之 process 必 在 中 (`heart_middle`) — 故 「人 = 极-pursuer」
     描述 与 Xin 之 structural inMiddle 冲突. Xin 不 是 homo economicus. -/
 theorem homo_economicus_refuted (x : Xin) (n : Nat) :
-    middle (x.process.states n) ∧ ¬ extreme (x.process.states n) :=
+    center (x.process.states n) ∧ ¬ terminus (x.process.states n) :=
   ⟨x.process.inMiddle n, x.process.inMiddle n⟩
 
 /-- **「Greed-as-virtue」 (Mandeville/naive Smith) 之 否定**:
     naive Mandeville 之 reading: universal 私利 ⟹ 集体 福. 但 universal greed
-    要求 universal extreme (全 在 极 = Moloch endpoint), 直接 violate ZhongField
+    要求 universal terminus (全 在 极 = Moloch endpoint), 直接 violate ZhongField
     之 全 中. 形式 = `moloch_endpoint_refuted`. -/
 theorem universal_greed_refuted (f : ZhongField) :
-    ¬ (∃ n, ∀ i : Fin f.k, extreme ((f.orbits i).states n)) :=
+    ¬ (∃ n, ∀ i : Fin f.k, terminus ((f.orbits i).states n)) :=
   moloch_endpoint_refuted f
 
 /-- **Zero-sum framing 之 否定**:
@@ -214,7 +214,7 @@ theorem universal_greed_refuted (f : ZhongField) :
     同 中 — 没有 loser. 直接 = `zero_sum_refuted_by_ren`.  -/
 theorem zero_sum_refuted
     (h1 h2 : ZhongOrbit) (n : Nat) (h_distinct : h1.states n ≠ h2.states n) :
-    middle (h1.states n) ∧ middle (h2.states n) ∧ ren h1 h2 n :=
+    center (h1.states n) ∧ center (h2.states n) ∧ ren h1 h2 n :=
   zero_sum_refuted_by_ren h1 h2 n h_distinct
 
 
@@ -224,7 +224,7 @@ theorem zero_sum_refuted
     极-attractor configurations (PD, commons, race-to-bottom) IS 非道.
     本 meta-theorem 同时 给 二 形式: 全 中 (道 face) ∧ uniformity-attractor 不可能 (非道 之 否). -/
 theorem market_two_faces (f : ZhongField) (n : Nat) (target : Field) :
-    (∀ i : Fin f.k, middle ((f.orbits i).states n))   -- market 之 道 face: 全 中
+    (∀ i : Fin f.k, center ((f.orbits i).states n))   -- market 之 道 face: 全 中
     ∧ ¬ attractor target f                            -- 非道 之 否: uniformity attractor 不可能
     ∧ ¬ (∀ i j : Fin f.k, (f.orbits i).states n = (f.orbits j).states n) := by  -- ¬ uniformity
   refine ⟨fun i => (f.orbits i).inMiddle n, ?_, f.he_not_same n⟩

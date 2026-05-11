@@ -11,7 +11,7 @@ after S15-S17:
    classical finite-probability support;
 2. the concrete channel from S15 is genuinely nonzero on both displayed
    one-step edges;
-3. its sum-over-middle composition gives a nonzero prepared-to-measured
+3. its sum-over-center composition gives a nonzero prepared-to-measured
    two-step amplitude and connects to the S16 Born distribution boundary.
 
 This is a finite support-respecting typed skeleton.  It is not a Hilbert-space

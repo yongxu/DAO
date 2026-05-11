@@ -83,8 +83,8 @@ def pathPhase {P : FiniteProcess}
     (C : TwoStepEdgePhaseCandidate P)
     (p : TwoStepPathWitness P) : DiscretePhase :=
   discretePhaseAdd
-    (C.edgePhase p.start p.middle p.leftStep)
-    (C.edgePhase p.middle p.stop p.rightStep)
+    (C.edgePhase p.start p.center p.leftStep)
+    (C.edgePhase p.center p.stop p.rightStep)
 
 end TwoStepEdgePhaseCandidate
 

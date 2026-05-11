@@ -454,7 +454,7 @@ def coreTheoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .P_9  => some ⟨.P_9,  Stdlib.hexIdBody, 1, "止: Mohist stop as identity"⟩
   | .P_10 => some ⟨.P_10, Stdlib.hexIdBody, 1, "端: Mohist endpoint anchor as identity; no geometry semantics"⟩
   | .P_11 => some ⟨.P_11, Stdlib.pairHBody, 2, "尺: Hex pair carrier constructor; no metric semantics"⟩
-  | .P_12 => some ⟨.P_12, Stdlib.hexIdBody, 1, "中: Mohist middle-point anchor as identity; no geometry semantics"⟩
+  | .P_12 => some ⟨.P_12, Stdlib.hexIdBody, 1, "中: Mohist center-point anchor as identity; no geometry semantics"⟩
   | .P_13 => some ⟨.P_13, Stdlib.pairHBody, 2, "圜/圆: Hex pair carrier constructor; no geometric semantics"⟩
   | .P_18 => some ⟨.P_18, Stdlib.hexIdBody, 1, "法: Mohist model extractor anchor as identity; no rule semantics"⟩
   | .P_19 => some ⟨.P_19, Stdlib.hexIdBody, 1, "名: Mohist name-class anchor as identity; no naming/reference semantics"⟩

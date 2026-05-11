@@ -7,7 +7,7 @@ Companion:
 S17 records the channel-law boundary after S13-S16:
 
 1. the current typed skeleton has closed finite channel/probability interfaces:
-   pointwise composition, associativity, sum-over-middle two-step support, and
+   pointwise composition, associativity, sum-over-center two-step support, and
    conditional composed Born distribution boundary;
 2. the physical quantum-channel law still requires extra structure: Hilbert
    carriers, linear operators, unitary evolution, density matrices, complete

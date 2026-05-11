@@ -7,9 +7,9 @@ Companion:
 This module advances S5j by adding a conservative identity-key boundary for
 two-step path witnesses:
 
-1. it defines the finite two-step path key `(start, middle, stop)`;
+1. it defines the finite two-step path key `(start, center, stop)`;
 2. it proves that key equality implies equality of the visible endpoints and
-   middle state;
+   center state;
 3. it proves that the two-route upper and lower displayed paths have distinct
    keys;
 4. it proves that every toy source/target two-step witness has a key in the
@@ -37,14 +37,14 @@ open SSBX.Foundation.Modern.QuantumRelativityWenBoundary
 /-- The visible identity key of a two-step path witness. -/
 structure TwoStepPathKey (P : FiniteProcess) where
   start : P.State
-  middle : P.State
+  center : P.State
   stop : P.State
 
 /-- Forget proof fields and keep only visible two-step path identity data. -/
 def twoStepPathKey {P : FiniteProcess}
     (p : TwoStepPathWitness P) : TwoStepPathKey P where
   start := p.start
-  middle := p.middle
+  center := p.center
   stop := p.stop
 
 /-- Key equality preserves the visible start state. -/
@@ -55,12 +55,12 @@ theorem two_step_path_key_eq_start {P : FiniteProcess}
   have hs := congrArg TwoStepPathKey.start h
   simpa [twoStepPathKey] using hs
 
-/-- Key equality preserves the visible middle state. -/
+/-- Key equality preserves the visible center state. -/
 theorem two_step_path_key_eq_middle {P : FiniteProcess}
     {p q : TwoStepPathWitness P}
     (h : twoStepPathKey p = twoStepPathKey q) :
-    p.middle = q.middle := by
-  have hm := congrArg TwoStepPathKey.middle h
+    p.center = q.center := by
+  have hm := congrArg TwoStepPathKey.center h
   simpa [twoStepPathKey] using hm
 
 /-- Key equality preserves the visible stop state. -/
@@ -86,22 +86,22 @@ theorem two_route_upper_lower_keys_distinct :
   have hm := two_step_path_key_eq_middle h
   exact two_route_paths_distinct_middle hm
 
-/-- A source/target two-step path with upper middle has the upper displayed key. -/
+/-- A source/target two-step path with upper center has the upper displayed key. -/
 theorem two_route_source_target_upper_middle_key
     (p : TwoStepPathWitness twoRouteProcess)
     (hStart : p.start = TwoRouteState.source)
-    (hMiddle : p.middle = TwoRouteState.upper)
+    (hMiddle : p.center = TwoRouteState.upper)
     (hStop : p.stop = TwoRouteState.target) :
     twoStepPathKey p = twoStepPathKey twoRouteUpperPath := by
   cases p
   simp [twoStepPathKey, twoRouteUpperPath] at hStart hMiddle hStop ⊢
   exact ⟨hStart, hMiddle, hStop⟩
 
-/-- A source/target two-step path with lower middle has the lower displayed key. -/
+/-- A source/target two-step path with lower center has the lower displayed key. -/
 theorem two_route_source_target_lower_middle_key
     (p : TwoStepPathWitness twoRouteProcess)
     (hStart : p.start = TwoRouteState.source)
-    (hMiddle : p.middle = TwoRouteState.lower)
+    (hMiddle : p.center = TwoRouteState.lower)
     (hStop : p.stop = TwoRouteState.target) :
     twoStepPathKey p = twoStepPathKey twoRouteLowerPath := by
   cases p
@@ -139,7 +139,7 @@ theorem two_route_source_target_key_complete :
 /-! ## § 3 Public summary -/
 
 /-- Public summary for S5k:
-    two-step path witnesses now have a visible `(start, middle, stop)` key.
+    two-step path witnesses now have a visible `(start, center, stop)` key.
     In the toy two-route process, upper and lower displayed route keys are
     distinct, and every source/target two-step witness has a key in the
     displayed key enumeration.  This proves only a finite identity-key
@@ -149,7 +149,7 @@ theorem path_identity_bridge_summary :
     (∀ {P : FiniteProcess} {p q : TwoStepPathWitness P},
       twoStepPathKey p = twoStepPathKey q -> p.start = q.start)
     ∧ (∀ {P : FiniteProcess} {p q : TwoStepPathWitness P},
-      twoStepPathKey p = twoStepPathKey q -> p.middle = q.middle)
+      twoStepPathKey p = twoStepPathKey q -> p.center = q.center)
     ∧ (∀ {P : FiniteProcess} {p q : TwoStepPathWitness P},
       twoStepPathKey p = twoStepPathKey q -> p.stop = q.stop)
     ∧ twoStepPathKey twoRouteUpperPath ≠

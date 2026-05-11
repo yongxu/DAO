@@ -118,7 +118,7 @@ theorem print_parse_round_trip (c : Cell) : parseCell (printCell c) = .ok c := b
 
 /-- Flip the bottom yao (y1). -/
 def flip1 : Cell := ⟨.yang, .yin,  .yin⟩
-/-- Flip the middle yao (y2). -/
+/-- Flip the center yao (y2). -/
 def flip2 : Cell := ⟨.yin,  .yang, .yin⟩
 /-- Flip the top yao (y3). -/
 def flip3 : Cell := ⟨.yin,  .yin,  .yang⟩
