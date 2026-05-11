@@ -207,6 +207,48 @@ theorem metaInterpProg_fetchProg_at_offset :
   · rfl
   omega
 
+/-- The concrete dispatch tree is spliced into `metaInterpProg` starting at
+    `dispatchOffset`.  This is the segment witness needed before standalone
+    dispatch routing lemmas can be lifted to absolute pc execution. -/
+theorem metaInterpProg_dispatchProg_at_offset :
+    ∀ i (_hi : i < 16),
+      metaInterpProg[dispatchOffset + i]? =
+        (DispatchProg.dispatchProg metaInterpDispatchOffsets dispatchOffset)[i]? := by
+  intro i hi
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  omega
+
 /-- Tier B routing theorem: from a META state at `pc = outerLoopOffset`
     running `metaInterpProg`, one fuel step lands at `pc = fetchOffset`. -/
 theorem metaInterpProg_routes_outerLoop_to_fetch
@@ -310,11 +352,15 @@ theorem metaInterpProg_base256_structural_summary :
       ∧ (∀ i (_hi : i < FetchProg.fetchProg_totalLen),
           metaInterpProg[fetchOffset + i]? =
             (FetchProg.fetchProg dispatchOffset haltOffset)[i]?)
+      ∧ (∀ i (_hi : i < 16),
+          metaInterpProg[dispatchOffset + i]? =
+            (DispatchProg.dispatchProg metaInterpDispatchOffsets dispatchOffset)[i]?)
       ∧ metaInterpProg[haltOffset]? = some YiInstr.halt
       ∧ metaInterpDispatchOffsets.halt_offset = haltOffset := by
   exact ⟨metaInterpProg_length,
     metaInterpProg_outerLoop_at_offset,
     metaInterpProg_fetchProg_at_offset,
+    metaInterpProg_dispatchProg_at_offset,
     metaInterpProg_simulates_one_halt.1,
     metaInterpProg_simulates_one_halt.2⟩
 
