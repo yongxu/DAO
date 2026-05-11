@@ -377,6 +377,53 @@ theorem encMetaHistory_pc_set
   unfold encMetaHistory
   rfl
 
+/-- Advancing the simulated pc by one grows `encMetaHistory` by exactly one
+    cell.  Changing `cur` at the same step does not affect the encoded META
+    history layout. -/
+theorem encMetaHistory_pc_increment_length
+    (regHex : Hexagram) (sim : YiState) (nextCur : R8) :
+    (encMetaHistory regHex
+      { sim with cur := nextCur, pc := sim.pc + 1 }).length =
+      (encMetaHistory regHex sim).length + 1 := by
+  rw [encMetaHistory_length, encMetaHistory_length]
+  simp
+  omega
+
+/-- A simulated one-step pc increment cannot leave the encoded META history
+    byte-for-byte unchanged. -/
+theorem encMetaHistory_pc_increment_ne_unchanged
+    (regHex : Hexagram) (sim : YiState) (nextCur : R8) :
+    encMetaHistory regHex { sim with cur := nextCur, pc := sim.pc + 1 } ≠
+      encMetaHistory regHex sim := by
+  intro h
+  have hlen := congrArg List.length h
+  rw [encMetaHistory_pc_increment_length] at hlen
+  omega
+
+/-- Boundary fact for exact block witnesses: if the source step increments
+    `pc`, any META block result whose history is still the pre-step
+    `encMetaHistory` cannot satisfy `BlockPost`.
+
+    This exposes why cur-only placeholder blocks with unchanged history are
+    local-effect witnesses only; exact `BlockPost` needs a real pc-counter
+    update in META history. -/
+theorem blockPost_unchanged_history_impossible_after_pc_increment
+    (regHex : Hexagram) (sim : YiState) (fetchOffset : Nat)
+    (metaProg : List YiInstr) (μ' : YiState) (endHalted : Bool)
+    (nextCur : R8)
+    (h_step : sim.step =
+      { sim with cur := nextCur, pc := sim.pc + 1 })
+    (h_history : μ'.history = encMetaHistory regHex sim) :
+    ¬ BlockPost regHex sim fetchOffset metaProg μ' endHalted := by
+  intro h_post
+  have h_eq :
+      encMetaHistory regHex
+        { sim with cur := nextCur, pc := sim.pc + 1 } =
+        encMetaHistory regHex sim := by
+    rw [← h_step, ← h_post.history]
+    exact h_history
+  exact encMetaHistory_pc_increment_ne_unchanged regHex sim nextCur h_eq
+
 /-! ## § 3  Worked example: executeBlock_halt
 
 The `halt` opcode: sets `sim.halted := true`, no other change.
