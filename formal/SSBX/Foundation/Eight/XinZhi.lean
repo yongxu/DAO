@@ -93,15 +93,15 @@ theorem sixiang_fensi_roundtrip (s : SiXiang) :
     - 辞让之心（礼之端）
     - 是非之心（智之端）-/
 inductive SiDuan : Type
-  | ceYin   -- 恻隐（仁）
-  | xiuWu   -- 羞恶（义）
-  | ciRang  -- 辞让（礼）
-  | shiFei  -- 是非（智）
+  | compassion   -- 恻隐（仁）
+  | shame   -- 羞恶（义）
+  | yielding  -- 辞让（礼）
+  | discernment  -- 是非（智）
   deriving DecidableEq, Repr
 
 /-- 四端穷尽。 -/
 def SiDuan.all : List SiDuan :=
-  [.ceYin, .xiuWu, .ciRang, .shiFei]
+  [.compassion, .shame, .yielding, .discernment]
 
 theorem siduan_all_length : SiDuan.all.length = 4 := rfl
 
@@ -115,19 +115,19 @@ theorem siduan_all_length : SiDuan.all.length = 4 := rfl
 
 /-- 四端 → 四正卦 之映射。 -/
 def SiDuan.toTrigram : SiDuan → Trigram
-  | .ceYin   => Trigram.fire
-  | .xiuWu   => Trigram.water
-  | .ciRang  => Trigram.thunder
-  | .shiFei  => Trigram.lake
+  | .compassion   => Trigram.fire
+  | .shame   => Trigram.water
+  | .yielding  => Trigram.thunder
+  | .discernment  => Trigram.lake
 
 /-- 6 对不等式由 `siduan_toTrigram_injective` 之 contrapositive 立得；此处记 SiDuan 之 inductive 不等。 -/
-theorem ceYin_ne_xiuWu : SiDuan.ceYin ≠ SiDuan.xiuWu := by decide
+theorem ceYin_ne_xiuWu : SiDuan.compassion ≠ SiDuan.shame := by decide
 
 /-- **四端各自之具体 Trigram 值**（用于注入性论证）。 -/
-theorem siduan_to_li : SiDuan.toTrigram .ceYin = Trigram.fire := rfl
-theorem siduan_to_kan : SiDuan.toTrigram .xiuWu = Trigram.water := rfl
-theorem siduan_to_zhen : SiDuan.toTrigram .ciRang = Trigram.thunder := rfl
-theorem siduan_to_dui : SiDuan.toTrigram .shiFei = Trigram.lake := rfl
+theorem siduan_to_li : SiDuan.toTrigram .compassion = Trigram.fire := rfl
+theorem siduan_to_kan : SiDuan.toTrigram .shame = Trigram.water := rfl
+theorem siduan_to_zhen : SiDuan.toTrigram .yielding = Trigram.thunder := rfl
+theorem siduan_to_dui : SiDuan.toTrigram .discernment = Trigram.lake := rfl
 
 /-- **四端 → 四正卦 是单射**：四个不同卦对应四个不同端（通过 16 case 检验）。 -/
 theorem siduan_toTrigram_injective :

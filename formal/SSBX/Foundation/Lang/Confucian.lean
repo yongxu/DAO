@@ -18,10 +18,10 @@ in the (Z/2)ⁿ hierarchy:
 
 | 层 | 名 | 落位 | 类型 | 来源 |
 | --- | --- | --- | --- | --- |
-| R₃ | 恻隐 (仁端) | 离 ☲ | alias | from `SiDuan.toTrigram .ceYin` |
-| R₃ | 羞恶 (义端) | 坎 ☵ | alias | from `SiDuan.toTrigram .xiuWu` |
-| R₃ | 辞让 (礼端) | 震 ☳ | alias | from `SiDuan.toTrigram .ciRang` |
-| R₃ | 是非 (智端) | 兑 ☱ | alias | from `SiDuan.toTrigram .shiFei` |
+| R₃ | 恻隐 (仁端) | 离 ☲ | alias | from `SiDuan.toTrigram .compassion` |
+| R₃ | 羞恶 (义端) | 坎 ☵ | alias | from `SiDuan.toTrigram .shame` |
+| R₃ | 辞让 (礼端) | 震 ☳ | alias | from `SiDuan.toTrigram .yielding` |
+| R₃ | 是非 (智端) | 兑 ☱ | alias | from `SiDuan.toTrigram .discernment` |
 | R₃ | 格物 | 巽 ☴ (penetrate) | new | proposed |
 | R₃ | 致知 | 离 ☲ (illuminate) | new | proposed |
 | R₃ | 诚意 | 兑 ☱ (joy/lake) | new | proposed |
@@ -71,10 +71,10 @@ def discernment : Trigram := Trigram.lake
 /-- These four aliases agree with the existing `SiDuan.toTrigram` mapping
 in `Foundation/Eight/XinZhi.lean`. -/
 theorem siduan_agrees_with_XinZhi :
-    compassion = SSBX.Foundation.Eight.XinZhi.SiDuan.toTrigram .ceYin ∧
-    shame = SSBX.Foundation.Eight.XinZhi.SiDuan.toTrigram .xiuWu ∧
-    yielding = SSBX.Foundation.Eight.XinZhi.SiDuan.toTrigram .ciRang ∧
-    discernment = SSBX.Foundation.Eight.XinZhi.SiDuan.toTrigram .shiFei := by
+    compassion = SSBX.Foundation.Eight.XinZhi.SiDuan.toTrigram .compassion ∧
+    shame = SSBX.Foundation.Eight.XinZhi.SiDuan.toTrigram .shame ∧
+    yielding = SSBX.Foundation.Eight.XinZhi.SiDuan.toTrigram .yielding ∧
+    discernment = SSBX.Foundation.Eight.XinZhi.SiDuan.toTrigram .discernment := by
   refine ⟨rfl, rfl, rfl, rfl⟩
 
 /-- The 4 端 are pairwise distinct. -/
