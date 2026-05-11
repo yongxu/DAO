@@ -174,6 +174,39 @@ theorem metaInterpProg_outerLoop_at_offset :
   -- instruction of the outerLoopEntry block.
   rfl
 
+/-- The concrete `FetchProg.fetchProg` block is spliced into
+    `metaInterpProg` starting at `fetchOffset`.  This is the segment
+    hypothesis required by the `FetchProg` route theorems. -/
+theorem metaInterpProg_fetchProg_at_offset :
+    ∀ i (_hi : i < FetchProg.fetchProg_totalLen),
+      metaInterpProg[fetchOffset + i]? =
+        (FetchProg.fetchProg dispatchOffset haltOffset)[i]? := by
+  intro i hi
+  unfold FetchProg.fetchProg_totalLen FetchProg.walkerLen at hi
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  omega
+
 /-- Tier B routing theorem: from a META state at `pc = outerLoopOffset`
     running `metaInterpProg`, one fuel step lands at `pc = fetchOffset`. -/
 theorem metaInterpProg_routes_outerLoop_to_fetch
@@ -206,6 +239,35 @@ theorem metaInterpProg_routes_outerLoop_to_fetch
               rfl rfl rfl
   simp [YiState.runFuel, this]
 
+/-- Assembly-specialized halted fetch route, with explicit peel fuel. -/
+theorem metaInterpProg_fetch_routes_halted_at_fuel
+    (regHex : Hexagram) (sim : YiState)
+    (h_halted : sim.halted = true)
+    (M0 : Nat)
+    (h_peel :
+      (Fetch.fetchEntryState regHex sim metaInterpProg fetchOffset).runFuel M0 =
+        FetchProg.fetchProgHaltDetectEntry regHex sim metaInterpProg fetchOffset true) :
+    ((Fetch.fetchEntryState regHex sim metaInterpProg fetchOffset).runFuel
+      (M0 + 1)).pc = haltOffset := by
+  exact FetchProg.fetchProg_routes_halted_at_fuel regHex sim metaInterpProg
+    fetchOffset dispatchOffset haltOffset metaInterpProg_fetchProg_at_offset
+    h_halted M0 h_peel
+
+/-- Assembly-specialized running fetch route, with explicit peel fuel. -/
+theorem metaInterpProg_fetch_routes_running_to_dispatch_at_fuel
+    (regHex : Hexagram) (sim : YiState)
+    (h_running : sim.halted = false)
+    (h_pcInBounds : sim.pc < sim.prog.length)
+    (M0 : Nat)
+    (h_peel :
+      (Fetch.fetchEntryState regHex sim metaInterpProg fetchOffset).runFuel M0 =
+        FetchProg.fetchProgHaltDetectEntry regHex sim metaInterpProg fetchOffset false) :
+    ((Fetch.fetchEntryState regHex sim metaInterpProg fetchOffset).runFuel
+      (M0 + 1 + (FetchProg.walkerLen + 1))).pc = dispatchOffset := by
+  exact FetchProg.fetchProg_routes_running_to_dispatch_at_fuel regHex sim metaInterpProg
+    fetchOffset dispatchOffset haltOffset metaInterpProg_fetchProg_at_offset
+    h_running h_pcInBounds M0 h_peel
+
 /-! ## § 6  Tier C — single-opcode end-to-end smoke
 
 Stretch goal.  Constructing a fully-encoded META start state for a
@@ -235,5 +297,25 @@ theorem metaInterpProg_simulates_one_halt :
   -- haltOffset = 84; the executeBlock_halt block at positions 84..84
   -- is the singleton list `[YiInstr.halt]`.
   rfl
+
+/-- Base-256 assembly summary: the concrete meta-interpreter program has fixed
+    shape, enters fetch through the outer-loop jump, and contains the halt arm
+    required by the structural smoke theorem.
+
+    This does not claim the full universal semantic theorem; parameterized
+    sub-dispatch and arbitrary-program simulation remain separate obligations. -/
+theorem metaInterpProg_base256_structural_summary :
+    metaInterpProg.length = 85
+      ∧ metaInterpProg[outerLoopOffset]? = some (YiInstr.jump fetchOffset)
+      ∧ (∀ i (_hi : i < FetchProg.fetchProg_totalLen),
+          metaInterpProg[fetchOffset + i]? =
+            (FetchProg.fetchProg dispatchOffset haltOffset)[i]?)
+      ∧ metaInterpProg[haltOffset]? = some YiInstr.halt
+      ∧ metaInterpDispatchOffsets.halt_offset = haltOffset := by
+  exact ⟨metaInterpProg_length,
+    metaInterpProg_outerLoop_at_offset,
+    metaInterpProg_fetchProg_at_offset,
+    metaInterpProg_simulates_one_halt.1,
+    metaInterpProg_simulates_one_halt.2⟩
 
 end SSBX.Foundation.Wen.MetaInterp.Assembly
