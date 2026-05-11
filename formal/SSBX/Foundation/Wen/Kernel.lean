@@ -128,110 +128,70 @@ private abbrev cell128Xor : Cell128 → Cell128 → Cell128 :=
 private abbrev cell128Origin : Cell128 :=
   SSBX.Foundation.Bagua.Cell128.Cell128.origin
 
-/-! ## Phase K — Cayley-native grounding
+/-! ## Phase K — Cayley-native grounding (native, no opacity)
 
-  The opaque `theOne` witness has been migrated from `Fin 3` (a 3-cycle
-  toy state-space) to `Cell128 = Hexagram × YinBit = (Z/2)⁷`, with
-  `motion` realized as Cayley XOR-with-a-specific-cell. This bridges
-  Kernel.lean to the (Z/2)ⁿ R-hierarchy without changing any downstream
-  theorem statement — all consume `One` via its abstract interface.
+  Field IS the R₇ layer `Cell128 = Hexagram × YinBit = (Z/2)⁷`.
+  `motion` is XOR with the doctrinal primer cell c_motion = 姤·无 = 仁.
+  No opacity, no `One` indirection — the substrate is the native
+  (Z/2)⁷ algebra. Every Kernel concept (中/极/几/势/...) reads
+  through R₇ cells with Cayley action.
 
-  **Cayley grounding**: `motion s = Cell128.xor s c_motion` where
-  `c_motion` is the canonical "primer movement" cell. Doctrinally:
-  `c_motion = (姤, false) = R7_xoooooo` — the first stir, 仁的 Cayley face.
-
-  Consequence: every Kernel concept (中/极/几/势/...) now reads
-  through `(Z/2)⁷` cells with Cayley action. Two-system gap eliminated.
+  Cayley grounding: `motion s = Cell128.xor s c_motion` — definitionally,
+  proven by `rfl`. No axiom.
 -/
+
+/-- 場 (Field): the R₇ layer = Cell128 = (Z/2)⁷.
+    Pure abbrev — the R-hierarchy is the substrate. -/
+abbrev Field : Type := Cell128
+
+/-- 一 (yiOne) alias for the framework root type — Field = R₇. -/
+abbrev yiOne : Type := Field
 
 /-- The canonical "primer movement" cell.
     = 姤·无 = R7_xoooooo = "first stir" / 仁 (Wuchang.benevolence) -/
-private def c_motion : Cell128 :=
+def c_motion : Cell128 :=
   (⟨Yao.yin, Yao.yang, Yao.yang, Yao.yang, Yao.yang, Yao.yang⟩, false)
 
-/-! ### Layer 0: 一 (THE ROOT) — single-axiom genesis
+/-- 動 (motion): Cayley XOR with c_motion. Not opaque — the doctrine
+    states the algebra directly. -/
+def motion : Field → Field := fun s => cell128Xor s c_motion
 
-  v13.2 卷〇 一元: "天下之本一也."
-  严格 「一为本」 之 实现:
-    所有 framework 之 substantive 单字 (Field, motion, exists_middle)
-    皆 是 一 之 projection — NOT separate axioms.
-    单一 axiom: ∃ 一.
+/-- 元 之 起点 (origin): the (Z/2)⁷ identity = 乾·无. -/
+def origin : Field := cell128Origin
+
+/-- 元 之 alive: motion takes origin to c_motion ≠ origin. -/
+theorem origin_alive : motion origin ≠ origin := by native_decide
+
+/-! ### Cayley grounding bridge — by `rfl`
+
+  No axiom. Lean reduces `motion s` to `cell128Xor s c_motion`
+  definitionally. The Cayley structure IS the framework — there is
+  no abstraction to bridge.
 -/
+theorem kernel_motion_eq_cayley (s : Field) : motion s = cell128Xor s c_motion := rfl
 
-/-- 一 (One): 架构 之 root.
+/-! ### Legacy `One` structure — preserved for downstream signatures
 
-    四 fields, 全 constructive (no abstract existentials):
-    - state: 場 (state-universe)
-    - motion: 動 (motion operator)
-    - origin: 元 之 起点 (designated point of departure)
-    - alive: 「动起则元成」 (motion at origin is genuine — origin is 中, not 极)
-
-    Per v5 §二 l. 59-64: "动初显处, 谓之元. 动息则元亡, 动起则元成."
-    The framework's commit IS that 一 has a live origin — concrete witness,
-    not abstract existence claim. -/
+  Pre-refactor, `theOne : One` was the abstract witness for downstream
+  proofs that consume `theOne.state`/`theOne.motion`/`theOne.origin`/
+  `theOne.alive`. We keep this thin shim so those proofs build, but the
+  fields just project to the native definitions above. -/
 structure One where
-  /-- 場 (state-universe). -/
   state : Type
-  /-- 動 (motion operator on state). 「动初显处, 谓之元」. -/
   motion : state → state
-  /-- 元 之 起点: a designated origin in state. v5: "动起则元成." -/
   origin : state
-  /-- 「动起」 — origin is alive (motion takes it elsewhere; origin 是 中, 不 极). -/
   alive : motion origin ≠ origin
 
-/-- **theOne — opaque, witnessed**.  框架级 一 之 sealed 见证。
-
-    Replaces the previous `axiom theOne : One` with an `opaque def`.  The
-    body provides a concrete witness (`Fin 3` with `motion := 0↔1, 2 fixed`),
-    so existence is constructively established — `#print axioms` shows
-    NO axiom for theOne.  But `opaque` seals the definition: Lean refuses
-    to unfold it, so `Field := theOne.state` stays abstract and downstream
-    proofs cannot collapse via `decide` on the Fin 3 representation.
-
-    This is metaphysically faithful to v5 §二: 一 exists (witnessed) but
-    its *carrier* is opaque to the framework — 道可道，非常道. The framework
-    commits to existence + properties (alive origin, 中/极 inhabited)
-    without committing to a specific carrier type.
-
-    Witness internals (private — not unfoldable downstream):
-    - state := Fin 3, origin := 0
-    - motion (0↔1, 2 fixed) — both center (0,1) and terminus (2) are inhabited
-    - alive : motion 0 = 1 ≠ 0 (provable by decide on the witness) -/
-opaque theOne : One :=
-  { state  := Cell128
-    motion   := fun s => cell128Xor s c_motion
-    origin := cell128Origin
-    alive  := by
-      -- xor origin c_motion = c_motion ≠ origin (because c_motion = 姤·无 ≠ 乾·无)
-      show cell128Xor cell128Origin c_motion ≠ cell128Origin
-      native_decide }
-
-/-! #### 自 一 derived: 場, 動, 元, 一 (yiOne alias) -/
-
-/-- 場 (Field): 一 之 state-universe (transparent alias, not new axiom). -/
-abbrev Field : Type := theOne.state
-
-/-- 一 (yiOne) alias for the framework root type — Field. -/
-abbrev yiOne : Type := Field
-
-/-- 動 (motion): 一 之 motion. NOT an axiom — projection of theOne.
-    生 (聚) 与 灭 (散) 是 動 之 两面 (v5 §六 l. 136-144).
-    「無自体, 以一为体」. -/
-noncomputable def motion : Field → Field := theOne.motion
-
-/-- 元 之 起点 (origin): 一 之 designated departure point.
-    "动起则元成" (v5 §二 l. 60). NOT an axiom — projection of theOne.
-    Concrete witness 替代 abstract existential claim. -/
-noncomputable def origin : Field := theOne.origin
-
-/-- 元 之 alive: motion takes origin elsewhere — origin is 中.
-    NOT an axiom — projection of theOne. -/
-theorem origin_alive : motion origin ≠ origin := theOne.alive
+def theOne : One :=
+  { state  := Field
+    motion := motion
+    origin := origin
+    alive  := origin_alive }
 
 /-- 元 (yuan) function: 動 之 single application from any state.
     "动初显处, 谓之元... 元无自体, 以动为体."
     元 ≡ 動 (as operations); the FIRST 元 is `yuan origin`. -/
-noncomputable def yuan (s : Field) : Field := motion s
+def yuan (s : Field) : Field := motion s
 
 /-- 元 ≡ 動 之 一 application (alias proof). -/
 theorem yuan_eq_dong (s : Field) : yuan s = motion s := rfl
@@ -258,7 +218,7 @@ theorem origin_is_middle : center origin := origin_alive
 /-- 几 (continuity): n successive applications of 動.
     "过程之最初之自指" (v5 §三 l. 79) — 几 IS structural self-reference,
     because 几(n+1) is defined IN TERMS OF 几(n). -/
-noncomputable def trace : Nat → Field → Field
+def trace : Nat → Field → Field
   | 0, s => s
   | n+1, s => motion (trace n s)
 
@@ -807,7 +767,7 @@ theorem alignment_self_grounding (x : Xin) (n : Nat) : good (x.process.states n)
 /-- 生 (engenders): 動 之 「生成」 一面 — same operation, generation aspect.
     v5 §六 l. 136-144: "生与灭...皆同一过程之两面."
     生 ≡ 動 (as a Field → Field operation). -/
-noncomputable def engenders (s : Field) : Field := motion s
+def engenders (s : Field) : Field := motion s
 
 /-- 息 (rest): 動 之 「停息」 — same predicate as 极 (cessation = fixed-point trap).
     v5 §二 l. 60: "动息则元亡." 息 ≡ 极. -/
@@ -815,7 +775,7 @@ def rest (s : Field) : Prop := terminus s
 
 /-- 行 (act): 動 之 「actor's act」 — same operation, agent-perspective.
     v5 §二十三 l. 759: "义 = 仁之于具体行." 行 ≡ 動. -/
-noncomputable def act (s : Field) : Field := motion s
+def act (s : Field) : Field := motion s
 
 /-- 生 ≡ 動 (alias proof). 加 字 of 生 不 加 axiom. -/
 theorem engenders_eq_motion (s : Field) : engenders s = motion s := rfl
@@ -2724,7 +2684,7 @@ inductive ChuciDirection
   deriving Repr, DecidableEq
 
 /-- 方向图 edge semantics: 每一方向给出一个 state transformation。 -/
-noncomputable def chuciEdge : ChuciDirection → Field → Field
+def chuciEdge : ChuciDirection → Field → Field
   | .zhao, s => motion s
   | .jiang, s => yuan s
   | .deng, s => trace 2 s
@@ -2864,7 +2824,7 @@ theorem huainanzi_total_synthesis
 /-! #### 46.7 辩者精化 — 惠施极限算子 / 邓析两可 / 尹文子名分 type-boundary -/
 
 /-- 惠施极限算子: 以任意尺度 k 读取同一 orbit 的 k-fold process。 -/
-noncomputable def huishiLimitOperator (o : ZhongOrbit) (k : Nat) : Field :=
+def huishiLimitOperator (o : ZhongOrbit) (k : Nat) : Field :=
   trace k (o.states 0)
 
 /-- 邓析两可: 同一 state 可在多值判断中位于中/极二分的可判别边界。 -/

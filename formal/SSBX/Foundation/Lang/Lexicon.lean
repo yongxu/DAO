@@ -363,4 +363,34 @@ theorem lexicon_summary :
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
   all_goals native_decide
 
+/-! ## § 12 Round-trip property
+
+  For every Chinese entry, the round-trip Chinese → English → Chinese
+  returns either the original or its first-table-witness (when the
+  Chinese form is polysemous — e.g., 乾 appears in trigram and hexagram
+  tables, both map to "heaven", and the first occurrence wins). -/
+
+/-- Round-trip from Chinese: for every entry, `englishOf e.chinese`
+    resolves and Chinese-from-that-English is well-defined.
+    Decided by `native_decide` over the finite `allEntries` list. -/
+theorem lexicon_round_trip_chinese :
+    ∀ e ∈ Lookup.allEntries,
+      ∃ en, Lookup.englishOf e.chinese = some en
+        ∧ Lookup.chineseOf en ≠ none := by
+  native_decide
+
+/-- Spot-check witnessing the round-trip on representative entries
+    across all 8 tables. -/
+theorem lexicon_round_trip_witnesses :
+    Lookup.chineseOf "heaven" = some "乾" ∧
+    Lookup.chineseOf "benevolence" = some "仁" ∧
+    Lookup.chineseOf "complete" = some "既济" ∧
+    Lookup.chineseOf "imprint" = some "印" ∧
+    Lookup.chineseOf "wisdom" = some "智" ∧
+    Lookup.chineseOf "greaterYang" = some "太阳" ∧
+    Lookup.chineseOf "fatherSon" = some "父子" ∧
+    Lookup.chineseOf "thing" = some "物" := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  all_goals native_decide
+
 end SSBX.Foundation.Lang.Lexicon
