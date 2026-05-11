@@ -188,6 +188,20 @@ structure FetchHaltOutcome
   /-- META is still alive (writeback runs after halt detection). -/
   halted     : μ'.halted = false
 
+/-- Target constructor for the out-of-bounds fetch branch: once a concrete
+    routine has restored the canonical halted simulated state and routed to
+    `haltOffset`, the `FetchHaltOutcome` record is immediate. -/
+theorem fetchHaltOutcome_restored_state
+    (regHex : Hexagram) (sim : YiState) (metaProg : List YiInstr)
+    (haltOffset : Nat) (cur : R8) :
+    FetchHaltOutcome regHex sim metaProg haltOffset
+      { cur := cur
+        history := encMetaHistory regHex { sim with halted := true }
+        pc := haltOffset
+        prog := metaProg
+        halted := false } := by
+  exact ⟨rfl, rfl, rfl, rfl⟩
+
 /-! ## § 2  Concrete `fetchProtocol` skeleton
 
   The protocol below is the *structural* implementation: a concrete
