@@ -310,6 +310,57 @@ theorem encMetaHistory_nop_step
   rw [encCounter_succ]
   simp [List.cons_append]
 
+/-- Exact `BlockPre → BlockPost` witness for `nop` under the current aligned
+    register-cell invariant.  The `nop` block pushes `META.cur` as the new
+    pc-counter data cell, so this proof needs the loop invariant
+    `sim.cur = regDataCell regHex`. -/
+theorem executeBlock_nop_simulates_aligned
+    (regHex : Hexagram) (sim : YiState)
+    (offset fetchOffset : Nat) (metaProg : List YiInstr) (μ : YiState)
+    (h_alive : sim.halted = false)
+    (h_nop : sim.prog[sim.pc]? = some .nop)
+    (h_curAligned : sim.cur = regDataCell regHex)
+    (h_pushAt : metaProg[offset]? = some YiInstr.push)
+    (h_jumpAt : metaProg[offset + 1]? = some (YiInstr.jump fetchOffset))
+    (h_pre : BlockPre regHex sim offset metaProg μ) :
+    BlockPost regHex sim fetchOffset metaProg (μ.runFuel 2) false := by
+  obtain ⟨hcur, hhist, hpc, hprog, hhalt⟩ := h_pre
+  let μ1 : YiState :=
+    { cur := sim.cur
+      history := sim.cur :: encMetaHistory regHex sim
+      pc := offset + 1
+      prog := metaProg
+      halted := false }
+  have h_step0 : μ.step = μ1 := by
+    unfold YiState.step
+    rw [hhalt]
+    simp only [Bool.false_eq_true, if_false]
+    rw [hprog, hpc, h_pushAt]
+    unfold YiState.execute
+    simp [μ1, hcur, hhist, hpc, hprog, hhalt]
+  have h_run1 : μ.runFuel 1 = μ1 := by
+    unfold YiState.runFuel
+    rw [hhalt]
+    simpa using h_step0
+  have h_step1 :
+      μ1.step = { μ1 with pc := fetchOffset } := by
+    unfold YiState.step
+    simp [μ1, h_jumpAt, YiState.execute]
+  have h_run2 : μ.runFuel 2 = { μ1 with pc := fetchOffset } := by
+    rw [show (2 : Nat) = 1 + 1 from rfl,
+      SSBX.Foundation.Bagua.GodelLi.runFuel_succ_right, h_run1, h_step1]
+  have h_sim_step : sim.step = { sim with pc := sim.pc + 1 } := by
+    simp [YiState.step, h_alive, h_nop, YiState.execute]
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · rw [h_run2, h_sim_step]
+  · rw [h_run2]
+    simp [μ1]
+    rw [h_curAligned]
+    exact (encMetaHistory_nop_step regHex sim h_alive h_nop).symm
+  · rw [h_run2]
+  · rw [h_run2]
+  · rw [h_run2]
+
 /-! ## § 2.1  Encoding shape for pc-only updates -/
 
 /-- Replacing only the simulated pc rewrites exactly the leading
