@@ -1,4 +1,4 @@
-> 状态：v1.5 (2026-05-11) — Phase R/K/L 后之 self-similarity roadmap 已完成一轮形式补齐；5.1/5.2 的 R-O represented-operator self-duality 与 finite Boolean character self-duality 已 machineChecked；F.7c.7 已补 halt-arm absolute-pc dispatch route + halt execution smoke witness；full arbitrary-program universal compose 仍 pending。
+> 状态：v1.6 (2026-05-11) — Phase R/K/L 后之 self-similarity roadmap 已完成一轮形式补齐；5.1/5.2 的 R-O represented-operator self-duality 与 finite Boolean character self-duality 已 machineChecked；F.7c.8 已补 halt-arm absolute-pc dispatch route、halt execution smoke witness、pc-counter peel exposes halted-flag bridge；full arbitrary-program universal compose 仍 pending。
 
 # Roadmap — Self-similarity 形式化 (v1, post Phase R cutover)
 
@@ -23,7 +23,7 @@ v1.1 本轮完成项：
 - `Kernel.lean` / `DaoJudge.lean` 补齐 post-Cayley collapse、R₇ Lisp closure、concrete bilingual identity。
 - 新增 `ClassicalTextRHierarchyBridge.lean` 与 `QuantumR8Bridge.lean`，只证明 direct typed skeleton；Quantum 桥已含有限函数空间 `R8 → ℂ` 与 faithful regular translation，但不宣称 physical Pauli-string / unitary semantics 已完成。
 - `MetaInterp/Assembly.lean` 已有 base-256 concrete dispatch/assembly structural summary；`MetaInterp/Universal.lean` 已证明 embedded prologue U.0a、zero-step/prologue compose，并把 U.0 改成 exact-fuel no-sorry composition from explicit loop/padding semantic obligations。
-- `MetaInterp/Universal.lean` 新增 `SemanticLoopObligations`、`semantic_loop_obligation_frontier_summary`、`metaInterpProg_meta_halted_padding`、`StrategyBCompatibleProgram` 与 `universal_compose_current_boundary_summary`；`Fetch.lean` 新增 pc=0 scaffold 的 exact dispatch route theorem；`FetchProg.lean` 暴露 halted/running peel-witness route 的 exact-fuel theorem；`Assembly.lean` 已把这些 route wrappers 专门化到 `metaInterpProg` fetch segment，暴露 dispatch segment witness，并新增 halt-arm absolute-pc dispatch route 与 7-fuel halt execution smoke witness。这只是 F.7c.7 incremental frontier，不宣称 concrete U.1/U.2/U.3 witnesses 或 full arbitrary-program simulation 已完成。
+- `MetaInterp/Universal.lean` 新增 `SemanticLoopObligations`、`semantic_loop_obligation_frontier_summary`、`metaInterpProg_meta_halted_padding`、`StrategyBCompatibleProgram` 与 `universal_compose_current_boundary_summary`；`Fetch.lean` 新增 pc=0 scaffold 的 exact dispatch route theorem 与 pc-counter peel exposes halted-flag bridge；`FetchProg.lean` 暴露 halted/running peel-witness route 的 exact-fuel theorem；`Assembly.lean` 已把这些 route wrappers 专门化到 `metaInterpProg` fetch segment，暴露 dispatch segment witness，并新增 halt-arm absolute-pc dispatch route 与 7-fuel halt execution smoke witness。这只是 F.7c.8 incremental frontier，不宣称 concrete U.1/U.2/U.3 witnesses 或 full arbitrary-program simulation 已完成。
 
 ## 1 · 已落地之 pattern (Present)
 
@@ -319,7 +319,7 @@ v1.1 本轮完成项：
 - **实/虚 labeling per squaring step**：documentation-only；待有稳定计算行为后再考虑结构化。
 
 仍然 deferred 的架构性边界：
-- **Full arbitrary-program universal compose theorem for `metaInterpProg`**：路线明确，但不是一句 `simp` 能闭合。`MetaInterp/Assembly.lean` 已有 base-256 structural summary、assembly-specialized fetch route wrappers、dispatch segment witness、halt-arm absolute-pc dispatch route 与 7-fuel halt execution smoke witness；`MetaInterp/Universal.lean` 已有 zero-step/prologue compose、exact-fuel composition frontier、U.1/U.2/U.3 obligation interface 与 Strategy-B fixed-parameter boundary；`Fetch.lean` 已有 pc=0 scaffold exact dispatch route；`FetchProg.lean` 已有 peel-witness exact-fuel route wrappers。剩余是按顺序补：real concrete fetch peel/decode/restore；all-op dispatch absolute-pc route lift / segment execution；hard-block encoded-history semantic effects；parameterized sub-dispatch；最后由这些 witness 构造 `SemanticLoopObligations`。
+- **Full arbitrary-program universal compose theorem for `metaInterpProg`**：路线明确，但不是一句 `simp` 能闭合。`MetaInterp/Assembly.lean` 已有 base-256 structural summary、assembly-specialized fetch route wrappers、dispatch segment witness、halt-arm absolute-pc dispatch route 与 7-fuel halt execution smoke witness；`MetaInterp/Universal.lean` 已有 zero-step/prologue compose、exact-fuel composition frontier、U.1/U.2/U.3 obligation interface 与 Strategy-B fixed-parameter boundary；`Fetch.lean` 已有 pc=0 scaffold exact dispatch route 与 `pc_counter_peel_history_head_is_halted_flag`；`FetchProg.lean` 已有 peel-witness exact-fuel route wrappers。剩余是按顺序补：connect pc-counter peel bridge into concrete `FetchProg` state shape；real fetch decode/restore；all-op dispatch absolute-pc route lift / segment execution；hard-block encoded-history semantic effects；parameterized sub-dispatch；最后由这些 witness 构造 `SemanticLoopObligations`。
 - **Physical Pauli-string / analytic unitarity bridge**：`QuantumR8Bridge.lean` 已给 finite basis + `R8 → ℂ` regular function-space semantics；未宣称物理 Pauli-string 或 inner-product unitary 结构。
 
 ## 6 · 完整 commit log (Phase L/K/R)
@@ -353,7 +353,7 @@ Baseline before v1.1：`lake build SSBX` 曾在 Phase L/K/R cutover 后 clean。
 形式边界：
 - 新 axioms from v1.1: **0**
 - `Kernel.lean` 的既有 trust boundary 不在本轮扩大
-- `ClassicalTextRHierarchyBridge.lean`、`MetaInterp/Assembly.lean`、`MetaInterp/Universal.lean`、`MetaInterp/Fetch.lean`、`MetaInterp/FetchProg.lean` 已给 classical-language direct bridge + base-256 structural assembly + zero-step/prologue compose + exact-fuel semantic frontier + U.1/U.2/U.3 obligation interface + pc=0 fetch route + peel-witness / assembly-specialized exact-fuel route wrappers + dispatch segment witness + halt-arm absolute-pc route；不宣称 full universality
+- `ClassicalTextRHierarchyBridge.lean`、`MetaInterp/Assembly.lean`、`MetaInterp/Universal.lean`、`MetaInterp/Fetch.lean`、`MetaInterp/FetchProg.lean` 已给 classical-language direct bridge + base-256 structural assembly + zero-step/prologue compose + exact-fuel semantic frontier + U.1/U.2/U.3 obligation interface + pc=0 fetch route + pc-counter peel bridge + peel-witness / assembly-specialized exact-fuel route wrappers + dispatch segment witness + halt-arm absolute-pc route；不宣称 full universality
 - `QuantumR8Bridge.lean` 是 typed skeleton，不宣称 physical Pauli-string semantics
 
 ## 8 · Out-of-scope (per original plan + user decisions)

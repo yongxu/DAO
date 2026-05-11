@@ -580,6 +580,57 @@ theorem fetchProtocol_simulates_pc0_to_dispatch_standalone
     (fetchProtocol 0 dispatchOffset haltOffset) 0 dispatchOffset
     (by rfl) (by rfl) (by rfl) h_pc0
 
+/-! ## § 5  Counter peel bridge
+
+The full fetch program still needs tag decode and history restoration, but the
+first real peel boundary can already be stated and proved: consuming the
+pc-counter prefix of canonical `encMetaHistory` exposes the halted-flag cell.
+The proof reuses the empty-body counted-loop theorem from `MetaInterp.lean`.
+-/
+
+/-- The canonical META-history tail immediately below the pc-counter prefix. -/
+def pcCounterTailAfterPeel (regHex : Hexagram) (sim : YiState) : List R8 :=
+  [encHaltedFlag regHex sim.halted] ++
+  encCounter regHex sim.history.length ++
+  sim.history ++
+  ProgEnc.encProg sim.prog
+
+theorem encMetaHistory_eq_pcCounter_append_tail
+    (regHex : Hexagram) (sim : YiState) :
+    encMetaHistory regHex sim =
+      encCounter regHex sim.pc ++ pcCounterTailAfterPeel regHex sim := by
+  unfold encMetaHistory pcCounterTailAfterPeel
+  simp [List.append_assoc]
+
+/-- Peeling the pc-counter with the empty counted-loop lands exactly at the
+    tail whose head is the halted-flag cell.  This is a route-independent
+    bridge for constructing future `FetchProg` peel witnesses. -/
+theorem pc_counter_peel_exposes_halted_flag
+    (offset : Nat) (metaProg : List YiInstr)
+    (h_loop : MetaProgHasEmptyCountedLoopAt offset metaProg)
+    (cur : R8) (regHex : Hexagram) (sim : YiState) :
+    (countedLoopEmptyEntryState offset metaProg cur regHex sim.pc
+      (pcCounterTailAfterPeel regHex sim)).runFuel (3 * sim.pc + 2)
+      = countedLoopEmptyExitState offset metaProg regHex
+          (pcCounterTailAfterPeel regHex sim) := by
+  exact countedLoop_empty_simulates_n_iterations offset metaProg h_loop cur regHex
+    sim.pc (pcCounterTailAfterPeel regHex sim)
+
+/-- Field-facing form: after the pc-counter peel, the next history cell is the
+    encoded halted flag, pc is at the counted-loop exit, and META remains alive. -/
+theorem pc_counter_peel_history_head_is_halted_flag
+    (offset : Nat) (metaProg : List YiInstr)
+    (h_loop : MetaProgHasEmptyCountedLoopAt offset metaProg)
+    (cur : R8) (regHex : Hexagram) (sim : YiState) :
+    let μ' :=
+      (countedLoopEmptyEntryState offset metaProg cur regHex sim.pc
+        (pcCounterTailAfterPeel regHex sim)).runFuel (3 * sim.pc + 2)
+    μ'.history.head? = some (encHaltedFlag regHex sim.halted)
+      ∧ μ'.pc = offset + 3
+      ∧ μ'.halted = false := by
+  rw [pc_counter_peel_exposes_halted_flag offset metaProg h_loop cur regHex sim]
+  simp [countedLoopEmptyExitState, pcCounterTailAfterPeel]
+
 /-! ## § 6  Roadmap to full fetch correctness
 
   The proven content above (sim.pc = 0 initial-pop + branch-taken
