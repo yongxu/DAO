@@ -7,7 +7,7 @@ would collide with `GodelLi.halts_undecidable_internally`.
 
 Provides:
   · `BoundedExec p h n` — explicit-fuel execution structure with witness
-  · `«合度判停» p h n` — Bool-valued bounded halting check (decidable)
+  · `boundedHaltCheck p h n` — Bool-valued bounded halting check (decidable)
   · sanity lemma: `daoJudgeProg` halts within 10 fuel for every input
 
 Risk mitigated: 路径丙 § 风险 5（Gödel 撞墙）.
@@ -46,31 +46,31 @@ end BoundedExec
 /-! ## § 2  合度判停 — 显式 fuel 之停机 Bool 函数 -/
 
 /-- 「合度判停」：显式 fuel 之停机判定。**不**判 `∃ n`，故不撞 Gödel。 -/
-def «合度判停» (p : List YiInstr) (h : Hexagram) (n : Nat) : Bool :=
+def boundedHaltCheck (p : List YiInstr) (h : Hexagram) (n : Nat) : Bool :=
   ((YiState.init h p).runFuel n).halted
 
 /-- 反射等价：判停函数等于 `runFuel` 末态的 halted 标志。 -/
 theorem judgeHalt_reflect (p : List YiInstr) (h : Hexagram) (n : Nat) :
-    «合度判停» p h n = ((YiState.init h p).runFuel n).halted := rfl
+    boundedHaltCheck p h n = ((YiState.init h p).runFuel n).halted := rfl
 
 /-- 凭据之等价：用 BoundedExec 取末态与直接 `runFuel` 等价。 -/
 theorem judgeHalt_via_bounded (p : List YiInstr) (h : Hexagram) (n : Nat) :
-    «合度判停» p h n = (BoundedExec.run p h n).haltedOf := rfl
+    boundedHaltCheck p h n = (BoundedExec.run p h n).haltedOf := rfl
 
 /-! ## § 3  范例：道判 + 乾卦必停 -/
 
 /-- 验证：daoJudgeProg 在乾卦输入 + 10 燃料下必止（与 BaguaTuring.daoJudgeProg_total_within_10
     精神一致）。 -/
-example : «合度判停» daoJudgeProg Hexagram.heaven 10 = true := by native_decide
+example : boundedHaltCheck daoJudgeProg Hexagram.heaven 10 = true := by native_decide
 
 /-- 验证：daoJudgeProg 在坤卦输入 + 10 燃料下必止。 -/
-example : «合度判停» daoJudgeProg Hexagram.earth 10 = true := by native_decide
+example : boundedHaltCheck daoJudgeProg Hexagram.earth 10 = true := by native_decide
 
 /-! ## § 4  边界声明（命名而不证）
 
   以下命题**不可**声明为 Decidable / 不可 `native_decide`：
     · `∀ p h, Decidable (∃ n, ((YiState.init h p).runFuel n).halted = true)`
-    · `∀ p h, ∃ n, «合度判停» p h n = true`（即「全程序必停」）
+    · `∀ p h, ∃ n, boundedHaltCheck p h n = true`（即「全程序必停」）
     · 任何忽略 fuel 之停机断言
 
   反例与不可判定性见 `GodelLi.halts_undecidable_internally`、`KleeneInternal.lean`。
