@@ -6,24 +6,30 @@
 
 ## 读取顺序
 
-1. 先查 `../_generated/lean-index.md`，确认模块、文件与声明所在 cluster。
-2. 再查 `../_generated/claim-index.md`，确认相关 claim 是 machineChecked、modelComputed 还是 ledgerDependent。
-3. 若涉及信任边界，先读 `../_generated/trust-boundary.md` 与 `../10_formal_形式/trust-boundaries.md`。
-4. 最后回到 `../20_theory_义理/`，只把已确认的形式事实映射为解释语言。
+1. 先以本页的 R₀..R₈ 主轴回读，确认 Lean 事实落在哪一层。
+2. 再查 `../_generated/lean-index.md`，确认模块、文件与声明所在 cluster。
+3. 再查 `../_generated/claim-index.md`，确认相关 claim 是 machineChecked、modelComputed 还是 ledgerDependent。
+4. 若涉及信任边界，先读 `../_generated/trust-boundary.md` 与 `../10_formal_形式/trust-boundaries.md`。
+5. 最后回到 `../20_theory_义理/`，只把已确认的形式事实映射为解释语言。
 
-## 常见映射
+## R₀..R₈ 主轴回读
 
-| Lean 区域 | 可读作 | 不可读作 |
-|---|---|---|
-| `Foundation/Core` | 根源、生成、注意、人类对齐等基础构件 | 全部价值论已闭合 |
-| `Foundation/Bagua` | 八卦计算、Cell128 / Cell256、有限执行与不完备路线（v3：256 格 + V₄ Shi） | 无条件去公理化完成 |
-| `Foundation/Hierarchy` | R₀..R₈ strict (Z/2)ⁿ uniform、lift/project 函子、retract 引理 | (Z/2)ⁿ 之外（GL、连续、概率）已被覆盖 |
-| `Foundation/Hierarchy/Operators` | XOR atomic 子群（abelian） + V₄ Klein outer permutation 群 | 所有可想象之非线性算子族已形式化 |
-| `Foundation/Notation/OXNotation` | `OX["o/x×8"]` term-level 字面量；parse-time 验证；rfl 求值 | OX-string 是规范 surface（文言层另议） |
-| `Foundation/Wen` | 文、算子、解释器、自释相关工程；base-256 dispatch re-derivation pending | 文言自然语言全覆盖；自释完整闭合 |
-| `Foundation/Modern` | 现代数学和跨域接口的形式桥 | 经验科学结论已由 Lean 证明 |
-| `Text` | 字形、算子表、读法与完备性登记（已迁 Cell256 anchor） | 每个传统训诂都已定本 |
-| `Truth` | claim ledger 与语义状态 | 所有旧文 claim 均 machineChecked |
+| R 层 | 基数 | Lean anchor | 可读作 | 不可读作 |
+|---|---:|---|---|---|
+| R₀ | 1 | `Foundation/Hierarchy/R0_Taiji.lean`; `Unit` | one-point root; absolute origin layer | value theory or generated ontology already closed |
+| R₁ | 2 | `Foundation/Hierarchy/R1_Yao.lean`; `Yao` | binary line distinction; first split | all ethics, language, or alignment semantics |
+| R₂ | 4 | `Foundation/Hierarchy/R2_SiXiang.lean`; `SiXiang` | four-state image layer; two-bit square | all V₄ or fourfold structures exhausted |
+| R₃ | 8 | `Foundation/Hierarchy/R3_Trigram.lean`; `Trigram` | trigram layer; three-bit position space | full hexagram structure or R₈ closure |
+| R₄ | 16 | `Foundation/Hierarchy/R4_Mian.lean`; `Mian = Ben × Zheng` | 16-state face layer; base × orientation | hierarchy terminus or complete semantic surface |
+| R₅ | 32 | `Foundation/Hierarchy/R5_Wuyao.lean`; `Wuyao` | explicit 32-state intermediate layer | settled traditional canon anchor |
+| R₆ | 64 | `Foundation/Hierarchy/R6_Hexagram.lean`; `Hexagram` | hexagram layer; classical 64-state carrier | Cell256, Way origin, or temporal closure |
+| R₇ | 128 | `Foundation/Hierarchy/R7_YinHex.lean`; `Cell128` | Cell128; hexagram × trace bit | final R₈ closure or projection-bit completion |
+| R₈ | 256 | `Foundation/Hierarchy/R8_GuoHex.lean`; `Cell256`; `Cell256Stratify` | Cell256; R₆ × trace bit × projection bit; Way origin | continuous, probabilistic, physical, or semantic universal-compose claims already proved |
+
+## 跨层模块读法
+
+- `Foundation/Core`、`Foundation/Wen`、`Foundation/Modern`、`Text`、`Truth` 是支撑、解释、桥接或登记层，不构成 R 层级主轴。
+- `Foundation/Hierarchy/Operators` 与 `Foundation/Notation/OXNotation` 是 R-axis 周边结构，不读成与 R₀..R₈ 并列的本体层。
 
 ## v3 之 「signature」结果（machineChecked，可作锚点）
 
