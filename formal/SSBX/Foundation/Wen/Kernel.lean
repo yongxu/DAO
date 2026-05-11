@@ -492,17 +492,17 @@ def shiftOrbit (o : ZhongOrbit) (k : Nat) : ZhongOrbit where
 theorem de_robust (o : ZhongOrbit) (k : Nat) : hasVirtue (shiftOrbit o k) :=
   fun n => o.inMiddle (n + k)
 
-/-! ### Layer 8: 理 (fire; 过程自显之条贯) -/
+/-! ### Layer 8: 理 (principle; 过程自显之条贯) -/
 
-/-- 理 (fire, coherence): an orbit's pattern IS its state-sequence —
+/-- 理 (principle, coherence): an orbit's pattern IS its state-sequence —
     not external rule, not internal essence, but the orbit's self-display.
     v5 §十一 l. 379: "理即事之自显为条贯之事自身.
     离过程无理, 离理无过程." -/
-def fire (o : ZhongOrbit) : Nat → Field := o.states
+def principle (o : ZhongOrbit) : Nat → Field := o.states
 
 /-- 理 不离事: 理 of an orbit IS the orbit's states — not separate.
     Captures "离过程无理, 离理无过程" definitionally. -/
-theorem li_inseparable (o : ZhongOrbit) : fire o = o.states := rfl
+theorem li_inseparable (o : ZhongOrbit) : principle o = o.states := rfl
 
 /-- 理 之 substantive content: the orbit's entire pattern is determined by
     its initial state and 動 — i.e., 理 IS 動's iteration (几).
@@ -2909,7 +2909,7 @@ inductive KernelDanZi : Type
   | he         -- 和 : ZhongField invariant                      (Layer 5)
   | mei        -- 美 : aestheticEncounter (heart × event ↦ 中)   (Layer 6)
   | de         -- 德 : hasVirtue (orbit's 中-disposition)             (Layer 7)
-  | fire         -- 理 : orbit's pattern IS motion-iteration           (Layer 8)
+  | principle         -- 理 : orbit's pattern IS motion-iteration           (Layer 8)
   | xin        -- 心 : perceiving focal-process (Xin structure)    (Layer 10)
   | feeling       -- 情 : heart's relational self-display (predicate) (Layer 11)
   | traceAccumulation    -- 积 : history-window of orbit (Fin-indexed)        (Layer 12)
@@ -2942,7 +2942,7 @@ def KernelDanZi.role : KernelDanZi → String
   | .he         => "和 = 多样性 × 流通性, 中之多聚焦显 (theorem on ZhongField)"
   | .mei        => "美 = 心遇中之事而生之感应 (heart-event 中-encounter)"
   | .de         => "德 = 倾向于中之积 (持续合中之回应模式; robust under shift)"
-  | .fire         => "理 = 事之自显为条贯之事自身 (orbit IS iterated 動 from initial state)"
+  | .principle         => "理 = 事之自显为条贯之事自身 (orbit IS iterated 動 from initial state)"
   | .xin        => "心 = 过程于某处自感之聚焦 (Xin: ZhongOrbit + respond function)"
   | .feeling       => "情 = 心于关系中之自显方式 (feeling predicate; 之得正 ⟺ 美)"
   | .traceAccumulation    => "积 = 过程于某尺度之穩定化 (history-window; 积即过程)"
@@ -2978,14 +2978,14 @@ def kernelToMonadRoot : KernelDanZi → Option SSBX.Foundation.Core.MonadRoot.Co
   | .xing  => some .«行»
   | .sheng => some .«生»
   | .benevolence   => some .«仁»
-  | .fire    => some .«理»
+  | .principle    => some .«理»
   | .xin   => some .«心»
   | .ju    => some .«聚»
   | _      => none
 
 /-- 共有 list: KernelDanZi entries with MonadRoot mapping. -/
 def kernelMonadRootShared : List KernelDanZi :=
-  [.yiOne, .yuan, .motion, .xing, .sheng, .benevolence, .fire, .xin, .ju]
+  [.yiOne, .yuan, .motion, .xing, .sheng, .benevolence, .principle, .xin, .ju]
 
 /-- 共有 字 共 9 个. -/
 theorem shared_count : kernelMonadRootShared.length = 9 := rfl
@@ -3034,8 +3034,8 @@ def kernelDanZiFace : KernelDanZi → Face
   | .feeling      => .«心面»
   -- 理面 (1): 智 — recognition
   | .wisdom       => .«理面»
-  -- 证明面 (3 with fire): 一/元/理 — root + first display + coherent pattern (per MonadRoot)
-  | .fire        => .«证明面»
+  -- 证明面 (3 with principle): 一/元/理 — root + first display + coherent pattern (per MonadRoot)
+  | .principle        => .«证明面»
   -- 人面 (2): 礼/信 — relational form / coherence
   | .propriety  => .«人面»
   | .integrityTrust  => .«人面»
@@ -3097,7 +3097,7 @@ def kernelDanZiToAtom : KernelDanZi → Option AtomName
   | .he        => some .«和»
   | .mei       => some .«美»
   | .de        => some .«德»
-  | .fire        => some .«理»
+  | .principle        => some .«理»
   | .xin       => some .«心»
   | .feeling      => some .«情»
   | .traceAccumulation   => some .«积»
@@ -3116,7 +3116,7 @@ def kernelDanZiToAtom : KernelDanZi → Option AtomName
 /-- All 28 KernelDanZi 字 are registered in Roster.AtomName (Layer 20: 恶 added; Layer 24: 意 added). -/
 def kernelRegisteredList : List KernelDanZi :=
   [.yiOne, .yuan, .motion, .terminus, .center, .ji, .shi, .pivotMoment, .ju, .san,
-   .he, .mei, .de, .fire, .xin, .feeling, .traceAccumulation, .benevolence, .righteousness, .propriety,
+   .he, .mei, .de, .principle, .xin, .feeling, .traceAccumulation, .benevolence, .righteousness, .propriety,
    .wisdom, .integrityTrust, .good, .evil, .sheng, .rest, .xing, .yiIntent]
 
 theorem kernelRegistered_count : kernelRegisteredList.length = 28 := rfl
@@ -3265,7 +3265,7 @@ theorem face_consistent_ren :
     kernelDanZiFace .benevolence = atomPrimaryFace .«仁» := rfl
 
 theorem face_consistent_li :
-    kernelDanZiFace .fire = atomPrimaryFace .«理» := rfl
+    kernelDanZiFace .principle = atomPrimaryFace .«理» := rfl
 
 theorem face_consistent_xin :
     kernelDanZiFace .xin = atomPrimaryFace .«心» := rfl
