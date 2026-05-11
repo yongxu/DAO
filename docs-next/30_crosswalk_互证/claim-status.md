@@ -27,7 +27,7 @@
 | `axiomBacked` | `ledgerDependent` | 依赖明示公理或 claim ledger |
 | `caseResult` | `modelComputed` 或 `ledgerDependent` | 具体案例可能已算出，也可能仍依赖解释 |
 
-## v3 当前关键 live claim（精选 7 条）
+## v3 当前关键 live claim（精选 15 条）
 
 | # | claim | kind | status | 锚 |
 |---|---|---|---|---|
@@ -37,13 +37,22 @@
 | 4 | **R₀..R₈ 8 对 lift/project 全 retract**（`proj ∘ lift = id`，faithful Rₙ ↪ R_{n+1}） | `proved` | `machineChecked` | `LiftProject.lean § 9` `liftProject_summary` |
 | 5 | **印 / 投 = XOR-with-mask atomic 算子**：each involution；commute；`yin_mask ⊕ tou_mask = (qian, jin)` (V₄ central) | `proved` | `machineChecked` | `Cell256.lean § 8` + `Operators/Atomic.lean` `atomic_all_involutive` |
 | 6 | **{id, cuo, zong, cuoZong} on Hexagram = V₄ Klein**（每元 involution、abelian、composite 关系全成立）；`hu` 不在 V₄，但其唯一不动点 = `{乾, 坤}` | `proved` | `machineChecked` | `Operators/V4Outer.lean § 7` `v4_outer_summary` |
-| 7 | **0 sorry 跨已迁文件**（V₄ Shi 迁移过程中未引入 sorry；commits `7de5064`, `0003224`, `8e4406e` 之 lake build 全 3648/3648） | `registry` | `machineChecked`（构建侧） | `git log` + `lake build`；摘要见 `../_generated/lean-index.md` |
+| 7 | **Self-similarity v1 gaps closed**：R₁ ≃ R₀⊕R₀、R₆ 三路汇聚、R₈ ≃ R₇×Bool | `proved` | `machineChecked` | `SelfSimilarity.lean` `self_similarity_gap_summary` |
+| 8 | **R₈ V₄ partition + Way/operator anchor**：R₈ ≃ R₆ × trace bit × projection bit；每个 temporal-state fiber 64；Way (道) = origin = no-op；cell injects into translation operators | `proved` | `machineChecked` | `V4Tensor.lean` `V4Tensor.r8_eq_r6_times_trace_projection`, `V4Tensor.r8_temporal_coordinate_summary`, `V4Tensor.r8_temporal_state_fiber_card_eq_64`, `V4Tensor.way_origin_operator_summary`, `cell_is_operator` |
+| 9 | **Kernel post-Cayley collapse**：R₇ Kernel motion 无 terminus，center universal | `proved` | `machineChecked` | `Kernel.lean` `kernel_post_cayley_collapse_summary` |
+| 10 | **WayJudge closure + concrete bilingual identity**：Sexp evaluator 成功结果闭在 R₇；Chinese-form 与 o/x-form concrete programs 对齐 | `proved` | `machineChecked` | `DaoJudge.lean` `DaoJudge.eval_chinese_earth_eq_ascii_earth`, `DaoJudge.judge_bilingual_same_earth_self`, `DaoJudge.way_judge_closure_bilingual_summary` |
+| 11 | **Classical text ↔ R-hierarchy direct bridge**：classical-language aliases 与 YiInstr / R₈ operator execution / WayJudge 对齐 | `proved` (typed skeleton) | `machineChecked` | `ClassicalTextRHierarchyBridge.lean` `classical_text_way_judge_rhierarchy_bridge_summary` |
+| 12 | **Quantum ↔ R₈ finite bridge skeleton**：Pauli X basis action、R₃ basis flips、R₈ V₄⁴ + finite function-space regular representation `R8 → ℂ` with involutive faithful translations | `proved` (typed skeleton) | `machineChecked` | `QuantumR8Bridge.lean` `r8_regular_representation_quantum_bridge_summary`, `r8_regular_translate_involutive`, `r8_regular_translate_faithful` |
+| 13 | **Base-256 self-interpreter structural assembly**：concrete `metaInterpProg` has fixed length, outer-loop fetch entry, and halt arm structural witness | `proved` (typed skeleton) | `machineChecked` | `MetaInterp/Assembly.lean` `metaInterpProg_base256_structural_summary` |
+| 14 | **Exact-fuel semantic-compose frontier**：embedded prologue U.0a and zero-step/prologue compose are proved; U.0 composition is machine-checked from explicit loop/padding semantic obligations; U.1/U.2/U.3 now have a no-sorry obligation interface; generic META halted padding is proved; Strategy-B fixed-parameter boundary is machineChecked; budget fuel is only an upper-bound lane | `proved` (conditional) | `machineChecked` | `MetaInterp/Universal.lean` `metaStart_runFuel_five_eq_postPrologue`, `metaInterpProg_simulates_zero_steps`, `semantic_compose_frontier_summary`, `semantic_loop_obligation_frontier_summary`, `metaInterpProg_meta_halted_padding`, `universal_compose_current_boundary_summary`, `metaInterpProg_simulates` |
+| 15 | **0 sorry 跨已迁文件**（V₄ temporal-state 迁移过程中未引入 sorry；commits `7de5064`, `0003224`, `8e4406e` 之 lake build 全 3648/3648） | `registry` | `machineChecked`（构建侧） | `git log` + `lake build`；摘要见 `../_generated/lean-index.md` |
 
-## v3 当前 live claim — pending（精选 1 条）
+## v3 当前 live claim — pending（精选 2 条）
 
 | # | claim | status | 备注 |
 |---|---|---|---|
-| 8 | **WenyanSelfInterp.lean base-256 dispatch program 完整 re-derivation** | `pending` | atomic encoding 已迁 Cell256（Phase F.1，commit `7de5064`），但 12-tag dispatch program 之 base-256 重导（hex 0..2 × 4 shi states）尚未完成。`metaInterpStepPc_branchShiEq_notTaken_*` 之 `Shi.dao` 新 ctor 覆盖完成；下游 quine 路线之 base-256 重写**未完成**。详 `WenyanSelfInterp.lean` 头部注释 + Phase F.1 注释。 |
+| 16 | **Classical-language self-interpreter full semantic universal-compose theorem** | `pending` | embedded prologue U.0a、zero-step/prologue compose、exact-fuel U.0 composition frontier、U.1/U.2/U.3 obligation interface、generic META halted padding、Strategy-B fixed-parameter boundary 与 pc=0 fetch exact dispatch route 已 machineChecked；仍缺从 general concrete fetch peel/decode、hard-block semantic effects、parameterized sub-dispatch 构造 `SemanticLoopObligations`，以及 arbitrary-program simulation。详 `MetaInterp/Universal.lean` / `MetaInterp/Fetch.lean`。 |
+| 17 | **Physical Pauli-string / analytic unitarity bridge** | `pending` | `QuantumR8Bridge.lean` 已给 one-bit basis、R₃ basis flips、R₈ regular representation 与 finite function-space carrier `R8 → ℂ`；未构造 physical Pauli-string system 或 inner-product/unitarity semantics。 |
 
 ## 审读规则
 
@@ -87,4 +96,11 @@ V₄ Shi / Cell256 升级后，与 Cell192 cardinality 直接绑定的 claim 已
 - [`formal/SSBX/Foundation/Hierarchy/LiftProject.lean`](../../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) — `liftProject_summary`
 - [`formal/SSBX/Foundation/Hierarchy/Operators/Atomic.lean`](../../formal/SSBX/Foundation/Hierarchy/Operators/Atomic.lean) — `atomic_all_involutive`
 - [`formal/SSBX/Foundation/Hierarchy/Operators/V4Outer.lean`](../../formal/SSBX/Foundation/Hierarchy/Operators/V4Outer.lean) — `v4_outer_summary`
-- [`formal/SSBX/Foundation/Wen/WenyanSelfInterp.lean`](../../formal/SSBX/Foundation/Wen/WenyanSelfInterp.lean) — pending base-256 dispatch
+- [`formal/SSBX/Foundation/Wen/WenyanSelfInterp.lean`](../../formal/SSBX/Foundation/Wen/WenyanSelfInterp.lean) — legacy route remains non-universal after Cell256 migration
+- [`formal/SSBX/Foundation/Wen/MetaInterp/Assembly.lean`](../../formal/SSBX/Foundation/Wen/MetaInterp/Assembly.lean) — `metaInterpProg_base256_structural_summary`
+- [`formal/SSBX/Foundation/Wen/MetaInterp/Universal.lean`](../../formal/SSBX/Foundation/Wen/MetaInterp/Universal.lean) — `metaInterpProg_simulates_zero_steps`, `semantic_compose_frontier_summary`, `semantic_loop_obligation_frontier_summary`, `metaInterpProg_meta_halted_padding`, `universal_compose_current_boundary_summary`
+- [`formal/SSBX/Foundation/Wen/MetaInterp/Fetch.lean`](../../formal/SSBX/Foundation/Wen/MetaInterp/Fetch.lean) — `fetchProtocol_simulates_pc0_to_dispatch`
+- [`formal/SSBX/Foundation/Squaring/SelfSimilarity.lean`](../../formal/SSBX/Foundation/Squaring/SelfSimilarity.lean) — `self_similarity_gap_summary`
+- [`formal/SSBX/Foundation/Squaring/V4Tensor.lean`](../../formal/SSBX/Foundation/Squaring/V4Tensor.lean) — `V4Tensor.r8_temporal_coordinate_summary`, `V4Tensor.r8_temporal_state_fiber_card_eq_64`, `cell_is_operator`
+- [`formal/SSBX/Foundation/Wen/ClassicalTextRHierarchyBridge.lean`](../../formal/SSBX/Foundation/Wen/ClassicalTextRHierarchyBridge.lean)
+- [`formal/SSBX/Foundation/Modern/QuantumR8Bridge.lean`](../../formal/SSBX/Foundation/Modern/QuantumR8Bridge.lean)

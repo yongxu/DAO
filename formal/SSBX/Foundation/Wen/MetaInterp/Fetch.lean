@@ -487,6 +487,99 @@ theorem fetchProtocol_simulates_pc0_to_handoff
   rw [fetchProtocol_simulates_pc0_initialPop regHex sim metaProg offset h_progAt0 h_pc0]
   exact fetchProtocol_branchTaken_at_pc0 regHex sim metaProg offset h_progAt1
 
+/-- State after the pc=0 marker branch executes the hand-off jump to dispatch. -/
+def fetchAfterDispatchJump_pc0
+    (regHex : Hexagram) (sim : YiState) (metaProg : List YiInstr)
+    (dispatchOffset : Nat) : YiState :=
+  { cur     := (regHex, Shi.wei)
+  , history := [encHaltedFlag regHex sim.halted] ++
+               encCounter regHex sim.history.length ++
+               sim.history ++
+               ProgEnc.encProg sim.prog
+  , pc      := dispatchOffset
+  , prog    := metaProg
+  , halted  := false }
+
+/-- At the pc=0 hand-off point, the jump at `offset + 3` routes to the
+    dispatch block.  This remains route-only: it does not yet prove that
+    `META.cur` is the next opcode tag, because the real encProg walk/restore
+    is still deferred. -/
+theorem fetchProtocol_jumpDispatch_at_pc0
+    (regHex : Hexagram) (sim : YiState) (metaProg : List YiInstr)
+    (offset dispatchOffset : Nat)
+    (h_jumpAt : metaProg[offset + 3]? =
+      some (YiInstr.jump dispatchOffset)) :
+    (fetchAfterMarkerBranch_pc0 regHex sim metaProg offset).step
+      = fetchAfterDispatchJump_pc0 regHex sim metaProg dispatchOffset := by
+  unfold YiState.step
+  have h_halt :
+      (fetchAfterMarkerBranch_pc0 regHex sim metaProg offset).halted = false := rfl
+  show (if (fetchAfterMarkerBranch_pc0 regHex sim metaProg offset).halted = true
+        then (fetchAfterMarkerBranch_pc0 regHex sim metaProg offset)
+        else match
+          (fetchAfterMarkerBranch_pc0 regHex sim metaProg offset).prog[
+            (fetchAfterMarkerBranch_pc0 regHex sim metaProg offset).pc]? with
+          | none => { (fetchAfterMarkerBranch_pc0 regHex sim metaProg offset) with
+              halted := true }
+          | some instr =>
+              YiState.execute instr
+                (fetchAfterMarkerBranch_pc0 regHex sim metaProg offset))
+        = _
+  rw [h_halt]
+  simp only [Bool.false_eq_true, if_false]
+  have h_prog_eq :
+      (fetchAfterMarkerBranch_pc0 regHex sim metaProg offset).prog = metaProg := rfl
+  have h_pc_eq :
+      (fetchAfterMarkerBranch_pc0 regHex sim metaProg offset).pc = offset + 3 := rfl
+  rw [h_prog_eq, h_pc_eq, h_jumpAt]
+  show YiState.execute (YiInstr.jump dispatchOffset)
+        (fetchAfterMarkerBranch_pc0 regHex sim metaProg offset)
+      = fetchAfterDispatchJump_pc0 regHex sim metaProg dispatchOffset
+  unfold YiState.execute
+  unfold fetchAfterMarkerBranch_pc0 fetchAfterDispatchJump_pc0
+  rfl
+
+/-- Composition: 3 fuel steps from fetch-entry (sim.pc = 0) route to the
+    dispatch block through the current fetch skeleton.
+
+    This is an exact route theorem for the pc=0 scaffold.  It intentionally
+    stays weaker than full fetch correctness: the tag extraction and canonical
+    history restoration obligations remain open. -/
+theorem fetchProtocol_simulates_pc0_to_dispatch
+    (regHex : Hexagram) (sim : YiState) (metaProg : List YiInstr)
+    (offset dispatchOffset : Nat)
+    (h_progAt0 : metaProg[offset]? = some YiInstr.pop)
+    (h_progAt1 : metaProg[offset + 1]? =
+      some (YiInstr.branchShiEq Shi.wei (offset + 3)))
+    (h_progAt3 : metaProg[offset + 3]? =
+      some (YiInstr.jump dispatchOffset))
+    (h_pc0 : sim.pc = 0) :
+    (fetchEntryState regHex sim metaProg offset).runFuel 3
+      = fetchAfterDispatchJump_pc0 regHex sim metaProg dispatchOffset := by
+  have h3 :
+      (fetchEntryState regHex sim metaProg offset).runFuel 3
+      = ((fetchEntryState regHex sim metaProg offset).runFuel 2).step := by
+    rw [show (3 : Nat) = 2 + 1 from rfl,
+        SSBX.Foundation.Bagua.GodelLi.runFuel_succ_right]
+  rw [h3]
+  rw [fetchProtocol_simulates_pc0_to_handoff regHex sim metaProg offset
+    h_progAt0 h_progAt1 h_pc0]
+  exact fetchProtocol_jumpDispatch_at_pc0 regHex sim metaProg offset dispatchOffset h_progAt3
+
+/-- Standalone pc=0 route theorem for `fetchProtocol 0 ...`: after 3 fuel
+    ticks the skeleton reaches `dispatchOffset`. -/
+theorem fetchProtocol_simulates_pc0_to_dispatch_standalone
+    (regHex : Hexagram) (sim : YiState)
+    (dispatchOffset haltOffset : Nat)
+    (h_pc0 : sim.pc = 0) :
+    (fetchEntryState regHex sim
+      (fetchProtocol 0 dispatchOffset haltOffset) 0).runFuel 3
+      = fetchAfterDispatchJump_pc0 regHex sim
+        (fetchProtocol 0 dispatchOffset haltOffset) dispatchOffset := by
+  exact fetchProtocol_simulates_pc0_to_dispatch regHex sim
+    (fetchProtocol 0 dispatchOffset haltOffset) 0 dispatchOffset
+    (by rfl) (by rfl) (by rfl) h_pc0
+
 /-! ## § 6  Roadmap to full fetch correctness
 
   The proven content above (sim.pc = 0 initial-pop + branch-taken

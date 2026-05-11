@@ -24,7 +24,7 @@ main = origin/main = 1c76a55 (Phase C: R₀..R₈ index alias + RHierarchy)
 
 **两份 wenyan exe 双 CLI**（Phase F 之后仍在）：
 - `wenyan-surface` (~1949 行，speaks WenSurface 文言)
-- `wenyan` (speaks baguaWen IL；底盘已迁 Cell256，但 universalMetaInterp base-256 dispatch 待重新派生 — 详 §5.3)
+- `wenyan` (speaks baguaWen IL；底盘已迁 Cell256；新 `MetaInterp/Assembly.lean` 已承接 base-256 structural assembly，legacy `WenyanSelfInterp.lean` universal route 仍不是 full arbitrary-program interpreter — 详 §5.3)
 
 ---
 
@@ -71,6 +71,8 @@ main 在 7de5064/0003224/8e4406e/1c76a55 之后的关键事实：
 
 印 (yìn) = XOR mask `(qian, ji)`，投 (tóu) = XOR mask `(qian, wei)` — 都已 atomic。
 
+Self-similarity v1.1 补齐：[`SelfSimilarity.lean`](../../formal/SSBX/Foundation/Squaring/SelfSimilarity.lean) 现含 R₁ ≃ R₀⊕R₀、R₆ 三路汇聚、R₈ ≃ R₇×Bool；[`V4Tensor.lean`](../../formal/SSBX/Foundation/Squaring/V4Tensor.lean) 现含 R₈ = R₆ × trace bit × projection bit、4 个 temporal-state-indexed R₆ slices、Way (道) origin/no-op、cell-as-operator 单射。
+
 ### 2.5 OX 字面 macro
 
 [`Foundation/Notation/OXNotation.lean`](../../formal/SSBX/Foundation/Notation/OXNotation.lean) 提供 `OX["xxxxxxxx"]` 8-char 字面，把 8 个 `o`/`x` 字符串编为 Cell256 立即数。位 7/8 编 YinBit/GuoBit → Shi。
@@ -95,7 +97,7 @@ main 在 7de5064/0003224/8e4406e/1c76a55 之后的关键事实：
 |---|---|---|---|
 | **A** | Cell128/256 algebraic spine + Cayley ι/ε + 印/投 atomic | done | 7de5064 |
 | **B.1** | YinBit dedup（canonical 在 Cell128） | done | 8e4406e |
-| **B.2** | Shi → Bool × Bool abbrev（让 Shi 直接是 V₄ as 双 bit） | pending | — |
+| **B.2** | temporal state → Bool × Bool abbrev（trace bit × projection bit） | done | `R8.lean` + `V4Tensor.r8_temporal_coordinate_summary` |
 | **C** | Foundation/Hierarchy/R{0..8}_*.lean alias files + umbrella | done | 1c76a55 |
 | **D** | LiftProject uniform R₀..R₈ pairs | done | 7de5064 |
 | **E** | Operators/{Atomic, V4Outer}.lean inner/outer split | done | 7de5064 |
@@ -104,7 +106,12 @@ main 在 7de5064/0003224/8e4406e/1c76a55 之后的关键事实：
 | **F.6** | Cell192.lean 删除 | done | 8e4406e |
 | **G** | Doc sync (yi-RO-hierarchy / yi-calculus-theorem / yi-as-meta-framework / SSBX/README) | done | 8e4406e |
 | **G+** | docs-next/ 系列 v3 重写（本轮工作） | in progress | (本提交) |
-| **F.7** | 重新派生 base-256 universalMetaInterp dispatch | pending | — |
+| **F.7a** | base-256 concrete dispatch/assembly structural summary | done | `MetaInterp/Assembly.metaInterpProg_base256_structural_summary` |
+| **F.7b** | exact-fuel semantic-compose frontier interface | done | `MetaInterp/Universal.metaStart_runFuel_five_eq_postPrologue` + `semantic_compose_frontier_summary` |
+| **F.7c.1** | expose U.1/U.2/U.3 as no-sorry semantic-obligation interface + prove generic META halted padding | done | `SemanticLoopObligations`, `semantic_loop_obligation_frontier_summary`, `metaInterpProg_meta_halted_padding` |
+| **F.7c.2** | close unconditional zero-step compose and make Strategy-B fixed-parameter boundary machine-checkable | done | `metaInterpProg_simulates_zero_steps`, `StrategyBCompatibleProgram`, `universal_compose_current_boundary_summary` |
+| **F.7c.3** | strengthen pc=0 fetch scaffold from hand-off to exact dispatch route | done | `Fetch.fetchProtocol_simulates_pc0_to_dispatch` |
+| **F.7c** | construct concrete U.1/U.2/U.3 semantic witnesses from fetch peel/decode + hard-block effects | pending | — |
 | **B.3** | Cell192 archive 引用扫尾（docs-next 之外）| pending | — |
 
 ---
@@ -157,6 +164,7 @@ main 在 7de5064/0003224/8e4406e/1c76a55 之后的关键事实：
 | [foundation-core.md](../10_formal_形式/foundation-core.md) | v3 本轮重写 | Foundation/{Core,Bagua} 模块 |
 | [module-map.md](../10_formal_形式/module-map.md) | v3 本轮重写 | 模块簇地图 |
 | [research-position.md](research-position.md) | 既往 | 学术 positioning（已立 vs novel）|
+| [roadmap-self-similarity-v1.md](roadmap-self-similarity-v1.md) | v1.1 本轮完成 | self-similarity gaps closed + classical-language/Quantum typed skeleton boundaries |
 
 ---
 
@@ -175,7 +183,7 @@ main 在 7de5064/0003224/8e4406e/1c76a55 之后的关键事实：
 commit 7de5064 之 status 说：
 > WenyanSelfInterp.lean dropped legacy dispatchProg + universalMetaInterp (base-192-specific routing); Phase 2.3 12/12 cur-effect simulation theorems retained. Re-derive base-256 dispatch in follow-up.
 
-这意味着 wenyan IL 可执行/ Phase 2.3 cur-effect 同步证明都仍在，但 universalMetaInterp 顶层 dispatch 在 base-256 上需要重新拼接（**Phase F.7**，pending）。
+这意味着 wenyan IL 可执行/ Phase 2.3 cur-effect 同步证明都仍在。base-256 structural assembly 已转移到 `MetaInterp/Assembly.lean`，exact-fuel composition frontier、zero-step/prologue compose、U.1/U.2/U.3 obligation interface 与 Strategy-B fixed-parameter boundary 已在 `MetaInterp/Universal.lean`；`Fetch.lean` 已把 pc=0 scaffold 推进到 exact dispatch route。full arbitrary-program universal compose 仍 pending，原因是 concrete fetch peel/decode、hard-block semantic effects、parameterized sub-dispatch 还未全部构造。
 
 ### 5.4 docs-next 之外的 archive 引用
 
@@ -187,8 +195,13 @@ commit 7de5064 之 status 说：
 
 ### 6.1 必要 cleanup
 
-- [ ] Phase B.2: `abbrev Shi := YinBit × GuoBit`（让 Shi 直接是双 bit，省掉 inductive ↔ pair 的双向转换）
-- [ ] Phase F.7: 重新派生 base-256 universalMetaInterp dispatch（重新对接 Phase 2.3 12/12 cur-effect simulation）
+- [x] Phase B.2: temporal state is already a Bool × Bool abbrev; see `R8.lean` and `V4Tensor.r8_temporal_coordinate_summary`
+- [x] Phase F.7a: base-256 concrete dispatch/assembly structural summary
+- [x] Phase F.7b: exact-fuel semantic-compose frontier interface
+- [x] Phase F.7c.1: U.1/U.2/U.3 semantic-obligation interface + generic META halted-padding lemma
+- [x] Phase F.7c.2: zero-step/prologue compose + Strategy-B fixed-parameter boundary
+- [x] Phase F.7c.3: pc=0 fetch scaffold reaches dispatch route
+- [ ] Phase F.7c: construct concrete U.1/U.2/U.3 witnesses（重新对接 fetch peel/decode、hard-block semantic effects、parameterized sub-dispatch + arbitrary-program simulation）
 - [ ] 审查所有老 doc 的代码锚点是否还指向有效路径（Cell192 引用）
 
 ### 6.2 可选扩展
@@ -253,6 +266,10 @@ lake build SSBX.Text.LayerCharacterMap
 - [`formal/SSBX/Foundation/Bagua/Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) — R₈ + 投 (tou) + Shi V₄
 - [`formal/SSBX/Foundation/Bagua/Cell256Stratify.lean`](../../formal/SSBX/Foundation/Bagua/Cell256Stratify.lean) — R8_complete bundle
 - [`formal/SSBX/Foundation/Bagua/BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) — Mian = R₄
+- [`formal/SSBX/Foundation/Squaring/SelfSimilarity.lean`](../../formal/SSBX/Foundation/Squaring/SelfSimilarity.lean) — self-similarity v1.1 closure
+- [`formal/SSBX/Foundation/Squaring/V4Tensor.lean`](../../formal/SSBX/Foundation/Squaring/V4Tensor.lean) — R₈ V₄ partition + cell/operator anchors
+- [`formal/SSBX/Foundation/Wen/ClassicalTextRHierarchyBridge.lean`](../../formal/SSBX/Foundation/Wen/ClassicalTextRHierarchyBridge.lean) — classical-language direct typed bridge
+- [`formal/SSBX/Foundation/Modern/QuantumR8Bridge.lean`](../../formal/SSBX/Foundation/Modern/QuantumR8Bridge.lean) — Quantum/R₈ finite typed bridge
 - [`formal/SSBX/Foundation/Notation/OXNotation.lean`](../../formal/SSBX/Foundation/Notation/OXNotation.lean) — `OX["..."]` macro
 - [`formal/SSBX/Foundation/Core/MonadRoot.lean`](../../formal/SSBX/Foundation/Core/MonadRoot.lean) — Face 12 inductive (并存于 Mian)
 - [`formal/SSBX.lean`](../../formal/SSBX.lean) — 顶层 import 树
