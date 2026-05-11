@@ -373,6 +373,35 @@ theorem metaInterpProg_fetch_routes_halted_exact
   exact FetchProg.fetchProg_branch_halted_true regHex sim metaInterpProg
     fetchHaltDetectOffset dispatchOffset haltOffset h_branchAt
 
+/-- Full current shape of the concrete halted fetch route from the real
+    fetch-loop entry.  This is intentionally route-shape only: it exposes
+    that the current scaffold reaches `haltOffset` with the post-peel tail,
+    not with canonical halted-history writeback. -/
+theorem metaInterpProg_fetch_halted_current_shape_exact
+    (regHex : Hexagram) (sim : YiState)
+    (h_halted : sim.halted = true) :
+    (Fetch.fetchEntryState regHex sim metaInterpProg fetchOffset).runFuel
+      (3 * sim.pc + 4) =
+      { cur := encHaltedFlag regHex true
+      , history := encCounter regHex sim.history.length ++
+                   sim.history ++
+                   ProgEnc.encProg sim.prog
+      , pc := haltOffset
+      , prog := metaInterpProg
+      , halted := false } := by
+  have h_peel :
+      (Fetch.fetchEntryState regHex sim metaInterpProg fetchOffset).runFuel
+          (3 * sim.pc + 3) =
+        FetchProg.fetchProgHaltDetectEntry regHex sim metaInterpProg
+          fetchHaltDetectOffset true := by
+    simpa [h_halted] using
+      metaInterpProg_fetch_peel_to_haltDetect_at_fuel regHex sim
+  have h_fuel : 3 * sim.pc + 4 = (3 * sim.pc + 3) + 1 := by omega
+  rw [h_fuel, SSBX.Foundation.Bagua.GodelLi.runFuel_succ_right, h_peel]
+  exact FetchProg.fetchProg_haltDetect_halted_to_halt_state_at_fuel
+    regHex sim metaInterpProg fetchHaltDetectOffset dispatchOffset haltOffset
+    metaInterpProg_fetchProg_at_offset
+
 /-- Exact assembly-specialized running fetch route from the real concrete
     fetch-loop entry.  This composes the pc-counter peel prefix, the
     halted-flag pop, the running branch, the placeholder walker, and the
@@ -402,6 +431,43 @@ theorem metaInterpProg_fetch_routes_running_to_dispatch_exact
             SSBX.Foundation.Bagua.GodelLi.runFuel_succ_right, ih]
   rw [h_add, h_peel]
   exact FetchProg.fetchProg_haltDetect_running_to_dispatch_at_fuel
+    regHex sim metaInterpProg fetchHaltDetectOffset dispatchOffset haltOffset
+    metaInterpProg_fetchProg_at_offset
+
+/-- Full current shape of the concrete running fetch route from the real
+    fetch-loop entry.  This theorem makes the F.7c boundary explicit:
+    dispatch is reached, but `cur` still carries the halted-flag cell and
+    history is the post-peel tail, not restored `encMetaHistory`. -/
+theorem metaInterpProg_fetch_running_current_shape_exact
+    (regHex : Hexagram) (sim : YiState)
+    (h_running : sim.halted = false) :
+    (Fetch.fetchEntryState regHex sim metaInterpProg fetchOffset).runFuel
+      ((3 * sim.pc + 3) + (1 + (FetchProg.walkerLen + 1))) =
+      { cur := encHaltedFlag regHex false
+      , history := encCounter regHex sim.history.length ++
+                   sim.history ++
+                   ProgEnc.encProg sim.prog
+      , pc := dispatchOffset
+      , prog := metaInterpProg
+      , halted := false } := by
+  let entry := Fetch.fetchEntryState regHex sim metaInterpProg fetchOffset
+  have h_peel : entry.runFuel (3 * sim.pc + 3) =
+      FetchProg.fetchProgHaltDetectEntry regHex sim metaInterpProg
+        fetchHaltDetectOffset false := by
+    simpa [entry, h_running] using
+      metaInterpProg_fetch_peel_to_haltDetect_at_fuel regHex sim
+  have h_add : ∀ k, entry.runFuel ((3 * sim.pc + 3) + k)
+              = (entry.runFuel (3 * sim.pc + 3)).runFuel k := by
+    intro k
+    induction k with
+    | zero => simp [YiState.runFuel]
+    | succ k ih =>
+        rw [show (3 * sim.pc + 3) + (k + 1) =
+              ((3 * sim.pc + 3) + k) + 1 by omega,
+            SSBX.Foundation.Bagua.GodelLi.runFuel_succ_right,
+            SSBX.Foundation.Bagua.GodelLi.runFuel_succ_right, ih]
+  rw [h_add, h_peel]
+  exact FetchProg.fetchProg_haltDetect_running_to_dispatch_state_at_fuel
     regHex sim metaInterpProg fetchHaltDetectOffset dispatchOffset haltOffset
     metaInterpProg_fetchProg_at_offset
 

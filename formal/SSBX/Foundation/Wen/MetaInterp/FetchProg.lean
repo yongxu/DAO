@@ -342,14 +342,17 @@ private theorem walker_nops_advance
     ∃ s', s.runFuel k = s'
         ∧ s'.pc = offset + 2 + k
         ∧ s'.halted = false
-        ∧ s'.prog = s.prog := by
+        ∧ s'.prog = s.prog
+        ∧ s'.cur = s.cur
+        ∧ s'.history = s.history := by
   induction k with
   | zero =>
-      refine ⟨s, ?_, ?_, ?_, ?_⟩ <;> simp [YiState.runFuel, h_pc, h_halted]
+      refine ⟨s, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+        simp [YiState.runFuel, h_pc, h_halted]
   | succ k ih =>
       have hk' : k ≤ walkerLen := Nat.le_of_succ_le hk
       have hk_lt : k < walkerLen := hk
-      obtain ⟨s', hrun, hpc', hhalt', hprog'⟩ := ih hk'
+      obtain ⟨s', hrun, hpc', hhalt', hprog', hcur', hhist'⟩ := ih hk'
       -- runFuel (k+1) s = (runFuel k s).step = s'.step
       have hstep : s.runFuel (k + 1) = s'.step := by
         rw [SSBX.Foundation.Bagua.GodelLi.runFuel_succ_right, hrun]
@@ -372,11 +375,23 @@ private theorem walker_nops_advance
         rw [hhalt']; simp only [Bool.false_eq_true, if_false]
         rw [h_lookup]; show (YiState.execute YiInstr.nop s').prog = s.prog
         unfold YiState.execute; exact hprog'
-      refine ⟨s'.step, ?_, ?_, ?_, ?_⟩
+      have h_step_cur : s'.step.cur = s.cur := by
+        unfold YiState.step
+        rw [hhalt']; simp only [Bool.false_eq_true, if_false]
+        rw [h_lookup]; show (YiState.execute YiInstr.nop s').cur = s.cur
+        unfold YiState.execute; exact hcur'
+      have h_step_history : s'.step.history = s.history := by
+        unfold YiState.step
+        rw [hhalt']; simp only [Bool.false_eq_true, if_false]
+        rw [h_lookup]; show (YiState.execute YiInstr.nop s').history = s.history
+        unfold YiState.execute; exact hhist'
+      refine ⟨s'.step, ?_, ?_, ?_, ?_, ?_, ?_⟩
       · exact hstep
       · rw [h_step_pc, hpc']; omega
       · exact h_step_halted
       · exact h_step_prog
+      · exact h_step_cur
+      · exact h_step_history
 
 /-- After traversing all `walkerLen = 8` nops, the final `jump
     dispatchOffset` instruction routes pc to `dispatchOffset`. -/
@@ -388,7 +403,7 @@ private theorem walker_then_dispatch_jump
         s.prog[offset + 2 + j]? = some YiInstr.nop)
     (h_jumpAt : s.prog[offset + 10]? = some (YiInstr.jump dispatchOffset)) :
     (s.runFuel (walkerLen + 1)).pc = dispatchOffset := by
-  obtain ⟨s', hrun, hpc', hhalt', hprog'⟩ :=
+  obtain ⟨s', hrun, hpc', hhalt', hprog', _hcur', _hhist'⟩ :=
     walker_nops_advance s offset walkerLen (Nat.le.refl) h_pc h_halted h_walkerSlots
   -- runFuel (walkerLen + 1) s = s'.step
   have hstep : s.runFuel (walkerLen + 1) = s'.step := by
@@ -403,6 +418,35 @@ private theorem walker_then_dispatch_jump
     rw [hhalt']; simp only [Bool.false_eq_true, if_false]
     rw [h_lookup]; rfl
   rw [hstep]; exact h_step_pc
+
+/-- Full-state version of `walker_then_dispatch_jump`: the placeholder walker
+    and final dispatch jump change only the pc, landing at `dispatchOffset`. -/
+private theorem walker_then_dispatch_jump_state
+    (s : YiState) (offset dispatchOffset : Nat)
+    (h_pc : s.pc = offset + 2)
+    (h_halted : s.halted = false)
+    (h_walkerSlots : ∀ j (_ : j < walkerLen),
+        s.prog[offset + 2 + j]? = some YiInstr.nop)
+    (h_jumpAt : s.prog[offset + 10]? = some (YiInstr.jump dispatchOffset)) :
+    s.runFuel (walkerLen + 1) = { s with pc := dispatchOffset } := by
+  obtain ⟨s', hrun, hpc', hhalt', hprog', hcur', hhist'⟩ :=
+    walker_nops_advance s offset walkerLen (Nat.le.refl) h_pc h_halted h_walkerSlots
+  have hstep : s.runFuel (walkerLen + 1) = s'.step := by
+    rw [SSBX.Foundation.Bagua.GodelLi.runFuel_succ_right, hrun]
+  have h_pc_final : s'.pc = offset + 10 := by
+    rw [hpc']; unfold walkerLen; omega
+  have h_lookup : s'.prog[s'.pc]? = some (YiInstr.jump dispatchOffset) := by
+    rw [h_pc_final, hprog']; exact h_jumpAt
+  have h_step : s'.step = { s with pc := dispatchOffset } := by
+    unfold YiState.step
+    rw [hhalt']; simp only [Bool.false_eq_true, if_false]
+    rw [h_lookup]
+    unfold YiState.execute
+    change { s' with pc := dispatchOffset } = { s with pc := dispatchOffset }
+    cases s
+    cases s'
+    simp_all
+  rw [hstep, h_step]
 
 /-! ### § 5b  Routing theorems (composed via peel hypothesis) -/
 
@@ -436,6 +480,68 @@ theorem fetchProg_routes_halted_at_fuel
     exact h.trans rfl
   exact fetchProg_branch_halted_true regHex sim metaProg offset
     dispatchOffset haltOffset h_branchAt
+
+/-- Full post-peel halted route shape.  The current concrete fetch route
+    changes pc only: it does not perform canonical halted-history writeback. -/
+theorem fetchProg_haltDetect_halted_to_halt_state_at_fuel
+    (regHex : Hexagram) (sim : YiState) (metaProg : List YiInstr)
+    (offset dispatchOffset haltOffset : Nat)
+    (h_progStart : ∀ i (_hi : i < fetchProg_totalLen),
+        metaProg[offset + i]? = (fetchProg dispatchOffset haltOffset)[i]?) :
+    (fetchProgHaltDetectEntry regHex sim metaProg offset true).runFuel 1 =
+      { cur := encHaltedFlag regHex true
+      , history := encCounter regHex sim.history.length ++
+                   sim.history ++
+                   ProgEnc.encProg sim.prog
+      , pc := haltOffset
+      , prog := metaProg
+      , halted := false } := by
+  have h_branchAt : metaProg[offset + 1]? =
+      some (YiInstr.branchShiEq Shi.ji haltOffset) := by
+    have h := h_progStart 1 (by unfold fetchProg_totalLen walkerLen; decide)
+    exact h.trans rfl
+  let postPeel := fetchProgHaltDetectEntry regHex sim metaProg offset true
+  have hrun_1 : postPeel.runFuel 1 = postPeel.step := by
+    change (if postPeel.halted then postPeel else postPeel.step) = postPeel.step
+    rw [show postPeel.halted = false by rfl]
+    simp
+  have h_step : postPeel.step =
+      { cur := encHaltedFlag regHex true
+      , history := encCounter regHex sim.history.length ++
+                   sim.history ++
+                   ProgEnc.encProg sim.prog
+      , pc := haltOffset
+      , prog := metaProg
+      , halted := false } := by
+    unfold YiState.step
+    have h_halt0 : postPeel.halted = false := rfl
+    rw [h_halt0]
+    simp only [Bool.false_eq_true, if_false]
+    have h_prog0 : postPeel.prog = metaProg := rfl
+    have h_pc0 : postPeel.pc = offset + 1 := rfl
+    rw [h_prog0, h_pc0, h_branchAt]
+    show (YiState.execute (YiInstr.branchShiEq Shi.ji haltOffset) postPeel) =
+      { cur := encHaltedFlag regHex true
+      , history := encCounter regHex sim.history.length ++
+                   sim.history ++
+                   ProgEnc.encProg sim.prog
+      , pc := haltOffset
+      , prog := metaProg
+      , halted := false }
+    show (if postPeel.cur.2 = Shi.ji
+          then { postPeel with pc := haltOffset }
+          else { postPeel with pc := postPeel.pc + 1 }) =
+      { cur := encHaltedFlag regHex true
+      , history := encCounter regHex sim.history.length ++
+                   sim.history ++
+                   ProgEnc.encProg sim.prog
+      , pc := haltOffset
+      , prog := metaProg
+      , halted := false }
+    have hji : postPeel.cur.2 = Shi.ji := rfl
+    rw [if_pos hji]
+    rfl
+  rw [hrun_1, h_step]
 
 theorem fetchProg_routes_halted_general
     (regHex : Hexagram) (sim : YiState) (metaProg : List YiInstr)
@@ -552,6 +658,100 @@ theorem fetchProg_haltDetect_running_to_dispatch_at_fuel
   rw [h_add', hrun_1]
   exact walker_then_dispatch_jump postPeel.step offset dispatchOffset
     h_postStep_pc h_postStep_halted h_walkerSlots h_jumpAt
+
+/-- Full post-peel running route shape.  This records the current scaffold
+    boundary: the route reaches dispatch while preserving the post-peel
+    noncanonical history and the halted-flag cell in `cur`. -/
+theorem fetchProg_haltDetect_running_to_dispatch_state_at_fuel
+    (regHex : Hexagram) (sim : YiState) (metaProg : List YiInstr)
+    (offset dispatchOffset haltOffset : Nat)
+    (h_progStart : ∀ i (_hi : i < fetchProg_totalLen),
+        metaProg[offset + i]? = (fetchProg dispatchOffset haltOffset)[i]?) :
+    (fetchProgHaltDetectEntry regHex sim metaProg offset false).runFuel
+      (1 + (walkerLen + 1)) =
+      { cur := encHaltedFlag regHex false
+      , history := encCounter regHex sim.history.length ++
+                   sim.history ++
+                   ProgEnc.encProg sim.prog
+      , pc := dispatchOffset
+      , prog := metaProg
+      , halted := false } := by
+  have h_branchAt : metaProg[offset + 1]? =
+      some (YiInstr.branchShiEq Shi.ji haltOffset) := by
+    have h := h_progStart 1 (by unfold fetchProg_totalLen walkerLen; decide)
+    exact h.trans rfl
+  let postPeel := fetchProgHaltDetectEntry regHex sim metaProg offset false
+  have hrun_1 : postPeel.runFuel 1 = postPeel.step := by
+    change (if postPeel.halted then postPeel else postPeel.step) = postPeel.step
+    rw [show postPeel.halted = false by rfl]
+    simp
+  have h_postStep_state : postPeel.step = { postPeel with pc := offset + 2 } := by
+    unfold YiState.step
+    have h_halt0 : postPeel.halted = false := rfl
+    rw [h_halt0]
+    simp only [Bool.false_eq_true, if_false]
+    have h_prog0 : postPeel.prog = metaProg := rfl
+    have h_pc0 : postPeel.pc = offset + 1 := rfl
+    rw [h_prog0, h_pc0, h_branchAt]
+    show (YiState.execute (YiInstr.branchShiEq Shi.ji haltOffset) postPeel) =
+      { postPeel with pc := offset + 2 }
+    show (if postPeel.cur.2 = Shi.ji
+          then { postPeel with pc := haltOffset }
+          else { postPeel with pc := postPeel.pc + 1 }) =
+      { postPeel with pc := offset + 2 }
+    have hne : postPeel.cur.2 ≠ Shi.ji := by show Shi.wei ≠ Shi.ji; decide
+    rw [if_neg hne]
+    rfl
+  have h_walkerSlots : ∀ j (_ : j < walkerLen),
+      ({ postPeel with pc := offset + 2 } : YiState).prog[offset + 2 + j]? =
+        some YiInstr.nop := by
+    intro j hj
+    have hi_lt : 2 + j < fetchProg_totalLen := by
+      unfold fetchProg_totalLen walkerLen at hj ⊢
+      omega
+    have h := h_progStart (2 + j) hi_lt
+    have hoff : offset + (2 + j) = offset + 2 + j := by omega
+    rw [hoff] at h
+    rw [show ({ postPeel with pc := offset + 2 } : YiState).prog = metaProg by rfl]
+    rw [h]
+    show (fetchProg dispatchOffset haltOffset)[2 + j]? = some YiInstr.nop
+    unfold fetchProg walkerLen
+    have hj' : j < 8 := by
+      unfold walkerLen at hj
+      exact hj
+    match j, hj' with
+    | 0, _ => rfl
+    | 1, _ => rfl
+    | 2, _ => rfl
+    | 3, _ => rfl
+    | 4, _ => rfl
+    | 5, _ => rfl
+    | 6, _ => rfl
+    | 7, _ => rfl
+  have h_jumpAt : ({ postPeel with pc := offset + 2 } : YiState).prog[offset + 10]? =
+      some (YiInstr.jump dispatchOffset) := by
+    have hi_lt : 10 < fetchProg_totalLen := by
+      unfold fetchProg_totalLen walkerLen
+      decide
+    have h := h_progStart 10 hi_lt
+    rw [show ({ postPeel with pc := offset + 2 } : YiState).prog = metaProg by rfl]
+    rw [h]
+    rfl
+  have h_add : ∀ k, postPeel.runFuel (1 + k)
+              = (postPeel.runFuel 1).runFuel k := by
+    intro k
+    induction k with
+    | zero => simp [YiState.runFuel]
+    | succ k ih =>
+        rw [show 1 + (k + 1) = (1 + k) + 1 from rfl,
+            SSBX.Foundation.Bagua.GodelLi.runFuel_succ_right,
+            SSBX.Foundation.Bagua.GodelLi.runFuel_succ_right, ih]
+  have h_add' := h_add (walkerLen + 1)
+  rw [h_add', hrun_1, h_postStep_state]
+  simpa [postPeel, fetchProgHaltDetectEntry] using
+    walker_then_dispatch_jump_state
+      ({ postPeel with pc := offset + 2 } : YiState)
+      offset dispatchOffset rfl rfl h_walkerSlots h_jumpAt
 
 /-- The "fetch-when-not-halted" routing theorem.
 
