@@ -7,11 +7,11 @@ fixed mask on the underlying (Z/2)ⁿ carrier. Algebraically they form an
 
 ## Members
 
-- `yin`, `project` — Cell256 mask-XOR involutions
-  (Cell256 lives at R₈ = (Z/2)⁸; yin toggles the 因/YinBit, project toggles 果/GuoBit).
+- `imprint`, `project` — Cell256 mask-XOR involutions
+  (Cell256 lives at R₈ = (Z/2)⁸; imprint toggles the 因/YinBit, project toggles 果/GuoBit).
 - `flip1..flip6` — Cell128 single-yao toggles
   (Cell128 = Hexagram × YinBit at R₇; flipᵢ toggles the i-th yao).
-- `hexCuo` (Cell128) — Hexagram-level 错 = XOR with `earth` (the all-yin mask),
+- `hexCuo` (Cell128) — Hexagram-level 错 = XOR with `earth` (the all-imprint mask),
   i.e. componentwise yao negation.
 
 ## Group property
@@ -38,14 +38,14 @@ open SSBX.Foundation.Bagua.Cell128
 /-! ## § 1 Cell256 atomic operators (R₈ level) -/
 
 /-- Cell256 印 (yìn): XOR with `(heaven, ji)` mask (toggle YinBit / 因 axis). -/
-def cell256_yin (c : Cell256) : Cell256 := Cell256.yin c
+def cell256_imprint (c : Cell256) : Cell256 := Cell256.imprint c
 
 /-- Cell256 投 (tóu): XOR with `(heaven, wei)` mask (toggle GuoBit / 果 axis). -/
 def cell256_tou (c : Cell256) : Cell256 := Cell256.project c
 
 /-! ## § 2 Cell128 atomic operators (R₇ level)
 
-  Note: in `Cell128.lean`, `flip1..flip6`, `yin`, `hexCuo` are defined at
+  Note: in `Cell128.lean`, `flip1..flip6`, `imprint`, `hexCuo` are defined at
   the *file-level* namespace `SSBX.Foundation.Bagua.Cell128` (NOT inside
   the inner `Cell128` namespace which only houses the carrier/`xor`/
   `origin`/etc.). After `open SSBX.Foundation.Bagua.Cell128` we reference
@@ -65,11 +65,11 @@ def cell128_flip5 (c : Cell128) : Cell128 := flip5 c
 def cell128_flip6 (c : Cell128) : Cell128 := flip6 c
 
 /-- Cell128 印 (yìn): toggle the YinBit. Direct form. -/
-def cell128_yin (c : Cell128) : Cell128 :=
-  SSBX.Foundation.Bagua.Cell128.yin c
+def cell128_imprint (c : Cell128) : Cell128 :=
+  SSBX.Foundation.Bagua.Cell128.imprint c
 
 /-- Cell128 hexagram-level 错 (complement): yao-wise negation = XOR with the
-    all-yin (earth) mask on the Hexagram component, preserving the YinBit.
+    all-imprint (earth) mask on the Hexagram component, preserving the YinBit.
 
     This is the "atomic XOR-mask" form of `Hexagram.complement` lifted to Cell128. -/
 def cell128_hexCuo (c : Cell128) : Cell128 :=
@@ -80,8 +80,8 @@ def cell128_hexCuo (c : Cell128) : Cell128 :=
   XOR with any fixed mask `m` is an involution: `(c ⊕ m) ⊕ m = c`. The
   proofs below simply forward to the source-file involution lemmas. -/
 
-theorem cell256_yin_involutive (c : Cell256) : cell256_yin (cell256_yin c) = c :=
-  Cell256.yin_yin c
+theorem cell256_yin_involutive (c : Cell256) : cell256_imprint (cell256_imprint c) = c :=
+  Cell256.imprint_imprint c
 
 theorem cell256_tou_involutive (c : Cell256) : cell256_tou (cell256_tou c) = c :=
   Cell256.project_project c
@@ -104,8 +104,8 @@ theorem cell128_flip5_involutive (c : Cell128) : cell128_flip5 (cell128_flip5 c)
 theorem cell128_flip6_involutive (c : Cell128) : cell128_flip6 (cell128_flip6 c) = c :=
   flip6_flip6 c
 
-theorem cell128_yin_involutive (c : Cell128) : cell128_yin (cell128_yin c) = c :=
-  SSBX.Foundation.Bagua.Cell128.yin_yin c
+theorem cell128_yin_involutive (c : Cell128) : cell128_imprint (cell128_imprint c) = c :=
+  SSBX.Foundation.Bagua.Cell128.imprint_imprint c
 
 theorem cell128_hexCuo_involutive (c : Cell128) : cell128_hexCuo (cell128_hexCuo c) = c :=
   SSBX.Foundation.Bagua.Cell128.hexCuo_hexCuo c
@@ -117,8 +117,8 @@ theorem cell128_hexCuo_involutive (c : Cell128) : cell128_hexCuo (cell128_hexCuo
 
 /-- 印 and 投 commute on Cell256 (both are XOR with fixed Cell256 masks). -/
 theorem cell256_yin_tou_comm (c : Cell256) :
-    cell256_yin (cell256_tou c) = cell256_tou (cell256_yin c) :=
-  Cell256.yin_tou_comm c
+    cell256_imprint (cell256_tou c) = cell256_tou (cell256_imprint c) :=
+  Cell256.imprint_project_comm c
 
 /-! ## § 5 Public summary — the atomic group property
 
@@ -127,7 +127,7 @@ theorem cell256_yin_tou_comm (c : Cell256) :
 
 theorem atomic_all_involutive :
     -- Cell256 layer
-    (∀ c : Cell256, cell256_yin (cell256_yin c) = c)
+    (∀ c : Cell256, cell256_imprint (cell256_imprint c) = c)
     ∧ (∀ c : Cell256, cell256_tou (cell256_tou c) = c)
     -- Cell128 single-yao toggles
     ∧ (∀ c : Cell128, cell128_flip1 (cell128_flip1 c) = c)
@@ -137,7 +137,7 @@ theorem atomic_all_involutive :
     ∧ (∀ c : Cell128, cell128_flip5 (cell128_flip5 c) = c)
     ∧ (∀ c : Cell128, cell128_flip6 (cell128_flip6 c) = c)
     -- Cell128 印 + hexCuo
-    ∧ (∀ c : Cell128, cell128_yin (cell128_yin c) = c)
+    ∧ (∀ c : Cell128, cell128_imprint (cell128_imprint c) = c)
     ∧ (∀ c : Cell128, cell128_hexCuo (cell128_hexCuo c) = c) :=
   ⟨cell256_yin_involutive, cell256_tou_involutive,
    cell128_flip1_involutive, cell128_flip2_involutive, cell128_flip3_involutive,

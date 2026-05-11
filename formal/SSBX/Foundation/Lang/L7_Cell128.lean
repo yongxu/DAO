@@ -3,7 +3,7 @@
 
 The headline R-rung. Cell space `Cell128 = Hexagram × YinBit = (Z/2)⁷ = 128 atoms`.
 The 7th bit (YinBit) represents 因 (yīn — past-trace bit per the doctrine);
-its atomic operator is **印 (yìn)**, already defined as `Cell128.yin` in
+its atomic operator is **印 (yìn)**, already defined as `Cell128.imprint` in
 `SSBX.Foundation.Bagua.Cell128` with proven involutivity.
 
 ## Surface syntax (7-token bit form)
@@ -33,7 +33,7 @@ Origin = `(heaven, false)` = (Z/2)⁷ identity. Each cell c plays both roles
 The 7 single-bit-flip masks are the (Z/2)⁷ generators. Reusing the masks
 already proven correct in `Cell128`:
 - flip1..6: toggle yao i of the hexagram (XOR-mask form via `Cell128.flipᵢ`)
-- yin (印):  toggle the YinBit (XOR-mask form via `Cell128.yinM`)
+- yin (印):  toggle the YinBit (XOR-mask form via `Cell128.imprintM`)
 
 Each atomic op is realized as a Cayley XOR by a one-hot Cell128 mask;
 applied to the data this gives 7 independent involutions generating
@@ -151,8 +151,8 @@ def mask_y4 : Cell := (⟨.yang, .yang, .yang, .yin, .yang, .yang⟩, false)
 def mask_y5 : Cell := (⟨.yang, .yang, .yang, .yang, .yin, .yang⟩, false)
 /-- One-hot mask: flip yao 6 only. -/
 def mask_y6 : Cell := (⟨.yang, .yang, .yang, .yang, .yang, .yin⟩, false)
-/-- 印 mask: flip the YinBit (7th coord). Reused from `Cell128.yin_mask`. -/
-def mask_yin : Cell := SSBX.Foundation.Bagua.Cell128.Cell128.yin_mask
+/-- 印 mask: flip the YinBit (7th coord). Reused from `Cell128.imprint_mask`. -/
+def mask_yin : Cell := SSBX.Foundation.Bagua.Cell128.Cell128.imprint_mask
 
 /-! ## § 5 LangLayer instance -/
 

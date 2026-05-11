@@ -28,12 +28,12 @@ abbrev Cell256 : Type := SSBX.Foundation.Bagua.Cell256.Cell256
 /-! ## XOR-mask atomic operators on R₈
 
   Re-exposed from `Cell256` namespace for R-index discoverability.
-  These are the strict (Z/2)⁸ XOR-mask atoms (yin / project) and the
+  These are the strict (Z/2)⁸ XOR-mask atoms (imprint / project) and the
   Hexagram-side propagation atoms (flip1..6 + hexCuo/hexZong/hexHu)
   plus the Shi-side atoms (shiCuo / shiZong / shiCuoZong). -/
 
-/-- 印 (yin): XOR with `yin_mask = (heaven, ji)`; flips the 7th coord (YinBit). -/
-def yin (c : Cell256) : Cell256 := Cell256.yin c
+/-- 印 (imprint): XOR with `imprint_mask = (heaven, ji)`; flips the 7th coord (YinBit). -/
+def imprint (c : Cell256) : Cell256 := Cell256.imprint c
 
 /-- 投 (project): XOR with `project_mask = (heaven, wei)`; flips the 8th coord (GuoBit). -/
 def project (c : Cell256) : Cell256 := Cell256.project c

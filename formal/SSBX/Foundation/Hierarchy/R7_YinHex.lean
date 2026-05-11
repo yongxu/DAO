@@ -22,11 +22,11 @@ abbrev Cell128 : Type := SSBX.Foundation.Bagua.Cell128.Cell128
 /-! ## Atomic operators on R₇
 
   Re-exposed from `Cell128` namespace for R-index discoverability.
-  These are the strict (Z/2)⁷ XOR-mask atoms (yin + flip1..6) plus
+  These are the strict (Z/2)⁷ XOR-mask atoms (imprint + flip1..6) plus
   the trigram-level outer operators (hexCuo / hexZong / hexHu). -/
 
-/-- 印 (yin): toggle the YinBit (Z/2 involution on the 7th coord). -/
-def yin (c : Cell128) : Cell128 := SSBX.Foundation.Bagua.Cell128.yin c
+/-- 印 (imprint): toggle the YinBit (Z/2 involution on the 7th coord). -/
+def imprint (c : Cell128) : Cell128 := SSBX.Foundation.Bagua.Cell128.imprint c
 
 /-- flip1: toggle yao 1 (inner-下) of the hexagram component. -/
 def flip1 (c : Cell128) : Cell128 := SSBX.Foundation.Bagua.Cell128.flip1 c

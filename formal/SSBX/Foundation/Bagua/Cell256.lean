@@ -139,18 +139,18 @@ theorem toYinGuo_ofYinGuo (yg : YinBit × GuoBit) : toYinGuo (ofYinGuo yg) = yg 
   备选 印/望、持/期等 — 详 yi-calculus-theorem.md §16. -/
 
 /-- 印 (yìn): toggle YinBit (因 axis). 等价于 Shi.complement. -/
-def yin (s : Shi) : Shi := s.complement
+def imprint (s : Shi) : Shi := s.complement
 
 /-- 投 (tóu): toggle GuoBit (果 axis). 等价于 Shi.reverse. -/
 def project (s : Shi) : Shi := s.reverse
 
-theorem yin_yin (s : Shi) : yin (yin s) = s := cuo_cuo s
+theorem imprint_imprint (s : Shi) : imprint (imprint s) = s := cuo_cuo s
 theorem project_project (s : Shi) : project (project s) = s := zong_zong s
-theorem yin_tou_comm (s : Shi) : yin (project s) = project (yin s) := cuo_zong_comm s
+theorem imprint_project_comm (s : Shi) : imprint (project s) = project (imprint s) := cuo_zong_comm s
 
 /-- 印 ∘ 投 = complementReverse = V₄ central element. -/
-theorem yin_tou_eq_cuoZong (s : Shi) : yin (project s) = complementReverse s := by
-  unfold yin project
+theorem imprint_project_eq_complementReverse (s : Shi) : imprint (project s) = complementReverse s := by
+  unfold imprint project
   exact (cuoZong_eq_compose s).symm
 
 end Shi
@@ -391,7 +391,7 @@ namespace Cell256
 
 /-! ### § 7.1 Yao XOR helper -/
 
-/-- XOR of two Yao: equal → yang (identity), differ → yin. -/
+/-- XOR of two Yao: equal → yang (identity), differ → imprint. -/
 def yaoXor (a b : Yao) : Yao :=
   match a, b with
   | .yang, .yang => .yang
@@ -570,10 +570,10 @@ end Cell256
   Phase A re-expresses 印/投 at the **Cell256 level** as XOR with two
   canonical masks:
 
-    yin_mask = (heaven, ji)  = `oooooooi`o  (only YinBit / 因 axis)
+    imprint_mask = (heaven, ji)  = `oooooooi`o  (only YinBit / 因 axis)
     project_mask = (heaven, wei) = `oooooooo`i  (only GuoBit / 果 axis)
 
-  Then `yin = (· ⊕ yin_mask)` and `project = (· ⊕ project_mask)` are mask-XOR
+  Then `imprint = (· ⊕ imprint_mask)` and `project = (· ⊕ project_mask)` are mask-XOR
   involutions. The two masks XOR to `(heaven, jin) = "ooooooon"`, the V₄
   central element. -/
 
@@ -581,21 +581,21 @@ namespace Cell256
 
 /-- 印 mask: only the YinBit (因 axis, R5 atom) is set.
     `(heaven, ji) = (heaven, (1, 0)) = "oooooooi"`. -/
-def yin_mask : Cell256 := (Hexagram.heaven, Shi.ji)
+def imprint_mask : Cell256 := (Hexagram.heaven, Shi.ji)
 
 /-- 投 mask: only the GuoBit (果 axis, R6 atom) is set.
     `(heaven, wei) = (heaven, (0, 1)) = "ooooooox"`. -/
 def project_mask : Cell256 := (Hexagram.heaven, Shi.wei)
 
 /-- 印 (yìn) at Cell256: XOR with the YinBit-only mask. -/
-def yin (c : Cell256) : Cell256 := xor c yin_mask
+def imprint (c : Cell256) : Cell256 := xor c imprint_mask
 
 /-- 投 (tóu) at Cell256: XOR with the GuoBit-only mask. -/
 def project (c : Cell256) : Cell256 := xor c project_mask
 
 /-- 印 is involutive (mask is self-inverse). -/
-theorem yin_yin (c : Cell256) : yin (yin c) = c := by
-  unfold yin
+theorem imprint_imprint (c : Cell256) : imprint (imprint c) = c := by
+  unfold imprint
   rw [xor_assoc, xor_self, xor_origin]
 
 /-- 投 is involutive. -/
@@ -605,20 +605,20 @@ theorem project_project (c : Cell256) : project (project c) = c := by
 
 /-- 印 and 投 commute (both are XOR-with-fixed-mask, and XOR is commutative
     + associative). -/
-theorem yin_tou_comm (c : Cell256) : yin (project c) = project (yin c) := by
-  unfold yin project
-  rw [xor_assoc, xor_assoc, xor_comm project_mask yin_mask]
+theorem imprint_project_comm (c : Cell256) : imprint (project c) = project (imprint c) := by
+  unfold imprint project
+  rw [xor_assoc, xor_assoc, xor_comm project_mask imprint_mask]
 
 /-- 印 ∘ 投 = XOR with `(heaven, jin)` = the V₄ central mask. -/
-theorem yin_tou_eq_central (c : Cell256) :
-    yin (project c) = xor c (Hexagram.heaven, Shi.jin) := by
-  unfold yin project
+theorem imprint_project_eq_central (c : Cell256) :
+    imprint (project c) = xor c (Hexagram.heaven, Shi.jin) := by
+  unfold imprint project
   rw [xor_assoc]
   congr 1
 
 /-- The two masks together generate the V₄ central element. -/
-theorem yin_mask_xor_tou_mask :
-    xor yin_mask project_mask = (Hexagram.heaven, Shi.jin) := by
+theorem imprint_mask_xor_project_mask :
+    xor imprint_mask project_mask = (Hexagram.heaven, Shi.jin) := by
   rfl
 
 end Cell256
@@ -636,11 +636,11 @@ theorem cell256_phaseA_summary :
     ∧ Function.Injective Cell256.cayley
     ∧ (∀ c : Cell256, Cell256.epsAtOrigin (Cell256.cayley c) = c)
     -- 印 / 投 mask involutions + commute
-    ∧ (∀ c : Cell256, Cell256.yin (Cell256.yin c) = c)
+    ∧ (∀ c : Cell256, Cell256.imprint (Cell256.imprint c) = c)
     ∧ (∀ c : Cell256, Cell256.project (Cell256.project c) = c)
-    ∧ (∀ c : Cell256, Cell256.yin (Cell256.project c) = Cell256.project (Cell256.yin c)) :=
+    ∧ (∀ c : Cell256, Cell256.imprint (Cell256.project c) = Cell256.project (Cell256.imprint c)) :=
   ⟨Cell256.origin_xor, Cell256.xor_self, Cell256.xor_comm, Cell256.xor_assoc,
    Cell256.cayley_inj, Cell256.epsAtOrigin_cayley,
-   Cell256.yin_yin, Cell256.project_project, Cell256.yin_tou_comm⟩
+   Cell256.imprint_imprint, Cell256.project_project, Cell256.imprint_project_comm⟩
 
 end SSBX.Foundation.Bagua.Cell256

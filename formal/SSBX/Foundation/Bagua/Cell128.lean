@@ -31,7 +31,7 @@ R₇ atomic 算子: **印 (yìn)** = toggle 因 bit (Z/2 involution).
 - `SMul Cell128 Cell128` self-action = Cayley regular representation
 - `cayley : Cell128 → (Cell128 → Cell128)` = injection into permutation group
 - `epsAtOrigin` = inverse-at-origin retraction
-- 印 (yin) = (· ⊕ yin_mask) where yin_mask = (heaven, true) = `oooooooi`
+- 印 (imprint) = (· ⊕ imprint_mask) where imprint_mask = (heaven, true) = `oooooooi`
 -/
 import SSBX.Foundation.Yi.Yi
 import SSBX.Foundation.Bagua.BaguaAlgebra
@@ -78,22 +78,22 @@ end Cell128
 
 /-! ## § 3 R5 atomic 算子: 印 (yìn) — toggle 因 bit (legacy direct form)
 
-  This original `yin` toggles the YinBit directly. Phase A adds an
+  This original `imprint` toggles the YinBit directly. Phase A adds an
   equivalent XOR-mask form below (§ 7) — they coincide on Cell128. -/
 
 /-- 印 (yìn): toggle YinBit (legacy direct form). Z/2 involution.
 
     印 是 R5 之新引入 atomic 算子（O5 之 atom）。
     Provisional naming. -/
-def yin (c : Cell128) : Cell128 := (c.1, !c.2)
+def imprint (c : Cell128) : Cell128 := (c.1, !c.2)
 
 /-- 印 是 involution: 印² = id. -/
-theorem yin_yin (c : Cell128) : yin (yin c) = c := by
+theorem imprint_imprint (c : Cell128) : imprint (imprint c) = c := by
   rcases c with ⟨h, b⟩
   cases b <;> rfl
 
 /-- 印 不动 hexagram 部分. -/
-theorem yin_preserves_hex (c : Cell128) : (yin c).1 = c.1 := by
+theorem imprint_preserves_hex (c : Cell128) : (imprint c).1 = c.1 := by
   rcases c with ⟨h, b⟩; rfl
 
 /-! ## § 4 Hexagram lift 到 Cell128 (保 因 bit) -/
@@ -141,13 +141,13 @@ theorem flip6_flip6 (c : Cell128) : flip6 (flip6 c) = c := by
 
 /-! ### 印 与 hex 算子相容 (tensor product 结构) -/
 
-theorem yin_hexCuo_comm (c : Cell128) : yin (hexCuo c) = hexCuo (yin c) := by
+theorem imprint_hexCuo_comm (c : Cell128) : imprint (hexCuo c) = hexCuo (imprint c) := by
   rcases c with ⟨h, b⟩; rfl
 
-theorem yin_hexZong_comm (c : Cell128) : yin (hexZong c) = hexZong (yin c) := by
+theorem imprint_hexZong_comm (c : Cell128) : imprint (hexZong c) = hexZong (imprint c) := by
   rcases c with ⟨h, b⟩; rfl
 
-theorem yin_flip1_comm (c : Cell128) : yin (flip1 c) = flip1 (yin c) := by
+theorem imprint_flip1_comm (c : Cell128) : imprint (flip1 c) = flip1 (imprint c) := by
   rcases c with ⟨h, b⟩; rfl
 
 /-! ## § 5 Public summary (legacy) -/
@@ -156,10 +156,10 @@ theorem yin_flip1_comm (c : Cell128) : yin (flip1 c) = flip1 (yin c) := by
 theorem cell128_summary :
     Cell128.all.length = 128
     ∧ (∀ c : Cell128, c ∈ Cell128.all)
-    ∧ (∀ c : Cell128, yin (yin c) = c)
+    ∧ (∀ c : Cell128, imprint (imprint c) = c)
     ∧ (∀ c : Cell128, hexCuo (hexCuo c) = c)
     ∧ (∀ c : Cell128, flip1 (flip1 c) = c) :=
-  ⟨Cell128.all_length, Cell128.mem_all, yin_yin, hexCuo_hexCuo, flip1_flip1⟩
+  ⟨Cell128.all_length, Cell128.mem_all, imprint_imprint, hexCuo_hexCuo, flip1_flip1⟩
 
 /-! ## § 6 Phase A — (Z/2)⁷ Algebraic Spine
 
@@ -176,9 +176,9 @@ namespace Cell128
 
 /-! ### § 6.1 Yao XOR helper
 
-  We treat Yao as a Z/2 atom via `yang = 0` (identity), `yin = 1`. -/
+  We treat Yao as a Z/2 atom via `yang = 0` (identity), `imprint = 1`. -/
 
-/-- XOR of two Yao: equal → yang (identity), differ → yin. -/
+/-- XOR of two Yao: equal → yang (identity), differ → imprint. -/
 def yaoXor (a b : Yao) : Yao :=
   match a, b with
   | .yang, .yang => .yang
@@ -321,27 +321,27 @@ end Cell128
 
 /-! ## § 7 印 重写为 XOR mask (Phase A)
 
-  Original `yin (h, b) = (h, !b)` toggles only the YinBit. We re-express this
-  as XOR with the canonical mask `yin_mask = (heaven, true) = "oooooooi"`,
-  showing `yin = (· ⊕ yin_mask)`. This is the form required for
+  Original `imprint (h, b) = (h, !b)` toggles only the YinBit. We re-express this
+  as XOR with the canonical mask `imprint_mask = (heaven, true) = "oooooooi"`,
+  showing `imprint = (· ⊕ imprint_mask)`. This is the form required for
   Cell256 mask-based 印/投 (where 印 and 投 each pick a different mask). -/
 
 namespace Cell128
 
 /-- 印 mask at R₇: only the YinBit (bit 7) is set. -/
-def yin_mask : Cell128 := (Hexagram.heaven, true)
+def imprint_mask : Cell128 := (Hexagram.heaven, true)
 
 /-- 印 (mask form): XOR with the YinBit-only mask. -/
-def yinM (c : Cell128) : Cell128 := xor c yin_mask
+def imprintM (c : Cell128) : Cell128 := xor c imprint_mask
 
 /-- mask form coincides with the legacy direct toggle. -/
-theorem yinM_eq_yin (c : Cell128) : yinM c = yin c := by
+theorem imprintM_eq_imprint (c : Cell128) : imprintM c = imprint c := by
   rcases c with ⟨h, b⟩
-  cases b <;> simp [yinM, yin, xor, yin_mask, hexXor_qian_right]
+  cases b <;> simp [imprintM, imprint, xor, imprint_mask, hexXor_qian_right]
 
 /-- 印 (mask form) is involutive (because the mask is self-inverse). -/
-theorem yinM_yinM (c : Cell128) : yinM (yinM c) = c := by
-  unfold yinM
+theorem imprintM_imprintM (c : Cell128) : imprintM (imprintM c) = c := by
+  unfold imprintM
   rw [xor_assoc, xor_self, xor_origin]
 
 end Cell128
@@ -359,8 +359,8 @@ theorem cell128_phaseA_summary :
     ∧ Function.Injective Cell128.cayley
     ∧ (∀ c : Cell128, Cell128.epsAtOrigin (Cell128.cayley c) = c)
     -- 印 = XOR-with-mask = legacy direct toggle
-    ∧ (∀ c : Cell128, Cell128.yinM c = yin c) :=
+    ∧ (∀ c : Cell128, Cell128.imprintM c = imprint c) :=
   ⟨Cell128.origin_xor, Cell128.xor_self, Cell128.xor_comm, Cell128.xor_assoc,
-   Cell128.cayley_inj, Cell128.epsAtOrigin_cayley, Cell128.yinM_eq_yin⟩
+   Cell128.cayley_inj, Cell128.epsAtOrigin_cayley, Cell128.imprintM_eq_imprint⟩
 
 end SSBX.Foundation.Bagua.Cell128
