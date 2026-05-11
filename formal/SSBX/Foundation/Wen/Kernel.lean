@@ -110,8 +110,44 @@ KernelDanZi → MonadRoot.CoreAtom (9 共有 字: 一/元/动/行/生/仁/理/�
 
 import SSBX.Foundation.Core.MonadRoot
 import SSBX.Foundation.Wen.Operators
+import SSBX.Foundation.Bagua.Cell128
+import SSBX.Foundation.Yi.Yi
 
 namespace SSBX.Foundation.Wen.Kernel
+
+open SSBX.Foundation.Yi.Yi (Yao Hexagram)
+open SSBX.Foundation.Bagua.Cell128 (Cell128)
+
+/-- Local alias for cell-XOR; avoids name conflict with `Kernel.origin` etc.
+    The xor/origin live inside an INNER `Cell128` namespace within the file
+    namespace `SSBX.Foundation.Bagua.Cell128`. -/
+private abbrev cell128Xor : Cell128 → Cell128 → Cell128 :=
+  SSBX.Foundation.Bagua.Cell128.Cell128.xor
+
+/-- Local alias for cell-origin; avoids name conflict with `Kernel.origin`. -/
+private abbrev cell128Origin : Cell128 :=
+  SSBX.Foundation.Bagua.Cell128.Cell128.origin
+
+/-! ## Phase K — Cayley-native grounding
+
+  The opaque `theOne` witness has been migrated from `Fin 3` (a 3-cycle
+  toy state-space) to `Cell128 = Hexagram × YinBit = (Z/2)⁷`, with
+  `dong` realized as Cayley XOR-with-a-specific-cell. This bridges
+  Kernel.lean to the (Z/2)ⁿ R-hierarchy without changing any downstream
+  theorem statement — all consume `One` via its abstract interface.
+
+  **Cayley grounding**: `dong s = Cell128.xor s c_motion` where
+  `c_motion` is the canonical "primer movement" cell. Doctrinally:
+  `c_motion = (姤, false) = R7_xoooooo` — the first stir, 仁的 Cayley face.
+
+  Consequence: every Kernel concept (中/极/几/势/...) now reads
+  through `(Z/2)⁷` cells with Cayley action. Two-system gap eliminated.
+-/
+
+/-- The canonical "primer movement" cell.
+    = 姤·无 = R7_xoooooo = "first stir" / 仁 (Wuchang.benevolence) -/
+private def c_motion : Cell128 :=
+  (⟨Yao.yin, Yao.yang, Yao.yang, Yao.yang, Yao.yang, Yao.yang⟩, false)
 
 /-! ### Layer 0: 一 (THE ROOT) — single-axiom genesis
 
@@ -162,10 +198,13 @@ structure One where
     - dong (0↔1, 2 fixed) — both middle (0,1) and extreme (2) are inhabited
     - alive : dong 0 = 1 ≠ 0 (provable by decide on the witness) -/
 opaque theOne : One :=
-  { state  := Fin 3
-    dong   := fun n => if n = 2 then 2 else if n = 0 then 1 else 0
-    origin := 0
-    alive  := by decide }
+  { state  := Cell128
+    dong   := fun s => cell128Xor s c_motion
+    origin := cell128Origin
+    alive  := by
+      -- xor origin c_motion = c_motion ≠ origin (because c_motion = 姤·无 ≠ 乾·无)
+      show cell128Xor cell128Origin c_motion ≠ cell128Origin
+      native_decide }
 
 /-! #### 自 一 derived: 場, 動, 元, 一 (yiOne alias) -/
 
