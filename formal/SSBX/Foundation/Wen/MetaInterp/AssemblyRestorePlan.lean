@@ -477,6 +477,148 @@ theorem restoredMetaInterpProg_execute_nop_simulates_aligned
     restoredMetaInterpProg_nop_body_jump_at_offset
     h_pre
 
+/-! ## Restored current-transform boundaries -/
+
+theorem restoredMetaInterpProg_execute_setShi_current_history_not_blockPost
+    (regHex : Hexagram) (sim : YiState)
+    (h_alive : sim.halted = false)
+    (h_setShi : sim.prog[sim.pc]? = some (.setShi Shi.dao)) :
+    let μ : YiState :=
+      { cur := sim.cur
+      , history := encMetaHistory regHex sim
+      , pc := bodyOffset block_setShi_offset
+      , prog := restoredMetaInterpProg
+      , halted := false }
+    let μ' := μ.runFuel 2
+    ¬ ExecuteBlock.BlockPost regHex sim fetchOffset restoredMetaInterpProg μ' false := by
+  dsimp
+  let μ : YiState :=
+    { cur := sim.cur
+    , history := encMetaHistory regHex sim
+    , pc := bodyOffset block_setShi_offset
+    , prog := restoredMetaInterpProg
+    , halted := false }
+  have h_history : (μ.runFuel 2).history = encMetaHistory regHex sim := by
+    rfl
+  exact
+    ExecuteBlock.blockPost_unchanged_history_impossible_after_pc_increment
+      regHex sim fetchOffset restoredMetaInterpProg (μ.runFuel 2) false
+      (sim.cur.1, Shi.dao)
+      (by simp [YiState.step, h_alive, h_setShi, YiState.execute])
+      h_history
+
+theorem restoredMetaInterpProg_execute_flipYao_current_history_not_blockPost
+    (regHex : Hexagram) (sim : YiState)
+    (h_alive : sim.halted = false)
+    (h_flipYao : sim.prog[sim.pc]? = some (.flipYao 0)) :
+    let μ : YiState :=
+      { cur := sim.cur
+      , history := encMetaHistory regHex sim
+      , pc := bodyOffset block_flipYao_offset
+      , prog := restoredMetaInterpProg
+      , halted := false }
+    let μ' := μ.runFuel 2
+    ¬ ExecuteBlock.BlockPost regHex sim fetchOffset restoredMetaInterpProg μ' false := by
+  dsimp
+  let μ : YiState :=
+    { cur := sim.cur
+    , history := encMetaHistory regHex sim
+    , pc := bodyOffset block_flipYao_offset
+    , prog := restoredMetaInterpProg
+    , halted := false }
+  have h_history : (μ.runFuel 2).history = encMetaHistory regHex sim := by
+    rfl
+  exact
+    ExecuteBlock.blockPost_unchanged_history_impossible_after_pc_increment
+      regHex sim fetchOffset restoredMetaInterpProg (μ.runFuel 2) false
+      (sim.cur.1.flipPos 0, sim.cur.2)
+      (by simp [YiState.step, h_alive, h_flipYao, YiState.execute])
+      h_history
+
+theorem restoredMetaInterpProg_execute_hu_current_history_not_blockPost
+    (regHex : Hexagram) (sim : YiState)
+    (h_alive : sim.halted = false)
+    (h_hu : sim.prog[sim.pc]? = some .interlace) :
+    let μ : YiState :=
+      { cur := sim.cur
+      , history := encMetaHistory regHex sim
+      , pc := bodyOffset block_hu_offset
+      , prog := restoredMetaInterpProg
+      , halted := false }
+    let μ' := μ.runFuel 2
+    ¬ ExecuteBlock.BlockPost regHex sim fetchOffset restoredMetaInterpProg μ' false := by
+  dsimp
+  let μ : YiState :=
+    { cur := sim.cur
+    , history := encMetaHistory regHex sim
+    , pc := bodyOffset block_hu_offset
+    , prog := restoredMetaInterpProg
+    , halted := false }
+  have h_history : (μ.runFuel 2).history = encMetaHistory regHex sim := by
+    rfl
+  exact
+    ExecuteBlock.blockPost_unchanged_history_impossible_after_pc_increment
+      regHex sim fetchOffset restoredMetaInterpProg (μ.runFuel 2) false
+      (Hexagram.interlace sim.cur.1, sim.cur.2)
+      (by simp [YiState.step, h_alive, h_hu, YiState.execute])
+      h_history
+
+theorem restoredMetaInterpProg_execute_cuo_current_history_not_blockPost
+    (regHex : Hexagram) (sim : YiState)
+    (h_alive : sim.halted = false)
+    (h_cuo : sim.prog[sim.pc]? = some .complement) :
+    let μ : YiState :=
+      { cur := sim.cur
+      , history := encMetaHistory regHex sim
+      , pc := bodyOffset block_cuo_offset
+      , prog := restoredMetaInterpProg
+      , halted := false }
+    let μ' := μ.runFuel 2
+    ¬ ExecuteBlock.BlockPost regHex sim fetchOffset restoredMetaInterpProg μ' false := by
+  dsimp
+  let μ : YiState :=
+    { cur := sim.cur
+    , history := encMetaHistory regHex sim
+    , pc := bodyOffset block_cuo_offset
+    , prog := restoredMetaInterpProg
+    , halted := false }
+  have h_history : (μ.runFuel 2).history = encMetaHistory regHex sim := by
+    rfl
+  exact
+    ExecuteBlock.blockPost_unchanged_history_impossible_after_pc_increment
+      regHex sim fetchOffset restoredMetaInterpProg (μ.runFuel 2) false
+      (Hexagram.complement sim.cur.1, sim.cur.2)
+      (by simp [YiState.step, h_alive, h_cuo, YiState.execute])
+      h_history
+
+theorem restoredMetaInterpProg_execute_zong_current_history_not_blockPost
+    (regHex : Hexagram) (sim : YiState)
+    (h_alive : sim.halted = false)
+    (h_zong : sim.prog[sim.pc]? = some .reverse) :
+    let μ : YiState :=
+      { cur := sim.cur
+      , history := encMetaHistory regHex sim
+      , pc := bodyOffset block_zong_offset
+      , prog := restoredMetaInterpProg
+      , halted := false }
+    let μ' := μ.runFuel 2
+    ¬ ExecuteBlock.BlockPost regHex sim fetchOffset restoredMetaInterpProg μ' false := by
+  dsimp
+  let μ : YiState :=
+    { cur := sim.cur
+    , history := encMetaHistory regHex sim
+    , pc := bodyOffset block_zong_offset
+    , prog := restoredMetaInterpProg
+    , halted := false }
+  have h_history : (μ.runFuel 2).history = encMetaHistory regHex sim := by
+    rfl
+  exact
+    ExecuteBlock.blockPost_unchanged_history_impossible_after_pc_increment
+      regHex sim fetchOffset restoredMetaInterpProg (μ.runFuel 2) false
+      (Hexagram.reverse sim.cur.1, sim.cur.2)
+      (by simp [YiState.step, h_alive, h_zong, YiState.execute])
+      h_history
+
 /-! ## Public summary -/
 
 theorem assembly_restore_plan_summary :
