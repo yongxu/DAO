@@ -313,6 +313,32 @@ theorem restoredMetaInterpProg_savedCur_target_yields_BlockPre
     (dispatchTargetOfInstr restoredDispatchOffsets instr) instr
     (restoredMetaInterpProg_dispatchTarget_has_restore instr)
 
+/-! ## Restored block-body witnesses -/
+
+theorem restoredMetaInterpProg_nop_body_push_at_offset :
+    restoredMetaInterpProg[bodyOffset block_nop_offset]? = some YiInstr.push := rfl
+
+theorem restoredMetaInterpProg_nop_body_jump_at_offset :
+    restoredMetaInterpProg[bodyOffset block_nop_offset + 1]? =
+      some (YiInstr.jump fetchOffset) := rfl
+
+theorem restoredMetaInterpProg_execute_nop_simulates_aligned
+    (regHex : Hexagram) (sim μ : YiState)
+    (h_alive : sim.halted = false)
+    (h_nop : sim.prog[sim.pc]? = some .nop)
+    (h_curAligned : sim.cur = regDataCell regHex)
+    (h_pre :
+      ExecuteBlock.BlockPre regHex sim (bodyOffset block_nop_offset)
+        restoredMetaInterpProg μ) :
+    ExecuteBlock.BlockPost regHex sim fetchOffset restoredMetaInterpProg
+      (μ.runFuel 2) false := by
+  exact ExecuteBlock.executeBlock_nop_simulates_aligned
+    regHex sim (bodyOffset block_nop_offset) fetchOffset restoredMetaInterpProg μ
+    h_alive h_nop h_curAligned
+    restoredMetaInterpProg_nop_body_push_at_offset
+    restoredMetaInterpProg_nop_body_jump_at_offset
+    h_pre
+
 /-! ## Public summary -/
 
 theorem assembly_restore_plan_summary :
@@ -337,7 +363,18 @@ theorem assembly_restore_plan_summary :
           (dispatchTargetOfInstr restoredDispatchOffsets instr + 1)
           restoredMetaInterpProg
           ((DispatchRestore.savedCurBlockEntryState regHex sim restoredMetaInterpProg
-            (dispatchTargetOfInstr restoredDispatchOffsets instr) instr).runFuel 1)) := by
+            (dispatchTargetOfInstr restoredDispatchOffsets instr) instr).runFuel 1))
+    ∧ restoredMetaInterpProg[bodyOffset block_nop_offset]? = some YiInstr.push
+    ∧ restoredMetaInterpProg[bodyOffset block_nop_offset + 1]? =
+        some (YiInstr.jump fetchOffset)
+    ∧ (∀ regHex sim μ,
+        sim.halted = false →
+        sim.prog[sim.pc]? = some .nop →
+        sim.cur = regDataCell regHex →
+        ExecuteBlock.BlockPre regHex sim (bodyOffset block_nop_offset)
+          restoredMetaInterpProg μ →
+          ExecuteBlock.BlockPost regHex sim fetchOffset restoredMetaInterpProg
+            (μ.runFuel 2) false) := by
   exact
     ⟨ restoredMetaInterpProg_length
     , restoredMetaInterpProg_nop_restore_at_offset
@@ -354,6 +391,9 @@ theorem assembly_restore_plan_summary :
     , restoredMetaInterpProg_halt_restore_at_offset
     , restoredMetaInterpProg_dispatchTarget_has_restore
     , restoredMetaInterpProg_savedCur_target_yields_BlockPre
+    , restoredMetaInterpProg_nop_body_push_at_offset
+    , restoredMetaInterpProg_nop_body_jump_at_offset
+    , restoredMetaInterpProg_execute_nop_simulates_aligned
     ⟩
 
 end SSBX.Foundation.Wen.MetaInterp.AssemblyRestorePlan

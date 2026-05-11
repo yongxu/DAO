@@ -128,6 +128,24 @@ theorem savedCurFetch_dispatch_restore_yields_BlockPre
     regHex sim μ instr h_fetch h_get]
   exact restoredMetaInterpProg_savedCur_target_yields_BlockPre regHex sim instr
 
+/-- First exact restored end-to-end opcode path: saved-current fetch, restored
+dispatch, restore prelude, then the aligned `nop` body witness. -/
+theorem savedCurFetch_dispatch_restore_execute_nop_simulates_aligned
+    (regHex : Hexagram) (sim : YiState) (μ : YiState)
+    (h_fetch :
+      SavedCurFetchOutcome regHex sim restoredMetaInterpProg dispatchOffset μ)
+    (h_alive : sim.halted = false)
+    (h_nop : sim.prog[sim.pc]? = some .nop)
+    (h_curAligned : sim.cur = regDataCell regHex) :
+    ExecuteBlock.BlockPost regHex sim fetchOffset restoredMetaInterpProg
+      (((μ.runFuel (dispatchFuelOfInstr .nop)).runFuel 1).runFuel 2) false := by
+  have h_pre :=
+    savedCurFetch_dispatch_restore_yields_BlockPre regHex sim μ .nop h_fetch h_nop
+  exact restoredMetaInterpProg_execute_nop_simulates_aligned
+    regHex sim ((μ.runFuel (dispatchFuelOfInstr .nop)).runFuel 1)
+    h_alive h_nop h_curAligned
+    (by simpa [bodyOffset] using h_pre)
+
 /-! ## Public summary -/
 
 theorem fetch_dispatch_restore_summary :
@@ -141,10 +159,19 @@ theorem fetch_dispatch_restore_summary :
         ExecuteBlock.BlockPre regHex sim
           (dispatchTargetOfInstr restoredDispatchOffsets instr + 1)
           restoredMetaInterpProg
-          ((μ.runFuel (dispatchFuelOfInstr instr)).runFuel 1)) := by
+          ((μ.runFuel (dispatchFuelOfInstr instr)).runFuel 1))
+    ∧ (∀ regHex sim μ,
+      SavedCurFetchOutcome regHex sim restoredMetaInterpProg dispatchOffset μ →
+      sim.halted = false →
+      sim.prog[sim.pc]? = some .nop →
+      sim.cur = regDataCell regHex →
+        ExecuteBlock.BlockPost regHex sim fetchOffset restoredMetaInterpProg
+          (((μ.runFuel (dispatchFuelOfInstr .nop)).runFuel 1).runFuel 2)
+          false) := by
   exact
     ⟨ savedCurFetchOutcome_cur_eq_dispatchTag
     , savedCurFetch_dispatch_restore_yields_BlockPre
+    , savedCurFetch_dispatch_restore_execute_nop_simulates_aligned
     ⟩
 
 end SSBX.Foundation.Wen.MetaInterp.FetchDispatchRestore
