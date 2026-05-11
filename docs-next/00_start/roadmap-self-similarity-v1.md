@@ -1,4 +1,4 @@
-> 状态：v1.13 (2026-05-11) — Phase R/K/L 后之 self-similarity roadmap 已完成一轮形式补齐；5.1/5.2 的 R-O represented-operator self-duality 与 finite Boolean character self-duality 已 machineChecked，并补 `XorOperator` internal composition、mask-coordinate character XOR 与 OX full-negation operator summary；F.7c.8 已补 pc-update encoding bridges、concrete fetch-with-peel splice、exact halted/running fetch routes、halted/running fetch current-shape witnesses、instruction-indexed dispatch route wrapper、halt-opcode current-shape-vs-step witness、all-op absolute-pc dispatch routes 与 halt execution smoke witness；full arbitrary-program universal compose 仍 pending，当前阻塞点是 route-only fetch/dispatch 尚未恢复 canonical semantic-state invariant。
+> 状态：v1.14 (2026-05-11) — Phase R/K/L 后之 self-similarity roadmap 已完成一轮形式补齐；5.1/5.2 的 R-O represented-operator self-duality 与 finite Boolean character self-duality 已 machineChecked，并补 `XorOperator` internal composition、mask-coordinate character XOR、OX coordinate roundtrip 与 OX full-negation operator summary；F.7c.8 已补 pc-update encoding bridges、concrete fetch-with-peel splice、exact halted/running fetch routes、halted/running fetch current-shape witnesses、instruction-indexed dispatch route wrapper、halt-opcode current-shape-vs-step witness、all-op absolute-pc dispatch routes 与 halt execution smoke witness；full arbitrary-program universal compose 仍 pending，当前阻塞点是 route-only fetch/dispatch 尚未恢复 canonical semantic-state invariant。
 
 # Roadmap — Self-similarity 形式化 (v1, post Phase R cutover)
 
@@ -19,7 +19,7 @@
 
 v1.1 本轮完成项：
 - `SelfSimilarity.lean` 补齐 R₁ 奠基步、R₆ 三路汇聚、R₈ ≃ R₇ × Bool。
-- `V4Tensor.lean` 补齐 R₈ = R₆ × trace bit × projection bit、temporal-state-indexed R₆ slices、每个 temporal-state fiber = 64、Way (道) origin/no-op、cell-as-operator、`R8 ≃ XorOperator`、operator composition = representative XOR、internal `XorOperator` composition、finite Boolean character image、mask-coordinate character XOR、OX full-negation masks。
+- `V4Tensor.lean` / `OXNotation.lean` 补齐 R₈ = R₆ × trace bit × projection bit、temporal-state-indexed R₆ slices、每个 temporal-state fiber = 64、Way (道) origin/no-op、cell-as-operator、`R8 ≃ XorOperator`、operator composition = representative XOR、internal `XorOperator` composition、finite Boolean character image、mask-coordinate character XOR、OX coordinate roundtrip、OX full-negation masks。
 - `Kernel.lean` / `DaoJudge.lean` 补齐 post-Cayley collapse、R₇ Lisp closure、concrete bilingual identity。
 - 新增 `ClassicalTextRHierarchyBridge.lean` 与 `QuantumR8Bridge.lean`，只证明 direct typed skeleton；Quantum 桥已含有限函数空间 `R8 → ℂ` 与 faithful regular translation，但不宣称 physical Pauli-string / unitary semantics 已完成。
 - `MetaInterp/Assembly.lean` 已有 base-256 concrete dispatch/assembly structural summary；`MetaInterp/Universal.lean` 已证明 embedded prologue U.0a、zero-step/prologue compose，并把 U.0 改成 exact-fuel no-sorry composition from explicit loop/padding semantic obligations。
@@ -214,6 +214,7 @@ v1.1 本轮完成项：
 | `V4Tensor.r8_equiv_mask_character_image` | R₈ 与 finite Boolean character image 双射 |
 | `V4Tensor.maskCharacter_xor_mask` | character 对 mask coordinate 也保持 XOR 计算 |
 | `V4Tensor.r8_negation_ox_operator_summary` | additive inverse、OX full-negation operator、自逆与 mask 分解 bundle |
+| `OXNotation.ox_coordinate_complete_summary` | eight OX bits 与 R₈ cell 双向 roundtrip |
 | `V4Tensor.ox_full_neg_mask_eq` | `OX["xxxxxxxx"]` 是 full 8-bit negation mask |
 | `V4Tensor.way_noop_operator` | Way (道) / origin 是 no-op operator |
 
@@ -316,6 +317,7 @@ v1.1 本轮完成项：
 | `V4Tensor.r8_operator_character_duality_summary` | closed: represented XOR operators + finite Boolean characters |
 | `V4Tensor.r8_character_duality_computation_summary` | closed: character XOR in both state and mask coordinates |
 | `V4Tensor.r8_negation_ox_operator_summary` | closed: additive inverse is self; full OX negation is a represented self-inverse operator |
+| `OXNotation.ox_coordinate_complete_summary` | closed: eight OX coordinates round-trip exactly with R₈ |
 | `V4Tensor.fullNegOperator_involutive` / `V4Tensor.ox_full_neg_mask_eq` | closed: full 8-bit negation and OX mask reading |
 | Lisp closure in R₇ | closed as `eval_closed_in_r7` in `DaoJudge.lean` |
 | Sexp bilingual identity | closed for concrete WayJudge (`DaoJudge.lean`) parser identities |
@@ -406,7 +408,8 @@ Baseline before v1.1：`lake build SSBX` 曾在 Phase L/K/R cutover 后 clean。
 6. Cell-as-operator：`cellOperator`, `cell_is_operator`
 7. R-O represented-operator equivalence + finite Boolean character self-duality：`V4Tensor.r8_operator_character_duality_summary`
 8. Character two-coordinate XOR computation：`V4Tensor.r8_character_duality_computation_summary`
-9. Full OX negation operator reading：`V4Tensor.r8_negation_ox_operator_summary`
-10. R₇ evaluator closure + concrete bilingual identity：`DaoJudge.way_judge_closure_bilingual_summary`
+9. OX coordinate completeness：`OXNotation.ox_coordinate_complete_summary`
+10. Full OX negation operator reading：`V4Tensor.r8_negation_ox_operator_summary`
+11. R₇ evaluator closure + concrete bilingual identity：`DaoJudge.way_judge_closure_bilingual_summary`
 
 剩余边界不属于 self-similarity v1 核心：constructing `SemanticLoopObligations` for `metaInterpProg` from concrete fetch peel/decode and hard-block semantic effects、parameterized sub-dispatch arbitrary-program simulation、physical Pauli-string / analytic unitarity semantics。

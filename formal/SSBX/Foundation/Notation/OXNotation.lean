@@ -58,6 +58,76 @@ def cellOfString (s : String) : R8 :=
        Shi.ofYinGuo (boolOfChar c6, boolOfChar c7))
   | _ => (Hexagram.heaven, Shi.dao)  -- unreachable when macro validates length
 
+/-! ## § 1a R8 ↔ OX coordinate completeness -/
+
+/-- Eight Boolean coordinates behind an `o/x ×8` surface literal. -/
+structure OXBits8 where
+  b0 : Bool
+  b1 : Bool
+  b2 : Bool
+  b3 : Bool
+  b4 : Bool
+  b5 : Bool
+  b6 : Bool
+  b7 : Bool
+  deriving Repr, DecidableEq
+
+/-- Coordinate bit to Yao: `false/o` is yang, `true/x` is yin. -/
+def yaoOfBool : Bool → Yao
+  | false => Yao.yang
+  | true => Yao.yin
+
+/-- Yao to coordinate bit: yang is `false/o`, yin is `true/x`. -/
+def boolOfYao : Yao → Bool
+  | Yao.yang => false
+  | Yao.yin => true
+
+/-- Decode eight OX coordinate bits to `R8`. -/
+def cellOfBits (b : OXBits8) : R8 :=
+  (⟨yaoOfBool b.b0, yaoOfBool b.b1, yaoOfBool b.b2,
+    yaoOfBool b.b3, yaoOfBool b.b4, yaoOfBool b.b5⟩,
+   Shi.ofYinGuo (b.b6, b.b7))
+
+/-- Encode an `R8` cell as its eight OX coordinate bits. -/
+def bitsOfCell (c : R8) : OXBits8 :=
+  { b0 := boolOfYao c.1.y1
+  , b1 := boolOfYao c.1.y2
+  , b2 := boolOfYao c.1.y3
+  , b3 := boolOfYao c.1.y4
+  , b4 := boolOfYao c.1.y5
+  , b5 := boolOfYao c.1.y6
+  , b6 := c.2.1
+  , b7 := c.2.2 }
+
+@[simp] theorem yaoOfBool_boolOfYao (y : Yao) :
+    yaoOfBool (boolOfYao y) = y := by
+  cases y <;> rfl
+
+@[simp] theorem boolOfYao_yaoOfBool (b : Bool) :
+    boolOfYao (yaoOfBool b) = b := by
+  cases b <;> rfl
+
+/-- Every `R8` cell round-trips through OX coordinates. -/
+theorem cellOfBits_bitsOfCell (c : R8) : cellOfBits (bitsOfCell c) = c := by
+  rcases c with ⟨h, s⟩
+  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
+  rcases s with ⟨yin, guo⟩
+  cases y1 <;> cases y2 <;> cases y3 <;>
+    cases y4 <;> cases y5 <;> cases y6 <;>
+    cases yin <;> cases guo <;> rfl
+
+/-- Every OX coordinate vector round-trips through `R8`. -/
+theorem bitsOfCell_cellOfBits (b : OXBits8) : bitsOfCell (cellOfBits b) = b := by
+  rcases b with ⟨b0, b1, b2, b3, b4, b5, b6, b7⟩
+  cases b0 <;> cases b1 <;> cases b2 <;>
+    cases b3 <;> cases b4 <;> cases b5 <;>
+    cases b6 <;> cases b7 <;> rfl
+
+theorem ox_coordinate_complete_summary :
+    (∀ c : R8, cellOfBits (bitsOfCell c) = c)
+    ∧ (∀ b : OXBits8, bitsOfCell (cellOfBits b) = b) :=
+  ⟨cellOfBits_bitsOfCell, bitsOfCell_cellOfBits⟩
+
 /-! ## § 2 Macro `OX["..."]` — parse-time validation + R8 term -/
 
 /-- `OX[" o/x ×8 "]` term-level macro producing a `R8`. -/
