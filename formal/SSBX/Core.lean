@@ -508,17 +508,17 @@ theorem unitProcess_open : Open unitProcess unitOpenCriteria () := by
   exact ⟨trivial, unitProcess_has_interval, trivial, trivial, trivial⟩
 
 inductive OnticRoot where
-  | wu
-  | dong
-  | jian
+  | thing
+  | motion
+  | interval
   deriving DecidableEq, Repr
 
 namespace OnticRoot
 
 def dimension : OnticRoot -> String
-  | .wu => "0-dimensional discreteness"
-  | .dong => "n-dimensional process extension"
-  | .jian => "topological relation without intrinsic metric"
+  | .thing => "0-dimensional discreteness"
+  | .motion => "n-dimensional process extension"
+  | .interval => "topological relation without intrinsic metric"
 
 end OnticRoot
 
@@ -531,14 +531,14 @@ inductive Manifestation where
 namespace Manifestation
 
 def visibleRoots : Manifestation -> List OnticRoot
-  | .wei => [.wu, .jian]
-  | .chang => [.dong, .wu]
-  | .ji => [.jian, .dong]
+  | .wei => [.thing, .interval]
+  | .chang => [.motion, .thing]
+  | .ji => [.interval, .motion]
 
 def bracketedRoot : Manifestation -> OnticRoot
-  | .wei => .dong
-  | .chang => .jian
-  | .ji => .wu
+  | .wei => .motion
+  | .chang => .interval
+  | .ji => .thing
 
 def shape : Manifestation -> String
   | .wei => "pointed position"

@@ -23,8 +23,8 @@ universe u v w
 
 /-- The three structural positions: 物, 间, 事. -/
 inductive TriuneAspect : Type
-  | wu
-  | jian
+  | thing
+  | interval
   | shi
   deriving Repr, DecidableEq
 
@@ -32,20 +32,20 @@ namespace TriuneAspect
 
 /-- Chinese surface form for the aspect. -/
 def surface : TriuneAspect → String
-  | .wu => "物"
-  | .jian => "间"
+  | .thing => "物"
+  | .interval => "间"
   | .shi => "事"
 
 /-- The aspect interface has no fourth case. -/
 theorem exhaustive (a : TriuneAspect) :
-    a = .wu ∨ a = .jian ∨ a = .shi := by
+    a = .thing ∨ a = .interval ∨ a = .shi := by
   cases a <;> simp
 
 /-- The three aspect positions do not collapse into one another. -/
 theorem pairwise_distinct :
-    TriuneAspect.wu ≠ TriuneAspect.jian
-      ∧ TriuneAspect.wu ≠ TriuneAspect.shi
-      ∧ TriuneAspect.jian ≠ TriuneAspect.shi := by
+    TriuneAspect.thing ≠ TriuneAspect.interval
+      ∧ TriuneAspect.thing ≠ TriuneAspect.shi
+      ∧ TriuneAspect.interval ≠ TriuneAspect.shi := by
   simp
 
 end TriuneAspect
@@ -106,8 +106,8 @@ theorem wjs_fields_determine_expression
 /-- Presence of an aspect in a concrete expression. -/
 def AspectPresent (x : WuJianShiExpression Thing Interval Event) :
     TriuneAspect → Prop
-  | .wu => ∃ thing : Thing, x.thing = thing
-  | .jian => ∃ interval : Interval, x.interval = interval
+  | .thing => ∃ thing : Thing, x.thing = thing
+  | .interval => ∃ interval : Interval, x.interval = interval
   | .shi => ∃ event : Event, x.event = event
 
 /-- Any existing expression has all three aspects present. -/
@@ -115,9 +115,9 @@ theorem every_aspect_present
     (x : WuJianShiExpression Thing Interval Event) (a : TriuneAspect) :
     AspectPresent x a := by
   cases a with
-  | wu =>
+  | thing =>
       exact ⟨x.thing, rfl⟩
-  | jian =>
+  | interval =>
       exact ⟨x.interval, rfl⟩
   | shi =>
       exact ⟨x.event, rfl⟩
@@ -170,19 +170,19 @@ theorem wjs_trinity_summary
     (x : WuJianShiExpression Thing Interval Event) :
     ExpressedByTriad x
       ∧ rebuild x.thing x.interval x.event = x
-      ∧ (∀ a : TriuneAspect, a = .wu ∨ a = .jian ∨ a = .shi)
-      ∧ AspectPresent x .wu
-      ∧ AspectPresent x .jian
+      ∧ (∀ a : TriuneAspect, a = .thing ∨ a = .interval ∨ a = .shi)
+      ∧ AspectPresent x .thing
+      ∧ AspectPresent x .interval
       ∧ AspectPresent x .shi
-      ∧ TriuneAspect.wu ≠ TriuneAspect.jian
-      ∧ TriuneAspect.wu ≠ TriuneAspect.shi
-      ∧ TriuneAspect.jian ≠ TriuneAspect.shi := by
+      ∧ TriuneAspect.thing ≠ TriuneAspect.interval
+      ∧ TriuneAspect.thing ≠ TriuneAspect.shi
+      ∧ TriuneAspect.interval ≠ TriuneAspect.shi := by
   exact
     ⟨ every_wjs_expression_decomposes x
     , wjs_rebuild_identity x
     , TriuneAspect.exhaustive
-    , every_aspect_present x .wu
-    , every_aspect_present x .jian
+    , every_aspect_present x .thing
+    , every_aspect_present x .interval
     , every_aspect_present x .shi
     , TriuneAspect.pairwise_distinct.1
     , TriuneAspect.pairwise_distinct.2.1

@@ -87,7 +87,7 @@ theorem public_goods_via_liRitual
     Smith 之 invisible-hand 之 valid 读法 是 spontaneous order — 各 agent 自主
     advance, 无 central designer, 整体仍 显 多样 + 流通. 此 直接 = `hayek_spontaneous_order`.  -/
 theorem smith_invisible_hand_proper (f : ZhongField) (n : Nat) :
-    (∀ i : Fin f.k, dong ((f.orbits i).states n) = (f.orbits i).states (n + 1))
+    (∀ i : Fin f.k, motion ((f.orbits i).states n) = (f.orbits i).states (n + 1))
     ∧ (∀ i : Fin f.k, (f.orbits i).states n ≠ (f.orbits i).states (n + 1))
     ∧ (∃ i j : Fin f.k, i ≠ j ∧ (f.orbits i).states n ≠ (f.orbits j).states n) :=
   hayek_spontaneous_order f n
@@ -100,12 +100,12 @@ theorem smith_invisible_hand_proper (f : ZhongField) (n : Nat) :
 
 /-- **Nash equilibrium existence is conditional on it not being 极**:
     Nash eq. 之 经典 dilemma: PD 之 (defect, defect) 是 Nash eq. 但 是 极-attractor.
-    形式 sieve: equilibrium 之 「fixed-point」 form (state stays at s, i.e. dong s = s)
+    形式 sieve: equilibrium 之 「fixed-point」 form (state stays at s, i.e. motion s = s)
     IS 极 之 定义. 故 「Nash eq. as fixed-point」 IS 极, NOT 中.
-    本定理: 若 state s 是 fixed-point of dong (即 Nash eq. in static reading),
+    本定理: 若 state s 是 fixed-point of motion (即 Nash eq. in static reading),
     则 s 必 是 极, 不 是 中. 「Nash eq. exists」 ≠ 「Nash eq. is 中」. -/
 theorem nash_equilibrium_static_is_extreme
-    (s : Field) (h_fixed : dong s = s) :
+    (s : Field) (h_fixed : motion s = s) :
     extreme s ∧ ¬ middle s := by
   refine ⟨h_fixed, ?_⟩
   intro h_mid

@@ -257,7 +257,7 @@ def reversePositionIndex : Fin 8 → Fin 8
 
 /-- **动 = 初爻位翻转**：在 3-qubit computational basis index 上即最高 bit 翻转。 -/
 theorem dong_via_fin8 (t : SSBX.Foundation.Yi.Yi.Trigram) :
-    Trigram.toFin8 (dong t) = flipInitialIndex (Trigram.toFin8 t) := by
+    Trigram.toFin8 (motion t) = flipInitialIndex (Trigram.toFin8 t) := by
   cases t with
   | mk y1 y2 y3 =>
     cases y1 <;> cases y2 <;> cases y3 <;> rfl
@@ -286,7 +286,7 @@ theorem zong_via_fin8 (t : SSBX.Foundation.Yi.Yi.Trigram) :
 
 /-- 乾出发时，三个位算子分别给出 4/2/1 的 basis 权重。 -/
 theorem qian_position_weights :
-    Trigram.toFin8 (dong SSBX.Foundation.Yi.Yi.Trigram.heaven) = 4
+    Trigram.toFin8 (motion SSBX.Foundation.Yi.Yi.Trigram.heaven) = 4
     ∧ Trigram.toFin8 (hua SSBX.Foundation.Yi.Yi.Trigram.heaven) = 2
     ∧ Trigram.toFin8 (bian SSBX.Foundation.Yi.Yi.Trigram.heaven) = 1 := by
   exact ⟨rfl, rfl, rfl⟩
@@ -294,7 +294,7 @@ theorem qian_position_weights :
 /-- **算子-位对齐总表**：动/化/变/错/综全落到 3-qubit basis index 的位操作。 -/
 theorem operator_position_index_alignment :
     (∀ t : SSBX.Foundation.Yi.Yi.Trigram,
-        Trigram.toFin8 (dong t) = flipInitialIndex (Trigram.toFin8 t))
+        Trigram.toFin8 (motion t) = flipInitialIndex (Trigram.toFin8 t))
     ∧ (∀ t : SSBX.Foundation.Yi.Yi.Trigram,
         Trigram.toFin8 (hua t) = flipMiddleIndex (Trigram.toFin8 t))
     ∧ (∀ t : SSBX.Foundation.Yi.Yi.Trigram,
@@ -337,7 +337,7 @@ theorem quantum_summary :
     ∧ (∀ ψ : Qubit, computationalBasisNormalized ψ →
         0 ≤ bornProb0 ψ ∧ 0 ≤ bornProb1 ψ ∧ bornProb0 ψ + bornProb1 ψ = 1)
     ∧ (∀ t : SSBX.Foundation.Yi.Yi.Trigram,
-        Trigram.toFin8 (dong t) = flipInitialIndex (Trigram.toFin8 t))
+        Trigram.toFin8 (motion t) = flipInitialIndex (Trigram.toFin8 t))
     ∧ (∀ t : SSBX.Foundation.Yi.Yi.Trigram,
         Trigram.toFin8 (hua t) = flipMiddleIndex (Trigram.toFin8 t))
     ∧ (∀ t : SSBX.Foundation.Yi.Yi.Trigram,

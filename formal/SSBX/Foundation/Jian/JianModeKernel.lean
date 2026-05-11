@@ -8,7 +8,7 @@
   This file maps each JianMode to its Kernel role, with the central asymmetry:
 
     塞 (sai) — ALONE among the 8 — is the ONLY mode that lands in 极 (extreme).
-    All 7 others are 中-modes: they exhibit `dong s ≠ s`, the rhythm continues.
+    All 7 others are 中-modes: they exhibit `motion s ≠ s`, the rhythm continues.
 
   This recovers the 心-tier vs. 道-tier distinction at the phenomenological layer:
     - 心-modes (yuan/shen/sai/ju): 心道 — subjective phases of motion
@@ -122,19 +122,19 @@ theorem non_sai_is_middle (m : JianMode) (h : m ≠ .sai) :
 
   Each mode characterizes a property on Kernel `Field` states. -/
 
-/-- A state `s` is in the 塞-mode (sai) iff dong fails to escape it.
+/-- A state `s` is in the 塞-mode (sai) iff motion fails to escape it.
     塞 ≡ 极 (extremity = fixed-point). -/
 def saiState (s : Field) : Prop := extreme s
 
-/-- A state `s` is in the 续-mode (sheng) iff dong takes it elsewhere AND
+/-- A state `s` is in the 续-mode (sheng) iff motion takes it elsewhere AND
     the destination is itself middle (so motion keeps unfolding). -/
-def shengState (s : Field) : Prop := middle s ∧ middle (dong s)
+def shengState (s : Field) : Prop := middle s ∧ middle (motion s)
 
 /-- A state is in 元-mode (yuan) iff it equals `origin` (the 元 之 起点). -/
 def yuanState (s : Field) : Prop := s = origin
 
-/-- A state is in 受-mode (shou) iff it is a `dong`-image — received from prior. -/
-def shouState (s : Field) : Prop := ∃ s', dong s' = s
+/-- A state is in 受-mode (shou) iff it is a `motion`-image — received from prior. -/
+def shouState (s : Field) : Prop := ∃ s', motion s' = s
 
 /-- A state is in 显-mode (xian) iff there is a 心 (Xin) whose orbit passes through.
     Manifestation requires a heart-substrate to register. -/

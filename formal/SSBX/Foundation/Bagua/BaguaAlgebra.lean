@@ -18,15 +18,15 @@ This file adds the strictly finer (Z/2)³ structure: three single-bit flips
   Trigram.y3 = 上爻 (top)
 
 ## Three single-bit flips (named in ASCII; Chinese in comments)
-  dong (动) = flip y1 (initial / 下爻 changes)
+  motion (动) = flip y1 (initial / 下爻 changes)
   hua  (化) = flip y2 (middle  / 中爻 transforms)
   bian (变) = flip y3 (top     / 上爻 changes)
 
-错 = dong ∘ hua ∘ bian (full negation = the central element of (Z/2)³).
+错 = motion ∘ hua ∘ bian (full negation = the central element of (Z/2)³).
 
 ## Phases
   § 1   三个反爻 + involution + commutativity
-  § 2   错 = dong ∘ hua ∘ bian
+  § 2   错 = motion ∘ hua ∘ bian
   § 3   8 concrete examples — orbit of 乾 under (Z/2)³
   § 4   Cayley graph: simply transitive on 8 trigrams (Hamming ≤ 3)
   § 5   纵向 he (合, project)
@@ -45,8 +45,8 @@ open Trigram
 
 /-! ## § 1 三个反爻 (single-yao flips) -/
 
-/-- dong (动): flip the initial (bottom) yao. -/
-def dong (t : Trigram) : Trigram := ⟨t.y1.neg, t.y2, t.y3⟩
+/-- motion (动): flip the initial (bottom) yao. -/
+def motion (t : Trigram) : Trigram := ⟨t.y1.neg, t.y2, t.y3⟩
 
 /-- hua (化): flip the middle yao. -/
 def hua (t : Trigram) : Trigram := ⟨t.y1, t.y2.neg, t.y3⟩
@@ -56,8 +56,8 @@ def bian (t : Trigram) : Trigram := ⟨t.y1, t.y2, t.y3.neg⟩
 
 /-! ### Involutivity (each is order 2, so each is its own inverse) -/
 
-theorem dong_dong (t : Trigram) : dong (dong t) = t := by
-  simp [dong, Yao.neg_neg]
+theorem dong_dong (t : Trigram) : motion (motion t) = t := by
+  simp [motion, Yao.neg_neg]
 
 theorem hua_hua (t : Trigram) : hua (hua t) = t := by
   simp [hua, Yao.neg_neg]
@@ -67,33 +67,33 @@ theorem bian_bian (t : Trigram) : bian (bian t) = t := by
 
 /-! ### Pairwise commutativity (the (Z/2)³ structure: abelian) -/
 
-theorem dong_hua_comm (t : Trigram) : hua (dong t) = dong (hua t) := by
+theorem dong_hua_comm (t : Trigram) : hua (motion t) = motion (hua t) := by
   cases t; rfl
 
 theorem hua_bian_comm (t : Trigram) : bian (hua t) = hua (bian t) := by
   cases t; rfl
 
-theorem dong_bian_comm (t : Trigram) : bian (dong t) = dong (bian t) := by
+theorem dong_bian_comm (t : Trigram) : bian (motion t) = motion (bian t) := by
   cases t; rfl
 
-/-! ## § 2 错 = dong ∘ hua ∘ bian
+/-! ## § 2 错 = motion ∘ hua ∘ bian
 
   Yi.Trigram.cuo (full negation) is the product of all three single-bit flips. -/
 
 theorem cuo_eq_compose (t : Trigram) :
-    Trigram.cuo t = dong (hua (bian t)) := by
+    Trigram.cuo t = motion (hua (bian t)) := by
   cases t; rfl
 
 /-! ## § 3 Concrete 8-element orbit of 乾 under (Z/2)³ -/
 
 theorem id_qian      : heaven = heaven := rfl
-theorem dong_qian    : dong heaven = wind := rfl       -- 巽 ⟨阴,阳,阳⟩
+theorem dong_qian    : motion heaven = wind := rfl       -- 巽 ⟨阴,阳,阳⟩
 theorem hua_qian     : hua heaven = fire := rfl         -- 离 ⟨阳,阴,阳⟩
 theorem bian_qian    : bian heaven = lake := rfl       -- 兑 ⟨阳,阳,阴⟩
-theorem dong_hua_qian   : dong (hua heaven) = mountain := rfl   -- 艮 ⟨阴,阴,阳⟩
+theorem dong_hua_qian   : motion (hua heaven) = mountain := rfl   -- 艮 ⟨阴,阴,阳⟩
 theorem hua_bian_qian   : hua (bian heaven) = thunder := rfl  -- 震 ⟨阳,阴,阴⟩
-theorem dong_bian_qian  : dong (bian heaven) = water := rfl  -- 坎 ⟨阴,阳,阴⟩
-theorem dong_hua_bian_qian : dong (hua (bian heaven)) = earth := rfl  -- 坤 ⟨阴,阴,阴⟩
+theorem dong_bian_qian  : motion (bian heaven) = water := rfl  -- 坎 ⟨阴,阳,阴⟩
+theorem dong_hua_bian_qian : motion (hua (bian heaven)) = earth := rfl  -- 坤 ⟨阴,阴,阴⟩
 
 /-- 错 of 乾 is 坤 (witnessed via the compose decomposition). -/
 theorem cuo_qian_eq_kun : Trigram.cuo heaven = earth := by
@@ -132,9 +132,9 @@ theorem transform_correct (a b : Trigram) : transform a b a = b := by
     cases b1 <;> cases b2 <;> cases b3 <;>
     rfl
 
-/-- transform expressed via the canonical {dong, hua, bian, id} composition. -/
+/-- transform expressed via the canonical {motion, hua, bian, id} composition. -/
 def transformViaFlips (a b : Trigram) : Trigram → Trigram :=
-  let f1 : Trigram → Trigram := if a.y1 = b.y1 then id else dong
+  let f1 : Trigram → Trigram := if a.y1 = b.y1 then id else motion
   let f2 : Trigram → Trigram := if a.y2 = b.y2 then id else hua
   let f3 : Trigram → Trigram := if a.y3 = b.y3 then id else bian
   f3 ∘ f2 ∘ f1
@@ -276,7 +276,7 @@ end Sheng
 
 /-- The 5-operator structure: three lateral flips + one project + one生生. -/
 structure MinimalOps where
-  dong  : Trigram → Trigram
+  motion  : Trigram → Trigram
   hua   : Trigram → Trigram
   bian  : Trigram → Trigram
   he    : Trigram → SiXiang
@@ -284,7 +284,7 @@ structure MinimalOps where
 
 /-- Canonical instance using BaguaAlgebra's definitions. -/
 def canonicalOps : MinimalOps where
-  dong  := dong
+  motion  := motion
   hua   := hua
   bian  := bian
   he    := heShang
@@ -314,7 +314,7 @@ theorem grandCycle_returns (y1 y2 y3 : Yao) : grandCycle y1 y2 y3 = () := rfl
   dimensionality. The 6 ops naturally split as 3-inner + 3-outer.
 
   Hexagram = inner ⊕ outer (`Hexagram.oplus`); each side carries its own
-  (Z/2)³ via dong/hua/bian. Composing all 6 yields `Hexagram.cuo`. -/
+  (Z/2)³ via motion/hua/bian. Composing all 6 yields `Hexagram.cuo`. -/
 
 /-- 内·动 (dongInner): flip y1 (inner-bottom yao) of a hexagram. -/
 def dongInner (h : Hexagram) : Hexagram :=
@@ -415,7 +415,7 @@ theorem hex_intercommunication_bounded (a b : Hexagram) :
 
 /-- Inner-side flips are exactly trigram flips on the inner trigram. -/
 theorem dongInner_via_chong (h : Hexagram) :
-    dongInner h = chong (dong h.innerTrigram) h.outerTrigram := by
+    dongInner h = chong (motion h.innerTrigram) h.outerTrigram := by
   cases h; rfl
 
 theorem huaInner_via_chong (h : Hexagram) :
@@ -427,7 +427,7 @@ theorem bianInner_via_chong (h : Hexagram) :
   cases h; rfl
 
 theorem dongOuter_via_chong (h : Hexagram) :
-    dongOuter h = chong h.innerTrigram (dong h.outerTrigram) := by
+    dongOuter h = chong h.innerTrigram (motion h.outerTrigram) := by
   cases h; rfl
 
 theorem huaOuter_via_chong (h : Hexagram) :
@@ -495,7 +495,7 @@ theorem hammingDist_eq_zero_iff (a b : Trigram) : hammingDist a b = 0 ↔ a = b 
 /-- Concrete path from a to b: a list of single-flip operators with length equal
     to the Hamming distance. -/
 def pathFromTo (a b : Trigram) : List (Trigram → Trigram) :=
-  (if a.y1 = b.y1 then [] else [dong]) ++
+  (if a.y1 = b.y1 then [] else [motion]) ++
   (if a.y2 = b.y2 then [] else [hua]) ++
   (if a.y3 = b.y3 then [] else [bian])
 
@@ -571,7 +571,7 @@ theorem chong_inner_outer (h : Hexagram) :
 theorem zong_qian_eq_qian : Trigram.zong heaven = heaven := rfl
 
 /-- Every non-id (Z/2)³ element moves 乾. -/
-theorem dong_qian_ne_qian : dong heaven ≠ heaven := by decide
+theorem dong_qian_ne_qian : motion heaven ≠ heaven := by decide
 theorem hua_qian_ne_qian : hua heaven ≠ heaven := by decide
 theorem bian_qian_ne_qian : bian heaven ≠ heaven := by decide
 
@@ -579,9 +579,9 @@ theorem bian_qian_ne_qian : bian heaven ≠ heaven := by decide
 theorem zong_ne_id : Trigram.zong ≠ id := fun h =>
   absurd (congrFun h lake) (by decide)
 
-/-- 综 ≠ each of dong, hua, bian (witnessed by 乾, since 综 heaven = heaven but
+/-- 综 ≠ each of motion, hua, bian (witnessed by 乾, since 综 heaven = heaven but
     each flip moves 乾). -/
-theorem zong_ne_dong : Trigram.zong ≠ dong := fun h =>
+theorem zong_ne_dong : Trigram.zong ≠ motion := fun h =>
   absurd (congrFun h heaven) (by decide)
 
 theorem zong_ne_hua : Trigram.zong ≠ hua := fun h =>
@@ -597,7 +597,7 @@ theorem zong_ne_cuo : (Trigram.zong : Trigram → Trigram) ≠ Trigram.cuo := fu
 /-- Summary: 综 is outside the (Z/2)³ flip group on Trigram. -/
 theorem zong_outside_flip_group :
     Trigram.zong ≠ id ∧
-    Trigram.zong ≠ dong ∧
+    Trigram.zong ≠ motion ∧
     Trigram.zong ≠ hua ∧
     Trigram.zong ≠ bian ∧
     (Trigram.zong : Trigram → Trigram) ≠ Trigram.cuo :=
@@ -608,13 +608,13 @@ theorem zong_outside_flip_group :
 /-- The 8 elements of (Z/2)³ as a finite type. -/
 inductive FlipCombo : Type
   | id  -- e
-  | d   -- dong
+  | d   -- motion
   | h   -- hua
   | b   -- bian
-  | dh  -- dong ∘ hua
+  | dh  -- motion ∘ hua
   | hb  -- hua ∘ bian
-  | db  -- dong ∘ bian
-  | dhb -- dong ∘ hua ∘ bian = 错
+  | db  -- motion ∘ bian
+  | dhb -- motion ∘ hua ∘ bian = 错
   deriving DecidableEq, Repr, BEq
 
 namespace FlipCombo
@@ -622,13 +622,13 @@ namespace FlipCombo
 /-- Apply a flip combo to a trigram. -/
 def apply : FlipCombo → Trigram → Trigram
   | id,  t => t
-  | d,   t => dong t
+  | d,   t => motion t
   | h,   t => hua t
   | b,   t => bian t
-  | dh,  t => dong (hua t)
+  | dh,  t => motion (hua t)
   | hb,  t => hua (bian t)
-  | db,  t => dong (bian t)
-  | dhb, t => dong (hua (bian t))
+  | db,  t => motion (bian t)
+  | dhb, t => motion (hua (bian t))
 
 /-- All 8 combos enumerated. -/
 def all : List FlipCombo := [id, d, h, b, dh, hb, db, dhb]
@@ -667,7 +667,7 @@ end FlipCombo
 theorem bagua_algebra_complete :
     (∀ a b : Trigram, ∃ f : Trigram → Trigram, f a = b)
     ∧ (∀ t : Trigram, guiyi t = ())
-    ∧ (∀ t : Trigram, Trigram.cuo t = dong (hua (bian t)))
+    ∧ (∀ t : Trigram, Trigram.cuo t = motion (hua (bian t)))
     ∧ (∀ s : SiXiang, ∀ y : Yao, heShang (fenToTrigram s y) = s)
     ∧ (∀ y1 y2 y3 : Yao, grandCycle y1 y2 y3 = ()) :=
   ⟨bagua_intercommunication,
@@ -704,7 +704,7 @@ theorem bagua_algebra_phase2_complete :
     -- (e6') chong reconstructs the hexagram
     ∧ (∀ h : Hexagram, chong h.innerTrigram h.outerTrigram = h)
     -- (e7) 综 is not in (Z/2)³
-    ∧ (Trigram.zong ≠ id ∧ Trigram.zong ≠ dong ∧
+    ∧ (Trigram.zong ≠ id ∧ Trigram.zong ≠ motion ∧
        Trigram.zong ≠ hua ∧ Trigram.zong ≠ bian ∧
        (Trigram.zong : Trigram → Trigram) ≠ Trigram.cuo)
     -- (e8) (Z/2)³ acts simply transitively (regular)

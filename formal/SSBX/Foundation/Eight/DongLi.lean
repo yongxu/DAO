@@ -63,8 +63,8 @@ theorem fixed_is_periodic_one {X : Type} (S : DynSys X) (x : X)
 
 /-! ## § 3 八卦反爻动力 · 无不动点 -/
 
-/-- **dong 动力系统**：相空间 = Trigram，一步 = dong。 -/
-def dongDyn : DynSys Trigram where step := dong
+/-- **motion 动力系统**：相空间 = Trigram，一步 = motion。 -/
+def dongDyn : DynSys Trigram where step := motion
 
 /-- **hua 动力系统**。 -/
 def huaDyn : DynSys Trigram where step := hua
@@ -75,14 +75,14 @@ def bianDyn : DynSys Trigram where step := bian
 /-- **cuo 动力系统**（错卦：阴阳全反）。 -/
 def cuoDyn : DynSys Trigram where step := Trigram.cuo
 
-/-- **dong 在 乾 上之 2-周期性**：iter 2 = id at 乾。 -/
+/-- **motion 在 乾 上之 2-周期性**：iter 2 = id at 乾。 -/
 theorem dong_qian_period :
     iter dongDyn 2 heaven = heaven := dong_dong heaven
 
-/-- **dong 在 Trigram 上无不动点**：不存在 t 使 dong t = t。 -/
+/-- **motion 在 Trigram 上无不动点**：不存在 t 使 motion t = t。 -/
 theorem dong_no_fixed : ¬ ∃ t : Trigram, IsFixed dongDyn t := by
   rintro ⟨⟨y1, y2, y3⟩, h⟩
-  cases y1 <;> simp [IsFixed, dongDyn, dong, Yao.neg] at h
+  cases y1 <;> simp [IsFixed, dongDyn, motion, Yao.neg] at h
 
 /-- **hua 在 Trigram 上无不动点**。 -/
 theorem hua_no_fixed : ¬ ∃ t : Trigram, IsFixed huaDyn t := by
@@ -96,7 +96,7 @@ theorem bian_no_fixed : ¬ ∃ t : Trigram, IsFixed bianDyn t := by
 
 /-! ## § 4 周期 = 2 -/
 
-/-- **dong 周期 = 2**：dong² = id 即任意 t 是 dong 之 2-周期点。 -/
+/-- **motion 周期 = 2**：motion² = id 即任意 t 是 motion 之 2-周期点。 -/
 theorem dong_period_2 (t : Trigram) : IsPeriodic dongDyn 2 t := by
   unfold IsPeriodic iter
   exact dong_dong t
@@ -210,10 +210,10 @@ theorem targetEuler_idempotent (target current : Trigram) :
 /-! ## § 9 公开摘要 -/
 
 /-- **动力总摘要**（含 Phase 4 先行：连续 ODE 之 finite approximation）：
-    (1) dong 在 Trigram 上无不动点
+    (1) motion 在 Trigram 上无不动点
     (2) hua 在 Trigram 上无不动点
     (3) bian 在 Trigram 上无不动点
-    (4) dong 周期 = 2（任意起点）
+    (4) motion 周期 = 2（任意起点）
     (5) hua 周期 = 2
     (6) bian 周期 = 2
     (7) cuo 周期 = 2

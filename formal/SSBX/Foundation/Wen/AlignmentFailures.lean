@@ -40,7 +40,7 @@ def GoodhartState (P : Proxy) : Prop := ∃ s : Field, P s ∧ extreme s
 **T1 · Goodhart's law 形式存在性**:存在 proxy 与 极 状态 共 满足 之.
 
 释:任意 P 不强于 middle, 皆 可 有 反例.取 P = (fun _ => True) 则 P 被 任意态
-满足,包括 极 态 (need to witness existence of an extreme state — 由 dong 之
+满足,包括 极 态 (need to witness existence of an extreme state — 由 motion 之
 opaque 性质,我们 无法 直接 produce; 故 weakening 至 conditional 形式).
 
 **Conditional form**:若 存在 任何 极 态 s, 则 存在 proxy 与 此 极 态 共满足.
@@ -219,10 +219,10 @@ theorem heart_corrigible_universal (x : Xin) :
 /-! ## 八 · Faithful Self-Report (positive result) -/
 
 /--
-**T8 · Faithful self-report (xinTrust)**:Xin 之 自报 (process step) 与 dong 之
+**T8 · Faithful self-report (xinTrust)**:Xin 之 自报 (process step) 与 motion 之
 实 演化 一致.
 
-释:此 是 introspective faithfulness 之 形式表征 — 心 之 step 是 dong 之 直接
+释:此 是 introspective faithfulness 之 形式表征 — 心 之 step 是 motion 之 直接
 显, 没 hidden state.故 introspective report 不可 mislead (under xinTrust).
 -/
 theorem faithful_self_report (x : Xin) (n : Nat) : xinTrust x n :=

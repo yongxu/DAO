@@ -37,14 +37,14 @@ open SSBX.Foundation.Eight.LuoJi
     - 证自证 - 知"我知我在见" -/
 inductive FenSi : Type
   | xiang     -- 相分（所对）
-  | jian      -- 见分（能观）
+  | interval      -- 见分（能观）
   | ziZheng   -- 自证（知我知）
   | zhengZi   -- 证自证（知我知我知）
   deriving DecidableEq, Repr
 
 /-- 四分穷尽。 -/
 def FenSi.all : List FenSi :=
-  [.xiang, .jian, .ziZheng, .zhengZi]
+  [.xiang, .interval, .ziZheng, .zhengZi]
 
 theorem fensi_all_length : FenSi.all.length = 4 := rfl
 
@@ -57,7 +57,7 @@ theorem fensi_all_length : FenSi.all.length = 4 := rfl
     - 自证 = (F, T) = 少阳（客对主，反观）
     - 证自证 = (F, F) = 太阴（客纯静）-/
 def FenSi.toSiXiang : FenSi → SiXiang
-  | .jian     => SiXiang.greaterYang   -- ⟨阳, 阳⟩
+  | .interval     => SiXiang.greaterYang   -- ⟨阳, 阳⟩
   | .xiang    => SiXiang.lesserYin   -- ⟨阳, 阴⟩
   | .ziZheng  => SiXiang.lesserYang  -- ⟨阴, 阳⟩
   | .zhengZi  => SiXiang.greaterYin    -- ⟨阴, 阴⟩
@@ -65,7 +65,7 @@ def FenSi.toSiXiang : FenSi → SiXiang
 /-- 四象 → 四分 之逆映射。 -/
 def SiXiang.toFenSi (s : SiXiang) : FenSi :=
   match s.y1, s.y2 with
-  | .yang, .yang => .jian
+  | .yang, .yang => .interval
   | .yang, .yin  => .xiang
   | .yin,  .yang => .ziZheng
   | .yin,  .yin  => .zhengZi

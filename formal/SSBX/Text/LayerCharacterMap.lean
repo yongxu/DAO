@@ -95,7 +95,7 @@ end SSBX.Foundation.Bagua.BaguaAlgebra.SiXiang
    《说卦传》原文：乾健、坤顺、震动、巽入、坎陷、离丽、艮止、兑说也。
 
    本表对原文做三处替换以避免系统内冲突：
-   - 震：动 → 起 (因 `dong` 已是 R3 flip y1 算子；《说卦》"震起"为次义)
+   - 震：动 → 起 (因 `motion` 已是 R3 flip y1 算子；《说卦》"震起"为次义)
    - 离：丽 → 显 (因 `丽` 与 30 卦撞名；`显` 与 Sheng.toTrigram manifest 同向)
    - 兑：说 → 悦 (现代汉字写法) -/
 
@@ -144,7 +144,7 @@ end SSBX.Foundation.Yi.Yi.Trigram
 
    六爻位翻转字: 改/化/变/临/主/极 (Fin 6, 0-indexed)
 
-   - flip[0] (改) — 初爻 (与 R3 dong 一致)
+   - flip[0] (改) — 初爻 (与 R3 motion 一致)
    - flip[1] (化) — 二爻 (与 R3 hua 一致)
    - flip[2] (变) — 三爻 (与 R3 bian 一致)
    - flip[3] (临) — 四爻 (近君位 / 临察；19 临卦同字)

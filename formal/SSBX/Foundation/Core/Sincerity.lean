@@ -21,7 +21,7 @@
 
 义理参考:
   JIAN Foundation Note v1.0 §IV.5 (信/诚)
-    `/Users/ren/repos/jian/JIAN_FOUNDATION_NOTE_v1.0.md`
+    `/Users/ren/repos/interval/JIAN_FOUNDATION_NOTE_v1.0.md`
   生生不息论 · 补篇一·卷十·收(alignment 与礼)
   生生不息论 · 补篇二·十三(行仁要善)
 配套形式化:

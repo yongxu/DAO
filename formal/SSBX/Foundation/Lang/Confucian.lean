@@ -2,7 +2,7 @@
 # Confucian — 儒家概念在 R-层 Cell 上的具体落位
 
 Following the existing abstract formalization in `Foundation/Wen/Kernel.lean`
-(80+ Confucian theorems based on a `dong : Field → Field` axiom layer), this
+(80+ Confucian theorems based on a `motion : Field → Field` axiom layer), this
 file lifts four families of Confucian concepts to **concrete R-layer cells**
 in the (Z/2)ⁿ hierarchy:
 
@@ -329,10 +329,10 @@ and our cell-layer work does not replace them:
 
 | Concept | 类型 | 为何不 lift |
 |---|---|---|
-| 動 / dong | axiom on Field → Field | the foundational dynamics axiom |
-| 中 / middle | predicate `dong s ≠ s` | property of states, not a state |
-| 极 / extreme | predicate `dong s = s` | property of states |
-| 几 / ji | iter-of-dong | sequence, not a state |
+| 動 / motion | axiom on Field → Field | the foundational dynamics axiom |
+| 中 / middle | predicate `motion s ≠ s` | property of states, not a state |
+| 极 / extreme | predicate `motion s = s` | property of states |
+| 几 / ji | iter-of-motion | sequence, not a state |
 | 势 / shi | accumulated direction | derived dynamics |
 | 机 / jiTurning | critical point | event-on-orbit |
 | 聚 / 散 / 和 / 美 / 德 / 理 / 心 / 情 / 积 | various predicates | properties of orbits |

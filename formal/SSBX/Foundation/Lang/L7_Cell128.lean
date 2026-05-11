@@ -14,7 +14,7 @@ its atomic operator is **印 (yìn)**, already defined as `Cell128.yin` in
 
 `<yi>` accepts 阳/yang/1 for yang, 阴/yin/0 for yin (yao positions).
 `<yin>` (the 7th token, YinBit) accepts 有/yin/1 for `true` (有因), and
-无/wu/0 for `false` (无因).
+无/thing/0 for `false` (无因).
 
 Canonical printer uses 阳/阴 for yao positions and 有/无 for the YinBit.
 
@@ -93,11 +93,11 @@ private def parseYao (tok : String) : Except String Yao :=
   | other => .error s!"L7.parseCell: unknown yao token '{other}'"
 
 /-- Parse the YinBit (7th) token: 有/yin/1 → true (有因),
-    无/wu/0 → false (无因). -/
+    无/thing/0 → false (无因). -/
 private def parseYinBit (tok : String) : Except String YinBit :=
   match tok with
   | "有" | "yin" | "1" => .ok true
-  | "无" | "wu"  | "0" => .ok false
+  | "无" | "thing"  | "0" => .ok false
   | other => .error s!"L7.parseCell: unknown yinbit token '{other}'"
 
 /-- Parse `(cell128 <y1> <y2> <y3> <y4> <y5> <y6> <yin>)` to a Cell128. -/

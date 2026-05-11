@@ -23,9 +23,9 @@ open SSBX.Roster
 open SSBX.Text.Glyph
 
 def rootSurface : OnticRoot -> String
-  | .wu => "物"
-  | .dong => "動"
-  | .jian => "間"
+  | .thing => "物"
+  | .motion => "動"
+  | .interval => "間"
 
 def manifestationSurface : Manifestation -> String
   | .wei => "位"
@@ -47,18 +47,18 @@ def compositeSurface : CompositeForm -> String
   | .flow => "流"
 
 theorem wei_is_wu_jian_with_dong_bracketed :
-    Manifestation.visibleRoots .wei = [.wu, .jian] ∧
-      Manifestation.bracketedRoot .wei = .dong :=
+    Manifestation.visibleRoots .wei = [.thing, .interval] ∧
+      Manifestation.bracketedRoot .wei = .motion :=
   ⟨rfl, rfl⟩
 
 theorem chang_is_dong_wu_with_jian_bracketed :
-    Manifestation.visibleRoots .chang = [.dong, .wu] ∧
-      Manifestation.bracketedRoot .chang = .jian :=
+    Manifestation.visibleRoots .chang = [.motion, .thing] ∧
+      Manifestation.bracketedRoot .chang = .interval :=
   ⟨rfl, rfl⟩
 
 theorem ji_is_jian_dong_with_wu_bracketed :
-    Manifestation.visibleRoots .ji = [.jian, .dong] ∧
-      Manifestation.bracketedRoot .ji = .wu :=
+    Manifestation.visibleRoots .ji = [.interval, .motion] ∧
+      Manifestation.bracketedRoot .ji = .thing :=
   ⟨rfl, rfl⟩
 
 theorem every_manifestation_brackets_absent_root (m : Manifestation) :
@@ -165,16 +165,16 @@ structure SelfReferenceWitness where
   resulting_network : CompositeForm
 
 def selfReferenceWitness : SelfReferenceWitness :=
-  { relation_structure := .jian
-    enacted_process := .dong
+  { relation_structure := .interval
+    enacted_process := .motion
     field_manifestation := .chang
     produced_position := .wei
     connecting_interface := .ji
     resulting_network := .network }
 
 theorem ontology_is_instance_of_its_own_shape :
-    selfReferenceWitness.relation_structure = .jian ∧
-      selfReferenceWitness.enacted_process = .dong ∧
+    selfReferenceWitness.relation_structure = .interval ∧
+      selfReferenceWitness.enacted_process = .motion ∧
       selfReferenceWitness.field_manifestation = .chang ∧
       selfReferenceWitness.produced_position = .wei ∧
       selfReferenceWitness.connecting_interface = .ji ∧

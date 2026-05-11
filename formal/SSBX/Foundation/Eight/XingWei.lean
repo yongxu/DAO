@@ -8,7 +8,7 @@ on top of `BaguaAlgebra`'s `hammingDist`.
 
   § 1   项目几何字 (dian/wei/ju/lin/zhong/ying/bi/dang) as Lean defs
   § 2   汉明度量公理：对称、自距零、三角不等式（NEW results）
-  § 3   反爻之等距性：dong/hua/bian 保汉明距离
+  § 3   反爻之等距性：motion/hua/bian 保汉明距离
   § 4   立方体 Euler 特征：3-cube χ = 1，6-cube χ = 1（concrete computation）
   § 5   易经四位 之 Lean wrap（refer Yi.lean）
 
@@ -78,9 +78,9 @@ theorem ju_le_three (a b : Trigram) : ju a b ≤ 3 := by
 (Z/2)³ 群作用是 (Trigram, ju) 上之等距群——
 即"几何对称群 = 算子群"。 -/
 
-/-- **动 (dong) 等距**：`ju (dong a) (dong b) = ju a b`. -/
-theorem dong_iso (a b : Trigram) : ju (dong a) (dong b) = ju a b := by
-  unfold ju hammingDist dong
+/-- **动 (motion) 等距**：`ju (motion a) (motion b) = ju a b`. -/
+theorem dong_iso (a b : Trigram) : ju (motion a) (motion b) = ju a b := by
+  unfold ju hammingDist motion
   rcases a with ⟨a₁, a₂, a₃⟩
   rcases b with ⟨b₁, b₂, b₃⟩
   cases a₁ <;> cases a₂ <;> cases a₃ <;>
@@ -204,7 +204,7 @@ theorem xingwei_summary :
     ∧ (∀ a b : Trigram, ju a b = ju b a)
     ∧ (∀ a b c : Trigram, ju a c ≤ ju a b + ju b c)
     -- (2) 三反爻等距
-    ∧ (∀ a b : Trigram, ju (dong a) (dong b) = ju a b)
+    ∧ (∀ a b : Trigram, ju (motion a) (motion b) = ju a b)
     ∧ (∀ a b : Trigram, ju (hua a) (hua b) = ju a b)
     ∧ (∀ a b : Trigram, ju (bian a) (bian b) = ju a b)
     -- (3) 立方体 Euler

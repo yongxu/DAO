@@ -6,7 +6,7 @@
 ## 结构
 
   4 本 (substrates, palindromic) ↔ {heaven, fire, water, earth}
-    Ben.wu (物), Ben.dong (動), Ben.jian (間), Ben.shi (事)
+    Ben.thing (物), Ben.motion (動), Ben.interval (間), Ben.shi (事)
 
   4 征 (marks, directional) ↔ {wind, thunder, lake, mountain}
     Zheng.jiFaint (幾), Zheng.shiForce (勢), Zheng.jiOccasion (機), Zheng.shiTime (時)
@@ -21,7 +21,7 @@
 
   cuo  保 isZongFixed (Trigram-level) → 保 quadrant (Hexagram-level)
   hua  保 isZongFixed                 → huaInner / huaOuter 保 quadrant
-  dong / bian 翻 isZongFixed           → dongInner / bianInner / dongOuter / bianOuter 跨象限
+  motion / bian 翻 isZongFixed           → dongInner / bianInner / dongOuter / bianOuter 跨象限
   zong: 本本/征征 自闭, 本征↔征本
 
   hu fixed points: 1乾, 2坤; hu 2-cycle: 63既济 ↔ 64未济
@@ -43,33 +43,33 @@ open SSBX.Foundation.Bagua.BaguaAlgebra
 
 /-- 4 本: 物 / 動 / 間 / 事. -/
 inductive Ben : Type
-  | wu     -- 物
-  | dong   -- 動
-  | jian   -- 間
+  | thing     -- 物
+  | motion   -- 動
+  | interval   -- 間
   | shi    -- 事
   deriving Repr, DecidableEq, BEq
 
 namespace Ben
 
-def all : List Ben := [.wu, .dong, .jian, .shi]
+def all : List Ben := [.thing, .motion, .interval, .shi]
 
 /-- 本 → trigram 双射: 物→乾, 動→离, 間→坎, 事→坤. -/
 def toTrigram : Ben → Trigram
-  | .wu   => Trigram.heaven
-  | .dong => Trigram.fire
-  | .jian => Trigram.water
+  | .thing   => Trigram.heaven
+  | .motion => Trigram.fire
+  | .interval => Trigram.water
   | .shi  => Trigram.earth
 
 def char : Ben → String
-  | .wu   => "物"
-  | .dong => "动"
-  | .jian => "间"
+  | .thing   => "物"
+  | .motion => "动"
+  | .interval => "间"
   | .shi  => "事"
 
 def fromChar (s : String) : Option Ben :=
-  if s = "物" then some .wu
-  else if s = "动" || s = "動" then some .dong
-  else if s = "间" || s = "間" then some .jian
+  if s = "物" then some .thing
+  else if s = "动" || s = "動" then some .motion
+  else if s = "间" || s = "間" then some .interval
   else if s = "事" then some .shi
   else none
 
@@ -140,9 +140,9 @@ def isZongMobile (t : Trigram) : Bool := !t.isZongFixed
 
 /-- Trigram → 本: 仅 4 个 zong-fixed trigram 有 Ben. -/
 def benOf? (t : Trigram) : Option SSBX.Foundation.Bagua.BenZheng.Ben :=
-  if t = heaven then some .wu
-  else if t = fire   then some .dong
-  else if t = water  then some .jian
+  if t = heaven then some .thing
+  else if t = fire   then some .motion
+  else if t = water  then some .interval
   else if t = earth  then some .shi
   else none
 
@@ -187,9 +187,9 @@ theorem hua_preserves_isZongFixed (t : Trigram) :
   | mk y1 y2 y3 =>
     cases y1 <;> cases y3 <;> rfl
 
-/-- dong 翻 isZongFixed: 改 y1 而不动 y3, 翻 palindrome 状态. -/
+/-- motion 翻 isZongFixed: 改 y1 而不动 y3, 翻 palindrome 状态. -/
 theorem dong_flips_isZongFixed (t : Trigram) :
-    (dong t).isZongFixed = !t.isZongFixed := by
+    (motion t).isZongFixed = !t.isZongFixed := by
   cases t with
   | mk y1 y2 y3 =>
     cases y1 <;> cases y3 <;> rfl
@@ -239,18 +239,18 @@ theorem all_count : Mian.all.length = 16 := by native_decide
 
 /-- 16-cell label: 本×征 = 派生单字. -/
 def label : Mian → String
-  | (.wu,   .jiFaint)    => "动"  -- 物之微
-  | (.wu,   .shiForce)   => "行"  -- 物之进
-  | (.wu,   .jiOccasion) => "化"  -- 物之转
-  | (.wu,   .shiTime)    => "流"  -- 物之久
-  | (.dong, .jiFaint)    => "萌"  -- 動之微
-  | (.dong, .shiForce)   => "长"  -- 動之进
-  | (.dong, .jiOccasion) => "发"  -- 動之转
-  | (.dong, .shiTime)    => "续"  -- 動之久
-  | (.jian, .jiFaint)    => "缘"  -- 間之微
-  | (.jian, .shiForce)   => "通"  -- 間之进
-  | (.jian, .jiOccasion) => "会"  -- 間之转
-  | (.jian, .shiTime)    => "系"  -- 間之久
+  | (.thing,   .jiFaint)    => "动"  -- 物之微
+  | (.thing,   .shiForce)   => "行"  -- 物之进
+  | (.thing,   .jiOccasion) => "化"  -- 物之转
+  | (.thing,   .shiTime)    => "流"  -- 物之久
+  | (.motion, .jiFaint)    => "萌"  -- 動之微
+  | (.motion, .shiForce)   => "长"  -- 動之进
+  | (.motion, .jiOccasion) => "发"  -- 動之转
+  | (.motion, .shiTime)    => "续"  -- 動之久
+  | (.interval, .jiFaint)    => "缘"  -- 間之微
+  | (.interval, .shiForce)   => "通"  -- 間之进
+  | (.interval, .jiOccasion) => "会"  -- 間之转
+  | (.interval, .shiTime)    => "系"  -- 間之久
   | (.shi,  .jiFaint)    => "兆"  -- 事之微
   | (.shi,  .shiForce)   => "趋"  -- 事之进
   | (.shi,  .jiOccasion) => "变"  -- 事之转

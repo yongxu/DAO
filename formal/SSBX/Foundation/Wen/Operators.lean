@@ -377,11 +377,11 @@ abbrev youExistsOp {α : Sort _} (P : α → Prop) : Prop := ∃ x : α, P x
 theorem you_eq_exists {α : Sort _} (P : α → Prop) :
     «有» P ↔ ∃ x : α, P x := Iff.rfl
 
-/-! ### 无 (wu) — non-existence
+/-! ### 无 (thing) — non-existence
 
   「无 X」 = "no X" / ¬∃X. -/
 
-/-- 无 (wu): negated existence. -/
+/-- 无 (thing): negated existence. -/
 abbrev «无» {α : Sort _} (P : α → Prop) : Prop := ¬ ∃ x : α, P x
 
 abbrev wuOp {α : Sort _} (P : α → Prop) : Prop := ¬ ∃ x : α, P x

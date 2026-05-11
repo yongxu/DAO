@@ -1,7 +1,7 @@
 /-
 # 間 之 核 (Jian Kernel) — Lean 4 formalization
 
-  Per spec 史料/真理/jian-kernel.md (archived v12; the 文/约/替 minimal computational core).
+  Per spec 史料/真理/interval-kernel.md (archived v12; the 文/约/替 minimal computational core).
 
   Scope of this file (P-current; first verification pass):
     - 文 (Wen): inductive grammar, 文 ::= 字 | [文 之 文]

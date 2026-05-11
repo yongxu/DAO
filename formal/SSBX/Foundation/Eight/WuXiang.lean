@@ -105,9 +105,9 @@ theorem cuo_yinCount_mod2 (t : Trigram) :
 
 /-! ## § 5 单 flip 之 yinCount 性质 -/
 
-/-- **dong 翻转初爻之 yin**：dong 改变 yinCount mod 2。 -/
+/-- **motion 翻转初爻之 yin**：motion 改变 yinCount mod 2。 -/
 theorem dong_yinCount_mod2 (t : Trigram) :
-    (Trigram.yinCount (dong t) + Trigram.yinCount t) % 2 = 1 := by
+    (Trigram.yinCount (motion t) + Trigram.yinCount t) % 2 = 1 := by
   cases t with
   | mk y1 y2 y3 => cases y1 <;> cases y2 <;> cases y3 <;> decide
 
@@ -161,7 +161,7 @@ theorem trigram_card_anchor : Trigram.all.length = 8 := by decide
     (3) cuo² = id（对偶 involution）
     (4) cuoZong² = id（错综 involution）
     (5) cuo 翻 yinCount mod 2
-    (6) dong 翻 yinCount mod 2
+    (6) motion 翻 yinCount mod 2
     (7) (Z/2)³ 全群作用：任意两卦互通 → 无非平凡 invariant
     (8) Trigram cardinality = 8（与 SU(3) dim 同 cardinality） -/
 theorem wuxiang_summary :
@@ -171,7 +171,7 @@ theorem wuxiang_summary :
     ∧ (∀ b : Bool × Bool × Bool, Trigram.toBool3 (Bool3.toTrigram b) = b)
     ∧ (∀ t : Trigram, Trigram.cuo (Trigram.cuo t) = t)
     ∧ (∀ t : Trigram, (Trigram.yinCount (Trigram.cuo t) + Trigram.yinCount t) % 2 = 1)
-    ∧ (∀ t : Trigram, (Trigram.yinCount (dong t) + Trigram.yinCount t) % 2 = 1)
+    ∧ (∀ t : Trigram, (Trigram.yinCount (motion t) + Trigram.yinCount t) % 2 = 1)
     ∧ (∀ a b : Trigram, transform a b a = b)
     ∧ (Trigram.all.length = 8) :=
   ⟨yao_bool_roundtrip, bool_yao_roundtrip,

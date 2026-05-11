@@ -308,7 +308,7 @@ theorem complete_self_description : CompleteSelfDescription := by
 def TrigramOperatorComplete : Prop :=
   (∀ a b : Trigram, ∃ f : Trigram → Trigram, f a = b)
     ∧ (∀ t : Trigram, guiyi t = ())
-    ∧ (∀ t : Trigram, Trigram.cuo t = dong (hua (bian t)))
+    ∧ (∀ t : Trigram, Trigram.cuo t = motion (hua (bian t)))
     ∧ (∀ s : SiXiang, ∀ y : Yao, heShang (fenToTrigram s y) = s)
     ∧ (∀ y1 y2 y3 : Yao, grandCycle y1 y2 y3 = ())
 

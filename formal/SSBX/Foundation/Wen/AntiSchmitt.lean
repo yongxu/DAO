@@ -214,16 +214,16 @@ theorem political_third_option_total_count :
 
 /-- **第十四定理 concrete_friend_enemy_inversion**:
     在 ZhongField 中, 任意 「敌」 (即 distinct from self) 之 orbit 也是 ZhongOrbit,
-    与 self 共享 同一 dong-axiom (同根). 「敌」 不是 ontological other,
+    与 self 共享 同一 motion-axiom (同根). 「敌」 不是 ontological other,
     而是 自身 axiom 之 又一 instantiation — 同根异显.
 
     Concretely: 若 i ≠ j 且 二焦点 distinct at n, 则 二焦点 都 inMiddle 且
-    都 step via 同 一 axiom dong, 故 形式上 indistinguishable as 「同根」. -/
+    都 step via 同 一 axiom motion, 故 形式上 indistinguishable as 「同根」. -/
 theorem concrete_friend_enemy_inversion
     (f : ZhongField) (n : Nat) (i j : Fin f.k) (_h_ne_idx : i ≠ j) :
-    -- 同根: 都 obey dong axiom
-    (∀ m, dong ((f.orbits i).states m) = (f.orbits i).states (m + 1))
-    ∧ (∀ m, dong ((f.orbits j).states m) = (f.orbits j).states (m + 1))
+    -- 同根: 都 obey motion axiom
+    (∀ m, motion ((f.orbits i).states m) = (f.orbits i).states (m + 1))
+    ∧ (∀ m, motion ((f.orbits j).states m) = (f.orbits j).states (m + 1))
     -- 异显: 中 + (potentially) distinct trace
     ∧ middle ((f.orbits i).states n)
     ∧ middle ((f.orbits j).states n) := by

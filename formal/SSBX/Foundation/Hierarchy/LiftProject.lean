@@ -115,24 +115,24 @@ theorem proj_lift_id_R2 (s : R2) (y3 : Yao) :
   - Project drops `extra` (the 4th yao) and recovers a trigram. -/
 
 /-- Yao² → Ben canonical bijection.
-    (yang, yang) → wu   / (yang, yin) → dong
-    (yin,  yang) → jian / (yin,  yin) → shi -/
+    (yang, yang) → thing   / (yang, yin) → motion
+    (yin,  yang) → interval / (yin,  yin) → shi -/
 def benFromYao (y1 y2 : Yao) : Ben :=
   match y1, y2 with
-  | .yang, .yang => .wu
-  | .yang, .yin  => .dong
-  | .yin,  .yang => .jian
+  | .yang, .yang => .thing
+  | .yang, .yin  => .motion
+  | .yin,  .yang => .interval
   | .yin,  .yin  => .shi
 
 /-- Ben → Yao² inverse: extract the first bit. -/
 def benToYao1 : Ben → Yao
-  | .wu | .dong => .yang
-  | .jian | .shi => .yin
+  | .thing | .motion => .yang
+  | .interval | .shi => .yin
 
 /-- Ben → Yao² inverse: extract the second bit. -/
 def benToYao2 : Ben → Yao
-  | .wu | .jian => .yang
-  | .dong | .shi => .yin
+  | .thing | .interval => .yang
+  | .motion | .shi => .yin
 
 theorem benFromYao_yao1 (y1 y2 : Yao) : benToYao1 (benFromYao y1 y2) = y1 := by
   cases y1 <;> cases y2 <;> rfl

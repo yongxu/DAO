@@ -76,7 +76,7 @@ def all : List Trigram := [heaven, lake, fire, thunder, wind, water, mountain, e
 theorem all_length : all.length = 8 := rfl
 
 /-- 错 on a trigram: yao-wise negation.
-    NB: refined in `SSBX.Foundation.Bagua.BaguaAlgebra` as `cuo = dong ∘ hua ∘ bian`
+    NB: refined in `SSBX.Foundation.Bagua.BaguaAlgebra` as `cuo = motion ∘ hua ∘ bian`
     — the (Z/2)³ decomposition into three single-yao flips. -/
 def cuo (t : Trigram) : Trigram := ⟨t.y1.neg, t.y2.neg, t.y3.neg⟩
 
@@ -432,7 +432,7 @@ inductive SigmaCategory : Type
   | xiang   -- 象 (heaven/earth/...) — natural phenomenon
   | jia     -- 家 (father/mother/...) — family role
   | ti      -- 体 (body parts)
-  | wu      -- 物 (animals)
+  | thing      -- 物 (animals)
   deriving Repr, DecidableEq, BEq
 
 namespace Trigram
@@ -470,7 +470,7 @@ def shuoGua : Trigram → SigmaCategory → List String
       else if t = mountain then ["手"]
       else if t = lake then ["口"]
       else []
-  | t, .wu =>
+  | t, .thing =>
       if t = heaven then ["马"]
       else if t = earth then ["牛"]
       else if t = thunder then ["龙"]
@@ -492,7 +492,7 @@ theorem shuoGua_qian_polymorphic :
     shuoGua heaven .xiang = ["天"] ∧
     shuoGua heaven .jia = ["父"] ∧
     shuoGua heaven .ti = ["首"] ∧
-    shuoGua heaven .wu = ["马"] :=
+    shuoGua heaven .thing = ["马"] :=
   ⟨rfl, rfl, rfl, rfl⟩
 
 /-- 坤 across 4 categories. -/
@@ -500,7 +500,7 @@ theorem shuoGua_kun_polymorphic :
     shuoGua earth .xiang = ["地"] ∧
     shuoGua earth .jia = ["母"] ∧
     shuoGua earth .ti = ["腹"] ∧
-    shuoGua earth .wu = ["牛"] :=
+    shuoGua earth .thing = ["牛"] :=
   ⟨rfl, rfl, rfl, rfl⟩
 
 end Trigram
