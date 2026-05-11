@@ -6,8 +6,8 @@ Companion:
 
 This module advances S5b by one conservative step:
 
-1. it adds a two-step path witness that keeps the middle state visible;
-2. it gives a four-state toy process with two alternative middle states;
+1. it adds a two-step path witness that keeps the center state visible;
+2. it gives a four-state toy process with two alternative center states;
 3. it assigns candidate two-step amplitudes `1` and `-1`;
 4. it proves that their finite two-path sum cancels and that the cancelled
    amplitude has Born-shaped candidate weight zero.
@@ -34,23 +34,23 @@ open SSBX.Foundation.Modern.QuantumRelativityWenBoundary
 A two-step path witness keeps the intermediate state.
 
 The older `ProcessPath` only stores outer endpoints and a validity proposition,
-so it cannot distinguish same-endpoint alternatives by their middle state.
+so it cannot distinguish same-endpoint alternatives by their center state.
 -/
 structure TwoStepPathWitness (P : FiniteProcess) where
   start : P.State
-  middle : P.State
+  center : P.State
   stop : P.State
-  leftStep : P.step start middle
-  rightStep : P.step middle stop
+  leftStep : P.step start center
+  rightStep : P.step center stop
 
 namespace TwoStepPathWitness
 
-/-- Forget the middle state and return to the older endpoint-only path shape. -/
+/-- Forget the center state and return to the older endpoint-only path shape. -/
 def toProcessPath {P : FiniteProcess} (p : TwoStepPathWitness P) :
     ProcessPath P where
   start := p.start
   stop := p.stop
-  valid := P.step p.start p.middle ∧ P.step p.middle p.stop
+  valid := P.step p.start p.center ∧ P.step p.center p.stop
 
 /-- The forgotten endpoint-only path is valid. -/
 theorem toProcessPath_valid {P : FiniteProcess}
@@ -66,7 +66,7 @@ structure SameEndpointTwoStepPair (P : FiniteProcess) where
   right : TwoStepPathWitness P
   same_start : left.start = right.start
   same_stop : left.stop = right.stop
-  distinct_middle : left.middle ≠ right.middle
+  distinct_middle : left.center ≠ right.center
 
 /-- A process has a same-endpoint two-step pair when one is explicitly given. -/
 def HasSameEndpointTwoStepPair (P : FiniteProcess) : Prop :=
@@ -130,7 +130,7 @@ theorem step_iff_positive_weight (a b : TwoRouteState) :
 
 end TwoRouteState
 
-/-- The four-state toy process with two alternative middle states. -/
+/-- The four-state toy process with two alternative center states. -/
 def twoRouteProcess : FiniteProcess where
   State := TwoRouteState
   stateCode := TwoRouteState.code
@@ -231,7 +231,7 @@ noncomputable def twoRoutePathAmplitudeSkeleton :
     twoRouteProcess
     twoRouteQuantumChannelSkeleton
 
-/-- A two-step path amplitude candidate over middle-preserving witnesses. -/
+/-- A two-step path amplitude candidate over center-preserving witnesses. -/
 structure TwoStepPathAmplitudeCandidate (P : FiniteProcess) where
   channel : QuantumChannelSkeleton P
   twoStepAmplitude : TwoStepPathWitness P -> ℂ
@@ -240,7 +240,7 @@ structure TwoStepPathAmplitudeCandidate (P : FiniteProcess) where
     ∀ p : TwoStepPathWitness P,
       candidateWeight p = ampProb (twoStepAmplitude p)
 
-/-- A process has a middle-preserving two-step amplitude candidate. -/
+/-- A process has a center-preserving two-step amplitude candidate. -/
 def HasTwoStepPathAmplitudeCandidate (P : FiniteProcess) : Prop :=
   Nonempty (TwoStepPathAmplitudeCandidate P)
 
@@ -255,7 +255,7 @@ def twoStepPairAmplitudeSum {P : FiniteProcess}
 /-- The upper route: `source -> upper -> target`. -/
 def twoRouteUpperPath : TwoStepPathWitness twoRouteProcess where
   start := TwoRouteState.source
-  middle := TwoRouteState.upper
+  center := TwoRouteState.upper
   stop := TwoRouteState.target
   leftStep := True.intro
   rightStep := True.intro
@@ -263,12 +263,12 @@ def twoRouteUpperPath : TwoStepPathWitness twoRouteProcess where
 /-- The lower route: `source -> lower -> target`. -/
 def twoRouteLowerPath : TwoStepPathWitness twoRouteProcess where
   start := TwoRouteState.source
-  middle := TwoRouteState.lower
+  center := TwoRouteState.lower
   stop := TwoRouteState.target
   leftStep := True.intro
   rightStep := True.intro
 
-/-- The upper/lower pair has the same endpoints and different middle states. -/
+/-- The upper/lower pair has the same endpoints and different center states. -/
 def twoRouteUpperLowerPair :
     SameEndpointTwoStepPair twoRouteProcess where
   left := twoRouteUpperPath
@@ -284,14 +284,14 @@ theorem two_route_paths_same_endpoints :
   ⟨rfl, rfl⟩
 
 theorem two_route_paths_distinct_middle :
-    twoRouteUpperPath.middle ≠ twoRouteLowerPath.middle := by
+    twoRouteUpperPath.center ≠ twoRouteLowerPath.center := by
   decide
 
 /-- Candidate two-step route amplitude: upper `1`, lower `-1`. -/
 def twoRouteTwoStepAmplitude
     (p : TwoStepPathWitness twoRouteProcess) : ℂ :=
-  if p.middle = TwoRouteState.upper then 1
-  else if p.middle = TwoRouteState.lower then -1
+  if p.center = TwoRouteState.upper then 1
+  else if p.center = TwoRouteState.lower then -1
   else 0
 
 /-- Middle-preserving two-step amplitude candidate for the two-route process. -/
@@ -336,8 +336,8 @@ theorem two_route_cancelled_born_weight_zero :
 
 /-- Public summary for S5c:
     the two-route toy process has finite probability, channel, endpoint-only
-    path-amplitude, and middle-preserving two-step amplitude candidates.  The
-    upper and lower same-endpoint paths have different middle states, carry
+    path-amplitude, and center-preserving two-step amplitude candidates.  The
+    upper and lower same-endpoint paths have different center states, carry
     candidate amplitudes `1` and `-1`, and their finite two-path sum cancels.
     This proves only a two-path cancellation candidate, not a physical
     interference law, path integral, Born-rule derivation, unitary/CPTP law,
@@ -350,7 +350,7 @@ theorem two_path_interference_bridge_summary :
     ∧ HasSameEndpointTwoStepPair twoRouteProcess
     ∧ (twoRouteUpperPath.start = twoRouteLowerPath.start
         ∧ twoRouteUpperPath.stop = twoRouteLowerPath.stop)
-    ∧ twoRouteUpperPath.middle ≠ twoRouteLowerPath.middle
+    ∧ twoRouteUpperPath.center ≠ twoRouteLowerPath.center
     ∧ twoRouteTwoStepAmplitudeCandidate.twoStepAmplitude
         twoRouteUpperPath = 1
     ∧ twoRouteTwoStepAmplitudeCandidate.twoStepAmplitude

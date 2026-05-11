@@ -162,12 +162,12 @@ theorem yoneda_full {C : TyCat} {A : C.Obj}
 
 /-! ## § 6 BaguaCat1 上之米田 vacuous 实例
 
-`BaguaCat1` 是 indiscrete (Hom = Unit)，故 `homFunctor BaguaCat1 (qian-lift)` 之
+`BaguaCat1` 是 indiscrete (Hom = Unit)，故 `homFunctor BaguaCat1 (heaven-lift)` 之
 obj 处处为 `Unit`。任意 `F : Functor BaguaCat1 SetCat.{0}` 之米田双射在此变 trivial。
 -/
 
-/-- **BaguaCat1 之 qian-lift** alias。 -/
-abbrev qianLift : BaguaCat1.Obj := ULift.up Trigram.qian
+/-- **BaguaCat1 之 heaven-lift** alias。 -/
+abbrev qianLift : BaguaCat1.Obj := ULift.up Trigram.heaven
 
 /-- **常 Unit 函子**：`BaguaCat1 → SetCat.{0}` 之处处 `Unit`、处处恒等之函子。 -/
 def constUnitFunctor : Functor BaguaCat1 SetCat.{0} where

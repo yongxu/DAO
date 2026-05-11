@@ -8,7 +8,7 @@ that give it mathematical content.
 -/
 import SSBX.Truth.Adequacy
 import SSBX.Foundation.Bagua.BaguaAlgebra
-import SSBX.Foundation.Bagua.Cell256
+import SSBX.Foundation.Bagua.R8
 import SSBX.Foundation.Modern.HexagramPosition
 
 namespace SSBX.Truth.SelfDescription
@@ -22,7 +22,7 @@ open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Yi.Yi.Trigram
 open SSBX.Foundation.Yi.Yi.Hexagram
 open SSBX.Foundation.Bagua.BaguaAlgebra
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Modern.HexagramPosition
 
 /-! ## § 1 Objects of self-description -/
@@ -146,16 +146,16 @@ def BitPositionVerified : BitPositionObject -> Prop
   | .yaoSix => ∀ h : Hexagram, atPos h ⟨5, by decide⟩ = h.y6
   | .trigram => Trigram.all.length = 8 ∧ ∀ t : Trigram, t ∈ Trigram.all
   | .hexagram => Hexagram.allHex.length = 64 ∧ ∀ h : Hexagram, h ∈ Hexagram.allHex
-  | .cell256 => Cell256.all.length = 256 ∧ ∀ c : Cell256, c ∈ Cell256.all
+  | .cell256 => R8.all.length = 256 ∧ ∀ c : R8, c ∈ R8.all
   | .shiEternal => Shi.dao ∈ Shi.all
   | .shiPast => Shi.ji ∈ Shi.all
   | .shiPresent => Shi.jin ∈ Shi.all
   | .shiFuture => Shi.wei ∈ Shi.all
   | .wellPosition =>
-      wellPosCount jiji = 6 ∧ wellPosCount weiji = 0
+      wellPosCount complete = 6 ∧ wellPosCount incomplete = 0
         ∧ wellPosCountAt 0 + wellPosCountAt 1 + wellPosCountAt 2 + wellPosCountAt 3
             + wellPosCountAt 4 + wellPosCountAt 5 + wellPosCountAt 6 = 64
-        ∧ ∀ h : Hexagram, ∀ i : Fin 6, wellPos h.cuo i = !(wellPos h i)
+        ∧ ∀ h : Hexagram, ∀ i : Fin 6, wellPos h.complement i = !(wellPos h i)
   | .centralPosition =>
       Hexagram.allHex.countP (fun h => decide (centralYaos h = (Yao.yang, Yao.yang))) = 16
         ∧ Hexagram.allHex.countP (fun h => decide (centralYaos h = (Yao.yang, Yao.yin))) = 16
@@ -169,22 +169,22 @@ def BitPositionVerified : BitPositionObject -> Prop
       respondsCountAt 0 = 8 ∧ respondsCountAt 1 = 24
         ∧ respondsCountAt 2 = 24 ∧ respondsCountAt 3 = 8
         ∧ respondsCountAt 0 + respondsCountAt 1 + respondsCountAt 2 + respondsCountAt 3 = 64
-        ∧ (∀ h : Hexagram, respondsCount h.cuo = respondsCount h)
-        ∧ (∀ h : Hexagram, respondsCount h.zong = respondsCount h)
+        ∧ (∀ h : Hexagram, respondsCount h.complement = respondsCount h)
+        ∧ (∀ h : Hexagram, respondsCount h.reverse = respondsCount h)
   | .neighborPosition =>
       biCountAt 0 = 2 ∧ biCountAt 5 = 2
         ∧ biCountAt 0 + biCountAt 1 + biCountAt 2 + biCountAt 3
             + biCountAt 4 + biCountAt 5 = 64
-        ∧ (∀ h : Hexagram, biCount h.cuo = biCount h)
-        ∧ (∀ h : Hexagram, biCount h.zong = biCount h)
+        ∧ (∀ h : Hexagram, biCount h.complement = biCount h)
+        ∧ (∀ h : Hexagram, biCount h.reverse = biCount h)
   | .supportPosition =>
-      chenCount jiji = 2 ∧ chenCount weiji = 3
+      chenCount complete = 2 ∧ chenCount incomplete = 3
         ∧ (∀ h : Hexagram, chenCount h + chengCount h + biCount h = 5)
-        ∧ (∀ h : Hexagram, chenCount h.cuo = chengCount h)
+        ∧ (∀ h : Hexagram, chenCount h.complement = chengCount h)
   | .ridingPosition =>
-      chengCount jiji = 3 ∧ chengCount weiji = 2
+      chengCount complete = 3 ∧ chengCount incomplete = 2
         ∧ (∀ h : Hexagram, chenCount h + chengCount h + biCount h = 5)
-        ∧ (∀ h : Hexagram, chengCount h.cuo = chenCount h)
+        ∧ (∀ h : Hexagram, chengCount h.complement = chenCount h)
 
 theorem bit_position_verified (b : BitPositionObject) :
     BitPositionVerified b := by
@@ -224,7 +224,7 @@ theorem bit_position_verified (b : BitPositionObject) :
   | hexagram =>
       exact ⟨Hexagram.allHex_count, hexagram_mem_allHex⟩
   | cell256 =>
-      exact ⟨Cell256.all_length, Cell256.mem_all⟩
+      exact ⟨R8.all_length, R8.mem_all⟩
   | shiEternal =>
       change Shi.dao ∈ Shi.all
       simp [Shi.all]
@@ -308,18 +308,18 @@ theorem complete_self_description : CompleteSelfDescription := by
 def TrigramOperatorComplete : Prop :=
   (∀ a b : Trigram, ∃ f : Trigram → Trigram, f a = b)
     ∧ (∀ t : Trigram, guiyi t = ())
-    ∧ (∀ t : Trigram, Trigram.cuo t = dong (hua (bian t)))
+    ∧ (∀ t : Trigram, Trigram.complement t = motion (middleFlip (topFlip t)))
     ∧ (∀ s : SiXiang, ∀ y : Yao, heShang (fenToTrigram s y) = s)
     ∧ (∀ y1 y2 y3 : Yao, grandCycle y1 y2 y3 = ())
 
 def HexagramOperatorComplete : Prop :=
-  (∀ h : Hexagram, Hexagram.cuo h
-      = dongInner (huaInner (bianInner (dongOuter (huaOuter (bianOuter h))))))
+  (∀ h : Hexagram, Hexagram.complement h
+      = dongInner (middleFlipInner (topFlipInner (dongOuter (middleFlipOuter (topFlipOuter h))))))
     ∧ (∀ a b : Hexagram, ∃ f : Hexagram → Hexagram, f a = b)
     ∧ (∀ a b : Hexagram, hexHammingDist a b ≤ 6)
 
-def Cell256OperatorComplete : Prop :=
-  ∀ a b : Cell256, ∃ f : Cell256 → Cell256, f a = b
+def R8OperatorComplete : Prop :=
+  ∀ a b : R8, ∃ f : R8 → R8, f a = b
 
 def OperatorCatalogueComplete : Prop :=
   (∀ id : OperatorId, CoveredOperator id)
@@ -327,7 +327,7 @@ def OperatorCatalogueComplete : Prop :=
     ∧ (∀ i : DerivedInterface, CoveredDerivedInterface i)
     ∧ TrigramOperatorComplete
     ∧ HexagramOperatorComplete
-    ∧ Cell256OperatorComplete
+    ∧ R8OperatorComplete
 
 def PositionAwareCompleteOperatorSet : Prop :=
   PositionSemanticsComplete ∧ OperatorCatalogueComplete
@@ -345,7 +345,7 @@ theorem shi_operator_complete (a b : Shi) :
   -- mapping is realizable).
   exact ⟨fun _ => b, rfl⟩
 
-theorem cell256_operator_complete : Cell256OperatorComplete := by
+theorem cell256_operator_complete : R8OperatorComplete := by
   intro a b
   rcases a with ⟨ha, sa⟩
   rcases b with ⟨hb, sb⟩

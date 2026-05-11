@@ -7,10 +7,10 @@ Companion: `义理/物理 · 从元到象.md` § 二 / § 四
 本文借 Mathlib `Matrix` + `InnerProductSpace` 升 Phase 3 之 finite basis layer 至
 **叠加层** (superposition layer)：qubit ≅ ℂ²、Pauli X / Y / Z 矩阵、Hadamard、3-qubit Trigram。
 
-## 与 P17 之 cuo-不变性之关系
+## 与 P17 之 complement-不变性之关系
 
-**P17 发现**：YiInstr 之所有指令 cuo-等变 → BaguaTuring 表达力 ≤ 2^32 cuo-不变 Hex→Bool。
-**量子层之 cuo**：cuo = X⊗X⊗X⊗X⊗X⊗X (六 qubit Pauli X) — charge conjugation / parity 之具体形态。
+**P17 发现**：YiInstr 之所有指令 complement-等变 → BaguaTuring 表达力 ≤ 2^32 complement-不变 Hex→Bool。
+**量子层之 complement**：complement = X⊗X⊗X⊗X⊗X⊗X (六 qubit Pauli X) — charge conjugation / parity 之具体形态。
 此即 P17 之结构对称在量子层之自然解读。
 
 ## 道理二分立场
@@ -182,26 +182,26 @@ def Trigram.toFin8 (t : SSBX.Foundation.Yi.Yi.Trigram) : Fin 8 :=
 
 /-- **乾 ↦ |000⟩ basis index**。 -/
 theorem qian_to_zero :
-    Trigram.toFin8 SSBX.Foundation.Yi.Yi.Trigram.qian = 0 := by
+    Trigram.toFin8 SSBX.Foundation.Yi.Yi.Trigram.heaven = 0 := by
   rfl
 
 /-- **坤 ↦ |111⟩ basis index**。 -/
 theorem kun_to_seven :
-    Trigram.toFin8 SSBX.Foundation.Yi.Yi.Trigram.kun = 7 := by
+    Trigram.toFin8 SSBX.Foundation.Yi.Yi.Trigram.earth = 7 := by
   rfl
 
-/-! ## § 8 cuo ≅ X ⊗ X ⊗ X 之 anchor
+/-! ## § 8 complement ≅ X ⊗ X ⊗ X 之 anchor
 
-**项目主张**（连接 P17 之 cuo-equivariance）：
-Trigram 之 cuo 算子 = 三 qubit 上之 Pauli X⊗X⊗X 矩阵之作用。
+**项目主张**（连接 P17 之 complement-equivariance）：
+Trigram 之 complement 算子 = 三 qubit 上之 Pauli X⊗X⊗X 矩阵之作用。
 即：物理之 charge conjugation / parity 之三 qubit 表示。
 
-形式陈述：cuo Trigram ↔ (Pauli X)⊗³ acting on 3-qubit basis。
-此处仅在 basis index 层声明：cuo 把 b ∈ Fin 8 翻为 (7 - b)。 -/
+形式陈述：complement Trigram ↔ (Pauli X)⊗³ acting on 3-qubit basis。
+此处仅在 basis index 层声明：complement 把 b ∈ Fin 8 翻为 (7 - b)。 -/
 
-/-- **cuo 在 Fin 8 上之作用**：b ↦ 7 - b。 -/
+/-- **complement 在 Fin 8 上之作用**：b ↦ 7 - b。 -/
 theorem cuo_via_fin8 (t : SSBX.Foundation.Yi.Yi.Trigram) :
-    Trigram.toFin8 (SSBX.Foundation.Yi.Yi.Trigram.cuo t)
+    Trigram.toFin8 (SSBX.Foundation.Yi.Yi.Trigram.complement t)
       = ⟨7 - (Trigram.toFin8 t).val, by
           have h := (Trigram.toFin8 t).isLt
           omega⟩ := by
@@ -257,28 +257,28 @@ def reversePositionIndex : Fin 8 → Fin 8
 
 /-- **动 = 初爻位翻转**：在 3-qubit computational basis index 上即最高 bit 翻转。 -/
 theorem dong_via_fin8 (t : SSBX.Foundation.Yi.Yi.Trigram) :
-    Trigram.toFin8 (dong t) = flipInitialIndex (Trigram.toFin8 t) := by
+    Trigram.toFin8 (motion t) = flipInitialIndex (Trigram.toFin8 t) := by
   cases t with
   | mk y1 y2 y3 =>
     cases y1 <;> cases y2 <;> cases y3 <;> rfl
 
 /-- **化 = 中爻位翻转**：在 3-qubit computational basis index 上即中 bit 翻转。 -/
 theorem hua_via_fin8 (t : SSBX.Foundation.Yi.Yi.Trigram) :
-    Trigram.toFin8 (hua t) = flipMiddleIndex (Trigram.toFin8 t) := by
+    Trigram.toFin8 (middleFlip t) = flipMiddleIndex (Trigram.toFin8 t) := by
   cases t with
   | mk y1 y2 y3 =>
     cases y1 <;> cases y2 <;> cases y3 <;> rfl
 
 /-- **变 = 上爻位翻转**：在 3-qubit computational basis index 上即最低 bit 翻转。 -/
 theorem bian_via_fin8 (t : SSBX.Foundation.Yi.Yi.Trigram) :
-    Trigram.toFin8 (bian t) = flipTopIndex (Trigram.toFin8 t) := by
+    Trigram.toFin8 (topFlip t) = flipTopIndex (Trigram.toFin8 t) := by
   cases t with
   | mk y1 y2 y3 =>
     cases y1 <;> cases y2 <;> cases y3 <;> rfl
 
 /-- **综 = 位反序**：在 3-qubit computational basis index 上即 bit-reversal。 -/
 theorem zong_via_fin8 (t : SSBX.Foundation.Yi.Yi.Trigram) :
-    Trigram.toFin8 (SSBX.Foundation.Yi.Yi.Trigram.zong t)
+    Trigram.toFin8 (SSBX.Foundation.Yi.Yi.Trigram.reverse t)
       = reversePositionIndex (Trigram.toFin8 t) := by
   cases t with
   | mk y1 y2 y3 =>
@@ -286,26 +286,26 @@ theorem zong_via_fin8 (t : SSBX.Foundation.Yi.Yi.Trigram) :
 
 /-- 乾出发时，三个位算子分别给出 4/2/1 的 basis 权重。 -/
 theorem qian_position_weights :
-    Trigram.toFin8 (dong SSBX.Foundation.Yi.Yi.Trigram.qian) = 4
-    ∧ Trigram.toFin8 (hua SSBX.Foundation.Yi.Yi.Trigram.qian) = 2
-    ∧ Trigram.toFin8 (bian SSBX.Foundation.Yi.Yi.Trigram.qian) = 1 := by
+    Trigram.toFin8 (motion SSBX.Foundation.Yi.Yi.Trigram.heaven) = 4
+    ∧ Trigram.toFin8 (middleFlip SSBX.Foundation.Yi.Yi.Trigram.heaven) = 2
+    ∧ Trigram.toFin8 (topFlip SSBX.Foundation.Yi.Yi.Trigram.heaven) = 1 := by
   exact ⟨rfl, rfl, rfl⟩
 
 /-- **算子-位对齐总表**：动/化/变/错/综全落到 3-qubit basis index 的位操作。 -/
 theorem operator_position_index_alignment :
     (∀ t : SSBX.Foundation.Yi.Yi.Trigram,
-        Trigram.toFin8 (dong t) = flipInitialIndex (Trigram.toFin8 t))
+        Trigram.toFin8 (motion t) = flipInitialIndex (Trigram.toFin8 t))
     ∧ (∀ t : SSBX.Foundation.Yi.Yi.Trigram,
-        Trigram.toFin8 (hua t) = flipMiddleIndex (Trigram.toFin8 t))
+        Trigram.toFin8 (middleFlip t) = flipMiddleIndex (Trigram.toFin8 t))
     ∧ (∀ t : SSBX.Foundation.Yi.Yi.Trigram,
-        Trigram.toFin8 (bian t) = flipTopIndex (Trigram.toFin8 t))
+        Trigram.toFin8 (topFlip t) = flipTopIndex (Trigram.toFin8 t))
     ∧ (∀ t : SSBX.Foundation.Yi.Yi.Trigram,
-        Trigram.toFin8 (SSBX.Foundation.Yi.Yi.Trigram.cuo t)
+        Trigram.toFin8 (SSBX.Foundation.Yi.Yi.Trigram.complement t)
           = ⟨7 - (Trigram.toFin8 t).val, by
               have h := (Trigram.toFin8 t).isLt
               omega⟩)
     ∧ (∀ t : SSBX.Foundation.Yi.Yi.Trigram,
-        Trigram.toFin8 (SSBX.Foundation.Yi.Yi.Trigram.zong t)
+        Trigram.toFin8 (SSBX.Foundation.Yi.Yi.Trigram.reverse t)
           = reversePositionIndex (Trigram.toFin8 t)) := by
   exact ⟨dong_via_fin8, hua_via_fin8, bian_via_fin8, cuo_via_fin8, zong_via_fin8⟩
 
@@ -321,7 +321,7 @@ theorem operator_position_index_alignment :
     (7) Trigram ↦ Fin 8 之 basis index
     (8) 乾 ↦ 0
     (9) 坤 ↦ 7
-    (10) cuo 在 Fin 8 上即 b ↦ 7-b（X⊗X⊗X 之 basis 表示）
+    (10) complement 在 Fin 8 上即 b ↦ 7-b（X⊗X⊗X 之 basis 表示）
     (11) Pauli X 在 Yao basis 上等于 Yao.neg
     (12) computational-basis Born rule 给二值归一概率分布
     (13) 动/化/变/综 对齐 3-qubit basis index 之位操作 -/
@@ -330,25 +330,25 @@ theorem quantum_summary :
     ∧ pauliZ * pauliZ = (1 : Matrix (Fin 2) (Fin 2) ℂ)
     ∧ Matrix.mulVec pauliX ket0 = ket1
     ∧ Matrix.mulVec pauliX ket1 = ket0
-    ∧ Trigram.toFin8 SSBX.Foundation.Yi.Yi.Trigram.qian = 0
-    ∧ Trigram.toFin8 SSBX.Foundation.Yi.Yi.Trigram.kun = 7
+    ∧ Trigram.toFin8 SSBX.Foundation.Yi.Yi.Trigram.heaven = 0
+    ∧ Trigram.toFin8 SSBX.Foundation.Yi.Yi.Trigram.earth = 7
     ∧ (∀ y : SSBX.Foundation.Yi.Yi.Yao,
         Matrix.mulVec pauliX (Yao.toQubit y) = Yao.toQubit y.neg)
     ∧ (∀ ψ : Qubit, computationalBasisNormalized ψ →
         0 ≤ bornProb0 ψ ∧ 0 ≤ bornProb1 ψ ∧ bornProb0 ψ + bornProb1 ψ = 1)
     ∧ (∀ t : SSBX.Foundation.Yi.Yi.Trigram,
-        Trigram.toFin8 (dong t) = flipInitialIndex (Trigram.toFin8 t))
+        Trigram.toFin8 (motion t) = flipInitialIndex (Trigram.toFin8 t))
     ∧ (∀ t : SSBX.Foundation.Yi.Yi.Trigram,
-        Trigram.toFin8 (hua t) = flipMiddleIndex (Trigram.toFin8 t))
+        Trigram.toFin8 (middleFlip t) = flipMiddleIndex (Trigram.toFin8 t))
     ∧ (∀ t : SSBX.Foundation.Yi.Yi.Trigram,
-        Trigram.toFin8 (bian t) = flipTopIndex (Trigram.toFin8 t))
+        Trigram.toFin8 (topFlip t) = flipTopIndex (Trigram.toFin8 t))
     ∧ (∀ t : SSBX.Foundation.Yi.Yi.Trigram,
-        Trigram.toFin8 (SSBX.Foundation.Yi.Yi.Trigram.cuo t)
+        Trigram.toFin8 (SSBX.Foundation.Yi.Yi.Trigram.complement t)
           = ⟨7 - (Trigram.toFin8 t).val, by
               have h := (Trigram.toFin8 t).isLt
               omega⟩)
     ∧ (∀ t : SSBX.Foundation.Yi.Yi.Trigram,
-        Trigram.toFin8 (SSBX.Foundation.Yi.Yi.Trigram.zong t)
+        Trigram.toFin8 (SSBX.Foundation.Yi.Yi.Trigram.reverse t)
           = reversePositionIndex (Trigram.toFin8 t)) :=
   ⟨pauliX_squared, pauliZ_squared, pauliX_apply_ket0, pauliX_apply_ket1,
    qian_to_zero, kun_to_seven, pauliX_apply_yao_basis,

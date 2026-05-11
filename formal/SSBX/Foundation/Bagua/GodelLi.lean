@@ -34,7 +34,7 @@ namespace SSBX.Foundation.Bagua.GodelLi
 
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Bagua.BaguaAlgebra
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 
 /-! ## § 1 Halts predicate (Σ₁) -/
@@ -276,12 +276,12 @@ theorem li_incomplete_finite :
     ¬ ∃ N : Nat, ∀ (P : List YiInstr) (h : Hexagram),
         Halts P h ↔ ((YiState.init h P).runFuel N).halted = true := by
   intro ⟨N, hN⟩
-  -- 取反例：slowProg N 在 qian 上
-  have h_halts : Halts (slowProg N) Hexagram.qian := halts_slowProg _ _
+  -- 取反例：slowProg N 在 heaven 上
+  have h_halts : Halts (slowProg N) Hexagram.heaven := halts_slowProg _ _
   have h_not_halted_at_N :
-      ((YiState.init Hexagram.qian (slowProg N)).runFuel N).halted = false :=
+      ((YiState.init Hexagram.heaven (slowProg N)).runFuel N).halted = false :=
     slowProg_runFuel_N_not_halted _ _
-  have := (hN (slowProg N) Hexagram.qian).mp h_halts
+  have := (hN (slowProg N) Hexagram.heaven).mp h_halts
   rw [h_not_halted_at_N] at this
   exact Bool.false_ne_true this
 
@@ -300,27 +300,27 @@ theorem phase2_summary :
    fun h N => slowProg_runFuel_N_not_halted h N,
    li_incomplete_finite⟩
 
-/-! ## § 2.5 cuo-symmetry of Halts
+/-! ## § 2.5 complement-symmetry of Halts
 
-  YiInstr 之每条指令在 cur 上皆 cuo-等变（commute with yao-wise negation）。
-  推论：`Halts P h ↔ Halts P h.cuo` —— 即 Halts 在 cuo 下不变。
+  YiInstr 之每条指令在 cur 上皆 complement-等变（commute with yao-wise negation）。
+  推论：`Halts P h ↔ Halts P h.complement` —— 即 Halts 在 complement 下不变。
 
   此节内联自旧 `CuoInvariance.lean`，目的：使 `KleeneInverter` 可在
   `CuoInvariantDecide` 限定子集上成立（消除原始无限制形式之不一致）。
-  数学内容：cuo 是 BaguaTuring 指令集之结构对称——branch 决策比较 cell
-  内的 yaos（cuo 不变），其他 cur-修改指令（hu/cuo/zong/flipYao）皆与
-  cuo 交换，setShi/branchShiEq 仅作用于 Shi（cuo 不触），history 操作
-  保 cuo-关系。 -/
+  数学内容：complement 是 BaguaTuring 指令集之结构对称——branch 决策比较 cell
+  内的 yaos（complement 不变），其他 cur-修改指令（interlace/complement/reverse/flipYao）皆与
+  complement 交换，setShi/branchShiEq 仅作用于 Shi（complement 不触），history 操作
+  保 complement-关系。 -/
 
-/-- Apply `cuo` to a Cell256's hexagram component (Shi unchanged). -/
-def cuoCell (c : Cell256) : Cell256 := (c.1.cuo, c.2)
+/-- Apply `complement` to a R8's hexagram component (Shi unchanged). -/
+def cuoCell (c : R8) : R8 := (c.1.complement, c.2)
 
-/-- cuo is involutive on cells. -/
-theorem cuoCell_cuoCell (c : Cell256) : cuoCell (cuoCell c) = c := by
+/-- complement is involutive on cells. -/
+theorem cuoCell_cuoCell (c : R8) : cuoCell (cuoCell c) = c := by
   unfold cuoCell
-  simp [Hexagram.cuo_cuo]
+  simp [Hexagram.complement_involutive]
 
-/-- Apply cuo to all hexagrams in a YiState (cur + history). -/
+/-- Apply complement to all hexagrams in a YiState (cur + history). -/
 def cuoState (s : YiState) : YiState :=
   { cur := cuoCell s.cur
     history := s.history.map cuoCell
@@ -332,9 +332,9 @@ theorem cuoState_halted (s : YiState) : (cuoState s).halted = s.halted := rfl
 theorem cuoState_pc (s : YiState) : (cuoState s).pc = s.pc := rfl
 theorem cuoState_prog (s : YiState) : (cuoState s).prog = s.prog := rfl
 
-/-- yaoAt of cuo'd hex = neg of yaoAt. -/
+/-- yaoAt of complement'd hex = neg of yaoAt. -/
 theorem yaoAt_cuo (h : Hexagram) (i : Fin 6) :
-    (h.cuo).yaoAt i = (h.yaoAt i).neg := by
+    (h.complement).yaoAt i = (h.yaoAt i).neg := by
   rcases i with ⟨n, hn⟩
   match n, hn with
   | 0, _ => rfl
@@ -344,29 +344,29 @@ theorem yaoAt_cuo (h : Hexagram) (i : Fin 6) :
   | 4, _ => rfl
   | 5, _ => rfl
 
-/-- yaoEq is preserved under cuo. -/
+/-- yaoEq is preserved under complement. -/
 theorem yaoEq_cuo (h : Hexagram) (i j : Fin 6) :
-    ((h.cuo).yaoAt i = (h.cuo).yaoAt j) ↔ (h.yaoAt i = h.yaoAt j) := by
+    ((h.complement).yaoAt i = (h.complement).yaoAt j) ↔ (h.yaoAt i = h.yaoAt j) := by
   rw [yaoAt_cuo, yaoAt_cuo]
   cases (h.yaoAt i) <;> cases (h.yaoAt j) <;> decide
 
-/-- flipPos commutes with cuo. -/
+/-- flipPos commutes with complement. -/
 theorem flipPos_cuo (h : Hexagram) (i : Fin 6) :
-    (h.cuo).flipPos i = (h.flipPos i).cuo := by
+    (h.complement).flipPos i = (h.flipPos i).complement := by
   rcases i with ⟨n, hn⟩
   match n, hn with
-  | 0, _ => simp [Hexagram.flipPos, Hexagram.cuo, Yao.neg_neg]
-  | 1, _ => simp [Hexagram.flipPos, Hexagram.cuo, Yao.neg_neg]
-  | 2, _ => simp [Hexagram.flipPos, Hexagram.cuo, Yao.neg_neg]
-  | 3, _ => simp [Hexagram.flipPos, Hexagram.cuo, Yao.neg_neg]
-  | 4, _ => simp [Hexagram.flipPos, Hexagram.cuo, Yao.neg_neg]
-  | 5, _ => simp [Hexagram.flipPos, Hexagram.cuo, Yao.neg_neg]
+  | 0, _ => simp [Hexagram.flipPos, Hexagram.complement, Yao.neg_neg]
+  | 1, _ => simp [Hexagram.flipPos, Hexagram.complement, Yao.neg_neg]
+  | 2, _ => simp [Hexagram.flipPos, Hexagram.complement, Yao.neg_neg]
+  | 3, _ => simp [Hexagram.flipPos, Hexagram.complement, Yao.neg_neg]
+  | 4, _ => simp [Hexagram.flipPos, Hexagram.complement, Yao.neg_neg]
+  | 5, _ => simp [Hexagram.flipPos, Hexagram.complement, Yao.neg_neg]
 
-/-- hu commutes with cuo. -/
-theorem hu_cuo (h : Hexagram) : (h.cuo).hu = (h.hu).cuo := by cases h; rfl
+/-- interlace commutes with complement. -/
+theorem hu_cuo (h : Hexagram) : (h.complement).interlace = (h.interlace).complement := by cases h; rfl
 
-/-- zong commutes with cuo. -/
-theorem zong_cuo (h : Hexagram) : (h.cuo).zong = (h.zong).cuo := by cases h; rfl
+/-- reverse commutes with complement. -/
+theorem zong_cuo (h : Hexagram) : (h.complement).reverse = (h.reverse).complement := by cases h; rfl
 
 private theorem step_not_halted_helper (s : YiState) (h_nh : s.halted = false) :
     s.step = (match s.prog[s.pc]? with
@@ -393,7 +393,7 @@ private theorem cuoState_step_not_halted (s : YiState) (h_nh : s.halted = false)
   rfl
 
 /-- The CORE INVARIANT: `step` commutes with `cuoState`.  Case analysis on
-    each YiInstr — captures cuo as a structural symmetry of the transition. -/
+    each YiInstr — captures complement as a structural symmetry of the transition. -/
 theorem cuoState_step (s : YiState) :
     cuoState (s.step) = (cuoState s).step := by
   by_cases h_halt : s.halted = true
@@ -417,13 +417,13 @@ theorem cuoState_step (s : YiState) :
       | flipYao i =>
         unfold YiState.execute cuoState cuoCell
         simp [flipPos_cuo]
-      | hu  =>
+      | interlace  =>
         unfold YiState.execute cuoState cuoCell
         simp [hu_cuo]
-      | cuo =>
+      | complement =>
         unfold YiState.execute cuoState cuoCell
-        simp [Hexagram.cuo_cuo]
-      | zong =>
+        simp [Hexagram.complement_involutive]
+      | reverse =>
         unfold YiState.execute cuoState cuoCell
         simp [zong_cuo]
       | branchYaoEq i j t =>
@@ -469,23 +469,23 @@ theorem cuoState_runFuel (s : YiState) (n : Nat) :
       rw [← cuoState_step]
       exact ih s.step
 
-/-- The init state is cuo-equivariant: cuoState (init h P) = init (cuo h) P. -/
+/-- The init state is complement-equivariant: cuoState (init h P) = init (complement h) P. -/
 theorem cuoState_init (h : Hexagram) (P : List YiInstr) :
-    cuoState (YiState.init h P) = YiState.init h.cuo P := rfl
+    cuoState (YiState.init h P) = YiState.init h.complement P := rfl
 
 private theorem halts_cuo_forward (P : List YiInstr) (h : Hexagram) :
-    Halts P h → Halts P h.cuo := by
+    Halts P h → Halts P h.complement := by
   intro ⟨n, hn⟩
   refine ⟨n, ?_⟩
   rw [← cuoState_init, ← cuoState_runFuel, cuoState_halted]
   exact hn
 
-/-- **MAIN SYMMETRY**: `Halts P h ↔ Halts P (cuo h)`. -/
+/-- **MAIN SYMMETRY**: `Halts P h ↔ Halts P (complement h)`. -/
 theorem halts_cuo_invariant (P : List YiInstr) (h : Hexagram) :
-    Halts P h ↔ Halts P h.cuo := by
+    Halts P h ↔ Halts P h.complement := by
   refine ⟨halts_cuo_forward P h, fun hyp => ?_⟩
-  have := halts_cuo_forward P h.cuo hyp
-  rwa [Hexagram.cuo_cuo] at this
+  have := halts_cuo_forward P h.complement hyp
+  rwa [Hexagram.complement_involutive] at this
 
 /-! ## § 3 Kleene 递归 假设 + 条件 Halting 不可判
 
@@ -506,24 +506,24 @@ theorem halts_cuo_invariant (P : List YiInstr) (h : Hexagram) :
   不可判」——即 道理二分 之精确数学陈述。
 -/
 
-/-- A Lean Bool decider is **cuo-invariant** iff its output is unchanged
+/-- A Lean Bool decider is **complement-invariant** iff its output is unchanged
     under yao-wise hexagram negation.  This is a NECESSARY precondition for
     Kleene-style inversion in BaguaTuring: by `halts_cuo_invariant`, every
-    YiProg's halt profile is cuo-invariant, so only cuo-invariant deciders
+    YiProg's halt profile is complement-invariant, so only complement-invariant deciders
     admit a YiProg counter-example.  Without this restriction the plain
     `KleeneInverter` is provably inconsistent (proof in `CuoInvariance.lean`
     via `unrestricted_kleene_inverter_inconsistent`). -/
 def CuoInvariantDecide (decide : List YiInstr → Hexagram → Bool) : Prop :=
-  ∀ P h, decide P h = decide P h.cuo
+  ∀ P h, decide P h = decide P h.complement
 
-/-- **Kleene 递归性质**（cuo-invariant 限定形）：对任 cuo-不变之 Lean Bool
+/-- **Kleene 递归性质**（complement-invariant 限定形）：对任 complement-不变之 Lean Bool
     函数 `decide`，存在 YiProg D 使其在 h 上停机当且仅当 decide(D, h) = false。
 
-    这是 Church-Turing 论题对 BaguaTuring 之断言：任何 cuo-不变 Bool 行为
+    这是 Church-Turing 论题对 BaguaTuring 之断言：任何 complement-不变 Bool 行为
     （包括"判 decide 后反转"）皆可由 YiProg 实现。
 
-    **限定动机**：`Halts P h ↔ Halts P h.cuo`（见 § 2.5 之 `halts_cuo_invariant`），
-    故只有 cuo-不变 decide 可被 YiProg 反转。原始无限制形式
+    **限定动机**：`Halts P h ↔ Halts P h.complement`（见 § 2.5 之 `halts_cuo_invariant`），
+    故只有 complement-不变 decide 可被 YiProg 反转。原始无限制形式
     `∀ decide, ...` 是 inconsistent in Lean（取 `decide _ h := h.y1 = .yang`
     即得反例）。 -/
 def KleeneInverter : Prop :=
@@ -531,64 +531,64 @@ def KleeneInverter : Prop :=
     CuoInvariantDecide decide →
     ∃ D : List YiInstr, ∀ h : Hexagram, Halts D h ↔ decide D h = false
 
-/-- 由 `Halts P h ↔ Halts P h.cuo` 派生：若 `decide` 是 Halts 之 Lean Bool
-    判定器，则它必为 cuo-不变。 -/
+/-- 由 `Halts P h ↔ Halts P h.complement` 派生：若 `decide` 是 Halts 之 Lean Bool
+    判定器，则它必为 complement-不变。 -/
 theorem cuoInvariant_of_decides_halts
     (decide : List YiInstr → Hexagram → Bool)
     (h_dec : ∀ P h, decide P h = true ↔ Halts P h) :
     CuoInvariantDecide decide := by
   intro P h
   have h₁ : decide P h = true ↔ Halts P h := h_dec P h
-  have h₂ : decide P h.cuo = true ↔ Halts P h.cuo := h_dec P h.cuo
-  have h₃ : Halts P h ↔ Halts P h.cuo := halts_cuo_invariant P h
+  have h₂ : decide P h.complement = true ↔ Halts P h.complement := h_dec P h.complement
+  have h₃ : Halts P h ↔ Halts P h.complement := halts_cuo_invariant P h
   -- Bool extensionality via cases
   cases hb : decide P h with
   | true =>
     have : Halts P h := h₁.mp hb
-    have : Halts P h.cuo := h₃.mp this
-    have : decide P h.cuo = true := h₂.mpr this
+    have : Halts P h.complement := h₃.mp this
+    have : decide P h.complement = true := h₂.mpr this
     rw [this]
   | false =>
-    cases hb' : decide P h.cuo with
+    cases hb' : decide P h.complement with
     | true =>
-      have : Halts P h.cuo := h₂.mp hb'
+      have : Halts P h.complement := h₂.mp hb'
       have : Halts P h := h₃.mpr this
       have : decide P h = true := h₁.mpr this
       rw [hb] at this
       exact absurd this (by decide)
     | false => rfl
 
-/-- h-忽略 decide 是 cuo-不变（trivially）。 -/
+/-- h-忽略 decide 是 complement-不变（trivially）。 -/
 theorem cuoInvariant_of_h_ignore (f : List YiInstr → Bool) :
     CuoInvariantDecide (fun P _ => f P) := by
   intro _ _; rfl
 
-/-- cuo-不变性在 Bool not 下保持。 -/
+/-- complement-不变性在 Bool not 下保持。 -/
 theorem cuoInvariant_not (f : List YiInstr → Hexagram → Bool)
     (h_inv : CuoInvariantDecide f) :
     CuoInvariantDecide (fun P h => !f P h) := by
   intro P h
   simp only [h_inv P h]
 
-/-- 由 `Halts P h ↔ Halts P h.cuo` 派生：若 `decide` 是 ¬Halts 之 Lean Bool
-    判定器，则它必为 cuo-不变。 -/
+/-- 由 `Halts P h ↔ Halts P h.complement` 派生：若 `decide` 是 ¬Halts 之 Lean Bool
+    判定器，则它必为 complement-不变。 -/
 theorem cuoInvariant_of_decides_not_halts
     (decide : List YiInstr → Hexagram → Bool)
     (h_dec : ∀ P h, decide P h = true ↔ ¬ Halts P h) :
     CuoInvariantDecide decide := by
   intro P h
   have h₁ : decide P h = true ↔ ¬ Halts P h := h_dec P h
-  have h₂ : decide P h.cuo = true ↔ ¬ Halts P h.cuo := h_dec P h.cuo
-  have h₃ : Halts P h ↔ Halts P h.cuo := halts_cuo_invariant P h
+  have h₂ : decide P h.complement = true ↔ ¬ Halts P h.complement := h_dec P h.complement
+  have h₃ : Halts P h ↔ Halts P h.complement := halts_cuo_invariant P h
   cases hb : decide P h with
   | true =>
     have hnh : ¬ Halts P h := h₁.mp hb
-    have hnh' : ¬ Halts P h.cuo := fun hh => hnh (h₃.mpr hh)
+    have hnh' : ¬ Halts P h.complement := fun hh => hnh (h₃.mpr hh)
     rw [h₂.mpr hnh']
   | false =>
-    cases hb' : decide P h.cuo with
+    cases hb' : decide P h.complement with
     | true =>
-      have hnh' : ¬ Halts P h.cuo := h₂.mp hb'
+      have hnh' : ¬ Halts P h.complement := h₂.mp hb'
       have hnh : ¬ Halts P h := fun hh => hnh' (h₃.mp hh)
       have h_eq_true : decide P h = true := h₁.mpr hnh
       rw [hb] at h_eq_true; exact absurd h_eq_true (by decide)
@@ -612,23 +612,23 @@ theorem halts_undecidable_under_kleene (h_kleene : KleeneInverter) :
         ∀ P h, decide P h = true ↔ Halts P h := by
   intro ⟨decide, hd⟩
   obtain ⟨D, hD⟩ := h_kleene decide (cuoInvariant_of_decides_halts decide hd)
-  -- 取 qian 作具体 hexagram
-  have h_iff_halts : decide D Hexagram.qian = true ↔ Halts D Hexagram.qian :=
-    hd D Hexagram.qian
-  have h_iff_invert : Halts D Hexagram.qian ↔ decide D Hexagram.qian = false :=
-    hD Hexagram.qian
+  -- 取 heaven 作具体 hexagram
+  have h_iff_halts : decide D Hexagram.heaven = true ↔ Halts D Hexagram.heaven :=
+    hd D Hexagram.heaven
+  have h_iff_invert : Halts D Hexagram.heaven ↔ decide D Hexagram.heaven = false :=
+    hD Hexagram.heaven
   -- 矛盾：decide D h = true ↔ Halts D h ↔ decide D h = false
-  cases hb : decide D Hexagram.qian with
+  cases hb : decide D Hexagram.heaven with
   | true =>
     -- decide = true → Halts → decide = false（矛盾）
-    have h_halts : Halts D Hexagram.qian := h_iff_halts.mp hb
-    have h_false : decide D Hexagram.qian = false := h_iff_invert.mp h_halts
+    have h_halts : Halts D Hexagram.heaven := h_iff_halts.mp hb
+    have h_false : decide D Hexagram.heaven = false := h_iff_invert.mp h_halts
     rw [hb] at h_false
     contradiction
   | false =>
     -- decide = false → Halts → decide = true（矛盾）
-    have h_halts : Halts D Hexagram.qian := h_iff_invert.mpr hb
-    have h_true : decide D Hexagram.qian = true := h_iff_halts.mpr h_halts
+    have h_halts : Halts D Hexagram.heaven := h_iff_invert.mpr hb
+    have h_true : decide D Hexagram.heaven = true := h_iff_halts.mpr h_halts
     rw [hb] at h_true
     contradiction
 
@@ -670,7 +670,7 @@ theorem not_halts_undecidable_under_kleene (h_kleene : KleeneInverter) :
     cuoInvariant_of_decides_not_halts decide_neg h_neg
   obtain ⟨D, hD⟩ := h_kleene (fun P h => !decide_neg P h)
     (cuoInvariant_not decide_neg h_cuo_neg)
-  let h := Hexagram.qian
+  let h := Hexagram.heaven
   have h_kleene_iff : Halts D h ↔ (!decide_neg D h) = false := hD h
   -- (!b) = false ↔ b = true
   have h_negbool : (!decide_neg D h) = false ↔ decide_neg D h = true := by
@@ -685,24 +685,24 @@ theorem not_halts_undecidable_under_kleene (h_kleene : KleeneInverter) :
   · exact h_halts (h_contra.mpr h_halts)
 
 /-- **固定 h，Halts 仍不可判**：即使输入六爻固定为乾，停机仍不可判。
-    证明：若 decide_qian 判 `Halts · qian`，由 KleeneInverter 取 D（用 decide 忽略 h）
+    证明：若 decide_qian 判 `Halts · heaven`，由 KleeneInverter 取 D（用 decide 忽略 h）
     导出矛盾。 -/
 theorem halts_at_qian_undecidable_under_kleene (h_kleene : KleeneInverter) :
     ¬ ∃ decide : List YiInstr → Bool,
-        ∀ P, decide P = true ↔ Halts P Hexagram.qian := by
+        ∀ P, decide P = true ↔ Halts P Hexagram.heaven := by
   intro ⟨decide_qian, h_dec⟩
   obtain ⟨D, hD⟩ := h_kleene (fun P _ => decide_qian P)
     (cuoInvariant_of_h_ignore decide_qian)
-  have h_kleene_iff : Halts D Hexagram.qian ↔ decide_qian D = false :=
-    hD Hexagram.qian
-  have h_dec_iff : decide_qian D = true ↔ Halts D Hexagram.qian := h_dec D
+  have h_kleene_iff : Halts D Hexagram.heaven ↔ decide_qian D = false :=
+    hD Hexagram.heaven
+  have h_dec_iff : decide_qian D = true ↔ Halts D Hexagram.heaven := h_dec D
   cases hb : decide_qian D with
   | true =>
-    have hh : Halts D Hexagram.qian := h_dec_iff.mp hb
+    have hh : Halts D Hexagram.heaven := h_dec_iff.mp hb
     have hf : decide_qian D = false := h_kleene_iff.mp hh
     rw [hb] at hf; contradiction
   | false =>
-    have hh : Halts D Hexagram.qian := h_kleene_iff.mpr hb
+    have hh : Halts D Hexagram.heaven := h_kleene_iff.mpr hb
     have ht : decide_qian D = true := h_dec_iff.mpr hh
     rw [hb] at ht; contradiction
 
@@ -776,14 +776,14 @@ theorem halts_on_some_undecidable_under_kleene (h_kleene : KleeneInverter) :
   | false =>
     -- decide_some D = false → ¬ ∃ h, Halts D h
     -- 但 Kleene 给：Halts D h ↔ (false = false) ↔ True，即 ∀ h, Halts D h
-    -- 取 qian：既 Halts 又 ¬ Halts
+    -- 取 heaven：既 Halts 又 ¬ Halts
     have h_no_some : ¬ ∃ h, Halts D h := by
       intro he
       have hT : decide_some D = true := (h_dec D).mpr he
       rw [hb] at hT
       contradiction
-    have h_qian : Halts D Hexagram.qian := (hD Hexagram.qian).mpr hb
-    exact h_no_some ⟨Hexagram.qian, h_qian⟩
+    have h_qian : Halts D Hexagram.heaven := (hD Hexagram.heaven).mpr hb
+    exact h_no_some ⟨Hexagram.heaven, h_qian⟩
 
 /-- **Π_none 不可判**（条件版）：「程序处处不停」不可由任何 Lean Bool
     函数判定。证明：直接对 (fun P _ => !decide_none P) 应用 KleeneInverter。 -/
@@ -797,11 +797,11 @@ theorem halts_on_none_undecidable_under_kleene (h_kleene : KleeneInverter) :
   cases hb : decide_none D with
   | true =>
     -- decide_none D = true → ∀ h, ¬ Halts D h (by h_dec)
-    -- 但 (!decide_none D) = !true = false，故 hD qian.mpr 给 Halts D qian
+    -- 但 (!decide_none D) = !true = false，故 hD heaven.mpr 给 Halts D heaven
     have h_all_no : ∀ h, ¬ Halts D h := (h_dec D).mp hb
     have h_kleene_eq : (!decide_none D) = false := by rw [hb]; decide
-    have h_qian_halt : Halts D Hexagram.qian := (hD Hexagram.qian).mpr h_kleene_eq
-    exact (h_all_no Hexagram.qian h_qian_halt).elim
+    have h_qian_halt : Halts D Hexagram.heaven := (hD Hexagram.heaven).mpr h_kleene_eq
+    exact (h_all_no Hexagram.heaven h_qian_halt).elim
   | false =>
     -- decide_none D = false → !decide_none D = true，故 hD h.mp 强迫 ¬ Halts D h
     have h_kl_all_no : ∀ h, ¬ Halts D h := by
@@ -826,8 +826,8 @@ theorem halts_on_all_undecidable_under_kleene (h_kleene : KleeneInverter) :
   | true =>
     -- decide_all D = true → ∀ h, Halts D h，但 Kleene 给 ∀ h, ¬ Halts D h
     have h_all_halt : ∀ h, Halts D h := (h_dec D).mp hb
-    have h_qian : Halts D Hexagram.qian := h_all_halt Hexagram.qian
-    have h_kl : Halts D Hexagram.qian ↔ decide_all D = false := hD Hexagram.qian
+    have h_qian : Halts D Hexagram.heaven := h_all_halt Hexagram.heaven
+    have h_kl : Halts D Hexagram.heaven ↔ decide_all D = false := hD Hexagram.heaven
     have hf : decide_all D = false := h_kl.mp h_qian
     rw [hb] at hf
     contradiction
@@ -984,12 +984,12 @@ theorem rice_uniform_under_kleene (h_kleene : KleeneInverter)
     ¬ ∃ decide_Phi : List YiInstr → Bool,
         ∀ P, decide_Phi P = true ↔ Phi (Halts P) = true := by
   intro ⟨decide_Phi, h_dec⟩
-  cases hu : Phi (fun _ : Hexagram => True) with
+  cases interlace : Phi (fun _ : Hexagram => True) with
   | true =>
     -- Phi(univ) = true, 由 h_dist 推 Phi(∅) = false
     have he : Phi (fun _ : Hexagram => False) = false := by
       cases hF : Phi (fun _ : Hexagram => False) with
-      | true => exact absurd (hu.trans hF.symm) h_dist
+      | true => exact absurd (interlace.trans hF.symm) h_dist
       | false => rfl
     -- 直接 Kleene
     obtain ⟨D, hD⟩ := h_kleene (fun P _ => decide_Phi P)
@@ -1005,20 +1005,20 @@ theorem rice_uniform_under_kleene (h_kleene : KleeneInverter)
       rw [h_eq, he] at h_spec
       exact Bool.noConfusion h_spec
     | false =>
-      -- Halts D 处处停 → Phi(univ) = false，但 hu 说 true
+      -- Halts D 处处停 → Phi(univ) = false，但 interlace 说 true
       have h_spec_ne : Phi (Halts D) ≠ true := fun ht => by
         have := (h_dec D).mpr ht; rw [hb] at this; exact Bool.noConfusion this
       have h_full : ∀ h, Halts D h := fun h => (hD h).mpr hb
       have h_eq : (Halts D) = (fun _ : Hexagram => True) :=
         funext fun h => propext ⟨fun _ => trivial, fun _ => h_full h⟩
-      rw [h_eq, hu] at h_spec_ne
+      rw [h_eq, interlace] at h_spec_ne
       exact h_spec_ne rfl
   | false =>
     -- Phi(univ) = false, 由 h_dist 推 Phi(∅) = true
     have he : Phi (fun _ : Hexagram => False) = true := by
       cases hF : Phi (fun _ : Hexagram => False) with
       | true => rfl
-      | false => exact absurd (hu.trans hF.symm) h_dist
+      | false => exact absurd (interlace.trans hF.symm) h_dist
     -- 用 !decide_Phi 应用 Kleene → Halts D h ↔ decide_Phi D = true
     obtain ⟨D, hD⟩ := h_kleene (fun P _ => !decide_Phi P)
       (cuoInvariant_of_h_ignore (fun P => !decide_Phi P))
@@ -1026,12 +1026,12 @@ theorem rice_uniform_under_kleene (h_kleene : KleeneInverter)
       rw [hD h]; cases decide_Phi D <;> simp
     cases hb : decide_Phi D with
     | true =>
-      -- Halts D 处处停 → Phi(univ) = true，但 hu 说 false
+      -- Halts D 处处停 → Phi(univ) = true，但 interlace 说 false
       have h_spec : Phi (Halts D) = true := (h_dec D).mp hb
       have h_full : ∀ h, Halts D h := fun h => (hD' h).mpr hb
       have h_eq : (Halts D) = (fun _ : Hexagram => True) :=
         funext fun h => propext ⟨fun _ => trivial, fun _ => h_full h⟩
-      rw [h_eq, hu] at h_spec
+      rw [h_eq, interlace] at h_spec
       exact Bool.noConfusion h_spec
     | false =>
       -- Halts D 处处不停 → Phi(∅) = false，但 he 说 true
@@ -1112,7 +1112,7 @@ theorem halts_on_some_via_uniform_under_kleene (h_kleene : KleeneInverter) :
     fun S => decide (∃ h, S h)
   have h_dist : Phi (fun _ => True) ≠ Phi (fun _ => False) := by
     have h_T : Phi (fun _ : Hexagram => True) = true :=
-      decide_eq_true ⟨Hexagram.qian, trivial⟩
+      decide_eq_true ⟨Hexagram.heaven, trivial⟩
     have h_F : Phi (fun _ : Hexagram => False) = false :=
       decide_eq_false (fun ⟨_, hf⟩ => hf)
     rw [h_T, h_F]; decide
@@ -1130,7 +1130,7 @@ theorem halts_on_none_via_uniform_under_kleene (h_kleene : KleeneInverter) :
     fun S => decide (∀ h, ¬ S h)
   have h_dist : Phi (fun _ => True) ≠ Phi (fun _ => False) := by
     have h_T : Phi (fun _ : Hexagram => True) = false :=
-      decide_eq_false (fun h => h Hexagram.qian trivial)
+      decide_eq_false (fun h => h Hexagram.heaven trivial)
     have h_F : Phi (fun _ : Hexagram => False) = true :=
       decide_eq_true (fun _ hf => hf)
     rw [h_T, h_F]; decide
@@ -1150,7 +1150,7 @@ theorem halts_on_all_via_uniform_under_kleene (h_kleene : KleeneInverter) :
     have h_T : Phi (fun _ : Hexagram => True) = true :=
       decide_eq_true (fun _ => trivial)
     have h_F : Phi (fun _ : Hexagram => False) = false :=
-      decide_eq_false (fun h => h Hexagram.qian)
+      decide_eq_false (fun h => h Hexagram.heaven)
     rw [h_T, h_F]; decide
   apply rice_uniform_under_kleene h_kleene Phi h_dist
   refine ⟨da, fun P => ?_⟩
@@ -1168,7 +1168,7 @@ theorem halts_on_some_no_via_uniform_under_kleene (h_kleene : KleeneInverter) :
     have h_T : Phi (fun _ : Hexagram => True) = false :=
       decide_eq_false (fun ⟨_, hf⟩ => hf trivial)
     have h_F : Phi (fun _ : Hexagram => False) = true :=
-      decide_eq_true ⟨Hexagram.qian, fun hf => hf⟩
+      decide_eq_true ⟨Hexagram.heaven, fun hf => hf⟩
     rw [h_T, h_F]; decide
   apply rice_uniform_under_kleene h_kleene Phi h_dist
   refine ⟨dsn, fun P => ?_⟩

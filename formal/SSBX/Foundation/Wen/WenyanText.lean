@@ -12,7 +12,7 @@ import SSBX.Foundation.Bagua.BaguaTuring
 namespace SSBX.Foundation.Wen.WenyanText
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 
 /-! ## § 1  文之十二字 — YiInstr 之文言别名 -/
@@ -20,11 +20,11 @@ open SSBX.Foundation.Bagua.BaguaTuring
 /-- 不动：守而不易。 -/
 abbrev «不动» : YiInstr := YiInstr.nop
 /-- 互：内外相照。 -/
-abbrev «互» : YiInstr := YiInstr.hu
+abbrev «互» : YiInstr := YiInstr.interlace
 /-- 错：阴阳全反。 -/
-abbrev «错» : YiInstr := YiInstr.cuo
+abbrev «错» : YiInstr := YiInstr.complement
 /-- 综：上下颠倒。 -/
-abbrev «综» : YiInstr := YiInstr.zong
+abbrev «综» : YiInstr := YiInstr.reverse
 /-- 推：现入于带。 -/
 abbrev «推» : YiInstr := YiInstr.push
 /-- 取：自带回现。 -/
@@ -86,10 +86,10 @@ theorem «施判等同» (h : Hexagram) : «施» «道判之程» h = daoJudge 
 /-! ## § 5  验证 — 经卦皆可执 -/
 
 /-- 乾☰☰：天道。 -/
-theorem «乾天道» : «施» «道判之程» Hexagram.qian = «已» := by native_decide
+theorem «乾天道» : «施» «道判之程» Hexagram.heaven = «已» := by native_decide
 
 /-- 坤☷☷：天道。 -/
-theorem «坤天道» : «施» «道判之程» Hexagram.kun = «已» := by native_decide
+theorem «坤天道» : «施» «道判之程» Hexagram.earth = «已» := by native_decide
 
 /-- 否☰☷：心道。 -/
 theorem «否心道» :

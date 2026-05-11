@@ -21,7 +21,7 @@ implement the compiler fields for the existing lambda calculus.
 namespace SSBX.Foundation.Wen.WenyanLambdaBridge
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
 open SSBX.Foundation.Wen.WenyanQuineSpec
@@ -52,7 +52,7 @@ def quoteShi (s : Shi) : Lam :=
   | Shi.jin => sym "shi.jin"
   | Shi.wei => sym "shi.wei"
 
-def quoteCell (c : Cell256) : Lam :=
+def quoteCell (c : R8) : Lam :=
   app2 (sym "cell") (quoteNat (cellToIdx c).val) (quoteShi c.2)
 
 /-- Quote a Yi instruction as lambda data.  The encoding is intentionally
@@ -61,9 +61,9 @@ def quoteInstr : YiInstr → Lam
   | .nop => sym "YiInstr.nop"
   | .setShi s => app (sym "YiInstr.setShi") (quoteShi s)
   | .flipYao i => app (sym "YiInstr.flipYao") (quoteFin6 i)
-  | .hu => sym "YiInstr.hu"
-  | .cuo => sym "YiInstr.cuo"
-  | .zong => sym "YiInstr.zong"
+  | .interlace => sym "YiInstr.interlace"
+  | .complement => sym "YiInstr.complement"
+  | .reverse => sym "YiInstr.reverse"
   | .branchYaoEq i j target =>
       app3 (sym "YiInstr.branchYaoEq") (quoteFin6 i) (quoteFin6 j) (quoteNat target)
   | .branchShiEq s target =>

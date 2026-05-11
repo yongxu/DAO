@@ -22,7 +22,7 @@ import SSBX.Foundation.Modern.QuantumRelativityPathCausalBridge
 
 namespace SSBX.Foundation.Modern.QuantumRelativityAmplitudeChannelBridge
 
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Modern.Quantum
 open SSBX.Foundation.Modern.QuantumRelativityMarkovBridge
 open SSBX.Foundation.Modern.QuantumRelativityConcreteBridge

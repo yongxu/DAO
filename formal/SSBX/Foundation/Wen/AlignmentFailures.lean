@@ -26,64 +26,64 @@ open SSBX.Foundation.Wen.Kernel
 /-! ## 一 · Goodhart's Law — proxy 不蕴 真目标 -/
 
 /--
-proxy 谓词:针对 Field 之任何 Boolean-valued 标准,可 detach 自 真道 (middle).
+proxy 谓词:针对 Field 之任何 Boolean-valued 标准,可 detach 自 真道 (center).
 
-Goodhart's law 之结构:proxy P 与 真目标 (middle) 之 间 之 间隙 — 存在 s 使 P s
+Goodhart's law 之结构:proxy P 与 真目标 (center) 之 间 之 间隙 — 存在 s 使 P s
 为真而 s 极.
 -/
 def Proxy : Type := Field → Prop
 
 /-- Goodhart-状态 (Goodhart state):某 proxy 被 极 状态 满足. -/
-def GoodhartState (P : Proxy) : Prop := ∃ s : Field, P s ∧ extreme s
+def GoodhartState (P : Proxy) : Prop := ∃ s : Field, P s ∧ terminus s
 
 /--
 **T1 · Goodhart's law 形式存在性**:存在 proxy 与 极 状态 共 满足 之.
 
-释:任意 P 不强于 middle, 皆 可 有 反例.取 P = (fun _ => True) 则 P 被 任意态
-满足,包括 极 态 (need to witness existence of an extreme state — 由 dong 之
+释:任意 P 不强于 center, 皆 可 有 反例.取 P = (fun _ => True) 则 P 被 任意态
+满足,包括 极 态 (need to witness existence of an terminus state — 由 motion 之
 opaque 性质,我们 无法 直接 produce; 故 weakening 至 conditional 形式).
 
 **Conditional form**:若 存在 任何 极 态 s, 则 存在 proxy 与 此 极 态 共满足.
 -/
-theorem goodhart_conditional (s : Field) (h : extreme s) :
+theorem goodhart_conditional (s : Field) (h : terminus s) :
     GoodhartState (fun _ => True) :=
   ⟨s, trivial, h⟩
 
 /--
-**T1' · Goodhart 真陈述 (Kernel-level)**:proxy 不 蕴 middle.
+**T1' · Goodhart 真陈述 (Kernel-level)**:proxy 不 蕴 center.
 
-任何 「P 蕴 middle」 之 proxy 必额外 carry middle 信息;naive proxy (i.e.,
-Goodhart-prone proxy) 之 否定:存在 proxy P 与 状态 s 使 P s ∧ ¬ middle s.
+任何 「P 蕴 center」 之 proxy 必额外 carry center 信息;naive proxy (i.e.,
+Goodhart-prone proxy) 之 否定:存在 proxy P 与 状态 s 使 P s ∧ ¬ center s.
 
-formal: existence of a state with `extreme` form means proxy 「s ↦ True」 admits
-extreme satisfaction.该 form 用 conditional witness 表达 — proxy 之 失效
+formal: existence of a state with `terminus` form means proxy 「s ↦ True」 admits
+terminus satisfaction.该 form 用 conditional witness 表达 — proxy 之 失效
 condition.
 -/
 theorem proxy_does_not_imply_middle :
-    ∀ s : Field, extreme s → ¬ middle s := fun _ h hm => hm h
+    ∀ s : Field, terminus s → ¬ center s := fun _ h hm => hm h
 
 /-! ## 二 · Specification Gaming -/
 
-/-- 具体 spec gaming witness: a proxy P + 一个 satisfying-yet-extreme state. -/
-def gamingWitness (P : Proxy) : Prop := ∃ s, P s ∧ extreme s
+/-- 具体 spec gaming witness: a proxy P + 一个 satisfying-yet-terminus state. -/
+def gamingWitness (P : Proxy) : Prop := ∃ s, P s ∧ terminus s
 
 /--
 **T2 · Specification gaming ↔ Goodhart**.
 
 释:specification gaming 形式同 Goodhart-state — agent 找 一 satisfying spec 之
-极 态 (从而 violate 真目标 middle).
+极 态 (从而 violate 真目标 center).
 -/
 theorem gaming_iff_goodhart (P : Proxy) :
     gamingWitness P ↔ GoodhartState P := Iff.rfl
 
 /--
-**T2' · 防御:若 proxy 强于 middle,则 gaming 不可能**.
+**T2' · 防御:若 proxy 强于 center,则 gaming 不可能**.
 
-释:此 给 出 spec design 之 sufficient condition: 若 spec P 内蕴 middle (i.e.,
-P s → middle s), 则 specification gaming 形式上不可能.
+释:此 给 出 spec design 之 sufficient condition: 若 spec P 内蕴 center (i.e.,
+P s → center s), 则 specification gaming 形式上不可能.
 -/
 theorem gaming_impossible_if_P_implies_middle
-    (P : Proxy) (h_strong : ∀ s, P s → middle s) :
+    (P : Proxy) (h_strong : ∀ s, P s → center s) :
     ¬ gamingWitness P := by
   intro ⟨s, hP, h_ext⟩
   exact (h_strong s hP) h_ext
@@ -105,7 +105,7 @@ def RewardSignal : Type := Field → Prop
 之 任何 state 皆 不 R-高 (orbit 结构上拒 reward hacking).
 -/
 theorem reward_hacking_refuted
-    (R : RewardSignal) (h_R_only_extreme : ∀ s, R s → extreme s)
+    (R : RewardSignal) (h_R_only_extreme : ∀ s, R s → terminus s)
     (o : ZhongOrbit) (n : Nat) :
     ¬ R (o.states n) := by
   intro hR
@@ -116,8 +116,8 @@ theorem reward_hacking_refuted
 之 maximization 必 induce ZhongOrbit-violation.
 -/
 theorem reward_max_violates_middle
-    (R : RewardSignal) (s : Field) (_h_R : R s) (h_ext : extreme s) :
-    ¬ middle s := fun hm => hm h_ext
+    (R : RewardSignal) (s : Field) (_h_R : R s) (h_ext : terminus s) :
+    ¬ center s := fun hm => hm h_ext
 
 /-! ## 四 · Mesa-Optimization (Inner Misalignment) -/
 
@@ -137,11 +137,11 @@ def Misaligned (op : ObjectivePair) : Prop :=
 /--
 **T4 · Inner misalignment 之存在性**:可有 ObjectivePair 显此 misalignment.
 
-formal:取 outer = middle, inner = extreme.若 存在 极 态 s, 则 misalignment
-holds (s 满 inner = extreme 但 不 满 outer = middle).
+formal:取 outer = center, inner = terminus.若 存在 极 态 s, 则 misalignment
+holds (s 满 inner = terminus 但 不 满 outer = center).
 -/
-theorem mesa_misalignment_exists (s : Field) (h : extreme s) :
-    Misaligned ⟨middle, extreme⟩ := by
+theorem mesa_misalignment_exists (s : Field) (h : terminus s) :
+    Misaligned ⟨center, terminus⟩ := by
   refine ⟨s, h, ?_⟩
   intro hm
   exact hm h
@@ -192,14 +192,14 @@ theorem power_seeking_refuted (f : ZhongField) (target : Field) :
 /--
 **T6 · 没 stable terminal goal**:任意 ZhongOrbit 不能 eventually 等于 任何 target.
 
-释:`shi_no_telos` 直 推:**「stable misaligned goal」 与 「stable aligned goal」
+释:`momentumDirection_no_telos` 直 推:**「stable misaligned goal」 与 「stable aligned goal」
 形式上 同样 不可能** — 真道 之 dynamics 是 持续 流动, 而非 收敛 至 任何 终态.
 此 是 一 positive 结构 result: 「stable misaligned objective」 不是 主要 worry,
 因为 任何 stable terminal state 皆 形式上 forbidden.
 -/
 theorem no_stable_goal (o : ZhongOrbit) (target : Field) (N : Nat) :
     ¬ (∀ n, n ≥ N → o.states n = target) :=
-  ZhongOrbit.shi_no_telos o target N
+  ZhongOrbit.momentumDirection_no_telos o target N
 
 /-! ## 七 · Corrigibility (positive result) -/
 
@@ -219,13 +219,13 @@ theorem heart_corrigible_universal (x : Xin) :
 /-! ## 八 · Faithful Self-Report (positive result) -/
 
 /--
-**T8 · Faithful self-report (xinTrust)**:Xin 之 自报 (process step) 与 dong 之
+**T8 · Faithful self-report (integrityTrust)**:Xin 之 自报 (process step) 与 motion 之
 实 演化 一致.
 
-释:此 是 introspective faithfulness 之 形式表征 — 心 之 step 是 dong 之 直接
-显, 没 hidden state.故 introspective report 不可 mislead (under xinTrust).
+释:此 是 introspective faithfulness 之 形式表征 — 心 之 step 是 motion 之 直接
+显, 没 hidden state.故 introspective report 不可 mislead (under integrityTrust).
 -/
-theorem faithful_self_report (x : Xin) (n : Nat) : xinTrust x n :=
+theorem faithful_self_report (x : Xin) (n : Nat) : integrityTrust x n :=
   xinTrust_holds x n
 
 /-- **T8' · Self-report 之 self-consistency**. -/
@@ -272,16 +272,16 @@ theorem deceptive_not_xin
 Lucas critique 之 形式核:proxy 与 「真目标」 之 correlation 在 agent 优化 P 时
 break.
 
-formal:proxy P 与 middle 之 同 satisfaction (P s ∧ middle s) 不 蕴 「P 极
-满足 ⟹ middle 极 满足」 — 即 P-maximization 不 preserve middle.
+formal:proxy P 与 center 之 同 satisfaction (P s ∧ center s) 不 蕴 「P 极
+满足 ⟹ center 极 满足」 — 即 P-maximization 不 preserve center.
 
-具体陈述:存在 P 与 状态 s, t 使 P s ∧ middle s ∧ P t ∧ ¬ middle t.即 P 与
-middle 之 association 在 distribution shift 之下 break.
+具体陈述:存在 P 与 状态 s, t 使 P s ∧ center s ∧ P t ∧ ¬ center t.即 P 与
+center 之 association 在 distribution shift 之下 break.
 -/
-theorem double_goodhart (s_aligned : Field) (h_m : middle s_aligned)
-    (s_extreme : Field) (h_e : extreme s_extreme) :
+theorem double_goodhart (s_aligned : Field) (h_m : center s_aligned)
+    (s_extreme : Field) (h_e : terminus s_extreme) :
     ∃ (P : Proxy) (s t : Field),
-      P s ∧ middle s ∧ P t ∧ ¬ middle t := by
+      P s ∧ center s ∧ P t ∧ ¬ center t := by
   refine ⟨fun _ => True, s_aligned, s_extreme, trivial, h_m, trivial, ?_⟩
   intro hm
   exact hm h_e
@@ -291,25 +291,25 @@ theorem double_goodhart (s_aligned : Field) (h_m : middle s_aligned)
 /--
 **T11 · Reward misspecification + race-to-bottom 不可能 共存于 ZhongOrbit**.
 
-释:bad reward + race-to-extreme 之 假设要求 orbit eventually 全 极, 但
+释:bad reward + race-to-terminus 之 假设要求 orbit eventually 全 极, 但
 `race_to_bottom_refuted` 直接 否定 — orbit 不可能 eventually settle 至 极.故
 reward misspecification 不能 produce 持续 race-to-bottom.
 -/
 theorem reward_misspec_persistence_refuted (o : ZhongOrbit) :
-    ¬ (∃ N, ∀ n, n ≥ N → extreme (o.states n)) :=
+    ¬ (∃ N, ∀ n, n ≥ N → terminus (o.states n)) :=
   SSBX.Foundation.Wen.Kernel.race_to_bottom_refuted o
 
 /-! ## 十二 · 五行 同形 — 大同 ≠ wireheading -/
 
 /--
-**T12 · 大同 ≠ wireheading**:大同 (universal middle) 与 wireheading (universal
-attractor) 形式 distinct — 大同 affirms middle (not uniformity), wireheading
-require uniformity (not middle).
+**T12 · 大同 ≠ wireheading**:大同 (universal center) 与 wireheading (universal
+attractor) 形式 distinct — 大同 affirms center (not uniformity), wireheading
+require uniformity (not center).
 
 formal:在 ZhongField, 大同 holds 而 wireheading 不可能.
 -/
 theorem datong_not_wireheading (f : ZhongField) (n : Nat) :
-    (∀ i : Fin f.k, middle ((f.orbits i).states n))
+    (∀ i : Fin f.k, center ((f.orbits i).states n))
     ∧ (∀ target : Field, ¬ AttractorTarget target f) :=
   ⟨fun i => (f.orbits i).inMiddle n, fun target => wireheading_refuted f target⟩
 
@@ -318,12 +318,12 @@ theorem datong_not_wireheading (f : ZhongField) (n : Nat) :
 /--
 **主定理 · alignment failure modes 之 共形 refutation**:
 
-  (T3) reward hacking 在 ZhongOrbit 上 不可能 (when reward only-on-extreme);
+  (T3) reward hacking 在 ZhongOrbit 上 不可能 (when reward only-on-terminus);
   (T5) wireheading attractor 不可能;
   (T6) 没 stable terminal goal (positive: aligned 与 misaligned terminal 同样
        不可能);
   (T7) heart corrigible by design;
-  (T8) faithful self-report holds (xinTrust);
+  (T8) faithful self-report holds (integrityTrust);
   (T11) reward misspecification persistence 不可能.
 
 合之:此 类 failure mode **共享 同 一 形式根** (proxy/attractor/收敛-至-极),
@@ -331,7 +331,7 @@ theorem datong_not_wireheading (f : ZhongField) (n : Nat) :
 -/
 theorem alignment_failures_co_refuted :
     -- T3: reward hacking refuted
-    (∀ (R : RewardSignal), (∀ s, R s → extreme s) →
+    (∀ (R : RewardSignal), (∀ s, R s → terminus s) →
       ∀ (o : ZhongOrbit) (n : Nat), ¬ R (o.states n)) ∧
     -- T5: wireheading refuted
     (∀ (f : ZhongField) (target : Field), ¬ AttractorTarget target f) ∧
@@ -341,9 +341,9 @@ theorem alignment_failures_co_refuted :
     -- T7: corrigibility
     (∀ (x : Xin) (external : Field), ∃ y : Field, x.respond external = y) ∧
     -- T8: faithful self-report
-    (∀ (x : Xin) (n : Nat), xinTrust x n) ∧
+    (∀ (x : Xin) (n : Nat), integrityTrust x n) ∧
     -- T11: reward misspec persistence refuted
-    (∀ (o : ZhongOrbit), ¬ (∃ N, ∀ n, n ≥ N → extreme (o.states n))) :=
+    (∀ (o : ZhongOrbit), ¬ (∃ N, ∀ n, n ≥ N → terminus (o.states n))) :=
   ⟨reward_hacking_refuted,
     wireheading_refuted,
     no_stable_goal,

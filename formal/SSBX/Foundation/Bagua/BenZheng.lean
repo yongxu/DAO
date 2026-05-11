@@ -1,15 +1,15 @@
 /-
 # BenZheng — 4 本 / 4 征 / Mian / Quadrant
 
-本文件是新本体核心。把 (Z/2)³ 群 zong-orbit 的 4+4 划分作为 ontology basis。
+本文件是新本体核心。把 (Z/2)³ 群 reverse-orbit 的 4+4 划分作为 ontology basis。
 
 ## 结构
 
-  4 本 (substrates, palindromic) ↔ {qian, li, kan, kun}
-    Ben.wu (物), Ben.dong (動), Ben.jian (間), Ben.shi (事)
+  4 本 (substrates, palindromic) ↔ {heaven, fire, water, earth}
+    Ben.thing (物), Ben.motion (動), Ben.interval (間), Ben.event (事)
 
-  4 征 (marks, directional) ↔ {xun, zhen, dui, gen}
-    Zheng.jiFaint (幾), Zheng.shiForce (勢), Zheng.jiOccasion (機), Zheng.shiTime (時)
+  4 征 (marks, directional) ↔ {wind, thunder, lake, mountain}
+    Zheng.trace (幾), Zheng.momentum (勢), Zheng.pivot (機), Zheng.occasion (時)
 
   Mian := Ben × Zheng = 16 cells
     label: 動/行/化/流/萌/长/发/续/缘/通/会/系/兆/趋/变/史
@@ -19,12 +19,12 @@
 
 ## 算子 invariants (全部 native_decide 可证)
 
-  cuo  保 isZongFixed (Trigram-level) → 保 quadrant (Hexagram-level)
-  hua  保 isZongFixed                 → huaInner / huaOuter 保 quadrant
-  dong / bian 翻 isZongFixed           → dongInner / bianInner / dongOuter / bianOuter 跨象限
-  zong: 本本/征征 自闭, 本征↔征本
+  complement  保 isZongFixed (Trigram-level) → 保 quadrant (Hexagram-level)
+  middleFlip  保 isZongFixed                 → middleFlipInner / middleFlipOuter 保 quadrant
+  motion / topFlip 翻 isZongFixed           → dongInner / topFlipInner / dongOuter / topFlipOuter 跨象限
+  reverse: 本本/征征 自闭, 本征↔征本
 
-  hu fixed points: 1乾, 2坤; hu 2-cycle: 63既济 ↔ 64未济
+  interlace fixed points: 1乾, 2坤; interlace 2-cycle: 63既济 ↔ 64未济
 
 ## 替代了什么
 
@@ -43,34 +43,34 @@ open SSBX.Foundation.Bagua.BaguaAlgebra
 
 /-- 4 本: 物 / 動 / 間 / 事. -/
 inductive Ben : Type
-  | wu     -- 物
-  | dong   -- 動
-  | jian   -- 間
-  | shi    -- 事
+  | thing     -- 物
+  | motion   -- 動
+  | interval   -- 間
+  | event    -- 事
   deriving Repr, DecidableEq, BEq
 
 namespace Ben
 
-def all : List Ben := [.wu, .dong, .jian, .shi]
+def all : List Ben := [.thing, .motion, .interval, .event]
 
 /-- 本 → trigram 双射: 物→乾, 動→离, 間→坎, 事→坤. -/
 def toTrigram : Ben → Trigram
-  | .wu   => Trigram.qian
-  | .dong => Trigram.li
-  | .jian => Trigram.kan
-  | .shi  => Trigram.kun
+  | .thing   => Trigram.heaven
+  | .motion => Trigram.fire
+  | .interval => Trigram.water
+  | .event  => Trigram.earth
 
 def char : Ben → String
-  | .wu   => "物"
-  | .dong => "动"
-  | .jian => "间"
-  | .shi  => "事"
+  | .thing   => "物"
+  | .motion => "动"
+  | .interval => "间"
+  | .event  => "事"
 
 def fromChar (s : String) : Option Ben :=
-  if s = "物" then some .wu
-  else if s = "动" || s = "動" then some .dong
-  else if s = "间" || s = "間" then some .jian
-  else if s = "事" then some .shi
+  if s = "物" then some .thing
+  else if s = "动" || s = "動" then some .motion
+  else if s = "间" || s = "間" then some .interval
+  else if s = "事" then some .event
   else none
 
 theorem char_roundtrip (b : Ben) : fromChar b.char = some b := by
@@ -82,37 +82,37 @@ end Ben
 
 /-- 4 征: 幾 / 勢 / 機 / 時.
 
-    构造子用 jiFaint / shiForce / jiOccasion / shiTime 避免与 Ben.shi 冲突
-    (两个 namespace 都用裸 `shi` / `ji` 会产生歧义)。 -/
+    构造子用 trace / momentum / pivot / occasion 避免与 Ben.event 冲突
+    (两个 namespace 都用裸 `event` / `ji` 会产生歧义)。 -/
 inductive Zheng : Type
-  | jiFaint     -- 幾 (subtle trace)
-  | shiForce    -- 勢 (momentum)
-  | jiOccasion  -- 機 (occasion)
-  | shiTime     -- 時 (timing)
+  | trace     -- 幾 (subtle trace)
+  | momentum    -- 勢 (momentum)
+  | pivot  -- 機 (occasion)
+  | occasion     -- 時 (timing)
   deriving Repr, DecidableEq, BEq
 
 namespace Zheng
 
-def all : List Zheng := [.jiFaint, .shiForce, .jiOccasion, .shiTime]
+def all : List Zheng := [.trace, .momentum, .pivot, .occasion]
 
 /-- 征 → trigram 双射: 幾→巽, 勢→震, 機→兑, 時→艮. -/
 def toTrigram : Zheng → Trigram
-  | .jiFaint    => Trigram.xun
-  | .shiForce   => Trigram.zhen
-  | .jiOccasion => Trigram.dui
-  | .shiTime    => Trigram.gen
+  | .trace    => Trigram.wind
+  | .momentum   => Trigram.thunder
+  | .pivot => Trigram.lake
+  | .occasion    => Trigram.mountain
 
 def char : Zheng → String
-  | .jiFaint    => "几"
-  | .shiForce   => "势"
-  | .jiOccasion => "机"
-  | .shiTime    => "时"
+  | .trace    => "几"
+  | .momentum   => "势"
+  | .pivot => "机"
+  | .occasion    => "时"
 
 def fromChar (s : String) : Option Zheng :=
-  if s = "几" || s = "幾" then some .jiFaint
-  else if s = "势" || s = "勢" then some .shiForce
-  else if s = "机" || s = "機" then some .jiOccasion
-  else if s = "时" || s = "時" then some .shiTime
+  if s = "几" || s = "幾" then some .trace
+  else if s = "势" || s = "勢" then some .momentum
+  else if s = "机" || s = "機" then some .pivot
+  else if s = "时" || s = "時" then some .occasion
   else none
 
 theorem char_roundtrip (z : Zheng) : fromChar z.char = some z := by
@@ -128,30 +128,30 @@ namespace SSBX.Foundation.Yi.Yi.Trigram
 
 open SSBX.Foundation.Yi.Yi
 
-/-- palindromic / zong-fixed: y1 = y3。这是 4 本组的判别. -/
+/-- palindromic / reverse-fixed: y1 = y3。这是 4 本组的判别. -/
 def isZongFixed (t : Trigram) : Bool :=
   match t.y1, t.y3 with
   | .yang, .yang => true
   | .yin,  .yin  => true
   | _, _         => false
 
-/-- non-palindromic / zong-mobile: y1 ≠ y3。这是 4 征组的判别. -/
+/-- non-palindromic / reverse-mobile: y1 ≠ y3。这是 4 征组的判别. -/
 def isZongMobile (t : Trigram) : Bool := !t.isZongFixed
 
-/-- Trigram → 本: 仅 4 个 zong-fixed trigram 有 Ben. -/
+/-- Trigram → 本: 仅 4 个 reverse-fixed trigram 有 Ben. -/
 def benOf? (t : Trigram) : Option SSBX.Foundation.Bagua.BenZheng.Ben :=
-  if t = qian then some .wu
-  else if t = li   then some .dong
-  else if t = kan  then some .jian
-  else if t = kun  then some .shi
+  if t = heaven then some .thing
+  else if t = fire   then some .motion
+  else if t = water  then some .interval
+  else if t = earth  then some .event
   else none
 
-/-- Trigram → 征: 仅 4 个 zong-mobile trigram 有 Zheng. -/
+/-- Trigram → 征: 仅 4 个 reverse-mobile trigram 有 Zheng. -/
 def zhengOf? (t : Trigram) : Option SSBX.Foundation.Bagua.BenZheng.Zheng :=
-  if t = xun  then some .jiFaint
-  else if t = zhen then some .shiForce
-  else if t = dui  then some .jiOccasion
-  else if t = gen  then some .shiTime
+  if t = wind  then some .trace
+  else if t = thunder then some .momentum
+  else if t = lake  then some .pivot
+  else if t = mountain  then some .occasion
   else none
 
 end SSBX.Foundation.Yi.Yi.Trigram
@@ -173,30 +173,30 @@ theorem ben_zheng_complement (t : Trigram) :
     t.isZongFixed = !t.isZongMobile := by
   simp [Trigram.isZongMobile]
 
-/-- cuo 保 isZongFixed: 全反不破坏 palindrome. -/
-theorem cuo_preserves_isZongFixed (t : Trigram) :
-    t.cuo.isZongFixed = t.isZongFixed := by
+/-- complement 保 isZongFixed: 全反不破坏 palindrome. -/
+theorem complement_preserves_isZongFixed (t : Trigram) :
+    t.complement.isZongFixed = t.isZongFixed := by
   cases t with
   | mk y1 y2 y3 =>
     cases y1 <;> cases y3 <;> rfl
 
-/-- hua 保 isZongFixed: 翻中爻不动 y1/y3, palindrome 不变. -/
-theorem hua_preserves_isZongFixed (t : Trigram) :
-    (hua t).isZongFixed = t.isZongFixed := by
+/-- middleFlip 保 isZongFixed: 翻中爻不动 y1/y3, palindrome 不变. -/
+theorem middleFlip_preserves_isZongFixed (t : Trigram) :
+    (middleFlip t).isZongFixed = t.isZongFixed := by
   cases t with
   | mk y1 y2 y3 =>
     cases y1 <;> cases y3 <;> rfl
 
-/-- dong 翻 isZongFixed: 改 y1 而不动 y3, 翻 palindrome 状态. -/
-theorem dong_flips_isZongFixed (t : Trigram) :
-    (dong t).isZongFixed = !t.isZongFixed := by
+/-- motion 翻 isZongFixed: 改 y1 而不动 y3, 翻 palindrome 状态. -/
+theorem motion_flips_isZongFixed (t : Trigram) :
+    (motion t).isZongFixed = !t.isZongFixed := by
   cases t with
   | mk y1 y2 y3 =>
     cases y1 <;> cases y3 <;> rfl
 
-/-- bian 翻 isZongFixed: 改 y3 而不动 y1, 翻 palindrome 状态. -/
-theorem bian_flips_isZongFixed (t : Trigram) :
-    (bian t).isZongFixed = !t.isZongFixed := by
+/-- topFlip 翻 isZongFixed: 改 y3 而不动 y1, 翻 palindrome 状态. -/
+theorem topFlip_flips_isZongFixed (t : Trigram) :
+    (topFlip t).isZongFixed = !t.isZongFixed := by
   cases t with
   | mk y1 y2 y3 =>
     cases y1 <;> cases y3 <;> rfl
@@ -211,12 +211,12 @@ theorem zhengOf_toTrigram (z : Zheng) :
     Trigram.zhengOf? z.toTrigram = some z := by
   cases z <;> rfl
 
-/-- Ben.toTrigram 总是 zong-fixed. -/
+/-- Ben.toTrigram 总是 reverse-fixed. -/
 theorem ben_toTrigram_isZongFixed (b : Ben) :
     b.toTrigram.isZongFixed = true := by
   cases b <;> rfl
 
-/-- Zheng.toTrigram 总是 zong-mobile. -/
+/-- Zheng.toTrigram 总是 reverse-mobile. -/
 theorem zheng_toTrigram_isZongMobile (z : Zheng) :
     z.toTrigram.isZongMobile = true := by
   cases z <;> rfl
@@ -239,22 +239,22 @@ theorem all_count : Mian.all.length = 16 := by native_decide
 
 /-- 16-cell label: 本×征 = 派生单字. -/
 def label : Mian → String
-  | (.wu,   .jiFaint)    => "动"  -- 物之微
-  | (.wu,   .shiForce)   => "行"  -- 物之进
-  | (.wu,   .jiOccasion) => "化"  -- 物之转
-  | (.wu,   .shiTime)    => "流"  -- 物之久
-  | (.dong, .jiFaint)    => "萌"  -- 動之微
-  | (.dong, .shiForce)   => "长"  -- 動之进
-  | (.dong, .jiOccasion) => "发"  -- 動之转
-  | (.dong, .shiTime)    => "续"  -- 動之久
-  | (.jian, .jiFaint)    => "缘"  -- 間之微
-  | (.jian, .shiForce)   => "通"  -- 間之进
-  | (.jian, .jiOccasion) => "会"  -- 間之转
-  | (.jian, .shiTime)    => "系"  -- 間之久
-  | (.shi,  .jiFaint)    => "兆"  -- 事之微
-  | (.shi,  .shiForce)   => "趋"  -- 事之进
-  | (.shi,  .jiOccasion) => "变"  -- 事之转
-  | (.shi,  .shiTime)    => "史"  -- 事之久
+  | (.thing,   .trace)    => "动"  -- 物之微
+  | (.thing,   .momentum)   => "行"  -- 物之进
+  | (.thing,   .pivot) => "化"  -- 物之转
+  | (.thing,   .occasion)    => "流"  -- 物之久
+  | (.motion, .trace)    => "萌"  -- 動之微
+  | (.motion, .momentum)   => "长"  -- 動之进
+  | (.motion, .pivot) => "发"  -- 動之转
+  | (.motion, .occasion)    => "续"  -- 動之久
+  | (.interval, .trace)    => "缘"  -- 間之微
+  | (.interval, .momentum)   => "通"  -- 間之进
+  | (.interval, .pivot) => "会"  -- 間之转
+  | (.interval, .occasion)    => "系"  -- 間之久
+  | (.event,  .trace)    => "兆"  -- 事之微
+  | (.event,  .momentum)   => "趋"  -- 事之进
+  | (.event,  .pivot) => "变"  -- 事之转
+  | (.event,  .occasion)    => "史"  -- 事之久
 
 end Mian
 
@@ -331,16 +331,16 @@ theorem quadrant_partition_complete :
 
 /-! ## § 9 Hexagram 算子 invariants -/
 
-/-- cuo 保象限 (六爻全反，inner 与 outer 各自 isZongFixed 不变). -/
-theorem cuo_preserves_quadrant (h : Hexagram) :
-    h.cuo.quadrant = h.quadrant := by
+/-- complement 保象限 (六爻全反，inner 与 outer 各自 isZongFixed 不变). -/
+theorem complement_preserves_quadrant (h : Hexagram) :
+    h.complement.quadrant = h.quadrant := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y3 <;> cases y4 <;> cases y6 <;> rfl
 
-/-- zong 在本本自闭. -/
-theorem zong_preserves_benBen (h : Hexagram) :
-    h.quadrant = .benBen → h.zong.quadrant = .benBen := by
+/-- reverse 在本本自闭. -/
+theorem reverse_preserves_benBen (h : Hexagram) :
+    h.quadrant = .benBen → h.reverse.quadrant = .benBen := by
   intro hq
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
@@ -349,9 +349,9 @@ theorem zong_preserves_benBen (h : Hexagram) :
       first | rfl | (simp [Hexagram.quadrant, Hexagram.innerTrigram,
                             Hexagram.outerTrigram, Trigram.isZongFixed] at hq)
 
-/-- zong 把本征送到征本. -/
-theorem zong_swap_benZheng_to_zhengBen (h : Hexagram) :
-    h.quadrant = .benZheng → h.zong.quadrant = .zhengBen := by
+/-- reverse 把本征送到征本. -/
+theorem reverse_swap_benZheng_to_zhengBen (h : Hexagram) :
+    h.quadrant = .benZheng → h.reverse.quadrant = .zhengBen := by
   intro hq
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
@@ -360,9 +360,9 @@ theorem zong_swap_benZheng_to_zhengBen (h : Hexagram) :
       first | rfl | (simp [Hexagram.quadrant, Hexagram.innerTrigram,
                             Hexagram.outerTrigram, Trigram.isZongFixed] at hq)
 
-/-- zong 把征本送到本征. -/
-theorem zong_swap_zhengBen_to_benZheng (h : Hexagram) :
-    h.quadrant = .zhengBen → h.zong.quadrant = .benZheng := by
+/-- reverse 把征本送到本征. -/
+theorem reverse_swap_zhengBen_to_benZheng (h : Hexagram) :
+    h.quadrant = .zhengBen → h.reverse.quadrant = .benZheng := by
   intro hq
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
@@ -371,9 +371,9 @@ theorem zong_swap_zhengBen_to_benZheng (h : Hexagram) :
       first | rfl | (simp [Hexagram.quadrant, Hexagram.innerTrigram,
                             Hexagram.outerTrigram, Trigram.isZongFixed] at hq)
 
-/-- zong 在征征自闭. -/
-theorem zong_preserves_zhengZheng (h : Hexagram) :
-    h.quadrant = .zhengZheng → h.zong.quadrant = .zhengZheng := by
+/-- reverse 在征征自闭. -/
+theorem reverse_preserves_zhengZheng (h : Hexagram) :
+    h.quadrant = .zhengZheng → h.reverse.quadrant = .zhengZheng := by
   intro hq
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
@@ -384,16 +384,16 @@ theorem zong_preserves_zhengZheng (h : Hexagram) :
 
 /-! ## § 10 单爻 flip：中爻 (y2/y5) 保象限，其它跨 -/
 
-/-- huaInner (flip y2) 保象限. -/
+/-- middleFlipInner (flip y2) 保象限. -/
 theorem huaInner_preserves_quadrant (h : Hexagram) :
-    (huaInner h).quadrant = h.quadrant := by
+    (middleFlipInner h).quadrant = h.quadrant := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y3 <;> cases y4 <;> cases y6 <;> rfl
 
-/-- huaOuter (flip y5) 保象限. -/
+/-- middleFlipOuter (flip y5) 保象限. -/
 theorem huaOuter_preserves_quadrant (h : Hexagram) :
-    (huaOuter h).quadrant = h.quadrant := by
+    (middleFlipOuter h).quadrant = h.quadrant := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y3 <;> cases y4 <;> cases y6 <;> rfl
@@ -405,9 +405,9 @@ theorem dongInner_flips_inner (h : Hexagram) :
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y3 <;> rfl
 
-/-- bianInner (flip y3) 跨 inner 本/征. -/
+/-- topFlipInner (flip y3) 跨 inner 本/征. -/
 theorem bianInner_flips_inner (h : Hexagram) :
-    (bianInner h).innerTrigram.isZongFixed = !h.innerTrigram.isZongFixed := by
+    (topFlipInner h).innerTrigram.isZongFixed = !h.innerTrigram.isZongFixed := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y3 <;> rfl
@@ -419,57 +419,57 @@ theorem dongOuter_flips_outer (h : Hexagram) :
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y4 <;> cases y6 <;> rfl
 
-/-- bianOuter (flip y6) 跨 outer 本/征. -/
+/-- topFlipOuter (flip y6) 跨 outer 本/征. -/
 theorem bianOuter_flips_outer (h : Hexagram) :
-    (bianOuter h).outerTrigram.isZongFixed = !h.outerTrigram.isZongFixed := by
+    (topFlipOuter h).outerTrigram.isZongFixed = !h.outerTrigram.isZongFixed := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y4 <;> cases y6 <;> rfl
 
-/-! ## § 11 hu attractors: {1乾, 2坤, 63既济, 64未济} 全在本本 -/
+/-! ## § 11 interlace attractors: {1乾, 2坤, 63既济, 64未济} 全在本本 -/
 
-/-- 乾 hu-fixed (本本). -/
-theorem qian_quadrant : Hexagram.qian.quadrant = .benBen := by native_decide
+/-- 乾 interlace-fixed (本本). -/
+theorem qian_quadrant : Hexagram.heaven.quadrant = .benBen := by native_decide
 
-/-- 坤 hu-fixed (本本). -/
-theorem kun_quadrant : Hexagram.kun.quadrant = .benBen := by native_decide
+/-- 坤 interlace-fixed (本本). -/
+theorem kun_quadrant : Hexagram.earth.quadrant = .benBen := by native_decide
 
 /-- 既济在本本. -/
-theorem jiji_quadrant : Hexagram.jiji.quadrant = .benBen := by native_decide
+theorem jiji_quadrant : Hexagram.complete.quadrant = .benBen := by native_decide
 
 /-- 未济在本本. -/
-theorem weiji_quadrant : Hexagram.weiji.quadrant = .benBen := by native_decide
+theorem weiji_quadrant : Hexagram.incomplete.quadrant = .benBen := by native_decide
 
-/-- 4 个 hu attractor 都在本本 — 这是 64 卦最深的 substrate. -/
-theorem hu_attractors_in_benBen :
-    Hexagram.qian.quadrant = .benBen
-    ∧ Hexagram.kun.quadrant = .benBen
-    ∧ Hexagram.jiji.quadrant = .benBen
-    ∧ Hexagram.weiji.quadrant = .benBen := by
+/-- 4 个 interlace attractor 都在本本 — 这是 64 卦最深的 substrate. -/
+theorem interlace_attractors_in_benBen :
+    Hexagram.heaven.quadrant = .benBen
+    ∧ Hexagram.earth.quadrant = .benBen
+    ∧ Hexagram.complete.quadrant = .benBen
+    ∧ Hexagram.incomplete.quadrant = .benBen := by
   exact ⟨qian_quadrant, kun_quadrant, jiji_quadrant, weiji_quadrant⟩
 
-/-- 既济 hu→ 未济, 未济 hu→ 既济: 2-cycle in 本本. -/
-theorem jiji_hu_eq_weiji : Hexagram.jiji.hu = Hexagram.weiji := by rfl
+/-- 既济 interlace→ 未济, 未济 interlace→ 既济: 2-cycle in 本本. -/
+theorem jiji_hu_eq_weiji : Hexagram.complete.interlace = Hexagram.incomplete := by rfl
 
-theorem weiji_hu_eq_jiji : Hexagram.weiji.hu = Hexagram.jiji := by rfl
+theorem weiji_hu_eq_jiji : Hexagram.incomplete.interlace = Hexagram.complete := by rfl
 
 /-! ## § 12 Sanity tests (concrete) -/
 
--- cuo / 错卦 在象限内
-example : (Hexagram.cuo Hexagram.qian).quadrant = Hexagram.qian.quadrant := by
+-- complement / 错卦 在象限内
+example : (Hexagram.complement Hexagram.heaven).quadrant = Hexagram.heaven.quadrant := by
   native_decide
 
--- 11泰 ↔ 12否 by cuo, 都本本
-example : (chong Trigram.qian Trigram.kun).quadrant = .benBen := by native_decide
-example : (chong Trigram.kun Trigram.qian).quadrant = .benBen := by native_decide
+-- 11泰 ↔ 12否 by complement, 都本本
+example : (chong Trigram.heaven Trigram.earth).quadrant = .benBen := by native_decide
+example : (chong Trigram.earth Trigram.heaven).quadrant = .benBen := by native_decide
 
 -- 34大壮 (内乾外震) 是本征
-example : (chong Trigram.qian Trigram.zhen).quadrant = .benZheng := by native_decide
+example : (chong Trigram.heaven Trigram.thunder).quadrant = .benZheng := by native_decide
 
 -- 25无妄 (内震外乾) 是征本
-example : (chong Trigram.zhen Trigram.qian).quadrant = .zhengBen := by native_decide
+example : (chong Trigram.thunder Trigram.heaven).quadrant = .zhengBen := by native_decide
 
 -- 51震 (内震外震) 是征征
-example : (chong Trigram.zhen Trigram.zhen).quadrant = .zhengZheng := by native_decide
+example : (chong Trigram.thunder Trigram.thunder).quadrant = .zhengZheng := by native_decide
 
 end SSBX.Foundation.Bagua.BenZheng

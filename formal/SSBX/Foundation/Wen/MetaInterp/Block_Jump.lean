@@ -27,9 +27,9 @@ In META terms, satisfying the block contract therefore requires:
 
 3. **Jump** to `fetchOffset`.
 
-## Why this block is structurally harder than nop / hu / cuo / zong
+## Why this block is structurally harder than nop / interlace / complement / reverse
 
-The cur-transform blocks (`nop`, `hu`, `cuo`, `zong`) only need to
+The cur-transform blocks (`nop`, `interlace`, `complement`, `reverse`) only need to
 prepend ONE `regDataCell regHex` cell at the top of META.history (the
 pc-counter advance from `sim.pc` to `sim.pc + 1`).  This is a single
 `YiInstr.push` whose Hex content is supplied automatically by the loop
@@ -116,7 +116,7 @@ import SSBX.Foundation.Wen.MetaInterp.ExecuteBlock
 namespace SSBX.Foundation.Wen.MetaInterp.ExecuteBlock
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
 open SSBX.Foundation.Wen.MetaInterp
@@ -176,7 +176,7 @@ history just lands at fetchOffset with everything else unchanged.
 /-- **Local effect** of the jump skeleton: a 1-fuel run lands at
     `fetchOffset` and preserves cur, history, halted. -/
 theorem executeBlock_jump_local_effect
-    (cur : Cell256) (history : List Cell256) (fetchOffset offset : Nat) :
+    (cur : R8) (history : List R8) (fetchOffset offset : Nat) :
     let μ : YiState :=
       { cur := cur
         history := history

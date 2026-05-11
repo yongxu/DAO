@@ -70,16 +70,16 @@ theorem observability_region_exhaustive (r : ObservabilityRegion) :
 
 theorem observable_not_unobservable (r : ObservabilityRegion) :
     Observable r → ¬ Unobservable r := by
-  intro ho hu
+  intro ho interlace
   unfold Observable at ho
-  unfold Unobservable at hu
-  rw [ho] at hu
-  cases hu
+  unfold Unobservable at interlace
+  rw [ho] at interlace
+  cases interlace
 
 theorem unobservable_not_observable (r : ObservabilityRegion) :
     Unobservable r → ¬ Observable r := by
-  intro hu ho
-  exact observable_not_unobservable r ho hu
+  intro interlace ho
+  exact observable_not_unobservable r ho interlace
 
 /-- 可观边界完备：可观 / 不可观穷尽，且两向互斥。 -/
 theorem observability_boundary_complete :
@@ -110,16 +110,16 @@ theorem interface_region_exhaustive (r : InterfaceRegion) :
 
 theorem interfaced_not_uninterfaced (r : InterfaceRegion) :
     Interfaced r → ¬ Uninterfaced r := by
-  intro hi hu
+  intro hi interlace
   unfold Interfaced at hi
-  unfold Uninterfaced at hu
-  rw [hi] at hu
-  cases hu
+  unfold Uninterfaced at interlace
+  rw [hi] at interlace
+  cases interlace
 
 theorem uninterfaced_not_interfaced (r : InterfaceRegion) :
     Uninterfaced r → ¬ Interfaced r := by
-  intro hu hi
-  exact interfaced_not_uninterfaced r hi hu
+  intro interlace hi
+  exact interfaced_not_uninterfaced r hi interlace
 
 /-- 接口边界完备：可接 / 不可接穷尽，且两向互斥。 -/
 theorem interface_boundary_complete :
@@ -150,16 +150,16 @@ theorem protocol_region_exhaustive (r : ProtocolRegion) :
 
 theorem specified_not_unspecified (r : ProtocolRegion) :
     ProtocolSpecified r → ¬ ProtocolUnspecified r := by
-  intro hs hu
+  intro hs interlace
   unfold ProtocolSpecified at hs
-  unfold ProtocolUnspecified at hu
-  rw [hs] at hu
-  cases hu
+  unfold ProtocolUnspecified at interlace
+  rw [hs] at interlace
+  cases interlace
 
 theorem unspecified_not_specified (r : ProtocolRegion) :
     ProtocolUnspecified r → ¬ ProtocolSpecified r := by
-  intro hu hs
-  exact specified_not_unspecified r hs hu
+  intro interlace hs
+  exact specified_not_unspecified r hs interlace
 
 /-- 方法边界完备：有法 / 无法穷尽，且两向互斥。 -/
 theorem protocol_boundary_complete :
@@ -190,16 +190,16 @@ theorem calibration_region_exhaustive (r : CalibrationRegion) :
 
 theorem calibrated_not_uncalibrated (r : CalibrationRegion) :
     Calibrated r → ¬ Uncalibrated r := by
-  intro hc hu
+  intro hc interlace
   unfold Calibrated at hc
-  unfold Uncalibrated at hu
-  rw [hc] at hu
-  cases hu
+  unfold Uncalibrated at interlace
+  rw [hc] at interlace
+  cases interlace
 
 theorem uncalibrated_not_calibrated (r : CalibrationRegion) :
     Uncalibrated r → ¬ Calibrated r := by
-  intro hu hc
-  exact calibrated_not_uncalibrated r hc hu
+  intro interlace hc
+  exact calibrated_not_uncalibrated r hc interlace
 
 /-- 校准边界完备：已校 / 未校穷尽，且两向互斥。 -/
 theorem calibration_boundary_complete :
@@ -230,16 +230,16 @@ theorem readout_region_exhaustive (r : ReadoutRegion) :
 
 theorem readable_not_unreadable (r : ReadoutRegion) :
     Readable r → ¬ Unreadable r := by
-  intro hr hu
+  intro hr interlace
   unfold Readable at hr
-  unfold Unreadable at hu
-  rw [hr] at hu
-  cases hu
+  unfold Unreadable at interlace
+  rw [hr] at interlace
+  cases interlace
 
 theorem unreadable_not_readable (r : ReadoutRegion) :
     Unreadable r → ¬ Readable r := by
-  intro hu hr
-  exact readable_not_unreadable r hr hu
+  intro interlace hr
+  exact readable_not_unreadable r hr interlace
 
 /-- 读数边界完备：可读 / 不可读穷尽，且两向互斥。 -/
 theorem readout_boundary_complete :
@@ -270,16 +270,16 @@ theorem record_region_exhaustive (r : RecordRegion) :
 
 theorem recorded_not_unrecorded (r : RecordRegion) :
     Recorded r → ¬ Unrecorded r := by
-  intro hr hu
+  intro hr interlace
   unfold Recorded at hr
-  unfold Unrecorded at hu
-  rw [hr] at hu
-  cases hu
+  unfold Unrecorded at interlace
+  rw [hr] at interlace
+  cases interlace
 
 theorem unrecorded_not_recorded (r : RecordRegion) :
     Unrecorded r → ¬ Recorded r := by
-  intro hu hr
-  exact recorded_not_unrecorded r hr hu
+  intro interlace hr
+  exact recorded_not_unrecorded r hr interlace
 
 /-- 记录边界完备：可记 / 不可记穷尽，且两向互斥。 -/
 theorem record_boundary_complete :

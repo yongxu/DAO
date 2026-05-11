@@ -35,7 +35,7 @@ import SSBX.Foundation.Wen.WenyanParser
 namespace SSBX.Foundation.Wen.WenyanReflect
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Bagua.BaguaWenSpec
 open SSBX.Foundation.Wen.WenyanParser
@@ -97,14 +97,14 @@ theorem «validProg_iff_判型良» (p : List YiInstr) :
 theorem «道判_判型良» : «判型良» daoJudgeProg = true := by native_decide
 
 /-- 道判机于乾卦 10 步内停机。 -/
-theorem «道判_判停_乾» : «判停» daoJudgeProg Hexagram.qian 10 = true := by native_decide
+theorem «道判_判停_乾» : «判停» daoJudgeProg Hexagram.heaven 10 = true := by native_decide
 
 /-- loopProg 于乾卦任 10 步内不停机（loopProg 永循环）。 -/
-theorem «环程_不停» : «判停» loopProg Hexagram.qian 10 = false := by native_decide
+theorem «环程_不停» : «判停» loopProg Hexagram.heaven 10 = false := by native_decide
 
 /-- 验程之末态：道判机于乾卦 10 步后 cur.2 = 已（天道）。 -/
 theorem «验程_乾_末时» :
-    («验程» daoJudgeProg Hexagram.qian 10).cur.2 = Shi.ji := by native_decide
+    («验程» daoJudgeProg Hexagram.heaven 10).cur.2 = Shi.ji := by native_decide
 
 /-! ## § 7  附加见证 — 三角公示
 
@@ -115,8 +115,8 @@ theorem «验程_乾_末时» :
 /-- 道判机三反射齐整：合度 ∧ 停 ∧ 末时 = 已. -/
 theorem «道判_三反射» :
     «判型良» daoJudgeProg = true
-    ∧ «判停» daoJudgeProg Hexagram.qian 10 = true
-    ∧ («验程» daoJudgeProg Hexagram.qian 10).cur.2 = Shi.ji :=
+    ∧ «判停» daoJudgeProg Hexagram.heaven 10 = true
+    ∧ («验程» daoJudgeProg Hexagram.heaven 10).cur.2 = Shi.ji :=
   ⟨«道判_判型良», «道判_判停_乾», «验程_乾_末时»⟩
 
 end SSBX.Foundation.Wen.WenyanReflect

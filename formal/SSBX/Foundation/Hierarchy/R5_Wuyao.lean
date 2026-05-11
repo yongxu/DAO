@@ -17,7 +17,7 @@ Mian-extending lift / project pair:
 - projR5toR4 : Wuyao → Mian
 with proj ∘ lift = id (faithful R₄ ↪ R₅).
 
-Mirrors `SSBX.Foundation.Bagua.Cell128` structure.
+Mirrors `SSBX.Foundation.Bagua.R7` structure.
 -/
 import SSBX.Foundation.Bagua.BenZheng
 

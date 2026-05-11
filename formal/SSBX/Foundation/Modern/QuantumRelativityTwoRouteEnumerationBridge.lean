@@ -7,10 +7,10 @@ Companion:
 This module advances S5i by proving a deliberately small enumeration theorem
 for the toy two-route process:
 
-1. the endpoint-indexed two-route family has middle list `[upper, lower]`;
+1. the endpoint-indexed two-route family has center list `[upper, lower]`;
 2. any two-step witness from `source` to `target` in `twoRouteProcess` has
-   middle state `upper` or `lower`;
-3. therefore every source/target two-step witness has its middle listed by the
+   center state `upper` or `lower`;
+3. therefore every source/target two-step witness has its center listed by the
    endpoint-indexed family.
 
 This is only a finite enumeration theorem for the toy two-step process.  It is
@@ -31,18 +31,18 @@ open SSBX.Foundation.Modern.QuantumRelativityEndpointIndexedPathFamilyBridge
 open SSBX.Foundation.Modern.QuantumRelativityEndpointSupportNormalizationBridge
 open SSBX.Foundation.Modern.QuantumRelativityWenBoundary
 
-/-! ## § 1 Endpoint-indexed middle lists -/
+/-! ## § 1 Endpoint-indexed center lists -/
 
-/-- Extract the middle-state list from an endpoint-indexed two-step family. -/
+/-- Extract the center-state list from an endpoint-indexed two-step family. -/
 def endpointIndexedMiddleList {P : FiniteProcess}
     (E : EndpointIndexedTwoStepPathFamily P) : List P.State :=
-  E.paths.map fun p => p.path.middle
+  E.paths.map fun p => p.path.center
 
 /-- The displayed source/target middles in the two-route toy process. -/
 def twoRouteSourceTargetMiddleEnumeration : List TwoRouteState :=
   [TwoRouteState.upper, TwoRouteState.lower]
 
-/-- The S5h endpoint-indexed two-route family has middle list `[upper, lower]`. -/
+/-- The S5h endpoint-indexed two-route family has center list `[upper, lower]`. -/
 theorem two_route_endpoint_indexed_middle_list_eq :
     endpointIndexedMiddleList twoRouteEndpointIndexedFamily =
       twoRouteSourceTargetMiddleEnumeration := by
@@ -56,19 +56,19 @@ theorem two_route_endpoint_indexed_middle_list_eq :
 
 /--
 Any two-step path in the toy two-route process from `source` to `target` has
-middle state `upper` or `lower`.
+center state `upper` or `lower`.
 -/
 theorem two_route_source_target_middle_upper_or_lower
     (p : TwoStepPathWitness twoRouteProcess)
     (hStart : p.start = TwoRouteState.source)
     (hStop : p.stop = TwoRouteState.target) :
-    p.middle = TwoRouteState.upper
-      ∨ p.middle = TwoRouteState.lower := by
-  have hLeft : TwoRouteState.step TwoRouteState.source p.middle := by
+    p.center = TwoRouteState.upper
+      ∨ p.center = TwoRouteState.lower := by
+  have hLeft : TwoRouteState.step TwoRouteState.source p.center := by
     simpa [twoRouteProcess, hStart] using p.leftStep
-  have hRight : TwoRouteState.step p.middle TwoRouteState.target := by
+  have hRight : TwoRouteState.step p.center TwoRouteState.target := by
     simpa [twoRouteProcess, hStop] using p.rightStep
-  cases hMiddle : p.middle
+  cases hMiddle : p.center
   · exfalso
     simp [TwoRouteState.step, hMiddle] at hLeft
   · exact Or.inl rfl
@@ -76,12 +76,12 @@ theorem two_route_source_target_middle_upper_or_lower
   · exfalso
     simp [TwoRouteState.step, hMiddle] at hLeft
 
-/-- The middle of any source/target two-step path appears in the displayed list. -/
+/-- The center of any source/target two-step path appears in the displayed list. -/
 theorem two_route_source_target_middle_mem_enumeration
     (p : TwoStepPathWitness twoRouteProcess)
     (hStart : p.start = TwoRouteState.source)
     (hStop : p.stop = TwoRouteState.target) :
-    p.middle ∈ twoRouteSourceTargetMiddleEnumeration := by
+    p.center ∈ twoRouteSourceTargetMiddleEnumeration := by
   rcases two_route_source_target_middle_upper_or_lower p hStart hStop with
     hUpper | hLower
   · rw [hUpper]
@@ -90,23 +90,23 @@ theorem two_route_source_target_middle_mem_enumeration
     decide
 
 /--
-The S5h endpoint-indexed two-route family is middle-complete for source/target
+The S5h endpoint-indexed two-route family is center-complete for source/target
 two-step witnesses in the toy process.
 -/
 theorem two_route_source_target_middle_mem_endpoint_family
     (p : TwoStepPathWitness twoRouteProcess)
     (hStart : p.start = TwoRouteState.source)
     (hStop : p.stop = TwoRouteState.target) :
-    p.middle ∈ endpointIndexedMiddleList twoRouteEndpointIndexedFamily := by
+    p.center ∈ endpointIndexedMiddleList twoRouteEndpointIndexedFamily := by
   rw [two_route_endpoint_indexed_middle_list_eq]
   exact two_route_source_target_middle_mem_enumeration p hStart hStop
 
-/-- The toy source/target two-step enumeration is complete at middle-state level. -/
+/-- The toy source/target two-step enumeration is complete at center-state level. -/
 def TwoRouteSourceTargetMiddleComplete : Prop :=
   ∀ p : TwoStepPathWitness twoRouteProcess,
     p.start = TwoRouteState.source ->
       p.stop = TwoRouteState.target ->
-        p.middle ∈ endpointIndexedMiddleList twoRouteEndpointIndexedFamily
+        p.center ∈ endpointIndexedMiddleList twoRouteEndpointIndexedFamily
 
 theorem two_route_source_target_middle_complete :
     TwoRouteSourceTargetMiddleComplete := by
@@ -117,7 +117,7 @@ theorem two_route_source_target_middle_complete :
 
 /-- Public summary for S5j:
     in the toy two-route process, the endpoint-indexed source/target family
-    lists exactly the two possible middle states, and every source/target
+    lists exactly the two possible center states, and every source/target
     two-step witness has one of those middles.  This proves only toy finite
     two-step enumeration, not all-path enumeration for arbitrary processes, a
     path integral, continuous action law, Born-rule derivation, or empirical
@@ -128,8 +128,8 @@ theorem two_route_enumeration_bridge_summary :
     ∧ (∀ p : TwoStepPathWitness twoRouteProcess,
         p.start = TwoRouteState.source ->
           p.stop = TwoRouteState.target ->
-            p.middle = TwoRouteState.upper
-              ∨ p.middle = TwoRouteState.lower)
+            p.center = TwoRouteState.upper
+              ∨ p.center = TwoRouteState.lower)
     ∧ TwoRouteSourceTargetMiddleComplete
     ∧ endpointIndexedFamilyAmplitudeSum
         (edgePhaseInducedTwoStepAmplitudeCandidate

@@ -20,10 +20,10 @@
 bounded/full universal-interpreter target 与 framed-input 工程 lane；文言
 程序随后只作为 Lean 检查的 witness，不作为根证明系统。
 
-## 编码约束（cuo-equivariance ceiling）
+## 编码约束（complement-equivariance ceiling）
 
 YiInstr 之 12 指令**无法构造绝对的 Hexagram 值**——只有 cur 之 transform
-（hu/cuo/zong/flipYao）+ Shi 之绝对设置（setShi）。runtime cur 之初值是
+（interlace/complement/reverse/flipYao）+ Shi 之绝对设置（setShi）。runtime cur 之初值是
 输入 h，编译期未知。故所有 register cells 之 Hex 部分必依赖于初始 cur，
 仅 Shi 部分可绝对控制。
 
@@ -34,7 +34,7 @@ YiInstr 之 12 指令**无法构造绝对的 Hexagram 值**——只有 cur 之 
 
 → register cell 之 Hex 部分**未指定**（依输入而变）；下游 fetch logic
   通过 Shi tag + 位置（counted-pop）区分 region。这套 encoding 自然
-  满足 cuo-不变性（Shi 与 Hex.cuo 正交）。
+  满足 complement-不变性（Shi 与 Hex.complement 正交）。
 
 ## META.history 布局（top → bottom，pop 取头）
 
@@ -48,9 +48,9 @@ YiInstr 之 12 指令**无法构造绝对的 Hexagram 值**——只有 cur 之 
 [encProg sim.prog]                   (raw, read-only after prologue)
 ```
 
-## Phase F.2 migration note (Cell192 → Cell256)
+## Phase F.2 migration note (Cell192 → R8)
 
-This file migrates from `Cell192` (3-state Z/3 Shi `{已, 今, 未}`) to `Cell256`
+This file migrates from `Cell192` (3-state Z/3 Shi `{已, 今, 未}`) to `R8`
 (V₄ Klein 4-state Shi `{道, 已, 今, 未}`). The encoding-tag conventions used
 here only reference `Shi.jin / Shi.wei / Shi.ji`; the new identity element
 `Shi.dao` is reserved (not consumed by counter / halted-flag encoding) but is
@@ -59,7 +59,7 @@ admissible as an "unexpected" case in `decCounter` / `decHaltedFlag`.
 ## META.cur 之角色
 
 **Loop 不变**：META.cur ≡ sim.cur（直接镜像，无编码开销）。
-6 个 cur-变换指令（hu/cuo/zong/flipYao/setShi）可直接在 META.cur 上
+6 个 cur-变换指令（interlace/complement/reverse/flipYao/setShi）可直接在 META.cur 上
 执行——天然实现 sim 之同名指令。
 
 仅在 fetch/dispatch/execute 临时（中间步骤）期间，META.cur 被借用作
@@ -71,7 +71,7 @@ import SSBX.Foundation.Bagua.KleeneInternal
 namespace SSBX.Foundation.Wen.MetaInterp
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Bagua.KleeneInternal
 open SSBX.Foundation.Bagua.GodelLi
@@ -80,22 +80,22 @@ open SSBX.Foundation.Wen.WenyanSelfInterp
 /-! ## § 1 Shi-tagged register cells -/
 
 /-- Pc/simhist-len data unit cell：Shi.jin，Hex 任意. -/
-def regDataCell (h : Hexagram) : Cell256 := (h, Shi.jin)
+def regDataCell (h : Hexagram) : R8 := (h, Shi.jin)
 
 /-- End-marker cell：Shi.wei. -/
-def regMarkerCell (h : Hexagram) : Cell256 := (h, Shi.wei)
+def regMarkerCell (h : Hexagram) : R8 := (h, Shi.wei)
 
 /-- Halted-flag = halted: Shi.ji. -/
-def haltedTrueCell (h : Hexagram) : Cell256 := (h, Shi.ji)
+def haltedTrueCell (h : Hexagram) : R8 := (h, Shi.ji)
 
 /-- Halted-flag = running: Shi.wei. -/
-def haltedFalseCell (h : Hexagram) : Cell256 := (h, Shi.wei)
+def haltedFalseCell (h : Hexagram) : R8 := (h, Shi.wei)
 
 /-! ## § 2 Counter-encoding (Nat ↔ List of Shi.jin cells + Shi.wei marker) -/
 
 /-- Encode a Nat counter as `n` data cells + 1 end-marker.  All `n+1`
     cells share the same Hex (the `h` parameter); only Shi distinguishes. -/
-def encCounter (h : Hexagram) (n : Nat) : List Cell256 :=
+def encCounter (h : Hexagram) (n : Nat) : List R8 :=
   List.replicate n (regDataCell h) ++ [regMarkerCell h]
 
 theorem encCounter_length (h : Hexagram) (n : Nat) :
@@ -118,7 +118,7 @@ theorem encCounter_succ (h : Hexagram) (n : Nat) :
 
     Phase F.2: V₄ Shi adds `Shi.dao` (V₄ identity); like `Shi.ji`, it is not
     used in the counter encoding — appearance ⇒ `none` (decode error). -/
-def decCounter : List Cell256 → Option (Nat × List Cell256)
+def decCounter : List R8 → Option (Nat × List R8)
   | [] => none
   | (_, Shi.jin) :: rest =>
       match decCounter rest with
@@ -128,7 +128,7 @@ def decCounter : List Cell256 → Option (Nat × List Cell256)
   | (_, Shi.ji) :: _ => none  -- unexpected: ji not used in counters
   | (_, Shi.dao) :: _ => none -- unexpected: dao (V₄ identity) not used in counters
 
-theorem decCounter_encCounter (h : Hexagram) (n : Nat) (tail : List Cell256) :
+theorem decCounter_encCounter (h : Hexagram) (n : Nat) (tail : List R8) :
     decCounter (encCounter h n ++ tail) = some (n, tail) := by
   induction n with
   | zero =>
@@ -148,7 +148,7 @@ theorem decCounter_encCounter (h : Hexagram) (n : Nat) (tail : List Cell256) :
 
     Phase F.2: V₄ Shi adds `Shi.dao` (V₄ identity); like `Shi.jin`, it is not
     a halted-flag encoding — appearance ⇒ `none` (decode error). -/
-def decHaltedFlag (c : Cell256) : Option Bool :=
+def decHaltedFlag (c : R8) : Option Bool :=
   match c.2 with
   | Shi.ji  => some true
   | Shi.wei => some false
@@ -162,7 +162,7 @@ theorem decHaltedFlag_haltedFalse (h : Hexagram) :
     decHaltedFlag (haltedFalseCell h) = some false := rfl
 
 /-- Encode a Bool halted-flag as a single cell. -/
-def encHaltedFlag (h : Hexagram) (b : Bool) : Cell256 :=
+def encHaltedFlag (h : Hexagram) (b : Bool) : R8 :=
   if b then haltedTrueCell h else haltedFalseCell h
 
 theorem decHaltedFlag_encHaltedFlag (h : Hexagram) (b : Bool) :
@@ -188,7 +188,7 @@ theorem decHaltedFlag_encHaltedFlag (h : Hexagram) (b : Bool) :
     the spec's perspective; in practice, this is the runtime `cur.1`
     threaded through the prologue, but for Lean-level reasoning we
     parameterize). -/
-def encMetaHistory (regHex : Hexagram) (sim : YiState) : List Cell256 :=
+def encMetaHistory (regHex : Hexagram) (sim : YiState) : List R8 :=
   encCounter regHex sim.pc ++
   [encHaltedFlag regHex sim.halted] ++
   encCounter regHex sim.history.length ++
@@ -464,7 +464,7 @@ def MetaProgHasEmptyCountedLoopAt (offset : Nat) (metaProg : List YiInstr) : Pro
     initial `cur` is irrelevant since the first instruction is `pop`,
     which overwrites it). -/
 def countedLoopEmptyEntryState (offset : Nat) (metaProg : List YiInstr)
-    (cur : Cell256) (regHex : Hexagram) (n : Nat) (tail : List Cell256) : YiState :=
+    (cur : R8) (regHex : Hexagram) (n : Nat) (tail : List R8) : YiState :=
   { cur     := cur
   , history := encCounter regHex n ++ tail
   , pc      := offset
@@ -473,7 +473,7 @@ def countedLoopEmptyEntryState (offset : Nat) (metaProg : List YiInstr)
 
 /-- Helper: the expected META state after the empty-body loop completes. -/
 def countedLoopEmptyExitState (offset : Nat) (metaProg : List YiInstr)
-    (regHex : Hexagram) (tail : List Cell256) : YiState :=
+    (regHex : Hexagram) (tail : List R8) : YiState :=
   { cur     := (regHex, Shi.wei)
   , history := tail
   , pc      := offset + 3
@@ -507,7 +507,7 @@ private theorem runFuel_add (s : YiState) (m n : Nat) :
 theorem countedLoop_empty_simulates_n_iterations
     (offset : Nat) (metaProg : List YiInstr)
     (h_loop : MetaProgHasEmptyCountedLoopAt offset metaProg)
-    (cur : Cell256) (regHex : Hexagram) (n : Nat) (tail : List Cell256) :
+    (cur : R8) (regHex : Hexagram) (n : Nat) (tail : List R8) :
     (countedLoopEmptyEntryState offset metaProg cur regHex n tail).runFuel (3 * n + 2)
       = countedLoopEmptyExitState offset metaProg regHex tail := by
   obtain ⟨h_pop, h_branch, h_jump⟩ := h_loop
@@ -601,7 +601,7 @@ theorem countedLoop_empty_simulates_n_iterations
 
 /-! ## § 8 Decode helpers — DEFERRED to Phase B
 
-  The full `decMetaHistory : List Cell256 → Option (...)` plus its round-trip
+  The full `decMetaHistory : List R8 → Option (...)` plus its round-trip
   with `encMetaHistory` will be needed when we prove per-opcode simulation
   lemmas in Phase B (each executeBlock's behavior is stated in terms of
   decoded sim-state).

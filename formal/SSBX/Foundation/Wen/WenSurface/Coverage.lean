@@ -31,7 +31,7 @@ theorem wenSurface_reading_catalogue_counts :
 theorem wenSurface_hex_literal_counts :
     canonicalHexNames.length = 64
       ∧ canonicalHexNameRows.length = 64
-      ∧ canonicalHexNameRows.map Prod.snd = SSBX.Foundation.Bagua.Cell256.xuGua
+      ∧ canonicalHexNameRows.map Prod.snd = SSBX.Foundation.Bagua.R8.xuGua
       ∧ hexagramGapPromotions.length = 25
       ∧ hexagramUnpromotedGapForms = ["丽", "井", "鼎", "震", "大", "小"]
       ∧ (canonicalHexNames.filter (fun s => decide (s.toList.length > 1))).all
@@ -292,10 +292,10 @@ theorem wenSurface_registry_summary :
 
 theorem wenSurface_reuses_bagua_grid_summary :
     allOperatorIds.length = 371
-      ∧ SSBX.Foundation.Bagua.Cell256.Cell256.all.length = 256
+      ∧ SSBX.Foundation.Bagua.R8.R8.all.length = 256
       ∧ SSBX.Text.OperatorCellMap.allOperatorCells.length = 94976 :=
   ⟨ allOperatorIds_length
-  , SSBX.Foundation.Bagua.Cell256.Cell256.all_length
+  , SSBX.Foundation.Bagua.R8.R8.all_length
   , allOperatorCells_length
   ⟩
 

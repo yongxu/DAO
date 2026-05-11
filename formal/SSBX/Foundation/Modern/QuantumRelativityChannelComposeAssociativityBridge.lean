@@ -35,35 +35,35 @@ open SSBX.Text.OperatorCellMap
 /-- Reassociating pointwise channel composition keeps the same amplitude. -/
 theorem channelCompose_associative_amplitude
     {P : FiniteProcess}
-    (left middle right : QuantumChannelSkeleton P)
+    (left center right : QuantumChannelSkeleton P)
     (a b : P.State) :
-    (channelCompose (channelCompose left middle) right).amplitudeLayer.amplitude a b =
-      (channelCompose left (channelCompose middle right)).amplitudeLayer.amplitude a b := by
+    (channelCompose (channelCompose left center) right).amplitudeLayer.amplitude a b =
+      (channelCompose left (channelCompose center right)).amplitudeLayer.amplitude a b := by
   simp [channelCompose, mul_assoc]
 
 /-- Reassociating pointwise channel composition keeps the same left boundary. -/
 theorem channelCompose_associative_classical_boundary
     {P : FiniteProcess}
-    (left middle right : QuantumChannelSkeleton P) :
-    (channelCompose (channelCompose left middle) right).classicalBoundary =
-      (channelCompose left (channelCompose middle right)).classicalBoundary :=
+    (left center right : QuantumChannelSkeleton P) :
+    (channelCompose (channelCompose left center) right).classicalBoundary =
+      (channelCompose left (channelCompose center right)).classicalBoundary :=
   rfl
 
 /-- Closed facts for pointwise associativity of the current channel skeleton. -/
 def ChannelComposeAssociativityBoundaryClosed : Prop :=
-  ∀ {P : FiniteProcess} (left middle right : QuantumChannelSkeleton P),
+  ∀ {P : FiniteProcess} (left center right : QuantumChannelSkeleton P),
     (∀ a b : P.State,
-      (channelCompose (channelCompose left middle) right).amplitudeLayer.amplitude a b =
-        (channelCompose left (channelCompose middle right)).amplitudeLayer.amplitude a b)
-      ∧ (channelCompose (channelCompose left middle) right).classicalBoundary =
-        (channelCompose left (channelCompose middle right)).classicalBoundary
+      (channelCompose (channelCompose left center) right).amplitudeLayer.amplitude a b =
+        (channelCompose left (channelCompose center right)).amplitudeLayer.amplitude a b)
+      ∧ (channelCompose (channelCompose left center) right).classicalBoundary =
+        (channelCompose left (channelCompose center right)).classicalBoundary
 
 theorem channel_compose_associativity_boundary_closed :
     ChannelComposeAssociativityBoundaryClosed := by
-  intro P left middle right
+  intro P left center right
   exact
-    ⟨ channelCompose_associative_amplitude left middle right
-    , channelCompose_associative_classical_boundary left middle right
+    ⟨ channelCompose_associative_amplitude left center right
+    , channelCompose_associative_classical_boundary left center right
     ⟩
 
 /-! ## § 2 Identity obstruction boundary -/

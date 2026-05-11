@@ -40,7 +40,7 @@ open SSBX.Foundation.Modern.QuantumRelativityWenBoundary
 def actionIndexPhase (n : Nat) : DiscretePhase :=
   match n % 2 with
   | 0 => DiscretePhase.zero
-  | _ => DiscretePhase.pi
+  | _ => DiscretePhase.blocking
 
 /-- Candidate amplitude induced by a period-two action index. -/
 def actionIndexAmplitude (n : Nat) : ℂ :=
@@ -51,7 +51,7 @@ theorem action_index_zero_phase :
   rfl
 
 theorem action_index_one_phase :
-    actionIndexPhase 1 = DiscretePhase.pi := by
+    actionIndexPhase 1 = DiscretePhase.blocking := by
   rfl
 
 theorem action_index_zero_amplitude :
@@ -95,7 +95,7 @@ def quotientSupportActionPhaseBornWeight {P : FiniteProcess}
 def twoRouteQuotientActionPhaseLaw :
     QuotientActionPhaseLawCandidate twoRouteProcess where
   actionIndex q :=
-    match (quotientVisibleKey q).middle with
+    match (quotientVisibleKey q).center with
     | TwoRouteState.upper => 0
     | TwoRouteState.lower => 1
     | TwoRouteState.source => 0
@@ -146,7 +146,7 @@ def twoRouteActionPhaseKeyAmplitudeCandidate :
   channel := twoRouteQuantumChannelSkeleton
   keyAmplitude k :=
     actionIndexAmplitude
-      (match k.middle with
+      (match k.center with
       | TwoRouteState.upper => 0
       | TwoRouteState.lower => 1
       | TwoRouteState.source => 0
@@ -154,7 +154,7 @@ def twoRouteActionPhaseKeyAmplitudeCandidate :
   candidateWeight k :=
     ampProb
       (actionIndexAmplitude
-        (match k.middle with
+        (match k.center with
         | TwoRouteState.upper => 0
         | TwoRouteState.lower => 1
         | TwoRouteState.source => 0

@@ -66,21 +66,21 @@ theorem sqrt2_irrational : Irrational (Real.sqrt 2) :=
 /-! ## § 4 ShuSuan 之 ℕ 与 ℝ 之桥 -/
 
 /-- ℕ → ℝ 之 coercion 是 monoid 同态（trivial wrapper）。 -/
-theorem shu_to_real_zero : ((SSBX.Foundation.Eight.ShuSuan.kong : ℕ) : ℝ) = 0 := by
-  simp [SSBX.Foundation.Eight.ShuSuan.kong]
+theorem shu_to_real_zero : ((SSBX.Foundation.Eight.ShuSuan.zero : ℕ) : ℝ) = 0 := by
+  simp [SSBX.Foundation.Eight.ShuSuan.zero]
 
-theorem shu_to_real_one : ((SSBX.Foundation.Eight.ShuSuan.yi : ℕ) : ℝ) = 1 := by
-  simp [SSBX.Foundation.Eight.ShuSuan.yi]
+theorem shu_to_real_one : ((SSBX.Foundation.Eight.ShuSuan.one : ℕ) : ℝ) = 1 := by
+  simp [SSBX.Foundation.Eight.ShuSuan.one]
 
 theorem shu_to_real_he (a b : ℕ) :
-    ((SSBX.Foundation.Eight.ShuSuan.he a b : ℕ) : ℝ)
+    ((SSBX.Foundation.Eight.ShuSuan.combine a b : ℕ) : ℝ)
       = (a : ℝ) + (b : ℝ) := by
-  simp [SSBX.Foundation.Eight.ShuSuan.he]
+  simp [SSBX.Foundation.Eight.ShuSuan.combine]
 
 theorem shu_to_real_chong (a b : ℕ) :
-    ((SSBX.Foundation.Eight.ShuSuan.chong a b : ℕ) : ℝ)
+    ((SSBX.Foundation.Eight.ShuSuan.multiply a b : ℕ) : ℝ)
       = (a : ℝ) * (b : ℝ) := by
-  simp [SSBX.Foundation.Eight.ShuSuan.chong]
+  simp [SSBX.Foundation.Eight.ShuSuan.multiply]
 
 /-! ## § 5 公开摘要 -/
 
@@ -97,7 +97,7 @@ theorem rcauchy_summary :
     ∧ (Filter.Tendsto halfPow Filter.atTop (nhds 0))
     ∧ (∃ x : ℝ, x * x = 2 ∧ x ≥ 0)
     ∧ (Irrational (Real.sqrt 2))
-    ∧ (∀ a b : ℕ, ((SSBX.Foundation.Eight.ShuSuan.he a b : ℕ) : ℝ) = (a : ℝ) + (b : ℝ)) :=
+    ∧ (∀ a b : ℕ, ((SSBX.Foundation.Eight.ShuSuan.combine a b : ℕ) : ℝ) = (a : ℝ) + (b : ℝ)) :=
   ⟨real_complete, cauchy_converges, halfPow_tendsto_zero,
    sqrt2_exists, sqrt2_irrational, shu_to_real_he⟩
 

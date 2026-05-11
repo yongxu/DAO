@@ -10,7 +10,7 @@ parameter) handles encNat t consumption and the actual conditional pc-update.
 This is the "outer" half of branchYaoEq dispatch; the per-t inner dispatch
 is C.D-pending.
 
-## Phase F.2 migration note (Cell192 → Cell256)
+## Phase F.2 migration note (Cell192 → R8)
 
 Pre-migration `encFin6 i` decoded via `cellFromIdx ⟨i.val, _⟩` with
 `hex_idx = i.val / 3 ∈ {0, 1}` (3 = old Z/3 Shi card) and
@@ -20,7 +20,7 @@ Post-migration (base-256 encoding), `cellFromIdx ⟨k, _⟩` decomposes as:
   hex_idx = k / 4
   shi_idx = k % 4
 For k ∈ {0..5} = `Fin 6`:
-  i=0 → hex=0, shi=dao   (qian, all-yang;     y1=yang)
+  i=0 → hex=0, shi=dao   (heaven, all-yang;     y1=yang)
   i=1 → hex=0, shi=ji
   i=2 → hex=0, shi=jin
   i=3 → hex=0, shi=wei
@@ -48,7 +48,7 @@ import SSBX.Foundation.Wen.MetaInterp.ExecuteBlock
 namespace SSBX.Foundation.Wen.MetaInterp.SubDispatch_BranchYaoEq
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
 open SSBX.Foundation.Wen.WenyanSelfInterp.YiInstrEnc
@@ -80,7 +80,7 @@ The actual list below is 10 instructions long (no +7 slot); offsets
 +8..+10 in the description above correspond to indices 7..9 of the list.
 -/
 
-/-- A single 6-way Fin 6 dispatcher.  Pops one Cell256 from history into
+/-- A single 6-way Fin 6 dispatcher.  Pops one R8 from history into
     cur, then routes to one of `off0..off5` based on the popped cell's
     (y1, shi) bits. The hex-0 block is a 4-way Shi dispatch; the hex-1
     block is a 2-way Shi dispatch (only dao/ji are reachable for `Fin 6`). -/
@@ -177,7 +177,7 @@ Fuel needed:
 
 /-- Routing for `j.val = 0`: lands at `off0`. -/
 theorem subDispatchBranchYaoEqPerJ_routes_j0
-    (curHex : Hexagram) (curShi : Shi) (tail : List Cell256)
+    (curHex : Hexagram) (curShi : Shi) (tail : List R8)
     (off0 off1 off2 off3 off4 off5 : Nat) :
     let μ : YiState :=
       { cur := (curHex, curShi)
@@ -197,7 +197,7 @@ theorem subDispatchBranchYaoEqPerJ_routes_j0
 
 /-- Routing for `j.val = 1`: lands at `off1`. -/
 theorem subDispatchBranchYaoEqPerJ_routes_j1
-    (curHex : Hexagram) (curShi : Shi) (tail : List Cell256)
+    (curHex : Hexagram) (curShi : Shi) (tail : List R8)
     (off0 off1 off2 off3 off4 off5 : Nat) :
     let μ : YiState :=
       { cur := (curHex, curShi)
@@ -217,7 +217,7 @@ theorem subDispatchBranchYaoEqPerJ_routes_j1
 
 /-- Routing for `j.val = 2`: lands at `off2`. -/
 theorem subDispatchBranchYaoEqPerJ_routes_j2
-    (curHex : Hexagram) (curShi : Shi) (tail : List Cell256)
+    (curHex : Hexagram) (curShi : Shi) (tail : List R8)
     (off0 off1 off2 off3 off4 off5 : Nat) :
     let μ : YiState :=
       { cur := (curHex, curShi)
@@ -237,7 +237,7 @@ theorem subDispatchBranchYaoEqPerJ_routes_j2
 
 /-- Routing for `j.val = 3`: lands at `off3`. -/
 theorem subDispatchBranchYaoEqPerJ_routes_j3
-    (curHex : Hexagram) (curShi : Shi) (tail : List Cell256)
+    (curHex : Hexagram) (curShi : Shi) (tail : List R8)
     (off0 off1 off2 off3 off4 off5 : Nat) :
     let μ : YiState :=
       { cur := (curHex, curShi)
@@ -257,7 +257,7 @@ theorem subDispatchBranchYaoEqPerJ_routes_j3
 
 /-- Routing for `j.val = 4`: lands at `off4`. -/
 theorem subDispatchBranchYaoEqPerJ_routes_j4
-    (curHex : Hexagram) (curShi : Shi) (tail : List Cell256)
+    (curHex : Hexagram) (curShi : Shi) (tail : List R8)
     (off0 off1 off2 off3 off4 off5 : Nat) :
     let μ : YiState :=
       { cur := (curHex, curShi)
@@ -277,7 +277,7 @@ theorem subDispatchBranchYaoEqPerJ_routes_j4
 
 /-- Routing for `j.val = 5`: lands at `off5`. -/
 theorem subDispatchBranchYaoEqPerJ_routes_j5
-    (curHex : Hexagram) (curShi : Shi) (tail : List Cell256)
+    (curHex : Hexagram) (curShi : Shi) (tail : List R8)
     (off0 off1 off2 off3 off4 off5 : Nat) :
     let μ : YiState :=
       { cur := (curHex, curShi)
@@ -303,7 +303,7 @@ because the structure is identical. -/
 
 /-- Routing for `i.val = 0`: lands at `iSubBase0`. -/
 theorem subDispatchBranchYaoEq_routes_i0
-    (curHex : Hexagram) (curShi : Shi) (tail : List Cell256)
+    (curHex : Hexagram) (curShi : Shi) (tail : List R8)
     (iSubBase0 iSubBase1 iSubBase2 iSubBase3 iSubBase4 iSubBase5 : Nat) :
     let μ : YiState :=
       { cur := (curHex, curShi)
@@ -324,7 +324,7 @@ theorem subDispatchBranchYaoEq_routes_i0
 
 /-- Routing for `i.val = 1`: lands at `iSubBase1`. -/
 theorem subDispatchBranchYaoEq_routes_i1
-    (curHex : Hexagram) (curShi : Shi) (tail : List Cell256)
+    (curHex : Hexagram) (curShi : Shi) (tail : List R8)
     (iSubBase0 iSubBase1 iSubBase2 iSubBase3 iSubBase4 iSubBase5 : Nat) :
     let μ : YiState :=
       { cur := (curHex, curShi)
@@ -345,7 +345,7 @@ theorem subDispatchBranchYaoEq_routes_i1
 
 /-- Routing for `i.val = 2`: lands at `iSubBase2`. -/
 theorem subDispatchBranchYaoEq_routes_i2
-    (curHex : Hexagram) (curShi : Shi) (tail : List Cell256)
+    (curHex : Hexagram) (curShi : Shi) (tail : List R8)
     (iSubBase0 iSubBase1 iSubBase2 iSubBase3 iSubBase4 iSubBase5 : Nat) :
     let μ : YiState :=
       { cur := (curHex, curShi)
@@ -366,7 +366,7 @@ theorem subDispatchBranchYaoEq_routes_i2
 
 /-- Routing for `i.val = 3`: lands at `iSubBase3`. -/
 theorem subDispatchBranchYaoEq_routes_i3
-    (curHex : Hexagram) (curShi : Shi) (tail : List Cell256)
+    (curHex : Hexagram) (curShi : Shi) (tail : List R8)
     (iSubBase0 iSubBase1 iSubBase2 iSubBase3 iSubBase4 iSubBase5 : Nat) :
     let μ : YiState :=
       { cur := (curHex, curShi)
@@ -387,7 +387,7 @@ theorem subDispatchBranchYaoEq_routes_i3
 
 /-- Routing for `i.val = 4`: lands at `iSubBase4`. -/
 theorem subDispatchBranchYaoEq_routes_i4
-    (curHex : Hexagram) (curShi : Shi) (tail : List Cell256)
+    (curHex : Hexagram) (curShi : Shi) (tail : List R8)
     (iSubBase0 iSubBase1 iSubBase2 iSubBase3 iSubBase4 iSubBase5 : Nat) :
     let μ : YiState :=
       { cur := (curHex, curShi)
@@ -408,7 +408,7 @@ theorem subDispatchBranchYaoEq_routes_i4
 
 /-- Routing for `i.val = 5`: lands at `iSubBase5`. -/
 theorem subDispatchBranchYaoEq_routes_i5
-    (curHex : Hexagram) (curShi : Shi) (tail : List Cell256)
+    (curHex : Hexagram) (curShi : Shi) (tail : List R8)
     (iSubBase0 iSubBase1 iSubBase2 iSubBase3 iSubBase4 iSubBase5 : Nat) :
     let μ : YiState :=
       { cur := (curHex, curShi)

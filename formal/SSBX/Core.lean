@@ -88,7 +88,7 @@ end Tri
 
 inductive Term where
   | atom : Name -> Term
-  | gen : Name -> List Term -> Term
+  | mountain : Name -> List Term -> Term
   | prim : Name -> Term
   | recur : Name -> Term
   | pending : Name -> Term
@@ -393,9 +393,9 @@ theorem yuan_after_is_shenghe {M : Model} (y : YuanTriad M) :
 
 /-- Abstract predicates for 几 / 势 / 机 over the field continuation model. -/
 structure SystemDynamics (M : Model) where
-  ji : (g : M.Gamma) -> IntervalDomain M g -> Prop
-  shi : List M.Gamma -> Prop
-  jiMoment : M.Gamma -> Prop
+  trace : (g : M.Gamma) -> IntervalDomain M g -> Prop
+  momentum : List M.Gamma -> Prop
+  pivot : M.Gamma -> Prop
 
 /--
 An action or transition changes the future interval domain when the valid
@@ -508,42 +508,42 @@ theorem unitProcess_open : Open unitProcess unitOpenCriteria () := by
   exact ⟨trivial, unitProcess_has_interval, trivial, trivial, trivial⟩
 
 inductive OnticRoot where
-  | wu
-  | dong
-  | jian
+  | thing
+  | motion
+  | interval
   deriving DecidableEq, Repr
 
 namespace OnticRoot
 
 def dimension : OnticRoot -> String
-  | .wu => "0-dimensional discreteness"
-  | .dong => "n-dimensional process extension"
-  | .jian => "topological relation without intrinsic metric"
+  | .thing => "0-dimensional discreteness"
+  | .motion => "n-dimensional process extension"
+  | .interval => "topological relation without intrinsic metric"
 
 end OnticRoot
 
 inductive Manifestation where
   | wei
   | chang
-  | ji
+  | trace
   deriving DecidableEq, Repr
 
 namespace Manifestation
 
 def visibleRoots : Manifestation -> List OnticRoot
-  | .wei => [.wu, .jian]
-  | .chang => [.dong, .wu]
-  | .ji => [.jian, .dong]
+  | .wei => [.thing, .interval]
+  | .chang => [.motion, .thing]
+  | .trace => [.interval, .motion]
 
 def bracketedRoot : Manifestation -> OnticRoot
-  | .wei => .dong
-  | .chang => .jian
-  | .ji => .wu
+  | .wei => .motion
+  | .chang => .interval
+  | .trace => .thing
 
 def shape : Manifestation -> String
   | .wei => "pointed position"
   | .chang => "extended medium"
-  | .ji => "contact interface"
+  | .trace => "contact interface"
 
 theorem visible_roots_pair (m : Manifestation) :
     (visibleRoots m).length = 2 := by
@@ -562,30 +562,30 @@ inductive StaticFace where
   deriving DecidableEq, Repr
 
 inductive DynamicMark where
-  | ji
-  | shi
-  | jiMoment
+  | trace
+  | momentum
+  | pivot
   deriving DecidableEq, Repr
 
 namespace DynamicMark
 
 def ofManifestation : Manifestation -> DynamicMark
-  | .wei => .ji
-  | .chang => .shi
-  | .ji => .jiMoment
+  | .wei => .trace
+  | .chang => .momentum
+  | .trace => .pivot
 
 def staticFaceOf : Manifestation -> StaticFace
   | .wei => .noPersistentSplit
   | .chang => .pointOnField
-  | .ji => .contactBoundary
+  | .trace => .contactBoundary
 
 def expansionMode : DynamicMark -> String
-  | .ji => "foundational seed at the zero-dimensional limit"
-  | .shi => "ji extended through a continuous medium"
-  | .jiMoment => "ji gathered through topological routing"
+  | .trace => "foundational seed at the zero-dimensional limit"
+  | .momentum => "trace extended through a continuous medium"
+  | .pivot => "trace gathered through topological routing"
 
 theorem wei_mark_is_foundational :
-    ofManifestation .wei = .ji :=
+    ofManifestation .wei = .trace :=
   rfl
 
 end DynamicMark
@@ -607,12 +607,12 @@ inductive EventResult where
 namespace Gate
 
 def result : DynamicMark -> Gate -> EventResult
-  | .ji, .open => .life
-  | .ji, .closed => .extinction
-  | .shi, .open => .formation
-  | .shi, .closed => .reversal
-  | .jiMoment, .open => .turning
-  | .jiMoment, .closed => .keeping
+  | .trace, .open => .life
+  | .trace, .closed => .extinction
+  | .momentum, .open => .formation
+  | .momentum, .closed => .reversal
+  | .pivot, .open => .turning
+  | .pivot, .closed => .keeping
 
 theorem gate_binary (g : Gate) : g = .open ∨ g = .closed := by
   cases g <;> simp
@@ -628,14 +628,14 @@ inductive CompositeForm where
 namespace CompositeForm
 
 def parts : CompositeForm -> Manifestation × Manifestation
-  | .network => (.wei, .ji)
+  | .network => (.wei, .trace)
   | .body => (.wei, .chang)
-  | .flow => (.chang, .ji)
+  | .flow => (.chang, .trace)
 
 def feedbackTarget : CompositeForm -> Manifestation
   | .network => .wei
   | .body => .chang
-  | .flow => .ji
+  | .flow => .trace
 
 theorem parts_distinct (c : CompositeForm) :
     (parts c).1 ≠ (parts c).2 := by

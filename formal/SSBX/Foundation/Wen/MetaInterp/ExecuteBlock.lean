@@ -171,7 +171,7 @@ import SSBX.Foundation.Wen.MetaInterp
 namespace SSBX.Foundation.Wen.MetaInterp.ExecuteBlock
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
 open SSBX.Foundation.Wen.MetaInterp
@@ -269,7 +269,7 @@ theorem executeBlock_nop_second (offset fetchOffset : Nat) :
     simulation lemma once the surrounding `metaInterpProg` is assembled
     and the loop invariant `METAcur = (regHex, Shi.jin)` is locked in. -/
 theorem executeBlock_nop_local_effect
-    (regHex : Hexagram) (history : List Cell256) (fetchOffset offset : Nat) :
+    (regHex : Hexagram) (history : List R8) (fetchOffset offset : Nat) :
     let μ : YiState :=
       { cur := (regHex, Shi.jin)
         history := history
@@ -351,7 +351,7 @@ theorem executeBlock_halt_first (offset fetchOffset : Nat) :
     to true; cur, history, pc are preserved (in the local sense — pc
     does not advance because halt sets halted before pc-update). -/
 theorem executeBlock_halt_local_effect
-    (cur : Cell256) (history : List Cell256) (offset fetchOffset : Nat) :
+    (cur : R8) (history : List R8) (offset fetchOffset : Nat) :
     let μ : YiState :=
       { cur := cur
         history := history
@@ -423,9 +423,9 @@ can be discharged.
 | nop           | (none)              | 2               | pc++                     |
 | setShi        | sh : Shi            | ~3              | cur.2 := sh; pc++        |
 | flipYao       | i : Fin 6           | ~3              | cur.1 := flipPos i; pc++ |
-| hu            | (none)              | 2               | cur.1 := hu cur.1; pc++  |
-| cuo           | (none)              | 2               | cur.1 := cuo cur.1; pc++ |
-| zong          | (none)              | 2               | cur.1 := zong cur.1; pc++|
+| interlace            | (none)              | 2               | cur.1 := interlace cur.1; pc++  |
+| complement           | (none)              | 2               | cur.1 := complement cur.1; pc++ |
+| reverse          | (none)              | 2               | cur.1 := reverse cur.1; pc++|
 | branchYaoEq   | i j : Fin 6, t : Nat| ~6              | conditional pc set       |
 | branchShiEq   | s : Shi, t : Nat    | ~5              | conditional pc set       |
 | jump          | t : Nat             | ~3              | pc := t (replaces pc-cnt)|

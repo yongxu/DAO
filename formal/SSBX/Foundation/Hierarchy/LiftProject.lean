@@ -10,8 +10,8 @@ The R-hierarchy is strict (Z/2)ⁿ uniform:
   R₄ = Mian           = Ben × Zheng        (16)
   R₅ = Wuyao          = Mian × Bool        (32)
   R₆ = Hexagram       = Yao⁶               (64)
-  R₇ = Cell128        = Hexagram × YinBit  (128)
-  R₈ = Cell256        = Hexagram × Shi     (256)
+  R₇ = R7        = Hexagram × YinBit  (128)
+  R₈ = R8        = Hexagram × Shi     (256)
 
 For each consecutive pair (Rₙ, R_{n+1}), this module provides a uniform
 **Lift / Project** pair plus a `proj_lift_id_R{n}` retract lemma (faithful
@@ -39,8 +39,8 @@ The R₇ → R₈ lift attaches a GuoBit; project drops it via `Shi.toYinGuo`.
 import SSBX.Foundation.Yi.Yi
 import SSBX.Foundation.Bagua.BaguaAlgebra
 import SSBX.Foundation.Bagua.BenZheng
-import SSBX.Foundation.Bagua.Cell128
-import SSBX.Foundation.Bagua.Cell256
+import SSBX.Foundation.Bagua.R7
+import SSBX.Foundation.Bagua.R8
 import SSBX.Foundation.Hierarchy.R5_Wuyao
 
 namespace SSBX.Foundation.Hierarchy.LiftProject
@@ -48,8 +48,8 @@ namespace SSBX.Foundation.Hierarchy.LiftProject
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Bagua.BaguaAlgebra
 open SSBX.Foundation.Bagua.BenZheng
-open SSBX.Foundation.Bagua.Cell128
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R7
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Hierarchy.R5_Wuyao
 
 /-! ## § 0 R-layer abbreviations -/
@@ -68,10 +68,10 @@ abbrev R4 : Type := Mian
 abbrev R5 : Type := Wuyao
 /-- R₆ = 六十四卦 = Hexagram. -/
 abbrev R6 : Type := Hexagram
-/-- R₇ = 128-格 = Cell128 = Hexagram × YinBit. -/
-abbrev R7 : Type := Cell128
-/-- R₈ = 256-格 = Cell256 = Hexagram × Shi. -/
-abbrev R8 : Type := Cell256
+/-- R₇ = 128-格 = Hexagram × YinBit. -/
+abbrev R7 : Type := SSBX.Foundation.Bagua.R7.R7
+/-- R₈ = 256-格 = Hexagram × Shi. -/
+abbrev R8 : Type := SSBX.Foundation.Bagua.R8.R8
 
 /-! ## § 1 R₀ ↔ R₁ -/
 
@@ -115,24 +115,24 @@ theorem proj_lift_id_R2 (s : R2) (y3 : Yao) :
   - Project drops `extra` (the 4th yao) and recovers a trigram. -/
 
 /-- Yao² → Ben canonical bijection.
-    (yang, yang) → wu   / (yang, yin) → dong
-    (yin,  yang) → jian / (yin,  yin) → shi -/
+    (yang, yang) → thing   / (yang, yin) → motion
+    (yin,  yang) → interval / (yin,  yin) → event -/
 def benFromYao (y1 y2 : Yao) : Ben :=
   match y1, y2 with
-  | .yang, .yang => .wu
-  | .yang, .yin  => .dong
-  | .yin,  .yang => .jian
-  | .yin,  .yin  => .shi
+  | .yang, .yang => .thing
+  | .yang, .yin  => .motion
+  | .yin,  .yang => .interval
+  | .yin,  .yin  => .event
 
 /-- Ben → Yao² inverse: extract the first bit. -/
 def benToYao1 : Ben → Yao
-  | .wu | .dong => .yang
-  | .jian | .shi => .yin
+  | .thing | .motion => .yang
+  | .interval | .event => .yin
 
 /-- Ben → Yao² inverse: extract the second bit. -/
 def benToYao2 : Ben → Yao
-  | .wu | .jian => .yang
-  | .dong | .shi => .yin
+  | .thing | .interval => .yang
+  | .motion | .event => .yin
 
 theorem benFromYao_yao1 (y1 y2 : Yao) : benToYao1 (benFromYao y1 y2) = y1 := by
   cases y1 <;> cases y2 <;> rfl
@@ -141,24 +141,24 @@ theorem benFromYao_yao2 (y1 y2 : Yao) : benToYao2 (benFromYao y1 y2) = y2 := by
   cases y1 <;> cases y2 <;> rfl
 
 /-- Yao² → Zheng canonical bijection.
-    (yang, yang) → jiFaint    / (yang, yin) → shiForce
-    (yin,  yang) → jiOccasion / (yin,  yin) → shiTime -/
+    (yang, yang) → trace    / (yang, yin) → momentum
+    (yin,  yang) → pivot / (yin,  yin) → occasion -/
 def zhengFromYao (y3 y4 : Yao) : Zheng :=
   match y3, y4 with
-  | .yang, .yang => .jiFaint
-  | .yang, .yin  => .shiForce
-  | .yin,  .yang => .jiOccasion
-  | .yin,  .yin  => .shiTime
+  | .yang, .yang => .trace
+  | .yang, .yin  => .momentum
+  | .yin,  .yang => .pivot
+  | .yin,  .yin  => .occasion
 
 /-- Zheng → Yao² inverse: extract the first bit (the trigram's y3). -/
 def zhengToYao1 : Zheng → Yao
-  | .jiFaint | .shiForce => .yang
-  | .jiOccasion | .shiTime => .yin
+  | .trace | .momentum => .yang
+  | .pivot | .occasion => .yin
 
 /-- Zheng → Yao² inverse: extract the second bit (the lifted "extra" bit). -/
 def zhengToYao2 : Zheng → Yao
-  | .jiFaint | .jiOccasion => .yang
-  | .shiForce | .shiTime => .yin
+  | .trace | .pivot => .yang
+  | .momentum | .occasion => .yin
 
 theorem zhengFromYao_yao1 (y3 y4 : Yao) :
     zhengToYao1 (zhengFromYao y3 y4) = y3 := by
@@ -260,30 +260,30 @@ theorem proj_lift_id_R5 (w : R5) (y6 : Yao) :
         benFromYao_benToYao, zhengFromYao_zhengToYao,
         yaoToBool_boolToYao]
 
-/-! ## § 7 R₆ ↔ R₇ — Hexagram ↔ Cell128 (= Hexagram × YinBit) -/
+/-! ## § 7 R₆ ↔ R₇ — Hexagram ↔ R7 (= Hexagram × YinBit) -/
 
 /-- 六爻 ↪ 128-格: attach YinBit (R5/R7 atom 因 bit). -/
-def liftR6toR7 (h : R6) (y : SSBX.Foundation.Bagua.Cell128.YinBit) : R7 := (h, y)
+def liftR6toR7 (h : R6) (y : SSBX.Foundation.Bagua.R7.YinBit) : R7 := (h, y)
 
 /-- 128-格 ↠ 六爻: drop YinBit. -/
 def projR7toR6 (c : R7) : R6 := c.1
 
-theorem proj_lift_id_R6 (h : R6) (y : SSBX.Foundation.Bagua.Cell128.YinBit) :
+theorem proj_lift_id_R6 (h : R6) (y : SSBX.Foundation.Bagua.R7.YinBit) :
     projR7toR6 (liftR6toR7 h y) = h := rfl
 
-/-! ## § 8 R₇ ↔ R₈ — Cell128 ↔ Cell256 (= Hexagram × Shi)
+/-! ## § 8 R₇ ↔ R₈ — R7 ↔ R8 (= Hexagram × Shi)
 
   Shi ≅ YinBit × GuoBit. R₈ adds a GuoBit (R6/R8 atom 果 bit) to R₇. -/
 
 /-- 128-格 ↪ 256-格: attach GuoBit to YinBit, package as Shi. -/
-def liftR7toR8 (c : R7) (g : SSBX.Foundation.Bagua.Cell256.GuoBit) : R8 :=
+def liftR7toR8 (c : R7) (g : SSBX.Foundation.Bagua.R8.GuoBit) : R8 :=
   (c.1, Shi.ofYinGuo (c.2, g))
 
 /-- 256-格 ↠ 128-格: extract YinBit from Shi (drop GuoBit). -/
 def projR8toR7 (c : R8) : R7 :=
   (c.1, (Shi.toYinGuo c.2).1)
 
-theorem proj_lift_id_R7 (c : R7) (g : SSBX.Foundation.Bagua.Cell256.GuoBit) :
+theorem proj_lift_id_R7 (c : R7) (g : SSBX.Foundation.Bagua.R8.GuoBit) :
     projR8toR7 (liftR7toR8 c g) = c := by
   rcases c with ⟨h, y⟩
   simp [projR8toR7, liftR7toR8, Shi.toYinGuo_ofYinGuo]

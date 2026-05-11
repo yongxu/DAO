@@ -21,7 +21,7 @@ namespace SSBX.Text.OperatorAnchors
 
 open SSBX.Text.WenyanOperators
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Bagua.BaguaWenSpec
 
@@ -46,9 +46,9 @@ inductive YiInstrKind where
   | nop
   | setShi
   | flipYao
-  | hu
-  | cuo
-  | zong
+  | interlace
+  | complement
+  | reverse
   | branchYaoEq
   | branchShiEq
   | jump
@@ -64,9 +64,9 @@ def token : YiInstrKind → String
   | .nop => "不动"
   | .setShi => "设时"
   | .flipYao => "翻爻"
-  | .hu => "互"
-  | .cuo => "错"
-  | .zong => "综"
+  | .interlace => "互"
+  | .complement => "错"
+  | .reverse => "综"
   | .branchYaoEq => "比爻"
   | .branchShiEq => "比时"
   | .jump => "跳"
@@ -79,9 +79,9 @@ def sample : YiInstrKind → YiInstr
   | .nop => .nop
   | .setShi => .setShi Shi.jin
   | .flipYao => .flipYao ⟨0, by decide⟩
-  | .hu => .hu
-  | .cuo => .cuo
-  | .zong => .zong
+  | .interlace => .interlace
+  | .complement => .complement
+  | .reverse => .reverse
   | .branchYaoEq => .branchYaoEq ⟨0, by decide⟩ ⟨1, by decide⟩ 0
   | .branchShiEq => .branchShiEq Shi.jin 0
   | .jump => .jump 0
@@ -96,7 +96,7 @@ theorem primaryToken_sample (k : YiInstrKind) :
 end YiInstrKind
 
 def yiInstrKinds : List YiInstrKind :=
-  [.nop, .setShi, .flipYao, .hu, .cuo, .zong,
+  [.nop, .setShi, .flipYao, .interlace, .complement, .reverse,
    .branchYaoEq, .branchShiEq, .jump, .push, .pop, .halt]
 
 theorem yiInstrKinds_length : yiInstrKinds.length = 12 := by native_decide
@@ -123,9 +123,9 @@ def l0OperatorAnchors : List L0OperatorAnchor :=
   [ { kind := .nop,          catalogueIds := [],              missingForms := ["不动"] }
   , { kind := .setShi,       catalogueIds := [],              missingForms := ["设时"] }
   , { kind := .flipYao,      catalogueIds := [],              missingForms := ["翻爻"] }
-  , { kind := .hu,           catalogueIds := [.Z_3],          missingForms := [] }
-  , { kind := .cuo,          catalogueIds := [.Z_5],          missingForms := [] }
-  , { kind := .zong,         catalogueIds := [.Z_6],          missingForms := [] }
+  , { kind := .interlace,           catalogueIds := [.Z_3],          missingForms := [] }
+  , { kind := .complement,          catalogueIds := [.Z_5],          missingForms := [] }
+  , { kind := .reverse,         catalogueIds := [.Z_6],          missingForms := [] }
   , { kind := .branchYaoEq,  catalogueIds := [.R_8],          missingForms := [] }
   , { kind := .branchShiEq,  catalogueIds := [.R_8],          missingForms := [] }
   , { kind := .jump,         catalogueIds := [],              missingForms := ["跳"] }
@@ -277,21 +277,21 @@ structure TrigramOperatorAnchor where
   deriving Repr
 
 def trigramOperatorAnchors : List TrigramOperatorAnchor :=
-  [ { trigram := Trigram.qian, name := "乾", mode := .sheng,
+  [ { trigram := Trigram.heaven, name := "乾", mode := .sheng,
       catalogueIds := [.F_10],       semanticIds := [],      missingForms := [] }
-  , { trigram := Trigram.dui,  name := "兑", mode := .kai,
+  , { trigram := Trigram.lake,  name := "兑", mode := .kai,
       catalogueIds := [],            semanticIds := [],      missingForms := ["悦"] }
-  , { trigram := Trigram.li,   name := "离", mode := .xian,
+  , { trigram := Trigram.fire,   name := "离", mode := .xian,
       catalogueIds := [],            semanticIds := [],      missingForms := ["丽", "附"] }
-  , { trigram := Trigram.zhen, name := "震", mode := .yuan,
+  , { trigram := Trigram.thunder, name := "震", mode := .yuan,
       catalogueIds := [.F_10],       semanticIds := [],      missingForms := ["震"] }
-  , { trigram := Trigram.xun,  name := "巽", mode := .shen,
+  , { trigram := Trigram.wind,  name := "巽", mode := .shen,
       catalogueIds := [.F_8, .Y_20], semanticIds := [],      missingForms := [] }
-  , { trigram := Trigram.kan,  name := "坎", mode := .sai,
+  , { trigram := Trigram.water,  name := "坎", mode := .sai,
       catalogueIds := [],            semanticIds := [],      missingForms := ["险"] }
-  , { trigram := Trigram.gen,  name := "艮", mode := .ju,
+  , { trigram := Trigram.mountain,  name := "艮", mode := .ju,
       catalogueIds := [.B_4],        semanticIds := [],      missingForms := [] }
-  , { trigram := Trigram.kun,  name := "坤", mode := .shou,
+  , { trigram := Trigram.earth,  name := "坤", mode := .shou,
       catalogueIds := [.C_3],        semanticIds := [],      missingForms := [] }
   ]
 
@@ -709,7 +709,7 @@ structure CellOperatorAnchor where
 
 namespace CellOperatorAnchor
 
-def cell (a : CellOperatorAnchor) : Cell256 :=
+def cell (a : CellOperatorAnchor) : R8 :=
   (a.hexagramAnchor.hexagram, a.shi)
 
 def hexagramNumber (a : CellOperatorAnchor) : Nat :=
@@ -722,10 +722,10 @@ def cellOperatorAnchors : List CellOperatorAnchor :=
   hexagramOperatorAnchors.flatMap fun h =>
     shiAnchors.map fun s => { hexagramAnchor := h, shi := s.shi }
 
-def anchoredCells : List Cell256 :=
+def anchoredCells : List R8 :=
   cellOperatorAnchors.map CellOperatorAnchor.cell
 
-def cellCovered (c : Cell256) : Bool :=
+def cellCovered (c : R8) : Bool :=
   anchoredCells.any fun d => d == c
 
 theorem cellOperatorAnchors_length :
@@ -733,8 +733,8 @@ theorem cellOperatorAnchors_length :
   native_decide
 
 theorem cellOperatorAnchors_length_eq_cell256 :
-    cellOperatorAnchors.length = Cell256.all.length := by
-  rw [cellOperatorAnchors_length, Cell256.all_length]
+    cellOperatorAnchors.length = R8.all.length := by
+  rw [cellOperatorAnchors_length, R8.all_length]
 
 theorem anchoredCells_nodup :
     anchoredCells.Nodup := by
@@ -745,7 +745,7 @@ theorem cellOperatorAnchor_hexagram_numbers_range :
       (fun a => decide (1 <= a.hexagramNumber ∧ a.hexagramNumber <= 64)) = true := by
   native_decide
 
-theorem cellOperatorAnchors_cover_all (c : Cell256) :
+theorem cellOperatorAnchors_cover_all (c : R8) :
     cellCovered c = true := by
   rcases c with ⟨⟨y1, y2, y3, y4, y5, y6⟩, sy, sg⟩
   cases y1 <;> cases y2 <;> cases y3 <;>
@@ -780,11 +780,11 @@ theorem bagua_operator_anchor_summary :
         (fun s => !hexagramUnpromotedGapForms.contains s) = true
     ∧ hexagramNearMissAnchors.length = 7
     ∧ hexagramNearMissForms.all (fun s => hexagramMissingVocabulary.contains s) = true
-    ∧ cellOperatorAnchors.length = Cell256.all.length
+    ∧ cellOperatorAnchors.length = R8.all.length
     ∧ anchoredCells.Nodup
     ∧ cellOperatorAnchors.all
         (fun a => decide (1 <= a.hexagramNumber ∧ a.hexagramNumber <= 64)) = true
-    ∧ (∀ c : Cell256, cellCovered c = true) := by
+    ∧ (∀ c : R8, cellCovered c = true) := by
   exact
     ⟨ by rw [reservedTokenAnchors_length, reservedTokens_length]
     , reservedTokenAnchor_tokens_eq_reservedTokens

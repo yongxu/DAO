@@ -57,16 +57,16 @@ theorem exposure_region_exhaustive (r : ExposureRegion) :
 
 theorem exposed_not_unexposed (r : ExposureRegion) :
     Exposed r → ¬ Unexposed r := by
-  intro he hu
+  intro he interlace
   unfold Exposed at he
-  unfold Unexposed at hu
-  rw [he] at hu
-  cases hu
+  unfold Unexposed at interlace
+  rw [he] at interlace
+  cases interlace
 
 theorem unexposed_not_exposed (r : ExposureRegion) :
     Unexposed r → ¬ Exposed r := by
-  intro hu he
-  exact exposed_not_unexposed r he hu
+  intro interlace he
+  exact exposed_not_unexposed r he interlace
 
 theorem exposure_boundary_complete :
     (∀ r : ExposureRegion, Exposed r ∨ Unexposed r)
@@ -90,16 +90,16 @@ theorem reception_region_exhaustive (r : ReceptionRegion) :
 
 theorem received_not_unreceived (r : ReceptionRegion) :
     Received r → ¬ Unreceived r := by
-  intro hr hu
+  intro hr interlace
   unfold Received at hr
-  unfold Unreceived at hu
-  rw [hr] at hu
-  cases hu
+  unfold Unreceived at interlace
+  rw [hr] at interlace
+  cases interlace
 
 theorem unreceived_not_received (r : ReceptionRegion) :
     Unreceived r → ¬ Received r := by
-  intro hu hr
-  exact received_not_unreceived r hr hu
+  intro interlace hr
+  exact received_not_unreceived r hr interlace
 
 theorem reception_boundary_complete :
     (∀ r : ReceptionRegion, Received r ∨ Unreceived r)
@@ -123,16 +123,16 @@ theorem affection_region_exhaustive (r : AffectionRegion) :
 
 theorem affected_not_unaffected (r : AffectionRegion) :
     Affected r → ¬ Unaffected r := by
-  intro ha hu
+  intro ha interlace
   unfold Affected at ha
-  unfold Unaffected at hu
-  rw [ha] at hu
-  cases hu
+  unfold Unaffected at interlace
+  rw [ha] at interlace
+  cases interlace
 
 theorem unaffected_not_affected (r : AffectionRegion) :
     Unaffected r → ¬ Affected r := by
-  intro hu ha
-  exact affected_not_unaffected r ha hu
+  intro interlace ha
+  exact affected_not_unaffected r ha interlace
 
 theorem affection_boundary_complete :
     (∀ r : AffectionRegion, Affected r ∨ Unaffected r)
@@ -191,16 +191,16 @@ theorem feeling_report_region_exhaustive (r : FeelingReportRegion) :
 
 theorem reportable_not_unreportable (r : FeelingReportRegion) :
     Reportable r → ¬ Unreportable r := by
-  intro hr hu
+  intro hr interlace
   unfold Reportable at hr
-  unfold Unreportable at hu
-  rw [hr] at hu
-  cases hu
+  unfold Unreportable at interlace
+  rw [hr] at interlace
+  cases interlace
 
 theorem unreportable_not_reportable (r : FeelingReportRegion) :
     Unreportable r → ¬ Reportable r := by
-  intro hu hr
-  exact reportable_not_unreportable r hr hu
+  intro interlace hr
+  exact reportable_not_unreportable r hr interlace
 
 theorem feeling_report_boundary_complete :
     (∀ r : FeelingReportRegion, Reportable r ∨ Unreportable r)

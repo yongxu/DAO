@@ -7,7 +7,7 @@ This file gives the **finite, no-Mathlib** core of the **心智** 衍 file:
   § 1   唯识四分 FenSi (相 / 见 / 自证 / 证自证) inductive
   § 2   FenSi ≅ SiXiang （Bool² 笛卡尔积之严格同构）
   § 3   心学四端 SiDuan (恻隐 / 羞恶 / 辞让 / 是非) inductive
-  § 4   SiDuan ≅ 四正卦 （Trigram 之 li / kan / zhen / dui 之具体映射）
+  § 4   SiDuan ≅ 四正卦 （Trigram 之 fire / water / thunder / lake 之具体映射）
   § 5   注意力函子 Att （Trigram → Trigram）
   § 6   三值悬置 之心智 instance（接 LuoJi）
   § 7   公开摘要
@@ -37,14 +37,14 @@ open SSBX.Foundation.Eight.LuoJi
     - 证自证 - 知"我知我在见" -/
 inductive FenSi : Type
   | xiang     -- 相分（所对）
-  | jian      -- 见分（能观）
+  | interval      -- 见分（能观）
   | ziZheng   -- 自证（知我知）
   | zhengZi   -- 证自证（知我知我知）
   deriving DecidableEq, Repr
 
 /-- 四分穷尽。 -/
 def FenSi.all : List FenSi :=
-  [.xiang, .jian, .ziZheng, .zhengZi]
+  [.xiang, .interval, .ziZheng, .zhengZi]
 
 theorem fensi_all_length : FenSi.all.length = 4 := rfl
 
@@ -57,15 +57,15 @@ theorem fensi_all_length : FenSi.all.length = 4 := rfl
     - 自证 = (F, T) = 少阳（客对主，反观）
     - 证自证 = (F, F) = 太阴（客纯静）-/
 def FenSi.toSiXiang : FenSi → SiXiang
-  | .jian     => SiXiang.taiYang   -- ⟨阳, 阳⟩
-  | .xiang    => SiXiang.shaoYin   -- ⟨阳, 阴⟩
-  | .ziZheng  => SiXiang.shaoYang  -- ⟨阴, 阳⟩
-  | .zhengZi  => SiXiang.taiYin    -- ⟨阴, 阴⟩
+  | .interval     => SiXiang.greaterYang   -- ⟨阳, 阳⟩
+  | .xiang    => SiXiang.lesserYin   -- ⟨阳, 阴⟩
+  | .ziZheng  => SiXiang.lesserYang  -- ⟨阴, 阳⟩
+  | .zhengZi  => SiXiang.greaterYin    -- ⟨阴, 阴⟩
 
 /-- 四象 → 四分 之逆映射。 -/
 def SiXiang.toFenSi (s : SiXiang) : FenSi :=
   match s.y1, s.y2 with
-  | .yang, .yang => .jian
+  | .yang, .yang => .interval
   | .yang, .yin  => .xiang
   | .yin,  .yang => .ziZheng
   | .yin,  .yin  => .zhengZi
@@ -82,8 +82,8 @@ theorem sixiang_fensi_roundtrip (s : SiXiang) :
   | mk y1 y2 =>
     cases y1 <;> cases y2 <;>
       simp [SiXiang.toFenSi, FenSi.toSiXiang,
-            SiXiang.taiYang, SiXiang.shaoYin,
-            SiXiang.shaoYang, SiXiang.taiYin]
+            SiXiang.greaterYang, SiXiang.lesserYin,
+            SiXiang.lesserYang, SiXiang.greaterYin]
 
 /-! ## § 3 心学四端 -/
 
@@ -93,21 +93,21 @@ theorem sixiang_fensi_roundtrip (s : SiXiang) :
     - 辞让之心（礼之端）
     - 是非之心（智之端）-/
 inductive SiDuan : Type
-  | ceYin   -- 恻隐（仁）
-  | xiuWu   -- 羞恶（义）
-  | ciRang  -- 辞让（礼）
-  | shiFei  -- 是非（智）
+  | compassion   -- 恻隐（仁）
+  | shame   -- 羞恶（义）
+  | yielding  -- 辞让（礼）
+  | discernment  -- 是非（智）
   deriving DecidableEq, Repr
 
 /-- 四端穷尽。 -/
 def SiDuan.all : List SiDuan :=
-  [.ceYin, .xiuWu, .ciRang, .shiFei]
+  [.compassion, .shame, .yielding, .discernment]
 
 theorem siduan_all_length : SiDuan.all.length = 4 := rfl
 
 /-! ## § 4 心学四端 ≅ 四正卦 之意象 + 阴阳映射
 
-四正卦：离 (li) / 坎 (kan) / 震 (zhen) / 兑 (dui)
+四正卦：离 (fire) / 坎 (water) / 震 (thunder) / 兑 (lake)
 - 恻隐 → 仁 → 离 (火，向外照人)
 - 羞恶 → 义 → 坎 (水，自止其溺)
 - 辞让 → 礼 → 震 (雷，仰让于序)
@@ -115,19 +115,19 @@ theorem siduan_all_length : SiDuan.all.length = 4 := rfl
 
 /-- 四端 → 四正卦 之映射。 -/
 def SiDuan.toTrigram : SiDuan → Trigram
-  | .ceYin   => Trigram.li
-  | .xiuWu   => Trigram.kan
-  | .ciRang  => Trigram.zhen
-  | .shiFei  => Trigram.dui
+  | .compassion   => Trigram.fire
+  | .shame   => Trigram.water
+  | .yielding  => Trigram.thunder
+  | .discernment  => Trigram.lake
 
 /-- 6 对不等式由 `siduan_toTrigram_injective` 之 contrapositive 立得；此处记 SiDuan 之 inductive 不等。 -/
-theorem ceYin_ne_xiuWu : SiDuan.ceYin ≠ SiDuan.xiuWu := by decide
+theorem ceYin_ne_xiuWu : SiDuan.compassion ≠ SiDuan.shame := by decide
 
 /-- **四端各自之具体 Trigram 值**（用于注入性论证）。 -/
-theorem siduan_to_li : SiDuan.toTrigram .ceYin = Trigram.li := rfl
-theorem siduan_to_kan : SiDuan.toTrigram .xiuWu = Trigram.kan := rfl
-theorem siduan_to_zhen : SiDuan.toTrigram .ciRang = Trigram.zhen := rfl
-theorem siduan_to_dui : SiDuan.toTrigram .shiFei = Trigram.dui := rfl
+theorem siduan_to_li : SiDuan.toTrigram .compassion = Trigram.fire := rfl
+theorem siduan_to_kan : SiDuan.toTrigram .shame = Trigram.water := rfl
+theorem siduan_to_zhen : SiDuan.toTrigram .yielding = Trigram.thunder := rfl
+theorem siduan_to_dui : SiDuan.toTrigram .discernment = Trigram.lake := rfl
 
 /-- **四端 → 四正卦 是单射**：四个不同卦对应四个不同端（通过 16 case 检验）。 -/
 theorem siduan_toTrigram_injective :
@@ -137,7 +137,7 @@ theorem siduan_toTrigram_injective :
     first
       | rfl
       | (exfalso; exact absurd h (by
-          simp only [SiDuan.toTrigram, Trigram.li, Trigram.kan, Trigram.zhen, Trigram.dui]
+          simp only [SiDuan.toTrigram, Trigram.fire, Trigram.water, Trigram.thunder, Trigram.lake]
           intro heq
           injection heq with h1 h2 h3
           first | exact Yao.noConfusion h1 | exact Yao.noConfusion h2 | exact Yao.noConfusion h3))
@@ -156,9 +156,9 @@ theorem att_id (a : Trigram) : Att a a a = a := by
 theorem att_correct (a b : Trigram) : Att a b a = b :=
   transform_correct a b
 
-/-- **错卦作 全域注意力**：从乾到坤之注意力 = cuo。 -/
-theorem att_qian_kun_via_cuo : Att qian kun qian = kun := by
-  exact transform_correct qian kun
+/-- **错卦作 全域注意力**：从乾到坤之注意力 = complement。 -/
+theorem att_qian_kun_via_cuo : Att heaven earth heaven = earth := by
+  exact transform_correct heaven earth
 
 /-! ## § 6 心智 K3 三值之 inductive 重述 -/
 
@@ -240,10 +240,10 @@ where
     + (if t.y3 = .yin then 1 else 0)
 
 /-- **乾 pattern 之 restCount = 0**（全 fire）。 -/
-theorem restCount_qian : Pattern3.restCount Trigram.qian = 0 := by decide
+theorem restCount_qian : Pattern3.restCount Trigram.heaven = 0 := by decide
 
 /-- **坤 pattern 之 restCount = 3**（全 rest）。 -/
-theorem restCount_kun : Pattern3.restCount Trigram.kun = 3 := by decide
+theorem restCount_kun : Pattern3.restCount Trigram.earth = 3 := by decide
 
 /-! ## § 9 现象学时间意识三相 · Husserl (Phase 4 先行)
 
@@ -280,11 +280,11 @@ def TimePhase.proj (t : Trigram) : TimePhase → Yao
   | .protention  => t.y3
 
 /-- **乾 之三相皆 yang**。 -/
-theorem qian_all_yang (p : TimePhase) : TimePhase.proj Trigram.qian p = .yang := by
+theorem qian_all_yang (p : TimePhase) : TimePhase.proj Trigram.heaven p = .yang := by
   cases p <;> rfl
 
 /-- **坤 之三相皆 yin**。 -/
-theorem kun_all_yin (p : TimePhase) : TimePhase.proj Trigram.kun p = .yin := by
+theorem kun_all_yin (p : TimePhase) : TimePhase.proj Trigram.earth p = .yin := by
   cases p <;> rfl
 
 /-- **时间流之离散一步**：cyclic shift（retention ← primalImpr ← protention ← new）。

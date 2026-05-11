@@ -33,7 +33,7 @@ import SSBX.Foundation.Bagua.BaguaTuring
 namespace SSBX.Foundation.Bagua.BaguaWenSpec
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 
 /-! ## § 1  12 主字 -/
@@ -43,9 +43,9 @@ def primaryToken : YiInstr → String
   | .nop                => "不动"
   | .setShi _           => "设时"
   | .flipYao _          => "翻爻"
-  | .hu                 => "互"
-  | .cuo                => "错"
-  | .zong               => "综"
+  | .interlace                 => "互"
+  | .complement                => "错"
+  | .reverse               => "综"
   | .branchYaoEq _ _ _  => "比爻"
   | .branchShiEq _ _    => "比时"
   | .jump _             => "跳"

@@ -43,7 +43,7 @@ import SSBX.Foundation.Wen.MetaInterp.Assembly
 namespace SSBX.Foundation.Wen.MetaInterp.Universal
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Bagua.KleeneInternal
 open SSBX.Foundation.Wen.WenyanSelfInterp

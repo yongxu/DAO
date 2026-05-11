@@ -91,16 +91,16 @@ theorem rule_region_exhaustive (r : RuleRegion) :
 
 theorem rule_specified_not_unspecified (r : RuleRegion) :
     RuleSpecified r → ¬ RuleUnspecified r := by
-  intro hs hu
+  intro hs interlace
   unfold RuleSpecified at hs
-  unfold RuleUnspecified at hu
-  rw [hs] at hu
-  cases hu
+  unfold RuleUnspecified at interlace
+  rw [hs] at interlace
+  cases interlace
 
 theorem rule_unspecified_not_specified (r : RuleRegion) :
     RuleUnspecified r → ¬ RuleSpecified r := by
-  intro hu hs
-  exact rule_specified_not_unspecified r hs hu
+  intro interlace hs
+  exact rule_specified_not_unspecified r hs interlace
 
 theorem rule_boundary_complete :
     (∀ r : RuleRegion, RuleSpecified r ∨ RuleUnspecified r)
@@ -126,16 +126,16 @@ theorem derivation_region_exhaustive (r : DerivationRegion) :
 
 theorem derived_not_underived (r : DerivationRegion) :
     Derived r → ¬ Underived r := by
-  intro hd hu
+  intro hd interlace
   unfold Derived at hd
-  unfold Underived at hu
-  rw [hd] at hu
-  cases hu
+  unfold Underived at interlace
+  rw [hd] at interlace
+  cases interlace
 
 theorem underived_not_derived (r : DerivationRegion) :
     Underived r → ¬ Derived r := by
-  intro hu hd
-  exact derived_not_underived r hd hu
+  intro interlace hd
+  exact derived_not_underived r hd interlace
 
 theorem derivation_boundary_complete :
     (∀ r : DerivationRegion, Derived r ∨ Underived r)
@@ -161,16 +161,16 @@ theorem conclusion_region_exhaustive (r : ConclusionRegion) :
 
 theorem concluded_not_unconcluded (r : ConclusionRegion) :
     Concluded r → ¬ Unconcluded r := by
-  intro hc hu
+  intro hc interlace
   unfold Concluded at hc
-  unfold Unconcluded at hu
-  rw [hc] at hu
-  cases hu
+  unfold Unconcluded at interlace
+  rw [hc] at interlace
+  cases interlace
 
 theorem unconcluded_not_concluded (r : ConclusionRegion) :
     Unconcluded r → ¬ Concluded r := by
-  intro hu hc
-  exact concluded_not_unconcluded r hc hu
+  intro interlace hc
+  exact concluded_not_unconcluded r hc interlace
 
 theorem conclusion_boundary_complete :
     (∀ r : ConclusionRegion, Concluded r ∨ Unconcluded r)
@@ -196,16 +196,16 @@ theorem warrant_region_exhaustive (r : WarrantRegion) :
 
 theorem warranted_not_unwarranted (r : WarrantRegion) :
     Warranted r → ¬ Unwarranted r := by
-  intro hw hu
+  intro hw interlace
   unfold Warranted at hw
-  unfold Unwarranted at hu
-  rw [hw] at hu
-  cases hu
+  unfold Unwarranted at interlace
+  rw [hw] at interlace
+  cases interlace
 
 theorem unwarranted_not_warranted (r : WarrantRegion) :
     Unwarranted r → ¬ Warranted r := by
-  intro hu hw
-  exact warranted_not_unwarranted r hw hu
+  intro interlace hw
+  exact warranted_not_unwarranted r hw interlace
 
 theorem warrant_boundary_complete :
     (∀ r : WarrantRegion, Warranted r ∨ Unwarranted r)

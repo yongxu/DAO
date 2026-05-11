@@ -128,9 +128,9 @@ theorem top_sound (I : Interface) {c : I.model.Claim}
   · have hs := I.sound c hv
     rw [h] at hs
     exact hs
-  · have hu := I.unknown_on_invalid c hv
-    rw [h] at hu
-    cases hu
+  · have interlace := I.unknown_on_invalid c hv
+    rw [h] at interlace
+    cases interlace
 
 theorem bot_sound (I : Interface) {c : I.model.Claim}
     (h : I.run c = Tri.bot) :
@@ -139,9 +139,9 @@ theorem bot_sound (I : Interface) {c : I.model.Claim}
   · have hs := I.sound c hv
     rw [h] at hs
     exact hs
-  · have hu := I.unknown_on_invalid c hv
-    rw [h] at hu
-    cases hu
+  · have interlace := I.unknown_on_invalid c hv
+    rw [h] at interlace
+    cases interlace
 
 end AuditData
 
@@ -192,9 +192,9 @@ theorem top_sound (I : Interface) {x : Input I.model}
   · have hs := I.sound x hv
     rw [h] at hs
     exact hs
-  · have hu := I.unknown_on_invalid x hv
-    rw [h] at hu
-    cases hu
+  · have interlace := I.unknown_on_invalid x hv
+    rw [h] at interlace
+    cases interlace
 
 theorem bot_sound (I : Interface) {x : Input I.model}
     (h : I.run x = Tri.bot) :
@@ -203,9 +203,9 @@ theorem bot_sound (I : Interface) {x : Input I.model}
   · have hs := I.sound x hv
     rw [h] at hs
     exact hs
-  · have hu := I.unknown_on_invalid x hv
-    rw [h] at hu
-    cases hu
+  · have interlace := I.unknown_on_invalid x hv
+    rw [h] at interlace
+    cases interlace
 
 end Calibration
 
@@ -273,9 +273,9 @@ theorem right_top_sound (I : Interface) {x : I.model.X}
   · have hs := I.sound ⟨.right, x⟩ hv
     rw [h] at hs
     exact hs
-  · have hu := I.unknown_on_invalid ⟨.right, x⟩ hv
-    rw [h] at hu
-    cases hu
+  · have interlace := I.unknown_on_invalid ⟨.right, x⟩ hv
+    rw [h] at interlace
+    cases interlace
 
 theorem evil_top_sound (I : Interface) {x : I.model.X}
     (h : I.run ⟨.evil, x⟩ = Tri.top) :
@@ -284,9 +284,9 @@ theorem evil_top_sound (I : Interface) {x : I.model.X}
   · have hs := I.sound ⟨.evil, x⟩ hv
     rw [h] at hs
     exact hs
-  · have hu := I.unknown_on_invalid ⟨.evil, x⟩ hv
-    rw [h] at hu
-    cases hu
+  · have interlace := I.unknown_on_invalid ⟨.evil, x⟩ hv
+    rw [h] at interlace
+    cases interlace
 
 theorem conflict_not_top (I : Interface) {x : I.model.X}
     (h : ThresholdConflict I.model x) :
@@ -353,9 +353,9 @@ theorem relevance_top_sound {M : Model} {D : DaoCriteria M}
   · have hs := I.sound ⟨.relevance, g, p, d, t⟩ hv
     rw [h] at hs
     exact hs
-  · have hu := I.unknown_on_invalid ⟨.relevance, g, p, d, t⟩ hv
-    rw [h] at hu
-    cases hu
+  · have interlace := I.unknown_on_invalid ⟨.relevance, g, p, d, t⟩ hv
+    rw [h] at interlace
+    cases interlace
 
 theorem cycle_top_sound {M : Model} {D : DaoCriteria M}
     (I : Interface M D) {g : M.Gamma} {p : D.Path}
@@ -366,9 +366,9 @@ theorem cycle_top_sound {M : Model} {D : DaoCriteria M}
   · have hs := I.sound ⟨.cycle, g, p, d, t⟩ hv
     rw [h] at hs
     exact hs
-  · have hu := I.unknown_on_invalid ⟨.cycle, g, p, d, t⟩ hv
-    rw [h] at hu
-    cases hu
+  · have interlace := I.unknown_on_invalid ⟨.cycle, g, p, d, t⟩ hv
+    rw [h] at interlace
+    cases interlace
 
 end DegreePeriod
 
@@ -411,9 +411,9 @@ theorem top_sound {M : Model} {C : OpenCriteria M}
   · have hs := I.sound ⟨g, i⟩ hv
     rw [h] at hs
     exact hs
-  · have hu := I.unknown_on_invalid ⟨g, i⟩ hv
-    rw [h] at hu
-    cases hu
+  · have interlace := I.unknown_on_invalid ⟨g, i⟩ hv
+    rw [h] at interlace
+    cases interlace
 
 end OpenProjection
 
@@ -474,9 +474,9 @@ theorem top_sound (I : Interface) {tau : I.model.Trace}
   · have hs := I.sound tau hv
     rw [h] at hs
     exact hs
-  · have hu := I.unknown_on_invalid tau hv
-    rw [h] at hu
-    cases hu
+  · have interlace := I.unknown_on_invalid tau hv
+    rw [h] at interlace
+    cases interlace
 
 theorem bot_sound (I : Interface) {tau : I.model.Trace}
     (h : I.run tau = Tri.bot) :
@@ -485,9 +485,9 @@ theorem bot_sound (I : Interface) {tau : I.model.Trace}
   · have hs := I.sound tau hv
     rw [h] at hs
     exact hs
-  · have hu := I.unknown_on_invalid tau hv
-    rw [h] at hu
-    cases hu
+  · have interlace := I.unknown_on_invalid tau hv
+    rw [h] at interlace
+    cases interlace
 
 end EvilContinuation
 

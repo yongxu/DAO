@@ -1,20 +1,20 @@
 /-
 # V₄ Tensor — R₈ ≅ V₄⁴
 
-This module is the first Mathlib-facing bridge for the Cell256 carrier.
+This module is the first Mathlib-facing bridge for the R8 carrier.
 Foundation files keep Mathlib imports out; here we bind the already-proved
-Cell256 XOR laws to `Fintype` and `AddCommGroup` instances, then expose the
+R8 XOR laws to `Fintype` and `AddCommGroup` instances, then expose the
 four Klein-four axes of R₈.
 -/
 import Mathlib.Algebra.Group.Prod
 import Mathlib.Data.Fintype.Basic
-import SSBX.Foundation.Bagua.Cell256
+import SSBX.Foundation.Bagua.R8
 import SSBX.Foundation.Hierarchy.LiftProject
 
 namespace SSBX.Foundation.Squaring
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 
 namespace V4Tensor
 
@@ -26,12 +26,12 @@ instance instFintypeYao : Fintype Yao where
     intro y
     cases y <;> simp
 
-instance instAddYao : Add Yao := ⟨Cell256.yaoXor⟩
+instance instAddYao : Add Yao := ⟨R8.yaoXor⟩
 instance instZeroYao : Zero Yao := ⟨Yao.yang⟩
 instance instNegYao : Neg Yao := ⟨id⟩
-instance instSubYao : Sub Yao := ⟨Cell256.yaoXor⟩
+instance instSubYao : Sub Yao := ⟨R8.yaoXor⟩
 
-@[simp] theorem yao_add_eq_xor (a b : Yao) : a + b = Cell256.yaoXor a b := rfl
+@[simp] theorem yao_add_eq_xor (a b : Yao) : a + b = R8.yaoXor a b := rfl
 
 instance instAddCommGroupYao : AddCommGroup Yao where
   nsmul := nsmulRec
@@ -52,20 +52,20 @@ instance instAddCommGroupYao : AddCommGroup Yao where
     intro a b
     cases a <;> cases b <;> rfl
 
-instance instFintypeCell256 : Fintype Cell256 where
-  elems := Cell256.all.toFinset
-  complete := fun c => List.mem_toFinset.mpr (Cell256.mem_all c)
+instance instFintypeR8 : Fintype R8 where
+  elems := R8.all.toFinset
+  complete := fun c => List.mem_toFinset.mpr (R8.mem_all c)
 
-instance instAddCommGroupCell256 : AddCommGroup Cell256 where
+instance instAddCommGroupR8 : AddCommGroup R8 where
   nsmul := nsmulRec
   zsmul := zsmulRec
-  add_assoc := Cell256.xor_assoc
-  zero_add := Cell256.origin_xor
-  add_zero := Cell256.xor_origin
+  add_assoc := R8.xor_assoc
+  zero_add := R8.origin_xor
+  add_zero := R8.xor_origin
   neg_add_cancel := by
     intro c
-    simpa [Cell256.neg_def] using Cell256.xor_self c
-  add_comm := Cell256.xor_comm
+    simpa [R8.neg_def] using R8.xor_self c
+  add_comm := R8.xor_comm
 
 /-! ## Generic V₄ carrier and the third-axis alias -/
 
@@ -107,12 +107,12 @@ def v4ToShi (v : V4) : Shi :=
   rcases v with ⟨a, b⟩
   cases a <;> cases b <;> rfl
 
-/-! ## Main equivalence: Cell256 ≃+ V₄⁴ -/
+/-! ## Main equivalence: R8 ≃+ V₄⁴ -/
 
-def toV4Quad (c : Cell256) : V4 × V4 × V4 × V4 :=
+def toV4Quad (c : R8) : V4 × V4 × V4 × V4 :=
   ((c.1.y1, c.1.y2), (c.1.y3, c.1.y4), (c.1.y5, c.1.y6), shiToV4 c.2)
 
-def ofV4Quad : V4 × V4 × V4 × V4 → Cell256
+def ofV4Quad : V4 × V4 × V4 × V4 → R8
   | ((y1, y2), (y3, y4), (y5, y6), shi) =>
       (⟨y1, y2, y3, y4, y5, y6⟩, v4ToShi shi)
 
@@ -120,13 +120,13 @@ theorem to_of (q : V4 × V4 × V4 × V4) : toV4Quad (ofV4Quad q) = q := by
   rcases q with ⟨⟨y1, y2⟩, ⟨y3, y4⟩, ⟨y5, y6⟩, ⟨s1, s2⟩⟩
   cases s1 <;> cases s2 <;> rfl
 
-theorem of_to (c : Cell256) : ofV4Quad (toV4Quad c) = c := by
+theorem of_to (c : R8) : ofV4Quad (toV4Quad c) = c := by
   rcases c with ⟨h, s⟩
   rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
   rcases s with ⟨yin, guo⟩
   cases yin <;> cases guo <;> rfl
 
-def iso : Cell256 ≃+ (V4 × V4 × V4 × V4) where
+def iso : R8 ≃+ (V4 × V4 × V4 × V4) where
   toFun := toV4Quad
   invFun := ofV4Quad
   left_inv := of_to
@@ -139,18 +139,18 @@ def iso : Cell256 ≃+ (V4 × V4 × V4 × V4) where
     rcases hb with ⟨b1, b2, b3, b4, b5, b6⟩
     rcases sa with ⟨ay, ag⟩
     rcases sb with ⟨byin, bg⟩
-    simp [toV4Quad, Cell256.add_def, Cell256.xor, Cell256.hexXor,
-      Cell256.shiXor, Shi.toYinGuo, Shi.ofYinGuo, shiToV4]
+    simp [toV4Quad, R8.add_def, R8.xor, R8.hexXor,
+      R8.shiXor, Shi.toYinGuo, Shi.ofYinGuo, shiToV4]
 
 theorem origin_toV4Quad :
-    toV4Quad Cell256.origin =
+    toV4Quad R8.origin =
       ((Yao.yang, Yao.yang), (Yao.yang, Yao.yang),
        (Yao.yang, Yao.yang), (Yao.yang, Yao.yang)) := rfl
 
 theorem v4_tensor_summary :
-    (∀ c : Cell256, ofV4Quad (toV4Quad c) = c)
+    (∀ c : R8, ofV4Quad (toV4Quad c) = c)
     ∧ (∀ q : V4 × V4 × V4 × V4, toV4Quad (ofV4Quad q) = q)
-    ∧ toV4Quad Cell256.origin =
+    ∧ toV4Quad R8.origin =
       ((Yao.yang, Yao.yang), (Yao.yang, Yao.yang),
        (Yao.yang, Yao.yang), (Yao.yang, Yao.yang)) :=
   ⟨of_to, to_of, origin_toV4Quad⟩

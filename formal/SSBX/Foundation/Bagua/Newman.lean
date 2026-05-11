@@ -100,10 +100,10 @@ theorem newman (R : α → α → Prop)
   -- Well-founded induction on t using SN
   induction t using sn.induction with
   | _ t ih =>
-    intro u v hu hv
-    -- Decompose hu via cons-form: either t = u or t → u' → ... → u
-    rw [RTC.cons_form] at hu
-    cases hu with
+    intro u v interlace hv
+    -- Decompose interlace via cons-form: either t = u or t → u' → ... → u
+    rw [RTC.cons_form] at interlace
+    cases interlace with
     | inl heq_u =>
         -- t = u; common descendant is v
         subst heq_u
@@ -194,8 +194,8 @@ theorem newman (R : α → α → Prop)
 /-- Phrasing as: "weakly Church-Rosser + SN ⟹ Church-Rosser". -/
 theorem newman_alt (R : α → α → Prop)
     (sn : StronglyNormalizing R) (lc : LocallyConfluent R)
-    (t u v : α) (hu : RTC R t u) (hv : RTC R t v) :
+    (t u v : α) (interlace : RTC R t u) (hv : RTC R t v) :
     ∃ w, RTC R u w ∧ RTC R v w :=
-  newman R sn lc t u v hu hv
+  newman R sn lc t u v interlace hv
 
 end SSBX.Foundation.Bagua.Newman

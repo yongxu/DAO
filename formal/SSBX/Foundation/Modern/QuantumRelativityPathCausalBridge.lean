@@ -6,7 +6,7 @@ Companion:
 
 This module advances the Markov/causal bridge by one conservative S3 step:
 
-1. two valid path witnesses with a shared middle state compose into a valid
+1. two valid path witnesses with a shared center state compose into a valid
    path witness;
 2. the composed witness gives both reachability and `causalBefore`;
 3. the concrete and operator-cell grid instances have code-successor steps,
@@ -18,7 +18,7 @@ import SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityBridge
 
 namespace SSBX.Foundation.Modern.QuantumRelativityPathCausalBridge
 
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Modern.QuantumRelativityMarkovBridge
 open SSBX.Foundation.Modern.QuantumRelativityConcreteBridge
 open SSBX.Foundation.Modern.OperatorCellGridMarkovBridge

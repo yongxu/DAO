@@ -523,13 +523,13 @@ example : typeCheck [] Stdlib.fanBody     = some (.arr (.arr .hex .bool) .bool) 
 example : typeCheck [] Tm.yi = some .hex := by native_decide
 
 example :
-    (match inferTypeDetailed [] (.app .notB (.hexLit Hexagram.qian)) with
+    (match inferTypeDetailed [] (.app .notB (.hexLit Hexagram.heaven)) with
      | .error (.argumentMismatch .bool .hex) => true
      | _ => false) = true :=
   by native_decide
 
 example :
-    (match inferTypeDetailed [] (.app (.hexLit Hexagram.qian) (.hexLit Hexagram.kun)) with
+    (match inferTypeDetailed [] (.app (.hexLit Hexagram.heaven) (.hexLit Hexagram.earth)) with
      | .error (.expectedFunction .hex) => true
      | _ => false) = true :=
   by native_decide

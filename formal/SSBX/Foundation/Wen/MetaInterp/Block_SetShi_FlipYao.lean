@@ -11,7 +11,7 @@ These two opcodes carry a runtime parameter — `sh : Shi` for `setShi`,
 `META.cur = sim.cur`), so the only history-side change between
 `encMetaHistory regHex sim` and `encMetaHistory regHex sim.step` is the
 pc-counter advance — exactly one `regDataCell regHex` cell prepended at
-the head, identical in shape to `nop` / `hu` / `cuo` / `zong`.
+the head, identical in shape to `nop` / `interlace` / `complement` / `reverse`.
 
 ## §0  Design choice for parameter cells
 
@@ -38,7 +38,7 @@ implicitly by the existing `Block_HuCuoZong.lean` worked blocks:
 Trade-off: the meta-program grows with the number of (op, param) pairs
 (11 + 4 + 6 = 21 blocks vs 12 for tag-only dispatch), but per-block
 proofs become trivial cur-mirroring — exactly the pattern proven for
-`hu`/`cuo`/`zong`.  This keeps Phase B local-effect lemmas honest and
+`interlace`/`complement`/`reverse`.  This keeps Phase B local-effect lemmas honest and
 defers the destructive-walk question to whichever Phase C dispatcher
 design ultimately wins (the bridge lemmas here are independent of that
 choice).
@@ -64,14 +64,14 @@ import SSBX.Foundation.Wen.MetaInterp.ExecuteBlock
 namespace SSBX.Foundation.Wen.MetaInterp.ExecuteBlock
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.MetaInterp
 
 /-! ## § 1  setShi block (parameterized by sh : Shi) -/
 
 /-- The `setShi sh` execute block: apply `YiInstr.setShi sh` (设时态),
-    then jump back to fetch.  Like `hu`/`cuo`/`zong`, it is a straight-line
+    then jump back to fetch.  Like `interlace`/`complement`/`reverse`, it is a straight-line
     two-instruction program; the Shi transform is applied to META.cur via
     the surrounding loop invariant that maintains `META.cur = sim.cur`.
 
@@ -102,7 +102,7 @@ theorem executeBlock_setShi_second (sh : Shi) (offset fetchOffset : Nat) :
     itself there is no history modification). -/
 theorem executeBlock_setShi_local_effect
     (sh : Shi) (h : Hexagram) (sh₀ : Shi)
-    (history : List Cell256) (fetchOffset offset : Nat) :
+    (history : List R8) (fetchOffset offset : Nat) :
     let μ : YiState :=
       { cur := (h, sh₀)
         history := history
@@ -120,7 +120,7 @@ theorem executeBlock_setShi_local_effect
     instruction advances `sim.pc` by 1 and sets `sim.cur.2` to `sh`.
     Since `encMetaHistory` does NOT record `cur`, the only history-side
     change is the pc-counter advance — exactly one `regDataCell regHex`
-    cell prepended at the head, identical in shape to `nop`/`hu`/`cuo`/`zong`. -/
+    cell prepended at the head, identical in shape to `nop`/`interlace`/`complement`/`reverse`. -/
 theorem encMetaHistory_setShi_step
     (regHex : Hexagram) (sim : YiState) (sh : Shi)
     (h_alive : sim.halted = false)
@@ -166,7 +166,7 @@ theorem executeBlock_flipYao_second (i : Fin 6) (offset fetchOffset : Nat) :
     `(h.flipPos i, sh)` and jumps to fetchOffset. -/
 theorem executeBlock_flipYao_local_effect
     (i : Fin 6) (h : Hexagram) (sh : Shi)
-    (history : List Cell256) (fetchOffset offset : Nat) :
+    (history : List R8) (fetchOffset offset : Nat) :
     let μ : YiState :=
       { cur := (h, sh)
         history := history

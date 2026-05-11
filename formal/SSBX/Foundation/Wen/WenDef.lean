@@ -48,25 +48,25 @@ Path 丙 § 风险 3 之完全缓解：
 
 0 sorry / 0 axiom. 仅类型层；operational semantics 见 M2.
 
-## Phase F.2 migration note (Cell192 → Cell256)
+## Phase F.2 migration note (Cell192 → R8)
 
 Was: `cellLit : Cell192 → Tm` (192 cells, Z/3 `Shi`).
-Now: `cellLit : Cell256 → Tm` (256 cells, V₄ Klein `Shi`).
+Now: `cellLit : R8 → Tm` (256 cells, V₄ Klein `Shi`).
 
 The cell-endo builtin tags `.shiNextC` / `.shiPrevC` keep their syntactic
 identity here (this is the typed-λ surface; only types change). Their
 operational semantics are defined elsewhere (`WenDefEval`); under V₄ both
-collapse to the `Shi.cuo` involution because V₄ involutions are self-inverse.
+collapse to the `Shi.complement` involution because V₄ involutions are self-inverse.
 -/
 import SSBX.Foundation.Yi.Yi
-import SSBX.Foundation.Bagua.Cell256
+import SSBX.Foundation.Bagua.R8
 import SSBX.Foundation.Bagua.BaguaWenSpec
 import SSBX.Text.OperatorSignatures
 
 namespace SSBX.Foundation.Wen.WenDef
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaWenSpec
 open SSBX.Text.WenyanOperators
 open SSBX.Text.OperatorSignatures
@@ -93,7 +93,7 @@ inductive Tm : Type
   | app     (f x : Tm)                 : Tm
   | hexLit  (h : Hexagram)             : Tm
   | boolLit (b : Bool)                 : Tm
-  | cellLit (c : Cell256)              : Tm
+  | cellLit (c : R8)              : Tm
   | jia                                : Tm  -- 加 :  Hex → Hex → Hex
   | yi                                 : Tm  -- 一 :  Hex
   | notB                               : Tm  -- 不 :  Bool → Bool
@@ -124,8 +124,8 @@ inductive Tm : Type
   | cuoC                               : Tm  -- Cell → Cell, preserve 时
   | zongC                              : Tm  -- Cell → Cell, preserve 时
   | huC                                : Tm  -- Cell → Cell, preserve 时
-  | shiNextC                           : Tm  -- Cell → Cell, 时态单步 (V₄ Shi.cuo)
-  | shiPrevC                           : Tm  -- Cell → Cell, 时态单步 (V₄ Shi.cuo, self-inverse)
+  | shiNextC                           : Tm  -- Cell → Cell, 时态单步 (V₄ Shi.complement)
+  | shiPrevC                           : Tm  -- Cell → Cell, 时态单步 (V₄ Shi.complement, self-inverse)
   | flip1C                             : Tm  -- Cell → Cell, y1 flip
   | flip2C                             : Tm  -- Cell → Cell, y2 flip
   | flip3C                             : Tm  -- Cell → Cell, y3 flip
@@ -260,7 +260,7 @@ def typeCheck : Ctx → Tm → Option Ty
       | _, _, _ => none
 
 example :
-    typeCheck [] (.catalogue2 .E_2 (.hexLit Hexagram.qian) (.hexLit Hexagram.qian))
+    typeCheck [] (.catalogue2 .E_2 (.hexLit Hexagram.heaven) (.hexLit Hexagram.heaven))
       = some (.catalogue .textAct) := by native_decide
 
 example :
@@ -272,7 +272,7 @@ example :
       = some (.catalogue .propConnective) := by native_decide
 
 example :
-    typeCheck [] (.catalogue2 .P_23 (.hexLit Hexagram.qian) (.hexLit Hexagram.kun))
+    typeCheck [] (.catalogue2 .P_23 (.hexLit Hexagram.heaven) (.hexLit Hexagram.earth))
       = none := by native_decide
 
 /-! ## § 4  命名空间 -/
@@ -457,7 +457,7 @@ def fanDef : WenDef where
 -/
 
 def sunBody : Tm :=
-  .abs "x" .hex (.app (.app .jia (.hexLit Hexagram.kun)) (.var "x"))
+  .abs "x" .hex (.app (.app .jia (.hexLit Hexagram.earth)) (.var "x"))
 
 theorem sunBody_typed :
     typeCheck [] sunBody = some (.arr .hex .hex) := by native_decide
@@ -500,7 +500,7 @@ theorem cuoBody_typed :
     typeCheck [] cuoBody = some (.arr .hex .hex) := by native_decide
 
 def cuoDef : WenDef where
-  name           := "cuo"
+  name           := "complement"
   body           := cuoBody
   bodyType       := .arr .hex .hex
   validName      := by native_decide
@@ -512,7 +512,7 @@ theorem zongBody_typed :
     typeCheck [] zongBody = some (.arr .hex .hex) := by native_decide
 
 def zongDef : WenDef where
-  name           := "zong"
+  name           := "reverse"
   body           := zongBody
   bodyType       := .arr .hex .hex
   validName      := by native_decide
@@ -524,7 +524,7 @@ theorem huBody_typed :
     typeCheck [] huBody = some (.arr .hex .hex) := by native_decide
 
 def huDef : WenDef where
-  name           := "hu"
+  name           := "interlace"
   body           := huBody
   bodyType       := .arr .hex .hex
   validName      := by native_decide
@@ -561,7 +561,7 @@ theorem cuoZongBody_typed :
     typeCheck [] cuoZongBody = some (.arr .hex .hex) := by native_decide
 
 def cuoZongDef : WenDef where
-  name           := "cuoZong"
+  name           := "complementReverse"
   body           := cuoZongBody
   bodyType       := .arr .hex .hex
   validName      := by native_decide
@@ -643,7 +643,7 @@ def flip6Def : WenDef where
 
   These bodies reuse the existing `Bool`, `Hex`, and finite `forallH` core.
   They deliberately avoid catalogue rows that require new carriers such as
-  `Cell256` (was `Cell192` pre-Phase F.2), paths, text acts, modal frames,
+  `R8` (was `Cell192` pre-Phase F.2), paths, text acts, modal frames,
   or domain-specific state.
 -/
 
@@ -944,7 +944,7 @@ def headHDef : WenDef where
   validName      := by native_decide
   bodyTypechecks := by native_decide
 
-/-! ### Cell256 carrier helpers (post Phase F.2 migration; was `Cell192`) -/
+/-! ### R8 carrier helpers (post Phase F.2 migration; was `Cell192`) -/
 
 def eqCellBody : Tm := .eqCell
 
@@ -1023,8 +1023,8 @@ theorem all_length : all.length = 52 := by native_decide
 theorem all_names :
     all.map WenDef.name =
       [ "tui", "bi", "bu", "biModal", "tong", "fan", "sun", "yiBenefit"
-      , "cuo", "zong", "hu", "fanReverse"
-      , "hexId", "cuoZong", "flip1", "flip2", "flip3", "flip4", "flip5", "flip6"
+      , "complement", "reverse", "interlace", "fanReverse"
+      , "hexId", "complementReverse", "flip1", "flip2", "flip3", "flip4", "flip5", "flip6"
       , "imp", "xorB", "neqHex", "existsH", "noneH"
       , "uniqueH", "exactly3H", "majorityH", "endoComp", "hexApply"
       , "boolMarker", "repeatOnce", "eachH", "hexPredApply"

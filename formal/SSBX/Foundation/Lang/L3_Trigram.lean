@@ -15,8 +15,8 @@ Bit form (canonical printer output):
 
 Named form (also accepted by parser):
 ```
-(trigram-named 乾)   — qian
-(trigram-named 坤)   — kun
+(trigram-named 乾)   — heaven
+(trigram-named 坤)   — earth
 …
 ```
 
@@ -24,8 +24,8 @@ Tokens accepted per yao slot: 阳/yang/1 or 阴/yin/0.
 
 ## The 8 trigrams (Yao-tuple bit-pattern, y1 y2 y3)
 
-  乾 qian (阳阳阳) ☰   兑 dui  (阳阳阴) ☱   离 li   (阳阴阳) ☲   震 zhen (阳阴阴) ☳
-  巽 xun  (阴阳阳) ☴   坎 kan  (阴阳阴) ☵   艮 gen  (阴阴阳) ☶   坤 kun  (阴阴阴) ☷
+  乾 heaven (阳阳阳) ☰   兑 lake  (阳阳阴) ☱   离 fire   (阳阴阳) ☲   震 thunder (阳阴阴) ☳
+  巽 wind  (阴阳阳) ☴   坎 water  (阴阳阴) ☵   艮 mountain  (阴阴阳) ☶   坤 earth  (阴阴阴) ☷
 
 `origin = 坤` (the (Z/2)³ zero).
 -/
@@ -85,14 +85,14 @@ def printYaoAtom : Yao → Sexp
 
 /-- Parse a named trigram atom (single CJK char). -/
 def parseNamed : String → Except String Cell
-  | "乾" => .ok Trigram.qian
-  | "兑" => .ok Trigram.dui
-  | "离" => .ok Trigram.li
-  | "震" => .ok Trigram.zhen
-  | "巽" => .ok Trigram.xun
-  | "坎" => .ok Trigram.kan
-  | "艮" => .ok Trigram.gen
-  | "坤" => .ok Trigram.kun
+  | "乾" => .ok Trigram.heaven
+  | "兑" => .ok Trigram.lake
+  | "离" => .ok Trigram.fire
+  | "震" => .ok Trigram.thunder
+  | "巽" => .ok Trigram.wind
+  | "坎" => .ok Trigram.water
+  | "艮" => .ok Trigram.mountain
+  | "坤" => .ok Trigram.earth
   | other => .error s!"L3.parseNamed: unknown trigram name '{other}'"
 
 /-- Parse `(trigram t1 t2 t3)` (bit form) or `(trigram-named 乾)` (named). -/
@@ -118,7 +118,7 @@ theorem print_parse_round_trip (c : Cell) : parseCell (printCell c) = .ok c := b
 
 /-- Flip the bottom yao (y1). -/
 def flip1 : Cell := ⟨.yang, .yin,  .yin⟩
-/-- Flip the middle yao (y2). -/
+/-- Flip the center yao (y2). -/
 def flip2 : Cell := ⟨.yin,  .yang, .yin⟩
 /-- Flip the top yao (y3). -/
 def flip3 : Cell := ⟨.yin,  .yin,  .yang⟩
@@ -160,13 +160,13 @@ def flipY3Atomic : Rule :=
 
 /-- Named transition: 乾 → 坤 (full 错). -/
 def qianToKun : Rule :=
-  Rule.named "qian-to-kun"
+  Rule.named "heaven-to-earth"
     (.list [.atom "trigram", .atom "阳", .atom "阳", .atom "阳"])
     (.list [.atom "trigram", .atom "阴", .atom "阴", .atom "阴"])
 
-/-- Named transition: 离 → 坎 (cuo of 离). -/
+/-- Named transition: 离 → 坎 (complement of 离). -/
 def liToKan : Rule :=
-  Rule.named "li-to-kan"
+  Rule.named "fire-to-water"
     (.list [.atom "trigram", .atom "阳", .atom "阴", .atom "阳"])
     (.list [.atom "trigram", .atom "阴", .atom "阳", .atom "阴"])
 
@@ -177,19 +177,19 @@ def defaultRules : List Rule :=
 /-- Smoke test: from 坤 (origin), 1 step lands on 震 (y1 flip). -/
 example :
     (Eval.runRules defaultRules (printCell origin) 1
-        == printCell Trigram.zhen) = true := by
+        == printCell Trigram.thunder) = true := by
   native_decide
 
 /-- 3 steps from 坤 reach 乾 (y1 → y2 → y3 chain). -/
 example :
     (Eval.runRules defaultRules (printCell origin) 3
-        == printCell Trigram.qian) = true := by
+        == printCell Trigram.heaven) = true := by
   native_decide
 
-/-- 4 steps from 坤: hits 乾 (3 steps) then `qian-to-kun` fires → back to 坤. -/
+/-- 4 steps from 坤: hits 乾 (3 steps) then `heaven-to-earth` fires → back to 坤. -/
 example :
     (Eval.runRules defaultRules (printCell origin) 4
-        == printCell Trigram.kun) = true := by
+        == printCell Trigram.earth) = true := by
   native_decide
 
 /-- runCell convenience produces an OK result starting from 坤. -/
@@ -197,12 +197,12 @@ example : (runCell (α := Cell) defaultRules origin 1).toOption.isSome = true :=
   native_decide
 
 /-- Round-trip via printer for 乾 (uses `print_parse_round_trip`). -/
-example : parseCell (printCell Trigram.qian) = .ok Trigram.qian :=
-  print_parse_round_trip Trigram.qian
+example : parseCell (printCell Trigram.heaven) = .ok Trigram.heaven :=
+  print_parse_round_trip Trigram.heaven
 
 /-- Named-form parser: `(trigram-named 离)` parses to 离. -/
 example :
-    parseCell (.list [.atom "trigram-named", .atom "离"]) = .ok Trigram.li := rfl
+    parseCell (.list [.atom "trigram-named", .atom "离"]) = .ok Trigram.fire := rfl
 
 /-! ## § 7 L3 summary bundle -/
 

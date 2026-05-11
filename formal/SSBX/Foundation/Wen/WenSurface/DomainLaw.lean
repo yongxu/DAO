@@ -257,7 +257,7 @@ inductive SpatialAccessor where
   | interior
   | begin
   | finish
-  | extreme
+  | terminus
 deriving Repr, DecidableEq
 
 def SpatialAccessor.operatorId : SpatialAccessor → OperatorId
@@ -269,7 +269,7 @@ def SpatialAccessor.operatorId : SpatialAccessor → OperatorId
   | .interior => .C_8
   | .begin => .B_1
   | .finish => .B_2
-  | .extreme => .B_7
+  | .terminus => .B_7
 
 def spatialFrameAccessorOperatorIds : List OperatorId :=
   [.R_5, .C_4, .C_5, .C_6, .C_7, .C_8, .B_1, .B_2, .B_7]
@@ -355,7 +355,7 @@ inductive NameObjectAccessor where
   | duration
   | extent
   | endpoint
-  | middle
+  | center
   | model
   | nameClass
   | textContent
@@ -376,7 +376,7 @@ def NameObjectAccessor.operatorId : NameObjectAccessor → OperatorId
   | .duration => .P_6
   | .extent => .P_7
   | .endpoint => .P_10
-  | .middle => .P_12
+  | .center => .P_12
   | .model => .P_18
   | .nameClass => .P_19
   | .textContent => .P_21
@@ -700,42 +700,42 @@ theorem hexBenefitIncrementTransform_denotes_yiBenefit (id : OperatorId) (h : He
   exact yiBenefit_eq_sheng h
 
 def hexDecrementTransform (_id : OperatorId) (h : Hexagram) : Hexagram :=
-  «加» Hexagram.kun h
+  «加» Hexagram.earth h
 
 theorem hexDecrementTransform_denotes_sun (id : OperatorId) (h : Hexagram) :
     denoteHexFun Stdlib.sunBody h = some (hexDecrementTransform id h) := by
   unfold hexDecrementTransform
   exact sun_eq_decrement h
 
-def hexCuoTransform (_id : OperatorId) (h : Hexagram) : Hexagram := h.cuo
+def hexCuoTransform (_id : OperatorId) (h : Hexagram) : Hexagram := h.complement
 
 theorem hexCuoTransform_denotes_cuo (id : OperatorId) (h : Hexagram) :
     denoteHexFun Stdlib.cuoBody h = some (hexCuoTransform id h) := by
   unfold hexCuoTransform
   exact cuoBody_eq_cuo h
 
-def hexFanReverseTransform (_id : OperatorId) (h : Hexagram) : Hexagram := h.cuo
+def hexFanReverseTransform (_id : OperatorId) (h : Hexagram) : Hexagram := h.complement
 
 theorem hexFanReverseTransform_denotes_cuo (id : OperatorId) (h : Hexagram) :
     denoteHexFun Stdlib.fanReverseBody h = some (hexFanReverseTransform id h) := by
   unfold hexFanReverseTransform
   exact fanReverseBody_eq_cuo h
 
-def hexZongTransform (_id : OperatorId) (h : Hexagram) : Hexagram := h.zong
+def hexZongTransform (_id : OperatorId) (h : Hexagram) : Hexagram := h.reverse
 
 theorem hexZongTransform_denotes_zong (id : OperatorId) (h : Hexagram) :
     denoteHexFun Stdlib.zongBody h = some (hexZongTransform id h) := by
   unfold hexZongTransform
   exact zongBody_eq_zong h
 
-def hexHuTransform (_id : OperatorId) (h : Hexagram) : Hexagram := h.hu
+def hexHuTransform (_id : OperatorId) (h : Hexagram) : Hexagram := h.interlace
 
 theorem hexHuTransform_denotes_hu (id : OperatorId) (h : Hexagram) :
     denoteHexFun Stdlib.huBody h = some (hexHuTransform id h) := by
   unfold hexHuTransform
   exact huBody_eq_hu h
 
-def hexCuoZongTransform (_id : OperatorId) (h : Hexagram) : Hexagram := h.cuoZong
+def hexCuoZongTransform (_id : OperatorId) (h : Hexagram) : Hexagram := h.complementReverse
 
 theorem hexCuoZongTransform_denotes_cuoZong (id : OperatorId) (h : Hexagram) :
     denoteHexFun Stdlib.cuoZongBody h = some (hexCuoZongTransform id h) := by
@@ -749,14 +749,14 @@ theorem hexFlip1Transform_denotes_flip1 (id : OperatorId) (h : Hexagram) :
   unfold hexFlip1Transform
   exact flip1Body_eq_dongInner h
 
-def hexFlip2Transform (_id : OperatorId) (h : Hexagram) : Hexagram := huaInner h
+def hexFlip2Transform (_id : OperatorId) (h : Hexagram) : Hexagram := middleFlipInner h
 
 theorem hexFlip2Transform_denotes_flip2 (id : OperatorId) (h : Hexagram) :
     denoteHexFun Stdlib.flip2Body h = some (hexFlip2Transform id h) := by
   unfold hexFlip2Transform
   exact flip2Body_eq_huaInner h
 
-def hexFlip3Transform (_id : OperatorId) (h : Hexagram) : Hexagram := bianInner h
+def hexFlip3Transform (_id : OperatorId) (h : Hexagram) : Hexagram := topFlipInner h
 
 theorem hexFlip3Transform_denotes_flip3 (id : OperatorId) (h : Hexagram) :
     denoteHexFun Stdlib.flip3Body h = some (hexFlip3Transform id h) := by

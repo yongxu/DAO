@@ -38,7 +38,7 @@ interpreter — any future surface-alias parser should consult it as ground trut
 
 import SSBX.Foundation.Yi.Yi
 import SSBX.Foundation.Bagua.BaguaAlgebra
-import SSBX.Foundation.Bagua.Cell256
+import SSBX.Foundation.Bagua.R8
 import SSBX.Text.OperatorAnchors
 
 /-! ## R1 — Yao essence (阳/阴 → 实/虚)
@@ -76,16 +76,16 @@ namespace SSBX.Foundation.Bagua.BaguaAlgebra.SiXiang
 open SSBX.Foundation.Yi.Yi
 
 def seasonChar (s : SiXiang) : String :=
-  if s = SiXiang.taiYang then "夏"
-  else if s = SiXiang.shaoYin then "秋"
-  else if s = SiXiang.shaoYang then "春"
-  else "冬"  -- taiYin
+  if s = SiXiang.greaterYang then "夏"
+  else if s = SiXiang.lesserYin then "秋"
+  else if s = SiXiang.lesserYang then "春"
+  else "冬"  -- greaterYin
 
 def fromSeasonChar (s : String) : Option SiXiang :=
-  if s = "夏" then some SiXiang.taiYang
-  else if s = "秋" then some SiXiang.shaoYin
-  else if s = "春" then some SiXiang.shaoYang
-  else if s = "冬" then some SiXiang.taiYin
+  if s = "夏" then some SiXiang.greaterYang
+  else if s = "秋" then some SiXiang.lesserYin
+  else if s = "春" then some SiXiang.lesserYang
+  else if s = "冬" then some SiXiang.greaterYin
   else none
 
 end SSBX.Foundation.Bagua.BaguaAlgebra.SiXiang
@@ -95,42 +95,42 @@ end SSBX.Foundation.Bagua.BaguaAlgebra.SiXiang
    《说卦传》原文：乾健、坤顺、震动、巽入、坎陷、离丽、艮止、兑说也。
 
    本表对原文做三处替换以避免系统内冲突：
-   - 震：动 → 起 (因 `dong` 已是 R3 flip y1 算子；《说卦》"震起"为次义)
+   - 震：动 → 起 (因 `motion` 已是 R3 flip y1 算子；《说卦》"震起"为次义)
    - 离：丽 → 显 (因 `丽` 与 30 卦撞名；`显` 与 Sheng.toTrigram manifest 同向)
    - 兑：说 → 悦 (现代汉字写法) -/
 
 namespace SSBX.Foundation.Yi.Yi.Trigram
 
 def virtueChar (t : Trigram) : String :=
-  if t = qian then "健"
-  else if t = dui then "悦"
-  else if t = li then "显"
-  else if t = zhen then "起"
-  else if t = xun then "入"
-  else if t = kan then "险"
-  else if t = gen then "止"
-  else "顺"  -- kun
+  if t = heaven then "健"
+  else if t = lake then "悦"
+  else if t = fire then "显"
+  else if t = thunder then "起"
+  else if t = wind then "入"
+  else if t = water then "险"
+  else if t = mountain then "止"
+  else "顺"  -- earth
 
 def fromVirtueChar (s : String) : Option Trigram :=
-  if s = "健" then some qian
-  else if s = "悦" then some dui
-  else if s = "显" then some li
-  else if s = "起" then some zhen
-  else if s = "入" then some xun
-  else if s = "险" then some kan
-  else if s = "止" then some gen
-  else if s = "顺" then some kun
+  if s = "健" then some heaven
+  else if s = "悦" then some lake
+  else if s = "显" then some fire
+  else if s = "起" then some thunder
+  else if s = "入" then some wind
+  else if s = "险" then some water
+  else if s = "止" then some mountain
+  else if s = "顺" then some earth
   else none
 
 /-- Each trigram's canonical literal character (the trigram name itself). -/
 def literalChar (t : Trigram) : String :=
-  if t = qian then "乾"
-  else if t = dui then "兑"
-  else if t = li then "离"
-  else if t = zhen then "震"
-  else if t = xun then "巽"
-  else if t = kan then "坎"
-  else if t = gen then "艮"
+  if t = heaven then "乾"
+  else if t = lake then "兑"
+  else if t = fire then "离"
+  else if t = thunder then "震"
+  else if t = wind then "巽"
+  else if t = water then "坎"
+  else if t = mountain then "艮"
   else "坤"
 
 theorem virtue_roundtrip (t : Trigram) :
@@ -144,9 +144,9 @@ end SSBX.Foundation.Yi.Yi.Trigram
 
    六爻位翻转字: 改/化/变/临/主/极 (Fin 6, 0-indexed)
 
-   - flip[0] (改) — 初爻 (与 R3 dong 一致)
-   - flip[1] (化) — 二爻 (与 R3 hua 一致)
-   - flip[2] (变) — 三爻 (与 R3 bian 一致)
+   - flip[0] (改) — 初爻 (与 R3 motion 一致)
+   - flip[1] (化) — 二爻 (与 R3 middleFlip 一致)
+   - flip[2] (变) — 三爻 (与 R3 topFlip 一致)
    - flip[3] (临) — 四爻 (近君位 / 临察；19 临卦同字)
    - flip[4] (主) — 五爻 (君位 / 主导；九五之尊)
    - flip[5] (极) — 上爻 (亢龙有悔之极位) -/
@@ -194,7 +194,7 @@ inductive ShiTransition : Type
 
 namespace ShiTransition
 
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 
 def char : ShiTransition → String
   | .next => "迁"
@@ -206,12 +206,12 @@ def fromChar (s : String) : Option ShiTransition :=
   else none
 
 /-- Apply a shi transition to a Shi value. Under V₄, both `.next` and `.prev`
-    collapse to `Shi.cuo` (V₄ involution = self-inverse). The legacy Z/3
-    cycle (next^[3]=id) was replaced by cuo^[2]=id. -/
+    collapse to `Shi.complement` (V₄ involution = self-inverse). The legacy Z/3
+    cycle (next^[3]=id) was replaced by complement^[2]=id. -/
 def apply (t : ShiTransition) (s : Shi) : Shi :=
   match t with
-  | .next => s.cuo
-  | .prev => s.cuo
+  | .next => s.complement
+  | .prev => s.complement
 
 theorem char_roundtrip (t : ShiTransition) :
     fromChar t.char = some t := by
@@ -232,9 +232,9 @@ def modernAlias : YiInstrKind → String
   | .nop          => "静"
   | .setShi       => "置"
   | .flipYao      => "翻"
-  | .hu           => "互"
-  | .cuo          => "错"
-  | .zong         => "综"
+  | .interlace           => "互"
+  | .complement          => "错"
+  | .reverse         => "综"
   | .branchYaoEq  => "侔"
   | .branchShiEq  => "会"
   | .jump         => "跳"
@@ -246,9 +246,9 @@ def fromModernAlias (s : String) : Option YiInstrKind :=
   if s = "静"      then some .nop
   else if s = "置" then some .setShi
   else if s = "翻" then some .flipYao
-  else if s = "互" then some .hu
-  else if s = "错" then some .cuo
-  else if s = "综" then some .zong
+  else if s = "互" then some .interlace
+  else if s = "错" then some .complement
+  else if s = "综" then some .reverse
   else if s = "侔" then some .branchYaoEq
   else if s = "会" then some .branchShiEq
   else if s = "跳" then some .jump
@@ -292,28 +292,28 @@ def allLayerChars : List LayerChar :=
   [ ⟨"R1", "essence", "Yao.yang",  "实"⟩
   , ⟨"R1", "essence", "Yao.yin",   "虚"⟩
   -- R2: sixiang seasons (4)
-  , ⟨"R2", "season",  "SiXiang.taiYang",  "夏"⟩
-  , ⟨"R2", "season",  "SiXiang.shaoYin",  "秋"⟩
-  , ⟨"R2", "season",  "SiXiang.shaoYang", "春"⟩
-  , ⟨"R2", "season",  "SiXiang.taiYin",   "冬"⟩
+  , ⟨"R2", "season",  "SiXiang.greaterYang",  "夏"⟩
+  , ⟨"R2", "season",  "SiXiang.lesserYin",  "秋"⟩
+  , ⟨"R2", "season",  "SiXiang.lesserYang", "春"⟩
+  , ⟨"R2", "season",  "SiXiang.greaterYin",   "冬"⟩
   -- R3: trigram virtues (8)
-  , ⟨"R3", "virtue",  "Trigram.qian", "健"⟩
-  , ⟨"R3", "virtue",  "Trigram.dui",  "悦"⟩
-  , ⟨"R3", "virtue",  "Trigram.li",   "显"⟩
-  , ⟨"R3", "virtue",  "Trigram.zhen", "起"⟩
-  , ⟨"R3", "virtue",  "Trigram.xun",  "入"⟩
-  , ⟨"R3", "virtue",  "Trigram.kan",  "险"⟩
-  , ⟨"R3", "virtue",  "Trigram.gen",  "止"⟩
-  , ⟨"R3", "virtue",  "Trigram.kun",  "顺"⟩
+  , ⟨"R3", "virtue",  "Trigram.heaven", "健"⟩
+  , ⟨"R3", "virtue",  "Trigram.lake",  "悦"⟩
+  , ⟨"R3", "virtue",  "Trigram.fire",   "显"⟩
+  , ⟨"R3", "virtue",  "Trigram.thunder", "起"⟩
+  , ⟨"R3", "virtue",  "Trigram.wind",  "入"⟩
+  , ⟨"R3", "virtue",  "Trigram.water",  "险"⟩
+  , ⟨"R3", "virtue",  "Trigram.mountain",  "止"⟩
+  , ⟨"R3", "virtue",  "Trigram.earth",  "顺"⟩
   -- R3: trigram literals (8)
-  , ⟨"R3", "literal", "Trigram.qian", "乾"⟩
-  , ⟨"R3", "literal", "Trigram.dui",  "兑"⟩
-  , ⟨"R3", "literal", "Trigram.li",   "离"⟩
-  , ⟨"R3", "literal", "Trigram.zhen", "震"⟩
-  , ⟨"R3", "literal", "Trigram.xun",  "巽"⟩
-  , ⟨"R3", "literal", "Trigram.kan",  "坎"⟩
-  , ⟨"R3", "literal", "Trigram.gen",  "艮"⟩
-  , ⟨"R3", "literal", "Trigram.kun",  "坤"⟩
+  , ⟨"R3", "literal", "Trigram.heaven", "乾"⟩
+  , ⟨"R3", "literal", "Trigram.lake",  "兑"⟩
+  , ⟨"R3", "literal", "Trigram.fire",   "离"⟩
+  , ⟨"R3", "literal", "Trigram.thunder", "震"⟩
+  , ⟨"R3", "literal", "Trigram.wind",  "巽"⟩
+  , ⟨"R3", "literal", "Trigram.water",  "坎"⟩
+  , ⟨"R3", "literal", "Trigram.mountain",  "艮"⟩
+  , ⟨"R3", "literal", "Trigram.earth",  "坤"⟩
   -- R4: 6-yao flip positions (6)
   , ⟨"R4", "flip", "flip[0]初爻", "改"⟩
   , ⟨"R4", "flip", "flip[1]二爻", "化"⟩
@@ -328,9 +328,9 @@ def allLayerChars : List LayerChar :=
   , ⟨"L0", "instr", "YiInstrKind.nop",          "静"⟩
   , ⟨"L0", "instr", "YiInstrKind.setShi",       "置"⟩
   , ⟨"L0", "instr", "YiInstrKind.flipYao",      "翻"⟩
-  , ⟨"L0", "instr", "YiInstrKind.hu",           "互"⟩
-  , ⟨"L0", "instr", "YiInstrKind.cuo",          "错"⟩
-  , ⟨"L0", "instr", "YiInstrKind.zong",         "综"⟩
+  , ⟨"L0", "instr", "YiInstrKind.interlace",           "互"⟩
+  , ⟨"L0", "instr", "YiInstrKind.complement",          "错"⟩
+  , ⟨"L0", "instr", "YiInstrKind.reverse",         "综"⟩
   , ⟨"L0", "instr", "YiInstrKind.branchYaoEq",  "侔"⟩
   , ⟨"L0", "instr", "YiInstrKind.branchShiEq",  "会"⟩
   , ⟨"L0", "instr", "YiInstrKind.jump",         "跳"⟩

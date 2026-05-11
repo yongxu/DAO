@@ -54,7 +54,7 @@ end SSBX.Foundation.Bagua.BaguaTuring
 namespace SSBX.Foundation.Wen.WenyanParser
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 
 /-! ## § 1  Token 类型 -/
@@ -226,9 +226,9 @@ def parseInstrAlias (op : String) (rest : List Tok) : Option (YiInstr × List To
 /-- 解析单条指令。返回 (指令, 剩余 tokens)。结构匹配 13 主字。 -/
 def parseInstr : List Tok → Option (YiInstr × List Tok)
   | .cjk "不动" :: rest => some (.nop, rest)
-  | .cjk "互"   :: rest => some (.hu, rest)
-  | .cjk "错"   :: rest => some (.cuo, rest)
-  | .cjk "综"   :: rest => some (.zong, rest)
+  | .cjk "互"   :: rest => some (.interlace, rest)
+  | .cjk "错"   :: rest => some (.complement, rest)
+  | .cjk "综"   :: rest => some (.reverse, rest)
   | .cjk "推"   :: rest => some (.push, rest)
   | .cjk "取"   :: rest => some (.pop, rest)
   | .cjk "终"   :: rest => some (.halt, rest)
@@ -330,9 +330,9 @@ def printYao : Fin 6 → String
 
 def printInstr : YiInstr → String
   | .nop  => "«不动»"
-  | .hu   => "«互»"
-  | .cuo  => "«错»"
-  | .zong => "«综»"
+  | .interlace   => "«互»"
+  | .complement  => "«错»"
+  | .reverse => "«综»"
   | .push => "«推»"
   | .pop  => "«取»"
   | .halt => "«终»"
@@ -385,7 +385,7 @@ theorem daoJudgeProg_roundtrip :
 /-- 12 构造子之代表（每构造子至少一例，含全部 6 爻位 / 3 时态 / 范围内 Nat 参数）。 -/
 def allKindReprs : List YiInstr := [
   .nop,
-  .hu, .cuo, .zong,
+  .interlace, .complement, .reverse,
   .push, .pop,
   .halt,
   .setShi .dao, .setShi .ji, .setShi .jin, .setShi .wei,
@@ -425,7 +425,7 @@ def shiRange : List Shi := [.dao, .ji, .jin, .wei]
   * 64 条 `jump`
 -/
 def validInstrUniverse : List YiInstr :=
-  [.nop, .hu, .cuo, .zong, .push, .pop, .halt]
+  [.nop, .interlace, .complement, .reverse, .push, .pop, .halt]
   ++ shiRange.map .setShi
   ++ yaoRange.map .flipYao
   ++ (List.flatMap
@@ -480,7 +480,7 @@ def testPrograms : List (List YiInstr) := [
   daoJudgeProg,
   [.nop, .halt],
   [.push, .pop, .halt],
-  [.hu, .cuo, .zong, .halt],
+  [.interlace, .complement, .reverse, .halt],
   [.flipYao ⟨0, by omega⟩, .flipYao ⟨5, by omega⟩, .halt],
   [.setShi .ji, .setShi .jin, .setShi .wei, .halt],
   [.branchYaoEq ⟨0, by omega⟩ ⟨1, by omega⟩ 5, .halt, .nop, .nop, .nop, .halt],

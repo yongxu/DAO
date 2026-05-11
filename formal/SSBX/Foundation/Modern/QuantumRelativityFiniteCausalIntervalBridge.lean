@@ -6,11 +6,11 @@ Companion:
 
 S28 advances S27 by one local-finiteness step:
 
-1. define a finite two-step causal interval as an explicit list of middle
+1. define a finite two-step causal interval as an explicit list of center
    states between fixed endpoints;
 2. prove the list is sound and complete for genuine `step a m ∧ step m c`
    witnesses;
-3. prove such middle states respect the S27 finite local-future interface;
+3. prove such center states respect the S27 finite local-future interface;
 4. instantiate the interval for the concrete prepared/evolved/measured chain
    and the two-route source/target toy process.
 
@@ -38,24 +38,24 @@ open SSBX.Foundation.Modern.QuantumRelativityWenBoundary
 /-! ## § 1 Finite two-step causal interval interface -/
 
 /--
-A finite two-step causal interval candidate displays all middle states `m`
+A finite two-step causal interval candidate displays all center states `m`
 between fixed endpoints `a` and `c` for the local relation
 `P.step a m ∧ P.step m c`.
 -/
 structure FiniteTwoStepCausalIntervalCandidate
     (P : FiniteProcess) (a c : P.State) where
-  middle : List P.State
+  center : List P.State
   middle_sound :
-    ∀ {m : P.State}, m ∈ middle -> P.step a m ∧ P.step m c
+    ∀ {m : P.State}, m ∈ center -> P.step a m ∧ P.step m c
   middle_complete :
-    ∀ {m : P.State}, P.step a m -> P.step m c -> m ∈ middle
+    ∀ {m : P.State}, P.step a m -> P.step m c -> m ∈ center
 
 /-- The displayed closed interval points: left endpoint, displayed middles,
 and right endpoint. -/
 def closedTwoStepIntervalPoints {P : FiniteProcess} {a c : P.State}
     (I : FiniteTwoStepCausalIntervalCandidate P a c) :
     List P.State :=
-  a :: (I.middle ++ [c])
+  a :: (I.center ++ [c])
 
 theorem left_endpoint_mem_closed_interval {P : FiniteProcess}
     {a c : P.State} (I : FiniteTwoStepCausalIntervalCandidate P a c) :
@@ -69,18 +69,18 @@ theorem right_endpoint_mem_closed_interval {P : FiniteProcess}
 
 theorem middle_mem_closed_interval {P : FiniteProcess}
     {a c m : P.State} (I : FiniteTwoStepCausalIntervalCandidate P a c) :
-    m ∈ I.middle -> m ∈ closedTwoStepIntervalPoints I := by
+    m ∈ I.center -> m ∈ closedTwoStepIntervalPoints I := by
   intro hm
   simp [closedTwoStepIntervalPoints, hm]
 
 theorem interval_middle_step_law {P : FiniteProcess}
     {a c m : P.State} (I : FiniteTwoStepCausalIntervalCandidate P a c) :
-    m ∈ I.middle -> P.step a m ∧ P.step m c :=
+    m ∈ I.center -> P.step a m ∧ P.step m c :=
   I.middle_sound
 
 theorem interval_middle_causal_law {P : FiniteProcess}
     {a c m : P.State} (I : FiniteTwoStepCausalIntervalCandidate P a c) :
-    m ∈ I.middle ->
+    m ∈ I.center ->
       causalBefore (P := P) ⟨a⟩ ⟨m⟩ ∧
         causalBefore (P := P) ⟨m⟩ ⟨c⟩ := by
   intro hm
@@ -88,13 +88,13 @@ theorem interval_middle_causal_law {P : FiniteProcess}
   exact ⟨step_implies_causal_before hleft, step_implies_causal_before hright⟩
 
 /-- A displayed two-step interval respects a local-future interface when every
-middle lies in the local future of the left endpoint and the right endpoint lies
-in the local future of that middle. -/
+center lies in the local future of the left endpoint and the right endpoint lies
+in the local future of that center. -/
 def LocalTwoStepIntervalRespectsLocalFuture {P : FiniteProcess}
     {a c : P.State}
     (N : FiniteCausalLocalFutureCandidate P)
     (I : FiniteTwoStepCausalIntervalCandidate P a c) : Prop :=
-  ∀ {m : P.State}, m ∈ I.middle ->
+  ∀ {m : P.State}, m ∈ I.center ->
     m ∈ N.localFuture a ∧ c ∈ N.localFuture m
 
 theorem interval_respects_local_future {P : FiniteProcess}
@@ -111,7 +111,7 @@ theorem interval_respects_local_future {P : FiniteProcess}
 def concretePreparedMeasuredInterval :
     FiniteTwoStepCausalIntervalCandidate concreteProcess
       ConcreteState.prepared ConcreteState.measured where
-  middle := [ConcreteState.evolved]
+  center := [ConcreteState.evolved]
   middle_sound := by
     intro m hm
     have hm_eq : m = ConcreteState.evolved := by
@@ -129,7 +129,7 @@ def concretePreparedMeasuredInterval :
     · simp [concreteProcess, ConcreteState.step] at hright
 
 theorem concrete_prepared_measured_interval_middle :
-    concretePreparedMeasuredInterval.middle = [ConcreteState.evolved] :=
+    concretePreparedMeasuredInterval.center = [ConcreteState.evolved] :=
   rfl
 
 theorem concrete_prepared_measured_closed_interval_points :
@@ -138,7 +138,7 @@ theorem concrete_prepared_measured_closed_interval_points :
   rfl
 
 theorem concrete_evolved_between_prepared_measured :
-    ConcreteState.evolved ∈ concretePreparedMeasuredInterval.middle := by
+    ConcreteState.evolved ∈ concretePreparedMeasuredInterval.center := by
   exact List.mem_singleton_self ConcreteState.evolved
 
 theorem concrete_prepared_measured_interval_respects_local_future :
@@ -200,7 +200,7 @@ theorem twoRoute_kernel_respects_local_future :
 def twoRouteSourceTargetInterval :
     FiniteTwoStepCausalIntervalCandidate twoRouteProcess
       TwoRouteState.source TwoRouteState.target where
-  middle := [TwoRouteState.upper, TwoRouteState.lower]
+  center := [TwoRouteState.upper, TwoRouteState.lower]
   middle_sound := by
     intro m hm
     have hm_cases :
@@ -226,7 +226,7 @@ def twoRouteSourceTargetInterval :
     · simp [twoRouteProcess, TwoRouteState.step] at hleft
 
 theorem two_route_source_target_interval_middle :
-    twoRouteSourceTargetInterval.middle =
+    twoRouteSourceTargetInterval.center =
       [TwoRouteState.upper, TwoRouteState.lower] :=
   rfl
 
@@ -237,11 +237,11 @@ theorem two_route_source_target_closed_interval_points :
   rfl
 
 theorem two_route_upper_between_source_target :
-    TwoRouteState.upper ∈ twoRouteSourceTargetInterval.middle := by
+    TwoRouteState.upper ∈ twoRouteSourceTargetInterval.center := by
   exact List.mem_cons_self
 
 theorem two_route_lower_between_source_target :
-    TwoRouteState.lower ∈ twoRouteSourceTargetInterval.middle := by
+    TwoRouteState.lower ∈ twoRouteSourceTargetInterval.center := by
   exact
     List.mem_cons_of_mem _
       (List.mem_singleton_self TwoRouteState.lower)
@@ -253,8 +253,8 @@ theorem two_route_source_target_interval_respects_local_future :
     twoRouteCausalLocalFuture twoRouteSourceTargetInterval
 
 theorem two_route_interval_has_two_distinct_middles :
-    TwoRouteState.upper ∈ twoRouteSourceTargetInterval.middle
-      ∧ TwoRouteState.lower ∈ twoRouteSourceTargetInterval.middle
+    TwoRouteState.upper ∈ twoRouteSourceTargetInterval.center
+      ∧ TwoRouteState.lower ∈ twoRouteSourceTargetInterval.center
       ∧ TwoRouteState.upper ≠ TwoRouteState.lower := by
   exact
     ⟨ two_route_upper_between_source_target
@@ -295,10 +295,10 @@ theorem two_route_source_target_middle_causal_law :
 def FiniteCausalIntervalClosed : Prop :=
   (∀ {P : FiniteProcess} {a c m : P.State}
       (I : FiniteTwoStepCausalIntervalCandidate P a c),
-      m ∈ I.middle -> P.step a m ∧ P.step m c)
+      m ∈ I.center -> P.step a m ∧ P.step m c)
     ∧ (∀ {P : FiniteProcess} {a c m : P.State}
         (I : FiniteTwoStepCausalIntervalCandidate P a c),
-        m ∈ I.middle ->
+        m ∈ I.center ->
           causalBefore (P := P) ⟨a⟩ ⟨m⟩ ∧
             causalBefore (P := P) ⟨m⟩ ⟨c⟩)
     ∧ (∀ {P : FiniteProcess} {a c : P.State}
@@ -317,8 +317,8 @@ def FiniteCausalIntervalClosed : Prop :=
     ∧ KernelRespectsLocalFuture
       twoRouteFiniteProbabilityKernel.toMarkovKernelSkeleton
       twoRouteCausalLocalFuture
-    ∧ (TwoRouteState.upper ∈ twoRouteSourceTargetInterval.middle
-      ∧ TwoRouteState.lower ∈ twoRouteSourceTargetInterval.middle
+    ∧ (TwoRouteState.upper ∈ twoRouteSourceTargetInterval.center
+      ∧ TwoRouteState.lower ∈ twoRouteSourceTargetInterval.center
       ∧ TwoRouteState.upper ≠ TwoRouteState.lower)
 
 theorem finite_causal_interval_closed :

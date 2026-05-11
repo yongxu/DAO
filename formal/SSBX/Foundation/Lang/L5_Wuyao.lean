@@ -10,10 +10,10 @@ where ⊕ on Mian is componentwise XOR over (Ben × Zheng) ≅ (Z/2)⁴.
 
 ## Atomic operators (5 single-bit flips)
 
-  flipBenLo  — flip the low bit of Ben    (wu/dong ↔ jian/shi axis)
-  flipBenHi  — flip the high bit of Ben   (wu/jian ↔ dong/shi axis)
-  flipZhengLo — flip the low bit of Zheng (jiFaint/shiForce ↔ jiOccasion/shiTime)
-  flipZhengHi — flip the high bit of Zheng (jiFaint/jiOccasion ↔ shiForce/shiTime)
+  flipBenLo  — flip the low bit of Ben    (thing/motion ↔ interval/event axis)
+  flipBenHi  — flip the high bit of Ben   (thing/interval ↔ motion/event axis)
+  flipZhengLo — flip the low bit of Zheng (trace/momentum ↔ pivot/occasion)
+  flipZhengHi — flip the high bit of Zheng (trace/pivot ↔ momentum/occasion)
   flip5      — flip the 5th-yao Bool bit
 
 ## Bridge to L4
@@ -38,30 +38,30 @@ abbrev Cell : Type := Wuyao
 
 /-! ## § 2 (Z/2)⁵ XOR — componentwise -/
 
-/-- XOR on Ben (4 elements as (Z/2)²): wu=00, dong=01, jian=10, shi=11. -/
+/-- XOR on Ben (4 elements as (Z/2)²): thing=00, motion=01, interval=10, event=11. -/
 def Ben.xor : Ben → Ben → Ben
-  | .wu,   y => y
-  | .dong, .wu => .dong | .dong, .dong => .wu | .dong, .jian => .shi | .dong, .shi => .jian
-  | .jian, .wu => .jian | .jian, .dong => .shi | .jian, .jian => .wu | .jian, .shi => .dong
-  | .shi,  .wu => .shi  | .shi,  .dong => .jian | .shi, .jian => .dong | .shi, .shi => .wu
+  | .thing,   y => y
+  | .motion, .thing => .motion | .motion, .motion => .thing | .motion, .interval => .event | .motion, .event => .interval
+  | .interval, .thing => .interval | .interval, .motion => .event | .interval, .interval => .thing | .interval, .event => .motion
+  | .event,  .thing => .event  | .event,  .motion => .interval | .event, .interval => .motion | .event, .event => .thing
 
-/-- XOR on Zheng (4 elements as (Z/2)²): jiFaint=00, shiForce=01, jiOccasion=10, shiTime=11. -/
+/-- XOR on Zheng (4 elements as (Z/2)²): trace=00, momentum=01, pivot=10, occasion=11. -/
 def Zheng.xor : Zheng → Zheng → Zheng
-  | .jiFaint, y => y
-  | .shiForce, .jiFaint => .shiForce | .shiForce, .shiForce => .jiFaint
-  | .shiForce, .jiOccasion => .shiTime | .shiForce, .shiTime => .jiOccasion
-  | .jiOccasion, .jiFaint => .jiOccasion | .jiOccasion, .shiForce => .shiTime
-  | .jiOccasion, .jiOccasion => .jiFaint | .jiOccasion, .shiTime => .shiForce
-  | .shiTime, .jiFaint => .shiTime | .shiTime, .shiForce => .jiOccasion
-  | .shiTime, .jiOccasion => .shiForce | .shiTime, .shiTime => .jiFaint
+  | .trace, y => y
+  | .momentum, .trace => .momentum | .momentum, .momentum => .trace
+  | .momentum, .pivot => .occasion | .momentum, .occasion => .pivot
+  | .pivot, .trace => .pivot | .pivot, .momentum => .occasion
+  | .pivot, .pivot => .trace | .pivot, .occasion => .momentum
+  | .occasion, .trace => .occasion | .occasion, .momentum => .pivot
+  | .occasion, .pivot => .momentum | .occasion, .occasion => .trace
 
 /-- Cayley action on Wuyao: componentwise XOR over (Z/2)⁵. -/
 def apply : Cell → Cell → Cell
   | (⟨b₁, z₁⟩, x₁), (⟨b₂, z₂⟩, x₂) =>
       ((Ben.xor b₁ b₂, Zheng.xor z₁ z₂), Bool.xor x₁ x₂)
 
-/-- The (Z/2)⁵ origin: (wu, jiFaint, false). -/
-def origin : Cell := ((.wu, .jiFaint), false)
+/-- The (Z/2)⁵ origin: (thing, trace, false). -/
+def origin : Cell := ((.thing, .trace), false)
 
 /-! ## § 3 Cayley action laws (involution + identity) -/
 
@@ -102,20 +102,20 @@ theorem print_parse_round_trip (c : Cell) : parseCell (printCell c) = .ok c := b
 
 /-! ## § 5 Atomic operators (5 single-bit flips) -/
 
-/-- Flip the low bit of Ben (wu↔dong, jian↔shi). -/
-def flipBenLo : Cell := ((.dong, .jiFaint), false)
+/-- Flip the low bit of Ben (thing↔motion, interval↔event). -/
+def flipBenLo : Cell := ((.motion, .trace), false)
 
-/-- Flip the high bit of Ben (wu↔jian, dong↔shi). -/
-def flipBenHi : Cell := ((.jian, .jiFaint), false)
+/-- Flip the high bit of Ben (thing↔interval, motion↔event). -/
+def flipBenHi : Cell := ((.interval, .trace), false)
 
-/-- Flip the low bit of Zheng (jiFaint↔shiForce, jiOccasion↔shiTime). -/
-def flipZhengLo : Cell := ((.wu, .shiForce), false)
+/-- Flip the low bit of Zheng (trace↔momentum, pivot↔occasion). -/
+def flipZhengLo : Cell := ((.thing, .momentum), false)
 
-/-- Flip the high bit of Zheng (jiFaint↔jiOccasion, shiForce↔shiTime). -/
-def flipZhengHi : Cell := ((.wu, .jiOccasion), false)
+/-- Flip the high bit of Zheng (trace↔pivot, momentum↔occasion). -/
+def flipZhengHi : Cell := ((.thing, .pivot), false)
 
 /-- Flip the 5th-yao Bool bit. -/
-def flipFifth : Cell := ((.wu, .jiFaint), true)
+def flipFifth : Cell := ((.thing, .trace), true)
 
 /-! ## § 6 LangLayer instance -/
 
@@ -152,13 +152,13 @@ Mian-pattern rules each; those are deferred to L4's rule set, which lifts
 trivially because flipFifth is orthogonal).
 -/
 
-/-- Toggle 5th yao 0→1 at (wu, jiFaint). -/
+/-- Toggle 5th yao 0→1 at (thing, trace). -/
 def toggleFifthOff : Rule :=
   Rule.named "wuyao-toggle-fifth-off"
     (.list [.atom "wuyao", .atom "物", .atom "几", .atom "0"])
     (.list [.atom "wuyao", .atom "物", .atom "几", .atom "1"])
 
-/-- Toggle 5th yao 1→0 at (wu, jiFaint). -/
+/-- Toggle 5th yao 1→0 at (thing, trace). -/
 def toggleFifthOn : Rule :=
   Rule.named "wuyao-toggle-fifth-on"
     (.list [.atom "wuyao", .atom "物", .atom "几", .atom "1"])
@@ -169,7 +169,7 @@ def defaultRules : List Rule := [toggleFifthOff, toggleFifthOn]
 /-! ## § 9 Smoke tests (native_decide) -/
 
 example : (Eval.runRules defaultRules (printCell origin) 1
-            == printCell ((.wu, .jiFaint), true)) = true := by
+            == printCell ((.thing, .trace), true)) = true := by
   native_decide
 
 example : (Eval.runRules defaultRules (printCell origin) 2

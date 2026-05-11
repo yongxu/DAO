@@ -1,25 +1,25 @@
 /-
-# WenyanSelfInterp — 以文自释 (Cell256 / V₄ Klein)
+# WenyanSelfInterp — 以文自释 (R8 / V₄ Klein)
 
 Self-interpretation: the wenyan-encoded language interprets itself.
 
   文 (program) → 文 (data) ; 文 (program) operating on 文 (data) ≈ direct.
 
 We build:
-  § 1   Atomic bijections  (Yao, Shi, Hexagram, Cell256) ↔ Fin
-  § 2   Nat ↔ List Cell256 (base-256 digits, total bijection)
-  § 3   YiInstr ↪ List Cell256  (with round-trip)
-  § 4   List YiInstr, YiState ↪ List Cell256  (with round-trip)
+  § 1   Atomic bijections  (Yao, Shi, Hexagram, R8) ↔ Fin
+  § 2   Nat ↔ List R8 (base-256 digits, total bijection)
+  § 3   YiInstr ↪ List R8  (with round-trip)
+  § 4   List YiInstr, YiState ↪ List R8  (with round-trip)
   § 5   metaStep — META interpreter (Lean-level), operating on encoded data
   § 6   Simulation theorem  metaStep ∘ encode = encode ∘ step
   § 7   Quine — a List YiInstr whose run produces its own encoding in history
 
-## Phase F.1 migration note (Cell192 → Cell256)
+## Phase F.1 migration note (Cell192 → R8)
 
-This file is Phase F.1 of the Cell192 → Cell256 migration. The atomic
-encoding now uses `Cell256.Shi` (V₄ Klein 4-group with `dao/已/今/未`) instead
+This file is Phase F.1 of the Cell192 → R8 migration. The atomic
+encoding now uses `R8.Shi` (V₄ Klein 4-group with `dao/已/今/未`) instead
 of the legacy `Cell192.Shi` (Z/3 cyclic). All downstream layers (encInstr /
-ProgEnc / StateEnc / metaStep / dispatch / Quine) operate on `Cell256`
+ProgEnc / StateEnc / metaStep / dispatch / Quine) operate on `R8`
 throughout.
 
 The dispatch program `dispatchProg` is re-derived for base-256: the base-256
@@ -30,14 +30,14 @@ all 4 shi states. Routing uses 4-way Shi outer × 3-way Hex inner branches.
 The `metaInterpStepPc_branchShiEq_notTaken_*` lemmas additionally cover the
 new `Shi.dao` ctor as a "not-taken" case.
 -/
-import SSBX.Foundation.Bagua.Cell256
+import SSBX.Foundation.Bagua.R8
 import SSBX.Foundation.Bagua.BaguaTuring
 
 namespace SSBX.Foundation.Wen.WenyanSelfInterp
 
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Bagua.BaguaAlgebra
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 
 end SSBX.Foundation.Wen.WenyanSelfInterp
@@ -67,13 +67,13 @@ theorem fromIdx_toIdx (i : Fin 2) : (fromIdx i).toIdx = i := by
 
 end SSBX.Foundation.Yi.Yi.Yao
 
-namespace SSBX.Foundation.Bagua.Cell256.Shi
+namespace SSBX.Foundation.Bagua.R8.Shi
 
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 
 /-- Shi ↔ Fin 4: dao ↔ 0, ji ↔ 1, jin ↔ 2, wei ↔ 3.
 
-    Migrated from Cell192 3-state Z/3 to Cell256 4-state V₄ Klein per
+    Migrated from Cell192 3-state Z/3 to R8 4-state V₄ Klein per
     yi-RO-hierarchy-v2.md. Index 0 (dao) is the V₄ identity element. -/
 def toIdx : Shi → Fin 4
   | .dao => ⟨0, by omega⟩
@@ -94,7 +94,7 @@ theorem fromIdx_toIdx (i : Fin 4) : (fromIdx i).toIdx = i := by
   match i with
   | ⟨0, _⟩ | ⟨1, _⟩ | ⟨2, _⟩ | ⟨3, _⟩ => rfl
 
-end SSBX.Foundation.Bagua.Cell256.Shi
+end SSBX.Foundation.Bagua.R8.Shi
 
 namespace SSBX.Foundation.Yi.Yi.Hexagram
 
@@ -149,23 +149,23 @@ namespace SSBX.Foundation.Wen.WenyanSelfInterp
 
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Bagua.BaguaAlgebra
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 
-/-- Cell256 ↔ Fin 256: hex_idx * 4 + shi_idx.  Defined as a plain function
-    (not a method) because Cell256 is an abbreviation for `Hexagram × Shi`,
-    so dot notation `c.toIdx` cannot resolve to a custom Cell256 namespace. -/
-def cellToIdx (c : Cell256) : Fin 256 :=
+/-- R8 ↔ Fin 256: hex_idx * 4 + shi_idx.  Defined as a plain function
+    (not a method) because R8 is an abbreviation for `Hexagram × Shi`,
+    so dot notation `c.toIdx` cannot resolve to a custom R8 namespace. -/
+def cellToIdx (c : R8) : Fin 256 :=
   ⟨c.1.toIdx.val * 4 + c.2.toIdx.val, by
     have h1 : c.1.toIdx.val < 64 := c.1.toIdx.isLt
     have h2 : c.2.toIdx.val < 4 := c.2.toIdx.isLt
     omega⟩
 
-def cellFromIdx (n : Fin 256) : Cell256 :=
+def cellFromIdx (n : Fin 256) : R8 :=
   ( SSBX.Foundation.Yi.Yi.Hexagram.fromIdx ⟨n.val / 4, by omega⟩
-  , SSBX.Foundation.Bagua.Cell256.Shi.fromIdx ⟨n.val % 4, by omega⟩ )
+  , SSBX.Foundation.Bagua.R8.Shi.fromIdx ⟨n.val % 4, by omega⟩ )
 
-theorem cellToIdx_fromIdx (c : Cell256) : cellFromIdx (cellToIdx c) = c := by
+theorem cellToIdx_fromIdx (c : R8) : cellFromIdx (cellToIdx c) = c := by
   rcases c with ⟨h, s⟩
   unfold cellFromIdx cellToIdx
   have hb : h.toIdx.val < 64 := h.toIdx.isLt
@@ -178,27 +178,27 @@ theorem cellToIdx_fromIdx (c : Cell256) : cellFromIdx (cellToIdx c) = c := by
     exact SSBX.Foundation.Yi.Yi.Hexagram.toIdx_fromIdx h
   · rw [show (⟨(h.toIdx.val * 4 + s.toIdx.val) % 4, by omega⟩ : Fin 4)
          = s.toIdx from Fin.ext hmod]
-    exact SSBX.Foundation.Bagua.Cell256.Shi.toIdx_fromIdx s
+    exact SSBX.Foundation.Bagua.R8.Shi.toIdx_fromIdx s
 
 theorem cellFromIdx_toIdx (n : Fin 256) : cellToIdx (cellFromIdx n) = n := by
   apply Fin.ext
   unfold cellToIdx cellFromIdx
   show (SSBX.Foundation.Yi.Yi.Hexagram.fromIdx ⟨n.val / 4, _⟩).toIdx.val * 4
-    + (SSBX.Foundation.Bagua.Cell256.Shi.fromIdx ⟨n.val % 4, _⟩).toIdx.val = n.val
+    + (SSBX.Foundation.Bagua.R8.Shi.fromIdx ⟨n.val % 4, _⟩).toIdx.val = n.val
   rw [SSBX.Foundation.Yi.Yi.Hexagram.fromIdx_toIdx,
-      SSBX.Foundation.Bagua.Cell256.Shi.fromIdx_toIdx]
+      SSBX.Foundation.Bagua.R8.Shi.fromIdx_toIdx]
   show (n.val / 4) * 4 + n.val % 4 = n.val
   omega
 
-/-! ## § 2 Nat ↔ List Cell256 — base-256 digit encoding (LSB-first) -/
+/-! ## § 2 Nat ↔ List R8 — base-256 digit encoding (LSB-first) -/
 
 namespace NatCell
 
 /-- A "small" cell: index < 256. Used as a base-256 digit. -/
-abbrev Digit := Cell256
+abbrev Digit := R8
 
 /-- Encode a Nat as base-256 LSB-first digits. -/
-def encodeNat : Nat → List Cell256
+def encodeNat : Nat → List R8
   | 0 => []
   | n+1 =>
     have : (n + 1) / 256 < n + 1 := Nat.div_lt_self (by omega) (by omega)
@@ -206,7 +206,7 @@ def encodeNat : Nat → List Cell256
       :: encodeNat ((n + 1) / 256)
 
 /-- Decode a base-256 digit list back to Nat. -/
-def decodeNat : List Cell256 → Nat
+def decodeNat : List R8 → Nat
   | [] => 0
   | c :: rest => (cellToIdx c).val + 256 * decodeNat rest
 
@@ -224,22 +224,22 @@ theorem decode_encode (n : Nat) : decodeNat (encodeNat n) = n := by
 
 end NatCell
 
-/-! ## § 3 YiInstr ↔ List Cell256 -/
+/-! ## § 3 YiInstr ↔ List R8 -/
 
 namespace YiInstrEnc
 
-def tagCell (tag : Nat) (h : tag < 256) : Cell256 := cellFromIdx ⟨tag, h⟩
+def tagCell (tag : Nat) (h : tag < 256) : R8 := cellFromIdx ⟨tag, h⟩
 
-def encFin6 (i : Fin 6) : Cell256 := cellFromIdx ⟨i.val, by omega⟩
+def encFin6 (i : Fin 6) : R8 := cellFromIdx ⟨i.val, by omega⟩
 
-def encShi (s : Shi) : Cell256 :=
+def encShi (s : Shi) : R8 :=
   cellFromIdx ⟨s.toIdx.val, by have := s.toIdx.isLt; omega⟩
 
-def encNat (n : Nat) : List Cell256 :=
+def encNat (n : Nat) : List R8 :=
   let digits := NatCell.encodeNat n
   cellFromIdx ⟨min digits.length 255, by omega⟩ :: digits
 
-def decNat (l : List Cell256) : Option (Nat × List Cell256) :=
+def decNat (l : List R8) : Option (Nat × List R8) :=
   match l with
   | [] => none
   | hdr :: rest =>
@@ -248,13 +248,13 @@ def decNat (l : List Cell256) : Option (Nat × List Cell256) :=
       some (NatCell.decodeNat (rest.take len), rest.drop len)
     else none
 
-def encInstr : YiInstr → List Cell256
+def encInstr : YiInstr → List R8
   | .nop                        => [cellFromIdx ⟨0,  by omega⟩]
   | .setShi s                   => [cellFromIdx ⟨1,  by omega⟩, encShi s]
   | .flipYao i                  => [cellFromIdx ⟨2,  by omega⟩, encFin6 i]
-  | .hu                         => [cellFromIdx ⟨3,  by omega⟩]
-  | .cuo                        => [cellFromIdx ⟨4,  by omega⟩]
-  | .zong                       => [cellFromIdx ⟨5,  by omega⟩]
+  | .interlace                         => [cellFromIdx ⟨3,  by omega⟩]
+  | .complement                        => [cellFromIdx ⟨4,  by omega⟩]
+  | .reverse                       => [cellFromIdx ⟨5,  by omega⟩]
   | .branchYaoEq i j t          => [cellFromIdx ⟨6,  by omega⟩, encFin6 i, encFin6 j] ++ encNat t
   | .branchShiEq s t            => [cellFromIdx ⟨7,  by omega⟩, encShi s] ++ encNat t
   | .jump t                     => cellFromIdx ⟨8,  by omega⟩ :: encNat t
@@ -262,7 +262,7 @@ def encInstr : YiInstr → List Cell256
   | .pop                        => [cellFromIdx ⟨10, by omega⟩]
   | .halt                       => [cellFromIdx ⟨11, by omega⟩]
 
-def decInstr (l : List Cell256) : Option (YiInstr × List Cell256) :=
+def decInstr (l : List R8) : Option (YiInstr × List R8) :=
   match l with
   | [] => none
   | tag :: rest =>
@@ -270,15 +270,15 @@ def decInstr (l : List Cell256) : Option (YiInstr × List Cell256) :=
     | 0,  rest => some (.nop, rest)
     | 1,  s :: rest =>
         if h : (cellToIdx s).val < 4
-        then some (.setShi (SSBX.Foundation.Bagua.Cell256.Shi.fromIdx ⟨(cellToIdx s).val, h⟩), rest)
+        then some (.setShi (SSBX.Foundation.Bagua.R8.Shi.fromIdx ⟨(cellToIdx s).val, h⟩), rest)
         else none
     | 2,  i :: rest =>
         if h : (cellToIdx i).val < 6
         then some (.flipYao ⟨(cellToIdx i).val, h⟩, rest)
         else none
-    | 3,  rest => some (.hu, rest)
-    | 4,  rest => some (.cuo, rest)
-    | 5,  rest => some (.zong, rest)
+    | 3,  rest => some (.interlace, rest)
+    | 4,  rest => some (.complement, rest)
+    | 5,  rest => some (.reverse, rest)
     | 6,  i :: j :: rest =>
         if hi : (cellToIdx i).val < 6 then
           if hj : (cellToIdx j).val < 6 then
@@ -292,7 +292,7 @@ def decInstr (l : List Cell256) : Option (YiInstr × List Cell256) :=
         if h : (cellToIdx s).val < 4 then
           match decNat rest with
           | some (t, rest') =>
-              some (.branchShiEq (SSBX.Foundation.Bagua.Cell256.Shi.fromIdx ⟨(cellToIdx s).val, h⟩) t, rest')
+              some (.branchShiEq (SSBX.Foundation.Bagua.R8.Shi.fromIdx ⟨(cellToIdx s).val, h⟩) t, rest')
           | none => none
         else none
     | 8,  rest =>
@@ -310,42 +310,42 @@ theorem cellToIdx_val_of_cellFromIdx (k : Nat) (h : k < 256) :
     (cellToIdx (cellFromIdx ⟨k, h⟩)).val = k := by
   rw [cellFromIdx_toIdx]
 
-theorem decInstr_encInstr_nop (rest : List Cell256) :
+theorem decInstr_encInstr_nop (rest : List R8) :
     decInstr (encInstr .nop ++ rest) = some (.nop, rest) := by
   show decInstr (cellFromIdx ⟨0, by omega⟩ :: rest) = _
   simp only [decInstr, cellFromIdx_toIdx]
 
-theorem decInstr_encInstr_hu (rest : List Cell256) :
-    decInstr (encInstr .hu ++ rest) = some (.hu, rest) := by
+theorem decInstr_encInstr_hu (rest : List R8) :
+    decInstr (encInstr .interlace ++ rest) = some (.interlace, rest) := by
   show decInstr (cellFromIdx ⟨3, by omega⟩ :: rest) = _
   simp only [decInstr, cellFromIdx_toIdx]
 
-theorem decInstr_encInstr_cuo (rest : List Cell256) :
-    decInstr (encInstr .cuo ++ rest) = some (.cuo, rest) := by
+theorem decInstr_encInstr_cuo (rest : List R8) :
+    decInstr (encInstr .complement ++ rest) = some (.complement, rest) := by
   show decInstr (cellFromIdx ⟨4, by omega⟩ :: rest) = _
   simp only [decInstr, cellFromIdx_toIdx]
 
-theorem decInstr_encInstr_zong (rest : List Cell256) :
-    decInstr (encInstr .zong ++ rest) = some (.zong, rest) := by
+theorem decInstr_encInstr_zong (rest : List R8) :
+    decInstr (encInstr .reverse ++ rest) = some (.reverse, rest) := by
   show decInstr (cellFromIdx ⟨5, by omega⟩ :: rest) = _
   simp only [decInstr, cellFromIdx_toIdx]
 
-theorem decInstr_encInstr_push (rest : List Cell256) :
+theorem decInstr_encInstr_push (rest : List R8) :
     decInstr (encInstr .push ++ rest) = some (.push, rest) := by
   show decInstr (cellFromIdx ⟨9, by omega⟩ :: rest) = _
   simp only [decInstr, cellFromIdx_toIdx]
 
-theorem decInstr_encInstr_pop (rest : List Cell256) :
+theorem decInstr_encInstr_pop (rest : List R8) :
     decInstr (encInstr .pop ++ rest) = some (.pop, rest) := by
   show decInstr (cellFromIdx ⟨10, by omega⟩ :: rest) = _
   simp only [decInstr, cellFromIdx_toIdx]
 
-theorem decInstr_encInstr_halt (rest : List Cell256) :
+theorem decInstr_encInstr_halt (rest : List R8) :
     decInstr (encInstr .halt ++ rest) = some (.halt, rest) := by
   show decInstr (cellFromIdx ⟨11, by omega⟩ :: rest) = _
   simp only [decInstr, cellFromIdx_toIdx]
 
-theorem decInstr_encInstr_setShi (s : Shi) (rest : List Cell256) :
+theorem decInstr_encInstr_setShi (s : Shi) (rest : List R8) :
     decInstr (encInstr (.setShi s) ++ rest) = some (.setShi s, rest) := by
   have h4 : s.toIdx.val < 4 := s.toIdx.isLt
   show decInstr (cellFromIdx ⟨1, by omega⟩ :: encShi s :: rest) = _
@@ -353,9 +353,9 @@ theorem decInstr_encInstr_setShi (s : Shi) (rest : List Cell256) :
   rw [dif_pos h4]
   congr 2
   have eq1 : (⟨s.toIdx.val, h4⟩ : Fin 4) = s.toIdx := Fin.ext rfl
-  rw [eq1, SSBX.Foundation.Bagua.Cell256.Shi.toIdx_fromIdx]
+  rw [eq1, SSBX.Foundation.Bagua.R8.Shi.toIdx_fromIdx]
 
-theorem decInstr_encInstr_flipYao (i : Fin 6) (rest : List Cell256) :
+theorem decInstr_encInstr_flipYao (i : Fin 6) (rest : List R8) :
     decInstr (encInstr (.flipYao i) ++ rest) = some (.flipYao i, rest) := by
   have h6 : i.val < 6 := i.isLt
   show decInstr (cellFromIdx ⟨2, by omega⟩ :: encFin6 i :: rest) = _
@@ -364,27 +364,27 @@ theorem decInstr_encInstr_flipYao (i : Fin 6) (rest : List Cell256) :
 
 /-! ### § 3c Round-trip for the three Nat-parameter instructions -/
 
-private theorem list_take_left_eq (l r : List Cell256) :
+private theorem list_take_left_eq (l r : List R8) :
     (l ++ r).take l.length = l := by
   induction l with
   | nil => simp
   | cons a as ih => simp [ih]
 
-private theorem list_drop_left_eq (l r : List Cell256) :
+private theorem list_drop_left_eq (l r : List R8) :
     (l ++ r).drop l.length = r := by
   induction l with
   | nil => simp
   | cons a as ih => simp [ih]
 
 private theorem decNat_cellFromIdx_cons (k : Nat) (h256 : k < 256)
-    (rest : List Cell256) (hk : k ≤ rest.length) :
+    (rest : List R8) (hk : k ≤ rest.length) :
     decNat (cellFromIdx ⟨k, h256⟩ :: rest) =
       some (NatCell.decodeNat (rest.take k), rest.drop k) := by
   unfold decNat
   simp only [cellFromIdx_toIdx]
   rw [if_pos hk]
 
-theorem decNat_encNat (n : Nat) (rest : List Cell256)
+theorem decNat_encNat (n : Nat) (rest : List R8)
     (hlen : (NatCell.encodeNat n).length < 256) :
     decNat (encNat n ++ rest) = some (n, rest) := by
   let digits := NatCell.encodeNat n
@@ -403,14 +403,14 @@ theorem decNat_encNat (n : Nat) (rest : List Cell256)
   rw [list_take_left_eq, list_drop_left_eq]
   rw [show digits = NatCell.encodeNat n from rfl, NatCell.decode_encode]
 
-theorem decInstr_encInstr_jump (t : Nat) (rest : List Cell256)
+theorem decInstr_encInstr_jump (t : Nat) (rest : List R8)
     (hlen : (NatCell.encodeNat t).length < 256) :
     decInstr (encInstr (.jump t) ++ rest) = some (.jump t, rest) := by
   show decInstr (cellFromIdx ⟨8, by omega⟩ :: (encNat t ++ rest)) = _
   simp only [decInstr, cellFromIdx_toIdx]
   rw [decNat_encNat t rest hlen]
 
-theorem decInstr_encInstr_branchShiEq (s : Shi) (t : Nat) (rest : List Cell256)
+theorem decInstr_encInstr_branchShiEq (s : Shi) (t : Nat) (rest : List R8)
     (hlen : (NatCell.encodeNat t).length < 256) :
     decInstr (encInstr (.branchShiEq s t) ++ rest)
       = some (.branchShiEq s t, rest) := by
@@ -421,9 +421,9 @@ theorem decInstr_encInstr_branchShiEq (s : Shi) (t : Nat) (rest : List Cell256)
   rw [decNat_encNat t rest hlen]
   congr 2
   have eq1 : (⟨s.toIdx.val, h4⟩ : Fin 4) = s.toIdx := Fin.ext rfl
-  rw [eq1, SSBX.Foundation.Bagua.Cell256.Shi.toIdx_fromIdx]
+  rw [eq1, SSBX.Foundation.Bagua.R8.Shi.toIdx_fromIdx]
 
-theorem decInstr_encInstr_branchYaoEq (i j : Fin 6) (t : Nat) (rest : List Cell256)
+theorem decInstr_encInstr_branchYaoEq (i j : Fin 6) (t : Nat) (rest : List R8)
     (hlen : (NatCell.encodeNat t).length < 256) :
     decInstr (encInstr (.branchYaoEq i j t) ++ rest)
       = some (.branchYaoEq i j t, rest) := by
@@ -435,7 +435,7 @@ theorem decInstr_encInstr_branchYaoEq (i j : Fin 6) (t : Nat) (rest : List Cell2
   rw [dif_pos hi, dif_pos hj]
   rw [decNat_encNat t rest hlen]
 
-/-! ### § 3d Unified round-trip for `YiInstr ↔ List Cell256` -/
+/-! ### § 3d Unified round-trip for `YiInstr ↔ List R8` -/
 
 def Encodable : YiInstr → Prop
   | .jump t                  => (NatCell.encodeNat t).length < 256
@@ -444,13 +444,13 @@ def Encodable : YiInstr → Prop
   | _                        => True
 
 theorem decInstr_encInstr (i : YiInstr) (h_enc : Encodable i)
-    (rest : List Cell256) :
+    (rest : List R8) :
     decInstr (encInstr i ++ rest) = some (i, rest) := by
   cases i with
   | nop                      => exact decInstr_encInstr_nop rest
-  | hu                       => exact decInstr_encInstr_hu rest
-  | cuo                      => exact decInstr_encInstr_cuo rest
-  | zong                     => exact decInstr_encInstr_zong rest
+  | interlace                       => exact decInstr_encInstr_hu rest
+  | complement                      => exact decInstr_encInstr_cuo rest
+  | reverse                     => exact decInstr_encInstr_zong rest
   | push                     => exact decInstr_encInstr_push rest
   | pop                      => exact decInstr_encInstr_pop rest
   | halt                     => exact decInstr_encInstr_halt rest
@@ -467,16 +467,16 @@ theorem decInstr_encInstr_of_all (i : YiInstr) (h_enc : Encodable i) :
 
 end YiInstrEnc
 
-/-! ## § 4 List YiInstr, YiState ↔ List Cell256 -/
+/-! ## § 4 List YiInstr, YiState ↔ List R8 -/
 
 namespace ProgEnc
 
-def encProg (p : List YiInstr) : List Cell256 :=
+def encProg (p : List YiInstr) : List R8 :=
   let bodies := p.map YiInstrEnc.encInstr
   let body := bodies.flatten
   body
 
-def decInstrs : Nat → List Cell256 → Option (List YiInstr × List Cell256)
+def decInstrs : Nat → List R8 → Option (List YiInstr × List R8)
   | 0, rest => some ([], rest)
   | n+1, rest =>
     match YiInstrEnc.decInstr rest with
@@ -490,7 +490,7 @@ def AllEncodable (p : List YiInstr) : Prop :=
   ∀ i ∈ p, YiInstrEnc.Encodable i
 
 theorem decInstrs_encProg (p : List YiInstr) (h_enc : AllEncodable p)
-    (rest : List Cell256) :
+    (rest : List R8) :
     decInstrs p.length (encProg p ++ rest) = some (p, rest) := by
   induction p with
   | nil => rfl
@@ -516,10 +516,10 @@ theorem decInstrs_encProg (p : List YiInstr) (h_enc : AllEncodable p)
 
 /-! ### § 4b Framed program encoding -/
 
-def encFramedProg (p : List YiInstr) : List Cell256 :=
+def encFramedProg (p : List YiInstr) : List R8 :=
   YiInstrEnc.encNat p.length ++ encProg p
 
-def decFramedProg (l : List Cell256) : Option (List YiInstr × List Cell256) :=
+def decFramedProg (l : List R8) : Option (List YiInstr × List R8) :=
   match YiInstrEnc.decNat l with
   | some (n, rest) =>
       match decInstrs n rest with
@@ -527,7 +527,7 @@ def decFramedProg (l : List Cell256) : Option (List YiInstr × List Cell256) :=
       | none => none
   | none => none
 
-private theorem decNat_encNat_app (n : Nat) (rest : List Cell256)
+private theorem decNat_encNat_app (n : Nat) (rest : List R8)
     (h_len : (NatCell.encodeNat n).length < 256) :
     YiInstrEnc.decNat (YiInstrEnc.encNat n ++ rest) = some (n, rest) := by
   unfold YiInstrEnc.decNat YiInstrEnc.encNat
@@ -542,7 +542,7 @@ private theorem decNat_encNat_app (n : Nat) (rest : List Cell256)
   simp [h_take, h_drop, NatCell.decode_encode]
 
 theorem decFramedProg_encFramedProg (p : List YiInstr) (h_enc : AllEncodable p)
-    (rest : List Cell256) (h_len : (NatCell.encodeNat p.length).length < 256) :
+    (rest : List R8) (h_len : (NatCell.encodeNat p.length).length < 256) :
     decFramedProg (encFramedProg p ++ rest) = some (p, rest) := by
   unfold decFramedProg encFramedProg
   rw [List.append_assoc]
@@ -565,7 +565,7 @@ end ProgEnc
 
 namespace StateEnc
 
-def encState (s : YiState) : List Cell256 :=
+def encState (s : YiState) : List R8 :=
   s.cur ::
   YiInstrEnc.encNat s.history.length ++
   s.history ++
@@ -579,7 +579,7 @@ end StateEnc
 
 /-! ## § 5 Lean-level META interpreter — `metaStep` -/
 
-def metaStep (s : YiState) : List Cell256 :=
+def metaStep (s : YiState) : List R8 :=
   StateEnc.encState s.step
 
 /-! ## § 6 Simulation theorem -/
@@ -649,28 +649,28 @@ theorem metaInterpProg_jump_out_correct (h : Hexagram) :
 /-! ### Phase 2.2 -/
 
 def metaInterpProg_hu : List YiInstr :=
-  [YiInstr.hu, YiInstr.halt]
+  [YiInstr.interlace, YiInstr.halt]
 
 theorem metaInterpProg_hu_correct (h : Hexagram) :
-    ((YiState.init h metaInterpProg_hu).runFuel 2).cur = (Hexagram.hu h, Shi.jin)
+    ((YiState.init h metaInterpProg_hu).runFuel 2).cur = (Hexagram.interlace h, Shi.jin)
     ∧ ((YiState.init h metaInterpProg_hu).runFuel 2).pc = 1
     ∧ ((YiState.init h metaInterpProg_hu).runFuel 2).halted = true := by
   refine ⟨?_, ?_, ?_⟩ <;> rfl
 
 def metaInterpProg_cuo : List YiInstr :=
-  [YiInstr.cuo, YiInstr.halt]
+  [YiInstr.complement, YiInstr.halt]
 
 theorem metaInterpProg_cuo_correct (h : Hexagram) :
-    ((YiState.init h metaInterpProg_cuo).runFuel 2).cur = (Hexagram.cuo h, Shi.jin)
+    ((YiState.init h metaInterpProg_cuo).runFuel 2).cur = (Hexagram.complement h, Shi.jin)
     ∧ ((YiState.init h metaInterpProg_cuo).runFuel 2).pc = 1
     ∧ ((YiState.init h metaInterpProg_cuo).runFuel 2).halted = true := by
   refine ⟨?_, ?_, ?_⟩ <;> rfl
 
 def metaInterpProg_zong : List YiInstr :=
-  [YiInstr.zong, YiInstr.halt]
+  [YiInstr.reverse, YiInstr.halt]
 
 theorem metaInterpProg_zong_correct (h : Hexagram) :
-    ((YiState.init h metaInterpProg_zong).runFuel 2).cur = (Hexagram.zong h, Shi.jin)
+    ((YiState.init h metaInterpProg_zong).runFuel 2).cur = (Hexagram.reverse h, Shi.jin)
     ∧ ((YiState.init h metaInterpProg_zong).runFuel 2).pc = 1
     ∧ ((YiState.init h metaInterpProg_zong).runFuel 2).halted = true := by
   refine ⟨?_, ?_, ?_⟩ <;> rfl
@@ -698,8 +698,8 @@ def metaInterpProg_branchYaoEq (i j : Fin 6) (target : Nat) : List YiInstr :=
   [YiInstr.branchYaoEq i j target, YiInstr.halt, YiInstr.halt]
 
 theorem metaInterpProg_branchYaoEq_correct (i j : Fin 6) :
-    ((YiState.init Hexagram.qian (metaInterpProg_branchYaoEq i j 2)).runFuel 1).pc = 2
-    ∧ ((YiState.init Hexagram.qian (metaInterpProg_branchYaoEq i j 2)).runFuel 2).halted
+    ((YiState.init Hexagram.heaven (metaInterpProg_branchYaoEq i j 2)).runFuel 1).pc = 2
+    ∧ ((YiState.init Hexagram.heaven (metaInterpProg_branchYaoEq i j 2)).runFuel 2).halted
         = true := by
   refine ⟨?_, ?_⟩
   all_goals
@@ -739,49 +739,49 @@ open YiInstrEnc
 
 def metaInterpStep_nop : List YiInstr := [.pop, .push, .halt]
 def metaInterpStep_halt : List YiInstr := [.pop, .push, .halt]
-def metaInterpStep_hu : List YiInstr := [.pop, .hu, .push, .halt]
-def metaInterpStep_cuo : List YiInstr := [.pop, .cuo, .push, .halt]
-def metaInterpStep_zong : List YiInstr := [.pop, .zong, .push, .halt]
+def metaInterpStep_hu : List YiInstr := [.pop, .interlace, .push, .halt]
+def metaInterpStep_cuo : List YiInstr := [.pop, .complement, .push, .halt]
+def metaInterpStep_zong : List YiInstr := [.pop, .reverse, .push, .halt]
 def metaInterpStep_push : List YiInstr := [.pop, .push, .push, .halt]
 def metaInterpStep_pop : List YiInstr := [.pop, .pop, .halt]
 
-theorem metaInterpStep_nop_simulates (h : Hexagram) (gcur : Cell256) :
+theorem metaInterpStep_nop_simulates (h : Hexagram) (gcur : R8) :
     let s := { (YiState.init h metaInterpStep_nop) with history := [gcur] }
     (s.runFuel 4).history = [gcur]
     ∧ (s.runFuel 4).halted = true := by
   refine ⟨?_, ?_⟩ <;> rfl
 
-theorem metaInterpStep_halt_simulates (h : Hexagram) (gcur : Cell256) :
+theorem metaInterpStep_halt_simulates (h : Hexagram) (gcur : R8) :
     let s := { (YiState.init h metaInterpStep_halt) with history := [gcur] }
     (s.runFuel 4).history = [gcur]
     ∧ (s.runFuel 4).halted = true := by
   refine ⟨?_, ?_⟩ <;> rfl
 
-theorem metaInterpStep_hu_simulates (h : Hexagram) (gcur : Cell256) :
+theorem metaInterpStep_hu_simulates (h : Hexagram) (gcur : R8) :
     let s := { (YiState.init h metaInterpStep_hu) with history := [gcur] }
-    (s.runFuel 5).history = [(Hexagram.hu gcur.1, gcur.2)]
+    (s.runFuel 5).history = [(Hexagram.interlace gcur.1, gcur.2)]
     ∧ (s.runFuel 5).halted = true := by
   refine ⟨?_, ?_⟩ <;> rfl
 
-theorem metaInterpStep_cuo_simulates (h : Hexagram) (gcur : Cell256) :
+theorem metaInterpStep_cuo_simulates (h : Hexagram) (gcur : R8) :
     let s := { (YiState.init h metaInterpStep_cuo) with history := [gcur] }
-    (s.runFuel 5).history = [(Hexagram.cuo gcur.1, gcur.2)]
+    (s.runFuel 5).history = [(Hexagram.complement gcur.1, gcur.2)]
     ∧ (s.runFuel 5).halted = true := by
   refine ⟨?_, ?_⟩ <;> rfl
 
-theorem metaInterpStep_zong_simulates (h : Hexagram) (gcur : Cell256) :
+theorem metaInterpStep_zong_simulates (h : Hexagram) (gcur : R8) :
     let s := { (YiState.init h metaInterpStep_zong) with history := [gcur] }
-    (s.runFuel 5).history = [(Hexagram.zong gcur.1, gcur.2)]
+    (s.runFuel 5).history = [(Hexagram.reverse gcur.1, gcur.2)]
     ∧ (s.runFuel 5).halted = true := by
   refine ⟨?_, ?_⟩ <;> rfl
 
-theorem metaInterpStep_push_simulates (h : Hexagram) (gcur : Cell256) :
+theorem metaInterpStep_push_simulates (h : Hexagram) (gcur : R8) :
     let s := { (YiState.init h metaInterpStep_push) with history := [gcur] }
     (s.runFuel 5).history = [gcur, gcur]
     ∧ (s.runFuel 5).halted = true := by
   refine ⟨?_, ?_⟩ <;> rfl
 
-theorem metaInterpStep_pop_simulates (h : Hexagram) (gcur1 gcur2 : Cell256) :
+theorem metaInterpStep_pop_simulates (h : Hexagram) (gcur1 gcur2 : R8) :
     let s := { (YiState.init h metaInterpStep_pop) with history := [gcur1, gcur2] }
     (s.runFuel 4).history = []
     ∧ (s.runFuel 4).halted = true
@@ -793,7 +793,7 @@ theorem metaInterpStep_pop_simulates (h : Hexagram) (gcur1 gcur2 : Cell256) :
 def metaInterpStep_setShi (sh : Shi) : List YiInstr :=
   [.pop, .setShi sh, .push, .halt]
 
-theorem metaInterpStep_setShi_simulates (h : Hexagram) (sh : Shi) (gcur : Cell256) :
+theorem metaInterpStep_setShi_simulates (h : Hexagram) (sh : Shi) (gcur : R8) :
     let s := { (YiState.init h (metaInterpStep_setShi sh))
                with history := [gcur] }
     (s.runFuel 5).history = [(gcur.1, sh)] ∧ (s.runFuel 5).halted = true := by
@@ -802,7 +802,7 @@ theorem metaInterpStep_setShi_simulates (h : Hexagram) (sh : Shi) (gcur : Cell25
 def metaInterpStep_flipYao (i : Fin 6) : List YiInstr :=
   [.pop, .flipYao i, .push, .halt]
 
-theorem metaInterpStep_flipYao_simulates (h : Hexagram) (i : Fin 6) (gcur : Cell256) :
+theorem metaInterpStep_flipYao_simulates (h : Hexagram) (i : Fin 6) (gcur : R8) :
     let s := { (YiState.init h (metaInterpStep_flipYao i))
                with history := [gcur] }
     (s.runFuel 5).history = [(gcur.1.flipPos i, gcur.2)] ∧ (s.runFuel 5).halted = true := by
@@ -812,7 +812,7 @@ theorem metaInterpStep_flipYao_simulates (h : Hexagram) (i : Fin 6) (gcur : Cell
 
 def metaInterpStep_jump (_t : Nat) : List YiInstr := [.pop, .push, .halt]
 
-theorem metaInterpStep_jump_preserves_gcur (h : Hexagram) (t : Nat) (gcur : Cell256) :
+theorem metaInterpStep_jump_preserves_gcur (h : Hexagram) (t : Nat) (gcur : R8) :
     let s := { (YiState.init h (metaInterpStep_jump t)) with history := [gcur] }
     (s.runFuel 4).history = [gcur] ∧ (s.runFuel 4).halted = true := by
   refine ⟨?_, ?_⟩ <;> rfl
@@ -821,7 +821,7 @@ def metaInterpStep_branchYaoEq (_i _j : Fin 6) (_t : Nat) : List YiInstr :=
   [.pop, .push, .halt]
 
 theorem metaInterpStep_branchYaoEq_preserves_gcur (h : Hexagram)
-    (i j : Fin 6) (t : Nat) (gcur : Cell256) :
+    (i j : Fin 6) (t : Nat) (gcur : R8) :
     let s := { (YiState.init h (metaInterpStep_branchYaoEq i j t)) with history := [gcur] }
     (s.runFuel 4).history = [gcur] ∧ (s.runFuel 4).halted = true := by
   refine ⟨?_, ?_⟩ <;> rfl
@@ -830,7 +830,7 @@ def metaInterpStep_branchShiEq (_sh : Shi) (_t : Nat) : List YiInstr :=
   [.pop, .push, .halt]
 
 theorem metaInterpStep_branchShiEq_preserves_gcur (h : Hexagram)
-    (sh : Shi) (t : Nat) (gcur : Cell256) :
+    (sh : Shi) (t : Nat) (gcur : R8) :
     let s := { (YiState.init h (metaInterpStep_branchShiEq sh t)) with history := [gcur] }
     (s.runFuel 4).history = [gcur] ∧ (s.runFuel 4).halted = true := by
   refine ⟨?_, ?_⟩ <;> rfl
@@ -840,7 +840,7 @@ theorem metaInterpStep_branchShiEq_preserves_gcur (h : Hexagram)
 def metaInterpStepPc_jump : List YiInstr := [.pop, .halt]
 
 theorem metaInterpStepPc_jump_simulates
-    (h : Hexagram) (encOldPc encNewPc gcur : Cell256) :
+    (h : Hexagram) (encOldPc encNewPc gcur : R8) :
     let s := { (YiState.init h metaInterpStepPc_jump)
                with history := [encOldPc, encNewPc, gcur] }
     (s.runFuel 3).history = [encNewPc, gcur] ∧ (s.runFuel 3).halted = true := by
@@ -856,7 +856,7 @@ def metaInterpStepPc_branchShiEq (sh : Shi) : List YiInstr :=
   ]
 
 theorem metaInterpStepPc_branchShiEq_taken (h hex : Hexagram) (sh : Shi) :
-    let gcur : Cell256 := (hex, sh)
+    let gcur : R8 := (hex, sh)
     let s := { (YiState.init h (metaInterpStepPc_branchShiEq sh))
                with history := [gcur] }
     (s.runFuel 5).pc = 5
@@ -865,7 +865,7 @@ theorem metaInterpStepPc_branchShiEq_taken (h hex : Hexagram) (sh : Shi) :
   refine ⟨?_, ?_, ?_⟩ <;> (rcases sh with ⟨y, g⟩ <;> cases y <;> cases g <;> rfl)
 
 theorem metaInterpStepPc_branchShiEq_notTaken_jin_dao (h hex : Hexagram) :
-    let gcur : Cell256 := (hex, Shi.dao)
+    let gcur : R8 := (hex, Shi.dao)
     let s := { (YiState.init h (metaInterpStepPc_branchShiEq Shi.jin))
                with history := [gcur] }
     (s.runFuel 5).pc = 3
@@ -874,7 +874,7 @@ theorem metaInterpStepPc_branchShiEq_notTaken_jin_dao (h hex : Hexagram) :
   refine ⟨?_, ?_, ?_⟩ <;> rfl
 
 theorem metaInterpStepPc_branchShiEq_notTaken_jin_ji (h hex : Hexagram) :
-    let gcur : Cell256 := (hex, Shi.ji)
+    let gcur : R8 := (hex, Shi.ji)
     let s := { (YiState.init h (metaInterpStepPc_branchShiEq Shi.jin))
                with history := [gcur] }
     (s.runFuel 5).pc = 3
@@ -883,7 +883,7 @@ theorem metaInterpStepPc_branchShiEq_notTaken_jin_ji (h hex : Hexagram) :
   refine ⟨?_, ?_, ?_⟩ <;> rfl
 
 theorem metaInterpStepPc_branchShiEq_notTaken_jin_wei (h hex : Hexagram) :
-    let gcur : Cell256 := (hex, Shi.wei)
+    let gcur : R8 := (hex, Shi.wei)
     let s := { (YiState.init h (metaInterpStepPc_branchShiEq Shi.jin))
                with history := [gcur] }
     (s.runFuel 5).pc = 3
@@ -902,13 +902,13 @@ theorem trivialSeven_simulates :
         (s.runFuel 4).history = [gcur] ∧ (s.runFuel 4).halted = true)
     ∧ (∀ h gcur,
         let s := { (YiState.init h metaInterpStep_hu) with history := [gcur] }
-        (s.runFuel 5).history = [(Hexagram.hu gcur.1, gcur.2)] ∧ (s.runFuel 5).halted = true)
+        (s.runFuel 5).history = [(Hexagram.interlace gcur.1, gcur.2)] ∧ (s.runFuel 5).halted = true)
     ∧ (∀ h gcur,
         let s := { (YiState.init h metaInterpStep_cuo) with history := [gcur] }
-        (s.runFuel 5).history = [(Hexagram.cuo gcur.1, gcur.2)] ∧ (s.runFuel 5).halted = true)
+        (s.runFuel 5).history = [(Hexagram.complement gcur.1, gcur.2)] ∧ (s.runFuel 5).halted = true)
     ∧ (∀ h gcur,
         let s := { (YiState.init h metaInterpStep_zong) with history := [gcur] }
-        (s.runFuel 5).history = [(Hexagram.zong gcur.1, gcur.2)] ∧ (s.runFuel 5).halted = true)
+        (s.runFuel 5).history = [(Hexagram.reverse gcur.1, gcur.2)] ∧ (s.runFuel 5).halted = true)
     ∧ (∀ h gcur,
         let s := { (YiState.init h metaInterpStep_push) with history := [gcur] }
         (s.runFuel 5).history = [gcur, gcur] ∧ (s.runFuel 5).halted = true)
@@ -936,13 +936,13 @@ theorem phase23_all12_simulated :
         (s.runFuel 5).history = [(gcur.1.flipPos i, gcur.2)] ∧ (s.runFuel 5).halted = true)
     ∧ (∀ h gcur,
         let s := { (YiState.init h metaInterpStep_hu) with history := [gcur] }
-        (s.runFuel 5).history = [(Hexagram.hu gcur.1, gcur.2)] ∧ (s.runFuel 5).halted = true)
+        (s.runFuel 5).history = [(Hexagram.interlace gcur.1, gcur.2)] ∧ (s.runFuel 5).halted = true)
     ∧ (∀ h gcur,
         let s := { (YiState.init h metaInterpStep_cuo) with history := [gcur] }
-        (s.runFuel 5).history = [(Hexagram.cuo gcur.1, gcur.2)] ∧ (s.runFuel 5).halted = true)
+        (s.runFuel 5).history = [(Hexagram.complement gcur.1, gcur.2)] ∧ (s.runFuel 5).halted = true)
     ∧ (∀ h gcur,
         let s := { (YiState.init h metaInterpStep_zong) with history := [gcur] }
-        (s.runFuel 5).history = [(Hexagram.zong gcur.1, gcur.2)] ∧ (s.runFuel 5).halted = true)
+        (s.runFuel 5).history = [(Hexagram.reverse gcur.1, gcur.2)] ∧ (s.runFuel 5).halted = true)
     ∧ (∀ h i j t gcur,
         let s := { (YiState.init h (metaInterpStep_branchYaoEq i j t)) with history := [gcur] }
         (s.runFuel 4).history = [gcur] ∧ (s.runFuel 4).halted = true)
@@ -997,7 +997,7 @@ theorem selfPush_pushes_cur (h : Hexagram) :
 
 def quineProg : List YiInstr := [YiInstr.push]
 
-def quineCur : Cell256 := cellFromIdx ⟨9, by omega⟩
+def quineCur : R8 := cellFromIdx ⟨9, by omega⟩
 
 def quineInit : YiState :=
   { cur := quineCur, history := [], pc := 0
@@ -1037,12 +1037,12 @@ theorem wenyan_self_interp_complete :
     (∀ i : YiInstr, (YiInstrEnc.encInstr i).length ≥ 1)
     ∧ (∀ s : YiState, (StateEnc.encState s).length ≥ 1)
     ∧ (∀ s : YiState, (metaStep s).head? = some s.step.cur)
-    ∧ (∀ c : Cell256, cellFromIdx (cellToIdx c) = c)
+    ∧ (∀ c : R8, cellFromIdx (cellToIdx c) = c)
     ∧ (∀ n : Nat, NatCell.decodeNat (NatCell.encodeNat n) = n)
     ∧ (∀ rest, YiInstrEnc.decInstr (YiInstrEnc.encInstr .nop  ++ rest) = some (.nop, rest))
-    ∧ (∀ rest, YiInstrEnc.decInstr (YiInstrEnc.encInstr .hu   ++ rest) = some (.hu, rest))
-    ∧ (∀ rest, YiInstrEnc.decInstr (YiInstrEnc.encInstr .cuo  ++ rest) = some (.cuo, rest))
-    ∧ (∀ rest, YiInstrEnc.decInstr (YiInstrEnc.encInstr .zong ++ rest) = some (.zong, rest))
+    ∧ (∀ rest, YiInstrEnc.decInstr (YiInstrEnc.encInstr .interlace   ++ rest) = some (.interlace, rest))
+    ∧ (∀ rest, YiInstrEnc.decInstr (YiInstrEnc.encInstr .complement  ++ rest) = some (.complement, rest))
+    ∧ (∀ rest, YiInstrEnc.decInstr (YiInstrEnc.encInstr .reverse ++ rest) = some (.reverse, rest))
     ∧ (∀ rest, YiInstrEnc.decInstr (YiInstrEnc.encInstr .push ++ rest) = some (.push, rest))
     ∧ (∀ rest, YiInstrEnc.decInstr (YiInstrEnc.encInstr .pop  ++ rest) = some (.pop, rest))
     ∧ (∀ rest, YiInstrEnc.decInstr (YiInstrEnc.encInstr .halt ++ rest) = some (.halt, rest))

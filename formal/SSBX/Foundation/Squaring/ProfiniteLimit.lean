@@ -18,20 +18,20 @@ import SSBX.Foundation.Squaring.StreamCarrier
 
 namespace SSBX.Foundation.Squaring
 
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open CategoryTheory
 
 namespace ProfiniteLimit
 
 /-- The finite squaring tower: `L n` is a block of length `2^n`. -/
 def L : Nat -> Type
-  | 0 => Cell256
+  | 0 => R8
   | n + 1 => L n × L n
 
 instance instAddCommGroupL (n : Nat) : AddCommGroup (L n) := by
   induction n with
   | zero =>
-      change AddCommGroup Cell256
+      change AddCommGroup R8
       infer_instance
   | succ n ih =>
       change AddCommGroup (L n × L n)
@@ -41,7 +41,7 @@ instance instAddCommGroupL (n : Nat) : AddCommGroup (L n) := by
 noncomputable instance instFintypeL (n : Nat) : Fintype (L n) := by
   induction n with
   | zero =>
-      change Fintype Cell256
+      change Fintype R8
       infer_instance
   | succ n ih =>
       change Fintype (L n × L n)
@@ -125,7 +125,7 @@ instance : AddCommGroup L_inf where
 end L_inf
 
 instance instAddCommGroupTrajCell : AddCommGroup StreamCarrier.TrajCell := by
-  change AddCommGroup (Nat -> Cell256)
+  change AddCommGroup (Nat -> R8)
   infer_instance
 
 /-- Read a natural-number coordinate from a finite block.
@@ -133,7 +133,7 @@ instance instAddCommGroupTrajCell : AddCommGroup StreamCarrier.TrajCell := by
 Out-of-range indices are still assigned a value by recursively falling into the
 right branch.  The correctness lemma below is only stated for `k < 2^n`.
 -/
-def blockGetNat : (n : Nat) -> L n -> Nat -> Cell256
+def blockGetNat : (n : Nat) -> L n -> Nat -> R8
   | 0, b, _ => b
   | n + 1, b, k =>
       if k < 2 ^ n then
@@ -295,23 +295,23 @@ def tailLimit (x : L_inf) : L_inf :=
   fromStream (toStream x).tail
 
 /-- Coalgebra structure transported from the stream head/tail coalgebra. -/
-def coalg (x : L_inf) : Cell256 × L_inf :=
+def coalg (x : L_inf) : R8 × L_inf :=
   ((toStream x).head, tailLimit x)
 
 theorem coalg_toStream_step (x : L_inf) :
     StreamCarrier.step (toStream x) = ((coalg x).1, toStream (coalg x).2) := by
   simp [coalg, tailLimit, StreamCarrier.step, toStream_fromStream]
 
-def coalgebraMorphism {X : Type} (ξ : X -> Cell256 × X) : X -> L_inf :=
+def coalgebraMorphism {X : Type} (ξ : X -> R8 × X) : X -> L_inf :=
   fun x => fromStream (StreamCarrier.unfold ξ x)
 
-theorem coalgebraMorphism_step {X : Type} (ξ : X -> Cell256 × X) (x : X) :
+theorem coalgebraMorphism_step {X : Type} (ξ : X -> R8 × X) (x : X) :
     coalg (coalgebraMorphism ξ x) =
       ((ξ x).1, coalgebraMorphism ξ (ξ x).2) := by
   simp [coalgebraMorphism, coalg, tailLimit, StreamCarrier.unfold_head,
     StreamCarrier.unfold_tail, toStream_fromStream]
 
-theorem coalgebraMorphism_unique {X : Type} (ξ : X -> Cell256 × X) (g : X -> L_inf)
+theorem coalgebraMorphism_unique {X : Type} (ξ : X -> R8 × X) (g : X -> L_inf)
     (h : ∀ x, coalg (g x) = ((ξ x).1, g (ξ x).2)) :
     g = coalgebraMorphism ξ := by
   have hstep : ∀ x,
@@ -348,16 +348,16 @@ theorem coalgebraMorphism_unique {X : Type} (ξ : X -> Cell256 × X) (g : X -> L
     _ = fromStream (StreamCarrier.unfold ξ x) := by rw [hstream]
     _ = coalgebraMorphism ξ x := rfl
 
-theorem L_inf_isFinalCoalgebra_concrete {X : Type} (ξ : X -> Cell256 × X) :
+theorem L_inf_isFinalCoalgebra_concrete {X : Type} (ξ : X -> R8 × X) :
     ∃! g : X -> L_inf, ∀ x, coalg (g x) = ((ξ x).1, g (ξ x).2) := by
   refine ⟨coalgebraMorphism ξ, coalgebraMorphism_step ξ, ?_⟩
   intro g hg
   exact coalgebraMorphism_unique ξ g hg
 
-/-- The concrete polynomial functor `F X = Cell256 × X` on `Type`. -/
+/-- The concrete polynomial functor `F X = R8 × X` on `Type`. -/
 def funcF : Type ⥤ Type where
-  obj X := Cell256 × X
-  map {X Y} f := TypeCat.ofHom (fun p : Cell256 × X => (p.1, f p.2))
+  obj X := R8 × X
+  map {X Y} f := TypeCat.ofHom (fun p : R8 × X => (p.1, f p.2))
 
 /-- `L_inf` as a Mathlib endofunctor coalgebra. -/
 def L_inf_coalgebra : CategoryTheory.Endofunctor.Coalgebra funcF where
@@ -393,7 +393,7 @@ theorem profinite_limit_summary :
     ∧ (∀ n (x y : L (n + 1)), pi n (x + y) = pi n x + pi n y)
     ∧ Function.LeftInverse fromStream toStream
     ∧ (∀ s : StreamCarrier.TrajCell, toStream (fromStream s) = s)
-    ∧ (∀ (X : Type) (ξ : X -> Cell256 × X),
+    ∧ (∀ (X : Type) (ξ : X -> R8 × X),
         ∃! g : X -> L_inf, ∀ x, coalg (g x) = ((ξ x).1, g (ξ x).2))
     ∧ Nonempty (CategoryTheory.Limits.IsTerminal L_inf_coalgebra)
     ∧ (∀ x : L_inf,

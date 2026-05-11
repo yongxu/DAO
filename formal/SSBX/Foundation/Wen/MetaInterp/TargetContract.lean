@@ -8,7 +8,7 @@ The target is a Lean-checked bridge:
 
 * Lean defines and checks the YiInstr operational semantics.
 * Program encodings round-trip under explicit hypotheses.
-* Universal interpretation, s-m-n, diagonal compilers, and cuo-restricted
+* Universal interpretation, s-m-n, diagonal compilers, and complement-restricted
   Church-Turing remain explicit target propositions.
 * Wenyan programs are next-phase witnesses for those propositions, not the root
   proof system.
@@ -20,7 +20,7 @@ import SSBX.Foundation.Wen.WenyanQuineKleene
 namespace SSBX.Foundation.Wen.MetaInterp.TargetContract
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Bagua.GodelLi
 open SSBX.Foundation.Bagua.KleeneInternal
@@ -155,7 +155,7 @@ def SmnCompilerTarget : Prop := SmnExists
 /-- Fixed-point and Boolean-inverter compiler target. -/
 def DiagonalCompilerTarget : Prop := KleeneFromPrimitives
 
-/-- Current Church-Turing target, restricted to cuo-invariant deciders. -/
+/-- Current Church-Turing target, restricted to complement-invariant deciders. -/
 def CuoRestrictedChurchTuringTarget : Prop := AllDecidersAreYiComputable
 
 /-- A next-phase Wenyan witness is a concrete YiInstr program satisfying the

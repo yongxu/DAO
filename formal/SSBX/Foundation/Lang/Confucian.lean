@@ -2,13 +2,13 @@
 # Confucian — 儒家概念在 R-层 Cell 上的具体落位
 
 Following the existing abstract formalization in `Foundation/Wen/Kernel.lean`
-(80+ Confucian theorems based on a `dong : Field → Field` axiom layer), this
+(80+ Confucian theorems based on a `motion : Field → Field` axiom layer), this
 file lifts four families of Confucian concepts to **concrete R-layer cells**
 in the (Z/2)ⁿ hierarchy:
 
 | 家族 | R-layer | Cells | 来源 |
 | --- | --- | ---: | --- |
-| 五常 (仁义礼智信) | R₇ Cell128 | 5 of 128 | `Wuchang.lean` (done) |
+| 五常 (仁义礼智信) | R₇ R7 | 5 of 128 | `Wuchang.lean` (done) |
 | 四端 (恻隐羞恶辞让是非) | R₃ Trigram | 4 of 8 | here, **aliases** existing `Eight/XinZhi.lean::SiDuan.toTrigram` |
 | 大学八目 (格致诚正修齐治平) | R₃ Trigram | 8 of 8 | here, **new** proposal mapping |
 | 五伦 (父子君臣夫妇兄弟朋友) | R₅ Wuyao | 5 of 32 | here, **new** aliases of L5 generators |
@@ -18,10 +18,10 @@ in the (Z/2)ⁿ hierarchy:
 
 | 层 | 名 | 落位 | 类型 | 来源 |
 | --- | --- | --- | --- | --- |
-| R₃ | 恻隐 (仁端) | 离 ☲ | alias | from `SiDuan.toTrigram .ceYin` |
-| R₃ | 羞恶 (义端) | 坎 ☵ | alias | from `SiDuan.toTrigram .xiuWu` |
-| R₃ | 辞让 (礼端) | 震 ☳ | alias | from `SiDuan.toTrigram .ciRang` |
-| R₃ | 是非 (智端) | 兑 ☱ | alias | from `SiDuan.toTrigram .shiFei` |
+| R₃ | 恻隐 (仁端) | 离 ☲ | alias | from `SiDuan.toTrigram .compassion` |
+| R₃ | 羞恶 (义端) | 坎 ☵ | alias | from `SiDuan.toTrigram .shame` |
+| R₃ | 辞让 (礼端) | 震 ☳ | alias | from `SiDuan.toTrigram .yielding` |
+| R₃ | 是非 (智端) | 兑 ☱ | alias | from `SiDuan.toTrigram .discernment` |
 | R₃ | 格物 | 巽 ☴ (penetrate) | new | proposed |
 | R₃ | 致知 | 离 ☲ (illuminate) | new | proposed |
 | R₃ | 诚意 | 兑 ☱ (joy/lake) | new | proposed |
@@ -57,30 +57,30 @@ open SSBX.Foundation.Yi.Yi.Hexagram
 namespace SiDuan
 
 /-- 恻隐之心 = 仁之端 → 离 ☲ (illumination/warmth). -/
-def «恻隐» : Trigram := Trigram.li
+def compassion : Trigram := Trigram.fire
 
 /-- 羞恶之心 = 义之端 → 坎 ☵ (water/danger/judgment). -/
-def «羞恶» : Trigram := Trigram.kan
+def shame : Trigram := Trigram.water
 
 /-- 辞让之心 = 礼之端 → 震 ☳ (thunder/initiation/yielding). -/
-def «辞让» : Trigram := Trigram.zhen
+def yielding : Trigram := Trigram.thunder
 
 /-- 是非之心 = 智之端 → 兑 ☱ (lake/clarity/discrimination). -/
-def «是非» : Trigram := Trigram.dui
+def discernment : Trigram := Trigram.lake
 
 /-- These four aliases agree with the existing `SiDuan.toTrigram` mapping
 in `Foundation/Eight/XinZhi.lean`. -/
-theorem siduan_agrees_with_XinZhi :
-    «恻隐» = SSBX.Foundation.Eight.XinZhi.SiDuan.toTrigram .ceYin ∧
-    «羞恶» = SSBX.Foundation.Eight.XinZhi.SiDuan.toTrigram .xiuWu ∧
-    «辞让» = SSBX.Foundation.Eight.XinZhi.SiDuan.toTrigram .ciRang ∧
-    «是非» = SSBX.Foundation.Eight.XinZhi.SiDuan.toTrigram .shiFei := by
+theorem fourBuds_agrees_with_XinZhi :
+    compassion = SSBX.Foundation.Eight.XinZhi.SiDuan.toTrigram .compassion ∧
+    shame = SSBX.Foundation.Eight.XinZhi.SiDuan.toTrigram .shame ∧
+    yielding = SSBX.Foundation.Eight.XinZhi.SiDuan.toTrigram .yielding ∧
+    discernment = SSBX.Foundation.Eight.XinZhi.SiDuan.toTrigram .discernment := by
   refine ⟨rfl, rfl, rfl, rfl⟩
 
 /-- The 4 端 are pairwise distinct. -/
-theorem siduan_distinct :
-    «恻隐» ≠ «羞恶» ∧ «恻隐» ≠ «辞让» ∧ «恻隐» ≠ «是非» ∧
-    «羞恶» ≠ «辞让» ∧ «羞恶» ≠ «是非» ∧ «辞让» ≠ «是非» := by
+theorem fourBuds_distinct :
+    compassion ≠ shame ∧ compassion ≠ yielding ∧ compassion ≠ discernment ∧
+    shame ≠ yielding ∧ shame ≠ discernment ∧ yielding ≠ discernment := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
   all_goals decide
 
@@ -104,29 +104,29 @@ Alternative readings exist — this is a proposal.
 
 namespace BaMu
 
-def «格物»   : Trigram := Trigram.xun
-def «致知»   : Trigram := Trigram.li
-def «诚意»   : Trigram := Trigram.dui
-def «正心»   : Trigram := Trigram.gen
-def «修身»   : Trigram := Trigram.zhen
-def «齐家»   : Trigram := Trigram.kan
-def «治国»   : Trigram := Trigram.kun
-def «平天下» : Trigram := Trigram.qian
+def investigateThings   : Trigram := Trigram.wind
+def extendKnowledge   : Trigram := Trigram.fire
+def sincereIntention   : Trigram := Trigram.lake
+def rectifyHeart   : Trigram := Trigram.mountain
+def cultivateSelf   : Trigram := Trigram.thunder
+def regulateFamily   : Trigram := Trigram.water
+def governState   : Trigram := Trigram.earth
+def pacifyWorld : Trigram := Trigram.heaven
 
 /-- The 8 目 list. -/
 def all : List Trigram :=
-  [«格物», «致知», «诚意», «正心», «修身», «齐家», «治国», «平天下»]
+  [investigateThings, extendKnowledge, sincereIntention, rectifyHeart, cultivateSelf, regulateFamily, governState, pacifyWorld]
 
-theorem bamu_count : all.length = 8 := rfl
+theorem eightAims_count : all.length = 8 := rfl
 
 /-- The 8 目 cover all 8 trigrams (bijection with 八卦) as a list permutation. -/
-theorem bamu_eq_perm_of_bagua : BaMu.all =
-    [Trigram.xun, Trigram.li, Trigram.dui, Trigram.gen,
-     Trigram.zhen, Trigram.kan, Trigram.kun, Trigram.qian] := rfl
+theorem eightAims_eq_perm_of_bagua : BaMu.all =
+    [Trigram.wind, Trigram.fire, Trigram.lake, Trigram.mountain,
+     Trigram.thunder, Trigram.water, Trigram.earth, Trigram.heaven] := rfl
 
 /-- The 8 目 are pairwise distinct. -/
-theorem bamu_distinct : «格物» ≠ «致知» ∧ «格物» ≠ «诚意» ∧
-    «致知» ≠ «诚意» ∧ «修身» ≠ «齐家» ∧ «治国» ≠ «平天下» := by
+theorem eightAims_distinct : investigateThings ≠ extendKnowledge ∧ investigateThings ≠ sincereIntention ∧
+    extendKnowledge ≠ sincereIntention ∧ cultivateSelf ≠ regulateFamily ∧ governState ≠ pacifyWorld := by
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
   all_goals decide
 
@@ -142,29 +142,29 @@ R₅ via XOR. Aliases of the existing `L5.flipBenLo/Hi`, `L5.flipZhengLo/Hi`,
 namespace WuLun
 
 /-- 父子有亲 → flipBenLo. -/
-def «父子» : SSBX.Foundation.Lang.L5.Cell := SSBX.Foundation.Lang.L5.flipBenLo
+def fatherSon : SSBX.Foundation.Lang.L5.Cell := SSBX.Foundation.Lang.L5.flipBenLo
 
 /-- 君臣有义 → flipBenHi. -/
-def «君臣» : SSBX.Foundation.Lang.L5.Cell := SSBX.Foundation.Lang.L5.flipBenHi
+def rulerSubject : SSBX.Foundation.Lang.L5.Cell := SSBX.Foundation.Lang.L5.flipBenHi
 
 /-- 夫妇有别 → flipZhengLo. -/
-def «夫妇» : SSBX.Foundation.Lang.L5.Cell := SSBX.Foundation.Lang.L5.flipZhengLo
+def husbandWife : SSBX.Foundation.Lang.L5.Cell := SSBX.Foundation.Lang.L5.flipZhengLo
 
 /-- 兄弟有序 → flipZhengHi. -/
-def «兄弟» : SSBX.Foundation.Lang.L5.Cell := SSBX.Foundation.Lang.L5.flipZhengHi
+def brothers : SSBX.Foundation.Lang.L5.Cell := SSBX.Foundation.Lang.L5.flipZhengHi
 
 /-- 朋友有信 → flipFifth (the new 5th-yao bit, "above" the Mian generators). -/
-def «朋友» : SSBX.Foundation.Lang.L5.Cell := SSBX.Foundation.Lang.L5.flipFifth
+def friends : SSBX.Foundation.Lang.L5.Cell := SSBX.Foundation.Lang.L5.flipFifth
 
 def all : List SSBX.Foundation.Lang.L5.Cell :=
-  [«父子», «君臣», «夫妇», «兄弟», «朋友»]
+  [fatherSon, rulerSubject, husbandWife, brothers, friends]
 
-theorem wulun_count : all.length = 5 := rfl
+theorem fiveRelations_count : all.length = 5 := rfl
 
-theorem wulun_distinct :
-    «父子» ≠ «君臣» ∧ «父子» ≠ «夫妇» ∧ «父子» ≠ «兄弟» ∧ «父子» ≠ «朋友» ∧
-    «君臣» ≠ «夫妇» ∧ «君臣» ≠ «兄弟» ∧ «君臣» ≠ «朋友» ∧
-    «夫妇» ≠ «兄弟» ∧ «夫妇» ≠ «朋友» ∧ «兄弟» ≠ «朋友» := by
+theorem fiveRelations_distinct :
+    fatherSon ≠ rulerSubject ∧ fatherSon ≠ husbandWife ∧ fatherSon ≠ brothers ∧ fatherSon ≠ friends ∧
+    rulerSubject ≠ husbandWife ∧ rulerSubject ≠ brothers ∧ rulerSubject ≠ friends ∧
+    husbandWife ≠ brothers ∧ husbandWife ≠ friends ∧ brothers ≠ friends := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   all_goals decide
 
@@ -180,15 +180,10 @@ re-states the inDao fact at the named cells.
 
 namespace DaTong
 
-def «乾»   : Hexagram := Hexagram.«乾»
-def «坤»   : Hexagram := Hexagram.«坤»
-def «既济» : Hexagram := Hexagram.«既济»
-def «未济» : Hexagram := Hexagram.«未济»
-
-theorem qian_in_dao   : «乾».inDao = true   := SSBX.Foundation.Core.Yuan.daTong_total «乾»
-theorem kun_in_dao    : «坤».inDao = true   := SSBX.Foundation.Core.Yuan.daTong_total «坤»
-theorem jiji_in_dao   : «既济».inDao = true := SSBX.Foundation.Core.Yuan.daTong_total «既济»
-theorem weiji_in_dao  : «未济».inDao = true := SSBX.Foundation.Core.Yuan.daTong_total «未济»
+theorem heaven_in_dao     : Hexagram.heaven.inDao = true     := SSBX.Foundation.Core.Yuan.daTong_total Hexagram.heaven
+theorem earth_in_dao      : Hexagram.earth.inDao = true      := SSBX.Foundation.Core.Yuan.daTong_total Hexagram.earth
+theorem complete_in_dao   : Hexagram.complete.inDao = true   := SSBX.Foundation.Core.Yuan.daTong_total Hexagram.complete
+theorem incomplete_in_dao : Hexagram.incomplete.inDao = true := SSBX.Foundation.Core.Yuan.daTong_total Hexagram.incomplete
 
 /-- The universal statement, re-exported from Yuan.lean. -/
 theorem all_hexagrams_in_dao (h : Hexagram) : h.inDao = true :=
@@ -198,8 +193,8 @@ end DaTong
 
 /-! ## § 6 R₁ Yao — 善 / 恶 (the simplest cell-level binary)
 
-In Kernel.lean: `shan ≡ middle` (善 = 中, the unfixed state) and `eVice ≡
-extreme` (恶 = 极, the fixed state). At Cell layer, "fixed by XOR-with-0"
+In Kernel.lean: `good ≡ center` (善 = 中, the unfixed state) and `evil ≡
+terminus` (恶 = 极, the fixed state). At Cell layer, "fixed by XOR-with-0"
 is automatic (origin), but the doctrinal yin/yang reading is more natural:
 
 - 善 ↔ 阳 (Yao.yang) — the manifest, the moving-forward
@@ -211,10 +206,10 @@ intuition. We name accordingly with documentation. -/
 
 namespace ShanE
 
-def «善» : Yao := Yao.yang
-def «恶» : Yao := Yao.yin
+def good : Yao := Yao.yang
+def evil : Yao := Yao.yin
 
-theorem shan_e_distinct : «善» ≠ «恶» := by decide
+theorem good_evil_distinct : good ≠ evil := by decide
 
 end ShanE
 
@@ -223,24 +218,24 @@ end ShanE
 《中庸》"喜怒哀乐之未发，谓之中；发而皆中节，谓之和". The four primary
 emotions fit naturally into the 4-element SiXiang structure.
 
-  喜 (joy)     → 太阳 (taiYang, full yang)
-  怒 (anger)   → 少阴 (shaoYin, yang-going-down)
-  哀 (sorrow)  → 少阳 (shaoYang, yin-rising)
-  乐 (delight) → 太阴 (taiYin, full yin)
+  喜 (joy)     → 太阳 (greaterYang, full yang)
+  怒 (anger)   → 少阴 (lesserYin, yang-going-down)
+  哀 (sorrow)  → 少阳 (lesserYang, yin-rising)
+  乐 (delight) → 太阴 (greaterYin, full yin)
 -/
 
 namespace XiNuAiLe
 
 open SSBX.Foundation.Bagua.BaguaAlgebra
 
-def «喜» : SiXiang := SiXiang.taiYang
-def «怒» : SiXiang := SiXiang.shaoYin
-def «哀» : SiXiang := SiXiang.shaoYang
-def «乐» : SiXiang := SiXiang.taiYin
+def joy : SiXiang := SiXiang.greaterYang
+def anger : SiXiang := SiXiang.lesserYin
+def sorrow : SiXiang := SiXiang.lesserYang
+def delight : SiXiang := SiXiang.greaterYin
 
-theorem xi_nu_ai_le_distinct :
-    «喜» ≠ «怒» ∧ «喜» ≠ «哀» ∧ «喜» ≠ «乐» ∧
-    «怒» ≠ «哀» ∧ «怒» ≠ «乐» ∧ «哀» ≠ «乐» := by
+theorem joy_anger_sorrow_delight_distinct :
+    joy ≠ anger ∧ joy ≠ sorrow ∧ joy ≠ delight ∧
+    anger ≠ sorrow ∧ anger ≠ delight ∧ sorrow ≠ delight := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
   all_goals decide
 
@@ -261,14 +256,14 @@ namespace YuanHengLiZhen
 
 open SSBX.Foundation.Bagua.BaguaAlgebra
 
-def «元» : SiXiang := SiXiang.taiYang
-def «亨» : SiXiang := SiXiang.shaoYang
-def «利» : SiXiang := SiXiang.shaoYin
-def «贞» : SiXiang := SiXiang.taiYin
+def originVirtue : SiXiang := SiXiang.greaterYang
+def smoothVirtue : SiXiang := SiXiang.lesserYang
+def benefitVirtue : SiXiang := SiXiang.lesserYin
+def correctVirtue : SiXiang := SiXiang.greaterYin
 
-theorem yuan_heng_li_zhen_distinct :
-    «元» ≠ «亨» ∧ «元» ≠ «利» ∧ «元» ≠ «贞» ∧
-    «亨» ≠ «利» ∧ «亨» ≠ «贞» ∧ «利» ≠ «贞» := by
+theorem originVirtues_distinct :
+    originVirtue ≠ smoothVirtue ∧ originVirtue ≠ benefitVirtue ∧ originVirtue ≠ correctVirtue ∧
+    smoothVirtue ≠ benefitVirtue ∧ smoothVirtue ≠ correctVirtue ∧ benefitVirtue ≠ correctVirtue := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
   all_goals decide
 
@@ -292,16 +287,16 @@ end YuanHengLiZhen
 
 namespace SanGang
 
-def «明明德» : Trigram := Trigram.li
-def «亲民»   : Trigram := Trigram.dui
-def «止于至善» : Trigram := Trigram.gen
+def illuminateVirtue : Trigram := Trigram.fire
+def engagePeople   : Trigram := Trigram.lake
+def restInGood : Trigram := Trigram.mountain
 
-def all : List Trigram := [«明明德», «亲民», «止于至善»]
+def all : List Trigram := [illuminateVirtue, engagePeople, restInGood]
 
-theorem sangang_count : all.length = 3 := rfl
+theorem threeBonds_count : all.length = 3 := rfl
 
-theorem sangang_distinct :
-    «明明德» ≠ «亲民» ∧ «明明德» ≠ «止于至善» ∧ «亲民» ≠ «止于至善» := by
+theorem threeBonds_distinct :
+    illuminateVirtue ≠ engagePeople ∧ illuminateVirtue ≠ restInGood ∧ engagePeople ≠ restInGood := by
   refine ⟨?_, ?_, ?_⟩
   all_goals decide
 
@@ -309,12 +304,12 @@ end SanGang
 
 namespace SanCai
 
-def «天» : Trigram := Trigram.qian
-def «地» : Trigram := Trigram.kun
-def «人» : Trigram := Trigram.gen
+def sky : Trigram := Trigram.heaven
+def ground : Trigram := Trigram.earth
+def human : Trigram := Trigram.mountain
 
-theorem sancai_distinct :
-    «天» ≠ «地» ∧ «天» ≠ «人» ∧ «地» ≠ «人» := by
+theorem threePowers_distinct :
+    sky ≠ ground ∧ sky ≠ human ∧ ground ≠ human := by
   refine ⟨?_, ?_, ?_⟩
   all_goals decide
 
@@ -329,14 +324,14 @@ and our cell-layer work does not replace them:
 
 | Concept | 类型 | 为何不 lift |
 |---|---|---|
-| 動 / dong | axiom on Field → Field | the foundational dynamics axiom |
-| 中 / middle | predicate `dong s ≠ s` | property of states, not a state |
-| 极 / extreme | predicate `dong s = s` | property of states |
-| 几 / ji | iter-of-dong | sequence, not a state |
+| 動 / motion | axiom on Field → Field | the foundational dynamics axiom |
+| 中 / center | predicate `motion s ≠ s` | property of states, not a state |
+| 极 / terminus | predicate `motion s = s` | property of states |
+| 几 / ji | iter-of-motion | sequence, not a state |
 | 势 / shi | accumulated direction | derived dynamics |
 | 机 / jiTurning | critical point | event-on-orbit |
 | 聚 / 散 / 和 / 美 / 德 / 理 / 心 / 情 / 积 | various predicates | properties of orbits |
-| 圣人 / isShengRen | predicate over Xin | role under window |
+| 圣人 / isSage | predicate over Xin | role under window |
 | 内圣 / 外王 | derived predicates | orbital configurations |
 | 恕道 / 推己及人 / 己所不欲 | cross-orbit relation | not a single state |
 | 知行合一 / 反身而诚 | composition theorem | dynamics + closure |
@@ -359,21 +354,21 @@ Field-level dynamics. This is a HONEST division of labor, not a gap.
 /-- Public summary bundling all nine families across R₁..R₆. -/
 theorem confucian_summary :
     -- R₁ 善恶
-    ShanE.«善» = Yao.yang ∧ ShanE.«恶» = Yao.yin ∧
+    ShanE.good = Yao.yang ∧ ShanE.evil = Yao.yin ∧
     -- R₂ 喜怒哀乐
-    XiNuAiLe.«喜» = SSBX.Foundation.Bagua.BaguaAlgebra.SiXiang.taiYang ∧
+    XiNuAiLe.joy = SSBX.Foundation.Bagua.BaguaAlgebra.SiXiang.greaterYang ∧
     -- R₂ 元亨利贞
-    YuanHengLiZhen.«元» = SSBX.Foundation.Bagua.BaguaAlgebra.SiXiang.taiYang ∧
+    YuanHengLiZhen.originVirtue = SSBX.Foundation.Bagua.BaguaAlgebra.SiXiang.greaterYang ∧
     -- R₃ 四端
-    SiDuan.«恻隐» = Trigram.li ∧
-    SiDuan.«羞恶» = Trigram.kan ∧
-    SiDuan.«辞让» = Trigram.zhen ∧
-    SiDuan.«是非» = Trigram.dui ∧
+    SiDuan.compassion = Trigram.fire ∧
+    SiDuan.shame = Trigram.water ∧
+    SiDuan.yielding = Trigram.thunder ∧
+    SiDuan.discernment = Trigram.lake ∧
     -- R₃ 三纲
     SanGang.all.length = 3 ∧
     -- R₃ 三才
-    SanCai.«天» = Trigram.qian ∧
-    SanCai.«地» = Trigram.kun ∧
+    SanCai.sky = Trigram.heaven ∧
+    SanCai.ground = Trigram.earth ∧
     -- R₃ 大学八目
     BaMu.all.length = 8 ∧
     -- R₅ 五伦

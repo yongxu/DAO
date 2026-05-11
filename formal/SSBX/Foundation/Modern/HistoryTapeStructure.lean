@@ -21,7 +21,7 @@ namespace SSBX.Foundation.Modern.HistoryTapeStructure
 
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Core.Yuan
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Bagua.BaguaAlgebra
 open SSBX.Foundation.Modern.MingBoundary
@@ -32,7 +32,7 @@ open SSBX.Text.OperatorSignatures
 /-! ## § 1 史带：YiState.history as an unbounded list -/
 
 /-- The "史带" at the executable L0 layer is the `history` list of cells. -/
-abbrev HistoryTape : Type := List Cell256
+abbrev HistoryTape : Type := List R8
 
 /-- Read the tape component from an interpreter state. -/
 def stateTape (s : YiState) : HistoryTape :=
@@ -53,7 +53,7 @@ theorem pop_empty_halts (s : YiState) (h : stateTape s = []) :
       subst history
       rfl
 
-theorem pop_reads_head_cell_from_tape (s : YiState) (c : Cell256) (rest : HistoryTape)
+theorem pop_reads_head_cell_from_tape (s : YiState) (c : R8) (rest : HistoryTape)
     (h : stateTape s = c :: rest) :
     stateTape (YiState.execute YiInstr.pop s) = rest
       ∧ (YiState.execute YiInstr.pop s).cur = c := by
@@ -66,10 +66,10 @@ theorem pop_reads_head_cell_from_tape (s : YiState) (c : Cell256) (rest : Histor
 /-! ## § 2 爻根：cells bottom out in six Yuan/Yao values -/
 
 /-- The yao trace carried by a 256-cell. -/
-def cellYuanTrace (c : Cell256) : List Yuan :=
+def cellYuanTrace (c : R8) : List Yuan :=
   c.1.toDuoYuan
 
-theorem cellYuanTrace_length (c : Cell256) :
+theorem cellYuanTrace_length (c : R8) :
     (cellYuanTrace c).length = 6 := by
   rcases c with ⟨h, _s⟩
   exact hex_toDuoYuan_length h
@@ -241,13 +241,13 @@ def qianKunYuanPoles : Yuan × Yuan :=
 
 /-- 乾坤 at the trigram layer is the all-yang/all-yin pair. -/
 def qianKunTrigrams : Trigram × Trigram :=
-  (Trigram.qian, Trigram.kun)
+  (Trigram.heaven, Trigram.earth)
 
 theorem qianKunYuanPoles_eq :
     qianKunYuanPoles = (Yao.yang, Yao.yin) := rfl
 
 theorem qianKunTrigrams_eq :
-    qianKunTrigrams = (Trigram.qian, Trigram.kun) := rfl
+    qianKunTrigrams = (Trigram.heaven, Trigram.earth) := rfl
 
 /-- The three vertical layers of one trigram: 下 / 中 / 上. -/
 inductive VerticalLayer where
@@ -298,15 +298,15 @@ def layerYao (t : Trigram) : VerticalLayer → Yuan
   | .shang => t.y3
 
 theorem qian_kun_layers_differ (l : VerticalLayer) :
-    layerYao Trigram.qian l ≠ layerYao Trigram.kun l := by
+    layerYao Trigram.heaven l ≠ layerYao Trigram.earth l := by
   cases l <;> decide
 
 theorem qian_layers_are_yang (l : VerticalLayer) :
-    layerYao Trigram.qian l = Yao.yang := by
+    layerYao Trigram.heaven l = Yao.yang := by
   cases l <;> rfl
 
 theorem kun_layers_are_yin (l : VerticalLayer) :
-    layerYao Trigram.kun l = Yao.yin := by
+    layerYao Trigram.earth l = Yao.yin := by
   cases l <;> rfl
 
 /-- Relations among the three vertical layers. -/
@@ -397,10 +397,10 @@ theorem qian_kun_yuan_yao_layer_summary :
     (∀ x : RootOne, x = rootOne)
       ∧ Yuan = Yao
       ∧ qianKunYuanPoles = (Yao.yang, Yao.yin)
-      ∧ qianKunTrigrams = (Trigram.qian, Trigram.kun)
+      ∧ qianKunTrigrams = (Trigram.heaven, Trigram.earth)
       ∧ (∀ l : VerticalLayer,
-          layerYao Trigram.qian l = Yao.yang ∧ layerYao Trigram.kun l = Yao.yin)
-      ∧ (∀ l : VerticalLayer, layerYao Trigram.qian l ≠ layerYao Trigram.kun l)
+          layerYao Trigram.heaven l = Yao.yang ∧ layerYao Trigram.earth l = Yao.yin)
+      ∧ (∀ l : VerticalLayer, layerYao Trigram.heaven l ≠ layerYao Trigram.earth l)
       ∧ qianKunJianReading = .betweenLayers
       ∧ qianKunJianReading ≠ .endpointInterval
       ∧ (∀ l : VerticalLayer, l ∈ qianKunJianLayers)
@@ -435,7 +435,7 @@ theorem qian_kun_yuan_yao_layer_summary :
 /--
 Machine-checkable summary of the narrow claim:
 
-* `history` is a `List Cell256` tape and push/pop act on its head.
+* `history` is a `List R8` tape and push/pop act on its head.
 * each cell has a six-yao trace.
 * `fen` builds the three-yao trigram spine from Yuan/Yao inputs.
 * recursive structure expressions have only yao/root leaves.
@@ -444,7 +444,7 @@ Machine-checkable summary of the narrow claim:
 theorem history_tape_structure_summary :
     (∀ s : YiState, stateTape s = s.history)
     ∧ (∀ s : YiState, stateTape (YiState.execute YiInstr.push s) = s.cur :: stateTape s)
-    ∧ (∀ c : Cell256, (cellYuanTrace c).length = 6)
+    ∧ (∀ c : R8, (cellYuanTrace c).length = 6)
     ∧ (∀ y1 y2 y3 : Yuan,
         fenToTrigram (fenToSiXiang (fenToYi () y1) y2) y3 = ⟨y1, y2, y3⟩)
     ∧ (∀ e : StructureExpr, BuiltFromYao e)
@@ -458,9 +458,9 @@ theorem history_tape_structure_summary :
     ∧ (∀ x : RootOne, x = rootOne)
     ∧ Yuan = Yao
     ∧ qianKunYuanPoles = (Yao.yang, Yao.yin)
-    ∧ qianKunTrigrams = (Trigram.qian, Trigram.kun)
+    ∧ qianKunTrigrams = (Trigram.heaven, Trigram.earth)
     ∧ (∀ l : VerticalLayer,
-        layerYao Trigram.qian l = Yao.yang ∧ layerYao Trigram.kun l = Yao.yin)
+        layerYao Trigram.heaven l = Yao.yang ∧ layerYao Trigram.earth l = Yao.yin)
     ∧ qianKunJianReading = .betweenLayers
     ∧ qianKunJianReading ≠ .endpointInterval
     ∧ (∀ l : VerticalLayer, l ∈ qianKunJianLayers)

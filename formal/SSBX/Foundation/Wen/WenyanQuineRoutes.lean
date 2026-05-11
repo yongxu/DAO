@@ -17,7 +17,7 @@ Two routes for strengthening the current concrete Tier 3 witness:
 namespace SSBX.Foundation.Wen.WenyanQuineRoutes
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
 open SSBX.Foundation.Wen.WenyanQuineEmitter
@@ -26,14 +26,14 @@ open SSBX.Foundation.Wen.WenyanQuineHistory
 namespace ConcreteGenerated
 
 /-- The current literal emitter contains at least `setShi` and `push`. -/
-theorem emitCellFrom_length_ge_two (cur target : Cell256) :
+theorem emitCellFrom_length_ge_two (cur target : R8) :
     2 ≤ (emitCellFrom cur target).length := by
   simp only [emitCellFrom, List.length_append, List.length_cons, List.length_nil]
   omega
 
 /-- Every emitted target cell contributes at least three encoded cells:
     `setShi` encodes to two cells and `push` encodes to one. -/
-theorem encProg_emitCellFrom_length_ge_three (cur target : Cell256) :
+theorem encProg_emitCellFrom_length_ge_three (cur target : R8) :
     3 ≤ (ProgEnc.encProg (emitCellFrom cur target)).length := by
   unfold emitCellFrom ProgEnc.encProg YiInstrEnc.encInstr
   simp only [List.map_append, List.flatten_append, List.length_append, List.map_cons,
@@ -41,11 +41,11 @@ theorem encProg_emitCellFrom_length_ge_three (cur target : Cell256) :
   omega
 
 /-- Length of the current generated-emitter program. -/
-theorem emitCellsInOrderFrom_length_nil (start : Cell256) :
+theorem emitCellsInOrderFrom_length_nil (start : R8) :
     (emitCellsInOrderFrom start []).length = 0 := rfl
 
 /-- Empty target closes trivially for the literal emitter. -/
-theorem literal_emitter_empty_fixed_point (start : Cell256) :
+theorem literal_emitter_empty_fixed_point (start : R8) :
     ProgEnc.encProg (emitCellsFrom start []) = [] := by
   rfl
 

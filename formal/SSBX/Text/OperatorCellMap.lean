@@ -12,7 +12,7 @@ import SSBX.Text.OperatorAnchors
 
 This file records the total indexing layer between the text catalogue and the
 Bagua cell space.  It is deliberately weaker than a semantic interpretation:
-every `OperatorId` is paired with every `Cell256`, while the stronger meaning
+every `OperatorId` is paired with every `R8`, while the stronger meaning
 claims remain in the specialized anchor/semantics files.
 -/
 
@@ -27,12 +27,12 @@ open SSBX.Text.OperatorInstructionSemantics
 open SSBX.Text.OperatorCellCandidateSemantics
 open SSBX.Text.OperatorCellSemantics
 open SSBX.Text.OperatorAnchors
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 
 /-! ## § 1 Total operator-cell index -/
 
 /-- A catalogue operator at one concrete 64-hexagram × 4-shi cell. -/
-abbrev OperatorCell : Type := OperatorId × Cell256
+abbrev OperatorCell : Type := OperatorId × R8
 
 /--
 The total 371 × 256 index.  This is a coverage grid, not a claim that each
@@ -40,7 +40,7 @@ operator has a distinct theorem-level semantics at each cell.
 -/
 def allOperatorCells : List OperatorCell :=
   allOperatorIds.flatMap fun id =>
-    Cell256.all.map fun c => (id, c)
+    R8.all.map fun c => (id, c)
 
 theorem allOperatorIds_length : allOperatorIds.length = 371 := by
   native_decide
@@ -52,8 +52,8 @@ theorem allOperatorCells_length : allOperatorCells.length = 94976 := by
   native_decide
 
 theorem allOperatorCells_length_product :
-    allOperatorCells.length = allOperatorIds.length * Cell256.all.length := by
-  rw [allOperatorCells_length, allOperatorIds_length, Cell256.all_length]
+    allOperatorCells.length = allOperatorIds.length * R8.all.length := by
+  rw [allOperatorCells_length, allOperatorIds_length, R8.all_length]
 
 theorem allOperatorCells_complete (p : OperatorCell) :
     p ∈ allOperatorCells := by
@@ -61,62 +61,62 @@ theorem allOperatorCells_complete (p : OperatorCell) :
   unfold allOperatorCells
   exact List.mem_flatMap.mpr
     ⟨id, allOperatorIds_complete id,
-      List.mem_map.mpr ⟨c, Cell256.mem_all c, rfl⟩⟩
+      List.mem_map.mpr ⟨c, R8.mem_all c, rfl⟩⟩
 
-theorem allOperatorCells_complete_pair (id : OperatorId) (c : Cell256) :
+theorem allOperatorCells_complete_pair (id : OperatorId) (c : R8) :
     (id, c) ∈ allOperatorCells := by
   exact allOperatorCells_complete (id, c)
 
 /-- The row fiber of the total grid at a fixed operator. -/
 def cellsForOperator (id : OperatorId) : List OperatorCell :=
-  Cell256.all.map fun c => (id, c)
+  R8.all.map fun c => (id, c)
 
 /-- The column fiber of the total grid at a fixed Bagua cell. -/
-def operatorsForCell (cell : Cell256) : List OperatorCell :=
+def operatorsForCell (cell : R8) : List OperatorCell :=
   allOperatorIds.map fun id => (id, cell)
 
 /-- Projection of the total index at a fixed operator. -/
-def indexedCellsForOperator (_id : OperatorId) : List Cell256 :=
-  Cell256.all
+def indexedCellsForOperator (_id : OperatorId) : List R8 :=
+  R8.all
 
 /-- Projection of the total index at a fixed Bagua cell. -/
-def indexedOperatorsForCell (_cell : Cell256) : List OperatorId :=
+def indexedOperatorsForCell (_cell : R8) : List OperatorId :=
   allOperatorIds
 
 theorem cellsForOperator_length (id : OperatorId) :
     (cellsForOperator id).length = 256 := by
-  rw [cellsForOperator, List.length_map, Cell256.all_length]
+  rw [cellsForOperator, List.length_map, R8.all_length]
 
-theorem operatorsForCell_length (cell : Cell256) :
+theorem operatorsForCell_length (cell : R8) :
     (operatorsForCell cell).length = 371 := by
   rw [operatorsForCell, List.length_map, allOperatorIds_length]
 
 theorem indexedCellsForOperator_length (id : OperatorId) :
     (indexedCellsForOperator id).length = 256 := by
-  rw [indexedCellsForOperator, Cell256.all_length]
+  rw [indexedCellsForOperator, R8.all_length]
 
-theorem indexedOperatorsForCell_length (cell : Cell256) :
+theorem indexedOperatorsForCell_length (cell : R8) :
     (indexedOperatorsForCell cell).length = 371 := by
   rw [indexedOperatorsForCell, allOperatorIds_length]
 
-theorem indexedCellsForOperator_complete (id : OperatorId) (cell : Cell256) :
+theorem indexedCellsForOperator_complete (id : OperatorId) (cell : R8) :
     cell ∈ indexedCellsForOperator id
       ∧ (id, cell) ∈ allOperatorCells := by
-  exact ⟨Cell256.mem_all cell, allOperatorCells_complete_pair id cell⟩
+  exact ⟨R8.mem_all cell, allOperatorCells_complete_pair id cell⟩
 
-theorem cellsForOperator_complete (id : OperatorId) (cell : Cell256) :
+theorem cellsForOperator_complete (id : OperatorId) (cell : R8) :
     (id, cell) ∈ cellsForOperator id
       ∧ (id, cell) ∈ allOperatorCells := by
   exact
-    ⟨List.mem_map.mpr ⟨cell, Cell256.mem_all cell, rfl⟩,
+    ⟨List.mem_map.mpr ⟨cell, R8.mem_all cell, rfl⟩,
       allOperatorCells_complete_pair id cell⟩
 
-theorem indexedOperatorsForCell_complete (cell : Cell256) (id : OperatorId) :
+theorem indexedOperatorsForCell_complete (cell : R8) (id : OperatorId) :
     id ∈ indexedOperatorsForCell cell
       ∧ (id, cell) ∈ allOperatorCells := by
   exact ⟨allOperatorIds_complete id, allOperatorCells_complete_pair id cell⟩
 
-theorem operatorsForCell_complete (cell : Cell256) (id : OperatorId) :
+theorem operatorsForCell_complete (cell : R8) (id : OperatorId) :
     (id, cell) ∈ operatorsForCell cell
       ∧ (id, cell) ∈ allOperatorCells := by
   exact
@@ -134,7 +134,7 @@ theorem allOperatorCells_operator_mem (p : OperatorCell) :
   exact hid
 
 theorem allOperatorCells_cell_mem (p : OperatorCell) :
-    p ∈ allOperatorCells → p.2 ∈ Cell256.all := by
+    p ∈ allOperatorCells → p.2 ∈ R8.all := by
   intro h
   rcases p with ⟨op, cell⟩
   unfold allOperatorCells at h
@@ -157,23 +157,23 @@ Machine-checkable summary for the text/Bagua bridge:
 -/
 theorem operator_cell_bagua_summary :
     allOperatorIds.length = 371
-    ∧ Cell256.all.length = 256
+    ∧ R8.all.length = 256
     ∧ allOperatorCells.length = 94976
     ∧ allOperatorIds.Nodup
-    ∧ Cell256.all.Nodup
+    ∧ R8.all.Nodup
     ∧ (∀ id : OperatorId, id ∈ allOperatorIds)
-    ∧ (∀ c : Cell256, c ∈ Cell256.all)
-    ∧ (∀ id : OperatorId, ∀ c : Cell256, (id, c) ∈ allOperatorCells)
+    ∧ (∀ c : R8, c ∈ R8.all)
+    ∧ (∀ id : OperatorId, ∀ c : R8, (id, c) ∈ allOperatorCells)
     ∧ (∀ id : OperatorId, (cellsForOperator id).length = 256)
-    ∧ (∀ cell : Cell256, (operatorsForCell cell).length = 371) := by
+    ∧ (∀ cell : R8, (operatorsForCell cell).length = 371) := by
   exact
     ⟨ allOperatorIds_length
-    , Cell256.all_length
+    , R8.all_length
     , allOperatorCells_length
     , allOperatorIds_nodup
-    , Cell256.all_nodup
+    , R8.all_nodup
     , allOperatorIds_complete
-    , Cell256.mem_all
+    , R8.mem_all
     , allOperatorCells_complete_pair
     , cellsForOperator_length
     , operatorsForCell_length
@@ -227,9 +227,9 @@ structure SemanticLowerBoundRow where
 Current lower-bound audit for theorem families:
 
 * 10 exact cell-transform families: identity, next/prev, 错 / 综 / 互,
-  cuo-zong, and three line flips; equivalently the V4 transforms,
+  complement-reverse, and three line flips; equivalently the V4 transforms,
   single-yao flips, identity, and mod-64 successor/predecessor.
-* 7 concrete `Cell256` reachability generators: six line flips plus one time edge.
+* 7 concrete `R8` reachability generators: six line flips plus one time edge.
 * 12 BaguaWen L0 instruction clauses.
 * 27 core text-level semantic families from the parameterized kernel draft.
 -/
@@ -370,15 +370,15 @@ theorem functionalCompletionPendingLayers_eq :
 
 theorem functional_completion_summary :
     allOperatorIds.length = 371
-    ∧ Cell256.all.length = 256
+    ∧ R8.all.length = 256
     ∧ allOperatorCells.length = 94976
     ∧ allOperatorIds.Nodup
-    ∧ Cell256.all.Nodup
+    ∧ R8.all.Nodup
     ∧ (functionalCompletionRows.map (·.layer)).Nodup
     ∧ (∀ id : OperatorId, (indexedCellsForOperator id).length = 256)
-    ∧ (∀ cell : Cell256, (indexedOperatorsForCell cell).length = 371)
+    ∧ (∀ cell : R8, (indexedOperatorsForCell cell).length = 371)
     ∧ (∀ id : OperatorId, (cellsForOperator id).length = 256)
-    ∧ (∀ cell : Cell256, (operatorsForCell cell).length = 371)
+    ∧ (∀ cell : R8, (operatorsForCell cell).length = 371)
     ∧ catalogueHomographReadings.length = 81
     ∧ allSurfaceReadings.length = 82
     ∧ (allSurfaceReadings.map (fun e => e.readings.length)).foldl Nat.add 0 = 193
@@ -410,10 +410,10 @@ theorem functional_completion_summary :
     ∧ functionalCompletionPendingRows.length = 0 := by
   exact
     ⟨ allOperatorIds_length
-    , Cell256.all_length
+    , R8.all_length
     , allOperatorCells_length
     , allOperatorIds_nodup
-    , Cell256.all_nodup
+    , R8.all_nodup
     , functionalCompletionLayers_nodup
     , indexedCellsForOperator_length
     , indexedOperatorsForCell_length

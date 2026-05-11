@@ -16,7 +16,7 @@ import SSBX.Foundation.Modern.OperatorCellGridMarkovBridge
 
 namespace SSBX.Foundation.Modern.QuantumRelativityFiniteProbabilityBridge
 
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Modern.QuantumRelativityMarkovBridge
 open SSBX.Foundation.Modern.QuantumRelativityConcreteBridge
 open SSBX.Foundation.Modern.OperatorCellGridMarkovBridge
@@ -211,7 +211,7 @@ theorem finite_probability_bridge_summary :
         operatorCellGridFiniteProbabilityKernel.weight a b
           ≤ operatorCellGridFiniteProbabilityKernel.rowTotal a)
     ∧ allOperatorIds.length = 371
-    ∧ Cell256.all.length = 256
+    ∧ R8.all.length = 256
     ∧ allOperatorCells.length = 94976
     ∧ WenConstructiveCoverage := by
   exact
@@ -224,7 +224,7 @@ theorem finite_probability_bridge_summary :
     , concreteFiniteProbabilityKernel.weight_le_rowTotal
     , operatorCellGridFiniteProbabilityKernel.weight_le_rowTotal
     , allOperatorIds_length
-    , Cell256.all_length
+    , R8.all_length
     , allOperatorCells_length
     , wen_constructive_coverage_192_371
     ⟩

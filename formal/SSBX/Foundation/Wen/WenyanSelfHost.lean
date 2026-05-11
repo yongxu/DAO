@@ -10,9 +10,9 @@
 
   § 1   «判型良_basic»：基本结构合度判定（self-contained，不依赖 WenyanParser）
   § 2   «微核源»：Tier 2 之 「文之试金石」 程序（约 60 instr，结构性运用十二字）
-  § 3   «微核数»：«微核源» 在 Cell256 字 之 编码
+  § 3   «微核数»：«微核源» 在 R8 字 之 编码
   § 4   «微核自验» 主定理：«判型良_basic» = true ∧ encProg/decInstrs round-trip
-  § 5   «微核自释»：«微核源» 在初态 (Hexagram.qian) 上 之 执行 trace 收敛于 halted
+  § 5   «微核自释»：«微核源» 在初态 (Hexagram.heaven) 上 之 执行 trace 收敛于 halted
   § 6   §文之至 — 四相俱
 
 ## Tier
@@ -44,7 +44,7 @@
 
   (a)  «判型良_basic 微核源 = true»          — 由 native_decide
   (b)  «decInstrs |微核源| 微核数 = some (微核源, [])»  — 由 native_decide
-  (c)  «(YiState.init Hexagram.qian 微核源).runFuel 200 之 halted = true»  — by native_decide
+  (c)  «(YiState.init Hexagram.heaven 微核源).runFuel 200 之 halted = true»  — by native_decide
 
   (a)+(b) 一同 即 «微核自验» 之 完整 statement。
   (c) 即 «微核自释» — 运行至 halted 之 见证。
@@ -55,7 +55,7 @@ import SSBX.Foundation.Wen.WenyanParserGeneral
 namespace SSBX.Foundation.Wen.WenyanSelfHost
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
 open SSBX.Foundation.Wen.WenyanParser
@@ -95,16 +95,16 @@ def «判型良_basic» (p : List YiInstr) : Bool := p.all «判型良_instr»
   All instructions 之 encoding 之 Nat 参数 之 digits length < 256，使
   Encodable holds — 故 ProgEnc.decInstrs 之 round-trip 可证。
 
-  程序设计为：从 (Hexagram.qian, Shi.jin) 始，约 65-80 步内 reach .halt
+  程序设计为：从 (Hexagram.heaven, Shi.jin) 始，约 65-80 步内 reach .halt
   (借 last-instruction halt). -/
 
 /-- «微核源» — Tier 2 自宿主源程序。 -/
 def «微核源» : List YiInstr :=
   -- 阶段 一  (10 instr, pc 0..9)
   [ YiInstr.push                                                   -- pc 0
-  , YiInstr.hu                                                     -- pc 1
-  , YiInstr.cuo                                                    -- pc 2
-  , YiInstr.zong                                                   -- pc 3
+  , YiInstr.interlace                                                     -- pc 1
+  , YiInstr.complement                                                    -- pc 2
+  , YiInstr.reverse                                                   -- pc 3
   , YiInstr.flipYao ⟨0, by omega⟩                                  -- pc 4
   , YiInstr.flipYao ⟨1, by omega⟩                                  -- pc 5
   , YiInstr.flipYao ⟨2, by omega⟩                                  -- pc 6
@@ -119,9 +119,9 @@ def «微核源» : List YiInstr :=
   , YiInstr.flipYao ⟨1, by omega⟩                                  -- pc 14
   , YiInstr.flipYao ⟨0, by omega⟩                                  -- pc 15
   -- 阶段 三  (3 instr, pc 16..18)
-  , YiInstr.cuo                                                    -- pc 16
-  , YiInstr.zong                                                   -- pc 17
-  , YiInstr.hu                                                     -- pc 18
+  , YiInstr.complement                                                    -- pc 16
+  , YiInstr.reverse                                                   -- pc 17
+  , YiInstr.interlace                                                     -- pc 18
   -- 阶段 四  (10 instr, pc 19..28) — branchYaoEq / branchShiEq tests
   , YiInstr.branchYaoEq ⟨0, by omega⟩ ⟨5, by omega⟩ 22              -- pc 19  (skip 2)
   , YiInstr.nop                                                    -- pc 20  (skipped if y0=y5)
@@ -179,8 +179,8 @@ theorem «微核源_length» : «微核源».length = 64 := by native_decide
 
 /-! ## § 3  «微核数» — 文 之 数 -/
 
-/-- «微核数» — «微核源» 之 Cell256 字串 编码。 -/
-def «微核数» : List Cell256 := ProgEnc.encProg «微核源»
+/-- «微核数» — «微核源» 之 R8 字串 编码。 -/
+def «微核数» : List R8 := ProgEnc.encProg «微核源»
 
 /-! ## § 4  «微核自验» — 文 之 形 + 文 之 数 + 文 之 解 -/
 
@@ -259,15 +259,15 @@ theorem «微核源_print_parseN_round_trip» :
 
 /-! ## § 5  «微核自释» — 在 易 之 自动机 上 执行 收敛
 
-  «微核源» 从 (qian, jin) 始，沿 阶段一..六 之路径，最终 reach halted state。
+  «微核源» 从 (heaven, jin) 始，沿 阶段一..六 之路径，最终 reach halted state。
   其中 阶段 六 之 第二 个 pop 触发 history-empty halt （history 在 pop（pc=39）后 为
   empty，pc=40 之 pop 看到 [] 故 halted := true）。
 
   fuel = 200 充裕；任何 < 100 之 fuel 已足。 -/
 
-/-- «微核自释»：«微核源» 在 (qian, jin) 上 执行 200 步后 已 halted。 -/
+/-- «微核自释»：«微核源» 在 (heaven, jin) 上 执行 200 步后 已 halted。 -/
 theorem «微核自释» :
-    ((YiState.init Hexagram.qian «微核源»).runFuel 200).halted = true := by
+    ((YiState.init Hexagram.heaven «微核源»).runFuel 200).halted = true := by
   native_decide
 
 /-- 加强版：从 任意 hexagram 始 皆 halt 于 200 步内。 -/
@@ -278,11 +278,11 @@ theorem «微核自释_total» :
   cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
     native_decide
 
-/-- 当前 Tier 2 微核在 qian 初态的运行结果并不会把自身编码留在 history。
+/-- 当前 Tier 2 微核在 heaven 初态的运行结果并不会把自身编码留在 history。
     这标记了它与 Tier 3 完整 quine 的关键差距：已有 self-decoding，
     但尚无 runtime self-production。 -/
 theorem «微核源_not_runtime_quine_qian» :
-    ((YiState.init Hexagram.qian «微核源»).runFuel 200).history ≠ «微核数» := by
+    ((YiState.init Hexagram.heaven «微核源»).runFuel 200).history ≠ «微核数» := by
   native_decide
 
 /-! ## § 6  §文之至 — 四相俱
@@ -297,7 +297,7 @@ theorem «微核源_not_runtime_quine_qian» :
   ║                  · 由 «微核源_well_formed» 见证                  ║
   ║                                                                  ║
   ║    文 之 数  ——  «微核数 = ProgEnc.encProg 微核源» 是其编码     ║
-  ║                  · List Cell256 形式（base-256）                 ║
+  ║                  · List R8 形式（base-256）                 ║
   ║                                                                  ║
   ║    文 之 解  ——  «decInstrs |微核源| 微核数 = some (微核源, [])» ║
   ║                  · 编码 round-trips back to 源                   ║

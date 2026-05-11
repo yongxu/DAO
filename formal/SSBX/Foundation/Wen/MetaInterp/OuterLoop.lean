@@ -78,7 +78,7 @@ import SSBX.Foundation.Wen.MetaInterp
 namespace SSBX.Foundation.Wen.MetaInterp.OuterLoop
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.MetaInterp
 
@@ -114,7 +114,7 @@ halted unchanged. -/
     from `pc = 0` of the standalone block program advances `pc` to
     `fetchOffset` and preserves everything else. -/
 theorem outerLoopEntry_local_effect
-    (cur : Cell256) (history : List Cell256) (fetchOffset : Nat) :
+    (cur : R8) (history : List R8) (fetchOffset : Nat) :
     let μ : YiState :=
       { cur := cur
         history := history

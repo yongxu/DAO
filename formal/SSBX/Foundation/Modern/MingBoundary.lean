@@ -59,16 +59,16 @@ theorem naming_region_exhaustive (r : NamingRegion) :
 
 theorem nameable_not_unnameable (r : NamingRegion) :
     Nameable r → ¬ Unnameable r := by
-  intro hn hu
+  intro hn interlace
   unfold Nameable at hn
-  unfold Unnameable at hu
-  rw [hn] at hu
-  cases hu
+  unfold Unnameable at interlace
+  rw [hn] at interlace
+  cases interlace
 
 theorem unnameable_not_nameable (r : NamingRegion) :
     Unnameable r → ¬ Nameable r := by
-  intro hu hn
-  exact nameable_not_unnameable r hn hu
+  intro interlace hn
+  exact nameable_not_unnameable r hn interlace
 
 theorem naming_boundary_complete :
     (∀ r : NamingRegion, Nameable r ∨ Unnameable r)

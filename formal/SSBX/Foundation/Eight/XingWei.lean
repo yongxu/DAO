@@ -8,7 +8,7 @@ on top of `BaguaAlgebra`'s `hammingDist`.
 
   § 1   项目几何字 (dian/wei/ju/lin/zhong/ying/bi/dang) as Lean defs
   § 2   汉明度量公理：对称、自距零、三角不等式（NEW results）
-  § 3   反爻之等距性：dong/hua/bian 保汉明距离
+  § 3   反爻之等距性：motion/middleFlip/topFlip 保汉明距离
   § 4   立方体 Euler 特征：3-cube χ = 1，6-cube χ = 1（concrete computation）
   § 5   易经四位 之 Lean wrap（refer Yi.lean）
 
@@ -78,33 +78,33 @@ theorem ju_le_three (a b : Trigram) : ju a b ≤ 3 := by
 (Z/2)³ 群作用是 (Trigram, ju) 上之等距群——
 即"几何对称群 = 算子群"。 -/
 
-/-- **动 (dong) 等距**：`ju (dong a) (dong b) = ju a b`. -/
-theorem dong_iso (a b : Trigram) : ju (dong a) (dong b) = ju a b := by
-  unfold ju hammingDist dong
+/-- **动 (motion) 等距**：`ju (motion a) (motion b) = ju a b`. -/
+theorem motion_iso (a b : Trigram) : ju (motion a) (motion b) = ju a b := by
+  unfold ju hammingDist motion
   rcases a with ⟨a₁, a₂, a₃⟩
   rcases b with ⟨b₁, b₂, b₃⟩
   cases a₁ <;> cases a₂ <;> cases a₃ <;>
     cases b₁ <;> cases b₂ <;> cases b₃ <;> rfl
 
-/-- **化 (hua) 等距**：`ju (hua a) (hua b) = ju a b`. -/
-theorem hua_iso (a b : Trigram) : ju (hua a) (hua b) = ju a b := by
-  unfold ju hammingDist hua
+/-- **化 (middleFlip) 等距**：`ju (middleFlip a) (middleFlip b) = ju a b`. -/
+theorem middleFlip_iso (a b : Trigram) : ju (middleFlip a) (middleFlip b) = ju a b := by
+  unfold ju hammingDist middleFlip
   rcases a with ⟨a₁, a₂, a₃⟩
   rcases b with ⟨b₁, b₂, b₃⟩
   cases a₁ <;> cases a₂ <;> cases a₃ <;>
     cases b₁ <;> cases b₂ <;> cases b₃ <;> rfl
 
-/-- **变 (bian) 等距**：`ju (bian a) (bian b) = ju a b`. -/
-theorem bian_iso (a b : Trigram) : ju (bian a) (bian b) = ju a b := by
-  unfold ju hammingDist bian
+/-- **变 (topFlip) 等距**：`ju (topFlip a) (topFlip b) = ju a b`. -/
+theorem topFlip_iso (a b : Trigram) : ju (topFlip a) (topFlip b) = ju a b := by
+  unfold ju hammingDist topFlip
   rcases a with ⟨a₁, a₂, a₃⟩
   rcases b with ⟨b₁, b₂, b₃⟩
   cases a₁ <;> cases a₂ <;> cases a₃ <;>
     cases b₁ <;> cases b₂ <;> cases b₃ <;> rfl
 
-/-- **错 (cuo) 等距**：错卦保距离（错 = 三反复合，由各反等距递进可得）。 -/
-theorem cuo_iso (a b : Trigram) : ju (Trigram.cuo a) (Trigram.cuo b) = ju a b := by
-  unfold ju hammingDist Trigram.cuo
+/-- **错 (complement) 等距**：错卦保距离（错 = 三反复合，由各反等距递进可得）。 -/
+theorem complement_iso (a b : Trigram) : ju (Trigram.complement a) (Trigram.complement b) = ju a b := by
+  unfold ju hammingDist Trigram.complement
   rcases a with ⟨a₁, a₂, a₃⟩
   rcases b with ⟨b₁, b₂, b₃⟩
   cases a₁ <;> cases a₂ <;> cases a₃ <;>
@@ -183,16 +183,16 @@ abbrev ying : Hexagram → Fin 3 → Bool := yingResponds
 abbrev bi : Hexagram → Fin 5 → Yao × Yao := biAdj
 
 /-- **乾五位**当位（具体见证）。 -/
-theorem dang_qian_5 : dang Hexagram.qian ⟨4, by omega⟩ = true := qian_5th_wellPos
+theorem dang_qian_5 : dang Hexagram.heaven ⟨4, by omega⟩ = true := heaven_5th_wellPos
 
 /-- **坤五位**不当位（阴爻在阳位）。 -/
-theorem dang_kun_5_not : dang Hexagram.kun ⟨4, by omega⟩ = false := kun_5th_not_wellPos
+theorem dang_kun_5_not : dang Hexagram.earth ⟨4, by omega⟩ = false := earth_5th_not_wellPos
 
 /-- **既济**全当位：六爻皆当其位。 -/
-theorem dang_jiji_all (i : Fin 6) : dang Hexagram.jiji i = true := jiji_wellPos_all i
+theorem dang_jiji_all (i : Fin 6) : dang Hexagram.complete i = true := complete_wellPos_all i
 
 /-- **未济**全不当位：六爻皆不当其位。 -/
-theorem dang_weiji_none (i : Fin 6) : dang Hexagram.weiji i = false := weiji_wellPos_none i
+theorem dang_weiji_none (i : Fin 6) : dang Hexagram.incomplete i = false := incomplete_wellPos_none i
 
 /-! ## § 7 公开摘要 -/
 
@@ -204,9 +204,9 @@ theorem xingwei_summary :
     ∧ (∀ a b : Trigram, ju a b = ju b a)
     ∧ (∀ a b c : Trigram, ju a c ≤ ju a b + ju b c)
     -- (2) 三反爻等距
-    ∧ (∀ a b : Trigram, ju (dong a) (dong b) = ju a b)
-    ∧ (∀ a b : Trigram, ju (hua a) (hua b) = ju a b)
-    ∧ (∀ a b : Trigram, ju (bian a) (bian b) = ju a b)
+    ∧ (∀ a b : Trigram, ju (motion a) (motion b) = ju a b)
+    ∧ (∀ a b : Trigram, ju (middleFlip a) (middleFlip b) = ju a b)
+    ∧ (∀ a b : Trigram, ju (topFlip a) (topFlip b) = ju a b)
     -- (3) 立方体 Euler
     ∧ ((cube3_V : Int) - cube3_E + cube3_F - cube3_C = 1)
     ∧ ((cube6_V : Int) - cube6_E + cube6_2 - cube6_3 + cube6_4 - cube6_5 + cube6_6 = 1)
@@ -214,7 +214,7 @@ theorem xingwei_summary :
     ∧ (Trigram.all.length = cube3_V)
     ∧ (Hexagram.allHex.length = cube6_V) :=
   ⟨ju_self, ju_eq_zero_iff, ju_comm, ju_triangle,
-   dong_iso, hua_iso, bian_iso,
+   motion_iso, middleFlip_iso, topFlip_iso,
    cube3_euler_int, cube6_euler_int,
    trigram_card_cube3, hexagram_card_cube6⟩
 

@@ -5,34 +5,34 @@ L1 (`WenDef.Tm`) 与 L0 (`BaguaTuring.YiInstr`) 之间一桥。
 WenDefEval.lean 已建 Lean-level evaluator (`denoteHexFun`)。
 本文 进一步：取若干 closed Tm，给出 YiInstr 程序，证 二者同义。
 
-## 关键观察 — 错对称之约束 (cuo-symmetry constraint)
+## 关键观察 — 错对称之约束 (complement-symmetry constraint)
 
 YiInstr 之 12 条原语皆与「错」(全爻取反) 通约：
-  ·  flipYao i :  (flipPos i h).cuo = flipPos i (h.cuo)
-  ·  cuo, hu, zong : 皆与 cuo 通约
-  ·  branchYaoEq i j : (h.yaoAt i = h.yaoAt j) ↔ (h.cuo.yaoAt i = h.cuo.yaoAt j)
+  ·  flipYao i :  (flipPos i h).complement = flipPos i (h.complement)
+  ·  complement, interlace, reverse : 皆与 complement 通约
+  ·  branchYaoEq i j : (h.yaoAt i = h.yaoAt j) ↔ (h.complement.yaoAt i = h.complement.yaoAt j)
   ·  setShi/branchShiEq : 仅作用于 Shi，不涉 yao
   ·  jump/push/pop/halt/nop : 控制流原语
 
 故：任 YiInstr 程序之转换 f : Hexagram → Hexagram 满足
-  f(h.cuo) = (f h).cuo                              ... (★)
+  f(h.complement) = (f h).complement                              ... (★)
 
-「错等变」(cuo-equivariance) — YiInstr 可表达之 Hex → Hex 函数之刚性约束。
+「错等变」(complement-equivariance) — YiInstr 可表达之 Hex → Hex 函数之刚性约束。
 
 由 (★) 可推：
-  ·  常值函数 f(h) = «一» 不可表（«一» ≠ «一».cuo = ⟨yang,yin,yin,yin,yin,yin⟩）
-  ·  «生» = «加» «一» 不可表（«生» «乾» = «一»; («生» «乾»).cuo = «一».cuo ≠ «生» «坤» = «乾»）
+  ·  常值函数 f(h) = «一» 不可表（«一» ≠ «一».complement = ⟨yang,yin,yin,yin,yin,yin⟩）
+  ·  «生» = «加» «一» 不可表（«生» «乾» = «一»; («生» «乾»).complement = «一».complement ≠ «生» «坤» = «乾»）
      故任 YiInstr 程序皆不能模拟 «生» — 此为 Path 丙 之结构性界限。
 
 可表者：恒等、«错»、«互»、«综»、flipYao i 之复合、«加» k (k.toIdx ∈ {0, 32})、
-       并 control flow 由 cuo-invariant 谓词决定者（如「y3=y4」）。
+       并 control flow 由 complement-invariant 谓词决定者（如「y3=y4」）。
 
-非常值之 Hex → Bool 谓词若 cuo-invariant，亦可由 YiInstr 实现并以 Shi 输出
+非常值之 Hex → Bool 谓词若 complement-invariant，亦可由 YiInstr 实现并以 Shi 输出
 （如 daoJudgeProg 之 `isTian` 判定）。
 
 ## 本文 之范围
 
-我们给出三例 L1 → L0 compile，皆 cuo-equivariant：
+我们给出三例 L1 → L0 compile，皆 complement-equivariant：
 
 ### Tier 0：恒等
   ·  Tm `λx. x`（`idBody`）  →  `[halt]` (`idProg`)
@@ -51,13 +51,13 @@ YiInstr 之 12 条原语皆与「错」(全爻取反) 通约：
 
 ## 未尽之业 (future work)
 
-由 cuo-symmetry，Tier B (生 = 加 «一») 与 Tier A (常 «一») 皆不可表。
+由 complement-symmetry，Tier B (生 = 加 «一») 与 Tier A (常 «一») 皆不可表。
 完整 `compileHexFun : Tm → Option (List YiInstr)` 须严格限制于可由 L0 原语表达的
-cuo-equivariant 子集。本文之 `compileHexFunCertified?` 先覆盖 straight-line exact
+complement-equivariant 子集。本文之 `compileHexFunCertified?` 先覆盖 straight-line exact
 Hex transform chain，并以 64 卦 finite validation 作执行边界。
 
 替代方案：扩展 YiInstr 加 absolute yao test (`branchYaoYang i t`) 或加 hexLit-style 常量
-载入 — 此皆破 cuo-symmetry，得任意 Hex → Hex compile 能力。本文不行此路，留作 future work。
+载入 — 此皆破 complement-symmetry，得任意 Hex → Hex compile 能力。本文不行此路，留作 future work。
 
 ## 状态
 
@@ -70,7 +70,7 @@ namespace SSBX.Foundation.Wen.WenDefCompile
 
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Yi.YiCore
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenDef
 open SSBX.Foundation.Wen.WenDefEval
@@ -143,12 +143,12 @@ theorem add32Prog_denotes (h : Hexagram) :
 
 /-! ## § 3  Tier 2 — 直接 «错» (no Tm source) -/
 
-/-- 「错」之 YiInstr 程序：直接 cuo 一条加 halt。 -/
-def cuoProg : List YiInstr := [.cuo, .halt]
+/-- 「错」之 YiInstr 程序：直接 complement 一条加 halt。 -/
+def cuoProg : List YiInstr := [.complement, .halt]
 
-/-- 「错」compile 正确：runFuel 2 之 cur = h.cuo。 -/
+/-- 「错」compile 正确：runFuel 2 之 cur = h.complement。 -/
 theorem cuoProg_correct (h : Hexagram) :
-    ((YiState.init h cuoProg).runFuel 2).cur.1 = h.cuo := by
+    ((YiState.init h cuoProg).runFuel 2).cur.1 = h.complement := by
   rfl
 
 /-- 「错」compile 之 Tm 等价。 -/
@@ -159,7 +159,7 @@ theorem cuoProg_denotes (h : Hexagram) :
     native_decide
 
 /-- 「综」之 YiInstr 程序。 -/
-def zongProg : List YiInstr := [.zong, .halt]
+def zongProg : List YiInstr := [.reverse, .halt]
 
 theorem zongProg_denotes (h : Hexagram) :
     some ((YiState.init h zongProg).runFuel 2).cur.1 = denoteHexFun Stdlib.zongBody h := by
@@ -168,7 +168,7 @@ theorem zongProg_denotes (h : Hexagram) :
     native_decide
 
 /-- 「互」之 YiInstr 程序。 -/
-def huProg : List YiInstr := [.hu, .halt]
+def huProg : List YiInstr := [.interlace, .halt]
 
 theorem huProg_denotes (h : Hexagram) :
     some ((YiState.init h huProg).runFuel 2).cur.1 = denoteHexFun Stdlib.huBody h := by
@@ -177,7 +177,7 @@ theorem huProg_denotes (h : Hexagram) :
     native_decide
 
 /-- 「错综」之 YiInstr 程序：按定义先错后综。 -/
-def cuoZongProg : List YiInstr := [.cuo, .zong, .halt]
+def cuoZongProg : List YiInstr := [.complement, .reverse, .halt]
 
 theorem cuoZongProg_denotes (h : Hexagram) :
     some ((YiState.init h cuoZongProg).runFuel 3).cur.1 =
@@ -280,10 +280,10 @@ mutual
           compileHexStepsFuel? fuel f
         else
           none
-    | _+1, .cuoH => some ([.cuo], "cuo")
-    | _+1, .zongH => some ([.zong], "zong")
-    | _+1, .huH => some ([.hu], "hu")
-    | _+1, .cuoZongH => some ([.cuo, .zong], "cuoZong")
+    | _+1, .cuoH => some ([.complement], "complement")
+    | _+1, .zongH => some ([.reverse], "reverse")
+    | _+1, .huH => some ([.interlace], "interlace")
+    | _+1, .cuoZongH => some ([.complement, .reverse], "complementReverse")
     | _+1, .flip1H => some ([.flipYao fin0], "flip1")
     | _+1, .flip2H => some ([.flipYao fin1], "flip2")
     | _+1, .flip3H => some ([.flipYao fin2], "flip3")
@@ -343,16 +343,16 @@ theorem compileHexFun_id :
     compileHexFun? Stdlib.hexIdBody = some [.halt] := by rfl
 
 theorem compileHexFun_cuo :
-    compileHexFun? Stdlib.cuoBody = some [.cuo, .halt] := by rfl
+    compileHexFun? Stdlib.cuoBody = some [.complement, .halt] := by rfl
 
 theorem compileHexFun_zong :
-    compileHexFun? Stdlib.zongBody = some [.zong, .halt] := by rfl
+    compileHexFun? Stdlib.zongBody = some [.reverse, .halt] := by rfl
 
 theorem compileHexFun_hu :
-    compileHexFun? Stdlib.huBody = some [.hu, .halt] := by rfl
+    compileHexFun? Stdlib.huBody = some [.interlace, .halt] := by rfl
 
 theorem compileHexFun_cuoZong :
-    compileHexFun? Stdlib.cuoZongBody = some [.cuo, .zong, .halt] := by rfl
+    compileHexFun? Stdlib.cuoZongBody = some [.complement, .reverse, .halt] := by rfl
 
 theorem compileHexFun_flip1 :
     compileHexFun? Stdlib.flip1Body = some [.flipYao fin0, .halt] := by rfl
@@ -360,7 +360,7 @@ theorem compileHexFun_flip1 :
 theorem compileHexFun_flip6 :
     compileHexFun? Stdlib.flip6Body = some [.flipYao fin5, .halt] := by rfl
 
-/-- Simple composition example: `λx. cuo (zong x)`. -/
+/-- Simple composition example: `λx. complement (reverse x)`. -/
 def cuoAfterZongBody : Tm :=
   .abs "x" .hex (.app .cuoH (.app .zongH (.var "x")))
 
@@ -368,7 +368,7 @@ theorem cuoAfterZongBody_typed :
     typeCheck [] cuoAfterZongBody = some (.arr .hex .hex) := by native_decide
 
 theorem compileHexFun_cuoAfterZong :
-    compileHexFun? cuoAfterZongBody = some [.zong, .cuo, .halt] := by rfl
+    compileHexFun? cuoAfterZongBody = some [.reverse, .complement, .halt] := by rfl
 
 /-- Surface `而 错 综`: exact endomap composition without eta expansion. -/
 def cuoAfterZongCombinatorBody : Tm :=
@@ -378,7 +378,7 @@ theorem cuoAfterZongCombinatorBody_typed :
     typeCheck [] cuoAfterZongCombinatorBody = some (.arr .hex .hex) := by native_decide
 
 theorem compileHexFun_cuoAfterZongCombinator :
-    compileHexFun? cuoAfterZongCombinatorBody = some [.zong, .cuo, .halt] := by rfl
+    compileHexFun? cuoAfterZongCombinatorBody = some [.reverse, .complement, .halt] := by rfl
 
 /-- Surface `而 反 综`: deferred `反` as object-level `.cuoH`. -/
 def fanAfterZongCombinatorBody : Tm :=
@@ -388,7 +388,7 @@ theorem fanAfterZongCombinatorBody_typed :
     typeCheck [] fanAfterZongCombinatorBody = some (.arr .hex .hex) := by native_decide
 
 theorem compileHexFun_fanAfterZongCombinator :
-    compileHexFun? fanAfterZongCombinatorBody = some [.zong, .cuo, .halt] := by rfl
+    compileHexFun? fanAfterZongCombinatorBody = some [.reverse, .complement, .halt] := by rfl
 
 /-- Surface `再 反`: exact one-repeat helper over the object-level `反`. -/
 def repeatFanBody : Tm :=
@@ -398,7 +398,7 @@ theorem repeatFanBody_typed :
     typeCheck [] repeatFanBody = some (.arr .hex .hex) := by native_decide
 
 theorem compileHexFun_repeatFan :
-    compileHexFun? repeatFanBody = some [.cuo, .cuo, .halt] := by rfl
+    compileHexFun? repeatFanBody = some [.complement, .complement, .halt] := by rfl
 
 theorem compileHexFun_id_denotes (h : Hexagram) :
     some (runHexProg [.halt] h) = denoteHexFun Stdlib.hexIdBody h := by
@@ -407,33 +407,33 @@ theorem compileHexFun_id_denotes (h : Hexagram) :
     native_decide
 
 theorem compileHexFun_cuo_denotes (h : Hexagram) :
-    some (runHexProg [.cuo, .halt] h) = denoteHexFun Stdlib.cuoBody h := by
+    some (runHexProg [.complement, .halt] h) = denoteHexFun Stdlib.cuoBody h := by
   rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
   cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
     native_decide
 
 theorem compileHexFun_cuoAfterZong_denotes (h : Hexagram) :
-    some (runHexProg [.zong, .cuo, .halt] h) = denoteHexFun cuoAfterZongBody h := by
+    some (runHexProg [.reverse, .complement, .halt] h) = denoteHexFun cuoAfterZongBody h := by
   rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
   cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
     native_decide
 
 theorem compileHexFun_cuoAfterZongCombinator_denotes (h : Hexagram) :
-    some (runHexProg [.zong, .cuo, .halt] h) =
+    some (runHexProg [.reverse, .complement, .halt] h) =
       denoteHexFun cuoAfterZongCombinatorBody h := by
   rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
   cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
     native_decide
 
 theorem compileHexFun_fanAfterZongCombinator_denotes (h : Hexagram) :
-    some (runHexProg [.zong, .cuo, .halt] h) =
+    some (runHexProg [.reverse, .complement, .halt] h) =
       denoteHexFun fanAfterZongCombinatorBody h := by
   rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
   cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
     native_decide
 
 theorem compileHexFun_repeatFan_denotes (h : Hexagram) :
-    some (runHexProg [.cuo, .cuo, .halt] h) = denoteHexFun repeatFanBody h := by
+    some (runHexProg [.complement, .complement, .halt] h) = denoteHexFun repeatFanBody h := by
   rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
   cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
     native_decide
@@ -504,7 +504,7 @@ theorem compileHexFun_reject_jia :
 
 theorem compileHexFun_reject_catalogue :
     (compileHexFunCertified?
-      (.catalogue2 .E_2 (.hexLit Hexagram.qian) (.hexLit Hexagram.qian))).isNone = true := by
+      (.catalogue2 .E_2 (.hexLit Hexagram.heaven) (.hexLit Hexagram.heaven))).isNone = true := by
   native_decide
 
 theorem compileHexFun_reject_bool :
@@ -519,15 +519,15 @@ theorem compileHexFun_reject_list :
 theorem compileHexFun_reject_cell :
     (compileHexFunCertified? Stdlib.cuoCBody).isNone = true := by native_decide
 
-/-! ## § 4  错对称 之 形式见证 (cuo-symmetry as a structural lemma)
+/-! ## § 4  错对称 之 形式见证 (complement-symmetry as a structural lemma)
 
-  对每个 YiInstr，运行结果之 cur.1 与输入 cuo 通约。这是「为何不能 compile «生»」之
-  根因的形式化。我们 仅 证 单步原语之 通约性 (cuo-equivariance)，不全展开 runFuel。
+  对每个 YiInstr，运行结果之 cur.1 与输入 complement 通约。这是「为何不能 compile «生»」之
+  根因的形式化。我们 仅 证 单步原语之 通约性 (complement-equivariance)，不全展开 runFuel。
 -/
 
-/-- flipYao 之 cuo-等变：(flipPos i h).cuo = flipPos i (h.cuo)。 -/
+/-- flipYao 之 complement-等变：(flipPos i h).complement = flipPos i (h.complement)。 -/
 theorem flipPos_cuo_equivariant (h : Hexagram) (i : Fin 6) :
-    (h.flipPos i).cuo = (h.cuo).flipPos i := by
+    (h.flipPos i).complement = (h.complement).flipPos i := by
   match i with
   | ⟨0, _⟩ => rcases h with ⟨y1, _, _, _, _, _⟩; cases y1 <;> rfl
   | ⟨1, _⟩ => rcases h with ⟨_, y2, _, _, _, _⟩; cases y2 <;> rfl
@@ -536,25 +536,25 @@ theorem flipPos_cuo_equivariant (h : Hexagram) (i : Fin 6) :
   | ⟨4, _⟩ => rcases h with ⟨_, _, _, _, y5, _⟩; cases y5 <;> rfl
   | ⟨5, _⟩ => rcases h with ⟨_, _, _, _, _, y6⟩; cases y6 <;> rfl
 
-/-- cuo 与自身之 等变：(cuo h).cuo = cuo (h.cuo)。 -/
+/-- complement 与自身之 等变：(complement h).complement = complement (h.complement)。 -/
 theorem cuo_cuo_equivariant (h : Hexagram) :
-    (Hexagram.cuo h).cuo = Hexagram.cuo (h.cuo) := by
+    (Hexagram.complement h).complement = Hexagram.complement (h.complement) := by
   rfl
 
-/-- hu 与 cuo 通约：(hu h).cuo = hu (h.cuo)。 -/
+/-- interlace 与 complement 通约：(interlace h).complement = interlace (h.complement)。 -/
 theorem hu_cuo_equivariant (h : Hexagram) :
-    (Hexagram.hu h).cuo = Hexagram.hu (h.cuo) := by
+    (Hexagram.interlace h).complement = Hexagram.interlace (h.complement) := by
   rfl
 
-/-- zong 与 cuo 通约：(zong h).cuo = zong (h.cuo)。 -/
+/-- reverse 与 complement 通约：(reverse h).complement = reverse (h.complement)。 -/
 theorem zong_cuo_equivariant (h : Hexagram) :
-    (Hexagram.zong h).cuo = Hexagram.zong (h.cuo) := by
+    (Hexagram.reverse h).complement = Hexagram.reverse (h.complement) := by
   rfl
 
-/-- branchYaoEq 之 cuo-不变性：y_i = y_j ↔ y_i.neg = y_j.neg
-    （等价性 在 cuo 下保持）。 -/
+/-- branchYaoEq 之 complement-不变性：y_i = y_j ↔ y_i.neg = y_j.neg
+    （等价性 在 complement 下保持）。 -/
 theorem yaoAt_eq_cuo_invariant (h : Hexagram) (i j : Fin 6) :
-    (h.yaoAt i = h.yaoAt j) ↔ ((h.cuo).yaoAt i = (h.cuo).yaoAt j) := by
+    (h.yaoAt i = h.yaoAt j) ↔ ((h.complement).yaoAt i = (h.complement).yaoAt j) := by
   constructor
   · intro heq
     match i, j with
@@ -581,7 +581,7 @@ theorem yaoAt_eq_cuo_invariant (h : Hexagram) (i j : Fin 6) :
     | ⟨5, _⟩, ⟨5, _⟩ =>
         rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
         cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
-          simp_all [Hexagram.yaoAt, Hexagram.cuo, Yao.neg]
+          simp_all [Hexagram.yaoAt, Hexagram.complement, Yao.neg]
   · intro heq
     match i, j with
     | ⟨0, _⟩, ⟨0, _⟩ => rfl
@@ -607,24 +607,24 @@ theorem yaoAt_eq_cuo_invariant (h : Hexagram) (i j : Fin 6) :
     | ⟨5, _⟩, ⟨5, _⟩ =>
         rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
         cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
-          simp_all [Hexagram.yaoAt, Hexagram.cuo, Yao.neg]
+          simp_all [Hexagram.yaoAt, Hexagram.complement, Yao.neg]
 
 /-! ## § 5  「«生» 不可 compile」之 见证
 
-  由 cuo-symmetry，任 YiInstr 程序 prog 满足
-    ((init h prog).runFuel n).cur.1.cuo = ((init h.cuo prog).runFuel n).cur.1   (∀ n h)
+  由 complement-symmetry，任 YiInstr 程序 prog 满足
+    ((init h prog).runFuel n).cur.1.complement = ((init h.complement prog).runFuel n).cur.1   (∀ n h)
 
-  若 prog 实现 «生»，则 («生» h).cuo = «生» (h.cuo) 须成立。但：
-    («生» «乾»).cuo = «一».cuo = ⟨yang,yin,yin,yin,yin,yin⟩ (toIdx 62)
-    «生» («乾».cuo) = «生» «坤» = ⟨yang,yang,yang,yang,yang,yang⟩ (toIdx 0) = «乾»
+  若 prog 实现 «生»，则 («生» h).complement = «生» (h.complement) 须成立。但：
+    («生» «乾»).complement = «一».complement = ⟨yang,yin,yin,yin,yin,yin⟩ (toIdx 62)
+    «生» («乾».complement) = «生» «坤» = ⟨yang,yang,yang,yang,yang,yang⟩ (toIdx 0) = «乾»
   二者相异，故无 prog 实现 «生»。
 
   此为 Path 丙之 structural limit。下证之。
 -/
 
-/-- 反例点：«生» 不与 cuo 通约 — 取 h = «乾» 则等式不成立。 -/
+/-- 反例点：«生» 不与 complement 通约 — 取 h = «乾» 则等式不成立。 -/
 theorem sheng_not_cuo_equivariant :
-    («生» Hexagram.qian).cuo ≠ «生» (Hexagram.qian.cuo) := by
+    («生» Hexagram.heaven).complement ≠ «生» (Hexagram.heaven.complement) := by
   native_decide
 
 /-! ## § 6  公示总结 -/
@@ -632,8 +632,8 @@ theorem sheng_not_cuo_equivariant :
 /-- compile 之 三层成果：
     (1) 恒等 Tm 之 compile
     (2) 加常 32 之 Tm 之 compile (含 Tm 等价)
-    (3) cuo 程序之直接定义
-    (4) cuo-symmetry 引理 (witness flipYao/cuo/hu/zong/branchYaoEq 皆 cuo-等变)
+    (3) complement 程序之直接定义
+    (4) complement-symmetry 引理 (witness flipYao/complement/interlace/reverse/branchYaoEq 皆 complement-等变)
     (5) «生» 不可 compile 之反例（Tier B 之 不可性）
 -/
 theorem compile_summary :
@@ -641,12 +641,12 @@ theorem compile_summary :
     (∀ h : Hexagram, ((YiState.init h idProg).runFuel 1).cur.1 = h)
     ∧ -- (2) 加 32 (cur 等价)
     (∀ h : Hexagram, ((YiState.init h add32Prog).runFuel 2).cur.1 = «加» hex32 h)
-    ∧ -- (3) cuo 程序
-    (∀ h : Hexagram, ((YiState.init h cuoProg).runFuel 2).cur.1 = h.cuo)
-    ∧ -- (4) cuo-symmetry: flipPos 通约
-    (∀ h : Hexagram, ∀ i : Fin 6, (h.flipPos i).cuo = (h.cuo).flipPos i)
+    ∧ -- (3) complement 程序
+    (∀ h : Hexagram, ((YiState.init h cuoProg).runFuel 2).cur.1 = h.complement)
+    ∧ -- (4) complement-symmetry: flipPos 通约
+    (∀ h : Hexagram, ∀ i : Fin 6, (h.flipPos i).complement = (h.complement).flipPos i)
     ∧ -- (5) «生» 之结构性不可 compile 见证
-    («生» Hexagram.qian).cuo ≠ «生» (Hexagram.qian.cuo)
+    («生» Hexagram.heaven).complement ≠ «生» (Hexagram.heaven.complement)
     := ⟨idProg_correct, add32Prog_correct, cuoProg_correct,
         flipPos_cuo_equivariant, sheng_not_cuo_equivariant⟩
 

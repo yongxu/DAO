@@ -2,17 +2,17 @@
 # L2 — R₂ SiXiang layer (the second R-rung)
 
 Cell space `SiXiang = Yao × Yao` (= (Z/2)²). 4 atoms:
-`taiYang ⟨阳,阳⟩ / shaoYin ⟨阳,阴⟩ / shaoYang ⟨阴,阳⟩ / taiYin ⟨阴,阴⟩`.
+`greaterYang ⟨阳,阳⟩ / lesserYin ⟨阳,阴⟩ / lesserYang ⟨阴,阳⟩ / greaterYin ⟨阴,阴⟩`.
 
-The Cayley action is component-wise XOR. Origin = ⟨阴,阴⟩ = `taiYin`.
+The Cayley action is component-wise XOR. Origin = ⟨阴,阴⟩ = `greaterYin`.
 
 ## Surface syntax
 
 ```
-(sixiang 阳 阳)   — taiYang
-(sixiang 阳 阴)   — shaoYin
-(sixiang 阴 阳)   — shaoYang
-(sixiang 阴 阴)   — taiYin
+(sixiang 阳 阳)   — greaterYang
+(sixiang 阳 阴)   — lesserYin
+(sixiang 阴 阳)   — lesserYang
+(sixiang 阴 阴)   — greaterYin
 ```
 
 Tokens accept 阳/yang/1 and 阴/yin/0; canonical printer uses 阳/阴.
@@ -22,7 +22,7 @@ Tokens accept 阳/yang/1 and 阴/yin/0; canonical printer uses 阳/阴.
 Same regular representation as L1, lifted to (Z/2)². Each cell is both a value
 and the "XOR-by-mask" operator. Two atomic ops = the two single-bit-flip masks
 `⟨阳,阴⟩` (flip bit 1) and `⟨阴,阳⟩` (flip bit 2). Together with the origin and
-their sum `taiYang`, they exhaust the Klein-four group.
+their sum `greaterYang`, they exhaust the Klein-four group.
 -/
 
 import SSBX.Foundation.Lang.Core
@@ -46,7 +46,7 @@ def apply : Cell → Cell → Cell
   | ⟨.yin,  .yang⟩, s => ⟨s.y1, s.y2.neg⟩
   | ⟨.yang, .yang⟩, s => ⟨s.y1.neg, s.y2.neg⟩
 
-/-- The (Z/2)² origin = ⟨阴,阴⟩ = taiYin. -/
+/-- The (Z/2)² origin = ⟨阴,阴⟩ = greaterYin. -/
 def origin : Cell := ⟨.yin, .yin⟩
 
 /-! ## § 2 Cayley action laws -/

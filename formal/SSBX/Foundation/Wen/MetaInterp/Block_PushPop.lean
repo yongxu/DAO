@@ -2,8 +2,8 @@
 # Block_PushPop — executeBlocks for `push` and `pop`
 
 These two opcodes are **fundamentally harder** than the cur-only blocks
-(`nop`, `hu`, `cuo`, `zong`, `setShi`, `flipYao`) because they mutate
-`sim.history`, which is encoded in the **middle** of `META.history`:
+(`nop`, `interlace`, `complement`, `reverse`, `setShi`, `flipYao`) because they mutate
+`sim.history`, which is encoded in the **center** of `META.history`:
 
 ```
 encMetaHistory regHex sim
@@ -49,7 +49,7 @@ For the **scaffold**:
     the top — which we capture in the local-effect lemma.
 
 The **general** simulation lemma (arbitrary `sim.history`, full
-middle-of-history mutation) is **deferred**; the deferred theorem
+center-of-history mutation) is **deferred**; the deferred theorem
 `executeBlock_pop_simulates` and `executeBlock_push_simulates` are
 **stated** as `Prop` definitions (so that future phases have a fixed
 target signature) but not proven.  Following the contract guidance from
@@ -71,7 +71,7 @@ For each block we provide:
 
 What's deferred to Phase C:
   - the general (non-empty sim.history) simulation;
-  - the destructive-walk middle-of-history mutation.
+  - the destructive-walk center-of-history mutation.
 
 The deferred lemmas appear as `Prop`-typed targets at the end of the
 file.
@@ -81,7 +81,7 @@ import SSBX.Foundation.Wen.MetaInterp.ExecuteBlock
 namespace SSBX.Foundation.Wen.MetaInterp.ExecuteBlock
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
 open SSBX.Foundation.Wen.MetaInterp
@@ -145,7 +145,7 @@ theorem executeBlock_push_third (offset fetchOffset : Nat) :
     leaves META with `cur` unchanged, two copies of the original cur
     prepended to history, and `pc = fetchOffset`. -/
 theorem executeBlock_push_local_effect
-    (cur : Cell256) (history : List Cell256)
+    (cur : R8) (history : List R8)
     (offset fetchOffset : Nat) :
     let μ : YiState :=
       { cur := cur
@@ -255,7 +255,7 @@ theorem executeBlock_pop_first (offset fetchOffset : Nat) :
     untouched.  This mirrors the sim-side `pop` behaviour when
     `sim.history = []`. -/
 theorem executeBlock_pop_empty_local_effect
-    (cur : Cell256) (history : List Cell256)
+    (cur : R8) (history : List R8)
     (offset fetchOffset : Nat) :
     let μ : YiState :=
       { cur := cur

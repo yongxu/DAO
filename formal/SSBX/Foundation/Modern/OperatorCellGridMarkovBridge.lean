@@ -20,7 +20,7 @@ import SSBX.Foundation.Modern.QuantumRelativityWenBoundary
 
 namespace SSBX.Foundation.Modern.OperatorCellGridMarkovBridge
 
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Modern.QuantumSpacetime
 open SSBX.Foundation.Modern.QuantumRelativityNoGo
 open SSBX.Foundation.Modern.QuantumRelativityIntegration
@@ -136,7 +136,7 @@ theorem operatorCellGridPath_reachable :
     rule, quantum channels, metric recovery, or empirical closure. -/
 theorem operator_cell_grid_markov_causal_bridge_summary :
     allOperatorIds.length = 371
-    ∧ Cell256.all.length = 256
+    ∧ R8.all.length = 256
     ∧ allOperatorCells.length = 94976
     ∧ WenConstructiveCoverage
     ∧ (∀ s : OperatorCellGridState,
@@ -157,7 +157,7 @@ theorem operator_cell_grid_markov_causal_bridge_summary :
      hSameOne, hNotIdentity, hNotDirect⟩
   exact
     ⟨ allOperatorIds_length
-    , Cell256.all_length
+    , R8.all_length
     , allOperatorCells_length
     , wen_constructive_coverage_192_371
     , operatorCellAtState_mem_allOperatorCells

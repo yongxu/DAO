@@ -110,16 +110,16 @@ theorem metric_region_exhaustive (r : MetricRegion) :
 
 theorem metricable_not_unmetricable (r : MetricRegion) :
     Metricable r → ¬ Unmetricable r := by
-  intro hm hu
+  intro hm interlace
   unfold Metricable at hm
-  unfold Unmetricable at hu
-  rw [hm] at hu
-  cases hu
+  unfold Unmetricable at interlace
+  rw [hm] at interlace
+  cases interlace
 
 theorem unmetricable_not_metricable (r : MetricRegion) :
     Unmetricable r → ¬ Metricable r := by
-  intro hu hm
-  exact metricable_not_unmetricable r hm hu
+  intro interlace hm
+  exact metricable_not_unmetricable r hm interlace
 
 /-- 度量边界完备：可度量 / 不可度量穷尽，且两向互斥。 -/
 theorem metric_boundary_complete :
@@ -150,16 +150,16 @@ theorem measure_region_exhaustive (r : MeasureRegion) :
 
 theorem sigma_measurable_not_unmeasurable (r : MeasureRegion) :
     SigmaMeasurable r → ¬ SigmaUnmeasurable r := by
-  intro hm hu
+  intro hm interlace
   unfold SigmaMeasurable at hm
-  unfold SigmaUnmeasurable at hu
-  rw [hm] at hu
-  cases hu
+  unfold SigmaUnmeasurable at interlace
+  rw [hm] at interlace
+  cases interlace
 
 theorem sigma_unmeasurable_not_measurable (r : MeasureRegion) :
     SigmaUnmeasurable r → ¬ SigmaMeasurable r := by
-  intro hu hm
-  exact sigma_measurable_not_unmeasurable r hm hu
+  intro interlace hm
+  exact sigma_measurable_not_unmeasurable r hm interlace
 
 /-- 测度论边界完备：σ-可测 / σ-不可测穷尽，且两向互斥。 -/
 theorem measure_theoretic_boundary_complete :
@@ -190,16 +190,16 @@ theorem measurement_region_exhaustive (r : MeasurementRegion) :
 
 theorem measurable_by_interface_not_unmeasurable (r : MeasurementRegion) :
     MeasurableByInterface r → ¬ UnmeasurableByInterface r := by
-  intro hm hu
+  intro hm interlace
   unfold MeasurableByInterface at hm
-  unfold UnmeasurableByInterface at hu
-  rw [hm] at hu
-  cases hu
+  unfold UnmeasurableByInterface at interlace
+  rw [hm] at interlace
+  cases interlace
 
 theorem unmeasurable_by_interface_not_measurable (r : MeasurementRegion) :
     UnmeasurableByInterface r → ¬ MeasurableByInterface r := by
-  intro hu hm
-  exact measurable_by_interface_not_unmeasurable r hm hu
+  intro interlace hm
+  exact measurable_by_interface_not_unmeasurable r hm interlace
 
 /-- 测量边界完备：可由接口测得 / 不可由接口测得穷尽，且两向互斥。 -/
 theorem measurement_boundary_complete :
@@ -230,16 +230,16 @@ theorem quantifier_region_exhaustive (r : QuantifierRegion) :
 
 theorem scoped_not_unscoped (r : QuantifierRegion) :
     Scoped r → ¬ Unscoped r := by
-  intro hs hu
+  intro hs interlace
   unfold Scoped at hs
-  unfold Unscoped at hu
-  rw [hs] at hu
-  cases hu
+  unfold Unscoped at interlace
+  rw [hs] at interlace
+  cases interlace
 
 theorem unscoped_not_scoped (r : QuantifierRegion) :
     Unscoped r → ¬ Scoped r := by
-  intro hu hs
-  exact scoped_not_unscoped r hs hu
+  intro interlace hs
+  exact scoped_not_unscoped r hs interlace
 
 /-- 量词边界完备：有域 / 无域穷尽，且两向互斥。 -/
 theorem quantifier_boundary_complete :

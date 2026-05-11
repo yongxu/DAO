@@ -1,5 +1,5 @@
 /-
-# Cell256Stratify — R7/R8 双层收口（128 + 256 = (Z/2)⁷+(Z/2)⁸ in 自相似 R-hierarchy）
+# R8Stratify — R7/R8 双层收口（128 + 256 = (Z/2)⁷+(Z/2)⁸ in 自相似 R-hierarchy）
 
 把 [`docs-next/10_formal_形式/yi-RO-hierarchy.md`](../../../../docs-next/10_formal_形式/yi-RO-hierarchy.md)
 之 R/O 双层级与 yi-calculus-theorem.md Theorems H–K 在 Lean 中显式落地：
@@ -8,18 +8,18 @@
   R2 (四象)      = (Z/2)²      = 4          → `SiXiang`
   R3 (八卦)      = (Z/2)³      = 8 = 4本+4征 → `Trigram`
   R6 (六十四卦)  = (Z/2)⁶      = 64         → `Hexagram`
-  R7 (Cell128)   = (Z/2)⁷      = 128 = 64×2 → `Cell128 = Hexagram × YinBit` (R7 atom: 因 yīn)
-  R8 (256-Cell)  = (Z/2)⁸      = 256 = 128×2 = 64×4 → `Cell256 = Hexagram × Shi` (R8 atom: 果 guǒ)
+  R7 (R7)   = (Z/2)⁷      = 128 = 64×2 → `R7 = Hexagram × YinBit` (R7 atom: 因 yīn)
+  R8 (256-Cell)  = (Z/2)⁸      = 256 = 128×2 = 64×4 → `R8 = Hexagram × Shi` (R8 atom: 果 guǒ)
 
 R-hierarchy R1..R8 全部纯 (Z/2)ⁿ 自相似闭合, 无任何非 (Z/2) 因子.
 Shi V₄ = {道, 已, 今, 未} **at R8** 由 (因, 果) ∈ Bool² emerge (非 R7 单层 atom)：
   - 道 = (因=0, 果=0) — V₄ 单位元 = 跨时空永真 anchor
 
 算子的物理同构（§ 3.4）：
-  cuo  = P  (parity / sign reversal)
-  zong = T  (time-reversal of yao sequence)
+  complement  = P  (parity / sign reversal)
+  reverse = T  (time-reversal of yao sequence)
   错综 = PT
-  hu   = Y  (Y-combinator / fixed-point operator)
+  interlace   = Y  (Y-combinator / fixed-point operator)
 
 R7 atomic 算子: **印 (yìn)** = toggle 因 bit
 R8 atomic 算子: **投 (tóu)** = toggle 果 bit (= Shi V₄ 之第二轴)
@@ -37,16 +37,16 @@ R8 atomic 算子: **投 (tóu)** = toggle 果 bit (= Shi V₄ 之第二轴)
 § 6  xuGua extension to R8 (xuGua256: 256 元有序列)
 § 7  R8 closure 摘要定理 + R7 中间层桥接
 -/
-import SSBX.Foundation.Bagua.Cell128
-import SSBX.Foundation.Bagua.Cell256
+import SSBX.Foundation.Bagua.R7
+import SSBX.Foundation.Bagua.R8
 import SSBX.Foundation.Bagua.BenZheng
 import SSBX.Foundation.Bagua.BaguaAlgebra
 
-namespace SSBX.Foundation.Bagua.Cell256Stratify
+namespace SSBX.Foundation.Bagua.R8Stratify
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell128
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R7
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BenZheng
 open SSBX.Foundation.Bagua.BaguaAlgebra
 
@@ -74,11 +74,11 @@ abbrev R5 := Mian × Bool
 /-- R6 (六十四卦) = (Z/2)⁶ = 64 = 4 quadrant × 16. -/
 abbrev R6 := Hexagram
 
-/-- R7 (Cell128) = (Z/2)⁷ = 128 = 64 × 2 (R6 + 因 yīn). -/
-abbrev R7 := Cell128
+/-- R7 = (Z/2)⁷ = 128 = 64 × 2 (Hexagram × YinBit). -/
+abbrev R7 := SSBX.Foundation.Bagua.R7.R7
 
-/-- R8 (256-Cell) = (Z/2)⁸ = 256 = 128 × 2 = 64 × 4 (R7 + 果 guǒ). -/
-abbrev R8 := Cell256
+/-- R8 = (Z/2)⁸ = 256 = 128 × 2 = 64 × 4 (Hexagram × Shi). -/
+abbrev R8 := SSBX.Foundation.Bagua.R8.R8
 
 /-! ### 基数定理：每层 Rn 之元素数 -/
 
@@ -99,9 +99,9 @@ theorem R5_card_eq_32 : ((Mian.all.flatMap fun m => [(m, false), (m, true)]) : L
 
 theorem R6_card_eq_64 : (Hexagram.allHex : List R6).length = 64 := by native_decide
 
-theorem R7_card_eq_128 : (Cell128.all : List R7).length = 128 := Cell128.all_length
+theorem R7_card_eq_128 : (R7.all : List R7).length = 128 := R7.all_length
 
-theorem R8_card_eq_256 : (Cell256.all : List R8).length = 256 := Cell256.all_length
+theorem R8_card_eq_256 : (R8.all : List R8).length = 256 := R8.all_length
 
 /-! ### Step-up isomorphisms：R(n+1) factors over R(n) -/
 
@@ -109,7 +109,7 @@ theorem R8_card_eq_256 : (Cell256.all : List R8).length = 256 := Cell256.all_len
 example : R8 = (R6 × Shi) := rfl
 
 /-- R7 = R6 × YinBit (definitional). -/
-example : R7 = (R6 × Cell128.YinBit) := rfl
+example : R7 = (R6 × R7.YinBit) := rfl
 
 /-- R3 ≅ R2 × Yao via fenToTrigram. -/
 example (s : R2) (y : Yao) : R3 :=
@@ -120,11 +120,11 @@ example (inner outer : R3) : R6 := chong inner outer
 
 /-- R7 → R8 lift: 加 GuoBit. -/
 def liftR7toR8 (c5 : R7) (g : GuoBit) : R8 :=
-  (c5.1, Cell256.Shi.ofYinGuo (c5.2, g))
+  (c5.1, R8.Shi.ofYinGuo (c5.2, g))
 
 /-- R8 → R7 project: 丢 GuoBit (取 Shi 之 因 投影). -/
 def projR8toR7 (c6 : R8) : R7 :=
-  (c6.1, (Cell256.Shi.toYinGuo c6.2).1)
+  (c6.1, (R8.Shi.toYinGuo c6.2).1)
 
 /-- R7 → R8 → R7 round-trip: project ∘ lift = id. -/
 theorem projR6toR7_liftR7toR8 (c5 : R7) (g : GuoBit) :
@@ -132,84 +132,84 @@ theorem projR6toR7_liftR7toR8 (c5 : R7) (g : GuoBit) :
   rcases c5 with ⟨h, y⟩
   cases y <;> cases g <;> rfl
 
-/-! ## § 2 R8 算子: cuo = P, zong = T, hu = Y
+/-! ## § 2 R8 算子: complement = P, reverse = T, interlace = Y
 
   R8 上 V₄ 出现两层（hex side + shi side），各自实现物理 P/T/PT.
-  parity = hex cuo lift（保 Shi）；timeReversal = hex zong + Shi zong（双层 T）；
-  PT = 错综（双层）；yComb = hu lift. -/
+  parity = hex complement lift（保 Shi）；timeReversal = hex reverse + Shi reverse（双层 T）；
+  PT = 错综（双层）；yComb = interlace lift. -/
 
 /-! ### parity (P) — yao-wise sign reversal on hex; preserves Shi -/
 
-/-- P (parity): hex cuo lift 到 R8；保 Shi. -/
-def parity (c : R8) : R8 := (Hexagram.cuo c.1, c.2)
+/-- P (parity): hex complement lift 到 R8；保 Shi. -/
+def parity (c : R8) : R8 := (Hexagram.complement c.1, c.2)
 
 theorem parity_parity (c : R8) : parity (parity c) = c := by
   rcases c with ⟨h, s⟩
-  simp [parity, Hexagram.cuo_cuo]
+  simp [parity, Hexagram.complement_involutive]
 
-/-! ### timeReversal (T) — zong on hex + zong on Shi (V₄ 二层 T) -/
+/-! ### timeReversal (T) — reverse on hex + reverse on Shi (V₄ 二层 T) -/
 
-/-- T (time-reversal): hex zong lift + Shi V₄ T-flip (Shi.zong: 道↔未, 已↔今). -/
-def timeReversal (c : R8) : R8 := (Hexagram.zong c.1, c.2.zong)
+/-- T (time-reversal): hex reverse lift + Shi V₄ T-flip (Shi.reverse: 道↔未, 已↔今). -/
+def timeReversal (c : R8) : R8 := (Hexagram.reverse c.1, c.2.reverse)
 
 theorem timeReversal_timeReversal (c : R8) : timeReversal (timeReversal c) = c := by
   rcases c with ⟨h, s⟩
-  simp [timeReversal, Hexagram.zong_zong, Shi.zong_zong]
+  simp [timeReversal, Hexagram.reverse_involutive, Shi.reverse_involutive]
 
 /-! ### PT = parity ∘ timeReversal = 错综 + Shi 双轴翻 -/
 
-/-- PT: 错综 + Shi cuoZong (V₄ 中心元). -/
+/-- PT: 错综 + Shi complementReverse (V₄ 中心元). -/
 def PT (c : R8) : R8 := timeReversal (parity c)
 
 theorem PT_PT (c : R8) : PT (PT c) = c := by
   rcases c with ⟨h, s⟩
-  simp [PT, parity, timeReversal, Hexagram.zong_zong, Shi.zong_zong,
-        Hexagram.cuo_cuo, ← Hexagram.cuo_zong_comm]
+  simp [PT, parity, timeReversal, Hexagram.reverse_involutive, Shi.reverse_involutive,
+        Hexagram.complement_involutive, ← Hexagram.complement_reverse_comm]
 
 /-- P 与 T 交换（V₄ Klein 群结构）. -/
 theorem parity_timeReversal_comm (c : R8) :
     parity (timeReversal c) = timeReversal (parity c) := by
   rcases c with ⟨h, s⟩
-  simp [parity, timeReversal, Hexagram.cuo_zong_comm]
+  simp [parity, timeReversal, Hexagram.complement_reverse_comm]
 
-/-! ### yComb (Y) — hu lifted -/
+/-! ### yComb (Y) — interlace lifted -/
 
-/-- Y (Y-combinator / 互): hu lift 到 R8；保 Shi. -/
-def yComb (c : R8) : R8 := (Hexagram.hu c.1, c.2)
+/-- Y (Y-combinator / 互): interlace lift 到 R8；保 Shi. -/
+def yComb (c : R8) : R8 := (Hexagram.interlace c.1, c.2)
 
-/-- 乾 (qian) cell at any Shi is hu-fixed. -/
-theorem yComb_qian (s : Shi) : yComb (Hexagram.qian, s) = (Hexagram.qian, s) := by
-  simp [yComb, Hexagram.hu_qian]
+/-- 乾 (heaven) cell at any Shi is interlace-fixed. -/
+theorem yComb_qian (s : Shi) : yComb (Hexagram.heaven, s) = (Hexagram.heaven, s) := by
+  simp [yComb, Hexagram.interlace_heaven]
 
-/-- 坤 (kun) cell at any Shi is hu-fixed. -/
-theorem yComb_kun (s : Shi) : yComb (Hexagram.kun, s) = (Hexagram.kun, s) := by
-  simp [yComb, Hexagram.hu_kun]
+/-- 坤 (earth) cell at any Shi is interlace-fixed. -/
+theorem yComb_kun (s : Shi) : yComb (Hexagram.earth, s) = (Hexagram.earth, s) := by
+  simp [yComb, Hexagram.interlace_earth]
 
-/-- Hexagram-level hu attractors {乾, 坤, 既济, 未济} lift 至 16 个 R8 attractor
+/-- Hexagram-level interlace attractors {乾, 坤, 既济, 未济} lift 至 16 个 R8 attractor
     (4 hex × 4 Shi = 16). -/
 theorem yComb_attractors_count :
-    ([(Hexagram.qian, Shi.dao), (Hexagram.qian, Shi.ji),
-      (Hexagram.qian, Shi.jin), (Hexagram.qian, Shi.wei),
-      (Hexagram.kun, Shi.dao),  (Hexagram.kun, Shi.ji),
-      (Hexagram.kun, Shi.jin),  (Hexagram.kun, Shi.wei),
-      (Hexagram.jiji, Shi.dao), (Hexagram.jiji, Shi.ji),
-      (Hexagram.jiji, Shi.jin), (Hexagram.jiji, Shi.wei),
-      (Hexagram.weiji, Shi.dao),(Hexagram.weiji, Shi.ji),
-      (Hexagram.weiji, Shi.jin),(Hexagram.weiji, Shi.wei)
+    ([(Hexagram.heaven, Shi.dao), (Hexagram.heaven, Shi.ji),
+      (Hexagram.heaven, Shi.jin), (Hexagram.heaven, Shi.wei),
+      (Hexagram.earth, Shi.dao),  (Hexagram.earth, Shi.ji),
+      (Hexagram.earth, Shi.jin),  (Hexagram.earth, Shi.wei),
+      (Hexagram.complete, Shi.dao), (Hexagram.complete, Shi.ji),
+      (Hexagram.complete, Shi.jin), (Hexagram.complete, Shi.wei),
+      (Hexagram.incomplete, Shi.dao),(Hexagram.incomplete, Shi.ji),
+      (Hexagram.incomplete, Shi.jin),(Hexagram.incomplete, Shi.wei)
      ] : List R8).length = 16 := rfl
 
 /-! ### parity 通过 6 单爻 flip 之复合 -/
 
 /-- parity = 6 单爻 flip 之复合 (R8 lift of `hex_cuo_eq_compose`). -/
 theorem parity_eq_six_flips (c : R8) :
-    parity c = Cell256.flip1 (Cell256.flip2 (Cell256.flip3
-                 (Cell256.flip4 (Cell256.flip5 (Cell256.flip6 c))))) := by
+    parity c = R8.flip1 (R8.flip2 (R8.flip3
+                 (R8.flip4 (R8.flip5 (R8.flip6 c))))) := by
   rcases c with ⟨h, s⟩
-  simp [parity, Cell256.flip1, Cell256.flip2, Cell256.flip3,
-        Cell256.flip4, Cell256.flip5, Cell256.flip6]
+  simp [parity, R8.flip1, R8.flip2, R8.flip3,
+        R8.flip4, R8.flip5, R8.flip6]
   exact hex_cuo_eq_compose h
 
-end SSBX.Foundation.Bagua.Cell256Stratify
+end SSBX.Foundation.Bagua.R8Stratify
 
 /-! ## Yao XOR + Hexagram XOR 扩展（添加到 Yi.Yi 命名空间） -/
 
@@ -237,31 +237,31 @@ def xor (a b : Hexagram) : Hexagram :=
   ⟨Yao.xor a.y1 b.y1, Yao.xor a.y2 b.y2, Yao.xor a.y3 b.y3,
    Yao.xor a.y4 b.y4, Yao.xor a.y5 b.y5, Yao.xor a.y6 b.y6⟩
 
-/-- qian 为 XOR 单位元（右）. -/
-theorem xor_qian_right (a : Hexagram) : xor a Hexagram.qian = a := by
+/-- heaven 为 XOR 单位元（右）. -/
+theorem xor_qian_right (a : Hexagram) : xor a Hexagram.heaven = a := by
   rcases a with ⟨y1, y2, y3, y4, y5, y6⟩
   cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;> rfl
 
-/-- qian 为 XOR 单位元（左）. -/
-theorem xor_qian_left (a : Hexagram) : xor Hexagram.qian a = a := by
+/-- heaven 为 XOR 单位元（左）. -/
+theorem xor_qian_left (a : Hexagram) : xor Hexagram.heaven a = a := by
   rcases a with ⟨y1, y2, y3, y4, y5, y6⟩
   cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;> rfl
 
 end SSBX.Foundation.Yi.Yi.Hexagram
 
-/-! ## Shi XOR (V₄ Klein 群作用) — 扩展 Cell256.Shi 命名空间 -/
+/-! ## Shi XOR (V₄ Klein 群作用) — 扩展 R8.Shi 命名空间 -/
 
-namespace SSBX.Foundation.Bagua.Cell256.Shi
+namespace SSBX.Foundation.Bagua.R8.Shi
 
-/-- Shi V₄ XOR: 道是单位元，cuo/zong/cuoZong 是 3 个生成元.
+/-- Shi V₄ XOR: 道是单位元，complement/reverse/complementReverse 是 3 个生成元.
 
-    实现：用 cuo/zong/cuoZong 表达 V₄ 之 act. -/
+    实现：用 complement/reverse/complementReverse 表达 V₄ 之 act. -/
 def xor (a b : Shi) : Shi :=
   match a with
   | .dao => b
-  | .ji  => Shi.cuo b      -- 已 ⊕ b: 翻 past 轴
-  | .wei => Shi.zong b     -- 未 ⊕ b: 翻 future 轴
-  | .jin => Shi.cuoZong b  -- 今 ⊕ b: 翻双轴 (PT)
+  | .ji  => Shi.complement b      -- 已 ⊕ b: 翻 past 轴
+  | .wei => Shi.reverse b     -- 未 ⊕ b: 翻 future 轴
+  | .jin => Shi.complementReverse b  -- 今 ⊕ b: 翻双轴 (PT)
 
 /-- 道 是 XOR 单位元（左）. -/
 theorem xor_dao_left (s : Shi) : xor .dao s = s := rfl
@@ -279,12 +279,12 @@ theorem xor_comm (a b : Shi) : xor a b = xor b a := by
   rcases a with ⟨ya, ga⟩ <;> rcases b with ⟨yb, gb⟩ <;>
     cases ya <;> cases ga <;> cases yb <;> cases gb <;> rfl
 
-end SSBX.Foundation.Bagua.Cell256.Shi
+end SSBX.Foundation.Bagua.R8.Shi
 
-namespace SSBX.Foundation.Bagua.Cell256Stratify
+namespace SSBX.Foundation.Bagua.R8Stratify
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BenZheng
 open SSBX.Foundation.Bagua.BaguaAlgebra
 
@@ -295,7 +295,7 @@ def R8.quadrant (c : R8) : Quadrant := c.1.quadrant
 
 /-- R8 cells filtered by quadrant. -/
 def R8.quadrantList (q : Quadrant) : List R8 :=
-  Cell256.all.filter (fun c => decide (c.1.quadrant = q))
+  R8.all.filter (fun c => decide (c.1.quadrant = q))
 
 /-- |benBen 象限| × 4 时态 = 64. -/
 theorem R8.benBen_count : (R8.quadrantList .benBen).length = 64 := by native_decide
@@ -341,21 +341,21 @@ theorem R8.mian?_isSome_iff_benZheng (c : R8) :
 
 /-- shiCuo / shiZong 保 quadrant (Shi 不动 hex). -/
 theorem shiCuo_preserves_quadrant (c : R8) :
-    R8.quadrant (Cell256.shiCuo c) = R8.quadrant c := by
+    R8.quadrant (R8.shiCuo c) = R8.quadrant c := by
   rcases c with ⟨h, s⟩; rfl
 
 theorem shiZong_preserves_quadrant (c : R8) :
-    R8.quadrant (Cell256.shiZong c) = R8.quadrant c := by
+    R8.quadrant (R8.shiZong c) = R8.quadrant c := by
   rcases c with ⟨h, s⟩; rfl
 
-/-- parity (= cuo lift) 保 quadrant. -/
+/-- parity (= complement lift) 保 quadrant. -/
 theorem parity_preserves_quadrant (c : R8) :
     R8.quadrant (parity c) = R8.quadrant c := by
   rcases c with ⟨h, s⟩
   simp [parity, R8.quadrant]
-  exact cuo_preserves_quadrant h
+  exact complement_preserves_quadrant h
 
-/-- timeReversal (zong + Shi.zong) 在 4 象限上的作用表. -/
+/-- timeReversal (reverse + Shi.reverse) 在 4 象限上的作用表. -/
 theorem timeReversal_quadrant (c : R8) :
     R8.quadrant (timeReversal c) =
       match R8.quadrant c with
@@ -379,39 +379,39 @@ abbrev R8Combo := Hexagram × Shi
 def R8Combo.apply (g : R8Combo) (c : R8) : R8 :=
   (Hexagram.xor g.1 c.1, Shi.xor g.2 c.2)
 
-/-- 256 元枚举 = Cell256.all. -/
-def R8Combo.all : List R8Combo := Cell256.all
+/-- 256 元枚举 = R8.all. -/
+def R8Combo.all : List R8Combo := R8.all
 
 /-- |R8Combo| = 256. -/
-theorem R8Combo.all_length : R8Combo.all.length = 256 := Cell256.all_length
+theorem R8Combo.all_length : R8Combo.all.length = 256 := R8.all_length
 
-/-- apply 在 anchor (qian, dao) 上的特化：(g_h, g_s) ↦ (g_h, g_s)
-    即 (qian, dao) 是 V₄ × (Z/2)⁶ 之 identity. -/
+/-- apply 在 anchor (heaven, dao) 上的特化：(g_h, g_s) ↦ (g_h, g_s)
+    即 (heaven, dao) 是 V₄ × (Z/2)⁶ 之 identity. -/
 theorem R8Combo.apply_at_qian_dao (g : R8Combo) :
-    g.apply (Hexagram.qian, Shi.dao) = (g.1, g.2) := by
+    g.apply (Hexagram.heaven, Shi.dao) = (g.1, g.2) := by
   rcases g with ⟨h, s⟩
   simp [R8Combo.apply, Hexagram.xor_qian_right, Shi.xor_dao_right]
 
-/-- **Surjectivity**：∀ c : R8, ∃ g, g.apply (qian, dao) = c. -/
+/-- **Surjectivity**：∀ c : R8, ∃ g, g.apply (heaven, dao) = c. -/
 theorem R8Combo.apply_qian_dao_surjective (c : R8) :
-    ∃ g : R8Combo, g.apply (Hexagram.qian, Shi.dao) = c := by
+    ∃ g : R8Combo, g.apply (Hexagram.heaven, Shi.dao) = c := by
   rcases c with ⟨h, s⟩
   refine ⟨(h, s), ?_⟩
   exact R8Combo.apply_at_qian_dao (h, s)
 
-/-- **Injectivity**：apply (qian, dao) 是 R8Combo → R8 的 injection. -/
+/-- **Injectivity**：apply (heaven, dao) 是 R8Combo → R8 的 injection. -/
 theorem R8Combo.apply_qian_dao_injective :
-    Function.Injective (fun g : R8Combo => g.apply (Hexagram.qian, Shi.dao)) := by
+    Function.Injective (fun g : R8Combo => g.apply (Hexagram.heaven, Shi.dao)) := by
   intro g1 g2 heq
   rcases g1 with ⟨h1, s1⟩
   rcases g2 with ⟨h2, s2⟩
   simp [R8Combo.apply_at_qian_dao] at heq
   exact Prod.mk.injEq _ _ _ _ |>.mpr heq
 
-/-- **Simply transitive**：对任意 c : R8，存在唯一的 g 满足 g.apply (qian, dao) = c. -/
+/-- **Simply transitive**：对任意 c : R8，存在唯一的 g 满足 g.apply (heaven, dao) = c. -/
 theorem R8Combo.apply_qian_dao_simply_transitive (c : R8) :
-    ∃ g : R8Combo, g.apply (Hexagram.qian, Shi.dao) = c
-      ∧ ∀ g' : R8Combo, g'.apply (Hexagram.qian, Shi.dao) = c → g' = g := by
+    ∃ g : R8Combo, g.apply (Hexagram.heaven, Shi.dao) = c
+      ∧ ∀ g' : R8Combo, g'.apply (Hexagram.heaven, Shi.dao) = c → g' = g := by
   obtain ⟨g, hg⟩ := R8Combo.apply_qian_dao_surjective c
   refine ⟨g, hg, ?_⟩
   intro g' hg'
@@ -422,22 +422,22 @@ theorem R8Combo.apply_qian_dao_simply_transitive (c : R8) :
 /-- flip1 (= dongInner lift) 对应 R8Combo (⟨yin,yang,yang,yang,yang,yang⟩, dao). -/
 theorem R8Combo.flip1_combo (c : R8) :
     R8Combo.apply (⟨.yin, .yang, .yang, .yang, .yang, .yang⟩, Shi.dao) c
-      = Cell256.flip1 c := by
+      = R8.flip1 c := by
   rcases c with ⟨⟨y1, y2, y3, y4, y5, y6⟩, s⟩
   cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
     cases s <;> rfl
 
-/-- shiCuo 对应 R8Combo (qian, ji) — Shi P-flip, hex 不动. -/
+/-- shiCuo 对应 R8Combo (heaven, ji) — Shi P-flip, hex 不动. -/
 theorem R8Combo.shiCuo_combo (c : R8) :
-    R8Combo.apply (Hexagram.qian, Shi.ji) c = Cell256.shiCuo c := by
+    R8Combo.apply (Hexagram.heaven, Shi.ji) c = R8.shiCuo c := by
   rcases c with ⟨h, s⟩
-  simp [R8Combo.apply, Cell256.shiCuo, Shi.xor, Hexagram.xor_qian_left]
+  simp [R8Combo.apply, R8.shiCuo, Shi.xor, Hexagram.xor_qian_left]
 
-/-- shiZong 对应 R8Combo (qian, wei). -/
+/-- shiZong 对应 R8Combo (heaven, wei). -/
 theorem R8Combo.shiZong_combo (c : R8) :
-    R8Combo.apply (Hexagram.qian, Shi.wei) c = Cell256.shiZong c := by
+    R8Combo.apply (Hexagram.heaven, Shi.wei) c = R8.shiZong c := by
   rcases c with ⟨h, s⟩
-  simp [R8Combo.apply, Cell256.shiZong, Shi.xor, Hexagram.xor_qian_left]
+  simp [R8Combo.apply, R8.shiZong, Shi.xor, Hexagram.xor_qian_left]
 
 /-! ## § 5 Position-Operator-Tree: Sheng 6 × Shi ≃ R8 -/
 
@@ -459,17 +459,17 @@ theorem R8Tree.ofR8_toR5 (t : R8Tree) : R8Tree.ofR5 (R8Tree.toR5 t) = t := by
 
 /-- R8 树之 9 层 level counts: [1, 2, 4, 8, 16, 32, 64, 128, 256]. -/
 theorem R8_tree_levels :
-    Cell256.rootTo256TreeLevelCounts = [1, 2, 4, 8, 16, 32, 64, 128, 256] := rfl
+    R8.rootTo256TreeLevelCounts = [1, 2, 4, 8, 16, 32, 64, 128, 256] := rfl
 
 theorem R8_tree_levels_sum :
-    Cell256.rootTo256TreeLevelCounts.sum = 511 :=
-  Cell256.rootTo256TreeLevelCounts_sum
+    R8.rootTo256TreeLevelCounts.sum = 511 :=
+  R8.rootTo256TreeLevelCounts_sum
 
 /-! ## § 6 xuGua extension to R8 — Hex-major × Shi-minor (4-fold) -/
 
 /-- xuGua 序扩展到 R8（Hex-major × Shi-minor: Hex_1[dao,ji,jin,wei], Hex_2[...], ...）. -/
 def xuGua256 : List R8 :=
-  Cell256.xuGua.flatMap fun h =>
+  R8.xuGua.flatMap fun h =>
     [(h, Shi.dao), (h, Shi.ji), (h, Shi.jin), (h, Shi.wei)]
 
 theorem xuGua256_length : xuGua256.length = 256 := by native_decide
@@ -478,11 +478,11 @@ theorem xuGua256_nodup : xuGua256.Nodup := by native_decide
 
 /-- xuGua256 之首：(乾, 道) — 永真起点. -/
 theorem xuGua256_head :
-    xuGua256.head? = some (Hexagram.qian, Shi.dao) := rfl
+    xuGua256.head? = some (Hexagram.heaven, Shi.dao) := rfl
 
 /-- xuGua256 之末：(未济, 未) — 开放未来终点. -/
 theorem xuGua256_last :
-    xuGua256.getLast? = some (Hexagram.weiji, Shi.wei) := by native_decide
+    xuGua256.getLast? = some (Hexagram.incomplete, Shi.wei) := by native_decide
 
 /-- xuGua256 后继：Shi 内 V₄ 序（道→已→今→未），未→外跳到下卦的「道」. -/
 def xuGuaNext256 (c : R8) : Option R8 :=
@@ -490,7 +490,7 @@ def xuGuaNext256 (c : R8) : Option R8 :=
   | .dao => some (c.1, Shi.ji)
   | .ji  => some (c.1, Shi.jin)
   | .jin => some (c.1, Shi.wei)
-  | .wei => (Cell256.xuGuaNext c.1).map fun h' => (h', Shi.dao)
+  | .wei => (R8.xuGuaNext c.1).map fun h' => (h', Shi.dao)
 
 /-! ## § 7 R8 Closure 摘要定理 -/
 
@@ -499,16 +499,16 @@ def xuGuaNext256 (c : R8) : Option R8 :=
   这是 yi-as-meta-framework.md § 4.1 R8 层之 Lean 落地之公开 hand-off 接口. -/
 theorem R8_complete :
     -- (1) 基数 256
-    (Cell256.all : List R8).length = 256
+    (R8.all : List R8).length = 256
     -- (2) R-hierarchy: R8 = R6 × Shi (definitional)
     ∧ (∀ c : R8, c = (c.1, c.2))
     -- (3) 算子 P/T/Y closure
     ∧ (∀ c : R8, parity (parity c) = c)
     ∧ (∀ c : R8, timeReversal (timeReversal c) = c)
     ∧ (∀ c : R8, parity (timeReversal c) = timeReversal (parity c))
-    -- (4) 群作用 (Z/2)⁸ simply transitive on R8（经 anchor (qian, dao)）
-    ∧ Function.Injective (fun g : R8Combo => g.apply (Hexagram.qian, Shi.dao))
-    ∧ (∀ c : R8, ∃ g : R8Combo, g.apply (Hexagram.qian, Shi.dao) = c)
+    -- (4) 群作用 (Z/2)⁸ simply transitive on R8（经 anchor (heaven, dao)）
+    ∧ Function.Injective (fun g : R8Combo => g.apply (Hexagram.heaven, Shi.dao))
+    ∧ (∀ c : R8, ∃ g : R8Combo, g.apply (Hexagram.heaven, Shi.dao) = c)
     -- (5) BenZheng 投影 + Mian 特权
     ∧ (∀ c : R8, (R8.mian? c).isSome = true ↔ c.1.quadrant = .benZheng)
     -- (6) 位置-算子树双射
@@ -516,7 +516,7 @@ theorem R8_complete :
     -- (7) xuGua extension to R8
     ∧ xuGua256.length = 256
     ∧ xuGua256.Nodup :=
-  ⟨Cell256.all_length,
+  ⟨R8.all_length,
    fun c => by rcases c with ⟨_, _⟩; rfl,
    parity_parity,
    timeReversal_timeReversal,
@@ -535,4 +535,4 @@ theorem R8_complete :
 
 #print axioms R8_complete
 
-end SSBX.Foundation.Bagua.Cell256Stratify
+end SSBX.Foundation.Bagua.R8Stratify

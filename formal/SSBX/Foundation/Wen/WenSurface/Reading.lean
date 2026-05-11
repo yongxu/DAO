@@ -18,7 +18,7 @@ Hex/Bool denotation。
 -/
 import SSBX.Foundation.Wen.WenSurface.Lex
 import SSBX.Foundation.Wen.WenSurface.Semantics
-import SSBX.Foundation.Bagua.Cell256
+import SSBX.Foundation.Bagua.R8
 import SSBX.Text.OperatorAnchors
 import SSBX.Text.OperatorReadings
 import SSBX.Foundation.Yi.YiCore
@@ -30,7 +30,7 @@ open SSBX.Text.WenyanOperators
 open SSBX.Text.OperatorReadings
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Yi.YiCore
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Text.OperatorAnchors
 
 /-! ## § 1  Resolved 类型 -/
@@ -80,7 +80,7 @@ def surfaceVarNames : List String :=
 def resolveVarName : Glyph → Option String
   | g => if surfaceVarNames.contains g then some g else none
 
-/-- Canonical surface hexagram names, aligned with `Cell256.xuGua`.
+/-- Canonical surface hexagram names, aligned with `R8.xuGua`.
     The traditional `鼎` is retained as an alias; the default single-glyph
     surface for hexagram 50 is `器` to avoid the unpromoted gap-form conflict. -/
 def canonicalHexNames : List String :=
@@ -505,13 +505,13 @@ example :
     opIdsOf "推 一" = some [some OperatorId.T_10, none] :=
   by native_decide
 
-/-- 「乾」 → hexConst Hexagram.qian. -/
+/-- 「乾」 → hexConst Hexagram.heaven. -/
 example : opIdsOf "乾" = some [none] := by native_decide
 
-/-- 「坤」 → hexConst Hexagram.kun. -/
+/-- 「坤」 → hexConst Hexagram.earth. -/
 example : opIdsOf "坤" = some [none] := by native_decide
 
-/-- 「推 乾」 → T_10 + qian. -/
+/-- 「推 乾」 → T_10 + heaven. -/
 example : opIdsOf "推 乾" = some [some OperatorId.T_10, none] := by native_decide
 
 /-- 「推 之 一」 → T_10 + appMarker + 一. -/
@@ -571,8 +571,8 @@ theorem hexNameAliasSurfaces_lex_as_single :
   native_decide
 
 example : resolveHexConst "一" = some «一»          := by native_decide
-example : resolveHexConst "乾" = some Hexagram.qian := by native_decide
-example : resolveHexConst "坤" = some Hexagram.kun  := by native_decide
+example : resolveHexConst "乾" = some Hexagram.heaven := by native_decide
+example : resolveHexConst "坤" = some Hexagram.earth  := by native_decide
 example : resolveHexConst "大壯" = resolveHexConst "大壮" := by native_decide
 example : resolveHexConst "器" = resolveHexConst "鼎" := by native_decide
 example : resolveHexConst "推" = none               := by native_decide

@@ -14,8 +14,8 @@ some Lean-definable Bool functions correspond to no YiInstr program.
 1.  Define `YiComputable decide` — a precise computability witness via YiInstr.
 2.  State `YiKleeneInverter` for `YiComputable` deciders (provable conditional
     on universal interpreter + s-m-n; foundation in `WenyanSelfInterp.lean`).
-3.  Show the current cuo-invariant `KleeneInverter` ⟸
-    `YiKleeneInverter` ∧ cuo-restricted `Church-Turing`.
+3.  Show the current complement-invariant `KleeneInverter` ⟸
+    `YiKleeneInverter` ∧ complement-restricted `Church-Turing`.
 
 This file delivers parts (1) and (3) rigorously, plus the formal statement of
 the remaining engineering (2) as a `Prop` so its dependency is explicit.
@@ -36,7 +36,7 @@ the remaining engineering (2) as a `Prop` so its dependency is explicit.
   interfaces that remain between the primitives and `YiKleeneInverter`.
 - `yi_kleene_from_fixedpoint_and_inverter`: proved assembly of those interfaces.
 - `kleene_inverter_via_yi_kleene`: structural reduction from
-  `YiKleeneInverter ∧ cuo-restricted Church-Turing ⇒ KleeneInverter`.
+  `YiKleeneInverter ∧ complement-restricted Church-Turing ⇒ KleeneInverter`.
 - `path_to_zero_axiom`: the full chain — given primitives + diagonal
   construction + Church-Turing, the original axiom is a theorem.
 
@@ -49,7 +49,7 @@ the remaining engineering (2) as a `Prop` so its dependency is explicit.
   `WenyanSelfInterp.lean § 6b` for the existing partial scaffold.
 
 - The current `SmnSpec` is intentionally an explicit strong assumption.  The
-  existing `YiInstr` core has no `Cell256` literal instruction or safe
+  existing `YiInstr` core has no `R8` literal instruction or safe
   empty-stack test, so a generic "push arbitrary cells, then continue" prefix
   is not currently justified by the instruction set alone.
 
@@ -65,7 +65,7 @@ import SSBX.Foundation.Bagua.GodelLi
 namespace SSBX.Foundation.Bagua.KleeneInternal
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
 open SSBX.Foundation.Bagua.GodelLi
@@ -75,7 +75,7 @@ open SSBX.Foundation.Bagua.GodelLi
 /-- Initial YiState with custom history (the "input tape").  Standard
     `YiState.init` sets history := [].  For meta-interpretation, we need the
     input encoding to be present at startup. -/
-def RunWith (h : Hexagram) (prog : List YiInstr) (input : List Cell256) : YiState :=
+def RunWith (h : Hexagram) (prog : List YiInstr) (input : List R8) : YiState :=
   { cur := (h, Shi.jin), history := input, pc := 0, prog := prog, halted := false }
 
 /-- `RunWith` agrees with `YiState.init` when input is empty. -/
@@ -83,7 +83,7 @@ theorem runWith_empty (h : Hexagram) (prog : List YiInstr) :
     RunWith h prog [] = YiState.init h prog := rfl
 
 /-- Halting predicate for a state with custom input. -/
-def HaltsWith (prog : List YiInstr) (h : Hexagram) (input : List Cell256) : Prop :=
+def HaltsWith (prog : List YiInstr) (h : Hexagram) (input : List R8) : Prop :=
   ∃ n : Nat, ((RunWith h prog input).runFuel n).halted = true
 
 /-- For empty input, `HaltsWith` reduces to `Halts`. -/
@@ -119,12 +119,12 @@ def ProgLenBounded (P : List YiInstr) : Prop :=
 
 /-- A length-delimited program input: first encode `P.length`, then the raw
     program body. -/
-def LenProgInput (P : List YiInstr) : List Cell256 :=
+def LenProgInput (P : List YiInstr) : List R8 :=
   YiInstrEnc.encNat P.length ++ ProgEnc.encProg P
 
 /-- Lean-side decoder for `LenProgInput`: read the instruction count, then
     decode exactly that many instructions. -/
-def decLenProgInput (input : List Cell256) : Option (List YiInstr × List Cell256) :=
+def decLenProgInput (input : List R8) : Option (List YiInstr × List R8) :=
   match YiInstrEnc.decNat input with
   | some (n, rest) => ProgEnc.decInstrs n rest
   | none => none
@@ -289,7 +289,7 @@ theorem universalInterpSpec_empty_input {U : List YiInstr}
 /-! ### § 4.1 Bounded universal interpreter spec
 
   The realisable variant: `U` correctly simulates `P` on `h` for every
-  bounded `P` (length-prefix and jump targets within one Cell256).  Pure
+  bounded `P` (length-prefix and jump targets within one R8).  Pure
   YiInstr cannot realise the unbounded variant because the ISA lacks
   multiplication, but the Lean-side universe of programs we ever construct
   in this codebase satisfies the bound. -/
@@ -323,23 +323,23 @@ theorem universalInterpExists_to_bounded :
     `P` would when run with `input_cells` already on its history.
 
     A tempting implementation is `subst P input = pushList input ++ P`, but
-    this is not currently available for arbitrary `Cell256`: `YiInstr` has
+    this is not currently available for arbitrary `R8`: `YiInstr` has
     relative hex transformations and `setShi`, not hex literals or absolute
     yao tests.  Proving this spec therefore needs either a new literal/macro
     layer, or a different self-encoding construction.
 
     Together with `UniversalInterpExists`, this gives Kleene's recursion. -/
-def SmnSpec (subst : List YiInstr → List Cell256 → List YiInstr) : Prop :=
-  ∀ (P : List YiInstr) (input : List Cell256) (h : Hexagram),
+def SmnSpec (subst : List YiInstr → List R8 → List YiInstr) : Prop :=
+  ∀ (P : List YiInstr) (input : List R8) (h : Hexagram),
     HaltsWith P h input ↔ Halts (subst P input) h
 
 /-- Existence form for an s-m-n specialization compiler witness. -/
 def SmnExists : Prop :=
-  ∃ subst : List YiInstr → List Cell256 → List YiInstr, SmnSpec subst
+  ∃ subst : List YiInstr → List R8 → List YiInstr, SmnSpec subst
 
 /-- Immediate sanity check for any s-m-n witness: specializing empty input
     cannot change halting behavior. -/
-theorem smnSpec_empty_input {subst : List YiInstr → List Cell256 → List YiInstr}
+theorem smnSpec_empty_input {subst : List YiInstr → List R8 → List YiInstr}
     (hsubst : SmnSpec subst) (P : List YiInstr) (h : Hexagram) :
     Halts (subst P []) h ↔ Halts P h :=
   (hsubst P [] h).symm.trans (haltsWith_empty P h)
@@ -415,28 +415,28 @@ theorem yi_kleene_from_primitives
 
 /-- The unrestricted Church-Turing statement for all Lean Bool functions.
     This is kept only as a named stronger interface; the axiom-removal chain
-    below deliberately uses the cuo-restricted version. -/
+    below deliberately uses the complement-restricted version. -/
 def AllLeanDecidersAreYiComputable : Prop :=
   ∀ (decide : List YiInstr → Hexagram → Bool), YiComputable decide
 
 /-- Historical public name for the Church-Turing interface used here:
-    every cuo-invariant Lean Bool decider is YiComputable.  This is the
+    every complement-invariant Lean Bool decider is YiComputable.  This is the
     version compatible with `GodelLi.KleeneInverter`, whose quantifier is also
     restricted by `CuoInvariantDecide`. -/
 def AllDecidersAreYiComputable : Prop :=
   ∀ (decide : List YiInstr → Hexagram → Bool),
     CuoInvariantDecide decide → YiComputable decide
 
-/-- The old unrestricted Church-Turing statement implies the cuo-restricted
+/-- The old unrestricted Church-Turing statement implies the complement-restricted
     interface, but the path theorem below only requires the latter. -/
 theorem all_deciders_from_all_lean_deciders :
     AllLeanDecidersAreYiComputable → AllDecidersAreYiComputable := by
   intro h_all decide _h_cuo
   exact h_all decide
 
-/-- **Structural reduction**: the (now cuo-invariant restricted)
+/-- **Structural reduction**: the (now complement-invariant restricted)
     `KleeneInverter` follows from `YiKleeneInverter` plus Church-Turing.
-    The cuo-invariance precondition is now consumed exactly where the
+    The complement-invariance precondition is now consumed exactly where the
     Church-Turing interface needs it. -/
 theorem kleene_inverter_via_yi_kleene :
     YiKleeneInverter → AllDecidersAreYiComputable → KleeneInverter := by
@@ -449,7 +449,7 @@ theorem kleene_inverter_via_yi_kleene :
   - `UniversalInterpExists`     (~ 700 lines mechanical engineering)
   - `SmnExists`                 (~ 50 lines)
   - `KleeneFromPrimitives`      (fixed-point + Bool-inverter compilers)
-  - `AllDecidersAreYiComputable` (cuo-restricted Church-Turing meta-interface)
+  - `AllDecidersAreYiComputable` (complement-restricted Church-Turing meta-interface)
 
   We deduce `KleeneInverter` as a Lean theorem, removing
   `kleene_recursion_axiom` from `GodelLi.lean`. -/
@@ -481,7 +481,7 @@ theorem kleene_internal_summary :
     (UniversalInterpExists → SmnExists → KleeneFromPrimitives → YiKleeneInverter)
     ∧ -- (5) Structural: YiKleene + Church-Turing ⇒ KleeneInverter
     (YiKleeneInverter → AllDecidersAreYiComputable → KleeneInverter)
-    ∧ -- (6) Path: primitives + cuo CT ⇒ axiom-free Kleene
+    ∧ -- (6) Path: primitives + complement CT ⇒ axiom-free Kleene
     (UniversalInterpExists → SmnExists →
        KleeneFromPrimitives → AllDecidersAreYiComputable → KleeneInverter) :=
   ⟨runWith_empty, haltsWith_empty,

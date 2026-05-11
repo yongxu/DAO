@@ -15,7 +15,7 @@ L1 layer (`WenDef.Tm`) 与 L0 internal kernel (`YiCore.«加»/«一»`) 之桥�
 Value :=
   | hexV : Hexagram → Value
   | boolV : Bool → Value
-  | cellV : Cell256 → Value
+  | cellV : R8 → Value
   | pairV : Value → Value → Value
   | listV : List Value → Value
   | closV : List (String × Value) → String → Tm → Value      -- λ closure
@@ -41,7 +41,7 @@ Value :=
 import SSBX.Foundation.Wen.WenDef
 import SSBX.Foundation.Yi.YiCore
 import SSBX.Foundation.Bagua.BaguaAlgebra
-import SSBX.Foundation.Bagua.Cell256
+import SSBX.Foundation.Bagua.R8
 
 namespace SSBX.Foundation.Wen.WenDefEval
 
@@ -49,7 +49,7 @@ open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Yi.YiCore
 open SSBX.Foundation.Wen.WenDef
 open SSBX.Foundation.Bagua.BaguaAlgebra
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 
 /-! ## § 1  Builtin 标记 -/
 
@@ -79,7 +79,7 @@ def Builtin.arity : Builtin → Nat
 inductive Value : Type
   | hexV     (h : Hexagram)                                    : Value
   | boolV    (b : Bool)                                        : Value
-  | cellV    (c : Cell256)                                     : Value
+  | cellV    (c : R8)                                     : Value
   | pairV    (a b : Value)                                     : Value
   | listV    (xs : List Value)                                 : Value
   | closV    (env : List (String × Value)) (n : String) (body : Tm) : Value
@@ -205,16 +205,16 @@ mutual
     | _+1,    .andB,   [.boolV a, .boolV b] => some (.boolV (a && b))
     | _+1,    .orB,    [.boolV a, .boolV b] => some (.boolV (a || b))
     | _+1,    .eqHex,  [.hexV a, .hexV b]   => some (.boolV (decide (a = b)))
-    | _+1,    .cuoH,   [.hexV h]            => some (.hexV h.cuo)
-    | _+1,    .zongH,  [.hexV h]            => some (.hexV h.zong)
-    | _+1,    .huH,    [.hexV h]            => some (.hexV h.hu)
-    | _+1,    .cuoZongH, [.hexV h]          => some (.hexV h.cuoZong)
+    | _+1,    .cuoH,   [.hexV h]            => some (.hexV h.complement)
+    | _+1,    .zongH,  [.hexV h]            => some (.hexV h.reverse)
+    | _+1,    .huH,    [.hexV h]            => some (.hexV h.interlace)
+    | _+1,    .cuoZongH, [.hexV h]          => some (.hexV h.complementReverse)
     | _+1,    .flip1H, [.hexV h]            => some (.hexV (dongInner h))
-    | _+1,    .flip2H, [.hexV h]            => some (.hexV (huaInner h))
-    | _+1,    .flip3H, [.hexV h]            => some (.hexV (bianInner h))
+    | _+1,    .flip2H, [.hexV h]            => some (.hexV (middleFlipInner h))
+    | _+1,    .flip3H, [.hexV h]            => some (.hexV (topFlipInner h))
     | _+1,    .flip4H, [.hexV h]            => some (.hexV (dongOuter h))
-    | _+1,    .flip5H, [.hexV h]            => some (.hexV (huaOuter h))
-    | _+1,    .flip6H, [.hexV h]            => some (.hexV (bianOuter h))
+    | _+1,    .flip5H, [.hexV h]            => some (.hexV (middleFlipOuter h))
+    | _+1,    .flip6H, [.hexV h]            => some (.hexV (topFlipOuter h))
     | _+1,    .pairH,  [.hexV a, .hexV b]   => some (.pairV (.hexV a) (.hexV b))
     | _+1,    .dupH,   [.hexV h]            => some (.pairV (.hexV h) (.hexV h))
     | _+1,    .list1H, [.hexV h]            => some (.listV [.hexV h])
@@ -222,17 +222,17 @@ mutual
     | _+1,    .list3H, [.hexV a, .hexV b, .hexV c] => some (.listV [.hexV a, .hexV b, .hexV c])
     | _+1,    .headH,  [.listV (.hexV h :: _)] => some (.hexV h)
     | _+1,    .eqCell, [.cellV a, .cellV b] => some (.boolV (decide (a = b)))
-    | _+1,    .cuoC,   [.cellV c]           => some (.cellV (Cell256.hexCuo c))
-    | _+1,    .zongC,  [.cellV c]           => some (.cellV (Cell256.hexZong c))
-    | _+1,    .huC,    [.cellV c]           => some (.cellV (Cell256.hexHu c))
-    | _+1,    .shiNextC, [.cellV c]         => some (.cellV (Cell256.shiCuo c))
-    | _+1,    .shiPrevC, [.cellV c]         => some (.cellV (Cell256.shiCuo c))
-    | _+1,    .flip1C, [.cellV c]           => some (.cellV (Cell256.flip1 c))
-    | _+1,    .flip2C, [.cellV c]           => some (.cellV (Cell256.flip2 c))
-    | _+1,    .flip3C, [.cellV c]           => some (.cellV (Cell256.flip3 c))
-    | _+1,    .flip4C, [.cellV c]           => some (.cellV (Cell256.flip4 c))
-    | _+1,    .flip5C, [.cellV c]           => some (.cellV (Cell256.flip5 c))
-    | _+1,    .flip6C, [.cellV c]           => some (.cellV (Cell256.flip6 c))
+    | _+1,    .cuoC,   [.cellV c]           => some (.cellV (R8.hexCuo c))
+    | _+1,    .zongC,  [.cellV c]           => some (.cellV (R8.hexZong c))
+    | _+1,    .huC,    [.cellV c]           => some (.cellV (R8.hexHu c))
+    | _+1,    .shiNextC, [.cellV c]         => some (.cellV (R8.shiCuo c))
+    | _+1,    .shiPrevC, [.cellV c]         => some (.cellV (R8.shiCuo c))
+    | _+1,    .flip1C, [.cellV c]           => some (.cellV (R8.flip1 c))
+    | _+1,    .flip2C, [.cellV c]           => some (.cellV (R8.flip2 c))
+    | _+1,    .flip3C, [.cellV c]           => some (.cellV (R8.flip3 c))
+    | _+1,    .flip4C, [.cellV c]           => some (.cellV (R8.flip4 c))
+    | _+1,    .flip5C, [.cellV c]           => some (.cellV (R8.flip5 c))
+    | _+1,    .flip6C, [.cellV c]           => some (.cellV (R8.flip6 c))
     | fuel+1, .forallH, [p]                 =>
         some (.boolV (forallHex (fun h =>
           match applyFuel fuel p (.hexV h) with
@@ -282,7 +282,7 @@ def denoteBool (t : Tm) : Option Bool :=
   | some (.boolV b) => some b
   | _               => none
 
-def denoteCell (t : Tm) : Option Cell256 :=
+def denoteCell (t : Tm) : Option R8 :=
   match eval [] t with
   | some (.cellV c) => some c
   | _ => none
@@ -309,7 +309,7 @@ def denoteHexList (t : Tm) : Option (List Hexagram) :=
   | some (.listV xs) => valueToHexList? xs
   | _ => none
 
-def valueToCellList? : List Value → Option (List Cell256)
+def valueToCellList? : List Value → Option (List R8)
   | [] => some []
   | .cellV c :: rest =>
       match valueToCellList? rest with
@@ -317,7 +317,7 @@ def valueToCellList? : List Value → Option (List Cell256)
       | none => none
   | _ :: _ => none
 
-def denoteCellList (t : Tm) : Option (List Cell256) :=
+def denoteCellList (t : Tm) : Option (List R8) :=
   match eval [] t with
   | some (.listV xs) => valueToCellList? xs
   | _ => none
@@ -332,7 +332,7 @@ def denoteHexFun (t : Tm) (h : Hexagram) : Option Hexagram :=
   | none => none
 
 /-- Cell → Cell 之 Tm: 逐输入施 apply 取 cellV. -/
-def denoteCellFun (t : Tm) (c : Cell256) : Option Cell256 :=
+def denoteCellFun (t : Tm) (c : R8) : Option R8 :=
   match eval [] t with
   | some v =>
       match apply v (.cellV c) with
@@ -362,7 +362,7 @@ def denoteHexRel (t : Tm) (a b : Hexagram) : Option Bool :=
   | none => none
 
 /-- Cell → Cell → Bool 之 Tm: binary Cell relation denotation. -/
-def denoteCellRel (t : Tm) (a b : Cell256) : Option Bool :=
+def denoteCellRel (t : Tm) (a b : R8) : Option Bool :=
   match eval [] t with
   | some v =>
       match apply v (.cellV a) with
@@ -393,14 +393,14 @@ example : denoteHex .yi = some «一» := by native_decide
 example :
     denoteBool (.app (.app .eqHex .yi) .yi) = some true := by native_decide
 
-/-- `.eqHex .yi (.hexLit Hexagram.qian)` denotes false (qian ≠ 一). -/
+/-- `.eqHex .yi (.hexLit Hexagram.heaven)` denotes false (heaven ≠ 一). -/
 example :
-    denoteBool (.app (.app .eqHex .yi) (.hexLit Hexagram.qian))
+    denoteBool (.app (.app .eqHex .yi) (.hexLit Hexagram.heaven))
       = some false := by native_decide
 
 example :
-    denoteHexPair (.app (.app .pairH (.hexLit Hexagram.qian)) (.hexLit Hexagram.kun))
-      = some (Hexagram.qian, Hexagram.kun) := by native_decide
+    denoteHexPair (.app (.app .pairH (.hexLit Hexagram.heaven)) (.hexLit Hexagram.earth))
+      = some (Hexagram.heaven, Hexagram.earth) := by native_decide
 
 theorem pairHBody_eq_pair (a b : Hexagram) :
     denoteHexPair (.app (.app Stdlib.pairHBody (.hexLit a)) (.hexLit b)) = some (a, b) := by
@@ -411,8 +411,8 @@ theorem dupHBody_eq_dup (h : Hexagram) :
   rfl
 
 example :
-    denoteHexList (.app .list1H (.hexLit Hexagram.qian))
-      = some [Hexagram.qian] := by native_decide
+    denoteHexList (.app .list1H (.hexLit Hexagram.heaven))
+      = some [Hexagram.heaven] := by native_decide
 
 theorem list1HBody_eq_singleton (h : Hexagram) :
     denoteHexList (.app Stdlib.list1HBody (.hexLit h)) = some [h] := by
@@ -428,27 +428,27 @@ theorem list3HBody_eq_tripleList (a b c : Hexagram) :
   rfl
 
 example :
-    denoteHex (.app .headH (.app .list1H (.hexLit Hexagram.qian)))
-      = some Hexagram.qian := by native_decide
+    denoteHex (.app .headH (.app .list1H (.hexLit Hexagram.heaven)))
+      = some Hexagram.heaven := by native_decide
 
 theorem headHBody_list1_eq_id (h : Hexagram) :
     denoteHex (.app Stdlib.headHBody (.app Stdlib.list1HBody (.hexLit h))) = some h := by
   rfl
 
 example :
-    denoteCell (.cellLit (Hexagram.qian, Shi.jin)) =
-      some (Hexagram.qian, Shi.jin) := by native_decide
+    denoteCell (.cellLit (Hexagram.heaven, Shi.jin)) =
+      some (Hexagram.heaven, Shi.jin) := by native_decide
 
 example :
-    denoteCellFun .cuoC (Hexagram.qian, Shi.jin) =
-      some (Hexagram.kun, Shi.jin) := by native_decide
+    denoteCellFun .cuoC (Hexagram.heaven, Shi.jin) =
+      some (Hexagram.earth, Shi.jin) := by native_decide
 
 example :
-    denoteCellFun .shiNextC (Hexagram.qian, Shi.jin) =
-      some (Hexagram.qian, Shi.wei) := by native_decide
+    denoteCellFun .shiNextC (Hexagram.heaven, Shi.jin) =
+      some (Hexagram.heaven, Shi.wei) := by native_decide
 
 example :
-    denoteCellRel .eqCell (Hexagram.qian, Shi.jin) (Hexagram.qian, Shi.jin) =
+    denoteCellRel .eqCell (Hexagram.heaven, Shi.jin) (Hexagram.heaven, Shi.jin) =
       some true := by native_decide
 
 /-! ## § 7  Stdlib correctness — 推 ⟷ 生 -/
@@ -461,10 +461,10 @@ theorem tui_eq_sheng (h : Hexagram) :
     cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
     all_goals native_decide
 
-/-- 損 之 denotation = mod-64 减一 (即 «加» Hexagram.kun).
+/-- 損 之 denotation = mod-64 减一 (即 «加» Hexagram.earth).
     «坤».toIdx = 63；(x + 63) mod 64 = (x − 1) mod 64. -/
 theorem sun_eq_decrement (h : Hexagram) :
-    denoteHexFun Stdlib.sunBody h = some («加» Hexagram.kun h) := by
+    denoteHexFun Stdlib.sunBody h = some («加» Hexagram.earth h) := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
@@ -478,25 +478,25 @@ theorem yiBenefit_eq_sheng (h : Hexagram) :
     cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
     all_goals native_decide
 
-/-- 错 之 denotation = Hexagram.cuo. -/
+/-- 错 之 denotation = Hexagram.complement. -/
 theorem cuoBody_eq_cuo (h : Hexagram) :
-    denoteHexFun Stdlib.cuoBody h = some h.cuo := by
+    denoteHexFun Stdlib.cuoBody h = some h.complement := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
     all_goals native_decide
 
-/-- 综 之 denotation = Hexagram.zong. -/
+/-- 综 之 denotation = Hexagram.reverse. -/
 theorem zongBody_eq_zong (h : Hexagram) :
-    denoteHexFun Stdlib.zongBody h = some h.zong := by
+    denoteHexFun Stdlib.zongBody h = some h.reverse := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
     all_goals native_decide
 
-/-- 互 之 denotation = Hexagram.hu. -/
+/-- 互 之 denotation = Hexagram.interlace. -/
 theorem huBody_eq_hu (h : Hexagram) :
-    denoteHexFun Stdlib.huBody h = some h.hu := by
+    denoteHexFun Stdlib.huBody h = some h.interlace := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
@@ -504,7 +504,7 @@ theorem huBody_eq_hu (h : Hexagram) :
 
 /-- 反 在 object-transform 读法下同错. -/
 theorem fanReverseBody_eq_cuo (h : Hexagram) :
-    denoteHexFun Stdlib.fanReverseBody h = some h.cuo :=
+    denoteHexFun Stdlib.fanReverseBody h = some h.complement :=
   cuoBody_eq_cuo h
 
 theorem hexIdBody_eq_id (h : Hexagram) :
@@ -515,7 +515,7 @@ theorem hexIdBody_eq_id (h : Hexagram) :
     all_goals native_decide
 
 theorem cuoZongBody_eq_cuoZong (h : Hexagram) :
-    denoteHexFun Stdlib.cuoZongBody h = some h.cuoZong := by
+    denoteHexFun Stdlib.cuoZongBody h = some h.complementReverse := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
@@ -529,14 +529,14 @@ theorem flip1Body_eq_dongInner (h : Hexagram) :
     all_goals native_decide
 
 theorem flip2Body_eq_huaInner (h : Hexagram) :
-    denoteHexFun Stdlib.flip2Body h = some (huaInner h) := by
+    denoteHexFun Stdlib.flip2Body h = some (middleFlipInner h) := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
     all_goals native_decide
 
 theorem flip3Body_eq_bianInner (h : Hexagram) :
-    denoteHexFun Stdlib.flip3Body h = some (bianInner h) := by
+    denoteHexFun Stdlib.flip3Body h = some (topFlipInner h) := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
@@ -550,14 +550,14 @@ theorem flip4Body_eq_dongOuter (h : Hexagram) :
     all_goals native_decide
 
 theorem flip5Body_eq_huaOuter (h : Hexagram) :
-    denoteHexFun Stdlib.flip5Body h = some (huaOuter h) := by
+    denoteHexFun Stdlib.flip5Body h = some (middleFlipOuter h) := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
     all_goals native_decide
 
 theorem flip6Body_eq_bianOuter (h : Hexagram) :
-    denoteHexFun Stdlib.flip6Body h = some (bianOuter h) := by
+    denoteHexFun Stdlib.flip6Body h = some (topFlipOuter h) := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
@@ -569,7 +569,7 @@ example :
 
 /-- 「同 «一» «乾»」denotes false («一» ≠ «乾»). -/
 example :
-    denoteBool (.app (.app Stdlib.tongBody .yi) (.hexLit Hexagram.qian))
+    denoteBool (.app (.app Stdlib.tongBody .yi) (.hexLit Hexagram.heaven))
       = some false := by native_decide
 
 /-- 「不」之 denotation 即 boolean negation. -/
@@ -602,7 +602,7 @@ example :
     denoteHexRel Stdlib.neqHexBody «一» «一» = some false := by native_decide
 
 example :
-    denoteHexRel Stdlib.neqHexBody «一» Hexagram.qian = some true := by native_decide
+    denoteHexRel Stdlib.neqHexBody «一» Hexagram.heaven = some true := by native_decide
 
 example :
     denoteBool (.app Stdlib.existsHBody
@@ -624,8 +624,8 @@ example :
       (.abs "h" .hex
         (.app (.app .orB (.app (.app .eqHex (.var "h")) .yi))
           (.app (.app .orB
-            (.app (.app .eqHex (.var "h")) (.hexLit Hexagram.qian)))
-            (.app (.app .eqHex (.var "h")) (.hexLit Hexagram.kun))))))
+            (.app (.app .eqHex (.var "h")) (.hexLit Hexagram.heaven)))
+            (.app (.app .eqHex (.var "h")) (.hexLit Hexagram.earth))))))
       = some true := by native_decide
 
 example :
@@ -653,11 +653,11 @@ theorem hexApplyBody_tui_eq_sheng (h : Hexagram) :
 
 example :
     denoteHex (.app (.app Stdlib.hexApplyBody Stdlib.sunBody) .yi)
-      = some («加» Hexagram.kun «一») := by native_decide
+      = some («加» Hexagram.earth «一») := by native_decide
 
 theorem hexApplyBody_sun_eq_decrement (h : Hexagram) :
     denoteHex (.app (.app Stdlib.hexApplyBody Stdlib.sunBody) (.hexLit h)) =
-      some («加» Hexagram.kun h) := by
+      some («加» Hexagram.earth h) := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
@@ -686,12 +686,12 @@ example : «生生» 64 «一» = «一» := by exact «周而复始» «一»
 
 /-- wenyan 之 «推» 施于 «乾» 一次 = «生» «乾». -/
 example :
-    denoteHexFun Stdlib.tuiBody Hexagram.qian = some («生» Hexagram.qian) := by
+    denoteHexFun Stdlib.tuiBody Hexagram.heaven = some («生» Hexagram.heaven) := by
   native_decide
 
 /-- 由 «乾» 起 «推» 一次至 «一»（by «生施一即一»）. -/
 example :
-    denoteHexFun Stdlib.tuiBody Hexagram.qian = some «一» := by native_decide
+    denoteHexFun Stdlib.tuiBody Hexagram.heaven = some «一» := by native_decide
 
 /-! ## § 10  桥之总公示 -/
 
