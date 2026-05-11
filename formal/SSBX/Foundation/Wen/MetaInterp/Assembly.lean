@@ -1093,6 +1093,35 @@ theorem metaInterpProg_halt_opcode_current_shape_vs_step
   exact ⟨hroute.1, hroute.2.1, hroute.2.2.1, hroute.2.2.2.2,
     h_pre, h_step⟩
 
+/-- Current assembly boundary for the halt arm: dispatch plus the concrete
+    `halt` instruction sets the META VM halted, but the encoded history is
+    still the pre-step history.  Since a live simulated halt step flips the
+    encoded halted-flag cell, this route is not an exact `BlockPost` witness. -/
+theorem metaInterpProg_halt_opcode_not_blockPost_current_history
+    (regHex : Hexagram) (sim : YiState)
+    (h_halt_instr : sim.prog[sim.pc]? = some .halt)
+    (h_alive : sim.halted = false) :
+    let μ : YiState :=
+      { cur := Dispatch.haltTag
+        history := encMetaHistory regHex sim
+        pc := dispatchOffset
+        prog := metaInterpProg
+        halted := false }
+    let μ' := μ.runFuel 7
+    ¬ SSBX.Foundation.Wen.MetaInterp.ExecuteBlock.BlockPost
+        regHex sim haltOffset metaInterpProg μ' true := by
+  dsimp
+  intro h_post
+  have h_shape :=
+    metaInterpProg_halt_opcode_current_shape_vs_step regHex sim
+      h_halt_instr h_alive
+  have h_eq :
+      encMetaHistory regHex sim.step = encMetaHistory regHex sim := by
+    rw [← h_post.history, h_shape.2.2.1]
+  exact
+    SSBX.Foundation.Wen.MetaInterp.ExecuteBlock.encMetaHistory_halt_step_ne_unchanged
+      regHex sim h_halt_instr h_alive h_eq
+
 /-! ## § 6  Tier C — single-opcode end-to-end smoke
 
 Stretch goal.  Constructing a fully-encoded META start state for a

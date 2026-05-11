@@ -504,6 +504,23 @@ theorem encMetaHistory_halt_step
   -- update only affects the `[encHaltedFlag regHex sim.halted]` slot.
   rfl
 
+/-- A live simulated halt step changes the encoded halted-flag cell, so the
+    post-step encoded history is not byte-for-byte equal to the pre-step
+    encoded history. -/
+theorem encMetaHistory_halt_step_ne_unchanged
+    (regHex : Hexagram) (sim : YiState)
+    (h_halt_instr : sim.prog[sim.pc]? = some .halt)
+    (h_alive : sim.halted = false) :
+    encMetaHistory regHex sim.step ≠ encMetaHistory regHex sim := by
+  intro h
+  have h_dec := congrArg decCounter h
+  rw [encMetaHistory_halt_step regHex sim h_halt_instr h_alive] at h_dec
+  unfold encMetaHistory at h_dec
+  rw [h_alive] at h_dec
+  simp [List.append_assoc, decCounter_encCounter, encHaltedFlag,
+    haltedTrueCell, haltedFalseCell] at h_dec
+  cases h_dec
+
 /-! ## § 4  Subagent guide
 
 Each of the 10 remaining blocks should follow this template:
