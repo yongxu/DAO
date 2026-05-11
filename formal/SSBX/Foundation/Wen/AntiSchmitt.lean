@@ -41,11 +41,11 @@ def friendOrEnemy (h1 h2 : ZhongOrbit) (n : Nat) : Prop :=
   ∨ terminus (h2.states n)     -- enemy (h2 at 极)
 
 /-- **第一定理**: 在 ZhongField 内, friend-enemy 二分 之 forced choice 不成立.
-    存在 第三 option (仁): h1 ≠ h2 ∧ 双 中 ∧ ren-relation. -/
+    存在 第三 option (仁): h1 ≠ h2 ∧ 双 中 ∧ benevolence-relation. -/
 theorem friend_enemy_distinction_via_predicate
     (h1 h2 : ZhongOrbit) (n : Nat) (h_distinct : h1.states n ≠ h2.states n) :
     ¬ friendOrEnemy h1 h2 n
-    ∧ ren h1 h2 n := by
+    ∧ benevolence h1 h2 n := by
   refine ⟨?_, h_distinct⟩
   intro hfe
   rcases hfe with h_same | h_ext1 | h_ext2
@@ -116,13 +116,13 @@ theorem tongGen_no_exception
 
 /-! ## § 4  Concrete Order via 仁 — 替代结构 -/
 
-/-- **Concrete order via ren**: 多 orbit 之间 maintained ren-relation 越 时刻
+/-- **Concrete order via benevolence**: 多 orbit 之间 maintained benevolence-relation 越 时刻
     构成 真正之 政治 substrate, 而 非 友敌. 此 是 Schmitt "konkrete Ordnung"
     之 健康 reading — 不 经由 enmity, 而 经由 同根异显. -/
 def concreteOrderViaRen (h1 h2 : ZhongOrbit) (N : Nat) : Prop :=
-  ∀ n ≤ N, ren h1 h2 n
+  ∀ n ≤ N, benevolence h1 h2 n
 
-/-- **第七定理**: 若 二焦点 在 0..N 始终 ren, 则 既 无 friend-collapse 也 无 enemy-collapse. -/
+/-- **第七定理**: 若 二焦点 在 0..N 始终 benevolence, 则 既 无 friend-collapse 也 无 enemy-collapse. -/
 theorem concrete_order_via_ren
     (h1 h2 : ZhongOrbit) (N : Nat) (h_co : concreteOrderViaRen h1 h2 N) (n : Nat) (h_le : n ≤ N) :
     h1.states n ≠ h2.states n
@@ -131,12 +131,12 @@ theorem concrete_order_via_ren
   ⟨h_co n h_le, h1.inMiddle n, h2.inMiddle n⟩
 
 /-- **第八定理 (政治之本质 IS 仁, 非 enmity)**:
-    political-essence-as-ren — 给定 ZhongField (政治 之 minimum 形式),
-    任意 distinct 焦点 pair 之间 自动 是 ren-relation, 而 非 enemy. -/
+    political-essence-as-benevolence — 给定 ZhongField (政治 之 minimum 形式),
+    任意 distinct 焦点 pair 之间 自动 是 benevolence-relation, 而 非 enemy. -/
 theorem political_essence_is_ren_not_enmity
     (f : ZhongField) (n : Nat) (i j : Fin f.k)
     (h_ne : (f.orbits i).states n ≠ (f.orbits j).states n) :
-    ren (f.orbits i) (f.orbits j) n
+    benevolence (f.orbits i) (f.orbits j) n
     ∧ ¬ terminus ((f.orbits i).states n)
     ∧ ¬ terminus ((f.orbits j).states n) :=
   ⟨h_ne, (f.orbits i).inMiddle n, (f.orbits j).inMiddle n⟩

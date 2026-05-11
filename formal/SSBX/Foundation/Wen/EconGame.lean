@@ -64,7 +64,7 @@ theorem mechanism_incentive_compatibility
 
 /-- **Nash bargaining (合作博弈) 之 cooperation-as-道**:
     Nash bargaining solution 假设 cooperative 解 maximizes joint surplus.
-    在 Kernel 中, cooperation 之 形式 = `propriety` (礼-window 内 ren). 本定理
+    在 Kernel 中, cooperation 之 形式 = `propriety` (礼-window 内 benevolence). 本定理
     重述 `cooperation_cong_dao`: 礼-window 内 双方 中 + 仁. 此 是 positive-sum
     之 形式: 没有 「分蛋糕 而 必有 winner / loser」 — 而是 二者 同 在 中.  -/
 theorem nash_bargaining_cong_dao
@@ -72,7 +72,7 @@ theorem nash_bargaining_cong_dao
     (k : Nat) (hk : k ≤ m) :
     center (h1.states (n + k))
     ∧ center (h2.states (n + k))
-    ∧ ren h1 h2 (n + k) :=
+    ∧ benevolence h1 h2 (n + k) :=
   ⟨h1.inMiddle (n + k), h2.inMiddle (n + k), h_li k hk⟩
 
 /-- **Public goods provision via 礼-coordination (公共品 之 礼-维持)**:
@@ -81,7 +81,7 @@ theorem nash_bargaining_cong_dao
     center) 持续. 此 是 Olson 之 "logic of collective action" 之 positive 解.  -/
 theorem public_goods_via_liRitual
     (h1 h2 : ZhongOrbit) (n m : Nat) (h_li : propriety h1 h2 n m) :
-    ∀ k : Nat, k ≤ m → ren h1 h2 (n + k) := h_li
+    ∀ k : Nat, k ≤ m → benevolence h1 h2 (n + k) := h_li
 
 /-- **Smith 看不见的手 之 proper reading (亚当·斯密 自发秩序)**:
     Smith 之 invisible-hand 之 valid 读法 是 spontaneous order — 各 agent 自主
@@ -114,7 +114,7 @@ theorem nash_equilibrium_static_is_extreme
 /-- **Rational choice 仅 在 决策者 之 状态 已 classifiable 时 有效**:
     Rational choice theory 假设 actor 之 preference 已 totally determined.
     形式 sieve: 此 假设 = `zhi_universal` (state 已 classifiable as 中 ∨ 极).
-    在 Kernel 中, zhi 是 universal — 故 二值 form 之 rational choice 总 valid.
+    在 Kernel 中, wisdom 是 universal — 故 二值 form 之 rational choice 总 valid.
     Conditional 形式 (即 strict 「全 决定」 reading 之 限制): rational choice
     总 produces 中 ∨ 极, NEVER 显 「悬置」 之 第三 option. 此 即 二值 之 局限. -/
 theorem rational_choice_only_binary (s : Field) :
@@ -214,7 +214,7 @@ theorem universal_greed_refuted (f : ZhongField) :
     同 中 — 没有 loser. 直接 = `zero_sum_refuted_by_ren`.  -/
 theorem zero_sum_refuted
     (h1 h2 : ZhongOrbit) (n : Nat) (h_distinct : h1.states n ≠ h2.states n) :
-    center (h1.states n) ∧ center (h2.states n) ∧ ren h1 h2 n :=
+    center (h1.states n) ∧ center (h2.states n) ∧ benevolence h1 h2 n :=
   zero_sum_refuted_by_ren h1 h2 n h_distinct
 
 

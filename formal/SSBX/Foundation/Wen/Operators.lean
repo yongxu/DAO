@@ -16,15 +16,15 @@ Layer 23 (this file) presents:
 
 namespace SSBX.Foundation.Wen.Operators
 
-/-! ### S-1: 之 (zhi) — function application / possessive
+/-! ### S-1: 之 (wisdom) — function application / possessive
 
   「X 之 Y」 = "Y of X" / application of f to x.
   In Lean: f x. -/
 
-/-- 之 (zhi): function application. -/
+/-- 之 (wisdom): function application. -/
 abbrev «之» {α β : Sort _} (f : α → β) (x : α) : β := f x
 
-/-- ASCII alias: zhi. -/
+/-- ASCII alias: wisdom. -/
 abbrev zhiOp {α β : Sort _} (f : α → β) (x : α) : β := f x
 
 /-- 之 ≡ Lean's function application. -/
@@ -393,11 +393,11 @@ theorem wu_eq_not_exists {α : Sort _} (P : α → Prop) :
 theorem wu_eq_bu_you {α : Sort _} (P : α → Prop) :
     «无» P ↔ «不» («有» P) := Iff.rfl
 
-/-! ### 已 (yi-perfective) — perfective aspect
+/-! ### 已 (righteousness-perfective) — perfective aspect
 
   「已 X」 = "already X" / X has occurred. Aspect monad marker. -/
 
-/-- 已 (yi, perfective): aspect marker for completed state. -/
+/-- 已 (righteousness, perfective): aspect marker for completed state. -/
 abbrev «已» (P : Prop) : Prop := P
 
 abbrev yiPerfOp (P : Prop) : Prop := P
@@ -496,9 +496,9 @@ theorem bu_fan_eq_you_bu {α : Sort _} (P : α → Prop) :
 
 /-! ## Batch 3: instrumentals, copulas, demonstratives, iteration -/
 
-/-! ### 以 (yi) — instrumental: 「以 f 之 x」 = f applied via instrument. -/
+/-! ### 以 (righteousness) — instrumental: 「以 f 之 x」 = f applied via instrument. -/
 
-/-- 以 (yi): instrumental. 等同 application; semantic role = "by means of f, on x". -/
+/-- 以 (righteousness): instrumental. 等同 application; semantic role = "by means of f, on x". -/
 abbrev «以» {α β : Sort _} (f : α → β) (x : α) : β := f x
 abbrev yiBy {α β : Sort _} (f : α → β) (x : α) : β := f x
 theorem yi_eq_app {α β : Sort _} (f : α → β) (x : α) : «以» f x = f x := rfl
@@ -555,9 +555,9 @@ theorem fu_succ {α : Sort _} (n : Nat) (f : α → α) (x : α) :
     «复» (n+1) f x = f («复» n f x) := rfl
 theorem fu_one {α : Sort _} (f : α → α) (x : α) : «复» 1 f x = f x := rfl
 
-/-! ### 至 (zhi-reach) — bounded iteration: 「至 P f x」 = ∃ n, P (复 n f x). -/
+/-! ### 至 (wisdom-reach) — bounded iteration: 「至 P f x」 = ∃ n, P (复 n f x). -/
 
-/-- 至 (zhi-reach): existence of an iteration step satisfying P. -/
+/-- 至 (wisdom-reach): existence of an iteration step satisfying P. -/
 abbrev «至» {α : Sort _} (P : α → Prop) (f : α → α) (x : α) : Prop :=
   ∃ n : Nat, P («复» n f x)
 abbrev zhiReach {α : Sort _} (P : α → Prop) (f : α → α) (x : α) : Prop :=
@@ -565,7 +565,7 @@ abbrev zhiReach {α : Sort _} (P : α → Prop) (f : α → α) (x : α) : Prop 
 theorem zhi_reach_eq {α : Sort _} (P : α → Prop) (f : α → α) (x : α) :
     «至» P f x = (∃ n : Nat, P («复» n f x)) := rfl
 
-/-! ### 同 / 异 (tong, yi-diff) — equality / inequality. -/
+/-! ### 同 / 异 (tong, righteousness-diff) — equality / inequality. -/
 
 /-- 同 (tong): equality. 「a 同 b」 ≡ a = b. -/
 abbrev «同» {α : Sort _} (a b : α) : Prop := a = b
@@ -575,7 +575,7 @@ theorem tong_refl {α : Sort _} (a : α) : «同» a a := rfl
 theorem tong_symm {α : Sort _} {a b : α} : «同» a b → «同» b a := Eq.symm
 theorem tong_trans {α : Sort _} {a b c : α} : «同» a b → «同» b c → «同» a c := Eq.trans
 
-/-- 异 (yi-diff): inequality. 「a 异 b」 ≡ a ≠ b. -/
+/-- 异 (righteousness-diff): inequality. 「a 异 b」 ≡ a ≠ b. -/
 abbrev «异» {α : Sort _} (a b : α) : Prop := a ≠ b
 abbrev yiDiff {α : Sort _} (a b : α) : Prop := a ≠ b
 theorem yi_diff_eq_ne {α : Sort _} (a b : α) : («异» a b) = (a ≠ b) := rfl
