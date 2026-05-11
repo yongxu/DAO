@@ -1,4 +1,4 @@
-> 状态：v1.27 (2026-05-12) — Phase R/K/L 后之 self-similarity roadmap 已完成一轮形式补齐；5.1/5.2 的 R-O represented-operator self-duality 与 finite Boolean character self-duality 已 machineChecked，并补 `XorOperator` internal composition、associative/commutative/unit/self-inverse laws、mask-coordinate character XOR、OX coordinate roundtrip 与 OX full-negation operator summary；F.7c.20 已补 pc-update encoding bridges、concrete fetch-with-peel splice、exact halted/running fetch routes、halted/running fetch current-shape witnesses、instruction-indexed dispatch route wrapper、halt-opcode current-shape-vs-step witness、all-op absolute-pc dispatch routes、halt execution smoke witness、encoded-program split/decode bridge、canonical-history program-tail split bridge、restored fetch outcome constructors、zero-arity read-tag micro-witness、push/pop sim-side encoded-history bridges、aligned `nop` exact BlockPre-to-BlockPost witness、assembly-specialized aligned `nop` witness、trivial-jump exact witness、pc-increment with unchanged-history cannot satisfy `BlockPost` boundary、running fetch post-peel history is not canonical boundary、Strategy-B cur-only blocks cannot be exact `BlockPost` witnesses boundaries，以及 halt arm cannot be exact `BlockPost` witness boundary；full arbitrary-program universal compose 仍 pending，当前阻塞点是 route-only fetch/dispatch 尚未恢复 canonical semantic-state invariant，且 cur-only / halt placeholder blocks 需要真实 META history update 才能成为 exact witnesses。
+> 状态：v1.28 (2026-05-12) — Phase R/K/L 后之 self-similarity roadmap 已完成一轮形式补齐；5.1/5.2 的 R-O represented-operator self-duality 与 finite Boolean character self-duality 已 machineChecked，并补 `XorOperator` internal composition、associative/commutative/unit/self-inverse laws、mask-coordinate character XOR、OX coordinate roundtrip、coordinate-wise OX XOR、OX bit-complement 与 OX full-negation operator summary；F.7c.20 已补 pc-update encoding bridges、concrete fetch-with-peel splice、exact halted/running fetch routes、halted/running fetch current-shape witnesses、instruction-indexed dispatch route wrapper、halt-opcode current-shape-vs-step witness、all-op absolute-pc dispatch routes、halt execution smoke witness、encoded-program split/decode bridge、canonical-history program-tail split bridge、restored fetch outcome constructors、zero-arity read-tag micro-witness、push/pop sim-side encoded-history bridges、aligned `nop` exact BlockPre-to-BlockPost witness、assembly-specialized aligned `nop` witness、trivial-jump exact witness、pc-increment with unchanged-history cannot satisfy `BlockPost` boundary、running fetch post-peel history is not canonical boundary、Strategy-B cur-only blocks cannot be exact `BlockPost` witnesses boundaries，以及 halt arm cannot be exact `BlockPost` witness boundary；full arbitrary-program universal compose 仍 pending，当前阻塞点是 route-only fetch/dispatch 尚未恢复 canonical semantic-state invariant，且 cur-only / halt placeholder blocks 需要真实 META history update 才能成为 exact witnesses。
 
 # Roadmap — Self-similarity 形式化 (v1, post Phase R cutover)
 
@@ -19,7 +19,7 @@
 
 v1.1 本轮完成项：
 - `SelfSimilarity.lean` 补齐 R₁ 奠基步、R₆ 三路汇聚、R₈ ≃ R₇ × Bool。
-- `V4Tensor.lean` / `OXNotation.lean` 补齐 R₈ = R₆ × trace bit × projection bit、temporal-state-indexed R₆ slices、每个 temporal-state fiber = 64、Way (道) origin/no-op、cell-as-operator、`R8 ≃ XorOperator`、operator composition = representative XOR、internal `XorOperator` composition and algebra laws、finite Boolean character image、mask-coordinate character XOR、OX coordinate roundtrip、OX full-negation masks。
+- `V4Tensor.lean` / `OXNotation.lean` 补齐 R₈ = R₆ × trace bit × projection bit、temporal-state-indexed R₆ slices、每个 temporal-state fiber = 64、Way (道) origin/no-op、cell-as-operator、`R8 ≃ XorOperator`、operator composition = representative XOR、internal `XorOperator` composition and algebra laws、finite Boolean character image、mask-coordinate character XOR、OX coordinate roundtrip、coordinate-wise OX XOR、OX bit-complement、OX full-negation masks。
 - `Kernel.lean` / `DaoJudge.lean` 补齐 post-Cayley collapse、R₇ Lisp closure、concrete bilingual identity。
 - 新增 `ClassicalTextRHierarchyBridge.lean` 与 `QuantumR8Bridge.lean`，只证明 direct typed skeleton；Quantum 桥已含有限函数空间 `R8 → ℂ` 与 faithful regular translation，但不宣称 physical Pauli-string / unitary semantics 已完成。
 - `MetaInterp/Assembly.lean` 已有 base-256 concrete dispatch/assembly structural summary；`MetaInterp/Universal.lean` 已证明 embedded prologue U.0a、zero-step/prologue compose，并把 U.0 改成 exact-fuel no-sorry composition from explicit loop/padding semantic obligations。
@@ -214,7 +214,7 @@ v1.1 本轮完成项：
 | `V4Tensor.r8_equiv_mask_character_image` | R₈ 与 finite Boolean character image 双射 |
 | `V4Tensor.maskCharacter_xor_mask` | character 对 mask coordinate 也保持 XOR 计算 |
 | `V4Tensor.r8_negation_ox_operator_summary` | additive inverse、OX full-negation operator、自逆与 mask 分解 bundle |
-| `OXNotation.ox_coordinate_complete_summary` | eight OX bits 与 R₈ cell 双向 roundtrip |
+| `OXNotation.ox_coordinate_complete_summary` | eight OX bits 与 R₈ cell 双向 roundtrip；coordinate-wise OX XOR = R₈ XOR；full bit-complement = XOR with all-`x` mask |
 | `V4Tensor.ox_full_neg_mask_eq` | `OX["xxxxxxxx"]` 是 full 8-bit negation mask |
 | `V4Tensor.way_noop_operator` | Way (道) / origin 是 no-op operator |
 
@@ -317,7 +317,7 @@ v1.1 本轮完成项：
 | `V4Tensor.r8_operator_character_duality_summary` | closed: represented XOR operators + internal operator algebra laws + finite Boolean characters |
 | `V4Tensor.r8_character_duality_computation_summary` | closed: character XOR in both state and mask coordinates |
 | `V4Tensor.r8_negation_ox_operator_summary` | closed: additive inverse is self; full OX negation is a represented self-inverse operator |
-| `OXNotation.ox_coordinate_complete_summary` | closed: eight OX coordinates round-trip exactly with R₈ |
+| `OXNotation.ox_coordinate_complete_summary` | closed: eight OX coordinates round-trip exactly with R₈ and compute XOR/bit-complement coordinate-wise |
 | `V4Tensor.fullNegOperator_involutive` / `V4Tensor.ox_full_neg_mask_eq` | closed: full 8-bit negation and OX mask reading |
 | Lisp closure in R₇ | closed as `eval_closed_in_r7` in `DaoJudge.lean` |
 | Sexp bilingual identity | closed for concrete WayJudge (`DaoJudge.lean`) parser identities |

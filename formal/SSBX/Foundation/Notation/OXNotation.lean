@@ -123,10 +123,74 @@ theorem bitsOfCell_cellOfBits (b : OXBits8) : bitsOfCell (cellOfBits b) = b := b
     cases b3 <;> cases b4 <;> cases b5 <;>
     cases b6 <;> cases b7 <;> rfl
 
+/-- Coordinate-wise XOR on OX bit vectors. -/
+def xorBits (a b : OXBits8) : OXBits8 :=
+  { b0 := Bool.xor a.b0 b.b0
+  , b1 := Bool.xor a.b1 b.b1
+  , b2 := Bool.xor a.b2 b.b2
+  , b3 := Bool.xor a.b3 b.b3
+  , b4 := Bool.xor a.b4 b.b4
+  , b5 := Bool.xor a.b5 b.b5
+  , b6 := Bool.xor a.b6 b.b6
+  , b7 := Bool.xor a.b7 b.b7 }
+
+/-- All-eight-bit mask, the coordinate form of `OX["xxxxxxxx"]`. -/
+def fullNegBits : OXBits8 :=
+  { b0 := true, b1 := true, b2 := true, b3 := true
+  , b4 := true, b5 := true, b6 := true, b7 := true }
+
+/-- Full OX bit-complement, computed as coordinate-wise XOR with the all-`x`
+    mask. -/
+def bitComplement (b : OXBits8) : OXBits8 := xorBits b fullNegBits
+
+/-- Boolean XOR translated into the Yao coordinate agrees with R₁ XOR. -/
+theorem yaoOfBool_xor (a b : Bool) :
+    yaoOfBool (Bool.xor a b) =
+      R8.yaoXor (yaoOfBool a) (yaoOfBool b) := by
+  cases a <;> cases b <;> rfl
+
+/-- OX coordinate-wise XOR is exactly R₈ XOR after decoding. -/
+theorem cellOfBits_xorBits (a b : OXBits8) :
+    cellOfBits (xorBits a b) = R8.xor (cellOfBits a) (cellOfBits b) := by
+  rcases a with ⟨a0, a1, a2, a3, a4, a5, a6, a7⟩
+  rcases b with ⟨b0, b1, b2, b3, b4, b5, b6, b7⟩
+  simp [cellOfBits, xorBits, R8.xor, R8.hexXor, R8.shiXor,
+    yaoOfBool_xor, Shi.toYinGuo_ofYinGuo]
+
+/-- Encoding an R₈ XOR result is coordinate-wise OX XOR. -/
+theorem bitsOfCell_xor (a b : R8) :
+    bitsOfCell (R8.xor a b) = xorBits (bitsOfCell a) (bitsOfCell b) := by
+  calc
+    bitsOfCell (R8.xor a b)
+        = bitsOfCell (cellOfBits (xorBits (bitsOfCell a) (bitsOfCell b))) := by
+          rw [cellOfBits_xorBits, cellOfBits_bitsOfCell, cellOfBits_bitsOfCell]
+    _ = xorBits (bitsOfCell a) (bitsOfCell b) :=
+          bitsOfCell_cellOfBits (xorBits (bitsOfCell a) (bitsOfCell b))
+
+/-- Decoding the all-`x` coordinate mask gives the full R₈ negation mask. -/
+theorem cellOfBits_fullNegBits :
+    cellOfBits fullNegBits = (Hexagram.earth, Shi.jin) := rfl
+
+/-- Full OX bit-complement is R₈ XOR with the all-eight-bit mask. -/
+theorem cellOfBits_bitComplement (b : OXBits8) :
+    cellOfBits (bitComplement b) =
+      R8.xor (cellOfBits b) (Hexagram.earth, Shi.jin) := by
+  rw [bitComplement, cellOfBits_xorBits, cellOfBits_fullNegBits]
+
 theorem ox_coordinate_complete_summary :
     (∀ c : R8, cellOfBits (bitsOfCell c) = c)
-    ∧ (∀ b : OXBits8, bitsOfCell (cellOfBits b) = b) :=
-  ⟨cellOfBits_bitsOfCell, bitsOfCell_cellOfBits⟩
+    ∧ (∀ b : OXBits8, bitsOfCell (cellOfBits b) = b)
+    ∧ (∀ a b : OXBits8,
+        cellOfBits (xorBits a b) = R8.xor (cellOfBits a) (cellOfBits b))
+    ∧ (∀ a b : R8,
+        bitsOfCell (R8.xor a b) = xorBits (bitsOfCell a) (bitsOfCell b))
+    ∧ cellOfBits fullNegBits = (Hexagram.earth, Shi.jin)
+    ∧ (∀ b : OXBits8,
+        cellOfBits (bitComplement b) =
+          R8.xor (cellOfBits b) (Hexagram.earth, Shi.jin)) :=
+  ⟨cellOfBits_bitsOfCell, bitsOfCell_cellOfBits,
+   cellOfBits_xorBits, bitsOfCell_xor,
+   cellOfBits_fullNegBits, cellOfBits_bitComplement⟩
 
 /-! ## § 2 Macro `OX["..."]` — parse-time validation + R8 term -/
 
