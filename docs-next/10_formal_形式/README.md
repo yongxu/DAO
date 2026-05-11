@@ -6,7 +6,7 @@
 
 - `Foundation/Wen/Kernel.lean` 给出「一」的封装见证，并投影出 `Field`、`dong`、`origin`、`origin_alive`。
 - `Foundation/Core/` 承担单根、构造主干、价值递归、注意、人对齐等核心结构。
-- `Foundation/Bagua/` 承担八卦、`Cell192`、BaguaTuring、Kleene/Rice/GodelLi 边界。
+- `Foundation/Bagua/` 承担八卦、Cell256 / R₀..R₈ strict spine、BaguaTuring、Kleene/Rice/GodelLi 边界。
 - `Text/` 承担字、算子、义位与覆盖性账本。
 - `Truth/` 与 `Model/` 承担 claim ledger、语义、充足模型原则与体系内真理口径。
 
@@ -36,9 +36,11 @@
 - [truth-model.md](./truth-model.md)：truth、claim ledger 与 model adequacy。
 - [foundation-core.md](./foundation-core.md)：核心 foundation 各文件的读法。
 - [root-layer-map.md](./root-layer-map.md)：底层 root 几层的生成线、名册线、内容线、关系与算子总图。
+- [r8-root-language-tree.md](./r8-root-language-tree.md)：R₀..R₈ root language tree、1021/1022 口径、root-rule roadmap。
+- [root-language-tree/README.md](./root-language-tree/README.md)：1022-entry 文言 / 中文 / English / formal logic 审阅包。
 - [wen.md](./wen.md)：`Foundation/Wen`、文言微核、自释与 quine 路线。
 - [jian.md](./jian.md)：`Foundation/Jian` 的间、本体与 STLC 桥。
-- [yi-bagua.md](./yi-bagua.md)：易、八卦、Cell192、BaguaTuring 与不完备边界。
+- [yi-bagua.md](./yi-bagua.md)：易、八卦、Cell256、BaguaTuring 与不完备边界。
 - [eight.md](./eight.md)：八衍模块与现代专题之间的中层接口。
 - [modern.md](./modern.md)：现代数学、概率、逻辑、物理与神经接口。
 - [pending.md](./pending.md)：pending interface 的经验边界。

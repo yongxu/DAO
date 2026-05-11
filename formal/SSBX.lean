@@ -18,6 +18,8 @@ import SSBX.Text.OperatorReachabilitySemantics
 import SSBX.Text.OperatorInstructionSemantics
 import SSBX.Text.OperatorCellCandidateSemantics
 import SSBX.Text.OperatorCellSemantics
+import SSBX.Text.ExactCellTransformGenerator
+import SSBX.Text.OperatorCatalogueLayering
 import SSBX.Text.Completeness
 
 -- 真 / 模型 层
@@ -49,6 +51,12 @@ import SSBX.Foundation.Core.Renlei
 import SSBX.Foundation.Wen.Operators
 import SSBX.Foundation.Wen.Kernel
 import SSBX.Foundation.Wen.WenyanText
+import SSBX.Foundation.Wen.R8ProjectionCalculus
+import SSBX.Foundation.Wen.R8ProjectionKernel
+import SSBX.Foundation.Wen.RootRuleKernel
+import SSBX.Foundation.Wen.R8AxisIndependence
+import SSBX.Foundation.Wen.RootRuleExamples
+import SSBX.Foundation.Wen.RootRuleDemoInterpreter
 import SSBX.Foundation.Wen.WenyanSelfInterp
 import SSBX.Foundation.Wen.MetaInterp
 import SSBX.Foundation.Wen.MetaInterp.SkipInstr

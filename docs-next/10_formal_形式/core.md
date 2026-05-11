@@ -66,6 +66,8 @@ R₈ / Cell256 spine（v3 sibling docs，本轮并行写入）：
 - [ox-notation.md](ox-notation.md) — `OX["..."]` 8-char 字面 macro
 - [operator-split.md](operator-split.md) — atomic inner/outer 算子拆分
 - [lift-project.md](lift-project.md) — R₀..R₈ Lift / Project pairs
+- [r8-root-language-tree.md](r8-root-language-tree.md) — R₀..R₈ root language tree、1021/1022 口径、root-rule roadmap
+- [root-language-tree/README.md](root-language-tree/README.md) — 1022-entry 文言 / 中文 / English / formal logic 审阅包
 
 R-line 与字根：
 

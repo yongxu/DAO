@@ -13,7 +13,8 @@ One-stop import for the entire R-index navigation surface:
   R₇ YinHex     — Hexagram × YinBit (R7), |·| = 128 = (Z/2)⁷
   R₈ GuoHex     — Hexagram × Shi (R8), |·| = 256 = (Z/2)⁸
 
-Plus the cross-cutting Lift/Project pairs and atomic / V₄-outer operators.
+Plus the cross-cutting Lift/Project pairs, root-language-tree bookkeeping,
+and atomic / V₄-outer operators.
 
 Each R_n_*.lean file is a thin re-export shim providing R-index naming
 (no new logic).  Modules that already live in `Hierarchy/` (R5_Wuyao,
@@ -33,5 +34,6 @@ import SSBX.Foundation.Hierarchy.R8_GuoHex
 
 -- Cross-cutting structure
 import SSBX.Foundation.Hierarchy.LiftProject
+import SSBX.Foundation.Hierarchy.RootLanguageTree
 import SSBX.Foundation.Hierarchy.Operators.Atomic
 import SSBX.Foundation.Hierarchy.Operators.V4Outer
