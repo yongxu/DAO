@@ -116,23 +116,23 @@ theorem proj_lift_id_R2 (s : R2) (y3 : Yao) :
 
 /-- Yao² → Ben canonical bijection.
     (yang, yang) → thing   / (yang, yin) → motion
-    (yin,  yang) → interval / (yin,  yin) → shi -/
+    (yin,  yang) → interval / (yin,  yin) → event -/
 def benFromYao (y1 y2 : Yao) : Ben :=
   match y1, y2 with
   | .yang, .yang => .thing
   | .yang, .yin  => .motion
   | .yin,  .yang => .interval
-  | .yin,  .yin  => .shi
+  | .yin,  .yin  => .event
 
 /-- Ben → Yao² inverse: extract the first bit. -/
 def benToYao1 : Ben → Yao
   | .thing | .motion => .yang
-  | .interval | .shi => .yin
+  | .interval | .event => .yin
 
 /-- Ben → Yao² inverse: extract the second bit. -/
 def benToYao2 : Ben → Yao
   | .thing | .interval => .yang
-  | .motion | .shi => .yin
+  | .motion | .event => .yin
 
 theorem benFromYao_yao1 (y1 y2 : Yao) : benToYao1 (benFromYao y1 y2) = y1 := by
   cases y1 <;> cases y2 <;> rfl

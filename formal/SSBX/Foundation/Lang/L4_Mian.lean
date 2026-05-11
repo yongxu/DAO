@@ -11,7 +11,7 @@ encoding. 4 atomic single-bit-flip masks span the group.
 Ben.thing   ↔ (F,F)    Zheng.trace    ↔ (F,F)
 Ben.motion ↔ (T,F)    Zheng.momentum   ↔ (T,F)
 Ben.interval ↔ (F,T)    Zheng.pivot ↔ (F,T)
-Ben.shi  ↔ (T,T)    Zheng.occasion    ↔ (T,T)
+Ben.event  ↔ (T,T)    Zheng.occasion    ↔ (T,T)
 ```
 
 XOR is per-component `xor`. Origin = `(thing, trace)` = (F,F,F,F).
@@ -45,14 +45,14 @@ def benToBits : Ben → Bool × Bool
   | .thing   => (false, false)
   | .motion => (true,  false)
   | .interval => (false, true)
-  | .shi  => (true,  true)
+  | .event  => (true,  true)
 
 /-- (Bool, Bool) → Ben. -/
 def benFromBits : Bool × Bool → Ben
   | (false, false) => .thing
   | (true,  false) => .motion
   | (false, true)  => .interval
-  | (true,  true)  => .shi
+  | (true,  true)  => .event
 
 /-- Zheng → (Bool, Bool). -/
 def zhengToBits : Zheng → Bool × Bool
@@ -173,11 +173,11 @@ def benDongAdvance : Rule :=
     (mianSexp .motion .trace)
     (mianSexp .motion .momentum)
 
-/-- Compound example: 动势 → 事势 (climb Ben column from motion to shi). -/
+/-- Compound example: 动势 → 事势 (climb Ben column from motion to event). -/
 def zhengShiForceClimb : Rule :=
   Rule.named "zheng-shiforce-climb"
     (mianSexp .motion .momentum)
-    (mianSexp .shi  .momentum)
+    (mianSexp .event  .momentum)
 
 /-- Default rule list at L4: 4 atomic flips + 2 compound steps. -/
 def defaultRules : List Rule :=
@@ -199,7 +199,7 @@ example :
 /-- Three steps reach (事, 势). -/
 example :
     (Eval.runRules defaultRules (printCell origin) 3
-      == printCell (.shi, .momentum)) = true := by
+      == printCell (.event, .momentum)) = true := by
   native_decide
 
 /-- runCell convenience produces an OK result. -/

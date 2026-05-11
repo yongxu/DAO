@@ -10,8 +10,8 @@ where ⊕ on Mian is componentwise XOR over (Ben × Zheng) ≅ (Z/2)⁴.
 
 ## Atomic operators (5 single-bit flips)
 
-  flipBenLo  — flip the low bit of Ben    (thing/motion ↔ interval/shi axis)
-  flipBenHi  — flip the high bit of Ben   (thing/interval ↔ motion/shi axis)
+  flipBenLo  — flip the low bit of Ben    (thing/motion ↔ interval/event axis)
+  flipBenHi  — flip the high bit of Ben   (thing/interval ↔ motion/event axis)
   flipZhengLo — flip the low bit of Zheng (trace/momentum ↔ pivot/occasion)
   flipZhengHi — flip the high bit of Zheng (trace/pivot ↔ momentum/occasion)
   flip5      — flip the 5th-yao Bool bit
@@ -38,12 +38,12 @@ abbrev Cell : Type := Wuyao
 
 /-! ## § 2 (Z/2)⁵ XOR — componentwise -/
 
-/-- XOR on Ben (4 elements as (Z/2)²): thing=00, motion=01, interval=10, shi=11. -/
+/-- XOR on Ben (4 elements as (Z/2)²): thing=00, motion=01, interval=10, event=11. -/
 def Ben.xor : Ben → Ben → Ben
   | .thing,   y => y
-  | .motion, .thing => .motion | .motion, .motion => .thing | .motion, .interval => .shi | .motion, .shi => .interval
-  | .interval, .thing => .interval | .interval, .motion => .shi | .interval, .interval => .thing | .interval, .shi => .motion
-  | .shi,  .thing => .shi  | .shi,  .motion => .interval | .shi, .interval => .motion | .shi, .shi => .thing
+  | .motion, .thing => .motion | .motion, .motion => .thing | .motion, .interval => .event | .motion, .event => .interval
+  | .interval, .thing => .interval | .interval, .motion => .event | .interval, .interval => .thing | .interval, .event => .motion
+  | .event,  .thing => .event  | .event,  .motion => .interval | .event, .interval => .motion | .event, .event => .thing
 
 /-- XOR on Zheng (4 elements as (Z/2)²): trace=00, momentum=01, pivot=10, occasion=11. -/
 def Zheng.xor : Zheng → Zheng → Zheng
@@ -102,10 +102,10 @@ theorem print_parse_round_trip (c : Cell) : parseCell (printCell c) = .ok c := b
 
 /-! ## § 5 Atomic operators (5 single-bit flips) -/
 
-/-- Flip the low bit of Ben (thing↔motion, interval↔shi). -/
+/-- Flip the low bit of Ben (thing↔motion, interval↔event). -/
 def flipBenLo : Cell := ((.motion, .trace), false)
 
-/-- Flip the high bit of Ben (thing↔interval, motion↔shi). -/
+/-- Flip the high bit of Ben (thing↔interval, motion↔event). -/
 def flipBenHi : Cell := ((.interval, .trace), false)
 
 /-- Flip the low bit of Zheng (trace↔momentum, pivot↔occasion). -/

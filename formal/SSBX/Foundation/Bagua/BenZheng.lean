@@ -6,7 +6,7 @@
 ## 结构
 
   4 本 (substrates, palindromic) ↔ {heaven, fire, water, earth}
-    Ben.thing (物), Ben.motion (動), Ben.interval (間), Ben.shi (事)
+    Ben.thing (物), Ben.motion (動), Ben.interval (間), Ben.event (事)
 
   4 征 (marks, directional) ↔ {wind, thunder, lake, mountain}
     Zheng.trace (幾), Zheng.momentum (勢), Zheng.pivot (機), Zheng.occasion (時)
@@ -46,31 +46,31 @@ inductive Ben : Type
   | thing     -- 物
   | motion   -- 動
   | interval   -- 間
-  | shi    -- 事
+  | event    -- 事
   deriving Repr, DecidableEq, BEq
 
 namespace Ben
 
-def all : List Ben := [.thing, .motion, .interval, .shi]
+def all : List Ben := [.thing, .motion, .interval, .event]
 
 /-- 本 → trigram 双射: 物→乾, 動→离, 間→坎, 事→坤. -/
 def toTrigram : Ben → Trigram
   | .thing   => Trigram.heaven
   | .motion => Trigram.fire
   | .interval => Trigram.water
-  | .shi  => Trigram.earth
+  | .event  => Trigram.earth
 
 def char : Ben → String
   | .thing   => "物"
   | .motion => "动"
   | .interval => "间"
-  | .shi  => "事"
+  | .event  => "事"
 
 def fromChar (s : String) : Option Ben :=
   if s = "物" then some .thing
   else if s = "动" || s = "動" then some .motion
   else if s = "间" || s = "間" then some .interval
-  else if s = "事" then some .shi
+  else if s = "事" then some .event
   else none
 
 theorem char_roundtrip (b : Ben) : fromChar b.char = some b := by
@@ -82,8 +82,8 @@ end Ben
 
 /-- 4 征: 幾 / 勢 / 機 / 時.
 
-    构造子用 trace / momentum / pivot / occasion 避免与 Ben.shi 冲突
-    (两个 namespace 都用裸 `shi` / `ji` 会产生歧义)。 -/
+    构造子用 trace / momentum / pivot / occasion 避免与 Ben.event 冲突
+    (两个 namespace 都用裸 `event` / `ji` 会产生歧义)。 -/
 inductive Zheng : Type
   | trace     -- 幾 (subtle trace)
   | momentum    -- 勢 (momentum)
@@ -143,7 +143,7 @@ def benOf? (t : Trigram) : Option SSBX.Foundation.Bagua.BenZheng.Ben :=
   if t = heaven then some .thing
   else if t = fire   then some .motion
   else if t = water  then some .interval
-  else if t = earth  then some .shi
+  else if t = earth  then some .event
   else none
 
 /-- Trigram → 征: 仅 4 个 zong-mobile trigram 有 Zheng. -/
@@ -251,10 +251,10 @@ def label : Mian → String
   | (.interval, .momentum)   => "通"  -- 間之进
   | (.interval, .pivot) => "会"  -- 間之转
   | (.interval, .occasion)    => "系"  -- 間之久
-  | (.shi,  .trace)    => "兆"  -- 事之微
-  | (.shi,  .momentum)   => "趋"  -- 事之进
-  | (.shi,  .pivot) => "变"  -- 事之转
-  | (.shi,  .occasion)    => "史"  -- 事之久
+  | (.event,  .trace)    => "兆"  -- 事之微
+  | (.event,  .momentum)   => "趋"  -- 事之进
+  | (.event,  .pivot) => "变"  -- 事之转
+  | (.event,  .occasion)    => "史"  -- 事之久
 
 end Mian
 

@@ -242,7 +242,7 @@ def name (m : Mian) : String :=
   m.fst.char ++ "·" ++ m.snd.char
 
 example : name (.thing, .trace) = "物·几" := by native_decide
-example : name (.shi, .occasion) = "事·时" := by native_decide
+example : name (.event, .occasion) = "事·时" := by native_decide
 
 end SSBX.Foundation.Bagua.BenZheng.Mian
 
@@ -261,7 +261,7 @@ def name (w : Wuyao) : String :=
   Mian.name w.fst ++ "·" ++ (if w.snd then "显" else "隐")
 
 example : name ((.thing, .trace), false) = "物·几·隐" := by native_decide
-example : name ((.shi, .occasion), true) = "事·时·显" := by native_decide
+example : name ((.event, .occasion), true) = "事·时·显" := by native_decide
 
 end SSBX.Foundation.Hierarchy.R5_Wuyao.Wuyao
 
