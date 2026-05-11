@@ -338,7 +338,7 @@ restored route accumulates exact witnesses.
 
 | Target | Acceptance condition | Current anchor |
 |---|---|---|
-| F.7c.28 real saved-current fetch walker | concrete fetch segment proves `SavedCurFetchOutcome` from `fetchEntryState`; old `fetchProgWithPeel` remains boundary-only | `FetchSavedCurObligations.RestoredSavedCurFetchObligations`, `FetchSavedCurBoundary.currentAssembly_running_fetch_not_savedCurOutcome` |
+| F.7c.28 real saved-current fetch walker | concrete fetch segment proves `SavedCurFetchOutcome` from `fetchEntryState`; old `fetchProgWithPeel` remains boundary-only; implementation is factored into decode/restore plus finite R8 saved-current re-emitter | `FetchSavedCurObligations.RestoredSavedCurFetchObligations`, `FetchSavedCurProg.fetch_saved_cur_prog_factor_summary`, `FetchSavedCurBoundary.restoredAssembly_running_fetch_not_savedCurOutcome` |
 | F.7c.29 restored assembly switch point | restored layout has segment witnesses for outer-loop, fetch, dispatch, restore prelude, and body offsets without importing old `Assembly.metaInterpProg` | `AssemblyRestorePlan.restoredMetaInterpProg`, `UniversalRestorePlan.restoredMetaStart` |
 | F.7c.30 exact block witnesses | each restored block used by U.1 proves `BlockPre → BlockPost` or a precise impossibility boundary; `.nop` is already exact | `AssemblyRestorePlan.restoredMetaInterpProg_execute_nop_simulates_aligned` |
 | F.7c.31 parameter sub-dispatch | parameterized opcodes read encoded operands instead of Strategy-B defaults | `SubDispatch_BranchShiEq`, `SubDispatch_BranchYaoEq` patterns |
