@@ -39,12 +39,12 @@ theorem pareto_at_middle (f : ZhongField) (n : Nat) :
 
 /-- **Coase 定理 之 zero-transaction-cost 形式 (科斯定理 之 同根 重写)**:
     Coase 定理: 若 transaction cost 为 0 且 property rights 清晰, 则 externality
-    可被 internalized. 形式 sieve: internalize externality = 重建 同根 (tongGen).
+    可被 internalized. 形式 sieve: internalize externality = 重建 同根 (sameRoot).
     在 同根 之 下, A 之 action 对 A 与 B 之 极-effect 等价 — 没有 「A 受益 / B 受损」
     之 asymmetric externality (此 即 `moloch_via_externality_refuted` 之 corollary).
-    形式: tongGen ∧ center (a (h1 state)) ⟹ ¬ terminus (a (h2 state)). -/
+    形式: sameRoot ∧ center (a (h1 state)) ⟹ ¬ terminus (a (h2 state)). -/
 theorem coase_internalizes_externality
-    (a : Field → Field) (h_tongGen : tongGen a)
+    (a : Field → Field) (h_tongGen : sameRoot a)
     (h1 h2 : ZhongOrbit) (n : Nat)
     (h_local : center (a (h1.states n))) :
     ¬ terminus (a (h2.states n)) := by
@@ -53,11 +53,11 @@ theorem coase_internalizes_externality
 
 /-- **Mechanism design 之 incentive compatibility (机制设计 之 激励相容)**:
     Direct mechanism 之 IC: agent 之 truth-telling 是 dominant. 形式 sieve:
-    truth-telling 是 dominant ⟺ action 之 中-effect 是 universal (tongGenMiddle).
+    truth-telling 是 dominant ⟺ action 之 中-effect 是 universal (sameRootCentered).
     若 action a 是 中-preserving 在 i, 则 它 也 中-preserving 在 j —
     故 agent 没有 incentive 偏离 truth (因 truth 之 reward 是 universal).  -/
 theorem mechanism_incentive_compatibility
-    (a : Field → Field) (h_universal : tongGenMiddle a)
+    (a : Field → Field) (h_universal : sameRootCentered a)
     (s t : Field) (hs : center s) (ht : center t) :
     center (a s) ↔ center (a t) :=
   h_universal s t hs ht
@@ -131,13 +131,13 @@ theorem equilibrium_static_vs_dynamic
     ∧ (∀ n, center (o.states n)) :=                          -- dynamic eq. (orbit-form) holds
   ⟨ZhongOrbit.shi_no_telos o target N, o.inMiddle⟩
 
-/-- **VCG auction 之 efficiency conditional on tongGen (truth-telling)**:
+/-- **VCG auction 之 efficiency conditional on sameRoot (truth-telling)**:
     VCG (Vickrey-Clarke-Groves) auction efficiency 依赖 truth-telling 之 dominance.
-    形式 sieve: truth-telling-dominance ⟺ tongGen — action 之 极-pattern universal,
+    形式 sieve: truth-telling-dominance ⟺ sameRoot — action 之 极-pattern universal,
     故 没有 incentive 撒谎 (撒谎 之 极-effect 与 truth 之 极-effect 同).
-    Conditional: 在 tongGen 之 下, action 之 极-pattern 在 任何 中-states 上 等价.  -/
+    Conditional: 在 sameRoot 之 下, action 之 极-pattern 在 任何 中-states 上 等价.  -/
 theorem vcg_auction_efficient_under_tongGen
-    (a : Field → Field) (h_tongGen : tongGen a)
+    (a : Field → Field) (h_tongGen : sameRoot a)
     (s t : Field) (hs : center s) (ht : center t) :
     terminus (a s) ↔ terminus (a t) := h_tongGen s t hs ht
 
@@ -148,14 +148,14 @@ theorem vcg_auction_efficient_under_tongGen
 
 /-- **Prisoner's dilemma 之 「defect-defect 是 universal」 形式 之 否定**:
     PD 之 经典 narrative: 双方 defect 是 dominant, defect-defect 是 「rational」 outcome.
-    形式 sieve: 此 narrative 假设 defect 之 universal collapse (= jiSuoBuYu + shiYuRen).
+    形式 sieve: 此 narrative 假设 defect 之 universal collapse (= selfNotDesire + applyToOther).
     但 在 同根 之 下, defect 之 collapse-effect 必 symmetric — 故 「我 defect 是 rational
     even though 它 害 你」 是 不可能. 此 即 `zhen_dou_self_refuting`: 害 你 = 害 己.  -/
 theorem prisoners_dilemma_refuted_under_tongGen
     (x : Xin) (a : Field → Field) (other : ZhongOrbit) (n : Nat)
-    (h_tongGen : tongGen a)
-    (h_defect_other : shiYuRen a other n) :
-    jiSuoBuYu x a n :=
+    (h_tongGen : sameRoot a)
+    (h_defect_other : applyToOther a other n) :
+    selfNotDesire x a n :=
   zhen_dou_self_refuting x a other n h_tongGen h_defect_other
 
 /-- **Tragedy of the commons 之 否定 (公地悲剧 之 形式 refute)**:
@@ -163,7 +163,7 @@ theorem prisoners_dilemma_refuted_under_tongGen
     直接 = `moloch_via_externality_refuted`: 在 同根 之 下, 「个人 中 / 集体 极」
     之 asymmetric externality 是 不可能.  -/
 theorem tragedy_of_commons_refuted
-    (a : Field → Field) (h_tongGen : tongGen a)
+    (a : Field → Field) (h_tongGen : sameRoot a)
     (h1 h2 : ZhongOrbit) (n : Nat)
     (h_local_rational : center (a (h1.states n)))
     (h_collapse_other : terminus (a (h2.states n))) :

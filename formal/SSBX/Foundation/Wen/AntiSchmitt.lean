@@ -10,12 +10,12 @@
   2. **decisionism** (Politische Theologie):
      "Souverän ist, wer über den Ausnahmezustand entscheidet."
      主权决断 treats specific case differently from general rule —
-     形式上 require asymmetric action, 与 同根 (tongGen) 直接冲突.
+     形式上 require asymmetric action, 与 同根 (sameRoot) 直接冲突.
 
   3. **state of exception** (Ausnahmezustand):
      例外状态: rule 不 universally apply.
      形式上是 a 在某 中-states 上 collapse, 在另一些 上 不 collapse —
-     punctures tongGen.
+     punctures sameRoot.
 
 最深刻发现: **Schmitt 三支柱共享同一形式根源 — 拒绝 universalizability**.
 故 Anti-Schmitt = Anti-Moloch = 仁 之 同根异显.
@@ -72,45 +72,45 @@ theorem enemy_collapse_violates_inMiddle
 
 /-- **Decisionism 形式 reading**: 主权决断 treats specific case differently —
     存在 中-状态 s 与 t, action a 在 s 上 induce 极, 在 t 上不 induce 极.
-    这恰是 tongGen 之 negation. -/
+    这恰是 sameRoot 之 negation. -/
 def decisionistAsymmetry (a : Field → Field) : Prop :=
   ∃ s t : Field, center s ∧ center t ∧ terminus (a s) ∧ ¬ terminus (a t)
 
-/-- **第四定理**: decisionism (asymmetric sovereign action) 与 tongGen 形式 互斥. -/
-theorem decisionism_breaks_tongGen
+/-- **第四定理**: decisionism (asymmetric sovereign action) 与 sameRoot 形式 互斥. -/
+theorem decisionism_breaks_sameRoot
     (a : Field → Field) (h_asym : decisionistAsymmetry a) :
-    ¬ tongGen a := by
+    ¬ sameRoot a := by
   intro h_tong
   obtain ⟨s, t, hs_mid, ht_mid, h_ext_s, h_not_ext_t⟩ := h_asym
   exact h_not_ext_t ((h_tong s t hs_mid ht_mid).mp h_ext_s)
 
-/-- Contrapositive — 若 tongGen 成立, 则 主权决断 不存在. -/
-theorem tongGen_excludes_decisionism
-    (a : Field → Field) (h_tong : tongGen a) :
+/-- Contrapositive — 若 sameRoot 成立, 则 主权决断 不存在. -/
+theorem sameRoot_excludes_decisionism
+    (a : Field → Field) (h_tong : sameRoot a) :
     ¬ decisionistAsymmetry a :=
-  fun h_asym => decisionism_breaks_tongGen a h_asym h_tong
+  fun h_asym => decisionism_breaks_sameRoot a h_asym h_tong
 
 /-! ## § 3  State of Exception 之 形式破缺 -/
 
 /-- **例外状态 形式 reading**: 规则 a 对某些 中-状态 collapse, 对另一些 不 collapse.
-    亦即: 规则 不 universally apply — punctures tongGen on the 极-side.
+    亦即: 规则 不 universally apply — punctures sameRoot on the 极-side.
     (与 decisionistAsymmetry 形式 等价.) -/
 def stateOfException (a : Field → Field) : Prop :=
   ∃ s t : Field, center s ∧ center t ∧ terminus (a s) ∧ center (a t)
 
-/-- **第六定理**: state of exception 与 tongGen 形式 incompatible.
+/-- **第六定理**: state of exception 与 sameRoot 形式 incompatible.
     例外 = 规则不 universally apply ⟹ 破 同根. -/
 theorem state_of_exception_breaks_universality
     (a : Field → Field) (h_exc : stateOfException a) :
-    ¬ tongGen a := by
+    ¬ sameRoot a := by
   intro h_tong
   obtain ⟨s, t, hs_mid, ht_mid, h_ext_s, h_mid_t⟩ := h_exc
-  -- a t is center, hence not terminus; but tongGen forces terminus (a t) given terminus (a s)
+  -- a t is center, hence not terminus; but sameRoot forces terminus (a t) given terminus (a s)
   exact (zhi_exclusive (a t)) ⟨h_mid_t, (h_tong s t hs_mid ht_mid).mp h_ext_s⟩
 
-/-- Sovereign exception 之 contrapositive: tongGen ⟹ 没有 例外. -/
+/-- Sovereign exception 之 contrapositive: sameRoot ⟹ 没有 例外. -/
 theorem tongGen_no_exception
-    (a : Field → Field) (h_tong : tongGen a) :
+    (a : Field → Field) (h_tong : sameRoot a) :
     ¬ stateOfException a :=
   fun h_exc => state_of_exception_breaks_universality a h_exc h_tong
 
@@ -149,10 +149,10 @@ theorem political_essence_is_ren_not_enmity
     此 是 zhen_dou_self_refuting 之 partisan-extension. -/
 theorem partisan_war_self_destructive
     (x : Xin) (a : Field → Field)
-    (h_tongGen : tongGen a)
+    (h_tongGen : sameRoot a)
     (others : Nat → ZhongOrbit)
-    (h_partisan : ∀ k, shiYuRen a (others k) k) :
-    ∀ n, jiSuoBuYu x a n := by
+    (h_partisan : ∀ k, applyToOther a (others k) k) :
+    ∀ n, selfNotDesire x a n := by
   intro n
   -- Use the n-th other; 同根 transports the collapse to self.
   exact (h_tongGen ((others n).states n) (x.process.states n)
@@ -171,12 +171,12 @@ theorem legitimacy_via_emergency_lacks_grounding (o : ZhongOrbit) :
 /-! ## § 7  法治 vs 主权例外 -/
 
 /-- **第十一定理 sovereign_decision_vs_law_universality**:
-    rule of law = universally applicable a (即 tongGen 成立).
+    rule of law = universally applicable a (即 sameRoot 成立).
     sovereign exception = stateOfException 成立.
     二者形式上互斥 — 不可同时成立. -/
 theorem sovereign_decision_vs_law_universality
     (a : Field → Field) :
-    ¬ (tongGen a ∧ stateOfException a) := by
+    ¬ (sameRoot a ∧ stateOfException a) := by
   intro ⟨h_tong, h_exc⟩
   exact state_of_exception_breaks_universality a h_exc h_tong
 
@@ -185,11 +185,11 @@ theorem sovereign_decision_vs_law_universality
 /-- **第十二定理 friend_enemy_implies_moloch_enabler**:
     Schmitt 之 friend-enemy 框架 (具体化为 stateOfException) 切断 universalizability,
     从而 enable Moloch dynamics (asymmetric externality).
-    形式上: 若 a 是 stateOfException, 则 不是 tongGen — 而 tongGen 正是 forbid Moloch
+    形式上: 若 a 是 stateOfException, 则 不是 sameRoot — 而 sameRoot 正是 forbid Moloch
     之 唯一 hypothesis (见 moloch_via_externality_refuted). -/
 theorem friend_enemy_implies_moloch
     (a : Field → Field) (h_exc : stateOfException a) :
-    ¬ tongGen a :=
+    ¬ sameRoot a :=
   state_of_exception_breaks_universality a h_exc
 
 /-! ## § 9  政治 之 第三 option 总枚举 -/
@@ -233,12 +233,12 @@ theorem concrete_friend_enemy_inversion
 
 /-- **第十五定理 anti_schmitt_unified**:
     decisionism, state-of-exception, 与 friend-enemy 三大支柱 形式上 share
-    同一 root cause: 拒绝 universalizability (i.e., tongGen).
-    若 tongGen 成立, 则 三者 全 不成立. -/
+    同一 root cause: 拒绝 universalizability (i.e., sameRoot).
+    若 sameRoot 成立, 则 三者 全 不成立. -/
 theorem anti_schmitt_unified
-    (a : Field → Field) (h_tong : tongGen a) :
+    (a : Field → Field) (h_tong : sameRoot a) :
     ¬ decisionistAsymmetry a
     ∧ ¬ stateOfException a := by
-  exact ⟨tongGen_excludes_decisionism a h_tong, tongGen_no_exception a h_tong⟩
+  exact ⟨sameRoot_excludes_decisionism a h_tong, tongGen_no_exception a h_tong⟩
 
 end SSBX.Foundation.Wen.AntiSchmitt
