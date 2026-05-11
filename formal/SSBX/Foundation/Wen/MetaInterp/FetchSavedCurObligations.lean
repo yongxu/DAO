@@ -93,10 +93,32 @@ theorem restoredSavedCurFetch_nop_to_BlockPost_at_fuel
   rw [runFuel_restored_nop_tail μ]
   exact h_post
 
+/-- Field form matching the steady-iteration part of
+`Universal.SemanticLoopObligations`, specialized to the first restored exact
+opcode path. -/
+theorem restoredSavedCurFetch_nop_steady_fields
+    (O : RestoredSavedCurFetchObligations)
+    (regHex : Hexagram) (sim : YiState)
+    (h_alive : sim.halted = false)
+    (h_nop : sim.prog[sim.pc]? = some .nop)
+    (h_curAligned : sim.cur = regDataCell regHex) :
+    ∃ fuel,
+      let μ' :=
+        (Fetch.fetchEntryState regHex sim restoredMetaInterpProg fetchOffset).runFuel
+          fuel
+      μ'.history = encMetaHistory regHex sim.step
+        ∧ μ'.halted = false
+        ∧ μ'.pc = fetchOffset := by
+  obtain ⟨fuel, h_post⟩ :=
+    restoredSavedCurFetch_nop_to_BlockPost_at_fuel
+      O regHex sim h_alive h_nop h_curAligned
+  refine ⟨fuel, ?_⟩
+  exact ⟨h_post.history, h_post.halted, h_post.pc⟩
+
 /-! ## Public summary -/
 
 theorem fetch_saved_cur_obligation_frontier_summary :
-    RestoredSavedCurFetchObligations →
+    (RestoredSavedCurFetchObligations →
       ∀ regHex sim,
         sim.halted = false →
         sim.prog[sim.pc]? = some .nop →
@@ -105,9 +127,22 @@ theorem fetch_saved_cur_obligation_frontier_summary :
             ExecuteBlock.BlockPost regHex sim fetchOffset restoredMetaInterpProg
               ((Fetch.fetchEntryState regHex sim restoredMetaInterpProg fetchOffset).runFuel
                 fuel)
-              false := by
-  intro O regHex sim h_alive h_nop h_curAligned
-  exact restoredSavedCurFetch_nop_to_BlockPost_at_fuel
-    O regHex sim h_alive h_nop h_curAligned
+              false)
+    ∧ (RestoredSavedCurFetchObligations →
+      ∀ regHex sim,
+        sim.halted = false →
+        sim.prog[sim.pc]? = some .nop →
+        sim.cur = regDataCell regHex →
+          ∃ fuel,
+            let μ' :=
+              (Fetch.fetchEntryState regHex sim restoredMetaInterpProg fetchOffset).runFuel
+                fuel
+            μ'.history = encMetaHistory regHex sim.step
+              ∧ μ'.halted = false
+              ∧ μ'.pc = fetchOffset) := by
+  exact
+    ⟨ restoredSavedCurFetch_nop_to_BlockPost_at_fuel
+    , restoredSavedCurFetch_nop_steady_fields
+    ⟩
 
 end SSBX.Foundation.Wen.MetaInterp.FetchSavedCurObligations

@@ -181,6 +181,45 @@ The existing universal-compose file remains responsible for semantic loop
 obligations. This keeps the rooted-word layer from absorbing the meta-interpreter
 proof.
 
+### Phase 4.1: loop-frame bridge discipline
+
+The restored META route needs a bridge, but the bridge is not an ontology layer.
+It is a narrow loop-frame contract between fetch, dispatch, and execute-block
+proofs.
+
+The issue is structural: dispatch must read the opcode tag through `META.cur`,
+while execute blocks need `META.cur` restored to the simulated current R8 cell.
+The current `fetchProgWithPeel` reaches dispatch with the halted-flag cell in
+`META.cur` and the post-peel tail in history; it cannot be read as a
+saved-current fetch outcome. The restored path therefore uses this contract:
+
+```text
+fetch produces:
+  META.cur     = opcode tag
+  META.history = simulated current R8 cell :: encMetaHistory regHex sim
+  META.pc      = restored dispatch offset
+
+dispatch routes by opcode tag
+restore prelude pops simulated current cell
+execute block receives the existing BlockPre shape
+```
+
+Lean anchors:
+
+| Contract | Anchor |
+|---|---|
+| saved-current fetch target | `FetchSavedCur.SavedCurFetchOutcome` |
+| uniform restore prelude | `DispatchRestore.restoreSavedCur_yields_BlockPre` |
+| restored layout | `AssemblyRestorePlan.restoredMetaInterpProg` |
+| fetch → dispatch → restore | `FetchDispatchRestore.savedCurFetch_dispatch_restore_yields_BlockPre` |
+| first exact restored opcode path | `FetchDispatchRestore.savedCurFetch_dispatch_restore_execute_nop_simulates_aligned` |
+| future real fetch walker boundary | `FetchSavedCurObligations.RestoredSavedCurFetchObligations` |
+
+This is elegant only if it stays thin: it names the missing executable handoff,
+composes already-proved pieces, and has a deletion path once the concrete fetch
+walker directly proves the saved-current outcome. It must not become a second
+interpreter or a place to hide semantic work.
+
 ### Phase 5: expansion discipline
 
 After the skeleton is stable, each new word must enter through the same gate:
