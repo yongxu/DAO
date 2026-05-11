@@ -106,9 +106,9 @@ def parseChineseAtom (s : String) : Option Cell128 :=
 
 example : parseChineseAtom "乾·无" = some Cell128.origin := by native_decide
 example : parseChineseAtom "既济·有" =
-    some (SSBX.Foundation.Yi.Yi.Hexagram.«既济», true) := by native_decide
+    some (SSBX.Foundation.Yi.Yi.Hexagram.complete, true) := by native_decide
 example : parseChineseAtom "未济·无" =
-    some (SSBX.Foundation.Yi.Yi.Hexagram.«未济», false) := by native_decide
+    some (SSBX.Foundation.Yi.Yi.Hexagram.incomplete, false) := by native_decide
 example : parseChineseAtom "不存在·有" = none := by native_decide
 
 /-- Unified atom parser: try 7-char `o/x` form first, then `<卦名>·<因>`. -/
