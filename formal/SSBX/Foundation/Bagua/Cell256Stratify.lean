@@ -179,11 +179,11 @@ def yComb (c : R8) : R8 := (Hexagram.interlace c.1, c.2)
 
 /-- 乾 (heaven) cell at any Shi is interlace-fixed. -/
 theorem yComb_qian (s : Shi) : yComb (Hexagram.heaven, s) = (Hexagram.heaven, s) := by
-  simp [yComb, Hexagram.hu_qian]
+  simp [yComb, Hexagram.interlace_heaven]
 
 /-- 坤 (earth) cell at any Shi is interlace-fixed. -/
 theorem yComb_kun (s : Shi) : yComb (Hexagram.earth, s) = (Hexagram.earth, s) := by
-  simp [yComb, Hexagram.hu_kun]
+  simp [yComb, Hexagram.interlace_earth]
 
 /-- Hexagram-level interlace attractors {乾, 坤, 既济, 未济} lift 至 16 个 R8 attractor
     (4 hex × 4 Shi = 16). -/

@@ -184,16 +184,16 @@ theorem hu_fixed_point (h : Hexagram) :
   · rintro (h | h) <;> rw [h] <;> rfl
 
 /-- 乾 is fixed by 互. -/
-theorem hu_qian : heaven.interlace = heaven := rfl
+theorem interlace_heaven : heaven.interlace = heaven := rfl
 
 /-- 坤 is fixed by 互. -/
-theorem hu_kun : earth.interlace = earth := rfl
+theorem interlace_earth : earth.interlace = earth := rfl
 
 /-- 乾's 错 is 坤. -/
-theorem cuo_qian : heaven.complement = earth := rfl
+theorem complement_heaven : heaven.complement = earth := rfl
 
 /-- 坤's 错 is 乾. -/
-theorem cuo_kun : earth.complement = heaven := rfl
+theorem complement_earth : earth.complement = heaven := rfl
 
 /-! ### Inner-outer composition ⊕ -/
 
@@ -223,7 +223,7 @@ def blocking : Hexagram := oplus Trigram.earth Trigram.heaven
 def peace : Hexagram := oplus Trigram.heaven Trigram.earth
 
 /-- 否 ≠ 泰 — the non-commutativity has concrete witness. -/
-theorem pi_ne_tai : blocking ≠ peace := by
+theorem blocking_ne_peace : blocking ≠ peace := by
   intro h
   injection h with h1
   cases h1
@@ -268,10 +268,10 @@ def biAdj (h : Hexagram) (i : Fin 5) : Yao × Yao :=
   (h.atPos ⟨i.val, by omega⟩, h.atPos ⟨i.val + 1, by omega⟩)
 
 /-- 乾 's center position (5th yao = 0-indexed 4) is well-positioned (yang on yang pos). -/
-theorem qian_5th_wellPos : wellPos heaven ⟨4, by omega⟩ = true := rfl
+theorem heaven_5th_wellPos : wellPos heaven ⟨4, by omega⟩ = true := rfl
 
 /-- 坤 's center position (5th yao = 0-indexed 4) is NOT well-positioned (yin on yang pos). -/
-theorem kun_5th_not_wellPos : wellPos earth ⟨4, by omega⟩ = false := rfl
+theorem earth_5th_not_wellPos : wellPos earth ⟨4, by omega⟩ = false := rfl
 
 /-! ### Type-hierarchy summary
 
@@ -482,13 +482,13 @@ def shuoGua : Trigram → SigmaCategory → List String
       else []
 
 /-- 乾 in 象 category projects to 天. -/
-theorem shuoGua_qian_xiang : shuoGua heaven .xiang = ["天"] := rfl
+theorem shuoGua_heaven_xiang : shuoGua heaven .xiang = ["天"] := rfl
 
 /-- 巽 in 象 category is multi-valued: 风 AND 木. -/
-theorem shuoGua_xun_xiang_multi : shuoGua wind .xiang = ["风", "木"] := rfl
+theorem shuoGua_wind_xiang_multi : shuoGua wind .xiang = ["风", "木"] := rfl
 
 /-- 乾 across 4 categories gives 4 distinct symbols (multi-polymorphism). -/
-theorem shuoGua_qian_polymorphic :
+theorem shuoGua_heaven_polymorphic :
     shuoGua heaven .xiang = ["天"] ∧
     shuoGua heaven .jia = ["父"] ∧
     shuoGua heaven .ti = ["首"] ∧
@@ -496,7 +496,7 @@ theorem shuoGua_qian_polymorphic :
   ⟨rfl, rfl, rfl, rfl⟩
 
 /-- 坤 across 4 categories. -/
-theorem shuoGua_kun_polymorphic :
+theorem shuoGua_earth_polymorphic :
     shuoGua earth .xiang = ["地"] ∧
     shuoGua earth .jia = ["母"] ∧
     shuoGua earth .ti = ["腹"] ∧
@@ -537,15 +537,15 @@ inductive XuguaStep : Hexagram → Hexagram → Prop
   | byZong (h h' : Hexagram) : h.reverse = h' → XuguaStep h h'
 
 /-- 乾 → 坤 by 错. (乾 is 综-self, must use 错.) -/
-theorem xugua_qian_kun : XuguaStep heaven earth :=
-  .byCuo heaven earth cuo_qian
+theorem xugua_heaven_earth : XuguaStep heaven earth :=
+  .byCuo heaven earth complement_heaven
 
 /-- 屯 → 蒙 by 综. -/
-theorem xugua_zhun_meng : XuguaStep sprout naive :=
+theorem xugua_sprout_naive : XuguaStep sprout naive :=
   .byZong sprout naive (by rfl)
 
 /-- 需 → 讼 by 综. -/
-theorem xugua_xu_song : XuguaStep waiting dispute :=
+theorem xugua_waiting_dispute : XuguaStep waiting dispute :=
   .byZong waiting dispute (by rfl)
 
 -- Note: in 序卦 cross-pair transitions (e.g., 蒙 → 需) follow neither pure 综 nor 错;
@@ -558,8 +558,8 @@ inductive XuguaStar : Hexagram → Hexagram → Prop
   | tail {a b c : Hexagram} : XuguaStar a b → XuguaStep b c → XuguaStar a c
 
 /-- 乾 reaches 坤 in the序卦. -/
-theorem xugua_qian_to_kun : XuguaStar heaven earth :=
-  .tail (.refl heaven) xugua_qian_kun
+theorem xugua_heaven_to_earth : XuguaStar heaven earth :=
+  .tail (.refl heaven) xugua_heaven_earth
 
 end Hexagram
 
@@ -619,7 +619,7 @@ theorem iterHu_period (h : Hexagram) : iterHu 4 h = iterHu 2 h := by
   rfl
 
 /-- 互² h = 乾 ⟺ h.y3 = yang ∧ h.y4 = yang (center pair both yang). -/
-theorem iterHu_2_eq_qian_iff (h : Hexagram) :
+theorem iterHu_2_eq_heaven_iff (h : Hexagram) :
     iterHu 2 h = heaven ↔ h.y3 = .yang ∧ h.y4 = .yang := by
   rw [iterHu_2_eq]
   constructor
@@ -630,7 +630,7 @@ theorem iterHu_2_eq_qian_iff (h : Hexagram) :
     rw [e3, e4]; rfl
 
 /-- 互² h = 坤 ⟺ h.y3 = yin ∧ h.y4 = yin (center pair both yin). -/
-theorem iterHu_2_eq_kun_iff (h : Hexagram) :
+theorem iterHu_2_eq_earth_iff (h : Hexagram) :
     iterHu 2 h = earth ↔ h.y3 = .yin ∧ h.y4 = .yin := by
   rw [iterHu_2_eq]
   constructor
@@ -644,7 +644,7 @@ theorem iterHu_2_eq_kun_iff (h : Hexagram) :
 theorem iterHu_2_fixed_iff_middle_agrees (h : Hexagram) :
     (iterHu 2 h).interlace = iterHu 2 h ↔ h.y3 = h.y4 := by
   rw [hu_fixed_point]
-  rw [iterHu_2_eq_qian_iff, iterHu_2_eq_kun_iff]
+  rw [iterHu_2_eq_heaven_iff, iterHu_2_eq_earth_iff]
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y3 <;> cases y4 <;> simp
@@ -668,13 +668,13 @@ def complete : Hexagram := ⟨.yang, .yin, .yang, .yin, .yang, .yin⟩
 def incomplete : Hexagram := ⟨.yin, .yang, .yin, .yang, .yin, .yang⟩
 
 /-- 既济 = 离 ⊕ 坎 (内 离, 外 坎). -/
-theorem jiji_eq_oplus : complete = oplus Trigram.fire Trigram.water := rfl
+theorem complete_eq_oplus : complete = oplus Trigram.fire Trigram.water := rfl
 
 /-- 未济 = 坎 ⊕ 离. -/
-theorem weiji_eq_oplus : incomplete = oplus Trigram.water Trigram.fire := rfl
+theorem incomplete_eq_oplus : incomplete = oplus Trigram.water Trigram.fire := rfl
 
 /-- 既济 has every yao well-positioned. -/
-theorem jiji_wellPos_all (i : Fin 6) : wellPos complete i = true := by
+theorem complete_wellPos_all (i : Fin 6) : wellPos complete i = true := by
   match i with
   | ⟨0, h⟩ => decide +revert
   | ⟨1, h⟩ => decide +revert
@@ -684,7 +684,7 @@ theorem jiji_wellPos_all (i : Fin 6) : wellPos complete i = true := by
   | ⟨5, h⟩ => decide +revert
 
 /-- 未济 has NO yao well-positioned. -/
-theorem weiji_wellPos_none (i : Fin 6) : wellPos incomplete i = false := by
+theorem incomplete_wellPos_none (i : Fin 6) : wellPos incomplete i = false := by
   match i with
   | ⟨0, h⟩ => decide +revert
   | ⟨1, h⟩ => decide +revert
@@ -694,22 +694,22 @@ theorem weiji_wellPos_none (i : Fin 6) : wellPos incomplete i = false := by
   | ⟨5, h⟩ => decide +revert
 
 /-- 既济 ↔ 未济 by 综 (reflection). -/
-theorem jiji_zong_weiji : complete.reverse = incomplete := by rfl
+theorem complete_reverse_incomplete : complete.reverse = incomplete := by rfl
 
 /-- 既济 ↔ 未济 by 错 (negation). -/
-theorem jiji_cuo_weiji : complete.complement = incomplete := by rfl
+theorem complete_complement_incomplete : complete.complement = incomplete := by rfl
 
 /-- 既济 ≠ 未济 (concrete witness of their distinction). -/
-theorem jiji_ne_weiji : complete ≠ incomplete := by
+theorem complete_ne_incomplete : complete ≠ incomplete := by
   intro h
   injection h with h1
   cases h1
 
 /-- 既济 互 互 = 既济 — 既济 is on a 2-period orbit. -/
-theorem jiji_iterHu_2 : iterHu 2 complete = complete := by rfl
+theorem complete_iterHu_2 : iterHu 2 complete = complete := by rfl
 
 /-- 既济 is NOT 互-fixed (so it's the canonical period-2 example). -/
-theorem jiji_not_hu_fixed : complete.interlace ≠ complete := by
+theorem complete_not_interlace_fixed : complete.interlace ≠ complete := by
   intro heq
   injection heq with e1
   cases e1
@@ -717,7 +717,7 @@ theorem jiji_not_hu_fixed : complete.interlace ≠ complete := by
 /-- 既济's 互 is 未济's 综⁻¹... actually it's simpler:
     互 complete = ⟨complete.y2, complete.y3, complete.y4, complete.y3, complete.y4, complete.y5⟩
            = ⟨yin, yang, yin, yang, yin, yang⟩ = incomplete. -/
-theorem jiji_hu_weiji : complete.interlace = incomplete := by rfl
+theorem complete_interlace_incomplete : complete.interlace = incomplete := by rfl
 
 end Hexagram
 
@@ -801,8 +801,8 @@ def jianMode : Trigram → JianMode
 
 /-! ### Per-trigram mode -/
 
-theorem qian_jianMode : heaven.jianMode = .sheng := rfl
-theorem kun_jianMode  : earth.jianMode  = .shou  := rfl
+theorem heaven_jianMode : heaven.jianMode = .sheng := rfl
+theorem earth_jianMode  : earth.jianMode  = .shou  := rfl
 theorem zhen_jianMode : thunder.jianMode = .yuan  := rfl
 theorem xun_jianMode  : wind.jianMode  = .shen  := rfl
 theorem kan_jianMode  : water.jianMode  = .sai   := rfl
