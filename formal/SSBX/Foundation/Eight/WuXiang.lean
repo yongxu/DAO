@@ -112,13 +112,13 @@ theorem dong_yinCount_mod2 (t : Trigram) :
   | mk y1 y2 y3 => cases y1 <;> cases y2 <;> cases y3 <;> decide
 
 /-- **middleFlip 改变 yinCount mod 2**。 -/
-theorem hua_yinCount_mod2 (t : Trigram) :
+theorem middleFlip_yinCount_mod2 (t : Trigram) :
     (Trigram.yinCount (middleFlip t) + Trigram.yinCount t) % 2 = 1 := by
   cases t with
   | mk y1 y2 y3 => cases y1 <;> cases y2 <;> cases y3 <;> decide
 
 /-- **topFlip 改变 yinCount mod 2**。 -/
-theorem bian_yinCount_mod2 (t : Trigram) :
+theorem topFlip_yinCount_mod2 (t : Trigram) :
     (Trigram.yinCount (topFlip t) + Trigram.yinCount t) % 2 = 1 := by
   cases t with
   | mk y1 y2 y3 => cases y1 <;> cases y2 <;> cases y3 <;> decide

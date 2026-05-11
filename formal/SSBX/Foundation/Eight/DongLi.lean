@@ -85,12 +85,12 @@ theorem dong_no_fixed : ¬ ∃ t : Trigram, IsFixed dongDyn t := by
   cases y1 <;> simp [IsFixed, dongDyn, motion, Yao.neg] at h
 
 /-- **middleFlip 在 Trigram 上无不动点**。 -/
-theorem hua_no_fixed : ¬ ∃ t : Trigram, IsFixed middleFlipDyn t := by
+theorem middleFlip_no_fixed : ¬ ∃ t : Trigram, IsFixed middleFlipDyn t := by
   rintro ⟨⟨y1, y2, y3⟩, h⟩
   cases y2 <;> simp [IsFixed, middleFlipDyn, middleFlip, Yao.neg] at h
 
 /-- **topFlip 在 Trigram 上无不动点**。 -/
-theorem bian_no_fixed : ¬ ∃ t : Trigram, IsFixed topFlipDyn t := by
+theorem topFlip_no_fixed : ¬ ∃ t : Trigram, IsFixed topFlipDyn t := by
   rintro ⟨⟨y1, y2, y3⟩, h⟩
   cases y3 <;> simp [IsFixed, topFlipDyn, topFlip, Yao.neg] at h
 
@@ -102,11 +102,11 @@ theorem dong_period_2 (t : Trigram) : IsPeriodic dongDyn 2 t := by
   exact dong_dong t
 
 /-- **middleFlip 周期 = 2**。 -/
-theorem hua_period_2 (t : Trigram) : IsPeriodic middleFlipDyn 2 t :=
+theorem middleFlip_period_2 (t : Trigram) : IsPeriodic middleFlipDyn 2 t :=
   hua_hua t
 
 /-- **topFlip 周期 = 2**。 -/
-theorem bian_period_2 (t : Trigram) : IsPeriodic topFlipDyn 2 t :=
+theorem topFlip_period_2 (t : Trigram) : IsPeriodic topFlipDyn 2 t :=
   bian_bian t
 
 /-- **complement 周期 = 2**：错² = id。 -/
@@ -239,8 +239,8 @@ theorem dongli_summary :
     ∧ (∀ target current : Trigram, lyapunov target (targetEulerStep target current) = 0)
     ∧ (∀ target current : Trigram, targetEulerStep target (targetEulerStep target current) = target)
     ∧ (∀ target current : Trigram, lyapunov target current ≤ 3) :=
-  ⟨dong_no_fixed, hua_no_fixed, bian_no_fixed,
-   dong_period_2, hua_period_2, bian_period_2, cuo_period_2, zhi_period_2,
+  ⟨dong_no_fixed, middleFlip_no_fixed, topFlip_no_fixed,
+   dong_period_2, middleFlip_period_2, topFlip_period_2, cuo_period_2, zhi_period_2,
    orbit_length, daYanProject_laoYin_yang,
    targetEuler_one_step, lyapunov_descent_one_step,
    targetEuler_idempotent, lyapunov_bound⟩

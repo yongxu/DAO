@@ -87,7 +87,7 @@ theorem dong_iso (a b : Trigram) : ju (motion a) (motion b) = ju a b := by
     cases b₁ <;> cases b₂ <;> cases b₃ <;> rfl
 
 /-- **化 (middleFlip) 等距**：`ju (middleFlip a) (middleFlip b) = ju a b`. -/
-theorem hua_iso (a b : Trigram) : ju (middleFlip a) (middleFlip b) = ju a b := by
+theorem middleFlip_iso (a b : Trigram) : ju (middleFlip a) (middleFlip b) = ju a b := by
   unfold ju hammingDist middleFlip
   rcases a with ⟨a₁, a₂, a₃⟩
   rcases b with ⟨b₁, b₂, b₃⟩
@@ -95,7 +95,7 @@ theorem hua_iso (a b : Trigram) : ju (middleFlip a) (middleFlip b) = ju a b := b
     cases b₁ <;> cases b₂ <;> cases b₃ <;> rfl
 
 /-- **变 (topFlip) 等距**：`ju (topFlip a) (topFlip b) = ju a b`. -/
-theorem bian_iso (a b : Trigram) : ju (topFlip a) (topFlip b) = ju a b := by
+theorem topFlip_iso (a b : Trigram) : ju (topFlip a) (topFlip b) = ju a b := by
   unfold ju hammingDist topFlip
   rcases a with ⟨a₁, a₂, a₃⟩
   rcases b with ⟨b₁, b₂, b₃⟩
@@ -214,7 +214,7 @@ theorem xingwei_summary :
     ∧ (Trigram.all.length = cube3_V)
     ∧ (Hexagram.allHex.length = cube6_V) :=
   ⟨ju_self, ju_eq_zero_iff, ju_comm, ju_triangle,
-   dong_iso, hua_iso, bian_iso,
+   dong_iso, middleFlip_iso, topFlip_iso,
    cube3_euler_int, cube6_euler_int,
    trigram_card_cube3, hexagram_card_cube6⟩
 

@@ -181,7 +181,7 @@ theorem cuo_preserves_isZongFixed (t : Trigram) :
     cases y1 <;> cases y3 <;> rfl
 
 /-- middleFlip 保 isZongFixed: 翻中爻不动 y1/y3, palindrome 不变. -/
-theorem hua_preserves_isZongFixed (t : Trigram) :
+theorem middleFlip_preserves_isZongFixed (t : Trigram) :
     (middleFlip t).isZongFixed = t.isZongFixed := by
   cases t with
   | mk y1 y2 y3 =>
@@ -195,7 +195,7 @@ theorem dong_flips_isZongFixed (t : Trigram) :
     cases y1 <;> cases y3 <;> rfl
 
 /-- topFlip 翻 isZongFixed: 改 y3 而不动 y1, 翻 palindrome 状态. -/
-theorem bian_flips_isZongFixed (t : Trigram) :
+theorem topFlip_flips_isZongFixed (t : Trigram) :
     (topFlip t).isZongFixed = !t.isZongFixed := by
   cases t with
   | mk y1 y2 y3 =>

@@ -79,7 +79,7 @@ theorem kong_chong (a : Shu) : multiply zero a = zero := Nat.zero_mul a
 
 theorem chong_yi (a : Shu) : multiply a one = a := Nat.mul_one a
 
-theorem yi_chong (a : Shu) : multiply one a = a := Nat.one_mul a
+theorem one_multiply (a : Shu) : multiply one a = a := Nat.one_mul a
 
 theorem chong_comm (a b : Shu) : multiply a b = multiply b a := Nat.mul_comm a b
 
