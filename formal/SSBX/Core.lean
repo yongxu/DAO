@@ -393,9 +393,9 @@ theorem yuan_after_is_shenghe {M : Model} (y : YuanTriad M) :
 
 /-- Abstract predicates for 几 / 势 / 机 over the field continuation model. -/
 structure SystemDynamics (M : Model) where
-  ji : (g : M.Gamma) -> IntervalDomain M g -> Prop
-  shi : List M.Gamma -> Prop
-  jiMoment : M.Gamma -> Prop
+  trace : (g : M.Gamma) -> IntervalDomain M g -> Prop
+  momentum : List M.Gamma -> Prop
+  pivot : M.Gamma -> Prop
 
 /--
 An action or transition changes the future interval domain when the valid
@@ -525,7 +525,7 @@ end OnticRoot
 inductive Manifestation where
   | wei
   | chang
-  | ji
+  | trace
   deriving DecidableEq, Repr
 
 namespace Manifestation
@@ -533,17 +533,17 @@ namespace Manifestation
 def visibleRoots : Manifestation -> List OnticRoot
   | .wei => [.thing, .interval]
   | .chang => [.motion, .thing]
-  | .ji => [.interval, .motion]
+  | .trace => [.interval, .motion]
 
 def bracketedRoot : Manifestation -> OnticRoot
   | .wei => .motion
   | .chang => .interval
-  | .ji => .thing
+  | .trace => .thing
 
 def shape : Manifestation -> String
   | .wei => "pointed position"
   | .chang => "extended medium"
-  | .ji => "contact interface"
+  | .trace => "contact interface"
 
 theorem visible_roots_pair (m : Manifestation) :
     (visibleRoots m).length = 2 := by
@@ -562,30 +562,30 @@ inductive StaticFace where
   deriving DecidableEq, Repr
 
 inductive DynamicMark where
-  | ji
-  | shi
-  | jiMoment
+  | trace
+  | momentum
+  | pivot
   deriving DecidableEq, Repr
 
 namespace DynamicMark
 
 def ofManifestation : Manifestation -> DynamicMark
-  | .wei => .ji
-  | .chang => .shi
-  | .ji => .jiMoment
+  | .wei => .trace
+  | .chang => .momentum
+  | .trace => .pivot
 
 def staticFaceOf : Manifestation -> StaticFace
   | .wei => .noPersistentSplit
   | .chang => .pointOnField
-  | .ji => .contactBoundary
+  | .trace => .contactBoundary
 
 def expansionMode : DynamicMark -> String
-  | .ji => "foundational seed at the zero-dimensional limit"
-  | .shi => "ji extended through a continuous medium"
-  | .jiMoment => "ji gathered through topological routing"
+  | .trace => "foundational seed at the zero-dimensional limit"
+  | .momentum => "trace extended through a continuous medium"
+  | .pivot => "trace gathered through topological routing"
 
 theorem wei_mark_is_foundational :
-    ofManifestation .wei = .ji :=
+    ofManifestation .wei = .trace :=
   rfl
 
 end DynamicMark
@@ -607,12 +607,12 @@ inductive EventResult where
 namespace Gate
 
 def result : DynamicMark -> Gate -> EventResult
-  | .ji, .open => .life
-  | .ji, .closed => .extinction
-  | .shi, .open => .formation
-  | .shi, .closed => .reversal
-  | .jiMoment, .open => .turning
-  | .jiMoment, .closed => .keeping
+  | .trace, .open => .life
+  | .trace, .closed => .extinction
+  | .momentum, .open => .formation
+  | .momentum, .closed => .reversal
+  | .pivot, .open => .turning
+  | .pivot, .closed => .keeping
 
 theorem gate_binary (g : Gate) : g = .open ∨ g = .closed := by
   cases g <;> simp
@@ -628,14 +628,14 @@ inductive CompositeForm where
 namespace CompositeForm
 
 def parts : CompositeForm -> Manifestation × Manifestation
-  | .network => (.wei, .ji)
+  | .network => (.wei, .trace)
   | .body => (.wei, .chang)
-  | .flow => (.chang, .ji)
+  | .flow => (.chang, .trace)
 
 def feedbackTarget : CompositeForm -> Manifestation
   | .network => .wei
   | .body => .chang
-  | .flow => .ji
+  | .flow => .trace
 
 theorem parts_distinct (c : CompositeForm) :
     (parts c).1 ≠ (parts c).2 := by

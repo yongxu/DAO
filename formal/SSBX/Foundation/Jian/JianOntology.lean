@@ -30,12 +30,12 @@ def rootSurface : OnticRoot -> String
 def manifestationSurface : Manifestation -> String
   | .wei => "位"
   | .chang => "場"
-  | .ji => "際"
+  | .trace => "際"
 
 def dynamicSurface : DynamicMark -> String
-  | .ji => "幾"
-  | .shi => "勢"
-  | .jiMoment => "機"
+  | .trace => "幾"
+  | .momentum => "勢"
+  | .pivot => "機"
 
 def gateSurface : Gate -> String
   | .open => "開"
@@ -57,8 +57,8 @@ theorem chang_is_dong_wu_with_jian_bracketed :
   ⟨rfl, rfl⟩
 
 theorem ji_is_jian_dong_with_wu_bracketed :
-    Manifestation.visibleRoots .ji = [.interval, .motion] ∧
-      Manifestation.bracketedRoot .ji = .thing :=
+    Manifestation.visibleRoots .trace = [.interval, .motion] ∧
+      Manifestation.bracketedRoot .trace = .thing :=
   ⟨rfl, rfl⟩
 
 theorem every_manifestation_brackets_absent_root (m : Manifestation) :
@@ -67,26 +67,26 @@ theorem every_manifestation_brackets_absent_root (m : Manifestation) :
 
 theorem wei_has_no_persistent_static_split :
     DynamicMark.staticFaceOf .wei = .noPersistentSplit ∧
-      DynamicMark.ofManifestation .wei = .ji :=
+      DynamicMark.ofManifestation .wei = .trace :=
   ⟨rfl, rfl⟩
 
 theorem shi_is_ji_along_continuous_medium :
-    dynamicSurface .shi = "勢" ∧
-      DynamicMark.expansionMode .shi = "ji extended through a continuous medium" :=
+    dynamicSurface .momentum = "勢" ∧
+      DynamicMark.expansionMode .momentum = "trace extended through a continuous medium" :=
   ⟨rfl, rfl⟩
 
 theorem jiMoment_is_ji_along_topological_routing :
-    dynamicSurface .jiMoment = "機" ∧
-      DynamicMark.expansionMode .jiMoment = "ji gathered through topological routing" :=
+    dynamicSurface .pivot = "機" ∧
+      DynamicMark.expansionMode .pivot = "trace gathered through topological routing" :=
   ⟨rfl, rfl⟩
 
 theorem gate_results :
-    Gate.result .ji .open = .life ∧
-      Gate.result .ji .closed = .extinction ∧
-      Gate.result .shi .open = .formation ∧
-      Gate.result .shi .closed = .reversal ∧
-      Gate.result .jiMoment .open = .turning ∧
-      Gate.result .jiMoment .closed = .keeping :=
+    Gate.result .trace .open = .life ∧
+      Gate.result .trace .closed = .extinction ∧
+      Gate.result .momentum .open = .formation ∧
+      Gate.result .momentum .closed = .reversal ∧
+      Gate.result .pivot .open = .turning ∧
+      Gate.result .pivot .closed = .keeping :=
   ⟨rfl, rfl, rfl, rfl, rfl, rfl⟩
 
 theorem gate_is_only_open_or_closed (g : Gate) :
@@ -94,12 +94,12 @@ theorem gate_is_only_open_or_closed (g : Gate) :
   Gate.gate_binary g
 
 def mutuallyManifest : Manifestation -> Manifestation -> Prop
-  | .wei, .ji => True
-  | .ji, .wei => True
+  | .wei, .trace => True
+  | .trace, .wei => True
   | _, _ => False
 
 theorem wei_ji_mutually_manifest :
-    mutuallyManifest .wei .ji ∧ mutuallyManifest .ji .wei :=
+    mutuallyManifest .wei .trace ∧ mutuallyManifest .trace .wei :=
   ⟨trivial, trivial⟩
 
 theorem mutually_manifest_symmetric {a b : Manifestation} :
@@ -110,22 +110,22 @@ def Composes (a b : Manifestation) (c : CompositeForm) : Prop :=
   CompositeForm.parts c = (a, b) ∨ CompositeForm.parts c = (b, a)
 
 theorem composition_table :
-    Composes .wei .ji .network ∧
+    Composes .wei .trace .network ∧
       Composes .wei .chang .body ∧
-      Composes .chang .ji .flow :=
+      Composes .chang .trace .flow :=
   ⟨Or.inl rfl, Or.inl rfl, Or.inl rfl⟩
 
 def Drives (d : DynamicMark) (m : Manifestation) : Prop :=
   DynamicMark.ofManifestation m = d
 
 theorem dynamic_drive_table :
-    Drives .ji .wei ∧ Drives .shi .chang ∧ Drives .jiMoment .ji :=
+    Drives .trace .wei ∧ Drives .momentum .chang ∧ Drives .pivot .trace :=
   ⟨rfl, rfl, rfl⟩
 
 theorem feedback_table :
     CompositeForm.feedbackTarget .network = .wei ∧
       CompositeForm.feedbackTarget .body = .chang ∧
-      CompositeForm.feedbackTarget .flow = .ji :=
+      CompositeForm.feedbackTarget .flow = .trace :=
   ⟨rfl, rfl, rfl⟩
 
 structure Assembly where
@@ -138,7 +138,7 @@ structure Assembly where
 def networkAssembly (arrangement : Nat) : Assembly :=
   { composite := .network
     left := .wei
-    right := .ji
+    right := .trace
     arrangement := arrangement
     parts_match := Or.inl rfl }
 
@@ -169,7 +169,7 @@ def selfReferenceWitness : SelfReferenceWitness :=
     enacted_process := .motion
     field_manifestation := .chang
     produced_position := .wei
-    connecting_interface := .ji
+    connecting_interface := .trace
     resulting_network := .network }
 
 theorem ontology_is_instance_of_its_own_shape :
@@ -177,7 +177,7 @@ theorem ontology_is_instance_of_its_own_shape :
       selfReferenceWitness.enacted_process = .motion ∧
       selfReferenceWitness.field_manifestation = .chang ∧
       selfReferenceWitness.produced_position = .wei ∧
-      selfReferenceWitness.connecting_interface = .ji ∧
+      selfReferenceWitness.connecting_interface = .trace ∧
       selfReferenceWitness.resulting_network = .network :=
   ⟨rfl, rfl, rfl, rfl, rfl, rfl⟩
 
