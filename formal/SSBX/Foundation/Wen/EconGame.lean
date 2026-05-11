@@ -113,12 +113,12 @@ theorem nash_equilibrium_static_is_extreme
 
 /-- **Rational choice 仅 在 决策者 之 状态 已 classifiable 时 有效**:
     Rational choice theory 假设 actor 之 preference 已 totally determined.
-    形式 sieve: 此 假设 = `zhi_universal` (state 已 classifiable as 中 ∨ 极).
+    形式 sieve: 此 假设 = `wisdom_universal` (state 已 classifiable as 中 ∨ 极).
     在 Kernel 中, wisdom 是 universal — 故 二值 form 之 rational choice 总 valid.
     Conditional 形式 (即 strict 「全 决定」 reading 之 限制): rational choice
     总 produces 中 ∨ 极, NEVER 显 「悬置」 之 第三 option. 此 即 二值 之 局限. -/
 theorem rational_choice_only_binary (s : Field) :
-    center s ∨ terminus s := zhi_universal s
+    center s ∨ terminus s := wisdom_universal s
 
 /-- **Static equilibrium IS 极, dynamic equilibrium IS 中**:
     Equilibrium 之 经济学 standard reading 是 fixed-point. 但 ZhongOrbit 拒

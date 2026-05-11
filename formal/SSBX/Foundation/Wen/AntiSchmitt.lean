@@ -106,7 +106,7 @@ theorem state_of_exception_breaks_universality
   intro h_tong
   obtain ⟨s, t, hs_mid, ht_mid, h_ext_s, h_mid_t⟩ := h_exc
   -- a t is center, hence not terminus; but sameRoot forces terminus (a t) given terminus (a s)
-  exact (zhi_exclusive (a t)) ⟨h_mid_t, (h_tong s t hs_mid ht_mid).mp h_ext_s⟩
+  exact (wisdom_exclusive (a t)) ⟨h_mid_t, (h_tong s t hs_mid ht_mid).mp h_ext_s⟩
 
 /-- Sovereign exception 之 contrapositive: sameRoot ⟹ 没有 例外. -/
 theorem tongGen_no_exception
