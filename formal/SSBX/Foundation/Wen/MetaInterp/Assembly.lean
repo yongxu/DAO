@@ -528,6 +528,22 @@ theorem metaInterpProg_dispatch_routes_nop_at_fuel
         simpa [DispatchProg.dispatchProg] using
           metaInterpProg_dispatchProg_at_offset i hi)
 
+/-- Assembly-specialized exact block witness for `nop`, under the same aligned
+    register-cell invariant required by `ExecuteBlock.executeBlock_nop_simulates_aligned`. -/
+theorem metaInterpProg_execute_nop_simulates_aligned
+    (regHex : Hexagram) (sim μ : YiState)
+    (h_alive : sim.halted = false)
+    (h_nop : sim.prog[sim.pc]? = some .nop)
+    (h_curAligned : sim.cur = regDataCell regHex)
+    (h_pre :
+      SSBX.Foundation.Wen.MetaInterp.ExecuteBlock.BlockPre
+        regHex sim block_nop_offset metaInterpProg μ) :
+    SSBX.Foundation.Wen.MetaInterp.ExecuteBlock.BlockPost
+      regHex sim fetchOffset metaInterpProg (μ.runFuel 2) false := by
+  exact SSBX.Foundation.Wen.MetaInterp.ExecuteBlock.executeBlock_nop_simulates_aligned
+    regHex sim block_nop_offset fetchOffset metaInterpProg μ
+    h_alive h_nop h_curAligned (by rfl) (by rfl) h_pre
+
 /-- Assembly-specialized dispatch route for the setShi tag. -/
 theorem metaInterpProg_dispatch_routes_setShi_at_fuel
     (history : List R8) :
