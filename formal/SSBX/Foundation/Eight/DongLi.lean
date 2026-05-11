@@ -76,11 +76,11 @@ def topFlipDyn : DynSys Trigram where step := topFlip
 def cuoDyn : DynSys Trigram where step := Trigram.complement
 
 /-- **motion 在 乾 上之 2-周期性**：iter 2 = id at 乾。 -/
-theorem dong_qian_period :
-    iter dongDyn 2 heaven = heaven := dong_dong heaven
+theorem motion_heaven_period :
+    iter dongDyn 2 heaven = heaven := motion_motion heaven
 
 /-- **motion 在 Trigram 上无不动点**：不存在 t 使 motion t = t。 -/
-theorem dong_no_fixed : ¬ ∃ t : Trigram, IsFixed dongDyn t := by
+theorem motion_no_fixed : ¬ ∃ t : Trigram, IsFixed dongDyn t := by
   rintro ⟨⟨y1, y2, y3⟩, h⟩
   cases y1 <;> simp [IsFixed, dongDyn, motion, Yao.neg] at h
 
@@ -97,17 +97,17 @@ theorem topFlip_no_fixed : ¬ ∃ t : Trigram, IsFixed topFlipDyn t := by
 /-! ## § 4 周期 = 2 -/
 
 /-- **motion 周期 = 2**：motion² = id 即任意 t 是 motion 之 2-周期点。 -/
-theorem dong_period_2 (t : Trigram) : IsPeriodic dongDyn 2 t := by
+theorem motion_period_2 (t : Trigram) : IsPeriodic dongDyn 2 t := by
   unfold IsPeriodic iter
-  exact dong_dong t
+  exact motion_motion t
 
 /-- **middleFlip 周期 = 2**。 -/
 theorem middleFlip_period_2 (t : Trigram) : IsPeriodic middleFlipDyn 2 t :=
-  hua_hua t
+  middleFlip_middleFlip t
 
 /-- **topFlip 周期 = 2**。 -/
 theorem topFlip_period_2 (t : Trigram) : IsPeriodic topFlipDyn 2 t :=
-  bian_bian t
+  topFlip_topFlip t
 
 /-- **complement 周期 = 2**：错² = id。 -/
 theorem cuo_period_2 (t : Trigram) : IsPeriodic cuoDyn 2 t := by
@@ -239,8 +239,8 @@ theorem dongli_summary :
     ∧ (∀ target current : Trigram, lyapunov target (targetEulerStep target current) = 0)
     ∧ (∀ target current : Trigram, targetEulerStep target (targetEulerStep target current) = target)
     ∧ (∀ target current : Trigram, lyapunov target current ≤ 3) :=
-  ⟨dong_no_fixed, middleFlip_no_fixed, topFlip_no_fixed,
-   dong_period_2, middleFlip_period_2, topFlip_period_2, cuo_period_2, zhi_period_2,
+  ⟨motion_no_fixed, middleFlip_no_fixed, topFlip_no_fixed,
+   motion_period_2, middleFlip_period_2, topFlip_period_2, cuo_period_2, zhi_period_2,
    orbit_length, daYanProject_laoYin_yang,
    targetEuler_one_step, lyapunov_descent_one_step,
    targetEuler_idempotent, lyapunov_bound⟩

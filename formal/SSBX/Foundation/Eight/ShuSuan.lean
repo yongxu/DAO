@@ -65,7 +65,7 @@ theorem kong_he (a : Shu) : combine zero a = a := Nat.zero_add a
 
 theorem he_sheng (a b : Shu) : combine a (successor b) = successor (combine a b) := rfl
 
-theorem sheng_he (a b : Shu) : combine (successor a) b = successor (combine a b) := by
+theorem successor_combine (a b : Shu) : combine (successor a) b = successor (combine a b) := by
   unfold successor combine
   exact Nat.succ_add a b
 
@@ -197,7 +197,7 @@ Sheng inductive 之深度 n 等同于 List Yao 长度 n，
 此处仅用项目 multiply 字面陈述卡数定理。 -/
 
 /-- **Sheng 之 round-trip on Trigram** —— 仅 wrap BaguaAlgebra 既有定理。 -/
-theorem sheng_trigram_roundtrip (t : Trigram) :
+theorem successor_trigram_roundtrip (t : Trigram) :
     Sheng.toTrigram (Sheng.ofTrigram t) = t :=
   Sheng.toTrigram_ofTrigram t
 

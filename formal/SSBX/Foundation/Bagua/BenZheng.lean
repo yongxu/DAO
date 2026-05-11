@@ -188,7 +188,7 @@ theorem middleFlip_preserves_isZongFixed (t : Trigram) :
     cases y1 <;> cases y3 <;> rfl
 
 /-- motion 翻 isZongFixed: 改 y1 而不动 y3, 翻 palindrome 状态. -/
-theorem dong_flips_isZongFixed (t : Trigram) :
+theorem motion_flips_isZongFixed (t : Trigram) :
     (motion t).isZongFixed = !t.isZongFixed := by
   cases t with
   | mk y1 y2 y3 =>

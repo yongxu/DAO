@@ -79,7 +79,7 @@ theorem ju_le_three (a b : Trigram) : ju a b ≤ 3 := by
 即"几何对称群 = 算子群"。 -/
 
 /-- **动 (motion) 等距**：`ju (motion a) (motion b) = ju a b`. -/
-theorem dong_iso (a b : Trigram) : ju (motion a) (motion b) = ju a b := by
+theorem motion_iso (a b : Trigram) : ju (motion a) (motion b) = ju a b := by
   unfold ju hammingDist motion
   rcases a with ⟨a₁, a₂, a₃⟩
   rcases b with ⟨b₁, b₂, b₃⟩
@@ -214,7 +214,7 @@ theorem xingwei_summary :
     ∧ (Trigram.all.length = cube3_V)
     ∧ (Hexagram.allHex.length = cube6_V) :=
   ⟨ju_self, ju_eq_zero_iff, ju_comm, ju_triangle,
-   dong_iso, middleFlip_iso, topFlip_iso,
+   motion_iso, middleFlip_iso, topFlip_iso,
    cube3_euler_int, cube6_euler_int,
    trigram_card_cube3, hexagram_card_cube6⟩
 

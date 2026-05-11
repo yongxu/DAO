@@ -106,7 +106,7 @@ theorem cuo_yinCount_mod2 (t : Trigram) :
 /-! ## § 5 单 flip 之 yinCount 性质 -/
 
 /-- **motion 翻转初爻之 yin**：motion 改变 yinCount mod 2。 -/
-theorem dong_yinCount_mod2 (t : Trigram) :
+theorem motion_yinCount_mod2 (t : Trigram) :
     (Trigram.yinCount (motion t) + Trigram.yinCount t) % 2 = 1 := by
   cases t with
   | mk y1 y2 y3 => cases y1 <;> cases y2 <;> cases y3 <;> decide
@@ -176,7 +176,7 @@ theorem wuxiang_summary :
     ∧ (Trigram.all.length = 8) :=
   ⟨yao_bool_roundtrip, bool_yao_roundtrip,
    trigram_bool3_roundtrip, bool3_trigram_roundtrip,
-   cuo_involution, cuo_yinCount_mod2, dong_yinCount_mod2,
+   cuo_involution, cuo_yinCount_mod2, motion_yinCount_mod2,
    any_two_connected, trigram_card_anchor⟩
 
 end SSBX.Foundation.Eight.WuXiang

@@ -56,24 +56,24 @@ def topFlip (t : Trigram) : Trigram := ⟨t.y1, t.y2, t.y3.neg⟩
 
 /-! ### Involutivity (each is order 2, so each is its own inverse) -/
 
-theorem dong_dong (t : Trigram) : motion (motion t) = t := by
+theorem motion_motion (t : Trigram) : motion (motion t) = t := by
   simp [motion, Yao.neg_neg]
 
-theorem hua_hua (t : Trigram) : middleFlip (middleFlip t) = t := by
+theorem middleFlip_middleFlip (t : Trigram) : middleFlip (middleFlip t) = t := by
   simp [middleFlip, Yao.neg_neg]
 
-theorem bian_bian (t : Trigram) : topFlip (topFlip t) = t := by
+theorem topFlip_topFlip (t : Trigram) : topFlip (topFlip t) = t := by
   simp [topFlip, Yao.neg_neg]
 
 /-! ### Pairwise commutativity (the (Z/2)³ structure: abelian) -/
 
-theorem dong_hua_comm (t : Trigram) : middleFlip (motion t) = motion (middleFlip t) := by
+theorem motion_middleFlip_comm (t : Trigram) : middleFlip (motion t) = motion (middleFlip t) := by
   cases t; rfl
 
-theorem hua_bian_comm (t : Trigram) : topFlip (middleFlip t) = middleFlip (topFlip t) := by
+theorem middleFlip_topFlip_comm (t : Trigram) : topFlip (middleFlip t) = middleFlip (topFlip t) := by
   cases t; rfl
 
-theorem dong_bian_comm (t : Trigram) : topFlip (motion t) = motion (topFlip t) := by
+theorem motion_topFlip_comm (t : Trigram) : topFlip (motion t) = motion (topFlip t) := by
   cases t; rfl
 
 /-! ## § 2 错 = motion ∘ middleFlip ∘ topFlip
