@@ -240,6 +240,57 @@ theorem encMetaHistory_jump_step_trivial
     | mk cur history pc prog halted => rfl
   rw [h_step]
 
+/-- Exact `BlockPre → BlockPost` witness for the current jump skeleton in
+    the trivial case `target = sim.pc`.  Since the simulated pc does not
+    change extensionally, the encoded history is unchanged; the block only
+    transfers META control back to fetch. -/
+theorem executeBlock_jump_simulates_trivial
+    (regHex : Hexagram) (sim : YiState)
+    (offset fetchOffset : Nat) (metaProg : List YiInstr) (μ : YiState)
+    (h_alive : sim.halted = false)
+    (h_jump : sim.prog[sim.pc]? = some (.jump sim.pc))
+    (h_jumpAt : metaProg[offset]? = some (YiInstr.jump fetchOffset))
+    (h_pre : BlockPre regHex sim offset metaProg μ) :
+    BlockPost regHex sim fetchOffset metaProg (μ.runFuel 1) false := by
+  obtain ⟨hcur, hhist, hpc, hprog, hhalt⟩ := h_pre
+  have h_step_meta :
+      μ.step =
+        { cur := sim.cur
+          history := encMetaHistory regHex sim
+          pc := fetchOffset
+          prog := metaProg
+          halted := false } := by
+    unfold YiState.step
+    rw [hhalt]
+    simp only [Bool.false_eq_true, if_false]
+    rw [hprog, hpc, h_jumpAt]
+    unfold YiState.execute
+    simp [hcur, hhist, hprog, hhalt]
+  have h_run :
+      μ.runFuel 1 =
+        { cur := sim.cur
+          history := encMetaHistory regHex sim
+          pc := fetchOffset
+          prog := metaProg
+          halted := false } := by
+    unfold YiState.runFuel
+    rw [hhalt]
+    simpa using h_step_meta
+  have h_sim_step : sim.step = sim := by
+    unfold YiState.step
+    rw [h_alive]
+    simp only [Bool.false_eq_true, if_false]
+    rw [h_jump]
+    unfold YiState.execute
+    cases sim with
+    | mk cur history pc prog halted => rfl
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · rw [h_run, h_sim_step]
+  · rw [h_run, h_sim_step]
+  · rw [h_run]
+  · rw [h_run]
+  · rw [h_run]
+
 /-! ## § 3  General-case simulation — **deferred**
 
 The general-case simulation theorem would have the shape:
