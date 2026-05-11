@@ -64,13 +64,12 @@ For each block we provide:
     `executeBlock_pop_length`);
   - instruction-enumeration lemmas (`_first`);
   - one **concrete local-effect** lemma per block;
-  - a **sim-side bridge** lemma showing how `encMetaHistory regHex
-    sim.step` relates to `encMetaHistory regHex sim` for the
-    empty-sim.history case (push) and the empty-sim.history halt
-    case (pop).
+  - **sim-side bridge** lemmas showing how `encMetaHistory regHex
+    sim.step` relates to `encMetaHistory regHex sim` for general push,
+    non-empty pop, and the empty-sim.history halt case for pop.
 
 What's deferred to Phase C:
-  - the general (non-empty sim.history) simulation;
+  - the general push/pop block execution simulation;
   - the destructive-walk center-of-history mutation.
 
 The deferred lemmas appear as `Prop`-typed targets at the end of the
@@ -160,6 +159,33 @@ theorem executeBlock_push_local_effect
     ∧ μ'.halted = false := by
   refine ⟨?_, ?_, ?_, ?_⟩ <;> rfl
 
+/-- **Sim-side bridge for push (general history)**:
+    a simulated `.push` increments the encoded pc-counter, increments the
+    encoded simulated-history length counter, and inserts `sim.cur` at the
+    front of the simulated-history payload. -/
+theorem encMetaHistory_push_step
+    (regHex : Hexagram) (sim : YiState)
+    (h_alive : sim.halted = false)
+    (h_push : sim.prog[sim.pc]? = some .push) :
+    encMetaHistory regHex sim.step =
+      regDataCell regHex
+        :: encCounter regHex sim.pc
+        ++ [encHaltedFlag regHex sim.halted]
+        ++ regDataCell regHex
+        :: encCounter regHex sim.history.length
+        ++ sim.cur
+        :: sim.history
+        ++ ProgEnc.encProg sim.prog := by
+  have h_step : sim.step =
+      { sim with history := sim.cur :: sim.history
+               , pc := sim.pc + 1 } := by
+    simp [YiState.step, h_alive, h_push, YiState.execute]
+  rw [h_step]
+  unfold encMetaHistory
+  rw [encCounter_succ]
+  have h_len : (sim.cur :: sim.history).length = sim.history.length + 1 := rfl
+  rw [h_len, encCounter_succ]
+
 /-- **Sim-side bridge for push (empty sim.history, pc = 0 base case)**:
     when `sim.history = []` and `sim.pc = 0`, the encoded post-state
     differs from the pre-state by the prepending of two cells: the new
@@ -190,26 +216,8 @@ theorem encMetaHistory_push_step_emptyHist
         :: encCounter regHex 0
         ++ sim.cur
         :: ProgEnc.encProg sim.prog := by
-  -- sim.step on .push: { sim with history := sim.cur :: sim.history,
-  --                              pc := sim.pc + 1 }
-  have h_step : sim.step =
-      { sim with history := sim.cur :: sim.history
-               , pc := sim.pc + 1 } := by
-    simp [YiState.step, h_alive, h_push, YiState.execute]
-  rw [h_step]
-  unfold encMetaHistory
-  -- after the rewrite:
-  --   encCounter regHex (sim.pc + 1) ++ [...] ++
-  --   encCounter regHex (sim.cur :: []).length ++ (sim.cur :: []) ++
-  --   encProg sim.prog
-  rw [encCounter_succ]
-  -- (sim.cur :: sim.history).length = sim.history.length + 1
-  -- with h_emptyHist this is just 1; encCounter regHex 1 = regDataCell :: encCounter 0
-  have h_len : (sim.cur :: sim.history).length = 1 := by
-    rw [h_emptyHist]; rfl
-  rw [h_len, encCounter_succ]
-  rw [h_emptyHist]
-  simp [List.cons_append, List.append_assoc]
+  simpa [h_emptyHist, List.cons_append, List.append_assoc] using
+    encMetaHistory_push_step regHex sim h_alive h_push
 
 /-! ## § 2  pop block
 
@@ -300,6 +308,30 @@ theorem encMetaHistory_pop_step_emptyHist
   rw [h_step]
   unfold encMetaHistory
   rfl
+
+/-- **Sim-side bridge for pop (non-empty sim.history)**: when the simulated
+    history is `head :: rest`, `.pop` moves `head` into `sim.cur`, drops it
+    from `sim.history`, increments the pc-counter, and leaves the halted flag
+    and encoded program tail unchanged. -/
+theorem encMetaHistory_pop_step_nonempty
+    (regHex : Hexagram) (sim : YiState)
+    (h_pop : sim.prog[sim.pc]? = some .pop)
+    (h_alive : sim.halted = false)
+    (head : R8) (rest : List R8)
+    (h_history : sim.history = head :: rest) :
+    encMetaHistory regHex sim.step =
+      regDataCell regHex
+        :: encCounter regHex sim.pc
+        ++ [encHaltedFlag regHex sim.halted]
+        ++ encCounter regHex rest.length
+        ++ rest
+        ++ ProgEnc.encProg sim.prog := by
+  have h_step : sim.step =
+      { sim with cur := head, history := rest, pc := sim.pc + 1 } := by
+    simp [YiState.step, h_alive, h_pop, YiState.execute, h_history]
+  rw [h_step]
+  unfold encMetaHistory
+  rw [encCounter_succ]
 
 /-! ## § 3  Deferred general simulation lemmas
 
