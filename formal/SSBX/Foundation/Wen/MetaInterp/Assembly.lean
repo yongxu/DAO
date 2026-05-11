@@ -11,25 +11,26 @@ pc range   region                                length
 ---------  ------------------------------------  ------
 0..4       prologueProg                          5
 5          outerLoopEntry fetchOffset            1
-6..16      fetchProg dispatchOffset haltOffset   11
-17..32     dispatchProg offsets dispatchOffset   16
-33..34     executeBlock_nop                      2
-35..36     executeBlock_setShi  Shi.dao    [B]   2
-37..38     executeBlock_flipYao 0          [B]   2
-39..40     executeBlock_hu                       2
-41..42     executeBlock_cuo                      2
-43..44     executeBlock_zong                     2
-45..54     executeBlock_branchYaoEq 0 0 0  [B]   10
-55..64     executeBlock_branchShiEq Shi.dao 0 [B] 10
-65..73     executeBlock_jump 0             [B]   9
-74..78     executeBlock_push                     5
-79..83     executeBlock_pop                      5
-84         executeBlock_halt                     1
+6..19      fetchProgWithPeel dispatchOffset haltOffset 14
+20..35     dispatchProg offsets dispatchOffset   16
+36..37     executeBlock_nop                      2
+38..39     executeBlock_setShi  Shi.dao    [B]   2
+40..41     executeBlock_flipYao 0          [B]   2
+42..43     executeBlock_hu                       2
+44..45     executeBlock_cuo                      2
+46..47     executeBlock_zong                     2
+48..57     executeBlock_branchYaoEq 0 0 0  [B]   10
+58..67     executeBlock_branchShiEq Shi.dao 0 [B] 10
+68..76     executeBlock_jump 0             [B]   9
+77..81     executeBlock_push                     5
+82..86     executeBlock_pop                      5
+87         executeBlock_halt                     1
                                               ----
-                                          total 85
+                                          total 88
 ```
 
-`fetchOffset = 6`, `dispatchOffset = 17`, `haltOffset = 84`.
+`fetchOffset = 6`, `fetchHaltDetectOffset = 9`, `dispatchOffset = 20`,
+`haltOffset = 87`.
 
 ## Strategy B caveats
 
@@ -76,19 +77,20 @@ open SSBX.Foundation.Wen.MetaInterp.ExecuteBlocksHard
 def prologueOffset    : Nat := 0
 def outerLoopOffset   : Nat := 5
 def fetchOffset       : Nat := 6
-def dispatchOffset    : Nat := 17
-def block_nop_offset         : Nat := 33
-def block_setShi_offset      : Nat := 35
-def block_flipYao_offset     : Nat := 37
-def block_hu_offset          : Nat := 39
-def block_cuo_offset         : Nat := 41
-def block_zong_offset        : Nat := 43
-def block_branchYaoEq_offset : Nat := 45
-def block_branchShiEq_offset : Nat := 55
-def block_jump_offset        : Nat := 65
-def block_push_offset        : Nat := 74
-def block_pop_offset         : Nat := 79
-def haltOffset               : Nat := 84
+def fetchHaltDetectOffset : Nat := fetchOffset + 3
+def dispatchOffset    : Nat := 20
+def block_nop_offset         : Nat := 36
+def block_setShi_offset      : Nat := 38
+def block_flipYao_offset     : Nat := 40
+def block_hu_offset          : Nat := 42
+def block_cuo_offset         : Nat := 44
+def block_zong_offset        : Nat := 46
+def block_branchYaoEq_offset : Nat := 48
+def block_branchShiEq_offset : Nat := 58
+def block_jump_offset        : Nat := 68
+def block_push_offset        : Nat := 77
+def block_pop_offset         : Nat := 82
+def haltOffset               : Nat := 87
 
 /-! ## § 2  DispatchOffsets table -/
 
@@ -115,7 +117,7 @@ Strategy B defaults (see file header):
 def metaInterpProg : List YiInstr :=
   PrologueProg.prologueProg
   ++ OuterLoop.outerLoopEntry fetchOffset
-  ++ FetchProg.fetchProg dispatchOffset haltOffset
+  ++ FetchProg.fetchProgWithPeel fetchOffset dispatchOffset haltOffset
   ++ DispatchProg.dispatchProg metaInterpDispatchOffsets dispatchOffset
   ++ executeBlock_nop block_nop_offset fetchOffset
   ++ executeBlock_setShi Shi.dao fetchOffset
@@ -132,7 +134,7 @@ def metaInterpProg : List YiInstr :=
 
 /-! ## § 4  Tier A — length lemma -/
 
-theorem metaInterpProg_length : metaInterpProg.length = 85 := by
+theorem metaInterpProg_length : metaInterpProg.length = 88 := by
   -- All component lists are concrete; length reduces by `rfl` modulo
   -- the placeholder bodies built with `List.replicate`.  We unfold
   -- everything and let `simp` close the numeric goal.
@@ -140,7 +142,7 @@ theorem metaInterpProg_length : metaInterpProg.length = 85 := by
   simp only [metaInterpProg, List.length_append,
         PrologueProg.prologueProg_length,
         OuterLoop.outerLoopEntry_length,
-        FetchProg.fetchProg_length_concrete,
+        FetchProg.fetchProgWithPeel_length_concrete,
         DispatchProg.dispatchProg_length,
         executeBlock_nop_length,
         executeBlock_setShi_length,
@@ -174,12 +176,51 @@ theorem metaInterpProg_outerLoop_at_offset :
   -- instruction of the outerLoopEntry block.
   rfl
 
-/-- The concrete `FetchProg.fetchProg` block is spliced into
-    `metaInterpProg` starting at `fetchOffset`.  This is the segment
-    hypothesis required by the `FetchProg` route theorems. -/
+/-- The offset-aware fetch block with pc-counter peel is spliced into
+    `metaInterpProg` starting at `fetchOffset`. -/
+theorem metaInterpProg_fetchProgWithPeel_at_offset :
+    ∀ i (_hi : i < FetchProg.fetchProg_totalLen + 3),
+      metaInterpProg[fetchOffset + i]? =
+        (FetchProg.fetchProgWithPeel fetchOffset dispatchOffset haltOffset)[i]? := by
+  intro i hi
+  unfold FetchProg.fetchProg_totalLen FetchProg.walkerLen at hi
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  rcases i with _ | i
+  · rfl
+  omega
+
+/-- The halt-detection / placeholder-walker part of fetch begins immediately
+    after the pc-counter peel, at `fetchHaltDetectOffset`.  This is the
+    segment hypothesis required by the existing `FetchProg.fetchProg`
+    route theorems. -/
 theorem metaInterpProg_fetchProg_at_offset :
     ∀ i (_hi : i < FetchProg.fetchProg_totalLen),
-      metaInterpProg[fetchOffset + i]? =
+      metaInterpProg[fetchHaltDetectOffset + i]? =
         (FetchProg.fetchProg dispatchOffset haltOffset)[i]? := by
   intro i hi
   unfold FetchProg.fetchProg_totalLen FetchProg.walkerLen at hi
@@ -281,33 +322,88 @@ theorem metaInterpProg_routes_outerLoop_to_fetch
               rfl rfl rfl
   simp [YiState.runFuel, this]
 
-/-- Assembly-specialized halted fetch route, with explicit peel fuel. -/
+/-- The first three instructions of the concrete fetch region are the empty
+    counted-loop prefix that peels the encoded simulated pc-counter. -/
+theorem metaInterpProg_fetchPeel_loop_at_offset :
+    MetaProgHasEmptyCountedLoopAt fetchOffset metaInterpProg := by
+  refine ⟨?_, ?_, ?_⟩ <;> rfl
+
+/-- Immediately after the pc-counter peel prefix, the next concrete fetch
+    instruction pops the halted flag into `META.cur`. -/
+theorem metaInterpProg_fetchPeel_pop_halted_flag_at_offset :
+    metaInterpProg[fetchOffset + 3]? = some YiInstr.pop := by
+  rfl
+
+/-- Assembly-specialized exact pc-counter peel hand-off.  Starting at the
+    concrete fetch-loop entry, the counted-loop prefix consumes the pc-counter
+    and the following pop moves the halted flag into `META.cur`, reaching the
+    shifted halt-detection state. -/
+theorem metaInterpProg_fetch_peel_to_haltDetect_at_fuel
+    (regHex : Hexagram) (sim : YiState) :
+    (Fetch.fetchEntryState regHex sim metaInterpProg fetchOffset).runFuel
+        (3 * sim.pc + 3) =
+      FetchProg.fetchProgHaltDetectEntry regHex sim metaInterpProg
+        fetchHaltDetectOffset sim.halted := by
+  simpa [fetchHaltDetectOffset] using
+    FetchProg.fetchEntryState_pc_counter_peel_then_haltDetectEntry_shifted
+      regHex sim metaInterpProg fetchOffset
+      metaInterpProg_fetchPeel_loop_at_offset
+      metaInterpProg_fetchPeel_pop_halted_flag_at_offset
+
+/-- Exact assembly-specialized halted fetch route from the real concrete
+    fetch-loop entry.  This composes the pc-counter peel prefix, the
+    halted-flag pop, and the halt-detection branch. -/
+theorem metaInterpProg_fetch_routes_halted_exact
+    (regHex : Hexagram) (sim : YiState)
+    (h_halted : sim.halted = true) :
+    ((Fetch.fetchEntryState regHex sim metaInterpProg fetchOffset).runFuel
+      (3 * sim.pc + 4)).pc = haltOffset := by
+  have h_peel :
+      (Fetch.fetchEntryState regHex sim metaInterpProg fetchOffset).runFuel
+          (3 * sim.pc + 3) =
+        FetchProg.fetchProgHaltDetectEntry regHex sim metaInterpProg
+          fetchHaltDetectOffset true := by
+    simpa [h_halted] using
+      metaInterpProg_fetch_peel_to_haltDetect_at_fuel regHex sim
+  have h_fuel : 3 * sim.pc + 4 = (3 * sim.pc + 3) + 1 := by omega
+  rw [h_fuel, SSBX.Foundation.Bagua.GodelLi.runFuel_succ_right, h_peel]
+  have h_branchAt : metaInterpProg[fetchHaltDetectOffset + 1]? =
+      some (YiInstr.branchShiEq Shi.ji haltOffset) := by
+    rfl
+  exact FetchProg.fetchProg_branch_halted_true regHex sim metaInterpProg
+    fetchHaltDetectOffset dispatchOffset haltOffset h_branchAt
+
+/-- Assembly-specialized halted fetch route for the inner halt-detection
+    segment, with explicit peel fuel supplied by callers. -/
 theorem metaInterpProg_fetch_routes_halted_at_fuel
     (regHex : Hexagram) (sim : YiState)
     (h_halted : sim.halted = true)
     (M0 : Nat)
     (h_peel :
-      (Fetch.fetchEntryState regHex sim metaInterpProg fetchOffset).runFuel M0 =
-        FetchProg.fetchProgHaltDetectEntry regHex sim metaInterpProg fetchOffset true) :
-    ((Fetch.fetchEntryState regHex sim metaInterpProg fetchOffset).runFuel
+      (Fetch.fetchEntryState regHex sim metaInterpProg fetchHaltDetectOffset).runFuel M0 =
+        FetchProg.fetchProgHaltDetectEntry regHex sim metaInterpProg
+          fetchHaltDetectOffset true) :
+    ((Fetch.fetchEntryState regHex sim metaInterpProg fetchHaltDetectOffset).runFuel
       (M0 + 1)).pc = haltOffset := by
   exact FetchProg.fetchProg_routes_halted_at_fuel regHex sim metaInterpProg
-    fetchOffset dispatchOffset haltOffset metaInterpProg_fetchProg_at_offset
+    fetchHaltDetectOffset dispatchOffset haltOffset metaInterpProg_fetchProg_at_offset
     h_halted M0 h_peel
 
-/-- Assembly-specialized running fetch route, with explicit peel fuel. -/
+/-- Assembly-specialized running fetch route for the inner halt-detection
+    segment, with explicit peel fuel supplied by callers. -/
 theorem metaInterpProg_fetch_routes_running_to_dispatch_at_fuel
     (regHex : Hexagram) (sim : YiState)
     (h_running : sim.halted = false)
     (h_pcInBounds : sim.pc < sim.prog.length)
     (M0 : Nat)
     (h_peel :
-      (Fetch.fetchEntryState regHex sim metaInterpProg fetchOffset).runFuel M0 =
-        FetchProg.fetchProgHaltDetectEntry regHex sim metaInterpProg fetchOffset false) :
-    ((Fetch.fetchEntryState regHex sim metaInterpProg fetchOffset).runFuel
+      (Fetch.fetchEntryState regHex sim metaInterpProg fetchHaltDetectOffset).runFuel M0 =
+        FetchProg.fetchProgHaltDetectEntry regHex sim metaInterpProg
+          fetchHaltDetectOffset false) :
+    ((Fetch.fetchEntryState regHex sim metaInterpProg fetchHaltDetectOffset).runFuel
       (M0 + 1 + (FetchProg.walkerLen + 1))).pc = dispatchOffset := by
   exact FetchProg.fetchProg_routes_running_to_dispatch_at_fuel regHex sim metaInterpProg
-    fetchOffset dispatchOffset haltOffset metaInterpProg_fetchProg_at_offset
+    fetchHaltDetectOffset dispatchOffset haltOffset metaInterpProg_fetchProg_at_offset
     h_running h_pcInBounds M0 h_peel
 
 /-! ## § 5.5  Dispatch absolute-pc route lift -/
@@ -631,7 +727,7 @@ theorem metaInterpProg_dispatch_halt_executes_halt
 
 Stretch goal.  Constructing a fully-encoded META start state for a
 non-trivial sim program would require invoking `RunWith` and threading
-`encMetaHistory` through 6+11+16+1+1 ≈ 35 fuel ticks; that's beyond
+`encMetaHistory` through 6+14+16+1+1 ≈ 38 fuel ticks; that's beyond
 this slot's scope (4-sorry budget).  We record the obligation as a
 TODO theorem so callers can target it. -/
 
@@ -645,15 +741,14 @@ TODO theorem so callers can target it. -/
       starting from `RunWith h metaInterpProg (encProg [YiInstr.halt])`,
       after enough fuel ticks the META machine halts.  Discharging
       that needs the prologue contract, the outer-loop step, the
-      fetch routing (sorry-blocked in
-      `FetchProg.fetchProg_routes_running_to_dispatch`), the dispatch
-      routing for the `halt` arm, and the `executeBlock_halt` local
-      effect.  We record here the structural witness only. -/
+      fetch decode/restore contract, dispatch routing for the `halt`
+      arm, and the `executeBlock_halt` local effect.  We record here
+      the structural witness only. -/
 theorem metaInterpProg_simulates_one_halt :
     metaInterpProg[haltOffset]? = some YiInstr.halt
       ∧ metaInterpDispatchOffsets.halt_offset = haltOffset := by
   refine ⟨?_, rfl⟩
-  -- haltOffset = 84; the executeBlock_halt block at positions 84..84
+  -- haltOffset = 87; the executeBlock_halt block at positions 87..87
   -- is the singleton list `[YiInstr.halt]`.
   rfl
 
@@ -664,10 +759,13 @@ theorem metaInterpProg_simulates_one_halt :
     This does not claim the full universal semantic theorem; parameterized
     sub-dispatch and arbitrary-program simulation remain separate obligations. -/
 theorem metaInterpProg_base256_structural_summary :
-    metaInterpProg.length = 85
+    metaInterpProg.length = 88
       ∧ metaInterpProg[outerLoopOffset]? = some (YiInstr.jump fetchOffset)
-      ∧ (∀ i (_hi : i < FetchProg.fetchProg_totalLen),
+      ∧ (∀ i (_hi : i < FetchProg.fetchProg_totalLen + 3),
           metaInterpProg[fetchOffset + i]? =
+            (FetchProg.fetchProgWithPeel fetchOffset dispatchOffset haltOffset)[i]?)
+      ∧ (∀ i (_hi : i < FetchProg.fetchProg_totalLen),
+          metaInterpProg[fetchHaltDetectOffset + i]? =
             (FetchProg.fetchProg dispatchOffset haltOffset)[i]?)
       ∧ (∀ i (_hi : i < 16),
           metaInterpProg[dispatchOffset + i]? =
@@ -676,6 +774,7 @@ theorem metaInterpProg_base256_structural_summary :
       ∧ metaInterpDispatchOffsets.halt_offset = haltOffset := by
   exact ⟨metaInterpProg_length,
     metaInterpProg_outerLoop_at_offset,
+    metaInterpProg_fetchProgWithPeel_at_offset,
     metaInterpProg_fetchProg_at_offset,
     metaInterpProg_dispatchProg_at_offset,
     metaInterpProg_simulates_one_halt.1,

@@ -137,6 +137,33 @@ theorem fetchProg_length_concrete (dispatchOffset haltOffset : Nat) :
     (fetchProg dispatchOffset haltOffset).length = 11 := by
   rw [fetchProg_length]; rfl
 
+/-! ## § 2a  Offset-aware fetch program with pc-counter peel prefix -/
+
+/-- Concrete fetch loop with the pc-counter peel spliced in front of the
+    existing halt-detection / placeholder-walker segment.
+
+    The first three instructions are `countedLoop fetchOffset []`, which
+    consumes the pc-counter and exits at `fetchOffset + 3`.  The existing
+    `fetchProg dispatchOffset haltOffset` begins there, first popping the
+    halted flag into `META.cur` and then routing on it. -/
+def fetchProgWithPeel
+    (fetchOffset dispatchOffset haltOffset : Nat) : List YiInstr :=
+  countedLoop fetchOffset [] ++ fetchProg dispatchOffset haltOffset
+
+theorem fetchProgWithPeel_length
+    (fetchOffset dispatchOffset haltOffset : Nat) :
+    (fetchProgWithPeel fetchOffset dispatchOffset haltOffset).length =
+      fetchProg_totalLen + 3 := by
+  unfold fetchProgWithPeel
+  rw [List.length_append, countedLoop_length, fetchProg_length]
+  rfl
+
+theorem fetchProgWithPeel_length_concrete
+    (fetchOffset dispatchOffset haltOffset : Nat) :
+    (fetchProgWithPeel fetchOffset dispatchOffset haltOffset).length = 14 := by
+  rw [fetchProgWithPeel_length]
+  rfl
+
 /-! ## § 3  Structural lookup lemmas -/
 
 theorem fetchProg_first (dispatchOffset haltOffset : Nat) :
