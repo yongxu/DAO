@@ -76,7 +76,7 @@ def all : List Trigram := [heaven, lake, fire, thunder, wind, water, mountain, e
 theorem all_length : all.length = 8 := rfl
 
 /-- 错 on a trigram: yao-wise negation.
-    NB: refined in `SSBX.Foundation.Bagua.BaguaAlgebra` as `complement = motion ∘ hua ∘ bian`
+    NB: refined in `SSBX.Foundation.Bagua.BaguaAlgebra` as `complement = motion ∘ middleFlip ∘ topFlip`
     — the (Z/2)³ decomposition into three single-yao flips. -/
 def complement (t : Trigram) : Trigram := ⟨t.y1.neg, t.y2.neg, t.y3.neg⟩
 

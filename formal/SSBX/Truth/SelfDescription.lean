@@ -308,13 +308,13 @@ theorem complete_self_description : CompleteSelfDescription := by
 def TrigramOperatorComplete : Prop :=
   (∀ a b : Trigram, ∃ f : Trigram → Trigram, f a = b)
     ∧ (∀ t : Trigram, guiyi t = ())
-    ∧ (∀ t : Trigram, Trigram.complement t = motion (hua (bian t)))
+    ∧ (∀ t : Trigram, Trigram.complement t = motion (middleFlip (topFlip t)))
     ∧ (∀ s : SiXiang, ∀ y : Yao, heShang (fenToTrigram s y) = s)
     ∧ (∀ y1 y2 y3 : Yao, grandCycle y1 y2 y3 = ())
 
 def HexagramOperatorComplete : Prop :=
   (∀ h : Hexagram, Hexagram.complement h
-      = dongInner (huaInner (bianInner (dongOuter (huaOuter (bianOuter h))))))
+      = dongInner (middleFlipInner (topFlipInner (dongOuter (middleFlipOuter (topFlipOuter h))))))
     ∧ (∀ a b : Hexagram, ∃ f : Hexagram → Hexagram, f a = b)
     ∧ (∀ a b : Hexagram, hexHammingDist a b ≤ 6)
 

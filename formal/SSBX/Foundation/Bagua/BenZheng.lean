@@ -20,8 +20,8 @@
 ## 算子 invariants (全部 native_decide 可证)
 
   complement  保 isZongFixed (Trigram-level) → 保 quadrant (Hexagram-level)
-  hua  保 isZongFixed                 → huaInner / huaOuter 保 quadrant
-  motion / bian 翻 isZongFixed           → dongInner / bianInner / dongOuter / bianOuter 跨象限
+  middleFlip  保 isZongFixed                 → middleFlipInner / middleFlipOuter 保 quadrant
+  motion / topFlip 翻 isZongFixed           → dongInner / topFlipInner / dongOuter / topFlipOuter 跨象限
   reverse: 本本/征征 自闭, 本征↔征本
 
   interlace fixed points: 1乾, 2坤; interlace 2-cycle: 63既济 ↔ 64未济
@@ -180,9 +180,9 @@ theorem cuo_preserves_isZongFixed (t : Trigram) :
   | mk y1 y2 y3 =>
     cases y1 <;> cases y3 <;> rfl
 
-/-- hua 保 isZongFixed: 翻中爻不动 y1/y3, palindrome 不变. -/
+/-- middleFlip 保 isZongFixed: 翻中爻不动 y1/y3, palindrome 不变. -/
 theorem hua_preserves_isZongFixed (t : Trigram) :
-    (hua t).isZongFixed = t.isZongFixed := by
+    (middleFlip t).isZongFixed = t.isZongFixed := by
   cases t with
   | mk y1 y2 y3 =>
     cases y1 <;> cases y3 <;> rfl
@@ -194,9 +194,9 @@ theorem dong_flips_isZongFixed (t : Trigram) :
   | mk y1 y2 y3 =>
     cases y1 <;> cases y3 <;> rfl
 
-/-- bian 翻 isZongFixed: 改 y3 而不动 y1, 翻 palindrome 状态. -/
+/-- topFlip 翻 isZongFixed: 改 y3 而不动 y1, 翻 palindrome 状态. -/
 theorem bian_flips_isZongFixed (t : Trigram) :
-    (bian t).isZongFixed = !t.isZongFixed := by
+    (topFlip t).isZongFixed = !t.isZongFixed := by
   cases t with
   | mk y1 y2 y3 =>
     cases y1 <;> cases y3 <;> rfl
@@ -384,16 +384,16 @@ theorem zong_preserves_zhengZheng (h : Hexagram) :
 
 /-! ## § 10 单爻 flip：中爻 (y2/y5) 保象限，其它跨 -/
 
-/-- huaInner (flip y2) 保象限. -/
+/-- middleFlipInner (flip y2) 保象限. -/
 theorem huaInner_preserves_quadrant (h : Hexagram) :
-    (huaInner h).quadrant = h.quadrant := by
+    (middleFlipInner h).quadrant = h.quadrant := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y3 <;> cases y4 <;> cases y6 <;> rfl
 
-/-- huaOuter (flip y5) 保象限. -/
+/-- middleFlipOuter (flip y5) 保象限. -/
 theorem huaOuter_preserves_quadrant (h : Hexagram) :
-    (huaOuter h).quadrant = h.quadrant := by
+    (middleFlipOuter h).quadrant = h.quadrant := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y3 <;> cases y4 <;> cases y6 <;> rfl
@@ -405,9 +405,9 @@ theorem dongInner_flips_inner (h : Hexagram) :
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y3 <;> rfl
 
-/-- bianInner (flip y3) 跨 inner 本/征. -/
+/-- topFlipInner (flip y3) 跨 inner 本/征. -/
 theorem bianInner_flips_inner (h : Hexagram) :
-    (bianInner h).innerTrigram.isZongFixed = !h.innerTrigram.isZongFixed := by
+    (topFlipInner h).innerTrigram.isZongFixed = !h.innerTrigram.isZongFixed := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y3 <;> rfl
@@ -419,9 +419,9 @@ theorem dongOuter_flips_outer (h : Hexagram) :
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y4 <;> cases y6 <;> rfl
 
-/-- bianOuter (flip y6) 跨 outer 本/征. -/
+/-- topFlipOuter (flip y6) 跨 outer 本/征. -/
 theorem bianOuter_flips_outer (h : Hexagram) :
-    (bianOuter h).outerTrigram.isZongFixed = !h.outerTrigram.isZongFixed := by
+    (topFlipOuter h).outerTrigram.isZongFixed = !h.outerTrigram.isZongFixed := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y4 <;> cases y6 <;> rfl

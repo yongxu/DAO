@@ -749,14 +749,14 @@ theorem hexFlip1Transform_denotes_flip1 (id : OperatorId) (h : Hexagram) :
   unfold hexFlip1Transform
   exact flip1Body_eq_dongInner h
 
-def hexFlip2Transform (_id : OperatorId) (h : Hexagram) : Hexagram := huaInner h
+def hexFlip2Transform (_id : OperatorId) (h : Hexagram) : Hexagram := middleFlipInner h
 
 theorem hexFlip2Transform_denotes_flip2 (id : OperatorId) (h : Hexagram) :
     denoteHexFun Stdlib.flip2Body h = some (hexFlip2Transform id h) := by
   unfold hexFlip2Transform
   exact flip2Body_eq_huaInner h
 
-def hexFlip3Transform (_id : OperatorId) (h : Hexagram) : Hexagram := bianInner h
+def hexFlip3Transform (_id : OperatorId) (h : Hexagram) : Hexagram := topFlipInner h
 
 theorem hexFlip3Transform_denotes_flip3 (id : OperatorId) (h : Hexagram) :
     denoteHexFun Stdlib.flip3Body h = some (hexFlip3Transform id h) := by

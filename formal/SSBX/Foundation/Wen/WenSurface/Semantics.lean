@@ -418,8 +418,8 @@ def coreTheoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .C_6  => some ⟨.C_6,  Stdlib.hexIdBody, 1, "內/内: Hex projection anchor as identity; no spatial model"⟩
   | .C_7  => some ⟨.C_7,  Stdlib.hexIdBody, 1, "表: surface projection anchor as identity; no spatial model"⟩
   | .C_8  => some ⟨.C_8,  Stdlib.hexIdBody, 1, "裡/里: interior projection anchor as identity; no spatial model"⟩
-  | .T_1  => some ⟨.T_1,  Stdlib.flip2Body, 1, "化: Hex y2 transform / inner hua"⟩
-  | .T_2  => some ⟨.T_2,  Stdlib.flip3Body, 1, "變/变: Hex y3 transform / inner bian"⟩
+  | .T_1  => some ⟨.T_1,  Stdlib.flip2Body, 1, "化: Hex y2 transform / inner middleFlip"⟩
+  | .T_2  => some ⟨.T_2,  Stdlib.flip3Body, 1, "變/变: Hex y3 transform / inner topFlip"⟩
   | .T_3  => some ⟨.T_3,  Stdlib.pairHBody, 2, "易: binary object exchange carrier"⟩
   | .T_4  => some ⟨.T_4,  Stdlib.cuoBody, 1, "革: total Hex overhaul as complement"⟩
   | .T_5  => some ⟨.T_5,  Stdlib.flip1Body, 1, "改: local Hex y1 correction / inner motion"⟩

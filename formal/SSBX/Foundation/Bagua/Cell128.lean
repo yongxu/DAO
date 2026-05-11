@@ -107,11 +107,11 @@ def hexHu (c : Cell128) : Cell128 := (Hexagram.interlace c.1, c.2)
 
 /-- 6 单爻 flip lift. -/
 def flip1 (c : Cell128) : Cell128 := (dongInner c.1, c.2)
-def flip2 (c : Cell128) : Cell128 := (huaInner c.1, c.2)
-def flip3 (c : Cell128) : Cell128 := (bianInner c.1, c.2)
+def flip2 (c : Cell128) : Cell128 := (middleFlipInner c.1, c.2)
+def flip3 (c : Cell128) : Cell128 := (topFlipInner c.1, c.2)
 def flip4 (c : Cell128) : Cell128 := (dongOuter c.1, c.2)
-def flip5 (c : Cell128) : Cell128 := (huaOuter c.1, c.2)
-def flip6 (c : Cell128) : Cell128 := (bianOuter c.1, c.2)
+def flip5 (c : Cell128) : Cell128 := (middleFlipOuter c.1, c.2)
+def flip6 (c : Cell128) : Cell128 := (topFlipOuter c.1, c.2)
 
 /-! ### Involutivity -/
 

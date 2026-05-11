@@ -66,11 +66,11 @@ theorem fixed_is_periodic_one {X : Type} (S : DynSys X) (x : X)
 /-- **motion 动力系统**：相空间 = Trigram，一步 = motion。 -/
 def dongDyn : DynSys Trigram where step := motion
 
-/-- **hua 动力系统**。 -/
-def huaDyn : DynSys Trigram where step := hua
+/-- **middleFlip 动力系统**。 -/
+def middleFlipDyn : DynSys Trigram where step := middleFlip
 
-/-- **bian 动力系统**。 -/
-def bianDyn : DynSys Trigram where step := bian
+/-- **topFlip 动力系统**。 -/
+def topFlipDyn : DynSys Trigram where step := topFlip
 
 /-- **complement 动力系统**（错卦：阴阳全反）。 -/
 def cuoDyn : DynSys Trigram where step := Trigram.complement
@@ -84,15 +84,15 @@ theorem dong_no_fixed : ¬ ∃ t : Trigram, IsFixed dongDyn t := by
   rintro ⟨⟨y1, y2, y3⟩, h⟩
   cases y1 <;> simp [IsFixed, dongDyn, motion, Yao.neg] at h
 
-/-- **hua 在 Trigram 上无不动点**。 -/
-theorem hua_no_fixed : ¬ ∃ t : Trigram, IsFixed huaDyn t := by
+/-- **middleFlip 在 Trigram 上无不动点**。 -/
+theorem hua_no_fixed : ¬ ∃ t : Trigram, IsFixed middleFlipDyn t := by
   rintro ⟨⟨y1, y2, y3⟩, h⟩
-  cases y2 <;> simp [IsFixed, huaDyn, hua, Yao.neg] at h
+  cases y2 <;> simp [IsFixed, middleFlipDyn, middleFlip, Yao.neg] at h
 
-/-- **bian 在 Trigram 上无不动点**。 -/
-theorem bian_no_fixed : ¬ ∃ t : Trigram, IsFixed bianDyn t := by
+/-- **topFlip 在 Trigram 上无不动点**。 -/
+theorem bian_no_fixed : ¬ ∃ t : Trigram, IsFixed topFlipDyn t := by
   rintro ⟨⟨y1, y2, y3⟩, h⟩
-  cases y3 <;> simp [IsFixed, bianDyn, bian, Yao.neg] at h
+  cases y3 <;> simp [IsFixed, topFlipDyn, topFlip, Yao.neg] at h
 
 /-! ## § 4 周期 = 2 -/
 
@@ -101,12 +101,12 @@ theorem dong_period_2 (t : Trigram) : IsPeriodic dongDyn 2 t := by
   unfold IsPeriodic iter
   exact dong_dong t
 
-/-- **hua 周期 = 2**。 -/
-theorem hua_period_2 (t : Trigram) : IsPeriodic huaDyn 2 t :=
+/-- **middleFlip 周期 = 2**。 -/
+theorem hua_period_2 (t : Trigram) : IsPeriodic middleFlipDyn 2 t :=
   hua_hua t
 
-/-- **bian 周期 = 2**。 -/
-theorem bian_period_2 (t : Trigram) : IsPeriodic bianDyn 2 t :=
+/-- **topFlip 周期 = 2**。 -/
+theorem bian_period_2 (t : Trigram) : IsPeriodic topFlipDyn 2 t :=
   bian_bian t
 
 /-- **complement 周期 = 2**：错² = id。 -/
@@ -211,11 +211,11 @@ theorem targetEuler_idempotent (target current : Trigram) :
 
 /-- **动力总摘要**（含 Phase 4 先行：连续 ODE 之 finite approximation）：
     (1) motion 在 Trigram 上无不动点
-    (2) hua 在 Trigram 上无不动点
-    (3) bian 在 Trigram 上无不动点
+    (2) middleFlip 在 Trigram 上无不动点
+    (3) topFlip 在 Trigram 上无不动点
     (4) motion 周期 = 2（任意起点）
-    (5) hua 周期 = 2
-    (6) bian 周期 = 2
+    (5) middleFlip 周期 = 2
+    (6) topFlip 周期 = 2
     (7) complement 周期 = 2
     (8) 之卦周期 = 2
     (9) orbit 长度公式
@@ -226,11 +226,11 @@ theorem targetEuler_idempotent (target current : Trigram) :
     (14) Lyapunov 上界 ≤ 3 -/
 theorem dongli_summary :
     (¬ ∃ t : Trigram, IsFixed dongDyn t)
-    ∧ (¬ ∃ t : Trigram, IsFixed huaDyn t)
-    ∧ (¬ ∃ t : Trigram, IsFixed bianDyn t)
+    ∧ (¬ ∃ t : Trigram, IsFixed middleFlipDyn t)
+    ∧ (¬ ∃ t : Trigram, IsFixed topFlipDyn t)
     ∧ (∀ t : Trigram, IsPeriodic dongDyn 2 t)
-    ∧ (∀ t : Trigram, IsPeriodic huaDyn 2 t)
-    ∧ (∀ t : Trigram, IsPeriodic bianDyn 2 t)
+    ∧ (∀ t : Trigram, IsPeriodic middleFlipDyn 2 t)
+    ∧ (∀ t : Trigram, IsPeriodic topFlipDyn 2 t)
     ∧ (∀ t : Trigram, IsPeriodic cuoDyn 2 t)
     ∧ (∀ t : Trigram, zhiTrigram (zhiTrigram t) = t)
     ∧ (∀ (S : DynSys Trigram) (n : Nat) (x : Trigram), (orbit S n x).length = n)

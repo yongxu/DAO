@@ -210,11 +210,11 @@ mutual
     | _+1,    .huH,    [.hexV h]            => some (.hexV h.interlace)
     | _+1,    .cuoZongH, [.hexV h]          => some (.hexV h.complementReverse)
     | _+1,    .flip1H, [.hexV h]            => some (.hexV (dongInner h))
-    | _+1,    .flip2H, [.hexV h]            => some (.hexV (huaInner h))
-    | _+1,    .flip3H, [.hexV h]            => some (.hexV (bianInner h))
+    | _+1,    .flip2H, [.hexV h]            => some (.hexV (middleFlipInner h))
+    | _+1,    .flip3H, [.hexV h]            => some (.hexV (topFlipInner h))
     | _+1,    .flip4H, [.hexV h]            => some (.hexV (dongOuter h))
-    | _+1,    .flip5H, [.hexV h]            => some (.hexV (huaOuter h))
-    | _+1,    .flip6H, [.hexV h]            => some (.hexV (bianOuter h))
+    | _+1,    .flip5H, [.hexV h]            => some (.hexV (middleFlipOuter h))
+    | _+1,    .flip6H, [.hexV h]            => some (.hexV (topFlipOuter h))
     | _+1,    .pairH,  [.hexV a, .hexV b]   => some (.pairV (.hexV a) (.hexV b))
     | _+1,    .dupH,   [.hexV h]            => some (.pairV (.hexV h) (.hexV h))
     | _+1,    .list1H, [.hexV h]            => some (.listV [.hexV h])
@@ -529,14 +529,14 @@ theorem flip1Body_eq_dongInner (h : Hexagram) :
     all_goals native_decide
 
 theorem flip2Body_eq_huaInner (h : Hexagram) :
-    denoteHexFun Stdlib.flip2Body h = some (huaInner h) := by
+    denoteHexFun Stdlib.flip2Body h = some (middleFlipInner h) := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
     all_goals native_decide
 
 theorem flip3Body_eq_bianInner (h : Hexagram) :
-    denoteHexFun Stdlib.flip3Body h = some (bianInner h) := by
+    denoteHexFun Stdlib.flip3Body h = some (topFlipInner h) := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
@@ -550,14 +550,14 @@ theorem flip4Body_eq_dongOuter (h : Hexagram) :
     all_goals native_decide
 
 theorem flip5Body_eq_huaOuter (h : Hexagram) :
-    denoteHexFun Stdlib.flip5Body h = some (huaOuter h) := by
+    denoteHexFun Stdlib.flip5Body h = some (middleFlipOuter h) := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
     all_goals native_decide
 
 theorem flip6Body_eq_bianOuter (h : Hexagram) :
-    denoteHexFun Stdlib.flip6Body h = some (bianOuter h) := by
+    denoteHexFun Stdlib.flip6Body h = some (topFlipOuter h) := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6

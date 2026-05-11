@@ -225,11 +225,11 @@ def hexHu (c : Cell256) : Cell256 := (Hexagram.interlace c.1, c.2)
 
 /-- 6 single yao flips lifted. -/
 def flip1 (c : Cell256) : Cell256 := (dongInner c.1, c.2)
-def flip2 (c : Cell256) : Cell256 := (huaInner c.1, c.2)
-def flip3 (c : Cell256) : Cell256 := (bianInner c.1, c.2)
+def flip2 (c : Cell256) : Cell256 := (middleFlipInner c.1, c.2)
+def flip3 (c : Cell256) : Cell256 := (topFlipInner c.1, c.2)
 def flip4 (c : Cell256) : Cell256 := (dongOuter c.1, c.2)
-def flip5 (c : Cell256) : Cell256 := (huaOuter c.1, c.2)
-def flip6 (c : Cell256) : Cell256 := (bianOuter c.1, c.2)
+def flip5 (c : Cell256) : Cell256 := (middleFlipOuter c.1, c.2)
+def flip6 (c : Cell256) : Cell256 := (topFlipOuter c.1, c.2)
 
 theorem hexCuo_hexCuo (c : Cell256) : hexCuo (hexCuo c) = c := by
   rcases c with ⟨h, s⟩

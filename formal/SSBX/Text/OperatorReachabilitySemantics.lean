@@ -198,12 +198,12 @@ theorem flip1_updates_hexagram (c : Cell256) :
   rfl
 
 theorem flip2_updates_hexagram (c : Cell256) :
-    (apply .flip2 c).1 = huaInner c.1 := by
+    (apply .flip2 c).1 = middleFlipInner c.1 := by
   rcases c with ⟨h, s⟩
   rfl
 
 theorem flip3_updates_hexagram (c : Cell256) :
-    (apply .flip3 c).1 = bianInner c.1 := by
+    (apply .flip3 c).1 = topFlipInner c.1 := by
   rcases c with ⟨h, s⟩
   rfl
 
@@ -213,12 +213,12 @@ theorem flip4_updates_hexagram (c : Cell256) :
   rfl
 
 theorem flip5_updates_hexagram (c : Cell256) :
-    (apply .flip5 c).1 = huaOuter c.1 := by
+    (apply .flip5 c).1 = middleFlipOuter c.1 := by
   rcases c with ⟨h, s⟩
   rfl
 
 theorem flip6_updates_hexagram (c : Cell256) :
-    (apply .flip6 c).1 = bianOuter c.1 := by
+    (apply .flip6 c).1 = topFlipOuter c.1 := by
   rcases c with ⟨h, s⟩
   rfl
 

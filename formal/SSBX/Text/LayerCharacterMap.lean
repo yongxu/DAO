@@ -145,8 +145,8 @@ end SSBX.Foundation.Yi.Yi.Trigram
    六爻位翻转字: 改/化/变/临/主/极 (Fin 6, 0-indexed)
 
    - flip[0] (改) — 初爻 (与 R3 motion 一致)
-   - flip[1] (化) — 二爻 (与 R3 hua 一致)
-   - flip[2] (变) — 三爻 (与 R3 bian 一致)
+   - flip[1] (化) — 二爻 (与 R3 middleFlip 一致)
+   - flip[2] (变) — 三爻 (与 R3 topFlip 一致)
    - flip[3] (临) — 四爻 (近君位 / 临察；19 临卦同字)
    - flip[4] (主) — 五爻 (君位 / 主导；九五之尊)
    - flip[5] (极) — 上爻 (亢龙有悔之极位) -/

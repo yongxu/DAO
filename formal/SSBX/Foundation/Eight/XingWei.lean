@@ -8,7 +8,7 @@ on top of `BaguaAlgebra`'s `hammingDist`.
 
   § 1   项目几何字 (dian/wei/ju/lin/zhong/ying/bi/dang) as Lean defs
   § 2   汉明度量公理：对称、自距零、三角不等式（NEW results）
-  § 3   反爻之等距性：motion/hua/bian 保汉明距离
+  § 3   反爻之等距性：motion/middleFlip/topFlip 保汉明距离
   § 4   立方体 Euler 特征：3-cube χ = 1，6-cube χ = 1（concrete computation）
   § 5   易经四位 之 Lean wrap（refer Yi.lean）
 
@@ -86,17 +86,17 @@ theorem dong_iso (a b : Trigram) : ju (motion a) (motion b) = ju a b := by
   cases a₁ <;> cases a₂ <;> cases a₃ <;>
     cases b₁ <;> cases b₂ <;> cases b₃ <;> rfl
 
-/-- **化 (hua) 等距**：`ju (hua a) (hua b) = ju a b`. -/
-theorem hua_iso (a b : Trigram) : ju (hua a) (hua b) = ju a b := by
-  unfold ju hammingDist hua
+/-- **化 (middleFlip) 等距**：`ju (middleFlip a) (middleFlip b) = ju a b`. -/
+theorem hua_iso (a b : Trigram) : ju (middleFlip a) (middleFlip b) = ju a b := by
+  unfold ju hammingDist middleFlip
   rcases a with ⟨a₁, a₂, a₃⟩
   rcases b with ⟨b₁, b₂, b₃⟩
   cases a₁ <;> cases a₂ <;> cases a₃ <;>
     cases b₁ <;> cases b₂ <;> cases b₃ <;> rfl
 
-/-- **变 (bian) 等距**：`ju (bian a) (bian b) = ju a b`. -/
-theorem bian_iso (a b : Trigram) : ju (bian a) (bian b) = ju a b := by
-  unfold ju hammingDist bian
+/-- **变 (topFlip) 等距**：`ju (topFlip a) (topFlip b) = ju a b`. -/
+theorem bian_iso (a b : Trigram) : ju (topFlip a) (topFlip b) = ju a b := by
+  unfold ju hammingDist topFlip
   rcases a with ⟨a₁, a₂, a₃⟩
   rcases b with ⟨b₁, b₂, b₃⟩
   cases a₁ <;> cases a₂ <;> cases a₃ <;>
@@ -205,8 +205,8 @@ theorem xingwei_summary :
     ∧ (∀ a b c : Trigram, ju a c ≤ ju a b + ju b c)
     -- (2) 三反爻等距
     ∧ (∀ a b : Trigram, ju (motion a) (motion b) = ju a b)
-    ∧ (∀ a b : Trigram, ju (hua a) (hua b) = ju a b)
-    ∧ (∀ a b : Trigram, ju (bian a) (bian b) = ju a b)
+    ∧ (∀ a b : Trigram, ju (middleFlip a) (middleFlip b) = ju a b)
+    ∧ (∀ a b : Trigram, ju (topFlip a) (topFlip b) = ju a b)
     -- (3) 立方体 Euler
     ∧ ((cube3_V : Int) - cube3_E + cube3_F - cube3_C = 1)
     ∧ ((cube6_V : Int) - cube6_E + cube6_2 - cube6_3 + cube6_4 - cube6_5 + cube6_6 = 1)

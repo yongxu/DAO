@@ -53,15 +53,15 @@ def cell256_tou (c : Cell256) : Cell256 := Cell256.tou c
 
 /-- Single-yao toggle of the 1st yao (初爻 / dongInner). -/
 def cell128_flip1 (c : Cell128) : Cell128 := flip1 c
-/-- Single-yao toggle of the 2nd yao (二爻 / huaInner). -/
+/-- Single-yao toggle of the 2nd yao (二爻 / middleFlipInner). -/
 def cell128_flip2 (c : Cell128) : Cell128 := flip2 c
-/-- Single-yao toggle of the 3rd yao (三爻 / bianInner). -/
+/-- Single-yao toggle of the 3rd yao (三爻 / topFlipInner). -/
 def cell128_flip3 (c : Cell128) : Cell128 := flip3 c
 /-- Single-yao toggle of the 4th yao (四爻 / dongOuter). -/
 def cell128_flip4 (c : Cell128) : Cell128 := flip4 c
-/-- Single-yao toggle of the 5th yao (五爻 / huaOuter). -/
+/-- Single-yao toggle of the 5th yao (五爻 / middleFlipOuter). -/
 def cell128_flip5 (c : Cell128) : Cell128 := flip5 c
-/-- Single-yao toggle of the 6th yao (上爻 / bianOuter). -/
+/-- Single-yao toggle of the 6th yao (上爻 / topFlipOuter). -/
 def cell128_flip6 (c : Cell128) : Cell128 := flip6 c
 
 /-- Cell128 印 (yìn): toggle the YinBit. Direct form. -/

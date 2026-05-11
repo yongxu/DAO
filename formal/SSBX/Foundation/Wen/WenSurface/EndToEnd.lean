@@ -925,13 +925,13 @@ example : (wenyanInterp "复 乾").toOption = some Hexagram.heaven := by native_
 example : (wenyanInterp "归一 乾").toOption = some Hexagram.heaven := by native_decide
 example : (wenyanInterp "展 乾").toOption = some («生» Hexagram.heaven) := by native_decide
 example : (wenyanInterp "初动 乾").toOption = some (dongInner Hexagram.heaven) := by native_decide
-example : (wenyanInterp "承变 乾").toOption = some (huaInner Hexagram.heaven) := by native_decide
-example : (wenyanInterp "际变 乾").toOption = some (bianInner Hexagram.heaven) := by native_decide
+example : (wenyanInterp "承变 乾").toOption = some (middleFlipInner Hexagram.heaven) := by native_decide
+example : (wenyanInterp "际变 乾").toOption = some (topFlipInner Hexagram.heaven) := by native_decide
 example :
     (wenyanCompile "改").toOption.map (·.ty) = some (.arr .hex .hex) :=
   by native_decide
 example :
-    (wenyanInterp "化 乾").toOption = some (huaInner Hexagram.heaven) :=
+    (wenyanInterp "化 乾").toOption = some (middleFlipInner Hexagram.heaven) :=
   by native_decide
 example :
     (wenyanInterp "反 乾").toOption = some Hexagram.heaven.complement :=
