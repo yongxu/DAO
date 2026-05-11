@@ -20,10 +20,10 @@
 bounded/full universal-interpreter target 与 framed-input 工程 lane；文言
 程序随后只作为 Lean 检查的 witness，不作为根证明系统。
 
-## 编码约束（cuo-equivariance ceiling）
+## 编码约束（complement-equivariance ceiling）
 
 YiInstr 之 12 指令**无法构造绝对的 Hexagram 值**——只有 cur 之 transform
-（hu/cuo/zong/flipYao）+ Shi 之绝对设置（setShi）。runtime cur 之初值是
+（interlace/complement/reverse/flipYao）+ Shi 之绝对设置（setShi）。runtime cur 之初值是
 输入 h，编译期未知。故所有 register cells 之 Hex 部分必依赖于初始 cur，
 仅 Shi 部分可绝对控制。
 
@@ -34,7 +34,7 @@ YiInstr 之 12 指令**无法构造绝对的 Hexagram 值**——只有 cur 之 
 
 → register cell 之 Hex 部分**未指定**（依输入而变）；下游 fetch logic
   通过 Shi tag + 位置（counted-pop）区分 region。这套 encoding 自然
-  满足 cuo-不变性（Shi 与 Hex.cuo 正交）。
+  满足 complement-不变性（Shi 与 Hex.complement 正交）。
 
 ## META.history 布局（top → bottom，pop 取头）
 
@@ -59,7 +59,7 @@ admissible as an "unexpected" case in `decCounter` / `decHaltedFlag`.
 ## META.cur 之角色
 
 **Loop 不变**：META.cur ≡ sim.cur（直接镜像，无编码开销）。
-6 个 cur-变换指令（hu/cuo/zong/flipYao/setShi）可直接在 META.cur 上
+6 个 cur-变换指令（interlace/complement/reverse/flipYao/setShi）可直接在 META.cur 上
 执行——天然实现 sim 之同名指令。
 
 仅在 fetch/dispatch/execute 临时（中间步骤）期间，META.cur 被借用作

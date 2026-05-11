@@ -707,35 +707,35 @@ theorem hexDecrementTransform_denotes_sun (id : OperatorId) (h : Hexagram) :
   unfold hexDecrementTransform
   exact sun_eq_decrement h
 
-def hexCuoTransform (_id : OperatorId) (h : Hexagram) : Hexagram := h.cuo
+def hexCuoTransform (_id : OperatorId) (h : Hexagram) : Hexagram := h.complement
 
 theorem hexCuoTransform_denotes_cuo (id : OperatorId) (h : Hexagram) :
     denoteHexFun Stdlib.cuoBody h = some (hexCuoTransform id h) := by
   unfold hexCuoTransform
   exact cuoBody_eq_cuo h
 
-def hexFanReverseTransform (_id : OperatorId) (h : Hexagram) : Hexagram := h.cuo
+def hexFanReverseTransform (_id : OperatorId) (h : Hexagram) : Hexagram := h.complement
 
 theorem hexFanReverseTransform_denotes_cuo (id : OperatorId) (h : Hexagram) :
     denoteHexFun Stdlib.fanReverseBody h = some (hexFanReverseTransform id h) := by
   unfold hexFanReverseTransform
   exact fanReverseBody_eq_cuo h
 
-def hexZongTransform (_id : OperatorId) (h : Hexagram) : Hexagram := h.zong
+def hexZongTransform (_id : OperatorId) (h : Hexagram) : Hexagram := h.reverse
 
 theorem hexZongTransform_denotes_zong (id : OperatorId) (h : Hexagram) :
     denoteHexFun Stdlib.zongBody h = some (hexZongTransform id h) := by
   unfold hexZongTransform
   exact zongBody_eq_zong h
 
-def hexHuTransform (_id : OperatorId) (h : Hexagram) : Hexagram := h.hu
+def hexHuTransform (_id : OperatorId) (h : Hexagram) : Hexagram := h.interlace
 
 theorem hexHuTransform_denotes_hu (id : OperatorId) (h : Hexagram) :
     denoteHexFun Stdlib.huBody h = some (hexHuTransform id h) := by
   unfold hexHuTransform
   exact huBody_eq_hu h
 
-def hexCuoZongTransform (_id : OperatorId) (h : Hexagram) : Hexagram := h.cuoZong
+def hexCuoZongTransform (_id : OperatorId) (h : Hexagram) : Hexagram := h.complementReverse
 
 theorem hexCuoZongTransform_denotes_cuoZong (id : OperatorId) (h : Hexagram) :
     denoteHexFun Stdlib.cuoZongBody h = some (hexCuoZongTransform id h) := by

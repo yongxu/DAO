@@ -102,9 +102,9 @@ def «判型良_basic» (p : List YiInstr) : Bool := p.all «判型良_instr»
 def «微核源» : List YiInstr :=
   -- 阶段 一  (10 instr, pc 0..9)
   [ YiInstr.push                                                   -- pc 0
-  , YiInstr.hu                                                     -- pc 1
-  , YiInstr.cuo                                                    -- pc 2
-  , YiInstr.zong                                                   -- pc 3
+  , YiInstr.interlace                                                     -- pc 1
+  , YiInstr.complement                                                    -- pc 2
+  , YiInstr.reverse                                                   -- pc 3
   , YiInstr.flipYao ⟨0, by omega⟩                                  -- pc 4
   , YiInstr.flipYao ⟨1, by omega⟩                                  -- pc 5
   , YiInstr.flipYao ⟨2, by omega⟩                                  -- pc 6
@@ -119,9 +119,9 @@ def «微核源» : List YiInstr :=
   , YiInstr.flipYao ⟨1, by omega⟩                                  -- pc 14
   , YiInstr.flipYao ⟨0, by omega⟩                                  -- pc 15
   -- 阶段 三  (3 instr, pc 16..18)
-  , YiInstr.cuo                                                    -- pc 16
-  , YiInstr.zong                                                   -- pc 17
-  , YiInstr.hu                                                     -- pc 18
+  , YiInstr.complement                                                    -- pc 16
+  , YiInstr.reverse                                                   -- pc 17
+  , YiInstr.interlace                                                     -- pc 18
   -- 阶段 四  (10 instr, pc 19..28) — branchYaoEq / branchShiEq tests
   , YiInstr.branchYaoEq ⟨0, by omega⟩ ⟨5, by omega⟩ 22              -- pc 19  (skip 2)
   , YiInstr.nop                                                    -- pc 20  (skipped if y0=y5)

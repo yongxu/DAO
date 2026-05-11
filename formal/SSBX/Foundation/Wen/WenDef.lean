@@ -56,7 +56,7 @@ Now: `cellLit : Cell256 → Tm` (256 cells, V₄ Klein `Shi`).
 The cell-endo builtin tags `.shiNextC` / `.shiPrevC` keep their syntactic
 identity here (this is the typed-λ surface; only types change). Their
 operational semantics are defined elsewhere (`WenDefEval`); under V₄ both
-collapse to the `Shi.cuo` involution because V₄ involutions are self-inverse.
+collapse to the `Shi.complement` involution because V₄ involutions are self-inverse.
 -/
 import SSBX.Foundation.Yi.Yi
 import SSBX.Foundation.Bagua.Cell256
@@ -124,8 +124,8 @@ inductive Tm : Type
   | cuoC                               : Tm  -- Cell → Cell, preserve 时
   | zongC                              : Tm  -- Cell → Cell, preserve 时
   | huC                                : Tm  -- Cell → Cell, preserve 时
-  | shiNextC                           : Tm  -- Cell → Cell, 时态单步 (V₄ Shi.cuo)
-  | shiPrevC                           : Tm  -- Cell → Cell, 时态单步 (V₄ Shi.cuo, self-inverse)
+  | shiNextC                           : Tm  -- Cell → Cell, 时态单步 (V₄ Shi.complement)
+  | shiPrevC                           : Tm  -- Cell → Cell, 时态单步 (V₄ Shi.complement, self-inverse)
   | flip1C                             : Tm  -- Cell → Cell, y1 flip
   | flip2C                             : Tm  -- Cell → Cell, y2 flip
   | flip3C                             : Tm  -- Cell → Cell, y3 flip
@@ -500,7 +500,7 @@ theorem cuoBody_typed :
     typeCheck [] cuoBody = some (.arr .hex .hex) := by native_decide
 
 def cuoDef : WenDef where
-  name           := "cuo"
+  name           := "complement"
   body           := cuoBody
   bodyType       := .arr .hex .hex
   validName      := by native_decide
@@ -512,7 +512,7 @@ theorem zongBody_typed :
     typeCheck [] zongBody = some (.arr .hex .hex) := by native_decide
 
 def zongDef : WenDef where
-  name           := "zong"
+  name           := "reverse"
   body           := zongBody
   bodyType       := .arr .hex .hex
   validName      := by native_decide
@@ -524,7 +524,7 @@ theorem huBody_typed :
     typeCheck [] huBody = some (.arr .hex .hex) := by native_decide
 
 def huDef : WenDef where
-  name           := "hu"
+  name           := "interlace"
   body           := huBody
   bodyType       := .arr .hex .hex
   validName      := by native_decide
@@ -561,7 +561,7 @@ theorem cuoZongBody_typed :
     typeCheck [] cuoZongBody = some (.arr .hex .hex) := by native_decide
 
 def cuoZongDef : WenDef where
-  name           := "cuoZong"
+  name           := "complementReverse"
   body           := cuoZongBody
   bodyType       := .arr .hex .hex
   validName      := by native_decide
@@ -1023,8 +1023,8 @@ theorem all_length : all.length = 52 := by native_decide
 theorem all_names :
     all.map WenDef.name =
       [ "tui", "bi", "bu", "biModal", "tong", "fan", "sun", "yiBenefit"
-      , "cuo", "zong", "hu", "fanReverse"
-      , "hexId", "cuoZong", "flip1", "flip2", "flip3", "flip4", "flip5", "flip6"
+      , "complement", "reverse", "interlace", "fanReverse"
+      , "hexId", "complementReverse", "flip1", "flip2", "flip3", "flip4", "flip5", "flip6"
       , "imp", "xorB", "neqHex", "existsH", "noneH"
       , "uniqueH", "exactly3H", "majorityH", "endoComp", "hexApply"
       , "boolMarker", "repeatOnce", "eachH", "hexPredApply"

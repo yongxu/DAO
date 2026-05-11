@@ -21,8 +21,8 @@ Klein 4-group and tags decompose as `(hex_idx ∈ {0,1,2}, shi_idx ∈ {0,1,2,3}
 with `cellFromIdx ⟨k, _⟩ = (Hexagram.fromIdx ⟨k/4, _⟩, Shi.fromIdx ⟨k%4, _⟩)`.
 
 Concretely for k ∈ {0..11}:
-  hex_idx 0 (heaven, all yang):   k ∈ {0,1,2,3}  =  nop / setShi / flipYao / hu
-  hex_idx 1 (y1=yin, rest yang): k ∈ {4,5,6,7}  = cuo / zong / branchYaoEq / branchShiEq
+  hex_idx 0 (heaven, all yang):   k ∈ {0,1,2,3}  =  nop / setShi / flipYao / interlace
+  hex_idx 1 (y1=yin, rest yang): k ∈ {4,5,6,7}  = complement / reverse / branchYaoEq / branchShiEq
   hex_idx 2 (y2=yin, rest yang): k ∈ {8,9,10,11} = jump / push / pop / halt
 
 (With shi_idx 0=dao, 1=ji, 2=jin, 3=wei.)
@@ -72,10 +72,10 @@ The pseudo-code:
 
 ```
   if y2 = y6 then                      /* hex ∈ {0, 1} */
-    if y1 = y6 then                    /* hex = 0: nop / setShi / flipYao / hu */
-      shi-dispatch → nop / setShi / flipYao / hu
-    else                               /* hex = 1: cuo / zong / branchYaoEq / branchShiEq */
-      shi-dispatch → cuo / zong / branchYaoEq / branchShiEq
+    if y1 = y6 then                    /* hex = 0: nop / setShi / flipYao / interlace */
+      shi-dispatch → nop / setShi / flipYao / interlace
+    else                               /* hex = 1: complement / reverse / branchYaoEq / branchShiEq */
+      shi-dispatch → complement / reverse / branchYaoEq / branchShiEq
   else                                 /* hex = 2: jump / push / pop / halt */
     shi-dispatch → jump / push / pop / halt
 ```
@@ -181,10 +181,10 @@ Layout (offsets relative to the dispatch tree's own start, `dispatchBase`):
   +3  : jump L_hex1                  -- else hex = 1
 
   L_hex0 (+4):
-  +4  : dispatchShi (nop, setShi, flipYao, hu)         — 4 instr (+4..+7)
+  +4  : dispatchShi (nop, setShi, flipYao, interlace)         — 4 instr (+4..+7)
 
   L_hex1 (+8):
-  +8  : dispatchShi (cuo, zong, branchYaoEq, branchShiEq)  — 4 instr (+8..+11)
+  +8  : dispatchShi (complement, reverse, branchYaoEq, branchShiEq)  — 4 instr (+8..+11)
 
   L_hex2 (+12):
   +12 : dispatchShi (jump, push, pop, halt)            — 4 instr (+12..+15)
@@ -207,13 +207,13 @@ def dispatchTree (offsets : DispatchOffsets) (dispatchBase : Nat) : List YiInstr
   [ YiInstr.branchYaoEq ⟨0, by omega⟩ ⟨5, by omega⟩ L_hex0
   , YiInstr.jump L_hex1 ]
   ++
-  -- L_hex0 (+4): hex=0 → nop / setShi / flipYao / hu
+  -- L_hex0 (+4): hex=0 → nop / setShi / flipYao / interlace
   dispatchShi offsets.nop_offset
               offsets.setShi_dispatch_offset
               offsets.flipYao_dispatch_offset
               offsets.hu_offset
   ++
-  -- L_hex1 (+8): hex=1 → cuo / zong / branchYaoEq / branchShiEq
+  -- L_hex1 (+8): hex=1 → complement / reverse / branchYaoEq / branchShiEq
   dispatchShi offsets.cuo_offset
               offsets.zong_offset
               offsets.branchYaoEq_dispatch_offset
@@ -419,9 +419,9 @@ hex_idx (= k/4) and shi_idx (= k%4):
 | 0  | nop           | 0   | dao | yes    | yes    | dao (1 take)  | 3    |
 | 1  | setShi        | 0   | ji  | yes    | yes    | dao→ji (2)    | 4    |
 | 2  | flipYao       | 0   | jin | yes    | yes    | dao→ji→jin    | 5    |
-| 3  | hu            | 0   | wei | yes    | yes    | jump          | 6    |
-| 4  | cuo           | 1   | dao | yes    | no     | dao           | 4    |
-| 5  | zong          | 1   | ji  | yes    | no     | dao→ji        | 5    |
+| 3  | interlace            | 0   | wei | yes    | yes    | jump          | 6    |
+| 4  | complement           | 1   | dao | yes    | no     | dao           | 4    |
+| 5  | reverse          | 1   | ji  | yes    | no     | dao→ji        | 5    |
 | 6  | branchYaoEq   | 1   | jin | yes    | no     | dao→ji→jin    | 6    |
 | 7  | branchShiEq   | 1   | wei | yes    | no     | jump          | 7    |
 | 8  | jump          | 2   | dao | no     | -      | dao           | 3    |
@@ -534,7 +534,7 @@ theorem dispatchTree_routes_flipYao
           Hexagram.yaoAt, flipYaoTag_yao.1, flipYaoTag_yao.2.1,
           flipYaoTag_yao.2.2.2.2.2]
 
-/-! ### hu  (k=3, hex_idx=0, shi=wei) -/
+/-! ### interlace  (k=3, hex_idx=0, shi=wei) -/
 
 def huTag : Cell256 := cellFromIdx ⟨3, by omega⟩
 
@@ -568,7 +568,7 @@ theorem dispatchTree_routes_hu
           dispatchTree, dispatchShi, huTag_shi,
           Hexagram.yaoAt, huTag_yao.1, huTag_yao.2.1, huTag_yao.2.2.2.2.2]
 
-/-! ### cuo  (k=4, hex_idx=1, shi=dao) -/
+/-! ### complement  (k=4, hex_idx=1, shi=dao) -/
 
 def cuoTag : Cell256 := cellFromIdx ⟨4, by omega⟩
 
@@ -602,7 +602,7 @@ theorem dispatchTree_routes_cuo
           dispatchTree, dispatchShi, cuoTag_shi,
           Hexagram.yaoAt, cuoTag_yao.1, cuoTag_yao.2.1, cuoTag_yao.2.2.2.2.2]
 
-/-! ### zong  (k=5, hex_idx=1, shi=ji) -/
+/-! ### reverse  (k=5, hex_idx=1, shi=ji) -/
 
 def zongTag : Cell256 := cellFromIdx ⟨5, by omega⟩
 

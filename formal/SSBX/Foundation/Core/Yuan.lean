@@ -179,8 +179,8 @@ theorem taiji_unfolds_to_dao : (taijiUnfold 6).length = Dao.length := by
   every transformation. Every 易-act on a 多元 lands back in 道.
   Diversity (the 64 distinct hexagrams) is unity (a single closed orbit space). -/
 
-/-- 易 lifted to Hexagram: yao-wise flip. This is `Hexagram.cuo`. -/
-def yiHex : Hexagram → Hexagram := Hexagram.cuo
+/-- 易 lifted to Hexagram: yao-wise flip. This is `Hexagram.complement`. -/
+def yiHex : Hexagram → Hexagram := Hexagram.complement
 
 /-- 易 (hex) is involutive — same as `cuo_cuo`. -/
 theorem yiHex_involutive (h : Hexagram) : yiHex (yiHex h) = h := Hexagram.cuo_cuo h
@@ -190,15 +190,15 @@ theorem yiHex_involutive (h : Hexagram) : yiHex (yiHex h) = h := Hexagram.cuo_cu
 theorem daTong (h : Hexagram) : (yiHex h).inDao = true := hex_in_dao_bool (yiHex h)
 
 /-- Stronger 大同: closure under 综 too. -/
-theorem daTong_zong (h : Hexagram) : h.zong.inDao = true := hex_in_dao_bool h.zong
+theorem daTong_zong (h : Hexagram) : h.reverse.inDao = true := hex_in_dao_bool h.reverse
 
-/-- Strongest 大同: closure under any V_4 element (cuo, zong, cuoZong, id).
+/-- Strongest 大同: closure under any V_4 element (complement, reverse, complementReverse, id).
     The whole Klein-4 group action stays in 道. -/
 theorem daTong_v4 (h : Hexagram) :
-    h.cuo.inDao = true ∧ h.zong.inDao = true ∧
-    h.cuoZong.inDao = true ∧ h.inDao = true :=
-  ⟨hex_in_dao_bool h.cuo, hex_in_dao_bool h.zong,
-   hex_in_dao_bool h.cuoZong, hex_in_dao_bool h⟩
+    h.complement.inDao = true ∧ h.reverse.inDao = true ∧
+    h.complementReverse.inDao = true ∧ h.inDao = true :=
+  ⟨hex_in_dao_bool h.complement, hex_in_dao_bool h.reverse,
+   hex_in_dao_bool h.complementReverse, hex_in_dao_bool h⟩
 
 /-- 大同 by enumeration: every Hexagram (without precondition) is in 道.
     Diversity (64 distinct elements) and unity (one closed space) coincide. -/
@@ -225,11 +225,11 @@ theorem chain_yuan_to_datong :
     -- 道 has 64 elements
     (Dao.length = 64) ∧
     -- 大同: 道 is V_4-closed (Bool membership)
-    (∀ h : Hexagram, h.cuo.inDao = true ∧ h.zong.inDao = true) := by
+    (∀ h : Hexagram, h.complement.inDao = true ∧ h.reverse.inDao = true) := by
   refine ⟨rfl, ?_, rfl, taiji_unfolds_to_dao, dao_count, ?_⟩
   · intro y
     exact ⟨yi_involutive y, yi_no_fixed_point y⟩
   · intro h
-    exact ⟨hex_in_dao_bool h.cuo, hex_in_dao_bool h.zong⟩
+    exact ⟨hex_in_dao_bool h.complement, hex_in_dao_bool h.reverse⟩
 
 end SSBX.Foundation.Core.Yuan

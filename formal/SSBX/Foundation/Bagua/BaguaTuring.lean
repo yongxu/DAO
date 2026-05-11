@@ -18,7 +18,7 @@ Behavioural changes:
   - `YiInstr.branchShiEq` similarly admits 4 possible discriminants.
   - `shiNext` (the state-stepper helper) used to be the Z/3 cycle
     已→今→未→已. V₄ has no canonical cyclic order, so we replace it with
-    `Shi.cuo` (the 因-axis involution `dao↔已, 今↔未`). This is deterministic
+    `Shi.complement` (the 因-axis involution `dao↔已, 今↔未`). This is deterministic
     and total but order-2 rather than order-3.
   - Cardinality jumps 192 → 256.
 
@@ -61,12 +61,12 @@ inductive YiInstr : Type
   | setShi (s : Shi)
   /-- 翻爻: flip the i-th yao of cur's hexagram. -/
   | flipYao (i : Fin 6)
-  /-- 互: apply Hexagram.hu to cur's hexagram. -/
-  | hu
-  /-- 错: apply Hexagram.cuo to cur's hexagram. -/
-  | cuo
-  /-- 综: apply Hexagram.zong to cur's hexagram. -/
-  | zong
+  /-- 互: apply Hexagram.interlace to cur's hexagram. -/
+  | interlace
+  /-- 错: apply Hexagram.complement to cur's hexagram. -/
+  | complement
+  /-- 综: apply Hexagram.reverse to cur's hexagram. -/
+  | reverse
   /-- 比爻 (branch if equal yao): if y_i = y_j then jump to target, else advance. -/
   | branchYaoEq (i j : Fin 6) (target : Nat)
   /-- 比时 (branch if Shi equal): if cur.2 = s then jump to target, else advance. -/
@@ -147,9 +147,9 @@ def execute (instr : YiInstr) (s : YiState) : YiState :=
   | .setShi sh => { s with cur := (s.cur.1, sh), pc := s.pc + 1 }
   | .flipYao i =>
       { s with cur := (s.cur.1.flipPos i, s.cur.2), pc := s.pc + 1 }
-  | .hu  => { s with cur := (Hexagram.hu s.cur.1, s.cur.2), pc := s.pc + 1 }
-  | .cuo => { s with cur := (Hexagram.cuo s.cur.1, s.cur.2), pc := s.pc + 1 }
-  | .zong => { s with cur := (Hexagram.zong s.cur.1, s.cur.2), pc := s.pc + 1 }
+  | .interlace  => { s with cur := (Hexagram.interlace s.cur.1, s.cur.2), pc := s.pc + 1 }
+  | .complement => { s with cur := (Hexagram.complement s.cur.1, s.cur.2), pc := s.pc + 1 }
+  | .reverse => { s with cur := (Hexagram.reverse s.cur.1, s.cur.2), pc := s.pc + 1 }
   | .branchYaoEq i j target =>
       if s.cur.1.yaoAt i = s.cur.1.yaoAt j
       then { s with pc := target }
@@ -192,7 +192,7 @@ end YiState
 /-! ## § 5b shiNext — V₄ stepper (post-Phase F.2, replaces Z/3 cycle)
 
   Pre-migration `shiNext` was the Z/3 cycle 已→今→未→已 on the legacy Cell192.
-  V₄ has no canonical cyclic order, so we replace it with the `Shi.cuo`
+  V₄ has no canonical cyclic order, so we replace it with the `Shi.complement`
   involution (因-axis toggle: 道↔已, 今↔未). This is the most natural
   "single deterministic step" on the V₄ group:
 
@@ -203,13 +203,13 @@ end YiState
   Downstream callers expecting Z/3-cycle semantics need to update; the new
   contract is documented at each public boundary. -/
 
-/-- 时态 single-step on the cell: V₄ `cuo` involution on the Shi component
+/-- 时态 single-step on the cell: V₄ `complement` involution on the Shi component
     (因-axis toggle 道↔已, 今↔未). Preserves the Hexagram. -/
-def shiNext (c : Cell256) : Cell256 := (c.1, c.2.cuo)
+def shiNext (c : Cell256) : Cell256 := (c.1, c.2.complement)
 
 theorem shiNext_preserves_hex (c : Cell256) : (shiNext c).1 = c.1 := rfl
 
-/-- `shiNext` is now an involution (V₄ `cuo` is order-2), no longer order-3. -/
+/-- `shiNext` is now an involution (V₄ `complement` is order-2), no longer order-3. -/
 theorem shiNext_shiNext (c : Cell256) : shiNext (shiNext c) = c := by
   rcases c with ⟨h, s⟩
   simp [shiNext, Shi.cuo_cuo]

@@ -23,9 +23,9 @@ inductive L0InstructionClauseKind where
   | nop
   | setShi
   | flipYao
-  | hu
-  | cuo
-  | zong
+  | interlace
+  | complement
+  | reverse
   | branchYaoEq
   | branchShiEq
   | jump
@@ -41,9 +41,9 @@ def ofInstr : YiInstr → L0InstructionClauseKind
   | .nop => .nop
   | .setShi _ => .setShi
   | .flipYao _ => .flipYao
-  | .hu => .hu
-  | .cuo => .cuo
-  | .zong => .zong
+  | .interlace => .interlace
+  | .complement => .complement
+  | .reverse => .reverse
   | .branchYaoEq _ _ _ => .branchYaoEq
   | .branchShiEq _ _ => .branchShiEq
   | .jump _ => .jump
@@ -56,9 +56,9 @@ def sample : L0InstructionClauseKind → YiInstr
   | .nop => .nop
   | .setShi => .setShi Shi.jin
   | .flipYao => .flipYao ⟨0, by decide⟩
-  | .hu => .hu
-  | .cuo => .cuo
-  | .zong => .zong
+  | .interlace => .interlace
+  | .complement => .complement
+  | .reverse => .reverse
   | .branchYaoEq => .branchYaoEq ⟨0, by decide⟩ ⟨1, by decide⟩ 0
   | .branchShiEq => .branchShiEq Shi.jin 0
   | .jump => .jump 0
@@ -74,7 +74,7 @@ end L0InstructionClauseKind
 
 /-- The complete L0 instruction clause-kind ledger. -/
 def l0InstructionClauseKinds : List L0InstructionClauseKind :=
-  [.nop, .setShi, .flipYao, .hu, .cuo, .zong,
+  [.nop, .setShi, .flipYao, .interlace, .complement, .reverse,
    .branchYaoEq, .branchShiEq, .jump, .push, .pop, .halt]
 
 theorem l0InstructionClauseKinds_length :
@@ -97,9 +97,9 @@ def clauseLevel : L0InstructionClauseKind → InstructionSemanticLevel
   | .nop => .currentCell
   | .setShi => .currentCell
   | .flipYao => .currentCell
-  | .hu => .currentCell
-  | .cuo => .currentCell
-  | .zong => .currentCell
+  | .interlace => .currentCell
+  | .complement => .currentCell
+  | .reverse => .currentCell
   | .branchYaoEq => .stateControl
   | .branchShiEq => .stateControl
   | .jump => .stateControl
@@ -151,9 +151,9 @@ def instructionCellEndomap? : YiInstr → Option (Cell256 → Cell256)
   | .nop => some id
   | .setShi sh => some (fun c => (c.1, sh))
   | .flipYao i => some (fun c => (c.1.flipPos i, c.2))
-  | .hu => some Cell256.hexHu
-  | .cuo => some Cell256.hexCuo
-  | .zong => some Cell256.hexZong
+  | .interlace => some Cell256.hexHu
+  | .complement => some Cell256.hexCuo
+  | .reverse => some Cell256.hexZong
   | .branchYaoEq _ _ _ => none
   | .branchShiEq _ _ => none
   | .jump _ => none
@@ -174,15 +174,15 @@ theorem flipYao_cell_effect_matches_execute (i : Fin 6) (s : YiState) :
   rfl
 
 theorem hu_cell_effect_matches_execute (s : YiState) :
-    (YiState.execute .hu s).cur = Cell256.hexHu s.cur := by
+    (YiState.execute .interlace s).cur = Cell256.hexHu s.cur := by
   rfl
 
 theorem cuo_cell_effect_matches_execute (s : YiState) :
-    (YiState.execute .cuo s).cur = Cell256.hexCuo s.cur := by
+    (YiState.execute .complement s).cur = Cell256.hexCuo s.cur := by
   rfl
 
 theorem zong_cell_effect_matches_execute (s : YiState) :
-    (YiState.execute .zong s).cur = Cell256.hexZong s.cur := by
+    (YiState.execute .reverse s).cur = Cell256.hexZong s.cur := by
   rfl
 
 theorem instructionCellEndomap?_matches_execute

@@ -20,11 +20,11 @@ open SSBX.Foundation.Bagua.BaguaTuring
 /-- 不动：守而不易。 -/
 abbrev «不动» : YiInstr := YiInstr.nop
 /-- 互：内外相照。 -/
-abbrev «互» : YiInstr := YiInstr.hu
+abbrev «互» : YiInstr := YiInstr.interlace
 /-- 错：阴阳全反。 -/
-abbrev «错» : YiInstr := YiInstr.cuo
+abbrev «错» : YiInstr := YiInstr.complement
 /-- 综：上下颠倒。 -/
-abbrev «综» : YiInstr := YiInstr.zong
+abbrev «综» : YiInstr := YiInstr.reverse
 /-- 推：现入于带。 -/
 abbrev «推» : YiInstr := YiInstr.push
 /-- 取：自带回现。 -/

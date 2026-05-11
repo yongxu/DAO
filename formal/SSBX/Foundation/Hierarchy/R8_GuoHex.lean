@@ -50,13 +50,13 @@ def hexCuo (c : Cell256) : Cell256 := Cell256.hexCuo c
 def hexZong (c : Cell256) : Cell256 := Cell256.hexZong c
 def hexHu (c : Cell256) : Cell256 := Cell256.hexHu c
 
-/-- Shi-side 错: cuo on the V₄ block. -/
+/-- Shi-side 错: complement on the V₄ block. -/
 def shiCuo (c : Cell256) : Cell256 := Cell256.shiCuo c
 
-/-- Shi-side 综: zong on the V₄ block. -/
+/-- Shi-side 综: reverse on the V₄ block. -/
 def shiZong (c : Cell256) : Cell256 := Cell256.shiZong c
 
-/-- Shi-side 错综: cuo ∘ zong on the V₄ block. -/
+/-- Shi-side 错综: complement ∘ reverse on the V₄ block. -/
 def shiCuoZong (c : Cell256) : Cell256 := Cell256.shiCuoZong c
 
 /-- Group XOR on Cell256 = (Z/2)⁸. -/

@@ -14,8 +14,8 @@ some Lean-definable Bool functions correspond to no YiInstr program.
 1.  Define `YiComputable decide` — a precise computability witness via YiInstr.
 2.  State `YiKleeneInverter` for `YiComputable` deciders (provable conditional
     on universal interpreter + s-m-n; foundation in `WenyanSelfInterp.lean`).
-3.  Show the current cuo-invariant `KleeneInverter` ⟸
-    `YiKleeneInverter` ∧ cuo-restricted `Church-Turing`.
+3.  Show the current complement-invariant `KleeneInverter` ⟸
+    `YiKleeneInverter` ∧ complement-restricted `Church-Turing`.
 
 This file delivers parts (1) and (3) rigorously, plus the formal statement of
 the remaining engineering (2) as a `Prop` so its dependency is explicit.
@@ -36,7 +36,7 @@ the remaining engineering (2) as a `Prop` so its dependency is explicit.
   interfaces that remain between the primitives and `YiKleeneInverter`.
 - `yi_kleene_from_fixedpoint_and_inverter`: proved assembly of those interfaces.
 - `kleene_inverter_via_yi_kleene`: structural reduction from
-  `YiKleeneInverter ∧ cuo-restricted Church-Turing ⇒ KleeneInverter`.
+  `YiKleeneInverter ∧ complement-restricted Church-Turing ⇒ KleeneInverter`.
 - `path_to_zero_axiom`: the full chain — given primitives + diagonal
   construction + Church-Turing, the original axiom is a theorem.
 
@@ -415,28 +415,28 @@ theorem yi_kleene_from_primitives
 
 /-- The unrestricted Church-Turing statement for all Lean Bool functions.
     This is kept only as a named stronger interface; the axiom-removal chain
-    below deliberately uses the cuo-restricted version. -/
+    below deliberately uses the complement-restricted version. -/
 def AllLeanDecidersAreYiComputable : Prop :=
   ∀ (decide : List YiInstr → Hexagram → Bool), YiComputable decide
 
 /-- Historical public name for the Church-Turing interface used here:
-    every cuo-invariant Lean Bool decider is YiComputable.  This is the
+    every complement-invariant Lean Bool decider is YiComputable.  This is the
     version compatible with `GodelLi.KleeneInverter`, whose quantifier is also
     restricted by `CuoInvariantDecide`. -/
 def AllDecidersAreYiComputable : Prop :=
   ∀ (decide : List YiInstr → Hexagram → Bool),
     CuoInvariantDecide decide → YiComputable decide
 
-/-- The old unrestricted Church-Turing statement implies the cuo-restricted
+/-- The old unrestricted Church-Turing statement implies the complement-restricted
     interface, but the path theorem below only requires the latter. -/
 theorem all_deciders_from_all_lean_deciders :
     AllLeanDecidersAreYiComputable → AllDecidersAreYiComputable := by
   intro h_all decide _h_cuo
   exact h_all decide
 
-/-- **Structural reduction**: the (now cuo-invariant restricted)
+/-- **Structural reduction**: the (now complement-invariant restricted)
     `KleeneInverter` follows from `YiKleeneInverter` plus Church-Turing.
-    The cuo-invariance precondition is now consumed exactly where the
+    The complement-invariance precondition is now consumed exactly where the
     Church-Turing interface needs it. -/
 theorem kleene_inverter_via_yi_kleene :
     YiKleeneInverter → AllDecidersAreYiComputable → KleeneInverter := by
@@ -449,7 +449,7 @@ theorem kleene_inverter_via_yi_kleene :
   - `UniversalInterpExists`     (~ 700 lines mechanical engineering)
   - `SmnExists`                 (~ 50 lines)
   - `KleeneFromPrimitives`      (fixed-point + Bool-inverter compilers)
-  - `AllDecidersAreYiComputable` (cuo-restricted Church-Turing meta-interface)
+  - `AllDecidersAreYiComputable` (complement-restricted Church-Turing meta-interface)
 
   We deduce `KleeneInverter` as a Lean theorem, removing
   `kleene_recursion_axiom` from `GodelLi.lean`. -/
@@ -481,7 +481,7 @@ theorem kleene_internal_summary :
     (UniversalInterpExists → SmnExists → KleeneFromPrimitives → YiKleeneInverter)
     ∧ -- (5) Structural: YiKleene + Church-Turing ⇒ KleeneInverter
     (YiKleeneInverter → AllDecidersAreYiComputable → KleeneInverter)
-    ∧ -- (6) Path: primitives + cuo CT ⇒ axiom-free Kleene
+    ∧ -- (6) Path: primitives + complement CT ⇒ axiom-free Kleene
     (UniversalInterpExists → SmnExists →
        KleeneFromPrimitives → AllDecidersAreYiComputable → KleeneInverter) :=
   ⟨runWith_empty, haltsWith_empty,

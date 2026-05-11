@@ -13,7 +13,7 @@ Previously this module operated on `Cell192 = Hexagram × Shi(Z/3)` with the
 
 After Phase F doctrine alignment, `Shi` is the V₄ Klein four-group
 `{道, 已, 今, 未}` and `Cell256 = Hexagram × Shi(V₄)` (256 cells). V₄ has no
-canonical cyclic order, so `shiNext` is now the V₄ `Shi.cuo` involution
+canonical cyclic order, so `shiNext` is now the V₄ `Shi.complement` involution
 (因-axis toggle 道↔已, 今↔未). It is order-2 rather than order-3.
 
 The inductive type names `Cell192Generator` and `Cell192TransitionOperator`
@@ -55,7 +55,7 @@ end LineFlipGenerator
 The seven elementary reachability generators on `Cell256`.
 
 Legacy name kept stable for downstream `OperatorCellMap`. The generator
-`shiNext` is now the V₄ `Shi.cuo` involution (post-Phase F.2), not the
+`shiNext` is now the V₄ `Shi.complement` involution (post-Phase F.2), not the
 Z/3 cycle of the legacy 192-cell layer.
 -/
 inductive Cell192Generator where
@@ -188,7 +188,7 @@ theorem shiNext_preserves_hexagram (c : Cell256) :
   rfl
 
 theorem shiNext_updates_shi (c : Cell256) :
-    (apply .shiNext c).2 = c.2.cuo := by
+    (apply .shiNext c).2 = c.2.complement := by
   rcases c with ⟨h, s⟩
   rfl
 
@@ -251,7 +251,7 @@ theorem lineFlip_involutive (g : LineFlipGenerator) (c : Cell256) :
   · exact flip6_involutive c
 
 /--
-Post-migration: `shiNext` is the V₄ `Shi.cuo` involution (order 2),
+Post-migration: `shiNext` is the V₄ `Shi.complement` involution (order 2),
 replacing the legacy Z/3 cycle (order 3) of `Cell192`. -/
 theorem shiNext_involutive (c : Cell256) :
     apply .shiNext (apply .shiNext c) = c :=
@@ -260,7 +260,7 @@ theorem shiNext_involutive (c : Cell256) :
 /--
 Summary: the reachability layer has seven distinct generators; the six line
 generators preserve `Shi` and are involutive, while `shiNext` preserves the
-hexagram component and is now an involution (V₄ `Shi.cuo`, order 2 — was
+hexagram component and is now an involution (V₄ `Shi.complement`, order 2 — was
 order 3 in the legacy Z/3 cycle).
 -/
 theorem cell256_generator_summary :
@@ -268,7 +268,7 @@ theorem cell256_generator_summary :
     ∧ all.Nodup
     ∧ (∀ g : LineFlipGenerator, ∀ c : Cell256, (apply (lineFlip g) c).2 = c.2)
     ∧ (∀ c : Cell256, (apply .shiNext c).1 = c.1)
-    ∧ (∀ c : Cell256, (apply .shiNext c).2 = c.2.cuo)
+    ∧ (∀ c : Cell256, (apply .shiNext c).2 = c.2.complement)
     ∧ (∀ g : LineFlipGenerator, ∀ c : Cell256,
         apply (lineFlip g) (apply (lineFlip g) c) = c)
     ∧ (∀ c : Cell256, apply .shiNext (apply .shiNext c) = c) := by
@@ -290,7 +290,7 @@ end Cell192Generator
 Named one-step transition operators on `Cell256`.
 
 Legacy name kept stable for documentation/index purposes. Post Phase F.2:
-`shiNext` and `shiPrev` both collapse to the V₄ `Shi.cuo` involution
+`shiNext` and `shiPrev` both collapse to the V₄ `Shi.complement` involution
 (any V₄ involution is its own inverse). They are retained as distinct
 inhabitants of this enumeration to keep the transition-index documentation
 schema stable.

@@ -6,9 +6,9 @@ Companion document: `义理/物理 · 从元到象.md`
 This file gives the **finite, no-Mathlib** core of the **物理** 衍 file:
   § 1   Yao ≅ Bool 严格双射
   § 2   Trigram ≅ Bool³（借 BaguaAlgebra 之 Sheng）
-  § 3   cuo² = id（parity / 对偶之 involution）
+  § 3   complement² = id（parity / 对偶之 involution）
   § 4   错综 之 周期 = 2
-  § 5   阴爻数 mod 2 守恒 under cuo（subgroup invariant）
+  § 5   阴爻数 mod 2 守恒 under complement（subgroup invariant）
   § 6   (Z/2)³ 全群作用 → 仅常 invariant
   § 7   SU(3) 不同构于 (Z/2)³ —— 仅意象层陈述（无 Mathlib SU(3)）
   § 8   公开摘要
@@ -72,15 +72,15 @@ theorem bool3_trigram_roundtrip (b : Bool × Bool × Bool) :
   | mk b1 rest => cases rest with
     | mk b2 b3 => cases b1 <;> cases b2 <;> cases b3 <;> rfl
 
-/-! ## § 3 cuo² = id（对偶之 involution）-/
+/-! ## § 3 complement² = id（对偶之 involution）-/
 
 /-- **错卦之 involution**（已在 Yi.lean 见证；此处 re-export 至物理语境）。 -/
-theorem cuo_involution (t : Trigram) : Trigram.cuo (Trigram.cuo t) = t :=
+theorem cuo_involution (t : Trigram) : Trigram.complement (Trigram.complement t) = t :=
   Trigram.cuo_cuo t
 
 /-- **错综之 involution**（在 Hexagram 上）。 -/
 theorem cuoZong_involution (h : Hexagram) :
-    Hexagram.cuoZong (Hexagram.cuoZong h) = h :=
+    Hexagram.complementReverse (Hexagram.complementReverse h) = h :=
   Hexagram.cuoZong_cuoZong h
 
 /-! ## § 4 阴爻数 · subgroup invariant -/
@@ -97,9 +97,9 @@ theorem yinCount_qian : Trigram.yinCount Trigram.heaven = 0 := by decide
 /-- **坤之 yinCount = 3**。 -/
 theorem yinCount_kun : Trigram.yinCount Trigram.earth = 3 := by decide
 
-/-- **错卦把 yinCount 之 mod 2 翻**：cuo 翻三爻，每爻奇偶反转，三次翻使 mod 2 总和反转（3 mod 2 = 1）。 -/
+/-- **错卦把 yinCount 之 mod 2 翻**：complement 翻三爻，每爻奇偶反转，三次翻使 mod 2 总和反转（3 mod 2 = 1）。 -/
 theorem cuo_yinCount_mod2 (t : Trigram) :
-    (Trigram.yinCount (Trigram.cuo t) + Trigram.yinCount t) % 2 = 1 := by
+    (Trigram.yinCount (Trigram.complement t) + Trigram.yinCount t) % 2 = 1 := by
   cases t with
   | mk y1 y2 y3 => cases y1 <;> cases y2 <;> cases y3 <;> decide
 
@@ -158,9 +158,9 @@ theorem trigram_card_anchor : Trigram.all.length = 8 := by decide
 /-- **物理总摘要**：
     (1) Yao ↔ Bool 严格双射（双向 roundtrip）
     (2) Trigram ↔ Bool³ 严格双射
-    (3) cuo² = id（对偶 involution）
-    (4) cuoZong² = id（错综 involution）
-    (5) cuo 翻 yinCount mod 2
+    (3) complement² = id（对偶 involution）
+    (4) complementReverse² = id（错综 involution）
+    (5) complement 翻 yinCount mod 2
     (6) motion 翻 yinCount mod 2
     (7) (Z/2)³ 全群作用：任意两卦互通 → 无非平凡 invariant
     (8) Trigram cardinality = 8（与 SU(3) dim 同 cardinality） -/
@@ -169,8 +169,8 @@ theorem wuxiang_summary :
     ∧ (∀ b : Bool, Yao.toBool (Bool.toYao b) = b)
     ∧ (∀ t : Trigram, Bool3.toTrigram (Trigram.toBool3 t) = t)
     ∧ (∀ b : Bool × Bool × Bool, Trigram.toBool3 (Bool3.toTrigram b) = b)
-    ∧ (∀ t : Trigram, Trigram.cuo (Trigram.cuo t) = t)
-    ∧ (∀ t : Trigram, (Trigram.yinCount (Trigram.cuo t) + Trigram.yinCount t) % 2 = 1)
+    ∧ (∀ t : Trigram, Trigram.complement (Trigram.complement t) = t)
+    ∧ (∀ t : Trigram, (Trigram.yinCount (Trigram.complement t) + Trigram.yinCount t) % 2 = 1)
     ∧ (∀ t : Trigram, (Trigram.yinCount (motion t) + Trigram.yinCount t) % 2 = 1)
     ∧ (∀ a b : Trigram, transform a b a = b)
     ∧ (Trigram.all.length = 8) :=

@@ -205,10 +205,10 @@ mutual
     | _+1,    .andB,   [.boolV a, .boolV b] => some (.boolV (a && b))
     | _+1,    .orB,    [.boolV a, .boolV b] => some (.boolV (a || b))
     | _+1,    .eqHex,  [.hexV a, .hexV b]   => some (.boolV (decide (a = b)))
-    | _+1,    .cuoH,   [.hexV h]            => some (.hexV h.cuo)
-    | _+1,    .zongH,  [.hexV h]            => some (.hexV h.zong)
-    | _+1,    .huH,    [.hexV h]            => some (.hexV h.hu)
-    | _+1,    .cuoZongH, [.hexV h]          => some (.hexV h.cuoZong)
+    | _+1,    .cuoH,   [.hexV h]            => some (.hexV h.complement)
+    | _+1,    .zongH,  [.hexV h]            => some (.hexV h.reverse)
+    | _+1,    .huH,    [.hexV h]            => some (.hexV h.interlace)
+    | _+1,    .cuoZongH, [.hexV h]          => some (.hexV h.complementReverse)
     | _+1,    .flip1H, [.hexV h]            => some (.hexV (dongInner h))
     | _+1,    .flip2H, [.hexV h]            => some (.hexV (huaInner h))
     | _+1,    .flip3H, [.hexV h]            => some (.hexV (bianInner h))
@@ -478,25 +478,25 @@ theorem yiBenefit_eq_sheng (h : Hexagram) :
     cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
     all_goals native_decide
 
-/-- 错 之 denotation = Hexagram.cuo. -/
+/-- 错 之 denotation = Hexagram.complement. -/
 theorem cuoBody_eq_cuo (h : Hexagram) :
-    denoteHexFun Stdlib.cuoBody h = some h.cuo := by
+    denoteHexFun Stdlib.cuoBody h = some h.complement := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
     all_goals native_decide
 
-/-- 综 之 denotation = Hexagram.zong. -/
+/-- 综 之 denotation = Hexagram.reverse. -/
 theorem zongBody_eq_zong (h : Hexagram) :
-    denoteHexFun Stdlib.zongBody h = some h.zong := by
+    denoteHexFun Stdlib.zongBody h = some h.reverse := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
     all_goals native_decide
 
-/-- 互 之 denotation = Hexagram.hu. -/
+/-- 互 之 denotation = Hexagram.interlace. -/
 theorem huBody_eq_hu (h : Hexagram) :
-    denoteHexFun Stdlib.huBody h = some h.hu := by
+    denoteHexFun Stdlib.huBody h = some h.interlace := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
@@ -504,7 +504,7 @@ theorem huBody_eq_hu (h : Hexagram) :
 
 /-- 反 在 object-transform 读法下同错. -/
 theorem fanReverseBody_eq_cuo (h : Hexagram) :
-    denoteHexFun Stdlib.fanReverseBody h = some h.cuo :=
+    denoteHexFun Stdlib.fanReverseBody h = some h.complement :=
   cuoBody_eq_cuo h
 
 theorem hexIdBody_eq_id (h : Hexagram) :
@@ -515,7 +515,7 @@ theorem hexIdBody_eq_id (h : Hexagram) :
     all_goals native_decide
 
 theorem cuoZongBody_eq_cuoZong (h : Hexagram) :
-    denoteHexFun Stdlib.cuoZongBody h = some h.cuoZong := by
+    denoteHexFun Stdlib.cuoZongBody h = some h.complementReverse := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6

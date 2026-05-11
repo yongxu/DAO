@@ -27,9 +27,9 @@ In META terms, satisfying the block contract therefore requires:
 
 3. **Jump** to `fetchOffset`.
 
-## Why this block is structurally harder than nop / hu / cuo / zong
+## Why this block is structurally harder than nop / interlace / complement / reverse
 
-The cur-transform blocks (`nop`, `hu`, `cuo`, `zong`) only need to
+The cur-transform blocks (`nop`, `interlace`, `complement`, `reverse`) only need to
 prepend ONE `regDataCell regHex` cell at the top of META.history (the
 pc-counter advance from `sim.pc` to `sim.pc + 1`).  This is a single
 `YiInstr.push` whose Hex content is supplied automatically by the loop

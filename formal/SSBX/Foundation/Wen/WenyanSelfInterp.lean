@@ -252,9 +252,9 @@ def encInstr : YiInstr → List Cell256
   | .nop                        => [cellFromIdx ⟨0,  by omega⟩]
   | .setShi s                   => [cellFromIdx ⟨1,  by omega⟩, encShi s]
   | .flipYao i                  => [cellFromIdx ⟨2,  by omega⟩, encFin6 i]
-  | .hu                         => [cellFromIdx ⟨3,  by omega⟩]
-  | .cuo                        => [cellFromIdx ⟨4,  by omega⟩]
-  | .zong                       => [cellFromIdx ⟨5,  by omega⟩]
+  | .interlace                         => [cellFromIdx ⟨3,  by omega⟩]
+  | .complement                        => [cellFromIdx ⟨4,  by omega⟩]
+  | .reverse                       => [cellFromIdx ⟨5,  by omega⟩]
   | .branchYaoEq i j t          => [cellFromIdx ⟨6,  by omega⟩, encFin6 i, encFin6 j] ++ encNat t
   | .branchShiEq s t            => [cellFromIdx ⟨7,  by omega⟩, encShi s] ++ encNat t
   | .jump t                     => cellFromIdx ⟨8,  by omega⟩ :: encNat t
@@ -276,9 +276,9 @@ def decInstr (l : List Cell256) : Option (YiInstr × List Cell256) :=
         if h : (cellToIdx i).val < 6
         then some (.flipYao ⟨(cellToIdx i).val, h⟩, rest)
         else none
-    | 3,  rest => some (.hu, rest)
-    | 4,  rest => some (.cuo, rest)
-    | 5,  rest => some (.zong, rest)
+    | 3,  rest => some (.interlace, rest)
+    | 4,  rest => some (.complement, rest)
+    | 5,  rest => some (.reverse, rest)
     | 6,  i :: j :: rest =>
         if hi : (cellToIdx i).val < 6 then
           if hj : (cellToIdx j).val < 6 then
@@ -316,17 +316,17 @@ theorem decInstr_encInstr_nop (rest : List Cell256) :
   simp only [decInstr, cellFromIdx_toIdx]
 
 theorem decInstr_encInstr_hu (rest : List Cell256) :
-    decInstr (encInstr .hu ++ rest) = some (.hu, rest) := by
+    decInstr (encInstr .interlace ++ rest) = some (.interlace, rest) := by
   show decInstr (cellFromIdx ⟨3, by omega⟩ :: rest) = _
   simp only [decInstr, cellFromIdx_toIdx]
 
 theorem decInstr_encInstr_cuo (rest : List Cell256) :
-    decInstr (encInstr .cuo ++ rest) = some (.cuo, rest) := by
+    decInstr (encInstr .complement ++ rest) = some (.complement, rest) := by
   show decInstr (cellFromIdx ⟨4, by omega⟩ :: rest) = _
   simp only [decInstr, cellFromIdx_toIdx]
 
 theorem decInstr_encInstr_zong (rest : List Cell256) :
-    decInstr (encInstr .zong ++ rest) = some (.zong, rest) := by
+    decInstr (encInstr .reverse ++ rest) = some (.reverse, rest) := by
   show decInstr (cellFromIdx ⟨5, by omega⟩ :: rest) = _
   simp only [decInstr, cellFromIdx_toIdx]
 
@@ -448,9 +448,9 @@ theorem decInstr_encInstr (i : YiInstr) (h_enc : Encodable i)
     decInstr (encInstr i ++ rest) = some (i, rest) := by
   cases i with
   | nop                      => exact decInstr_encInstr_nop rest
-  | hu                       => exact decInstr_encInstr_hu rest
-  | cuo                      => exact decInstr_encInstr_cuo rest
-  | zong                     => exact decInstr_encInstr_zong rest
+  | interlace                       => exact decInstr_encInstr_hu rest
+  | complement                      => exact decInstr_encInstr_cuo rest
+  | reverse                     => exact decInstr_encInstr_zong rest
   | push                     => exact decInstr_encInstr_push rest
   | pop                      => exact decInstr_encInstr_pop rest
   | halt                     => exact decInstr_encInstr_halt rest
@@ -649,28 +649,28 @@ theorem metaInterpProg_jump_out_correct (h : Hexagram) :
 /-! ### Phase 2.2 -/
 
 def metaInterpProg_hu : List YiInstr :=
-  [YiInstr.hu, YiInstr.halt]
+  [YiInstr.interlace, YiInstr.halt]
 
 theorem metaInterpProg_hu_correct (h : Hexagram) :
-    ((YiState.init h metaInterpProg_hu).runFuel 2).cur = (Hexagram.hu h, Shi.jin)
+    ((YiState.init h metaInterpProg_hu).runFuel 2).cur = (Hexagram.interlace h, Shi.jin)
     ∧ ((YiState.init h metaInterpProg_hu).runFuel 2).pc = 1
     ∧ ((YiState.init h metaInterpProg_hu).runFuel 2).halted = true := by
   refine ⟨?_, ?_, ?_⟩ <;> rfl
 
 def metaInterpProg_cuo : List YiInstr :=
-  [YiInstr.cuo, YiInstr.halt]
+  [YiInstr.complement, YiInstr.halt]
 
 theorem metaInterpProg_cuo_correct (h : Hexagram) :
-    ((YiState.init h metaInterpProg_cuo).runFuel 2).cur = (Hexagram.cuo h, Shi.jin)
+    ((YiState.init h metaInterpProg_cuo).runFuel 2).cur = (Hexagram.complement h, Shi.jin)
     ∧ ((YiState.init h metaInterpProg_cuo).runFuel 2).pc = 1
     ∧ ((YiState.init h metaInterpProg_cuo).runFuel 2).halted = true := by
   refine ⟨?_, ?_, ?_⟩ <;> rfl
 
 def metaInterpProg_zong : List YiInstr :=
-  [YiInstr.zong, YiInstr.halt]
+  [YiInstr.reverse, YiInstr.halt]
 
 theorem metaInterpProg_zong_correct (h : Hexagram) :
-    ((YiState.init h metaInterpProg_zong).runFuel 2).cur = (Hexagram.zong h, Shi.jin)
+    ((YiState.init h metaInterpProg_zong).runFuel 2).cur = (Hexagram.reverse h, Shi.jin)
     ∧ ((YiState.init h metaInterpProg_zong).runFuel 2).pc = 1
     ∧ ((YiState.init h metaInterpProg_zong).runFuel 2).halted = true := by
   refine ⟨?_, ?_, ?_⟩ <;> rfl
@@ -739,9 +739,9 @@ open YiInstrEnc
 
 def metaInterpStep_nop : List YiInstr := [.pop, .push, .halt]
 def metaInterpStep_halt : List YiInstr := [.pop, .push, .halt]
-def metaInterpStep_hu : List YiInstr := [.pop, .hu, .push, .halt]
-def metaInterpStep_cuo : List YiInstr := [.pop, .cuo, .push, .halt]
-def metaInterpStep_zong : List YiInstr := [.pop, .zong, .push, .halt]
+def metaInterpStep_hu : List YiInstr := [.pop, .interlace, .push, .halt]
+def metaInterpStep_cuo : List YiInstr := [.pop, .complement, .push, .halt]
+def metaInterpStep_zong : List YiInstr := [.pop, .reverse, .push, .halt]
 def metaInterpStep_push : List YiInstr := [.pop, .push, .push, .halt]
 def metaInterpStep_pop : List YiInstr := [.pop, .pop, .halt]
 
@@ -759,19 +759,19 @@ theorem metaInterpStep_halt_simulates (h : Hexagram) (gcur : Cell256) :
 
 theorem metaInterpStep_hu_simulates (h : Hexagram) (gcur : Cell256) :
     let s := { (YiState.init h metaInterpStep_hu) with history := [gcur] }
-    (s.runFuel 5).history = [(Hexagram.hu gcur.1, gcur.2)]
+    (s.runFuel 5).history = [(Hexagram.interlace gcur.1, gcur.2)]
     ∧ (s.runFuel 5).halted = true := by
   refine ⟨?_, ?_⟩ <;> rfl
 
 theorem metaInterpStep_cuo_simulates (h : Hexagram) (gcur : Cell256) :
     let s := { (YiState.init h metaInterpStep_cuo) with history := [gcur] }
-    (s.runFuel 5).history = [(Hexagram.cuo gcur.1, gcur.2)]
+    (s.runFuel 5).history = [(Hexagram.complement gcur.1, gcur.2)]
     ∧ (s.runFuel 5).halted = true := by
   refine ⟨?_, ?_⟩ <;> rfl
 
 theorem metaInterpStep_zong_simulates (h : Hexagram) (gcur : Cell256) :
     let s := { (YiState.init h metaInterpStep_zong) with history := [gcur] }
-    (s.runFuel 5).history = [(Hexagram.zong gcur.1, gcur.2)]
+    (s.runFuel 5).history = [(Hexagram.reverse gcur.1, gcur.2)]
     ∧ (s.runFuel 5).halted = true := by
   refine ⟨?_, ?_⟩ <;> rfl
 
@@ -902,13 +902,13 @@ theorem trivialSeven_simulates :
         (s.runFuel 4).history = [gcur] ∧ (s.runFuel 4).halted = true)
     ∧ (∀ h gcur,
         let s := { (YiState.init h metaInterpStep_hu) with history := [gcur] }
-        (s.runFuel 5).history = [(Hexagram.hu gcur.1, gcur.2)] ∧ (s.runFuel 5).halted = true)
+        (s.runFuel 5).history = [(Hexagram.interlace gcur.1, gcur.2)] ∧ (s.runFuel 5).halted = true)
     ∧ (∀ h gcur,
         let s := { (YiState.init h metaInterpStep_cuo) with history := [gcur] }
-        (s.runFuel 5).history = [(Hexagram.cuo gcur.1, gcur.2)] ∧ (s.runFuel 5).halted = true)
+        (s.runFuel 5).history = [(Hexagram.complement gcur.1, gcur.2)] ∧ (s.runFuel 5).halted = true)
     ∧ (∀ h gcur,
         let s := { (YiState.init h metaInterpStep_zong) with history := [gcur] }
-        (s.runFuel 5).history = [(Hexagram.zong gcur.1, gcur.2)] ∧ (s.runFuel 5).halted = true)
+        (s.runFuel 5).history = [(Hexagram.reverse gcur.1, gcur.2)] ∧ (s.runFuel 5).halted = true)
     ∧ (∀ h gcur,
         let s := { (YiState.init h metaInterpStep_push) with history := [gcur] }
         (s.runFuel 5).history = [gcur, gcur] ∧ (s.runFuel 5).halted = true)
@@ -936,13 +936,13 @@ theorem phase23_all12_simulated :
         (s.runFuel 5).history = [(gcur.1.flipPos i, gcur.2)] ∧ (s.runFuel 5).halted = true)
     ∧ (∀ h gcur,
         let s := { (YiState.init h metaInterpStep_hu) with history := [gcur] }
-        (s.runFuel 5).history = [(Hexagram.hu gcur.1, gcur.2)] ∧ (s.runFuel 5).halted = true)
+        (s.runFuel 5).history = [(Hexagram.interlace gcur.1, gcur.2)] ∧ (s.runFuel 5).halted = true)
     ∧ (∀ h gcur,
         let s := { (YiState.init h metaInterpStep_cuo) with history := [gcur] }
-        (s.runFuel 5).history = [(Hexagram.cuo gcur.1, gcur.2)] ∧ (s.runFuel 5).halted = true)
+        (s.runFuel 5).history = [(Hexagram.complement gcur.1, gcur.2)] ∧ (s.runFuel 5).halted = true)
     ∧ (∀ h gcur,
         let s := { (YiState.init h metaInterpStep_zong) with history := [gcur] }
-        (s.runFuel 5).history = [(Hexagram.zong gcur.1, gcur.2)] ∧ (s.runFuel 5).halted = true)
+        (s.runFuel 5).history = [(Hexagram.reverse gcur.1, gcur.2)] ∧ (s.runFuel 5).halted = true)
     ∧ (∀ h i j t gcur,
         let s := { (YiState.init h (metaInterpStep_branchYaoEq i j t)) with history := [gcur] }
         (s.runFuel 4).history = [gcur] ∧ (s.runFuel 4).halted = true)
@@ -1040,9 +1040,9 @@ theorem wenyan_self_interp_complete :
     ∧ (∀ c : Cell256, cellFromIdx (cellToIdx c) = c)
     ∧ (∀ n : Nat, NatCell.decodeNat (NatCell.encodeNat n) = n)
     ∧ (∀ rest, YiInstrEnc.decInstr (YiInstrEnc.encInstr .nop  ++ rest) = some (.nop, rest))
-    ∧ (∀ rest, YiInstrEnc.decInstr (YiInstrEnc.encInstr .hu   ++ rest) = some (.hu, rest))
-    ∧ (∀ rest, YiInstrEnc.decInstr (YiInstrEnc.encInstr .cuo  ++ rest) = some (.cuo, rest))
-    ∧ (∀ rest, YiInstrEnc.decInstr (YiInstrEnc.encInstr .zong ++ rest) = some (.zong, rest))
+    ∧ (∀ rest, YiInstrEnc.decInstr (YiInstrEnc.encInstr .interlace   ++ rest) = some (.interlace, rest))
+    ∧ (∀ rest, YiInstrEnc.decInstr (YiInstrEnc.encInstr .complement  ++ rest) = some (.complement, rest))
+    ∧ (∀ rest, YiInstrEnc.decInstr (YiInstrEnc.encInstr .reverse ++ rest) = some (.reverse, rest))
     ∧ (∀ rest, YiInstrEnc.decInstr (YiInstrEnc.encInstr .push ++ rest) = some (.push, rest))
     ∧ (∀ rest, YiInstrEnc.decInstr (YiInstrEnc.encInstr .pop  ++ rest) = some (.pop, rest))
     ∧ (∀ rest, YiInstrEnc.decInstr (YiInstrEnc.encInstr .halt ++ rest) = some (.halt, rest))

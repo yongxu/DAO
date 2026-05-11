@@ -382,14 +382,14 @@ def reduceN : Nat → Wen → Wen
 /-- stepAny is deterministic: same input gives same output (trivially, since it's a function).
     This is NOT global confluence — only that ONE strategy is well-defined. -/
 theorem stepAny_deterministic (t u v : Wen)
-    (hu : stepAny t = some u) (hv : stepAny t = some v) : u = v := by
-  rw [hu] at hv
+    (interlace : stepAny t = some u) (hv : stepAny t = some v) : u = v := by
+  rw [interlace] at hv
   injection hv
 
 /-- reduceN is deterministic for the same reason. -/
 theorem reduceN_deterministic (n : Nat) (t u v : Wen)
-    (hu : reduceN n t = u) (hv : reduceN n t = v) : u = v := by
-  rw [← hu, ← hv]
+    (interlace : reduceN n t = u) (hv : reduceN n t = v) : u = v := by
+  rw [← interlace, ← hv]
 
 /-! ### Confluence — scaffolding
 

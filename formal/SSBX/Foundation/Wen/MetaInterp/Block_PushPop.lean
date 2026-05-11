@@ -2,7 +2,7 @@
 # Block_PushPop — executeBlocks for `push` and `pop`
 
 These two opcodes are **fundamentally harder** than the cur-only blocks
-(`nop`, `hu`, `cuo`, `zong`, `setShi`, `flipYao`) because they mutate
+(`nop`, `interlace`, `complement`, `reverse`, `setShi`, `flipYao`) because they mutate
 `sim.history`, which is encoded in the **middle** of `META.history`:
 
 ```

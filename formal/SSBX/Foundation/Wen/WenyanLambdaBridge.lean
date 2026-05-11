@@ -61,9 +61,9 @@ def quoteInstr : YiInstr → Lam
   | .nop => sym "YiInstr.nop"
   | .setShi s => app (sym "YiInstr.setShi") (quoteShi s)
   | .flipYao i => app (sym "YiInstr.flipYao") (quoteFin6 i)
-  | .hu => sym "YiInstr.hu"
-  | .cuo => sym "YiInstr.cuo"
-  | .zong => sym "YiInstr.zong"
+  | .interlace => sym "YiInstr.interlace"
+  | .complement => sym "YiInstr.complement"
+  | .reverse => sym "YiInstr.reverse"
   | .branchYaoEq i j target =>
       app3 (sym "YiInstr.branchYaoEq") (quoteFin6 i) (quoteFin6 j) (quoteNat target)
   | .branchShiEq s target =>

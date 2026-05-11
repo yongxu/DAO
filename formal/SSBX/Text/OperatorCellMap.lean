@@ -227,7 +227,7 @@ structure SemanticLowerBoundRow where
 Current lower-bound audit for theorem families:
 
 * 10 exact cell-transform families: identity, next/prev, 错 / 综 / 互,
-  cuo-zong, and three line flips; equivalently the V4 transforms,
+  complement-reverse, and three line flips; equivalently the V4 transforms,
   single-yao flips, identity, and mod-64 successor/predecessor.
 * 7 concrete `Cell256` reachability generators: six line flips plus one time edge.
 * 12 BaguaWen L0 instruction clauses.

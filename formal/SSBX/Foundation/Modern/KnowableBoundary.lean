@@ -100,11 +100,11 @@ def BeyondBoundaryUtterance (u : Utterance) : Prop :=
 theorem beyond_boundary_utterance_is_non_li
     (u : Utterance) (h : BeyondBoundaryUtterance u) :
     ¬ IsLiUtterance u := by
-  intro hu
+  intro interlace
   unfold BeyondBoundaryUtterance at h
-  unfold IsLiUtterance IsLi at hu
-  rw [h] at hu
-  cases hu
+  unfold IsLiUtterance IsLi at interlace
+  rw [h] at interlace
+  cases interlace
 
 /-! ## § 4 Other ke-boundaries are deferred from this file -/
 

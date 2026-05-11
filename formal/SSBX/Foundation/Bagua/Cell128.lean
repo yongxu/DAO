@@ -98,12 +98,12 @@ theorem yin_preserves_hex (c : Cell128) : (yin c).1 = c.1 := by
 
 /-! ## § 4 Hexagram lift 到 Cell128 (保 因 bit) -/
 
-/-- Hexagram cuo lift 到 Cell128 (保 因). -/
-def hexCuo (c : Cell128) : Cell128 := (Hexagram.cuo c.1, c.2)
-/-- Hexagram zong lift. -/
-def hexZong (c : Cell128) : Cell128 := (Hexagram.zong c.1, c.2)
-/-- Hexagram hu lift. -/
-def hexHu (c : Cell128) : Cell128 := (Hexagram.hu c.1, c.2)
+/-- Hexagram complement lift 到 Cell128 (保 因). -/
+def hexCuo (c : Cell128) : Cell128 := (Hexagram.complement c.1, c.2)
+/-- Hexagram reverse lift. -/
+def hexZong (c : Cell128) : Cell128 := (Hexagram.reverse c.1, c.2)
+/-- Hexagram interlace lift. -/
+def hexHu (c : Cell128) : Cell128 := (Hexagram.interlace c.1, c.2)
 
 /-- 6 单爻 flip lift. -/
 def flip1 (c : Cell128) : Cell128 := (dongInner c.1, c.2)

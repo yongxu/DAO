@@ -164,7 +164,7 @@ def qianToKun : Rule :=
     (.list [.atom "trigram", .atom "阳", .atom "阳", .atom "阳"])
     (.list [.atom "trigram", .atom "阴", .atom "阴", .atom "阴"])
 
-/-- Named transition: 离 → 坎 (cuo of 离). -/
+/-- Named transition: 离 → 坎 (complement of 离). -/
 def liToKan : Rule :=
   Rule.named "fire-to-water"
     (.list [.atom "trigram", .atom "阳", .atom "阴", .atom "阳"])

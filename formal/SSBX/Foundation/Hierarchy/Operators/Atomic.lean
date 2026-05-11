@@ -24,7 +24,7 @@ i.e. using the proofs already established in `Cell128.lean` / `Cell256.lean`.
 
 - Does NOT redefine the operators (pure re-export via `def` aliases).
 - Does NOT touch source files (`Cell256.lean`, `Cell128.lean`, `BaguaAlgebra.lean`).
-- Does NOT include `zong` / `hu` / `cuoZong` — those are V₄-outer (non-XOR
+- Does NOT include `reverse` / `interlace` / `complementReverse` — those are V₄-outer (non-XOR
   permutations) and live in `V4Outer.lean`.
 -/
 import SSBX.Foundation.Bagua.Cell256
@@ -68,10 +68,10 @@ def cell128_flip6 (c : Cell128) : Cell128 := flip6 c
 def cell128_yin (c : Cell128) : Cell128 :=
   SSBX.Foundation.Bagua.Cell128.yin c
 
-/-- Cell128 hexagram-level 错 (cuo): yao-wise negation = XOR with the
+/-- Cell128 hexagram-level 错 (complement): yao-wise negation = XOR with the
     all-yin (earth) mask on the Hexagram component, preserving the YinBit.
 
-    This is the "atomic XOR-mask" form of `Hexagram.cuo` lifted to Cell128. -/
+    This is the "atomic XOR-mask" form of `Hexagram.complement` lifted to Cell128. -/
 def cell128_hexCuo (c : Cell128) : Cell128 :=
   SSBX.Foundation.Bagua.Cell128.hexCuo c
 

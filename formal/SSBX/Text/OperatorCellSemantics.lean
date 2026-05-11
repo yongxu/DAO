@@ -31,10 +31,10 @@ def applyKindOnCell256 : CellTransformKind → Cell256 → Cell256
   | .id, c => c
   | .next64, c => (SSBX.Foundation.Yi.YiCore.«生» c.1, c.2)
   | .prev64, c => (SSBX.Foundation.Yi.YiCore.«加» SSBX.Foundation.Yi.Yi.Hexagram.earth c.1, c.2)
-  | .cuo, c => Cell256.hexCuo c
-  | .zong, c => Cell256.hexZong c
-  | .hu, c => Cell256.hexHu c
-  | .cuoZong, c => (c.1.cuoZong, c.2)
+  | .complement, c => Cell256.hexCuo c
+  | .reverse, c => Cell256.hexZong c
+  | .interlace, c => Cell256.hexHu c
+  | .complementReverse, c => (c.1.complementReverse, c.2)
   | .flip1, c => Cell256.flip1 c
   | .flip2, c => Cell256.flip2 c
   | .flip3, c => Cell256.flip3 c

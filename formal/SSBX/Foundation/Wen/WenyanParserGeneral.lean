@@ -233,9 +233,9 @@ def tokOfNum (n : Nat) : Tok := Tok.cjk (numeralInner n)
 /-- 单条指令之规范化 token 序列。 -/
 def tokensOfInstr : YiInstr → List Tok
   | .nop  => [Tok.cjk "不动"]
-  | .hu   => [Tok.cjk "互"]
-  | .cuo  => [Tok.cjk "错"]
-  | .zong => [Tok.cjk "综"]
+  | .interlace   => [Tok.cjk "互"]
+  | .complement  => [Tok.cjk "错"]
+  | .reverse => [Tok.cjk "综"]
   | .push => [Tok.cjk "推"]
   | .pop  => [Tok.cjk "取"]
   | .halt => [Tok.cjk "终"]
@@ -370,9 +370,9 @@ theorem numeralInnerChars_no_close (n : Nat) (h1 : 1 ≤ n) (h64 : n ≤ 64) :
 /-- 单条指令打印之 List Char 形 (镜像 printInstr 之分发). -/
 def printInstrChars : YiInstr → List Char
   | .nop  => ['«', '不', '动', '»']
-  | .hu   => ['«', '互', '»']
-  | .cuo  => ['«', '错', '»']
-  | .zong => ['«', '综', '»']
+  | .interlace   => ['«', '互', '»']
+  | .complement  => ['«', '错', '»']
+  | .reverse => ['«', '综', '»']
   | .push => ['«', '推', '»']
   | .pop  => ['«', '取', '»']
   | .halt => ['«', '终', '»']
@@ -392,9 +392,9 @@ theorem printInstr_toList (i : YiInstr) (h : validInstr i = true) :
     (printInstr i).toList = printInstrChars i := by
   cases i with
   | nop  => decide
-  | hu   => decide
-  | cuo  => decide
-  | zong => decide
+  | interlace   => decide
+  | complement  => decide
+  | reverse => decide
   | push => decide
   | pop  => decide
   | halt => decide
@@ -427,7 +427,7 @@ theorem printInstr_toList (i : YiInstr) (h : validInstr i = true) :
 
 /-- 单条指令 lex 所需 fuel 数 (= 括号组 + 内空格). -/
 def instrLexFuel : YiInstr → Nat
-  | .nop  | .hu  | .cuo | .zong | .push | .pop | .halt => 1
+  | .nop  | .interlace  | .complement | .reverse | .push | .pop | .halt => 1
   | .setShi _   | .flipYao _ => 3
   | .jump _ => 5
   | .branchShiEq _ _ => 7
@@ -548,17 +548,17 @@ theorem lexFuel_printInstrChars_app
       rw [lexFuel_bracket_split ['不', '动'] tail n
             (by intro c hc; simp at hc; rcases hc with rfl|rfl <;> decide)]
       rfl
-  | hu =>
+  | interlace =>
       show lexFuel (n + 1) (('«' :: ['互'] ++ ['»']) ++ tail) = _
       rw [lexFuel_bracket_split ['互'] tail n
             (by intro c hc; simp at hc; subst hc; decide)]
       rfl
-  | cuo =>
+  | complement =>
       show lexFuel (n + 1) (('«' :: ['错'] ++ ['»']) ++ tail) = _
       rw [lexFuel_bracket_split ['错'] tail n
             (by intro c hc; simp at hc; subst hc; decide)]
       rfl
-  | zong =>
+  | reverse =>
       show lexFuel (n + 1) (('«' :: ['综'] ++ ['»']) ++ tail) = _
       rw [lexFuel_bracket_split ['综'] tail n
             (by intro c hc; simp at hc; subst hc; decide)]
@@ -688,9 +688,9 @@ theorem parseInstr_tokensOfInstr_app (i : YiInstr) (rest : List Tok) (h : validI
     parseInstr (tokensOfInstr i ++ rest) = some (i, rest) := by
   cases i with
   | nop  => rfl
-  | hu   => rfl
-  | cuo  => rfl
-  | zong => rfl
+  | interlace   => rfl
+  | complement  => rfl
+  | reverse => rfl
   | push => rfl
   | pop  => rfl
   | halt => rfl
@@ -987,9 +987,9 @@ private theorem progLexFuel_le_length (p : List YiInstr) (h : validProg p = true
           -- printInstrChars i 的 length 大于 instrLexFuel i (since each fuel = ≥ 1 char)
           cases i with
           | nop  => decide
-          | hu   => decide
-          | cuo  => decide
-          | zong => decide
+          | interlace   => decide
+          | complement  => decide
+          | reverse => decide
           | push => decide
           | pop  => decide
           | halt => decide
@@ -1022,9 +1022,9 @@ private theorem progLexFuel_le_length (p : List YiInstr) (h : validProg p = true
           have h_inst : instrLexFuel i ≤ (printInstrChars i).length := by
             cases i with
             | nop  => decide
-            | hu   => decide
-            | cuo  => decide
-            | zong => decide
+            | interlace   => decide
+            | complement  => decide
+            | reverse => decide
             | push => decide
             | pop  => decide
             | halt => decide

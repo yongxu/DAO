@@ -27,11 +27,11 @@
   pc  wenyan          YiInstr                 道之相
   ──  ──────────────  ──────────────────────  ───────────────
    0  推              push                    太极 (留初象于带)
-   1  错              cuo                     阴阳生
-   2  错              cuo                     返本 (cuo² = id)
-   3  综              zong                    反观
-   4  综              zong                    还本 (zong² = id)
-   5  互              hu                      中之四象
+   1  错              complement                     阴阳生
+   2  错              complement                     返本 (complement² = id)
+   3  综              reverse                    反观
+   4  综              reverse                    还本 (reverse² = id)
+   5  互              interlace                      中之四象
    6  取              pop                     返于初 (history → cur)
    7  设时 今         setShi jin              立今
    8  比时 未 至 十   branchShiEq wei 10      若已未则跳 (false)
@@ -44,8 +44,8 @@
   15  终              halt                    终
 ```
 
-  pc 1..4 之净效应为 id（cuo² = zong² = id）；
-  pc 5 之 hu 改变中爻位但 pc 6 之 pop 从 history 取回初象，
+  pc 1..4 之净效应为 id（complement² = reverse² = id）；
+  pc 5 之 interlace 改变中爻位但 pc 6 之 pop 从 history 取回初象，
   故 pc 7 之状态恒为 (h, jin)；其后中爻同 ↔ 天道。
 
 ## 状态
@@ -80,11 +80,11 @@ def «道源» : String :=
 /-- «道程»：«道源» 所对应之 YiInstr 程，16 条指令. -/
 def «道程» : List YiInstr :=
   [ YiInstr.push                                            -- pc 0  推 · 太极
-  , YiInstr.cuo                                             -- pc 1  错 · 阴阳
-  , YiInstr.cuo                                             -- pc 2  错 · 返
-  , YiInstr.zong                                            -- pc 3  综 · 反观
-  , YiInstr.zong                                            -- pc 4  综 · 还
-  , YiInstr.hu                                              -- pc 5  互 · 中
+  , YiInstr.complement                                             -- pc 1  错 · 阴阳
+  , YiInstr.complement                                             -- pc 2  错 · 返
+  , YiInstr.reverse                                            -- pc 3  综 · 反观
+  , YiInstr.reverse                                            -- pc 4  综 · 还
+  , YiInstr.interlace                                              -- pc 5  互 · 中
   , YiInstr.pop                                             -- pc 6  取 · 返初
   , YiInstr.setShi Shi.jin                                  -- pc 7  设时 今
   , YiInstr.branchShiEq Shi.wei 10                          -- pc 8  比时 未
@@ -207,9 +207,9 @@ theorem «道源_否_心道» :
   ║                                                                  ║
   ╚══════════════════════════════════════════════════════════════════╝
 
-  与 cuo-equivariance ceiling 之关系：
-    «道程» 全 cuo-等变（每构造子皆 cuo-等变），故落在 12-字 ISA 之表达力之内。
-    其 义 ↔ 中爻同 — 此性质本身 cuo-等变（cuo 翻 yang/yin 不改 y3=y4），故合规。
+  与 complement-equivariance ceiling 之关系：
+    «道程» 全 complement-等变（每构造子皆 complement-等变），故落在 12-字 ISA 之表达力之内。
+    其 义 ↔ 中爻同 — 此性质本身 complement-等变（complement 翻 yang/yin 不改 y3=y4），故合规。
 -/
 
 theorem «道之自指» :

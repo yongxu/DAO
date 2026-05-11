@@ -156,7 +156,7 @@ theorem att_id (a : Trigram) : Att a a a = a := by
 theorem att_correct (a b : Trigram) : Att a b a = b :=
   transform_correct a b
 
-/-- **错卦作 全域注意力**：从乾到坤之注意力 = cuo。 -/
+/-- **错卦作 全域注意力**：从乾到坤之注意力 = complement。 -/
 theorem att_qian_kun_via_cuo : Att heaven earth heaven = earth := by
   exact transform_correct heaven earth
 

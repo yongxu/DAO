@@ -19,7 +19,7 @@ Shi 是 V₄ Klein 四群 = {道, 已, 今, 未}（**绝非 Z/3 cyclic**）：
 Builds on Yi.lean and BaguaAlgebra.lean.
 
 ## Phases
-  § 1   Shi (时态) inductive + V₄ Klein 群结构 (cuo / zong / cuoZong involution)
+  § 1   Shi (时态) inductive + V₄ Klein 群结构 (complement / reverse / complementReverse involution)
   § 2   Cell256 = Hexagram × Shi + cardinality 256
   § 3   Cell256 lateral operators (合 hex flips with 时态)
   § 4   xuGua (序卦传 King Wen order) as List Hexagram of length 64
@@ -77,40 +77,40 @@ def all : List Shi := [dao, ji, jin, wei]
 
 theorem all_length : all.length = 4 := rfl
 
-/-- V₄ cuo (P-like, 翻 past-trace 轴): 道↔已, 未↔今. -/
-def cuo : Shi → Shi
+/-- V₄ complement (P-like, 翻 past-trace 轴): 道↔已, 未↔今. -/
+def complement : Shi → Shi
   | .dao => .ji
   | .ji  => .dao
   | .jin => .wei
   | .wei => .jin
 
-/-- V₄ zong (T-like, 翻 future-projection 轴): 道↔未, 已↔今. -/
-def zong : Shi → Shi
+/-- V₄ reverse (T-like, 翻 future-projection 轴): 道↔未, 已↔今. -/
+def reverse : Shi → Shi
   | .dao => .wei
   | .ji  => .jin
   | .jin => .ji
   | .wei => .dao
 
-/-- V₄ cuoZong (= PT, 双轴翻): 道↔今, 已↔未. -/
-def cuoZong : Shi → Shi
+/-- V₄ complementReverse (= PT, 双轴翻): 道↔今, 已↔未. -/
+def complementReverse : Shi → Shi
   | .dao => .jin
   | .ji  => .wei
   | .jin => .dao
   | .wei => .ji
 
-theorem cuo_cuo (s : Shi) : cuo (cuo s) = s := by
+theorem cuo_cuo (s : Shi) : complement (complement s) = s := by
   rcases s with ⟨y, g⟩; cases y <;> cases g <;> rfl
-theorem zong_zong (s : Shi) : zong (zong s) = s := by
+theorem zong_zong (s : Shi) : reverse (reverse s) = s := by
   rcases s with ⟨y, g⟩; cases y <;> cases g <;> rfl
-theorem cuoZong_cuoZong (s : Shi) : cuoZong (cuoZong s) = s := by
-  rcases s with ⟨y, g⟩; cases y <;> cases g <;> rfl
-
-/-- cuo 与 zong 交换（V₄ Abelian）. -/
-theorem cuo_zong_comm (s : Shi) : cuo (zong s) = zong (cuo s) := by
+theorem cuoZong_cuoZong (s : Shi) : complementReverse (complementReverse s) = s := by
   rcases s with ⟨y, g⟩; cases y <;> cases g <;> rfl
 
-/-- cuoZong = cuo ∘ zong （V₄ 复合）. -/
-theorem cuoZong_eq_compose (s : Shi) : cuoZong s = cuo (zong s) := by
+/-- complement 与 reverse 交换（V₄ Abelian）. -/
+theorem cuo_zong_comm (s : Shi) : complement (reverse s) = reverse (complement s) := by
+  rcases s with ⟨y, g⟩; cases y <;> cases g <;> rfl
+
+/-- complementReverse = complement ∘ reverse （V₄ 复合）. -/
+theorem cuoZong_eq_compose (s : Shi) : complementReverse s = complement (reverse s) := by
   rcases s with ⟨y, g⟩; cases y <;> cases g <;> rfl
 
 /-! ### Shi ↔ (YinBit × GuoBit) ≅ V₄ Klein 双射
@@ -138,18 +138,18 @@ theorem toYinGuo_ofYinGuo (yg : YinBit × GuoBit) : toYinGuo (ofYinGuo yg) = yg 
   **命名 provisional**: 印/投 vs 因/果（state attributes）的二元对偶；
   备选 印/望、持/期等 — 详 yi-calculus-theorem.md §16. -/
 
-/-- 印 (yìn): toggle YinBit (因 axis). 等价于 Shi.cuo. -/
-def yin (s : Shi) : Shi := s.cuo
+/-- 印 (yìn): toggle YinBit (因 axis). 等价于 Shi.complement. -/
+def yin (s : Shi) : Shi := s.complement
 
-/-- 投 (tóu): toggle GuoBit (果 axis). 等价于 Shi.zong. -/
-def tou (s : Shi) : Shi := s.zong
+/-- 投 (tóu): toggle GuoBit (果 axis). 等价于 Shi.reverse. -/
+def tou (s : Shi) : Shi := s.reverse
 
 theorem yin_yin (s : Shi) : yin (yin s) = s := cuo_cuo s
 theorem tou_tou (s : Shi) : tou (tou s) = s := zong_zong s
 theorem yin_tou_comm (s : Shi) : yin (tou s) = tou (yin s) := cuo_zong_comm s
 
-/-- 印 ∘ 投 = cuoZong = V₄ central element. -/
-theorem yin_tou_eq_cuoZong (s : Shi) : yin (tou s) = cuoZong s := by
+/-- 印 ∘ 投 = complementReverse = V₄ central element. -/
+theorem yin_tou_eq_cuoZong (s : Shi) : yin (tou s) = complementReverse s := by
   unfold yin tou
   exact (cuoZong_eq_compose s).symm
 
@@ -200,12 +200,12 @@ end Cell256
 
 namespace Cell256
 
-/-- 时态 cuo on Cell256 (P-like, 保 hex). -/
-def shiCuo (c : Cell256) : Cell256 := (c.1, c.2.cuo)
-/-- 时态 zong on Cell256 (T-like, 保 hex). -/
-def shiZong (c : Cell256) : Cell256 := (c.1, c.2.zong)
-/-- 时态 cuoZong on Cell256 (PT, 保 hex). -/
-def shiCuoZong (c : Cell256) : Cell256 := (c.1, c.2.cuoZong)
+/-- 时态 complement on Cell256 (P-like, 保 hex). -/
+def shiCuo (c : Cell256) : Cell256 := (c.1, c.2.complement)
+/-- 时态 reverse on Cell256 (T-like, 保 hex). -/
+def shiZong (c : Cell256) : Cell256 := (c.1, c.2.reverse)
+/-- 时态 complementReverse on Cell256 (PT, 保 hex). -/
+def shiCuoZong (c : Cell256) : Cell256 := (c.1, c.2.complementReverse)
 
 theorem shiCuo_shiCuo (c : Cell256) : shiCuo (shiCuo c) = c := by
   rcases c with ⟨h, s⟩; simp [shiCuo, Shi.cuo_cuo]
@@ -217,11 +217,11 @@ theorem shiCuoZong_shiCuoZong (c : Cell256) : shiCuoZong (shiCuoZong c) = c := b
   rcases c with ⟨h, s⟩; simp [shiCuoZong, Shi.cuoZong_cuoZong]
 
 /-- Hexagram 错 lifted to Cell256 (preserves 时态). -/
-def hexCuo (c : Cell256) : Cell256 := (Hexagram.cuo c.1, c.2)
+def hexCuo (c : Cell256) : Cell256 := (Hexagram.complement c.1, c.2)
 /-- Hexagram 综 lifted. -/
-def hexZong (c : Cell256) : Cell256 := (Hexagram.zong c.1, c.2)
+def hexZong (c : Cell256) : Cell256 := (Hexagram.reverse c.1, c.2)
 /-- Hexagram 互 lifted. -/
-def hexHu (c : Cell256) : Cell256 := (Hexagram.hu c.1, c.2)
+def hexHu (c : Cell256) : Cell256 := (Hexagram.interlace c.1, c.2)
 
 /-- 6 single yao flips lifted. -/
 def flip1 (c : Cell256) : Cell256 := (dongInner c.1, c.2)
@@ -566,7 +566,7 @@ end Cell256
 
 /-! ## § 8 印/投 重写为 XOR mask (Phase A)
 
-  The legacy `Shi.yin / Shi.tou` (= `Shi.cuo / Shi.zong`) are V₄ wraps.
+  The legacy `Shi.yin / Shi.tou` (= `Shi.complement / Shi.reverse`) are V₄ wraps.
   Phase A re-expresses 印/投 at the **Cell256 level** as XOR with two
   canonical masks:
 

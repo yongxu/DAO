@@ -44,7 +44,7 @@ There are two dynamic paths:
   META.pc := fetchOffset.  This is structurally identical to a 2-step
   run of `[ nop ; jump fetchOffset ]` from the local-effect standpoint.
   The corresponding sim-side encoding bridge is the **same head-prepend
-  of `regDataCell regHex`** as for `nop`/`hu`/`cuo`/`zong`.
+  of `regDataCell regHex`** as for `nop`/`interlace`/`complement`/`reverse`.
 
 * **Branch-taken** (condition TRUE): after the branch op, META.pc := t.
   In the local block-only YiState (where `prog := executeBlock_… 0 …`),

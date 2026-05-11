@@ -4,7 +4,7 @@
 The complete operator system for 八卦 (T_3 = Σ³), formalizing
   义理/G_完整算子系统_八卦互通与归一.md
 
-Yi.lean already provides Trigram with 错 (cuo) = full negation and 综 (zong) =
+Yi.lean already provides Trigram with 错 (complement) = full negation and 综 (reverse) =
 positional reversal — these form the V_4 subgroup acting on Trigram.
 
 This file adds the strictly finer (Z/2)³ structure: three single-bit flips
@@ -78,10 +78,10 @@ theorem dong_bian_comm (t : Trigram) : bian (motion t) = motion (bian t) := by
 
 /-! ## § 2 错 = motion ∘ hua ∘ bian
 
-  Yi.Trigram.cuo (full negation) is the product of all three single-bit flips. -/
+  Yi.Trigram.complement (full negation) is the product of all three single-bit flips. -/
 
 theorem cuo_eq_compose (t : Trigram) :
-    Trigram.cuo t = motion (hua (bian t)) := by
+    Trigram.complement t = motion (hua (bian t)) := by
   cases t; rfl
 
 /-! ## § 3 Concrete 8-element orbit of 乾 under (Z/2)³ -/
@@ -96,7 +96,7 @@ theorem dong_bian_qian  : motion (bian heaven) = water := rfl  -- 坎 ⟨阴,阳
 theorem dong_hua_bian_qian : motion (hua (bian heaven)) = earth := rfl  -- 坤 ⟨阴,阴,阴⟩
 
 /-- 错 of 乾 is 坤 (witnessed via the compose decomposition). -/
-theorem cuo_qian_eq_kun : Trigram.cuo heaven = earth := by
+theorem cuo_qian_eq_kun : Trigram.complement heaven = earth := by
   rw [cuo_eq_compose]
   exact dong_hua_bian_qian
 
@@ -314,7 +314,7 @@ theorem grandCycle_returns (y1 y2 y3 : Yao) : grandCycle y1 y2 y3 = () := rfl
   dimensionality. The 6 ops naturally split as 3-inner + 3-outer.
 
   Hexagram = inner ⊕ outer (`Hexagram.oplus`); each side carries its own
-  (Z/2)³ via motion/hua/bian. Composing all 6 yields `Hexagram.cuo`. -/
+  (Z/2)³ via motion/hua/bian. Composing all 6 yields `Hexagram.complement`. -/
 
 /-- 内·动 (dongInner): flip y1 (inner-bottom yao) of a hexagram. -/
 def dongInner (h : Hexagram) : Hexagram :=
@@ -363,7 +363,7 @@ theorem bianOuter_bianOuter (h : Hexagram) : bianOuter (bianOuter h) = h := by
 /-- 错_hex = composition of all 6 single-yao flips. T_6 analog of § 2's
     `cuo_eq_compose`. -/
 theorem hex_cuo_eq_compose (h : Hexagram) :
-    Hexagram.cuo h
+    Hexagram.complement h
       = dongInner (huaInner (bianInner (dongOuter (huaOuter (bianOuter h))))) := by
   cases h; rfl
 
@@ -550,9 +550,9 @@ end Sheng
 
 /-! ### § 16 Hexagram inner/outer structural theorems -/
 
-/-- Hexagram.cuo decomposes via inner/outer Trigram.cuo (compatibility). -/
+/-- Hexagram.complement decomposes via inner/outer Trigram.complement (compatibility). -/
 theorem hex_cuo_via_inner_outer (h : Hexagram) :
-    Hexagram.cuo h = chong (Trigram.cuo h.innerTrigram) (Trigram.cuo h.outerTrigram) := by
+    Hexagram.complement h = chong (Trigram.complement h.innerTrigram) (Trigram.complement h.outerTrigram) := by
   cases h; rfl
 
 /-- chong reconstructs h from its own inner and outer trigrams (重之逆). -/
@@ -568,7 +568,7 @@ theorem chong_inner_outer (h : Hexagram) :
   and 综 ≠ id via 兑 (since 综 lake = wind ≠ lake). -/
 
 /-- 综 fixes 乾 (palindrome). -/
-theorem zong_qian_eq_qian : Trigram.zong heaven = heaven := rfl
+theorem zong_qian_eq_qian : Trigram.reverse heaven = heaven := rfl
 
 /-- Every non-id (Z/2)³ element moves 乾. -/
 theorem dong_qian_ne_qian : motion heaven ≠ heaven := by decide
@@ -576,31 +576,31 @@ theorem hua_qian_ne_qian : hua heaven ≠ heaven := by decide
 theorem bian_qian_ne_qian : bian heaven ≠ heaven := by decide
 
 /-- 综 ≠ id (witnessed by 兑 → 巽). -/
-theorem zong_ne_id : Trigram.zong ≠ id := fun h =>
+theorem zong_ne_id : Trigram.reverse ≠ id := fun h =>
   absurd (congrFun h lake) (by decide)
 
 /-- 综 ≠ each of motion, hua, bian (witnessed by 乾, since 综 heaven = heaven but
     each flip moves 乾). -/
-theorem zong_ne_dong : Trigram.zong ≠ motion := fun h =>
+theorem zong_ne_dong : Trigram.reverse ≠ motion := fun h =>
   absurd (congrFun h heaven) (by decide)
 
-theorem zong_ne_hua : Trigram.zong ≠ hua := fun h =>
+theorem zong_ne_hua : Trigram.reverse ≠ hua := fun h =>
   absurd (congrFun h heaven) (by decide)
 
-theorem zong_ne_bian : Trigram.zong ≠ bian := fun h =>
+theorem zong_ne_bian : Trigram.reverse ≠ bian := fun h =>
   absurd (congrFun h heaven) (by decide)
 
 /-- 综 ≠ 错 (witnessed by 乾, since 错 heaven = earth but 综 heaven = heaven). -/
-theorem zong_ne_cuo : (Trigram.zong : Trigram → Trigram) ≠ Trigram.cuo := fun h =>
+theorem zong_ne_cuo : (Trigram.reverse : Trigram → Trigram) ≠ Trigram.complement := fun h =>
   absurd (congrFun h heaven) (by decide)
 
 /-- Summary: 综 is outside the (Z/2)³ flip group on Trigram. -/
 theorem zong_outside_flip_group :
-    Trigram.zong ≠ id ∧
-    Trigram.zong ≠ motion ∧
-    Trigram.zong ≠ hua ∧
-    Trigram.zong ≠ bian ∧
-    (Trigram.zong : Trigram → Trigram) ≠ Trigram.cuo :=
+    Trigram.reverse ≠ id ∧
+    Trigram.reverse ≠ motion ∧
+    Trigram.reverse ≠ hua ∧
+    Trigram.reverse ≠ bian ∧
+    (Trigram.reverse : Trigram → Trigram) ≠ Trigram.complement :=
   ⟨zong_ne_id, zong_ne_dong, zong_ne_hua, zong_ne_bian, zong_ne_cuo⟩
 
 /-! ### § 18 Simply transitive: (Z/2)³ orbit of 乾 is a bijection -/
@@ -667,7 +667,7 @@ end FlipCombo
 theorem bagua_algebra_complete :
     (∀ a b : Trigram, ∃ f : Trigram → Trigram, f a = b)
     ∧ (∀ t : Trigram, guiyi t = ())
-    ∧ (∀ t : Trigram, Trigram.cuo t = motion (hua (bian t)))
+    ∧ (∀ t : Trigram, Trigram.complement t = motion (hua (bian t)))
     ∧ (∀ s : SiXiang, ∀ y : Yao, heShang (fenToTrigram s y) = s)
     ∧ (∀ y1 y2 y3 : Yao, grandCycle y1 y2 y3 = ()) :=
   ⟨bagua_intercommunication,
@@ -678,13 +678,13 @@ theorem bagua_algebra_complete :
 
 /-- **Phase 2 completeness**: enumeration, tightness, isomorphism, separation.
 
-  This bundles the 6 + 1 (zong) closure theorems established in §§ 12-18:
+  This bundles the 6 + 1 (reverse) closure theorems established in §§ 12-18:
     (e1) 8 trigrams exhaust `Trigram.all`
     (e2) 64 hexagrams exhaust `Hexagram.allHex`
     (e3) Hamming distance characterizes equality
     (e4) explicit path length equals Hamming distance (tightness)
     (e5) Sheng 6 ≃ Hexagram (full hierarchy isomorphism)
-    (e6) Hexagram cuo and chong respect inner/outer structure
+    (e6) Hexagram complement and chong respect inner/outer structure
     (e7) 综 is outside the (Z/2)³ flip group
     (e8) (Z/2)³ acts simply transitively (orbit of 乾 is a bijection) -/
 theorem bagua_algebra_phase2_complete :
@@ -698,15 +698,15 @@ theorem bagua_algebra_phase2_complete :
     ∧ (∀ a b : Trigram, (pathFromTo a b).length = hammingDist a b)
     -- (e5) Sheng 6 ≃ Hexagram round-trip
     ∧ (∀ h : Hexagram, Sheng.toHexagram (Sheng.ofHexagram h) = h)
-    -- (e6) Hexagram cuo factors through Trigram cuo on inner/outer
+    -- (e6) Hexagram complement factors through Trigram complement on inner/outer
     ∧ (∀ h : Hexagram,
-         Hexagram.cuo h = chong (Trigram.cuo h.innerTrigram) (Trigram.cuo h.outerTrigram))
+         Hexagram.complement h = chong (Trigram.complement h.innerTrigram) (Trigram.complement h.outerTrigram))
     -- (e6') chong reconstructs the hexagram
     ∧ (∀ h : Hexagram, chong h.innerTrigram h.outerTrigram = h)
     -- (e7) 综 is not in (Z/2)³
-    ∧ (Trigram.zong ≠ id ∧ Trigram.zong ≠ motion ∧
-       Trigram.zong ≠ hua ∧ Trigram.zong ≠ bian ∧
-       (Trigram.zong : Trigram → Trigram) ≠ Trigram.cuo)
+    ∧ (Trigram.reverse ≠ id ∧ Trigram.reverse ≠ motion ∧
+       Trigram.reverse ≠ hua ∧ Trigram.reverse ≠ bian ∧
+       (Trigram.reverse : Trigram → Trigram) ≠ Trigram.complement)
     -- (e8) (Z/2)³ acts simply transitively (regular)
     ∧ (Function.Injective (fun c : FlipCombo => c.apply heaven)) :=
   ⟨trigram_mem_all,
@@ -723,7 +723,7 @@ theorem bagua_algebra_phase2_complete :
     一 在 不同层面 不同 — at T_3 it's (Z/2)³, at T_6 it's (Z/2)⁶. -/
 theorem hex_algebra_complete :
     -- 错_hex 之 6-单flip decomposition
-    (∀ h : Hexagram, Hexagram.cuo h
+    (∀ h : Hexagram, Hexagram.complement h
         = dongInner (huaInner (bianInner (dongOuter (huaOuter (bianOuter h))))))
     -- 重卦 互通
     ∧ (∀ a b : Hexagram, ∃ f : Hexagram → Hexagram, f a = b)

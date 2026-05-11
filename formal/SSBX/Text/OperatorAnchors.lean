@@ -46,9 +46,9 @@ inductive YiInstrKind where
   | nop
   | setShi
   | flipYao
-  | hu
-  | cuo
-  | zong
+  | interlace
+  | complement
+  | reverse
   | branchYaoEq
   | branchShiEq
   | jump
@@ -64,9 +64,9 @@ def token : YiInstrKind → String
   | .nop => "不动"
   | .setShi => "设时"
   | .flipYao => "翻爻"
-  | .hu => "互"
-  | .cuo => "错"
-  | .zong => "综"
+  | .interlace => "互"
+  | .complement => "错"
+  | .reverse => "综"
   | .branchYaoEq => "比爻"
   | .branchShiEq => "比时"
   | .jump => "跳"
@@ -79,9 +79,9 @@ def sample : YiInstrKind → YiInstr
   | .nop => .nop
   | .setShi => .setShi Shi.jin
   | .flipYao => .flipYao ⟨0, by decide⟩
-  | .hu => .hu
-  | .cuo => .cuo
-  | .zong => .zong
+  | .interlace => .interlace
+  | .complement => .complement
+  | .reverse => .reverse
   | .branchYaoEq => .branchYaoEq ⟨0, by decide⟩ ⟨1, by decide⟩ 0
   | .branchShiEq => .branchShiEq Shi.jin 0
   | .jump => .jump 0
@@ -96,7 +96,7 @@ theorem primaryToken_sample (k : YiInstrKind) :
 end YiInstrKind
 
 def yiInstrKinds : List YiInstrKind :=
-  [.nop, .setShi, .flipYao, .hu, .cuo, .zong,
+  [.nop, .setShi, .flipYao, .interlace, .complement, .reverse,
    .branchYaoEq, .branchShiEq, .jump, .push, .pop, .halt]
 
 theorem yiInstrKinds_length : yiInstrKinds.length = 12 := by native_decide
@@ -123,9 +123,9 @@ def l0OperatorAnchors : List L0OperatorAnchor :=
   [ { kind := .nop,          catalogueIds := [],              missingForms := ["不动"] }
   , { kind := .setShi,       catalogueIds := [],              missingForms := ["设时"] }
   , { kind := .flipYao,      catalogueIds := [],              missingForms := ["翻爻"] }
-  , { kind := .hu,           catalogueIds := [.Z_3],          missingForms := [] }
-  , { kind := .cuo,          catalogueIds := [.Z_5],          missingForms := [] }
-  , { kind := .zong,         catalogueIds := [.Z_6],          missingForms := [] }
+  , { kind := .interlace,           catalogueIds := [.Z_3],          missingForms := [] }
+  , { kind := .complement,          catalogueIds := [.Z_5],          missingForms := [] }
+  , { kind := .reverse,         catalogueIds := [.Z_6],          missingForms := [] }
   , { kind := .branchYaoEq,  catalogueIds := [.R_8],          missingForms := [] }
   , { kind := .branchShiEq,  catalogueIds := [.R_8],          missingForms := [] }
   , { kind := .jump,         catalogueIds := [],              missingForms := ["跳"] }

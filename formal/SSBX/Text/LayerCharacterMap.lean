@@ -206,12 +206,12 @@ def fromChar (s : String) : Option ShiTransition :=
   else none
 
 /-- Apply a shi transition to a Shi value. Under V₄, both `.next` and `.prev`
-    collapse to `Shi.cuo` (V₄ involution = self-inverse). The legacy Z/3
-    cycle (next^[3]=id) was replaced by cuo^[2]=id. -/
+    collapse to `Shi.complement` (V₄ involution = self-inverse). The legacy Z/3
+    cycle (next^[3]=id) was replaced by complement^[2]=id. -/
 def apply (t : ShiTransition) (s : Shi) : Shi :=
   match t with
-  | .next => s.cuo
-  | .prev => s.cuo
+  | .next => s.complement
+  | .prev => s.complement
 
 theorem char_roundtrip (t : ShiTransition) :
     fromChar t.char = some t := by
@@ -232,9 +232,9 @@ def modernAlias : YiInstrKind → String
   | .nop          => "静"
   | .setShi       => "置"
   | .flipYao      => "翻"
-  | .hu           => "互"
-  | .cuo          => "错"
-  | .zong         => "综"
+  | .interlace           => "互"
+  | .complement          => "错"
+  | .reverse         => "综"
   | .branchYaoEq  => "侔"
   | .branchShiEq  => "会"
   | .jump         => "跳"
@@ -246,9 +246,9 @@ def fromModernAlias (s : String) : Option YiInstrKind :=
   if s = "静"      then some .nop
   else if s = "置" then some .setShi
   else if s = "翻" then some .flipYao
-  else if s = "互" then some .hu
-  else if s = "错" then some .cuo
-  else if s = "综" then some .zong
+  else if s = "互" then some .interlace
+  else if s = "错" then some .complement
+  else if s = "综" then some .reverse
   else if s = "侔" then some .branchYaoEq
   else if s = "会" then some .branchShiEq
   else if s = "跳" then some .jump
@@ -328,9 +328,9 @@ def allLayerChars : List LayerChar :=
   , ⟨"L0", "instr", "YiInstrKind.nop",          "静"⟩
   , ⟨"L0", "instr", "YiInstrKind.setShi",       "置"⟩
   , ⟨"L0", "instr", "YiInstrKind.flipYao",      "翻"⟩
-  , ⟨"L0", "instr", "YiInstrKind.hu",           "互"⟩
-  , ⟨"L0", "instr", "YiInstrKind.cuo",          "错"⟩
-  , ⟨"L0", "instr", "YiInstrKind.zong",         "综"⟩
+  , ⟨"L0", "instr", "YiInstrKind.interlace",           "互"⟩
+  , ⟨"L0", "instr", "YiInstrKind.complement",          "错"⟩
+  , ⟨"L0", "instr", "YiInstrKind.reverse",         "综"⟩
   , ⟨"L0", "instr", "YiInstrKind.branchYaoEq",  "侔"⟩
   , ⟨"L0", "instr", "YiInstrKind.branchShiEq",  "会"⟩
   , ⟨"L0", "instr", "YiInstrKind.jump",         "跳"⟩

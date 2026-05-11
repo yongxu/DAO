@@ -6,11 +6,11 @@ This file consolidates the per-opcode `executeBlock_<op>` programs for the
 
 - `nop`  — pc++; no other state change
 - `halt` — halted := true
-- `hu`   — cur.1 := Hexagram.hu cur.1; pc++
-- `cuo`  — cur.1 := Hexagram.cuo cur.1; pc++
+- `interlace`   — cur.1 := Hexagram.interlace cur.1; pc++
+- `complement`  — cur.1 := Hexagram.complement cur.1; pc++
 
 The blocks for nop/halt are also defined in `ExecuteBlock.lean` as worked
-examples, and hu/cuo/zong in `Block_HuCuoZong.lean`.  To avoid duplicate-
+examples, and interlace/complement/reverse in `Block_HuCuoZong.lean`.  To avoid duplicate-
 definition clashes we place this aggregator in its own sub-namespace
 `Aggregate`, keeping the underlying instruction lists identical so that
 downstream dispatch can route to either copy.
@@ -21,8 +21,8 @@ downstream dispatch can route to either copy.
 | ---- | --------------------- | -------------------------------- |
 | nop  | ✓                     | ✓ (Tier B, full)                 |
 | halt | ✓                     | ✓ (Tier B, full)                 |
-| hu   | ✓                     | ✓ (Tier C, full)                 |
-| cuo  | ✓                     | ✓ (Tier C, full)                 |
+| interlace   | ✓                     | ✓ (Tier C, full)                 |
+| complement  | ✓                     | ✓ (Tier C, full)                 |
 
 All four block effects are discharged by `rfl` after the standard
 `runFuel` unfolding (cf. `ExecuteBlock.executeBlock_nop_local_effect`
@@ -103,25 +103,25 @@ theorem executeBlock_halt_local_effect
     ∧ μ'.halted = true := by
   refine ⟨?_, ?_, ?_⟩ <;> rfl
 
-/-! ## § 3  hu
+/-! ## § 3  interlace
 
-    `hu` is a pure cur-transform under the loop invariant
+    `interlace` is a pure cur-transform under the loop invariant
     `META.cur ≡ sim.cur` (see `MetaInterp.lean` §META.cur 之角色).
-    No history pop/push is needed: the YiInstr.hu instruction directly
-    rewrites `cur.1 := Hexagram.hu cur.1`. -/
+    No history pop/push is needed: the YiInstr.interlace instruction directly
+    rewrites `cur.1 := Hexagram.interlace cur.1`. -/
 
 def executeBlock_hu (_offset : Nat) (fetchOffset : Nat) : List YiInstr :=
-  [ YiInstr.hu
+  [ YiInstr.interlace
   , YiInstr.jump fetchOffset ]
 
 theorem executeBlock_hu_length (offset fetchOffset : Nat) :
     (executeBlock_hu offset fetchOffset).length = 2 := rfl
 
-/-- **Tier C local effect** for `hu`: from cur = `(h, sh)`, running the
-    2-step block leaves cur = `(Hexagram.hu h, sh)` and pc = fetchOffset.
+/-- **Tier C local effect** for `interlace`: from cur = `(h, sh)`, running the
+    2-step block leaves cur = `(Hexagram.interlace h, sh)` and pc = fetchOffset.
     History is locally unchanged; the pc-counter advance in the encoded
     META-history is handled by the surrounding fetch protocol, not by
-    this block (`hu` is a cur-only transform; see
+    this block (`interlace` is a cur-only transform; see
     `Block_HuCuoZong.encMetaHistory_hu_step`). -/
 theorem executeBlock_hu_local_effect
     (h : Hexagram) (sh : Shi) (history : List Cell256)
@@ -133,22 +133,22 @@ theorem executeBlock_hu_local_effect
         prog := executeBlock_hu offset fetchOffset
         halted := false }
     let μ' := μ.runFuel 2
-    μ'.cur = (Hexagram.hu h, sh)
+    μ'.cur = (Hexagram.interlace h, sh)
     ∧ μ'.history = history
     ∧ μ'.pc = fetchOffset
     ∧ μ'.halted = false := by
   refine ⟨?_, ?_, ?_, ?_⟩ <;> rfl
 
-/-! ## § 4  cuo -/
+/-! ## § 4  complement -/
 
 def executeBlock_cuo (_offset : Nat) (fetchOffset : Nat) : List YiInstr :=
-  [ YiInstr.cuo
+  [ YiInstr.complement
   , YiInstr.jump fetchOffset ]
 
 theorem executeBlock_cuo_length (offset fetchOffset : Nat) :
     (executeBlock_cuo offset fetchOffset).length = 2 := rfl
 
-/-- **Tier C local effect** for `cuo`: see `executeBlock_hu_local_effect`. -/
+/-- **Tier C local effect** for `complement`: see `executeBlock_hu_local_effect`. -/
 theorem executeBlock_cuo_local_effect
     (h : Hexagram) (sh : Shi) (history : List Cell256)
     (fetchOffset offset : Nat) :
@@ -159,7 +159,7 @@ theorem executeBlock_cuo_local_effect
         prog := executeBlock_cuo offset fetchOffset
         halted := false }
     let μ' := μ.runFuel 2
-    μ'.cur = (Hexagram.cuo h, sh)
+    μ'.cur = (Hexagram.complement h, sh)
     ∧ μ'.history = history
     ∧ μ'.pc = fetchOffset
     ∧ μ'.halted = false := by
@@ -168,7 +168,7 @@ theorem executeBlock_cuo_local_effect
 /-! ## § 5  setShi (parameterized by sh : Shi)
 
     `setShi sh` is a pure cur-transform: it rewrites `cur.2 := sh`.
-    Like hu/cuo, the loop invariant `META.cur ≡ sim.cur` makes the
+    Like interlace/complement, the loop invariant `META.cur ≡ sim.cur` makes the
     local effect provable by `rfl`. -/
 
 def executeBlock_setShi (sh : Shi) (fetchOffset : Nat) : List YiInstr :=
@@ -224,16 +224,16 @@ theorem executeBlock_flipYao_local_effect
     ∧ μ'.halted = false := by
   refine ⟨?_, ?_, ?_, ?_⟩ <;> rfl
 
-/-! ## § 7  zong -/
+/-! ## § 7  reverse -/
 
 def executeBlock_zong (fetchOffset : Nat) : List YiInstr :=
-  [ YiInstr.zong
+  [ YiInstr.reverse
   , YiInstr.jump fetchOffset ]
 
 theorem executeBlock_zong_length (fetchOffset : Nat) :
     (executeBlock_zong fetchOffset).length = 2 := rfl
 
-/-- **Tier C local effect** for `zong`: see `executeBlock_hu_local_effect`. -/
+/-- **Tier C local effect** for `reverse`: see `executeBlock_hu_local_effect`. -/
 theorem executeBlock_zong_local_effect
     (h : Hexagram) (sh : Shi) (history : List Cell256)
     (fetchOffset : Nat) :
@@ -244,7 +244,7 @@ theorem executeBlock_zong_local_effect
         prog := executeBlock_zong fetchOffset
         halted := false }
     let μ' := μ.runFuel 2
-    μ'.cur = (Hexagram.zong h, sh)
+    μ'.cur = (Hexagram.reverse h, sh)
     ∧ μ'.history = history
     ∧ μ'.pc = fetchOffset
     ∧ μ'.halted = false := by
@@ -254,7 +254,7 @@ theorem executeBlock_zong_local_effect
 
 These trivial lemmas confirm the aggregated definitions are *syntactically
 identical* to the ones in `ExecuteBlock` (nop/halt) and `Block_HuCuoZong`
-(hu/cuo).  Should the underlying definitions ever diverge, these checks
+(interlace/complement).  Should the underlying definitions ever diverge, these checks
 will fail at build time. -/
 
 theorem executeBlock_nop_eq (offset fetchOffset : Nat) :

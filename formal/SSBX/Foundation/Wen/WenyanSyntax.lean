@@ -65,9 +65,9 @@ notation "上爻" => (⟨5, by omega⟩ : Fin 6)
 /-! ## § 3  指令字 — atomic 7 -/
 
 notation "不动" => YiInstr.nop
-notation "互"   => YiInstr.hu
-notation "错"   => YiInstr.cuo
-notation "综"   => YiInstr.zong
+notation "互"   => YiInstr.interlace
+notation "错"   => YiInstr.complement
+notation "综"   => YiInstr.reverse
 notation "推"   => YiInstr.push
 notation "取"   => YiInstr.pop
 notation "终"   => YiInstr.halt
@@ -103,9 +103,9 @@ macro_rules
 
 example : (YiInstr.nop  : YiInstr) = 不动 := rfl
 example : (YiInstr.halt : YiInstr) = 终   := rfl
-example : (YiInstr.hu   : YiInstr) = 互   := rfl
-example : (YiInstr.cuo  : YiInstr) = 错   := rfl
-example : (YiInstr.zong : YiInstr) = 综   := rfl
+example : (YiInstr.interlace   : YiInstr) = 互   := rfl
+example : (YiInstr.complement  : YiInstr) = 错   := rfl
+example : (YiInstr.reverse : YiInstr) = 综   := rfl
 example : (YiInstr.push : YiInstr) = 推   := rfl
 example : (YiInstr.pop  : YiInstr) = 取   := rfl
 
@@ -182,7 +182,7 @@ theorem sampleProg_length : sampleProg.length = 8 := rfl
 
 theorem sampleProg_explicit :
     sampleProg = [YiInstr.nop, YiInstr.flipYao ⟨0, by omega⟩,
-                  YiInstr.hu, YiInstr.cuo, YiInstr.zong,
+                  YiInstr.interlace, YiInstr.complement, YiInstr.reverse,
                   YiInstr.setShi Shi.jin, YiInstr.jump 7, YiInstr.halt] := rfl
 
 end SSBX.Foundation.Wen.WenyanSyntax

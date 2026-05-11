@@ -52,7 +52,7 @@ def hexCuo (c : Cell128) : Cell128 := SSBX.Foundation.Bagua.Cell128.hexCuo c
 /-- 综 (hexZong): hexagram-wise reversal (top-bottom flip). -/
 def hexZong (c : Cell128) : Cell128 := SSBX.Foundation.Bagua.Cell128.hexZong c
 
-/-- 互 (hexHu): hexagram-wise hu (inner trigram from yao 2/3/4, outer from 3/4/5). -/
+/-- 互 (hexHu): hexagram-wise interlace (inner trigram from yao 2/3/4, outer from 3/4/5). -/
 def hexHu (c : Cell128) : Cell128 := SSBX.Foundation.Bagua.Cell128.hexHu c
 
 end SSBX.Foundation.Hierarchy.R7

@@ -16,10 +16,10 @@ Shi V₄ = {道, 已, 今, 未} **at R8** 由 (因, 果) ∈ Bool² emerge (非 
   - 道 = (因=0, 果=0) — V₄ 单位元 = 跨时空永真 anchor
 
 算子的物理同构（§ 3.4）：
-  cuo  = P  (parity / sign reversal)
-  zong = T  (time-reversal of yao sequence)
+  complement  = P  (parity / sign reversal)
+  reverse = T  (time-reversal of yao sequence)
   错综 = PT
-  hu   = Y  (Y-combinator / fixed-point operator)
+  interlace   = Y  (Y-combinator / fixed-point operator)
 
 R7 atomic 算子: **印 (yìn)** = toggle 因 bit
 R8 atomic 算子: **投 (tóu)** = toggle 果 bit (= Shi V₄ 之第二轴)
@@ -132,25 +132,25 @@ theorem projR6toR7_liftR7toR8 (c5 : R7) (g : GuoBit) :
   rcases c5 with ⟨h, y⟩
   cases y <;> cases g <;> rfl
 
-/-! ## § 2 R8 算子: cuo = P, zong = T, hu = Y
+/-! ## § 2 R8 算子: complement = P, reverse = T, interlace = Y
 
   R8 上 V₄ 出现两层（hex side + shi side），各自实现物理 P/T/PT.
-  parity = hex cuo lift（保 Shi）；timeReversal = hex zong + Shi zong（双层 T）；
-  PT = 错综（双层）；yComb = hu lift. -/
+  parity = hex complement lift（保 Shi）；timeReversal = hex reverse + Shi reverse（双层 T）；
+  PT = 错综（双层）；yComb = interlace lift. -/
 
 /-! ### parity (P) — yao-wise sign reversal on hex; preserves Shi -/
 
-/-- P (parity): hex cuo lift 到 R8；保 Shi. -/
-def parity (c : R8) : R8 := (Hexagram.cuo c.1, c.2)
+/-- P (parity): hex complement lift 到 R8；保 Shi. -/
+def parity (c : R8) : R8 := (Hexagram.complement c.1, c.2)
 
 theorem parity_parity (c : R8) : parity (parity c) = c := by
   rcases c with ⟨h, s⟩
   simp [parity, Hexagram.cuo_cuo]
 
-/-! ### timeReversal (T) — zong on hex + zong on Shi (V₄ 二层 T) -/
+/-! ### timeReversal (T) — reverse on hex + reverse on Shi (V₄ 二层 T) -/
 
-/-- T (time-reversal): hex zong lift + Shi V₄ T-flip (Shi.zong: 道↔未, 已↔今). -/
-def timeReversal (c : R8) : R8 := (Hexagram.zong c.1, c.2.zong)
+/-- T (time-reversal): hex reverse lift + Shi V₄ T-flip (Shi.reverse: 道↔未, 已↔今). -/
+def timeReversal (c : R8) : R8 := (Hexagram.reverse c.1, c.2.reverse)
 
 theorem timeReversal_timeReversal (c : R8) : timeReversal (timeReversal c) = c := by
   rcases c with ⟨h, s⟩
@@ -158,7 +158,7 @@ theorem timeReversal_timeReversal (c : R8) : timeReversal (timeReversal c) = c :
 
 /-! ### PT = parity ∘ timeReversal = 错综 + Shi 双轴翻 -/
 
-/-- PT: 错综 + Shi cuoZong (V₄ 中心元). -/
+/-- PT: 错综 + Shi complementReverse (V₄ 中心元). -/
 def PT (c : R8) : R8 := timeReversal (parity c)
 
 theorem PT_PT (c : R8) : PT (PT c) = c := by
@@ -172,20 +172,20 @@ theorem parity_timeReversal_comm (c : R8) :
   rcases c with ⟨h, s⟩
   simp [parity, timeReversal, Hexagram.cuo_zong_comm]
 
-/-! ### yComb (Y) — hu lifted -/
+/-! ### yComb (Y) — interlace lifted -/
 
-/-- Y (Y-combinator / 互): hu lift 到 R8；保 Shi. -/
-def yComb (c : R8) : R8 := (Hexagram.hu c.1, c.2)
+/-- Y (Y-combinator / 互): interlace lift 到 R8；保 Shi. -/
+def yComb (c : R8) : R8 := (Hexagram.interlace c.1, c.2)
 
-/-- 乾 (heaven) cell at any Shi is hu-fixed. -/
+/-- 乾 (heaven) cell at any Shi is interlace-fixed. -/
 theorem yComb_qian (s : Shi) : yComb (Hexagram.heaven, s) = (Hexagram.heaven, s) := by
   simp [yComb, Hexagram.hu_qian]
 
-/-- 坤 (earth) cell at any Shi is hu-fixed. -/
+/-- 坤 (earth) cell at any Shi is interlace-fixed. -/
 theorem yComb_kun (s : Shi) : yComb (Hexagram.earth, s) = (Hexagram.earth, s) := by
   simp [yComb, Hexagram.hu_kun]
 
-/-- Hexagram-level hu attractors {乾, 坤, 既济, 未济} lift 至 16 个 R8 attractor
+/-- Hexagram-level interlace attractors {乾, 坤, 既济, 未济} lift 至 16 个 R8 attractor
     (4 hex × 4 Shi = 16). -/
 theorem yComb_attractors_count :
     ([(Hexagram.heaven, Shi.dao), (Hexagram.heaven, Shi.ji),
@@ -253,15 +253,15 @@ end SSBX.Foundation.Yi.Yi.Hexagram
 
 namespace SSBX.Foundation.Bagua.Cell256.Shi
 
-/-- Shi V₄ XOR: 道是单位元，cuo/zong/cuoZong 是 3 个生成元.
+/-- Shi V₄ XOR: 道是单位元，complement/reverse/complementReverse 是 3 个生成元.
 
-    实现：用 cuo/zong/cuoZong 表达 V₄ 之 act. -/
+    实现：用 complement/reverse/complementReverse 表达 V₄ 之 act. -/
 def xor (a b : Shi) : Shi :=
   match a with
   | .dao => b
-  | .ji  => Shi.cuo b      -- 已 ⊕ b: 翻 past 轴
-  | .wei => Shi.zong b     -- 未 ⊕ b: 翻 future 轴
-  | .jin => Shi.cuoZong b  -- 今 ⊕ b: 翻双轴 (PT)
+  | .ji  => Shi.complement b      -- 已 ⊕ b: 翻 past 轴
+  | .wei => Shi.reverse b     -- 未 ⊕ b: 翻 future 轴
+  | .jin => Shi.complementReverse b  -- 今 ⊕ b: 翻双轴 (PT)
 
 /-- 道 是 XOR 单位元（左）. -/
 theorem xor_dao_left (s : Shi) : xor .dao s = s := rfl
@@ -348,14 +348,14 @@ theorem shiZong_preserves_quadrant (c : R8) :
     R8.quadrant (Cell256.shiZong c) = R8.quadrant c := by
   rcases c with ⟨h, s⟩; rfl
 
-/-- parity (= cuo lift) 保 quadrant. -/
+/-- parity (= complement lift) 保 quadrant. -/
 theorem parity_preserves_quadrant (c : R8) :
     R8.quadrant (parity c) = R8.quadrant c := by
   rcases c with ⟨h, s⟩
   simp [parity, R8.quadrant]
   exact cuo_preserves_quadrant h
 
-/-- timeReversal (zong + Shi.zong) 在 4 象限上的作用表. -/
+/-- timeReversal (reverse + Shi.reverse) 在 4 象限上的作用表. -/
 theorem timeReversal_quadrant (c : R8) :
     R8.quadrant (timeReversal c) =
       match R8.quadrant c with

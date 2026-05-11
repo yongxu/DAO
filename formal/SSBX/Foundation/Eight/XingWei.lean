@@ -102,9 +102,9 @@ theorem bian_iso (a b : Trigram) : ju (bian a) (bian b) = ju a b := by
   cases a₁ <;> cases a₂ <;> cases a₃ <;>
     cases b₁ <;> cases b₂ <;> cases b₃ <;> rfl
 
-/-- **错 (cuo) 等距**：错卦保距离（错 = 三反复合，由各反等距递进可得）。 -/
-theorem cuo_iso (a b : Trigram) : ju (Trigram.cuo a) (Trigram.cuo b) = ju a b := by
-  unfold ju hammingDist Trigram.cuo
+/-- **错 (complement) 等距**：错卦保距离（错 = 三反复合，由各反等距递进可得）。 -/
+theorem cuo_iso (a b : Trigram) : ju (Trigram.complement a) (Trigram.complement b) = ju a b := by
+  unfold ju hammingDist Trigram.complement
   rcases a with ⟨a₁, a₂, a₃⟩
   rcases b with ⟨b₁, b₂, b₃⟩
   cases a₁ <;> cases a₂ <;> cases a₃ <;>

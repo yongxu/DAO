@@ -115,17 +115,17 @@ theorem sensibility_exhaustive (r : SensibilityRegion) :
 /-- 可感与不可感互斥。 -/
 theorem feelable_not_unfeelable (r : SensibilityRegion) :
     Feelable r → ¬ Unfeelable r := by
-  intro hf hu
+  intro hf interlace
   unfold Feelable at hf
-  unfold Unfeelable at hu
-  rw [hf] at hu
-  cases hu
+  unfold Unfeelable at interlace
+  rw [hf] at interlace
+  cases interlace
 
 /-- 不可感与可感互斥。 -/
 theorem unfeelable_not_feelable (r : SensibilityRegion) :
     Unfeelable r → ¬ Feelable r := by
-  intro hu hf
-  exact feelable_not_unfeelable r hf hu
+  intro interlace hf
+  exact feelable_not_unfeelable r hf interlace
 
 /-- 可感边界完备：可感 / 不可感穷尽，且两向互斥。 -/
 theorem sensibility_boundary_complete :
@@ -156,17 +156,17 @@ theorem actionability_exhaustive (r : ActionabilityRegion) :
 /-- 可行与不可行互斥。 -/
 theorem actionable_not_unactionable (r : ActionabilityRegion) :
     Actionable r → ¬ Unactionable r := by
-  intro ha hu
+  intro ha interlace
   unfold Actionable at ha
-  unfold Unactionable at hu
-  rw [ha] at hu
-  cases hu
+  unfold Unactionable at interlace
+  rw [ha] at interlace
+  cases interlace
 
 /-- 不可行与可行互斥。 -/
 theorem unactionable_not_actionable (r : ActionabilityRegion) :
     Unactionable r → ¬ Actionable r := by
-  intro hu ha
-  exact actionable_not_unactionable r ha hu
+  intro interlace ha
+  exact actionable_not_unactionable r ha interlace
 
 /-- 可行边界完备：可行 / 不可行穷尽，且两向互斥。 -/
 theorem actionability_boundary_complete :
@@ -197,17 +197,17 @@ theorem proof_region_exhaustive (r : ProofRegion) :
 /-- 可证与不可证互斥。 -/
 theorem provable_not_unprovable (r : ProofRegion) :
     Provable r → ¬ Unprovable r := by
-  intro hp hu
+  intro hp interlace
   unfold Provable at hp
-  unfold Unprovable at hu
-  rw [hp] at hu
-  cases hu
+  unfold Unprovable at interlace
+  rw [hp] at interlace
+  cases interlace
 
 /-- 不可证与可证互斥。 -/
 theorem unprovable_not_provable (r : ProofRegion) :
     Unprovable r → ¬ Provable r := by
-  intro hu hp
-  exact provable_not_unprovable r hp hu
+  intro interlace hp
+  exact provable_not_unprovable r hp interlace
 
 /-- 可证边界完备：可证 / 不可证穷尽，且两向互斥。 -/
 theorem proof_boundary_complete :

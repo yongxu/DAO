@@ -34,9 +34,9 @@
   | 0   | nop           | 0 (00)          | dao  | 0          |
   | 1   | setShi        | 0 (00)          | ji   | 1          |
   | 2   | flipYao       | 0 (00)          | jin  | 1          |
-  | 3   | hu            | 0 (00)          | wei  | 0          |
-  | 4   | cuo           | 1 (01)          | dao  | 0          |
-  | 5   | zong          | 1 (01)          | ji   | 0          |
+  | 3   | interlace            | 0 (00)          | wei  | 0          |
+  | 4   | complement           | 1 (01)          | dao  | 0          |
+  | 5   | reverse          | 1 (01)          | ji   | 0          |
   | 6   | branchYaoEq   | 1 (01)          | jin  | 2 + encNat |
   | 7   | branchShiEq   | 1 (01)          | wei  | 1 + encNat |
   | 8   | jump          | 2 (10)          | dao  | encNat     |
@@ -51,8 +51,8 @@
 
   - ✓ `skipOneInstr` 之 well-formed 定义
   - ✓ `skipOneInstr_length` （结构上的长度引理）
-  - ✓ `skipOneInstr_simulates_zeroArity`（针对 7 个零参指令：nop, hu, cuo,
-    zong, push, pop, halt 之 simulation；这些指令编码恰为单个 tag cell，
+  - ✓ `skipOneInstr_simulates_zeroArity`（针对 7 个零参指令：nop, interlace, complement,
+    reverse, push, pop, halt 之 simulation；这些指令编码恰为单个 tag cell，
     故只需 pop 一次）
   - ✗ 完整 12-way simulation（涉及 Nat-参数指令之变长编码与 dispatch tree
     之全 12 路 case 分析；架构上完备但工程量极大，超出当前 chunk 范围）
@@ -115,7 +115,7 @@ theorem popBlock_length (arity : Nat) (exitPc : Nat) :
 
 /-! ## § 3 主子例程 `skipOneInstr`
 
-  当前实现：仅 pop 一次 tag cell（适合零参指令 nop/hu/cuo/zong/push/pop/halt）.
+  当前实现：仅 pop 一次 tag cell（适合零参指令 nop/interlace/complement/reverse/push/pop/halt）.
 
   对有参指令，其编码格式为 `[tag_cell, param_cells...]`，本子例程只 pop 掉
   tag_cell。上层 fetch loop 需在分派后由对应 executeBlock 自行 pop 参数 cells。
@@ -137,7 +137,7 @@ theorem skipOneInstr_length (offset : Nat) :
 
 /-! ## § 4 Simulation lemma：零参指令之 skip 正确性
 
-  对 7 个零参指令 i ∈ {nop, hu, cuo, zong, push, pop, halt}：
+  对 7 个零参指令 i ∈ {nop, interlace, complement, reverse, push, pop, halt}：
     encInstr i = [tag_cell_i]
   故 skipOneInstr （= [pop]）从 history = encInstr i ++ tail 状态出发，
   运行 1 fuel 后，history = tail。此外 META.cur 被覆盖为 tag_cell_i。
@@ -146,9 +146,9 @@ theorem skipOneInstr_length (offset : Nat) :
 /-- The 7 zero-arity YiInstr opcodes whose encoding is exactly 1 cell. -/
 def IsZeroArity : YiInstr → Prop
   | .nop  => True
-  | .hu   => True
-  | .cuo  => True
-  | .zong => True
+  | .interlace   => True
+  | .complement  => True
+  | .reverse => True
   | .push => True
   | .pop  => True
   | .halt => True
@@ -177,9 +177,9 @@ private def preState (cur : Cell256) (i : YiInstr) (tail : List Cell256)
 def zeroArityTag (i : YiInstr) (h : IsZeroArity i) : Cell256 :=
   match i, h with
   | .nop,  _ => cellFromIdx ⟨0,  by omega⟩
-  | .hu,   _ => cellFromIdx ⟨3,  by omega⟩
-  | .cuo,  _ => cellFromIdx ⟨4,  by omega⟩
-  | .zong, _ => cellFromIdx ⟨5,  by omega⟩
+  | .interlace,   _ => cellFromIdx ⟨3,  by omega⟩
+  | .complement,  _ => cellFromIdx ⟨4,  by omega⟩
+  | .reverse, _ => cellFromIdx ⟨5,  by omega⟩
   | .push, _ => cellFromIdx ⟨9,  by omega⟩
   | .pop,  _ => cellFromIdx ⟨10, by omega⟩
   | .halt, _ => cellFromIdx ⟨11, by omega⟩

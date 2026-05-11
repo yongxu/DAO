@@ -72,8 +72,8 @@ def huaDyn : DynSys Trigram where step := hua
 /-- **bian 动力系统**。 -/
 def bianDyn : DynSys Trigram where step := bian
 
-/-- **cuo 动力系统**（错卦：阴阳全反）。 -/
-def cuoDyn : DynSys Trigram where step := Trigram.cuo
+/-- **complement 动力系统**（错卦：阴阳全反）。 -/
+def cuoDyn : DynSys Trigram where step := Trigram.complement
 
 /-- **motion 在 乾 上之 2-周期性**：iter 2 = id at 乾。 -/
 theorem dong_qian_period :
@@ -109,7 +109,7 @@ theorem hua_period_2 (t : Trigram) : IsPeriodic huaDyn 2 t :=
 theorem bian_period_2 (t : Trigram) : IsPeriodic bianDyn 2 t :=
   bian_bian t
 
-/-- **cuo 周期 = 2**：错² = id。 -/
+/-- **complement 周期 = 2**：错² = id。 -/
 theorem cuo_period_2 (t : Trigram) : IsPeriodic cuoDyn 2 t := by
   unfold IsPeriodic iter cuoDyn
   exact Trigram.cuo_cuo t
@@ -135,9 +135,9 @@ theorem daYanProject_laoYang_yin : daYanProject .laoYang = .yin := rfl
 /-- **本卦 → 之卦**：取 Trigram 之每爻，依"老必变 / 少不变"得之卦。
     简化：仅作 Trigram 反爻（即每爻 toggle if isLao）。
     本文件取**全反**作 demo（实际之卦由具体老爻位置决定，不全反）。 -/
-def zhiTrigram (t : Trigram) : Trigram := Trigram.cuo t
+def zhiTrigram (t : Trigram) : Trigram := Trigram.complement t
 
-/-- **之卦动力周期 = 2**：本卦 → 之卦 → 本卦（cuo² = id）。 -/
+/-- **之卦动力周期 = 2**：本卦 → 之卦 → 本卦（complement² = id）。 -/
 theorem zhi_period_2 (t : Trigram) : zhiTrigram (zhiTrigram t) = t := by
   unfold zhiTrigram
   exact Trigram.cuo_cuo t
@@ -216,7 +216,7 @@ theorem targetEuler_idempotent (target current : Trigram) :
     (4) motion 周期 = 2（任意起点）
     (5) hua 周期 = 2
     (6) bian 周期 = 2
-    (7) cuo 周期 = 2
+    (7) complement 周期 = 2
     (8) 之卦周期 = 2
     (9) orbit 长度公式
     (10) 大衍 4 状态 → Yao 投影确定

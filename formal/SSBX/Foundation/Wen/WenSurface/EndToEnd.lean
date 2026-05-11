@@ -9,7 +9,7 @@
 
 求值复用既有 [WenDefEval.denoteHex / denoteBool / denoteHexPair / denoteHexList](../WenDefEval.lean)，
 不走 baguaWen IL（保留 [WenDefCompile.lean](../WenDefCompile.lean) 的
-cuo-equivariant 子集 commute 作 future work）。
+complement-equivariant 子集 commute 作 future work）。
 
 ## 当前范围
 
@@ -497,7 +497,7 @@ example : (wenyanInterp "錯 乾").toOption = some Hexagram.earth := by native_d
 example : (wenyanInterp "综 乾").toOption = some Hexagram.heaven := by native_decide
 example : (wenyanInterp "互 坤").toOption = some Hexagram.earth := by native_decide
 example : (wenyanInterp "改 乾").toOption = some (dongInner Hexagram.heaven) := by native_decide
-example : (wenyanInterp "轉 乾").toOption = some Hexagram.heaven.zong := by native_decide
+example : (wenyanInterp "轉 乾").toOption = some Hexagram.heaven.reverse := by native_decide
 example : (wenyanInterp "伸 乾").toOption = some («生» Hexagram.heaven) := by native_decide
 example : (wenyanInterp "屈 乾").toOption = some («加» Hexagram.earth Hexagram.heaven) := by native_decide
 example : (wenyanInterp "起 乾").toOption = some («生» Hexagram.heaven) := by native_decide
@@ -919,8 +919,8 @@ example :
 example : (wenyanInterp "静 乾").toOption = some Hexagram.heaven := by native_decide
 example : (wenyanInterp "恒 乾").toOption = some Hexagram.heaven := by native_decide
 example : (wenyanInterp "不动 乾").toOption = some Hexagram.heaven := by native_decide
-example : (wenyanInterp "錯綜 乾").toOption = some Hexagram.heaven.cuoZong := by native_decide
-example : (wenyanInterp "交错 乾").toOption = some Hexagram.heaven.cuoZong := by native_decide
+example : (wenyanInterp "錯綜 乾").toOption = some Hexagram.heaven.complementReverse := by native_decide
+example : (wenyanInterp "交错 乾").toOption = some Hexagram.heaven.complementReverse := by native_decide
 example : (wenyanInterp "复 乾").toOption = some Hexagram.heaven := by native_decide
 example : (wenyanInterp "归一 乾").toOption = some Hexagram.heaven := by native_decide
 example : (wenyanInterp "展 乾").toOption = some («生» Hexagram.heaven) := by native_decide
@@ -934,7 +934,7 @@ example :
     (wenyanInterp "化 乾").toOption = some (huaInner Hexagram.heaven) :=
   by native_decide
 example :
-    (wenyanInterp "反 乾").toOption = some Hexagram.heaven.cuo :=
+    (wenyanInterp "反 乾").toOption = some Hexagram.heaven.complement :=
   by native_decide
 example :
     (wenyanInterpBool "反 真").toOption = some false :=
@@ -990,9 +990,9 @@ example :
       = some (.arr .hex .hex) :=
   by native_decide
 
-example : (wenyanInterp "而 反 综 一").toOption = some «一».zong.cuo := by native_decide
+example : (wenyanInterp "而 反 综 一").toOption = some «一».reverse.complement := by native_decide
 
-example : (wenyanInterp "再 反 一").toOption = some «一».cuo.cuo := by native_decide
+example : (wenyanInterp "再 反 一").toOption = some «一».complement.complement := by native_decide
 
 example :
     (wenyanCompile "而 推 損").toOption.map (·.ty)

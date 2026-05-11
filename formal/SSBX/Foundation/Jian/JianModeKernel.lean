@@ -222,28 +222,28 @@ theorem sai_excludes_xian (s : Field) : ¬ (saiState s ∧ xianState s) := by
 
 /-! ## § 7 Trigram-level reading: V_4 group action on JianMode lifts to roles
 
-  V_4 (cuo/zong/cuoZong/id) acts on JianMode (defined in Yi.lean §11).
+  V_4 (complement/reverse/complementReverse/id) acts on JianMode (defined in Yi.lean §11).
   The action descends to KernelRole via the bijection. -/
 
 namespace KernelRole
 
-/-- 错 (cuo) on KernelRole — derived from JianMode.cuo via the bijection. -/
-def cuo (r : KernelRole) : KernelRole := r.jianMode.cuo.kernelRole
+/-- 错 (complement) on KernelRole — derived from JianMode.complement via the bijection. -/
+def complement (r : KernelRole) : KernelRole := r.jianMode.complement.kernelRole
 
-/-- 综 (zong) on KernelRole. -/
-def zong (r : KernelRole) : KernelRole := r.jianMode.zong.kernelRole
+/-- 综 (reverse) on KernelRole. -/
+def reverse (r : KernelRole) : KernelRole := r.jianMode.reverse.kernelRole
 
 /-- 错 is involutive. -/
-theorem cuo_cuo (r : KernelRole) : r.cuo.cuo = r := by
+theorem cuo_cuo (r : KernelRole) : r.complement.complement = r := by
   cases r <;> rfl
 
 /-- 综 is involutive. -/
-theorem zong_zong (r : KernelRole) : r.zong.zong = r := by
+theorem zong_zong (r : KernelRole) : r.reverse.reverse = r := by
   cases r <;> rfl
 
 /-- 错 swaps extremity ↔ manifestation (sai ↔ xian; 塞 ↔ 显). -/
-theorem cuo_extremity : (extremity).cuo = manifestation := rfl
-theorem cuo_manifestation : (manifestation).cuo = extremity := rfl
+theorem cuo_extremity : (extremity).complement = manifestation := rfl
+theorem cuo_manifestation : (manifestation).complement = extremity := rfl
 
 end KernelRole
 
@@ -261,7 +261,7 @@ theorem bridge_summary :
     -- Exactly one extreme mode
     (∀ m : JianMode, m.kernelRole.isExtreme = true ↔ m = .sai) ∧
     -- 错 is involutive on KernelRole
-    (∀ r : KernelRole, r.cuo.cuo = r) :=
+    (∀ r : KernelRole, r.complement.complement = r) :=
   ⟨mode_role_left_inverse,
    mode_role_right_inverse,
    only_sai_extreme,

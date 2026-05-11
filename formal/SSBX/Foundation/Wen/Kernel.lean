@@ -1468,7 +1468,7 @@ theorem jun_jun_chen_chen_fu_fu_zi_zi
     (r : WuLunRelation) (k : Nat) (hk : k ≤ r.m) :
     ren r.h1 r.h2 (r.n + k) := r.ritual k hk
 
-/-- 不患寡而患不均 (bù huàn guǎ ér huàn bù jūn, 《季氏》):
+/-- 不患寡而患不均 (bù interlaceàn guǎ ér interlaceàn bù jūn, 《季氏》):
     "worry not about scarcity but about uneven distribution." Even smallest field
     (k = 2) suffices for 和; the structural worry is uniformity (不均 = 不和). -/
 theorem bu_huan_gua_er_huan_bu_jun (f : ZhongField) (n : Nat) :
@@ -1706,7 +1706,7 @@ theorem qian_li_zhi_xing (o : ZhongOrbit) (k : Nat) :
 theorem wu_zhuang_ze_lao (s : Field) : ¬ (middle s ∧ extreme s) :=
   zhi_exclusive s
 
-/-- 祸福相倚 (huò fú xiāng yǐ, 《道德经·58》"祸兮福之所倚, 福兮祸之所伏"):
+/-- 祸福相倚 (interlaceò fú xiāng yǐ, 《道德经·58》"祸兮福之所倚, 福兮祸之所伏"):
     "calamity and fortune lean on each other." Universal 二项: every state is 中 (福) or 极 (祸). -/
 theorem huo_fu_xiang_yi (s : Field) : middle s ∨ extreme s := zhi_universal s
 
@@ -1734,7 +1734,7 @@ theorem xin_zhai_zuo_wang (x : Xin) (n : Nat) :
     x.process.states n ≠ x.process.states (n + 1) :=
   xinTrust_self_consistent x n
 
-/-- 庄周梦蝶 — 物化 (wù huà, 《齐物论》"周与胡蝶, 则必有分矣, 此之谓物化"):
+/-- 庄周梦蝶 — 物化 (wù interlaceà, 《齐物论》"周与胡蝶, 则必有分矣, 此之谓物化"):
     "Zhuangzi-and-butterfly transformation." Each step IS a 化 — state becomes
     different state, while remaining 中-bearing. -/
 theorem wu_hua (o : ZhongOrbit) (n : Nat) :
@@ -1856,9 +1856,9 @@ theorem ba_zheng_dao (x : Xin) (n : Nat) :
   ⟨zhi_universal _, x.process.inMiddle n, x.process.step n,
    xinTrust_holds x n, x.process.inMiddle (n + 1)⟩
 
-/-! #### 戒定慧 (jiè dìng huì) -/
+/-! #### 戒定慧 (jiè dìng interlaceì) -/
 
-/-- 戒定慧三学 (jiè dìng huì sān waitingé, three trainings):
+/-- 戒定慧三学 (jiè dìng interlaceì sān waitingé, three trainings):
     戒 (sīla, ethics) + 定 (samādhi, concentration) + 慧 (prajñā, wisdom).
     Formally: xinTrust ∧ middle ∧ zhi. -/
 theorem jie_ding_hui (x : Xin) (n : Nat) :
@@ -1898,7 +1898,7 @@ theorem bu_er_fa_men (s : Field) :
     ∧ (middle s ∨ extreme s) :=                                -- 同 一 process
   ⟨shan_iff_middle s, eVice_iff_extreme s, zhi_universal s⟩
 
-/-- 心如工画师 (xīn rú gōng huà shī, 《华严经·夜摩天宫菩萨说偈品》"心如工画师,
+/-- 心如工画师 (xīn rú gōng interlaceà shī, 《华严经·夜摩天宫菩萨说偈品》"心如工画师,
     能画诸世间"): "the mind is like a painter — paints all worlds."
     Heart's response IS total — paints any field event into some interpretation. -/
 theorem xin_ru_gong_hua_shi (x : Xin) (event : Field) :

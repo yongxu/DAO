@@ -155,7 +155,7 @@ def BitPositionVerified : BitPositionObject -> Prop
       wellPosCount complete = 6 ∧ wellPosCount incomplete = 0
         ∧ wellPosCountAt 0 + wellPosCountAt 1 + wellPosCountAt 2 + wellPosCountAt 3
             + wellPosCountAt 4 + wellPosCountAt 5 + wellPosCountAt 6 = 64
-        ∧ ∀ h : Hexagram, ∀ i : Fin 6, wellPos h.cuo i = !(wellPos h i)
+        ∧ ∀ h : Hexagram, ∀ i : Fin 6, wellPos h.complement i = !(wellPos h i)
   | .centralPosition =>
       Hexagram.allHex.countP (fun h => decide (centralYaos h = (Yao.yang, Yao.yang))) = 16
         ∧ Hexagram.allHex.countP (fun h => decide (centralYaos h = (Yao.yang, Yao.yin))) = 16
@@ -169,22 +169,22 @@ def BitPositionVerified : BitPositionObject -> Prop
       respondsCountAt 0 = 8 ∧ respondsCountAt 1 = 24
         ∧ respondsCountAt 2 = 24 ∧ respondsCountAt 3 = 8
         ∧ respondsCountAt 0 + respondsCountAt 1 + respondsCountAt 2 + respondsCountAt 3 = 64
-        ∧ (∀ h : Hexagram, respondsCount h.cuo = respondsCount h)
-        ∧ (∀ h : Hexagram, respondsCount h.zong = respondsCount h)
+        ∧ (∀ h : Hexagram, respondsCount h.complement = respondsCount h)
+        ∧ (∀ h : Hexagram, respondsCount h.reverse = respondsCount h)
   | .neighborPosition =>
       biCountAt 0 = 2 ∧ biCountAt 5 = 2
         ∧ biCountAt 0 + biCountAt 1 + biCountAt 2 + biCountAt 3
             + biCountAt 4 + biCountAt 5 = 64
-        ∧ (∀ h : Hexagram, biCount h.cuo = biCount h)
-        ∧ (∀ h : Hexagram, biCount h.zong = biCount h)
+        ∧ (∀ h : Hexagram, biCount h.complement = biCount h)
+        ∧ (∀ h : Hexagram, biCount h.reverse = biCount h)
   | .supportPosition =>
       chenCount complete = 2 ∧ chenCount incomplete = 3
         ∧ (∀ h : Hexagram, chenCount h + chengCount h + biCount h = 5)
-        ∧ (∀ h : Hexagram, chenCount h.cuo = chengCount h)
+        ∧ (∀ h : Hexagram, chenCount h.complement = chengCount h)
   | .ridingPosition =>
       chengCount complete = 3 ∧ chengCount incomplete = 2
         ∧ (∀ h : Hexagram, chenCount h + chengCount h + biCount h = 5)
-        ∧ (∀ h : Hexagram, chengCount h.cuo = chenCount h)
+        ∧ (∀ h : Hexagram, chengCount h.complement = chenCount h)
 
 theorem bit_position_verified (b : BitPositionObject) :
     BitPositionVerified b := by
@@ -308,12 +308,12 @@ theorem complete_self_description : CompleteSelfDescription := by
 def TrigramOperatorComplete : Prop :=
   (∀ a b : Trigram, ∃ f : Trigram → Trigram, f a = b)
     ∧ (∀ t : Trigram, guiyi t = ())
-    ∧ (∀ t : Trigram, Trigram.cuo t = motion (hua (bian t)))
+    ∧ (∀ t : Trigram, Trigram.complement t = motion (hua (bian t)))
     ∧ (∀ s : SiXiang, ∀ y : Yao, heShang (fenToTrigram s y) = s)
     ∧ (∀ y1 y2 y3 : Yao, grandCycle y1 y2 y3 = ())
 
 def HexagramOperatorComplete : Prop :=
-  (∀ h : Hexagram, Hexagram.cuo h
+  (∀ h : Hexagram, Hexagram.complement h
       = dongInner (huaInner (bianInner (dongOuter (huaOuter (bianOuter h))))))
     ∧ (∀ a b : Hexagram, ∃ f : Hexagram → Hexagram, f a = b)
     ∧ (∀ a b : Hexagram, hexHammingDist a b ≤ 6)
