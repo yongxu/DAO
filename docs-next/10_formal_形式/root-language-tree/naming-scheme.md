@@ -5,7 +5,13 @@
 
 ## 0. 口径
 
-本组文件采用 `1022` interface 口径：每个 root 同时列 `cell` 与 `operator`。R0 也重复，是为了审阅接口完整；本体口径仍可采用 `1021`。
+本组文件采用 `1023` 审名口径：
+
+```text
+1 未分根 + 1022 interface readings = 1023 review entries
+```
+
+其中 `1022` interface 口径是每个 root 同时列 `cell` 与 `operator`。R0 也重复，是为了审阅接口完整；本体口径仍可采用 `1021`。
 
 ## 1. 总原则
 

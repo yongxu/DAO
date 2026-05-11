@@ -3,8 +3,8 @@
 > 状态：draft v0.1 (2026-05-11)
 > 角色：本文给出“完整语言树 root”的结构版 claim：cell transform 不应靠历史 catalogue 或枚举表作为本体，而应由 R₀..R₈ 根树与生成规则给出；遗留算子目录只能作为解释、索引或审稿材料，不能规定 root 结构。
 > 前置：[`yi-RO-hierarchy.md`](yi-RO-hierarchy.md) · [`cell256-algebra.md`](cell256-algebra.md) · [`../00_start/final-claim-roadmap.md`](../00_start/final-claim-roadmap.md) · [`../../义理/文-R8投影规约.md`](../../义理/文-R8投影规约.md)
-> 审阅包：[`root-language-tree/README.md`](root-language-tree/README.md) — R₀..R₈ 共 1022 个 interface entries 的文言 / 中文 / English / formal logic 候选表。
-> Lean 锚点：[`RootLanguageTree.lean`](../../formal/SSBX/Foundation/Hierarchy/RootLanguageTree.lean) — `root_language_tree_summary` 证明 511 / 1021 / 1022 计数；[`RootRuleKernel.lean`](../../formal/SSBX/Foundation/Wen/RootRuleKernel.lean) — `root_rule_kernel_summary` 证明 root rules 的 R8-visible 程序核；[`RootRuleExamples.lean`](../../formal/SSBX/Foundation/Wen/RootRuleExamples.lean) — `root_rule_examples_summary` 固定例句目标行为；[`RootRuleDemoInterpreter.lean`](../../formal/SSBX/Foundation/Wen/RootRuleDemoInterpreter.lean) — `root_rule_demo_interpreter_summary` 给出最小 demo interpreter；[`R8ProjectionKernel.lean`](../../formal/SSBX/Foundation/Wen/R8ProjectionKernel.lean) — `r8_projection_kernel_summary` 给出通用 projection kernel；[`R8AxisIndependence.lean`](../../formal/SSBX/Foundation/Wen/R8AxisIndependence.lean) — `r8_axis_independence_summary` 证明有限 XOR span 的 axis 恰当性接口。
+> 审阅包：[`root-language-tree/README.md`](root-language-tree/README.md) — R₀..R₈ 共 1023 个 review entries 的文言 / 中文 / English / formal logic 候选表。
+> Lean 锚点：[`RootLanguageTree.lean`](../../formal/SSBX/Foundation/Hierarchy/RootLanguageTree.lean) — `root_language_tree_summary` 证明 511 / 1021 / 1022 / 1023 计数；[`RootRuleKernel.lean`](../../formal/SSBX/Foundation/Wen/RootRuleKernel.lean) — `root_rule_kernel_summary` 证明 root rules 的 R8-visible 程序核；[`RootRuleExamples.lean`](../../formal/SSBX/Foundation/Wen/RootRuleExamples.lean) — `root_rule_examples_summary` 固定例句目标行为；[`RootRuleDemoInterpreter.lean`](../../formal/SSBX/Foundation/Wen/RootRuleDemoInterpreter.lean) — `root_rule_demo_interpreter_summary` 给出最小 demo interpreter；[`R8ProjectionKernel.lean`](../../formal/SSBX/Foundation/Wen/R8ProjectionKernel.lean) — `r8_projection_kernel_summary` 给出通用 projection kernel；[`R8AxisIndependence.lean`](../../formal/SSBX/Foundation/Wen/R8AxisIndependence.lean) — `r8_axis_independence_summary` 证明有限 XOR span 的 axis 恰当性接口。
 
 ---
 
@@ -69,6 +69,19 @@ RootReading = (R0 + R1 + ... + R8) × {cell, operator}
 
 这适合作为“读法表”或“接口表”：每个 root 都允许被问“作为元是什么、作为算是什么”。
 
+### 1.1.1 审名总表：1023
+
+若为了逐名审阅，再把 cell/operator 分化之前的“未分根”也列成一条总锚：
+
+```text
+RootNamingReview
+= {undivided-root} + ((R0 + R1 + ... + R8) × {cell, operator})
+= 1 + 1022
+= 1023
+```
+
+这就是审字工作流采用的 `1023`。它不是第三种本体 role，只是让“未分之道”也有一行可审。
+
 ### 1.2 本体根树：1021
 
 如果更严格地说，R0 是未分之根，在 cell/operator 区分之前，则不应把 R0 复制成两份：
@@ -81,7 +94,7 @@ RootLanguageTree
 = 1021
 ```
 
-本文推荐以 `1021` 作为本体根树，以 `1022` 作为读法标记表。
+本文推荐以 `1021` 作为本体根树，以 `1022` 作为读法标记表，以 `1023` 作为审名总表。
 
 原因：
 
@@ -90,6 +103,7 @@ RootLanguageTree
 | `511` | pure root cells | 只数 R₀..R₈ 元 |
 | `1021` | ontology root tree | R0 未分；R1..R8 有元/算双读 |
 | `1022` | interface reading table | 连 R0 也以 cell/operator 两接口读取 |
+| `1023` | naming review table | 未分根 + 1022 interface readings |
 
 ---
 
@@ -659,7 +673,7 @@ proof of behavior from the rule
 
 | 阶段 | 要完成的东西 | 结果 |
 |---|---|---|
-| A | RootLanguageTree 类型与计数证明 | done: `RootLanguageTree.lean` 证明 511 / 1021 / 1022 |
+| A | RootLanguageTree 类型与计数证明 | done: `RootLanguageTree.lean` 证明 511 / 1021 / 1022 / 1023 |
 | B | RootRule kernel | done: `RootRuleKernel.lean` 给出 quote/apply/compose/... 的 R8-visible 程序核 |
 | C | root-native operator boundary | done: `RootOperator.lean` 给出 mask / program / projection / alias 四类来源 |
 | C2 | root-native transform generator | pending: 从 root mask / root program 生成行为，不以历史 catalogue 数字为目标 |

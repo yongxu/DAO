@@ -9,6 +9,8 @@ It proves only the structural bookkeeping:
 * the strict R0..R8 layer sizes sum to 511 root cells;
 * the interface reading table has 1022 entries when every root is read as
   both `cell` and `operator`;
+* the naming-review table has 1023 entries when one undifferentiated root is
+  added before those 1022 interface readings;
 * the ontology reading has 1021 entries when R0 remains prior to the
   cell/operator split;
 * the root rules are a fixed, exhaustive kernel for later Wen/Lisp work.
@@ -99,7 +101,7 @@ theorem mem_all (r : RootRole) : r ∈ all := by
 
 end RootRole
 
-/-! ## Counts for 511 / 1021 / 1022 -/
+/-! ## Counts for 511 / 1021 / 1022 / 1023 -/
 
 /-- Pure root-cell count across R0..R8. -/
 def rootCellCount : Nat :=
@@ -125,6 +127,15 @@ theorem ontologyRootCount_eq_1021 :
     ontologyRootCount = 1021 := by
   native_decide
 
+/-- Naming-review count: one undifferentiated root plus every cell/operator
+interface reading.  This is an audit table count, not a separate ontology. -/
+def namingReviewCount : Nat :=
+  1 + interfaceReadingCount
+
+theorem namingReviewCount_eq_1023 :
+    namingReviewCount = 1023 := by
+  native_decide
+
 /-- The 1022 interface table differs from the 1021 ontology tree by the extra
 R0 operator reading. -/
 theorem ontology_plus_r0_operator_eq_interface :
@@ -142,7 +153,7 @@ structure RootCell where
   code : Fin layer.size
   deriving Repr
 
-/-- Interface entry used by the generated 1022 review package. -/
+/-- Interface entry used by the generated 1023 naming-review package. -/
 structure RootInterfaceEntry where
   cell : RootCell
   role : RootRole
@@ -204,6 +215,7 @@ end RootRule
 theorem root_language_tree_summary :
     rootCellCount = 511
     ∧ interfaceReadingCount = 1022
+    ∧ namingReviewCount = 1023
     ∧ ontologyRootCount = 1021
     ∧ ontologyRootCount + 1 = interfaceReadingCount
     ∧ RootLayer.all.length = 9
@@ -212,6 +224,7 @@ theorem root_language_tree_summary :
   exact
     ⟨ rootCellCount_eq_511
     , interfaceReadingCount_eq_1022
+    , namingReviewCount_eq_1023
     , ontologyRootCount_eq_1021
     , ontology_plus_r0_operator_eq_interface
     , RootLayer.all_length
