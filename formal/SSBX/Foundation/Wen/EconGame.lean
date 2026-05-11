@@ -185,13 +185,13 @@ theorem regulatory_race_to_bottom_refuted (o : ZhongOrbit) :
 /-- **Arrow's impossibility 之 strict-dictator reading 之 否定**:
     Arrow's theorem strict reading: 任 aggregation rule (满足 several conditions) 必 有
     dictator. 形式 sieve: 此 reading 假设 「全 同 一 状态」 (uniformity = dictator's
-    preference imposed on all). ZhongField 之 `he_not_same` 直接 否定 此 uniformity —
+    preference imposed on all). ZhongField 之 `harmony_not_same` 直接 否定 此 uniformity —
     structural plurality forbids dictatorial collapse. 故 strict-dictator reading 不
     necessary. (Arrow's theorem 自身 是 mathematical fact 在 boolean 偏好域; 但 它 之
     political-dictator interpretation 在 ZhongField 中 fail.) -/
 theorem arrow_dictator_refuted (f : ZhongField) (n : Nat) :
     ¬ (∀ i j : Fin f.k, (f.orbits i).states n = (f.orbits j).states n) :=
-  f.he_not_same n
+  f.harmony_not_same n
 
 /-- **Homo economicus as descriptive model 之 否定**:
     Homo economicus: 决策者 是 isolated 极-pursuer, 无 仁 / 礼 / 同根.
@@ -227,7 +227,7 @@ theorem market_two_faces (f : ZhongField) (n : Nat) (target : Field) :
     (∀ i : Fin f.k, center ((f.orbits i).states n))   -- market 之 道 face: 全 中
     ∧ ¬ attractor target f                            -- 非道 之 否: uniformity attractor 不可能
     ∧ ¬ (∀ i j : Fin f.k, (f.orbits i).states n = (f.orbits j).states n) := by  -- ¬ uniformity
-  refine ⟨fun i => (f.orbits i).inMiddle n, ?_, f.he_not_same n⟩
+  refine ⟨fun i => (f.orbits i).inMiddle n, ?_, f.harmony_not_same n⟩
   exact winner_takes_all_refuted f target
 
 end SSBX.Foundation.Wen.EconGame

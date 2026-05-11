@@ -59,7 +59,7 @@ theorem friend_collapse_violates_plurality
     (f : ZhongField) (n : Nat)
     (h_all_friend : ∀ i j : Fin f.k, (f.orbits i).states n = (f.orbits j).states n) :
     False :=
-  f.he_not_same n h_all_friend
+  f.harmony_not_same n h_all_friend
 
 /-- 「敌 = 使他者 collapse 至 极」 之 reading 直接 violate 他者 之 inMiddle. -/
 theorem enemy_collapse_violates_inMiddle
