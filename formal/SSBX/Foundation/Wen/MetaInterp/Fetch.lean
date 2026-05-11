@@ -602,6 +602,44 @@ theorem encMetaHistory_eq_pcCounter_append_tail
   unfold encMetaHistory pcCounterTailAfterPeel
   simp [List.append_assoc]
 
+/-- Canonical META history with its encoded program tail split at the
+    source-level simulated pc.  This is the list-level bridge a real fetch
+    walker needs after it has traversed the register and simulated-history
+    regions and skipped `sim.pc` encoded instructions. -/
+theorem encMetaHistory_program_tail_splitAt_get?
+    (regHex : Hexagram) (sim : YiState) (instr : YiInstr)
+    (h_get : sim.prog[sim.pc]? = some instr) :
+    encMetaHistory regHex sim =
+      encCounter regHex sim.pc ++
+      [encHaltedFlag regHex sim.halted] ++
+      encCounter regHex sim.history.length ++
+      sim.history ++
+      ProgEnc.encProg (sim.prog.take sim.pc) ++
+      YiInstrEnc.encInstr instr ++
+      ProgEnc.encProg (sim.prog.drop (sim.pc + 1)) := by
+  unfold encMetaHistory
+  rw [ProgEnc.encProg_splitAt_get? sim.prog sim.pc instr h_get]
+  simp [List.append_assoc]
+
+/-- Zero-arity specialization of `encMetaHistory_program_tail_splitAt_get?`:
+    after the prefix walk, the next encoded cell is exactly the opcode tag,
+    and the rest of the encoded source program follows immediately. -/
+theorem encMetaHistory_program_tail_zeroArity_splitAt_get?
+    (regHex : Hexagram) (sim : YiState) (instr : YiInstr)
+    (h_get : sim.prog[sim.pc]? = some instr)
+    (h_zero : IsZeroArity instr) :
+    encMetaHistory regHex sim =
+      encCounter regHex sim.pc ++
+      [encHaltedFlag regHex sim.halted] ++
+      encCounter regHex sim.history.length ++
+      sim.history ++
+      ProgEnc.encProg (sim.prog.take sim.pc) ++
+      zeroArityTag instr h_zero ::
+      ProgEnc.encProg (sim.prog.drop (sim.pc + 1)) := by
+  rw [encMetaHistory_program_tail_splitAt_get? regHex sim instr h_get]
+  rw [encInstr_zeroArity_eq instr h_zero]
+  simp [List.append_assoc]
+
 /-- A real fetch-entry state is exactly the empty counted-loop entry state
     for the pc-counter peel, with `sim.cur` as the carried META cur and
     the canonical tail below the pc-counter. -/
