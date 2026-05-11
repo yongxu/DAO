@@ -122,14 +122,14 @@ theorem rational_choice_only_binary (s : Field) :
 
 /-- **Static equilibrium IS 极, dynamic equilibrium IS 中**:
     Equilibrium 之 经济学 standard reading 是 fixed-point. 但 ZhongOrbit 拒
-    fixed-point (`shi_no_telos`). 故 经济学 之 「static equilibrium」 (state
+    fixed-point (`momentumDirection_no_telos`). 故 经济学 之 「static equilibrium」 (state
     settles) 是 极, NOT 中. 但 「dynamic equilibrium」 (orbit-state, 永 advance)
     是 中. 二 reading 形式上 distinct. -/
 theorem equilibrium_static_vs_dynamic
     (o : ZhongOrbit) (target : Field) (N : Nat) :
     ¬ (∀ n, n ≥ N → o.states n = target)                     -- static eq. impossible
     ∧ (∀ n, center (o.states n)) :=                          -- dynamic eq. (orbit-form) holds
-  ⟨ZhongOrbit.shi_no_telos o target N, o.inMiddle⟩
+  ⟨ZhongOrbit.momentumDirection_no_telos o target N, o.inMiddle⟩
 
 /-- **VCG auction 之 efficiency conditional on sameRoot (truth-telling)**:
     VCG (Vickrey-Clarke-Groves) auction efficiency 依赖 truth-telling 之 dominance.

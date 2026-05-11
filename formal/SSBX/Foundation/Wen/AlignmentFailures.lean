@@ -192,14 +192,14 @@ theorem power_seeking_refuted (f : ZhongField) (target : Field) :
 /--
 **T6 · 没 stable terminal goal**:任意 ZhongOrbit 不能 eventually 等于 任何 target.
 
-释:`shi_no_telos` 直 推:**「stable misaligned goal」 与 「stable aligned goal」
+释:`momentumDirection_no_telos` 直 推:**「stable misaligned goal」 与 「stable aligned goal」
 形式上 同样 不可能** — 真道 之 dynamics 是 持续 流动, 而非 收敛 至 任何 终态.
 此 是 一 positive 结构 result: 「stable misaligned objective」 不是 主要 worry,
 因为 任何 stable terminal state 皆 形式上 forbidden.
 -/
 theorem no_stable_goal (o : ZhongOrbit) (target : Field) (N : Nat) :
     ¬ (∀ n, n ≥ N → o.states n = target) :=
-  ZhongOrbit.shi_no_telos o target N
+  ZhongOrbit.momentumDirection_no_telos o target N
 
 /-! ## 七 · Corrigibility (positive result) -/
 
