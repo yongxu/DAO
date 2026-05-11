@@ -52,7 +52,7 @@ def decrement (a b : Shu) : Shu := a - b
 def multiply (a b : Shu) : Shu := a * b
 
 /-- **反 (fan)**：在 ℤ 上 negate；ℕ 截断版退化为 trivial。 -/
-def fan (a : Int) : Int := -a
+def negate (a : Int) : Int := -a
 
 /-! ## § 2 Peano 性质（以项目单字证）
 
