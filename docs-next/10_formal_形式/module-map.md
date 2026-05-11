@@ -1,12 +1,12 @@
 # 模块地图
 
-> 状态：v3 (2026-05-11) — 与 main @ 1c76a55 对齐。Cell192 已删；Hierarchy/ 与 Notation/ 是 v3 新增簇；R₀..R₈ strict (Z/2)ⁿ uniform 是 spine。
+> 状态：v3 (2026-05-11) — 与当前工作树对齐。Cell192 已删；Hierarchy/、Notation/、Squaring/ 是 v3 新增簇；R₀..R₈ strict (Z/2)ⁿ uniform 是 spine。
 
-模块地图把读者从主题带到 Lean 文件。完整列表见 [../_generated/lean-index.md](../_generated/lean-index.md)；本页只描述模块簇的职责。
+模块地图把读者从主题带到 Lean 文件。完整列表由 `python3 scripts/docs_next.py build` 生成到 `docs-next/_generated/lean-index.md`；本页只描述模块簇的职责。
 
 ## 顶层入口
 
-- [`formal/SSBX.lean`](../../formal/SSBX.lean) — 聚合入口；当前在 main @ 1c76a55 上 `lake build SSBX` = **3656 / 3656 jobs**
+- [`formal/SSBX.lean`](../../formal/SSBX.lean) — 聚合入口；当前工作树 `lake build SSBX` = **3686 / 3686 jobs**
 - [`formal/SSBX/Core.lean`](../../formal/SSBX/Core.lean) — 基础枚举、三值、开闭与若干共用结构
 - [`formal/SSBX/Roster.lean`](../../formal/SSBX/Roster.lean) — 字根、生成项、primitive、recursive、pending 名册
 
@@ -23,6 +23,7 @@
 | `Foundation/Bagua` | [`Foundation/Bagua/`](../../formal/SSBX/Foundation/Bagua/) | 八卦代数、BenZheng (R₄)、**Cell128 (R₇)、Cell256 (R₈)、Cell256Stratify** (R₀..R₈ bundle)、BaguaTuring、KleeneInternal、GodelLi、Newman、ChunkedDecide、CuoInvariance、FuelDiscipline | 看计算边界与 `kleene_recursion_axiom` |
 | **`Foundation/Hierarchy`** ⭐新 | [`Foundation/Hierarchy/`](../../formal/SSBX/Foundation/Hierarchy/) | **R₀..R₈ index alias 文件 (R0_Taiji..R8_GuoHex) + RHierarchy umbrella + LiftProject + Operators/{Atomic, V4Outer}** | 一处 import 即得 R-index 命名 + 算子 inner/outer 拆分 |
 | **`Foundation/Notation`** ⭐新 | [`Foundation/Notation/`](../../formal/SSBX/Foundation/Notation/) | **`OX["xxxxxxxx"]` 8-char Cell256 字面 macro** | 给 256-cell 一个可读的字面 |
+| **`Foundation/Squaring`** ⭐新 | [`Foundation/Squaring/`](../../formal/SSBX/Foundation/Squaring/) | **L-tower / V₄ tensor / L₁ / retract tower / Stream carrier / L∞ final coalgebra** | 看 R₈ 闭合后的正交 squaring tower，不读作 R₉ |
 | `Foundation/Eight` | [`Foundation/Eight/`](../../formal/SSBX/Foundation/Eight/) | 八衍：动理、逻辑、数算、统计、形等 | 看专题中层接口，不读作经验充分性 |
 | `Foundation/Modern` | [`Foundation/Modern/`](../../formal/SSBX/Foundation/Modern/) | 现代数学、概率、逻辑、物理、神经科学 | 看形式桥接与局部定理；Cell256 cascades 已 0003224 落地 |
 | `Text` | [`Text/`](../../formal/SSBX/Text/) | glyph、义位、算子、覆盖性 | 看文字账本与算子表完备性；OperatorAnchors / OperatorCellMap / LayerCharacterMap 在 Cell256 之上 |
@@ -35,7 +36,7 @@
 **删除（commit 8e4406e）**：
 - ~~`Foundation/Bagua/Cell192.lean`~~ — 已删（旧 192 = 64 hex × 3 Shi {ji, jin, wei} 之 carrier）
 
-**新增（commits 7de5064 + 1c76a55）**：
+**新增（v3 base + current worktree）**：
 
 `Foundation/Hierarchy/`（11 文件 + 1 子目录）：
 
@@ -50,6 +51,16 @@ RHierarchy.lean    LiftProject.lean   Operators/{Atomic.lean, V4Outer.lean}
 
 ```
 OXNotation.lean    -- OX["xxxxxxxx"] 8-char Cell256 字面 macro
+```
+
+`Foundation/Squaring/`：
+
+```
+V4Tensor.lean       -- Cell256 ≃+ V₄⁴ + Mathlib Fintype/AddCommGroup bridge
+L1.lean             -- L₁ = Cell256 × Cell256 + swap/diag/octant classifier
+RetractTower.lean   -- R₀..R₈ retracts lifted into L₁
+StreamCarrier.lean  -- Stream' Cell256 coalgebra carrier + unfold/bisim wrapper
+ProfiniteLimit.lean -- L∞ coherent prefixes ≃+ Stream' Cell256 + final coalgebra
 ```
 
 `Foundation/Bagua/` 新增（commit 7de5064）：
@@ -74,10 +85,10 @@ import SSBX.Foundation.Hierarchy.RHierarchy
 
 人工模块图会过期。核对时优先使用：
 
-- [../_generated/lean-index.md](../_generated/lean-index.md)：模块、导入、声明、行数
-- [../_generated/crossrefs.md](../_generated/crossrefs.md)：文档与 Lean 路径/符号互证
-- [../_generated/registry-index.md](../_generated/registry-index.md)：名册 kind 与 pending/recursive 项
-- [../_generated/claim-index.md](../_generated/claim-index.md)：claim 状态
+- `docs-next/_generated/lean-index.md`：模块、导入、声明、行数
+- `docs-next/_generated/crossrefs.md`：文档与 Lean 路径/符号互证
+- `docs-next/_generated/registry-index.md`：名册 kind 与 pending/recursive 项
+- `docs-next/_generated/claim-index.md`：claim 状态
 
 ## 阅读原则
 
@@ -96,6 +107,11 @@ import SSBX.Foundation.Hierarchy.RHierarchy
 - [`formal/SSBX/Foundation/Hierarchy/Operators/Atomic.lean`](../../formal/SSBX/Foundation/Hierarchy/Operators/Atomic.lean)
 - [`formal/SSBX/Foundation/Hierarchy/Operators/V4Outer.lean`](../../formal/SSBX/Foundation/Hierarchy/Operators/V4Outer.lean)
 - [`formal/SSBX/Foundation/Notation/OXNotation.lean`](../../formal/SSBX/Foundation/Notation/OXNotation.lean)
+- [`formal/SSBX/Foundation/Squaring/V4Tensor.lean`](../../formal/SSBX/Foundation/Squaring/V4Tensor.lean)
+- [`formal/SSBX/Foundation/Squaring/L1.lean`](../../formal/SSBX/Foundation/Squaring/L1.lean)
+- [`formal/SSBX/Foundation/Squaring/RetractTower.lean`](../../formal/SSBX/Foundation/Squaring/RetractTower.lean)
+- [`formal/SSBX/Foundation/Squaring/StreamCarrier.lean`](../../formal/SSBX/Foundation/Squaring/StreamCarrier.lean)
+- [`formal/SSBX/Foundation/Squaring/ProfiniteLimit.lean`](../../formal/SSBX/Foundation/Squaring/ProfiniteLimit.lean)
 - [`formal/SSBX/Foundation/Bagua/Cell128.lean`](../../formal/SSBX/Foundation/Bagua/Cell128.lean)
 - [`formal/SSBX/Foundation/Bagua/Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean)
 - [`formal/SSBX/Foundation/Bagua/Cell256Stratify.lean`](../../formal/SSBX/Foundation/Bagua/Cell256Stratify.lean)

@@ -1,6 +1,6 @@
 # 生生不息 · SSBX
 
-> 状态：v3 (2026-05-11) — strict (Z/2)ⁿ uniform R₀..R₈ 阶梯; V₄ Klein 时态在 R₈; Cell256 = 64 卦 × 4 时态; 道 = R₈ origin = identity = no-op = 永真 cell; 0 sorry / 0 项目自定 axiom on migrated files; lake build 3656/3656 jobs.
+> 状态：v3 (2026-05-11) — strict (Z/2)ⁿ uniform R₀..R₈ 阶梯; V₄ Klein 时态在 R₈; Cell256 = 64 卦 × 4 时态; 道 = R₈ origin = identity = no-op = 永真 cell; 0 sorry / 0 项目自定 axiom on migrated files; lake build 3686/3686 jobs.
 
 > 中文 · [English](./README.en.md) · [形式 / Formal](./README.formal.md)
 
@@ -12,11 +12,11 @@
 
 ```
 版本 / 阶段        v3 final algebraic spine (post-Cell192 → Cell256 迁移)
-HEAD              1c76a55  (claude/thirsty-merkle-f43218 worktree)
-                  ↳ 4 commits ahead of origin/main
-build target      lake build  →  3656 / 3656 jobs ✓
-sorry count       0   (across migrated files)
-project axioms    0   (kleene_recursion_axiom 已被 cuo-equivariance 内化)
+HEAD              45bf014  (local main worktree)
+                  ↳ 45 commits ahead of origin/main
+build target      lake build SSBX  →  3686 / 3686 jobs ✓
+sorry count       0   (across migrated files + Foundation/Squaring; legacy Universal has known sorrys)
+project axioms    0   (in migrated files + Foundation/Squaring; see trust-boundary index for legacy boundaries)
 opaque count      1   (theOne 仍是唯一 ontological seal, Foundation/Wen/Kernel.lean Layer 0)
 partial def       1   (BaguaTuring.run, 执行级非终止边界, 不是额外 axiom)
 trust base        Lean 4 v4.30.0-rc2 + Mathlib master HEAD
@@ -63,7 +63,7 @@ trust base        Lean 4 v4.30.0-rc2 + Mathlib master HEAD
 ## 构建与运行
 
 ```bash
-# Lean 全库 (3656 jobs; 慢)
+# Lean 全库 (3686 jobs; 慢)
 lake build SSBX
 
 # 单模块
@@ -102,7 +102,7 @@ formal/                            Lean 4 形式化 (lake 包名 = ssbx; @[defau
    ├─ Core / Roster / Pending      字根名册 + 核心生成项 + 待校接口
    ├─ Text/                        字 / 算子 catalogue (含 OperatorCellMap, OperatorAnchors)
    ├─ Truth / Model                模型论与真值边界
-   └─ Foundation/                  9 簇 · 100+ modules
+   └─ Foundation/                  10 簇 · 100+ modules
       ├─ Core                      字根 · 单根证书 · Alignment / Sincerity / Renlei
       ├─ Wen                       古文虚字 · 45 层 Kernel · 路径丙 11 模 · DaoSource / MetaInterp
       ├─ Jian                      间之核 (14 字粒子核; STLC + Mode + Yi 桥)
@@ -110,6 +110,7 @@ formal/                            Lean 4 形式化 (lake 包名 = ssbx; @[defau
       ├─ Bagua                     八卦 + Turing + Gödel-Rice + Cell128/256 + BenZheng
       ├─ Hierarchy                 R₀..R₈ index alias 体系 + LiftProject + Operators (Atomic/V4Outer)
       ├─ Notation                  OXNotation: `OX["oooooooo"]` 8-char Cell256 字面量 macro
+      ├─ Squaring                  L-tower: V₄ tensor / L₁ / retract tower / Stream / L∞ final coalgebra
       ├─ Eight                     八衍: 数 / 推 / 测 / 形 / 类 / 动 / 识 / 象
       └─ Modern                    Mathlib 接入: ℝ Cauchy / Lebesgue / 量子 / SU(N) / 范畴 + 60+ Markov-桥
 ```
@@ -123,6 +124,7 @@ formal/                            Lean 4 形式化 (lake 包名 = ssbx; @[defau
 - **Foundation/Bagua**: `BaguaAlgebra` 布尔代数 + V₄; `BenZheng` 4 本 / 4 征 / Mian / Quadrant; `Cell128 / Cell256 / Cell256Stratify` 是 R₇/R₈ 之具体实现 + R8_complete bundle; `BaguaTuring` 12-instr ISA Turing 完备; `GodelLi` 道判机不可通用化; `KleeneInternal / Newman / CuoInvariance / FuelDiscipline / ChunkedDecide` 立 Cuo 等变 / 局部汇合 / fuel 单调 / 决策 budget。
 - **Foundation/Hierarchy**: 这是 v3 新增之 umbrella: `RHierarchy.lean` 暴露 R₀..R₈ 之 index-named alias (R0_Taiji..R8_GuoHex); `LiftProject.lean` 给出 8 对 uniform Lift_n / Project_n + retract 引理; `Operators/Atomic.lean` 集中 XOR 子群 atomic generators (yin/tou/flipᵢ/hexCuo); `Operators/V4Outer.lean` 集中 V₄ Klein 外对称 (zong/cuoZong/hu)。
 - **Foundation/Notation**: `OXNotation.lean` 提供 `OX["xxxxxxxx"]` term-level macro (8-char `o`/`x` → Cell256 字面量, 含 parse-time 长度与字符校验; `OX["oooooooo"]` = `(Hexagram.qian, Shi.dao)` = `Cell256.origin` = (Z/2)⁸ identity = 道)。
+- **Foundation/Squaring**: `V4Tensor / L1 / RetractTower / StreamCarrier / ProfiniteLimit` 实现 R₈ 闭合后的正交 L-tower；`ProfiniteLimit.lean` 给出 `L_inf ≃+ Stream' Cell256` 与 Mathlib `Endofunctor.Coalgebra` terminal 证明。
 - **Foundation/Eight**: 数 / 推 / 测 / 形 / 类 / 动 / 识 / 象 八衍, 各一 .lean, 与 Mathlib 接通各自方向。
 - **Foundation/Modern**: 19+ Mathlib bridge + 60+ QuantumRelativity*Bridge (Markov-桥之逐步统一); `DaoLi.lean` 是道-理二分 cross-cutting; `HexagramPosition.lean` 立中/应/比/当位/承乘之 Lean 计数。
 
@@ -354,14 +356,14 @@ formal/                            Lean 4 形式化 (lake 包名 = ssbx; @[defau
 ## § 6 · 数字状
 
 ```
-build jobs:        3656 ✓
-sorry:             0
-project axioms:    0   (kleene_recursion_axiom 已被 cuo-equivariance 内化)
+build jobs:        3686 ✓
+sorry:             0   (migrated files + Foundation/Squaring; legacy Universal has known sorrys)
+project axioms:    0   (migrated files + Foundation/Squaring; legacy trust boundaries separately indexed)
 opaque:            1   (theOne, preserves Field abstraction)
 partial def:       1   (BaguaTuring.run, 执行级非终止边界, 不是额外 axiom)
 trust base:        Lean 4 v4.30.0-rc2 + Mathlib master HEAD
 Lean 总行数:       ~45000+
-Foundation 簇数:   9 (Core / Wen / Jian / Yi / Bagua / Hierarchy / Notation / Eight / Modern)
+Foundation 簇数:   10 (Core / Wen / Jian / Yi / Bagua / Hierarchy / Notation / Squaring / Eight / Modern)
 Modern modules:    19+        Mathlib bridge 主体
 Markov-桥:         60+        QuantumRelativity*Bridge (逐步统一构造)
 路径丙 modules:    11         M1–M4-甲 全 in-source

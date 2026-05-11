@@ -112,16 +112,24 @@ import SSBX.Foundation.Jian.JianYiBridge
 import SSBX.Foundation.Yi.Yi
 import SSBX.Foundation.Yi.YiCore
 
--- Foundation/Bagua — 八卦 / 192 / Gödel-Rice / 风险缓解
+-- Foundation/Bagua — 八卦 / Cell128 / Cell256 / Gödel-Rice / 风险缓解
 import SSBX.Foundation.Bagua.BaguaAlgebra
-import SSBX.Foundation.Bagua.Cell128  -- R5 中间层 (Hexagram × YinBit, 128 cells, 印 算子)
+import SSBX.Foundation.Bagua.Cell128  -- R₇ 中间层 (Hexagram × YinBit, 128 cells, 印 算子)
 import SSBX.Foundation.Hierarchy.R5_Wuyao  -- R₅ strict (Z/2)⁵ = 32 carrier (Mian × Bool)
 import SSBX.Foundation.Hierarchy.LiftProject  -- Uniform Lift/Project pairs across R₀..R₈
 import SSBX.Foundation.Hierarchy.Operators.Atomic  -- XOR subgroup re-export (yin/tou/flipᵢ/hexCuo)
 import SSBX.Foundation.Hierarchy.Operators.V4Outer  -- V₄ Klein-four outer (zong/cuoZong/hu)
 import SSBX.Foundation.Hierarchy.RHierarchy  -- R₀..R₈ index-named alias umbrella
-import SSBX.Foundation.Bagua.Cell256  -- R6 闭合层 (Hexagram × Shi V₄, 256 cells, 投 算子)
-import SSBX.Foundation.Bagua.Cell256Stratify  -- R5/R6 双层 stratification + R6_complete bundle
+import SSBX.Foundation.Bagua.Cell256  -- R₈ 闭合层 (Hexagram × Shi V₄, 256 cells, 投 算子)
+import SSBX.Foundation.Bagua.Cell256Stratify  -- R₀..R₈ stratification + R8_complete bundle
+
+-- Foundation/Squaring — L-tower / V₄ tensor / stream coalgebra
+import SSBX.Foundation.Squaring.V4Tensor
+import SSBX.Foundation.Squaring.L1
+import SSBX.Foundation.Squaring.RetractTower
+import SSBX.Foundation.Squaring.StreamCarrier
+import SSBX.Foundation.Squaring.ProfiniteLimit
+
 import SSBX.Foundation.Bagua.BaguaTuring
 import SSBX.Foundation.Bagua.Newman
 import SSBX.Foundation.Bagua.KleeneInternal

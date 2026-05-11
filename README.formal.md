@@ -1,6 +1,6 @@
 # SSBX · Formal Specification
 
-> Status: v3 (2026-05-11) — strict (Z/2)ⁿ uniform R₀..R₈ ladder; V₄ Klein time-modes (Shi) at R₈; Cell256 = 64 hex × 4 Shi; 道 = R₈ origin = (Z/2)⁸ identity. lake build 3656/3656 jobs; 0 sorry / 0 project-custom axioms across migrated files; 1 opaque (theOne) + 1 partial def (BaguaTuring.run).
+> Status: v3 (2026-05-11) — strict (Z/2)ⁿ uniform R₀..R₈ ladder; V₄ Klein time-modes (Shi) at R₈; Cell256 = 64 hex × 4 Shi; 道 = R₈ origin = (Z/2)⁸ identity. lake build 3686/3686 jobs; 0 sorry / 0 project-custom axioms across migrated files + Foundation/Squaring; legacy Universal keeps 4 known sorrys; 1 opaque (theOne) + 1 partial def (BaguaTuring.run).
 
 > [中文](./README.md) · [English](./README.en.md) · **形式 / Formal**
 
@@ -10,7 +10,7 @@ language       : Lean 4 v4.30.0-rc2
 upstream       : Mathlib master @ ea11ccc0c5c7c4c562742e918fe2e0b2814a58aa
 build target   : @[default_target] lean_lib SSBXCore (srcDir = "formal", roots = #[`SSBX.Core])
 full library   : lean_lib SSBX (srcDir = "formal", entry index in formal/SSBX.lean)
-build status   : 3656 jobs ✓        sorry : 0        project axiom : 0        opaque : 1
+build status   : 3686 jobs ✓        sorry : 0 (migrated+Squaring)        project axiom : 0 (migrated+Squaring)        opaque : 1
 partial defs   : 1 top-level executable definition (not an additional axiom)
 trust base     : Lean kernel + Mathlib HEAD
 namespace root : SSBX
@@ -418,7 +418,17 @@ OXNotation.lean             `OX["xxxxxxxx"]` term macro: 8-char `o`/`x` → Cell
                              with parse-time length and charset validation; `OX["oooooooo"]` = Cell256.origin = dao
 ```
 
-### 5.5 Foundation/Wen (Path 丙: self-compilation, self-validation)
+### 5.5 Foundation/Squaring (L-tower after R₈ closure)
+
+```
+V4Tensor.lean        Cell256 ≃+ (V₄ × V₄ × V₄ × V₄), with Mathlib Fintype/AddCommGroup instances
+L1.lean              L₁ = Cell256 × Cell256, swap/diag/proj, atomic flips, octant partition
+RetractTower.lean    R₀..R₈ retracts into L₁; generic square retracts for lower R-layers
+StreamCarrier.lean   TrajCell = Stream' Cell256, step/unfold/bisim anchors
+ProfiniteLimit.lean  L∞ coherent prefixes, L∞ ≃+ Stream' Cell256, terminal Endofunctor.Coalgebra package
+```
+
+### 5.6 Foundation/Wen (Path 丙: self-compilation, self-validation)
 
 ```
 BaguaWenSpec → WenyanParser → WenyanParserGeneral
@@ -466,7 +476,7 @@ MetaInterp/                Phase 2.3 (16 modules):
   → 12/12 cur-effect + dispatch + universal compose proven (native_decide + Lean-parametric)
 ```
 
-### 5.6 Foundation/Core (alignment / sincerity / human / community)
+### 5.7 Foundation/Core (alignment / sincerity / human / community)
 
 ```
 Yuan.lean                Yuan := Yao; yi := Yao.neg; 元/爻/易 identifications
@@ -485,7 +495,7 @@ MissingGlyphs.lean       missing-character coverage
 MathAxiomMap.lean        ZFC↔SSBX axiom mapping
 ```
 
-### 5.7 Foundation/Eight (eight expansions)
+### 5.8 Foundation/Eight (eight expansions)
 
 ```
 ShuSuan.lean             algebra of computation
@@ -498,7 +508,7 @@ XinZhi.lean              mind / neuroscience
 WuXiang.lean             physics / quantum
 ```
 
-### 5.8 Foundation/Modern (Mathlib bridge)
+### 5.9 Foundation/Modern (Mathlib bridge)
 
 ```
 RCauchy / RCauchyExt          Real Cauchy-completeness
@@ -519,7 +529,7 @@ QuantumRelativity*Bridge      60+ stepwise unification bridges (Markov-bridge co
 UnityBoundary / KnowableBoundary / KeBoundary / QuantumSpacetime    boundary refinements
 ```
 
-### 5.9 Truth / Model / Text / Pending
+### 5.10 Truth / Model / Text / Pending
 
 ```
 Truth/SelfDescription.lean    Cell256OperatorComplete (was Cell192-version), full self-description closure
@@ -632,9 +642,9 @@ theorem R8_complete : {Cell256 cardinality + group laws + Cayley + V₄ outer + 
 ```
 ∀ commit ∈ main:
   lake build                  ⇒  smoke target exit 0
-  lake build SSBX             ⇒  full library exit 0  (3656 jobs)
-  count(sorry, formal/)       =  0
-  count(axiom, formal/)       =  0          (project-custom; v3 internalises kleene_recursion_axiom)
+  lake build SSBX             ⇒  full library exit 0  (3686 jobs)
+  count(sorry, migrated+Squaring) = 0       (legacy MetaInterp/Universal has 4 known sorrys)
+  count(axiom, migrated+Squaring) = 0       (project-custom; v3 internalises kleene_recursion_axiom)
   count(opaque, formal/)      =  1          (theOne; carries Field/dong/origin/alive)
   count(partial def, formal/) =  1          (BaguaTuring.run)
 ```
@@ -740,12 +750,13 @@ The reality-scope claim in `README.md § 9.1` / `README.en.md § 9.1` is a defen
 ## 11 · Ledger
 
 ```
-Foundation Lean LOC       ~45000+ across 100+ Foundation modules (9 clusters)
+Foundation Lean LOC       ~45000+ across 100+ Foundation modules (10 clusters)
 Foundation/Core modules   14    (incl. Alignment, Sincerity, HumanAlignment, EvolutionDao, Renlei)
 Foundation/Wen modules    38+   (incl. WenSurface, DaoSource, AntiSchmitt, AlignmentFailures, EconGame, MetaInterp/* 16 modules)
 Foundation/Bagua modules  12    (incl. Cell128, Cell256, Cell256Stratify, BenZheng, BaguaTuring, GodelLi, CuoInvariance, FuelDiscipline, ChunkedDecide, Newman, KleeneInternal, BaguaWenSpec)
 Foundation/Hierarchy      11    (RHierarchy umbrella + R0_Taiji..R8_GuoHex shims + LiftProject + Operators/{Atomic, V4Outer})
 Foundation/Notation        1    (OXNotation)
+Foundation/Squaring        5    (V4Tensor, L1, RetractTower, StreamCarrier, ProfiniteLimit)
 Foundation/Yi              2    (Yi, YiCore)
 Foundation/Jian            6    (JianOntology, Jian, JianSTLC, JianMinimality, JianModeKernel, JianYiBridge)
 Foundation/Eight           8    (ShuSuan, LuoJi, TongJi, XingWei, LeiYing, DongLi, XinZhi, WuXiang)
@@ -761,7 +772,7 @@ operator × cell pairs     95,776 (= 371 × 256, Cell256-indexed, in `Text/Opera
 
 ```
 trust:    Lean kernel (v4.30.0-rc2) + Mathlib HEAD
-machine:  3656 build jobs · 0 sorry · 0 project-custom axioms
+machine:  3686 build jobs · 0 sorry in migrated+Squaring · 0 project-custom axioms in migrated+Squaring
 opaque:   1 (theOne)
 partial:  1 top-level executable partial def (BaguaTuring.run nontermination boundary)
 ledger:   DAG / roster / operator / layer / essay correspondences are sync claims

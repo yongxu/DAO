@@ -43,6 +43,9 @@ formal/SSBX/
 │   │       └── V4Outer.lean      # V₄ 外对称 (zong / hu / cuoZong, non-XOR)
 │   ├── Notation/                 # 符号 / surface 编码
 │   │   └── OXNotation.lean       # `OX["xxxxxxxx"]` 8-char Cell256 字面量 macro
+│   ├── Squaring/                 # R₈ 后正交 L-tower
+│   │   ├── V4Tensor.lean、L1.lean、RetractTower.lean
+│   │   └── StreamCarrier.lean、ProfiniteLimit.lean
 │   └── Eight/                    # 八衍：数 / 推 / 测 / 形 / 类 / 动 / 识 / 象
 │       ├── ShuSuan.lean、LuoJi.lean、TongJi.lean、XingWei.lean
 │       └── LeiYing.lean、DongLi.lean、XinZhi.lean、WuXiang.lean
@@ -63,7 +66,8 @@ formal/SSBX/
 - `Core/Monism.lean`：内容构造 DAG（Γ → 三本 → 三显 → 三征 → 開/閉 → 生生不息论）。
 - `Jian/JianOntology.lean`：Tier-1 間/Jian 本体（三本／三显／三征／開閉／網體流／自指见证）。
 - `Wen/Kernel.lean`：完备自指之核——一字 (動) + 古文算子 ⊢ 生生不息 ∧ 自指 ∧ 自洽。
-- `Bagua/GodelLi.lean`：理之不完备 · 哥德尔在 192（49 定理 / 1 公理 / 0 sorry）。
+- `Bagua/GodelLi.lean`：理之不完备 · 哥德尔在 Cell256 边界内（49 定理 / 1 公理 / 0 sorry）。
+- `Squaring/ProfiniteLimit.lean`：L∞ coherent prefixes 与 `Stream' Cell256` 之 `AddEquiv`，并将其包装为 `X ↦ Cell256 × X` 的 terminal coalgebra。
 - `Eight/`：八衍（八道之展开），269 公开声明 / 0 sorry。
 
 ## 构建

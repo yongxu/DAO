@@ -1,6 +1,6 @@
 # 生生不息 · Shēngshēng-Bùxī (SSBX)
 
-> Status: v3 (2026-05-11) — strict (Z/2)ⁿ uniform R₀..R₈ ladder; V₄ Klein time-modes (Shi) at R₈; Cell256 = 64 hexagrams × 4 Shi; 道 (dao) = R₈ origin = identity = no-op = eternal cell; 0 sorry / 0 project-custom axioms across migrated files; lake build 3656/3656 jobs.
+> Status: v3 (2026-05-11) — strict (Z/2)ⁿ uniform R₀..R₈ ladder; V₄ Klein time-modes (Shi) at R₈; Cell256 = 64 hexagrams × 4 Shi; 道 (dao) = R₈ origin = identity = no-op = eternal cell; 0 sorry / 0 project-custom axioms across migrated files + Foundation/Squaring; lake build 3686/3686 jobs.
 
 > [中文](./README.md) · English · [形式 / Formal](./README.formal.md)
 
@@ -14,11 +14,11 @@
 
 ```
 version / phase     v3 final algebraic spine (post-Cell192 → Cell256 migration)
-HEAD                1c76a55  (claude/thirsty-merkle-f43218 worktree)
-                    ↳ 4 commits ahead of origin/main
-build target        lake build  →  3656 / 3656 jobs ✓
-sorry count         0   (across migrated files)
-project axioms      0   (kleene_recursion_axiom internalised via cuo-equivariance)
+HEAD                45bf014  (local main)
+                    ↳ 45 commits ahead of origin/main
+build target        lake build  →  3686 / 3686 jobs ✓
+sorry count         0   (across migrated files + Foundation/Squaring; legacy Universal has known sorrys)
+project axioms      0   (in migrated files + Foundation/Squaring; see trust-boundary index for legacy boundaries)
 opaque count        1   (theOne, the sole ontological seal at Foundation/Wen/Kernel.lean Layer 0)
 partial def         1   (BaguaTuring.run, executable nontermination boundary; not an extra axiom)
 trust base          Lean 4 v4.30.0-rc2 + Mathlib master HEAD
@@ -65,7 +65,7 @@ The full v1 → v2.1 → v3 renumbering and reasoning live in [docs-next/10_form
 ## Build and Run
 
 ```bash
-# Lean full library (3656 jobs; slow)
+# Lean full library (3686 jobs; slow)
 lake build SSBX
 
 # Single module
@@ -104,7 +104,7 @@ formal/                            Lean 4 formalisation (lake package = ssbx; @[
    ├─ Core / Roster / Pending      character roots roster + core generated items + pending interfaces
    ├─ Text/                        glyphs / operator catalogue (incl. OperatorCellMap, OperatorAnchors)
    ├─ Truth / Model                model theory + truth-status boundary
-   └─ Foundation/                  9 clusters · 100+ modules
+   └─ Foundation/                  10 clusters · 100+ modules
       ├─ Core                      character roots · monadic-root certificates · Alignment / Sincerity / Renlei
       ├─ Wen                       classical-Chinese particles · 45-layer Kernel · 11 modules of Path 丙 · DaoSource / MetaInterp
       ├─ Jian                      kernel of 间 (jiān, "interval"; 14-character particle core; STLC + Mode + Yi bridge)
@@ -112,6 +112,7 @@ formal/                            Lean 4 formalisation (lake package = ssbx; @[
       ├─ Bagua                     Eight Trigrams + Turing + Gödel-Rice + Cell128/256 + BenZheng
       ├─ Hierarchy                 R₀..R₈ index alias system + LiftProject + Operators (Atomic/V4Outer)
       ├─ Notation                  OXNotation: `OX["oooooooo"]` 8-char Cell256 string-literal macro
+      ├─ Squaring                  L-tower: V₄ tensor / L₁ / retract tower / Stream / L∞ final coalgebra
       ├─ Eight                     Eight Expansions: number / inference / measure / shape / kind / dynamics / mind / phenomenon
       └─ Modern                    Mathlib bridge: ℝ Cauchy / Lebesgue / quantum / SU(N) / category + 60+ Markov-bridge modules
 ```
@@ -125,6 +126,7 @@ formal/                            Lean 4 formalisation (lake package = ssbx; @[
 - **Foundation/Bagua**: `BaguaAlgebra` Boolean algebra + V₄; `BenZheng` 4 ben / 4 zheng / Mian / Quadrant; `Cell128 / Cell256 / Cell256Stratify` are the concrete R₇/R₈ realisations + R8_complete bundle; `BaguaTuring` 12-instr ISA Turing-completeness; `GodelLi` non-universalisable dao-judge; `KleeneInternal / Newman / CuoInvariance / FuelDiscipline / ChunkedDecide` set up cuo-equivariance / local confluence / fuel monotonicity / decision-budget.
 - **Foundation/Hierarchy**: New v3 umbrella: `RHierarchy.lean` exposes the R₀..R₈ index-named aliases (R0_Taiji..R8_GuoHex); `LiftProject.lean` gives 8 uniform Lift_n / Project_n pairs + retract lemmas; `Operators/Atomic.lean` collects XOR-subgroup atomic generators (yin/tou/flipᵢ/hexCuo); `Operators/V4Outer.lean` collects the V₄ Klein outer symmetries (zong/cuoZong/hu).
 - **Foundation/Notation**: `OXNotation.lean` provides the `OX["xxxxxxxx"]` term-level macro (8-char `o`/`x` → Cell256 literal, with parse-time length and charset validation; `OX["oooooooo"]` = `(Hexagram.qian, Shi.dao)` = `Cell256.origin` = (Z/2)⁸ identity = dao).
+- **Foundation/Squaring**: `V4Tensor / L1 / RetractTower / StreamCarrier / ProfiniteLimit` implement the orthogonal L-tower after R₈ closure; `ProfiniteLimit.lean` gives `L_inf ≃+ Stream' Cell256` and a Mathlib `Endofunctor.Coalgebra` terminal proof.
 - **Foundation/Eight**: number / inference / measure / shape / kind / dynamics / mind / phenomenon, one .lean each, each linking out to its Mathlib counterpart.
 - **Foundation/Modern**: 19+ Mathlib bridges + 60+ QuantumRelativity*Bridge (step-by-step unification of the Markov bridge); `DaoLi.lean` is the dao-li bifurcation cross-cutting module; `HexagramPosition.lean` formalises 中/应/比/当位/承乘 as Lean counts.
 
@@ -153,6 +155,7 @@ formal/                            Lean 4 formalisation (lake package = ssbx; @[
 | XOR subgroup atomic ops (yin/tou/flipᵢ/hexCuo) | `formal/SSBX/Foundation/Hierarchy/Operators/Atomic.lean` |
 | V₄ outer (zong/cuoZong/hu) | `formal/SSBX/Foundation/Hierarchy/Operators/V4Outer.lean` |
 | `OX["oooooooo"]..OX["xxxxxxxx"]` literal macro + dao = origin sanity | `formal/SSBX/Foundation/Notation/OXNotation.lean` |
+| L-tower / V₄ tensor / L∞ final coalgebra after R₈ closure | `formal/SSBX/Foundation/Squaring/{V4Tensor,L1,RetractTower,StreamCarrier,ProfiniteLimit}.lean` |
 | Cell256OperatorComplete (any a→b has f) + self-description closure | `formal/SSBX/Truth/SelfDescription.lean § cell256_operator_complete` |
 | R8_complete bundle (R₀..R₈ closure, native_decide + propext) | `formal/SSBX/Foundation/Bagua/Cell256Stratify.lean` |
 | BenZheng: 4 Ben / 4 Zheng / Mian = R₄ / Quadrant 4-decomposition | `formal/SSBX/Foundation/Bagua/BenZheng.lean` |
@@ -373,19 +376,20 @@ Read every "proved" claim below with this status split:
 ## § 6 · By the Numbers
 
 ```
-build jobs:        3656 ✓
-sorry:             0
-project axioms:    0   (kleene_recursion_axiom internalised via cuo-equivariance)
+build jobs:        3686 ✓
+sorry:             0   (migrated files + Foundation/Squaring; legacy Universal has known sorrys)
+project axioms:    0   (migrated files + Foundation/Squaring; legacy trust boundaries separately indexed)
 opaque:            1   (theOne, preserves Field abstraction)
 partial def:       1   (BaguaTuring.run, executable nontermination boundary; not an extra axiom)
 trust base:        Lean 4 v4.30.0-rc2 + Mathlib master HEAD
 Lean total LOC:    ~45000+
-Foundation clusters: 9 (Core / Wen / Jian / Yi / Bagua / Hierarchy / Notation / Eight / Modern)
+Foundation clusters: 10 (Core / Wen / Jian / Yi / Bagua / Hierarchy / Notation / Squaring / Eight / Modern)
 Modern modules:    19+        Mathlib bridge core
 Markov bridges:    60+        QuantumRelativity*Bridge (stepwise unification)
 Path-丙 modules:   11         M1–M4-甲 fully in-source
 MetaInterp Phase 2.3: 16 modules (12 dispatch + execute + universal compose all proved)
 Foundation/Wen:    38+ modules (incl. WenSurface / AntiSchmitt / AlignmentFailures / EconGame / DaoSource / MetaInterp)
+Foundation/Squaring: 5 modules (V4Tensor / L1 / RetractTower / StreamCarrier / ProfiniteLimit)
 Kernel layers:     45+        元 → forms-of-non-Dao + Layer 46 doctrinal-school refinements
 diagrams:          8 SVGs     Mermaid + ELK; MonadDAG 600+ nodes / 800+ edges
 Doctrinal .md:     90+        义理/A–Z* + Eight Expansions + 60+ Markov-bridge essays + Community
