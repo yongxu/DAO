@@ -561,6 +561,165 @@ theorem metaInterpProg_execute_nop_simulates_aligned
     regHex sim block_nop_offset fetchOffset metaInterpProg μ
     h_alive h_nop h_curAligned (by rfl) (by rfl) h_pre
 
+/-- Current assembly boundary for `interlace`: the concrete block changes
+    `META.cur` and jumps back to fetch, but does not append the pc-counter
+    cell required by `BlockPost`.  Therefore this local-effect block cannot
+    be promoted to an exact semantic-loop witness until the block layout
+    performs the history update. -/
+theorem metaInterpProg_execute_hu_current_history_not_blockPost
+    (regHex : Hexagram) (sim : YiState)
+    (h_alive : sim.halted = false)
+    (h_hu : sim.prog[sim.pc]? = some .interlace) :
+    let μ : YiState :=
+      { cur := sim.cur
+        history := encMetaHistory regHex sim
+        pc := block_hu_offset
+        prog := metaInterpProg
+        halted := false }
+    let μ' := μ.runFuel 2
+    ¬ SSBX.Foundation.Wen.MetaInterp.ExecuteBlock.BlockPost
+        regHex sim fetchOffset metaInterpProg μ' false := by
+  dsimp
+  let μ : YiState :=
+    { cur := sim.cur
+      history := encMetaHistory regHex sim
+      pc := block_hu_offset
+      prog := metaInterpProg
+      halted := false }
+  have h_history : (μ.runFuel 2).history = encMetaHistory regHex sim := by
+    rfl
+  exact
+    SSBX.Foundation.Wen.MetaInterp.ExecuteBlock.blockPost_unchanged_history_impossible_after_pc_increment
+      regHex sim fetchOffset metaInterpProg (μ.runFuel 2) false
+      (Hexagram.interlace sim.cur.1, sim.cur.2)
+      (by simp [YiState.step, h_alive, h_hu, YiState.execute])
+      h_history
+
+/-- Current assembly boundary for `setShi Shi.dao`: the Strategy-B concrete
+    block changes `META.cur` but does not append the pc-counter cell required
+    by exact `BlockPost`. -/
+theorem metaInterpProg_execute_setShi_current_history_not_blockPost
+    (regHex : Hexagram) (sim : YiState)
+    (h_alive : sim.halted = false)
+    (h_setShi : sim.prog[sim.pc]? = some (.setShi Shi.dao)) :
+    let μ : YiState :=
+      { cur := sim.cur
+        history := encMetaHistory regHex sim
+        pc := block_setShi_offset
+        prog := metaInterpProg
+        halted := false }
+    let μ' := μ.runFuel 2
+    ¬ SSBX.Foundation.Wen.MetaInterp.ExecuteBlock.BlockPost
+        regHex sim fetchOffset metaInterpProg μ' false := by
+  dsimp
+  let μ : YiState :=
+    { cur := sim.cur
+      history := encMetaHistory regHex sim
+      pc := block_setShi_offset
+      prog := metaInterpProg
+      halted := false }
+  have h_history : (μ.runFuel 2).history = encMetaHistory regHex sim := by
+    rfl
+  exact
+    SSBX.Foundation.Wen.MetaInterp.ExecuteBlock.blockPost_unchanged_history_impossible_after_pc_increment
+      regHex sim fetchOffset metaInterpProg (μ.runFuel 2) false
+      (sim.cur.1, Shi.dao)
+      (by simp [YiState.step, h_alive, h_setShi, YiState.execute])
+      h_history
+
+/-- Current assembly boundary for the Strategy-B `flipYao 0` block: it is a
+    cur transform plus jump, not an exact `BlockPost` history update. -/
+theorem metaInterpProg_execute_flipYao_current_history_not_blockPost
+    (regHex : Hexagram) (sim : YiState)
+    (h_alive : sim.halted = false)
+    (h_flipYao : sim.prog[sim.pc]? = some (.flipYao 0)) :
+    let μ : YiState :=
+      { cur := sim.cur
+        history := encMetaHistory regHex sim
+        pc := block_flipYao_offset
+        prog := metaInterpProg
+        halted := false }
+    let μ' := μ.runFuel 2
+    ¬ SSBX.Foundation.Wen.MetaInterp.ExecuteBlock.BlockPost
+        regHex sim fetchOffset metaInterpProg μ' false := by
+  dsimp
+  let μ : YiState :=
+    { cur := sim.cur
+      history := encMetaHistory regHex sim
+      pc := block_flipYao_offset
+      prog := metaInterpProg
+      halted := false }
+  have h_history : (μ.runFuel 2).history = encMetaHistory regHex sim := by
+    rfl
+  exact
+    SSBX.Foundation.Wen.MetaInterp.ExecuteBlock.blockPost_unchanged_history_impossible_after_pc_increment
+      regHex sim fetchOffset metaInterpProg (μ.runFuel 2) false
+      (sim.cur.1.flipPos 0, sim.cur.2)
+      (by simp [YiState.step, h_alive, h_flipYao, YiState.execute])
+      h_history
+
+/-- Current assembly boundary for `complement`: the concrete block leaves
+    META history unchanged, so it cannot satisfy exact `BlockPost`. -/
+theorem metaInterpProg_execute_cuo_current_history_not_blockPost
+    (regHex : Hexagram) (sim : YiState)
+    (h_alive : sim.halted = false)
+    (h_cuo : sim.prog[sim.pc]? = some .complement) :
+    let μ : YiState :=
+      { cur := sim.cur
+        history := encMetaHistory regHex sim
+        pc := block_cuo_offset
+        prog := metaInterpProg
+        halted := false }
+    let μ' := μ.runFuel 2
+    ¬ SSBX.Foundation.Wen.MetaInterp.ExecuteBlock.BlockPost
+        regHex sim fetchOffset metaInterpProg μ' false := by
+  dsimp
+  let μ : YiState :=
+    { cur := sim.cur
+      history := encMetaHistory regHex sim
+      pc := block_cuo_offset
+      prog := metaInterpProg
+      halted := false }
+  have h_history : (μ.runFuel 2).history = encMetaHistory regHex sim := by
+    rfl
+  exact
+    SSBX.Foundation.Wen.MetaInterp.ExecuteBlock.blockPost_unchanged_history_impossible_after_pc_increment
+      regHex sim fetchOffset metaInterpProg (μ.runFuel 2) false
+      (Hexagram.complement sim.cur.1, sim.cur.2)
+      (by simp [YiState.step, h_alive, h_cuo, YiState.execute])
+      h_history
+
+/-- Current assembly boundary for `reverse`: the concrete block leaves
+    META history unchanged, so it cannot satisfy exact `BlockPost`. -/
+theorem metaInterpProg_execute_zong_current_history_not_blockPost
+    (regHex : Hexagram) (sim : YiState)
+    (h_alive : sim.halted = false)
+    (h_zong : sim.prog[sim.pc]? = some .reverse) :
+    let μ : YiState :=
+      { cur := sim.cur
+        history := encMetaHistory regHex sim
+        pc := block_zong_offset
+        prog := metaInterpProg
+        halted := false }
+    let μ' := μ.runFuel 2
+    ¬ SSBX.Foundation.Wen.MetaInterp.ExecuteBlock.BlockPost
+        regHex sim fetchOffset metaInterpProg μ' false := by
+  dsimp
+  let μ : YiState :=
+    { cur := sim.cur
+      history := encMetaHistory regHex sim
+      pc := block_zong_offset
+      prog := metaInterpProg
+      halted := false }
+  have h_history : (μ.runFuel 2).history = encMetaHistory regHex sim := by
+    rfl
+  exact
+    SSBX.Foundation.Wen.MetaInterp.ExecuteBlock.blockPost_unchanged_history_impossible_after_pc_increment
+      regHex sim fetchOffset metaInterpProg (μ.runFuel 2) false
+      (Hexagram.reverse sim.cur.1, sim.cur.2)
+      (by simp [YiState.step, h_alive, h_zong, YiState.execute])
+      h_history
+
 /-- Assembly-specialized dispatch route for the setShi tag. -/
 theorem metaInterpProg_dispatch_routes_setShi_at_fuel
     (history : List R8) :
