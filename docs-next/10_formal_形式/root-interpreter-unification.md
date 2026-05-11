@@ -4,7 +4,8 @@
 > Role: this document is the executable architecture note for making the small
 > interpreter grow from the R0..R8 formal theory instead of living beside it.
 > Lean anchors: `RootLanguageTree.lean`, `RootRuleKernel.lean`,
-> `RootOperator.lean`, `BaguaTuring.lean`, `MetaInterp/Universal.lean`.
+> `RootOperator.lean`, `RootWord.lean`, `RootRuleInstructionBridge.lean`,
+> `BaguaTuring.lean`, `MetaInterp/Universal.lean`.
 
 ## 0. Decision
 
@@ -81,15 +82,13 @@ Add a typed `RootWord` boundary:
 ```text
 RootGlyph  = surface + RootInterfaceEntry + RootOperator
 RootWord   = RootGlyph + CoreForm + optional execution target
-YiInstr    -> RootRule / CoreForm classification
 ```
 
 This phase should prove only structural facts:
 
 - every glyph has an R-layer and role;
 - every word has an R8-visible semantic projection;
-- every word has a loss ledger;
-- every `YiInstr` has a root-rule classification.
+- every word has a loss ledger.
 
 It should not claim that all natural-language readings are complete.
 
@@ -101,15 +100,31 @@ which parts remain parameter-specific:
 | Instruction family | Root-rule reading |
 |---|---|
 | no-op / halt | return-to-Way boundary |
-| set temporal component | projection plus state update |
+| set temporal component | lift / projection plus state update |
 | flip coordinate | negation / XOR mask action |
-| interlace / complement / reverse | operator composition |
+| interlace / reverse | projected operator composition |
+| complement | XOR mask action |
 | branch | equality plus conditional |
-| jump | lookup / control transfer |
-| push / pop | quote / project through history |
+| jump | recursion / control transfer |
+| push | quote through history |
+| pop | lookup from history context |
 
 This is an audit ledger first. Exact per-parameter semantics can then be proved
 module by module without moving the architecture.
+
+The bridge should stay thin and one-directional:
+
+```text
+L0 instruction class
+-> primary RootRule plus support RootRules
+-> CoreForm readback
+-> R8-visible projection and loss ledger
+```
+
+It must not make `MetaInterp` depend on the theory layer, and it must not claim
+that root-rule evaluation is identical to VM state transition. Exact execution
+facts remain in the VM and are linked only where the instruction exposes a real
+current-cell endomap.
 
 ### Phase 3: glyph registry
 

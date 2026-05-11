@@ -145,88 +145,6 @@ theorem root_operator_loss_matches_core (w : RootWord) :
 
 end RootWord
 
-/-! ## YiInstr root-rule classification -/
-
-/-- Root-rule classification of an interpreter instruction.
-
-`primary` is the main root rule used to read the instruction. `support` records
-additional root rules required by the instruction family, for example equality
-inside a branch. This is a ledger for the instruction family, not a full
-per-parameter proof of the state transition. -/
-structure InstructionRootClass where
-  primary : RootRule
-  support : List RootRule
-  deriving Repr
-
-namespace InstructionRootClass
-
-/-- All root rules referenced by a classification. -/
-def rules (c : InstructionRootClass) : List RootRule :=
-  c.primary :: c.support
-
-/-- Conservative CoreForm readback of an instruction classification. -/
-def toCore (c : InstructionRootClass) : CoreForm :=
-  c.support.foldr
-    (fun r acc => CoreForm.compose (.primitive r) acc)
-    (.primitive c.primary)
-
-theorem toCore_has_visible_projection (c : InstructionRootClass) :
-    ∃ cell : R8, CoreForm.visible emptyEnv c.toCore = cell :=
-  CoreForm.every_form_has_visible_projection emptyEnv c.toCore
-
-theorem toCore_has_loss_ledger (c : InstructionRootClass) :
-    ∃ loss : ProjectionLoss, CoreForm.loss emptyEnv c.toCore = loss :=
-  CoreForm.every_form_has_loss_ledger emptyEnv c.toCore
-
-end InstructionRootClass
-
-/-- Classify each existing VM instruction by the root-rule family it uses. -/
-def instructionRootClass : YiInstr -> InstructionRootClass
-  | .nop => ⟨.returnDao, []⟩
-  | .setShi _ => ⟨.project, [.apply]⟩
-  | .flipYao _ => ⟨.xor, [.apply]⟩
-  | .interlace => ⟨.compose, []⟩
-  | .complement => ⟨.neg, [.xor]⟩
-  | .reverse => ⟨.compose, []⟩
-  | .branchYaoEq _ _ _ => ⟨.ite, [.equal]⟩
-  | .branchShiEq _ _ => ⟨.ite, [.equal]⟩
-  | .jump _ => ⟨.lookup, []⟩
-  | .push => ⟨.quote, []⟩
-  | .pop => ⟨.project, []⟩
-  | .halt => ⟨.returnDao, []⟩
-
-/-- CoreForm readback of a VM instruction family. -/
-def instructionCore (instr : YiInstr) : CoreForm :=
-  (instructionRootClass instr).toCore
-
-/-- Root-native operator readback of a VM instruction family. -/
-def instructionRootOperator (instr : YiInstr) : RootNativeOperator :=
-  RootNativeOperator.program (instructionCore instr)
-
-theorem instruction_primary_mem_all (instr : YiInstr) :
-    (instructionRootClass instr).primary ∈ RootRule.all := by
-  cases instr <;> simp [instructionRootClass, RootRule.all]
-
-theorem instruction_support_mem_all (instr : YiInstr) :
-    ∀ r ∈ (instructionRootClass instr).support, r ∈ RootRule.all := by
-  cases instr <;> simp [instructionRootClass, RootRule.all]
-
-theorem instruction_core_has_visible_projection (instr : YiInstr) :
-    ∃ cell : R8, CoreForm.visible emptyEnv (instructionCore instr) = cell :=
-  CoreForm.every_form_has_visible_projection emptyEnv (instructionCore instr)
-
-theorem instruction_core_has_loss_ledger (instr : YiInstr) :
-    ∃ loss : ProjectionLoss, CoreForm.loss emptyEnv (instructionCore instr) = loss :=
-  CoreForm.every_form_has_loss_ledger emptyEnv (instructionCore instr)
-
-theorem instruction_operator_has_visible_projection (instr : YiInstr) :
-    ∃ cell : R8, RootNativeOperator.visible (instructionRootOperator instr) = cell :=
-  ⟨RootNativeOperator.visible (instructionRootOperator instr), rfl⟩
-
-theorem instruction_operator_has_loss_ledger (instr : YiInstr) :
-    ∃ loss : ProjectionLoss, RootNativeOperator.loss (instructionRootOperator instr) = loss :=
-  ⟨RootNativeOperator.loss (instructionRootOperator instr), rfl⟩
-
 /-! ## Public summary -/
 
 theorem root_word_summary :
@@ -235,14 +153,7 @@ theorem root_word_summary :
     ∧ (∀ g : RootGlyph, ∃ c : R8, RootGlyph.visible g = c)
     ∧ (∀ g : RootGlyph, ∃ l : ProjectionLoss, RootGlyph.loss g = l)
     ∧ (∀ w : RootWord, ∃ c : R8, RootWord.visible w = c)
-    ∧ (∀ w : RootWord, ∃ l : ProjectionLoss, RootWord.loss w = l)
-    ∧ (∀ instr : YiInstr, (instructionRootClass instr).primary ∈ RootRule.all)
-    ∧ (∀ instr : YiInstr,
-        ∀ r ∈ (instructionRootClass instr).support, r ∈ RootRule.all)
-    ∧ (∀ instr : YiInstr,
-        ∃ c : R8, RootNativeOperator.visible (instructionRootOperator instr) = c)
-    ∧ (∀ instr : YiInstr,
-        ∃ l : ProjectionLoss, RootNativeOperator.loss (instructionRootOperator instr) = l) := by
+    ∧ (∀ w : RootWord, ∃ l : ProjectionLoss, RootWord.loss w = l) := by
   exact
     ⟨ RootGlyph.has_layer
     , RootGlyph.has_role
@@ -250,10 +161,6 @@ theorem root_word_summary :
     , RootGlyph.has_loss_ledger
     , RootWord.has_visible_projection
     , RootWord.has_loss_ledger
-    , instruction_primary_mem_all
-    , instruction_support_mem_all
-    , instruction_operator_has_visible_projection
-    , instruction_operator_has_loss_ledger
     ⟩
 
 end SSBX.Foundation.Wen.RootWord
