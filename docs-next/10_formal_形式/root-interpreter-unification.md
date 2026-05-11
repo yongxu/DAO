@@ -5,7 +5,8 @@
 > interpreter grow from the R0..R8 formal theory instead of living beside it.
 > Lean anchors: `RootLanguageTree.lean`, `RootRuleKernel.lean`,
 > `RootOperator.lean`, `RootWord.lean`, `RootRuleInstructionBridge.lean`,
-> `RootWordRegistry.lean`, `BaguaTuring.lean`, `MetaInterp/Universal.lean`.
+> `RootWordRegistry.lean`, `RootWordMetaInterpBridge.lean`,
+> `BaguaTuring.lean`, `MetaInterp/Universal.lean`.
 
 ## 0. Decision
 
@@ -153,9 +154,10 @@ Connect the `MetaInterp` universal path to the root-word layer:
 
 ```text
 RootWord list
--> CoreForm / YiInstr lowering
+-> optional YiInstr targets
 -> encoded program
--> universal interpreter execution
+-> META starting state
+-> universal interpreter execution obligations
 ```
 
 The intended theorem shape is not "natural language is finished". The intended
@@ -165,6 +167,19 @@ shape is:
 accepted rooted words compile into the R8 interpreter target,
 and the universal interpreter executes that target with an explicit ledger.
 ```
+
+The bridge at this layer should stop at the META input boundary:
+
+```text
+RootWordRegistry
+-> List YiInstr
+-> ProgEnc.encProg
+-> RunWith h metaInterpProg encodedInput
+```
+
+The existing universal-compose file remains responsible for semantic loop
+obligations. This keeps the rooted-word layer from absorbing the meta-interpreter
+proof.
 
 ### Phase 5: expansion discipline
 
