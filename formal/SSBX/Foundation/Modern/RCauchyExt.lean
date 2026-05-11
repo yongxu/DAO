@@ -123,8 +123,8 @@ theorem tendsto_iff_eps (f : ℕ → ℝ) (L : ℝ) :
 
 /-- **ShuSuan ℕ 之任意元 < ℝ 上某 nat**——直接由 Archimedean 得。 -/
 theorem shu_to_real_archimedean (a : ℕ) :
-    ∃ n : ℕ, ((SSBX.Foundation.Eight.ShuSuan.he a a : ℕ) : ℝ) < (n : ℝ) := by
-  obtain ⟨n, hn⟩ := exists_nat_gt ((SSBX.Foundation.Eight.ShuSuan.he a a : ℕ) : ℝ)
+    ∃ n : ℕ, ((SSBX.Foundation.Eight.ShuSuan.combine a a : ℕ) : ℝ) < (n : ℝ) := by
+  obtain ⟨n, hn⟩ := exists_nat_gt ((SSBX.Foundation.Eight.ShuSuan.combine a a : ℕ) : ℝ)
   exact ⟨n, hn⟩
 
 /-! ## § 9 RCauchy 之 anchor：Cauchy 序列 ↔ 收敛序列 -/

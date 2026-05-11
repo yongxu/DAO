@@ -7,10 +7,10 @@ This file formalizes the **数与算术** 衍 file's mapping from project single
 operators (元 / 一 / 续 / 合 / 损 / 重 / 除 / 反 / 空) to standard Nat / Int arithmetic,
 plus a few project-specific theorems:
 
-  § 1   项目单字 (project aliases): yi, kong, sheng, he, sun, chong
+  § 1   项目单字 (project aliases): one, zero, successor, combine, decrement, multiply
   § 2   Peano lemmas with project names (via Nat lemmas)
   § 3   损 ⊣ 合 之 Galois adjoint（截断减之伴随）
-  § 4   |Trigram| = 2³ + |Hexagram| = 2⁶ via project chong (重)
+  § 4   |Trigram| = 2³ + |Hexagram| = 2⁶ via project multiply (重)
   § 5   (Z/2)² ≄ Z/4：群序论证之 Lean 形式
 
 ## 道理二分立场
@@ -33,23 +33,23 @@ open SSBX.Foundation.Bagua.BaguaAlgebra
 /-- **数 (Shu)**：项目自然数类型，等同于 Lean 内置 `Nat`。 -/
 abbrev Shu : Type := Nat
 
-/-- **空 (kong)**：零；Empty 之 cardinality 类同。 -/
-def kong : Shu := 0
+/-- **空 (zero)**：零；Empty 之 cardinality 类同。 -/
+def zero : Shu := 0
 
-/-- **一 (yi)**：壹；Unit 之 cardinality 类同。 -/
-def yi : Shu := 1
+/-- **一 (one)**：壹；Unit 之 cardinality 类同。 -/
+def one : Shu := 1
 
-/-- **生 (sheng)**：后继 succ；与 `Sheng.step` 同名同义。 -/
-def sheng : Shu → Shu := Nat.succ
+/-- **生 (successor)**：后继 succ；与 `Sheng.step` 同名同义。 -/
+def successor : Shu → Shu := Nat.succ
 
-/-- **合 (he)**：加 +；项目主用字。 -/
-def he (a b : Shu) : Shu := a + b
+/-- **合 (combine)**：加 +；项目主用字。 -/
+def combine (a b : Shu) : Shu := a + b
 
-/-- **损 (sun)**：截断减 ∸（ℕ 内不可逆）。 -/
-def sun (a b : Shu) : Shu := a - b
+/-- **损 (decrement)**：截断减 ∸（ℕ 内不可逆）。 -/
+def decrement (a b : Shu) : Shu := a - b
 
-/-- **重 (chong)**：乘 ×；与 G 之"八卦相重"同字异作用。 -/
-def chong (a b : Shu) : Shu := a * b
+/-- **重 (multiply)**：乘 ×；与 G 之"八卦相重"同字异作用。 -/
+def multiply (a b : Shu) : Shu := a * b
 
 /-- **反 (fan)**：在 ℤ 上 negate；ℕ 截断版退化为 trivial。 -/
 def fan (a : Int) : Int := -a
@@ -57,90 +57,90 @@ def fan (a : Int) : Int := -a
 /-! ## § 2 Peano 性质（以项目单字证）
 
 为避免与 Lean stdlib 之 `Sum`/`Mul` 之 `⊕`/`⊗` notation 冲突，
-本节内皆用函数式风格 `he a b`/`chong a b` 等，不引入新 infix。 -/
+本节内皆用函数式风格 `combine a b`/`multiply a b` 等，不引入新 infix。 -/
 
-theorem he_kong (a : Shu) : he a kong = a := Nat.add_zero a
+theorem he_kong (a : Shu) : combine a zero = a := Nat.add_zero a
 
-theorem kong_he (a : Shu) : he kong a = a := Nat.zero_add a
+theorem kong_he (a : Shu) : combine zero a = a := Nat.zero_add a
 
-theorem he_sheng (a b : Shu) : he a (sheng b) = sheng (he a b) := rfl
+theorem he_sheng (a b : Shu) : combine a (successor b) = successor (combine a b) := rfl
 
-theorem sheng_he (a b : Shu) : he (sheng a) b = sheng (he a b) := by
-  unfold sheng he
+theorem sheng_he (a b : Shu) : combine (successor a) b = successor (combine a b) := by
+  unfold successor combine
   exact Nat.succ_add a b
 
-theorem he_comm (a b : Shu) : he a b = he b a := Nat.add_comm a b
+theorem he_comm (a b : Shu) : combine a b = combine b a := Nat.add_comm a b
 
-theorem he_assoc (a b c : Shu) : he (he a b) c = he a (he b c) := Nat.add_assoc a b c
+theorem he_assoc (a b c : Shu) : combine (combine a b) c = combine a (combine b c) := Nat.add_assoc a b c
 
-theorem chong_kong (a : Shu) : chong a kong = kong := Nat.mul_zero a
+theorem chong_kong (a : Shu) : multiply a zero = zero := Nat.mul_zero a
 
-theorem kong_chong (a : Shu) : chong kong a = kong := Nat.zero_mul a
+theorem kong_chong (a : Shu) : multiply zero a = zero := Nat.zero_mul a
 
-theorem chong_yi (a : Shu) : chong a yi = a := Nat.mul_one a
+theorem chong_yi (a : Shu) : multiply a one = a := Nat.mul_one a
 
-theorem yi_chong (a : Shu) : chong yi a = a := Nat.one_mul a
+theorem yi_chong (a : Shu) : multiply one a = a := Nat.one_mul a
 
-theorem chong_comm (a b : Shu) : chong a b = chong b a := Nat.mul_comm a b
+theorem chong_comm (a b : Shu) : multiply a b = multiply b a := Nat.mul_comm a b
 
-theorem chong_assoc (a b c : Shu) : chong (chong a b) c = chong a (chong b c) :=
+theorem chong_assoc (a b c : Shu) : multiply (multiply a b) c = multiply a (multiply b c) :=
   Nat.mul_assoc a b c
 
-theorem chong_distrib_he (a b c : Shu) : chong a (he b c) = he (chong a b) (chong a c) :=
+theorem chong_distrib_he (a b c : Shu) : multiply a (combine b c) = combine (multiply a b) (multiply a c) :=
   Nat.mul_add a b c
 
-theorem he_chong_distrib (a b c : Shu) : chong (he a b) c = he (chong a c) (chong b c) :=
+theorem he_chong_distrib (a b c : Shu) : multiply (combine a b) c = combine (multiply a c) (multiply b c) :=
   Nat.add_mul a b c
 
-theorem sun_kong (a : Shu) : sun a kong = a := Nat.sub_zero a
+theorem sun_kong (a : Shu) : decrement a zero = a := Nat.sub_zero a
 
-theorem kong_sun (a : Shu) : sun kong a = kong := Nat.zero_sub a
+theorem kong_sun (a : Shu) : decrement zero a = zero := Nat.zero_sub a
 
-theorem sun_self (a : Shu) : sun a a = kong := Nat.sub_self a
+theorem sun_self (a : Shu) : decrement a a = zero := Nat.sub_self a
 
 /-! ## § 3 损 ⊣ 合 之 Galois 伴随
 
 数与算术.md §6 之核心结果：截断减作为加之 left adjoint。 -/
 
-/-- **Galois 连接**：`sun a b ≤ c ⟺ a ≤ he c b`. -/
-theorem galois_sun_he (a b c : Shu) : sun a b ≤ c ↔ a ≤ he c b := by
-  unfold sun he
+/-- **Galois 连接**：`decrement a b ≤ c ⟺ a ≤ combine c b`. -/
+theorem galois_sun_he (a b c : Shu) : decrement a b ≤ c ↔ a ≤ combine c b := by
+  unfold decrement combine
   exact Nat.sub_le_iff_le_add
 
-/-- **逆方向恒等**：sun (he a b) b = a 永真. -/
-theorem he_sun_cancel (a b : Shu) : sun (he a b) b = a := by
-  simp only [he, sun]
+/-- **逆方向恒等**：decrement (combine a b) b = a 永真. -/
+theorem he_sun_cancel (a b : Shu) : decrement (combine a b) b = a := by
+  simp only [combine, decrement]
   exact Nat.add_sub_cancel a b
 
-/-- **顺方向恒等**：当 b ≤ a 时，he (sun a b) b = a。 -/
-theorem sun_he_cancel (a b : Shu) (h : b ≤ a) : he (sun a b) b = a := by
-  simp only [he, sun]
+/-- **顺方向恒等**：当 b ≤ a 时，combine (decrement a b) b = a。 -/
+theorem sun_he_cancel (a b : Shu) (h : b ≤ a) : combine (decrement a b) b = a := by
+  simp only [combine, decrement]
   exact Nat.sub_add_cancel h
 
-/-- **伴随之 unit**：a ≤ sun (he a b) b（保下界）。 -/
-theorem he_sun_le (a b : Shu) : a ≤ sun (he a b) b := by
+/-- **伴随之 unit**：a ≤ decrement (combine a b) b（保下界）。 -/
+theorem he_sun_le (a b : Shu) : a ≤ decrement (combine a b) b := by
   rw [he_sun_cancel]
   exact Nat.le.refl
 
 /-! ## § 4 卡数定理：|Trigram| = 2³，|Hexagram| = 2⁶ -/
 
-/-- **|Trigram| = 8 = 2 × 2 × 2**：八卦之卡数定理（用项目 chong）。 -/
-theorem trigram_card : Trigram.all.length = chong (chong 2 2) 2 := by
+/-- **|Trigram| = 8 = 2 × 2 × 2**：八卦之卡数定理（用项目 multiply）。 -/
+theorem trigram_card : Trigram.all.length = multiply (multiply 2 2) 2 := by
   show Trigram.all.length = (2 * 2) * 2
   decide
 
-/-- **|Hexagram| = 64 = 2⁶**：六十四卦之卡数定理（用项目 chong）。 -/
+/-- **|Hexagram| = 64 = 2⁶**：六十四卦之卡数定理（用项目 multiply）。 -/
 theorem hexagram_card :
-    Hexagram.allHex.length = chong (chong (chong (chong (chong 2 2) 2) 2) 2) 2 := by
+    Hexagram.allHex.length = multiply (multiply (multiply (multiply (multiply 2 2) 2) 2) 2) 2 := by
   show Hexagram.allHex.length = ((((2 * 2) * 2) * 2) * 2) * 2
   decide
 
-/-- **chong 三次 2 = 8**：项目 chong 之具体值。 -/
-theorem chong_2_3 : chong (chong (2 : Shu) 2) 2 = 8 := rfl
+/-- **multiply 三次 2 = 8**：项目 multiply 之具体值。 -/
+theorem chong_2_3 : multiply (multiply (2 : Shu) 2) 2 = 8 := rfl
 
-/-- **chong 六次 2 = 64**：64 卦之 cardinality。 -/
+/-- **multiply 六次 2 = 64**：64 卦之 cardinality。 -/
 theorem chong_2_6 :
-    chong (chong (chong (chong (chong (2 : Shu) 2) 2) 2) 2) 2 = 64 := rfl
+    multiply (multiply (multiply (multiply (multiply (2 : Shu) 2) 2) 2) 2) 2 = 64 := rfl
 
 /-! ## § 5 (Z/2)² ≄ Z/4：群序论证
 
@@ -192,9 +192,9 @@ theorem z2sq_ne_z4 :
 /-! ## § 6 与 BaguaAlgebra Sheng 之桥
 
 Sheng inductive 之深度 n 等同于 List Yao 长度 n，
-其卡数依 chong 累乘 = 2ⁿ。BaguaAlgebra 已证 `Sheng 3 ≃ Trigram`
+其卡数依 multiply 累乘 = 2ⁿ。BaguaAlgebra 已证 `Sheng 3 ≃ Trigram`
 （`toTrigram_ofTrigram` + `ofTrigram_toTrigram`）。
-此处仅用项目 chong 字面陈述卡数定理。 -/
+此处仅用项目 multiply 字面陈述卡数定理。 -/
 
 /-- **Sheng 之 round-trip on Trigram** —— 仅 wrap BaguaAlgebra 既有定理。 -/
 theorem sheng_trigram_roundtrip (t : Trigram) :
@@ -205,25 +205,25 @@ theorem trigram_sheng_roundtrip (s : Sheng 3) :
     Sheng.ofTrigram (Sheng.toTrigram s) = s :=
   Sheng.ofTrigram_toTrigram s
 
-/-- **卡数定理之单字陈述**：8 = chong 三次 2。 -/
-theorem trigram_card_chong : Trigram.all.length = chong (chong 2 2) 2 :=
+/-- **卡数定理之单字陈述**：8 = multiply 三次 2。 -/
+theorem trigram_card_chong : Trigram.all.length = multiply (multiply 2 2) 2 :=
   trigram_card
 
 /-! ## § 7 公开摘要 -/
 
 /-- **数算总摘要**：项目自字之 ℕ 算术性质 + 关键非平凡结果。 -/
 theorem shusuan_summary :
-    -- (1) 合 (he) 之交换 + 结合 + 单位
-    (∀ a b : Shu, he a b = he b a)
-    ∧ (∀ a b c : Shu, he (he a b) c = he a (he b c))
-    ∧ (∀ a : Shu, he a kong = a)
-    -- (2) 重 (chong) 之交换 + 结合 + 分配
-    ∧ (∀ a b : Shu, chong a b = chong b a)
-    ∧ (∀ a b c : Shu, chong a (he b c) = he (chong a b) (chong a c))
+    -- (1) 合 (combine) 之交换 + 结合 + 单位
+    (∀ a b : Shu, combine a b = combine b a)
+    ∧ (∀ a b c : Shu, combine (combine a b) c = combine a (combine b c))
+    ∧ (∀ a : Shu, combine a zero = a)
+    -- (2) 重 (multiply) 之交换 + 结合 + 分配
+    ∧ (∀ a b : Shu, multiply a b = multiply b a)
+    ∧ (∀ a b c : Shu, multiply a (combine b c) = combine (multiply a b) (multiply a c))
     -- (3) 损 ⊣ 合 之 Galois
-    ∧ (∀ a b c : Shu, sun a b ≤ c ↔ a ≤ he c b)
+    ∧ (∀ a b c : Shu, decrement a b ≤ c ↔ a ≤ combine c b)
     -- (4) 八卦卡数定理
-    ∧ (Trigram.all.length = chong (chong (2 : Shu) 2) 2)
+    ∧ (Trigram.all.length = multiply (multiply (2 : Shu) 2) 2)
     -- (5) (Z/2)² ≄ Z/4
     ∧ (¬ ∃ f : (Bool × Bool) → Fin 4,
           Surjective f ∧ f (false, false) = 0 ∧
