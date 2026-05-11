@@ -52,13 +52,9 @@ instance instAddCommGroupYao : AddCommGroup Yao where
     intro a b
     cases a <;> cases b <;> rfl
 
-noncomputable instance instFintypeCell256 : Fintype Cell256 := by
-  classical
-  exact
-    { elems := Cell256.all.toFinset
-      complete := by
-        intro c
-        exact List.mem_toFinset.mpr (Cell256.mem_all c) }
+instance instFintypeCell256 : Fintype Cell256 where
+  elems := Cell256.all.toFinset
+  complete := fun c => List.mem_toFinset.mpr (Cell256.mem_all c)
 
 instance instAddCommGroupCell256 : AddCommGroup Cell256 where
   nsmul := nsmulRec

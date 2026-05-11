@@ -7,6 +7,7 @@ bits of the XOR difference between the two factors.
 -/
 import Mathlib.Data.Fintype.Card
 import Mathlib.Data.Set.Card
+import Mathlib.Tactic.FinCases
 import SSBX.Foundation.Squaring.V4Tensor
 
 namespace SSBX.Foundation.Squaring
@@ -94,21 +95,23 @@ theorem octant_partition (l : L1) : ∃! i : Fin 8, l ∈ octant i := by
 
 /-- Each octant has size 8192 = |L₁|/8.
 
-Group-theoretic sketch: `octantIndex` factors as the composite of two
-surjective additive group homomorphisms — `L₁ → Cell256` via `(a, b) ↦ a + b`,
-then `Cell256 → (Z/2)³` taking the first three hexagram bits — reindexed as
-`Fin 8`. The composite kernel has index 8 in L₁, so by Lagrange each coset
-(= each octant) has size `|L₁|/8 = 65536/8 = 8192`.
+`octantIndex` factors as the composite of two surjective additive group
+homomorphisms — `L₁ → Cell256` via `(a, b) ↦ a + b`, then `Cell256 → (Z/2)³`
+taking the first three hexagram bits — reindexed as `Fin 8`. The composite
+kernel has index 8 in L₁, so each coset (= each octant) has size
+`|L₁|/8 = 65536/8 = 8192` by Lagrange.
 
-⚠️ Currently left as documented `sorry` per
-[L-tower-plan-v0.2.md §7.2](../../../../docs-next/10_formal_形式/L-tower-plan-v0.2.md)
-fallback. See
-[implementation notes](../../../../docs-next/10_formal_形式/L-tower-implementation-notes-sprint1.md)
-for the three closure paths (Lagrange / cardinality manipulation /
-`native_decide`). The Sprint 1 acceptance §8.1 explicitly permits this
-single documented `sorry`. -/
+Proven concretely by bridging `Set.ncard` to a `Finset.filter.card` over the
+finite type L₁, then running `native_decide` on each of the 8 cases for `i`.
+This consumes 65536 `Cell256 × Cell256` checks per case — fast in native code
+since `Fintype Cell256` is computable (see `V4Tensor.lean`). -/
 theorem octant_card (i : Fin 8) : (octant i).ncard = 8192 := by
-  sorry
+  have h_eq : (octant i : Set L1) =
+      ↑(Finset.univ.filter (fun l : L1 => octantIndex l = i)) := by
+    ext l
+    simp [octant]
+  rw [h_eq, Set.ncard_coe_finset]
+  fin_cases i <;> native_decide
 
 theorem l1_summary :
     (∀ l : L1, swap (swap l) = l)
