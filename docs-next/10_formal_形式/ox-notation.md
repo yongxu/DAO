@@ -404,6 +404,15 @@ example : tou_mask_alt = Cell256.tou_mask := rfl
 
 详 [`yin-tou-operators.md`](yin-tou-operators.md) § 3.1 与 [`v4-shi.md`](v4-shi.md) § 5 V₄ Klein 群运算表。
 
+Lean anchors for mask readings:
+
+| Anchor | 读法 |
+|---|---|
+| `V4Tensor.ox_origin_eq_origin` | `OX["oooooooo"]` is R₈ origin / Way |
+| `V4Tensor.ox_imprint_mask_eq` | `OX["ooooooxo"]` toggles the trace bit |
+| `V4Tensor.ox_project_mask_eq` | `OX["ooooooox"]` toggles the projection bit |
+| `V4Tensor.ox_temporal_pt_mask_eq` | `OX["ooooooxx"]` toggles both temporal bits |
+
 ---
 
 ## 7. R₃ / R₆ 之 OX 子集
@@ -452,13 +461,17 @@ R₈ (Z/2)⁸ 的 8 atomic XOR generators 在 OX 下：
 
 8 个 mask 之每一个都是 (Z/2)⁸ 群中的一个 standard basis vector — 它们任意 XOR 组合可生成全 256 cells。
 
-### 8.2 cuo 之 mask
+### 8.2 complement / negation masks
 
-| cuo (in [`yi-RO-hierarchy.md`](yi-RO-hierarchy.md) § 4.2) | OX |
+| Mask | OX | Lean anchor |
 |---|---|
-| Hex side cuo (XOR with kun-mask) | `OX["xxxxxxoo"]` (preserves Shi) |
-| Shi side cuo (Shi.cuo = 印 = toggle YinBit) | `OX["ooooooxo"]` |
-| Full cuo (both axes) | `OX["xxxxxxxo"]` 或 `OX["xxxxxxox"]` 之类，依具体语义 |
+| Hexagram complement mask | `OX["xxxxxxoo"]` (preserves temporal bits) | `V4Tensor.ox_hex_neg_mask_eq`, `V4Tensor.r8_hexCuo_eq_xor_earth_mask` |
+| Trace-bit toggle | `OX["ooooooxo"]` | `V4Tensor.ox_imprint_mask_eq` |
+| Projection-bit toggle | `OX["ooooooox"]` | `V4Tensor.ox_project_mask_eq` |
+| Temporal PT mask | `OX["ooooooxx"]` | `V4Tensor.ox_temporal_pt_mask_eq` |
+| Full 8-bit negation mask | `OX["xxxxxxxx"]` | `V4Tensor.ox_full_neg_mask_eq`, `V4Tensor.fullNegOperator_involutive` |
+
+`OX["xxxxxxoo"]` means “negate the six hexagram coordinates only.” `OX["xxxxxxxx"]` means “negate all eight coordinates”: six hexagram bits plus trace bit plus projection bit. Lean records the decomposition as `V4Tensor.fullNegOperator_eq_hexCuo_shiCuoZong`.
 
 ### 8.3 OX ↔ Lean ctor 速查
 

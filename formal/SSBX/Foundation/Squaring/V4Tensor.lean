@@ -8,12 +8,15 @@ four Klein-four axes of R₈.
 -/
 import Mathlib.Algebra.Group.Prod
 import Mathlib.Data.Fintype.Basic
+import Mathlib.Data.Fintype.Card
 import SSBX.Foundation.Bagua.R8
 import SSBX.Foundation.Hierarchy.LiftProject
+import SSBX.Foundation.Notation.OXNotation
 
 namespace SSBX.Foundation.Squaring
 
 open SSBX.Foundation.Yi.Yi
+open SSBX.Foundation.Bagua.BaguaAlgebra
 open SSBX.Foundation.Bagua.R8
 
 namespace V4Tensor
@@ -51,6 +54,10 @@ instance instAddCommGroupYao : AddCommGroup Yao where
   add_comm := by
     intro a b
     cases a <;> cases b <;> rfl
+
+instance instFintypeHexagram : Fintype Hexagram where
+  elems := Hexagram.allHex.toFinset
+  complete := fun h => List.mem_toFinset.mpr (hexagram_mem_allHex h)
 
 instance instFintypeR8 : Fintype R8 where
   elems := R8.all.toFinset
@@ -126,6 +133,273 @@ theorem of_to (c : R8) : ofV4Quad (toV4Quad c) = c := by
   rcases s with ⟨yin, guo⟩
   cases yin <;> cases guo <;> rfl
 
+/-! ## R8 as temporal-state-indexed R6 slices -/
+
+/-- R₈ is four temporal-state-indexed R₆/Hexagram slices.
+
+The underlying carrier is definitionally `Hexagram × Shi`; this equivalence
+puts the V₄ temporal-state coordinate first so the four fibers are explicit. -/
+def r8_eq_temporal_state_indexed_r6 : R8 ≃ Shi × Hexagram where
+  toFun := fun c => (c.2, c.1)
+  invFun := fun p => (p.2, p.1)
+  left_inv := by
+    intro c
+    rcases c with ⟨h, s⟩
+    rfl
+  right_inv := by
+    intro p
+    rcases p with ⟨s, h⟩
+    rfl
+
+/-- The temporal state is exactly a trace bit and a projection bit. -/
+def temporalStateEquivTraceProjection : Shi ≃ Bool × Bool where
+  toFun := Shi.toYinGuo
+  invFun := Shi.ofYinGuo
+  left_inv := Shi.ofYinGuo_toYinGuo
+  right_inv := Shi.toYinGuo_ofYinGuo
+
+/-- R₈ exposes the R₆/Hexagram coordinate plus trace and projection bits. -/
+def r8_eq_r6_times_trace_projection : R8 ≃ Hexagram × Bool × Bool where
+  toFun := fun c => (c.1, temporalStateEquivTraceProjection c.2)
+  invFun := fun p => (p.1, temporalStateEquivTraceProjection.symm p.2)
+  left_inv := by
+    intro c
+    rcases c with ⟨h, s⟩
+    rcases s with ⟨trace, projection⟩
+    cases trace <;> cases projection <;> rfl
+  right_inv := by
+    intro p
+    rcases p with ⟨h, ⟨trace, projection⟩⟩
+    cases trace <;> cases projection <;> rfl
+
+/-- A fixed temporal-state fiber is just the Hexagram/R₆ coordinate. -/
+def temporalStateFiberEquiv (s : Shi) : {c : R8 // c.2 = s} ≃ Hexagram where
+  toFun := fun c => c.1.1
+  invFun := fun h => ⟨(h, s), rfl⟩
+  left_inv := by
+    intro c
+    rcases c with ⟨⟨h, t⟩, ht⟩
+    cases ht
+    rfl
+  right_inv := by
+    intro h
+    rfl
+
+theorem hexagram_card_eq_64 : Fintype.card Hexagram = 64 := by
+  native_decide
+
+/-- Each temporal-state slice of R₈ contains 64 cells. -/
+theorem r8_temporal_state_fiber_card_eq_64 (s : Shi) :
+    Fintype.card {c : R8 // c.2 = s} = 64 := by
+  rw [Fintype.card_congr (temporalStateFiberEquiv s), hexagram_card_eq_64]
+
+/-- Roadmap §3.1 phrasing: the V₄ partition has four 64-cell fibers. -/
+theorem r8_v4_partition (s : Shi) :
+    Fintype.card {c : R8 // c.2 = s} = 64 :=
+  r8_temporal_state_fiber_card_eq_64 s
+
+/-- Summary anchor: R₈ has a Hexagram coordinate and two temporal-coordinate bits. -/
+theorem r8_temporal_coordinate_summary :
+    Nonempty (R8 ≃ Hexagram × Bool × Bool)
+    ∧ (∀ s : Shi, temporalStateEquivTraceProjection.symm
+        (temporalStateEquivTraceProjection s) = s)
+    ∧ (∀ s : Shi, Fintype.card {c : R8 // c.2 = s} = 64) :=
+  ⟨⟨r8_eq_r6_times_trace_projection⟩,
+   temporalStateEquivTraceProjection.left_inv,
+   r8_temporal_state_fiber_card_eq_64⟩
+
+/-! ## Way origin and cell-as-operator anchors -/
+
+/-- Way is the canonical R₈ origin: heaven hexagram at the temporal-state origin. -/
+theorem way_at_origin : R8.origin = (Hexagram.heaven, Shi.dao) := rfl
+
+/-- The operator represented by a cell: act on a state by XOR with that cell. -/
+def cellOperator (c : R8) : R8 → R8 := fun s => R8.xor s c
+
+@[simp] theorem cell_operator_apply (c s : R8) :
+    cellOperator c s = R8.xor s c := rfl
+
+/-- In an abelian R₈, the right-translation operator is the Cayley translation. -/
+theorem cell_operator_eq_cayley (c : R8) :
+    cellOperator c = R8.cayley c := by
+  funext s
+  simp [cellOperator, R8.cayley, R8.xor_comm]
+
+/-- Cells inject into operators by their action on the origin. -/
+theorem cell_is_operator : Function.Injective cellOperator := by
+  intro c1 c2 h
+  have heq := congrFun h R8.origin
+  simpa [cellOperator, R8.origin_xor] using heq
+
+/-- Way/origin is the no-op operator. -/
+theorem way_noop_operator : cellOperator R8.origin = id := by
+  funext s
+  simp [cellOperator]
+
+/-! ## R-O fusion: cells as their own XOR operators -/
+
+/-- The represented XOR-operator space: exactly those endomaps that are
+    translation by some R₈ cell. -/
+abbrev XorOperator : Type := { f : R8 → R8 // ∃ c : R8, f = cellOperator c }
+
+/-- A cell viewed as the operator it already is. -/
+def asXorOperator (c : R8) : XorOperator :=
+  ⟨cellOperator c, ⟨c, rfl⟩⟩
+
+/-- Recover a represented XOR operator by evaluating it at Way/origin. -/
+def evalXorOperatorAtOrigin (F : XorOperator) : R8 := F.1 R8.origin
+
+@[simp] theorem eval_asXorOperator (c : R8) :
+    evalXorOperatorAtOrigin (asXorOperator c) = c := by
+  simp [evalXorOperatorAtOrigin, asXorOperator, cellOperator]
+
+@[simp] theorem as_evalXorOperatorAtOrigin (F : XorOperator) :
+    asXorOperator (evalXorOperatorAtOrigin F) = F := by
+  rcases F with ⟨f, ⟨c, rfl⟩⟩
+  simp [asXorOperator, evalXorOperatorAtOrigin, cellOperator]
+
+/-- R₈ is equivalent to its own represented XOR-operator space. -/
+def r8_equiv_xor_operator : R8 ≃ XorOperator where
+  toFun := asXorOperator
+  invFun := evalXorOperatorAtOrigin
+  left_inv := eval_asXorOperator
+  right_inv := as_evalXorOperatorAtOrigin
+
+/-- Operator composition is the same computation as XOR of the representing
+    cells.  This is the formal "self-representation" mechanism. -/
+theorem cell_operator_comp (a b : R8) :
+    cellOperator (R8.xor a b) = cellOperator a ∘ cellOperator b := by
+  funext s
+  simp [cellOperator, Function.comp_apply, R8.xor_assoc, R8.xor_comm a b]
+
+/-- Every represented cell-operator is self-inverse. -/
+theorem cell_operator_self_inverse (c : R8) :
+    cellOperator c ∘ cellOperator c = id := by
+  funext s
+  simp [cellOperator, Function.comp_apply, R8.xor_assoc, R8.xor_self]
+
+/-! ## Negation and OX mask readings -/
+
+/-- Yao negation is XOR with the nonzero R₁ bit. -/
+theorem yao_neg_eq_xor_yin (y : Yao) :
+    y.neg = R8.yaoXor y Yao.yin := by
+  cases y <;> rfl
+
+/-- Hexagram complement is XOR with the all-yin hexagram mask. -/
+theorem hex_complement_eq_xor_earth (h : Hexagram) :
+    h.complement = R8.hexXor h Hexagram.earth := by
+  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
+  cases y1 <;> cases y2 <;> cases y3 <;>
+    cases y4 <;> cases y5 <;> cases y6 <;> rfl
+
+/-- R₈ hexagram-level complement is XOR with `xxxxxxoo`. -/
+theorem r8_hexCuo_eq_xor_earth_mask (c : R8) :
+    R8.hexCuo c = R8.xor c (Hexagram.earth, Shi.dao) := by
+  rcases c with ⟨h, s⟩
+  simp [R8.hexCuo, R8.xor, hex_complement_eq_xor_earth]
+
+/-- Full 8-bit negation mask: six hexagram bits plus both temporal bits. -/
+def fullNegMask : R8 := (Hexagram.earth, Shi.jin)
+
+/-- Full 8-bit negation as XOR with `xxxxxxxx`. -/
+def fullNegOperator (c : R8) : R8 := R8.xor c fullNegMask
+
+theorem fullNegOperator_involutive (c : R8) :
+    fullNegOperator (fullNegOperator c) = c := by
+  unfold fullNegOperator
+  rw [R8.xor_assoc, R8.xor_self, R8.xor_origin]
+
+/-- Full negation decomposes into hexagram complement and temporal PT flip. -/
+theorem fullNegOperator_eq_hexCuo_shiCuoZong (c : R8) :
+    fullNegOperator c = R8.shiCuoZong (R8.hexCuo c) := by
+  rcases c with ⟨h, s⟩
+  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
+  rcases s with ⟨yin, guo⟩
+  cases y1 <;> cases y2 <;> cases y3 <;>
+    cases y4 <;> cases y5 <;> cases y6 <;>
+    cases yin <;> cases guo <;> rfl
+
+theorem ox_origin_eq_origin : OX["oooooooo"] = (R8.origin : R8) := rfl
+theorem ox_imprint_mask_eq : OX["ooooooxo"] = R8.imprint_mask := rfl
+theorem ox_project_mask_eq : OX["ooooooox"] = R8.project_mask := rfl
+theorem ox_temporal_pt_mask_eq :
+    OX["ooooooxx"] = R8.xor R8.imprint_mask R8.project_mask := rfl
+theorem ox_hex_neg_mask_eq :
+    OX["xxxxxxoo"] = (Hexagram.earth, Shi.dao) := rfl
+theorem ox_full_neg_mask_eq :
+    OX["xxxxxxxx"] = fullNegMask := rfl
+
+/-! ## Mask characters: finite Boolean self-duality skeleton -/
+
+/-- `o/x` coordinate as a Boolean bit: yang/o is false; yin/x is true. -/
+def yaoBit : Yao → Bool
+  | Yao.yang => false
+  | Yao.yin => true
+
+/-- Boolean dot product over the eight R₈ coordinates. -/
+def r8Dot (mask state : R8) : Bool :=
+  Bool.xor (mask.2.2 && state.2.2) <|
+  Bool.xor (mask.2.1 && state.2.1) <|
+  Bool.xor (yaoBit mask.1.y6 && yaoBit state.1.y6) <|
+  Bool.xor (yaoBit mask.1.y5 && yaoBit state.1.y5) <|
+  Bool.xor (yaoBit mask.1.y4 && yaoBit state.1.y4) <|
+  Bool.xor (yaoBit mask.1.y3 && yaoBit state.1.y3) <|
+  Bool.xor (yaoBit mask.1.y2 && yaoBit state.1.y2)
+    (yaoBit mask.1.y1 && yaoBit state.1.y1)
+
+/-- The Boolean character represented by a mask.  `true` is the nontrivial
+    sign bit; in ±1 notation it corresponds to `-1`. -/
+def maskCharacter (mask : R8) : R8 → Bool := fun state => r8Dot mask state
+
+/-- Mask characters are homomorphisms from R₈ XOR to Bool XOR. -/
+theorem maskCharacter_xor :
+    ∀ mask a b : R8,
+      maskCharacter mask (R8.xor a b) =
+        Bool.xor (maskCharacter mask a) (maskCharacter mask b) := by
+  native_decide
+
+/-- Different masks give different Boolean characters. -/
+theorem maskCharacter_injective : Function.Injective maskCharacter := by
+  native_decide
+
+/-- The represented Boolean character space, i.e. the image of R₈ masks under
+    `maskCharacter`.  This is the finite Pontryagin-style self-dual carrier
+    used here; it avoids pretending that analytic `U(1)` has been built. -/
+abbrev MaskCharacterImage : Type :=
+  { χ : R8 → Bool // ∃ mask : R8, χ = maskCharacter mask }
+
+noncomputable def r8_equiv_mask_character_image : R8 ≃ MaskCharacterImage where
+  toFun := fun mask => ⟨maskCharacter mask, ⟨mask, rfl⟩⟩
+  invFun := fun χ => Classical.choose χ.2
+  left_inv := by
+    intro mask
+    have hspec :
+        maskCharacter mask =
+          maskCharacter (Classical.choose
+            (show ∃ m : R8, maskCharacter mask = maskCharacter m from ⟨mask, rfl⟩)) :=
+      Classical.choose_spec
+        (show ∃ m : R8, maskCharacter mask = maskCharacter m from ⟨mask, rfl⟩)
+    exact (maskCharacter_injective hspec).symm
+  right_inv := by
+    intro χ
+    apply Subtype.ext
+    exact (Classical.choose_spec χ.2).symm
+
+theorem r8_operator_character_duality_summary :
+    Nonempty (R8 ≃ XorOperator)
+    ∧ (∀ a b : R8,
+        cellOperator (R8.xor a b) = cellOperator a ∘ cellOperator b)
+    ∧ (∀ c : R8, cellOperator c ∘ cellOperator c = id)
+    ∧ Nonempty (R8 ≃ MaskCharacterImage)
+    ∧ (∀ mask a b : R8,
+        maskCharacter mask (R8.xor a b) =
+          Bool.xor (maskCharacter mask a) (maskCharacter mask b)) :=
+  ⟨⟨r8_equiv_xor_operator⟩,
+   cell_operator_comp,
+   cell_operator_self_inverse,
+   ⟨r8_equiv_mask_character_image⟩,
+   maskCharacter_xor⟩
+
 def iso : R8 ≃+ (V4 × V4 × V4 × V4) where
   toFun := toV4Quad
   invFun := ofV4Quad
@@ -146,6 +420,14 @@ theorem origin_toV4Quad :
     toV4Quad R8.origin =
       ((Yao.yang, Yao.yang), (Yao.yang, Yao.yang),
        (Yao.yang, Yao.yang), (Yao.yang, Yao.yang)) := rfl
+
+theorem way_origin_operator_summary :
+    R8.origin = (Hexagram.heaven, Shi.dao)
+    ∧ cellOperator R8.origin = id
+    ∧ toV4Quad R8.origin =
+      ((Yao.yang, Yao.yang), (Yao.yang, Yao.yang),
+       (Yao.yang, Yao.yang), (Yao.yang, Yao.yang)) :=
+  ⟨way_at_origin, way_noop_operator, origin_toV4Quad⟩
 
 theorem v4_tensor_summary :
     (∀ c : R8, ofV4Quad (toV4Quad c) = c)

@@ -200,12 +200,29 @@ R-O hierarchy 视角下另一个 self-duality 是 Pontryagin：
 
 $$\widehat{R_8} := \mathrm{Hom}(R_8, U(1)) \cong (\mathbb{Z}/2)^8 \cong R_8$$
 
-任意 finite abelian group `G` 之 character group $\hat{G}$ 同构于 `G`；对 (Z/2)⁸ 而言，character 取值 ∈ {±1} = ℤ/2，character group 又是 (Z/2)⁸。本 Foundation 模块未 explicit Pontryagin（需要 U(1) 或更广 character theory，超出 finite-decidable scope），但它在 [`yi-RO-hierarchy.md`](yi-RO-hierarchy.md) § 5.2 / 5.4 作为「Triple Coincidence」之第二支被记录：
+任意 finite abelian group `G` 之 character group $\hat{G}$ 同构于 `G`；对 (Z/2)⁸ 而言，character 取值可落在 {±1} = ℤ/2。当前 Lean 完成的是 finite Boolean character skeleton，而不是 analytic `U(1)` character theory：
+
+| Lean anchor | 含义 |
+|---|---|
+| `V4Tensor.maskCharacter` | R₈ mask 表示一个 `R8 → Bool` character |
+| `V4Tensor.maskCharacter_xor` | character 对 XOR 保结构 |
+| `V4Tensor.maskCharacter_injective` | 不同 mask 给出不同 character |
+| `V4Tensor.r8_equiv_mask_character_image` | `R8 ≃ MaskCharacterImage` |
+
+同一模块还把 Cayley side 补成真正双射:
+
+| Lean anchor | 含义 |
+|---|---|
+| `V4Tensor.r8_equiv_xor_operator` | `R8 ≃ XorOperator` |
+| `V4Tensor.cell_operator_comp` | 算子复合 = 代表元 XOR |
+| `V4Tensor.cell_operator_self_inverse` | 每个 represented XOR operator 自逆 |
+
+因此 [`yi-RO-hierarchy.md`](yi-RO-hierarchy.md) § 5.2 / 5.4 中的「Triple Coincidence」当前应读作 finite-decidable closure 内的 Cayley represented-operator self-duality + Boolean character self-duality；analytic `U(1)` 外延未声称已建。
 
 | Duality | 形式 | 在 R₈ 上 |
 |---|---|---|
 | Cayley | element ↔ self-action | R₈ ≅ XOR(R₈) (本文 § 6 严格 Lean 化) |
-| Pontryagin | element ↔ character | R₈ ≅ Hom(R₈, ±1) (informal) |
+| Pontryagin | element ↔ character | R₈ ≅ finite Boolean character image |
 | R-O frame | state-side ↔ operator-side | 同一 8-bit 二种 viewing |
 
 ---

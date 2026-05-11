@@ -384,11 +384,35 @@ $$\boxed{\varepsilon: \mathrm{XOR}(R_8) \to R_8, \quad f \mapsto f(\text{道})}$
 **互逆**: $\varepsilon \circ \iota = \mathrm{id}$, $\iota \circ \varepsilon = \mathrm{id}$.
 ⇒ **R₈ ≅ XOR(R₈) 是同构**。
 
+Lean completion anchors:
+
+| Anchor | 读法 |
+|---|---|
+| `V4Tensor.XorOperator` | represented XOR-operator space, 即 R₈ 元在自身上的 translation image |
+| `V4Tensor.r8_equiv_xor_operator` | `R8 ≃ XorOperator`; 元与 represented operator 双射 |
+| `V4Tensor.cell_operator_comp` | 算子之间的计算就是代表元的 XOR: `cellOperator (a ⊕ b) = cellOperator a ∘ cellOperator b` |
+| `V4Tensor.cell_operator_self_inverse` | 每个 represented operator 自逆 |
+| `R8.cayley_hom`, `R8.epsAtOrigin_cayley`, `R8.cayley_inj` | Cayley 同态、origin evaluation retraction、单射 |
+
+这正式表达“元即算子”：不是把任意 endomorphism 都读作元，而是在 XOR closure 内，每个 R₈ 元自身就是一个平移算子；算子复合与元的 XOR 是同一计算的两种读法。
+
 ### 5.2 Pontryagin 自对偶
 
 $$\hat{R_8} := \mathrm{Hom}(R_8, U(1)) \cong (\mathbb{Z}/2)^8 \cong R_8$$
 
 R₈ Pontryagin self-dual。对每个 Rₙ (n ≥ 1) 都成立。
+
+Lean 目前完成的是 finite Boolean character skeleton, 不是 analytic `U(1)` character theory:
+
+| Anchor | 读法 |
+|---|---|
+| `V4Tensor.maskCharacter` | 每个 R₈ mask 给出一个 Boolean character `R8 → Bool` |
+| `V4Tensor.maskCharacter_xor` | character respect XOR: `χ(a ⊕ b) = χ(a) ⊕ χ(b)` |
+| `V4Tensor.maskCharacter_injective` | 不同 mask 给出不同 character |
+| `V4Tensor.MaskCharacterImage` | R₈ masks 表示出的有限 character image |
+| `V4Tensor.r8_equiv_mask_character_image` | `R8 ≃ MaskCharacterImage` |
+
+因此“character ≅ element”已有有限、可判定、machineChecked 表达；完整 analytic `Hom(R₈, U(1))` 可另建，但不能把它读成已经在 Lean 中完成。
 
 ### 5.3 R-O frame duality (Schrödinger ↔ Heisenberg)
 
@@ -404,10 +428,10 @@ R₈ Pontryagin self-dual。对每个 Rₙ (n ≥ 1) 都成立。
 | Duality | 形式 | 在 R₈ 上 |
 |---|---|---|
 | Cayley | element ↔ self-action | R₈ ≅ XOR(R₈) |
-| Pontryagin | element ↔ character | R₈ ≅ Hom(R₈, ±1) |
+| Pontryagin | element ↔ character | R₈ ≅ finite Boolean character image (`±1` skeleton) |
 | R-O frame | state-side ↔ operator-side | 同一 8-bit 二种 viewing |
 
-**三种 duality 完全 coincide** 对 finite abelian (Z/2)⁸——「(Z/2)⁸ 之 algebraic 完美性」之精确根据。
+`V4Tensor.r8_operator_character_duality_summary` 把 Cayley represented-operator self-duality 与 finite Boolean character self-duality 打包。三种 duality 在 finite abelian (Z/2)⁸ closure 内 coincide；analytic `U(1)` development 是相邻外延，不在当前 Lean anchor 内。
 
 ### 5.5 道 anchoring 之必要
 
@@ -447,7 +471,7 @@ torsor 没有 distinguished origin, fusion 之严格成立必须**选定**:
 | V₄ on each R-layer (R₃+) | ✓ | R₃..R₈ |
 | hu fix points / cycles | ✓ | {乾, 坤, 既济, 未济} |
 | 道之三重身份 | ✓ | origin = identity = no-op = 永真 |
-| Pontryagin self-duality | ✓ | (Z/2)⁸ self-dual |
+| Pontryagin self-duality | ✓ | finite Boolean character image machineChecked; analytic `U(1)` not built |
 | R-O frame duality | ✓ | Schrödinger ↔ Heisenberg |
 | Theorem K (R₀..R₈ 全 (Z/2)ⁿ closure) | ✓ | yi-calculus-theorem.md |
 | **Strict uniform progression** | **✓** | **每步 +1 bit, no jumps** |
