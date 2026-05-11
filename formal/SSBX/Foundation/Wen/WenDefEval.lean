@@ -15,7 +15,7 @@ L1 layer (`WenDef.Tm`) 与 L0 internal kernel (`YiCore.«加»/«一»`) 之桥�
 Value :=
   | hexV : Hexagram → Value
   | boolV : Bool → Value
-  | cellV : Cell256 → Value
+  | cellV : R8 → Value
   | pairV : Value → Value → Value
   | listV : List Value → Value
   | closV : List (String × Value) → String → Tm → Value      -- λ closure
@@ -41,7 +41,7 @@ Value :=
 import SSBX.Foundation.Wen.WenDef
 import SSBX.Foundation.Yi.YiCore
 import SSBX.Foundation.Bagua.BaguaAlgebra
-import SSBX.Foundation.Bagua.Cell256
+import SSBX.Foundation.Bagua.R8
 
 namespace SSBX.Foundation.Wen.WenDefEval
 
@@ -49,7 +49,7 @@ open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Yi.YiCore
 open SSBX.Foundation.Wen.WenDef
 open SSBX.Foundation.Bagua.BaguaAlgebra
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 
 /-! ## § 1  Builtin 标记 -/
 
@@ -79,7 +79,7 @@ def Builtin.arity : Builtin → Nat
 inductive Value : Type
   | hexV     (h : Hexagram)                                    : Value
   | boolV    (b : Bool)                                        : Value
-  | cellV    (c : Cell256)                                     : Value
+  | cellV    (c : R8)                                     : Value
   | pairV    (a b : Value)                                     : Value
   | listV    (xs : List Value)                                 : Value
   | closV    (env : List (String × Value)) (n : String) (body : Tm) : Value
@@ -222,17 +222,17 @@ mutual
     | _+1,    .list3H, [.hexV a, .hexV b, .hexV c] => some (.listV [.hexV a, .hexV b, .hexV c])
     | _+1,    .headH,  [.listV (.hexV h :: _)] => some (.hexV h)
     | _+1,    .eqCell, [.cellV a, .cellV b] => some (.boolV (decide (a = b)))
-    | _+1,    .cuoC,   [.cellV c]           => some (.cellV (Cell256.hexCuo c))
-    | _+1,    .zongC,  [.cellV c]           => some (.cellV (Cell256.hexZong c))
-    | _+1,    .huC,    [.cellV c]           => some (.cellV (Cell256.hexHu c))
-    | _+1,    .shiNextC, [.cellV c]         => some (.cellV (Cell256.shiCuo c))
-    | _+1,    .shiPrevC, [.cellV c]         => some (.cellV (Cell256.shiCuo c))
-    | _+1,    .flip1C, [.cellV c]           => some (.cellV (Cell256.flip1 c))
-    | _+1,    .flip2C, [.cellV c]           => some (.cellV (Cell256.flip2 c))
-    | _+1,    .flip3C, [.cellV c]           => some (.cellV (Cell256.flip3 c))
-    | _+1,    .flip4C, [.cellV c]           => some (.cellV (Cell256.flip4 c))
-    | _+1,    .flip5C, [.cellV c]           => some (.cellV (Cell256.flip5 c))
-    | _+1,    .flip6C, [.cellV c]           => some (.cellV (Cell256.flip6 c))
+    | _+1,    .cuoC,   [.cellV c]           => some (.cellV (R8.hexCuo c))
+    | _+1,    .zongC,  [.cellV c]           => some (.cellV (R8.hexZong c))
+    | _+1,    .huC,    [.cellV c]           => some (.cellV (R8.hexHu c))
+    | _+1,    .shiNextC, [.cellV c]         => some (.cellV (R8.shiCuo c))
+    | _+1,    .shiPrevC, [.cellV c]         => some (.cellV (R8.shiCuo c))
+    | _+1,    .flip1C, [.cellV c]           => some (.cellV (R8.flip1 c))
+    | _+1,    .flip2C, [.cellV c]           => some (.cellV (R8.flip2 c))
+    | _+1,    .flip3C, [.cellV c]           => some (.cellV (R8.flip3 c))
+    | _+1,    .flip4C, [.cellV c]           => some (.cellV (R8.flip4 c))
+    | _+1,    .flip5C, [.cellV c]           => some (.cellV (R8.flip5 c))
+    | _+1,    .flip6C, [.cellV c]           => some (.cellV (R8.flip6 c))
     | fuel+1, .forallH, [p]                 =>
         some (.boolV (forallHex (fun h =>
           match applyFuel fuel p (.hexV h) with
@@ -282,7 +282,7 @@ def denoteBool (t : Tm) : Option Bool :=
   | some (.boolV b) => some b
   | _               => none
 
-def denoteCell (t : Tm) : Option Cell256 :=
+def denoteCell (t : Tm) : Option R8 :=
   match eval [] t with
   | some (.cellV c) => some c
   | _ => none
@@ -309,7 +309,7 @@ def denoteHexList (t : Tm) : Option (List Hexagram) :=
   | some (.listV xs) => valueToHexList? xs
   | _ => none
 
-def valueToCellList? : List Value → Option (List Cell256)
+def valueToCellList? : List Value → Option (List R8)
   | [] => some []
   | .cellV c :: rest =>
       match valueToCellList? rest with
@@ -317,7 +317,7 @@ def valueToCellList? : List Value → Option (List Cell256)
       | none => none
   | _ :: _ => none
 
-def denoteCellList (t : Tm) : Option (List Cell256) :=
+def denoteCellList (t : Tm) : Option (List R8) :=
   match eval [] t with
   | some (.listV xs) => valueToCellList? xs
   | _ => none
@@ -332,7 +332,7 @@ def denoteHexFun (t : Tm) (h : Hexagram) : Option Hexagram :=
   | none => none
 
 /-- Cell → Cell 之 Tm: 逐输入施 apply 取 cellV. -/
-def denoteCellFun (t : Tm) (c : Cell256) : Option Cell256 :=
+def denoteCellFun (t : Tm) (c : R8) : Option R8 :=
   match eval [] t with
   | some v =>
       match apply v (.cellV c) with
@@ -362,7 +362,7 @@ def denoteHexRel (t : Tm) (a b : Hexagram) : Option Bool :=
   | none => none
 
 /-- Cell → Cell → Bool 之 Tm: binary Cell relation denotation. -/
-def denoteCellRel (t : Tm) (a b : Cell256) : Option Bool :=
+def denoteCellRel (t : Tm) (a b : R8) : Option Bool :=
   match eval [] t with
   | some v =>
       match apply v (.cellV a) with

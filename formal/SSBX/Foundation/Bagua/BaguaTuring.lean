@@ -1,17 +1,17 @@
 /-
 # BaguaTuring — 文程序、解释器、是道非道判机
 
-The interpreter for 文 (wenyan-encoded YiInstr programs) operating on Cell256.
+The interpreter for 文 (wenyan-encoded YiInstr programs) operating on R8.
 
 The capstone: a Lean-verified Dao judge that, given a hexagram input, runs as a
 YiProg and outputs whether the hexagram is 天道 (tian) or 心道 (xin) — answering
 "是道非道" within the system.
 
-## Phase F.2 migration note (Cell192 → Cell256)
+## Phase F.2 migration note (Cell192 → R8)
 
 Previously this module operated on Cell192 = Hexagram × Shi where Shi was a
 Z/3 cyclic group `{已, 今, 未}`. After Phase F doctrine alignment, Shi is the
-V₄ Klein four-group `{道, 已, 今, 未}` (Cell256 = Hexagram × Shi V₄, 256 cells).
+V₄ Klein four-group `{道, 已, 今, 未}` (R8 = Hexagram × Shi V₄, 256 cells).
 
 Behavioural changes:
   - `YiInstr.setShi` accepts the new 4-state `Shi` (including `.dao`).
@@ -27,7 +27,7 @@ The new identity element `Shi.dao` is reachable as a verdict value but is not
 emitted by `daoJudgeProg`; correctness theorems remain stated in terms of
 `{Shi.ji, Shi.wei}`.
 
-## Phases (continuing from Cell256.lean's §1–5)
+## Phases (continuing from R8.lean's §1–5)
   § 4   YiInstr inductive (文 instruction set)
   § 5   YiState + structurally-recursive `runFuel` + executable `partial def run`
   § 6   daoJudge: a YiProg that judges 是道非道
@@ -35,7 +35,7 @@ emitted by `daoJudgeProg`; correctness theorems remain stated in terms of
        + TC discussion
 
 ## TC argument
-  - State is unbounded (history : List Cell256 grows without limit)
+  - State is unbounded (history : List R8 grows without limit)
   - Branching is data-dependent (branchYaoEq)
   - Jumps are unbounded (jump target : Nat)
   - Composition is unbounded (prog : List YiInstr of any length)
@@ -43,13 +43,13 @@ emitted by `daoJudgeProg`; correctness theorems remain stated in terms of
   These four primitives give universal computation. Specifically, any Minsky
   machine can be encoded by translating its instructions into YiInstr.
 -/
-import SSBX.Foundation.Bagua.Cell256
+import SSBX.Foundation.Bagua.R8
 
 namespace SSBX.Foundation.Bagua.BaguaTuring
 
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Bagua.BaguaAlgebra
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 
 /-! ## § 4 YiInstr — wenyan instruction set -/
 
@@ -115,15 +115,15 @@ namespace SSBX.Foundation.Bagua.BaguaTuring
 
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Bagua.BaguaAlgebra
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 
 /-! ## § 5 YiState + Interpreter -/
 
 /-- Execution state: current cell, unbounded history (the 带), program counter,
     program, and halted flag. -/
 structure YiState where
-  cur     : Cell256
-  history : List Cell256   -- ← 无界记忆
+  cur     : R8
+  history : List R8   -- ← 无界记忆
   pc      : Nat
   prog    : List YiInstr
   halted  : Bool
@@ -205,12 +205,12 @@ end YiState
 
 /-- 时态 single-step on the cell: V₄ `complement` involution on the Shi component
     (因-axis toggle 道↔已, 今↔未). Preserves the Hexagram. -/
-def shiNext (c : Cell256) : Cell256 := (c.1, c.2.complement)
+def shiNext (c : R8) : R8 := (c.1, c.2.complement)
 
-theorem shiNext_preserves_hex (c : Cell256) : (shiNext c).1 = c.1 := rfl
+theorem shiNext_preserves_hex (c : R8) : (shiNext c).1 = c.1 := rfl
 
 /-- `shiNext` is now an involution (V₄ `complement` is order-2), no longer order-3. -/
-theorem shiNext_shiNext (c : Cell256) : shiNext (shiNext c) = c := by
+theorem shiNext_shiNext (c : R8) : shiNext (shiNext c) = c := by
   rcases c with ⟨h, s⟩
   simp [shiNext, Shi.complement_involutive]
 

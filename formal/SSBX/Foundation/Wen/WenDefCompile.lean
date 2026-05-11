@@ -70,7 +70,7 @@ namespace SSBX.Foundation.Wen.WenDefCompile
 
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Yi.YiCore
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenDef
 open SSBX.Foundation.Wen.WenDefEval

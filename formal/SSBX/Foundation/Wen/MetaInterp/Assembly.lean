@@ -62,7 +62,7 @@ import SSBX.Foundation.Wen.MetaInterp.ExecuteBlocksHard
 namespace SSBX.Foundation.Wen.MetaInterp.Assembly
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
 open SSBX.Foundation.Bagua.KleeneInternal
@@ -177,7 +177,7 @@ theorem metaInterpProg_outerLoop_at_offset :
 /-- Tier B routing theorem: from a META state at `pc = outerLoopOffset`
     running `metaInterpProg`, one fuel step lands at `pc = fetchOffset`. -/
 theorem metaInterpProg_routes_outerLoop_to_fetch
-    (cur : Cell256) (history : List Cell256) :
+    (cur : R8) (history : List R8) :
     let μ : YiState :=
       { cur := cur
         history := history

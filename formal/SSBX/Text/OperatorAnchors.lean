@@ -21,7 +21,7 @@ namespace SSBX.Text.OperatorAnchors
 
 open SSBX.Text.WenyanOperators
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Bagua.BaguaWenSpec
 
@@ -709,7 +709,7 @@ structure CellOperatorAnchor where
 
 namespace CellOperatorAnchor
 
-def cell (a : CellOperatorAnchor) : Cell256 :=
+def cell (a : CellOperatorAnchor) : R8 :=
   (a.hexagramAnchor.hexagram, a.shi)
 
 def hexagramNumber (a : CellOperatorAnchor) : Nat :=
@@ -722,10 +722,10 @@ def cellOperatorAnchors : List CellOperatorAnchor :=
   hexagramOperatorAnchors.flatMap fun h =>
     shiAnchors.map fun s => { hexagramAnchor := h, shi := s.shi }
 
-def anchoredCells : List Cell256 :=
+def anchoredCells : List R8 :=
   cellOperatorAnchors.map CellOperatorAnchor.cell
 
-def cellCovered (c : Cell256) : Bool :=
+def cellCovered (c : R8) : Bool :=
   anchoredCells.any fun d => d == c
 
 theorem cellOperatorAnchors_length :
@@ -733,8 +733,8 @@ theorem cellOperatorAnchors_length :
   native_decide
 
 theorem cellOperatorAnchors_length_eq_cell256 :
-    cellOperatorAnchors.length = Cell256.all.length := by
-  rw [cellOperatorAnchors_length, Cell256.all_length]
+    cellOperatorAnchors.length = R8.all.length := by
+  rw [cellOperatorAnchors_length, R8.all_length]
 
 theorem anchoredCells_nodup :
     anchoredCells.Nodup := by
@@ -745,7 +745,7 @@ theorem cellOperatorAnchor_hexagram_numbers_range :
       (fun a => decide (1 <= a.hexagramNumber ∧ a.hexagramNumber <= 64)) = true := by
   native_decide
 
-theorem cellOperatorAnchors_cover_all (c : Cell256) :
+theorem cellOperatorAnchors_cover_all (c : R8) :
     cellCovered c = true := by
   rcases c with ⟨⟨y1, y2, y3, y4, y5, y6⟩, sy, sg⟩
   cases y1 <;> cases y2 <;> cases y3 <;>
@@ -780,11 +780,11 @@ theorem bagua_operator_anchor_summary :
         (fun s => !hexagramUnpromotedGapForms.contains s) = true
     ∧ hexagramNearMissAnchors.length = 7
     ∧ hexagramNearMissForms.all (fun s => hexagramMissingVocabulary.contains s) = true
-    ∧ cellOperatorAnchors.length = Cell256.all.length
+    ∧ cellOperatorAnchors.length = R8.all.length
     ∧ anchoredCells.Nodup
     ∧ cellOperatorAnchors.all
         (fun a => decide (1 <= a.hexagramNumber ∧ a.hexagramNumber <= 64)) = true
-    ∧ (∀ c : Cell256, cellCovered c = true) := by
+    ∧ (∀ c : R8, cellCovered c = true) := by
   exact
     ⟨ by rw [reservedTokenAnchors_length, reservedTokens_length]
     , reservedTokenAnchor_tokens_eq_reservedTokens

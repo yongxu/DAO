@@ -19,7 +19,7 @@ import SSBX.Foundation.Wen.WenSurface.Coverage
 namespace SSBX.Foundation.Modern.QuantumRelativityWenBoundary
 
 open SSBX.Foundation.Modern.QuantumRelativityNoGo
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Wen.WenSurface
 open SSBX.Text.WenyanOperators
 open SSBX.Text.OperatorCellMap
@@ -30,7 +30,7 @@ open SSBX.Text.OperatorCellSemantics
 /-- 当前可机器检查的 `256 × 371` 文构造覆盖读法。 -/
 def WenConstructiveCoverage : Prop :=
   allOperatorIds.length = 371
-    ∧ Cell256.all.length = 256
+    ∧ R8.all.length = 256
     ∧ allOperatorCells.length = 94976
     ∧ executableRegistryEntries.length = 371
     ∧ allOperatorCellSemanticRows.length = 94976
@@ -39,7 +39,7 @@ def WenConstructiveCoverage : Prop :=
 theorem wen_constructive_coverage_192_371 :
     WenConstructiveCoverage :=
   ⟨ allOperatorIds_length
-  , Cell256.all_length
+  , R8.all_length
   , allOperatorCells_length
   , executableRegistryEntries_length
   , allOperatorCellSemanticRows_length

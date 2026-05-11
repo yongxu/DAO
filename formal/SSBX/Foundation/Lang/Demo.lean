@@ -30,7 +30,7 @@ namespace SSBX.Foundation.Lang.Demo
 
 open SSBX.Foundation.Lang
 open SSBX.Foundation.Yi.Yi    (Yao Hexagram)
-open SSBX.Foundation.Bagua.Cell128
+open SSBX.Foundation.Bagua.R7
 
 /-! ## § 1  生生不息 — 乾·无 → 坤·有 in 7 atomic flips
 
@@ -45,10 +45,10 @@ The "perpetual" part: since each atomic op is its own inverse, the same
 has no sink — every cell has 7 outgoing edges, all reversible.
 -/
 
-/-- Cell128 cell `(heaven, false)` rendered as Sexp at L7. -/
+/-- R7 cell `(heaven, false)` rendered as Sexp at L7. -/
 private def qianWuSexp : Sexp := L7.printCell L7.origin
 
-/-- Cell128 cell `(earth, true)` rendered as Sexp at L7. -/
+/-- R7 cell `(earth, true)` rendered as Sexp at L7. -/
 private def kunYouSexp : Sexp :=
   L7.printCell ((⟨.yin, .yin, .yin, .yin, .yin, .yin⟩ : Hexagram), true)
 

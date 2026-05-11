@@ -2,14 +2,14 @@
 # L6 — R₆ Hexagram layer (周易 64 卦 / (Z/2)⁶)
 
 R₆ = Hexagram = (Z/2)⁶ = 64 atoms = the 64 hexagrams of 周易.
-Cayley action is componentwise XOR (re-using `Cell128.hexXor`).
+Cayley action is componentwise XOR (re-using `R7.hexXor`).
 
 ## Carrier convention
 
-Per Cell128.lean, **乾 (heaven) = ⟨yang,yang,yang,yang,yang,yang⟩** is the
+Per R7.lean, **乾 (heaven) = ⟨yang,yang,yang,yang,yang,yang⟩** is the
 (Z/2)⁶ identity (all-yang = 0 in the Z/2-as-yang convention; cf. yaoXor:
 `yang ⊕ yang = yang`). So `origin = Hexagram.heaven`. Note that yang here
-plays the role of the additive zero (this matches Cell128's convention,
+plays the role of the additive zero (this matches R7's convention,
 NOT the more common "yang=1" reading).
 
 ## Surface syntax
@@ -29,22 +29,22 @@ A handful of small smoke tests + 2-3 named transitions (e.g. 乾 → 坤).
 
 import SSBX.Foundation.Lang.Core
 import SSBX.Foundation.Yi.Yi
-import SSBX.Foundation.Bagua.Cell128
+import SSBX.Foundation.Bagua.R7
 
 namespace SSBX.Foundation.Lang.L6
 
 open SSBX.Foundation.Yi.Yi (Yao Hexagram)
-open SSBX.Foundation.Bagua.Cell128.Cell128 (hexXor hexXor_self hexXor_qian_left)
+open SSBX.Foundation.Bagua.R7.R7 (hexXor hexXor_self hexXor_qian_left)
 
 /-! ## § 1 Cell type alias -/
 
 /-- L6 cell carrier = Hexagram (= (Z/2)⁶, 64 atoms). -/
 abbrev Cell : Type := Hexagram
 
-/-- Cayley action = componentwise XOR (re-using Cell128.hexXor). -/
+/-- Cayley action = componentwise XOR (re-using R7.hexXor). -/
 def apply : Cell → Cell → Cell := hexXor
 
-/-- (Z/2)⁶ origin = 乾 (all-yang = identity, per Cell128 convention). -/
+/-- (Z/2)⁶ origin = 乾 (all-yang = identity, per R7 convention). -/
 def origin : Cell := Hexagram.heaven
 
 /-! ## § 2 Cayley action laws -/

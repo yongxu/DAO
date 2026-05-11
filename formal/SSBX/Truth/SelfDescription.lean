@@ -8,7 +8,7 @@ that give it mathematical content.
 -/
 import SSBX.Truth.Adequacy
 import SSBX.Foundation.Bagua.BaguaAlgebra
-import SSBX.Foundation.Bagua.Cell256
+import SSBX.Foundation.Bagua.R8
 import SSBX.Foundation.Modern.HexagramPosition
 
 namespace SSBX.Truth.SelfDescription
@@ -22,7 +22,7 @@ open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Yi.Yi.Trigram
 open SSBX.Foundation.Yi.Yi.Hexagram
 open SSBX.Foundation.Bagua.BaguaAlgebra
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Modern.HexagramPosition
 
 /-! ## § 1 Objects of self-description -/
@@ -146,7 +146,7 @@ def BitPositionVerified : BitPositionObject -> Prop
   | .yaoSix => ∀ h : Hexagram, atPos h ⟨5, by decide⟩ = h.y6
   | .trigram => Trigram.all.length = 8 ∧ ∀ t : Trigram, t ∈ Trigram.all
   | .hexagram => Hexagram.allHex.length = 64 ∧ ∀ h : Hexagram, h ∈ Hexagram.allHex
-  | .cell256 => Cell256.all.length = 256 ∧ ∀ c : Cell256, c ∈ Cell256.all
+  | .cell256 => R8.all.length = 256 ∧ ∀ c : R8, c ∈ R8.all
   | .shiEternal => Shi.dao ∈ Shi.all
   | .shiPast => Shi.ji ∈ Shi.all
   | .shiPresent => Shi.jin ∈ Shi.all
@@ -224,7 +224,7 @@ theorem bit_position_verified (b : BitPositionObject) :
   | hexagram =>
       exact ⟨Hexagram.allHex_count, hexagram_mem_allHex⟩
   | cell256 =>
-      exact ⟨Cell256.all_length, Cell256.mem_all⟩
+      exact ⟨R8.all_length, R8.mem_all⟩
   | shiEternal =>
       change Shi.dao ∈ Shi.all
       simp [Shi.all]
@@ -318,8 +318,8 @@ def HexagramOperatorComplete : Prop :=
     ∧ (∀ a b : Hexagram, ∃ f : Hexagram → Hexagram, f a = b)
     ∧ (∀ a b : Hexagram, hexHammingDist a b ≤ 6)
 
-def Cell256OperatorComplete : Prop :=
-  ∀ a b : Cell256, ∃ f : Cell256 → Cell256, f a = b
+def R8OperatorComplete : Prop :=
+  ∀ a b : R8, ∃ f : R8 → R8, f a = b
 
 def OperatorCatalogueComplete : Prop :=
   (∀ id : OperatorId, CoveredOperator id)
@@ -327,7 +327,7 @@ def OperatorCatalogueComplete : Prop :=
     ∧ (∀ i : DerivedInterface, CoveredDerivedInterface i)
     ∧ TrigramOperatorComplete
     ∧ HexagramOperatorComplete
-    ∧ Cell256OperatorComplete
+    ∧ R8OperatorComplete
 
 def PositionAwareCompleteOperatorSet : Prop :=
   PositionSemanticsComplete ∧ OperatorCatalogueComplete
@@ -345,7 +345,7 @@ theorem shi_operator_complete (a b : Shi) :
   -- mapping is realizable).
   exact ⟨fun _ => b, rfl⟩
 
-theorem cell256_operator_complete : Cell256OperatorComplete := by
+theorem cell256_operator_complete : R8OperatorComplete := by
   intro a b
   rcases a with ⟨ha, sa⟩
   rcases b with ⟨hb, sb⟩

@@ -1,7 +1,7 @@
 /-
-# OXNotation — `OX["..."]` 8-char string literal for Cell256
+# OXNotation — `OX["..."]` 8-char string literal for R8
 
-Encodes a `Cell256 = Hexagram × Shi` as an 8-character ASCII string of
+Encodes a `R8 = Hexagram × Shi` as an 8-character ASCII string of
 `o` and `x`:
 
   - chars 0..5 (positions 1..6): six yao of the Hexagram, **inner-to-outer**
@@ -21,21 +21,21 @@ Encodes a `Cell256 = Hexagram × Shi` as an 8-character ASCII string of
     "ox" → 未 (wei)
     "xx" → 今 (jin, PT)
 
-So `OX["oooooooo"] = (Hexagram.heaven, Shi.dao) = Cell256.origin`,
+So `OX["oooooooo"] = (Hexagram.heaven, Shi.dao) = R8.origin`,
 the (Z/2)⁸ identity element / 道 of the 256-cell algebra.
 
 Errors at parse time on any string of length ≠ 8 or containing chars
 other than `o`/`x`.
 -/
-import SSBX.Foundation.Bagua.Cell256
+import SSBX.Foundation.Bagua.R8
 
 namespace SSBX.Foundation.Notation.OXNotation
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open Lean
 
-/-! ## § 1 String → Cell256 helpers (used by the macro at elaboration time) -/
+/-! ## § 1 String → R8 helpers (used by the macro at elaboration time) -/
 
 /-- Map an `o`/`x` char to its `Yao`: `o` → yang (identity), `x` → yin. -/
 @[inline] def yaoOfChar : Char → Yao
@@ -47,10 +47,10 @@ open Lean
   | 'x' => true
   | _   => false
 
-/-- Decode an 8-char `o`/`x` string to `Cell256 = Hexagram × Shi`.
+/-- Decode an 8-char `o`/`x` string to `R8 = Hexagram × Shi`.
     The macro validates length and charset; this helper handles short
     strings by defaulting unspecified positions to `o` (yang / false bit). -/
-def cellOfString (s : String) : Cell256 :=
+def cellOfString (s : String) : R8 :=
   match s.toList with
   | [c0, c1, c2, c3, c4, c5, c6, c7] =>
       (⟨yaoOfChar c0, yaoOfChar c1, yaoOfChar c2,
@@ -58,9 +58,9 @@ def cellOfString (s : String) : Cell256 :=
        Shi.ofYinGuo (boolOfChar c6, boolOfChar c7))
   | _ => (Hexagram.heaven, Shi.dao)  -- unreachable when macro validates length
 
-/-! ## § 2 Macro `OX["..."]` — parse-time validation + Cell256 term -/
+/-! ## § 2 Macro `OX["..."]` — parse-time validation + R8 term -/
 
-/-- `OX[" o/x ×8 "]` term-level macro producing a `Cell256`. -/
+/-- `OX[" o/x ×8 "]` term-level macro producing a `R8`. -/
 syntax (name := oxLit) "OX[" str "]" : term
 
 /-- Build a syntactic `Yao` term: `Yao.yang` for `o`, `Yao.yin` for `x`. -/
@@ -99,7 +99,7 @@ def expandOxLit : Macro := fun stx => do
       let guoB ← boolStxOfChar c7
       `((SSBX.Foundation.Yi.Yi.Hexagram.mk
             $y1 $y2 $y3 $y4 $y5 $y6,
-         SSBX.Foundation.Bagua.Cell256.Shi.ofYinGuo ($yinB, $guoB)))
+         SSBX.Foundation.Bagua.R8.Shi.ofYinGuo ($yinB, $guoB)))
     | _ =>
       Macro.throwError
         s!"OX: string must have length 8, got {str.length} (\"{str}\")"
@@ -107,7 +107,7 @@ def expandOxLit : Macro := fun stx => do
 
 /-! ## § 3 Examples / tests — verifies macro evaluates by `rfl` -/
 
-/-- All-`o` 8-string = (heaven, dao) = Cell256.origin = (Z/2)⁸ identity. -/
+/-- All-`o` 8-string = (heaven, dao) = R8.origin = (Z/2)⁸ identity. -/
 example : OX["oooooooo"] = (Hexagram.heaven, Shi.dao) := rfl
 
 /-- Char 7 = `x` flips YinBit only ⇒ Shi.ji (已). -/
@@ -141,9 +141,9 @@ example :
       (Hexagram.mk Yao.yin Yao.yang Yao.yin Yao.yang Yao.yin Yao.yang,
        Shi.wei) := rfl
 
-/-! ## § 4 Origin sanity check via Cell256 algebra -/
+/-! ## § 4 Origin sanity check via R8 algebra -/
 
-/-- `OX["oooooooo"]` is exactly `Cell256.origin`. -/
-example : OX["oooooooo"] = (Cell256.origin : Cell256) := rfl
+/-- `OX["oooooooo"]` is exactly `R8.origin`. -/
+example : OX["oooooooo"] = (R8.origin : R8) := rfl
 
 end SSBX.Foundation.Notation.OXNotation

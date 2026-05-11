@@ -54,7 +54,7 @@ end SSBX.Foundation.Bagua.BaguaTuring
 namespace SSBX.Foundation.Wen.WenyanParser
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 
 /-! ## § 1  Token 类型 -/

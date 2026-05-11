@@ -15,8 +15,8 @@ where it makes sense.
 | R₄ Mian | 16 | <Ben>·<Zheng> e.g. 物·几, 动·势, … | here (composes existing chars) |
 | R₅ Wuyao | 32 | <Mian>·<5爻> where 5爻 ∈ {显/隐} | here (proposes 显/隐 for the 5th yao) |
 | R₆ Hexagram | 64 | 64 周易卦名 (乾/坤/屯/蒙/…/既济/未济) | here (lifts xuGua comments to defs) |
-| R₇ Cell128 | 128 | <卦名>·<因> where 因 ∈ {无/有} | here |
-| R₈ Cell256 | 256 | <卦名>·<时> where 时 ∈ V₄ {道/已/今/未} | here |
+| R₇ R7 | 128 | <卦名>·<因> where 因 ∈ {无/有} | here |
+| R₈ R8 | 256 | <卦名>·<时> where 时 ∈ V₄ {道/已/今/未} | here |
 
 ## R₅ naming rationale
 
@@ -41,8 +41,8 @@ import SSBX.Foundation.Yi.Yi
 import SSBX.Foundation.Bagua.BaguaAlgebra
 import SSBX.Foundation.Bagua.BenZheng
 import SSBX.Foundation.Hierarchy.R5_Wuyao
-import SSBX.Foundation.Bagua.Cell128
-import SSBX.Foundation.Bagua.Cell256
+import SSBX.Foundation.Bagua.R7
+import SSBX.Foundation.Bagua.R8
 
 namespace SSBX.Foundation.Yi.Yi.Hexagram
 
@@ -259,31 +259,31 @@ example : name ((.event, .occasion), true) = "事·时·显" := by native_decide
 
 end SSBX.Foundation.Hierarchy.R5_Wuyao.Wuyao
 
-namespace SSBX.Foundation.Bagua.Cell128
+namespace SSBX.Foundation.Bagua.R7
 
 open SSBX.Foundation.Yi.Yi (Hexagram)
 open SSBX.Foundation.Yi.Yi.Hexagram
 
-/-! ## § 7  R₇ — Cell128 = Hexagram × YinBit
+/-! ## § 7  R₇ — R7 = Hexagram × YinBit
 
 Naming: `<卦名>·<因>` where 因 ∈ {无, 有}.
 -/
 
-def name (c : Cell128) : String :=
+def name (c : R7) : String :=
   Hexagram.name c.fst ++ "·" ++ (if c.snd then "有" else "无")
 
-example : name (Cell128.origin) = "乾·无" := by native_decide
+example : name (R7.origin) = "乾·无" := by native_decide
 example : name (complete, true) = "既济·有" := by native_decide
 example : name (earth, false) = "坤·无" := by native_decide
 
-end SSBX.Foundation.Bagua.Cell128
+end SSBX.Foundation.Bagua.R7
 
-namespace SSBX.Foundation.Bagua.Cell256
+namespace SSBX.Foundation.Bagua.R8
 
 open SSBX.Foundation.Yi.Yi (Hexagram)
 open SSBX.Foundation.Yi.Yi.Hexagram
 
-/-! ## § 8  R₈ — Cell256 = Hexagram × Shi (V₄)
+/-! ## § 8  R₈ — R8 = Hexagram × Shi (V₄)
 
 Naming: `<卦名>·<时>` where 时 ∈ V₄ {道, 已, 今, 未}. The Shi V₄ Klein
 group: dao = (false,false), ji = (true,false), jin = (true,true),
@@ -297,15 +297,15 @@ def shiName (s : Shi) : String :=
   | (true,  true)  => "今"
   | (false, true)  => "未"
 
-def name (c : Cell256) : String :=
+def name (c : R8) : String :=
   Hexagram.name c.fst ++ "·" ++ shiName c.snd
 
-example : name (Cell256.origin) = "乾·道" := by native_decide
+example : name (R8.origin) = "乾·道" := by native_decide
 example : name (incomplete, Shi.wei) = "未济·未" := by native_decide
 example : name (complete, Shi.jin) = "既济·今" := by native_decide
 example : name (earth, Shi.dao) = "坤·道" := by native_decide
 
-end SSBX.Foundation.Bagua.Cell256
+end SSBX.Foundation.Bagua.R8
 
 /-! ## § Verification: spot-check round trips
 

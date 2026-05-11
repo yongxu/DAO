@@ -38,7 +38,7 @@ interpreter — any future surface-alias parser should consult it as ground trut
 
 import SSBX.Foundation.Yi.Yi
 import SSBX.Foundation.Bagua.BaguaAlgebra
-import SSBX.Foundation.Bagua.Cell256
+import SSBX.Foundation.Bagua.R8
 import SSBX.Text.OperatorAnchors
 
 /-! ## R1 — Yao essence (阳/阴 → 实/虚)
@@ -194,7 +194,7 @@ inductive ShiTransition : Type
 
 namespace ShiTransition
 
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 
 def char : ShiTransition → String
   | .next => "迁"

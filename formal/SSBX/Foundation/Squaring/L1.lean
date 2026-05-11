@@ -1,5 +1,5 @@
 /-
-# L₁ = Cell256 × Cell256
+# L₁ = R8 × R8
 
 The first squaring layer keeps the construction finite: group structure comes
 from `Prod`, and the octant classifier is read from the first three atomic
@@ -13,9 +13,9 @@ import SSBX.Foundation.Squaring.V4Tensor
 namespace SSBX.Foundation.Squaring
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 
-abbrev L1 : Type := Cell256 × Cell256
+abbrev L1 : Type := R8 × R8
 
 namespace L1
 
@@ -24,18 +24,18 @@ instance : AddCommGroup L1 := inferInstance
 def swap : L1 → L1
   | (a, b) => (b, a)
 
-def diag (c : Cell256) : L1 := (c, c)
+def diag (c : R8) : L1 := (c, c)
 
-def proj1 : L1 → Cell256 := Prod.fst
-def proj2 : L1 → Cell256 := Prod.snd
+def proj1 : L1 → R8 := Prod.fst
+def proj2 : L1 → R8 := Prod.snd
 
 theorem swap_swap (l : L1) : swap (swap l) = l := by
   rcases l with ⟨a, b⟩
   rfl
 
-theorem swap_diag (c : Cell256) : swap (diag c) = diag c := rfl
-theorem proj1_diag (c : Cell256) : proj1 (diag c) = c := rfl
-theorem proj2_diag (c : Cell256) : proj2 (diag c) = c := rfl
+theorem swap_diag (c : R8) : swap (diag c) = diag c := rfl
+theorem proj1_diag (c : R8) : proj1 (diag c) = c := rfl
+theorem proj2_diag (c : R8) : proj2 (diag c) = c := rfl
 
 inductive AtomicFlip where
   | f1 | f2 | f3 | f4 | f5 | f6 | imprint | project
@@ -43,15 +43,15 @@ inductive AtomicFlip where
 
 namespace AtomicFlip
 
-def apply : AtomicFlip → Cell256 → Cell256
-  | .f1 => Cell256.flip1
-  | .f2 => Cell256.flip2
-  | .f3 => Cell256.flip3
-  | .f4 => Cell256.flip4
-  | .f5 => Cell256.flip5
-  | .f6 => Cell256.flip6
-  | .imprint => Cell256.imprint
-  | .project => Cell256.project
+def apply : AtomicFlip → R8 → R8
+  | .f1 => R8.flip1
+  | .f2 => R8.flip2
+  | .f3 => R8.flip3
+  | .f4 => R8.flip4
+  | .f5 => R8.flip5
+  | .f6 => R8.flip6
+  | .imprint => R8.imprint
+  | .project => R8.project
 
 def applyL1Left (af : AtomicFlip) : L1 → L1
   | (a, b) => (af.apply a, b)
@@ -61,11 +61,11 @@ def applyL1Right (af : AtomicFlip) : L1 → L1
 
 theorem apply_left_f1_f1 (l : L1) : applyL1Left .f1 (applyL1Left .f1 l) = l := by
   rcases l with ⟨a, b⟩
-  simp [applyL1Left, apply, Cell256.flip1_flip1]
+  simp [applyL1Left, apply, R8.flip1_flip1]
 
 theorem apply_right_project_project (l : L1) : applyL1Right .project (applyL1Right .project l) = l := by
   rcases l with ⟨a, b⟩
-  simp [applyL1Right, apply, Cell256.project_project]
+  simp [applyL1Right, apply, R8.project_project]
 
 end AtomicFlip
 
@@ -96,15 +96,15 @@ theorem octant_partition (l : L1) : ∃! i : Fin 8, l ∈ octant i := by
 /-- Each octant has size 8192 = |L₁|/8.
 
 `octantIndex` factors as the composite of two surjective additive group
-homomorphisms — `L₁ → Cell256` via `(a, b) ↦ a + b`, then `Cell256 → (Z/2)³`
+homomorphisms — `L₁ → R8` via `(a, b) ↦ a + b`, then `R8 → (Z/2)³`
 taking the first three hexagram bits — reindexed as `Fin 8`. The composite
 kernel has index 8 in L₁, so each coset (= each octant) has size
 `|L₁|/8 = 65536/8 = 8192` by Lagrange.
 
 Proven concretely by bridging `Set.ncard` to a `Finset.filter.card` over the
 finite type L₁, then running `native_decide` on each of the 8 cases for `i`.
-This consumes 65536 `Cell256 × Cell256` checks per case — fast in native code
-since `Fintype Cell256` is computable (see `V4Tensor.lean`). -/
+This consumes 65536 `R8 × R8` checks per case — fast in native code
+since `Fintype R8` is computable (see `V4Tensor.lean`). -/
 theorem octant_card (i : Fin 8) : (octant i).ncard = 8192 := by
   have h_eq : (octant i : Set L1) =
       ↑(Finset.univ.filter (fun l : L1 => octantIndex l = i)) := by
@@ -115,8 +115,8 @@ theorem octant_card (i : Fin 8) : (octant i).ncard = 8192 := by
 
 theorem l1_summary :
     (∀ l : L1, swap (swap l) = l)
-    ∧ (∀ c : Cell256, proj1 (diag c) = c)
-    ∧ (∀ c : Cell256, proj2 (diag c) = c)
+    ∧ (∀ c : R8, proj1 (diag c) = c)
+    ∧ (∀ c : R8, proj2 (diag c) = c)
     ∧ (∀ l : L1, ∃! i : Fin 8, l ∈ octant i)
     ∧ (∀ i : Fin 8, (octant i).ncard = 8192) :=
   ⟨swap_swap, proj1_diag, proj2_diag, octant_partition, octant_card⟩

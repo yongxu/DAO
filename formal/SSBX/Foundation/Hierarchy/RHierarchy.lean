@@ -10,8 +10,8 @@ One-stop import for the entire R-index navigation surface:
   R₄ Mian       — Ben × Zheng, |·| = 16 = (Z/2)⁴
   R₅ Wuyao      — Mian × Bool, |·| = 32 = (Z/2)⁵
   R₆ Hexagram   — Yao⁶, |·| = 64 = (Z/2)⁶
-  R₇ YinHex     — Hexagram × YinBit (Cell128), |·| = 128 = (Z/2)⁷
-  R₈ GuoHex     — Hexagram × Shi (Cell256), |·| = 256 = (Z/2)⁸
+  R₇ YinHex     — Hexagram × YinBit (R7), |·| = 128 = (Z/2)⁷
+  R₈ GuoHex     — Hexagram × Shi (R8), |·| = 256 = (Z/2)⁸
 
 Plus the cross-cutting Lift/Project pairs and atomic / V₄-outer operators.
 

@@ -29,14 +29,14 @@ op in the operator family).
 -/
 import SSBX.Foundation.Yi.Yi
 import SSBX.Foundation.Bagua.BaguaAlgebra
-import SSBX.Foundation.Bagua.Cell256
-import SSBX.Foundation.Bagua.Cell128
+import SSBX.Foundation.Bagua.R8
+import SSBX.Foundation.Bagua.R7
 
 namespace SSBX.Foundation.Hierarchy.Operators.V4Outer
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
-open SSBX.Foundation.Bagua.Cell128
+open SSBX.Foundation.Bagua.R8
+open SSBX.Foundation.Bagua.R7
 
 /-! ## § 1 Hexagram-level V₄ outer operators
 
@@ -57,25 +57,25 @@ def hex_hu (h : Hexagram) : Hexagram := Hexagram.interlace h
     here as a V₄ generator for the Klein-four relations. -/
 def hex_cuo (h : Hexagram) : Hexagram := Hexagram.complement h
 
-/-! ## § 2 Cell128 lifts (preserve YinBit)
+/-! ## § 2 R7 lifts (preserve YinBit)
 
-  Note: in `Cell128.lean`, `hexZong` and `hexHu` live at the *file-level*
-  namespace `SSBX.Foundation.Bagua.Cell128` (NOT inside the inner `Cell128`
-  namespace). After `open SSBX.Foundation.Bagua.Cell128` we reference bare. -/
+  Note: in `R7.lean`, `hexZong` and `hexHu` live at the *file-level*
+  namespace `SSBX.Foundation.Bagua.R7` (NOT inside the inner `R7`
+  namespace). After `open SSBX.Foundation.Bagua.R7` we reference bare. -/
 
-/-- 综 lifted to Cell128 (preserves the YinBit / 因 axis). -/
-def cell128_zong (c : Cell128) : Cell128 := hexZong c
+/-- 综 lifted to R7 (preserves the YinBit / 因 axis). -/
+def cell128_zong (c : R7) : R7 := hexZong c
 
-/-- 互 lifted to Cell128. -/
-def cell128_hu (c : Cell128) : Cell128 := hexHu c
+/-- 互 lifted to R7. -/
+def cell128_hu (c : R7) : R7 := hexHu c
 
-/-! ## § 3 Cell256 lifts (preserve Shi V₄) -/
+/-! ## § 3 R8 lifts (preserve Shi V₄) -/
 
-/-- 综 lifted to Cell256 (preserves the Shi V₄ component). -/
-def cell256_zong (c : Cell256) : Cell256 := Cell256.hexZong c
+/-- 综 lifted to R8 (preserves the Shi V₄ component). -/
+def cell256_zong (c : R8) : R8 := R8.hexZong c
 
-/-- 互 lifted to Cell256. -/
-def cell256_hu (c : Cell256) : Cell256 := Cell256.hexHu c
+/-- 互 lifted to R8. -/
+def cell256_hu (c : R8) : R8 := R8.hexHu c
 
 /-! ## § 4 V₄ Klein-four relations on Hexagram
 
@@ -105,13 +105,13 @@ theorem cuo_zong_commute (h : Hexagram) :
 theorem cuoZong_eq_cuo_zong (h : Hexagram) :
     hex_cuoZong h = hex_cuo (hex_zong h) := rfl
 
-/-! ## § 5 Cell128 / Cell256 lift involutivity -/
+/-! ## § 5 R7 / R8 lift involutivity -/
 
-theorem cell128_zong_involutive (c : Cell128) : cell128_zong (cell128_zong c) = c :=
+theorem cell128_zong_involutive (c : R7) : cell128_zong (cell128_zong c) = c :=
   hexZong_hexZong c
 
-theorem cell256_zong_involutive (c : Cell256) : cell256_zong (cell256_zong c) = c :=
-  Cell256.hexZong_hexZong c
+theorem cell256_zong_involutive (c : R8) : cell256_zong (cell256_zong c) = c :=
+  R8.hexZong_hexZong c
 
 /-! ## § 6 互 fixed-point characterisation (sibling outer op)
 
@@ -140,9 +140,9 @@ theorem v4_outer_summary :
     ∧ (∀ h : Hexagram, hex_cuo (hex_zong h) = hex_zong (hex_cuo h))
     -- Composite definition (complementReverse = complement ∘ reverse)
     ∧ (∀ h : Hexagram, hex_cuoZong h = hex_cuo (hex_zong h))
-    -- Cell128 / Cell256 lift involutivity (reverse is preserved through lifts)
-    ∧ (∀ c : Cell128, cell128_zong (cell128_zong c) = c)
-    ∧ (∀ c : Cell256, cell256_zong (cell256_zong c) = c)
+    -- R7 / R8 lift involutivity (reverse is preserved through lifts)
+    ∧ (∀ c : R7, cell128_zong (cell128_zong c) = c)
+    ∧ (∀ c : R8, cell256_zong (cell256_zong c) = c)
     -- Sibling outer interlace fixed-point characterisation
     ∧ (∀ h : Hexagram, hex_hu h = h ↔ h = Hexagram.heaven ∨ h = Hexagram.earth) :=
   ⟨fun _ => rfl, cuo_involutive, zong_involutive, cuoZong_involutive,

@@ -19,7 +19,7 @@ import SSBX.Foundation.Modern.QuantumRelativityAmplitudeChannelBridge
 
 namespace SSBX.Foundation.Modern.QuantumRelativityInterferenceBridge
 
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Modern.Quantum
 open SSBX.Foundation.Modern.QuantumRelativityMarkovBridge
 open SSBX.Foundation.Modern.QuantumRelativityConcreteBridge

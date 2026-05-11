@@ -10,7 +10,7 @@
 
   § 1   «判型良_basic»：基本结构合度判定（self-contained，不依赖 WenyanParser）
   § 2   «微核源»：Tier 2 之 「文之试金石」 程序（约 60 instr，结构性运用十二字）
-  § 3   «微核数»：«微核源» 在 Cell256 字 之 编码
+  § 3   «微核数»：«微核源» 在 R8 字 之 编码
   § 4   «微核自验» 主定理：«判型良_basic» = true ∧ encProg/decInstrs round-trip
   § 5   «微核自释»：«微核源» 在初态 (Hexagram.heaven) 上 之 执行 trace 收敛于 halted
   § 6   §文之至 — 四相俱
@@ -55,7 +55,7 @@ import SSBX.Foundation.Wen.WenyanParserGeneral
 namespace SSBX.Foundation.Wen.WenyanSelfHost
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
 open SSBX.Foundation.Wen.WenyanParser
@@ -179,8 +179,8 @@ theorem «微核源_length» : «微核源».length = 64 := by native_decide
 
 /-! ## § 3  «微核数» — 文 之 数 -/
 
-/-- «微核数» — «微核源» 之 Cell256 字串 编码。 -/
-def «微核数» : List Cell256 := ProgEnc.encProg «微核源»
+/-- «微核数» — «微核源» 之 R8 字串 编码。 -/
+def «微核数» : List R8 := ProgEnc.encProg «微核源»
 
 /-! ## § 4  «微核自验» — 文 之 形 + 文 之 数 + 文 之 解 -/
 
@@ -297,7 +297,7 @@ theorem «微核源_not_runtime_quine_qian» :
   ║                  · 由 «微核源_well_formed» 见证                  ║
   ║                                                                  ║
   ║    文 之 数  ——  «微核数 = ProgEnc.encProg 微核源» 是其编码     ║
-  ║                  · List Cell256 形式（base-256）                 ║
+  ║                  · List R8 形式（base-256）                 ║
   ║                                                                  ║
   ║    文 之 解  ——  «decInstrs |微核源| 微核数 = some (微核源, [])» ║
   ║                  · 编码 round-trips back to 源                   ║

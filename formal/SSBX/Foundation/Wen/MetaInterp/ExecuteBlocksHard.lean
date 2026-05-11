@@ -39,7 +39,7 @@ import SSBX.Foundation.Wen.MetaInterp.Block_Branches
 namespace SSBX.Foundation.Wen.MetaInterp.ExecuteBlocksHard
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
 open SSBX.Foundation.Wen.MetaInterp
@@ -66,7 +66,7 @@ theorem executeBlock_jump_length (t fetchOffset : Nat) :
 /-- **Tier C** local effect for `jump`.  Deferred: encoded pc-counter
     region must be rewritten from old pc to `t`.  -/
 theorem executeBlock_jump_local_effect
-    (t : Nat) (cur : Cell256) (history : List Cell256)
+    (t : Nat) (cur : R8) (history : List R8)
     (fetchOffset : Nat) :
     let μ : YiState :=
       { cur := cur
@@ -101,7 +101,7 @@ theorem executeBlock_push_length (fetchOffset : Nat) :
 /-- **Tier C** local effect for `push`.  Deferred: simhist-len marker
     increment + sim.cur appended to encoded sim.history region. -/
 theorem executeBlock_push_local_effect
-    (cur : Cell256) (history : List Cell256) (fetchOffset : Nat) :
+    (cur : R8) (history : List R8) (fetchOffset : Nat) :
     let μ : YiState :=
       { cur := cur
         history := history
@@ -134,7 +134,7 @@ theorem executeBlock_pop_length (fetchOffset : Nat) :
 
 /-- **Tier C** local effect for `pop`.  Deferred. -/
 theorem executeBlock_pop_local_effect
-    (cur : Cell256) (history : List Cell256) (fetchOffset : Nat) :
+    (cur : R8) (history : List R8) (fetchOffset : Nat) :
     let μ : YiState :=
       { cur := cur
         history := history
@@ -190,7 +190,7 @@ theorem executeBlock_branchYaoEq_length
     embedded branch instruction).  The conditional pc-set + arm
     convergence is deferred to B.T4.E body refinement. -/
 theorem executeBlock_branchYaoEq_local_effect
-    (i j : Fin 6) (t : Nat) (cur : Cell256) (history : List Cell256)
+    (i j : Fin 6) (t : Nat) (cur : R8) (history : List R8)
     (fetchOffset : Nat) :
     let μ : YiState :=
       { cur := cur
@@ -237,7 +237,7 @@ theorem executeBlock_branchShiEq_length
     pc-set + two-arm convergence is deferred to B.T4.E body
     refinement. -/
 theorem executeBlock_branchShiEq_local_effect
-    (sh : Shi) (t : Nat) (cur : Cell256) (history : List Cell256)
+    (sh : Shi) (t : Nat) (cur : R8) (history : List R8)
     (fetchOffset : Nat) :
     let μ : YiState :=
       { cur := cur

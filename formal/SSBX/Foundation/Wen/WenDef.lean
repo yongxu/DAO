@@ -48,10 +48,10 @@ Path 丙 § 风险 3 之完全缓解：
 
 0 sorry / 0 axiom. 仅类型层；operational semantics 见 M2.
 
-## Phase F.2 migration note (Cell192 → Cell256)
+## Phase F.2 migration note (Cell192 → R8)
 
 Was: `cellLit : Cell192 → Tm` (192 cells, Z/3 `Shi`).
-Now: `cellLit : Cell256 → Tm` (256 cells, V₄ Klein `Shi`).
+Now: `cellLit : R8 → Tm` (256 cells, V₄ Klein `Shi`).
 
 The cell-endo builtin tags `.shiNextC` / `.shiPrevC` keep their syntactic
 identity here (this is the typed-λ surface; only types change). Their
@@ -59,14 +59,14 @@ operational semantics are defined elsewhere (`WenDefEval`); under V₄ both
 collapse to the `Shi.complement` involution because V₄ involutions are self-inverse.
 -/
 import SSBX.Foundation.Yi.Yi
-import SSBX.Foundation.Bagua.Cell256
+import SSBX.Foundation.Bagua.R8
 import SSBX.Foundation.Bagua.BaguaWenSpec
 import SSBX.Text.OperatorSignatures
 
 namespace SSBX.Foundation.Wen.WenDef
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaWenSpec
 open SSBX.Text.WenyanOperators
 open SSBX.Text.OperatorSignatures
@@ -93,7 +93,7 @@ inductive Tm : Type
   | app     (f x : Tm)                 : Tm
   | hexLit  (h : Hexagram)             : Tm
   | boolLit (b : Bool)                 : Tm
-  | cellLit (c : Cell256)              : Tm
+  | cellLit (c : R8)              : Tm
   | jia                                : Tm  -- 加 :  Hex → Hex → Hex
   | yi                                 : Tm  -- 一 :  Hex
   | notB                               : Tm  -- 不 :  Bool → Bool
@@ -643,7 +643,7 @@ def flip6Def : WenDef where
 
   These bodies reuse the existing `Bool`, `Hex`, and finite `forallH` core.
   They deliberately avoid catalogue rows that require new carriers such as
-  `Cell256` (was `Cell192` pre-Phase F.2), paths, text acts, modal frames,
+  `R8` (was `Cell192` pre-Phase F.2), paths, text acts, modal frames,
   or domain-specific state.
 -/
 
@@ -944,7 +944,7 @@ def headHDef : WenDef where
   validName      := by native_decide
   bodyTypechecks := by native_decide
 
-/-! ### Cell256 carrier helpers (post Phase F.2 migration; was `Cell192`) -/
+/-! ### R8 carrier helpers (post Phase F.2 migration; was `Cell192`) -/
 
 def eqCellBody : Tm := .eqCell
 

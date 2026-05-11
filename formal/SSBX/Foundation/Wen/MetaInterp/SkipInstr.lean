@@ -69,7 +69,7 @@ import SSBX.Foundation.Wen.MetaInterp
 namespace SSBX.Foundation.Wen.MetaInterp.SkipInstr
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
 open SSBX.Foundation.Wen.MetaInterp
@@ -165,7 +165,7 @@ theorem encInstr_zeroArity_length (i : YiInstr) (h : IsZeroArity i) :
 
     We don't fix metaProg's full structure; we only require that
     `metaProg[offset]? = some YiInstr.pop`. -/
-private def preState (cur : Cell256) (i : YiInstr) (tail : List Cell256)
+private def preState (cur : R8) (i : YiInstr) (tail : List R8)
     (metaProg : List YiInstr) (offset : Nat) : YiState :=
   { cur := cur
     history := YiInstrEnc.encInstr i ++ tail
@@ -174,7 +174,7 @@ private def preState (cur : Cell256) (i : YiInstr) (tail : List Cell256)
     halted := false }
 
 /-- For zero-arity ops, extract the tag cell explicitly. -/
-def zeroArityTag (i : YiInstr) (h : IsZeroArity i) : Cell256 :=
+def zeroArityTag (i : YiInstr) (h : IsZeroArity i) : R8 :=
   match i, h with
   | .nop,  _ => cellFromIdx ⟨0,  by omega⟩
   | .interlace,   _ => cellFromIdx ⟨3,  by omega⟩
@@ -200,8 +200,8 @@ theorem encInstr_zeroArity_eq (i : YiInstr) (h : IsZeroArity i) :
     Premise: `metaProg[offset]? = some YiInstr.pop` (skipOneInstr placed
     correctly at offset). -/
 theorem skipOneInstr_simulates_zeroArity
-    (cur : Cell256) (i : YiInstr) (h_zero : IsZeroArity i)
-    (tail : List Cell256) (metaProg : List YiInstr) (offset : Nat)
+    (cur : R8) (i : YiInstr) (h_zero : IsZeroArity i)
+    (tail : List R8) (metaProg : List YiInstr) (offset : Nat)
     (h_progAt : metaProg[offset]? = some YiInstr.pop) :
     let s₀ := preState cur i tail metaProg offset
     let s₁ := s₀.runFuel 1
@@ -281,8 +281,8 @@ theorem skipOneInstr_simulates_zeroArity
 /-- Standalone simulation: when `skipOneInstr 0` is the entire program and
     we run from `offset = 0`, the prog-lookup hypothesis is automatic. -/
 theorem skipOneInstr_simulates_standalone
-    (cur : Cell256) (i : YiInstr) (h_zero : IsZeroArity i)
-    (tail : List Cell256) :
+    (cur : R8) (i : YiInstr) (h_zero : IsZeroArity i)
+    (tail : List R8) :
     let s₀ : YiState :=
       { cur := cur
         history := YiInstrEnc.encInstr i ++ tail

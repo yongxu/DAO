@@ -42,7 +42,7 @@ namespace SSBX.Foundation.Wen.MetaInterp.ExecuteBlocks
 namespace Aggregate
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
 open SSBX.Foundation.Wen.MetaInterp
@@ -62,7 +62,7 @@ theorem executeBlock_nop_length (offset fetchOffset : Nat) :
     prepends one data cell and lands at `fetchOffset`.  This is exactly
     the pc-counter increment expected by `encMetaHistory_nop_step`. -/
 theorem executeBlock_nop_local_effect
-    (regHex : Hexagram) (history : List Cell256)
+    (regHex : Hexagram) (history : List R8)
     (fetchOffset offset : Nat) :
     let μ : YiState :=
       { cur := (regHex, Shi.jin)
@@ -89,7 +89,7 @@ theorem executeBlock_halt_length (offset fetchOffset : Nat) :
 
 /-- **Tier B local effect** for `halt`: 1-fuel run sets `μ'.halted = true`. -/
 theorem executeBlock_halt_local_effect
-    (cur : Cell256) (history : List Cell256)
+    (cur : R8) (history : List R8)
     (offset fetchOffset : Nat) :
     let μ : YiState :=
       { cur := cur
@@ -124,7 +124,7 @@ theorem executeBlock_hu_length (offset fetchOffset : Nat) :
     this block (`interlace` is a cur-only transform; see
     `Block_HuCuoZong.encMetaHistory_hu_step`). -/
 theorem executeBlock_hu_local_effect
-    (h : Hexagram) (sh : Shi) (history : List Cell256)
+    (h : Hexagram) (sh : Shi) (history : List R8)
     (fetchOffset offset : Nat) :
     let μ : YiState :=
       { cur := (h, sh)
@@ -150,7 +150,7 @@ theorem executeBlock_cuo_length (offset fetchOffset : Nat) :
 
 /-- **Tier C local effect** for `complement`: see `executeBlock_hu_local_effect`. -/
 theorem executeBlock_cuo_local_effect
-    (h : Hexagram) (sh : Shi) (history : List Cell256)
+    (h : Hexagram) (sh : Shi) (history : List R8)
     (fetchOffset offset : Nat) :
     let μ : YiState :=
       { cur := (h, sh)
@@ -181,7 +181,7 @@ theorem executeBlock_setShi_length (sh : Shi) (fetchOffset : Nat) :
 /-- **Tier C local effect** for `setShi sh`: from cur = `(h, sh₀)`,
     running the 2-step block leaves cur = `(h, sh)` and pc = fetchOffset. -/
 theorem executeBlock_setShi_local_effect
-    (sh : Shi) (h : Hexagram) (sh₀ : Shi) (history : List Cell256)
+    (sh : Shi) (h : Hexagram) (sh₀ : Shi) (history : List R8)
     (fetchOffset : Nat) :
     let μ : YiState :=
       { cur := (h, sh₀)
@@ -209,7 +209,7 @@ theorem executeBlock_flipYao_length (i : Fin 6) (fetchOffset : Nat) :
     running the 2-step block leaves cur = `(h.flipPos i, sh)`
     and pc = fetchOffset. -/
 theorem executeBlock_flipYao_local_effect
-    (i : Fin 6) (h : Hexagram) (sh : Shi) (history : List Cell256)
+    (i : Fin 6) (h : Hexagram) (sh : Shi) (history : List R8)
     (fetchOffset : Nat) :
     let μ : YiState :=
       { cur := (h, sh)
@@ -235,7 +235,7 @@ theorem executeBlock_zong_length (fetchOffset : Nat) :
 
 /-- **Tier C local effect** for `reverse`: see `executeBlock_hu_local_effect`. -/
 theorem executeBlock_zong_local_effect
-    (h : Hexagram) (sh : Shi) (history : List Cell256)
+    (h : Hexagram) (sh : Shi) (history : List R8)
     (fetchOffset : Nat) :
     let μ : YiState :=
       { cur := (h, sh)

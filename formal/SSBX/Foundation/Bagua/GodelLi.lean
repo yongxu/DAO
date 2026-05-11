@@ -34,7 +34,7 @@ namespace SSBX.Foundation.Bagua.GodelLi
 
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Bagua.BaguaAlgebra
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 
 /-! ## § 1 Halts predicate (Σ₁) -/
@@ -312,11 +312,11 @@ theorem phase2_summary :
   complement 交换，setShi/branchShiEq 仅作用于 Shi（complement 不触），history 操作
   保 complement-关系。 -/
 
-/-- Apply `complement` to a Cell256's hexagram component (Shi unchanged). -/
-def cuoCell (c : Cell256) : Cell256 := (c.1.complement, c.2)
+/-- Apply `complement` to a R8's hexagram component (Shi unchanged). -/
+def cuoCell (c : R8) : R8 := (c.1.complement, c.2)
 
 /-- complement is involutive on cells. -/
-theorem cuoCell_cuoCell (c : Cell256) : cuoCell (cuoCell c) = c := by
+theorem cuoCell_cuoCell (c : R8) : cuoCell (cuoCell c) = c := by
   unfold cuoCell
   simp [Hexagram.complement_involutive]
 

@@ -3,7 +3,7 @@ import SSBX.Foundation.Wen.WenyanSelfInterp
 namespace SSBX.Foundation.Wen.WenyanQuineMeta
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 
 /-- A tiny optional-handler lane witness: write `未`, then halt. -/

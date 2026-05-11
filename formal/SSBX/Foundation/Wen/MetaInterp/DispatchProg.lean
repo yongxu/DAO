@@ -2,7 +2,7 @@
 # DispatchProg — concrete materialization of the dispatch tree as `List YiInstr`
 
 This file re-derives, at base-256, the universal meta-interpreter dispatch
-machinery that the Cell192→Cell256 migration dropped.
+machinery that the Cell192→R8 migration dropped.
 
 The architecture file `MetaInterp/Dispatch.lean` already defines
 `dispatchTree : DispatchOffsets → Nat → List YiInstr` along with twelve
@@ -32,7 +32,7 @@ import SSBX.Foundation.Wen.MetaInterp.Dispatch
 namespace SSBX.Foundation.Wen.MetaInterp.DispatchProg
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
 open SSBX.Foundation.Wen.MetaInterp
@@ -64,7 +64,7 @@ Each `dispatchProg_routes_<op>` reduces to the matching `dispatchTree_routes_<op
 -/
 
 theorem dispatchProg_routes_nop
-    (offsets : DispatchOffsets) (history : List Cell256) :
+    (offsets : DispatchOffsets) (history : List R8) :
     let μ : YiState :=
       { cur := nopTag, history := history, pc := 0
         prog := dispatchProg offsets 0, halted := false }
@@ -74,7 +74,7 @@ theorem dispatchProg_routes_nop
   dispatchTree_routes_nop offsets history
 
 theorem dispatchProg_routes_setShi
-    (offsets : DispatchOffsets) (history : List Cell256) :
+    (offsets : DispatchOffsets) (history : List R8) :
     let μ : YiState :=
       { cur := setShiTag, history := history, pc := 0
         prog := dispatchProg offsets 0, halted := false }
@@ -84,7 +84,7 @@ theorem dispatchProg_routes_setShi
   dispatchTree_routes_setShi offsets history
 
 theorem dispatchProg_routes_flipYao
-    (offsets : DispatchOffsets) (history : List Cell256) :
+    (offsets : DispatchOffsets) (history : List R8) :
     let μ : YiState :=
       { cur := flipYaoTag, history := history, pc := 0
         prog := dispatchProg offsets 0, halted := false }
@@ -94,7 +94,7 @@ theorem dispatchProg_routes_flipYao
   dispatchTree_routes_flipYao offsets history
 
 theorem dispatchProg_routes_hu
-    (offsets : DispatchOffsets) (history : List Cell256) :
+    (offsets : DispatchOffsets) (history : List R8) :
     let μ : YiState :=
       { cur := huTag, history := history, pc := 0
         prog := dispatchProg offsets 0, halted := false }
@@ -104,7 +104,7 @@ theorem dispatchProg_routes_hu
   dispatchTree_routes_hu offsets history
 
 theorem dispatchProg_routes_cuo
-    (offsets : DispatchOffsets) (history : List Cell256) :
+    (offsets : DispatchOffsets) (history : List R8) :
     let μ : YiState :=
       { cur := cuoTag, history := history, pc := 0
         prog := dispatchProg offsets 0, halted := false }
@@ -114,7 +114,7 @@ theorem dispatchProg_routes_cuo
   dispatchTree_routes_cuo offsets history
 
 theorem dispatchProg_routes_zong
-    (offsets : DispatchOffsets) (history : List Cell256) :
+    (offsets : DispatchOffsets) (history : List R8) :
     let μ : YiState :=
       { cur := zongTag, history := history, pc := 0
         prog := dispatchProg offsets 0, halted := false }
@@ -124,7 +124,7 @@ theorem dispatchProg_routes_zong
   dispatchTree_routes_zong offsets history
 
 theorem dispatchProg_routes_branchYaoEq
-    (offsets : DispatchOffsets) (history : List Cell256) :
+    (offsets : DispatchOffsets) (history : List R8) :
     let μ : YiState :=
       { cur := branchYaoEqTag, history := history, pc := 0
         prog := dispatchProg offsets 0, halted := false }
@@ -134,7 +134,7 @@ theorem dispatchProg_routes_branchYaoEq
   dispatchTree_routes_branchYaoEq offsets history
 
 theorem dispatchProg_routes_branchShiEq
-    (offsets : DispatchOffsets) (history : List Cell256) :
+    (offsets : DispatchOffsets) (history : List R8) :
     let μ : YiState :=
       { cur := branchShiEqTag, history := history, pc := 0
         prog := dispatchProg offsets 0, halted := false }
@@ -144,7 +144,7 @@ theorem dispatchProg_routes_branchShiEq
   dispatchTree_routes_branchShiEq offsets history
 
 theorem dispatchProg_routes_jump
-    (offsets : DispatchOffsets) (history : List Cell256) :
+    (offsets : DispatchOffsets) (history : List R8) :
     let μ : YiState :=
       { cur := jumpTag, history := history, pc := 0
         prog := dispatchProg offsets 0, halted := false }
@@ -154,7 +154,7 @@ theorem dispatchProg_routes_jump
   dispatchTree_routes_jump offsets history
 
 theorem dispatchProg_routes_push
-    (offsets : DispatchOffsets) (history : List Cell256) :
+    (offsets : DispatchOffsets) (history : List R8) :
     let μ : YiState :=
       { cur := pushTag, history := history, pc := 0
         prog := dispatchProg offsets 0, halted := false }
@@ -164,7 +164,7 @@ theorem dispatchProg_routes_push
   dispatchTree_routes_push offsets history
 
 theorem dispatchProg_routes_pop
-    (offsets : DispatchOffsets) (history : List Cell256) :
+    (offsets : DispatchOffsets) (history : List R8) :
     let μ : YiState :=
       { cur := popTag, history := history, pc := 0
         prog := dispatchProg offsets 0, halted := false }
@@ -174,7 +174,7 @@ theorem dispatchProg_routes_pop
   dispatchTree_routes_pop offsets history
 
 theorem dispatchProg_routes_halt
-    (offsets : DispatchOffsets) (history : List Cell256) :
+    (offsets : DispatchOffsets) (history : List R8) :
     let μ : YiState :=
       { cur := haltTag, history := history, pc := 0
         prog := dispatchProg offsets 0, halted := false }
@@ -229,7 +229,7 @@ program reaches a halted state in 7 fuel steps (6 for dispatch routing to
 /-- **Tier 3 smoke test.**  The skeleton correctly routes a `haltTag` to the
     terminating `halt` and halts. -/
 theorem metaInterpProgSkeleton_simulates_halt
-    (history : List Cell256) :
+    (history : List R8) :
     let μ : YiState :=
       { cur := haltTag, history := history, pc := 0
         prog := metaInterpProgSkeleton, halted := false }
@@ -243,6 +243,6 @@ theorem metaInterpProgSkeleton_simulates_halt
           metaInterpProgSkeleton, dispatchProg, dispatchTree, dispatchShi,
           haltOnlyOffsets, haltTag, cellFromIdx,
           Hexagram.yaoAt, Hexagram.fromIdx, Yao.fromIdx,
-          SSBX.Foundation.Bagua.Cell256.Shi.fromIdx]
+          SSBX.Foundation.Bagua.R8.Shi.fromIdx]
 
 end SSBX.Foundation.Wen.MetaInterp.DispatchProg

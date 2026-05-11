@@ -8,7 +8,7 @@ in the (Z/2)ⁿ hierarchy:
 
 | 家族 | R-layer | Cells | 来源 |
 | --- | --- | ---: | --- |
-| 五常 (仁义礼智信) | R₇ Cell128 | 5 of 128 | `Wuchang.lean` (done) |
+| 五常 (仁义礼智信) | R₇ R7 | 5 of 128 | `Wuchang.lean` (done) |
 | 四端 (恻隐羞恶辞让是非) | R₃ Trigram | 4 of 8 | here, **aliases** existing `Eight/XinZhi.lean::SiDuan.toTrigram` |
 | 大学八目 (格致诚正修齐治平) | R₃ Trigram | 8 of 8 | here, **new** proposal mapping |
 | 五伦 (父子君臣夫妇兄弟朋友) | R₅ Wuyao | 5 of 32 | here, **new** aliases of L5 generators |

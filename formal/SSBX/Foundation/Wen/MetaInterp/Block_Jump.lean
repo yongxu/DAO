@@ -116,7 +116,7 @@ import SSBX.Foundation.Wen.MetaInterp.ExecuteBlock
 namespace SSBX.Foundation.Wen.MetaInterp.ExecuteBlock
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
 open SSBX.Foundation.Wen.MetaInterp
@@ -176,7 +176,7 @@ history just lands at fetchOffset with everything else unchanged.
 /-- **Local effect** of the jump skeleton: a 1-fuel run lands at
     `fetchOffset` and preserves cur, history, halted. -/
 theorem executeBlock_jump_local_effect
-    (cur : Cell256) (history : List Cell256) (fetchOffset offset : Nat) :
+    (cur : R8) (history : List R8) (fetchOffset offset : Nat) :
     let μ : YiState :=
       { cur := cur
         history := history

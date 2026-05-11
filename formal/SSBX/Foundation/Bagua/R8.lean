@@ -1,5 +1,5 @@
 /-
-# Cell256 — R₈ = (Z/2)⁸ = 256 格 + V₄ Shi + 序卦
+# R8 — R₈ = (Z/2)⁸ = 256 格 + V₄ Shi + 序卦
 
 (strict-uniform R₀..R₈ 编号 per yi-RO-hierarchy-v2.md; 旧 v1 中称 R₆)
 
@@ -20,21 +20,21 @@ Builds on Yi.lean and BaguaAlgebra.lean.
 
 ## Phases
   § 1   Shi (时态) inductive + V₄ Klein 群结构 (complement / reverse / complementReverse involution)
-  § 2   Cell256 = Hexagram × Shi + cardinality 256
-  § 3   Cell256 lateral operators (合 hex flips with 时态)
+  § 2   R8 = Hexagram × Shi + cardinality 256
+  § 3   R8 lateral operators (合 hex flips with 时态)
   § 4   xuGua (序卦传 King Wen order) as List Hexagram of length 64
   § 5   xuGua next / index / completeness theorems
 -/
 import SSBX.Foundation.Yi.Yi
 import SSBX.Foundation.Bagua.BaguaAlgebra
-import SSBX.Foundation.Bagua.Cell128
+import SSBX.Foundation.Bagua.R7
 
-namespace SSBX.Foundation.Bagua.Cell256
+namespace SSBX.Foundation.Bagua.R8
 
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Yi.Yi.Trigram
 open SSBX.Foundation.Bagua.BaguaAlgebra
-open SSBX.Foundation.Bagua.Cell128 (YinBit)
+open SSBX.Foundation.Bagua.R7 (YinBit)
 
 /-! ## § 1 Shi (时态) — V₄ Klein 四群 = {道, 已, 今, 未}
 
@@ -48,8 +48,8 @@ open SSBX.Foundation.Bagua.Cell128 (YinBit)
 
 /-- R6 atom: 果 (guǒ) — future-projection bit. Provisional naming.
 
-    `YinBit` is imported from `SSBX.Foundation.Bagua.Cell128` (R₇ origin):
-    Cell128 introduces 因 first, then Cell256 = Cell128 × GuoBit pairs it
+    `YinBit` is imported from `SSBX.Foundation.Bagua.R7` (R₇ origin):
+    R7 introduces 因 first, then R8 = R7 × GuoBit pairs it
     with 果 to form Shi V₄. -/
 abbrev GuoBit : Type := Bool
 
@@ -155,25 +155,25 @@ theorem imprint_project_eq_complementReverse (s : Shi) : imprint (project s) = c
 
 end Shi
 
-/-! ## § 2 Cell256 — 256 格 -/
+/-! ## § 2 R8 — 256 格 -/
 
 /-- 256 格 = 64 卦 × 4 时态 = (Z/2)⁸. -/
-abbrev Cell256 : Type := Hexagram × Shi
+abbrev R8 : Type := Hexagram × Shi
 
-namespace Cell256
+namespace R8
 
 /-- All 256 cells. -/
-def all : List Cell256 :=
+def all : List R8 :=
   Hexagram.allHex.flatMap fun h => Shi.all.map fun s => (h, s)
 
-/-- |Cell256| = 256 strictly. -/
+/-- |R8| = 256 strictly. -/
 theorem all_length : all.length = 256 := by native_decide
 
 /-- The 256-cell enumeration has no duplicate cells. -/
 theorem all_nodup : all.Nodup := by native_decide
 
-/-- Every Cell256 is in `all` (exhaustion). -/
-theorem mem_all (c : Cell256) : c ∈ all := by
+/-- Every R8 is in `all` (exhaustion). -/
+theorem mem_all (c : R8) : c ∈ all := by
   rcases c with ⟨h, s⟩
   unfold all
   refine List.mem_flatMap.mpr ⟨h, hexagram_mem_allHex h, ?_⟩
@@ -194,86 +194,86 @@ theorem rootTo256TreeEdgeCount :
     2 + 4 + 8 + 16 + 32 + 64 + 128 + 256 = 510 := by
   native_decide
 
-end Cell256
+end R8
 
-/-! ## § 3 Cell256 lateral operators — combined hex flips + 时态 V₄ -/
+/-! ## § 3 R8 lateral operators — combined hex flips + 时态 V₄ -/
 
-namespace Cell256
+namespace R8
 
-/-- 时态 complement on Cell256 (P-like, 保 hex). -/
-def shiCuo (c : Cell256) : Cell256 := (c.1, c.2.complement)
-/-- 时态 reverse on Cell256 (T-like, 保 hex). -/
-def shiZong (c : Cell256) : Cell256 := (c.1, c.2.reverse)
-/-- 时态 complementReverse on Cell256 (PT, 保 hex). -/
-def shiCuoZong (c : Cell256) : Cell256 := (c.1, c.2.complementReverse)
+/-- 时态 complement on R8 (P-like, 保 hex). -/
+def shiCuo (c : R8) : R8 := (c.1, c.2.complement)
+/-- 时态 reverse on R8 (T-like, 保 hex). -/
+def shiZong (c : R8) : R8 := (c.1, c.2.reverse)
+/-- 时态 complementReverse on R8 (PT, 保 hex). -/
+def shiCuoZong (c : R8) : R8 := (c.1, c.2.complementReverse)
 
-theorem shiCuo_shiCuo (c : Cell256) : shiCuo (shiCuo c) = c := by
+theorem shiCuo_shiCuo (c : R8) : shiCuo (shiCuo c) = c := by
   rcases c with ⟨h, s⟩; simp [shiCuo, Shi.complement_involutive]
 
-theorem shiZong_shiZong (c : Cell256) : shiZong (shiZong c) = c := by
+theorem shiZong_shiZong (c : R8) : shiZong (shiZong c) = c := by
   rcases c with ⟨h, s⟩; simp [shiZong, Shi.reverse_involutive]
 
-theorem shiCuoZong_shiCuoZong (c : Cell256) : shiCuoZong (shiCuoZong c) = c := by
+theorem shiCuoZong_shiCuoZong (c : R8) : shiCuoZong (shiCuoZong c) = c := by
   rcases c with ⟨h, s⟩; simp [shiCuoZong, Shi.cuoZong_cuoZong]
 
-/-- Hexagram 错 lifted to Cell256 (preserves 时态). -/
-def hexCuo (c : Cell256) : Cell256 := (Hexagram.complement c.1, c.2)
+/-- Hexagram 错 lifted to R8 (preserves 时态). -/
+def hexCuo (c : R8) : R8 := (Hexagram.complement c.1, c.2)
 /-- Hexagram 综 lifted. -/
-def hexZong (c : Cell256) : Cell256 := (Hexagram.reverse c.1, c.2)
+def hexZong (c : R8) : R8 := (Hexagram.reverse c.1, c.2)
 /-- Hexagram 互 lifted. -/
-def hexHu (c : Cell256) : Cell256 := (Hexagram.interlace c.1, c.2)
+def hexHu (c : R8) : R8 := (Hexagram.interlace c.1, c.2)
 
 /-- 6 single yao flips lifted. -/
-def flip1 (c : Cell256) : Cell256 := (dongInner c.1, c.2)
-def flip2 (c : Cell256) : Cell256 := (middleFlipInner c.1, c.2)
-def flip3 (c : Cell256) : Cell256 := (topFlipInner c.1, c.2)
-def flip4 (c : Cell256) : Cell256 := (dongOuter c.1, c.2)
-def flip5 (c : Cell256) : Cell256 := (middleFlipOuter c.1, c.2)
-def flip6 (c : Cell256) : Cell256 := (topFlipOuter c.1, c.2)
+def flip1 (c : R8) : R8 := (dongInner c.1, c.2)
+def flip2 (c : R8) : R8 := (middleFlipInner c.1, c.2)
+def flip3 (c : R8) : R8 := (topFlipInner c.1, c.2)
+def flip4 (c : R8) : R8 := (dongOuter c.1, c.2)
+def flip5 (c : R8) : R8 := (middleFlipOuter c.1, c.2)
+def flip6 (c : R8) : R8 := (topFlipOuter c.1, c.2)
 
-theorem hexCuo_hexCuo (c : Cell256) : hexCuo (hexCuo c) = c := by
+theorem hexCuo_hexCuo (c : R8) : hexCuo (hexCuo c) = c := by
   rcases c with ⟨h, s⟩
   simp [hexCuo, Hexagram.complement_involutive]
 
-theorem hexZong_hexZong (c : Cell256) : hexZong (hexZong c) = c := by
+theorem hexZong_hexZong (c : R8) : hexZong (hexZong c) = c := by
   rcases c with ⟨h, s⟩
   simp [hexZong, Hexagram.reverse_involutive]
 
-theorem hexCuo_hexZong_comm (c : Cell256) :
+theorem hexCuo_hexZong_comm (c : R8) :
     hexCuo (hexZong c) = hexZong (hexCuo c) := by
   rcases c with ⟨h, s⟩
   simp [hexCuo, hexZong, Hexagram.complement_reverse_comm]
 
-theorem hexCuoZong_hexCuoZong (c : Cell256) :
+theorem hexCuoZong_hexCuoZong (c : R8) :
     hexCuo (hexZong (hexCuo (hexZong c))) = c := by
   rw [hexCuo_hexZong_comm, hexCuo_hexCuo, hexZong_hexZong]
 
-theorem flip1_flip1 (c : Cell256) : flip1 (flip1 c) = c := by
+theorem flip1_flip1 (c : R8) : flip1 (flip1 c) = c := by
   rcases c with ⟨h, s⟩; simp [flip1, dongInner_dongInner]
 
-theorem flip2_flip2 (c : Cell256) : flip2 (flip2 c) = c := by
+theorem flip2_flip2 (c : R8) : flip2 (flip2 c) = c := by
   rcases c with ⟨h, s⟩; simp [flip2, huaInner_huaInner]
 
-theorem flip3_flip3 (c : Cell256) : flip3 (flip3 c) = c := by
+theorem flip3_flip3 (c : R8) : flip3 (flip3 c) = c := by
   rcases c with ⟨h, s⟩; simp [flip3, bianInner_bianInner]
 
-theorem flip4_flip4 (c : Cell256) : flip4 (flip4 c) = c := by
+theorem flip4_flip4 (c : R8) : flip4 (flip4 c) = c := by
   rcases c with ⟨h, s⟩; simp [flip4, dongOuter_dongOuter]
 
-theorem flip5_flip5 (c : Cell256) : flip5 (flip5 c) = c := by
+theorem flip5_flip5 (c : R8) : flip5 (flip5 c) = c := by
   rcases c with ⟨h, s⟩; simp [flip5, huaOuter_huaOuter]
 
-theorem flip6_flip6 (c : Cell256) : flip6 (flip6 c) = c := by
+theorem flip6_flip6 (c : R8) : flip6 (flip6 c) = c := by
   rcases c with ⟨h, s⟩; simp [flip6, bianOuter_bianOuter]
 
 /-- hex 与 shi V₄ 算子之间互相交换（tensor product 结构）. -/
-theorem hexCuo_shiCuo_comm (c : Cell256) : hexCuo (shiCuo c) = shiCuo (hexCuo c) := by
+theorem hexCuo_shiCuo_comm (c : R8) : hexCuo (shiCuo c) = shiCuo (hexCuo c) := by
   rcases c with ⟨h, s⟩; rfl
 
-theorem hexZong_shiZong_comm (c : Cell256) : hexZong (shiZong c) = shiZong (hexZong c) := by
+theorem hexZong_shiZong_comm (c : R8) : hexZong (shiZong c) = shiZong (hexZong c) := by
   rcases c with ⟨h, s⟩; rfl
 
-end Cell256
+end R8
 
 /-! ## § 4 序卦 (King Wen Order) — 64 hexagrams in canonical sequence -/
 
@@ -367,16 +367,16 @@ def xuGuaNext (h : Hexagram) : Option Hexagram :=
 
 /-! ## § 6 Public summary (legacy) -/
 
-/-- Cell256 cardinality + 序卦 length facts. -/
+/-- R8 cardinality + 序卦 length facts. -/
 theorem cell256_summary :
-    Cell256.all.length = 256
-    ∧ (∀ c : Cell256, c ∈ Cell256.all)
+    R8.all.length = 256
+    ∧ (∀ c : R8, c ∈ R8.all)
     ∧ xuGua.length = 64 :=
-  ⟨Cell256.all_length, Cell256.mem_all, xuGua_length⟩
+  ⟨R8.all_length, R8.mem_all, xuGua_length⟩
 
 /-! ## § 7 Phase A — (Z/2)⁸ Algebraic Spine
 
-  Expose Cell256 = Hexagram × Shi as a (Z/2)⁸ Abelian group via
+  Expose R8 = Hexagram × Shi as a (Z/2)⁸ Abelian group via
   componentwise XOR. The Shi V₄ part is XOR'd in (因, 果) ∈ Bool²
   coordinates via `Shi.toYinGuo` / `Shi.ofYinGuo`.
 
@@ -384,10 +384,10 @@ theorem cell256_summary :
   (Z/2)². Total: (Z/2)⁸ = 256 cells with `origin = (heaven, dao)` as identity.
 
   Strategy: prove every law componentwise on Yao (4-case) + Bool (8-case),
-  lift to Hexagram and Shi, then to Cell256 by `cases`.
+  lift to Hexagram and Shi, then to R8 by `cases`.
 -/
 
-namespace Cell256
+namespace R8
 
 /-! ### § 7.1 Yao XOR helper -/
 
@@ -474,78 +474,78 @@ theorem shiXor_assoc (s1 s2 s3 : Shi) :
   rcases s1 with ⟨y1, g1⟩; rcases s2 with ⟨y2, g2⟩; rcases s3 with ⟨y3, g3⟩
   cases y1 <;> cases g1 <;> cases y2 <;> cases g2 <;> cases y3 <;> cases g3 <;> rfl
 
-/-! ### § 7.4 Cell256 XOR -/
+/-! ### § 7.4 R8 XOR -/
 
-/-- Cell256 XOR = (hexXor on Hexagram, shiXor on Shi). -/
-def xor (c1 c2 : Cell256) : Cell256 :=
+/-- R8 XOR = (hexXor on Hexagram, shiXor on Shi). -/
+def xor (c1 c2 : R8) : R8 :=
   (hexXor c1.1 c2.1, shiXor c1.2 c2.2)
 
 /-- 道 cell at R₈ = (heaven, dao) = (Z/2)⁸ identity. -/
-def origin : Cell256 := (Hexagram.heaven, Shi.dao)
+def origin : R8 := (Hexagram.heaven, Shi.dao)
 
-@[simp] theorem origin_xor (c : Cell256) : xor origin c = c := by
+@[simp] theorem origin_xor (c : R8) : xor origin c = c := by
   rcases c with ⟨h, s⟩
   simp [xor, origin, hexXor_qian_left, shiXor_dao_left]
 
-@[simp] theorem xor_origin (c : Cell256) : xor c origin = c := by
+@[simp] theorem xor_origin (c : R8) : xor c origin = c := by
   rcases c with ⟨h, s⟩
   simp [xor, origin, hexXor_qian_right, shiXor_dao_right]
 
-theorem xor_self (c : Cell256) : xor c c = origin := by
+theorem xor_self (c : R8) : xor c c = origin := by
   rcases c with ⟨h, s⟩
   simp [xor, origin, hexXor_self, shiXor_self]
 
-theorem xor_comm (c1 c2 : Cell256) : xor c1 c2 = xor c2 c1 := by
+theorem xor_comm (c1 c2 : R8) : xor c1 c2 = xor c2 c1 := by
   rcases c1 with ⟨h1, s1⟩
   rcases c2 with ⟨h2, s2⟩
   simp [xor, hexXor_comm, shiXor_comm]
 
-theorem xor_assoc (c1 c2 c3 : Cell256) :
+theorem xor_assoc (c1 c2 c3 : R8) :
     xor (xor c1 c2) c3 = xor c1 (xor c2 c3) := by
   rcases c1 with ⟨h1, s1⟩
   rcases c2 with ⟨h2, s2⟩
   rcases c3 with ⟨h3, s3⟩
   simp [xor, hexXor_assoc, shiXor_assoc]
 
-end Cell256
+end R8
 
 /-! ### § 7.5 AddCommGroup-flavoured instance binding
 
-  We bind `Add` / `Zero` / `Neg` / `Sub` so Cell256 can use `+ / 0 / -`
+  We bind `Add` / `Zero` / `Neg` / `Sub` so R8 can use `+ / 0 / -`
   notation. We do not import Mathlib here (kept as Foundation-pure), but
   every law required by `AddCommGroup` is proven explicitly above. -/
 
-instance : Add Cell256 := ⟨Cell256.xor⟩
-instance : Zero Cell256 := ⟨Cell256.origin⟩
+instance : Add R8 := ⟨R8.xor⟩
+instance : Zero R8 := ⟨R8.origin⟩
 /-- In (Z/2)ⁿ every element is self-inverse: `-c = c`. -/
-instance : Neg Cell256 := ⟨id⟩
-instance : Sub Cell256 := ⟨Cell256.xor⟩
+instance : Neg R8 := ⟨id⟩
+instance : Sub R8 := ⟨R8.xor⟩
 
-namespace Cell256
+namespace R8
 
-@[simp] theorem add_def (c1 c2 : Cell256) : c1 + c2 = xor c1 c2 := rfl
-@[simp] theorem zero_def : (0 : Cell256) = origin := rfl
-@[simp] theorem neg_def (c : Cell256) : -c = c := rfl
-@[simp] theorem sub_def (c1 c2 : Cell256) : c1 - c2 = xor c1 c2 := rfl
+@[simp] theorem add_def (c1 c2 : R8) : c1 + c2 = xor c1 c2 := rfl
+@[simp] theorem zero_def : (0 : R8) = origin := rfl
+@[simp] theorem neg_def (c : R8) : -c = c := rfl
+@[simp] theorem sub_def (c1 c2 : R8) : c1 - c2 = xor c1 c2 := rfl
 
-end Cell256
+end R8
 
 /-! ### § 7.6 SMul self-action (Cayley regular representation) -/
 
-instance : SMul Cell256 Cell256 := ⟨Cell256.xor⟩
+instance : SMul R8 R8 := ⟨R8.xor⟩
 
-namespace Cell256
+namespace R8
 
-@[simp] theorem smul_def (c s : Cell256) : c • s = xor c s := rfl
+@[simp] theorem smul_def (c s : R8) : c • s = xor c s := rfl
 
-/-- Cayley left-translation by c on Cell256. -/
-def cayley (c : Cell256) : Cell256 → Cell256 := fun s => xor c s
+/-- Cayley left-translation by c on R8. -/
+def cayley (c : R8) : R8 → R8 := fun s => xor c s
 
-/-- Evaluate a Cell256 endo at the origin to recover its translation. -/
-def epsAtOrigin (f : Cell256 → Cell256) : Cell256 := f origin
+/-- Evaluate a R8 endo at the origin to recover its translation. -/
+def epsAtOrigin (f : R8 → R8) : R8 := f origin
 
 /-- ε ∘ Cayley = id (retraction). -/
-@[simp] theorem epsAtOrigin_cayley (c : Cell256) :
+@[simp] theorem epsAtOrigin_cayley (c : R8) :
     epsAtOrigin (cayley c) = c := by
   simp [epsAtOrigin, cayley, xor_origin]
 
@@ -557,17 +557,17 @@ theorem cayley_inj : Function.Injective cayley := by
   exact heq
 
 /-- Cayley is a group homomorphism: `cayley (a + b) = cayley a ∘ cayley b`. -/
-theorem cayley_hom (c1 c2 : Cell256) :
+theorem cayley_hom (c1 c2 : R8) :
     cayley (xor c1 c2) = cayley c1 ∘ cayley c2 := by
   funext s
   simp [cayley, Function.comp_apply, xor_assoc]
 
-end Cell256
+end R8
 
 /-! ## § 8 印/投 重写为 XOR mask (Phase A)
 
   The legacy `Shi.yin / Shi.project` (= `Shi.complement / Shi.reverse`) are V₄ wraps.
-  Phase A re-expresses 印/投 at the **Cell256 level** as XOR with two
+  Phase A re-expresses 印/投 at the **R8 level** as XOR with two
   canonical masks:
 
     imprint_mask = (heaven, ji)  = `oooooooi`o  (only YinBit / 因 axis)
@@ -577,40 +577,40 @@ end Cell256
   involutions. The two masks XOR to `(heaven, jin) = "ooooooon"`, the V₄
   central element. -/
 
-namespace Cell256
+namespace R8
 
 /-- 印 mask: only the YinBit (因 axis, R5 atom) is set.
     `(heaven, ji) = (heaven, (1, 0)) = "oooooooi"`. -/
-def imprint_mask : Cell256 := (Hexagram.heaven, Shi.ji)
+def imprint_mask : R8 := (Hexagram.heaven, Shi.ji)
 
 /-- 投 mask: only the GuoBit (果 axis, R6 atom) is set.
     `(heaven, wei) = (heaven, (0, 1)) = "ooooooox"`. -/
-def project_mask : Cell256 := (Hexagram.heaven, Shi.wei)
+def project_mask : R8 := (Hexagram.heaven, Shi.wei)
 
-/-- 印 (yìn) at Cell256: XOR with the YinBit-only mask. -/
-def imprint (c : Cell256) : Cell256 := xor c imprint_mask
+/-- 印 (yìn) at R8: XOR with the YinBit-only mask. -/
+def imprint (c : R8) : R8 := xor c imprint_mask
 
-/-- 投 (tóu) at Cell256: XOR with the GuoBit-only mask. -/
-def project (c : Cell256) : Cell256 := xor c project_mask
+/-- 投 (tóu) at R8: XOR with the GuoBit-only mask. -/
+def project (c : R8) : R8 := xor c project_mask
 
 /-- 印 is involutive (mask is self-inverse). -/
-theorem imprint_imprint (c : Cell256) : imprint (imprint c) = c := by
+theorem imprint_imprint (c : R8) : imprint (imprint c) = c := by
   unfold imprint
   rw [xor_assoc, xor_self, xor_origin]
 
 /-- 投 is involutive. -/
-theorem project_project (c : Cell256) : project (project c) = c := by
+theorem project_project (c : R8) : project (project c) = c := by
   unfold project
   rw [xor_assoc, xor_self, xor_origin]
 
 /-- 印 and 投 commute (both are XOR-with-fixed-mask, and XOR is commutative
     + associative). -/
-theorem imprint_project_comm (c : Cell256) : imprint (project c) = project (imprint c) := by
+theorem imprint_project_comm (c : R8) : imprint (project c) = project (imprint c) := by
   unfold imprint project
   rw [xor_assoc, xor_assoc, xor_comm project_mask imprint_mask]
 
 /-- 印 ∘ 投 = XOR with `(heaven, jin)` = the V₄ central mask. -/
-theorem imprint_project_eq_central (c : Cell256) :
+theorem imprint_project_eq_central (c : R8) :
     imprint (project c) = xor c (Hexagram.heaven, Shi.jin) := by
   unfold imprint project
   rw [xor_assoc]
@@ -621,26 +621,26 @@ theorem imprint_mask_xor_project_mask :
     xor imprint_mask project_mask = (Hexagram.heaven, Shi.jin) := by
   rfl
 
-end Cell256
+end R8
 
 /-! ## § 9 Public summary (Phase A) -/
 
 theorem cell256_phaseA_summary :
     -- (Z/2)⁸ identity + group laws
-    (∀ c : Cell256, Cell256.xor Cell256.origin c = c)
-    ∧ (∀ c : Cell256, Cell256.xor c c = Cell256.origin)
-    ∧ (∀ a b : Cell256, Cell256.xor a b = Cell256.xor b a)
-    ∧ (∀ a b c : Cell256,
-        Cell256.xor (Cell256.xor a b) c = Cell256.xor a (Cell256.xor b c))
+    (∀ c : R8, R8.xor R8.origin c = c)
+    ∧ (∀ c : R8, R8.xor c c = R8.origin)
+    ∧ (∀ a b : R8, R8.xor a b = R8.xor b a)
+    ∧ (∀ a b c : R8,
+        R8.xor (R8.xor a b) c = R8.xor a (R8.xor b c))
     -- Cayley fusion
-    ∧ Function.Injective Cell256.cayley
-    ∧ (∀ c : Cell256, Cell256.epsAtOrigin (Cell256.cayley c) = c)
+    ∧ Function.Injective R8.cayley
+    ∧ (∀ c : R8, R8.epsAtOrigin (R8.cayley c) = c)
     -- 印 / 投 mask involutions + commute
-    ∧ (∀ c : Cell256, Cell256.imprint (Cell256.imprint c) = c)
-    ∧ (∀ c : Cell256, Cell256.project (Cell256.project c) = c)
-    ∧ (∀ c : Cell256, Cell256.imprint (Cell256.project c) = Cell256.project (Cell256.imprint c)) :=
-  ⟨Cell256.origin_xor, Cell256.xor_self, Cell256.xor_comm, Cell256.xor_assoc,
-   Cell256.cayley_inj, Cell256.epsAtOrigin_cayley,
-   Cell256.imprint_imprint, Cell256.project_project, Cell256.imprint_project_comm⟩
+    ∧ (∀ c : R8, R8.imprint (R8.imprint c) = c)
+    ∧ (∀ c : R8, R8.project (R8.project c) = c)
+    ∧ (∀ c : R8, R8.imprint (R8.project c) = R8.project (R8.imprint c)) :=
+  ⟨R8.origin_xor, R8.xor_self, R8.xor_comm, R8.xor_assoc,
+   R8.cayley_inj, R8.epsAtOrigin_cayley,
+   R8.imprint_imprint, R8.project_project, R8.imprint_project_comm⟩
 
-end SSBX.Foundation.Bagua.Cell256
+end SSBX.Foundation.Bagua.R8

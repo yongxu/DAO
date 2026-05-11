@@ -10,10 +10,10 @@ Per-s sub-blocks (left as offset parameters) handle the encNat t consumption
 and final pc-update.  This is the "outer" half of branchShiEq dispatch;
 the per-t inner dispatch is C.D-pending.
 
-## Phase F.2 migration note (Cell192 → Cell256)
+## Phase F.2 migration note (Cell192 → R8)
 
 Pre-migration `Shi` was a 3-cycle `{已, 今, 未}` and the dispatcher branched
-3-ways. With Cell256 `Shi` is a V₄ Klein 4-group `{道, 已, 今, 未}` and the
+3-ways. With R8 `Shi` is a V₄ Klein 4-group `{道, 已, 今, 未}` and the
 dispatcher must route 4-ways. We add an explicit `Shi.dao` arm; the
 fall-through (default) target is the wei branch, with `dao` checked first.
 
@@ -42,7 +42,7 @@ import SSBX.Foundation.Wen.MetaInterp.ExecuteBlock
 namespace SSBX.Foundation.Wen.MetaInterp.SubDispatch_BranchShiEq
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
 open SSBX.Foundation.Wen.WenyanSelfInterp.YiInstrEnc
@@ -75,7 +75,7 @@ Fuel trace (from pc = 0):
 
 /-- Routing for `s = Shi.dao`: after 2 fuel steps, pc lands at `daoSubOff`. -/
 theorem subDispatchBranchShiEq_routes_dao
-    (curHex : Hexagram) (curShi : Shi) (tail : List Cell256)
+    (curHex : Hexagram) (curShi : Shi) (tail : List R8)
     (daoSubOff jiSubOff jinSubOff weiSubOff : Nat) :
     let μ : YiState :=
       { cur := (curHex, curShi)
@@ -104,7 +104,7 @@ Fuel trace (from pc = 0):
 
 /-- Routing for `s = Shi.ji`: after 3 fuel steps, pc lands at `jiSubOff`. -/
 theorem subDispatchBranchShiEq_routes_ji
-    (curHex : Hexagram) (curShi : Shi) (tail : List Cell256)
+    (curHex : Hexagram) (curShi : Shi) (tail : List R8)
     (daoSubOff jiSubOff jinSubOff weiSubOff : Nat) :
     let μ : YiState :=
       { cur := (curHex, curShi)
@@ -135,7 +135,7 @@ Fuel trace (from pc = 0):
 
 /-- Routing for `s = Shi.jin`: after 4 fuel steps, pc lands at `jinSubOff`. -/
 theorem subDispatchBranchShiEq_routes_jin
-    (curHex : Hexagram) (curShi : Shi) (tail : List Cell256)
+    (curHex : Hexagram) (curShi : Shi) (tail : List R8)
     (daoSubOff jiSubOff jinSubOff weiSubOff : Nat) :
     let μ : YiState :=
       { cur := (curHex, curShi)
@@ -168,7 +168,7 @@ Fuel trace (from pc = 0):
 
 /-- Routing for `s = Shi.wei`: after 5 fuel steps, pc lands at `weiSubOff`. -/
 theorem subDispatchBranchShiEq_routes_wei
-    (curHex : Hexagram) (curShi : Shi) (tail : List Cell256)
+    (curHex : Hexagram) (curShi : Shi) (tail : List R8)
     (daoSubOff jiSubOff jinSubOff weiSubOff : Nat) :
     let μ : YiState :=
       { cur := (curHex, curShi)

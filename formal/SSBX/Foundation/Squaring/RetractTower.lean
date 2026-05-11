@@ -10,15 +10,14 @@ import SSBX.Foundation.Hierarchy.LiftProject
 namespace SSBX.Foundation.Squaring
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
 open SSBX.Foundation.Hierarchy.LiftProject
 
 namespace RetractTower
 
-def liftR8toL1 : Cell256 → L1 := L1.diag
-def projL1toR8 : L1 → Cell256 := L1.proj1
+def liftR8toL1 : R8 → L1 := L1.diag
+def projL1toR8 : L1 → R8 := L1.proj1
 
-theorem proj_lift_id_L1 (c : Cell256) : projL1toR8 (liftR8toL1 c) = c := rfl
+theorem proj_lift_id_L1 (c : R8) : projL1toR8 (liftR8toL1 c) = c := rfl
 
 def projL1toR7 (l : L1) : R7 := projR8toR7 (projL1toR8 l)
 def projL1toR6 (l : L1) : R6 := projR7toR6 (projL1toR7 l)
@@ -93,8 +92,8 @@ theorem proj_liftR7toL1 (c : R7) : projL1toR7 (liftR7toL1 c) = c := by
   exact proj_lift_id_R7 c false
 
 theorem retract_tower_summary :
-    (∀ c : Cell256, projL1toR8 (liftR8toL1 c) = c)
-    ∧ (∀ aa : Cell256 × Cell256,
+    (∀ c : R8, projL1toR8 (liftR8toL1 c) = c)
+    ∧ (∀ aa : R8 × R8,
         squareProj projL1toR8 (squareRetract liftR8toL1 aa) = aa)
     ∧ (∀ r : R0, projL1toR0 (liftR0toL1 r) = r)
     ∧ (∀ y : R1, projL1toR1 (liftR1toL1 y) = y)

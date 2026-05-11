@@ -64,7 +64,7 @@ import SSBX.Foundation.Wen.MetaInterp.ExecuteBlock
 namespace SSBX.Foundation.Wen.MetaInterp.ExecuteBlock
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.MetaInterp
 
@@ -102,7 +102,7 @@ theorem executeBlock_setShi_second (sh : Shi) (offset fetchOffset : Nat) :
     itself there is no history modification). -/
 theorem executeBlock_setShi_local_effect
     (sh : Shi) (h : Hexagram) (sh₀ : Shi)
-    (history : List Cell256) (fetchOffset offset : Nat) :
+    (history : List R8) (fetchOffset offset : Nat) :
     let μ : YiState :=
       { cur := (h, sh₀)
         history := history
@@ -166,7 +166,7 @@ theorem executeBlock_flipYao_second (i : Fin 6) (offset fetchOffset : Nat) :
     `(h.flipPos i, sh)` and jumps to fetchOffset. -/
 theorem executeBlock_flipYao_local_effect
     (i : Fin 6) (h : Hexagram) (sh : Shi)
-    (history : List Cell256) (fetchOffset offset : Nat) :
+    (history : List R8) (fetchOffset offset : Nat) :
     let μ : YiState :=
       { cur := (h, sh)
         history := history

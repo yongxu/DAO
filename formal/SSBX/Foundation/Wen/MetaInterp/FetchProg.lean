@@ -77,7 +77,7 @@ import SSBX.Foundation.Wen.MetaInterp.Fetch
 namespace SSBX.Foundation.Wen.MetaInterp.FetchProg
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
 open SSBX.Foundation.Wen.MetaInterp

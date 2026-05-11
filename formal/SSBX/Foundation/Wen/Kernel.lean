@@ -110,46 +110,46 @@ KernelDanZi → MonadRoot.CoreAtom (9 共有 字: 一/元/动/行/生/仁/理/�
 
 import SSBX.Foundation.Core.MonadRoot
 import SSBX.Foundation.Wen.Operators
-import SSBX.Foundation.Bagua.Cell128
+import SSBX.Foundation.Bagua.R7
 import SSBX.Foundation.Yi.Yi
 
 namespace SSBX.Foundation.Wen.Kernel
 
 open SSBX.Foundation.Yi.Yi (Yao Hexagram)
-open SSBX.Foundation.Bagua.Cell128 (Cell128)
+open SSBX.Foundation.Bagua.R7 (R7)
 
 /-- Local alias for cell-XOR; avoids name conflict with `Kernel.origin` etc.
-    The xor/origin live inside an INNER `Cell128` namespace within the file
-    namespace `SSBX.Foundation.Bagua.Cell128`. -/
-private abbrev cell128Xor : Cell128 → Cell128 → Cell128 :=
-  SSBX.Foundation.Bagua.Cell128.Cell128.xor
+    The xor/origin live inside an INNER `R7` namespace within the file
+    namespace `SSBX.Foundation.Bagua.R7`. -/
+private abbrev cell128Xor : R7 → R7 → R7 :=
+  SSBX.Foundation.Bagua.R7.R7.xor
 
 /-- Local alias for cell-origin; avoids name conflict with `Kernel.origin`. -/
-private abbrev cell128Origin : Cell128 :=
-  SSBX.Foundation.Bagua.Cell128.Cell128.origin
+private abbrev cell128Origin : R7 :=
+  SSBX.Foundation.Bagua.R7.R7.origin
 
 /-! ## Phase K — Cayley-native grounding (native, no opacity)
 
-  Field IS the R₇ layer `Cell128 = Hexagram × YinBit = (Z/2)⁷`.
+  Field IS the R₇ layer `R7 = Hexagram × YinBit = (Z/2)⁷`.
   `motion` is XOR with the doctrinal primer cell c_motion = 姤·无 = 仁.
   No opacity, no `One` indirection — the substrate is the native
   (Z/2)⁷ algebra. Every Kernel concept (中/极/几/势/...) reads
   through R₇ cells with Cayley action.
 
-  Cayley grounding: `motion s = Cell128.xor s c_motion` — definitionally,
+  Cayley grounding: `motion s = R7.xor s c_motion` — definitionally,
   proven by `rfl`. No axiom.
 -/
 
-/-- 場 (Field): the R₇ layer = Cell128 = (Z/2)⁷.
+/-- 場 (Field): the R₇ layer = R7 = (Z/2)⁷.
     Pure abbrev — the R-hierarchy is the substrate. -/
-abbrev Field : Type := Cell128
+abbrev Field : Type := R7
 
 /-- 一 (yiOne) alias for the framework root type — Field = R₇. -/
 abbrev yiOne : Type := Field
 
 /-- The canonical "primer movement" cell.
     = 姤·无 = R7_xoooooo = "first stir" / 仁 (Wuchang.benevolence) -/
-def c_motion : Cell128 :=
+def c_motion : R7 :=
   (⟨Yao.yin, Yao.yang, Yao.yang, Yao.yang, Yao.yang, Yao.yang⟩, false)
 
 /-- 動 (motion): Cayley XOR with c_motion. Not opaque — the doctrine

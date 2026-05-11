@@ -13,7 +13,7 @@ sub-block.  We give the **structural** dispatch tree here and document the
 sub-dispatch protocol; the per-(op, param) sub-dispatch trees are built
 parametrically by `subDispatchSetShi`, `subDispatchFlipYao`, etc.
 
-## Phase F.2 migration note (Cell192 → Cell256)
+## Phase F.2 migration note (Cell192 → R8)
 
 Pre-migration `Shi` was a 3-cycle and the 12 tags decomposed as
 `(hex_idx ∈ {0,1,2,3}, shi_idx ∈ {0,1,2})`.  Post-migration `Shi` is a V₄
@@ -102,7 +102,7 @@ import SSBX.Foundation.Wen.MetaInterp.Block_PushPop
 namespace SSBX.Foundation.Wen.MetaInterp.Dispatch
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanSelfInterp
 open SSBX.Foundation.Wen.WenyanSelfInterp.YiInstrEnc
@@ -277,7 +277,7 @@ private theorem encShi_shi (sh : Shi) : (encShi sh).2 = sh := by
     `wei`) META lands at the correct branch offset. -/
 theorem subDispatchSetShi_routes
     (sh : Shi) (daoOff jiOff jinOff weiOff : Nat)
-    (cur : Cell256) (rest : List Cell256) :
+    (cur : R8) (rest : List R8) :
     let μ : YiState :=
       { cur := cur
         history := encShi sh :: rest
@@ -355,7 +355,7 @@ theorem subDispatchFlipYao_length (base a b c d e f : Nat) :
 -/
 theorem subDispatchFlipYao_routes
     (i : Fin 6) (off0 off1 off2 off3 off4 off5 : Nat)
-    (cur : Cell256) (rest : List Cell256) :
+    (cur : R8) (rest : List R8) :
     let μ : YiState :=
       { cur := cur
         history := encFin6 i :: rest
@@ -377,37 +377,37 @@ theorem subDispatchFlipYao_routes
       simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin,
             subDispatchFlipYao, Hexagram.yaoAt,
             encFin6, cellFromIdx, Hexagram.fromIdx, Yao.fromIdx,
-            SSBX.Foundation.Bagua.Cell256.Shi.fromIdx]
+            SSBX.Foundation.Bagua.R8.Shi.fromIdx]
   | ⟨1, _⟩ =>
     refine ⟨?_, ?_, ?_, ?_⟩ <;>
       simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin,
             subDispatchFlipYao, Hexagram.yaoAt,
             encFin6, cellFromIdx, Hexagram.fromIdx, Yao.fromIdx,
-            SSBX.Foundation.Bagua.Cell256.Shi.fromIdx]
+            SSBX.Foundation.Bagua.R8.Shi.fromIdx]
   | ⟨2, _⟩ =>
     refine ⟨?_, ?_, ?_, ?_⟩ <;>
       simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin,
             subDispatchFlipYao, Hexagram.yaoAt,
             encFin6, cellFromIdx, Hexagram.fromIdx, Yao.fromIdx,
-            SSBX.Foundation.Bagua.Cell256.Shi.fromIdx]
+            SSBX.Foundation.Bagua.R8.Shi.fromIdx]
   | ⟨3, _⟩ =>
     refine ⟨?_, ?_, ?_, ?_⟩ <;>
       simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin, Shi.wei,
             subDispatchFlipYao, Hexagram.yaoAt,
             encFin6, cellFromIdx, Hexagram.fromIdx, Yao.fromIdx,
-            SSBX.Foundation.Bagua.Cell256.Shi.fromIdx]
+            SSBX.Foundation.Bagua.R8.Shi.fromIdx]
   | ⟨4, _⟩ =>
     refine ⟨?_, ?_, ?_, ?_⟩ <;>
       simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin,
             subDispatchFlipYao, Hexagram.yaoAt,
             encFin6, cellFromIdx, Hexagram.fromIdx, Yao.fromIdx,
-            SSBX.Foundation.Bagua.Cell256.Shi.fromIdx]
+            SSBX.Foundation.Bagua.R8.Shi.fromIdx]
   | ⟨5, _⟩ =>
     refine ⟨?_, ?_, ?_, ?_⟩ <;>
       simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin,
             subDispatchFlipYao, Hexagram.yaoAt,
             encFin6, cellFromIdx, Hexagram.fromIdx, Yao.fromIdx,
-            SSBX.Foundation.Bagua.Cell256.Shi.fromIdx]
+            SSBX.Foundation.Bagua.R8.Shi.fromIdx]
 
 /-! ## § 5  Concrete routing proofs — all 12 opcode tags
 
@@ -432,7 +432,7 @@ hex_idx (= k/4) and shi_idx (= k%4):
 
 /-! ### nop  (k=0, hex_idx=0, shi=dao) -/
 
-def nopTag : Cell256 := cellFromIdx ⟨0, by omega⟩
+def nopTag : R8 := cellFromIdx ⟨0, by omega⟩
 
 private theorem nopTag_yao : nopTag.1.y1 = Yao.yang
                            ∧ nopTag.1.y2 = Yao.yang
@@ -447,7 +447,7 @@ private theorem nopTag_shi : nopTag.2 = Shi.dao := by
   rfl
 
 theorem dispatchTree_routes_nop
-    (offsets : DispatchOffsets) (history : List Cell256) :
+    (offsets : DispatchOffsets) (history : List R8) :
     let μ : YiState :=
       { cur := nopTag
         history := history
@@ -466,7 +466,7 @@ theorem dispatchTree_routes_nop
 
 /-! ### setShi  (k=1, hex_idx=0, shi=ji) -/
 
-def setShiTag : Cell256 := cellFromIdx ⟨1, by omega⟩
+def setShiTag : R8 := cellFromIdx ⟨1, by omega⟩
 
 private theorem setShiTag_yao : setShiTag.1.y1 = Yao.yang
                               ∧ setShiTag.1.y2 = Yao.yang
@@ -481,7 +481,7 @@ private theorem setShiTag_shi : setShiTag.2 = Shi.ji := by
   rfl
 
 theorem dispatchTree_routes_setShi
-    (offsets : DispatchOffsets) (history : List Cell256) :
+    (offsets : DispatchOffsets) (history : List R8) :
     let μ : YiState :=
       { cur := setShiTag
         history := history
@@ -501,7 +501,7 @@ theorem dispatchTree_routes_setShi
 
 /-! ### flipYao  (k=2, hex_idx=0, shi=jin) -/
 
-def flipYaoTag : Cell256 := cellFromIdx ⟨2, by omega⟩
+def flipYaoTag : R8 := cellFromIdx ⟨2, by omega⟩
 
 private theorem flipYaoTag_yao : flipYaoTag.1.y1 = Yao.yang
                                ∧ flipYaoTag.1.y2 = Yao.yang
@@ -516,7 +516,7 @@ private theorem flipYaoTag_shi : flipYaoTag.2 = Shi.jin := by
   rfl
 
 theorem dispatchTree_routes_flipYao
-    (offsets : DispatchOffsets) (history : List Cell256) :
+    (offsets : DispatchOffsets) (history : List R8) :
     let μ : YiState :=
       { cur := flipYaoTag
         history := history
@@ -536,7 +536,7 @@ theorem dispatchTree_routes_flipYao
 
 /-! ### interlace  (k=3, hex_idx=0, shi=wei) -/
 
-def huTag : Cell256 := cellFromIdx ⟨3, by omega⟩
+def huTag : R8 := cellFromIdx ⟨3, by omega⟩
 
 private theorem huTag_yao : huTag.1.y1 = Yao.yang
                           ∧ huTag.1.y2 = Yao.yang
@@ -551,7 +551,7 @@ private theorem huTag_shi : huTag.2 = Shi.wei := by
   rfl
 
 theorem dispatchTree_routes_hu
-    (offsets : DispatchOffsets) (history : List Cell256) :
+    (offsets : DispatchOffsets) (history : List R8) :
     let μ : YiState :=
       { cur := huTag
         history := history
@@ -570,7 +570,7 @@ theorem dispatchTree_routes_hu
 
 /-! ### complement  (k=4, hex_idx=1, shi=dao) -/
 
-def cuoTag : Cell256 := cellFromIdx ⟨4, by omega⟩
+def cuoTag : R8 := cellFromIdx ⟨4, by omega⟩
 
 private theorem cuoTag_yao : cuoTag.1.y1 = Yao.yin
                            ∧ cuoTag.1.y2 = Yao.yang
@@ -585,7 +585,7 @@ private theorem cuoTag_shi : cuoTag.2 = Shi.dao := by
   rfl
 
 theorem dispatchTree_routes_cuo
-    (offsets : DispatchOffsets) (history : List Cell256) :
+    (offsets : DispatchOffsets) (history : List R8) :
     let μ : YiState :=
       { cur := cuoTag
         history := history
@@ -604,7 +604,7 @@ theorem dispatchTree_routes_cuo
 
 /-! ### reverse  (k=5, hex_idx=1, shi=ji) -/
 
-def zongTag : Cell256 := cellFromIdx ⟨5, by omega⟩
+def zongTag : R8 := cellFromIdx ⟨5, by omega⟩
 
 private theorem zongTag_yao : zongTag.1.y1 = Yao.yin
                             ∧ zongTag.1.y2 = Yao.yang
@@ -619,7 +619,7 @@ private theorem zongTag_shi : zongTag.2 = Shi.ji := by
   rfl
 
 theorem dispatchTree_routes_zong
-    (offsets : DispatchOffsets) (history : List Cell256) :
+    (offsets : DispatchOffsets) (history : List R8) :
     let μ : YiState :=
       { cur := zongTag
         history := history
@@ -638,7 +638,7 @@ theorem dispatchTree_routes_zong
 
 /-! ### branchYaoEq  (k=6, hex_idx=1, shi=jin) -/
 
-def branchYaoEqTag : Cell256 := cellFromIdx ⟨6, by omega⟩
+def branchYaoEqTag : R8 := cellFromIdx ⟨6, by omega⟩
 
 private theorem branchYaoEqTag_yao : branchYaoEqTag.1.y1 = Yao.yin
                                    ∧ branchYaoEqTag.1.y2 = Yao.yang
@@ -653,7 +653,7 @@ private theorem branchYaoEqTag_shi : branchYaoEqTag.2 = Shi.jin := by
   rfl
 
 theorem dispatchTree_routes_branchYaoEq
-    (offsets : DispatchOffsets) (history : List Cell256) :
+    (offsets : DispatchOffsets) (history : List R8) :
     let μ : YiState :=
       { cur := branchYaoEqTag
         history := history
@@ -673,7 +673,7 @@ theorem dispatchTree_routes_branchYaoEq
 
 /-! ### branchShiEq  (k=7, hex_idx=1, shi=wei) -/
 
-def branchShiEqTag : Cell256 := cellFromIdx ⟨7, by omega⟩
+def branchShiEqTag : R8 := cellFromIdx ⟨7, by omega⟩
 
 private theorem branchShiEqTag_yao : branchShiEqTag.1.y1 = Yao.yin
                                    ∧ branchShiEqTag.1.y2 = Yao.yang
@@ -688,7 +688,7 @@ private theorem branchShiEqTag_shi : branchShiEqTag.2 = Shi.wei := by
   rfl
 
 theorem dispatchTree_routes_branchShiEq
-    (offsets : DispatchOffsets) (history : List Cell256) :
+    (offsets : DispatchOffsets) (history : List R8) :
     let μ : YiState :=
       { cur := branchShiEqTag
         history := history
@@ -708,7 +708,7 @@ theorem dispatchTree_routes_branchShiEq
 
 /-! ### jump  (k=8, hex_idx=2, shi=dao) -/
 
-def jumpTag : Cell256 := cellFromIdx ⟨8, by omega⟩
+def jumpTag : R8 := cellFromIdx ⟨8, by omega⟩
 
 private theorem jumpTag_yao : jumpTag.1.y1 = Yao.yang
                             ∧ jumpTag.1.y2 = Yao.yin
@@ -723,7 +723,7 @@ private theorem jumpTag_shi : jumpTag.2 = Shi.dao := by
   rfl
 
 theorem dispatchTree_routes_jump
-    (offsets : DispatchOffsets) (history : List Cell256) :
+    (offsets : DispatchOffsets) (history : List R8) :
     let μ : YiState :=
       { cur := jumpTag
         history := history
@@ -742,7 +742,7 @@ theorem dispatchTree_routes_jump
 
 /-! ### push  (k=9, hex_idx=2, shi=ji) -/
 
-def pushTag : Cell256 := cellFromIdx ⟨9, by omega⟩
+def pushTag : R8 := cellFromIdx ⟨9, by omega⟩
 
 private theorem pushTag_yao : pushTag.1.y1 = Yao.yang
                             ∧ pushTag.1.y2 = Yao.yin
@@ -757,7 +757,7 @@ private theorem pushTag_shi : pushTag.2 = Shi.ji := by
   rfl
 
 theorem dispatchTree_routes_push
-    (offsets : DispatchOffsets) (history : List Cell256) :
+    (offsets : DispatchOffsets) (history : List R8) :
     let μ : YiState :=
       { cur := pushTag
         history := history
@@ -776,7 +776,7 @@ theorem dispatchTree_routes_push
 
 /-! ### pop  (k=10, hex_idx=2, shi=jin) -/
 
-def popTag : Cell256 := cellFromIdx ⟨10, by omega⟩
+def popTag : R8 := cellFromIdx ⟨10, by omega⟩
 
 private theorem popTag_yao : popTag.1.y1 = Yao.yang
                            ∧ popTag.1.y2 = Yao.yin
@@ -791,7 +791,7 @@ private theorem popTag_shi : popTag.2 = Shi.jin := by
   rfl
 
 theorem dispatchTree_routes_pop
-    (offsets : DispatchOffsets) (history : List Cell256) :
+    (offsets : DispatchOffsets) (history : List R8) :
     let μ : YiState :=
       { cur := popTag
         history := history
@@ -810,7 +810,7 @@ theorem dispatchTree_routes_pop
 
 /-! ### halt  (k=11, hex_idx=2, shi=wei) -/
 
-def haltTag : Cell256 := cellFromIdx ⟨11, by omega⟩
+def haltTag : R8 := cellFromIdx ⟨11, by omega⟩
 
 private theorem haltTag_yao : haltTag.1.y1 = Yao.yang
                             ∧ haltTag.1.y2 = Yao.yin
@@ -825,7 +825,7 @@ private theorem haltTag_shi : haltTag.2 = Shi.wei := by
   rfl
 
 theorem dispatchTree_routes_halt
-    (offsets : DispatchOffsets) (history : List Cell256) :
+    (offsets : DispatchOffsets) (history : List R8) :
     let μ : YiState :=
       { cur := haltTag
         history := history

@@ -44,7 +44,7 @@ import Mathlib.Tactic.IntervalCases
 namespace SSBX.Foundation.Wen.WenyanParserGeneral
 
 open SSBX.Foundation.Yi.Yi
-open SSBX.Foundation.Bagua.Cell256
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Bagua.BaguaTuring
 open SSBX.Foundation.Wen.WenyanParser
 

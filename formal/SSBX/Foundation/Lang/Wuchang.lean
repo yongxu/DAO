@@ -1,7 +1,7 @@
 /-
-# 五常 — 仁义礼智信 as named Cell128 constants
+# 五常 — 仁义礼智信 as named R7 constants
 
-The Five Confucian Constants placed in Cell128 = (Z/2)⁷ such that they
+The Five Confucian Constants placed in R7 = (Z/2)⁷ such that they
 XOR to 道 (origin). The placement is forced by the (Z/2)⁷ algebra:
 **any five cells that balance to 道 must have one of them equal to the
 XOR of the other four.** The doctrine names this synthetic element 信
@@ -9,7 +9,7 @@ XOR of the other four.** The doctrine names this synthetic element 信
 
 ## Placement (Option A: single-yao flips + synthesis)
 
-| 字 | 五行 | Cell128 atom | 算子 (Cayley yuan view) |
+| 字 | 五行 | R7 atom | 算子 (Cayley yuan view) |
 | --- | --- | --- | --- |
 | 仁 | 木 | `(heaven.flipY1, false)` = `xoooooo` | flip 初爻 (initiate) |
 | 义 | 金 | `(heaven.flipY2, false)` = `oxooooo` | flip 二爻 (discriminate) |
@@ -41,34 +41,34 @@ and balance to 道.
 - `traditional_not_dao` : the trigram-doubled 五行→卦 placement does NOT XOR to 道
 -/
 
-import SSBX.Foundation.Bagua.Cell128
+import SSBX.Foundation.Bagua.R7
 import SSBX.Foundation.Lang.DaoJudge
 
 namespace SSBX.Foundation.Lang.Wuchang
 
 open SSBX.Foundation.Yi.Yi (Yao Hexagram)
-open SSBX.Foundation.Bagua.Cell128
+open SSBX.Foundation.Bagua.R7
 
 /-! ## § 1  五常 cells (Option A) -/
 
 /-- 仁 (benevolence, 木): flip 初爻. Cayley action moves yang→yin at y1. -/
-def benevolence : Cell128 :=
+def benevolence : R7 :=
   (⟨.yin, .yang, .yang, .yang, .yang, .yang⟩, false)
 
 /-- 义 (righteousness, 金): flip 二爻. -/
-def righteousness : Cell128 :=
+def righteousness : R7 :=
   (⟨.yang, .yin, .yang, .yang, .yang, .yang⟩, false)
 
 /-- 礼 (propriety, 火): flip 三爻. -/
-def propriety : Cell128 :=
+def propriety : R7 :=
   (⟨.yang, .yang, .yin, .yang, .yang, .yang⟩, false)
 
 /-- 智 (wisdom, 水): flip 四爻. -/
-def wisdom : Cell128 :=
+def wisdom : R7 :=
   (⟨.yang, .yang, .yang, .yin, .yang, .yang⟩, false)
 
 /-- 信 (integrity, 土): flip y1..y4 simultaneously = 仁⊕义⊕礼⊕智. -/
-def integrity : Cell128 :=
+def integrity : R7 :=
   (⟨.yin, .yin, .yin, .yin, .yang, .yang⟩, false)
 
 /-! ## § 2  五常 → 字 (DaoJudge atom encoding) -/
@@ -83,18 +83,18 @@ example : DaoJudge.printCellAtom integrity = "xxxxooo" := by native_decide
 
 /-- 信 is the synthesis of the other four (definitional / `decide`). -/
 theorem integrity_eq_synthesis :
-    integrity = Cell128.xor (Cell128.xor (Cell128.xor benevolence righteousness) propriety) wisdom := by
+    integrity = R7.xor (R7.xor (R7.xor benevolence righteousness) propriety) wisdom := by
   decide
 
 /-- 五常归一: 仁⊕义⊕礼⊕智⊕信 = 道. -/
 theorem fiveConstants_return_dao :
-    Cell128.xor (Cell128.xor (Cell128.xor (Cell128.xor benevolence righteousness) propriety) wisdom) integrity
-      = Cell128.origin := by
+    R7.xor (R7.xor (R7.xor (R7.xor benevolence righteousness) propriety) wisdom) integrity
+      = R7.origin := by
   decide
 
 /-- 四端不合: without 信, the four don't balance. -/
 theorem fourBuds_unbalanced :
-    Cell128.xor (Cell128.xor (Cell128.xor benevolence righteousness) propriety) wisdom ≠ Cell128.origin := by
+    R7.xor (R7.xor (R7.xor benevolence righteousness) propriety) wisdom ≠ R7.origin := by
   decide
 
 /-! ## § 4  五常 in the Lisp surface
@@ -123,35 +123,35 @@ Documented for completeness; proven NOT to balance to 道.
 namespace traditional
 
 /-- 仁 = 震䷲ (☳☳ = pure thunder, 木). -/
-def benevolence : Cell128 :=
+def benevolence : R7 :=
   (⟨.yang, .yin, .yin, .yang, .yin, .yin⟩, false)
 
 /-- 义 = 兑䷹ (☱☱ = pure lake, 金). -/
-def righteousness : Cell128 :=
+def righteousness : R7 :=
   (⟨.yang, .yang, .yin, .yang, .yang, .yin⟩, false)
 
 /-- 礼 = 离䷝ (☲☲ = pure fire, 火). -/
-def propriety : Cell128 :=
+def propriety : R7 :=
   (⟨.yang, .yin, .yang, .yang, .yin, .yang⟩, false)
 
 /-- 智 = 坎䷜ (☵☵ = pure water, 水). -/
-def wisdom : Cell128 :=
+def wisdom : R7 :=
   (⟨.yin, .yang, .yin, .yin, .yang, .yin⟩, false)
 
 /-- 信 = 坤䷁ (☷☷ = pure earth, 土). -/
-def integrity : Cell128 :=
+def integrity : R7 :=
   (⟨.yin, .yin, .yin, .yin, .yin, .yin⟩, false)
 
 theorem traditional_not_dao :
-    Cell128.xor (Cell128.xor (Cell128.xor (Cell128.xor benevolence righteousness) propriety) wisdom) integrity
-      ≠ Cell128.origin := by
+    R7.xor (R7.xor (R7.xor (R7.xor benevolence righteousness) propriety) wisdom) integrity
+      ≠ R7.origin := by
   decide
 
 /-- The traditional placement actually XOR's to 礼_li. The doctrine "五行
 循环" is a Z/5 structure; (Z/2)⁷ doesn't accommodate it without an
 external twist. -/
 theorem traditional_xor_eq_propriety :
-    Cell128.xor (Cell128.xor (Cell128.xor (Cell128.xor benevolence righteousness) propriety) wisdom) integrity
+    R7.xor (R7.xor (R7.xor (R7.xor benevolence righteousness) propriety) wisdom) integrity
       = propriety := by
   decide
 
@@ -165,8 +165,8 @@ theorem fiveConstants_summary :
     DaoJudge.printCellAtom propriety = "ooxoooo" ∧
     DaoJudge.printCellAtom wisdom = "oooxooo" ∧
     DaoJudge.printCellAtom integrity = "xxxxooo" ∧
-    Cell128.xor (Cell128.xor (Cell128.xor (Cell128.xor benevolence righteousness) propriety) wisdom) integrity
-      = Cell128.origin ∧
+    R7.xor (R7.xor (R7.xor (R7.xor benevolence righteousness) propriety) wisdom) integrity
+      = R7.origin ∧
     DaoJudge.judge fiveConstants_program = true := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   all_goals first | native_decide | decide
