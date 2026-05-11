@@ -471,6 +471,23 @@ theorem metaInterpProg_fetch_running_current_shape_exact
     regHex sim metaInterpProg fetchHaltDetectOffset dispatchOffset haltOffset
     metaInterpProg_fetchProg_at_offset
 
+/-- Consequence of `metaInterpProg_fetch_running_current_shape_exact`: the
+    current running fetch route reaches dispatch with the post-peel tail, not
+    canonical `encMetaHistory`.  This is a machine-checked boundary for the
+    pending fetch decode/restore phase. -/
+theorem metaInterpProg_fetch_running_history_not_canonical_exact
+    (regHex : Hexagram) (sim : YiState)
+    (h_running : sim.halted = false) :
+    ((Fetch.fetchEntryState regHex sim metaInterpProg fetchOffset).runFuel
+      ((3 * sim.pc + 3) + (1 + (FetchProg.walkerLen + 1)))).history ≠
+      encMetaHistory regHex sim := by
+  intro h_history
+  have h_shape :=
+    metaInterpProg_fetch_running_current_shape_exact regHex sim h_running
+  rw [h_shape] at h_history
+  exact Fetch.haltFlagTailAfterPeel_ne_encMetaHistory regHex sim
+    (by simpa [Fetch.haltFlagTailAfterPeel] using h_history)
+
 /-- Assembly-specialized halted fetch route for the inner halt-detection
     segment, with explicit peel fuel supplied by callers. -/
 theorem metaInterpProg_fetch_routes_halted_at_fuel

@@ -647,12 +647,69 @@ def pcCounterTailAfterPeel (regHex : Hexagram) (sim : YiState) : List R8 :=
   sim.history ++
   ProgEnc.encProg sim.prog
 
+/-- The tail immediately below the halted-flag cell, after fetch has popped
+    the halted flag into `META.cur`. -/
+def haltFlagTailAfterPeel (regHex : Hexagram) (sim : YiState) : List R8 :=
+  encCounter regHex sim.history.length ++
+  sim.history ++
+  ProgEnc.encProg sim.prog
+
+theorem pcCounterTailAfterPeel_eq_haltFlag_cons_tail
+    (regHex : Hexagram) (sim : YiState) :
+    pcCounterTailAfterPeel regHex sim =
+      encHaltedFlag regHex sim.halted ::
+        haltFlagTailAfterPeel regHex sim := by
+  unfold pcCounterTailAfterPeel haltFlagTailAfterPeel
+  simp
+
 theorem encMetaHistory_eq_pcCounter_append_tail
     (regHex : Hexagram) (sim : YiState) :
     encMetaHistory regHex sim =
       encCounter regHex sim.pc ++ pcCounterTailAfterPeel regHex sim := by
   unfold encMetaHistory pcCounterTailAfterPeel
   simp [List.append_assoc]
+
+/-- The post-peel tail is shorter than canonical `encMetaHistory` by exactly
+    the encoded pc-counter prefix. -/
+theorem encMetaHistory_length_eq_pcCounter_tail_length
+    (regHex : Hexagram) (sim : YiState) :
+    (encMetaHistory regHex sim).length =
+      sim.pc + 1 + (pcCounterTailAfterPeel regHex sim).length := by
+  rw [encMetaHistory_eq_pcCounter_append_tail]
+  simp [List.length_append, encCounter_length]
+
+/-- If both the pc-counter prefix and halted-flag cell have been consumed,
+    the remaining tail is shorter than canonical `encMetaHistory` by exactly
+    those two regions. -/
+theorem encMetaHistory_length_eq_pcCounter_haltFlag_tail_length
+    (regHex : Hexagram) (sim : YiState) :
+    (encMetaHistory regHex sim).length =
+      sim.pc + 1 + 1 + (haltFlagTailAfterPeel regHex sim).length := by
+  rw [encMetaHistory_eq_pcCounter_append_tail,
+    pcCounterTailAfterPeel_eq_haltFlag_cons_tail]
+  simp [List.length_append, encCounter_length]
+  omega
+
+/-- After the pc-counter has been peeled off, the remaining tail is not the
+    canonical encoded META history.  A real fetch-restore path must rebuild
+    the pc-counter prefix before handing off to dispatch. -/
+theorem pcCounterTailAfterPeel_ne_encMetaHistory
+    (regHex : Hexagram) (sim : YiState) :
+    pcCounterTailAfterPeel regHex sim ≠ encMetaHistory regHex sim := by
+  intro h
+  have hlen := congrArg List.length h
+  rw [encMetaHistory_length_eq_pcCounter_tail_length] at hlen
+  omega
+
+/-- After fetch has also popped the halted-flag cell into `META.cur`, the
+    remaining history still cannot be canonical `encMetaHistory`. -/
+theorem haltFlagTailAfterPeel_ne_encMetaHistory
+    (regHex : Hexagram) (sim : YiState) :
+    haltFlagTailAfterPeel regHex sim ≠ encMetaHistory regHex sim := by
+  intro h
+  have hlen := congrArg List.length h
+  rw [encMetaHistory_length_eq_pcCounter_haltFlag_tail_length] at hlen
+  omega
 
 /-- Canonical META history with its encoded program tail split at the
     source-level simulated pc.  This is the list-level bridge a real fetch
