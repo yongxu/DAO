@@ -73,7 +73,7 @@ def middleFlipDyn : DynSys Trigram where step := middleFlip
 def topFlipDyn : DynSys Trigram where step := topFlip
 
 /-- **complement 动力系统**（错卦：阴阳全反）。 -/
-def cuoDyn : DynSys Trigram where step := Trigram.complement
+def complementDyn : DynSys Trigram where step := Trigram.complement
 
 /-- **motion 在 乾 上之 2-周期性**：iter 2 = id at 乾。 -/
 theorem motion_heaven_period :
@@ -110,9 +110,9 @@ theorem topFlip_period_2 (t : Trigram) : IsPeriodic topFlipDyn 2 t :=
   topFlip_topFlip t
 
 /-- **complement 周期 = 2**：错² = id。 -/
-theorem cuo_period_2 (t : Trigram) : IsPeriodic cuoDyn 2 t := by
-  unfold IsPeriodic iter cuoDyn
-  exact Trigram.cuo_cuo t
+theorem complement_period_2 (t : Trigram) : IsPeriodic complementDyn 2 t := by
+  unfold IsPeriodic iter complementDyn
+  exact Trigram.complement_involutive t
 
 /-! ## § 5 Markov 链 之 Nat 计数版（接 TongJi 之大衍）-/
 
@@ -140,7 +140,7 @@ def zhiTrigram (t : Trigram) : Trigram := Trigram.complement t
 /-- **之卦动力周期 = 2**：本卦 → 之卦 → 本卦（complement² = id）。 -/
 theorem zhi_period_2 (t : Trigram) : zhiTrigram (zhiTrigram t) = t := by
   unfold zhiTrigram
-  exact Trigram.cuo_cuo t
+  exact Trigram.complement_involutive t
 
 /-! ## § 7 连续 ODE 之 finite approximation (Phase 4 先行)
 
@@ -231,7 +231,7 @@ theorem dongli_summary :
     ∧ (∀ t : Trigram, IsPeriodic dongDyn 2 t)
     ∧ (∀ t : Trigram, IsPeriodic middleFlipDyn 2 t)
     ∧ (∀ t : Trigram, IsPeriodic topFlipDyn 2 t)
-    ∧ (∀ t : Trigram, IsPeriodic cuoDyn 2 t)
+    ∧ (∀ t : Trigram, IsPeriodic complementDyn 2 t)
     ∧ (∀ t : Trigram, zhiTrigram (zhiTrigram t) = t)
     ∧ (∀ (S : DynSys Trigram) (n : Nat) (x : Trigram), (orbit S n x).length = n)
     ∧ (daYanProject .laoYin = .yang)
@@ -240,7 +240,7 @@ theorem dongli_summary :
     ∧ (∀ target current : Trigram, targetEulerStep target (targetEulerStep target current) = target)
     ∧ (∀ target current : Trigram, lyapunov target current ≤ 3) :=
   ⟨motion_no_fixed, middleFlip_no_fixed, topFlip_no_fixed,
-   motion_period_2, middleFlip_period_2, topFlip_period_2, cuo_period_2, zhi_period_2,
+   motion_period_2, middleFlip_period_2, topFlip_period_2, complement_period_2, zhi_period_2,
    orbit_length, daYanProject_laoYin_yang,
    targetEuler_one_step, lyapunov_descent_one_step,
    targetEuler_idempotent, lyapunov_bound⟩

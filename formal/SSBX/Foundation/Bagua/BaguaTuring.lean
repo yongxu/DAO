@@ -212,7 +212,7 @@ theorem shiNext_preserves_hex (c : Cell256) : (shiNext c).1 = c.1 := rfl
 /-- `shiNext` is now an involution (V₄ `complement` is order-2), no longer order-3. -/
 theorem shiNext_shiNext (c : Cell256) : shiNext (shiNext c) = c := by
   rcases c with ⟨h, s⟩
-  simp [shiNext, Shi.cuo_cuo]
+  simp [shiNext, Shi.complement_involutive]
 
 /-! ## § 6 道判机 — the Dao judge
 

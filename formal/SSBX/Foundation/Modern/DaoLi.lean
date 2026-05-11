@@ -243,7 +243,7 @@ theorem T6_V4_super_octahedral :
     ∧ (∀ h : Hexagram, V4_zong (V4_zong h) = h)
     ∧ (V4_image_taiHex ⟨0, by decide⟩ ≠ V4_image_taiHex ⟨1, by decide⟩) :=
   ⟨hexagram_card_64,
-   fun h => Hexagram.cuo_cuo h,
+   fun h => Hexagram.complement_involutive h,
    fun h => by unfold V4_zong; cases h; rfl,
    V4_taiHex_orbit_nontrivial⟩
 
@@ -273,7 +273,7 @@ theorem dao_li_summary :
    K3_tautology_eq_T,
    lem_not_K3_tautology,
    hexagram_card_64,
-   fun h => Hexagram.cuo_cuo h,
+   fun h => Hexagram.complement_involutive h,
    by decide⟩
 
 end SSBX.Foundation.Modern.DaoLi

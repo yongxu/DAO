@@ -103,7 +103,7 @@ theorem topFlip_iso (a b : Trigram) : ju (topFlip a) (topFlip b) = ju a b := by
     cases b₁ <;> cases b₂ <;> cases b₃ <;> rfl
 
 /-- **错 (complement) 等距**：错卦保距离（错 = 三反复合，由各反等距递进可得）。 -/
-theorem cuo_iso (a b : Trigram) : ju (Trigram.complement a) (Trigram.complement b) = ju a b := by
+theorem complement_iso (a b : Trigram) : ju (Trigram.complement a) (Trigram.complement b) = ju a b := by
   unfold ju hammingDist Trigram.complement
   rcases a with ⟨a₁, a₂, a₃⟩
   rcases b with ⟨b₁, b₂, b₃⟩

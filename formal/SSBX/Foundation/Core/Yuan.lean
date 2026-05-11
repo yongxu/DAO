@@ -182,8 +182,8 @@ theorem taiji_unfolds_to_dao : (taijiUnfold 6).length = Dao.length := by
 /-- 易 lifted to Hexagram: yao-wise flip. This is `Hexagram.complement`. -/
 def yiHex : Hexagram → Hexagram := Hexagram.complement
 
-/-- 易 (hex) is involutive — same as `cuo_cuo`. -/
-theorem yiHex_involutive (h : Hexagram) : yiHex (yiHex h) = h := Hexagram.cuo_cuo h
+/-- 易 (hex) is involutive — same as `complement_involutive`. -/
+theorem yiHex_involutive (h : Hexagram) : yiHex (yiHex h) = h := Hexagram.complement_involutive h
 
 /-- 大同 (dà tóng): 道 is closed under 易 — diversity reduces to a single
     closed transformation-space. Every transformed hex lands in 道. -/

@@ -116,10 +116,10 @@ def flip6 (c : Cell128) : Cell128 := (topFlipOuter c.1, c.2)
 /-! ### Involutivity -/
 
 theorem hexCuo_hexCuo (c : Cell128) : hexCuo (hexCuo c) = c := by
-  rcases c with ⟨h, b⟩; simp [hexCuo, Hexagram.cuo_cuo]
+  rcases c with ⟨h, b⟩; simp [hexCuo, Hexagram.complement_involutive]
 
 theorem hexZong_hexZong (c : Cell128) : hexZong (hexZong c) = c := by
-  rcases c with ⟨h, b⟩; simp [hexZong, Hexagram.zong_zong]
+  rcases c with ⟨h, b⟩; simp [hexZong, Hexagram.reverse_involutive]
 
 theorem flip1_flip1 (c : Cell128) : flip1 (flip1 c) = c := by
   rcases c with ⟨h, b⟩; simp [flip1, dongInner_dongInner]

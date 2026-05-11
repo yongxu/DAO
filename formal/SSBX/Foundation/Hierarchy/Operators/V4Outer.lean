@@ -86,11 +86,11 @@ def cell256_hu (c : Cell256) : Cell256 := Cell256.hexHu c
 
 /-- V₄ relation 1: 综² = id. -/
 theorem zong_involutive (h : Hexagram) : hex_zong (hex_zong h) = h :=
-  Hexagram.zong_zong h
+  Hexagram.reverse_involutive h
 
 /-- V₄ relation 2: 错² = id. -/
 theorem cuo_involutive (h : Hexagram) : hex_cuo (hex_cuo h) = h :=
-  Hexagram.cuo_cuo h
+  Hexagram.complement_involutive h
 
 /-- V₄ relation 3: 错综² = id. -/
 theorem cuoZong_involutive (h : Hexagram) : hex_cuoZong (hex_cuoZong h) = h :=
@@ -99,7 +99,7 @@ theorem cuoZong_involutive (h : Hexagram) : hex_cuoZong (hex_cuoZong h) = h :=
 /-- V₄ relation 4: 错 and 综 commute (the group is abelian). -/
 theorem cuo_zong_commute (h : Hexagram) :
     hex_cuo (hex_zong h) = hex_zong (hex_cuo h) :=
-  Hexagram.cuo_zong_comm h
+  Hexagram.complement_reverse_comm h
 
 /-- V₄ relation 5: 错综 = 错 ∘ 综 (defining the composite). -/
 theorem cuoZong_eq_cuo_zong (h : Hexagram) :
@@ -121,7 +121,7 @@ theorem cell256_zong_involutive (c : Cell256) : cell256_zong (cell256_zong c) = 
 
 theorem hu_fixed_iff (h : Hexagram) :
     hex_hu h = h ↔ h = Hexagram.heaven ∨ h = Hexagram.earth :=
-  Hexagram.hu_fixed_point h
+  Hexagram.interlace_fixed_point h
 
 /-! ## § 7 Public summary — the V₄ Klein-four group property + outer interlace
 

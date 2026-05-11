@@ -75,8 +75,8 @@ theorem bool3_trigram_roundtrip (b : Bool × Bool × Bool) :
 /-! ## § 3 complement² = id（对偶之 involution）-/
 
 /-- **错卦之 involution**（已在 Yi.lean 见证；此处 re-export 至物理语境）。 -/
-theorem cuo_involution (t : Trigram) : Trigram.complement (Trigram.complement t) = t :=
-  Trigram.cuo_cuo t
+theorem complement_involution (t : Trigram) : Trigram.complement (Trigram.complement t) = t :=
+  Trigram.complement_involutive t
 
 /-- **错综之 involution**（在 Hexagram 上）。 -/
 theorem cuoZong_involution (h : Hexagram) :
@@ -98,7 +98,7 @@ theorem yinCount_qian : Trigram.yinCount Trigram.heaven = 0 := by decide
 theorem yinCount_kun : Trigram.yinCount Trigram.earth = 3 := by decide
 
 /-- **错卦把 yinCount 之 mod 2 翻**：complement 翻三爻，每爻奇偶反转，三次翻使 mod 2 总和反转（3 mod 2 = 1）。 -/
-theorem cuo_yinCount_mod2 (t : Trigram) :
+theorem complement_yinCount_mod2 (t : Trigram) :
     (Trigram.yinCount (Trigram.complement t) + Trigram.yinCount t) % 2 = 1 := by
   cases t with
   | mk y1 y2 y3 => cases y1 <;> cases y2 <;> cases y3 <;> decide
@@ -176,7 +176,7 @@ theorem wuxiang_summary :
     ∧ (Trigram.all.length = 8) :=
   ⟨yao_bool_roundtrip, bool_yao_roundtrip,
    trigram_bool3_roundtrip, bool3_trigram_roundtrip,
-   cuo_involution, cuo_yinCount_mod2, motion_yinCount_mod2,
+   complement_involution, complement_yinCount_mod2, motion_yinCount_mod2,
    any_two_connected, trigram_card_anchor⟩
 
 end SSBX.Foundation.Eight.WuXiang

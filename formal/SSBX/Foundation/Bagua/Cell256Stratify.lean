@@ -145,7 +145,7 @@ def parity (c : R8) : R8 := (Hexagram.complement c.1, c.2)
 
 theorem parity_parity (c : R8) : parity (parity c) = c := by
   rcases c with ⟨h, s⟩
-  simp [parity, Hexagram.cuo_cuo]
+  simp [parity, Hexagram.complement_involutive]
 
 /-! ### timeReversal (T) — reverse on hex + reverse on Shi (V₄ 二层 T) -/
 
@@ -154,7 +154,7 @@ def timeReversal (c : R8) : R8 := (Hexagram.reverse c.1, c.2.reverse)
 
 theorem timeReversal_timeReversal (c : R8) : timeReversal (timeReversal c) = c := by
   rcases c with ⟨h, s⟩
-  simp [timeReversal, Hexagram.zong_zong, Shi.zong_zong]
+  simp [timeReversal, Hexagram.reverse_involutive, Shi.reverse_involutive]
 
 /-! ### PT = parity ∘ timeReversal = 错综 + Shi 双轴翻 -/
 
@@ -163,14 +163,14 @@ def PT (c : R8) : R8 := timeReversal (parity c)
 
 theorem PT_PT (c : R8) : PT (PT c) = c := by
   rcases c with ⟨h, s⟩
-  simp [PT, parity, timeReversal, Hexagram.zong_zong, Shi.zong_zong,
-        Hexagram.cuo_cuo, ← Hexagram.cuo_zong_comm]
+  simp [PT, parity, timeReversal, Hexagram.reverse_involutive, Shi.reverse_involutive,
+        Hexagram.complement_involutive, ← Hexagram.complement_reverse_comm]
 
 /-- P 与 T 交换（V₄ Klein 群结构）. -/
 theorem parity_timeReversal_comm (c : R8) :
     parity (timeReversal c) = timeReversal (parity c) := by
   rcases c with ⟨h, s⟩
-  simp [parity, timeReversal, Hexagram.cuo_zong_comm]
+  simp [parity, timeReversal, Hexagram.complement_reverse_comm]
 
 /-! ### yComb (Y) — interlace lifted -/
 
@@ -353,7 +353,7 @@ theorem parity_preserves_quadrant (c : R8) :
     R8.quadrant (parity c) = R8.quadrant c := by
   rcases c with ⟨h, s⟩
   simp [parity, R8.quadrant]
-  exact cuo_preserves_quadrant h
+  exact complement_preserves_quadrant h
 
 /-- timeReversal (reverse + Shi.reverse) 在 4 象限上的作用表. -/
 theorem timeReversal_quadrant (c : R8) :

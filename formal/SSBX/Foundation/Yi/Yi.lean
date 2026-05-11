@@ -83,10 +83,10 @@ def complement (t : Trigram) : Trigram := ⟨t.y1.neg, t.y2.neg, t.y3.neg⟩
 /-- 综 on a trigram: reverse yao order. -/
 def reverse (t : Trigram) : Trigram := ⟨t.y3, t.y2, t.y1⟩
 
-theorem cuo_cuo (t : Trigram) : t.complement.complement = t := by
+theorem complement_involutive (t : Trigram) : t.complement.complement = t := by
   simp [complement, Yao.neg_neg]
 
-theorem zong_zong (t : Trigram) : t.reverse.reverse = t := by
+theorem reverse_involutive (t : Trigram) : t.reverse.reverse = t := by
   cases t; rfl
 
 end Trigram
@@ -144,34 +144,34 @@ def interlace (h : Hexagram) : Hexagram :=
 /-! ### V_4 group properties -/
 
 /-- 错 is involutive: 错 ∘ 错 = id. -/
-theorem cuo_cuo (h : Hexagram) : h.complement.complement = h := by
+theorem complement_involutive (h : Hexagram) : h.complement.complement = h := by
   simp [complement, Yao.neg_neg]
 
 /-- 综 is involutive: 综 ∘ 综 = id. -/
-theorem zong_zong (h : Hexagram) : h.reverse.reverse = h := by
+theorem reverse_involutive (h : Hexagram) : h.reverse.reverse = h := by
   cases h; rfl
 
 /-- 错 and 综 commute: 错 ∘ 综 = 综 ∘ 错. -/
-theorem cuo_zong_comm (h : Hexagram) : h.complement.reverse = h.reverse.complement := by
+theorem complement_reverse_comm (h : Hexagram) : h.complement.reverse = h.reverse.complement := by
   cases h; rfl
 
 /-- 错综 is involutive (V_4 element of order 2). -/
 theorem cuoZong_cuoZong (h : Hexagram) : h.complementReverse.complementReverse = h := by
   show h.complement.reverse.complement.reverse = h
-  rw [show h.complement.reverse.complement = h.complement.complement.reverse from (cuo_zong_comm h.complement).symm]
-  rw [cuo_cuo, zong_zong]
+  rw [show h.complement.reverse.complement = h.complement.complement.reverse from (complement_reverse_comm h.complement).symm]
+  rw [complement_involutive, reverse_involutive]
 
 /-- {id, 错, 综, 错综} ≅ V_4 (Klein four-group): all elements satisfy x² = e. -/
 theorem v4_orders (h : Hexagram) :
     h = h ∧ h.complement.complement = h ∧ h.reverse.reverse = h ∧ h.complementReverse.complementReverse = h :=
-  ⟨rfl, cuo_cuo h, zong_zong h, cuoZong_cuoZong h⟩
+  ⟨rfl, complement_involutive h, reverse_involutive h, cuoZong_cuoZong h⟩
 
 /-! ### 互 fixed-point theorem -/
 
 /-- 互 fixed-point: H h = h ⟺ h ∈ {heaven, earth}.
     Proof: H h = h forces h.y1 = h.y2 = h.y3 = h.y4 = h.y5 = h.y6,
     so all 6 yao agree — either all yang (heaven) or all yin (earth). -/
-theorem hu_fixed_point (h : Hexagram) :
+theorem interlace_fixed_point (h : Hexagram) :
     h.interlace = h ↔ h = heaven ∨ h = earth := by
   constructor
   · intro heq
@@ -282,7 +282,7 @@ theorem trigram_count : Trigram.all.length = 8 := rfl
 
 /-- The two 互-fixed hexagrams are exactly 乾 and 坤 (restated without Set notation). -/
 theorem two_hu_fixed_points (h : Hexagram) :
-    h.interlace = h ↔ h = heaven ∨ h = earth := hu_fixed_point h
+    h.interlace = h ↔ h = heaven ∨ h = earth := interlace_fixed_point h
 
 end Hexagram
 
@@ -643,7 +643,7 @@ theorem iterHu_2_eq_earth_iff (h : Hexagram) :
 /-- **极反 dynamics**: 互² h is a fixed point of 互 ⟺ center pair agrees. -/
 theorem iterHu_2_fixed_iff_middle_agrees (h : Hexagram) :
     (iterHu 2 h).interlace = iterHu 2 h ↔ h.y3 = h.y4 := by
-  rw [hu_fixed_point]
+  rw [interlace_fixed_point]
   rw [iterHu_2_eq_heaven_iff, iterHu_2_eq_earth_iff]
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
@@ -879,12 +879,12 @@ def reverse : JianMode → JianMode
   | shen  => kai
   | kai   => shen
 
-theorem cuo_cuo (m : JianMode) : m.complement.complement = m := by cases m <;> rfl
-theorem zong_zong (m : JianMode) : m.reverse.reverse = m := by cases m <;> rfl
+theorem complement_involutive (m : JianMode) : m.complement.complement = m := by cases m <;> rfl
+theorem reverse_involutive (m : JianMode) : m.reverse.reverse = m := by cases m <;> rfl
 
 /-- 错 and 综 commute on JianMode (since 错 has period 2 and 综 has finite-order
     structure, V_4 is abelian). -/
-theorem cuo_zong_comm (m : JianMode) : m.complement.reverse = m.reverse.complement := by
+theorem complement_reverse_comm (m : JianMode) : m.complement.reverse = m.reverse.complement := by
   cases m <;> rfl
 
 /-- The 4 错-dual pairs as direct equalities. -/

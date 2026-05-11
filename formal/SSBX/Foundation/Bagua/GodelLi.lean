@@ -318,7 +318,7 @@ def cuoCell (c : Cell256) : Cell256 := (c.1.complement, c.2)
 /-- complement is involutive on cells. -/
 theorem cuoCell_cuoCell (c : Cell256) : cuoCell (cuoCell c) = c := by
   unfold cuoCell
-  simp [Hexagram.cuo_cuo]
+  simp [Hexagram.complement_involutive]
 
 /-- Apply complement to all hexagrams in a YiState (cur + history). -/
 def cuoState (s : YiState) : YiState :=
@@ -422,7 +422,7 @@ theorem cuoState_step (s : YiState) :
         simp [hu_cuo]
       | complement =>
         unfold YiState.execute cuoState cuoCell
-        simp [Hexagram.cuo_cuo]
+        simp [Hexagram.complement_involutive]
       | reverse =>
         unfold YiState.execute cuoState cuoCell
         simp [zong_cuo]
@@ -485,7 +485,7 @@ theorem halts_cuo_invariant (P : List YiInstr) (h : Hexagram) :
     Halts P h ↔ Halts P h.complement := by
   refine ⟨halts_cuo_forward P h, fun hyp => ?_⟩
   have := halts_cuo_forward P h.complement hyp
-  rwa [Hexagram.cuo_cuo] at this
+  rwa [Hexagram.complement_involutive] at this
 
 /-! ## § 3 Kleene 递归 假设 + 条件 Halting 不可判
 

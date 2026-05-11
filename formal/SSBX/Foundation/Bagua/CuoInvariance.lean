@@ -116,7 +116,7 @@ theorem unrestricted_kleene_inverter_inconsistent :
 
 /-- The unrestricted form is provably False; this is the receipt that
     `CuoInvariantDecide` precondition in `GodelLi.lean § 3` is REQUIRED. -/
-theorem cuo_invariance_summary :
+theorem complement_invariance_summary :
     -- (1) Halts is complement-invariant (already in GodelLi)
     (∀ P h, Halts P h ↔ Halts P h.complement)
     ∧ -- (2) Unrestricted KleeneInverter is logically false in Lean

@@ -234,11 +234,11 @@ def complement (r : KernelRole) : KernelRole := r.jianMode.complement.kernelRole
 def reverse (r : KernelRole) : KernelRole := r.jianMode.reverse.kernelRole
 
 /-- 错 is involutive. -/
-theorem cuo_cuo (r : KernelRole) : r.complement.complement = r := by
+theorem complement_involutive (r : KernelRole) : r.complement.complement = r := by
   cases r <;> rfl
 
 /-- 综 is involutive. -/
-theorem zong_zong (r : KernelRole) : r.reverse.reverse = r := by
+theorem reverse_involutive (r : KernelRole) : r.reverse.reverse = r := by
   cases r <;> rfl
 
 /-- 错 swaps extremity ↔ manifestation (sai ↔ xian; 塞 ↔ 显). -/
@@ -265,6 +265,6 @@ theorem bridge_summary :
   ⟨mode_role_left_inverse,
    mode_role_right_inverse,
    only_sai_extreme,
-   KernelRole.cuo_cuo⟩
+   KernelRole.complement_involutive⟩
 
 end SSBX.Foundation.Jian.JianModeKernel

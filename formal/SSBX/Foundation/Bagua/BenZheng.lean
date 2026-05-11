@@ -174,7 +174,7 @@ theorem ben_zheng_complement (t : Trigram) :
   simp [Trigram.isZongMobile]
 
 /-- complement 保 isZongFixed: 全反不破坏 palindrome. -/
-theorem cuo_preserves_isZongFixed (t : Trigram) :
+theorem complement_preserves_isZongFixed (t : Trigram) :
     t.complement.isZongFixed = t.isZongFixed := by
   cases t with
   | mk y1 y2 y3 =>
@@ -332,14 +332,14 @@ theorem quadrant_partition_complete :
 /-! ## § 9 Hexagram 算子 invariants -/
 
 /-- complement 保象限 (六爻全反，inner 与 outer 各自 isZongFixed 不变). -/
-theorem cuo_preserves_quadrant (h : Hexagram) :
+theorem complement_preserves_quadrant (h : Hexagram) :
     h.complement.quadrant = h.quadrant := by
   cases h with
   | mk y1 y2 y3 y4 y5 y6 =>
     cases y1 <;> cases y3 <;> cases y4 <;> cases y6 <;> rfl
 
 /-- reverse 在本本自闭. -/
-theorem zong_preserves_benBen (h : Hexagram) :
+theorem reverse_preserves_benBen (h : Hexagram) :
     h.quadrant = .benBen → h.reverse.quadrant = .benBen := by
   intro hq
   cases h with
@@ -350,7 +350,7 @@ theorem zong_preserves_benBen (h : Hexagram) :
                             Hexagram.outerTrigram, Trigram.isZongFixed] at hq)
 
 /-- reverse 把本征送到征本. -/
-theorem zong_swap_benZheng_to_zhengBen (h : Hexagram) :
+theorem reverse_swap_benZheng_to_zhengBen (h : Hexagram) :
     h.quadrant = .benZheng → h.reverse.quadrant = .zhengBen := by
   intro hq
   cases h with
@@ -361,7 +361,7 @@ theorem zong_swap_benZheng_to_zhengBen (h : Hexagram) :
                             Hexagram.outerTrigram, Trigram.isZongFixed] at hq)
 
 /-- reverse 把征本送到本征. -/
-theorem zong_swap_zhengBen_to_benZheng (h : Hexagram) :
+theorem reverse_swap_zhengBen_to_benZheng (h : Hexagram) :
     h.quadrant = .zhengBen → h.reverse.quadrant = .benZheng := by
   intro hq
   cases h with
@@ -372,7 +372,7 @@ theorem zong_swap_zhengBen_to_benZheng (h : Hexagram) :
                             Hexagram.outerTrigram, Trigram.isZongFixed] at hq)
 
 /-- reverse 在征征自闭. -/
-theorem zong_preserves_zhengZheng (h : Hexagram) :
+theorem reverse_preserves_zhengZheng (h : Hexagram) :
     h.quadrant = .zhengZheng → h.reverse.quadrant = .zhengZheng := by
   intro hq
   cases h with
@@ -441,7 +441,7 @@ theorem jiji_quadrant : Hexagram.complete.quadrant = .benBen := by native_decide
 theorem weiji_quadrant : Hexagram.incomplete.quadrant = .benBen := by native_decide
 
 /-- 4 个 interlace attractor 都在本本 — 这是 64 卦最深的 substrate. -/
-theorem hu_attractors_in_benBen :
+theorem interlace_attractors_in_benBen :
     Hexagram.heaven.quadrant = .benBen
     ∧ Hexagram.earth.quadrant = .benBen
     ∧ Hexagram.complete.quadrant = .benBen

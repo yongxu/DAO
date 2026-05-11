@@ -98,15 +98,15 @@ def complementReverse : Shi → Shi
   | .jin => .dao
   | .wei => .ji
 
-theorem cuo_cuo (s : Shi) : complement (complement s) = s := by
+theorem complement_involutive (s : Shi) : complement (complement s) = s := by
   rcases s with ⟨y, g⟩; cases y <;> cases g <;> rfl
-theorem zong_zong (s : Shi) : reverse (reverse s) = s := by
+theorem reverse_involutive (s : Shi) : reverse (reverse s) = s := by
   rcases s with ⟨y, g⟩; cases y <;> cases g <;> rfl
 theorem cuoZong_cuoZong (s : Shi) : complementReverse (complementReverse s) = s := by
   rcases s with ⟨y, g⟩; cases y <;> cases g <;> rfl
 
 /-- complement 与 reverse 交换（V₄ Abelian）. -/
-theorem cuo_zong_comm (s : Shi) : complement (reverse s) = reverse (complement s) := by
+theorem complement_reverse_comm (s : Shi) : complement (reverse s) = reverse (complement s) := by
   rcases s with ⟨y, g⟩; cases y <;> cases g <;> rfl
 
 /-- complementReverse = complement ∘ reverse （V₄ 复合）. -/
@@ -144,9 +144,9 @@ def imprint (s : Shi) : Shi := s.complement
 /-- 投 (tóu): toggle GuoBit (果 axis). 等价于 Shi.reverse. -/
 def project (s : Shi) : Shi := s.reverse
 
-theorem imprint_imprint (s : Shi) : imprint (imprint s) = s := cuo_cuo s
-theorem project_project (s : Shi) : project (project s) = s := zong_zong s
-theorem imprint_project_comm (s : Shi) : imprint (project s) = project (imprint s) := cuo_zong_comm s
+theorem imprint_imprint (s : Shi) : imprint (imprint s) = s := complement_involutive s
+theorem project_project (s : Shi) : project (project s) = s := reverse_involutive s
+theorem imprint_project_comm (s : Shi) : imprint (project s) = project (imprint s) := complement_reverse_comm s
 
 /-- 印 ∘ 投 = complementReverse = V₄ central element. -/
 theorem imprint_project_eq_complementReverse (s : Shi) : imprint (project s) = complementReverse s := by
@@ -208,10 +208,10 @@ def shiZong (c : Cell256) : Cell256 := (c.1, c.2.reverse)
 def shiCuoZong (c : Cell256) : Cell256 := (c.1, c.2.complementReverse)
 
 theorem shiCuo_shiCuo (c : Cell256) : shiCuo (shiCuo c) = c := by
-  rcases c with ⟨h, s⟩; simp [shiCuo, Shi.cuo_cuo]
+  rcases c with ⟨h, s⟩; simp [shiCuo, Shi.complement_involutive]
 
 theorem shiZong_shiZong (c : Cell256) : shiZong (shiZong c) = c := by
-  rcases c with ⟨h, s⟩; simp [shiZong, Shi.zong_zong]
+  rcases c with ⟨h, s⟩; simp [shiZong, Shi.reverse_involutive]
 
 theorem shiCuoZong_shiCuoZong (c : Cell256) : shiCuoZong (shiCuoZong c) = c := by
   rcases c with ⟨h, s⟩; simp [shiCuoZong, Shi.cuoZong_cuoZong]
@@ -233,16 +233,16 @@ def flip6 (c : Cell256) : Cell256 := (topFlipOuter c.1, c.2)
 
 theorem hexCuo_hexCuo (c : Cell256) : hexCuo (hexCuo c) = c := by
   rcases c with ⟨h, s⟩
-  simp [hexCuo, Hexagram.cuo_cuo]
+  simp [hexCuo, Hexagram.complement_involutive]
 
 theorem hexZong_hexZong (c : Cell256) : hexZong (hexZong c) = c := by
   rcases c with ⟨h, s⟩
-  simp [hexZong, Hexagram.zong_zong]
+  simp [hexZong, Hexagram.reverse_involutive]
 
 theorem hexCuo_hexZong_comm (c : Cell256) :
     hexCuo (hexZong c) = hexZong (hexCuo c) := by
   rcases c with ⟨h, s⟩
-  simp [hexCuo, hexZong, Hexagram.cuo_zong_comm]
+  simp [hexCuo, hexZong, Hexagram.complement_reverse_comm]
 
 theorem hexCuoZong_hexCuoZong (c : Cell256) :
     hexCuo (hexZong (hexCuo (hexZong c))) = c := by

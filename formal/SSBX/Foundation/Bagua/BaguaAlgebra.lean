@@ -80,7 +80,7 @@ theorem motion_topFlip_comm (t : Trigram) : topFlip (motion t) = motion (topFlip
 
   Yi.Trigram.complement (full negation) is the product of all three single-bit flips. -/
 
-theorem cuo_eq_compose (t : Trigram) :
+theorem complement_eq_compose (t : Trigram) :
     Trigram.complement t = motion (middleFlip (topFlip t)) := by
   cases t; rfl
 
@@ -97,7 +97,7 @@ theorem dong_hua_bian_qian : motion (middleFlip (topFlip heaven)) = earth := rfl
 
 /-- 错 of 乾 is 坤 (witnessed via the compose decomposition). -/
 theorem cuo_qian_eq_kun : Trigram.complement heaven = earth := by
-  rw [cuo_eq_compose]
+  rw [complement_eq_compose]
   exact dong_hua_bian_qian
 
 /-! ## § 4 Cayley graph: simply transitive on T_3 -/
@@ -361,7 +361,7 @@ theorem bianOuter_bianOuter (h : Hexagram) : topFlipOuter (topFlipOuter h) = h :
   simp [topFlipOuter, Yao.neg_neg]
 
 /-- 错_hex = composition of all 6 single-yao flips. T_6 analog of § 2's
-    `cuo_eq_compose`. -/
+    `complement_eq_compose`. -/
 theorem hex_cuo_eq_compose (h : Hexagram) :
     Hexagram.complement h
       = dongInner (middleFlipInner (topFlipInner (dongOuter (middleFlipOuter (topFlipOuter h))))) := by
@@ -672,7 +672,7 @@ theorem bagua_algebra_complete :
     ∧ (∀ y1 y2 y3 : Yao, grandCycle y1 y2 y3 = ()) :=
   ⟨bagua_intercommunication,
    guiyi_universal,
-   cuo_eq_compose,
+   complement_eq_compose,
    heShang_fenToTrigram,
    grandCycle_returns⟩
 
