@@ -20,6 +20,7 @@ is filled in.
 -/
 
 import SSBX.Foundation.Wen.MetaInterp.FetchSavedCurObligations
+import SSBX.Foundation.Wen.WenyanQuineEmitter
 
 namespace SSBX.Foundation.Wen.MetaInterp.FetchSavedCurProg
 
@@ -31,6 +32,7 @@ open SSBX.Foundation.Wen.MetaInterp.Fetch
 open SSBX.Foundation.Wen.MetaInterp.FetchSavedCur
 open SSBX.Foundation.Wen.MetaInterp.FetchSavedCurObligations
 open SSBX.Foundation.Wen.MetaInterp.AssemblyRestorePlan
+open SSBX.Foundation.Wen.WenyanQuineEmitter
 
 /-! ## Factored saved-current fetch contracts -/
 
@@ -102,5 +104,81 @@ theorem fetch_saved_cur_prog_factor_summary :
           restoredMetaInterpProg handoffOffset dispatchOffset →
         RestoredSavedCurFetchObligations :=
   restoredSavedCurFetchObligations_of_decode_reemit
+
+/-! ## Executable finite-R8 re-emitter core -/
+
+private def yao0 : Fin 6 := ⟨0, by omega⟩
+private def yao1 : Fin 6 := ⟨1, by omega⟩
+private def yao2 : Fin 6 := ⟨2, by omega⟩
+private def yao3 : Fin 6 := ⟨3, by omega⟩
+private def yao4 : Fin 6 := ⟨4, by omega⟩
+private def yao5 : Fin 6 := ⟨5, by omega⟩
+
+/-- Program fragment that mutates `META.cur` from a known cell to a known
+target cell without touching history.  It is the non-pushing half of
+`WenyanQuineEmitter.emitCellFrom`. -/
+def setCellFrom (cur target : R8) : List YiInstr :=
+  flipIfDiff cur.1 target.1 yao0 ++
+  flipIfDiff cur.1 target.1 yao1 ++
+  flipIfDiff cur.1 target.1 yao2 ++
+  flipIfDiff cur.1 target.1 yao3 ++
+  flipIfDiff cur.1 target.1 yao4 ++
+  flipIfDiff cur.1 target.1 yao5 ++
+  [YiInstr.setShi target.2]
+
+/-- Macro-level saved-current re-emitter for a fixed finite R8 case:
+set `cur` to the saved simulated cell, push it, restore the opcode tag, then
+jump to restored dispatch.  The full fetch walker will reach this by a finite
+R8 control dispatch over the incoming current cell. -/
+def reemitSavedCurProg (tag saved : R8) (dispatchOffset : Nat) : List YiInstr :=
+  setCellFrom tag saved ++
+  [YiInstr.push] ++
+  setCellFrom saved tag ++
+  [YiInstr.jump dispatchOffset]
+
+theorem setCellFrom_length_le (cur target : R8) :
+    (setCellFrom cur target).length ≤ 7 := by
+  have h0 := flipIfDiff_length_le cur.1 target.1 yao0
+  have h1 := flipIfDiff_length_le cur.1 target.1 yao1
+  have h2 := flipIfDiff_length_le cur.1 target.1 yao2
+  have h3 := flipIfDiff_length_le cur.1 target.1 yao3
+  have h4 := flipIfDiff_length_le cur.1 target.1 yao4
+  have h5 := flipIfDiff_length_le cur.1 target.1 yao5
+  simp only [setCellFrom, List.length_append, List.length_cons, List.length_nil]
+  omega
+
+theorem reemitSavedCurProg_length_le
+    (tag saved : R8) (dispatchOffset : Nat) :
+    (reemitSavedCurProg tag saved dispatchOffset).length ≤ 16 := by
+  have h_saved := setCellFrom_length_le tag saved
+  have h_tag := setCellFrom_length_le saved tag
+  simp only [reemitSavedCurProg, List.length_append, List.length_cons,
+    List.length_nil]
+  omega
+
+theorem reemitSavedCurProg_push_at_saved_boundary
+    (tag saved : R8) (dispatchOffset : Nat) :
+    (reemitSavedCurProg tag saved dispatchOffset)[(setCellFrom tag saved).length]? =
+      some YiInstr.push := by
+  simp [reemitSavedCurProg]
+
+theorem reemitSavedCurProg_nonempty
+    (tag saved : R8) (dispatchOffset : Nat) :
+    (reemitSavedCurProg tag saved dispatchOffset).length > 0 := by
+  simp [reemitSavedCurProg, setCellFrom]
+  omega
+
+theorem fetch_saved_cur_reemit_macro_summary :
+    (∀ cur target : R8, (setCellFrom cur target).length ≤ 7)
+    ∧ (∀ tag saved : R8, ∀ dispatchOffset : Nat,
+        (reemitSavedCurProg tag saved dispatchOffset).length ≤ 16)
+    ∧ (∀ tag saved : R8, ∀ dispatchOffset : Nat,
+        (reemitSavedCurProg tag saved dispatchOffset)[
+          (setCellFrom tag saved).length]? = some YiInstr.push) := by
+  exact
+    ⟨ setCellFrom_length_le
+    , reemitSavedCurProg_length_le
+    , reemitSavedCurProg_push_at_saved_boundary
+    ⟩
 
 end SSBX.Foundation.Wen.MetaInterp.FetchSavedCurProg
