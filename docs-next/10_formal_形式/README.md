@@ -38,6 +38,7 @@
 - [root-layer-map.md](./root-layer-map.md)：底层 root 几层的生成线、名册线、内容线、关系与算子总图。
 - [r8-root-language-tree.md](./r8-root-language-tree.md)：R₀..R₈ root language tree、1021/1022/1023 口径、root-rule roadmap。
 - [root-native-operators.md](./root-native-operators.md)：root-native operator 四类来源与 legacy catalogue quarantine 形式锚。
+- [v4-foundation.md](./v4-foundation.md)：V4 作为 Wen 的 two-axis Klein-four kernel、跨域读法与 preservation atlas。
 - [root-language-tree/README.md](./root-language-tree/README.md)：1023-entry 文言 / 中文 / English / formal logic 审阅包。
 - [wen.md](./wen.md)：`Foundation/Wen`、文言微核、自释与 quine 路线。
 - [jian.md](./jian.md)：`Foundation/Jian` 的间、本体与 STLC 桥。

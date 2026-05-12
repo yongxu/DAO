@@ -12,12 +12,13 @@ They are the two-axis V4 skeleton:
 The same V4 appears as the minimal reversible two-symbol Turing-machine local
 action: flip the written bit, flip the move direction, or flip both.
 -/
-import SSBX.Foundation.Hierarchy.Operators.V4Outer
+import SSBX.Foundation.Hierarchy.Operators.V4Core
 
 namespace SSBX.Foundation.Hierarchy.Operators.V4LogicTuring
 
 open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Bagua.R8
+open SSBX.Foundation.Hierarchy.Operators.V4Core
 open SSBX.Foundation.Hierarchy.Operators.V4Outer
 
 /-! ## Logical V4 skeleton -/
@@ -116,12 +117,34 @@ theorem actHex_compose (a b : LogicalV4) (h : Hexagram) :
 
 /-! ## R8 temporal-state bridge -/
 
+/-- Read the logical names through the canonical V4 kernel. -/
+def toCore : LogicalV4 → V4
+  | .dao => .dao
+  | .cuo => .cuo
+  | .zong => .zong
+  | .cuoZong => .cuoZong
+
+def ofCore : V4 → LogicalV4
+  | .dao => .dao
+  | .cuo => .cuo
+  | .zong => .zong
+  | .cuoZong => .cuoZong
+
+theorem ofCore_toCore (x : LogicalV4) :
+    ofCore (toCore x) = x := by
+  cases x <;> rfl
+
+theorem toCore_ofCore (g : V4) :
+    toCore (ofCore g) = g := by
+  cases g <;> rfl
+
+theorem toCore_compose (a b : LogicalV4) :
+    toCore (compose a b) = V4.compose (toCore a) (toCore b) := by
+  cases a <;> cases b <;> rfl
+
 /-- The same two-axis V4 skeleton as an R8 temporal-state tag. -/
 def toShi : LogicalV4 → Shi
-  | .dao => Shi.dao
-  | .cuo => Shi.ji
-  | .zong => Shi.wei
-  | .cuoZong => Shi.jin
+  | x => V4.toShi (toCore x)
 
 /-- Read an R8 temporal-state tag back as the logical V4 skeleton. -/
 def ofShi (s : Shi) : LogicalV4 :=
