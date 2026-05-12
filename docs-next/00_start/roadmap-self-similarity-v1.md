@@ -1,4 +1,4 @@
-> 状态：v1.38 (2026-05-12) — Phase R/K/L 后之 self-similarity roadmap 已完成一轮形式补齐；5.1/5.2 的 R-O represented-operator self-duality 与 finite Boolean character self-duality 已 machineChecked，并补 `XorOperator` internal composition、associative/commutative/unit/self-inverse laws、mask-coordinate character XOR、OX coordinate roundtrip、coordinate-wise OX XOR、OX bit-level identity/associativity/commutativity/self-inverse laws、OX bit-complement involution 与 OX full-negation operator summary；F.7c.27 已补 pc-update encoding bridges、concrete fetch-with-peel splice、exact halted/running fetch routes、halted/running fetch current-shape witnesses、instruction-indexed dispatch route wrapper、halt-opcode current-shape-vs-step witness、all-op absolute-pc dispatch routes、halt execution smoke witness、encoded-program split/decode bridge、canonical-history program-tail split bridge、restored fetch outcome constructors、saved-current fetch to restored-dispatch `BlockPre` handoff、restored saved-current `.nop` exact `BlockPost` path、restored saved-current fetch obligation frontier plus U.1-style steady/first-iteration fields、restored 100-instruction universal-compose frontier、old running fetch is not saved-current handoff boundary、zero-arity read-tag micro-witness、push/pop sim-side encoded-history bridges、aligned `nop` exact BlockPre-to-BlockPost witness、assembly-specialized aligned `nop` witness、trivial-jump exact witness、pc-increment with unchanged-history cannot satisfy `BlockPost` boundary、running fetch post-peel history is not canonical boundary、Strategy-B cur-only blocks cannot be exact `BlockPost` witnesses boundaries，以及 halt arm cannot be exact `BlockPost` witness boundary；F.7c.28 已补 saved-current reemit macro correctness：`setCellFrom_runFuel_state`、`reemitSavedCurProg_runFuel_state`、`reemitSavedCurProg_from_fetchOutcome_yields_savedCur`，并补 fixed 16-slot reemit fragment：`reemitSavedCurProg16_length`、`reemitSavedCurProg16_runFuel_state`、`reemitSavedCurProg16_from_fetchOutcome_yields_savedCur`；full arbitrary-program universal compose 仍 pending，当前剩余是把 concrete fetch walker 切到 saved-current-cell handoff，并补 hard-block exact META history update witnesses。
+> 状态：v1.39 (2026-05-12) — Universal-compose 主线已从 transitional saved-cell/pop reemit path 切到 **R₄² carry**：`R4Carry` gives `R8 ≃ R4 × R4` saved-current identity, `R4CarryRestore` gives the fixed restore fragment, `R4CarryBridge` / `R4CarryFetchObligations` / `R4CarryFetchFactor` connect decoded fetch to opcode dispatch and `BlockPre`, `R4CarryAssemblyPlan` records generated `SavedCurrentCarry × 12-opcode` rows, and the new `R4CarryBlockContracts` / `R4CarryParamDecodeObligations` / `R4CarryUniversalPlan` / `R4CarrySemanticFrontier` expose the exact block, operand route, strong loop, and public theorem frontier. Full arbitrary-program universal compose remains pending until the concrete fetch walker, embedded carry rows, executable encoded-history mutation blocks, dynamic `Nat` target decode, and halted padding are supplied.
 
 # Roadmap — Self-similarity 形式化 (v1, post Phase R cutover)
 
@@ -332,22 +332,31 @@ v1.1 本轮完成项：
 
 ### 5.1 Target Roadmap — Universal Compose
 
-Current target is **restored universal compose**, not the old Strategy-B
-`metaInterpProg` route.  The old route remains as a checked boundary while the
-restored route accumulates exact witnesses.
+Current target is **R₄² carry restored universal compose**, not the old
+Strategy-B `metaInterpProg` route and not the transitional saved-cell/pop
+reemit path.  The old files remain checked witnesses, but the preferred route is
+now:
 
-| Target | Acceptance condition | Current anchor |
+`R₄ × R₄ carry`
+→ opcode tag dispatch
+→ embedded carry restore
+→ operand route
+→ exact block witness
+→ restored semantic loop.
+
+| Phase | Acceptance condition | Current anchor |
 |---|---|---|
-| F.7c.28 real saved-current fetch walker | concrete fetch segment proves `SavedCurFetchOutcome` from `fetchEntryState`; old `fetchProgWithPeel` remains boundary-only; implementation is factored into decode/restore plus finite R8 saved-current re-emitter | `FetchSavedCurObligations.RestoredSavedCurFetchObligations`, `FetchSavedCurProg.fetch_saved_cur_prog_factor_summary`, `FetchSavedCurProg.fetch_saved_cur_reemit_macro_summary`, `FetchSavedCurBoundary.restoredAssembly_running_fetch_not_savedCurOutcome` |
-| F.7c.29 restored assembly switch point | restored layout has segment witnesses for outer-loop, fetch, dispatch, restore prelude, and body offsets without importing old `Assembly.metaInterpProg` | `AssemblyRestorePlan.restoredMetaInterpProg`, `UniversalRestorePlan.restoredMetaStart` |
-| F.7c.30 exact block witnesses | each restored block used by U.1 proves `BlockPre → BlockPost` or a precise impossibility boundary; `.nop` is already exact, current-transform blocks now have restored-layout unchanged-history boundaries | `AssemblyRestorePlan.restoredMetaInterpProg_execute_nop_simulates_aligned`, `AssemblyRestorePlan.restoredMetaInterpProg_execute_hu_current_history_not_blockPost` |
-| F.7c.31 parameter sub-dispatch | parameterized opcodes read encoded operands instead of Strategy-B defaults | `SubDispatch_BranchShiEq`, `SubDispatch_BranchYaoEq` patterns |
-| F.7c.32 restored loop obligations | construct `RestoredSemanticLoopObligations` from concrete fetch/dispatch/block witnesses | `UniversalRestorePlan.RestoredSemanticLoopObligations` |
-| F.7c.33 promote public compose | replace or wrap old public route only after restored obligations are supplied | `UniversalRestorePlan.restoredMetaInterpProg_simulates_from_loop` |
+| F.7c.28 carry fetch frontier | decoded fetch yields `R4CarryFetchOutcome`, carrying `carryOfCell sim.cur` while `META.cur` is reused for the dispatch tag | `R4CarryFetchObligations.RestoredR4CarryFetchObligations`, `R4CarryFetchFactor.restoredR4CarryFetchObligations_of_decoded_fetch` |
+| F.7c.29 carry layout skeleton | restore rows are generated as `SavedCurrentCarry × YiInstr` with opcode dimension 12, not a flat current-cell table | `R4CarryAssemblyPlan.carryRows_length`, `R4CarryAssemblyPlan.R4CarryRowSegmentContract` |
+| F.7c.30 embedded restore segment | concrete `restoredMetaInterpProg` contains each selected carry row and the selected row restores to the parameter route entry | `R4CarrySemanticFrontier.EmbeddedCarryRowsContract` |
+| F.7c.31 exact block witnesses | each restored block proves `BlockPre → BlockPost`; current-only blocks need executable pc-counter mutation, stack blocks need middle-history mutation, control blocks need pc rewrite | `R4CarryBlockContracts.R4CarryExactBlockContracts`, `ExecuteBlock.blockPost_unchanged_history_impossible_after_pc_increment` |
+| F.7c.32 parameter route | encoded operands route to concrete blocks; finite `Shi`/`Fin 6` routes are separated from dynamic `Nat` target decode | `R4CarryParamDecodeObligations.operandCells`, `R4CarryParamDecodeObligations.R4CarryParamDecodeContracts` |
+| F.7c.33 restored loop surface | strong per-iteration state equality implies `RestoredSemanticLoopObligations` and the restored public theorem | `R4CarryUniversalPlan.R4CarryExactStepObligations`, `R4CarrySemanticFrontier.r4_carry_semantic_frontier_summary` |
+| F.7c.34 public promotion | replace or wrap the old public route only after concrete fetch, embedded rows, parameter routes, exact blocks, and halted padding are supplied | `UniversalRestorePlan.restoredMetaInterpProg_simulates_from_loop` |
 
-Short rule: do not widen `Universal.lean` until F.7c.28-F.7c.32 are real.
-All interim work should either add executable restored witnesses or machine-check
-why the old route cannot supply them.
+Short rule: do not widen `Universal.lean` until F.7c.28-F.7c.33 have concrete
+executable witnesses.  Contract files may expose the frontier, but only the
+embedded restored program can promote universal compose.
 
 ## 6 · 完整 commit log (Phase L/K/R)
 
