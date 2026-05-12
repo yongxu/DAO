@@ -11,6 +11,7 @@ supplies the frontier contracts, then the existing restored universal-compose
 surface follows.
 -/
 import SSBX.Foundation.Wen.MetaInterp.R4CarryParamDecodeObligations
+import SSBX.Foundation.Wen.MetaInterp.R4CarryBlockPrePost
 import SSBX.Foundation.Wen.MetaInterp.R4CarryUniversalPlan
 
 namespace SSBX.Foundation.Wen.MetaInterp.R4CarrySemanticFrontier
@@ -27,6 +28,7 @@ open SSBX.Foundation.Wen.MetaInterp.R4CarryBridge
 open SSBX.Foundation.Wen.MetaInterp.R4CarryFetchObligations
 open SSBX.Foundation.Wen.MetaInterp.R4CarryAssemblyPlan
 open SSBX.Foundation.Wen.MetaInterp.R4CarryBlockContracts
+open SSBX.Foundation.Wen.MetaInterp.R4CarryBlockPrePost
 open SSBX.Foundation.Wen.MetaInterp.R4CarryParamDecodeObligations
 open SSBX.Foundation.Wen.MetaInterp.R4CarryUniversalPlan
 open SSBX.Foundation.Wen.MetaInterp.UniversalRestorePlan
@@ -52,8 +54,10 @@ dispatch, embedded carry restore, parameter route, and exact block body. -/
 structure RestoredCarryIterationContract
     (paramDecodeOffsetOf : ParamDecodeOffsetOf)
     (bodyOffsetOf : BodyOffsetOf)
+    (carryBodyOffsetOf : CarryBodyOffsetOf)
     (paramDecodeFuelOf : ParamDecodeFuelOf)
-    (bodyFuelOf : BodyFuelOf) : Prop where
+    (bodyFuelOf : BodyFuelOf)
+    (carryBodyFuelOf : CarryBodyFuelOf) : Prop where
   steadyState :
     ∀ regHex sim,
       sim.halted = false →
@@ -75,8 +79,10 @@ structure R4CarrySemanticFrontierContracts
     (restoreOffsetOf : RestoreOffsetOf)
     (paramDecodeOffsetOf : ParamDecodeOffsetOf)
     (bodyOffsetOf : BodyOffsetOf)
+    (carryBodyOffsetOf : CarryBodyOffsetOf)
     (paramDecodeFuelOf : ParamDecodeFuelOf)
-    (bodyFuelOf : BodyFuelOf) : Prop where
+    (bodyFuelOf : BodyFuelOf)
+    (carryBodyFuelOf : CarryBodyFuelOf) : Prop where
   fetch :
     RestoredR4CarryFetchObligations
   bridge :
@@ -88,9 +94,11 @@ structure R4CarrySemanticFrontierContracts
       paramDecodeFuelOf
   blocks :
     R4CarryExactBlockContracts bodyOffsetOf bodyFuelOf
+  carryBlocks :
+    R4CarryIndexedBlockContracts carryBodyOffsetOf carryBodyFuelOf
   iteration :
     RestoredCarryIterationContract paramDecodeOffsetOf bodyOffsetOf
-      paramDecodeFuelOf bodyFuelOf
+      carryBodyOffsetOf paramDecodeFuelOf bodyFuelOf carryBodyFuelOf
   haltedPadding :
     ∀ regHex sim extraFuel,
       sim.halted = true →
@@ -102,11 +110,13 @@ def R4CarrySemanticFrontierContracts.toExactStep
     {restoreOffsetOf : RestoreOffsetOf}
     {paramDecodeOffsetOf : ParamDecodeOffsetOf}
     {bodyOffsetOf : BodyOffsetOf}
+    {carryBodyOffsetOf : CarryBodyOffsetOf}
     {paramDecodeFuelOf : ParamDecodeFuelOf}
     {bodyFuelOf : BodyFuelOf}
+    {carryBodyFuelOf : CarryBodyFuelOf}
     (F :
       R4CarrySemanticFrontierContracts restoreOffsetOf paramDecodeOffsetOf bodyOffsetOf
-        paramDecodeFuelOf bodyFuelOf) :
+        carryBodyOffsetOf paramDecodeFuelOf bodyFuelOf carryBodyFuelOf) :
     R4CarryExactStepObligations where
   firstState := F.iteration.firstState
   steadyState := F.iteration.steadyState
@@ -116,11 +126,13 @@ def R4CarrySemanticFrontierContracts.toLoop
     {restoreOffsetOf : RestoreOffsetOf}
     {paramDecodeOffsetOf : ParamDecodeOffsetOf}
     {bodyOffsetOf : BodyOffsetOf}
+    {carryBodyOffsetOf : CarryBodyOffsetOf}
     {paramDecodeFuelOf : ParamDecodeFuelOf}
     {bodyFuelOf : BodyFuelOf}
+    {carryBodyFuelOf : CarryBodyFuelOf}
     (F :
       R4CarrySemanticFrontierContracts restoreOffsetOf paramDecodeOffsetOf bodyOffsetOf
-        paramDecodeFuelOf bodyFuelOf) :
+        carryBodyOffsetOf paramDecodeFuelOf bodyFuelOf carryBodyFuelOf) :
     RestoredSemanticLoopObligations :=
   F.toExactStep.toLoop
 
@@ -128,18 +140,21 @@ def R4CarrySemanticFrontierContracts.toCompose
     {restoreOffsetOf : RestoreOffsetOf}
     {paramDecodeOffsetOf : ParamDecodeOffsetOf}
     {bodyOffsetOf : BodyOffsetOf}
+    {carryBodyOffsetOf : CarryBodyOffsetOf}
     {paramDecodeFuelOf : ParamDecodeFuelOf}
     {bodyFuelOf : BodyFuelOf}
+    {carryBodyFuelOf : CarryBodyFuelOf}
     (F :
       R4CarrySemanticFrontierContracts restoreOffsetOf paramDecodeOffsetOf bodyOffsetOf
-        paramDecodeFuelOf bodyFuelOf) :
+        carryBodyOffsetOf paramDecodeFuelOf bodyFuelOf carryBodyFuelOf) :
     RestoredSemanticComposeObligations :=
   F.toExactStep.toCompose
 
 theorem r4_carry_semantic_frontier_summary :
-    ∀ restoreOffsetOf paramDecodeOffsetOf bodyOffsetOf paramDecodeFuelOf bodyFuelOf,
+    ∀ restoreOffsetOf paramDecodeOffsetOf bodyOffsetOf carryBodyOffsetOf
+      paramDecodeFuelOf bodyFuelOf carryBodyFuelOf,
       R4CarrySemanticFrontierContracts restoreOffsetOf paramDecodeOffsetOf bodyOffsetOf
-        paramDecodeFuelOf bodyFuelOf →
+        carryBodyOffsetOf paramDecodeFuelOf bodyFuelOf carryBodyFuelOf →
         RestoredSemanticLoopObligations ∧
         RestoredSemanticComposeObligations ∧
         (∀ regHex P n,
@@ -148,7 +163,8 @@ theorem r4_carry_semantic_frontier_summary :
             (restoredMetaStart regHex P).runFuel (restoredExactMetaFuel n)
           metaResult.history = encMetaHistory regHex simResult ∧
             metaResult.halted = simResult.halted) := by
-  intro restoreOffsetOf paramDecodeOffsetOf bodyOffsetOf paramDecodeFuelOf bodyFuelOf F
+  intro restoreOffsetOf paramDecodeOffsetOf bodyOffsetOf carryBodyOffsetOf
+    paramDecodeFuelOf bodyFuelOf carryBodyFuelOf F
   exact
     ⟨ F.toLoop
     , F.toCompose
