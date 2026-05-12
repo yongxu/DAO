@@ -181,4 +181,27 @@ theorem fetch_saved_cur_reemit_macro_summary :
     , reemitSavedCurProg_push_at_saved_boundary
     ⟩
 
+def reemitSmokeTag : R8 :=
+  (Hexagram.heaven, Shi.dao)
+
+def reemitSmokeSaved : R8 :=
+  (Hexagram.heaven, Shi.jin)
+
+theorem reemitSavedCurProg_smoke :
+    let tag := reemitSmokeTag
+    let saved := reemitSmokeSaved
+    let prog := reemitSavedCurProg tag saved 7
+    let μ : YiState :=
+      { cur := tag
+      , history := []
+      , pc := 0
+      , prog := prog
+      , halted := false }
+    let μ' := μ.runFuel prog.length
+    μ'.cur = tag
+      ∧ μ'.history = [saved]
+      ∧ μ'.pc = 7
+      ∧ μ'.halted = false := by
+  native_decide
+
 end SSBX.Foundation.Wen.MetaInterp.FetchSavedCurProg
