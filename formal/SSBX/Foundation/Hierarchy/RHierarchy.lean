@@ -34,6 +34,8 @@ import SSBX.Foundation.Hierarchy.R8_GuoHex
 
 -- Cross-cutting structure
 import SSBX.Foundation.Hierarchy.LiftProject
+import SSBX.Foundation.Hierarchy.R432Conversion
 import SSBX.Foundation.Hierarchy.RootLanguageTree
 import SSBX.Foundation.Hierarchy.Operators.Atomic
 import SSBX.Foundation.Hierarchy.Operators.V4Outer
+import SSBX.Foundation.Hierarchy.Operators.V4LogicTuring
