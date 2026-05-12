@@ -162,6 +162,10 @@ def origin : Field := cell128Origin
 /-- 元 之 alive: motion takes origin to c_motion ≠ origin. -/
 theorem origin_alive : motion origin ≠ origin := by native_decide
 
+/-- The Cayley primer cell is nonzero. This is the exact algebraic reason
+    post-Cayley motion has no fixed point; no stronger doctrine is hidden here. -/
+theorem c_motion_ne_origin : c_motion ≠ cell128Origin := by native_decide
+
 /-! ### Cayley grounding bridge — by `rfl`
 
   No axiom. Lean reduces `motion s` to `cell128Xor s c_motion`
@@ -206,6 +210,36 @@ def terminus (s : Field) : Prop := motion s = s
 /-- 中 (non-extremity): 不极 = 不收缩可能性空间 = 合于生生不息 (v5 §七 l. 189-191).
     A 中 state has 動 take it elsewhere — rhythm preserved. -/
 def center (s : Field) : Prop := motion s ≠ s
+
+/-! ### Post-Cayley collapse of the old fixed-point dichotomy
+
+  Since `motion` is XOR-translation by the nonzero cell `c_motion`, no state
+  can be fixed by `motion`. Thus `terminus` is empty and `center` is universal
+  in this R₇ Kernel substrate. This records only the algebraic collapse.
+-/
+
+/-- No state is a post-Cayley terminus: nonzero XOR-translation has no fixed point. -/
+theorem terminus_uninhabited (s : Field) : ¬ terminus s := by
+  intro h
+  have hzero : cell128Origin = c_motion := by
+    calc
+      cell128Origin = cell128Xor s s := (SSBX.Foundation.Bagua.R7.R7.xor_self s).symm
+      _ = cell128Xor s (motion s) := by rw [h]
+      _ = cell128Xor s (cell128Xor s c_motion) := by rw [kernel_motion_eq_cayley]
+      _ = cell128Xor (cell128Xor s s) c_motion :=
+          (SSBX.Foundation.Bagua.R7.R7.xor_assoc s s c_motion).symm
+      _ = cell128Xor cell128Origin c_motion :=
+          congrArg (fun x => cell128Xor x c_motion) (SSBX.Foundation.Bagua.R7.R7.xor_self s)
+      _ = c_motion := SSBX.Foundation.Bagua.R7.R7.origin_xor c_motion
+  exact c_motion_ne_origin hzero.symm
+
+/-- Every state is center in the post-Cayley R₇ Kernel. -/
+theorem center_universal (s : Field) : center s := terminus_uninhabited s
+
+/-- Roadmap §3.2 summary: post-Cayley terminus is empty and center is universal. -/
+theorem kernel_post_cayley_collapse_summary :
+    (∀ s : Field, ¬ terminus s) ∧ (∀ s : Field, center s) :=
+  ⟨terminus_uninhabited, center_universal⟩
 
 /-- 中 state exists — CONSTRUCTIVE proof from origin witness.
     NOT an axiom; derived from `theOne.origin` + `theOne.alive`.

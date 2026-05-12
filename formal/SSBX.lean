@@ -48,7 +48,9 @@ import SSBX.Foundation.Core.Renlei
 -- Foundation/Wen — 古文虚字 / 核 / 自释 / 类型化扩展 / 解析 / first-light demo
 import SSBX.Foundation.Wen.Operators
 import SSBX.Foundation.Wen.Kernel
+import SSBX.Foundation.Wen.V4Kernel
 import SSBX.Foundation.Wen.WenyanText
+import SSBX.Foundation.Wen.ClassicalTextRHierarchyBridge
 import SSBX.Foundation.Wen.R8ProjectionCalculus
 import SSBX.Foundation.Wen.R8ProjectionKernel
 import SSBX.Foundation.Wen.RootRuleKernel
@@ -187,6 +189,7 @@ import SSBX.Foundation.Eight.WuXiang
 import SSBX.Foundation.Modern.RCauchy
 import SSBX.Foundation.Modern.Kolmogorov
 import SSBX.Foundation.Modern.Quantum
+import SSBX.Foundation.Modern.QuantumR8Bridge
 import SSBX.Foundation.Modern.QuantumRelativityNoGo
 import SSBX.Foundation.Modern.QuantumRelativityIntegration
 import SSBX.Foundation.Modern.QuantumRelativityMarkovBridge

@@ -38,5 +38,6 @@ import SSBX.Foundation.Hierarchy.R432Conversion
 import SSBX.Foundation.Hierarchy.RootLanguageTree
 import SSBX.Foundation.Hierarchy.Operators.Atomic
 import SSBX.Foundation.Hierarchy.Operators.V4
+import SSBX.Foundation.Hierarchy.Operators.V8Audit
 import SSBX.Foundation.Hierarchy.Operators.Interlace
 import SSBX.Foundation.Hierarchy.Operators.OXPrefix

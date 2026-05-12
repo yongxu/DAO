@@ -1,5 +1,5 @@
 /-
-# DaoJudge — 解释器 + 道判机 closed within 128 cells
+# WayJudge — interpreter + 道判机 closed within 128 cells
 
 A self-closed language: the alphabet, the operators, and the result space
 are all the same 128-cell carrier (R7 = Hexagram × YinBit = (Z/2)⁷).
@@ -10,7 +10,7 @@ are all the same 128-cell carrier (R7 = Hexagram × YinBit = (Z/2)⁷).
   hexagram yao positions (`o` = yang = 0, `x` = yin = 1, matching the
   OXNotation convention from R8). The 7th char = YinBit (`o` = 无 =
   false, `x` = 有 = true).
-  - `ooooooo` = (heaven, false) = 乾·无 = origin = 道
+  - `ooooooo` = (heaven, false) = 乾·无 = origin = Way
   - `xxxxxxx` = (earth, true)  = 坤·有 = the antipode
 
 - **句 (sentence)**: `(A B)` where A and B are programs. Reduction:
@@ -21,18 +21,18 @@ are all the same 128-cell carrier (R7 = Hexagram × YinBit = (Z/2)⁷).
 A program is therefore a binary tree of cell atoms. Its value is the XOR
 of all leaves with multiplicities mod 2.
 
-## 道判机 (DaoJudge)
+## 道判机 (Way judge)
 
 `isDao : Sexp → Bool` evaluates the program and returns `true` iff the
 value equals origin. Since the language is just the abelian group (Z/2)⁷,
-"is 道" reduces to: do all 7 bit positions have even total leaf
+"is Way" reduces to: do all 7 bit positions have even total leaf
 occurrence?
 
 ## What this demo is showing
 
 1. The language is genuinely closed: every term in the AST is one of the
    128 cells; the only operator is application; application IS XOR.
-2. Truth-as-道 is decidable in finite time (just XOR the leaves).
+2. Truth-as-Way is decidable in finite time (just XOR the leaves).
 3. The yao/yuan duality is operationally witnessed: `(A B)` reads A as a
    value and as an operator simultaneously without distinction.
 -/
@@ -140,7 +140,37 @@ partial def eval : Sexp → Option R7
       pure (R7.xor pc qc)
   | _               => none
 
-/-- The 道-judge: evaluate the program; is the result `origin`? -/
+/-! ### Closure and bilingual identity anchors
+
+  `eval` already has codomain `Option R7`; the following theorems name that
+  closure for roadmap references, and pin concrete Chinese-form atoms/programs
+  to their canonical `o/x` forms.
+-/
+
+/-- Roadmap §3.7 closure: every successful evaluator result is one of the 128 R₇ cells. -/
+theorem eval_closed_in_r7 (p : Sexp) :
+    ∀ c : R7, eval p = some c → c ∈ R7.all := by
+  intro c _h
+  exact R7.mem_all c
+
+/-- `乾·无` and `ooooooo` are the same origin atom for the evaluator. -/
+theorem eval_chinese_origin_eq_ascii_origin :
+    eval (.atom "乾·无") = eval (.atom "ooooooo") := by native_decide
+
+/-- `坤·有` and `xxxxxxx` are the same concrete Earth R₇ atom for the evaluator. -/
+theorem eval_chinese_earth_eq_ascii_earth :
+    eval (.atom "坤·有") = eval (.atom "xxxxxxx") := by native_decide
+
+/-- `既济·有` and `oxoxoxx` are the same concrete R₇ atom for the evaluator. -/
+theorem eval_chinese_complete_eq_ascii_complete :
+    eval (.atom "既济·有") = eval (.atom "oxoxoxx") := by native_decide
+
+/-- A Chinese-form self-canceling program and its `o/x` spelling evaluate identically. -/
+theorem eval_chinese_program_eq_ascii_program :
+    eval (.list [.atom "既济·有", .atom "既济·有"]) =
+      eval (.list [.atom "oxoxoxx", .atom "oxoxoxx"]) := by native_decide
+
+/-- The Way judge: evaluate the program; is the result `origin`? -/
 def isDao (s : Sexp) : Bool :=
   match eval s with
   | some c => c == R7.origin
@@ -152,32 +182,50 @@ def judge (src : String) : Bool :=
   | .ok sexp => isDao sexp
   | .error _ => false
 
+/-- Chinese-form and `o/x`-form origin programs receive the same Way verdict. -/
+theorem judge_bilingual_same_origin :
+    judge "乾·无" = judge "ooooooo" := by native_decide
+
+/-- The same bilingual self-canceling Earth program receives the same Way verdict. -/
+theorem judge_bilingual_same_earth_self :
+    judge "(坤·有 坤·有)" = judge "(xxxxxxx xxxxxxx)" := by native_decide
+
+/-- Roadmap §3.7–§3.8 summary: evaluator closure plus concrete bilingual identities. -/
+theorem way_judge_closure_bilingual_summary :
+    (∀ p : Sexp, ∀ c : R7, eval p = some c → c ∈ R7.all)
+    ∧ eval (.atom "乾·无") = eval (.atom "ooooooo")
+    ∧ judge "乾·无" = judge "ooooooo"
+    ∧ eval (.list [.atom "既济·有", .atom "既济·有"]) =
+      eval (.list [.atom "oxoxoxx", .atom "oxoxoxx"]) :=
+  ⟨eval_closed_in_r7, eval_chinese_origin_eq_ascii_origin,
+   judge_bilingual_same_origin, eval_chinese_program_eq_ascii_program⟩
+
 /-! ## § 3  Examples — runnable verdicts
 
 The following `#eval` lines are the actual interpreter doing its thing.
-Each prints `true` (道) or `false` (非道).
+Each prints `true` (Way) or `false` (non-Way).
 -/
 
--- 道本身：bare origin atom.
+-- Way itself: bare origin atom.
 #eval judge "ooooooo"                                -- true
 
--- 自消律：A ⊕ A = 道。 (any cell, applied to itself.)
+-- Self-canceling law: A ⊕ A = Way. (any cell, applied to itself.)
 #eval judge "(xxxxxxx xxxxxxx)"                       -- true
 #eval judge "(xoxoxox xoxoxox)"                       -- true
 
--- 非道：origin ⊕ non-origin = non-origin.
+-- Non-Way: origin ⊕ non-origin = non-origin.
 #eval judge "(ooooooo xxxxxxx)"                       -- false
 
--- 复合自消：(A ⊕ B) ⊕ (A ⊕ B) = 道.
+-- Compound self-canceling: (A ⊕ B) ⊕ (A ⊕ B) = Way.
 #eval judge "((xoxoxox ooxxoox) (xoxoxox ooxxoox))"   -- true
 
--- 交换 + 自消：(A ⊕ B) ⊕ (B ⊕ A) = 道.
+-- Commutation plus self-canceling: (A ⊕ B) ⊕ (B ⊕ A) = Way.
 #eval judge "((xoxoxox ooxxoox) (ooxxoox xoxoxox))"   -- true
 
--- 关联 + 自消：(A ⊕ (A ⊕ B)) = B —— 非道 unless B = origin.
+-- Associativity plus self-canceling: (A ⊕ (A ⊕ B)) = B, non-Way unless B = origin.
 #eval judge "(xoxoxox (xoxoxox ooxxoox))"             -- false (= ooxxoox)
 
--- 但若 B = 道：(A ⊕ (A ⊕ 道)) = 道.
+-- If B = Way: (A ⊕ (A ⊕ Way)) = Way.
 #eval judge "(xoxoxox (xoxoxox ooooooo))"             -- true
 
 -- 错配：parse error → false.
@@ -205,21 +253,21 @@ example : judge "(xoxoxox (xoxoxox ooooooo))" = true := by native_decide
 
 Same algebra, now via cell names. -/
 
--- 道 itself, named form.
+-- Way itself, named form.
 #eval judge "乾·无"                                   -- true
 
--- A ⊕ A = 道 with named A.
+-- A ⊕ A = Way with named A.
 #eval judge "(既济·有 既济·有)"                       -- true
 #eval judge "(未济·无 未济·无)"                       -- true
 
--- Different named cells: non-道.
+-- Different named cells: non-Way.
 #eval judge "(乾·无 既济·有)"                         -- false
 
 -- Mixed form: o/x and named in one program.
 #eval judge "(乾·无 ooooooo)"                         -- true (same cell)
 #eval judge "(xxxxxxx 坤·有)"                         -- true (xxxxxxx = 坤·有)
 
--- Compound: (A ⊕ B) ⊕ (B ⊕ A) = 道 with named cells.
+-- Compound: (A ⊕ B) ⊕ (B ⊕ A) = Way with named cells.
 #eval judge "((既济·有 未济·无) (未济·无 既济·有))"   -- true
 
 example : judge "乾·无" = true := by native_decide
@@ -240,7 +288,7 @@ example : judge "((既济·有 未济·无) (未济·无 既济·有))" = true :
 example : judge "((((姤·无 同人·无) 履·无) 小畜·无) 观·无)" = true := by
   native_decide
 
-/-! ## § 4.5  仁义礼智信是道 —— 五常归一 demonstration
+/-! ## § 4.5  仁义礼智信 are Way — 五常归一 demonstration
 
 Map the Five Confucian Constants (五常) onto R7 atoms via 五行:
 - 仁 (benevolence, 木): single-flip at y1  = `xoooooo`
@@ -251,12 +299,12 @@ Map the Five Confucian Constants (五常) onto R7 atoms via 五行:
                        = 仁 ⊕ 义 ⊕ 礼 ⊕ 智  (the synthesis)
 
 `信` emerges as the algebraic synthesis of the other four. This is forced
-by the (Z/2)⁷ structure: for the five to balance to 道, one of them must
+by the (Z/2)⁷ structure: for the five to balance to Way, one of them must
 be the XOR of the rest. The doctrine names this synthetic element **土**
 (earth, the centre that holds the four directions) and morally **信**
 (integrity, the centre that holds the four virtues).
 
-Verdict: 仁⊕义⊕礼⊕智⊕信 = 道. -/
+Verdict: 仁⊕义⊕礼⊕智⊕信 = Way. -/
 example :
     judge "((((xoooooo oxooooo) ooxoooo) oooxooo) xxxxooo)" = true := by
   native_decide

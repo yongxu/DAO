@@ -41,9 +41,18 @@
 | 印 / 投 是 XOR-with-mask involution，且交换 | `Cell256.lean § 8` `yin_yin / tou_tou / yin_tou_comm` | machineChecked |
 | Cell128 是 (Z/2)⁷ Abelian 群 + Cayley | `Cell128.lean § 6` `cell128_phaseA_summary` | machineChecked |
 | R₀..R₈ 8 对 lift/project 全 retract（`proj ∘ lift = id`） | `LiftProject.lean § 9` `liftProject_summary` | machineChecked |
+| R₁ 奠基 split、R₆ 三路汇聚、R₈ ≃ R₇×Bool | `SelfSimilarity.lean` `self_similarity_gap_summary` | machineChecked |
+| R₈ = R₆ × trace bit × projection bit；4 个 temporal-state-indexed R₆ slices 每片 64 cells | `V4Tensor.lean` `V4Tensor.r8_eq_r6_times_trace_projection`, `V4Tensor.r8_temporal_coordinate_summary`, `V4Tensor.r8_temporal_state_fiber_card_eq_64` | machineChecked |
+| Way (道) = R₈ origin = no-op operator；cell-as-operator 单射 | `V4Tensor.lean` `V4Tensor.way_origin_operator_summary`, `cell_is_operator` | machineChecked |
 | Atomic XOR 算子皆 involution（10 件） | `Operators/Atomic.lean § 5` `atomic_all_involutive` | machineChecked |
 | `{id, cuo, zong, cuoZong}` Hexagram 上构成 V₄ Klein 群 | `Operators/V4Outer.lean § 7` `v4_outer_summary` | machineChecked |
 | `R8_complete` 收口（基数 + R-hierarchy + P/T/Y closure + 群作用 simply-transitive + BenZheng 投影 + 位置-算子树 + xuGua256） | `Cell256Stratify.lean § 7` `R8_complete` | machineChecked，依赖仅 `propext + native_decide` |
+| Kernel post-Cayley terminus empty / center universal | `Kernel.lean` `kernel_post_cayley_collapse_summary` | machineChecked |
+| WayJudge R₇ closure + concrete bilingual parser identities | `DaoJudge.lean` `DaoJudge.eval_chinese_earth_eq_ascii_earth`, `DaoJudge.judge_bilingual_same_earth_self`, `DaoJudge.way_judge_closure_bilingual_summary` | machineChecked |
+| Classical-language surface aliases / R₈ execution / WayJudge direct bridge | `ClassicalTextRHierarchyBridge.lean` `classical_text_way_judge_rhierarchy_bridge_summary` | machineChecked typed skeleton |
+| Base-256 self-interpreter structural assembly | `MetaInterp/Assembly.lean` `metaInterpProg_base256_structural_summary` | machineChecked typed skeleton |
+| Exact-fuel semantic-compose frontier | `MetaInterp/Universal.lean` `metaStart_runFuel_five_eq_postPrologue`, `semantic_compose_frontier_summary` | machineChecked conditional theorem; U.1/U.2/U.3 remain pending |
+| Quantum one-bit / R₃ basis / R₈ finite function-space regular representation bridge | `QuantumR8Bridge.lean` `r8_regular_representation_quantum_bridge_summary`, `r8_regular_translate_involutive`, `r8_regular_translate_faithful` | machineChecked typed skeleton |
 
 ## 强度词
 
@@ -76,7 +85,7 @@
 - `opaque theOne` 是抽象 witness，不是新增 axiom。
 - `YiState.run` 是执行边界；证明路径应引用 fuel 版本或有限见证。
 - `R8_complete` 之依赖只含 `propext + native_decide`（项目无新公理）；这是 v3 之主基线。
-- `WenyanSelfInterp.lean` 之 atomic encoding 已迁 Cell256，但 12-tag base-256 dispatch program **re-derivation 仍 pending**（详 `../30_crosswalk_互证/claim-status.md`）。
+- Classical-language self-interpreter 已有 base-256 structural assembly 与 exact-fuel semantic-compose frontier；U.1/U.2/U.3 full semantic obligations 仍 pending（详 `../30_crosswalk_互证/claim-status.md`）。
 - pending interface 不得被义理页写成已证明命题。
 
 ## v2 → v3 阅读迁移
@@ -104,3 +113,9 @@
 - [`formal/SSBX/Foundation/Hierarchy/Operators/Atomic.lean`](../../formal/SSBX/Foundation/Hierarchy/Operators/Atomic.lean)
 - [`formal/SSBX/Foundation/Hierarchy/Operators/V4Outer.lean`](../../formal/SSBX/Foundation/Hierarchy/Operators/V4Outer.lean)
 - [`formal/SSBX/Foundation/Notation/OXNotation.lean`](../../formal/SSBX/Foundation/Notation/OXNotation.lean)
+- [`formal/SSBX/Foundation/Squaring/SelfSimilarity.lean`](../../formal/SSBX/Foundation/Squaring/SelfSimilarity.lean)
+- [`formal/SSBX/Foundation/Squaring/V4Tensor.lean`](../../formal/SSBX/Foundation/Squaring/V4Tensor.lean)
+- [`formal/SSBX/Foundation/Wen/ClassicalTextRHierarchyBridge.lean`](../../formal/SSBX/Foundation/Wen/ClassicalTextRHierarchyBridge.lean)
+- [`formal/SSBX/Foundation/Wen/MetaInterp/Assembly.lean`](../../formal/SSBX/Foundation/Wen/MetaInterp/Assembly.lean)
+- [`formal/SSBX/Foundation/Wen/MetaInterp/Universal.lean`](../../formal/SSBX/Foundation/Wen/MetaInterp/Universal.lean)
+- [`formal/SSBX/Foundation/Modern/QuantumR8Bridge.lean`](../../formal/SSBX/Foundation/Modern/QuantumR8Bridge.lean)

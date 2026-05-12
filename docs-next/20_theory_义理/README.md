@@ -30,6 +30,7 @@
 | [U-Z 映射](map-u-z.md) | 信诚、政治、非道、对齐失败与经济博弈 |
 | [八衍总览](eight-expansions.md) | 数、推、测、形、映、行、识、象的统一读法 |
 | [义理到 Lean](bridge-to-lean.md) | 人工义理、生成索引、Lean 模块与信任边界的桥接 |
+| [V₄、意识与可知边界](v4-consciousness-boundary.md) | V₄ 核、道向树、意识、观测、真理类型与可知/不可知边界 |
 
 ## 维护约束
 

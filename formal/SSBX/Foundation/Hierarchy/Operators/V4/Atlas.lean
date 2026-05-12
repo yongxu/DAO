@@ -29,30 +29,77 @@ structure AtlasEntry where
   domain : AtlasDomain
   label : String
   reading : String
+  preservation : List PreservationLevel
   deriving Repr
 
+/-- Registry markers attached to an atlas row.
+
+These are internal preservation classifications only; they are not proofs that
+the named external domain has been fully formalized here. -/
+def atlasPreservation (position : V4) (domain : AtlasDomain) : List PreservationLevel :=
+  match domain with
+  | .wen | .turing | .pauli | .galois | .semiotics => [.setBijection]
+  | .category => [.setBijection, .categoricalFunctor]
+  | .logic =>
+      if preservesAt position .implicationTruth then
+        [.setBijection, .implicationTruth]
+      else
+        [.setBijection]
+
 def coreAtlas : List AtlasEntry :=
-  [ ⟨.dao, .wen, "Way", "identity"⟩
-  , ⟨.cuo, .wen, "content duality", "value flip"⟩
-  , ⟨.zong, .wen, "frame duality", "order flip"⟩
-  , ⟨.cuoZong, .wen, "compound duality", "content and frame flip"⟩
-  , ⟨.dao, .turing, "nop", "no local flip"⟩
-  , ⟨.cuo, .turing, "flip-bit", "tape-symbol flip"⟩
-  , ⟨.zong, .turing, "flip-dir", "head-direction flip"⟩
-  , ⟨.cuoZong, .turing, "flip-both", "symbol and direction flip"⟩
-  , ⟨.dao, .logic, "id", "identity"⟩
-  , ⟨.cuo, .logic, "negation", "content duality"⟩
-  , ⟨.zong, .logic, "implication reversal", "frame duality"⟩
-  , ⟨.cuoZong, .logic, "contrapositive", "compound duality"⟩
+  [ ⟨.dao, .wen, "Way", "identity", atlasPreservation .dao .wen⟩
+  , ⟨.cuo, .wen, "content duality", "value flip", atlasPreservation .cuo .wen⟩
+  , ⟨.zong, .wen, "frame duality", "order flip", atlasPreservation .zong .wen⟩
+  , ⟨.cuoZong, .wen, "compound duality", "content and frame flip",
+      atlasPreservation .cuoZong .wen⟩
+  , ⟨.dao, .logic, "id", "identity", atlasPreservation .dao .logic⟩
+  , ⟨.cuo, .logic, "negation", "content duality", atlasPreservation .cuo .logic⟩
+  , ⟨.zong, .logic, "implication reversal", "frame duality",
+      atlasPreservation .zong .logic⟩
+  , ⟨.cuoZong, .logic, "contrapositive", "compound duality",
+      atlasPreservation .cuoZong .logic⟩
+  , ⟨.dao, .category, "identity functor", "object and arrow identity",
+      atlasPreservation .dao .category⟩
+  , ⟨.cuo, .category, "opposite content", "object-level dual reading",
+      atlasPreservation .cuo .category⟩
+  , ⟨.zong, .category, "opposite arrows", "arrow-order dual reading",
+      atlasPreservation .zong .category⟩
+  , ⟨.cuoZong, .category, "dual opposite", "content and arrow-order dual reading",
+      atlasPreservation .cuoZong .category⟩
+  , ⟨.dao, .turing, "nop", "no local flip", atlasPreservation .dao .turing⟩
+  , ⟨.cuo, .turing, "flip-bit", "tape-symbol flip", atlasPreservation .cuo .turing⟩
+  , ⟨.zong, .turing, "flip-dir", "head-direction flip", atlasPreservation .zong .turing⟩
+  , ⟨.cuoZong, .turing, "flip-both", "symbol and direction flip",
+      atlasPreservation .cuoZong .turing⟩
+  , ⟨.dao, .pauli, "I", "identity reading", atlasPreservation .dao .pauli⟩
+  , ⟨.cuo, .pauli, "X", "value-flip reading", atlasPreservation .cuo .pauli⟩
+  , ⟨.zong, .pauli, "Z", "phase/frame-flip reading", atlasPreservation .zong .pauli⟩
+  , ⟨.cuoZong, .pauli, "XZ", "paired value-frame flip reading",
+      atlasPreservation .cuoZong .pauli⟩
+  , ⟨.dao, .galois, "identity automorphism", "fixed coordinate reading",
+      atlasPreservation .dao .galois⟩
+  , ⟨.cuo, .galois, "content conjugation", "value-axis conjugate reading",
+      atlasPreservation .cuo .galois⟩
+  , ⟨.zong, .galois, "frame conjugation", "order-axis conjugate reading",
+      atlasPreservation .zong .galois⟩
+  , ⟨.cuoZong, .galois, "bi-conjugation", "content and frame conjugate reading",
+      atlasPreservation .cuoZong .galois⟩
+  , ⟨.dao, .semiotics, "sign", "mark as itself", atlasPreservation .dao .semiotics⟩
+  , ⟨.cuo, .semiotics, "counter-sign", "marked content dual",
+      atlasPreservation .cuo .semiotics⟩
+  , ⟨.zong, .semiotics, "reframed sign", "context/order dual",
+      atlasPreservation .zong .semiotics⟩
+  , ⟨.cuoZong, .semiotics, "contrary reframed sign", "content and context dual",
+      atlasPreservation .cuoZong .semiotics⟩
   ]
 
 theorem coreAtlas_nonempty : coreAtlas ≠ [] := by
   decide
 
-theorem coreAtlas_length : coreAtlas.length = 12 := rfl
+theorem coreAtlas_length : coreAtlas.length = 28 := rfl
 
 theorem atlas_summary :
-    coreAtlas.length = 12
+    coreAtlas.length = 28
     ∧ coreAtlas ≠ [] :=
   ⟨coreAtlas_length, coreAtlas_nonempty⟩
 
