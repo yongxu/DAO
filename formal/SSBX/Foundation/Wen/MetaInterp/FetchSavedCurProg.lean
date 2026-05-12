@@ -239,6 +239,31 @@ theorem reemitSavedCurProg_runFuel_state
   all_goals
     simp [yao_neg_eq_iff_ne, yao_eq_neg_iff_ne, Yao.neg_neg, *]
 
+theorem reemitSavedCurProg_from_fetchOutcome_yields_savedCur
+    (regHex : Hexagram) (sim μ : YiState) (dispatchOffset : Nat)
+    (h_fetch :
+      FetchOutcome regHex sim
+        (reemitSavedCurProg μ.cur sim.cur dispatchOffset) 0 μ) :
+    SavedCurFetchOutcome regHex sim
+      (reemitSavedCurProg μ.cur sim.cur dispatchOffset)
+      dispatchOffset
+      (μ.runFuel (reemitSavedCurProg μ.cur sim.cur dispatchOffset).length) := by
+  cases μ with
+  | mk cur history pc prog halted =>
+      have h_history := h_fetch.history
+      have h_pc := h_fetch.pc
+      have h_prog := h_fetch.prog
+      have h_halted := h_fetch.halted
+      simp at h_history h_pc h_prog h_halted
+      subst history
+      subst pc
+      subst prog
+      subst halted
+      rw [reemitSavedCurProg_runFuel_state]
+      refine ⟨?_, rfl, rfl, rfl, rfl⟩
+      intro instr h_get
+      exact h_fetch.cur_is_tag instr h_get
+
 theorem fetch_saved_cur_reemit_macro_summary :
     (∀ cur target : R8, (setCellFrom cur target).length ≤ 7)
     ∧ (∀ tag saved : R8, ∀ dispatchOffset : Nat,
@@ -257,12 +282,21 @@ theorem fetch_saved_cur_reemit_macro_summary :
           , history := saved :: history
           , pc := dispatchOffset
           , prog := reemitSavedCurProg tag saved dispatchOffset
-          , halted := false }) := by
+          , halted := false })
+    ∧ (∀ regHex sim μ dispatchOffset,
+        FetchOutcome regHex sim
+          (reemitSavedCurProg μ.cur sim.cur dispatchOffset) 0 μ →
+          SavedCurFetchOutcome regHex sim
+            (reemitSavedCurProg μ.cur sim.cur dispatchOffset)
+            dispatchOffset
+            (μ.runFuel
+              (reemitSavedCurProg μ.cur sim.cur dispatchOffset).length)) := by
   exact
     ⟨ setCellFrom_length_le
     , reemitSavedCurProg_length_le
     , reemitSavedCurProg_push_at_saved_boundary
     , reemitSavedCurProg_runFuel_state
+    , reemitSavedCurProg_from_fetchOutcome_yields_savedCur
     ⟩
 
 def reemitSmokeTag : R8 :=
