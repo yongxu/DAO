@@ -136,6 +136,16 @@ def reemitSavedCurProg (tag saved : R8) (dispatchOffset : Nat) : List YiInstr :=
   setCellFrom saved tag ++
   [YiInstr.jump dispatchOffset]
 
+def reemitSavedCurPrefix (tag saved : R8) : List YiInstr :=
+  setCellFrom tag saved ++
+  [YiInstr.push] ++
+  setCellFrom saved tag
+
+def reemitSavedCurProg16 (tag saved : R8) (dispatchOffset : Nat) : List YiInstr :=
+  reemitSavedCurPrefix tag saved ++
+  List.replicate (15 - (reemitSavedCurPrefix tag saved).length) YiInstr.nop ++
+  [YiInstr.jump dispatchOffset]
+
 theorem setCellFrom_length_le (cur target : R8) :
     (setCellFrom cur target).length ≤ 7 := by
   have h0 := flipIfDiff_length_le cur.1 target.1 yao0
@@ -166,6 +176,22 @@ theorem reemitSavedCurProg_nonempty
     (tag saved : R8) (dispatchOffset : Nat) :
     (reemitSavedCurProg tag saved dispatchOffset).length > 0 := by
   simp [reemitSavedCurProg, setCellFrom]
+  omega
+
+theorem reemitSavedCurPrefix_length_le (tag saved : R8) :
+    (reemitSavedCurPrefix tag saved).length ≤ 15 := by
+  have h_saved := setCellFrom_length_le tag saved
+  have h_tag := setCellFrom_length_le saved tag
+  simp only [reemitSavedCurPrefix, List.length_append, List.length_cons,
+    List.length_nil]
+  omega
+
+theorem reemitSavedCurProg16_length
+    (tag saved : R8) (dispatchOffset : Nat) :
+    (reemitSavedCurProg16 tag saved dispatchOffset).length = 16 := by
+  have h_prefix := reemitSavedCurPrefix_length_le tag saved
+  unfold reemitSavedCurProg16
+  simp [List.length_append]
   omega
 
 @[simp] private theorem yao_neg_eq_of_ne {a b : Yao} (h : a ≠ b) :
@@ -239,6 +265,36 @@ theorem reemitSavedCurProg_runFuel_state
   all_goals
     simp [yao_neg_eq_iff_ne, yao_eq_neg_iff_ne, Yao.neg_neg, *]
 
+theorem reemitSavedCurProg16_runFuel_state
+    (tag saved : R8) (dispatchOffset : Nat) (history : List R8) :
+    ({ cur := tag
+      , history := history
+      , pc := 0
+      , prog := reemitSavedCurProg16 tag saved dispatchOffset
+      , halted := false } : YiState).runFuel
+        (reemitSavedCurProg16 tag saved dispatchOffset).length =
+      { cur := tag
+      , history := saved :: history
+      , pc := dispatchOffset
+      , prog := reemitSavedCurProg16 tag saved dispatchOffset
+      , halted := false } := by
+  rcases tag with ⟨tagHex, tagShi⟩
+  rcases saved with ⟨savedHex, savedShi⟩
+  rcases tagHex with ⟨a0, a1, a2, a3, a4, a5⟩
+  rcases savedHex with ⟨b0, b1, b2, b3, b4, b5⟩
+  unfold reemitSavedCurProg16 reemitSavedCurPrefix setCellFrom flipIfDiff
+  by_cases h0 : a0 = b0 <;>
+    by_cases h1 : a1 = b1 <;>
+    by_cases h2 : a2 = b2 <;>
+    by_cases h3 : a3 = b3 <;>
+    by_cases h4 : a4 = b4 <;>
+    by_cases h5 : a5 = b5 <;>
+    simp [yao0, yao1, yao2, yao3, yao4, yao5, h0, h1, h2, h3, h4, h5,
+      eq_comm, Hexagram.yaoAt, Hexagram.flipPos,
+      YiState.runFuel, YiState.step, YiState.execute]
+  all_goals
+    simp [yao_neg_eq_iff_ne, yao_eq_neg_iff_ne, Yao.neg_neg, *]
+
 theorem reemitSavedCurProg_from_fetchOutcome_yields_savedCur
     (regHex : Hexagram) (sim μ : YiState) (dispatchOffset : Nat)
     (h_fetch :
@@ -264,10 +320,37 @@ theorem reemitSavedCurProg_from_fetchOutcome_yields_savedCur
       intro instr h_get
       exact h_fetch.cur_is_tag instr h_get
 
+theorem reemitSavedCurProg16_from_fetchOutcome_yields_savedCur
+    (regHex : Hexagram) (sim μ : YiState) (dispatchOffset : Nat)
+    (h_fetch :
+      FetchOutcome regHex sim
+        (reemitSavedCurProg16 μ.cur sim.cur dispatchOffset) 0 μ) :
+    SavedCurFetchOutcome regHex sim
+      (reemitSavedCurProg16 μ.cur sim.cur dispatchOffset)
+      dispatchOffset
+      (μ.runFuel (reemitSavedCurProg16 μ.cur sim.cur dispatchOffset).length) := by
+  cases μ with
+  | mk cur history pc prog halted =>
+      have h_history := h_fetch.history
+      have h_pc := h_fetch.pc
+      have h_prog := h_fetch.prog
+      have h_halted := h_fetch.halted
+      simp at h_history h_pc h_prog h_halted
+      subst history
+      subst pc
+      subst prog
+      subst halted
+      rw [reemitSavedCurProg16_runFuel_state]
+      refine ⟨?_, rfl, rfl, rfl, rfl⟩
+      intro instr h_get
+      exact h_fetch.cur_is_tag instr h_get
+
 theorem fetch_saved_cur_reemit_macro_summary :
     (∀ cur target : R8, (setCellFrom cur target).length ≤ 7)
     ∧ (∀ tag saved : R8, ∀ dispatchOffset : Nat,
         (reemitSavedCurProg tag saved dispatchOffset).length ≤ 16)
+    ∧ (∀ tag saved : R8, ∀ dispatchOffset : Nat,
+        (reemitSavedCurProg16 tag saved dispatchOffset).length = 16)
     ∧ (∀ tag saved : R8, ∀ dispatchOffset : Nat,
         (reemitSavedCurProg tag saved dispatchOffset)[
           (setCellFrom tag saved).length]? = some YiInstr.push)
@@ -290,13 +373,23 @@ theorem fetch_saved_cur_reemit_macro_summary :
             (reemitSavedCurProg μ.cur sim.cur dispatchOffset)
             dispatchOffset
             (μ.runFuel
-              (reemitSavedCurProg μ.cur sim.cur dispatchOffset).length)) := by
+              (reemitSavedCurProg μ.cur sim.cur dispatchOffset).length))
+    ∧ (∀ regHex sim μ dispatchOffset,
+        FetchOutcome regHex sim
+          (reemitSavedCurProg16 μ.cur sim.cur dispatchOffset) 0 μ →
+          SavedCurFetchOutcome regHex sim
+            (reemitSavedCurProg16 μ.cur sim.cur dispatchOffset)
+            dispatchOffset
+            (μ.runFuel
+              (reemitSavedCurProg16 μ.cur sim.cur dispatchOffset).length)) := by
   exact
     ⟨ setCellFrom_length_le
     , reemitSavedCurProg_length_le
+    , reemitSavedCurProg16_length
     , reemitSavedCurProg_push_at_saved_boundary
     , reemitSavedCurProg_runFuel_state
     , reemitSavedCurProg_from_fetchOutcome_yields_savedCur
+    , reemitSavedCurProg16_from_fetchOutcome_yields_savedCur
     ⟩
 
 def reemitSmokeTag : R8 :=
