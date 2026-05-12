@@ -168,17 +168,101 @@ theorem reemitSavedCurProg_nonempty
   simp [reemitSavedCurProg, setCellFrom]
   omega
 
+@[simp] private theorem yao_neg_eq_of_ne {a b : Yao} (h : a ≠ b) :
+    a.neg = b := by
+  cases a <;> cases b <;> simp [Yao.neg] at h ⊢
+
+@[simp] private theorem yao_neg_eq_iff_ne (a b : Yao) :
+    a.neg = b ↔ a ≠ b := by
+  cases a <;> cases b <;> simp [Yao.neg]
+
+@[simp] private theorem yao_eq_neg_iff_ne (a b : Yao) :
+    b = a.neg ↔ a ≠ b := by
+  cases a <;> cases b <;> simp [Yao.neg]
+
+theorem setCellFrom_runFuel_state
+    (cur target : R8) (history : List R8) (suffix : List YiInstr) :
+    ({ cur := cur
+      , history := history
+      , pc := 0
+      , prog := setCellFrom cur target ++ suffix
+      , halted := false } : YiState).runFuel (setCellFrom cur target).length =
+      { cur := target
+      , history := history
+      , pc := (setCellFrom cur target).length
+      , prog := setCellFrom cur target ++ suffix
+      , halted := false } := by
+  rcases cur with ⟨ch, cs⟩
+  rcases target with ⟨th, ts⟩
+  rcases ch with ⟨c0, c1, c2, c3, c4, c5⟩
+  rcases th with ⟨t0, t1, t2, t3, t4, t5⟩
+  unfold setCellFrom flipIfDiff
+  by_cases h0 : c0 = t0 <;>
+    by_cases h1 : c1 = t1 <;>
+    by_cases h2 : c2 = t2 <;>
+    by_cases h3 : c3 = t3 <;>
+    by_cases h4 : c4 = t4 <;>
+    by_cases h5 : c5 = t5 <;>
+    simp [yao0, yao1, yao2, yao3, yao4, yao5, h0, h1, h2, h3, h4, h5,
+      Hexagram.yaoAt, Hexagram.flipPos,
+      YiState.runFuel, YiState.step, YiState.execute]
+  all_goals
+    simp [yao_neg_eq_iff_ne, yao_eq_neg_iff_ne, Yao.neg_neg, *]
+
+theorem reemitSavedCurProg_runFuel_state
+    (tag saved : R8) (dispatchOffset : Nat) (history : List R8) :
+    ({ cur := tag
+      , history := history
+      , pc := 0
+      , prog := reemitSavedCurProg tag saved dispatchOffset
+      , halted := false } : YiState).runFuel
+        (reemitSavedCurProg tag saved dispatchOffset).length =
+      { cur := tag
+      , history := saved :: history
+      , pc := dispatchOffset
+      , prog := reemitSavedCurProg tag saved dispatchOffset
+      , halted := false } := by
+  rcases tag with ⟨tagHex, tagShi⟩
+  rcases saved with ⟨savedHex, savedShi⟩
+  rcases tagHex with ⟨a0, a1, a2, a3, a4, a5⟩
+  rcases savedHex with ⟨b0, b1, b2, b3, b4, b5⟩
+  unfold reemitSavedCurProg setCellFrom flipIfDiff
+  by_cases h0 : a0 = b0 <;>
+    by_cases h1 : a1 = b1 <;>
+    by_cases h2 : a2 = b2 <;>
+    by_cases h3 : a3 = b3 <;>
+    by_cases h4 : a4 = b4 <;>
+    by_cases h5 : a5 = b5 <;>
+    simp [yao0, yao1, yao2, yao3, yao4, yao5, h0, h1, h2, h3, h4, h5,
+      eq_comm, Hexagram.yaoAt, Hexagram.flipPos,
+      YiState.runFuel, YiState.step, YiState.execute]
+  all_goals
+    simp [yao_neg_eq_iff_ne, yao_eq_neg_iff_ne, Yao.neg_neg, *]
+
 theorem fetch_saved_cur_reemit_macro_summary :
     (∀ cur target : R8, (setCellFrom cur target).length ≤ 7)
     ∧ (∀ tag saved : R8, ∀ dispatchOffset : Nat,
         (reemitSavedCurProg tag saved dispatchOffset).length ≤ 16)
     ∧ (∀ tag saved : R8, ∀ dispatchOffset : Nat,
         (reemitSavedCurProg tag saved dispatchOffset)[
-          (setCellFrom tag saved).length]? = some YiInstr.push) := by
+          (setCellFrom tag saved).length]? = some YiInstr.push)
+    ∧ (∀ tag saved : R8, ∀ dispatchOffset : Nat, ∀ history : List R8,
+        ({ cur := tag
+          , history := history
+          , pc := 0
+          , prog := reemitSavedCurProg tag saved dispatchOffset
+          , halted := false } : YiState).runFuel
+            (reemitSavedCurProg tag saved dispatchOffset).length =
+          { cur := tag
+          , history := saved :: history
+          , pc := dispatchOffset
+          , prog := reemitSavedCurProg tag saved dispatchOffset
+          , halted := false }) := by
   exact
     ⟨ setCellFrom_length_le
     , reemitSavedCurProg_length_le
     , reemitSavedCurProg_push_at_saved_boundary
+    , reemitSavedCurProg_runFuel_state
     ⟩
 
 def reemitSmokeTag : R8 :=
