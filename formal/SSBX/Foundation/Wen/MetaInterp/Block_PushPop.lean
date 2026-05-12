@@ -343,14 +343,14 @@ theorem encMetaHistory_pop_step_nonempty
 /-- The general push-simulation target (Phase C).  Takes the
     block-precondition record `BlockPre`, asserts that running the block
     for its dynamic fuel produces a state satisfying the
-    block-postcondition record `BlockPost` for `sim.step`. -/
+    block-postcondition record `BlockPost` for the one-step source state. -/
 def executeBlock_push_simulates_target
     (regHex : Hexagram) (sim : YiState) (offset fetchOffset : Nat)
     (metaProg : List YiInstr) (μ : YiState) : Prop :=
   sim.halted = false →
   sim.prog[sim.pc]? = some .push →
   BlockPre regHex sim offset metaProg μ →
-  ∃ fuel, BlockPost regHex sim.step fetchOffset metaProg
+  ∃ fuel, BlockPost regHex sim fetchOffset metaProg
             (μ.runFuel fuel) false
 
 /-- The general pop-simulation target (Phase C).  The post-state's
@@ -362,7 +362,7 @@ def executeBlock_pop_simulates_target
   sim.halted = false →
   sim.prog[sim.pc]? = some .pop →
   BlockPre regHex sim offset metaProg μ →
-  ∃ fuel, BlockPost regHex sim.step fetchOffset metaProg
+  ∃ fuel, BlockPost regHex sim fetchOffset metaProg
             (μ.runFuel fuel) sim.history.isEmpty
 
 end SSBX.Foundation.Wen.MetaInterp.ExecuteBlock
