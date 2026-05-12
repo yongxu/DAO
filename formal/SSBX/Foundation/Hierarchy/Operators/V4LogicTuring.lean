@@ -17,6 +17,7 @@ import SSBX.Foundation.Hierarchy.Operators.V4Outer
 namespace SSBX.Foundation.Hierarchy.Operators.V4LogicTuring
 
 open SSBX.Foundation.Yi.Yi
+open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Hierarchy.Operators.V4Outer
 
 /-! ## Logical V4 skeleton -/
@@ -112,6 +113,42 @@ theorem actHex_compose (a b : LogicalV4) (h : Hexagram) :
     | mk y1 y2 y3 y4 y5 y6 =>
         cases y1 <;> cases y2 <;> cases y3 <;>
           cases y4 <;> cases y5 <;> cases y6 <;> rfl
+
+/-! ## R8 temporal-state bridge -/
+
+/-- The same two-axis V4 skeleton as an R8 temporal-state tag. -/
+def toShi : LogicalV4 → Shi
+  | .dao => Shi.dao
+  | .cuo => Shi.ji
+  | .zong => Shi.wei
+  | .cuoZong => Shi.jin
+
+/-- Read an R8 temporal-state tag back as the logical V4 skeleton. -/
+def ofShi (s : Shi) : LogicalV4 :=
+  ofBits s.1 s.2
+
+theorem toShi_contentBit (x : LogicalV4) :
+    (toShi x).1 = contentBit x := by
+  cases x <;> rfl
+
+theorem toShi_frameBit (x : LogicalV4) :
+    (toShi x).2 = frameBit x := by
+  cases x <;> rfl
+
+theorem ofShi_toShi (x : LogicalV4) :
+    ofShi (toShi x) = x := by
+  cases x <;> rfl
+
+theorem toShi_ofShi (s : Shi) :
+    toShi (ofShi s) = s := by
+  rcases s with ⟨content, frame⟩
+  cases content <;> cases frame <;> rfl
+
+theorem toShi_compose (a b : LogicalV4) :
+    toShi (compose a b) =
+      (Bool.xor (toShi a).1 (toShi b).1,
+       Bool.xor (toShi a).2 (toShi b).2) := by
+  cases a <;> cases b <;> rfl
 
 end LogicalV4
 
@@ -230,6 +267,30 @@ theorem apply_compose (a b : TMV4Action) (s : TapeBit × MoveDir) :
   cases x1 <;> cases z1 <;> cases x2 <;> cases z2 <;>
     cases bit <;> cases dir <;> rfl
 
+/-- Reversible TM local actions use the same R8 temporal-state V4 carrier. -/
+def toShi (a : TMV4Action) : Shi :=
+  LogicalV4.toShi (toLogical a)
+
+theorem toShi_nop :
+    toShi nop = Shi.dao := rfl
+
+theorem toShi_flipBit :
+    toShi flipBit = Shi.ji := rfl
+
+theorem toShi_flipDir :
+    toShi flipDir = Shi.wei := rfl
+
+theorem toShi_flipBoth :
+    toShi flipBoth = Shi.jin := rfl
+
+theorem toShi_compose (a b : TMV4Action) :
+    toShi (compose a b) =
+      (Bool.xor (toShi a).1 (toShi b).1,
+       Bool.xor (toShi a).2 (toShi b).2) := by
+  rcases a with ⟨x1, z1⟩
+  rcases b with ⟨x2, z2⟩
+  cases x1 <;> cases z1 <;> cases x2 <;> cases z2 <;> rfl
+
 /-- A lightweight permutation record for the state-controller skeleton. -/
 structure StatePerm (Q : Type) where
   toFun : Q → Q
@@ -250,7 +311,10 @@ theorem reversible_tm_v4_summary :
     ∧ (∀ a b c : TMV4Action, compose (compose a b) c = compose a (compose b c))
     ∧ (∀ a b : LogicalV4, ofLogical (LogicalV4.compose a b) =
       compose (ofLogical a) (ofLogical b))
-    ∧ (∀ a b s, apply (compose a b) s = apply a (apply b s)) := by
+    ∧ (∀ a b s, apply (compose a b) s = apply a (apply b s))
+    ∧ (toShi flipBit = Shi.ji)
+    ∧ (toShi flipDir = Shi.wei)
+    ∧ (toShi flipBoth = Shi.jin) := by
   exact
     ⟨ rfl
     , compose_nop_right
@@ -259,6 +323,9 @@ theorem reversible_tm_v4_summary :
     , compose_assoc
     , ofLogical_compose
     , apply_compose
+    , rfl
+    , rfl
+    , rfl
     ⟩
 
 end TMV4Action
@@ -269,17 +336,31 @@ theorem logical_turing_v4_foundation_summary :
     (∀ x : LogicalV4, LogicalV4.compose x .dao = x)
     ∧ (∀ x : LogicalV4, LogicalV4.compose x x = .dao)
     ∧ (LogicalV4.compose .cuo .zong = .cuoZong)
+    ∧ (LogicalV4.toShi LogicalV4.dao = Shi.dao)
+    ∧ (LogicalV4.toShi LogicalV4.cuo = Shi.ji)
+    ∧ (LogicalV4.toShi LogicalV4.zong = Shi.wei)
+    ∧ (LogicalV4.toShi LogicalV4.cuoZong = Shi.jin)
     ∧ (∀ h : Hexagram,
       LogicalV4.actHex .cuoZong h =
         LogicalV4.actHex .cuo (LogicalV4.actHex .zong h))
     ∧ (TMV4Action.toLogical TMV4Action.flipBit = LogicalV4.cuo)
     ∧ (TMV4Action.toLogical TMV4Action.flipDir = LogicalV4.zong)
-    ∧ (TMV4Action.toLogical TMV4Action.flipBoth = LogicalV4.cuoZong) := by
+    ∧ (TMV4Action.toLogical TMV4Action.flipBoth = LogicalV4.cuoZong)
+    ∧ (TMV4Action.toShi TMV4Action.flipBit = Shi.ji)
+    ∧ (TMV4Action.toShi TMV4Action.flipDir = Shi.wei)
+    ∧ (TMV4Action.toShi TMV4Action.flipBoth = Shi.jin) := by
   exact
     ⟨ LogicalV4.compose_dao_right
     , LogicalV4.compose_self
     , rfl
+    , rfl
+    , rfl
+    , rfl
+    , rfl
     , fun h => rfl
+    , rfl
+    , rfl
+    , rfl
     , rfl
     , rfl
     , rfl
