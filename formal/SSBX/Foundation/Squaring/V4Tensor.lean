@@ -74,13 +74,16 @@ instance instAddCommGroupR8 : AddCommGroup R8 where
     simpa [R8.neg_def] using R8.xor_self c
   add_comm := R8.xor_comm
 
-/-! ## Generic V₄ carrier and the third-axis alias -/
+/-! ## V₄ coordinate carrier and the third-axis alias -/
 
-/-- Generic Klein-four carrier represented as two Yao bits. -/
-abbrev V4 : Type := Yao × Yao
+/-- Coordinate model of a Klein-four carrier represented as two Yao bits.
+
+The canonical V4 kernel lives in `Hierarchy/Operators/V4`.  This local type is
+only the Yao-pair coordinate used by the R8 tensor equivalence. -/
+abbrev V4Coord : Type := Yao × Yao
 
 /-- Third V₄ axis from `(y₅,y₆)`. The doctrine-level name remains open. -/
-abbrev OuterMian : Type := V4
+abbrev OuterMian : Type := V4Coord
 
 def boolToYao : Bool → Yao
   | false => Yao.yang
@@ -100,34 +103,37 @@ def yaoToBool : Yao → Bool
     boolToYao (Bool.xor a b) = boolToYao a + boolToYao b := by
   cases a <;> cases b <;> rfl
 
-def shiToV4 (s : Shi) : V4 :=
+def shiToV4Coord (s : Shi) : V4Coord :=
   (boolToYao (Shi.toYinGuo s).1, boolToYao (Shi.toYinGuo s).2)
 
-def v4ToShi (v : V4) : Shi :=
+def v4CoordToShi (v : V4Coord) : Shi :=
   Shi.ofYinGuo (yaoToBool v.1, yaoToBool v.2)
 
-@[simp] theorem v4ToShi_shiToV4 (s : Shi) : v4ToShi (shiToV4 s) = s := by
+@[simp] theorem v4CoordToShi_shiToV4Coord (s : Shi) :
+    v4CoordToShi (shiToV4Coord s) = s := by
   rcases s with ⟨yin, guo⟩
   cases yin <;> cases guo <;> rfl
 
-@[simp] theorem shiToV4_v4ToShi (v : V4) : shiToV4 (v4ToShi v) = v := by
+@[simp] theorem shiToV4Coord_v4CoordToShi (v : V4Coord) :
+    shiToV4Coord (v4CoordToShi v) = v := by
   rcases v with ⟨a, b⟩
   cases a <;> cases b <;> rfl
 
 /-! ## Main equivalence: R8 ≃+ V₄⁴ -/
 
-def toV4Quad (c : R8) : V4 × V4 × V4 × V4 :=
-  ((c.1.y1, c.1.y2), (c.1.y3, c.1.y4), (c.1.y5, c.1.y6), shiToV4 c.2)
+def toV4CoordQuad (c : R8) : V4Coord × V4Coord × V4Coord × V4Coord :=
+  ((c.1.y1, c.1.y2), (c.1.y3, c.1.y4), (c.1.y5, c.1.y6), shiToV4Coord c.2)
 
-def ofV4Quad : V4 × V4 × V4 × V4 → R8
+def ofV4CoordQuad : V4Coord × V4Coord × V4Coord × V4Coord → R8
   | ((y1, y2), (y3, y4), (y5, y6), shi) =>
-      (⟨y1, y2, y3, y4, y5, y6⟩, v4ToShi shi)
+      (⟨y1, y2, y3, y4, y5, y6⟩, v4CoordToShi shi)
 
-theorem to_of (q : V4 × V4 × V4 × V4) : toV4Quad (ofV4Quad q) = q := by
+theorem to_of (q : V4Coord × V4Coord × V4Coord × V4Coord) :
+    toV4CoordQuad (ofV4CoordQuad q) = q := by
   rcases q with ⟨⟨y1, y2⟩, ⟨y3, y4⟩, ⟨y5, y6⟩, ⟨s1, s2⟩⟩
   cases s1 <;> cases s2 <;> rfl
 
-theorem of_to (c : R8) : ofV4Quad (toV4Quad c) = c := by
+theorem of_to (c : R8) : ofV4CoordQuad (toV4CoordQuad c) = c := by
   rcases c with ⟨h, s⟩
   rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
   rcases s with ⟨yin, guo⟩
@@ -554,9 +560,9 @@ theorem r8_negation_ox_operator_summary :
    ox_full_neg_mask_decomposes,
    ox_full_neg_operator_decomposes⟩
 
-def iso : R8 ≃+ (V4 × V4 × V4 × V4) where
-  toFun := toV4Quad
-  invFun := ofV4Quad
+def iso : R8 ≃+ (V4Coord × V4Coord × V4Coord × V4Coord) where
+  toFun := toV4CoordQuad
+  invFun := ofV4CoordQuad
   left_inv := of_to
   right_inv := to_of
   map_add' := by
@@ -567,29 +573,30 @@ def iso : R8 ≃+ (V4 × V4 × V4 × V4) where
     rcases hb with ⟨b1, b2, b3, b4, b5, b6⟩
     rcases sa with ⟨ay, ag⟩
     rcases sb with ⟨byin, bg⟩
-    simp [toV4Quad, R8.add_def, R8.xor, R8.hexXor,
-      R8.shiXor, Shi.toYinGuo, Shi.ofYinGuo, shiToV4]
+    simp [toV4CoordQuad, R8.add_def, R8.xor, R8.hexXor,
+      R8.shiXor, Shi.toYinGuo, Shi.ofYinGuo, shiToV4Coord]
 
-theorem origin_toV4Quad :
-    toV4Quad R8.origin =
+theorem origin_toV4CoordQuad :
+    toV4CoordQuad R8.origin =
       ((Yao.yang, Yao.yang), (Yao.yang, Yao.yang),
        (Yao.yang, Yao.yang), (Yao.yang, Yao.yang)) := rfl
 
 theorem way_origin_operator_summary :
     R8.origin = (Hexagram.heaven, Shi.dao)
     ∧ cellOperator R8.origin = id
-    ∧ toV4Quad R8.origin =
+    ∧ toV4CoordQuad R8.origin =
       ((Yao.yang, Yao.yang), (Yao.yang, Yao.yang),
        (Yao.yang, Yao.yang), (Yao.yang, Yao.yang)) :=
-  ⟨way_at_origin, way_noop_operator, origin_toV4Quad⟩
+  ⟨way_at_origin, way_noop_operator, origin_toV4CoordQuad⟩
 
 theorem v4_tensor_summary :
-    (∀ c : R8, ofV4Quad (toV4Quad c) = c)
-    ∧ (∀ q : V4 × V4 × V4 × V4, toV4Quad (ofV4Quad q) = q)
-    ∧ toV4Quad R8.origin =
+    (∀ c : R8, ofV4CoordQuad (toV4CoordQuad c) = c)
+    ∧ (∀ q : V4Coord × V4Coord × V4Coord × V4Coord,
+      toV4CoordQuad (ofV4CoordQuad q) = q)
+    ∧ toV4CoordQuad R8.origin =
       ((Yao.yang, Yao.yang), (Yao.yang, Yao.yang),
        (Yao.yang, Yao.yang), (Yao.yang, Yao.yang)) :=
-  ⟨of_to, to_of, origin_toV4Quad⟩
+  ⟨of_to, to_of, origin_toV4CoordQuad⟩
 
 end V4Tensor
 

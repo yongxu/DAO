@@ -24,8 +24,10 @@ i.e. using the proofs already established in `R7.lean` / `R8.lean`.
 
 - Does NOT redefine the operators (pure re-export via `def` aliases).
 - Does NOT touch source files (`R8.lean`, `R7.lean`, `BaguaAlgebra.lean`).
-- Does NOT include `reverse` / `interlace` / `complementReverse` — those are V₄-outer (non-XOR
-  permutations) and live in `V4Outer.lean`.
+- Does NOT include `reverse` / `complementReverse` — those are the V4
+  Hexagram action in `V4/Hexagram.lean`.
+- Does NOT include `interlace` — that is a non-V4 projection in
+  `Interlace.lean`.
 -/
 import SSBX.Foundation.Bagua.R8
 import SSBX.Foundation.Bagua.R7

@@ -74,13 +74,13 @@ def yaoBit : Yao → Nat
   | Yao.yin => 1
 
 def octantNat (l : L1) : Nat :=
-  let q := V4Tensor.toV4Quad (l.1 + l.2)
+  let q := V4Tensor.toV4CoordQuad (l.1 + l.2)
   match q with
   | ((y1, y2), (y3, _), _, _) => 4 * yaoBit y1 + 2 * yaoBit y2 + yaoBit y3
 
 theorem octantNat_lt (l : L1) : octantNat l < 8 := by
   unfold octantNat
-  generalize hq : V4Tensor.toV4Quad (l.1 + l.2) = q
+  generalize hq : V4Tensor.toV4CoordQuad (l.1 + l.2) = q
   rcases q with ⟨⟨y1, y2⟩, ⟨y3, _y4⟩, _q3, _q4⟩
   cases y1 <;> cases y2 <;> cases y3 <;> simp [yaoBit]
 

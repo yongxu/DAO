@@ -125,7 +125,9 @@ import SSBX.Foundation.Bagua.R7  -- R₇ 中间层 (Hexagram × YinBit, 128 cell
 import SSBX.Foundation.Hierarchy.R5_Wuyao  -- R₅ strict (Z/2)⁵ = 32 carrier (Mian × Bool)
 import SSBX.Foundation.Hierarchy.LiftProject  -- Uniform Lift/Project pairs across R₀..R₈
 import SSBX.Foundation.Hierarchy.Operators.Atomic  -- XOR subgroup re-export (imprint/project/flipᵢ/hexCuo)
-import SSBX.Foundation.Hierarchy.Operators.V4Outer  -- V₄ Klein-four outer (zong/cuoZong/hu)
+import SSBX.Foundation.Hierarchy.Operators.V4  -- canonical V4 kernel + projections/actions
+import SSBX.Foundation.Hierarchy.Operators.Interlace  -- non-V4 interlace projection
+import SSBX.Foundation.Hierarchy.Operators.OXPrefix  -- variable-length o/x prefixes
 import SSBX.Foundation.Hierarchy.RHierarchy  -- R₀..R₈ index-named alias umbrella
 import SSBX.Foundation.Bagua.R8  -- R₈ 闭合层 (Hexagram × Shi V₄, 256 cells, 投 算子)
 import SSBX.Foundation.Bagua.R8Stratify  -- R₇/R₈ 双层 stratification + R8_complete bundle
