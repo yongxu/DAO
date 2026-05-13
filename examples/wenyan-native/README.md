@@ -5,6 +5,7 @@
 
 当前状态：
 
+- 规范语法见 `docs-next/10_formal_形式/wenyan-native-syntax-spec.md`。
 - parser、native lowering 与语义见 `formal/SSBX/Foundation/Wen/WenyanAlgorithms.lean`，已由 Lean 小定理验证。
 - `quicksort.wen` 可由 `wenyan-algorithm` 运行；它不走 Lisp reader。
 - 当前输出走 native `TopForm 8 / Value 8`；后续可把同一文法并入通用 native reader。

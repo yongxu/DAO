@@ -120,6 +120,7 @@ list-map 的理论式可以写作：
 
 - `formal/SSBX/Foundation/Wen/Native/ChineseAliases.lean`：中文 `abbrev/def` 与小定理，证明别名与 native core 同义。
 - `formal/SSBX/Foundation/Wen/Native/Reader.lean`：reader 接受中文 surface token，并降低到既有 native primitive / constructor。
+- `docs-next/10_formal_形式/wenyan-native-syntax-spec.md`：纯文言 algorithm parser 的规范语法；先固定结构，再扩实现。
 - `formal/SSBX/Foundation/Wen/WenyanAlgorithms.lean`：不用 Lisp surface 的文言算法 parser；先把 `法曰/受/若/取/令/归/试以` 小文法读成 `Function / Stmt / Expr`，再降低到 `Native.SurfaceTopForm 8 / TopForm 8` 并用 native evaluator 运行，以 Lean 小定理验证快速排序语义。
 - `WenyanAlgorithm.lean` / `wenyan-algorithm`：运行 `examples/wenyan-native/` 中的纯文言算法文件，不经 Lisp reader。
 - 后续如果扩 reader，应保持同一策略：中文 token 做 parse-time lowering；只有确需表达新可计算能力时才补最小 native primitive。

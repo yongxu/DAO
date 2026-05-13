@@ -42,6 +42,7 @@
 - [v4-foundation.md](./v4-foundation.md)：V4 作为 Wen 的 two-axis Klein-four kernel、跨域读法与 preservation atlas。
 - [v4-kernel-interpreter-architecture.md](./v4-kernel-interpreter-architecture.md)：V4-native interpreter kernel 与后续 R-space backend contract。
 - [wenscript-syntax-spec.md](./wenscript-syntax-spec.md)：`wen-lisp prove` 使用的受控古文 WenScript 句法、AST bucket 与证书边界。
+- [wenyan-native-syntax-spec.md](./wenyan-native-syntax-spec.md)：纯文言 algorithm parser 的 native lowering 语法规范；quicksort 已实现，`list-basics.wen` 为下一目标。
 - [r4x-r4-256-table.md](./r4x-r4-256-table.md)：`R4_high × R4_low` 的 16 x 16 `o/x` projection sheet；R1..R6 已填，R7/R8 留空。
 - [r4x-r4-256-table-zi.md](./r4x-r4-256-table-zi.md)：同一张 256 projection sheet 的字版；R1..R7 用现有字，R5 保持组合读法，R8 留空。
 - [root-language-tree/README.md](./root-language-tree/README.md)：1023-entry 文言 / 中文 / English / formal logic 审阅包。
