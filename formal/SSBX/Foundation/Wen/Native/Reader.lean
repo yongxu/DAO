@@ -17,7 +17,7 @@ expr    ::= atom
           | (if expr expr expr)
           | (flip nat expr)
           | (expr expr*)
-atom    ::= nil | true | false | nat | prim | name | #bits
+atom    ::= nil | 空 | true | false | nat | prim | name | #bits
 name    ::= @bits | bits
 param   ::= name | (name)
 bits    ::= exactly n chars, each one of o x 0 1
@@ -28,6 +28,14 @@ prim    ::= zero | xor | act | eq | cell-eq | cons | car | cdr
 
 `#bits` is reserved for cell literals; `@bits` is the explicit spelling for a
 surface name.  Bare `bits` remains accepted as a compact name form.
+
+Chinese aliases are accepted only at the reader/surface boundary.  They lower to
+the same native core constructors and primitives:
+
+```text
+函=lambda, 施=application, 结=cons, 空=nil, 首=car, 余=cdr,
+若=if, 空乎/判空=null, 引=quote, 解=eval, 定=define.
+```
 -/
 
 import SSBX.Foundation.Lang.Sexp
@@ -108,10 +116,10 @@ def primOfToken {n : Nat} : String → Option (Prim n)
   | "xor" => some .xor
   | "act" => some .act
   | "eq" | "cell-eq" => some .eq
-  | "cons" => some .cons
-  | "car" => some .car
-  | "cdr" => some .cdr
-  | "null" | "null?" => some .null
+  | "cons" | "结" => some .cons
+  | "car" | "首" => some .car
+  | "cdr" | "余" => some .cdr
+  | "null" | "null?" | "空乎" | "判空" => some .null
   | "atom" | "atom?" => some .atom
   | "bool?" => some .isBool
   | "number?" | "num?" => some .isNumber
@@ -119,14 +127,14 @@ def primOfToken {n : Nat} : String → Option (Prim n)
   | "succ" => some .succ
   | "pred" => some .pred
   | "add" | "+" => some .add
-  | "eval" => some .eval
+  | "eval" | "解" => some .eval
   | _ => none
 
 def slotOfNat? {n : Nat} (index : Nat) : Option (Slot n) :=
   if h : index < n then some ⟨index, h⟩ else none
 
 def readAtom {n : Nat} (token : String) : Option (SurfaceExpr n) :=
-  if token == "nil" then some .nil
+  if token == "nil" || token == "空" then some .nil
   else if token == "true" then some (.bool true)
   else if token == "false" then some (.bool false)
   else
@@ -166,14 +174,29 @@ def readExpr {n : Nat} : SSBX.Foundation.Lang.Sexp → Option (SurfaceExpr n)
   | .list [.atom "cell", .atom token] => do
       let value ← readCellLiteral token
       some (.cell value)
+  | .list [.atom "元", .atom token] => do
+      let value ← readCellLiteral token
+      some (.cell value)
   | .list [.atom "quote", body] => do
+      let b ← readExpr body
+      some (.quote b)
+  | .list [.atom "引", body] => do
       let b ← readExpr body
       some (.quote b)
   | .list [.atom "lambda", param, body] => do
       let p ← readLambdaParam param
       let b ← readExpr body
       some (.lambda p b)
+  | .list [.atom "函", param, body] => do
+      let p ← readLambdaParam param
+      let b ← readExpr body
+      some (.lambda p b)
   | .list [.atom "if", test, thenBranch, elseBranch] => do
+      let c ← readExpr test
+      let t ← readExpr thenBranch
+      let e ← readExpr elseBranch
+      some (.if0 c t e)
+  | .list [.atom "若", test, thenBranch, elseBranch] => do
       let c ← readExpr test
       let t ← readExpr thenBranch
       let e ← readExpr elseBranch
@@ -183,6 +206,10 @@ def readExpr {n : Nat} : SSBX.Foundation.Lang.Sexp → Option (SurfaceExpr n)
       let slot ← slotOfNat? index
       let a ← readExpr arg
       some (.app (.prim (.flip slot)) [a])
+  | .list (.atom "施" :: fn :: args) => do
+      let f ← readExpr fn
+      let as ← readExprList args
+      some (.app f as)
   | .list (fn :: args) => do
       let f ← readExpr fn
       let as ← readExprList args
@@ -192,6 +219,10 @@ end
 
 def readTop {n : Nat} : SSBX.Foundation.Lang.Sexp → Option (SurfaceTopForm n)
   | .list [.atom "define", .atom name, body] => do
+      let cell ← readName name
+      let expr ← readExpr body
+      some (.define cell expr)
+  | .list [.atom "定", .atom name, body] => do
       let cell ← readName name
       let expr ← readExpr body
       some (.define cell expr)
@@ -234,6 +265,60 @@ theorem readAtom_cell_literal_origin_r4 :
   simp [readAtom, primOfToken, parseAsciiNat, parseAsciiNatAux, digitVal,
     stripPrefix, cellOfToken, parseBits, bitVal, cellOfBits_oooo_eq_origin_r4]
 
+theorem cellOfBits_oooooooo_eq_origin_r8 :
+    cellOfBits (n := 8)
+      [false, false, false, false, false, false, false, false] = originCell := by
+  funext i
+  fin_cases i <;> rfl
+
+theorem readAtom_chinese_nil_r8 :
+    readAtom (n := 8) "空" = some .nil := rfl
+
+theorem primOfToken_chinese_cons_r8 :
+    primOfToken (n := 8) "结" = some .cons := rfl
+
+theorem readAtom_cell_literal_origin_r8 :
+    readAtom (n := 8) "#oooooooo" = some (.cell originCell) := by
+  simp [readAtom, primOfToken, parseAsciiNat, parseAsciiNatAux, digitVal,
+    stripPrefix, cellOfToken, parseBits, bitVal, cellOfBits_oooooooo_eq_origin_r8]
+
+def isOriginCellR8 (cell : Cell 8) : Bool :=
+  cell ⟨0, by decide⟩ == false &&
+  cell ⟨1, by decide⟩ == false &&
+  cell ⟨2, by decide⟩ == false &&
+  cell ⟨3, by decide⟩ == false &&
+  cell ⟨4, by decide⟩ == false &&
+  cell ⟨5, by decide⟩ == false &&
+  cell ⟨6, by decide⟩ == false &&
+  cell ⟨7, by decide⟩ == false
+
+def readEvalChineseConsOriginR8 : Bool :=
+  match readEvalTopString (n := 8) 16 [] "(结 #oooooooo 空)" with
+  | some ([], .cons (.cell cell) .nil) => isOriginCellR8 cell
+  | _ => false
+
+def readEvalChineseCarOriginR8 : Bool :=
+  match readEvalTopString (n := 8) 16 [] "(首 (结 #oooooooo 空))" with
+  | some ([], .cell cell) => isOriginCellR8 cell
+  | _ => false
+
+def readEvalChineseIfNullR8 : Bool :=
+  match readEvalTopString (n := 8) 16 [] "(若 (空乎 空) 1 2)" with
+  | some ([], .num 1) => true
+  | _ => false
+
+theorem readEval_chinese_cons_origin_r8 :
+    readEvalChineseConsOriginR8 = true := by
+  native_decide
+
+theorem readEval_chinese_car_origin_r8 :
+    readEvalChineseCarOriginR8 = true := by
+  native_decide
+
+theorem readEval_chinese_if_null_r8 :
+    readEvalChineseIfNullR8 = true := by
+  native_decide
+
 theorem reader_grammar_laws :
     parseAsciiNat "42" = some 42
     ∧ (primOfToken (n := 4) "xor" = some .xor)
@@ -241,9 +326,18 @@ theorem reader_grammar_laws :
     ∧ (slotOfNat? (n := 0) 0).isSome = false
     ∧ readName (n := 4) "@oooo" = some originCell
     ∧ readName (n := 4) "#oooo" = none
-    ∧ readAtom (n := 4) "#oooo" = some (.cell originCell) :=
+    ∧ readAtom (n := 4) "#oooo" = some (.cell originCell)
+    ∧ readAtom (n := 8) "空" = some .nil
+    ∧ primOfToken (n := 8) "结" = some .cons
+    ∧ readAtom (n := 8) "#oooooooo" = some (.cell originCell)
+    ∧ readEvalChineseConsOriginR8 = true
+    ∧ readEvalChineseCarOriginR8 = true
+    ∧ readEvalChineseIfNullR8 = true :=
   ⟨rfl, rfl, rfl, rfl, readName_explicit_origin_r4,
-    readName_hash_reserved_r4, readAtom_cell_literal_origin_r4⟩
+    readName_hash_reserved_r4, readAtom_cell_literal_origin_r4,
+    readAtom_chinese_nil_r8, primOfToken_chinese_cons_r8,
+    readAtom_cell_literal_origin_r8, readEval_chinese_cons_origin_r8,
+    readEval_chinese_car_origin_r8, readEval_chinese_if_null_r8⟩
 
 end Reader
 
