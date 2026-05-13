@@ -50,7 +50,6 @@ import SSBX.Foundation.Wen.Operators
 import SSBX.Foundation.Wen.Kernel
 import SSBX.Foundation.Wen.Layered
 import SSBX.Foundation.Wen.Native
-import SSBX.Foundation.Wen.Native.Examples.Confucian
 import SSBX.Foundation.Wen.WenyanText
 import SSBX.Foundation.Wen.ClassicalTextRHierarchyBridge
 import SSBX.Foundation.Wen.R8ProjectionCalculus
