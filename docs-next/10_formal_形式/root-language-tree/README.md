@@ -75,6 +75,7 @@
 - [daoist-overlay.md](daoist-overlay.md)：道家核心字词到现有 root entries 的 overlay mapping。
 - [sunzi-overlay.md](sunzi-overlay.md)：孙子兵法核心字词到现有 root entries 的 overlay mapping。
 - [cognitive-science-overlay.md](cognitive-science-overlay.md)：认知科学概念到现有 root entries 的 functional overlay mapping。
+- [computer-science-overlay.md](computer-science-overlay.md)：计算机与编程概念到现有 root entries 的 functional overlay mapping。
 - [glyph-inventory/](glyph-inventory/)：R5-R8 逐层字表，含 R8 的 512 个 interface 字词。
 - [all-1023.md](all-1023.md)：1023 条审名总表。
 - [manifest.md](manifest.md)：1023 审名计数清单。
