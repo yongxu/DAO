@@ -4,6 +4,7 @@
 > 作用：把 `layers/R5.md`..`layers/R8.md` 中的公开字词单独摊开，审的是“字”，不是只审生成 grammar。
 > 边界：这些仍是 surface / reader names；formal truth 仍在 `(Z/2)^n` carrier、OX mask 与 Lean theorem 中。
 > 可读性审计见 [readability-audit.md](readability-audit.md)。
+> R1-R3 operator 跨语境审名见 [R1-R3-operator-audit.md](R1-R3-operator-audit.md)。
 > R5 operator 逐项审名见 [R5-operator-audit.md](R5-operator-audit.md)。
 
 | layer | inventory | interface rows | 口径 |
