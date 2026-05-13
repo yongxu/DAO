@@ -126,8 +126,7 @@ wen-lisp prove examples/wen-lisp/confucian-core.wen --strict-proved --trace
 Shows:
 
 - a directly verified WenScript file for the Confucian core;
-- R5 structural certificates and `kernelDaoMembership` certificates for
-  仁、义、礼、智、信;
+- R5 structural certificates for 仁、义、礼、智、信;
 - controlled boundary lines that reject two bad readings: 中 is not mere
   half-splitting, and doctrine is not mystification or empty name without 德/道;
 - zero diagnostics, zero claim stubs, and zero registration-only certificates.

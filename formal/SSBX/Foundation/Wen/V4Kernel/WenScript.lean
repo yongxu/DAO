@@ -12,7 +12,6 @@ This is the first "文编译文证明文" bridge:
 
 import SSBX.Foundation.Wen.V4Kernel.WenR6
 import SSBX.Foundation.Wen.V4Kernel.Root512
-import SSBX.Foundation.Wen.Kernel
 import SSBX.Foundation.Wen.Layered.Bridges.Word64
 import SSBX.Text.WenyanOperators.Table
 
@@ -196,51 +195,6 @@ theorem compose_closed (a b : R5Word) :
     ∃ c : R5Word, c = compose a b := ⟨compose a b, rfl⟩
 
 end R5Word
-
-/-! ## Kernel bridge for 五常属道 -/
-
-abbrev KernelWuchang := _root_.SSBX.Foundation.Wen.Kernel.WuchangKind
-
-def kernelWuchangOfName : String → Option KernelWuchang
-  | "仁" => some .ren
-  | "义" => some .yi
-  | "義" => some .yi
-  | "礼" => some .li
-  | "禮" => some .li
-  | "智" => some .zhi
-  | "信" => some .xin
-  | _ => none
-
-def kernelWuchangR5 : KernelWuchang → R5Word
-  | .ren => ⟨⟨.interval, .trace⟩, .yang⟩
-  | .yi => ⟨⟨.motion, .occasion⟩, .yang⟩
-  | .li => ⟨⟨.thing, .momentum⟩, .yang⟩
-  | .zhi => ⟨⟨.interval, .pivot⟩, .yang⟩
-  | .xin => ⟨⟨.event, .trace⟩, .yang⟩
-
-/-- WenScript may only emit a 五常属道 certificate when the text's R5
-    definition matches the kernel bridge and the corresponding kernel
-    `WuchangKind.daoComponent` theorem exists. -/
-def kernelDaoMembershipCheck (name : String) (value : R5Word) : Bool :=
-  match kernelWuchangOfName name with
-  | some kind => decide (kernelWuchangR5 kind = value)
-  | none => false
-
-theorem kernelDaoMembershipCheck_sound {name : String} {value : R5Word}
-    (h : kernelDaoMembershipCheck name value = true) :
-    ∃ kind : KernelWuchang,
-      kernelWuchangOfName name = some kind
-        ∧ kernelWuchangR5 kind = value
-        ∧ _root_.SSBX.Foundation.Wen.Kernel.WuchangKind.daoComponent kind := by
-  unfold kernelDaoMembershipCheck at h
-  cases hname : kernelWuchangOfName name with
-  | none =>
-      simp [hname] at h
-  | some kind =>
-      refine ⟨kind, rfl, ?_, _root_.SSBX.Foundation.Wen.Kernel.WuchangKind.belongs_to_dao kind⟩
-      have hdec : decide (kernelWuchangR5 kind = value) = true := by
-        simpa [hname] using h
-      exact of_decide_eq_true hdec
 
 /-! ## Controlled sentence AST -/
 
@@ -499,7 +453,6 @@ inductive Sentence where
   | alias (left right : String)
   | enumHead (name : String)
   | verifyR5 (name : String)
-  | verifyKernelDao (name : String)
   | readThenVerify
   | claimStub (text : String) (tokens : List String)
   deriving DecidableEq, Repr
@@ -544,7 +497,6 @@ inductive SemanticCertificateKind where
   | pendingNameAvailability
   | wenCapability
   | nameResolutionRule
-  | kernelDaoMembership
   | v4OperatorTopic
   | wenBoundary
   | nameValueLaw
@@ -579,7 +531,6 @@ def label : SemanticCertificateKind → String
   | .pendingNameAvailability => "pendingNameAvailability"
   | .wenCapability => "wenCapability"
   | .nameResolutionRule => "nameResolutionRule"
-  | .kernelDaoMembership => "kernelDaoMembership"
   | .v4OperatorTopic => "v4OperatorTopic"
   | .wenBoundary => "wenBoundary"
   | .nameValueLaw => "nameValueLaw"
@@ -922,13 +873,6 @@ def SemanticCertificate.nameResolutionRule (condition conclusion : String) :
   , body := conclusion
   , kind := .nameResolutionRule
   , wellFormed := true }
-
-def SemanticCertificate.kernelDaoMembership (name : String) (value : R5Word) :
-    SemanticCertificate :=
-  { subject := name
-  , body := s!"核证属道:{value.chinese}"
-  , kind := .kernelDaoMembership
-  , wellFormed := kernelDaoMembershipCheck name value }
 
 def SemanticCertificate.v4OperatorTopic (subject body : String) :
     SemanticCertificate :=
@@ -1736,11 +1680,6 @@ def parseVerificationTarget (target : String) : Option String :=
       if predicate = "" then none else some predicate
   | _ => none
 
-def isDaoVerificationTarget (target : String) : Bool :=
-  target = "为道" ∨ target = "為道" ∨
-    target = "属道" ∨ target = "屬道" ∨
-    target = "属于道" ∨ target = "屬於道"
-
 def parseAssertion (line : String) : Option String := do
   let body ← stripTrailingChar '也' line
   if body = "" then none else some body
@@ -1915,22 +1854,14 @@ def parseSentence (line : String) : Sentence :=
       | _, _ => .claimStub line (charTokens line)
   | ["验", name, "为五爻"] => .verifyR5 name
   | ["驗", name, "為五爻"] => .verifyR5 name
-  | ["验", name, "属于", "道"] => .verifyKernelDao name
-  | ["驗", name, "屬於", "道"] => .verifyKernelDao name
   | ["验", name, target] =>
-      if isDaoVerificationTarget target then .verifyKernelDao name
-      else
-        match parseVerificationTarget target with
-        | some predicate => .instantiateUniversal name predicate
-        | none => .claimStub line (charTokens line)
+      match parseVerificationTarget target with
+      | some predicate => .instantiateUniversal name predicate
+      | none => .claimStub line (charTokens line)
   | ["驗", name, target] =>
-      if isDaoVerificationTarget target then .verifyKernelDao name
-      else
-        match parseVerificationTarget target with
-        | some predicate => .instantiateUniversal name predicate
-        | none => .claimStub line (charTokens line)
-  | ["验", name, "为", "道"] => .verifyKernelDao name
-  | ["驗", name, "為", "道"] => .verifyKernelDao name
+      match parseVerificationTarget target with
+      | some predicate => .instantiateUniversal name predicate
+      | none => .claimStub line (charTokens line)
   | ["验", name, "为", predicate] => .instantiateUniversal name predicate
   | ["驗", name, "為", predicate] => .instantiateUniversal name predicate
   | [opSurface, "之", arg] =>
@@ -2799,17 +2730,6 @@ def processSentence (sentence : Sentence) (report : ProofReport) :
       match lookupDef report.definitions name with
       | some value => addVerified name value report
       | none => { report with claimStubs := (s!"验 {name} 为五爻", [name]) :: report.claimStubs }
-  | .verifyKernelDao name =>
-      match lookupDef report.definitions name with
-      | some value =>
-          if kernelDaoMembershipCheck name value then
-            { report with
-              semanticCertificates :=
-                SemanticCertificate.kernelDaoMembership name value ::
-                  report.semanticCertificates }
-          else
-            { report with claimStubs := (s!"验 {name} 属于道", [name]) :: report.claimStubs }
-      | none => { report with claimStubs := (s!"验 {name} 属于道", [name]) :: report.claimStubs }
   | .alias left right =>
       { report with
         aliases := (left, right) :: report.aliases
@@ -2891,24 +2811,6 @@ def wuchangSource : String :=
 验 智 为五爻
 验 信 为五爻"
 
-def wuchangDaoSource : String :=
-"零起
-仁者 间几阳 也
-义者 动时阳 也
-礼者 物势阳 也
-智者 间机阳 也
-信者 事几阳 也
-验 仁 为五爻
-验 义 为五爻
-验 礼 为五爻
-验 智 为五爻
-验 信 为五爻
-验 仁 属于道
-验 义 属于道
-验 礼 属于道
-验 智 属于道
-验 信 属于道"
-
 theorem parse_wuchangSource_ok :
     (parseDocument wuchangSource).isOk = true := by
   native_decide
@@ -2966,12 +2868,6 @@ def proveSourceFrontierShape (source : String)
       frontierShape topics implications universals readThen textLayer appGrammar unknownArgs
         claimStubs report.frontierSummary
   | .error _ => false
-
-theorem prove_wuchangDaoSource_summary :
-    proveSourceShape wuchangDaoSource 5 10 0 0 0 0 = true
-      ∧ proveSourceExtendedShape wuchangDaoSource 5 0 0 0 true = true
-      ∧ proveSourceFrontierShape wuchangDaoSource 0 0 0 0 0 0 0 0 = true := by
-  native_decide
 
 def zeroStartMiniSource : String :=
 "零起
@@ -3085,8 +2981,6 @@ theorem parse_syntax_examples :
           .implication "名不入环境" "名为symbol"
       ∧ parseSentence "凡文皆可读" = .universal "文" "可读"
       ∧ parseSentence "验 文 为可证" = .instantiateUniversal "文" "可证"
-      ∧ parseSentence "验 仁 为道" = .verifyKernelDao "仁"
-      ∧ parseSentence "验 仁 属于道" = .verifyKernelDao "仁"
       ∧ isOperatorAppSentence (parseSentence "卦为形") = true
       ∧ parseSentence "仁者间几阳也" = .defineR5 "仁" ren
       ∧ isOperatorAppSentence (parseSentence "文可被读故有解释") = true

@@ -135,19 +135,10 @@ Pattern:
 ```text
 验 仁 为五爻
 驗 仁 為五爻
-验 仁 属于道
-验 仁 为道
 ```
 
 If `仁` has already been defined, verification emits another R5 certificate for
 that definition. If the name is unknown, it becomes a `claimStub`.
-
-`验 仁 属于道` / `验 仁 为道` is a kernel-routed membership check over the
-same prior R5 definition. It emits `semanticCert ... kernelDaoMembership`
-only when the text's R5 definition matches the controlled 五常 bridge and the
-corresponding `Wen.Kernel.WuchangKind.daoComponent` theorem is available from
-`alignment_for_xin`. This is not a free-form prose proof about 道, and it is
-not a report-layer shortcut.
 
 ### Universal Schema And Explicit Instance
 

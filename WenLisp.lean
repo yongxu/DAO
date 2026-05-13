@@ -136,7 +136,6 @@ def semanticKindShow : WenScript.SemanticCertificateKind → String
   | .pendingNameAvailability => "pendingNameAvailability"
   | .wenCapability => "wenCapability"
   | .nameResolutionRule => "nameResolutionRule"
-  | .kernelDaoMembership => "kernelDaoMembership"
   | .v4OperatorTopic => "v4OperatorTopic"
   | .wenBoundary => "wenBoundary"
   | .nameValueLaw => "nameValueLaw"
