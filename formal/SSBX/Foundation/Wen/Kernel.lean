@@ -779,6 +779,71 @@ theorem alignment_for_xin
    xinTrust_holds x n,
    x.process.inMiddle n⟩
 
+/-- 五常在核内的五个投影名。这里不把它们当文面标签处理；
+    每一项都必须能从 `alignment_for_xin` 的核证明中取出。 -/
+inductive WuchangKind where
+  | ren
+  | yi
+  | li
+  | zhi
+  | xin
+  deriving DecidableEq, Repr
+
+namespace WuchangKind
+
+def chinese : WuchangKind → String
+  | .ren => "仁"
+  | .yi => "义"
+  | .li => "礼"
+  | .zhi => "智"
+  | .xin => "信"
+
+/-- `属于道` 的核内含义：在一个 `Xin` 与另一 `ZhongOrbit` 的
+    礼-window 中，此德目可由 `alignment_for_xin` 导出。 -/
+def daoComponent : WuchangKind → Prop
+  | .ren =>
+      ∀ (x : Xin) (other : ZhongOrbit) (n m : Nat),
+        propriety x.process other n m →
+        benevolence x.process other n
+  | .yi =>
+      ∀ (x : Xin) (other : ZhongOrbit) (n m : Nat),
+        propriety x.process other n m →
+        righteousness x.process other n
+  | .li =>
+      ∀ (x : Xin) (other : ZhongOrbit) (n m : Nat),
+        propriety x.process other n m →
+        propriety x.process other n m
+  | .zhi =>
+      ∀ (x : Xin) (other : ZhongOrbit) (n m : Nat),
+        propriety x.process other n m →
+        wisdom (x.process.states n)
+  | .xin =>
+      ∀ (x : Xin) (other : ZhongOrbit) (n m : Nat),
+        propriety x.process other n m →
+        integrityTrust x n
+
+/-- 五常属道：不是 WenScript 报告层的枚举事实，而是从核定理
+    `alignment_for_xin` 中逐项投影出来。 -/
+theorem belongs_to_dao : ∀ kind : WuchangKind, kind.daoComponent := by
+  intro kind
+  cases kind <;> intro x other n m h_ritual
+  · exact (alignment_for_xin x other n m h_ritual).1
+  · exact (alignment_for_xin x other n m h_ritual).2.1
+  · exact (alignment_for_xin x other n m h_ritual).2.2.1
+  · exact (alignment_for_xin x other n m h_ritual).2.2.2.1
+  · exact (alignment_for_xin x other n m h_ritual).2.2.2.2.1
+
+theorem wuchang_belongs_to_dao_summary :
+    WuchangKind.ren.daoComponent
+    ∧ WuchangKind.yi.daoComponent
+    ∧ WuchangKind.li.daoComponent
+    ∧ WuchangKind.zhi.daoComponent
+    ∧ WuchangKind.xin.daoComponent :=
+  ⟨belongs_to_dao .ren, belongs_to_dao .yi, belongs_to_dao .li,
+   belongs_to_dao .zhi, belongs_to_dao .xin⟩
+
+end WuchangKind
+
 /-- alignment 同行 (co-traveling): both orbits step coherently, neither subordinate.
     v5 §二十四 l. 907: "仁与仁之间, 非 master-servant 之结构, 乃共同朝向同一方向之同行者." -/
 theorem alignment_co_traveling
