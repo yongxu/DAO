@@ -63,6 +63,22 @@ theorem word64_is_r6_hexagram :
     ∧ (∀ h : Hexagram, hexagramEquiv (hexagramEquiv.symm h) = h) :=
   ⟨ofHexagram_toHexagram, toHexagram_ofHexagram⟩
 
+theorem word64_hexagram_checklist_summary :
+    Word64.all.length = 64
+    ∧ Word64.all.length = 4 ^ 3
+    ∧ Nonempty (Word64 ≃ Hexagram)
+    ∧ (∀ word : Word64, hexagramEquiv.symm (hexagramEquiv word) = word)
+    ∧ (∀ h : Hexagram, hexagramEquiv (hexagramEquiv.symm h) = h)
+    ∧ (∀ word : Word64, ofHexagram (toHexagram word) = word)
+    ∧ (∀ h : Hexagram, toHexagram (ofHexagram h) = h) :=
+  ⟨Word64.all_length,
+   by native_decide,
+   ⟨hexagramEquiv⟩,
+   word64_is_r6_hexagram.1,
+   word64_is_r6_hexagram.2,
+   ofHexagram_toHexagram,
+   toHexagram_ofHexagram⟩
+
 def bitOfChar : Char → Option Bool
   | 'o' => some false
   | 'x' => some true

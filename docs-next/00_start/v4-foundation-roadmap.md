@@ -2,7 +2,7 @@
 
 > Status: active execution roadmap  
 > Source of truth: [`docs-next/v4-foundation.md`](../v4-foundation.md)  
-> Date: 2026-05-12
+> Date: 2026-05-13
 
 This roadmap turns the latest V4 foundation note into implementation phases.
 The foundation note remains the doctrine text; this file tracks what must be
@@ -19,6 +19,8 @@ made true in Lean and, later, in the compiler/runtime track.
 | 5. Cross-level bridge | Done | `V4/V8Bridge.lean` |
 | 6. V8 naming and metadata audit | Done | `Operators/V8Audit.lean` |
 | 7. Compiler/runtime track | Boundary documented | no Clojure/compiler source is present in the current repository slice |
+| 8. Layered Wen semantic core | Implemented, targeted checks passing | `Wen/Layered/*` |
+| 9. Final module re-layout | Committed follow-up | old modules become facades, then move behind the layered core |
 
 ## Current Baseline
 
@@ -182,6 +184,102 @@ Acceptance:
 
 - no compiler table may redefine V4 independently of the canonical Lean kernel;
 - if no compiler/runtime source is present, this remains a documented boundary.
+
+## Phase 8 — Layered Wen Semantic Core
+
+Status: implemented as an incremental refactor.  The new
+`formal/SSBX/Foundation/Wen/Layered` core and bridges compile under targeted
+checks; the older V8/V4 public modules now carry Phase 8 compatibility anchors.
+
+Goal: add the `wen-formal` / `wen-layered` classical semantics as a clean
+layer above the existing R8/V4/Word64 assets, without breaking existing theorem
+names or import boundaries during the transition.
+
+The current decision is explicit: **do not directly rewrite the existing
+`V4Kernel`, `V8Info`, `V8Derivability`, or `Word64Bridge` modules first**.
+Instead, introduce a new layered core, prove it can carry the existing facts,
+then let old modules become compatibility facades.
+
+Implement:
+
+- `Wen/Layered/Slot.lean` for finite positions and even split indices;
+- `Wen/Layered/BitSpace.lean` for `BitSpace n := Fin n -> Bool`;
+- `Wen/Layered/Split.lean` for `outer`, `inner`, and `combine` round trips;
+- `Wen/Layered/Flip.lean` for bit flips and outer/inner flips;
+- `Wen/Layered/Dao.lean` for `DaoFamily`, `DaoRegion`, observable states,
+  and `Boxtimes`;
+- `Wen/Layered/Modal.lean` for the classical four-way judgment
+  `necessary true / necessary false / contingent / boxtimes`;
+- `Wen/Layered/Core.lean` and `Wen/Layered/Rescue.lean` for k-core, boundary,
+  collapse irreversibility, and rescue-requires-outer;
+- `Wen/Layered/Information.lean` for invariant queries, orbits,
+  annihilator-style derivability, and the `{dao, jin}` parity example.
+
+Bridge after the core exists:
+
+- `Wen/Layered/Bridges/R8.lean`: `BitSpace 8` with the current R8/V8 reading;
+- `Wen/Layered/Bridges/Word64.lean`: `BitSpace 6` with
+  `Word64 = V4 x V4 x V4`;
+- `Wen/Layered/Bridges/RootCell256.lean`: `BitSpace 8` with
+  `Word64 x V4`;
+- `Wen/Layered/Bridges/V4Time.lean`: the y7/y8 time plane, `{dao, jin}`,
+  parity preservation, and the full-V4 counterexample.
+
+Quantum backend note:
+
+- reserve no implementation dependency for Hilbert spaces, tensor products,
+  Born measurement, or partial trace in this phase;
+- quantum remains a future optional backend, not part of the current
+  verification target.
+
+Acceptance:
+
+- the layered core proves the classical `wen-formal` obligations without
+  using the Klein `V4` name for `F2^4`;
+- `truth` and `is_observable` are not fields of a carrier class; they belong
+  to a `DaoFamily` / modal model layer;
+- existing public theorem names remain available during the transition;
+- old modules may import the layered core once bridges are in place, but the
+  layered core must not depend on old high-level interpreter modules.
+
+Completed in Phase 8:
+
+- `Slot`, `BitSpace`, `Split`, `Flip`, `Dao`, `Modal`, `Core`, `Rescue`, and
+  `Information` form the carrier-neutral classical bit-space core.
+- `Bridges/V4`, `Bridges/R8`, `Bridges/Word64`, `Bridges/RootCell256`, and
+  `Bridges/V4Time` connect the core to the current V4/R8/Word64 assets.
+- `V8Info`, `V8Derivability`, and `V4/V8Bridge` retain existing public names
+  and expose explicit Layered compatibility summaries.
+- `RootCell256` uses the current `Mode16.viewOfR8` / `Mode16.r8OfView`
+  round trip for the existing R8 carrier.
+
+## Phase 9 — Final Module Re-Layout
+
+Status: committed follow-up after Phase 8 bridge coverage.
+
+This is not an optional cleanup.  The repository will keep the incremental
+path to avoid breaking proofs prematurely, but the final architecture is a real
+module re-layout:
+
+1. `Wen/Layered` becomes the semantic core for classical bit-space judgment.
+2. Existing modules such as `Wen/V4Kernel/*`, `Operators/V8Info.lean`,
+   `Operators/V8Derivability.lean`, and `Wen/V4Kernel/Word64Bridge.lean`
+   either move behind the layered bridges or remain as thin compatibility
+   facades.
+3. Public names required by documents and downstream proofs are kept as aliases
+   or re-exported theorems during one compatibility window.
+4. Once targeted checks pass through the new import graph, obsolete facade-only
+   files are moved, deleted, or reduced to umbrella imports.
+
+Final acceptance:
+
+- one canonical carrier story: `BitSpace` / R8 / Cell256 as the same finite
+  8-bit root, read through explicit bridges;
+- one semantic judgment story: `DaoFamily`, observable/boxtimes, modal
+  judgment, rescue, invariant derivability;
+- no duplicate root ontology between `Wen/Layered`, `V4Kernel`, `V8Info`, and
+  `Word64Bridge`;
+- no future quantum module is required for the classical core to compile.
 
 ## Verification Policy
 

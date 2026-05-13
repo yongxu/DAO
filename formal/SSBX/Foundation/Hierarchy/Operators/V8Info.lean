@@ -6,6 +6,8 @@ eight Boolean coordinates, subgroups are XOR-mask predicates, and linear
 queries are F2 parity masks.
 -/
 
+import SSBX.Foundation.Wen.Layered.Bridges.V4Time
+
 namespace SSBX.Foundation.Hierarchy.Operators
 
 /-! ## V8 carrier and XOR masks -/
@@ -81,6 +83,14 @@ theorem evalQuery_constant_on_orbit
   rcases hy with ⟨g, hg, rfl⟩
   exact hq x g hg
 
+/-- Public information-preservation theorem: an invariant query has the same
+value at every state in the subgroup orbit of a root. -/
+theorem info_preservation
+    (q : V8) (H : Subgroup) (root y : V8)
+    (hq : isInvariant H q) (hy : orbit H root y) :
+    evalQuery q y = evalQuery q root :=
+  evalQuery_constant_on_orbit hq hy
+
 /-! ## Concrete Phase 4 masks -/
 
 def timeY7Mask : V8 := single y7
@@ -100,8 +110,7 @@ def v4Time : Subgroup where
     intro i _ _
     rfl
   xor_mem := by
-    intro a b ha hb
-    intro i hi7 hi8
+    intro a b ha hb i hi7 hi8
     unfold xor
     rw [ha i hi7 hi8, hb i hi7 hi8]
     rfl
@@ -157,6 +166,69 @@ theorem full_v4_time_does_not_preserve_parity :
   rw [evalQuery_parityMask, evalQuery_parityMask] at hflip
   unfold xor zero timeY7Mask single y7 y8 bit at hflip
   contradiction
+
+/-! ## Checklist compatibility names -/
+
+/-- Compatibility alias for the checklist name `{道, 今}`. -/
+def dao_jin_subgroup : Subgroup := daoJin
+
+/-- Compatibility alias for the checklist query `y7 ⊕ y8`. -/
+def parity_y7_y8 : V8 := parityMask
+
+theorem dao_jin_preserves_parity :
+    isInvariant dao_jin_subgroup parity_y7_y8 :=
+  daoJin_preserves_parity
+
+theorem V4_does_not_preserve_parity :
+    ¬ isInvariant v4Time parity_y7_y8 :=
+  full_v4_time_does_not_preserve_parity
+
+/-! ## Phase 8 layered compatibility anchors -/
+
+abbrev LayeredV8 : Type :=
+  SSBX.Foundation.Wen.Layered.V4Time.TimeSpace
+
+def layeredEvalQuery :
+    LayeredV8 → LayeredV8 → Bool :=
+  SSBX.Foundation.Wen.Layered.V4Time.evalQuery
+
+theorem layered_evalQuery_parityMask (x : V8) :
+    SSBX.Foundation.Wen.Layered.V4Time.evalQuery
+        SSBX.Foundation.Wen.Layered.V4Time.parityMask x =
+      evalQuery parityMask x := by
+  rw [SSBX.Foundation.Wen.Layered.V4Time.evalQuery_parityMask,
+    evalQuery_parityMask]
+  rfl
+
+theorem layered_daoJin_preserves_parity :
+    SSBX.Foundation.Wen.Layered.BitSpace.isInvariant
+      SSBX.Foundation.Wen.Layered.V4Time.daoJin
+      (SSBX.Foundation.Wen.Layered.V4Time.evalQuery
+        SSBX.Foundation.Wen.Layered.V4Time.parityMask) :=
+  SSBX.Foundation.Wen.Layered.V4Time.daoJin_preserves_parity
+
+theorem layered_full_v4_time_does_not_preserve_parity :
+    ¬ SSBX.Foundation.Wen.Layered.BitSpace.isInvariant
+      SSBX.Foundation.Wen.Layered.V4Time.v4Time
+      (SSBX.Foundation.Wen.Layered.V4Time.evalQuery
+        SSBX.Foundation.Wen.Layered.V4Time.parityMask) :=
+  SSBX.Foundation.Wen.Layered.V4Time.full_v4_time_does_not_preserve_parity
+
+theorem layered_v8info_summary :
+    (∀ x : V8,
+      SSBX.Foundation.Wen.Layered.V4Time.evalQuery
+          SSBX.Foundation.Wen.Layered.V4Time.parityMask x =
+        evalQuery parityMask x)
+    ∧ SSBX.Foundation.Wen.Layered.BitSpace.isInvariant
+      SSBX.Foundation.Wen.Layered.V4Time.daoJin
+      (SSBX.Foundation.Wen.Layered.V4Time.evalQuery
+        SSBX.Foundation.Wen.Layered.V4Time.parityMask)
+    ∧ ¬ SSBX.Foundation.Wen.Layered.BitSpace.isInvariant
+      SSBX.Foundation.Wen.Layered.V4Time.v4Time
+      (SSBX.Foundation.Wen.Layered.V4Time.evalQuery
+        SSBX.Foundation.Wen.Layered.V4Time.parityMask) :=
+  ⟨layered_evalQuery_parityMask, layered_daoJin_preserves_parity,
+   layered_full_v4_time_does_not_preserve_parity⟩
 
 end V8Info
 

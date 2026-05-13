@@ -8,6 +8,7 @@ and a small derivability checker for linear queries on that lattice.
 -/
 
 import SSBX.Foundation.Hierarchy.Operators.V8Audit
+import SSBX.Foundation.Wen.Layered.Bridges.V4Time
 
 namespace SSBX.Foundation.Hierarchy.Operators
 
@@ -174,6 +175,11 @@ theorem derivableTime_daoJin_parity (root : V8) :
   simp [derivableTime?, TimeSubgroupTag.generators, allFalseOn,
     evalQuery_parityMask_parityMask]
 
+theorem dao_jin_derives_parity (root : V8) :
+    derivableTime? .daoJin parityMask root =
+      some (evalQuery parityMask root) :=
+  derivableTime_daoJin_parity root
+
 theorem evalQuery_parityMask_timeY7 :
     evalQuery parityMask timeY7Mask = true := by
   rw [evalQuery_parityMask]
@@ -183,6 +189,10 @@ theorem derivableTime_full_rejects_parity (root : V8) :
     derivableTime? .full parityMask root = none := by
   simp [derivableTime?, TimeSubgroupTag.generators, allFalseOn,
     evalQuery_parityMask_timeY7]
+
+theorem full_v4_rejects_parity (root : V8) :
+    derivableTime? .full parityMask root = none :=
+  derivableTime_full_rejects_parity root
 
 theorem time_lattice_summary :
     TimeSubgroupTag.all.length = 5
@@ -204,6 +214,34 @@ theorem derivability_summary :
   ⟨derivable_iff_invariant, isInvariant_iff_annihilates,
    derivableTime_dao, derivableTime_daoJin_parity,
    derivableTime_full_rejects_parity, TimeSubgroupTag.all_length⟩
+
+theorem lean_v4_information_summary :
+    isInvariant daoJin parityMask
+    ∧ ¬ isInvariant v4Time parityMask
+    ∧ (∀ root, derivableTime? .daoJin parityMask root =
+      some (evalQuery parityMask root))
+    ∧ (∀ root, derivableTime? .full parityMask root = none)
+    ∧ (∀ H q, (∀ root : V8, orbitDerives H q root) ↔ isInvariant H q) :=
+  ⟨daoJin_preserves_parity,
+   full_v4_time_does_not_preserve_parity,
+   dao_jin_derives_parity,
+   full_v4_rejects_parity,
+   derivable_iff_invariant⟩
+
+theorem layered_derivability_summary :
+    (∀ root : V8,
+      SSBX.Foundation.Wen.Layered.V4Time.derivableTime?
+          SSBX.Foundation.Wen.Layered.V4Time.TimeSubgroupTag.daoJin
+          SSBX.Foundation.Wen.Layered.V4Time.parityMask root =
+        some (SSBX.Foundation.Wen.Layered.V4Time.evalQuery
+          SSBX.Foundation.Wen.Layered.V4Time.parityMask root))
+    ∧ (∀ root : V8,
+      SSBX.Foundation.Wen.Layered.V4Time.derivableTime?
+          SSBX.Foundation.Wen.Layered.V4Time.TimeSubgroupTag.full
+          SSBX.Foundation.Wen.Layered.V4Time.parityMask root =
+        none) :=
+  ⟨SSBX.Foundation.Wen.Layered.V4Time.dao_jin_derives_parity,
+   SSBX.Foundation.Wen.Layered.V4Time.full_v4_rejects_parity⟩
 
 end V8Info
 

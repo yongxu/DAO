@@ -6,7 +6,9 @@ facts.  It does not add domain claims beyond the classical implication slice
 modeled below.
 -/
 
+import SSBX.Foundation.Hierarchy.Operators.V4.Instances
 import SSBX.Foundation.Hierarchy.Operators.V4.Preservation
+import Mathlib.Algebra.Group.Subgroup.Basic
 
 namespace SSBX.Foundation.Hierarchy.Operators
 
@@ -63,6 +65,30 @@ theorem three_axis_classification :
    fun ha hb => contentAxis_closed ha hb,
    fun ha hb => frameAxis_closed ha hb,
    fun ha hb => structurePreservingAxis_closed ha hb⟩
+
+/-! ## Structure-preserving subgroup -/
+
+/-- The privileged subgroup `{dao, cuoZong}` selected by the
+variance-corrected structure-preservation marker. -/
+def structurePreservingSubgroup : Subgroup V4 where
+  carrier := {g | structurePreservingAxis g}
+  one_mem' := by
+    simp [structurePreservingAxis]
+  mul_mem' := by
+    intro a b ha hb
+    change structurePreservingAxis (a * b)
+    simpa [mul_eq_compose] using structurePreservingAxis_closed ha hb
+  inv_mem' := by
+    intro g hg
+    simpa [inv_eq_self] using hg
+
+theorem mem_structurePreservingSubgroup (g : V4) :
+    g ∈ structurePreservingSubgroup ↔ g = .dao ∨ g = .cuoZong :=
+  structurePreservingAxis_exact g
+
+theorem mem_structurePreservingSubgroup_iff_axis (g : V4) :
+    g ∈ structurePreservingSubgroup ↔ structurePreservingAxis g :=
+  Iff.rfl
 
 /-! ## Classical implication slice -/
 
@@ -155,15 +181,32 @@ theorem preserves_implicationTruth_exact (g : V4) :
     preservesAt g .implicationTruth = true ↔ g = .dao ∨ g = .cuoZong := by
   simpa [structurePreservingAxis] using preserves_implicationTruth_iff g
 
+theorem mem_structurePreservingSubgroup_iff_preserves_algebraHom (g : V4) :
+    g ∈ structurePreservingSubgroup ↔ preservesAt g .algebraHom = true := by
+  rw [mem_structurePreservingSubgroup, preserves_algebraHom_exact]
+
+theorem preserves_algebraHom_iff_mem_structurePreservingSubgroup (g : V4) :
+    preservesAt g .algebraHom = true ↔ g ∈ structurePreservingSubgroup :=
+  (mem_structurePreservingSubgroup_iff_preserves_algebraHom g).symm
+
 /-- Category-level preservation remains registry data in Phase 2. -/
 theorem categoricalFunctor_registry_only (g : V4) :
     preservesAt g .categoricalFunctor = true := by
   cases g <;> rfl
 
+theorem cuoZong_contrapositive_consistency :
+    preservesAt .cuoZong .implicationTruth = true
+      ∧ (∀ s : ImplicationSlice,
+        ImplicationSlice.truth (ImplicationSlice.act .cuoZong s)
+          = ImplicationSlice.truth s) :=
+  ⟨rfl, cuoZong_classical_implication_truth⟩
+
 theorem preservation_logic_summary :
     (∀ g : V4, preservesAt g .algebraHom = true ↔ g = .dao ∨ g = .cuoZong)
     ∧ (∀ g : V4, preservesAt g .implicationTruth = true ↔
       g = .dao ∨ g = .cuoZong)
+    ∧ (∀ g : V4, g ∈ structurePreservingSubgroup ↔
+      preservesAt g .algebraHom = true)
     ∧ (∀ g : V4,
       (∀ s : ImplicationSlice,
         ImplicationSlice.truth (ImplicationSlice.act g s)
@@ -171,6 +214,7 @@ theorem preservation_logic_summary :
     ∧ (∀ g : V4, preservesAt g .categoricalFunctor = true) :=
   ⟨preserves_algebraHom_exact,
    preserves_implicationTruth_exact,
+   mem_structurePreservingSubgroup_iff_preserves_algebraHom,
    ImplicationSlice.preserves_truth_iff_structureAxis,
    categoricalFunctor_registry_only⟩
 

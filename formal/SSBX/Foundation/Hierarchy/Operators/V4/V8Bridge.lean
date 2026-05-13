@@ -8,6 +8,7 @@ the state-level `{dao, jin}` parity subgroup in `V8Info`.
 import SSBX.Foundation.Hierarchy.Operators.V4.PreservationLogic
 import SSBX.Foundation.Hierarchy.Operators.V4.Temporal
 import SSBX.Foundation.Hierarchy.Operators.V8Info
+import SSBX.Foundation.Wen.Layered.Bridges.V4Time
 
 namespace SSBX.Foundation.Hierarchy.Operators
 
@@ -118,6 +119,31 @@ theorem v4_v8_bridge_summary :
       V8Info.daoJin.carrier (toV8TimeMask g) ↔ structurePreservingAxis g) :=
   ⟨toV8TimeMask_mem_v4Time, toV8TimeMask_dao, toV8TimeMask_cuoZong,
    structureAxis_iff_daoJin_carrier⟩
+
+/-! ## Phase 8 layered compatibility anchors -/
+
+theorem toV8TimeMask_eq_layered_toTimeMask (g : V4) :
+    toV8TimeMask g =
+      SSBX.Foundation.Wen.Layered.V4Time.toTimeMask g := by
+  funext i
+  cases g <;> fin_cases i <;> rfl
+
+theorem structureAxis_iff_layered_daoJin_carrier (g : V4) :
+    SSBX.Foundation.Wen.Layered.V4Time.daoJin.carrier
+        (SSBX.Foundation.Wen.Layered.V4Time.toTimeMask g)
+      ↔ structurePreservingAxis g :=
+  SSBX.Foundation.Wen.Layered.V4Time.structureAxis_iff_daoJin_carrier g
+
+theorem layered_v4_v8_bridge_summary :
+    (∀ g : V4,
+      toV8TimeMask g =
+        SSBX.Foundation.Wen.Layered.V4Time.toTimeMask g)
+    ∧ (∀ g : V4,
+      SSBX.Foundation.Wen.Layered.V4Time.daoJin.carrier
+          (SSBX.Foundation.Wen.Layered.V4Time.toTimeMask g)
+        ↔ structurePreservingAxis g) :=
+  ⟨toV8TimeMask_eq_layered_toTimeMask,
+   structureAxis_iff_layered_daoJin_carrier⟩
 
 end V4
 
