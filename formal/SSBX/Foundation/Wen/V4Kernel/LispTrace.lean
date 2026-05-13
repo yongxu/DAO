@@ -7,6 +7,7 @@ path inside the Lisp interpreter.
 -/
 
 import SSBX.Foundation.Wen.V4Kernel.LispProgram
+import SSBX.Foundation.Wen.Layered.Bridges.Word64
 
 namespace SSBX.Foundation.Wen.V4Kernel
 
@@ -37,13 +38,13 @@ def traceWordStates (start : Word64) (ops : List Word64) : List Word64 :=
 def readWordTokens : List String → Option (List Word64)
   | [] => some []
   | token :: rest => do
-      let word ← Word64Bridge.wordOfToken token
+      let word ← SSBX.Foundation.Wen.Layered.Bridges.Word64.wordOfToken token
       let words ← readWordTokens rest
       some (word :: words)
 
 def readWordPathStates (startToken : String) (opTokens : List String) :
     Option (List Word64) := do
-  let start ← Word64Bridge.wordOfToken startToken
+  let start ← SSBX.Foundation.Wen.Layered.Bridges.Word64.wordOfToken startToken
   let ops ← readWordTokens opTokens
   some (traceWordStates start ops)
 
@@ -97,4 +98,3 @@ theorem lisp_trace_summary :
 end LispTrace
 
 end SSBX.Foundation.Wen.V4Kernel
-

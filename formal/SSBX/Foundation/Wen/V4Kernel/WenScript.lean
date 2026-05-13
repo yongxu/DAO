@@ -12,6 +12,7 @@ This is the first "文编译文证明文" bridge:
 
 import SSBX.Foundation.Wen.V4Kernel.WenR6
 import SSBX.Foundation.Wen.V4Kernel.Root512
+import SSBX.Foundation.Wen.Layered.Bridges.Word64
 import SSBX.Text.WenyanOperators.Table
 
 namespace SSBX.Foundation.Wen.V4Kernel
@@ -1905,9 +1906,9 @@ def addVerified (name : String) (value : R5Word) (report : ProofReport) :
 mutual
 
 def applicationArgumentWordFuel? : Nat → String → Option Word64
-  | 0, surface => Word64Bridge.wordOfToken surface
+  | 0, surface => SSBX.Foundation.Wen.Layered.Bridges.Word64.wordOfToken surface
   | fuel + 1, surface =>
-      match Word64Bridge.wordOfToken surface with
+      match SSBX.Foundation.Wen.Layered.Bridges.Word64.wordOfToken surface with
       | some word => some word
       | none => do
           let app ← parseOperatorApp surface
@@ -1918,10 +1919,10 @@ def executableApplicationResultWordFuel? :
   | 0, app =>
       match app.op.carrier, app.form, app.args with
       | .v4Builtin g, .applicationParticle, [argSurface] => do
-          let arg ← Word64Bridge.wordOfToken argSurface
+          let arg ← SSBX.Foundation.Wen.Layered.Bridges.Word64.wordOfToken argSurface
           some (R6View.dual g arg)
       | .root512 opReading, .applicationParticle, [argSurface] => do
-          let argWord ← Word64Bridge.wordOfToken argSurface
+          let argWord ← SSBX.Foundation.Wen.Layered.Bridges.Word64.wordOfToken argSurface
           let argReading := Root512.word64Reading argWord .cell
           let result ← Root512.applyOperatorReading? opReading argReading
           match result.kind, result.cell.temporal with
@@ -1993,7 +1994,7 @@ def semanticImplicationCertificate? (condition conclusion : String) :
     Option SemanticCertificate := do
   let app ← parseOperatorApp condition
   let result ← executableApplicationResultWord? app
-  let expected ← Word64Bridge.wordOfToken conclusion
+  let expected ← SSBX.Foundation.Wen.Layered.Bridges.Word64.wordOfToken conclusion
   if result == expected then
     some
       { subject := condition
@@ -2526,7 +2527,7 @@ def mkLocatedDiagnostic (located : LocatedSentence) (kind : DiagnosticKind)
 def actionArgumentKnown? (app : OperatorApplication) : Bool :=
   match app.form, app.args with
   | .applicationParticle, [argSurface] =>
-      (Word64Bridge.wordOfToken argSurface).isSome
+      (SSBX.Foundation.Wen.Layered.Bridges.Word64.wordOfToken argSurface).isSome
   | _, _ => false
 
 def executableApplication? (app : OperatorApplication) : Bool :=

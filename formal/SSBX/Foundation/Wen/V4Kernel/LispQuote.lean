@@ -51,6 +51,10 @@ def encodePrim : Prim → V4Tree
   | .isSymbol => .node .cuo (.atom .zong) V4Tree.unit
   | .isNumber => .node .zong (.atom .zong) V4Tree.unit
   | .eval => .node .cuoZong (.atom .zong) V4Tree.unit
+  | .r5Is => .node .dao (.atom .cuoZong) V4Tree.unit
+  | .r5ToR4 => .node .cuo (.atom .cuoZong) V4Tree.unit
+  | .r5Compose => .node .zong (.atom .cuoZong) V4Tree.unit
+  | .r5Coords => .node .cuoZong (.atom .cuoZong) V4Tree.unit
 
 def decodePrim : V4Tree → Option Prim
   | .atom .dao => some .v4Compose
@@ -69,6 +73,10 @@ def decodePrim : V4Tree → Option Prim
   | .node .cuo (.atom .zong) (.atom .dao) => some .isSymbol
   | .node .zong (.atom .zong) (.atom .dao) => some .isNumber
   | .node .cuoZong (.atom .zong) (.atom .dao) => some .eval
+  | .node .dao (.atom .cuoZong) (.atom .dao) => some .r5Is
+  | .node .cuo (.atom .cuoZong) (.atom .dao) => some .r5ToR4
+  | .node .zong (.atom .cuoZong) (.atom .dao) => some .r5Compose
+  | .node .cuoZong (.atom .cuoZong) (.atom .dao) => some .r5Coords
   | _ => none
 
 @[simp] theorem decodePrim_encodePrim (p : Prim) :

@@ -7,7 +7,7 @@ current R8 implementation through the existing `Word64 ≃ Hexagram` and
 -/
 
 import SSBX.Foundation.Wen.V4Kernel.Mode16
-import SSBX.Foundation.Wen.V4Kernel.Word64Bridge
+import SSBX.Foundation.Wen.Layered.Bridges.Word64
 
 namespace SSBX.Foundation.Wen.V4Kernel
 
@@ -35,10 +35,12 @@ structure R8View where
   deriving DecidableEq, BEq, Repr
 
 def viewOfR8 (cell : R8) : R8View :=
-  ⟨Word64Bridge.ofHexagram cell.1, V4.ofTemporal cell.2⟩
+  ⟨SSBX.Foundation.Wen.Layered.Bridges.Word64.ofHexagram cell.1,
+    V4.ofTemporal cell.2⟩
 
 def r8OfView (view : R8View) : R8 :=
-  (Word64Bridge.toHexagram view.word, V4.toTemporal view.temporal)
+  (SSBX.Foundation.Wen.Layered.Bridges.Word64.toHexagram view.word,
+    V4.toTemporal view.temporal)
 
 @[simp] theorem r8OfView_viewOfR8 (cell : R8) :
     r8OfView (viewOfR8 cell) = cell := by

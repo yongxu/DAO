@@ -18,12 +18,12 @@
 
 | 日期 | Commit | 内容 |
 |---|---|---|
-| 2026-05-10 | `7de5064` | **Phase A–F 教义对齐**: Cell192 → Cell256；V₄ Shi 取代 Z/3 cyclic Shi；Algebraic spine on Cell128/Cell256；Cayley `ι/ε`；XOR-mask 印/投 |
+| 2026-05-10 | `7de5064` | **Phase A–F 教义对齐**: 旧 192-cell carrier → Cell256；V₄ Shi 取代 cyclic-3 Shi；Algebraic spine on Cell128/Cell256；Cayley `ι/ε`；XOR-mask 印/投 |
 | 2026-05-10 | `0003224` | **Phase F.x.5**: 完成 Modern/* 级联升级 (~80 文件 case-split 全 4 例) |
-| 2026-05-10 | `8e4406e` | **Phase F.6 + G + B.1**: 删 `Cell192.lean`（legacy 3-state Shi 完全删除）；4 份文档与 Lean 路径 sync；YinBit dedup (canonical 在 Cell128.lean) |
+| 2026-05-10 | `8e4406e` | **Phase F.6 + G + B.1**: 删旧 192-cell Lean 文件（legacy 3-state Shi 完全删除）；4 份文档与 Lean 路径 sync；YinBit dedup (canonical 在 Cell128.lean) |
 | 2026-05-11 | `1c76a55` | **Phase C**: 9 个 R-index 命名 alias 文件 + `RHierarchy.lean` umbrella；3656 jobs build 干净 |
 
-**当前 main = `1c76a55`**。`Cell192.lean` 自 `8e4406e` 起从树中物理删除；`R8_complete` axiom audit = `{propext, native_decide}`，**0 项目自定义 axiom**。
+**当前 main = `1c76a55`**。旧 192-cell Lean 文件自 `8e4406e` 起从树中物理删除；`R8_complete` axiom audit = `{propext, native_decide}`，**0 项目自定义 axiom**。
 
 ---
 
@@ -86,22 +86,22 @@ V₄ Klein 四群必有 identity → 道作为永真状态是 **代数必然性*
 
 ---
 
-## 旧 → 新 对照表 (Cell192 → Cell256 历史更正)
+## 旧 → 新 对照表（旧 192-cell carrier → Cell256 历史更正）
 
 | 旧 (legacy, 已删除) | 新 (v3 定本) | 备注 |
 |---|---|---|
-| **Cell192 = Hexagram × {已, 今, 未}** | **Cell256 = Hexagram × Shi** | Shi V₄ 取代 Z/3 cyclic |
-| Z/3 Shi {已, 今, 未} (3-cycle) | V₄ Klein {道, 已, 今, 未} | 4 元 abelian Klein, 含 identity |
+| **旧 192-cell carrier = Hexagram × {已, 今, 未}** | **Cell256 = Hexagram × Shi** | Shi V₄ 取代 cyclic-3 |
+| cyclic-3 Shi {已, 今, 未} | V₄ Klein {道, 已, 今, 未} | 4 元 abelian Klein, 含 identity |
 | `shiNext : Shi → Shi` (+1 mod 3 cycle) | `Shi.cuo`, `Shi.zong`, `Shi.cuoZong` (V₄ involutions) | non-cyclic; involutive |
 | 192 = 64 × 3 | 256 = 64 × 4 | + 64 个道-cells 入本体 |
 | 旧 operator-cell grid | Cell256-indexed legacy audit inventory | 表六旧格全表 → 表六_256格全表；不作 root ontology |
 | R₁..R₆ 编号 (含 R₃→R₄ chong 跳跃 +3 bit) | **R₀..R₈ strict uniform** (each +1 bit) | no jumps; no gaps |
-| `Cell192.lean` (R₆ 闭合层) | **删除** (`8e4406e`) | physically removed from tree |
+| 旧 192-cell Lean 文件 (R₆ 闭合层) | **删除** (`8e4406e`) | physically removed from tree |
 | `R7_complete` bundle | `R8_complete` bundle | depends only on `propext` + `native_decide` |
-| 道作为 Z/3 之外的 4-th 添加 (failed) | 道 = V₄ identity = (因=0, 果=0) **first-class** | V₄ structure 自然 anchor |
+| 道作为 cyclic-3 之外的 4-th 添加 (failed) | 道 = V₄ identity = (因=0, 果=0) **first-class** | V₄ structure 自然 anchor |
 | chong = +3 bit jump (R₃ → R₆) | **chong = 3-step composite** (R₃ → R₄ → R₅ → R₆ via Lift) | 不消失，显式认识为 3 步 +1 bit |
 
-**关键修正**：v1 之 Z/3 Shi 编码 = 把时态空间压缩为 cyclic 3-state, 丧失「道」V₄ identity anchor。v2.1/v3 修正路径：把 (因, 果) ∈ Bool² 二维独立处理 → 4 个 (因, 果) state at R₈ → 自然 V₄ Klein 结构 → 道 = (0, 0) **structurally first-class**。
+**关键修正**：v1 之 cyclic-3 Shi 编码 = 把时态空间压缩为 cyclic 3-state, 丧失「道」V₄ identity anchor。v2.1/v3 修正路径：把 (因, 果) ∈ Bool² 二维独立处理 → 4 个 (因, 果) state at R₈ → 自然 V₄ Klein 结构 → 道 = (0, 0) **structurally first-class**。
 
 ---
 

@@ -34,7 +34,7 @@ import SSBX.Foundation.Wen.V4Kernel.LispUniversal
 import SSBX.Foundation.Wen.V4Kernel.LispRBackend
 import SSBX.Foundation.Wen.V4Kernel.LispRSpacePlan
 import SSBX.Foundation.Wen.V4Kernel.LispSurface
-import SSBX.Foundation.Wen.V4Kernel.Word64Bridge
+import SSBX.Foundation.Wen.Layered.Bridges.Word64
 import SSBX.Foundation.Wen.V4Kernel.LispReader
 import SSBX.Foundation.Wen.V4Kernel.LispDaodejing
 import SSBX.Foundation.Wen.V4Kernel.LispProgram

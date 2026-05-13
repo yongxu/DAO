@@ -1,6 +1,6 @@
 # Phase Status — main @ 1c76a55 (2026-05-11)
 
-> 状态：v3 (2026-05-11) — 与 main = 1c76a55 (Phase C R-aliases + RHierarchy umbrella) 对齐。Cell192 已删；Shi 已升 V₄ Klein {道, 已, 今, 未}；R₀..R₈ strict (Z/2)ⁿ uniform 是当前形式 spine。
+> 状态：v3 (2026-05-11) — 与 main = 1c76a55 (Phase C R-aliases + RHierarchy umbrella) 对齐。旧 192-cell carrier 已删；Shi 已升 V₄ Klein {道, 已, 今, 未}；R₀..R₈ strict (Z/2)ⁿ uniform 是当前形式 spine。
 > 作用：本文件是 main 的"现在长什么样"快照，给未来读者作 ground truth。任何 commit 信息或文档与本文不一致时，**以代码为准、以本文为辅**。
 > 配套：[research-position.md](research-position.md)（学术 positioning）、[yi-RO-hierarchy.md](../10_formal_形式/yi-RO-hierarchy.md)（v2.1 doctrine）、[root-layer-map.md](../10_formal_形式/root-layer-map.md)（结构定义）。
 
@@ -13,8 +13,8 @@ main = origin/main = 1c76a55 (Phase C: R₀..R₈ index alias + RHierarchy)
 最近 commits:
   1c76a55 Phase C: R₀..R₈ index-named alias files + RHierarchy umbrella
   8e4406e Phase F.6 + G + B.1: cleanup + doc sync + YinBit dedup
-  0003224 Phase F.x.5: complete Cell192 → Cell256 migration in Modern/* cascades
-  7de5064 Phase A-F: doctrine alignment — Cell192 → Cell256 (V₄ Shi)
+  0003224 Phase F.x.5: complete old 192-cell → Cell256 migration in Modern/* cascades
+  7de5064 Phase A-F: doctrine alignment — old 192-cell → Cell256 (V₄ Shi)
   e4c07a4 docs: add phase-status.md (旧版 — 即本文)
   687eac1 P6: downstream alignment (旧 BenZheng + Face line)
   9dd29ed Merge claude/pensive-meitner-c79a1f — MetaInterp Phase 2.3 + wenyan CLI
@@ -32,9 +32,9 @@ main = origin/main = 1c76a55 (Phase C: R₀..R₈ index alias + RHierarchy)
 
 main 在 7de5064/0003224/8e4406e/1c76a55 之后的关键事实：
 
-### 2.1 Cell192 已删（Phase F.6）
+### 2.1 旧 192-cell carrier 已删（Phase F.6）
 
-[`formal/SSBX/Foundation/Bagua/Cell192.lean`](../../formal/SSBX/Foundation/Bagua/Cell192.lean) 已不存在（commit 8e4406e 删除）。Shi 不再是 3 元 {ji, jin, wei} 之 Z/3，而是 4 元 V₄ Klein 群 {dao, ji, jin, wei}（commit 7de5064 升级）。所有 192-cell 之 callsite 已迁移到 256-cell（commit 7de5064 + 0003224 共 ~50+5 个文件）。
+旧 192-cell Lean 文件已不存在（commit 8e4406e 删除）。Shi 不再是 3 元 {ji, jin, wei} 之 cyclic-3，而是 4 元 V₄ Klein 群 {dao, ji, jin, wei}（commit 7de5064 升级）。所有 192-cell 之 callsite 已迁移到 256-cell（commit 7de5064 + 0003224 共 ~50+5 个文件）。
 
 ### 2.2 R₀..R₈ strict (Z/2)ⁿ uniform 是 spine
 
@@ -101,9 +101,9 @@ Self-similarity v1.1 补齐：[`SelfSimilarity.lean`](../../formal/SSBX/Foundati
 | **C** | Foundation/Hierarchy/R{0..8}_*.lean alias files + umbrella | done | 1c76a55 |
 | **D** | LiftProject uniform R₀..R₈ pairs | done | 7de5064 |
 | **E** | Operators/{Atomic, V4Outer}.lean inner/outer split | done | 7de5064 |
-| **F.1–F.5** | Shi 3-元 → V₄；下游 Cell192→Cell256 | done | 7de5064 |
+| **F.1–F.5** | Shi 3-元 → V₄；下游旧 192-cell carrier → Cell256 | done | 7de5064 |
 | **F.x.5** | Modern/* cascades 数值迁移 | done | 0003224 |
-| **F.6** | Cell192.lean 删除 | done | 8e4406e |
+| **F.6** | 旧 192-cell Lean 文件删除 | done | 8e4406e |
 | **G** | Doc sync (yi-RO-hierarchy / yi-calculus-theorem / yi-as-meta-framework / SSBX/README) | done | 8e4406e |
 | **G+** | docs-next/ 系列 v3 重写（本轮工作） | in progress | (本提交) |
 | **F.7a** | base-256 concrete dispatch/assembly structural summary | done | `MetaInterp/Assembly.metaInterpProg_base256_structural_summary` |
@@ -115,7 +115,7 @@ Self-similarity v1.1 补齐：[`SelfSimilarity.lean`](../../formal/SSBX/Foundati
 | **F.7c.5** | specialize concrete fetch route wrappers to assembled `metaInterpProg` segment | done | `metaInterpProg_fetchProg_at_offset`, `metaInterpProg_fetch_routes_*_at_fuel` |
 | **F.7c.6** | expose assembled dispatch segment witness | done | `metaInterpProg_dispatchProg_at_offset` |
 | **F.7c** | construct concrete U.1/U.2/U.3 semantic witnesses from fetch peel/decode + hard-block effects | pending | — |
-| **B.3** | Cell192 archive 引用扫尾（docs-next 之外）| pending | — |
+| **B.3** | 旧 192-cell archive 引用扫尾（docs-next 之外）| pending | — |
 
 ---
 
@@ -190,7 +190,7 @@ commit 7de5064 之 status 说：
 
 ### 5.4 docs-next 之外的 archive 引用
 
-`docs-next/` 之外（特别是 `史料/` 与 `义理/` 旧文）仍有大量 `Cell192` / `192格` 字样 — 按 [scope.md](scope.md) 之"不删除或移动旧 文档"原则，这些 archive 引用不必处理；只 docs-next 内须 v3-align。
+`docs-next/` 之外（特别是 `史料/` 与 `义理/` 旧文）仍有大量旧 192-cell / `192格` 字样 — 按 [scope.md](scope.md) 之"不删除或移动旧 文档"原则，这些 archive 引用不必处理；只 docs-next 内须 v3-align。
 
 ---
 
@@ -208,7 +208,7 @@ commit 7de5064 之 status 说：
 - [x] Phase F.7c.5: assembly-specialized fetch route wrappers
 - [x] Phase F.7c.6: assembled dispatch segment witness
 - [ ] Phase F.7c: construct concrete U.1/U.2/U.3 witnesses（重新对接 fetch peel/decode、dispatch absolute-pc route lift、hard-block semantic effects、parameterized sub-dispatch + arbitrary-program simulation）
-- [ ] 审查所有老 doc 的代码锚点是否还指向有效路径（Cell192 引用）
+- [ ] 审查所有老 doc 的代码锚点是否还指向有效路径（旧 192-cell 引用）
 
 ### 6.2 可选扩展
 
@@ -226,8 +226,8 @@ lake build SSBX        # 应该 3656 jobs success
 lake build wenyan-surface  # WenSurface CLI
 lake build wenyan          # baguaWen CLI
 
-# 2. 确认 Cell192 已删
-test ! -e formal/SSBX/Foundation/Bagua/Cell192.lean
+# 2. 确认旧 192-cell carrier 已删
+test ! -e formal/SSBX/Foundation/Bagua/<old-192-cell>.lean
 
 # 3. 确认 Cell256 + Shi V₄ 在
 grep -c "inductive Shi\b" formal/SSBX/Foundation/Bagua/Cell256.lean   # = 1
@@ -255,7 +255,7 @@ lake build SSBX.Text.LayerCharacterMap
 **main @ 1c76a55 是 Phase A–G + Phase C R-aliases 之收口点**：
 
 - R₀..R₈ strict (Z/2)ⁿ uniform spine（RHierarchy umbrella 一处 import）
-- Cell192 已删；Cell256 + Shi V₄ {道, 已, 今, 未} 是 R₈ 之 (Z/2)⁸ 闭合
+- 旧 192-cell carrier 已删；Cell256 + Shi V₄ {道, 已, 今, 未} 是 R₈ 之 (Z/2)⁸ 闭合
 - Cell128 / Cell256 algebraic spine（AddCommGroup + SMul + Cayley ι/ε）+ 印/投 XOR atomic
 - 下游 ~50+5 文件已迁移、Modern/* cascades 数值已对齐
 - 0 sorry 净增、0 项目自定义 axiom（R8_complete 仅用 propext + native_decide）

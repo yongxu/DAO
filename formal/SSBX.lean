@@ -48,6 +48,7 @@ import SSBX.Foundation.Core.Renlei
 -- Foundation/Wen — 古文虚字 / 核 / 自释 / 类型化扩展 / 解析 / first-light demo
 import SSBX.Foundation.Wen.Operators
 import SSBX.Foundation.Wen.Kernel
+import SSBX.Foundation.Wen.Layered
 import SSBX.Foundation.Wen.V4Kernel
 import SSBX.Foundation.Wen.WenyanText
 import SSBX.Foundation.Wen.ClassicalTextRHierarchyBridge

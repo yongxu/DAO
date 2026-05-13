@@ -20,7 +20,7 @@ made true in Lean and, later, in the compiler/runtime track.
 | 6. V8 naming and metadata audit | Done | `Operators/V8Audit.lean` |
 | 7. Compiler/runtime track | Boundary documented | no Clojure/compiler source is present in the current repository slice |
 | 8. Layered Wen semantic core | Implemented, targeted checks passing | `Wen/Layered/*` |
-| 9. Final module re-layout | Committed follow-up | old modules become facades, then move behind the layered core |
+| 9. Final module re-layout | Done, hard re-layout | `Wen/Layered`, `Wen/Layered/Runtime`, Layered bridges |
 
 ## Current Baseline
 
@@ -255,21 +255,39 @@ Completed in Phase 8:
 
 ## Phase 9 — Final Module Re-Layout
 
-Status: committed follow-up after Phase 8 bridge coverage.
+Status: completed as a hard internal re-layout.
 
-This is not an optional cleanup.  The repository will keep the incremental
-path to avoid breaking proofs prematurely, but the final architecture is a real
-module re-layout:
+This was not treated as optional cleanup.  The repository now routes the
+classical semantic core and runtime mirror through `Wen/Layered`; old V8 and
+Word64 bridge entrypoints were deleted rather than kept as shims.
 
-1. `Wen/Layered` becomes the semantic core for classical bit-space judgment.
-2. Existing modules such as `Wen/V4Kernel/*`, `Operators/V8Info.lean`,
-   `Operators/V8Derivability.lean`, and `Wen/V4Kernel/Word64Bridge.lean`
-   either move behind the layered bridges or remain as thin compatibility
-   facades.
-3. Public names required by documents and downstream proofs are kept as aliases
-   or re-exported theorems during one compatibility window.
-4. Once targeted checks pass through the new import graph, obsolete facade-only
-   files are moved, deleted, or reduced to umbrella imports.
+Completed in Phase 9:
+
+- `Wen/Layered/Runtime` adds the BitVec-backed `Cell n` mirror for the full
+  classical Layered semantics: bit operations, split/flip, Dao/modal, core,
+  rescue, information, and V4 time-plane derivability.
+- `Wen/Layered/Bridges/Word64.lean` owns the former Word64/R6 hexagram and
+  lexicon bridge: `toHexagram`, `ofHexagram`, `hexagramEquiv`, `wordOfBits`,
+  and `wordOfToken`.
+- `Wen/Layered/Bridges/R8.lean` owns the R8/OX coordinate audit and R8
+  component metadata.
+- `Wen/Layered/Bridges/V4Time.lean` owns the former V8 derivability and
+  V4-to-time-plane bridge facts.
+- Deleted old entrypoints:
+  `Operators/V8Info.lean`, `Operators/V8Derivability.lean`,
+  `Operators/V8Audit.lean`, `Operators/V4/V8Bridge.lean`, and
+  `Wen/V4Kernel/Word64Bridge.lean`.
+- `Wen/V4Kernel`, `Hierarchy/RHierarchy`, `Operators/V4`, and the top-level
+  `SSBX` umbrella now import the Layered paths.
+
+Handoff audit:
+
+- Adopted: spec/impl separation, `Fin n -> Bool` proof core, `BitVec n`
+  runtime cells, first-class `boxtimes`, 4+4 representation, and 6+2 R8
+  semantic projection.
+- Rejected as obsolete for v3: using `V4` for `F2^4`, pre-v3 Shi/Dao
+  remapping, Jian naming, external JS-engine framing, and any archived 192-cell
+  or cyclic temporal carrier.
 
 Final acceptance:
 

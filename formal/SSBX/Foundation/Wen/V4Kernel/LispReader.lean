@@ -8,7 +8,7 @@ S-expression parser.  The core syntax/evaluator modules stay V4-only.
 import SSBX.Foundation.Lang.Sexp
 import SSBX.Foundation.Wen.WenyanParser
 import SSBX.Foundation.Wen.V4Kernel.LispSurface
-import SSBX.Foundation.Wen.V4Kernel.Word64Bridge
+import SSBX.Foundation.Wen.Layered.Bridges.Word64
 
 namespace SSBX.Foundation.Wen.V4Kernel
 
@@ -74,7 +74,7 @@ def v4OfToken : String → Option SSBX.Foundation.Hierarchy.Operators.V4
   | _ => none
 
 def wordOfToken (token : String) : Option Word64 :=
-  Word64Bridge.wordOfToken token
+  SSBX.Foundation.Wen.Layered.Bridges.Word64.wordOfToken token
 
 def readWordName (token : String) : Option Word64 :=
   wordOfToken token
@@ -166,7 +166,7 @@ theorem reader_summary :
     ∧ primOfToken "add" = some .add
     ∧ v4OfToken "错综" = some .cuoZong
     ∧ primOfToken "r5?" = some .r5Is :=
-  ⟨Word64Bridge.qian_token, rfl, rfl, rfl, rfl⟩
+  ⟨SSBX.Foundation.Wen.Layered.Bridges.Word64.qian_token, rfl, rfl, rfl, rfl⟩
 
 end LispReader
 

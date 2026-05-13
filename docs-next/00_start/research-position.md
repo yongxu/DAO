@@ -210,7 +210,7 @@
 
 下面这些**学术界没有 prior art**——必须靠这套 codebase 自己证。每条**都可成为发表论文的核心 claim**。
 
-> **v3 重组说明 (2026-05-11)**：本节重做以反映 Cell256 / V₄ Shi / 严格 R₀..R₈ 定本理论 (commits `7de5064` → `1c76a55`)。新增 §4.10–§4.12 (R₀..R₈ uniform closure + V₄ Shi + Cayley fusion) 三条 v3-defining 主张。原 §4.7 (Cell192 / Z/3 Shi) 已被 v3 retract — Cell192 经 `8e4406e` 物理删除，相关 claim 不再 standalone, 改作 §4.10/§4.11 之 negative-result 起点。其它 §4.1–§4.6, §4.8, §4.9 之 claim 在 R₀..R₈ 重号下保留，文字仅更新 R-index 命名。
+> **v3 重组说明 (2026-05-11)**：本节重做以反映 Cell256 / V₄ Shi / 严格 R₀..R₈ 定本理论 (commits `7de5064` → `1c76a55`)。新增 §4.10–§4.12 (R₀..R₈ uniform closure + V₄ Shi + Cayley fusion) 三条 v3-defining 主张。原 §4.7（旧 192-cell carrier / cyclic-3 Shi）已被 v3 retract — 旧 192-cell carrier 经 `8e4406e` 物理删除，相关 claim 不再 standalone, 改作 §4.10/§4.11 之 negative-result 起点。其它 §4.1–§4.6, §4.8, §4.9 之 claim 在 R₀..R₈ 重号下保留，文字仅更新 R-index 命名。
 
 ### 4.1 ⭐ 4 substrate + 4 mark = zong 的 Z/2-quotient (R₃ 层)
 
@@ -356,13 +356,13 @@ theorem attractors_in_benBen :
 
 ---
 
-### 4.7 ~~Cell192 separated time/truth axes~~ — **retracted, replaced by §4.10/§4.11/§4.12**
+### 4.7 ~~192-cell separated time/truth axes~~ — **retracted, replaced by §4.10/§4.11/§4.12**
 
-> **v3 修正 (2026-05-10/11)**：原 §4.7 主张「内容 × 时态 × 真值 三轴 12 × 3 × 3 = 108」基于 Cell192 = Hexagram × Z/3 Shi 之时态 cyclic 编码。Cell192 在 commit `8e4406e` 已**物理删除**——其 Z/3 cyclic Shi 是层级压缩错误：丧失「道」V₄ identity，破坏 (Z/2)ⁿ self-similarity。
+> **v3 修正 (2026-05-10/11)**：原 §4.7 主张「内容 × 时态 × 真值 三轴 12 × 3 × 3 = 108」基于旧 192-cell carrier = Hexagram × cyclic-3 Shi 之时态 cyclic 编码。该旧 carrier 在 commit `8e4406e` 已**物理删除**——其 cyclic-3 Shi 是层级压缩错误：丧失「道」V₄ identity，破坏 (Z/2)ⁿ self-similarity。
 >
 > 正确的 axis 分离 = R₇ 因 axis (binary) ⊗ R₈ 果 axis (binary) → V₄ Shi at R₈, 道 = (因=0, 果=0) = V₄ identity. 详见新 §4.10 (R₀..R₈ uniform closure), §4.11 (V₄ Klein Shi structure), §4.12 (Cayley self-action fusion)。
 >
-> **Cell192 之负结果本身**仍有学术价值：作为 v3 路径之 negative-result 起点 — 「为什么 Z/3 cyclic 时态编码不构成 self-describing closure, 而 V₄ 构成」可成为方法论 paper：*"Why time must be (Z/2)² not Z/3 in self-describing closures: a negative result on cyclic Shi encodings"*。
+> **旧 192-cell carrier 之负结果本身**仍有学术价值：作为 v3 路径之 negative-result 起点 — 「为什么 cyclic-3 时态编码不构成 self-describing closure, 而 V₄ 构成」可成为方法论 paper：*"Why time must be (Z/2)^2 rather than cyclic-3 in self-describing closures: a negative result on cyclic Shi encodings"*。
 
 ---
 
@@ -454,11 +454,11 @@ $$\mathcal{S} = \{道, 已, 今, 未\} \cong \text{YinBit} \times \text{GuoBit} 
 | **未** | (0, 1) | $\sigma_T$ | 未来开放 (T) |
 | **今** | (1, 1) | $\sigma_{PT}$ | PT 复合 = "现在" |
 
-**道 = (0, 0) = V₄ identity 是 algebraic necessity**: V₄ Klein 四群必有 identity, 这个 identity 在 (因, 果) coordinate 下 ≡ (因=0, 果=0) ≡ "无 causation flow 约束之状态" ≡ 跨时空恒真。把道从 Shi 删除（如 legacy Cell192 之 Z/3 cyclic 编码）= 丧失 V₄ identity = 破坏 (Z/2)ⁿ self-similarity。
+**道 = (0, 0) = V₄ identity 是 algebraic necessity**: V₄ Klein 四群必有 identity, 这个 identity 在 (因, 果) coordinate 下 ≡ (因=0, 果=0) ≡ "无 causation flow 约束之状态" ≡ 跨时空恒真。把道从 Shi 删除（如旧 192-cell carrier 之 cyclic-3 编码）= 丧失 V₄ identity = 破坏 (Z/2)ⁿ self-similarity。
 
 **Novel 程度**：**完全 novel**。
 - 学术界**没有人**写过 V₄ Klein Shi 之 (因, 果) tensor structure。
-- 旧 Cell192 文档写过 Z/3 cyclic Shi {已, 今, 未} 但**那是错的**（已 retract; 见 §4.7）。
+- 旧 192-cell 文档写过 cyclic-3 Shi {已, 今, 未} 但**那是错的**（已 retract; 见 §4.7）。
 - 把「道」作为 V₄ identity / origin / no-op / 永真 cell 之**五重身份 anchor**, **first-class 进入本体** — 这是 self-describing 系统中描述者之 ontological anchor 之 minimum algebraic 实现, 学术界无 prior art。
 
 **深度**：

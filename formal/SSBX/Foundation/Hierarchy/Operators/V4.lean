@@ -14,4 +14,4 @@ import SSBX.Foundation.Hierarchy.Operators.V4.PreservationLogic
 import SSBX.Foundation.Hierarchy.Operators.V4.Orbit
 import SSBX.Foundation.Hierarchy.Operators.V4.OrbitBurnside
 import SSBX.Foundation.Hierarchy.Operators.V4.Atlas
-import SSBX.Foundation.Hierarchy.Operators.V4.V8Bridge
+import SSBX.Foundation.Wen.Layered.Bridges.V4Time

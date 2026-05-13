@@ -17,6 +17,7 @@ The bridge theorem below states that these operators are exactly the existing
 -/
 
 import SSBX.Foundation.Wen.V4Kernel.WenR5
+import SSBX.Foundation.Wen.Layered.Bridges.Word64
 
 namespace SSBX.Foundation.Wen.V4Kernel
 
@@ -143,21 +144,21 @@ theorem dual_compose (a b : V4) (word : R6View) :
 /-! ## Bridge to canonical R6 Hexagram operators -/
 
 def toHexagram : R6View → Hexagram :=
-  Word64Bridge.toHexagram
+  SSBX.Foundation.Wen.Layered.Bridges.Word64.toHexagram
 
 def ofHexagram : Hexagram → R6View :=
-  Word64Bridge.ofHexagram
+  SSBX.Foundation.Wen.Layered.Bridges.Word64.ofHexagram
 
 @[simp] theorem ofHexagram_toHexagram (word : R6View) :
     ofHexagram (toHexagram word) = word :=
-  Word64Bridge.ofHexagram_toHexagram word
+  SSBX.Foundation.Wen.Layered.Bridges.Word64.ofHexagram_toHexagram word
 
 @[simp] theorem toHexagram_ofHexagram (h : Hexagram) :
     toHexagram (ofHexagram h) = h :=
-  Word64Bridge.toHexagram_ofHexagram h
+  SSBX.Foundation.Wen.Layered.Bridges.Word64.toHexagram_ofHexagram h
 
 def hexagramEquiv : R6View ≃ Hexagram :=
-  Word64Bridge.hexagramEquiv
+  SSBX.Foundation.Wen.Layered.Bridges.Word64.hexagramEquiv
 
 theorem toHexagram_contentDual (word : R6View) :
     toHexagram (contentDual word) = Hexagram.complement (toHexagram word) := by
