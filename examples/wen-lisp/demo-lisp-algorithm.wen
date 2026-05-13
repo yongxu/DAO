@@ -1,0 +1,29 @@
+; Complex success demo: closures, curried functions, V4, Word64, and R5-slice ops.
+;
+; Run:
+;   wen-lisp run examples/wen-lisp/demo-lisp-algorithm.wen --trace --fuel 256
+
+; Globals are immutable snapshots for closures.
+; 讼 captures the first 乾 = 10; the later 乾 = 100 does not change it.
+(define 乾 10)
+(define 讼 (lambda (坤) (add 乾 坤)))
+(define 乾 100)
+(讼 5)
+
+; Curried lambda over 64-word variable names.
+(define 需 (lambda (乾) (lambda (坤) (add 乾 坤))))
+(需 20 22)
+
+; V4-native calculation.
+(compose 错 综)
+(v4-eq (compose 错 综) 错综)
+(if (v4-eq (compose 错 综) 错综) (quote 既济) (quote 未济))
+
+; Word64 composition.
+(wordCompose (quote 乾) (quote 坤))
+
+; R5-slice structural operators using temporary 64-word handles.
+(define 同人 (lambda (乾) (wordCompose (quote 姤) 乾)))
+(define 履 (lambda (乾) (wordCompose (quote 履) 乾)))
+(r5? (同人 (quote 乾)))
+(r5-coords (履 (同人 (quote 乾))))

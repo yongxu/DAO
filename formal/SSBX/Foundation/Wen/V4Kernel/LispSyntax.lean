@@ -31,15 +31,20 @@ inductive Prim where
   | isSymbol
   | isNumber
   | eval
+  | r5Is
+  | r5ToR4
+  | r5Compose
+  | r5Coords
   deriving DecidableEq, Repr
 
 namespace Prim
 
 def all : List Prim :=
   [.v4Compose, .v4Eq, .wordCompose, .wordEq, .numEq, .succ, .pred, .add,
-    .cons, .car, .cdr, .null, .atom, .isSymbol, .isNumber, .eval]
+    .cons, .car, .cdr, .null, .atom, .isSymbol, .isNumber, .eval,
+    .r5Is, .r5ToR4, .r5Compose, .r5Coords]
 
-theorem all_length : all.length = 16 := rfl
+theorem all_length : all.length = 20 := rfl
 
 end Prim
 
@@ -188,7 +193,7 @@ def sampleLispLetCompose : Expr :=
   sampleLetCompose.toExpr
 
 theorem lisp_syntax_summary :
-    Prim.all.length = 16
+    Prim.all.length = 20
     ∧ sampleCuoZong.toExpr = sampleLispCompose
     ∧ sampleWordCompose =
       .app (.prim .wordCompose) (Expr.list [.symbol .qian, .symbol .kun])

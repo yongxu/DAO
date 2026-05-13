@@ -30,6 +30,10 @@ def arity : Prim → Nat
   | .isSymbol => 1
   | .isNumber => 1
   | .eval => 1
+  | .r5Is => 1
+  | .r5ToR4 => 1
+  | .r5Compose => 2
+  | .r5Coords => 1
 
 end Prim
 
@@ -44,6 +48,15 @@ def valueAtom? : Value → Bool
   | .nil => true
   | .prim _ => true
   | _ => false
+
+def isR5Symbol (word : Word64) : Bool :=
+  word.third.frameBit = false
+
+def r4ValueOfWord (word : Word64) : Value :=
+  Value.list [.atom word.first, .atom word.second]
+
+def r5CoordsValue (word : Word64) : Value :=
+  Value.list [.atom word.first, .atom word.second, .atom word.third]
 
 /-- Apply a primitive to an exact argument list. -/
 def applyPrim : Prim → List Value → Option Value
@@ -81,6 +94,22 @@ def applyPrim : Prim → List Value → Option Value
   | .isNumber, [_] => some .nil
   | .isNumber, _ => none
   | .eval, _ => none
+  | .r5Is, [.symbol word] => some (truthValue (isR5Symbol word))
+  | .r5Is, [_] => some .nil
+  | .r5Is, _ => none
+  | .r5ToR4, [.symbol word] =>
+      if isR5Symbol word then some (r4ValueOfWord word) else none
+  | .r5ToR4, _ => none
+  | .r5Compose, [.symbol a, .symbol b] =>
+      if isR5Symbol a && isR5Symbol b then
+        let c := Word64.compose a b
+        if isR5Symbol c then some (.symbol c) else none
+      else
+        none
+  | .r5Compose, _ => none
+  | .r5Coords, [.symbol word] =>
+      if isR5Symbol word then some (r5CoordsValue word) else none
+  | .r5Coords, _ => none
 
 @[simp] theorem applyPrim_v4Compose_atoms (a b : V4) :
     applyPrim .v4Compose [.atom a, .atom b] = some (.atom (V4.compose a b)) :=
@@ -113,6 +142,12 @@ def applyPrim : Prim → List Value → Option Value
 @[simp] theorem applyPrim_atom_v4 (g : V4) :
     applyPrim .atom [.atom g] = some (.atom .dao) := rfl
 
+@[simp] theorem applyPrim_r5Is_qian :
+    applyPrim .r5Is [.symbol .qian] = some (.atom .dao) := rfl
+
+@[simp] theorem applyPrim_r5Is_kun :
+    applyPrim .r5Is [.symbol .kun] = some .nil := rfl
+
 theorem applyPrim_wrong_v4Compose_arity :
     applyPrim .v4Compose [.atom .dao] = none := rfl
 
@@ -124,7 +159,9 @@ theorem lisp_prim_summary :
     ∧ applyPrim .pred [.num 0] = some (.num 0)
     ∧ applyPrim .cons [.atom .cuo, .nil] = some (.cons (.atom .cuo) .nil)
     ∧ applyPrim .car [.cons (.atom .cuo) .nil] = some (.atom .cuo)
-    ∧ applyPrim .v4Compose [.atom .dao] = none :=
-  ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl⟩
+    ∧ applyPrim .v4Compose [.atom .dao] = none
+    ∧ applyPrim .r5Is [.symbol .qian] = some (.atom .dao)
+    ∧ applyPrim .r5Is [.symbol .kun] = some .nil :=
+  ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl⟩
 
 end SSBX.Foundation.Wen.V4Kernel

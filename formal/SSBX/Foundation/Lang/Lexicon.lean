@@ -141,7 +141,7 @@ def hexagram : List Entry := [
   ⟨"临",   "approach",       "ooxxxx", ["lin"],     "19. Approach"⟩,
   ⟨"观",   "contemplation",  "xxxxoo", ["guan"],    "20. Contemplation"⟩,
   ⟨"噬嗑", "biteThrough",    "oxxoxo", ["shiHe"],   "21. Biting Through"⟩,
-  ⟨"贲",   "adornment",      "oxoxox", ["bi"],      "22. Grace / Adornment"⟩,
+  ⟨"贲",   "adornment",      "oxoxxo", ["bi"],      "22. Grace / Adornment"⟩,
   ⟨"剥",   "stripping",      "xxxxxo", ["bo"],      "23. Splitting Apart"⟩,
   ⟨"复",   "returning",      "oxxxxx", ["fu"],      "24. Return"⟩,
   -- 25-32

@@ -1,0 +1,18 @@
+; Homoiconic boundary demo.
+;
+; Run:
+;   wen-lisp run examples/wen-lisp/demo-lisp-homoiconic-boundary.wen --trace --fuel 128
+;
+; Scalar quoted expressions can be evaluated. Compound surface lists are still
+; data at this boundary; recursive macros and full source-list evaluation are
+; intentionally left for a later phase.
+
+(quote 乾)
+(eval (quote 三))
+(eval (quote 错))
+
+; This is syntax-as-data.
+(quote (add 二 三))
+
+; This currently returns the decoded data list, not 5.
+(eval (quote (add 二 三)))

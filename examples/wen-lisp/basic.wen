@@ -1,0 +1,4 @@
+; 64-word V4 Lisp smoke program.
+(define 乾 10)
+(define 坤 (add 乾 32))
+坤

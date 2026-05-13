@@ -60,6 +60,17 @@ def primOfToken : String → Option Prim
   | "symbol?" => some .isSymbol
   | "number?" => some .isNumber
   | "eval" => some .eval
+  | "r5?" | "r5Is" | "r5-is" => some .r5Is
+  | "r5ToR4" | "r5-to-r4" => some .r5ToR4
+  | "r5Compose" | "r5-compose" => some .r5Compose
+  | "r5Coords" | "r5-coords" => some .r5Coords
+  | _ => none
+
+def v4OfToken : String → Option SSBX.Foundation.Hierarchy.Operators.V4
+  | "道" | "dao" => some .dao
+  | "错" | "錯" | "cuo" => some .cuo
+  | "综" | "綜" | "zong" => some .zong
+  | "错综" | "錯綜" | "cuoZong" | "cuozong" => some .cuoZong
   | _ => none
 
 def wordOfToken (token : String) : Option Word64 :=
@@ -71,15 +82,18 @@ def readWordName (token : String) : Option Word64 :=
 def readAtom (token : String) : Option SurfaceExpr :=
   if token == "nil" then some .nil
   else
-    match primOfToken token with
-    | some p => some (.prim p)
+    match v4OfToken token with
+    | some g => some (.atom g)
     | none =>
-        match parseNatToken token with
-        | some n => some (.num n)
+        match primOfToken token with
+        | some p => some (.prim p)
         | none =>
-            match wordOfToken token with
-            | some word => some (.ref word)
-            | none => none
+            match parseNatToken token with
+            | some n => some (.num n)
+            | none =>
+                match wordOfToken token with
+                | some word => some (.ref word)
+                | none => none
 
 mutual
 
@@ -149,8 +163,10 @@ def readEvalTwoTopStrings (fuel : Nat) (global : GlobalEnv) (first second : Stri
 theorem reader_summary :
     wordOfToken "乾" = some Word64.qian
     ∧ parseNatToken "三" = some 3
-    ∧ primOfToken "add" = some .add :=
-  ⟨Word64Bridge.qian_token, rfl, rfl⟩
+    ∧ primOfToken "add" = some .add
+    ∧ v4OfToken "错综" = some .cuoZong
+    ∧ primOfToken "r5?" = some .r5Is :=
+  ⟨Word64Bridge.qian_token, rfl, rfl, rfl, rfl⟩
 
 end LispReader
 

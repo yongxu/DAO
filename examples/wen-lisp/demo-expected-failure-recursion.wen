@@ -1,0 +1,9 @@
+; Expected failure demo.
+;
+; Run:
+;   wen-lisp run examples/wen-lisp/demo-expected-failure-recursion.wen --trace --fuel 64
+;
+; Current define is non-recursive: the right-hand side is evaluated before the
+; new global binding is installed. This should fail with exit code 3.
+
+(define 需 (需 1))

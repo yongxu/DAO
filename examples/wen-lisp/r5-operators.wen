@@ -1,0 +1,32 @@
+; Experimental R5 operators in the 64-word V4 Lisp.
+;
+; Reading:
+;   R5View is the Word64 slice V4 x V4 x Bool.
+;   In raw o/x bits this means the last pair is either "oo" or "xo";
+;   the last pair's frame bit must remain "o".
+;
+; Each definition below is a slice-preserving translation:
+;   x ↦ wordCompose op x
+; where op itself is in the R5 slice.
+;
+; These are not final R5 word names. They are temporary 64-word handles.
+
+; 同人: first-coordinate content flip, using 姤/xooooo as the operator value.
+(define 同人 (lambda (乾) (wordCompose (quote 姤) 乾)))
+
+; 履: second-coordinate content flip, using 履/ooxooo as the operator value.
+(define 履 (lambda (乾) (wordCompose (quote 履) 乾)))
+
+; 大有: extension-bit flip, using 大有/ooooxo as the operator value.
+(define 大有 (lambda (乾) (wordCompose (quote 大有) 乾)))
+
+; 家人: frame flip on the first two V4 coordinates; still R5-slice preserving
+; because its third V4 coordinate is dao/oo.
+(define 家人 (lambda (乾) (wordCompose (quote 家人) 乾)))
+
+; A small composed path from R5 origin:
+;   乾 --同人--> 姤 --履--> 讼 --大有--> 未济 --家人--> 剥
+(同人 (quote 乾))
+(履 (同人 (quote 乾)))
+(大有 (履 (同人 (quote 乾))))
+(家人 (大有 (履 (同人 (quote 乾)))))

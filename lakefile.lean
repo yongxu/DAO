@@ -22,3 +22,7 @@ lean_exe «wenyan-surface» where
 lean_exe wenyan where
   root := `Wenyan
   supportInterpreter := true
+
+lean_exe «wen-lisp» where
+  root := `WenLisp
+  supportInterpreter := true

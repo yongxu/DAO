@@ -13,6 +13,12 @@ namespace V4
 
 inductive PreservationLevel where
   | setBijection
+  /-- Registry marker for variance-corrected algebraic preservation.
+
+  This is not a raw pointwise Boolean meet-preservation claim for every V4
+  action.  It marks the `{dao, cuoZong}` axis where the two anti-variance
+  readings (content duality and frame/opposite duality) compose back into a
+  homomorphism-shaped reading. -/
   | algebraHom
   | categoricalFunctor
   | implicationTruth
