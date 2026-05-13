@@ -7,6 +7,7 @@
 > R1-R3 operator 跨语境审名见 [R1-R3-operator-audit.md](R1-R3-operator-audit.md)。
 > R4 operator 跨语境审名见 [R4-operator-audit.md](R4-operator-audit.md)。
 > R5 operator 逐项审名见 [R5-operator-audit.md](R5-operator-audit.md)。
+> R6 operator 跨语境审名见 [R6-operator-audit.md](R6-operator-audit.md)。
 
 | layer | inventory | interface rows | 口径 |
 |---|---:|---:|---|
