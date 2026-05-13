@@ -70,6 +70,7 @@
 ## 配套说明
 
 - [naming-scheme.md](naming-scheme.md)：层级命名原则、备选及理由。
+- [confucian-overlay.md](confucian-overlay.md)：儒家核心字词到现有 root entries 的 overlay mapping。
 - [glyph-inventory/](glyph-inventory/)：R5-R8 逐层字表，含 R8 的 512 个 interface 字词。
 - [all-1023.md](all-1023.md)：1023 条审名总表。
 - [manifest.md](manifest.md)：1023 审名计数清单。
