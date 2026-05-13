@@ -19,6 +19,7 @@ import SSBX.Foundation.Wen.V4Kernel.RBackend
 import SSBX.Foundation.Wen.V4Kernel.Word64
 import SSBX.Foundation.Wen.V4Kernel.Mode16
 import SSBX.Foundation.Wen.V4Kernel.Root512
+import SSBX.Foundation.Wen.V4Kernel.ActionSemantics
 import SSBX.Foundation.Wen.V4Kernel.WenAction
 import SSBX.Foundation.Wen.V4Kernel.WenTrace
 import SSBX.Foundation.Wen.V4Kernel.WenRecursion
