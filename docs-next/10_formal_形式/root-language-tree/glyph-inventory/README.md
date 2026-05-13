@@ -7,14 +7,14 @@
 
 | layer | inventory | interface rows | 口径 |
 |---|---:|---:|---|
-| [R5](R5.md) | 64 | 32 cell + 32 operator | 默认 `內本/內征·R4`；32 个单字只作 alias；operator 为 5 位 XOR mask 字组 |
+| [R5](R5.md) | 64 | 32 cell + 32 operator | 32 个古字/文法 alias 作默认入口；组合名 `內本/內征·R4` 作 fallback |
 | [R6](R6.md) | 128 | 64 cell + 64 operator | 64 个六十四卦名；operator 为 6 位 XOR mask 字组 |
 | [R7](R7.md) | 256 | 128 cell + 128 operator | 64 卦 × `無跡/有跡`；operator 加 `印` |
 | [R8](R8.md) | 512 | 256 cell + 256 operator | `道/未/已/今 · 64卦`；operator 加 `印/投` |
 
 读表原则：
 
-- `推荐字词` 是当前公开入口；`无歧义读法` 给 parser / reader fallback。
+- `推荐字词` 是当前公开入口；古字/古文语法可读者优先。`无歧义读法` 给 parser / reader fallback。
 - `字源状态` 明确区分既有卦名、实字 alias、透明组合、Shi 位字组合、XOR 算子字组。
 - 多原子 operator 用 `+` 分隔；不再采用 `改化變臨...` 这种串写。
 - 没有把透明组合伪装成古已有定名；后续若找到更准确单字，可替换 `推荐字词`，formal 列不变。
