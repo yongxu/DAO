@@ -135,10 +135,18 @@ Pattern:
 ```text
 验 仁 为五爻
 驗 仁 為五爻
+验 仁 属于道
+验 仁 为道
 ```
 
 If `仁` has already been defined, verification emits another R5 certificate for
 that definition. If the name is unknown, it becomes a `claimStub`.
+
+`验 仁 属于道` / `验 仁 为道` is a separate structural membership check over
+the same prior R5 definition. It emits `semanticCert ... r5DaoMembership`
+only when the name has already been defined and its R5 view round-trips through
+the controlled carrier. This is a WenScript-level structural Dao-membership
+certificate, not a claim that arbitrary prose about 道 has been proved.
 
 ### Universal Schema And Explicit Instance
 
