@@ -56,6 +56,8 @@ abbrev «首» {n : Nat} : Prim n := .car
 abbrev «余» {n : Nat} : Prim n := .cdr
 abbrev «空乎» {n : Nat} : Prim n := .null
 abbrev «判空» {n : Nat} : Prim n := .null
+abbrev «不大于» {n : Nat} : Prim n := .numLe
+abbrev «大于» {n : Nat} : Prim n := .numLt
 abbrev «解» {n : Nat} : Prim n := .eval
 
 end «原语»
@@ -113,6 +115,12 @@ def «空乎» {n : Nat} (expr : Expr n) : Expr n :=
 def «判空» {n : Nat} (expr : Expr n) : Expr n :=
   «空乎» expr
 
+def «不大于» {n : Nat} (left right : Expr n) : Expr n :=
+  «原语施» .numLe [left, right]
+
+def «大于» {n : Nat} (left right : Expr n) : Expr n :=
+  «原语施» .numLt [right, left]
+
 def «解» {n : Nat} (expr : Expr n) : Expr n :=
   .app (.prim .eval) expr
 
@@ -132,8 +140,10 @@ theorem chinese_primitive_alias_laws {n : Nat} :
     ∧ («原语».«余» : Prim n) = .cdr
     ∧ («原语».«空乎» : Prim n) = .null
     ∧ («原语».«判空» : Prim n) = .null
+    ∧ («原语».«不大于» : Prim n) = .numLe
+    ∧ («原语».«大于» : Prim n) = .numLt
     ∧ («原语».«解» : Prim n) = .eval :=
-  ⟨rfl, rfl, rfl, rfl, rfl, rfl⟩
+  ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl⟩
 
 theorem chinese_expr_alias_laws {n : Nat}
     (cell name : Cell n) (prim : Prim n) (x y test thenBranch elseBranch : Expr n) :
@@ -150,8 +160,10 @@ theorem chinese_expr_alias_laws {n : Nat}
     ∧ «余» x = .app (.prim .cdr) (Expr.list [x])
     ∧ «空乎» x = .app (.prim .null) (Expr.list [x])
     ∧ «判空» x = .app (.prim .null) (Expr.list [x])
+    ∧ «不大于» x y = .app (.prim .numLe) (Expr.list [x, y])
+    ∧ «大于» x y = .app (.prim .numLt) (Expr.list [y, x])
     ∧ «解» x = .app (.prim .eval) x :=
-  ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl⟩
+  ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl⟩
 
 theorem empty_set_laws {α : Type u} :
     («空集» : «集» α).items = []

@@ -23,7 +23,8 @@ param   ::= name | (name)
 bits    ::= exactly n chars, each one of o x 0 1
 prim    ::= zero | xor | act | eq | cell-eq | cons | car | cdr
           | null | null? | atom | atom? | bool? | number? | num?
-          | numEq | num-eq | succ | pred | add | + | eval
+          | numEq | num-eq | num-le | <= | 不大于 | num-lt | < | 大于
+          | succ | pred | add | + | eval
 ```
 
 `#bits` is reserved for cell literals; `@bits` is the explicit spelling for a
@@ -124,6 +125,8 @@ def primOfToken {n : Nat} : String → Option (Prim n)
   | "bool?" => some .isBool
   | "number?" | "num?" => some .isNumber
   | "numEq" | "num-eq" => some .numEq
+  | "numLe" | "num-le" | "<=" | "不大于" => some .numLe
+  | "numLt" | "num-lt" | "<" | "大于" => some .numLt
   | "succ" => some .succ
   | "pred" => some .pred
   | "add" | "+" => some .add
@@ -277,6 +280,12 @@ theorem readAtom_chinese_nil_r8 :
 theorem primOfToken_chinese_cons_r8 :
     primOfToken (n := 8) "结" = some .cons := rfl
 
+theorem primOfToken_chinese_numLe_r8 :
+    primOfToken (n := 8) "不大于" = some .numLe := rfl
+
+theorem primOfToken_chinese_numLt_r8 :
+    primOfToken (n := 8) "大于" = some .numLt := rfl
+
 theorem readAtom_cell_literal_origin_r8 :
     readAtom (n := 8) "#oooooooo" = some (.cell originCell) := by
   simp [readAtom, primOfToken, parseAsciiNat, parseAsciiNatAux, digitVal,
@@ -329,6 +338,8 @@ theorem reader_grammar_laws :
     ∧ readAtom (n := 4) "#oooo" = some (.cell originCell)
     ∧ readAtom (n := 8) "空" = some .nil
     ∧ primOfToken (n := 8) "结" = some .cons
+    ∧ primOfToken (n := 8) "不大于" = some .numLe
+    ∧ primOfToken (n := 8) "大于" = some .numLt
     ∧ readAtom (n := 8) "#oooooooo" = some (.cell originCell)
     ∧ readEvalChineseConsOriginR8 = true
     ∧ readEvalChineseCarOriginR8 = true
@@ -336,6 +347,7 @@ theorem reader_grammar_laws :
   ⟨rfl, rfl, rfl, rfl, readName_explicit_origin_r4,
     readName_hash_reserved_r4, readAtom_cell_literal_origin_r4,
     readAtom_chinese_nil_r8, primOfToken_chinese_cons_r8,
+    primOfToken_chinese_numLe_r8, primOfToken_chinese_numLt_r8,
     readAtom_cell_literal_origin_r8, readEval_chinese_cons_origin_r8,
     readEval_chinese_car_origin_r8, readEval_chinese_if_null_r8⟩
 

@@ -30,6 +30,8 @@ inductive Prim (n : Nat) where
   | isBool
   | isNumber
   | numEq
+  | numLe
+  | numLt
   | succ
   | pred
   | add
@@ -60,6 +62,8 @@ inductive Value (n : Nat) where
   | nil
   | cons (head tail : Value n)
   | closure (global : List (Cell n × Value n)) (env : List (Value n)) (body : Expr n)
+  | recClosure (name : Cell n) (global : List (Cell n × Value n))
+      (env : List (Value n)) (body : Expr n)
   | prim (prim : Prim n)
 
 end

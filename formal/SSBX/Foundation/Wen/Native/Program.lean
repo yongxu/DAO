@@ -85,6 +85,26 @@ theorem eval_defineChain_final {n : Nat} :
   by
     simp [evalTopFormsFinalFuel, eval_defineChain]
 
+def recursiveCountdown : List (TopForm 8) :=
+  [ .define originCell
+      (.lam
+        (.if0
+          (.app (.prim .numEq) (Expr.list [.var 0, .num 0]))
+          (.num 0)
+          (.app (.ref originCell)
+            (.app (.prim .pred) (Expr.list [.var 0])))))
+  , .expr (.app (.ref originCell) (.num 3))
+  ]
+
+def evalRecursiveCountdownOk : Bool :=
+  match evalTopFormsFinalFuel 32 [] recursiveCountdown with
+  | some (_, .num 0) => true
+  | _ => false
+
+theorem eval_recursiveCountdown :
+    evalRecursiveCountdownOk = true := by
+  native_decide
+
 theorem program_runner_laws {n : Nat} :
     evalTopFormsFuel 8 [] (defineChain : List (TopForm n)) =
       some ([(Vn.xor originCell originCell, .num 42), (originCell, .num 10)],

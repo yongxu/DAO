@@ -28,6 +28,8 @@ def arity {n : Nat} : Prim n → Nat
   | .isBool => 1
   | .isNumber => 1
   | .numEq => 2
+  | .numLe => 2
+  | .numLt => 2
   | .succ => 1
   | .pred => 1
   | .add => 2
@@ -144,6 +146,7 @@ theorem valueAsExpr_exprAsValue {n : Nat} (expr : Expr n) :
       True.intro
       (fun _ _ _ _ => True.intro)
       (fun _ _ _ _ _ _ => True.intro)
+      (fun _ _ _ _ _ _ _ => True.intro)
       (fun _ => True.intro)
       True.intro
       (fun _ _ _ _ => True.intro)
@@ -190,6 +193,10 @@ def applyPrim {n : Nat} : Prim n → List (Value n) → Option (Value n)
   | .isNumber, _ => none
   | .numEq, [.num a, .num b] => some (truthValue (a = b))
   | .numEq, _ => none
+  | .numLe, [.num a, .num b] => some (truthValue (a ≤ b))
+  | .numLe, _ => none
+  | .numLt, [.num a, .num b] => some (truthValue (a < b))
+  | .numLt, _ => none
   | .succ, [.num value] => some (.num (value + 1))
   | .succ, _ => none
   | .pred, [.num 0] => some (.num 0)
@@ -246,6 +253,9 @@ def applyFuelG {n : Nat} : Nat → GlobalEnv n → Env n → Value n → Value n
       match fn with
       | .closure closureGlobal closureEnv body =>
           evalFuelG fuel closureGlobal (arg :: closureEnv) body
+      | .recClosure name closureGlobal closureEnv body =>
+          let self := Value.recClosure name closureGlobal closureEnv body
+          evalFuelG fuel ((name, self) :: closureGlobal) (arg :: closureEnv) body
       | .prim .eval => do
           let decoded ← valueAsExpr arg
           evalFuelG fuel global env decoded
@@ -278,8 +288,13 @@ def evalTopFuel {n : Nat} (fuel : Nat) (global : GlobalEnv n) :
       let value ← evalFuelG fuel global [] body
       some (global, value)
   | .define name body => do
-      let value ← evalFuelG fuel global [] body
-      some ((name, value) :: global, value)
+      match body with
+      | .lam lamBody =>
+          let value := Value.recClosure name global [] lamBody
+          some ((name, value) :: global, value)
+      | _ =>
+          let value ← evalFuelG fuel global [] body
+          some ((name, value) :: global, value)
 
 @[simp] theorem evalFuel_zero {n : Nat} (env : Env n) (expr : Expr n) :
     evalFuel 0 env expr = none := rfl
@@ -310,6 +325,12 @@ def evalTopFuel {n : Nat} (fuel : Nat) (global : GlobalEnv n) :
 
 @[simp] theorem applyPrim_add_nums {n : Nat} (a b : Nat) :
     applyPrim (.add : Prim n) [.num a, .num b] = some (.num (a + b)) := rfl
+
+@[simp] theorem applyPrim_numLe_nums {n : Nat} (a b : Nat) :
+    applyPrim (.numLe : Prim n) [.num a, .num b] = some (.bool (a ≤ b)) := rfl
+
+@[simp] theorem applyPrim_numLt_nums {n : Nat} (a b : Nat) :
+    applyPrim (.numLt : Prim n) [.num a, .num b] = some (.bool (a < b)) := rfl
 
 @[simp] theorem applyPrim_xor_cells {n : Nat} (a b : Cell n) :
     applyPrim (.xor : Prim n) [.cell a, .cell b] =
@@ -342,9 +363,12 @@ theorem evalFuel_eval_quote_num {n : Nat} :
 theorem eval_core_laws {n : Nat} :
     evalFuel (n := n) 12 [] lambdaAddExpr = some (.num 5)
     ∧ evalFuel (n := n) 3 [] (.app (.prim .eval) (.quote (.num 5))) = some (.num 5)
+    ∧ applyPrim (.numLe : Prim n) [.num 2, .num 3] = some (.bool true)
+    ∧ applyPrim (.numLt : Prim n) [.num 3, .num 2] = some (.bool false)
     ∧ (∀ env : Env n, ∀ expr : Expr n, evalFuel 0 env expr = none)
     ∧ (∀ fuel : Nat, ∀ env : Env n, ∀ expr : Expr n,
         evalFuel (fuel + 1) env (.quote expr) = some (quoteValue expr)) :=
-  ⟨evalFuel_lambdaAddExpr, evalFuel_eval_quote_num, evalFuel_zero, evalFuel_quote_succ⟩
+  ⟨evalFuel_lambdaAddExpr, evalFuel_eval_quote_num, rfl, rfl,
+    evalFuel_zero, evalFuel_quote_succ⟩
 
 end SSBX.Foundation.Wen.Native

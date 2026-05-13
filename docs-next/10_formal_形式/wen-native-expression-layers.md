@@ -2,7 +2,7 @@
 
 > 状态：v1 (2026-05-13)
 > Lean anchor: `SSBX.Foundation.Wen.Native.Reader`, `SSBX.Foundation.Wen.Native.ChineseAliases`
-> 作用：固定 native Wen 中「式、行、列、文、值、集」之构造口径；中文 primitive 先作为 surface alias / 理论词表，不新增 native evaluator 本体。
+> 作用：固定 native Wen 中「式、行、列、文、值、集」之构造口径；中文 primitive 作为 surface alias / 理论词表，文言算法 parser 降低到 native top forms 后运行。
 
 ## Decision
 
@@ -55,11 +55,13 @@
 | 若 | `if` / `Expr.if0` |
 | 空乎 | `null` / `Prim.null` |
 | 判空 | `null` / `Prim.null` |
+| 不大于 | `numLe` / `Prim.numLe` |
+| 大于 | `numLt` / `Prim.numLt` |
 | 引 | `quote` / `Expr.quote` |
 | 解 | `eval` / `Prim.eval` |
 | 定 | `define` / `TopForm.define` |
 
-第一阶段已经足够：这些字不改变 evaluator，只是让中文文面能读入 native core。
+这些字在 surface 边界降低到 native core。`不大于/大于` 与递归闭包是为了让纯文言快速排序跑在 native evaluator 上加入的最小 native core 支持；它们不改变 R₀..R₈ carrier。
 
 ## Lists And Sets
 
@@ -118,4 +120,6 @@ list-map 的理论式可以写作：
 
 - `formal/SSBX/Foundation/Wen/Native/ChineseAliases.lean`：中文 `abbrev/def` 与小定理，证明别名与 native core 同义。
 - `formal/SSBX/Foundation/Wen/Native/Reader.lean`：reader 接受中文 surface token，并降低到既有 native primitive / constructor。
-- 后续如果扩 reader，应保持同一策略：中文 token 只做 parse-time lowering，不新增 evaluator case。
+- `formal/SSBX/Foundation/Wen/WenyanAlgorithms.lean`：不用 Lisp surface 的文言算法 parser；先把 `法曰/受/若/取/令/归/试以` 小文法读成 `Function / Stmt / Expr`，再降低到 `Native.SurfaceTopForm 8 / TopForm 8` 并用 native evaluator 运行，以 Lean 小定理验证快速排序语义。
+- `WenyanAlgorithm.lean` / `wenyan-algorithm`：运行 `examples/wenyan-native/` 中的纯文言算法文件，不经 Lisp reader。
+- 后续如果扩 reader，应保持同一策略：中文 token 做 parse-time lowering；只有确需表达新可计算能力时才补最小 native primitive。

@@ -19,6 +19,10 @@ lean_exe «wenyan-surface» where
   root := `WenyanSurface
   supportInterpreter := true
 
+lean_exe «wenyan-algorithm» where
+  root := `WenyanAlgorithm
+  supportInterpreter := true
+
 lean_exe wenyan where
   root := `Wenyan
   supportInterpreter := true

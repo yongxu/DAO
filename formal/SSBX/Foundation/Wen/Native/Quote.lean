@@ -131,6 +131,7 @@ def decodeExpr {n : Nat} : CodeTree n → Option (Expr n)
       True.intro
       (fun _ _ _ _ => True.intro)
       (fun _ _ _ _ _ _ => True.intro)
+      (fun _ _ _ _ _ _ _ => True.intro)
       (fun _ => True.intro)
       True.intro
       (fun _ _ _ _ => True.intro)
