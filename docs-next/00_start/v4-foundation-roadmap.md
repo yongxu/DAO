@@ -1,7 +1,7 @@
 # V4 Foundation Roadmap
 
-> Status: active execution roadmap  
-> Source of truth: [`docs-next/v4-foundation.md`](../v4-foundation.md)  
+> Status: active execution roadmap
+> Source of truth: [`docs-next/v4-foundation.md`](../v4-foundation.md)
 > Date: 2026-05-13
 
 This roadmap turns the latest V4 foundation note into implementation phases.
@@ -22,6 +22,7 @@ made true in Lean and, later, in the compiler/runtime track.
 | 8. Layered Wen semantic core | Implemented, targeted checks passing | `Wen/Layered/*` |
 | 9. Final module re-layout | Done, hard re-layout | `Wen/Layered`, `Wen/Layered/Runtime`, Layered bridges |
 | 10. Generic `Vn/Rn` final interface | Done | `Wen/Layered/VnRn.lean`, `Finite.lean`, `Derivability.lean`, `Runtime/VnRn.lean` |
+| 11. Native Wen interpreter kernel | Implemented | `Wen/Native.lean`, `Wen/Native/*` |
 
 ## Current Baseline
 
@@ -32,8 +33,11 @@ made true in Lean and, later, in the compiler/runtime track.
 - Preservation hierarchy exists as registry-level markers.
 - Dao row and basic four-reading orbit lists exist.
 - `Word64 = V4 x V4 x V4` and the R6 hexagram bridge exist.
-- V4-native Lisp syntax, global references, numbers, quoting, reader, and
-  small text examples exist under `Foundation/Wen/V4Kernel`.
+- Native Wen syntax, values, globals, top forms, quote/decode, universal eval,
+  backend contract, surface reader, program runner, and Kleene target interfaces
+  exist under `Foundation/Wen/Native`.
+- `Foundation/Wen/V4Kernel` remains a compatibility and research archive; it is
+  no longer the active interpreter spine.
 
 ## Phase 1 — Mathlib-Facing V4 Interfaces
 
@@ -278,8 +282,9 @@ Completed in Phase 9:
   `Operators/V8Info.lean`, `Operators/V8Derivability.lean`,
   `Operators/V8Audit.lean`, `Operators/V4/V8Bridge.lean`, and
   `Wen/V4Kernel/Word64Bridge.lean`.
-- `Wen/V4Kernel`, `Hierarchy/RHierarchy`, `Operators/V4`, and the top-level
-  `SSBX` umbrella now import the Layered paths.
+- `Wen/V4Kernel` remains available only as a compatibility/research line.
+  `Hierarchy/RHierarchy`, `Operators/V4`, and the top-level `SSBX` umbrella now
+  import the Layered paths; the active interpreter entrypoint is `Wen/Native`.
 
 Handoff audit:
 
@@ -319,6 +324,31 @@ The final classical core is now phrased for any finite bit rank:
   generated subgroup; `derivableLinear?` specializes it to `linearEval q`.
 - `Runtime.Vn/Rn` exposes the packed `BitVec n` mirror with `toSpec/ofSpec`
   round trips and spec-lifted runtime action laws.
+
+## Phase 11 — Native Wen Interpreter Kernel
+
+Status: implemented as the active public interpreter spine.
+
+The interpreter no longer roots itself in `V4Kernel` or the old Lisp-named API.
+It is rank-polymorphic over Phase 10:
+
+- `Expr n`, `Value n`, `Env n`, `GlobalEnv n`, and `TopForm n` live in
+  `SSBX.Foundation.Wen.Native`.
+- Atomic program values are `Rn n`.
+- Layer operations are the existing `Vn n` operations: `zero`, `xor`, `act`,
+  cell `eq`, and slot `flip`.
+- Quote/decode, universal eval, backend contract, surface elaboration,
+  S-expression reader, and program runner are native Wen modules.
+- Native Kleene is target-level only in this phase: it defines `Halts`,
+  `Computable`, `UniversalSpec`, `SmnSpec`, fixed-point and inverter targets,
+  and proves the target assembly theorem.
+
+Boundary:
+
+- YiInstr and restored `MetaInterp` remain separate old-proof/backend research
+  lines; `Wen.Native` does not import them.
+- `V4`, `Word64/R6`, and `R8/Cell256` should now be bridges or examples over
+  `Expr n`, not separate interpreter roots.
 
 ## Verification Policy
 
