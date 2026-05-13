@@ -39,6 +39,7 @@
 | R6 | 128 | [layers/R6.md](layers/R6.md) |
 | R7 | 256 | [layers/R7.md](layers/R7.md) |
 | R8 | 512 | [layers/R8.md](layers/R8.md) |
+| R5-R8 字表 | 960 | [glyph-inventory/](glyph-inventory/) |
 | **interface subtotal** | **1022** |  |
 | **审名合计** | **1023** |  |
 
@@ -61,7 +62,7 @@
 ## 当前原则
 
 1. 有 canonical 字时先用 canonical，例如 R3 八卦、R6 六十四卦、R8 Shi V4。
-2. 没有稳定字时不强造，文言列保留 `ox`。
+2. 没有稳定单字时不强造；R5-R8 的透明组合另在 [glyph-inventory/](glyph-inventory/) 标明状态。
 3. operator 不再手写万行 transform；每个 operator row 都是 `lambda s, mask xor s` 的 interface reading。
 4. 遗留 operator catalogue 属于解释、别名、corpus 或审稿材料，不进入本组 root count。
 5. 这组文件是审字草案，不是最终定本；最终定字后再回写到 `LayerCharacterMap` / Lean。
@@ -69,6 +70,7 @@
 ## 配套说明
 
 - [naming-scheme.md](naming-scheme.md)：层级命名原则、备选及理由。
+- [glyph-inventory/](glyph-inventory/)：R5-R8 逐层字表，含 R8 的 512 个 interface 字词。
 - [all-1023.md](all-1023.md)：1023 条审名总表。
 - [manifest.md](manifest.md)：1023 审名计数清单。
 - [r8-64/](r8-64/)：R8 按 Shi 拆成 4×64 的审名工作表。

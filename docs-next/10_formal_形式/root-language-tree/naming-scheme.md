@@ -2,7 +2,7 @@
 
 > 状态：draft v0.2 (2026-05-13)
 > 角色：解释 `layers/R0.md` 到 `layers/R8.md` 的命名方案。每个具体 entry 的短理由在 layer 表中；本文给出成组的备选原因。
-> R4..R8 的最新结构字梯见 [`../r4-r8-character-ladder.md`](../r4-r8-character-ladder.md)。本目录下 `layers/R*.md` 是 2026-05-11 生成草表，尚未按该字梯重生成。
+> R4..R8 的最新结构字梯见 [`../r4-r8-character-ladder.md`](../r4-r8-character-ladder.md)。R5..R8 的逐项字表见 [`glyph-inventory/`](glyph-inventory/)；`layers/R*.md` 仍是 interface 主表，`glyph-inventory` 用来逐字审名。
 
 ## 0. 口径
 
