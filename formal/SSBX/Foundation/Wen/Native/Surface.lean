@@ -137,59 +137,59 @@ def evalFuel {n : Nat} (fuel : Nat) (global : GlobalEnv n) (form : SurfaceTopFor
 
 end SurfaceTopForm
 
-def sampleSurfaceLambdaShadow {n : Nat} : SurfaceExpr n :=
-  .app (.lambda sampleCell (.ref sampleCell)) [.num 2]
+def localShadowExpr {n : Nat} : SurfaceExpr n :=
+  .app (.lambda originCell (.ref originCell)) [.num 2]
 
-def sampleSurfaceQuoteName {n : Nat} : SurfaceExpr n :=
-  .quote (.ref sampleCell)
+def quotedNameExpr {n : Nat} : SurfaceExpr n :=
+  .quote (.ref originCell)
 
-def sampleDefinedGlobal {n : Nat} : GlobalEnv n :=
-  [(sampleCell, .num 7)]
+def originSevenGlobal {n : Nat} : GlobalEnv n :=
+  [(originCell, .num 7)]
 
-def sampleSurfaceDefine {n : Nat} : SurfaceTopForm n :=
-  .define sampleCell (.num 7)
+def defineOriginAsSeven {n : Nat} : SurfaceTopForm n :=
+  .define originCell (.num 7)
 
-def sampleSurfaceRef {n : Nat} : SurfaceTopForm n :=
-  .expr (.ref sampleCell)
+def refOriginForm {n : Nat} : SurfaceTopForm n :=
+  .expr (.ref originCell)
 
 theorem elab_local_shadow {n : Nat} :
-    SurfaceExpr.elabExpr [] (sampleSurfaceLambdaShadow : SurfaceExpr n) =
+    SurfaceExpr.elabExpr [] (localShadowExpr : SurfaceExpr n) =
       some (.app (.lam (.var 0)) (.num 2)) := by
-  simp [sampleSurfaceLambdaShadow, SurfaceExpr.elabExpr, SurfaceExpr.lookupLocal,
+  simp [localShadowExpr, SurfaceExpr.elabExpr, SurfaceExpr.lookupLocal,
     SurfaceExpr.elabList, SurfaceExpr.coreAppMany]
 
 theorem eval_surface_local_shadows_global {n : Nat} :
-    (match SurfaceExpr.elabExpr [] (sampleSurfaceLambdaShadow : SurfaceExpr n) with
-    | some expr => evalFuelG 8 (sampleDefinedGlobal : GlobalEnv n) [] expr
+    (match SurfaceExpr.elabExpr [] (localShadowExpr : SurfaceExpr n) with
+    | some expr => evalFuelG 8 (originSevenGlobal : GlobalEnv n) [] expr
     | none => none) =
     some (Value.num 2) := by
   rw [elab_local_shadow]
   rfl
 
 theorem elab_quote_name_is_cell {n : Nat} :
-    SurfaceExpr.elabExpr [] (sampleSurfaceQuoteName : SurfaceExpr n) =
-      some (.quote (.cell sampleCell)) := by
+    SurfaceExpr.elabExpr [] (quotedNameExpr : SurfaceExpr n) =
+      some (.quote (.cell originCell)) := by
   rfl
 
 theorem surface_define_ref {n : Nat} :
-    SurfaceTopForm.evalFuel 2 [] (sampleSurfaceDefine : SurfaceTopForm n) =
-      some ((sampleDefinedGlobal : GlobalEnv n), .num 7)
-    ∧ SurfaceTopForm.evalFuel 1 (sampleDefinedGlobal : GlobalEnv n)
-        (sampleSurfaceRef : SurfaceTopForm n) =
-      some ((sampleDefinedGlobal : GlobalEnv n), .num 7) := by
+    SurfaceTopForm.evalFuel 2 [] (defineOriginAsSeven : SurfaceTopForm n) =
+      some ((originSevenGlobal : GlobalEnv n), .num 7)
+    ∧ SurfaceTopForm.evalFuel 1 (originSevenGlobal : GlobalEnv n)
+        (refOriginForm : SurfaceTopForm n) =
+      some ((originSevenGlobal : GlobalEnv n), .num 7) := by
   constructor
   · rfl
-  · simp [sampleSurfaceRef, sampleDefinedGlobal, SurfaceTopForm.evalFuel,
+  · simp [refOriginForm, originSevenGlobal, SurfaceTopForm.evalFuel,
       SurfaceTopForm.elaborate, SurfaceExpr.elabExpr, SurfaceExpr.lookupLocal,
       evalTopFuel, evalFuelG, GlobalEnv.lookup]
 
-theorem native_surface_summary {n : Nat} :
-    SurfaceExpr.elabExpr [] (sampleSurfaceLambdaShadow : SurfaceExpr n) =
+theorem surface_elaboration_laws {n : Nat} :
+    SurfaceExpr.elabExpr [] (localShadowExpr : SurfaceExpr n) =
       some (.app (.lam (.var 0)) (.num 2))
-    ∧ SurfaceExpr.elabExpr [] (sampleSurfaceQuoteName : SurfaceExpr n) =
-      some (.quote (.cell sampleCell))
-    ∧ SurfaceTopForm.evalFuel 2 [] (sampleSurfaceDefine : SurfaceTopForm n) =
-      some ((sampleDefinedGlobal : GlobalEnv n), .num 7) :=
+    ∧ SurfaceExpr.elabExpr [] (quotedNameExpr : SurfaceExpr n) =
+      some (.quote (.cell originCell))
+    ∧ SurfaceTopForm.evalFuel 2 [] (defineOriginAsSeven : SurfaceTopForm n) =
+      some ((originSevenGlobal : GlobalEnv n), .num 7) :=
   ⟨elab_local_shadow, elab_quote_name_is_cell, surface_define_ref.1⟩
 
 end SSBX.Foundation.Wen.Native

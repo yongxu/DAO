@@ -33,27 +33,27 @@ def universalEvalTop {n : Nat} (fuel : Nat) (code : CodeTree n) :
   simp [universalEvalTop]
   cases evalTopFuel fuel [] form <;> rfl
 
-theorem universalEvalExpr_sampleNativeAdd {n : Nat} :
-    universalEvalExpr (n := n) 12 (CodeTree.encodeExpr sampleNativeLambdaAdd) =
+theorem universalEvalExpr_lambdaAddExpr {n : Nat} :
+    universalEvalExpr (n := n) 12 (CodeTree.encodeExpr lambdaAddExpr) =
       some (.num 5) := by
   rw [universalEvalExpr_encodeExpr]
-  exact evalFuel_sampleNativeLambdaAdd
+  exact evalFuel_lambdaAddExpr
 
-theorem universalEvalTop_sampleDefine {n : Nat} :
+theorem universalEvalTop_defineOrigin {n : Nat} :
     universalEvalTop (n := n) 2
-      (CodeTree.encodeTopForm (.define sampleCell (.num 7))) =
+      (CodeTree.encodeTopForm (.define originCell (.num 7))) =
         some (.num 7) := by
   rw [universalEvalTop_encodeTopForm]
   rfl
 
-theorem native_universal_summary {n : Nat} :
+theorem universal_eval_laws {n : Nat} :
     (∀ fuel : Nat, ∀ expr : Expr n,
       universalEvalExpr fuel (CodeTree.encodeExpr expr) = evalFuel fuel [] expr)
-    ∧ universalEvalExpr (n := n) 12 (CodeTree.encodeExpr sampleNativeLambdaAdd) =
+    ∧ universalEvalExpr (n := n) 12 (CodeTree.encodeExpr lambdaAddExpr) =
       some (.num 5)
     ∧ universalEvalTop (n := n) 2
-      (CodeTree.encodeTopForm (.define sampleCell (.num 7))) = some (.num 7) :=
-  ⟨universalEvalExpr_encodeExpr, universalEvalExpr_sampleNativeAdd,
-    universalEvalTop_sampleDefine⟩
+      (CodeTree.encodeTopForm (.define originCell (.num 7))) = some (.num 7) :=
+  ⟨universalEvalExpr_encodeExpr, universalEvalExpr_lambdaAddExpr,
+    universalEvalTop_defineOrigin⟩
 
 end SSBX.Foundation.Wen.Native

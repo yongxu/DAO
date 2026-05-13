@@ -170,7 +170,7 @@ theorem evalFuel_quote_exprAsValue {n : Nat}
     (fuel : Nat) (env : Env n) (expr : Expr n) :
     evalFuel (fuel + 1) env (.quote expr) = some (exprAsValue expr) := rfl
 
-theorem native_quote_summary {n : Nat} :
+theorem quote_roundtrip_laws {n : Nat} :
     (∀ expr : Expr n, CodeTree.decodeExpr (CodeTree.encodeExpr expr) = some expr)
     ∧ (∀ form : TopForm n,
         CodeTree.decodeTopForm (CodeTree.encodeTopForm form) = some form)

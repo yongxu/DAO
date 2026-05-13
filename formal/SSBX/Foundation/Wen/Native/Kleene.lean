@@ -119,16 +119,16 @@ theorem native_kleene_from_primitives {n : Nat}
   exact native_kleene_from_fixedpoint_and_inverter
     (hFixed hUniversal hSmn) (hInvert hUniversal)
 
-theorem halts_identity_cell {n : Nat} :
-    Halts (.lam (.var 0) : Expr n) sampleCell := by
-  exact ⟨3, .cell sampleCell, rfl⟩
+theorem halts_id_on_origin {n : Nat} :
+    Halts (.lam (.var 0) : Expr n) originCell := by
+  exact ⟨3, .cell originCell, rfl⟩
 
-theorem native_kleene_target_summary (n : Nat) :
+theorem kleene_target_laws (n : Nat) :
     (FixedPointExists n → BoolInverterCompilerExists n → NativeKleeneInverter n)
     ∧ (FixedPointFromPrimitives n → BoolInverterFromUniversal n → KleeneFromPrimitives n)
-    ∧ Halts (.lam (.var 0) : Expr n) sampleCell :=
+    ∧ Halts (.lam (.var 0) : Expr n) originCell :=
   ⟨native_kleene_from_fixedpoint_and_inverter, native_kleene_from_primitives,
-    halts_identity_cell⟩
+    halts_id_on_origin⟩
 
 end Kleene
 

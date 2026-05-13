@@ -1,5 +1,9 @@
 /-
 # Wen.Native.Program -- native top-level program runner
+
+Program evaluation is deliberately small: each top form receives the same fuel
+budget, `define` extends the immutable global environment, and the final-value
+entrypoint returns the last produced value or `nil` for an empty program.
 -/
 
 import SSBX.Foundation.Wen.Native.Reader
@@ -59,35 +63,35 @@ def readEvalProgramFinal {n : Nat}
   | [] => some (global', .nil)
   | final :: _ => some (global', final)
 
-/-! ## Smoke programs -/
+/-! ## Reference programs -/
 
-def defineChainProgram {n : Nat} : List (TopForm n) :=
-  [ .define sampleCell (.num 10)
-  , .define (Vn.xor sampleCell sampleCell) (.app (.prim .add) (Expr.list [.ref sampleCell, .num 32]))
-  , .expr (.ref (Vn.xor sampleCell sampleCell))
+def defineChain {n : Nat} : List (TopForm n) :=
+  [ .define originCell (.num 10)
+  , .define (Vn.xor originCell originCell) (.app (.prim .add) (Expr.list [.ref originCell, .num 32]))
+  , .expr (.ref (Vn.xor originCell originCell))
   ]
 
-theorem eval_defineChainProgram {n : Nat} :
-    evalTopFormsFuel 8 [] (defineChainProgram : List (TopForm n)) =
-      some ([(Vn.xor sampleCell sampleCell, .num 42), (sampleCell, .num 10)],
+theorem eval_defineChain {n : Nat} :
+    evalTopFormsFuel 8 [] (defineChain : List (TopForm n)) =
+      some ([(Vn.xor originCell originCell, .num 42), (originCell, .num 10)],
         [.num 10, .num 42, .num 42]) :=
   by
-    simp [defineChainProgram, evalTopFormsFuel, evalTopFuel, evalFuelG,
+    simp [defineChain, evalTopFormsFuel, evalTopFuel, evalFuelG,
       evalListFuelG, valueList?, applyPrim, Expr.list, GlobalEnv.lookup]
 
-theorem eval_defineChainProgram_final {n : Nat} :
-    evalTopFormsFinalFuel 8 [] (defineChainProgram : List (TopForm n)) =
-      some ([(Vn.xor sampleCell sampleCell, .num 42), (sampleCell, .num 10)], .num 42) :=
+theorem eval_defineChain_final {n : Nat} :
+    evalTopFormsFinalFuel 8 [] (defineChain : List (TopForm n)) =
+      some ([(Vn.xor originCell originCell, .num 42), (originCell, .num 10)], .num 42) :=
   by
-    simp [evalTopFormsFinalFuel, eval_defineChainProgram]
+    simp [evalTopFormsFinalFuel, eval_defineChain]
 
-theorem native_program_summary {n : Nat} :
-    evalTopFormsFuel 8 [] (defineChainProgram : List (TopForm n)) =
-      some ([(Vn.xor sampleCell sampleCell, .num 42), (sampleCell, .num 10)],
+theorem program_runner_laws {n : Nat} :
+    evalTopFormsFuel 8 [] (defineChain : List (TopForm n)) =
+      some ([(Vn.xor originCell originCell, .num 42), (originCell, .num 10)],
         [.num 10, .num 42, .num 42])
-    ∧ evalTopFormsFinalFuel 8 [] (defineChainProgram : List (TopForm n)) =
-      some ([(Vn.xor sampleCell sampleCell, .num 42), (sampleCell, .num 10)], .num 42) :=
-  ⟨eval_defineChainProgram, eval_defineChainProgram_final⟩
+    ∧ evalTopFormsFinalFuel 8 [] (defineChain : List (TopForm n)) =
+      some ([(Vn.xor originCell originCell, .num 42), (originCell, .num 10)], .num 42) :=
+  ⟨eval_defineChain, eval_defineChain_final⟩
 
 end Program
 

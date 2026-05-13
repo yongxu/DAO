@@ -58,27 +58,27 @@ def treeBackend (n : Nat) : Backend n where
   decodeTopFormCode := CodeTree.decodeTopForm
   decode_encodeTopFormCode := CodeTree.decodeTopForm_encodeTopForm
 
-theorem treeBackend_sampleNativeAdd {n : Nat} :
-    (treeBackend n).evalCodeFuel 12 ((treeBackend n).encodeExprCode sampleNativeLambdaAdd) =
+theorem treeBackend_lambdaAddExpr {n : Nat} :
+    (treeBackend n).evalCodeFuel 12 ((treeBackend n).encodeExprCode lambdaAddExpr) =
       some (.num 5) := by
   rw [Backend.evalCodeFuel_encodeExprCode]
-  exact evalFuel_sampleNativeLambdaAdd
+  exact evalFuel_lambdaAddExpr
 
-theorem treeBackend_sampleTopDefine {n : Nat} :
+theorem treeBackend_defineOrigin {n : Nat} :
     (treeBackend n).evalTopCodeFuel 2
-      ((treeBackend n).encodeTopFormCode (.define sampleCell (.num 7))) =
+      ((treeBackend n).encodeTopFormCode (.define originCell (.num 7))) =
         some (.num 7) := by
   rw [Backend.evalTopCodeFuel_encodeTopFormCode]
   rfl
 
-theorem native_backend_summary {n : Nat} :
+theorem backend_eval_laws {n : Nat} :
     (∀ backend : Backend n, ∀ fuel : Nat, ∀ expr : Expr n,
       backend.evalCodeFuel fuel (backend.encodeExprCode expr) = evalFuel fuel [] expr)
-    ∧ (treeBackend n).evalCodeFuel 12 ((treeBackend n).encodeExprCode sampleNativeLambdaAdd) =
+    ∧ (treeBackend n).evalCodeFuel 12 ((treeBackend n).encodeExprCode lambdaAddExpr) =
       some (.num 5)
     ∧ (treeBackend n).evalTopCodeFuel 2
-      ((treeBackend n).encodeTopFormCode (.define sampleCell (.num 7))) = some (.num 7) :=
-  ⟨Backend.evalCodeFuel_encodeExprCode, treeBackend_sampleNativeAdd,
-    treeBackend_sampleTopDefine⟩
+      ((treeBackend n).encodeTopFormCode (.define originCell (.num 7))) = some (.num 7) :=
+  ⟨Backend.evalCodeFuel_encodeExprCode, treeBackend_lambdaAddExpr,
+    treeBackend_defineOrigin⟩
 
 end SSBX.Foundation.Wen.Native

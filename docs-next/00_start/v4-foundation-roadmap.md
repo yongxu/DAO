@@ -23,6 +23,7 @@ made true in Lean and, later, in the compiler/runtime track.
 | 9. Final module re-layout | Done, hard re-layout | `Wen/Layered`, `Wen/Layered/Runtime`, Layered bridges |
 | 10. Generic `Vn/Rn` final interface | Done | `Wen/Layered/VnRn.lean`, `Finite.lean`, `Derivability.lean`, `Runtime/VnRn.lean` |
 | 11. Native Wen interpreter kernel | Implemented | `Wen/Native.lean`, `Wen/Native/*` |
+| 12. Native concrete carrier bridges | Implemented | `Wen/Native/Bridges/*` |
 
 ## Current Baseline
 
@@ -342,6 +343,8 @@ It is rank-polymorphic over Phase 10:
 - Native Kleene is target-level only in this phase: it defines `Halts`,
   `Computable`, `UniversalSpec`, `SmnSpec`, fixed-point and inverter targets,
   and proves the target assembly theorem.
+- Existing concrete carriers now enter through thin native bridges:
+  V4 as `Expr 2`, Word64/R6 as `Expr 6`, and R8/RootCell256 as `Expr 8`.
 
 Boundary:
 
@@ -349,6 +352,23 @@ Boundary:
   lines; `Wen.Native` does not import them.
 - `V4`, `Word64/R6`, and `R8/Cell256` should now be bridges or examples over
   `Expr n`, not separate interpreter roots.
+
+## Phase 12 — Native Concrete Carrier Bridges
+
+Status: implemented as adapters over existing Layered bridge theorems.
+
+The native kernel stays generic.  Concrete carriers are now explicit adapters:
+
+- `Wen.Native.Bridges.V4`: existing Klein-four carrier as native rank-2 data.
+- `Wen.Native.Bridges.Word64`: R6 `Word64` carrier as native rank-6 data.
+- `Wen.Native.Bridges.R8`: existing Bagua `R8` carrier as native rank-8 data.
+- `Wen.Native.Bridges.RootCell256`: `RootCell256` as native rank-8 data, with
+  round trips to the existing R8 view.
+
+Each bridge provides `toCell`, `fromCell`, `expr`, `value`, `fromValue?`, and a
+native `xor` smoke theorem showing that `evalFuel` over `.prim .xor` agrees
+with the existing carrier operation.  No bridge defines a new carrier or a
+separate interpreter root.
 
 ## Verification Policy
 

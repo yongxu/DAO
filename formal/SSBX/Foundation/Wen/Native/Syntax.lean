@@ -135,13 +135,16 @@ def truthy {n : Nat} : Value n → Bool
 
 end Value
 
-def sampleCell {n : Nat} : Cell n := Vn.zero
+/-- The neutral native cell at any rank.  At rank 8 this is the same
+all-`o` origin used by the Cell256/R8 bridge. -/
+def originCell {n : Nat} : Cell n := Vn.zero
 
-def sampleNativeXor {n : Nat} (slot : Slot n) : Expr n :=
-  .app (.prim .xor) (Expr.list [.cell (BitSpace.single slot), .cell sampleCell])
+/-- Core expression that xors one basis coordinate with the origin cell. -/
+def slotXorExpr {n : Nat} (slot : Slot n) : Expr n :=
+  .app (.prim .xor) (Expr.list [.cell (BitSpace.single slot), .cell originCell])
 
-theorem native_syntax_summary (n : Nat) :
-    (sampleCell : Cell n) = Vn.zero
+theorem syntax_core_laws (n : Nat) :
+    (originCell : Cell n) = Vn.zero
     ∧ Expr.list ([] : List (Expr n)) = .nil
     ∧ Value.list ([] : List (Value n)) = .nil :=
   ⟨rfl, rfl, rfl⟩

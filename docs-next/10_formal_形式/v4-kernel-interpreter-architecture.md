@@ -12,7 +12,7 @@ spine.  It is a native, arbitrary-rank kernel:
 ```text
 Layered.Rn n / Layered.Vn n
 -> Wen.Native.Expr n / Value n / Env n / GlobalEnv n / TopForm n
--> eval / quote / universal eval
+-> evalFuel / quote / universal eval
 -> backend contract
 -> surface reader and program runner
 -> Kleene target interfaces
@@ -35,6 +35,7 @@ history, but they are not the active public interpreter API.
 | reader | `Wen.Native.Reader` | S-expression boundary over native cells, with no YiInstr import |
 | programs | `Wen.Native.Program` | top-form lists, surface programs, reader-backed programs |
 | Kleene targets | `Wen.Native.Kleene` | `Halts`, `Computable`, universal/s-m-n/fixed-point/inverter targets |
+| concrete bridges | `Wen.Native.Bridges` | V4, Word64/R6, R8, and RootCell256 adapters into `Expr n` |
 
 ## Design Rules
 
@@ -49,6 +50,37 @@ history, but they are not the active public interpreter API.
   `GlobalEnv`.
 - Backend modules prove representation round trips; they do not redefine
   evaluation.
+- Concrete carrier bridges are adapters only: they map existing carriers to
+  native cells and prove native `.xor` agrees with the old carrier operation.
+- Public witness names are semantic: `originCell`, `slotXorExpr`,
+  `lambdaAddExpr`, `defineChain`, and module-level `*_laws` theorems state the
+  small API contracts.
+
+## Reader Surface
+
+The native reader accepts one S-expression top form:
+
+```text
+top     ::= (define name expr) | expr
+expr    ::= nil | true | false | nat | prim | name | #bits
+          | ()
+          | (cell bits)
+          | (quote expr) | 'expr
+          | (lambda param expr)
+          | (if expr expr expr)
+          | (flip nat expr)
+          | (expr expr*)
+name    ::= @bits | bits
+param   ::= name | (name)
+bits    ::= exactly n chars, each one of o x 0 1
+prim    ::= zero | xor | act | eq | cell-eq | cons | car | cdr
+          | null | null? | atom | atom? | bool? | number? | num?
+          | numEq | num-eq | succ | pred | add | + | eval
+```
+
+`#bits` is reserved for cell literals.  `@bits` is the explicit name spelling;
+bare `bits` remains a compact name spelling.  The reader does not import
+YiInstr or the old V4 Lisp reader.
 
 ## Suspended Lines
 
@@ -67,6 +99,7 @@ Expr n
 -> universalEvalExpr
 -> Backend n
 -> SurfaceTopForm n / Reader
+-> Bridges.{V4, Word64, R8, RootCell256}
 ```
 
 Native Kleene currently stops at target interfaces and target assembly:

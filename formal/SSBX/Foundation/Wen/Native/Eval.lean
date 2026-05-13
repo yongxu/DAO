@@ -324,27 +324,27 @@ def evalTopFuel {n : Nat} (fuel : Nat) (global : GlobalEnv n) :
 @[simp] theorem applyPrim_cdr_cons {n : Nat} (head tail : Value n) :
     applyPrim (.cdr : Prim n) [.cons head tail] = some tail := rfl
 
-def sampleNativeLambdaAdd {n : Nat} : Expr n :=
+def lambdaAddExpr {n : Nat} : Expr n :=
   .app
     (.lam (.app (.prim .add) (Expr.list [.var 0, .num 3])))
     (.num 2)
 
-theorem evalFuel_sampleNativeLambdaAdd {n : Nat} :
-    evalFuel (n := n) 12 [] sampleNativeLambdaAdd = some (.num 5) := rfl
+theorem evalFuel_lambdaAddExpr {n : Nat} :
+    evalFuel (n := n) 12 [] lambdaAddExpr = some (.num 5) := rfl
 
-theorem evalFuel_sampleNativeXor {n : Nat} (slot : Slot n) :
-    evalFuel 8 [] (sampleNativeXor slot) =
-      some (.cell (Vn.xor (BitSpace.single slot) sampleCell)) := rfl
+theorem evalFuel_slotXorExpr {n : Nat} (slot : Slot n) :
+    evalFuel 8 [] (slotXorExpr slot) =
+      some (.cell (Vn.xor (BitSpace.single slot) originCell)) := rfl
 
 theorem evalFuel_eval_quote_num {n : Nat} :
     evalFuel (n := n) 3 [] (.app (.prim .eval) (.quote (.num 5))) = some (.num 5) := rfl
 
-theorem native_eval_summary {n : Nat} :
-    evalFuel (n := n) 12 [] sampleNativeLambdaAdd = some (.num 5)
+theorem eval_core_laws {n : Nat} :
+    evalFuel (n := n) 12 [] lambdaAddExpr = some (.num 5)
     ∧ evalFuel (n := n) 3 [] (.app (.prim .eval) (.quote (.num 5))) = some (.num 5)
     ∧ (∀ env : Env n, ∀ expr : Expr n, evalFuel 0 env expr = none)
     ∧ (∀ fuel : Nat, ∀ env : Env n, ∀ expr : Expr n,
         evalFuel (fuel + 1) env (.quote expr) = some (quoteValue expr)) :=
-  ⟨evalFuel_sampleNativeLambdaAdd, evalFuel_eval_quote_num, evalFuel_zero, evalFuel_quote_succ⟩
+  ⟨evalFuel_lambdaAddExpr, evalFuel_eval_quote_num, evalFuel_zero, evalFuel_quote_succ⟩
 
 end SSBX.Foundation.Wen.Native

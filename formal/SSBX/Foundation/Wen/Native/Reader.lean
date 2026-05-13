@@ -1,9 +1,33 @@
 /-
 # Wen.Native.Reader -- S-expression boundary for native Wen
 
-The reader is a boundary module over the generic native surface.  It parses
-ASCII S-expressions into `SurfaceTopForm n` without importing YiInstr or the
-old V4 interpreter spine.
+The reader is the concrete text boundary over the generic native surface.  It
+parses one ASCII S-expression into `SurfaceTopForm n` without importing YiInstr
+or the old V4 interpreter spine.
+
+Accepted native grammar:
+
+```text
+top     ::= (define name expr) | expr
+expr    ::= atom
+          | ()
+          | (cell bits)
+          | (quote expr)          -- Sexp also expands 'expr to this form
+          | (lambda param expr)
+          | (if expr expr expr)
+          | (flip nat expr)
+          | (expr expr*)
+atom    ::= nil | true | false | nat | prim | name | #bits
+name    ::= @bits | bits
+param   ::= name | (name)
+bits    ::= exactly n chars, each one of o x 0 1
+prim    ::= zero | xor | act | eq | cell-eq | cons | car | cdr
+          | null | null? | atom | atom? | bool? | number? | num?
+          | numEq | num-eq | succ | pred | add | + | eval
+```
+
+`#bits` is reserved for cell literals; `@bits` is the explicit spelling for a
+surface name.  Bare `bits` remains accepted as a compact name form.
 -/
 
 import SSBX.Foundation.Lang.Sexp
@@ -72,10 +96,7 @@ def stripPrefix (mark : Char) (token : String) : Option String :=
 def readName {n : Nat} (token : String) : Option (Cell n) :=
   match stripPrefix '@' token with
   | some rest => cellOfToken rest
-  | none =>
-      match stripPrefix '#' token with
-      | some rest => cellOfToken rest
-      | none => cellOfToken token
+  | none => cellOfToken token
 
 def readCellLiteral {n : Nat} (token : String) : Option (Cell n) :=
   match stripPrefix '#' token with
@@ -195,12 +216,34 @@ def readEvalTwoTopStrings {n : Nat}
   let (global', _) ← readEvalTopString fuel global first
   readEvalTopString fuel global' second
 
-theorem reader_summary :
+theorem cellOfBits_oooo_eq_origin_r4 :
+    cellOfBits (n := 4) [false, false, false, false] = originCell := by
+  funext i
+  fin_cases i <;> rfl
+
+theorem readName_explicit_origin_r4 :
+    readName (n := 4) "@oooo" = some originCell := by
+  simp [readName, stripPrefix, cellOfToken, parseBits, bitVal,
+    cellOfBits_oooo_eq_origin_r4]
+
+theorem readName_hash_reserved_r4 :
+    readName (n := 4) "#oooo" = none := rfl
+
+theorem readAtom_cell_literal_origin_r4 :
+    readAtom (n := 4) "#oooo" = some (.cell originCell) := by
+  simp [readAtom, primOfToken, parseAsciiNat, parseAsciiNatAux, digitVal,
+    stripPrefix, cellOfToken, parseBits, bitVal, cellOfBits_oooo_eq_origin_r4]
+
+theorem reader_grammar_laws :
     parseAsciiNat "42" = some 42
     ∧ (primOfToken (n := 4) "xor" = some .xor)
     ∧ (slotOfNat? (n := 4) 2).isSome = true
-    ∧ (slotOfNat? (n := 0) 0).isSome = false :=
-  ⟨rfl, rfl, rfl, rfl⟩
+    ∧ (slotOfNat? (n := 0) 0).isSome = false
+    ∧ readName (n := 4) "@oooo" = some originCell
+    ∧ readName (n := 4) "#oooo" = none
+    ∧ readAtom (n := 4) "#oooo" = some (.cell originCell) :=
+  ⟨rfl, rfl, rfl, rfl, readName_explicit_origin_r4,
+    readName_hash_reserved_r4, readAtom_cell_literal_origin_r4⟩
 
 end Reader
 
