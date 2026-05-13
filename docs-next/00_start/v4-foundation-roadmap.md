@@ -14,13 +14,14 @@ made true in Lean and, later, in the compiler/runtime track.
 |-------|--------|-----------------|
 | 1. Mathlib-facing V4 interfaces | Done | `V4/Instances.lean` |
 | 2. Preservation proof layer | Done | `V4/PreservationLogic.lean` |
-| 3. Atlas and orbit completion | Done | `V4/Atlas.lean`, `V4/OrbitBurnside.lean`, `Word64Bridge.lean` |
-| 4. V8 information preservation | Done | `Operators/V8Info.lean` |
-| 5. Cross-level bridge | Done | `V4/V8Bridge.lean` |
-| 6. V8 naming and metadata audit | Done | `Operators/V8Audit.lean` |
+| 3. Atlas and orbit completion | Done | `V4/Atlas.lean`, `V4/OrbitBurnside.lean`, `Wen/Layered/Bridges/Word64.lean` |
+| 4. R8 information preservation | Done | `Wen/Layered/Information.lean`, `Wen/Layered/Bridges/V4Time.lean` |
+| 5. Cross-level bridge | Done | `Wen/Layered/Bridges/V4Time.lean` |
+| 6. R8 naming and metadata audit | Done | `Wen/Layered/Bridges/R8.lean` |
 | 7. Compiler/runtime track | Boundary documented | no Clojure/compiler source is present in the current repository slice |
 | 8. Layered Wen semantic core | Implemented, targeted checks passing | `Wen/Layered/*` |
 | 9. Final module re-layout | Done, hard re-layout | `Wen/Layered`, `Wen/Layered/Runtime`, Layered bridges |
+| 10. Generic `Vn/Rn` final interface | Done | `Wen/Layered/VnRn.lean`, `Finite.lean`, `Derivability.lean`, `Runtime/VnRn.lean` |
 
 ## Current Baseline
 
@@ -298,6 +299,26 @@ Final acceptance:
 - no duplicate root ontology between `Wen/Layered`, `V4Kernel`, `V8Info`, and
   `Word64Bridge`;
 - no future quantum module is required for the classical core to compile.
+
+## Phase 10 — Generic Vn/Rn Final Interface
+
+Status: completed as the public arbitrary-rank interface over Layered.
+
+The final classical core is now phrased for any finite bit rank:
+
+- `Rn n := BitSpace n` is the canonical proof-level state space.
+- `Vn n := BitSpace n` is the canonical XOR translation group acting on
+  `Rn n`.
+- `Vn n` has Mathlib-facing `CommGroup` and `MulAction (Vn n) (Rn n)`
+  instances.
+- `Vn 2` is explicitly bridged to the existing Klein-four `V4`; the old `V4`
+  name remains reserved for the Klein carrier, not for a four-bit space.
+- `BitSpace.card_eq_two_pow` proves `|Rn n| = 2^n`.
+- `spanList` gives finite generator closure and its universal property.
+- `derivable?` is a generic finite checker for any Boolean evaluator over a
+  generated subgroup; `derivableLinear?` specializes it to `linearEval q`.
+- `Runtime.Vn/Rn` exposes the packed `BitVec n` mirror with `toSpec/ofSpec`
+  round trips and spec-lifted runtime action laws.
 
 ## Verification Policy
 

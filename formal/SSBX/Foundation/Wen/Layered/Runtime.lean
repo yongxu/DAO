@@ -11,4 +11,5 @@ import SSBX.Foundation.Wen.Layered.Runtime.Modal
 import SSBX.Foundation.Wen.Layered.Runtime.Core
 import SSBX.Foundation.Wen.Layered.Runtime.Rescue
 import SSBX.Foundation.Wen.Layered.Runtime.Information
+import SSBX.Foundation.Wen.Layered.Runtime.VnRn
 import SSBX.Foundation.Wen.Layered.Runtime.V4Time

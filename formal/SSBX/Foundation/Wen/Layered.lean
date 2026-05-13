@@ -14,6 +14,9 @@ import SSBX.Foundation.Wen.Layered.Modal
 import SSBX.Foundation.Wen.Layered.Core
 import SSBX.Foundation.Wen.Layered.Rescue
 import SSBX.Foundation.Wen.Layered.Information
+import SSBX.Foundation.Wen.Layered.Finite
+import SSBX.Foundation.Wen.Layered.VnRn
+import SSBX.Foundation.Wen.Layered.Derivability
 import SSBX.Foundation.Wen.Layered.Bridges.V4
 import SSBX.Foundation.Wen.Layered.Bridges.R8
 import SSBX.Foundation.Wen.Layered.Bridges.Word64
