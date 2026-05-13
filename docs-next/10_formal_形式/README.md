@@ -36,6 +36,7 @@
 - [truth-model.md](./truth-model.md)：truth、claim ledger 与 model adequacy。
 - [foundation-core.md](./foundation-core.md)：核心 foundation 各文件的读法。
 - [root-layer-map.md](./root-layer-map.md)：底层 root 几层的生成线、名册线、内容线、关系与算子总图。
+- [r4-r8-character-ladder.md](./r4-r8-character-ladder.md)：R4..R8 的面/內/重/因/果结构字梯、reader grammar、备选字与形式逻辑读法。
 - [r8-root-language-tree.md](./r8-root-language-tree.md)：R₀..R₈ root language tree、1021/1022/1023 口径、root-rule roadmap。
 - [root-native-operators.md](./root-native-operators.md)：root-native operator 四类来源与 legacy catalogue quarantine 形式锚。
 - [v4-foundation.md](./v4-foundation.md)：V4 作为 Wen 的 two-axis Klein-four kernel、跨域读法与 preservation atlas。

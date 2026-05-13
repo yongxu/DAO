@@ -1,6 +1,7 @@
 # 易之 R-O 双层级 v2 — 元-算子融合 / 自对偶 / 完整性 (definitive, strict uniform)
 
 > 状态：定本 v2.1 (2026-05-10) — 重号为 **strict (Z/2)ⁿ uniform R₀..R₈**，补全跳过的 R₄ (面 Mian) + R₅ (五爻)，与传统 Yi 太极/两仪/四象/八卦/重卦完全对齐。
+> 2026-05-13 补注：R4..R8 的公开字 / reader grammar 已先在 [r4-r8-character-ladder.md](r4-r8-character-ladder.md) 收口为「面 / 內 / 重 / 因 / 果」。本文的 strict-uniform carrier 与 theorem 口径不变；Lean declaration rename / parser registry 尚未同步。
 > 关系：v1 [yi-RO-hierarchy.md](yi-RO-hierarchy.md) 是旧 R₁..R₆ 编号 (含 R₃→R₄ 之 3-bit chong 跳跃)，本 v2.1 是 strict uniform 之 definitive 版。
 > 作用：把易作为 self-describing system 之最 minimal algebraic 核——R₈ = (Z/2)⁸ Abelian 群 + Cayley 自对偶 + V₄ 外对称 + 道作为 origin——完整写清，**层数与 bits 严格相等 (Rₙ = (Z/2)ⁿ for n=0..8)**。涵盖**形态 / 结构 / 关系 / 过程 / insight**，证明系统在 abelian closure 内**完整 / 完备 / 自洽 / 自指**。
 > 配套：[`yi-as-meta-framework.md`](yi-as-meta-framework.md) · [`yi-calculus-theorem.md`](yi-calculus-theorem.md) · [`yi-RO-hierarchy.md`](yi-RO-hierarchy.md) (v1 旧编号)
@@ -17,7 +18,7 @@
 | R₂ | R₂ | 4 | 四象 — 不变 |
 | R₃ | R₃ | 8 | 八卦 — 不变 |
 | (跳过) | **R₄** | 16 | **面 (Mian) = Ben × Zheng** — 显式补 |
-| (跳过) | **R₅** | 32 | **五爻** (provisional, 无传统 anchor) — 显式补 |
+| (跳过) | **R₅** | 32 | **內 / 五爻** (`Wuyao = Mian × Bool`) — 显式补 |
 | R₄ | **R₆** | 64 | 重卦 (Hexagram) — 重号 |
 | R₅ | **R₇** | 128 | 因卦 (Cell128) — 重号 |
 | R₆ | **R₈** | 256 | 果卦 (Cell256) — 重号 |
@@ -88,7 +89,7 @@ $$\boxed{\texttt{oooooooo} = \text{道} = \text{identity} = \text{no-op operator
 | R₂ | 2 | 4 | 四象 | `oo`, `ox`, `xo`, `xx` |
 | R₃ | 3 | 8 | 八卦 | `ooo` (乾), `xxx` (坤), ... |
 | **R₄** | **4** | **16** | **面 (Mian)** | `oooo`..`xxxx` |
-| **R₅** | **5** | **32** | **五爻** | `ooooo`..`xxxxx` |
+| **R₅** | **5** | **32** | **內 / 五爻** | `ooooo`..`xxxxx` |
 | R₆ | 6 | 64 | 重卦 (Hexagram) | `oooooo` (乾), `oooxxx` (否), `xxxooo` (泰), `xxxxxx` (坤), ... |
 | R₇ | 7 | 128 | 因卦 (Cell128) | `ooooooo` (乾·无因), `oooooox` (乾·有因) |
 | **R₈** | **8** | **256** | **果卦 (Cell256)** | `oooooooo` (道-anchor), `ooooooxo` (乾·已), `ooooooox` (乾·未), `ooooooxx` (乾·今), ... `xxxxxxxx` (坤·今) |
@@ -200,12 +201,13 @@ example (c : R8) : c • c = oooooooo := xor_self c            -- self-inverse
 - **Lean**: `Mian` (`BenZheng.lean:120`)
 - **关键 insight**: v1 中之「R₃→R₄ chong jump」隐藏了此层; v2.1 明确 Mian 是 (Z/2)⁴ 之 anchor。Mian 之 16-命 (BenZheng.lean) 给此层 ontological 内容。
 
-### 3.5 R₅ — 五爻 (5-yao) ⭐ 新显式纳入 (provisional)
+### 3.5 R₅ — 內 / 五爻 (5-yao) ⭐ 新显式纳入
 
 - **元** (`ooooo`..`xxxxx`): **32 cells = (Z/2)⁵**
 - **新 atom**: 第 5 个 binary axis (无传统 Yi anchor; 可看作「Mian + 一个额外 yao」或「半个 hexagram」)
 - **Lift₅**: R₅ × R₁ → R₆ (chong 之最后一步)
 - **R-O fusion**: ✓
+- **2026-05-13 surface decision**: 公开读法推荐 **內**；位值 `內本 / 內征`，算子 `易內`。Lean carrier 名暂仍 `Wuyao = Mian × Bool`，详 [r4-r8-character-ladder.md](r4-r8-character-ladder.md)。
 - **命名 caveat (provisional)**: **「五爻」为 descriptive baseline** (no traditional Yi name). 候选:
   - **五爻** (5-yao, 描述性, 安全)
   - **接** (jie, 连接 R₄ 与 R₆ 之过渡)
@@ -240,7 +242,7 @@ example (c : R8) : c • c = oooooooo := xor_self c            -- self-inverse
 - **R-O fusion**: ✓
 - **现象学映射**: 因 ≈ Husserl retention 之 binary 标记 (NOT phase 本身; phase 在 R₃)
 - **Lean**: `Cell128`, `yin` (`Cell128.lean`)
-- **命名 caveat (provisional)**: 因/印 — 备选 印/留, 始/起 — 详 yi-calculus-theorem.md §16
+- **2026-05-13 surface decision**: `因` 作位，`印` 作算子；备选仍留账，但 default 不再读作 ox fallback。
 
 ### 3.8 R₈ — 果卦 (Cell256) — 闭合层 (was v1 R₆)
 
@@ -259,6 +261,7 @@ example (c : R8) : c • c = oooooooo := xor_self c            -- self-inverse
 - **R-hierarchy 闭合**: 无 R₉ (无第 9 个独立 binary axis)
 - **R-O fusion**: ✓ (|R₈| = 256 = |XOR(R₈)|) — **完整 self-action closure**
 - **Lean**: `Cell256`, `Shi`, `tou` + `Shi.toYinGuo` 双射 (`Cell256.lean`)
+- **2026-05-13 surface decision**: `果` 作位，`投` 作算子；Shi default 顺序读作 道 / 已 / 未 / 今。
 
 ### 3.9 关于 chong (重) — 现在显式 3-step composite
 
@@ -268,7 +271,7 @@ v2.1 strict-uniform 下:
 $$\mathrm{chong}: R_3 \times R_3 \to R_6$$
 
 被分解为 **3 步 +1 bit lift**:
-$$R_3 \xrightarrow{+1 \text{bit}} R_4 (\text{Mian}) \xrightarrow{+1 \text{bit}} R_5 (\text{五爻}) \xrightarrow{+1 \text{bit}} R_6 (\text{Hexagram})$$
+$$R_3 \xrightarrow{+1 \text{bit}} R_4 (\text{Mian}) \xrightarrow{+1 \text{bit}} R_5 (\text{內 / Wuyao}) \xrightarrow{+1 \text{bit}} R_6 (\text{Hexagram})$$
 
 chong 不消失, 而是显式认识为「**3 步 lift 之 composite**」。Yi 传统跳过 R₄/R₅ 是因为「unit ontologies 是 trigram (R₃) 与 trigram-pair (R₆), 中间 4-yao/5-yao 不是 ontologically complete 单位」。但 mathematical 上它们存在 (16/32), v2.1 显式纳入。
 
@@ -549,7 +552,7 @@ V₄ outer 中之 hu (R₆+):
 | R₂ | 四象 | 2-char | Bool² | V₄ | 2-qubit |
 | R₃ | 八卦 | 3-char | Bool³ | (ℤ/2)³ | 3-qubit |
 | **R₄** | **面 Mian** | 4-char | Bool⁴ | (ℤ/2)⁴ | Ben×Zheng decomposition |
-| **R₅** | 五爻 (provisional) | 5-char | Bool⁵ | (ℤ/2)⁵ | (transitional) |
+| **R₅** | 內 / 五爻 | 5-char | Bool⁵ | (ℤ/2)⁵ | transitional surface layer |
 | R₆ | 重卦 | 6-char | Bool⁶ | (ℤ/2)⁶ | 6-qubit + V₄ |
 | R₇ | 因卦 | 7-char | Bool⁷ | (ℤ/2)⁷ | + past-cone marker |
 | R₈ | 果卦 | 8-char | Bool⁸ | (ℤ/2)⁸ | + future-cone, Shi V₄ |
@@ -591,7 +594,7 @@ V₄ 在易系统中**至少**出现 4 次:
 | [`Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) | R₁/R₃/R₆ + 部分 O | `Yao`, `Trigram`, `Hexagram`, `cuo/zong/hu` |
 | [`BaguaAlgebra.lean`](../../formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean) | O₁..O₆ 主体 | `dong/hua/bian`, `FlipCombo`, `Sheng`, `chong` |
 | [`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) | **R₄ (Mian)** + R₃ 4+4 + R₆ quadrant | `Ben/Zheng/Mian/Quadrant` — **Mian = R₄ anchor** |
-| (待建) | **R₅ (五爻)** | `abbrev Pian5 := Mian × Bool` 候选 |
+| [`R5_Wuyao.lean`](../../formal/SSBX/Foundation/Hierarchy/R5_Wuyao.lean) | **R₅ (內 / Wuyao)** | `abbrev Wuyao := Mian × Bool` |
 | [`Cell128.lean`](../../formal/SSBX/Foundation/Bagua/Cell128.lean) | R₇ + O₇.印 | `Cell128`, `yin` (= 印) |
 | [`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) | R₈ + O₈.投 + Shi V₄ | `Cell256`, `Shi`, `yin/tou` + 双射 |
 | [`Cell256Stratify.lean`](../../formal/SSBX/Foundation/Bagua/Cell256Stratify.lean) | R₀..R₈ explicit + R8_complete | R-hierarchy abbrevs + parity/timeReversal/PT/yComb + bundle |
@@ -604,7 +607,7 @@ abbrev R1 := Yao                          -- 爻/两仪
 abbrev R2 := SiXiang                      -- 四象
 abbrev R3 := Trigram                      -- 八卦
 abbrev R4 := Mian                         -- 面 (= Ben × Zheng), 16
-abbrev R5 := Mian × Bool                  -- 五爻 (provisional), 32
+abbrev R5 := Mian × Bool                  -- 內 / Wuyao, 32
 abbrev R6 := Hexagram                     -- 重卦, 64
 abbrev R7 := Cell128                      -- 因卦, 128
 abbrev R8 := Cell256                      -- 果卦, 256
@@ -674,7 +677,7 @@ theorem ε_ι (c : R8) : ε (ι c) = c := ...
 |---|---|---|
 | R 编号 | R₁..R₆ (含 R₃→R₄ chong jump) | **R₀..R₈ strict uniform (no jumps)** |
 | Mian 之地位 | 在 BenZheng 内, 不在 R-hierarchy 主线 | **R₄ first-class** |
-| (Z/2)⁵ = 32 | 跳过 | **R₅ 显式 (五爻 provisional)** |
+| (Z/2)⁵ = 32 | 跳过 | **R₅ 显式 (內 / Wuyao)** |
 | 太极 R₀ | 隐含 (Unit) | **R₀ 显式纳入** |
 | Hexagram | R₄ | R₆ |
 | Cell128 | R₅ | R₇ |
@@ -694,11 +697,11 @@ theorem ε_ι (c : R8) : ε (ι c) = c := ...
 
 ### 10.4 开放问题
 
-- **R₅ 命名 final 定**: 五爻 (descriptive) vs 接/临/渐/进 (philosophical anchor)
+- **R₅ surface registry 同步**: 文档 default 已定为 內；Lean declaration / parser / generated root-language pages 尚待同步
 - **R₅ Lean type**: `Mian × Bool` vs 独立 `Cell32`
 - 印 / 投 atomic vs fancy (state-modifying)
 - R₃ phenomenology 三相 vs R₇/R₈ 二元之精确映射
-- 命名 final 定 (因/果/印/投 vs 印/投/始/终/持/期)
+- 因/果/印/投 的 generated root-language pages 与 parser 同步
 - R₉+ 是否存在 (无 candidate, 但 strict uniform 视角下 (Z/2)⁹ 数学存在)
 - Outer non-XOR 算子族之深化研究
 
@@ -787,7 +790,7 @@ R₈ Cell256 = (Z/2)⁸ 有两个等价主因式分解:
 | R₂ | R₂ | 4 | SiXiang |
 | R₃ | R₃ | 8 | Trigram |
 | (跳过) | **R₄** | 16 | Mian (Ben × Zheng) |
-| (跳过) | **R₅** | 32 | (provisional 五爻) |
+| (跳过) | **R₅** | 32 | 內 / Wuyao |
 | R₄ | **R₆** | 64 | Hexagram |
 | R₅ | **R₇** | 128 | Cell128 |
 | R₆ | **R₈** | 256 | Cell256 |

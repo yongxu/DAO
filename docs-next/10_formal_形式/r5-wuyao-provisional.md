@@ -2,8 +2,10 @@
 
 > 状态：v3 定本 (2026-05-11)
 > 父文档：[yi-RO-hierarchy.md](yi-RO-hierarchy.md) (R₀..R₈ strict-uniform doctrine, § 3.5)
-> 配套：[ox-notation.md](ox-notation.md) · [shi-v4.md](shi-v4.md) · [lift-project.md](lift-project.md) · [r7-yin-r8-guo.md](r7-yin-r8-guo.md)
+> 配套：[r4-r8-character-ladder.md](r4-r8-character-ladder.md) · [ox-notation.md](ox-notation.md) · [shi-v4.md](shi-v4.md) · [lift-project.md](lift-project.md) · [r7-yin-r8-guo.md](r7-yin-r8-guo.md)
 > 形式锚：[`Foundation/Hierarchy/R5_Wuyao.lean`](../../formal/SSBX/Foundation/Hierarchy/R5_Wuyao.lean)
+
+> 2026-05-13 注：本文保留 R₅ 现有 Lean carrier (`Wuyao = Mian × Bool`) 与旧「五爻 provisional」讨论。公开字 / reader grammar 的新一版决策见 [r4-r8-character-ladder.md](r4-r8-character-ladder.md)：R₅ surface 推荐为「內」，位值为「內本 / 內征」，算子为「易內」。这尚未等于 Lean declaration rename。
 
 ---
 

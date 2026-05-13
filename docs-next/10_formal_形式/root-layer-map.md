@@ -1,7 +1,7 @@
 > 状态：v3 定本 (2026-05-11)。
 > 父文档：[yi-RO-hierarchy.md](yi-RO-hierarchy.md)（R₀..R₈ 严格 (Z/2)ⁿ uniform 之 definitive）
 > Lean 入口：[`RHierarchy.lean`](../../formal/SSBX/Foundation/Hierarchy/RHierarchy.lean)（umbrella import）
-> 相关 v3 文档：[ox-notation.md](ox-notation.md) · [shi-v4.md](shi-v4.md) · [r5-wuyao-provisional.md](r5-wuyao-provisional.md) · [r7-yin-r8-guo.md](r7-yin-r8-guo.md) · [lift-project.md](lift-project.md) · [cell256-grid.md](cell256-grid.md)
+> 相关 v3 文档：[r4-r8-character-ladder.md](r4-r8-character-ladder.md) · [ox-notation.md](ox-notation.md) · [shi-v4.md](shi-v4.md) · [r5-wuyao-provisional.md](r5-wuyao-provisional.md) · [r7-yin-r8-guo.md](r7-yin-r8-guo.md) · [lift-project.md](lift-project.md) · [cell256-grid.md](cell256-grid.md)
 
 # 根层映射 root-layer-map · v3
 
@@ -17,7 +17,7 @@
 |---|---|---|---|
 | **R-轴**（layer index） | 严格 (Z/2)ⁿ uniform 层级，n = 0..8 | [`Foundation/Hierarchy/`](../../formal/SSBX/Foundation/Hierarchy/) | ✅ definitive (2026-05-10/11) |
 | **M-轴**（meta-content name） | 每层之内容名（Yao / SiXiang / Trigram / Mian / Wuyao / Hexagram / Cell128 / Cell256） | [`Foundation/Yi/`](../../formal/SSBX/Foundation/Yi/) + [`Foundation/Bagua/`](../../formal/SSBX/Foundation/Bagua/) | ✅ definitive |
-| **字根轴**（layer-character） | 每层 default 单字（义理读法） | [`Text/LayerCharacterMap.lean`](../../formal/SSBX/Text/LayerCharacterMap.lean) | ⚠ defaults subject to refinement (R₅ 五爻 + 因/果 命名 provisional) |
+| **字根轴**（layer-character） | 每层 default 单字（义理读法） | [`Text/LayerCharacterMap.lean`](../../formal/SSBX/Text/LayerCharacterMap.lean) + [r4-r8-character-ladder.md](r4-r8-character-ladder.md) | ⚠ R4..R8 surface 已有 v0.1 决议；Lean registry 尚待同步 |
 
 三轴**正交但同点**——同一 R-layer 之 M-name 与 character 是同一对象之不同 viewing。
 
@@ -31,11 +31,11 @@
 | **R₁** | 2 | 爻 / 两仪 (Yao) | 实 / 虚 (邵雍《观物外篇》) | [`R1_Yao.lean`](../../formal/SSBX/Foundation/Hierarchy/R1_Yao.lean) | [`Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) |
 | **R₂** | 4 | 四象 (SiXiang) | 春 / 夏 / 秋 / 冬 (邵雍先天图) | [`R2_SiXiang.lean`](../../formal/SSBX/Foundation/Hierarchy/R2_SiXiang.lean) | [`BaguaAlgebra.lean`](../../formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean) |
 | **R₃** | 8 | 八卦 (Trigram) | 健 / 悦 / 显 / 起 / 入 / 险 / 止 / 顺 (说卦回归) | [`R3_Trigram.lean`](../../formal/SSBX/Foundation/Hierarchy/R3_Trigram.lean) | [`Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) |
-| **R₄** | 16 | 面 (Mian) = Ben × Zheng | 物動間事 × 幾勢機時 (本×征 16-命) | [`R4_Mian.lean`](../../formal/SSBX/Foundation/Hierarchy/R4_Mian.lean) | [`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) |
-| **R₅** | 32 | 五爻 (Wuyao) = Mian × Bool | (provisional：暂用「五爻」描述名；候选 接 / 临 / 渐 / 进) | [`R5_Wuyao.lean`](../../formal/SSBX/Foundation/Hierarchy/R5_Wuyao.lean) | (与 alias 同文件) |
-| **R₆** | 64 | 重卦 (Hexagram) | 64 卦名（乾..坤） + 6 爻位字 改/化/变/临/主/极 | [`R6_Hexagram.lean`](../../formal/SSBX/Foundation/Hierarchy/R6_Hexagram.lean) | [`Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) |
-| **R₇** | 128 | 因卦 (Cell128) = Hexagram × YinBit | 因 (yīn) + 印 (yìn) — provisional | [`R7_YinHex.lean`](../../formal/SSBX/Foundation/Hierarchy/R7_YinHex.lean) | [`Cell128.lean`](../../formal/SSBX/Foundation/Bagua/Cell128.lean) |
-| **R₈** | 256 | 果卦 (Cell256) = Hexagram × Shi | 果 (guǒ) + 投 (tóu) + Shi V₄ {道, 已, 今, 未} — provisional | [`R8_GuoHex.lean`](../../formal/SSBX/Foundation/Hierarchy/R8_GuoHex.lean) | [`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) + [`Cell256Stratify.lean`](../../formal/SSBX/Foundation/Bagua/Cell256Stratify.lean) |
+| **R₄** | 16 | 面 (Mian) = Ben × Zheng | 動/行/化/流 · 萌/長/發/續 · 緣/通/會/系 · 兆/趨/變/史 | [`R4_Mian.lean`](../../formal/SSBX/Foundation/Hierarchy/R4_Mian.lean) | [`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) |
+| **R₅** | 32 | 五爻 / 內 (Wuyao) = Mian × Bool | 內本 / 內征；32 单字 alias 见 [r4-r8-character-ladder.md](r4-r8-character-ladder.md)；算子 易內 | [`R5_Wuyao.lean`](../../formal/SSBX/Foundation/Hierarchy/R5_Wuyao.lean) | (与 alias 同文件) |
+| **R₆** | 64 | 重卦 (Hexagram) | 重：本本 / 本征 / 征本 / 征征；64 卦名为强 alias；算子 易外 + 六位 flip 字 | [`R6_Hexagram.lean`](../../formal/SSBX/Foundation/Hierarchy/R6_Hexagram.lean) | [`Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) |
+| **R₇** | 128 | 因卦 (Cell128) = Hexagram × YinBit | 因：無因 / 有因；算子 印 | [`R7_YinHex.lean`](../../formal/SSBX/Foundation/Hierarchy/R7_YinHex.lean) | [`Cell128.lean`](../../formal/SSBX/Foundation/Bagua/Cell128.lean) |
+| **R₈** | 256 | 果卦 (Cell256) = Hexagram × Shi | 果：無果 / 有果；算子 投；Shi V₄ {道, 已, 未, 今} | [`R8_GuoHex.lean`](../../formal/SSBX/Foundation/Hierarchy/R8_GuoHex.lean) | [`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) + [`Cell256Stratify.lean`](../../formal/SSBX/Foundation/Bagua/Cell256Stratify.lean) |
 
 **严格 uniform 守则**：`|Rₙ| = 2ⁿ`，每加一个 binary axis = 一个独立 R-layer。无跳跃，无压缩。
 
@@ -54,7 +54,7 @@ R₃ Trigram  = Yao³
    ↓ liftR3toR4 / projR4toR3            （此处编码 Trigram + 1 yao → Mian）
 R₄ Mian     = Ben × Zheng               (R₃ 重卦传统跳过此层之物理 anchor)
    ↓ liftR4toR5 / projR5toR4
-R₅ Wuyao    = Mian × Bool               (provisional — 唯一无传统 Yi anchor)
+R₅ Wuyao    = Mian × Bool               (surface 讀「內」；Lean carrier 名仍 Wuyao)
    ↓ liftR5toR6 / projR6toR5
 R₆ Hexagram = Yao⁶                       (传统重卦)
    ↓ liftR6toR7 / projR7toR6
@@ -80,10 +80,10 @@ M-axis 是「内容侧的命名 backbone」——它给每个 R-layer 一个 ont
 | R₂ | 四象 / SiXiang | 系辞「两仪生四象」 | 2-qubit |
 | R₃ | 八卦 / Trigram | 系辞「四象生八卦」 | 3-qubit + V₄ outer |
 | R₄ | 面 / Mian = Ben × Zheng | 项目内 BenZheng 自创 | 4-qubit (本×征 16-命) |
-| R₅ | 五爻 / Wuyao | provisional descriptive | (transitional 5-qubit, 无传统 anchor) |
+| R₅ | 五爻 / 內 / Wuyao | surface 讀「內」；Lean carrier 名仍 Wuyao | transitional 5-qubit |
 | R₆ | 重卦 / Hexagram | 系辞「重卦」 | 6-qubit + V₄ outer |
-| R₇ | 因卦 / Cell128 | 因 (yīn, past-trace bit) — provisional | 7-qubit + past-cone marker |
-| R₈ | 果卦 / Cell256 | 果 (guǒ, future-projection bit) + Shi V₄ — provisional | 8-qubit + future-cone, V₄ Klein 闭合 |
+| R₇ | 因卦 / Cell128 | 因 (yīn, past-trace bit) + 印 | 7-qubit + past-cone marker |
+| R₈ | 果卦 / Cell256 | 果 (guǒ, future-projection bit) + 投 + Shi V₄ | 8-qubit + future-cone, V₄ Klein 闭合 |
 
 注：R₄ Mian 与 R₅ Wuyao 在 v2 之前隐式跳过，v3 重号下显式纳入。R₅ 是**唯一无传统 Yi anchor** 之层（mathematical 存在但 philosophical 上未独立刻画）。
 
@@ -91,20 +91,20 @@ M-axis 是「内容侧的命名 backbone」——它给每个 R-layer 一个 ont
 
 ## 4. 字根轴：layer-character defaults
 
-**defaults subject to refinement** — 部分字（特别是 R₅ 五爻、R₇ 因/印、R₈ 果/投/Shi 之命名）属于 provisional naming，待 final 定。
+R4..R8 的公开字 v0.1 见 [r4-r8-character-ladder.md](r4-r8-character-ladder.md)。这里记录的是 surface default；Lean declaration / parser registry 尚待同步。
 
 | Layer | 元素层 | 算子层 | Lean ground truth |
 |---|---|---|---|
 | R₁ | 阳/阴 → **实/虚** (essence) | 易 (yi / Yao.neg) | `Yao.essenceChar` |
 | R₂ | 太阳/少阴/少阳/太阴 → **夏/秋/春/冬** | (lift R₁) | `SiXiang.seasonChar` |
 | R₃ | 乾兑离震巽坎艮坤 → **健/悦/显/起/入/险/止/顺** | 改/化/变（y₁/y₂/y₃ flip） + 错/综/互 | `Trigram.virtueChar` / `Trigram.literalChar` |
-| R₄ | (本 × 征 16-命; 暂无单字 default) | (lift R₃ + 第 4 yao) | (BenZheng 16-命 in [`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean)) |
-| R₅ | (无传统 anchor; provisional) | flip5 (toggle 第 5 yao) | [`R5_Wuyao.lean`](../../formal/SSBX/Foundation/Hierarchy/R5_Wuyao.lean) |
-| R₆ | 64 卦名 | 改/化/变/**临/主/极** (y₁..y₆ flip) + 错/综/互/错综 | `flipPositionChar` |
+| R₄ | 面之 16 字：動..史 | (lift R₃ + 第 4 yao) | (BenZheng 16-命 in [`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean)) |
+| R₅ | 內本 / 內征 + R4 面名；32 单字 alias | 易內 / flip5 (toggle 第 5 bit) | [`R5_Wuyao.lean`](../../formal/SSBX/Foundation/Hierarchy/R5_Wuyao.lean) |
+| R₆ | 重：本本 / 本征 / 征本 / 征征 + R4 面名；64 卦名 alias | 易外；另有 改/化/变/**临/主/极** (y₁..y₆ flip) + 错/综/互/错综 | `flipPositionChar` + [`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) quadrant |
 | R₇ | (Hexagram + 因 bit) | **印 (yìn)** = toggle 因 | [`Cell128.lean`](../../formal/SSBX/Foundation/Bagua/Cell128.lean) `yin` |
 | R₈ | (Hexagram + Shi V₄) | **投 (tóu)** = toggle 果; Shi-side 错/综/错综 | [`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) `tou` + Shi V₄ ops |
 
-**provisional flag 含义**：R₅ 命名（五爻 vs 接/临/渐/进）以及 R₇/R₈ 之因/果/印/投（vs 印/投/始/终/持/期）在 [pending.md](pending.md) 列为待 final 决定。
+**同步边界**：R4..R8 的公开字已先在文档层收口；`Text/LayerCharacterMap.lean`、root-language generated pages、WenScript / Native parser 仍需后续同步。
 
 ---
 
@@ -177,6 +177,7 @@ abbrev R8 := Cell256      -- = Hexagram × Shi
 | [yi-RO-hierarchy.md](yi-RO-hierarchy.md) | **父文档** — R₀..R₈ definitive，本文 §1 主表是其结构性投影 |
 | [yi-calculus-theorem.md](yi-calculus-theorem.md) | Theorems A–K — 严格证明 R₀..R₈ closure |
 | [layer-axis-graph.md](layer-axis-graph.md) | Mermaid 图谱 — 本文 §1 之可视化 |
+| [r4-r8-character-ladder.md](r4-r8-character-ladder.md) | R4..R8 结构字梯、reader grammar、备选字与形式逻辑读法 |
 | [position-operator-tree.md](position-operator-tree.md) | 8 yao 位置之算子树 |
 | [ox-notation.md](ox-notation.md) | `OX["xxxxxxxx"]` 8-char Cell256 字面量 macro |
 | [shi-v4.md](shi-v4.md) | Shi V₄ {道, 已, 今, 未} 详解 |
