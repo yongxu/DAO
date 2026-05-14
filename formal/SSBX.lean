@@ -277,3 +277,11 @@ import SSBX.Foundation.Modern.UnityBoundary
 import SSBX.Foundation.Modern.KnowableBoundary
 import SSBX.Foundation.Modern.KeBoundary
 import SSBX.Foundation.Modern.QuantumSpacetime
+
+-- v0.6 R-Family tower (per wen-algebra.md v0.6 + v4-foundation.md v0.5):
+-- language-independent core (R N := Fin N → Bool), specialty modules
+-- for R 4 / R 8, and application-layer Atlas overlays.
+import SSBX.Foundation.R
+import SSBX.Foundation.R4
+import SSBX.Foundation.R8
+import SSBX.Foundation.Atlas
