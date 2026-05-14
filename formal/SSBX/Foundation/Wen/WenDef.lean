@@ -58,9 +58,9 @@ identity here (this is the typed-λ surface; only types change). Their
 operational semantics are defined elsewhere (`WenDefEval`); under V₄ both
 collapse to the `Shi.complement` involution because V₄ involutions are self-inverse.
 -/
-import SSBX.Foundation.Atlas.YiLegacy.Yi
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.R8
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaWenSpec
+import SSBX.Foundation.Atlas.Yi.Classical.Core.Yi
+import SSBX.Foundation.Atlas.Yi.Classical.Cells.R8
+import SSBX.Foundation.Atlas.Yi.Classical.Computation.BaguaWenSpec
 import SSBX.Text.OperatorSignatures
 
 namespace SSBX.Foundation.Wen.WenDef

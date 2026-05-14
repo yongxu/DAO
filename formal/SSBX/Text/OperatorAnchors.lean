@@ -1,5 +1,5 @@
 import SSBX.Text.WenyanOperators
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaWenSpec
+import SSBX.Foundation.Atlas.Yi.Classical.Computation.BaguaWenSpec
 
 /-!
 # OperatorAnchors — 文言算子到八卦系统的锚点

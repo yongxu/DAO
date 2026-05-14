@@ -1,15 +1,13 @@
 /-
 # GodelLi — 理之不完备 · 哥德尔在 192
 
-> **[Bagua LEGACY — relocated 2026-05-15 (Phase γ)]** Original location
-> `Foundation/Bagua/GodelLi.lean` retired; content preserved here under
-> `Atlas/YiLegacy/Bagua/`. The canonical diagonal theorem on the new
-> stack is at [`Foundation/Atlas/Yi/Diagonal.lean`](../../Yi/Diagonal.lean)
-> — 647 LOC, anchored on Wen/Core (language-independent R 8 TM), no
-> dependency on this file's `kleene_recursion_axiom`. This file is
-> preserved because the Wenyan parser stack still emits BaguaTuring's
-> YiInstr; the `kleene_recursion_axiom` here is the load-bearing axiom
-> for that stack's universal interpreter target.
+> **[Atlas/Yi/Classical/Diagonal — 2026-05-15 (Phase γ)]** This file
+> proves the diagonal incompleteness theorem on the classical
+> axiomatization using the load-bearing `kleene_recursion_axiom`.
+> The R-Family-side canonical diagonal theorem is at
+> [`Foundation/Atlas/Yi/Diagonal.lean`](../../Diagonal.lean)
+> — 647 LOC, anchored on Wen/Core (language-independent R 8 TM),
+> uses `KleeneInverter` as a `Prop` hypothesis rather than an axiom.
 
 Companion document: `义理/J_理之不完备_哥德尔在192.md`
 
@@ -38,7 +36,7 @@ substrate established in `Cell192.lean` and `BaguaTuring.lean`).
 
 This is the precise formal version of 「道可道，非常道」.
 -/
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaTuring
+import SSBX.Foundation.Atlas.Yi.Classical.Computation.BaguaTuring
 
 namespace SSBX.Foundation.Bagua.GodelLi
 

@@ -18,8 +18,8 @@ This file gives the **finite, no-Mathlib** core of the **类映** 衍 file:
 本文件仅依 Lean stdlib + Yi.lean，不引入 Mathlib `CategoryTheory`。
 所有结构 0 sorry / 0 axiom；高阶范畴 / Topos / 模型范畴 等 future work。
 -/
-import SSBX.Foundation.Atlas.YiLegacy.Yi
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaAlgebra
+import SSBX.Foundation.Atlas.Yi.Classical.Core.Yi
+import SSBX.Foundation.Atlas.Yi.Classical.Algebra.BaguaAlgebra
 
 namespace SSBX.Foundation.Eight.LeiYing
 

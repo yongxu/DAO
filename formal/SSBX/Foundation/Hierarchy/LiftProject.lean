@@ -36,11 +36,11 @@ choice of which 4 enum tags map to which Yao² pair (decisions made via
 R₇ = Hexagram × YinBit, R₈ = Hexagram × Shi where Shi ≅ YinBit × GuoBit.
 The R₇ → R₈ lift attaches a GuoBit; project drops it via `Shi.toYinGuo`.
 -/
-import SSBX.Foundation.Atlas.YiLegacy.Yi
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaAlgebra
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.BenZheng
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.R7
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.R8
+import SSBX.Foundation.Atlas.Yi.Classical.Core.Yi
+import SSBX.Foundation.Atlas.Yi.Classical.Algebra.BaguaAlgebra
+import SSBX.Foundation.Atlas.Yi.Classical.Algebra.BenZheng
+import SSBX.Foundation.Atlas.Yi.Classical.Cells.R7
+import SSBX.Foundation.Atlas.Yi.Classical.Cells.R8
 import SSBX.Foundation.Hierarchy.R5_Wuyao
 
 namespace SSBX.Foundation.Hierarchy.LiftProject

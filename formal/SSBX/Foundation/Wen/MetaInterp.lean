@@ -66,7 +66,7 @@ admissible as an "unexpected" case in `decCounter` / `decHaltedFlag`.
 scratch（放 tag、读取参数等）；execute 结束前必须恢复为 sim.step.cur。
 -/
 import SSBX.Foundation.Wen.WenyanSelfInterp
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.KleeneInternal
+import SSBX.Foundation.Atlas.Yi.Classical.Diagonal.KleeneInternal
 
 namespace SSBX.Foundation.Wen.MetaInterp
 

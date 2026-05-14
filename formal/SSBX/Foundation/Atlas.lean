@@ -28,20 +28,38 @@ convenience and to gather the available bindings.
                      (Yao = R 1, Trigram = R 3, Hexagram = R 6,
                      Shi = R 2, 8 Bagua + 64 hexagrams + V₄ ops).
 
-## Yi legacy (Phase γ — relocated 2026-05-15)
+## Atlas/Yi/Classical/ — co-equal classical axiomatization (Phase γ)
 
-The original `Foundation/Yi/` and `Foundation/Bagua/` directories
-were retired under v0.6 doctrine.  Their content was relocated to
-`Atlas/YiLegacy/` (preserved namespace `SSBX.Foundation.Yi` and
-`SSBX.Foundation.Bagua` internally — only the file paths moved) so
-that the legacy `Wen` parser / interpreter stack (~50 consumer files,
-using `inductive Yao` and `structure Hexagram`) continues to build
-on the legacy types while new code uses the clean `Atlas/Yi/` overlay
-(`Yao := Bool`, `Hexagram := R 6`) anchored on the R-Family core.
+Per `wen-algebra` v0.6 the project now carries **two co-equal Yi
+Atlas overlays**:
 
-`YiLegacy/` is **not** included in this umbrella; consumers continue
-to import the specific modules they need (e.g.
-`import SSBX.Foundation.Atlas.YiLegacy.Yi`).
+* `Atlas/Yi/{Names, Bagua, Hexagrams, Operators, ShiV4, Diagonal,
+  DaoSource}` — **R-Family axiomatization** (`Yao := Bool`,
+  `Hexagram := R 6 = Fin 6 → Bool`).  Doctrinally aligned with v0.6;
+  integrates with R-Family bilinear algebra + Squaring tower;
+  `Diagonal` uses `KleeneInverter` as a `Prop` hypothesis, not an
+  axiom.
+
+* `Atlas/Yi/Classical/` — **classical axiomatization**
+  (`inductive Yao`, `structure Hexagram { positions : Fin 6 → Yao }`).
+  Supports `cases h with | mk y₁..y₆ =>` exhaustive splits used by
+  ~50 Wenyan parser / interpreter consumer files and by the
+  load-bearing `kleene_recursion_axiom`.  Organized into 5 semantic
+  sub-clusters:
+    * `Classical/Core/`        — Yi.lean + YiCore.lean (basic types & ops)
+    * `Classical/Algebra/`     — BaguaAlgebra, BenZheng, CuoInvariance, Newman
+    * `Classical/Cells/`       — R7, R8, R8Stratify (Hex × YinBit, Hex × Shi)
+    * `Classical/Computation/` — BaguaTuring, BaguaWenSpec, ChunkedDecide,
+                                 FuelDiscipline
+    * `Classical/Diagonal/`    — GodelLi, KleeneInternal
+
+Both formalizations are mathematically valid; the long-term direction
+per v0.6 is the R-Family side, with `Classical/` preserved for theorems
+and consumers depending on the inductive encoding.
+
+`Classical/` is **not** included in this umbrella; consumers explicitly
+opt in to specific modules (e.g.
+`import SSBX.Foundation.Atlas.Yi.Classical.Core.Yi`).
 -/
 
 import SSBX.Foundation.Atlas.Pauli

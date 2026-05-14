@@ -1,4 +1,4 @@
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaTuring
+import SSBX.Foundation.Atlas.Yi.Classical.Computation.BaguaTuring
 
 /-!
 # OperatorInstructionSemantics — L0 instruction semantic clause ledger

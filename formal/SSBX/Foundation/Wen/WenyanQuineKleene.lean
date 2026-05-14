@@ -14,7 +14,7 @@ The key boundary is intentional:
 No full Kleene quine construction is claimed here.
 -/
 import SSBX.Foundation.Wen.WenyanQuineSpec
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.KleeneInternal
+import SSBX.Foundation.Atlas.Yi.Classical.Diagonal.KleeneInternal
 import SSBX.Foundation.Wen.WenyanSelfInterp
 
 namespace SSBX.Foundation.Wen.WenyanQuineKleene

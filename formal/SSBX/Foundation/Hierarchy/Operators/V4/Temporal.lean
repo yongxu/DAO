@@ -6,7 +6,7 @@ The underlying R8 carrier is still named `Shi`; the V4 architecture exposes it
 through English structural names.
 -/
 
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.R8
+import SSBX.Foundation.Atlas.Yi.Classical.Cells.R8
 import SSBX.Foundation.Hierarchy.Operators.V4.Core
 
 namespace SSBX.Foundation.Hierarchy.Operators

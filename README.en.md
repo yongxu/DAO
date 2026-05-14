@@ -146,7 +146,7 @@ formal/                            Lean 4 formalisation (lake package = ssbx; @[
 
 | Claim | File |
 |---|---|
-| Cell256 = R₈ = (Z/2)⁸ concrete realisation, full 256 enumeration | `formal/SSBX/Foundation/Atlas/YiLegacy/Bagua/Cell256.lean § Cell256.all_length, mem_all` |
+| Cell256 = R₈ = (Z/2)⁸ concrete realisation, full 256 enumeration | `formal/SSBX/Foundation/Atlas/Yi/Classical/Bagua-cluster/Cell256.lean § Cell256.all_length, mem_all` |
 | Phase A (Z/2)⁸ algebra (Add/Zero/Neg/Sub + Cayley ι/ε + yin/tou mask) | same file § 7 / § 8 / § 9 |
 | Shi V₄ Klein + ↔ (yin, guo) ∈ Bool² bijection | same file § 1 |
 | xuGua (King Wen) 64-hexagram order + length 64 + head 乾 / last 未济 | same file § 4 / § 5 |
@@ -157,11 +157,11 @@ formal/                            Lean 4 formalisation (lake package = ssbx; @[
 | `OX["oooooooo"]..OX["xxxxxxxx"]` literal macro + dao = origin sanity | `formal/SSBX/Foundation/Notation/OXNotation.lean` |
 | L-tower / V₄ tensor / L∞ final coalgebra after R₈ closure | `formal/SSBX/Foundation/Squaring/{V4Tensor,L1,RetractTower,StreamCarrier,ProfiniteLimit}.lean` |
 | Cell256OperatorComplete (any a→b has f) + self-description closure | `formal/SSBX/Truth/SelfDescription.lean § cell256_operator_complete` |
-| R8_complete bundle (R₀..R₈ closure, native_decide + propext) | `formal/SSBX/Foundation/Atlas/YiLegacy/Bagua/Cell256Stratify.lean` |
-| BenZheng: 4 Ben / 4 Zheng / Mian = R₄ / Quadrant 4-decomposition | `formal/SSBX/Foundation/Atlas/YiLegacy/Bagua/BenZheng.lean` |
+| R8_complete bundle (R₀..R₈ closure, native_decide + propext) | `formal/SSBX/Foundation/Atlas/Yi/Classical/Bagua-cluster/Cell256Stratify.lean` |
+| BenZheng: 4 Ben / 4 Zheng / Mian = R₄ / Quadrant 4-decomposition | `formal/SSBX/Foundation/Atlas/Yi/Classical/Bagua-cluster/BenZheng.lean` |
 | dao-li bifurcation cross-cutting | `formal/SSBX/Foundation/Modern/DaoLi.lean` |
-| Micro-kernel «加 + 一» — two-character closure | `formal/SSBX/Foundation/Atlas/YiLegacy/YiCore.lean` |
-| 12-instr ISA Turing completeness + dao-judge | `formal/SSBX/Foundation/Atlas/YiLegacy/Bagua/BaguaTuring.lean` + `GodelLi.lean` |
+| Micro-kernel «加 + 一» — two-character closure | `formal/SSBX/Foundation/Atlas/Yi/Classical/YiCore.lean` |
+| 12-instr ISA Turing completeness + dao-judge | `formal/SSBX/Foundation/Atlas/Yi/Classical/Bagua-cluster/BaguaTuring.lean` + `GodelLi.lean` |
 | Path 丙 self-compilation / self-validation (M1–M4-甲) | `formal/SSBX/Foundation/Wen/{WenyanParser, WenEval, WenDef, WenDefEval, WenDefCompile, WenyanReflect, WenyanSelfHost, WenyanSelfInterp, DaoSource}.lean` |
 | MetaInterp Phase 2.3 (12/12 dispatch + execute + universal compose) | `formal/SSBX/Foundation/Wen/MetaInterp/*` (16 files) |
 | 45-layer doctrine in-source | `formal/SSBX/Foundation/Wen/Kernel.lean` |

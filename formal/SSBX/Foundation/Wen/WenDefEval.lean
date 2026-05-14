@@ -39,9 +39,9 @@ Value :=
 0 sorry / 0 axiom. evaluator 为 fuel-bounded 总函数 + native_decide 见证 PoC.
 -/
 import SSBX.Foundation.Wen.WenDef
-import SSBX.Foundation.Atlas.YiLegacy.YiCore
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaAlgebra
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.R8
+import SSBX.Foundation.Atlas.Yi.Classical.Core.YiCore
+import SSBX.Foundation.Atlas.Yi.Classical.Algebra.BaguaAlgebra
+import SSBX.Foundation.Atlas.Yi.Classical.Cells.R8
 
 namespace SSBX.Foundation.Wen.WenDefEval
 

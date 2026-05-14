@@ -110,8 +110,8 @@ KernelDanZi → MonadRoot.CoreAtom (9 共有 字: 一/元/动/行/生/仁/理/�
 
 import SSBX.Foundation.Core.MonadRoot
 import SSBX.Foundation.Wen.Operators
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.R7
-import SSBX.Foundation.Atlas.YiLegacy.Yi
+import SSBX.Foundation.Atlas.Yi.Classical.Cells.R7
+import SSBX.Foundation.Atlas.Yi.Classical.Core.Yi
 
 namespace SSBX.Foundation.Wen.Kernel
 

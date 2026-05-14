@@ -1,4 +1,4 @@
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.R8
+import SSBX.Foundation.Atlas.Yi.Classical.Cells.R8
 
 /-!
 # OperatorReachabilitySemantics — seven generators over `R8`

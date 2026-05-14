@@ -44,7 +44,7 @@ they consume `Instr` via `translate.flatMap`.
 -/
 
 import SSBX.Foundation.Wen.Core
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaTuring
+import SSBX.Foundation.Atlas.Yi.Classical.Computation.BaguaTuring
 
 namespace SSBX.Foundation.Wen.Core
 

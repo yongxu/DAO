@@ -512,7 +512,7 @@ def operator_index(root: Path) -> tuple[dict, str]:
 
 
 def cell192_transition_index(root: Path) -> tuple[dict, str]:
-    cell_path = root / "formal/SSBX/Foundation/Atlas/YiLegacy/Bagua/Cell192.lean"
+    cell_path = root / "formal/SSBX/Foundation/Atlas/Yi/Classical/Bagua-cluster/Cell192.lean"
     reach_path = root / "formal/SSBX/Text/OperatorReachabilitySemantics.lean"
     reach_text = read(reach_path)
 
@@ -661,8 +661,8 @@ def cell192_transition_index(root: Path) -> tuple[dict, str]:
 
 
 def cell192_tree_index(root: Path) -> tuple[dict, str]:
-    yi_path = root / "formal/SSBX/Foundation/Atlas/YiLegacy/Yi.lean"
-    cell_path = root / "formal/SSBX/Foundation/Atlas/YiLegacy/Bagua/Cell192.lean"
+    yi_path = root / "formal/SSBX/Foundation/Atlas/Yi/Classical/Yi.lean"
+    cell_path = root / "formal/SSBX/Foundation/Atlas/Yi/Classical/Bagua-cluster/Cell192.lean"
 
     bits = [("1", "阳"), ("0", "阴")]
     shis = [("JI", "已"), ("JIN", "今"), ("WEI", "未")]

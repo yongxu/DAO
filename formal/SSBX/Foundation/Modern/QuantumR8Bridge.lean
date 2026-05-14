@@ -25,7 +25,7 @@ module.  (A future Atlas/Yi migration may rebase this on the parametric
 import Mathlib.Algebra.Group.Prod
 import Mathlib.Data.Fintype.Basic
 import SSBX.Foundation.Modern.Quantum
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.R8
+import SSBX.Foundation.Atlas.Yi.Classical.Cells.R8
 
 namespace SSBX.Foundation.Modern.QuantumR8Bridge
 

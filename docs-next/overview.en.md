@@ -14,14 +14,14 @@ The minimal algebraic kernel of *Yi* (易) is the strict (Z/2)ⁿ uniform R₀..
 | R-index | size = 2ⁿ | Name (CN) | Name (EN) | New atom this layer | Lean carrier |
 |---|---|---|---|---|---|
 | R₀ | 1 | 太极 | Taiji | (Unit) | (Lean stdlib `Unit`) |
-| R₁ | 2 | 爻 / 两仪 | Yao | neg (mask `x`) | [`Yi.lean`](../formal/SSBX/Foundation/Atlas/YiLegacy/Yi.lean) |
-| R₂ | 4 | 四象 | SiXiang | (lift R₁) | [`BaguaAlgebra.lean`](../formal/SSBX/Foundation/Atlas/YiLegacy/Bagua/BaguaAlgebra.lean) |
-| R₃ | 8 | 八卦 | Trigram | dong/hua/bian + cuo/zong/hu | [`Yi.lean`](../formal/SSBX/Foundation/Atlas/YiLegacy/Yi.lean) |
-| R₄ | 16 | 面 (Mian) | Mian = Ben × Zheng | 4-th binary axis | [`BenZheng.lean`](../formal/SSBX/Foundation/Atlas/YiLegacy/Bagua/BenZheng.lean) |
+| R₁ | 2 | 爻 / 两仪 | Yao | neg (mask `x`) | [`Yi.lean`](../formal/SSBX/Foundation/Atlas/Yi/Classical/Yi.lean) |
+| R₂ | 4 | 四象 | SiXiang | (lift R₁) | [`BaguaAlgebra.lean`](../formal/SSBX/Foundation/Atlas/Yi/Classical/Bagua-cluster/BaguaAlgebra.lean) |
+| R₃ | 8 | 八卦 | Trigram | dong/hua/bian + cuo/zong/hu | [`Yi.lean`](../formal/SSBX/Foundation/Atlas/Yi/Classical/Yi.lean) |
+| R₄ | 16 | 面 (Mian) | Mian = Ben × Zheng | 4-th binary axis | [`BenZheng.lean`](../formal/SSBX/Foundation/Atlas/Yi/Classical/Bagua-cluster/BenZheng.lean) |
 | R₅ | 32 | 五爻 (provisional) | Wuyao | 5-th binary axis | [`R5_Wuyao.lean`](../formal/SSBX/Foundation/Hierarchy/R5_Wuyao.lean) |
-| R₆ | 64 | 重卦 | Hexagram | outer 3 yao flips + outer V₄ | [`Yi.lean`](../formal/SSBX/Foundation/Atlas/YiLegacy/Yi.lean) |
-| R₇ | 128 | 因卦 (Cell128) | YinHex | 因 (yīn) bit + 印 toggle | [`Cell128.lean`](../formal/SSBX/Foundation/Atlas/YiLegacy/Bagua/Cell128.lean) |
-| R₈ | 256 | 果卦 (Cell256) | GuoHex | 果 (guǒ) bit + 投 + Shi V₄ emerge | [`Cell256.lean`](../formal/SSBX/Foundation/Atlas/YiLegacy/Bagua/Cell256.lean) |
+| R₆ | 64 | 重卦 | Hexagram | outer 3 yao flips + outer V₄ | [`Yi.lean`](../formal/SSBX/Foundation/Atlas/Yi/Classical/Yi.lean) |
+| R₇ | 128 | 因卦 (Cell128) | YinHex | 因 (yīn) bit + 印 toggle | [`Cell128.lean`](../formal/SSBX/Foundation/Atlas/Yi/Classical/Bagua-cluster/Cell128.lean) |
+| R₈ | 256 | 果卦 (Cell256) | GuoHex | 果 (guǒ) bit + 投 + Shi V₄ emerge | [`Cell256.lean`](../formal/SSBX/Foundation/Atlas/Yi/Classical/Bagua-cluster/Cell256.lean) |
 
 Anchors: [`yi-RO-hierarchy.md`](10_formal_形式/yi-RO-hierarchy.md) §3 (definitive). Each Rₙ is exactly 2ⁿ — strict uniform, no jumps, no gaps. The R-index naming alias shims (`R0_Taiji.lean` .. `R8_GuoHex.lean`) and umbrella ([`RHierarchy.lean`](../formal/SSBX/Foundation/Hierarchy/RHierarchy.lean)) provide reader-friendly navigation.
 
@@ -48,7 +48,7 @@ The Shi V₄ is **not** an R₇ or R₈ single-layer atom — it is the **double
 - **Lift / Project uniform API**: [`LiftProject.lean`](../formal/SSBX/Foundation/Hierarchy/LiftProject.lean) (8 R-layer pairs, each with `proj_lift_id_Rn` retract lemma).
 - **OX 8-char literal macro**: [`OXNotation.lean`](../formal/SSBX/Foundation/Notation/OXNotation.lean) provides `OX["xxxxxxxx"]` (8-char `o`/`x` string → Cell256).
 - **Self-description witness**: [`SelfDescription.lean`](../formal/SSBX/Truth/SelfDescription.lean) — `Cell256OperatorComplete` (the V₄ extension of the legacy 192-cell version).
-- **R₈ closure bundle**: `R8_complete` in [`Cell256Stratify.lean`](../formal/SSBX/Foundation/Atlas/YiLegacy/Bagua/Cell256Stratify.lean) — depends only on `propext` + `native_decide`.
+- **R₈ closure bundle**: `R8_complete` in [`Cell256Stratify.lean`](../formal/SSBX/Foundation/Atlas/Yi/Classical/Bagua-cluster/Cell256Stratify.lean) — depends only on `propext` + `native_decide`.
 
 ## Current verification policy
 

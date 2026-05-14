@@ -33,8 +33,8 @@ R₇ atomic 算子: **印 (yìn)** = toggle 因 bit (Z/2 involution).
 - `epsAtOrigin` = inverse-at-origin retraction
 - 印 (imprint) = (· ⊕ imprint_mask) where imprint_mask = (heaven, true) = `oooooooi`
 -/
-import SSBX.Foundation.Atlas.YiLegacy.Yi
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaAlgebra
+import SSBX.Foundation.Atlas.Yi.Classical.Core.Yi
+import SSBX.Foundation.Atlas.Yi.Classical.Algebra.BaguaAlgebra
 
 namespace SSBX.Foundation.Bagua.R7
 

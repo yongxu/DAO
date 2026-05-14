@@ -28,8 +28,8 @@ A handful of small smoke tests + 2-3 named transitions (e.g. 乾 → 坤).
 -/
 
 import SSBX.Foundation.Lang.Core
-import SSBX.Foundation.Atlas.YiLegacy.Yi
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.R7
+import SSBX.Foundation.Atlas.Yi.Classical.Core.Yi
+import SSBX.Foundation.Atlas.Yi.Classical.Cells.R7
 
 namespace SSBX.Foundation.Lang.L6
 

@@ -1,5 +1,5 @@
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.R8
-import SSBX.Foundation.Atlas.YiLegacy.YiCore
+import SSBX.Foundation.Atlas.Yi.Classical.Cells.R8
+import SSBX.Foundation.Atlas.Yi.Classical.Core.YiCore
 import SSBX.Text.OperatorSignatures
 
 /-!

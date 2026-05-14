@@ -60,7 +60,7 @@ This file is the **formal scaffolding** that, once the primitives are proven
 (future work), makes the axiom removal mechanical.
 -/
 import SSBX.Foundation.Wen.WenyanSelfInterp
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.GodelLi
+import SSBX.Foundation.Atlas.Yi.Classical.Diagonal.GodelLi
 
 namespace SSBX.Foundation.Bagua.KleeneInternal
 

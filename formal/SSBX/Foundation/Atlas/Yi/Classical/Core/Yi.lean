@@ -1,17 +1,25 @@
 /-
 # Yi-Calculus — formal extraction of 周易 's structure
 
-> **[Yi LEGACY — relocated 2026-05-15 (Phase γ)]** Original location
-> `Foundation/Yi/Yi.lean` retired; content preserved here under the
-> `Atlas/YiLegacy/` namespace as a doctrinally-positioned Atlas overlay.
-> New code MUST use [`Foundation/Atlas/Yi/`](../Yi/) (clean R-Family
-> overlay with `Yao := Bool`, `Hexagram := R 6`, etc.) and
-> [`Foundation/Wen/Core/`](../../Wen/Core/) (language-independent TM
-> on R 8). This file is preserved for downstream `Wen` parser stack
-> consumers (~50 files) using the legacy `inductive Yao` /
-> `structure Hexagram` types. Imports inside the consumer files still
-> name the legacy Lean namespaces (e.g. `SSBX.Foundation.Yi`); only the
-> `import` paths were updated to `SSBX.Foundation.Atlas.YiLegacy.*`.
+> **[Atlas/Yi/Classical — parallel formalization, 2026-05-15 (Phase γ)]**
+> This file holds the **classical Yi axiomatization**: `inductive Yao`
+> (yang/yin constructors) + `structure Hexagram` (positions field).
+> It is one of two co-equal Yi Atlas overlays preserved under v0.6:
+>
+>   * `Atlas/Yi/{Names, Bagua, Hexagrams, Operators, ShiV4, ...}` —
+>     **R-Family axiomatization** (`Yao := Bool`, `Hexagram := R 6`).
+>     Doctrinally aligned with `wen-algebra` v0.6 §9 (Atlas separation)
+>     and connects to R-Family bilinear algebra + Squaring tower.
+>
+>   * `Atlas/Yi/Classical/{Core, Algebra, Cells, Computation, Diagonal}/`
+>     — **classical axiomatization** (this file).  Original Lean
+>     encoding; supports `cases h with | mk y₁..y₆ =>` exhaustive splits
+>     used by ~50 Wenyan parser / interpreter consumer files and by the
+>     load-bearing `kleene_recursion_axiom` (Diagonal/GodelLi.lean).
+>
+> Both formalizations are mathematically valid; the long-term direction
+> per v0.6 is the R-Family side, with Classical/ preserved for theorems
+> and consumers depending on the inductive encoding.
 
   Per spec yi-calculus.md. Not modern logic mapped onto 周易, but the
   formal-system structure embedded in 周易 made explicit.

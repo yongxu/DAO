@@ -1,14 +1,14 @@
 /-
 # BaguaTuring — 文程序、解释器、是道非道判机
 
-> **[Bagua LEGACY — relocated 2026-05-15 (Phase γ)]** Original location
-> `Foundation/Bagua/BaguaTuring.lean` retired; content preserved here
-> under `Atlas/YiLegacy/Bagua/`. New code MUST use
-> [`Foundation/Wen/Core/`](../../../Wen/Core/) (language-independent
-> R 8-based interpreter). Bridge YiInstr ↔ Core.Instr is in
-> [`Foundation/Wen/Core/YiInstrBridge.lean`](../../../Wen/Core/YiInstrBridge.lean).
-> The headline DaoSource and Diagonal theorems are now anchored on
-> Wen/Core via `Atlas/Yi/{DaoSource,Diagonal}.lean`.
+> **[Atlas/Yi/Classical/Computation — 2026-05-15 (Phase γ)]** This file
+> provides the YiInstr 12-instruction ISA + interpreter operating on
+> classical Hexagram × Shi.  The R-Family TM (language-independent on
+> R 8) lives in [`Foundation/Wen/Core/`](../../../../Wen/Core/); the
+> bridge YiInstr ↔ Wen.Core.Instr is in
+> [`Foundation/Wen/Core/YiInstrBridge.lean`](../../../../Wen/Core/YiInstrBridge.lean).
+> Headline DaoSource and Diagonal theorems on the R-Family side are at
+> [`Atlas/Yi/{DaoSource, Diagonal}.lean`](../../).
 
 The interpreter for 文 (wenyan-encoded YiInstr programs) operating on R8.
 
@@ -52,7 +52,7 @@ emitted by `daoJudgeProg`; correctness theorems remain stated in terms of
   These four primitives give universal computation. Specifically, any Minsky
   machine can be encoded by translating its instructions into YiInstr.
 -/
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.R8
+import SSBX.Foundation.Atlas.Yi.Classical.Cells.R8
 
 namespace SSBX.Foundation.Bagua.BaguaTuring
 

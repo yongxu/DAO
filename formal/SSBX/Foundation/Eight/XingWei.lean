@@ -16,8 +16,8 @@ on top of `BaguaAlgebra`'s `hammingDist`.
 本文件给出 **理层** 之具体度量与位结构。所证之三角不等式、对称性、等距性
 皆是关于具体类型 `Trigram`/`Hexagram` 之 finitary 命题，0 sorry / 0 公理。
 -/
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaAlgebra
-import SSBX.Foundation.Atlas.YiLegacy.Yi
+import SSBX.Foundation.Atlas.Yi.Classical.Algebra.BaguaAlgebra
+import SSBX.Foundation.Atlas.Yi.Classical.Core.Yi
 
 namespace SSBX.Foundation.Eight.XingWei
 

@@ -8,7 +8,7 @@ anchor, an R8-visible meaning, and an optional YiInstr execution target.
 -/
 
 import SSBX.Foundation.Wen.RootOperator
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaTuring
+import SSBX.Foundation.Atlas.Yi.Classical.Computation.BaguaTuring
 
 namespace SSBX.Foundation.Wen.RootWord
 

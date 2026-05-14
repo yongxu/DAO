@@ -7,7 +7,7 @@
 
 注：Lean 4.29 之 lexer 不收 CJK 字为标识符之首，故须以 `«名»` 包之。
 -/
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaTuring
+import SSBX.Foundation.Atlas.Yi.Classical.Computation.BaguaTuring
 
 namespace SSBX.Foundation.Wen.WenyanText
 

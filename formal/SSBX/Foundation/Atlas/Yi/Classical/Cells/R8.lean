@@ -25,9 +25,9 @@ Builds on Yi.lean and BaguaAlgebra.lean.
   § 4   xuGua (序卦传 King Wen order) as List Hexagram of length 64
   § 5   xuGua next / index / completeness theorems
 -/
-import SSBX.Foundation.Atlas.YiLegacy.Yi
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaAlgebra
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.R7
+import SSBX.Foundation.Atlas.Yi.Classical.Core.Yi
+import SSBX.Foundation.Atlas.Yi.Classical.Algebra.BaguaAlgebra
+import SSBX.Foundation.Atlas.Yi.Classical.Cells.R7
 
 namespace SSBX.Foundation.Bagua.R8
 

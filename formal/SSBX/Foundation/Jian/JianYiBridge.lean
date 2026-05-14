@@ -25,7 +25,7 @@
 -/
 
 import SSBX.Foundation.Jian.Jian
-import SSBX.Foundation.Atlas.YiLegacy.Yi
+import SSBX.Foundation.Atlas.Yi.Classical.Core.Yi
 
 /-! ## § 1 Dimension → DaoLevel
 

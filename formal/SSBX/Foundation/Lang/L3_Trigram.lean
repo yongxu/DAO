@@ -31,11 +31,11 @@ Tokens accepted per yao slot: 阳/yang/1 or 阴/yin/0.
 -/
 
 import SSBX.Foundation.Lang.Core
-import SSBX.Foundation.Atlas.YiLegacy.Yi
+import SSBX.Foundation.Atlas.Yi
 
 namespace SSBX.Foundation.Lang.L3
 
-open SSBX.Foundation.Yi.Yi  (Yao Trigram)
+open SSBX.Foundation.Atlas.Yi (Yao Trigram)
 
 /-! ## § 1 Cell type alias + Cayley action -/
 
@@ -48,22 +48,22 @@ abbrev Cell : Type := Trigram
   | .yang, y => y.neg
 
 /-- Cayley action: `apply x y = x ⊕ y` componentwise on the 3 yao positions. -/
-def apply : Cell → Cell → Cell
-  | ⟨a1, a2, a3⟩, ⟨b1, b2, b3⟩ =>
-      ⟨xorYao a1 b1, xorYao a2 b2, xorYao a3 b3⟩
+def apply (a b : Cell) : Cell :=
+  Trigram.mk (xorYao a.y1 b.y1) (xorYao a.y2 b.y2) (xorYao a.y3 b.y3)
 
 /-- The (Z/2)³ origin / identity = 坤 (all yin). -/
-def origin : Cell := ⟨.yin, .yin, .yin⟩
+def origin : Cell := Trigram.mk .yin .yin .yin
 
 /-! ## § 2 Cayley action laws -/
 
 theorem apply_self (c : Cell) : apply c c = origin := by
-  rcases c with ⟨a, b, d⟩
-  cases a <;> cases b <;> cases d <;> rfl
+  apply Trigram.ext <;> simp [apply, origin, xorYao]
+  · cases c.y1 <;> rfl
+  · cases c.y2 <;> rfl
+  · cases c.y3 <;> rfl
 
 theorem origin_apply (c : Cell) : apply origin c = c := by
-  rcases c with ⟨a, b, d⟩
-  cases a <;> cases b <;> cases d <;> rfl
+  apply Trigram.ext <;> simp [apply, origin, xorYao]
 
 /-! ## § 3 Sexp bridge
 
@@ -85,14 +85,14 @@ def printYaoAtom : Yao → Sexp
 
 /-- Parse a named trigram atom (single CJK char). -/
 def parseNamed : String → Except String Cell
-  | "乾" => .ok Trigram.heaven
-  | "兑" => .ok Trigram.lake
-  | "离" => .ok Trigram.fire
-  | "震" => .ok Trigram.thunder
-  | "巽" => .ok Trigram.wind
-  | "坎" => .ok Trigram.water
-  | "艮" => .ok Trigram.mountain
-  | "坤" => .ok Trigram.earth
+  | "乾" => .ok Trigram.qian
+  | "兑" => .ok Trigram.dui
+  | "离" => .ok Trigram.li
+  | "震" => .ok Trigram.zhen
+  | "巽" => .ok Trigram.xun
+  | "坎" => .ok Trigram.kan
+  | "艮" => .ok Trigram.gen
+  | "坤" => .ok Trigram.kun
   | other => .error s!"L3.parseNamed: unknown trigram name '{other}'"
 
 /-- Parse `(trigram t1 t2 t3)` (bit form) or `(trigram-named 乾)` (named). -/
@@ -101,27 +101,28 @@ def parseCell : Sexp → Except String Cell
       let y1 ← parseYao t1
       let y2 ← parseYao t2
       let y3 ← parseYao t3
-      .ok ⟨y1, y2, y3⟩
+      .ok (Trigram.mk y1 y2 y3)
   | .list [.atom "trigram-named", .atom name] => parseNamed name
   | s => .error s!"L3.parseCell: expected (trigram <y1> <y2> <y3>) or (trigram-named <name>), got {s.toStr}"
 
 /-- Canonical printer: emits bit form `(trigram 阳 阳 阳)`. -/
-def printCell : Cell → Sexp
-  | ⟨y1, y2, y3⟩ =>
-      .list [.atom "trigram", printYaoAtom y1, printYaoAtom y2, printYaoAtom y3]
+def printCell (t : Cell) : Sexp :=
+  .list [.atom "trigram", printYaoAtom t.y1, printYaoAtom t.y2, printYaoAtom t.y3]
 
 theorem print_parse_round_trip (c : Cell) : parseCell (printCell c) = .ok c := by
-  rcases c with ⟨y1, y2, y3⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> rfl
+  have hc : c = Trigram.mk c.y1 c.y2 c.y3 := by apply Trigram.ext <;> rfl
+  conv_rhs => rw [hc]
+  conv_lhs => rw [hc]
+  cases c.y1 <;> cases c.y2 <;> cases c.y3 <;> rfl
 
 /-! ## § 4 Atomic ops (3 single-yao flips, the (Z/2)³ basis) -/
 
 /-- Flip the bottom yao (y1). -/
-def flip1 : Cell := ⟨.yang, .yin,  .yin⟩
+def flip1 : Cell := Trigram.mk .yang .yin  .yin
 /-- Flip the center yao (y2). -/
-def flip2 : Cell := ⟨.yin,  .yang, .yin⟩
+def flip2 : Cell := Trigram.mk .yin  .yang .yin
 /-- Flip the top yao (y3). -/
-def flip3 : Cell := ⟨.yin,  .yin,  .yang⟩
+def flip3 : Cell := Trigram.mk .yin  .yin  .yang
 
 /-! ## § 5 LangLayer instance -/
 
@@ -177,19 +178,19 @@ def defaultRules : List Rule :=
 /-- Smoke test: from 坤 (origin), 1 step lands on 震 (y1 flip). -/
 example :
     (Eval.runRules defaultRules (printCell origin) 1
-        == printCell Trigram.thunder) = true := by
+        == printCell Trigram.zhen) = true := by
   native_decide
 
 /-- 3 steps from 坤 reach 乾 (y1 → y2 → y3 chain). -/
 example :
     (Eval.runRules defaultRules (printCell origin) 3
-        == printCell Trigram.heaven) = true := by
+        == printCell Trigram.qian) = true := by
   native_decide
 
 /-- 4 steps from 坤: hits 乾 (3 steps) then `heaven-to-earth` fires → back to 坤. -/
 example :
     (Eval.runRules defaultRules (printCell origin) 4
-        == printCell Trigram.earth) = true := by
+        == printCell Trigram.kun) = true := by
   native_decide
 
 /-- runCell convenience produces an OK result starting from 坤. -/
@@ -197,12 +198,12 @@ example : (runCell (α := Cell) defaultRules origin 1).toOption.isSome = true :=
   native_decide
 
 /-- Round-trip via printer for 乾 (uses `print_parse_round_trip`). -/
-example : parseCell (printCell Trigram.heaven) = .ok Trigram.heaven :=
-  print_parse_round_trip Trigram.heaven
+example : parseCell (printCell Trigram.qian) = .ok Trigram.qian :=
+  print_parse_round_trip Trigram.qian
 
 /-- Named-form parser: `(trigram-named 离)` parses to 离. -/
 example :
-    parseCell (.list [.atom "trigram-named", .atom "离"]) = .ok Trigram.fire := rfl
+    parseCell (.list [.atom "trigram-named", .atom "离"]) = .ok Trigram.li := rfl
 
 /-! ## § 7 L3 summary bundle -/
 

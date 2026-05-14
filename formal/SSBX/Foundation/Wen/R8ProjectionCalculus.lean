@@ -13,7 +13,7 @@ This module records the typed skeleton for the doctrine claim:
 
 It intentionally does not define a complete natural-language semantics.
 -/
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.R8
+import SSBX.Foundation.Atlas.Yi.Classical.Cells.R8
 
 namespace SSBX.Foundation.Wen.R8ProjectionCalculus
 

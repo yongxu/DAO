@@ -30,8 +30,8 @@ all 4 shi states. Routing uses 4-way Shi outer × 3-way Hex inner branches.
 The `metaInterpStepPc_branchShiEq_notTaken_*` lemmas additionally cover the
 new `Shi.dao` ctor as a "not-taken" case.
 -/
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.R8
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaTuring
+import SSBX.Foundation.Atlas.Yi.Classical.Cells.R8
+import SSBX.Foundation.Atlas.Yi.Classical.Computation.BaguaTuring
 
 namespace SSBX.Foundation.Wen.WenyanSelfInterp
 

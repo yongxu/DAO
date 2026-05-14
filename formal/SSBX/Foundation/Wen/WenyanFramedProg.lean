@@ -1,5 +1,5 @@
 import SSBX.Foundation.Wen.WenyanSelfInterp
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.KleeneInternal
+import SSBX.Foundation.Atlas.Yi.Classical.Diagonal.KleeneInternal
 
 namespace SSBX.Foundation.Wen.WenyanFramedProg
 

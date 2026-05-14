@@ -42,8 +42,8 @@ sep    ::= 「；」 | 「;」
 - 一般性 `parse_print` 定理之真实前提为 `validProg p = true`；
   Nat target 只在 1..64 内可逆，0/>64 会印成 `«?»`
 -/
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaTuring
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaWenSpec
+import SSBX.Foundation.Atlas.Yi.Classical.Computation.BaguaTuring
+import SSBX.Foundation.Atlas.Yi.Classical.Computation.BaguaWenSpec
 
 -- 项目中 `YiInstr` 仅 `deriving Repr`；为使 round-trip native_decide 可决定性，
 -- 在原 namespace 内补派生 `DecidableEq`（参数皆 DecidableEq 故可派）。

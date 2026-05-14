@@ -15,8 +15,8 @@ This file gives the **finite, no-Mathlib** core of the **动力** 衍 file:
 本文件仅依 Lean stdlib + Yi.lean + BaguaAlgebra，不引入 Mathlib。
 连续动力（ODE/PDE）/ Lyapunov / chaos / KAM 皆 Phase 4 future work（需 Mathlib + 实数）。
 -/
-import SSBX.Foundation.Atlas.YiLegacy.Yi
-import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaAlgebra
+import SSBX.Foundation.Atlas.Yi.Classical.Core.Yi
+import SSBX.Foundation.Atlas.Yi.Classical.Algebra.BaguaAlgebra
 import SSBX.Foundation.Eight.TongJi
 
 namespace SSBX.Foundation.Eight.DongLi
