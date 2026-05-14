@@ -9,7 +9,7 @@ Per `wen-algebra` v0.6 §9 (Atlas separation) and `v4-foundation` v0.5
 > (`Foundation/R/`) is language-independent; Atlas provides the
 > cultural / domain / formal-tradition mappings.
 
-This umbrella collects the four Yi-tradition bindings on top of the
+This umbrella collects the Yi-tradition bindings on top of the
 R-Family core:
 
 * `Atlas/Yi/Names`      — core: `Yao` (= R 1), `Trigram` (= R 3),
@@ -18,6 +18,12 @@ R-Family core:
 * `Atlas/Yi/Hexagrams`  — 4 distinguished hexagrams + King-Wen order.
 * `Atlas/Yi/ShiV4`      — V₄ naming {dao, ji, jin, wei} on R 2.
 * `Atlas/Yi/Operators`  — V₄ operators (cuo / zong / cuoZong) and `hu`.
+* `Atlas/Yi/DaoSource`  — Phase β port of «道源» onto the clean stack:
+                          11-instr Wen.Core program judging «是道非道»
+                          with the five 相 (形/解/印/执/义) all proven.
+* `Atlas/Yi/Diagonal`   — 理之不完备 / 哥德尔在 R 8: halting-undecidability
+                          diagonal on `Wen.Core` (Atlas-Yi form of
+                          `Foundation/Bagua/GodelLi.lean`).
 
 Per doctrine, nothing else in the codebase imports this module: it is
 opt-in.  This umbrella exists for convenience and as a discoverability
@@ -36,3 +42,5 @@ import SSBX.Foundation.Atlas.Yi.Bagua
 import SSBX.Foundation.Atlas.Yi.Hexagrams
 import SSBX.Foundation.Atlas.Yi.ShiV4
 import SSBX.Foundation.Atlas.Yi.Operators
+import SSBX.Foundation.Atlas.Yi.DaoSource
+import SSBX.Foundation.Atlas.Yi.Diagonal
