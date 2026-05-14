@@ -1,37 +1,67 @@
 /-
-# Profinite limit of the squaring tower
+# Foundation.RInfty.Profinite — profinite limit of the squaring tower over `R 8`
 
-This module keeps the M5 construction compile-oriented:
+The squaring tower above `R 8` is
 
-* `L n` is the finite `2^n` block carrier, implemented as iterated products.
-* `pi n : L (n+1) -> L n` is first-half projection.
-* `L_inf` is the coherent prefix carrier for the inverse system.
-* `fromStream` and `toStream` are the concrete Stream' bridge, with both round
-  trips proved and packaged as an additive equivalence.
+    R 8 → R 16 = R 8 ⊕ R 8 → R 32 = R 16 ⊕ R 16 → … → R_{2^k · 8} → …
+
+and the corresponding inverse system of "first-half projections" admits a
+profinite limit.  This file packages that limit as `L_inf`, together with
+its bijection to `Stream' (R 8)` (the trajectory carrier from
+`R8/Dynamics.lean`) and the final-coalgebra property.
+
+Adapted from `Foundation/Squaring/ProfiniteLimit.lean`, which was tied to
+the Yi-flavoured `R8` (Bagua's `Hexagram × Shi`) carrier; we restate
+everything on the parametric `R N` carrier so the file lives in the
+language-independent core.
+
+## What is here
+
+* `L n` — the finite `2^n`-block carrier, implemented as iterated products
+  of `R 8`.
+* `pi n : L (n+1) → L n` — first-half projection.
+* `L_inf` — coherent prefixes for the inverse system.
+* `fromStream` / `toStream` — the concrete bijection with `Stream' (R 8)`,
+  with both round trips proved and packaged as an additive equivalence
+  `isoStream`.
+* `coalg` / `coalgebraMorphism` — the corecursive final-coalgebra structure.
+* `L_inf_isFinalCoalgebra` — the category-theoretic final-coalgebra
+  witness over `Type`.
+
+## Doctrinal anchor
+
+* `wen-algebra.md` v0.6 §1.3 (squaring tower step), §1.4 (beyond R 8).
+* `r8.md` v0.2 §12 (R 8 ceiling, squaring extension).
 -/
+
 import Mathlib.Algebra.Group.Pi.Basic
 import Mathlib.CategoryTheory.Endofunctor.Algebra
 import Mathlib.CategoryTheory.Types.Basic
 import Mathlib.Data.Nat.Log
 import Mathlib.Tactic
-import SSBX.Foundation.Squaring.StreamCarrier
+import SSBX.Foundation.R.Basic
+import SSBX.Foundation.R8.Dynamics
 
-namespace SSBX.Foundation.Squaring
+namespace SSBX.Foundation.RInfty
 
-open SSBX.Foundation.Bagua.R8
+open SSBX.Foundation.R
+open SSBX.Foundation.R8
 open CategoryTheory
 
-namespace ProfiniteLimit
+namespace Profinite
 
-/-- The finite squaring tower: `L n` is a block of length `2^n`. -/
-def L : Nat -> Type
-  | 0 => R8
+/-! ## § 1 The finite squaring tower over `R 8` -/
+
+/-- The finite squaring tower: `L n` is a block of length `2^n` of `R 8`
+    cells, encoded as iterated products. -/
+def L : Nat → Type
+  | 0 => R 8
   | n + 1 => L n × L n
 
 instance instAddCommGroupL (n : Nat) : AddCommGroup (L n) := by
   induction n with
   | zero =>
-      change AddCommGroup R8
+      change AddCommGroup (R 8)
       infer_instance
   | succ n ih =>
       change AddCommGroup (L n × L n)
@@ -41,7 +71,7 @@ instance instAddCommGroupL (n : Nat) : AddCommGroup (L n) := by
 noncomputable instance instFintypeL (n : Nat) : Fintype (L n) := by
   induction n with
   | zero =>
-      change Fintype R8
+      change Fintype (R 8)
       infer_instance
   | succ n ih =>
       change Fintype (L n × L n)
@@ -49,16 +79,18 @@ noncomputable instance instFintypeL (n : Nat) : Fintype (L n) := by
       infer_instance
 
 /-- First-half projection in the inverse system. -/
-def pi (n : Nat) : L (n + 1) -> L n := Prod.fst
+def pi (n : Nat) : L (n + 1) → L n := Prod.fst
 
 @[simp] theorem pi_apply (n : Nat) (x : L (n + 1)) : pi n x = x.1 := rfl
 
 @[simp] theorem pi_map_add (n : Nat) (x y : L (n + 1)) :
     pi n (x + y) = pi n x + pi n y := rfl
 
+/-! ## § 2 Coherent prefixes -/
+
 /-- Coherent prefixes for the first-half projection tower. -/
 structure L_inf where
-  toBlock : (n : Nat) -> L n
+  toBlock : (n : Nat) → L n
   coh : ∀ n, pi n (toBlock (n + 1)) = toBlock n
 
 namespace L_inf
@@ -124,16 +156,17 @@ instance : AddCommGroup L_inf where
 
 end L_inf
 
-instance instAddCommGroupTrajCell : AddCommGroup StreamCarrier.TrajCell := by
-  change AddCommGroup (Nat -> R8)
+instance instAddCommGroupTrajectory : AddCommGroup R8.Trajectory := by
+  change AddCommGroup (Nat → R 8)
   infer_instance
+
+/-! ## § 3 Bridging blocks and streams -/
 
 /-- Read a natural-number coordinate from a finite block.
 
-Out-of-range indices are still assigned a value by recursively falling into the
-right branch.  The correctness lemma below is only stated for `k < 2^n`.
--/
-def blockGetNat : (n : Nat) -> L n -> Nat -> R8
+Out-of-range indices are still assigned a value by recursively falling into
+the right branch.  The correctness lemma below is only stated for `k < 2^n`. -/
+def blockGetNat : (n : Nat) → L n → Nat → R 8
   | 0, b, _ => b
   | n + 1, b, k =>
       if k < 2 ^ n then
@@ -142,16 +175,16 @@ def blockGetNat : (n : Nat) -> L n -> Nat -> R8
         blockGetNat n b.2 (k - 2 ^ n)
 
 /-- First `2^n` cells of a stream, packed into the recursive block carrier. -/
-def blockTake : (n : Nat) -> StreamCarrier.TrajCell -> L n
+def blockTake : (n : Nat) → R8.Trajectory → L n
   | 0, s => s.head
   | n + 1, s => (blockTake n s, blockTake n (s.drop (2 ^ n)))
 
-@[simp] theorem pi_blockTake (n : Nat) (s : StreamCarrier.TrajCell) :
+@[simp] theorem pi_blockTake (n : Nat) (s : R8.Trajectory) :
     pi n (blockTake (n + 1) s) = blockTake n s := rfl
 
 theorem blockGetNat_blockTake :
-    ∀ (n : Nat) (s : StreamCarrier.TrajCell) {k : Nat},
-      k < 2 ^ n -> blockGetNat n (blockTake n s) k = s.get k
+    ∀ (n : Nat) (s : R8.Trajectory) {k : Nat},
+      k < 2 ^ n → blockGetNat n (blockTake n s) k = s.get k
   | 0, _s, k, hk => by
       have hk0 : k = 0 := by omega
       subst k
@@ -174,17 +207,17 @@ theorem index_lt_level (k : Nat) : k < 2 ^ (k + 1) := by
     (Nat.pow_le_pow_right (by decide : 0 < 2) (Nat.le_succ k))
 
 /-- A stream determines coherent finite prefixes. -/
-def fromStream (s : StreamCarrier.TrajCell) : L_inf where
+def fromStream (s : R8.Trajectory) : L_inf where
   toBlock := fun n => blockTake n s
   coh := by
     intro n
     rfl
 
 /-- Read the `k`-th cell from a sufficiently large coherent prefix. -/
-def toStream (x : L_inf) : StreamCarrier.TrajCell :=
+def toStream (x : L_inf) : R8.Trajectory :=
   fun k => blockGetNat (k + 1) (x.toBlock (k + 1)) k
 
-theorem toStream_fromStream (s : StreamCarrier.TrajCell) :
+theorem toStream_fromStream (s : R8.Trajectory) :
     toStream (fromStream s) = s := by
   apply Stream'.ext
   intro k
@@ -219,7 +252,7 @@ theorem blockGetNat_coherent_le (x : L_inf) (m d k : Nat) (hk : k < 2 ^ m) :
 
 theorem blockGetNat_ext :
     ∀ (n : Nat) (a b : L n),
-      (∀ k, k < 2 ^ n -> blockGetNat n a k = blockGetNat n b k) -> a = b
+      (∀ k, k < 2 ^ n → blockGetNat n a k = blockGetNat n b k) → a = b
   | 0, a, b, h => by
       have h0 := h 0 (by norm_num)
       simpa [blockGetNat] using h0
@@ -278,8 +311,9 @@ theorem blockGetNat_add :
       · simpa [blockGetNat, h] using blockGetNat_add n a.1 b.1 k
       · simpa [blockGetNat, h] using blockGetNat_add n a.2 b.2 (k - 2 ^ n)
 
-/-- The coherent-prefix carrier is additively equivalent to cell streams. -/
-def isoStream : L_inf ≃+ StreamCarrier.TrajCell where
+/-- The coherent-prefix carrier is additively equivalent to cell streams
+    of `R 8`. -/
+def isoStream : L_inf ≃+ R8.Trajectory where
   toFun := toStream
   invFun := fromStream
   left_inv := fromStream_toStream
@@ -290,46 +324,48 @@ def isoStream : L_inf ≃+ StreamCarrier.TrajCell where
     intro k
     exact blockGetNat_add (k + 1) (x.toBlock (k + 1)) (y.toBlock (k + 1)) k
 
+/-! ## § 4 Coalgebra structure on `L_inf` -/
+
 /-- Tail transported back through the proved `fromStream` direction. -/
 def tailLimit (x : L_inf) : L_inf :=
   fromStream (toStream x).tail
 
 /-- Coalgebra structure transported from the stream head/tail coalgebra. -/
-def coalg (x : L_inf) : R8 × L_inf :=
+def coalg (x : L_inf) : R 8 × L_inf :=
   ((toStream x).head, tailLimit x)
 
 theorem coalg_toStream_step (x : L_inf) :
-    StreamCarrier.step (toStream x) = ((coalg x).1, toStream (coalg x).2) := by
-  simp [coalg, tailLimit, StreamCarrier.step, toStream_fromStream]
+    R8.step (toStream x) = ((coalg x).1, toStream (coalg x).2) := by
+  simp [coalg, tailLimit, R8.step, toStream_fromStream]
 
-def coalgebraMorphism {X : Type} (ξ : X -> R8 × X) : X -> L_inf :=
-  fun x => fromStream (StreamCarrier.unfold ξ x)
+def coalgebraMorphism {X : Type} (ξ : X → R 8 × X) : X → L_inf :=
+  fun x => fromStream (R8.unfold ξ x)
 
-theorem coalgebraMorphism_step {X : Type} (ξ : X -> R8 × X) (x : X) :
+theorem coalgebraMorphism_step {X : Type} (ξ : X → R 8 × X) (x : X) :
     coalg (coalgebraMorphism ξ x) =
       ((ξ x).1, coalgebraMorphism ξ (ξ x).2) := by
-  simp [coalgebraMorphism, coalg, tailLimit, StreamCarrier.unfold_head,
-    StreamCarrier.unfold_tail, toStream_fromStream]
+  simp [coalgebraMorphism, coalg, tailLimit, R8.unfold_head,
+    R8.unfold_tail, toStream_fromStream]
 
-theorem coalgebraMorphism_unique {X : Type} (ξ : X -> R8 × X) (g : X -> L_inf)
+theorem coalgebraMorphism_unique {X : Type} (ξ : X → R 8 × X) (g : X → L_inf)
     (h : ∀ x, coalg (g x) = ((ξ x).1, g (ξ x).2)) :
     g = coalgebraMorphism ξ := by
   have hstep : ∀ x,
-      StreamCarrier.step (toStream (g x)) =
+      R8.step (toStream (g x)) =
         ((ξ x).1, toStream (g (ξ x).2)) := by
     intro x
     calc
-      StreamCarrier.step (toStream (g x)) =
+      R8.step (toStream (g x)) =
           ((coalg (g x)).1, toStream (coalg (g x)).2) := coalg_toStream_step (g x)
       _ = ((ξ x).1, toStream (g (ξ x).2)) := by rw [h x]
   funext x
-  have hstream : toStream (g x) = StreamCarrier.unfold ξ x := by
+  have hstream : toStream (g x) = R8.unfold ξ x := by
     apply Stream'.ext
     intro n
     induction n generalizing x with
     | zero =>
         have hh := congrArg Prod.fst (hstep x)
-        simpa [StreamCarrier.step, StreamCarrier.unfold_head] using hh
+        simpa [R8.step, R8.unfold_head] using hh
     | succ n ih =>
         have ht := congrArg Prod.snd (hstep x)
         calc
@@ -337,27 +373,29 @@ theorem coalgebraMorphism_unique {X : Type} (ξ : X -> R8 × X) (g : X -> L_inf)
               Stream'.get (toStream (g x)).tail n := by
             rw [Stream'.get_succ]
           _ = Stream'.get (toStream (g (ξ x).2)) n := by
-            simpa [StreamCarrier.step] using congrArg (fun s => Stream'.get s n) ht
-          _ = Stream'.get (StreamCarrier.unfold ξ (ξ x).2) n := ih (ξ x).2
-          _ = Stream'.get (StreamCarrier.unfold ξ x).tail n := by
-            rw [StreamCarrier.unfold_tail]
-          _ = Stream'.get (StreamCarrier.unfold ξ x) (n + 1) := by
+            simpa [R8.step] using congrArg (fun s => Stream'.get s n) ht
+          _ = Stream'.get (R8.unfold ξ (ξ x).2) n := ih (ξ x).2
+          _ = Stream'.get (R8.unfold ξ x).tail n := by
+            rw [R8.unfold_tail]
+          _ = Stream'.get (R8.unfold ξ x) (n + 1) := by
             rw [Stream'.get_succ]
   calc
     g x = fromStream (toStream (g x)) := (fromStream_toStream (g x)).symm
-    _ = fromStream (StreamCarrier.unfold ξ x) := by rw [hstream]
+    _ = fromStream (R8.unfold ξ x) := by rw [hstream]
     _ = coalgebraMorphism ξ x := rfl
 
-theorem L_inf_isFinalCoalgebra_concrete {X : Type} (ξ : X -> R8 × X) :
-    ∃! g : X -> L_inf, ∀ x, coalg (g x) = ((ξ x).1, g (ξ x).2) := by
+theorem L_inf_isFinalCoalgebra_concrete {X : Type} (ξ : X → R 8 × X) :
+    ∃! g : X → L_inf, ∀ x, coalg (g x) = ((ξ x).1, g (ξ x).2) := by
   refine ⟨coalgebraMorphism ξ, coalgebraMorphism_step ξ, ?_⟩
   intro g hg
   exact coalgebraMorphism_unique ξ g hg
 
-/-- The concrete polynomial functor `F X = R8 × X` on `Type`. -/
+/-! ## § 5 Mathlib-categorical final-coalgebra witness -/
+
+/-- The concrete polynomial functor `F X = R 8 × X` on `Type`. -/
 def funcF : Type ⥤ Type where
-  obj X := R8 × X
-  map {X Y} f := TypeCat.ofHom (fun p : R8 × X => (p.1, f p.2))
+  obj X := R 8 × X
+  map {X Y} f := TypeCat.ofHom (fun p : R 8 × X => (p.1, f p.2))
 
 /-- `L_inf` as a Mathlib endofunctor coalgebra. -/
 def L_inf_coalgebra : CategoryTheory.Endofunctor.Coalgebra funcF where
@@ -388,16 +426,18 @@ noncomputable def L_inf_isFinalCoalgebra :
     CategoryTheory.Limits.IsTerminal L_inf_coalgebra :=
   CategoryTheory.Limits.IsTerminal.ofUniqueHom terminalMorphismOf terminalMorphismOf_unique
 
+/-! ## § 6 Bundled summary for downstream consumers -/
+
 theorem profinite_limit_summary :
     (∀ n, Nonempty (AddCommGroup (L n)))
     ∧ (∀ n (x y : L (n + 1)), pi n (x + y) = pi n x + pi n y)
     ∧ Function.LeftInverse fromStream toStream
-    ∧ (∀ s : StreamCarrier.TrajCell, toStream (fromStream s) = s)
-    ∧ (∀ (X : Type) (ξ : X -> R8 × X),
-        ∃! g : X -> L_inf, ∀ x, coalg (g x) = ((ξ x).1, g (ξ x).2))
+    ∧ (∀ s : R8.Trajectory, toStream (fromStream s) = s)
+    ∧ (∀ (X : Type) (ξ : X → R 8 × X),
+        ∃! g : X → L_inf, ∀ x, coalg (g x) = ((ξ x).1, g (ξ x).2))
     ∧ Nonempty (CategoryTheory.Limits.IsTerminal L_inf_coalgebra)
     ∧ (∀ x : L_inf,
-        StreamCarrier.step (toStream x) = ((coalg x).1, toStream (coalg x).2)) :=
+        R8.step (toStream x) = ((coalg x).1, toStream (coalg x).2)) :=
   ⟨fun n => ⟨instAddCommGroupL n⟩,
    pi_map_add,
    fromStream_toStream,
@@ -406,6 +446,6 @@ theorem profinite_limit_summary :
    ⟨L_inf_isFinalCoalgebra⟩,
    coalg_toStream_step⟩
 
-end ProfiniteLimit
+end Profinite
 
-end SSBX.Foundation.Squaring
+end SSBX.Foundation.RInfty

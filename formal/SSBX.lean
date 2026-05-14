@@ -168,13 +168,13 @@ import SSBX.Foundation.Lang.Names     -- 64 卦 + R₄/R₅/R₇/R₈ name funct
 import SSBX.Foundation.Lang.Confucian -- 四端/八目/五伦/大同 named cells in R₃/R₅/R₆
 import SSBX.Foundation.Lang.Lexicon   -- canonical Chinese↔English↔bit-string mapping
 
--- Foundation/Squaring — squaring tower {R₀, R₁, R₂, R₄, R₈} + L-tower past R₈
-import SSBX.Foundation.Squaring.V4Tensor
-import SSBX.Foundation.Squaring.L1
-import SSBX.Foundation.Squaring.RetractTower
-import SSBX.Foundation.Squaring.StreamCarrier
-import SSBX.Foundation.Squaring.ProfiniteLimit
-import SSBX.Foundation.Squaring.SelfSimilarity  -- R₂≃R₁², R₄≃R₂², R₈≃R₄², R₆≃R₃²
+-- Foundation/Squaring is retired per the v0.6 R-Family doctrine.
+-- Its content has been redistributed:
+--   * squaring tower R₁→R₂→R₄→R₈ → `Foundation/R/Squaring.lean` (P1)
+--   * beyond-R₈ extension (R₁₆/R₃₂/…) → `Foundation/R8/Squaring.lean` (P2)
+--   * `Stream' (R 8)` trajectories → `Foundation/R8/Dynamics.lean` (P2)
+--   * F₂ Mathlib instances → `Foundation/R8/MathlibInstances.lean` (P2)
+--   * profinite limit (the only genuinely new content) → `Foundation/RInfty` (P4.4)
 
 -- Foundation/Eight — 八衍：数 / 推 / 测 / 形 / 类 / 动 / 识 / 象
 import SSBX.Foundation.Eight.ShuSuan
@@ -284,4 +284,5 @@ import SSBX.Foundation.Modern.QuantumSpacetime
 import SSBX.Foundation.R
 import SSBX.Foundation.R4
 import SSBX.Foundation.R8
+import SSBX.Foundation.RInfty
 import SSBX.Foundation.Atlas

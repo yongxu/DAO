@@ -10,9 +10,22 @@ This file records only the already-formal finite bridge:
 
 It deliberately does not construct a full `R8 → Fin 256 → ℂ` unitary
 representation or a physical Pauli-string system.
+
+## History
+
+Originally this file imported `Foundation/Squaring/V4Tensor.lean` for the
+Yi-flavoured `R₈ ≃+ V₄⁴` Mathlib `AddEquiv` (`V4Tensor.iso`) and the
+`V4Tensor.V4Coord = Yao × Yao` abbreviation.  The v0.6 R-Family restructure
+retired `Foundation/Squaring/`; this file's Yi-flavoured carriers are not
+part of the parametric core, so the relevant pieces are inlined locally
+below (`V4Coord`, `iso`) rather than re-imported from a non-existent
+module.  (A future Atlas/Yi migration may rebase this on the parametric
+`R 8` carrier; that is out of scope for the P4.4 cleanup.)
 -/
+import Mathlib.Algebra.Group.Prod
+import Mathlib.Data.Fintype.Basic
 import SSBX.Foundation.Modern.Quantum
-import SSBX.Foundation.Squaring.V4Tensor
+import SSBX.Foundation.Bagua.R8
 
 namespace SSBX.Foundation.Modern.QuantumR8Bridge
 
@@ -21,7 +34,124 @@ open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Bagua.BaguaAlgebra
 open SSBX.Foundation.Bagua.R8
 open SSBX.Foundation.Modern
-open SSBX.Foundation.Squaring
+
+/-! ## Local re-statement of `R₈ ≃+ V₄⁴`
+
+Adapted (inlined) from the retired `Foundation/Squaring/V4Tensor.lean` so
+this file no longer depends on the `Squaring/` subtree.  Only the pieces
+actually used downstream (`V4Coord`, `iso`, the supporting Mathlib
+instances) are kept; the F₂ machinery itself is also covered by the
+parametric `Foundation/R8/MathlibInstances.lean` for the `R 8` carrier. -/
+
+namespace V4Tensor
+
+/-- Mathlib `Fintype Yao`. -/
+instance instFintypeYao : Fintype Yao where
+  elems := [Yao.yang, Yao.yin].toFinset
+  complete := by
+    intro y
+    cases y <;> simp
+
+instance instAddYao : Add Yao := ⟨R8.yaoXor⟩
+instance instZeroYao : Zero Yao := ⟨Yao.yang⟩
+instance instNegYao : Neg Yao := ⟨id⟩
+instance instSubYao : Sub Yao := ⟨R8.yaoXor⟩
+
+@[simp] theorem yao_add_eq_xor (a b : Yao) : a + b = R8.yaoXor a b := rfl
+
+instance instAddCommGroupYao : AddCommGroup Yao where
+  nsmul := nsmulRec
+  zsmul := zsmulRec
+  add_assoc := by
+    intro a b c
+    cases a <;> cases b <;> cases c <;> rfl
+  zero_add := by
+    intro a
+    cases a <;> rfl
+  add_zero := by
+    intro a
+    cases a <;> rfl
+  neg_add_cancel := by
+    intro a
+    cases a <;> rfl
+  add_comm := by
+    intro a b
+    cases a <;> cases b <;> rfl
+
+instance instFintypeHexagram : Fintype Hexagram where
+  elems := Hexagram.allHex.toFinset
+  complete := fun h => List.mem_toFinset.mpr (hexagram_mem_allHex h)
+
+instance instFintypeR8 : Fintype R8 where
+  elems := R8.all.toFinset
+  complete := fun c => List.mem_toFinset.mpr (R8.mem_all c)
+
+instance instAddCommGroupR8 : AddCommGroup R8 where
+  nsmul := nsmulRec
+  zsmul := zsmulRec
+  add_assoc := R8.xor_assoc
+  zero_add := R8.origin_xor
+  add_zero := R8.xor_origin
+  neg_add_cancel := by
+    intro c
+    simpa [R8.neg_def] using R8.xor_self c
+  add_comm := R8.xor_comm
+
+/-- Coordinate model of a Klein-four carrier represented as two Yao bits.
+    Local re-statement of `Foundation/Squaring/V4Tensor.V4Coord`. -/
+abbrev V4Coord : Type := Yao × Yao
+
+def boolToYao : Bool → Yao
+  | false => Yao.yang
+  | true => Yao.yin
+
+def yaoToBool : Yao → Bool
+  | Yao.yang => false
+  | Yao.yin => true
+
+def shiToV4Coord (s : Shi) : V4Coord :=
+  (boolToYao (Shi.toYinGuo s).1, boolToYao (Shi.toYinGuo s).2)
+
+def v4CoordToShi (v : V4Coord) : Shi :=
+  Shi.ofYinGuo (yaoToBool v.1, yaoToBool v.2)
+
+def toV4CoordQuad (c : R8) : V4Coord × V4Coord × V4Coord × V4Coord :=
+  ((c.1.y1, c.1.y2), (c.1.y3, c.1.y4), (c.1.y5, c.1.y6), shiToV4Coord c.2)
+
+def ofV4CoordQuad : V4Coord × V4Coord × V4Coord × V4Coord → R8
+  | ((y1, y2), (y3, y4), (y5, y6), shi) =>
+      (⟨y1, y2, y3, y4, y5, y6⟩, v4CoordToShi shi)
+
+theorem to_of (q : V4Coord × V4Coord × V4Coord × V4Coord) :
+    toV4CoordQuad (ofV4CoordQuad q) = q := by
+  rcases q with ⟨⟨y1, y2⟩, ⟨y3, y4⟩, ⟨y5, y6⟩, ⟨s1, s2⟩⟩
+  cases s1 <;> cases s2 <;> rfl
+
+theorem of_to (c : R8) : ofV4CoordQuad (toV4CoordQuad c) = c := by
+  rcases c with ⟨h, s⟩
+  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
+  rcases s with ⟨yin, guo⟩
+  cases yin <;> cases guo <;> rfl
+
+/-- `R₈ ≃+ V₄⁴` Mathlib `AddEquiv`. -/
+def iso : R8 ≃+ (V4Coord × V4Coord × V4Coord × V4Coord) where
+  toFun := toV4CoordQuad
+  invFun := ofV4CoordQuad
+  left_inv := of_to
+  right_inv := to_of
+  map_add' := by
+    intro a b
+    rcases a with ⟨ha, sa⟩
+    rcases b with ⟨hb, sb⟩
+    rcases ha with ⟨a1, a2, a3, a4, a5, a6⟩
+    rcases hb with ⟨b1, b2, b3, b4, b5, b6⟩
+    rcases sa with ⟨ay, ag⟩
+    rcases sb with ⟨byin, bg⟩
+    cases ay <;> cases ag <;> cases byin <;> cases bg <;>
+      simp [toV4CoordQuad, R8.add_def, R8.xor, R8.hexXor,
+        R8.shiXor, R8.yaoXor, Shi.toYinGuo, Shi.ofYinGuo, shiToV4Coord, boolToYao]
+
+end V4Tensor
 
 /-! ## One-bit bridge -/
 
