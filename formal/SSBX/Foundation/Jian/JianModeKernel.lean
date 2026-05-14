@@ -17,7 +17,7 @@
   Each mode also has a more refined "phase" reading: where in 動's rhythm it sits.
 -/
 
-import SSBX.Foundation.Yi.Yi
+import SSBX.Foundation.Atlas.YiLegacy.Yi
 import SSBX.Foundation.Wen.Kernel
 
 namespace SSBX.Foundation.Jian.JianModeKernel

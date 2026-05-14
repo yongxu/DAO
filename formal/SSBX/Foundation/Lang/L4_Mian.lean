@@ -27,7 +27,7 @@ chars from `BenZheng.lean` (`Ben.char` / `Zheng.char`).
 -/
 
 import SSBX.Foundation.Lang.Core
-import SSBX.Foundation.Bagua.BenZheng
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.BenZheng
 
 namespace SSBX.Foundation.Lang.L4
 

@@ -63,7 +63,7 @@ Hex transform chain，并以 64 卦 finite validation 作执行边界。
 
 0 sorry / 0 axiom. 无 partial def. native_decide 见证具体例。
 -/
-import SSBX.Foundation.Bagua.BaguaTuring
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaTuring
 import SSBX.Foundation.Wen.WenDefEval
 
 namespace SSBX.Foundation.Wen.WenDefCompile

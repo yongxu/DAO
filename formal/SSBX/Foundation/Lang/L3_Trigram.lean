@@ -31,7 +31,7 @@ Tokens accepted per yao slot: 阳/yang/1 or 阴/yin/0.
 -/
 
 import SSBX.Foundation.Lang.Core
-import SSBX.Foundation.Yi.Yi
+import SSBX.Foundation.Atlas.YiLegacy.Yi
 
 namespace SSBX.Foundation.Lang.L3
 

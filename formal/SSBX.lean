@@ -106,12 +106,12 @@ import SSBX.Foundation.Jian.JianModeKernel
 import SSBX.Foundation.Jian.JianYiBridge
 
 -- Foundation/Yi — 易之代数
-import SSBX.Foundation.Yi.Yi
-import SSBX.Foundation.Yi.YiCore
+import SSBX.Foundation.Atlas.YiLegacy.Yi
+import SSBX.Foundation.Atlas.YiLegacy.YiCore
 
 -- Foundation/Bagua — 八卦 / R7 / R8 / Gödel-Rice / 风险缓解
-import SSBX.Foundation.Bagua.BaguaAlgebra
-import SSBX.Foundation.Bagua.R7  -- R₇ 中间层 (Hexagram × YinBit, 128 cells, 印 算子)
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaAlgebra
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.R7  -- R₇ 中间层 (Hexagram × YinBit, 128 cells, 印 算子)
 import SSBX.Foundation.Hierarchy.R5_Wuyao  -- R₅ strict (Z/2)⁵ = 32 carrier (Mian × Bool)
 import SSBX.Foundation.Hierarchy.LiftProject  -- Uniform Lift/Project pairs across R₀..R₈
 import SSBX.Foundation.Hierarchy.Operators.Atomic  -- XOR subgroup re-export (imprint/project/flipᵢ/hexCuo)
@@ -119,18 +119,18 @@ import SSBX.Foundation.Hierarchy.Operators.V4  -- canonical V4 kernel + projecti
 import SSBX.Foundation.Hierarchy.Operators.Interlace  -- non-V4 interlace projection
 import SSBX.Foundation.Hierarchy.Operators.OXPrefix  -- variable-length o/x prefixes
 import SSBX.Foundation.Hierarchy.RHierarchy  -- R₀..R₈ index-named alias umbrella
-import SSBX.Foundation.Bagua.R8  -- R₈ 闭合层 (Hexagram × Shi V₄, 256 cells, 投 算子)
-import SSBX.Foundation.Bagua.R8Stratify  -- R₇/R₈ 双层 stratification + R8_complete bundle
-import SSBX.Foundation.Bagua.BaguaTuring
-import SSBX.Foundation.Bagua.Newman
-import SSBX.Foundation.Bagua.KleeneInternal
-import SSBX.Foundation.Bagua.GodelLi
-import SSBX.Foundation.Bagua.BaguaWenSpec
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.R8  -- R₈ 闭合层 (Hexagram × Shi V₄, 256 cells, 投 算子)
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.R8Stratify  -- R₇/R₈ 双层 stratification + R8_complete bundle
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaTuring
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.Newman
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.KleeneInternal
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.GodelLi
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaWenSpec
 import SSBX.Text.OperatorAnchors
 import SSBX.Text.OperatorCellMap
-import SSBX.Foundation.Bagua.ChunkedDecide
-import SSBX.Foundation.Bagua.CuoInvariance
-import SSBX.Foundation.Bagua.FuelDiscipline
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.ChunkedDecide
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.CuoInvariance
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.FuelDiscipline
 
 -- Foundation/Notation — `OX["..."]` 8-char Cell256 string literal macro
 import SSBX.Foundation.Notation.OXNotation

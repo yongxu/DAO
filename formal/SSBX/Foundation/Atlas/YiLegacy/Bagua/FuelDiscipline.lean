@@ -12,7 +12,7 @@ Provides:
 
 Risk mitigated: 路径丙 § 风险 5（Gödel 撞墙）.
 -/
-import SSBX.Foundation.Bagua.BaguaTuring
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaTuring
 
 namespace SSBX.Foundation.Bagua.FuelDiscipline
 

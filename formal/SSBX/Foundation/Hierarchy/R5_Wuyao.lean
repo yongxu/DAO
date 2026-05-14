@@ -19,7 +19,7 @@ with proj ∘ lift = id (faithful R₄ ↪ R₅).
 
 Mirrors `SSBX.Foundation.Bagua.R7` structure.
 -/
-import SSBX.Foundation.Bagua.BenZheng
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.BenZheng
 
 namespace SSBX.Foundation.Hierarchy.R5_Wuyao
 

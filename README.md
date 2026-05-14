@@ -144,7 +144,7 @@ formal/                            Lean 4 形式化 (lake 包名 = ssbx; @[defau
 
 | 主张 | 文件 |
 |---|---|
-| Cell256 = R₈ = (Z/2)⁸ 之具体实现, 256 全枚举 | `formal/SSBX/Foundation/Bagua/Cell256.lean § Cell256.all_length, mem_all` |
+| Cell256 = R₈ = (Z/2)⁸ 之具体实现, 256 全枚举 | `formal/SSBX/Foundation/Atlas/YiLegacy/Bagua/Cell256.lean § Cell256.all_length, mem_all` |
 | Phase A (Z/2)⁸ 算子代数 (Add/Zero/Neg/Sub + Cayley ι/ε + 印/投 mask) | 同上 § 7 / § 8 / § 9 |
 | Shi V₄ Klein + ↔ (因, 果) ∈ Bool² 双射 | 同上 § 1 |
 | 序卦 (King Wen) 64 卦序枚举 + length 64 + head 乾 / last 未济 | 同上 § 4 / § 5 |
@@ -154,11 +154,11 @@ formal/                            Lean 4 形式化 (lake 包名 = ssbx; @[defau
 | V₄ outer (zong/cuoZong/hu) | `formal/SSBX/Foundation/Hierarchy/Operators/V4Outer.lean` |
 | `OX["oooooooo"]..OX["xxxxxxxx"]` 字面量 macro + 道 = origin sanity | `formal/SSBX/Foundation/Notation/OXNotation.lean` |
 | Cell256OperatorComplete (任 a→b 有 f) + 自描述总收口 | `formal/SSBX/Truth/SelfDescription.lean § cell256_operator_complete` |
-| R8_complete bundle (R₀..R₈ 完整闭合, native_decide + propext) | `formal/SSBX/Foundation/Bagua/Cell256Stratify.lean` |
-| BenZheng: 4 本 / 4 征 / Mian = R₄ / Quadrant 4 象限 | `formal/SSBX/Foundation/Bagua/BenZheng.lean` |
+| R8_complete bundle (R₀..R₈ 完整闭合, native_decide + propext) | `formal/SSBX/Foundation/Atlas/YiLegacy/Bagua/Cell256Stratify.lean` |
+| BenZheng: 4 本 / 4 征 / Mian = R₄ / Quadrant 4 象限 | `formal/SSBX/Foundation/Atlas/YiLegacy/Bagua/BenZheng.lean` |
 | 道-理二分 cross-cutting | `formal/SSBX/Foundation/Modern/DaoLi.lean` |
-| 微核「加 + 一」 — 二字成核 | `formal/SSBX/Foundation/Yi/YiCore.lean` |
-| 12-instr ISA Turing 完备 + 道判机 | `formal/SSBX/Foundation/Bagua/BaguaTuring.lean` + `GodelLi.lean` |
+| 微核「加 + 一」 — 二字成核 | `formal/SSBX/Foundation/Atlas/YiLegacy/YiCore.lean` |
+| 12-instr ISA Turing 完备 + 道判机 | `formal/SSBX/Foundation/Atlas/YiLegacy/Bagua/BaguaTuring.lean` + `GodelLi.lean` |
 | 路径丙 自编译自证 (M1–M4-甲) | `formal/SSBX/Foundation/Wen/{WenyanParser, WenEval, WenDef, WenDefEval, WenDefCompile, WenyanReflect, WenyanSelfHost, WenyanSelfInterp, DaoSource}.lean` |
 | MetaInterp Phase 2.3 (12/12 dispatch + execute + universal compose) | `formal/SSBX/Foundation/Wen/MetaInterp/*` (16 files) |
 | 45 层哲学义理 in-source | `formal/SSBX/Foundation/Wen/Kernel.lean` |

@@ -1,4 +1,4 @@
-import SSBX.Foundation.Bagua.R8
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.R8
 import SSBX.Text.OperatorFamilySemantics
 import SSBX.Text.OperatorSignatures
 

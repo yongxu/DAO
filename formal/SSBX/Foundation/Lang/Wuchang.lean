@@ -41,7 +41,7 @@ and balance to 道.
 - `traditional_not_dao` : the trigram-doubled 五行→卦 placement does NOT XOR to 道
 -/
 
-import SSBX.Foundation.Bagua.R7
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.R7
 import SSBX.Foundation.Lang.DaoJudge
 
 namespace SSBX.Foundation.Lang.Wuchang

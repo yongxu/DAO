@@ -5,7 +5,7 @@ The canonical V4 kernel acts on Hexagram by content complement and frame
 reversal.  R7 and R8 lifts preserve their extra coordinates.
 -/
 
-import SSBX.Foundation.Bagua.R7
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.R7
 import SSBX.Foundation.Hierarchy.Operators.V4.Instances
 import SSBX.Foundation.Hierarchy.Operators.V4.Temporal
 import Mathlib.Algebra.Group.Action.Defs

@@ -1,14 +1,14 @@
 /-
 # BaguaTuring — 文程序、解释器、是道非道判机
 
-> **[LEGACY-PARALLEL — 2026-05-15]** Per v0.6 doctrine, new code MUST
-> use [`Foundation/Wen/Core/`](../Wen/Core/) (the language-independent
+> **[Bagua LEGACY — relocated 2026-05-15 (Phase γ)]** Original location
+> `Foundation/Bagua/BaguaTuring.lean` retired; content preserved here
+> under `Atlas/YiLegacy/Bagua/`. New code MUST use
+> [`Foundation/Wen/Core/`](../../../Wen/Core/) (language-independent
 > R 8-based interpreter). Bridge YiInstr ↔ Core.Instr is in
-> [`Foundation/Wen/Core/YiInstrBridge.lean`](../Wen/Core/YiInstrBridge.lean).
+> [`Foundation/Wen/Core/YiInstrBridge.lean`](../../../Wen/Core/YiInstrBridge.lean).
 > The headline DaoSource and Diagonal theorems are now anchored on
-> Wen/Core via `Atlas/Yi/{DaoSource,Diagonal}.lean` — this file's
-> daoJudgeProg and BaguaTuring.runFuel remain for the Wenyan parser
-> stack which still emits legacy YiInstr.
+> Wen/Core via `Atlas/Yi/{DaoSource,Diagonal}.lean`.
 
 The interpreter for 文 (wenyan-encoded YiInstr programs) operating on R8.
 
@@ -52,7 +52,7 @@ emitted by `daoJudgeProg`; correctness theorems remain stated in terms of
   These four primitives give universal computation. Specifically, any Minsky
   machine can be encoded by translating its instructions into YiInstr.
 -/
-import SSBX.Foundation.Bagua.R8
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.R8
 
 namespace SSBX.Foundation.Bagua.BaguaTuring
 

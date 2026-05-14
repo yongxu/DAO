@@ -27,6 +27,21 @@ convenience and to gather the available bindings.
 * `Atlas/Yi`       — umbrella for the Yi naming Atlas overlay
                      (Yao = R 1, Trigram = R 3, Hexagram = R 6,
                      Shi = R 2, 8 Bagua + 64 hexagrams + V₄ ops).
+
+## Yi legacy (Phase γ — relocated 2026-05-15)
+
+The original `Foundation/Yi/` and `Foundation/Bagua/` directories
+were retired under v0.6 doctrine.  Their content was relocated to
+`Atlas/YiLegacy/` (preserved namespace `SSBX.Foundation.Yi` and
+`SSBX.Foundation.Bagua` internally — only the file paths moved) so
+that the legacy `Wen` parser / interpreter stack (~50 consumer files,
+using `inductive Yao` and `structure Hexagram`) continues to build
+on the legacy types while new code uses the clean `Atlas/Yi/` overlay
+(`Yao := Bool`, `Hexagram := R 6`) anchored on the R-Family core.
+
+`YiLegacy/` is **not** included in this umbrella; consumers continue
+to import the specific modules they need (e.g.
+`import SSBX.Foundation.Atlas.YiLegacy.Yi`).
 -/
 
 import SSBX.Foundation.Atlas.Pauli

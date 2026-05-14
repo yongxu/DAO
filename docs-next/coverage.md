@@ -28,8 +28,8 @@
 | `docs-next/10_formal_形式/cell192-grid.md` | **moved** → [`史/docs-next-v2/cell192-grid_Z3-Shi_旧版.md`](../史/docs-next-v2/cell192-grid_Z3-Shi_旧版.md) — 替代为 `docs-next/10_formal_形式/cell256-grid.md`（创建中，64 × 4 + 因/果 标注） |
 | `docs-next/10_formal_形式/yi-RO-hierarchy.md` (v1, 旧 R₁..R₆ 编号) | **moved** → [`史/docs-next-v2/yi-RO-hierarchy_v1_旧R1-R6编号.md`](../史/docs-next-v2/yi-RO-hierarchy_v1_旧R1-R6编号.md) — 替代为 [`yi-RO-hierarchy.md`](10_formal_形式/yi-RO-hierarchy.md)（原 -v2.md 提为正本，R₀..R₈ uniform） |
 | `表六_192格全表.md` | **renamed** → `表六_256格全表.md` (64 × 4 + 因/果 标注) |
-| `formal/SSBX/Foundation/Bagua/Cell192.lean` | **deleted** (commit `8e4406e`) — 替代为 `Cell256.lean` + `Cell128.lean` |
-| `formal/SSBX/Foundation/Bagua/Cell192Stratify.lean` | **replaced** by `Cell256Stratify.lean` (R₀..R₈ + R8_complete) |
+| `formal/SSBX/Foundation/Atlas/YiLegacy/Bagua/Cell192.lean` | **deleted** (commit `8e4406e`) — 替代为 `Cell256.lean` + `Cell128.lean` |
+| `formal/SSBX/Foundation/Atlas/YiLegacy/Bagua/Cell192Stratify.lean` | **replaced** by `Cell256Stratify.lean` (R₀..R₈ + R8_complete) |
 | (无) → `Foundation/Hierarchy/RHierarchy.lean` 与 `R0_Taiji.lean` .. `R8_GuoHex.lean` | **new** (commit `1c76a55`, Phase C) |
 | (无) → `Foundation/Hierarchy/R5_Wuyao.lean`、`LiftProject.lean`、`Operators/Atomic.lean`、`Operators/V4Outer.lean` | **new** (commit `7de5064`, Phase A–F) |
 | (无) → `Foundation/Notation/OXNotation.lean` | **new** (`OX["xxxxxxxx"]` 8-char macro) |

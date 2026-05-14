@@ -7,7 +7,7 @@ content/frame bits.
 
 import SSBX.Foundation.Wen.Layered.Bridges.V4
 import SSBX.Foundation.Lang.Lexicon
-import SSBX.Foundation.Yi.Yi
+import SSBX.Foundation.Atlas.YiLegacy.Yi
 import SSBX.Foundation.Wen.V4Kernel.Word64
 
 namespace SSBX.Foundation.Wen.Layered.Bridges

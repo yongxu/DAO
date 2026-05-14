@@ -7,7 +7,7 @@ and proves the corresponding Lisp-side evaluation value.
 -/
 
 import SSBX.Foundation.Hierarchy.Operators.V4.Temporal
-import SSBX.Foundation.Bagua.BaguaTuring
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaTuring
 import SSBX.Foundation.Wen.V4Kernel.LispRSpacePlan
 
 namespace SSBX.Foundation.Wen.V4Kernel

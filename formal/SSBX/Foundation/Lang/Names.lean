@@ -37,12 +37,12 @@ yi = 颐/益, …). To avoid ASCII ambiguity, the 64 individual defs use
 requires the brackets for CJK identifiers.
 -/
 
-import SSBX.Foundation.Yi.Yi
-import SSBX.Foundation.Bagua.BaguaAlgebra
-import SSBX.Foundation.Bagua.BenZheng
+import SSBX.Foundation.Atlas.YiLegacy.Yi
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaAlgebra
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.BenZheng
 import SSBX.Foundation.Hierarchy.R5_Wuyao
-import SSBX.Foundation.Bagua.R7
-import SSBX.Foundation.Bagua.R8
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.R7
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.R8
 
 namespace SSBX.Foundation.Yi.Yi.Hexagram
 

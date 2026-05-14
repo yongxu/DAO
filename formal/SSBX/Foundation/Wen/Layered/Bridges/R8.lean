@@ -5,7 +5,7 @@ The coordinate order is the v3 OX/R8 order:
 `y1 y2 y3 y4 y5 y6 yin guo`, with `false = o/yang`.
 -/
 
-import SSBX.Foundation.Bagua.R8
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.R8
 import SSBX.Foundation.Hierarchy.Operators.V4.Temporal
 import SSBX.Foundation.Wen.Layered.BitSpace
 

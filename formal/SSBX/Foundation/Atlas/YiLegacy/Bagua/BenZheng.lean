@@ -32,7 +32,7 @@
   - Core.lean GammaProcess namespace
   - MonadRoot.lean Face 12-枚举（在 P5 改造时）
 -/
-import SSBX.Foundation.Bagua.BaguaAlgebra
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaAlgebra
 
 namespace SSBX.Foundation.Bagua.BenZheng
 

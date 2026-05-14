@@ -1,12 +1,12 @@
 /-
 # BaguaAlgebra — 八卦完整算子代数
 
-> **[LEGACY-PARALLEL — 2026-05-15]** Per v0.6 doctrine, new code MUST
-> use [`Foundation/Atlas/Yi/Operators.lean`](../Atlas/Yi/Operators.lean)
-> (V₄ operators cuo/zong/hu on R-Family-typed Hexagram) and
-> [`Foundation/Wen/Core/`](../Wen/Core/) (language-independent TM).
-> This file remains for compatibility while the Wenyan parser stack
-> migrates incrementally. Full retirement is multi-session γ-work.
+> **[Bagua LEGACY — relocated 2026-05-15 (Phase γ)]** Original location
+> `Foundation/Bagua/BaguaAlgebra.lean` retired; content preserved here
+> under `Atlas/YiLegacy/Bagua/` as a doctrinally-positioned Atlas overlay.
+> New code MUST use [`Foundation/Atlas/Yi/Operators.lean`](../../Yi/Operators.lean)
+> (V₄ operators on R-Family-typed Hexagram) and
+> [`Foundation/Wen/Core/`](../../../Wen/Core/) (language-independent TM).
 
 The complete operator system for 八卦 (T_3 = Σ³), formalizing
   义理/G_完整算子系统_八卦互通与归一.md
@@ -43,7 +43,7 @@ This file adds the strictly finer (Z/2)³ structure: three single-bit flips
   § 9   5 minimal operators + completeness theorem
   § 10  grandCycle (大循环): TaiJi → Trigram → TaiJi
 -/
-import SSBX.Foundation.Yi.Yi
+import SSBX.Foundation.Atlas.YiLegacy.Yi
 
 namespace SSBX.Foundation.Bagua.BaguaAlgebra
 

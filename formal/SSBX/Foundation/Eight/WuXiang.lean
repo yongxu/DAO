@@ -17,8 +17,8 @@ This file gives the **finite, no-Mathlib** core of the **物理** 衍 file:
 本文件仅依 Lean stdlib + Yi.lean + BaguaAlgebra，不引入 Mathlib。
 连续 superposition / Hilbert 空间 / Schrödinger 方程 / SU(N) Lie 代数 皆 Phase 4 future（需 Mathlib + ℂ）。
 -/
-import SSBX.Foundation.Yi.Yi
-import SSBX.Foundation.Bagua.BaguaAlgebra
+import SSBX.Foundation.Atlas.YiLegacy.Yi
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaAlgebra
 
 set_option linter.unusedSimpArgs false
 

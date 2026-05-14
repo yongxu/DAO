@@ -39,8 +39,8 @@ occurrence?
 
 import SSBX.Foundation.Lang.Sexp
 import SSBX.Foundation.Lang.Names
-import SSBX.Foundation.Bagua.R7
-import SSBX.Foundation.Yi.Yi
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.R7
+import SSBX.Foundation.Atlas.YiLegacy.Yi
 
 namespace SSBX.Foundation.Lang.DaoJudge
 

@@ -36,9 +36,9 @@ The `allLayerChars` table at the bottom is a unified inspection point for the
 interpreter — any future surface-alias parser should consult it as ground truth.
 -/
 
-import SSBX.Foundation.Yi.Yi
-import SSBX.Foundation.Bagua.BaguaAlgebra
-import SSBX.Foundation.Bagua.R8
+import SSBX.Foundation.Atlas.YiLegacy.Yi
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaAlgebra
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.R8
 import SSBX.Text.OperatorAnchors
 
 /-! ## R1 — Yao essence (阳/阴 → 实/虚)

@@ -1,15 +1,17 @@
 /-
 # Yi-Calculus — formal extraction of 周易 's structure
 
-> **[LEGACY-PARALLEL — 2026-05-15]** Per v0.6 doctrine
-> ([docs-next/10_formal_形式/wen-algebra.md](../../../../docs-next/10_formal_形式/wen-algebra.md)),
-> new code MUST use [`Foundation/Atlas/Yi/`](../Atlas/Yi/) (Yi naming
-> as Atlas overlay over R-Family) and [`Foundation/Wen/Core/`](../Wen/Core/)
-> (language-independent TM on R 8). This file remains for downstream
-> compatibility while the Wenyan parser stack (~70 consumer files)
-> migrates incrementally. Full retirement of `Foundation/Yi/` is a
-> multi-session γ-effort tracked at
-> `/Users/ren/.claude/plans/restructure-code-per-wen-algebra-v06.md`.
+> **[Yi LEGACY — relocated 2026-05-15 (Phase γ)]** Original location
+> `Foundation/Yi/Yi.lean` retired; content preserved here under the
+> `Atlas/YiLegacy/` namespace as a doctrinally-positioned Atlas overlay.
+> New code MUST use [`Foundation/Atlas/Yi/`](../Yi/) (clean R-Family
+> overlay with `Yao := Bool`, `Hexagram := R 6`, etc.) and
+> [`Foundation/Wen/Core/`](../../Wen/Core/) (language-independent TM
+> on R 8). This file is preserved for downstream `Wen` parser stack
+> consumers (~50 files) using the legacy `inductive Yao` /
+> `structure Hexagram` types. Imports inside the consumer files still
+> name the legacy Lean namespaces (e.g. `SSBX.Foundation.Yi`); only the
+> `import` paths were updated to `SSBX.Foundation.Atlas.YiLegacy.*`.
 
   Per spec yi-calculus.md. Not modern logic mapped onto 周易, but the
   formal-system structure embedded in 周易 made explicit.

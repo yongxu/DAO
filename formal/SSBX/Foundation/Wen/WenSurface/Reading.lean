@@ -18,10 +18,10 @@ Hex/Bool denotation。
 -/
 import SSBX.Foundation.Wen.WenSurface.Lex
 import SSBX.Foundation.Wen.WenSurface.Semantics
-import SSBX.Foundation.Bagua.R8
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.R8
 import SSBX.Text.OperatorAnchors
 import SSBX.Text.OperatorReadings
-import SSBX.Foundation.Yi.YiCore
+import SSBX.Foundation.Atlas.YiLegacy.YiCore
 
 namespace SSBX.Foundation.Wen.WenSurface
 

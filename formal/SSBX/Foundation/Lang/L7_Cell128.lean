@@ -48,8 +48,8 @@ flipping every bit. (Demonstrated by `native_decide` smoke test.)
 -/
 
 import SSBX.Foundation.Lang.Core
-import SSBX.Foundation.Yi.Yi
-import SSBX.Foundation.Bagua.R7
+import SSBX.Foundation.Atlas.YiLegacy.Yi
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.R7
 
 namespace SSBX.Foundation.Lang.L7
 

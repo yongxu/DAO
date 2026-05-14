@@ -23,7 +23,7 @@
     3. 多元 = 道 = 太极 = 大同           (the resulting totality is unity)
 -/
 
-import SSBX.Foundation.Yi.Yi
+import SSBX.Foundation.Atlas.YiLegacy.Yi
 
 namespace SSBX.Foundation.Core.Yuan
 

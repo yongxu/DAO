@@ -20,8 +20,8 @@ arithmetic. The use of `Nat` / `Int` from Lean's stdlib is **道层** support
 
 The single-axiom-free, native-decide-free goal is upheld throughout.
 -/
-import SSBX.Foundation.Bagua.BaguaAlgebra
-import SSBX.Foundation.Yi.Yi
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaAlgebra
+import SSBX.Foundation.Atlas.YiLegacy.Yi
 
 namespace SSBX.Foundation.Eight.ShuSuan
 

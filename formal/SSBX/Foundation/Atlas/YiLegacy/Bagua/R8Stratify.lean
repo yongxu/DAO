@@ -37,10 +37,10 @@ R8 atomic 算子: **投 (tóu)** = toggle 果 bit (= Shi V₄ 之第二轴)
 § 6  xuGua extension to R8 (xuGua256: 256 元有序列)
 § 7  R8 closure 摘要定理 + R7 中间层桥接
 -/
-import SSBX.Foundation.Bagua.R7
-import SSBX.Foundation.Bagua.R8
-import SSBX.Foundation.Bagua.BenZheng
-import SSBX.Foundation.Bagua.BaguaAlgebra
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.R7
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.R8
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.BenZheng
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaAlgebra
 
 namespace SSBX.Foundation.Bagua.R8Stratify
 

@@ -16,8 +16,8 @@ This file gives the **finite, no-Mathlib** core of the **心智** 衍 file:
 本文件仅依 Lean stdlib + Yi.lean + BaguaAlgebra + LuoJi，不引入 Mathlib。
 神经科学 / 现象学时间意识 / 八识 等 future work（需 Husserl 严格化或大脑模型）。
 -/
-import SSBX.Foundation.Yi.Yi
-import SSBX.Foundation.Bagua.BaguaAlgebra
+import SSBX.Foundation.Atlas.YiLegacy.Yi
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaAlgebra
 import SSBX.Foundation.Eight.LuoJi
 
 set_option linter.unusedSimpArgs false

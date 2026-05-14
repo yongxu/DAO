@@ -13,7 +13,7 @@ So we can `native_decide` each half independently and combine.
 
 Risk mitigated: 路径丙 § 风险 1（native_decide 对长 List 卡顿）.
 -/
-import SSBX.Foundation.Bagua.BaguaTuring
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaTuring
 
 namespace SSBX.Foundation.Bagua.ChunkedDecide
 

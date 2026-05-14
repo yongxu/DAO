@@ -11,8 +11,8 @@ not claim a full denotation for every catalogue operator, nor a bi-infinite
 Turing tape with a movable head.
 -/
 import SSBX.Foundation.Core.Yuan
-import SSBX.Foundation.Bagua.BaguaTuring
-import SSBX.Foundation.Bagua.BaguaAlgebra
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaTuring
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaAlgebra
 import SSBX.Foundation.Modern.MingBoundary
 import SSBX.Text.OperatorInstructionSemantics
 import SSBX.Text.OperatorSignatures

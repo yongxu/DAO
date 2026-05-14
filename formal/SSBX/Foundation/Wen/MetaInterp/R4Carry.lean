@@ -26,8 +26,8 @@ Yi-specific bijection locally rather than reaching for the parametric
 on the parametric carrier; that is out of scope for the P4.4 cleanup.)
 -/
 import Mathlib.Logic.Equiv.Basic
-import SSBX.Foundation.Bagua.R8
-import SSBX.Foundation.Bagua.BenZheng
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.R8
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.BenZheng
 import SSBX.Foundation.Hierarchy.LiftProject
 
 namespace SSBX.Foundation.Wen.MetaInterp.R4Carry

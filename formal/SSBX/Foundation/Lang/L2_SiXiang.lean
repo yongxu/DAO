@@ -26,8 +26,8 @@ their sum `greaterYang`, they exhaust the Klein-four group.
 -/
 
 import SSBX.Foundation.Lang.Core
-import SSBX.Foundation.Yi.Yi
-import SSBX.Foundation.Bagua.BaguaAlgebra
+import SSBX.Foundation.Atlas.YiLegacy.Yi
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaAlgebra
 
 namespace SSBX.Foundation.Lang.L2
 

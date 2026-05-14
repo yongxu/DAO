@@ -17,8 +17,8 @@ This file formalizes the **finite, no-Mathlib** core of the **统计** 衍 file:
 所有概率以 **Nat 分子 + 共同分母** 表示——足以承担 大衍占筮 与 八卦层 之 finite 概率。
 连续测度 / Lebesgue / σ-代数无穷扩展皆 Phase 3 future work（需 Mathlib）。
 -/
-import SSBX.Foundation.Bagua.BaguaAlgebra
-import SSBX.Foundation.Yi.Yi
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaAlgebra
+import SSBX.Foundation.Atlas.YiLegacy.Yi
 
 namespace SSBX.Foundation.Eight.TongJi
 

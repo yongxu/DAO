@@ -36,7 +36,7 @@ The complement-equivariance machinery (cuoCell, cuoState, halts_cuo_invariant, e
 has been **inlined into `GodelLi.lean § 2.5`** so it is available to the
 consumer theorems that need to derive `CuoInvariantDecide` witnesses.
 -/
-import SSBX.Foundation.Bagua.GodelLi
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.GodelLi
 
 namespace SSBX.Foundation.Bagua.CuoInvariance
 

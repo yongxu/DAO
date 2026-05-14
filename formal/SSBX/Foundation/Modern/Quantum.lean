@@ -24,7 +24,7 @@ import Mathlib.Data.Matrix.Mul
 import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 import Mathlib.Data.Real.Sqrt
 import Mathlib.Data.Complex.Basic
-import SSBX.Foundation.Yi.Yi
+import SSBX.Foundation.Atlas.YiLegacy.Yi
 import SSBX.Foundation.Eight.WuXiang
 
 namespace SSBX.Foundation.Modern.Quantum

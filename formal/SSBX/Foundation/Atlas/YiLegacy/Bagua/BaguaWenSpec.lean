@@ -28,7 +28,7 @@ wenyan-operators.md 之 281 字（推、比、必、不、并、或、同、凡 
 
 Risk mitigated: 路径丙 § 风险 3 (由 L0 冻结 + L1 def 全面缓解).
 -/
-import SSBX.Foundation.Bagua.BaguaTuring
+import SSBX.Foundation.Atlas.YiLegacy.Bagua.BaguaTuring
 
 namespace SSBX.Foundation.Bagua.BaguaWenSpec
 
