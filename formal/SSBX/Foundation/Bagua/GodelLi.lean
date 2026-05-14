@@ -1,6 +1,15 @@
 /-
 # GodelLi — 理之不完备 · 哥德尔在 192
 
+> **[LEGACY-PARALLEL — 2026-05-15]** Per v0.6 doctrine, the canonical
+> diagonal theorem is at
+> [`Foundation/Atlas/Yi/Diagonal.lean`](../Atlas/Yi/Diagonal.lean) —
+> 647 LOC, anchored on Wen/Core (language-independent R 8 TM), no
+> dependency on this file's `kleene_recursion_axiom`. This file
+> remains because the Wenyan parser stack still emits BaguaTuring's
+> YiInstr; the `kleene_recursion_axiom` here is the load-bearing axiom
+> for that stack's universal interpreter target.
+
 Companion document: `义理/J_理之不完备_哥德尔在192.md`
 
 This file formalizes the **理之不完备** (incompleteness-of-Li) theorem at the
