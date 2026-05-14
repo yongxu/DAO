@@ -12,11 +12,11 @@ Companion: `义理/量子时空互补 · 从一到测.md`
 这不是量子引力或统一场论的物理证明；它是本文档所用语义边界的
 machine-checked skeleton。
 -/
-import SSBX.Foundation.Yi.Yi
+import SSBX.Foundation.Atlas.Yi.Bagua
 
 namespace SSBX.Foundation.Modern.QuantumSpacetime
 
-open SSBX.Foundation.Yi.Yi
+open SSBX.Foundation.Atlas.Yi
 
 /-! ## § 1 One root and two physical faces -/
 
@@ -72,6 +72,9 @@ inductive PreMeasurement : Type
   | realVirtual
   deriving Repr, DecidableEq
 
+private instance : Repr Trigram where
+  reprPrec _ _ := "Trigram"
+
 /-- 测量输出的三类边界：实、虚、或八卦态。 -/
 inductive CollapseOutcome : Type
   | real
@@ -104,8 +107,8 @@ theorem every_measurement_respects_limit (m : Measurement) (s : PreMeasurement) 
 
 /-- 八卦态的离散承载恰有 8 个枚举项。 -/
 theorem bagua_outcome_cardinality_anchor :
-    Trigram.all.length = 8 :=
-  Trigram.all_length
+    Trigram.bagua.length = 8 :=
+  Trigram.bagua_length
 
 /-! ## § 3 Public summary -/
 
@@ -118,7 +121,7 @@ theorem quantum_spacetime_measurement_summary :
     complementaryFaces .quantumSpace .relativisticSpacetime
     ∧ ¬ CurrentPhysicalUnity .quantumSpace .relativisticSpacetime
     ∧ (∀ m : Measurement, ∀ s : PreMeasurement, withinMeasurementLimit (m s))
-    ∧ Trigram.all.length = 8 :=
+    ∧ Trigram.bagua.length = 8 :=
   ⟨quantum_spacetime_complementary_faces,
    quantum_spacetime_not_identical,
    every_measurement_respects_limit,

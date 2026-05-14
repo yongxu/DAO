@@ -1,19 +1,19 @@
 /-
-# R₆ Hexagram — re-export from `SSBX.Foundation.Yi.Yi` (R-index alias)
+# R₆ Hexagram — re-export alias (R-index)
 
 Strict-uniform R₀..R₈ enumeration entry for R₆ = 六爻 (hexagram).
 
 R₆ = Hexagram (6 yao); |Hexagram| = 64 = (Z/2)⁶.
 
-This file is a thin re-export shim: it imports `Yi/Yi.lean` and
-re-publishes the `Hexagram` structure under `SSBX.Foundation.Hierarchy.R6`
-for R-index navigability. No new logic.
+Per the v0.6 R-Family doctrine and Atlas separation, the canonical
+Hexagram type is the Yi-naming overlay
+`SSBX.Foundation.Atlas.Yi.Hexagram` (= `R 6 = Fin 6 → Bool`).
 -/
-import SSBX.Foundation.Yi.Yi
+import SSBX.Foundation.Atlas.Yi.Names
 
 namespace SSBX.Foundation.Hierarchy.R6
 
-/-- R₆ (六爻卦) carrier alias: Hexagram structure (6-yao). -/
-abbrev Hexagram : Type := SSBX.Foundation.Yi.Yi.Hexagram
+/-- R₆ (六爻卦) carrier alias: Hexagram = R 6 (per `Atlas.Yi.Names`). -/
+abbrev Hexagram : Type := SSBX.Foundation.Atlas.Yi.Hexagram
 
 end SSBX.Foundation.Hierarchy.R6

@@ -17,7 +17,7 @@ import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 import Mathlib.Probability.ProbabilityMassFunction.Basic
 import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
 import SSBX.Foundation.Eight.TongJi
-import SSBX.Foundation.Yi.Yi
+import SSBX.Foundation.Atlas.Yi.Names
 
 -- DaYan / Trigram 是 inductive type，可派生 Fintype。
 deriving instance Fintype for SSBX.Foundation.Eight.TongJi.DaYan
@@ -81,7 +81,7 @@ theorem bayes_cross_product_skeleton (α : Type*) [MeasurableSpace α]
 instance : MeasurableSpace SSBX.Foundation.Eight.TongJi.DaYan := ⊤
 
 /-- **Trigram 上之 discrete σ-代数**。 -/
-instance : MeasurableSpace SSBX.Foundation.Yi.Yi.Trigram := ⊤
+instance : MeasurableSpace SSBX.Foundation.Atlas.Yi.Trigram := ⊤
 
 /-- **大衍 4 状态之 cardinality** = 4（与 Trigram 之 cardinality 8 之关系：DaYan 是 Trigram 一爻之分类）。 -/
 theorem dayan_card :

@@ -86,16 +86,8 @@ import SSBX.Foundation.Wen.WenyanParser
 import SSBX.Foundation.Wen.WenEval
 import SSBX.Foundation.Wen.WenDefEval
 import SSBX.Foundation.Wen.WenyanSyntax
-import SSBX.Foundation.Wen.WenyanReflect
 import SSBX.Foundation.Wen.WenDefCompile
 import SSBX.Foundation.Wen.WenyanParserGeneral
-import SSBX.Foundation.Wen.WenyanSelfHost
-import SSBX.Foundation.Wen.WenyanQuine
-import SSBX.Foundation.Wen.WenyanQuineRoutes
-import SSBX.Foundation.Wen.WenyanQuineConcreteSearch
-import SSBX.Foundation.Wen.WenyanQuineKleene
-import SSBX.Foundation.Wen.WenyanLambdaRoute
-import SSBX.Foundation.Wen.WenyanLambdaBridge
 import SSBX.Foundation.Wen.WenSurface.Lex
 import SSBX.Foundation.Wen.WenSurface.Reading
 import SSBX.Foundation.Wen.WenSurface.DomainLaw
@@ -104,11 +96,6 @@ import SSBX.Foundation.Wen.WenSurface.Syntax
 import SSBX.Foundation.Wen.WenSurface.Elaborate
 import SSBX.Foundation.Wen.WenSurface.EndToEnd
 import SSBX.Foundation.Wen.WenSurface.Coverage
-import SSBX.Foundation.Wen.DaoSource
-import SSBX.Foundation.Wen.Demo
-import SSBX.Foundation.Wen.AntiSchmitt
-import SSBX.Foundation.Wen.AlignmentFailures
-import SSBX.Foundation.Wen.EconGame
 
 -- Foundation/Jian — 间之核（14 字粒子核）
 import SSBX.Foundation.Jian.JianOntology

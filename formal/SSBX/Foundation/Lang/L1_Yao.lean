@@ -30,11 +30,11 @@ program reaches a fixed point in 1 step.
 -/
 
 import SSBX.Foundation.Lang.Core
-import SSBX.Foundation.Yi.Yi
+import SSBX.Foundation.Atlas.Yi.Names
 
 namespace SSBX.Foundation.Lang.L1
 
-open SSBX.Foundation.Yi.Yi  (Yao)
+open SSBX.Foundation.Atlas.Yi (Yao)
 
 /-! ## § 1 Cell type alias + Cayley action -/
 

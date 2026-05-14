@@ -19,11 +19,7 @@ the project's chosen 3-valued semantics for handling 实/虚/中 (true/false/und
 即 道层（Lean kernel 之经典逻辑）描述 理层（K3 三值系统）。
 此即"道之经典证理之非经典"——道理二分之精确实例。
 -/
-import SSBX.Foundation.Yi.Yi
-
 namespace SSBX.Foundation.Eight.LuoJi
-
-open SSBX.Foundation.Yi.Yi
 
 /-! ## § 1 K3 三值类型 -/
 
