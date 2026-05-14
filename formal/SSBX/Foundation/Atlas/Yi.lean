@@ -23,7 +23,21 @@ R-Family core:
                           with the five 相 (形/解/印/执/义) all proven.
 * `Atlas/Yi/Diagonal`   — 理之不完备 / 哥德尔在 R 8: halting-undecidability
                           diagonal on `Wen.Core` (Atlas-Yi form of
-                          `Foundation/Bagua/GodelLi.lean`).
+                          `GodelLi.lean`).
+* `Atlas/Yi/Positions`  — Hexagram position helpers (atPos, wellPos,
+                          isYangPos, yingResponds, biAdj, allHex).
+* `Atlas/Yi/Sheng`      — SiXiang (= Shi = R 2) + Trigram flips
+                          (motion / middleFlip / topFlip), involutivity,
+                          Hamming distance (R-Family port of
+                          `Classical/Algebra/BaguaAlgebra`).
+* `Atlas/Yi/Cell128`    — R₇ = Hexagram × YinBit with full (Z/2)⁷
+                          group, imprint, projection, V₄ hex actions,
+                          Cayley representation (R-Family port of
+                          `Classical/Cells/R7`).
+* `Atlas/Yi/Cell256`    — R₈ = Hexagram × Shi with full (Z/2)⁸ group,
+                          V₄ Shi + Hexagram actions, projections to
+                          Cell128 / Hexagram, Cayley representation
+                          (R-Family port of `Classical/Cells/R8`).
 
 Per doctrine, nothing else in the codebase imports this module: it is
 opt-in.  This umbrella exists for convenience and as a discoverability
@@ -33,8 +47,9 @@ anchor.
 
 This module does **not** depend on the legacy `Foundation/Yi/` or
 `Foundation/Bagua/` packages.  It is a clean re-implementation purely
-on top of `Foundation/R/`.  Phase γ (a later step) will delete the
-legacy modules; consumers should migrate to this Atlas overlay.
+on top of `Foundation/R/`.  Consumers should migrate to this Atlas
+overlay; legacy code is preserved in `Atlas/Yi/Classical/` (5 semantic
+sub-clusters) as a co-equal classical formalization.
 -/
 
 import SSBX.Foundation.Atlas.Yi.Names
@@ -44,3 +59,7 @@ import SSBX.Foundation.Atlas.Yi.ShiV4
 import SSBX.Foundation.Atlas.Yi.Operators
 import SSBX.Foundation.Atlas.Yi.DaoSource
 import SSBX.Foundation.Atlas.Yi.Diagonal
+import SSBX.Foundation.Atlas.Yi.Positions
+import SSBX.Foundation.Atlas.Yi.Sheng
+import SSBX.Foundation.Atlas.Yi.Cell128
+import SSBX.Foundation.Atlas.Yi.Cell256

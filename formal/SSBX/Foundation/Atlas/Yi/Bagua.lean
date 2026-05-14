@@ -111,6 +111,37 @@ theorem mem_bagua (t : Trigram) : t ∈ bagua := by
   rcases t.y1 with _ | _ <;> rcases t.y2 with _ | _ <;> rcases t.y3 with _ | _ <;>
     simp [qian, dui, li, zhen, xun, kan, gen, kun, yang, yin]
 
+/-! ## § 4 Legacy English name aliases
+
+These aliases preserve the English-language column from the bagua name
+table so legacy consumers can refer to a trigram by its translated noun.
+Each alias is a `def`-level synonym — the underlying value is the
+canonical pinyin entry. -/
+
+/-- ☰ 乾 — "heaven" alias of `qian`. -/
+def heaven : Trigram := qian
+
+/-- ☱ 兌 — "lake" alias of `dui`. -/
+def lake : Trigram := dui
+
+/-- ☲ 離 — "fire" alias of `li`. -/
+def fire : Trigram := li
+
+/-- ☳ 震 — "thunder" alias of `zhen`. -/
+def thunder : Trigram := zhen
+
+/-- ☴ 巽 — "wind" alias of `xun`. -/
+def wind : Trigram := xun
+
+/-- ☵ 坎 — "water" alias of `kan`. -/
+def water : Trigram := kan
+
+/-- ☶ 艮 — "mountain" alias of `gen`. -/
+def mountain : Trigram := gen
+
+/-- ☷ 坤 — "earth" alias of `kun`. -/
+def earth : Trigram := kun
+
 end Trigram
 
 end SSBX.Foundation.Atlas.Yi

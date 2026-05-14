@@ -197,6 +197,38 @@ theorem jiji_ne_weiji : (jiji : Hexagram) ≠ weiji := by
 theorem qianqian_ne_jiji : (qianqian : Hexagram) ≠ jiji := by
   intro h; have := congrFun h ⟨1, by decide⟩; cases this
 
+/-! ## § 5 Legacy English / pinyin aliases
+
+Pinyin entries for two further King-Wen anchors and English aliases for
+the six most commonly used hexagrams.  Each alias is a `def`-level
+synonym so existing pattern-matches against the canonical name continue
+to typecheck. -/
+
+/-- 泰 (☷☰, earth over heaven, King Wen #11): "peace".  Inner 乾, outer 坤. -/
+@[match_pattern] def tai : Hexagram := mk yang yang yang yin yin yin
+
+/-- 否 (☰☷, heaven over earth, King Wen #12): "blocking" / "obstruction".
+    Inner 坤, outer 乾. -/
+@[match_pattern] def pi : Hexagram := mk yin yin yin yang yang yang
+
+/-- ☰☰ 乾為天 — "heaven" alias of `qianqian`. -/
+def heaven : Hexagram := qianqian
+
+/-- ☷☷ 坤為地 — "earth" alias of `kunkun`. -/
+def earth : Hexagram := kunkun
+
+/-- ☵☲ 既濟 — "complete" alias of `jiji`. -/
+def complete : Hexagram := jiji
+
+/-- ☲☵ 未濟 — "incomplete" alias of `weiji`. -/
+def incomplete : Hexagram := weiji
+
+/-- ☰☷ 否 — "blocking" alias of `pi`. -/
+def blocking : Hexagram := pi
+
+/-- ☷☰ 泰 — "peace" alias of `tai`. -/
+def peace : Hexagram := tai
+
 end Hexagram
 
 end SSBX.Foundation.Atlas.Yi

@@ -105,6 +105,12 @@ theorem ext (t u : Trigram) (h1 : y1 t = y1 u) (h2 : y2 t = y2 u)
   | ⟨1, _⟩ => exact h2
   | ⟨2, _⟩ => exact h3
 
+/-- Legacy-compat positional read: `t.positions i = t i`. -/
+def positions (t : Trigram) (i : Fin 3) : Yao := t i
+
+/-- Function-form constructor: a `Trigram` is exactly a `Fin 3 → Yao`. -/
+def ofFn (fn : Fin 3 → Yao) : Trigram := fn
+
 end Trigram
 
 /-! ## § 3 Hexagram (T₆ / 六十四卦) — R 6 -/
@@ -165,6 +171,12 @@ def innerTrigram (h : Hexagram) : Trigram := Trigram.mk h.y1 h.y2 h.y3
 
 /-- 外卦 (outer trigram): the upper 3 yao = `y4 / y5 / y6`. -/
 def outerTrigram (h : Hexagram) : Trigram := Trigram.mk h.y4 h.y5 h.y6
+
+/-- Legacy-compat positional read: `h.positions i = h i`. -/
+def positions (h : Hexagram) (i : Fin 6) : Yao := h i
+
+/-- Function-form constructor: a `Hexagram` is exactly a `Fin 6 → Yao`. -/
+def ofFn (fn : Fin 6 → Yao) : Hexagram := fn
 
 /-- ⊕ : 内卦 → 外卦 → hexagram.
     inner is below (y1, y2, y3); outer is above (y4, y5, y6).
