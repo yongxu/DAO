@@ -1,6 +1,16 @@
 /-
 # Yi-Calculus — formal extraction of 周易 's structure
 
+> **[LEGACY-PARALLEL — 2026-05-15]** Per v0.6 doctrine
+> ([docs-next/10_formal_形式/wen-algebra.md](../../../../docs-next/10_formal_形式/wen-algebra.md)),
+> new code MUST use [`Foundation/Atlas/Yi/`](../Atlas/Yi/) (Yi naming
+> as Atlas overlay over R-Family) and [`Foundation/Wen/Core/`](../Wen/Core/)
+> (language-independent TM on R 8). This file remains for downstream
+> compatibility while the Wenyan parser stack (~70 consumer files)
+> migrates incrementally. Full retirement of `Foundation/Yi/` is a
+> multi-session γ-effort tracked at
+> `/Users/ren/.claude/plans/restructure-code-per-wen-algebra-v06.md`.
+
   Per spec yi-calculus.md. Not modern logic mapped onto 周易, but the
   formal-system structure embedded in 周易 made explicit.
 

@@ -1,6 +1,15 @@
 /-
 # BaguaTuring — 文程序、解释器、是道非道判机
 
+> **[LEGACY-PARALLEL — 2026-05-15]** Per v0.6 doctrine, new code MUST
+> use [`Foundation/Wen/Core/`](../Wen/Core/) (the language-independent
+> R 8-based interpreter). Bridge YiInstr ↔ Core.Instr is in
+> [`Foundation/Wen/Core/YiInstrBridge.lean`](../Wen/Core/YiInstrBridge.lean).
+> The headline DaoSource and Diagonal theorems are now anchored on
+> Wen/Core via `Atlas/Yi/{DaoSource,Diagonal}.lean` — this file's
+> daoJudgeProg and BaguaTuring.runFuel remain for the Wenyan parser
+> stack which still emits legacy YiInstr.
+
 The interpreter for 文 (wenyan-encoded YiInstr programs) operating on R8.
 
 The capstone: a Lean-verified Dao judge that, given a hexagram input, runs as a
