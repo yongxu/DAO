@@ -1,3 +1,7 @@
+> **[Superseded 2026-05-15]** — This is the v3.0 one-page map (R-uniform, Cell256-centered, Yi-named atoms). v0.6 canonical doctrine reframes this around the R-Family `R_N := F₂^N` parametric tower with R₄ + R₈ as dual centers and all semantic naming moved to Atlas. Read [`../10_formal_形式/wen-algebra.md`](../10_formal_形式/wen-algebra.md) v0.6 + [`../10_formal_形式/v4-foundation.md`](../10_formal_形式/v4-foundation.md) v0.5 for the current canonical one-page maps. This file kept for the v3.0 squaring-view ↔ incrementing-view duality discussion.
+
+---
+
 # v3 最终理论速览 — Cell256 / V₄ Shi / 严格 (Z/2)ⁿ R₀..R₈ 闭合
 
 > 状态：v3 定本 (2026-05-11)

@@ -1,15 +1,17 @@
 # Agent Instructions
 
-> 状态：v3 (2026-05-11) — 项目 R₀..R₈ strict (Z/2)ⁿ uniform, V₄ Klein Shi, Cell256, 道 = (qian, dao) = `OX["oooooooo"]`. 旧 Cell192 / Z/3 Shi / 旧 R-编号 已归档至 `史/`，不再被入口索引。
+> 状态：v0.6 (2026-05-15) — R-Family `R_N := F_2^N` tower algebra, R₀..R₈ root layers with R₄/R₈ dual centers, semantic names (道/已/今/未/Yi/Pauli/Boolean) demoted to **Atlas** application layer. v3.0 R-uniform / Cell256-centered doctrine (May 11) is superseded; old v2 Cell192 / Z/3 Shi remains archived in `史/`.
 
 本文件约束所有在本仓库工作的 agents。进入任务前先读本文件，并把这些规则传给后续开启的 subagents。
 
-## v3 Doctrine and Archive Pointers
+## v0.6 Doctrine and Archive Pointers
 
-- **Canonical doctrine**: [`docs-next/10_formal_形式/yi-RO-hierarchy.md`](./docs-next/10_formal_形式/yi-RO-hierarchy.md). 任何关于 R-hierarchy / V₄ Shi / Cell256 / 道 anchor 之结构主张必须以此为准, 不要援引旧 v1 / v2 文件。
+- **Canonical doctrine**: [`docs-next/10_formal_形式/wen-algebra.md`](./docs-next/10_formal_形式/wen-algebra.md) v0.6 (R-Family tower algebra + compiler/interpreter foundation). Companions: [`v4-foundation.md`](./docs-next/10_formal_形式/v4-foundation.md) v0.5 (R₀–R₈ root-layer specs), [`r4.md`](./docs-next/10_formal_形式/r4.md) (R₄ minimum complete unit), [`r8.md`](./docs-next/10_formal_形式/r8.md) (R₈ ceiling + spacetime + judgment). 任何关于 R-Family / R_N carrier / bilinear layers / Hom representation / phantom modes 之结构主张必须以此为准.
+- **Core is language-independent**: `R N := Fin N → Bool`. No Chinese / English / Pauli / Yi semantic names anywhere in `Foundation/R/`, `Foundation/R4/`, `Foundation/R8/`. Atom notation is o/x strings (`oo`, `xx`, `oooooooo`). Semantic mappings (道/错/综/八卦, Pauli, GF(256), Boolean, …) live under `Foundation/Atlas/` as opt-in bindings (per wen-algebra §9, v4-foundation §15).
+- **v3.0 historical (superseded)**: [`yi-RO-hierarchy.md`](./docs-next/10_formal_形式/yi-RO-hierarchy.md), [`yi-calculus-theorem.md`](./docs-next/10_formal_形式/yi-calculus-theorem.md), [`yi-as-meta-framework.md`](./docs-next/10_formal_形式/yi-as-meta-framework.md) — kept for historical context (R-uniform doctrine, Cell256-centered framing); banners point to v0.6 canonical.
 - **Pre-v3 archive**: [`史/`](./史/README.md). 仅当确实需要 v2 (Cell192 / Z/3 Shi / R₁..R₆) 之具体形式时才进入; 否则不读、不引、不更新; **不要把 `史/` 之内容作为新文档之依据**。
 - **Citable historical**: [`史料/`](./史料/) 是 v9–v14 各代手稿之研究档案 (与 `史/` 不同, 仍可援引)。
-- 涉及 Cell-carrier 的代码改动: 必为 `Cell256` (不是 `Cell192`); 若发现遗留 `Cell192` 命名, 在该次任务范围内一并迁移 (或报告给主线程)。
+- 涉及 R-layer 的代码改动: 必为 `R N` parametric (`Foundation/R/`); 旧 Cell128 / Cell256 / Hexagram / Shi / YinBit / GuoBit 命名都迁移到 `Foundation/Atlas/Yi/` overlay 或删除. 若发现 Cell192 残留 (应已无), 一并迁移.
 
 ## Goal: Elegance
 

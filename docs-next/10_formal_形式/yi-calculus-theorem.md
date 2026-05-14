@@ -1,3 +1,7 @@
+> **[Superseded 2026-05-15]** — Canonical doctrine is now [`wen-algebra.md`](wen-algebra.md) v0.6. Theorems A–K survive intact; they now apply to the R-Family `R_N := F₂^N` parametric tower rather than the Yi-specific Cell256 framing. Cardinality and rank facts are unchanged; the Yi-tradition naming (Yao / Trigram / Hexagram / Shi V₄ {道,已,今,未}) is now Atlas-layer per [`v4-foundation.md`](v4-foundation.md) §0.4 ("字符语义全部冻结，只看结构") and [`wen-algebra.md`](wen-algebra.md) §9.
+
+---
+
 # 易微积分定理：从爻到 R8 (256-Cell) 的 (Z/2)ⁿ 自相似完整刻画
 
 > 状态：定理稿 · R8 闭合版（2026-05-10，R7/R8 拆层版）。

@@ -1,15 +1,22 @@
-# 生生不息新文档集 — v3 (2026-05-11) — Cell256 / V₄ Shi / 严格-uniform R₀..R₈
+# 生生不息新文档集 — v0.6 (2026-05-15) — R-Family Tower Algebra
 
-> 状态：v3 定本 (2026-05-11)
+> 状态：v0.6 定本 (2026-05-15) — R-Family `R_N := F_2^N` tower; R₀..R₈ root layers; R₄ + R₈ dual centers; semantic naming (Yi / Pauli / Boolean / GF(256)) demoted to **Atlas** application layer.
 
 本目录是新的文档集暂存区。旧文档暂不删除；待本目录稳定后，再整体替换根 README、`formal/SSBX/README.md`、`义理/README.md` 与 web 索引入口。
 
-## v3 速览入口
+## v0.6 canonical doctrine (必读)
 
-- [**v3 最终理论速览**](00_start/final-theory.md) — Cell256 / V₄ Klein Shi / 严格 uniform R₀..R₈ 一页地图（推荐第一读）。
-- [**形式定本: yi-RO-hierarchy.md**](10_formal_形式/yi-RO-hierarchy.md) — R₀..R₈ definitive doctrine（v3 canonical theory）。
-- [Theorems A–K (yi-calculus-theorem.md)](10_formal_形式/yi-calculus-theorem.md) — R₁..R₈ Lean-anchored 定理链。
-- [meta-framework (yi-as-meta-framework.md)](10_formal_形式/yi-as-meta-framework.md) — self-description GUT 哲学层。
+- [**wen-algebra.md**](10_formal_形式/wen-algebra.md) v0.6 — Tower-level algebra + Lean compiler/interpreter foundation. R-Family closure, Hom representation as `Mat(R_4)`, three bilinear layers (dot / σ / q+Arf), 7 phantom modes, judgment layers (Information / Attractor / Behavior).
+- [**v4-foundation.md**](10_formal_形式/v4-foundation.md) v0.5 — R₀–R₈ root-layer specs (each layer's structure, Aut, subgroups, bilinear). Language-independent: 「字符语义全部冻结，只看结构」.
+- [**r4.md**](10_formal_形式/r4.md) — R₄ minimum complete unit专题 (rank stratification, GL(2,F₂) embedding, Aut = A_8, End(R_2) = R_4, Hom representation cell type).
+- [**r8.md**](10_formal_形式/r8.md) — R₈ ceiling 专题 (spacetime, causality, information/attractor/behavior judgment, squaring tower beyond R_8, GF(256)).
+
+## v3.0 historical (superseded)
+
+- [final-theory.md](00_start/final-theory.md) — v3.0 one-page map (Cell256-centered, Yi-named atoms)
+- [yi-RO-hierarchy.md](10_formal_形式/yi-RO-hierarchy.md) — v3.0 R-uniform strict (Z/2)ⁿ R₀..R₈ doctrine
+- [yi-calculus-theorem.md](10_formal_形式/yi-calculus-theorem.md) — Theorems A–K (survive intact; positioned as Yi-Atlas theorems now)
+- [yi-as-meta-framework.md](10_formal_形式/yi-as-meta-framework.md) — meta-categorical framework (Yi reframed as one Atlas binding among many)
 
 ## 三条阅读路径
 
@@ -29,12 +36,12 @@
 
 ## 最近变更 (Latest)
 
-| 日期 | Commit | 内容 |
-|---|---|---|
-| 2026-05-11 | `1c76a55` | **Phase C**: 9 个 R-index 命名 alias 文件 + `RHierarchy.lean` umbrella；3656 jobs build 干净 |
-| 2026-05-10 | `8e4406e` | **Phase F.6 + G + B.1**: 删 `Cell192.lean`（legacy 3-state Shi 完全删除）；4 份文档与 Lean 路径 sync；YinBit dedup |
-| 2026-05-10 | `0003224` | **Phase F.x.5**: 完成 Modern/* 级联升级 (~80 文件 case-split 全 4 例) |
-| 2026-05-10 | `7de5064` | **Phase A–F 教义对齐**: Cell192 → Cell256；V₄ Klein Shi 取代 Z/3 cyclic Shi；Algebraic spine on Cell128/Cell256；Cayley `ι/ε`；XOR-mask 印/投 |
+| 日期 | 内容 |
+|---|---|
+| 2026-05-15 | **v0.6 canonical doctrine**: `wen-algebra.md` v0.6 + `v4-foundation.md` v0.5 + `r4.md` + `r8.md` 入档. 弃 𝕏/𝕐/矩/象/Frame 等历史层名; 改用 R-Family `R_N := F_2^N` parametric tower. R₄/R₈ 双中心. 语义命名（Yi/Pauli/Boolean）下放至 Atlas application layer. Lean 4 为唯一形式语言 (Clojure 弃用). |
+| 2026-05-14 | v0.4 Xiang module shipped (`762a618`); since superseded by v0.6 R-Family. |
+| 2026-05-11 | v3.0 `1c76a55`: 9 个 R-index 命名 alias 文件 + `RHierarchy.lean` umbrella；3656 jobs build 干净. (v3.0 superseded by v0.6.) |
+| 2026-05-10 | v3.0 `7de5064`/`0003224`/`8e4406e`: Cell192 → Cell256 migration, V₄ Klein Shi, Modern/* upgrade, Cell192.lean deletion. (v3.0 superseded by v0.6.) |
 
 详见 [`30_crosswalk_互证/old-to-new.md`](30_crosswalk_互证/old-to-new.md) 之 **Cell192 → Cell256 transition** 节。
 
@@ -50,8 +57,8 @@
 
 本目录不是四个顶层文件；主体在各分区内：
 
-- `00_start/`：读者路径与范围。**[final-theory.md](00_start/final-theory.md)** 是 v3 一页速览。
-- `10_formal_形式/`：形式化、模块簇、信任边界、构建。**[yi-RO-hierarchy.md](10_formal_形式/yi-RO-hierarchy.md)** 是 v3 canonical theory。
+- `00_start/`：读者路径与范围。[final-theory.md](00_start/final-theory.md) 是 v3.0 superseded 一页速览; v0.6 canonical 之一页速览在 [`wen-algebra.md`](10_formal_形式/wen-algebra.md) §0 + [`v4-foundation.md`](10_formal_形式/v4-foundation.md) §0–§1.
+- `10_formal_形式/`：形式化、模块簇、信任边界、构建。**[`wen-algebra.md`](10_formal_形式/wen-algebra.md) v0.6** 是 canonical doctrine. 三 companion: `v4-foundation.md`, `r4.md`, `r8.md`.
 - `20_theory_义理/`：旧义理文档的分类重排（**[core-framework.md](20_theory_义理/core-framework.md)** 已升级至 R₀..R₈）。
 - `30_crosswalk_互证/`：Lean 与义理互证；**[old-to-new.md](30_crosswalk_互证/old-to-new.md)** 含 Cell192→Cell256 完整迁移记录。
 - `40_reference_参考/`：算子、字根、六表、字文与术语。
@@ -63,4 +70,4 @@
 - 一个事实只保留一个权威来源：Lean/ledger 为形式事实，生成索引为可定位目录，人工文档只做解释和路径。
 - 不在 README 里堆长表；长表进入 `_generated` 或 `40_reference_参考/`。
 - 不把 `史料/` 改写成现规范；只记录它们被哪里取代。
-- v3 之 ontology（Cell256 / V₄ Shi / R₀..R₈ uniform）以 [`yi-RO-hierarchy.md`](10_formal_形式/yi-RO-hierarchy.md) 为唯一定本；其它文档应链接而非复述其结构定义。
+- v0.6 之 ontology (R-Family `R_N := F_2^N`, R₀–R₈ root layers, R₄/R₈ 双中心, semantic naming demoted to Atlas) 以 [`wen-algebra.md`](10_formal_形式/wen-algebra.md) v0.6 + [`v4-foundation.md`](10_formal_形式/v4-foundation.md) v0.5 为唯一定本; 其它文档应链接而非复述其结构定义。

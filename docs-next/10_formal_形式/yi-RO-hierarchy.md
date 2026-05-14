@@ -1,3 +1,7 @@
+> **[Superseded 2026-05-15]** — Canonical doctrine is now [`wen-algebra.md`](wen-algebra.md) v0.6 (R-Family tower algebra, R₀–R₈ root layers with R₄/R₈ dual centers, semantic naming demoted to Atlas). This file documents the v3.0 R-uniform doctrine (strict (Z/2)ⁿ uniform R₀..R₈ interfaces, May 11) for historical reference. The math survives in [`v4-foundation.md`](v4-foundation.md) v0.5; the positioning has changed (every R_N is now first-class with its own structure, R_4/R_8 are dual centers rather than R_8 being sole closure, semantic names like 道/已/今/未 are application-layer overlays not core ontology).
+
+---
+
 # 易之 R-O 双层级 v2 — 元-算子融合 / 自对偶 / 完整性 (definitive, strict uniform)
 
 > 状态：定本 v2.1 (2026-05-10) — 重号为 **strict (Z/2)ⁿ uniform R₀..R₈**，补全跳过的 R₄ (面 Mian) + R₅ (五爻)，与传统 Yi 太极/两仪/四象/八卦/重卦完全对齐。

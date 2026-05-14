@@ -1,1002 +1,1408 @@
-# V₄ 与其蕴义 · The V₄ Foundation
+# v4-foundation — The $R_0$–$R_8$ Root Tower
 
-> **文 形式语言** · Foundation Note · v0.1
-> Companion to: `zi-calculus.md`, `wenyan-operators.md`, `yi-calculus.md`
-> Status: parallel-build 完成另一半 (the "structural / implications" half)
-> Date: 2026-05-12
-> **Dual-track**: 本文档同时支持 (a) Lean 4 + Mathlib 机器证明 (b) 文 编译器 IR 与 Clojure runtime 实现
+> **文 形式语言** · Foundation Note
+> $R_0$ through $R_8$ as the root layers; each $R_N$ has its own structure and meaning
+> Companion to: `r4.md` (R_4 专题), `r8.md` (R_8 专题), `wen-algebra.md` (v0.6 tower algebra)
+> **Single formal language**: Lean 4 + Mathlib
+> v0.5
 
----
+**Changelog**
 
-## 0. 文档目的
-
-文 的代数骨架是 **Klein 四元群 V₄ = ℤ/2 × ℤ/2**。这不是设计选择，是被 hexagram 数据结构、量子物理、可计算模型、范畴论独立逼出的同一个 minimum-non-trivial 对称代数。
-
-本文档是 **双轨规范**：
-
-- **证明轨** (Lean 4 + Mathlib)：所有结构性断言可被机器验证。§7 提供完整 Lean 实现骨架，§11 列出待证 theorem。
-- **编译轨** (文 compiler / Clojure / SCI)：V₄ 作为 IR primitive，编译器 normalize pass 利用 V₄ 阿贝尔性做常量折叠。§7.4–7.9 提供编译器侧实现。
-
-两轨必须 **round-trip 一致**：Lean 中证明的 V₄ 性质对应编译器中的 IR 变换；任何分歧 = CI 失败。
-
-本文档系统化地：
-
-1. **推导** V₄ 在 文 卦域的内禀必然性
-2. **证立** V₄ 的跨域普适性（量子、计算、Galois、CPT、符号学）
-3. **定位** V₄ 四个位置上各域算子的归属（the **Atlas**）
-4. **辨析** V₄ 内部的保持层级（set / algebra / category / truth）
-5. **识别** {e, 错综} 作为「真正保结构子群」的特殊地位
-6. **梳理** 历史上对 V₄ 框架的部分性发现
-7. **形式化** 为 Lean 4 证明 + 文 compiler IR（双轨）
-8. **导出** 由此可延伸的知识方向（the **Implications**）
-9. **检验** 双轨完成度
+- v0.5 — 自我 review 修订: §13.3 加 R_2 特例注 (Sp(2,2) = GL(2,2) 巧合相等); §14.1 修正错误的 "in tensor view" 标注 (squaring tower 通过 direct sum); §14.2 性质继承说明澄清 (direct sum 自然 lift, tensor 产生大得多的层). 标注 Lean 唯一形式语言 (Clojure 已弃用).
+- v0.4 — **重大视角矫正**：弃用「𝕏 中心」与「𝕐 中心」的单层中心化论述。$R_0$–$R_8$ 作为根集合，每层各有独特结构。**$R_4$ 与 $R_8$ 是双中心**（$R_4$ 为数学最小完整单元；$R_8 = R_4^2$ 为含下层的 ceiling）。Squaring 子塔 $R_1 \to R_2 \to R_4 \to R_8$ 显式建立。$\mathbb{X}, \mathbb{Y}$ 符号弃用
+- v0.3 — 二进制占位符规范；{oo, xx} 三合一刻画；象单层 11 节
+- v0.2 — 四套并行命名落地
+- v0.1 — 初稿
 
 ---
 
-## 1. V₄ 的卦域推导
+## 0. 范围与约定 · Scope and Conventions
 
-### 1.1 卦的双轴结构
+### 0.1 文档范围
 
-把六爻卦看作函数：
+本文档是 文 形式语言的**根层规范**。它确立：
 
-$$h : [6] \to \mathbb{F}_2$$
+1. **$R_0$ 到 $R_8$ 是文 algebra 的根层集合**（9 层）
+2. **每个 $R_N$ 都有其独特结构、形式与哲学意义**——不存在单一「中心层」
+3. **$R_4$ 与 $R_8$ 是双重点**：$R_4$ 是数学最小完整单元（rank 分层 + endomorphism 自封闭首现）；$R_8 = R_4^2$ 是 ceiling（含 $R_0$–$R_7$ 所有作为 $\mathbb{F}_2$-子空间；多种常用概念定居于此）
+4. **Squaring 子塔 $R_1 \to R_2 \to R_4 \to R_8$**：每层 = 上层²。这是 R-族内的自相似自然倍增
+5. **$N > 8$ 由 $R_0$–$R_8$ 构造**：高层 R_N 经直和、张量、Hom 由根层组合得到
+6. **三层 bilinear 精细度**（Layer 0/1/2: dot, σ, q + Arf）在所有偶 $N$ 上一致定义
 
-其中 $[6] = \{1,2,3,4,5,6\}$ 是带序位置集，$\mathbb{F}_2 = \{阴, 阳\}$ 是二元值集。
+### 0.2 命名约定
 
-此数据结构有两条独立的对称轴：
+**Notation**: $R_N$ 表示第 $N$ 层；$R$ 可视为 layer-root 的通用记号。
 
-| 轴 | 结构 | 非平凡 involution | 文 命名 |
-|----|------|-------------------|-----------|
-| **值轴** | $\mathrm{Aut}(\mathbb{F}_2)$ | swap (阴↔阳) | **错** |
-| **位轴** | $\mathrm{Aut}([6], \leq)$ 扩到容许翻转 | reversal (1↔6, 2↔5, 3↔4) | **综** |
+$$R_N := \mathbb{F}_2^N, \qquad |R_N| = 2^N$$
 
-### 1.2 V₄ 是直接乘积
+**Element representation**: $R_N$ 的元素表示为长度 $N$ 的 **o/x 字符串**。约定 $\mathrm{o} = 0$, $\mathrm{x} = 1$。
 
-对任意 functor $f: A \to B$，存在自动的对称作用：
+| $N$ | $|R_N|$ | 元素示例 |
+|-----|---------|----------|
+| 0 | 1 | $\varepsilon$ 或 $\cdot$ |
+| 1 | 2 | $\mathrm{o}, \mathrm{x}$ |
+| 2 | 4 | $\mathrm{oo}, \mathrm{ox}, \mathrm{xo}, \mathrm{xx}$ |
+| 3 | 8 | $\mathrm{ooo}, \mathrm{oox}, \ldots, \mathrm{xxx}$ |
+| 4 | 16 | $\mathrm{oooo}, \mathrm{ooox}, \ldots, \mathrm{xxxx}$ |
+| 8 | 256 | $\mathrm{oooooooo}, \ldots, \mathrm{xxxxxxxx}$ |
 
-$$\mathrm{Sym}(f) = \mathrm{Aut}(A) \times \mathrm{Aut}(B)$$
+**字符约定弃用**：本版**不**为元素或层赋予具体汉字或英文实指 (Image / Frame / Hexagram 等都退场)。所有命名以纯结构记号表达。
 
-两侧自同构作用于不同轴（covariant on codomain × contravariant on domain），**故必然 commute**。
+### 0.3 视角原则
 
-因此：
+为避免重复历史错位（v0.1–v0.3 经历过 𝕏 中心化、𝕐 中心化的偏移），本版采纳以下原则：
 
-$$\boxed{\mathrm{Sym}(\text{hexagram}) \;=\; \mathrm{Aut}(\mathbb{F}_2) \times \mathrm{Aut}([6], \leq) \;=\; \mathbb{Z}/2 \times \mathbb{Z}/2 \;=\; V_4}$$
+1. **无单层中心**：每个 $R_N$ 都是独立的代数对象，有其特有结构
+2. **双焦点 $R_4$ + $R_8$**：但具体论述深度上，$R_4$ 与 $R_8$ 获得最大篇幅
+3. **根集合 $R_0$–$R_8$ 作为论证范围**：可在此范围内证明所需性质；高层从此构造
+4. **外部传统对应** (Pauli, Yi, Galois 等) 严格作为 application-layer，详见 §10
 
-### 1.3 V₄ 的四元素
+### 0.4 与 wen-algebra 的边界
 
-$$V_4 = \{\,道,\ 错,\ 综,\ 错综\,\}$$
+| `wen-algebra.md` (待 v0.6 更新) | `v4-foundation.md` (本文档) |
+|---|---|
+| $\mathbb{X}^n$-塔 (旧名) 的代数完备性 | $R_0$–$R_8$ 根层规范 |
+| Tower-level dot product 与 LIC | 单层 bilinear 形式定义 |
+| Hom = Mat 表示 | $R_4$ = End($R_2$) 单层等同 |
+| 接口层与 surface 暴露规则 | 每 $R_N$ 的内部结构 |
 
-满足：
+两文档**配套使用**：foundation 给根层的结构事实，algebra 用这些根层构建上层 tower。
 
-- $错^2 = 综^2 = 道$
-- $错 \cdot 综 = 综 \cdot 错 = 错综$
-- $(错综)^2 = 道$
-- 所有非恒等元为 involution
-- 阿贝尔（commutative）
+### 0.5 形式语言
 
-### 1.4 为什么不是更大的群
+**Lean 4 + Mathlib 是唯一形式语言**（v0.5 update：Clojure 已弃用）：
 
-| 候选 | 阶 | 为什么不是 |
-|------|---|-----------|
-| $S_6$ on positions | 720 | 破坏卦体（上下三爻分割） |
-| $(\mathbb{Z}/2)^6$ on lines | 64 | 破坏阴阳整体极性 |
-| $\mathbb{Z}/4$ | 4 | 是 rotation，非 reflection；非 involutive |
-| 单一 $\mathbb{Z}/2$ | 2 | 丢失第二条轴，单轴系统不承载信息 |
-| $(\mathbb{Z}/2)^3$ | 8 | 第三条独立轴在卦上不存在（CPT 定理 的卦域类比） |
+- **证明轨** (Lean 4 + Mathlib)：每 $R_N$ 的结构性断言可机器验证
+- **解释/编译轨** (Lean 4 computable defs)：$R_N$ 作为 IR primitive，按 N 参数化，运行通过 `decide` / `native_decide`
 
-**V₄ 是「保 hexagram 之为 hexagram」的最大可逆对称群**，也是「最小非平凡双反射对偶」之群。
-
-### 1.5 互卦不在 V₄ 中
-
-经典易学的「互卦」（取 2,3,4 为下卦、3,4,5 为上卦）**不是 V₄ 元素**：
-
-- 非双射（丢失初爻、上爻信息）
-- 无自然逆
-- 反复作用进入不动点而非循环
-
-互卦属于另一类结构（possibly an idempotent or partial morphism on the hexagram lattice），应在 文 中**与 V₄ 正交地建模**。
+详见 §16.
 
 ---
 
-## 2. 道-row 规律
+## 1. $R_N$-族的整体视图 · Overview of the R-Family
 
-### 2.1 Statement
+### 1.1 9 层 $R_0$–$R_8$ 总览
 
-定义 **道-row**：
+| 层 | 大小 | $\mathbb{F}_2$-维 | 是否偶 | Bilinear layers | $|{\mathrm{Aut}}|$ | 关键特征 |
+|---|------|-------------------|--------|----------------|---------------------|---------|
+| $R_0$ | 1 | 0 | — | trivial | 1 | 平凡 |
+| $R_1$ | 2 | 1 | odd | Layer 0 only | 1 | 原始 bit |
+| $R_2$ | 4 | 2 | **even** | Layer 0/1/2 | 6 | Klein-4，双轴，三合一 |
+| $R_3$ | 8 | 3 | odd | Layer 0 only | 168 | Fano 平面 PG(2, 2) |
+| **$R_4$** ★ | 16 | 4 | **even** | Layer 0/1/2 | 20160 | 数学最小完整单元、End($R_2$) |
+| $R_5$ | 32 | 5 | odd | Layer 0 only | 9,999,360 | 31 (Mersenne) |
+| $R_6$ | 64 | 6 | **even** | Layer 0/1/2 | 20,158,709,760 | $R_2 \otimes R_3$ 等多重分解 |
+| $R_7$ | 128 | 7 | odd | Layer 0 only | $1.64 \times 10^{14}$ | Hamming(7,4) 完美码 |
+| **$R_8$** ★ | 256 | 8 | **even** | Layer 0/1/2 | $5.35 \times 10^{18}$ | byte / ceiling / $R_4^2$ |
 
-$$\text{道-row} := \{(h, 道) \mid h \in \mathrm{Hexagram}\} \;\subset\; \mathrm{Hexagram} \times V_4$$
+★ = 重点延伸层。
 
-包含 64 个 cell，每卦一个。
+### 1.2 三个观察 · Three Observations
 
-### 2.2 Theorem (V₄ Identity Closure)
+**Observation 1 (Bilinear layers 与奇偶)**：
 
-> 对任意 hexagram $h$，$(h, 道)$ 是 V₄ 作用下 $h$ 的不动点。
+- **奇 $N$** ($R_1, R_3, R_5, R_7$): 只支持 Layer 0 (Boolean dot)
+- **偶 $N$** ($R_2, R_4, R_6, R_8$): 全部 Layer 0/1/2 (含 σ 与 q + Arf)
+- 这是 char 2 下 symplectic form 要求偶维的几何事实
 
-证明：由 V₄ 单位元公理直接得 $h \cdot 道 = h$。
+**Observation 2 (Mersenne 与 Hamming)**：
 
-### 2.3 解读：「永真 atomic state」的结构基础
+- $|R_5| - 1 = 31$，$|R_7| - 1 = 127$，都是 Mersenne 素数
+- $R_7$ 是 Hamming(7,4) 完美码的自然居所
+- 这些数论事实使 $R_5, R_7$ 在编码理论中独特
 
-道-row 中每 cell 不承载任何变换，故：
+**Observation 3 (Aut 阶增长)**：
 
-- **永真**：identity transition 不改变 truth value，$h \text{ 真} \iff (h, 道) \text{ 真}$
-- **atomic**：道 在 V₄ 中不可分解（it is the unit），故 $(h, 道)$ 不可被 V₄ 进一步分解
-- **不受 causation flow 约束**：identity morphism 是 trivial cobordism，无方向，无前后
+$|\mathrm{Aut}(R_N)| = |\mathrm{GL}(N, \mathbb{F}_2)| = \prod_{k=0}^{N-1} (2^N - 2^k)$
 
-### 2.4 道 = e 的必然性
+阶按 $N$ 接近 $2^{N^2}$ / (some polynomial) 速率超指数增长——根层之间复杂度跨越极大。
 
-「道」在中国思想里精确是「自身不动而容纳一切动者」。范畴论里 identity 恰好满足这个描述：
+### 1.3 Squaring 子塔 · The Squaring Sub-Tower
 
-- $\mathrm{id}_X \circ f = f \circ \mathrm{id}_X = f$ for all $f$（容纳一切 morphism）
-- $(\mathrm{id}_X)^2 = \mathrm{id}_X$（自身不动）
+$R_N$-族内有一个特别自然的子塔：
 
-**所以 $e \mapsto 道$ 不是命名约定，是结构对应**。
+$$R_1 \xrightarrow{\;(\cdot)^2\;} R_2 \xrightarrow{\;(\cdot)^2\;} R_4 \xrightarrow{\;(\cdot)^2\;} R_8 \xrightarrow{\;(\cdot)^2\;} (R_{16}, \ldots)$$
 
-### 2.5 道-row 作为 Hexagram ↪ Hexagram × V₄ 的嵌入
+每层 = 上层²（cardinality 平方，$\mathbb{F}_2$-维倍增）：
 
-形式上：
+$$|R_1| = 2, \quad |R_2| = 4 = 2^2, \quad |R_4| = 16 = 4^2, \quad |R_8| = 256 = 16^2$$
 
-$$\iota: \mathrm{Hexagram} \hookrightarrow \mathrm{Hexagram} \times V_4, \quad h \mapsto (h, e)$$
+**这是 $R_0$–$R_8$ 内部的「自相似倍增」结构**。
 
-这是 V₄-action 的 **unit**。道-row 是这个空间的「保 hexagram 自身的对角」。
+为什么 squaring：
 
-64 个 atomic state 是因为有 64 个 hexagram；4 倍展开（256 cells）是因为 V₄ 阶为 4。
+- $R_{2N} = R_N \otimes_{\mathbb{F}_2} R_N$（张量积）
+- $R_{2N} \cong \mathrm{End}_{\mathbb{F}_2}(R_N)$ 当且仅当某些 dimension 条件成立——具体地，$R_4 = \mathrm{End}(R_2)$，$R_{16} = \mathrm{End}(R_4)$（但 $R_8 \neq \mathrm{End}(R_4)$，因 End($R_4$) over $\mathbb{F}_2$ 是 $4 \times 4$ matrix space = $R_{16}$）
+- $R_8 = R_4 \otimes R_4 = R_4^2$ 在张量意义上
 
----
+Squaring 子塔的层数从 $R_1$ 起每翻一倍记号下标：1, 2, 4, 8, (16, 32, ...). $R_0$–$R_8$ 包含此塔的前 4 层加 $R_0$。
 
-## 3. V₄ 的跨域普适性
+### 1.4 直和分解 · Direct-Sum Decomposition
 
-### 3.1 普适性断言
+任何 $R_N$ for $N \in \{3, 5, 6, 7\}$（squaring tower 外的根层）可由 squaring tower 直和：
 
-> **任何承载意义/计算/观测的最小系统，其对称结构包含一个 V₄ 子群。**
+- $R_3 = R_1 \oplus R_2$（二进制 3 = 1 + 2）
+- $R_5 = R_1 \oplus R_4$（5 = 1 + 4）
+- $R_6 = R_2 \oplus R_4$（6 = 2 + 4）
+- $R_7 = R_1 \oplus R_2 \oplus R_4$（7 = 1 + 2 + 4）
 
-这不是经验观察，是从「meaning-bearing structure 必然双轴 articulated」的结构性下界推出。
+由二进制展开 $N = \sum_i 2^{e_i}$（不同 $e_i$）：
 
-### 3.2 量子物理
+$$R_N \cong \bigoplus_i R_{2^{e_i}}$$
 
-**(a) Pauli 群模相位**
+——squaring tower **$R_1, R_2, R_4$ 是 $R_0$–$R_7$ 的「生成基」**（在直和意义下）。$R_8 = R_8$ 自身是 squaring tower 的下一层，不可由更小的 squaring tower 元素直和得到。
 
-$$\mathcal{P}_1 / \langle \pm 1, \pm i \rangle \;=\; \{I, X, Y, Z\} \;\cong\; V_4$$
+### 1.5 $R_8$ 作为根层 ceiling
 
-- $I$ = 恒等
-- $X$ = bit-flip（值轴 σₓ）
-- $Z$ = phase-flip（相位/框架轴 σ_z）
-- $Y = iXZ$ = 双翻
+$R_8$ 在 $R_0$–$R_8$ 中享有 ceiling 地位：
 
-Stabilizer formalism、Bell-state 互换、量子纠错码的代数基础。
+1. **$R_0$–$R_7$ 全部嵌入 $R_8$**：$R_N \hookrightarrow R_8$ for $N \leq 7$（取前 $N$ 坐标的子空间）
+2. **任何 $R_N$ for $N \in \{0, \ldots, 7\}$ 是 $R_8$ 的子结构**（由 §1.4 直和分解 + 嵌入）
+3. **常用编码尺度集中于 $R_8$**：byte (256 元), UTF-8 single byte, $\mathrm{GF}(256)$ (用于 AES 等), DNA/RNA 多重编码尺度
+4. **从 $R_0$–$R_8$ 可构造任意 $R_N$ for $N > 8$**：$R_N = R_8 \oplus R_{N-8}$，递归直到 $N-k \leq 8$
 
-**(b) QFT 离散对称（CPT）**
-
-CPT 定理强制 $CPT = 1$，于是 $\{I, C, P, T, CP, CT, PT, CPT\}$ 退化为 $V_4$。在 QED 中精确是 $\{I, C, P, CP\}$。
-
-### 3.3 计算理论
-
-**最小可逆图灵机原子动作**：
-
-$$V_4^{\text{TM}} = \{\text{nop},\ \text{flip-bit},\ \text{flip-dir},\ \text{flip-both}\}$$
-
-- 写值翻：tape symbol $\mathbb{F}_2$ 上的 ℤ/2（X-类）
-- 移头翻：方向 $\{L, R\}$ 上的 ℤ/2（Z-类）
-
-任何 2-符号可逆 TM 的**单步对称群**精确是 $V_4$。
-
-### 3.4 Galois 理论
-
-最小非循环 Galois 扩张：
-
-$$\mathrm{Gal}(\mathbb{Q}(\sqrt{2}, \sqrt{3}) / \mathbb{Q}) \;\cong\; V_4$$
-
-四个自同构：
-
-- $\mathrm{id}$
-- $\sqrt{2} \mapsto -\sqrt{2}$
-- $\sqrt{3} \mapsto -\sqrt{3}$
-- both
-
-这是 V₄ 在数论里的最小自然出现，且**结构上同构**于卦的 错/综/错综。
-
-### 3.5 跨域对照表
-
-| 域 | 值轴 ℤ/2 (= 错) | 框架轴 ℤ/2 (= 综) | 复合 (= 错综) |
-|----|----------------|-------------------|---------------|
-| **文** | 阴/阳 | 始/终 | 双翻 |
-| **Pauli** | $X$ (computational basis) | $Z$ (phase) | $Y$ |
-| **QFT** | $C$ (charge) | $PT$ (spacetime parity-time) | $CPT \equiv I$ |
-| **TM** | tape symbol | head direction | both |
-| **Galois** | $\sqrt{2} \to -\sqrt{2}$ | $\sqrt{3} \to -\sqrt{3}$ | both |
-| **Logic** | $\neg$ (negation) | reversal of implication | contrapositive |
-| **Category** | dagger (in $\dagger$-cat) | $\mathrm{op}$ | dagger ∘ op |
-| **Semiotics** | $\neg S$ (contradiction) | $S_2$ (contrary) | $\neg S_2$ |
-| **Greimas** | contradictory | contrary | sub-contrary |
-
-### 3.6 普适性的范畴论根据
-
-任何 functor $F: \mathcal{C} \to \mathcal{D}$ 自动具有 $\mathrm{Aut}(\mathcal{C}) \times \mathrm{Aut}(\mathcal{D})$ 对称。当 $\mathcal{C}, \mathcal{D}$ 各自处于最小非平凡情形（仅一个非平凡 involution）：
-
-$$\mathrm{Sym}(F)_{\min} = \mathbb{Z}/2 \times \mathbb{Z}/2 = V_4$$
-
-> **V₄ 是「functor 在最小非平凡边界条件下的内禀对称群」。**
-
-这就是为什么它跨域出现：hexagram、qubit、TM head、QFT field、Galois extension——都是「frame-indexed value」的 functor，且都在最小非平凡边界条件上工作。
+由此**根层范围 $R_0$–$R_8$ 是充分的**：所有需要的代数事实可在此范围内陈述与证明，更大层由直和/张量构造，性质继承。
 
 ---
 
-## 4. V₄ 知识地图（The Atlas）
+## 2. $R_0$ — The Trivial Layer
 
-把 V₄ 的四个位置作为坐标，可以系统化地把已知逻辑/物理/数学/语义算子归位。
+### 2.1 定义
 
-### 4.1 Position `e` (道 / identity)
+$R_0 = \{\varepsilon\}$（长度 0 字符串集合，亦记 $\{\cdot\}$）。 $|R_0| = 1 = 2^0$.
 
-**保结构、保真、不变换之物。**
+### 2.2 结构
 
-| 域 | 算子 |
-|----|------|
-| 逻辑 | $\mathrm{id}$, tautology, $A = A$ |
-| 范畴 | identity functor $1_\mathcal{C}$ |
-| 量子 | $I$ gate, vacuum |
-| 计算 | no-op, $\lambda x.x$ |
-| 代数 | 单位元 |
-| 物理 | CPT (under CPT theorem) |
-| 语义 | Greimas $S$ (origin) |
-| 哲学 | 道, Tathata, Spencer-Brown unmarked state |
+- **群结构**：平凡群 $\{e\}$
+- **$\mathbb{F}_2$-vector space**：0 维
+- **$\mathrm{Aut}(R_0)$**：平凡，单元
+- **Bilinear forms**：无（dimension 0 的退化情形）
+- **子群**：仅自身
 
-### 4.2 Position `a` (错 / value-flip)
+### 2.3 角色
 
-**翻转内容/值/极性。**
+$R_0$ 作为 R-族的「底」(bottom)：
 
-| 域 | 算子 |
-|----|------|
-| 逻辑 | $\neg$ (negation), Boolean complement |
-| 范畴 | dual object $X^*$, dagger |
-| 量子 | Pauli $X$, charge conjugation $C$ |
-| 计算 | bit-flip, NOT |
-| 生物 | DNA complement strand |
-| 代数 | 群求逆 $g \mapsto g^{-1}$（阿贝尔群） |
-| 物理 | particle ↔ antiparticle, magnetic N↔S |
-| 语义 | Greimas $\neg S$ (contradictory) |
-| 数学 | complex conjugation $z \mapsto \bar{z}$ |
-| 类型论 | linear negation $A^\bot$ |
+- 它是任何 $R_N$ 的子结构（trivial subspace）
+- 它是任何 $R_N$ 直和分解的「单位」($R_0 \oplus R_N = R_N$)
+- 它是 $R_N \otimes R_0 = R_0$ 的「零」(在张量意义)
 
-### 4.3 Position `b` (综 / frame-flip)
-
-**翻转方向/顺序/框架/视角。**
-
-| 域 | 算子 |
-|----|------|
-| 逻辑 | implication reversal $A \to B \mapsto B \to A$ |
-| 范畴 | opposite category $\mathcal{C}^{\mathrm{op}}$, contravariant functor |
-| 量子 | Pauli $Z$, time-reversal $T$ |
-| 计算 | list reverse, stack ↔ queue |
-| 代数 | matrix transpose $A^T$, left ↔ right action |
-| 物理 | time-reversal $T$, orientation flip |
-| 几何 | inside ↔ outside, Möbius flip |
-| 语义 | Greimas $S_2$ (contrary) |
-| 拓扑 | bordism orientation, cobordism dual |
-
-### 4.4 Position `ab` (错综 / combined)
-
-**复合对偶——常被遗忘但结构上最特殊。**
-
-| 域 | 算子 |
-|----|------|
-| 逻辑 | contrapositive: $A \to B \mapsto \neg B \to \neg A$ |
-| 范畴 | double dual $X^{**}$, dagger ∘ op |
-| 量子 | Pauli $Y$, PT symmetry |
-| 计算 | reverse + bit-flip = 二补码取负 |
-| 物理 | $CP$ (when CPT theorem 适用) |
-| 数学 | $\sqrt{2} \to -\sqrt{2} \wedge \sqrt{3} \to -\sqrt{3}$ |
-| 语义 | Greimas $\neg S_2$ (sub-contrary) |
-| 哲学 | 「否定之否定」(取道框架翻转，非 Hegelian sublation) |
+哲学：$R_0$ 标记「无结构」的起点。所有上层结构由此向上构造。
 
 ---
 
-## 5. 保持层级（Preservation Hierarchy）
+## 3. $R_1$ — The Bit
 
-V₄ 的四个元素**不等价地**保持结构。区分四个层次：
+### 3.1 定义
 
-### 5.1 Level 1 — Set bijection
+$R_1 = \{\mathrm{o}, \mathrm{x}\}$. $|R_1| = 2$.
 
-所有 4 元都是双射。**最弱的保持**。
+### 3.2 群结构
 
-### 5.2 Level 2 — Algebraic homomorphism
+$R_1 = \mathbb{Z}/2 = \mathbb{F}_2$ 作为 abelian 群。加法表：
 
-考虑 V₄ 作用在 Boolean 代数 $(A, \wedge, \vee, \neg)$ 上：
+| $+$ | o | x |
+|-----|----|----|
+| o | o | x |
+| x | x | o |
 
-| 元素 | 保 $\wedge, \vee$? | 备注 |
-|------|--------------------|----|
-| `e` | ✓ | 平凡同态 |
-| `a` (错) | ✗ | $\neg(a \wedge b) = \neg a \vee \neg b$ — De Morgan 反同态 |
-| `b` (综) | ✗ | 反同态（交换 $\wedge, \vee$） |
-| `ab` (错综) | ✓ | 两次反同态 = 同态 |
+唯一非恒等元 $\mathrm{x}$ 是 self-inverse: $\mathrm{x} + \mathrm{x} = \mathrm{o}$.
 
-> **{e, 错综} 是 V₄ 中保代数结构的子群。**
+### 3.3 $\mathbb{F}_2$-vector space
 
-**这是本文档最重要的发现之一**：V₄ 内部并非平等的——`错综` 与 `道` 共享一个特权地位。
+$R_1$ 是 1-维 $\mathbb{F}_2$-向量空间。典则基：$\{\mathrm{x}\}$. 每元素唯一表示为 $c \cdot \mathrm{x}$ for $c \in \{\mathrm{o}, \mathrm{x}\}$.
 
-### 5.3 Level 3 — Categorical functor
+### 3.4 $\mathrm{Aut}(R_1)$
 
-所有 4 元都是 functor，但 covariance 性质分裂：
+$\mathrm{Aut}_{\mathbb{F}_2}(R_1) = \mathrm{GL}(1, \mathbb{F}_2)$. 
 
-|         | 共变? | 保对象? | 保态射方向? |
-|---------|------|---------|--------------|
-| `e`     | ✓    | ✓       | ✓            |
-| `a` (错) | ✓   | translate | ✓          |
-| `b` (综) | ✗   | ✓       | ✗            |
-| `ab`    | ✗    | translate | ✗          |
+$1 \times 1$ 可逆 $\mathbb{F}_2$ 矩阵只有 $[1]$. 所以 $|\mathrm{Aut}(R_1)| = 1$.
 
-二维分类：
-- **共变性**轴: $\{e, a\}$ vs $\{b, ab\}$
-- **对象保持**轴: $\{e, b\}$ vs $\{a, ab\}$
+注：作为**集合**的双射 $R_1 \to R_1$ 有 2 个 ($\mathrm{id}$ 与 swap)。但 swap 把 $\mathrm{o}$ 映到 $\mathrm{x}$——不保单位元 $\mathrm{o}$——故不是群同态。**$R_1$ 没有非平凡 group automorphism**。
 
-这两个轴的乘积**又是 V₄**——V₄ 在范畴层有自身的 meta-V₄ 结构。
+### 3.5 Bilinear form
 
-### 5.4 Level 4 — Truth preservation
+唯一可能的 bilinear form：$\langle u, v \rangle = u \cdot v$（$\mathbb{F}_2$ 乘法 = AND）。
 
-| 元素 | 保真 (in classical logic)? |
-|------|-----------------------------|
-| `e` | ✓ |
-| `a` (错) | ✗（翻真假） |
-| `b` (综) | ✗（implication reversal 不保真） |
-| `ab` (错综) | **✓ on $A \to B$**（contrapositive law） |
+| $\langle \cdot, \cdot \rangle$ | o | x |
+|-----|----|----|
+| o | 0 | 0 |
+| x | 0 | 1 |
 
-> **错综 是经典逻辑 contrapositive 律的代数显形：$A \to B$ 等价于 $\neg B \to \neg A$ 这一事实，正是 V₄ 中 `ab` 在命题逻辑切片上的 truth-preservation 性质。**
+对称、非退化。**self-pairing 零集** = $\{\mathrm{o}\}$.
 
----
+$R_1$ 是奇维，**无 Layer 1 (σ)**。Char 2 下 symplectic 要求偶维。
 
-## 6. V₄ 内部子群分裂
+### 3.6 子群
 
-V₄ 有三个真子群（皆同构于 ℤ/2）：
+仅两个：$\{\mathrm{o}\}$ 与 $R_1$ 自身。无非平凡真子群。
 
-| 子群 | 结构意义 |
-|------|----------|
-| $\{e, 错\}$ | 仅值轴对偶 — 「内容对立群」 |
-| $\{e, 综\}$ | 仅框架轴对偶 — 「视角对立群」 |
-| $\{e, 错综\}$ | 复合对偶 — **「结构保持群」** |
+### 3.7 哲学/结构意义
 
-### 6.1 {e, 错综} 的特权地位
+$R_1$ = **最基本的二元区分**：
 
-由 §5.2 可知：在代数同态意义下，**只有 {e, 错综} 是 V₄ 的保结构子群**。
+- 存在 / 不存在
+- 真 / 假
+- 0 / 1
+- 是 / 非
 
-这意味着：
+它是任何分类、判断、命题的最简单代数体现。也是 Shannon 信息论的最小信息单元 (1 bit)。
 
-1. 「错综」不应被理解为「错与综的衍生物」
-2. 「错综」是 V₄ 中唯一非平凡的「真同态」元素
-3. 在 文 形式语言中，**错综 应被提升为 primary 概念**
+在 v0.1–v0.3 框架中 $R_1$ 曾被作为「half-image」边缘化，**v0.4 矫正：$R_1$ 是有自身独立地位的根层**。
 
-### 6.2 三子群对应的「不完整保持」
+### 3.8 与其他层的关系
 
-每个子群对应一种结构性的「部分保持」：
-
-- {e, 错}: 保共变性、破坏对象同一
-- {e, 综}: 保对象同一、破坏共变性
-- {e, 错综}: 保代数同态、破坏共变与对象同一
-
-V₄ 的 *全部* 这四种「partial structural preservations」**穷尽**了二轴系统中可能的保持模式。
+- $R_1 \oplus R_1 = R_2$（两个 bit 拼成 image）
+- $R_1 \oplus R_4 = R_5$
+- $R_1 \oplus R_2 \oplus R_4 = R_7$
+- $R_1 \hookrightarrow R_8$（subspace embedding）
+- $R_1 \otimes R_N = R_N$（张量单位）
 
 ---
 
-## 7. 形式化骨架（Lean 4 / Clojure 实现条目）
+## 4. $R_2$ — The Klein-Four / Pair Layer
 
-本节是双轨支持的：(a) Lean 4 + Mathlib 用于**机器验证证明**；(b) Clojure 实现用于 **文 编译器的运行时与 IR**。两者必须 round-trip 一致——任何 Lean 中证明的 V₄ 性质，在 Clojure 编译器中必须有对应运行时实现，反之亦然。
+### 4.1 定义
 
-### 7.1 V₄ as a `Group` instance (Lean 4 + Mathlib)
+$R_2 = \{\mathrm{oo}, \mathrm{ox}, \mathrm{xo}, \mathrm{xx}\}$. $|R_2| = 4$.
+
+每元素是长度 2 字符串 $u = u_1 u_2$ where $u_i \in \{\mathrm{o}, \mathrm{x}\}$. 
+
+约定坐标：$u_\alpha := u_1$, $u_\beta := u_2$. 即第一字符 = α，第二字符 = β。
+
+### 4.2 群结构
+
+$R_2 = \mathbb{F}_2 \times \mathbb{F}_2 = \mathbb{Z}/2 \times \mathbb{Z}/2$ = **Klein 四元群** $V_4$. 
+
+群乘法（= component-wise XOR）：
+
+| $+$ | oo | xo | ox | xx |
+|----|----|----|----|----|
+| oo | oo | xo | ox | xx |
+| xo | xo | oo | xx | ox |
+| ox | ox | xx | oo | xo |
+| xx | xx | ox | xo | oo |
+
+性质：
+
+- 阶 4
+- 阿贝尔
+- Exponent 2（所有元素 self-inverse）
+- 单位元 $\mathrm{oo}$
+- 3 个非平凡 $\mathbb{Z}/2$ 子群（§4.5）
+
+### 4.3 $\mathbb{F}_2$-vector space
+
+$R_2 = \mathbb{F}_2^2$. 典则基：
+
+- $e_\alpha = \mathrm{xo} = (1, 0)$
+- $e_\beta = \mathrm{ox} = (0, 1)$
+
+每 $v \in R_2$ 唯一分解 $v = v_\alpha e_\alpha + v_\beta e_\beta$.
+
+### 4.4 线性形式与对角线性形式
+
+$R_2$ 上 $\mathbb{F}_2$-线性形式 ($R_2 \to \mathbb{F}_2$) 共 4 个：
+
+1. 零形式 $0(v) = 0$
+2. α-投影 $\pi_\alpha(v) = v_\alpha$
+3. β-投影 $\pi_\beta(v) = v_\beta$
+4. **对角形式** $L(v) := v_\alpha + v_\beta$ ★
+
+$L$ 在 §4.7 三合一刻画中起关键作用。$\ker L = \{\mathrm{oo}, \mathrm{xx}\}$.
+
+### 4.5 子群结构
+
+$R_2$ 的所有子群：
+
+| 子群 | 阶 | 元素 |
+|------|----|----|
+| $\{\mathrm{oo}\}$ | 1 | 平凡 |
+| $\{\mathrm{oo}, \mathrm{xo}\}$ | 2 | α-axis |
+| $\{\mathrm{oo}, \mathrm{ox}\}$ | 2 | β-axis |
+| $\{\mathrm{oo}, \mathrm{xx}\}$ | 2 | **diagonal** ★ |
+| $R_2$ | 4 | 全 |
+
+5 个子群。三个非平凡 $\mathbb{Z}/2$ 子群中，$\{\mathrm{oo}, \mathrm{xx}\}$ 享三合一特权（§4.7）。
+
+**辨析**：$\{\mathrm{xo}, \mathrm{ox}\}$ **不是**子群（不含单位元 $\mathrm{oo}$）。它是 $\{\mathrm{oo}, \mathrm{xx}\}$ 的非平凡 coset，是商群 $R_2 / \{\mathrm{oo}, \mathrm{xx}\}$ 的另一等价类。
+
+### 4.6 三层 Bilinear 形式
+
+#### Layer 0 — Boolean dot product
+
+$$\langle u, v \rangle := u_\alpha v_\alpha + u_\beta v_\beta \in \mathbb{F}_2$$
+
+性质：对称、$\mathbb{F}_2$-双线性、非退化、**非 alternating**。
+
+| $\langle \cdot, \cdot \rangle$ | oo | xo | ox | xx |
+|---|----|----|----|----|
+| oo | 0 | 0 | 0 | 0 |
+| xo | 0 | 1 | 0 | 1 |
+| ox | 0 | 0 | 1 | 1 |
+| xx | 0 | 1 | 1 | 0 |
+
+Self-pairing 零集 = $\{\mathrm{oo}, \mathrm{xx}\}$ — 即 diagonal subgroup.
+
+#### Layer 1 — Symplectic form σ
+
+$$\sigma(u, v) := u_\alpha v_\beta + u_\beta v_\alpha \in \mathbb{F}_2$$
+
+性质：对称、双线性、**alternating** ($\sigma(v, v) = 0$ ∀ $v$)、非退化。
+
+| $\sigma$ | oo | xo | ox | xx |
+|---|----|----|----|----|
+| oo | 0 | 0 | 0 | 0 |
+| xo | 0 | 0 | 1 | 1 |
+| ox | 0 | 1 | 0 | 1 |
+| xx | 0 | 1 | 1 | 0 |
+
+#### 分解定理
+
+$$\boxed{\;\langle u, v \rangle = \sigma(u, v) + L(u) \cdot L(v)\;}$$
+
+证：直接展开 (§v0.3 §4.3 已给详证). ∎
+
+**结构含义**：$\langle\cdot,\cdot\rangle$, $\sigma$, $L$, $\{\mathrm{oo}, \mathrm{xx}\}$-subgroup **是同一结构事实的四个侧面**。
+
+#### Layer 2 — Quadratic refinements
+
+$$q_0(v) := v_\alpha \cdot v_\beta, \qquad q_1(v) := L(v) + q_0(v) = v_\alpha + v_\beta + v_\alpha v_\beta$$
+
+值表：
+
+| $v$ | $q_0(v)$ | $q_1(v)$ |
+|---|---|---|
+| oo | 0 | 0 |
+| xo | 0 | 1 |
+| ox | 0 | 1 |
+| xx | **1** | 1 |
+
+性质：$q_0, q_1$ 都是 σ 的 quadratic refinement。
+
+#### Arf 不变量
+
+$$\mathrm{Arf}(q) := q(e_\alpha) \cdot q(e_\beta) = q(\mathrm{xo}) \cdot q(\mathrm{ox})$$
+
+- $\mathrm{Arf}(q_0) = 0 \cdot 0 = \mathbf{0}$
+- $\mathrm{Arf}(q_1) = 1 \cdot 1 = \mathbf{1}$
+
+两类 quadratic refinements 完备分类（在 Arf 意义下）。
+
+### 4.7 $\{\mathrm{oo}, \mathrm{xx}\}$ 三合一刻画
+
+> **定理 4.7**：在 $R_2$ 中，$\{\mathrm{oo}, \mathrm{xx}\}$ 是唯一同时具备以下三性质的非平凡子群：
+> 
+> 1. **同态保护**：保 contrapositive 同态
+> 2. **几何 isotropy**：$\langle\cdot,\cdot\rangle$ self-pairing 零集
+> 3. **线性 kernel**：$\ker L$
+
+三者同集合，三种刻画互为代数等价。
+
+证明梗概：
+
+- (2) ⟺ (3): self-pairing $\langle v, v \rangle = v_\alpha + v_\beta = L(v)$. 所以 $\{v: \langle v, v \rangle = 0\} = \ker L$.
+- (1) ⟺ (3): contrapositive 是命题 $p \Rightarrow q$ ↦ $\neg q \Rightarrow \neg p$ 的同态。在 $R_2$ 中作为「双对偶」: 同时 flip α 与 β。这个映射 $v \mapsto v + \mathrm{xx}$ 保 $\{\mathrm{oo}, \mathrm{xx}\}$（作为 coset）且仅此非平凡 $\mathbb{Z}/2$ 子群被保。
+
+详细推导见 v0.3 §5。
+
+### 4.8 $\mathrm{Aut}(R_2)$
+
+$\mathrm{Aut}(R_2) = \mathrm{GL}(2, \mathbb{F}_2) \cong S_3$, 阶 6.
+
+每个 $\xi \in \mathrm{Aut}(R_2)$ 必固定 $\mathrm{oo}$，在 $\{\mathrm{xo}, \mathrm{ox}, \mathrm{xx}\}$ 上作置换。6 个 Aut 元素 = $\{xo, ox, xx\}$ 的 6 个置换。
+
+| Aut 元素 | 矩阵 | 在 $\{xo, ox, xx\}$ 的作用 | 阶 |
+|---|---|---|---|
+| $\mathrm{id}$ | $\begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$ | (固定) | 1 |
+| swap | $\begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$ | (xo ↔ ox), fix xx ★ | 2 |
+| fix-xo | $\begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix}$ | (ox ↔ xx), fix xo | 2 |
+| fix-ox | $\begin{pmatrix} 1 & 0 \\ 1 & 1 \end{pmatrix}$ | (xo ↔ xx), fix ox | 2 |
+| rot$_+$ | $\begin{pmatrix} 0 & 1 \\ 1 & 1 \end{pmatrix}$ | (xo → ox → xx → xo) | 3 |
+| rot$_-$ | $\begin{pmatrix} 1 & 1 \\ 1 & 0 \end{pmatrix}$ | (xo → xx → ox → xo) | 3 |
+
+**Stab$(\mathrm{xx}) = \{\mathrm{id}, \mathrm{swap}\}$** = stabilizer of $\{\mathrm{oo}, \mathrm{xx}\}$ subgroup = 保 $\langle\cdot,\cdot\rangle$ 的 Aut-子群（详 §4.9）。
+
+### 4.9 Preservation Hierarchy
+
+| 结构 | 保它的 Aut 子群 | 阶 |
+|---|---|---|
+| 群结构、σ、$q_1$ | 全 $S_3$ | 6 |
+| $\{\mathrm{oo}, \mathrm{xx}\}$、$\langle\cdot,\cdot\rangle$、$q_0$ | Stab(xx) | 2 |
+| 个别坐标 ($\alpha$ vs $\beta$) | $\{\mathrm{id}\}$ | 1 |
+
+三层 filtration $S_3 \supseteq \mathbb{Z}/2 \supseteq \{1\}$。
+
+### 4.10 $R_2$ 的角色
+
+$R_2$ 是**首层非平凡复合层**：
+
+- 含双轴 (α, β) 的最简结构
+- Aut 首次出现非平凡 ($S_3$，6 元)
+- Bilinear 三层 (Layer 0/1/2) 首次完整定义
+- 三合一刻画为 $\{\mathrm{oo}, \mathrm{xx}\}$ 提供深层结构地位
+
+但 $R_2$ 仍**缺少 rank stratification** — 所有 3 个非恒等元在 $S_3$ 下共轭。这一点要到 $R_4$ 才出现。
+
+---
+
+## 5. $R_3$ — Fano Plane Layer
+
+### 5.1 定义
+
+$R_3 = \mathbb{F}_2^3$. $|R_3| = 8$.
+
+元素：长度 3 字符串 $u = u_1 u_2 u_3$ ∈ $\{\mathrm{o}, \mathrm{x}\}^3$.
+
+8 元：ooo, oox, oxo, oxx, xoo, xox, xxo, xxx.
+
+### 5.2 群与 vector space 结构
+
+$R_3 = (\mathbb{Z}/2)^3$, abelian, exponent 2, 阶 8.
+
+3-维 $\mathbb{F}_2$-vector space. 典则基：$\{e_1, e_2, e_3\}$ where $e_i$ has 1 in position $i$, 0 elsewhere.
+
+7 个非零元，每个 self-inverse.
+
+### 5.3 子群
+
+$R_3$ 的 $\mathbb{F}_2$-subspaces：
+
+- dim 0: 1 (trivial)
+- dim 1: $\binom{3}{1}_2 = 7$（每个 $\mathbb{Z}/2$ 子群对应一个非零向量）
+- dim 2: $\binom{3}{2}_2 = 7$ (hyperplanes; 每个是 kernel of 一个非零线性形式)
+- dim 3: 1 (whole)
+
+共 16 个子群。
+
+### 5.4 $\mathrm{Aut}(R_3)$
+
+$$|\mathrm{Aut}(R_3)| = |\mathrm{GL}(3, \mathbb{F}_2)| = (8-1)(8-2)(8-4) = 7 \cdot 6 \cdot 4 = 168$$
+
+$\mathrm{GL}(3, \mathbb{F}_2) \cong \mathrm{PSL}(2, 7)$ — 一个著名的 simple group of order 168。
+
+它作用 transitively 在 7 个非零元上、也 transitively 在 7 个 hyperplanes 上。
+
+### 5.5 Fano 平面 PG(2, 2)
+
+$R_3$ 的**射影空间** $\mathrm{PG}(2, 2)$ 是 **Fano 平面**——一个 finite projective plane with 7 points and 7 lines, each line containing 3 points, each point on 3 lines.
+
+构造：把 7 个非零元作为 points；每对非零元 $u, v$ 决定一条 line $\{u, v, u + v\}$（3-element subset of 非零元，对应 2-dim subspace minus 0）。
+
+性质（标准 incidence axioms）：
+
+- 任两 points 决定唯一 line
+- 任两 lines 在唯一 point 相交
+- 存在 4 points 中无 3 共线
+
+Fano 平面是最小的 non-trivial projective plane，与 $R_3$ 的群结构紧密绑定。
+
+### 5.6 Bilinear form
+
+dot product on $R_3$:
+
+$$\langle u, v \rangle := u_1 v_1 + u_2 v_2 + u_3 v_3 \in \mathbb{F}_2$$
+
+对称、非退化。但奇维 ⇒ **无 Layer 1 (σ)**、**无 Layer 2 (q + Arf)** 在自然意义下。
+
+注：$R_3$ 上可定义有「准 alternating」二次形式，但需 break symmetry，不是自然的。
+
+### 5.7 与其他根层的关系
+
+- $R_3 \cong R_1 \oplus R_2$（任一非平凡 dim-1/dim-2 直和分解）
+- $R_3 \hookrightarrow R_4, R_5, \ldots, R_8$
+- $R_3$ 不是 squaring tower 成员（3 不是 2 的幂）
+
+### 5.8 哲学/结构意义
+
+$R_3$ 是**最小有趣的射影几何**——Fano 平面。它出现在：
+
+- finite geometry 的开端
+- error-correcting codes（Steiner systems 等）
+- 量子信息中的 mutually unbiased bases
+- representation theory of small groups
+
+$R_3$ 不在 squaring tower，但作为根层有独立结构地位。
+
+---
+
+## 6. $R_4$ — The Minimum Complete Unit ★
+
+> **重点层 1**：$R_4$ 是数学意义上的**最小完整单元** (minimum complete unit)。从 $R_4$ 开始，代数结构具备 rank 分层、群作用嵌入、endomorphism 自封闭三大特征。
+
+### 6.1 定义
+
+$R_4 = \mathbb{F}_2^4$. $|R_4| = 16$. 
+
+元素：长度 4 字符串。例：$\mathrm{ooxx}, \mathrm{xxoo}, \mathrm{xoxo}, \ldots$
+
+### 6.2 三种结构身份 · Three Structural Identities
+
+$R_4$ 在三种意义上同构于同一 16-元对象：
+
+1. **$\mathbb{F}_2^4$**：4-维 $\mathbb{F}_2$-vector space (flat view)
+2. **$R_2 \otimes_{\mathbb{F}_2} R_2 = R_2^2$**：双 $R_2$ 张量（pair-of-images）
+3. **$\mathrm{End}_{\mathbb{F}_2}(R_2) = \mathrm{Mat}_{2 \times 2}(\mathbb{F}_2)$**：$R_2$ 的全体线性自同态
+
+这三种 view 是 $R_4$ 的不同**呈现**而非不同对象。它们共生：每个 $R_4$ 元素 $w \in R_4$ 既是 (1) 一个 4-bit 向量，又是 (2) 一对 $R_2$ 元素，又是 (3) 一个 $R_2 \to R_2$ 的线性映射。
+
+### 6.3 群结构
+
+$R_4 = (\mathbb{Z}/2)^4$，abelian、exponent 2、阶 16. 
+
+群运算 = component-wise XOR（4 个坐标各独立）。
+
+### 6.4 Vector space 与典则基
+
+$R_4 = \mathbb{F}_2^4$. 典则基 $\{e_1, e_2, e_3, e_4\}$，对应坐标 $(w_1, w_2, w_3, w_4)$.
+
+#### 双坐标读法
+
+$R_4 = R_2 \otimes R_2$ 给出二级坐标：
+
+| flat | pair-of-images $(u, v) \in R_2 \times R_2$ |
+|------|-------------------------------------------|
+| $w_1 w_2 w_3 w_4$ | $(w_1 w_2, w_3 w_4)$ |
+| oooo | (oo, oo) |
+| ooxx | (oo, xx) |
+| xxoo | (xx, oo) |
+| xxxx | (xx, xx) |
+| oxxo | (ox, xo) |
+
+#### Matrix 读法
+
+$R_4 = \mathrm{Mat}_{2 \times 2}(\mathbb{F}_2)$. 每元素 $w$ 视为：
+
+$$M_w = \begin{pmatrix} w_1 & w_2 \\ w_3 & w_4 \end{pmatrix}$$
+
+这给出**线性映射** $R_2 \to R_2$ via $u \mapsto M_w u$.
+
+### 6.5 Rank Stratification ★
+
+$R_4$ 是**首层带 rank 分层**的根层。按矩阵秩分类 16 个元素：
+
+| Rank | 数 | 描述 | 例子 |
+|------|----|----|----|
+| 0 | 1 | 零矩阵 | oooo |
+| 1 | 9 | 退化映射（image 1-dim 或 kernel 1-dim） | oxoo, ooox, xxoo, ... |
+| 2 | 6 | invertible = $\mathrm{GL}(2, \mathbb{F}_2)$ | xoox, oxxo, xoxx, oxxx, xxox, xxxo |
+
+**注**：rank-2 6 个 = $\mathrm{GL}(2, \mathbb{F}_2) \cong S_3$. 这是 §4.8 的 $\mathrm{Aut}(R_2)$ 重现于 $R_4$ 内部！
+
+矩阵阶分布的 rank stratification 是**$R_2$ 完全缺失**的：在 $R_2$ 中所有非恒等元都是 "rank 2" involutions, flat。$R_4$ 在结构上首次出现「分层」。
+
+### 6.6 子群
+
+$R_4$ 的 $\mathbb{F}_2$-subspaces 数：
+
+$$\sum_{k=0}^{4} \binom{4}{k}_2 = 1 + 15 + 35 + 15 + 1 = 67$$
+
+详细：
+
+- dim 0: 1
+- dim 1: 15
+- dim 2: 35
+- dim 3: 15
+- dim 4: 1
+
+**重要嵌入**：$R_4$ 内含 $R_2$ subspaces. dim-2 共 35 个，分两类（按 quadratic form 限制）：
+
+- 各种「轴对齐」 $R_2$（前两坐标、后两坐标、对角等）
+- 一般 $R_2$-style subspaces
+
+值得特别注意的子群（来自 §1.4 直和 $R_4 = R_2 \oplus R_2$）：
+
+- **左半 $R_2^{(L)}$** = $\{w : w_3 = w_4 = 0\}$ = $\{\mathrm{oooo}, \mathrm{xooo}, \mathrm{oxoo}, \mathrm{xxoo}\}$
+- **右半 $R_2^{(R)}$** = $\{w : w_1 = w_2 = 0\}$ = $\{\mathrm{oooo}, \mathrm{ooxo}, \mathrm{ooox}, \mathrm{ooxx}\}$
+
+这两个 $R_2$ 直和恢复 $R_4$.
+
+### 6.7 $\mathrm{Aut}(R_4)$
+
+$$|\mathrm{Aut}(R_4)| = |\mathrm{GL}(4, \mathbb{F}_2)| = (16-1)(16-2)(16-4)(16-8) = 15 \cdot 14 \cdot 12 \cdot 8 = \mathbf{20160}$$
+
+20160 是 $A_8$ (阶 20160) 的阶。事实上 $\mathrm{GL}(4, \mathbb{F}_2) \cong A_8$ — 著名的群同构。
+
+$A_8$ 是 alternating group on 8 letters。这给 $R_4$ 一个跨学科桥接 (combinatorics、Galois theory、Lie theory)。
+
+### 6.8 三层 Bilinear 形式 on $R_4$
+
+$R_4$ 是偶维，三层全部存在。
+
+#### Layer 0 — Standard dot
+
+$$\langle w, w' \rangle_{R_4} := \sum_{i=1}^{4} w_i w'_i \in \mathbb{F}_2$$
+
+非退化、对称、非 alternating.
+
+或在 $R_2 \otimes R_2$ view 下：
+
+$$\langle (u_1, u_2), (u'_1, u'_2) \rangle = \langle u_1, u'_1 \rangle_{R_2} + \langle u_2, u'_2 \rangle_{R_2}$$
+
+这是 $R_2$-component-wise 直和。
+
+#### Layer 1 — Symplectic σ on $R_4$
+
+$$\sigma_{R_4}(w, w') := w_1 w'_2 + w_2 w'_1 + w_3 w'_4 + w_4 w'_3$$
+
+或 $R_2 \otimes R_2$ view：
+
+$$\sigma_{R_4}((u_1, u_2), (u'_1, u'_2)) = \sigma_{R_2}(u_1, u'_1) + \sigma_{R_2}(u_2, u'_2)$$
+
+Alternating, 非退化。
+
+#### Layer 2 — Quadratic refinements & Arf
+
+$$q_0^{R_4}(w) := w_1 w_2 + w_3 w_4$$
+
+$$q_1^{R_4}(w) := L_{R_4}(w) + q_0^{R_4}(w)$$
+
+其中 $L_{R_4}(w) = w_1 + w_2 + w_3 + w_4$.
+
+Arf 不变量：
+
+- $\mathrm{Arf}(q_0^{R_4}) = q_0(e_1) \cdot q_0(e_2) \cdot q_0(e_3) \cdot q_0(e_4)$ ... wait, Arf 在 $R_{2k}$ 上定义为 $\sum$ 类型，详细：
+
+$$\mathrm{Arf}(q^{R_4}) = q^{R_4}(e_1) q^{R_4}(e_2) + q^{R_4}(e_3) q^{R_4}(e_4) \pmod 2$$
+
+具体 $\mathrm{Arf}(q_0^{R_4}) = 0$, $\mathrm{Arf}(q_1^{R_4}) = 0$（前者显然，后者由 $L \cdot$ self contributing）.
+
+如要 Arf-1 类的 quadratic form on $R_4$，可逐 $R_2$-block 选 $q_1$，例如 $q_{1,0}^{R_4}(w) = q_1(w_1 w_2) + q_0(w_3 w_4)$.
+
+### 6.9 $R_4 = \mathrm{End}(R_2)$ 自封闭
+
+> **核心事实**：$R_4$ 的 16 元 = $R_2 \to R_2$ 的全部线性映射。
+
+把 $w \in R_4$ 视为矩阵 $M_w$（§6.4），它作用 $R_2$ 上 via $u \mapsto M_w u$。 
+
+**16 个线性映射的分类**（§6.5 rank stratification）：
+
+- 1 zero map (rank 0)
+- 9 退化 maps (rank 1) — 包括各种 projections, shears
+- 6 invertible maps (rank 2) = $\mathrm{GL}(2, \mathbb{F}_2) = \mathrm{Aut}(R_2) = S_3$
+
+最后一点是 $R_4$ 作为「**$R_2$ 的自我描述**」的精确表达：
+
+$$\mathrm{Aut}(R_2) \hookrightarrow R_4 \;\text{(rank-2 invertibles)}$$
+
+$R_2$ 的所有 6 个 group automorphisms **整体内嵌**到 $R_4$ 中作为 invertible 矩阵。
+
+### 6.10 $R_4$ 的角色 · The Significance of $R_4$
+
+$R_4$ 是数学最小完整单元的几条具体表述：
+
+1. **首层 rank 分层** (§6.5) — 「flat」一阶 $R_2$ 没有 rank，$R_4$ 是首层结构丰富
+2. **首层 endomorphism 自封闭** — $\mathrm{End}(R_2) = R_4$ 自身在 $R$-族内
+3. **首层内嵌前一层 Aut** (§6.9) — $\mathrm{Aut}(R_2)$ 作为 invertible 子集出现于 $R_4$
+4. **首层有 quadratic forms 的 Arf 分类** ($R_2$ 上 Arf 0/1 是定义，但 $R_4$ 上 Arf 才有多类 contribution)
+5. **首层属 squaring tower 非基** — $R_1 \to R_2 \to R_4 \to \ldots$，$R_4 = R_2^2$ 表达「自相似首层 doubling」
+
+哲学/工程意义：
+
+> $R_4$ 是**算法的最小完整体**。任何「需要 transformations 上 transformations」的代数结构都从 $R_4$ 开始变得 well-defined。$R_4$ 出现在范畴论的 endomorphism algebra、$2 \times 2$ matrix algebra、量子 single-qubit Clifford group、有限几何 $\mathrm{PG}(3, 2)$ 等多个场景，作为「最小可表达完整结构」。
+
+### 6.11 与其他根层的关系
+
+- $R_4 = R_2 \otimes R_2 = R_2^2$（张量积、squaring）
+- $R_4 = R_2 \oplus R_2$（直和、splitting view）
+- $R_4 = \mathrm{End}(R_2)$ (endomorphism view)
+- $R_4 \hookrightarrow R_8$ (subspace)
+- $R_4 \otimes R_4 = R_8$（squaring 下一步）
+- $R_4 \oplus R_4 = R_8$（直和 view of $R_8$）
+
+---
+
+## 7. $R_5$ — The 32-Element Layer
+
+### 7.1 定义
+
+$R_5 = \mathbb{F}_2^5$. $|R_5| = 32$. 
+
+元素：长度 5 字符串。
+
+### 7.2 群与 vector space
+
+$R_5 = (\mathbb{Z}/2)^5$. 5-维。Abelian exponent-2.
+
+### 7.3 数论特征
+
+$|R_5| - 1 = 31$ 是 **Mersenne 素数** ($2^5 - 1$). 这意味着 $R_5$ 的 31 个非零元在 $\mathrm{Aut}$ 下形成 transitive orbit，并且 31 是素数让 $\mathrm{Aut}$ 的结构与 Galois 理论有特殊接口。
+
+### 7.4 子群
+
+$\mathbb{F}_2$-subspace 数：$\sum_{k=0}^{5} \binom{5}{k}_2$
+
+- dim 0: 1
+- dim 1: 31
+- dim 2: 155
+- dim 3: 155
+- dim 4: 31
+- dim 5: 1
+
+共 374 子群。
+
+### 7.5 $\mathrm{Aut}(R_5)$
+
+$$|\mathrm{GL}(5, \mathbb{F}_2)| = 31 \cdot 30 \cdot 28 \cdot 24 \cdot 16 = \mathbf{9{,}999{,}360}$$
+
+### 7.6 Bilinear form
+
+奇维。仅 Layer 0 (dot product) 存在自然定义。
+
+### 7.7 射影空间 PG(4, 2)
+
+$R_5$ 的射影空间是 $\mathrm{PG}(4, 2)$：
+
+- 31 points (= dim-1 subspaces of $R_5$)
+- 155 lines (= dim-2 subspaces)
+- 155 planes (= dim-3 subspaces)
+- 31 hyperplanes (= dim-4 subspaces)
+
+### 7.8 $R_5 = R_1 \oplus R_4$ 分解
+
+$R_5$ 自然分解 $R_1 \oplus R_4$，把一个 bit 单独抽出。这给出 $R_4$-block + scalar 的 representations.
+
+### 7.9 角色
+
+$R_5$ 作为根层：
+
+- Mersenne 5 是最小 prime Mersenne
+- $\mathrm{GL}(5, 2)$ 体积近 $10^7$
+- 出现在 Galois group of $x^{31} - 1$ 等代数数论场景
+
+---
+
+## 8. $R_6$ — The 64-Element Layer
+
+### 8.1 定义
+
+$R_6 = \mathbb{F}_2^6$. $|R_6| = 64$. 元素：长度 6 字符串。
+
+### 8.2 多重分解
+
+$R_6$ 有多种自然张量/直和分解：
+
+- $R_6 = R_2 \otimes R_3$（=12 不对，应=4×8=32... wait, $R_N \otimes R_M = R_{NM}$, so $R_2 \otimes R_3 = R_6$，dim 6 yes，$|R_2 \otimes R_3| = 64$ ✓）
+- $R_6 = R_3 \otimes R_2$（同上，commutative）
+- $R_6 = R_2 \oplus R_4$（直和：dim 2+4=6）
+- $R_6 = R_2 \oplus R_2 \oplus R_2 = R_2^3$（in old framework 这是 "Hexagram" 解读 $R_2$ 三 fold）
+- $R_6 = \mathrm{Hom}(R_2, R_3)$ 或 $\mathrm{Hom}(R_3, R_2)$
+
+### 8.3 子群
+
+$\mathbb{F}_2$-subspace 数：
+
+- dim 0: 1
+- dim 1: 63
+- dim 2: 651
+- dim 3: 1395
+- dim 4: 651
+- dim 5: 63
+- dim 6: 1
+
+共 2825 子群。
+
+### 8.4 $\mathrm{Aut}(R_6)$
+
+$$|\mathrm{GL}(6, \mathbb{F}_2)| = 63 \cdot 62 \cdot 60 \cdot 56 \cdot 48 \cdot 32 = \mathbf{20{,}158{,}709{,}760}$$
+
+约 $2 \times 10^{10}$.
+
+### 8.5 三层 bilinear
+
+$R_6$ 偶维，Layer 0/1/2 全部支持：
+
+- $\langle u, v \rangle = \sum_i u_i v_i$
+- $\sigma(u, v) = $ pair-wise $(u_{2k-1} v_{2k} + u_{2k} v_{2k-1})$, $k = 1, 2, 3$
+- $q_0, q_1$ 类似 lift
+
+### 8.6 $R_6$ 中嵌入 $R_4$
+
+$R_4 \hookrightarrow R_6$ 通过取前 4 或后 4 坐标。$R_6 / R_4 \cong R_2$（商）。
+
+### 8.7 $R_2^3$ Tensor 解读
+
+把 $R_6$ 视为 $R_2 \otimes R_2 \otimes R_2$：每元素 $w \in R_6$ 看作 3 个 $R_2$ 的 tensor，等价于：
+
+$$w : R_2 \to R_4, \quad \text{or} \quad w : R_4 \to R_2$$
+
+这给 $R_6$ 一个 「Hom-tensor」 解读。
+
+### 8.8 角色
+
+$R_6$ 是**首个 dim-3 张量层**——$R_2^3$ 给出三方对偶关系。某些古典 6-fold symmetries (例如六爻、六极、六方) 与 $R_6$ 的代数结构对应（详 §10 Atlas）。
+
+---
+
+## 9. $R_7$ — Hamming Layer
+
+### 9.1 定义
+
+$R_7 = \mathbb{F}_2^7$. $|R_7| = 128$. 元素：长度 7 字符串。
+
+### 9.2 群与 vector space
+
+$R_7 = (\mathbb{Z}/2)^7$. 7-维.
+
+### 9.3 数论特征
+
+$2^7 - 1 = 127$ 也是 Mersenne 素数。$R_7$ 是第二个 Mersenne 根层（$R_5$ 是首个）。
+
+### 9.4 Hamming(7,4) 完美码
+
+$R_7$ 是 **Hamming(7, 4) 完美码**的自然居所——一个最小 perfect single-error-correcting binary linear code:
+
+- 4 message bits + 3 parity bits = 7 transmitted bits
+- 128 codeword space, 16 valid codewords forming $R_4$-dim subspace
+- distance 3, correcting any single bit error
+- "perfect" = sphere-packing-bound 满足
+
+Hamming(7, 4) 的代数：
+
+$$\mathrm{Hamming}(7, 4) = \ker H, \quad H \in \mathrm{Mat}_{3 \times 7}(\mathbb{F}_2)$$
+
+$H$ 是 parity-check matrix，列向量是 7 个非零元 $\mathbb{F}_2^3$ vector — 这又把 Fano 平面 (§5) 嵌入到 $R_7$ 的码结构。
+
+### 9.5 $\mathrm{Aut}(R_7)$
+
+$$|\mathrm{GL}(7, \mathbb{F}_2)| = 127 \cdot 126 \cdot 124 \cdot 120 \cdot 112 \cdot 96 \cdot 64 \approx 1.64 \times 10^{14}$$
+
+巨大。
+
+### 9.6 子群
+
+$\mathbb{F}_2$-subspace 共 $\sum_k \binom{7}{k}_2$ 个，几千个。
+
+### 9.7 角色
+
+$R_7$ 的独特地位主要由 Hamming 码定义：
+
+- 最小 perfect single-error-correcting code
+- $R_4$-dim Hamming code 嵌入 $R_7$
+- 出现在 quantum error correction 中（Steane code = Hamming-based 量子码）
+
+奇维 ⇒ 仅 Layer 0 bilinear。
+
+### 9.8 $R_7 = R_1 \oplus R_2 \oplus R_4$ 分解
+
+$R_7$ 是 $R_0$–$R_7$ 中**唯一**需要 squaring tower 三层全部参与的根层。所以 $R_7$ 在某种意义上是 squaring tower 「最完整」的非平凡直和.
+
+---
+
+## 10. $R_8$ — The Ceiling ★
+
+> **重点层 2**：$R_8 = R_4^2$ 是**根层 ceiling**。它含 $R_0$–$R_7$ 作为 $\mathbb{F}_2$-子空间；许多常用代数概念定居于此尺度。
+
+### 10.1 定义
+
+$R_8 = \mathbb{F}_2^8$. $|R_8| = 256$. 元素：长度 8 字符串。
+
+### 10.2 多种结构身份
+
+$R_8$ 同时是：
+
+1. **$\mathbb{F}_2^8$**：8-维 $\mathbb{F}_2$-vector space
+2. **$R_4 \otimes R_4 = R_4^2$**：张量自方
+3. **$R_4 \oplus R_4$**：直和
+4. **$R_2^4$**：四 fold $R_2$ 张量 (= $\mathrm{Hom}(R_4, R_2) \cdot \mathrm{Hom}(R_2, R_4)$ 等多种解读)
+5. **byte**：computer-science 标准 8-bit primitive unit
+
+### 10.3 群与 vector space
+
+$R_8 = (\mathbb{Z}/2)^8$. 阶 256. Abelian exponent-2.
+
+### 10.4 子群
+
+$\mathbb{F}_2$-subspace 总数 $\sum_k \binom{8}{k}_2 \approx 30000$.
+
+dim-by-dim:
+
+- dim 0: 1
+- dim 1: 255
+- dim 2: 5,355
+- dim 3: 11,811
+- dim 4: 200,787
+- ... 等
+
+### 10.5 $\mathrm{Aut}(R_8)$
+
+$$|\mathrm{GL}(8, \mathbb{F}_2)| = 255 \cdot 254 \cdot 252 \cdot 248 \cdot 240 \cdot 224 \cdot 192 \cdot 128 \approx 5.35 \times 10^{18}$$
+
+约 $5.35 \times 10^{18}$ — 远超经典 cryptography 的「实用」搜索空间起点。
+
+### 10.6 含 $R_0$–$R_7$ 全部为 subspaces
+
+> **关键事实**：$R_N \hookrightarrow R_8$ for all $N \in \{0, 1, \ldots, 7\}$.
+
+证明（embedding）：对 $N \leq 7$，取「前 $N$ 坐标」subspace $\{w \in R_8 : w_{N+1} = \ldots = w_8 = 0\} \cong R_N$.
+
+这个事实让 $R_8$ 成为**根层 universe**——所有更小根层都生活在 $R_8$ 内。
+
+### 10.7 三层 Bilinear
+
+$R_8$ 偶维 8，全部 Layer 支持：
+
+**Layer 0**:
+$$\langle w, w' \rangle = \sum_{i=1}^{8} w_i w'_i$$
+
+**Layer 1** (4 对 symplectic blocks):
+$$\sigma_{R_8}(w, w') = \sum_{k=1}^{4} (w_{2k-1} w'_{2k} + w_{2k} w'_{2k-1})$$
+
+**Layer 2** (Arf-graded quadratic forms):
+$$q_{R_8}^{(c_1, c_2, c_3, c_4)}(w) = \sum_{k=1}^{4} q_{c_k}(w_{2k-1} w_{2k})$$
+
+$c_k \in \{0, 1\}$ 选 $q_0$ 或 $q_1$ for each $R_2$-block. 总 Arf = $\sum_k c_k \pmod 2$.
+
+### 10.8 $R_8 = R_4^2$ — Nested Matrix Structure
+
+把 $R_8$ 视为 **「矩阵的矩阵」**：
+
+$$R_8 = R_4 \otimes R_4 \cong \mathrm{Mat}_{2 \times 2}(\mathrm{Mat}_{2 \times 2}(\mathbb{F}_2))$$
+
+即 $R_8$ 的元素是「$2 \times 2$ 矩阵，每个 entry 又是 $2 \times 2$ $\mathbb{F}_2$-矩阵」。
+
+或等价地，$R_8 = \mathrm{Mat}_{4 \times 4}(\mathbb{F}_2)$ — $4 \times 4$ $\mathbb{F}_2$-矩阵 space.
+
+注意 $\mathrm{Mat}_{4 \times 4}(\mathbb{F}_2)$ over $\mathbb{F}_2$ 的 dimension 是 16 = 与 $R_4$ 同。但 $R_8$ 自己 dim 8. 
+
+更精确地：$R_8 \neq \mathrm{End}(R_4) = R_{16}$. 而 $R_8 = R_4 \otimes R_4$ 是 tensor，不是 endomorphism algebra.
+
+正确说法：**$R_8$ 是 $R_4$ 的 "tensor square"，不是 "endomorphism algebra"**。
+
+### 10.9 常用概念在 $R_8$ 尺度
+
+256 元的代数结构在以下场景出现：
+
+1. **Computer byte**：8-bit 是计算机基础数据单元
+2. **Unicode UTF-8 single-byte**：256 code points
+3. **GF(256) finite field**：AES, BCH codes, Reed-Solomon codes 用之
+4. **DNA codons**：4³ = 64 codons 但 8-bit 编码扩展 (含碱基组合)
+5. **8-qubit register**：256 量子态
+6. **Pixel intensity 8-bit**：图像 0-255 灰度
+7. **Hex byte**：16² = 256 = 两个 hex digits
+
+许多 cryptography、coding theory、data representation 的 algebraic operations 定居于 $R_8$ 尺度。
+
+### 10.10 $R_8$ 作为 ceiling 的代数事实
+
+> **定理 10.10**：$R_0$–$R_8$ 是文 algebra 的充分根集。任何更大 $R_N$ ($N > 8$) 可由 $R_0$–$R_8$ 经直和、张量、Hom 构造。
+
+证（构造性）：
+
+- 若 $N = 8m + r$ ($0 \leq r < 8$)，则 $R_N = R_8^{\oplus m} \oplus R_r = m \cdot R_8 \oplus R_r$
+- $R_8^{\oplus m}$ 由 $R_8$ 自身重复直和
+- 由是任意 $R_N$ 在 $R_0$–$R_8$ 的代数闭包内
+
+更精细地：
+
+- $R_{16} = R_8 \oplus R_8 = R_8^2$（张量）— 是 squaring tower 下一层
+- $R_{32} = R_{16}^2$
+- $R_{64} = R_{32}^2$
+
+每次 squaring 可由 ceiling 的 tensor 翻倍。$R_0$–$R_8$ 是根层的有限封闭范围。
+
+### 10.11 角色 · The Significance of $R_8$
+
+$R_8$ 在 R-族中的独特地位：
+
+1. **Squaring tower 第 4 层**：$R_1 \to R_2 \to R_4 \to R_8$ 完成自相似四步
+2. **Ceiling**：含所有 $R_0$–$R_7$ 作为 subspace
+3. **Byte-scale**：计算的天然基本单位
+4. **生成性**：从 $R_0$–$R_8$ 可构造所有更大 $R_N$
+5. **Field structure**：$R_8$ 与 $\mathrm{GF}(256)$ 同构 (作为 $\mathbb{F}_2$-向量空间)，提供乘法环结构
+
+### 10.12 与其他根层的关系
+
+- $R_8 = R_4^2$ (tensor) ← squaring tower 关系
+- $R_8 = R_4 \oplus R_4$ (direct sum)
+- $R_8 = R_2 \oplus R_2 \oplus R_2 \oplus R_2 = R_2^4$ (4-fold direct sum / tensor)
+- $R_8 = R_1 \oplus R_7 = R_3 \oplus R_5 = $ 等多种二分
+- $R_0, R_1, \ldots, R_7 \hookrightarrow R_8$（嵌入）
+
+---
+
+## 11. 跨层操作 · Inter-Layer Operations
+
+### 11.1 直和
+
+$$R_N \oplus R_M = R_{N+M}$$
+
+按 $\mathbb{F}_2$-向量空间直和，dimension 加。
+
+### 11.2 张量积
+
+$$R_N \otimes_{\mathbb{F}_2} R_M = R_{NM}$$
+
+dimension 乘。$R_2 \otimes R_2 = R_4$, $R_4 \otimes R_4 = R_8$ — squaring tower 在此涌现。
+
+### 11.3 Hom
+
+$$\mathrm{Hom}_{\mathbb{F}_2}(R_N, R_M) \cong R_{NM}$$
+
+线性映射空间 = matrix space of size $M \times N$ over $\mathbb{F}_2$。
+
+特别：$\mathrm{End}(R_N) = \mathrm{Hom}(R_N, R_N) = R_{N^2}$.
+
+- $\mathrm{End}(R_1) = R_1$
+- $\mathrm{End}(R_2) = R_4$ ★ (= $R_2$ squaring)
+- $\mathrm{End}(R_3) = R_9$ (out of root layers)
+- $\mathrm{End}(R_4) = R_{16}$ (out of root layers; constructible via direct sum)
+
+### 11.4 子空间与商
+
+$R_N$ 含 $R_M$ subspace for $M \leq N$. 商 $R_N / R_M = R_{N-M}$.
+
+### 11.5 Dual
+
+Pontryagin 对偶 $\widehat{R_N} \cong R_N$ — 自对偶（因 $\mathbb{F}_2$ self-dual character group）。
+
+---
+
+## 12. Bilinear Pairings — Cross-Layer Summary
+
+### 12.1 一致性表
+
+| 层 | $N$ 奇偶 | Layer 0 ($\langle\cdot,\cdot\rangle$) | Layer 1 (σ) | Layer 2 (q + Arf) |
+|----|---------|----|----|----|
+| $R_0$ | — | trivial | — | — |
+| $R_1$ | odd | ✓ | — | — |
+| $R_2$ | even | ✓ | ✓ | ✓ |
+| $R_3$ | odd | ✓ | — | — |
+| $R_4$ | even | ✓ | ✓ | ✓ |
+| $R_5$ | odd | ✓ | — | — |
+| $R_6$ | even | ✓ | ✓ | ✓ |
+| $R_7$ | odd | ✓ | — | — |
+| $R_8$ | even | ✓ | ✓ | ✓ |
+
+**规律**：
+
+- Layer 0 (dot) 在所有 $R_N$ 上都自然定义
+- Layer 1 (σ) 与 Layer 2 (q + Arf) 仅在**偶维** $R_N$ 上自然定义——char 2 symplectic 几何要求偶维
+
+### 12.2 跨层 dot 的 $R_N$-block 因式化
+
+对偶维 $R_{2k}$，dot product 可按 $k$ 个 $R_2$-block 直和分解：
+
+$$\langle w, w' \rangle_{R_{2k}} = \sum_{j=1}^{k} \langle w^{(j)}, w'^{(j)} \rangle_{R_2}$$
+
+where $w^{(j)} = (w_{2j-1}, w_{2j}) \in R_2$.
+
+类似地 σ 与 q 都有 component-wise 因式化（详见 §6.8, §10.7）。
+
+---
+
+## 13. $\mathrm{Aut}(R_N)$ — Automorphism Groups
+
+### 13.1 阶公式
+
+$$|\mathrm{Aut}(R_N)| = |\mathrm{GL}(N, \mathbb{F}_2)| = \prod_{k=0}^{N-1} (2^N - 2^k)$$
+
+| $N$ | $|\mathrm{Aut}(R_N)|$ | 特殊同构 |
+|-----|----------------------|----------|
+| 0 | 1 | trivial |
+| 1 | 1 | trivial |
+| 2 | 6 | $\cong S_3$ |
+| 3 | 168 | $\cong \mathrm{PSL}(2, 7)$ |
+| 4 | 20,160 | $\cong A_8$ |
+| 5 | 9,999,360 | — |
+| 6 | 20,158,709,760 | — |
+| 7 | $\sim 1.64 \times 10^{14}$ | — |
+| 8 | $\sim 5.35 \times 10^{18}$ | — |
+
+### 13.2 子群嵌入
+
+$\mathrm{Aut}(R_N)$ 包含 $\mathrm{Aut}(R_M)$ for $M \leq N$ via 作用在 $R_M$-subspace 上的扩展。这给出**Aut 嵌套链**：
+
+$$\{1\} = \mathrm{Aut}(R_0) \hookrightarrow \mathrm{Aut}(R_1) \hookrightarrow \mathrm{Aut}(R_2) \hookrightarrow \ldots \hookrightarrow \mathrm{Aut}(R_8)$$
+
+### 13.3 Preservation hierarchy at $R_2$ (复习)
+
+$\mathrm{Aut}(R_2) = S_3$ 在 $R_2$ 上的 3 层 filtration：
+
+| Level | Aut 子群 | 阶 | 保的结构 |
+|-------|----------|----|---------|
+| L0 | $S_3$ (full) | 6 | 群、σ、$q_1$ |
+| L1 | Stab(xx) | 2 | + $\{\mathrm{oo}, \mathrm{xx}\}$、$\langle\cdot,\cdot\rangle$、$q_0$ |
+| L2 | $\{\mathrm{id}\}$ | 1 | 所有 |
+
+> **R_2 是特例**：$\mathrm{Sp}(2, 2) = \mathrm{GL}(2, 2) = S_3$（巧合相等 $|S_3| = 6$）。所以 R_2 上全 Aut 自动保 σ. 对 $R_4, R_8, \ldots$ **不**成立——$\mathrm{Sp}(N, 2) \subsetneq \mathrm{GL}(N, 2)$ 严格真子群，仅部分 Aut 保 σ. 详 r8.md §9.4 与 wen-algebra §5.4.
+
+---
+
+## 14. 超越 $R_8$ · Beyond $R_8$ — Construction Calculus
+
+### 14.1 $R_N$ for $N > 8$ 的构造
+
+由 §1.5 与 §10.10：任意 $R_N$ ($N > 8$) 由 $R_0$–$R_8$ 构造：
+
+$$R_N = R_8^{\oplus \lfloor N/8 \rfloor} \oplus R_{N \mod 8}$$
+
+例：
+
+- $R_{10} = R_8 \oplus R_2$
+- $R_{16} = R_8 \oplus R_8$（squaring tower 下一层，via direct sum；cardinality $|R_8|^2$）
+- $R_{32} = R_{16} \oplus R_{16}$
+- $R_{64} = R_{32} \oplus R_{32}$
+
+> **注意 squaring tower 记号**：「$R_{2N} = R_N^2$」在文档中表示 *cardinality squaring via direct sum* ($R_{2N} = R_N \oplus R_N$)，**不是 tensor square**（$R_N \otimes R_N = R_{N^2}$ much larger）。详 r8.md §1.6 tensor vs direct sum 辨析.
+
+### 14.2 性质继承
+
+由 $R_0$–$R_8$ 中验证的代数事实自动 lift 到任意 $R_N$ 经直和分解：
+
+- **群结构 + 阿贝尔性**：直接经直和继承
+- **Bilinear forms**：按 $R_2$-block 因式化（§12.2），由直和分解 lift
+- **$\mathrm{Aut}$**：$\mathrm{GL}(N, \mathbb{F}_2)$ 有递归子群结构（含 block-diagonal subgroup）
+- **Subspaces**：$R_N$ 子空间包含所有 $R_M \hookrightarrow R_N$ for $M \leq N$（前 $M$ 坐标）
+
+张量与 Hom 函子虽闭合（详 wen-algebra §2），但产生 $R_{NM}$ 这种**大得多**的层；高层 $R_N$ 的主要 lift 路径是**直和**.
+
+### 14.3 根层范围充足性
+
+> **充足性陈述**：所有需要在 $R_N$ ($N \in \mathbb{N}$) 上证明的代数性质，都可在 $R_0$–$R_8$ 上证明，再 lift 到 $R_N$。
+
+这给文 algebra 一个**有限根集**：$R_0, R_1, \ldots, R_8$ 是完整的 generating set。
+
+---
+
+## 15. 外部传统对应 · Application Layer Atlas
+
+> **范围**：本节列出 $R_N$ 在外部传统中的若干对应。这些是 **应用层映射** (application-layer correspondences)，**不是 $R_N$ algebra 的来源或定义**。
+
+### 15.1 $R_1$ — 经典二元
+
+- 数字 logic: $\{0, 1\}$ / true/false
+- Shannon bit
+- Schmitt trigger 输出
+- 是/非, 阴/阳 (古典中文宇宙论的最简层)
+
+### 15.2 $R_2$ — Klein-four
+
+- **Pauli 群 mod phase**: $\{I, X, Y, Z\}$ 同构于 $V_4$
+- **CPT 在物理**: trivial / C / P / T 对应
+- **Galois of $\mathbb{C}/\mathbb{R}$**: 部分嵌入 (复共轭 = 一个 $\mathbb{Z}/2$)
+- **Greimas semiotic square**: A / ¬A / B / ¬B
+- **古典中文「象」**: 4-fold (旧译 道/错/综/错综)
+- **Boolean logic operators**: identity / negation / dual / contrapositive (4-fold)
+
+### 15.3 $R_3$ — Fano 平面
+
+- **Octonions**: $\mathbb{O}$ 的 multiplication table 由 Fano 平面给出
+- **Quantum mutually unbiased bases**: $d = 2^{n/2}$ 系
+- **Steiner triple systems**: STS(7) = Fano
+
+### 15.4 $R_4$ — Mat($2 \times 2$, $\mathbb{F}_2$) / Frame
+
+- **Single-qubit Pauli group**: 16 元 (含 phase)
+- **Single-qubit Clifford group**: 24 元，但 mod phase 含 $R_4$ 子群
+- **Endomorphism algebra of $V_4$**: directly $R_4$
+- **Boolean logic 16 functions of 2 vars**: $\mathbb{F}_2^4$ = $R_4$
+- **古典中文「对象」/ Frame** (旧译，但不为本版使用)
+- **$\mathbb{A}_8$ alternating group**: $\mathrm{Aut}(R_4)$ 同构
+
+### 15.5 $R_5$ — Mersenne 5
+
+- **Galois group of $x^{31} - 1$**: 某些子结构对应
+- **Quintic equations**: $S_5$ vs $A_5$
+- **Edge code in $\mathbb{F}_2^5$**
+
+### 15.6 $R_6$ — 64-元
+
+- **8-cube symmetry partial**
+- **古典中文「卦」/ Hexagram** (易学 64 卦，作为 application-layer 映射)
+- **$R_2 \otimes R_3$**: 量子 6-state systems
+
+### 15.7 $R_7$ — Hamming
+
+- **Hamming(7, 4) 完美码**
+- **Steane code** (量子 Hamming 推广)
+- **Octonions 的扩展几何**
+
+### 15.8 $R_8$ — Byte / GF(256)
+
+- **Byte / 8-bit**: 计算基础单元
+- **AES (Rijndael)**: 使用 $\mathrm{GF}(256)$ field structure on $R_8$
+- **Reed-Solomon codes**: 多基于 $\mathrm{GF}(256)$
+- **Unicode UTF-8 single byte**: 256 code points
+- **Pixel intensity 8-bit**: 0-255 灰度
+- **古典中文「时卦」** (256 元，作为 application-layer)
+
+### 15.9 跨层共性观察
+
+> 多个外部传统在多个根层上有自然对应，但这些对应是**$R_N$ algebra 在不同领域中的显现**，不是 $R_N$ 的源。$R_0$–$R_8$ 由 §1–§14 的代数事实独立定义。
+
+---
+
+## 16. 形式骨架 · Formal Skeleton
+
+### 16.1 Lean 4
 
 ```lean
-import Mathlib.GroupTheory.Subgroup.Basic
-import Mathlib.GroupTheory.SpecificGroups.KleinFour
-import Mathlib.Logic.Equiv.Basic
+import Mathlib.Algebra.Group.Basic
+import Mathlib.LinearAlgebra.Basic
+import Mathlib.Data.Fin.Basic
 
-namespace Wen.V4
+namespace 文.R
 
-/-- V₄ 的四元素，对应 道/错/综/错综 -/
-inductive Elem
-  | dao        -- e
-  | cuo        -- a (错: value-flip)
-  | zong       -- b (综: frame-flip)
-  | cuozong    -- ab (错综: composite)
-  deriving DecidableEq, Repr, Fintype
+/-- R_N = F_2^N — the N-th layer root.
+    Element representation: Fin N → Bool (o = false, x = true). -/
+def R (N : ℕ) : Type := Fin N → Bool
 
-/-- 群乘法：V₄ 是 ℤ/2 × ℤ/2，所有非恒等元 self-inverse、commutative -/
-def mul : Elem → Elem → Elem
-  | .dao,     g          => g
-  | g,        .dao       => g
-  | .cuo,     .cuo       => .dao
-  | .zong,    .zong      => .dao
-  | .cuozong, .cuozong   => .dao
-  | .cuo,     .zong      => .cuozong
-  | .zong,    .cuo       => .cuozong   -- commutativity 显式编码
-  | .cuo,     .cuozong   => .zong
-  | .cuozong, .cuo       => .zong
-  | .zong,    .cuozong   => .cuo
-  | .cuozong, .zong      => .cuo
+namespace R
 
-instance : Mul Elem := ⟨mul⟩
-instance : One Elem := ⟨.dao⟩
-instance : Inv Elem := ⟨id⟩   -- 每个元素 self-inverse
+variable {N : ℕ}
 
-instance : CommGroup Elem where
-  mul_assoc       := by decide
-  one_mul         := by decide
-  mul_one         := by decide
-  mul_left_inv    := by decide
-  mul_comm        := by decide
+/-- Component-wise XOR — abelian group structure -/
+def xor (u v : R N) : R N := fun i => Bool.xor (u i) (v i)
 
-/-- 与 Mathlib 标准 Klein-4 的同构 -/
-def equivKleinFour : Elem ≃* KleinFour := ...
+instance : Add (R N) := ⟨xor⟩
+instance : Zero (R N) := ⟨fun _ => false⟩
 
-end Wen.V4
+instance : AddCommGroup (R N) where
+  add_assoc := by intros; funext i; cases (a i) <;> cases (b i) <;> cases (c i) <;> rfl
+  zero_add  := by intros; funext i; rfl
+  add_zero  := by intros; funext i; cases (a i) <;> rfl
+  add_left_neg := by sorry  -- char 2: v + v = 0
+  add_comm  := by intros; funext i; exact Bool.xor_comm _ _
+
+/-- Layer 0: Boolean dot product. Defined for all N. -/
+def dot (u v : R N) : Bool :=
+  (Finset.univ : Finset (Fin N)).foldr (fun i acc => Bool.xor (u i && v i) acc) false
+
+theorem dot_symm (u v : R N) : dot u v = dot v u := by
+  unfold dot; congr 1; funext i; exact Bool.and_comm _ _
+
+/-- Layer 1: Symplectic form sigma. Only for even N. -/
+def sigma {N : ℕ} (h : Even N) (u v : R N) : Bool := sorry
+  -- σ(u, v) = sum_{k=1..N/2} (u_{2k-1} v_{2k} + u_{2k} v_{2k-1})
+
+/-- Linear form L: diagonal projection -/
+def L (v : R N) : Bool :=
+  (Finset.univ : Finset (Fin N)).foldr (fun i acc => Bool.xor (v i) acc) false
+
+end R
+
+/-- R_2 — the Klein-four pair layer -/
+namespace R2
+
+/-- Named convenience constructors -/
+def oo : R 2 := fun _ => false
+def xo : R 2 := fun i => i = 0
+def ox : R 2 := fun i => i = 1
+def xx : R 2 := fun _ => true
+
+/-- {oo, xx} subgroup -/
+def subgroup_oo_xx : Set (R 2) := {oo, xx}
+
+/-- Three-in-one characterization @ R_2 -/
+theorem three_in_one_diagonal :
+    ∀ v : R 2, v ∈ subgroup_oo_xx ↔ R.L v = false := by sorry
+
+theorem three_in_one_isotropy :
+    ∀ v : R 2, v ∈ subgroup_oo_xx ↔ R.dot v v = false := by sorry
+
+end R2
+
+/-- R_4 — the minimum complete unit ★ -/
+namespace R4
+
+/-- R_4 as End(R_2): each element is a 2×2 F_2 matrix -/
+def asMatrix (w : R 4) : R 2 → R 2 := fun u i =>
+  Bool.xor ((w (2*i)) && (u 0)) ((w (2*i + 1)) && (u 1))
+
+/-- Rank classification -/
+inductive Rank | zero | one | two
+
+def rankOf (w : R 4) : Rank := sorry
+
+/-- Number of rank-2 (invertible) elements = 6 = |GL(2, F_2)| -/
+theorem rank_two_count : 
+    Fintype.card { w : R 4 // rankOf w = Rank.two } = 6 := by sorry
+
+end R4
+
+/-- R_8 — the ceiling ★ -/
+namespace R8
+
+/-- R_8 contains R_N as subspace for all N ≤ 7 -/
+def embed_from {N : ℕ} (h : N ≤ 7) (v : R N) : R 8 :=
+  fun i => if h_lt : i.val < N then v ⟨i.val, h_lt⟩ else false
+
+/-- R_8 = R_4 ⊕ R_4 -/
+def split (w : R 8) : R 4 × R 4 :=
+  (fun i => w ⟨i.val, by omega⟩, fun i => w ⟨i.val + 4, by omega⟩)
+
+end R8
+
+end 文.R
 ```
 
-`by decide` 关键：因 `Elem` 是 `Fintype` 且乘法 decidable，所有群公理可机械验证。
+### 16.2 单轨 (Lean only) note
 
-### 7.2 V₄-action on Hexagram
+v0.5 update: Clojure 实现已弃用。Lean 4 现为唯一形式语言。所有 verification（rank counts, σ alternating, Aut orders, Arf classification, etc.）在 Lean 内通过 `decide` / `native_decide` 完成，避免双轨 inconsistency.
 
-```lean
-namespace Wen.Hexagram
-
-/-- 六爻卦：从 Fin 6 到 Bool 的函数 -/
-structure Hexagram where
-  lines : Fin 6 → Bool
-  deriving DecidableEq
-
-/-- V₄ 在 Hexagram 上的作用 -/
-def V4.act : V4.Elem → Hexagram → Hexagram
-  | .dao,     h => h
-  | .cuo,     h => ⟨fun i => !h.lines i⟩
-  | .zong,    h => ⟨fun i => h.lines (Fin.rev i)⟩
-  | .cuozong, h => ⟨fun i => !h.lines (Fin.rev i)⟩
-
-/-- V₄ 在 Hexagram 上是群作用 -/
-instance : MulAction V4.Elem Hexagram where
-  smul := V4.act
-  one_smul := by intro h; rfl
-  mul_smul := by
-    intro g₁ g₂ h
-    cases g₁ <;> cases g₂ <;> simp [V4.act, V4.mul, Fin.rev_rev]
-
-end Wen.Hexagram
-```
-
-### 7.3 关键定理（含证明）
-
-```lean
-namespace Wen.V4.Theorems
-
-open Wen.V4 Wen.Hexagram
-
-/-- §2.2 道-row identity closure -/
-theorem dao_fixes_all (h : Hexagram) : V4.act .dao h = h := rfl
-
-/-- 错² = 道 -/
-theorem cuo_involutive (h : Hexagram) :
-    V4.act .cuo (V4.act .cuo h) = h := by
-  simp [V4.act, Bool.not_not]
-  rfl
-
-/-- 综² = 道 -/
-theorem zong_involutive (h : Hexagram) :
-    V4.act .zong (V4.act .zong h) = h := by
-  simp [V4.act, Fin.rev_rev]
-  rfl
-
-/-- 错综 = 综错 (commutativity 在 action 层) -/
-theorem cuo_zong_comm (h : Hexagram) :
-    V4.act .cuo (V4.act .zong h) = V4.act .zong (V4.act .cuo h) := by
-  simp [V4.act]; rfl
-
-/-- §5.2 的核心：错综 保 De Morgan 复合结构 -/
-theorem cuozong_preserves_meet (a b : Hexagram) :
-    V4.act .cuozong (Hexagram.meet a b)
-      = Hexagram.meet (V4.act .cuozong a) (V4.act .cuozong b) := by
-  unfold V4.act Hexagram.meet
-  ext i
-  simp [Bool.not_and, Fin.rev]
-
-/-- §5.2 的核心：错 *不* 保 ∧ (它把 ∧ 翻成 ∨，是反同态) -/
-theorem cuo_not_preserves_meet :
-    ¬ (∀ (a b : Hexagram),
-        V4.act .cuo (Hexagram.meet a b)
-          = Hexagram.meet (V4.act .cuo a) (V4.act .cuo b)) := by
-  intro h
-  -- 反例：取 a = all-阳, b = all-阴
-  ...
-
-/-- §6.1 {e, 错综} 是 V₄ 中保结构的子群 -/
-def structurePreservingSubgroup : Subgroup V4.Elem where
-  carrier := {.dao, .cuozong}
-  one_mem' := by simp
-  mul_mem' := by intro a b ha hb; cases ha <;> cases hb <;> decide
-  inv_mem' := by intro a ha; cases ha <;> decide
-
-theorem structurePreservingSubgroup_iso_Z2 :
-    structurePreservingSubgroup ≃* (ZMod 2) := ...
-
-end Wen.V4.Theorems
-```
-
-### 7.4 编译器侧：V₄ 作为文 IR 的 primitive
-
-文 编译器（Clojure / SCI）必须把 V₄ 作为**核心 IR primitive**，而非派生构造。理由：
-
-1. V₄ 元素是 Lean 证明可识别的——编译器输出必须与 Lean 证明对齐
-2. V₄ 是 hexagram operation 的 normalize 目标——任何 hexagram 上的可逆 unary 变换都应在编译期归约到 4 个 V₄ canonical form 之一
-3. {e, 错综} 子群是优化目标——保结构 transformations 可被编译器更积极地内联与重排
-
-**IR 类型层级**：
-
-```clojure
-;; src/wen/ir.cljc
-(ns wen.ir)
-
-;; V₄ 是闭枚举，编译时 dispatch 高效
-(def ^:const V4-ELEMS #{:dao :cuo :zong :cuozong})
-
-(defrecord V4Op [elem]              ;; IR node: V₄ 操作
-  IRNode
-  (op-kind [_] :v4-action)
-  (preservation-level [_]
-    (case elem
-      :dao      :truth
-      :cuozong  :algebra     ;; §5.2 关键事实编码到类型层
-      (:cuo
-       :zong)   :set)))
-
-(defrecord Hexagram [lines]         ;; IR node: 六爻卦
-  IRNode
-  (op-kind [_] :hexagram-literal))
-
-(defrecord V4Apply [v4op hex]       ;; IR node: 应用
-  IRNode
-  (op-kind [_] :v4-apply))
-```
-
-### 7.5 V₄ 乘法表作为编译期常量
-
-```clojure
-;; src/wen/v4.cljc
-(ns wen.v4)
-
-(def ^:const mul-table
-  ;; [a b] -> a·b
-  {[:dao :dao]         :dao,    [:dao :cuo]      :cuo,
-   [:dao :zong]        :zong,   [:dao :cuozong]  :cuozong
-   [:cuo :dao]         :cuo,    [:cuo :cuo]      :dao,
-   [:cuo :zong]        :cuozong [:cuo :cuozong]  :zong
-   [:zong :dao]        :zong,   [:zong :cuo]     :cuozong
-   [:zong :zong]       :dao,    [:zong :cuozong] :cuo
-   [:cuozong :dao]     :cuozong [:cuozong :cuo]  :zong
-   [:cuozong :zong]    :cuo,    [:cuozong :cuozong] :dao})
-
-(defn mul [a b] (get mul-table [a b]))
-(defn inv [a]   a)              ; self-inverse
-(def  identity-elem :dao)
-
-;; 在 hexagram 上的作用
-(defn act [g hex]
-  (case g
-    :dao     hex
-    :cuo     (mapv #(not %) hex)
-    :zong    (vec (reverse hex))
-    :cuozong (vec (reverse (mapv #(not %) hex)))))
-```
-
-### 7.6 编译器层 normalize pass
-
-V₄ 元素的组合可在编译期 collapse 成单个元素。这是一个由 §7.5 mul-table 直接驱动的优化 pass：
-
-```clojure
-;; src/wen/passes/v4_normalize.cljc
-(ns wen.passes.v4-normalize)
-
-(defn normalize-v4-chain
-  "把连续的 V4Apply 节点折叠为单一 V4Apply。
-   利用 V₄ 阿贝尔性 + 群乘法表实现常量传播。"
-  [ir]
-  (match ir
-    {:op :v4-apply
-     :v4op {:elem g1}
-     :hex {:op :v4-apply
-           :v4op {:elem g2}
-           :hex inner}}
-    (->V4Apply (->V4Op (v4/mul g1 g2)) (normalize-v4-chain inner))
-
-    :else
-    ir))
-
-;; 例：error errror 应被折叠到 dao
-;; (act :cuo (act :cuo h)) ==normalize==> (act :dao h) ==reduce==> h
-```
-
-### 7.7 Atlas as typed registry (Clojure)
-
-```clojure
-;; src/wen/atlas.cljc
-(ns wen.atlas
-  "V₄ 跨域 atlas — 编译器查找表 + 类型推导辅助。
-   与 Lean 中 V4.Theorems 的 atlas 对应字典必须保持同步。")
-
-(def atlas
-  {:dao
-   {:wen        "道"
-    :logic      :id
-    :pauli      :I
-    :tm         :nop
-    :category   :identity-functor
-    :semiotics  :S-origin
-    :preserves  #{:set :algebra :category :truth}}
-
-   :cuo
-   {:wen        "错"
-    :logic      :neg
-    :pauli      :X
-    :tm         :flip-bit
-    :category   :dagger
-    :semiotics  :contradictory
-    :preserves  #{:set}}
-
-   :zong
-   {:wen        "综"
-    :logic      :implication-reverse
-    :pauli      :Z
-    :tm         :flip-direction
-    :category   :op-functor
-    :semiotics  :contrary
-    :preserves  #{:set}}
-
-   :cuozong
-   {:wen        "错综"
-    :logic      :contrapositive
-    :pauli      :Y
-    :tm         :flip-both
-    :category   :dagger-op
-    :semiotics  :sub-contrary
-    :preserves  #{:set :algebra}}})    ; §5.2 关键事实
-
-(defn preserves? [v4-elt level]
-  (contains? (get-in atlas [v4-elt :preserves]) level))
-
-;; 编译期可证 invariants
-(assert (preserves? :dao :truth))
-(assert (preserves? :cuozong :algebra))
-(assert (not (preserves? :cuo :algebra)))
-```
-
-### 7.8 Lean ↔ Clojure round-trip 一致性
-
-| Lean 证明 | Clojure 实现 | 一致性条件 |
-|-----------|--------------|------------|
-| `cuo_involutive` | `(act :cuo (act :cuo h)) ≡ h` | normalize pass 必须折叠 |
-| `mul_comm` | `(mul a b) = (mul b a)` | mul-table 必须对称 |
-| `dao_fixes_all` | `(act :dao h) ≡ h` | 编译期消除 :dao act |
-| `cuozong_preserves_meet` | `atlas` 中 `:cuozong :preserves` 含 `:algebra` | atlas 必须与定理同步 |
-| `structurePreservingSubgroup` | `(filter #(preserves? % :algebra) V4-ELEMS) = #{:dao :cuozong}` | 子群提取一致 |
-
-**双向校验脚本**（应纳入 CI）：
-
-```clojure
-;; tests/wen/v4_consistency.clj
-;; 1. 读取 Lean 输出的 atlas data
-;; 2. 与 Clojure atlas 对比
-;; 3. 任何分歧 → 编译器拒绝构建
-```
-
-这个 round-trip 保证：**写文 = 证明文 = 编译文**——三位一体不可分裂。
-
-### 7.9 文 surface syntax 层
-
-在 文 surface syntax 上，V₄ 元素以单字呈现，编译器直接 lex 到 IR：
-
-```
-道  →  ⟨V4Op :dao⟩
-错  →  ⟨V4Op :cuo⟩
-综  →  ⟨V4Op :zong⟩
-错综 → ⟨V4Op :cuozong⟩    (single token, not :cuo · :zong)
-```
-
-「错综」作为单 token 而非 复合，是因为 §6.1 ——它有独立的语义地位，不应被还原。这是 surface syntax 层对结构事实的尊重。
-
-### 7.10 Action notation
-
-```
-错 之 乾    → V4Apply(cuo, 乾)        = 坤
-综 之 既济  → V4Apply(zong, 既济)     = 未济
-错综 之 乾  → V4Apply(cuozong, 乾)    = (reverse all-yang then flip) = 坤 (since 乾 综-fixed)
-道 之 h    → V4Apply(dao, h)         = h   (编译期消除)
-```
-
-「之」(zhi) 在 文 中作 application particle，对应 V₄ action `·`。这与 9-atom kernel 中的 `之` 一致。
+具体 Lean 模块组织详 `wen-algebra.md` v0.6 §10.9.
 
 ---
 
-## 8. 历史脉络：被部分发现的 V₄ 框架
+## 17. Open Questions
 
-### 8.1 Gotthard Günther — Polycontextural Logic
+1. **Surface 编码状态**：当前所有 $R_N$ 元素用 o/x 字符串作 surface 编码。这是 v0.3 起的设计决定（"字符语义先全部冻结，用 o/x 占位"），**不是占位待命名的过渡态**。汉字命名层只在 mnemonic / human-readable 需求出现时作为可选 application-layer alias 提供（不进 core type system，详 wen-algebra Rule 10）。Q3, Q4 中关于「如果选择用字」的讨论是可选扩展，不阻塞工程.
 
-德国哲学家 Günther（1900–1984）明确论证经典逻辑是 monocontextural（只一个 ℤ/2），现实需要 polycontextural（多个相交 ℤ/2）。他的「morphograms」在小情形下精确是 V₄ 上的对称模式。
+2. **R-tower 与 squaring tower 双层视角**的工程暴露：surface 类型系统是否需要同时支持两种视角？
 
-**关键文本**：*Idee und Grundriß einer nicht-Aristotelischen Logik* (1959)
+3. **$R_4$ 的 mnemonic alias**（可选）：若提供 human-readable alias，rank 分类是自然起点 (rank-2 6 个 = $S_3$ = $\mathrm{GL}(2, \mathbb{F}_2)$ 可命名 id/swap/shear/rotate).
 
-**未尽**：缺乏形式化、未识别 V₄ 普适性、未跨域。
+4. **$R_8$ 的 mnemonic alias**（可选）：若需 256 元 human-readable，hex byte (00-FF) 是天然兼容 alias.
 
-### 8.2 Spencer-Brown / Kauffman / Varela — Distinction Calculus
+5. **奇维 $R_1, R_3, R_5, R_7$ 的 surface 暴露**：奇维仅 Layer 0 bilinear，结构上「不完整」。是否仍允许 surface-level type？
 
-Spencer-Brown 的 *Laws of Form* (1969) 以一个原始算子（mark）+ re-entry 算子建构所有数学。两者各自 ℤ/2 involution，合起来是 V₄ 的隐式实例。
+6. **三层 preservation hierarchy** (§4.9) 是否要 surface 暴露？
 
-Louis Kauffman 把这扩到结理论、量子力学。Francisco Varela 的 *A Calculus for Self-Reference* (1975) 扩到自创生（autopoiesis）。
+7. **跨层 dot / σ / q 在 $R_N$ 上的提升机制**：当前 §12.2 给 $R_2$-block 因式化。是否值得给一个 unified Lean tactic?
 
-**未尽**：未识别 V₄ 的范畴论根据、未做跨域 atlas。
+8. **Atlas (§15) 应用层 binding 的工程组织**：core 文档不含 Atlas，应分到 `wen-correspondences.md`?
 
-### 8.3 Greimas — 符号方阵（Carré Sémiotique）
+9. **$R_8 = \mathrm{GF}(256)$ 的乘法结构**：$R_8$ 作为 $\mathbb{F}_2$-向量空间 (additive only) vs $\mathrm{GF}(256)$ (有乘法环结构)。后者是 application-layer 还是 core?
 
-法国符号学家 Algirdas Greimas 的语义方阵：
-
-```
-        S₁ ────────── S₂
-        │  \      /  │
-        │    \  /    │
-        │    /  \    │
-        │  /      \  │
-       ¬S₂ ────────── ¬S₁
-```
-
-四位置的关系（contrary, contradiction, sub-contrary, implication）**精确是 V₄ 在语义范畴上的作用**。
-
-Fredric Jameson 在文学批评里大量使用。
-
-**未尽**：未被认作 V₄；当作便利分析工具而非数学结构。
-
-### 8.4 范畴论中隐式的 V₄
-
-任何 dagger compact closed category 自带四个视角：
-
-$$\mathcal{C}, \quad \mathcal{C}^{\mathrm{op}}, \quad \mathcal{C}^*, \quad \mathcal{C}^{*\mathrm{op}}$$
-
-四者间的转换构成 V₄ 作用。Lawvere, Selinger, Coecke (*Picturing Quantum Processes*) 隐式工作于此。
-
-**未尽**：作为「四种自然变换」被使用，但未被显式命名为 V₄ 知识组织原理。
-
-### 8.5 被压缩的 V₄ — Peirce, Hegel
-
-- **Peirce**：Firstness/Secondness/Thirdness 表面三元，底下有 representamen × object 的隐藏 V₄
-- **Hegel**：thesis/antithesis/synthesis 表面三元，但合题包含同一性恢复 — 实质四步（同一/否定/反否定/综合）
-
-Žižek, Johnston 等当代解释者暗示过 Hegel 逻辑底下是 V₄。
-
-### 8.6 文 的独特位置
-
-|                       | Günther | Spencer-B | Greimas | Cat Theory | **文** |
-|-----------------------|---------|-----------|---------|------------|----------|
-| 识别 V₄ 结构          | 部分     | 隐式      | 部分    | 隐式       | **✓ 显式** |
-| 跨域归一              | ✗       | ✗         | ✗       | 部分        | **✓**    |
-| 形式化语言            | ✗       | 部分       | ✗       | ✓          | **✓**    |
-| 可执行                | ✗       | ✗         | ✗       | 部分        | **✓**    |
-| 作为知识组织原理      | 部分     | ✗         | ✗       | ✗           | **✓**    |
+10. **Beyond $R_8$ 的具体编译实现**：$R_N$ for $N > 8$ 在 IR 中如何表示？硬编码到 $R_8^{\oplus k}$ 还是抽象 $R_N$ type？
 
 ---
 
-## 9. Implications · 知识延伸方向
+## 18. 完成度自检 · Completeness Check
 
-### 9.1 V₄ Atlas 作为研究纲领
-
-对每个知识域，明确归位其逻辑算子到 V₄ 四位置之一。**空着的位置 = 该域可延伸的方向**。
-
-### 9.2 经典逻辑系统性丢失了「综」
-
-经典逻辑充分使用 $\{e, a, ab\}$（id、$\neg$、contrapositive），但**几乎不使用 b（综 = 命题反向）**——因为它不保真。
-
-但 b 在范畴论里对应 op，是核心结构。
-
-**假说**：直觉主义逻辑、线性逻辑、量子逻辑的出现，正是为了把 V₄ 中被经典逻辑丢失的「综」重新引入。文 应**显式拥有完整 V₄**，从而**统一这些非经典逻辑**。
-
-### 9.3 错综应被提升为 primary
-
-由 §6.1：错综 是 V₄ 中唯一非平凡的保代数结构元素。在 文 形式语言中：
-
-- 不应将 `cuozong` 仅作为 `(cuo, zong)` 的衍生
-- 应给 `cuozong` 独立的 primitive 地位
-- 应单独研究 {e, cuozong} 子群作为 文 的「真理保持核心」
-
-### 9.4 64 卦 = 16 个 V₄-orbit?
-
-由 V₄ 作用在 64 卦上，64 / 4 = 16，**若每个轨道大小恰好为 4**，则 64 卦分为 16 个 V₄-orbit。
-
-需检验：有多少卦是 V₄-fixed（如乾、坤、坎、离等对称卦）？
-
-- 乾 (111111): 错 → 坤; 综 → 111111 = 乾; 错综 → 坤. 轨道 = {乾, 坤}
-- 坎 (010010): 错 → 离; 综 → 010010 = 坎; 错综 → 离. 轨道 = {坎, 离}
-
-由 Burnside lemma 可精确计算轨道数。**这是一个可执行的 calculation，应纳入 文 实现**。
-
-### 9.5 V₄ 与 9-atom kernel 的整合
-
-文 现有 9-atom kernel：者/之/非/而/凡/即/也/是/令。
-
-**关键观察**：
-- `非` 是 ℤ/2 involution → 对应 V₄ 的「错」位置
-- `之` (composition / particle) → 对应 V₄ 的「综」位置 (?)
-- `凡` (universal quantifier) → 与 V₄ 不平行，是另一维度
-- `令` (let/binding) → 同上
-
-**任务**：把 9-atom kernel 中的 involutive operators 与 V₄ 显式对齐，识别 V₄-action 在 kernel 上的轨道结构。
-
-### 9.6 与生生不息论·文开本的对接
-
-V₄ 应被认作 **三相一理框架** 中的对偶代数表征。具体：
-
-- 「相」(phenomenal aspect) 对应 V₄ 中的 non-identity elements
-- 「理」(underlying principle) 对应 V₄ identity `e` (道)
-- 三相一理 的「三 + 一」结构与 V₄ 的「三个非平凡 + 一个平凡」对应
-
-**这给出 生生不息论 一个代数底座**。需写入 文开本 后续版本。
-
-### 9.7 与 OpenClaw / SST 的对接
-
-OpenClaw 的 Sprite-Space-Token 架构有自身对称：
-
-- Sprite (active entity) ↔ Space (passive medium): 对偶 → ℤ/2
-- Token (capability) ↔ Reference (handle): 对偶 → ℤ/2
-
-**两条独立 ℤ/2 → V₄**。SST 架构自然承载一个 V₄ symmetry，可用于：
-
-- Capability delegation 的方向翻转（综）
-- Sprite/Space 极性互换（错）
-- 对偶 capability flow（错综）
-
-### 9.8 与 Nomad OS 的对接
-
-Pay→Split→Chat→Trust→Coordinate 五阶段产品弧：
-
-- Pay ↔ Receive: 值轴 ℤ/2
-- Send ↔ History: 框架轴 ℤ/2
-
-**Nomad OS 的金融原语本质上是 V₄-acted on transaction state**。可用 V₄ 作为支付协议的代数基础。
-
-### 9.9 不被 V₄ 涵盖的结构
-
-V₄ 不涵盖：
-
-- 高阶 articulation (例如 3-element value sets, 需 $S_3$)
-- 非阿贝尔对称
-- 连续对称 (Lie group)
-- Cyclic non-involutive symmetry (rotation)
-- 非可逆操作（如互卦的 projection）
-
-**这些应在 文 的 *扩展* 层处理，V₄ 是 *核心* 层**。
-
-### 9.10 V₄ 张量积塔
-
-可考虑：
-
-$$V_4, \quad V_4 \otimes V_4 = (\mathbb{Z}/2)^4, \quad V_4^{\otimes n} = (\mathbb{Z}/2)^{2n}$$
-
-每多一个 V₄ tensor 对应「再一对独立对偶轴」。这给出 文 的高维扩展路径。
-
-可能与 64 卦本身的 $(\mathbb{Z}/2)^6$ 结构同构——$V_4 \otimes V_4 \otimes V_4 = (\mathbb{Z}/2)^6$，**恰好是 64！**
-
-这是一个值得严肃验证的 hypothesis。
+| 内容 | 已覆盖 |
+|------|------|
+| R_N 记号与 o/x 元素表示 | ✓ §0.2 |
+| 视角原则（无单层中心） | ✓ §0.3 |
+| 与 wen-algebra 的边界 | ✓ §0.4 |
+| 9 层 $R_0$–$R_8$ 总览表 | ✓ §1.1 |
+| Squaring 子塔 $R_1 \to R_2 \to R_4 \to R_8$ | ✓ §1.3 |
+| 直和分解 $R_N$ from squaring tower | ✓ §1.4 |
+| $R_8$ 作为 ceiling | ✓ §1.5, §10 |
+| $R_0$ 平凡层 | ✓ §2 |
+| $R_1$ 完整规范 | ✓ §3 |
+| $R_2$ 完整规范（群、空间、子群、三合一、Aut、preservation）| ✓ §4 |
+| $R_3$ 完整规范 (Fano 平面) | ✓ §5 |
+| **$R_4$ 重点延伸** ★ | ✓ §6 |
+| $R_4$ rank 分层 | ✓ §6.5 |
+| $R_4 = \mathrm{End}(R_2)$ 自封闭 | ✓ §6.9 |
+| $R_5$ 完整规范 (Mersenne) | ✓ §7 |
+| $R_6$ 完整规范（多重分解）| ✓ §8 |
+| $R_7$ 完整规范 (Hamming) | ✓ §9 |
+| **$R_8$ 重点延伸** ★ | ✓ §10 |
+| $R_8$ 含 $R_0$–$R_7$ subspaces | ✓ §10.6 |
+| $R_8$ 跨域常用概念 | ✓ §10.9 |
+| 跨层操作（直和/张量/Hom）| ✓ §11 |
+| Bilinear pairings 一致性表 | ✓ §12 |
+| Aut($R_N$) 阶 + 嵌入链 | ✓ §13 |
+| 超越 $R_8$ 构造 | ✓ §14 |
+| Atlas (§15) 应用层 | ✓ §15 |
+| Lean 4 骨架 (parametric R N) | ✓ §16.1 |
+| Lean-only formalization note | ✓ §16.2 |
+| Open Questions（10 项）| ✓ §17 |
 
 ---
 
-## 10. Open Questions
-
-1. **V₄ 完备性**：是否所有「meaning-bearing structure」的对称都必然包含 V₄？有反例吗？
-2. **Meta-V₄**：§5.3 中出现的范畴层 meta-V₄ 是否有名字？它与原 V₄ 的关系是 ℤ/2 × V₄ 还是 V₄ × V₄？
-3. **64 = $V_4^{\otimes 3}$?** §9.10 的 hypothesis 是否成立？卦的 $(\mathbb{Z}/2)^6$ 结构在 V₄-tensor 视角下的精确描述？
-4. **互卦的代数化**：互卦不是 V₄ 元素，那它在 文 里应被建模为什么类型的结构？Possibly 一个 idempotent endomorphism on hexagram lattice？
-5. **非阿贝尔扩展**：是否存在自然的「非阿贝尔 文」，其对称群是 $D_4$ 或 $Q_8$ 而非 V₄？什么场景需要？
-6. **Truth-preservation in non-classical logics**：在直觉主义/线性/量子逻辑中，V₄ 各元的 truth-preservation 性质如何？错综在这些逻辑中是否仍保 contrapositive？
-7. **Galois ↔ 卦对应**：$\mathrm{Gal}(\mathbb{Q}(\sqrt{2}, \sqrt{3})/\mathbb{Q}) \cong V_4$ 这个同构是否可被显式化为「数论卦」的对应？某些卦是否对应特定数域扩张？
-8. **Bell 状态 ↔ 卦对应**：四个 Bell 状态在 local Pauli 下互换。这能否给出 8 个特殊卦（V₄-fixed 的）与量子纠缠之间的精确字典？
-
----
-
-## 11. 完成检验清单（双轨）
-
-### 11.1 结构内容（本文档自足覆盖）
-
-- [x] 从 hexagram bi-axial 结构推导 V₄
-- [x] 论证 V₄ 是逼出的而非选择的
-- [x] 论证不是 ℤ/4、不是 $(\mathbb{Z}/2)^3$、不是更小的群
-- [x] 解释 道-row 规律的内禀必然性
-- [x] 建立跨域同构：Pauli, CPT, TM, Galois, Logic, Category, Semiotics
-- [x] 构建完整 V₄ Atlas（4 位置 × 9+ 域）
-- [x] 推导 4 级 preservation hierarchy (set / algebra / category / truth)
-- [x] 识别 {e, 错综} 为唯一非平凡保结构子群
-- [x] 识别错综在 contrapositive 上的特殊地位
-- [x] 历史脉络梳理（Günther, Spencer-Brown, Greimas, Cat, Peirce, Hegel）
-- [x] 识别 文 的独特位置（vs. 历史前驱）
-- [x] 9 项 Implications（经典逻辑缺综、错综提升、64=V₄³ 等）
-- [x] 8 个 Open Questions
-- [x] 与 9-atom kernel、生生不息论、OpenClaw、Nomad OS 的对接草图
-
-### 11.2 证明轨（Lean 4 + Mathlib）
-
-**本文档 §7.1–§7.3 已给出可编译骨架**，包含：
-
-- [x] V₄ 作为 `CommGroup` instance，群公理 `by decide`
-- [x] V₄ 在 Hexagram 上的 `MulAction` instance
-- [x] `dao_fixes_all` (refl)
-- [x] `cuo_involutive`, `zong_involutive` (含证明)
-- [x] `cuo_zong_comm` (commutativity at action level)
-- [x] `cuozong_preserves_meet` (§5.2 核心)
-- [x] `cuo_not_preserves_meet` (反例论证)
-- [x] `structurePreservingSubgroup` 定义
-- [x] `structurePreservingSubgroup_iso_Z2` (statement)
-
-**后续 Lean 工作**：
-
-- [ ] 把 `...` 占位的证明全部填完（特别是 `equivKleinFour`、`structurePreservingSubgroup_iso_Z2`）
-- [ ] 形式化 §5.3 Meta-V₄ 结构（共变 × 对象保持的二轴分解）
-- [ ] 形式化 §5.4 contrapositive 的 truth-preservation
-- [ ] 形式化 §6.1 子群分类完备性（V₄ 恰有 3 个非平凡 ℤ/2 子群）
-- [ ] 64 卦的 V₄-orbit 枚举与 Burnside 验证（可机械化）
-- [ ] $V_4^{\otimes 3} \cong (\mathbb{Z}/2)^6$ 的精确同构 + 与 hexagram 空间的对应
-
-### 11.3 编译轨（文 compiler / Clojure / SCI）
-
-**本文档 §7.4–§7.9 已给出 IR 与 runtime 骨架**，包含：
-
-- [x] `V4Op`, `Hexagram`, `V4Apply` IR records
-- [x] 完整 mul-table 作为编译期常量
-- [x] `act` runtime 实现
-- [x] `normalize-v4-chain` pass 算法
-- [x] Atlas as typed registry（含 `:preserves` 字段）
-- [x] `preserves?` predicate
-- [x] Lean ↔ Clojure round-trip 一致性映射表
-- [x] Surface syntax → IR 映射
-- [x] 「之」作为 V₄ application particle
-
-**后续编译器工作**：
-
-- [ ] 实际 lexer：单 token 识别「错综」而非 `错·综`
-- [ ] V₄ normalize pass 整合到 wen compiler pipeline
-- [ ] CI 一致性脚本：从 Lean 输出 atlas data, 对比 Clojure atlas
-- [ ] {e, 错综} 子群作为优化标记 propagation
-- [ ] V₄ IR primitive 与 9-atom kernel 中 `之/非` 的统一
-- [ ] Hexagram literal 编码（6-bit）与 V₄ act 的高效实现
-- [ ] REPL 集成：在 wen REPL 中可输入 `错 之 乾` 直接求值
-
-### 11.4 待两轨同时验证
-
-这些事项必须 **同时在 Lean 中证明** 与 **在编译器中实现**，且通过 round-trip 校验：
-
-- [ ] V₄ 群乘法表（Lean: `mul_comm`; Clojure: `mul-table` 对称性）
-- [ ] V₄ action 的群作用性质（Lean: `MulAction` instance; Clojure: `normalize-v4-chain` correctness）
-- [ ] {e, 错综} 子群的特殊地位（Lean: `structurePreservingSubgroup`; Clojure: `:preserves :algebra` flag）
-- [ ] 64 = $|V_4|^3 = 4^3$ 与 hexagram 空间的精确同构
-- [ ] 错综 的 contrapositive 性质在双轨上一致编码
-
-### 11.5 验证规则
-
-> 本文档作为「**结构 + 双轨形式化**」的另一半时，已自足覆盖：
-> (a) V₄ 的结构推导、普适性论证、atlas、preservation 分析、历史定位、implications
-> (b) Lean 4 证明轨的可编译骨架与待证 theorem 列表
-> (c) 文 compiler 轨的 IR、normalize pass、atlas registry、surface syntax 映射
-> (d) 双轨 round-trip 一致性的明确条件
-
-> **完成检验**：§11.1 全部 ✓；§11.2 给出 Lean 骨架（占位证明留待 fill-in）；§11.3 给出编译器骨架（实施留待 implementation track）；§11.4 双轨同步项目明列。
->
-> 当 §11.2 / §11.3 / §11.4 的所有 ☐ 全部 ✓ 时，V₄ track 进入 v1.0。当前为 v0.1。
-
----
-
-## 12. 结语
-
-V₄ 不是 文 的设计选择，是 文 必然走到的结构。它跨越卦学、量子物理、可计算理论、Galois 理论、范畴论、符号学、辩证逻辑——并不是因为这些域之间「碰巧相似」，而是因为它们都共享一个根本约束：
-
-> **任何承载意义的最小结构必须双轴 articulated；V₄ 是双轴二元对偶的最小代数。**
-
-历史上 Günther、Spencer-Brown、Greimas 各自摸到了部分。文 的贡献是：
-
-1. **显式化** V₄ 作为代数对象
-2. **跨域归一** 把不同域的算子归位到同一个 V₄ atlas
-3. **形式化** 到可执行的形式语言层
-4. **辨识** {e, 错综} 子群的特殊地位 — 这是 文 之前未被命名的事实
-5. **导出** 经典逻辑系统性遗失「综」的诊断，从而统一非经典逻辑作为「补回 V₄ 缺位」的尝试
-
-V₄ 是 **道 + 错 + 综 + 错综**，是 **identity + content + frame + composite**，是 文 之上所有更复杂结构（9-atom kernel, 64-hexagram space, SST, Nomad）的代数底座。
-
-把这底座写清楚，本文档的工作就完成了。
-
----
-
-*End of v0.1 · 文开本 / Wen Foundation Note · V₄ track*
+*End of v0.5 · v4-foundation · The R₀–R₈ Root Tower*
+*Each layer has its own structure; $R_4$ and $R_8$ are the dual emphases.*
