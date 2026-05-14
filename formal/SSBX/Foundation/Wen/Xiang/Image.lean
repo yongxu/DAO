@@ -1,9 +1,9 @@
 /-
-# Wen.SquaringTower.Image — `Image` (= V₄ = 𝕏) atomic carrier
+# Wen.Xiang.Image — `Image` (= V₄ = 𝕏) atomic carrier
 
 The atomic V₄ Klein four-group as a four-constructor inductive whose
 **constructor names are the bit pattern**.  `Image` plays the role of
-$\mathbb{X}$ in `wen-algebra` v0.2 §0.2 / §1.1: the algebraic centre of
+$\mathbb{X}$ in `wen-algebra` v0.4 §0.2 / §1.1: the algebraic centre of
 the entire 𝕏ⁿ tower.
 
 | ctor | F₂² coord | 文 (Chinese) | Math | English          | Pinyin   | Pauli (mod φ) |
@@ -24,7 +24,7 @@ The bit pattern is **primary identity**.  Every other reading
 * `alpha`, `beta` — the two F₂-coordinates.
 * `ofBits` — the inverse: `(α, β) ↦ Image.ofBits α β`.
 * `dot : Image → Image → Bit` — the canonical F₂-bilinear pairing
-  (`wen-algebra` v0.2 §5.1):
+  (`wen-algebra` v0.4 §5.1):
 
       ⟨u, v⟩ = (u_α ∧ v_α) ⊕ (u_β ∧ v_β)
 
@@ -35,11 +35,11 @@ The bit pattern is **primary identity**.  Every other reading
 Image-only equation, and `Fintype.card Image = 4` is a `decide`.
 -/
 
-import SSBX.Foundation.Wen.SquaringTower.Bit
+import SSBX.Foundation.Wen.Xiang.Bit
 import Mathlib.Algebra.Group.Basic
 import Mathlib.Data.Fintype.Basic
 
-namespace SSBX.Foundation.Wen.SquaringTower
+namespace SSBX.Foundation.Wen.Xiang
 
 /-! ## § 1 The `Image` inductive
 
@@ -133,7 +133,7 @@ def ofBits : Bit → Bit → Image
 This makes `oo` the identity and every element self-inverse. -/
 
 /-- Group multiplication: componentwise XOR on the two F₂-coordinates.
-    Per `wen-algebra` v0.2 §1.1, this realises the V₄ Klein four-group
+    Per `wen-algebra` v0.4 §1.1, this realises the V₄ Klein four-group
     multiplication table. -/
 def mul (a b : Image) : Image :=
   ofBits (Bool.xor a.alpha b.alpha) (Bool.xor a.beta b.beta)
@@ -167,7 +167,7 @@ theorem mul_table_summary :
     (.ox * .xx : Image) = .xo ∧ (.xx * .xx : Image) = .oo := by
   decide
 
-/-! ## § 5 F₂-bilinear dot product (`wen-algebra` v0.2 §5.1)
+/-! ## § 5 F₂-bilinear dot product (`wen-algebra` v0.4 §5.1)
 
 The atomic pairing on `Image`:
 
@@ -196,7 +196,7 @@ def dot (u v : Image) : Bit :=
 theorem dot_symm (u v : Image) : dot u v = dot v u := by
   cases u <;> cases v <;> rfl
 
-/-- The full V₄ pairing table per `wen-algebra` v0.2 §5.1, verifiable by
+/-- The full V₄ pairing table per `wen-algebra` v0.4 §5.1, verifiable by
     `decide`. -/
 theorem dot_table_summary :
     dot .xo .xo = true ∧ dot .xo .ox = false ∧ dot .xo .xx = true ∧
@@ -220,7 +220,7 @@ abbrev basisBeta : Image := .ox
   cases u <;> rfl
 
 /-- Atomic recovery: any `Image` is reconstructed from its two basis
-    pairings.  This is `wen-algebra` v0.2 §5.4 Sense 1 + Sense 2 at the
+    pairings.  This is `wen-algebra` v0.4 §5.4 Sense 1 + Sense 2 at the
     atomic level. -/
 theorem coord_recovery (u : Image) :
     u = ofBits (dot u basisAlpha) (dot u basisBeta) := by
@@ -228,4 +228,4 @@ theorem coord_recovery (u : Image) :
 
 end Image
 
-end SSBX.Foundation.Wen.SquaringTower
+end SSBX.Foundation.Wen.Xiang

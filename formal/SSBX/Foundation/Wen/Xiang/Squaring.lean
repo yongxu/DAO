@@ -1,7 +1,7 @@
 /-
-# Wen.SquaringTower.Squaring — `X (a + b) ≃ X a × X b` decompositions
+# Wen.Xiang.Squaring — `X (a + b) ≃ X a × X b` decompositions
 
-The squaring tower is the chain
+The squaring chain inside the Xiang kernel:
 
     X 1 → X 2 → X 4 → X 8 → …      with     X (2k) ≃ X k × X k
 
@@ -19,7 +19,7 @@ This file delivers:
 * The three canonical squaring witnesses
     `x2_split / x4_split / x8_split` (= `X 2 ≃ X 1 × X 1`, etc.).
 * The `Hexagram + TimeImage = TemporalHexagram` decomposition
-    `X 4 ≃ X 3 × X 1` (per `wen-algebra` v0.2 §4.4).
+    `X 4 ≃ X 3 × X 1` (per `wen-algebra` v0.4 §4.4).
 * `X.quarticEquiv : X 4 ≃ X 1 × X 1 × X 1 × X 1` — the full unfolding
     of `TemporalHexagram` as four single-image factors, with both
     round-trip lemmas as `@[simp]`.
@@ -29,12 +29,12 @@ machinery; the structure is identical to the bit-level Cell version
 that this file replaces, with `Image` substituted for `Bit`.
 -/
 
-import SSBX.Foundation.Wen.SquaringTower.X
-import SSBX.Foundation.Wen.SquaringTower.Layers
+import SSBX.Foundation.Wen.Xiang.X
+import SSBX.Foundation.Wen.Xiang.Layers
 import Mathlib.Data.Fin.Tuple.Basic
 import Mathlib.Logic.Equiv.Basic
 
-namespace SSBX.Foundation.Wen.SquaringTower
+namespace SSBX.Foundation.Wen.Xiang
 
 namespace X
 
@@ -104,9 +104,9 @@ end X
 /-! ## § 2 The three canonical squaring witnesses
 
 `X 2 ≃ X 1 × X 1`, `X 4 ≃ X 2 × X 2`, `X 8 ≃ X 4 × X 4` — the
-`T_{k+1} = T_k × T_k` chain that gives the squaring tower its name.
-For `n ≥ 5` the family is IR-internal but the witness is the same
-`X.splitEquiv` shape. -/
+`T_{k+1} = T_k × T_k` chain (the squaring construction inside the Xiang
+kernel).  For `n ≥ 5` the family is IR-internal but the witness is the
+same `X.splitEquiv` shape. -/
 
 /-- The atomic squaring step: `X 2 ≃ X 1 × X 1`. -/
 def x2_split : X 2 ≃ X 1 × X 1 := X.splitEquiv (a := 1) (b := 1)
@@ -117,20 +117,20 @@ def x4_split : X 4 ≃ X 2 × X 2 := X.splitEquiv (a := 2) (b := 2)
 
 /-- The final surface-layer squaring step: `X 8 ≃ X 4 × X 4`
     (= `TemporalHexagram × TemporalHexagram`).  `X 8` is IR-internal
-    per v0.2 §3.1; this witness is exposed for use in normalize-pass
+    per v0.4 §3.1; this witness is exposed for use in normalize-pass
     bookkeeping where doubled cells appear as intermediates. -/
 def x8_split : X 8 ≃ X 4 × X 4 := X.splitEquiv (a := 4) (b := 4)
 
-/-! ## § 3 The temporal-hexagram split (`wen-algebra` v0.2 §4.4)
+/-! ## § 3 The temporal-hexagram split (`wen-algebra` v0.4 §4.4)
 
 `TemporalHexagram = X 4 = X 3 × X 1 = Hexagram × Image1`.  The first
 three image coordinates are the `Hexagram` factor; the fourth is the
 `Time-Image` factor (`{Atemporal, Not-Yet, Already, Composite-Now}` in
-the temporal reading per v0.2 §0.2). -/
+the temporal reading per v0.4 §0.2). -/
 
 /-- The canonical 卦 ⊕ 时 split: `TemporalHexagram ≃ Hexagram × Image1`.
     The `Image1` factor is the time-image coordinate (= the "4th 象"
-    of `X 4`, per v0.2 §4.4). -/
+    of `X 4`, per v0.4 §4.4). -/
 def temporal_split : TemporalHexagram ≃ Hexagram × Image1 :=
   X.splitEquiv (a := 3) (b := 1)
 
@@ -172,7 +172,7 @@ def quartic (c : X 4) : X 1 × X 1 × X 1 × X 1 :=
 
 /-- The full equivalence `X 4 ≃ X 1⁴`, packaged from `ofQuartic` and
     `quartic`.  Useful when threading 4-qubit Pauli tensors through the
-    squaring tower (see `Mapping/Pauli.lean.tensor4`). -/
+    Xiang squaring chain (see `Mapping/Pauli.lean.tensor4`). -/
 def quarticEquiv : X 4 ≃ X 1 × X 1 × X 1 × X 1 where
   toFun := quartic
   invFun := ofQuartic
@@ -181,4 +181,4 @@ def quarticEquiv : X 4 ≃ X 1 × X 1 × X 1 × X 1 where
 
 end X
 
-end SSBX.Foundation.Wen.SquaringTower
+end SSBX.Foundation.Wen.Xiang

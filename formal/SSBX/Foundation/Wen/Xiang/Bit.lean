@@ -1,10 +1,10 @@
 /-
-# Wen.SquaringTower.Bit — Layer 0 substrate for the 𝕏ⁿ kernel
+# Wen.Xiang.Bit — Layer 0 substrate for the 𝕏ⁿ kernel
 
-This file defines the **substrate** layer (Layer 0 in the v0.2
-squaring-tower architecture per `wen-algebra` v0.2 §6.1) used by the
-atomic `Image` carrier (V₄ inductive in `Image.lean`) and indirectly by
-the family `X n := Fin n → Image` (`X.lean`).
+This file defines the **substrate** layer (Layer 0 of the Xiang kernel
+per `wen-algebra` v0.4 §7.1) used by the atomic `Image` carrier (V₄
+inductive in `Image.lean`) and indirectly by the family
+`X n := Fin n → Image` (`X.lean`).
 
 The default substrate is `Bool` (classical bit) and `Bit := Bool` is
 the alias used throughout the kernel for the two-valued atom-of-an-atom.
@@ -14,7 +14,7 @@ the substitution is a single-line change here, not a sprawling refactor
 across `Image`, `X`, `OX`, `Squaring`, `Dot`, and every
 `Mapping/*.lean` module.
 
-For the v0.2 phase only the interface is stable; `Qbit` semantics are
+For the v0.4 phase only the interface is stable; `Qbit` semantics are
 deferred (see § 4 below).
 
 ## Conventions
@@ -27,7 +27,7 @@ six characters that decode three image atoms (since each `Image` has
 two F₂-coordinates).
 -/
 
-namespace SSBX.Foundation.Wen.SquaringTower
+namespace SSBX.Foundation.Wen.Xiang
 
 /-! ## § 1 `BitLike` typeclass
 
@@ -103,7 +103,7 @@ The canonical-carrier files in this cluster reference `Bit` rather than
 `Bool` directly so that a future `Qbit` substitution is a single-line
 change here.
 
-For v0.2 the substrate is pinned at `Bool`; later phases may
+For v0.4 the substrate is pinned at `Bool`; later phases may
 parameterize `Image` by a `BitLike B` argument and provide a `Qbit`
 instance.
 -/
@@ -152,7 +152,7 @@ the `Bit := Bool` abbrev, and the `Bit.o` / `Bit.x` / `Bit.ofChar`
 helpers) is the seam at which that substitution will happen.
 
 **No `Qbit` definition or quantum semantics is provided in this phase**,
-per `wen-algebra` v0.2 §6.1 (the doctrine fixes the substrate at the
+per `wen-algebra` v0.4 §6.1 (the doctrine fixes the substrate at the
 classical bit; quantum lifts are explicitly deferred to follow-up work).
 
 TODO (Quantum phase): add `Qbit` carrier + `BitLike Qbit` instance +
@@ -162,4 +162,4 @@ into a weaker base typeclass for non-classical substrates; that
 decision is deferred.
 -/
 
-end SSBX.Foundation.Wen.SquaringTower
+end SSBX.Foundation.Wen.Xiang

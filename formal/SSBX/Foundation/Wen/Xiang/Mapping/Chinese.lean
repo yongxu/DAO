@@ -1,7 +1,7 @@
 /-
-# Wen.SquaringTower.Mapping.Chinese — Chinese-character reading
+# Wen.Xiang.Mapping.Chinese — Chinese-character reading
 
-Per `wen-algebra` v0.2 §0.2: Chinese-character readings of the
+Per `wen-algebra` v0.4 §0.2: Chinese-character readings of the
 canonical bit-pattern atoms.  Lean does not allow Han characters as
 identifier heads, so the canonical Lean names are pinyin (`abbrev`s)
 and the Chinese characters are layered on top via **scoped
@@ -12,25 +12,25 @@ classical hexagram anchors at `Hexagram = X 3`:
 
 | Sub-namespace      | atoms                              |
 |--------------------|------------------------------------|
-| `V4Atoms`          | 道 / 错 / 综 / 错综  (operator)     |
+| `XAtoms`          | 道 / 错 / 综 / 错综  (operator)     |
 | `SiXiang`          | 太阳 / 少阳 / 少阴 / 太阴  (image)  |
 | `TimeImage`        | 道 / 未 / 已 / 今  (temporal)       |
 | `HexagramAnchors`  | 乾 / 坤 / 既济 / 未济              |
 
-Every notation is `scoped` so that `open scoped V4Atoms` (etc.) brings
+Every notation is `scoped` so that `open scoped XAtoms` (etc.) brings
 the Chinese-character notation in without clobbering names from other
 sub-namespaces.
 
 ## Bit pattern → V₄ → Chinese reading
 
-| bit | V₄        | 文 (V4Atoms) | 文 (SiXiang) | 文 (TimeImage)   |
+| bit | V₄        | 文 (XAtoms) | 文 (SiXiang) | 文 (TimeImage)   |
 |-----|-----------|--------------|--------------|------------------|
 | oo  | identity  | 道           | 太阳         | 道 (Atemporal)   |
 | xo  | a (α-gen) | 错           | 少阳         | 未 (Not-Yet)     |
 | ox  | b (β-gen) | 综           | 少阴         | 已 (Already)     |
 | xx  | ab        | 错综         | 太阴         | 今 (Composite-Now) |
 
-The legacy `R8.Shi` convention swaps 未/已; v0.2 (and this file)
+The legacy `R8.Shi` convention swaps 未/已; v0.4 (and this file)
 commits to `未 = Image.xo, 已 = Image.ox`.
 
 ## Hexagram anchors
@@ -46,18 +46,18 @@ image-coordinates equal.
 | 未济   | `"xoxoxo"` | yin/yang    | (错)³         |
 -/
 
-import SSBX.Foundation.Wen.SquaringTower.Image
-import SSBX.Foundation.Wen.SquaringTower.X
-import SSBX.Foundation.Wen.SquaringTower.OX
-import SSBX.Foundation.Wen.SquaringTower.Layers
+import SSBX.Foundation.Wen.Xiang.Image
+import SSBX.Foundation.Wen.Xiang.X
+import SSBX.Foundation.Wen.Xiang.OX
+import SSBX.Foundation.Wen.Xiang.Layers
 
-namespace SSBX.Foundation.Wen.SquaringTower.Mapping.Chinese
+namespace SSBX.Foundation.Wen.Xiang.Mapping.Chinese
 
-open SSBX.Foundation.Wen.SquaringTower
+open SSBX.Foundation.Wen.Xiang
 
 /-! ## § 1 V₄ atoms — operator role at `Image` (道/错/综/错综) -/
 
-namespace V4Atoms
+namespace XAtoms
 
 /-- 道 (dào) — V₄ identity, `Image.oo`. -/
 abbrev dao : Image := .oo
@@ -80,7 +80,7 @@ scoped notation "综" => zong
 /-- Chinese-character notation for `cuozong` (错综). -/
 scoped notation "错综" => cuozong
 
-end V4Atoms
+end XAtoms
 
 /-! ## § 2 SiXiang atoms — 易传 image role at `Image` (太阳/少阳/少阴/太阴)
 
@@ -110,9 +110,9 @@ end SiXiang
 
 /-! ## § 3 Time-Image atoms — temporal role at `Image` (道/未/已/今)
 
-Per v0.2 §0.2, the fourth-coordinate (`X 4` time slot) reading.  The
+Per v0.4 §0.2, the fourth-coordinate (`X 4` time slot) reading.  The
 identity here is also called 道 (atemporal); the namespace separation
-keeps it disjoint from `V4Atoms.dao` even though both alias `Image.oo`. -/
+keeps it disjoint from `XAtoms.dao` even though both alias `Image.oo`. -/
 
 namespace TimeImage
 
@@ -120,11 +120,11 @@ namespace TimeImage
     `Image.oo`. -/
 abbrev atemporal : Image := .oo
 
-/-- 未 (wèi) — not-yet / future, `Image.xo` per v0.2 (legacy R8.Shi
+/-- 未 (wèi) — not-yet / future, `Image.xo` per v0.4 (legacy R8.Shi
     swaps wei/yi). -/
 abbrev wei : Image := .xo
 
-/-- 已 (yǐ) — already / past, `Image.ox` per v0.2. -/
+/-- 已 (yǐ) — already / past, `Image.ox` per v0.4. -/
 abbrev yi : Image := .ox
 
 /-- 今 (jīn) — composite-now / PT fusion, `Image.xx`. -/
@@ -171,18 +171,18 @@ underlying `Image` atom is identical.  These `rfl` examples are the
 architecture's payoff: cross-reading translation is mechanical at the
 bit-pattern level. -/
 
-example : V4Atoms.dao = SiXiang.taiyang := rfl
-example : V4Atoms.dao = TimeImage.atemporal := rfl
-example : V4Atoms.cuo = SiXiang.shaoyang := rfl
-example : V4Atoms.cuo = TimeImage.wei := rfl
-example : V4Atoms.zong = SiXiang.shaoyin := rfl
-example : V4Atoms.zong = TimeImage.yi := rfl
-example : V4Atoms.cuozong = SiXiang.taiyin := rfl
-example : V4Atoms.cuozong = TimeImage.jin := rfl
+example : XAtoms.dao = SiXiang.taiyang := rfl
+example : XAtoms.dao = TimeImage.atemporal := rfl
+example : XAtoms.cuo = SiXiang.shaoyang := rfl
+example : XAtoms.cuo = TimeImage.wei := rfl
+example : XAtoms.zong = SiXiang.shaoyin := rfl
+example : XAtoms.zong = TimeImage.yi := rfl
+example : XAtoms.cuozong = SiXiang.taiyin := rfl
+example : XAtoms.cuozong = TimeImage.jin := rfl
 
-example : ∀ i, HexagramAnchors.qian i = V4Atoms.dao := by decide
-example : ∀ i, HexagramAnchors.kun i = V4Atoms.cuozong := by decide
-example : ∀ i, HexagramAnchors.jiji i = V4Atoms.zong := by decide
-example : ∀ i, HexagramAnchors.weiji i = V4Atoms.cuo := by decide
+example : ∀ i, HexagramAnchors.qian i = XAtoms.dao := by decide
+example : ∀ i, HexagramAnchors.kun i = XAtoms.cuozong := by decide
+example : ∀ i, HexagramAnchors.jiji i = XAtoms.zong := by decide
+example : ∀ i, HexagramAnchors.weiji i = XAtoms.cuo := by decide
 
-end SSBX.Foundation.Wen.SquaringTower.Mapping.Chinese
+end SSBX.Foundation.Wen.Xiang.Mapping.Chinese

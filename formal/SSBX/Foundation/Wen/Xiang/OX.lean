@@ -1,5 +1,5 @@
 /-
-# Wen.SquaringTower.OX — `OX!"..."` literal for `X k` (image-level)
+# Wen.Xiang.OX — `OX!"..."` literal for `X k` (image-level)
 
 The bit-pattern primary literal of the kernel.  `OX!` accepts an
 even-length string of `'o'` and `'x'`, decoded **two characters at a
@@ -41,10 +41,10 @@ A length-0 literal `OX!""` is **rejected** to avoid the (legal but
 content-free) `X 0`; use `Origin.taiji` from `Layers.lean` instead.
 -/
 
-import SSBX.Foundation.Wen.SquaringTower.X
+import SSBX.Foundation.Wen.Xiang.X
 import Lean.Elab.Term
 
-namespace SSBX.Foundation.Wen.SquaringTower
+namespace SSBX.Foundation.Wen.Xiang
 
 open Lean
 
@@ -123,7 +123,7 @@ def expandOxBangLit : Macro := fun stx => do
           s!"OX! invalid char '{c}' in \"{str}\" (only 'o' and 'x' allowed)"
     let k := len / 2
     let kStx := Lean.quote k
-    `(SSBX.Foundation.Wen.SquaringTower.X.ofString $kStx $s)
+    `(SSBX.Foundation.Wen.Xiang.X.ofString $kStx $s)
   | _ => Macro.throwUnsupported
 
-end SSBX.Foundation.Wen.SquaringTower
+end SSBX.Foundation.Wen.Xiang

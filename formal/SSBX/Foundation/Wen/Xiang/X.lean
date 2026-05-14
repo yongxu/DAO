@@ -1,7 +1,7 @@
 /-
-# Wen.SquaringTower.X — `X n := Fin n → Image`, the n-fold image family
+# Wen.Xiang.X — `X n := Fin n → Image`, the n-fold image family
 
-Per `wen-algebra` v0.2 §1.1–§1.3 the canonical n-th 𝕏-tower carrier is
+Per `wen-algebra` v0.4 §1.1–§1.3 the canonical n-th 𝕏-tower carrier is
 
     𝕏ⁿ := the n-fold direct product of `Image`
 
@@ -20,7 +20,7 @@ with `abbrev` so that all `Pi`-class instances on `Fin n → Image`
 | 3 | `X 3`                | 64    | 6                  | `Hexagram` (卦 / 六十四卦)              |
 | 4 | `X 4`                | 256   | 8                  | `TemporalHexagram` (时卦)              |
 
-For `n ≥ 5` the family is IR-internal; v0.2 §3.1 forbids surface
+For `n ≥ 5` the family is IR-internal; v0.4 §3.1 forbids surface
 exposure beyond `n = 4`.
 
 ## Group structure
@@ -34,22 +34,22 @@ not have to unfold `abbrev` in user code.
 
 The single character `X` is reused by `Mapping/Pauli.lean` for the Pauli
 σ_x atom (`X : Image`).  Both are inhabited at distinct types and live
-in distinct namespaces (`SquaringTower.X : Nat → Type` vs
+in distinct namespaces (`Xiang.X : Nat → Type` vs
 `Mapping.Pauli.X : Image`); usage may require a fully qualified name
 when both are imported.
 -/
 
-import SSBX.Foundation.Wen.SquaringTower.Image
+import SSBX.Foundation.Wen.Xiang.Image
 import Mathlib.Algebra.Group.Pi.Basic
 import Mathlib.Data.Fintype.Pi
 import Mathlib.Logic.Equiv.Basic
 
-namespace SSBX.Foundation.Wen.SquaringTower
+namespace SSBX.Foundation.Wen.Xiang
 
 /-! ## § 1 The `X n` family -/
 
 /-- `X n` = n-fold direct product of `Image`, the canonical 𝕏ⁿ carrier
-    of `wen-algebra` v0.2.  Indexed by `Fin n`; values are `Image` atoms
+    of `wen-algebra` v0.4.  Indexed by `Fin n`; values are `Image` atoms
     in each coordinate. -/
 abbrev X (n : Nat) : Type := Fin n → Image
 
@@ -110,9 +110,9 @@ def toList {n : Nat} (x : X n) : List Image := List.ofFn x
 /-! ## § 5 Atomic-↔-family bridge `X 1 ≃ Image`
 
 The single-coordinate cell `X 1` is naturally equivalent to the atomic
-`Image`.  This is the trivial squaring-tower bottom case and the
-precondition for every layered mapping (`Mapping/*.lean`) to read its
-1-cell content as an atomic `Image`. -/
+`Image`.  This is the trivial bottom case of the Xiang squaring chain
+and the precondition for every layered mapping (`Mapping/*.lean`) to
+read its 1-cell content as an atomic `Image`. -/
 
 /-- `X 1 ≃ Image`: a single-coordinate cell is just an `Image` atom. -/
 def equivImage : X 1 ≃ Image where
@@ -131,4 +131,4 @@ def equivImage : X 1 ≃ Image where
 
 end X
 
-end SSBX.Foundation.Wen.SquaringTower
+end SSBX.Foundation.Wen.Xiang

@@ -1,8 +1,8 @@
 /-
-# Wen.SquaringTower.Mapping.Pauli — single-qubit Pauli group (mod phase)
+# Wen.Xiang.Mapping.Pauli — single-qubit Pauli group (mod phase)
 
 The single-qubit Pauli group `P₁` modulo phase `{±1, ±i}` is exactly
-V₄ (`wen-algebra` v0.2 §0.2 / `v4-foundation.md` §3.2):
+V₄ (`wen-algebra` v0.4 §0.2 / `v4-foundation.md` §3.2):
 
     P₁ / ⟨±1, ±i⟩  ≅  V₄  =  Image
 
@@ -25,11 +25,11 @@ This is exactly the `Image` group multiplication.
 ## Naming caution
 
 The Pauli `X` aliases `Image.xo` and lives in this module's namespace
-(`SSBX.Foundation.Wen.SquaringTower.Mapping.Pauli.X`).  At the same
-time the squaring-tower kernel exposes the type family
-`SSBX.Foundation.Wen.SquaringTower.X : Nat → Type`.  The two are at
+(`SSBX.Foundation.Wen.Xiang.Mapping.Pauli.X`).  At the same
+time the Xiang kernel exposes the type family
+`SSBX.Foundation.Wen.Xiang.X : Nat → Type`.  The two are at
 distinct types and in distinct namespaces; ambiguity arises only if a
-caller `open`s both `Pauli` and `SquaringTower`, in which case the
+caller `open`s both `Pauli` and `Xiang`, in which case the
 type family must be referred to by its fully qualified name (or via
 the layer aliases `Origin / Image1 / PairedImage / Hexagram /
 TemporalHexagram`).
@@ -41,15 +41,15 @@ cell, which the `Squaring.lean` decomposition `X 4 ≃ X 1⁴` lets us
 read as a 4-qubit Pauli tensor `P ⊗ Q ⊗ R ⊗ S`.  The `tensor4` helper
 below packages this. -/
 
-import SSBX.Foundation.Wen.SquaringTower.Image
-import SSBX.Foundation.Wen.SquaringTower.X
-import SSBX.Foundation.Wen.SquaringTower.OX
-import SSBX.Foundation.Wen.SquaringTower.Layers
-import SSBX.Foundation.Wen.SquaringTower.Squaring
+import SSBX.Foundation.Wen.Xiang.Image
+import SSBX.Foundation.Wen.Xiang.X
+import SSBX.Foundation.Wen.Xiang.OX
+import SSBX.Foundation.Wen.Xiang.Layers
+import SSBX.Foundation.Wen.Xiang.Squaring
 
-namespace SSBX.Foundation.Wen.SquaringTower.Mapping.Pauli
+namespace SSBX.Foundation.Wen.Xiang.Mapping.Pauli
 
-open SSBX.Foundation.Wen.SquaringTower
+open SSBX.Foundation.Wen.Xiang
 
 /-! ## § 1 Single-qubit Pauli atoms at `Image` -/
 
@@ -95,4 +95,4 @@ example : tensor4 Y Y Y Y = OX!"xxxxxxxx" := by decide
 /-- Sample mixed 4-qubit Pauli tensor `X ⊗ Z ⊗ X ⊗ Z`. -/
 def XZXZ : TemporalHexagram := tensor4 X Z X Z
 
-end SSBX.Foundation.Wen.SquaringTower.Mapping.Pauli
+end SSBX.Foundation.Wen.Xiang.Mapping.Pauli

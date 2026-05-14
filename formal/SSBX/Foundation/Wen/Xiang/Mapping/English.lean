@@ -1,7 +1,7 @@
 /-
-# Wen.SquaringTower.Mapping.English — English-language reading
+# Wen.Xiang.Mapping.English — English-language reading
 
-Per `wen-algebra` v0.2 §0.2: the canonical English (primary) names for
+Per `wen-algebra` v0.4 §0.2: the canonical English (primary) names for
 the V₄ atoms and Time-Image atoms.
 
 ## V₄ atoms (operator role at `Image`)
@@ -22,13 +22,13 @@ the V₄ atoms and Time-Image atoms.
 | `Already`         | `Image.ox`  | 已 | past                   |
 | `CompositeNow`    | `Image.xx`  | 今 | present-as-fusion      |
 
-Per v0.2 §4.4 the temporal atoms occupy the **fourth** image-coordinate
+Per v0.4 §4.4 the temporal atoms occupy the **fourth** image-coordinate
 of `TemporalHexagram = X 4`; the first three are the `Hexagram` factor.
 
 **Note on legacy `R8.Shi` discrepancy.** The legacy `Foundation/Bagua/R8.lean`
 encodes `Shi.ji = (true, false)` as 已 (Already) and `Shi.wei = (false,
-true)` as 未 (Not-Yet), opposite of v0.2's `未 = (1, 0), 已 = (0, 1)`.
-The squaring-tower kernel commits to v0.2; legacy code retains its own
+true)` as 未 (Not-Yet), opposite of v0.4's `未 = (1, 0), 已 = (0, 1)`.
+The Xiang kernel commits to v0.4; legacy code retains its own
 convention.
 
 ## Hexagram anchors (X 3 cells)
@@ -48,18 +48,18 @@ has all three image-coordinates equal to the same V₄ atom — a uniform
 hexagram in V₄-coordinate language.
 -/
 
-import SSBX.Foundation.Wen.SquaringTower.Image
-import SSBX.Foundation.Wen.SquaringTower.X
-import SSBX.Foundation.Wen.SquaringTower.OX
-import SSBX.Foundation.Wen.SquaringTower.Layers
+import SSBX.Foundation.Wen.Xiang.Image
+import SSBX.Foundation.Wen.Xiang.X
+import SSBX.Foundation.Wen.Xiang.OX
+import SSBX.Foundation.Wen.Xiang.Layers
 
-namespace SSBX.Foundation.Wen.SquaringTower.Mapping.English
+namespace SSBX.Foundation.Wen.Xiang.Mapping.English
 
-open SSBX.Foundation.Wen.SquaringTower
+open SSBX.Foundation.Wen.Xiang
 
 /-! ## § 1 V₄ atoms — operator role -/
 
-namespace V4Atoms
+namespace XAtoms
 
 /-- V₄ identity (= `Image.oo` = 道 = `e` = Pauli I). -/
 abbrev Identity : Image := .oo
@@ -73,7 +73,7 @@ abbrev FrameFlip : Image := .ox
 /-- V₄ diagonal element (= `Image.xx` = 错综 = `ab` = Pauli Y). -/
 abbrev CompoundFlip : Image := .xx
 
-end V4Atoms
+end XAtoms
 
 /-! ## § 2 Time-Image atoms — temporal role -/
 
@@ -83,10 +83,10 @@ namespace TimeImage
     = 道 in the temporal reading). -/
 abbrev Atemporal : Image := .oo
 
-/-- Time-image future atom (= `Image.xo`, = 未, per v0.2 convention). -/
+/-- Time-image future atom (= `Image.xo`, = 未, per v0.4 convention). -/
 abbrev NotYet : Image := .xo
 
-/-- Time-image past atom (= `Image.ox`, = 已, per v0.2 convention). -/
+/-- Time-image past atom (= `Image.ox`, = 已, per v0.4 convention). -/
 abbrev Already : Image := .ox
 
 /-- Time-image present-as-fusion atom (= `Image.xx`, = 今, the PT
@@ -117,16 +117,16 @@ end HexagramAnchors
 
 /-! ## § 4 Cross-reading sanity checks -/
 
-example : V4Atoms.Identity = TimeImage.Atemporal := rfl
-example : V4Atoms.ContentFlip = TimeImage.NotYet := rfl
-example : V4Atoms.FrameFlip = TimeImage.Already := rfl
-example : V4Atoms.CompoundFlip = TimeImage.CompositeNow := rfl
+example : XAtoms.Identity = TimeImage.Atemporal := rfl
+example : XAtoms.ContentFlip = TimeImage.NotYet := rfl
+example : XAtoms.FrameFlip = TimeImage.Already := rfl
+example : XAtoms.CompoundFlip = TimeImage.CompositeNow := rfl
 
-example : ∀ i, HexagramAnchors.Heaven i = V4Atoms.Identity := by decide
-example : ∀ i, HexagramAnchors.Earth i = V4Atoms.CompoundFlip := by decide
-example : ∀ i, HexagramAnchors.AfterCompletion i = V4Atoms.FrameFlip := by
+example : ∀ i, HexagramAnchors.Heaven i = XAtoms.Identity := by decide
+example : ∀ i, HexagramAnchors.Earth i = XAtoms.CompoundFlip := by decide
+example : ∀ i, HexagramAnchors.AfterCompletion i = XAtoms.FrameFlip := by
   decide
-example : ∀ i, HexagramAnchors.BeforeCompletion i = V4Atoms.ContentFlip := by
+example : ∀ i, HexagramAnchors.BeforeCompletion i = XAtoms.ContentFlip := by
   decide
 
-end SSBX.Foundation.Wen.SquaringTower.Mapping.English
+end SSBX.Foundation.Wen.Xiang.Mapping.English

@@ -1,7 +1,7 @@
 /-
-# Wen.SquaringTower.Mapping.Math — V₄ Klein-group reading of `Image`
+# Wen.Xiang.Mapping.Math — V₄ Klein-group reading of `Image`
 
-`wen-algebra` v0.2 §0.2 / §1.1: the atomic `Image` carrier is the Klein
+`wen-algebra` v0.4 §0.2 / §1.1: the atomic `Image` carrier is the Klein
 four-group `V₄ = (Z/2)²`.  Standard mathematical notation uses
 `{e, a, b, ab}` for the four atoms, which this module exposes as
 abbreviations on top of the bit-pattern primary names.
@@ -18,11 +18,11 @@ bit-pattern source, so the V₄ multiplication table is `decide`-able and
 all `Image` lemmas apply through the alias.
 -/
 
-import SSBX.Foundation.Wen.SquaringTower.Image
+import SSBX.Foundation.Wen.Xiang.Image
 
-namespace SSBX.Foundation.Wen.SquaringTower.Mapping.Math
+namespace SSBX.Foundation.Wen.Xiang.Mapping.Math
 
-open SSBX.Foundation.Wen.SquaringTower
+open SSBX.Foundation.Wen.Xiang
 
 /-! ## § 1 V₄ atoms (Math notation) -/
 
@@ -63,4 +63,4 @@ def all : List Image := [e, a, b, ab]
 theorem all_length : all.length = 4 := rfl
 theorem all_eq_image_all : all = Image.all := rfl
 
-end SSBX.Foundation.Wen.SquaringTower.Mapping.Math
+end SSBX.Foundation.Wen.Xiang.Mapping.Math
