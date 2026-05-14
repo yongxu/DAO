@@ -22,11 +22,11 @@ convenience and to gather the available bindings.
 * `Atlas/Hamming`  — R 7 ⊇ Hamming(7, 4) perfect code (16 codewords)
 * `Atlas/GF256`    — R 8 ↔ GF(256) Rijndael field structure
 
-## Yi bindings (deferred to Phase 3.2)
+## Yi bindings (Phase α — Yi naming bridge)
 
-Yi-tradition bindings (`Atlas/Yi/...`) are NOT included here; they
-depend on a refactored `Foundation/Yi/` which will be delivered in
-P3.2 of the restructure plan.
+* `Atlas/Yi`       — umbrella for the Yi naming Atlas overlay
+                     (Yao = R 1, Trigram = R 3, Hexagram = R 6,
+                     Shi = R 2, 8 Bagua + 64 hexagrams + V₄ ops).
 -/
 
 import SSBX.Foundation.Atlas.Pauli
@@ -35,3 +35,4 @@ import SSBX.Foundation.Atlas.Boolean
 import SSBX.Foundation.Atlas.Fano
 import SSBX.Foundation.Atlas.Hamming
 import SSBX.Foundation.Atlas.GF256
+import SSBX.Foundation.Atlas.Yi

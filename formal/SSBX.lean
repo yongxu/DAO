@@ -286,3 +286,8 @@ import SSBX.Foundation.R4
 import SSBX.Foundation.R8
 import SSBX.Foundation.RInfty
 import SSBX.Foundation.Atlas
+
+-- v0.6 Wen/Core: language-independent Wen kernel on pure R 8.
+-- Parallel to legacy Foundation/Bagua/BaguaTuring.lean (which is Yi-flavored).
+-- Yi semantics is provided via Foundation/Atlas/Yi/ as application overlay.
+import SSBX.Foundation.Wen.Core
