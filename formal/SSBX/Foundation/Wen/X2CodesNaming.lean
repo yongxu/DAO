@@ -206,6 +206,9 @@ def BitsIsX2 {n : Nat} (b : Fin n → Bool) : Prop :=
           have hi : i.val < n / 2 := i.isLt
           omega⟩
 
+instance {n : Nat} (b : Fin n → Bool) : Decidable (BitsIsX2 b) := by
+  unfold BitsIsX2; infer_instance
+
 /-- Abstract naming locus on the bit cube. -/
 def BitsNamingLocus {n : Nat} (b : Fin n → Bool) : Prop :=
   BitsIsX2 b ∧ (BitsIsPalindrome b ∨ BitsIsCompPal b)
