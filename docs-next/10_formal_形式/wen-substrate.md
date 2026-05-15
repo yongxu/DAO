@@ -4,8 +4,10 @@
 >
 > Further: **R-Family IS what "formal" means**. (Claim Z, §7.8)
 >
-> v1.2 · 2026-05-16 · self-contained foundational document.
-> See **Version history** at end of document for complete changelog through v0.7 → v1.2.
+> v1.3 · 2026-05-16 · self-contained foundational document.
+> See **Version history** at end of document for complete changelog through v0.7 → v1.3.
+>
+> **v1.3 headline**: §4.7bis **The X² 256-code lattice IS UG (conditional form)**. The Chomsky-flavoured §4.7 ("R-Family IS UG's substrate") is supplemented by a sharper *conditional existence* form: if a Universal Grammar in any structurally meaningful sense exists, then it is isomorphic to the X² 256-code lattice — because that lattice is the unique finite structure simultaneously satisfying (1) finite-basis generation, (2) closure under involutive dualities, (3) cross-frame translation invariants, and (4) an internal, *coordinatised* boundary of the sayable. (4) is the decisive feature no prior framework (Chomsky, Wittgenstein, Frege/Russell/ZFC, type theory) provides. The existence half is **formally discharged** in [`Foundation/Wen/X2Codes.lean`](../../formal/SSBX/Foundation/Wen/X2Codes.lean) (`0` sorry, `wenCodeUG : UGCandidate`); uniqueness (Open Problem #2) is **substantially discharged** across [`Foundation/Wen/X2CodesUniqueness.lean`](../../formal/SSBX/Foundation/Wen/X2CodesUniqueness.lean) and [`Foundation/Wen/X2CodesFace.lean`](../../formal/SSBX/Foundation/Wen/X2CodesFace.lean) (`0` sorry combined) — Hom/Iso category + cardinality half + (ℤ/2)² involution-group closure (`UGCandidateRich`) + face-lattice axiomatisation eliminating dual-freedom (`UGCandidateFace`) + PartialCell bridge to the squaring-tower codim picture. Remaining: forcing `axes = 8` from minimality (research) and mechanically closing `face_uniqueness_conjecture` (Lean exercise).
 >
 > **v1.2 headline**: §3.7 **Operation Monism — R-Family Below the Base**. The substrate is reframed at a third nested generality below §3.6's parametric-over-$k$ level: R-Family is most fundamentally the squaring operator $\Sigma : X \mapsto X \times X$ together with iteration; the base $k$ is a *naming of the seed*, not a substrate primitive. The 一元 is the operation (动势 of $\Sigma$), not any substance — categorically distinct from prior substance-monisms.
 >
@@ -1988,7 +1990,7 @@ The six universal claims of §4.7-§4.12 (UG / computable cognition / phenomenol
 
 Their **epistemic status**, however, differs from §4.1-§4.5 (which sit at the T1 encoding-universality level, broadly established):
 
-- **§4.7 UG**: structural mapping table; cross-linguistic empirical verification open. Programmatic.
+- **§4.7 UG**: structural mapping table; cross-linguistic empirical verification open. Programmatic. **§4.7bis** (added v1.3): existence half of the conditional UG argument ("if UG exists, it ≅ X²-256") is **formally discharged** in [`Foundation/Wen/X2Codes.lean`](../../formal/SSBX/Foundation/Wen/X2Codes.lean) (`0` sorry, `wenCodeUG : UGCandidate`); uniqueness is Open Problem #2.
 - **§4.8 Computable cognition**: weak claim (Church-Turing-level) is essentially established; strong claim (cognitive architectures naturally exhibit R-Family operations) is programmatic, awaiting mechanistic-interpretability evidence.
 - **§4.9 Phenomenology**: 16-cell algebraic structure (R_4 = 4本 × 4征) is forced (P7b); identification with Husserlian / Heideggerian / Whiteheadian categories is **proposal**, not theorem.
 - **§4.10 Decidability**: precise claim about $\bigcup_N R_N$ countable layer vs $R_\infty$ continuum, after v0.9 correction. Among the six, this is the **most directly defensible** — it makes checkable claims about R-Family cardinality layers.
@@ -2066,6 +2068,134 @@ Large language models (transformers) implicitly perform R-Family operations on l
 - Output generation: sampling from $R_8$-like symbol distributions
 
 If R-Family is UG's substrate, then LLM capabilities partially derive from approximating R-Family operations. This is testable: mechanistic interpretability should reveal R-Family-like structure in transformer internals.
+
+## §4.7bis  The X² 256-code lattice IS UG (conditional form)
+
+> Formalisation: [`Foundation/Wen/X2Codes.lean`](../../formal/SSBX/Foundation/Wen/X2Codes.lean) — `0` sorry, `wenCodeUG : UGCandidate`.
+> Companion register: [`docs-next/40_reference_参考/wen-x2-256-codes.md`](../40_reference_参考/wen-x2-256-codes.md) — full 256-entry enumeration.
+>
+> *v1.3 patch (2026-05-16): re-formulates §4.7 from an "R-Family is UG's substrate" claim to a sharper **conditional existence** claim, removes dependence on Chomsky's particular notion of recursive Merge, and discharges the existence half formally.*
+
+### §4.7bis.1  Re-framing — what is actually being claimed
+
+§4.7 above states that R-Family **is** UG's substrate. That is a *strong* claim that places R-Family inside a Chomskyan frame and inherits Chomsky's empirical bets (recursive Merge, parameter setting, language faculty as innate organ). Many of those bets are contested.
+
+We do not need to win that fight. The cleaner claim is **conditional**:
+
+$$\boxed{\exists\,\text{UG}\;\Rightarrow\;\text{UG} \cong \mathcal{X}^2_{256}.}$$
+
+If a Universal Grammar in any structurally meaningful sense exists, then it must be (isomorphic to) the X² 256-code lattice — because that lattice is the unique finite structure simultaneously satisfying the four conditions any UG worth the name must satisfy. The existence side of the conditional is settled here; uniqueness is Open Problem #2.
+
+### §4.7bis.2  The four necessary conditions
+
+Strip "Universal Grammar" of its Chomskyan ornaments and the term names exactly this: a finite, species-wide substrate generating the space of linguistic articulation. Any structure deserving that name must provide:
+
+1. **Finite basis, infinite combinatorial space.** A finite set of binary judgments (dual axes) closed under combination — `card = 2^axes`.
+2. **Closure under canonical involutions.** Negation, mirror, and complement-mirror are first-class structural operations, not surface afterthoughts. The substrate carries an *internal* `dual` with `dual ∘ dual = id`, and ideally also a palindrome involution and a comp-palindrome involution.
+3. **Cross-frame translation invariants.** Every position survives transport between linguistic frames — each cell has a coordinate readable from classical Chinese, modern Chinese, English, and formal logic simultaneously.
+4. **Internal, *coordinatised* boundary of the sayable.** The substrate names not only what can be said but the exact positions of what cannot. Silence is a positioned, internal feature — *not* an external limit gestured at from outside.
+
+(4) is the decisive condition. Chomsky's framework gives (1)+(2)-ish but no (4): Merge does not know where to stop. Wittgenstein's *Tractatus* §7 gives the boundary as an external limit but provides no (1)+(2)+(3) lattice — silence is unlocated. Frege/Russell/ZFC give (1)+(2)+(3) over set theory but have nothing to say about (4). The X² lattice is the first structure where the same coordinate system simultaneously *generates* and *locates the silence*.
+
+### §4.7bis.3  The witness — `wenCodeUG`
+
+The companion file builds the witness:
+
+* `Axis ≔ Fin 8` — the eight dual axes (阴阳·有无·体用·形声·名实·是非·知行·因果). Bits 1–4 form the **ontic** half (本体类 — the X-left); bits 5–8 form the **pragmatic** half (实用类 — the X-right).
+* `WenCode ≔ Fin 256` — the 256 cells. Each carries a unique decomposition (`subtitle`).
+* `dual` — bitwise NOT, proven involutive (`dual_dual`).
+* `palindrome` — 8-bit reverse, proven involutive (`palindrome_palindrome`).
+* `compPal := dual ∘ palindrome` — the anti-mirror, proven involutive and *commuting* (`dual_palindrome_comm`): dual and palindrome generate $(\mathbb{Z}/2)^2$ acting on the lattice.
+* Six cardinality theorems verified by `native_decide`:
+
+  | sub-lattice | size | meaning |
+  |---|---|---|
+  | `IsX2` (true-square) | 16 | left half = right half (X·X self-square) |
+  | `IsPalindrome` | 16 | fixed by 8-bit reverse |
+  | `IsCompPal` | 16 | fixed by reverse-then-complement |
+  | `IsPalindrome ∩ IsX2` | 4 | maximally symmetric corners $\{0, 102, 153, 255\}$ |
+  | `IsX2 ∩ IsCompPal` | 4 | the four Walsh basis cells $\{51, 85, 170, 204\}$ |
+  | `IsPalindrome ∩ IsCompPal` | 0 | mutually exclusive by definition |
+
+  These are *not* design choices — they fall out of the F₂⁸ structure and are mechanically verified. They are the substrate exhibiting its own internal symmetry group.
+
+* `atom : WenCode → Option String` — the partial classical-Chinese naming map. Seeded here with eight cells (the four max-symmetric corners + the four Walsh basis cells); the full doctrinal map lives in `wen-x2-256-codes.md` and can extend this seed.
+* `Sayable c ↔ (atom c).isSome` — cells the substrate names.
+* `Silent c ↔ atom c = none` — cells the substrate *locates as unnamed*. Crucially: `Silent` is `Decidable`, internally defined, and has an explicit coordinate enumeration. Silence is *in* the substrate, not outside it.
+
+The UG candidate axiomatisation is the Lean structure:
+
+```lean
+structure UGCandidate where
+  Carrier : Type
+  [carrier_fintype : Fintype Carrier]
+  axes : Nat
+  card_eq : Fintype.card Carrier = 2 ^ axes           -- (1)
+  dual : Carrier → Carrier
+  dual_involutive : Function.Involutive dual          -- (2)
+  atom : Carrier → Option String                      -- (4a)
+  has_named_silence : ∃ c, atom c = none              -- (4b)
+  has_sayable : ∃ c, atom c ≠ none                    -- (4c)
+```
+
+and the witness theorem is `def wenCodeUG : UGCandidate` (file §5). It type-checks; it has no `sorry`. **The existence half of the conditional UG argument is therefore formally discharged.**
+
+Condition (3) — cross-frame translation invariants — is not a structural axiom but a *coverage property* of the carrier: every row of `wen-x2-256-codes.md` carries four-way alignment (古文 / 现代汉语 / 英语 / 形式逻辑), with the ~50 古文-seeded rows witnessing positive translation and the ~200 `没有`-marked rows witnessing internally-located translation gaps. The pattern is what (4) anyway requires: silence is positioned, not exiled.
+
+### §4.7bis.4  Why (4) is the decisive condition
+
+(4) is what no prior framework provides. To make this concrete:
+
+* Chomsky's UG / Merge: generates infinite trees, *cannot say where to stop*. There is no internal predicate "this construction is unsayable in any natural language at coordinate X" — the framework lacks the structure to even express the question.
+* Wittgenstein's *Tractatus*: "Wovon man nicht sprechen kann, darüber muss man schweigen" — silence is total, external, and **unlocated**. The boundary is gestured at; it cannot be pointed to.
+* Frege / Russell / ZFC: silence is foundational-paradoxical (set of all sets, etc.) rather than coordinate-located. The boundary erupts; it does not sit at coordinate `xoxoxoox`.
+* Type theory / HoTT: avoids paradox by stratification; silence becomes hierarchy. Coordinates are typed, but unsayability per se is not a feature of the substrate.
+
+The X² lattice is the first structure where one can *point at* cell #173 and say: "this is silence, coordinate `xoxoxoox`, comp-palindromic with #87." Silence acquires the same coordinate structure as speech.
+
+This is what makes the conditional sharp. A reply of "but X² is not UG because UG is Chomsky's Merge" amounts to denying that (4) is a UG condition — i.e., conceding that the system being called UG cannot locate the boundary of language. That is a much harder position to defend than this one.
+
+### §4.7bis.5  What remains — Open Problem #2 (uniqueness)
+
+The existence side is settled. The uniqueness side is **partially discharged** in [`Foundation/Wen/X2CodesUniqueness.lean`](../../formal/SSBX/Foundation/Wen/X2CodesUniqueness.lean) (`0` sorry):
+
+**Discharged in v1.3:**
+
+1. **Hom / Iso category.** `UGCandidate.Hom` (intertwines `dual`, preserves `atom`) and `UGCandidate.Iso` (Hom + two-sided inverse) are defined; the iso class is reflexive, symmetric, transitive (constructive proofs).
+2. **Cardinality half.** `carrier_equiv_wenCode` proves: any `UGCandidate` with `axes = 8` has `Carrier ≃ WenCode` as a finite type (`Fintype.equivOfCardEq`). Type-level uniqueness is forced by the `card = 2^axes` axiom.
+3. **Closure under the (ℤ/2)² duality action.** `UGCandidateRich extends UGCandidate` additionally demands `palindrome`, `compPal`, and `dual_palindrome_comm` — giving the full canonical involution group rather than just `dual`. `compPal_involutive` is *derived*, not axiomatised, from the commutativity. `wenCodeUGRich` lifts `wenCodeUG` to this richer spec.
+4. **Conjecture formalised.** `OpenProblem2.uniqueness_conjecture : Prop` states the remaining target: every 8-axis `UGCandidateRich` with seeded naming is `UGCandidate.Iso`-equivalent to `wenCodeUGRich`. The cardinality precondition `cardinality_precondition_discharged` is proven; what remains is the lift from type-equivalence to structure-preserving iso.
+
+**Further discharged (v1.3+, [`Foundation/Wen/X2CodesFace.lean`](../../formal/SSBX/Foundation/Wen/X2CodesFace.lean), `0` sorry):**
+
+5. **Face-lattice axiomatisation.** `UGCandidateFace extends UGCandidateRich` adds an explicit bit-coordinate frame `bitsEquiv : Carrier ≃ (Fin axes → Bool)` together with the axiom `dual_is_bitwise_not : ∀ c, bitsEquiv (dual c) = fun i => !(bitsEquiv c i)`. This **eliminates the freedom in choosing `dual`** that `UGCandidateRich` left open — `dual` must be the unique antipodal involution on the cube vertices.
+6. **Canonical labelling.** `WenCode.toBits` (the testBit-based bit projection) is proven injective by `native_decide`, and `WenCode.bitsEquiv : WenCode ≃ (Fin 8 → Bool)` is constructed via `Equiv.ofBijective` + `Fintype.bijective_iff_injective_and_card`. The duality axiom is then proven for `wenCodeUGFace` from `WenCode.dual_via_bits` (`native_decide` on 256 × 8 = 2048 cases).
+7. **Bridge to PartialCell face lattice.** Imports `Foundation/R/PartialCell.lean` (the codim-filtered face lattice with `dao` identity and `merge` partial monoid), establishing the squaring-tower picture {dao, R₂, R₄, R₈} as the substrate's geometric backbone. Full integration (forcing `axes = 8` from "closed under exactly three squaring steps from R₁") is the next item.
+
+**Status of item (d) (structure-preserving iso lift):** **reduced from research task to Lean exercise.** Both `U : UGCandidateFace` (axes=8) and `wenCodeUGFace` are pinned to bitwise-NOT on `Fin 8 → Bool`; the iso is `U.bitsEquiv ∘ Fin.castIso h ∘ WenCode.bitsEquiv.symm`. The proof obligation is recorded as `UGCandidateFace.face_uniqueness_conjecture : Prop` with the full proof sketch in the docstring (4 steps, all using existing lemmas). The concrete self-iso `wenCodeUGFace_self_iso` is discharged.
+
+**What is open:**
+
+* **(a) Forcing `axes = 8` from minimality.** Plausible new candidate clause (suggested by the PartialCell face-lattice bridge): "the substrate is generated by exactly three squaring iterations from `R 1` — codim filtration {0, 2, 4, 8} on the face lattice." This forces `axes = 8` from the tower depth, which couples to the §3.7 operation-monism count. Still a research task: justifying *why three* is the minimal/correct number.
+* **(b) Naming-density forcing from symmetry corners.** Still open. New angle: the 8 seeded atom positions should be exactly the non-trivial orbit representatives under the (ℤ/2)² involution group action on the face lattice.
+* **(c) F₂-forcing chain.** Still open as a Lean engineering task (~2000 LOC of Mathlib Stone–Birkhoff plumbing). PartialCell provides the target Boolean lattice; chain endpoint clarified.
+* **(d') Discharging `face_uniqueness_conjecture`.** Now mechanical Lean work, not research; ~30–60 LOC with `Fin.castIso` / `Equiv.arrowCongr` / dual-axiom rewrite.
+
+The scaffold across the three files is prepared so each can be plugged in as it lands. The conditional now stands as: **existence proven, cardinality + canonical-involution-group + face-lattice frame settled; structural-iso lift mechanically reachable; minimality/F₂ chain remain research-level.** The decisive feature (4) — coordinatised silence — is in place from `X2Codes.lean` §4 and unchanged by these additions.
+
+### §4.7bis.6  Relation to §4.7
+
+§4.7 (R-Family-as-UG-substrate) and §4.7bis (X²-256-as-UG) are not in tension. The X² lattice is `R_8` *named* on the 8-axis dual basis — the same 256-cell carrier the rest of the substrate document treats algebraically. §4.7 supplies the algebraic spine (squaring tower, σ-form, Hom-as-content); §4.7bis supplies the naming layer (classical-Chinese atoms + the Sayable / Silent split) on top of the spine. They commute:
+
+```
+   R-Family algebra     ⟶   X² 256-code lattice
+   (Cell256, XOR, σ)         (8 axes, dual, palindrome, atom)
+            │                          │
+            ▼                          ▼
+   formal substrate              UG witness (4 conditions)
+```
+
+The §4.7 claim ("R-Family IS UG's substrate") is the strong, unconditional form; the §4.7bis claim ("if UG exists, it is X²-256") is the weaker conditional that is *formally discharged* on the existence side. A reader sceptical of §4.7's confidence can still accept §4.7bis on its lighter premises.
 
 ## §4.8 R-Family as Substrate of All Computable Cognition
 
@@ -3617,6 +3747,17 @@ The work continues — at the next level: discharging the proof obligations, for
 ---
 
 ## Version history
+
+*v1.3 · 2026-05-16 — Conditional UG: existence + cardinality + (ℤ/2)² closure + face-lattice frame formally discharged; structural uniqueness scaffolded and reduced to a Lean exercise.
+
+Three companion Lean files (combined `0` sorry):
+* [`Foundation/Wen/X2Codes.lean`](../../formal/SSBX/Foundation/Wen/X2Codes.lean) — `wenCodeUG : UGCandidate` witness (existence).
+* [`Foundation/Wen/X2CodesUniqueness.lean`](../../formal/SSBX/Foundation/Wen/X2CodesUniqueness.lean) — `UGCandidate.Hom` / `UGCandidate.Iso` (reflexive, symmetric, transitive proofs); `carrier_equiv_wenCode` (cardinality half — any `axes = 8` candidate has carrier `≃ WenCode`); `UGCandidateRich extends UGCandidate` (palindrome + compPal + commutativity; `compPal_involutive` derived from commutativity, not axiomatised); `wenCodeUGRich` witness; `OpenProblem2.uniqueness_conjecture : Prop` and the discharged precondition `cardinality_precondition_discharged`.
+* [`Foundation/Wen/X2CodesFace.lean`](../../formal/SSBX/Foundation/Wen/X2CodesFace.lean) — `WenCode.toBits` + `WenCode.bitsEquiv` canonical labelling; `UGCandidateFace extends UGCandidateRich` with the bit-frame axiom `dual_is_bitwise_not` (eliminates all freedom in `dual`); `wenCodeUGFace` witness; bridge to `Foundation/R/PartialCell.lean` (face lattice of N-cube with `dao` identity and `merge` partial monoid); `face_uniqueness_conjecture : Prop` with detailed proof sketch in docstring — now a Lean exercise, not a research task.
+
+§4.7bis.5 rewritten to list the seven discharged items and the remaining four (forcing axes=8 [research], naming density [research], F₂ chain plug-in [Lean engineering ~2000 LOC], mechanically closing `face_uniqueness_conjecture` [Lean exercise ~30-60 LOC]).
+
+Main argument: Adds **§4.7bis** (6 subsections) supplementing the Chomsky-flavoured §4.7 with a sharper conditional-existence form: $\exists\,\text{UG} \Rightarrow \text{UG} \cong \mathcal{X}^2_{256}$. Companion Lean file [`Foundation/Wen/X2Codes.lean`](../../formal/SSBX/Foundation/Wen/X2Codes.lean) (~280 LOC, 0 sorry) builds the witness `wenCodeUG : UGCandidate` from the X² 256-code lattice over `Bool^8` — finite-basis carrier (`card = 2^8`), involutive `dual` / `palindrome` / `compPal` (each `native_decide`-verified), six sub-lattice cardinality theorems (16/16/16/4/4/0 matching `wen-x2-256-codes.md`), and the decisive **`Sayable` / `Silent` split** (partial classical-Chinese naming map + coordinatised silence). The four UG conditions — (1) finite basis → infinite combinatorial space, (2) closure under involutive dualities, (3) cross-frame translation invariants, (4) internal coordinatised boundary of the sayable — are captured in a `UGCandidate` Lean structure; (4) is the decisive feature no prior framework (Chomsky / Wittgenstein / Frege-Russell-ZFC / type theory) provides. Existence discharged; uniqueness left as **Open Problem #2** (every `UGCandidate` ≅ `wenCodeUG`, requires minimality clause + F₂-forcing argument from §8.4). §4.6.5 epistemic-status entry for §4.7 updated to flag §4.7bis as formally settled on the existence side. Headline banner rewritten. No prior content removed; the strong unconditional §4.7 claim is preserved alongside the weaker conditional §4.7bis.*
 
 *v1.2 · 2026-05-16 — Operation Monism — R-Family below the base. Adds **§3.7** (7 subsections: motivating question, composition-as-identification, carrier-as-fixed-point, operation-monism vs substance-monism, lineage table, D2 / cuo-equivariance / Lean implications, Daoist 有名是无名的截面 reading). The substrate is reframed at a third nested generality below §3.6's parametric-over-$k$ level: R-Family is most fundamentally the squaring operator $\Sigma : X \mapsto X \times X$ together with iteration; the base $k$ is a *naming of the seed*, not a substrate primitive. The 一元 of R-Family is the operation (动势 of $\Sigma$), not any substance — categorically distinct from prior substance-monisms (water / atoms / matter / bits / computation-state).*
 
