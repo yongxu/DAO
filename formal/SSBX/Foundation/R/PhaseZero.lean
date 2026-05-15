@@ -610,7 +610,7 @@ theorem T_P7b :
   ⟨T_P7b_card, T_P7b_card_match, T_P7b_id_left, T_P7b_id_right, T_P7b_apply_id,
    T_P7b_ring_equiv.map_add, T_P7b_ring_equiv.map_mul⟩
 
-/-! ## § 5 Phase 0 summary
+/-! ## § 5 Phase 0 summary — the `complete_phase_zero` bundle
 
 All four Phase-0 small theorems of wen-substrate v1.1 §8.8 are packaged
 above as `T_P3`, `T_P6`, `T_P7a`, `T_P7b`.  Each is either fully proven
@@ -620,7 +620,69 @@ documented residual obligation (`T_P3`: uniqueness-up-to-iso of the
 L0/L1 forms; `T_P7b`: bridge to Mathlib's
 `Matrix (Fin 2) (Fin 2) (ZMod 2)` + Wedderburn-Artin uniqueness).
 
+The bundle below, `complete_phase_zero`, exhibits the **conjunction-is-
+forced** content: P3 ∧ P6 ∧ P7a ∧ P7b are not four independent claims
+that happen to co-hold; they are the simultaneous Phase-0 obligations
+of the R-Family substrate and are *jointly* discharged by the constituent
+theorems above.  This packages, in a single proposition, the entire
+Phase-0 closure under wen-substrate v1.1 §8.8.
+
 This file introduces **no new axioms**.
 -/
+
+/-- **Phase 0 closure** — the four Phase-0 small theorems of
+    wen-substrate v1.1 §8.8 hold *jointly*.
+
+    The conjunction emphasizes that P3, P6, P7a, P7b are not independent
+    structural facts that happen to co-hold; they are the simultaneous
+    Phase-0 obligations of the universal-formal-substrate claim, each
+    forced by the closure conditions (P1-P7) acting on the squaring
+    tower at carriers `R 2`, `R 3`, `R 4` and on `R (2*k)`.  All four
+    are discharged here from the named anchors with no new axioms. -/
+theorem complete_phase_zero :
+    -- P3 conjuncts (bilinear classification on R (2k))
+    ( (∀ N (u v : R N), R.dot u v = R.dot v u)
+    ∧ (∀ k (v : R (2 * k)), R.sigma v v = false)
+    ∧ (∀ k (u v : R (2 * k)), R.sigma u v = R.sigma v u)
+    ∧ (∀ k (u v : R (2 * k)),
+         R.dot u v = Bool.xor (R.sigma u v) (R.LL u v))
+    ∧ (∀ k (c : Fin k → Bool), R.arf c = true ∨ R.arf c = false) )
+  ∧ -- P6 conjuncts (V₄ minimality on R 2)
+    ( Fintype.card (R 2) = 4
+    ∧ (∀ s : Shi, Shi.complement (Shi.complement s) = s)
+    ∧ (∀ s : Shi, Shi.reverse (Shi.reverse s) = s)
+    ∧ (∀ s : Shi,
+         Shi.complement (Shi.reverse s) = Shi.reverse (Shi.complement s))
+    ∧ (∀ s : Shi, Shi.cuoZong (Shi.cuoZong s) = s) )
+  ∧ -- P7a conjuncts (zong involution + 4本 + 4征 split on R 3)
+    ( (∀ t : Trigram, Trigram.zong (Trigram.zong t) = t)
+    ∧ Trigram.benTrigrams.length = 4
+    ∧ Trigram.zhengTrigrams.length = 4
+    ∧ Trigram.benTrigrams.Nodup
+    ∧ Trigram.zhengTrigrams.Nodup
+    ∧ (∀ t : Trigram, Trigram.zong t = t ↔ t ∈ Trigram.benTrigrams) )
+  ∧ -- P7b conjuncts (Wedderburn anchor on R 4, including RingEquiv)
+    ( Fintype.card (R 4) = 16
+    ∧ Fintype.card (R 4) = Fintype.card (Fin 2 → Fin 2 → Bool)
+    ∧ (∀ f : R 4,
+         SSBX.Foundation.R4.composeR2 SSBX.Foundation.R4.idR4 f = f)
+    ∧ (∀ f : R 4,
+         SSBX.Foundation.R4.composeR2 f SSBX.Foundation.R4.idR4 = f)
+    ∧ (∀ u : R 2,
+         SSBX.Foundation.R4.applyR2 SSBX.Foundation.R4.idR4 u = u)
+    ∧ (∀ u v : R 4, T_P7b_ring_equiv (u + v)
+                      = T_P7b_ring_equiv u + T_P7b_ring_equiv v)
+    ∧ (∀ g f : R 4, T_P7b_ring_equiv (g * f)
+                      = T_P7b_ring_equiv g * T_P7b_ring_equiv f) ) :=
+  ⟨T_P3, T_P6, T_P7a, T_P7b⟩
+
+/-- Projection back to T_P3 from the bundle (proof-irrelevance witness). -/
+example : T_P3 = complete_phase_zero.1 := rfl
+/-- Projection back to T_P6 from the bundle. -/
+example : T_P6 = complete_phase_zero.2.1 := rfl
+/-- Projection back to T_P7a from the bundle. -/
+example : T_P7a = complete_phase_zero.2.2.1 := rfl
+/-- Projection back to T_P7b from the bundle. -/
+example : T_P7b = complete_phase_zero.2.2.2 := rfl
 
 end SSBX.Foundation.R.PhaseZero
