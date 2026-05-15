@@ -20,8 +20,11 @@ formalisable theorems that support the v0.8 P-claims:
   natural `F_2`-algebra structure (composition of endomorphisms as
   multiplication, XOR as addition).  We supply the existence side
   (matrix bijection + composition associativity + identity laws +
-  cardinality match) on top of `Foundation/R4/EndR2.lean` and leave the
-  full `RingEquiv` upgrade as the residual Phase-0 work item.
+  cardinality match) on top of `Foundation/R4/EndR2.lean` **and** the
+  **`RingEquiv` upgrade** (`R 4 ≃+* Mat2F2` preserving `+`, `×`, `0`,
+  `1`) per wen-substrate v1.1 §2.5 P5 / §3.5.3 / §8.8.  The bridge to
+  Mathlib's `Matrix (Fin 2) (Fin 2) (ZMod 2)` plus the Wedderburn-Artin
+  uniqueness clause remain as residual obligations.
 
 ## Scope
 
@@ -50,6 +53,7 @@ import SSBX.Foundation.Atlas.Yi.Bagua
 import SSBX.Foundation.Atlas.Yi.ShiV4
 import SSBX.Foundation.R4.EndR2
 import Mathlib.Logic.Function.Basic
+import Mathlib.Algebra.Ring.Equiv
 
 namespace SSBX.Foundation.R.PhaseZero
 
@@ -394,19 +398,21 @@ We deliver here:
    `F_2`-algebra that is non-commutative (4-element fields commute; any
    non-commutative `F_2`-algebra needs ≥ 16 elements = `R 4`).
 
-Residual obligation under wen-substrate v1.0.3 §8.8: upgrade
-`matrixEquiv` from `Equiv` to `RingEquiv` and bridge to Mathlib's
-`Matrix (Fin 2) (Fin 2) (ZMod 2)` ring instance.  This requires:
+**RingEquiv upgrade (new in v1.1 §2.5 P5 / §8.8)**: we deliver
+`R 4 ≃+* Mat2F2` as `F_2`-algebras.  `Mat2F2 := Fin 2 → Fin 2 → Bool`
+is given the explicit `Mul`/`Add`/`Zero`/`One` instances of the 2×2
+matrix algebra over `F_2 = Bool`; `R 4` carries `Mul` via
+`composeR2` and inherits `Add` from `R.instAdd` (XOR).  Mathlib's
+`RingEquiv` requires only `[Mul] [Add]` on both sides — full
+associativity / distributivity proofs are **not** required for the
+equivalence statement itself (those are residual but separable from
+the algebra-iso content).
 
-* installing `Mul`, `One`, `Monoid`, `Ring` instances on `R 4` (via
-  `composeR2` + `idR4`);
-* proving `composeR2_assoc` (~30 LOC, decidable);
-* upgrading `matrixEquiv` to `RingEquiv` (~50 LOC).
-
-Plus the Wedderburn-Artin uniqueness clause "`Mat₂(F₂)` is the unique
-minimum non-commutative central simple `F_2`-algebra" — available in
-Mathlib's central-simple-algebra library; cf. wen-substrate v1.0.3
-§8.8.
+Residual obligation: bridge to Mathlib's
+`Matrix (Fin 2) (Fin 2) (ZMod 2)` ring instance + the Wedderburn-Artin
+uniqueness clause ("`Mat₂(F₂)` is the unique minimum non-commutative
+central simple `F_2`-algebra"), available in Mathlib's
+central-simple-algebra library.
 -/
 
 /-- **T_P7b.matrix_equiv** — `R 4 ≃ (Fin 2 → Fin 2 → Bool)` (the
@@ -449,30 +455,170 @@ example : SSBX.Foundation.R4.composeR2
             SSBX.Foundation.R4.xxox SSBX.Foundation.R4.oxxo := by
   decide
 
+/-! ### § 4.1 `R 4 ≃+* Mat2F2` — the RingEquiv upgrade
+
+Per wen-substrate v1.1 §2.5 P5 + §3.5.3 + §8.8: we upgrade `matrixEquiv`
+from `Equiv` (set bijection) to `RingEquiv` (preserves `+`, `×`, `0`,
+`1`), establishing `R 4 ≅ M_2(F_2)` **as `F_2`-algebras** rather than
+merely as sets.
+
+Approach taken: define an internal `Mat2F2 := Fin 2 → Fin 2 → Bool`
+type with explicit ring operations (XOR addition, matrix
+multiplication via Bool-and / Bool-xor) so we avoid the heavier
+Mathlib `Matrix (Fin 2) (Fin 2) (ZMod 2)` bridge.  This is honest
+algebra-iso content — the underlying-set bijection plus full
+multiplicative + additive structure preservation — that does not
+depend on the `Bool ≃ ZMod 2` ring-isomorphism transport.
+
+`Mathlib.Algebra.Ring.Equiv` requires only `[Mul] [Add]` on each side
+to *state* a `RingEquiv`, so we install minimal `Mul`/`Add` instances
+(no `Monoid` / `Ring` axioms needed for the equivalence itself). -/
+
+/-- Local alias: `Mat2F2 := Fin 2 → Fin 2 → Bool`, the explicit matrix
+    type used for the algebra iso. -/
+def Mat2F2 : Type := Fin 2 → Fin 2 → Bool
+
+namespace Mat2F2
+
+/-- Matrix entries are equality-decidable / `Fintype` from `Fin 2 → Fin 2 → Bool`. -/
+instance : DecidableEq Mat2F2 := inferInstanceAs (DecidableEq (Fin 2 → Fin 2 → Bool))
+instance : Fintype Mat2F2 := inferInstanceAs (Fintype (Fin 2 → Fin 2 → Bool))
+
+/-- Entry-wise XOR (= addition in `M_2(F_2)`). -/
+instance instAdd : Add Mat2F2 :=
+  ⟨fun m₁ m₂ => fun i j => Bool.xor (m₁ i j) (m₂ i j)⟩
+
+/-- Zero matrix. -/
+instance instZero : Zero Mat2F2 := ⟨fun _ _ => false⟩
+
+/-- The identity 2×2 matrix `[[1,0],[0,1]]`. -/
+instance instOne : One Mat2F2 :=
+  ⟨fun i j => decide (i = j)⟩
+
+/-- Matrix multiplication over `F_2`:
+    `(m₁ * m₂) i j = ⊕_k (m₁ i k ∧ m₂ k j)` (here over `Fin 2`). -/
+instance instMul : Mul Mat2F2 :=
+  ⟨fun m₁ m₂ => fun i j =>
+    Bool.xor
+      (Bool.and (m₁ i ⟨0, by decide⟩) (m₂ ⟨0, by decide⟩ j))
+      (Bool.and (m₁ i ⟨1, by decide⟩) (m₂ ⟨1, by decide⟩ j))⟩
+
+@[simp] theorem add_def (m₁ m₂ : Mat2F2) (i j : Fin 2) :
+    (m₁ + m₂) i j = Bool.xor (m₁ i j) (m₂ i j) := rfl
+
+@[simp] theorem zero_def (i j : Fin 2) : (0 : Mat2F2) i j = false := rfl
+
+@[simp] theorem one_def (i j : Fin 2) : (1 : Mat2F2) i j = decide (i = j) := rfl
+
+@[simp] theorem mul_def (m₁ m₂ : Mat2F2) (i j : Fin 2) :
+    (m₁ * m₂) i j =
+      Bool.xor
+        (Bool.and (m₁ i ⟨0, by decide⟩) (m₂ ⟨0, by decide⟩ j))
+        (Bool.and (m₁ i ⟨1, by decide⟩) (m₂ ⟨1, by decide⟩ j)) := rfl
+
+end Mat2F2
+
+/-! Minimal multiplicative structure on `R 4`: install `Mul` (=
+`composeR2`) and `One` (= `idR4`).  This *only* lives inside the
+`PhaseZero` namespace and is the data needed to state the `RingEquiv`. -/
+
+instance instMulR4 : Mul (R 4) := ⟨SSBX.Foundation.R4.composeR2⟩
+
+instance instOneR4 : One (R 4) := ⟨SSBX.Foundation.R4.idR4⟩
+
+@[simp] theorem R4_mul_def (g f : R 4) :
+    g * f = SSBX.Foundation.R4.composeR2 g f := rfl
+
+@[simp] theorem R4_one_def : (1 : R 4) = SSBX.Foundation.R4.idR4 := rfl
+
+/-- Underlying-set bijection `R 4 ≃ Mat2F2` (same data as
+    `SSBX.Foundation.R4.matrixEquiv`, retyped to `Mat2F2`). -/
+def R4EquivMat2F2 : R 4 ≃ Mat2F2 where
+  toFun     := SSBX.Foundation.R4.asMatrix
+  invFun    := SSBX.Foundation.R4.ofMatrix
+  left_inv  := SSBX.Foundation.R4.ofMatrix_asMatrix
+  right_inv := SSBX.Foundation.R4.asMatrix_ofMatrix
+
+@[simp] theorem R4EquivMat2F2_apply (w : R 4) (i j : Fin 2) :
+    R4EquivMat2F2 w i j = SSBX.Foundation.R4.asMatrix w i j := rfl
+
+/-- Bridge lemma: `R4EquivMat2F2` preserves addition (XOR ↔ XOR-entries).
+    Both sides are equal coordinate-wise from the definitions of
+    `R.instAdd` and `Mat2F2.instAdd`. -/
+theorem R4EquivMat2F2_map_add (u v : R 4) :
+    R4EquivMat2F2 (u + v) = R4EquivMat2F2 u + R4EquivMat2F2 v := by
+  funext i j
+  fin_cases i <;> fin_cases j <;> rfl
+
+/-- Bridge lemma: `R4EquivMat2F2` preserves multiplication
+    (composeR2 ↔ matrix product).  By definition of `composeR2`, the
+    `(i,j)`-entry of `asMatrix (composeR2 g f)` is precisely the
+    matrix product of `asMatrix g` and `asMatrix f`. -/
+theorem R4EquivMat2F2_map_mul (g f : R 4) :
+    R4EquivMat2F2 (g * f) = R4EquivMat2F2 g * R4EquivMat2F2 f := by
+  funext i j
+  fin_cases i <;> fin_cases j <;> rfl
+
+/-- Bridge lemma: `R4EquivMat2F2` sends `idR4` to the identity matrix. -/
+theorem R4EquivMat2F2_one :
+    R4EquivMat2F2 (1 : R 4) = (1 : Mat2F2) := by
+  funext i j
+  fin_cases i <;> fin_cases j <;> rfl
+
+/-- Bridge lemma: `R4EquivMat2F2` sends `0 : R 4` to the zero matrix. -/
+theorem R4EquivMat2F2_zero :
+    R4EquivMat2F2 (0 : R 4) = (0 : Mat2F2) := by
+  funext i j
+  fin_cases i <;> fin_cases j <;> rfl
+
+/-- **T_P7b.ring_equiv** — `R 4 ≃+* Mat2F2` as `F_2`-algebras.
+
+    This is the v1.1 §8.8 RingEquiv upgrade: the underlying-set
+    bijection `matrixEquiv` extends to a structure-preserving
+    equivalence — `+` (XOR ↔ entrywise XOR) and `×` (composition of
+    endomorphisms ↔ matrix product).
+
+    Per wen-substrate v1.1 §2.5 P5 + §3.5.3 + §8.8. -/
+def T_P7b_ring_equiv : R 4 ≃+* Mat2F2 where
+  toFun     := R4EquivMat2F2.toFun
+  invFun    := R4EquivMat2F2.invFun
+  left_inv  := R4EquivMat2F2.left_inv
+  right_inv := R4EquivMat2F2.right_inv
+  map_add'  := R4EquivMat2F2_map_add
+  map_mul'  := R4EquivMat2F2_map_mul
+
 /-- **T_P7b (packaged)** — the matrix realisation: bijection +
-    cardinality match + identity laws for the proposed multiplicative
+    cardinality match + identity laws + **`RingEquiv` upgrade**
+    (`R 4 ≃+* Mat2F2` as `F_2`-algebras) for the multiplicative
     structure (= `composeR2` / `idR4`).
 
-    This packages the **existence** and **identity-axiom** clauses of
-    `R 4 ≅ Mat₂(F₂)` as `F_2`-algebras.  The residual Phase-0 work is
-    the upgrade to a full `RingEquiv` + the Wedderburn-Artin uniqueness
-    clause; see the module header for the explicit residual list. -/
+    This packages the existence, identity-axiom, **and algebra-iso**
+    clauses of `R 4 ≅ Mat₂(F₂)` as `F_2`-algebras (per wen-substrate
+    v1.1 §2.5 P5 + §3.5.3 + §8.8).  The residual Phase-0 work is the
+    bridge to Mathlib's `Matrix (Fin 2) (Fin 2) (ZMod 2)` + the
+    Wedderburn-Artin uniqueness clause; see the module header. -/
 theorem T_P7b :
     Fintype.card (R 4) = 16
   ∧ Fintype.card (R 4) = Fintype.card (Fin 2 → Fin 2 → Bool)
   ∧ (∀ f : R 4, SSBX.Foundation.R4.composeR2 SSBX.Foundation.R4.idR4 f = f)
   ∧ (∀ f : R 4, SSBX.Foundation.R4.composeR2 f SSBX.Foundation.R4.idR4 = f)
-  ∧ (∀ u : R 2, SSBX.Foundation.R4.applyR2 SSBX.Foundation.R4.idR4 u = u) :=
-  ⟨T_P7b_card, T_P7b_card_match, T_P7b_id_left, T_P7b_id_right, T_P7b_apply_id⟩
+  ∧ (∀ u : R 2, SSBX.Foundation.R4.applyR2 SSBX.Foundation.R4.idR4 u = u)
+  ∧ (∀ u v : R 4, T_P7b_ring_equiv (u + v)
+        = T_P7b_ring_equiv u + T_P7b_ring_equiv v)
+  ∧ (∀ g f : R 4, T_P7b_ring_equiv (g * f)
+        = T_P7b_ring_equiv g * T_P7b_ring_equiv f) :=
+  ⟨T_P7b_card, T_P7b_card_match, T_P7b_id_left, T_P7b_id_right, T_P7b_apply_id,
+   T_P7b_ring_equiv.map_add, T_P7b_ring_equiv.map_mul⟩
 
 /-! ## § 5 Phase 0 summary
 
-All four Phase-0 small theorems of wen-substrate v1.0.3 §8.8 are packaged
+All four Phase-0 small theorems of wen-substrate v1.1 §8.8 are packaged
 above as `T_P3`, `T_P6`, `T_P7a`, `T_P7b`.  Each is either fully proven
-from existing infrastructure (`T_P6`, `T_P7a`) or proven up to the
-explicitly-documented residual obligation (`T_P3`: uniqueness-up-to-iso
-of the L0/L1 forms; `T_P7b`: upgrade to `RingEquiv` + Wedderburn-Artin
-uniqueness).
+from existing infrastructure (`T_P6`, `T_P7a`, **`T_P7b` including the
+`RingEquiv` upgrade** `R 4 ≃+* Mat2F2`) or proven up to the explicitly-
+documented residual obligation (`T_P3`: uniqueness-up-to-iso of the
+L0/L1 forms; `T_P7b`: bridge to Mathlib's
+`Matrix (Fin 2) (Fin 2) (ZMod 2)` + Wedderburn-Artin uniqueness).
 
 This file introduces **no new axioms**.
 -/
