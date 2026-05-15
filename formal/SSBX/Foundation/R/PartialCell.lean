@@ -224,7 +224,7 @@ def toFull? (c : PartialCell N) : Option (R N) :=
   unfold toFull? ofFull
   split_ifs with h
   · rfl
-  · exact absurd (fun _ => rfl) h
+  · exact (h fun _ => rfl).elim
 
 /-! ## § Phase D — full monoid laws + List fold + support algebra -/
 
