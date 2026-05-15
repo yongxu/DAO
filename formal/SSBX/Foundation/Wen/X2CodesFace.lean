@@ -83,6 +83,20 @@ structure UGCandidateFace extends UGCandidateRich where
   /-- `dual` is bitwise-NOT under the chosen frame. -/
   dual_is_bitwise_not :
     ∀ c, bitsEquiv (dual c) = (fun i => !(bitsEquiv c i))
+  /-- **Atom-compatibility axiom (added 2026-05-16 to close
+  `face_uniqueness_conjecture`).**  At the calibrated `axes = 8` size,
+  the partial naming `atom` is the one obtained by reading off bits and
+  consulting `WenCode.atom`.  This is the "vertex set of the 8-cube
+  vertex set + canonical naming" closure: once the bit-frame is fixed,
+  not only `dual` but `atom` itself becomes a structural consequence,
+  not a free datum.  Without this axiom, two faces could disagree on
+  `atom` while agreeing on `dual`, defeating `Iso.atom_comm`.  The
+  axiom is conditional on `axes = 8` (the only size at which
+  `WenCode.atom` is defined) and is vacuous otherwise. -/
+  atom_compat :
+    ∀ (h : axes = 8) c,
+      atom c = WenCode.atom
+        (WenCode.bitsEquiv.symm (fun i : Fin 8 => bitsEquiv c (h ▸ i)))
 
 /-- `wenCodeUG`/`wenCodeUGRich` lift to a `UGCandidateFace`. -/
 noncomputable def wenCodeUGFace : UGCandidateFace where
@@ -92,6 +106,17 @@ noncomputable def wenCodeUGFace : UGCandidateFace where
     intro c
     funext i
     exact WenCode.dual_via_bits c i
+  atom_compat := by
+    -- At `axes = 8`, `bitsEquiv = WenCode.bitsEquiv`, so the reverse
+    -- composition cancels and we recover `WenCode.atom c = atom c`.
+    intro h c
+    -- `h : 8 = 8`, hence `h ▸ i = i`.
+    have hi : ∀ i : Fin 8, (h ▸ i : Fin 8) = i := fun _ => rfl
+    simp only [hi]
+    -- `(fun i => WenCode.bitsEquiv c i) = WenCode.bitsEquiv c`
+    have : (fun i : Fin 8 => WenCode.bitsEquiv c i) = WenCode.bitsEquiv c := rfl
+    rw [this, Equiv.symm_apply_apply]
+    rfl
 
 /-! ## §3  Structural uniqueness at `axes = 8` — reduced to a Lean exercise
 
@@ -128,6 +153,70 @@ Proof sketch (Lean exercise):
 def face_uniqueness_conjecture : Prop :=
   ∀ U : UGCandidateFace, U.axes = 8 →
     Nonempty (UGCandidate.Iso U.toUGCandidate wenCodeUGFace.toUGCandidate)
+
+/-- The bridge equivalence `U.Carrier ≃ WenCode` built from
+`U.bitsEquiv`, an `h`-driven type-rewrite `Fin axes → Bool ≃ Fin 8 → Bool`,
+and `WenCode.bitsEquiv.symm`. -/
+noncomputable def bridge (U : UGCandidateFace) (h : U.axes = 8) :
+    U.Carrier ≃ WenCode :=
+  U.bitsEquiv.trans <|
+    (Equiv.cast (by rw [h])).trans WenCode.bitsEquiv.symm
+
+@[simp] theorem bridge_apply (U : UGCandidateFace) (h : U.axes = 8) (c : U.Carrier) :
+    bridge U h c =
+      WenCode.bitsEquiv.symm (fun i : Fin 8 => U.bitsEquiv c (h ▸ i)) := by
+  unfold bridge
+  -- Compute the cast on functions `Fin U.axes → Bool` to `Fin 8 → Bool`.
+  simp only [Equiv.trans_apply]
+  congr 1
+  -- Both sides apply `Equiv.cast` (over `h`) to `U.bitsEquiv c`.
+  -- After `h` rewrite, the cast is the identity on values.
+  subst h
+  simp [Equiv.cast]
+
+/-- Discharge of `face_uniqueness_conjecture`.
+
+Strategy (matches docstring sketch):
+1. `bridge : U.Carrier ≃ WenCode` via frame composition.
+2. `dual_comm` from `U.dual_is_bitwise_not` + `WenCode.dual_via_bits`,
+   pushing the cast through `!`.
+3. `atom_comm` from the new `U.atom_compat` axiom — exactly the
+   strengthening flagged in the original docstring sketch (item 3). -/
+theorem face_uniqueness : face_uniqueness_conjecture := by
+  intro U h
+  refine ⟨{
+    toFun := bridge U h
+    invFun := (bridge U h).symm
+    left_inv := (bridge U h).left_inv
+    right_inv := (bridge U h).right_inv
+    dual_comm := ?_
+    atom_comm := ?_
+  }⟩
+  · -- dual_comm: bridge (U.dual c) = WenCode.dual (bridge c)
+    intro c
+    -- Show both sides are equal by passing through `WenCode.bitsEquiv` (injective).
+    apply WenCode.bitsEquiv.injective
+    -- LHS: bridge (U.dual c) = bitsEquiv.symm (bits...), then bitsEquiv ∘ symm = id.
+    rw [bridge_apply, Equiv.apply_symm_apply]
+    -- RHS: bitsEquiv (WenCode.dual (bridge c)) = fun i => ! bitsEquiv (bridge c) i
+    funext i
+    -- Read off both sides on coordinate i.
+    -- LHS at i: U.bitsEquiv (U.dual c) (h ▸ i) = ! (U.bitsEquiv c (h ▸ i)).
+    rw [U.dual_is_bitwise_not]
+    -- RHS at i: WenCode.toBits (WenCode.dual (bridge c)) i = ! (WenCode.toBits (bridge c) i).
+    show _ = WenCode.bitsEquiv (WenCode.dual (bridge U h c)) i
+    -- WenCode.bitsEquiv = WenCode.toBits as a function.
+    change _ = WenCode.toBits (WenCode.dual (bridge U h c)) i
+    rw [WenCode.dual_via_bits]
+    -- Now both sides are `!` of the same expression; reduce to bridging back.
+    congr 1
+    -- Goal: U.bitsEquiv c (h ▸ i) = WenCode.bitsEquiv (bridge U h c) i
+    rw [bridge_apply, Equiv.apply_symm_apply]
+  · -- atom_comm: wenCodeUGFace.atom (bridge c) = U.atom c
+    intro c
+    -- wenCodeUGFace.atom = WenCode.atom; reduce to U.atom_compat.
+    show WenCode.atom (bridge U h c) = U.atom c
+    rw [bridge_apply, U.atom_compat h c]
 
 /-- Concrete discharge for the witness itself: `wenCodeUGFace` is iso
 to itself, trivially. -/
