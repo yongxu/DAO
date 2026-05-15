@@ -81,18 +81,27 @@ theorem motion_heaven_period :
 
 /-- **motion 在 Trigram 上无不动点**：不存在 t 使 motion t = t。 -/
 theorem motion_no_fixed : ¬ ∃ t : Trigram, IsFixed dongDyn t := by
-  rintro ⟨⟨y1, y2, y3⟩, h⟩
-  cases y1 <;> simp [IsFixed, dongDyn, motion, Yao.neg] at h <;> revert h <;> decide
+  rintro ⟨t, h⟩
+  have h1 := congrArg Trigram.y1 h
+  show False
+  simp [IsFixed, dongDyn, motion, Yao.neg, Trigram.y1_mk] at h1
+  cases hy : t.y1 <;> rw [hy] at h1 <;> exact Bool.noConfusion h1
 
 /-- **middleFlip 在 Trigram 上无不动点**。 -/
 theorem middleFlip_no_fixed : ¬ ∃ t : Trigram, IsFixed middleFlipDyn t := by
-  rintro ⟨⟨y1, y2, y3⟩, h⟩
-  cases y2 <;> simp [IsFixed, middleFlipDyn, middleFlip, Yao.neg] at h <;> revert h <;> decide
+  rintro ⟨t, h⟩
+  have h2 := congrArg Trigram.y2 h
+  show False
+  simp [IsFixed, middleFlipDyn, middleFlip, Yao.neg, Trigram.y2_mk] at h2
+  cases hy : t.y2 <;> rw [hy] at h2 <;> exact Bool.noConfusion h2
 
 /-- **topFlip 在 Trigram 上无不动点**。 -/
 theorem topFlip_no_fixed : ¬ ∃ t : Trigram, IsFixed topFlipDyn t := by
-  rintro ⟨⟨y1, y2, y3⟩, h⟩
-  cases y3 <;> simp [IsFixed, topFlipDyn, topFlip, Yao.neg] at h <;> revert h <;> decide
+  rintro ⟨t, h⟩
+  have h3 := congrArg Trigram.y3 h
+  show False
+  simp [IsFixed, topFlipDyn, topFlip, Yao.neg, Trigram.y3_mk] at h3
+  cases hy : t.y3 <;> rw [hy] at h3 <;> exact Bool.noConfusion h3
 
 /-! ## § 4 周期 = 2 -/
 

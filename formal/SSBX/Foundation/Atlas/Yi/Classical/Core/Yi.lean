@@ -86,24 +86,45 @@ end Yao
   Per 系辞 "易有太极, 是生两仪, 两仪生四象, 四象生八卦":
     T_0 = {*}, T_1 = Σ, T_2 = Σ², T_3 = Σ³ (this layer), T_6 = Σ⁶. -/
 
-/-- 三爻卦 (trigram): three 爻 stacked from bottom (y1 = 初爻) to top (y3 = 上爻). -/
-structure Trigram where
-  y1 : Yao  -- 初爻 (bottom)
-  y2 : Yao  -- 中爻
-  y3 : Yao  -- 上爻 (top)
-  deriving Repr, DecidableEq, BEq
+/-- 三爻卦 (trigram): alias of `Atlas.Yi.Trigram = R 3 = Fin 3 → Bool`. -/
+abbrev Trigram : Type := SSBX.Foundation.Atlas.Yi.Trigram
+
+/-- Repr for Trigram (function-typed). -/
+instance : Repr Trigram where
+  reprPrec t _ :=
+    let b (x : Bool) := if x then "yin" else "yang"
+    "Trigram.mk ." ++ b (t ⟨0, by decide⟩) ++ " ." ++ b (t ⟨1, by decide⟩) ++ " ." ++ b (t ⟨2, by decide⟩)
 
 namespace Trigram
 
+/-- Constructor: build a Trigram from three yao. -/
+def mk (a b c : Yao) : Trigram := SSBX.Foundation.Atlas.Yi.Trigram.mk a b c
+
+/-- Read the 1st yao (初爻, bottom). -/
+def y1 (t : Trigram) : Yao := SSBX.Foundation.Atlas.Yi.Trigram.y1 t
+/-- Read the 2nd yao (中爻). -/
+def y2 (t : Trigram) : Yao := SSBX.Foundation.Atlas.Yi.Trigram.y2 t
+/-- Read the 3rd yao (上爻, top). -/
+def y3 (t : Trigram) : Yao := SSBX.Foundation.Atlas.Yi.Trigram.y3 t
+
+/-- Trigram extensionality through its 3 yao components. -/
+theorem ext (a b : Trigram) (h1 : y1 a = y1 b) (h2 : y2 a = y2 b)
+    (h3 : y3 a = y3 b) : a = b :=
+  SSBX.Foundation.Atlas.Yi.Trigram.ext a b h1 h2 h3
+
+@[simp] theorem y1_mk (a b c : Yao) : y1 (mk a b c) = a := rfl
+@[simp] theorem y2_mk (a b c : Yao) : y2 (mk a b c) = b := rfl
+@[simp] theorem y3_mk (a b c : Yao) : y3 (mk a b c) = c := rfl
+
 /-! ### The 8 trigrams (八卦) -/
-def heaven : Trigram := ⟨.yang, .yang, .yang⟩  -- ☰ 天 (heaven)
-def lake  : Trigram := ⟨.yang, .yang, .yin⟩   -- ☱ 泽 (lake)
-def fire   : Trigram := ⟨.yang, .yin, .yang⟩   -- ☲ 火 (fire)
-def thunder : Trigram := ⟨.yang, .yin, .yin⟩    -- ☳ 雷 (thunder)
-def wind  : Trigram := ⟨.yin, .yang, .yang⟩   -- ☴ 风 (wind)
-def water  : Trigram := ⟨.yin, .yang, .yin⟩    -- ☵ 水 (water)
-def mountain  : Trigram := ⟨.yin, .yin, .yang⟩    -- ☶ 山 (mountain)
-def earth  : Trigram := ⟨.yin, .yin, .yin⟩     -- ☷ 地 (earth)
+def heaven : Trigram := mk .yang .yang .yang  -- ☰ 天 (heaven)
+def lake  : Trigram := mk .yang .yang .yin   -- ☱ 泽 (lake)
+def fire   : Trigram := mk .yang .yin .yang   -- ☲ 火 (fire)
+def thunder : Trigram := mk .yang .yin .yin    -- ☳ 雷 (thunder)
+def wind  : Trigram := mk .yin .yang .yang   -- ☴ 风 (wind)
+def water  : Trigram := mk .yin .yang .yin    -- ☵ 水 (water)
+def mountain  : Trigram := mk .yin .yin .yang    -- ☶ 山 (mountain)
+def earth  : Trigram := mk .yin .yin .yin     -- ☷ 地 (earth)
 
 /-- All 8 trigrams. -/
 def all : List Trigram := [heaven, lake, fire, thunder, wind, water, mountain, earth]
@@ -114,16 +135,16 @@ theorem all_length : all.length = 8 := rfl
 /-- 错 on a trigram: yao-wise negation.
     NB: refined in `SSBX.Foundation.Bagua.BaguaAlgebra` as `complement = motion ∘ middleFlip ∘ topFlip`
     — the (Z/2)³ decomposition into three single-yao flips. -/
-def complement (t : Trigram) : Trigram := ⟨t.y1.neg, t.y2.neg, t.y3.neg⟩
+def complement (t : Trigram) : Trigram := mk t.y1.neg t.y2.neg t.y3.neg
 
 /-- 综 on a trigram: reverse yao order. -/
-def reverse (t : Trigram) : Trigram := ⟨t.y3, t.y2, t.y1⟩
+def reverse (t : Trigram) : Trigram := mk t.y3 t.y2 t.y1
 
 theorem complement_involutive (t : Trigram) : t.complement.complement = t := by
-  simp [complement, Yao.neg_neg]
+  apply ext <;> simp [complement, Yao.neg_neg]
 
 theorem reverse_involutive (t : Trigram) : t.reverse.reverse = t := by
-  cases t; rfl
+  apply ext <;> rfl
 
 end Trigram
 
@@ -136,37 +157,63 @@ end Trigram
   内 carries: 本/源/自身/起.
   外 carries: 用/显/对境/应. -/
 
-/-- 六爻卦 (hexagram): 6 爻 stacked. y1 = 初爻 (bottom), y6 = 上爻 (top). -/
-structure Hexagram where
-  y1 : Yao  -- 初爻
-  y2 : Yao
-  y3 : Yao
-  y4 : Yao
-  y5 : Yao
-  y6 : Yao  -- 上爻
-  deriving Repr, DecidableEq, BEq
+/-- 六爻卦 (hexagram): alias of `Atlas.Yi.Hexagram = R 6 = Fin 6 → Bool`. -/
+abbrev Hexagram : Type := SSBX.Foundation.Atlas.Yi.Hexagram
+
+/-- Repr for Hexagram (function-typed). -/
+instance : Repr Hexagram where
+  reprPrec h _ :=
+    let b (x : Bool) := if x then "yin" else "yang"
+    "Hexagram.mk ." ++ b (h ⟨0, by decide⟩) ++ " ." ++ b (h ⟨1, by decide⟩) ++ " ." ++
+      b (h ⟨2, by decide⟩) ++ " ." ++ b (h ⟨3, by decide⟩) ++ " ." ++
+      b (h ⟨4, by decide⟩) ++ " ." ++ b (h ⟨5, by decide⟩)
 
 namespace Hexagram
+
+/-- Constructor: build a Hexagram from six yao. -/
+def mk (a b c d e f : Yao) : Hexagram := SSBX.Foundation.Atlas.Yi.Hexagram.mk a b c d e f
+
+/-- 1st yao (初爻). -/
+def y1 (h : Hexagram) : Yao := SSBX.Foundation.Atlas.Yi.Hexagram.y1 h
+def y2 (h : Hexagram) : Yao := SSBX.Foundation.Atlas.Yi.Hexagram.y2 h
+def y3 (h : Hexagram) : Yao := SSBX.Foundation.Atlas.Yi.Hexagram.y3 h
+def y4 (h : Hexagram) : Yao := SSBX.Foundation.Atlas.Yi.Hexagram.y4 h
+def y5 (h : Hexagram) : Yao := SSBX.Foundation.Atlas.Yi.Hexagram.y5 h
+/-- 6th yao (上爻). -/
+def y6 (h : Hexagram) : Yao := SSBX.Foundation.Atlas.Yi.Hexagram.y6 h
+
+/-- Hexagram extensionality through its 6 yao components. -/
+theorem ext (a b : Hexagram)
+    (h1 : y1 a = y1 b) (h2 : y2 a = y2 b) (h3 : y3 a = y3 b)
+    (h4 : y4 a = y4 b) (h5 : y5 a = y5 b) (h6 : y6 a = y6 b) : a = b :=
+  SSBX.Foundation.Atlas.Yi.Hexagram.ext a b h1 h2 h3 h4 h5 h6
+
+@[simp] theorem y1_mk (a b c d e f : Yao) : y1 (mk a b c d e f) = a := rfl
+@[simp] theorem y2_mk (a b c d e f : Yao) : y2 (mk a b c d e f) = b := rfl
+@[simp] theorem y3_mk (a b c d e f : Yao) : y3 (mk a b c d e f) = c := rfl
+@[simp] theorem y4_mk (a b c d e f : Yao) : y4 (mk a b c d e f) = d := rfl
+@[simp] theorem y5_mk (a b c d e f : Yao) : y5 (mk a b c d e f) = e := rfl
+@[simp] theorem y6_mk (a b c d e f : Yao) : y6 (mk a b c d e f) = f := rfl
 
 /-! ### Foundational hexagrams (the two fixed points of 互) -/
 
 /-- 乾 (heaven, ☰☰): all yang. Heaven over heaven. -/
-def heaven : Hexagram := ⟨.yang, .yang, .yang, .yang, .yang, .yang⟩
+def heaven : Hexagram := mk .yang .yang .yang .yang .yang .yang
 
 /-- 坤 (earth, ☷☷): all yin. Earth over earth. -/
-def earth : Hexagram := ⟨.yin, .yin, .yin, .yin, .yin, .yin⟩
+def earth : Hexagram := mk .yin .yin .yin .yin .yin .yin
 
 /-! ### V_4 group operators 错/综/错综/恒等 -/
 
 /-- 错 (complement): yao-wise negation across all 6 positions.
     "Errors" — the dual hexagram. -/
 def complement (h : Hexagram) : Hexagram :=
-  ⟨h.y1.neg, h.y2.neg, h.y3.neg, h.y4.neg, h.y5.neg, h.y6.neg⟩
+  mk h.y1.neg h.y2.neg h.y3.neg h.y4.neg h.y5.neg h.y6.neg
 
 /-- 综 (reverse): reverse the yao order.
     "Reflection" — the upside-down hexagram. -/
 def reverse (h : Hexagram) : Hexagram :=
-  ⟨h.y6, h.y5, h.y4, h.y3, h.y2, h.y1⟩
+  mk h.y6 h.y5 h.y4 h.y3 h.y2 h.y1
 
 /-- 错综 (complementReverse): complement ∘ reverse. The composite. -/
 def complementReverse (h : Hexagram) : Hexagram := h.complement.reverse
@@ -175,21 +222,21 @@ def complementReverse (h : Hexagram) : Hexagram := h.complement.reverse
     H(h_1 h_2 h_3 h_4 h_5 h_6) = h_2 h_3 h_4 h_3 h_4 h_5
     "What lies hidden within" — the 互卦 extracted from the center 4 yao. -/
 def interlace (h : Hexagram) : Hexagram :=
-  ⟨h.y2, h.y3, h.y4, h.y3, h.y4, h.y5⟩
+  mk h.y2 h.y3 h.y4 h.y3 h.y4 h.y5
 
 /-! ### V_4 group properties -/
 
 /-- 错 is involutive: 错 ∘ 错 = id. -/
 theorem complement_involutive (h : Hexagram) : h.complement.complement = h := by
-  simp [complement, Yao.neg_neg]
+  apply ext <;> simp [complement, Yao.neg_neg]
 
 /-- 综 is involutive: 综 ∘ 综 = id. -/
 theorem reverse_involutive (h : Hexagram) : h.reverse.reverse = h := by
-  cases h; rfl
+  apply ext <;> rfl
 
 /-- 错 and 综 commute: 错 ∘ 综 = 综 ∘ 错. -/
 theorem complement_reverse_comm (h : Hexagram) : h.complement.reverse = h.reverse.complement := by
-  cases h; rfl
+  apply ext <;> rfl
 
 /-- 错综 is involutive (V_4 element of order 2). -/
 theorem cuoZong_cuoZong (h : Hexagram) : h.complementReverse.complementReverse = h := by
@@ -211,11 +258,36 @@ theorem interlace_fixed_point (h : Hexagram) :
     h.interlace = h ↔ h = heaven ∨ h = earth := by
   constructor
   · intro heq
-    cases h with
-    | mk y1 y2 y3 y4 y5 y6 =>
-      simp [interlace, Hexagram.mk.injEq] at heq
-      cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
-        first | (left; rfl) | (right; rfl) | simp_all [heaven, earth]
+    -- interlace h = ⟨y2,y3,y4,y3,y4,y5⟩; equality with h forces all yao equal.
+    have e21 : h.y2 = h.y1 := by have := congrArg y1 heq; simpa [interlace] using this
+    have e32 : h.y3 = h.y2 := by have := congrArg y2 heq; simpa [interlace] using this
+    have e43 : h.y4 = h.y3 := by have := congrArg y3 heq; simpa [interlace] using this
+    have e45 : h.y4 = h.y5 := by have := congrArg y5 heq; simpa [interlace] using this
+    have e56 : h.y5 = h.y6 := by have := congrArg y6 heq; simpa [interlace] using this
+    have e12 := e21.symm
+    have e23 := e32.symm
+    have e34 := e43.symm
+    have e15 : h.y1 = h.y5 := e12.trans (e23.trans (e34.trans e45))
+    have e16 : h.y1 = h.y6 := e15.trans e56
+    have e13 : h.y1 = h.y3 := e12.trans e23
+    have e14 : h.y1 = h.y4 := e13.trans e34
+    cases hy : h.y1
+    · left; apply ext <;>
+        (first
+          | (show h.y1 = _; rw [hy]; rfl)
+          | (show h.y2 = _; rw [← e12, hy]; rfl)
+          | (show h.y3 = _; rw [← e13, hy]; rfl)
+          | (show h.y4 = _; rw [← e14, hy]; rfl)
+          | (show h.y5 = _; rw [← e15, hy]; rfl)
+          | (show h.y6 = _; rw [← e16, hy]; rfl))
+    · right; apply ext <;>
+        (first
+          | (show h.y1 = _; rw [hy]; rfl)
+          | (show h.y2 = _; rw [← e12, hy]; rfl)
+          | (show h.y3 = _; rw [← e13, hy]; rfl)
+          | (show h.y4 = _; rw [← e14, hy]; rfl)
+          | (show h.y5 = _; rw [← e15, hy]; rfl)
+          | (show h.y6 = _; rw [← e16, hy]; rfl))
   · rintro (h | h) <;> rw [h] <;> rfl
 
 /-- 乾 is fixed by 互. -/
@@ -236,7 +308,7 @@ theorem complement_earth : earth.complement = heaven := rfl
     inner is below (y1, y2, y3), outer is above (y4, y5, y6).
     NON-COMMUTATIVE: inner ⊕ outer ≠ outer ⊕ inner in general. -/
 def oplus (inner outer : Trigram) : Hexagram :=
-  ⟨inner.y1, inner.y2, inner.y3, outer.y1, outer.y2, outer.y3⟩
+  mk inner.y1 inner.y2 inner.y3 outer.y1 outer.y2 outer.y3
 
 /-- ⊕ is non-commutative: 天地否 ≠ 地天泰.
     (qianTri ⊕ kunTri = 否 (heaven over earth, blocked);
@@ -245,11 +317,12 @@ theorem oplus_not_comm :
     ∃ a b : Trigram, oplus a b ≠ oplus b a := by
   refine ⟨Trigram.heaven, Trigram.earth, ?_⟩
   intro h
-  -- oplus qianTri kunTri = ⟨yang, yang, yang, yin, yin, yin⟩  (= 否)
-  -- oplus kunTri qianTri = ⟨yin, yin, yin, yang, yang, yang⟩   (= 泰)
-  -- These differ at every position; injection on first component suffices.
-  injection h with h1 _ _ _ _ _
-  cases h1
+  -- They differ at position 1: yang ≠ yin.
+  have h1 := congrArg y1 h
+  have e1 : y1 (oplus Trigram.heaven Trigram.earth) = .yang := rfl
+  have e2 : y1 (oplus Trigram.earth Trigram.heaven) = .yin := rfl
+  rw [e1, e2] at h1
+  exact Bool.noConfusion h1
 
 /-- 否 (blocking): 天 (heaven) over 地 (earth) → blocked. inner = 坤, outer = 乾. -/
 def blocking : Hexagram := oplus Trigram.earth Trigram.heaven
@@ -260,8 +333,11 @@ def peace : Hexagram := oplus Trigram.heaven Trigram.earth
 /-- 否 ≠ 泰 — the non-commutativity has concrete witness. -/
 theorem blocking_ne_peace : blocking ≠ peace := by
   intro h
-  injection h with h1
-  cases h1
+  have h1 := congrArg y1 h
+  have e1 : y1 blocking = .yin := rfl
+  have e2 : y1 peace = .yang := rfl
+  rw [e1, e2] at h1
+  exact Bool.noConfusion h1
 
 /-! ### Position structure (位) -/
 
@@ -404,21 +480,22 @@ namespace HexagramStar
 
 /-- 本卦 (cast hexagram): forget all modality. -/
 def benGua (s : HexagramStar) : Hexagram :=
-  ⟨s.z1.proj, s.z2.proj, s.z3.proj, s.z4.proj, s.z5.proj, s.z6.proj⟩
+  Hexagram.mk s.z1.proj s.z2.proj s.z3.proj s.z4.proj s.z5.proj s.z6.proj
 
 /-- 变卦 (transformed hexagram): flip the 老 yao. -/
 def bianGua (s : HexagramStar) : Hexagram :=
-  ⟨s.z1.delta, s.z2.delta, s.z3.delta, s.z4.delta, s.z5.delta, s.z6.delta⟩
+  Hexagram.mk s.z1.delta s.z2.delta s.z3.delta s.z4.delta s.z5.delta s.z6.delta
 
 /-- If all 6 yao are young, 本卦 = 变卦 (no change). -/
 theorem benGua_eq_bianGua_of_all_young (s : HexagramStar)
     (h1 : s.z1.isYoung = true) (h2 : s.z2.isYoung = true) (h3 : s.z3.isYoung = true)
     (h4 : s.z4.isYoung = true) (h5 : s.z5.isYoung = true) (h6 : s.z6.isYoung = true) :
     s.benGua = s.bianGua := by
-  simp [benGua, bianGua,
-        YaoStar.delta_young_eq_proj _ h1, YaoStar.delta_young_eq_proj _ h2,
-        YaoStar.delta_young_eq_proj _ h3, YaoStar.delta_young_eq_proj _ h4,
-        YaoStar.delta_young_eq_proj _ h5, YaoStar.delta_young_eq_proj _ h6]
+  apply Hexagram.ext <;>
+    simp [benGua, bianGua,
+          YaoStar.delta_young_eq_proj _ h1, YaoStar.delta_young_eq_proj _ h2,
+          YaoStar.delta_young_eq_proj _ h3, YaoStar.delta_young_eq_proj _ h4,
+          YaoStar.delta_young_eq_proj _ h5, YaoStar.delta_young_eq_proj _ h6]
 
 /-- An all-老阳 cast: 本卦 = 乾, 变卦 = 坤. -/
 def allLaoYang : HexagramStar where
@@ -430,10 +507,10 @@ def allLaoYang : HexagramStar where
   z6 := YaoStar.laoYang
 
 theorem allLaoYang_benGua : allLaoYang.benGua = Hexagram.heaven := by
-  decide
+  apply Hexagram.ext <;> rfl
 
 theorem allLaoYang_bianGua : allLaoYang.bianGua = Hexagram.earth := by
-  decide
+  apply Hexagram.ext <;> rfl
 
 /-- An all-老阴 cast: 本卦 = 坤, 变卦 = 乾. -/
 def allLaoYin : HexagramStar where
@@ -445,10 +522,10 @@ def allLaoYin : HexagramStar where
   z6 := YaoStar.laoYin
 
 theorem allLaoYin_benGua : allLaoYin.benGua = Hexagram.earth := by
-  decide
+  apply Hexagram.ext <;> rfl
 
 theorem allLaoYin_bianGua : allLaoYin.bianGua = Hexagram.heaven := by
-  decide
+  apply Hexagram.ext <;> rfl
 
 end HexagramStar
 
@@ -638,20 +715,17 @@ def iterHu : Nat → Hexagram → Hexagram
 
 /-- 互² h has the alternating-pair pattern ⟨y3, y4, y3, y4, y3, y4⟩. -/
 theorem iterHu_2_eq (h : Hexagram) :
-    iterHu 2 h = ⟨h.y3, h.y4, h.y3, h.y4, h.y3, h.y4⟩ := by
-  cases h
-  rfl
+    iterHu 2 h = mk h.y3 h.y4 h.y3 h.y4 h.y3 h.y4 := by
+  apply ext <;> rfl
 
 /-- 互³ h has the swapped pattern ⟨y4, y3, y4, y3, y4, y3⟩. -/
 theorem iterHu_3_eq (h : Hexagram) :
-    iterHu 3 h = ⟨h.y4, h.y3, h.y4, h.y3, h.y4, h.y3⟩ := by
-  cases h
-  rfl
+    iterHu 3 h = mk h.y4 h.y3 h.y4 h.y3 h.y4 h.y3 := by
+  apply ext <;> rfl
 
 /-- **Period-2 convergence**: 互⁴ = 互². Every orbit is 2-periodic after step 2. -/
 theorem iterHu_period (h : Hexagram) : iterHu 4 h = iterHu 2 h := by
-  cases h
-  rfl
+  apply ext <;> rfl
 
 /-- 互² h = 乾 ⟺ h.y3 = yang ∧ h.y4 = yang (center pair both yang). -/
 theorem iterHu_2_eq_heaven_iff (h : Hexagram) :
@@ -659,10 +733,11 @@ theorem iterHu_2_eq_heaven_iff (h : Hexagram) :
   rw [iterHu_2_eq]
   constructor
   · intro heq
-    injection heq with e1 e2
-    exact ⟨e1, e2⟩
+    have e3 : h.y3 = .yang := by have := congrArg y1 heq; simpa [heaven] using this
+    have e4 : h.y4 = .yang := by have := congrArg y2 heq; simpa [heaven] using this
+    exact ⟨e3, e4⟩
   · intro ⟨e3, e4⟩
-    rw [e3, e4]; rfl
+    apply ext <;> simp [heaven, e3, e4]
 
 /-- 互² h = 坤 ⟺ h.y3 = yin ∧ h.y4 = yin (center pair both yin). -/
 theorem iterHu_2_eq_earth_iff (h : Hexagram) :
@@ -670,10 +745,11 @@ theorem iterHu_2_eq_earth_iff (h : Hexagram) :
   rw [iterHu_2_eq]
   constructor
   · intro heq
-    injection heq with e1 e2
-    exact ⟨e1, e2⟩
+    have e3 : h.y3 = .yin := by have := congrArg y1 heq; simpa [earth] using this
+    have e4 : h.y4 = .yin := by have := congrArg y2 heq; simpa [earth] using this
+    exact ⟨e3, e4⟩
   · intro ⟨e3, e4⟩
-    rw [e3, e4]; rfl
+    apply ext <;> simp [earth, e3, e4]
 
 /-- **极反 dynamics**: 互² h is a fixed point of 互 ⟺ center pair agrees. -/
 theorem iterHu_2_fixed_iff_middle_agrees (h : Hexagram) :
@@ -697,11 +773,11 @@ namespace Hexagram
 
 /-- 既济 (complete, ☵☲ — 水 over 火): 内 离, 外 坎.
     All 6 yao are well-positioned (yang at 1,3,5; yin at 2,4,6, 1-indexed). -/
-def complete : Hexagram := ⟨.yang, .yin, .yang, .yin, .yang, .yin⟩
+def complete : Hexagram := mk .yang .yin .yang .yin .yang .yin
 
 /-- 未济 (incomplete, ☲☵ — 火 over 水): 内 坎, 外 离.
     No yao is well-positioned. -/
-def incomplete : Hexagram := ⟨.yin, .yang, .yin, .yang, .yin, .yang⟩
+def incomplete : Hexagram := mk .yin .yang .yin .yang .yin .yang
 
 /-- 既济 = 离 ⊕ 坎 (内 离, 外 坎). -/
 theorem complete_eq_oplus : complete = oplus Trigram.fire Trigram.water := rfl
@@ -730,30 +806,40 @@ theorem incomplete_wellPos_none (i : Fin 6) : wellPos incomplete i = false := by
   | ⟨5, h⟩ => decide +revert
 
 /-- 既济 ↔ 未济 by 综 (reflection). -/
-theorem complete_reverse_incomplete : complete.reverse = incomplete := by rfl
+theorem complete_reverse_incomplete : complete.reverse = incomplete := by
+  apply ext <;> rfl
 
 /-- 既济 ↔ 未济 by 错 (negation). -/
-theorem complete_complement_incomplete : complete.complement = incomplete := by rfl
+theorem complete_complement_incomplete : complete.complement = incomplete := by
+  apply ext <;> rfl
 
 /-- 既济 ≠ 未济 (concrete witness of their distinction). -/
 theorem complete_ne_incomplete : complete ≠ incomplete := by
   intro h
-  injection h with h1
-  cases h1
+  have h1 := congrArg y1 h
+  have e1 : y1 complete = .yang := rfl
+  have e2 : y1 incomplete = .yin := rfl
+  rw [e1, e2] at h1
+  exact Bool.noConfusion h1
 
 /-- 既济 互 互 = 既济 — 既济 is on a 2-period orbit. -/
-theorem complete_iterHu_2 : iterHu 2 complete = complete := by rfl
+theorem complete_iterHu_2 : iterHu 2 complete = complete := by
+  apply ext <;> rfl
 
 /-- 既济 is NOT 互-fixed (so it's the canonical period-2 example). -/
 theorem complete_not_interlace_fixed : complete.interlace ≠ complete := by
   intro heq
-  injection heq with e1
-  cases e1
+  have h1 := congrArg y1 heq
+  have e1 : y1 complete.interlace = .yin := rfl
+  have e2 : y1 complete = .yang := rfl
+  rw [e1, e2] at h1
+  exact Bool.noConfusion h1
 
 /-- 既济's 互 is 未济's 综⁻¹... actually it's simpler:
     互 complete = ⟨complete.y2, complete.y3, complete.y4, complete.y3, complete.y4, complete.y5⟩
            = ⟨yin, yang, yin, yang, yin, yang⟩ = incomplete. -/
-theorem complete_interlace_incomplete : complete.interlace = incomplete := by rfl
+theorem complete_interlace_incomplete : complete.interlace = incomplete := by
+  apply ext <;> rfl
 
 end Hexagram
 
@@ -768,10 +854,14 @@ namespace Trigram
     (Sanity check: σ is total, no missing entries.) -/
 theorem shuoGua_total (t : Trigram) (c : SigmaCategory) :
     (shuoGua t c).length > 0 := by
-  cases c <;>
-    cases t with
-    | mk y1 y2 y3 =>
-      cases y1 <;> cases y2 <;> cases y3 <;> decide
+  -- Split by all 8 trigrams via the 3 yao values.
+  have hy1 := t.y1
+  have hy2 := t.y2
+  have hy3 := t.y3
+  -- Reconstruct: t = mk t.y1 t.y2 t.y3 (by ext).
+  have heq : t = mk t.y1 t.y2 t.y3 := by apply ext <;> rfl
+  rw [heq]
+  cases c <;> cases hy : t.y1 <;> cases hy' : t.y2 <;> cases hy'' : t.y3 <;> decide
 
 end Trigram
 
@@ -848,9 +938,10 @@ theorem dui_jianMode  : lake.jianMode  = .kai   := rfl
 /-- Right-inverse: starting from any of the 8 named trigrams, jianMode then
     toTrigram returns the same trigram. -/
 theorem jianMode_toTrigram (t : Trigram) : t.jianMode.toTrigram = t := by
-  cases t with
-  | mk y1 y2 y3 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> decide
+  have heq : t = mk t.y1 t.y2 t.y3 := by apply ext <;> rfl
+  conv_rhs => rw [heq]
+  rw [heq]
+  cases t.y1 <;> cases t.y2 <;> cases t.y3 <;> decide
 
 end Trigram
 
@@ -943,15 +1034,15 @@ namespace Trigram
 /-- 错 on trigrams commutes with the mode projection: the mode of 错 t is
     the 错 of t's mode. -/
 theorem cuo_jianMode (t : Trigram) : t.complement.jianMode = t.jianMode.complement := by
-  cases t with
-  | mk y1 y2 y3 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> decide
+  have heq : t = mk t.y1 t.y2 t.y3 := by apply ext <;> rfl
+  rw [heq]
+  cases t.y1 <;> cases t.y2 <;> cases t.y3 <;> decide
 
 /-- 综 on trigrams commutes with the mode projection. -/
 theorem zong_jianMode (t : Trigram) : t.reverse.jianMode = t.jianMode.reverse := by
-  cases t with
-  | mk y1 y2 y3 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> decide
+  have heq : t = mk t.y1 t.y2 t.y3 := by apply ext <;> rfl
+  rw [heq]
+  cases t.y1 <;> cases t.y2 <;> cases t.y3 <;> decide
 
 end Trigram
 
@@ -963,17 +1054,17 @@ end Trigram
 namespace Hexagram
 
 /-- The 内卦 (inner / lower trigram): bottom 3 yao. -/
-def innerTrigram (h : Hexagram) : Trigram := ⟨h.y1, h.y2, h.y3⟩
+def innerTrigram (h : Hexagram) : Trigram := Trigram.mk h.y1 h.y2 h.y3
 
 /-- The 外卦 (outer / upper trigram): top 3 yao. -/
-def outerTrigram (h : Hexagram) : Trigram := ⟨h.y4, h.y5, h.y6⟩
+def outerTrigram (h : Hexagram) : Trigram := Trigram.mk h.y4 h.y5 h.y6
 
 /-- ⊕ 之逆: oplus a b's inner is a, outer is b. -/
 theorem oplus_inner (a b : Trigram) : (oplus a b).innerTrigram = a := by
-  cases a; rfl
+  apply Trigram.ext <;> rfl
 
 theorem oplus_outer (a b : Trigram) : (oplus a b).outerTrigram = b := by
-  cases b; rfl
+  apply Trigram.ext <;> rfl
 
 /-- A hexagram's 间生论 reading: (内 mode, 外 mode).
     内 ↔ 本 / 自身 / 起.  外 ↔ 用 / 显 / 应. -/
@@ -1091,17 +1182,17 @@ theorem zhongGen_reading  : zhongGen.reading  = (.ju,   .ju)   := rfl
 
 /-- 错 on a hexagram pulls back to 错 on each trigram. -/
 theorem cuo_innerTrigram (h : Hexagram) : h.complement.innerTrigram = h.innerTrigram.complement := by
-  cases h; rfl
+  apply Trigram.ext <;> rfl
 
 theorem cuo_outerTrigram (h : Hexagram) : h.complement.outerTrigram = h.outerTrigram.complement := by
-  cases h; rfl
+  apply Trigram.ext <;> rfl
 
 /-- 综 on a hexagram swaps inner/outer (and reverses each trigram's yao). -/
 theorem zong_innerTrigram (h : Hexagram) : h.reverse.innerTrigram = h.outerTrigram.reverse := by
-  cases h; rfl
+  apply Trigram.ext <;> rfl
 
 theorem zong_outerTrigram (h : Hexagram) : h.reverse.outerTrigram = h.innerTrigram.reverse := by
-  cases h; rfl
+  apply Trigram.ext <;> rfl
 
 /-- 错 on a hexagram applies 错 to each mode of the reading. -/
 theorem cuo_reading (h : Hexagram) :
@@ -1192,9 +1283,21 @@ def baseDaoLevel (h : Hexagram) : DaoLevel :=
 
 /-- 互 preserves 天/心 partition: subjective stays subjective. -/
 theorem hu_preserves_isTian (h : Hexagram) : h.interlace.isTian = h.isTian := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y3 <;> cases y4 <;> rfl
+  show (interlace h).isTian = h.isTian
+  unfold isTian
+  show (match (interlace h).y3, (interlace h).y4 with
+        | .yang, .yang => true
+        | .yin, .yin => true
+        | _, _ => false) =
+       (match h.y3, h.y4 with
+        | .yang, .yang => true
+        | .yin, .yin => true
+        | _, _ => false)
+  -- interlace h .y3 = h.y4 and interlace h .y4 = h.y3
+  have e3 : (interlace h).y3 = h.y4 := rfl
+  have e4 : (interlace h).y4 = h.y3 := rfl
+  rw [e3, e4]
+  cases h.y3 <;> cases h.y4 <;> rfl
 
 theorem hu_preserves_isXin (h : Hexagram) : h.interlace.isXin = h.isXin := by
   simp [isXin, hu_preserves_isTian]
@@ -1204,7 +1307,7 @@ def allHex : List Hexagram :=
   let yaos : List Yao := [.yang, .yin]
   yaos.flatMap fun y1 => yaos.flatMap fun y2 => yaos.flatMap fun y3 =>
   yaos.flatMap fun y4 => yaos.flatMap fun y5 => yaos.map fun y6 =>
-    ⟨y1, y2, y3, y4, y5, y6⟩
+    mk y1 y2 y3 y4 y5 y6
 
 theorem allHex_count : allHex.length = 64 := by native_decide
 
@@ -1364,11 +1467,9 @@ def xinShouStrength (h : Hexagram) : Nat := 6 - h.shenStrength
 
 theorem shen_xinShou_complement (h : Hexagram) :
     h.shenStrength + h.xinShouStrength = 6 := by
-  unfold xinShouStrength
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
-      decide
+  unfold xinShouStrength shenStrength
+  -- Case-split on all 6 yao.
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;> decide
 
 /-- 身/心 polarity classification. -/
 def polarity (h : Hexagram) : BodyMind :=

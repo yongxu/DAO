@@ -382,23 +382,25 @@ theorem rateToYao_yin_of_le (θ r : ℝ) (h : r ≤ θ) : rateToYao θ r = Yao.y
 /-- **三相 firing rates 经阈值 → Trigram**。
     输入：θ 阈值；(r₁, r₂, r₃) 分别对应 retention / primalImpr / protention 之窗口 firing rate。 -/
 noncomputable def ratesToTrigram (θ : ℝ) (r1 r2 r3 : ℝ) : Trigram :=
-  ⟨rateToYao θ r1, rateToYao θ r2, rateToYao θ r3⟩
+  Trigram.mk (rateToYao θ r1) (rateToYao θ r2) (rateToYao θ r3)
 
 /-- **全 fire 三相 → 乾**：所有 firing rate > θ ⇒ Trigram = 乾。 -/
 theorem ratesToTrigram_qian (θ r1 r2 r3 : ℝ)
     (h1 : r1 > θ) (h2 : r2 > θ) (h3 : r3 > θ) :
     ratesToTrigram θ r1 r2 r3 = Trigram.heaven := by
-  unfold ratesToTrigram Trigram.heaven
-  rw [rateToYao_yang_of_gt θ r1 h1, rateToYao_yang_of_gt θ r2 h2,
-      rateToYao_yang_of_gt θ r3 h3]
+  apply Trigram.ext
+  · simp [ratesToTrigram, Trigram.heaven, Trigram.y1_mk, rateToYao_yang_of_gt θ r1 h1]
+  · simp [ratesToTrigram, Trigram.heaven, Trigram.y2_mk, rateToYao_yang_of_gt θ r2 h2]
+  · simp [ratesToTrigram, Trigram.heaven, Trigram.y3_mk, rateToYao_yang_of_gt θ r3 h3]
 
 /-- **全 rest 三相 → 坤**：所有 firing rate ≤ θ ⇒ Trigram = 坤。 -/
 theorem ratesToTrigram_kun (θ r1 r2 r3 : ℝ)
     (h1 : r1 ≤ θ) (h2 : r2 ≤ θ) (h3 : r3 ≤ θ) :
     ratesToTrigram θ r1 r2 r3 = Trigram.earth := by
-  unfold ratesToTrigram Trigram.earth
-  rw [rateToYao_yin_of_le θ r1 h1, rateToYao_yin_of_le θ r2 h2,
-      rateToYao_yin_of_le θ r3 h3]
+  apply Trigram.ext
+  · simp [ratesToTrigram, Trigram.earth, Trigram.y1_mk, rateToYao_yin_of_le θ r1 h1]
+  · simp [ratesToTrigram, Trigram.earth, Trigram.y2_mk, rateToYao_yin_of_le θ r2 h2]
+  · simp [ratesToTrigram, Trigram.earth, Trigram.y3_mk, rateToYao_yin_of_le θ r3 h3]
 
 /-- **桥接到 XinZhi.TimePhase.proj**：三相投影 = 阈值化之回收。
     形式：rate r 之阈值化 = 直接给定 Yao 之"恒等" projection——

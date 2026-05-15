@@ -115,7 +115,7 @@ theorem «端到端_坤» :
       = some (Hexagram.earth, Shi.ji) := by native_decide
 
 /-- 端到端 3：否卦输入 → 解执 → 编码列首 = (否, 未). -/
-def «否» : Hexagram := ⟨.yin, .yin, .yin, .yang, .yang, .yang⟩
+def «否» : Hexagram := Hexagram.mk .yin .yin .yin .yang .yang .yang
 
 theorem «端到端_否» :
     («解执» «道判源» «否» 10).bind (fun cells => cells.head?)

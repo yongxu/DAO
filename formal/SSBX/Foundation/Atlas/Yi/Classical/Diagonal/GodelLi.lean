@@ -371,10 +371,12 @@ theorem flipPos_cuo (h : Hexagram) (i : Fin 6) :
   | 5, _ => simp [Hexagram.flipPos, Hexagram.complement, Yao.neg_neg]
 
 /-- interlace commutes with complement. -/
-theorem hu_cuo (h : Hexagram) : (h.complement).interlace = (h.interlace).complement := by cases h; rfl
+theorem hu_cuo (h : Hexagram) : (h.complement).interlace = (h.interlace).complement := by
+  apply Hexagram.ext <;> rfl
 
 /-- reverse commutes with complement. -/
-theorem zong_cuo (h : Hexagram) : (h.complement).reverse = (h.reverse).complement := by cases h; rfl
+theorem zong_cuo (h : Hexagram) : (h.complement).reverse = (h.reverse).complement := by
+  apply Hexagram.ext <;> rfl
 
 private theorem step_not_halted_helper (s : YiState) (h_nh : s.halted = false) :
     s.step = (match s.prog[s.pc]? with
@@ -1117,17 +1119,23 @@ theorem halts_on_some_via_uniform_under_kleene (h_kleene : KleeneInverter) :
   -- 改写 spec 为 Phi (Halts P) = true 形式
   intro ⟨ds, h_ds⟩
   let Phi : (Hexagram → Prop) → Bool :=
-    fun S => decide (∃ h, S h)
+    fun S => if (∃ h, S h) then true else false
   have h_dist : Phi (fun _ => True) ≠ Phi (fun _ => False) := by
     have h_T : Phi (fun _ : Hexagram => True) = true :=
-      decide_eq_true ⟨Hexagram.heaven, trivial⟩
+      if_pos ⟨Hexagram.heaven, trivial⟩
     have h_F : Phi (fun _ : Hexagram => False) = false :=
-      decide_eq_false (fun ⟨_, hf⟩ => hf)
+      if_neg (fun ⟨_, hf⟩ => hf)
     rw [h_T, h_F]; decide
   apply rice_uniform_under_kleene h_kleene Phi h_dist
   refine ⟨ds, fun P => ?_⟩
   rw [h_ds P]
-  exact ⟨fun he => decide_eq_true he, fun hd => of_decide_eq_true hd⟩
+  change _ ↔ (if _ then true else false) = true
+  constructor
+  · intro he; rw [if_pos he]
+  · intro hp
+    by_cases he : ∃ h, Halts P h
+    · exact he
+    · rw [if_neg he] at hp; exact absurd hp (by decide)
 
 /-- 由 uniform 重导：Π_none 不可判（条件版）。 -/
 theorem halts_on_none_via_uniform_under_kleene (h_kleene : KleeneInverter) :
@@ -1135,17 +1143,23 @@ theorem halts_on_none_via_uniform_under_kleene (h_kleene : KleeneInverter) :
         ∀ P, decide_none P = true ↔ ∀ h, ¬ Halts P h := by
   intro ⟨dn, h_dn⟩
   let Phi : (Hexagram → Prop) → Bool :=
-    fun S => decide (∀ h, ¬ S h)
+    fun S => if (∀ h, ¬ S h) then true else false
   have h_dist : Phi (fun _ => True) ≠ Phi (fun _ => False) := by
     have h_T : Phi (fun _ : Hexagram => True) = false :=
-      decide_eq_false (fun h => h Hexagram.heaven trivial)
+      if_neg (fun h => h Hexagram.heaven trivial)
     have h_F : Phi (fun _ : Hexagram => False) = true :=
-      decide_eq_true (fun _ hf => hf)
+      if_pos (fun _ hf => hf)
     rw [h_T, h_F]; decide
   apply rice_uniform_under_kleene h_kleene Phi h_dist
   refine ⟨dn, fun P => ?_⟩
   rw [h_dn P]
-  exact ⟨fun he => decide_eq_true he, fun hd => of_decide_eq_true hd⟩
+  change _ ↔ (if _ then true else false) = true
+  constructor
+  · intro he; rw [if_pos he]
+  · intro hp
+    by_cases he : ∀ h, ¬ Halts P h
+    · exact he
+    · rw [if_neg he] at hp; exact absurd hp (by decide)
 
 /-- 由 uniform 重导：Π_all 不可判（条件版）。 -/
 theorem halts_on_all_via_uniform_under_kleene (h_kleene : KleeneInverter) :
@@ -1153,17 +1167,23 @@ theorem halts_on_all_via_uniform_under_kleene (h_kleene : KleeneInverter) :
         ∀ P, decide_all P = true ↔ ∀ h, Halts P h := by
   intro ⟨da, h_da⟩
   let Phi : (Hexagram → Prop) → Bool :=
-    fun S => decide (∀ h, S h)
+    fun S => if (∀ h, S h) then true else false
   have h_dist : Phi (fun _ => True) ≠ Phi (fun _ => False) := by
     have h_T : Phi (fun _ : Hexagram => True) = true :=
-      decide_eq_true (fun _ => trivial)
+      if_pos (fun _ => trivial)
     have h_F : Phi (fun _ : Hexagram => False) = false :=
-      decide_eq_false (fun h => h Hexagram.heaven)
+      if_neg (fun h => h Hexagram.heaven)
     rw [h_T, h_F]; decide
   apply rice_uniform_under_kleene h_kleene Phi h_dist
   refine ⟨da, fun P => ?_⟩
   rw [h_da P]
-  exact ⟨fun he => decide_eq_true he, fun hd => of_decide_eq_true hd⟩
+  change _ ↔ (if _ then true else false) = true
+  constructor
+  · intro he; rw [if_pos he]
+  · intro hp
+    by_cases he : ∀ h, Halts P h
+    · exact he
+    · rw [if_neg he] at hp; exact absurd hp (by decide)
 
 /-- 由 uniform 重导：Π_some_no 不可判（条件版）。 -/
 theorem halts_on_some_no_via_uniform_under_kleene (h_kleene : KleeneInverter) :
@@ -1171,17 +1191,23 @@ theorem halts_on_some_no_via_uniform_under_kleene (h_kleene : KleeneInverter) :
         ∀ P, decide_some_no P = true ↔ ∃ h, ¬ Halts P h := by
   intro ⟨dsn, h_dsn⟩
   let Phi : (Hexagram → Prop) → Bool :=
-    fun S => decide (∃ h, ¬ S h)
+    fun S => if (∃ h, ¬ S h) then true else false
   have h_dist : Phi (fun _ => True) ≠ Phi (fun _ => False) := by
     have h_T : Phi (fun _ : Hexagram => True) = false :=
-      decide_eq_false (fun ⟨_, hf⟩ => hf trivial)
+      if_neg (fun ⟨_, hf⟩ => hf trivial)
     have h_F : Phi (fun _ : Hexagram => False) = true :=
-      decide_eq_true ⟨Hexagram.heaven, fun hf => hf⟩
+      if_pos ⟨Hexagram.heaven, fun hf => hf⟩
     rw [h_T, h_F]; decide
   apply rice_uniform_under_kleene h_kleene Phi h_dist
   refine ⟨dsn, fun P => ?_⟩
   rw [h_dsn P]
-  exact ⟨fun he => decide_eq_true he, fun hd => of_decide_eq_true hd⟩
+  change _ ↔ (if _ then true else false) = true
+  constructor
+  · intro he; rw [if_pos he]
+  · intro hp
+    by_cases he : ∃ h, ¬ Halts P h
+    · exact he
+    · rw [if_neg he] at hp; exact absurd hp (by decide)
 
 end RiceUniform
 

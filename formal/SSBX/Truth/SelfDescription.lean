@@ -194,30 +194,12 @@ theorem bit_position_verified (b : BitPositionObject) :
   | yang =>
       intro h
       cases h
-  | yaoOne =>
-      intro h
-      cases h
-      rfl
-  | yaoTwo =>
-      intro h
-      cases h
-      rfl
-  | yaoThree =>
-      intro h
-      cases h
-      rfl
-  | yaoFour =>
-      intro h
-      cases h
-      rfl
-  | yaoFive =>
-      intro h
-      cases h
-      rfl
-  | yaoSix =>
-      intro h
-      cases h
-      rfl
+  | yaoOne => intro _; rfl
+  | yaoTwo => intro _; rfl
+  | yaoThree => intro _; rfl
+  | yaoFour => intro _; rfl
+  | yaoFive => intro _; rfl
+  | yaoSix => intro _; rfl
   | trigram =>
       exact ⟨rfl, trigram_mem_all⟩
   | hexagram =>

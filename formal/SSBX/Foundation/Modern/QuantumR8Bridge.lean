@@ -86,16 +86,7 @@ instance instFintypeR8 : Fintype R8 where
   elems := R8.all.toFinset
   complete := fun c => List.mem_toFinset.mpr (R8.mem_all c)
 
-instance instAddCommGroupR8 : AddCommGroup R8 where
-  nsmul := nsmulRec
-  zsmul := zsmulRec
-  add_assoc := R8.xor_assoc
-  zero_add := R8.origin_xor
-  add_zero := R8.xor_origin
-  neg_add_cancel := by
-    intro c
-    simpa [R8.neg_def] using R8.xor_self c
-  add_comm := R8.xor_comm
+instance instAddCommGroupR8 : AddCommGroup R8 := inferInstance
 
 /-- Coordinate model of a Klein-four carrier represented as two Yao bits.
     Local re-statement of `Foundation/Squaring/V4Tensor.V4Coord`. -/
@@ -120,7 +111,7 @@ def toV4CoordQuad (c : R8) : V4Coord × V4Coord × V4Coord × V4Coord :=
 
 def ofV4CoordQuad : V4Coord × V4Coord × V4Coord × V4Coord → R8
   | ((y1, y2), (y3, y4), (y5, y6), shi) =>
-      (⟨y1, y2, y3, y4, y5, y6⟩, v4CoordToShi shi)
+      (SSBX.Foundation.Yi.Yi.Hexagram.mk y1 y2 y3 y4 y5 y6, v4CoordToShi shi)
 
 theorem to_of (q : V4Coord × V4Coord × V4Coord × V4Coord) :
     toV4CoordQuad (ofV4CoordQuad q) = q := by
@@ -129,9 +120,13 @@ theorem to_of (q : V4Coord × V4Coord × V4Coord × V4Coord) :
 
 theorem of_to (c : R8) : ofV4CoordQuad (toV4CoordQuad c) = c := by
   rcases c with ⟨h, s⟩
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
   rcases s with ⟨yin, guo⟩
-  cases yin <;> cases guo <;> rfl
+  have heq : h = SSBX.Foundation.Yi.Yi.Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by
+    apply SSBX.Foundation.Yi.Yi.Hexagram.ext <;> rfl
+  show ofV4CoordQuad (toV4CoordQuad (h, yin, guo)) = (h, yin, guo)
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
+    cases yin <;> cases guo <;> rfl
 
 /-- `R₈ ≃+ V₄⁴` Mathlib `AddEquiv`. -/
 def iso : R8 ≃+ (V4Coord × V4Coord × V4Coord × V4Coord) where
@@ -143,13 +138,10 @@ def iso : R8 ≃+ (V4Coord × V4Coord × V4Coord × V4Coord) where
     intro a b
     rcases a with ⟨ha, sa⟩
     rcases b with ⟨hb, sb⟩
-    rcases ha with ⟨a1, a2, a3, a4, a5, a6⟩
-    rcases hb with ⟨b1, b2, b3, b4, b5, b6⟩
     rcases sa with ⟨ay, ag⟩
     rcases sb with ⟨byin, bg⟩
-    cases ay <;> cases ag <;> cases byin <;> cases bg <;>
-      simp [toV4CoordQuad, R8.add_def, R8.xor, R8.hexXor,
-        R8.shiXor, R8.yaoXor, Shi.toYinGuo, Shi.ofYinGuo, shiToV4Coord, boolToYao]
+    simp only [Prod.mk_add_mk, toV4CoordQuad]
+    cases ay <;> cases ag <;> cases byin <;> cases bg <;> rfl
 
 end V4Tensor
 

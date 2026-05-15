@@ -234,18 +234,29 @@ open SSBX.Foundation.Yi.Yi.Yao
 
 /-- Hexagram XOR: 逐爻 XOR. 把 Hexagram 视为 (Z/2)⁶ 群的载体. -/
 def xor (a b : Hexagram) : Hexagram :=
-  ⟨Yao.xor a.y1 b.y1, Yao.xor a.y2 b.y2, Yao.xor a.y3 b.y3,
-   Yao.xor a.y4 b.y4, Yao.xor a.y5 b.y5, Yao.xor a.y6 b.y6⟩
+  Hexagram.mk
+    (Yao.xor a.y1 b.y1) (Yao.xor a.y2 b.y2) (Yao.xor a.y3 b.y3)
+    (Yao.xor a.y4 b.y4) (Yao.xor a.y5 b.y5) (Yao.xor a.y6 b.y6)
 
 /-- heaven 为 XOR 单位元（右）. -/
 theorem xor_qian_right (a : Hexagram) : xor a Hexagram.heaven = a := by
-  rcases a with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;> rfl
+  apply Hexagram.ext
+  all_goals (
+    simp only [xor, Hexagram.heaven, Hexagram.y1_mk, Hexagram.y2_mk, Hexagram.y3_mk,
+               Hexagram.y4_mk, Hexagram.y5_mk, Hexagram.y6_mk]
+    show Yao.xor _ Yao.yang = _
+    cases a.y1 <;> cases a.y2 <;> cases a.y3 <;>
+      cases a.y4 <;> cases a.y5 <;> cases a.y6 <;> rfl)
 
 /-- heaven 为 XOR 单位元（左）. -/
 theorem xor_qian_left (a : Hexagram) : xor Hexagram.heaven a = a := by
-  rcases a with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;> rfl
+  apply Hexagram.ext
+  all_goals (
+    simp only [xor, Hexagram.heaven, Hexagram.y1_mk, Hexagram.y2_mk, Hexagram.y3_mk,
+               Hexagram.y4_mk, Hexagram.y5_mk, Hexagram.y6_mk]
+    show Yao.xor Yao.yang _ = _
+    cases a.y1 <;> cases a.y2 <;> cases a.y3 <;>
+      cases a.y4 <;> cases a.y5 <;> cases a.y6 <;> rfl)
 
 end SSBX.Foundation.Yi.Yi.Hexagram
 
@@ -333,9 +344,11 @@ def R8.mian? (c : R8) : Option Mian :=
 /-- Mian 的特权命题：R8.mian? c = some _ ↔ c.quadrant = benZheng. -/
 theorem R8.mian?_isSome_iff_benZheng (c : R8) :
     (R8.mian? c).isSome = true ↔ c.1.quadrant = .benZheng := by
-  rcases c with ⟨⟨y1, y2, y3, y4, y5, y6⟩, sy, sg⟩
+  rcases c with ⟨h, sy, sg⟩
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
   cases sy <;> cases sg <;>
-    (cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;> decide)
+    (cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;> decide)
 
 /-! ### 算子对 R8.quadrant 的作用 -/
 
@@ -364,8 +377,10 @@ theorem timeReversal_quadrant (c : R8) :
       | .zhengBen   => .benZheng
       | .zhengZheng => .zhengZheng := by
   rcases c with ⟨h, s⟩
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y3 <;> cases y4 <;> cases y6 <;> rfl
+  show (timeReversal (h, s)).1.quadrant = _
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y3 <;> cases h.y4 <;> cases h.y6 <;> rfl
 
 /-! ## § 4 (Z/2)⁸ 群作用 simply transitive on R8
 
@@ -421,11 +436,18 @@ theorem R8Combo.apply_qian_dao_simply_transitive (c : R8) :
 
 /-- flip1 (= dongInner lift) 对应 R8Combo (⟨yin,yang,yang,yang,yang,yang⟩, dao). -/
 theorem R8Combo.flip1_combo (c : R8) :
-    R8Combo.apply (⟨.yin, .yang, .yang, .yang, .yang, .yang⟩, Shi.dao) c
+    R8Combo.apply (Hexagram.mk .yin .yang .yang .yang .yang .yang, Shi.dao) c
       = R8.flip1 c := by
-  rcases c with ⟨⟨y1, y2, y3, y4, y5, y6⟩, s⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
-    cases s <;> rfl
+  rcases c with ⟨h, s⟩
+  show (Hexagram.xor _ h, Shi.xor .dao s) = (_, s)
+  congr 1
+  apply Hexagram.ext
+  all_goals (
+    simp only [Hexagram.xor, R8.flip1, dongInner,
+               Hexagram.y1_mk, Hexagram.y2_mk, Hexagram.y3_mk,
+               Hexagram.y4_mk, Hexagram.y5_mk, Hexagram.y6_mk]
+    cases h.y1 <;> cases h.y2 <;> cases h.y3 <;>
+      cases h.y4 <;> cases h.y5 <;> cases h.y6 <;> rfl)
 
 /-- shiCuo 对应 R8Combo (heaven, ji) — Shi P-flip, hex 不动. -/
 theorem R8Combo.shiCuo_combo (c : R8) :

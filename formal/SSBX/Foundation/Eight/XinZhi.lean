@@ -136,8 +136,12 @@ theorem siduan_toTrigram_injective :
       | (exfalso; exact absurd h (by
           simp only [SiDuan.toTrigram, Trigram.fire, Trigram.water, Trigram.thunder, Trigram.lake]
           intro heq
-          injection heq with h1 h2 h3
-          first | exact Yao.noConfusion h1 | exact Yao.noConfusion h2 | exact Yao.noConfusion h3))
+          have h1 := congrArg Trigram.y1 heq
+          have h2 := congrArg Trigram.y2 heq
+          have h3 := congrArg Trigram.y3 heq
+          simp [Trigram.y1_mk, Trigram.y2_mk, Trigram.y3_mk, Yao.yang, Yao.yin,
+                SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin]
+            at h1 h2 h3))
 
 /-! ## § 5 注意力函子 -/
 
@@ -287,7 +291,7 @@ theorem kun_all_yin (p : TimePhase) : TimePhase.proj Trigram.earth p = .yin := b
 /-- **时间流之离散一步**：cyclic shift（retention ← primalImpr ← protention ← new）。
     Finite 版本：retention 出，protention 入新值。 -/
 def timeFlow (newProtention : Yao) (t : Trigram) : Trigram :=
-  ⟨t.y2, t.y3, newProtention⟩
+  Trigram.mk t.y2 t.y3 newProtention
 
 /-- **时间流保 protention 之新输入**。 -/
 theorem timeFlow_protention (newP : Yao) (t : Trigram) :

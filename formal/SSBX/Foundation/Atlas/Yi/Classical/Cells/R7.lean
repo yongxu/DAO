@@ -206,32 +206,25 @@ theorem yaoXor_assoc (a b c : Yao) :
 
 /-- Componentwise Hexagram XOR — yao-by-yao via `yaoXor`. -/
 def hexXor (h1 h2 : Hexagram) : Hexagram :=
-  ⟨yaoXor h1.y1 h2.y1, yaoXor h1.y2 h2.y2, yaoXor h1.y3 h2.y3,
-   yaoXor h1.y4 h2.y4, yaoXor h1.y5 h2.y5, yaoXor h1.y6 h2.y6⟩
+  Hexagram.mk
+    (yaoXor h1.y1 h2.y1) (yaoXor h1.y2 h2.y2) (yaoXor h1.y3 h2.y3)
+    (yaoXor h1.y4 h2.y4) (yaoXor h1.y5 h2.y5) (yaoXor h1.y6 h2.y6)
 
 @[simp] theorem hexXor_qian_left (h : Hexagram) : hexXor Hexagram.heaven h = h := by
-  rcases h with ⟨_, _, _, _, _, _⟩
-  simp [hexXor, Hexagram.heaven]
+  apply Hexagram.ext <;> simp [hexXor, Hexagram.heaven]
 
 @[simp] theorem hexXor_qian_right (h : Hexagram) : hexXor h Hexagram.heaven = h := by
-  rcases h with ⟨_, _, _, _, _, _⟩
-  simp [hexXor, Hexagram.heaven]
+  apply Hexagram.ext <;> simp [hexXor, Hexagram.heaven]
 
 theorem hexXor_self (h : Hexagram) : hexXor h h = Hexagram.heaven := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  simp [hexXor, Hexagram.heaven, yaoXor_self]
+  apply Hexagram.ext <;> simp [hexXor, Hexagram.heaven, yaoXor_self]
 
 theorem hexXor_comm (h1 h2 : Hexagram) : hexXor h1 h2 = hexXor h2 h1 := by
-  rcases h1 with ⟨_, _, _, _, _, _⟩
-  rcases h2 with ⟨_, _, _, _, _, _⟩
-  simp [hexXor, yaoXor_comm]
+  apply Hexagram.ext <;> simp [hexXor, yaoXor_comm]
 
 theorem hexXor_assoc (h1 h2 h3 : Hexagram) :
     hexXor (hexXor h1 h2) h3 = hexXor h1 (hexXor h2 h3) := by
-  rcases h1 with ⟨_, _, _, _, _, _⟩
-  rcases h2 with ⟨_, _, _, _, _, _⟩
-  rcases h3 with ⟨_, _, _, _, _, _⟩
-  simp [hexXor, yaoXor_assoc]
+  apply Hexagram.ext <;> simp [hexXor, yaoXor_assoc]
 
 /-! ### § 6.3 R7 XOR -/
 

@@ -279,70 +279,70 @@ end R8
 
 /-- The 64 hexagrams in the canonical 序卦传 (King Wen) order. -/
 def xuGua : List Hexagram := [
-  ⟨.yang, .yang, .yang, .yang, .yang, .yang⟩,  --  1. 乾    ䷀
-  ⟨.yin,  .yin,  .yin,  .yin,  .yin,  .yin⟩,   --  2. 坤    ䷁
-  ⟨.yang, .yin,  .yin,  .yin,  .yang, .yin⟩,   --  3. 屯    ䷂
-  ⟨.yin,  .yang, .yin,  .yin,  .yin,  .yang⟩,  --  4. 蒙    ䷃
-  ⟨.yang, .yang, .yang, .yin,  .yang, .yin⟩,   --  5. 需    ䷄
-  ⟨.yin,  .yang, .yin,  .yang, .yang, .yang⟩,  --  6. 讼    ䷅
-  ⟨.yin,  .yang, .yin,  .yin,  .yin,  .yin⟩,   --  7. 师    ䷆
-  ⟨.yin,  .yin,  .yin,  .yin,  .yang, .yin⟩,   --  8. 比    ䷇
-  ⟨.yang, .yang, .yang, .yin,  .yang, .yang⟩,  --  9. 小畜  ䷈
-  ⟨.yang, .yang, .yin,  .yang, .yang, .yang⟩,  -- 10. 履    ䷉
-  ⟨.yang, .yang, .yang, .yin,  .yin,  .yin⟩,   -- 11. 泰    ䷊
-  ⟨.yin,  .yin,  .yin,  .yang, .yang, .yang⟩,  -- 12. 否    ䷋
-  ⟨.yang, .yin,  .yang, .yang, .yang, .yang⟩,  -- 13. 同人  ䷌
-  ⟨.yang, .yang, .yang, .yang, .yin,  .yang⟩,  -- 14. 大有  ䷍
-  ⟨.yin,  .yin,  .yang, .yin,  .yin,  .yin⟩,   -- 15. 谦    ䷎
-  ⟨.yin,  .yin,  .yin,  .yang, .yin,  .yin⟩,   -- 16. 豫    ䷏
-  ⟨.yang, .yin,  .yin,  .yang, .yang, .yin⟩,   -- 17. 随    ䷐
-  ⟨.yin,  .yang, .yang, .yin,  .yin,  .yang⟩,  -- 18. 蛊    ䷑
-  ⟨.yang, .yang, .yin,  .yin,  .yin,  .yin⟩,   -- 19. 临    ䷒
-  ⟨.yin,  .yin,  .yin,  .yin,  .yang, .yang⟩,  -- 20. 观    ䷓
-  ⟨.yang, .yin,  .yin,  .yang, .yin,  .yang⟩,  -- 21. 噬嗑  ䷔
-  ⟨.yang, .yin,  .yang, .yin,  .yin,  .yang⟩,  -- 22. 贲    ䷕
-  ⟨.yin,  .yin,  .yin,  .yin,  .yin,  .yang⟩,  -- 23. 剥    ䷖
-  ⟨.yang, .yin,  .yin,  .yin,  .yin,  .yin⟩,   -- 24. 复    ䷗
-  ⟨.yang, .yin,  .yin,  .yang, .yang, .yang⟩,  -- 25. 无妄  ䷘
-  ⟨.yang, .yang, .yang, .yin,  .yin,  .yang⟩,  -- 26. 大畜  ䷙
-  ⟨.yang, .yin,  .yin,  .yin,  .yin,  .yang⟩,  -- 27. 颐    ䷚
-  ⟨.yin,  .yang, .yang, .yang, .yang, .yin⟩,   -- 28. 大过  ䷛
-  ⟨.yin,  .yang, .yin,  .yin,  .yang, .yin⟩,   -- 29. 坎    ䷜
-  ⟨.yang, .yin,  .yang, .yang, .yin,  .yang⟩,  -- 30. 离    ䷝
-  ⟨.yin,  .yin,  .yang, .yang, .yang, .yin⟩,   -- 31. 咸    ䷞
-  ⟨.yin,  .yang, .yang, .yang, .yin,  .yin⟩,   -- 32. 恒    ䷟
-  ⟨.yin,  .yin,  .yang, .yang, .yang, .yang⟩,  -- 33. 遁    ䷠
-  ⟨.yang, .yang, .yang, .yang, .yin,  .yin⟩,   -- 34. 大壮  ䷡
-  ⟨.yin,  .yin,  .yin,  .yang, .yin,  .yang⟩,  -- 35. 晋    ䷢
-  ⟨.yang, .yin,  .yang, .yin,  .yin,  .yin⟩,   -- 36. 明夷  ䷣
-  ⟨.yang, .yin,  .yang, .yin,  .yang, .yang⟩,  -- 37. 家人  ䷤
-  ⟨.yang, .yang, .yin,  .yang, .yin,  .yang⟩,  -- 38. 睽    ䷥
-  ⟨.yin,  .yin,  .yang, .yin,  .yang, .yin⟩,   -- 39. 蹇    ䷦
-  ⟨.yin,  .yang, .yin,  .yang, .yin,  .yin⟩,   -- 40. 解    ䷧
-  ⟨.yang, .yang, .yin,  .yin,  .yin,  .yang⟩,  -- 41. 损    ䷨
-  ⟨.yang, .yin,  .yin,  .yin,  .yang, .yang⟩,  -- 42. 益    ䷩
-  ⟨.yang, .yang, .yang, .yang, .yang, .yin⟩,   -- 43. 夬    ䷪
-  ⟨.yin,  .yang, .yang, .yang, .yang, .yang⟩,  -- 44. 姤    ䷫
-  ⟨.yin,  .yin,  .yin,  .yang, .yang, .yin⟩,   -- 45. 萃    ䷬
-  ⟨.yin,  .yang, .yang, .yin,  .yin,  .yin⟩,   -- 46. 升    ䷭
-  ⟨.yin,  .yang, .yin,  .yang, .yang, .yin⟩,   -- 47. 困    ䷮
-  ⟨.yin,  .yang, .yang, .yin,  .yang, .yin⟩,   -- 48. 井    ䷯
-  ⟨.yang, .yin,  .yang, .yang, .yang, .yin⟩,   -- 49. 革    ䷰
-  ⟨.yin,  .yang, .yang, .yang, .yin,  .yang⟩,  -- 50. 鼎    ䷱
-  ⟨.yang, .yin,  .yin,  .yang, .yin,  .yin⟩,   -- 51. 震    ䷲
-  ⟨.yin,  .yin,  .yang, .yin,  .yin,  .yang⟩,  -- 52. 艮    ䷳
-  ⟨.yin,  .yin,  .yang, .yin,  .yang, .yang⟩,  -- 53. 渐    ䷴
-  ⟨.yang, .yang, .yin,  .yang, .yin,  .yin⟩,   -- 54. 归妹  ䷵
-  ⟨.yang, .yin,  .yang, .yang, .yin,  .yin⟩,   -- 55. 丰    ䷶
-  ⟨.yin,  .yin,  .yang, .yang, .yin,  .yang⟩,  -- 56. 旅    ䷷
-  ⟨.yin,  .yang, .yang, .yin,  .yang, .yang⟩,  -- 57. 巽    ䷸
-  ⟨.yang, .yang, .yin,  .yang, .yang, .yin⟩,   -- 58. 兑    ䷹
-  ⟨.yin,  .yang, .yin,  .yin,  .yang, .yang⟩,  -- 59. 涣    ䷺
-  ⟨.yang, .yang, .yin,  .yin,  .yang, .yin⟩,   -- 60. 节    ䷻
-  ⟨.yang, .yang, .yin,  .yin,  .yang, .yang⟩,  -- 61. 中孚  ䷼
-  ⟨.yin,  .yin,  .yang, .yang, .yin,  .yin⟩,   -- 62. 小过  ䷽
-  ⟨.yang, .yin,  .yang, .yin,  .yang, .yin⟩,   -- 63. 既济  ䷾
-  ⟨.yin,  .yang, .yin,  .yang, .yin,  .yang⟩   -- 64. 未济  ䷿
+  Hexagram.mk .yang .yang .yang .yang .yang .yang,  --  1. 乾    ䷀
+  Hexagram.mk .yin .yin .yin .yin .yin .yin,   --  2. 坤    ䷁
+  Hexagram.mk .yang .yin .yin .yin .yang .yin,   --  3. 屯    ䷂
+  Hexagram.mk .yin .yang .yin .yin .yin .yang,  --  4. 蒙    ䷃
+  Hexagram.mk .yang .yang .yang .yin .yang .yin,   --  5. 需    ䷄
+  Hexagram.mk .yin .yang .yin .yang .yang .yang,  --  6. 讼    ䷅
+  Hexagram.mk .yin .yang .yin .yin .yin .yin,   --  7. 师    ䷆
+  Hexagram.mk .yin .yin .yin .yin .yang .yin,   --  8. 比    ䷇
+  Hexagram.mk .yang .yang .yang .yin .yang .yang,  --  9. 小畜  ䷈
+  Hexagram.mk .yang .yang .yin .yang .yang .yang,  -- 10. 履    ䷉
+  Hexagram.mk .yang .yang .yang .yin .yin .yin,   -- 11. 泰    ䷊
+  Hexagram.mk .yin .yin .yin .yang .yang .yang,  -- 12. 否    ䷋
+  Hexagram.mk .yang .yin .yang .yang .yang .yang,  -- 13. 同人  ䷌
+  Hexagram.mk .yang .yang .yang .yang .yin .yang,  -- 14. 大有  ䷍
+  Hexagram.mk .yin .yin .yang .yin .yin .yin,   -- 15. 谦    ䷎
+  Hexagram.mk .yin .yin .yin .yang .yin .yin,   -- 16. 豫    ䷏
+  Hexagram.mk .yang .yin .yin .yang .yang .yin,   -- 17. 随    ䷐
+  Hexagram.mk .yin .yang .yang .yin .yin .yang,  -- 18. 蛊    ䷑
+  Hexagram.mk .yang .yang .yin .yin .yin .yin,   -- 19. 临    ䷒
+  Hexagram.mk .yin .yin .yin .yin .yang .yang,  -- 20. 观    ䷓
+  Hexagram.mk .yang .yin .yin .yang .yin .yang,  -- 21. 噬嗑  ䷔
+  Hexagram.mk .yang .yin .yang .yin .yin .yang,  -- 22. 贲    ䷕
+  Hexagram.mk .yin .yin .yin .yin .yin .yang,  -- 23. 剥    ䷖
+  Hexagram.mk .yang .yin .yin .yin .yin .yin,   -- 24. 复    ䷗
+  Hexagram.mk .yang .yin .yin .yang .yang .yang,  -- 25. 无妄  ䷘
+  Hexagram.mk .yang .yang .yang .yin .yin .yang,  -- 26. 大畜  ䷙
+  Hexagram.mk .yang .yin .yin .yin .yin .yang,  -- 27. 颐    ䷚
+  Hexagram.mk .yin .yang .yang .yang .yang .yin,   -- 28. 大过  ䷛
+  Hexagram.mk .yin .yang .yin .yin .yang .yin,   -- 29. 坎    ䷜
+  Hexagram.mk .yang .yin .yang .yang .yin .yang,  -- 30. 离    ䷝
+  Hexagram.mk .yin .yin .yang .yang .yang .yin,   -- 31. 咸    ䷞
+  Hexagram.mk .yin .yang .yang .yang .yin .yin,   -- 32. 恒    ䷟
+  Hexagram.mk .yin .yin .yang .yang .yang .yang,  -- 33. 遁    ䷠
+  Hexagram.mk .yang .yang .yang .yang .yin .yin,   -- 34. 大壮  ䷡
+  Hexagram.mk .yin .yin .yin .yang .yin .yang,  -- 35. 晋    ䷢
+  Hexagram.mk .yang .yin .yang .yin .yin .yin,   -- 36. 明夷  ䷣
+  Hexagram.mk .yang .yin .yang .yin .yang .yang,  -- 37. 家人  ䷤
+  Hexagram.mk .yang .yang .yin .yang .yin .yang,  -- 38. 睽    ䷥
+  Hexagram.mk .yin .yin .yang .yin .yang .yin,   -- 39. 蹇    ䷦
+  Hexagram.mk .yin .yang .yin .yang .yin .yin,   -- 40. 解    ䷧
+  Hexagram.mk .yang .yang .yin .yin .yin .yang,  -- 41. 损    ䷨
+  Hexagram.mk .yang .yin .yin .yin .yang .yang,  -- 42. 益    ䷩
+  Hexagram.mk .yang .yang .yang .yang .yang .yin,   -- 43. 夬    ䷪
+  Hexagram.mk .yin .yang .yang .yang .yang .yang,  -- 44. 姤    ䷫
+  Hexagram.mk .yin .yin .yin .yang .yang .yin,   -- 45. 萃    ䷬
+  Hexagram.mk .yin .yang .yang .yin .yin .yin,   -- 46. 升    ䷭
+  Hexagram.mk .yin .yang .yin .yang .yang .yin,   -- 47. 困    ䷮
+  Hexagram.mk .yin .yang .yang .yin .yang .yin,   -- 48. 井    ䷯
+  Hexagram.mk .yang .yin .yang .yang .yang .yin,   -- 49. 革    ䷰
+  Hexagram.mk .yin .yang .yang .yang .yin .yang,  -- 50. 鼎    ䷱
+  Hexagram.mk .yang .yin .yin .yang .yin .yin,   -- 51. 震    ䷲
+  Hexagram.mk .yin .yin .yang .yin .yin .yang,  -- 52. 艮    ䷳
+  Hexagram.mk .yin .yin .yang .yin .yang .yang,  -- 53. 渐    ䷴
+  Hexagram.mk .yang .yang .yin .yang .yin .yin,   -- 54. 归妹  ䷵
+  Hexagram.mk .yang .yin .yang .yang .yin .yin,   -- 55. 丰    ䷶
+  Hexagram.mk .yin .yin .yang .yang .yin .yang,  -- 56. 旅    ䷷
+  Hexagram.mk .yin .yang .yang .yin .yang .yang,  -- 57. 巽    ䷸
+  Hexagram.mk .yang .yang .yin .yang .yang .yin,   -- 58. 兑    ䷹
+  Hexagram.mk .yin .yang .yin .yin .yang .yang,  -- 59. 涣    ䷺
+  Hexagram.mk .yang .yang .yin .yin .yang .yin,   -- 60. 节    ䷻
+  Hexagram.mk .yang .yang .yin .yin .yang .yang,  -- 61. 中孚  ䷼
+  Hexagram.mk .yin .yin .yang .yang .yin .yin,   -- 62. 小过  ䷽
+  Hexagram.mk .yang .yin .yang .yin .yang .yin,   -- 63. 既济  ䷾
+  Hexagram.mk .yin .yang .yin .yang .yin .yang   -- 64. 未济  ䷿
 ]
 
 /-! ## § 5 序卦 properties -/
@@ -354,7 +354,7 @@ theorem xuGua_head : xuGua.head? = some Hexagram.heaven := rfl
 
 /-- The last hexagram in 序卦 is 未济. -/
 theorem xuGua_last :
-    xuGua.getLast? = some ⟨.yin, .yang, .yin, .yang, .yin, .yang⟩ := rfl
+    xuGua.getLast? = some (Hexagram.mk .yin .yang .yin .yang .yin .yang) := rfl
 
 /-- 序卦 successor: the next hexagram in King Wen order, if any. -/
 def xuGuaNext (h : Hexagram) : Option Hexagram :=
@@ -419,32 +419,25 @@ theorem yaoXor_assoc (a b c : Yao) :
 
 /-- Componentwise Hexagram XOR — yao-by-yao via `yaoXor`. -/
 def hexXor (h1 h2 : Hexagram) : Hexagram :=
-  ⟨yaoXor h1.y1 h2.y1, yaoXor h1.y2 h2.y2, yaoXor h1.y3 h2.y3,
-   yaoXor h1.y4 h2.y4, yaoXor h1.y5 h2.y5, yaoXor h1.y6 h2.y6⟩
+  Hexagram.mk
+    (yaoXor h1.y1 h2.y1) (yaoXor h1.y2 h2.y2) (yaoXor h1.y3 h2.y3)
+    (yaoXor h1.y4 h2.y4) (yaoXor h1.y5 h2.y5) (yaoXor h1.y6 h2.y6)
 
 @[simp] theorem hexXor_qian_left (h : Hexagram) : hexXor Hexagram.heaven h = h := by
-  rcases h with ⟨_, _, _, _, _, _⟩
-  simp [hexXor, Hexagram.heaven]
+  apply Hexagram.ext <;> simp [hexXor, Hexagram.heaven]
 
 @[simp] theorem hexXor_qian_right (h : Hexagram) : hexXor h Hexagram.heaven = h := by
-  rcases h with ⟨_, _, _, _, _, _⟩
-  simp [hexXor, Hexagram.heaven]
+  apply Hexagram.ext <;> simp [hexXor, Hexagram.heaven]
 
 theorem hexXor_self (h : Hexagram) : hexXor h h = Hexagram.heaven := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  simp [hexXor, Hexagram.heaven, yaoXor_self]
+  apply Hexagram.ext <;> simp [hexXor, Hexagram.heaven, yaoXor_self]
 
 theorem hexXor_comm (h1 h2 : Hexagram) : hexXor h1 h2 = hexXor h2 h1 := by
-  rcases h1 with ⟨_, _, _, _, _, _⟩
-  rcases h2 with ⟨_, _, _, _, _, _⟩
-  simp [hexXor, yaoXor_comm]
+  apply Hexagram.ext <;> simp [hexXor, yaoXor_comm]
 
 theorem hexXor_assoc (h1 h2 h3 : Hexagram) :
     hexXor (hexXor h1 h2) h3 = hexXor h1 (hexXor h2 h3) := by
-  rcases h1 with ⟨_, _, _, _, _, _⟩
-  rcases h2 with ⟨_, _, _, _, _, _⟩
-  rcases h3 with ⟨_, _, _, _, _, _⟩
-  simp [hexXor, yaoXor_assoc]
+  apply Hexagram.ext <;> simp [hexXor, yaoXor_assoc]
 
 /-! ### § 7.3 Shi XOR
 

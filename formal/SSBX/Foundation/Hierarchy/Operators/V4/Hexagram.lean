@@ -39,10 +39,11 @@ theorem actHex_cuoZong (h : Hexagram) :
 theorem actHex_compose (a b : V4) (h : Hexagram) :
     actHex (compose a b) h = actHex a (actHex b h) := by
   cases a <;> cases b <;>
-    cases h with
-    | mk y1 y2 y3 y4 y5 y6 =>
-        cases y1 <;> cases y2 <;> cases y3 <;>
-          cases y4 <;> cases y5 <;> cases y6 <;> rfl
+    simp [actHex, compose,
+          Hexagram.complement_involutive, Hexagram.reverse_involutive,
+          Hexagram.complementReverse, Hexagram.complement_reverse_comm,
+          Hexagram.cuoZong_cuoZong] <;>
+    apply Hexagram.ext <;> rfl
 
 theorem actHex_self_inverse (g : V4) (h : Hexagram) :
     actHex g (actHex g h) = h := by

@@ -108,21 +108,27 @@ def toIdx (h : Hexagram) : Fin 64 :=
     + 8 * h.y4.toIdx.val
     + 16 * h.y5.toIdx.val
     + 32 * h.y6.toIdx.val, by
-    rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
-      decide⟩
+    have e1 : h.y1.toIdx.val < 2 := h.y1.toIdx.isLt
+    have e2 : h.y2.toIdx.val < 2 := h.y2.toIdx.isLt
+    have e3 : h.y3.toIdx.val < 2 := h.y3.toIdx.isLt
+    have e4 : h.y4.toIdx.val < 2 := h.y4.toIdx.isLt
+    have e5 : h.y5.toIdx.val < 2 := h.y5.toIdx.isLt
+    have e6 : h.y6.toIdx.val < 2 := h.y6.toIdx.isLt
+    omega⟩
 
 def fromIdx (n : Fin 64) : Hexagram :=
-  { y1 := Yao.fromIdx ⟨n.val % 2, by omega⟩
-  , y2 := Yao.fromIdx ⟨(n.val / 2) % 2, by omega⟩
-  , y3 := Yao.fromIdx ⟨(n.val / 4) % 2, by omega⟩
-  , y4 := Yao.fromIdx ⟨(n.val / 8) % 2, by omega⟩
-  , y5 := Yao.fromIdx ⟨(n.val / 16) % 2, by omega⟩
-  , y6 := Yao.fromIdx ⟨(n.val / 32) % 2, by omega⟩ }
+  Hexagram.mk
+    (Yao.fromIdx ⟨n.val % 2, by omega⟩)
+    (Yao.fromIdx ⟨(n.val / 2) % 2, by omega⟩)
+    (Yao.fromIdx ⟨(n.val / 4) % 2, by omega⟩)
+    (Yao.fromIdx ⟨(n.val / 8) % 2, by omega⟩)
+    (Yao.fromIdx ⟨(n.val / 16) % 2, by omega⟩)
+    (Yao.fromIdx ⟨(n.val / 32) % 2, by omega⟩)
 
 theorem toIdx_fromIdx (h : Hexagram) : fromIdx h.toIdx = h := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     native_decide
 
 theorem fromIdx_toIdx (n : Fin 64) : (fromIdx n).toIdx = n := by

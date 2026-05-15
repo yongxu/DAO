@@ -74,12 +74,12 @@ theorem cellYuanTrace_length (c : R8) :
   exact hex_toDuoYuan_length h
 
 theorem fen_three_yuan_makes_trigram (y1 y2 y3 : Yuan) :
-    fenToTrigram (fenToSiXiang (fenToYi () y1) y2) y3 = ⟨y1, y2, y3⟩ := by
+    fenToTrigram (fenToSiXiang (fenToYi () y1) y2) y3 = SSBX.Foundation.Yi.Yi.Trigram.mk y1 y2 y3 := by
   rfl
 
 /-- A direct six-yao constructor used to state the hexagram root trace. -/
 def hexFromYuan (y1 y2 y3 y4 y5 y6 : Yuan) : Hexagram :=
-  ⟨y1, y2, y3, y4, y5, y6⟩
+  SSBX.Foundation.Yi.Yi.Hexagram.mk y1 y2 y3 y4 y5 y6
 
 theorem hexFromYuan_trace (y1 y2 y3 y4 y5 y6 : Yuan) :
     (hexFromYuan y1 y2 y3 y4 y5 y6).toDuoYuan =
@@ -384,13 +384,16 @@ def removeLayer : VerticalLayer → Trigram → SiXiang
 
 /-- 分 inserts a yao at the chosen layer. -/
 def fenAtLayer : VerticalLayer → SiXiang → Yuan → Trigram
-  | .xia, s, y => ⟨y, s.y1, s.y2⟩
-  | .zhong, s, y => ⟨s.y1, y, s.y2⟩
+  | .xia, s, y => SSBX.Foundation.Yi.Yi.Trigram.mk y s.y1 s.y2
+  | .zhong, s, y => SSBX.Foundation.Yi.Yi.Trigram.mk s.y1 y s.y2
   | .shang, s, y => fenToTrigram s y
 
 theorem removeLayer_fenAtLayer (l : VerticalLayer) (s : SiXiang) (y : Yuan) :
     removeLayer l (fenAtLayer l s y) = s := by
-  cases l <;> cases s <;> rfl
+  cases l <;> cases s <;>
+    simp [removeLayer, fenAtLayer, heXia, heZhong, heShang, fenToTrigram,
+          SSBX.Foundation.Yi.Yi.Trigram.y1_mk, SSBX.Foundation.Yi.Yi.Trigram.y2_mk,
+          SSBX.Foundation.Yi.Yi.Trigram.y3_mk]
 
 theorem qian_kun_yuan_yao_layer_summary :
     (∀ x : RootOne, x = rootOne)
@@ -445,7 +448,7 @@ theorem history_tape_structure_summary :
     ∧ (∀ s : YiState, stateTape (YiState.execute YiInstr.push s) = s.cur :: stateTape s)
     ∧ (∀ c : R8, (cellYuanTrace c).length = 6)
     ∧ (∀ y1 y2 y3 : Yuan,
-        fenToTrigram (fenToSiXiang (fenToYi () y1) y2) y3 = ⟨y1, y2, y3⟩)
+        fenToTrigram (fenToSiXiang (fenToYi () y1) y2) y3 = SSBX.Foundation.Yi.Yi.Trigram.mk y1 y2 y3)
     ∧ (∀ e : StructureExpr, BuiltFromYao e)
     ∧ (∀ ops : CatalogueOperatorSeq, operatorSeqAct ops = .fen)
     ∧ (∀ m : MingSkeleton, nameAct m = .he)

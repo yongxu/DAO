@@ -37,7 +37,7 @@ def toHexagram (word : Carrier) : Hexagram :=
   let p1 := yaoPairOfV4 word.first
   let p2 := yaoPairOfV4 word.second
   let p3 := yaoPairOfV4 word.third
-  ⟨p1.1, p1.2, p2.1, p2.2, p3.1, p3.2⟩
+  Hexagram.mk p1.1 p1.2 p2.1 p2.2 p3.1 p3.2
 
 def ofHexagram (h : Hexagram) : Carrier :=
   ⟨v4OfYaoPair h.y1 h.y2, v4OfYaoPair h.y3 h.y4,
@@ -47,13 +47,14 @@ def ofHexagram (h : Hexagram) : Carrier :=
     ofHexagram (toHexagram word) = word := by
   cases word with
   | mk a b c =>
-      cases a <;> cases b <;> cases c <;> rfl
+      cases a <;> cases b <;> cases c <;> decide
 
 @[simp] theorem toHexagram_ofHexagram (h : Hexagram) :
     toHexagram (ofHexagram h) = h := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;>
-    cases y6 <;> rfl
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
+    decide
 
 /-- The exact carrier bridge: the V4-native 64-word space is the R6
 hexagram space, read as three two-bit V4 coordinates. -/

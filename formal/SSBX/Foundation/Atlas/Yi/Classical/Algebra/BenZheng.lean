@@ -176,30 +176,49 @@ theorem ben_zheng_complement (t : Trigram) :
 /-- complement 保 isZongFixed: 全反不破坏 palindrome. -/
 theorem complement_preserves_isZongFixed (t : Trigram) :
     t.complement.isZongFixed = t.isZongFixed := by
-  cases t with
-  | mk y1 y2 y3 =>
-    cases y1 <;> cases y3 <;> rfl
+  show (match (Trigram.complement t).y1, (Trigram.complement t).y3 with
+    | .yang, .yang => true | .yin, .yin => true | _, _ => false) =
+    (match t.y1, t.y3 with
+    | .yang, .yang => true | .yin, .yin => true | _, _ => false)
+  have e1 : (Trigram.complement t).y1 = t.y1.neg := rfl
+  have e3 : (Trigram.complement t).y3 = t.y3.neg := rfl
+  rw [e1, e3]
+  cases t.y1 <;> cases t.y3 <;> rfl
 
 /-- middleFlip 保 isZongFixed: 翻中爻不动 y1/y3, palindrome 不变. -/
 theorem middleFlip_preserves_isZongFixed (t : Trigram) :
     (middleFlip t).isZongFixed = t.isZongFixed := by
-  cases t with
-  | mk y1 y2 y3 =>
-    cases y1 <;> cases y3 <;> rfl
+  show (match (middleFlip t).y1, (middleFlip t).y3 with
+    | .yang, .yang => true | .yin, .yin => true | _, _ => false) =
+    (match t.y1, t.y3 with
+    | .yang, .yang => true | .yin, .yin => true | _, _ => false)
+  have e1 : (middleFlip t).y1 = t.y1 := rfl
+  have e3 : (middleFlip t).y3 = t.y3 := rfl
+  rw [e1, e3]
 
 /-- motion 翻 isZongFixed: 改 y1 而不动 y3, 翻 palindrome 状态. -/
 theorem motion_flips_isZongFixed (t : Trigram) :
     (motion t).isZongFixed = !t.isZongFixed := by
-  cases t with
-  | mk y1 y2 y3 =>
-    cases y1 <;> cases y3 <;> rfl
+  show (match (motion t).y1, (motion t).y3 with
+    | .yang, .yang => true | .yin, .yin => true | _, _ => false) =
+    !(match t.y1, t.y3 with
+    | .yang, .yang => true | .yin, .yin => true | _, _ => false)
+  have e1 : (motion t).y1 = t.y1.neg := rfl
+  have e3 : (motion t).y3 = t.y3 := rfl
+  rw [e1, e3]
+  cases t.y1 <;> cases t.y3 <;> rfl
 
 /-- topFlip 翻 isZongFixed: 改 y3 而不动 y1, 翻 palindrome 状态. -/
 theorem topFlip_flips_isZongFixed (t : Trigram) :
     (topFlip t).isZongFixed = !t.isZongFixed := by
-  cases t with
-  | mk y1 y2 y3 =>
-    cases y1 <;> cases y3 <;> rfl
+  show (match (topFlip t).y1, (topFlip t).y3 with
+    | .yang, .yang => true | .yin, .yin => true | _, _ => false) =
+    !(match t.y1, t.y3 with
+    | .yang, .yang => true | .yin, .yin => true | _, _ => false)
+  have e1 : (topFlip t).y1 = t.y1 := rfl
+  have e3 : (topFlip t).y3 = t.y3.neg := rfl
+  rw [e1, e3]
+  cases t.y1 <;> cases t.y3 <;> rfl
 
 /-- bijection round-trip: Ben → Trigram → Ben. -/
 theorem benOf_toTrigram (b : Ben) :
@@ -334,97 +353,210 @@ theorem quadrant_partition_complete :
 /-- complement 保象限 (六爻全反，inner 与 outer 各自 isZongFixed 不变). -/
 theorem complement_preserves_quadrant (h : Hexagram) :
     h.complement.quadrant = h.quadrant := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y3 <;> cases y4 <;> cases y6 <;> rfl
+  show (match h.complement.innerTrigram.isZongFixed, h.complement.outerTrigram.isZongFixed with
+    | true, true => Quadrant.benBen | true, false => Quadrant.benZheng
+    | false, true => Quadrant.zhengBen | false, false => Quadrant.zhengZheng) =
+       (match h.innerTrigram.isZongFixed, h.outerTrigram.isZongFixed with
+    | true, true => Quadrant.benBen | true, false => Quadrant.benZheng
+    | false, true => Quadrant.zhengBen | false, false => Quadrant.zhengZheng)
+  rw [show h.complement.innerTrigram.isZongFixed = h.innerTrigram.isZongFixed from ?innerEq,
+      show h.complement.outerTrigram.isZongFixed = h.outerTrigram.isZongFixed from ?outerEq]
+  case innerEq =>
+    cases hy1 : h.y1 <;> cases hy3 : h.y3 <;>
+      simp [Hexagram.innerTrigram, Hexagram.complement, Trigram.isZongFixed,
+            Trigram.mk, Trigram.y1, Trigram.y3, Yao.neg,
+            SSBX.Foundation.Atlas.Yi.Trigram.y1, SSBX.Foundation.Atlas.Yi.Trigram.y3,
+            SSBX.Foundation.Atlas.Yi.Trigram.mk, SSBX.Foundation.Atlas.Yi.Yao.neg,
+            SSBX.Foundation.Atlas.Yi.Hexagram.y1, SSBX.Foundation.Atlas.Yi.Hexagram.y3,
+            hy1, hy3]
+  case outerEq =>
+    cases hy4 : h.y4 <;> cases hy6 : h.y6 <;>
+      simp [Hexagram.outerTrigram, Hexagram.complement, Trigram.isZongFixed,
+            Trigram.mk, Trigram.y1, Trigram.y3, Yao.neg,
+            SSBX.Foundation.Atlas.Yi.Trigram.y1, SSBX.Foundation.Atlas.Yi.Trigram.y3,
+            SSBX.Foundation.Atlas.Yi.Trigram.mk, SSBX.Foundation.Atlas.Yi.Yao.neg,
+            SSBX.Foundation.Atlas.Yi.Hexagram.y4, SSBX.Foundation.Atlas.Yi.Hexagram.y6,
+            hy4, hy6]
+
+/-- Key isomorphism: a hexagram's quadrant depends only on its y1/y3/y4/y6 yao via
+    isZongFixed of inner/outer trigrams. reverse swaps inner with outer (and reverses each). -/
+private theorem reverse_inner_isZongFixed (h : Hexagram) :
+    h.reverse.innerTrigram.isZongFixed = h.outerTrigram.isZongFixed := by
+  show (Trigram.isZongFixed (Trigram.mk h.y6 h.y5 h.y4))
+     = (Trigram.isZongFixed (Trigram.mk h.y4 h.y5 h.y6))
+  unfold Trigram.isZongFixed
+  show (match (Trigram.mk h.y6 h.y5 h.y4).y1, (Trigram.mk h.y6 h.y5 h.y4).y3 with
+    | .yang, .yang => true | .yin, .yin => true | _, _ => false) =
+       (match (Trigram.mk h.y4 h.y5 h.y6).y1, (Trigram.mk h.y4 h.y5 h.y6).y3 with
+    | .yang, .yang => true | .yin, .yin => true | _, _ => false)
+  rw [Trigram.y1_mk, Trigram.y3_mk, Trigram.y1_mk, Trigram.y3_mk]
+  cases h.y4 <;> cases h.y6 <;> rfl
+
+private theorem reverse_outer_isZongFixed (h : Hexagram) :
+    h.reverse.outerTrigram.isZongFixed = h.innerTrigram.isZongFixed := by
+  show (Trigram.isZongFixed (Trigram.mk h.y3 h.y2 h.y1))
+     = (Trigram.isZongFixed (Trigram.mk h.y1 h.y2 h.y3))
+  unfold Trigram.isZongFixed
+  show (match (Trigram.mk h.y3 h.y2 h.y1).y1, (Trigram.mk h.y3 h.y2 h.y1).y3 with
+    | .yang, .yang => true | .yin, .yin => true | _, _ => false) =
+       (match (Trigram.mk h.y1 h.y2 h.y3).y1, (Trigram.mk h.y1 h.y2 h.y3).y3 with
+    | .yang, .yang => true | .yin, .yin => true | _, _ => false)
+  rw [Trigram.y1_mk, Trigram.y3_mk, Trigram.y1_mk, Trigram.y3_mk]
+  cases h.y1 <;> cases h.y3 <;> rfl
 
 /-- reverse 在本本自闭. -/
 theorem reverse_preserves_benBen (h : Hexagram) :
     h.quadrant = .benBen → h.reverse.quadrant = .benBen := by
   intro hq
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    revert hq
-    cases y1 <;> cases y3 <;> cases y4 <;> cases y6 <;> intro hq <;>
-      first | rfl | (simp [Hexagram.quadrant, Hexagram.innerTrigram,
-                            Hexagram.outerTrigram, Trigram.isZongFixed] at hq)
+  show (match h.reverse.innerTrigram.isZongFixed, h.reverse.outerTrigram.isZongFixed with
+    | true, true => Quadrant.benBen | true, false => Quadrant.benZheng
+    | false, true => Quadrant.zhengBen | false, false => Quadrant.zhengZheng) = Quadrant.benBen
+  rw [reverse_inner_isZongFixed, reverse_outer_isZongFixed]
+  -- Now use hq.
+  show (match h.outerTrigram.isZongFixed, h.innerTrigram.isZongFixed with
+    | true, true => Quadrant.benBen | true, false => Quadrant.benZheng
+    | false, true => Quadrant.zhengBen | false, false => Quadrant.zhengZheng) = Quadrant.benBen
+  have hq' : (match h.innerTrigram.isZongFixed, h.outerTrigram.isZongFixed with
+    | true, true => Quadrant.benBen | true, false => Quadrant.benZheng
+    | false, true => Quadrant.zhengBen | false, false => Quadrant.zhengZheng) = Quadrant.benBen := hq
+  revert hq'
+  cases h.innerTrigram.isZongFixed <;> cases h.outerTrigram.isZongFixed <;>
+    intro hq' <;> first | rfl | (simp at hq')
 
 /-- reverse 把本征送到征本. -/
 theorem reverse_swap_benZheng_to_zhengBen (h : Hexagram) :
     h.quadrant = .benZheng → h.reverse.quadrant = .zhengBen := by
   intro hq
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    revert hq
-    cases y1 <;> cases y3 <;> cases y4 <;> cases y6 <;> intro hq <;>
-      first | rfl | (simp [Hexagram.quadrant, Hexagram.innerTrigram,
-                            Hexagram.outerTrigram, Trigram.isZongFixed] at hq)
+  show (match h.reverse.innerTrigram.isZongFixed, h.reverse.outerTrigram.isZongFixed with
+    | true, true => Quadrant.benBen | true, false => Quadrant.benZheng
+    | false, true => Quadrant.zhengBen | false, false => Quadrant.zhengZheng) = Quadrant.zhengBen
+  rw [reverse_inner_isZongFixed, reverse_outer_isZongFixed]
+  have hq' : (match h.innerTrigram.isZongFixed, h.outerTrigram.isZongFixed with
+    | true, true => Quadrant.benBen | true, false => Quadrant.benZheng
+    | false, true => Quadrant.zhengBen | false, false => Quadrant.zhengZheng) = Quadrant.benZheng := hq
+  revert hq'
+  cases h.innerTrigram.isZongFixed <;> cases h.outerTrigram.isZongFixed <;>
+    intro hq' <;> first | rfl | (simp at hq')
 
 /-- reverse 把征本送到本征. -/
 theorem reverse_swap_zhengBen_to_benZheng (h : Hexagram) :
     h.quadrant = .zhengBen → h.reverse.quadrant = .benZheng := by
   intro hq
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    revert hq
-    cases y1 <;> cases y3 <;> cases y4 <;> cases y6 <;> intro hq <;>
-      first | rfl | (simp [Hexagram.quadrant, Hexagram.innerTrigram,
-                            Hexagram.outerTrigram, Trigram.isZongFixed] at hq)
+  show (match h.reverse.innerTrigram.isZongFixed, h.reverse.outerTrigram.isZongFixed with
+    | true, true => Quadrant.benBen | true, false => Quadrant.benZheng
+    | false, true => Quadrant.zhengBen | false, false => Quadrant.zhengZheng) = Quadrant.benZheng
+  rw [reverse_inner_isZongFixed, reverse_outer_isZongFixed]
+  have hq' : (match h.innerTrigram.isZongFixed, h.outerTrigram.isZongFixed with
+    | true, true => Quadrant.benBen | true, false => Quadrant.benZheng
+    | false, true => Quadrant.zhengBen | false, false => Quadrant.zhengZheng) = Quadrant.zhengBen := hq
+  revert hq'
+  cases h.innerTrigram.isZongFixed <;> cases h.outerTrigram.isZongFixed <;>
+    intro hq' <;> first | rfl | (simp at hq')
 
 /-- reverse 在征征自闭. -/
 theorem reverse_preserves_zhengZheng (h : Hexagram) :
     h.quadrant = .zhengZheng → h.reverse.quadrant = .zhengZheng := by
   intro hq
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    revert hq
-    cases y1 <;> cases y3 <;> cases y4 <;> cases y6 <;> intro hq <;>
-      first | rfl | (simp [Hexagram.quadrant, Hexagram.innerTrigram,
-                            Hexagram.outerTrigram, Trigram.isZongFixed] at hq)
+  show (match h.reverse.innerTrigram.isZongFixed, h.reverse.outerTrigram.isZongFixed with
+    | true, true => Quadrant.benBen | true, false => Quadrant.benZheng
+    | false, true => Quadrant.zhengBen | false, false => Quadrant.zhengZheng) = Quadrant.zhengZheng
+  rw [reverse_inner_isZongFixed, reverse_outer_isZongFixed]
+  have hq' : (match h.innerTrigram.isZongFixed, h.outerTrigram.isZongFixed with
+    | true, true => Quadrant.benBen | true, false => Quadrant.benZheng
+    | false, true => Quadrant.zhengBen | false, false => Quadrant.zhengZheng) = Quadrant.zhengZheng := hq
+  revert hq'
+  cases h.innerTrigram.isZongFixed <;> cases h.outerTrigram.isZongFixed <;>
+    intro hq' <;> first | rfl | (simp at hq')
 
 /-! ## § 10 单爻 flip：中爻 (y2/y5) 保象限，其它跨 -/
+
+/-- Helper: isZongFixed of a `Trigram.mk a b c` depends only on a and c. -/
+private theorem isZongFixed_mk_mid_indep (a b b' c : Yao) :
+    Trigram.isZongFixed (Trigram.mk a b c) = Trigram.isZongFixed (Trigram.mk a b' c) := by
+  unfold Trigram.isZongFixed
+  show (match (Trigram.mk a b c).y1, (Trigram.mk a b c).y3 with
+    | .yang, .yang => true | .yin, .yin => true | _, _ => false) =
+       (match (Trigram.mk a b' c).y1, (Trigram.mk a b' c).y3 with
+    | .yang, .yang => true | .yin, .yin => true | _, _ => false)
+  rw [Trigram.y1_mk, Trigram.y3_mk, Trigram.y1_mk, Trigram.y3_mk]
 
 /-- middleFlipInner (flip y2) 保象限. -/
 theorem huaInner_preserves_quadrant (h : Hexagram) :
     (middleFlipInner h).quadrant = h.quadrant := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y3 <;> cases y4 <;> cases y6 <;> rfl
+  show (match (middleFlipInner h).innerTrigram.isZongFixed, (middleFlipInner h).outerTrigram.isZongFixed with
+    | true, true => Quadrant.benBen | true, false => Quadrant.benZheng
+    | false, true => Quadrant.zhengBen | false, false => Quadrant.zhengZheng) = _
+  have e1 : (middleFlipInner h).innerTrigram.isZongFixed = h.innerTrigram.isZongFixed := by
+    show Trigram.isZongFixed (Trigram.mk h.y1 h.y2.neg h.y3)
+       = Trigram.isZongFixed (Trigram.mk h.y1 h.y2 h.y3)
+    exact isZongFixed_mk_mid_indep h.y1 h.y2.neg h.y2 h.y3
+  have e2 : (middleFlipInner h).outerTrigram.isZongFixed = h.outerTrigram.isZongFixed := rfl
+  rw [e1, e2]; rfl
 
 /-- middleFlipOuter (flip y5) 保象限. -/
 theorem huaOuter_preserves_quadrant (h : Hexagram) :
     (middleFlipOuter h).quadrant = h.quadrant := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y3 <;> cases y4 <;> cases y6 <;> rfl
+  show (match (middleFlipOuter h).innerTrigram.isZongFixed, (middleFlipOuter h).outerTrigram.isZongFixed with
+    | true, true => Quadrant.benBen | true, false => Quadrant.benZheng
+    | false, true => Quadrant.zhengBen | false, false => Quadrant.zhengZheng) = _
+  have e1 : (middleFlipOuter h).innerTrigram.isZongFixed = h.innerTrigram.isZongFixed := rfl
+  have e2 : (middleFlipOuter h).outerTrigram.isZongFixed = h.outerTrigram.isZongFixed := by
+    show Trigram.isZongFixed (Trigram.mk h.y4 h.y5.neg h.y6)
+       = Trigram.isZongFixed (Trigram.mk h.y4 h.y5 h.y6)
+    exact isZongFixed_mk_mid_indep h.y4 h.y5.neg h.y5 h.y6
+  rw [e1, e2]; rfl
 
 /-- dongInner (flip y1) 跨 inner 本/征. -/
 theorem dongInner_flips_inner (h : Hexagram) :
     (dongInner h).innerTrigram.isZongFixed = !h.innerTrigram.isZongFixed := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y3 <;> rfl
+  show (Trigram.isZongFixed (Trigram.mk h.y1.neg h.y2 h.y3))
+     = !(Trigram.isZongFixed (Trigram.mk h.y1 h.y2 h.y3))
+  unfold Trigram.isZongFixed
+  show (match (Trigram.mk h.y1.neg h.y2 h.y3).y1, (Trigram.mk h.y1.neg h.y2 h.y3).y3 with
+    | .yang, .yang => true | .yin, .yin => true | _, _ => false) =
+       !(match (Trigram.mk h.y1 h.y2 h.y3).y1, (Trigram.mk h.y1 h.y2 h.y3).y3 with
+    | .yang, .yang => true | .yin, .yin => true | _, _ => false)
+  rw [Trigram.y1_mk, Trigram.y3_mk, Trigram.y1_mk, Trigram.y3_mk]
+  cases h.y1 <;> cases h.y3 <;> rfl
 
 /-- topFlipInner (flip y3) 跨 inner 本/征. -/
 theorem bianInner_flips_inner (h : Hexagram) :
     (topFlipInner h).innerTrigram.isZongFixed = !h.innerTrigram.isZongFixed := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y3 <;> rfl
+  show (Trigram.isZongFixed (Trigram.mk h.y1 h.y2 h.y3.neg))
+     = !(Trigram.isZongFixed (Trigram.mk h.y1 h.y2 h.y3))
+  unfold Trigram.isZongFixed
+  show (match (Trigram.mk h.y1 h.y2 h.y3.neg).y1, (Trigram.mk h.y1 h.y2 h.y3.neg).y3 with
+    | .yang, .yang => true | .yin, .yin => true | _, _ => false) =
+       !(match (Trigram.mk h.y1 h.y2 h.y3).y1, (Trigram.mk h.y1 h.y2 h.y3).y3 with
+    | .yang, .yang => true | .yin, .yin => true | _, _ => false)
+  rw [Trigram.y1_mk, Trigram.y3_mk, Trigram.y1_mk, Trigram.y3_mk]
+  cases h.y1 <;> cases h.y3 <;> rfl
 
 /-- dongOuter (flip y4) 跨 outer 本/征. -/
 theorem dongOuter_flips_outer (h : Hexagram) :
     (dongOuter h).outerTrigram.isZongFixed = !h.outerTrigram.isZongFixed := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y4 <;> cases y6 <;> rfl
+  show (Trigram.isZongFixed (Trigram.mk h.y4.neg h.y5 h.y6))
+     = !(Trigram.isZongFixed (Trigram.mk h.y4 h.y5 h.y6))
+  unfold Trigram.isZongFixed
+  show (match (Trigram.mk h.y4.neg h.y5 h.y6).y1, (Trigram.mk h.y4.neg h.y5 h.y6).y3 with
+    | .yang, .yang => true | .yin, .yin => true | _, _ => false) =
+       !(match (Trigram.mk h.y4 h.y5 h.y6).y1, (Trigram.mk h.y4 h.y5 h.y6).y3 with
+    | .yang, .yang => true | .yin, .yin => true | _, _ => false)
+  rw [Trigram.y1_mk, Trigram.y3_mk, Trigram.y1_mk, Trigram.y3_mk]
+  cases h.y4 <;> cases h.y6 <;> rfl
 
 /-- topFlipOuter (flip y6) 跨 outer 本/征. -/
 theorem bianOuter_flips_outer (h : Hexagram) :
     (topFlipOuter h).outerTrigram.isZongFixed = !h.outerTrigram.isZongFixed := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y4 <;> cases y6 <;> rfl
+  show (Trigram.isZongFixed (Trigram.mk h.y4 h.y5 h.y6.neg))
+     = !(Trigram.isZongFixed (Trigram.mk h.y4 h.y5 h.y6))
+  unfold Trigram.isZongFixed
+  show (match (Trigram.mk h.y4 h.y5 h.y6.neg).y1, (Trigram.mk h.y4 h.y5 h.y6.neg).y3 with
+    | .yang, .yang => true | .yin, .yin => true | _, _ => false) =
+       !(match (Trigram.mk h.y4 h.y5 h.y6).y1, (Trigram.mk h.y4 h.y5 h.y6).y3 with
+    | .yang, .yang => true | .yin, .yin => true | _, _ => false)
+  rw [Trigram.y1_mk, Trigram.y3_mk, Trigram.y1_mk, Trigram.y3_mk]
+  cases h.y4 <;> cases h.y6 <;> rfl
 
 /-! ## § 11 interlace attractors: {1乾, 2坤, 63既济, 64未济} 全在本本 -/
 

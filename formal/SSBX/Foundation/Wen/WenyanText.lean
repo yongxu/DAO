@@ -93,11 +93,11 @@ theorem «坤天道» : «施» «道判之程» Hexagram.earth = «已» := by 
 
 /-- 否☰☷：心道。 -/
 theorem «否心道» :
-    «施» «道判之程» ⟨.yin, .yin, .yin, .yang, .yang, .yang⟩ = «未» := by native_decide
+    «施» «道判之程» (Hexagram.mk .yin .yin .yin .yang .yang .yang) = «未» := by native_decide
 
 /-- 泰☷☰：心道。 -/
 theorem «泰心道» :
-    «施» «道判之程» ⟨.yang, .yang, .yang, .yin, .yin, .yin⟩ = «未» := by native_decide
+    «施» «道判之程» (Hexagram.mk .yang .yang .yang .yin .yin .yin) = «未» := by native_decide
 
 /-! ## § 6  文之他程 — 文言之中能造万程 -/
 
@@ -131,22 +131,25 @@ def «综而后判» : List YiInstr :=
 /-- 互而后判：保道。互不变 y3=y4 之关系。 -/
 theorem «互判保道» (h : Hexagram) :
     «施» «互而后判» h = «施» «道判之程» h := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     native_decide
 
 /-- 错而后判：保道。错颠倒所有爻，y3、y4 之同否不变。 -/
 theorem «错判保道» (h : Hexagram) :
     «施» «错而后判» h = «施» «道判之程» h := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     native_decide
 
 /-- 综而后判：保道。综倒上下，y3 与 y4 互换，故同否不变。 -/
 theorem «综判保道» (h : Hexagram) :
     «施» «综而后判» h = «施» «道判之程» h := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     native_decide
 
 /-! ## § 7  翻爻之程 — 一爻反则道未必同 -/
@@ -163,8 +166,9 @@ def «翻三而后判» : List YiInstr :=
 /-- 翻第三爻则道反：天变心，心变天。 -/
 theorem «翻三反道» (h : Hexagram) :
     «施» «翻三而后判» h = (if «施» «道判之程» h = «已» then «未» else «已») := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     native_decide
 
 /-! ## § 8  推取之程 — 带之用 -/
@@ -177,8 +181,9 @@ def «推取» : List YiInstr :=
 
 theorem «推取归原» (h : Hexagram) :
     ((YiState.init h «推取»).runFuel 10).cur = (h, «今») := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     native_decide
 
 /-! ## § 9  公示 -/

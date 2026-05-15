@@ -794,55 +794,55 @@ def boolDiscriminationLawOperatorIds : List OperatorId :=
 def boolRelationPredicate (_id : OperatorId) (a b : Hexagram) : Bool :=
   decide (a = b)
 
+set_option maxHeartbeats 2000000 in
 theorem boolRelationPredicate_denotes_eqHex (id : OperatorId) (a b : Hexagram) :
     denoteHexRel Stdlib.tongBody a b = some (boolRelationPredicate id a b) := by
   unfold boolRelationPredicate
-  cases a with
-  | mk a1 a2 a3 a4 a5 a6 =>
-    cases b with
-    | mk b1 b2 b3 b4 b5 b6 =>
-      cases a1 <;> cases a2 <;> cases a3 <;> cases a4 <;> cases a5 <;> cases a6 <;>
-      cases b1 <;> cases b2 <;> cases b3 <;> cases b4 <;> cases b5 <;> cases b6 <;>
-      native_decide
+  have hae : a = Hexagram.mk a.y1 a.y2 a.y3 a.y4 a.y5 a.y6 := by apply Hexagram.ext <;> rfl
+  have hbe : b = Hexagram.mk b.y1 b.y2 b.y3 b.y4 b.y5 b.y6 := by apply Hexagram.ext <;> rfl
+  rw [hae, hbe]
+  cases a.y1 <;> cases a.y2 <;> cases a.y3 <;> cases a.y4 <;> cases a.y5 <;> cases a.y6 <;>
+  cases b.y1 <;> cases b.y2 <;> cases b.y3 <;> cases b.y4 <;> cases b.y5 <;> cases b.y6 <;>
+  native_decide
 
 def hexEqualityLaw (_id : OperatorId) (a b : Hexagram) : Bool :=
   decide (a = b)
 
+set_option maxHeartbeats 2000000 in
 theorem hexEqualityLaw_denotes_tong (id : OperatorId) (a b : Hexagram) :
     denoteHexRel Stdlib.tongBody a b = some (hexEqualityLaw id a b) := by
   unfold hexEqualityLaw
-  cases a with
-  | mk a1 a2 a3 a4 a5 a6 =>
-    cases b with
-    | mk b1 b2 b3 b4 b5 b6 =>
-      cases a1 <;> cases a2 <;> cases a3 <;> cases a4 <;> cases a5 <;> cases a6 <;>
-      cases b1 <;> cases b2 <;> cases b3 <;> cases b4 <;> cases b5 <;> cases b6 <;>
-      native_decide
+  have hae : a = Hexagram.mk a.y1 a.y2 a.y3 a.y4 a.y5 a.y6 := by apply Hexagram.ext <;> rfl
+  have hbe : b = Hexagram.mk b.y1 b.y2 b.y3 b.y4 b.y5 b.y6 := by apply Hexagram.ext <;> rfl
+  rw [hae, hbe]
+  cases a.y1 <;> cases a.y2 <;> cases a.y3 <;> cases a.y4 <;> cases a.y5 <;> cases a.y6 <;>
+  cases b.y1 <;> cases b.y2 <;> cases b.y3 <;> cases b.y4 <;> cases b.y5 <;> cases b.y6 <;>
+  native_decide
 
+set_option maxHeartbeats 2000000 in
 theorem hexEqualityLaw_denotes_bi (id : OperatorId) (a b : Hexagram) :
     denoteHexRel Stdlib.biBody a b = some (hexEqualityLaw id a b) := by
   unfold hexEqualityLaw
-  cases a with
-  | mk a1 a2 a3 a4 a5 a6 =>
-    cases b with
-    | mk b1 b2 b3 b4 b5 b6 =>
-      cases a1 <;> cases a2 <;> cases a3 <;> cases a4 <;> cases a5 <;> cases a6 <;>
-      cases b1 <;> cases b2 <;> cases b3 <;> cases b4 <;> cases b5 <;> cases b6 <;>
-      native_decide
+  have hae : a = Hexagram.mk a.y1 a.y2 a.y3 a.y4 a.y5 a.y6 := by apply Hexagram.ext <;> rfl
+  have hbe : b = Hexagram.mk b.y1 b.y2 b.y3 b.y4 b.y5 b.y6 := by apply Hexagram.ext <;> rfl
+  rw [hae, hbe]
+  cases a.y1 <;> cases a.y2 <;> cases a.y3 <;> cases a.y4 <;> cases a.y5 <;> cases a.y6 <;>
+  cases b.y1 <;> cases b.y2 <;> cases b.y3 <;> cases b.y4 <;> cases b.y5 <;> cases b.y6 <;>
+  native_decide
 
 def hexDisequalityLaw (_id : OperatorId) (a b : Hexagram) : Bool :=
   decide (a ≠ b)
 
+set_option maxHeartbeats 2000000 in
 theorem hexDisequalityLaw_denotes_neq (id : OperatorId) (a b : Hexagram) :
     denoteHexRel Stdlib.neqHexBody a b = some (hexDisequalityLaw id a b) := by
   unfold hexDisequalityLaw
-  cases a with
-  | mk a1 a2 a3 a4 a5 a6 =>
-    cases b with
-    | mk b1 b2 b3 b4 b5 b6 =>
-      cases a1 <;> cases a2 <;> cases a3 <;> cases a4 <;> cases a5 <;> cases a6 <;>
-      cases b1 <;> cases b2 <;> cases b3 <;> cases b4 <;> cases b5 <;> cases b6 <;>
-      native_decide
+  have hae : a = Hexagram.mk a.y1 a.y2 a.y3 a.y4 a.y5 a.y6 := by apply Hexagram.ext <;> rfl
+  have hbe : b = Hexagram.mk b.y1 b.y2 b.y3 b.y4 b.y5 b.y6 := by apply Hexagram.ext <;> rfl
+  rw [hae, hbe]
+  cases a.y1 <;> cases a.y2 <;> cases a.y3 <;> cases a.y4 <;> cases a.y5 <;> cases a.y6 <;>
+  cases b.y1 <;> cases b.y2 <;> cases b.y3 <;> cases b.y4 <;> cases b.y5 <;> cases b.y6 <;>
+  native_decide
 
 def boolNegationLaw (_id : OperatorId) (b : Bool) : Bool := !b
 
@@ -1008,10 +1008,10 @@ theorem applicationWrapper_denotes_hex_id (id : OperatorId) (h : Hexagram) :
     denoteHex (.app (.app Stdlib.hexApplyBody Stdlib.hexIdBody) (.hexLit h)) =
       some (applicationWrapper id h) := by
   unfold applicationWrapper
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
-    all_goals native_decide
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
+    native_decide
 
 def predicateAnchorLawOperatorIds : List OperatorId :=
   [.B_8, .G_3, .G_6, .D_5, .D_6, .D_7, .Z_39, .ZA_13, .ZA_14]
@@ -1024,10 +1024,10 @@ def predicateAnchor (_id : OperatorId) (_h : Hexagram) : Bool := true
 theorem predicateAnchor_denotes_true (id : OperatorId) (h : Hexagram) :
     denoteBool (.app predicateAnchorBody (.hexLit h)) = some (predicateAnchor id h) := by
   unfold predicateAnchor
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
-    all_goals native_decide
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
+    native_decide
 
 def truthMarkerLawOperatorIds : List OperatorId :=
   [.S_4, .S_5, .S_6, .S_8]

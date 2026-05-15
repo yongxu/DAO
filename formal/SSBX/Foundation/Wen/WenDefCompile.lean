@@ -94,8 +94,9 @@ theorem idProg_correct (h : Hexagram) :
 /-- 「恒等」compile 之 Tm 等价：runFuel 之输出与 denotation 一致。 -/
 theorem idProg_denotes (h : Hexagram) :
     some ((YiState.init h idProg).runFuel 1).cur.1 = denoteHexFun idBody h := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     native_decide
 
 /-! ## § 2  Tier 1 — 常加 32 (即 flipYao 5) -/
@@ -103,7 +104,7 @@ theorem idProg_denotes (h : Hexagram) :
 /-- 卦索引 32：仅 y6 为 yin (高位)，其余 yang。 -/
 def hex32 : Hexagram := Hexagram.fromIdx ⟨32, by omega⟩
 
-theorem hex32_def : hex32 = ⟨.yang, .yang, .yang, .yang, .yang, .yin⟩ := by
+theorem hex32_def : hex32 = Hexagram.mk .yang .yang .yang .yang .yang .yin := by
   native_decide
 
 /-- 「加 32」之 Tm 体：λx:Hex. .jia (.hexLit hex32) x. -/
@@ -124,8 +125,9 @@ theorem add32Prog_runs (h : Hexagram) :
 /-- 桥 引理：翻 y6 一爻 = «加» hex32 h（mod 64 加 32 等同于 XOR 第 5 位）。 -/
 theorem flipPos5_eq_add32 (h : Hexagram) :
     h.flipPos ⟨5, by omega⟩ = «加» hex32 h := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     native_decide
 
 /-- 「加 32」compile 正确：runFuel 之 cur = «加» hex32 h。 -/
@@ -137,8 +139,9 @@ theorem add32Prog_correct (h : Hexagram) :
     全 64 输入皆 native_decide 见证。 -/
 theorem add32Prog_denotes (h : Hexagram) :
     some ((YiState.init h add32Prog).runFuel 2).cur.1 = denoteHexFun add32Body h := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     native_decide
 
 /-! ## § 3  Tier 2 — 直接 «错» (no Tm source) -/
@@ -154,8 +157,9 @@ theorem cuoProg_correct (h : Hexagram) :
 /-- 「错」compile 之 Tm 等价。 -/
 theorem cuoProg_denotes (h : Hexagram) :
     some ((YiState.init h cuoProg).runFuel 2).cur.1 = denoteHexFun Stdlib.cuoBody h := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     native_decide
 
 /-- 「综」之 YiInstr 程序。 -/
@@ -163,8 +167,9 @@ def zongProg : List YiInstr := [.reverse, .halt]
 
 theorem zongProg_denotes (h : Hexagram) :
     some ((YiState.init h zongProg).runFuel 2).cur.1 = denoteHexFun Stdlib.zongBody h := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     native_decide
 
 /-- 「互」之 YiInstr 程序。 -/
@@ -172,8 +177,9 @@ def huProg : List YiInstr := [.interlace, .halt]
 
 theorem huProg_denotes (h : Hexagram) :
     some ((YiState.init h huProg).runFuel 2).cur.1 = denoteHexFun Stdlib.huBody h := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     native_decide
 
 /-- 「错综」之 YiInstr 程序：按定义先错后综。 -/
@@ -182,8 +188,9 @@ def cuoZongProg : List YiInstr := [.complement, .reverse, .halt]
 theorem cuoZongProg_denotes (h : Hexagram) :
     some ((YiState.init h cuoZongProg).runFuel 3).cur.1 =
       denoteHexFun Stdlib.cuoZongBody h := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     native_decide
 
 private def fin0 : Fin 6 := ⟨0, by omega⟩
@@ -203,38 +210,44 @@ def flip6Prog : List YiInstr := [.flipYao fin5, .halt]
 
 theorem flip1Prog_denotes (h : Hexagram) :
     some ((YiState.init h flip1Prog).runFuel 2).cur.1 = denoteHexFun Stdlib.flip1Body h := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     native_decide
 
 theorem flip2Prog_denotes (h : Hexagram) :
     some ((YiState.init h flip2Prog).runFuel 2).cur.1 = denoteHexFun Stdlib.flip2Body h := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     native_decide
 
 theorem flip3Prog_denotes (h : Hexagram) :
     some ((YiState.init h flip3Prog).runFuel 2).cur.1 = denoteHexFun Stdlib.flip3Body h := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     native_decide
 
 theorem flip4Prog_denotes (h : Hexagram) :
     some ((YiState.init h flip4Prog).runFuel 2).cur.1 = denoteHexFun Stdlib.flip4Body h := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     native_decide
 
 theorem flip5Prog_denotes (h : Hexagram) :
     some ((YiState.init h flip5Prog).runFuel 2).cur.1 = denoteHexFun Stdlib.flip5Body h := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     native_decide
 
 theorem flip6Prog_denotes (h : Hexagram) :
     some ((YiState.init h flip6Prog).runFuel 2).cur.1 = denoteHexFun Stdlib.flip6Body h := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     native_decide
 
 /-! ## § 3b  A conservative executable bridge -/
@@ -402,40 +415,46 @@ theorem compileHexFun_repeatFan :
 
 theorem compileHexFun_id_denotes (h : Hexagram) :
     some (runHexProg [.halt] h) = denoteHexFun Stdlib.hexIdBody h := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     native_decide
 
 theorem compileHexFun_cuo_denotes (h : Hexagram) :
     some (runHexProg [.complement, .halt] h) = denoteHexFun Stdlib.cuoBody h := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     native_decide
 
 theorem compileHexFun_cuoAfterZong_denotes (h : Hexagram) :
     some (runHexProg [.reverse, .complement, .halt] h) = denoteHexFun cuoAfterZongBody h := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     native_decide
 
 theorem compileHexFun_cuoAfterZongCombinator_denotes (h : Hexagram) :
     some (runHexProg [.reverse, .complement, .halt] h) =
       denoteHexFun cuoAfterZongCombinatorBody h := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     native_decide
 
 theorem compileHexFun_fanAfterZongCombinator_denotes (h : Hexagram) :
     some (runHexProg [.reverse, .complement, .halt] h) =
       denoteHexFun fanAfterZongCombinatorBody h := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     native_decide
 
 theorem compileHexFun_repeatFan_denotes (h : Hexagram) :
     some (runHexProg [.complement, .complement, .halt] h) = denoteHexFun repeatFanBody h := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     native_decide
 
 example :
@@ -529,27 +548,27 @@ theorem compileHexFun_reject_cell :
 theorem flipPos_cuo_equivariant (h : Hexagram) (i : Fin 6) :
     (h.flipPos i).complement = (h.complement).flipPos i := by
   match i with
-  | ⟨0, _⟩ => rcases h with ⟨y1, _, _, _, _, _⟩; cases y1 <;> rfl
-  | ⟨1, _⟩ => rcases h with ⟨_, y2, _, _, _, _⟩; cases y2 <;> rfl
-  | ⟨2, _⟩ => rcases h with ⟨_, _, y3, _, _, _⟩; cases y3 <;> rfl
-  | ⟨3, _⟩ => rcases h with ⟨_, _, _, y4, _, _⟩; cases y4 <;> rfl
-  | ⟨4, _⟩ => rcases h with ⟨_, _, _, _, y5, _⟩; cases y5 <;> rfl
-  | ⟨5, _⟩ => rcases h with ⟨_, _, _, _, _, y6⟩; cases y6 <;> rfl
+  | ⟨0, _⟩ => apply Hexagram.ext <;> cases h.y1 <;> rfl
+  | ⟨1, _⟩ => apply Hexagram.ext <;> cases h.y2 <;> rfl
+  | ⟨2, _⟩ => apply Hexagram.ext <;> cases h.y3 <;> rfl
+  | ⟨3, _⟩ => apply Hexagram.ext <;> cases h.y4 <;> rfl
+  | ⟨4, _⟩ => apply Hexagram.ext <;> cases h.y5 <;> rfl
+  | ⟨5, _⟩ => apply Hexagram.ext <;> cases h.y6 <;> rfl
 
 /-- complement 与自身之 等变：(complement h).complement = complement (h.complement)。 -/
 theorem cuo_cuo_equivariant (h : Hexagram) :
     (Hexagram.complement h).complement = Hexagram.complement (h.complement) := by
-  rfl
+  apply Hexagram.ext <;> rfl
 
 /-- interlace 与 complement 通约：(interlace h).complement = interlace (h.complement)。 -/
 theorem hu_cuo_equivariant (h : Hexagram) :
     (Hexagram.interlace h).complement = Hexagram.interlace (h.complement) := by
-  rfl
+  apply Hexagram.ext <;> rfl
 
 /-- reverse 与 complement 通约：(reverse h).complement = reverse (h.complement)。 -/
 theorem zong_cuo_equivariant (h : Hexagram) :
     (Hexagram.reverse h).complement = Hexagram.reverse (h.complement) := by
-  rfl
+  apply Hexagram.ext <;> rfl
 
 /-- branchYaoEq 之 complement-不变性：y_i = y_j ↔ y_i.neg = y_j.neg
     （等价性 在 complement 下保持）。 -/
@@ -579,13 +598,14 @@ theorem yaoAt_eq_cuo_invariant (h : Hexagram) (i j : Fin 6) :
     | ⟨4, _⟩, ⟨4, _⟩
     | ⟨4, _⟩, ⟨5, _⟩ | ⟨5, _⟩, ⟨4, _⟩
     | ⟨5, _⟩, ⟨5, _⟩ =>
-        rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
         first
           | rfl
-          | (simp only [Hexagram.yaoAt, Hexagram.complement] at heq ⊢
+          | (simp only [Hexagram.yaoAt, Hexagram.complement,
+                        Hexagram.y1_mk, Hexagram.y2_mk, Hexagram.y3_mk,
+                        Hexagram.y4_mk, Hexagram.y5_mk, Hexagram.y6_mk] at heq ⊢
              revert heq
-             cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;>
-               cases y6 <;> decide)
+             cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;>
+               cases h.y6 <;> decide +revert)
   · intro heq
     match i, j with
     | ⟨0, _⟩, ⟨0, _⟩ => rfl
@@ -609,13 +629,14 @@ theorem yaoAt_eq_cuo_invariant (h : Hexagram) (i j : Fin 6) :
     | ⟨4, _⟩, ⟨4, _⟩
     | ⟨4, _⟩, ⟨5, _⟩ | ⟨5, _⟩, ⟨4, _⟩
     | ⟨5, _⟩, ⟨5, _⟩ =>
-        rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
         first
           | rfl
-          | (simp only [Hexagram.yaoAt, Hexagram.complement] at heq ⊢
+          | (simp only [Hexagram.yaoAt, Hexagram.complement,
+                        Hexagram.y1_mk, Hexagram.y2_mk, Hexagram.y3_mk,
+                        Hexagram.y4_mk, Hexagram.y5_mk, Hexagram.y6_mk] at heq ⊢
              revert heq
-             cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;>
-               cases y6 <;> decide)
+             cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;>
+               cases h.y6 <;> decide +revert)
 
 /-! ## § 5  「«生» 不可 compile」之 见证
 

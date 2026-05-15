@@ -54,20 +54,15 @@ theorem ju_eq_zero_iff (a b : Trigram) : ju a b = 0 ↔ a = b := by
 /-- **对称**：`ju a b = ju b a`. -/
 theorem ju_comm (a b : Trigram) : ju a b = ju b a := by
   unfold ju hammingDist
-  rcases a with ⟨a₁, a₂, a₃⟩
-  rcases b with ⟨b₁, b₂, b₃⟩
-  cases a₁ <;> cases a₂ <;> cases a₃ <;>
-    cases b₁ <;> cases b₂ <;> cases b₃ <;> rfl
+  cases a.y1 <;> cases a.y2 <;> cases a.y3 <;>
+    cases b.y1 <;> cases b.y2 <;> cases b.y3 <;> rfl
 
 /-- **三角不等式**：`ju a c ≤ ju a b + ju b c`（NEW result, 单值 cardinality 论证）。 -/
 theorem ju_triangle (a b c : Trigram) : ju a c ≤ ju a b + ju b c := by
   unfold ju hammingDist
-  rcases a with ⟨a₁, a₂, a₃⟩
-  rcases b with ⟨b₁, b₂, b₃⟩
-  rcases c with ⟨c₁, c₂, c₃⟩
-  cases a₁ <;> cases a₂ <;> cases a₃ <;>
-    cases b₁ <;> cases b₂ <;> cases b₃ <;>
-      cases c₁ <;> cases c₂ <;> cases c₃ <;> decide
+  cases a.y1 <;> cases a.y2 <;> cases a.y3 <;>
+    cases b.y1 <;> cases b.y2 <;> cases b.y3 <;>
+      cases c.y1 <;> cases c.y2 <;> cases c.y3 <;> decide
 
 /-- **直径上界**：`ju a b ≤ 3`（继承 BaguaAlgebra）。 -/
 theorem ju_le_three (a b : Trigram) : ju a b ≤ 3 := by
@@ -81,34 +76,26 @@ theorem ju_le_three (a b : Trigram) : ju a b ≤ 3 := by
 /-- **动 (motion) 等距**：`ju (motion a) (motion b) = ju a b`. -/
 theorem motion_iso (a b : Trigram) : ju (motion a) (motion b) = ju a b := by
   unfold ju hammingDist motion
-  rcases a with ⟨a₁, a₂, a₃⟩
-  rcases b with ⟨b₁, b₂, b₃⟩
-  cases a₁ <;> cases a₂ <;> cases a₃ <;>
-    cases b₁ <;> cases b₂ <;> cases b₃ <;> rfl
+  cases a.y1 <;> cases a.y2 <;> cases a.y3 <;>
+    cases b.y1 <;> cases b.y2 <;> cases b.y3 <;> rfl
 
 /-- **化 (middleFlip) 等距**：`ju (middleFlip a) (middleFlip b) = ju a b`. -/
 theorem middleFlip_iso (a b : Trigram) : ju (middleFlip a) (middleFlip b) = ju a b := by
   unfold ju hammingDist middleFlip
-  rcases a with ⟨a₁, a₂, a₃⟩
-  rcases b with ⟨b₁, b₂, b₃⟩
-  cases a₁ <;> cases a₂ <;> cases a₃ <;>
-    cases b₁ <;> cases b₂ <;> cases b₃ <;> rfl
+  cases a.y1 <;> cases a.y2 <;> cases a.y3 <;>
+    cases b.y1 <;> cases b.y2 <;> cases b.y3 <;> rfl
 
 /-- **变 (topFlip) 等距**：`ju (topFlip a) (topFlip b) = ju a b`. -/
 theorem topFlip_iso (a b : Trigram) : ju (topFlip a) (topFlip b) = ju a b := by
   unfold ju hammingDist topFlip
-  rcases a with ⟨a₁, a₂, a₃⟩
-  rcases b with ⟨b₁, b₂, b₃⟩
-  cases a₁ <;> cases a₂ <;> cases a₃ <;>
-    cases b₁ <;> cases b₂ <;> cases b₃ <;> rfl
+  cases a.y1 <;> cases a.y2 <;> cases a.y3 <;>
+    cases b.y1 <;> cases b.y2 <;> cases b.y3 <;> rfl
 
 /-- **错 (complement) 等距**：错卦保距离（错 = 三反复合，由各反等距递进可得）。 -/
 theorem complement_iso (a b : Trigram) : ju (Trigram.complement a) (Trigram.complement b) = ju a b := by
   unfold ju hammingDist Trigram.complement
-  rcases a with ⟨a₁, a₂, a₃⟩
-  rcases b with ⟨b₁, b₂, b₃⟩
-  cases a₁ <;> cases a₂ <;> cases a₃ <;>
-    cases b₁ <;> cases b₂ <;> cases b₃ <;> rfl
+  cases a.y1 <;> cases a.y2 <;> cases a.y3 <;>
+    cases b.y1 <;> cases b.y2 <;> cases b.y3 <;> rfl
 
 /-! ## § 4 立方体 Euler 特征
 

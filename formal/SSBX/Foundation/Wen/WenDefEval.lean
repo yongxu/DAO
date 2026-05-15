@@ -456,50 +456,50 @@ example :
 /-- 「推」之 denotation 即 YiCore.«生». -/
 theorem tui_eq_sheng (h : Hexagram) :
     denoteHexFun Stdlib.tuiBody h = some («生» h) := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     all_goals native_decide
 
 /-- 損 之 denotation = mod-64 减一 (即 «加» Hexagram.earth).
     «坤».toIdx = 63；(x + 63) mod 64 = (x − 1) mod 64. -/
 theorem sun_eq_decrement (h : Hexagram) :
     denoteHexFun Stdlib.sunBody h = some («加» Hexagram.earth h) := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     all_goals native_decide
 
 /-- 益 之 denotation = mod-64 加一 = «生». 与 推 共体. -/
 theorem yiBenefit_eq_sheng (h : Hexagram) :
     denoteHexFun Stdlib.yiBenefitBody h = some («生» h) := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     all_goals native_decide
 
 /-- 错 之 denotation = Hexagram.complement. -/
 theorem cuoBody_eq_cuo (h : Hexagram) :
     denoteHexFun Stdlib.cuoBody h = some h.complement := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     all_goals native_decide
 
 /-- 综 之 denotation = Hexagram.reverse. -/
 theorem zongBody_eq_zong (h : Hexagram) :
     denoteHexFun Stdlib.zongBody h = some h.reverse := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     all_goals native_decide
 
 /-- 互 之 denotation = Hexagram.interlace. -/
 theorem huBody_eq_hu (h : Hexagram) :
     denoteHexFun Stdlib.huBody h = some h.interlace := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     all_goals native_decide
 
 /-- 反 在 object-transform 读法下同错. -/
@@ -509,58 +509,58 @@ theorem fanReverseBody_eq_cuo (h : Hexagram) :
 
 theorem hexIdBody_eq_id (h : Hexagram) :
     denoteHexFun Stdlib.hexIdBody h = some h := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     all_goals native_decide
 
 theorem cuoZongBody_eq_cuoZong (h : Hexagram) :
     denoteHexFun Stdlib.cuoZongBody h = some h.complementReverse := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     all_goals native_decide
 
 theorem flip1Body_eq_dongInner (h : Hexagram) :
     denoteHexFun Stdlib.flip1Body h = some (dongInner h) := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     all_goals native_decide
 
 theorem flip2Body_eq_huaInner (h : Hexagram) :
     denoteHexFun Stdlib.flip2Body h = some (middleFlipInner h) := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     all_goals native_decide
 
 theorem flip3Body_eq_bianInner (h : Hexagram) :
     denoteHexFun Stdlib.flip3Body h = some (topFlipInner h) := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     all_goals native_decide
 
 theorem flip4Body_eq_dongOuter (h : Hexagram) :
     denoteHexFun Stdlib.flip4Body h = some (dongOuter h) := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     all_goals native_decide
 
 theorem flip5Body_eq_huaOuter (h : Hexagram) :
     denoteHexFun Stdlib.flip5Body h = some (middleFlipOuter h) := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     all_goals native_decide
 
 theorem flip6Body_eq_bianOuter (h : Hexagram) :
     denoteHexFun Stdlib.flip6Body h = some (topFlipOuter h) := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     all_goals native_decide
 
 /-- 「同 «一» «一»」denotes true (恒等于自身). -/
@@ -646,9 +646,9 @@ example :
 
 theorem hexApplyBody_tui_eq_sheng (h : Hexagram) :
     denoteHex (.app (.app Stdlib.hexApplyBody Stdlib.tuiBody) (.hexLit h)) = some («生» h) := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     all_goals native_decide
 
 example :
@@ -658,9 +658,9 @@ example :
 theorem hexApplyBody_sun_eq_decrement (h : Hexagram) :
     denoteHex (.app (.app Stdlib.hexApplyBody Stdlib.sunBody) (.hexLit h)) =
       some («加» Hexagram.earth h) := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     all_goals native_decide
 
 /-- 「凡 (λh. 同 h h)」denotes true (反身性 universally). -/

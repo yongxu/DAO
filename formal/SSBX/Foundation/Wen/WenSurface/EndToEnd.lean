@@ -25,6 +25,8 @@ complement-equivariant 子集 commute 作 future work）。
 -/
 import SSBX.Foundation.Wen.WenSurface.Elaborate
 
+set_option maxHeartbeats 8000000
+
 namespace SSBX.Foundation.Wen.WenSurface
 
 open SSBX.Foundation.Yi.Yi

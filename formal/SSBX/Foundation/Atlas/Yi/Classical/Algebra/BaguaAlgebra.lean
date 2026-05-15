@@ -53,35 +53,35 @@ open Trigram
 /-! ## § 1 三个反爻 (single-yao flips) -/
 
 /-- motion (动): flip the initial (bottom) yao. -/
-def motion (t : Trigram) : Trigram := ⟨t.y1.neg, t.y2, t.y3⟩
+def motion (t : Trigram) : Trigram := Trigram.mk t.y1.neg t.y2 t.y3
 
 /-- middleFlip (化): flip the center yao. -/
-def middleFlip (t : Trigram) : Trigram := ⟨t.y1, t.y2.neg, t.y3⟩
+def middleFlip (t : Trigram) : Trigram := Trigram.mk t.y1 t.y2.neg t.y3
 
 /-- topFlip (变): flip the top yao. -/
-def topFlip (t : Trigram) : Trigram := ⟨t.y1, t.y2, t.y3.neg⟩
+def topFlip (t : Trigram) : Trigram := Trigram.mk t.y1 t.y2 t.y3.neg
 
 /-! ### Involutivity (each is order 2, so each is its own inverse) -/
 
 theorem motion_motion (t : Trigram) : motion (motion t) = t := by
-  simp [motion, Yao.neg_neg]
+  apply Trigram.ext <;> simp [motion, Yao.neg_neg]
 
 theorem middleFlip_middleFlip (t : Trigram) : middleFlip (middleFlip t) = t := by
-  simp [middleFlip, Yao.neg_neg]
+  apply Trigram.ext <;> simp [middleFlip, Yao.neg_neg]
 
 theorem topFlip_topFlip (t : Trigram) : topFlip (topFlip t) = t := by
-  simp [topFlip, Yao.neg_neg]
+  apply Trigram.ext <;> simp [topFlip, Yao.neg_neg]
 
 /-! ### Pairwise commutativity (the (Z/2)³ structure: abelian) -/
 
 theorem motion_middleFlip_comm (t : Trigram) : middleFlip (motion t) = motion (middleFlip t) := by
-  cases t; rfl
+  apply Trigram.ext <;> rfl
 
 theorem middleFlip_topFlip_comm (t : Trigram) : topFlip (middleFlip t) = middleFlip (topFlip t) := by
-  cases t; rfl
+  apply Trigram.ext <;> rfl
 
 theorem motion_topFlip_comm (t : Trigram) : topFlip (motion t) = motion (topFlip t) := by
-  cases t; rfl
+  apply Trigram.ext <;> rfl
 
 /-! ## § 2 错 = motion ∘ middleFlip ∘ topFlip
 
@@ -89,18 +89,18 @@ theorem motion_topFlip_comm (t : Trigram) : topFlip (motion t) = motion (topFlip
 
 theorem complement_eq_compose (t : Trigram) :
     Trigram.complement t = motion (middleFlip (topFlip t)) := by
-  cases t; rfl
+  apply Trigram.ext <;> rfl
 
 /-! ## § 3 Concrete 8-element orbit of 乾 under (Z/2)³ -/
 
 theorem id_qian      : heaven = heaven := rfl
-theorem dong_qian    : motion heaven = wind := rfl       -- 巽 ⟨阴,阳,阳⟩
-theorem hua_qian     : middleFlip heaven = fire := rfl         -- 离 ⟨阳,阴,阳⟩
-theorem bian_qian    : topFlip heaven = lake := rfl       -- 兑 ⟨阳,阳,阴⟩
-theorem dong_hua_qian   : motion (middleFlip heaven) = mountain := rfl   -- 艮 ⟨阴,阴,阳⟩
-theorem hua_bian_qian   : middleFlip (topFlip heaven) = thunder := rfl  -- 震 ⟨阳,阴,阴⟩
-theorem dong_bian_qian  : motion (topFlip heaven) = water := rfl  -- 坎 ⟨阴,阳,阴⟩
-theorem dong_hua_bian_qian : motion (middleFlip (topFlip heaven)) = earth := rfl  -- 坤 ⟨阴,阴,阴⟩
+theorem dong_qian    : motion heaven = wind := by apply Trigram.ext <;> rfl
+theorem hua_qian     : middleFlip heaven = fire := by apply Trigram.ext <;> rfl
+theorem bian_qian    : topFlip heaven = lake := by apply Trigram.ext <;> rfl
+theorem dong_hua_qian   : motion (middleFlip heaven) = mountain := by apply Trigram.ext <;> rfl
+theorem hua_bian_qian   : middleFlip (topFlip heaven) = thunder := by apply Trigram.ext <;> rfl
+theorem dong_bian_qian  : motion (topFlip heaven) = water := by apply Trigram.ext <;> rfl
+theorem dong_hua_bian_qian : motion (middleFlip (topFlip heaven)) = earth := by apply Trigram.ext <;> rfl
 
 /-- 错 of 乾 is 坤 (witnessed via the compose decomposition). -/
 theorem cuo_qian_eq_kun : Trigram.complement heaven = earth := by
@@ -127,17 +127,22 @@ theorem hammingDist_self (t : Trigram) : hammingDist t t = 0 := by
     any t into b's-form by flipping each yao independently iff a and b differ
     at that position. When t = a, this exactly produces b. -/
 def transform (a b t : Trigram) : Trigram :=
-  ⟨if a.y1 = b.y1 then t.y1 else t.y1.neg,
-   if a.y2 = b.y2 then t.y2 else t.y2.neg,
-   if a.y3 = b.y3 then t.y3 else t.y3.neg⟩
+  Trigram.mk
+    (if a.y1 = b.y1 then t.y1 else t.y1.neg)
+    (if a.y2 = b.y2 then t.y2 else t.y2.neg)
+    (if a.y3 = b.y3 then t.y3 else t.y3.neg)
+
+/-- Helper: `(if a = b then a else a.neg) = b` for any two Yao. -/
+private theorem ifNeg_correct (a b : Yao) :
+    (if a = b then a else a.neg) = b := by
+  cases a <;> cases b <;> decide
 
 /-- The transform takes a to b. Proof by case analysis on Yao values. -/
 theorem transform_correct (a b : Trigram) : transform a b a = b := by
-  rcases a with ⟨a1, a2, a3⟩
-  rcases b with ⟨b1, b2, b3⟩
-  cases a1 <;> cases a2 <;> cases a3 <;>
-    cases b1 <;> cases b2 <;> cases b3 <;>
-    rfl
+  apply Trigram.ext
+  · exact ifNeg_correct a.y1 b.y1
+  · exact ifNeg_correct a.y2 b.y2
+  · exact ifNeg_correct a.y3 b.y3
 
 /-- transform expressed via the canonical {motion, middleFlip, topFlip, id} composition. -/
 def transformViaFlips (a b : Trigram) : Trigram → Trigram :=
@@ -149,11 +154,12 @@ def transformViaFlips (a b : Trigram) : Trigram → Trigram :=
 /-- transform and transformViaFlips agree at the source point a. -/
 theorem transform_eq_via_flips (a b : Trigram) :
     transform a b a = transformViaFlips a b a := by
-  rcases a with ⟨a1, a2, a3⟩
-  rcases b with ⟨b1, b2, b3⟩
-  cases a1 <;> cases a2 <;> cases a3 <;>
-    cases b1 <;> cases b2 <;> cases b3 <;>
-    rfl
+  apply Trigram.ext <;>
+    (cases hy : a.y1 <;> cases hy' : b.y1 <;>
+     cases hz : a.y2 <;> cases hz' : b.y2 <;>
+     cases hw : a.y3 <;> cases hw' : b.y3 <;>
+     simp [transform, transformViaFlips, motion, middleFlip, topFlip,
+           Trigram.y1_mk, Trigram.y2_mk, Trigram.y3_mk, hy, hy', hz, hz', hw, hw', Yao.neg])
 
 /-- 八卦互通: any two trigrams are connected by some transformation. -/
 theorem bagua_intercommunication (a b : Trigram) :
@@ -228,13 +234,16 @@ def fenToYi (_ : TaiJi) (y : Yao) : LiangYi := y
 def fenToSiXiang (y1 : LiangYi) (y2 : Yao) : SiXiang := ⟨y1, y2⟩
 
 /-- fen from 四象 to 八卦. -/
-def fenToTrigram (s : SiXiang) (y3 : Yao) : Trigram := ⟨s.y1, s.y2, y3⟩
+def fenToTrigram (s : SiXiang) (y3 : Yao) : Trigram := Trigram.mk s.y1 s.y2 y3
 
 /-! ### Section / retract: he ∘ fen = id (left inverse) -/
 
 theorem heShang_fenToTrigram (s : SiXiang) (y : Yao) :
     heShang (fenToTrigram s y) = s := by
-  cases s; rfl
+  cases s
+  simp [heShang, fenToTrigram, Trigram.y1, Trigram.y2,
+        SSBX.Foundation.Atlas.Yi.Trigram.y1, SSBX.Foundation.Atlas.Yi.Trigram.y2,
+        Trigram.mk, SSBX.Foundation.Atlas.Yi.Trigram.mk]
 
 theorem heToYi_fenToSiXiang (y1 y2 : Yao) :
     heToYi (fenToSiXiang y1 y2) = y1 := rfl
@@ -258,7 +267,7 @@ namespace Sheng
 
 /-- Forgetful map from depth-3 Sheng to Trigram. -/
 def toTrigram : Sheng 3 → Trigram
-  | .step (.step (.step .peace a) b) c => ⟨a, b, c⟩
+  | .step (.step (.step .peace a) b) c => Trigram.mk a b c
 
 /-- Lifting map from Trigram to depth-3 Sheng. -/
 def ofTrigram (t : Trigram) : Sheng 3 :=
@@ -266,7 +275,7 @@ def ofTrigram (t : Trigram) : Sheng 3 :=
 
 /-- Round-trip: Trigram → Sheng → Trigram is the identity. -/
 theorem toTrigram_ofTrigram (t : Trigram) : toTrigram (ofTrigram t) = t := by
-  cases t; rfl
+  apply Trigram.ext <;> rfl
 
 /-- Round-trip: Sheng 3 → Trigram → Sheng 3 is the identity. -/
 theorem ofTrigram_toTrigram (s : Sheng 3) : ofTrigram (toTrigram s) = s := by
@@ -325,54 +334,54 @@ theorem grandCycle_returns (y1 y2 y3 : Yao) : grandCycle y1 y2 y3 = () := rfl
 
 /-- 内·动 (dongInner): flip y1 (inner-bottom yao) of a hexagram. -/
 def dongInner (h : Hexagram) : Hexagram :=
-  ⟨h.y1.neg, h.y2, h.y3, h.y4, h.y5, h.y6⟩
+  Hexagram.mk h.y1.neg h.y2 h.y3 h.y4 h.y5 h.y6
 
 /-- 内·化 (middleFlipInner): flip y2. -/
 def middleFlipInner (h : Hexagram) : Hexagram :=
-  ⟨h.y1, h.y2.neg, h.y3, h.y4, h.y5, h.y6⟩
+  Hexagram.mk h.y1 h.y2.neg h.y3 h.y4 h.y5 h.y6
 
 /-- 内·变 (topFlipInner): flip y3. -/
 def topFlipInner (h : Hexagram) : Hexagram :=
-  ⟨h.y1, h.y2, h.y3.neg, h.y4, h.y5, h.y6⟩
+  Hexagram.mk h.y1 h.y2 h.y3.neg h.y4 h.y5 h.y6
 
 /-- 外·动 (dongOuter): flip y4 (outer-bottom yao). -/
 def dongOuter (h : Hexagram) : Hexagram :=
-  ⟨h.y1, h.y2, h.y3, h.y4.neg, h.y5, h.y6⟩
+  Hexagram.mk h.y1 h.y2 h.y3 h.y4.neg h.y5 h.y6
 
 /-- 外·化 (middleFlipOuter): flip y5. -/
 def middleFlipOuter (h : Hexagram) : Hexagram :=
-  ⟨h.y1, h.y2, h.y3, h.y4, h.y5.neg, h.y6⟩
+  Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5.neg h.y6
 
 /-- 外·变 (topFlipOuter): flip y6. -/
 def topFlipOuter (h : Hexagram) : Hexagram :=
-  ⟨h.y1, h.y2, h.y3, h.y4, h.y5, h.y6.neg⟩
+  Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6.neg
 
 /-! ### Involutivity (each is order 2) -/
 
 theorem dongInner_dongInner (h : Hexagram) : dongInner (dongInner h) = h := by
-  simp [dongInner, Yao.neg_neg]
+  apply Hexagram.ext <;> simp [dongInner, Yao.neg_neg]
 
 theorem huaInner_huaInner (h : Hexagram) : middleFlipInner (middleFlipInner h) = h := by
-  simp [middleFlipInner, Yao.neg_neg]
+  apply Hexagram.ext <;> simp [middleFlipInner, Yao.neg_neg]
 
 theorem bianInner_bianInner (h : Hexagram) : topFlipInner (topFlipInner h) = h := by
-  simp [topFlipInner, Yao.neg_neg]
+  apply Hexagram.ext <;> simp [topFlipInner, Yao.neg_neg]
 
 theorem dongOuter_dongOuter (h : Hexagram) : dongOuter (dongOuter h) = h := by
-  simp [dongOuter, Yao.neg_neg]
+  apply Hexagram.ext <;> simp [dongOuter, Yao.neg_neg]
 
 theorem huaOuter_huaOuter (h : Hexagram) : middleFlipOuter (middleFlipOuter h) = h := by
-  simp [middleFlipOuter, Yao.neg_neg]
+  apply Hexagram.ext <;> simp [middleFlipOuter, Yao.neg_neg]
 
 theorem bianOuter_bianOuter (h : Hexagram) : topFlipOuter (topFlipOuter h) = h := by
-  simp [topFlipOuter, Yao.neg_neg]
+  apply Hexagram.ext <;> simp [topFlipOuter, Yao.neg_neg]
 
 /-- 错_hex = composition of all 6 single-yao flips. T_6 analog of § 2's
     `complement_eq_compose`. -/
 theorem hex_cuo_eq_compose (h : Hexagram) :
     Hexagram.complement h
       = dongInner (middleFlipInner (topFlipInner (dongOuter (middleFlipOuter (topFlipOuter h))))) := by
-  cases h; rfl
+  apply Hexagram.ext <;> rfl
 
 /-! ### Hexagram-level Cayley graph -/
 
@@ -394,19 +403,22 @@ theorem hexHammingDist_self (h : Hexagram) : hexHammingDist h h = 0 := by
 
 /-- Direct connecting transformation on hexagrams. -/
 def hexTransform (a b h : Hexagram) : Hexagram :=
-  ⟨if a.y1 = b.y1 then h.y1 else h.y1.neg,
-   if a.y2 = b.y2 then h.y2 else h.y2.neg,
-   if a.y3 = b.y3 then h.y3 else h.y3.neg,
-   if a.y4 = b.y4 then h.y4 else h.y4.neg,
-   if a.y5 = b.y5 then h.y5 else h.y5.neg,
-   if a.y6 = b.y6 then h.y6 else h.y6.neg⟩
+  Hexagram.mk
+    (if a.y1 = b.y1 then h.y1 else h.y1.neg)
+    (if a.y2 = b.y2 then h.y2 else h.y2.neg)
+    (if a.y3 = b.y3 then h.y3 else h.y3.neg)
+    (if a.y4 = b.y4 then h.y4 else h.y4.neg)
+    (if a.y5 = b.y5 then h.y5 else h.y5.neg)
+    (if a.y6 = b.y6 then h.y6 else h.y6.neg)
 
 theorem hexTransform_correct (a b : Hexagram) : hexTransform a b a = b := by
-  rcases a with ⟨a1, a2, a3, a4, a5, a6⟩
-  rcases b with ⟨b1, b2, b3, b4, b5, b6⟩
-  cases a1 <;> cases a2 <;> cases a3 <;> cases a4 <;> cases a5 <;> cases a6 <;>
-    cases b1 <;> cases b2 <;> cases b3 <;> cases b4 <;> cases b5 <;> cases b6 <;>
-    rfl
+  apply Hexagram.ext
+  · exact ifNeg_correct a.y1 b.y1
+  · exact ifNeg_correct a.y2 b.y2
+  · exact ifNeg_correct a.y3 b.y3
+  · exact ifNeg_correct a.y4 b.y4
+  · exact ifNeg_correct a.y5 b.y5
+  · exact ifNeg_correct a.y6 b.y6
 
 /-- 重卦 互通: any two hexagrams are connected by some transformation. -/
 theorem hex_intercommunication (a b : Hexagram) :
@@ -423,27 +435,27 @@ theorem hex_intercommunication_bounded (a b : Hexagram) :
 /-- Inner-side flips are exactly trigram flips on the inner trigram. -/
 theorem dongInner_via_chong (h : Hexagram) :
     dongInner h = chong (motion h.innerTrigram) h.outerTrigram := by
-  cases h; rfl
+  apply Hexagram.ext <;> rfl
 
 theorem huaInner_via_chong (h : Hexagram) :
     middleFlipInner h = chong (middleFlip h.innerTrigram) h.outerTrigram := by
-  cases h; rfl
+  apply Hexagram.ext <;> rfl
 
 theorem bianInner_via_chong (h : Hexagram) :
     topFlipInner h = chong (topFlip h.innerTrigram) h.outerTrigram := by
-  cases h; rfl
+  apply Hexagram.ext <;> rfl
 
 theorem dongOuter_via_chong (h : Hexagram) :
     dongOuter h = chong h.innerTrigram (motion h.outerTrigram) := by
-  cases h; rfl
+  apply Hexagram.ext <;> rfl
 
 theorem huaOuter_via_chong (h : Hexagram) :
     middleFlipOuter h = chong h.innerTrigram (middleFlip h.outerTrigram) := by
-  cases h; rfl
+  apply Hexagram.ext <;> rfl
 
 theorem bianOuter_via_chong (h : Hexagram) :
     topFlipOuter h = chong h.innerTrigram (topFlip h.outerTrigram) := by
-  cases h; rfl
+  apply Hexagram.ext <;> rfl
 
 /-! ## Phase 2 — Completeness extensions (B1–B9)
 
@@ -463,8 +475,9 @@ theorem bianOuter_via_chong (h : Hexagram) :
 
 /-- Every trigram appears in `Trigram.all` (cardinality 8 strictly). -/
 theorem trigram_mem_all (t : Trigram) : t ∈ Trigram.all := by
-  rcases t with ⟨y1, y2, y3⟩
-  cases y1 <;> cases y2 <;> cases y3 <;>
+  have heq : t = Trigram.mk t.y1 t.y2 t.y3 := by apply Trigram.ext <;> rfl
+  rw [heq]
+  cases hy : t.y1 <;> cases hz : t.y2 <;> cases hw : t.y3 <;>
     (show _ ∈ Trigram.all
      show _ ∈ [heaven, lake, fire, thunder, wind, water, mountain, earth]
      simp [heaven, lake, fire, thunder, wind, water, mountain, earth, Yao.yang, Yao.yin]
@@ -477,14 +490,15 @@ private theorem yao_in_yaos (y : Yao) : y ∈ ([Yao.yang, Yao.yin] : List Yao) :
 /-- Every hexagram appears in `Hexagram.allHex` (cardinality 64 strictly).
     Proof by structurally building the membership through 6 flatMap layers. -/
 theorem hexagram_mem_allHex (h : Hexagram) : h ∈ Hexagram.allHex := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
   unfold Hexagram.allHex
-  refine List.mem_flatMap.mpr ⟨y1, yao_in_yaos y1, ?_⟩
-  refine List.mem_flatMap.mpr ⟨y2, yao_in_yaos y2, ?_⟩
-  refine List.mem_flatMap.mpr ⟨y3, yao_in_yaos y3, ?_⟩
-  refine List.mem_flatMap.mpr ⟨y4, yao_in_yaos y4, ?_⟩
-  refine List.mem_flatMap.mpr ⟨y5, yao_in_yaos y5, ?_⟩
-  exact List.mem_map.mpr ⟨y6, yao_in_yaos y6, rfl⟩
+  refine List.mem_flatMap.mpr ⟨h.y1, yao_in_yaos h.y1, ?_⟩
+  refine List.mem_flatMap.mpr ⟨h.y2, yao_in_yaos h.y2, ?_⟩
+  refine List.mem_flatMap.mpr ⟨h.y3, yao_in_yaos h.y3, ?_⟩
+  refine List.mem_flatMap.mpr ⟨h.y4, yao_in_yaos h.y4, ?_⟩
+  refine List.mem_flatMap.mpr ⟨h.y5, yao_in_yaos h.y5, ?_⟩
+  exact List.mem_map.mpr ⟨h.y6, yao_in_yaos h.y6, rfl⟩
 
 /-! ### § 13 Hamming distance characterization -/
 
@@ -492,11 +506,17 @@ theorem hexagram_mem_allHex (h : Hexagram) : h ∈ Hexagram.allHex := by
 theorem hammingDist_eq_zero_iff (a b : Trigram) : hammingDist a b = 0 ↔ a = b := by
   constructor
   · intro hd
-    rcases a with ⟨a1, a2, a3⟩
-    rcases b with ⟨b1, b2, b3⟩
-    cases a1 <;> cases a2 <;> cases a3 <;>
-      cases b1 <;> cases b2 <;> cases b3 <;>
-      simp_all [hammingDist]
+    unfold hammingDist at hd
+    apply Trigram.ext
+    · by_cases hne : a.y1 = b.y1
+      · exact hne
+      · exfalso; simp [hne] at hd
+    · by_cases hne : a.y2 = b.y2
+      · exact hne
+      · exfalso; simp [hne] at hd
+    · by_cases hne : a.y3 = b.y3
+      · exact hne
+      · exfalso; simp [hne] at hd
   · rintro rfl
     exact hammingDist_self a
 
@@ -517,20 +537,21 @@ def applyPath : List (Trigram → Trigram) → Trigram → Trigram
 /-- The path takes a to b. -/
 theorem applyPath_pathFromTo (a b : Trigram) :
     applyPath (pathFromTo a b) a = b := by
-  rcases a with ⟨a1, a2, a3⟩
-  rcases b with ⟨b1, b2, b3⟩
-  cases a1 <;> cases a2 <;> cases a3 <;>
-    cases b1 <;> cases b2 <;> cases b3 <;>
-    rfl
+  apply Trigram.ext <;>
+    (cases hy : a.y1 <;> cases hy' : b.y1 <;>
+     cases hz : a.y2 <;> cases hz' : b.y2 <;>
+     cases hw : a.y3 <;> cases hw' : b.y3 <;>
+     simp [pathFromTo, applyPath, motion, middleFlip, topFlip,
+           Trigram.y1_mk, Trigram.y2_mk, Trigram.y3_mk, hy, hy', hz, hz', hw, hw',
+           Yao.neg, SSBX.Foundation.Atlas.Yi.Yao.neg,
+           SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin])
 
 /-- Path length equals Hamming distance — the bound `hammingDist_le_3` is tight. -/
 theorem pathFromTo_length_eq_hammingDist (a b : Trigram) :
     (pathFromTo a b).length = hammingDist a b := by
-  rcases a with ⟨a1, a2, a3⟩
-  rcases b with ⟨b1, b2, b3⟩
-  cases a1 <;> cases a2 <;> cases a3 <;>
-    cases b1 <;> cases b2 <;> cases b3 <;>
-    decide
+  unfold pathFromTo hammingDist
+  by_cases hy : a.y1 = b.y1 <;> by_cases hz : a.y2 = b.y2 <;> by_cases hw : a.y3 = b.y3 <;>
+    simp [hy, hz, hw]
 
 /-! ### § 15 Sheng 6 ≃ Hexagram -/
 
@@ -539,7 +560,7 @@ namespace Sheng
 /-- Forgetful map from depth-6 Sheng to Hexagram. -/
 def toHexagram : Sheng 6 → Hexagram
   | .step (.step (.step (.step (.step (.step .peace a) b) c) d) e) f =>
-      ⟨a, b, c, d, e, f⟩
+      Hexagram.mk a b c d e f
 
 /-- Lifting map from Hexagram to depth-6 Sheng. -/
 def ofHexagram (h : Hexagram) : Sheng 6 :=
@@ -548,7 +569,7 @@ def ofHexagram (h : Hexagram) : Sheng 6 :=
 /-- Round-trip: Hexagram → Sheng 6 → Hexagram is the identity. -/
 theorem toHexagram_ofHexagram (h : Hexagram) :
     toHexagram (ofHexagram h) = h := by
-  cases h; rfl
+  apply Hexagram.ext <;> rfl
 
 /-- Round-trip: Sheng 6 → Hexagram → Sheng 6 is the identity. -/
 theorem ofHexagram_toHexagram (s : Sheng 6) :
@@ -563,12 +584,12 @@ end Sheng
 /-- Hexagram.complement decomposes via inner/outer Trigram.complement (compatibility). -/
 theorem hex_cuo_via_inner_outer (h : Hexagram) :
     Hexagram.complement h = chong (Trigram.complement h.innerTrigram) (Trigram.complement h.outerTrigram) := by
-  cases h; rfl
+  apply Hexagram.ext <;> rfl
 
 /-- chong reconstructs h from its own inner and outer trigrams (重之逆). -/
 theorem chong_inner_outer (h : Hexagram) :
     chong h.innerTrigram h.outerTrigram = h := by
-  cases h; rfl
+  apply Hexagram.ext <;> rfl
 
 /-! ### § 17 综 ∉ (Z/2)³
 

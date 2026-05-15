@@ -98,14 +98,15 @@ theorem proj_lift_id_R1 (y1 : R1) (y2 : Yao) :
 /-! ## § 3 R₂ ↔ R₃ -/
 
 /-- 四象 ↪ 八卦: extend a SiXiang by a 3rd Yao. -/
-def liftR2toR3 (s : R2) (y3 : Yao) : R3 := ⟨s.y1, s.y2, y3⟩
+def liftR2toR3 (s : R2) (y3 : Yao) : R3 := Trigram.mk s.y1 s.y2 y3
 
 /-- 八卦 ↠ 四象: forget the 3rd Yao (keep y1, y2). -/
 def projR3toR2 (t : R3) : R2 := ⟨t.y1, t.y2⟩
 
 theorem proj_lift_id_R2 (s : R2) (y3 : Yao) :
     projR3toR2 (liftR2toR3 s y3) = s := by
-  cases s; rfl
+  cases s
+  simp [projR3toR2, liftR2toR3, Trigram.y1_mk, Trigram.y2_mk]
 
 /-! ## § 4 R₃ ↔ R₄ — Trigram ↔ Mian (= Ben × Zheng)
 
@@ -175,13 +176,12 @@ def liftR3toR4 (t : R3) (y4 : Yao) : R4 :=
 
 /-- 命 ↠ 八卦: extract trigram y1, y2 from Ben, y3 from Zheng (drop y4). -/
 def projR4toR3 (m : R4) : R3 :=
-  ⟨benToYao1 m.1, benToYao2 m.1, zhengToYao1 m.2⟩
+  Trigram.mk (benToYao1 m.1) (benToYao2 m.1) (zhengToYao1 m.2)
 
 theorem proj_lift_id_R3 (t : R3) (y4 : Yao) :
     projR4toR3 (liftR3toR4 t y4) = t := by
-  cases t with
-  | mk y1 y2 y3 =>
-    simp [projR4toR3, liftR3toR4,
+  apply Trigram.ext <;>
+    simp [projR4toR3, liftR3toR4, Trigram.y1_mk, Trigram.y2_mk, Trigram.y3_mk,
           benFromYao_yao1, benFromYao_yao2, zhengFromYao_yao1]
 
 /-! ## § 5 R₄ ↔ R₅ — Mian ↔ Wuyao (= Mian × Bool)
@@ -237,8 +237,8 @@ theorem yaoToBool_boolToYao (b : Bool) : yaoToBool (boolToYao b) = b := by
 def liftR5toR6 (w : R5) (y6 : Yao) : R6 :=
   let m := w.1
   let b := w.2
-  ⟨benToYao1 m.1, benToYao2 m.1, zhengToYao1 m.2, zhengToYao2 m.2,
-   boolToYao b, y6⟩
+  Hexagram.mk (benToYao1 m.1) (benToYao2 m.1) (zhengToYao1 m.2) (zhengToYao2 m.2)
+    (boolToYao b) y6
 
 /-- 六爻 ↠ 五爻: drop y6, decode (y1, y2) → Ben, (y3, y4) → Zheng,
     y5 → Bool. -/
@@ -257,6 +257,7 @@ theorem proj_lift_id_R5 (w : R5) (y6 : Yao) :
     projR6toR5 (liftR5toR6 w y6) = w := by
   rcases w with ⟨⟨b, z⟩, bit⟩
   simp [projR6toR5, liftR5toR6,
+        Hexagram.y1_mk, Hexagram.y2_mk, Hexagram.y3_mk, Hexagram.y4_mk, Hexagram.y5_mk,
         benFromYao_benToYao, zhengFromYao_zhengToYao,
         yaoToBool_boolToYao]
 

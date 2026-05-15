@@ -111,12 +111,12 @@ def yaoAt (h : Hexagram) : Fin 6 → Yao
 
 /-- Flip the i-th yao of a hexagram. -/
 def flipPos (h : Hexagram) : Fin 6 → Hexagram
-  | ⟨0, _⟩ => { h with y1 := h.y1.neg }
-  | ⟨1, _⟩ => { h with y2 := h.y2.neg }
-  | ⟨2, _⟩ => { h with y3 := h.y3.neg }
-  | ⟨3, _⟩ => { h with y4 := h.y4.neg }
-  | ⟨4, _⟩ => { h with y5 := h.y5.neg }
-  | ⟨5, _⟩ => { h with y6 := h.y6.neg }
+  | ⟨0, _⟩ => Hexagram.mk h.y1.neg h.y2 h.y3 h.y4 h.y5 h.y6
+  | ⟨1, _⟩ => Hexagram.mk h.y1 h.y2.neg h.y3 h.y4 h.y5 h.y6
+  | ⟨2, _⟩ => Hexagram.mk h.y1 h.y2 h.y3.neg h.y4 h.y5 h.y6
+  | ⟨3, _⟩ => Hexagram.mk h.y1 h.y2 h.y3 h.y4.neg h.y5 h.y6
+  | ⟨4, _⟩ => Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5.neg h.y6
+  | ⟨5, _⟩ => Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6.neg
 
 end SSBX.Foundation.Yi.Yi.Hexagram
 
@@ -260,8 +260,9 @@ def daoJudge (h : Hexagram) : Shi :=
 /-- The 道判机 correctly classifies 天/心 道. -/
 theorem daoJudge_correct (h : Hexagram) :
     daoJudge h = (if h.isTian then Shi.ji else Shi.wei) := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     native_decide
 
 /-- Equivalent reading: 是道 (= 天道) iff verdict is .ji. -/
@@ -284,11 +285,11 @@ theorem daoJudge_kun : daoJudge Hexagram.earth = Shi.ji := by native_decide
 
 /-- 否 (天地否) is 心道 (y3=阳 ≠ y4=阴). -/
 theorem daoJudge_pi :
-    daoJudge ⟨.yin, .yin, .yin, .yang, .yang, .yang⟩ = Shi.wei := by native_decide
+    daoJudge (Hexagram.mk .yin .yin .yin .yang .yang .yang) = Shi.wei := by native_decide
 
 /-- 泰 (地天泰) is 心道 (y3=阳 ≠ y4=阴). -/
 theorem daoJudge_tai :
-    daoJudge ⟨.yang, .yang, .yang, .yin, .yin, .yin⟩ = Shi.wei := by native_decide
+    daoJudge (Hexagram.mk .yang .yang .yang .yin .yin .yin) = Shi.wei := by native_decide
 
 /-! ### § 7b TC primitives — what gives universal computation
 
@@ -378,8 +379,9 @@ theorem daoJudgeProg_total_within_10 :
     ∀ h : Hexagram,
       ((YiState.init h daoJudgeProg).runFuel 10).halted = true := by
   intro h
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     native_decide
 
 /-! ### § 7d Public summary -/

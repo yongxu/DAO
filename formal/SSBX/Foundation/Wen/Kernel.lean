@@ -150,7 +150,7 @@ abbrev yiOne : Type := Field
 /-- The canonical "primer movement" cell.
     = 姤·无 = R7_xoooooo = "first stir" / 仁 (Wuchang.benevolence) -/
 def c_motion : R7 :=
-  (⟨Yao.yin, Yao.yang, Yao.yang, Yao.yang, Yao.yang, Yao.yang⟩, false)
+  (Hexagram.mk Yao.yin Yao.yang Yao.yang Yao.yang Yao.yang Yao.yang, false)
 
 /-- 動 (motion): Cayley XOR with c_motion. Not opaque — the doctrine
     states the algebra directly. -/

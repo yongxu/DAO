@@ -270,17 +270,17 @@ theorem biCountAt_total :
 /-- **biCount = 5 唯一者** 仅 heaven 与 earth。 -/
 theorem biCount_5_iff_qian_kun (h : Hexagram) :
     biCount h = 5 ↔ h = heaven ∨ h = earth := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
       decide
 
 /-- **biCount = 0 唯一者** 仅 complete 与 incomplete。 -/
 theorem biCount_0_iff_jiji_weiji (h : Hexagram) :
     biCount h = 0 ↔ h = complete ∨ h = incomplete := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
       decide
 
 /-! ## § 5 承 (chenLi) / 乘 (chengLi) 关系
@@ -336,9 +336,9 @@ theorem chengCount_weiji : chengCount incomplete = 2 := by native_decide
 /-- 承 + 乘 = 异性邻位之总数 = 5 - biCount。 -/
 theorem chen_cheng_complement (h : Hexagram) :
     chenCount h + chengCount h + biCount h = 5 := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
       decide
 
 /-! ## § 6 位 之 complement / reverse 不变性
@@ -354,9 +354,9 @@ theorem chen_cheng_complement (h : Hexagram) :
 /-- **complement flips wellPos**: ∀ i, wellPos h.complement i ≠ wellPos h i. -/
 theorem cuo_flips_wellPos (h : Hexagram) (i : Fin 6) :
     wellPos h.complement i = !(wellPos h i) := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
       (match i with
        | ⟨0, h⟩ => decide +revert
        | ⟨1, h⟩ => decide +revert
@@ -368,57 +368,57 @@ theorem cuo_flips_wellPos (h : Hexagram) (i : Fin 6) :
 /-- **wellPosCount 与 complement 互补**: count h + count (complement h) = 6. -/
 theorem wellPosCount_cuo_complement (h : Hexagram) :
     wellPosCount h + wellPosCount h.complement = 6 := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
       decide
 
 /-- **biCount 在 complement 下不变**。 -/
 theorem biCount_cuo_invariant (h : Hexagram) :
     biCount h.complement = biCount h := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
       decide
 
 /-- **biCount 在 reverse 下不变**。 -/
 theorem biCount_zong_invariant (h : Hexagram) :
     biCount h.reverse = biCount h := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
       decide
 
 /-- **respondsCount 在 complement 下不变**：complement 翻每爻 → 应位每对皆同步翻 → 应/敌不变。 -/
 theorem respondsCount_cuo_invariant (h : Hexagram) :
     respondsCount h.complement = respondsCount h := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
       decide
 
 /-- **respondsCount 在 reverse 下不变**：reverse 反位 → 应位三对皆 (i, 5-i) 之配对反置 → 三对集合不变。 -/
 theorem respondsCount_zong_invariant (h : Hexagram) :
     respondsCount h.reverse = respondsCount h := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
       decide
 
 /-- **承 / 乘 在 complement 下交换**：complement 把每爻 yang ↔ yin，故 (yin,yang) ↔ (yang,yin)。 -/
 theorem chen_cuo_eq_cheng (h : Hexagram) :
     chenCount h.complement = chengCount h := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
       decide
 
 /-- 对偶：cheng complement = chen。 -/
 theorem cheng_cuo_eq_chen (h : Hexagram) :
     chengCount h.complement = chenCount h := by
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
       decide
 
 /-! ## § 7 几何字元 anchors: 点 / 线 / 面 / 体
@@ -489,13 +489,16 @@ theorem posClass_tai : posClass peace = ((.yang, .yin), 3, 4) := by native_decid
     h1.reverse 与 h1 在 biCount/respondsCount 下不变（§ 6 之 reverse 不变性），
     且 h1 之中爻 = (yang, yang) (二、五皆 yang) 之 reverse 后仍 (yang, yang)，
     故两者 posClass 一致。 -/
-def collA : Hexagram := ⟨.yang, .yang, .yin, .yin, .yang, .yin⟩
-def collB : Hexagram := ⟨.yin, .yang, .yin, .yin, .yang, .yang⟩
+def collA : Hexagram := Hexagram.mk .yang .yang .yin .yin .yang .yin
+def collB : Hexagram := Hexagram.mk .yin .yang .yin .yin .yang .yang
 
 /-- A ≠ B 但 posClass 相等：见证 fingerprint non-injectivity. -/
 theorem posClass_collision : collA ≠ collB ∧ posClass collA = posClass collB := by
   refine ⟨?_, ?_⟩
-  · intro h; injection h with h1; cases h1
+  · intro h
+    have h1 := congrArg Hexagram.y1 h
+    simp [collA, collB, Hexagram.y1_mk, Yao.yang, Yao.yin,
+          SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin] at h1
   · native_decide
 
 /-- 位 之 posClass 之像 (image) 之 cardinality 严格小于 64. -/

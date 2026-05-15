@@ -204,9 +204,9 @@ theorem cuo_via_fin8 (t : SSBX.Foundation.Yi.Yi.Trigram) :
       = ⟨7 - (Trigram.toFin8 t).val, by
           have h := (Trigram.toFin8 t).isLt
           omega⟩ := by
-  cases t with
-  | mk y1 y2 y3 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> rfl
+  have heq : t = SSBX.Foundation.Yi.Yi.Trigram.mk t.y1 t.y2 t.y3 := by apply SSBX.Foundation.Yi.Yi.Trigram.ext <;> rfl
+  rw [heq]
+  cases t.y1 <;> cases t.y2 <;> cases t.y3 <;> rfl
 
 /-! ## § 9 算子与位：动 / 化 / 变 / 综 的 basis-index 证明 -/
 
@@ -257,31 +257,31 @@ def reversePositionIndex : Fin 8 → Fin 8
 /-- **动 = 初爻位翻转**：在 3-qubit computational basis index 上即最高 bit 翻转。 -/
 theorem dong_via_fin8 (t : SSBX.Foundation.Yi.Yi.Trigram) :
     Trigram.toFin8 (motion t) = flipInitialIndex (Trigram.toFin8 t) := by
-  cases t with
-  | mk y1 y2 y3 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> rfl
+  have heq : t = SSBX.Foundation.Yi.Yi.Trigram.mk t.y1 t.y2 t.y3 := by apply SSBX.Foundation.Yi.Yi.Trigram.ext <;> rfl
+  rw [heq]
+  cases t.y1 <;> cases t.y2 <;> cases t.y3 <;> rfl
 
 /-- **化 = 中爻位翻转**：在 3-qubit computational basis index 上即中 bit 翻转。 -/
 theorem hua_via_fin8 (t : SSBX.Foundation.Yi.Yi.Trigram) :
     Trigram.toFin8 (middleFlip t) = flipMiddleIndex (Trigram.toFin8 t) := by
-  cases t with
-  | mk y1 y2 y3 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> rfl
+  have heq : t = SSBX.Foundation.Yi.Yi.Trigram.mk t.y1 t.y2 t.y3 := by apply SSBX.Foundation.Yi.Yi.Trigram.ext <;> rfl
+  rw [heq]
+  cases t.y1 <;> cases t.y2 <;> cases t.y3 <;> rfl
 
 /-- **变 = 上爻位翻转**：在 3-qubit computational basis index 上即最低 bit 翻转。 -/
 theorem bian_via_fin8 (t : SSBX.Foundation.Yi.Yi.Trigram) :
     Trigram.toFin8 (topFlip t) = flipTopIndex (Trigram.toFin8 t) := by
-  cases t with
-  | mk y1 y2 y3 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> rfl
+  have heq : t = SSBX.Foundation.Yi.Yi.Trigram.mk t.y1 t.y2 t.y3 := by apply SSBX.Foundation.Yi.Yi.Trigram.ext <;> rfl
+  rw [heq]
+  cases t.y1 <;> cases t.y2 <;> cases t.y3 <;> rfl
 
 /-- **综 = 位反序**：在 3-qubit computational basis index 上即 bit-reversal。 -/
 theorem zong_via_fin8 (t : SSBX.Foundation.Yi.Yi.Trigram) :
     Trigram.toFin8 (SSBX.Foundation.Yi.Yi.Trigram.reverse t)
       = reversePositionIndex (Trigram.toFin8 t) := by
-  cases t with
-  | mk y1 y2 y3 =>
-    cases y1 <;> cases y2 <;> cases y3 <;> rfl
+  have heq : t = SSBX.Foundation.Yi.Yi.Trigram.mk t.y1 t.y2 t.y3 := by apply SSBX.Foundation.Yi.Yi.Trigram.ext <;> rfl
+  rw [heq]
+  cases t.y1 <;> cases t.y2 <;> cases t.y3 <;> rfl
 
 /-- 乾出发时，三个位算子分别给出 4/2/1 的 basis 权重。 -/
 theorem qian_position_weights :

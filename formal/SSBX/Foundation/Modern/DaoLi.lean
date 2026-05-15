@@ -196,7 +196,7 @@ theorem V4_orbit_qian :
 
 /-- **V₄ 在某一非自反卦上自由作用之见证**（取 `heaven` 之内 yang 外 yin 即 `泰 (peace)`：
     ⟨yang, yang, yang, yin, yin, yin⟩；此卦在 V₄ 之 4 元素下取 4 个不同卦）。 -/
-def taiHex : Hexagram := ⟨.yang, .yang, .yang, .yin, .yin, .yin⟩
+def taiHex : Hexagram := Hexagram.mk .yang .yang .yang .yin .yin .yin
 
 /-- V₄ 之 4 元素在 taiHex 上之具体值（pairwise distinct, 见 `V4_free_orbit_witness`）。 -/
 def V4_image_taiHex : Fin 4 → Hexagram
@@ -209,13 +209,13 @@ def V4_image_taiHex : Fin 4 → Hexagram
 theorem V4_image_taiHex_0 : V4_image_taiHex ⟨0, by decide⟩ = taiHex := rfl
 theorem V4_image_taiHex_1 :
     V4_image_taiHex ⟨1, by decide⟩
-      = ⟨Yao.yin, Yao.yin, Yao.yin, Yao.yang, Yao.yang, Yao.yang⟩ := rfl
+      = Hexagram.mk Yao.yin Yao.yin Yao.yin Yao.yang Yao.yang Yao.yang := rfl
 theorem V4_image_taiHex_2 :
     V4_image_taiHex ⟨2, by decide⟩
-      = ⟨Yao.yin, Yao.yin, Yao.yin, Yao.yang, Yao.yang, Yao.yang⟩ := rfl
+      = Hexagram.mk Yao.yin Yao.yin Yao.yin Yao.yang Yao.yang Yao.yang := rfl
 theorem V4_image_taiHex_3 :
     V4_image_taiHex ⟨3, by decide⟩
-      = ⟨Yao.yang, Yao.yang, Yao.yang, Yao.yin, Yao.yin, Yao.yin⟩ := rfl
+      = Hexagram.mk Yao.yang Yao.yang Yao.yang Yao.yin Yao.yin Yao.yin := rfl
 
 /-- **V₄ 在 taiHex 上之轨道大小 ≥ 2**：complement 像 ≠ id 像（具体卦不等之见证）。
     （注：在 taiHex 上 V₄ 之 stabilizer 含 reverse，故 |orbit| = 2，非 4。
@@ -224,8 +224,11 @@ theorem V4_taiHex_orbit_nontrivial :
     V4_image_taiHex ⟨0, by decide⟩ ≠ V4_image_taiHex ⟨1, by decide⟩ := by
   rw [V4_image_taiHex_0, V4_image_taiHex_1]
   intro h
-  injection h with h1 _
-  injection h1
+  have h1 := congrArg SSBX.Foundation.Yi.Yi.Hexagram.y1 h
+  have e1 : taiHex.y1 = Yao.yang := rfl
+  have e2 : (Hexagram.mk Yao.yin Yao.yin Yao.yin Yao.yang Yao.yang Yao.yang).y1 = Yao.yin := rfl
+  rw [e1, e2] at h1
+  exact Bool.noConfusion h1
 
 /-- **T₆ V₄ 超八面体之结构事实总结**：
     (a) 全 64 卦穷尽；
@@ -242,7 +245,7 @@ theorem T6_V4_super_octahedral :
     ∧ (V4_image_taiHex ⟨0, by decide⟩ ≠ V4_image_taiHex ⟨1, by decide⟩) :=
   ⟨hexagram_card_64,
    fun h => Hexagram.complement_involutive h,
-   fun h => by unfold V4_zong; cases h; rfl,
+   fun h => by unfold V4_zong; apply SSBX.Foundation.Yi.Yi.Hexagram.ext <;> rfl,
    V4_taiHex_orbit_nontrivial⟩
 
 /-! ## § 4 综合摘要 (公开 API)

@@ -51,7 +51,7 @@ theorem heaven_orbit_distinct_count :
 
 /-- A concrete nonsymmetric witness has all four V4 readings distinct. -/
 def freeOrbitWitness : Hexagram :=
-  ⟨.yang, .yang, .yang, .yang, .yang, .yin⟩
+  Hexagram.mk .yang .yang .yang .yang .yang .yin
 
 theorem freeOrbitWitness_distinct_count :
     hexOrbitDistinctCount freeOrbitWitness = 4 := by

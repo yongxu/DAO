@@ -55,15 +55,18 @@ def Trigram.toBool3 (t : Trigram) : Bool × Bool × Bool :=
 
 /-- Bool³ → Trigram 之逆映射。 -/
 def Bool3.toTrigram (b : Bool × Bool × Bool) : Trigram :=
-  ⟨Bool.toYao b.1, Bool.toYao b.2.1, Bool.toYao b.2.2⟩
+  Trigram.mk (Bool.toYao b.1) (Bool.toYao b.2.1) (Bool.toYao b.2.2)
 
 /-- **Trigram → Bool³ → Trigram = id**。 -/
 theorem trigram_bool3_roundtrip (t : Trigram) :
     Bool3.toTrigram (Trigram.toBool3 t) = t := by
-  cases t with
-  | mk y1 y2 y3 =>
-    simp [Trigram.toBool3, Bool3.toTrigram, Yao.toBool, Bool.toYao]
-    cases y1 <;> cases y2 <;> cases y3 <;> decide
+  apply Trigram.ext
+  · show Bool.toYao (Yao.toBool t.y1) = t.y1
+    cases h : t.y1 <;> rfl
+  · show Bool.toYao (Yao.toBool t.y2) = t.y2
+    cases h : t.y2 <;> rfl
+  · show Bool.toYao (Yao.toBool t.y3) = t.y3
+    cases h : t.y3 <;> rfl
 
 /-- **Bool³ → Trigram → Bool³ = id**。 -/
 theorem bool3_trigram_roundtrip (b : Bool × Bool × Bool) :
@@ -100,28 +103,32 @@ theorem yinCount_kun : Trigram.yinCount Trigram.earth = 3 := by decide
 /-- **错卦把 yinCount 之 mod 2 翻**：complement 翻三爻，每爻奇偶反转，三次翻使 mod 2 总和反转（3 mod 2 = 1）。 -/
 theorem complement_yinCount_mod2 (t : Trigram) :
     (Trigram.yinCount (Trigram.complement t) + Trigram.yinCount t) % 2 = 1 := by
-  cases t with
-  | mk y1 y2 y3 => cases y1 <;> cases y2 <;> cases y3 <;> decide
+  have heq : t = Trigram.mk t.y1 t.y2 t.y3 := by apply Trigram.ext <;> rfl
+  rw [heq]
+  cases t.y1 <;> cases t.y2 <;> cases t.y3 <;> decide
 
 /-! ## § 5 单 flip 之 yinCount 性质 -/
 
 /-- **motion 翻转初爻之 yin**：motion 改变 yinCount mod 2。 -/
 theorem motion_yinCount_mod2 (t : Trigram) :
     (Trigram.yinCount (motion t) + Trigram.yinCount t) % 2 = 1 := by
-  cases t with
-  | mk y1 y2 y3 => cases y1 <;> cases y2 <;> cases y3 <;> decide
+  have heq : t = Trigram.mk t.y1 t.y2 t.y3 := by apply Trigram.ext <;> rfl
+  rw [heq]
+  cases t.y1 <;> cases t.y2 <;> cases t.y3 <;> decide
 
 /-- **middleFlip 改变 yinCount mod 2**。 -/
 theorem middleFlip_yinCount_mod2 (t : Trigram) :
     (Trigram.yinCount (middleFlip t) + Trigram.yinCount t) % 2 = 1 := by
-  cases t with
-  | mk y1 y2 y3 => cases y1 <;> cases y2 <;> cases y3 <;> decide
+  have heq : t = Trigram.mk t.y1 t.y2 t.y3 := by apply Trigram.ext <;> rfl
+  rw [heq]
+  cases t.y1 <;> cases t.y2 <;> cases t.y3 <;> decide
 
 /-- **topFlip 改变 yinCount mod 2**。 -/
 theorem topFlip_yinCount_mod2 (t : Trigram) :
     (Trigram.yinCount (topFlip t) + Trigram.yinCount t) % 2 = 1 := by
-  cases t with
-  | mk y1 y2 y3 => cases y1 <;> cases y2 <;> cases y3 <;> decide
+  have heq : t = Trigram.mk t.y1 t.y2 t.y3 := by apply Trigram.ext <;> rfl
+  rw [heq]
+  cases t.y1 <;> cases t.y2 <;> cases t.y3 <;> decide
 
 /-! ## § 6 (Z/2)³ 全群在 Trigram 上之单纯传递作用 →
         无非平凡 invariant -/

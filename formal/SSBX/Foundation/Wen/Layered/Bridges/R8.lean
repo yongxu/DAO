@@ -115,21 +115,25 @@ def toBitSpace (c : Carrier) : BitSpace 8 :=
     | _ => false
 
 def fromBitSpace (v : BitSpace 8) : Carrier :=
-  (⟨yaoOfBool (v ⟨0, by decide⟩),
-    yaoOfBool (v ⟨1, by decide⟩),
-    yaoOfBool (v ⟨2, by decide⟩),
-    yaoOfBool (v ⟨3, by decide⟩),
-    yaoOfBool (v ⟨4, by decide⟩),
-    yaoOfBool (v ⟨5, by decide⟩)⟩,
+  (SSBX.Foundation.Yi.Yi.Hexagram.mk
+     (yaoOfBool (v ⟨0, by decide⟩))
+     (yaoOfBool (v ⟨1, by decide⟩))
+     (yaoOfBool (v ⟨2, by decide⟩))
+     (yaoOfBool (v ⟨3, by decide⟩))
+     (yaoOfBool (v ⟨4, by decide⟩))
+     (yaoOfBool (v ⟨5, by decide⟩)),
    (v ⟨6, by decide⟩, v ⟨7, by decide⟩))
 
 @[simp] theorem fromBitSpace_toBitSpace (c : Carrier) :
     fromBitSpace (toBitSpace c) = c := by
   rcases c with ⟨h, s⟩
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
   rcases s with ⟨yin, guo⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;>
-    cases y5 <;> cases y6 <;> cases yin <;> cases guo <;> rfl
+  have heq : h = SSBX.Foundation.Yi.Yi.Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by
+    apply SSBX.Foundation.Yi.Yi.Hexagram.ext <;> rfl
+  show fromBitSpace (toBitSpace (h, yin, guo)) = (h, yin, guo)
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;>
+    cases h.y5 <;> cases h.y6 <;> cases yin <;> cases guo <;> rfl
 
 @[simp] theorem toBitSpace_fromBitSpace (v : BitSpace 8) :
     toBitSpace (fromBitSpace v) = v := by

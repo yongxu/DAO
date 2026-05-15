@@ -137,8 +137,9 @@ open SSBX.Foundation.Yi.Yi
 
 /-- Every Hexagram passes the Bool-membership check (the 64-enumeration is total). -/
 theorem hex_in_dao_bool (h : Hexagram) : h.inDao = true := by
-  rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
+  have heq : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by apply Hexagram.ext <;> rfl
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6
     <;> native_decide
 
 /-! ## § 6 道 = 太极: the primitive reflexively generates the totality

@@ -49,8 +49,9 @@ def joinR3 (f : R3Frame) : R3 :=
 
 theorem joinR3_splitR3 (t : R3) :
     joinR3 (splitR3 t) = t := by
-  cases t
-  rfl
+  apply Trigram.ext <;>
+    simp [splitR3, joinR3, projR3toR2, liftR2toR3,
+          Trigram.y1_mk, Trigram.y2_mk, Trigram.y3_mk]
 
 theorem splitR3_joinR3 (f : R3Frame) :
     splitR3 (joinR3 f) = f := by

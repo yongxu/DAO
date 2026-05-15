@@ -747,9 +747,13 @@ theorem cellOperatorAnchor_hexagram_numbers_range :
 
 theorem cellOperatorAnchors_cover_all (c : R8) :
     cellCovered c = true := by
-  rcases c with ⟨⟨y1, y2, y3, y4, y5, y6⟩, sy, sg⟩
-  cases y1 <;> cases y2 <;> cases y3 <;>
-    cases y4 <;> cases y5 <;> cases y6 <;> cases sy <;> cases sg <;>
+  rcases c with ⟨h, sy, sg⟩
+  have heq : h = SSBX.Foundation.Yi.Yi.Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by
+    apply SSBX.Foundation.Yi.Yi.Hexagram.ext <;> rfl
+  show cellCovered (h, sy, sg) = true
+  rw [heq]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;>
+    cases h.y4 <;> cases h.y5 <;> cases h.y6 <;> cases sy <;> cases sg <;>
     native_decide
 
 /--
