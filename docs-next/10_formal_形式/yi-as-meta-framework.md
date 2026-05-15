@@ -1,4 +1,6 @@
 > **[Superseded 2026-05-15]** — Canonical doctrine is now [`wen-algebra.md`](wen-algebra.md) v0.6 (R-Family tower algebra). The philosophical positioning shifts: Yi is now framed as **one Atlas binding among many** (alongside Pauli, Boolean, GF(256), Greimas, Hamming, Fano), not as the core ontology. The Spencer-Brown / Lawvere / Yoneda / Curry-Howard family connections (§6) remain meaningful but are claims about the R-Family algebra in different guises rather than Yi-specific.
+>
+> **Updated v1.0.2 reference**: see [`wen-substrate.md`](wen-substrate.md) §3.6 for parametric framing — Yi is one semantic naming on the R-Family-over-{F_2, ℝ, ℂ, ℂ_p, …} substrate, not a meta-framework above it.
 
 ---
 

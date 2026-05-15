@@ -1,3 +1,7 @@
+> **[v3 archive · superseded 2026-05-15 by wen-substrate v1.0.2]** — This doc is rooted in the F_2-only / Cell256-centric framing. See [`wen-substrate.md`](wen-substrate.md) §3.6 for the v1.0.2 parametric R-Family framework (R-Family-over-{F_2, ℝ, ℂ, ℂ_p, ...}) which subsumes and reframes the content here, and §4.1.5b for the carrier-vs-structure distinction. Kept for archival reference.
+
+---
+
 # Cell256 网格 — 256-cell 全枚举与 Hexagram × Shi 分布
 
 > 状态：v3 canonical (2026-05-11) — Cell256 = Hexagram × Shi 之 256 元 ground inventory；R₀..R₈ strict uniform 体系下 R₈ 闭合层之元清单。

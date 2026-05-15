@@ -1,3 +1,7 @@
+> **[v3 archive · superseded 2026-05-15 by wen-substrate v1.0.2]** — This doc is rooted in the F_2-only / Cell256-centric framing. See [`wen-substrate.md`](wen-substrate.md) §3.6 for the v1.0.2 parametric R-Family framework (R-Family-over-{F_2, ℝ, ℂ, ℂ_p, ...}) which subsumes and reframes the content here, and §4.1.5b for the carrier-vs-structure distinction. Kept for archival reference.
+
+---
+
 # Cell256 代数 spine — (Z/2)⁸ AddCommGroup + Cayley 自对偶
 
 > 状态：v3 canonical (2026-05-11) — Cell128 / Cell256 之 algebraic spine：componentwise XOR 给出 (Z/2)⁷ 与 (Z/2)⁸ Abelian 群结构；Cayley regular representation `ι : Cell256 → (Cell256 → Cell256)` 把元变成自身上的左平移；ε(f) = f(origin) 是逆向 retraction；origin = (qian, dao) = V₄ identity = (Z/2)⁸ zero。

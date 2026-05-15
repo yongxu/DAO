@@ -81,6 +81,7 @@ import SSBX.Foundation.Wen.MetaInterp.OuterLoop
 import SSBX.Foundation.Wen.MetaInterp.TargetContract
 import SSBX.Foundation.Wen.MetaInterp.Assembly
 import SSBX.Foundation.Wen.MetaInterp.Universal
+import SSBX.Foundation.Wen.MetaInterp.GodelR8
 import SSBX.Foundation.Wen.WenDef
 import SSBX.Foundation.Wen.WenyanParser
 import SSBX.Foundation.Wen.WenEval

@@ -1,4 +1,6 @@
 > **[Superseded 2026-05-15]** — Canonical doctrine is now [`wen-algebra.md`](wen-algebra.md) v0.6 (R-Family tower algebra, R₀–R₈ root layers with R₄/R₈ dual centers, semantic naming demoted to Atlas). This file documents the v3.0 R-uniform doctrine (strict (Z/2)ⁿ uniform R₀..R₈ interfaces, May 11) for historical reference. The math survives in [`v4-foundation.md`](v4-foundation.md) v0.5; the positioning has changed (every R_N is now first-class with its own structure, R_4/R_8 are dual centers rather than R_8 being sole closure, semantic names like 道/已/今/未 are application-layer overlays not core ontology).
+>
+> **Updated v1.0.2 reference**: see [`wen-substrate.md`](wen-substrate.md) §3.6 for parametric framing — R-Family-over-{F_2, ℝ, ℂ, ℂ_p, …} generalises the strict (Z/2)ⁿ tower presented here to arbitrary base rings/fields.
 
 ---
 

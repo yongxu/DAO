@@ -1,4 +1,6 @@
 > **[Superseded 2026-05-15]** — Canonical doctrine is now [`wen-algebra.md`](wen-algebra.md) v0.6. Theorems A–K survive intact; they now apply to the R-Family `R_N := F₂^N` parametric tower rather than the Yi-specific Cell256 framing. Cardinality and rank facts are unchanged; the Yi-tradition naming (Yao / Trigram / Hexagram / Shi V₄ {道,已,今,未}) is now Atlas-layer per [`v4-foundation.md`](v4-foundation.md) §0.4 ("字符语义全部冻结，只看结构") and [`wen-algebra.md`](wen-algebra.md) §9.
+>
+> **Updated v1.0.2 reference**: see [`wen-substrate.md`](wen-substrate.md) §3.6 for parametric framing — Theorems A–K are properties of the R-Family-over-{F_2, ℝ, ℂ, ℂ_p, …} substrate; the F_2 instance shown here is one of many.
 
 ---
 

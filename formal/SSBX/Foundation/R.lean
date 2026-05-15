@@ -13,6 +13,7 @@ This umbrella pulls the whole subtree in one import.
 -/
 
 import SSBX.Foundation.R.Basic
+import SSBX.Foundation.R.Parametric
 import SSBX.Foundation.R.DirectSum
 import SSBX.Foundation.R.Tensor
 import SSBX.Foundation.R.Hom

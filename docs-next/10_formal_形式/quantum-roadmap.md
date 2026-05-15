@@ -1,3 +1,7 @@
+> **[v3 archive · superseded 2026-05-15 by wen-substrate v1.0.2]** — This doc is rooted in the F_2-only / Cell256-centric framing. See [`wen-substrate.md`](wen-substrate.md) §3.6 for the v1.0.2 parametric R-Family framework (R-Family-over-{F_2, ℝ, ℂ, ℂ_p, ...}) which subsumes and reframes the content here. Kept for archival reference.
+
+---
+
 # Quantum Roadmap — 从 (Z/2)⁸ 到 (ℂ²)⁸ 之完整升级路线 / From classical R₀..R₈ to fully quantum Hilbert state
 
 > 状态：v3 (2026-05-11) — 量子化路线图，从经典 R₀..R₈ 到 (ℂ²)⁸

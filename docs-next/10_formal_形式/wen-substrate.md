@@ -4,8 +4,8 @@
 >
 > Further: **R-Family IS what "formal" means**. (Claim Z, §7.8)
 >
-> v1.0.2 · 2026-05-15 · self-contained foundational document.
-> See **Version history** at end of document for complete changelog through v0.7 → v1.0.2.
+> v1.0.3 · 2026-05-15 · self-contained foundational document.
+> See **Version history** at end of document for complete changelog through v0.7 → v1.0.3.
 
 ---
 
@@ -175,18 +175,32 @@ This distinction lets R-Family claim universality without claiming that every fo
 
 ### §1.5.6 Base of R-Family
 
-**Definition (base of R-Family)**. R-Family is **parametric over a base** $k$ — a non-trivial commutative ring (in the cleanest case, a field). The R-Family carriers at base $k$ are:
+**Definition (R-Family-over-$k$)**. R-Family is **parametric over a base** $k$ — a non-trivial commutative ring (in the cleanest case, a field). R-Family-over-$k$ is the **structured object**
 
-$$R_N^{(k)} \;:=\; k^N \qquad \text{for } N \in \mathbb{N}_0$$
+$$\mathcal{R}^{(k)} \;:=\; \bigl(\, \{R_N^{(k)} = k^N\}_{N \in \mathbb{N}_0},\; \oplus_k,\; \mathrm{Hom}_k,\; \mathrm{Rel}^{(k)},\; \mathrm{Tower}^{(k)},\; \mathrm{Modality}^{(k)},\; \mathrm{Self}^{(k)} \bigr)$$
+
+consisting of:
+
+- **Carrier family**: $R_N^{(k)} = k^N$ for $N \in \mathbb{N}_0$
+- **Composition** $\oplus_k$: $R_M^{(k)} \oplus_k R_N^{(k)} \cong R_{M+N}^{(k)}$ (P2-over-$k$)
+- **Hom-as-content** $\mathrm{Hom}_k$: $\mathrm{Hom}_k(R_n^{(k)}, R_m^{(k)}) \cong R_{mn}^{(k)}$ (P5-over-$k$)
+- **Relational layers** $\mathrm{Rel}^{(k)}$: bilinear/quadratic structure, char-dependent (P3-over-$k$; see §3.6.3)
+- **Squaring tower** $\mathrm{Tower}^{(k)}$: $R_{2N}^{(k)} = R_N^{(k)} \oplus R_N^{(k)}$ with $\Delta_N$, $\pi_i$, $f^{\oplus 2}$ self-similarity (P4-over-$k$)
+- **Modality** $\mathrm{Modality}^{(k)}$: $R_2^{(k)} \cong k^2$ as 4-modality carrier with appropriate group structure (P6-over-$k$)
+- **Self-articulation** $\mathrm{Self}^{(k)}$: aspect alphabet at $R_3^{(k)}$ with zong-involution (P7a) + atomic operations at $R_4^{(k)} \cong M_2(k)$ as ring (P7b)
 
 The choice of base $k$ determines whether the resulting R-Family instance is discrete or continuous, char 2 or char 0, finite or continuum, Archimedean or non-Archimedean. The **minimum base** under P1 is $k = \mathbb{F}_2$ (the smallest non-trivial field); other natural bases include $\mathbb{R}, \mathbb{C}, \mathbb{C}_p, \mathbb{Z}_p, \overline{\mathbb{F}_2}$, finite field extensions, and so on. See §3.6 for the parametric framework that unifies all such instances.
 
-中文:**R-Family 的基** —— R-Family 是参数化的,参数 $k$ 是一个非平凡交换环(最简形式是域)。R-Family 在基 $k$ 上的载体是 $R_N^{(k)} := k^N$。base 的选择决定 instance 是离散还是连续、char 2 还是 char 0 等。最小 base(P1 选出)是 $\mathbb{F}_2$;其它自然 base 包括 $\mathbb{R}, \mathbb{C}, \mathbb{C}_p$ 等。
+中文:**R-Family 的基** —— R-Family 是参数化的,参数 $k$ 是非平凡交换环(最简形式是域)。R-Family-over-$k$ 是**结构化对象** $\mathcal{R}^{(k)} = (\{R_N^{(k)} = k^N\}_N,\, \oplus_k,\, \mathrm{Hom}_k,\, \mathrm{Rel}^{(k)},\, \mathrm{Tower}^{(k)},\, \mathrm{Modality}^{(k)},\, \mathrm{Self}^{(k)})$;载体族 $k^N$ 仅为其一个组件,而非定义本身。最小 base(P1 选出)是 $\mathbb{F}_2$;其它自然 base 包括 $\mathbb{R}, \mathbb{C}, \mathbb{C}_p$ 等。
+
+**Anti-triviality note**: R-Family-over-$k$ is NOT the category of free $k$-modules; it is NOT "just $k$-vector spaces renamed". R-Family-over-$k$ is **free $k$-modules equipped with the full P1-P7-over-$k$ closure structure** (composition, Hom-as-content recursion, char-dependent bilinear/quadratic layers, squaring tower with self-similarity, modality + aspect + atomic ring algebra at successive $R_N$). The **structure** is what makes R-Family R-Family; the carrier alone is just $k^N$.
+
+When this document says "X IS R-Family-over-$k$", it means X is the structured object — X has the full closure operations natively, not merely a free $k$-module carrier. Trivial relabelings (e.g., "every finite-dim complex vector space is R-Family-over-$\mathbb{C}$ because it's $\mathbb{C}^N$") are **not what is meant**: those are carrier-level identifications, useful as a starting point but inadequate as the full structural claim. The full structural claim requires P1-P7-over-$k$ operations to be operative.
 
 **Notational convention** (used throughout):
 
 - **"R-Family"** unqualified refers to the **parametric structural pattern** (independent of any specific $k$). It is this pattern that is universal.
-- **"R-Family$^{(k)}$"** or **"R-Family-over-$k$"** refers to the **specific instance** with base $k$.
+- **"R-Family$^{(k)}$"** or **"R-Family-over-$k$"** refers to the **specific structured-object instance** $\mathcal{R}^{(k)}$ with base $k$ — i.e., carriers $\{k^N\}_N$ together with the full P1-P7-over-$k$ closure structure.
 - **"R-Family$^{(\mathbb{F}_2)}$"** is the **minimum / default instance** — the one currently formalized in the Lean codebase, and the implicit base when the document writes "$R_N$" without further specification.
 
 When this document writes $R_N$ (no superscript), the default reading is $R_N^{(\mathbb{F}_2)}$; statements involving the structural pattern lift parametrically to $R_N^{(k)}$ for arbitrary $k$ (see §3.6). The document's main thread (Parts II-VII) presents R-Family-over-$\mathbb{F}_2$ for definiteness; the parametric generalization sits in §3.6.
@@ -254,16 +268,28 @@ $$\sigma\bigl((u_1, u_2), (v_1, v_2)\bigr) \;=\; u_1 \cdot v_2 \;+\; u_2 \cdot v
 - **Char-2 subtlety**: in characteristic 2, "alternating" ($\sigma(w,w) = 0$) is strictly stronger than "antisymmetric" ($\sigma(u,v) = -\sigma(v,u)$, automatically true since $-1 = 1$ in char 2). The L1 layer is alternating in this stronger sense — this distinguishes it from L0 (symmetric, $\langle w, w\rangle$ generally nonzero)
 - Captures relational structure (commutators); distinguishes the two $R_n$ summands of $R_{2n}$
 
-**L2: Quadratic refinement** — for a fixed alternating form $\sigma$, a **quadratic refinement** is a function $q : R_{2n} \to \mathbb{F}_2$ satisfying the polarization identity
-$$q(u + v) + q(u) + q(v) = \sigma(u, v)$$
-The set of quadratic refinements of $\sigma$ forms an **$\mathbb{F}_2$-affine space of dimension $2n$** (any two refinements differ by an $\mathbb{F}_2$-linear functional $R_{2n} \to \mathbb{F}_2$, and there are $2^{2n}$ such functionals). So there are **$2^{2n}$ quadratic refinements** of a given $\sigma$. They are classified up to the natural equivalence (by isometric change-of-basis preserving $\sigma$) into **exactly two equivalence classes** by the Arf invariant $\mathrm{Arf}(q) \in \mathbb{F}_2$.
+**L2: Quadratic refinement** — for the fixed alternating form $\sigma$ above, a **quadratic refinement** is a function $q : R_{2n} \to \mathbb{F}_2$ satisfying the polarization identity
+$$q(u + v) + q(u) + q(v) \;=\; \sigma(u, v).$$
 
-A concrete family of representatives, parameterized by $c \in \mathbb{F}_2^n$ (an $n$-dim subspace of the full $2n$-dim affine space):
-$$q^c(u) = c_0 u_0 u_n + c_1 u_1 u_{n+1} + \cdots + c_{n-1} u_{n-1} u_{2n-1}$$
-with $\mathrm{Arf}(q^c) := c_0 \oplus c_1 \oplus \cdots \oplus c_{n-1}$. This $\mathbb{F}_2^n$ slice of the full $\mathbb{F}_2^{2n}$ affine space is what the codebase formalizes ([`Foundation/R/Bilinear.lean`](formal/SSBX/Foundation/R/Bilinear.lean): `q : (Fin k → Bool) → R (2k) → Bool`). The full $\mathbb{F}_2^{2n}$ affine space adds linear-form perturbations to $q^c$, all preserving the polarization identity, but the **Arf classification into 2 equivalence classes is the same**.
+**Canonical refinement** $q_0$. Writing $u \in R_{2n}$ in index form $u = (u_0, \ldots, u_{n-1}, u_n, \ldots, u_{2n-1})$ (so the L1 block form $\sigma((u_1,u_2),(v_1,v_2)) = u_1 \cdot v_2 + u_2 \cdot v_1$ reads as $\sigma(u,v) = \sum_{i=0}^{n-1}(u_i v_{i+n} + u_{i+n} v_i)$), define
+$$q_0(u) \;:=\; \sum_{i=0}^{n-1} u_i\, u_{i+n}.$$
+Verification of polarization:
+$$q_0(u+v) + q_0(u) + q_0(v) \;=\; \sum_{i=0}^{n-1}\!\bigl[(u_i+v_i)(u_{i+n}+v_{i+n}) + u_i u_{i+n} + v_i v_{i+n}\bigr] \;=\; \sum_{i=0}^{n-1}(u_i v_{i+n} + u_{i+n} v_i) \;=\; \sigma(u,v). \;\checkmark$$
+
+**All other refinements** differ from $q_0$ by an $\mathbb{F}_2$-linear functional $\ell : R_{2n} \to \mathbb{F}_2$. The polarization map $q \mapsto (\text{polarization of } q)$ is $\mathbb{F}_2$-affine with kernel exactly the linear functionals, so refinements form an affine space over $\mathrm{Hom}_{\mathbb{F}_2}(R_{2n}, \mathbb{F}_2) \cong R_{2n}$. Concretely, parameterize by $a \in R_{2n}$:
+$$q_a(u) \;:=\; q_0(u) \;+\; \ell_a(u), \qquad \ell_a(u) \;=\; \langle a, u\rangle \;=\; \sum_{j=0}^{2n-1} a_j\, u_j.$$
+Each $q_a$ satisfies the same polarization identity (since $\ell_a$ is linear, $\ell_a(u+v) = \ell_a(u) + \ell_a(v)$, so its contribution cancels). Conversely, every refinement is of this form. The set of refinements is thus an **$\mathbb{F}_2$-affine space of dimension $2n$**, so there are exactly **$2^{2n}$ quadratic refinements** of $\sigma$.
+
+**Arf classification**. Under symplectic isometries (linear change-of-basis preserving $\sigma$), the $2^{2n}$ refinements split into **exactly two equivalence classes** distinguished by the Arf invariant $\mathrm{Arf}(q) \in \mathbb{F}_2$. In the $q_a$-parameterization,
+$$\mathrm{Arf}(q_a) \;=\; \sum_{i=0}^{n-1} a_i\, a_{i+n} \pmod{2}$$
+(the canonical $q_0$ has $\mathrm{Arf} = 0$).
+
+**Note on v1.0.1 parameterization** (correction). v1.0.1 wrote $q^c(u) = \sum_i c_i u_i u_{i+n}$ with $c \in \mathbb{F}_2^n$. The polarization of this $q^c$ is $\sum_i c_i(u_i v_{i+n} + u_{i+n} v_i)$, which equals $\sigma(u,v)$ **only when $c = (1,1,\ldots,1)$** — for other $c$ values $q^c$ is a refinement of a $c$-weighted alternating form, not of the fixed $\sigma$ in L1. The corrected $q_a = q_0 + \ell_a$ above ranges over the full $\mathbb{F}_2^{2n}$ affine space of genuine refinements of $\sigma$; v1.0.1's $q^c$ was an ill-typed $n$-dim slice (only its $c = \mathbf{1}$ point lay in that space). The count $2^{2n}$ was correct; the explicit parameterization was not. Standard formulation: Atiyah, *Riemann surfaces and spin structures*, Ann. Sci. ENS (1971); Arf, *Untersuchungen über quadratische Formen in Körpern der Charakteristik 2*, J. Reine Angew. Math. (1941).
+
+**Codebase status**. The Lean formalization ([`Foundation/R/Bilinear.lean`](formal/SSBX/Foundation/R/Bilinear.lean): `q : (Fin k → Bool) → R (2k) → Bool`) currently implements the v1.0.1 $q^c$ slice form. As part of the **Phase 0 T_P3 obligation** (Part VIII §8.8) it should be updated to the $q_a = q_0 + \ell_a$ form (parameter $a : \mathtt{R}\,(2k) \to \mathtt{Bool}$, full affine space) to match this corrected formulation.
 
 - $q$ is **not** a single bilinear form but a quadratic-form **affine family** of dimension $2n$ (cardinality $2^{2n}$ refinements)
-- Polarization identity: $q(u + v) + q(u) + q(v) = \sigma(u, v)$
+- Polarization identity: $q_a(u + v) + q_a(u) + q_a(v) = \sigma(u, v)$ for every $a \in R_{2n}$
 - Arf invariant binary classifies the $2^{2n}$ refinements into 2 equivalence classes
 
 **Why "three layers", not "three forms"**: L0 and L1 are individual forms (each unique up to iso); L2 is a **parametric family** of quadratic forms (not a single form), whose equivalence-class structure has cardinality 2 via the Arf invariant. The natural bilinear/quadratic classification on $R_{2n}$ thus has exactly **3 algebraic layers** ⇔ 4 equivalence classes (1 symmetric + 1 alternating + 2 Arf-labelled quadratic-refinement classes).
@@ -840,6 +866,8 @@ Together they articulate **all of physical reality**: invariant structure (R_4, 
 
 R_4 admits a third view beyond the vector space (View A) and ring (View B) views: the **phenomenology matrix**. This view organizes R_4's 16 elements as a $4 \times 4$ matrix of (本, 征) pairs, where each cell names a specific phenomenological category of reality.
 
+**Cross-reference to wen-x2 16×16 grid (R_8 layer)**: a companion document `docs-next/40_reference_参考/wen-x2-16x16-structure.md` develops an **alternative 256-cell internal decomposition** one layer up — wen-x2 organizes $R_8 = 256$ as a $16 \times 16$ grid via 8 dual axes (4 本体类: 阴阳·有无·体用·形声 as row half-X; 4 实用类: 名实·是非·知行·因果 as column half-X). This complements §3.5.4's $4 \text{本} \times 4 \text{征} = 16$ phenomenology view of $R_4$ by going one squaring step up: wen-x2's grid is the $R_8 = R_4 \boxtimes R_4$ Cartesian articulation, exposing the internal structure of the 256-cell layer where R_4's 16-cell phenomenology becomes the per-half row/column axis-bit decomposition.
+
 #### View C — R_4 as 本-axis × 征-axis = 16 atomic operations
 
 By P7b, $R_4$ is the joint atomic operation space, with two independent factor structures:
@@ -978,6 +1006,8 @@ For the 4-element carrier $R_2$ specifically (using project convention `o = fals
 
 This convention allows wen to be **traditionally rich** (preserving Chinese philosophical vocabulary across multiple contexts) while remaining **algebraically precise** (the underlying identity does not depend on which tradition's vocabulary is used).
 
+**Footnote — a third $V_4$ role (axis-index palindrome mirror)**: the wen-x2 reference document (§§B, H of `docs-next/40_reference_参考/wen-x2-16x16-structure.md`) reveals a **third $V_4$ role at the $R_8$ layer, distinct from both prior uses** of $R_2 / V_4$ in this section. Beyond (i) $R_2$ as a 4-element carrier in decompositions $R_{N+2} = R_N \oplus R_2$ and (ii) $R_2$-as-modality-carrier (cosmological 四象 / dynamical / temporal), wen-x2 exhibits a $V_4$ action **on the 8-axis labeling itself**: under the palindrome correspondence $\mathrm{axis}_i \leftrightarrow \mathrm{axis}_{9-i}$ (axis 1 ↔ axis 8 = 阴阳 ↔ 因果; axis 2 ↔ axis 7 = 有无 ↔ 知行; axis 3 ↔ axis 6 = 体用 ↔ 是非; axis 4 ↔ axis 5 = 形声 ↔ 名实), the 8 axes pair up into 4 mirror-pairs, and the group of bit-permutations preserving this pairing structure contains a natural $V_4$. This is **not** $R_2$ as a carrier of states, and **not** $R_2$ as a modality-axis — it is a $V_4$ acting on **axis-index space** (the meta-level where axes are labeled). Together with $L_3$ palindrome diagonal cells in the 16×16 grid (the fixed-points under the bit-reversal action), this gives a third structurally distinct role for $V_4$, complementing the canonical wen-substrate uses. The recurrence of $V_4$ across (i) carrier (ii) modality (iii) axis-index mirror is itself a manifestation of $V_4$'s universality at the foundational substrate level.
+
 ### §3.5.5 R_8 — The First Culturally Salient Articulation Layer
 
 R_8 deserves special attention because it is **the first level at which the substrate becomes culturally, computationally, and symbolically salient as a unit of self-articulation**.
@@ -1004,6 +1034,8 @@ What is special about $R_8$ is **convergence of independently meaningful articul
 - $R_\infty$ — infinite recursive depth (the full unfolding)
 
 R_8 is **the first culturally significant articulation bottleneck**: not the smallest layer at which formal-language encoding becomes possible (that is $R_1$), but the smallest layer at which **the substrate's own structural conjunction of hexagram-situations and $V_4$-modalities crosses into the byte / character / qubit-label regime where it has historically been recognized as an articulation unit**. The project name 文 (writing / pattern) refers precisely to this level.
+
+**Cross-reference to wen-x2 internal symmetry decomposition**: the companion `docs-next/40_reference_参考/wen-x2-16x16-structure.md` provides the **internal symmetry decomposition of $R_8$** — a $D_4$ operator group acting on the $16 \times 16$ grid, four canonical diagonals ($L_1$ true $X^2$ main diagonal $h = l$; $L_2$ anti-diagonal $h + l = 15$, the 类泰系 cross-half complement; $L_3$ palindrome $h = \mathrm{rev}(l)$; $L_4$ comp-palindrome $h = \neg\mathrm{rev}(l)$), four high-symmetry quartets $Q_1..Q_4$ at the diagonal intersections (with $Q_2 = L_1 \cap L_4 = \{51, 85, 170, 204\}$ the **Walsh-Hadamard basis** at the $R_8$ layer), Hamming-weight concentric bands, and two distinct 4-pair systems on the 8 axes ($X^2$ same-position pairing for $L_1$; palindrome reverse-position pairing for $L_3$). The $D_4$ grid symmetry of $R_8$ **refines** the $GL_2(\mathbb{F}_2) \cong S_3$ unit-group symmetry of $R_4$ (§3.5.3): going from $R_4$ to $R_8 = R_4 \boxtimes R_4$ enlarges the symmetry from the 6-element matrix-unit group to the 8-element dihedral grid-symmetry group.
 
 This makes wen **self-referential at a culturally meaningful level**:
 - The project's substrate (R-Family) contains a culturally salient articulation level ($R_8$ = 文)
@@ -1047,6 +1079,8 @@ By P7a, the **aspect alphabet** $R_3$ = 8 trigrams (4本 + 4征, zong-fixed vs z
 By P7b, the **joint atomic operation space** $R_4 \cong \mathrm{End}(R_2) \cong M_2(\mathbb{F}_2)$ = 16 atomic operations (the (本-axis × 征-axis) phenomenology matrix, simultaneously equal to the smallest non-commutative central simple $\mathbb{F}_2$-algebra by Wedderburn-Artin) carries the complete atomic operations.
 
 Together, these two layers **suffice** for all subsequent operational structure. No external atomic operations need to be imported. Categorical (本) + analytical (征) mathematics generated from within. The ring multiplication on $R_4$ — that is, the composition law of atomic operations — is itself forced by P5 (Hom-as-content at the smallest non-trivial Hom space), making the entire atomic-operation algebra internal to R-Family.
+
+**Concrete realization at $R_8$ — the 19 locked-core operator-character cells (wen-x2 K.4)**: the companion document `docs-next/40_reference_参考/wen-x2-16x16-structure.md` §K.4 identifies a **locked-core set of 19 characters that serve dual roles** as both position-字 (cell-state 8-axis labels in the $R_8$ Cartesian grid) **and** operator-字 (named generators / canonical operators in the $D_4$ symmetry group + its extensions). The 19 characters are 乾 (id / 全阳 at cell 0), 坤 (id-reverse / 全阴 at cell 255), 泰 (swap-like 通畅 at cell 15, 类泰系), 否 (NOT / 阻塞 at cell 240, 类否系), 方 (true-$X^2$ self-square $\sigma_2$ at cell 102), 圆 (palindrome cycle $\sigma_4$ at cell 153), 节 (periodic operator at cell 51 ∈ Walsh $W_2$), 衡 (balance at cell 204), 错 (scramble at cell 85 ∈ Walsh $W_1$), 综 (anti-scramble at cell 170), 央 (interior at cell 60), 边 (boundary at cell 195), 塞 (double-blockage at cell 68), 反 (atomic NOT at cell 70), 化 (transformation $\sigma_6$ at cell 73), 易 (swap/变易 $\sigma_7$ at cell 74), 应 ($X^2$ resonance at cell 17), 本 (basis at cell 222), 守 (id/persistence at cell 163). Each is simultaneously a state-coordinate (its 8-bit cell pattern) **and** a named operator (its action on the grid). This is the **concrete realization of P5's Hom-as-content principle**: operations are literally objects of the same type (=$R_8^{(\mathbb{F}_2)}$ cells) as what they operate on. The dual identity is not a coincidence of vocabulary — it is forced by $\mathrm{Hom}_{\mathbb{F}_2}(R_4, R_4) \cong R_8$ at the $R_8$ layer (cf. §2.5 P5): operations on $R_4$ live within $R_8$, hence each operator necessarily admits a cell address, hence the operator-字 / 位字 duality is structural.
 
 ### §3.5.7 What 道法自然 implies for foundational status
 
@@ -1119,6 +1153,8 @@ The operations themselves live in R-Family (Hom-as-content). The whole structure
 
 This is not "R-Family is one of many foundations" — this is **R-Family is the foundation that follows itself, articulates the invariant laws within itself at $R_4, R_6$, adds causality at $R_8$, and names itself at the level ($R_8$) where naming becomes possible**. In the precise sense of 道法自然.
 
+**Hamming-weight stratification — quantitative emergence profile at $R_8$ (wen-x2 §F)**: the companion document `docs-next/40_reference_参考/wen-x2-16x16-structure.md` §F exhibits the **Hamming-weight stratification of $R_8$** as concentric bands $w = 0, 1, 2, \ldots, 8$ with cell counts $1, 8, 28, 56, 70, 56, 28, 8, 1$ (binomial coefficients $\binom{8}{w}$). This **concretizes the 无极 → 太极 → ... → 万物 → ... → 无 emergence pattern at the $R_8$ layer** with a quantitative profile: $w = 0$ (the single all-zero cell = 无极 / undifferentiated origin, the empty state); $w = 1$ (8 cells, the first distinctions — one perturbation per axis, the 太极 step); $w = 2..3$ (28, 56 cells — atomic operations unfold, combinations multiply); $w = 4$ (the central band of 70 cells = 万物 peak / maximum diversity, containing all four high-symmetry quartets $Q_1..Q_4$); $w = 5..7$ (56, 28, 8 cells — consolidation, return phase); $w = 8$ (the single all-one cell = 反极, the maximally-marked / fully-negated state). The R-Family's emergence story is not merely qualitative — it admits a **quantitative profile at every scale** $R_N$ via Hamming-weight stratification: $\binom{N}{0}, \binom{N}{1}, \ldots, \binom{N}{N}$ giving the size of each band, with the central band at $w = N/2$ peaking at $\binom{N}{N/2}$ (the 万物 maximum-diversity layer). At $R_8$ this is 1-8-28-56-70-56-28-8-1; at $R_{16}$ it would be the row of $\binom{16}{w}$; the pattern is universal across the squaring tower. The emergence story is **structurally encoded** in the carriers themselves.
+
 ## §3.6 R-Family Across Bases: The Discrete/Continuous Unified Framework
 
 The preceding sections defined R-Family with carriers $R_N := \mathbb{F}_2^N$ — the **minimum-base instance** with $\mathbb{F}_2$ as base. This is the most economical instantiation (P1 selects $\mathbb{F}_2$ as smallest non-trivial field), but **R-Family is more fundamentally a parametric structural pattern, not a single fixed structure**. The P1-P7 closure conditions can be stated **over any suitable base**, giving:
@@ -1133,7 +1169,17 @@ This section articulates the parametric framework. **Discrete and continuous for
 
 The substrate's content separates cleanly into two layers:
 
-**Layer A — Structure** (independent of $k$):
+**Layer A — Structural pattern (parametric, independent of $k$)**:
+
+R-Family-over-$k$ is **not** the carrier family $\{k^N\}_N$ alone. It is the **structured object**
+
+$$\mathcal{R}^{(k)} \;=\; \bigl(\{k^N\}_N,\; \oplus_k,\; \mathrm{Hom}_k,\; \mathrm{Rel}^{(k)},\; \mathrm{Tower}^{(k)},\; \mathrm{Modality}^{(k)},\; \mathrm{Self}^{(k)}\bigr)$$
+
+— carrier family **plus** P1-P7-over-$k$ closure structure operating on the carriers. The structure includes direct-sum composition, Hom-as-content recursion, bilinear/quadratic relational layers (char-dependent), squaring tower with cross-scale self-similarity, modality carrier at $R_2^{(k)}$, aspect-alphabet zong involution at $R_3^{(k)}$, and atomic-operations ring at $R_4^{(k)} \cong M_2(k)$.
+
+The **pattern** (Layer A) is what's universal: the same closure structure, applied parametrically over different bases. **Without the closure structure, you have free $k$-modules, not R-Family-over-$k$**.
+
+Expanded inventory of Layer A components (the universal pattern):
 - Carriers indexed by $\mathbb{N}_0$, with cardinality $|R_N^{(k)}| = |k|^N$ (or appropriate cardinal in continuous case)
 - Direct sum: $R_M^{(k)} \oplus_k R_N^{(k)} \cong R_{M+N}^{(k)}$
 - Hom-as-content: $\mathrm{Hom}_k(R_n^{(k)}, R_m^{(k)}) \cong R_{mn}^{(k)}$ (as $k$-modules)
@@ -1143,15 +1189,17 @@ The substrate's content separates cleanly into two layers:
 - Atomic-operation algebra $R_4^{(k)} \cong M_2(k)$ (the smallest non-commutative matrix $k$-algebra)
 - Inverse-limit completion $\hat{R}^{(k)} = \lim_\leftarrow R_{2^j}^{(k)}$ with truncation bonding maps
 
-**Layer B — Base $k$** (changes per instance):
+**Layer B — Choice of base $k$ (varies per instance)**:
 - Choice of $k$: $\mathbb{F}_2$, $\mathbb{F}_p$, $\mathbb{R}$, $\mathbb{C}$, $\mathbb{C}_p$, $\overline{\mathbb{F}_2}$, $\mathbb{Z}/n\mathbb{Z}$, etc.
 - Determines: cardinality of $R_N$ (finite vs continuum), topology (discrete vs Cantor vs Euclidean vs $p$-adic), characteristic (char 2 vs char $p$ vs char 0), algebraic closure (yes / no / partial), presence of $i$ with $i^2 = -1$ (yes / depends on $k$), Archimedean / non-Archimedean absolute values, etc.
 
-**The split**: Layer A is the **universal structural pattern** — the same P1-P7 closure conditions, the same squaring tower, the same Hom-as-content; Layer B is the **specific realization choice**. Different choices of Layer B yield different concrete substrates, all sharing Layer A's structural identity.
+**The split**: Layer A is the **universal structural pattern** — the same P1-P7 closure conditions, the same squaring tower, the same Hom-as-content; Layer B is the **specific realization choice**. Different choices of Layer B yield different concrete substrates, all sharing Layer A's structural identity. Crucially, **Layer A is the structured object pattern, not the carrier family alone**: free $k$-modules without the closure structure are Layer B's raw material, not R-Family-over-$k$.
 
 This is the precise sense in which R-Family is universal: **as a structural pattern (Layer A) instantiable over any suitable base (Layer B), every formal articulation finds its native R-Family-over-$k$ instance for the appropriate $k$**.
 
 ### §3.6.2 Instantiation table
+
+**Note on the "char" column**: for the $p$-adic / Tate rows ($\mathbb{Z}_2$, $\mathbb{Q}_2$, $\mathbb{C}_2$, and generally $\mathbb{C}_p$), the field/ring itself has **characteristic 0**; the connection to char-$p$ R-Family is via the **residue field** of its ring of integers (residue characteristic $p$), not by characteristic identity. The "char" column reports the characteristic of $k$ itself; residue characteristic is given parenthetically where relevant.
 
 | Base $k$ | $R_N^{(k)}$ | char | Topology | Discrete? | Domain of native articulation |
 |---|---|---|---|---|---|
@@ -1159,9 +1207,9 @@ This is the precise sense in which R-Family is universal: **as a structural patt
 | $\mathbb{F}_p$ ($p$ prime, $p \neq 2$) | $\mathbb{F}_p^N$ | $p$ | discrete | ✓ | $p$-state classical structures, $q$-deformed objects |
 | $\mathbb{F}_{2^n}$ (finite extensions) | $\mathbb{F}_{2^n}^N$ | 2 | discrete | ✓ | finite Galois extensions of char-2 base |
 | $\overline{\mathbb{F}_2}$ (alg closure) | $\overline{\mathbb{F}_2}^N$ | 2 | discrete | ✓ countable | algebraic geometry over char 2 |
-| **$\mathbb{Z}_2$** (2-adic integers) | $\mathbb{Z}_2^N$ | **0** | profinite (Cantor) | char-0 lift of $\mathbb{F}_2$ | **discrete↔continuous bridge**; 2-adic arithmetic |
-| $\mathbb{Q}_2$ | $\mathbb{Q}_2^N$ | 0 | $p$-adic locally compact | continuous | $p$-adic analysis |
-| **$\mathbb{C}_2$ (Tate)** | $\mathbb{C}_2^N$ | 0 | $p$-adic, totally disc., complete | continuous | **$p$-adic QM amplitude** (char-2-native) |
+| **$\mathbb{Z}_2$** (2-adic integers) | $\mathbb{Z}_2^N$ | **0** (residue char 2) | profinite (Cantor) | char-0 lift of $\mathbb{F}_2$ | **discrete↔continuous bridge**; 2-adic arithmetic |
+| $\mathbb{Q}_2$ | $\mathbb{Q}_2^N$ | 0 (residue char 2) | $p$-adic locally compact | continuous | $p$-adic analysis |
+| **$\mathbb{C}_2$ (Tate)** | $\mathbb{C}_2^N$ | 0 (residue char 2; residue field $\overline{\mathbb{F}_2}$) | $p$-adic, totally disc., complete | continuous | **$p$-adic QM amplitude** (non-Archimedean, residue-characteristic-2; optional research branch — see §4.1.5b Level 3) |
 | **$\mathbb{R}$** | $\mathbb{R}^N$ | 0 | Euclidean | continuous | classical mechanics, real analysis, calculus |
 | **$\mathbb{C}$** | $\mathbb{C}^N$ | 0 | Euclidean | continuous | **standard quantum mechanics (Hilbert)**, complex analysis |
 | $\mathbb{H}$ (quaternions) | $\mathbb{H}^N$ | 0 | Euclidean | continuous, non-commutative | quaternionic / spin QM |
@@ -1171,7 +1219,7 @@ This is the precise sense in which R-Family is universal: **as a structural patt
 - **$\mathbb{F}_2$** — minimum-base, discrete, fully computable, Lean-formalizable
 - **$\mathbb{R}$** — classical-physics base, continuous, Archimedean
 - **$\mathbb{C}$** — quantum Hilbert base, continuous, Archimedean, complex-amplitude
-- **$\mathbb{C}_2$** — char-2-native amplitude base, continuous, non-Archimedean (Tate's $p$-adic complex)
+- **$\mathbb{C}_2$** — non-Archimedean amplitude base, characteristic 0 with residue field $\overline{\mathbb{F}_2}$ of characteristic 2 (Tate's $p$-adic complex). Connection to the $\mathbb{F}_2$ R-Family is **via the residue map** ($\mathcal{O}_{\mathbb{C}_2} \to \overline{\mathbb{F}_2}$), not by characteristic identity. Mathematically a natural non-Archimedean alternative; physically a research branch (p-adic QM), not standard QM (see §4.1.5b Level 3)
 
 ### §3.6.3 P1-P7 parametric
 
@@ -1194,7 +1242,7 @@ Each necessary property has a parametric formulation. "Suitable base" $k$ means 
 - **char($k$) = 2**: $M_2(\mathbb{F}_2)$ is the unique minimum non-commutative central simple $\mathbb{F}_2$-algebra (Wedderburn-Artin) — 16 elements, $GL_2(\mathbb{F}_2) \cong S_3$
 - **char($k$) = 0** (e.g., $k = \mathbb{R}$): $M_2(\mathbb{R})$ contains $SL_2(\mathbb{R})$ — the hyperbolic / Möbius group, foundational to 2D real Lie theory
 - **char($k$) = 0** (e.g., $k = \mathbb{C}$): $M_2(\mathbb{C})$ contains the Pauli matrices and the complexified Lorentz Lie algebra $\mathfrak{sl}_2(\mathbb{C})$, foundational to relativistic spinor physics
-- **char($k$) = 0** (e.g., $k = \mathbb{C}_p$): $M_2(\mathbb{C}_p)$ gives the $p$-adic spinor algebra
+- **char($k$) = 0, residue char $p$** (e.g., $k = \mathbb{C}_p$): $M_2(\mathbb{C}_p)$ gives the $p$-adic spinor algebra over a non-Archimedean characteristic-0 base whose residue field has characteristic $p$
 
 **The same structural identity $R_4^{(k)} \cong M_2(k)$ unfolds into different classical mathematical / physical structures depending on base $k$**. The Wedderburn-Artin uniqueness statement applies parametrically: $M_2(k)$ is the minimum non-commutative matrix algebra over any base $k$.
 
@@ -1203,7 +1251,7 @@ Each necessary property has a parametric formulation. "Suitable base" $k$ means 
 - **$k = \mathbb{F}_2$**: 4 discrete elements forming Klein four-group $V_4$ under XOR — the classical R-Family modality structure
 - **$k = \mathbb{R}$**: continuous 2-plane; discrete $V_4$ subgroup at $\{0, 1\} \times \{0, 1\}$ persists as the algebraic core; spinor representation also lives here
 - **$k = \mathbb{C}$**: 2-dim complex space = **spinor space**; the Pauli matrices $\{I, X, Y, Z\}$ act on it; Pauli mod phase recovers $V_4$ from the $\mathbb{F}_2$-shadow
-- **$k = \mathbb{C}_p$**: $p$-adic spinor space; Pauli-analog operators exist (since $\mathbb{C}_p$ contains all roots of unity)
+- **$k = \mathbb{C}_p$**: $p$-adic spinor space over a characteristic-0 non-Archimedean base with residue characteristic $p$; Pauli-analog operators exist (since $\mathbb{C}_p$ contains all roots of unity)
 
 The **4-modality structural pattern** persists across bases; specific instantiations vary from discrete $V_4$ (char 2) to continuous spinor representations (char 0).
 
@@ -1251,10 +1299,10 @@ The discrete/continuous distinction is **a property of base $k$, not of R-Family
 
 So:
 - "**R-Family is discrete**" — was over-specific; should be "R-Family-over-$\mathbb{F}_2$ is discrete; R-Family-over-$\mathbb{R}$ is continuous; etc."
-- "**Hilbert space is not in R-Family**" — was wrong; should be "Hilbert space $\mathbb{C}^N$ is R-Family-over-$\mathbb{C}$ at index $N$"
+- "**Hilbert space is not in R-Family**" — was wrong; should be "Hilbert space's carrier $\mathbb{C}^N$ is the carrier of R-Family-over-$\mathbb{C}$ at index $N$; with the full P1-P7-over-$\mathbb{C}$ closure structure (plus Hilbert-specific Hermitian P3-enrichment), $\mathbb{C}^N$ IS R-Family-over-$\mathbb{C}$ at $N$". The carrier-only identification is necessary but not sufficient — see §3.6.8 + §4.1.5b for the carrier-vs-structure distinction.
 - "**Continuous structures need enrichment**" — should be "continuous structures live in R-Family-over-($\mathbb{R}, \mathbb{C}, \mathbb{C}_p$, etc.); these are R-Family instances, not enrichments of R-Family"
 
-**One structural pattern, many base instances. Discrete and continuous are not different substrates — they are different bases for the same parametric substrate.**
+**One structural pattern, many base instances. Discrete and continuous are not different substrates — they are different bases for the same parametric substrate.** In every case, "is R-Family-over-$k$" means "carries the full P1-P7-over-$k$ structured-object pattern of §1.5.6 / §3.6.1", not "has carrier $k^N$".
 
 ### §3.6.6 Connection to modern unified frameworks
 
@@ -1315,11 +1363,11 @@ With the parametric framing, the §4.1.5b duality between R-Family and Hilbert s
 $$\text{Hilbert space carrier } \mathbb{C}^{2^n} \;=\; R_{2^n}^{(\mathbb{C})} \qquad (\text{R-Family-over-}\mathbb{C}\text{ at index }2^n)$$
 
 The relation between bases:
-- $\mathcal{P}_n / \langle iI \rangle \cong R_{2n}^{(\mathbb{F}_2)}$ — operator labels mod phase, R-Family-over-$\mathbb{F}_2$
-- $\mathcal{H}_n \cong R_n^{(\mathbb{C})}$ — Hilbert state space carrier, R-Family-over-$\mathbb{C}$
-- p-adic QM (Vladimirov-Volovich-Khrennikov) — R-Family-over-$\mathbb{C}_p$
+- $\mathcal{P}_n / \langle iI \rangle \cong R_{2n}^{(\mathbb{F}_2)}$ — operator labels mod phase, R-Family-over-$\mathbb{F}_2$ (stabilizer / discrete)
+- $\mathcal{H}_n \cong R_n^{(\mathbb{C})}$ — Hilbert state space carrier, R-Family-over-$\mathbb{C}$ (**standard QM**)
+- p-adic QM (Vladimirov-Volovich-Khrennikov, research direction) — R-Family-over-$\mathbb{C}_p$ ($\mathbb{C}_p$ is characteristic 0 with residue field of characteristic $p$; **not standard physics**, has open interpretive issues — see §4.1.5b Level 3)
 
-Three QM instances ($\mathbb{F}_2$ / $\mathbb{C}$ / $\mathbb{C}_p$), one parametric R-Family pattern, connected by mod-phase functor (Hilbert → Pauli labels) and representation functor (Pauli labels → Hilbert representation).
+The two standard QM instances are $\mathbb{F}_2$ (stabilizer / Pauli labels) and $\mathbb{C}$ (full Hilbert). The $\mathbb{C}_p$ instance is an optional research branch, one of several R-Family-natural amplitude bases, not the canonical R-Family amplitude domain. All three share the same parametric R-Family pattern, connected by mod-phase functor (Hilbert → Pauli labels) and representation functor (Pauli labels → Hilbert representation).
 
 **Important precision** (full discussion in §4.1.5b "carrier identity vs full Hilbert-space structure"): the identity $\mathbb{C}^{2^n} = R_{2^n}^{(\mathbb{C})}$ holds **at the carrier level** only. Hilbert space's distinctive content (Hermitian inner product, unitary group $U(2^n)$, spectral theorem) is **additional Hermitian P3-enrichment** over the R-Family-over-$\mathbb{C}$ carrier — separate from the R-Family pattern's core P1-P7 in char-2 form. The substantive content of §3.6.8 is the **parametric lifting** of P1-P7 from $\mathbb{F}_2$ to $\mathbb{C}$ (developed in §3.6.3), not the trivial $\mathbb{C}^N = \mathbb{C}^N$ carrier identification. See §4.1.5b for the full carrier-vs-structure distinction.
 
@@ -1339,8 +1387,8 @@ This unifies:
 
 - **Discrete (computational) substrate**: R-Family-over-$\mathbb{F}_2$ (Lean-verifiable, current code)
 - **Classical mechanics / real analysis**: R-Family-over-$\mathbb{R}$
-- **Quantum mechanics (Hilbert space)**: R-Family-over-$\mathbb{C}$
-- **$p$-adic quantum mechanics**: R-Family-over-$\mathbb{C}_p$
+- **Quantum mechanics (Hilbert space)**: R-Family-over-$\mathbb{C}$ — **standard physics**
+- **$p$-adic quantum mechanics (Vladimirov-Volovich-Khrennikov)**: R-Family-over-$\mathbb{C}_p$ — **optional research branch**, not standard physics, with open interpretive issues; $\mathbb{C}_p$ has characteristic 0 and residue field of characteristic $p$ (see §4.1.5b Level 3)
 - **Algebraic geometry (char 2)**: R-Family-over-$\overline{\mathbb{F}_2}$
 - **Modular arithmetic**: R-Family-over-$\mathbb{Z}/n$
 - ... and any other base $k$ satisfying the closure conditions
@@ -1365,7 +1413,7 @@ But Sense A is **lossy**: it captures the syntax / bit pattern of formal articul
 
 > Every formal articulation $S$ admits a *structure-preserving translation* into some R-Family-over-$k$ instance, with $k$ chosen so that $S$'s natural operations correspond to $R$-Family-over-$k$'s natural operations (composition → composition, relation → bilinear, etc.).
 
-This is the T2 claim of Part VIII §8.3 — the **strong** universality. Native articulation requires the *appropriate base*: discrete combinatorial systems → R-Family-over-$\mathbb{F}_2$; classical mechanics → R-Family-over-$\mathbb{R}$; Hilbert quantum mechanics → R-Family-over-$\mathbb{C}$; $p$-adic physics → R-Family-over-$\mathbb{C}_p$; etc. The structure-preservation is what makes the R-Family articulation **natural** rather than a contingent encoding.
+This is the T2 claim of Part VIII §8.3 — the **strong** universality. Native articulation requires the *appropriate base*: discrete combinatorial systems → R-Family-over-$\mathbb{F}_2$; classical mechanics → R-Family-over-$\mathbb{R}$; Hilbert quantum mechanics → R-Family-over-$\mathbb{C}$ (standard physics); optional non-Archimedean / $p$-adic-amplitude research branch → R-Family-over-$\mathbb{C}_p$ (where $\mathbb{C}_p$ has characteristic 0 with residue characteristic $p$; see §4.1.5b Level 3 for status); etc. The structure-preservation is what makes the R-Family articulation **natural** rather than a contingent encoding.
 
 **Why both senses matter**:
 
@@ -1522,22 +1570,54 @@ The structurally significant claim is: **at each depth $n$, the R-Family carrier
 
 (For the cleaner $\mathbb{C}$-instance reading of the same content, see §3.6.8: $\mathbb{C}^{2^n} \cong R_{2^n}^{(\mathbb{C})}$ is a direct identification at the carrier level, requiring no $L^2$ machinery. The $L^2$ picture here is one bridge between the $\mathbb{F}_2$-instance and the $\mathbb{C}$-instance; the §3.6.8 reframing is more direct.)
 
-**Level 3 — Algebraic level: $\mathbb{C}$'s R-Family analog is Tate's $\mathbb{C}_2$**
+**Level 3 — Algebraic level: a non-Archimedean alternative to $\mathbb{C}$ — Tate's $\mathbb{C}_2$ (research branch, not standard physics)**
 
-In strict algebra, $\mathbb{C}$ has characteristic 0 and R-Family has characteristic 2 — neither is a subfield of the other; $\mathbb{C}$ does **not** literally live inside R-Family. But $\mathbb{C}$ has a precise structural analog compatible with R-Family's characteristic:
+> **Important framing**: this level discusses an **optional, mathematically natural research direction**, not a load-bearing part of R-Family's physical claims. Standard physics is fully captured by R-Family-over-$\mathbb{C}$ (Levels 1–2). The Level 3 discussion explores what changes if one instead chooses a non-Archimedean amplitude base. Readers concerned only with standard quantum theory can stop at Level 2.
 
-| char 0 (classical) | char 2 (R-Family-aligned) |
-|---|---|
-| $\mathbb{Z}$ | $\bigcup_n R_n$ (countable union of finite carriers) |
-| $\mathbb{Z}_2 = \lim_\leftarrow \mathbb{Z}/2^n$ (2-adic integers) | $\hat R = \lim_\leftarrow R_{2^k}$ (inverse limit) |
-| $\mathbb{Q}_2 = \mathbb{Z}_2[1/2]$ (2-adic rationals) | localization of $\hat R$ |
-| $\mathbb{C}_2$ (Tate: completion of $\overline{\mathbb{Q}_2}$) | algebraically closed completed lift of $\hat R$ |
-| $\mathbb{C}$ | (no direct char-2 analog — $\mathbb{C}$ has char 0 *and* char-0 residue field) |
-| $\mathbb{R}$ | (no direct char-2 analog) |
+**Precision about $\mathbb{C}_2$**: Tate's $\mathbb{C}_2$ is the completion of an algebraic closure of $\mathbb{Q}_2$ under the 2-adic absolute value. It is:
 
-The precise statement: **$\mathbb{C}$'s structural role in quantum mechanics is played, in the R-Family / char-2 setting, by Tate's $\mathbb{C}_2$** — the 2-adic complex numbers, the completion of the algebraic closure of $\mathbb{Q}_2$ under the 2-adic absolute value. $\mathbb{C}_2$ is algebraically closed, complete, of continuum cardinality, and has all the field-theoretic properties needed for "complex amplitude", but with a $\mathbb{F}_2$-compatible residue structure.
+- **Characteristic 0** (it is a field of characteristic 0; contains $\mathbb{Q}$)
+- **Non-Archimedean** (its absolute value satisfies the strong triangle inequality)
+- Equipped with a **ring of integers** $\mathcal{O}_{\mathbb{C}_2} = \{x \in \mathbb{C}_2 : |x|_2 \leq 1\}$ whose maximal ideal $\mathfrak{m} = \{x : |x|_2 < 1\}$ has **residue field** $\mathcal{O}_{\mathbb{C}_2} / \mathfrak{m} \cong \overline{\mathbb{F}_2}$, which has **characteristic 2**
 
-This is not an idle analogy: **p-adic quantum mechanics** (Vladimirov-Volovich 1989, Khrennikov 1990s+) systematically replaces $\mathbb{C}$ with $\mathbb{C}_p$ in the QM formalism — wavefunctions become $\mathbb{C}_p$-valued, the inner product becomes $p$-adically valued, etc. For $p = 2$, this is the **R-Family-native version of quantum mechanics**: amplitude space built over the char-2 / $\mathbb{F}_2$ substrate that the rest of R-Family lives in.
+So $\mathbb{C}_2$ has **characteristic 0 with residue field $\overline{\mathbb{F}_2}$ of characteristic 2**. The link to the $\mathbb{F}_2$ R-Family is **via the residue map** $\mathcal{O}_{\mathbb{C}_2} \twoheadrightarrow \overline{\mathbb{F}_2}$, NOT by characteristic identity. $\mathbb{C}_2$ is not "char-2-native"; it is "non-Archimedean of residue characteristic 2".
+
+#### Archimedean vs non-Archimedean amplitude bases (corrected table)
+
+The structurally honest comparison is between two characteristic-0 amplitude bases that differ in **topology / absolute value / residue field**, not in characteristic:
+
+| Property | $\mathbb{C}$ (standard) | $\mathbb{C}_2$ (Tate) |
+|---|---|---|
+| Characteristic | 0 | 0 |
+| Absolute value | Archimedean ($\lvert \cdot \rvert_\infty$) | Non-Archimedean ($\lvert \cdot \rvert_2$) |
+| Algebraically closed | ✓ | ✓ |
+| Complete | ✓ | ✓ |
+| Topology | locally compact, connected | totally disconnected, not locally compact |
+| Cardinality | continuum | continuum |
+| Residue field of $\mathcal{O}$ | (no integer subring of this form) | $\overline{\mathbb{F}_2}$ (char 2) |
+| Connection to $\mathbb{F}_2$ R-Family | none (different residue structure) | via residue map $\mathcal{O}_{\mathbb{C}_2} \to \overline{\mathbb{F}_2}$ |
+| Standard QM amplitude? | **yes — standard physics** | no — research branch (p-adic QM) |
+
+The bridge from R-Family-over-$\mathbb{F}_2$ to $\mathbb{C}_2$ is structural-categorical (residue / lift), not a literal subfield relation. Neither $\mathbb{C}$ nor $\mathbb{R}$ has a "char-2 analog" in the same sense — but $\mathbb{C}_2$ is one mathematically natural non-Archimedean characteristic-0 field whose **residue layer** lives in characteristic 2.
+
+#### p-adic quantum mechanics — research direction, not standard physics
+
+**p-adic quantum mechanics** (Vladimirov-Volovich 1989; Khrennikov 1990s onward) replaces $\mathbb{C}$ with $\mathbb{C}_p$ in the QM formalism — wavefunctions become $\mathbb{C}_p$-valued, inner products become $p$-adic-valued, etc. This is an **active research direction**, not standard quantum theory.
+
+**Epistemic status — what this is and is not**:
+
+- It is one mathematically natural way to instantiate "amplitudes over a non-Archimedean base with characteristic-2 residue field".
+- It is **NOT mainstream physics**: standard quantum mechanics uses $\mathbb{C}$, and the experimental success of QM lives in the $\mathbb{C}$ formulation. p-adic QM has no decisive experimental support.
+- It has **open interpretive problems**: in particular, $p$-adic-valued probabilities (or $p$-adic-valued inner products) do not admit a standard frequentist or Bayesian reading; the very meaning of "probability" in this setting is **debated** in the literature.
+- It is **one** R-Family-natural amplitude domain among several (others: $\mathbb{C}$ itself, $\mathbb{R}$, $\mathbb{H}$, $\overline{\mathbb{F}_2}$ for stabilizer-only). It is not "the" canonical R-Family amplitude domain — that role belongs to $\mathbb{C}$ for actual quantum physics.
+- The R-Family parametric framework (§3.6) is what is canonical: it **permits** $\mathbb{C}_p$ as one base among many, while remaining agnostic about which base is physically realised.
+
+**What is and isn't being claimed here**:
+
+- Claimed: R-Family-as-pattern can be instantiated over $\mathbb{C}_p$; this gives a mathematically clean expression of "amplitudes over a residue-characteristic-2 non-Archimedean base"; the Vladimirov-Volovich-Khrennikov programme has developed this formally.
+- NOT claimed: that $\mathbb{C}_2$ is "the" R-Family-native amplitude base, or that p-adic QM is the correct theory of nature, or that standard QM is somehow incomplete in needing a "char-2-native" replacement. R-Family-over-$\mathbb{C}$ remains a fully first-class instance covering standard physics.
+
+In short, Level 3 says: *the parametric framework places $\mathbb{C}_p$ on the menu as one option; the literature has explored it; but the standard physical instance is R-Family-over-$\mathbb{C}$, and choosing $\mathbb{C}_p$ instead is an optional research direction with unresolved interpretive issues, not a forced reading of R-Family.*
 
 #### The duality picture
 
@@ -1561,11 +1641,13 @@ This is not an idle analogy: **p-adic quantum mechanics** (Vladimirov-Volovich 1
                       inside R-Family ambient
                       via amplitude enrichment)
                      │
-                     │ char-0 algebraic lift
-                     │ (p-adic completion + alg closure)
+                     │ alternative non-Archimedean
+                     │ amplitude base (p-adic completion
+                     │ + alg closure; research branch)
                      ▼
-                     ℂ_2 (Tate's 2-adic complex; ℂ's
-                     char-2-friendly structural analog)
+                     ℂ_2 (Tate's 2-adic complex; char 0,
+                     non-Archimedean, residue field 𝔽̄_2;
+                     linked to 𝔽_2 R-Family via residue map)
 ```
 
 #### What this means for "is Hilbert in R-Family?"
@@ -1577,8 +1659,9 @@ The question admits a precise three-tier answer:
 | Is $\mathbb{C}$ a subset / subfield of R-Family? | **No** — different characteristics. |
 | Is the Pauli operator algebra mod phase in R-Family? | **Yes, structurally identical**: $\mathcal{P}_n / \langle iI \rangle \cong R_{2n}$. |
 | Is the Hilbert space $\mathbb{C}^{2^n}$ in R-Family? | **Yes, as a subspace of $L^2(\hat R, \mu)$**, the natural separable Hilbert space living on the R-Family ambient. |
-| What is the R-Family-native analog of $\mathbb{C}$ for QM? | **Tate's $\mathbb{C}_2$** (p-adic complex at p=2); used in p-adic QM literature. |
-| Can pure R-Family articulate full QM (incl. non-Clifford, T-gates)? | **Not natively**: needs either $\mathbb{C}$-valued amplitude enrichment (Level 2) or $\mathbb{C}_2$-valued p-adic enrichment (Level 3). |
+| What is the standard amplitude base for QM in R-Family? | **$\mathbb{C}$** — R-Family-over-$\mathbb{C}$ is the first-class instance for actual quantum physics. |
+| Is there a non-Archimedean alternative with residue-characteristic-2 amplitude? | **Tate's $\mathbb{C}_2$** (char 0, residue field $\overline{\mathbb{F}_2}$); explored in the p-adic QM research literature (Vladimirov-Volovich-Khrennikov). **Not standard physics**, with open interpretive issues (notably the meaning of $p$-adic-valued probability). |
+| Can pure R-Family-over-$\mathbb{F}_2$ articulate full QM (incl. non-Clifford, T-gates)? | **Not natively**: needs a different base — typically $\mathbb{C}$-valued amplitude (Level 2, standard physics); alternatively $\mathbb{C}_p$-valued amplitude (Level 3, research direction). |
 
 #### Operator-vs-state duality
 
@@ -1598,11 +1681,13 @@ $$\underbrace{\mathcal{P}_n / \langle iI \rangle \;\cong\; R_{2n}^{(\mathbb{F}_2
 
 Both are R-Family. Just different bases. The "mod-phase functor" is the canonical R-Family functor R-Family-over-$\mathbb{C}$ → R-Family-over-$\mathbb{F}_2$ (residue-style reduction). The "representation functor" is the canonical R-Family functor R-Family-over-$\mathbb{F}_2$ → R-Family-over-$\mathbb{C}$ (Pauli embedding).
 
-Adding the p-adic case: R-Family-over-$\mathbb{C}_p$ gives p-adic QM (Vladimirov-Volovich, Khrennikov). Three QM instances, three bases ($\mathbb{F}_2$ / $\mathbb{C}$ / $\mathbb{C}_p$), one parametric R-Family pattern.
+Adding the p-adic research branch: R-Family-over-$\mathbb{C}_p$ has been formally developed in the Vladimirov-Volovich-Khrennikov programme on p-adic QM. This is an optional non-Archimedean amplitude instance — characteristic 0 with residue characteristic $p$, linked to $\mathbb{F}_2$ R-Family via the residue map — **not standard quantum physics** and with open interpretive issues (notably the meaning of $p$-adic-valued probability). Three QM instances are available in the parametric framework: $\mathbb{F}_2$ (stabilizer / discrete), $\mathbb{C}$ (**standard** Hilbert QM), and $\mathbb{C}_p$ (research branch). One parametric R-Family pattern, several mathematically natural amplitude bases; canonical physical instance = $\mathbb{C}$.
 
-So the rest of this section's discussion can be re-read as: **R-Family-over-$\mathbb{F}_2$ captures the Pauli mod-phase shadow; R-Family-over-$\mathbb{C}$ captures full Hilbert; R-Family-over-$\mathbb{C}_p$ captures the $p$-adic alternative**. The §4.1.5 boundary statement "stabilizer native; full Hilbert needs enrichment" was a v0.9 framing that has been corrected by v1.0's parametric §3.6: **the "enrichment" is just choosing a different base $k$**. Hilbert space is not outside R-Family — it is R-Family-over-$\mathbb{C}$.
+So the rest of this section's discussion can be re-read as: **R-Family-over-$\mathbb{F}_2$ captures the Pauli mod-phase shadow; R-Family-over-$\mathbb{C}$ captures full Hilbert (standard QM); R-Family-over-$\mathbb{C}_p$ supplies an optional non-Archimedean amplitude alternative for the p-adic-QM research direction**. The §4.1.5 boundary statement "stabilizer native; full Hilbert needs enrichment" was a v0.9 framing that has been corrected by v1.0's parametric §3.6: **the "enrichment" is just choosing a different base $k$**. Hilbert space is not outside R-Family — it is R-Family-over-$\mathbb{C}$.
 
-This articulates the precise quantum content of R-Family without overclaiming (no single R-Family instance covers full QM — you need the appropriate base) and without underclaiming (R-Family **as a parametric pattern** covers all of stabilizer + Hilbert + $p$-adic QM, just at different bases).
+This articulates the precise quantum content of R-Family without overclaiming (no single R-Family instance covers full QM — you need the appropriate base; and the $\mathbb{C}_p$ instance is one mathematical possibility, not "the" R-Family-canonical amplitude domain) and without underclaiming (R-Family **as a parametric pattern** covers stabilizer QM, standard Hilbert QM, and the p-adic-QM research direction, each at the appropriate base).
+
+**Cross-reference to wen-x2 as alternative base-coordinate choice**: the companion `docs-next/40_reference_参考/wen-x2-16x16-structure.md` makes visible an additional internal-coordinate freedom **within** the $\mathbb{F}_2$ instance. wen-x2's 8-axis Cartesian decomposition of $R_8$-over-$\mathbb{F}_2$ (4 本体类 row-axes + 4 实用类 column-axes, all over $\mathbb{F}_2$) is **yet another base-coordinate choice** for the 256 elements of $R_8^{(\mathbb{F}_2)}$ — distinct from the canonical wen-substrate decomposition $R_8 = R_6 \oplus R_2 = $ (hexagram, temporal-$V_4$ modality), distinct from the $\mathbb{C}$-amplitude axes of $R_8^{(\mathbb{C})} = \mathcal{H}_3$, distinct from the $\mathbb{C}_p$-amplitude axes of the $p$-adic instance. All are R-Family realizations; wen-x2 demonstrates that even fixing a base ($\mathbb{F}_2$) and a layer ($R_8$), the substrate **admits multiple internally meaningful coordinate decompositions** (hexagram-plus-modality vs 4+4 dual-axis Cartesian), each suited to different articulation purposes — the parametric framework of §3.6 governs choice of base $k$, while wen-x2 reveals an orthogonal axis of choice: **choice of internal-coordinate factorization** within a fixed base and layer.
 
 #### Important precision: carrier identity vs full Hilbert-space structure
 
@@ -3192,11 +3277,19 @@ The work continues — at the next level: discharging the proof obligations, for
 
 ---
 
-*文 — the universal formal substrate (parametric pattern; minimum instance over $\mathbb{F}_2$) — v1.0.2*
+*文 — the universal formal substrate (parametric pattern; minimum instance over $\mathbb{F}_2$) — v1.0.3*
 
 ---
 
 ## Version history
+
+*v1.0.3 · 2026-05-15 — wen-x2 integration pass. Cross-references the parallel `docs-next/40_reference_参考/wen-x2-16x16-structure.md` companion document, which develops a 16×16 internal decomposition of $R_8 = 256$ via 8 dual axes (4 本体类: 阴阳·有无·体用·形声 + 4 实用类: 名实·是非·知行·因果). **wen-x2 is a complementary articulation, not a competing foundation** — it provides internal-coordinate structure within $R_8^{(\mathbb{F}_2)}$, the same canonical layer wen-substrate identifies as the first culturally-salient articulation layer. Changes:*
+
+*- **3 cross-references** (§3.5.4, §3.5.5, §4.1.5b): §3.5.4 R_4 phenomenology matrix → notes wen-x2's 16×16 grid as alternative 256-cell internal decomposition one squaring step up; §3.5.5 R_8 culturally-salient layer → notes wen-x2's $D_4$ internal symmetry decomposition ($L_1..L_4$ diagonals, $Q_1..Q_4$ quartets including Walsh-Hadamard basis at $Q_2$, two distinct 4-pair systems on the 8 axes); §4.1.5b operator-state duality → notes wen-x2's 8-axis Cartesian decomposition as additional internal-coordinate freedom within $R_8^{(\mathbb{F}_2)}$, orthogonal to the §3.6 choice-of-base parametric framework.*
+
+*- **3 substantive insight-merges**: §3.5.7 K.4 operator-character duality — 19 locked-core 字 (乾·坤·泰·否·方·圆·节·衡·错·综·央·边·塞·反·化·易·应·本·守) serve dual roles as position-字 AND operator-字, the concrete realization of P5's Hom-as-content principle at $R_8$; §3.5.5 R_2 naming convention footnote — wen-x2 exhibits a **third $V_4$ role** (axis-index palindrome mirror on the 8-axis labeling), distinct from $R_2$-as-carrier and $R_2$-as-modality; §3.5.8 closing-of-the-loop — wen-x2 §F's Hamming-weight stratification (concentric bands $w = 0..8$ with cell counts $1, 8, 28, 56, 70, 56, 28, 8, 1$) concretizes the 无极 → 太极 → 万物 → 反极 emergence pattern at $R_8$ with a quantitative profile, universal across the squaring tower via $\binom{N}{w}$ at $R_N$.*
+
+*Force preserved: no existing claim weakened; all of Parts I–VIII and Claim Z (§7.8) intact. wen-x2 is properly positioned as articulation of internal $R_8$ structure, not as alternative substrate.*
 
 *v1.0.2 · 2026-05-15 — Holistic review patch after second fresh-context external review. Addresses **completeness / elegance / defensibility** findings without weakening Part VII or Claim Z. Changes:*
 
