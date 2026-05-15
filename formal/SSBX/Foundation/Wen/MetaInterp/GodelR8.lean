@@ -10,12 +10,15 @@
 > salient articulation layer** (§3.5.5) where this diagonal is
 > stateable in the Yi-Hexagram naming overlay.
 >
-> **Salvage anchor**: the canonical pre-Phase-F proof on the
-> abandoned 192-cell layer (`Cell192 := Hexagram × Fin 3` with Z/3
-> cyclic Shi) lives on branch `salvage/cell192-full` at commit
-> `da09d63` (`formal/SSBX/Foundation/Bagua/GodelLi.lean`,
-> 988 LOC, 49 theorems, 1 axiom).  The R_8 / V₄ migration
-> (Phase F.2, 2026-05-15) replaced the Z/3 cyclic Shi with the V₄
+> **Historical note**: the canonical pre-Phase-F proof was originally
+> on the abandoned 192-cell layer (`Cell192 := Hexagram × Fin 3` with
+> Z/3 cyclic Shi), `Foundation/Bagua/GodelLi.lean` (988 LOC, 49
+> theorems, 1 axiom). Was preserved on branch `salvage/cell192-full`
+> (commit `da09d63`, 2026-05-15); **branch deleted 2026-05-16** after
+> confirming the R_8 / V₄ migration (Phase F.2) was complete and the
+> salvage was no longer needed. The commit hash `da09d63` may still
+> be reachable via reflog for ~90 days; after that, gc-collected.
+> The R_8 / V₄ migration replaced the Z/3 cyclic Shi with the V₄
 > Klein four-group `{道, 已, 今, 未}` and re-proved the diagonal on
 > the 256-cell layer; this file is the re-export anchor under the
 > name requested by wen-substrate.
