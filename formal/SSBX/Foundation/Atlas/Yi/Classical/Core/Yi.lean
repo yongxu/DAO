@@ -40,28 +40,44 @@
     - interlace iteration convergence to {heaven, earth}
 -/
 
+/- **[Phase γ final — 2026-05-15]** Yao/Trigram/Hexagram are now
+   `abbrev` aliases of the R-Family Atlas/Yi/ types.  Definitionally:
+
+     SSBX.Foundation.Yi.Yi.Yao       =  SSBX.Foundation.Atlas.Yi.Yao       = Bool
+     SSBX.Foundation.Yi.Yi.Trigram   =  SSBX.Foundation.Atlas.Yi.Trigram   = R 3
+     SSBX.Foundation.Yi.Yi.Hexagram  =  SSBX.Foundation.Atlas.Yi.Hexagram  = R 6
+
+   This unifies the Classical and R-Family axiomatizations at the kernel
+   level — pattern matching on `.yang`/`.yin` works via `@[match_pattern]`,
+   and `Hexagram.mk a b c d e f` builds a function-typed hexagram. -/
+
+import SSBX.Foundation.Atlas.Yi.Names
+
 namespace SSBX.Foundation.Yi.Yi
 
-/-! ## § 1 Atom: 爻 (yao) -/
+/-! ## § 1 Atom: 爻 (yao) — alias of Atlas.Yi.Yao -/
 
-/-- 爻 (yao): the binary atom of 周易. Σ = {阳, 阴} ≅ {⚊, ⚋}.
-    NB: 阴/阳 is NOT Boolean true/false. Each carries the tendency toward
-    its dual — the language's atoms are intrinsically processual. -/
-inductive Yao : Type
-  | yang  -- ⚊ (阳)
-  | yin   -- ⚋ (阴)
-  deriving Repr, DecidableEq, BEq
+/-- 爻 (yao): alias of `Atlas.Yi.Yao = Bool`. -/
+abbrev Yao : Type := SSBX.Foundation.Atlas.Yi.Yao
 
 namespace Yao
 
+/-- `yang` (阳, ⚊) — alias of `Atlas.Yi.Yao.yang = false`. -/
+@[match_pattern] def yang : Yao := SSBX.Foundation.Atlas.Yi.Yao.yang
+
+/-- `yin` (阴, ⚋) — alias of `Atlas.Yi.Yao.yin = true`. -/
+@[match_pattern] def yin : Yao := SSBX.Foundation.Atlas.Yi.Yao.yin
+
+/-- Compat: classical `Yao.noConfusion` (inductive uniqueness witness) re-routed to `Bool.noConfusion`. -/
+noncomputable def noConfusion {motive : Sort*} {a b : Yao} (h : a = b) :
+    Bool.noConfusionType motive a b :=
+  Bool.noConfusion h
+
 /-- Negation on a single 爻 (the atomic 错). -/
-def neg : Yao → Yao
-  | yang => yin
-  | yin => yang
+def neg : Yao → Yao := SSBX.Foundation.Atlas.Yi.Yao.neg
 
 /-- Double-negation involutivity: 错 ∘ 错 = id. -/
-theorem neg_neg (y : Yao) : y.neg.neg = y := by
-  cases y <;> rfl
+theorem neg_neg (y : Yao) : y.neg.neg = y := SSBX.Foundation.Atlas.Yi.Yao.neg_neg y
 
 end Yao
 
@@ -198,9 +214,8 @@ theorem interlace_fixed_point (h : Hexagram) :
     cases h with
     | mk y1 y2 y3 y4 y5 y6 =>
       simp [interlace, Hexagram.mk.injEq] at heq
-      -- heq decomposes into componentwise equalities
       cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
-        simp_all [heaven, earth]
+        first | (left; rfl) | (right; rfl) | simp_all [heaven, earth]
   · rintro (h | h) <;> rw [h] <;> rfl
 
 /-- 乾 is fixed by 互. -/
@@ -361,7 +376,7 @@ theorem delta_young_eq_proj (y : YaoStar) (h : y.isYoung = true) :
 /-- Old yao: δ = neg ∘ proj (the cast flips). -/
 theorem delta_old_eq_neg_proj (y : YaoStar) (h : y.isOld = true) :
     y.delta = y.proj.neg := by
-  cases y <;> simp_all [delta, proj, isOld, Yao.neg]
+  cases y <;> first | rfl | (simp [isOld] at h)
 
 /-- Old/young is exhaustive. -/
 theorem old_or_young (y : YaoStar) : y.isOld = true ∨ y.isYoung = true := by
@@ -594,7 +609,7 @@ namespace YaoStar
 theorem extreme_reverses (y : YaoStar) (h : y.isOld = true) :
     y.delta ≠ y.proj := by
   rw [delta_old_eq_neg_proj y h]
-  cases y <;> simp_all [proj, Yao.neg, isOld]
+  cases y <;> first | decide | (simp [isOld] at h)
 
 /-- Among young yao, δ preserves polarity. -/
 theorem young_preserves (y : YaoStar) (h : y.isYoung = true) :
@@ -665,9 +680,10 @@ theorem iterHu_2_fixed_iff_middle_agrees (h : Hexagram) :
     (iterHu 2 h).interlace = iterHu 2 h ↔ h.y3 = h.y4 := by
   rw [interlace_fixed_point]
   rw [iterHu_2_eq_heaven_iff, iterHu_2_eq_earth_iff]
-  cases h with
-  | mk y1 y2 y3 y4 y5 y6 =>
-    cases y3 <;> cases y4 <;> simp
+  -- LHS = (y3=yang ∧ y4=yang) ∨ (y3=yin ∧ y4=yin); RHS = y3=y4.
+  -- Yao = Bool, so case-split y3 and y4 on Bool true/false.
+  show ((h.y3 = false ∧ h.y4 = false) ∨ (h.y3 = true ∧ h.y4 = true)) ↔ h.y3 = h.y4
+  cases h.y3 <;> cases h.y4 <;> simp
 
 end Hexagram
 
@@ -755,8 +771,7 @@ theorem shuoGua_total (t : Trigram) (c : SigmaCategory) :
   cases c <;>
     cases t with
     | mk y1 y2 y3 =>
-      cases y1 <;> cases y2 <;> cases y3 <;>
-        simp [shuoGua, heaven, earth, lake, fire, thunder, wind, water, mountain]
+      cases y1 <;> cases y2 <;> cases y3 <;> decide
 
 end Trigram
 
@@ -835,8 +850,7 @@ theorem dui_jianMode  : lake.jianMode  = .kai   := rfl
 theorem jianMode_toTrigram (t : Trigram) : t.jianMode.toTrigram = t := by
   cases t with
   | mk y1 y2 y3 =>
-    cases y1 <;> cases y2 <;> cases y3 <;>
-      simp [jianMode, JianMode.toTrigram, heaven, earth, thunder, wind, water, fire, mountain, lake]
+    cases y1 <;> cases y2 <;> cases y3 <;> decide
 
 end Trigram
 
@@ -931,15 +945,13 @@ namespace Trigram
 theorem cuo_jianMode (t : Trigram) : t.complement.jianMode = t.jianMode.complement := by
   cases t with
   | mk y1 y2 y3 =>
-    cases y1 <;> cases y2 <;> cases y3 <;>
-      simp [Trigram.complement, jianMode, JianMode.complement, heaven, earth, lake, fire, thunder, wind, water, mountain, Yao.neg]
+    cases y1 <;> cases y2 <;> cases y3 <;> decide
 
 /-- 综 on trigrams commutes with the mode projection. -/
 theorem zong_jianMode (t : Trigram) : t.reverse.jianMode = t.jianMode.reverse := by
   cases t with
   | mk y1 y2 y3 =>
-    cases y1 <;> cases y2 <;> cases y3 <;>
-      simp [Trigram.reverse, jianMode, JianMode.reverse, heaven, earth, lake, fire, thunder, wind, water, mountain]
+    cases y1 <;> cases y2 <;> cases y3 <;> decide
 
 end Trigram
 

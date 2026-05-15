@@ -375,37 +375,43 @@ theorem subDispatchFlipYao_routes
   | ⟨0, _⟩ =>
     refine ⟨?_, ?_, ?_, ?_⟩ <;>
       simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin,
-            subDispatchFlipYao, Hexagram.yaoAt,
+            subDispatchFlipYao, Hexagram.yaoAt, Yao.yang, Yao.yin,
+            SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin,
             encFin6, cellFromIdx, Hexagram.fromIdx, Yao.fromIdx,
             SSBX.Foundation.Bagua.R8.Shi.fromIdx]
   | ⟨1, _⟩ =>
     refine ⟨?_, ?_, ?_, ?_⟩ <;>
       simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin,
-            subDispatchFlipYao, Hexagram.yaoAt,
+            subDispatchFlipYao, Hexagram.yaoAt, Yao.yang, Yao.yin,
+            SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin,
             encFin6, cellFromIdx, Hexagram.fromIdx, Yao.fromIdx,
             SSBX.Foundation.Bagua.R8.Shi.fromIdx]
   | ⟨2, _⟩ =>
     refine ⟨?_, ?_, ?_, ?_⟩ <;>
       simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin,
-            subDispatchFlipYao, Hexagram.yaoAt,
+            subDispatchFlipYao, Hexagram.yaoAt, Yao.yang, Yao.yin,
+            SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin,
             encFin6, cellFromIdx, Hexagram.fromIdx, Yao.fromIdx,
             SSBX.Foundation.Bagua.R8.Shi.fromIdx]
   | ⟨3, _⟩ =>
     refine ⟨?_, ?_, ?_, ?_⟩ <;>
       simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin, Shi.wei,
-            subDispatchFlipYao, Hexagram.yaoAt,
+            subDispatchFlipYao, Hexagram.yaoAt, Yao.yang, Yao.yin,
+            SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin,
             encFin6, cellFromIdx, Hexagram.fromIdx, Yao.fromIdx,
             SSBX.Foundation.Bagua.R8.Shi.fromIdx]
   | ⟨4, _⟩ =>
     refine ⟨?_, ?_, ?_, ?_⟩ <;>
       simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin,
-            subDispatchFlipYao, Hexagram.yaoAt,
+            subDispatchFlipYao, Hexagram.yaoAt, Yao.yang, Yao.yin,
+            SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin,
             encFin6, cellFromIdx, Hexagram.fromIdx, Yao.fromIdx,
             SSBX.Foundation.Bagua.R8.Shi.fromIdx]
   | ⟨5, _⟩ =>
     refine ⟨?_, ?_, ?_, ?_⟩ <;>
       simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin,
-            subDispatchFlipYao, Hexagram.yaoAt,
+            subDispatchFlipYao, Hexagram.yaoAt, Yao.yang, Yao.yin,
+            SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin,
             encFin6, cellFromIdx, Hexagram.fromIdx, Yao.fromIdx,
             SSBX.Foundation.Bagua.R8.Shi.fromIdx]
 
@@ -520,7 +526,8 @@ theorem dispatchTree_routes_nop
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin,
           dispatchTree, dispatchShi, nopTag_shi,
-          Hexagram.yaoAt, nopTag_yao.1, nopTag_yao.2.1, nopTag_yao.2.2.2.2.2]
+          Hexagram.yaoAt, Yao.yang, Yao.yin,
+            SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin, nopTag_yao.1, nopTag_yao.2.1, nopTag_yao.2.2.2.2.2]
 
 /-! ### setShi  (k=1, hex_idx=0, shi=ji) -/
 
@@ -554,7 +561,8 @@ theorem dispatchTree_routes_setShi
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin,
           dispatchTree, dispatchShi, setShiTag_shi,
-          Hexagram.yaoAt, setShiTag_yao.1, setShiTag_yao.2.1,
+          Hexagram.yaoAt, Yao.yang, Yao.yin,
+            SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin, setShiTag_yao.1, setShiTag_yao.2.1,
           setShiTag_yao.2.2.2.2.2]
 
 /-! ### flipYao  (k=2, hex_idx=0, shi=jin) -/
@@ -589,7 +597,8 @@ theorem dispatchTree_routes_flipYao
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin,
           dispatchTree, dispatchShi, flipYaoTag_shi,
-          Hexagram.yaoAt, flipYaoTag_yao.1, flipYaoTag_yao.2.1,
+          Hexagram.yaoAt, Yao.yang, Yao.yin,
+            SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin, flipYaoTag_yao.1, flipYaoTag_yao.2.1,
           flipYaoTag_yao.2.2.2.2.2]
 
 /-! ### interlace  (k=3, hex_idx=0, shi=wei) -/
@@ -624,7 +633,8 @@ theorem dispatchTree_routes_hu
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin, Shi.wei,
           dispatchTree, dispatchShi, huTag_shi,
-          Hexagram.yaoAt, huTag_yao.1, huTag_yao.2.1, huTag_yao.2.2.2.2.2]
+          Hexagram.yaoAt, Yao.yang, Yao.yin,
+            SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin, huTag_yao.1, huTag_yao.2.1, huTag_yao.2.2.2.2.2]
 
 /-! ### complement  (k=4, hex_idx=1, shi=dao) -/
 
@@ -658,7 +668,8 @@ theorem dispatchTree_routes_cuo
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin,
           dispatchTree, dispatchShi, cuoTag_shi,
-          Hexagram.yaoAt, cuoTag_yao.1, cuoTag_yao.2.1, cuoTag_yao.2.2.2.2.2]
+          Hexagram.yaoAt, Yao.yang, Yao.yin,
+            SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin, cuoTag_yao.1, cuoTag_yao.2.1, cuoTag_yao.2.2.2.2.2]
 
 /-! ### reverse  (k=5, hex_idx=1, shi=ji) -/
 
@@ -692,7 +703,8 @@ theorem dispatchTree_routes_zong
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin,
           dispatchTree, dispatchShi, zongTag_shi,
-          Hexagram.yaoAt, zongTag_yao.1, zongTag_yao.2.1, zongTag_yao.2.2.2.2.2]
+          Hexagram.yaoAt, Yao.yang, Yao.yin,
+            SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin, zongTag_yao.1, zongTag_yao.2.1, zongTag_yao.2.2.2.2.2]
 
 /-! ### branchYaoEq  (k=6, hex_idx=1, shi=jin) -/
 
@@ -726,7 +738,8 @@ theorem dispatchTree_routes_branchYaoEq
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin,
           dispatchTree, dispatchShi, branchYaoEqTag_shi,
-          Hexagram.yaoAt, branchYaoEqTag_yao.1, branchYaoEqTag_yao.2.1,
+          Hexagram.yaoAt, Yao.yang, Yao.yin,
+            SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin, branchYaoEqTag_yao.1, branchYaoEqTag_yao.2.1,
           branchYaoEqTag_yao.2.2.2.2.2]
 
 /-! ### branchShiEq  (k=7, hex_idx=1, shi=wei) -/
@@ -761,7 +774,8 @@ theorem dispatchTree_routes_branchShiEq
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin, Shi.wei,
           dispatchTree, dispatchShi, branchShiEqTag_shi,
-          Hexagram.yaoAt, branchShiEqTag_yao.1, branchShiEqTag_yao.2.1,
+          Hexagram.yaoAt, Yao.yang, Yao.yin,
+            SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin, branchShiEqTag_yao.1, branchShiEqTag_yao.2.1,
           branchShiEqTag_yao.2.2.2.2.2]
 
 /-! ### jump  (k=8, hex_idx=2, shi=dao) -/
@@ -796,7 +810,8 @@ theorem dispatchTree_routes_jump
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin,
           dispatchTree, dispatchShi, jumpTag_shi,
-          Hexagram.yaoAt, jumpTag_yao.2.1, jumpTag_yao.2.2.2.2.2]
+          Hexagram.yaoAt, Yao.yang, Yao.yin,
+            SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin, jumpTag_yao.2.1, jumpTag_yao.2.2.2.2.2]
 
 /-! ### push  (k=9, hex_idx=2, shi=ji) -/
 
@@ -830,7 +845,8 @@ theorem dispatchTree_routes_push
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin,
           dispatchTree, dispatchShi, pushTag_shi,
-          Hexagram.yaoAt, pushTag_yao.2.1, pushTag_yao.2.2.2.2.2]
+          Hexagram.yaoAt, Yao.yang, Yao.yin,
+            SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin, pushTag_yao.2.1, pushTag_yao.2.2.2.2.2]
 
 /-! ### pop  (k=10, hex_idx=2, shi=jin) -/
 
@@ -864,7 +880,8 @@ theorem dispatchTree_routes_pop
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin,
           dispatchTree, dispatchShi, popTag_shi,
-          Hexagram.yaoAt, popTag_yao.2.1, popTag_yao.2.2.2.2.2]
+          Hexagram.yaoAt, Yao.yang, Yao.yin,
+            SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin, popTag_yao.2.1, popTag_yao.2.2.2.2.2]
 
 /-! ### halt  (k=11, hex_idx=2, shi=wei) -/
 
@@ -898,7 +915,8 @@ theorem dispatchTree_routes_halt
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao, Shi.ji, Shi.jin, Shi.wei,
           dispatchTree, dispatchShi, haltTag_shi,
-          Hexagram.yaoAt, haltTag_yao.2.1, haltTag_yao.2.2.2.2.2]
+          Hexagram.yaoAt, Yao.yang, Yao.yin,
+            SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin, haltTag_yao.2.1, haltTag_yao.2.2.2.2.2]
 
 /-- Segment-level nop routing. -/
 theorem dispatchTree_routes_nop_at_segment
@@ -933,7 +951,8 @@ theorem dispatchTree_routes_nop_at_segment
   refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao,
       h_lookup0, h_lookup2, h_lookup4, nopTag_shi,
-      Hexagram.yaoAt, nopTag_yao.1, nopTag_yao.2.1,
+      Hexagram.yaoAt, Yao.yang, Yao.yin,
+            SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin, nopTag_yao.1, nopTag_yao.2.1,
       nopTag_yao.2.2.2.2.2]
 
 /-- Segment-level setShi routing. -/
@@ -974,7 +993,8 @@ theorem dispatchTree_routes_setShi_at_segment
     simp [YiState.runFuel, YiState.step, YiState.execute,
       Shi.dao, Shi.ji,
       h_lookup0, h_lookup2, h_lookup4, h_lookup5, setShiTag_shi,
-      Hexagram.yaoAt, setShiTag_yao.1, setShiTag_yao.2.1,
+      Hexagram.yaoAt, Yao.yang, Yao.yin,
+            SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin, setShiTag_yao.1, setShiTag_yao.2.1,
       setShiTag_yao.2.2.2.2.2]
 
 /-- Segment-level flipYao routing. -/
@@ -1019,7 +1039,8 @@ theorem dispatchTree_routes_flipYao_at_segment
     simp [YiState.runFuel, YiState.step, YiState.execute,
       Shi.dao, Shi.ji, Shi.jin,
       h_lookup0, h_lookup2, h_lookup4, h_lookup5, h_lookup6,
-      flipYaoTag_shi, Hexagram.yaoAt, flipYaoTag_yao.1,
+      flipYaoTag_shi, Hexagram.yaoAt, Yao.yang, Yao.yin,
+            SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin, flipYaoTag_yao.1,
       flipYaoTag_yao.2.1, flipYaoTag_yao.2.2.2.2.2]
 
 /-- Segment-level interlace routing. -/
@@ -1068,7 +1089,8 @@ theorem dispatchTree_routes_hu_at_segment
     simp [YiState.runFuel, YiState.step, YiState.execute,
       Shi.dao, Shi.ji, Shi.jin, Shi.wei,
       h_lookup0, h_lookup2, h_lookup4, h_lookup5, h_lookup6,
-      h_lookup7, huTag_shi, Hexagram.yaoAt, huTag_yao.1,
+      h_lookup7, huTag_shi, Hexagram.yaoAt, Yao.yang, Yao.yin,
+            SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin, huTag_yao.1,
       huTag_yao.2.1, huTag_yao.2.2.2.2.2]
 
 /-- Segment-level complement routing. -/
@@ -1108,7 +1130,8 @@ theorem dispatchTree_routes_cuo_at_segment
   refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao,
       h_lookup0, h_lookup2, h_lookup3, h_lookup8, cuoTag_shi,
-      Hexagram.yaoAt, cuoTag_yao.1, cuoTag_yao.2.1,
+      Hexagram.yaoAt, Yao.yang, Yao.yin,
+            SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin, cuoTag_yao.1, cuoTag_yao.2.1,
       cuoTag_yao.2.2.2.2.2]
 
 /-- Segment-level reverse routing. -/
@@ -1153,7 +1176,8 @@ theorem dispatchTree_routes_zong_at_segment
     simp [YiState.runFuel, YiState.step, YiState.execute,
       Shi.dao, Shi.ji,
       h_lookup0, h_lookup2, h_lookup3, h_lookup8, h_lookup9,
-      zongTag_shi, Hexagram.yaoAt, zongTag_yao.1,
+      zongTag_shi, Hexagram.yaoAt, Yao.yang, Yao.yin,
+            SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin, zongTag_yao.1,
       zongTag_yao.2.1, zongTag_yao.2.2.2.2.2]
 
 /-- Segment-level branchYaoEq routing. -/
@@ -1203,7 +1227,8 @@ theorem dispatchTree_routes_branchYaoEq_at_segment
     simp [YiState.runFuel, YiState.step, YiState.execute,
       Shi.dao, Shi.ji, Shi.jin,
       h_lookup0, h_lookup2, h_lookup3, h_lookup8, h_lookup9,
-      h_lookup10, branchYaoEqTag_shi, Hexagram.yaoAt,
+      h_lookup10, branchYaoEqTag_shi, Hexagram.yaoAt, Yao.yang, Yao.yin,
+            SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin,
       branchYaoEqTag_yao.1, branchYaoEqTag_yao.2.1,
       branchYaoEqTag_yao.2.2.2.2.2]
 
@@ -1258,7 +1283,8 @@ theorem dispatchTree_routes_branchShiEq_at_segment
     simp [YiState.runFuel, YiState.step, YiState.execute,
       Shi.dao, Shi.ji, Shi.jin, Shi.wei,
       h_lookup0, h_lookup2, h_lookup3, h_lookup8, h_lookup9,
-      h_lookup10, h_lookup11, branchShiEqTag_shi, Hexagram.yaoAt,
+      h_lookup10, h_lookup11, branchShiEqTag_shi, Hexagram.yaoAt, Yao.yang, Yao.yin,
+            SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin,
       branchShiEqTag_yao.1, branchShiEqTag_yao.2.1,
       branchShiEqTag_yao.2.2.2.2.2]
 
@@ -1294,7 +1320,8 @@ theorem dispatchTree_routes_jump_at_segment
   refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
     simp [YiState.runFuel, YiState.step, YiState.execute, Shi.dao,
       h_lookup0, h_lookup1, h_lookup12, jumpTag_shi,
-      Hexagram.yaoAt, jumpTag_yao.2.1, jumpTag_yao.2.2.2.2.2]
+      Hexagram.yaoAt, Yao.yang, Yao.yin,
+            SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin, jumpTag_yao.2.1, jumpTag_yao.2.2.2.2.2]
 
 /-- Segment-level push routing. -/
 theorem dispatchTree_routes_push_at_segment
@@ -1333,7 +1360,8 @@ theorem dispatchTree_routes_push_at_segment
     simp [YiState.runFuel, YiState.step, YiState.execute,
       Shi.dao, Shi.ji,
       h_lookup0, h_lookup1, h_lookup12, h_lookup13, pushTag_shi,
-      Hexagram.yaoAt, pushTag_yao.2.1, pushTag_yao.2.2.2.2.2]
+      Hexagram.yaoAt, Yao.yang, Yao.yin,
+            SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin, pushTag_yao.2.1, pushTag_yao.2.2.2.2.2]
 
 /-- Segment-level pop routing. -/
 theorem dispatchTree_routes_pop_at_segment
@@ -1376,7 +1404,8 @@ theorem dispatchTree_routes_pop_at_segment
     simp [YiState.runFuel, YiState.step, YiState.execute,
       Shi.dao, Shi.ji, Shi.jin,
       h_lookup0, h_lookup1, h_lookup12, h_lookup13, h_lookup14,
-      popTag_shi, Hexagram.yaoAt, popTag_yao.2.1,
+      popTag_shi, Hexagram.yaoAt, Yao.yang, Yao.yin,
+            SSBX.Foundation.Atlas.Yi.Yao.yang, SSBX.Foundation.Atlas.Yi.Yao.yin, popTag_yao.2.1,
       popTag_yao.2.2.2.2.2]
 
 /-- Segment-level halt routing: if a `dispatchTree offsets dispatchBase`

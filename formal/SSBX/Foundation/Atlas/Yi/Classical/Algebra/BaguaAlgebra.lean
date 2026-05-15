@@ -465,11 +465,14 @@ theorem bianOuter_via_chong (h : Hexagram) :
 theorem trigram_mem_all (t : Trigram) : t ∈ Trigram.all := by
   rcases t with ⟨y1, y2, y3⟩
   cases y1 <;> cases y2 <;> cases y3 <;>
-    simp [Trigram.all, heaven, lake, fire, thunder, wind, water, mountain, earth]
+    (show _ ∈ Trigram.all
+     show _ ∈ [heaven, lake, fire, thunder, wind, water, mountain, earth]
+     simp [heaven, lake, fire, thunder, wind, water, mountain, earth, Yao.yang, Yao.yin]
+     <;> tauto)
 
 /-- Helper: every yao is in `[Yao.yang, Yao.yin]`. -/
 private theorem yao_in_yaos (y : Yao) : y ∈ ([Yao.yang, Yao.yin] : List Yao) := by
-  cases y <;> simp
+  cases y <;> decide
 
 /-- Every hexagram appears in `Hexagram.allHex` (cardinality 64 strictly).
     Proof by structurally building the membership through 6 flatMap layers. -/

@@ -580,8 +580,12 @@ theorem yaoAt_eq_cuo_invariant (h : Hexagram) (i j : Fin 6) :
     | ⟨4, _⟩, ⟨5, _⟩ | ⟨5, _⟩, ⟨4, _⟩
     | ⟨5, _⟩, ⟨5, _⟩ =>
         rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-        cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
-          simp_all [Hexagram.yaoAt, Hexagram.complement, Yao.neg]
+        first
+          | rfl
+          | (simp only [Hexagram.yaoAt, Hexagram.complement] at heq ⊢
+             revert heq
+             cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;>
+               cases y6 <;> decide)
   · intro heq
     match i, j with
     | ⟨0, _⟩, ⟨0, _⟩ => rfl
@@ -606,8 +610,12 @@ theorem yaoAt_eq_cuo_invariant (h : Hexagram) (i j : Fin 6) :
     | ⟨4, _⟩, ⟨5, _⟩ | ⟨5, _⟩, ⟨4, _⟩
     | ⟨5, _⟩, ⟨5, _⟩ =>
         rcases h with ⟨y1, y2, y3, y4, y5, y6⟩
-        cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;>
-          simp_all [Hexagram.yaoAt, Hexagram.complement, Yao.neg]
+        first
+          | rfl
+          | (simp only [Hexagram.yaoAt, Hexagram.complement] at heq ⊢
+             revert heq
+             cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;>
+               cases y6 <;> decide)
 
 /-! ## § 5  「«生» 不可 compile」之 见证
 

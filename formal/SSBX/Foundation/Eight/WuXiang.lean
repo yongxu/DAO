@@ -63,7 +63,7 @@ theorem trigram_bool3_roundtrip (t : Trigram) :
   cases t with
   | mk y1 y2 y3 =>
     simp [Trigram.toBool3, Bool3.toTrigram, Yao.toBool, Bool.toYao]
-    cases y1 <;> cases y2 <;> cases y3 <;> simp [Yao.toBool, Bool.toYao]
+    cases y1 <;> cases y2 <;> cases y3 <;> decide
 
 /-- **Bool³ → Trigram → Bool³ = id**。 -/
 theorem bool3_trigram_roundtrip (b : Bool × Bool × Bool) :

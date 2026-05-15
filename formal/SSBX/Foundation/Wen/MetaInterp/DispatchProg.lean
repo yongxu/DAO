@@ -243,6 +243,9 @@ theorem metaInterpProgSkeleton_simulates_halt
           metaInterpProgSkeleton, dispatchProg, dispatchTree, dispatchShi,
           haltOnlyOffsets, haltTag, cellFromIdx,
           Hexagram.yaoAt, Hexagram.fromIdx, Yao.fromIdx,
-          SSBX.Foundation.Bagua.R8.Shi.fromIdx]
+          SSBX.Foundation.Bagua.R8.Shi.fromIdx,
+          Yao.yang, Yao.yin,
+          SSBX.Foundation.Atlas.Yi.Yao.yang,
+          SSBX.Foundation.Atlas.Yi.Yao.yin]
 
 end SSBX.Foundation.Wen.MetaInterp.DispatchProg

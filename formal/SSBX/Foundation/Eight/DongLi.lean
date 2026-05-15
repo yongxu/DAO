@@ -82,17 +82,17 @@ theorem motion_heaven_period :
 /-- **motion 在 Trigram 上无不动点**：不存在 t 使 motion t = t。 -/
 theorem motion_no_fixed : ¬ ∃ t : Trigram, IsFixed dongDyn t := by
   rintro ⟨⟨y1, y2, y3⟩, h⟩
-  cases y1 <;> simp [IsFixed, dongDyn, motion, Yao.neg] at h
+  cases y1 <;> simp [IsFixed, dongDyn, motion, Yao.neg] at h <;> revert h <;> decide
 
 /-- **middleFlip 在 Trigram 上无不动点**。 -/
 theorem middleFlip_no_fixed : ¬ ∃ t : Trigram, IsFixed middleFlipDyn t := by
   rintro ⟨⟨y1, y2, y3⟩, h⟩
-  cases y2 <;> simp [IsFixed, middleFlipDyn, middleFlip, Yao.neg] at h
+  cases y2 <;> simp [IsFixed, middleFlipDyn, middleFlip, Yao.neg] at h <;> revert h <;> decide
 
 /-- **topFlip 在 Trigram 上无不动点**。 -/
 theorem topFlip_no_fixed : ¬ ∃ t : Trigram, IsFixed topFlipDyn t := by
   rintro ⟨⟨y1, y2, y3⟩, h⟩
-  cases y3 <;> simp [IsFixed, topFlipDyn, topFlip, Yao.neg] at h
+  cases y3 <;> simp [IsFixed, topFlipDyn, topFlip, Yao.neg] at h <;> revert h <;> decide
 
 /-! ## § 4 周期 = 2 -/
 

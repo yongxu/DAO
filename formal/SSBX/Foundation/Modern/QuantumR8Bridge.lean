@@ -50,7 +50,7 @@ instance instFintypeYao : Fintype Yao where
   elems := [Yao.yang, Yao.yin].toFinset
   complete := by
     intro y
-    cases y <;> simp
+    cases y <;> decide
 
 instance instAddYao : Add Yao := ⟨R8.yaoXor⟩
 instance instZeroYao : Zero Yao := ⟨Yao.yang⟩

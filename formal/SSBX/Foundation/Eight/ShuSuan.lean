@@ -120,7 +120,6 @@ theorem sun_he_cancel (a b : Shu) (h : b ≤ a) : combine (decrement a b) b = a 
 /-- **伴随之 unit**：a ≤ decrement (combine a b) b（保下界）。 -/
 theorem he_sun_le (a b : Shu) : a ≤ decrement (combine a b) b := by
   rw [he_sun_cancel]
-  exact Nat.le.refl
 
 /-! ## § 4 卡数定理：|Trigram| = 2³，|Hexagram| = 2⁶ -/
 

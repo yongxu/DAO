@@ -80,10 +80,7 @@ theorem sixiang_fensi_roundtrip (s : SiXiang) :
     FenSi.toSiXiang (SiXiang.toFenSi s) = s := by
   cases s with
   | mk y1 y2 =>
-    cases y1 <;> cases y2 <;>
-      simp [SiXiang.toFenSi, FenSi.toSiXiang,
-            SiXiang.greaterYang, SiXiang.lesserYin,
-            SiXiang.lesserYang, SiXiang.greaterYin]
+    cases y1 <;> cases y2 <;> decide
 
 /-! ## § 3 心学四端 -/
 
