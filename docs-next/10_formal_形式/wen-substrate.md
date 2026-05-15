@@ -4,65 +4,8 @@
 >
 > Further: **R-Family IS what "formal" means**. (Claim Z, §7.8)
 >
-> This document demonstrates these claims from first principles. Self-contained.
->
-> v0.7 · 2026 — added §4.7-4.12 six major universal claims (UG, computable cognition, phenomenology, decidability, physical-informational, formal articulation itself), §7.8 Claim Z as maximum foundational claim
->
-> v0.8 · 2026-05-15 — Mathematical precision pass:
-> - §2.3 P3: "three forms" → "three layers" (L0 / L1 / L2 quadratic-refinement family with Arf classification)
-> - §2.4 P4: added cross-scale self-similarity (diagonal embedding $\Delta_N$, projections $\pi_i$, operation lift $f^{\oplus 2}$)
-> - §2.5 P5: Hom equality $=$ replaced by isomorphism $\cong$ throughout; basis-free version $\mathrm{Hom}(R_n, R_m) \cong R_m \otimes R_n^*$; canonical ring structure on $R_4 \cong \mathrm{End}(R_2) \cong M_2(\mathbb{F}_2)$ articulated as forced consequence (Wedderburn)
-> - §2.6 P6: ad hoc "binary × ternary" argument replaced by two independent forcing arguments (minimum multi-modal carrier + Lorentzian causal regions)
-> - §2.7 P7: split into P7a (aspect alphabet at $R_3$, with 4本+4征 split forced by zong involution) + P7b (atomic operations at $R_4 \cong M_2(\mathbb{F}_2)$, forced by Wedderburn + carrier minimality)
-> - §3.5.3 / §3.5.4: $R_4 \cong M_2(\mathbb{F}_2)$ phrased consistently as ring-structure-equipping (View B) on top of bare $\mathbb{F}_2^4$ carrier (View A); BenZheng.lean codebase reference removed in favor of pure R-Family naming
-> - $R_2$ bit-pattern ↔ temporal-modality table aligned with code's `Atlas/Yi/ShiV4.lean` ($V_4$ convention: `xo = 已 = P$, `ox = 未 = T`, `xx = 今 = PT`)
->
-> v0.9 · 2026-05-15 — Definitions + precision + proof obligations pass (claims preserved, not downgraded):
-> - **§1.5 (new)** — Four core definitions: formal articulation (D1), universal formal substrate, minimality, equivalence, embedding. Embedding vs equivalence distinction made explicit (§1.5.5)
-> - **§3.4.1 (new)** — How other formal systems relate to R-Family: *partial systems embed* ($S \hookrightarrow R$), *complete universal substrates are equivalent* ($S \simeq R$). Precise statement behind "the universal formal substrate"
-> - **§3.5.1** — $R_\infty$ inverse limit's bonding maps made explicit: canonical truncation projections $\pi_{k+1, k} : R_{2^{k+1}} \twoheadrightarrow R_{2^k}$
-> - **§3.5.5** — R_8 reframed as "first culturally salient articulation layer" (byte / 4-qubit / character-set / hexagram×modality) rather than "smallest formal-language layer" ($R_1$ is already Turing-complete at encoding level)
-> - **§4.1.5** — Pauli label space distinguished from Hilbert space; stabilizer subset native R-Family, non-Clifford / magic / arbitrary Hilbert needs enrichment. Precise R-Family scope table added
-> - **§4.1.5b (new)** — R-Family ↔ Hilbert space precise duality: three levels (operator: $R_{2n} \cong \mathcal{P}_n / \langle iI \rangle$; functional: $\mathbb{C}^{2^n} \hookrightarrow L^2(\hat R, \mu)$; algebraic: ℂ's char-2 analog is Tate's $\mathbb{C}_2$, p-adic complex). Operator-state duality articulated. Reference to p-adic QM (Vladimirov-Volovich, Khrennikov)
-> - **§4.10** — Computability mapping corrected: halting / Gödel arise at $\bigcup_N R_N$ (countable, unbounded finite), *not* at uncountable $R_\infty$. Three-layer distinction (bounded $R_N$ / unbounded $\bigcup_N R_N$ / continuum $R_\infty$) made explicit
-> - **Part VIII (new)** — Proof Obligations: D1, D2, T1-T8 + Phase 0 small theorems (T_P3 / T_P6 / T_P7a / T_P7b) + three-phase proof programme (weak universality / structural articulation / minimal uniqueness). The substrate claim of Part VII is preserved as Theorem T0; Part VIII makes the proof structure visible.
-> - **Coda** — closing phrase updated: "The theorem has been stated. The proof obligations are now visible." / 定理已立,证责已明。
->
-> **v1.0 · 2026-05-15 — Parametric framework: discrete and continuous unified as bases of the same R-Family**.
->
-> Major theoretical generalization. Prior to v1.0, R-Family was implicitly defined as $R_N := \mathbb{F}_2^N$ — *the* substrate. v1.0 reframes R-Family as a **parametric structural pattern over any suitable base $k$**:
->
-> $$R\text{-Family}^{(k)} \;=\; \{R_N^{(k)}\}_{N \in \mathbb{N}_0}, \quad R_N^{(k)} := k^N$$
->
-> Discrete and continuous formal articulation become **two cases of the same pattern**, distinguished only by choice of base $k$. The minimum instance is R-Family-over-$\mathbb{F}_2$ (Occam-minimal, Lean-verifiable, current code); continuous instances over $\mathbb{R}, \mathbb{C}, \mathbb{C}_p$ etc. are equally R-Family.
->
-> v1.0 changes:
-> - **§1.5.6 (new)** — Base of R-Family definition + parametric notation convention; "R-Family" without superscript defaults to $\mathbb{F}_2$ instance, full pattern is parametric
-> - **Part II opening note** — P1-P7 presented over minimum base $\mathbb{F}_2$ for definiteness; parametric formulation in §3.6
-> - **§3.1** — definition explicitly framed as the "R-Family-over-$\mathbb{F}_2$" (minimum) instance; parametric extension to arbitrary $k$ in §3.6
-> - **§3.6 (Major new section)** — "R-Family Across Bases: The Discrete/Continuous Unified Framework". 9 sub-sections covering: parametric structure (Layer A) vs base choice (Layer B); instantiation table ($\mathbb{F}_2 / \mathbb{R} / \mathbb{C} / \mathbb{C}_p$ etc.); P1-P7 parametric formulations (with char-dependent adjustment to P3); minimality clarification (Tier 1 = minimum instance $\mathbb{F}_2$; Tier 2 = universal pattern); discrete vs continuous as base properties; connections to **condensed mathematics** (Clausen-Scholze), **adic spaces** (Huber), **topos theory** (Lawvere-Kock), **stable ∞-categories** (Lurie); code vs theory; §4.1.5b reframing
-> - **§4.1.5b (revised)** — three-level duality reframed as **single statement**: Pauli mod phase = R-Family-over-$\mathbb{F}_2$; Hilbert = R-Family-over-$\mathbb{C}$; p-adic QM = R-Family-over-$\mathbb{C}_p$. Hilbert space is now **literally** an R-Family carrier, not "outside R-Family + enrichment"
-> - **Part VIII D3 (new)** — Parametric R-Family over arbitrary base, as proof obligation. Verifies P1-P7 cross-base; transfer functors between R-Family-over-$\mathbb{F}_2$, $\mathbb{R}$, $\mathbb{C}$, $\mathbb{C}_p$
-> - **§8.10** — D3 inserted at priority position 3 (after D1, D2); domain-specific T's now annotated with their native base
->
-> **Effect on Part VII claims**: All preserved and **strengthened**. "R-Family is THE universal formal substrate" now means: *universal as a parametric structural pattern*, with $\mathbb{F}_2$ as minimum specific instance. "Hilbert space is not in R-Family" was a v0.9 framing now corrected: **Hilbert space IS R-Family-over-$\mathbb{C}$**. The substrate is not narrowed; it is precisely articulated as the pattern, not as a single fixed instance.
->
-> **v1.0.1 · 2026-05-15 — Math precision patch after fresh-context external review**. Fixes identified by an independent reviewer reading the v1.0 document without prior conversation context:
-> - **§2.3** — σ written in block form $\sigma((u_1,u_2),(v_1,v_2)) = u_1 \cdot v_2 + u_2 \cdot v_1$ with explicit alternating condition $\sigma(w,w)=0$; clarified that "alternating" in char 2 is strictly stronger than "antisymmetric"
-> - **§2.3 L2** — corrected parameter count: quadratic refinements of σ form a $2n$-dim $\mathbb{F}_2$-affine space (cardinality $2^{2n}$), not $2^n$. The code's `q^c` is one $\mathbb{F}_2^n$ slice of this full affine space; Arf classification into 2 equivalence classes holds in either form
-> - **§2.5** — morphism context list rewritten using $\mathrm{End}(R_n) \cong R_{n^2}$ form (not the mixed $R_1$-source-arbitrary-target original)
-> - **§2.5 / §2.7** — Wedderburn citation now includes both Wedderburn-Artin (semisimple = matrix algebras over division rings) and Wedderburn's little theorem (finite division rings are commutative), giving the proper two-step argument for "$M_2(\mathbb{F}_2)$ is the unique minimal non-commutative central simple $\mathbb{F}_2$-algebra"
-> - **§2.6** — Lorentzian argument corrected: tangent space has **3 metric-class regions** (timelike / spacelike / null) plus time-orientation splitting timelike into 2 components = 4 distinguished cells. The 4-region phrasing was technically imprecise; the count of 4 remains correct
-> - **§2.7 P7b** — fixed type error "$R_2 \otimes R_2 \cong R_2 \oplus R_2$"; replaced with $R_2 \oplus R_2 \cong R_2 \times R_2$ (direct sum at $\mathbb{F}_2$-module level; tensor product dropped — they only coincide at $n=2$ by accidental dim agreement)
-> - **§3.5.4 R_2 table** — 四象 column corrected: with `o = false = yang` convention, `oo` = 阳阳 = 太阳 (not 太阴 as in v1.0); all four 四象 entries swapped to align with project bit-pattern convention. 少阳 ↔ `xo`, 少阴 ↔ `ox` (yang-growing vs yang-declining)
-> - **§3.5.6 P6** — "two natural involutions of $V_4$" corrected to "two distinguished generators" ($V_4$ has 3 non-identity involutions; picking 2 generators yields the basis)
-> - **§4.1.4** — Brouwer attribution corrected to Hausdorff-Alexandroff; clarified what Brouwer's theorem actually says (topological characterization of Cantor space)
-> - **§4.1.5b Level 2** — L² embedding claim weakened to its canonical content: $\mathbb{C}^{2^n} \cong V_n^{\text{cyl}}$ (depth-$n$ cylinder-function subspace) is canonical at finite depth; broader "every separable Hilbert space embeds" is trivial (all separable Hilbert spaces are isomorphic) and adds no structural content. Pointer to §3.6.8 for direct $\mathbb{C}^{2^n} = R_{2^n}^{(\mathbb{C})}$ reading
-> - **§3.6.10 (new)** — explicitly distinguish "**Sense A: encoding universality**" ($\mathbb{F}_2$-substrate alone via Turing-coding) from "**Sense B: native articulation**" (appropriate base $k$ per articulation). Both senses are valid; v1.0 conflation is resolved
-> - **§3.4.1** — note that v0.9's partial-embedding classification of HoTT / ETCS / type theory is **provisional**: under their full universal-substrate claims they may be T5-equivalent to R-Family rather than merely embedded
-> - **§3.5.3** — qualified $GL_2(\mathbb{F}_2) \cong S_3$ vs Lorentz/Galileo as **structural-discrete analog**, not faithful representation (Lorentz group is 6-dim Lie; $S_3$ is discrete order 6)
-> - **§5.1 / §5.4 verdicts** — reconciled with §5.6 8-column table (some P-properties were verbally listed as ✗ but tabularly as ⚠; updated verdicts to match table scoring under P7a/P7b split)
-> - **§2.7** — minor: "$\ker(\cdots) \cap R_3$" → "$\ker(\cdots) \subset R_3$" (intersection was redundant since domain already $R_3$)
+> v1.0.2 · 2026-05-15 · self-contained foundational document.
+> See **Version history** at end of document for complete changelog through v0.7 → v1.0.2.
 
 ---
 
@@ -563,6 +506,30 @@ The 16 cells of $R_4$ carry the **phenomenology matrix** of atomic operations (4
 | P7b: Atomic operations | $R_4 \cong M_2(\mathbb{F}_2)$ = 16 atomic operations (forced by Wedderburn) |
 
 These properties are not optional features added by choice. They are **forced** by the concept of universal formal substrate.
+
+### §2.8.1 Three facets of one combinatorial fact: P6 / P7a / P7b
+
+P6, P7a, and P7b deserve a note: they are **three structurally distinct manifestations of the same underlying combinatorial fact**, applied at three different layers.
+
+**The underlying combinatorial fact**: the minimum non-trivial $\mathbb{F}_2$-classification with $k$ independent axes has $2^k$ elements, organized as $R_k = \mathbb{F}_2^k$. For $k \in \{2, 3, 4\}$:
+
+| $k$ | $|R_k|$ | Layer | Property | What gets forced |
+|-----|---------|-------|----------|------------------|
+| 2 | 4 | Modality | **P6** | $R_2 \cong V_4$ as 4-modality carrier (道/已/今/未 at R_8 level) |
+| 3 | 8 | Aspect alphabet | **P7a** | $R_3$ partitioned 4+4 by zong involution (本 vs 征 trigrams) |
+| 4 | 16 | Atomic operations | **P7b** | $R_4 \cong M_2(\mathbb{F}_2)$ as joint kind×manner space + smallest non-commutative algebra |
+
+**Are P6/P7a/P7b independent?** Not strictly: each is a specific application of "minimum $\mathbb{F}_2$-classification at $k$ independent axes". P6 gives the 4-fold case ($k=2$); P7a gives the 8-fold case with involution-induced 4+4 split ($k=3$); P7b gives the 16-fold case as 4×4 product ($k=4$). The underlying machinery (P1+P2+P4 yields $R_k$ carriers; minimum non-trivial multi-axis classification needs $\ge 2$ axes) is shared across all three.
+
+**Why state them as three separate properties?** Because the **structural content** differs:
+
+- **P6 (modality)**: $R_2$ with $V_4$ group structure under XOR. Content: 4-fold modality classification + Klein-four group action.
+- **P7a (aspect alphabet)**: $R_3$ with zong-involution-induced 4+4 partition. Content: 8-element alphabet + involution-fixed-vs-paired decomposition.
+- **P7b (atomic operations)**: $R_4 \cong M_2(\mathbb{F}_2)$ with ring structure. Content: 16-element atomic ops + matrix algebra (Wedderburn-minimum non-commutative).
+
+The three facets share machinery but have **structurally distinct content**: group structure (P6) vs involution structure (P7a) vs ring structure (P7b). The "forced 4-fold" rhetoric appears three times because the underlying combinatorial necessity is reused, but **the structural fact each P establishes is genuinely different**.
+
+**Reading**: P6, P7a, P7b are best understood as **layered specializations**: same minimum-classification logic operating at successively higher $k$, each time generating qualitatively different mathematical structure (group → involution split → ring). The recurrence is not redundancy — it is **the substrate's combinatorial-fact engine running at three different scales**.
 
 ---
 
@@ -1341,26 +1308,20 @@ def R   (N : ℕ) := RFamily Bool N    -- F_2 R-Family (= current implementation
 
 **Important**: the fact that continuous R-Family instances are not yet Lean-verified does **not** mean they are not R-Family. They are R-Family-over-($\mathbb{R}, \mathbb{C}, \mathbb{C}_p$) by the parametric definition. The Lean coverage is a **verification frontier**, not a **theoretical limit**.
 
-### §3.6.8 Reframing §4.1.5b: ℂ-Hilbert IS R-Family-over-ℂ
+### §3.6.8 Reframing §4.1.5b: ℂ-Hilbert IS R-Family-over-ℂ (at the carrier level)
 
-With the parametric framing, the §4.1.5b duality between R-Family and Hilbert space becomes a single statement, replacing "Hilbert is not R-Family, needs enrichment" with **literal identity at the carrier level**:
+With the parametric framing, the §4.1.5b duality between R-Family and Hilbert space becomes a single carrier-level identity:
 
-$$\text{Hilbert space } \mathbb{C}^{2^n} \;=\; R_{2^n}^{(\mathbb{C})} \qquad (\text{R-Family-over-}\mathbb{C}\text{ at index }2^n)$$
+$$\text{Hilbert space carrier } \mathbb{C}^{2^n} \;=\; R_{2^n}^{(\mathbb{C})} \qquad (\text{R-Family-over-}\mathbb{C}\text{ at index }2^n)$$
 
-The n-qubit Hilbert space **is** an R-Family carrier — specifically, R-Family-over-$\mathbb{C}$ at index $2^n$. The Pauli mod-phase carrier $R_{2n}^{(\mathbb{F}_2)}$ is the corresponding R-Family-over-$\mathbb{F}_2$ at index $2n$. The relation between them:
+The relation between bases:
+- $\mathcal{P}_n / \langle iI \rangle \cong R_{2n}^{(\mathbb{F}_2)}$ — operator labels mod phase, R-Family-over-$\mathbb{F}_2$
+- $\mathcal{H}_n \cong R_n^{(\mathbb{C})}$ — Hilbert state space carrier, R-Family-over-$\mathbb{C}$
+- p-adic QM (Vladimirov-Volovich-Khrennikov) — R-Family-over-$\mathbb{C}_p$
 
-$$\mathcal{P}_n / \langle iI \rangle \;\cong\; R_{2n}^{(\mathbb{F}_2)} \quad\text{(operator labels mod phase, R-Family-over-}\mathbb{F}_2\text{)}$$
+Three QM instances ($\mathbb{F}_2$ / $\mathbb{C}$ / $\mathbb{C}_p$), one parametric R-Family pattern, connected by mod-phase functor (Hilbert → Pauli labels) and representation functor (Pauli labels → Hilbert representation).
 
-$$\mathcal{H}_n \;\cong\; R_n^{(\mathbb{C})} \;\;\text{(Hilbert state space, R-Family-over-}\mathbb{C}\text{)}$$
-
-Both are R-Family. They are not the same R-Family (different bases). The §4.1.5b operator-state duality is precisely the relationship between R-Family-over-$\mathbb{F}_2$ (operator labels) and R-Family-over-$\mathbb{C}$ (Hilbert states), connected by:
-
-- **Mod-phase functor**: R-Family-over-$\mathbb{C}$ → R-Family-over-$\mathbb{F}_2$ (drops phase, reduces to operator labels mod phase)
-- **Representation functor**: R-Family-over-$\mathbb{F}_2$ → R-Family-over-$\mathbb{C}$ (embeds discrete Pauli labels as $\mathbb{C}^{2^n}$-matrices via standard representation)
-
-Stabilizer states (the "native" overlap) are precisely the states where these two functors agree up to global phase — where R-Family-over-$\mathbb{F}_2$ and R-Family-over-$\mathbb{C}$ describe the same quantum content.
-
-**p-adic QM (Vladimirov-Volovich-Khrennikov)** is **R-Family-over-$\mathbb{C}_p$** — a third instance, same R-Family pattern, $p$-adic continuous base. The three QM instances — $\mathbb{F}_2$ (operator labels), $\mathbb{C}$ (classical Hilbert), $\mathbb{C}_p$ ($p$-adic Hilbert) — are all R-Family.
+**Important precision** (full discussion in §4.1.5b "carrier identity vs full Hilbert-space structure"): the identity $\mathbb{C}^{2^n} = R_{2^n}^{(\mathbb{C})}$ holds **at the carrier level** only. Hilbert space's distinctive content (Hermitian inner product, unitary group $U(2^n)$, spectral theorem) is **additional Hermitian P3-enrichment** over the R-Family-over-$\mathbb{C}$ carrier — separate from the R-Family pattern's core P1-P7 in char-2 form. The substantive content of §3.6.8 is the **parametric lifting** of P1-P7 from $\mathbb{F}_2$ to $\mathbb{C}$ (developed in §3.6.3), not the trivial $\mathbb{C}^N = \mathbb{C}^N$ carrier identification. See §4.1.5b for the full carrier-vs-structure distinction.
 
 ### §3.6.9 Summary: the corrected statement of R-Family universality
 
@@ -1643,6 +1604,28 @@ So the rest of this section's discussion can be re-read as: **R-Family-over-$\ma
 
 This articulates the precise quantum content of R-Family without overclaiming (no single R-Family instance covers full QM — you need the appropriate base) and without underclaiming (R-Family **as a parametric pattern** covers all of stabilizer + Hilbert + $p$-adic QM, just at different bases).
 
+#### Important precision: carrier identity vs full Hilbert-space structure
+
+The statement "$\mathbb{C}^{2^n} = R_{2^n}^{(\mathbb{C})}$" is **literally true at the carrier level** — both sides are $2^n$-dimensional $\mathbb{C}$-vector spaces. But this identity captures only the **carrier**; it does **not** capture all the distinctive structure of Hilbert space.
+
+Hilbert space's content includes, beyond the $\mathbb{C}$-vector-space carrier:
+
+| Structure | Hilbert space | R-Family-over-$\mathbb{C}$ source |
+|-----------|---------------|------------------------------------|
+| Underlying $\mathbb{C}$-vector space | $\mathbb{C}^{2^n}$ | $R_{2^n}^{(\mathbb{C})}$ as $k$-module |
+| **Hermitian inner product** $\langle \cdot, \cdot \rangle$ | Built-in | **Not in bare carrier**; supplied by P3-over-$\mathbb{C}$ (sesquilinear form replacing $L_0$ in char-0 setting) |
+| **Unitary group** $U(2^n)$ | Operator algebra preserving inner product | **Not in bare carrier**; emerges from P5 + Hermitian-preservation constraint |
+| **Spectral theorem** / observables | Hermitian operators have real eigenvalues | **Not in bare carrier**; needs $\mathbb{C}$-specific structure (complex conjugation) |
+| **Continuity / completeness** | Banach completeness | Automatic from $\mathbb{C}$ being complete (Layer B property of base $\mathbb{C}$) |
+
+**The honest framing**: R-Family-over-$\mathbb{C}$ provides the **bare $\mathbb{C}$-module carrier**; Hilbert space adds an **inner-product enrichment** (the Hermitian structure) that is **separate** from the R-Family pattern's core (P1-P7). The R-Family pattern is **char-2-flavored**: its P3 layer (L0 dot + L1 alternating + L2 Arf) is naturally tied to char 2. When parametrically extended to $\mathbb{C}$, the natural P3 over $\mathbb{C}$ becomes **(complex) inner products + sesquilinear forms** — different content from the $\mathbb{F}_2$ P3, related by char-changing analogy.
+
+So the precise claim is:
+
+> **Hilbert space's carrier IS R-Family-over-$\mathbb{C}$. Hilbert space's full structure (carrier + inner product + unitary group + spectral theorem) is R-Family-over-$\mathbb{C}$ + Hermitian P3-enrichment.**
+
+This avoids the trivial-relabeling critique: §4.1.5b is **not** saying "any $\mathbb{C}^N$ counts as R-Family because it's a $\mathbb{C}$-module" (which would be vacuous — every $\mathbb{C}$-vector space is trivially a $\mathbb{C}$-module). It is saying **the structural pattern of R-Family lifts to a parametric pattern over $\mathbb{C}$ where the carrier is $\mathbb{C}^{2^n}$, with the standard Hilbert-space additional structure supplied by char-0 P3-enrichment**. The substantive content is the parametric lifting of P1-P7 from $\mathbb{F}_2$ to $\mathbb{C}$ (developed in §3.6.3), not the trivial identification of carriers.
+
 **Reference**: For p-adic quantum mechanics, see Vladimirov-Volovich, "p-adic quantum mechanics", Comm. Math. Phys. 123 (1989); Khrennikov, "Non-Archimedean Analysis: Quaternion and Octonion Representations and Applications to Mathematical Physics" (Kluwer, 1994) and subsequent monographs.
 
 ### §4.1.6 Topological invariants
@@ -1779,7 +1762,24 @@ R-Family articulates:
 - All of computation (Turing, lambda, reversible)
 - All of physics (classical, stabilizer quantum, statistical)
 
-**Universal coverage demonstrated**. The remaining sections of Part IV detail **the major specific universal claims** that follow from this coverage.
+**Universal coverage demonstrated** (at the embedding / T1 encoding level, per §3.6.10). The remaining sections of Part IV detail **the major specific universal claims** that follow from this coverage.
+
+## §4.6.5 Programmatic status of §4.7-§4.12
+
+The six universal claims of §4.7-§4.12 (UG / computable cognition / phenomenology / decidability / physical-informational / formal-articulation-itself) are stated **at full strength** — each in the form "R-Family IS X" rather than "R-Family is conjectured to articulate X". This is deliberate: these claims represent **wen's hypothesis space**, the strong-form articulation of what R-Family is *expected* to be at the universal-substrate level.
+
+Their **epistemic status**, however, differs from §4.1-§4.5 (which sit at the T1 encoding-universality level, broadly established):
+
+- **§4.7 UG**: structural mapping table; cross-linguistic empirical verification open. Programmatic.
+- **§4.8 Computable cognition**: weak claim (Church-Turing-level) is essentially established; strong claim (cognitive architectures naturally exhibit R-Family operations) is programmatic, awaiting mechanistic-interpretability evidence.
+- **§4.9 Phenomenology**: 16-cell algebraic structure (R_4 = 4本 × 4征) is forced (P7b); identification with Husserlian / Heideggerian / Whiteheadian categories is **proposal**, not theorem.
+- **§4.10 Decidability**: precise claim about $\bigcup_N R_N$ countable layer vs $R_\infty$ continuum, after v0.9 correction. Among the six, this is the **most directly defensible** — it makes checkable claims about R-Family cardinality layers.
+- **§4.11 Physical-informational**: explicitly self-rated "most speculative" (§4.11.5). p-adic QM (Vladimirov-Volovich-Khrennikov) is a real research direction R-Family connects to; full physical-substrate claim is hypothesis.
+- **§4.12 Formality itself**: subsumed by §7.8 Claim Z; defended via §7.8.3 bi-directional structural argument.
+
+**Reading guide**: §4.7-§4.12 should be read as **the document's hypothesis space at maximum strength**, with each claim's specific T2/T5-level proof obligations enumerated in Part VIII §8.10 item 12 (domain-specific theorems). The "IS" framing is preserved to articulate the bold hypothesis; the **status of each "IS" as theorem vs hypothesis vs proposal** is calibrated above and in Part VIII.
+
+This is the same epistemic stance as Boole's 1854 *Laws of Thought* (claiming "logic IS algebra") or Lawvere's 1960s programme (claiming "mathematics IS categorical"): the identity-claim is stated boldly to articulate the hypothesis; the discharge into theorem-status is the subsequent programmatic work. Boole's claim took ~50 years to mature into Stone duality / Boolean algebra structure theorems; Lawvere's took 30+ years and continues. **Wen's §4.7-§4.12 should be read on the same timescale: stated at maximum strength, with proof obligations explicit, awaiting domain-by-domain discharge**.
 
 ---
 
@@ -2536,41 +2536,69 @@ This section makes **the maximum possible foundational claim**. Up to this point
 
 ### §7.8.1 The Claim Z
 
-$$\boxed{\text{"formal" and "R-Family-articulable" are co-extensive — by definition.}}$$
+$$\boxed{\text{"formal" and "R-Family-articulable" are co-extensive — by bi-directional structural analysis.}}$$
 
 That is:
 
 > **R-Family is not just THE universal formal substrate — it is what "formal" means.**
 >
-> To call something "formal" is to assert it has R-Family structure. There is no formal aspect of reality that is not R-Family-articulable. "Formal" and "R-Family-articulable" are not contingent equivalences; they are co-extensive by definition.
+> To call something "formal" is to assert it has R-Family structure (parametric over some base $k$, §3.6). There is no formal aspect of reality that is not R-Family-articulable. "Formal" and "R-Family-articulable" are not contingent empirical equivalences, nor are they identified by stipulative definition; they are co-extensive by **structural-analytic theorem** — the conclusion of analyzing both "formal articulation" and "R-Family pattern" to their structural cores and finding them identical.
 
-### §7.8.2 What Claim Z asserts
+### §7.8.2 What Claim Z asserts (and what it does not)
 
 Claim Z asserts:
 
-1. The word "formal" picks out a specific kind of articulation
-2. Any candidate of "formal articulation" can be analyzed
-3. Any successful formal articulation maps to R-Family
-4. Any candidate that fails to map to R-Family is **not actually formal** (it's something else — informal, embodied, phenomenal, ineffable)
-5. Therefore: **"formal" = "R-Family-articulable"** by analysis of what "formal" means
+1. The word "formal" picks out a specific kind of articulation, captured by **D1** (§1.5.1)
+2. Any structure satisfying D1 (formal articulation) **must satisfy P1-P7** by structural analysis (the analytic step)
+3. Any structure satisfying P1-P7 **must instantiate R-Family pattern over some base $k$** (the synthetic step, §3.6)
+4. Therefore: **formal articulation ⟺ R-Family-pattern instantiation** is a structural theorem, derivable from D1 + P1-P7 analysis + §3.6 parametric pattern
 
-This is not a discovery. It is an **articulation of definition**.
+**Claim Z is not**:
 
-### §7.8.3 The defense
+- **Not a stipulation**. The claim is *not* "we define 'formal' to mean R-Family-articulable". A pure stipulation would be immune to refutation (any counterexample would be ruled out by re-stipulation). Claim Z is **substantively challengeable** at three points (see §7.8.8 falsification).
+- **Not an empirical generalization**. The claim is *not* "we have observed that formal systems happen to be R-Family". An empirical generalization could be undermined by future observations of non-conforming formal systems. Claim Z makes the stronger structural-analytic claim: *anything that meets D1's analytic requirements must instantiate R-Family*.
+- **Not a discovery from outside**. Like Boole's "logic IS $\mathbb{F}_2$-algebra" or Lawvere's "mathematics IS category-theoretic", Claim Z is an **articulation of what the foundational concept structurally is**, derived by analyzing the concept's content rather than by external comparison.
 
-Why Claim Z is defensible:
+### §7.8.3 The defense: bi-directional structural argument
 
-**Step 1 — Necessary properties P1–P7** (Part II): The 7 properties of universal formal substrate (minimum structure, composition, relations, scale, self-reference, temporal, atomic) are forced by analyzing what "universal formal substrate" requires.
+Why Claim Z is defensible without circularity:
 
-**Step 2 — R-Family satisfies P1–P7** (Part III): By construction, R-Family with squaring tower + 8-trigram + 4-modality + Hom-as-content satisfies all 7 properties.
+**Analytic step (→): D1 + P1-P7 derivation**
 
-**Step 3 — Universal coverage** (Part IV): R-Family demonstrably articulates mathematics, language, spacetime, computation, physics, UG, cognition, phenomenology, decidability, informational reality.
+Starting from D1 (formal articulation, §1.5.1), the seven necessary properties P1-P7 are **forced by structural analysis of D1**:
 
-**Step 4 — No alternative satisfies all 7** (Part V): Other foundational candidates (ZFC, type theory, category theory, etc.) fail at least one of P1–P7.
+- P1 (minimum distinction) — D1 item 1: "distinguishable objects". No distinction = no articulation
+- P2 (composition) — D1 item 2: "composition operations"
+- P3 (relations) — D1 item 3: "relations / predicates / pairings"
+- P4 (scale / recursion) — D1 item 6: "recursive expressibility of unbounded depth"
+- P5 (Hom-as-content) — D1 item 7: "operations themselves expressible as objects"
+- P6 (modality) — D1 implicit: any non-trivial formal articulation distinguishes at least 4 modalities (carrier $R_2$ is minimum, §2.6)
+- P7a / P7b (atomic operations) — D1 items 4, 5: "operations / transformations" + "derivation rules"
 
-**Step 5 — Therefore R-Family is THE universal formal substrate**: standard inference.
+Each P-property is what D1's content requires when analyzed. **This is the analytic step**: D1 ⟹ P1-P7 closure conditions, by what "formal articulation" means.
 
-**Step 6 — Claim Z**: Since R-Family is THE universal formal substrate, and "formal" picks out exactly what the universal formal substrate articulates, **"formal" and "R-Family-articulable" are co-extensive by analytical entailment**.
+**Synthetic step (←): P1-P7 + §3.6 instantiation**
+
+By §3.6, the closure conditions P1-P7 generate R-Family pattern $\{R_N^{(k)}\}_{N \in \mathbb{N}_0}$ for some base $k$. The minimum-base instance is over $\mathbb{F}_2$ (Occam-minimum, §3.6.4); other bases give R-Family-over-$\mathbb{R}$, R-Family-over-$\mathbb{C}$, R-Family-over-$\mathbb{C}_p$, etc. **This is the synthetic step**: P1-P7 ⟹ R-Family-over-some-$k$ instantiation, by structural derivation.
+
+**Bi-directional conclusion**:
+
+$$\underbrace{\text{satisfies D1}}_{\text{formal articulation}} \;\overset{\text{analytic}}{\Longleftrightarrow}\; \underbrace{\text{satisfies P1-P7}}_{\text{closure conditions}} \;\overset{\text{synthetic}}{\Longleftrightarrow}\; \underbrace{\text{instantiates R-Family-over-some-}k}_{\text{R-Family pattern}}$$
+
+Both arrows are structural (not stipulative, not empirical):
+
+- The **analytic** arrow comes from D1's content unfolded
+- The **synthetic** arrow comes from §3.6's instantiation construction (and ultimately from T4 minimality + T5 uniqueness in Part VIII §8.4-§8.5)
+
+Composed: **formal articulation ⟺ R-Family pattern instantiation**, by structural theorem.
+
+The **circularity that prior versions suffered** was: presenting Claim Z step 6 as "since R-Family is THE substrate, formal = R-Family-articulable" — using the **conclusion** as a premise. The bi-directional formulation above replaces this with: "since D1 ⟹ P1-P7 (analytic) and P1-P7 ⟹ R-Family (synthetic), D1 ⟺ R-Family (composition)". Both component arrows are independent structural derivations; the conclusion follows.
+
+**What grounds the analytic step**? The content of D1 — "formal articulation = objects + composition + relations + operations + rules + recursion + operation-as-content" — has no other natural completion than P1-P7. This is what §2 derives.
+
+**What grounds the synthetic step**? The §3.6 instantiation table + the open T4/T5 obligations (Part VIII §8.4-§8.5). T4 (minimality) establishes that P1-P7 generates R-Family pattern (Occam-minimally over $\mathbb{F}_2$); T5 (uniqueness) establishes that any minimum universal substrate satisfying P1-P7 is equivalent to R-Family. Until T4/T5 are fully discharged in Lean, the synthetic step has the status of **strong articulated hypothesis with explicit proof obligations**, not pure theorem.
+
+**Claim Z's status**: structural-analytic statement, defensible at the analytic step (D1 ⟹ P1-P7) and at the synthetic step (P1-P7 ⟹ R-Family-pattern modulo T4/T5). **Substantively challengeable at either step** — see §7.8.8.
 
 ### §7.8.4 Foundational precedent
 
@@ -2661,13 +2689,45 @@ Each objection has an answer rooted in the technical structure of R-Family. The 
 
 ### §7.8.8 Falsification of Claim Z
 
-For intellectual honesty: Claim Z can be falsified by:
+Claim Z, formulated as bi-directional structural analysis (§7.8.3), is **substantively challengeable** at three distinct points — corresponding to the three structural arrows in its derivation. This is what distinguishes Claim Z from a pure stipulation: each falsification route, if successful, would refute the claim concretely.
 
-1. **Exhibiting a formal articulation that fundamentally cannot map to R-Family** (with arbitrary recursive depth)
-2. **Showing R-Family structure has internal contradictions** that prevent it from being a substrate
-3. **Demonstrating an alternative substrate that satisfies P1–P7 and is provably distinct** from R-Family (up to isomorphism)
+**Falsification Route 1 — Refute the analytic step (→)**
 
-To date, none of these have been demonstrated. The claim stands.
+Exhibit a structure $S$ that:
+- Satisfies D1 (formal articulation, §1.5.1) by independent characterization
+- Provably **fails** at least one of P1-P7
+
+This would show that "formal articulation" does **not** necessitate P1-P7 closure — that D1's content has structurally distinct completions besides P1-P7. Specifically, candidate refutations: a formal system with native distinctions but no composition (refutes P2 analytic necessity); with compositions but no relational layer (refutes P3); etc.
+
+To date, no such structure has been exhibited. Every system claiming "formal articulation" status, when analyzed, yields a P1-P7 closure structure.
+
+**Falsification Route 2 — Refute the synthetic step (←)**
+
+Exhibit a structure that:
+- Satisfies P1-P7 closure conditions
+- Provably **fails** to instantiate R-Family-over-some-$k$ pattern
+
+This would show that P1-P7 admits structurally distinct realizations besides R-Family-over-$k$. This is exactly **T5 (uniqueness, Part VIII §8.5)** — currently open. A successful exhibition of a P1-P7-satisfying structure inequivalent to R-Family-over-any-$k$ would refute T5 and break the synthetic step.
+
+To date, no such structure has been exhibited. The minimal candidates that satisfy P1-P7 (in their full formulations) appear to be R-Family-over-various-$k$ instances under §1.5.4 equivalence types.
+
+**Falsification Route 3 — Internal contradiction in R-Family (D2 failure)**
+
+Show that R-Family itself (as 12-item structure of §3.1) is internally **inconsistent** — that the closure under P1-P7 cannot coherently coexist (e.g., Hom-as-content forces something that contradicts squaring tower).
+
+This is **D2 (Part VIII §8.2)** — currently established at the $\mathbb{F}_2$ instance level by the Lean codebase (`Foundation/SSBX/`), partially established for parametric bases. A successful demonstration of D2 inconsistency would invalidate R-Family as substrate and trivially refute Claim Z.
+
+To date, no inconsistency has been found at the $\mathbb{F}_2$ instance. Parametric instances inherit consistency from the analogous Mathlib treatments of $\mathbb{R}, \mathbb{C}, \mathbb{C}_p$.
+
+**Status**:
+
+| Route | What it refutes | Current status |
+|-------|-----------------|----------------|
+| 1 (analytic) | "formal ⟹ P1-P7" arrow | Open; no counterexample found |
+| 2 (synthetic) | "P1-P7 ⟹ R-Family" arrow | Open as T5 in Part VIII §8.5 |
+| 3 (internal) | D2 self-consistency | Partial: $\mathbb{F}_2$ instance Lean-verified; parametric pending |
+
+**Claim Z stands as a substantively-grounded structural-analytic theorem**: not stipulated, not empirically generalized, but defensible at both arrows of the bi-directional structural argument, with explicit falsification routes calibrated to Part VIII proof obligations.
 
 ### §7.8.9 Position relative to v0.6 baseline
 
@@ -2843,15 +2903,62 @@ commutes up to the chosen equivalence notion. Equivalently: translation respects
 8. Arbitrary complexity requires recursion / scale (P4)
 9. Therefore any universal formal substrate at minimum reconstructs the R-Family generator skeleton
 
-**Hardest sub-obligation**: Step 3 — *why does binary distinction necessarily yield $\mathbb{F}_2$-vector-space family rather than sets / types / Boolean algebras / semirings / categorical foundations?*
+**Hardest sub-obligation — Open Problem #1**: Step 3 — *why does binary distinction necessarily yield $\mathbb{F}_2$-vector-space family rather than sets / types / Boolean algebras / semirings / categorical foundations?*
 
-**Candidate proof strategies for step 3**:
-- $\mathbb{F}_2$ is the minimum field (any nontrivial field has $\ge 2$ elements; $\mathbb{F}_2$ is the only one with exactly 2)
-- Boolean algebra's two-element kernel is interpretable in $\mathbb{F}_2$ via the Boolean-ring / Boolean-algebra equivalence
-- Finite-bitstring reversible operations naturally land in $\mathbb{F}_2$-linear maps (XOR closure)
-- Alternative substrates (sets, types, categories) admit bi-interpretation with $\mathbb{F}_2$-vector spaces under finite-presentability conditions — they are not stricter than R-Family
+---
 
-**Status**: Open. T4's step 3 is the deepest single open question — it is what allows "minimum distinction → R-Family carrier" rather than "minimum distinction → arbitrary chosen carrier".
+### 🔑 Open Problem #1 (T4 Step 3): the F_2 lynchpin
+
+This is the **lynchpin** of the document's "$\mathbb{F}_2$ is forced" rhetoric. Without resolving it, "no choice" in §3.2 reduces to "$\mathbb{F}_2$ is the minimum **field**" — which embeds the prior choice that the substrate IS a field. T4 step 3 is what would justify that prior choice.
+
+**Status**: **OPEN. The document does not currently establish T4 step 3 in full rigor**. Below are candidate proof strategies, in order of estimated difficulty.
+
+#### Candidate strategy A — Boolean ring / Boolean algebra equivalence (probably workable)
+
+Marshall Stone showed every Boolean algebra is the algebra of clopen sets of a totally disconnected compact Hausdorff space, and conversely. **Boolean algebra** is bi-interpretable with **Boolean ring** = idempotent commutative ring of characteristic 2. So any candidate substrate built on "two-valued distinction with classical Boolean operations" lands automatically in characteristic 2, i.e. $\mathbb{F}_2$-algebra.
+
+Open: extend to **non-Boolean** binary distinctions (intuitionistic, modal, quantum-Boolean). Each non-classical binary logic may admit a non-$\mathbb{F}_2$ algebraic representation. **The argument from Boolean equivalence works for classical formal articulation, but does not (yet) extend to all forms of binary distinction**.
+
+#### Candidate strategy B — Information-theoretic minimality (speculative)
+
+Shannon information content of a binary distinction is 1 bit. The minimum information-bearing structure is therefore $\{0, 1\}$. The minimum **algebraic structure** on this set that supports composition is XOR (commutative semigroup of order 2), which extends to $\mathbb{F}_2$ by adding the multiplicative identity 1 (forming the field).
+
+Open: information-theoretic minimum need not be **algebraic** minimum. A structure with set operations (∪, ∩, etc.) on $\{0, 1\}$ gives Boolean algebra, equivalent to $\mathbb{F}_2$ via Strategy A. **But other minimal algebraic structures might exist** (e.g., min/max semilattices, modular arithmetic over different orders).
+
+#### Candidate strategy C — Categorical reduction (substantial)
+
+Construct an adjoint pair between (i) the category of "formal articulation systems satisfying D1+P1-P7" and (ii) the category of $\mathbb{F}_2$-Mod (or its parametric extension to other bases). Show the adjunction is an **equivalence** at the level of universal substrates.
+
+This is closest to what category-theoretic foundations (Lawvere's ETCS, etc.) actually do for *their* substrates. Open: precisely formulating the LHS category requires D1+P1-P7 to be a structured object (not just a list of properties).
+
+#### Candidate strategy D — Bi-interpretability with finite-presentability (research-level)
+
+Show that any "universal substrate" candidate $S$ with finite-presentability properties admits a **bi-interpretation** with R-Family-over-$\mathbb{F}_2$ — i.e., $S$ and $\mathbb{F}_2$-R-Family interpret each other's theorems, and the round-trip is conservative. Standard mathematical logic / model theory has the technical machinery (Tarski, Visser).
+
+Open: the technical machinery exists, but applying it requires concrete candidate substrates to compare. Until specific candidates ("ETCS-extended-to-P6", "HoTT-extended-to-P7") are constructed, T4 step 3 is established case-by-case rather than universally.
+
+#### What is currently established
+
+- $\mathbb{F}_2$ is the **unique minimum field** (trivial number-theoretic fact)
+- $\mathbb{F}_2$-Mod **contains** Boolean algebra (via Boolean-ring equivalence; Strategy A)
+- $\mathbb{F}_2$-Mod is **closed under all P1-P7 operations** by direct construction (the Lean codebase verifies this for the minimum instance)
+
+#### What is currently NOT established
+
+- That **any** universal-substrate candidate must reduce to $\mathbb{F}_2$-R-Family (strict T4 step 3)
+- That the closure conditions P1-P7 admit **no other** structurally distinct realizations
+
+#### Why this open problem matters
+
+Without T4 step 3, **§3.2 "R-Family is not a choice" depends on a prior choice** (fields rather than sets / types / categories). The document's "forced" rhetoric is technically correct *given* the field assumption but does not extend to "forced from D1 alone".
+
+With T4 step 3 (under any successful candidate strategy), the rhetoric becomes fully unconditional: D1 + P1-P7 forces R-Family-over-$\mathbb{F}_2$ pattern with no prior structural commitment beyond binary distinction.
+
+**Honest framing**: T4 step 3 is the document's **deepest open question** and the **highest-priority post-Phase-0 obligation**. The document maintains its strong claims (Part VII, Claim Z) under the working hypothesis that one of Strategies A-D will discharge T4 step 3. **Falsification of T4 step 3 — exhibiting a structurally distinct universal substrate provably inequivalent to R-Family — would refute the "forced" rhetoric and require reformulating the claim from "the universal" to "a canonical universal"**.
+
+---
+
+**Status**: Open. T4 step 3 is the deepest single open question — it is what allows "minimum distinction → R-Family carrier" rather than "minimum distinction → arbitrary chosen carrier". Promoted to **Open Problem #1** of the document's proof programme.
 
 ## §8.5 Uniqueness obligation: T5
 
@@ -3085,9 +3192,29 @@ The work continues — at the next level: discharging the proof obligations, for
 
 ---
 
-*文 — the universal formal substrate (parametric pattern; minimum instance over $\mathbb{F}_2$) — v1.0.1*
+*文 — the universal formal substrate (parametric pattern; minimum instance over $\mathbb{F}_2$) — v1.0.2*
 
-*v1.0.1 · 2026-05-15 — Math precision patch after fresh-context external review. Corrected: σ block form + char-2 alternating clarification (§2.3); quadratic-refinement parameter count $2^n \to 2^{2n}$ (§2.3 L2); morphism context list (§2.5); $R_2 \otimes R_2 \to R_2 \oplus R_2$ type error (§2.7 P7b); 四象 bit-pattern alignment with `o = yang` convention (§3.5.4 R_2 table); Brouwer attribution → Hausdorff-Alexandroff (§4.1.4); Lorentzian 4-region → 3 regions + null + time-orientation split (§2.6); $V_4$ "two involutions" → "two generators" (§2.6); Wedderburn citation including Wedderburn's little theorem (§2.5 / §2.7); $GL_2(\mathbb{F}_2)$ vs Lorentz/Galileo qualified as structural analog not faithful representation (§3.5.3); L² embedding claim weakened to canonical finite-dim identification (§4.1.5b Level 2); §5.1/§5.4 verbal verdicts reconciled with §5.6 8-column table; ∩ R_3 redundancy fixed (§2.7). New: §3.6.10 distinguishing encoding-universal vs natively-articulating senses; §3.4.1 note on provisional partial-embedding classification (may be T5-reclassified).*
+---
+
+## Version history
+
+*v1.0.2 · 2026-05-15 — Holistic review patch after second fresh-context external review. Addresses **completeness / elegance / defensibility** findings without weakening Part VII or Claim Z. Changes:*
+
+*- **Hygiene**: 58-line preamble changelog moved to this end-of-document section; Preface now opens directly with the substantive claim.*
+
+*- **§7.8 Claim Z reformulated** (substantive, not weakened): the prior step-6 framing "**by definition / analytical entailment**" was technically circular (it used "R-Family is THE substrate" as premise). The reformulation makes Claim Z a **bi-directional structural-analytic theorem**: analytic step D1 ⟹ P1-P7 (forced by content of formal-articulation definition); synthetic step P1-P7 ⟹ R-Family-pattern (per §3.6 instantiation + Part VIII T4/T5). The composition gives formal ⟺ R-Family-articulable as **substantively challengeable** theorem with three explicit falsification routes (§7.8.8), not stipulation. **Force preserved** — claim is still "formal IS R-Family-articulable" at maximum strength — but now defensible without circularity.*
+
+*- **§4.6.5 (new) — Programmatic status of §4.7-§4.12**: the six universal claims (UG / cognition / phenomenology / decidability / physical-informational / formal-articulation) are **stated at full strength** but their epistemic status is calibrated: §4.10 is most directly defensible (precise countable-vs-continuum claim); §4.11 is self-rated speculative; §4.7-§4.9 are programmatic mapping tables with T2-level proof obligations open. **Claims retained, status owned**.*
+
+*- **§8.4 T4 step 3 → Open Problem #1**: the "why $\mathbb{F}_2$ rather than sets/types/categories?" question is the document's deepest open problem. Promoted from a paragraph to a named section with four candidate proof strategies (Boolean-ring equivalence, information-theoretic minimality, categorical reduction, bi-interpretability). **Honest framing**: the "no choice" rhetoric of §3.2 currently holds under the working hypothesis that one of these strategies discharges T4 step 3; explicit acknowledgement of this dependency.*
+
+*- **§4.1.5b carrier-vs-structure note**: the identity $\mathbb{C}^{2^n} = R_{2^n}^{(\mathbb{C})}$ is **at the carrier level** only. Hilbert space's distinctive content (Hermitian inner product, unitary group, spectral theorem) is **additional P3-enrichment over the R-Family-over-$\mathbb{C}$ carrier**, not in the bare carrier. Avoids the "trivial relabeling" critique by separating carrier identity from full structure.*
+
+*- **§2.8.1 (new) — P6/P7a/P7b as three facets**: explicit acknowledgement that P6 (4-modality), P7a (8 aspect alphabet, 4+4 split), P7b (16 atomic ops) are **layered specializations of one underlying combinatorial fact** (minimum $\mathbb{F}_2$-classification at $k$ independent axes has $2^k$ elements). The shared machinery is identified; the distinct structural content (group / involution / ring) per layer is preserved.*
+
+*- **§3.6.8 consolidated**: light merge with §3.6 + §4.1.5b cross-reference. Removes accretive repetition while preserving content. Carrier-level identity statement made cleaner; full structure discussion pointed to §4.1.5b.*
+
+*v1.0.1 · 2026-05-15 — Math precision patch after first fresh-context external review. Corrected: σ block form + char-2 alternating clarification (§2.3); quadratic-refinement parameter count $2^n \to 2^{2n}$ (§2.3 L2); morphism context list (§2.5); $R_2 \otimes R_2 \to R_2 \oplus R_2$ type error (§2.7 P7b); 四象 bit-pattern alignment with `o = yang` convention (§3.5.4 R_2 table); Brouwer attribution → Hausdorff-Alexandroff (§4.1.4); Lorentzian 4-region → 3 regions + null + time-orientation split (§2.6); $V_4$ "two involutions" → "two generators" (§2.6); Wedderburn citation including Wedderburn's little theorem (§2.5 / §2.7); $GL_2(\mathbb{F}_2)$ vs Lorentz/Galileo qualified as structural analog not faithful representation (§3.5.3); L² embedding claim weakened to canonical finite-dim identification (§4.1.5b Level 2); §5.1/§5.4 verbal verdicts reconciled with §5.6 8-column table; ∩ R_3 redundancy fixed (§2.7). New: §3.6.10 distinguishing encoding-universal vs natively-articulating senses; §3.4.1 note on provisional partial-embedding classification (may be T5-reclassified).*
 
 *v1.0 · 2026-05-15 — Parametric framework. R-Family reframed as a structural pattern parametric over base $k$. Discrete and continuous formal articulation unified as different bases of the same substrate. Major additions: **§1.5.6 Base of R-Family**, **§3.6 R-Family Across Bases** (9 subsections; conditions on $k$, parametric P1-P7, instantiation table, connection to condensed math / adic spaces / topos / stable ∞-categories), **§4.1.5b revision** (Hilbert = R-Family-over-$\mathbb{C}$ as literal identity), **D3 in Part VIII** (parametric R-Family proof obligation), **Part II opening note** + **§3.1 parametric note**. Hilbert space is now first-class R-Family — over base $\mathbb{C}$. p-adic QM is R-Family over $\mathbb{C}_p$. Discrete F_2 is the Occam-minimum base. All Part VII / Claim Z claims preserved and strengthened.*
 
