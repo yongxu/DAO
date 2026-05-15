@@ -134,6 +134,98 @@ theorem support_ofFull (v : R N) :
   apply Finset.filter_true_of_mem
   intro i _; rfl
 
+@[simp] theorem support_dao : support (dao : PartialCell N) = ∅ := by
+  unfold support dao
+  ext i
+  simp
+
+/-! ## § Phase B — commutativity, associativity, restriction, full extraction -/
+
+/-! ### B.1 Compatibility is symmetric -/
+
+theorem compatible_comm (a b : PartialCell N) :
+    compatible a b ↔ compatible b a := by
+  refine ⟨fun h i => ?_, fun h i => ?_⟩
+  · rcases h i with hi | hi | hi
+    · exact Or.inr (Or.inl hi)
+    · exact Or.inl hi
+    · exact Or.inr (Or.inr hi.symm)
+  · rcases h i with hi | hi | hi
+    · exact Or.inr (Or.inl hi)
+    · exact Or.inl hi
+    · exact Or.inr (Or.inr hi.symm)
+
+theorem compatible_symm {a b : PartialCell N} (h : compatible a b) :
+    compatible b a := (compatible_comm a b).mp h
+
+/-! ### B.2 `mergeFn` commutativity under compatibility -/
+
+theorem mergeFn_comm {a b : PartialCell N} (h : compatible a b) :
+    mergeFn a b = mergeFn b a := by
+  funext i
+  unfold mergeFn
+  rcases h i with hi | hi | hi
+  · rw [hi]; cases b i <;> rfl
+  · rw [hi]; cases a i <;> rfl
+  · rw [hi]
+
+/-! ### B.3 `merge` is unconditionally commutative -/
+
+theorem merge_comm (a b : PartialCell N) : merge a b = merge b a := by
+  unfold merge
+  by_cases h : compatible a b
+  · rw [if_pos h, if_pos (compatible_symm h), mergeFn_comm h]
+  · rw [if_neg h, if_neg (fun h' => h (compatible_symm h'))]
+
+/-! ### B.4 `mergeFn` is unconditionally associative (pointwise "first specified wins") -/
+
+theorem mergeFn_assoc (a b c : PartialCell N) :
+    mergeFn (mergeFn a b) c = mergeFn a (mergeFn b c) := by
+  funext i
+  unfold mergeFn
+  cases a i <;> cases b i <;> cases c i <;> rfl
+
+/-! ### B.5 Restriction (codim-controlled projection) -/
+
+/-- Restrict a partial cell to a sub-mask: positions outside `s` become unspecified.
+    This is the codim-increasing direction of the partial-cell lattice. -/
+def restrict (s : Finset (Fin N)) (c : PartialCell N) : PartialCell N :=
+  fun i => if i ∈ s then c i else none
+
+@[simp] theorem restrict_dao (s : Finset (Fin N)) :
+    restrict s (dao : PartialCell N) = dao := by
+  funext i
+  unfold restrict dao
+  split <;> rfl
+
+@[simp] theorem restrict_univ (c : PartialCell N) :
+    restrict Finset.univ c = c := by
+  funext i
+  unfold restrict
+  rw [if_pos (Finset.mem_univ i)]
+
+@[simp] theorem restrict_empty (c : PartialCell N) :
+    restrict ∅ c = dao := by
+  funext i
+  unfold restrict dao
+  simp
+
+/-! ### B.6 Full extraction `toFull?` -/
+
+/-- Try to extract a full `R N` vector.  Returns `some v` iff every
+    position is specified (`support c = univ`), `none` otherwise. -/
+def toFull? (c : PartialCell N) : Option (R N) :=
+  if h : ∀ i, (c i).isSome = true then
+    some (fun i => (c i).get (h i))
+  else none
+
+@[simp] theorem toFull?_ofFull (v : R N) :
+    toFull? (ofFull v) = some v := by
+  unfold toFull? ofFull
+  split_ifs with h
+  · rfl
+  · exact absurd (fun _ => rfl) h
+
 end PartialCell
 
 end SSBX.Foundation.R
