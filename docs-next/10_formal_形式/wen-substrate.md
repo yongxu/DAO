@@ -4,10 +4,12 @@
 >
 > Further: **R-Family IS what "formal" means**. (Claim Z, §7.8)
 >
-> v1.1 · 2026-05-16 · self-contained foundational document.
-> See **Version history** at end of document for complete changelog through v0.7 → v1.1.
+> v1.1.1 · 2026-05-16 · self-contained foundational document.
+> See **Version history** at end of document for complete changelog through v0.7 → v1.1.1.
 >
-> **v1.1 headline**: Open Problem #1 (T4 step 3 — "why $\mathbb{F}_2$?") **partially discharged** via Strategy A (Stone-Birkhoff-Boolean ring chain) for the classical-Boolean scope (§8.4.1). Non-classical extensions (multi-valued, intuitionistic-provability) discharged in parametric form (§8.4.2-§8.4.4). The §3.2 "no choice" rhetoric is now substantively defended: $\mathbb{F}_2$ emerges forced from D1 + P1 + classical-Boolean structure (no prior commitment to fields). Open sub-problems: intuitionistic constructive content, quantum logic at $C^*$-level, modal, substructural.
+> **v1.1 headline**: Open Problem #1 (T4 step 3 — "why $\mathbb{F}_2$?") **partially discharged** via Strategy A (Stone-Birkhoff-Boolean ring chain) for the classical-Boolean scope (§8.4.1). Non-classical extensions (multi-valued, intuitionistic-provability) discharged in parametric form (§8.4.2-§8.4.4). The §3.2 "no choice" rhetoric is now substantively defended: $\mathbb{F}_2$ emerges forced from D1 + P1 + classical-Boolean structure (no prior commitment to fields).
+>
+> **v1.1.1 patch**: (1) D1 item 8 (modality clause) added to §1.5.1 — closes the §7.8.3 "P6 modality smuggling" hole by making the modality requirement an **explicit conditional D1 item** rather than implicit. (2) Trimmed 道法自然 repetition across §3.5.6 reason (3) / §3.5.8 closing / Coda emphasis bullets — content preserved, pointers added.
 
 ---
 
@@ -117,7 +119,7 @@ Before deriving the necessary properties, we fix four core definitions. These gi
 
 ### §1.5.1 Formal articulation
 
-**Definition (formal articulation)**. A *formal articulation* is a structure-preserving expression of distinctions, compositions, relations, operations, and rules of transformation. Formally, a formal articulation $S$ consists of:
+**Definition (formal articulation, D1)**. A *formal articulation* is a structure-preserving expression of distinctions, compositions, relations, operations, and rules of transformation. Formally, a formal articulation $S$ consists of:
 
 1. A collection of distinguishable objects $\mathrm{Obj}(S)$
 2. Composition operations $\mathrm{Comp}(S)$ combining objects into larger objects
@@ -126,10 +128,15 @@ Before deriving the necessary properties, we fix four core definitions. These gi
 5. Derivation / rewrite rules $\mathrm{Rule}(S)$
 6. Recursive expressibility (expressions of unbounded finite depth)
 7. Operation-as-content: operations themselves may be expressed as objects
+8. **(D1' modality clause, v1.1.1)**: when $S$ articulates content with process / change / temporal-or-causal dimension — i.e., when $S$ includes any objects/operations that distinguish *static* vs *dynamic*, *before* vs *after*, *eternal* vs *event*, or analogous bipolar / multipolar modal categorizations — $S$ must carry a **non-trivial multi-modal classification of articulated content**. The minimum non-trivial multi-modal classification has 4 modalities (forced by the minimum carrier requirement of P6, §2.6), forming a Klein four-group / 4-element structure.
 
-中文:**形式表达**,是对区别、组合、关系、操作与变换规则的结构保持表达。
+中文:**形式表达**,是对区别、组合、关系、操作与变换规则的结构保持表达。**第 8 项 (D1' 模态条款)**:若 $S$ 表达涉及过程 / 变化 / 时间 / 因果维度的内容(任何 静/动、前/后、永恒/事件 等极性或多极模态分类),则 $S$ 须承载**非平凡多模态分类**,最小 4 模态(由 P6 强制)。
 
-The standard formal frameworks — algebraic theory, Lawvere theory, finite-limit theory, institution, doctrine, computable presentation, syntax/semantics adjunction — are each specific implementations of this general notion.
+**Scope of item 8 (D1')**. Item 8 is **conditional**: it applies only to formal articulations whose content includes process / temporal / causal structure. Pure mathematical articulations (e.g., set-theoretic articulation of finite combinatorics, classical Boolean logic, untyped propositional calculus) may not need item 8 — they can satisfy D1's items 1-7 without invoking modal classification. In that restricted scope, the analytic step (§7.8.3) D1 ⟹ P1-P7 omits P6, yielding a weaker theorem D1|₇ ⟹ P1-P5+P7 (no temporal-causal modality required). The 4-modality structure of P6 enters only when item 8 is operative.
+
+**Why item 8 is needed (not smuggled)**. Prior versions of §7.8.3 listed P6 (modality, 4-fold temporal-causal classification) as "D1 implicit: any non-trivial formal articulation distinguishes at least 4 modalities" — but D1's items 1-7 do not mention modalities, so this was *modality smuggling*. The fix in v1.1.1: make the modality requirement **explicit** as item 8 (conditional), so the analytic step §7.8.3 D1 ⟹ P6 cites a stated D1 item rather than an implicit one. The conditionality preserves D1's applicability to non-process formal articulations.
+
+The standard formal frameworks — algebraic theory, Lawvere theory, finite-limit theory, institution, doctrine, computable presentation, syntax/semantics adjunction — are each specific implementations of D1 items 1-7 (item 8 applies if the framework includes process content).
 
 ### §1.5.2 Universal formal substrate
 
@@ -1068,11 +1075,7 @@ $$R_{2N} = R_N \oplus R_N$$
 
 Each layer **generates itself** from the previous, via internal operation (direct sum). No external "push" needed.
 
-**(3) Internal cosmological passage**:
-
-$$R_0 \to R_1 \to R_2 \to R_3 \to \ldots \to R_\infty$$
-
-The entire passage from undifferentiated origin to infinite recursive depth is **internal** to R-Family. No external cosmology, no external Demiurge, no external First Cause.
+**(3) Internal cosmological passage** $R_0 \to R_1 \to R_2 \to \ldots \to R_\infty$ — the entire passage from undifferentiated origin to infinite recursive depth is **internal** to R-Family. No external cosmology, no external Demiurge, no external First Cause. (Visual: §3.5.8 diagram.)
 
 **(4) Atomic operations self-contained, at two layers**:
 
@@ -1142,18 +1145,7 @@ R-Family closes the foundational loop:
               (self-referential)
 ```
 
-The structure begins at $R_0$ (undifferentiated). Through internal operations, generates $R_1, R_2, \ldots, R_\infty$.
-
-**Key emergence levels**:
-- **$R_4$**: spacetime emerges (the invariant arena).
-- **$R_6$**: dynamics emerges (the invariant laws — 道 in algebraic form). $R_2$ here = 4 征 dynamical modalities.
-- **$R_8$**: causality emerges (temporal placement added to invariant law). $R_2$ here = 道/已/今/未 temporal modalities. Substrate self-articulates as 文.
-
-Note: $R_2$ is a **universal 4-element carrier**. It appears multiple times in different decompositions with different semantic content (cosmological 四象, dynamical modalities, temporal modalities). Same algebraic structure, different roles.
-
-The operations themselves live in R-Family (Hom-as-content). The whole structure is **closed**, **self-following**, **complete**.
-
-This is not "R-Family is one of many foundations" — this is **R-Family is the foundation that follows itself, articulates the invariant laws within itself at $R_4, R_6$, adds causality at $R_8$, and names itself at the level ($R_8$) where naming becomes possible**. In the precise sense of 道法自然.
+The structure begins at $R_0$ (undifferentiated) and generates $R_1, R_2, \ldots, R_\infty$ via internal operations. Key emergence levels at $R_4$ / $R_6$ / $R_8$ (spacetime / dynamics / causality) are detailed in §3.5.3; the universal-4-carrier role of $R_2$ across multiple decompositions is detailed in §3.5.4. The diagram above is a visual summary of the cosmological passage (§3.5.2 table) closed by Hom-as-content recursion (§2.5 P5) — both internal to R-Family. The whole structure is **closed**, **self-following**, **complete** in the precise sense of 道法自然 articulated in §3.5.6.
 
 **Hamming-weight stratification — quantitative emergence profile at $R_8$ (wen-x2 §F)**: the companion document `docs-next/40_reference_参考/wen-x2-16x16-structure.md` §F exhibits the **Hamming-weight stratification of $R_8$** as concentric bands $w = 0, 1, 2, \ldots, 8$ with cell counts $1, 8, 28, 56, 70, 56, 28, 8, 1$ (binomial coefficients $\binom{8}{w}$). This **concretizes the 无极 → 太极 → ... → 万物 → ... → 无 emergence pattern at the $R_8$ layer** with a quantitative profile: $w = 0$ (the single all-zero cell = 无极 / undifferentiated origin, the empty state); $w = 1$ (8 cells, the first distinctions — one perturbation per axis, the 太极 step); $w = 2..3$ (28, 56 cells — atomic operations unfold, combinations multiply); $w = 4$ (the central band of 70 cells = 万物 peak / maximum diversity, containing all four high-symmetry quartets $Q_1..Q_4$); $w = 5..7$ (56, 28, 8 cells — consolidation, return phase); $w = 8$ (the single all-one cell = 反极, the maximally-marked / fully-negated state). The R-Family's emergence story is not merely qualitative — it admits a **quantitative profile at every scale** $R_N$ via Hamming-weight stratification: $\binom{N}{0}, \binom{N}{1}, \ldots, \binom{N}{N}$ giving the size of each band, with the central band at $w = N/2$ peaking at $\binom{N}{N/2}$ (the 万物 maximum-diversity layer). At $R_8$ this is 1-8-28-56-70-56-28-8-1; at $R_{16}$ it would be the row of $\binom{16}{w}$; the pattern is universal across the squaring tower. The emergence story is **structurally encoded** in the carriers themselves.
 
@@ -2659,7 +2651,7 @@ Starting from D1 (formal articulation, §1.5.1), the seven necessary properties 
 - P3 (relations) — D1 item 3: "relations / predicates / pairings"
 - P4 (scale / recursion) — D1 item 6: "recursive expressibility of unbounded depth"
 - P5 (Hom-as-content) — D1 item 7: "operations themselves expressible as objects"
-- P6 (modality) — D1 implicit: any non-trivial formal articulation distinguishes at least 4 modalities (carrier $R_2$ is minimum, §2.6)
+- P6 (modality) — **D1 item 8** (v1.1.1, conditional): formal articulations that include process / change / temporal-causal content carry a multi-modal classification of articulated content (minimum 4-fold, carrier $R_2$). For non-process formal articulations (e.g., pure finite combinatorics), item 8 does not apply and the analytic step omits P6 — yielding a weaker D1|₇ ⟹ P1-P5+P7 theorem in that restricted scope
 - P7a / P7b (atomic operations) — D1 items 4, 5: "operations / transformations" + "derivation rules"
 
 Each P-property is what D1's content requires when analyzed. **This is the analytic step**: D1 ⟹ P1-P7 closure conditions, by what "formal articulation" means.
@@ -3392,14 +3384,7 @@ What was sought has been found. What was scattered has been unified. What was im
 > Generation ↔ squaring tower $R_{16}, R_{32}, \ldots$ with cross-scale self-similarity
 > 万物 (ten thousand things) ↔ $R_\infty = \hat{R}$
 >
-> The cosmological sequence is internal to R-Family.
->
-> **R_4 is the invariant spacetime arena.**
-> **R_6 is 道 in algebraic form — the invariant laws.**
-> **R_8 is the complete event — where causality (道/已/今/未) is added to invariant law.**
-> **The project is named 文** because $R_8$ is the level at which the substrate becomes capable of self-articulation through symbols.
->
-> **Causality emerges at $R_8$** — added to the eternal laws at $R_6$ via the temporal $R_2$ component. The invariant structure ($R_4, R_6$) is 道; the temporal placement ($R_2$ at $R_8$ level) is when 道 is realized.
+> The cosmological sequence is internal to R-Family (§3.5.6). $R_4$ is the invariant spacetime arena, $R_6$ is 道 in algebraic form, $R_8$ is the complete event (causality added to invariant law) — the substrate self-articulates at $R_8$, the namesake **文** level (§3.5.3 + §3.5.5).
 
 ## The Major Universal Claims
 
@@ -3440,11 +3425,17 @@ The work continues — at the next level: discharging the proof obligations, for
 
 ---
 
-*文 — the universal formal substrate (parametric pattern; minimum instance over $\mathbb{F}_2$, forced by Strategy A discharge §8.4.1 for classical-Boolean scope) — v1.1*
+*文 — the universal formal substrate (parametric pattern; minimum instance over $\mathbb{F}_2$, forced by Strategy A discharge §8.4.1 for classical-Boolean scope; modality clause D1 item 8 §1.5.1) — v1.1.1*
 
 ---
 
 ## Version history
+
+*v1.1.1 · 2026-05-16 — Targeted patch for two third-review findings. Changes:*
+
+*- **§1.5.1 D1 item 8 (new) — modality clause**: closes the §7.8.3 "P6 modality smuggling" hole flagged in v1.1 third-review. Prior versions cited P6's mapping in the analytic step as "D1 implicit" — but D1's items 1-7 don't mention modalities, so the implicit move was rhetorical, not analytical. v1.1.1 adds **D1 item 8** (conditional): when articulation $S$ includes process / change / temporal-causal content, $S$ carries a non-trivial multi-modal classification (minimum 4-fold, forced by P6). Conditional scope: pure mathematical articulations (set theory of finite combinatorics, classical Boolean logic, etc.) without process content do **not** invoke item 8 — analytic step omits P6 in that restricted scope, yielding weaker D1|₇ ⟹ P1-P5+P7 theorem. The §7.8.3 P6 reference updated accordingly.*
+
+*- **§3.5.6 reason (3) / §3.5.8 closing / Coda emphasis bullets** — trimmed 道法自然 repetition: §3.5.6 reason (3) compressed from full paragraph to brief pointer to §3.5.8 diagram; §3.5.8 closing paragraphs after the ASCII tower diagram consolidated to a single pointer-paragraph (cross-references §3.5.2, §3.5.3, §3.5.4, §3.5.6); Coda's R_4/R_6/R_8 emphasis bullets compressed into one pointer-line to §3.5.3/§3.5.5. Content preserved (no claims dropped); cross-section repetition removed.*
 
 *v1.1 · 2026-05-16 — Open Problem #1 (T4 step 3) partially discharged via Strategy A. Major substantive addition (~280 lines), not just precision patch. Changes:*
 
