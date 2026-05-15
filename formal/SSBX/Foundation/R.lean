@@ -31,4 +31,7 @@ import SSBX.Foundation.R.Judgment.Behavior
 import SSBX.Foundation.R.RFamilyStructure
 import SSBX.Foundation.R.PhaseZero
 import SSBX.Foundation.R.OperationMonism
+import SSBX.Foundation.R.OperationMonismBridge
 import SSBX.Foundation.R.ClaimZ
+import SSBX.Foundation.R.ClaimZF2
+import SSBX.Foundation.R.StrategyA

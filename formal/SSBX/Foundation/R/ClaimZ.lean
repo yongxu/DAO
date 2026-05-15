@@ -25,10 +25,16 @@ The interface-level encoding is honest:
 
 * It captures the **shape** of D1's eight items and of P1-P7's seven
   closure conditions.
-* The implication theorem `d1_implies_P` is proven by structural
-  projection — each P-conjunct is read off from the corresponding D1
-  conjunct, exhibiting the analytic step *as a derivation in Lean*
-  rather than as natural-language argument.
+* The implication theorem `d1_implies_P` is a **Lean-checked
+  combinator** over the per-item analytic entailments: it fixes the
+  *shape* of how the §7.8.3 mapping must combine (D1.1 → P1, D1.2 → P2,
+  …), without itself proving why each individual entailment holds.
+  The substantive content — *why* "binary distinction forces F₂",
+  *why* "composition forces direct sum", etc. — is pushed to the
+  per-item hypotheses `h1..h7b`, which the caller supplies at the
+  appropriate concrete-instantiation site (e.g., R-Family-over-F₂
+  via `complete_phase_zero` for Phase 0; further bases via the
+  parametric obligations of §8.2 D3).
 * The unsettled content (e.g., "binary distinction *forces* F₂", the
   T4-step-3 lynchpin of §8.4) is captured by leaving the P-conjuncts
   schematic: each P-conjunct is itself a Prop, supplied by the user of
