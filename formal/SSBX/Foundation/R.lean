@@ -27,3 +27,5 @@ import SSBX.Foundation.R.SubTower
 import SSBX.Foundation.R.Judgment.Information
 import SSBX.Foundation.R.Judgment.Attractor
 import SSBX.Foundation.R.Judgment.Behavior
+import SSBX.Foundation.R.RFamilyStructure
+import SSBX.Foundation.R.PhaseZero
