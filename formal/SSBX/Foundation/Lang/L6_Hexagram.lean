@@ -1,16 +1,14 @@
 /-
 # L6 — R₆ Hexagram layer (周易 64 卦 / (Z/2)⁶)
 
-R₆ = Hexagram = (Z/2)⁶ = 64 atoms = the 64 hexagrams of 周易.
-Cayley action is componentwise XOR (re-using `R7.hexXor`).
+R₆ = Hexagram = `R 6 = Fin 6 → Bool` = 64 atoms = the 64 hexagrams of 周易.
+Cayley action is componentwise XOR (R-Family `+` on `R 6`).
 
 ## Carrier convention
 
-Per R7.lean, **乾 (heaven) = ⟨yang,yang,yang,yang,yang,yang⟩** is the
-(Z/2)⁶ identity (all-yang = 0 in the Z/2-as-yang convention; cf. yaoXor:
-`yang ⊕ yang = yang`). So `origin = Hexagram.heaven`. Note that yang here
-plays the role of the additive zero (this matches R7's convention,
-NOT the more common "yang=1" reading).
+Per `Atlas/Yi/Names.lean`, **乾 (heaven) = qianqian = mk yang yang yang yang yang yang**
+is the (Z/2)⁶ identity (`o = false = yang`; `x = true = yin`). So
+`origin = Hexagram.heaven = qianqian`.
 
 ## Surface syntax
 
@@ -28,41 +26,55 @@ A handful of small smoke tests + 2-3 named transitions (e.g. 乾 → 坤).
 -/
 
 import SSBX.Foundation.Lang.Core
-import SSBX.Foundation.Atlas.Yi.Classical.Core.Yi
-import SSBX.Foundation.Atlas.Yi.Classical.Cells.R7
+import SSBX.Foundation.Atlas.Yi
 
 namespace SSBX.Foundation.Lang.L6
 
-open SSBX.Foundation.Yi.Yi (Yao Hexagram)
-open SSBX.Foundation.Bagua.R7.R7 (hexXor hexXor_self hexXor_qian_left)
+open SSBX.Foundation.Atlas.Yi (Yao Hexagram)
+open SSBX.Foundation.R
 
 /-! ## § 1 Cell type alias -/
 
-/-- L6 cell carrier = Hexagram (= (Z/2)⁶, 64 atoms). -/
+/-- L6 cell carrier = Hexagram (= R 6, 64 atoms). -/
 abbrev Cell : Type := Hexagram
 
-/-- Cayley action = componentwise XOR (re-using R7.hexXor). -/
-def apply : Cell → Cell → Cell := hexXor
+/-- Cayley action = componentwise XOR via R-Family `+`. -/
+def apply (a b : Cell) : Cell := a + b
 
-/-- (Z/2)⁶ origin = 乾 (all-yang = identity, per R7 convention). -/
-def origin : Cell := Hexagram.heaven
+/-- (Z/2)⁶ origin = 乾 (qianqian = all-yang = identity). -/
+def origin : Cell := Hexagram.qianqian
 
 /-! ## § 2 Cayley action laws -/
 
-theorem apply_self (c : Cell) : apply c c = origin := hexXor_self c
+/-- `qianqian = 0` as element of `Hexagram = R 6`. -/
+private theorem qianqian_eq_zero : (Hexagram.qianqian : Hexagram) = 0 := by
+  funext i
+  match i with
+  | ⟨0, _⟩ => rfl
+  | ⟨1, _⟩ => rfl
+  | ⟨2, _⟩ => rfl
+  | ⟨3, _⟩ => rfl
+  | ⟨4, _⟩ => rfl
+  | ⟨5, _⟩ => rfl
 
-theorem origin_apply (c : Cell) : apply origin c = c := hexXor_qian_left c
+theorem apply_self (c : Cell) : apply c c = origin := by
+  show c + c = Hexagram.qianqian
+  rw [R.add_self, ← qianqian_eq_zero]
+
+theorem origin_apply (c : Cell) : apply origin c = c := by
+  show Hexagram.qianqian + c = c
+  rw [qianqian_eq_zero, zero_add]
 
 /-! ## § 3 Atomic single-yao flip masks (6 generators of (Z/2)⁶) -/
 
 /-- Mask flipping only y1 (初爻). -/
-def mask1 : Cell := ⟨.yin, .yang, .yang, .yang, .yang, .yang⟩
-def mask2 : Cell := ⟨.yang, .yin, .yang, .yang, .yang, .yang⟩
-def mask3 : Cell := ⟨.yang, .yang, .yin, .yang, .yang, .yang⟩
-def mask4 : Cell := ⟨.yang, .yang, .yang, .yin, .yang, .yang⟩
-def mask5 : Cell := ⟨.yang, .yang, .yang, .yang, .yin, .yang⟩
+def mask1 : Cell := Hexagram.mk .yin .yang .yang .yang .yang .yang
+def mask2 : Cell := Hexagram.mk .yang .yin .yang .yang .yang .yang
+def mask3 : Cell := Hexagram.mk .yang .yang .yin .yang .yang .yang
+def mask4 : Cell := Hexagram.mk .yang .yang .yang .yin .yang .yang
+def mask5 : Cell := Hexagram.mk .yang .yang .yang .yang .yin .yang
 /-- Mask flipping only y6 (上爻). -/
-def mask6 : Cell := ⟨.yang, .yang, .yang, .yang, .yang, .yin⟩
+def mask6 : Cell := Hexagram.mk .yang .yang .yang .yang .yang .yin
 
 /-! ## § 4 Sexp bridge -/
 
@@ -86,19 +98,21 @@ def parseCell : Sexp → Except String Cell
       let y4 ← parseYao a4
       let y5 ← parseYao a5
       let y6 ← parseYao a6
-      .ok ⟨y1, y2, y3, y4, y5, y6⟩
+      .ok (Hexagram.mk y1 y2 y3 y4 y5 y6)
   | s => .error s!"L6.parseCell: expected (hex y1 .. y6), got {s.toStr}"
 
 /-- Canonical printer: `(hex 阳/阴 ×6)`. -/
-def printCell : Cell → Sexp
-  | ⟨y1, y2, y3, y4, y5, y6⟩ =>
-      .list [.atom "hex",
-             .atom (printYao y1), .atom (printYao y2), .atom (printYao y3),
-             .atom (printYao y4), .atom (printYao y5), .atom (printYao y6)]
+def printCell (h : Cell) : Sexp :=
+  .list [.atom "hex",
+         .atom (printYao h.y1), .atom (printYao h.y2), .atom (printYao h.y3),
+         .atom (printYao h.y4), .atom (printYao h.y5), .atom (printYao h.y6)]
 
 theorem print_parse_round_trip (c : Cell) : parseCell (printCell c) = .ok c := by
-  rcases c with ⟨y1, y2, y3, y4, y5, y6⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6 <;> rfl
+  have hc : c = Hexagram.mk c.y1 c.y2 c.y3 c.y4 c.y5 c.y6 := by
+    apply Hexagram.ext <;> rfl
+  rw [hc]
+  cases c.y1 <;> cases c.y2 <;> cases c.y3 <;>
+    cases c.y4 <;> cases c.y5 <;> cases c.y6 <;> rfl
 
 /-! ## § 5 LangLayer instance -/
 

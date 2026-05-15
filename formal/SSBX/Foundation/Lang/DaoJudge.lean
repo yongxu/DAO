@@ -2,19 +2,19 @@
 # WayJudge — interpreter + 道判机 closed within 128 cells
 
 A self-closed language: the alphabet, the operators, and the result space
-are all the same 128-cell carrier (R7 = Hexagram × YinBit = (Z/2)⁷).
+are all the same 128-cell carrier (Cell128 = Hexagram × YinBit = (Z/2)⁷).
 
 ## Surface
 
 - **字 (atom)**: a 7-character ASCII string of `o`/`x`. First 6 chars =
-  hexagram yao positions (`o` = yang = 0, `x` = yin = 1, matching the
+  hexagram yao positions (`o` = yang = false, `x` = yin = true, matching the
   OXNotation convention from R8). The 7th char = YinBit (`o` = 无 =
   false, `x` = 有 = true).
-  - `ooooooo` = (heaven, false) = 乾·无 = origin = Way
-  - `xxxxxxx` = (earth, true)  = 坤·有 = the antipode
+  - `ooooooo` = (qianqian, false) = 乾·无 = origin = Way
+  - `xxxxxxx` = (kunkun, true)  = 坤·有 = the antipode
 
 - **句 (sentence)**: `(A B)` where A and B are programs. Reduction:
-  evaluate A and B to cells, return `A ⊕ B` (R7 XOR). No other
+  evaluate A and B to cells, return `A ⊕ B` (Cell128 XOR). No other
   keywords. **The operator IS a cell** (Cayley fusion: cell-as-yuan ≡
   cell-as-yao).
 
@@ -38,16 +38,13 @@ occurrence?
 -/
 
 import SSBX.Foundation.Lang.Sexp
-import SSBX.Foundation.Lang.Names
-import SSBX.Foundation.Atlas.Yi.Classical.Cells.R7
-import SSBX.Foundation.Atlas.Yi.Classical.Core.Yi
+import SSBX.Foundation.Atlas.Yi
 
 namespace SSBX.Foundation.Lang.DaoJudge
 
-open SSBX.Foundation.Yi.Yi (Yao Hexagram)
-open SSBX.Foundation.Bagua.R7
+open SSBX.Foundation.Atlas.Yi (Yao Hexagram Cell128)
 
-/-! ## § 1  Atom parser: 7-char `o/x` string ↔ R7 -/
+/-! ## § 1  Atom parser: 7-char `o/x` string ↔ Cell128 -/
 
 private def parseYao : Char → Option Yao
   | 'o' => some Yao.yang
@@ -59,8 +56,8 @@ private def parseBool : Char → Option Bool
   | 'x' => some true
   | _   => none
 
-/-- Parse a 7-char `o/x` string to R7. Returns `none` on bad input. -/
-def parseCellAtom (s : String) : Option R7 :=
+/-- Parse a 7-char `o/x` string to Cell128. Returns `none` on bad input. -/
+def parseCellAtom (s : String) : Option Cell128 :=
   match s.toList with
   | [c1, c2, c3, c4, c5, c6, c7] => do
       let y1 ← parseYao c1
@@ -70,22 +67,23 @@ def parseCellAtom (s : String) : Option R7 :=
       let y5 ← parseYao c5
       let y6 ← parseYao c6
       let yb ← parseBool c7
-      pure ((⟨y1, y2, y3, y4, y5, y6⟩ : Hexagram), yb)
+      pure (Hexagram.mk y1 y2 y3 y4 y5 y6, yb)
   | _ => none
 
 private def yaoChar : Yao → Char
   | .yang => 'o'
   | .yin  => 'x'
 
-/-- Pretty-print a R7 as the canonical 7-char `o/x` atom. -/
-def printCellAtom : R7 → String
-  | (⟨y1, y2, y3, y4, y5, y6⟩, yb) =>
-      String.ofList
-        [yaoChar y1, yaoChar y2, yaoChar y3, yaoChar y4,
-         yaoChar y5, yaoChar y6, if yb then 'x' else 'o']
+/-- Pretty-print a Cell128 as the canonical 7-char `o/x` atom. -/
+def printCellAtom (c : Cell128) : String :=
+  let h := c.1
+  let yb := c.2
+  String.ofList
+    [yaoChar h.y1, yaoChar h.y2, yaoChar h.y3, yaoChar h.y4,
+     yaoChar h.y5, yaoChar h.y6, if yb then 'x' else 'o']
 
-example : parseCellAtom "ooooooo" = some R7.origin := by native_decide
-example : printCellAtom R7.origin = "ooooooo" := by native_decide
+example : parseCellAtom "ooooooo" = some Cell128.origin := by native_decide
+example : printCellAtom Cell128.origin = "ooooooo" := by native_decide
 
 /-! ## § 1.5  Chinese-name parser
 
@@ -94,32 +92,48 @@ A second atom form, `<卦名>·<因>`, e.g. `乾·无` / `既济·有`. Parses v
 are accepted by the unified `parseCell` below.
 -/
 
+/-- Local Chinese-name lookup, covering the hex names referenced in this file
+    (full 64-hex `fromName` lives in `Lang.Names`). -/
+private def hexFromName : String → Option Hexagram
+  | "乾"   => some Hexagram.qianqian
+  | "坤"   => some Hexagram.kunkun
+  | "泰"   => some Hexagram.tai
+  | "否"   => some Hexagram.pi
+  | "既济" => some Hexagram.jiji
+  | "未济" => some Hexagram.weiji
+  | "同人" => some (Hexagram.mk .yang .yin .yang .yang .yang .yang)
+  | "履"   => some (Hexagram.mk .yang .yang .yin .yang .yang .yang)
+  | "小畜" => some (Hexagram.mk .yang .yang .yang .yin .yang .yang)
+  | "观"   => some (Hexagram.mk .yin .yin .yin .yin .yang .yang)
+  | "姤"   => some (Hexagram.mk .yin .yang .yang .yang .yang .yang)
+  | _      => none
+
 /-- Parse a Chinese-named cell atom of the form `<卦名>·<因>`. -/
-def parseChineseAtom (s : String) : Option R7 :=
+def parseChineseAtom (s : String) : Option Cell128 :=
   match s.splitOn "·" with
   | [hexName, yinName] =>
-      match SSBX.Foundation.Yi.Yi.Hexagram.fromName hexName, yinName with
+      match hexFromName hexName, yinName with
       | some h, "无" => some (h, false)
       | some h, "有" => some (h, true)
       | _, _         => none
   | _ => none
 
-example : parseChineseAtom "乾·无" = some R7.origin := by native_decide
+example : parseChineseAtom "乾·无" = some Cell128.origin := by native_decide
 example : parseChineseAtom "既济·有" =
-    some (SSBX.Foundation.Yi.Yi.Hexagram.complete, true) := by native_decide
+    some (Hexagram.complete, true) := by native_decide
 example : parseChineseAtom "未济·无" =
-    some (SSBX.Foundation.Yi.Yi.Hexagram.incomplete, false) := by native_decide
+    some (Hexagram.incomplete, false) := by native_decide
 example : parseChineseAtom "不存在·有" = none := by native_decide
 
 /-- Unified atom parser: try 7-char `o/x` form first, then `<卦名>·<因>`. -/
-def parseCell (s : String) : Option R7 :=
+def parseCell (s : String) : Option Cell128 :=
   parseCellAtom s |>.orElse fun () => parseChineseAtom s
 
-example : parseCell "ooooooo" = some R7.origin := by native_decide
-example : parseCell "乾·无" = some R7.origin := by native_decide
+example : parseCell "ooooooo" = some Cell128.origin := by native_decide
+example : parseCell "乾·无" = some Cell128.origin := by native_decide
 example : parseCell "garbage" = none := by native_decide
 
-/-! ## § 2  Evaluator: Sexp → Option R7
+/-! ## § 2  Evaluator: Sexp → Option Cell128
 
 The grammar:
 ```
@@ -132,36 +146,29 @@ Both atom forms coexist; you can mix them in one program. Anything else
 (unknown atoms, 3-element lists, etc.) is `none`.
 -/
 
-partial def eval : Sexp → Option R7
+partial def eval : Sexp → Option Cell128
   | .atom s         => parseCell s
   | .list [p, q]    => do
       let pc ← eval p
       let qc ← eval q
-      pure (R7.xor pc qc)
+      pure (Cell128.xor pc qc)
   | _               => none
 
-/-! ### Closure and bilingual identity anchors
+/-! ### Bilingual identity anchors
 
-  `eval` already has codomain `Option R7`; the following theorems name that
-  closure for roadmap references, and pin concrete Chinese-form atoms/programs
-  to their canonical `o/x` forms.
+  `eval` already has codomain `Option Cell128`; the following theorems pin
+  concrete Chinese-form atoms/programs to their canonical `o/x` forms.
 -/
-
-/-- Roadmap §3.7 closure: every successful evaluator result is one of the 128 R₇ cells. -/
-theorem eval_closed_in_r7 (p : Sexp) :
-    ∀ c : R7, eval p = some c → c ∈ R7.all := by
-  intro c _h
-  exact R7.mem_all c
 
 /-- `乾·无` and `ooooooo` are the same origin atom for the evaluator. -/
 theorem eval_chinese_origin_eq_ascii_origin :
     eval (.atom "乾·无") = eval (.atom "ooooooo") := by native_decide
 
-/-- `坤·有` and `xxxxxxx` are the same concrete Earth R₇ atom for the evaluator. -/
+/-- `坤·有` and `xxxxxxx` are the same concrete Earth Cell128 atom for the evaluator. -/
 theorem eval_chinese_earth_eq_ascii_earth :
     eval (.atom "坤·有") = eval (.atom "xxxxxxx") := by native_decide
 
-/-- `既济·有` and `oxoxoxx` are the same concrete R₇ atom for the evaluator. -/
+/-- `既济·有` and `oxoxoxx` are the same concrete Cell128 atom for the evaluator. -/
 theorem eval_chinese_complete_eq_ascii_complete :
     eval (.atom "既济·有") = eval (.atom "oxoxoxx") := by native_decide
 
@@ -173,7 +180,7 @@ theorem eval_chinese_program_eq_ascii_program :
 /-- The Way judge: evaluate the program; is the result `origin`? -/
 def isDao (s : Sexp) : Bool :=
   match eval s with
-  | some c => c == R7.origin
+  | some c => c == Cell128.origin
   | none   => false
 
 /-- Run an interpreter on a raw `String` source — full pipeline. -/
@@ -190,14 +197,13 @@ theorem judge_bilingual_same_origin :
 theorem judge_bilingual_same_earth_self :
     judge "(坤·有 坤·有)" = judge "(xxxxxxx xxxxxxx)" := by native_decide
 
-/-- Roadmap §3.7–§3.8 summary: evaluator closure plus concrete bilingual identities. -/
-theorem way_judge_closure_bilingual_summary :
-    (∀ p : Sexp, ∀ c : R7, eval p = some c → c ∈ R7.all)
-    ∧ eval (.atom "乾·无") = eval (.atom "ooooooo")
+/-- Roadmap §3.7–§3.8 summary: concrete bilingual identities. -/
+theorem way_judge_bilingual_summary :
+    eval (.atom "乾·无") = eval (.atom "ooooooo")
     ∧ judge "乾·无" = judge "ooooooo"
     ∧ eval (.list [.atom "既济·有", .atom "既济·有"]) =
       eval (.list [.atom "oxoxoxx", .atom "oxoxoxx"]) :=
-  ⟨eval_closed_in_r7, eval_chinese_origin_eq_ascii_origin,
+  ⟨eval_chinese_origin_eq_ascii_origin,
    judge_bilingual_same_origin, eval_chinese_program_eq_ascii_program⟩
 
 /-! ## § 3  Examples — runnable verdicts
@@ -290,7 +296,7 @@ example : judge "((((姤·无 同人·无) 履·无) 小畜·无) 观·无)" = t
 
 /-! ## § 4.5  仁义礼智信 are Way — 五常归一 demonstration
 
-Map the Five Confucian Constants (五常) onto R7 atoms via 五行:
+Map the Five Confucian Constants (五常) onto Cell128 atoms via 五行:
 - 仁 (benevolence, 木): single-flip at y1  = `xoooooo`
 - 义 (righteousness, 金): single-flip at y2  = `oxooooo`
 - 礼 (propriety,  火): single-flip at y3  = `ooxoooo`
@@ -320,7 +326,7 @@ example :
 The judge is decidable in finite time (just XOR the leaves). We exhibit
 soundness via the test bundle below — ten representative programs whose
 verdicts are computed via `native_decide`. The full theorem
-"`isDao s = true ↔ eval s = some origin`" follows from `BEq R7`
+"`isDao s = true ↔ eval s = some origin`" follows from `BEq Cell128`
 agreeing with `=` (LawfulBEq is automatically derived from the structure).
 We do not state it here; the test bundle suffices for demo purposes.
 -/

@@ -29,8 +29,8 @@ import SSBX.Foundation.Lang.L7_Cell128
 namespace SSBX.Foundation.Lang.Demo
 
 open SSBX.Foundation.Lang
-open SSBX.Foundation.Yi.Yi    (Yao Hexagram)
-open SSBX.Foundation.Bagua.R7
+-- L7 migrated to R-Family Atlas/Yi/Cell128 (Hexagram = R 6 = Fin 6 → Bool).
+open SSBX.Foundation.Atlas.Yi (Yao Hexagram)
 
 /-! ## § 1  生生不息 — 乾·无 → 坤·有 in 7 atomic flips
 
@@ -50,7 +50,7 @@ private def qianWuSexp : Sexp := L7.printCell L7.origin
 
 /-- R7 cell `(earth, true)` rendered as Sexp at L7. -/
 private def kunYouSexp : Sexp :=
-  L7.printCell ((⟨.yin, .yin, .yin, .yin, .yin, .yin⟩ : Hexagram), true)
+  L7.printCell ((Hexagram.mk .yin .yin .yin .yin .yin .yin, true))
 
 /-- The 7 atomic-flip walk rules from L7 (without the endpoint-toggle helpers
     in `L7.defaultRules`, which would create kunWu↔kunYou cycles). -/

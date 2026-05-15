@@ -12,7 +12,6 @@ Turing tape with a movable head.
 -/
 import SSBX.Foundation.Core.Yuan
 import SSBX.Foundation.Atlas.Yi.Classical.Computation.BaguaTuring
-import SSBX.Foundation.Atlas.Yi.Classical.Algebra.BaguaAlgebra
 import SSBX.Foundation.Modern.MingBoundary
 import SSBX.Text.OperatorInstructionSemantics
 import SSBX.Text.OperatorSignatures

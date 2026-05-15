@@ -1,18 +1,18 @@
 /-
 # L2 — R₂ SiXiang layer (the second R-rung)
 
-Cell space `SiXiang = Yao × Yao` (= (Z/2)²). 4 atoms:
-`greaterYang ⟨阳,阳⟩ / lesserYin ⟨阳,阴⟩ / lesserYang ⟨阴,阳⟩ / greaterYin ⟨阴,阴⟩`.
+Cell space `SiXiang = R 2 = Fin 2 → Bool` (= Shi). 4 atoms:
+`taiyang ⟨阳,阳⟩ / shaoyin ⟨阳,阴⟩ / shaoyang ⟨阴,阳⟩ / taiyin ⟨阴,阴⟩`.
 
-The Cayley action is component-wise XOR. Origin = ⟨阴,阴⟩ = `greaterYin`.
+The Cayley action is component-wise XOR (R-Family `+` on R 2). Origin = ⟨阴,阴⟩ = `taiyin`.
 
 ## Surface syntax
 
 ```
-(sixiang 阳 阳)   — greaterYang
-(sixiang 阳 阴)   — lesserYin
-(sixiang 阴 阳)   — lesserYang
-(sixiang 阴 阴)   — greaterYin
+(sixiang 阳 阳)   — taiyang
+(sixiang 阳 阴)   — shaoyin
+(sixiang 阴 阳)   — shaoyang
+(sixiang 阴 阴)   — taiyin
 ```
 
 Tokens accept 阳/yang/1 and 阴/yin/0; canonical printer uses 阳/阴.
@@ -21,43 +21,74 @@ Tokens accept 阳/yang/1 and 阴/yin/0; canonical printer uses 阳/阴.
 
 Same regular representation as L1, lifted to (Z/2)². Each cell is both a value
 and the "XOR-by-mask" operator. Two atomic ops = the two single-bit-flip masks
-`⟨阳,阴⟩` (flip bit 1) and `⟨阴,阳⟩` (flip bit 2). Together with the origin and
-their sum `greaterYang`, they exhaust the Klein-four group.
+`shaoyin` (flip bit 1) and `shaoyang` (flip bit 2). Together with the origin and
+their sum `taiyang`, they exhaust the Klein-four group.
 -/
 
 import SSBX.Foundation.Lang.Core
-import SSBX.Foundation.Atlas.Yi.Classical.Core.Yi
-import SSBX.Foundation.Atlas.Yi.Classical.Algebra.BaguaAlgebra
+import SSBX.Foundation.Atlas.Yi
 
 namespace SSBX.Foundation.Lang.L2
 
-open SSBX.Foundation.Yi.Yi (Yao)
-open SSBX.Foundation.Bagua.BaguaAlgebra (SiXiang)
+open SSBX.Foundation.Atlas.Yi (Yao Shi)
+open SSBX.Foundation.Atlas.Yi.Sheng (SiXiang)
 
 /-! ## § 1 Cell type alias + Cayley action -/
 
-/-- L2 cell carrier = SiXiang (= (Z/2)², 4 atoms). -/
+/-- L2 cell carrier = SiXiang (= Shi = R 2, 4 atoms). -/
 abbrev Cell : Type := SiXiang
 
-/-- Cayley action: component-wise XOR (via Yao.neg toggling). -/
-def apply : Cell → Cell → Cell
-  | ⟨.yin,  .yin⟩,  s => s
-  | ⟨.yang, .yin⟩,  s => ⟨s.y1.neg, s.y2⟩
-  | ⟨.yin,  .yang⟩, s => ⟨s.y1, s.y2.neg⟩
-  | ⟨.yang, .yang⟩, s => ⟨s.y1.neg, s.y2.neg⟩
+/-- Read y1 of a SiXiang cell (= bit 0 of the underlying R 2). -/
+@[inline] def y1 (c : Cell) : Yao := c ⟨0, by decide⟩
+/-- Read y2 of a SiXiang cell (= bit 1 of the underlying R 2). -/
+@[inline] def y2 (c : Cell) : Yao := c ⟨1, by decide⟩
 
-/-- The (Z/2)² origin = ⟨阴,阴⟩ = greaterYin. -/
-def origin : Cell := ⟨.yin, .yin⟩
+/-- Build a SiXiang from two Yao components. -/
+@[inline] def mk (a b : Yao) : Cell := fun i =>
+  match i with
+  | ⟨0, _⟩ => a
+  | ⟨1, _⟩ => b
+
+/-- Extensionality through y1 / y2. -/
+theorem ext (c d : Cell) (h1 : y1 c = y1 d) (h2 : y2 c = y2 d) : c = d := by
+  funext i
+  match i with
+  | ⟨0, _⟩ => exact h1
+  | ⟨1, _⟩ => exact h2
+
+/-- Componentwise yao-XOR (yin acts as 0 = identity, yang acts as 1 = flip).
+    This convention matches the legacy `BaguaAlgebra` so that
+    `origin = ⟨yin, yin⟩ = taiyin` acts as identity in the Cayley action. -/
+@[inline] def xorY : Yao → Yao → Yao
+  | .yin,  y => y
+  | .yang, y => Yao.neg y
+
+/-- Cayley action: component-wise XOR via `xorY`. -/
+def apply (a b : Cell) : Cell :=
+  mk (xorY (y1 a) (y1 b)) (xorY (y2 a) (y2 b))
+
+/-- The (Z/2)² origin = ⟨阴,阴⟩ = taiyin. -/
+def origin : Cell := SiXiang.taiyin
 
 /-! ## § 2 Cayley action laws -/
 
 theorem apply_self (c : Cell) : apply c c = origin := by
-  rcases c with ⟨y1, y2⟩
-  cases y1 <;> cases y2 <;> rfl
+  apply ext
+  · show y1 (apply c c) = y1 origin
+    show xorY (y1 c) (y1 c) = y1 origin
+    cases hy : y1 c <;> rfl
+  · show y2 (apply c c) = y2 origin
+    show xorY (y2 c) (y2 c) = y2 origin
+    cases hy : y2 c <;> rfl
 
 theorem origin_apply (c : Cell) : apply origin c = c := by
-  rcases c with ⟨y1, y2⟩
-  cases y1 <;> cases y2 <;> rfl
+  apply ext
+  · show y1 (apply origin c) = y1 c
+    show xorY (y1 origin) (y1 c) = y1 c
+    rfl
+  · show y2 (apply origin c) = y2 c
+    show xorY (y2 origin) (y2 c) = y2 c
+    rfl
 
 /-! ## § 3 Sexp bridge -/
 
@@ -71,9 +102,9 @@ private def parseYao (tok : String) : Except String Yao :=
 /-- Parse `(sixiang <tok1> <tok2>)` to a SiXiang cell. -/
 def parseCell : Sexp → Except String Cell
   | .list [.atom "sixiang", .atom t1, .atom t2] => do
-      let y1 ← parseYao t1
-      let y2 ← parseYao t2
-      .ok ⟨y1, y2⟩
+      let a ← parseYao t1
+      let b ← parseYao t2
+      .ok (mk a b)
   | s => .error s!"L2.parseCell: expected (sixiang <tok1> <tok2>), got {s.toStr}"
 
 /-- Print one yao to its canonical 阳/阴 atom. -/
@@ -82,18 +113,20 @@ private def printYao : Yao → Sexp
   | .yin  => .atom "阴"
 
 /-- Canonical printer: `(sixiang 阳/阴 阳/阴)`. -/
-def printCell : Cell → Sexp
-  | ⟨y1, y2⟩ => .list [.atom "sixiang", printYao y1, printYao y2]
+def printCell (c : Cell) : Sexp :=
+  .list [.atom "sixiang", printYao (y1 c), printYao (y2 c)]
 
 theorem print_parse_round_trip (c : Cell) : parseCell (printCell c) = .ok c := by
-  rcases c with ⟨y1, y2⟩
-  cases y1 <;> cases y2 <;> rfl
+  have hc : c = mk (y1 c) (y2 c) := by
+    apply ext <;> rfl
+  rw [hc]
+  cases h1 : y1 c <;> cases h2 : y2 c <;> rfl
 
 /-! ## § 4 LangLayer instance -/
 
-/-- The two single-bit-flip masks: ⟨阳,阴⟩ flips bit 1, ⟨阴,阳⟩ flips bit 2. -/
-def flipBit1 : Cell := ⟨.yang, .yin⟩
-def flipBit2 : Cell := ⟨.yin, .yang⟩
+/-- The two single-bit-flip masks: shaoyin flips bit 1, shaoyang flips bit 2. -/
+def flipBit1 : Cell := SiXiang.shaoyin   -- ⟨yang, yin⟩
+def flipBit2 : Cell := SiXiang.shaoyang  -- ⟨yin, yang⟩
 
 instance : LangLayer Cell where
   parseCell    := parseCell
@@ -143,24 +176,24 @@ def defaultRules : List Rule :=
 /-! ## § 6 Smoke tests -/
 
 example :
-    (Eval.runRules defaultRules (printCell ⟨.yin, .yin⟩) 1
-       == printCell ⟨.yang, .yin⟩) = true := by
+    (Eval.runRules defaultRules (printCell (mk .yin .yin)) 1
+       == printCell (mk .yang .yin)) = true := by
   native_decide
 
 example :
-    (Eval.runRules defaultRules (printCell ⟨.yin, .yin⟩) 2
-       == printCell ⟨.yang, .yang⟩) = true := by
+    (Eval.runRules defaultRules (printCell (mk .yin .yin)) 2
+       == printCell (mk .yang .yang)) = true := by
   native_decide
 
 example :
-    (Eval.runRules defaultRules (printCell ⟨.yin, .yang⟩) 1
-       == printCell ⟨.yang, .yang⟩) = true := by
+    (Eval.runRules defaultRules (printCell (mk .yin .yang)) 1
+       == printCell (mk .yang .yang)) = true := by
   native_decide
 
-example : (runCell (α := Cell) defaultRules ⟨.yin, .yin⟩ 2).toOption.isSome = true := by
+example : (runCell (α := Cell) defaultRules (mk .yin .yin) 2).toOption.isSome = true := by
   native_decide
 
-example : (runCell (α := Cell) defaultRules ⟨.yang, .yang⟩ 1).toOption.isSome = true := by
+example : (runCell (α := Cell) defaultRules (mk .yang .yang) 1).toOption.isSome = true := by
   native_decide
 
 /-! ## § 7 L2 summary bundle -/

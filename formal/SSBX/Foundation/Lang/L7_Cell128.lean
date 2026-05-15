@@ -1,10 +1,10 @@
 /-
-# L7 — R₇ R7 layer (the immediate target: 64 × 2 字加语法)
+# L7 — R₇ Cell128 layer (the immediate target: 64 × 2 字加语法)
 
-The headline R-rung. Cell space `R7 = Hexagram × YinBit = (Z/2)⁷ = 128 atoms`.
+The headline R-rung. Cell space `Cell128 = Hexagram × YinBit = (Z/2)⁷ = 128 atoms`.
 The 7th bit (YinBit) represents 因 (yīn — past-trace bit per the doctrine);
-its atomic operator is **印 (yìn)**, already defined as `R7.imprint` in
-`SSBX.Foundation.Bagua.R7` with proven involutivity.
+its atomic operator is **印 (yìn)**, already defined as `Cell128.imprint` in
+`SSBX.Foundation.Atlas.Yi.Cell128` with proven involutivity.
 
 ## Surface syntax (7-token bit form)
 
@@ -19,23 +19,23 @@ its atomic operator is **印 (yìn)**, already defined as `R7.imprint` in
 Canonical printer uses 阳/阴 for yao positions and 有/无 for the YinBit.
 
 Examples:
-- `(cell128 阳 阳 阳 阳 阳 阳 无)` = `乾·无` = `(heaven, false)` = R₇ origin.
-- `(cell128 阴 阴 阴 阴 阴 阴 有)` = `坤·有` = `(earth, true)` (target of demo).
+- `(cell128 阳 阳 阳 阳 阳 阳 无)` = `乾·无` = `(qianqian, false)` = R₇ origin.
+- `(cell128 阴 阴 阴 阴 阴 阴 有)` = `坤·有` = `(kunkun, true)` (target of demo).
 
 ## Yao/Yuan duality at L7
 
-Apply = `R7.xor` (componentwise (Z/2)⁷ XOR), already proven involutive.
-Origin = `(heaven, false)` = (Z/2)⁷ identity. Each cell c plays both roles
+Apply = `Cell128.xor` (componentwise (Z/2)⁷ XOR), already proven involutive.
+Origin = `(qianqian, false)` = (Z/2)⁷ identity. Each cell c plays both roles
 (value at L7, and operator `λ s ⇒ c ⊕ s`).
 
 ## Atomic operators (7 = 6 yao flips + 印)
 
 The 7 single-bit-flip masks are the (Z/2)⁷ generators. Reusing the masks
-already proven correct in `R7`:
-- flip1..6: toggle yao i of the hexagram (XOR-mask form via `R7.flipᵢ`)
-- yin (印):  toggle the YinBit (XOR-mask form via `R7.imprintM`)
+already proven correct in `Atlas.Yi.Cell128`:
+- flip1..6 masks: toggle yao i of the hexagram (XOR-mask form)
+- yin (印):  toggle the YinBit (XOR-mask form via `Cell128.imprint_mask`)
 
-Each atomic op is realized as a Cayley XOR by a one-hot R7 mask;
+Each atomic op is realized as a Cayley XOR by a one-hot Cell128 mask;
 applied to the data this gives 7 independent involutions generating
 all 2⁷ = 128 reachable states from any starting point.
 
@@ -48,40 +48,38 @@ flipping every bit. (Demonstrated by `native_decide` smoke test.)
 -/
 
 import SSBX.Foundation.Lang.Core
-import SSBX.Foundation.Atlas.Yi.Classical.Core.Yi
-import SSBX.Foundation.Atlas.Yi.Classical.Cells.R7
+import SSBX.Foundation.Atlas.Yi
 
 namespace SSBX.Foundation.Lang.L7
 
-open SSBX.Foundation.Yi.Yi (Yao Hexagram)
-open SSBX.Foundation.Bagua.R7 (R7 YinBit)
+open SSBX.Foundation.Atlas.Yi (Yao Hexagram YinBit Cell128)
 
 /-! ## § 1 Cell type alias + Cayley action -/
 
-/-- L7 cell carrier = R7 (= (Z/2)⁷, 128 atoms). -/
-abbrev Cell : Type := R7
+/-- L7 cell carrier = Cell128 (= R 7, 128 atoms). -/
+abbrev Cell : Type := Cell128
 
-/-- Cayley action: `R7.xor`, already a (Z/2)⁷ XOR proven commutative,
-    associative, and involutive in `Bagua/R7.lean`. -/
-def apply : Cell → Cell → Cell := SSBX.Foundation.Bagua.R7.R7.xor
+/-- Cayley action: `Cell128.xor`, already a (Z/2)⁷ XOR proven commutative,
+    associative, and involutive in `Atlas/Yi/Cell128.lean`. -/
+def apply : Cell → Cell → Cell := Cell128.xor
 
-/-- The (Z/2)⁷ origin: `(heaven, false)` = `乾·无`. -/
-def origin : Cell := SSBX.Foundation.Bagua.R7.R7.origin
+/-- The (Z/2)⁷ origin: `(qianqian, false)` = `乾·无`. -/
+def origin : Cell := Cell128.origin
 
-/-! ## § 2 Cayley action laws (delegate to R7 algebraic spine) -/
+/-! ## § 2 Cayley action laws (delegate to Cell128 algebraic spine) -/
 
 theorem apply_self (c : Cell) : apply c c = origin :=
-  SSBX.Foundation.Bagua.R7.R7.xor_self c
+  Cell128.xor_self c
 
 theorem origin_apply (c : Cell) : apply origin c = c :=
-  SSBX.Foundation.Bagua.R7.R7.origin_xor c
+  Cell128.origin_xor c
 
 theorem apply_comm (a b : Cell) : apply a b = apply b a :=
-  SSBX.Foundation.Bagua.R7.R7.xor_comm a b
+  Cell128.xor_comm a b
 
 theorem apply_assoc (a b c : Cell) :
     apply (apply a b) c = apply a (apply b c) :=
-  SSBX.Foundation.Bagua.R7.R7.xor_assoc a b c
+  Cell128.xor_assoc a b c
 
 /-! ## § 3 Sexp bridge — 7-token bit form -/
 
@@ -100,7 +98,7 @@ private def parseYinBit (tok : String) : Except String YinBit :=
   | "无" | "thing"  | "0" => .ok false
   | other => .error s!"L7.parseCell: unknown yinbit token '{other}'"
 
-/-- Parse `(cell128 <y1> <y2> <y3> <y4> <y5> <y6> <yin>)` to a R7. -/
+/-- Parse `(cell128 <y1> <y2> <y3> <y4> <y5> <y6> <yin>)` to a Cell128. -/
 def parseCell : Sexp → Except String Cell
   | .list [.atom "cell128", .atom t1, .atom t2, .atom t3,
                             .atom t4, .atom t5, .atom t6, .atom t7] => do
@@ -111,7 +109,7 @@ def parseCell : Sexp → Except String Cell
       let y5 ← parseYao t5
       let y6 ← parseYao t6
       let b  ← parseYinBit t7
-      .ok (⟨y1, y2, y3, y4, y5, y6⟩, b)
+      .ok (Hexagram.mk y1 y2 y3 y4 y5 y6, b)
   | s => .error s!"L7.parseCell: expected (cell128 <y1..y6> <yin>), got {s.toStr}"
 
 /-- Print one yao to its canonical 阳/阴 atom. -/
@@ -125,34 +123,39 @@ private def printYinBit : YinBit → Sexp
   | false => .atom "无"
 
 /-- Canonical printer: `(cell128 阳/阴 阳/阴 阳/阴 阳/阴 阳/阴 阳/阴 有/无)`. -/
-def printCell : Cell → Sexp
-  | (⟨y1, y2, y3, y4, y5, y6⟩, b) =>
-      .list [.atom "cell128",
-             printYao y1, printYao y2, printYao y3,
-             printYao y4, printYao y5, printYao y6,
-             printYinBit b]
+def printCell (c : Cell) : Sexp :=
+  let h := c.1
+  let b := c.2
+  .list [.atom "cell128",
+         printYao h.y1, printYao h.y2, printYao h.y3,
+         printYao h.y4, printYao h.y5, printYao h.y6,
+         printYinBit b]
 
 theorem print_parse_round_trip (c : Cell) : parseCell (printCell c) = .ok c := by
-  rcases c with ⟨⟨y1, y2, y3, y4, y5, y6⟩, b⟩
-  cases y1 <;> cases y2 <;> cases y3 <;> cases y4 <;> cases y5 <;> cases y6
-    <;> cases b <;> rfl
+  rcases c with ⟨h, b⟩
+  have hh : h = Hexagram.mk h.y1 h.y2 h.y3 h.y4 h.y5 h.y6 := by
+    apply Hexagram.ext <;> rfl
+  show parseCell (printCell (h, b)) = .ok (h, b)
+  rw [hh]
+  cases h.y1 <;> cases h.y2 <;> cases h.y3 <;>
+    cases h.y4 <;> cases h.y5 <;> cases h.y6 <;> cases b <;> rfl
 
 /-! ## § 4 The 7 atomic single-bit-flip masks -/
 
 /-- One-hot mask: flip yao 1 only. -/
-def mask_y1 : Cell := (⟨.yin, .yang, .yang, .yang, .yang, .yang⟩, false)
+def mask_y1 : Cell := (Hexagram.mk .yin .yang .yang .yang .yang .yang, false)
 /-- One-hot mask: flip yao 2 only. -/
-def mask_y2 : Cell := (⟨.yang, .yin, .yang, .yang, .yang, .yang⟩, false)
+def mask_y2 : Cell := (Hexagram.mk .yang .yin .yang .yang .yang .yang, false)
 /-- One-hot mask: flip yao 3 only. -/
-def mask_y3 : Cell := (⟨.yang, .yang, .yin, .yang, .yang, .yang⟩, false)
+def mask_y3 : Cell := (Hexagram.mk .yang .yang .yin .yang .yang .yang, false)
 /-- One-hot mask: flip yao 4 only. -/
-def mask_y4 : Cell := (⟨.yang, .yang, .yang, .yin, .yang, .yang⟩, false)
+def mask_y4 : Cell := (Hexagram.mk .yang .yang .yang .yin .yang .yang, false)
 /-- One-hot mask: flip yao 5 only. -/
-def mask_y5 : Cell := (⟨.yang, .yang, .yang, .yang, .yin, .yang⟩, false)
+def mask_y5 : Cell := (Hexagram.mk .yang .yang .yang .yang .yin .yang, false)
 /-- One-hot mask: flip yao 6 only. -/
-def mask_y6 : Cell := (⟨.yang, .yang, .yang, .yang, .yang, .yin⟩, false)
-/-- 印 mask: flip the YinBit (7th coord). Reused from `R7.imprint_mask`. -/
-def mask_yin : Cell := SSBX.Foundation.Bagua.R7.R7.imprint_mask
+def mask_y6 : Cell := (Hexagram.mk .yang .yang .yang .yang .yang .yin, false)
+/-- 印 mask: flip the YinBit (7th coord). Reused from `Cell128.imprint_mask`. -/
+def mask_yin : Cell := Cell128.imprint_mask
 
 /-! ## § 5 LangLayer instance -/
 
@@ -254,22 +257,22 @@ def defaultRules : List Rule :=
 
 /-! ## § 7 Smoke tests + reachability demo -/
 
-/-- Origin 乾·无 = `(heaven, false)` = R₇ identity. -/
-def qianWu : Cell := (Hexagram.heaven, false)
+/-- Origin 乾·无 = `(qianqian, false)` = R₇ identity. -/
+def qianWu : Cell := (Hexagram.qianqian, false)
 
-/-- The earth-with-trace cell 坤·有 = `(earth, true)` — terminal of the demo. -/
-def kunYou : Cell := (⟨.yin, .yin, .yin, .yin, .yin, .yin⟩, true)
+/-- The earth-with-trace cell 坤·有 = `(kunkun, true)` — terminal of the demo. -/
+def kunYou : Cell := (Hexagram.kunkun, true)
 
 /-- 1-step demo: from 乾·无 the first matching rule (`step1`) flips yao 1. -/
 example :
     (Eval.runRules defaultRules (printCell qianWu) 1
-       == printCell (⟨.yin, .yang, .yang, .yang, .yang, .yang⟩, false)) = true := by
+       == printCell (Hexagram.mk .yin .yang .yang .yang .yang .yang, false)) = true := by
   native_decide
 
 /-- 2-step demo: from 乾·无, `step1`+`step2` walk to ⟨阴,阴,阳⁴⟩·无. -/
 example :
     (Eval.runRules defaultRules (printCell qianWu) 2
-       == printCell (⟨.yin, .yin, .yang, .yang, .yang, .yang⟩, false)) = true := by
+       == printCell (Hexagram.mk .yin .yin .yang .yang .yang .yang, false)) = true := by
   native_decide
 
 /-- The headline reachability demo: 7 fuel-steps walk 乾·无 → 坤·有. -/
@@ -284,18 +287,18 @@ example : (runCell (α := Cell) defaultRules qianWu 7).toOption.isSome = true :=
 /-- 6-step partial demo: reach 坤·无 (yin-bit not yet flipped). -/
 example :
     (Eval.runRules defaultRules (printCell qianWu) 6
-       == printCell (⟨.yin, .yin, .yin, .yin, .yin, .yin⟩, false)) = true := by
+       == printCell (Hexagram.kunkun, false)) = true := by
   native_decide
 
 /-- Apply involutivity is decidable on demand at native speed. -/
 example : apply qianWu qianWu = origin := by native_decide
 
-/-- 印 mask XORed with origin gives `(heaven, true)`. -/
-example : apply mask_yin origin = (Hexagram.heaven, true) := by native_decide
+/-- 印 mask XORed with origin gives `(qianqian, true)`. -/
+example : apply mask_yin origin = (Hexagram.qianqian, true) := by native_decide
 
 /-! ## § 8 L7 summary bundle -/
 
-/-- Public summary of R₇ R7 layer:
+/-- Public summary of R₇ Cell128 layer:
     cardinality = 128, 7 atomic ops (6 yao flips + 印),
     Cayley involutivity, origin identity, parse round-trip,
     Cayley = apply by definition. -/

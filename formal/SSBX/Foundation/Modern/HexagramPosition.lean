@@ -25,7 +25,6 @@ Companion document: `义理/几何位 · 从元到形.md`
 对应 `XingWei.lean` 之 metric 度量层之离散基底。
 -/
 import SSBX.Foundation.Eight.XingWei
-import SSBX.Foundation.Atlas.Yi.Classical.Core.Yi
 
 namespace SSBX.Foundation.Modern.HexagramPosition
 

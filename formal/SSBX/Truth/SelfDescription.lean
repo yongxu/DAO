@@ -7,7 +7,6 @@ each position object is tied to the finite Yi/Bagua/HexagramPosition theorems
 that give it mathematical content.
 -/
 import SSBX.Truth.Adequacy
-import SSBX.Foundation.Atlas.Yi.Classical.Algebra.BaguaAlgebra
 import SSBX.Foundation.Atlas.Yi.Classical.Cells.R8
 import SSBX.Foundation.Modern.HexagramPosition
 

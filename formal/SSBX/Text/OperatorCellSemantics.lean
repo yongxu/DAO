@@ -1,4 +1,3 @@
-import SSBX.Foundation.Atlas.Yi.Classical.Cells.R8
 import SSBX.Text.OperatorFamilySemantics
 import SSBX.Text.OperatorSignatures
 
