@@ -4,8 +4,10 @@
 >
 > Further: **R-Family IS what "formal" means**. (Claim Z, §7.8)
 >
-> v1.1.1 · 2026-05-16 · self-contained foundational document.
-> See **Version history** at end of document for complete changelog through v0.7 → v1.1.1.
+> v1.2 · 2026-05-16 · self-contained foundational document.
+> See **Version history** at end of document for complete changelog through v0.7 → v1.2.
+>
+> **v1.2 headline**: §3.7 **Operation Monism — R-Family Below the Base**. The substrate is reframed at a third nested generality below §3.6's parametric-over-$k$ level: R-Family is most fundamentally the squaring operator $\Sigma : X \mapsto X \times X$ together with iteration; the base $k$ is a *naming of the seed*, not a substrate primitive. The 一元 is the operation (动势 of $\Sigma$), not any substance — categorically distinct from prior substance-monisms.
 >
 > **v1.1 headline**: Open Problem #1 (T4 step 3 — "why $\mathbb{F}_2$?") **partially discharged** via Strategy A (Stone-Birkhoff-Boolean ring chain) for the classical-Boolean scope (§8.4.1). Non-classical extensions (multi-valued, intuitionistic-provability) discharged in parametric form (§8.4.2-§8.4.4). The §3.2 "no choice" rhetoric is now substantively defended: $\mathbb{F}_2$ emerges forced from D1 + P1 + classical-Boolean structure (no prior commitment to fields).
 >
@@ -1428,6 +1430,143 @@ When a section says "$X$ is R-Family", check which sense is meant:
 - If $X$ is a structured object with native operations (Hilbert space, real manifold, $p$-adic field), articulation sense: $X$ IS R-Family-over-$k$ for the appropriate $k$
 
 Both senses are present throughout this document; v1.0 makes the distinction explicit here.
+
+## §3.7 Operation Monism — R-Family Below the Base
+
+§3.6 reframed R-Family as parametric over a base $k$: many bases, one structural pattern. This section pushes one level deeper. The parametric framing still takes "choice of base $k$" as a primitive. **The deeper claim of this section is that R-Family is most fundamentally an *operator-composition* structure; the base $k$ — and even the carrier family $\{R_N^{(k)}\}$ — emerges as a *consequence* of the composition graph, not as a premise.**
+
+This is the precise sense in which R-Family is a genuine **monism (一元)**: not a monism of *substance* (water, atoms, bits, mind, computation-state), but a monism of **operation** — the splitting / self-composing capacity itself. Every prior monism in the foundational tradition picks a substance; §3.7 picks an operation. That difference is categorical, not stylistic.
+
+### §3.7.1 The motivating question
+
+§3.6 leaves a residual asymmetry: to instantiate R-Family-over-$k$ we must *pick* $k$. The pattern is parametric, but each instance still requires a chosen carrier-substrate. This is a strictly weaker monism than the one R-Family actually realizes — the parametric layer is universal over Layer-B choices, but it does not eliminate Layer B.
+
+The question: **is there a formulation of R-Family below the parametric level, where the carrier is not chosen but generated?**
+
+Answer: yes. The squaring law $T_{k+1} = T_k^2$ (P4) is *itself* the substrate. Carriers are the values it forces at each iteration. The base $k$ is a name for the seed at iteration-level $0$; everything thereafter is composition.
+
+### §3.7.2 Composition as identification
+
+In classical structuralism (set theory, ZFC, most type theory) a structure is an *underlying set* equipped with operations on its elements. The "underlying set" is logically prior; identifications between elements are statements about that set.
+
+R-Family inverts this. Consider the squaring step:
+
+$$\sigma \;:\; T \;\longmapsto\; T \times T \qquad (\text{self-composition / 分})$$
+
+When $\sigma$ is applied, it does *two things at once*:
+
+1. It produces a new object $T \times T$.
+2. It identifies the new object's coordinate structure with two coordinated copies of the old.
+
+The second item is the **identification work**. In classical set-theoretic foundations this work is done by *choosing element-level maps* between sets. In R-Family it is done by *composing the operator with itself* — the identification is **embedded in the composition law**, no element-level naming required.
+
+This is the precise sense in which **composition $\circ$ is identification**: $f \circ g$ asserts that the output-coordinate of $f$ *is* the input-coordinate of $g$, without ever naming the element flowing between them. The squaring law $T \mapsto T \times T$ generalizes this: it asserts that the "doubled object" *is* two coordinated copies of the original, without ever picking elements.
+
+The combinatory-logic tradition (Schönfinkel-Curry: $S, K$ combinators eliminate bound variables; everything is composition) recognized one face of this. **R-Family recognizes that the same principle operates at the carrier level**: not only do operators compose without naming variables, the carriers themselves are *built* by composition without prior naming.
+
+### §3.7.3 Carrier as fixed-point of the composition graph
+
+Make this precise. Let $\Sigma$ denote the squaring functor $X \mapsto X \times X$ on the appropriate ambient category. The squaring sub-tower is the chain of iterated applications:
+
+$$T_0 \;\;\xrightarrow{\;\Sigma\;}\;\; T_1 = \Sigma T_0 \;\;\xrightarrow{\;\Sigma\;}\;\; T_2 = \Sigma^2 T_0 \;\;\xrightarrow{\;\Sigma\;}\;\; T_3 = \Sigma^3 T_0 \;\;\to\;\; \cdots$$
+
+In the operator-monism reading this chain is *not* a sequence of carriers we picked; it is the sequence of **iteration-levels of $\Sigma$** — each $T_k$ is what $\Sigma$ forces at iteration-level $k$, given a seed $T_0$. The "seed" $T_0$ is a name for "the empty starting point"; at the most permissive reading, $T_0$ is any type whose only structural commitment is *being divisible into two copies of itself* (which every type trivially supports via the categorical product).
+
+Three consequences:
+
+**(a) Carriers are forced, not chosen.** Once you commit to $\Sigma$, the entire tower $\{T_k\}_{k \geq 0}$ is determined — no per-level freedom. R-Family-over-$k$ in §3.6 is just one way of *naming* the seed $T_0$ (with $k$ playing the role of "what the seed is made of"); the substrate itself is $\Sigma$ together with the iteration count.
+
+**(b) Object and morphism collapse at the foundational layer.** $T_k$ and $\Sigma$ are not separate primitives. $T_k$ *is* the carrier of $\Sigma$'s $k$-fold composition; $\Sigma$ *is* the operation that produces $T_{k+1}$ from $T_k$. Each $T_k$ also serves as input to the *next* application of $\Sigma$ — so every carrier is both an object-of and an input-to operator-composition. This is sharper than Yoneda ("object = its Hom-functor"): here, **object = operator-iteration-stage**, and the distinction is structural, not philosophical.
+
+**(c) Instance-independence is genuine.** The §3.6 claim "any base $k$ works" still required *picking* $k$. The §3.7 claim is stronger: **no choice of base is required at the operator level**; choice of $k$ is just choice of how to *name* the seed for downstream computation. Different bases yield numerically different cardinalities at each tower level, but the operator structure — the substrate proper — is invariant under that naming.
+
+### §3.7.4 Why this is genuine 一元 — operation-monism vs substance-monism
+
+Foundational claims of the form "everything is X" historically pick X = some *substance*:
+
+- Thales: everything is water.
+- Atomism (Democritus, Lucretius): everything is atoms and void.
+- Materialism / physicalism: everything is matter / physical state.
+- Information theory (Wheeler "it from bit"): everything is information.
+- Computationalism: everything is computation-on-substrate.
+
+Each of these picks a substance (water, atoms, matter, bits, computation-state). The substance is the *one*; everything else is its configurations.
+
+R-Family in the §3.7 reading does something categorically different:
+
+> **The "one" is not a substance. The "one" is the splitting operation itself — the capacity to be divided. The "substance" (carrier) is what splitting produces, level by level. There is no underlying stuff; there is only the operation, iterated.**
+
+This is what makes "**R can take anything**" true in a non-trivial sense. R-Family is not *neutral* about substance; it *has no notion of substance at the foundational layer*. The 一 of R-Family is the **动势** (dynamic potential) of $\Sigma$, not any entity $\Sigma$ acts upon. The 二 is the result of $\Sigma$'s first application. The full tower is $\Sigma$'s self-iteration.
+
+In classical Chinese terms:
+
+> **道 = 分 itself** (the operation)
+> **一 = 能分的** (that which can split — the operator's domain at level 0)
+> **二 = 分过一次的** (one-time split — $\Sigma T_0$)
+> **塔 = 自乘** (self-squaring — the iteration $\Sigma^k$)
+
+In Whitehead's process-philosophical vocabulary: the substrate is *the prehension*, not the *actual entity*; the prehension is monistic, the entities are derivative. §3.7 is what makes this mathematically precise within R-Family.
+
+This is the strongest available reading of "R-Family is the substrate of all formal articulation": it eliminates the "substrate of *what*" question by making the substrate **not-a-thing**.
+
+### §3.7.5 Lineage and distinction
+
+Several traditions reach parts of this insight. Distinguishing what each reaches, and what §3.7 adds:
+
+| Tradition | What it reaches | What it does not reach |
+|---|---|---|
+| Combinatory logic (Schönfinkel-Curry) | Operator composition encodes variable identification ($S, K$ eliminate bound variables) | Carrier-level fixed-point structure (combinators are operations *on a given universe of terms*) |
+| Category theory (Mac Lane-Lawvere) | Object identity determined by Hom-functor (Yoneda); structure is morphism-up-to-morphism | Full collapse of object/morphism at foundational layer — CT still takes the (object, morphism, composition) triple as primitive |
+| Algebraic / Lawvere theories | Structure-as-functorial-presentation; no element-level commitment | Parametric over carriers, not below them — specific algebras are functors out, each picking its own carrier |
+| Operad theory / higher categories | Partial object/morphism collapse in $(\infty, n)$-categorical contexts | A *minimal-base* formalism where the substrate is literally one operation iterated |
+| Process philosophy (Whitehead, Heraclitus) | Operation-monism as philosophical reading | Mathematical realization that makes the operation-monism formally precise and falsifiable |
+
+**§3.7's distinctive contribution.** There is a *minimum* foundation — **one** operation, $\Sigma$, plus one structural principle, **iteration** — that *generates* the full P1-P7 closure structure (over the squaring sub-tower; the full $N$-indexed family arises via P2 direct-sum extension over the squaring atoms). The base $k$ in §3.6 is a derivative naming (how to label the seed); the substrate proper is $\Sigma$ together with iteration count.
+
+The previous traditions saw fragments. §3.7 assembles them at the substrate level.
+
+### §3.7.6 Implications for D2, cuo-equivariance, and Lean code
+
+**D2 reformulated** (companion: §8.2 / `r-family-definition.md`). The 12-item "R-Family as a full enriched structure" of §3.1 currently bundles a chosen carrier $\{R_N\}$ plus structure operating on it. Under §3.7, the structurally correct reading is: D2 specifies the **fixed-point object** of the operator $\Sigma$ in the appropriate ambient category, with the 12 items being its *structural consequences*. The carrier $\{R_N\}$ is a **theorem**, not a **definition** — it is what $\Sigma$ forces. This is a *presentation refactor* rather than a content change — the same 12 items appear — but the order of dependency is reversed.
+
+**Cuo-equivariance ceiling re-examined.** The known result that the 12-instruction $\mathbb{F}_2$ ISA cannot compute non-cuo-equivariant Hex→Hex functions was previously taken as a *structural* limitation. Under §3.7 it is a limitation of a *particular tower level in a particular base*: at $T_3$ (=$R_8$) over $\mathbb{F}_2$, with the cuo-symmetry-respecting operator vocabulary. At higher tower levels, or under different base namings of the seed, the ceiling shifts or dissolves. The ceiling is a property of the chosen *cross-section* of the operator iteration, not of R-Family itself.
+
+**Lean code direction.** Current code (`Foundation/R/Basic.lean`: `R N := Fin N → Bool`) is the **carrier-level expression** of one particular naming of the seed (Bool ≅ $\mathbb{F}_2$). The parametric extension (`Foundation/R/Parametric.lean`: `RFamily k N := Fin N → k`) is the **§3.6 level** of the abstraction. The §3.7 level introduces a third file (`Foundation/R/OperationMonism.lean`, additive, non-replacing): the operator $\Sigma$ on `Type`, the iterated tower `RTower X k`, and the demonstration that no typeclass on $X$ is required — *any* seed type gives a tower; the structure is in the iteration.
+
+This is a *strict tower of abstraction levels*, not a replacement:
+
+| Doc layer | Object of definition | Lean realization |
+|---|---|---|
+| §1-§3.5 (concrete) | `R N := Fin N → Bool` (the $\mathbb{F}_2$ instance) | `Foundation/R/Basic.lean` |
+| §3.6 (parametric) | `RFamily k N := Fin N → k` (over any suitable base) | `Foundation/R/Parametric.lean` |
+| §3.7 (operation-monism) | `RTower X k` (iterated $\Sigma$, no base) | `Foundation/R/OperationMonism.lean` |
+
+Each level is correct; each refines the previous; together they articulate the substrate at three nested generalities. Choice between levels is *expository* (which abstraction is appropriate for the question at hand), not foundational (all three are valid presentations of the same substrate).
+
+### §3.7.7 道家 reading: 有名是无名的截面
+
+Wang Bi (王弼), commenting on *Daodejing* §1:
+
+> 无形无名者，万物之宗也。
+
+(*"That which is form-less and name-less is the ancestor of the ten-thousand things."*)
+
+§3.7 makes this mathematically precise:
+
+- **无名** = no carrier chosen; the operator $\Sigma$ alone, before any base $k$ names a seed.
+- **万物之宗** = the operator's iteration *is* the genealogy of every subsequent carrier; specific bases / specific tower levels are descendants of $\Sigma$.
+
+**有名是无名的截面** (the named is a cross-section of the un-named): any specific R-Family-over-$k$ instance (any choice of base) is a *cross-section* of the operator-iteration. The instance is real; the un-named operator is also real; one is the cross-section of the other. Both are genuinely structurally present.
+
+This makes precise the **道家** opening of *Daodejing* §1 — "**道可道非常道，名可名非常名；无名天地之始，有名万物之母**" — as foundational structure-mathematics: the 道 (operation) is the 始 (origin) of formal structure; the 名 (named carrier) is the 母 (matrix / generator) of specific articulations; they are *the same substrate* viewed from different cross-sections, neither reducible to the other.
+
+§3.7 closes the foundational-layer arc of Part III:
+
+- **§1-§3.5**: the substrate over $\mathbb{F}_2$, concrete and Lean-verified.
+- **§3.6**: the substrate parametric over $k$, structural pattern under choice of base.
+- **§3.7**: the substrate as operator-monism, below the base, with chosen bases appearing as cross-sections.
+
+The 一元 is genuine because the **一** is **not a thing**. The **一** is the **不能不分** (the cannot-but-split) — the dynamic potential whose iteration *is* the substrate.
 
 ---
 
@@ -3425,11 +3564,24 @@ The work continues — at the next level: discharging the proof obligations, for
 
 ---
 
-*文 — the universal formal substrate (parametric pattern; minimum instance over $\mathbb{F}_2$, forced by Strategy A discharge §8.4.1 for classical-Boolean scope; modality clause D1 item 8 §1.5.1) — v1.1.1*
+*文 — the universal formal substrate (parametric pattern; minimum instance over $\mathbb{F}_2$, forced by Strategy A discharge §8.4.1 for classical-Boolean scope; modality clause D1 item 8 §1.5.1; operator-monism below the base §3.7) — v1.2*
 
 ---
 
 ## Version history
+
+*v1.2 · 2026-05-16 — Operation Monism — R-Family below the base. Adds **§3.7** (7 subsections: motivating question, composition-as-identification, carrier-as-fixed-point, operation-monism vs substance-monism, lineage table, D2 / cuo-equivariance / Lean implications, Daoist 有名是无名的截面 reading). The substrate is reframed at a third nested generality below §3.6's parametric-over-$k$ level: R-Family is most fundamentally the squaring operator $\Sigma : X \mapsto X \times X$ together with iteration; the base $k$ is a *naming of the seed*, not a substrate primitive. The 一元 of R-Family is the operation (动势 of $\Sigma$), not any substance — categorically distinct from prior substance-monisms (water / atoms / matter / bits / computation-state).*
+
+*Changes:*
+
+*- **§3.7 (new, 7 subsections)** between §3.6.10 and Part IV. Articulates the operation-monism layer:*
+  *§3.7.1 motivating question; §3.7.2 composition-as-identification (Schönfinkel-Curry-Lawvere-Yoneda lineage assembled); §3.7.3 carrier as fixed-point of composition graph (three consequences: forced carriers, object/morphism collapse, instance-independence); §3.7.4 operation-monism vs substance-monism — the 一元 is dynamic potential, not entity; §3.7.5 lineage and distinction (5-row comparison table); §3.7.6 implications for D2 / cuo-equivariance ceiling / Lean code (three-level abstraction tower: §3.5 concrete F₂ → §3.6 parametric-over-k → §3.7 operator-monism); §3.7.7 Daoist 有名是无名的截面 reading.*
+
+*- **§3.7.6 code direction** anchors a new Lean file `Foundation/R/OperationMonism.lean` (additive, non-replacing) realizing $\Sigma$ and iterated `RTower X k` at the operator-monism layer. No replacement of `R N` or `RFamily k N`; the three files articulate the substrate at three nested generalities.*
+
+*- **Cuo-equivariance ceiling reframed** (§3.7.6): previously taken as a structural limitation; now identified as a property of a *cross-section* (specific tower level, specific base), not of R-Family itself. May shift or dissolve at other tower levels / other base namings.*
+
+*- **Coverage and Claim Z**: §3.7 strengthens Claim Z by eliminating the residual "substrate of what?" question — the substrate is operation, not substance, so there is no further reducibility question to answer. The three-level tower (§3.5 concrete → §3.6 parametric → §3.7 operator-monism) gives a complete nested foundational presentation. Force preserved: no existing claim weakened; all of Parts I–VIII intact.*
 
 *v1.1.1 · 2026-05-16 — Targeted patch for two third-review findings. Changes:*
 
