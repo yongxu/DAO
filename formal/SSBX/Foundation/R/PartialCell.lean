@@ -226,6 +226,92 @@ def toFull? (c : PartialCell N) : Option (R N) :=
   · rfl
   · exact absurd (fun _ => rfl) h
 
+/-! ## § Phase D — full monoid laws + List fold + support algebra -/
+
+/-! ### D.1 Compatibility transports through `mergeFn` -/
+
+theorem compatible_mergeFn_left (a b c : PartialCell N)
+    (hac : compatible a c) (hbc : compatible b c) :
+    compatible (mergeFn a b) c := by
+  intro i
+  show (mergeFn a b) i = none ∨ c i = none ∨ (mergeFn a b) i = c i
+  unfold mergeFn
+  cases ha : a i with
+  | none => exact hbc i
+  | some x =>
+    have hi := hac i
+    rw [ha] at hi
+    rcases hi with hi | hi | hi
+    · cases hi
+    · exact Or.inr (Or.inl hi)
+    · exact Or.inr (Or.inr hi)
+
+theorem compatible_mergeFn_right (a b c : PartialCell N)
+    (hab : compatible a b) (hac : compatible a c) :
+    compatible a (mergeFn b c) :=
+  compatible_symm (compatible_mergeFn_left b c a (compatible_symm hab) (compatible_symm hac))
+
+/-! ### D.2 Full `merge` associativity (under pairwise compatibility) -/
+
+theorem merge_assoc (a b c : PartialCell N)
+    (hab : compatible a b) (hac : compatible a c) (hbc : compatible b c) :
+    merge a b >>= (fun ab => merge ab c) =
+    merge b c >>= (fun bc => merge a bc) := by
+  have hAB : merge a b = some (mergeFn a b) := by unfold merge; rw [if_pos hab]
+  have hBC : merge b c = some (mergeFn b c) := by unfold merge; rw [if_pos hbc]
+  rw [hAB, hBC]
+  show merge (mergeFn a b) c = merge a (mergeFn b c)
+  have hABc : compatible (mergeFn a b) c :=
+    compatible_mergeFn_left a b c hac hbc
+  have haBC : compatible a (mergeFn b c) :=
+    compatible_mergeFn_right a b c hab hac
+  have h1 : merge (mergeFn a b) c = some (mergeFn (mergeFn a b) c) := by
+    unfold merge; rw [if_pos hABc]
+  have h2 : merge a (mergeFn b c) = some (mergeFn a (mergeFn b c)) := by
+    unfold merge; rw [if_pos haBC]
+  rw [h1, h2]
+  congr 1
+  exact mergeFn_assoc a b c
+
+/-! ### D.3 List fold `mergeAll` -/
+
+/-- Right-fold of `merge` over a list of partial cells.
+    Empty list folds to `dao`.  Result is `none` iff the chain fails
+    compatibility somewhere. -/
+def mergeAll : List (PartialCell N) → Option (PartialCell N)
+  | [] => some dao
+  | c :: rest => mergeAll rest >>= merge c
+
+@[simp] theorem mergeAll_nil :
+    mergeAll ([] : List (PartialCell N)) = some dao := rfl
+
+@[simp] theorem mergeAll_cons (c : PartialCell N) (rest : List (PartialCell N)) :
+    mergeAll (c :: rest) = mergeAll rest >>= merge c := rfl
+
+theorem mergeAll_singleton (c : PartialCell N) : mergeAll [c] = some c := by
+  show mergeAll [] >>= merge c = some c
+  rw [mergeAll_nil]
+  show merge c dao = some c
+  exact merge_dao c
+
+/-! ### D.4 Support algebra (codim filtration) -/
+
+theorem support_mergeFn (a b : PartialCell N) :
+    support (mergeFn a b) = support a ∪ support b := by
+  ext i
+  unfold support mergeFn
+  simp only [Finset.mem_union, Finset.mem_filter, Finset.mem_univ, true_and]
+  cases a i <;> cases b i <;> simp
+
+theorem support_restrict (s : Finset (Fin N)) (c : PartialCell N) :
+    support (restrict s c) = s ∩ support c := by
+  ext i
+  unfold support restrict
+  simp only [Finset.mem_inter, Finset.mem_filter, Finset.mem_univ, true_and]
+  by_cases hi : i ∈ s
+  · simp [hi]
+  · simp [hi]
+
 end PartialCell
 
 end SSBX.Foundation.R
