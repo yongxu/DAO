@@ -24,6 +24,7 @@ import SSBX.Foundation.R.DirectDecomp
 import SSBX.Foundation.R.BeyondR8
 import SSBX.Foundation.R.Squaring
 import SSBX.Foundation.R.SubTower
+import SSBX.Foundation.R.PartialCell
 import SSBX.Foundation.R.Judgment.Information
 import SSBX.Foundation.R.Judgment.Attractor
 import SSBX.Foundation.R.Judgment.Behavior
