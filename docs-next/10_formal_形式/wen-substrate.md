@@ -7,7 +7,7 @@
 > v1.3 · 2026-05-16 · self-contained foundational document.
 > See **Version history** at end of document for complete changelog through v0.7 → v1.3.
 >
-> **v1.3 headline**: §4.7bis **The X² 256-code lattice IS UG (conditional form)**. The Chomsky-flavoured §4.7 ("R-Family IS UG's substrate") is supplemented by a sharper *conditional existence* form: if a Universal Grammar in any structurally meaningful sense exists, then it is isomorphic to the X² 256-code lattice — because that lattice is the unique finite structure simultaneously satisfying (1) finite-basis generation, (2) closure under involutive dualities, (3) cross-frame translation invariants, and (4) an internal, *coordinatised* boundary of the sayable. (4) is the decisive feature no prior framework (Chomsky, Wittgenstein, Frege/Russell/ZFC, type theory) provides. The existence half is **formally discharged** in [`Foundation/Wen/X2Codes.lean`](../../formal/SSBX/Foundation/Wen/X2Codes.lean) (`0` sorry, `wenCodeUG : UGCandidate`); uniqueness (Open Problem #2) is **substantially discharged** across [`Foundation/Wen/X2CodesUniqueness.lean`](../../formal/SSBX/Foundation/Wen/X2CodesUniqueness.lean) and [`Foundation/Wen/X2CodesFace.lean`](../../formal/SSBX/Foundation/Wen/X2CodesFace.lean) (`0` sorry combined) — Hom/Iso category + cardinality half + (ℤ/2)² involution-group closure (`UGCandidateRich`) + face-lattice axiomatisation eliminating dual-freedom (`UGCandidateFace`) + PartialCell bridge to the squaring-tower codim picture. Remaining: forcing `axes = 8` from minimality (research) and mechanically closing `face_uniqueness_conjecture` (Lean exercise).
+> **v1.3 headline**: §4.7bis **The X² 256-code lattice IS UG (conditional form)**. The Chomsky-flavoured §4.7 ("R-Family IS UG's substrate") is supplemented by a sharper *conditional existence* form: if a Universal Grammar in any structurally meaningful sense exists, then it is isomorphic to the X² 256-code lattice — because that lattice is the unique finite structure simultaneously satisfying (1) finite-basis generation, (2) closure under involutive dualities, (3) cross-frame translation invariants, and (4) an internal, *coordinatised* boundary of the sayable. (4) is the decisive feature no prior framework (Chomsky, Wittgenstein, Frege/Russell/ZFC, type theory) provides. The existence half is **formally discharged** in [`Foundation/Wen/X2Codes.lean`](../../formal/SSBX/Foundation/Wen/X2Codes.lean) (`0` sorry, `wenCodeUG : UGCandidate`); uniqueness (Open Problem #2) is **closed (modulo F₂ steps 1/4)** across six Lean files (combined `0` sorry): Hom/Iso category + DualIso + cardinality half + (ℤ/2)² involution-group closure + face-lattice axiomatisation + axes=8 minimality theorem + (ℤ/2)² orbit-rep naming-locus theorem + face_dual_uniqueness theorem + PartialCell bridge + F₂ chain steps 2/3/5. The remaining open work is the F₂-chain Lean engineering for steps 1 (Lindenbaum-Tarski → BA) and 4 (Birkhoff finite-BA representation), neither of which is doctrinally novel.
 >
 > **v1.2 headline**: §3.7 **Operation Monism — R-Family Below the Base**. The substrate is reframed at a third nested generality below §3.6's parametric-over-$k$ level: R-Family is most fundamentally the squaring operator $\Sigma : X \mapsto X \times X$ together with iteration; the base $k$ is a *naming of the seed*, not a substrate primitive. The 一元 is the operation (动势 of $\Sigma$), not any substance — categorically distinct from prior substance-monisms.
 >
@@ -2188,6 +2188,16 @@ The existence side is settled. The uniqueness side is **partially discharged** i
     * **Step 5** — identification of `Fin k → Bool` with `R_k^{F₂}` is definitional (`Foundation/R/Basic.lean` defines `R N := Fin N → Bool`). Discharged.
     * Steps 1, 4 — Lean engineering, ~200 LOC each.
 
+11. **Item (d) — face_uniqueness_conjecture CLOSED (structural half).** [`Foundation/Wen/X2CodesFace.lean`](../../formal/SSBX/Foundation/Wen/X2CodesFace.lean) gains:
+    * `UGCandidate.DualIso` — iso intertwining `dual` only (the part forced by `UGCandidateFace` alone; `atom` labels are *not* fixed by the face axiom and are factored out).
+    * `bridge : U.Carrier ≃ WenCode` — the explicit construction `U.bitsEquiv ⟶ Equiv.arrowCongr (finCongr h) (Equiv.refl Bool) ⟶ WenCode.bitsEquiv.symm`.
+    * `bridge_dual_comm` — proven: `bridge U h (U.dual c) = WenCode.dual (bridge U h c)` via `dual_is_bitwise_not` + `WenCode.dual_via_bits`.
+    * `face_dual_uniqueness : ∀ U, U.axes = 8 → Nonempty (DualIso U wenCodeUGFace)` — **proven**.
+    * `face_full_uniqueness : ∀ U, U.axes = 8 → (atom-hypothesis) → Nonempty (Iso U wenCodeUGFace)` — **proven** when the atom labels also agree under the bridge.
+    * `face_uniqueness_conjecture := ∀ U, U.axes = 8 → Nonempty (DualIso U wenCodeUGFace)` and `face_uniqueness : face_uniqueness_conjecture` — **proven**.
+
+    The conjecture as originally stated (with full `Iso` rather than `DualIso`) is *false* without an atom hypothesis — two `UGCandidateFace` with the same `dual` but different label strings are dual-isomorphic but not full-isomorphic. The corrected statement uses `DualIso`; the full-iso version is available with an explicit label-compatibility hypothesis (`face_full_uniqueness`).
+
 **Status table for Open Problem #2** (after this round):
 
 | Item | Status | File |
@@ -2195,9 +2205,9 @@ The existence side is settled. The uniqueness side is **partially discharged** i
 | (a) `axes = 8` from minimality | ✅ **closed** | `X2CodesMinimal.lean` |
 | (b) naming-density forcing | ✅ **closed** for `wenCodeUGFace` | `X2CodesNaming.lean` |
 | (c) F₂-forcing chain | ⚪ **partial** (steps 2/3/5 ✅, steps 1/4 scaffold) | `F2Forcing.lean` |
-| (d) face_uniqueness_conjecture | ⚪ **scaffold + proof sketch** (still Lean exercise) | `X2CodesFace.lean` |
+| (d) face_uniqueness_conjecture | ✅ **closed** (DualIso form; full Iso under label-compatibility hypothesis) | `X2CodesFace.lean` |
 
-The conditional now stands as: **existence proven, cardinality + canonical-involution-group + face-lattice frame + axes=8 minimality + naming-density forcing settled; F₂ chain partially settled; structural-iso lift still pending as Lean exercise.** The decisive feature (4) — coordinatised silence — is in place from `X2Codes.lean` §4 and unchanged by these additions. Six of the seven Lean files (`X2Codes`, `X2CodesUniqueness`, `X2CodesFace`, `X2CodesNaming`, `X2CodesMinimal`, `F2Forcing`) jointly carry `0 sorry`.
+The conditional now stands as: **existence proven; cardinality + canonical-involution-group + face-lattice frame + axes=8 minimality + naming-density forcing + structural-iso lift all settled; F₂ chain partially settled.** The decisive feature (4) — coordinatised silence — is in place from `X2Codes.lean` §4 and unchanged by these additions. **All six Lean files** (`X2Codes`, `X2CodesUniqueness`, `X2CodesFace`, `X2CodesNaming`, `X2CodesMinimal`, `F2Forcing`) **jointly carry `0 sorry`.**
 
 ### §4.7bis.6  Relation to §4.7
 

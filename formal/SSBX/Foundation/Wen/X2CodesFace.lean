@@ -93,41 +93,125 @@ noncomputable def wenCodeUGFace : UGCandidateFace where
     funext i
     exact WenCode.dual_via_bits c i
 
-/-! ## §3  Structural uniqueness at `axes = 8` — reduced to a Lean exercise
+/-! ## §3  Structural uniqueness at `axes = 8` — discharged
 
 With the face axiom in place, the freedom in choosing `dual` is gone:
 both `U` and `wenCodeUGFace` have `dual = bitwise-NOT under their
-respective bit-frames`.  The only remaining task is to compose the two
-frames and verify the composite intertwines the duals.
+respective bit-frames`.  Composing the two bit-frames via a
+`finCongr`-driven axis-relabelling yields the structural iso
+intertwining the duals.
 
-This is **no longer a research task** (cf. §4.7bis.5 item (d)) — it is
-a Lean exercise about `Equiv.trans` and `Fin.cast` across the
-`U.axes = 8` hypothesis.  We state it as a `Prop` and discharge the
-concrete instance for `wenCodeUGFace` itself; the general case
-follows by the proof sketch in the docstring once `Fin.castIso`-style
-bridges are inserted. -/
+The `atom` direction is *not* pinned by `UGCandidateFace` alone — two
+faces can name the same coordinates with different label strings while
+agreeing on dual.  Accordingly we factor the iso theorem into:
+
+* `UGCandidate.DualIso` — iso intertwining `dual` only (the structural
+  part that the face axiom forces).
+* `face_dual_uniqueness` — **proven**: every `axes = 8`
+  `UGCandidateFace` admits a `DualIso` to `wenCodeUGFace`.
+* `face_full_uniqueness` — **proven** under an additional atom
+  hypothesis (atom values agree under the bridge); automatic for any
+  candidate sharing `WenCode.atom`'s labelling. -/
+
+/-- `DualIso U V` intertwines the canonical `dual` involutions but does
+not constrain `atom`.  Used when uniqueness is at the structural level
+only — different label choices for `atom` give distinct candidates
+that are nevertheless dual-isomorphic. -/
+structure UGCandidate.DualIso (U V : UGCandidate) where
+  toFun : U.Carrier → V.Carrier
+  invFun : V.Carrier → U.Carrier
+  left_inv : Function.LeftInverse invFun toFun
+  right_inv : Function.RightInverse invFun toFun
+  dual_comm : ∀ c, toFun (U.dual c) = V.dual (toFun c)
+
+namespace UGCandidate.DualIso
+
+/-- Reflexive `DualIso`. -/
+def refl (U : UGCandidate) : UGCandidate.DualIso U U where
+  toFun := id
+  invFun := id
+  left_inv _ := rfl
+  right_inv _ := rfl
+  dual_comm _ := rfl
+
+/-- Forget the `atom_comm` field of an `Iso`. -/
+def ofIso {U V : UGCandidate} (h : UGCandidate.Iso U V) :
+    UGCandidate.DualIso U V where
+  toFun := h.toFun
+  invFun := h.invFun
+  left_inv := h.left_inv
+  right_inv := h.right_inv
+  dual_comm := h.dual_comm
+
+end UGCandidate.DualIso
 
 namespace UGCandidateFace
 
-/-- The conjecture: every `axes = 8` `UGCandidateFace` is `Iso` to
-`wenCodeUG` at the `UGCandidate` level, with the iso explicitly given
-by frame-composition `U.bitsEquiv ⋯ WenCode.bitsEquiv.symm`.
+/-- The **bridge equivalence** `U.Carrier ≃ WenCode` constructed from
+the two bit-frames `U.bitsEquiv` and `WenCode.bitsEquiv`, joined by a
+`finCongr` axis-relabelling driven by `h : U.axes = 8`. -/
+noncomputable def bridge (U : UGCandidateFace) (h : U.axes = 8) :
+    U.Carrier ≃ WenCode :=
+  U.bitsEquiv.trans <|
+    (Equiv.arrowCongr (finCongr h) (Equiv.refl Bool)).trans
+      WenCode.bitsEquiv.symm
 
-Proof sketch (Lean exercise):
-1. Build `bridge : U.Carrier ≃ WenCode` as the composition
-   `U.bitsEquiv ⟶ Fin.castIso h ⟶ WenCode.bitsEquiv.symm`.
-2. Show `bridge (U.dual c) = WenCode.dual (bridge c)` by:
-   * `bridge (U.dual c) = WenCode.bitsEquiv.symm (cast (U.bitsEquiv (U.dual c)))`
-   * `= WenCode.bitsEquiv.symm (cast (fun i => !(U.bitsEquiv c i)))` (by `U.dual_is_bitwise_not`)
-   * `= WenCode.bitsEquiv.symm (fun i => !(WenCode.bitsEquiv (bridge c) i))` (push cast through `!`)
-   * `= WenCode.dual (bridge c)` (by `WenCode.dual_via_bits`).
-3. The `atom_comm` direction follows from `dual_is_bitwise_not` not
-   touching `atom`; one verifies `atom` is preserved on the bridge by
-   checking the 8 seeded cells map correctly (or strengthens the face
-   axiom to include atom-preservation directly). -/
-def face_uniqueness_conjecture : Prop :=
-  ∀ U : UGCandidateFace, U.axes = 8 →
-    Nonempty (UGCandidate.Iso U.toUGCandidate wenCodeUGFace.toUGCandidate)
+theorem bridge_apply (U : UGCandidateFace) (h : U.axes = 8) (c : U.Carrier) :
+    bridge U h c = WenCode.bitsEquiv.symm
+      (fun i : Fin 8 => U.bitsEquiv c ((finCongr h).symm i)) := by
+  rfl
+
+/-- The bridge equivalence intertwines the duals.  This is the algebraic
+heart of item (d): `bridge (U.dual c) = WenCode.dual (bridge c)`. -/
+theorem bridge_dual_comm (U : UGCandidateFace) (h : U.axes = 8)
+    (c : U.Carrier) :
+    bridge U h (U.dual c) = WenCode.dual (bridge U h c) := by
+  -- Apply `WenCode.bitsEquiv` to both sides; suffices to show bit-equality.
+  apply WenCode.bitsEquiv.injective
+  rw [bridge_apply, Equiv.apply_symm_apply]
+  funext i
+  -- LHS at i: U.bitsEquiv (U.dual c) ((finCongr h).symm i)
+  --        = ! (U.bitsEquiv c ((finCongr h).symm i))   [via dual_is_bitwise_not]
+  rw [U.dual_is_bitwise_not]
+  -- Re-express the RHS via WenCode.toBits (defeq to bitsEquiv).
+  change Bool.not (U.bitsEquiv c ((finCongr h).symm i))
+      = WenCode.toBits (WenCode.dual (bridge U h c)) i
+  -- Apply WenCode.dual_via_bits on RHS to push the dual through.
+  rw [WenCode.dual_via_bits]
+  -- Both sides are now `!` of the same expression up to bridge_apply.
+  congr 1
+  change U.bitsEquiv c ((finCongr h).symm i)
+      = WenCode.bitsEquiv (bridge U h c) i
+  rw [bridge_apply, Equiv.apply_symm_apply]
+
+/-- **Face dual-uniqueness (item (d), structural half).**  Every
+`axes = 8` `UGCandidateFace` admits a `DualIso` to `wenCodeUGFace`.
+
+The face axiom `dual_is_bitwise_not` pins down `dual` so tightly that
+the bridge equivalence, composed from the two bit-frames, automatically
+intertwines the duals. -/
+theorem face_dual_uniqueness (U : UGCandidateFace) (h : U.axes = 8) :
+    Nonempty (UGCandidate.DualIso U.toUGCandidate
+      wenCodeUGFace.toUGCandidate) :=
+  ⟨{ toFun     := bridge U h
+     invFun    := (bridge U h).symm
+     left_inv  := (bridge U h).left_inv
+     right_inv := (bridge U h).right_inv
+     dual_comm := bridge_dual_comm U h }⟩
+
+/-- **Face full-uniqueness (item (d), with atom hypothesis).**  When
+`U`'s `atom` agrees with `WenCode.atom` under the bridge, the `DualIso`
+lifts to a full `UGCandidate.Iso` including `atom_comm`. -/
+theorem face_full_uniqueness (U : UGCandidateFace) (h : U.axes = 8)
+    (h_atom : ∀ c, WenCode.atom (bridge U h c) = U.atom c) :
+    Nonempty (UGCandidate.Iso U.toUGCandidate
+      wenCodeUGFace.toUGCandidate) :=
+  ⟨{ toFun     := bridge U h
+     invFun    := (bridge U h).symm
+     left_inv  := (bridge U h).left_inv
+     right_inv := (bridge U h).right_inv
+     dual_comm := bridge_dual_comm U h
+     atom_comm := h_atom }⟩
 
 /-- Concrete discharge for the witness itself: `wenCodeUGFace` is iso
 to itself, trivially. -/
@@ -135,6 +219,18 @@ theorem wenCodeUGFace_self_iso :
     Nonempty (UGCandidate.Iso wenCodeUGFace.toUGCandidate
       wenCodeUGFace.toUGCandidate) :=
   ⟨UGCandidate.Iso.refl _⟩
+
+/-- The `face_uniqueness_conjecture` of v1.3 (item (d) of §4.7bis.5),
+restated in its `DualIso` form: every `axes = 8` `UGCandidateFace` is
+dual-isomorphic to `wenCodeUGFace`. -/
+def face_uniqueness_conjecture : Prop :=
+  ∀ U : UGCandidateFace, U.axes = 8 →
+    Nonempty (UGCandidate.DualIso U.toUGCandidate
+      wenCodeUGFace.toUGCandidate)
+
+/-- `face_uniqueness_conjecture` is **proven**.  Item (d) closed at the
+structural level. -/
+theorem face_uniqueness : face_uniqueness_conjecture := face_dual_uniqueness
 
 end UGCandidateFace
 
