@@ -162,6 +162,16 @@ Per wen-substrate v1.0.3 §2.6 (P6) and §8.8.
 witnessed by the three involutions `Shi.complement`, `Shi.reverse`,
 `Shi.cuoZong` together with the identity (each pair commutes; each is
 self-inverse).
+
+**Physical realisation (Lorentzian-4-region bridge)** — per Phase 0
+Stream P0-B (G6.2) of `docs-next/10_formal_形式/gut-roadmap.md`, the
+V₄ minimality has a canonical physical instance: the four Lorentzian
+causal regions {null, past-timelike, spacelike, future-timelike} of an
+algebraic Minkowski 4-vector partition `R^4` into exactly the four
+modalities of `Shi`.  This extension is delivered in
+`Foundation/R/PhaseZero/TP6Lorentzian.lean` (no Mathlib `Manifold` /
+`Lorentzian` dependency required).  See that file's
+`T_P6_lorentzian_bridge` for the packaged statement.
 -/
 
 /-- **T_P6.card** — `|R 2| = 4`. -/
