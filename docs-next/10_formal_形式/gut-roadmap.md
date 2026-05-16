@@ -354,11 +354,13 @@ Single-session batch execution closed the **minimum viable GUT-A claim** with 0 
 | **G1.integration** | Phase 1 packaged into `D1_implies_Phase1Closure_F2` | ✅ closed | `R/ClaimZ/Analytic.lean` | `7c2a125` |
 | **G2** | T5-A: P1-P7 ⟹ R-family-over-F₂ uniqueness (layerwise) | ✅ closed (tractable form) | `R/UniquenessF2.lean` | `23441fc` |
 | **G2'** | T5 polymorphic: P1+P2 over any Fintype δ ⟹ R N δ layerwise | ✅ closed | `R/UniquenessGeneral.lean` | `a980e92` |
+| **G2''** | T5 algebraic-class: P1+P2+P7b over any Field k ⟹ R N k layerwise + ring iso at carrier 4 | ✅ closed | `R/UniquenessAlgebraic.lean` | `821a2f3` |
+| **G2'''** | Concrete polymorphic T5 demos at Distinction, ZMod 3, Fin 5 + Bool↔ZMod 2 cross-instance | ✅ closed | `R/UniquenessGeneral/Demos.lean` | `3e47cd7` |
 | **G3.C3** | Stabilizer-QM (Pauli group) ↪ R 2n | ✅ closed | `Wen/Embeddings/StabilizerQM.lean` | `975104d` |
 | **G3.C4** | FOL syntax tree ↪ R N | ✅ closed | `Wen/Embeddings/FOL.lean` | `f87c40f` |
 | **G5** | D6 falsification record (HoTT/ETCS/SDG attempts) | ✅ closed | `R/D6_Tests.lean` | `b1f1181` |
 
-**Aggregate**: 18 closures, 0 sorry / 0 axioms across all GUT-A files. Full library `lake build SSBX` = 3826+ jobs clean.
+**Aggregate**: 20 closures, 0 sorry / 0 axioms across all GUT-A + polymorphic files. Full library `lake build SSBX` = 3830 jobs clean.
 
 ### 十一·1 Polymorphic T5 update (2026-05-16, `a980e92`)
 
@@ -390,6 +392,38 @@ What remains δ-specific (post-this-update):
 - **P6/P7a alphabet pinning** — uses 4-element / 8-element cardinality, which generalize as `(|δ|)² = 4` only for δ = Bool.
 
 These are the remaining items for the **full** GUT claim (T5-B + T5-C scope).
+
+### 十一·2 Polymorphic completion update (2026-05-16, batch 5)
+
+Three parallel agents in batch 5 completed the algebraic-class extension + concrete demos + doc updates:
+
+**G2'' Algebraic-class T5** (`R/UniquenessAlgebraic.lean`, commit `821a2f3`):
+- `P1P7_Satisfier_Algebraic (k : Type) [Field k] [Fintype k] [DecidableEq k]` — extends `P1P7_Core k` with `p7b_ring_equiv : Nonempty (carrier 4 ≃+* Matrix (Fin 2) (Fin 2) k)` + Mul/Add instances.
+- `T5_algebraic` — combines T5_general (layerwise) with the ring iso at carrier 4 for any field k.
+- F₂-Boolean lift via the **ZMod 2 bridge** (`forgetF2ToAlgebraic_ZMod2`): the existing `P1P7_Satisfier_F2`'s `p7b_mat2F2_equiv` composes with `Mat2F2 ≃+* Matrix (Fin 2) (Fin 2) (ZMod 2)` (from G6.3's TP7bUniqueness) to give a `P1P7_Satisfier_Algebraic (ZMod 2)`.
+- Char(k)=2 demo at `ZMod 2` proves layerwise + ring-iso for F₂'s natural algebraic-class cousin.
+
+**G2''' Concrete polymorphic demos** (`R/UniquenessGeneral/Demos.lean`, commit `3e47cd7`):
+- δ=Distinction non-canonical instance via `Distinction.equivBool` transport.
+- δ=ZMod 3 (`|R 2 (ZMod 3)| = 9`, `|R 3 (ZMod 3)| = 27`, ternary substrate).
+- δ=Fin 5 (`|R 2 (Fin 5)| = 25`, 5-ary non-field substrate).
+- Cross-instance: `R N Bool ≃ R N (ZMod 2)`, `R N Bool ≃ R N Distinction`, `R N Distinction ≃ R N (ZMod 2)`.
+- `concrete_polymorphic_T5_demo` — 7-tuple aggregator packaging all witnesses.
+
+**Doc updates** (`wen-substrate/02-parametric.md`, `07-claim.md`, `08-obligations.md`, commit `3edbeb7`):
+- 02-parametric: added "Polymorphic T5" section documenting the four δ-corollaries.
+- 07-claim: refined direct claim from "R-Family over F₂" to "δ-polymorphic R-Family; F₂ canonical not restriction".
+- 08-obligations: 3-row T5 status table (T5 layerwise ✅, T5-A F₂ ring iso ✅, T5-B/C ring iso polymorphic ✅ via UniquenessAlgebraic).
+
+**Aggregate (post-batch-5)**: 22 closures total, 0 sorry / 0 axioms, lake build 3830+ jobs clean. The polymorphic generalization is **complete** at the layerwise + ring-iso (over Field k) level.
+
+What remains for the **strongest** GUT claim form:
+
+- **Char(k)≠2 bilinear classification**: discriminant-based P3 for non-char-2 fields.
+- **Non-algebraic δ (Prop, Heyting algebra, etc.)**: requires constructive/non-Fintype handling; T5-C territory.
+- **D1 ⟹ P-closure over polymorphic δ**: currently `D1_implies_Phase1Closure_F2` is δ=Bool specific; polymorphic D1 analytic direction is an open extension.
+
+These are research-level extensions; the **minimum viable polymorphic GUT claim** is now formally proven for any Fintype + DecidableEq + Inhabited δ at the layerwise level, and for any Field k at the ring-iso level.
 
 ### What "minimum viable GUT-A" means at this status
 
