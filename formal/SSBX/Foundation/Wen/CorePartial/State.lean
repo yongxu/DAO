@@ -47,10 +47,22 @@ namespace State
 def initial : State :=
   { pc := 0, cur := PartialCell.dao, history := [], halted := false }
 
+/-- Initial state with input `inp : R 8` lifted into a fully-specified
+    PartialCell.  Bridge for porting `Wen.Core` programs (where the
+    input is a total bit vector).  -/
+def init (inp : R 8) : State :=
+  { pc := 0, cur := PartialCell.ofFull inp, history := [], halted := false }
+
 @[simp] theorem initial_pc : initial.pc = 0 := rfl
 @[simp] theorem initial_cur : initial.cur = (PartialCell.dao : PartialCell 8) := rfl
 @[simp] theorem initial_history : initial.history = ([] : List (PartialCell 8)) := rfl
 @[simp] theorem initial_halted : initial.halted = false := rfl
+
+@[simp] theorem init_pc (inp : R 8) : (init inp).pc = 0 := rfl
+@[simp] theorem init_cur (inp : R 8) : (init inp).cur = PartialCell.ofFull inp := rfl
+@[simp] theorem init_history (inp : R 8) :
+    (init inp).history = ([] : List (PartialCell 8)) := rfl
+@[simp] theorem init_halted (inp : R 8) : (init inp).halted = false := rfl
 
 end State
 
