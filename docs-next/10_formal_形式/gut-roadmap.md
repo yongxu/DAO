@@ -461,3 +461,63 @@ These are research-level extensions; the **minimum viable polymorphic GUT claim*
 4. **Peer engagement** (G9): send the framework out for external critique.
 
 The original 3-6 月 estimate now applies to **GUT-B** (parametric over algebraic class) and **GUT-C** (full δ-realisation incl. non-algebraic), not GUT-A.
+
+---
+
+## 十二、G11 cut-1 plan — char(k)≠2 finite fields (2026-05-17)
+
+Per `docs-next/00_start/lawvere-identification.md` v0.4 status — metalogic identification done, GUT-A polish path identified. Next major milestone: extend GUT to **any finite field** (char ≠ 2 included), staying inside Mathlib's existing infrastructure.
+
+### Why cut-1 over full G11
+
+Full G11 (任意 field k, 含 ℝ/ℂ/ℚ_p) requires Brauer group machinery, Witt theory over arbitrary fields, Hasse-Minkowski local-global — **research-level, 4-8 月**.
+
+**Cut-1 scope**: only finite fields F_p (odd prime p) + F_{p^n}. Skips:
+- Infinite fields (ℝ, ℂ, ℚ_p) — left to G11+ / GUT-C
+- Brauer group infrastructure (over finite fields Br(F_q) = 0 trivially via Wedderburn's little theorem)
+- Unified char-agnostic treatment — char 2 stays Arf-based, char ≠ 2 gets parallel disc-based
+
+⟹ Cut-1 compressible to **~2-3 月** (vs full G11 4-8 月) via parallel execution.
+
+### Cut-1 sub-tasks
+
+| Sub-task | Status | File | Owner |
+|---|---|---|---|
+| **G11-A** Install `IsSimpleRing`/`IsArtinianRing` on Mat₂(F_q) | in-progress | `Foundation/R/Algebra/MatFqInstances.lean` (new) | parallel subagent |
+| **G11-B** Discriminant-based P3 for char(k)≠2 finite fields | in-progress | `Foundation/R/Bilinear/DiscriminantCharNeq2.lean` (new) | parallel subagent |
+| **G11-C** Polymorphic UniquenessGeneralField scaffold + char-class dispatch | in-progress | `Foundation/R/UniquenessGeneralField.lean` (new) | parallel subagent |
+| **G11-D** T5-A items 4+6 closing (GUT-A polish, orthogonal) | in-progress | `Foundation/R/UniquenessF2.lean` (edit) | parallel subagent |
+
+**Strategy**: 4 subagents parallel since files are disjoint. G11-A unblocks Wedderburn application; G11-B provides char ≠ 2 bilinear; G11-C ties them together; G11-D closes the last GUT-A residual.
+
+### Cut-1 completion criteria
+
+- All 4 subagents' new files `lake build` clean (sorries allowed where document blockers)
+- `Foundation/R/UniquenessGeneralField.lean` provides `T5_field` over any `[Field k] [Fintype k]` with char-class dispatch
+- Concrete demos at `ZMod 3`, `ZMod 5`, `ZMod 7` produce non-trivial layerwise + ring-iso witnesses
+- T5-A items 4+6 closed → full GUT-A claim no caveats
+
+### Post-cut-1 remaining (deferred to G11+ / GUT-C)
+
+| Item | Estimate |
+|---|---|
+| Infinite fields ℝ / ℂ / ℚ_p | 6-12 月 (Brauer + Witt + Hasse) |
+| Discriminant-Arf unified treatment | 1-2 月 |
+| Per-base bridges (G13) | 月-each |
+
+These are no longer blocking GUT publication; cut-1 brings GUT "any finite field" 内的 *publishable strong claim*.
+
+### Status snapshot — what's already closed
+
+(Per §十一 + this cut-1 session, post-2026-05-17)
+
+| Layer | Status |
+|---|---|
+| GUT-A (F₂-Boolean classical) | ✅ closed (2026-05-16) |
+| GUT-A items 4+6 (T5-A naturality residuals) | 🟡 cut-1 G11-D in-flight |
+| GUT-B layerwise (any Fintype δ) | ✅ closed (2026-05-16) |
+| GUT-B algebraic-class (any Field k, ring-iso assumed) | ✅ closed (2026-05-16) |
+| GUT-B algebraic-class (any finite Field k, ring-iso derived via Wedderburn) | 🟡 cut-1 G11-A/B/C in-flight |
+| GUT-B over infinite fields (ℝ/ℂ/ℚ_p) | ⏳ deferred to GUT-C |
+| GUT-C (non-algebraic δ realisation) | ⏳ open (research-level) |
+| Metalogic identification (D1 = lfp(Φ)) | ✅ closed (2026-05-17) — see `lawvere-identification.md` v0.4 |
