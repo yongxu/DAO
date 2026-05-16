@@ -385,45 +385,93 @@ theorem step4_BAiso_for_CABA {α : Type*} [CompleteAtomicBooleanAlgebra α]
           exact h (eAtom.symm i) }
   exact ⟨iso1.trans (iso2.trans iso3)⟩
 
-/-- **Step 4 BA-iso, conditional on the instance-derivation gap.**
+/-! ### Mathlib infrastructure — `Fintype + Lattice + BoundedOrder → CompleteLattice`
 
-`step4_BAiso_for_CABA` (above) is the unconditional theorem for
-`CompleteAtomicBooleanAlgebra` carriers.  The only remaining gap is
-**lifting `[BooleanAlgebra α] [Fintype α]` to
-`[CompleteAtomicBooleanAlgebra α]`** — a Mathlib instance derivation
-that requires:
+The only remaining gap is lifting `[BooleanAlgebra α] [Fintype α]` to
+`[CompleteAtomicBooleanAlgebra α]`.  Mathlib already provides:
 
-* `Fintype α + Lattice α → CompleteLattice α` (Mathlib doesn't package),
-* `Finite α + BooleanAlgebra α → IsAtomic α` (provided by
-  `Mathlib.Order.Atoms.Finite.Finite.to_isAtomic`),
-* `CompleteBooleanAlgebra α + IsAtomic α → CompleteAtomicBooleanAlgebra α`
-  (Mathlib's `toCompleteAtomicBooleanAlgebra` at `Mathlib.Order.Atoms`
-  line 542).
+* `Finite.to_isAtomic`: `[PartialOrder α] [OrderBot α] [Finite α] → IsAtomic α`.
+* `toCompleteAtomicBooleanAlgebra`: `[CompleteBooleanAlgebra α] [IsAtomic α]
+   → CompleteAtomicBooleanAlgebra α`.
 
-Once that derivation chain lands in Mathlib, `step4_BAiso_for_CABA`
-immediately yields `step4_birkhoff_BAiso` for arbitrary
-`UGCandidateBoolean`.  This is the residual TODO. -/
-def step4_BAiso_conditional : Prop :=
-  ∀ (α : Type) [BooleanAlgebra α] [Fintype α] (k : ℕ),
-    Fintype.card α = 2 ^ k →
-    Nonempty (CompleteAtomicBooleanAlgebra α) →
-    Nonempty (α ≃o (Fin k → Bool))
+The missing piece is **`Fintype + Lattice + BoundedOrder → CompleteLattice`**,
+which we build below using `Finset.sup`/`Finset.inf` over `Set.toFinset`.
+Crucially, the construction **reuses the existing `Lattice α` and
+`BoundedOrder α` instances** via the `with` pattern, ensuring the
+underlying `LE` term is *literally the same* — sidestepping the
+typeclass-diamond clash that previously blocked
+`step4_BAiso_conditional_holds`. -/
 
--- `step4_BAiso_conditional_holds` is provable by `step4_BAiso_for_CABA`
--- once the two `LE α` instance paths (BA → BiheytingAlgebra vs
--- CABA → ChainComplete) are reconciled.  Mathlib's typeclass system
--- treats them as syntactically distinct even though they coincide;
--- proving the bridge requires `Subsingleton.elim`-style instance
--- reconciliation that isn't packaged.  We state the theorem and leave
--- the instance-bridge as the documented residue.
+/-- **Mathlib infrastructure (proven here).**  Any finite lattice with a
+bounded order is a complete lattice.  The construction reuses the
+existing `Lattice` and `BoundedOrder` instances (so the underlying `LE`
+remains definitionally identical), defining `sSup`/`sInf` via finite
+`sup`/`inf` over `Finset.univ.filter (· ∈ s)`.
 
-/-- The remaining Mathlib TODO, stated precisely.  This is the only
-piece preventing unconditional `step4_birkhoff_BAiso` for arbitrary
-finite-BA `UGCandidateBoolean`. -/
-def step4_BAiso_mathlib_todo : Prop :=
-  ∀ (α : Type) [BooleanAlgebra α] [Fintype α] [DecidableEq α] (k : ℕ),
-    Fintype.card α = 2 ^ k →
-    Nonempty (α ≃o (Fin k → Bool))
+This closes the instance-derivation gap that prevented
+`step4_BAiso_conditional` from being discharged unconditionally. -/
+@[reducible]
+noncomputable def finiteLatticeToCompleteLattice {α : Type*}
+    [Fintype α] [Lattice α] [BoundedOrder α] : CompleteLattice α := by
+  classical
+  exact
+    { (‹Lattice α›), (‹BoundedOrder α›) with
+      sSup := fun s => (Finset.univ.filter (· ∈ s)).sup id
+      sInf := fun s => (Finset.univ.filter (· ∈ s)).inf id
+      isLUB_sSup := by
+        intro s
+        refine ⟨?_, ?_⟩
+        · intro a ha
+          exact Finset.le_sup (f := id)
+            (Finset.mem_filter.mpr ⟨Finset.mem_univ _, ha⟩)
+        · intro a h
+          exact Finset.sup_le fun b hb => h (Finset.mem_filter.mp hb).2
+      isGLB_sInf := by
+        intro s
+        refine ⟨?_, ?_⟩
+        · intro a ha
+          exact Finset.inf_le (f := id)
+            (Finset.mem_filter.mpr ⟨Finset.mem_univ _, ha⟩)
+        · intro a h
+          exact Finset.le_inf fun b hb => h (Finset.mem_filter.mp hb).2 }
+
+/-- **Mathlib infrastructure (proven here).**  Any finite Boolean algebra
+upgrades to `CompleteBooleanAlgebra` — by composing
+`finiteLatticeToCompleteLattice` with the existing `BooleanAlgebra`
+instance.  Since `CompleteBooleanAlgebra` is just `CompleteLattice +
+BooleanAlgebra` with no extra fields, this is a direct `with` composition.
+LE is preserved by construction. -/
+@[reducible]
+noncomputable def finiteBooleanAlgebraToCompleteBooleanAlgebra
+    {α : Type*} [BooleanAlgebra α] [Fintype α] : CompleteBooleanAlgebra α :=
+  { (‹BooleanAlgebra α›), (finiteLatticeToCompleteLattice (α := α)) with }
+
+/-- **Mathlib infrastructure (proven here).**  Any finite Boolean algebra
+upgrades to `CompleteAtomicBooleanAlgebra` — combining
+`finiteBooleanAlgebraToCompleteBooleanAlgebra` with Mathlib's
+`Finite.to_isAtomic` and `toCompleteAtomicBooleanAlgebra`. -/
+@[reducible]
+noncomputable def finiteBooleanAlgebraToCABA
+    {α : Type*} [BooleanAlgebra α] [Fintype α] :
+    CompleteAtomicBooleanAlgebra α :=
+  letI : CompleteBooleanAlgebra α :=
+    finiteBooleanAlgebraToCompleteBooleanAlgebra
+  letI : IsAtomic α := Finite.to_isAtomic
+  CompleteBooleanAlgebra.toCompleteAtomicBooleanAlgebra
+
+/-- **Step 4 BA-iso, fully unconditional.**  Combining the infrastructure
+above with `step4_BAiso_for_CABA`, every `UGCandidateBoolean` admits a
+BA-iso to `Fin U.axes → Bool`.  The Mathlib instance-derivation gap is
+closed. -/
+theorem step4_BAiso_for_UGCandidateBoolean (U : UGCandidateBoolean) :
+    Nonempty (U.Carrier ≃o (Fin U.axes → Bool)) :=
+  letI : CompleteAtomicBooleanAlgebra U.Carrier := finiteBooleanAlgebraToCABA
+  step4_BAiso_for_CABA U.axes U.card_eq
+
+/-- Restate `step4_birkhoff_BAiso` as a real theorem — no more conditional. -/
+theorem step4_birkhoff_BAiso_holds (U : UGCandidateBoolean) :
+    step4_birkhoff_BAiso U :=
+  step4_BAiso_for_UGCandidateBoolean U
 
 /-! ### Step 5 — Identification with the R-family carrier
 

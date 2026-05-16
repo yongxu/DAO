@@ -2186,12 +2186,13 @@ The existence side is settled. The uniqueness side is **partially discharged** i
     * **Step 1** — `step1_bitcube_BA n : Nonempty (BooleanAlgebra (Fin n → Bool))` via `Pi.booleanAlgebra` + `Bool.instBooleanAlgebra`. Terminal form of Lindenbaum-Tarski quotient (the propositional-syntax construction is mechanical; the chain only needs the terminal BA-instance on the target).
     * **Step 2** — `step2_holds` via `BooleanAlgebra.toBooleanRing` (Stone 1936). Discharged.
     * **Step 3** (algebraic core) — `step3_BR_char_two : ∀ {α} [BooleanRing α] (a : α), a + a = 0`, via `BooleanRing.add_self`. **The idempotency forces characteristic 2.** Discharged as a real theorem.
-    * **Step 4** — `step4_holds : ∀ U, step4_birkhoff U` via `Fintype.equivOfCardEq` (type-level Birkhoff). The BA-preserving refinement `step4_birkhoff_BAiso` is **proven** for `CompleteAtomicBooleanAlgebra` carriers (`step4_BAiso_for_CABA`):
+    * **Step 4** — `step4_holds : ∀ U, step4_birkhoff U` via `Fintype.equivOfCardEq` (type-level Birkhoff). **The BA-preserving refinement `step4_birkhoff_BAiso` is now also proven unconditionally** (`step4_birkhoff_BAiso_holds`):
       - `setOrderEquivBoolFun : Set α ≃o (α → Bool)` — characteristic-function order-iso. ✅
       - `lowerSetEquivSetOfAntichain : LowerSet α ≃o Set α` under antichain hypothesis. ✅
-      - `step4_BAiso_for_CABA : ∀ α [CABA] [Fintype], |α| = 2^k → Nonempty (α ≃o (Fin k → Bool))` — assembles `toSetOfIsAtom` (Mathlib) + `setOrderEquivBoolFun` + an inline `(atoms → Bool) ≃o (Fin k → Bool)` via `Fintype.equivFinOfCardEq` + atom-count from `Fintype.card_set` + `Nat.pow_right_injective`. ✅
-
-      `step4_BAiso_conditional : Prop` documents the only residual gap: lifting `[BooleanAlgebra α] [Fintype α]` to `[CompleteAtomicBooleanAlgebra α]`, which requires three Mathlib instance derivations (`Fintype + Lattice → CompleteLattice`, `Finite + BooleanAlgebra → IsAtomic` — *already in Mathlib* as `Finite.to_isAtomic` — and `CompleteBooleanAlgebra + IsAtomic → CompleteAtomicBooleanAlgebra` — *already in Mathlib* as `toCompleteAtomicBooleanAlgebra`). The remaining missing link is `Fintype + Lattice → CompleteLattice` and a final `LE` instance-bridge (the same partial order from two different inheritance paths). This is a Mathlib packaging matter, not a substrate-level theoretical gap; `Mathlib/Order/Category/FinBoolAlg.lean` itself flags Birkhoff for finite BAs as a TODO.
+      - `step4_BAiso_for_CABA : ∀ α [CABA] [Fintype], |α| = 2^k → Nonempty (α ≃o (Fin k → Bool))` — assembles `toSetOfIsAtom` + `setOrderEquivBoolFun` + inline `(atoms → Bool) ≃o (Fin k → Bool)` + atom-count argument. ✅
+      - **Mathlib infrastructure (proven here)**: `finiteLatticeToCompleteLattice` (`Fintype + Lattice + BoundedOrder → CompleteLattice` via `Finset.sup`/`Finset.inf` over `Finset.univ.filter`, reusing the existing `Lattice` and `BoundedOrder` via `with` so `LE` stays definitionally identical), `finiteBooleanAlgebraToCompleteBooleanAlgebra`, and `finiteBooleanAlgebraToCABA` (chains through `Finite.to_isAtomic` + `CompleteBooleanAlgebra.toCompleteAtomicBooleanAlgebra`). ✅
+      - `step4_BAiso_for_UGCandidateBoolean : ∀ U : UGCandidateBoolean, Nonempty (U.Carrier ≃o (Fin U.axes → Bool))` — final assembly: `letI : CompleteAtomicBooleanAlgebra U.Carrier := finiteBooleanAlgebraToCABA; exact step4_BAiso_for_CABA U.axes U.card_eq`. ✅
+      - `step4_birkhoff_BAiso_holds : ∀ U, step4_birkhoff_BAiso U` — the BA-iso theorem in its public form, **proven unconditionally**. ✅
     * **Step 5** — identification of `Fin k → Bool` with `R_k^{F₂}` is definitional. Discharged.
     * **`chain_holds : ∀ U : UGCandidateBoolean, Nonempty (U.Carrier ≃ (Fin U.axes → Bool))`** — the full chain assembled, **proven**. This unconditionally hands `UGCandidateFace` its `bitsEquiv` field from `UGCandidateBoolean`'s assumed BA structure + cardinality.
 
@@ -2211,10 +2212,10 @@ The existence side is settled. The uniqueness side is **partially discharged** i
 |---|---|---|
 | (a) `axes = 8` from minimality | ✅ **closed** | `X2CodesMinimal.lean` |
 | (b) naming-density forcing | ✅ **closed** for `wenCodeUGFace` | `X2CodesNaming.lean` |
-| (c) F₂-forcing chain | ✅ **closed** (all 5 steps proven at the type-equivalence level; BA-iso refinement of step 4 remains as `step4_birkhoff_BAiso` scaffold) | `F2Forcing.lean` |
+| (c) F₂-forcing chain | ✅ **closed unconditionally** (all 5 steps proven; step 4 BA-iso refinement proven for `UGCandidateBoolean` via `step4_birkhoff_BAiso_holds` after self-built `finiteLatticeToCompleteLattice` Mathlib infrastructure) | `F2Forcing.lean` |
 | (d) face_uniqueness_conjecture | ✅ **closed** (DualIso form; full Iso under label-compatibility hypothesis) | `X2CodesFace.lean` |
 
-The conditional now stands as: **existence proven; cardinality + canonical-involution-group + face-lattice frame + axes=8 minimality + naming-density forcing + structural-iso lift + F₂-forcing chain all settled.** The decisive feature (4) — coordinatised silence — is in place from `X2Codes.lean` §4 and unchanged by these additions. **All six Lean files** (`X2Codes`, `X2CodesUniqueness`, `X2CodesFace`, `X2CodesNaming`, `X2CodesMinimal`, `F2Forcing`) **jointly carry `0 sorry`.** Open Problem #2 is closed at the type-equivalence level demanded by `UGCandidateFace.bitsEquiv`; the only remaining engineering is the BA-preserving refinement of Birkhoff's step 4 (`step4_birkhoff_BAiso`), which is a Mathlib packaging issue, not a theoretical gap.
+**Open Problem #2 is closed.**  The conditional now stands as: existence proven; cardinality + canonical-involution-group + face-lattice frame + axes=8 minimality + naming-density forcing + structural-iso lift + F₂-forcing chain (including BA-preserving Birkhoff step 4) **all settled**. The decisive feature (4) — coordinatised silence — is in place from `X2Codes.lean` §4. **All six Lean files** (`X2Codes`, `X2CodesUniqueness`, `X2CodesFace`, `X2CodesNaming`, `X2CodesMinimal`, `F2Forcing`) **jointly carry `0 sorry`** with no remaining open items in the substrate proof.
 
 ### §4.7bis.6  Relation to §4.7
 
