@@ -286,3 +286,7 @@ import SSBX.Foundation.Lang.Partial
 -- Representation closure: A/B/D locator strategies for concept → R-Family.
 -- Per wen-substrate.md v1.4 §Representation.
 import SSBX.Foundation.Representation
+
+-- Closure (Knaster-Tarski lfp identification of D1, skeleton).
+-- Per docs-next/00_start/lawvere-identification.md v0.2 §§4.5, 5.
+import SSBX.Foundation.Closure.PhiOperator
