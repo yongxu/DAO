@@ -452,7 +452,7 @@ WenyanReflect.lean        «文核同源» (rfl), «判型良»/«判停»/«验
 WenyanSelfHost.lean       «微核自验», «微核自释_total» (Tier 2 quine PoC)
 WenyanSelfInterp.lean     Tier 3 partial: Quine.quine{3,5,16}_history (uniform [push]^N);
                           Tier 3 ground: ProgEnc.{encFramedProg, decFramedProg, ...};
-                          ⚠ universal buildEmitProg + diagonal: re-dispatch from Cell192 → Cell256 still pending
+                          (future) universal buildEmitProg + diagonal: roadmap construction, not yet written in any carrier
 DaoSource.lean            «道之自指» (form / parse / print / halt / semantics 5-fold)
 WenSurface/Lex.lean        controlled-wenyan lex
 WenSurface/Reading.lean    operator readings table
@@ -695,7 +695,7 @@ Surface wenyan → 12-instr ISA          Foundation/Wen/WenyanParser.lean § par
 ISA → wenyan                          same § printInstr
 Tm → ISA (cuo-equivariant subset)     Foundation/Wen/WenDefCompile.lean
 ISA → YiState transition              Foundation/Bagua/BaguaTuring.lean § execute / step / runFuel
-Cell256 ↔ List Cell256 (encoding)     Foundation/Wen/WenyanSelfInterp.lean § ProgEnc (re-dispatch from Cell192 pending)
+Cell256 ↔ List Cell256 (encoding)     Foundation/Wen/WenyanSelfInterp.lean § ProgEnc (R8-native; Phase F.1 migration complete)
 
 V₄ Shi ↔ (因, 果) ∈ Bool²              Foundation/Bagua/Cell256.lean § Shi.toYinGuo / ofYinGuo
 Cell256 algebraic spine               Foundation/Bagua/Cell256.lean § 7

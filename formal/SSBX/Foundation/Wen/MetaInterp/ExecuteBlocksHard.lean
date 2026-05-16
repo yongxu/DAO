@@ -12,7 +12,8 @@ surgery beyond the pure `META.cur ≡ sim.cur` invariant:
 
 Each is committed at **Tier A** (definite-length `List YiInstr`) with a
 **Tier B** `length = rfl` lemma.  **Tier C** local-effect simulation
-lemmas are stubbed with `sorry` and `TODO(B.T4.E)` markers — the
+lemmas are deferred to wave B.T4.E (not yet written, no `sorry`
+placeholders in code; `nop` padding reserves block offsets) — the
 encoded-history surgery is deferred to a dedicated wave.
 
 The block shapes here use deliberately-padded `nop` placeholders so that
@@ -23,13 +24,13 @@ internal logic can be filled in B.T4.E without disturbing those offsets.
 
 | op             | Tier A | Tier B | Tier C            |
 | -------------- | ------ | ------ | ----------------- |
-| jump           | ✓      | ✓ rfl  | sorry (B.T4.E)    |
-| push           | ✓      | ✓ rfl  | sorry (B.T4.E)    |
-| pop            | ✓      | ✓ rfl  | sorry (B.T4.E)    |
-| branchYaoEq    | ✓      | ✓ rfl  | sorry (B.T4.E)    |
-| branchShiEq    | ✓      | ✓ rfl  | sorry (B.T4.E)    |
+| jump           | ✓      | ✓ rfl  | deferred (B.T4.E) |
+| push           | ✓      | ✓ rfl  | deferred (B.T4.E) |
+| pop            | ✓      | ✓ rfl  | deferred (B.T4.E) |
+| branchYaoEq    | ✓      | ✓ rfl  | deferred (B.T4.E) |
+| branchShiEq    | ✓      | ✓ rfl  | deferred (B.T4.E) |
 
-Total: 5 `sorry`s (one Tier-C local-effect per opcode).
+Total: 5 Tier-C lemmas deferred (no `sorry` in code; opcodes use `nop` padding).
 -/
 import SSBX.Foundation.Wen.MetaInterp.ExecuteBlock
 import SSBX.Foundation.Wen.MetaInterp.Block_Jump
