@@ -1,0 +1,34 @@
+# 文之表层小诗 — WenSurface 文言级样本
+#
+# 与 hello.wen / microKernel.wen / daoJudge.wen 不同, 本样本不走 Bagua-ISA
+# («终» / «推» / «翻爻» 等 22-token 内核), 而走 WenSurface 层:
+#
+#   String → lex → resolveWithCues → parseSurface → elabSurface
+#          → WenDef.Tm (经 S 组虚词 desugar 至 22 核 builtin)
+#          → denoteHex / denoteBool (R₈ 求值)
+#
+# 每行独立 elaborate, 不需要句末标点; 注释行以 `#` 起.
+# round-trip 由 Foundation/Wen/WenSurface/ProseSample.lean 之 native_decide pin 死.
+
+# 一 - 阴爻单卦, 64 卦之元 (Hex literal)
+一
+
+# 推 一 - 应用算子 推 (T_10, Hex 自增) 于 一, 得 «生» «一»
+推 一
+
+# 推 之 一 - 同上, 经 「之」 (S_1) 显式 application marker
+推 之 一
+
+# 而 推 損 一 - 「而」 (S_2) 函数复合, 推 ∘ 損 = id (mod 64), 还原至 一
+而 推 損 一
+
+# 凡 甲 同 甲 甲 - 「凡」 (Q_1) 全称量化, 「同」 (I_1) Hex equality
+# 对所有 64 卦 甲, 同(甲, 甲) = true
+凡 甲 同 甲 甲
+
+# 令 甲 乾 推 甲 - 「令」 let-binding, 甲 := 乾, body = 推 甲 = «生» 乾 = «一»
+令 甲 乾 推 甲
+
+# （者 甲 甲 之 乾） 之 推 - 「者」 (S_13) λ-abstraction:
+#   (λx.x) 乾 = 乾, then 推 applied to 乾 = «一»
+（者 甲 甲 之 乾） 之 推
