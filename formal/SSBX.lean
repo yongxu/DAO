@@ -275,6 +275,18 @@ import SSBX.Foundation.R8
 import SSBX.Foundation.RInfty
 import SSBX.Foundation.Atlas
 
+-- T5 polymorphic-field scaffold (G11 cut-1: char(k)=2 + char(k)≠2 dispatch).
+-- Per gut-roadmap.md §十二.
+import SSBX.Foundation.R.UniquenessAlgebraic
+import SSBX.Foundation.R.UniquenessGeneralField
+
+-- G11 bottleneck-removal: install `IsSimpleRing` / `IsArtinianRing`
+-- chain on `Matrix (Fin n) (Fin n) (ZMod p)` and `Matrix (Fin n) (Fin n) k`
+-- so Mathlib's `IsSimpleRing.exists_ringEquiv_matrix_divisionRing`
+-- applies directly to our R₄-anchor ring.
+-- Per gut-roadmap.md G11 (T5-B parametric over k).
+import SSBX.Foundation.R.Algebra.MatFqInstances
+
 -- Phase E: Wen/Core — PartialCell-native Wen kernel.
 -- Parallel to legacy Foundation/Bagua/BaguaTuring.lean (which is Yi-flavored).
 -- Yi semantics is provided via Foundation/Atlas/Yi/ as application overlay.
@@ -290,3 +302,8 @@ import SSBX.Foundation.Representation
 -- Closure (Knaster-Tarski lfp identification of D1, skeleton).
 -- Per docs-next/00_start/lawvere-identification.md v0.2 §§4.5, 5.
 import SSBX.Foundation.Closure.PhiOperator
+
+-- Cross-base functor library (G7 gut-roadmap §三 Tier 2).
+-- Mod-phase Hilbert ↔ Pauli ↔ R(2n) — reverse functors + RFamily k bridges.
+import SSBX.Foundation.Wen.Embeddings.StabilizerQM
+import SSBX.Foundation.Wen.Embeddings.HilbertPauliFunctor
