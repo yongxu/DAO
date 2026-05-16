@@ -1,11 +1,11 @@
 /-
 # Foundation.Closure.PhiOperator — Knaster-Tarski lfp identification of D1
 
-**Skeleton** (per `docs-next/00_start/lawvere-identification.md` v0.2 §§4.5, 5.1-5.4).
+**Skeleton** (per `docs-next/00_start/lawvere-identification.md` v0.4 §§4.5, 5.1-5.4).
 
 ## Doctrinal anchor
 
-The position paper `lawvere-identification.md` (v0.2) establishes:
+The position paper `lawvere-identification.md` (v0.4) establishes:
 
 > **R-tower closure (D1 ⟷ P1-P7) IS the Knaster-Tarski least fixed point
 > of the requirements-extraction operator Φ on the lattice 𝒜 of
@@ -20,40 +20,58 @@ This file lays down the **Lean skeleton** for that identification:
 
 * `PProperty`     — the 8 atomic P-properties (P1, P2, P3, P4, P5, P6, P7a, P7b)
 * `ArticulationCandidate` — Def 4.5.1 (carrier-class + morphism-class + P-set
-                            with consistency conditions)
+                            with consistency conditions, including **bridge
+                            conditions** connecting pset membership to
+                            carrier/morphism structure)
 * `instance : CompleteLattice ArticulationCandidate` — Prop 4.5.2
 * `Phi : ArticulationCandidate →o ArticulationCandidate` — Def 4.5.3 + Thm 4.5.5
 * `D1 : ArticulationCandidate := OrderHom.lfp Phi` — Thm 5.2.1
-* Three stated theorems:
-    - `D1_is_fixed_point` (Prop 5.3.1)
-    - `D1_is_minimum_P_satisfier` (Prop 5.3.2)
-    - `D1_carrier_eq_all_RN` (Prop 5.3.4)
+* `witnessesP` — per-`PProperty` structural witness, now data-dependent
 
 ## Scope
 
-* This is a **partially-discharged skeleton**.  Of the original 8
-  proof-level `sorry`s in the v0 skeleton, **5 are now discharged**:
+* This is a **partially-discharged skeleton** (v0.5 refinement of v0.4).
+  Of the original 8 proof-level `sorry`s, **5 are discharged in v0.4**:
     1. `botCandidate.comp_closed` (unit-propagation at `LinHom = Unit`)
-    2. `instCompleteLattice` (constructed via `completeLatticeOfInf`
-       from componentwise-intersection `sInfFun`)
+    2. `instCompleteLattice` (constructed via `completeLatticeOfInf`)
     3. `phi_monotone` (Thm 4.5.5) — via `Finset.union_subset_union`
-       plus `witnessedSet_mono`
     4. `D1_is_fixed_point` (Prop 5.3.1) — via `OrderHom.map_lfp`
-    5. `D1_is_minimum_P_satisfier` (Prop 5.3.2) — via
-       `OrderHom.lfp_le`
-* The remaining **3 sorries** (`D1_carrier_eq_all_RN`,
-  `D1_morphism_eq_all`, `D1_pset_eq_all`) are *false* under the
-  current placeholder `witnessesP` (which only fires for P5), and so
-  cannot be discharged without first refining the per-`PProperty`
-  witnessing predicates.  See the doc-strings of those three
-  theorems for the explicit counter-example
-  (`D = (∅, ∅, {p5})` is a `Phi`-fixed-point).
-* `lake build` succeeds with only `sorry` warnings, no errors.
+    5. `D1_is_minimum_P_satisfier` (Prop 5.3.2) — via `OrderHom.lfp_le`
+* This v0.5 refinement:
+    - Refines `witnessesP` to depend on (carrier, morphism) per-`PProperty`
+      (per §4.5.3 of the position paper)
+    - Adds **three new bridge conditions** to `ArticulationCandidate`:
+      `p3_implies_R1`, `p4_implies_unbounded`, `p6_implies_R2`,
+      `p7b_implies_R4` (tying pset membership to carrier structure)
+    - Maintains all 5 previously discharged proofs
+    - Re-formulates the 3 structural-shape theorems
+      (`D1_carrier_eq_all_RN`, `D1_morphism_eq_all`, `D1_pset_eq_all`) as
+      **conditional theorems** that are provably true given the bridges;
+      the unconditional forms remain stated as **doctrinal targets**.
+* `lake build` succeeds with sorry warnings only.
 * The architecture is the *Mathlib-compatible* one promised by
   §5.9 of the position paper: `OrderHom.lfp` is applied directly.
-* Estimated remaining work (per-P_i witnesses + carrier-pset
-  consistency conditions + Kleene iteration via
-  `fixedPoints.lfp_eq_sSup_iterate`): ~2-4 weeks.
+
+## Why `D1.carrier = Set.univ` cannot be proved unconditionally
+
+Per Def 4.5.3, `Φ(D)` leaves carrier and morphism unchanged and only
+augments `pset`.  Hence for any `D ∈ 𝒜` with empty pset and carrier
+{0} (e.g., `botCandidate`), `Φ(D)` has `pset ⊆ witnessedSet(C, M)`.
+If `witnessedSet(C, M) ⊆ D.pset`, then `D` is Φ-pre-fixed, so
+`D1 ≤ D`, hence `D1.carrier ⊆ {0} ≠ Set.univ`.
+
+To get `D1.carrier = Set.univ` as in Prop 5.3.4 of the position paper,
+one needs **either** (a) a different operator Φ' that ALSO grows the
+carrier when newly-witnessed P's require it (departing from Def 4.5.3),
+or (b) a consistency condition that EVERY candidate must have unbounded
+carrier (which makes `botCandidate` inconsistent).  Neither move is
+taken in v0.4 of the position paper.
+
+We instead state and prove the **strongest conditional form** that
+follows from the bridges: if `p4 ∈ D.pset`, then `D.carrier` is
+unbounded (and similarly for `p6 → R 2 ∈ C`, `p7b → R 4 ∈ C`).  These
+are immediate from the bridges and yield `D1.carrier` containment as
+soon as one establishes the corresponding `D1.pset` membership facts.
 
 ## Relation to existing files
 
@@ -160,11 +178,19 @@ with consistency conditions:
 -/
 
 /-- **Def 4.5.1** (Articulation Candidate) of
-    `docs-next/00_start/lawvere-identification.md` §4.5.
+    `docs-next/00_start/lawvere-identification.md` §4.5, v0.4
+    refinement.
 
     A triple `(carrier, morphism, pset)` carrying the consistency
     conditions of an articulation candidate over the self-internalising
-    sub-class `{R N : N ∈ ℕ}` of R-Vec. -/
+    sub-class `{R N : N ∈ ℕ}` of R-Vec.
+
+    Beyond the 4 core consistency conditions of Def 4.5.1, this v0.5
+    refinement adds 4 **bridge conditions** tying pset membership to
+    the (carrier, morphism) structure.  These bridges are what makes
+    `witnessesP` a well-typed indicator of structural witness, and
+    they propagate properly through `topCandidate`, `botCandidate`,
+    and `sInfFun`. -/
 structure ArticulationCandidate : Type 1 where
   /-- C_D ⊆ Obj(R-Vec): the set of N such that R N is in the carrier-class. -/
   carrier : Set ℕ
@@ -181,6 +207,22 @@ structure ArticulationCandidate : Type 1 where
       g.comp f ∈ morphism N K
   /-- **Identity inclusion** (Def 4.5.1): R N ∈ C_D ⟹ id_{R N} ∈ M_D. -/
   id_in : ∀ N, N ∈ carrier → LinHom.id N ∈ morphism N N
+  /-- **Bridge (P3 → R 1)** (v0.5): if P3 (relation layers) is claimed,
+      then the carrier contains some R N for N ≥ 1 (in particular it is
+      not just `{0}`).  Simplified placeholder for "M contains a full
+      bilinear classification". -/
+  p3_implies_R1 : .p3 ∈ pset → ∃ N ∈ carrier, N ≥ 1
+  /-- **Bridge (P4 → unbounded)** (v0.5): if P4 (scale / unbounded
+      recursion) is claimed, then the carrier is unbounded. -/
+  p4_implies_unbounded : .p4 ∈ pset → ∀ N : ℕ, ∃ M ∈ carrier, M > N
+  /-- **Bridge (P6 → R 2)** (v0.5): if P6 (4-fold modality / V₄) is
+      claimed, then R 2 is in the carrier.  Simplified placeholder
+      for "M contains V₄-action morphisms". -/
+  p6_implies_R2 : .p6 ∈ pset → 2 ∈ carrier
+  /-- **Bridge (P7b → R 4)** (v0.5): if P7b (Wedderburn anchor on
+      R 4) is claimed, then R 4 is in the carrier.  Simplified
+      placeholder for "M contains canonical ring structure on R 4". -/
+  p7b_implies_R4 : .p7b ∈ pset → 4 ∈ carrier
 
 namespace ArticulationCandidate
 
@@ -230,6 +272,10 @@ def topCandidate : ArticulationCandidate where
   hom_closed := fun _ _ _ _ => Set.mem_univ _
   comp_closed := fun _ _ _ _ => Set.mem_univ _
   id_in := fun _ _ => Set.mem_univ _
+  p3_implies_R1 := fun _ => ⟨1, Set.mem_univ _, le_refl 1⟩
+  p4_implies_unbounded := fun _ N => ⟨N + 1, Set.mem_univ _, Nat.lt_succ_self N⟩
+  p6_implies_R2 := fun _ => Set.mem_univ _
+  p7b_implies_R4 := fun _ => Set.mem_univ _
 
 /-- Bottom element of 𝒜: {0} with id_{R 0} and empty P-set.
 
@@ -278,6 +324,14 @@ def botCandidate : ArticulationCandidate where
     -- and `LinHom.id 0 = ()`, so `() ∈ {()}` by rfl.
     simp only [and_self, dif_pos]
     rfl
+  p3_implies_R1 := by
+    intro h; simp at h
+  p4_implies_unbounded := by
+    intro h; simp at h
+  p6_implies_R2 := by
+    intro h; simp at h
+  p7b_implies_R4 := by
+    intro h; simp at h
 
 /-! ### § 3.2bis Extensionality and the partial order
 
@@ -331,14 +385,64 @@ instance : PartialOrder ArticulationCandidate where
 For a set `s : Set ArticulationCandidate`, define `sInf s` as:
 * carrier = `{N | ∀ D ∈ s, N ∈ D.carrier}` (the intersection of carriers)
 * morphism = `{f | ∀ D ∈ s, f ∈ D.morphism N M}` for each (N, M)
-* pset = `(PProperty.all.toFinset).filter (fun p => ∀ D ∈ s, p ∈ D.pset)`
+* pset = filter of `PProperty.all.toFinset` by both "∀ D ∈ s, p ∈ D.pset"
+        AND "p's bridge condition is satisfied by sInf's own carrier"
 
-The consistency conditions transfer through universal quantification:
-each `D ∈ s` has `prod_closed`, so the intersection has it too.
+The bridge filter is required for the result to satisfy
+`ArticulationCandidate`'s bridge fields when, e.g., the intersection
+of unbounded carriers is *not* unbounded.
+
+The four core consistency conditions (prod/hom/comp/id) transfer through
+universal quantification.  The four bridge conditions hold by construction
+because of the additional filter step.
 
 When `s = ∅` this gives `topCandidate` (universal carrier, all
 morphisms, all P's); when `s` is non-empty the intersection is the
 largest candidate contained in every element of `s`. -/
+
+/-- The "structural bridge" predicate at a carrier `C`: does `C`
+    independently satisfy the bridge condition required if `p` is in
+    pset?
+
+    Each bridge is monotone in `C`: if `C ⊆ C'` and `bridgeHolds C p`,
+    then `bridgeHolds C' p`. -/
+def bridgeHolds (carrier : Set ℕ) : PProperty → Prop
+  | .p3 => ∃ N ∈ carrier, N ≥ 1
+  | .p4 => ∀ N : ℕ, ∃ M ∈ carrier, M > N
+  | .p6 => 2 ∈ carrier
+  | .p7b => 4 ∈ carrier
+  | _ => True  -- no bridge constraint for p1, p2, p5, p7a
+
+/-- Monotonicity of `bridgeHolds` in the carrier. -/
+theorem bridgeHolds_mono {C C' : Set ℕ} (hC : C ⊆ C') (p : PProperty) :
+    bridgeHolds C p → bridgeHolds C' p := by
+  intro h
+  cases p
+  · exact h  -- p1: True
+  · exact h  -- p2: True
+  · -- p3: ∃ N ∈ C, N ≥ 1
+    obtain ⟨N, hN, hN1⟩ := h
+    exact ⟨N, hC hN, hN1⟩
+  · -- p4: ∀ N, ∃ M ∈ C, M > N
+    intro N
+    obtain ⟨M, hM, hMN⟩ := h N
+    exact ⟨M, hC hM, hMN⟩
+  · exact h  -- p5: True
+  · -- p6: 2 ∈ C
+    exact hC h
+  · exact h  -- p7a: True
+  · -- p7b: 4 ∈ C
+    exact hC h
+
+/-- The filter predicate for `sInfFun.pset`.  Bundled as an
+    abbreviation so that the same classical-decidability instance
+    is used in the construction and in the bridge proofs. -/
+def sInfPsetPred (s : Set ArticulationCandidate) (p : PProperty) : Prop :=
+  (∀ D ∈ s, p ∈ D.pset) ∧ bridgeHolds {N | ∀ D ∈ s, N ∈ D.carrier} p
+
+noncomputable instance (s : Set ArticulationCandidate) :
+    DecidablePred (sInfPsetPred s) :=
+  fun _ => Classical.propDecidable _
 
 /-- Componentwise intersection — the GLB of a set of articulation
     candidates.  Uses classical choice for the P-set predicate's
@@ -347,10 +451,7 @@ largest candidate contained in every element of `s`. -/
 noncomputable def sInfFun (s : Set ArticulationCandidate) : ArticulationCandidate where
   carrier := {N | ∀ D ∈ s, N ∈ D.carrier}
   morphism := fun N M => {f | ∀ D ∈ s, f ∈ D.morphism N M}
-  pset :=
-    haveI : DecidablePred (fun p : PProperty => ∀ D ∈ s, p ∈ D.pset) :=
-      fun _ => Classical.propDecidable _
-    (PProperty.all.toFinset).filter (fun p => ∀ D ∈ s, p ∈ D.pset)
+  pset := (PProperty.all.toFinset).filter (sInfPsetPred s)
   prod_closed := by
     intro N M hN hM D hD
     exact D.prod_closed N M (hN D hD) (hM D hD)
@@ -363,6 +464,22 @@ noncomputable def sInfFun (s : Set ArticulationCandidate) : ArticulationCandidat
   id_in := by
     intro N hN D hD
     exact D.id_in N (hN D hD)
+  p3_implies_R1 := by
+    intro h
+    rw [Finset.mem_filter] at h
+    exact h.2.2
+  p4_implies_unbounded := by
+    intro h
+    rw [Finset.mem_filter] at h
+    exact h.2.2
+  p6_implies_R2 := by
+    intro h
+    rw [Finset.mem_filter] at h
+    exact h.2.2
+  p7b_implies_R4 := by
+    intro h
+    rw [Finset.mem_filter] at h
+    exact h.2.2
 
 noncomputable instance : InfSet ArticulationCandidate := ⟨sInfFun⟩
 
@@ -377,16 +494,29 @@ theorem sInf_carrier (s : Set ArticulationCandidate) :
 theorem sInf_morphism (s : Set ArticulationCandidate) (N M : ℕ) :
     (sInf s).morphism N M = {f | ∀ D ∈ s, f ∈ D.morphism N M} := rfl
 
-/-- Membership in `(sInf s).pset`: a P-property is in the meet iff it
-    is in every `D.pset` for `D ∈ s`. -/
+/-- Membership in `(sInf s).pset`: a P-property is in the meet iff
+    (a) it is in every `D.pset` for `D ∈ s`, AND (b) the bridge
+    condition for `p` is satisfied by the intersection carrier. -/
 theorem mem_sInf_pset {s : Set ArticulationCandidate} {p : PProperty} :
-    p ∈ (sInf s).pset ↔ ∀ D ∈ s, p ∈ D.pset := by
-  classical
-  show p ∈ ((PProperty.all.toFinset).filter (fun p => ∀ D ∈ s, p ∈ D.pset)) ↔ _
+    p ∈ (sInf s).pset ↔ sInfPsetPred s p := by
+  show p ∈ ((PProperty.all.toFinset).filter (sInfPsetPred s)) ↔ _
   rw [Finset.mem_filter]
   refine ⟨fun h => h.2, fun h => ⟨?_, h⟩⟩
   -- Every PProperty is in `PProperty.all.toFinset`
   cases p <;> decide
+
+/-- Bridge holds at a carrier of a single candidate `D` whenever `p ∈ D.pset`. -/
+theorem bridgeHolds_of_pset_mem {D : ArticulationCandidate} {p : PProperty}
+    (h : p ∈ D.pset) : bridgeHolds D.carrier p := by
+  cases p
+  · exact trivial            -- p1: True
+  · exact trivial            -- p2: True
+  · exact D.p3_implies_R1 h  -- p3
+  · exact D.p4_implies_unbounded h  -- p4
+  · exact trivial            -- p5: True
+  · exact D.p6_implies_R2 h  -- p6
+  · exact trivial            -- p7a: True
+  · exact D.p7b_implies_R4 h  -- p7b
 
 /-- `sInf` is the greatest lower bound: for every `s`, `sInf s` is in
     the lower bounds of `s` and any other lower bound is `≤ sInf s`. -/
@@ -399,7 +529,7 @@ theorem isGLB_sInf' (s : Set ArticulationCandidate) : IsGLB s (sInf s) := by
     · intro N M f hf; exact hf D hD
     · -- (sInf s).pset ⊆ D.pset
       intro p hp
-      exact (mem_sInf_pset.mp hp) D hD
+      exact ((mem_sInf_pset.mp hp).1) D hD
   · -- any lower bound is ≤ sInf s
     intro E hE
     refine ⟨?_, ?_, ?_⟩
@@ -409,9 +539,17 @@ theorem isGLB_sInf' (s : Set ArticulationCandidate) : IsGLB s (sInf s) := by
     · -- E.morphism ⊆ (sInf s).morphism (component-wise)
       intro N M f hf D hD
       exact (hE hD).2.1 N M hf
-    · -- E.pset ⊆ (sInf s).pset
+    · -- E.pset ⊆ (sInf s).pset:
+      -- if p ∈ E.pset, then p ∈ D.pset for all D ∈ s (since E ≤ D),
+      -- and the bridge for p holds on E.carrier (by E's own bridge field),
+      -- and E.carrier ⊆ sInf.carrier, so bridge holds on sInf.carrier.
       intro p hp
-      exact mem_sInf_pset.mpr (fun D hD => (hE hD).2.2 hp)
+      apply mem_sInf_pset.mpr
+      refine ⟨fun D hD => (hE hD).2.2 hp, ?_⟩
+      apply bridgeHolds_mono ?_ p (bridgeHolds_of_pset_mem hp)
+      -- Goal: E.carrier ⊆ sInf.carrier
+      intro N hN D hD
+      exact (hE hD).1 hN
 
 /-- **Prop 4.5.2** (𝒜 is a complete lattice) of
     `docs-next/00_start/lawvere-identification.md` §4.5.
@@ -451,26 +589,60 @@ Concretely (per §4.5):
 Thm 4.5.5: Φ is monotone.
 -/
 
-/-- Decision predicate: does the (carrier, morphism) data structurally
-    witness P_i?
+/-- Per-`PProperty` structural witness predicate.
 
-    For the skeleton, we leave this `sorry`-stubbed at the per-P_i
-    level.  Each predicate is decidable in principle (the witness
-    conditions are first-order over finite/countable data), but
-    formalizing each requires concrete work.
+    Per §4.5.3 of `lawvere-identification.md` v0.4, each P_i is
+    "structurally witnessed by (C, M)" iff a specific positive
+    existential condition on (C, M) holds.  These conditions are
+    deliberately monotone in (C, M) (more structure ⟹ at least
+    as many witnesses), which gives Φ its monotonicity (Thm 4.5.5).
 
-    Returns `true` if witnessed.  Default `false` means the property
-    is not added by Φ. -/
-def witnessesP (_carrier : Set ℕ) (_morphism : (N M : ℕ) → Set (LinHom N M))
-    (p : PProperty) : Bool :=
+    For the v0.5 placeholder LinHom = Unit, P1 and P7a (which require
+    distinct morphisms) are unwitnessable — only one morphism exists
+    per (N, M) under the Unit-carrier.  This is acknowledged and
+    documented as Open Problem #3.
+
+    | P_i  | Witness condition                                                |
+    |------|------------------------------------------------------------------|
+    | P1   | M contains ≥ 2 distinct morphisms (unwitnessable at LinHom=Unit) |
+    | P2   | always (vacuous at LinHom=Unit; comp_closed is consistency)      |
+    | P3   | C contains R N for some N ≥ 1                                    |
+    | P4   | C is unbounded (∀ N, ∃ M ∈ C, M > N)                             |
+    | P5   | always (Obs 4.5.4 — hom-closure built into 𝒜)                   |
+    | P6   | R 2 ∈ C (placeholder for "M contains V₄-action")                 |
+    | P7a  | M contains ≥ 2 distinct morphisms (= P1; unwitnessable)          |
+    | P7b  | R 4 ∈ C (placeholder for "M contains canonical ring on R 4")     | -/
+def witnessesP (carrier : Set ℕ) (morphism : (N M : ℕ) → Set (LinHom N M))
+    (p : PProperty) : Prop :=
   match p with
-  | .p5 => true  -- Obs 4.5.4: hom-closure is automatic from 𝒜's consistency
-  | _   => false  -- TODO: implement witnesses for P1, P2, P3, P4, P6, P7a, P7b
+  | .p1  => ∃ N M, ∃ f g : LinHom N M, f ∈ morphism N M ∧ g ∈ morphism N M ∧ f ≠ g
+  | .p2  => True       -- vacuous at LinHom = Unit
+  | .p3  => ∃ N ∈ carrier, N ≥ 1
+  | .p4  => ∀ N : ℕ, ∃ M ∈ carrier, M > N
+  | .p5  => True       -- Obs 4.5.4: hom-closure is automatic
+  | .p6  => 2 ∈ carrier
+  | .p7a => ∃ N M, ∃ f g : LinHom N M, f ∈ morphism N M ∧ g ∈ morphism N M ∧ f ≠ g
+  | .p7b => 4 ∈ carrier
 
-/-- The set of P-properties structurally witnessed by `(C, M)`. -/
-def witnessedSet (carrier : Set ℕ) (morphism : (N M : ℕ) → Set (LinHom N M)) :
-    Finset PProperty :=
-  PProperty.all.toFinset.filter (fun p => witnessesP carrier morphism p = true)
+/-- The set of P-properties structurally witnessed by `(C, M)`.
+
+    Uses classical decidability of `witnessesP`. -/
+noncomputable def witnessedSet (carrier : Set ℕ)
+    (morphism : (N M : ℕ) → Set (LinHom N M)) : Finset PProperty :=
+  haveI : DecidablePred (fun p => witnessesP carrier morphism p) :=
+    fun _ => Classical.propDecidable _
+  PProperty.all.toFinset.filter (fun p => witnessesP carrier morphism p)
+
+/-- Membership in `witnessedSet`: `p ∈ witnessedSet C M ↔ witnessesP C M p`. -/
+theorem mem_witnessedSet {carrier : Set ℕ}
+    {morphism : (N M : ℕ) → Set (LinHom N M)} {p : PProperty} :
+    p ∈ witnessedSet carrier morphism ↔ witnessesP carrier morphism p := by
+  classical
+  show p ∈ (PProperty.all.toFinset.filter
+    (fun p => witnessesP carrier morphism p)) ↔ _
+  rw [Finset.mem_filter]
+  refine ⟨fun h => h.2, fun h => ⟨?_, h⟩⟩
+  cases p <;> decide
 
 /-- **Def 4.5.3** (Φ: Requirements Extraction) of
     `docs-next/00_start/lawvere-identification.md` §4.5.
@@ -479,8 +651,10 @@ def witnessedSet (carrier : Set ℕ) (morphism : (N M : ℕ) → Set (LinHom N M
 
     Φ leaves the carrier and morphism class unchanged; it augments the
     P-set with all P_i whose structural witnesses are present in
-    `(C, M)`. -/
-def phiFun (D : ArticulationCandidate) : ArticulationCandidate where
+    `(C, M)`.  The bridge fields propagate via case-split: a newly
+    added P_i was either already in `D.pset` (use `D`'s bridge) or
+    newly witnessed (use `witnessesP` directly). -/
+noncomputable def phiFun (D : ArticulationCandidate) : ArticulationCandidate where
   carrier := D.carrier
   morphism := D.morphism
   pset := D.pset ∪ witnessedSet D.carrier D.morphism
@@ -488,26 +662,62 @@ def phiFun (D : ArticulationCandidate) : ArticulationCandidate where
   hom_closed := D.hom_closed
   comp_closed := D.comp_closed
   id_in := D.id_in
+  p3_implies_R1 := by
+    intro h
+    rcases Finset.mem_union.mp h with h | h
+    · exact D.p3_implies_R1 h
+    · -- p3 ∈ witnessedSet ⟹ witnessesP D.carrier D.morphism .p3
+      exact (mem_witnessedSet.mp h : witnessesP D.carrier D.morphism .p3)
+  p4_implies_unbounded := by
+    intro h
+    rcases Finset.mem_union.mp h with h | h
+    · exact D.p4_implies_unbounded h
+    · exact (mem_witnessedSet.mp h : witnessesP D.carrier D.morphism .p4)
+  p6_implies_R2 := by
+    intro h
+    rcases Finset.mem_union.mp h with h | h
+    · exact D.p6_implies_R2 h
+    · exact (mem_witnessedSet.mp h : witnessesP D.carrier D.morphism .p6)
+  p7b_implies_R4 := by
+    intro h
+    rcases Finset.mem_union.mp h with h | h
+    · exact D.p7b_implies_R4 h
+    · exact (mem_witnessedSet.mp h : witnessesP D.carrier D.morphism .p7b)
 
 /-- **Monotonicity of `witnessesP` in the data** (per-`PProperty`).
 
-    Stated as: if `C ⊆ C'` and `M ⊆ M'` componentwise, then
-    `witnessesP C M p = true → witnessesP C' M' p = true`.
+    If `C ⊆ C'` and `M ⊆ M'` componentwise, then
+    `witnessesP C M p → witnessesP C' M' p`.
 
-    For the current skeleton's `witnessesP` (P5 = constant true, all
-    others = constant false), this is trivially true.  When the
-    full per-P_i witnesses are implemented, each case will need its
-    own monotonicity proof — but they all hold by inspection
-    (witnesses are positive existential conditions on `(C, M)`). -/
+    Each case is a positive existential / universal-existential over
+    `(C, M)`, hence monotone. -/
 theorem witnessesP_mono
     {C C' : Set ℕ} {M : (N K : ℕ) → Set (LinHom N K)}
     {M' : (N K : ℕ) → Set (LinHom N K)}
-    (_hC : C ⊆ C') (_hM : ∀ N K, M N K ⊆ M' N K)
+    (hC : C ⊆ C') (hM : ∀ N K, M N K ⊆ M' N K)
     (p : PProperty) :
-    witnessesP C M p = true → witnessesP C' M' p = true := by
-  -- Current witnessesP is constant in (C, M) for each p: P5 = true,
-  -- others = false.  So `witnessesP C M p = witnessesP C' M' p`.
-  cases p <;> intro h <;> exact h
+    witnessesP C M p → witnessesP C' M' p := by
+  intro h
+  cases p
+  · -- p1: ∃ N M f g, f, g ∈ M, f ≠ g
+    obtain ⟨N, K, f, g, hf, hg, hfg⟩ := h
+    exact ⟨N, K, f, g, hM N K hf, hM N K hg, hfg⟩
+  · exact h  -- p2: True
+  · -- p3: ∃ N ∈ C, N ≥ 1
+    obtain ⟨N, hN, hN1⟩ := h
+    exact ⟨N, hC hN, hN1⟩
+  · -- p4: ∀ N, ∃ M ∈ C, M > N
+    intro N
+    obtain ⟨K, hK, hKN⟩ := h N
+    exact ⟨K, hC hK, hKN⟩
+  · exact h  -- p5: True
+  · -- p6: 2 ∈ C
+    exact hC h
+  · -- p7a: ∃ N M f g, f, g ∈ M, f ≠ g
+    obtain ⟨N, K, f, g, hf, hg, hfg⟩ := h
+    exact ⟨N, K, f, g, hM N K hf, hM N K hg, hfg⟩
+  · -- p7b: 4 ∈ C
+    exact hC h
 
 /-- **Monotonicity of `witnessedSet`** in the data. -/
 theorem witnessedSet_mono
@@ -515,10 +725,10 @@ theorem witnessedSet_mono
     {M' : (N K : ℕ) → Set (LinHom N K)}
     (hC : C ⊆ C') (hM : ∀ N K, M N K ⊆ M' N K) :
     witnessedSet C M ⊆ witnessedSet C' M' := by
+  classical
   intro p hp
-  rw [witnessedSet, Finset.mem_filter] at hp ⊢
-  refine ⟨hp.1, ?_⟩
-  exact witnessesP_mono hC hM p hp.2
+  rw [mem_witnessedSet] at hp ⊢
+  exact witnessesP_mono hC hM p hp
 
 /-- **Thm 4.5.5** (Φ is monotone) of
     `docs-next/00_start/lawvere-identification.md` §4.5.
@@ -547,7 +757,7 @@ theorem phi_monotone : Monotone phiFun := by
 
 /-- **Def 4.5.3** packaged as a bundled `OrderHom`, ready for
     `OrderHom.lfp`. -/
-def Phi : ArticulationCandidate →o ArticulationCandidate where
+noncomputable def Phi : ArticulationCandidate →o ArticulationCandidate where
   toFun := phiFun
   monotone' := phi_monotone
 
@@ -632,72 +842,216 @@ theorem D1_is_minimum_P_satisfier
     · exact h
     · exact h_all_P p
 
-/-- **Prop 5.3.4** of `docs-next/00_start/lawvere-identification.md` §5.3.
+/-! ### § 5.1 The three "structural-shape" theorems (Prop 5.3.4)
 
-    D1's structural shape: carrier = full {R N : N ∈ ℕ}.
+The position paper §5.3.4 asserts:
 
-    *Proof from the paper:* Needed for P4's unbounded recursion.
-
-    *In Lean:*  Show D1.carrier = Set.univ by Kleene iteration
-    (`fixedPoints.lfp_eq_sSup_iterate` from Mathlib, requires
-    ω-continuity of Φ, which holds because the witnessing conditions
-    depend only on finite data).
-
-    **Sorry status:** This theorem is *FALSE for the current
-    skeleton's placeholder `witnessesP`*: with `witnessesP _ _ p =
-    (p = .p5)`, the candidate
-    `D = (carrier={0}, morphism=trivial, pset={p5})` satisfies
-    `Phi D ≤ D`, so `D1 ≤ D` and `D1.carrier ⊆ {0} ≠ Set.univ`.
-
-    The theorem becomes *true* once the per-`PProperty` witnesses are
-    fully implemented per §4.5: `witnessesP _ _ p4` must depend on
-    the carrier being unbounded, and consistency conditions (e.g.,
-    "if `p4 ∈ pset` then `carrier` is unbounded") must be added to
-    `ArticulationCandidate`.  With those additions, Kleene iteration
-    via `fixedPoints.lfp_eq_sSup_iterate` (Mathlib) discharges this.
-
-    Estimated discharge effort (post-witnessesP refinement):
-    ~1-2 weeks. -/
-theorem D1_carrier_eq_all_RN : D1.carrier = Set.univ := by
-  -- TODO: Kleene iteration after witnessesP and consistency are fully
-  -- elaborated.  See note above for why this is currently unprovable.
-  sorry
-
-/-! ## § 6 Companion: D1's full structural characterization (Prop 5.3.4)
-
-The position paper §5.3.4 also gives:
-
-* `M_{D_1} = ⋃ LinHom(N, M)` (all linear maps)
+* `C_{D_1} = {R N : N ∈ ℕ}` (full carrier-class)
+* `M_{D_1} = ⋃ LinHom(N, M)` (all morphisms)
 * `P_{D_1} = {P1, ..., P7b}` (all 8 atomic properties)
 
-These are stated as future-work theorems below for completeness.
+**v0.5 finding (mathematically rigorous).**  Under Def 4.5.3 of Φ —
+which leaves carrier and morphism unchanged and only augments pset —
+**all three of these unconditional claims are false**.
+
+The lfp `D1 = inf {D : Φ(D) ≤ D}` is the meet over ALL Φ-pre-fixed-points,
+including very small candidates such as `(∅, ∅, {.p2, .p5})` which IS a
+valid `ArticulationCandidate` and IS a Φ-fixed-point.  Hence
+`D1 ≤ (∅, ∅, {.p2, .p5})`, forcing:
+
+* `D1.carrier ⊆ ∅` (= ∅, contradicting the claim `= Set.univ`)
+* `D1.morphism N M ⊆ ∅` (contradicting `= Set.univ`)
+* `D1.pset ⊆ {.p2, .p5}` (contradicting `= all 8`)
+
+In the opposite direction, `p2` and `p5` are witnessed unconditionally
+by `witnessesP` (their predicate is `True`), so every Φ-pre-fixed-point
+contains them in its pset, hence so does the meet `D1.pset`.
+
+**Equality is therefore:**
+* `D1.carrier = ∅`
+* `D1.morphism N M = ∅` for all N, M
+* `D1.pset = {.p2, .p5}`
+
+This means **Def 4.5.3 of the position paper, as stated, does not
+deliver the intended fixed point.**  To recover the doctrinal target
+of §5.3.4, one needs to redefine Φ as a *carrier-and-morphism-growing*
+operator (not just pset-augmenting), or to add a non-trivial
+"existence" axiom forcing every candidate to contain at least R 1.
+
+The skeleton below records this fact:
+
+* The three original equalities are stated, documented as **false in
+  v0.5**, and marked `sorry` with explicit counter-example.
+* The three TRUE characterizations (`D1.carrier = ∅`, etc.) are
+  stated and proved as `D1_carrier_eq_emptyset`, etc.
+* The bridge-driven CONDITIONAL form is stated and proved as
+  `D1_p4_implies_unbounded`, etc.
+
+This is the cleanest formal record consistent with v0.4 doctrine.
+The proper fix lives in a follow-up `v0.6` of the position paper.
 -/
+
+/-- A candidate `D` is in `Φ`-pre-fixed-point set `{D : Φ(D) ≤ D}`
+    iff every `P` witnessed by `(D.carrier, D.morphism)` is already
+    in `D.pset`. -/
+theorem phi_le_iff (D : ArticulationCandidate) :
+    Phi D ≤ D ↔ witnessedSet D.carrier D.morphism ⊆ D.pset := by
+  refine ⟨?_, ?_⟩
+  · -- (→): if Phi D ≤ D then witnessedSet ⊆ D.pset
+    intro h p hp
+    have hp' : p ∈ (Phi D).pset := Finset.mem_union.mpr (Or.inr hp)
+    exact h.2.2 hp'
+  · -- (←): if witnessedSet ⊆ D.pset then Phi D ≤ D
+    intro h
+    refine ⟨Set.Subset.rfl, fun _ _ => Set.Subset.rfl, ?_⟩
+    intro p hp
+    rcases Finset.mem_union.mp hp with h' | h'
+    · exact h'
+    · exact h h'
+
+/-- The minimum Φ-pre-fixed-point: `(∅, ∅, {.p2, .p5})`. -/
+noncomputable def minPreFP : ArticulationCandidate where
+  carrier := ∅
+  morphism := fun _ _ => ∅
+  pset := {PProperty.p2, PProperty.p5}
+  prod_closed := by intro N M hN; exact absurd hN (Set.notMem_empty _)
+  hom_closed := by intro N M hN; exact absurd hN (Set.notMem_empty _)
+  comp_closed := by intro N M K f hf; exact absurd hf (Set.notMem_empty _)
+  id_in := by intro N hN; exact absurd hN (Set.notMem_empty _)
+  p3_implies_R1 := by intro h; simp at h
+  p4_implies_unbounded := by intro h; simp at h
+  p6_implies_R2 := by intro h; simp at h
+  p7b_implies_R4 := by intro h; simp at h
+
+/-- `minPreFP` is a Φ-pre-fixed-point. -/
+theorem minPreFP_is_pre_fp : Phi minPreFP ≤ minPreFP := by
+  rw [phi_le_iff]
+  classical
+  intro p hp
+  rw [mem_witnessedSet] at hp
+  -- hp : witnessesP ∅ ∅-morphism p — only p2 and p5 are witnessed
+  -- (p1, p7a need distinct morphisms in ∅ — impossible;
+  --  p3, p4, p6, p7b need elements in ∅ — impossible)
+  show p ∈ ({PProperty.p2, PProperty.p5} : Finset PProperty)
+  cases p
+  · -- p1
+    obtain ⟨_, _, _, _, hf, _, _⟩ := hp
+    exact absurd hf (Set.notMem_empty _)
+  · -- p2
+    simp
+  · -- p3
+    obtain ⟨_, hN, _⟩ := hp
+    exact absurd hN (Set.notMem_empty _)
+  · -- p4
+    obtain ⟨_, hM, _⟩ := hp 0
+    exact absurd hM (Set.notMem_empty _)
+  · -- p5
+    simp
+  · -- p6
+    exact absurd hp (Set.notMem_empty _)
+  · -- p7a
+    obtain ⟨_, _, _, _, hf, _, _⟩ := hp
+    exact absurd hf (Set.notMem_empty _)
+  · -- p7b
+    exact absurd hp (Set.notMem_empty _)
+
+/-- **(TRUE characterization; v0.5)** `D1.carrier = ∅`.
+
+    Follows from `D1 ≤ minPreFP` (since `minPreFP` is Φ-pre-fixed)
+    and `minPreFP.carrier = ∅`. -/
+theorem D1_carrier_eq_empty : D1.carrier = ∅ := by
+  apply Set.eq_empty_of_subset_empty
+  exact (OrderHom.lfp_le Phi minPreFP_is_pre_fp).1
+
+/-- **(TRUE characterization; v0.5)** `D1.morphism N M = ∅` for all N, M.
+
+    Follows from `D1 ≤ minPreFP` and `minPreFP.morphism N M = ∅`. -/
+theorem D1_morphism_eq_empty (N M : ℕ) : D1.morphism N M = ∅ := by
+  apply Set.eq_empty_of_subset_empty
+  exact (OrderHom.lfp_le Phi minPreFP_is_pre_fp).2.1 N M
+
+/-- **(TRUE characterization; v0.5)** `D1.pset = {.p2, .p5}`.
+
+    Forward: `D1 ≤ minPreFP` gives `⊆`.  Backward: both `.p2` and
+    `.p5` are unconditionally witnessed, hence belong to every
+    Φ-pre-fixed-point's pset, hence to the meet `D1.pset`. -/
+theorem D1_pset_eq_p2_p5 :
+    D1.pset = {PProperty.p2, PProperty.p5} := by
+  apply Finset.Subset.antisymm
+  · -- D1.pset ⊆ {p2, p5}
+    exact (OrderHom.lfp_le Phi minPreFP_is_pre_fp).2.2
+  · -- {p2, p5} ⊆ D1.pset.  Use `D1 = Phi(D1)`: p2, p5 ∈ witnessedSet ⊆ D1.pset.
+    have hfp : Phi D1 = D1 := D1_is_fixed_point
+    intro p hp
+    have hp_p2_or_p5 : p = .p2 ∨ p = .p5 := by
+      rcases Finset.mem_insert.mp hp with h | h
+      · exact Or.inl h
+      · exact Or.inr (Finset.mem_singleton.mp h)
+    -- Show p ∈ (Phi D1).pset = D1.pset ∪ witnessedSet
+    rw [← hfp]
+    apply Finset.mem_union.mpr
+    right
+    classical
+    rw [mem_witnessedSet]
+    -- witnessesP D1.carrier D1.morphism p for p ∈ {p2, p5}
+    rcases hp_p2_or_p5 with h | h <;> subst h <;> exact trivial
+
+/-- **(Bridge corollary; v0.5)** If `.p4 ∈ D1.pset`, then D1's carrier
+    is unbounded.  Direct consequence of `D1.p4_implies_unbounded`. -/
+theorem D1_p4_implies_unbounded :
+    .p4 ∈ D1.pset → ∀ N : ℕ, ∃ M ∈ D1.carrier, M > N :=
+  D1.p4_implies_unbounded
+
+/-- **(Bridge corollary; v0.5)** If `.p6 ∈ D1.pset`, then `R 2 ∈ D1.carrier`. -/
+theorem D1_p6_implies_R2 : .p6 ∈ D1.pset → 2 ∈ D1.carrier :=
+  D1.p6_implies_R2
+
+/-- **(Bridge corollary; v0.5)** If `.p7b ∈ D1.pset`, then `R 4 ∈ D1.carrier`. -/
+theorem D1_p7b_implies_R4 : .p7b ∈ D1.pset → 4 ∈ D1.carrier :=
+  D1.p7b_implies_R4
+
+/-! ### § 5.2 The three doctrinal targets of Prop 5.3.4 — stated, FALSE in v0.5
+
+These three statements are the original §5.3.4 targets.  As established
+above, **all three are false** under Def 4.5.3 of v0.4.  The skeleton
+keeps them as named `sorry`-marked declarations so that downstream
+reverse-references (e.g. `Foundation/R/ClaimZ.D1Articulation` bridge)
+remain compilable.
+
+Each statement is marked with its explicit counter-example via
+`minPreFP`.  Discharging them would require redefining Φ to grow the
+carrier (departing from §4.5.3 of the position paper).
+-/
+
+/-- **Prop 5.3.4 (carrier part)** — `D1.carrier = Set.univ`.
+
+    **FALSE in v0.5** under Def 4.5.3 of Φ.  The minimum Φ-pre-fixed-point
+    `minPreFP = (∅, ∅, {.p2, .p5})` satisfies `D1 ≤ minPreFP`, hence
+    `D1.carrier ⊆ ∅` (see `D1_carrier_eq_empty`).
+
+    To make this theorem true requires redefining Φ to grow the carrier
+    when new P's are witnessed (not done in v0.4 of the position paper). -/
+theorem D1_carrier_eq_all_RN : D1.carrier = Set.univ := by
+  -- False: D1_carrier_eq_empty shows D1.carrier = ∅.
+  -- Kept as `sorry` for downstream reference compatibility.
+  sorry
 
 /-- **Prop 5.3.4 (morphism part)** of `lawvere-identification.md` §5.3:
     D1's morphism class contains *all* linear maps between members of
     its carrier-class.
 
-    **Same scope caveat as `D1_carrier_eq_all_RN`**: false for the
-    current placeholder `witnessesP`/`LinHom`; becomes true once
-    per-`PProperty` witnesses are fully implemented (P3 forces all
-    bilinear maps, P7a forces alphabet morphisms, P7b forces canonical
-    ring, etc.). -/
+    **FALSE in v0.5** under Def 4.5.3.  See `D1_morphism_eq_empty`. -/
 theorem D1_morphism_eq_all (N M : ℕ) : D1.morphism N M = Set.univ := by
-  -- TODO: Once witnessesP is fully elaborated, every linear map will
-  -- be forced into D1.morphism by the P-witnessing constraints.
+  -- False: D1_morphism_eq_empty shows D1.morphism N M = ∅.
   sorry
 
 /-- **Prop 5.3.4 (P-set part)** of `lawvere-identification.md` §5.3:
-    D1's P-set is the full 8-element set.  This is the precise
-    statement that "D1 satisfies all of P1-P7".
+    D1's P-set is the full 8-element set.
 
-    **Same scope caveat as `D1_carrier_eq_all_RN`**: false for the
-    current placeholder `witnessesP` (only P5 is witnessed); becomes
-    true once witnessesP is fleshed out so that the lfp's pset
-    accumulates all 8 properties. -/
+    **FALSE in v0.5** under Def 4.5.3.  See `D1_pset_eq_p2_p5`:
+    `D1.pset = {.p2, .p5}`. -/
 theorem D1_pset_eq_all : D1.pset = PProperty.all.toFinset := by
-  -- TODO: Once witnessesP fires for all 8 P's at the saturated D1,
-  -- the lfp's pset will be PProperty.all.toFinset.
+  -- False: D1_pset_eq_p2_p5 shows D1.pset = {.p2, .p5}.
   sorry
 
 /-! ## § 7 Bridge to existing `ClaimZ.D1Articulation` (future work)

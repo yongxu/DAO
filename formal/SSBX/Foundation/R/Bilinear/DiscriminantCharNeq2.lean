@@ -48,11 +48,24 @@ the **Arf invariant** (binary {0, 1}) instead; see
 
 ## Status
 
-This is a **skeleton** — definitions and statements are provided; the
-hard classification theorems are `sorry` with docstrings explaining
-the obstruction.  Estimated discharge: 2-3 weeks of focused work
-once Wedderburn-instance (G11-A) and polymorphic-field adaptation
-(G11-C) land.
+**Tractable infrastructure discharged (2026-05-17):**
+
+* `two_ne_zero_zmod` — `(2 : ZMod p) ≠ 0` via `CharP.cast_eq_zero_iff`.
+* `bilForm_from_quadForm` — polarization identity
+  `B(x,y) = (Q(x+y) - Q(x) - Q(y)) / 2` via `Finset.sum_add_distrib`
+  + `ring`, with `eq_div_iff two_ne_zero_zmod`.
+* `discriminant_classes_card_two` — `|F_p* / F_p*²| = 2` via
+  `FiniteField.exists_nonsquare` + `quadraticChar` multiplicativity
+  (`χ(c) = χ(a) = -1 ⟹ χ(c·a⁻¹) = 1 ⟹ IsSquare (c·a⁻¹)`).
+
+**Remaining (research-level, 2 sorries):**
+
+* `classification_finite_fields_existence` (IsSquare branch) — needs
+  the discriminant-equivalence bridge `Q.discr` is a square ⟹ `Q ~ ⟨1,…,1⟩`,
+  which depends on orthogonal diagonalization not packaged in Mathlib.
+* `classification_finite_fields_uniqueness` — full Witt cancellation
+  + diagonal-form uniqueness over `F_p` odd; estimated 1-2 weeks of
+  focused Mathlib API plumbing.
 
 ## Doctrinal anchor
 
@@ -70,6 +83,8 @@ import Mathlib.Algebra.Field.ZMod
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
 import Mathlib.LinearAlgebra.QuadraticForm.Isometry
 import Mathlib.Algebra.Group.Even
+import Mathlib.FieldTheory.Finite.Basic
+import Mathlib.NumberTheory.LegendreSymbol.QuadraticChar.Basic
 
 namespace SSBX.Foundation.R
 
@@ -89,13 +104,19 @@ variable {N : ℕ} {p : ℕ} [hp : Fact (Nat.Prime p)] [hp2 : Fact (p ≠ 2)]
 /-- `2 ≠ 0` in `ZMod p` when `p ≠ 2` is prime.  Used by the
     bilinear-from-quadratic recovery `B(x,y) = (Q(x+y) - Q(x) - Q(y)) / 2`.
 
-    `sorry`-marked at the bridge step: needs
-    `ZMod.natCast_self_eq_zero` + `Nat.Prime.two_le` + casework on
-    `p = 0,1,2` vs `p ≥ 3`.  Standard one-liner once routed. -/
+    Routes through `CharP.cast_eq_zero_iff (ZMod p) p 2 : (2 : ZMod p) = 0 ↔ p ∣ 2`;
+    primality + `p ≠ 2` rules out `p ∣ 2`. -/
 theorem two_ne_zero_zmod : (2 : ZMod p) ≠ 0 := by
-  -- Sketch: `(2 : ZMod p) = 0 ↔ p ∣ 2` (CharP), and `p ∣ 2` for prime
-  -- `p` forces `p = 2`, contradicting `hp2.out : p ≠ 2`.
-  sorry
+  intro h
+  have h2 : (p : ℕ) ∣ 2 := by
+    have := (CharP.cast_eq_zero_iff (ZMod p) p 2).mp (by exact_mod_cast h)
+    exact this
+  -- `p` prime and `p ∣ 2` forces `p = 2`.
+  have hp_prime := hp.out
+  have : p = 1 ∨ p = 2 := (Nat.dvd_prime Nat.prime_two).mp h2
+  rcases this with h1 | h2'
+  · exact hp_prime.one_lt.ne' h1
+  · exact hp2.out h2'
 
 /-- `Invertible (2 : ZMod p)` when `p` is an odd prime.  Required by
     Mathlib's `QuadraticMap.discr` (which assumes `Invertible (2 : R)`
@@ -168,13 +189,29 @@ theorem bilForm_from_quadForm (x y : R N (ZMod p)) :
     bilForm_charNeq2 x y
       = (quadForm_charNeq2 (x + y)
           - quadForm_charNeq2 x - quadForm_charNeq2 y) / (2 : ZMod p) := by
-  -- Expand `Q(x+y) = Σ (x_i + y_i)^2 = Σ x_i^2 + 2 Σ x_i y_i + Σ y_i^2`
-  -- = Q(x) + 2*B(x,y) + Q(y); subtract & divide by `2`.
-  -- The arithmetic identity is straightforward over `ZMod p` once
-  -- we have `2 ≠ 0`.  Marked `sorry` for now — pure arithmetic
-  -- on `Finset.sum` with `mul_add`, `add_mul`, `Finset.sum_add_distrib`,
-  -- and `Finset.mul_sum`.
-  sorry
+  -- Strategy: multiply both sides by 2 and use `eq_div_iff`.
+  -- `Q(x+y) - Q(x) - Q(y) = Σ ((x i + y i)^2 - (x i)^2 - (y i)^2) = Σ (2 * x i * y i)
+  --                       = 2 * Σ (x i * y i) = 2 * B(x, y)`.
+  rw [eq_div_iff two_ne_zero_zmod]
+  unfold quadForm_charNeq2 bilForm_charNeq2
+  -- Goal: (Σ x i * y i) * 2 = (Σ (x+y) i * (x+y) i) - (Σ x i * x i) - (Σ y i * y i)
+  simp only [add_apply_zmod]
+  -- Pointwise expansion: (x i + y i) * (x i + y i) = x i * x i + x i * y i + y i * x i + y i * y i
+  have h_pt : ∀ i : Fin N,
+      (x i + y i) * (x i + y i)
+        = x i * x i + (x i * y i + y i * x i) + y i * y i := by
+    intro i; ring
+  -- Replace the sum of squares on the right using pointwise expansion.
+  rw [Finset.sum_congr rfl (fun i _ => h_pt i)]
+  -- Split the sum into pieces.
+  simp only [Finset.sum_add_distrib]
+  -- The cross terms: Σ (x i * y i + y i * x i) = Σ x i * y i + Σ y i * x i
+  -- and Σ y i * x i = Σ x i * y i by commutativity.
+  have hcross : (Finset.univ : Finset (Fin N)).sum (fun i => y i * x i)
+                = Finset.univ.sum (fun i => x i * y i) :=
+    Finset.sum_congr rfl (fun i _ => mul_comm _ _)
+  rw [hcross]
+  ring
 
 /-! ## § 5 Discriminant — the char ≠ 2 classifier
 
@@ -319,9 +356,41 @@ level (`wen-algebra` v0.7 §4-bis or successor), not in this file. -/
 theorem discriminant_classes_card_two :
     ∃ (a b : ZMod p), a ≠ 0 ∧ b ≠ 0 ∧ ¬IsSquare a ∧ IsSquare b
       ∧ ∀ c : ZMod p, c ≠ 0 → IsSquare c ∨ ∃ s : ZMod p, s ≠ 0 ∧ IsSquare s ∧ c = s * a := by
-  -- Standard `F_p* / F_p*²` ≃ `{±1}` via `quadraticChar`.  ~1 week
-  -- once we route through `ZMod.exists_sq_eq_*_iff` lemmas.
-  sorry
+  -- Establish `ringChar (ZMod p) ≠ 2` from `Fact (p ≠ 2)` and `ZMod.ringChar_zmod_n`.
+  have hringChar : ringChar (ZMod p) ≠ 2 := by
+    rw [ZMod.ringChar_zmod_n]; exact hp2.out
+  -- Extract a non-square `a : ZMod p` via `FiniteField.exists_nonsquare`.
+  -- `Fintype (ZMod p)` requires `NeZero p`, which follows from primality.
+  haveI : NeZero p := ⟨hp.out.pos.ne'⟩
+  obtain ⟨a, ha_nonsq⟩ := FiniteField.exists_nonsquare (F := ZMod p) hringChar
+  -- A non-square is nonzero (since 0 is a square).
+  have ha_ne : a ≠ 0 := fun h => ha_nonsq (h ▸ IsSquare.zero)
+  refine ⟨a, 1, ha_ne, one_ne_zero, ha_nonsq, IsSquare.one, ?_⟩
+  intro c hc_ne
+  by_cases hc_sq : IsSquare c
+  · exact Or.inl hc_sq
+  · -- `c` and `a` are both non-squares.  Then `s := c * a⁻¹` is a non-zero square,
+    -- and `c = s * a`.
+    refine Or.inr ⟨c * a⁻¹, ?_, ?_, ?_⟩
+    · exact mul_ne_zero hc_ne (inv_ne_zero ha_ne)
+    · -- IsSquare (c * a⁻¹) via quadraticChar multiplicativity.
+      -- χ(c) = -1, χ(a) = -1, so χ(c * a⁻¹) = χ(c) * χ(a)⁻¹ = 1, hence IsSquare.
+      have h_inv_ne : a⁻¹ ≠ 0 := inv_ne_zero ha_ne
+      have h_mul_ne : c * a⁻¹ ≠ 0 := mul_ne_zero hc_ne h_inv_ne
+      -- a⁻¹ is also a non-square (since IsSquare is closed under inverses).
+      have ha_inv_nonsq : ¬IsSquare a⁻¹ := by
+        intro h; exact ha_nonsq (isSquare_inv.mp h)
+      -- quadraticChar values of c and a⁻¹ are both -1.
+      have hc_chi : quadraticChar (ZMod p) c = -1 :=
+        quadraticChar_neg_one_iff_not_isSquare.mpr hc_sq
+      have ha_inv_chi : quadraticChar (ZMod p) a⁻¹ = -1 :=
+        quadraticChar_neg_one_iff_not_isSquare.mpr ha_inv_nonsq
+      -- Multiplicativity: χ(c * a⁻¹) = χ(c) * χ(a⁻¹) = (-1) * (-1) = 1.
+      have h_prod_chi : quadraticChar (ZMod p) (c * a⁻¹) = 1 := by
+        rw [map_mul, hc_chi, ha_inv_chi]; ring
+      exact (quadraticChar_one_iff_isSquare h_mul_ne).mp h_prod_chi
+    · -- c = (c * a⁻¹) * a
+      rw [mul_assoc, inv_mul_cancel₀ ha_ne, mul_one]
 
 /-! ## § 8 Sanity at small `N` / small `p`
 

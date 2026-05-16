@@ -22,10 +22,9 @@ equivalence).  This file completes the cross-base functor library by:
 
 3. Constructing the **Pauli → Hilbert representation** as concrete
    `2^n × 2^n` complex matrices.  For `n = 1` this is the explicit
-   `{I, X, Y, Z}` table on `Matrix (Fin 2) (Fin 2) ℂ`; for `n > 1`
-   the dimension and Kronecker structure is recorded but full unitary
-   composition is left as `sorry` (waiting on a uniform Mathlib
-   `Matrix.kroneckerMap` integration);
+   `{I, X, Y, Z}` table on `Matrix (Fin 2) (Fin 2) ℂ`; for `n ≥ 2`
+   the recursion uses Mathlib's `Matrix.kroneckerMap (· * ·)` reindexed
+   through `hilbertProdEquiv : Fin 2 × Fin (2^n) ≃ Fin (2^(n+1))`;
 
 4. Building the **composed cross-base functor** `R (2*n) → Hilbert(2^n)` via
    `rToPauli` followed by `pauliToHilbert`;
@@ -45,8 +44,10 @@ equivalence).  This file completes the cross-base functor library by:
   with `sorry` (follows from `pauliToR_compose` + `sigma` linearity, but
   requires a "commute mod phase" predicate beyond mod-phase scope).
 * Section 3 (Pauli → Hilbert): single-qubit table fully concrete; general
-  n uses an explicit recursion via `Fin (2^n)` index splitting but the
-  matrix-tensor algebra theorems are `sorry`.
+  n is built via the canonical `Matrix.kroneckerMap` recursion (definition
+  full; matrix-tensor algebra **theorems** such as
+  `pauliToHilbert (p ⊗ q) = pauliToHilbert p ⊗ pauliToHilbert q` are
+  future work but no longer a `sorry` in the definition).
 * Section 4 (R → Hilbert composite): definition only, no theorems.
 * Section 5 (`RFamily k` bridges): definitional `Bool ↔ R` shipped;
   `Bool ≃ ZMod 2` bridge shipped; `RFamily (ZMod p) N` is a carrier-level
@@ -82,6 +83,8 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Matrix.Mul
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.ZMod.Basic
+import Mathlib.LinearAlgebra.Matrix.Kronecker
+import Mathlib.Logic.Equiv.Fin.Basic
 
 namespace SSBX.Foundation.Wen.Embeddings.HilbertPauliFunctor
 
@@ -170,11 +173,13 @@ mod-phase Pauli operators.
 For `n = 1`, the table is the canonical `{I, X, Y, Z}` from
 `Foundation.Modern.Quantum`.
 
-For `n > 1`, the natural definition is the Kronecker (tensor) product of
-the per-qubit single-qubit matrices.  Lifting `Matrix.kroneckerMap` into
-a strict-monoidal functor requires a non-trivial wad of Mathlib glue, so
-we record the index-splitting recursion and leave the matrix-algebra
-identities (`pauliToHilbert (p ⊗ q) = … ⊗ …`) as `sorry`. -/
+For `n ≥ 2`, the natural definition is the Kronecker (tensor) product of
+the per-qubit single-qubit matrices.  We use Mathlib's
+`Matrix.kroneckerMap (· * ·)` plus a carrier reindex
+`Fin 2 × Fin (2^n) ≃ Fin (2^(n+1))` to land in
+`Matrix (Fin (2^(n+1))) (Fin (2^(n+1))) ℂ`.  The matrix-algebra
+identities (`pauliToHilbert (p ⊗ q) = … ⊗ …`) are stated as theorems in
+the (future) `kroneckerMap`-on-`pauliToHilbert` API. -/
 
 /-- The four single-qubit Pauli base operators as `2 × 2` complex
     matrices, matching `Foundation.Modern.Quantum.{pauliX,pauliY,pauliZ}`
@@ -270,33 +275,46 @@ theorem pauliBaseToHilbert_injective :
 For `n ≥ 1`, the n-qubit Pauli `p : Fin n → PauliBase` produces a
 `2^n × 2^n` matrix via the recursion
 
-    pauliToHilbert (p :: tail) = pauliBaseToHilbert p ⊗ pauliToHilbert tail.
+    pauliToHilbert (p :: tail) = pauliBaseToHilbert (p 0) ⊗ pauliToHilbert tail
 
-Encoding this cleanly requires `Matrix.kroneckerMap`; for now we expose
-the **dimension and definition skeleton** and leave the recursive case
-as `sorry`. -/
+implemented via Mathlib's `Matrix.kroneckerMap (· * ·)` and the carrier
+equivalence `Fin 2 × Fin (2^n) ≃ Fin (2^(n+1))`. -/
 
 /-- The Hilbert-space dimension carried by an n-qubit system: `2 ^ n`. -/
 @[reducible] def hilbertDim (n : ℕ) : ℕ := 2 ^ n
 
+/-- Carrier equivalence `Fin 2 × Fin (2^n) ≃ Fin (2^(n+1))`.
+
+    Decomposes a Hilbert-space basis index `Fin (2^(n+1))` into a
+    "head qubit" coordinate `Fin 2` paired with a "tail" coordinate
+    `Fin (2^n)`.  Built from Mathlib's `finProdFinEquiv` plus the
+    propositional equality `2 * 2^n = 2^(n+1)` (from `pow_succ'`). -/
+def hilbertProdEquiv (n : ℕ) : Fin 2 × Fin (2 ^ n) ≃ Fin (2 ^ (n + 1)) :=
+  finProdFinEquiv.trans (Equiv.cast (by rw [pow_succ']))
+
 /-- The n-qubit Pauli → Hilbert matrix representation.
 
     * `n = 0`: the trivial `1 × 1` identity matrix `[[1]]`.
-    * `n = 1`: dispatch through `pauliBaseToHilbert`.
-    * `n ≥ 2`: tensor-product recursion — left as `sorry` pending a
-      uniform `Matrix.kroneckerMap` lift. -/
+    * `n + 1`: tensor-product recursion via `Matrix.kroneckerMap`:
+      `pauliToHilbert p = pauliBaseToHilbert (p 0) ⊗ pauliToHilbert (Fin.tail p)`,
+      reindexed via `hilbertProdEquiv n` to land in
+      `Matrix (Fin (2^(n+1))) (Fin (2^(n+1))) ℂ`.
+
+    This recursion is the canonical tensor-product representation of
+    the n-qubit Pauli group on `ℂ^(2^n)`. -/
 noncomputable def pauliToHilbert : ∀ {n : ℕ}, PauliN n →
     Matrix (Fin (hilbertDim n)) (Fin (hilbertDim n)) ℂ
   | 0,     _ => (1 : Matrix (Fin (hilbertDim 0)) (Fin (hilbertDim 0)) ℂ)
-  | 1,     p =>
-      -- `Fin (2^1) = Fin 2`; cast through the definitional identity.
-      let m : Matrix (Fin 2) (Fin 2) ℂ := pauliBaseToHilbert (p 0)
-      (show Fin (2 ^ 1) = Fin 2 from by simp) ▸
-        (show Fin (2 ^ 1) = Fin 2 from by simp) ▸ m
-  | n + 2, _ =>
-      -- TODO(G7-Hilbert-tensor): Kronecker recursion across the
-      -- first qubit and the remaining `n + 1`-qubit factor.
-      sorry
+  | n + 1, p =>
+      -- head qubit on Fin 2, tail (n-qubit Pauli) on Fin (2^n)
+      let head : Matrix (Fin 2) (Fin 2) ℂ := pauliBaseToHilbert (p 0)
+      let tail : Matrix (Fin (2 ^ n)) (Fin (2 ^ n)) ℂ :=
+        pauliToHilbert (n := n) (fun i => p i.succ)
+      -- Kronecker product: Matrix (Fin 2 × Fin (2^n)) (Fin 2 × Fin (2^n)) ℂ
+      let kron : Matrix (Fin 2 × Fin (2 ^ n)) (Fin 2 × Fin (2 ^ n)) ℂ :=
+        Matrix.kroneckerMap (· * ·) head tail
+      -- reindex to Matrix (Fin (2^(n+1))) (Fin (2^(n+1))) ℂ
+      Matrix.reindex (hilbertProdEquiv n) (hilbertProdEquiv n) kron
 
 /-- Sanity (n = 0): the empty product is the `1 × 1` identity. -/
 example : pauliToHilbert (n := 0) (fun i => i.elim0) =
