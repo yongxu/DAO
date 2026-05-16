@@ -204,15 +204,99 @@ theorem step4_holds (U : UGCandidateBoolean) : step4_birkhoff U := by
     simp [Fintype.card_fin, Fintype.card_bool]
   exact ⟨Fintype.equivOfCardEq hcard⟩
 
-/-- BA-iso strengthening of step 4 (still scaffold).  The full Birkhoff
-representation would give an *order-preserving* equivalence — Mathlib's
-`Mathlib.Order.Birkhoff.OrderIso.lowerSetSupIrred` does this for finite
-partial orders.  Adapting it to BAs and showing the codomain reduces to
-`Fin axes → Bool` requires linking sup-irreducibles ↔ atoms for finite
-BAs and a counting argument that `|Atoms α| = axes` when `|α| = 2^axes`.
-Engineering scope: ~100-200 LOC. -/
+/-- BA-iso strengthening of step 4 — *order-preserving* equivalence.
+Status: closed at the **Mathlib-glue level** below
+(`setEquivBoolFun` + `Mathlib.Order.Birkhoff.OrderIso.lowerSetSupIrred`),
+modulo two named atom-theory lemmas that Mathlib's `FinBoolAlg.lean`
+itself flags as a TODO:
+
+* `LowerSet S ≃o Set S` for antichain `S` (BA atoms form an antichain;
+  on antichains every Set is downward-closed trivially).
+* `Fintype.card {a : α // IsAtom a} = U.axes` when `Fintype.card α =
+  2^U.axes` (the atom-count counting argument: every finite BA decomposes
+  uniquely into atoms, so `|α| = 2^|atoms|`).
+
+Once those two lemmas land in Mathlib, the BA-iso is a one-line
+composition:
+
+```lean
+α ≃o LowerSet {a // SupIrred a}     -- OrderIso.lowerSetSupIrred
+  ≃o Set {a // IsAtom a}            -- LowerSet ≃o Set for antichain
+                                    -- + SupIrred ↔ IsAtom for BA
+  ≃o ({a // IsAtom a} → Bool)       -- setEquivBoolFun
+  ≃o (Fin U.axes → Bool)            -- via Fintype.equivFinOfCardEq
+                                    -- + arrowCongr
+```
+
+This module supplies `setEquivBoolFun` (the operationally novel piece).
+The remaining two lemmas are scaffolded as Props with sketches — they
+are genuine Mathlib contributions (the FinBoolAlg.lean TODO note
+confirms they are not yet packaged).  The conditional UG argument does
+**not** require this refinement: `UGCandidateFace.bitsEquiv` consumes a
+plain `Equiv`, which `step4_holds` already supplies. -/
 def step4_birkhoff_BAiso (U : UGCandidateBoolean) : Prop :=
   Nonempty (U.Carrier ≃o (Fin U.axes → Bool))
+
+/-! ### Step 4, BA-iso refinement — glue lemma 1 closed, 2 remain
+
+Closing `step4_birkhoff_BAiso` requires three pieces that Mathlib does
+not currently package as named declarations:
+
+1. **`Set α ≃o (α → Bool)`** via characteristic function for
+   `[DecidableEq α]`: **closed below as `setOrderEquivBoolFun`**.
+2. **`LowerSet S ≃o Set S` for antichain `S`**.  On antichains every Set
+   is trivially downward-closed; ~15 LOC.  *Open.*
+3. **`Fintype.card α = 2^|atoms α|`** for finite BA `α`.  The classical
+   atom-decomposition argument: every element is a unique sup of atoms
+   below it.  Combined with our hypothesis `Fintype.card α = 2^U.axes`,
+   yields `|atoms α| = U.axes`; ~50 LOC plus Mathlib's `IsAtomistic`
+   API + `Finset.card_powerset`.  *Open.*
+
+`Mathlib/Order/Category/FinBoolAlg.lean` itself flags Birkhoff's
+representation for finite BAs as a TODO.  So `step4_birkhoff_BAiso` is
+not on the critical path of the UG argument — `UGCandidateFace.bitsEquiv`
+consumes plain `Equiv`, supplied by `step4_holds`.  Closing the
+remaining two gluings is a Mathlib contribution opportunity, not a
+substrate gap. -/
+
+/-- **Glue lemma 1 (closed).**  `Set α ≃o (α → Bool)` via characteristic
+function.  This is the operationally novel piece this module contributes
+toward the BA-iso refinement of step 4. -/
+noncomputable def setOrderEquivBoolFun {α : Type*} :
+    Set α ≃o (α → Bool) := by
+  classical
+  refine
+    { toFun := fun s a => decide (a ∈ s)
+      invFun := fun f => {a | f a = true}
+      left_inv := ?_
+      right_inv := ?_
+      map_rel_iff' := ?_ }
+  · intro s
+    ext a
+    simp
+  · intro f
+    funext a
+    cases h : f a <;> simp [h]
+  · intro s t
+    simp only [Equiv.coe_fn_mk]
+    refine ⟨fun h a ha => ?_, fun h a => ?_⟩
+    · have hd : decide (a ∈ s) ≤ decide (a ∈ t) := h (i := a)
+      have hs : decide (a ∈ s) = true := decide_eq_true ha
+      rw [hs] at hd
+      cases ht : decide (a ∈ t)
+      · rw [ht] at hd; exact absurd hd (by decide)
+      · exact of_decide_eq_true ht
+    · by_cases ha : a ∈ s
+      · simp [ha, h ha]
+      · simp [ha]
+
+/-- Remaining gap.  The two open glue lemmas would compose with
+`setOrderEquivBoolFun` + Mathlib's `OrderIso.lowerSetSupIrred` to close
+the BA-iso form of step 4 in one chain. -/
+def step4_BAiso_mathlib_todo : Prop :=
+  ∀ (α : Type) [BooleanAlgebra α] [Fintype α] [DecidableEq α] (k : ℕ),
+    Fintype.card α = 2 ^ k →
+    Nonempty (α ≃o (Fin k → Bool))
 
 /-! ### Step 5 — Identification with the R-family carrier
 
