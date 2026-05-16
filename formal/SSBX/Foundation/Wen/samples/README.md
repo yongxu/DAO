@@ -9,7 +9,7 @@
 
 两层并非并行宇宙：
 
-1. **WenSurface → WenDef.Tm**：`wenyanCompile` 经 `theoremBackedSemanticsFor?` desugar 把 371 个 catalogue 算子（88% 已接电）落到 22 个 builtin（推=`tuiBody` / 同=`tongBody` …）。
+1. **WenSurface → WenDef.Tm**：`wenyanCompile` 经 `theoremBackedSemanticsFor?` desugar 把全 371 个 catalogue 算子落到 WenDef.Tm 之 22 builtin + helper body（推=`tuiBody` / 同=`tongBody` / 关系算子→`hexRelEqBody` / 谓词算子→`hexPredTrueBody` ……）。覆盖率 **100%**（形式见证：`theorem theoremBackedOperatorIds_length : theoremBackedOperatorIds.length = 371` + `theorem structuralCatalogueOperatorIds_length : structuralCatalogueOperatorIds.length = 0`，Foundation/Wen/WenSurface/Semantics.lean:1142-1153）。注：46 个学派关系算子（R_1..R_10/C_1/C_3/K_2..K_4/G_3/G_6/G_10/I_9/D_5..D_7/L_4/Y_20/Z_4/Z_14/Z_15/Z_39/Z_40/ZHU_1/CHU_10/LIJ_6/LIJ_9/ZA_13..20/P_1/P_14..17/P_20/B_8/F_12）共享 `hexRelEqBody / hexPredTrueBody` 两个占位 body —— 语法接电、denotation 退为等价类，是「domain caveat」而非「desugar gap」。
 2. **WenDef.Tm → Bagua-ISA**：`compileHexFunCertified?` (in `WenDefCompile.lean`) 把 complement-equivariant 之 Hex→Hex 子集编译到 YiInstr 程序，由 `runHexProg` 或 `wenyan run` CLI 执行。
 
 故 Bagua-ISA 是 WenDef.Tm 之**后端目标**而非另一表面，两条表面在 Tm 处汇合。**「错等变」约束** (`f(h.complement) = (f h).complement`) 是 YiInstr 之代数刚性 — 故 `推`/`损`/`生` 等非 equivariant 项不可桥（这是结构性界限，不是工程缺口）。
