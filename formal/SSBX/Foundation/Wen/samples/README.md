@@ -7,7 +7,12 @@
 | **Bagua-ISA** | 22-token 汇编 (`«终» «推» «翻爻»`…) | `hello.wen` / `daoJudge.wen` / `microKernel.wen` | `wenyan` CLI binary |
 | **WenSurface** | 文言级 prose (`推 之 一` / `凡 甲 同 甲 甲`) | `wenSurfaceProse.wen` | `wenyanInterp` / `wenyanInterpBool` (Lean) |
 
-两层并非并行宇宙：WenSurface 经 `theoremBackedSemanticsFor?` desugar 落到与 Bagua-ISA 同一组 `WenDef.Tm` builtin (推=`tuiBody` / 同=`tongBody` …), 在 R₈ 投影上汇合.
+两层并非并行宇宙：
+
+1. **WenSurface → WenDef.Tm**：`wenyanCompile` 经 `theoremBackedSemanticsFor?` desugar 把 371 个 catalogue 算子（88% 已接电）落到 22 个 builtin（推=`tuiBody` / 同=`tongBody` …）。
+2. **WenDef.Tm → Bagua-ISA**：`compileHexFunCertified?` (in `WenDefCompile.lean`) 把 complement-equivariant 之 Hex→Hex 子集编译到 YiInstr 程序，由 `runHexProg` 或 `wenyan run` CLI 执行。
+
+故 Bagua-ISA 是 WenDef.Tm 之**后端目标**而非另一表面，两条表面在 Tm 处汇合。**「错等变」约束** (`f(h.complement) = (f h).complement`) 是 YiInstr 之代数刚性 — 故 `推`/`损`/`生` 等非 equivariant 项不可桥（这是结构性界限，不是工程缺口）。
 
 ## Inventory
 
@@ -24,6 +29,7 @@
 | File | Description | Lean mirror |
 |---|---|---|
 | `wenSurfaceProse.wen` | 7-行文言级 prose, 演示 S-组虚词 之/而/凡/令/者 同走 desugar 至 22 核 builtin | `SSBX.Foundation.Wen.WenSurface.ProseSample` |
+| `wenSurfaceISABridge.wen` | 文言 → Bagua-ISA 桥之 5 个可桥例 (错/综/互/而 反 综/再 反) + 3 个反例 (推/損/同 — non-equivariant)；演示二层在 Tm 处汇合 | `SSBX.Foundation.Wen.WenSurface.ISABridge` |
 
 ## Regenerate the generated samples
 
@@ -46,7 +52,8 @@ wenyan run microKernel.wen               # default 乾 init, expect halted withi
 ### WenSurface (Lean)
 
 ```bash
-lake build SSBX.Foundation.Wen.WenSurface.ProseSample
+lake build SSBX.Foundation.Wen.WenSurface.ProseSample   # 7 行文言 → Tm denotation
+lake build SSBX.Foundation.Wen.WenSurface.ISABridge     # 8 行文言 → YiInstr 桥 + 64-Hex agreement
 ```
 
-`wenSurfaceProse.wen` 自身仅作文档展示; 实际 round-trip 在 ProseSample.lean 中由 `theorem proseSurface_endToEnd` 见证.
+`.wen` 文件自身仅作文档展示；实际 round-trip 在对应 Lean 模块中由 `theorem proseSurface_endToEnd` / `theorem isaBridge_endToEnd` 见证。
