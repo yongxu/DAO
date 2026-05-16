@@ -1,385 +1,153 @@
 /-
-# Foundation.Wen.Core.Examples — basic R 8 bit-machine test programs
+# Foundation.Wen.Core.Examples — demo programs
 
-A small gallery of example programs, all expressed purely on `R 8`
-with **no Yi / Hexagram / Shi / Pauli** semantics.  These witnesses
-exercise each of the eight primitive instructions and demonstrate
-their algebraic identities.
-
-## What is here
-
-* **§ 1 `nopProg`** — a single `nop` then `halt`.
-* **§ 2 `flipBit0Prog`** — flip bit 0, then halt.
-* **§ 3 `setAllBitsProg`** — write `true` into every bit.
-* **§ 4 `loopProg`** — an unconditional jump-to-self (non-halting).
-* **§ 5 `branchProg`** — a conditional branch on bit 0.
-* **§ 6 `pushPopProg`** — push, mutate, then pop (round-trip).
-* **§ 7 `xorMaskProg`** — XOR with a constant mask.
-
-For each program we give:
-* The program (as `List Instr`).
-* A small fuel bound that suffices for termination.
-* Algebraic correctness lemmas (`runFuel`-based).
-
-These doubled as smoke tests for the interpreter.  No `sorry`, no
-`axiom`, no Atlas overlay.
-
-## Doctrinal anchor
-
-* `r8.md` v0.2 §15.10 (interpreter primitives).
-* `wen-algebra.md` v0.6 §10.7 (interpreter foundation).
+A small gallery showing the PartialCell-native interpreter in action.
+For Phase E.1 we keep the demos at the *definition* level only — they
+verify that the ISA + interpreter typecheck and produce structurally
+sensible programs.  Theorems about concrete execution traces are
+deferred to Phase E.2 (where we add the equivalence proof against
+`Wen.Core` and gain machinery for unrolling `runFuel`).
 -/
 
-import SSBX.Foundation.Wen.Core.Instruction
-import SSBX.Foundation.Wen.Core.State
 import SSBX.Foundation.Wen.Core.Machine
 
--- The `by decide` proofs inside `⟨k, by decide⟩` Fin literals are
--- elaborated to closed proofs that the underlying linter then flags
--- as "never executed" inside the larger tactic block.  This is
--- cosmetic; silence locally.
-set_option linter.unreachableTactic false
-set_option linter.unusedTactic false
-
-namespace SSBX.Foundation.Wen.Core
-namespace Examples
+namespace SSBX.Foundation.Wen.Core.Examples
 
 open SSBX.Foundation.R
-open SSBX.Foundation.R.R (basis)
+open SSBX.Foundation.Wen.Core
 
-/-! ## § 0 A useful step-unfolding helper
+/-! ## § Demo 1 — empty program -/
 
-To keep example proofs readable, we expose a single rewriting lemma
-that unfolds one `runFuel (n+1)` step on a non-halted state.  This
-hides the inner `if/match` and lets each example's correctness proof
-proceed by chaining a small number of `rfl`-friendly rewrites.
--/
+/-- The empty program.  From `initial`, halts in one step (pc past end). -/
+def emptyProg : List Instr := []
 
-/-- Unfold one `runFuel (n+1)` step on a non-halted state. -/
-theorem runFuel_succ_of_not_halted (prog : List Instr) (n : Nat) (s : State)
-    (h : s.halted = false) :
-    runFuel prog (n+1) s = runFuel prog n (step prog s) := by
-  show (if s.halted = true then s else runFuel prog n (step prog s))
-      = runFuel prog n (step prog s)
-  simp [h]
+/-! ## § Demo 2 — single halt -/
 
-/-! ## § 1 The `nop` program -/
+/-- Trivial program that just halts. -/
+def haltProg : List Instr := [.halt]
 
-/-- `nopProg`: a `nop` then a `halt`. -/
-def nopProg : List Instr := [.nop, .halt]
+/-! ## § Demo 3 — pin a single bit then halt
 
-/-- After 2 fuel units, `nopProg` halts. -/
-theorem nopProg_halts (input : R 8) :
-    (run nopProg input 2).halted = true := by
-  -- Two steps: nop (pc 0 → 1), halt (pc 1 → halted).
-  unfold run
-  rw [runFuel_succ_of_not_halted _ _ _ (by rfl : (State.init input).halted = false)]
-  -- step nopProg (init input) = executeInstr nop (init input)
-  show (runFuel nopProg 1 (executeInstr .nop (State.init input))).halted = true
-  -- After nop, pc=1, not halted; next is halt → halted.
-  rw [runFuel_succ_of_not_halted _ _ _
-      (by rfl : (executeInstr .nop (State.init input)).halted = false)]
-  -- step on the post-nop state fetches instruction at pc=1 = halt
-  show (runFuel nopProg 0
-      (executeInstr .halt (executeInstr .nop (State.init input)))).halted = true
-  rfl
+Builds a cell with bit 0 = true, then halts.  The state after running
+this from `initial` has `cur ⟨0⟩ = some true` and all other bits = none. -/
+def pinBit0Prog : List Instr := [
+  .mergeBit ⟨0, by decide⟩ true,
+  .halt
+]
 
-/-- After 2 fuel units, `nopProg` leaves the input cell unchanged. -/
-theorem nopProg_preserves_input (input : R 8) :
-    (run nopProg input 2).cur = input := by
-  unfold run
-  rw [runFuel_succ_of_not_halted _ _ _ (by rfl : (State.init input).halted = false)]
-  show (runFuel nopProg 1 (executeInstr .nop (State.init input))).cur = input
-  rw [runFuel_succ_of_not_halted _ _ _
-      (by rfl : (executeInstr .nop (State.init input)).halted = false)]
-  show (runFuel nopProg 0
-      (executeInstr .halt (executeInstr .nop (State.init input)))).cur = input
-  rfl
+/-! ## § Demo 4 — 不通 halt via incompatible merge
 
-/-! ## § 2 The `flipBit 0` program -/
+After pinning bit 0 = true, attempting to merge bit 0 = false triggers
+the 不通 halt (PartialCell.merge returns none → halted := true). -/
+def contradictProg : List Instr := [
+  .mergeBit ⟨0, by decide⟩ true,
+  .mergeBit ⟨0, by decide⟩ false,
+  .halt
+]
 
-/-- `flipBit0Prog`: flip bit 0, then halt. -/
-def flipBit0Prog : List Instr := [.flipBit ⟨0, by decide⟩, .halt]
+/-! ## § Demo 5 — incremental specification
 
-/-- After 2 fuel units, `flipBit0Prog` halts with bit 0 of the input
-    inverted. -/
-theorem flipBit0Prog_correct (input : R 8) :
-    (run flipBit0Prog input 2).cur =
-      flipBitR8 ⟨0, by decide⟩ input := by
-  unfold run
-  rw [runFuel_succ_of_not_halted _ _ _ (by rfl : (State.init input).halted = false)]
-  show (runFuel flipBit0Prog 1
-      (executeInstr (.flipBit ⟨0, by decide⟩) (State.init input))).cur
-    = flipBitR8 ⟨0, by decide⟩ input
-  rw [runFuel_succ_of_not_halted _ _ _ (by rfl :
-      (executeInstr (.flipBit ⟨0, by decide⟩) (State.init input)).halted = false)]
-  rfl
+Pin all 8 bits to `true` in sequence.  After running with sufficient
+fuel, the state's `cur` should be the all-`some true` cell (= `ofFull`
+of the all-true `R 8` vector). -/
+def buildAllTrueProg : List Instr := [
+  .mergeBit ⟨0, by decide⟩ true,
+  .mergeBit ⟨1, by decide⟩ true,
+  .mergeBit ⟨2, by decide⟩ true,
+  .mergeBit ⟨3, by decide⟩ true,
+  .mergeBit ⟨4, by decide⟩ true,
+  .mergeBit ⟨5, by decide⟩ true,
+  .mergeBit ⟨6, by decide⟩ true,
+  .mergeBit ⟨7, by decide⟩ true,
+  .halt
+]
 
-theorem flipBit0Prog_halts (input : R 8) :
-    (run flipBit0Prog input 2).halted = true := by
-  unfold run
-  rw [runFuel_succ_of_not_halted _ _ _ (by rfl : (State.init input).halted = false)]
-  show (runFuel flipBit0Prog 1
-      (executeInstr (.flipBit ⟨0, by decide⟩) (State.init input))).halted = true
-  rw [runFuel_succ_of_not_halted _ _ _ (by rfl :
-      (executeInstr (.flipBit ⟨0, by decide⟩) (State.init input)).halted = false)]
-  rfl
+/-! ## § Demo 6 — restrict back to subspace
 
-/-! ## § 3 The `setAllBitsProg`
+Pin bits 0, 1, 2 to true, then restrict to {0, 1} only.  Final state
+has cur ⟨0⟩ = some true, cur ⟨1⟩ = some true, cur ⟨2⟩ = none. -/
+def pinThenRestrictProg : List Instr := [
+  .mergeBit ⟨0, by decide⟩ true,
+  .mergeBit ⟨1, by decide⟩ true,
+  .mergeBit ⟨2, by decide⟩ true,
+  .restrict ({⟨0, by decide⟩, ⟨1, by decide⟩} : Finset (Fin 8)),
+  .halt
+]
 
-Write `true` into every one of the 8 bits, then halt.
--/
+/-! ## § Demo 7 — jump loop (degenerate)
 
-/-- Sets every bit to `true`, then halts.  9 instructions. -/
-def setAllBitsProg : List Instr :=
-  [ .writeBit ⟨0, by decide⟩ true
-  , .writeBit ⟨1, by decide⟩ true
-  , .writeBit ⟨2, by decide⟩ true
-  , .writeBit ⟨3, by decide⟩ true
-  , .writeBit ⟨4, by decide⟩ true
-  , .writeBit ⟨5, by decide⟩ true
-  , .writeBit ⟨6, by decide⟩ true
-  , .writeBit ⟨7, by decide⟩ true
-  , .halt ]
+`jump 0` from pc=0 loops forever.  Combined with finite fuel, the
+machine doesn't halt within budget. -/
+def jumpLoopProg : List Instr := [.jump 0]
 
-/-- Helper: chain 9 `runFuel_succ_of_not_halted` rewrites. -/
-private theorem setAllBitsProg_unrolls (input : R 8) :
-    runFuel setAllBitsProg 9 (State.init input)
-      = step setAllBitsProg
-          (step setAllBitsProg
-            (step setAllBitsProg
-              (step setAllBitsProg
-                (step setAllBitsProg
-                  (step setAllBitsProg
-                    (step setAllBitsProg
-                      (step setAllBitsProg
-                        (step setAllBitsProg (State.init input))))))))) := by
-  rw [runFuel_succ_of_not_halted _ _ _ (by rfl : (State.init input).halted = false)]
-  rw [runFuel_succ_of_not_halted _ _ _ (by rfl :
-      (step setAllBitsProg (State.init input)).halted = false)]
-  rw [runFuel_succ_of_not_halted _ _ _ (by rfl :
-      (step setAllBitsProg (step setAllBitsProg (State.init input))).halted = false)]
-  rw [runFuel_succ_of_not_halted _ _ _ (by rfl :
-      (step setAllBitsProg (step setAllBitsProg (step setAllBitsProg
-        (State.init input)))).halted = false)]
-  rw [runFuel_succ_of_not_halted _ _ _ (by rfl :
-      (step setAllBitsProg (step setAllBitsProg (step setAllBitsProg
-        (step setAllBitsProg (State.init input))))).halted = false)]
-  rw [runFuel_succ_of_not_halted _ _ _ (by rfl :
-      (step setAllBitsProg (step setAllBitsProg (step setAllBitsProg
-        (step setAllBitsProg (step setAllBitsProg (State.init input)))))).halted = false)]
-  rw [runFuel_succ_of_not_halted _ _ _ (by rfl :
-      (step setAllBitsProg (step setAllBitsProg (step setAllBitsProg
-        (step setAllBitsProg (step setAllBitsProg (step setAllBitsProg
-          (State.init input))))))).halted = false)]
-  rw [runFuel_succ_of_not_halted _ _ _ (by rfl :
-      (step setAllBitsProg (step setAllBitsProg (step setAllBitsProg
-        (step setAllBitsProg (step setAllBitsProg (step setAllBitsProg
-          (step setAllBitsProg (State.init input)))))))).halted = false)]
-  rw [runFuel_succ_of_not_halted _ _ _ (by rfl :
-      (step setAllBitsProg (step setAllBitsProg (step setAllBitsProg
-        (step setAllBitsProg (step setAllBitsProg (step setAllBitsProg
-          (step setAllBitsProg (step setAllBitsProg
-            (State.init input))))))))).halted = false)]
-  rfl
+/-! ## § Demo 8 — branch on partial state (E.2)
 
-/-- After 9 fuel units, `setAllBitsProg` is halted. -/
-theorem setAllBitsProg_halts (input : R 8) :
-    (run setAllBitsProg input 9).halted = true := by
-  unfold run
-  rw [setAllBitsProg_unrolls]
-  rfl
+If bit 0 is set, jump over the second merge; otherwise fall through.
+From `initial` (cur = 道), bit 0 is `none`, so the branch does NOT
+fire (partial commitment policy: ambiguity = fall through).  This
+distinguishes CorePartial from a classical bit-machine where bit 0
+would have a definite value. -/
+def branchOnBit0Prog : List Instr := [
+  .branchIfSet ⟨0, by decide⟩ 3,    -- skip to pc 3 if bit 0 set
+  .mergeBit ⟨1, by decide⟩ true,    -- only runs if branch did NOT fire
+  .halt,                             -- pc 2 — halt after merging bit 1
+  .halt                              -- pc 3 — halt after skip
+]
 
-/-! ## § 4 The infinite loop -/
+/-! ## § Demo 9 — pin-then-branch
 
-/-- `loopProg`: jump to self, forever. -/
-def loopProg : List Instr := [.jump 0]
+Pin bit 0 = true, then branch on bit 0.  Now the branch DOES fire. -/
+def pinThenBranchProg : List Instr := [
+  .mergeBit ⟨0, by decide⟩ true,    -- pc 0: pin bit 0 = true
+  .branchIfSet ⟨0, by decide⟩ 4,    -- pc 1: should jump to 4
+  .mergeBit ⟨1, by decide⟩ true,    -- pc 2: skipped
+  .halt,                             -- pc 3: skipped
+  .halt                              -- pc 4: jumped here
+]
 
-/-- One step of `loopProg` from the init state returns the init state. -/
-theorem step_loopProg_init (input : R 8) :
-    step loopProg (State.init input) = State.init input := by
-  unfold step State.init
-  show (if ({ cur := input, history := [], pc := 0, halted := false } : State).halted
-        then ({ cur := input, history := [], pc := 0, halted := false } : State)
-        else match loopProg[({ cur := input, history := [], pc := 0, halted := false } : State).pc]? with
-          | none => { ({ cur := input, history := [], pc := 0, halted := false } : State) with halted := true }
-          | some instr => executeInstr instr { cur := input, history := [], pc := 0, halted := false })
-      = { cur := input, history := [], pc := 0, halted := false }
-  rfl
+/-! ## § Demo 10 — push/pop save-restore (Phase E.3)
 
-/-- `runFuel` on `loopProg` is stuttering: every fuel amount returns
-    the init state. -/
-theorem runFuel_loopProg_init (input : R 8) (n : Nat) :
-    runFuel loopProg n (State.init input) = State.init input := by
-  induction n with
-  | zero => rfl
-  | succ k ih =>
-      rw [runFuel_succ_of_not_halted _ _ _ (by rfl :
-          (State.init input).halted = false)]
-      rw [step_loopProg_init]
-      exact ih
+Pin bit 0, push state, pin bit 1, pop (restoring to "only bit 0 pinned"). -/
+def saveRestoreProg : List Instr := [
+  .mergeBit ⟨0, by decide⟩ true,
+  .push,
+  .mergeBit ⟨1, by decide⟩ true,
+  .pop,
+  .halt
+]
 
-/-- `loopProg` never reaches a halted state. -/
-theorem loopProg_never_halts (input : R 8) (n : Nat) :
-    (run loopProg input n).halted = false := by
-  unfold run
-  rw [runFuel_loopProg_init]
-  rfl
+/-! ## § Demo 11 — writeBit overrides (Phase E.3)
 
-/-! ## § 5 The branch program
+`merge` of bit 0 = true would normally CONFLICT with bit 0 = false in
+a subsequent merge.  But `writeBit` overwrites, so the program proceeds
+without halting. -/
+def writeOverrideProg : List Instr := [
+  .mergeBit ⟨0, by decide⟩ true,    -- bit 0 = true
+  .writeBit ⟨0, by decide⟩ false,   -- bit 0 := false (overwrite!)
+  .halt
+]
 
-A simple conditional: branch on bit 0.  If bit 0 = true, jump to
-pc=3 (the "true" branch); else fall through to pc=1 (the "false"
-branch).
--/
+/-! ## § Demo 12 — flipBit on defined / undefined bits (Phase E.3)
 
-/-- `branchProg`: tests bit 0; writes a fixed value to bit 7 in each
-    branch (true → set bit 7 true; false → set bit 7 false). -/
-def branchProg : List Instr :=
-  [ .branchBitEq ⟨0, by decide⟩ true 3   -- pc=0
-  , .writeBit ⟨7, by decide⟩ false       -- pc=1
-  , .halt                                -- pc=2
-  , .writeBit ⟨7, by decide⟩ true        -- pc=3
-  , .halt ]                              -- pc=4
+Bit 0 starts unspecified.  `flipBit 0` leaves it `none` (partial
+commitment policy).  Then we pin bit 0 = true, flip it, bit 0 becomes
+false. -/
+def flipOnPartialProg : List Instr := [
+  .flipBit ⟨0, by decide⟩,           -- bit 0 still none (flipped 0 times)
+  .mergeBit ⟨0, by decide⟩ true,    -- bit 0 = true
+  .flipBit ⟨0, by decide⟩,           -- bit 0 = false
+  .halt
+]
 
-/-- If bit 0 of the input is `true`, `branchProg` jumps to pc=3 in
-    one step. -/
-theorem branchProg_takes_true_branch (input : R 8)
-    (h : input ⟨0, by decide⟩ = true) :
-    step branchProg (State.init input)
-      = { State.init input with pc := 3 } := by
-  -- Convert `input ⟨0, by decide⟩` to `input 0` (they're the same Fin).
-  have h' : input 0 = true := h
-  show (if (State.init input).halted = true
-        then State.init input
-        else match branchProg[(State.init input).pc]? with
-          | none => { State.init input with halted := true }
-          | some instr => executeInstr instr (State.init input))
-      = { State.init input with pc := 3 }
-  have hinit : (State.init input).halted = false := rfl
-  simp only [hinit]
-  show (match branchProg[(State.init input).pc]? with
-        | none => { State.init input with halted := true }
-        | some instr => executeInstr instr (State.init input))
-      = { State.init input with pc := 3 }
-  show executeInstr (.branchBitEq ⟨0, by decide⟩ true 3) (State.init input)
-      = { State.init input with pc := 3 }
-  show (if (State.init input).cur ⟨0, by decide⟩ = true
-        then { State.init input with pc := 3 }
-        else { State.init input with pc := (State.init input).pc + 1 })
-      = { State.init input with pc := 3 }
-  have : (State.init input).cur ⟨0, by decide⟩ = true := h
-  rw [if_pos this]
+/-! ## § Demo 13 — xorMask flips defined bits (Phase E.3)
 
-/-- If bit 0 of the input is `false`, `branchProg` falls through to
-    pc=1 in one step. -/
-theorem branchProg_takes_false_branch (input : R 8)
-    (h : input ⟨0, by decide⟩ = false) :
-    step branchProg (State.init input)
-      = { State.init input with pc := 1 } := by
-  show (if (State.init input).halted = true
-        then State.init input
-        else match branchProg[(State.init input).pc]? with
-          | none => { State.init input with halted := true }
-          | some instr => executeInstr instr (State.init input))
-      = { State.init input with pc := 1 }
-  have hinit : (State.init input).halted = false := rfl
-  simp only [hinit]
-  show (match branchProg[(State.init input).pc]? with
-        | none => { State.init input with halted := true }
-        | some instr => executeInstr instr (State.init input))
-      = { State.init input with pc := 1 }
-  show executeInstr (.branchBitEq ⟨0, by decide⟩ true 3) (State.init input)
-      = { State.init input with pc := 1 }
-  show (if (State.init input).cur ⟨0, by decide⟩ = true
-        then { State.init input with pc := 3 }
-        else { State.init input with pc := (State.init input).pc + 1 })
-      = { State.init input with pc := 1 }
-  have hne : (State.init input).cur ⟨0, by decide⟩ ≠ true := by
-    show input ⟨0, by decide⟩ ≠ true
-    rw [h]; decide
-  rw [if_neg hne]
-  show { State.init input with pc := 0 + 1 } = { State.init input with pc := 1 }
-  rfl
+Build cur with bit 0 = true and bit 1 = false, then xorMask with the
+all-true mask — defined bits flip, undefined stay none. -/
+def xorMaskDemo : List Instr := [
+  .mergeBit ⟨0, by decide⟩ true,
+  .mergeBit ⟨1, by decide⟩ false,
+  .xorMask (fun _ => true),          -- flip all bits where m i = true
+  .halt
+]
 
-/-! ## § 6 The push/pop round-trip
-
-Demonstrates the linear-tape memory: push the current cell, mutate
-the cell, then pop to restore.  Final `cur` equals the input. -/
-
-/-- `pushPopProg`: push, flip bit 0, pop, halt. -/
-def pushPopProg : List Instr :=
-  [ .push                                -- pc=0
-  , .flipBit ⟨0, by decide⟩              -- pc=1
-  , .pop                                 -- pc=2
-  , .halt ]                              -- pc=3
-
-/-- After 4 fuel units, `pushPopProg` restores the input cell. -/
-theorem pushPopProg_restores (input : R 8) :
-    (run pushPopProg input 4).cur = input := by
-  unfold run
-  rw [runFuel_succ_of_not_halted _ _ _ (by rfl : (State.init input).halted = false)]
-  -- After push: cur=input, history=[input], pc=1
-  rw [runFuel_succ_of_not_halted _ _ _ (by rfl :
-      (step pushPopProg (State.init input)).halted = false)]
-  rw [runFuel_succ_of_not_halted _ _ _ (by rfl :
-      (step pushPopProg (step pushPopProg (State.init input))).halted = false)]
-  rw [runFuel_succ_of_not_halted _ _ _ (by rfl :
-      (step pushPopProg (step pushPopProg (step pushPopProg (State.init input)))).halted = false)]
-  -- Now after 4 steps: cur=input, halted=true.
-  rfl
-
-/-- After 4 fuel units, `pushPopProg` halts. -/
-theorem pushPopProg_halts (input : R 8) :
-    (run pushPopProg input 4).halted = true := by
-  unfold run
-  rw [runFuel_succ_of_not_halted _ _ _ (by rfl : (State.init input).halted = false)]
-  rw [runFuel_succ_of_not_halted _ _ _ (by rfl :
-      (step pushPopProg (State.init input)).halted = false)]
-  rw [runFuel_succ_of_not_halted _ _ _ (by rfl :
-      (step pushPopProg (step pushPopProg (State.init input))).halted = false)]
-  rw [runFuel_succ_of_not_halted _ _ _ (by rfl :
-      (step pushPopProg (step pushPopProg (step pushPopProg (State.init input)))).halted = false)]
-  rfl
-
-/-! ## § 7 The xorMask program -/
-
-/-- `xorMaskProg m`: XOR with `m`, then halt. -/
-def xorMaskProg (m : R 8) : List Instr := [.xorMask m, .halt]
-
-/-- After 2 fuel units, `xorMaskProg m` produces `input + m`. -/
-theorem xorMaskProg_correct (input m : R 8) :
-    (run (xorMaskProg m) input 2).cur = input + m := by
-  unfold run
-  rw [runFuel_succ_of_not_halted _ _ _ (by rfl : (State.init input).halted = false)]
-  rw [runFuel_succ_of_not_halted _ _ _ (by rfl :
-      (step (xorMaskProg m) (State.init input)).halted = false)]
-  rfl
-
-theorem xorMaskProg_halts (input m : R 8) :
-    (run (xorMaskProg m) input 2).halted = true := by
-  unfold run
-  rw [runFuel_succ_of_not_halted _ _ _ (by rfl : (State.init input).halted = false)]
-  rw [runFuel_succ_of_not_halted _ _ _ (by rfl :
-      (step (xorMaskProg m) (State.init input)).halted = false)]
-  rfl
-
-/-- XORing with `0` is the identity. -/
-theorem xorMaskProg_zero (input : R 8) :
-    (run (xorMaskProg 0) input 2).cur = input := by
-  rw [xorMaskProg_correct]
-  simp
-
-/-- Applying `xorMaskProg m` twice cancels (involution): XORing twice
-    with the same mask gives back the input.  Proved via the
-    `R 8`-group identity `v + m + m = v`. -/
-theorem xorMaskProg_twice (input m : R 8) :
-    (run (xorMaskProg m) ((run (xorMaskProg m) input 2).cur) 2).cur = input := by
-  rw [xorMaskProg_correct, xorMaskProg_correct]
-  rw [add_assoc]
-  show input + (m + m) = input
-  rw [R.add_self]
-  simp
-
-end Examples
-end SSBX.Foundation.Wen.Core
+end SSBX.Foundation.Wen.Core.Examples

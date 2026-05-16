@@ -1,8 +1,8 @@
 /-
-# Foundation.Wen.CorePartial.Bridge — translation from legacy `Wen.Core` to `Wen.CorePartial`
+# Foundation.Wen.Core.Bridge — translation from legacy `Wen.Core` to `Wen.Core`
 
 Phase E.5: a forward bridge from the legacy 9-constructor `Wen.Core.Instr`
-(operating on `R 8`) to the new 11-constructor `Wen.CorePartial.Instr`
+(operating on `R 8`) to the new 11-constructor `Wen.Core.Instr`
 (operating on `PartialCell 8`).
 
 The 9 legacy constructors map 1:1 to 9 of the 11 new constructors; the two
@@ -12,10 +12,10 @@ new) but not a retraction (new has more morphisms).
 
 ## What's bridged
 
-* `translate : Wen.Core.Instr → Wen.CorePartial.Instr` — 1:1 constructor
+* `translate : Wen.Core.Instr → Wen.Core.Instr` — 1:1 constructor
   mapping for the 9 shared opcodes.
 * `translateProg` — pointwise list-lift via `List.map`.
-* `liftState : Wen.Core.State → Wen.CorePartial.State` — lifts `cur` via
+* `liftState : Wen.Core.State → Wen.Core.State` — lifts `cur` via
   `PartialCell.ofFull` (totally-specified bit-vector → totally-specified
   partial cell), preserves `pc`, `history` (also lifted pointwise), and
   `halted`.
@@ -31,23 +31,23 @@ new) but not a retraction (new has more morphisms).
 -/
 
 import SSBX.Foundation.Wen.Core.Machine
-import SSBX.Foundation.Wen.CorePartial.Machine
+import SSBX.Foundation.Wen.Core.Machine
 
-namespace SSBX.Foundation.Wen.CorePartial
+namespace SSBX.Foundation.Wen.Core
 
 open SSBX.Foundation.R
 
 /-! ## § 1 Instruction translation -/
 
 /-- 1:1 case-by-case translation of the 9 legacy `Wen.Core.Instr`
-    constructors to the corresponding `Wen.CorePartial.Instr`
+    constructors to the corresponding `Wen.Core.Instr`
     constructors.
 
     The 9 shared opcodes match exactly in arity and meaning under
     full-specification.  The two PartialCell-native opcodes (`merge`,
     `restrict`) of the target ISA have no legacy preimage and are
     therefore not in the image of `translate`. -/
-def translate : Wen.Core.Instr → Wen.CorePartial.Instr
+def translate : Wen.Core.Instr → Wen.Core.Instr
   | .nop                  => .nop
   | .flipBit i            => .flipBit i
   | .writeBit i b         => .writeBit i b
@@ -59,11 +59,11 @@ def translate : Wen.Core.Instr → Wen.CorePartial.Instr
   | .halt                 => .halt
 
 /-- Lift a legacy program to a CorePartial program, pointwise. -/
-def translateProg (prog : List Wen.Core.Instr) : List Wen.CorePartial.Instr :=
+def translateProg (prog : List Wen.Core.Instr) : List Wen.Core.Instr :=
   prog.map translate
 
 @[simp] theorem translateProg_nil :
-    translateProg [] = ([] : List Wen.CorePartial.Instr) := rfl
+    translateProg [] = ([] : List Wen.Core.Instr) := rfl
 
 @[simp] theorem translateProg_cons (i : Wen.Core.Instr) (rest : List Wen.Core.Instr) :
     translateProg (i :: rest) = translate i :: translateProg rest := rfl
@@ -74,7 +74,7 @@ def translateProg (prog : List Wen.Core.Instr) : List Wen.CorePartial.Instr :=
 
 /-! ## § 2 State lift -/
 
-/-- Lift a legacy `Wen.Core.State` to a `Wen.CorePartial.State` by
+/-- Lift a legacy `Wen.Core.State` to a `Wen.Core.State` by
     transporting `cur` and each entry of `history` through
     `PartialCell.ofFull`, and copying `pc` and `halted` unchanged.
 
@@ -83,7 +83,7 @@ def translateProg (prog : List Wen.Core.Instr) : List Wen.CorePartial.Instr :=
     PartialCell.ofFull s.cur`.  Such states never trigger the new `merge`
     halt path (since `merge dao` and `restrict` etc. are not in the image
     of `translate`). -/
-def liftState (s : Wen.Core.State) : Wen.CorePartial.State :=
+def liftState (s : Wen.Core.State) : Wen.Core.State :=
   { pc      := s.pc
     cur     := PartialCell.ofFull s.cur
     history := s.history.map PartialCell.ofFull
@@ -113,7 +113,7 @@ def liftState (s : Wen.Core.State) : Wen.CorePartial.State :=
 The intended semantic theorem: for any legacy program `prog` and any
 state `s : Wen.Core.State`, running one legacy `Wen.Core.step` on `s`
 and then lifting equals lifting `s` first and then running one
-`Wen.CorePartial.step` on the translated program.
+`Wen.Core.step` on the translated program.
 
 This is a non-trivial proof because:
 
@@ -165,4 +165,4 @@ each constructor so downstream callers can normalise without unfolding. -/
     translate (.xorMask m) = .xorMask m := rfl
 @[simp] theorem translate_halt : translate .halt = .halt := rfl
 
-end SSBX.Foundation.Wen.CorePartial
+end SSBX.Foundation.Wen.Core

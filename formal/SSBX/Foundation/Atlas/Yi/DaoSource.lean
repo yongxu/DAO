@@ -78,7 +78,7 @@ finite carrier (256 hexagram bytes ≤ 64 instructions deep).
 -/
 
 import SSBX.Foundation.R.Basic
-import SSBX.Foundation.Wen.CorePartial
+import SSBX.Foundation.Wen.Core
 import SSBX.Foundation.Atlas.Yi.Names
 import SSBX.Foundation.Atlas.Yi.ShiV4
 
@@ -86,7 +86,7 @@ namespace SSBX.Foundation.Atlas.Yi
 namespace DaoSource
 
 open SSBX.Foundation.R
-open SSBX.Foundation.Wen.CorePartial
+open SSBX.Foundation.Wen.Core
 open SSBX.Foundation.Atlas.Yi
 
 /-! ## § 0  Shi-from-R 8 projection

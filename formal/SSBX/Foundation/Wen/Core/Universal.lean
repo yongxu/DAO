@@ -1,42 +1,50 @@
 /-
-# Foundation.Wen.Core.Universal — universal interpreter specification
+# Foundation.Wen.Core.Universal — universal interpreter specification (PartialCell-native)
 
-The **specification** of a universal interpreter on the language-
-independent `R 8` bit-machine, and the auxiliary `encodeProgInput`
-function that injects a `(program, input)` pair into the linear
-`history` boundary of an initial state.
+The **specification** of a universal interpreter on the PartialCell-native
+bit-machine, and the auxiliary `encodeProgInput` function that injects a
+`(program, input)` pair into the linear `history` boundary of an initial
+state.
 
-We do **not** construct a universal interpreter here — that
-construction is the subject of `Foundation/Wen/MetaInterp/`, where
-it is currently axiomatised as `kleene_recursion_axiom`.  This file
-provides only the target specification (the `IsUniversal` predicate)
-so that future work can prove `IsUniversal U` for an explicit `U`.
+This is the Phase E.4 port of `Foundation/Wen/Core/Universal.lean` to the
+new `CorePartial` substrate.  As in the legacy spec, we do **not**
+construct a universal interpreter here — this file provides only the
+target predicate (`IsUniversal`), so that future work can prove
+`IsUniversal U` for an explicit `U`.
 
 ## What is here
 
-* **§ 1 Program encoding** — `encodeProgInput`, the canonical injection
-  of a `List Instr × R 8` pair into the initial-state `history`.
-* **§ 2 Observational equivalence** — `equivObs`, the equivalence
-  relation on `State`s used as the universal-interpretation target.
+* **§ 1 Program encoding** — `InstrEncoding`, `encodeProg`,
+  `encodeProgInput`, the canonical injection of a
+  `(List Instr × PartialCell 8)` pair into the initial-state `history`.
+* **§ 2 Observational equivalence** — `equivObs` on `State`, agreeing
+  on `cur` (the partial-cell observable) and the halt flag.
 * **§ 3 `IsUniversal`** — the universal-interpreter spec.
+* **§ 4–6** — sanity lemmas, `Simulates`, and `UniversalInterpreterExists`.
+
+## Key differences from the legacy port
+
+* The `cur` channel is `PartialCell 8`, not `R 8`.  Observational
+  equivalence compares partial cells directly (no extraction to
+  `R 8` — `cur` IS the observable, and a universal interpreter
+  must reproduce it *including its commitment shape*).
+* The instruction-encoding carrier is still `R 8` (one fully-specified
+  byte per `Instr`), since the `history` channel itself remains a list
+  of partial cells but the encoding alphabet is taken total to keep
+  `dec_enc` decidable and useful.  Encoded program cells are injected
+  via `PartialCell.ofFull`.
+* `encodeProgInput` accepts `PartialCell 8` as input, not `R 8` — the
+  caller may supply a partial input, which is the natural shape on
+  this substrate.  `init` (the legacy bridge that lifts `R 8`) is
+  used only via `PartialCell.ofFull`.
+* `run` is defined locally (mirroring the legacy `Wen.Core.Machine.run`)
+  as `runFuel prog fuel (State.init inp)` for the totalized input case.
 
 ## Doctrinal anchor
 
-* `wen-algebra.md` v0.6 §10.7 (Interpreter Foundation, equiv test).
-* `r8.md` v0.2 §15.10 (Interpreter primitives, `step` / `trace`).
-* The target of `kleene_recursion_axiom` in `Foundation/Wen/MetaInterp/`
-  (cf. `KleeneCarrier.lean`).
-
-## Carrier choice for encoding
-
-We use the `history : List (R 8)` channel for `(program, input)`
-encoding, rather than splitting the byte (`cur : R 8`) into separate
-program/input halves.  Rationale: the `history` channel is
-**unbounded** by design (it's the linear tape that gives the machine
-universal computation), so a finite encoding always fits.  The
-instruction encoding (one `R 8` per `Instr`) is parametric and
-left abstract here — concrete encodings (e.g. opcode + operand
-packed into one byte) belong to `MetaInterp/`.
+* `wen-substrate.md` v1.2 §3.7 (Operation Monism).
+* `wen-algebra.md` v0.6 §10.7 (Interpreter Foundation).
+* Legacy: `Foundation/Wen/Core/Universal.lean`.
 -/
 
 import SSBX.Foundation.Wen.Core.Instruction
@@ -49,9 +57,12 @@ open SSBX.Foundation.R
 
 /-! ## § 1 Program encoding
 
-We assume an abstract encoder of instructions to `R 8` cells.  Any
-concrete `encodeInstr : Instr → R 8` and `decodeInstr : R 8 → Option Instr`
-forms an encoding scheme; we abstract over the choice via a structure.
+We assume an abstract encoder of instructions to `R 8` cells.  The
+encoding alphabet is kept *total* (`R 8` rather than `PartialCell 8`)
+so that `dec_enc` round-tripping is unambiguous; the program-tape
+itself lives in `history : List (PartialCell 8)` (the partial-cell
+substrate), and encoded program cells are injected via
+`PartialCell.ofFull`.
 -/
 
 /-- An encoding scheme for instructions into `R 8` cells.
@@ -68,45 +79,70 @@ structure InstrEncoding where
   /-- Decoder is the left-inverse of encoder. -/
   dec_enc : ∀ i : Instr, dec (enc i) = some i
 
-/-- Encode a program as a list of `R 8` cells. -/
-def encodeProg (E : InstrEncoding) (prog : List Instr) : List (R 8) :=
-  prog.map E.enc
+/-- Encode a program as a list of `PartialCell 8` cells (each
+    instruction's `R 8` image lifted to a fully-specified partial
+    cell via `ofFull`). -/
+def encodeProg (E : InstrEncoding) (prog : List Instr)
+    : List (PartialCell 8) :=
+  prog.map (fun i => PartialCell.ofFull (E.enc i))
 
 /-- The standard injection of `(program, input)` into an initial state:
-    `cur := input`, `history := encodeProg E prog`. -/
-def encodeProgInput (E : InstrEncoding) (prog : List Instr) (input : R 8)
-    : State :=
+    `cur := input`, `history := encodeProg E prog`.
+
+    Note: `input` is a `PartialCell 8` here (not `R 8` as in the legacy
+    spec), reflecting the substrate.  See `encodeProgInputFull` for the
+    totalized-input convenience. -/
+def encodeProgInput (E : InstrEncoding) (prog : List Instr)
+    (input : PartialCell 8) : State :=
   { cur := input
   , history := encodeProg E prog
   , pc := 0
   , halted := false }
 
+/-- Convenience: encode with a fully-specified `R 8` input (legacy
+    parity bridge).  Definitionally equal to
+    `encodeProgInput E prog (PartialCell.ofFull inp)`. -/
+def encodeProgInputFull (E : InstrEncoding) (prog : List Instr)
+    (inp : R 8) : State :=
+  encodeProgInput E prog (PartialCell.ofFull inp)
+
 @[simp] theorem encodeProgInput_cur (E : InstrEncoding) (prog : List Instr)
-    (input : R 8) :
+    (input : PartialCell 8) :
     (encodeProgInput E prog input).cur = input := rfl
 
 @[simp] theorem encodeProgInput_history (E : InstrEncoding)
-    (prog : List Instr) (input : R 8) :
+    (prog : List Instr) (input : PartialCell 8) :
     (encodeProgInput E prog input).history = encodeProg E prog := rfl
 
 @[simp] theorem encodeProgInput_pc (E : InstrEncoding) (prog : List Instr)
-    (input : R 8) :
+    (input : PartialCell 8) :
     (encodeProgInput E prog input).pc = 0 := rfl
 
 @[simp] theorem encodeProgInput_halted (E : InstrEncoding) (prog : List Instr)
-    (input : R 8) :
+    (input : PartialCell 8) :
     (encodeProgInput E prog input).halted = false := rfl
+
+@[simp] theorem encodeProgInputFull_cur (E : InstrEncoding) (prog : List Instr)
+    (inp : R 8) :
+    (encodeProgInputFull E prog inp).cur = PartialCell.ofFull inp := rfl
+
+@[simp] theorem encodeProgInputFull_history (E : InstrEncoding)
+    (prog : List Instr) (inp : R 8) :
+    (encodeProgInputFull E prog inp).history = encodeProg E prog := rfl
 
 /-! ## § 2 Observational equivalence
 
 Two states are observationally equivalent if they agree on the
-"observable" data: the `cur` cell value and the halt flag.  The
+"observable" data: the `cur` partial cell and the halt flag.  The
 program counter and history are internal scratch — a universal
 interpreter is allowed to differ on those, so long as the externally
 visible output (`cur`, `halted`) matches that of the original program.
 
-This matches the standard simulation-up-to-stuttering equivalence
-used in interpreter-correctness arguments.
+PartialCell-native note: equality on `cur : PartialCell 8` requires
+**bit-for-bit identical commitment shape**.  This is strictly stronger
+than a "same total bytes" criterion: two states that both have
+`cur = ofFull v` agree, but a universal interpreter cannot replace a
+partial `cur` with its `none`-completion or vice versa.
 -/
 
 /-- Observational equivalence on `State`: agree on `cur` and `halted`. -/
@@ -134,8 +170,8 @@ instance : Equivalence equivObs where
 
 /-! ## § 3 Universal interpreter specification
 
-A program `U : List Instr` is **universal** with respect to an
-encoding `E : InstrEncoding` iff: for every program `p`, every input
+A program `U : List Instr` is **universal** with respect to an encoding
+`E : InstrEncoding` iff: for every program `p`, every (partial) input
 `inp`, and every fuel budget `N`, running `U` on the encoded
 `(p, inp)` pair for some bounded amount of fuel produces a state
 observationally equivalent to running `p` directly on `inp` for `N`
@@ -147,45 +183,47 @@ function `f : Nat → Nat`: simulating `N` steps of `p` may take up to
 -/
 
 /-- A *universal interpreter* with respect to encoding `E`: `U`
-    simulates every program `p` on every input `inp`, with the
-    simulation fuel-translated by some computable function `f`. -/
+    simulates every program `p` on every partial input `inp`, with
+    the simulation fuel-translated by some computable function `f`. -/
 def IsUniversal (E : InstrEncoding) (U : List Instr) : Prop :=
   ∃ f : Nat → Nat,
-    ∀ (p : List Instr) (inp : R 8) (N : Nat),
+    ∀ (p : List Instr) (inp : PartialCell 8) (N : Nat),
       equivObs
         (runFuel U (f N) (encodeProgInput E p inp))
-        (run p inp N)
+        (runFuel p N { pc := 0, cur := inp, history := [], halted := false })
 
 /-! ## § 4 Sanity lemmas about the spec -/
 
-/-- The identity-program `[]` is universal only over the empty
-    program-class.  Concretely: `IsUniversal E []` would require
-    `equivObs (encodeProgInput E p inp) (run p inp N)` for all
-    `p, inp, N`, which can hold only if every program halts
-    immediately at its initial state, which is not the case.
-
-    We do **not** state this as a theorem (it is not always provable
-    without a concrete encoding), but document the intent: only
-    *non-trivial* `U` can be universal. -/
+/-- Pointwise unpacking of `IsUniversal`: the `equivObs` decomposes
+    into per-field equalities.  Useful for downstream consumers that
+    need direct `.cur` or `.halted` access. -/
 theorem IsUniversal_target_form (E : InstrEncoding) (U : List Instr)
     (hU : IsUniversal E U) :
     ∃ f : Nat → Nat,
-      ∀ (p : List Instr) (inp : R 8) (N : Nat),
-        (runFuel U (f N) (encodeProgInput E p inp)).cur = (run p inp N).cur ∧
-        (runFuel U (f N) (encodeProgInput E p inp)).halted = (run p inp N).halted := by
+      ∀ (p : List Instr) (inp : PartialCell 8) (N : Nat),
+        (runFuel U (f N) (encodeProgInput E p inp)).cur =
+          (runFuel p N { pc := 0, cur := inp, history := [],
+                         halted := false }).cur ∧
+        (runFuel U (f N) (encodeProgInput E p inp)).halted =
+          (runFuel p N { pc := 0, cur := inp, history := [],
+                         halted := false }).halted := by
   rcases hU with ⟨f, hf⟩
   refine ⟨f, fun p inp N => ?_⟩
   exact hf p inp N
 
 /-- Trivial universality witness: a program is universal-for-itself
-    with identity fuel translation. -/
+    with identity fuel translation (assuming it self-simulates under
+    the encoding). -/
 theorem self_simulates (E : InstrEncoding) (p : List Instr)
-    (h : ∀ (inp : R 8) (N : Nat),
-      equivObs (runFuel p N (encodeProgInput E p inp)) (run p inp N)) :
+    (h : ∀ (inp : PartialCell 8) (N : Nat),
+      equivObs (runFuel p N (encodeProgInput E p inp))
+               (runFuel p N { pc := 0, cur := inp, history := [],
+                              halted := false })) :
     ∃ f : Nat → Nat,
-      ∀ (inp : R 8) (N : Nat),
+      ∀ (inp : PartialCell 8) (N : Nat),
         equivObs (runFuel p (f N) (encodeProgInput E p inp))
-                 (run p inp N) :=
+                 (runFuel p N { pc := 0, cur := inp, history := [],
+                                halted := false }) :=
   ⟨id, h⟩
 
 /-! ## § 5 Fuel-translated simulation
@@ -199,10 +237,10 @@ translation `f` and encoding `E`.  `IsUniversal` is exactly
     fuel translation `f` and encoding `E`. -/
 def Simulates (E : InstrEncoding) (U : List Instr) (p : List Instr)
     (f : Nat → Nat) : Prop :=
-  ∀ (inp : R 8) (N : Nat),
+  ∀ (inp : PartialCell 8) (N : Nat),
     equivObs
       (runFuel U (f N) (encodeProgInput E p inp))
-      (run p inp N)
+      (runFuel p N { pc := 0, cur := inp, history := [], halted := false })
 
 /-- A universal interpreter simulates every program with a single
     fuel translation. -/
@@ -216,24 +254,17 @@ theorem IsUniversal_iff_uniform_Simulates (E : InstrEncoding) (U : List Instr) :
   · rintro ⟨f, hf⟩
     exact ⟨f, fun p inp N => hf p inp N⟩
 
-/-! ## § 6 The target of `kleene_recursion_axiom`
+/-! ## § 6 Existence statement
 
-`IsUniversal` is the formal target of the universal-interpreter
-existence statement.  In `Foundation/Wen/MetaInterp/KleeneCarrier.lean`,
-the construction is currently axiomatised:
+The target of any future explicit-universal-interpreter construction.
+On the PartialCell substrate this is the §3.7-aligned shape of the
+universality claim. -/
 
-```
-axiom kleene_recursion_axiom : ∃ U : ..., IsUniversal ... U
-```
-
-(with a different but equivalent state-machine shape).  This file
-provides the canonical, language-independent target.  Future work in
-`MetaInterp/` will exhibit an explicit witness `U` and prove
-`IsUniversal E U` for a chosen encoding `E`.
--/
-
-/-- The existence statement of a universal interpreter.  This is the
-    target of `Foundation/Wen/MetaInterp/`'s construction. -/
+/-- The existence statement of a universal interpreter on
+    `CorePartial`.  This is the target of any future universal-
+    interpreter construction (the analogue of
+    `Foundation/Wen/Core/Universal.lean`'s `UniversalInterpreterExists`
+    for the partial substrate). -/
 def UniversalInterpreterExists (E : InstrEncoding) : Prop :=
   ∃ U : List Instr, IsUniversal E U
 

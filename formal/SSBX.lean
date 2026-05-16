@@ -275,7 +275,7 @@ import SSBX.Foundation.R8
 import SSBX.Foundation.RInfty
 import SSBX.Foundation.Atlas
 
--- Phase E: Wen/CorePartial — PartialCell-native Wen kernel.
+-- Phase E: Wen/Core — PartialCell-native Wen kernel.
 -- Parallel to legacy Foundation/Bagua/BaguaTuring.lean (which is Yi-flavored).
 -- Yi semantics is provided via Foundation/Atlas/Yi/ as application overlay.
-import SSBX.Foundation.Wen.CorePartial
+import SSBX.Foundation.Wen.Core

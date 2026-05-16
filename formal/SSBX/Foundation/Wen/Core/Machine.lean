@@ -1,299 +1,261 @@
 /-
-# Foundation.Wen.Core.Machine — semantics of the R 8 bit-machine
+# Foundation.Wen.Core.Machine — single-step + fuel-bounded execution
 
-Single-step (`executeInstr`), structural-recursive `runFuel`, and the
-core algebraic identities that justify the interpreter's specification.
+The operational semantics of the PartialCell-native ISA.  `executeInstr`
+maps each `Instr` to its `State → State` action; `step` fetches the next
+instruction; `runFuel` iterates `step` up to a bound.
 
-## Layout
-
-* **§ 1 `executeInstr`** — one-step semantics: maps `Instr × State` to
-  `State`.  Each case is a `rfl`-friendly definition.
-* **§ 2 `step`** — fetches the instruction at `pc` and applies
-  `executeInstr`; halts when `pc` is out of bounds.
-* **§ 3 `runFuel`** — fuel-bounded multi-step.  Structurally recursive
-  on the fuel `n : Nat`.
-* **§ 4 Algebraic identities** — `nop_advances_pc`,
-  `flipBit_involutive`, `writeBit_idempotent`,
-  `halt_makes_terminated`, `runFuel_halt_idempotent`,
-  `runFuel_fuel_monotone`.
-
-Per `wen-algebra.md` v0.6 §10.7 and `r8.md` v0.2 §15.10, this is the
-language-independent interpreter core.  Semantic overlays (Yi-named
-instruction lifts, application-level traces) live in
-`Foundation/Atlas/`.
-
-## Doctrinal anchor
-
-* `wen-algebra.md` v0.6 §10.7 (Interpreter Foundation).
-* `r8.md` v0.2 §15.10 (Interpreter primitives, `step` / `trace`).
+The crucial PartialCell-native fact: the `merge` instruction *may halt
+the machine* if the merge target is incompatible with the current state.
+This is the operational realisation of "不通" — when a sentence contains
+contradictory specifications, the machine cannot proceed.
 -/
 
-import SSBX.Foundation.Wen.Core.Instruction
 import SSBX.Foundation.Wen.Core.State
 
 namespace SSBX.Foundation.Wen.Core
 
 open SSBX.Foundation.R
 
-/-! ## § 1 Single-instruction semantics -/
-
-/-- Execute one instruction, producing the next `State`.
-
-    Per `wen-algebra` v0.6 §10.7: each constructor of `Instr` rewrites
-    the carrier `cur : R 8`, possibly mutates `history`, and updates
-    `pc`.  `halt` flips `halted` to `true`; subsequent `runFuel` steps
-    are then idempotent. -/
-def executeInstr : Instr → State → State
-  | .nop, s => { s with pc := s.pc + 1 }
-  | .flipBit i, s =>
-      { s with cur := flipBitR8 i s.cur, pc := s.pc + 1 }
-  | .writeBit i b, s =>
-      { s with cur := writeBitR8 i b s.cur, pc := s.pc + 1 }
-  | .branchBitEq i b target, s =>
-      if s.cur i = b then { s with pc := target }
-      else { s with pc := s.pc + 1 }
-  | .jump target, s => { s with pc := target }
-  | .push, s =>
+/-- Execute a single instruction, returning the new state.
+    Pure function — does not consume fuel. -/
+def executeInstr (instr : Instr) (s : State) : State :=
+  match instr with
+  | .nop =>
+      { s with pc := s.pc + 1 }
+  | .merge c =>
+      match PartialCell.merge s.cur c with
+      | some c' => { s with cur := c', pc := s.pc + 1 }
+      | none    => { s with halted := true }  -- 不通 → halt
+  | .restrict mask =>
+      { s with cur := PartialCell.restrict mask s.cur, pc := s.pc + 1 }
+  | .push =>
       { s with history := s.cur :: s.history, pc := s.pc + 1 }
-  | .pop, s =>
+  | .pop =>
       match s.history with
-      | [] => { s with pc := s.pc + 1 }
-      | h :: rest =>
-          { s with cur := h, history := rest, pc := s.pc + 1 }
-  | .xorMask m, s =>
-      { s with cur := s.cur + m, pc := s.pc + 1 }
-  | .halt, s => { s with halted := true }
+      | []      => { s with pc := s.pc + 1 }
+      | c :: rs => { s with cur := c, history := rs, pc := s.pc + 1 }
+  | .flipBit i =>
+      { s with
+        cur := fun j => if j = i then (s.cur j).map (!·) else s.cur j,
+        pc := s.pc + 1 }
+  | .writeBit i b =>
+      { s with
+        cur := fun j => if j = i then some b else s.cur j,
+        pc := s.pc + 1 }
+  | .xorMask m =>
+      { s with
+        cur := fun j => (s.cur j).map (· != m j),
+        pc := s.pc + 1 }
+  | .branchBitEq i b t =>
+      if s.cur i = some b then
+        { s with pc := t }
+      else
+        { s with pc := s.pc + 1 }
+  | .jump t =>
+      { s with pc := t }
+  | .halt =>
+      { s with halted := true }
 
-/-! ## § 2 Fetch-decode-execute step -/
-
-/-- Single step: fetch instruction at pc, execute.  If pc is out of
-    bounds (no instruction at the current index) the machine halts. -/
+/-- Single fetch-decode-execute step.
+    If `s.halted = true`, returns `s` unchanged.
+    If `pc` is past the end of the program, halts. -/
 def step (prog : List Instr) (s : State) : State :=
   if s.halted then s
-  else match prog[s.pc]? with
-    | none => { s with halted := true }
-    | some instr => executeInstr instr s
+  else
+    match prog[s.pc]? with
+    | none      => { s with halted := true }
+    | some inst => executeInstr inst s
 
-/-! ## § 3 Fuel-bounded run -/
-
-/-- Bounded run with fuel: at most `n` steps, then halt-as-is.
-
-    Per the fuel-discipline convention used throughout `SSBX.Foundation`
-    (cf. `Foundation/Bagua/FuelDiscipline.lean`), structurally
-    recursive on `n` so Lean accepts it without termination metric. -/
+/-- Iterate `step` up to `fuel` times.  Returns the resulting state. -/
 def runFuel (prog : List Instr) : Nat → State → State
-  | 0, s => s
-  | n+1, s =>
-      if s.halted then s
-      else runFuel prog n (step prog s)
+  | 0,     s => s
+  | n + 1, s => runFuel prog n (step prog s)
 
-/-- Convenience: run on the initial state. -/
-def run (prog : List Instr) (input : R 8) (fuel : Nat) : State :=
-  runFuel prog fuel (State.init input)
+/-! ## § Basic theorems -/
 
-/-! ## § 4 Theorems -/
+@[simp] theorem step_halted (prog : List Instr) (s : State) (h : s.halted = true) :
+    step prog s = s := by
+  unfold step; rw [if_pos h]
 
-/-! ### § 4.1 `nop_advances_pc` -/
-
-/-- `nop` advances the program counter by 1 (everything else
-    unchanged). -/
-@[simp] theorem nop_advances_pc (s : State) :
-    (executeInstr .nop s).pc = s.pc + 1 := rfl
-
-@[simp] theorem nop_preserves_cur (s : State) :
-    (executeInstr .nop s).cur = s.cur := rfl
-
-@[simp] theorem nop_preserves_history (s : State) :
-    (executeInstr .nop s).history = s.history := rfl
-
-@[simp] theorem nop_preserves_halted (s : State) :
-    (executeInstr .nop s).halted = s.halted := rfl
-
-/-! ### § 4.2 `flipBit_involutive` -/
-
-/-- Applying `flipBit i` twice in sequence restores the cell value. -/
-theorem flipBit_involutive (i : Fin 8) (s : State) :
-    (executeInstr (.flipBit i) (executeInstr (.flipBit i) s)).cur = s.cur := by
-  simp [executeInstr, flipBitR8_involutive]
-
-/-! ### § 4.3 `writeBit_idempotent` -/
-
-/-- Applying `writeBit i b` twice in sequence is the same as applying
-    it once (the cell value is `writeBit i b` of the original cell). -/
-theorem writeBit_idempotent (i : Fin 8) (b : Bool) (s : State) :
-    (executeInstr (.writeBit i b) (executeInstr (.writeBit i b) s)).cur =
-      (executeInstr (.writeBit i b) s).cur := by
-  simp [executeInstr, writeBitR8_idempotent]
-
-/-! ### § 4.4 Halt semantics -/
-
-/-- `halt` flips `halted` to `true`. -/
-@[simp] theorem halt_makes_terminated (s : State) :
-    (executeInstr .halt s).halted = true := rfl
-
-/-- `halt` preserves everything else. -/
-@[simp] theorem halt_preserves_cur (s : State) :
-    (executeInstr .halt s).cur = s.cur := rfl
-
-@[simp] theorem halt_preserves_history (s : State) :
-    (executeInstr .halt s).history = s.history := rfl
-
-@[simp] theorem halt_preserves_pc (s : State) :
-    (executeInstr .halt s).pc = s.pc := rfl
-
-/-! ### § 4.5 `runFuel` halt idempotence -/
-
-/-- If the state is halted, `runFuel` does nothing. -/
-theorem runFuel_halt_idempotent (prog : List Instr) (n : Nat) (s : State)
-    (h : s.halted = true) :
-    runFuel prog n s = s := by
-  induction n with
-  | zero => rfl
-  | succ k _ =>
-      unfold runFuel
-      simp [h]
-
-/-! ### § 4.6 Step on halted state -/
-
-/-- `step` on a halted state is the identity. -/
-@[simp] theorem step_halted (prog : List Instr) (s : State)
-    (h : s.halted = true) : step prog s = s := by
-  unfold step; simp [h]
-
-/-! ### § 4.7 Fuel monotonicity -/
-
-/-- `runFuel` with zero fuel is the identity. -/
 @[simp] theorem runFuel_zero (prog : List Instr) (s : State) :
     runFuel prog 0 s = s := rfl
 
-/-- `runFuel` with `n+1` fuel: one step, then `n` more (only if not
-    already halted). -/
-theorem runFuel_succ (prog : List Instr) (n : Nat) (s : State) :
-    runFuel prog (n+1) s =
-      (if s.halted then s else runFuel prog n (step prog s)) := by
-  rfl
-
-/-- Once halted, additional fuel does not change the state. -/
-theorem runFuel_fuel_monotone_halted (prog : List Instr) (n m : Nat) (s : State)
-    (h : (runFuel prog n s).halted = true) :
-    runFuel prog (n + m) s = runFuel prog n s := by
-  induction n generalizing s with
-  | zero =>
-      -- `runFuel 0 s = s`, so `s.halted = true`, hence runFuel of any
-      -- additional fuel is `s` by `runFuel_halt_idempotent`.
-      simp at h
-      exact runFuel_halt_idempotent prog (0 + m) s h
+theorem runFuel_halted (prog : List Instr) (s : State) (h : s.halted = true) :
+    ∀ n, runFuel prog n s = s := by
+  intro n
+  induction n with
+  | zero => rfl
   | succ k ih =>
-      by_cases hs : s.halted
-      · -- halted, so runFuel does nothing
-        rw [runFuel_halt_idempotent prog _ s hs,
-            runFuel_halt_idempotent prog _ s hs]
-      · -- not halted, recurse on step
-        have hk : (runFuel prog k (step prog s)).halted = true := by
-          rw [runFuel_succ] at h
-          simp [hs] at h
-          exact h
-        have ih' := ih (step prog s) hk
-        -- Need: runFuel prog (k+1+m) s = runFuel prog (k+1) s
-        -- (k+1+m) = ((k+m)+1)
-        have heq : k + 1 + m = (k + m) + 1 := by omega
-        rw [heq, runFuel_succ, runFuel_succ]
-        simp [hs]
-        exact ih'
+    unfold runFuel
+    rw [step_halted prog s h]
+    exact ih
 
-/-! ### § 4.8 R 8 algebraic-add identity for xorMask -/
+/-! ### Field-projection lemmas (idiomatic — record-equality forms are
+     brittle under match reduction with branchBitEq's nested if). -/
 
-/-- `xorMask m` adds `m` to the current cell (F_2^8 XOR). -/
-@[simp] theorem xorMask_adds (m : R 8) (s : State) :
-    (executeInstr (.xorMask m) s).cur = s.cur + m := rfl
+@[simp] theorem halt_halted (s : State) : (executeInstr .halt s).halted = true := rfl
+@[simp] theorem halt_pc (s : State) : (executeInstr .halt s).pc = s.pc := rfl
+@[simp] theorem halt_cur (s : State) : (executeInstr .halt s).cur = s.cur := rfl
 
-/-- `xorMask 0` is the identity on `cur`. -/
-@[simp] theorem xorMask_zero_preserves_cur (s : State) :
-    (executeInstr (.xorMask 0) s).cur = s.cur := by
-  show s.cur + 0 = s.cur
-  simp
+@[simp] theorem nop_pc (s : State) : (executeInstr .nop s).pc = s.pc + 1 := rfl
+@[simp] theorem nop_cur (s : State) : (executeInstr .nop s).cur = s.cur := rfl
+@[simp] theorem nop_halted (s : State) : (executeInstr .nop s).halted = s.halted := rfl
 
-/-- `xorMask m` is involutive in `cur`: applying it twice cancels. -/
-theorem xorMask_involutive (m : R 8) (s : State) :
-    (executeInstr (.xorMask m) (executeInstr (.xorMask m) s)).cur = s.cur := by
-  show s.cur + m + m = s.cur
-  rw [add_assoc]
-  show s.cur + (m + m) = s.cur
-  rw [R.add_self]
-  simp
-
-/-! ### § 4.9 push/pop algebra -/
-
-/-- `push` adds the current cell to the history head; `cur` is
-    preserved. -/
-@[simp] theorem push_preserves_cur (s : State) :
-    (executeInstr .push s).cur = s.cur := rfl
-
-@[simp] theorem push_history (s : State) :
-    (executeInstr .push s).history = s.cur :: s.history := rfl
-
-/-- `pop` on an empty history is just a pc advance. -/
-theorem pop_empty (s : State) (h : s.history = []) :
-    executeInstr .pop s = { s with pc := s.pc + 1 } := by
-  show (match s.history with
-    | [] => { s with pc := s.pc + 1 }
-    | hh :: rest => { s with cur := hh, history := rest, pc := s.pc + 1 })
-      = { s with pc := s.pc + 1 }
-  rw [h]
-
-/-- `pop` on `c :: rest` restores `c` and shortens history. -/
-theorem pop_cons (s : State) (c : R 8) (rest : List (R 8))
-    (h : s.history = c :: rest) :
-    executeInstr .pop s =
-      { s with cur := c, history := rest, pc := s.pc + 1 } := by
-  show (match s.history with
-    | [] => { s with pc := s.pc + 1 }
-    | hh :: rest' => { s with cur := hh, history := rest', pc := s.pc + 1 })
-      = { s with cur := c, history := rest, pc := s.pc + 1 }
-  rw [h]
-
-/-- `push` then `pop` is an algebraic identity (up to pc advance by 2):
-    `cur` is preserved, history reverts. -/
-theorem push_pop_round_trip (s : State) :
-    let s₁ := executeInstr .push s
-    let s₂ := executeInstr .pop s₁
-    s₂.cur = s.cur ∧ s₂.history = s.history ∧ s₂.pc = s.pc + 2 := by
-  refine ⟨rfl, rfl, ?_⟩
-  show s.pc + 1 + 1 = s.pc + 2
-  rfl
-
-/-! ### § 4.10 Branch semantics -/
-
-/-- `branchBitEq` jumps when the bit matches. -/
-theorem branchBitEq_taken (i : Fin 8) (b : Bool) (t : Nat) (s : State)
-    (h : s.cur i = b) :
-    executeInstr (.branchBitEq i b t) s = { s with pc := t } := by
-  unfold executeInstr
-  simp [h]
-
-/-- `branchBitEq` falls through when the bit does not match. -/
-theorem branchBitEq_not_taken (i : Fin 8) (b : Bool) (t : Nat) (s : State)
-    (h : s.cur i ≠ b) :
-    executeInstr (.branchBitEq i b t) s = { s with pc := s.pc + 1 } := by
-  unfold executeInstr
-  simp [h]
-
-/-- `jump t` sets the pc to `t`, no other change. -/
-@[simp] theorem jump_sets_pc (t : Nat) (s : State) :
-    (executeInstr (.jump t) s).pc = t := rfl
-
-@[simp] theorem jump_preserves_cur (t : Nat) (s : State) :
-    (executeInstr (.jump t) s).cur = s.cur := rfl
-
-@[simp] theorem jump_preserves_halted (t : Nat) (s : State) :
+@[simp] theorem jump_pc (t : Nat) (s : State) : (executeInstr (.jump t) s).pc = t := rfl
+@[simp] theorem jump_cur (t : Nat) (s : State) : (executeInstr (.jump t) s).cur = s.cur := rfl
+@[simp] theorem jump_halted (t : Nat) (s : State) :
     (executeInstr (.jump t) s).halted = s.halted := rfl
 
-/-! ### § 4.11 Type-of-state preservation -/
+/-- `merge c` from initial-like state with `cur = dao` always succeeds.
+    Stated as field-projection on `cur` to dodge record-equality brittleness. -/
+@[simp] theorem merge_cur_of_dao (c : PartialCell 8) (s : State)
+    (hs : s.cur = PartialCell.dao) :
+    (executeInstr (.merge c) s).cur = c := by
+  show ((match PartialCell.merge s.cur c with
+         | some c' => ({ s with cur := c', pc := s.pc + 1 } : State)
+         | none    => { s with halted := true }).cur) = c
+  rw [hs, PartialCell.dao_merge]
 
-/-- `executeInstr` does not change the **type** of state — `R 8` is a
-    fixed type.  This is a structural triviality but worth stating
-    explicitly as a "no carrier drift" certificate. -/
-theorem executeInstr_preserves_R8_type (i : Instr) (s : State) :
-    (executeInstr i s).cur = (executeInstr i s).cur := rfl
+@[simp] theorem restrict_cur (mask : Finset (Fin 8)) (s : State) :
+    (executeInstr (.restrict mask) s).cur = PartialCell.restrict mask s.cur := rfl
+
+@[simp] theorem restrict_pc (mask : Finset (Fin 8)) (s : State) :
+    (executeInstr (.restrict mask) s).pc = s.pc + 1 := rfl
+
+@[simp] theorem restrict_halted (mask : Finset (Fin 8)) (s : State) :
+    (executeInstr (.restrict mask) s).halted = s.halted := rfl
+
+/-! ### Phase E.3 — push / pop / flipBit / writeBit / xorMask -/
+
+@[simp] theorem push_pc (s : State) : (executeInstr .push s).pc = s.pc + 1 := rfl
+@[simp] theorem push_cur (s : State) : (executeInstr .push s).cur = s.cur := rfl
+@[simp] theorem push_history (s : State) :
+    (executeInstr .push s).history = s.cur :: s.history := rfl
+@[simp] theorem push_halted (s : State) :
+    (executeInstr .push s).halted = s.halted := rfl
+
+@[simp] theorem pop_pc (s : State) : (executeInstr .pop s).pc = s.pc + 1 := by
+  show (match s.history with
+        | []      => ({ s with pc := s.pc + 1 } : State)
+        | c :: rs => { s with cur := c, history := rs, pc := s.pc + 1 }).pc
+       = s.pc + 1
+  cases s.history <;> rfl
+
+@[simp] theorem pop_halted (s : State) : (executeInstr .pop s).halted = s.halted := by
+  show (match s.history with
+        | []      => ({ s with pc := s.pc + 1 } : State)
+        | c :: rs => { s with cur := c, history := rs, pc := s.pc + 1 }).halted
+       = s.halted
+  cases s.history <;> rfl
+
+theorem pop_cur_empty (s : State) (h : s.history = []) :
+    (executeInstr .pop s).cur = s.cur := by
+  show (match s.history with
+        | []      => ({ s with pc := s.pc + 1 } : State)
+        | c :: rs => { s with cur := c, history := rs, pc := s.pc + 1 }).cur
+       = s.cur
+  rw [h]
+
+theorem pop_cur_cons (c : PartialCell 8) (rs : List (PartialCell 8)) (s : State)
+    (h : s.history = c :: rs) :
+    (executeInstr .pop s).cur = c := by
+  show (match s.history with
+        | []      => ({ s with pc := s.pc + 1 } : State)
+        | c' :: rs' => { s with cur := c', history := rs', pc := s.pc + 1 }).cur
+       = c
+  rw [h]
+
+@[simp] theorem flipBit_pc (i : Fin 8) (s : State) :
+    (executeInstr (.flipBit i) s).pc = s.pc + 1 := rfl
+@[simp] theorem flipBit_halted (i : Fin 8) (s : State) :
+    (executeInstr (.flipBit i) s).halted = s.halted := rfl
+@[simp] theorem flipBit_cur_at (i : Fin 8) (s : State) :
+    (executeInstr (.flipBit i) s).cur i = (s.cur i).map (!·) := by
+  show (if i = i then (s.cur i).map (!·) else s.cur i)
+       = (s.cur i).map (!·)
+  rw [if_pos rfl]
+@[simp] theorem flipBit_cur_other (i j : Fin 8) (s : State) (h : j ≠ i) :
+    (executeInstr (.flipBit i) s).cur j = s.cur j := by
+  show (if j = i then (s.cur j).map (!·) else s.cur j) = s.cur j
+  rw [if_neg h]
+
+@[simp] theorem writeBit_pc (i : Fin 8) (b : Bool) (s : State) :
+    (executeInstr (.writeBit i b) s).pc = s.pc + 1 := rfl
+@[simp] theorem writeBit_halted (i : Fin 8) (b : Bool) (s : State) :
+    (executeInstr (.writeBit i b) s).halted = s.halted := rfl
+@[simp] theorem writeBit_cur_at (i : Fin 8) (b : Bool) (s : State) :
+    (executeInstr (.writeBit i b) s).cur i = some b := by
+  show (if i = i then some b else s.cur i) = some b
+  rw [if_pos rfl]
+@[simp] theorem writeBit_cur_other (i j : Fin 8) (b : Bool) (s : State) (h : j ≠ i) :
+    (executeInstr (.writeBit i b) s).cur j = s.cur j := by
+  show (if j = i then some b else s.cur j) = s.cur j
+  rw [if_neg h]
+
+@[simp] theorem xorMask_pc (m : R 8) (s : State) :
+    (executeInstr (.xorMask m) s).pc = s.pc + 1 := rfl
+@[simp] theorem xorMask_halted (m : R 8) (s : State) :
+    (executeInstr (.xorMask m) s).halted = s.halted := rfl
+@[simp] theorem xorMask_cur (m : R 8) (s : State) (j : Fin 8) :
+    (executeInstr (.xorMask m) s).cur j = (s.cur j).map (· != m j) := rfl
+
+/-- `branchBitEq i b t` fires when bit `i` is *explicitly* specified to `b`. -/
+theorem branchBitEq_pc_taken (i : Fin 8) (b : Bool) (t : Nat) (s : State)
+    (h : s.cur i = some b) :
+    (executeInstr (.branchBitEq i b t) s).pc = t := by
+  show (if s.cur i = some b then ({ s with pc := t } : State)
+        else { s with pc := s.pc + 1 }).pc = t
+  rw [if_pos h]
+
+/-- `branchBitEq i b t` falls through when bit `i` is *not* explicitly `b`,
+    including the `none` (unspecified) case — partial states do not commit. -/
+theorem branchBitEq_pc_skip (i : Fin 8) (b : Bool) (t : Nat) (s : State)
+    (h : s.cur i ≠ some b) :
+    (executeInstr (.branchBitEq i b t) s).pc = s.pc + 1 := by
+  show (if s.cur i = some b then ({ s with pc := t } : State)
+        else { s with pc := s.pc + 1 }).pc = s.pc + 1
+  rw [if_neg h]
+
+/-- Specialisation: `branchBitEq` on an *unspecified* bit always falls through. -/
+theorem branchBitEq_pc_unspec (i : Fin 8) (b : Bool) (t : Nat) (s : State)
+    (h : s.cur i = none) :
+    (executeInstr (.branchBitEq i b t) s).pc = s.pc + 1 := by
+  apply branchBitEq_pc_skip
+  rw [h]; intro h'; cases h'
+
+@[simp] theorem branchBitEq_cur (i : Fin 8) (b : Bool) (t : Nat) (s : State) :
+    (executeInstr (.branchBitEq i b t) s).cur = s.cur := by
+  show (if s.cur i = some b then ({ s with pc := t } : State)
+        else { s with pc := s.pc + 1 }).cur = s.cur
+  by_cases h : s.cur i = some b
+  · rw [if_pos h]
+  · rw [if_neg h]
+
+@[simp] theorem branchBitEq_halted (i : Fin 8) (b : Bool) (t : Nat) (s : State) :
+    (executeInstr (.branchBitEq i b t) s).halted = s.halted := by
+  show (if s.cur i = some b then ({ s with pc := t } : State)
+        else { s with pc := s.pc + 1 }).halted = s.halted
+  by_cases h : s.cur i = some b
+  · rw [if_pos h]
+  · rw [if_neg h]
+
+/-! ## § Bridge to `mergeAll`: a pure-merge program IS `mergeAll`
+
+For a program consisting only of `merge` instructions (no jumps, no
+halts, no restricts), the result of running it from `initial` is exactly
+`PartialCell.mergeAll` of the merge cells.  This is the operational
+realisation of Phase D's algebraic fold. -/
+
+/-- Extract the merge cells from a program (in order, only `.merge`
+    instructions kept). -/
+def mergeCells : List Instr → List (PartialCell 8)
+  | []                => []
+  | .merge c :: rest  => c :: mergeCells rest
+  | _ :: rest         => mergeCells rest
+
+@[simp] theorem mergeCells_nil : mergeCells [] = [] := rfl
+@[simp] theorem mergeCells_merge_cons (c : PartialCell 8) (rest : List Instr) :
+    mergeCells (.merge c :: rest) = c :: mergeCells rest := rfl
 
 end SSBX.Foundation.Wen.Core

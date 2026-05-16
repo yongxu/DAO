@@ -1,56 +1,36 @@
 /-
-# `SSBX.Foundation.Wen.Core` — umbrella import for the language-
-independent R 8 bit-machine interpreter core
+# `SSBX.Foundation.Wen.Core` — PartialCell-native interpreter (Phase E.1)
 
-Canonical doctrine: `docs-next/10_formal_形式/wen-algebra.md` v0.6 +
-`docs-next/10_formal_形式/r8.md` v0.2.
-
-The Wen Core operates **directly on `R 8 = Fin 8 → Bool`** with a
-language-independent instruction set.  No semantic naming (Yi 爻/时态,
-Hexagram, Shi, Bagua, Pauli, …) appears anywhere in this subtree;
-overlays live in `Foundation/Atlas/`.
-
-This umbrella pulls the whole subtree in one import.
+The §3.7-aligned rewrite of `Foundation/Wen/Core/`.  Where the legacy
+core operates on `R 8 = Fin 8 → Bool` (fully-specified bit vectors),
+CorePartial operates on `PartialCell 8 = Fin 8 → Option Bool` — partial
+states are first-class.
 
 ## Module map
 
-* `Instruction.lean` — the 8-constructor `Instr` inductive (plus the
-  `xorMask` `R 8`-add primitive); language-independent.
-* `State.lean`       — `State` record + carrier-level update helpers
-  (`flipBitR8`, `writeBitR8`) and their algebraic identities.
-* `Machine.lean`     — single-step `executeInstr`, fetch-decode `step`,
-  fuel-bounded `runFuel`, and core algebraic theorems
-  (`nop_advances_pc`, `flipBit_involutive`, `writeBit_idempotent`,
-  `runFuel_halt_idempotent`, `runFuel_fuel_monotone_halted`, …).
-* `Universal.lean`   — `InstrEncoding`, `encodeProgInput`, `equivObs`,
-  `Simulates`, `IsUniversal`, `UniversalInterpreterExists` (target
-  spec for `Foundation/Wen/MetaInterp/`).
-* `Examples.lean`    — a small gallery of test programs:
-  `nopProg`, `flipBit0Prog`, `setAllBitsProg`, `loopProg`,
-  `branchProg`, `pushPopProg`, `xorMaskProg`.
+* `Instruction.lean` — 5-constructor `Instr` (nop / merge / restrict /
+  jump / halt).  `merge` and `restrict` are first-class instructions;
+  the partial-cell algebra is now part of the ISA.
+* `State.lean`       — `State` record with `cur : PartialCell 8`,
+  initial state = 道.
+* `Machine.lean`     — `executeInstr`, `step`, `runFuel`, basic
+  theorems, and the `mergeCells` extractor that bridges to Phase D's
+  `mergeAll`.
+* `Examples.lean`    — demo programs: empty, halt, pin-a-bit, 不通-halt.
 
-## Doctrinal anchor
+## Doctrinal alignment
 
-* `wen-algebra.md` v0.6 §10.7 (Interpreter Foundation).
-* `r8.md` v0.2 §15.10 (Interpreter primitives), §11
-  (behavior/judgment).
-* Language-independence principle: `wen-algebra.md` v0.6 §0.3,
-  §0.5; `r8.md` v0.2 §0.4.
+Per §3.7 (操作 ≡ 位 ≡ 内容): in CorePartial, the state IS a partial cell,
+and the partial-cell algebra primitives (merge, restrict) ARE
+instructions.  No category split between "data" and "operation".
 
-## Relationship to legacy `Foundation/Bagua/BaguaTuring.lean`
+## Roadmap
 
-`BaguaTuring.lean` defines a Yi-named state machine where state =
-`Hexagram × Shi` (a 256-cell carrier identified via Yi vocabulary).
-This Wen Core operates on the same 256-cell carrier algebraically
-(`R 8`), but **without** any Yi names.  The two coexist:
-
-* `BaguaTuring.lean` — Yi-named overlay; retained.
-* `Wen.Core` — language-independent foundation; new in v0.6.
-
-Future integration (out of scope here): an Atlas module
-`Foundation/Atlas/Yi/Bridge.lean` will define a bijection
-`Hexagram × Shi ≃ R 8` and a translation from `YiInstr` to `Instr`
-that respects single-step semantics.
+* **Phase E.1** (this file): scaffold + linear-control interpreter.
+* **Phase E.2**: conditional branches (`branchBitEq i b t` adapted to
+  partial states), equivalence theorem with legacy `Wen.Core` on the
+  shared semantics.
+* **Phase E.3+**: migrate Kernel / MetaInterp / upstream consumers.
 -/
 
 import SSBX.Foundation.Wen.Core.Instruction
@@ -58,3 +38,8 @@ import SSBX.Foundation.Wen.Core.State
 import SSBX.Foundation.Wen.Core.Machine
 import SSBX.Foundation.Wen.Core.Universal
 import SSBX.Foundation.Wen.Core.Examples
+-- NOTE: `Bridge` is *not* in the umbrella because its `step_equiv` /
+-- `runFuel_equiv` theorems carry `sorry` (Phase E.6 targets), which
+-- poisons `native_decide` in any downstream module that imports the
+-- umbrella.  Consumers that need the legacy ↔ CorePartial translation
+-- should `import SSBX.Foundation.Wen.Core.Bridge` directly.

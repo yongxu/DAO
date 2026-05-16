@@ -53,7 +53,7 @@ This file is a thin **re-export anchor** under the requested
 in two canonical Cell256 modules:
 
 * `Foundation/Atlas/Yi/Diagonal.lean` (647 LOC, **0 axioms**,
-  **0 sorry**): language-independent R₈ kernel on `Wen.CorePartial`'s
+  **0 sorry**): language-independent R₈ kernel on `Wen.Core`'s
   `Instr` ISA; `KleeneInverter` as a `Prop` hypothesis, not an
   axiom.  This is the **canonical R₈ Gödel theorem**.
 * `Foundation/Atlas/Yi/Classical/Diagonal/GodelLi.lean` (1309 LOC,
@@ -81,19 +81,19 @@ import SSBX.Foundation.Atlas.Yi.Diagonal
 namespace SSBX.Foundation.Wen.MetaInterp.GodelR8
 
 open SSBX.Foundation.R
-open SSBX.Foundation.Wen.CorePartial
+open SSBX.Foundation.Wen.Core
 open SSBX.Foundation.Atlas.Yi.Diagonal
 
 /-! ## § 1 Canonical R₈ aliases (language-independent kernel)
 
 These re-export the Atlas-Yi language-independent forms on
-`Wen.CorePartial`'s `R 8` machine.  The names here use the
+`Wen.Core`'s `R 8` machine.  The names here use the
 `Wen.MetaInterp.GodelR8` namespace and append an `_r8` suffix where
 ambiguous, so they coexist cleanly with the Atlas-Yi originals.
 -/
 
 /-- **R₈ Halts predicate**: `p` halts on input `inp : R 8` iff some
-    fuel makes `Wen.CorePartial.runFuel`'s halt flag true.
+    fuel makes `Wen.Core.runFuel`'s halt flag true.
 
     Re-export of `Atlas.Yi.Diagonal.Halts` — see that module for the
     Σ₁ shape and `halts_iff_exists_fuel` derivation. -/

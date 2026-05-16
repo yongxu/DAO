@@ -62,14 +62,14 @@ layer, in 语言无关 (language-independent) form on `R 8`.
   * Atlas separation: `wen-algebra.md` v0.6 §9.
 -/
 
-import SSBX.Foundation.Wen.CorePartial
+import SSBX.Foundation.Wen.Core
 
 namespace SSBX.Foundation.Atlas.Yi.Diagonal
 
 open SSBX.Foundation.R
-open SSBX.Foundation.Wen.CorePartial
+open SSBX.Foundation.Wen.Core
 
-/-! ## § 1 Halts predicate (Σ₁) on the Wen.CorePartial machine
+/-! ## § 1 Halts predicate (Σ₁) on the Wen.Core machine
 
 The halting predicate on a `(program, input)` pair is the existential
 fuel quantifier over `runFuel`'s halt flag.  This is the standard Σ₁
@@ -78,7 +78,7 @@ decidable by `Bool.decEq`).
 -/
 
 /-- **停机谓词** (`Halts`): program `p` on input `inp` halts iff there
-    is a fuel bound at which `Wen.CorePartial.runFuel` reaches
+    is a fuel bound at which `Wen.Core.runFuel` reaches
     `halted = true`.  Σ₁-shaped: existential over `Nat`. -/
 def Halts (p : List Instr) (inp : R 8) : Prop :=
   ∃ fuel : Nat, (runFuel p fuel (State.init inp)).halted = true
@@ -96,7 +96,7 @@ instance halts_within_decidable (p : List Instr) (inp : R 8) (n : Nat) :
 
 /-! ### § 1.0 Local helper: `runFuel` succ-unfolding
 
-In `Wen.CorePartial`, `runFuel prog (n+1) s = runFuel prog n (step prog s)`
+In `Wen.Core`, `runFuel prog (n+1) s = runFuel prog n (step prog s)`
 *definitionally* — the `if halted` guard is pushed into `step` rather
 than the fuel loop.  We expose a named form for parity with the
 `Wen.Core` proof style. -/
