@@ -38,8 +38,4 @@ import SSBX.Foundation.Wen.Core.State
 import SSBX.Foundation.Wen.Core.Machine
 import SSBX.Foundation.Wen.Core.Universal
 import SSBX.Foundation.Wen.Core.Examples
--- NOTE: `Bridge` is *not* in the umbrella because its `step_equiv` /
--- `runFuel_equiv` theorems carry `sorry` (Phase E.6 targets), which
--- poisons `native_decide` in any downstream module that imports the
--- umbrella.  Consumers that need the legacy ↔ CorePartial translation
--- should `import SSBX.Foundation.Wen.Core.Bridge` directly.
+import SSBX.Foundation.Wen.Core.ConstraintDemo
