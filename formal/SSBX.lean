@@ -120,6 +120,7 @@ import SSBX.Foundation.Hierarchy.Operators.V4  -- canonical V4 kernel + projecti
 import SSBX.Foundation.Hierarchy.Operators.Interlace  -- non-V4 interlace projection
 import SSBX.Foundation.Hierarchy.Operators.OXPrefix  -- variable-length o/x prefixes
 import SSBX.Foundation.Hierarchy.RHierarchy  -- R₀..R₈ index-named alias umbrella
+import SSBX.Foundation.Hierarchy.ZoneClassifier  -- 任意位 oxox 全轴判定 + 道/理/可理/墙 子集化
 import SSBX.Foundation.Atlas.Yi.Classical.Cells.R8  -- R₈ 闭合层 (Hexagram × Shi V₄, 256 cells, 投 算子)
 import SSBX.Foundation.Atlas.Yi.Classical.Cells.R8Stratify  -- R₇/R₈ 双层 stratification + R8_complete bundle
 import SSBX.Foundation.Atlas.Yi.Classical.Computation.BaguaTuring

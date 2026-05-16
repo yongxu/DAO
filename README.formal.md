@@ -409,7 +409,33 @@ R0_Taiji.lean   .. R8_GuoHex.lean   thin re-export shims giving R-index naming (
 LiftProject.lean            8 uniform Lift_n / Project_n pairs + proj_lift_id_Rn retract lemmas
 Operators/Atomic.lean       XOR-subgroup atomic gens (yin/tou/flipᵢ/hexCuo) re-exported from Cell{128,256}
 Operators/V4Outer.lean      V₄ Klein outer (zong/cuoZong/hu) at every R₃+ layer
+ZoneClassifier/             任意位 oxox 全轴判定 + 道/理/可理/墙 子集化（第二轮收紧）
+  Types.lean                Zone / WallTag / RiceQuadrant / OperatorTag / Classification (5 字段)
+  WallCitations.lean        11 条 cited_* 单行 wrap 既证墙定理（证据流入口）
+  Operators.lean            applyUnary (每 op 之结构性一元行动) + apply (Option 签名) + composeZone (Zone.level + max) + sheng_no_fixed_point
+  Axes.lean                 extractShi only (Behavior/Claim/Modality 已删除——无诚实派生)
+  Classify.lean             classify 5-step priority + detectWalls (cell-independent) + 阈值由 op.applicable n 派生
+  Subsets.lean              daoSubset/liSubset/keLiSubset/wallSubset + subsets_partition + dao_via_shengshengbuxi
+  Interaction.lean          interact (apply Option-aware) + wall-absorption theorems
+  Examples.lean             5 条 #eval smoke tests
+ZoneClassifier.lean         顶层入口（re-exports 全部子模块）
 ```
+
+**核心定理**（在 `ZoneClassifier/Subsets.lean`）：
+- `dao_via_shengshengbuxi : daoSubset 6 .yiCore_step = Finset.univ`
+  —— 证明严格通过 `orbit_witness`（= `«生生不息»`）+ `sheng_no_fixed_point` 派生，
+     非定义型真值赋予；`#print axioms` 之依赖图含 YiCore.«生生不息»
+- `subsets_partition / subsets_disjoint_*` —— 由 Zone 构造子互斥性派生
+- `WallCitations.all_citations_typecheck` —— 同时引用 11 条墙定理强制 type-check
+- `composeZone` —— 由 `Zone.level + max` 派生，**不依赖任何公理**（#print axioms 显示 empty）
+
+**证据流第二轮收紧**（消灭 11 处定义型真值）：
+- 删除 `encodesSheng`、`extractBehavior`、`extractClaim`、`extractModality`、`Lift.lean`（全为定义型默认）
+- `detectWalls` 改为 cell-independent；每 op→walls 之映射在 Classify.lean docstring 有结构理由表
+- `composeZone` 由 5×5 硬编码表改为 `Zone.level + max` 之派生
+- `apply` 改为 `Option (BitSpace n)`，无自然二元行动者返回 `none`（非任意 fst fallback）
+- `classify` 阈值 `n < 8` 改为 `op.applicable n` 派生
+- 实际 dao_axiom 子集（256/0/1/64/2/8/1/0）从规则**自动算出**，无显式枚举
 
 ### 5.4 Foundation/Notation
 
@@ -776,7 +802,7 @@ machine:  3686 build jobs · 0 sorry in migrated+Squaring · 0 project-custom ax
 opaque:   1 (theOne)
 partial:  1 top-level executable partial def (BaguaTuring.run nontermination boundary)
 ledger:   DAG / roster / operator / layer / essay correspondences are sync claims
-pending:  6 PendingName interfaces; WenyanSelfInterp universal-quine re-dispatch (engineering)
+pending:  6 PendingName interfaces; WenyanSelfInterp universal buildEmitProg + diagonal (roadmap, not yet written)
 conj:     ConjOne / ConjTwo, no Lean term claimed
 boundary: cuo-equivariance ceiling, universal-compileTm undefinable
           (halts_cuo_invariant + unrestricted_kleene_inverter_inconsistent),
