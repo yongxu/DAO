@@ -1,10 +1,11 @@
 # R-Tower Closure as Knaster-Tarski Fixed Point in the Lawvere Lineage
 ## A Position Paper Draft — Metalogic Identification for §8.4
 
-> **Version:** 0.2 · 2026-05-16
-> **Status:** **DRAFT — §4 + §5 严格化完成**, 其余章节骨架待展开。
-> **Companion to:** [`representation-closure.md`](representation-closure.md) §8.4
-> **Target:** 30-40 页定稿, 当前约 ~13000 字 (~35-40%)
+> **Version:** 0.4 · 2026-05-17
+> **Status:** **DRAFT — §2, §4-§8 严格化完成**, ~95% publication-ready (剩 Lean 形式化 + minor polish)。
+> **Companion to:** [`representation-closure.md`](representation-closure.md) §8.4 · [`peer-engagement-draft.md`](peer-engagement-draft.md) (outreach v0.1)
+> **Lean companion:** [`formal/SSBX/Foundation/Closure/PhiOperator.lean`](../../formal/SSBX/Foundation/Closure/PhiOperator.lean) (5/8 sorries discharged)
+> **Target:** 30-40 页定稿, 当前 ~1286 行 / ~33000 字 (~95%)
 > **Critical reads needed:** Lawvere 1969, Yanofsky 2003, Knaster-Tarski 1928, Aczel 1988, Lambek & Scott 1986 §I.13
 
 ---

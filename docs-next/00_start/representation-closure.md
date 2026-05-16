@@ -1,9 +1,9 @@
 # 表征闭合 (Representation Closure)
 ## — 概念、语言、与 R-tower 的形式统一
 
-> **Version:** 0.1.2 · 2026-05-16
-> **Status:** 哲学纲领初稿 (philosophical programme, draft) — §3.1 R₄ minimality 已升格为形式定理引用; §8.1 算法层 Strategy C+E 双 locator 通道完成
-> **Companion to:** chapter 01 (D1 + P1–P7 derivation) · `wen-substrate.md` v1.4 · `formal/SSBX/Foundation/R/Squaring.lean` · [`R4Minimality.lean`](../../formal/SSBX/Foundation/R/R4Minimality.lean) (§3.1 master theorem) · [`Lexicon.lean`](../../formal/SSBX/Foundation/Representation/Lexicon.lean) + [`Lexicon/Examples.lean`](../../formal/SSBX/Foundation/Representation/Lexicon/Examples.lean) (§8.1 Strategy C, 6 schools) · [`OXPattern.lean`](../../formal/SSBX/Foundation/Representation/OXPattern.lean) (§8.1 Strategy E) · [`lawvere-identification.md`](lawvere-identification.md) v0.2 (§8.4 metalogic 嵌入的严格化)
+> **Version:** 0.1.3 · 2026-05-17
+> **Status:** 哲学纲领初稿 (philosophical programme, draft) — §3.1 R₄ minimality 已升格为形式定理引用; §8.1 算法层 Strategy C+E 双 locator 通道完成; §8.4 metalogic 完整闭合 (lawvere v0.4 +95%)
+> **Companion to:** chapter 01 (D1 + P1–P7 derivation) · `wen-substrate.md` v1.4 · `formal/SSBX/Foundation/R/Squaring.lean` · [`R4Minimality.lean`](../../formal/SSBX/Foundation/R/R4Minimality.lean) (§3.1 master theorem) · [`Lexicon.lean`](../../formal/SSBX/Foundation/Representation/Lexicon.lean) + [`Lexicon/Examples.lean`](../../formal/SSBX/Foundation/Representation/Lexicon/Examples.lean) (§8.1 Strategy C, 6 schools) · [`OXPattern.lean`](../../formal/SSBX/Foundation/Representation/OXPattern.lean) (§8.1 Strategy E) · [`lawvere-identification.md`](lawvere-identification.md) v0.4 (§8.4 metalogic 嵌入完整严格化, ~95%)
 > **Audience:** 已熟悉 D1+P1–P7 + R-tower 基本概念的读者; 非入门材料
 
 ---
@@ -37,7 +37,7 @@
 | chapter 01 | D1 ⟹ P1–P7 (分析方向 / →) 证明 |
 | `wen-substrate.md` v1.4 | R-tower 结构定义、公理、operation monism |
 | Lean codebase | 形式化代数面 (0 sorry) |
-| [`lawvere-identification.md`](lawvere-identification.md) v0.2 | §8.4 元理论嵌入的严格化 (D1 = Knaster-Tarski lfp(Φ), Lawvere lineage) |
+| [`lawvere-identification.md`](lawvere-identification.md) v0.4 | §8.4 元理论嵌入完整严格化 (D1 = Knaster-Tarski lfp(Φ), Lawvere lineage); §2-§8 全 rigorous, ~95% publication-ready |
 | **本文** | **整体哲学综合 + 意义评估 + 开放问题清单** |
 
 ---
@@ -456,7 +456,7 @@ D1 ⟷ P1–P7 双向闭合在 *哲学* 上有说服力, 但在 *形式 metalogi
 - 是引入新 foundation, 还是嵌入现有 foundation?
 - 与 Russell 的"恶性循环原则"如何区分?
 
-v0.1 列为开放的形而上学问题, 但 [`lawvere-identification.md`](lawvere-identification.md) v0.2 已严格化此 closure 为 ZFC 内 Knaster-Tarski lfp(Φ), P5 是 lattice 𝒜 consistency 的结构条件。Russell 区分由 §5.7 negation-absence 论证给出。详 §8.4 (现已大半完成)。
+v0.1 列为开放的形而上学问题, 但 [`lawvere-identification.md`](lawvere-identification.md) v0.4 已完整严格化此 closure 为 ZFC 内 Knaster-Tarski lfp(Φ), P5 是 lattice 𝒜 consistency 的结构条件。Russell 区分由 §6 (4 candidate negations 全部失败, Thm 6.3.1) 给出。详 §8.4 (现已基本完成)。
 
 ### §5.4 综合方向证明的完整性
 
@@ -585,7 +585,7 @@ R-tower 不在真空里。它与几个已有传统有亲缘也有差异。
 
 ### §8.4 元理论嵌入 — 🟢 大半完成 (2026-05-16)
 
-**状态更新:** 本项原列为 Tier 1 重要开放问题 (估 6-12 月)。[`lawvere-identification.md`](lawvere-identification.md) v0.2 已**严格化**核心识别:
+**状态更新:** 本项原列为 Tier 1 重要开放问题 (估 6-12 月)。[`lawvere-identification.md`](lawvere-identification.md) v0.4 已**完整严格化**核心识别 (§2-§8 all rigorous, paper ~95%):
 
 > **D1 = lfp(Φ)** — Knaster-Tarski 在 articulation candidates lattice 𝒜 上对 requirements-extraction operator Φ 的 least fixed point; P5 (hom-closure) 是使 Φ 良定义的结构条件, 内建于 𝒜 的 consistency 中。
 
