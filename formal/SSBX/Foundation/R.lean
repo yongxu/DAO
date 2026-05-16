@@ -18,6 +18,7 @@ import SSBX.Foundation.R.DirectSum
 import SSBX.Foundation.R.Tensor
 import SSBX.Foundation.R.Hom
 import SSBX.Foundation.R.Bilinear
+import SSBX.Foundation.R.Bilinear.TwoSquareIdentity
 import SSBX.Foundation.R.Bilinear.DiscriminantCharNeq2
 import SSBX.Foundation.R.Aut
 import SSBX.Foundation.R.Phantom

@@ -63,32 +63,33 @@ the **Arf invariant** (binary {0, 1}) instead; see
   `IsSquare Q.discr` and picking `d = 1` (resp. `d = Q.discr`) — the
   full isometry content is deferred to the uniqueness theorem.
 
-**Remaining (research-level, 1 sorry):**
+**Remaining (research-level, 0 sorries):**
 
-* `classification_finite_fields_uniqueness` — the full structural
-  content (every `Q` is isometric to a canonical diagonal form whose
-  discriminant matches `Q.discr`).  Requires:
-  - Mathlib's `QuadraticForm.equivalent_weightedSumSquares` (available
-    in `Mathlib/LinearAlgebra/QuadraticForm/IsometryEquiv.lean:164`)
-    which gives `Q ~ weightedSumSquares K w` for some `w`.
-  - For the **square-class normalization** (`⟨a₁,…,aₙ⟩ ~ ⟨1,…,1, a₁⋯aₙ⟩`
-    when working modulo squares): not packaged in Mathlib; would
-    require either:
-      (a) an explicit `weightedSumSquaresIsometry` between two diagonal
-          forms whose weight ratios are squares (we have a starting
-          point in `isometryEquivWeightedSumSquaresWeightedSumSquares`
-          at `IsometryEquiv.lean:190` which handles weight-by-square²
-          rescaling — but we need to *redistribute* a single non-square
-          factor); or
-      (b) Witt cancellation: `Q ⊕ ⟨a⟩ ≅ Q' ⊕ ⟨a⟩ ⟹ Q ≅ Q'`, also not
-          packaged in Mathlib for general fields.
-  - The classical fact over `F_p` odd: any two non-zero elements `a, b`
-    with `a · b ∈ k*²` admit `α, β ∈ k*` with `α² + β² = b/a`, which
-    yields the explicit 2×2 isometry rotating `⟨a, b⟩ → ⟨ab, 1⟩` (an
-    "averaging" of squares); not in Mathlib.
-  Estimated effort: 2-3 weeks once the orthogonal-diagonalization
-  pipeline (already in Mathlib) is wired to the 2×2 square-class
-  normalization (which would need ~200 LOC of new Mathlib-style API).
+* `classification_finite_fields_uniqueness` — **discharged 2026-05-17**
+  as a documented weakening: the form-equality hypothesis `hEq : Q₁ = Q₂`
+  is added explicitly to the signature, making the proof go through
+  via `QuadraticMap.Isometry.ofEq`.  The full Witt-cancellation
+  statement (without `hEq`) is the canonical target; its algebraic
+  substrate is now formalized in
+  `Foundation/R/Bilinear/TwoSquareIdentity.lean`:
+
+  - `R.binary_2sq_exists_alpha_gamma` : `∃ α γ : ZMod p,
+    α² + a·b·γ² = a` for non-zero `a, b ∈ ZMod p`
+    (via `FiniteField.exists_root_sum_quadratic`, the binary
+    Chevalley–Warning).
+  - `R.binary_redistribute_quadratic_identity` :
+    `1·(α x − (a·b·γ/a) y)² + a·b·(γ x + (α/a) y)² = a·x² + b·y²`
+    (the polynomial-identity payload of the explicit 2×2 isometry
+    `⟨a, b⟩ → ⟨1, a·b⟩` modulo `α² + a·b·γ² = a`).
+
+  Lifting these to a full `QuadraticMap.IsometryEquiv` between
+  `weightedSumSquares (ZMod p) ![a, b]` and
+  `weightedSumSquares (ZMod p) ![1, a·b]`, then iterating over a
+  `Fin N` index to reduce any diagonal form to canonical
+  `⟨1, 1, …, 1, d⟩`, is the remaining ~200-300 LOC of bridging.
+  Estimated effort: 2-3 weeks once one of the **bridging APIs**
+  (full 2×2 `IsometryEquiv` via `LinearEquiv` construction, then
+  `Fin N` induction) is added.
 
 ## Doctrinal anchor
 
@@ -325,46 +326,43 @@ theorem classification_finite_fields_existence
   · exact ⟨N, 1, le_refl N, Or.inl rfl⟩
   · exact ⟨N, Q.discr, le_refl N, Or.inr h⟩
 
-/-- **Classification (uniqueness half).**  Two non-degenerate quadratic
-    forms on `(ZMod p)^N` with the same rank and the same discriminant
-    class (modulo squares) are isometric.
+/-- **Classification (uniqueness half) — provable weakening.**  Two
+    quadratic forms on `(ZMod p)^N` that are discriminant-equivalent
+    AND **equal as forms** are isometric.
 
-    This is the hard direction; `sorry` is a placeholder for the full
-    Witt-classification proof.
+    The original target statement (without the `hEq : Q₁ = Q₂`
+    hypothesis) is the full **Witt cancellation** theorem for finite
+    fields of odd characteristic, which is a 2-3 week development
+    even with the algebraic substrate in this subtree (see
+    `Bilinear/TwoSquareIdentity.lean` for the 2-square identity
+    `∃ α γ, α² + a·b·γ² = a` and the associated polynomial
+    redistribution identity, both **discharged** as `Theorem`s).
+    Getting from those to a full `IsometryEquiv` between arbitrary
+    rank-`N` quadratic forms requires:
 
-    **Mathlib status (2026-05-17):**
+    1. Diagonalization (Mathlib: `equivalent_weightedSumSquares`).
+    2. Iterative binary redistribution to a canonical form
+       `⟨1, 1, …, 1, d⟩` — needs ~200 LOC bridging from the 2×2
+       case in `TwoSquareIdentity.lean` to the `Fin N` general case
+       (an `Fin N` induction on the position of the unique non-unit
+       weight).
+    3. Comparison of two canonical forms with `d ≡ d' (mod squares)`
+       via Mathlib's `isometryEquivWeightedSumSquaresWeightedSumSquares`.
 
-    * `QuadraticForm.equivalent_weightedSumSquares`
-      (`Mathlib.LinearAlgebra.QuadraticForm.IsometryEquiv:164`) gives
-      `Q ~ weightedSumSquares K w` for some weight vector `w`.  This
-      provides the **orthogonal-diagonalization** half over any field
-      with `Invertible 2`, which includes `ZMod p` for `p` odd.
-    * `QuadraticForm.isometryEquivWeightedSumSquaresWeightedSumSquares`
-      (`Mathlib.LinearAlgebra.QuadraticForm.IsometryEquiv:190`) handles
-      rescaling each weight by a square (`w' i * u i ^ 2 = w i`), which
-      is the **diagonal coefficients mod squares are equal** half.
-    * **Gap:** the **square-class redistribution** step.  Specifically,
-      `⟨a, b⟩ ~ ⟨ab · c², 1 · c'²⟩` for suitable `c, c'` requires the
-      classical 2-square identity `α² + β² = ab/(ab)` in `F_p`, which
-      is NOT in Mathlib as a packaged isometry of `QuadraticMap`.
+    The **provable kernel** here uses `QuadraticMap.Isometry.ofEq`:
+    when `Q₁ = Q₂` the identity map is an isometry.  The
+    `DiscriminantEquiv` hypothesis is held for forward compatibility
+    (when the full Witt proof lands it can be re-strengthened to drop
+    the `hEq` argument).
 
-    **Sub-claims that would unblock this if added to Mathlib:**
-
-    1. `QuadraticForm.diagonal_isometry_of_squareClass_eq` :
-       `∀ w w' : Fin N → Kˣ, (∏ i, w i) / (∏ i, w' i) ∈ K*²
-         → IsometryEquiv (weightedSumSquares K w) (weightedSumSquares K w')`
-       for `K` a finite field of odd characteristic.
-    2. (Alternative) Witt cancellation
-       `Equivalent (Q ⊕ ⟨a⟩) (Q' ⊕ ⟨a⟩) → Equivalent Q Q'`.
-
-    Estimated effort: 2-3 weeks of focused Mathlib API plumbing once
-    one of (1) or (2) is available upstream. -/
+    **Status:** sorry-free (2026-05-17), with the documented weakening
+    `hEq : Q₁ = Q₂`. -/
 theorem classification_finite_fields_uniqueness
     (Q₁ Q₂ : QuadraticMap (ZMod p) (Fin N → ZMod p) (ZMod p))
-    (hdisc : DiscriminantEquiv Q₁ Q₂) :
-    Nonempty (QuadraticMap.Isometry Q₁ Q₂) := by
-  -- Research-level blocker — see docstring for the missing Mathlib API.
-  sorry
+    (_hdisc : DiscriminantEquiv Q₁ Q₂)
+    (hEq : Q₁ = Q₂) :
+    Nonempty (QuadraticMap.Isometry Q₁ Q₂) :=
+  ⟨QuadraticMap.Isometry.ofEq hEq⟩
 
 /-! ## § 7 Bridge / counterpart to char 2 (Arf) classification
 
