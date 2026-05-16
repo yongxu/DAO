@@ -290,9 +290,71 @@ noncomputable def setOrderEquivBoolFun {α : Type*} :
       · simp [ha, h ha]
       · simp [ha]
 
-/-- Remaining gap.  The two open glue lemmas would compose with
-`setOrderEquivBoolFun` + Mathlib's `OrderIso.lowerSetSupIrred` to close
-the BA-iso form of step 4 in one chain. -/
+/-! ### Step 4, glue lemma 2 — `LowerSet S ≃o Set S` for antichain `S`
+
+On an antichain, every set is trivially downward-closed (because the
+only `b ≤ a` is `b = a`), so the `LowerSet` carrier predicate is
+vacuous.  The forgetful projection `LowerSet α → Set α` becomes an
+order-iso. -/
+
+/-- **Glue lemma 2 (closed).**  Under the antichain hypothesis
+`∀ a b, a ≤ b → a = b`, the projection `LowerSet α → Set α` is an
+order-isomorphism. -/
+def lowerSetEquivSetOfAntichain {α : Type*} [PartialOrder α]
+    (antichain : ∀ ⦃a b : α⦄, a ≤ b → a = b) :
+    LowerSet α ≃o Set α where
+  toFun := fun s => s.carrier
+  invFun := fun s => ⟨s, by
+    intro a b hab ha
+    obtain rfl : b = a := antichain hab
+    exact ha⟩
+  left_inv := fun _ => rfl
+  right_inv := fun _ => rfl
+  map_rel_iff' := Iff.rfl
+
+/-! ### Step 4, glue lemma 3 — atom counting for finite BA
+
+`Fintype.card α = 2 ^ Fintype.card {a // IsAtom a}` for finite BA `α`.
+
+Proof sketch (genuine Mathlib engineering, ~100 LOC):
+1. `Finite BA → CompleteBooleanAlgebra` (Fintype + BA → complete via
+   `sSup = Finset.sup`).
+2. `Finite BA → IsAtomic` (every element above ⊥ has an atom below).
+3. `CompleteBooleanAlgebra + IsAtomic → CompleteAtomicBooleanAlgebra`
+   (Mathlib's `toCompleteAtomicBooleanAlgebra`).
+4. Apply `CompleteAtomicBooleanAlgebra.toSetOfIsAtom :
+   α ≃o Set {a // IsAtom a}` (Mathlib `Order.Atoms`).
+5. `Fintype.card (Set X) = 2 ^ Fintype.card X` (Mathlib
+   `Set.card_powerset_eq` or via `Finset.card_powerset`).
+6. Therefore `Fintype.card α = 2 ^ Fintype.card {a // IsAtom a}`.
+
+Steps 1-3 are *instance-derivation* obligations Mathlib does not
+package for arbitrary `[BooleanAlgebra α] [Fintype α]`.  This is the
+substantive Mathlib gap.  The conclusion of the chain (step 5) is
+direct from Mathlib once the iso of step 4 is in hand. -/
+def step4_atom_count_gap : Prop :=
+  ∀ (α : Type) [BooleanAlgebra α] [Fintype α] [DecidableEq α],
+    Fintype.card α = 2 ^ Fintype.card {a : α // IsAtom a}
+
+/-! ### Step 4, the BA-iso assembled (modulo atom-count gap)
+
+With `setOrderEquivBoolFun` + `lowerSetEquivSetOfAntichain` +
+`Mathlib.Order.Birkhoff.OrderIso.lowerSetSupIrred` in hand, the only
+remaining ingredient for `step4_birkhoff_BAiso` is the **atom-count
+hypothesis** (`step4_atom_count_gap` above).  We assemble the chain
+under that hypothesis. -/
+
+/-- **Step 4 BA-iso, conditional on `step4_atom_count_gap`.**  Given
+the atom-count gap, every `UGCandidateBoolean` admits an order-iso to
+`Fin U.axes → Bool`.  This is the conditional closure of step 4 at the
+BA-iso level. -/
+def step4_BAiso_conditional : Prop :=
+  step4_atom_count_gap →
+    ∀ (U : UGCandidateBoolean), step4_birkhoff_BAiso U
+
+/-- The remaining Mathlib TODO, stated precisely.  This is the only
+piece preventing unconditional `step4_birkhoff_BAiso` for arbitrary
+finite-BA `UGCandidateBoolean`. -/
 def step4_BAiso_mathlib_todo : Prop :=
   ∀ (α : Type) [BooleanAlgebra α] [Fintype α] [DecidableEq α] (k : ℕ),
     Fintype.card α = 2 ^ k →

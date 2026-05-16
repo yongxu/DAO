@@ -2186,7 +2186,12 @@ The existence side is settled. The uniqueness side is **partially discharged** i
     * **Step 1** — `step1_bitcube_BA n : Nonempty (BooleanAlgebra (Fin n → Bool))` via `Pi.booleanAlgebra` + `Bool.instBooleanAlgebra`. Terminal form of Lindenbaum-Tarski quotient (the propositional-syntax construction is mechanical; the chain only needs the terminal BA-instance on the target).
     * **Step 2** — `step2_holds` via `BooleanAlgebra.toBooleanRing` (Stone 1936). Discharged.
     * **Step 3** (algebraic core) — `step3_BR_char_two : ∀ {α} [BooleanRing α] (a : α), a + a = 0`, via `BooleanRing.add_self`. **The idempotency forces characteristic 2.** Discharged as a real theorem.
-    * **Step 4** — `step4_holds : ∀ U, step4_birkhoff U` via `Fintype.equivOfCardEq` (type-level Birkhoff). The BA-preserving refinement `step4_birkhoff_BAiso` has one of three glue lemmas closed (`setOrderEquivBoolFun : Set α ≃o (α → Bool)`); the remaining two (`LowerSet S ≃o Set S` on antichain `S`, and `|atoms α| = log₂|α|` for finite BA `α`) are Mathlib contribution opportunities — `Mathlib/Order/Category/FinBoolAlg.lean` itself flags Birkhoff for finite BAs as a TODO.
+    * **Step 4** — `step4_holds : ∀ U, step4_birkhoff U` via `Fintype.equivOfCardEq` (type-level Birkhoff). The BA-preserving refinement `step4_birkhoff_BAiso` has **two of three** glue lemmas closed:
+      - `setOrderEquivBoolFun : Set α ≃o (α → Bool)` — characteristic-function order-iso. ✅
+      - `lowerSetEquivSetOfAntichain : LowerSet α ≃o Set α` under antichain hypothesis. ✅
+      - `step4_atom_count_gap : ∀ finite-BA α, |α| = 2^|atoms α|` — atom-count counting argument. 🔲 Mathlib TODO. Combined with `OrderIso.lowerSetSupIrred` (Mathlib) and the two closed glues, this would unconditionally close `step4_birkhoff_BAiso`.
+
+      The conditional form `step4_BAiso_conditional : step4_atom_count_gap → ∀ U, step4_birkhoff_BAiso U` is the residue. `Mathlib/Order/Category/FinBoolAlg.lean` itself flags Birkhoff for finite BAs as a TODO; the atom-count gap is the substantive piece, requiring `Fintype + BooleanAlgebra → CompleteAtomicBooleanAlgebra` instance derivation that Mathlib doesn't currently package.
     * **Step 5** — identification of `Fin k → Bool` with `R_k^{F₂}` is definitional. Discharged.
     * **`chain_holds : ∀ U : UGCandidateBoolean, Nonempty (U.Carrier ≃ (Fin U.axes → Bool))`** — the full chain assembled, **proven**. This unconditionally hands `UGCandidateFace` its `bitsEquiv` field from `UGCandidateBoolean`'s assumed BA structure + cardinality.
 
