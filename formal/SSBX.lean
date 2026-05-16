@@ -279,3 +279,6 @@ import SSBX.Foundation.Atlas
 -- Parallel to legacy Foundation/Bagua/BaguaTuring.lean (which is Yi-flavored).
 -- Yi semantics is provided via Foundation/Atlas/Yi/ as application overlay.
 import SSBX.Foundation.Wen.Core
+
+-- Phase G/I: Lang/Partial — PartialCell-based language layer (proof-of-concept).
+import SSBX.Foundation.Lang.Partial

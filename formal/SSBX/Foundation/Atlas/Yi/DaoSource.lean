@@ -265,6 +265,7 @@ def encodeOne : Instr → Nat × Nat × Nat
   -- CorePartial-only constructors (not used by daoProg; encoded as no-info):
   | .merge _              => (9, 0, 0)
   | .restrict _           => (10, 0, 0)
+  | .mergePrior           => (11, 0, 0)
 
 /-- Decode one triple back to an instruction; `none` if the opcode or
     operand is out of range. -/

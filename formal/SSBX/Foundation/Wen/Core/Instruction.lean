@@ -16,7 +16,7 @@ Key differences from the legacy `Wen.Core` ISA:
 * The `不通 / ungrammatical` outcome of `merge` is interpreted as **halt**:
   a program is *stuck* when its next operation would conflict with state.
 
-## ISA (11 primitives — Phase E.3 feature-parity with `Wen.Core`)
+## ISA (12 primitives — Phase E.3 feature-parity + E.4 cross-substrate)
 
 | # | Constructor          | Effect on `cur : PartialCell 8` | pc update |
 |---|----------------------|----------------------------------|-----------|
@@ -31,6 +31,7 @@ Key differences from the legacy `Wen.Core` ISA:
 | 9 | `branchBitEq i b t`  | unchanged                        | t if `cur i = some b`, else pc+1 |
 | 10| `jump t`             | unchanged                        | t         |
 | 11| `halt`               | unchanged                        | unchanged + halted |
+| 12| `mergePrior`         | `cur ⊔ history.head` (or halt if 不通; no-op if history empty) | pc+1 |
 
 `merge` and `restrict` (#2, #3) are the PartialCell-native primitives;
 they have no analogue in legacy `Wen.Core` (where state is total `R 8`).
@@ -116,6 +117,15 @@ inductive Instr where
   | jump (t : Nat)
   /-- Halt. -/
   | halt
+  /-- **Cross-substrate primitive** (history × merge).  Refine `cur` by
+      merging it with the top of the history stack: `cur := cur ⊔ history.head`.
+      If the merge is incompatible (`不通`), the machine halts; if the
+      history is empty, this is a no-op (advances pc only).
+
+      Operationally: "refine current commitment against the most recently
+      saved context."  Genuinely PartialCell-native — has no analogue in
+      the legacy `Wen.Core` (where state is total and `merge` is moot). -/
+  | mergePrior
 
 namespace Instr
 

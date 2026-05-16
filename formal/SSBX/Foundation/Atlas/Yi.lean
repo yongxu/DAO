@@ -64,3 +64,4 @@ import SSBX.Foundation.Atlas.Yi.Sheng
 import SSBX.Foundation.Atlas.Yi.Cell128
 import SSBX.Foundation.Atlas.Yi.Cell256
 import SSBX.Foundation.Atlas.Yi.Cell256Partial
+import SSBX.Foundation.Atlas.Yi.ConstraintDemoYi

@@ -150,4 +150,21 @@ def xorMaskDemo : List Instr := [
   .halt
 ]
 
+/-! ## § Demo 14 — `mergePrior` cross-substrate refinement (Phase E.4)
+
+Saves bit 0 = true as context, restricts away to forget it locally,
+pins bit 1 = true in the "forgotten" workspace, then `mergePrior`
+re-imposes the saved bit 0 = true.  Final `cur` has BOTH bit 0 = true
+(restored from history) AND bit 1 = true (added locally) — a true
+join of saved context with current refinement that neither `merge` nor
+`pop` alone could achieve. -/
+def mergePriorRefineProg : List Instr := [
+  .mergeBit ⟨0, by decide⟩ true,                                    -- pc 0: bit 0 = true
+  .push,                                                             -- pc 1: save (bit 0 = true)
+  .forget ⟨0, by decide⟩,                                            -- pc 2: locally forget bit 0
+  .mergeBit ⟨1, by decide⟩ true,                                    -- pc 3: pin bit 1 = true
+  .mergePrior,                                                       -- pc 4: re-merge saved context — now both bits set
+  .halt
+]
+
 end SSBX.Foundation.Wen.Core.Examples

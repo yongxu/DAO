@@ -56,6 +56,13 @@ def executeInstr (instr : Instr) (s : State) : State :=
       { s with pc := t }
   | .halt =>
       { s with halted := true }
+  | .mergePrior =>
+      match s.history with
+      | []      => { s with pc := s.pc + 1 }
+      | h :: _  =>
+        match PartialCell.merge s.cur h with
+        | some c' => { s with cur := c', pc := s.pc + 1 }
+        | none    => { s with halted := true }  -- 不通 → halt
 
 /-- Single fetch-decode-execute step.
     If `s.halted = true`, returns `s` unchanged.
@@ -239,6 +246,55 @@ theorem branchBitEq_pc_unspec (i : Fin 8) (b : Bool) (t : Nat) (s : State)
   by_cases h : s.cur i = some b
   · rw [if_pos h]
   · rw [if_neg h]
+
+/-! ### Phase E.4 — `mergePrior` (cross-substrate: history × merge) -/
+
+/-- `mergePrior` always advances pc by 1 — both in the empty-history
+    branch, the successful-merge branch, and the halt branch (since we
+    don't move pc on halt either, but the *pre-halt* pc is unchanged;
+    we state it as pc+1 only when no halt occurs).  Here we cover the
+    no-history case where the instruction is a pure pc-advance. -/
+theorem mergePrior_pc_empty (s : State) (h : s.history = []) :
+    (executeInstr .mergePrior s).pc = s.pc + 1 := by
+  show (match s.history with
+        | []      => ({ s with pc := s.pc + 1 } : State)
+        | hd :: _ =>
+          match PartialCell.merge s.cur hd with
+          | some c' => { s with cur := c', pc := s.pc + 1 }
+          | none    => { s with halted := true }).pc
+       = s.pc + 1
+  rw [h]
+
+/-- `mergePrior` is a no-op on `cur` when history is empty. -/
+theorem mergePrior_cur_empty (s : State) (h : s.history = []) :
+    (executeInstr .mergePrior s).cur = s.cur := by
+  show (match s.history with
+        | []      => ({ s with pc := s.pc + 1 } : State)
+        | hd :: _ =>
+          match PartialCell.merge s.cur hd with
+          | some c' => { s with cur := c', pc := s.pc + 1 }
+          | none    => { s with halted := true }).cur
+       = s.cur
+  rw [h]
+
+/-- When history has a head `hd` and the merge succeeds, `cur` becomes
+    `mergeFn s.cur hd` and pc advances. -/
+theorem mergePrior_cur_success (s : State) (hd : PartialCell 8)
+    (rest : List (PartialCell 8)) (hh : s.history = hd :: rest)
+    (hc : PartialCell.compatible s.cur hd) :
+    (executeInstr .mergePrior s).cur = PartialCell.mergeFn s.cur hd := by
+  have hm : PartialCell.merge s.cur hd = some (PartialCell.mergeFn s.cur hd) := by
+    unfold PartialCell.merge; rw [if_pos hc]
+  simp [executeInstr, hh, hm]
+
+/-- When history has a head and the merge fails (`不通`), the machine halts. -/
+theorem mergePrior_halted_conflict (s : State) (hd : PartialCell 8)
+    (rest : List (PartialCell 8)) (hh : s.history = hd :: rest)
+    (hc : ¬ PartialCell.compatible s.cur hd) :
+    (executeInstr .mergePrior s).halted = true := by
+  have hm : PartialCell.merge s.cur hd = none := by
+    unfold PartialCell.merge; rw [if_neg hc]
+  simp [executeInstr, hh, hm]
 
 /-! ## § Bridge to `mergeAll`: a pure-merge program IS `mergeAll`
 
