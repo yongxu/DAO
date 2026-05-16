@@ -50,12 +50,40 @@ its `Obj`, `Comp`, `Rel`, … fit D1's intent); the analytic step then
 *forces* the corresponding P-closure-conjuncts.  This is exactly the
 content of wen-substrate §7.8.3.
 
+## Phase 1 closure (fully discharged at F₂-Boolean)
+
+`ClaimZ.lean` itself supplies the interface-level form `d1_implies_P`.
+The **fully-discharged form** — where the 8 per-item entailments
+`h1..h7b` are *derived* from the 8 analytic streams rather than
+required as hypotheses — lives in `Foundation/R/ClaimZ/Analytic.lean`
+as `D1_implies_Phase1Closure_F2`.  That file imports the 8
+`Analytic/P1.lean` ... `Analytic/P7b.lean` streams, packages their
+results into a concrete `Phase1Closure_F2 : PClosure` (whose
+8 conjuncts are the propositional shadows of the analytic theorems),
+and delivers the Phase 1 closure theorem with **no per-item entailment
+hypotheses** — only the D1 item witnesses.
+
+Per `gut-roadmap.md` Phase 1 Integration Step, the upgrade is:
+
+* **Before (this file)**: `d1_implies_P` requires the caller to
+  supply 8 per-item entailment hypotheses `h1..h7b`.
+* **After (`ClaimZ/Analytic.lean`)**: at the F₂-Boolean realisation,
+  `D1_implies_Phase1Closure_F2` derives the entailments from the
+  analytic streams; only the D1 item witnesses are required.
+
+This file remains the **interface-level home** of D1Articulation,
+PClosure, D5, D6, and the combinator theorems `d1_implies_P` and
+`d1_restricted_implies_P` — kept fixed so that non-F₂ instantiations
+(Phase 2+) can continue to use the same plumbing.
+
 ## Doctrinal anchor
 
 * `wen-substrate.md` v1.2 §1.5.1 (D1 — 8 items).
 * `wen-substrate.md` v1.2 §7.8.3 (bi-directional defense of Claim Z).
 * `wen-substrate.md` v1.2 §7.8.8 (three falsification routes).
 * `wen-substrate.md` v1.2 §8.2 (D5 universal-claims, D6 falsification).
+* `gut-roadmap.md` Phase 1 Integration Step (D1 ⟹ Phase1Closure_F2).
+* `Foundation/R/ClaimZ/Analytic.lean` (fully-discharged F₂ closure).
 -/
 
 import SSBX.Foundation.R.Basic
