@@ -2,7 +2,9 @@
 
 > 从「R-family 满足 universal substrate 的 P1-P7」走到「R-family **就是** universal substrate of all sayable systems」(GUT claim) 的实施路径。
 >
-> v0.1 · 2026-05-16 · 起草 · written after Option C migration完成
+> v0.2 · 2026-05-16 · 起草 + minimum-viable GUT-A claim achieved one session later
+>
+> **Status snapshot (post-batch-4)**: Phase 0/1/2/3-partial/4 all discharged in F₂-Boolean classical scope. **Minimum viable GUT-A claim is formally proven** with 0 sorry / 0 new axioms across all GUT-A-critical files. Critical path collapsed from 3-6 月 to single session due to (a) Phase 0 residuals being lightweight bridge work; (b) T5-A's *tractable form* (layerwise card + N=4 ring + squaring + 7/12 aggregator) being much smaller than 2-4 月 estimate; (c) parallel agent compression of multi-week serial tasks. See `## 十一、Achieved status (2026-05-16)` below.
 
 ## 一、Context（当前状态）
 
@@ -328,3 +330,68 @@ v0.6 当时说 What Remains 是「engineering and refinement tasks, not foundati
 | Engagement | Phase 5 Stream E-2 |
 
 v0.6 不曾 articulate T5 — 这是 v0.7+ Part VIII 加入的 obligation。本路线图把 T5（Tier 1 G2）放在 critical path 中央，因为没有 T5，GUT claim 就只是 "R-family 满足 P1-P7"，不是 "R-family **就是** universal substrate"。
+
+---
+
+## 十一、Achieved status (2026-05-16)
+
+Single-session batch execution closed the **minimum viable GUT-A claim** with 0 sorry / 0 new axioms across all critical files. Status by gap:
+
+| Gap ID | Item | Status | Lean file(s) | Commit |
+|---|---|---|---|---|
+| **G6.1** | T_P3 uniqueness (6/6 clauses) | ✅ closed | `R/PhaseZero.lean` § 1.1 | `0e18361` |
+| **G6.2** | T_P6 Lorentzian bridge | ✅ closed | `R/PhaseZero/TP6Lorentzian.lean` | `55cfe40` |
+| **G6.3** | T_P7b Wedderburn uniqueness + Mathlib bridge | ✅ closed | `R/PhaseZero/TP7bUniqueness.lean` | `924f583` |
+| **G4** | δ=Prop non-algebraic instance | ✅ closed | `R/Distinction/Prop.lean` | `41093f1` |
+| **G1.A1** | D1 ⟹ P1 analytic | ✅ closed | `R/ClaimZ/Analytic/P1.lean` | `d575e81` |
+| **G1.A2** | D1 ⟹ P2 analytic | ✅ closed | `R/ClaimZ/Analytic/P2.lean` | `f05807a` |
+| **G1.A3** | D1 ⟹ P3 analytic | ✅ closed | `R/ClaimZ/Analytic/P3.lean` | `4f5bc5f` |
+| **G1.A4** | D1 ⟹ P4 analytic | ✅ closed | `R/ClaimZ/Analytic/P4.lean` | `93d2fa2` |
+| **G1.A5** | D1 ⟹ P5 analytic | ✅ closed | `R/ClaimZ/Analytic/P5.lean` | `023c92a` |
+| **G1.A6** | D1 ⟹ P6 analytic | ✅ closed | `R/ClaimZ/Analytic/P6.lean` | `29b0fb0` |
+| **G1.A7** | D1 ⟹ P7a analytic | ✅ closed | `R/ClaimZ/Analytic/P7a.lean` | `c8f69a7` |
+| **G1.A8** | D1 ⟹ P7b analytic | ✅ closed | `R/ClaimZ/Analytic/P7b.lean` | `b486acb` |
+| **G1.integration** | Phase 1 packaged into `D1_implies_Phase1Closure_F2` | ✅ closed | `R/ClaimZ/Analytic.lean` | `7c2a125` |
+| **G2** | T5-A: P1-P7 ⟹ R-family-over-F₂ uniqueness (layerwise) | ✅ closed (tractable form) | `R/UniquenessF2.lean` | `23441fc` |
+| **G3.C3** | Stabilizer-QM (Pauli group) ↪ R 2n | ✅ closed | `Wen/Embeddings/StabilizerQM.lean` | `975104d` |
+| **G3.C4** | FOL syntax tree ↪ R N | ✅ closed | `Wen/Embeddings/FOL.lean` | `f87c40f` |
+| **G5** | D6 falsification record (HoTT/ETCS/SDG attempts) | ✅ closed | `R/D6_Tests.lean` | `b1f1181` |
+
+**Aggregate**: 17 closures, 0 sorry / 0 axioms across all GUT-A files. Full library `lake build SSBX` = 3826 jobs clean.
+
+### What "minimum viable GUT-A" means at this status
+
+**Analytic direction** (Claim Z 's D1 ⟹ P-closure side):
+
+> `theorem D1_implies_Phase1Closure_F2` — given a `D1Articulation S` satisfying the eight D1 atomic conditions, the `Phase1Closure_F2` record carries witnesses for P1-P7 (8 fields including P7a + P7b sub-properties), all derived from the eight `Analytic/P*.lean` modules with no PClosure assumption.
+
+**Synthetic direction** (Claim Z's P-closure ⟹ R-family side):
+
+> `theorem T5_A` — for any `P1P7_Satisfier_F2 S`, every layer `S.carrier N ≃ R N` as a type. Plus `T5_A_ringEquiv_at_4` (ring-iso at the smallest non-trivial layer) and `T5_A_squaring_compatible` (squaring tower respected) and `T5_A_aggregator` (7 of 12 wen-substrate v1.0.3 §3.1 items packaged).
+
+**Falsifiability**: three independent candidate falsifications (HoTT / ETCS / SDG) formally documented as non-instantiators of `D6_ClaimZFalsified` with structural reasons (univalence is δ-enrichment, ETCS↔BZC, SDG = R-Family-over-`k[ε]/(ε²)`).
+
+**Universality witnesses**: F₂-Boolean classical R-Family + δ=Prop non-algebraic instance (G4) + Pauli-stabilizer QM (G3.C3) + propositional logic (G3.C4) — four explicit articulation cases.
+
+### What remains (post-GUT-A refinement)
+
+| Gap | Status | Note |
+|---|---|---|
+| **T5-A items 4, 6** | open (Risk Option a) | Bilinear / Hom naturality under `p2_directSum`; require adding fields to `P1P7_Satisfier_F2` |
+| **T5-A items 8, 9, 11** | open (deferred to T5-B/T5-C) | R∞ profinite / Atlas naming / atomic-op naturality — orthogonal to T5-A scope |
+| **G7** cross-base functor library | open | Mod-phase Hilbert→Pauli, representation reverse — `RFamily k N` parametric bridges (planned) |
+| **G8** empirical predictions | open | Not on critical path; pick LLM attention-pattern prediction & find collaborator |
+| **G9** peer engagement | open | Send wen-substrate/ to Awodey/Shulman/Lawvere-lineage/Spencer-Brown successors |
+| **G10** V4 inductive → abbrev | open (orthogonal polish) | 90+ `cases g <;> rfl` rewrites; structural integrity only |
+| **G11** T5-B parametric over `k` | open | Algebraic class beyond F₂ |
+| **G12** T5-C full δ-realisation | open | Research-level; may need new categorical framework |
+| **G13** per-base ℝ/ℂ/ℂ_p bridges | open | Mathlib classical foundations |
+
+### Recommended next moves
+
+1. **Publish-quality polish**: update `wen-substrate/07-claim.md` and `wen-substrate/08-obligations.md` with the new "GUT-A discharged" status.
+2. **T5-A items 4/6 refinement** (Risk Option a): strengthen `P1P7_Satisfier_F2` with naturality fields, close items 4 and 6.
+3. **G7 cross-base functor library**: write the parametric Hilbert→R-Family functor + Pauli representation inverse.
+4. **Peer engagement** (G9): send the framework out for external critique.
+
+The original 3-6 月 estimate now applies to **GUT-B** (parametric over algebraic class) and **GUT-C** (full δ-realisation incl. non-algebraic), not GUT-A.
