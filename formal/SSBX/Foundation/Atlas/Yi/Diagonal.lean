@@ -5,8 +5,8 @@ Companion document: `wen-algebra` v0.6, §10.7 (Interpreter Foundation),
 §9 (Atlas separation).
 
 This file ports the headline **incompleteness-of-Li** theorem to the
-language-independent `R 8`-machine of `Foundation/Wen/Core/`.  The proof
-kernel is the standard diagonal argument (Kleene's recursion-based
+language-independent `R 8`-machine of `Foundation/Wen/CorePartial/`.  The
+proof kernel is the standard diagonal argument (Kleene's recursion-based
 Halting undecidability), expressed here over the canonical `R 8` ISA
 rather than the Yi-named `YiInstr`.
 
@@ -51,7 +51,7 @@ layer, in 语言无关 (language-independent) form on `R 8`.
 
   * No `sorry`.
   * No new `axiom`s.
-  * Imports stay in `Foundation/R/*` and `Foundation/Wen/Core/*`.
+  * Imports stay in `Foundation/R/*` and `Foundation/Wen/CorePartial/*`.
   * **No** dependency on `Foundation/Bagua/`, `Foundation/Yi/`,
     or `Foundation/Bagua/BaguaTuring`.
 
@@ -62,14 +62,14 @@ layer, in 语言无关 (language-independent) form on `R 8`.
   * Atlas separation: `wen-algebra.md` v0.6 §9.
 -/
 
-import SSBX.Foundation.Wen.Core
+import SSBX.Foundation.Wen.CorePartial
 
 namespace SSBX.Foundation.Atlas.Yi.Diagonal
 
 open SSBX.Foundation.R
-open SSBX.Foundation.Wen.Core
+open SSBX.Foundation.Wen.CorePartial
 
-/-! ## § 1 Halts predicate (Σ₁) on the Wen.Core machine
+/-! ## § 1 Halts predicate (Σ₁) on the Wen.CorePartial machine
 
 The halting predicate on a `(program, input)` pair is the existential
 fuel quantifier over `runFuel`'s halt flag.  This is the standard Σ₁
@@ -78,8 +78,8 @@ decidable by `Bool.decEq`).
 -/
 
 /-- **停机谓词** (`Halts`): program `p` on input `inp` halts iff there
-    is a fuel bound at which `Wen.Core.runFuel` reaches `halted = true`.
-    Σ₁-shaped: existential over `Nat`. -/
+    is a fuel bound at which `Wen.CorePartial.runFuel` reaches
+    `halted = true`.  Σ₁-shaped: existential over `Nat`. -/
 def Halts (p : List Instr) (inp : R 8) : Prop :=
   ∃ fuel : Nat, (runFuel p fuel (State.init inp)).halted = true
 
@@ -94,6 +94,19 @@ instance halts_within_decidable (p : List Instr) (inp : R 8) (n : Nat) :
     Decidable ((runFuel p n (State.init inp)).halted = true) :=
   inferInstance
 
+/-! ### § 1.0 Local helper: `runFuel` succ-unfolding
+
+In `Wen.CorePartial`, `runFuel prog (n+1) s = runFuel prog n (step prog s)`
+*definitionally* — the `if halted` guard is pushed into `step` rather
+than the fuel loop.  We expose a named form for parity with the
+`Wen.Core` proof style. -/
+
+/-- Unfold one `runFuel (n+1)` step (the `halted = false` hypothesis is
+    not required in CorePartial because `runFuel` already unconditionally
+    iterates `step`, and `step` itself is idempotent on halted states). -/
+theorem runFuel_succ_step (prog : List Instr) (n : Nat) (s : State) :
+    runFuel prog (n+1) s = runFuel prog n (step prog s) := rfl
+
 /-! ### § 1.1 Concrete witness: `haltProg` halts -/
 
 /-- `haltProg`: the singleton `[.halt]` program.  Halts in 1 fuel. -/
@@ -102,10 +115,9 @@ def haltProg : List Instr := [.halt]
 /-- `haltProg` halts on every input within 1 fuel. -/
 theorem haltProg_halts_at (inp : R 8) :
     (runFuel haltProg 1 (State.init inp)).halted = true := by
-  -- runFuel haltProg 1 s = step haltProg s (since s.halted = false)
+  -- runFuel haltProg 1 s = step haltProg s
   -- step on init state fetches haltProg[0] = .halt, which sets halted = true
-  rw [Examples.runFuel_succ_of_not_halted _ _ _
-      (by rfl : (State.init inp).halted = false)]
+  rw [runFuel_succ_step]
   rfl
 
 /-- `haltProg` is a `Halts` witness for every input. -/
@@ -120,11 +132,10 @@ def loopProg : List Instr := [.jump 0]
 /-- One step of `loopProg` from the init state returns the init state. -/
 theorem step_loopProg_init (inp : R 8) :
     step loopProg (State.init inp) = State.init inp := by
-  show (if (State.init inp).halted = true then State.init inp
-        else match loopProg[(State.init inp).pc]? with
-          | none => { State.init inp with halted := true }
-          | some instr => executeInstr instr (State.init inp))
-      = State.init inp
+  unfold step
+  -- (State.init inp).halted = false, so falls through to the match;
+  -- loopProg[0]? = some (.jump 0), executeInstr returns { s with pc := 0 }
+  -- which equals s since (State.init inp).pc = 0
   rfl
 
 /-- `loopProg` never reaches a halted state — every fuel returns
@@ -134,8 +145,7 @@ theorem loopProg_runFuel_init (inp : R 8) (n : Nat) :
   induction n with
   | zero => rfl
   | succ k ih =>
-      rw [Examples.runFuel_succ_of_not_halted _ _ _
-          (by rfl : (State.init inp).halted = false)]
+      rw [runFuel_succ_step]
       rw [step_loopProg_init]
       exact ih
 
@@ -200,65 +210,28 @@ halt case.  This is the standard "step iteration is associative":
 running `n` steps then one more = running `n+1` steps.
 -/
 
-/-- `runFuel (n+1) s = step (runFuel n s)`.  Together with
-    `runFuel_succ` this gives the "right-step" rewrite needed for
-    invariant-style proofs about `slowProg`. -/
+/-- `runFuel (n+1) s = step (runFuel n s)`.  Together with the
+    definitional `runFuel_succ_step` (left-step) this gives the
+    "right-step" rewrite needed for invariant-style proofs about
+    `slowProg`.
+
+    In CorePartial the proof is much shorter than in Wen.Core because
+    `runFuel` does not gate on `halted` — that's handled inside `step`. -/
 theorem runFuel_succ_right (prog : List Instr) (n : Nat) (s : State) :
     runFuel prog (n+1) s = step prog (runFuel prog n s) := by
   induction n generalizing s with
   | zero =>
-      -- runFuel 1 s = if s.halted then s else step prog s
+      -- runFuel 1 s = runFuel 0 (step prog s) = step prog s
       -- step prog (runFuel 0 s) = step prog s
-      -- Both reduce identically to step prog s when s is not halted,
-      -- and to s when s is halted (since step prog s = s).
-      by_cases h : s.halted = true
-      · -- both sides equal s
-        have hL : runFuel prog 1 s = s := by
-          show (if s.halted = true then s else runFuel prog 0 (step prog s)) = s
-          simp [h]
-        have hR : step prog (runFuel prog 0 s) = s := by
-          show step prog s = s
-          exact step_halted prog s h
-        rw [hL, hR]
-      · have h' : s.halted = false := by
-          match hh : s.halted with
-          | true => exact absurd hh h
-          | false => rfl
-        have hL : runFuel prog 1 s = step prog s := by
-          show (if s.halted = true then s else runFuel prog 0 (step prog s)) = step prog s
-          simp [h']
-        rw [hL]
-        rfl
+      rfl
   | succ k ih =>
-      by_cases h : s.halted = true
-      · have hL : runFuel prog (k+2) s = s := by
-          have h2 : runFuel prog (k+2) s = runFuel prog (k+1) s := by
-            rw [show (k+2) = (k+1)+1 from rfl]
-            show (if s.halted = true then s else runFuel prog (k+1) (step prog s))
-                = runFuel prog (k+1) s
-            simp [h]
-            exact (runFuel_halt_idempotent prog (k+1) s h).symm
-          rw [h2]
-          exact runFuel_halt_idempotent prog (k+1) s h
-        have hR : step prog (runFuel prog (k+1) s) = s := by
-          rw [runFuel_halt_idempotent prog (k+1) s h, step_halted prog s h]
-        rw [hL, hR]
-      · have h' : s.halted = false := by
-          match hh : s.halted with
-          | true => exact absurd hh h
-          | false => rfl
-        -- runFuel (k+2) s = runFuel (k+1) (step prog s) (by h')
-        have hL : runFuel prog (k+2) s = runFuel prog (k+1) (step prog s) := by
-          show (if s.halted = true then s else runFuel prog (k+1) (step prog s))
-              = runFuel prog (k+1) (step prog s)
-          simp [h']
-        -- runFuel (k+1) s = runFuel k (step prog s) (by h')
-        have hR : runFuel prog (k+1) s = runFuel prog k (step prog s) := by
-          show (if s.halted = true then s else runFuel prog k (step prog s))
-              = runFuel prog k (step prog s)
-          simp [h']
-        rw [hL, hR]
-        exact ih (step prog s)
+      -- LHS: runFuel prog (k+2) s = runFuel prog (k+1) (step prog s)  [def]
+      -- RHS: step prog (runFuel prog (k+1) s)
+      --     = step prog (runFuel prog k (step prog s))                 [def]
+      -- And LHS = step prog (runFuel prog k (step prog s))             [by ih]
+      show runFuel prog (k+1) (step prog s)
+          = step prog (runFuel prog k (step prog s))
+      exact ih (step prog s)
 
 /-! ### § 2.3 Step shapes on `nop` and `halt` -/
 
@@ -281,10 +254,11 @@ theorem step_halt_at (prog : List Instr) (s : State) (h_halt : s.halted = false)
 /-! ### § 2.4 Invariant + main fuel-bound lemmas -/
 
 /-- Invariant: after `k` ≤ `N` steps, `slowProg N` has advanced pc to
-    `k`, with `cur = inp`, no history, no halt. -/
+    `k`, with `cur = PartialCell.ofFull inp` (unchanged from init since
+    `nop` only touches `pc`), no history, no halt. -/
 theorem slowProg_state_after (N : Nat) (inp : R 8) (k : Nat) (hk : k ≤ N) :
     runFuel (slowProg N) k (State.init inp)
-      = { cur := inp, history := [], pc := k, halted := false } := by
+      = { pc := k, cur := PartialCell.ofFull inp, history := [], halted := false } := by
   induction k with
   | zero => rfl
   | succ j ih =>
@@ -293,19 +267,14 @@ theorem slowProg_state_after (N : Nat) (inp : R 8) (k : Nat) (hk : k ≤ N) :
       rw [runFuel_succ_right, ih hj]
       -- now apply step at pc = j; program[j] = nop because j < N
       have h_lookup0 : (slowProg N)[j]? = some .nop := slowProg_get_lt N j hj_lt
-      -- target state has pc = j, halted = false
-      have h_halt :
-          ({ cur := inp, history := [], pc := j, halted := false } : State).halted = false := rfl
-      have h_pc_eq :
-          ({ cur := inp, history := [], pc := j, halted := false } : State).pc = j := rfl
-      -- rewrite the lookup with the state's pc form
-      have h_lookup :
-          (slowProg N)[({ cur := inp, history := [], pc := j, halted := false } : State).pc]?
-            = some .nop := by
+      -- extract state to a let-bind so `s.pc` indexing parses cleanly
+      set sj : State := { pc := j, cur := PartialCell.ofFull inp, history := [],
+                          halted := false } with hsj
+      have h_halt : sj.halted = false := rfl
+      have h_pc_eq : sj.pc = j := rfl
+      have h_lookup : (slowProg N)[sj.pc]? = some .nop := by
         rw [h_pc_eq]; exact h_lookup0
-      rw [step_nop_at (slowProg N)
-          ({ cur := inp, history := [], pc := j, halted := false } : State)
-          h_halt h_lookup]
+      rw [step_nop_at (slowProg N) sj h_halt h_lookup]
 
 /-- After `N` fuel, `slowProg N` is NOT halted. -/
 theorem slowProg_runFuel_N_not_halted (N : Nat) (inp : R 8) :
@@ -317,17 +286,13 @@ theorem slowProg_runFuel_succ_halted (N : Nat) (inp : R 8) :
     (runFuel (slowProg N) (N+1) (State.init inp)).halted = true := by
   rw [runFuel_succ_right, slowProg_state_after N inp N (Nat.le.refl)]
   have h_lookup0 : (slowProg N)[N]? = some .halt := slowProg_get_eq N
-  have h_halt :
-      ({ cur := inp, history := [], pc := N, halted := false } : State).halted = false := rfl
-  have h_pc_eq :
-      ({ cur := inp, history := [], pc := N, halted := false } : State).pc = N := rfl
-  have h_lookup :
-      (slowProg N)[({ cur := inp, history := [], pc := N, halted := false } : State).pc]?
-        = some .halt := by
+  set sN : State := { pc := N, cur := PartialCell.ofFull inp, history := [],
+                      halted := false } with hsN
+  have h_halt : sN.halted = false := rfl
+  have h_pc_eq : sN.pc = N := rfl
+  have h_lookup : (slowProg N)[sN.pc]? = some .halt := by
     rw [h_pc_eq]; exact h_lookup0
-  rw [step_halt_at (slowProg N)
-      ({ cur := inp, history := [], pc := N, halted := false } : State)
-      h_halt h_lookup]
+  rw [step_halt_at (slowProg N) sN h_halt h_lookup]
 
 /-- `slowProg N` halts on every input. -/
 theorem halts_slowProg (N : Nat) (inp : R 8) : Halts (slowProg N) inp :=

@@ -78,9 +78,7 @@ finite carrier (256 hexagram bytes ≤ 64 instructions deep).
 -/
 
 import SSBX.Foundation.R.Basic
-import SSBX.Foundation.Wen.Core.Instruction
-import SSBX.Foundation.Wen.Core.State
-import SSBX.Foundation.Wen.Core.Machine
+import SSBX.Foundation.Wen.CorePartial
 import SSBX.Foundation.Atlas.Yi.Names
 import SSBX.Foundation.Atlas.Yi.ShiV4
 
@@ -88,7 +86,7 @@ namespace SSBX.Foundation.Atlas.Yi
 namespace DaoSource
 
 open SSBX.Foundation.R
-open SSBX.Foundation.Wen.Core
+open SSBX.Foundation.Wen.CorePartial
 open SSBX.Foundation.Atlas.Yi
 
 /-! ## § 0  Shi-from-R 8 projection
@@ -104,6 +102,13 @@ def fromR8 (c : R 8) : Shi := fun i =>
   match i with
   | ⟨0, _⟩ => c ⟨6, by decide⟩
   | ⟨1, _⟩ => c ⟨7, by decide⟩
+
+/-- Project a `PartialCell 8` cell (the CorePartial state representation)
+    to its Shi (R 2) overlay.  Reads bits at positions `i.val + 6`;
+    unspecified bits default to `false` (which is unreachable for a
+    `State.init`-derived run using only flipBit/writeBit/branchBitEq/jump/halt). -/
+def fromPartial (c : PartialCell 8) : Shi := fun i =>
+  (c ⟨i.val + 6, by omega⟩).getD false
 
 /-- The four Shi values, restated as `R 8`-bit witnesses for `fromR8`. -/
 @[simp] theorem fromR8_apply_0 (c : R 8) :
@@ -257,6 +262,9 @@ def encodeOne : Instr → Nat × Nat × Nat
   | .pop                  => (6, 0, 0)
   | .halt                 => (7, 0, 0)
   | .xorMask _            => (8, 0, 0)
+  -- CorePartial-only constructors (not used by daoProg; encoded as no-info):
+  | .merge _              => (9, 0, 0)
+  | .restrict _           => (10, 0, 0)
 
 /-- Decode one triple back to an instruction; `none` if the opcode or
     operand is out of range. -/
@@ -357,7 +365,7 @@ h ⟨2,_⟩ = h ⟨3,_⟩`. -/
 theorem daoProg_yi :
     ∀ (h : Hexagram),
       let final := runFuel daoProg 64 (State.init (liftHex h))
-      Shi.fromR8 final.cur = Shi.ji ↔
+      Shi.fromPartial final.cur = Shi.ji ↔
         h ⟨2, by decide⟩ = h ⟨3, by decide⟩ := by
   intro h
   let h0 := h ⟨0, by decide⟩
@@ -390,15 +398,15 @@ def fou : Hexagram :=
   Hexagram.mk true true true false false false
 
 theorem daoProg_qian_tian :
-    Shi.fromR8 (runFuel daoProg 64 (State.init (liftHex qian))).cur = Shi.ji := by
+    Shi.fromPartial (runFuel daoProg 64 (State.init (liftHex qian))).cur = Shi.ji := by
   native_decide
 
 theorem daoProg_kun_tian :
-    Shi.fromR8 (runFuel daoProg 64 (State.init (liftHex kun))).cur = Shi.ji := by
+    Shi.fromPartial (runFuel daoProg 64 (State.init (liftHex kun))).cur = Shi.ji := by
   native_decide
 
 theorem daoProg_fou_xin :
-    Shi.fromR8 (runFuel daoProg 64 (State.init (liftHex fou))).cur = Shi.wei := by
+    Shi.fromPartial (runFuel daoProg 64 (State.init (liftHex fou))).cur = Shi.wei := by
   native_decide
 
 /-! ## § 8  «道之自指 (新)» — five-相 summary
@@ -439,7 +447,7 @@ theorem dao_self_reference :
         (runFuel daoProg 64 (State.init (liftHex h))).halted = true) ∧
     -- 义
     (∀ h : Hexagram,
-        Shi.fromR8 (runFuel daoProg 64 (State.init (liftHex h))).cur = Shi.ji ↔
+        Shi.fromPartial (runFuel daoProg 64 (State.init (liftHex h))).cur = Shi.ji ↔
           h ⟨2, by decide⟩ = h ⟨3, by decide⟩) :=
   ⟨daoProg_xing, daoSource_jie, daoProg_yin, daoProg_zhi, daoProg_yi⟩
 

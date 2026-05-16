@@ -19,10 +19,10 @@ R-Family core:
 * `Atlas/Yi/ShiV4`      — V₄ naming {dao, ji, jin, wei} on R 2.
 * `Atlas/Yi/Operators`  — V₄ operators (cuo / zong / cuoZong) and `hu`.
 * `Atlas/Yi/DaoSource`  — Phase β port of «道源» onto the clean stack:
-                          11-instr Wen.Core program judging «是道非道»
+                          11-instr Wen.CorePartial program judging «是道非道»
                           with the five 相 (形/解/印/执/义) all proven.
 * `Atlas/Yi/Diagonal`   — 理之不完备 / 哥德尔在 R 8: halting-undecidability
-                          diagonal on `Wen.Core` (Atlas-Yi form of
+                          diagonal on `Wen.CorePartial` (Atlas-Yi form of
                           `GodelLi.lean`).
 * `Atlas/Yi/Positions`  — Hexagram position helpers (atPos, wellPos,
                           isYangPos, yingResponds, biAdj, allHex).

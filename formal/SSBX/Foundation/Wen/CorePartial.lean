@@ -36,4 +36,10 @@ instructions.  No category split between "data" and "operation".
 import SSBX.Foundation.Wen.CorePartial.Instruction
 import SSBX.Foundation.Wen.CorePartial.State
 import SSBX.Foundation.Wen.CorePartial.Machine
+import SSBX.Foundation.Wen.CorePartial.Universal
 import SSBX.Foundation.Wen.CorePartial.Examples
+-- NOTE: `Bridge` is *not* in the umbrella because its `step_equiv` /
+-- `runFuel_equiv` theorems carry `sorry` (Phase E.6 targets), which
+-- poisons `native_decide` in any downstream module that imports the
+-- umbrella.  Consumers that need the legacy ↔ CorePartial translation
+-- should `import SSBX.Foundation.Wen.CorePartial.Bridge` directly.

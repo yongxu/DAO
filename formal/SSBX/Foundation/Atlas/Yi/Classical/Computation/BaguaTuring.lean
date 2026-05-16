@@ -4,9 +4,9 @@
 > **[Atlas/Yi/Classical/Computation — 2026-05-15 (Phase γ)]** This file
 > provides the YiInstr 12-instruction ISA + interpreter operating on
 > classical Hexagram × Shi.  The R-Family TM (language-independent on
-> R 8) lives in [`Foundation/Wen/Core/`](../../../../Wen/Core/); the
-> bridge YiInstr ↔ Wen.Core.Instr is in
-> [`Foundation/Wen/Core/YiInstrBridge.lean`](../../../../Wen/Core/YiInstrBridge.lean).
+> PartialCell 8) lives in [`Foundation/Wen/CorePartial/`](../../../../Wen/CorePartial/); the
+> bridge YiInstr ↔ Wen.CorePartial.Instr is in
+> [`Foundation/Wen/CorePartial/Bridge.lean`](../../../../Wen/CorePartial/Bridge.lean).
 > Headline DaoSource and Diagonal theorems on the R-Family side are at
 > [`Atlas/Yi/{DaoSource, Diagonal}.lean`](../../).
 
