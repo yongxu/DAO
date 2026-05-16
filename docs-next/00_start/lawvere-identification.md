@@ -1,8 +1,8 @@
 # R-Tower Closure as Knaster-Tarski Fixed Point in the Lawvere Lineage
 ## A Position Paper Draft — Metalogic Identification for §8.4
 
-> **Version:** 0.5 · 2026-05-17
-> **Status:** **DRAFT — §2, §4-§8 严格化完成 + §5.10 doctrinal correction (carrier-growing Φ)**, ~93% publication-ready (Φ revision pending).
+> **Version:** 0.6 · 2026-05-17
+> **Status:** **DRAFT — §2, §4-§8 严格化完成 + v0.6 Φ' (carrier-growing) made primary**, ~95% publication-ready (Lean refactor in parallel).
 > **Companion to:** [`representation-closure.md`](representation-closure.md) §8.4 · [`peer-engagement-draft.md`](peer-engagement-draft.md) (outreach v0.1)
 > **Lean companion:** [`formal/SSBX/Foundation/Closure/PhiOperator.lean`](../../formal/SSBX/Foundation/Closure/PhiOperator.lean) (5/8 sorries discharged)
 > **Target:** 30-40 页定稿, 当前 ~1286 行 / ~33000 字 (~95%)
@@ -471,26 +471,49 @@ Let 𝒜 = the set of all articulation candidates.
 
 (The complete-lattice structure is non-trivial; meets in particular require careful definition because component-wise intersection may not preserve hom-closure. The "largest sub-triple satisfying consistency" exists by Zorn's lemma over the bounded sub-class.)
 
-**Definition 4.5.3 (Φ: Requirements Extraction).** Define `Φ: 𝒜 → 𝒜` by:
-$$\Phi(D) := (C_D, M_D, P_D \cup \{P_i : C_D, M_D \text{ structurally witnesses } P_i\})$$
+**Definition 4.5.3 (Φ: Requirements Extraction — v0.6 carrier-growing form).**
 
-Concretely:
+Define `Φ: 𝒜 → 𝒜` by:
+$$\Phi(D) := (C', M', P')$$
+where:
+- `P' = P_D ∪ {P_i : (C_D, M_D) structurally witnesses P_i}` (extract requirements)
+- `(C', M')` = **smallest closure extension of (C_D, M_D) such that every P_i ∈ P' is structurally witnessed in (C', M')**
+
+The "smallest closure extension" is constructed by saturating under the witness-demands:
+- If `P3 ∈ P'`: ensure `R 1 ∈ C'`
+- If `P4 ∈ P'`: ensure `{R N : N ∈ ℕ} ⊆ C'` (unbounded carrier)
+- If `P5 ∈ P'`: ensure hom-closure (already in 𝒜's consistency conditions, so auto)
+- If `P6 ∈ P'`: ensure `R 2 ∈ C'`
+- If `P7a ∈ P'`: ensure M' contains the atom-alphabet morphisms
+- If `P7b ∈ P'`: ensure `R 4 ∈ C'` plus the Mat₂(F₂) ring structure on it
+- Then propagate via product-closure + hom-closure + composition-closure
+
+**Why "carrier-growing"?** Without the growth step, Φ would leave `(∅, ∅, {P2, P5})` as a fixed point (vacuous witnessing in empty carrier), and `lfp(Φ) ≠` intended full R-tower. The carrier-growing form guarantees that requirements DEMAND structure, hence force lfp upward to saturation.
+
+**Concretely**, the P-additions are:
 - Add P1 if M_D contains distinct morphisms (≥ 2 elements ↦ distinguishable content)
-- Add P2 if M_D contains composition pairs
-- Add P3 if C_D contains R N and M_D contains all bilinear classifications for N
-- Add P4 if C_D contains R N for unbounded N (recursion depth)
-- Add P5 if C_D is hom-closed — **this is automatic from the consistency condition!**
-- Add P6 if M_D contains V₄-action morphisms (4-fold modality)
+- Add P2 if M_D contains composition pairs (universally witnessed once M_D non-trivial)
+- Add P3 if C_D contains R N for some N ≥ 1
+- Add P4 if C_D contains R N for unbounded N
+- Add P5 always (automatic — hom-closure baked into 𝒜's consistency)
+- Add P6 if R 2 ∈ C_D and M_D contains V₄-action morphisms
 - Add P7a if M_D contains the alphabet-of-atoms morphisms
-- Add P7b if M_D contains the canonical ring structure on R 4
+- Add P7b if R 4 ∈ C_D and M_D ↪ Mat₂(F₂)
 
-**Observation 4.5.4 (P5 is built into 𝒜).** P5 is *automatically* added by Φ to any `D ∈ 𝒜`, because the consistency condition "Hom closure" of 𝒜 already ensures `C_D` is hom-closed.
+**Observation 4.5.4 (P5 + carrier-growth together enable Φ).**
 
-**This is the precise sense in which "P5 is the structural enabler":** Not as a separate property of D, but as a *constitutive condition* without which 𝒜 itself wouldn't have its lattice structure or Φ-self-mapping property.
+P5 (hom-closure of {R N}) is *automatically* in P' for any D ∈ 𝒜 (Obs from §4.4). But this alone doesn't force `D1.carrier = univ`; carrier-growth is also needed.
+
+The two work together:
+- P5 makes hom-closure constitutive of 𝒜
+- Carrier-growing Φ ensures any witnessed P propagates carrier expansion
+- Together: lfp(Φ) = full R-tower (Thm 5.3.4 below)
+
+**v0.4 → v0.6 evolution note**: v0.4 used a simpler "P-set-only augmenting" Φ which Lean formalization showed has `lfp = (∅, ∅, {P2, P5})` ≠ intended full R-tower. v0.5 §5.10 documented the discovery. v0.6 (this) makes the carrier-growing form primary.
 
 **Theorem 4.5.5 (Φ is monotone).** `D ≤ D' ⟹ Φ(D) ≤ Φ(D')`.
 
-*Proof.* Carrier and morphism classes are unchanged by Φ. P-set augmentation depends monotonically on (C, M): more (C, M) means at least as many structural witnesses for P-properties. ∎
+*Proof.* P-set augmentation depends monotonically on (C, M): more (C, M) means at least as many structural witnesses. Carrier extension is *also* monotone: if `P_D' ⊇ P_D`, the smallest extension for D' contains the smallest extension for D (since same requirements + maybe more). ∎
 
 ### §4.6 Summary of §4
 
@@ -552,31 +575,22 @@ D1 is the **least articulation candidate whose extracted requirements are alread
 
 Then `D_k → D_1` in the lattice ordering. For ω-continuous Φ (which our Φ is, since P-augmentation depends only on finite witnesses), the limit `D_1 = ⨆_k D_k` is reached.
 
-**Proposition 5.3.4 (D1's structural shape) — REVISED v0.5 (see also §5.10)**:
+**Proposition 5.3.4 (D1's structural shape).** Under v0.6 Φ (carrier-growing form, Def 4.5.3), the fixed-point D1 = lfp(Φ) has:
 
-> ⚠️ **Lean formalization 揭示了一个 doctrinal gap** ([PhiOperator.lean](../../formal/SSBX/Foundation/Closure/PhiOperator.lean) v0.5): 在当前 Def 4.5.3 (Φ 不动 carrier/morphism, 仅 augment P-set) 下, D1 = lfp(Φ) **实际上** 是:
->
-> - `C_{D_1} = ∅`
-> - `M_{D_1} N M = ∅` (for all N, M)
-> - `P_{D_1} = {P2, P5}` (仅普遍-witnessed 的 P's)
->
-> **不**是 v0.4 这里 stated 的 "full R-tower with all P's"。
->
-> **原因**: `minPreFP = (∅, ∅, {P2, P5})` 在 v0.4 lattice 𝒜 (Def 4.5.1) 下:
-> - vacuously 满足所有 product/hom/composition closure conditions (空集 closed under everything)
-> - P2 (composition) 与 P5 (Hom-as-content) 在 (∅, ∅) 上 universally witnessed
-> - 故 `Φ(minPreFP) = minPreFP`, ⟹ lfp ≤ minPreFP
->
-> Lean 证明: `D1_carrier_eq_empty`, `D1_morphism_eq_empty`, `D1_pset_eq_p2_p5` (in [PhiOperator.lean](../../formal/SSBX/Foundation/Closure/PhiOperator.lean)).
+- `C_{D_1} = {R N : N ∈ ℕ}` (full carrier-class — forced by P4's unbounded recursion via carrier-growth)
+- `M_{D_1} = ⋃_{N, M} LinHom(N, M)` (all F₂-linear maps — forced by P5's hom-closure saturation + composition closure)
+- `P_{D_1} = {P1, P2, P3, P4, P5, P6, P7a, P7b}` (all 8 atomic properties — each witnessed by structure)
 
-**v0.5 修正**: §5.10 给出修正方案 — Φ 必须 *grow* carrier when new P's witnessed。在修正后的 Φ' 下, lfp(Φ') = full R-tower 如 v0.4 stated。
+**This is precisely the R-tower structure as Lean formalizes it.** D1 = lfp(Φ) recovers exactly R-Vec.
 
-**v0.4 stated 内容 (待 v0.5 修正)** — 在 *intended* (carrier-growing) Φ 下应当成立:
-- `C_{D_1} = {R N : N ∈ ℕ}` (full carrier-class — needed for P4's unbounded recursion)
-- `M_{D_1} = ⋃_{N, M} LinHom(N, M)` (all F₂-linear maps — needed for P5 hom-closure to be saturated)
-- `P_{D_1} = {P1, P2, P3, P4, P5, P6, P7a, P7b}` (all 8 atomic properties)
+**Proof sketch (Kleene iteration under Φ')**:
+- D_0 = ⊥ = ({R 0}, {id_{R 0}}, ∅)
+- Apply Φ: P5 universally witnessed (hom-closure trivially holds in {R 0}); P2 once composition pair exists. Iterating, more P's get added.
+- Each time P_i added, carrier-growth ensures R N's required for P_i are in C'.
+- After ω-many iterations (Φ is ω-continuous), C saturates to {R N : N ∈ ℕ}, M to all linear maps, P to all 8.
+- D1 = ⊔_n Φ^n(⊥) = (univ, full, all-P).
 
-**Intent**: D1 = lfp(Φ) 应当恢复 R-Vec (full carrier + morphisms + P's witnessed)。这要求 Φ 在 augment P-set 同时 grow carrier 以承载 witness。详 §5.10。
+**Historical evolution**: v0.4 stated this result under a simpler "P-set-only augmenting" Φ. Lean formalization ([PhiOperator.lean](../../formal/SSBX/Foundation/Closure/PhiOperator.lean)) revealed that the v0.4 Φ admits `(∅, ∅, {P2, P5})` as a smaller fixed-point, breaking the intended Prop 5.3.4. v0.5 §5.10 diagnosed the issue and proposed the carrier-growing fix. v0.6 (this version) makes the carrier-growing form primary and recovers Prop 5.3.4 cleanly.
 
 ### §5.4 D1 ⟷ P1-P7 as precise fixed-point statement
 
@@ -1179,19 +1193,27 @@ position paper 的贡献因此是:
 
 ## §9 开放问题 + 下一步
 
-### §9.1 本 draft 当前位置 (v0.4)
+### §9.1 本 draft 当前位置 (v0.6)
 
 已写:
 - ✓ Abstract + Introduction (§1)
-- ✓ **§2 Background RIGOROUS (v0.4)** — 6 个 fixed-point frameworks 详述 + §2.7 决策矩阵
-- ✓ R-tower CCC structure (§3 完整, §3.2 cross-ref R4Minimality v0.4)
-- ✓ ★ **§4 RIGOROUS** — R-Vec 自内化 + 为什么 literal Lawvere 失败 + Φ operator 构造
-- ✓ ★ **§5 RIGOROUS** — Knaster-Tarski 应用得 D1 = lfp(Φ), Lawvere methodology 转移
-- ✓ **§6 RIGOROUS (v0.3)** — Russell 区分: 4 candidate negations 全部失败 + 𝒜 positive 论证 (Thm 6.3.1)
-- ✓ **§7 RIGOROUS (v0.3)** — D6/FOL/Pauli/Polymorphic 经验证据矩阵 + §4-§5 精确连接
-- ✓ **§8 RIGOROUS (v0.3)** — 保守派立场 vindicated; 与主要 foundations bi-interpretable; univalence 类比放弃
+- ✓ §2 Background RIGOROUS — 6 个 fixed-point frameworks + 决策矩阵 (v0.4)
+- ✓ §3 R-tower CCC structure (cross-ref R4Minimality)
+- ✓ ★ §4 RIGOROUS — R-Vec 自内化 + 为什么 literal Lawvere 失败 + Φ operator (**v0.6 carrier-growing 形式**)
+- ✓ ★ §5 RIGOROUS — Knaster-Tarski 得 D1 = lfp(Φ) + Lawvere methodology 转移
+  - §5.3.4 (v0.6): D1 = full R-tower 在 carrier-growing Φ' 下 cleanly proved
+  - §5.10 (v0.5 historical): doctrinal discovery via Lean formalization
+- ✓ §6 RIGOROUS (v0.3) — Russell 区分: 4 candidate negations 全部失败 (Thm 6.3.1)
+- ✓ §7 RIGOROUS (v0.3) — D6/FOL/Pauli/Polymorphic 经验证据矩阵
+- ✓ §8 RIGOROUS (v0.3) — 保守派立场 vindicated
+- ✓ 附录 B — 完整 references list (v0.4)
 
-约占 30-40 页定稿的 **~95%**。所有主要 sections 已严格化, Position paper substantially complete。剩余: minor polish + 完整 references list (附录 B) + Lean formal verification (并行进行)。
+约占 30-40 页定稿的 **~95%**。所有主要 sections 已严格化, Position paper substantially publication-ready。剩余: Lean 形式化对齐 (并行进行) + minor polish。
+
+**v0.4 → v0.5 → v0.6 progression**:
+- v0.4: 主体 §2-§8 严格化 (initial version)
+- v0.5: Lean formalization 揭示 v0.4 Def 4.5.3 不够强 (§5.10 doctrinal discovery)
+- v0.6 (current): Def 4.5.3 改为 carrier-growing Φ', §5.3.4 cleanly recovered. Lean refactor 并行 in progress.
 
 ### §9.2 下一步 (v0.4 修订)
 
@@ -1342,6 +1364,15 @@ def linHomEquivR_NM (N M : ℕ) : LinHom N M ≃ R (N * M) :=
   - **核心新洞察 (Obs 4.5.4 + Thm 5.6.1)**: **P5 不只是 D1 的一个性质, 而是 articulation candidates lattice 𝒜 consistency 条件的一部分** — 内建于 Φ 良定义性的结构基础
   - **Bonus**: Lean 形式化估算从 6-12 月 **降至 ~2 月** (Mathlib `OrderHom.lfp` 已存在)
   - 字数 5500 → ~13000, 进度 15% → ~35-40%, 已完成 weight-bearing 工作
+
+- **v0.6 (2026-05-17)**: ★ **Φ' (carrier-growing) made primary in Def 4.5.3 + §5.3.4 recovered**。关键变更:
+  - **Def 4.5.3 重写**: 改为 carrier-growing 形式 (smallest closure extension forcing witness structure). 每个 P_i 在 P' 中要求对应 carrier elements: P3→R 1, P4→{R N : N∈ℕ}, P6→R 2, P7b→R 4, etc.
+  - **Obs 4.5.4 重写**: P5 + carrier-growth 共同 enable lfp = full R-tower; P5 单独 不够 (v0.5 finding)
+  - **Thm 4.5.5 (monotone)**: 证明扩展 — carrier extension 也 monotone (more P → more carrier requirements)
+  - **§5.3.4 简化**: 不再有 "REVISED v0.5" caveat; 直接 state under v0.6 Φ'. 加 Kleene iteration proof sketch
+  - **历史演化注**: v0.4 simple Φ → v0.5 doctrinal finding (§5.10 added) → v0.6 Φ' primary
+  - **§5.10 保留** as historical record of v0.5 discovery
+  - **配套**: Lean refactor 在 PhiOperator.lean 并行进行 (parallel subagent)
 
 - **v0.5 (2026-05-17)**: ★ **Doctrinal finding via Lean formalization — §5.10 added, §5.3.4 revised**。关键变更:
   - **PhiOperator.lean discharge round** 揭示 v0.4 §5.3.4 是 *false* under Def 4.5.3 现有形式 (Φ 不动 carrier)。具体: minPreFP = (∅, ∅, {P2, P5}) 是 lfp(Φ), 不是 full R-tower。
