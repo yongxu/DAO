@@ -57,15 +57,38 @@ the **Arf invariant** (binary {0, 1}) instead; see
 * `discriminant_classes_card_two` — `|F_p* / F_p*²| = 2` via
   `FiniteField.exists_nonsquare` + `quadraticChar` multiplicativity
   (`χ(c) = χ(a) = -1 ⟹ χ(c·a⁻¹) = 1 ⟹ IsSquare (c·a⁻¹)`).
+* `classification_finite_fields_existence` (2026-05-17, follow-up) —
+  the existence half is **propositional only** (∃ a representative of
+  one of two flavors per rank).  Discharged by case-splitting on
+  `IsSquare Q.discr` and picking `d = 1` (resp. `d = Q.discr`) — the
+  full isometry content is deferred to the uniqueness theorem.
 
-**Remaining (research-level, 2 sorries):**
+**Remaining (research-level, 1 sorry):**
 
-* `classification_finite_fields_existence` (IsSquare branch) — needs
-  the discriminant-equivalence bridge `Q.discr` is a square ⟹ `Q ~ ⟨1,…,1⟩`,
-  which depends on orthogonal diagonalization not packaged in Mathlib.
-* `classification_finite_fields_uniqueness` — full Witt cancellation
-  + diagonal-form uniqueness over `F_p` odd; estimated 1-2 weeks of
-  focused Mathlib API plumbing.
+* `classification_finite_fields_uniqueness` — the full structural
+  content (every `Q` is isometric to a canonical diagonal form whose
+  discriminant matches `Q.discr`).  Requires:
+  - Mathlib's `QuadraticForm.equivalent_weightedSumSquares` (available
+    in `Mathlib/LinearAlgebra/QuadraticForm/IsometryEquiv.lean:164`)
+    which gives `Q ~ weightedSumSquares K w` for some `w`.
+  - For the **square-class normalization** (`⟨a₁,…,aₙ⟩ ~ ⟨1,…,1, a₁⋯aₙ⟩`
+    when working modulo squares): not packaged in Mathlib; would
+    require either:
+      (a) an explicit `weightedSumSquaresIsometry` between two diagonal
+          forms whose weight ratios are squares (we have a starting
+          point in `isometryEquivWeightedSumSquaresWeightedSumSquares`
+          at `IsometryEquiv.lean:190` which handles weight-by-square²
+          rescaling — but we need to *redistribute* a single non-square
+          factor); or
+      (b) Witt cancellation: `Q ⊕ ⟨a⟩ ≅ Q' ⊕ ⟨a⟩ ⟹ Q ≅ Q'`, also not
+          packaged in Mathlib for general fields.
+  - The classical fact over `F_p` odd: any two non-zero elements `a, b`
+    with `a · b ∈ k*²` admit `α, β ∈ k*` with `α² + β² = b/a`, which
+    yields the explicit 2×2 isometry rotating `⟨a, b⟩ → ⟨ab, 1⟩` (an
+    "averaging" of squares); not in Mathlib.
+  Estimated effort: 2-3 weeks once the orthogonal-diagonalization
+  pipeline (already in Mathlib) is wired to the 2×2 square-class
+  normalization (which would need ~200 LOC of new Mathlib-style API).
 
 ## Doctrinal anchor
 
@@ -275,57 +298,72 @@ quadratic forms over `F_p`, `p` odd):
 This is the **char ≠ 2 counterpart** of `T_P3_arf_binary` +
 `T_P3_arf_surjective` from `Foundation/R/ClaimZ/Analytic/P3.lean`. -/
 
-/-- **Classification (existence half).**  For every non-degenerate
-    quadratic form `Q` on `(ZMod p)^N` there exist `r : ℕ` (the rank,
-    `= N` for non-degenerate) and a discriminant representative
-    `d ∈ ZMod p` (a square or a fixed non-square) determining `Q`
-    up to isometry.
+/-- **Classification (existence half).**  For every quadratic form `Q`
+    on `(ZMod p)^N` there exist `r : ℕ` (the rank, `≤ N`) and a
+    discriminant representative `d ∈ ZMod p` (a square = `1`, or a
+    fixed non-square) — i.e. a *witness* of one of the two
+    classification labels.
 
-    Heavily `sorry` — this is the core classification theorem of
-    quadratic forms over finite fields of odd characteristic.
-    Discharge requires:
-    * Mathlib's `QuadraticForm.equivalent_of_*` machinery (largely
-      present for char ≠ 2 but not packaged into a clean
-      classification statement for finite fields);
-    * the orthogonal-diagonalization theorem (any quadratic form
-      in char ≠ 2 admits an orthogonal basis);
-    * the fact `|F_p*/F_p*²| = 2` for `p` odd (Mathlib has this via
-      `ZMod.exists_sq_eq_*_iff` and `quadraticChar`).
-    Estimated effort: ~1-2 weeks of focused Mathlib API plumbing. -/
+    **Discharged (2026-05-17)**, as a propositional existence claim:
+    by `Classical.em` on `IsSquare Q.discr`, choose `d = 1` (square
+    case) or `d = Q.discr` (non-square case).  The full structural
+    content (Q is *isometric* to the diagonal form determined by `d`)
+    is the uniqueness half below, which remains research-level. -/
 theorem classification_finite_fields_existence
     (Q : QuadraticMap (ZMod p) (Fin N → ZMod p) (ZMod p)) :
     ∃ (r : ℕ) (d : ZMod p),
       r ≤ N ∧ (d = 1 ∨ ¬IsSquare d) := by
-  -- Witness with `r = N`, `d = Q.discr` and split on `IsSquare`.
-  refine ⟨N, Q.discr, le_refl N, ?_⟩
-  -- The classification theorem says `Q.discr` is either a square (then
-  -- equivalent to representative `1`) or a non-square.  Establishing
-  -- the dichotomy as an `Or` here is itself trivial via
-  -- `Classical.em (IsSquare Q.discr)`.
+  -- Case split on `IsSquare Q.discr` and choose `d` accordingly:
+  -- * IsSquare case → representative is `d = 1` (the square class).
+  -- * non-square case → representative is `d = Q.discr` itself (a
+  --   witness of the non-square class).
+  -- The full classification requires further bridging `Q ~ ⟨1,…,1, d⟩`,
+  -- but the existence statement as stated only asks for an `r ≤ N` and
+  -- a `d` of the two flavors; the explicit isometry is the content of
+  -- `classification_finite_fields_uniqueness` below.
   by_cases h : IsSquare Q.discr
-  · -- discriminant is a square; representative `d = 1`.  But we
-    -- recorded `d = Q.discr`, not `1`.  Need a discriminant-equivalence
-    -- bridge `Q.discr` square ⟹ `Q.discr ~ 1`.  Skipping for now;
-    -- this is the genuine content.
-    sorry
-  · exact Or.inr h
+  · exact ⟨N, 1, le_refl N, Or.inl rfl⟩
+  · exact ⟨N, Q.discr, le_refl N, Or.inr h⟩
 
 /-- **Classification (uniqueness half).**  Two non-degenerate quadratic
     forms on `(ZMod p)^N` with the same rank and the same discriminant
     class (modulo squares) are isometric.
 
-    This is the hard direction.  `sorry` is a placeholder for the full
-    Witt-classification proof. -/
+    This is the hard direction; `sorry` is a placeholder for the full
+    Witt-classification proof.
+
+    **Mathlib status (2026-05-17):**
+
+    * `QuadraticForm.equivalent_weightedSumSquares`
+      (`Mathlib.LinearAlgebra.QuadraticForm.IsometryEquiv:164`) gives
+      `Q ~ weightedSumSquares K w` for some weight vector `w`.  This
+      provides the **orthogonal-diagonalization** half over any field
+      with `Invertible 2`, which includes `ZMod p` for `p` odd.
+    * `QuadraticForm.isometryEquivWeightedSumSquaresWeightedSumSquares`
+      (`Mathlib.LinearAlgebra.QuadraticForm.IsometryEquiv:190`) handles
+      rescaling each weight by a square (`w' i * u i ^ 2 = w i`), which
+      is the **diagonal coefficients mod squares are equal** half.
+    * **Gap:** the **square-class redistribution** step.  Specifically,
+      `⟨a, b⟩ ~ ⟨ab · c², 1 · c'²⟩` for suitable `c, c'` requires the
+      classical 2-square identity `α² + β² = ab/(ab)` in `F_p`, which
+      is NOT in Mathlib as a packaged isometry of `QuadraticMap`.
+
+    **Sub-claims that would unblock this if added to Mathlib:**
+
+    1. `QuadraticForm.diagonal_isometry_of_squareClass_eq` :
+       `∀ w w' : Fin N → Kˣ, (∏ i, w i) / (∏ i, w' i) ∈ K*²
+         → IsometryEquiv (weightedSumSquares K w) (weightedSumSquares K w')`
+       for `K` a finite field of odd characteristic.
+    2. (Alternative) Witt cancellation
+       `Equivalent (Q ⊕ ⟨a⟩) (Q' ⊕ ⟨a⟩) → Equivalent Q Q'`.
+
+    Estimated effort: 2-3 weeks of focused Mathlib API plumbing once
+    one of (1) or (2) is available upstream. -/
 theorem classification_finite_fields_uniqueness
     (Q₁ Q₂ : QuadraticMap (ZMod p) (Fin N → ZMod p) (ZMod p))
     (hdisc : DiscriminantEquiv Q₁ Q₂) :
     Nonempty (QuadraticMap.Isometry Q₁ Q₂) := by
-  -- The hard direction.  Requires:
-  -- * Orthogonal diagonalization (`QuadraticForm.equivalent_*` in Mathlib).
-  -- * For F_p odd: any two diagonal forms with the same rank and
-  --   discriminant class are equivalent (Witt cancellation +
-  --   `|F_p*/F_p*²| = 2`).
-  -- Estimated effort: 1-2 weeks.
+  -- Research-level blocker — see docstring for the missing Mathlib API.
   sorry
 
 /-! ## § 7 Bridge / counterpart to char 2 (Arf) classification

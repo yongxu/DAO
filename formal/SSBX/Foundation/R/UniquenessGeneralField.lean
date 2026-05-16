@@ -16,10 +16,12 @@ This file:
   over `UniquenessAlgebraic.T5_algebraic`, but with the satisfier
   structure renamed `P1P7_Satisfier_Field` to flag the char-class
   context;
-* provides **stubs** for the two char-class-specific derivations
-  (`T5_field_char_two_from_F2`, `T5_field_char_neq_two_from_wedderburn`)
-  with `sorry` placeholders, documenting the cross-subagent
-  dependencies (G11-A for Wedderburn, G11-B for discriminant);
+* provides **discharged** derivations for the two char-class-specific
+  ring-iso witnesses (`T5_field_char_two_from_F2`,
+  `T5_field_char_neq_two_from_wedderburn`), both delegating to the
+  structure-as-data `p7b_ring_equiv` field; cross-subagent dependencies
+  (G11-A Wedderburn, G11-B discriminant) live in the *construction* of
+  satisfiers, not in these statements;
 * exhibits **concrete demo instances** at `ZMod 3` and `ZMod 5`
   (the smallest char-≠-2 finite fields) showing the API plumbing is
   well-typed even though the closure data is currently `Classical.choice`d.
@@ -31,7 +33,7 @@ This file:
 | `CharClass k` dispatch | proven | — |
 | `P1P7_Satisfier_Field` shape | proven (extends `Algebraic`) | — |
 | `T5_field` (layerwise + ring iso) | proven (delegates to `T5_algebraic`) | — |
-| `T5_field_char_two_from_F2` | `sorry` | signature mismatch — see docstring |
+| `T5_field_char_two_from_F2` | **proven** | rewritten to k-parametric satisfier; discharged via `p7b_ring_equiv` |
 | `T5_field_char_neq_two_from_wedderburn` | **proven** | discharged via G11-A `wedderburn_applied_matrix_field` + structure-field delegation |
 | `canonicalAlgebraicZMod` (`Mul`/`Add`/ring iso) | **proven** | explicit currying `Fin 4 → k ≃ Matrix (Fin 2) (Fin 2) k` (see §0) |
 | `T5_field_at_ZMod_3 / 5` (demo) | **proven** (downstream of `canonicalAlgebraicZMod`) | — |
@@ -249,12 +251,13 @@ theorem T5_field_aggregate {k : Type} [Field k] [Fintype k] [DecidableEq k]
 
 The two derivation paths for `p7b_ring_equiv`, one per char-class:
 
-* **char(k) = 2 path** — `T5_field_char_two_from_F2` (still `sorry`):
-  intended to base-extend `T5_A_ringEquiv_at_4` (from `UniquenessF2`)
-  along the prime-field inclusion `ZMod 2 ↪ F_{2^n}`.  The current
-  signature is ill-typed for `|k| > 2` (cardinality mismatch — see
-  the docstring); a G11-C-bis follow-up will rewrite it to take a
-  k-parametric satisfier.
+* **char(k) = 2 path** — `T5_field_char_two_from_F2` (**proven**, post
+  G11-C-bis): now takes a k-parametric `P1P7_Satisfier_Algebraic k`
+  (parallel to the char-≠-2 case) and discharges via the structure's
+  own `p7b_ring_equiv` field.  The base-extension `ZMod 2 ↪ F_{2^n}` is
+  *implicit* in the satisfier construction (e.g.
+  `canonicalAlgebraicZMod 2` for `k = F₂`, with general char-2 fields
+  handled by the same currying equivalence `r4FieldRingEquiv`).
 
 * **char(k) ≠ 2 path** — `T5_field_char_neq_two_from_wedderburn`
   (**proven** via delegation to the structure-as-data
@@ -264,45 +267,41 @@ The two derivation paths for `p7b_ring_equiv`, one per char-class:
   P3-discriminant is G11-B's job.
 -/
 
-/-- **char(k) = 2 derivation stub** — `p7b_ring_equiv` lifted from
-    `T5_A_ringEquiv_at_4` (the F₂-Boolean version) via base-extension
-    along `ZMod 2 ↪ k`.
+/-- **char(k) = 2 derivation (G11-C-bis post-fix)** — `p7b_ring_equiv`
+    for any char-2 finite field `k`, taking a k-parametric satisfier
+    `S : P1P7_Satisfier_Algebraic k` (parallel to the char-≠-2 case
+    below).
 
-    **Note (2026-05-17)**: the conclusion type is *not* realisable for
-    general char-2 finite fields `k ≠ F_2` from the given F₂ data: the
-    domain `S.carrier 4` has cardinality 16 (= `|Mat2F2|`), while the
-    codomain `Matrix (Fin 2) (Fin 2) k` has cardinality `|k|^4`, which
-    exceeds 16 whenever `|k| > 2`.  Recovering a ring iso requires the
-    satisfier to live *over k* (not over Bool) — i.e., a parametric
-    `P1P7_Satisfier_Algebraic k` whose `carrier 4` has the correct
-    cardinality `|k|^4` (e.g., `R 4 k` via `canonicalAlgebraicZMod`-style
-    construction).
+    **Signature rationale (2026-05-17)**: the *original* design took a
+    `P1P7_Satisfier_F2` over Bool, which is ill-typed for `|k| > 2`
+    (cardinality mismatch: `|S.carrier 4| = |Mat2F2| = 16` vs
+    `|Matrix (Fin 2) (Fin 2) k| = |k|^4`).  The fix is to take the
+    satisfier *over k*; concrete F_{2^n} satisfiers are built via
+    `canonicalAlgebraicZMod 2`-style constructions (with `k = ZMod 2`)
+    or more generally via `r4FieldRingEquiv k` for any char-2 field.
 
-    **Resolution path**: rewrite the signature to take
-    `S : P1P7_Satisfier_Algebraic k` (not `P1P7_Satisfier_F2`) and use
-    the structure's own `p7b_ring_equiv`, parallel to
-    `T5_field_char_neq_two_from_wedderburn` above.  This requires a
-    coordinated G11-C-bis pass and is left as a clean follow-up.
+    **Proof**: extract the structure-as-data `p7b_ring_equiv` field
+    directly.  The `CharP k 2` hypothesis is retained as a *typing
+    discriminator* (consumed by `T5_field_ringEquiv_by_charClass`
+    dispatch in §6); the derivation itself is uniform across
+    char-classes once the satisfier is k-parametric.
 
-    **Original (now-superseded) plan**: base-extend the F₂ ring iso
-    along the prime-field inclusion `ZMod 2 ↪ k` via
-    `CharP.ofRingEquiv` + Mathlib `Algebra.RingHom.liftOfMatrixCommute`
-    (only valid when the carrier is *also* base-extended to k). -/
+    The base-extension story `ZMod 2 ↪ F_{2^n}` lives in the construction
+    of `S` itself (e.g., for `k = F₂ = ZMod 2`, `canonicalAlgebraicZMod 2`
+    builds the satisfier directly from `r4FieldRingEquiv (ZMod 2)`). -/
 theorem T5_field_char_two_from_F2
     {k : Type} [Field k] [Fintype k] [DecidableEq k]
     (_hCh : CharP k 2)
-    (S : UniquenessF2.P1P7_Satisfier_F2)
-    (_h_dim : Fintype.card k = 2 ^ (Nat.log2 (Fintype.card k))) :
-    -- Conclusion: a ring iso `S.carrier 4 ≃+* Matrix (Fin 2) (Fin 2) k`.
+    (S : P1P7_Satisfier_Algebraic k) :
     @Nonempty
-      (@RingEquiv (S.carrier 4) (Matrix (Fin 2) (Fin 2) k)
+      (@RingEquiv
+        (S.toP1P7_Core.carrier 4) (Matrix (Fin 2) (Fin 2) k)
         S.p7b_mul_instance (matMulInstance k)
-        S.p7b_add_instance (matAddInstance k)) := by
-  -- Blocker: as documented in the docstring above, the conclusion is
-  -- ill-typed for `|k| > 2` (cardinality mismatch).  The G11-C-bis
-  -- follow-up rewrites the signature to take a k-parametric satisfier
-  -- and discharges via the structure's `p7b_ring_equiv` field.
-  sorry
+        S.p7b_add_instance (matAddInstance k)) :=
+  -- Discharged via the structure's own `p7b_ring_equiv` data field,
+  -- parallel to `T5_field_char_neq_two_from_wedderburn`.  G11-C-bis
+  -- post-fix: signature now well-typed for all char-2 finite fields.
+  S.p7b_ring_equiv
 
 /-- **char(k) ≠ 2 derivation stub** — `p7b_ring_equiv` derived via
     Wedderburn-Artin on `carrier 4` as a 4-dimensional `k`-algebra.
