@@ -105,4 +105,49 @@ def pinThenBranchProg : List Instr := [
   .halt                              -- pc 4: jumped here
 ]
 
+/-! ## § Demo 10 — push/pop save-restore (Phase E.3)
+
+Pin bit 0, push state, pin bit 1, pop (restoring to "only bit 0 pinned"). -/
+def saveRestoreProg : List Instr := [
+  .mergeBit ⟨0, by decide⟩ true,
+  .push,
+  .mergeBit ⟨1, by decide⟩ true,
+  .pop,
+  .halt
+]
+
+/-! ## § Demo 11 — writeBit overrides (Phase E.3)
+
+`merge` of bit 0 = true would normally CONFLICT with bit 0 = false in
+a subsequent merge.  But `writeBit` overwrites, so the program proceeds
+without halting. -/
+def writeOverrideProg : List Instr := [
+  .mergeBit ⟨0, by decide⟩ true,    -- bit 0 = true
+  .writeBit ⟨0, by decide⟩ false,   -- bit 0 := false (overwrite!)
+  .halt
+]
+
+/-! ## § Demo 12 — flipBit on defined / undefined bits (Phase E.3)
+
+Bit 0 starts unspecified.  `flipBit 0` leaves it `none` (partial
+commitment policy).  Then we pin bit 0 = true, flip it, bit 0 becomes
+false. -/
+def flipOnPartialProg : List Instr := [
+  .flipBit ⟨0, by decide⟩,           -- bit 0 still none (flipped 0 times)
+  .mergeBit ⟨0, by decide⟩ true,    -- bit 0 = true
+  .flipBit ⟨0, by decide⟩,           -- bit 0 = false
+  .halt
+]
+
+/-! ## § Demo 13 — xorMask flips defined bits (Phase E.3)
+
+Build cur with bit 0 = true and bit 1 = false, then xorMask with the
+all-true mask — defined bits flip, undefined stay none. -/
+def xorMaskDemo : List Instr := [
+  .mergeBit ⟨0, by decide⟩ true,
+  .mergeBit ⟨1, by decide⟩ false,
+  .xorMask (fun _ => true),          -- flip all bits where m i = true
+  .halt
+]
+
 end SSBX.Foundation.Wen.CorePartial.Examples

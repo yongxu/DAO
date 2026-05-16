@@ -29,6 +29,24 @@ def executeInstr (instr : Instr) (s : State) : State :=
       | none    => { s with halted := true }  -- 不通 → halt
   | .restrict mask =>
       { s with cur := PartialCell.restrict mask s.cur, pc := s.pc + 1 }
+  | .push =>
+      { s with history := s.cur :: s.history, pc := s.pc + 1 }
+  | .pop =>
+      match s.history with
+      | []      => { s with pc := s.pc + 1 }
+      | c :: rs => { s with cur := c, history := rs, pc := s.pc + 1 }
+  | .flipBit i =>
+      { s with
+        cur := fun j => if j = i then (s.cur j).map (!·) else s.cur j,
+        pc := s.pc + 1 }
+  | .writeBit i b =>
+      { s with
+        cur := fun j => if j = i then some b else s.cur j,
+        pc := s.pc + 1 }
+  | .xorMask m =>
+      { s with
+        cur := fun j => (s.cur j).map (· != m j),
+        pc := s.pc + 1 }
   | .branchBitEq i b t =>
       if s.cur i = some b then
         { s with pc := t }
@@ -107,6 +125,80 @@ theorem runFuel_halted (prog : List Instr) (s : State) (h : s.halted = true) :
 
 @[simp] theorem restrict_halted (mask : Finset (Fin 8)) (s : State) :
     (executeInstr (.restrict mask) s).halted = s.halted := rfl
+
+/-! ### Phase E.3 — push / pop / flipBit / writeBit / xorMask -/
+
+@[simp] theorem push_pc (s : State) : (executeInstr .push s).pc = s.pc + 1 := rfl
+@[simp] theorem push_cur (s : State) : (executeInstr .push s).cur = s.cur := rfl
+@[simp] theorem push_history (s : State) :
+    (executeInstr .push s).history = s.cur :: s.history := rfl
+@[simp] theorem push_halted (s : State) :
+    (executeInstr .push s).halted = s.halted := rfl
+
+@[simp] theorem pop_pc (s : State) : (executeInstr .pop s).pc = s.pc + 1 := by
+  show (match s.history with
+        | []      => ({ s with pc := s.pc + 1 } : State)
+        | c :: rs => { s with cur := c, history := rs, pc := s.pc + 1 }).pc
+       = s.pc + 1
+  cases s.history <;> rfl
+
+@[simp] theorem pop_halted (s : State) : (executeInstr .pop s).halted = s.halted := by
+  show (match s.history with
+        | []      => ({ s with pc := s.pc + 1 } : State)
+        | c :: rs => { s with cur := c, history := rs, pc := s.pc + 1 }).halted
+       = s.halted
+  cases s.history <;> rfl
+
+theorem pop_cur_empty (s : State) (h : s.history = []) :
+    (executeInstr .pop s).cur = s.cur := by
+  show (match s.history with
+        | []      => ({ s with pc := s.pc + 1 } : State)
+        | c :: rs => { s with cur := c, history := rs, pc := s.pc + 1 }).cur
+       = s.cur
+  rw [h]
+
+theorem pop_cur_cons (c : PartialCell 8) (rs : List (PartialCell 8)) (s : State)
+    (h : s.history = c :: rs) :
+    (executeInstr .pop s).cur = c := by
+  show (match s.history with
+        | []      => ({ s with pc := s.pc + 1 } : State)
+        | c' :: rs' => { s with cur := c', history := rs', pc := s.pc + 1 }).cur
+       = c
+  rw [h]
+
+@[simp] theorem flipBit_pc (i : Fin 8) (s : State) :
+    (executeInstr (.flipBit i) s).pc = s.pc + 1 := rfl
+@[simp] theorem flipBit_halted (i : Fin 8) (s : State) :
+    (executeInstr (.flipBit i) s).halted = s.halted := rfl
+@[simp] theorem flipBit_cur_at (i : Fin 8) (s : State) :
+    (executeInstr (.flipBit i) s).cur i = (s.cur i).map (!·) := by
+  show (if i = i then (s.cur i).map (!·) else s.cur i)
+       = (s.cur i).map (!·)
+  rw [if_pos rfl]
+@[simp] theorem flipBit_cur_other (i j : Fin 8) (s : State) (h : j ≠ i) :
+    (executeInstr (.flipBit i) s).cur j = s.cur j := by
+  show (if j = i then (s.cur j).map (!·) else s.cur j) = s.cur j
+  rw [if_neg h]
+
+@[simp] theorem writeBit_pc (i : Fin 8) (b : Bool) (s : State) :
+    (executeInstr (.writeBit i b) s).pc = s.pc + 1 := rfl
+@[simp] theorem writeBit_halted (i : Fin 8) (b : Bool) (s : State) :
+    (executeInstr (.writeBit i b) s).halted = s.halted := rfl
+@[simp] theorem writeBit_cur_at (i : Fin 8) (b : Bool) (s : State) :
+    (executeInstr (.writeBit i b) s).cur i = some b := by
+  show (if i = i then some b else s.cur i) = some b
+  rw [if_pos rfl]
+@[simp] theorem writeBit_cur_other (i j : Fin 8) (b : Bool) (s : State) (h : j ≠ i) :
+    (executeInstr (.writeBit i b) s).cur j = s.cur j := by
+  show (if j = i then some b else s.cur j) = s.cur j
+  rw [if_neg h]
+
+@[simp] theorem xorMask_pc (m : R 8) (s : State) :
+    (executeInstr (.xorMask m) s).pc = s.pc + 1 := rfl
+@[simp] theorem xorMask_halted (m : R 8) (s : State) :
+    (executeInstr (.xorMask m) s).halted = s.halted := rfl
+@[simp] theorem xorMask_cur (m : R 8) (s : State) (j : Fin 8) :
+    (executeInstr (.xorMask m) s).cur j = (s.cur j).map (· != m j) := rfl
 
 /-- `branchBitEq i b t` fires when bit `i` is *explicitly* specified to `b`. -/
 theorem branchBitEq_pc_taken (i : Fin 8) (b : Bool) (t : Nat) (s : State)
