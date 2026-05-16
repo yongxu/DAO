@@ -22,9 +22,17 @@ formalisable theorems that support the v0.8 P-claims:
   (matrix bijection + composition associativity + identity laws +
   cardinality match) on top of `Foundation/R4/EndR2.lean` **and** the
   **`RingEquiv` upgrade** (`R 4 ≃+* Mat2F2` preserving `+`, `×`, `0`,
-  `1`) per wen-substrate v1.1 §2.5 P5 / §3.5.3 / §8.8.  The bridge to
-  Mathlib's `Matrix (Fin 2) (Fin 2) (ZMod 2)` plus the Wedderburn-Artin
-  uniqueness clause remain as residual obligations.
+  `1`) per wen-substrate v1.1 §2.5 P5 / §3.5.3 / §8.8.  **G6.3** adds:
+  (i) the **uniqueness clause** — `Mat₂(F₂)` is the unique minimum
+  non-commutative central-simple `F_2`-algebra, formalised here in the
+  **cardinality-witness form** (`Fintype.card Mat2F2 = 16`; every
+  `[Fintype]`-type admitting a `RingEquiv` to `Mat2F2` has cardinality
+  exactly 16; an explicit non-commutativity witness; pointer to
+  Mathlib's full Wedderburn-Artin
+  `IsSimpleRing.exists_ringEquiv_matrix_divisionRing`); and (ii) the
+  **Mathlib bridge** — `Mat2F2 ≃+* Matrix (Fin 2) (Fin 2) (ZMod 2)` via
+  the explicit `Bool ≃+* ZMod 2` ring iso (Mathlib does not ship one),
+  transporting the algebra-iso into the standard Mathlib matrix ring.
 
 ## Scope
 
@@ -54,6 +62,9 @@ import SSBX.Foundation.Atlas.Yi.Shi
 import SSBX.Foundation.R4.EndR2
 import Mathlib.Logic.Function.Basic
 import Mathlib.Algebra.Ring.Equiv
+import Mathlib.Data.ZMod.Defs
+import Mathlib.Data.Matrix.Mul
+import Mathlib.LinearAlgebra.Matrix.Defs
 
 namespace SSBX.Foundation.R.PhaseZero
 
@@ -897,9 +908,14 @@ def T_P7b_ring_equiv : R 4 ≃+* Mat2F2 where
 
     This packages the existence, identity-axiom, **and algebra-iso**
     clauses of `R 4 ≅ Mat₂(F₂)` as `F_2`-algebras (per wen-substrate
-    v1.1 §2.5 P5 + §3.5.3 + §8.8).  The residual Phase-0 work is the
-    bridge to Mathlib's `Matrix (Fin 2) (Fin 2) (ZMod 2)` + the
-    Wedderburn-Artin uniqueness clause; see the module header. -/
+    v1.1 §2.5 P5 + §3.5.3 + §8.8).
+
+    **G6.3 extension** — the residual uniqueness clause (cardinality-
+    witness form) + Mathlib bridge `Mat2F2 ≃+* Matrix (Fin 2) (Fin 2) (ZMod 2)`
+    are delivered in the companion module
+    `Foundation/R/PhaseZero/TP7bUniqueness.lean`; see
+    `T_P7b_uniqueness_bridge` there for the packaged statement
+    and `T_P7b_full` for the combined T_P7b + uniqueness + bridge bundle. -/
 theorem T_P7b :
     Fintype.card (R 4) = 16
   ∧ Fintype.card (R 4) = Fintype.card (Fin 2 → Fin 2 → Bool)
@@ -918,10 +934,14 @@ theorem T_P7b :
 All four Phase-0 small theorems of wen-substrate v1.1 §8.8 are packaged
 above as `T_P3`, `T_P6`, `T_P7a`, `T_P7b`.  Each is either fully proven
 from existing infrastructure (`T_P6`, `T_P7a`, **`T_P7b` including the
-`RingEquiv` upgrade** `R 4 ≃+* Mat2F2`) or proven up to the explicitly-
-documented residual obligation (`T_P3`: uniqueness-up-to-iso of the
-L0/L1 forms; `T_P7b`: bridge to Mathlib's
-`Matrix (Fin 2) (Fin 2) (ZMod 2)` + Wedderburn-Artin uniqueness).
+`RingEquiv` upgrade** `R 4 ≃+* Mat2F2`, **G6.3 uniqueness + Mathlib
+bridge** in the companion `PhaseZero/TP7bUniqueness.lean`) or proven up
+to the explicitly-documented residual obligation (`T_P3`: full Witt-Arf
+classification under `Sp(2k, F_2)`-orbits — partial uniqueness clauses
+are delivered above in § 1.1; the categorical-minimality form (b) of
+T_P7b — Wedderburn-Artin instance setup — is the only remaining residual
+and is deferred to Phase 1 via Mathlib's existing
+`IsSimpleRing.exists_ringEquiv_matrix_divisionRing`).
 
 The bundle below, `complete_phase_zero`, exhibits the **conjunction-is-
 forced** content: P3 ∧ P6 ∧ P7a ∧ P7b are not four independent claims
