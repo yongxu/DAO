@@ -1,8 +1,8 @@
 # R-Tower Closure as Knaster-Tarski Fixed Point in the Lawvere Lineage
 ## A Position Paper Draft — Metalogic Identification for §8.4
 
-> **Version:** 0.4 · 2026-05-17
-> **Status:** **DRAFT — §2, §4-§8 严格化完成**, ~95% publication-ready (剩 Lean 形式化 + minor polish)。
+> **Version:** 0.5 · 2026-05-17
+> **Status:** **DRAFT — §2, §4-§8 严格化完成 + §5.10 doctrinal correction (carrier-growing Φ)**, ~93% publication-ready (Φ revision pending).
 > **Companion to:** [`representation-closure.md`](representation-closure.md) §8.4 · [`peer-engagement-draft.md`](peer-engagement-draft.md) (outreach v0.1)
 > **Lean companion:** [`formal/SSBX/Foundation/Closure/PhiOperator.lean`](../../formal/SSBX/Foundation/Closure/PhiOperator.lean) (5/8 sorries discharged)
 > **Target:** 30-40 页定稿, 当前 ~1286 行 / ~33000 字 (~95%)
@@ -552,12 +552,31 @@ D1 is the **least articulation candidate whose extracted requirements are alread
 
 Then `D_k → D_1` in the lattice ordering. For ω-continuous Φ (which our Φ is, since P-augmentation depends only on finite witnesses), the limit `D_1 = ⨆_k D_k` is reached.
 
-**Proposition 5.3.4 (D1's structural shape).** The fixed-point D1 has:
+**Proposition 5.3.4 (D1's structural shape) — REVISED v0.5 (see also §5.10)**:
+
+> ⚠️ **Lean formalization 揭示了一个 doctrinal gap** ([PhiOperator.lean](../../formal/SSBX/Foundation/Closure/PhiOperator.lean) v0.5): 在当前 Def 4.5.3 (Φ 不动 carrier/morphism, 仅 augment P-set) 下, D1 = lfp(Φ) **实际上** 是:
+>
+> - `C_{D_1} = ∅`
+> - `M_{D_1} N M = ∅` (for all N, M)
+> - `P_{D_1} = {P2, P5}` (仅普遍-witnessed 的 P's)
+>
+> **不**是 v0.4 这里 stated 的 "full R-tower with all P's"。
+>
+> **原因**: `minPreFP = (∅, ∅, {P2, P5})` 在 v0.4 lattice 𝒜 (Def 4.5.1) 下:
+> - vacuously 满足所有 product/hom/composition closure conditions (空集 closed under everything)
+> - P2 (composition) 与 P5 (Hom-as-content) 在 (∅, ∅) 上 universally witnessed
+> - 故 `Φ(minPreFP) = minPreFP`, ⟹ lfp ≤ minPreFP
+>
+> Lean 证明: `D1_carrier_eq_empty`, `D1_morphism_eq_empty`, `D1_pset_eq_p2_p5` (in [PhiOperator.lean](../../formal/SSBX/Foundation/Closure/PhiOperator.lean)).
+
+**v0.5 修正**: §5.10 给出修正方案 — Φ 必须 *grow* carrier when new P's witnessed。在修正后的 Φ' 下, lfp(Φ') = full R-tower 如 v0.4 stated。
+
+**v0.4 stated 内容 (待 v0.5 修正)** — 在 *intended* (carrier-growing) Φ 下应当成立:
 - `C_{D_1} = {R N : N ∈ ℕ}` (full carrier-class — needed for P4's unbounded recursion)
 - `M_{D_1} = ⋃_{N, M} LinHom(N, M)` (all F₂-linear maps — needed for P5 hom-closure to be saturated)
 - `P_{D_1} = {P1, P2, P3, P4, P5, P6, P7a, P7b}` (all 8 atomic properties)
 
-**This is precisely the R-tower structure as Lean formalizes it.** D1 = lfp(Φ) recovers exactly R-Vec (with all morphisms and all P-properties witnessed).
+**Intent**: D1 = lfp(Φ) 应当恢复 R-Vec (full carrier + morphisms + P's witnessed)。这要求 Φ 在 augment P-set 同时 grow carrier 以承载 witness。详 §5.10。
 
 ### §5.4 D1 ⟷ P1-P7 as precise fixed-point statement
 
@@ -649,6 +668,58 @@ This is what we mean by **"R-tower closure is in the Lawvere lineage."** Not as 
 > - P5 = hom-closure of R-Vec at {R N} (Cor 4.2.2)
 
 This is the rigorous identification §8.4 of [`representation-closure.md`](representation-closure.md) asked for.
+
+### §5.10 Doctrinal correction (v0.5): Φ must grow carrier
+
+**Discovery (2026-05-17, via Lean formalization)**: 当 PhiOperator.lean 把 Def 4.5.3 严格实现后, 发现 lfp(Φ) ≠ full R-tower。详细推导见 §5.3.4 revised note。
+
+#### The flaw in v0.4's Φ
+
+v0.4 Def 4.5.3 让 Φ(D) := (D.C, D.M, D.P ∪ {witnessed P's}) — **leave (C, M) unchanged**, only augment P-set.
+
+后果: 空 D = (∅, ∅, ∅) 在 v0.4 lattice 中:
+- 满足所有 consistency conditions (空集 vacuously closed under product/hom/composition)
+- Φ 只能 augment P-set, 不能 grow carrier
+- 最终 lfp(Φ) = (∅, ∅, {P2, P5}) — *不* 是 intended full R-tower
+
+#### The fix: Φ' grows carrier
+
+修正后的 Φ': 当某 P_i ∈ witnessed-set 但 D.C 不含必要的 carrier elements (e.g., P4 witnessed 但 D.C 有界), Φ' **自动 extend C** 以承载 witness:
+
+```
+Φ'(D) := let newP = witnessed-set ∪ D.P
+         in (C', M', newP)
+         where (C', M') = smallest extension of (D.C, D.M) such that
+                          each p ∈ newP is structurally witnessed
+```
+
+例如:
+- P4 (unbounded recursion) ∈ newP ⟹ C' 必含 {R N : N ∈ ℕ}
+- P6 (V₄ modality) ∈ newP ⟹ C' 必含 R 2
+- P7b (Wedderburn anchor) ∈ newP ⟹ C' 必含 R 4
+
+⟹ Φ' is *carrier-growing*; D1 = lfp(Φ') 自然 saturate 到 full R-tower。
+
+#### 形式上的转化
+
+Φ' 仍是 monotone (more witnessed P's ⟹ more carrier ⟹ more potential witnesses); 仍在 complete lattice 上; Knaster-Tarski 仍适用。
+
+**关键**: P5 仍是 structural enabler — hom-closure 保证 C' 必含 [R N, R M] = R(N·M), 这就是 P5 在 Φ' 内的角色。
+
+#### v0.5 工作
+
+- 修正 Def 4.5.3 为 Φ' 形式 (carrier-growing)
+- 重证 §5.3.4 (D1 = full R-tower) 在 Φ' 下
+- 更新 [PhiOperator.lean](../../formal/SSBX/Foundation/Closure/PhiOperator.lean): 把 phiFun 改为 carrier-growing
+- 重新 discharge 3 个 currently-stuck sorries
+
+**估算工作量**: ~2-3 周 (paper revision 1 周 + Lean refactor 1-2 周)。
+
+#### 这一发现的意义
+
+> Lean formalization 的严谨性*抓住* paper 的一个 definitional 漏洞 — 这是用 formal verification 紧固 philosophy 的成功示例.
+
+v0.4 paper 的 *intent* (D1 = full R-tower) 是正确的, 但 v0.4 Def 4.5.3 (specific Φ) 不能实现这一 intent. v0.5 修正 Φ → Φ' 即可。
 
 ### §5.9 What remains for Lean formalization
 
@@ -1271,6 +1342,14 @@ def linHomEquivR_NM (N M : ℕ) : LinHom N M ≃ R (N * M) :=
   - **核心新洞察 (Obs 4.5.4 + Thm 5.6.1)**: **P5 不只是 D1 的一个性质, 而是 articulation candidates lattice 𝒜 consistency 条件的一部分** — 内建于 Φ 良定义性的结构基础
   - **Bonus**: Lean 形式化估算从 6-12 月 **降至 ~2 月** (Mathlib `OrderHom.lfp` 已存在)
   - 字数 5500 → ~13000, 进度 15% → ~35-40%, 已完成 weight-bearing 工作
+
+- **v0.5 (2026-05-17)**: ★ **Doctrinal finding via Lean formalization — §5.10 added, §5.3.4 revised**。关键变更:
+  - **PhiOperator.lean discharge round** 揭示 v0.4 §5.3.4 是 *false* under Def 4.5.3 现有形式 (Φ 不动 carrier)。具体: minPreFP = (∅, ∅, {P2, P5}) 是 lfp(Φ), 不是 full R-tower。
+  - **§5.3.4 revised**: 显示 Lean 反例 (`D1_carrier_eq_empty`, `D1_morphism_eq_empty`, `D1_pset_eq_p2_p5` proved in Lean) + 注明 v0.5 修正方案
+  - **§5.10 NEW**: 完整 doctrinal correction — Φ' grows carrier when new P's witnessed; lfp(Φ') = full R-tower as v0.4 intended
+  - **Lean 当前状态** (`PhiOperator.lean` v0.5): 3 sorries 保留 *作为 documented counter-examples*; 新增 TRUE characterizations (`minPreFP_is_pre_fp`, etc.); ~480 LOC 增加, ~126 删除
+  - **整体 Lean discharge**: 14 → 6 sorries this round (G11-B 5→2, G11-C 5→1, G7 1→0, PhiOperator 3→3 with counter-example)
+  - **关键 meta-观察**: Lean formalization 严谨性 *抓住* paper 的 definitional 漏洞 — 这是 "用 formal verification 紧固 philosophy" 的成功示例
 
 - **v0.4 (2026-05-16)**: ★ **§2 background 详写完成 — Position paper substantially complete**。关键变更:
   - **§2 重写**: 从 6 个 stub subsections 扩到 rigorous 详细 framework treatment — 每个 framework (Knaster-Tarski / Kleene / Lawvere / Aczel AFA / HoTT / Banach+Brouwer+Coalgebra) 各 ~500-800 字, 含历史 + 形式陈述 + 现代用法 + 对 R-tower 的适用性
