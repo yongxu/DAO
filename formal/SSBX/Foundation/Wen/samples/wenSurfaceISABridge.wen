@@ -1,0 +1,48 @@
+# 文言 → Bagua-ISA 桥样本 — WenSurface 与 22-token 汇编层之汇合
+#
+# WenSurface 文言 prose 经 `wenyanCompile` 得 WenDef.Tm; 满 complement-equivariant
+# 条件之 Tm 可经 `compileHexFunCertified?` 进一步降到 Bagua-ISA YiInstr 程序,
+# 由 `runHexProg` / `wenyan run` 执行. 故 Bagua-ISA 是 WenDef.Tm 的**后端目标**,
+# 不是另一表面 — 二者在 Tm 处汇合.
+#
+# 桥之 round-trip pin 于 Foundation/Wen/WenSurface/ISABridge.lean
+# (`theorem isaBridge_endToEnd`, 8 个 native_decide).
+
+## §1  可桥子集 (complement-equivariant)
+
+# YiInstr 之 12 原语皆与 Hex.complement 通约, 故任 YiInstr-表达之
+# f : Hex → Hex 须满足  f(h.complement) = (f h).complement.
+
+# 「者 甲 甲」 — 恒等 λx.x → `[halt]`
+者 甲 甲
+
+# 「错」 — Hexagram.complement → `[complement, halt]`
+错
+
+# 「综」 — Hexagram.reverse → `[reverse, halt]`
+综
+
+# 「互」 — Hexagram.interlace → `[interlace, halt]`
+互
+
+# 「而 反 综」 — 反 ∘ 综 复合 (先 综 后 反) → `[reverse, complement, halt]`
+而 反 综
+
+# 「再 反」 — 反应用两次, 还原 → `[complement, complement, halt]`
+再 反
+
+## §2  不可桥子集 (non-equivariant)
+
+# 此处 prose 仍 type-check 为 Hex → Hex, 但 denotation 不满足 (★),
+# 故 `wenyanCompileToYiInstr? -> none`. 这不是工程缺陷, 是 YiInstr 之代数刚性
+# (扩 YiInstr 加 absolute yao test 或 hexLit 载入即破 (★), 见 WenDefCompile.lean
+# §「未尽之业」). 此约束是 wen-substrate.md 中 Path 丙的结构性界限.
+
+# 「推」 — mod-64 自增 (= 「加」 «一»), 用 .jia/.yi 原语, 非 equivariant
+推
+
+# 「損」 — mod-64 自减, 同理
+損
+
+# 「同」 — Hex × Hex → Bool, 非 Hex → Hex 型, 不在 compileHexFun? 域中
+同
