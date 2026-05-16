@@ -70,6 +70,43 @@ So the precise three-tier answer to "is Hilbert in R-Family?" reads:
 
 Universal grammar — the strongest claim available to R-Family at the linguistic level — gets its own chapter at [06-universal-grammar.md](06-universal-grammar.md), including the conditional form (if UG exists, it is isomorphic to the X²-256 lattice) whose existence half is formally discharged in Lean.
 
+#### Representation closure — three locator algorithms (formally discharged)
+
+The existence claim "any concept c admits an R-Family coordinate" was previously stated at the meta-level (a structural argument from D1+P1–P7 to R-tower inhabitation). It is now realised as a **constructive Lean function**: three independent locators that map a concept to its R-Family level, with a master agreement theorem proving they coincide on every concept.
+
+**The three strategies.**
+
+| Strategy | Locator | Method |
+|---|---|---|
+| **A** (compositional) | `Concept.level` | Inductive `Concept` type mirrors D1+P1–P7 primitives; level computed by structural recursion |
+| **B** (signature) | `Concept.signatureLevel` | Extract a `ConceptSignature` (level + 5 structural flags: modal, hom, squared, recursion depth, derivation depth); reconstruct level from the signature |
+| **D** (fixed-point) | `Concept.locateByFixedPoint` | `articulate` strips P7 (derivation) decorations; level at the idempotent fixed point of self-articulation |
+
+The `Concept` constructors mirror the D1+P1–P7 axes:
+
+- `atom`    — P1 minimum distinction
+- `compose` — P2 same-level combination
+- `square`  — P5 self-application (`R N × R N → R (2N)`)
+- `modal`   — P6 V₄ Shi stamp (forces level ≥ 2)
+- `hom`     — Hom-as-content (forces level ≥ 4)
+- `derive`  — P7 derivation step (level-preserving)
+
+The level formula `Concept.level` matches the squaring tower exactly: `level(square a b) = 2 * max(level a, level b)`, `level(modal _ c) = max(level c, 2)`, `level(hom a b) = max(2 * max(level a, level b), 4)`.
+
+**Master agreement theorem.** For every concept `c`,
+
+```
+locateByFixedPoint c = c.level ∧
+c.signatureLevel = c.level ∧
+c.signatureLevel = locateByFixedPoint c
+```
+
+— all three locators return the same R-Family index. Proved by structural induction over `Concept`.
+
+**Status.** [`Foundation/Representation`](../../../formal/SSBX/Foundation/Representation.lean) — three independent locators (817 LOC across `Concept.lean`, `Signature.lean`, `Articulate.lean`) + 32 LOC umbrella; **0 sorry, 0 axiom**. Worked examples verified at R₁ (bare atom), R₂ (modal atom / atom squared), R₄ (hom of atoms), R₈ (triply-nested squaring ceiling); cross-strategy agreement type-checks at every level.
+
+**Strategy C (lexical anchor table) is deferred** — it slots on top of A by refining `Concept.cell` against the wen-substrate character tables (R₂ V₄ Shi = 4 字; R₃ 八卦 = 8 字; R₄ 16-cell process matrix = 16 字; R₆ 六十四卦 = 64 字; R₈ Cell256 = 256 字), giving the concrete汉字 → R-Family coordinate lookup. This is the linguistic-anchor extension to representation closure; the structural part (A/B/D) is independently complete.
+
 ### Spacetime and causality
 
 The four temporal modalities (道 / 已 / 今 / 未) are carried by R₂ in its role as the temporal component of R₈ = R₆ ⊕ R₂. R₆ carries the invariant laws (state + dynamics, what classical Chinese tradition would call **道** in algebraic form); R₂ carries temporal modality (eternal / past / present / future placement). Every spacetime event corresponds to a (law-content, temporal-modality) pair:
