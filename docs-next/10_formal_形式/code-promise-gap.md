@@ -1,10 +1,25 @@
-# Code-Doc Gap — what wen-substrate v1.3 promises vs what Lean delivers
+# Code-Doc Gap — what wen-substrate v1.4 promises vs what Lean delivers
 
 > **D7 transparency document.** An honest, section-by-section map between the claims
-> made in [`wen-substrate.md`](wen-substrate.md) v1.3 and the Lean code under
+> made in [`wen-substrate.md`](wen-substrate.md) v1.4 and the Lean code under
 > `formal/SSBX/Foundation/` that currently backs them.
 >
-> v0.2 · 2026-05-16 · companion to wen-substrate.md.
+> v0.3 · 2026-05-16 · companion to wen-substrate.md.
+>
+> **v0.3 delta** since v0.2 (which tracked v1.3): wen-substrate has advanced to v1.4,
+> adding a fourth level to the R-Family abstraction tower — §3.7.8 **distinction
+> monism**, sitting below operation monism (§3.7). The squaring operator Σ acts on
+> *distinctions*, not types; the primitive `o`/`x` is the observable binary difference
+> itself, with classical/quantum/semantic/propositional/traditional realizations as
+> siblings. The realization parameter `k` is renamed to **`δ`** (lowercase delta) to
+> stop presupposing algebraic structure; `k` (ring/field) becomes one *class* of
+> δ-realization (the algebraic class — §3.6's parametric framework continues
+> unchanged, just re-read as "the algebraic-class δ-realizations"). A new Lean file
+> `Foundation/R/Distinction.lean` (0 sorry, 0 axiom) lands the substrate type
+> `Distinction` with `o`/`x` constructors, `Distinction ≃ Bool` (classical
+> realization), and the δ-parametric carrier `R' N δ := Fin N → δ` with bridge
+> `R' N Bool = R N` (rfl). A new sub-section §1.3c records this; the §3.1 module
+> catalog gains an entry; §5 gains a "what is solid" bullet.
 >
 > **v0.2 delta** since v0.1 (which tracked v1.0.3): wen-substrate has advanced to v1.3,
 > adding three substantive content layers — §3.7 operation monism, §3.8 PartialCell
@@ -51,7 +66,7 @@ All file paths are relative to repository root.
 
 ---
 
-## §1 What v1.3 promises — section-by-section map
+## §1 What v1.4 promises — section-by-section map
 
 ### §1.1 Part I (Core definitions, §1.5.1–§1.5.6)
 
@@ -108,6 +123,22 @@ All file paths are relative to repository root.
 | §3.8.3 | Codim filtration relation to R-Tower; `{R₀, R₂, R₄, R₈}` ↔ `{support size 0, 2, 4, 8}` | `Foundation/R/PartialCell.lean` (lattice picture); cross-referenced in `Foundation/Wen/Core/Instruction.lean` header | ✓ proven (structural; identity at the support-size level) |
 | §3.8.4 | `ConstraintDemo`: `agreementProg_halts`, `conflictProg_halts` (substrate detects contradiction), `restrictProg_forgets_bit_2` (codim-raising mid-program) | `Foundation/Wen/Core/ConstraintDemo.lean` — 3 theorems proven by `rfl` from small fuel bounds | ✓ proven |
 
+### §1.3c Part III additions: §3.7.8 distinction monism (new in v1.4)
+
+The fourth (deepest) level of the R-Family abstraction tower. Σ acts on
+*distinctions*, not on types. The primitive `o`/`x` is the observable binary
+difference itself; classical/quantum/semantic/propositional/traditional readings
+are siblings (the classical computational realization is `Distinction ≃ Bool`).
+The realization parameter is renamed `k → δ`; algebraic `k` (ring/field) is one
+*class* of δ-realization.
+
+| wen-substrate | Claim | Lean backing | Status |
+|---|---|---|---|
+| §3.7.8 | `Distinction` as substrate-level primitive type with `o`/`x` constructors; classical computational realization `Distinction ≃ Bool` | `Foundation/R/Distinction.lean` — `inductive Distinction \| o \| x` with derived `DecidableEq`, `Repr`, `Fintype`; `Distinction.toBool` / `ofBool` + round-trip lemmas; `Distinction.equivBool : Distinction ≃ Bool`; `Distinction.card : Fintype.card Distinction = 2`. 0 sorry, 0 axiom. | ✓ proven |
+| §3.7.8 | δ-parametric substrate carrier `R' N δ := Fin N → δ` (δ-realization-independent) | `Foundation/R/Distinction.lean` — `def R' (N : ℕ) (δ : Type) : Type := Fin N → δ` | ✓ proven |
+| §3.7.8 | Bridge: existing F₂ R-Family is `δ = Bool` realization of `R'` | `Foundation/R/Distinction.lean` — `R' N Bool = R N` (rfl) and `Nonempty (R' N Distinction ≃ R N)` | ✓ proven |
+| §3.7.8 | `k` (ring/field) reframed as the *algebraic class* of δ-realizations (no doctrinal change to §3.6; just re-reading the parameter) | `Foundation/R/Parametric.lean` continues unchanged — now read as "the algebraic-class δ-realization" | — (doctrinal re-reading; no Lean delta) |
+
 ### §1.4 Part IV (Universal coverage + six major claims)
 
 | wen-substrate | Claim | Lean backing | Status |
@@ -145,7 +176,7 @@ The §8.10 ordering, with current Lean status against each item:
 |---|---|---|---|---|
 | 1 | **D1** | Definition of formal articulation (§1.5.1) | □ open | Verification against standard frameworks (Lawvere theory, finite-limit theory, institutions, doctrines) is a literature-review obligation; no Lean theorem expected. |
 | 2 | **D2** | R-Family as full enriched structure (§3.1) | ⚠ partial | Companion doc `r-family-definition.md` (373 LOC) bundles the 12 items as one mathematical object; Lean re-export hub `Foundation/R/RFamilyStructure.lean` (93 LOC) imports the components. Integration into a single Lean `structure` type (rather than a re-export module) pending. |
-| 3 | **D3** | Parametric R-Family over arbitrary base (§3.6) | ⚠ partial | `Foundation/R/Parametric.lean` defines `RFamily k N := Fin N → k` with basic instances (`Fintype`, `DecidableEq`, `Inhabited`). Per-base lemma porting (P1–P7 over `ℝ`, `ℂ`, `ℂ_p`, `ℤ_p`, `ℚ_p`) requires Mathlib bridge work — explicitly deferred per §3.6.7. |
+| 3 | **D3** | Parametric R-Family over arbitrary base (§3.6) | ⚠ partial | `Foundation/R/Parametric.lean` defines `RFamily k N := Fin N → k` with basic instances (`Fintype`, `DecidableEq`, `Inhabited`). Per-base lemma porting (P1–P7 over `ℝ`, `ℂ`, `ℂ_p`, `ℤ_p`, `ℚ_p`) requires Mathlib bridge work — explicitly deferred per §3.6.7. (Under v1.4, `k` is re-read as the *algebraic class* of δ-realization; the underlying §3.7.8 substrate `R' N δ := Fin N → δ` is in `Foundation/R/Distinction.lean` with `R' N Bool = R N` rfl.) |
 | 4a | **T_P3** | Bilinear classification (P3): L0/L1/L2 are the only natural layers | ⚠ partial | `Foundation/R/PhaseZero.lean` packages `T_P3` (re-exporting `Foundation/R/Bilinear.lean` sub-theorems `dot`, `sigma`, `q`, `arf`, polarization `dot_eq_sigma_xor_LL`, Arf binary classification). Up-to-iso uniqueness of L0/L1 still pending. |
 | 4b | **T_P6** | V_4 carrier minimality (P6) | ⚠ partial | `Foundation/R/PhaseZero.lean` packages `T_P6` (cardinality `|R 2| = 4`, two commuting involutions `Shi.complement` / `Shi.reverse` from `Foundation/Atlas/Yi/ShiV4.lean`, V_4 central element `Shi.cuoZong` involutive, 4 named elements distinct). Explicit minimality lemma ("≥3 independent modalities ⟹ ≥4 elements") still pending. |
 | 4c | **T_P7a** | Zong involution forces 4本+4征 split | ✓ proven | `Foundation/R/PhaseZero.lean` `T_P7a` package: defines `Trigram.zong` (y₁ ↔ y₃ swap), proves `zong_involutive`; 8 named-element actions (4 fixed + 2 pairs swap); `benTrigrams.Nodup`, `zhengTrigrams.Nodup` (cardinality 4 each via `toNat` map); `zong_fixed_iff_ben`, `zheng_iff_not_fixed`. 0 sorry, 0 axiom. |
@@ -190,6 +221,7 @@ relative to repo root.
 | `R/OperationMonism.lean` | §3.7: `Sigma X := X × X`, `RTower X k`, `rtower_no_typeclass`, `BoolTower`/`PUnitTower`. The operator-monism layer of the abstraction tower; additive, non-replacing. |
 | `R/OperationMonismBridge.lean` | Bridge from `RTower Bool` to the existing `R N` carriers. |
 | `R/PartialCell.lean` | §3.8: `PartialCell N := Fin N → Option Bool`; `dao` identity; `compatible`/`merge`/`mergeFn`; `restrict`; `mergeAll` list fold; `support` algebra (`support_mergeFn = ∪`, `support_restrict = ∩`); R-tower codim filtration. ~317 LOC, 0 sorry. |
+| `R/Distinction.lean` | §3.7.8: `Distinction` inductive type with `o`/`x` constructors (`DecidableEq`/`Repr`/`Fintype` derived); `toBool`/`ofBool` round-trip + `Distinction.equivBool : Distinction ≃ Bool` (classical computational realization); `Distinction.card = 2`; `R' N δ := Fin N → δ` δ-parametric substrate; bridge `R' N Bool = R N` (rfl). The deepest (distinction-monism) layer of the abstraction tower. 0 sorry, 0 axiom. |
 
 ### §3.2 R_4 specifics (`formal/SSBX/Foundation/R4/`)
 
@@ -302,6 +334,7 @@ Three intended audiences:
 * R_8 Gödel undecidability with 0 axioms in the kernel (`Foundation/Atlas/Yi/Diagonal.lean`, anchored at `Foundation/Wen/MetaInterp/GodelR8.lean`)
 * Parametric `RFamily k N` carrier-level skeleton (`Foundation/R/Parametric.lean`)
 * **§3.7 operation monism** (`Foundation/R/OperationMonism.lean`): `Sigma X := X × X`, `RTower X k`, `rtower_no_typeclass` — substrate-as-operator layer; additive, non-replacing
+* **§3.7.8 distinction-monism layer** (`Foundation/R/Distinction.lean`): primitive `Distinction` type with `o`/`x` constructors, `Distinction ≃ Bool` (classical computational realization), δ-parametric carrier `R' N δ := Fin N → δ`. The substrate is δ-realization-independent; the existing F₂ R-Family is `δ = Bool`. The deepest (fourth) level of the R-Family abstraction tower, sitting below operation monism. 0 sorry, 0 axiom.
 * **§3.8 PartialCell substrate** (`Foundation/R/PartialCell.lean`): face lattice of `R N`; `dao` identity, `merge` partial commutative monoid (Phases A–D), `mergeAll` list fold, `support` algebra
 * **§3.8 Wen.Core 12-instr PartialCell-native interpreter** (`Foundation/Wen/Core/`): ISA + small-step semantics + `ConstraintDemo` operational theorems (agreement / conflict-as-halt / restrict-as-forgetting)
 * **§4.7bis conditional UG — Open Problem #2 closed across 6 files, combined `0 sorry`**:
@@ -341,5 +374,5 @@ project as of 2026-05-16.
 
 ---
 
-*Companion document to [`wen-substrate.md`](wen-substrate.md) v1.3.*
+*Companion document to [`wen-substrate.md`](wen-substrate.md) v1.4.*
 *The two will be revised in tandem.*

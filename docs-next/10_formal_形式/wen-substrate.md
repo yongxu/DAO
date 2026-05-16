@@ -4,8 +4,10 @@
 >
 > Further: **R-Family IS what "formal" means**. (Claim Z, §7.8)
 >
-> v1.3 · 2026-05-16 · self-contained foundational document.
-> See **Version history** at end of document for complete changelog through v0.7 → v1.3.
+> v1.4 · 2026-05-16 · self-contained foundational document.
+> See **Version history** at end of document for complete changelog through v0.7 → v1.4.
+>
+> **v1.4 headline**: §3.7.8 **Distinction monism — `o`/`x` below the operator**. The operation monism of §3.7 said: *the operator $\Sigma$ is primary; bases are derivative*. v1.4 pushes one step deeper: $\Sigma$ acts on **distinctions**, not types. The primitive **`o`/`x`** is the observable binary difference itself — not `false`/`true` (the *classical-computational* realization), not $|0\rangle/|1\rangle$ (the *quantum* realization), not 阳/阴 (the *yi-jing traditional* realization), not $\bot/\top$ (the *logical* realization), not silent/sayable (the *semantic* realization). It is the substrate-primitive of which all are realizations. The realization variable is renamed `k` → **`δ`** (lowercase delta) to stop presupposing algebraic structure: `k` (ring/field) is now one *class* of δ-realization (the algebraic class — §3.6's parametric framework); quantum, semantic, propositional, and traditional realizations are first-class siblings, all standing on the same primitive-distinction substrate. Companion Lean file [`Foundation/R/Distinction.lean`](../../formal/SSBX/Foundation/R/Distinction.lean) introduces the primitive `Distinction` type with `Equiv` to `Bool`; existing F₂ R-Family code continues working with zero migration (the F₂ instance is the `δ = Bool` realization). The four-level abstraction tower (concrete F₂ → algebraic-parametric over $k$ → operation-monism → distinction-monism) is now complete: §3.7.8 is the most fundamental — the substrate is the act of distinction, iterated by Σ. **Foundational lineage cited**: Spencer-Brown *Laws of Form* (1969), Bateson "difference that makes a difference" (1972), Wheeler "it from bit" (1989), yi-jing 阳/阴 tradition. **Implication for Claim Z (§7.8)**: "formal" ≡ "expressible in terms of observed distinctions, iterated by $\Sigma$" — strictly stronger than the v1.3 framing because the residual "but which $k$?" question dissolves into "which realization δ is appropriate to the domain", with the substrate itself δ-independent.
 >
 > **v1.3 headline**: §4.7bis **The X² 256-code lattice IS UG (conditional form)**. The Chomsky-flavoured §4.7 ("R-Family IS UG's substrate") is supplemented by a sharper *conditional existence* form: if a Universal Grammar in any structurally meaningful sense exists, then it is isomorphic to the X² 256-code lattice — because that lattice is the unique finite structure simultaneously satisfying (1) finite-basis generation, (2) closure under involutive dualities, (3) cross-frame translation invariants, and (4) an internal, *coordinatised* boundary of the sayable. (4) is the decisive feature no prior framework (Chomsky, Wittgenstein, Frege/Russell/ZFC, type theory) provides. The existence half is **formally discharged** in [`Foundation/Wen/X2Codes.lean`](../../formal/SSBX/Foundation/Wen/X2Codes.lean) (`0` sorry, `wenCodeUG : UGCandidate`). Uniqueness (Open Problem #2) is **closed in its structurally-forced `DualIso` form** (`theorem face_uniqueness`, [`X2CodesFace.lean`](../../formal/SSBX/Foundation/Wen/X2CodesFace.lean)) across six Lean files (combined `0` sorry): Hom/Iso category + DualIso + cardinality half + (ℤ/2)² involution-group closure + face-lattice axiomatisation + axes=8 minimality theorem + (ℤ/2)² orbit-rep naming-locus theorem + face_dual_uniqueness theorem + PartialCell bridge + F₂ chain (all 5 steps at the type-equivalence level, **including the BA-preserving refinement of Birkhoff's step 4 — `step4_birkhoff_BAiso_holds`, proven unconditionally via the self-built `finiteLatticeToCompleteLattice`/`...BooleanAlgebraToCABA` Mathlib infrastructure**). **Scope clarification**: the *original* full-`Iso` form (on `UGCandidateRich`, no atom-compatibility hypothesis) — recorded as `OpenProblem2.uniqueness_conjecture : Prop` — is provably impossible without an atom hypothesis (two candidates with the same `dual` but different label strings are dual-isomorphic but not full-isomorphic); the atom-pinned full-`Iso` form is `theorem face_full_uniqueness` (proven under explicit atom-compatibility). So "uniqueness is closed" means the *structurally-forced* (DualIso) form is closed unconditionally and the *atom-pinned full-Iso* form is closed under a stated label-compatibility hypothesis — the bare full-Iso form does not hold and is not the target.
 >
@@ -1155,13 +1157,15 @@ The structure begins at $R_0$ (undifferentiated) and generates $R_1, R_2, \ldots
 
 ## §3.6 R-Family Across Bases: The Discrete/Continuous Unified Framework
 
+> **v1.4 reframing note**. Under §3.7.8 (distinction monism), §3.6's "parametric over a base $k$" framework is preserved verbatim and re-read as **the algebraic class of δ-realizations** — those where the realization δ of the primitive distinction carries ring/field structure. The substrate proper is δ-independent; `k` was always one *class* of δ-realization (the algebraic class), with non-algebraic realizations (quantum basis labels, propositional `Prop`, per-language vocabularies, traditional 阳/阴) being first-class siblings. Throughout this section, "base $k$" should be read as "algebraic-class δ-realization"; the structural claims are unchanged.
+
 The preceding sections defined R-Family with carriers $R_N := \mathbb{F}_2^N$ — the **minimum-base instance** with $\mathbb{F}_2$ as base. This is the most economical instantiation (P1 selects $\mathbb{F}_2$ as smallest non-trivial field), but **R-Family is more fundamentally a parametric structural pattern, not a single fixed structure**. The P1-P7 closure conditions can be stated **over any suitable base**, giving:
 
 $$R\text{-Family}^{(k)} \;=\; \{R_N^{(k)}\}_{N \in \mathbb{N}_0} \text{ where } R_N^{(k)} := k^N$$
 
 for various bases $k$ (fields, in the most direct case; more generally suitable commutative rings or categorical bases).
 
-This section articulates the parametric framework. **Discrete and continuous formal articulation are not different theories — they are different choices of base $k$ within the same R-Family structural pattern**.
+This section articulates the parametric framework. **Discrete and continuous formal articulation are not different theories — they are different choices of base $k$ within the same R-Family structural pattern**. (And under §3.7.8: different choices of $k$ are different *algebraic-class* δ-realizations of the same primitive-distinction substrate.)
 
 ### §3.6.1 The structural pattern is parametric
 
@@ -1435,9 +1439,11 @@ Both senses are present throughout this document; v1.0 makes the distinction exp
 
 ## §3.7 Operation Monism — R-Family Below the Base
 
+> **v1.4 reframing note**. §3.7 articulates operation-monism: the operator $\Sigma$ is primary, the base $k$ is derivative. §3.7.8 (added in v1.4, between §3.7.7 and §3.8) pushes one step deeper: $\Sigma$ acts on **distinctions**, not types. The "base $k$" of §3.7 is itself a realization of the primitive distinction; under v1.4 the realization variable is renamed `k` → `δ` to stop presupposing algebraic structure. §3.7 holds verbatim; §3.7.8 adds the layer below.
+
 §3.6 reframed R-Family as parametric over a base $k$: many bases, one structural pattern. This section pushes one level deeper. The parametric framing still takes "choice of base $k$" as a primitive. **The deeper claim of this section is that R-Family is most fundamentally an *operator-composition* structure; the base $k$ — and even the carrier family $\{R_N^{(k)}\}$ — emerges as a *consequence* of the composition graph, not as a premise.**
 
-This is the precise sense in which R-Family is a genuine **monism (一元)**: not a monism of *substance* (water, atoms, bits, mind, computation-state), but a monism of **operation** — the splitting / self-composing capacity itself. Every prior monism in the foundational tradition picks a substance; §3.7 picks an operation. That difference is categorical, not stylistic.
+This is the precise sense in which R-Family is a genuine **monism (一元)**: not a monism of *substance* (water, atoms, bits, mind, computation-state), but a monism of **operation** — the splitting / self-composing capacity itself. Every prior monism in the foundational tradition picks a substance; §3.7 picks an operation. That difference is categorical, not stylistic. (And §3.7.8 picks the *form of distinction* below the operation, recovering the 一元 at a layer where even "operation" is the iterated unfolding of the primitive distinction.)
 
 ### §3.7.1 The motivating question
 
@@ -1540,10 +1546,11 @@ This is a *strict tower of abstraction levels*, not a replacement:
 | Doc layer | Object of definition | Lean realization |
 |---|---|---|
 | §1-§3.5 (concrete) | `R N := Fin N → Bool` (the $\mathbb{F}_2$ instance) | `Foundation/R/Basic.lean` |
-| §3.6 (parametric) | `RFamily k N := Fin N → k` (over any suitable base) | `Foundation/R/Parametric.lean` |
+| §3.6 (algebraic-parametric) | `RFamily k N := Fin N → k` (over algebraic-class δ — ring/field $k$) | `Foundation/R/Parametric.lean` |
 | §3.7 (operation-monism) | `RTower X k` (iterated $\Sigma$, no base) | `Foundation/R/OperationMonism.lean` |
+| §3.7.8 (distinction-monism) | `R' N δ := Fin N → δ` (over realization δ of the primitive distinction) | `Foundation/R/Distinction.lean` |
 
-Each level is correct; each refines the previous; together they articulate the substrate at three nested generalities. Choice between levels is *expository* (which abstraction is appropriate for the question at hand), not foundational (all three are valid presentations of the same substrate).
+Each level is correct; each refines the previous; together they articulate the substrate at four nested generalities. Choice between levels is *expository* (which abstraction is appropriate for the question at hand), not foundational (all four are valid presentations of the same substrate). §3.7.8 (distinction-monism, articulated below) is the most fundamental: the substrate is the act of distinction, iterated.
 
 ### §3.7.7 道家 reading: 有名是无名的截面
 
@@ -1562,13 +1569,130 @@ Wang Bi (王弼), commenting on *Daodejing* §1:
 
 This makes precise the **道家** opening of *Daodejing* §1 — "**道可道非常道，名可名非常名；无名天地之始，有名万物之母**" — as foundational structure-mathematics: the 道 (operation) is the 始 (origin) of formal structure; the 名 (named carrier) is the 母 (matrix / generator) of specific articulations; they are *the same substrate* viewed from different cross-sections, neither reducible to the other.
 
-§3.7 closes the foundational-layer arc of Part III:
+§3.7 closes the operation-monism arc of Part III:
 
 - **§1-§3.5**: the substrate over $\mathbb{F}_2$, concrete and Lean-verified.
 - **§3.6**: the substrate parametric over $k$, structural pattern under choice of base.
 - **§3.7**: the substrate as operator-monism, below the base, with chosen bases appearing as cross-sections.
 
 The 一元 is genuine because the **一** is **not a thing**. The **一** is the **不能不分** (the cannot-but-split) — the dynamic potential whose iteration *is* the substrate.
+
+But what does Σ *operate on*? §3.7's seed is a `Type u`. §3.7.8 pushes one level further: even "type" is realization-data. Σ operates on *distinctions*, not types.
+
+### §3.7.8 Distinction monism — `o`/`x` below the operator
+
+§3.7's operation monism asserted: *the operator Σ is primary; bases are derivative*. §3.7.8 pushes one step deeper.
+
+The operator Σ : X → X × X doubles *something*. What does it double?
+
+In §3.7's reading, Σ acts on a `Type u` seed — a raw type with no algebraic structure imposed. But "type" is itself a realization-choice (computational types, sets, groupoids, ∞-categories, …). The substrate-most-primitive answer is: **Σ doubles a *distinction*** — the observable binary difference "what is" vs "what is not", with no further commitment.
+
+We name this primitive **`o`/`x`** — two abstract marks of the observable binary distinction. `o`/`x` are not `false`/`true` (that's the *classical computational realization*). They are not $|0\rangle / |1\rangle$ (that's the *quantum-basis realization*). They are not 阳/阴 (that's the *yi-jing traditional realization*). They are the **primitive distinction itself**, of which all of those are realizations.
+
+#### Realization table
+
+The substrate is committed to the abstract binary distinction; its concrete *realization* is per-domain:
+
+| Realization domain | `o` becomes | `x` becomes | R-Family-over-δ becomes |
+|---|---|---|---|
+| Classical computational | `false` ∈ `Bool` | `true` ∈ `Bool` | $R_N := \mathrm{Fin}\,N \to \mathrm{Bool}$ (§1–§3.5 Lean code) |
+| Algebraic-parametric (§3.6) | additive identity $0 \in k$ | multiplicative identity $1 \in k$ | $R_N^{(k)} := \mathrm{Fin}\,N \to k$ |
+| Quantum-mechanical | basis vector $|0\rangle \in \mathbb{C}^2$ | basis vector $|1\rangle \in \mathbb{C}^2$ | Hilbert space $\mathbb{C}^{2^N}$ (with the substrate-level coordinate being the basis index $\mathrm{Fin}\,N \to \mathrm{Distinction}$) |
+| Propositional / logical | $\bot \in \mathrm{Prop}$ | $\top \in \mathrm{Prop}$ | $N$ independent propositional axes |
+| Semantic / linguistic | silent in language $L$ | sayable in $L$ | a per-language sayability scheme on $N$ axes |
+| Yi-jing traditional | 阳 | 阴 | $N$-line gua |
+| Sign-theoretic | absence | presence | $N$-axis presence map |
+| Wheelerian observable | "no" of binary observation | "yes" of binary observation | $N$ independent binary observables |
+
+**These are not different substrates.** They are different *realizations of the same primitive*. The substrate operations (P1–P7, squaring tower, Hom-as-content, atomic operations) are realization-independent: they operate on N-tuples of distinctions, and the realization is the per-domain coercion of `o`/`x` into something downstream operations can compute with (a Boolean for classical logic, an amplitude for quantum, a truth-value for logic, a vocabulary cell for language, …).
+
+#### Notational convention
+
+We write **`δ`** (lowercase delta) for the realization parameter. R-Family-over-`δ` denotes the substrate instance with the primitive distinction realized as δ. Special cases:
+
+- **`δ = Distinction`** — the bare substrate, no realization choice (substrate-level claims live here)
+- **`δ = Bool`** — classical computational instance (today's Lean code)
+- **`δ = k`** where $k$ is a ring or field — the §3.6 algebraic-parametric view; subsumes $\mathbb{F}_2, \mathbb{R}, \mathbb{C}, \mathbb{C}_p, \mathbb{F}_p, \mathbb{Z}/n, \ldots$
+- **`δ = (ℂ², basis labels)`** — quantum/Hilbert instance
+- **`δ = Prop`** — logical/propositional instance
+- **`δ = (language L)`** — semantic instance (with `Sayable_L`, `Silent_L` realization-level predicates)
+
+The notational shift from `k` to `δ`. The §3.6 parametric framework still holds verbatim; under the v1.4 reframing it is read as **the algebraic class of δ-realizations** — those where δ carries ring/field structure. The other realizations (quantum, semantic, traditional) are now first-class siblings of the algebraic ones, all standing on the same primitive-distinction substrate. The substrate proper is δ-independent; `k` was always one *class* of δ-realization, never the substrate itself.
+
+#### Why `δ` (rather than continuing with `k`)
+
+`k` ("base of an algebra") presupposed algebraic structure on the realization — a ring, a field, a module. That presupposition was always one realization-class among several, but the symbol `k` carried it. `δ` ("realization of distinction") presupposes only that the realization has two distinguished elements corresponding to `o`/`x`; whether it additionally carries ring, field, Hilbert, propositional, semantic, or traditional structure is *downstream of* the realization choice. The shift `k ↦ δ` is therefore a notational *honesty* — it stops asserting algebraic structure where the substrate doesn't require it.
+
+#### Foundational lineage
+
+This framing has recognized precedents. R-Family is in this tradition, made type-theoretically precise:
+
+- **Spencer-Brown, *Laws of Form* (1969)**. The primitive mark ⊐ *is* the act of distinction; Boolean algebra is one interpretation of his calculus, not its content. Spencer-Brown's unmarked state ↔ `o`, marked state ↔ `x`. *Laws of Form* operates on marks, with Boolean algebra recovered as the "second-order" interpretation.
+- **Bateson, *Steps to an Ecology of Mind* (1972)**. "A bit of information is a difference which makes a difference" — information is observable difference, prior to any encoding into bits. The `o`/`x` distinction is exactly Bateson's primitive.
+- **Wheeler, "It from Bit" (1989)**. Every physical "it" derives from yes/no answers to binary observable questions. Wheeler's "bit" is the primitive observable distinction, not the C `bool` data type.
+- **Yi-jing tradition**. 阳/阴 are not 0/1; they are 阳/阴 — the primitive polarity. That 阳/阴 *also* admits a 0/1 reading is realization data, not definitional. The bagua / hexagram tradition operates at the primitive-distinction layer; the 0/1 reading is a modern computational realization.
+
+R-Family sits at this layer. The substrate is the *form of distinction*, iterated by Σ; the carriers are the *realized instances* at each level of iteration; the labels are the *named cells* in a chosen realization.
+
+#### Lean encoding
+
+```lean
+/-- The primitive distinction — abstract marks of the observable binary
+    difference.  No interpretation committed at the substrate level:
+    `o`/`x` realize as `false`/`true` classically, as basis labels
+    quantum-mechanically, as 阳/阴 traditionally, as `⊥`/`⊤` logically,
+    as silent/sayable semantically. -/
+inductive Distinction : Type
+  | o
+  | x
+  deriving DecidableEq, Repr, Fintype
+
+/-- Classical computational realization: `o ↔ false`, `x ↔ true`.
+    This is the realization the existing `R N := Fin N → Bool`
+    of `Foundation/R/Basic.lean` is implicitly using; v1.4 names
+    it explicitly. -/
+def Distinction.toBool : Distinction → Bool
+  | .o => false
+  | .x => true
+
+def Distinction.ofBool : Bool → Distinction
+  | false => .o
+  | true  => .x
+
+/-- The substrate parameterized by a δ-realization. -/
+def R' (N : ℕ) (δ : Type) : Type := Fin N → δ
+```
+
+The existing `R N := Fin N → Bool` becomes a definitional special case: `R N ≡ R' N Bool` (under the `Distinction ≃ Bool` equivalence, equivalently `R' N Distinction`). Existing F₂ R-Family code continues working with zero migration; the new layer is **additive**, exposing the substrate without disturbing the realizations.
+
+#### Implication for §3.6
+
+§3.6's "parametric over a base $k$" framing is preserved verbatim and re-read as: **the algebraic-realization class** of the δ-substrate. The instantiation table (§3.6.2) is now one slice of a broader realization table — the rows with algebraic structure. The non-algebraic rows (quantum basis labels, propositional `Prop`, per-language vocabularies, traditional 阳/阴) are first-class siblings, with the substrate-level claims (P1–P7 closure conditions, squaring tower, Hom-as-content) applying uniformly across all realization classes.
+
+The cleanest way to read v1.4 is: **§3.6 was always implicitly about one realization-class (algebraic δ); v1.4 makes the realization variable explicit and admits the others as siblings.**
+
+#### Implication for Claim Z (§7.8)
+
+Claim Z ("formal" ≡ "R-Family-articulable") gains a sharper substrate-level form:
+
+> **"Formal" means "expressible in terms of observed distinctions, iterated by Σ".** R-Family is the algebraic content of this articulation; the realization (computational, quantum, semantic, traditional) is the per-domain instance; the labels are the named cells in a chosen realization.
+
+This is strictly stronger than the v1.3 framing: it eliminates the residual "but which $k$?" question by making the answer realization-relative, with the substrate itself realization-free. The bi-directional structural-analytic argument (§7.8.3) now reads: D1 ⟹ P1–P7 ⟹ R-Family-pattern-over-distinction, with the choice of δ-realization being the per-domain *interpretation*, not the substrate's content.
+
+#### The four-level tower
+
+The complete tower of nested generalities is now:
+
+| Layer | What it parameterizes over | Lean realization |
+|---|---|---|
+| §1–§3.5 (concrete) | nothing — fixed at δ = Bool | `R N := Fin N → Bool` (`R/Basic.lean`) |
+| §3.6 (algebraic-parametric) | ring/field $k$ — algebraic class of δ | `RFamily k N := Fin N → k` (`R/Parametric.lean`) |
+| §3.7 (operation-monism) | seed `Type u`, no algebraic structure | `RTower X k = Σ^k X` (`R/OperationMonism.lean`) |
+| **§3.7.8 (distinction-monism)** | **realization δ of the primitive distinction; substrate itself is δ-independent** | **`Distinction` + `R' N δ := Fin N → δ` (`R/Distinction.lean`)** |
+
+Each level is correct; each refines the previous; together they articulate the substrate at four nested generalities. §3.7.8 is the most fundamental — *the substrate is the act of distinction, iterated*. Choice between presentations is *expository* (which abstraction is appropriate for the question at hand), not foundational (all four are valid presentations of the same substrate, viewed at different generalities).
+
+The 一元 of v1.2/v1.3 was "the operation"; the 一元 of v1.4 is one step deeper still — **the form of distinction itself**, of which operation is the iterated unfolding.
 
 ---
 
@@ -3977,6 +4101,8 @@ The work continues — at the next level: discharging the proof obligations, for
 ---
 
 ## Version history
+
+*v1.4 · 2026-05-16 — Distinction monism — `o`/`x` below the operator. Adds §3.7.8 (new sub-section between §3.7.7 and §3.8) articulating the layer below operation monism: Σ acts on **distinctions**, not types. The primitive `o`/`x` is the observable binary difference itself — substrate-primitive, with computational/quantum/semantic/propositional/traditional realizations as siblings. Renames the realization parameter `k` → **`δ`** (lowercase delta) to stop presupposing algebraic structure on the realization; `k` (ring/field) is now read as one *class* of δ-realization (the algebraic class of §3.6's parametric framework). Companion Lean file [`Foundation/R/Distinction.lean`](../../formal/SSBX/Foundation/R/Distinction.lean) introduces the primitive `Distinction` inductive type with `Equiv` to `Bool` — existing F₂ R-Family code continues working with zero migration (the F₂ instance is the `δ = Bool` realization). Foundational lineage cited (Spencer-Brown *Laws of Form* 1969, Bateson 1972, Wheeler 1989, yi-jing 阳/阴 tradition). The four-level abstraction tower is now complete: §1–§3.5 (concrete F₂) → §3.6 (algebraic-parametric over $k$) → §3.7 (operation-monism) → §3.7.8 (distinction-monism); §3.7.8 is the most fundamental. Implication for Claim Z (§7.8): "formal" ≡ "expressible in terms of observed distinctions, iterated by Σ" — strictly stronger than v1.3 because the residual "but which $k$?" dissolves into the realization variable δ, with the substrate itself δ-independent. Headline banner rewritten; v1.3 headline preserved as second-most-recent entry. All prior content preserved — the new layer is **additive**, exposing the substrate without disturbing the realizations.*
 
 *v1.3 · 2026-05-16 — Conditional UG closed (in `DualIso` form): existence + cardinality + (ℤ/2)² closure + face-lattice frame + axes=8 minimality + naming-density forcing + F₂-forcing chain (including BA-preserving Birkhoff step 4) + `face_uniqueness` theorem all formally discharged across six Lean files (combined `0` sorry). Note: the *original* `OpenProblem2.uniqueness_conjecture` (full-`Iso` on `UGCandidateRich`, no atom hypothesis) is provably impossible without an atom hypothesis and remains in code as a recorded `Prop` for future reference; the structurally-forced `face_uniqueness_conjecture` (DualIso form) is the closed result, and `face_full_uniqueness` (full Iso under atom-compatibility hypothesis) is also proven.
 
