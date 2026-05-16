@@ -282,3 +282,7 @@ import SSBX.Foundation.Wen.Core
 
 -- Phase G/I: Lang/Partial — PartialCell-based language layer (proof-of-concept).
 import SSBX.Foundation.Lang.Partial
+
+-- Representation closure: A/B/D locator strategies for concept → R-Family.
+-- Per wen-substrate.md v1.4 §Representation.
+import SSBX.Foundation.Representation
