@@ -35,3 +35,4 @@ import SSBX.Foundation.R.OperationMonismBridge
 import SSBX.Foundation.R.ClaimZ
 import SSBX.Foundation.R.ClaimZF2
 import SSBX.Foundation.R.StrategyA
+import SSBX.Foundation.R.R4Minimality
