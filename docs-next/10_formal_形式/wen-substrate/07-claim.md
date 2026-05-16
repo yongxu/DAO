@@ -10,9 +10,20 @@ The discharge of the claim into theorem-status is the work of [08-obligations.md
 
 ## The direct claim
 
-$$\boxed{\text{R-Family is the universal formal substrate.}}$$
+$$\boxed{\text{R-Family is the }\delta\text{-polymorphic universal formal substrate. F$_2$-Boolean is its canonical realization, not its restriction.}}$$
 
-R-Family with the squaring tower R₀ → R₁ → R₂ → R₄ → R₈ → ⋯ → R∞, the bilinear / quadratic relational layers (⟨·,·⟩, σ, q_a), Hom-as-content recursion, the recursive depth R̂, the 8-trigram aspect alphabet at R₃, the 16-cell atomic operation algebra at R₄ ≅ M₂(F₂), and the 4-modality temporal structure at the R₂ slot of R₈, IS the universal formal substrate. The substrate of all formal mathematics, all formal logic, all formal language, all formal computation, all formal physics, all formal articulation of any kind.
+R-Family — δ-polymorphic at the substrate level, instantiated as `R N δ` for any Fintype + DecidableEq + Inhabited realisation δ — with the squaring tower R₀ → R₁ → R₂ → R₄ → R₈ → ⋯ → R∞, the bilinear / quadratic relational layers (⟨·,·⟩, σ, q_a — char-dependent), Hom-as-content recursion, the recursive depth R̂, the 8-trigram aspect alphabet at R₃, the 16-cell atomic operation algebra at R₄ ≅ M₂(δ) for algebraic δ, and the 4-modality temporal structure at the R₂ slot of R₈, IS the universal formal substrate. The substrate of all formal mathematics, all formal logic, all formal language, all formal computation, all formal physics, all formal articulation of any kind.
+
+**The polymorphic refinement (2026-05-16).** Earlier formulations of this claim — "R-Family-over-F₂ is the unique formal substrate" — read too narrowly. The framework is *not* F₂-Boolean restricted: F₂-Boolean is the `δ = Bool` specialization of a polymorphic uniqueness theorem (`T5_general`) that holds for arbitrary Fintype δ at the layerwise level. The uniqueness theorem T5 (chapter 08) accordingly now has two coexisting forms:
+
+- **Layerwise polymorphic form** (`T5_general`, commit `a980e92`): for any `[Fintype δ] [DecidableEq δ] [Inhabited δ]`, any P1+P2-closure-satisfying substrate `S : P1P7_Core δ` admits a layerwise type-equivalence `S.carrier N ≃ R N δ` for every N. Discharged. Four canonical δ-corollaries (`Bool`, `Distinction`, `Fin (n+1)`, `ZMod (n+2)`).
+- **F₂-Boolean ring-iso refinement** (`T5_A_ringEquiv_at_4`, commit `23441fc`): at the smallest non-trivial layer R₄ over F₂, the layerwise type-equivalence upgrades to a ring isomorphism `R 4 ≃+* Mat₂F₂`. Discharged.
+
+The full GUT claim decomposes correspondingly:
+
+- **GUT-A** (F₂-specific, ring iso at R₄): ✅ discharged.
+- **GUT-B (layerwise)** (δ-polymorphic, layerwise type-equiv): ✅ discharged.
+- **GUT-B/C (ring iso polymorphic)** (parametric over algebraic-class k, ring iso at R₄ over k): in progress (parametric Wedderburn-over-k extension).
 
 **For mathematics.** Mathematics has a unified foundation. Different mathematical traditions — set theory, type theory, category theory — are all articulations within R-Family.
 
@@ -53,7 +64,7 @@ The 8-column verdict (✓ satisfies natively · ⚠ partial / requires extension
 
 **Linear algebra over F₂.** F₂^N, linear maps, bilinear forms. Lacks specific 8-trigram structure, specific 4-modality structure, recursive Hom-as-content emphasis, squaring tower as foundational principle. R-Family is *organised* linear F₂-algebra with the seven specific properties — what linear F₂-algebra becomes when fully articulated as a universal substrate.
 
-R-Family-over-F₂ is the unique minimum substrate satisfying all 8 necessary sub-properties. Other R-Family instances (over ℝ, ℂ, ℂ_p) inherit ✓ on all 8 by the parametric formulation (chapter 02), with char-dependent adjustments to P3 (two layers in char ≠ 2 instead of three). The minimum-instance status remains with R-Family-over-F₂.
+R-Family-over-F₂ is the unique minimum substrate satisfying all 8 necessary sub-properties — and as of 2026-05-16 (commit `a980e92`), R-Family is δ-polymorphic uniquely at the layerwise level for any Fintype δ (`T5_general`), making F₂-Boolean a *canonical realization* rather than the unique class. Other R-Family instances (over ℝ, ℂ, ℂ_p) inherit ✓ on all 8 by the parametric formulation (chapter 02), with char-dependent adjustments to P3 (two layers in char ≠ 2 instead of three). The minimum-instance status remains with R-Family-over-F₂; the polymorphic-uniqueness status holds across all Fintype-δ realisations at the layerwise level.
 
 ---
 
@@ -219,14 +230,14 @@ Claim Z, formulated as bi-directional structural analysis, is substantively chal
 
 **Route 1 — refute the analytic step (→).** Exhibit a structure S that satisfies D1 (formal articulation) by independent characterisation and provably *fails* at least one of P1–P7. This would show that "formal articulation" does not necessitate P1–P7 closure — that D1's content has structurally distinct completions besides P1–P7. Candidate refutations: a formal system with native distinctions but no composition (would refute P2 analytic necessity); with compositions but no relational layer (would refute P3); etc. To date, no such structure has been exhibited. Every system claiming "formal articulation" status, when analysed, yields a P1–P7 closure structure.
 
-**Route 2 — refute the synthetic step (←).** Exhibit a structure that satisfies P1–P7 closure conditions and provably *fails* to instantiate R-Family-over-some-k pattern. This would show that P1–P7 admits structurally distinct realisations besides R-Family-over-k — exactly **T5 (uniqueness)**, currently open. A successful exhibition of a P1–P7-satisfying structure inequivalent to R-Family-over-any-k would refute T5 and break the synthetic step. To date, no such structure has been exhibited. The minimal candidates that satisfy P1–P7 (in their full formulations) appear to be R-Family-over-various-k instances under the equivalence types of chapter 01.
+**Route 2 — refute the synthetic step (←).** Exhibit a structure that satisfies P1–P7 closure conditions and provably *fails* to instantiate R-Family-over-some-δ pattern. This would show that P1–P7 admits structurally distinct realisations besides R-Family-over-δ — exactly **T5 (uniqueness)**. *Layerwise polymorphic T5* (`T5_general`) is **discharged** (2026-05-16, commit `a980e92`): any `P1P7_Core δ` substrate is layerwise type-equivalent to `R N δ` for any Fintype + DecidableEq + Inhabited δ. The remaining open frontier on Route 2 is the *ring-iso refinement* at R₄ over algebraic-class k for char(k) ≠ 2 (parametric Wedderburn-over-k). A successful exhibition of a P1–P7-satisfying structure inequivalent to R-Family-over-any-δ at the layerwise level would now refute the discharged `T5_general` theorem — i.e., it would be a contradiction in Lean, not merely an open conjecture. The polymorphic discharge collapses Route 2's open scope to the ring-iso refinement only.
 
 **Route 3 — internal contradiction in R-Family (D2 failure).** Show that R-Family itself, as the 12-item structure of chapter 01, is internally inconsistent — that closure under P1–P7 cannot coherently coexist (e.g., Hom-as-content forces something that contradicts the squaring tower). This is **D2**, currently established at the F₂ instance level by the Lean codebase under `Foundation/SSBX/`, partially established for parametric bases. A successful demonstration of D2 inconsistency would invalidate R-Family as substrate and trivially refute Claim Z. To date, no inconsistency has been found at the F₂ instance. Parametric instances inherit consistency from the analogous Mathlib treatments of ℝ, ℂ, ℂ_p.
 
 | route | what it refutes | current status |
 |---|---|---|
-| 1 (analytic) | "formal ⟹ P1–P7" | open; no counterexample found |
-| 2 (synthetic) | "P1–P7 ⟹ R-Family" | open as T5 in chapter 08 |
+| 1 (analytic) | "formal ⟹ P1–P7" | discharged for D1 ⟹ P1–P7 across A1–A8 in F₂ scope (chapter 08); polymorphic analytic extension open |
+| 2 (synthetic) | "P1–P7 ⟹ R-Family" | **layerwise polymorphic T5 discharged** (`T5_general`, `a980e92`); remaining open scope is ring-iso refinement at R₄ over k for char(k) ≠ 2 (parametric Wedderburn) |
 | 3 (internal) | D2 self-consistency | partial: F₂ instance Lean-verified; parametric pending |
 
 The discharge structure is formalised in [`Foundation/R/ClaimZ.lean`](../../../formal/SSBX/Foundation/R/ClaimZ.lean) (D5 / D6 — universal-claims bundle + falsification apparatus) and [`Foundation/R/ClaimZF2.lean`](../../../formal/SSBX/Foundation/R/ClaimZF2.lean) (F₂-specific discharge with explicit residual obligations noted in the file).
@@ -247,12 +258,14 @@ There is nothing further to claim about formal substrates. The foundational prog
   - [`Foundation/R/ClaimZ.lean`](../../../formal/SSBX/Foundation/R/ClaimZ.lean) — D5 universal-claims bundle + D6 three-route falsification apparatus (per chapter 08).
   - [`Foundation/R/ClaimZF2.lean`](../../../formal/SSBX/Foundation/R/ClaimZF2.lean) — F₂-specific discharge consuming Strategy A's Boolean-ring chain; an explicit residual T3 obligation is noted inline.
   - [`Foundation/R/StrategyA.lean`](../../../formal/SSBX/Foundation/R/StrategyA.lean) — Strategy A discharge of T4 step 3 for the classical-Boolean scope; anchors the analytic step of Claim Z's defense.
+  - [`Foundation/R/UniquenessGeneral.lean`](../../../formal/SSBX/Foundation/R/UniquenessGeneral.lean) — **polymorphic T5 layerwise** discharge (commit `a980e92`, 2026-05-16): `T5_general` plus four δ-corollaries plus `GUT_B_layerwise` aggregator. This is the synthetic-step-of-Claim-Z discharge at the layerwise level for arbitrary Fintype δ.
+  - [`Foundation/R/UniquenessF2.lean`](../../../formal/SSBX/Foundation/R/UniquenessF2.lean) — F₂-Boolean ring-iso refinement `T5_A_ringEquiv_at_4` (commit `23441fc`): the δ-specific upgrade from layerwise type-equiv to ring iso at R₄.
 - The 8-column comparison table is documentary; the per-property failure verdicts for ZFC / type theory / category theory / Boolean / linear-F₂ are argued in this chapter, not formalised.
 - The seven objections each receive substantive responses in this chapter; their formal correlates (where they have any) are scattered across the Lean codebase (e.g. the continuous-arithmetic objection's response lives in the parametric Lean file of chapter 02; the cognition objection's response leans on the chapter-05 mapping; etc.).
 
 ## Open / TODO
 
-- T5 (uniqueness) remains open as a formal theorem; chapter 08 enumerates its specific shape.
+- T5 layerwise polymorphic discharged (`T5_general`); T5 ring-iso refinement is δ-specific to F₂ as of 2026-05-16. **Parametric Wedderburn-over-k extension** (for char(k) ≠ 2 algebraic-class bases) is the remaining open scope — this is GUT-B/C ring iso, currently in progress.
 - Non-classical extensions of the analytic step (intuitionistic, multi-valued, quantum, modal) are documented in chapter 08; their Lean discharge is partial / open.
 - D2 consistency at parametric bases (ℝ, ℂ, ℂ_p) inherits from Mathlib but is not packaged as a single "R-Family-over-k is consistent" Lean theorem.
 - The "competing substrate" picture in objection 5 — concrete bi-interpretability claims for ZFC, ETCS, HoTT, Univalent Foundations vs R-Family — is documentary; no Lean construction commits any of these bi-interpretations.

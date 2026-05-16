@@ -212,7 +212,58 @@ A precise foundational document must distinguish two senses in which R-Family is
 
 Both senses are valid. Chapter 05's coverage demonstrations operate primarily at the **encoding** level — they show that mathematical / computational / linguistic content can be expressed in R-Family-over-F₂ via standard codings. This chapter and the Hilbert sub-section of chapter 05 operate at the **native articulation** level — they show that the appropriate R-Family instance directly represents the content's structure. The Claim Z statement of chapter 07 combines both: R-Family is universal in the encoding sense (T1, Turing-level) **and** in the articulation sense (T2, parametric).
 
+**T2 in its δ-polymorphic layerwise form is now formally discharged** (2026-05-16, commit `a980e92`): see the "Polymorphic T5 — layerwise uniqueness over any Fintype δ" section below for the full statement. The discharge promotes "every formal articulation IS R-Family-over-some-k" from articulated hypothesis (the v1.3 status) to a Lean-verified layerwise theorem at any Fintype δ — F₂-Boolean is now the canonical specialisation, not the restriction. The ring-iso refinement at R₄ (i.e., the *full* GUT articulation theorem with algebraic structure preserved) remains δ-specific to F₂ for now; parametric extension to algebraic-class k is the remaining open item.
+
 When a section says "X is R-Family", check which sense is meant. If X is an arbitrary computable / formal object, encoding sense: X embeds in ⋃_N R_N^{(F₂)}. If X is a structured object with native operations (Hilbert space, real manifold, p-adic field), articulation sense: X IS R-Family-over-k for the appropriate k.
+
+---
+
+## Polymorphic T5 — layerwise uniqueness over any Fintype δ
+
+The T2-direction uniqueness theorem — "any P1–P7 closure-satisfying substrate IS R-Family" — has been formally discharged in its **layerwise δ-polymorphic form** (commit `a980e92`, 2026-05-16). The framework is no longer F₂-Boolean restricted at the layerwise level: F₂-Boolean is now the `δ = Bool` *specialization* of a polymorphic uniqueness claim that holds for arbitrary realisations.
+
+**The polymorphic claim form.** For any realisation `δ : Type` carrying `[Fintype δ] [DecidableEq δ] [Inhabited δ]`:
+
+$$\forall\,S : \mathrm{P1P7\_Core}\,\delta,\ \forall\,N,\ \mathrm{Nonempty}\bigl(S.\mathrm{carrier}\,N \simeq R\,N\,\delta\bigr).$$
+
+`P1P7_Core δ` is the polymorphic minimum-data structure: a carrier family `carrier : ℕ → Type` plus `Fintype` / `DecidableEq` instances plus the core closure clauses (zero-cardinality, base-cardinality `|carrier 1| = |δ|`, direct-sum `carrier (m+n) ≃ carrier m × carrier n`). No ring structure is assumed; this is the algebra-free layerwise core.
+
+The Lean theorem:
+
+```lean
+theorem T5_general {δ : Type} [Fintype δ] [DecidableEq δ] [Inhabited δ]
+    (S : P1P7_Core δ) (N : ℕ) :
+    Nonempty (S.carrier N ≃ R N δ)
+```
+
+**The four canonical δ-corollaries.** Each is a one-line specialization of `T5_general`:
+
+| δ | corollary | nature of δ |
+|---|---|---|
+| `Bool` | `T5_general_at_Bool` | classical binary distinction (F₂ canonical case) |
+| `Distinction` | `T5_general_at_Distinction` | substrate-primitive inductive type (chapter 03's o / x) |
+| `Fin (n+1)` | `T5_general_at_Fin n` | n+1-state classical structures (multi-valued logic) |
+| `ZMod (n+2)` | `T5_general_at_ZMod n` | modular arithmetic carrier (cyclic groups) |
+
+The F₂-Boolean theorem `T5_A : ∀ S : P1P7_Satisfier_F2, ∀ N, S.carrier N ≃ R N` (commit `23441fc`) is now a *derived* corollary at δ = Bool via the forgetful map `forgetF2ToCore : P1P7_Satisfier_F2 → P1P7_Core Bool` and `T5_A_from_general`.
+
+**Lean anchor.** [`Foundation/R/UniquenessGeneral.lean`](../../../formal/SSBX/Foundation/R/UniquenessGeneral.lean) delivers:
+
+- `P1P7_Core δ` — polymorphic minimum-data structure.
+- `R.card_eq_general` — `|R N δ| = (|δ|)^N` polymorphic cardinality.
+- `T5_general` — layerwise type-equiv for any δ with Fintype + DecidableEq + Inhabited.
+- Four δ-corollaries: `T5_general_at_Bool`, `T5_general_at_Distinction`, `T5_general_at_Fin n`, `T5_general_at_ZMod p`.
+- `T5_general_squaring_compatible` — polymorphic squaring tower R_{2N} ≃ R_N × R_N respected.
+- `canonicalRFamily δ : P1P7_Core δ` — the R-family itself as a canonical instance (non-vacuous sanity check).
+- `GUT_B_layerwise` — aggregator packaging the polymorphic content as a single theorem.
+
+**What this re-positions.** The framework is no longer "F₂-Boolean classical" specifically. The layerwise uniqueness statement holds for *any* Fintype δ; F₂-Boolean is the canonical realization but not the restriction. What remains δ-specific (post-this-discharge) is:
+
+- **Ring iso at carrier 4** (`T5_A_ringEquiv_at_4`) — requires δ with ring structure; discharged for F₂ via `R 4 ≃+* Mat₂F₂`. Generalisation to char(k)=2 fields is trivial; char(k)≠2 needs Wedderburn-over-k (open as GUT-B/C ring iso).
+- **Bilinear classification (P3)** — Arf invariant is char(k)=2 specific; discriminant replaces it for char(k)≠2.
+- **P6/P7a alphabet pinning** — uses 4-element / 8-element cardinality, which generalize to `(|δ|)² = 4` only for δ = Bool.
+
+These are the open items for the **full** parametric GUT claim (T5-B + T5-C scope; in progress).
 
 ---
 
@@ -268,6 +319,8 @@ The fact that non-F₂ R-Family instances are not yet Lean-verified does **not**
 - [`Foundation/R/Basic.lean`](../../../formal/SSBX/Foundation/R/Basic.lean) — **δ-polymorphic** `def R (N : ℕ) (δ : Type := Bool) : Type := Fin N → δ` (Route 3B refactor, 2026-05-16). Default `δ := Bool` preserves backward compatibility for the ~2090 `R N` call-sites across the Lean codebase. δ = Bool–specific structure (`Add` / `Zero` / `Neg` / `Sub` via `Bool.xor`, `AddCommGroup` via XOR, cardinality `R N = 2^N`) installed for the default realisation. Build verified: `lake build SSBX.Foundation.R.Basic` ✓, `SSBX.Foundation.R.Bilinear` ✓, `SSBX.Foundation.Wen.Kernel` ✓.
 - [`Foundation/R/Distinction.lean`](../../../formal/SSBX/Foundation/R/Distinction.lean) — primitive `Distinction` type with `Distinction.equivBool` bridge (~230 LOC, 0 sorry, 0 axiom). Provides the substrate-most-primitive layer (chapter 03).
 - [`Foundation/R/Parametric.lean`](../../../formal/SSBX/Foundation/R/Parametric.lean) — `RFamily k N := Fin N → k` together with `Fintype`, `DecidableEq`, `Inhabited` instances and a `coord` reader. The algebraic-class parametric carrier; commits to the structure that `R N δ` lacks (algebraic axioms on δ = k).
+- [`Foundation/R/UniquenessGeneral.lean`](../../../formal/SSBX/Foundation/R/UniquenessGeneral.lean) — **polymorphic T5 (layerwise)** discharged 2026-05-16 (commit `a980e92`). `T5_general` proves `∀ S : P1P7_Core δ, ∀ N, Nonempty (S.carrier N ≃ R N δ)` for any `[Fintype δ] [DecidableEq δ] [Inhabited δ]`. Four δ-corollaries (`Bool`, `Distinction`, `Fin (n+1)`, `ZMod (n+2)`) plus `T5_general_squaring_compatible`, `canonicalRFamily δ`, `forgetF2ToCore`, `T5_A_from_general`, `GUT_B_layerwise` aggregator. The F₂-Boolean `T5_A` from `UniquenessF2.lean` is now a derived δ = Bool corollary. 0 sorry, 0 axiom.
+- [`Foundation/R/UniquenessF2.lean`](../../../formal/SSBX/Foundation/R/UniquenessF2.lean) — F₂-Boolean uniqueness `T5_A` plus `T5_A_ringEquiv_at_4` (ring iso at the smallest non-trivial layer) and `T5_A_squaring_compatible`. The ring-iso refinement remains δ-specific to F₂ pending parametric Wedderburn-over-k.
 - The detailed P1–P7-over-k bridge files (direct sum, Hom-as-content, squaring tower, bilinear / quadratic relational structure, M₂(k) atomic operations) are **deferred to per-instance bridges**. For δ = Bool (the discharged default), the full P1–P7 content lives in `Foundation/R/{Basic, DirectSum, Tensor, Hom, Bilinear, Aut, Phantom, DirectDecomp, BeyondR8, Squaring, SubTower}.lean`.
 - The companion document [`r-family-parametric-bases.md`](../r-family-parametric-bases.md) is the D3 single-source for the parametric concretisation (instantiation tables, char-dependent P3 detail, Hilbert reframing detail, p-adic research direction).
 
