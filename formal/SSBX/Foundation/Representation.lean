@@ -25,13 +25,24 @@ This umbrella pulls in four independent locator strategies:
   string of arbitrary length to an R-tower coordinate, with full
   bidirectional round-trip identities against `renderOX`.
 
+* **Strategy C** (`Representation.Lexicon`): lexical anchor table —
+  `LexicalAnchor : String → Option (Σ N, R N)` parametric over school /
+  era / register; a school = a `LexicalAnchor` term loaded from a
+  `.lex` text file or built from `Lang.Lexicon`.  Cross-school
+  agreement on R-tower coordinates is decidable via `agreesAt`.
+  Demonstrations across 6 schools (wen-substrate / yijing / confucian /
+  daoist / buddhist / military) in `Lexicon/Examples.lean`.
+
 Strategies A/B/D agree on closed concepts (see `Articulate.locator_agreement`
-for the A↔B↔D triple).  Strategy E is the most concrete locator and is
-the basis for downstream Strategy C (lexical anchor table) once 汉字 →
-o/x patterns are tabulated.
+for the A↔B↔D triple).  Strategy E is the most concrete locator.
+Strategy C closes the suite: it provides the **lexical input layer**
+(汉字 / 词 → o/x string → Strategy E → R-tower coordinate), making the
+full pipeline 字 ↦ R-tower computable for any school's lexicon.
 -/
 
 import SSBX.Foundation.Representation.Concept
 import SSBX.Foundation.Representation.Signature
 import SSBX.Foundation.Representation.Articulate
 import SSBX.Foundation.Representation.OXPattern
+import SSBX.Foundation.Representation.Lexicon
+import SSBX.Foundation.Representation.Lexicon.Examples
