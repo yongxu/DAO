@@ -80,4 +80,29 @@ def pinThenRestrictProg : List Instr := [
 machine doesn't halt within budget. -/
 def jumpLoopProg : List Instr := [.jump 0]
 
+/-! ## § Demo 8 — branch on partial state (E.2)
+
+If bit 0 is set, jump over the second merge; otherwise fall through.
+From `initial` (cur = 道), bit 0 is `none`, so the branch does NOT
+fire (partial commitment policy: ambiguity = fall through).  This
+distinguishes CorePartial from a classical bit-machine where bit 0
+would have a definite value. -/
+def branchOnBit0Prog : List Instr := [
+  .branchIfSet ⟨0, by decide⟩ 3,    -- skip to pc 3 if bit 0 set
+  .mergeBit ⟨1, by decide⟩ true,    -- only runs if branch did NOT fire
+  .halt,                             -- pc 2 — halt after merging bit 1
+  .halt                              -- pc 3 — halt after skip
+]
+
+/-! ## § Demo 9 — pin-then-branch
+
+Pin bit 0 = true, then branch on bit 0.  Now the branch DOES fire. -/
+def pinThenBranchProg : List Instr := [
+  .mergeBit ⟨0, by decide⟩ true,    -- pc 0: pin bit 0 = true
+  .branchIfSet ⟨0, by decide⟩ 4,    -- pc 1: should jump to 4
+  .mergeBit ⟨1, by decide⟩ true,    -- pc 2: skipped
+  .halt,                             -- pc 3: skipped
+  .halt                              -- pc 4: jumped here
+]
+
 end SSBX.Foundation.Wen.CorePartial.Examples

@@ -16,19 +16,27 @@ Key differences from the legacy `Wen.Core` ISA:
 * The `不通 / ungrammatical` outcome of `merge` is interpreted as **halt**:
   a program is *stuck* when its next operation would conflict with state.
 
-## ISA (5 primitives)
+## ISA (6 primitives)
 
 | # | Constructor          | Effect on `cur : PartialCell 8` | pc update |
 |---|----------------------|----------------------------------|-----------|
 | 1 | `nop`                | unchanged                        | pc+1      |
 | 2 | `merge c`            | `cur ⊔ c` (or halt if 不通)      | pc+1      |
 | 3 | `restrict s`         | `cur ↾ s` (forget bits ∉ s)      | pc+1      |
-| 4 | `jump t`             | unchanged                        | t         |
-| 5 | `halt`               | unchanged                        | unchanged + halted |
+| 4 | `branchBitEq i b t`  | unchanged                        | t if `cur i = some b`, else pc+1 |
+| 5 | `jump t`             | unchanged                        | t         |
+| 6 | `halt`               | unchanged                        | unchanged + halted |
 
-Five primitives suffice for Phase E.1: `merge` + `restrict` already give
-the full partial-cell lattice; `jump` + `halt` give linear-ish control.
-Conditional branches arrive in Phase E.2.
+The new `branchBitEq` (Phase E.2) is **PartialCell-aware**: it triggers
+only when bit `i` is *explicitly specified* to `b` (`cur i = some b`).
+When bit `i` is unspecified (`cur i = none`), the branch does **not**
+fire — under-specification is not a commitment, so the conditional
+falls through to pc+1.
+
+This is a meaningful semantic shift from `Wen.Core.branchBitEq`, where
+the bit always has a definite value: in CorePartial, the partial state
+can be ambiguous, and the language commits to "fall through on
+ambiguity".
 
 ## Why so much smaller than `Wen.Core` (which had 8 primitives)?
 
@@ -65,6 +73,10 @@ inductive Instr where
   /-- Restrict the current state to the sub-mask `s`: positions outside
       `s` become `none` (codim-increasing). -/
   | restrict (s : Finset (Fin 8))
+  /-- Conditional branch: jump to `t` if `cur i = some b` (the bit is
+      explicitly specified to `b`); fall through to pc+1 otherwise.
+      In particular, when `cur i = none`, the branch does NOT fire. -/
+  | branchBitEq (i : Fin 8) (b : Bool) (t : Nat)
   /-- Unconditional jump to instruction index `t`. -/
   | jump (t : Nat)
   /-- Halt. -/
@@ -87,6 +99,14 @@ def pinBit (i : Fin 8) (b : Bool) : PartialCell 8 :=
     position `i` (codim-1 forgetting). -/
 @[reducible] def forget (i : Fin 8) : Instr :=
   .restrict ((Finset.univ : Finset (Fin 8)).erase i)
+
+/-- Branch if bit `i` is explicitly `true`. -/
+@[reducible] def branchIfSet (i : Fin 8) (t : Nat) : Instr :=
+  .branchBitEq i true t
+
+/-- Branch if bit `i` is explicitly `false`. -/
+@[reducible] def branchIfClear (i : Fin 8) (t : Nat) : Instr :=
+  .branchBitEq i false t
 
 end Instr
 

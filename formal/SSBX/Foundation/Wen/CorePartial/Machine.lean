@@ -29,6 +29,11 @@ def executeInstr (instr : Instr) (s : State) : State :=
       | none    => { s with halted := true }  -- 不通 → halt
   | .restrict mask =>
       { s with cur := PartialCell.restrict mask s.cur, pc := s.pc + 1 }
+  | .branchBitEq i b t =>
+      if s.cur i = some b then
+        { s with pc := t }
+      else
+        { s with pc := s.pc + 1 }
   | .jump t =>
       { s with pc := t }
   | .halt =>
@@ -68,27 +73,80 @@ theorem runFuel_halted (prog : List Instr) (s : State) (h : s.halted = true) :
     rw [step_halted prog s h]
     exact ih
 
-theorem executeInstr_halt (s : State) :
-    executeInstr .halt s = { s with halted := true } := rfl
+/-! ### Field-projection lemmas (idiomatic — record-equality forms are
+     brittle under match reduction with branchBitEq's nested if). -/
 
-theorem executeInstr_nop (s : State) :
-    executeInstr .nop s = { s with pc := s.pc + 1 } := rfl
+@[simp] theorem halt_halted (s : State) : (executeInstr .halt s).halted = true := rfl
+@[simp] theorem halt_pc (s : State) : (executeInstr .halt s).pc = s.pc := rfl
+@[simp] theorem halt_cur (s : State) : (executeInstr .halt s).cur = s.cur := rfl
 
-theorem executeInstr_jump (t : Nat) (s : State) :
-    executeInstr (.jump t) s = { s with pc := t } := rfl
+@[simp] theorem nop_pc (s : State) : (executeInstr .nop s).pc = s.pc + 1 := rfl
+@[simp] theorem nop_cur (s : State) : (executeInstr .nop s).cur = s.cur := rfl
+@[simp] theorem nop_halted (s : State) : (executeInstr .nop s).halted = s.halted := rfl
 
-/-- `merge c` from initial-like state with `cur = dao` always succeeds. -/
-theorem executeInstr_merge_dao (c : PartialCell 8) (s : State)
+@[simp] theorem jump_pc (t : Nat) (s : State) : (executeInstr (.jump t) s).pc = t := rfl
+@[simp] theorem jump_cur (t : Nat) (s : State) : (executeInstr (.jump t) s).cur = s.cur := rfl
+@[simp] theorem jump_halted (t : Nat) (s : State) :
+    (executeInstr (.jump t) s).halted = s.halted := rfl
+
+/-- `merge c` from initial-like state with `cur = dao` always succeeds.
+    Stated as field-projection on `cur` to dodge record-equality brittleness. -/
+@[simp] theorem merge_cur_of_dao (c : PartialCell 8) (s : State)
     (hs : s.cur = PartialCell.dao) :
-    executeInstr (.merge c) s =
-      { s with cur := c, pc := s.pc + 1 } := by
-  simp [executeInstr, hs, PartialCell.dao_merge]
+    (executeInstr (.merge c) s).cur = c := by
+  show ((match PartialCell.merge s.cur c with
+         | some c' => ({ s with cur := c', pc := s.pc + 1 } : State)
+         | none    => { s with halted := true }).cur) = c
+  rw [hs, PartialCell.dao_merge]
 
-/-- `restrict mask` is involutive only when `mask` covers all of `s.cur`'s
-    support — but the operation itself is always well-defined. -/
-theorem executeInstr_restrict (mask : Finset (Fin 8)) (s : State) :
-    executeInstr (.restrict mask) s =
-      { s with cur := PartialCell.restrict mask s.cur, pc := s.pc + 1 } := rfl
+@[simp] theorem restrict_cur (mask : Finset (Fin 8)) (s : State) :
+    (executeInstr (.restrict mask) s).cur = PartialCell.restrict mask s.cur := rfl
+
+@[simp] theorem restrict_pc (mask : Finset (Fin 8)) (s : State) :
+    (executeInstr (.restrict mask) s).pc = s.pc + 1 := rfl
+
+@[simp] theorem restrict_halted (mask : Finset (Fin 8)) (s : State) :
+    (executeInstr (.restrict mask) s).halted = s.halted := rfl
+
+/-- `branchBitEq i b t` fires when bit `i` is *explicitly* specified to `b`. -/
+theorem branchBitEq_pc_taken (i : Fin 8) (b : Bool) (t : Nat) (s : State)
+    (h : s.cur i = some b) :
+    (executeInstr (.branchBitEq i b t) s).pc = t := by
+  show (if s.cur i = some b then ({ s with pc := t } : State)
+        else { s with pc := s.pc + 1 }).pc = t
+  rw [if_pos h]
+
+/-- `branchBitEq i b t` falls through when bit `i` is *not* explicitly `b`,
+    including the `none` (unspecified) case — partial states do not commit. -/
+theorem branchBitEq_pc_skip (i : Fin 8) (b : Bool) (t : Nat) (s : State)
+    (h : s.cur i ≠ some b) :
+    (executeInstr (.branchBitEq i b t) s).pc = s.pc + 1 := by
+  show (if s.cur i = some b then ({ s with pc := t } : State)
+        else { s with pc := s.pc + 1 }).pc = s.pc + 1
+  rw [if_neg h]
+
+/-- Specialisation: `branchBitEq` on an *unspecified* bit always falls through. -/
+theorem branchBitEq_pc_unspec (i : Fin 8) (b : Bool) (t : Nat) (s : State)
+    (h : s.cur i = none) :
+    (executeInstr (.branchBitEq i b t) s).pc = s.pc + 1 := by
+  apply branchBitEq_pc_skip
+  rw [h]; intro h'; cases h'
+
+@[simp] theorem branchBitEq_cur (i : Fin 8) (b : Bool) (t : Nat) (s : State) :
+    (executeInstr (.branchBitEq i b t) s).cur = s.cur := by
+  show (if s.cur i = some b then ({ s with pc := t } : State)
+        else { s with pc := s.pc + 1 }).cur = s.cur
+  by_cases h : s.cur i = some b
+  · rw [if_pos h]
+  · rw [if_neg h]
+
+@[simp] theorem branchBitEq_halted (i : Fin 8) (b : Bool) (t : Nat) (s : State) :
+    (executeInstr (.branchBitEq i b t) s).halted = s.halted := by
+  show (if s.cur i = some b then ({ s with pc := t } : State)
+        else { s with pc := s.pc + 1 }).halted = s.halted
+  by_cases h : s.cur i = some b
+  · rw [if_pos h]
+  · rw [if_neg h]
 
 /-! ## § Bridge to `mergeAll`: a pure-merge program IS `mergeAll`
 
