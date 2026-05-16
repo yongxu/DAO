@@ -326,6 +326,78 @@ theorem T5_A_from_general (S : UniquenessF2.P1P7_Satisfier_F2) (N : ℕ) :
     Nonempty (S.carrier N ≃ R N) :=
   T5_general (forgetF2ToCore S) N
 
+/-! ## § 5.5 Polymorphic squaring tower compatibility
+
+The squaring step `carrier (N + N) ≃ carrier N × carrier N` is the
+**δ-free content** of P4: it doesn't depend on δ having ring structure.
+We package it as a polymorphic corollary of `T5_general`, matching
+the F₂-specific `T5_A_squaring_compatible` from `UniquenessF2.lean`. -/
+
+/-- **T5-general squaring compatibility** — δ-polymorphic squaring tower.
+
+    For any `P1P7_Core δ` and any `n : ℕ`, both rows of the diagram
+
+           S.carrier (n + n)  ─────≃─────→  S.carrier n × S.carrier n
+                  │                                   │
+                  ≃                                   ≃
+                  ↓                                   ↓
+                R (n + n) δ   ─────≃─────→  R n δ × R n δ
+
+    exist (top from `p2_directSum`, bottom from carrier squaring
+    inherited via `T5_general`). -/
+theorem T5_general_squaring_compatible
+    {δ : Type} [Fintype δ] [DecidableEq δ] [Inhabited δ]
+    (S : P1P7_Core δ) (n : ℕ) :
+    Nonempty (S.carrier (n + n) ≃ R (n + n) δ)
+  ∧ Nonempty (S.carrier n × S.carrier n ≃ R n δ × R n δ) := by
+  refine ⟨T5_general S (n + n), ?_⟩
+  obtain ⟨eN⟩ := T5_general S n
+  exact ⟨Equiv.prodCongr eN eN⟩
+
+/-! ## § 5.6 Canonical R-family instance demo
+
+A sanity check that `T5_general` is **non-vacuous** — the R-family
+itself is a `P1P7_Core δ` for any Fintype δ, and `T5_general` at this
+instance is the trivial-but-confirming identity `R N δ ≃ R N δ`.
+
+This documents that the polymorphic uniqueness statement is honest:
+the canonical realization satisfies all the hypotheses, and the
+conclusion at the canonical realization is the identity. -/
+
+/-- **Canonical R-family as a `P1P7_Core δ` instance** — the R-family
+    itself satisfies the polymorphic minimum-data conditions for any
+    Fintype δ. -/
+def canonicalRFamily (δ : Type) [Fintype δ] [DecidableEq δ] :
+    P1P7_Core δ where
+  carrier := fun N => R N δ
+  fintype := fun N => instFintypeRGeneral N δ
+  decEq := fun N => instDecEqRGeneral N δ
+  p1_base_card := by
+    show Fintype.card (R 1 δ) = Fintype.card δ
+    rw [R.card_eq_general]
+    ring
+  p2_directSum := fun N M => by
+    -- R (N + M) δ = (Fin (N + M) → δ) ≃ (Fin N → δ) × (Fin M → δ)
+    --             = R N δ × R M δ
+    show (Fin (N + M) → δ) ≃ (Fin N → δ) × (Fin M → δ)
+    exact (Equiv.arrowCongr finSumFinEquiv (Equiv.refl δ)).symm.trans
+            (Equiv.sumArrowEquivProdArrow _ _ _)
+
+end SSBX.Foundation.R.UniquenessGeneral
+
+namespace SSBX.Foundation.R.UniquenessGeneral
+
+open SSBX.Foundation.R
+
+/-- **T5-general at the canonical R-family** is trivially the identity:
+    `R N δ ≃ R N δ`.  This documents that `T5_general` is non-vacuous —
+    the R-family itself satisfies all hypotheses and the conclusion
+    is correct at this canonical instance. -/
+theorem T5_general_canonical_R_family
+    (δ : Type) [Fintype δ] [DecidableEq δ] [Inhabited δ] (N : ℕ) :
+    Nonempty ((canonicalRFamily δ).carrier N ≃ R N δ) :=
+  T5_general (canonicalRFamily δ) N
+
 /-! ## § 6 Aggregator — what GUT-B layerwise delivers
 
 This file generalizes the **layerwise type-equivalence** form of

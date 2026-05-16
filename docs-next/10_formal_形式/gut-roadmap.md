@@ -353,11 +353,43 @@ Single-session batch execution closed the **minimum viable GUT-A claim** with 0 
 | **G1.A8** | D1 ⟹ P7b analytic | ✅ closed | `R/ClaimZ/Analytic/P7b.lean` | `b486acb` |
 | **G1.integration** | Phase 1 packaged into `D1_implies_Phase1Closure_F2` | ✅ closed | `R/ClaimZ/Analytic.lean` | `7c2a125` |
 | **G2** | T5-A: P1-P7 ⟹ R-family-over-F₂ uniqueness (layerwise) | ✅ closed (tractable form) | `R/UniquenessF2.lean` | `23441fc` |
+| **G2'** | T5 polymorphic: P1+P2 over any Fintype δ ⟹ R N δ layerwise | ✅ closed | `R/UniquenessGeneral.lean` | `a980e92` |
 | **G3.C3** | Stabilizer-QM (Pauli group) ↪ R 2n | ✅ closed | `Wen/Embeddings/StabilizerQM.lean` | `975104d` |
 | **G3.C4** | FOL syntax tree ↪ R N | ✅ closed | `Wen/Embeddings/FOL.lean` | `f87c40f` |
 | **G5** | D6 falsification record (HoTT/ETCS/SDG attempts) | ✅ closed | `R/D6_Tests.lean` | `b1f1181` |
 
-**Aggregate**: 17 closures, 0 sorry / 0 axioms across all GUT-A files. Full library `lake build SSBX` = 3826 jobs clean.
+**Aggregate**: 18 closures, 0 sorry / 0 axioms across all GUT-A files. Full library `lake build SSBX` = 3826+ jobs clean.
+
+### 十一·1 Polymorphic T5 update (2026-05-16, `a980e92`)
+
+Per user direction *"让我们把它推广到general，而不是只有bool"*, the layerwise T5 statement is now **δ-polymorphic** (works for any `[Fintype δ] [DecidableEq δ] [Inhabited δ]`):
+
+```
+theorem T5_general (S : P1P7_Core δ) (N : ℕ) : Nonempty (S.carrier N ≃ R N δ)
+```
+
+`R/UniquenessGeneral.lean` delivers:
+
+- `P1P7_Core δ` — polymorphic minimum-data structure (carrier family + Fintype/decEq + zero-card + base-card + direct-sum), no ring requirements.
+- `R.card_eq_general` — `|R N δ| = (|δ|)^N` polymorphic cardinality.
+- `T5_general` — layerwise type-equiv for any δ with Fintype + DecidableEq + Inhabited.
+- Four canonical δ-corollaries: `T5_general_at_Bool`, `T5_general_at_Distinction`, `T5_general_at_Fin n`, `T5_general_at_ZMod p`.
+- `forgetF2ToCore` + `T5_A_from_general` — the F₂-Boolean `T5_A` is now a derived corollary at δ=Bool.
+- `T5_general_squaring_compatible` — polymorphic squaring tower.
+- `canonicalRFamily δ : P1P7_Core δ` — the R-family itself as a canonical instance (non-vacuous sanity check).
+- `GUT_B_layerwise` — aggregator packaging the polymorphic content.
+
+**What this re-positions**: the framework is no longer "F₂-Boolean classical" specifically; F₂-Boolean is the δ=Bool **specialization** of a polymorphic uniqueness claim. The minimum viable GUT claim is therefore:
+
+> **GUT-B (layerwise)**: any structure satisfying the *core P1+P2* closure conditions over any `[Fintype δ] [DecidableEq δ] [Inhabited δ]` substrate is layerwise type-equivalent to R-family-over-δ.
+
+What remains δ-specific (post-this-update):
+
+- **Ring iso at carrier 4** (`T5_A_ringEquiv_at_4`) — requires δ with ring structure; F₂ + char(k)=2 fields extend trivially, char(k)≠2 needs Wedderburn-over-k.
+- **Bilinear classification (P3)** — Arf invariant is char(k)=2 specific; discriminant replaces it for char(k)≠2.
+- **P6/P7a alphabet pinning** — uses 4-element / 8-element cardinality, which generalize as `(|δ|)² = 4` only for δ = Bool.
+
+These are the remaining items for the **full** GUT claim (T5-B + T5-C scope).
 
 ### What "minimum viable GUT-A" means at this status
 
