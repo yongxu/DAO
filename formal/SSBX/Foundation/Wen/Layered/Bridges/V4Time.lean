@@ -1,6 +1,12 @@
 /-
 # Wen.Layered.Bridges.V4Time -- y7/y8 V4 time-plane bridge
 
+This file uses `V4` from `Foundation/Hierarchy/Operators/V4/Core.lean`,
+which is the constructor-style presentation of `R 2` per
+`wen-substrate.md` v1.4 §3.7.8 (distinction monism).  The R-family is the
+one mathematical core; `V4` here is the ergonomic 4-constructor surface
+over `R 2 = Fin 2 → Bool`.
+
 This module specializes the generic layered information kernel to the canonical
 R8 y7/y8 time plane.  It imports V4 sidecars directly, avoiding the
 `Operators.V4` umbrella to keep import cycles out of Phase 8.

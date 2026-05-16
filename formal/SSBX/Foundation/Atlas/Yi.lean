@@ -16,7 +16,7 @@ R-Family core:
                           `Hexagram` (= R 6), `Shi` (= R 2).
 * `Atlas/Yi/Bagua`      — the 8 trigram names (qian/dui/.../kun) on R 3.
 * `Atlas/Yi/Hexagrams`  — 4 distinguished hexagrams + King-Wen order.
-* `Atlas/Yi/ShiV4`      — V₄ naming {dao, ji, jin, wei} on R 2.
+* `Atlas/Yi/Shi`        — Atlas naming {dao, ji, jin, wei} on R 2.
 * `Atlas/Yi/Operators`  — V₄ operators (cuo / zong / cuoZong) and `hu`.
 * `Atlas/Yi/DaoSource`  — Phase β port of «道源» onto the clean stack:
                           11-instr Wen.Core program judging «是道非道»
@@ -55,7 +55,7 @@ sub-clusters) as a co-equal classical formalization.
 import SSBX.Foundation.Atlas.Yi.Names
 import SSBX.Foundation.Atlas.Yi.Bagua
 import SSBX.Foundation.Atlas.Yi.Hexagrams
-import SSBX.Foundation.Atlas.Yi.ShiV4
+import SSBX.Foundation.Atlas.Yi.Shi
 import SSBX.Foundation.Atlas.Yi.Operators
 import SSBX.Foundation.Atlas.Yi.DaoSource
 import SSBX.Foundation.Atlas.Yi.Diagonal

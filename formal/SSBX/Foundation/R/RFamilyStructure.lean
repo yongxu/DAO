@@ -14,8 +14,8 @@ The 12-item definition of R-Family in `wen-substrate.md` §3.1 is realized
 `Foundation/R/Bilinear.lean` (relational layers), `Foundation/R/Squaring.lean`
 (self-similar tower), `Foundation/R/Hom.lean` + `Foundation/R4/HomMat.lean`
 (Hom-as-content), `Foundation/R4/EndR2.lean` (ring at $R_4$ + atomic ops),
-`Foundation/RInfty/Profinite.lean` ($R_\infty$), `Foundation/Atlas/Yi/ShiV4.lean`
-($R_2$ as $V_4$ modality), `Foundation/Atlas/Yi/Bagua.lean` ($R_3$ alphabet),
+`Foundation/RInfty/Profinite.lean` ($R_\infty$), `Foundation/Atlas/Yi/Shi.lean`
+(Atlas naming on $R_2$), `Foundation/Atlas/Yi/Bagua.lean` ($R_3$ alphabet),
 `Foundation/Atlas/Yi/Operators.lean` (zong involution for the 4 + 4 split),
 and `Foundation/R/Parametric.lean` (parametric extension).
 
@@ -36,7 +36,7 @@ re-exports them under one umbrella so that downstream code can refer to
 | 6    | Hom-as-content                  | `Foundation.R.Hom` + `Foundation.R4.HomMat`   |
 | 7    | Ring structure at $R_4$         | `Foundation.R4.EndR2`                         |
 | 8    | $R_\infty$ profinite limit      | `Foundation.RInfty.Profinite.L_inf`           |
-| 9    | $R_2$ as $V_4$ 4-modality       | `Foundation.Atlas.Yi.ShiV4.Shi`               |
+| 9    | Atlas naming on $R_2$           | `Foundation.Atlas.Yi.Shi.Shi`                 |
 | 10   | $R_3$ aspect alphabet           | `Foundation.Atlas.Yi.Bagua.Trigram`           |
 | 11   | Atomic operations at $R_4$      | `Foundation.R4.EndR2` (16 elements of `R 4`)  |
 | 12   | Self-following / closure        | This module's existence + `Foundation.R.lean` |
@@ -79,7 +79,7 @@ the hub by importing this file (whose presence in the import graph is the
     reference this marker for documentation purposes.
 
     The 12 items of §3.1 are realized by the modules imported above plus the
-    Atlas-layer companions (`Foundation.Atlas.Yi.ShiV4`,
+    Atlas-layer companions (`Foundation.Atlas.Yi.Shi`,
     `Foundation.Atlas.Yi.Bagua`, `Foundation.Atlas.Yi.Operators`) and
     `Foundation.R4.EndR2` / `Foundation.RInfty.Profinite`. See the D2
     companion doc `r-family-definition.md` §4 for the full code-anchor table. -/

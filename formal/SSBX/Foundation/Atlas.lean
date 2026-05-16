@@ -33,7 +33,7 @@ convenience and to gather the available bindings.
 Per `wen-algebra` v0.6 the project now carries **two co-equal Yi
 Atlas overlays**:
 
-* `Atlas/Yi/{Names, Bagua, Hexagrams, Operators, ShiV4, Diagonal,
+* `Atlas/Yi/{Names, Bagua, Hexagrams, Operators, Shi, Diagonal,
   DaoSource}` — **R-Family axiomatization** (`Yao := Bool`,
   `Hexagram := R 6 = Fin 6 → Bool`).  Doctrinally aligned with v0.6;
   integrates with R-Family bilinear algebra + Squaring tower;

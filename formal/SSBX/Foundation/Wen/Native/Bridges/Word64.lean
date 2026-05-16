@@ -44,20 +44,20 @@ def xorExpr (a b : Carrier) : Expr 6 :=
 
 theorem eval_xor (a b : Carrier) :
     evalFuel 8 [] (xorExpr a b) =
-      some (value (SSBX.Foundation.Wen.V4Kernel.Word64.compose a b)) := by
+      some (value (SSBX.Foundation.Wen.RKernel.Word64.compose a b)) := by
   change
     some (Value.cell (BitSpace.xor
       (SSBX.Foundation.Wen.Layered.Bridges.Word64.toBitSpace a)
       (SSBX.Foundation.Wen.Layered.Bridges.Word64.toBitSpace b))) =
       some (Value.cell (SSBX.Foundation.Wen.Layered.Bridges.Word64.toBitSpace
-        (SSBX.Foundation.Wen.V4Kernel.Word64.compose a b)))
+        (SSBX.Foundation.Wen.RKernel.Word64.compose a b)))
   rw [← SSBX.Foundation.Wen.Layered.Bridges.Word64.toBitSpace_xor a b]
 
 theorem eval_qian_kun :
     evalFuel 8 [] (xorExpr
-      SSBX.Foundation.Wen.V4Kernel.Word64.qian
-      SSBX.Foundation.Wen.V4Kernel.Word64.kun) =
-      some (value SSBX.Foundation.Wen.V4Kernel.Word64.kun) := by
+      SSBX.Foundation.Wen.RKernel.Word64.qian
+      SSBX.Foundation.Wen.RKernel.Word64.kun) =
+      some (value SSBX.Foundation.Wen.RKernel.Word64.kun) := by
   rw [eval_xor]
   rfl
 
@@ -65,11 +65,11 @@ theorem bridge_laws :
     (∀ word : Carrier, fromValue? (value word) = some word)
     ∧ (∀ a b : Carrier,
       evalFuel 8 [] (xorExpr a b) =
-        some (value (SSBX.Foundation.Wen.V4Kernel.Word64.compose a b)))
+        some (value (SSBX.Foundation.Wen.RKernel.Word64.compose a b)))
     ∧ evalFuel 8 [] (xorExpr
-      SSBX.Foundation.Wen.V4Kernel.Word64.qian
-      SSBX.Foundation.Wen.V4Kernel.Word64.kun) =
-      some (value SSBX.Foundation.Wen.V4Kernel.Word64.kun) :=
+      SSBX.Foundation.Wen.RKernel.Word64.qian
+      SSBX.Foundation.Wen.RKernel.Word64.kun) =
+      some (value SSBX.Foundation.Wen.RKernel.Word64.kun) :=
   ⟨fromValue_value, eval_xor, eval_qian_kun⟩
 
 end SSBX.Foundation.Wen.Native.Bridges.Word64

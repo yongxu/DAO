@@ -50,7 +50,7 @@ import SSBX.Foundation.Wen.Core.Examples
 import SSBX.Foundation.Atlas.Yi.Names
 import SSBX.Foundation.Atlas.Yi.Bagua
 import SSBX.Foundation.Atlas.Yi.Hexagrams
-import SSBX.Foundation.Atlas.Yi.ShiV4
+import SSBX.Foundation.Atlas.Yi.Shi
 import SSBX.Foundation.Atlas.Yi.Cell256Partial
 
 namespace SSBX.Foundation.Atlas.Yi.ConstraintDemoYi

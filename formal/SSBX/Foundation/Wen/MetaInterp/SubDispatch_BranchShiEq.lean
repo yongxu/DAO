@@ -13,7 +13,7 @@ the per-t inner dispatch is C.D-pending.
 ## Phase F.2 migration note (Cell192 → R8)
 
 Pre-migration `Shi` was a 3-cycle `{已, 今, 未}` and the dispatcher branched
-3-ways. With R8 `Shi` is a V₄ Klein 4-group `{道, 已, 今, 未}` and the
+3-ways. With R8 `Shi` is a R 2 Klein-four 4-group `{道, 已, 今, 未}` and the
 dispatcher must route 4-ways. We add an explicit `Shi.dao` arm; the
 fall-through (default) target is the wei branch, with `dao` checked first.
 

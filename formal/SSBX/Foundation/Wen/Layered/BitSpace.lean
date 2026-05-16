@@ -2,7 +2,7 @@
 # Wen.Layered.BitSpace -- classical bit-space carrier
 
 This is the low-level classical carrier used by the layered Wen semantics.
-It intentionally does not import R8, V4Kernel, WenSurface, MetaInterp, or Text
+It intentionally does not import R8, RKernel, WenSurface, MetaInterp, or Text
 modules.
 -/
 

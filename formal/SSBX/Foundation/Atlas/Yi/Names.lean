@@ -196,9 +196,9 @@ end Hexagram
 
 /-! ## § 4 Shi (时态, V₄) — R 2 -/
 
-/-- 时态 (Shí, "state"): the V₄ Klein-four group `R 2 = Fin 2 → Bool`.
+/-- 时态 (Shí, "state"): the R 2 Klein-four group `R 2 = Fin 2 → Bool`.
     Per `wen-algebra` v0.6, Shi is exactly `R 2`; the 4 traditional
-    names live in `Atlas/Yi/ShiV4.lean`. -/
+    names live in `Atlas/Yi/Shi.lean`. -/
 abbrev Shi : Type := R 2
 
 end SSBX.Foundation.Atlas.Yi

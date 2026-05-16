@@ -59,20 +59,20 @@ def fromExistingR8 (cell : SSBX.Foundation.Bagua.R8.R8) : Carrier :=
 
 theorem eval_xor (a b : Carrier) :
     evalFuel 8 [] (xorExpr a b) =
-      some (value (SSBX.Foundation.Wen.V4Kernel.Root512.composeCell a b)) := by
+      some (value (SSBX.Foundation.Wen.RKernel.Root512.composeCell a b)) := by
   change
     some (Value.cell (BitSpace.xor
       (SSBX.Foundation.Wen.Layered.Bridges.RootCell256.toBitSpace a)
       (SSBX.Foundation.Wen.Layered.Bridges.RootCell256.toBitSpace b))) =
       some (Value.cell (SSBX.Foundation.Wen.Layered.Bridges.RootCell256.toBitSpace
-        (SSBX.Foundation.Wen.V4Kernel.Root512.composeCell a b)))
+        (SSBX.Foundation.Wen.RKernel.Root512.composeCell a b)))
   rw [← SSBX.Foundation.Wen.Layered.Bridges.RootCell256.toBitSpace_xor a b]
 
 theorem bridge_laws :
     (∀ cell : Carrier, fromValue? (value cell) = some cell)
     ∧ (∀ a b : Carrier,
       evalFuel 8 [] (xorExpr a b) =
-        some (value (SSBX.Foundation.Wen.V4Kernel.Root512.composeCell a b)))
+        some (value (SSBX.Foundation.Wen.RKernel.Root512.composeCell a b)))
     ∧ (∀ cell : SSBX.Foundation.Bagua.R8.R8,
       toExistingR8 (fromExistingR8 cell) = cell)
     ∧ (∀ cell : Carrier, fromExistingR8 (toExistingR8 cell) = cell) :=

@@ -4,6 +4,8 @@
 > 作用：把整个系统所有命名位置（R₁ 到 R₈ + ontological grids + naming registry）**全部表达为 算子作用于爻 的算子树**。
 > 起点假设：爻 = 唯一原子。所有位置都是有限算子组合作用于爻得到的导出位置。
 > 配套：[yi-RO-hierarchy.md](yi-RO-hierarchy.md) (v2.1 doctrine) · [64-hexagram-grid.md](64-hexagram-grid.md) · [cell256-grid.md](cell256-grid.md) · [layer-axis-graph.md](layer-axis-graph.md) · [operator-split.md](operator-split.md) (sibling, v3 inner/outer 拆) · [lift-project.md](lift-project.md) (sibling, v3 R₀..R₈ pairs)。
+>
+> **命名注**：本文中之 "V₄" / "V₄ outer" / "V₄ × V₄" / "V₄ Klein" 指 R₂ 之 Klein-four-group 结构 —— R₂ 之两个可交换 involution 与其复合。"V₄" 是 legacy marquee 命名，因表中 row terseness、Lean 模块名 (`V4Outer.lean`、`ShiV4` 等) 与 v2 历史连续性而保留；algebraic content（R₂ 上之 Klein 4-group 作用）原样保留为 load-bearing claim。
 
 ---
 

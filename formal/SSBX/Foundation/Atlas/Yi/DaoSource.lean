@@ -80,7 +80,7 @@ finite carrier (256 hexagram bytes ≤ 64 instructions deep).
 import SSBX.Foundation.R.Basic
 import SSBX.Foundation.Wen.Core
 import SSBX.Foundation.Atlas.Yi.Names
-import SSBX.Foundation.Atlas.Yi.ShiV4
+import SSBX.Foundation.Atlas.Yi.Shi
 
 namespace SSBX.Foundation.Atlas.Yi
 namespace DaoSource

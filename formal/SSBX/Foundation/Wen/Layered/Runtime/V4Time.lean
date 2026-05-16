@@ -1,5 +1,11 @@
 /-
 # Wen.Layered.Runtime.V4Time -- BitVec runtime y7/y8 time-plane mirrors
+
+This file uses `V4` from `Foundation/Hierarchy/Operators/V4/Core.lean`,
+which is the constructor-style presentation of `R 2` per
+`wen-substrate.md` v1.4 §3.7.8 (distinction monism).  The R-family is the
+one mathematical core; `V4` here is the ergonomic 4-constructor surface
+over `R 2 = Fin 2 → Bool`.
 -/
 
 import SSBX.Foundation.Wen.Layered.Bridges.V4Time

@@ -51,7 +51,7 @@ Path 丙 § 风险 3 之完全缓解：
 ## Phase F.2 migration note (Cell192 → R8)
 
 Was: `cellLit : Cell192 → Tm` (192 cells, Z/3 `Shi`).
-Now: `cellLit : R8 → Tm` (256 cells, V₄ Klein `Shi`).
+Now: `cellLit : R8 → Tm` (256 cells, R 2 Klein-four `Shi`).
 
 The cell-endo builtin tags `.shiNextC` / `.shiPrevC` keep their syntactic
 identity here (this is the typed-λ surface; only types change). Their

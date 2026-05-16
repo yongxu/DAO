@@ -11,7 +11,7 @@ This file defines the conservative reachability generator family used by the
 Previously this module operated on `Cell192 = Hexagram × Shi(Z/3)` with the
 `shiNext` generator implementing the Z/3 cycle 已→今→未→已 (`shiNext^[3] = id`).
 
-After Phase F doctrine alignment, `Shi` is the V₄ Klein four-group
+After Phase F doctrine alignment, `Shi` is the R 2 Klein-four four-group
 `{道, 已, 今, 未}` and `R8 = Hexagram × Shi(V₄)` (256 cells). V₄ has no
 canonical cyclic order, so `shiNext` is now the V₄ `Shi.complement` involution
 (因-axis toggle 道↔已, 今↔未). It is order-2 rather than order-3.

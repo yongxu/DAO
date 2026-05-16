@@ -6,7 +6,9 @@
 # 层级轴图全景 layer-axis-graph · v3
 
 > 本文是**全景图谱**——把 R₀..R₈ 严格 (Z/2)ⁿ uniform R-轴、内容线、Lift/Project 函子、V₄ outer 对称、Shi V₄ Klein 闭合统一作图。
-> v2 (2026-05-09) 含 R₁..R₆ + Cell192 旧 surface；v3 (2026-05-11) 切换到 **R₀..R₈ + Cell256 + V₄ Klein Shi** 之 definitive。
+> v2 (2026-05-09) 含 R₁..R₆ + Cell192 旧 surface；v3 (2026-05-11) 切换到 **R₀..R₈ + Cell256 + R₂ Klein-four 结构 Shi** 之 definitive。
+>
+> **命名注**：本文中之 "V₄" / "V₄ outer" / "V₄ Klein" / "Shi V₄" 指 R₂ 之 Klein-four-group 结构 —— R₂ 之两个可交换 involution 与其复合。"V₄" 是 legacy marquee 命名，因 (a) Lean 模块名 (`Operators/V4Outer.lean`、`ShiV4` 等)、(b) ASCII / Mermaid 图谱中之 table-row terseness、(c) 历史 v2 文档连续性而保留；algebraic content（R₂ 上之 Klein 4-group 作用）是 load-bearing claim，命名不变。
 
 ---
 

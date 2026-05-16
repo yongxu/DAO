@@ -285,7 +285,7 @@ open SSBX.Foundation.Yi.Yi.Hexagram
 
 /-! ## § 8  R₈ — R8 = Hexagram × Shi (V₄)
 
-Naming: `<卦名>·<时>` where 时 ∈ V₄ {道, 已, 今, 未}. The Shi V₄ Klein
+Naming: `<卦名>·<时>` where 时 ∈ V₄ {道, 已, 今, 未}. The R 2 Klein (Shi naming)
 group: dao = (false,false), ji = (true,false), jin = (true,true),
 wei = (false,true).
 -/

@@ -37,7 +37,7 @@ R-Family port of the classical `SSBX.Foundation.Bagua.R8Stratify` module
 import SSBX.Foundation.R.Basic
 import SSBX.Foundation.Atlas.Yi.Names
 import SSBX.Foundation.Atlas.Yi.Hexagrams
-import SSBX.Foundation.Atlas.Yi.ShiV4
+import SSBX.Foundation.Atlas.Yi.Shi
 import SSBX.Foundation.Atlas.Yi.Operators
 import SSBX.Foundation.Atlas.Yi.Cell128
 import SSBX.Foundation.Atlas.Yi.Cell256

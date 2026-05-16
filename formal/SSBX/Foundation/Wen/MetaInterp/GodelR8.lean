@@ -37,7 +37,7 @@
 The Z/3 group operations `Shi.next`, `Shi.prev`, `next_three` exist
 in the legacy Cell192 module but **are never used inside `GodelLi`**.
 Consequently V₄ works as a *drop-in*: 4 elements give strictly more
-room than 3, and the V₄ Klein four-group's involutive structure
+room than 3, and the R 2 Klein-four four-group's involutive structure
 (complement / reverse / cuoZong) replaces the cyclic Z/3 successor
 without disturbing any theorem of the Gödel proof.
 

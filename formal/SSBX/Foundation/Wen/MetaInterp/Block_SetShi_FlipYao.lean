@@ -27,7 +27,7 @@ implicitly by the existing `Block_HuCuoZong.lean` worked blocks:
 
   > **Per-(opcode × parameter-value) compilation.**  The dispatcher
   > emits one block per concrete `(opcode, param)` pair: 4 blocks for
-  > `setShi` (one per `Shi` — now V₄ Klein 4 with `dao/ji/jin/wei`),
+  > `setShi` (one per `Shi` — now R 2 Klein-four 4 with `dao/ji/jin/wei`),
   > 6 blocks for `flipYao` (one per `Fin 6`).
   > Each block is therefore parameterized at the *Lean* level by the
   > runtime operand, so it does not need to read the param cell at
@@ -76,7 +76,7 @@ open SSBX.Foundation.Wen.MetaInterp
     the surrounding loop invariant that maintains `META.cur = sim.cur`.
 
     There are 4 such blocks (one per `Shi` value: dao, ji, jin, wei —
-    the V₄ Klein 4-group); fetch+dispatch routes control to the right
+    the R 2 Klein-four 4-group); fetch+dispatch routes control to the right
     one based on the runtime param cell.  Note that `setShi Shi.dao`
     is now a valid target (V₄ identity). -/
 def executeBlock_setShi (sh : Shi) (_offset fetchOffset : Nat) : List YiInstr :=

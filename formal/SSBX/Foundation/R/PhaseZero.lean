@@ -41,7 +41,7 @@ explicit TODO referencing the wen-substrate section it discharges.
 * `wen-substrate.md` v1.0.3 §2.3 (P3 bilinear classification),
   §2.6 (P6 V₄ minimality), §2.7 (P7 zong / Wedderburn).
 * `Foundation/R/Bilinear.lean` (T_P3 anchor).
-* `Foundation/Atlas/Yi/ShiV4.lean` (T_P6 anchor).
+* `Foundation/Atlas/Yi/Shi.lean` (T_P6 anchor).
 * `Foundation/Atlas/Yi/Bagua.lean` (T_P7a anchor).
 * `Foundation/R4/EndR2.lean`, `Foundation/R4/HomMat.lean` (T_P7b anchor).
 -/
@@ -50,7 +50,7 @@ import SSBX.Foundation.R.Basic
 import SSBX.Foundation.R.Bilinear
 import SSBX.Foundation.Atlas.Yi.Names
 import SSBX.Foundation.Atlas.Yi.Bagua
-import SSBX.Foundation.Atlas.Yi.ShiV4
+import SSBX.Foundation.Atlas.Yi.Shi
 import SSBX.Foundation.R4.EndR2
 import Mathlib.Logic.Function.Basic
 import Mathlib.Algebra.Ring.Equiv

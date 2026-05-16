@@ -62,10 +62,10 @@ theorem primaryTokens_length : primaryTokens.length = 12 := by native_decide
 
 theorem primaryTokens_nodup : primaryTokens.Nodup := by native_decide
 
-/-! ## § 2  4 时态 (Phase F.2: V₄ Klein)
+/-! ## § 2  4 时态 (Phase F.2: R 2 Klein-four)
 
   Pre-migration this layer had 3 时态 tokens (`已 / 今 / 未`) tied to a Z/3
-  cyclic `Shi`. After Phase F doctrine alignment `Shi` is V₄ Klein with
+  cyclic `Shi`. After Phase F doctrine alignment `Shi` is R 2 Klein-four with
   4 elements `{道, 已, 今, 未}`, so `shiToken` must handle a 4th case and
   `shiTokens` lists 4 entries. The `道` token denotes the V₄ identity
   (永真 / cross-temporal anchor). -/

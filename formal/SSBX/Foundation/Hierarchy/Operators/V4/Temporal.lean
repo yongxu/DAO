@@ -19,11 +19,8 @@ namespace V4
 abbrev TemporalCoordinate : Type := Shi
 
 /-- The R8 temporal-coordinate reading of the same V4 kernel. -/
-def toTemporal : V4 → TemporalCoordinate
-  | .dao => Shi.dao
-  | .cuo => Shi.ji
-  | .zong => Shi.wei
-  | .cuoZong => Shi.jin
+def toTemporal (g : V4) : TemporalCoordinate :=
+  V4.elim g Shi.dao Shi.ji Shi.wei Shi.jin
 
 def ofTemporal (s : TemporalCoordinate) : V4 :=
   ofBits s.1 s.2

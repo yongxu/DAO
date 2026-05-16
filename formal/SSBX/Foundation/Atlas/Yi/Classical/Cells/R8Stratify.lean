@@ -166,7 +166,7 @@ theorem PT_PT (c : R8) : PT (PT c) = c := by
   simp [PT, parity, timeReversal, Hexagram.reverse_involutive, Shi.reverse_involutive,
         Hexagram.complement_involutive, ← Hexagram.complement_reverse_comm]
 
-/-- P 与 T 交换（V₄ Klein 群结构）. -/
+/-- P 与 T 交换（R 2 Klein 群结构）. -/
 theorem parity_timeReversal_comm (c : R8) :
     parity (timeReversal c) = timeReversal (parity c) := by
   rcases c with ⟨h, s⟩
@@ -260,7 +260,7 @@ theorem xor_qian_left (a : Hexagram) : xor Hexagram.heaven a = a := by
 
 end SSBX.Foundation.Yi.Yi.Hexagram
 
-/-! ## Shi XOR (V₄ Klein 群作用) — 扩展 R8.Shi 命名空间 -/
+/-! ## Shi XOR (R 2 Klein 群作用) — 扩展 R8.Shi 命名空间 -/
 
 namespace SSBX.Foundation.Bagua.R8.Shi
 

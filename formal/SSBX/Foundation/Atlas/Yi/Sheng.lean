@@ -39,8 +39,8 @@ open SSBX.Foundation.Atlas.Yi
 /-! ## § 1 SiXiang (四象, T_2) -/
 
 /-- 四象 (Sì Xiàng): the 4 elemental images = `R 2 = Shi`.  The four
-    classical names live here; in the V₄ Atlas the same type is named
-    `{道, 已, 今, 未}` (see `Atlas/Yi/ShiV4.lean`). -/
+    classical names live here; in the temporal-modality Atlas the same type is named
+    `{道, 已, 今, 未}` (see `Atlas/Yi/Shi.lean`). -/
 abbrev SiXiang : Type := Shi
 
 namespace SiXiang

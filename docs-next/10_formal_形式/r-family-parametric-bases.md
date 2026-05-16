@@ -1,13 +1,19 @@
 # R-Family Parametric Bases (D3 companion)
 
-> **Status**: D3 documentation companion to `wen-substrate.md` v1.0.2+ §3.6.
-> Scope: concretizes the parametric R-Family framework per base; lists transfer
-> functors between bases; maps Lean coverage to theoretical bases.
+> **Status**: D3 documentation companion to `wen-substrate.md` v1.4 §3.6 + §3.7.8 (now in [`wen-substrate/02-parametric.md`](./wen-substrate/02-parametric.md) and [`wen-substrate/03-operation-monism.md`](./wen-substrate/03-operation-monism.md)).
+> Scope: concretizes the **algebraic-class** R-Family parametric framework per base; lists transfer
+> functors between bases; maps Lean coverage to theoretical bases. The non-algebraic δ-realisations are siblings, surveyed at the end of §2.
+
+## v1.4 reframing — δ-realisation parameter and the algebraic-class subset
+
+Per `wen-substrate.md` v1.4 §3.7.8 (distinction monism), the substrate-most-primitive parameter is the **realisation δ** of the primitive binary distinction `o`/`x`. This document treats the **algebraic-class subset** of δ-realisations: those where δ = k for k a ring or field. The k-parametric framework of §3.6 (wen-substrate v1.0+) is preserved verbatim under this re-reading; what changes is that "base k" is now understood as the algebraic-class case of a broader **δ-realisation framework**, with non-algebraic δ-realisations (quantum basis labels, propositional `Prop`, per-language vocabularies, traditional 阳/阴) as first-class siblings.
+
+Throughout this document, **k = ring/field** is the algebraic-class subset; **δ = realisation** is the broader parameter. Headers continue to read "base k" or "k = ℝ" etc. for the algebraic instances; the non-algebraic table at the end of §2 lays out the siblings. Companion Lean file [`Foundation/R/Distinction.lean`](../../formal/SSBX/Foundation/R/Distinction.lean) (~230 LOC, 0 sorry, 0 axiom) provides the substrate-most-primitive layer; the polymorphic `R N (δ : Type := Bool) : Type := Fin N → δ` in [`Foundation/R/Basic.lean`](../../formal/SSBX/Foundation/R/Basic.lean) (Route 3B refactor, 2026-05-16) makes the δ-substrate available to Lean code while preserving backward compatibility for the canonical δ = Bool default.
 
 ## Preface
 
-This document concretizes [`wen-substrate.md`](./wen-substrate.md) §3.6 — the
-parametric R-Family framework over a base $k$. wen-substrate states the
+This document concretizes [`wen-substrate/02-parametric.md`](./wen-substrate/02-parametric.md) — the
+algebraic-class R-Family parametric framework over a base $k$. wen-substrate states the
 abstract framework: R-Family is a **structural pattern** instantiable as
 **R-Family-over-$k$** for various bases $k$, with the same P1–P7 closure
 conditions stated parametrically (Layer A) and base-specific properties
@@ -343,6 +349,32 @@ discrete-valuation ring; what's missing is the R-Family-pattern lifting.
 
 **Domain**: $p$-adic arithmetic, Iwasawa theory, $p$-adic Hodge theory,
 formal group laws, profinite limit constructions.
+
+### §2.7 Non-algebraic δ-realisations (v1.4 siblings)
+
+The above six instances are all **algebraic-class** δ-realisations: δ = k carries ring or field structure. Under `wen-substrate.md` v1.4 §3.7.8 (distinction monism), the broader δ-realisation framework admits non-algebraic siblings — first-class on the same substrate, requiring different per-realisation relational structure in place of P3's bilinear / sesquilinear forms.
+
+| δ-realisation | δ type | algebraic? | additional structure | R-Family-over-δ instance |
+|---|---|---|---|---|
+| classical / Boolean (= F₂) | `Bool` | yes (field) | XOR, AND, ¬ | full P1–P7 in `Foundation/R/Basic.lean` (canonical δ = Bool default) |
+| real / continuous | ℝ | yes (field) | order, completeness | algebraic-class, §2.3 of this doc |
+| complex / Hilbert | ℂ | yes (field) | Hermitian inner product (P3-enrichment) | algebraic-class, §2.4; Hermitian via separate enrichment |
+| p-adic | ℂ_p | yes (field) | non-Archimedean absolute value | algebraic-class, §2.5 |
+| **quantum basis labels** | `{|0⟩, |1⟩}` | **no** | ℂ-amplitude algebra attached separately (substrate ≠ amplitude) | per-realisation bridge open; substrate carrier in `Foundation/R/Distinction.lean` |
+| **propositional / logical** | `Prop` | **no** | proof-relevance (Curry-Howard) | per-realisation bridge open |
+| **semantic / linguistic** | per-language `L` vocabulary | **no** | per-language syntax / semantics; `Sayable_L` / `Silent_L` predicates | per-realisation bridge open |
+| **yi-jing traditional** | 阳 / 阴 | **no** | classical-Chinese tradition overlay | per-realisation bridge open; Atlas namespace |
+
+**P3 cross-realisation note**. The bilinear / quadratic classification of §1.2 / §2's per-base entries is the **algebraic-class** form of substrate-level relational structure. For non-algebraic δ:
+
+- Quantum δ: relational structure is **Hermitian sesquilinear** on ℂ-amplitude, not F₂-bilinear on the δ carrier. The substrate carries qubit basis labels; the amplitude algebra is separate.
+- Propositional δ: relational structure is **proof-relevant** (intuitionistic / Heyting), with Curry-Howard correspondence between proofs and constructions.
+- Semantic δ: relational structure is per-language **syntactic / pragmatic** (subject-of, object-of, modification, …), with each language providing its own `Sayable_L` predicate.
+- Traditional 阳/阴: relational structure follows the classical-Chinese 易经 tradition's atom interactions; this is Atlas-level overlay, not substrate-level relational structure.
+
+For all non-algebraic δ, the underlying carrier `R' N δ := Fin N → δ` is well-defined (substrate-level); the closure conditions P1, P2, P4 (binary distinction, direct sum, squaring tower) hold uniformly; P3, P5, P6, P7b require additional per-realisation structure layered over and above the carrier. The companion file [`Foundation/R/Distinction.lean`](../../formal/SSBX/Foundation/R/Distinction.lean) makes the substrate-level layer available; the per-realisation bridge files remain open work.
+
+**Connection to modern algebraic frameworks** (condensed math / adic spaces / topos / stable ∞-categories): these tools apply at the **algebraic-class** layer. Non-algebraic δ-realisations may require different ambient frameworks (operator algebras for quantum; structured-language categories for semantic; type-theoretic categories with proof-relevance for propositional). This is documentary, not yet a formal claim.
 
 ## §3 Transfer functors between instances
 

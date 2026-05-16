@@ -295,7 +295,7 @@ theorem proj_lift_id_R7 (c : R7) (g : Cell256.GuoBit) :
   simp [projR8toR7, liftR7toR8, Shi.toYinGuo_ofYinGuo]
 ```
 
-证明用了 `Shi.toYinGuo_ofYinGuo` (one of the 双射 round-trip lemmas)。这是 8 个 retract 中**唯一**需要 V₄ tools (Shi 之 (因, 果) 双射)，其余都是 trivial structural projection。
+证明用了 `Shi.toYinGuo_ofYinGuo` (one of the 双射 round-trip lemmas)。这是 8 个 retract 中**唯一**需要 R₂ 之 Klein-four 结构工具（即 Shi 之 (因, 果) 双射，legacy 称作 V₄ tools），其余都是 trivial structural projection。
 
 ---
 

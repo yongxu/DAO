@@ -1,8 +1,15 @@
 /-
 # Wen.Native.Bridges.V4 -- V4 as native rank-2 Wen data
 
+This file uses `V4` from `Foundation/Hierarchy/Operators/V4/Core.lean`,
+which is the constructor-style presentation of `R 2` per
+`wen-substrate.md` v1.4 §3.7.8 (distinction monism).  The R-family is the
+one mathematical core; `V4` here is the ergonomic 4-constructor surface
+over `R 2 = Fin 2 → Bool`.
+
 The native interpreter remains generic over `Expr n`.  This module is only an
 adapter from the existing Klein-four carrier into `Expr 2` / `Value 2`.
+The rank-2 native Wen data is therefore a direct embedding of `R 2`.
 -/
 
 import SSBX.Foundation.Wen.Native.Eval

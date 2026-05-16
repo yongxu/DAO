@@ -1,19 +1,29 @@
 # R-Family Definition (D2 — single source of truth)
 
-> **Status**: D2 documentation companion to `wen-substrate.md` v1.0.3 §3.1.
-> Scope: concretizes the 12-item structural definition of R-Family-over-$\mathbb{F}_2$
+> **Status**: D2 documentation companion to `wen-substrate.md` v1.4 §3.1 (now in [`wen-substrate/01-foundations.md`](./wen-substrate/01-foundations.md)).
+> Scope: concretizes the 12-item structural definition of R-Family at the canonical δ = Bool (≅ F₂) realisation
 > as one mathematical object, bundles the existing Lean-side components, and
-> positions the result against the parametric extension (D3) and Phase 0
+> positions the result against the substrate-level distinction-monism layer
+> (chapter 03), the algebraic-class parametric extension (D3), and Phase 0
 > theorems (D4).
+
+## The substrate vs. the canonical δ = Bool realisation
+
+Per `wen-substrate.md` v1.4 §3.7.8 (distinction monism), the substrate-most-primitive layer is the **act of distinction** itself: `o`/`x` as abstract marks of an observable binary difference, with `Bool`, qubit basis labels, `Prop` ⊥/⊤, sayable/silent, and 阳/阴 all being *realisations* of this primitive. The realisation variable is named **δ**; `k` (ring/field) is the **algebraic-class subset** of δ-realisations.
+
+The 12-item definition below is given at the **canonical δ = Bool ≅ F₂ realisation** for definiteness. Most items lift to the substrate level (any δ); a few require algebraic structure on δ (i.e., δ = k for k a ring or field). The items split as:
+
+- **Substrate-level (any δ; chapter 03's distinction monism applies)**: items 1 (Carrier `Fin N → δ`), 2 (Origin `R 0`), 3 (Composition / direct sum), 5 (Tower with Δ / π / f^{⊕2}), 6 (Hom-as-content cardinality), 8 (Depth `R̂`), 9 (R₂ as universal 4-modality carrier — structural count), 10 (R₃ aspect alphabet — structural count), 12 (Self-following).
+- **Algebraic-class-specific (δ = k for k a ring or field)**: items 4 (Bilinear / quadratic relational layers — depends on char(k)), 7 (Ring structure R₄ ≅ M₂(k)), 11 (Atomic operations as M₂(k)).
+- **Mixed**: items 9, 10 have substrate-level counts but δ = Bool-specific F₂-vector-space presentations.
+
+The companion Lean module [`Foundation/R/Distinction.lean`](../../formal/SSBX/Foundation/R/Distinction.lean) (~230 LOC, zero sorry, zero axiom) provides the substrate-level primitive (`Distinction` inductive type + `Distinction.equivBool` bridge); [`Foundation/R/Basic.lean`](../../formal/SSBX/Foundation/R/Basic.lean) provides the δ-polymorphic carrier `R N (δ : Type := Bool) := Fin N → δ` with the canonical F₂ instance as the default-argument case.
+
+**Foundational lineage** (per `wen-substrate.md` v1.4 §3.7.8): Spencer-Brown *Laws of Form* (1969) — the primary mark of distinction; Bateson *Steps to an Ecology of Mind* (1972) — "a difference that makes a difference"; Wheeler "it from bit" (1989) — the primitive binary observable; yi-jing 阳/阴 tradition — the primary binary inscription. R-Family makes these type-theoretically precise.
 
 ## Preface
 
-This document concretizes [`wen-substrate.md`](./wen-substrate.md) v1.0.3 §3.1
-(the 12-item definition of R-Family-over-$\mathbb{F}_2$) into a **single
-mathematical object**, and points at the Lean modules that collectively realize
-each item. Where wen-substrate v1.0.3 §3.1 lists 12 components in prose, this
-document presents the same content as one structured tuple, gives it a
-mathematical type, and indexes the code anchors.
+This document concretizes [`wen-substrate/01-foundations.md`](./wen-substrate/01-foundations.md)'s 12-item R-Family definition (originally `wen-substrate.md` §3.1) into a **single mathematical object** at the canonical δ = Bool realisation, and points at the Lean modules that collectively realise each item. Where the chapter-01 §3.1 lists 12 components in prose, this document presents the same content as one structured tuple, gives it a mathematical type, and indexes the code anchors.
 
 **Why D2 exists**. Prior to D2, the 12 items of §3.1 were scattered across the
 Lean tree (`Foundation/R/Basic.lean`, `Foundation/R/DirectSum.lean`,
@@ -300,29 +310,27 @@ The 12 items of §1 are realized **collectively** by the following Lean modules.
 The umbrella module `Foundation.R.RFamilyStructure` (introduced in this D2
 patch) re-exports them as a navigation hub.
 
-| Item | Component                  | Lean module                                                       |
-| ---- | -------------------------- | ----------------------------------------------------------------- |
-| 1    | Carriers $R_N$             | `Foundation/R/Basic.lean` — `R N := Fin N → Bool`                 |
-| 2    | Origin $R_0$               | `Foundation/R/Basic.lean` — `R 0` (with `R0_subsingleton`)        |
-| 3    | Direct sum                 | `Foundation/R/DirectSum.lean` — `R.directSumEquiv`                |
-| 4    | L0/L1/L2 bilinear layers   | `Foundation/R/Bilinear.lean` — dot / sigma / `q^c` / Arf          |
-| 5    | Squaring tower             | `Foundation/R/Squaring.lean` — `squaringEquiv` + concrete witnesses |
-| 6    | Hom-as-content             | `Foundation/R/Hom.lean` (base) + `Foundation/R4/HomMat.lean` (matrix-of-$R_4$ view) |
-| 7    | Ring structure at $R_4$    | `Foundation/R4/EndR2.lean` — `applyR2`, `composeR2`, `idR4`       |
-| 8    | $R_\infty$                 | `Foundation/RInfty/Profinite.lean` — `L_inf` as inverse limit / Cantor |
-| 9    | $R_2$ as $V_4$ modality    | `Foundation/Atlas/Yi/ShiV4.lean` — `Shi` (= 道/已/今/未)           |
-| 10   | $R_3$ aspect alphabet      | `Foundation/Atlas/Yi/Bagua.lean` — 8 trigrams; zong split via `Foundation/Atlas/Yi/Operators.lean` |
-| 11   | Atomic operations at $R_4$ | `Foundation/R4/EndR2.lean` + `Foundation/R4/Enumeration.lean` (16 atoms) |
-| 12   | Self-following / umbrella  | `Foundation/R.lean` — pulls the whole subtree in one import       |
+| Item | Component                  | Layer | Lean module                                                       |
+| ---- | -------------------------- | ----- | ----------------------------------------------------------------- |
+| —    | **Primitive distinction** (v1.4) | substrate | [`Foundation/R/Distinction.lean`](../../formal/SSBX/Foundation/R/Distinction.lean) — `inductive Distinction \| o \| x` + `Distinction.equivBool : Distinction ≃ Bool` (~230 LOC, 0 sorry, 0 axiom) |
+| 1    | Carriers $R_N$             | substrate-level (δ-polymorphic) | `Foundation/R/Basic.lean` — `R N (δ : Type := Bool) := Fin N → δ` (Route 3B refactor) |
+| 2    | Origin $R_0$               | substrate-level | `Foundation/R/Basic.lean` — `R 0` (with `R0_subsingleton`)        |
+| 3    | Direct sum                 | substrate-level | `Foundation/R/DirectSum.lean` — `R.directSumEquiv`                |
+| 4    | L0/L1/L2 bilinear layers   | δ = Bool / algebraic-class | `Foundation/R/Bilinear.lean` — dot / sigma / `q^c` / Arf          |
+| 5    | Squaring tower             | substrate-level | `Foundation/R/Squaring.lean` — `squaringEquiv` + concrete witnesses |
+| 6    | Hom-as-content             | substrate-level (cardinality) | `Foundation/R/Hom.lean` (base) + `Foundation/R4/HomMat.lean` (matrix-of-$R_4$ view) |
+| 7    | Ring structure at $R_4$    | δ = Bool / algebraic-class | `Foundation/R4/EndR2.lean` — `applyR2`, `composeR2`, `idR4`       |
+| 8    | $R_\infty$                 | substrate-level | `Foundation/RInfty/Profinite.lean` — `L_inf` as inverse limit / Cantor |
+| 9    | $R_2$ as 4-modality carrier (legacy V₄) | mixed | `Foundation/Atlas/Yi/ShiV4.lean` — `Shi` (= 道/已/今/未); count substrate-level, F₂-vector-space presentation δ = Bool |
+| 10   | $R_3$ aspect alphabet      | mixed | `Foundation/Atlas/Yi/Bagua.lean` — 8 trigrams; zong split via `Foundation/Atlas/Yi/Operators.lean` |
+| 11   | Atomic operations at $R_4$ | δ = Bool / algebraic-class | `Foundation/R4/EndR2.lean` + `Foundation/R4/Enumeration.lean` (16 atoms) |
+| 12   | Self-following / umbrella  | substrate-level | `Foundation/R.lean` — pulls the whole subtree in one import       |
 
-**Parametric extension** (§3): `Foundation/R/Parametric.lean` — `RFamily k N :=
-Fin N → k`, with `Bool`-specialization recovering the $\mathbb{F}_2$ instance
-definitionally.
+**Substrate-most-primitive layer** (v1.4): `Foundation/R/Distinction.lean` — `inductive Distinction | o | x` with `Distinction.equivBool : Distinction ≃ Bool` the canonical classical-computational realisation. The δ-parametric carrier `R' N δ := Fin N → δ` (definitionally equal to the `R N δ` of `Basic.lean`) makes the substrate layer available.
 
-**Aggregator** (this D2 patch): `Foundation/R/RFamilyStructure.lean` — the
-**single source-of-truth module** that imports the above and serves as the
-navigation hub. Downstream code looking for "R-Family as one object" should
-import or cite `Foundation.R.RFamilyStructure`.
+**Parametric extension** (§3, algebraic-class): `Foundation/R/Parametric.lean` — `RFamily k N := Fin N → k`, with `Bool`-specialisation recovering the F₂ instance definitionally.
+
+**Aggregator** (this D2 patch): `Foundation/R/RFamilyStructure.lean` — the **single source-of-truth module** that imports the above and serves as the navigation hub. Downstream code looking for "R-Family as one object" should import or cite `Foundation.R.RFamilyStructure`.
 
 ---
 
@@ -366,6 +374,7 @@ companion. D4 is the proof-side companion.
 
 ## Version history
 
+- **v1.1** (2026-05-16): v1.4 alignment patch. Adds substrate-vs-canonical-δ-realisation preface (between header and §1) explaining that the 12-item definition is at the canonical δ = Bool ≅ F₂ realisation while the substrate-most-primitive layer (chapter 03's distinction monism) is realisation-free. Annotates each item in §4 code-anchor table with its layer (substrate-level vs δ = Bool / algebraic-class vs mixed). Adds new top row for `Foundation/R/Distinction.lean` (~230 LOC, 0 sorry, 0 axiom) — the primitive distinction Lean file. Cites Spencer-Brown / Bateson / Wheeler / yi-jing foundational lineage. Header link points to the new wen-substrate folder structure (`wen-substrate/01-foundations.md` rather than the single-file `wen-substrate.md` §3.1). No mathematical content changed; structural framing refined.
 - **v1.0** (2026-05-16): Initial D2 release. Bundles wen-substrate v1.0.3 §3.1
   into one structured-tuple definition (§1), gives the mathematical type (§2),
   recaps the parametric extension (§3), maps to existing Lean code anchors (§4),

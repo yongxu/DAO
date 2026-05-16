@@ -1,7 +1,7 @@
 /-
 # Wen.Layered -- umbrella imports for the layered semantic core
 
-Phase 8 keeps these modules beside the existing V4Kernel spine.  This file is
+Phase 8 keeps these modules beside the existing RKernel spine.  This file is
 only an import surface; definitions live in the focused files below.
 -/
 
