@@ -29,17 +29,11 @@ inductive PreservationLevel where
 `implicationTruth` means the classical-logic implication slice where
 contraposition preserves truth.  It is intentionally not a global truth claim
 for arbitrary logical systems. -/
-def preservesAt : V4 → PreservationLevel → Bool
-  | _, .setBijection => true
-  | .dao, .algebraHom => true
-  | .cuo, .algebraHom => false
-  | .zong, .algebraHom => false
-  | .cuoZong, .algebraHom => true
-  | _, .categoricalFunctor => true
-  | .dao, .implicationTruth => true
-  | .cuo, .implicationTruth => false
-  | .zong, .implicationTruth => false
-  | .cuoZong, .implicationTruth => true
+def preservesAt (g : V4) : PreservationLevel → Bool
+  | .setBijection => true
+  | .algebraHom => V4.elim g true false false true
+  | .categoricalFunctor => true
+  | .implicationTruth => V4.elim g true false false true
 
 def contentAxis (g : V4) : Prop :=
   g = .dao ∨ g = .cuo

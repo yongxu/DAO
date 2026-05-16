@@ -49,7 +49,7 @@ open SSBX.Foundation.Atlas.Yi.YiInstr
     surface compatibility with the pre-migration wenyan vocabulary. -/
 abbrev YiInstr : Type := Instr
 
-/-! ## § 1  时态四字 (V₄ Klein) -/
+/-! ## § 1  时态四字 (R 2 Klein-four) -/
 
 notation "道" => Shi.dao
 notation "已" => Shi.ji

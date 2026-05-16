@@ -6,28 +6,28 @@ the two temporal V4 bits.
 -/
 
 import SSBX.Foundation.Wen.Layered.Bridges.Word64
-import SSBX.Foundation.Wen.V4Kernel.Root512
+import SSBX.Foundation.Wen.RKernel.Root512
 
 namespace SSBX.Foundation.Wen.Layered.Bridges
 
 namespace RootCell256
 
-abbrev Carrier : Type := SSBX.Foundation.Wen.V4Kernel.Root512.RootCell256
+abbrev Carrier : Type := SSBX.Foundation.Wen.RKernel.Root512.RootCell256
 
 def toExistingR8 (cell : Carrier) : SSBX.Foundation.Bagua.R8.R8 :=
-  SSBX.Foundation.Wen.V4Kernel.Mode16.r8OfView cell
+  SSBX.Foundation.Wen.RKernel.Mode16.r8OfView cell
 
 def fromExistingR8 (cell : SSBX.Foundation.Bagua.R8.R8) : Carrier :=
-  SSBX.Foundation.Wen.V4Kernel.Mode16.viewOfR8 cell
+  SSBX.Foundation.Wen.RKernel.Mode16.viewOfR8 cell
 
 @[simp] theorem toExistingR8_fromExistingR8
     (cell : SSBX.Foundation.Bagua.R8.R8) :
     toExistingR8 (fromExistingR8 cell) = cell :=
-  SSBX.Foundation.Wen.V4Kernel.Mode16.r8OfView_viewOfR8 cell
+  SSBX.Foundation.Wen.RKernel.Mode16.r8OfView_viewOfR8 cell
 
 @[simp] theorem fromExistingR8_toExistingR8 (cell : Carrier) :
     fromExistingR8 (toExistingR8 cell) = cell :=
-  SSBX.Foundation.Wen.V4Kernel.Mode16.viewOfR8_r8OfView cell
+  SSBX.Foundation.Wen.RKernel.Mode16.viewOfR8_r8OfView cell
 
 def toBitSpace (cell : Carrier) : BitSpace 8 :=
   fun i =>
@@ -71,38 +71,38 @@ def fromBitSpace (v : BitSpace 8) : Carrier :=
 
 @[simp] theorem fromBitSpace_zero :
     fromBitSpace (BitSpace.zero : BitSpace 8) =
-      SSBX.Foundation.Wen.V4Kernel.Root512.originCell := rfl
+      SSBX.Foundation.Wen.RKernel.Root512.originCell := rfl
 
 @[simp] theorem toBitSpace_zero :
-    toBitSpace SSBX.Foundation.Wen.V4Kernel.Root512.originCell =
+    toBitSpace SSBX.Foundation.Wen.RKernel.Root512.originCell =
       (BitSpace.zero : BitSpace 8) := by
   funext i
   fin_cases i <;> rfl
 
 @[simp] theorem toBitSpace_xor (a b : Carrier) :
-    toBitSpace (SSBX.Foundation.Wen.V4Kernel.Root512.composeCell a b) =
+    toBitSpace (SSBX.Foundation.Wen.RKernel.Root512.composeCell a b) =
       BitSpace.xor (toBitSpace a) (toBitSpace b) := by
   funext i
   fin_cases i <;>
     simp [toBitSpace, BitSpace.xor,
-      SSBX.Foundation.Wen.V4Kernel.Root512.composeCell,
-      SSBX.Foundation.Wen.V4Kernel.Word64.compose,
+      SSBX.Foundation.Wen.RKernel.Root512.composeCell,
+      SSBX.Foundation.Wen.RKernel.Word64.compose,
       SSBX.Foundation.Hierarchy.Operators.V4.compose,
       SSBX.Foundation.Hierarchy.Operators.V4.contentBit_ofBits,
       SSBX.Foundation.Hierarchy.Operators.V4.frameBit_ofBits]
 
 theorem rootCell256_bridge_summary :
     fromBitSpace (BitSpace.zero : BitSpace 8) =
-      SSBX.Foundation.Wen.V4Kernel.Root512.originCell
+      SSBX.Foundation.Wen.RKernel.Root512.originCell
     ∧ (∀ cell : SSBX.Foundation.Bagua.R8.R8,
       toExistingR8 (fromExistingR8 cell) = cell)
     ∧ (∀ cell : Carrier, fromExistingR8 (toExistingR8 cell) = cell)
-    ∧ toBitSpace SSBX.Foundation.Wen.V4Kernel.Root512.originCell =
+    ∧ toBitSpace SSBX.Foundation.Wen.RKernel.Root512.originCell =
       (BitSpace.zero : BitSpace 8)
     ∧ (∀ cell : Carrier, fromBitSpace (toBitSpace cell) = cell)
     ∧ (∀ v : BitSpace 8, toBitSpace (fromBitSpace v) = v)
     ∧ (∀ a b : Carrier,
-        toBitSpace (SSBX.Foundation.Wen.V4Kernel.Root512.composeCell a b) =
+        toBitSpace (SSBX.Foundation.Wen.RKernel.Root512.composeCell a b) =
           BitSpace.xor (toBitSpace a) (toBitSpace b)) :=
   ⟨fromBitSpace_zero, toExistingR8_fromExistingR8, fromExistingR8_toExistingR8,
    toBitSpace_zero, fromBitSpace_toBitSpace,

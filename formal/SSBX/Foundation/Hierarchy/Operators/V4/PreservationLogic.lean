@@ -103,14 +103,12 @@ namespace ImplicationSlice
 def truth (s : ImplicationSlice) : Bool :=
   (!s.antecedent) || s.consequent
 
-def act : V4 → ImplicationSlice → ImplicationSlice
-  | .dao, s => s
-  | .cuo, s =>
-      { antecedent := !s.antecedent, consequent := !s.consequent }
-  | .zong, s =>
-      { antecedent := s.consequent, consequent := s.antecedent }
-  | .cuoZong, s =>
-      { antecedent := !s.consequent, consequent := !s.antecedent }
+def act (g : V4) (s : ImplicationSlice) : ImplicationSlice :=
+  V4.elim g
+    s
+    { antecedent := !s.antecedent, consequent := !s.consequent }
+    { antecedent := s.consequent, consequent := s.antecedent }
+    { antecedent := !s.consequent, consequent := !s.antecedent }
 
 theorem truth_mk (p q : Bool) :
     truth { antecedent := p, consequent := q } = ((!p) || q) := rfl

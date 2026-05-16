@@ -6,8 +6,10 @@
 # 根层映射 root-layer-map · v3
 
 > 本文是**结构地图**——把 R₀..R₈ 的 R-轴（layer-index）、M-轴（meta-content）、字根轴（layer-character）三者并置。
-> 历史变迁：v2 (2026-05-09) 含 R₁..R₆ + 192 格旧 surface；v3 (2026-05-11) 切换到 **R₀..R₈ + Cell256 + V₄ Klein Shi** 之 definitive 编号。
+> 历史变迁：v2 (2026-05-09) 含 R₁..R₆ + 192 格旧 surface；v3 (2026-05-11) 切换到 **R₀..R₈ + Cell256 + R₂ Klein-four 结构 Shi** 之 definitive 编号。
 > 不再保留 Cell192 / R₁..R₆ 顶层 claim — 仅在「历史修正」附录中作 archive pointer。
+>
+> **命名注**：本文中之 "V₄" / "Shi V₄" / "V₄ Klein" 等指 R₂ 上的 Klein-four-group 结构 —— 即 R₂ 之两个可交换 involution 与其复合（algebraic content 不变）。"V₄" 是 legacy marquee 命名，因 Lean 模块名 `Operators/V4Outer.lean` 及 layer 表行连续性而保留；algebraic content 是 R₂ 之 Klein-four 结构，并非独立 axiom。
 
 ---
 

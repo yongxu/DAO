@@ -1,8 +1,16 @@
 /-
 # Wen.Layered.Bridges.V4 -- canonical V4 as a two-bit space
 
+This file uses `V4` from `Foundation/Hierarchy/Operators/V4/Core.lean`,
+which is the constructor-style presentation of `R 2` per
+`wen-substrate.md` v1.4 §3.7.8 (distinction monism).  The R-family is the
+one mathematical core; `V4` here is the ergonomic 4-constructor surface
+over `R 2 = Fin 2 → Bool`.
+
 This bridge is intentionally thin: it reads the existing V4 carrier through
-the layered `BitSpace 2` API without changing the V4 kernel.
+the layered `BitSpace 2` API without changing the V4 kernel.  Since
+`BitSpace 2` is itself `Fin 2 → Bool = R 2`, the `toBitSpace`/`fromBitSpace`
+pair is exactly `V4.equivR2` exposed under the layered name.
 -/
 
 import SSBX.Foundation.Hierarchy.Operators.V4.Core

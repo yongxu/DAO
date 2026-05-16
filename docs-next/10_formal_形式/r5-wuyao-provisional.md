@@ -291,7 +291,7 @@ R₅ 之 32 cells 仅是 **Mian × Bool 之纯机械积** — Bool 没有独立 
 | 不做 | 原因 |
 |---|---|
 | 不刻画独立 Yi-style 32-命 doctrine | R₅ 无传统 Yi anchor |
-| 不刻画 V₄ outer 算子 (zong / hu) | V₄ outer 主要在 R₃ / R₆ / R₈; R₅ 无独立 V₄ structure |
+| 不刻画 V₄ outer 算子 (zong / hu) | V₄ outer (R₂ 之 Klein-four 结构所给 outer 算子族；legacy 称作 V₄) 主要在 R₃ / R₆ / R₈; R₅ 无独立此结构 |
 | 不刻画 BenZheng quadrant 之 R₅ analog | quadrant 在 R₃ / R₆ 层定义 |
 | 不接 retention/protention 现象学 | 那是 R₇ / R₈ (因 / 果) 之内容 |
 

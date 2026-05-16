@@ -1,5 +1,5 @@
 /-
-# WenyanSelfInterp — 以文自释 (R8 / V₄ Klein)
+# WenyanSelfInterp — 以文自释 (R8 / R 2 Klein-four)
 
 Self-interpretation: the wenyan-encoded language interprets itself.
 
@@ -17,7 +17,7 @@ We build:
 ## Phase F.1 migration note (Cell192 → R8)
 
 This file is Phase F.1 of the Cell192 → R8 migration. The atomic
-encoding now uses `R8.Shi` (V₄ Klein 4-group with `dao/已/今/未`) instead
+encoding now uses `R8.Shi` (R 2 Klein-four 4-group with `dao/已/今/未`) instead
 of the legacy `Cell192.Shi` (Z/3 cyclic). All downstream layers (encInstr /
 ProgEnc / StateEnc / metaStep / dispatch / Quine) operate on `R8`
 throughout.
@@ -73,7 +73,7 @@ open SSBX.Foundation.Bagua.R8
 
 /-- Shi ↔ Fin 4: dao ↔ 0, ji ↔ 1, jin ↔ 2, wei ↔ 3.
 
-    Migrated from Cell192 3-state Z/3 to R8 4-state V₄ Klein per
+    Migrated from Cell192 3-state Z/3 to R8 4-state R 2 Klein-four per
     yi-RO-hierarchy-v2.md. Index 0 (dao) is the V₄ identity element. -/
 def toIdx : Shi → Fin 4
   | .dao => ⟨0, by omega⟩

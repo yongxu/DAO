@@ -1,10 +1,33 @@
-# Universal Claims — proof structure for wen-substrate v1.1 §4.7-§4.12 (D5)
+# Universal Claims — proof structure for wen-substrate v1.4 §4.7-§4.12 (D5)
 
-> **Status**: D5 companion to [`wen-substrate.md`](./wen-substrate.md) v1.1.
+> **Status**: D5 companion to wen-substrate v1.4 (now in [`wen-substrate/`](./wen-substrate/) folder; §4.7-§4.12 content in [`05-coverage.md`](./wen-substrate/05-coverage.md) and [`06-universal-grammar.md`](./wen-substrate/06-universal-grammar.md); §7.8 Claim Z in [`07-claim.md`](./wen-substrate/07-claim.md)).
 > Scope: makes the six maximum-strength universal claims of §4.7-§4.12
 > proof-structure explicit. Each claim is restated, given concrete
 > sub-obligations, falsification routes, and current status.
-> v0.1 · 2026-05-16 · doc-only; no code changes.
+> v0.2 · 2026-05-16 · v1.4 alignment pass (substrate-level claims preface added).
+
+---
+
+## Substrate-level claims vs realisation-relative concretizations (v1.4 alignment)
+
+Per `wen-substrate.md` v1.4 §3.7.8 (distinction monism), each of the six universal claims below is at the **substrate level** — "R-Family is X" reads as "R-Family-pattern-over-some-δ is X" for the appropriate realisation δ of the primitive binary distinction. The specific R-Family instances (F₂ for stabilizer / discrete; ℂ for Hilbert / standard QM; ℂ_p for the p-adic-QM research direction; non-algebraic δ for quantum basis labels, propositional `Prop`, per-language semantics, traditional 阳/阴) are **realisation-relative concretizations** of the substrate-level claim.
+
+For each claim below:
+- The **substrate-level form** is realisation-free — "the structural pattern of [domain] is R-Family".
+- The **canonical δ-realisation form** is what most of this document discharges in detail — at the algebraic-class realisation δ = k for the appropriate k (F₂ for discrete/Boolean, ℂ for Hilbert, etc.).
+- The **non-algebraic δ siblings** (per chapter 03's distinction monism) provide alternate realisations of the same substrate-level claim.
+
+In particular:
+- **Claim Z** (§4.12 / §7.8 — "formal" = "R-Family-articulable") strengthens under v1.4 to: **"formal" ≡ "expressible in observed distinctions, iterated by Σ"**. The residual "but which k?" of v1.3 dissolves into "which δ-realisation is appropriate to the domain", with the substrate itself δ-independent.
+- **UG** (§4.7 + §4.7bis) is realised at δ = Bool for the discrete-symbolic instance (the X²-256 lattice over F₂); the substrate-level claim is "any UG worth the name is R-Family-articulable".
+- **Cognition** (§4.8) is realised at δ = Bool for symbolic / computational cognition; quantum-cognition speculations would sit at a non-algebraic quantum-basis δ with ℂ-amplitude enrichment.
+- **Phenomenology** (§4.9) is realised at δ = Bool for the R₄ phenomenology matrix; alternative realisations may instantiate the same 16-cell algebraic structure with different per-domain content.
+- **Decidability** (§4.10) is realised at δ = Bool (the countable layer ⋃_N R_N over F₂) for the standard halting / Gödel content; the substrate-level decidability boundary is δ-independent.
+- **Physical-informational** (§4.11) cites Wheeler's "it from bit" lineage — exactly the v1.4 framing (Wheeler's "bit" *is* the primitive distinction `o`/`x`); the p-adic-QM via δ = ℂ_p is one algebraic-realisation option, not the canonical one.
+
+**Foundational lineage** (per `wen-substrate.md` v1.4 §3.7.8): Spencer-Brown *Laws of Form* (1969), Bateson "difference that makes a difference" (1972), Wheeler "it from bit" (1989), yi-jing 阳/阴 tradition. The lineage strengthens Claim Z's bi-directional structural argument: D1 ⟹ P1–P7 (substrate-level analytic step) ⟹ R-Family-pattern-over-some-δ (substrate-level synthetic step) — none of which references a specific algebraic realisation.
+
+Companion Lean files: [`Foundation/R/Distinction.lean`](../../formal/SSBX/Foundation/R/Distinction.lean) (primitive distinction; ~230 LOC, 0 sorry, 0 axiom); [`Foundation/R/Basic.lean`](../../formal/SSBX/Foundation/R/Basic.lean) (δ-polymorphic `R N (δ : Type := Bool) := Fin N → δ`, Route 3B refactor 2026-05-16).
 
 ---
 

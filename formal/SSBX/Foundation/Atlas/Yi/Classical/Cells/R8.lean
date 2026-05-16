@@ -5,7 +5,7 @@
 
 R₈ = R₆ × Shi = (Z/2)⁶ × V₄ = 256 cells.
 
-Shi 是 V₄ Klein 四群 = {道, 已, 今, 未}（**绝非 Z/3 cyclic**）：
+Shi 是 R 2 Klein 四群 = {道, 已, 今, 未}（**绝非 Z/3 cyclic**）：
   - 道 = (0, 0) = V₄ 单位元 = 跨时空永真 anchor
   - 已 = (1, 0) = parity-like (P)：过去固定，无未来
   - 未 = (0, 1) = time-reversal-like (T)：未来开放，无过去
@@ -19,7 +19,7 @@ Shi 是 V₄ Klein 四群 = {道, 已, 今, 未}（**绝非 Z/3 cyclic**）：
 Builds on Yi.lean and BaguaAlgebra.lean.
 
 ## Phases
-  § 1   Shi (时态) inductive + V₄ Klein 群结构 (complement / reverse / complementReverse involution)
+  § 1   Shi (时态) inductive + R 2 Klein 群结构 (complement / reverse / complementReverse involution)
   § 2   R8 = Hexagram × Shi + cardinality 256
   § 3   R8 lateral operators (合 hex flips with 时态)
   § 4   xuGua (序卦传 King Wen order) as List Hexagram of length 64
@@ -36,7 +36,7 @@ open SSBX.Foundation.Yi.Yi.Trigram
 open SSBX.Foundation.Bagua.BaguaAlgebra
 open SSBX.Foundation.Bagua.R7 (YinBit)
 
-/-! ## § 1 Shi (时态) — V₄ Klein 四群 = {道, 已, 今, 未}
+/-! ## § 1 Shi (时态) — R 2 Klein 四群 = {道, 已, 今, 未}
 
   Shi 由 R5/R6 双 axis 之 (因, 果) ∈ Bool² emerge（详 yi-RO-hierarchy.md 第六部分）：
   - YinBit (因, R5 atom) = past trace bit
@@ -113,7 +113,7 @@ theorem complement_reverse_comm (s : Shi) : complement (reverse s) = reverse (co
 theorem cuoZong_eq_compose (s : Shi) : complementReverse s = complement (reverse s) := by
   rcases s with ⟨y, g⟩; cases y <;> cases g <;> rfl
 
-/-! ### Shi ↔ (YinBit × GuoBit) ≅ V₄ Klein 双射
+/-! ### Shi ↔ (YinBit × GuoBit) ≅ Klein four-group (R 2) 双射
 
   Shi 之 V₄ 结构通过 (因, 果) bit 显式暴露，对应 yi-RO-hierarchy.md 第六部分:
   Shi V₄ = R5⊗R6 emergence。 -/
@@ -441,7 +441,7 @@ theorem hexXor_assoc (h1 h2 h3 : Hexagram) :
 
 /-! ### § 7.3 Shi XOR
 
-  Shi = V₄ Klein four-group. We define XOR via the (因, 果) ∈ Bool² bijection. -/
+  Shi = Klein four-group on R 2. We define XOR via the (因, 果) ∈ Bool² bijection. -/
 
 /-- Shi XOR via componentwise Bool XOR on (因, 果). -/
 def shiXor (s1 s2 : Shi) : Shi :=

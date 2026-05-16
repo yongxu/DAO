@@ -3,7 +3,7 @@
 
 This is the **clean-stack port** of `Atlas/Yi/Classical/Computation/BaguaWenSpec.lean`
 onto the new `Atlas/Yi/` overlay (types live in `Names.lean`, `Bagua.lean`,
-`Hexagrams.lean`, `ShiV4.lean`).  No legacy `Yi.Yi` or `Bagua.BaguaTuring`
+`Hexagrams.lean`, `Shi.lean`).  No legacy `Yi.Yi` or `Bagua.BaguaTuring`
 import — everything is expressed against the R-Family atlas.
 
 The 23 reserved tokens carry the same `baguaWen` doctrine (per
@@ -30,7 +30,7 @@ the R-Family `Trigram` (= `R 3`) of `Atlas/Yi/Names.lean`.
 
 import SSBX.Foundation.Atlas.Yi.Names
 import SSBX.Foundation.Atlas.Yi.Bagua
-import SSBX.Foundation.Atlas.Yi.ShiV4
+import SSBX.Foundation.Atlas.Yi.Shi
 
 namespace SSBX.Foundation.Atlas.Yi.WenSpec
 
@@ -54,12 +54,12 @@ theorem primaryTokens_length : primaryTokens.length = 12 := by native_decide
 
 theorem primaryTokens_nodup : primaryTokens.Nodup := by native_decide
 
-/-! ## § 2  4 时态 tokens (V₄ Klein)
+/-! ## § 2  4 时态 tokens (Klein four-group on `R 2`)
 
-The 4 时态 names on `Shi = R 2` (V₄ Klein group).  The `道` token
-denotes the V₄ identity (永真 / cross-temporal anchor). -/
+The 4 时态 names on `Shi = R 2` (Klein four-group).  The `道` token
+denotes the identity element (永真 / cross-temporal anchor). -/
 
-/-- Wenyan token for each named V₄ element.  Lifted from `ShiV4.lean`. -/
+/-- Wenyan token for each named Shi element.  Lifted from `Shi.lean`. -/
 def shiToken (s : Shi) : String :=
   if s = Shi.dao then "道"
   else if s = Shi.ji  then "已"

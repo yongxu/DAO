@@ -5,6 +5,8 @@
 >
 > 作用：把 **Yi (爻 / 四象 / 八卦 / 重卦)**、**Bagua (BenZheng + Mian + Quadrant)**、**BaguaTuring (受控计算)** 与**不完备边界 (Kleene/Rice/Gödel)** 整合到同一 R-hierarchy 阅读路径。本页是 R₀..R₈ 形式系统的入口 hub。
 >
+> **命名注**：本文中之 "V₄" 指 R₂ 之 Klein-four-group 结构（即 R₂ 之两个可交换 involution 与其复合）。"V₄" 是 legacy marquee 命名，因 Lean 模块名 (`Operators/V4Outer.lean`、`ShiV4` 等) 与 doc-internal table-row 一致性而保留；algebraic content 是 R₂ 之 Klein-four 结构。
+>
 > 配套 v3 兄弟文档：[ox-notation.md](ox-notation.md) · [shi-v4.md](shi-v4.md) · [r5-wuyao-provisional.md](r5-wuyao-provisional.md) · [r7-yin-r8-guo.md](r7-yin-r8-guo.md) · [lift-project.md](lift-project.md) · [cell256-grid.md](cell256-grid.md) · [64-hexagram-grid.md](64-hexagram-grid.md) · [sanben-sijieduan-grid.md](sanben-sijieduan-grid.md)
 > 形式锚：[`Yi.lean`](../../formal/SSBX/Foundation/Yi/Yi.lean) · [`BaguaAlgebra.lean`](../../formal/SSBX/Foundation/Bagua/BaguaAlgebra.lean) · [`BenZheng.lean`](../../formal/SSBX/Foundation/Bagua/BenZheng.lean) · [`Cell128.lean`](../../formal/SSBX/Foundation/Bagua/Cell128.lean) · [`Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) · [`BaguaTuring.lean`](../../formal/SSBX/Foundation/Bagua/BaguaTuring.lean) · [`GodelLi.lean`](../../formal/SSBX/Foundation/Bagua/GodelLi.lean) · [`KleeneInternal.lean`](../../formal/SSBX/Foundation/Bagua/KleeneInternal.lean)
 
@@ -53,7 +55,7 @@ inductive SiXiang : Type
   | taiyin   -- 太阴 xx
 ```
 
-R₂ = (Z/2)² = 4 = V₄ Klein 结构。
+R₂ = (Z/2)² = F₂² 有 4 元，含两个可交换 involution 与其复合 —— Klein-four-group 结构 (legacy V₄)。
 
 ### 1.3 R₃ Trigram (八卦) — `Yi.lean:54`
 

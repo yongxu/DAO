@@ -8,7 +8,7 @@ content/frame bits.
 import SSBX.Foundation.Wen.Layered.Bridges.V4
 import SSBX.Foundation.Lang.Lexicon
 import SSBX.Foundation.Atlas.Yi.Classical.Core.Yi
-import SSBX.Foundation.Wen.V4Kernel.Word64
+import SSBX.Foundation.Wen.RKernel.Word64
 
 namespace SSBX.Foundation.Wen.Layered.Bridges
 
@@ -17,7 +17,7 @@ namespace Word64
 open SSBX.Foundation.Hierarchy.Operators
 open SSBX.Foundation.Yi.Yi
 
-abbrev Carrier : Type := SSBX.Foundation.Wen.V4Kernel.Word64
+abbrev Carrier : Type := SSBX.Foundation.Wen.RKernel.Word64
 
 def yaoOfBit : Bool → Yao
   | false => .yang
@@ -70,14 +70,14 @@ theorem word64_is_r6_hexagram :
   ⟨ofHexagram_toHexagram, toHexagram_ofHexagram⟩
 
 theorem word64_hexagram_checklist_summary :
-    SSBX.Foundation.Wen.V4Kernel.Word64.all.length = 64
-    ∧ SSBX.Foundation.Wen.V4Kernel.Word64.all.length = 4 ^ 3
+    SSBX.Foundation.Wen.RKernel.Word64.all.length = 64
+    ∧ SSBX.Foundation.Wen.RKernel.Word64.all.length = 4 ^ 3
     ∧ Nonempty (Carrier ≃ Hexagram)
     ∧ (∀ word : Carrier, hexagramEquiv.symm (hexagramEquiv word) = word)
     ∧ (∀ h : Hexagram, hexagramEquiv (hexagramEquiv.symm h) = h)
     ∧ (∀ word : Carrier, ofHexagram (toHexagram word) = word)
     ∧ (∀ h : Hexagram, toHexagram (ofHexagram h) = h) :=
-  ⟨SSBX.Foundation.Wen.V4Kernel.Word64.all_length,
+  ⟨SSBX.Foundation.Wen.RKernel.Word64.all_length,
    by native_decide,
    ⟨hexagramEquiv⟩,
    word64_is_r6_hexagram.1,
@@ -115,31 +115,31 @@ def wordOfToken (token : String) : Option Carrier :=
   | none => wordOfBits token
 
 theorem qian_token :
-    wordOfToken "乾" = some SSBX.Foundation.Wen.V4Kernel.Word64.qian := by
+    wordOfToken "乾" = some SSBX.Foundation.Wen.RKernel.Word64.qian := by
   native_decide
 
 theorem kun_token :
-    wordOfToken "坤" = some SSBX.Foundation.Wen.V4Kernel.Word64.kun := by
+    wordOfToken "坤" = some SSBX.Foundation.Wen.RKernel.Word64.kun := by
   native_decide
 
 theorem complete_token :
-    wordOfToken "既济" = some SSBX.Foundation.Wen.V4Kernel.Word64.complete := by
+    wordOfToken "既济" = some SSBX.Foundation.Wen.RKernel.Word64.complete := by
   native_decide
 
 theorem incomplete_token :
-    wordOfToken "未济" = some SSBX.Foundation.Wen.V4Kernel.Word64.incomplete := by
+    wordOfToken "未济" = some SSBX.Foundation.Wen.RKernel.Word64.incomplete := by
   native_decide
 
 theorem english_qian_token :
-    wordOfToken "heaven" = some SSBX.Foundation.Wen.V4Kernel.Word64.qian := by
+    wordOfToken "heaven" = some SSBX.Foundation.Wen.RKernel.Word64.qian := by
   native_decide
 
 theorem bridge_summary :
     SSBX.Foundation.Lang.Lexicon.hexagram.length = 64
-    ∧ wordOfToken "乾" = some SSBX.Foundation.Wen.V4Kernel.Word64.qian
-    ∧ wordOfToken "坤" = some SSBX.Foundation.Wen.V4Kernel.Word64.kun
-    ∧ wordOfToken "既济" = some SSBX.Foundation.Wen.V4Kernel.Word64.complete
-    ∧ wordOfToken "未济" = some SSBX.Foundation.Wen.V4Kernel.Word64.incomplete
+    ∧ wordOfToken "乾" = some SSBX.Foundation.Wen.RKernel.Word64.qian
+    ∧ wordOfToken "坤" = some SSBX.Foundation.Wen.RKernel.Word64.kun
+    ∧ wordOfToken "既济" = some SSBX.Foundation.Wen.RKernel.Word64.complete
+    ∧ wordOfToken "未济" = some SSBX.Foundation.Wen.RKernel.Word64.incomplete
     ∧ (∀ word : Carrier, hexagramEquiv.symm (hexagramEquiv word) = word)
     ∧ (∀ h : Hexagram, hexagramEquiv (hexagramEquiv.symm h) = h)
     ∧ (∀ word : Carrier, ofHexagram (toHexagram word) = word)
@@ -183,34 +183,34 @@ def fromBitSpace (v : BitSpace 6) : Carrier :=
 
 @[simp] theorem fromBitSpace_zero :
     fromBitSpace (BitSpace.zero : BitSpace 6) =
-      SSBX.Foundation.Wen.V4Kernel.Word64.origin := rfl
+      SSBX.Foundation.Wen.RKernel.Word64.origin := rfl
 
 @[simp] theorem toBitSpace_zero :
-    toBitSpace SSBX.Foundation.Wen.V4Kernel.Word64.origin =
+    toBitSpace SSBX.Foundation.Wen.RKernel.Word64.origin =
       (BitSpace.zero : BitSpace 6) := by
   funext i
   fin_cases i <;> rfl
 
 @[simp] theorem toBitSpace_xor (a b : Carrier) :
-    toBitSpace (SSBX.Foundation.Wen.V4Kernel.Word64.compose a b) =
+    toBitSpace (SSBX.Foundation.Wen.RKernel.Word64.compose a b) =
       BitSpace.xor (toBitSpace a) (toBitSpace b) := by
   funext i
   fin_cases i <;>
     simp [toBitSpace, BitSpace.xor,
-      SSBX.Foundation.Wen.V4Kernel.Word64.compose,
+      SSBX.Foundation.Wen.RKernel.Word64.compose,
       SSBX.Foundation.Hierarchy.Operators.V4.compose,
       SSBX.Foundation.Hierarchy.Operators.V4.contentBit_ofBits,
       SSBX.Foundation.Hierarchy.Operators.V4.frameBit_ofBits]
 
 theorem word64_bridge_summary :
     fromBitSpace (BitSpace.zero : BitSpace 6) =
-      SSBX.Foundation.Wen.V4Kernel.Word64.origin
-    ∧ toBitSpace SSBX.Foundation.Wen.V4Kernel.Word64.origin =
+      SSBX.Foundation.Wen.RKernel.Word64.origin
+    ∧ toBitSpace SSBX.Foundation.Wen.RKernel.Word64.origin =
       (BitSpace.zero : BitSpace 6)
     ∧ (∀ word : Carrier, fromBitSpace (toBitSpace word) = word)
     ∧ (∀ v : BitSpace 6, toBitSpace (fromBitSpace v) = v)
     ∧ (∀ a b : Carrier,
-        toBitSpace (SSBX.Foundation.Wen.V4Kernel.Word64.compose a b) =
+        toBitSpace (SSBX.Foundation.Wen.RKernel.Word64.compose a b) =
           BitSpace.xor (toBitSpace a) (toBitSpace b)) :=
   ⟨fromBitSpace_zero, toBitSpace_zero, fromBitSpace_toBitSpace,
    toBitSpace_fromBitSpace, toBitSpace_xor⟩

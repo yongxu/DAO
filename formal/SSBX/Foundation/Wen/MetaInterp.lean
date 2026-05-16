@@ -51,7 +51,7 @@ YiInstr 之 12 指令**无法构造绝对的 Hexagram 值**——只有 cur 之 
 ## Phase F.2 migration note (Cell192 → R8)
 
 This file migrates from `Cell192` (3-state Z/3 Shi `{已, 今, 未}`) to `R8`
-(V₄ Klein 4-state Shi `{道, 已, 今, 未}`). The encoding-tag conventions used
+(R 2 Klein-four 4-state Shi `{道, 已, 今, 未}`). The encoding-tag conventions used
 here only reference `Shi.jin / Shi.wei / Shi.ji`; the new identity element
 `Shi.dao` is reserved (not consumed by counter / halted-flag encoding) but is
 admissible as an "unexpected" case in `decCounter` / `decHaltedFlag`.

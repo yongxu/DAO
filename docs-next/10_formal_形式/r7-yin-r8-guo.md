@@ -5,6 +5,8 @@
 > 配套：[ox-notation.md](ox-notation.md) · [shi-v4.md](shi-v4.md) · [lift-project.md](lift-project.md) · [r5-wuyao-provisional.md](r5-wuyao-provisional.md)
 > 形式锚：[`Foundation/Bagua/Cell128.lean`](../../formal/SSBX/Foundation/Bagua/Cell128.lean) · [`Foundation/Bagua/Cell256.lean`](../../formal/SSBX/Foundation/Bagua/Cell256.lean) · [`Foundation/Hierarchy/R7_YinHex.lean`](../../formal/SSBX/Foundation/Hierarchy/R7_YinHex.lean) · [`Foundation/Hierarchy/R8_GuoHex.lean`](../../formal/SSBX/Foundation/Hierarchy/R8_GuoHex.lean)
 > 定理引用：[yi-calculus-theorem.md](yi-calculus-theorem.md) Theorems H / I / J
+>
+> **命名注**：本文中之 "V₄" / "V₄ Klein four-group" / "Shi V₄" / "hex V₄" / "双层 V₄" 指 R₂ 之 Klein-four-group 结构 —— 四元群 (Z/2)²，含两个可交换 involution 与其复合。"V₄" 是 legacy marquee 命名，因 Lean 模块 (`ShiV4`、`V4Outer.lean`) 与 table-row terseness 而保留；algebraic content（R₂ 上之 Klein 4-group 作用 + R₈ 上之 hex-side / Shi-side 两层 instance）原样保留为 load-bearing claim。Part 8 "双层 V₄ (Double V₄)" 之标题与结构保持不变。
 
 ---
 
@@ -19,7 +21,8 @@ R₇ Cell128 (128 = 64 × 2)
   ↓ + 果 (guǒ) axis = future-projection bit
 R₈ Cell256 (256 = 64 × 4)
 
-R₈ Shi = (因, 果) ∈ Bool² ≅ V₄ Klein four-group
+R₈ Shi = (因, 果) ∈ Bool² ≅ R₂ 之 Klein-four-group 结构 (legacy V₄)
+       = 四元，含两个可交换 involution 与其复合
        = {道 (0,0), 已 (1,0), 未 (0,1), 今 (1,1)}
 ```
 

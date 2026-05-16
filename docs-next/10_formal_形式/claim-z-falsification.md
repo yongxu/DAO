@@ -1,8 +1,22 @@
 # D6 — Claim Z Falsification Programs
 
-**Status**: companion document to `wen-substrate.md` v1.1 §7.8.8
+**Status**: companion document to wen-substrate v1.4 §7.8.8 (now in [`wen-substrate/07-claim.md`](./wen-substrate/07-claim.md)).
 **Purpose**: operationalize the three falsification routes for Claim Z into concrete refutation programs
 **Reading orientation**: a foundational claim that admits no refutation isn't science. D6 makes Claim Z falsifiable by spelling out HOW one would refute it — what S would qualify, what protocol decides whether the candidate succeeds, and what dispositions follow from "near-miss" candidates.
+
+---
+
+## v1.4 alignment note
+
+Per `wen-substrate.md` v1.4 §3.7.8 (distinction monism), Claim Z reads as: **"formal" ≡ "expressible in observed distinctions, iterated by Σ"**, with R-Family the algebraic content of this articulation and the realisation δ (Bool / qubit basis / Prop / sayable-silent / 阳-阴) the per-domain interpretation. The three falsification routes below operate at the **substrate level** — they ask about the substrate-level pattern, not the canonical δ = Bool realisation:
+
+- **Route 1 (analytic)** refutes D1 ⟹ P1–P7 by exhibiting a formal articulation that fails some P_i at the substrate level. The Strategy A discharge (Boolean → F₂) is the **algebraic-class** refinement of the substrate-level analytic step; non-classical (intuitionistic / quantum / modal / substructural) formal articulations land on **non-algebraic δ-realisations** rather than refuting the substrate-level analytic step.
+- **Route 2 (synthetic)** refutes P1–P7 ⟹ R-Family by exhibiting a structure satisfying P1–P7 not equivalent to R-Family-over-any-δ-realisation. The "any-δ-realisation" reading is broader than v1.3's "any k" — it admits non-algebraic siblings.
+- **Route 3 (internal)** refutes D2 self-consistency. Under v1.4, D2 consistency is **per-realisation**: the canonical δ = Bool instance is Lean-verified ([`Foundation/R/Basic.lean`](../../formal/SSBX/Foundation/R/Basic.lean) + downstream); non-algebraic δ instances inherit consistency from their per-realisation ambient (operator algebras for quantum, type theory for propositional, structured-language frameworks for semantic).
+
+The Lean anchor for the substrate-level consistency claim is now [`Foundation/R/Distinction.lean`](../../formal/SSBX/Foundation/R/Distinction.lean) (primitive `Distinction` type with `Distinction.equivBool` bridge; ~230 LOC, 0 sorry, 0 axiom). The polymorphic carrier `R N (δ : Type := Bool) := Fin N → δ` in `Foundation/R/Basic.lean` (Route 3B refactor 2026-05-16) makes the substrate-level definition available; backward compatibility preserved via δ = Bool default.
+
+**Foundational lineage** (per v1.4 §3.7.8): Spencer-Brown *Laws of Form* (1969), Bateson (1972), Wheeler "it from bit" (1989), yi-jing 阳/阴 tradition. None of the three falsification routes references a specific algebraic realisation; the lineage strengthens the substrate-level framing.
 
 ---
 

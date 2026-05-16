@@ -4,7 +4,7 @@
 Strict-uniform R₀..R₈ enumeration entry for R₈.
 
 R₈ = Hexagram × Shi; |R₈| = 64 × 4 = 256 = (Z/2)⁸.
-Shi = V₄ Klein-four (dao/ji/jin/wei) ≅ YinBit × GuoBit.
+Shi = R 2 Klein-four (dao/ji/jin/wei) ≅ YinBit × GuoBit.
 
 Per the v0.6 R-Family doctrine, R₈'s canonical carrier is the
 language-independent `R 8 = Fin 8 → Bool` (see `Foundation/R/Basic.lean`).

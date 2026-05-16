@@ -6,8 +6,9 @@ Per `wen-algebra` v0.6 §9 and `v4-foundation` v0.5 §15:
     legacy: Shi := YinBit × GuoBit  =  Bool × Bool   (Foundation/Atlas/Yi/Classical/Cells/R8.lean)
     new:    Shi := R 2              =  Fin 2 → Bool  (Foundation/Atlas/Yi/Names.lean)
 
-Both encodings carry the same V₄ Klein four-group `{道, 已, 今, 未}`
-with the same bit-pattern convention:
+Both encodings carry the same Klein four-group `{道, 已, 今, 未}`
+(the Atlas-naming surface over `R 2`) with the same bit-pattern
+convention:
 
 | Name  | Han | Legacy (yin, guo) | New (s 0, s 1) |
 |-------|-----|-------------------|----------------|
@@ -17,7 +18,7 @@ with the same bit-pattern convention:
 | `wei` | 未  | (false, true)     | (false, true)  |
 
 This module is a **pure overlay**: it imports the new `Shi` (`Names.lean`
-+ `ShiV4.lean`) and exposes the legacy `Bool × Bool` shape so consumer
++ `Shi.lean`) and exposes the legacy `Bool × Bool` shape so consumer
 files can migrate without modifying their pattern-matches.  No existing
 module is touched; this module is additive.
 
@@ -28,7 +29,7 @@ module is touched; this module is additive.
 -/
 
 import SSBX.Foundation.Atlas.Yi.Names
-import SSBX.Foundation.Atlas.Yi.ShiV4
+import SSBX.Foundation.Atlas.Yi.Shi
 
 namespace SSBX.Foundation.Atlas.Yi.ShiBridge
 
@@ -120,11 +121,11 @@ end Legacy
 @[simp] theorem fromNew_jin : fromNew Shi.jin = Legacy.jin := rfl
 @[simp] theorem fromNew_wei : fromNew Shi.wei = Legacy.wei := rfl
 
-/-! ## § 4 V₄ operators on the legacy side, mirroring `ShiV4.lean`
+/-! ## § 4 Atlas-naming operators on the legacy side, mirroring `Shi.lean`
 
 These are the legacy 4-case definitions, so we can prove they commute
 with the bridge.  All three are involutions; together with the identity
-they form V₄. -/
+they form the Klein four-group on `Shi`. -/
 
 namespace Legacy
 

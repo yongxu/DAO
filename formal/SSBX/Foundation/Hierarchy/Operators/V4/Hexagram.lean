@@ -18,11 +18,9 @@ open SSBX.Foundation.Bagua.R8
 
 namespace V4
 
-def actHex : V4 → Hexagram → Hexagram
-  | .dao, h => h
-  | .cuo, h => Hexagram.complement h
-  | .zong, h => Hexagram.reverse h
-  | .cuoZong, h => Hexagram.complementReverse h
+def actHex (g : V4) (h : Hexagram) : Hexagram :=
+  V4.elim g h (Hexagram.complement h) (Hexagram.reverse h)
+    (Hexagram.complementReverse h)
 
 theorem actHex_dao (h : Hexagram) :
     actHex .dao h = h := rfl
@@ -41,8 +39,7 @@ theorem actHex_compose (a b : V4) (h : Hexagram) :
   cases a <;> cases b <;>
     simp [actHex, compose,
           Hexagram.complement_involutive, Hexagram.reverse_involutive,
-          Hexagram.complementReverse, Hexagram.complement_reverse_comm,
-          Hexagram.cuoZong_cuoZong] <;>
+          Hexagram.complementReverse, Hexagram.complement_reverse_comm] <;>
     apply Hexagram.ext <;> rfl
 
 theorem actHex_self_inverse (g : V4) (h : Hexagram) :

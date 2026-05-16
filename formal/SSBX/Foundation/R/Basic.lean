@@ -1,16 +1,27 @@
 /-
-# Foundation.R.Basic — R N := Fin N → Bool, the parametric R-Family carrier
+# Foundation.R.Basic — R N (δ : Type := Bool), the δ-polymorphic R-Family carrier
 
-Per `wen-algebra` v0.6 §1.1 and `v4-foundation` v0.5 §0.2:
+Per `wen-substrate.md` v1.4 §3.7.8 (Distinction Monism), the R-Family
+carrier is **δ-parametric** over a realisation of the primitive
+distinction.  The canonical δ = Bool realisation is the classical-
+computational instance:
 
-    R N := F_2^N,   |R N| = 2^N
+    R N := R N Bool := Fin N → Bool ≅ F_2^N,   |R N| = 2^N    (δ = Bool default)
 
-implemented as `Fin N → Bool`.  This is the **canonical** carrier of the
-R-Family tower:
+For arbitrary δ:
+
+    R N δ := Fin N → δ
+
+The default argument `δ : Type := Bool` makes `R N` continue to mean
+the canonical F₂ instance — backward-compatible with all pre-v1.4 code
+that writes `R N` without an explicit δ.  Polymorphic uses write
+`R N δ` explicitly (e.g., `R N (ZMod 2)`, `R N ℝ`, `R N Distinction`).
+
+The δ = Bool tower:
 
 * `R 0` = trivial layer (single empty function)
 * `R 1` = bit (the primitive F_2 element)
-* `R 2` = Klein four-group (pair-of-bits)
+* `R 2` = 4-element carrier with two commuting involutions (Klein-four-group structure, legacy V₄)
 * `R 3` = Fano-plane / 3-bit
 * `R 4` = minimum complete unit
 * …
@@ -19,13 +30,18 @@ R-Family tower:
 
 The doctrine is **language-independent**: there are *no* Chinese / Pauli /
 Yi names anywhere in this directory.  Semantic mappings live in
-`Foundation/Atlas/` (P3 of the restructure plan).
+`Foundation/Atlas/` (P3 of the restructure plan).  The substrate-most-
+primitive layer (the `Distinction` inductive type itself) is in
+`Foundation/R/Distinction.lean`.
 
-## Algebraic content
+## Algebraic content (δ = Bool)
 
-`R N` is an `F_2`-vector space; we install the `AddCommGroup` instance
-by hand using `Bool.xor` coordinate-wise.  Negation is self-inverse
-because we are in characteristic 2 (`v + v = 0`).
+At the default `δ = Bool` realisation, `R N` is an `F_2`-vector space; we install
+the `AddCommGroup` instance by hand using `Bool.xor` coordinate-wise.  Negation
+is self-inverse because we are in characteristic 2 (`v + v = 0`).  These
+instances are δ = Bool–specific; they do not lift uniformly to arbitrary δ.
+For algebraic-class realisations δ = k with k a ring or field, the analogous
+instances live in `Foundation/R/Parametric.lean` (the k-parametric layer).
 
 Helpers:
 
@@ -53,20 +69,26 @@ import Mathlib.Tactic.FinCases
 
 namespace SSBX.Foundation.R
 
-/-! ## § 1 The R-Family carrier
+/-! ## § 1 The R-Family carrier (δ-polymorphic, δ := Bool default)
 
-`R N` is the N-fold product of `Bool`, i.e. `F_2^N`.  We use `def`
-(rather than `abbrev`) so that the layer index `N` is *not* eagerly
-inlined and downstream code can talk about `R N` uniformly.  The
-operations below provide all the structure that `Pi.addCommGroup`
-would give for an `abbrev`. -/
+`R N δ` is the N-fold product of a realisation type `δ`.  The default
+`δ : Type := Bool` makes `R N` continue to mean `R N Bool = Fin N → Bool`
+≅ F_2^N for all pre-v1.4 callers; downstream code that wants a different
+δ-realisation writes `R N δ` explicitly.  We use `def` (rather than
+`abbrev`) so the layer index `N` is *not* eagerly inlined and downstream
+code can talk about `R N` uniformly.  The δ = Bool–specific structure
+(Add / Zero / Neg / Sub via `Bool.xor`) is installed below; the
+operations match what `Pi.addCommGroup` would give for an `abbrev`. -/
 
-/-- `R N = F_2^N`, the N-th layer of the R-Family tower.  Implemented
-    as `Fin N → Bool` so that the bit-pattern is the primary identity
-    of every element.
+/-- `R N δ` — the N-fold product of a δ-realisation of the primitive
+    distinction.  Per `wen-substrate.md` v1.4 §3.7.8 (Distinction Monism),
+    the carrier is δ-parametric; the default `δ := Bool` gives the
+    canonical F₂ realisation `R N = R N Bool := Fin N → Bool ≅ F_2^N`
+    (per `wen-algebra` v0.6 §1.1 and `v4-foundation` v0.5 §0.2).
 
-    Per `wen-algebra` v0.6 §1.1 and `v4-foundation` v0.5 §0.2. -/
-def R (N : ℕ) : Type := Fin N → Bool
+    The bit-pattern (or, for non-Bool δ, the δ-pattern) is the primary
+    identity of every element. -/
+def R (N : ℕ) (δ : Type := Bool) : Type := Fin N → δ
 
 namespace R
 

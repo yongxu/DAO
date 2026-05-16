@@ -18,8 +18,8 @@ theorem concrete_bridge_laws :
     ∧ Nonempty R8.Carrier
     ∧ Nonempty RootCell256.Carrier :=
   ⟨⟨SSBX.Foundation.Hierarchy.Operators.V4.dao⟩,
-   ⟨SSBX.Foundation.Wen.V4Kernel.Word64.origin⟩,
+   ⟨SSBX.Foundation.Wen.RKernel.Word64.origin⟩,
    ⟨SSBX.Foundation.Bagua.R8.R8.origin⟩,
-   ⟨SSBX.Foundation.Wen.V4Kernel.Root512.originCell⟩⟩
+   ⟨SSBX.Foundation.Wen.RKernel.Root512.originCell⟩⟩
 
 end SSBX.Foundation.Wen.Native.Bridges

@@ -20,7 +20,7 @@ YiProg and outputs whether the hexagram is 天道 (tian) or 心道 (xin) — ans
 
 Previously this module operated on Cell192 = Hexagram × Shi where Shi was a
 Z/3 cyclic group `{已, 今, 未}`. After Phase F doctrine alignment, Shi is the
-V₄ Klein four-group `{道, 已, 今, 未}` (R8 = Hexagram × Shi V₄, 256 cells).
+Klein four-group on R 2 `{道, 已, 今, 未}` (R8 = Hexagram × Shi V₄, 256 cells).
 
 Behavioural changes:
   - `YiInstr.setShi` accepts the new 4-state `Shi` (including `.dao`).

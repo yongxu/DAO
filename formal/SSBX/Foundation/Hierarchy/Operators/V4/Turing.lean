@@ -65,11 +65,8 @@ def toV4 : TMV4Action → V4
   | (false, true) => .zong
   | (true, true) => .cuoZong
 
-def ofV4 : V4 → TMV4Action
-  | .dao => nop
-  | .cuo => flipBit
-  | .zong => flipDir
-  | .cuoZong => flipBoth
+def ofV4 (g : V4) : TMV4Action :=
+  V4.elim g nop flipBit flipDir flipBoth
 
 theorem toV4_ofV4 (g : V4) :
     toV4 (ofV4 g) = g := by

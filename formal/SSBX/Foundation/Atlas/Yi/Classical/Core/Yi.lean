@@ -6,7 +6,7 @@
 > (yang/yin constructors) + `structure Hexagram` (positions field).
 > It is one of two co-equal Yi Atlas overlays preserved under v0.6:
 >
->   * `Atlas/Yi/{Names, Bagua, Hexagrams, Operators, ShiV4, ...}` —
+>   * `Atlas/Yi/{Names, Bagua, Hexagrams, Operators, Shi, ...}` —
 >     **R-Family axiomatization** (`Yao := Bool`, `Hexagram := R 6`).
 >     Doctrinally aligned with `wen-algebra` v0.6 §9 (Atlas separation)
 >     and connects to R-Family bilinear algebra + Squaring tower.

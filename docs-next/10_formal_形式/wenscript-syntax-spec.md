@@ -3,6 +3,14 @@
 > Status: implemented parser surface for `wen-lisp prove`.
 > This spec describes syntax recognition and AST buckets only. It does not
 > claim semantic proof for every parsed sentence.
+>
+> **Naming note**: "V4" / "V4Kernel" / "V4Outer" / "v4Builtin" / "V4 guarantee"
+> appearing throughout this spec are runtime-level identifiers for operators
+> that have been evaluated through `V4Kernel`. The underlying algebraic
+> substrate is R₂'s Klein-four-group structure — two commuting involutions
+> and their composite. "V4" is the legacy marquee name retained for runtime
+> identifier consistency (Lean module path `formal/SSBX/Foundation/Wen/V4Kernel/`,
+> type tags `V4`, `v4Builtin`, etc.); the algebraic content is unchanged.
 
 ## Purpose
 

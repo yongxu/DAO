@@ -9,8 +9,8 @@ This is the R-Family port of the classical `SSBX.Foundation.Bagua.R8` module
 (formerly under `Atlas/Yi/Classical/Cells/R8.lean`).  Differences:
 
 * `Hexagram` is the R-Family type `R 6 = Fin 6 → Bool`.
-* `Shi` is the R-Family type `R 2 = Fin 2 → Bool` carrying the V₄
-  structure exposed in `Atlas.Yi.ShiV4`.
+* `Shi` is the R-Family type `R 2 = Fin 2 → Bool` carrying the Atlas
+  naming exposed in `Atlas.Yi.Shi`.
 * The (Z/2)⁸ Abelian group structure comes from `R.instAdd` on both
   components.  `origin = (qianqian, dao)`.
 * 印 / 投 are XOR-with-mask forms picking out the two Shi bits.
@@ -25,7 +25,7 @@ This is the R-Family port of the classical `SSBX.Foundation.Bagua.R8` module
 import SSBX.Foundation.Atlas.Yi.Names
 import SSBX.Foundation.Atlas.Yi.Hexagrams
 import SSBX.Foundation.Atlas.Yi.Operators
-import SSBX.Foundation.Atlas.Yi.ShiV4
+import SSBX.Foundation.Atlas.Yi.Shi
 import SSBX.Foundation.Atlas.Yi.Cell128
 
 namespace SSBX.Foundation.Atlas.Yi
@@ -36,7 +36,7 @@ open SSBX.Foundation.R
 
     Per `wen-algebra` v0.6 §1.8 and `v4-foundation` v0.5 §15.8, the
     256-cell layer is the natural product of the 64 hexagrams with the
-    4-element Shi V₄ Klein four-group. -/
+    4-element Shi Klein four-group on R 2. -/
 abbrev Cell256 : Type := Hexagram × Shi
 
 namespace Cell256
