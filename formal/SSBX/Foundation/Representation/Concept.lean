@@ -1,51 +1,61 @@
 /-
-# Foundation.Representation.Concept — Strategy A: Concept-as-syntax + level
+# Foundation.Representation.Concept — Strategy A: Concept-as-syntax + level + cell
 
 Per the representation-closure programme (`wen-substrate.md` v1.4 §Representation):
 concepts are represented in the R-Family by encoding the D1+P1–P7 primitives
 as inductive constructors of a `Concept` type, then mapping each concept to
-its **structural level** `Concept.level : Concept → ℕ` (the smallest `R N`
-index hosting it).
+its **structural level** `Concept.level : Concept → ℕ` and its **cell**
+`Concept.cell c : R c.level` (a concrete inhabitant of the R-tower at that
+level).
+
+The two-projection map is:
+
+      locate : Concept → Σ N, R N
+      locate c := ⟨c.level, c.cell⟩
 
 This module is the **compositional / denotational** half of the locator
-programme.  Signature-based (Strategy B) and fixed-point (Strategy D)
-locators live in `Signature.lean` and `Articulate.lean` respectively and
-must agree with `Concept.level` on closed concepts.
+programme.  Signature-based (Strategy B), fixed-point (Strategy D), and
+o/x-bit-string (Strategy E) locators live in `Signature.lean`,
+`Articulate.lean`, `OXPattern.lean` respectively and agree on shared inputs.
 
-## Constructors (D1+P1–P7 mirror)
+## Constructors (D1+P1–P7 mirror + Strategy E bridge)
 
-* `atom`    — P1 minimum distinction; an atomic concept anchored by a string label.
-* `compose` — P2 composition; combines two concepts at the same level.
+* `atom`    — P1 minimum distinction; logical atom, level 1 (cell is the
+              R 1 default zero — it's a label, not a bit pattern).
+* `bits`    — Strategy E bridge: o/x string atom, level = `s.toList.length`,
+              cell = `(fromOX s).snd` (the concrete parsed bit pattern).
+* `compose` — P2 composition; combines two concepts at the same level
+              (XOR on the lifted carriers).
 * `square`  — P5 self-application; jumps to the next squaring-tower step
-              (`R N × R N → R (N+N)`).
+              (`R N × R N → R (N+N)`, level `2 * max`).
 * `modal`   — P6 modal stamp; tags a concept with a V₄ Shi class, forcing
-              level ≥ 2.
-* `hom`     — Hom-as-content (P5 internalisation); forces level ≥ 4.
-* `derive`  — P7 derivation step; level-preserving (rules don't enlarge
-              the carrier they act on).
+              level ≥ 2 (XOR with embedded V₄ element).
+* `hom`     — Hom-as-content (P5 internalisation); forces level ≥ 4
+              (squaring carrier, padded to ≥ 4).
+* `derive`  — P7 derivation step; level-preserving, cell pass-through.
 
-## Level formula
+## Cell formulas (concrete realisations)
 
-      level(atom)         = 1
-      level(compose a b)  = max(level a, level b)
-      level(square a b)   = 2 * max(level a, level b)
-      level(modal v c)    = max(level c, 2)
-      level(hom a b)      = max(2 * max(level a, level b), 4)
-      level(derive r c)   = level c
-
-Each clause is forced by the structural axis it represents (see the
-representation-closure derivation in `wen-substrate.md`).
+      cell(atom _)         := fun _ => false                                   -- R 1 zero
+      cell(bits s)         := (fromOX s).snd                                   -- parsed pattern
+      cell(compose a b) i  := xor (cell a embedded) (cell b embedded)          -- XOR @ max level
+      cell(square a b)     := append of (cell a, cell b) lifted to max level   -- R (m+m)
+      cell(modal v c) i    := xor (v embedded) (cell c embedded)               -- modal XOR
+      cell(hom a b)        := square cell padded up to ≥ R 4
+      cell(derive _ c)     := cell c                                           -- pass-through
 
 ## Doctrinal anchor
 
-* `wen-substrate.md` v1.4 §Representation (representation closure theorem).
+* `wen-substrate.md` v1.4 §Representation.
 * P1–P7 derivation from D1 (chapter 01).
 * Squaring-tower step `R(N+N) ≅ R N × R N` formalised in
   `Foundation/R/Squaring.lean`.
+* O/x bit-string parser in `Foundation/Representation/OXPattern.lean`.
 -/
 
 import SSBX.Foundation.R.Basic
 import SSBX.Foundation.Atlas.Yi.Shi
+import SSBX.Foundation.Representation.OXPattern
 
 namespace SSBX.Foundation.Representation
 
@@ -54,21 +64,11 @@ open SSBX.Foundation.Atlas.Yi
 
 /-! ## § 1 The `Concept` inductive type -/
 
-/-- A **Concept** is a syntax tree built from the D1+P1–P7 primitives.  Each
-    constructor maps to a distinct structural axis of the R-Family carrier:
-
-    * `atom`    : P1 minimum distinction.
-    * `compose` : P2 composition at the same level.
-    * `square`  : P5 self-application, jumping `R N → R (2N)`.
-    * `modal`   : P6 modal stamping with a V₄ Shi class.
-    * `hom`     : Hom-as-content; forces level ≥ 4.
-    * `derive`  : P7 derivation step (level-preserving).
-
-    The label `String` on `atom` is a lexical anchor; subsequent locator
-    strategies (B/D) may resolve it against a character table without
-    altering the inductive structure. -/
+/-- A **Concept** is a syntax tree built from the D1+P1–P7 primitives plus
+    a `bits` bridge to the Strategy E o/x parser. -/
 inductive Concept where
   | atom    : String → Concept
+  | bits    : String → Concept
   | compose : Concept → Concept → Concept
   | square  : Concept → Concept → Concept
   | modal   : Shi → Concept → Concept
@@ -81,17 +81,10 @@ namespace Concept
 /-! ## § 2 The `level` function -/
 
 /-- `level c` is the smallest `N` such that `c` admits a structural
-    representation as an element of `R N`.
-
-    The formula is forced by the constructor semantics:
-    * `compose` stays at the same level (R_N has internal composition).
-    * `square` jumps via the R-Family squaring step `R N × R N ≃ R (2N)`.
-    * `modal` requires V₄ (= R 2) as a minimum modal carrier.
-    * `hom` requires R 4 as the minimum Hom-as-content host (P5
-       internalisation first becomes non-trivial at R 4 = V₄ × V₄).
-    * `derive` preserves the level (rules act on R N, not above it). -/
+    representation as an element of `R N`. -/
 def level : Concept → Nat
   | .atom _      => 1
+  | .bits s      => s.toList.length
   | .compose a b => max a.level b.level
   | .square a b  => 2 * max a.level b.level
   | .modal _ c   => max c.level 2
@@ -100,6 +93,9 @@ def level : Concept → Nat
 
 @[simp] theorem level_atom (s : String) :
     (atom s).level = 1 := rfl
+
+@[simp] theorem level_bits (s : String) :
+    (bits s).level = s.toList.length := rfl
 
 @[simp] theorem level_compose (a b : Concept) :
     (compose a b).level = max a.level b.level := rfl
@@ -117,24 +113,6 @@ def level : Concept → Nat
     (derive r c).level = c.level := rfl
 
 /-! ## § 3 Level lower-bounds (structural minimums) -/
-
-/-- Every `Concept` lives at level ≥ 1 (P1: minimum distinction). -/
-theorem level_pos (c : Concept) : 1 ≤ c.level := by
-  induction c with
-  | atom _ => show (1 : Nat) ≤ 1; omega
-  | compose _ _ iha ihb =>
-      show 1 ≤ max _ _
-      omega
-  | square _ _ iha ihb =>
-      show 1 ≤ 2 * max _ _
-      omega
-  | modal _ _ ihc =>
-      show 1 ≤ max _ 2
-      omega
-  | hom _ _ iha ihb =>
-      show 1 ≤ max (2 * max _ _) 4
-      omega
-  | derive _ _ ihc => exact ihc
 
 /-- Modal-stamped concepts live at level ≥ 2 (P6: minimum V₄ modality). -/
 theorem level_modal_ge_two (v : Shi) (c : Concept) :
@@ -155,12 +133,67 @@ theorem level_square_even (a b : Concept) :
   show 2 ∣ 2 * max a.level b.level
   exact ⟨_, rfl⟩
 
-/-! ## § 4 Worked examples (smoke tests) -/
+/-- Non-empty `bits` concepts live at level ≥ 1.  (Empty `bits ""` has
+    level 0; we treat it as a degenerate / "empty distinction" case.) -/
+theorem level_bits_pos {s : String} (h : s.toList ≠ []) :
+    1 ≤ (bits s).level := by
+  show 1 ≤ s.toList.length
+  exact List.length_pos_iff.mpr h
 
-/-- A primary atomic concept at level 1 — the simplest distinction. -/
+/-! ## § 4 The `cell` function — concrete R-tower inhabitants -/
+
+/-- `cell c : R c.level` is a concrete inhabitant of the R-tower at level
+    `c.level`.  Each constructor gets a structurally-determined formula. -/
+def cell : (c : Concept) → R c.level
+  | .atom _      => fun _ => false
+  | .bits s      => (fromOX s).snd
+  | .compose a b =>
+      let ca := cell a
+      let cb := cell b
+      fun (i : Fin (max a.level b.level)) =>
+        xor
+          (if hia : i.val < a.level then ca ⟨i.val, hia⟩ else false)
+          (if hib : i.val < b.level then cb ⟨i.val, hib⟩ else false)
+  | .square a b =>
+      let ca := cell a
+      let cb := cell b
+      let m := max a.level b.level
+      fun (i : Fin (2 * m)) =>
+        if _hi_first : i.val < m then
+          if hia : i.val < a.level then ca ⟨i.val, hia⟩ else false
+        else
+          let j := i.val - m
+          if hib : j < b.level then cb ⟨j, hib⟩ else false
+  | .modal v c =>
+      let cc := cell c
+      fun (i : Fin (max c.level 2)) =>
+        xor
+          (if hi2 : i.val < 2 then v ⟨i.val, hi2⟩ else false)
+          (if hic : i.val < c.level then cc ⟨i.val, hic⟩ else false)
+  | .hom a b =>
+      let ca := cell a
+      let cb := cell b
+      let m := max a.level b.level
+      fun (i : Fin (max (2 * m) 4)) =>
+        if _hi_inner : i.val < 2 * m then
+          if _hi_first : i.val < m then
+            if hia : i.val < a.level then ca ⟨i.val, hia⟩ else false
+          else
+            let j := i.val - m
+            if hib : j < b.level then cb ⟨j, hib⟩ else false
+        else
+          false
+  | .derive _ c => cell c
+
+/-! ## § 5 Worked examples — level + cell smoke tests -/
+
+/-- A logical atom at level 1; cell is the R 1 default zero. -/
 def exAtom : Concept := atom "x"
 
-/-- A modal-stamped atom (例: 道-stamped "x") — forced to R 2. -/
+/-- O/x bit-pattern at level 7 — the user's "ooxoxox" running example. -/
+def exBitsSeven : Concept := bits "ooxoxox"
+
+/-- Modal-stamped atom — forced to R 2. -/
 def exModal : Concept := modal Shi.dao exAtom
 
 /-- Two atoms composed — stays at R 1. -/
@@ -169,42 +202,79 @@ def exCompose : Concept := compose exAtom exAtom
 /-- Two atoms squared — jumps to R 2. -/
 def exSquare : Concept := square exAtom exAtom
 
-/-- Hom of two modal-atoms — forced to R 4 (since both sides at R 2, hom
-    requires max(2*2, 4) = 4). -/
+/-- Hom of two modal atoms — forced to R 4. -/
 def exHomModal : Concept := hom exModal exModal
 
-/-- Triply-nested squaring of atoms — lands at R 8 (the byte ceiling). -/
+/-- Triply-nested squaring — lands at R 8 (byte ceiling). -/
 def exDeepSquare : Concept := square (square exSquare exSquare) (square exSquare exSquare)
 
-/-! ### Computational checks -/
+/-! ### Level checks -/
 
 example : exAtom.level = 1 := rfl
+example : exBitsSeven.level = 7 := rfl
 example : exModal.level = 2 := rfl
 example : exCompose.level = 1 := rfl
 example : exSquare.level = 2 := rfl
 example : exHomModal.level = 4 := rfl
 example : exDeepSquare.level = 8 := rfl
 
-/-! ## § 5 `cell` — placeholder mapping into `R c.level`
+/-! ### Cell checks — bits parsed correctly via OXPattern bridge -/
 
-For each concept `c`, `cell c` produces a witness inhabitant of `R c.level`.
-The full cell function (matching the 16-character process matrix and the
-Cell256 lookup table) lives in `Foundation/Representation/Cell.lean`
-(Strategy C, deferred).  Here we provide a **default witness** that
-guarantees `cell` is total: the zero element of `R c.level` (= the
-all-`false` bit-pattern, which corresponds to 道 at every level).
+/-- `bits "ooxoxox"` at level 7 has cell = the parsed bit pattern.  The
+    bit-by-bit values match: positions 0='o'/false, 1='o', 2='x'/true,
+    3='o', 4='x', 5='o', 6='x'. -/
+example : exBitsSeven.cell ⟨2, by decide⟩ = true := rfl
+example : exBitsSeven.cell ⟨0, by decide⟩ = false := rfl
+example : exBitsSeven.cell ⟨6, by decide⟩ = true := rfl
 
-This is sufficient for the structural representation theorem; richer
-witnesses (matching the wen-substrate lexical anchors) compose on top
-without altering `level`.
--/
+/-- `bits` cells agree with `OXPattern.fromOX` by construction (no cast
+    needed — types are definitionally aligned). -/
+example (s : String) : (bits s).cell = (fromOX s).snd := rfl
 
-/-- The default cell witness: the zero element of `R c.level` (all-false /
-    道-anchored).  Strategy C will refine this against the lexical tables. -/
-def cell (c : Concept) : R c.level := fun _ => false
+/-- An R₂ bit-pattern: `bits "xo"` should have cell = R.xo. -/
+example : (bits "xo").cell = R.xo := by
+  funext i; fin_cases i <;> rfl
 
-@[simp] theorem cell_atom (s : String) :
-    cell (atom s) = (fun _ => false : R 1) := rfl
+example : (bits "ox").cell = R.ox := by
+  funext i; fin_cases i <;> rfl
+
+/-- Derive wrappers pass cell through. -/
+example (s : String) (r : Nat) : (derive r (bits s)).cell = (bits s).cell := rfl
+
+/-- The 8-bit byte at R₈ from an o/x string. -/
+example : (bits "ooxoxoxo").level = 8 := rfl
+example : (bits "ooxoxoxo").cell ⟨7, by decide⟩ = false := rfl
+example : (bits "ooxoxoxo").cell ⟨2, by decide⟩ = true := rfl
+
+/-! ### Cell composition checks (Item 2 / cell laws) -/
+
+/-- `compose (bits "x") (bits "x")` at R₁: XOR of true with itself = false. -/
+example : (compose (bits "x") (bits "x")).cell ⟨0, by decide⟩ = false := by
+  decide
+
+/-- `compose (bits "x") (bits "o")` at R₁: XOR true ⊕ false = true. -/
+example : (compose (bits "x") (bits "o")).cell ⟨0, by decide⟩ = true := by
+  decide
+
+/-- `square (bits "x") (bits "x")` at R₂: cell at pos 0 = x = true, pos 1 = x = true.
+    Pointwise: matches `R.xx`. -/
+example : (square (bits "x") (bits "x")).cell ⟨0, by decide⟩ = true := by decide
+example : (square (bits "x") (bits "x")).cell ⟨1, by decide⟩ = true := by decide
+
+/-- `square (bits "x") (bits "o")` at R₂: pos 0 = x (true), pos 1 = o (false). -/
+example : (square (bits "x") (bits "o")).cell ⟨0, by decide⟩ = true := by decide
+example : (square (bits "x") (bits "o")).cell ⟨1, by decide⟩ = false := by decide
+
+/-- `square (bits "o") (bits "x")` at R₂: pos 0 = o, pos 1 = x. -/
+example : (square (bits "o") (bits "x")).cell ⟨0, by decide⟩ = false := by decide
+example : (square (bits "o") (bits "x")).cell ⟨1, by decide⟩ = true := by decide
+
+/-- `modal Shi.ji (bits "o")` at R₂: `ji = xo` (V₄), bits "o" has level 1, cell = false@0.
+    Result at pos 0: xor (ji at 0) (bits at 0) = xor true false = true. -/
+example : (modal Shi.ji (bits "o")).cell ⟨0, by decide⟩ = true := by decide
+
+/-- `derive` is cell pass-through at every level. -/
+example (r : Nat) (s : String) : (derive r (bits s)).cell = (bits s).cell := rfl
 
 end Concept
 

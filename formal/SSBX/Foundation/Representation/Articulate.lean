@@ -57,6 +57,7 @@ namespace Concept
 def articulate : Concept → Concept
   | .derive _ c  => articulate c
   | .atom s      => .atom s
+  | .bits s      => .bits s
   | .compose a b => .compose (articulate a) (articulate b)
   | .square a b  => .square (articulate a) (articulate b)
   | .modal v c   => .modal v (articulate c)
@@ -64,6 +65,9 @@ def articulate : Concept → Concept
 
 @[simp] theorem articulate_atom (s : String) :
     articulate (atom s) = atom s := rfl
+
+@[simp] theorem articulate_bits (s : String) :
+    articulate (bits s) = bits s := rfl
 
 @[simp] theorem articulate_compose (a b : Concept) :
     articulate (compose a b) = compose (articulate a) (articulate b) := rfl
@@ -90,6 +94,7 @@ theorem articulate_preserves_level (c : Concept) :
     (articulate c).level = c.level := by
   induction c with
   | atom s => rfl
+  | bits s => rfl
   | compose a b iha ihb =>
       simp [articulate, level, iha, ihb]
   | square a b iha ihb =>
@@ -107,6 +112,7 @@ theorem articulate_preserves_level (c : Concept) :
     `articulate`'s image iff it satisfies this. -/
 def isNormalised : Concept → Prop
   | .atom _      => True
+  | .bits _      => True
   | .compose a b => a.isNormalised ∧ b.isNormalised
   | .square a b  => a.isNormalised ∧ b.isNormalised
   | .modal _ c   => c.isNormalised
@@ -118,6 +124,7 @@ theorem articulate_isNormalised (c : Concept) :
     (articulate c).isNormalised := by
   induction c with
   | atom s => trivial
+  | bits s => trivial
   | compose a b iha ihb =>
       simp [articulate, isNormalised]
       exact ⟨iha, ihb⟩
@@ -139,6 +146,7 @@ theorem articulate_fix_of_normalised {c : Concept} (hn : c.isNormalised) :
     articulate c = c := by
   induction c with
   | atom s => rfl
+  | bits s => rfl
   | compose a b iha ihb =>
       obtain ⟨ha, hb⟩ := hn
       simp [articulate, iha ha, ihb hb]

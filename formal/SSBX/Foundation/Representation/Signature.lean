@@ -96,6 +96,13 @@ def signature : Concept → ConceptSignature
         squaredEver := false
         recursionDepth := 1
         derivationDepth := 0 }
+  | .bits s =>
+      { level := s.toList.length
+        modalActive := false
+        homInternalised := false
+        squaredEver := false
+        recursionDepth := 1
+        derivationDepth := 0 }
   | .compose a b =>
       let sa := a.signature
       let sb := b.signature
@@ -140,6 +147,9 @@ def signature : Concept → ConceptSignature
 @[simp] theorem signature_atom (s : String) :
     (atom s).signature.level = 1 := rfl
 
+@[simp] theorem signature_bits (s : String) :
+    (bits s).signature.level = s.toList.length := rfl
+
 @[simp] theorem signature_compose_level (a b : Concept) :
     (compose a b).signature.level = max a.signature.level b.signature.level := rfl
 
@@ -169,6 +179,7 @@ theorem signature_level (c : Concept) :
     c.signature.level = c.level := by
   induction c with
   | atom s => rfl
+  | bits s => rfl
   | compose a b iha ihb =>
       show max a.signature.level b.signature.level = max a.level b.level
       rw [iha, ihb]
