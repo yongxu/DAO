@@ -818,6 +818,54 @@ example : openBinderOf? (.hexLit «一») = none := by
 example : pendingCtx none = [] := by native_decide
 example : pendingCtx (some ("甲", .hex)) = [("甲", .hex)] := by native_decide
 
+/-! ### § 2d.1  `其` pronoun resolution
+
+  Surface form: `其` ("his/its") inside a statement that follows an open
+  binder is rewritten to the binder's variable name BEFORE lex/resolve.
+
+  Design choice: textual substitution rather than resolver-level integration.
+  Reasons:
+  · Consistency with the Wen 1.5 `定 NAME 为 BODY` pipeline (which also
+    uses textual substitution to expand user-defs).
+  · The resolver is context-free; threading a runtime pending-binder state
+    through it would be a much larger change.
+  · `其` does NOT currently resolve to anything (no `OperatorReading`, no
+    surface marker), so substituting it pre-lex has no collision risk.
+
+  Note: we deliberately do NOT substitute `之` as a pronoun.  `之` is the
+  application-marker (S_1) and re-purposing it would silently break
+  thousands of catalogue invocations.
+
+  Edge cases handled by `replaceAll` semantics:
+  · Multiple `其` in one chunk all rewrite to the same name (correct: the
+    pronoun refers to the SAME bound subject).
+  · `其` appearing without a pending binder is left untouched — it will
+    then fail to resolve as an unknown glyph and surface a clean
+    parser-level error, which is the desired Wen 1.5 behaviour for unknown
+    glyphs. -/
+
+/-- Rewrite all literal occurrences of `其` in `chunk` to the pending
+    binder's variable name (wrapped in spaces so it tokenises as a separate
+    glyph). When `pb = none`, `chunk` is returned unchanged. -/
+def applyPendingBinder (pb : PendingBinder) (chunk : String) : String :=
+  match pb with
+  | none        => chunk
+  | some (n, _) => replaceAll chunk "其" (" " ++ n ++ " ")
+
+/-- Sanity: no pending binder → no-op. -/
+example : applyPendingBinder none "其 一" = "其 一" := by native_decide
+
+/-- Sanity: pending binder `甲` rewrites `其` to `甲`. -/
+example : applyPendingBinder (some ("甲", .hex)) "其" = " 甲 " := by native_decide
+
+/-- Sanity: multiple occurrences. -/
+example :
+    applyPendingBinder (some ("甲", .hex)) "其 与 其" = " 甲  与  甲 " :=
+  by native_decide
+
+/-- Sanity: non-`其` chunk unchanged. -/
+example : applyPendingBinder (some ("甲", .hex)) "推 一" = "推 一" := by native_decide
+
 /-! ## § 2c.5  Helper sanity (cheap; pipeline tests live in `EndToEndTests.lean`) -/
 
 /-- `chunkStartsWithDefKeyword` recognises a leading `定` after trimming. -/
