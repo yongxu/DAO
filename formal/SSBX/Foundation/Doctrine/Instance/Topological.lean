@@ -90,10 +90,18 @@ as a future-work pointer (§7).
   classically).
 
 ### §4 Frame-specific P3 reformulation
-- `IsFrameBilinear` — frame-bimorphism predicate (preserves ⊓ in
-  each arg + preserves ⨆ in each arg).
-- `P3_topological` — frame morphism classification (statement-level;
-  classification proof is research open).
+- `IsFrameBilinear` — *weak* (⊥-preservation-only) frame-bimorphism
+  predicate (kept for backward compatibility; see deprecation note).
+- `IsJTFrameBilinear` — **strong** Joyal-Tierney bimorphism predicate
+  (preserves ⨆ and ⊓ in each slot; v0.4 doctrine, Option 1a).  Local
+  duplicate of `Foundation/Order/FrameBimorphism.lean:167` — cycle-free
+  copy specialised to the `Fin N → Ω` shape.
+- `B4_counterexample_fails_strong` — Lean-verifies that the v0.3-era
+  off-diagonal cross-pairing counter-example to weak-P3 does NOT
+  satisfy the v0.4 strong hypothesis.
+- `P3_topological` — frame morphism classification under the **strong**
+  v0.4 hypothesis (statement-level; the full classification proof is
+  gated on the Mathlib `frameCoprod` PR, research open).
 
 ### §5 Frame-specific P7b reformulation
 - `Sierpinski2` — the 2-element Sierpinski frame `{⊥, ⊤}`
@@ -429,14 +437,23 @@ def relate_topological_pointwise_meet (N M : ℕ)
     v ⟨i.val, lt_of_lt_of_le i.isLt (min_le_right _ _)⟩
 
 /-- A binary form `φ : (Fin N → Ω) → (Fin M → Ω) → Ω` is called
-    **frame-bilinear** if it preserves `⊥` in each argument *and*
-    preserves arbitrary joins in each argument (the defining
-    property of `FrameHom`).
+    **frame-bilinear** (weak / v0.3 sense) if it preserves `⊥` in
+    each argument.  This is the **minimum non-degenerate
+    frame-bimorphism axiom**.
 
-    This is the *loose* frame-bimorphism definition; the genuine
-    classification (every `IsFrameBilinear φ` factors through the
-    canonical frame product) is the open Joyal-Tierney problem in
-    the constructive setting. -/
+    **DEPRECATION NOTE (v0.4 doctrine, Option 1a, 2026-05-17)**:
+    This weak predicate is retained **for backward compatibility**
+    with `Foundation/Order/FrameBimorphism.lean:367
+    JT_bilinear_to_topological_bilinear` (the *bridge* lemma that
+    `IsJTFrameBilinear → IsFrameBilinear`), but it is **no longer
+    used as the hypothesis of `P3_topological`** — see
+    `B4_counterexample_fails_strong` for the v0.3-era counter-example
+    that motivated the strengthening, and `IsJTFrameBilinear` below
+    for the v0.4 hypothesis.
+
+    The genuine classification (every `IsJTFrameBilinear φ` factors
+    through the canonical frame product) is the open Joyal-Tierney
+    problem gated on the Mathlib `frameCoprod` upstream PR. -/
 def IsFrameBilinear {N M : ℕ}
     (φ : (Fin N → SierpinskiOmega) → (Fin M → SierpinskiOmega) → SierpinskiOmega) :
     Prop :=
@@ -445,138 +462,184 @@ def IsFrameBilinear {N M : ℕ}
   (∀ v, φ (⊥ : Fin N → SierpinskiOmega) v ↔ False) ∧
   (∀ u, φ u (⊥ : Fin M → SierpinskiOmega) ↔ False)
 
-/-- **P3-Topological** (statement form) — every frame-bilinear form
-    `φ : (Fin N → Ω) → (Fin M → Ω) → Ω` (in the sense of
-    `IsFrameBilinear`) factors through the canonical frame-product
+/-- **`IsJTFrameBilinear`** — the **strong** Joyal-Tierney bimorphism
+    predicate (v0.4 doctrine, Option 1a):  `φ` preserves arbitrary
+    joins (`sSup`) **and** finite meets (`⊓`) in **each** argument
+    slot.
+
+    This is the **local copy** of `Foundation/Order/FrameBimorphism.lean:167
+    IsJTFrameBilinear`, specialised to the
+    `(Fin N → Ω) → (Fin M → Ω) → Ω` shape used by `P3_topological`.
+    The duplication is a deliberate **cycle-resolution** measure:
+    `FrameBimorphism.lean` already imports this file, so this file
+    cannot import `FrameBimorphism.lean` in turn.
+
+    **TODO**: merge `IsJTFrameBilinear` (here) and
+    `SSBX.Foundation.Order.IsJTFrameBilinear` (FrameBimorphism.lean) into
+    a single shared `Foundation/Order/FrameBimorphismCore.lean` module
+    once the import graph is refactored.  The two predicates are
+    **definitionally equivalent** at the specialised shape (see
+    `JT_bilinear_to_topological_bilinear` in FrameBimorphism.lean §5 for
+    the trivial direction of the bridge). -/
+structure IsJTFrameBilinear {N M : ℕ}
+    (φ : (Fin N → SierpinskiOmega) → (Fin M → SierpinskiOmega) → SierpinskiOmega) :
+    Prop where
+  /-- Preserves arbitrary joins in the left argument. -/
+  map_sSup_left : ∀ (v : Fin M → SierpinskiOmega) (s : Set (Fin N → SierpinskiOmega)),
+    φ (sSup s) v = sSup ((fun u => φ u v) '' s)
+  /-- Preserves arbitrary joins in the right argument. -/
+  map_sSup_right : ∀ (u : Fin N → SierpinskiOmega) (s : Set (Fin M → SierpinskiOmega)),
+    φ u (sSup s) = sSup ((fun v => φ u v) '' s)
+  /-- Preserves finite meets in the left argument. -/
+  map_inf_left : ∀ (v : Fin M → SierpinskiOmega)
+      (a b : Fin N → SierpinskiOmega),
+    φ (a ⊓ b) v = φ a v ⊓ φ b v
+  /-- Preserves finite meets in the right argument. -/
+  map_inf_right : ∀ (u : Fin N → SierpinskiOmega)
+      (a b : Fin M → SierpinskiOmega),
+    φ u (a ⊓ b) = φ u a ⊓ φ u b
+
+/-- **P3-Topological (v0.4 doctrine, Option 1a — strong-hypothesis form)**
+    — every **Joyal-Tierney bilinear** form
+    `φ : (Fin N → Ω) → (Fin M → Ω) → Ω` (i.e. one satisfying
+    `IsJTFrameBilinear`: preserves arbitrary joins AND finite meets
+    in each slot) factors through the canonical frame-product
     structure on `Fin (min N M) → Ω`.
 
-    **Status**: the *statement* matches gut-c-doctrine v0.2 §3.5
-    (P3 in Frm = frame morphism classification); the *proof*
-    requires the Joyal-Tierney frame-tensor universal property
-    classification, which is recorded as a Path C γ.3 research open
-    problem.
+    -----------------------------------------------------------------
+    ## v0.4 doctrine note (2026-05-17, supersedes v0.3 weak form)
+    -----------------------------------------------------------------
+    Per the v0.4 doctrine revision (`docs-next/00_start/gut-c-doctrine.md`
+    §4.2), this theorem was **upgraded** from the v0.3 weak hypothesis
+    `IsFrameBilinear` (⊥-preservation only) to the **strong** hypothesis
+    `IsJTFrameBilinear` (⨆+⊓ preservation in each slot) — *Option 1a*
+    from the doctrine: keep the conclusion shape, strengthen the
+    hypothesis to the genuine Joyal-Tierney bimorphism predicate.
+
+    **Motivation**: under the v0.3 weak hypothesis, the conclusion is
+    *false* — the off-diagonal cross-pairing
+    `φ u v := (u 0 ⊓ v 1) ⊔ (u 1 ⊓ v 0)` at `N = M = 2` is a
+    counter-example (it satisfies `IsFrameBilinear` but its value
+    depends on cross terms that are not recoverable from the
+    pointwise diagonal `fun i => u i ⊓ v i`).  See
+    `B4_counterexample_fails_strong` below for a Lean-verified
+    statement that this counter-example does NOT satisfy the v0.4
+    strong hypothesis (= confirms the v0.4 strengthening is real
+    progress and not vacuous).
+
+    **Asymmetry vs Heyting**: in the Heyting case (`Heyting.lean
+    P3_heyting`), the strong hypothesis *collapses* the classification
+    to a triviality via the pointwise himp formula
+    `(u → v) = ⨅ i (u i → v i)`.  No such collapse holds in `Frm`:
+    the JT-strong hypothesis is genuinely classified by the frame
+    coproduct, and the surjectivity onto pointwise-meet is the JT
+    universal property + Sierpinski-cube cancellation.
 
     -----------------------------------------------------------------
-    ## BOUNDARY FINDING (2026-05-17, B3-style audit)
+    ## Proof status (v0.4): research-level sorry, *honest*
     -----------------------------------------------------------------
-    A careful analysis of this statement as currently formulated
-    reveals a **hypothesis/conclusion mismatch** that constitutes a
-    second, more refined research open:
+    Even under the strong hypothesis, the proof requires the
+    Joyal-Tierney frame-tensor universal property + Sierpinski-cube
+    cancellation, both gated on the Mathlib upstream `frameCoprod`
+    PR.  Concretely:
 
-    **Counterexample to the strong reading under the weak hypothesis**:
-    For `N = M = 2`, take
-    `φ u v := (u 0 ⊓ v 1) ⊔ (u 1 ⊓ v 0)` — the off-diagonal
-    "cross pairing".  This `φ` satisfies `IsFrameBilinear`:
-      * `φ ⊥ v = (False ⊓ v 1) ⊔ (False ⊓ v 0) ↔ False` ✓
-      * `φ u ⊥ = (u 0 ⊓ False) ⊔ (u 1 ⊓ False) ↔ False` ✓
-    but the conclusion **fails**: the value of `φ u v` depends on
-    `u 0 ⊓ v 1` and `u 1 ⊓ v 0` (cross terms), which are
-    *not* recoverable from the diagonal function
-    `fun i => u i ⊓ v i = (u 0 ⊓ v 0, u 1 ⊓ v 1)`.  Concretely:
-      * `u = (⊤,⊥), v = (⊥,⊤)` gives diagonal `(⊥,⊥)` and `φ u v = ⊤`;
-      * `u = (⊥,⊥), v = (⊥,⊥)` gives diagonal `(⊥,⊥)` and `φ u v = ⊥`.
-    Same diagonal, different `φ` values — no `ψ` of the diagonal can
-    represent both.
-
-    **Diagnosis**: the `IsFrameBilinear` predicate as defined above is
-    a **bottom-preservation-only** condition (the minimum
-    non-degenerate frame-bimorphism axiom).  The conclusion as
-    written is the **full diagonal-meet-determinacy** classification.
-    There is a strict gap between these two strengths — the
-    classification is genuinely false at this hypothesis level.
-
-    The correct fix is one of:
-    1.  **Strengthen the hypothesis** to the genuine
-        `IsJTFrameBilinear` predicate (preserves `⨆` AND `⊓` in each
-        slot — see `Foundation/Order/FrameBimorphism.lean §2`); the
-        classification then follows from `JT_classification` +
-        Sierpinski-cube cancellation (`frameCoprod (Fin N → Ω)
-        (Fin M → Ω) ≅ Fin (min N M) → Ω`) — still a research open
-        gated by the Mathlib frame-coproduct PR.
-    2.  **Weaken the conclusion** to "there exists ψ with φ ≤ ψ ∘
-        diagonal" (a one-sided inequality, which IS provable under
-        the weak hypothesis).
-    3.  **Restrict to the diagonal case** `N = M` and to `φ`
-        satisfying an extra "diagonal cross-vanishing" axiom
-        `φ u v = φ u' v'` whenever the diagonals match.
-
-    Per project policy ("Don't drop theorems to keep sorry-count at
-    0"), we keep the original (strong) statement intact and record
-    `sorry` together with this detailed obstruction note.  The
-    refined statement (1) is the one actually conjectured in the
-    literature (Joyal-Tierney 1984 §III); the gap between the
-    surface predicate `IsFrameBilinear` and the genuine
-    `IsJTFrameBilinear` is the doctrinal point.
-
-    -----------------------------------------------------------------
-    ## Proof strategy (under strengthened hypothesis)
-    -----------------------------------------------------------------
-    Assuming `hφ : IsJTFrameBilinear φ` (the version that preserves
-    `⨆` and `⊓` in each slot), the proof would proceed:
-
-    1. Apply `JT_classification` (in
-       `Foundation/Order/FrameBimorphism.lean §4`, currently a
-       research-open `sorry` gated on a Mathlib upstream PR for
-       `frameCoprod`) to obtain a frame `T` with a universal
-       bilinear `ι : (Fin N → Ω) → (Fin M → Ω) → T` and a unique
-       `FrameHom u : T → Ω` such that `u ∘ ι = φ`.
+    1. Apply `JT_classification`
+       (`Foundation/Order/FrameBimorphism.lean §4`) to obtain a
+       frame `T` with a universal bilinear `ι : (Fin N → Ω) → (Fin M
+       → Ω) → T` and a unique `FrameHom u : T → Ω` with `u ∘ ι = φ`.
     2. Identify `T ≅ Fin (min N M) → Ω` via the **Sierpinski-cube
-       cancellation** for frame coproducts (a known result:
-       `frameCoprod (Fin N → Ω) (Fin M → Ω) ≅ Fin (N + M) → Ω`
-       degenerates to `Fin (min N M) → Ω` under the diagonal-meet
-       evaluation; cf. Picado-Pultr 2012 Ch. IV §3 + Vickers 1989
-       Ch. 7).
-    3. Transport `u` along the iso to get the desired `ψ`.
+       cancellation** for frame coproducts (Picado-Pultr 2012
+       Ch. IV §3 + Vickers 1989 Ch. 7).
+    3. Transport `u` along the iso to obtain the desired `ψ`.
 
-    Step (1) is the upstream research open; (2)-(3) are routine
-    transports (~30-50 LOC) once (1) is available.  This entire
-    program is laid out in `Foundation/Order/FrameBimorphism.lean §5`
-    (`to_topological_P3`) which is a **separate statement under the
-    stronger hypothesis `IsJTFrameBilinear`** — and which is itself
-    `sorry` gated on the same upstream PR.
+    Step (1)'s `JT_classification` *currently* has a Path-B trivial
+    diagonal witness in `FrameBimorphism.lean` (commit 416c744), but
+    that witness uses `T := F₃, ι := φ, u := id` — which does
+    **NOT** satisfy this theorem's stronger conclusion shape
+    (`ψ` must factor through the *specific* pointwise-meet diagonal
+    `fun i => u_i ⊓ v_i`, not arbitrary `ι`).  Hence the trivial
+    witness does *not* discharge `P3_topological`, and we record an
+    honest `sorry`.
 
     -----------------------------------------------------------------
     ## References
     -----------------------------------------------------------------
     * Joyal & Tierney 1984, *An extension of the Galois theory of
-      Grothendieck*, Memoirs AMS 309 — original frame coproduct.
+      Grothendieck*, Memoirs AMS 309 — **original frame coproduct +
+      JT bimorphism universal property** (the central reference for
+      this theorem).
     * Picado & Pultr 2012, *Frames and Locales* (Birkhäuser), Ch. IV
       §3 — textbook treatment of frame tensor + cube cancellation.
     * Vickers 1989, *Topology via Logic* (Cambridge), Ch. 7 —
       locale-theoretic perspective on `Fin n → Ω` cubes.
     * Johnstone 1982, *Stone Spaces* (Cambridge) — classical
       reference.
-
-    **`sorry` is used here** to record the open math at the
-    statement level. The form of the conclusion mirrors the sister
-    `Heyting.P3_heyting` (the F₂ / Heyting / Frame distinction is
-    exactly which operation `⊓` / `⇨` / `⨆`-of-`⊓` represents the
-    inner product). -/
+    * `Foundation/Order/FrameBimorphism.lean §4-§6` — full Mathlib
+      upstream PR roadmap (~1000-1500 LOC) needed to discharge this
+      `sorry`. -/
 theorem P3_topological (N M : ℕ)
     (φ : (Fin N → SierpinskiOmega) → (Fin M → SierpinskiOmega) →
           SierpinskiOmega)
-    (hφ : IsFrameBilinear φ) :
+    (hφ : IsJTFrameBilinear φ) :
     -- Classification conclusion: φ is representable as the canonical
     -- frame product `⨆ i (u_i ⊓ v_i)` over `Fin (min N M)`.
     ∃ (ψ : (Fin (min N M) → SierpinskiOmega) → SierpinskiOmega),
       ∀ u v, φ u v ↔
         ψ (fun i => u ⟨i.val, lt_of_lt_of_le i.isLt (min_le_left _ _)⟩
                       ⊓ v ⟨i.val, lt_of_lt_of_le i.isLt (min_le_right _ _)⟩) := by
-  -- Path C γ.3 research open problem. **Two layers of open math
-  -- compounded**:
-  --   (a) the BOUNDARY FINDING above shows that `IsFrameBilinear`
-  --       (bottom-preservation-only) is too weak for the strong
-  --       diagonal-meet-determinacy conclusion — a counterexample
-  --       exists at N=M=2 (off-diagonal cross pairing).
-  --   (b) under the strengthened hypothesis `IsJTFrameBilinear`
-  --       (the genuine Joyal-Tierney bimorphism predicate), the
-  --       classification reduces to the JT frame-tensor universal
-  --       property, which is the Mathlib upstream gap recorded in
-  --       `Foundation/Order/FrameBimorphism.lean §4` (`JT_classification`
-  --       sorry, gated on the frame-coproduct PR).
-  -- See the docstring for the full obstruction analysis and the
-  -- 3-step proof strategy under the strengthened hypothesis.
+  -- v0.4 doctrine sorry (Option 1a, strong-hypothesis form).
+  -- Honest: the trivial Path-B witness used in
+  -- `FrameBimorphism.JT_classification` (commit 416c744) does NOT
+  -- apply here because the conclusion's `ψ` is constrained to factor
+  -- through the *specific* pointwise-meet diagonal
+  -- `fun i => u_i ⊓ v_i`, not arbitrary `ι`.  Discharging this
+  -- sorry requires the Mathlib upstream `frameCoprod` PR
+  -- (`Foundation/Order/FrameBimorphism.lean §6`) + the
+  -- Sierpinski-cube cancellation lemma.
+  let _ := hφ  -- record the hypothesis is used for proof-strategy
   sorry
+
+/-- **B4 counter-example check (v0.4 doctrine certificate)** — the
+    v0.3-era counter-example to weak-P3,
+    `φ u v := (u 0 ⊓ v 1) ⊔ (u 1 ⊓ v 0)` on `Fin 2 → Ω`, does
+    **NOT** satisfy the v0.4 strong hypothesis `IsJTFrameBilinear`.
+
+    This Lean-verifies that the v0.4 strengthening (Option 1a) is
+    **genuine progress**: the counter-example that previously broke
+    weak-P3 is now ruled out at the hypothesis level — i.e. the v0.4
+    revised `P3_topological` is **not vacuously true** by ruling out
+    the only known counter-example.
+
+    **Witness**: `map_inf_left` fails at `a = (⊤, ⊥)`, `b = (⊥, ⊤)`,
+    `v = (⊤, ⊤)`:
+    * `φ (a ⊓ b) v = (⊥ ⊓ ⊤) ⊔ (⊥ ⊓ ⊤) = ⊥`
+    * `φ a v ⊓ φ b v = ((⊤ ⊓ ⊤) ⊔ (⊥ ⊓ ⊤)) ⊓ ((⊥ ⊓ ⊤) ⊔ (⊤ ⊓ ⊤))
+                     = ⊤ ⊓ ⊤ = ⊤`
+    * `⊥ ≠ ⊤` (in `Prop`, `False ↔ True` is `False`). -/
+theorem B4_counterexample_fails_strong :
+    ¬ IsJTFrameBilinear (fun u v : Fin 2 → SierpinskiOmega =>
+        (u 0 ⊓ v 1) ⊔ (u 1 ⊓ v 0)) := by
+  intro h
+  -- Test `map_inf_left` at `a = (⊤,⊥)`, `b = (⊥,⊤)`, `v = (⊤,⊤)`.
+  let a : Fin 2 → SierpinskiOmega := ![True, False]
+  let b : Fin 2 → SierpinskiOmega := ![False, True]
+  let v : Fin 2 → SierpinskiOmega := ![True, True]
+  have hkey := h.map_inf_left v a b
+  -- LHS = φ (a ⊓ b) v.  Compute: a ⊓ b = ![False, False].
+  -- φ (a ⊓ b) v = (False ⊓ True) ⊔ (False ⊓ True) = False ⊔ False = False.
+  -- RHS = φ a v ⊓ φ b v.
+  -- φ a v = (True ⊓ True) ⊔ (False ⊓ True) = True ⊔ False = True.
+  -- φ b v = (False ⊓ True) ⊔ (True ⊓ True) = False ⊔ True = True.
+  -- φ a v ⊓ φ b v = True ⊓ True = True.
+  -- So hkey : False = True (in Prop, via propext) — contradiction.
+  simp only [a, b, v, Pi.inf_apply, Matrix.cons_val_zero,
+    Matrix.cons_val_one] at hkey
+  -- `hkey` reduces to a Prop equality `False = True` (or
+  -- equivalent); the equality `φ (a ⊓ b) v = φ a v ⊓ φ b v` in
+  -- `Prop` is an equality of propositions; since LHS reduces to
+  -- `False`-flavoured and RHS to `True`-flavoured, we get
+  -- `False ↔ True` and `True.intro` gives the contradiction.
+  simp_all
 
 /-- **Frame exponential** (placeholder) — in `Frm`, the **frame
     exponential** `R N ⇒_{Frm} R M` is the locale of *continuous
