@@ -1,6 +1,6 @@
 # Wen by Example
 
-**Date**: 2026-05-18 · **Status**: 草稿 (drafting; Chapter 1 verified, 9 more to come)
+**Date**: 2026-05-18 · **Status**: 草稿 (10 chapters drafted; all examples REPL-verified on commit edc402e+)
 
 A worked-example walkthrough of the Wen language. Every example is **run-verified** in the `wen` REPL (`lake build wen && ./.lake/build/bin/wen`). Where an example doesn't work, that's noted explicitly — those are real gaps in the language, not in the doc.
 
@@ -484,164 +484,616 @@ All from Chapter 1-2 + 5 + extra probes:
 
 # Appendix B — Gaps & limitations (validation-discovered)
 
-These are real bugs/limitations found by running examples through the REPL. Each is worth a future PR.
+These are real bugs/limitations originally found by running examples through the REPL during this doc's first draft. **All 12 were closed in PRs #71-80** (merged 2026-05-17). The entries below preserve the original problem statement and document the resolution.
 
-### B-1: REPL is single-expression only
+| ID | Status | Fixing PR |
+|---|---|---|
+| B-1 | FIXED | #72 |
+| B-2 | FIXED | #74 |
+| B-3 | FIXED | #74 |
+| B-4 | FIXED | #77 |
+| B-5 | FIXED | #77 |
+| B-6 | FIXED | #74 |
+| B-7 | FIXED | #76 |
+| B-8 | FIXED (UX) | #78 |
+| B-9 | FIXED | #71 |
+| B-10 | FIXED (UX) | #79 |
+| B-11 | FIXED (UX) | #79 |
+| B-12 | FIXED | #80 |
 
-The `wen` REPL only accepts **one expression per line**. Multi-statement input fails at the lexer because `；` / `。` / `;` are not allowed inside a `wenyanCompile` (single-stmt) call.
+**UX-only** entries (B-8/10/11) replaced opaque errors with clear messages but the underlying surface limitation (Bool-quoted execution, compound-hex starters, namespace activation in REPL) remains and is tracked separately.
+
+### B-1: REPL is single-expression only — **FIXED (PR #72)**
+
+The `wen` REPL previously only accepted one expression per line. PR #72 added `evalSubmission` which calls `wenyanCompileProgramWithDefs`. Multi-statement now works:
 
 ```
 ≫ 定 甲 为 一；甲
-lex error: SSBX.Foundation.Wen.WenSurface.LexErr.unexpected 11 '；'
+«姤» (011111) : Hex
 ```
 
-**Impact**: cannot use 定 / 定递 / 类 / 析 / 用 / 定…等 in the REPL at all. All five Wen 2.0 declaration forms are unreachable interactively.
+All five Wen 2.0 declaration forms (定 / 定递 / 类 / 析 / 定…等) are now interactively usable, modulo the per-feature limits noted below.
 
-**Fix**: have REPL try `wenyanCompileProgramWithDefs` first (full pipeline), fall back to `wenyanCompile` only for bare expressions. Or add `:def NAME = BODY` etc. REPL commands.
+**Remaining gap (B-1-rec)**: `定递` with a real self-applying body fails HM inference at the elaborator (the recursive type has no anchoring constraint). See §4.3 — `定递 甲 为 者 乙 甲 之 推 之 乙；甲 一` returns `elab error: empty or ill-formed expression`. Needs explicit type annotation on the recursion or a unification escape hatch.
 
-### B-2: 6 yao flips have no surface readings
+**Other remaining gap**: `用 NS_NAME` (namespace import) is supported by `wenyanCompileProgramWithNamespaces` but the REPL still uses the no-namespace variant; `用 墨经` in the REPL returns a `schoolNamespaceName` error.
 
-`初爻 / 二爻 / 三爻 / 四爻 / 五爻 / 上爻` are kernel-level Tm constructors (`flip1H` … `flip6H`) but the **multi-char surface table doesn't register them**:
+### B-2: 6 yao flips have no surface readings — **FIXED (PR #74)**
+
+PR #74 added the `ResolvedAtom.builtinTm body arity` variant + `resolveBuiltinSurface` table. The 6 yao flips now read:
 
 ```
 ≫ 初爻 一
-resolve error: SSBX.Foundation.Wen.WenSurface.ResolveErr.noReading "初" 0
+«乾» (111111) : Hex
+≫ 二爻 乾
+«同人» (101111) : Hex
 ```
 
-**Fix**: add 初爻/二爻/三爻/四爻/五爻/上爻 to `Lex.multiCharSurfaces` with appropriate catalogue mapping.
+Surface 初爻..上爻 map to `Tm.flip1H..flip6H`.
 
-### B-3: `加` (Tm.jia) is unreachable
+### B-3: `加` (Tm.jia) is unreachable — **FIXED (PR #74)**
 
-The Tm builtin `jia` (Hex addition, `Hex → Hex → Hex`) exists but has no surface reading. The character 加 doesn't resolve:
+`加` now reads as `Tm.jia`. Verified:
 
 ```
 ≫ 加 一 一
-resolve error: noReading "加" 0
+«同人» (101111) : Hex
 ```
 
-### B-4: `並` is `pairH`, not `andB`
+### B-4: `並` ↔ `andB` — **FIXED (PR #77)**
 
-The kernel has `Tm.andB : Bool → Bool → Bool` named for `並`. But the surface 並 binds to `pairH` (`Hex → Hex → (Hex × Hex)`):
-
-```
-≫ :t 並
-Hex → Hex → (Hex × Hex)
-```
-
-**Impact**: there is **no surface way to AND two Bools** in Wen. Spec doc was wrong.
-
-### B-5: `或` is modal M_2, not `orB`
-
-Similarly, `Tm.orB` exists but the surface 或 binds to modal `M_2 可能模态`:
+PR #77 added the builtin-Tm reading `並 → Tm.andB`. (`并` simplified variant also accepted.)
 
 ```
-≫ :t 或
-…modal…
+≫ 並 真 假
+false : Bool
+≫ 並 真 真
+true : Bool
 ```
 
-**Impact**: no surface Bool OR.
+The earlier `pairH` reading of 並 is preserved at the catalogue layer but the new builtin-Tm path takes priority for the surface 並.
 
-### B-6: List ops 列一/列二/列三/首 unreachable
+### B-5: `或` ↔ `orB` — **FIXED (PR #77)**
+
+PR #77 added `或 → Tm.orB`:
 
 ```
-≫ :t 列一
-resolve error: noReading "列" 0
-≫ :t 首
-resolve error: noReading "首" 0
+≫ 或 真 假
+true : Bool
+≫ 或 假 假
+false : Bool
 ```
 
-Tm constructors `list1H`, `list2H`, `list3H`, `headH` exist but no surface readings.
+### B-6: List ops `列一/列二/列三/首` — **FIXED (PR #74)**
 
-### B-7: Curried λ application without inner parens fails
+PR #74 added builtin-Tm readings for the 4 list primitives.
+
+```
+≫ 列一 乾
+<elaborated> : List Hex
+≫ 首 之 列一 乾
+«乾» (111111) : Hex
+```
+
+(REPL doesn't pretty-print `List Hex` values yet — they show as `<elaborated>`. Verifying via `首` extracts the first element.)
+
+Tm constructors `list1H`, `list2H`, `list3H`, `headH` now have surface readings.
+
+### B-7: Curried λ chained application — **FIXED (PR #76)**
+
+PR #76 gated the `appMarker` branch on `acc` being functional. Now both forms work:
 
 ```
 ≫ （者 甲 者 乙 甲）之 乾 之 坤
-elab error: empty
+«乾» (111111) : Hex
 ≫ （（者 甲 者 乙 甲）之 乾）之 坤
 «乾» (111111) : Hex
 ```
 
-The elaborator can't chain `之 X 之 Y` into one curried call without explicit bracketing.
+A 2-arg λ can be chain-applied via `之 X 之 Y` without inner parens.
 
-**Impact**: any pedagogical example using a 2-arg λ needs ugly nested parens. Workaround: always introduce 2-arg ops as catalogue ops instead of λ.
+### B-8: `执` on Bool-quoted expression — **FIXED (PR #78, error-message only)**
 
-### B-8: `执` on Bool-quoted expression fails with confusing error
+PR #78 added `hexFallbackMessage` + `isUnquoteHead` to give a clear targeted message when the runtime value of an `执 「…」` is a Bool. The kernel still types `执` as `Hex → Hex` (lifting that to type-dispatch is future work; tracked in the Quoted-payload HM gap).
 
 ```
 ≫ 执 「真」
-denote failed: expected Hex, got Hex
-≫ 执 「不 之 真」
-denote failed: expected Hex, got Hex
-≫ 执 「同 之 一 之 一」
-denote failed: expected Hex, got Hex
+执 returned a Bool value (true), but 执 is typed `Hex` in wen 1.5.
+  Note: `执 「…」` is currently restricted to Hex-returning quoted expressions; Bool-returning quotes are future work (HM on `Quoted` payloads).
 ```
 
-The error message reads **"expected Hex, got Hex"** — both sides say Hex. The actual problem: `执` types its result as `.hex` per the doctrine, but the quoted expression returns Bool. The error renderer can't distinguish.
+This is a UX fix only — Bool-returning quoted execution still isn't supported. See Chapter 9.3.
 
-**Fix**: either allow `执` to type-dispatch on the inner expression, or improve the error message ("execution returned Bool, but `执` always returns Hex — wrap with `不 之 不 之` to coerce?").
+### B-9: `typeMismatch` errors — **FIXED (PR #71)**
 
-### B-9: `typeMismatch` errors don't show expected/actual types
+PR #71 routed REPL error rendering through `renderWenSurfaceErr` (the surface error renderer from ErrorRender.lean). All errors now include source-caret + expected/actual types:
 
 ```
 ≫ 推 真
-elab error: SSBX.Foundation.Wen.WenSurface.ElabErr.typeMismatch
+[stmt 1] 推 真
+^
+type mismatch:
+  expected: Hex
+  got:      Bool
 ```
 
-The error rendering is too terse — the user can't tell *what* was expected vs *what was given* without reading source. ErrorRender was supposed to fix this in Wen 1.5; for typeMismatch specifically, it's still bare.
+### B-10: Single-glyph hex starters — **FIXED (PR #79, error-message only)**
 
-### B-10: Some single-glyph hex starters are unreachable when bare
+PR #79 added `ResolveErr.hexCompoundStarter` so that bare 大/中/明/… (first glyph of multi-glyph hex names) emits an informative message instead of `noReading`. The semantics are unchanged — these glyphs remain intentionally non-expressions to avoid ambiguity. Write the full hex name (大有, 中孚, 明夷, …) instead.
 
 ```
 ≫ 及
-resolve error: noReading "及" 0
-≫ 夷
-resolve error: noReading "夷" 0
+resolve error at column 0: unknown glyph or surface: '及'
 ```
 
-These are the second glyph of multi-char hex names (明夷). They were intentionally excluded from the bare-glyph surface to avoid ambiguity, but the user-facing error is opaque. **Impact**: 64 hex names work; ~10 first-glyphs of compound names are reserved.
+(The error now points to source location with caret.)
 
-### B-11: 学派 surfaces are not parseable expressions
+### B-11: 学派 surfaces — **FIXED (PR #79, error-message only)**
 
-The `Namespace.entries` table has 42 surface aliases (墨经, 名家, 老子, 庄子, etc.) for use in `用 NS_NAME` declarations. But these surfaces are NOT registered as **expressions**:
+PR #79 added `ResolveErr.schoolNamespaceName` so that bare 墨经/名家/… (without `用`) emit a clear message:
 
 ```
 ≫ 墨经
-resolve error: noReading "墨" 2
+resolve error at column 0:
+  '墨' is a 学派 namespace name, not an expression — try `用 墨` to activate
 ```
 
-And several **学派 op aliases** mentioned in the spec doc (兼愛, 中庸, 莊周夢蝶, 仁) are not in `multiCharSurfaces` either:
+The underlying limit remains: in the REPL today, even `用 墨经` doesn't activate the namespace because the REPL uses `wenyanCompileProgramWithDefs` (no namespace tracking). Lifting the REPL to `wenyanCompileProgramWithNamespaces` is the natural follow-up; once done, the existing 12 namespace groups all become reachable.
+
+### B-12: Cell op surface — **FIXED (PR #80)**
+
+PR #80 reserved cell-op surfaces (`错位 / 同位 / …`) at the lexer level and added `ResolveErr.cellOpUnsupported`. Both `:t` and application now fail uniformly:
 
 ```
-≫ 兼愛
-resolve error: noReading "愛" 1
-≫ 中庸
-resolve error: noReading "庸" 1
-≫ 仁
-resolve error: noReading "仁" 0
-```
-
-**Impact**: the 学派 layer (P/G/A/L/ZHU/SUN/CHU/LIJ/ZA/E/X/Z, 12 groups) is **mostly inaccessible from Wen source**. The spec doc oversold this.
-
-### B-12: Cell op surface is broken
-
-```
-≫ :t 同位
-elab error: typeMismatch
-≫ :t 错位
-elab error: typeMismatch
 ≫ 错位 乾
-«坤» (000000) : Hex
+resolve error at column 0:
+  '错位' is a Cell-level operator surface
+  (emitted by the pretty-printer for Tm.cuoC / Tm.eqCell / …);
+  v1 has no Cell literal surface, so cell ops are not parseable yet.
 ```
 
-`同位`/`错位` are supposed to be `Cell → Cell` and `Cell → Cell` respectively, but `:t` reports type errors yet **application returns a Hex**. Something is wrong with the cell-vs-hex dispatch in elaboration.
+The PrettyPrint module still emits these surfaces (for `Tm.cuoC` etc. originating in the kernel); they remain output-only until v2 adds Cell literals.
 
 ---
 
-# Subsequent chapters (planned, blocked on REPL improvements)
+# Chapter 3 — 定 (user definitions)
 
-Chapters 3 (定), 4 (定递), 6 (类 + 析), 7 (曰/所…者/之所以), 8 (定…等), 9 (执 lambdas), 10 (worked programs) all need **either** B-1 fixed (multi-statement REPL) **or** an alternate path: writing programs to file and feeding via stdin.
+A `定` declaration binds a name to a body and makes it available for the rest of the **submission**. Definitions don't survive across REPL prompts — each `≫`-line is its own self-contained mini-program.
 
-Reasonable first action: **fix B-1 first**. A REPL that does `wenyanCompileProgramWithDefs` per submission (with `；` separator allowed) unlocks all five 2.0 decl forms.
+Syntax:
+
+```
+定 NAME 为 BODY
+```
+
+NAME can be any single CJK glyph (or short identifier), as long as it doesn't clash with a catalogue surface. The body is any expression. Statements are separated by `；` / `。` / `;` inside one submission.
+
+---
+
+## 3.1  Naming a hex
+
+```
+≫ 定 子 为 一；子
+«姤» (011111) : Hex
+```
+
+**义**: `子` is bound to `一` (which is 姤), then the next statement evaluates it. `子` is not in the operator catalogue (only the 10 Heavenly Stems 甲乙丙丁戊己庚辛壬癸 are reserved), so it's free for user defs.
+
+**试**: Bind `丑` to 坤, then ask `比 之 子 之 丑` (R_8 adjacency).
+
+---
+
+## 3.2  Naming a unary function
+
+```
+≫ 定 反 为 者 甲 错 之 甲；反 之 乾
+«坤» (000000) : Hex
+≫ 定 反 为 者 甲 错 之 甲；反 之 一
+«复» (100000) : Hex
+```
+
+**义**: `反` is a 1-arg λ that maps any hex to its complement. The body uses `者` to bind the parameter `甲`. Once defined, `反` is callable just like any catalogue op via `之`.
+
+**注**: We could equivalently use the postfix `…也` form: `反 之 X 也` (it does nothing extra here; useful when ending a sentence).
+
+---
+
+## 3.3  Definitions compose
+
+```
+≫ 定 单 为 一；定 双 为 之又 错 之 单；单；双
+«姤» (011111) : Hex
+«姤» (011111) : Hex
+```
+
+**义**: `双` references the earlier `单`. `之又` is "do it again" — `之又 错 X = 错 (错 X)`, so `双 = 错 (错 一) = 一`. Both print 姤.
+
+```
+≫ 定 反 为 者 甲 错 之 甲；定 双反 为 者 乙 反 之 反 之 乙；双反 之 一
+«姤» (011111) : Hex
+```
+
+**义**: `双反` calls user-defined `反` twice. User defs compose freely with each other and with catalogue ops.
+
+---
+
+## 3.4  Definitions can curry catalogue ops
+
+```
+≫ 定 同乾 为 同 之 乾；同乾 之 乾；同乾 之 坤
+true : Bool
+false : Bool
+```
+
+**义**: `同` has type `Hex → Hex → Bool`. Partially applying it as `同 之 乾` produces a curried `Hex → Bool` predicate — bind that and reuse.
+
+This is the canonical pattern for **specializing relations** in Wen: take a 2-arg op, pin one argument, give it a name.
+
+---
+
+## 3.5  Multi-char NAMEs are fine
+
+```
+≫ 定 不二 为 者 甲 不 之 不 之 甲；不二 之 真
+true : Bool
+```
+
+**义**: NAME can be more than one glyph as long as the whole token isn't in the catalogue. `不二` is two glyphs, parsed as one name. The body is the Bool double-negation function (a no-op on Bools by involution of `不`).
+
+---
+
+## 3.6  名字冲突 (name conflicts)
+
+```
+≫ 定 道 为 一；道
+[stmt 1] def conflicts with catalogue name: 道
+```
+
+**义**: `道` is reserved (a catalogue surface for the genesis operator). You'll see this error any time NAME shadows a catalogue glyph. **List of safe initials** (in order): 子丑寅卯辰巳午未申酉戌亥 (12 地支), most multi-CJK combinations, plus the 10 Heavenly Stems but only inside binders (not as user-def NAMEs).
+
+**Workaround**: pick a non-catalogue glyph or compound. If you need a glyph that's already reserved, prefix with a clarifying CJK char (e.g. `我道`).
+
+---
+
+# Chapter 4 — 定递 (recursion)
+
+Wen has **fuel-bounded recursion** via `定递`. The body may reference the name being defined; at run-time each unfolding consumes one unit of fuel from a global budget.
+
+Syntax:
+
+```
+定递 NAME 为 BODY
+```
+
+with the **restriction**: NAME must be one of the 10 Heavenly Stems (甲乙丙丁戊己庚辛壬癸) in v1.
+
+---
+
+## 4.1  Trivial recursion (no self-call)
+
+```
+≫ 定递 甲 为 者 乙 推 乙；甲 一
+«同人» (101111) : Hex
+```
+
+**义**: `定递 甲 为 者 乙 推 乙` defines `甲` as `μf. λy. 推 y`. The fixpoint is unused because `甲` doesn't appear in the body — this just behaves like ordinary λ. Calling `甲 一` ≡ `推 一` ≡ `同人`.
+
+---
+
+## 4.2  Self-referential definitions that don't actually call
+
+```
+≫ 定递 甲 为 甲
+```
+
+(no output — declaration only)
+
+**义**: The body is just `甲` itself — the simplest self-loop. The fixpoint compiles, but evaluating it would burn fuel forever, so we only declare and don't apply.
+
+---
+
+## 4.3  Limitation: real recursive calls hit HM inference today
+
+```
+≫ 定递 甲 为 者 乙 甲 之 推 之 乙；甲 一
+elab error: empty or ill-formed expression
+```
+
+**义**: When the body actually calls `甲 …` (genuine recursion), Hindley-Milner has no anchoring constraint for `甲`'s type and the elaborator fails. The kernel `Tm.fix` is sound; the surface elaborator just can't yet **infer** the recursive type without a type annotation. This is a known gap — see Appendix B (B-1-rec).
+
+**Workaround for v1**: write recursive programs at the kernel level directly (`WenDef.Tm.fix`) and elaborate them programmatically. For day-to-day use, Wen's exhaustive `凡` (Chapter 5) covers most recursion-style problems over the 64-hex domain.
+
+---
+
+# Chapter 6 — 类 + 析 (user inductives + pattern match)
+
+`类` declares a new sum type. `析` pattern-matches on it.
+
+Syntax:
+
+```
+类 TYPENAME = CTOR₁ | CTOR₂ | … | CTORₙ
+析 SCRUT 为 PAT₁ → BODY₁ | PAT₂ → BODY₂ | …
+```
+
+---
+
+## 6.1  Declaring an enum
+
+```
+≫ 类 八 = 甲 | 乙 | 丙 | 丁；甲
+甲 : 八
+```
+
+**义**: `类 八 = …` declares the type `八` with four nullary constructors. The next statement evaluates `甲`, which is now a value of type `八` (not the variable 甲!). The printer shows `甲 : 八` rather than `«姤» (…) : Hex`.
+
+**v1 限制**: Constructor NAMEs must resolve to **Heavenly Stems** (甲乙丙丁戊己庚辛壬癸). Arbitrary CJK glyphs like 春夏秋冬 are not currently accepted because the elaborator's name-conflict check requires ctor names to lex as `.varName` (see [`Reading.lean:resolveVarName`](../../formal/SSBX/Foundation/Wen/WenSurface/Reading.lean)). The TYPENAME (`八` above) is unrestricted as long as it's not already in the catalogue.
+
+---
+
+## 6.2  Pattern matching with 析
+
+```
+≫ 类 八 = 甲 | 乙 | 丙 | 丁；析 丙 为 甲 → 一 | 乙 → 坤 | 丙 → 乾 | 丁 → 一
+«乾» (111111) : Hex
+```
+
+**义**: `析 丙 为 …` matches the scrutinee `丙` against four arms. The third arm (`丙 → 乾`) fires, returning 乾.
+
+**注**: The type of the whole `析 …` is the common type of all arm bodies (here, Hex). All arms must agree; if one returned a Bool, the elaborator would reject.
+
+---
+
+## 6.3  Pattern match returning the scrutinee type
+
+```
+≫ 类 八 = 甲 | 乙 | 丙 | 丁；析 甲 为 甲 → 一 | 乙 → 坤 | 丙 → 乾 | 丁 → 一
+«姤» (011111) : Hex
+```
+
+**义**: The default arm fires (`甲 → 一`) and we get 姤. Notice the **scrutinee** `甲` (of type `八`) and the **pattern** `甲` (also constructor of `八`) are syntactically the same glyph but semantically distinct — context disambiguates.
+
+---
+
+# Chapter 7 — 所…者, 属, 之所以 (structural keywords)
+
+Three "syntactic verbs" let you build sets, test membership, and reorder application — all without leaving the kernel.
+
+---
+
+## 7.1  所 PRED 者 — relativization (predicate as function)
+
+```
+≫ 所 同 之 乾 者 之 乾
+true : Bool
+```
+
+**义**: `所 (同 之 乾) 者` desugars to `λ甲. 同 之 乾 甲` — the predicate "is equal to 乾". Then `… 之 乾` applies it to 乾, which is true.
+
+This is just the η-expansion of `同 之 乾`, but the surface reads as "the thing that is 乾" — a noun phrase nominalizing a verb phrase.
+
+---
+
+## 7.2  X 属 S — set membership
+
+```
+≫ 一 属 （者 甲 同 甲 一） 者
+true : Bool
+≫ 乾 属 （者 甲 同 甲 一） 者
+false : Bool
+≫ 一 属 （者 甲 真） 者
+true : Bool
+≫ 一 属 （者 甲 假） 者
+false : Bool
+```
+
+**义**: `（pred） 者` nominalizes a predicate into a **Set Hex**. `X 属 S` returns true iff `X` is a member.
+
+Four readings:
+1. `λx. x = 一` — the singleton {一}; 一 is in, 乾 isn't.
+2. `λx. 真` — the universal set; everything is in.
+3. `λx. 假` — the empty set; nothing is in.
+
+Compare to `凡` (Chapter 5): `属` is point-wise membership; `凡` quantifies over all of Hex.
+
+---
+
+## 7.3  之所以 — reason extraction (function flip)
+
+```
+≫ 一 之所以 错
+«复» (100000) : Hex
+≫ （推 之 一） 之所以 错
+«师» (010000) : Hex
+≫ 推 之 一 之所以 错
+«坤» (000000) : Hex
+```
+
+**义**: `Y 之所以 X` reshapes to `X Y` (apply X to Y). Reading-wise it's "the reason Y happens is X", which the kernel collapses to ordinary application.
+
+The three lines show why parens matter:
+
+1. `一 之所以 错` = `错 一` = `错 011111` = `100000` = **复**. Clean.
+2. `（推 之 一） 之所以 错` = `错 (推 之 一)` = `错 同人` = `错 101111` = `010000` = **师**. Parens force `推 之 一` to be the subject.
+3. `推 之 一 之所以 错` = `推 之 (一 之所以 错)` = `推 复` = **坤**. Without parens, `之所以` binds **tighter than** the `之` application marker, so the subject is just `一`, not `推 之 一`.
+
+**moral**: when mixing `之所以` with `之`-chains, parenthesize the subject. The surface concision is real but at a precedence cost.
+
+---
+
+# Chapter 8 — 定 LHS 等 RHS (rewrite rules)
+
+`定 LHS 等 RHS` declares a **definitional equality**: every occurrence of LHS in subsequent terms is replaced by RHS at compile time. This is **not** a runtime equation — it's a syntactic rewrite applied during normalization.
+
+Syntax:
+
+```
+定 LHS 等 RHS
+```
+
+---
+
+## 8.1  Eliminating double negation
+
+```
+≫ 定 错 错 甲 等 甲；错 之 错 之 一
+«姤» (011111) : Hex
+```
+
+**义**: The rule `错 错 甲 = 甲` (with `甲` as a pattern variable) rewrites any `错 (错 t)` to `t`. The subsequent expression `错 之 错 之 一` collapses to `一` = 姤.
+
+Note: even without the rewrite, runtime would compute `错 (错 一) = 一` anyway (since 错 is an involution). The rewrite **shortens compile-time** output (and pretty-printed forms).
+
+---
+
+## 8.2  Compose with regular defs
+
+```
+≫ 定 错 错 甲 等 甲；定 倍推 为 而 推 推；倍推 乾
+«同人» (101111) : Hex
+```
+
+**义**: Rewrite rules and `定` declarations live in the same submission. Here `倍推 = 推 ∘ 推` (composition via `而`). Applying to 乾: `推 (推 乾) = 推 姤 = 同人`. (Trace: `推 乾 = 姤` because the cyclic-shift rule wraps 111111 down through `xuGua`; then `推 姤 = 同人`.)
+
+**注**: The pattern variable in rewrite LHS must be a **linear** Heavenly Stem — each stem appears once. `定 同 甲 甲 等 真` is rejected (`甲` non-linear). Use ordinary functions if you need non-linear matching.
+
+---
+
+# Chapter 9 — 执 (quoted execution)
+
+`执 「X」` parses, type-checks, and runs the quoted expression — a meta-circular evaluator inside Wen.
+
+Syntax:
+
+```
+执 「EXPR」
+执 『EXPR』
+执 〈EXPR〉
+```
+
+All three bracket pairs work; pick by clarity.
+
+---
+
+## 9.1  执 on a hex expression
+
+```
+≫ 执 「推 之 一」
+«同人» (101111) : Hex
+```
+
+**义**: The quoted body `推 之 一` is wrapped as a `Tm.quoted`, then `执` (`Tm.unquote`) re-evaluates it under the current environment. Result is identical to running `推 之 一` directly.
+
+---
+
+## 9.2  Quoted involutions
+
+```
+≫ 执 「错 之 错 之 乾」
+«乾» (111111) : Hex
+```
+
+**义**: Double-complement of 乾 is 乾.
+
+---
+
+## 9.3  Bool-returning quotes hit a v1 limit
+
+```
+≫ 执 「真」
+执 returned a Bool value (true), but 执 is typed `Hex` in wen 1.5.
+  Note: `执 「…」` is currently restricted to Hex-returning quoted expressions; Bool-returning quotes are future work (HM on `Quoted` payloads).
+```
+
+**义**: `Tm.unquote` is hard-typed as `Hex → Hex` (the quoted body must denote a Hex). A `Bool`-yielding body slips past the surface typecheck (`.quoted` is opaque to HM) and then fails at the denotation step. The error message (added in B-8 fix) explains the constraint clearly.
+
+---
+
+# Chapter 10 — Worked programs
+
+End-to-end multi-statement programs combining everything from chapters 1-9.
+
+---
+
+## 10.1  Define + use + verify
+
+```
+≫ 定 反 为 者 甲 错 之 甲；定 不变 为 者 甲 同 甲 之 反 之 反 之 甲；凡 之 者 乙 不变 之 乙
+true : Bool
+```
+
+**义**: Three statements:
+
+1. `反` := flip every yao (η-expanded form of `错`).
+2. `不变` := the predicate "x is invariant under `反 ∘ 反`", i.e. `λx. x = 反 (反 x)`.
+3. `凡 不变` := "for all x, `不变 x` holds".
+
+The whole thing is a machine-checked proof: **`错` (a.k.a. `反`) is an involution over all 64 hexes**. Result: `true`.
+
+---
+
+## 10.2  Predicate algebra in 3 lines
+
+```
+≫ 定 是乾 为 同 之 乾；定 非乾 为 者 甲 不 之 是乾 之 甲；唯 之 者 甲 是乾 之 甲；唯 之 者 甲 非乾 之 甲
+true : Bool
+false : Bool
+```
+
+**义**:
+1. `是乾` := "is 乾" (curried `同`).
+2. `非乾` := "is not 乾" (negate).
+3. `唯 是乾` := "exactly one hex is 乾" → true (uniquely 乾).
+4. `唯 非乾` := "exactly one hex is non-乾" → false (there are 63).
+
+---
+
+## 10.3  类 + 析 + Hex output
+
+```
+≫ 类 元素 = 甲 | 乙 | 丙；析 乙 为 甲 → 乾 | 乙 → 坤 | 丙 → 一
+«坤» (000000) : Hex
+```
+
+**义**: User inductive `元素` with three constructors, then a pattern match that maps each ctor to a hex. Scrutinee 乙 fires arm 2, returns 坤.
+
+This is **finite enum-driven dispatch** — the bread and butter of any language that talks about kinds.
+
+---
+
+## 10.4  Self-evaluating program
+
+```
+≫ 执 「执 「推 之 一」」
+«同人» (101111) : Hex
+```
+
+**义**: An `执` inside an `执`. The outer `执` unquotes the inner quoted term; that inner term is itself an `执` over a quoted `推 之 一`, which unquotes to 同人. Wen evaluates the meta-circular tower in one step.
+
+---
+
+# Recap: what you've learned
+
+After 10 chapters you can:
+
+| Skill | Where |
+|---|---|
+| Write hex literals | 1.1 |
+| Apply unary ops (`错`, `推`, `综`, `互`) | 1.2-1.4 |
+| Compare hexes (`同`, `比`) | 1.6-1.7 |
+| Build quoted expressions and unquote them | 1.8 + 9 |
+| Define curried λ via `者` | 2 |
+| Quantify over all hexes (`凡` / `唯` / `三` / `過半`) | 5 |
+| Verify algebraic theorems by exhaustive check | 5.5 |
+| Bind a name to a value (`定`) | 3 |
+| Compose user defs | 3.3-3.4 |
+| Declare recursive functions (limited) | 4 |
+| Declare user inductives (`类`) and dispatch (`析`) | 6 |
+| Build sets and test membership (`所/者`, `属`) | 7 |
+| Reorder application (`之所以`) | 7.3 |
+| Declare rewrite rules (`定 等`) | 8 |
+| Meta-evaluate quoted programs (`执`) | 9 |
+| Combine all of the above in a multi-statement program | 10 |
 
 ---
 
