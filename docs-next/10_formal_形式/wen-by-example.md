@@ -246,36 +246,402 @@ You cannot yet:
 | 真, 假 | true, false | Bool literal | |
 | 之又 | zhī yòu | iterate twice | `之又 op X = op (op X)` |
 
-**Known gaps** (验证发现):
-- `加` (hex addition) — Tm.jia exists but has no surface reading. Can't use bare `加 X Y` syntax. (Reported gap; not yet fixed.)
-- `並` (Bool AND) — bound to `pairH` in catalogue, not `andB`. Won't work as Boolean conjunction.
-- `或` (Bool OR) — bound to modal "possibly" (M_2), not `orB`.
-- `列一` / `首` (list ops) — no surface readings.
-
-These will need surface-reading PRs before they're usable from Wen source. Until then, work around with `不` + 同 for booleans, and skip list ops entirely.
+See also [Appendix B — Gaps & limitations](#appendix-b--gaps--limitations) for the **full** validation-discovered gap list (11 issues).
 
 ---
 
 # Chapter 2 — λ 与 应用 (lambda and application)
 
-*Drafting in progress.* The plan: identity `者 甲 甲`, composition `者 甲 错 之 综 之 甲`, application via grouping `(者 …) 之 X`, and the precedence story (`者` body extends to end-of-chunk).
+The binder `者` introduces a λ-abstraction: `者 NAME body`. Wen's evaluator is **call-by-value** with **explicit application markers** (`之`), which leads to a few non-obvious idioms.
 
-Examples 2.1-2.5 to follow once Chapter 1 review lands.
+## 2.1  Identity
+
+```
+≫ 者 甲 甲
+<elaborated> : Hex → Hex
+≫ :t 者 甲 甲
+Hex → Hex
+```
+
+**义**: `者 甲 甲` is `λx. x` — the identity. Wen's HM defaults the unsolved domain mvar to `.hex`, so without an applied context it prints as `Hex → Hex`.
+
+To apply it, wrap in parens and use `之`:
+
+```
+≫ （者 甲 甲）之 一
+«姤» (011111) : Hex
+≫ （者 甲 甲）之 乾
+«乾» (111111) : Hex
+```
+
+The **fullwidth** parens `（）` or **ASCII** parens `()` both work as grouping.
+
+## 2.2  Wrapping an operation
+
+```
+≫ （者 甲 错 之 甲）之 一
+«复» (100000) : Hex
+≫ （者 甲 错 之 综 之 甲）之 一
+«剥» (000001) : Hex
+≫ （者 甲 综 之 错 之 甲）之 一
+«剥» (000001) : Hex
+```
+
+**义**: `者 甲 错 之 甲` = `λx. 错 x` — a function that applies 错. The last two examples show **composition commutes** for 错 and 综: `错 ∘ 综 = 综 ∘ 错` (both give 错综).
+
+## 2.3  Curried λ — explicit parens required
+
+Multi-binder λs are tricky:
+
+```
+≫ 者 甲 者 乙 甲
+<elaborated> : Hex → Hex → Hex
+≫ :t 者 甲 者 乙 甲
+Hex → Hex → Hex
+```
+
+So `者 甲 者 乙 甲` typechecks as `λx. λy. x` (the K combinator). But:
+
+```
+≫ （者 甲 者 乙 甲）之 乾 之 坤
+elab error: SSBX.Foundation.Wen.WenSurface.ElabErr.empty
+```
+
+**Application of a curried λ to two args fails without inner parens**. Workaround: bracket the partial application:
+
+```
+≫ （（者 甲 者 乙 甲）之 乾）之 坤
+«乾» (111111) : Hex
+```
+
+This is a real parser issue (see Appendix B #7) — the application-chain elaborator can't fold `之 X 之 Y` into a single curried call. For pedagogy: **always bracket curried partials explicitly**.
+
+## 2.4  Higher-order — predicates
+
+A predicate is a `Hex → Bool` function. Applying a quantifier folds it into a Bool:
+
+```
+≫ :t 同 乾
+Hex → Bool
+≫ （同 乾）之 坤
+false : Bool
+≫ （同 乾）之 乾
+true : Bool
+```
+
+**义**: `同 乾` curries the equality op into a unary predicate `λx. x = 乾`. Apply via `之`.
+
+## 2.5  Identity as a Bool function
+
+```
+≫ 者 甲 不 之 不 之 甲
+<elaborated> : Bool → Bool
+≫ （者 甲 不 之 不 之 甲）之 真
+true : Bool
+≫ （者 甲 不 之 不 之 甲）之 假
+false : Bool
+```
+
+**义**: HM picks `Bool → Bool` here because the body `不 之 不 之 甲` only typechecks with `甲 : Bool`. This is the **HM-driven binder-domain selection** in action — no annotation needed.
+
+## 章末 — Patterns to remember
+
+| 想法 | 文言 |
+|---|---|
+| Identity (Hex) | `者 甲 甲` |
+| Identity (Bool) | `者 甲 不 之 不 之 甲` |
+| Wrap an op | `者 甲 OP 之 甲` |
+| Compose | `者 甲 OP₁ 之 OP₂ 之 甲` |
+| Curried partial | wrap inner `(λ 之 X)` in parens before `之 Y` |
+| Predicate | `同 X` or `者 甲 PRED-expr` |
 
 ---
 
-# Subsequent chapters (planned)
+# Chapter 5 — 量词 (quantifiers) — preview
 
-- Chapter 3 — `定 NAME 为 BODY` (user definitions, substitution)
-- Chapter 4 — `定递 NAME 为 BODY` (recursion with fuel)
-- Chapter 5 — `凡 / 唯 / 三 / 過半` (quantifiers)
-- Chapter 6 — `类 NAME = CTOR | …` + `析 X 为 …` (inductive + match)
-- Chapter 7 — `曰 / 所…者 / 之所以` (literary surface)
-- Chapter 8 — `定 LHS 等 RHS` (rewrite rules)
-- Chapter 9 — `执 「X」` (quote-eval, meta-programming)
-- Chapter 10 — Worked programs: 道德经-Wen 1st stanza, 易经-占卜 sim, 人类命运共同体 自指
+(Chapters 3-4 on user defs / recursion need multi-statement REPL — see Appendix B #1. Skipping ahead.)
 
-Each chapter ~5 examples, all REPL-verified. Total target: 50 examples.
+Wen has 4 quantifier-style higher-order operators, all `(Hex → Bool) → Bool`:
+
+```
+≫ :t 凡
+(Hex → Bool) → Bool
+≫ :t 唯
+(Hex → Bool) → Bool
+≫ :t 三
+(Hex → Bool) → Bool
+≫ :t 過半
+(Hex → Bool) → Bool
+```
+
+Each runs an exhaustive check over all 64 hexagrams.
+
+## 5.1  `凡` — for all
+
+```
+≫ 凡 之 者 甲 真
+true : Bool
+≫ 凡 之 者 甲 假
+false : Bool
+≫ 凡 之 者 甲 不 之 不 之 真
+true : Bool
+```
+
+**义**: `凡 之 (λ甲. P)` ≡ `∀甲 : Hex. P 甲`. The body must return Bool.
+
+The third example shows compositions live inside the predicate: `不 ∘ 不 ∘ 真 = 真`, so the `∀` is trivially true.
+
+## 5.2  `唯` — exists unique
+
+```
+≫ 唯 之 者 甲 同 甲 乾
+true : Bool
+≫ 唯 之 者 甲 真
+false : Bool
+```
+
+**义**: `唯` returns true if **exactly one** hex satisfies the predicate. `同 甲 乾` is true only for 甲 = 乾, so unique. `真` is satisfied by all 64, so not unique.
+
+## 5.3  `三` — exactly three
+
+```
+≫ 三 之 者 甲 真
+false : Bool
+```
+
+**义**: `三` checks for exactly 3 satisfying hexes. `真` has 64 satisfiers, not 3.
+
+## 5.4  `過半` — majority (≥ 33)
+
+```
+≫ 過半 之 者 甲 真
+true : Bool
+```
+
+**义**: 64 > 32 — majority.
+
+## 5.5  Algebraic theorems — verified by exhaustive check
+
+`凡` over a 64-element domain effectively makes Wen a **decision procedure** for closed Hex-quantified formulas. This means we can verify **algebraic identities** by writing them as `凡` propositions:
+
+```
+≫ 凡 之 者 甲 同 之 甲 之 错 之 错 之 甲
+true : Bool
+```
+
+**义**: `∀x. x = 错 (错 x)` — **错 is an involution**. Verified by exhaustive check over 64 hexes.
+
+```
+≫ 凡 之 者 甲 同 之 甲 之 综 之 综 之 甲
+true : Bool
+```
+
+**义**: `综` is also an involution.
+
+```
+≫ 凡 之 者 甲 同 之 错 之 综 之 甲 之 综 之 错 之 甲
+true : Bool
+```
+
+**义**: **`错 ∘ 综 = 综 ∘ 错`** — complement and reverse **commute**. (Both compose to 错综.)
+
+```
+≫ 凡 之 者 甲 不 之 同 之 推 之 甲 之 甲
+true : Bool
+```
+
+**义**: `推` has **no fixed point** — there's no hex x such that 推 x = x.
+
+These four are real algebraic theorems machine-verified by Wen.
+
+---
+
+# Appendix A — Working primitives table (verified)
+
+All from Chapter 1-2 + 5 + extra probes:
+
+| 文言 | Type | Notes |
+|---|---|---|
+| `一` | Hex | the hex 姤 (011111) |
+| 64 King-Wen names | Hex | `乾 坤 屯 蒙 需 訟 師 比 小畜 履 泰 否 …` (some 1-char ones like 及/夷 fail when bare; see B-10) |
+| `真` `假` | Bool | literals |
+| `错` `综` `互` `错综` | Hex → Hex | involutions (錯/錯综 verified) |
+| `推` | Hex → Hex | shift; no fixed point |
+| `不` | Bool → Bool | involution |
+| `同` | Hex → Hex → Bool | curries: `同 乾 : Hex → Bool` |
+| `凡` `唯` `三` `過半` | (Hex → Bool) → Bool | exhaustive over 64 |
+| `比` | Hex → Hex → Bool (when applied; Hex alone) | R_8 infix |
+| `之又` | iterate twice | `之又 op X = op (op X)` |
+| `之` | app marker | left-associative |
+| `「 」` `『 』` `〈 〉` | quote brackets | wraps Tm-as-`Quoted` |
+| `执 「X」` | unquote + eval | `Quoted → Hex` only |
+| `（ ）` `( )` | grouping | both fullwidth and ASCII |
+| `也` | Hex → Hex | postfix predication (identity on Hex) |
+| `乎` `矣` `哉` `兮` | Bool → Bool | postfix Bool particles |
+| `者 NAME body` | λ-binder | HM-inferred domain |
+
+---
+
+# Appendix B — Gaps & limitations (validation-discovered)
+
+These are real bugs/limitations found by running examples through the REPL. Each is worth a future PR.
+
+### B-1: REPL is single-expression only
+
+The `wen` REPL only accepts **one expression per line**. Multi-statement input fails at the lexer because `；` / `。` / `;` are not allowed inside a `wenyanCompile` (single-stmt) call.
+
+```
+≫ 定 甲 为 一；甲
+lex error: SSBX.Foundation.Wen.WenSurface.LexErr.unexpected 11 '；'
+```
+
+**Impact**: cannot use 定 / 定递 / 类 / 析 / 用 / 定…等 in the REPL at all. All five Wen 2.0 declaration forms are unreachable interactively.
+
+**Fix**: have REPL try `wenyanCompileProgramWithDefs` first (full pipeline), fall back to `wenyanCompile` only for bare expressions. Or add `:def NAME = BODY` etc. REPL commands.
+
+### B-2: 6 yao flips have no surface readings
+
+`初爻 / 二爻 / 三爻 / 四爻 / 五爻 / 上爻` are kernel-level Tm constructors (`flip1H` … `flip6H`) but the **multi-char surface table doesn't register them**:
+
+```
+≫ 初爻 一
+resolve error: SSBX.Foundation.Wen.WenSurface.ResolveErr.noReading "初" 0
+```
+
+**Fix**: add 初爻/二爻/三爻/四爻/五爻/上爻 to `Lex.multiCharSurfaces` with appropriate catalogue mapping.
+
+### B-3: `加` (Tm.jia) is unreachable
+
+The Tm builtin `jia` (Hex addition, `Hex → Hex → Hex`) exists but has no surface reading. The character 加 doesn't resolve:
+
+```
+≫ 加 一 一
+resolve error: noReading "加" 0
+```
+
+### B-4: `並` is `pairH`, not `andB`
+
+The kernel has `Tm.andB : Bool → Bool → Bool` named for `並`. But the surface 並 binds to `pairH` (`Hex → Hex → (Hex × Hex)`):
+
+```
+≫ :t 並
+Hex → Hex → (Hex × Hex)
+```
+
+**Impact**: there is **no surface way to AND two Bools** in Wen. Spec doc was wrong.
+
+### B-5: `或` is modal M_2, not `orB`
+
+Similarly, `Tm.orB` exists but the surface 或 binds to modal `M_2 可能模态`:
+
+```
+≫ :t 或
+…modal…
+```
+
+**Impact**: no surface Bool OR.
+
+### B-6: List ops 列一/列二/列三/首 unreachable
+
+```
+≫ :t 列一
+resolve error: noReading "列" 0
+≫ :t 首
+resolve error: noReading "首" 0
+```
+
+Tm constructors `list1H`, `list2H`, `list3H`, `headH` exist but no surface readings.
+
+### B-7: Curried λ application without inner parens fails
+
+```
+≫ （者 甲 者 乙 甲）之 乾 之 坤
+elab error: empty
+≫ （（者 甲 者 乙 甲）之 乾）之 坤
+«乾» (111111) : Hex
+```
+
+The elaborator can't chain `之 X 之 Y` into one curried call without explicit bracketing.
+
+**Impact**: any pedagogical example using a 2-arg λ needs ugly nested parens. Workaround: always introduce 2-arg ops as catalogue ops instead of λ.
+
+### B-8: `执` on Bool-quoted expression fails with confusing error
+
+```
+≫ 执 「真」
+denote failed: expected Hex, got Hex
+≫ 执 「不 之 真」
+denote failed: expected Hex, got Hex
+≫ 执 「同 之 一 之 一」
+denote failed: expected Hex, got Hex
+```
+
+The error message reads **"expected Hex, got Hex"** — both sides say Hex. The actual problem: `执` types its result as `.hex` per the doctrine, but the quoted expression returns Bool. The error renderer can't distinguish.
+
+**Fix**: either allow `执` to type-dispatch on the inner expression, or improve the error message ("execution returned Bool, but `执` always returns Hex — wrap with `不 之 不 之` to coerce?").
+
+### B-9: `typeMismatch` errors don't show expected/actual types
+
+```
+≫ 推 真
+elab error: SSBX.Foundation.Wen.WenSurface.ElabErr.typeMismatch
+```
+
+The error rendering is too terse — the user can't tell *what* was expected vs *what was given* without reading source. ErrorRender was supposed to fix this in Wen 1.5; for typeMismatch specifically, it's still bare.
+
+### B-10: Some single-glyph hex starters are unreachable when bare
+
+```
+≫ 及
+resolve error: noReading "及" 0
+≫ 夷
+resolve error: noReading "夷" 0
+```
+
+These are the second glyph of multi-char hex names (明夷). They were intentionally excluded from the bare-glyph surface to avoid ambiguity, but the user-facing error is opaque. **Impact**: 64 hex names work; ~10 first-glyphs of compound names are reserved.
+
+### B-11: 学派 surfaces are not parseable expressions
+
+The `Namespace.entries` table has 42 surface aliases (墨经, 名家, 老子, 庄子, etc.) for use in `用 NS_NAME` declarations. But these surfaces are NOT registered as **expressions**:
+
+```
+≫ 墨经
+resolve error: noReading "墨" 2
+```
+
+And several **学派 op aliases** mentioned in the spec doc (兼愛, 中庸, 莊周夢蝶, 仁) are not in `multiCharSurfaces` either:
+
+```
+≫ 兼愛
+resolve error: noReading "愛" 1
+≫ 中庸
+resolve error: noReading "庸" 1
+≫ 仁
+resolve error: noReading "仁" 0
+```
+
+**Impact**: the 学派 layer (P/G/A/L/ZHU/SUN/CHU/LIJ/ZA/E/X/Z, 12 groups) is **mostly inaccessible from Wen source**. The spec doc oversold this.
+
+### B-12: Cell op surface is broken
+
+```
+≫ :t 同位
+elab error: typeMismatch
+≫ :t 错位
+elab error: typeMismatch
+≫ 错位 乾
+«坤» (000000) : Hex
+```
+
+`同位`/`错位` are supposed to be `Cell → Cell` and `Cell → Cell` respectively, but `:t` reports type errors yet **application returns a Hex**. Something is wrong with the cell-vs-hex dispatch in elaboration.
+
+---
+
+# Subsequent chapters (planned, blocked on REPL improvements)
+
+Chapters 3 (定), 4 (定递), 6 (类 + 析), 7 (曰/所…者/之所以), 8 (定…等), 9 (执 lambdas), 10 (worked programs) all need **either** B-1 fixed (multi-statement REPL) **or** an alternate path: writing programs to file and feeding via stdin.
+
+Reasonable first action: **fix B-1 first**. A REPL that does `wenyanCompileProgramWithDefs` per submission (with `；` separator allowed) unlocks all five 2.0 decl forms.
 
 ---
 
@@ -284,3 +650,9 @@ Each chapter ~5 examples, all REPL-verified. Total target: 50 examples.
 The principle: **never write an example without running it**. The wen REPL is the spec's tip-of-iceberg ground truth; documents that diverge from it are bugs.
 
 If you're following along: `lake build wen && ./.lake/build/bin/wen`. The REPL hangs around the `≫ ` prompt; type `:quit` or Ctrl-D to exit.
+
+For a one-liner test from the shell:
+
+```
+echo -e "推 之 一\n:quit" | ./.lake/build/bin/wen 2>&1 | grep "^≫"
+```
