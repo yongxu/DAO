@@ -56,6 +56,8 @@ partial def tyStr : Ty → String
   | .prod a b       => s!"({tyStr a} × {tyStr b})"
   | .list a         => s!"List {tyStr a}"
   | .quoted         => "Quoted"   -- wen-2.0 ⑥/⑩ 引语括号 payload
+  | .user n         => n          -- wen-2.0 ④ user inductive type
+  | .set a          => s!"Set {tyStr a}"  -- wen-2.0 ⑦ predicate extension
   | .arr a b        =>
     -- right-associate: `a → b → c` rather than `a → (b → c)`
     match a with
