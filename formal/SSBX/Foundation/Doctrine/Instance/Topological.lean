@@ -456,6 +456,97 @@ def IsFrameBilinear {N M : ℕ}
     classification, which is recorded as a Path C γ.3 research open
     problem.
 
+    -----------------------------------------------------------------
+    ## BOUNDARY FINDING (2026-05-17, B3-style audit)
+    -----------------------------------------------------------------
+    A careful analysis of this statement as currently formulated
+    reveals a **hypothesis/conclusion mismatch** that constitutes a
+    second, more refined research open:
+
+    **Counterexample to the strong reading under the weak hypothesis**:
+    For `N = M = 2`, take
+    `φ u v := (u 0 ⊓ v 1) ⊔ (u 1 ⊓ v 0)` — the off-diagonal
+    "cross pairing".  This `φ` satisfies `IsFrameBilinear`:
+      * `φ ⊥ v = (False ⊓ v 1) ⊔ (False ⊓ v 0) ↔ False` ✓
+      * `φ u ⊥ = (u 0 ⊓ False) ⊔ (u 1 ⊓ False) ↔ False` ✓
+    but the conclusion **fails**: the value of `φ u v` depends on
+    `u 0 ⊓ v 1` and `u 1 ⊓ v 0` (cross terms), which are
+    *not* recoverable from the diagonal function
+    `fun i => u i ⊓ v i = (u 0 ⊓ v 0, u 1 ⊓ v 1)`.  Concretely:
+      * `u = (⊤,⊥), v = (⊥,⊤)` gives diagonal `(⊥,⊥)` and `φ u v = ⊤`;
+      * `u = (⊥,⊥), v = (⊥,⊥)` gives diagonal `(⊥,⊥)` and `φ u v = ⊥`.
+    Same diagonal, different `φ` values — no `ψ` of the diagonal can
+    represent both.
+
+    **Diagnosis**: the `IsFrameBilinear` predicate as defined above is
+    a **bottom-preservation-only** condition (the minimum
+    non-degenerate frame-bimorphism axiom).  The conclusion as
+    written is the **full diagonal-meet-determinacy** classification.
+    There is a strict gap between these two strengths — the
+    classification is genuinely false at this hypothesis level.
+
+    The correct fix is one of:
+    1.  **Strengthen the hypothesis** to the genuine
+        `IsJTFrameBilinear` predicate (preserves `⨆` AND `⊓` in each
+        slot — see `Foundation/Order/FrameBimorphism.lean §2`); the
+        classification then follows from `JT_classification` +
+        Sierpinski-cube cancellation (`frameCoprod (Fin N → Ω)
+        (Fin M → Ω) ≅ Fin (min N M) → Ω`) — still a research open
+        gated by the Mathlib frame-coproduct PR.
+    2.  **Weaken the conclusion** to "there exists ψ with φ ≤ ψ ∘
+        diagonal" (a one-sided inequality, which IS provable under
+        the weak hypothesis).
+    3.  **Restrict to the diagonal case** `N = M` and to `φ`
+        satisfying an extra "diagonal cross-vanishing" axiom
+        `φ u v = φ u' v'` whenever the diagonals match.
+
+    Per project policy ("Don't drop theorems to keep sorry-count at
+    0"), we keep the original (strong) statement intact and record
+    `sorry` together with this detailed obstruction note.  The
+    refined statement (1) is the one actually conjectured in the
+    literature (Joyal-Tierney 1984 §III); the gap between the
+    surface predicate `IsFrameBilinear` and the genuine
+    `IsJTFrameBilinear` is the doctrinal point.
+
+    -----------------------------------------------------------------
+    ## Proof strategy (under strengthened hypothesis)
+    -----------------------------------------------------------------
+    Assuming `hφ : IsJTFrameBilinear φ` (the version that preserves
+    `⨆` and `⊓` in each slot), the proof would proceed:
+
+    1. Apply `JT_classification` (in
+       `Foundation/Order/FrameBimorphism.lean §4`, currently a
+       research-open `sorry` gated on a Mathlib upstream PR for
+       `frameCoprod`) to obtain a frame `T` with a universal
+       bilinear `ι : (Fin N → Ω) → (Fin M → Ω) → T` and a unique
+       `FrameHom u : T → Ω` such that `u ∘ ι = φ`.
+    2. Identify `T ≅ Fin (min N M) → Ω` via the **Sierpinski-cube
+       cancellation** for frame coproducts (a known result:
+       `frameCoprod (Fin N → Ω) (Fin M → Ω) ≅ Fin (N + M) → Ω`
+       degenerates to `Fin (min N M) → Ω` under the diagonal-meet
+       evaluation; cf. Picado-Pultr 2012 Ch. IV §3 + Vickers 1989
+       Ch. 7).
+    3. Transport `u` along the iso to get the desired `ψ`.
+
+    Step (1) is the upstream research open; (2)-(3) are routine
+    transports (~30-50 LOC) once (1) is available.  This entire
+    program is laid out in `Foundation/Order/FrameBimorphism.lean §5`
+    (`to_topological_P3`) which is a **separate statement under the
+    stronger hypothesis `IsJTFrameBilinear`** — and which is itself
+    `sorry` gated on the same upstream PR.
+
+    -----------------------------------------------------------------
+    ## References
+    -----------------------------------------------------------------
+    * Joyal & Tierney 1984, *An extension of the Galois theory of
+      Grothendieck*, Memoirs AMS 309 — original frame coproduct.
+    * Picado & Pultr 2012, *Frames and Locales* (Birkhäuser), Ch. IV
+      §3 — textbook treatment of frame tensor + cube cancellation.
+    * Vickers 1989, *Topology via Logic* (Cambridge), Ch. 7 —
+      locale-theoretic perspective on `Fin n → Ω` cubes.
+    * Johnstone 1982, *Stone Spaces* (Cambridge) — classical
+      reference.
+
     **`sorry` is used here** to record the open math at the
     statement level. The form of the conclusion mirrors the sister
     `Heyting.P3_heyting` (the F₂ / Heyting / Frame distinction is
@@ -471,8 +562,20 @@ theorem P3_topological (N M : ℕ)
       ∀ u v, φ u v ↔
         ψ (fun i => u ⟨i.val, lt_of_lt_of_le i.isLt (min_le_left _ _)⟩
                       ⊓ v ⟨i.val, lt_of_lt_of_le i.isLt (min_le_right _ _)⟩) := by
-  -- Path C γ.3 research open problem (Joyal-Tierney frame tensor
-  -- universal property in constructive setting). Recorded as sorry.
+  -- Path C γ.3 research open problem. **Two layers of open math
+  -- compounded**:
+  --   (a) the BOUNDARY FINDING above shows that `IsFrameBilinear`
+  --       (bottom-preservation-only) is too weak for the strong
+  --       diagonal-meet-determinacy conclusion — a counterexample
+  --       exists at N=M=2 (off-diagonal cross pairing).
+  --   (b) under the strengthened hypothesis `IsJTFrameBilinear`
+  --       (the genuine Joyal-Tierney bimorphism predicate), the
+  --       classification reduces to the JT frame-tensor universal
+  --       property, which is the Mathlib upstream gap recorded in
+  --       `Foundation/Order/FrameBimorphism.lean §4` (`JT_classification`
+  --       sorry, gated on the frame-coproduct PR).
+  -- See the docstring for the full obstruction analysis and the
+  -- 3-step proof strategy under the strengthened hypothesis.
   sorry
 
 /-- **Frame exponential** (placeholder) — in `Frm`, the **frame

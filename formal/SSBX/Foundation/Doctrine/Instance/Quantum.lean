@@ -680,11 +680,9 @@ theorem quantum_realisation_consistent_with_HilbertPauliFunctor :
 theorem quantum_universal_sayability_witness :
     Nonempty (TGUTRealisation.RealIso
       (TGUTRealisation.quantum)
-      (TGUTRealisation.canonical (PauliBase : Type 0))) := by
-  -- Depends on G3's `T_GUT.universal_sayability`, which is currently
-  -- a `sorry` in `Foundation/Doctrine/T_GUT.lean`.  We record this as
-  -- a witness placeholder for the γ.3-quantum specialisation.
-  sorry
+      (TGUTRealisation.canonical (PauliBase : Type 0))) :=
+  TGUTRealisation.universal_sayability (PauliBase : Type 0)
+    TGUTRealisation.quantum
 
 end ConsistencyCheck
 
