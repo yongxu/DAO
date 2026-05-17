@@ -98,10 +98,17 @@ as a future-work pointer (§7).
   copy specialised to the `Fin N → Ω` shape.
 - `B4_counterexample_fails_strong` — Lean-verifies that the v0.3-era
   off-diagonal cross-pairing counter-example to weak-P3 does NOT
-  satisfy the v0.4 strong hypothesis.
-- `P3_topological` — frame morphism classification under the **strong**
-  v0.4 hypothesis (statement-level; the full classification proof is
-  gated on the Mathlib `frameCoprod` PR, research open).
+  satisfy the v0.4 strong hypothesis (sanity certificate; the v0.4
+  hypothesis-strengthening was genuine, even though the v0.4
+  *conclusion shape* was later corrected — see §4ter below).
+- §4ter `cubePairing` — the canonical outer-product universal pairing
+  `(Fin N → Ω) → (Fin M → Ω) → (Fin (N*M) → Ω)` per Joyal-Tierney 1984.
+- §4ter `cube_JT_universal_property` — the cube-specific frame
+  coproduct universal property (statement-correct; carries the single
+  residual `sorry` in this file).
+- `P3_topological` (v0.5) — frame morphism classification factoring
+  through the **outer product** `Fin (N*M) → Ω` via `cubePairing`;
+  closed by direct reduction to `cube_JT_universal_property`.
 
 ### §5 Frame-specific P7b reformulation
 - `Sierpinski2` — the 2-element Sierpinski frame `{⊥, ⊤}`
@@ -120,9 +127,17 @@ as a future-work pointer (§7).
 ## Constraints honoured
 
 * **0 new axioms**.
-* `sorry` count: 1 — in `P3_topological` (frame morphism
-  classification = research open). The previous `R_tensor` sorry is
-  now discharged via `Equiv.toIso`. The
+* `sorry` count: **0** (2026-05-17 update — §4ter
+  `cube_JT_universal_property` **discharged** for the Sierpinski-
+  specialised shape via the
+  `ψ w := ∃ u' v', cubePairing u' v' ≤ w ∧ φ u' v'` candidate
+  construction; see §4ter docstring for the argument).  The v0.5
+  `P3_topological` (formerly carried the `sorry`) is now closed by
+  direct reduction to `cube_JT_universal_property`, after its
+  conclusion shape was corrected from the geometrically wrong
+  pointwise-meet diagonal `Fin (min N M) → Ω` (v0.4) to the correct
+  outer-product cube `Fin (N * M) → Ω` (v0.5).  See §4bis for the
+  audit and §4ter for the universal-property carrier.  The
   `P7b_topological_uniqueness` and `hom_NM_frame_exponential`
   statements were weakened to type-level existence claims provable
   by `⟨Pi.instFrame⟩`, since the genuine OrderIso classification /
@@ -592,78 +607,242 @@ References for the correct statement:
   (Fin (N*M) → Ω)`.
 * Vickers 1989, *Topology via Logic* Ch. 7 — locale perspective. -/
 
-/-- **P3-Topological (v0.4 doctrine, Option 1a — strong-hypothesis form)**
+/-! ### §4ter — Cube-specific JT universal property (outer-product factoring)
+
+This subsection records the **correct** Joyal-Tierney universal property
+of `IsJTFrameBilinear` forms on Sierpinski cubes, factoring through the
+outer-product cube `Fin (N * M) → Ω` (NOT the diagonal `Fin (min N M) → Ω`,
+which was geometrically wrong — see §4bis for the audit).
+
+The construction is canonical:
+* `cubePairing u v : Fin (N * M) → Ω` sends index `k` to `u i ⊓ v j`
+  where `(i, j) := finProdFinEquiv.symm k`.
+* `cube_JT_universal_property` states the universal factoring: every
+  `IsJTFrameBilinear` form `φ` decomposes as `ψ ∘ cubePairing` for
+  some `ψ : (Fin (N*M) → Ω) → Ω`.
+
+The proof of `cube_JT_universal_property` is left as `sorry` — the
+**statement** is the geometrically correct outer-product form and is a
+strict improvement over the previous unprovable diagonal form. The full
+proof requires the Joyal-Tierney classification machinery (Picado-Pultr
+2012 Ch. IV §3 cube-cancellation), which is the Mathlib `frameCoprod`
+PR-level deliverable tracked in `Foundation/Order/FrameBimorphism.lean §6`.
+-/
+
+section CubeFrameCoprod
+
+variable {N M : ℕ}
+
+/-- **The universal pairing for the frame coproduct of two Sierpinski
+    cubes**, realised as `Fin (N * M) → Ω` via the outer-product
+    diagonal `finProdFinEquiv.symm : Fin (N*M) ≃ Fin N × Fin M`.
+
+    At index `k : Fin (N*M)` corresponding to pair `(i, j) := decode k`,
+    the value is `u i ⊓ v j`. This is the canonical "frame inner product"
+    in the OUTER (tensor) sense, distinct from the pointwise meet over
+    the DIAGONAL `Fin (min N M)` used (incorrectly) in the v0.3 statement
+    of `P3_topological`. See §4bis for the audit. -/
+def cubePairing (u : Fin N → SierpinskiOmega) (v : Fin M → SierpinskiOmega) :
+    Fin (N * M) → SierpinskiOmega :=
+  fun k =>
+    let p := finProdFinEquiv.symm k
+    u p.1 ⊓ v p.2
+
+/-- `cubePairing` agrees pointwise with the outer-product formula:
+    `cubePairing u v k = u (finProdFinEquiv.symm k).1 ⊓ v (finProdFinEquiv.symm k).2`. -/
+@[simp]
+theorem cubePairing_apply (u : Fin N → SierpinskiOmega) (v : Fin M → SierpinskiOmega)
+    (k : Fin (N * M)) :
+    cubePairing u v k = u (finProdFinEquiv.symm k).1 ⊓ v (finProdFinEquiv.symm k).2 :=
+  rfl
+
+/-- **Cube frame-coproduct universal property** — for any
+    Joyal-Tierney bilinear form
+    `φ : (Fin N → Ω) → (Fin M → Ω) → Ω`, there exists a function
+    `ψ : (Fin (N * M) → Ω) → Ω` (a frame morphism in the full
+    Joyal-Tierney statement; carrier-level here) such that
+    `φ u v ↔ ψ (cubePairing u v)` for all `u, v`.
+
+    This is the **correct** factoring shape per Joyal-Tierney 1984
+    §VI: the frame coproduct of two Sierpinski cubes is the outer-
+    product cube indexed by `Fin N × Fin M ≃ Fin (N*M)`, NOT the
+    diagonal `Fin (min N M)`.
+
+    **Proof status (2026-05-17)**: **proved**, via the candidate
+    construction
+    `ψ w := ∃ u' v', cubePairing u' v' ≤ w ∧ φ u' v'` (the join of
+    `φ` over all `(u', v')` whose outer product is `≤ w`). The forward
+    direction `φ u v → ψ (cubePairing u v)` is immediate (witness
+    `u, v` themselves with `le_refl`). The backward direction case-
+    splits on whether `u'` / `v'` are everywhere-`⊥`:
+    * if so, JT-bilinearity reduces `φ u' v'` to `⊥ = False`,
+      contradicting the hypothesis `φ u' v'`;
+    * otherwise, picking witnesses `i₀, j₀` with `u' i₀, v' j₀`,
+      the outer-product index `finProdFinEquiv (i, j₀)` forces
+      `u' ≤ u` pointwise; symmetrically `v' ≤ v`; then
+      `map_inf_left` + `inf_eq_left.mpr` give monotonicity in each
+      slot, so `φ u' v' → φ u v' → φ u v`.
+
+    The argument is specific to the Sierpinski generator
+    `Ω = Prop` (uses `propext` to identify `(∀ i, ¬ u' i) ↔ u' = ⊥`
+    on `Fin N → Prop`); a fully generic frame-coproduct version
+    would still require the upstream Mathlib `frameCoprod` PR
+    tracked in `Foundation/Order/FrameBimorphism.lean §6`. -/
+theorem cube_JT_universal_property
+    (φ : (Fin N → SierpinskiOmega) → (Fin M → SierpinskiOmega) → SierpinskiOmega)
+    (hφ : IsJTFrameBilinear φ) :
+    ∃ (ψ : (Fin (N * M) → SierpinskiOmega) → SierpinskiOmega),
+      ∀ u v, φ u v ↔ ψ (cubePairing u v) := by
+  -- **Proved 2026-05-17** (Sierpinski-cube specialisation): take
+  --   `ψ w := ∃ u' v', cubePairing u' v' ≤ w ∧ φ u' v'`.
+  -- Forward direction is by `⟨u, v, le_refl _, ·⟩`.
+  -- Backward direction uses two structural facts about
+  -- `SierpinskiOmega = Prop`:
+  --   (a) if `u' = ⊥` (i.e. `∀ i, ¬ u' i`), then JT-bilinearity
+  --       (`map_sSup_left v' ∅`) gives `φ u' v' = ⊥ = False`, so any
+  --       supposed proof of `φ u' v'` is `False.elim`-able.  Symmetric
+  --       for `v'`.
+  --   (b) otherwise, pick witnesses `i₀, j₀` with `u' i₀, v' j₀`; the
+  --       hypothesis `cubePairing u' v' ≤ cubePairing u v` at the
+  --       outer-product index `finProdFinEquiv (i, j₀)` forces
+  --       `u' ≤ u` pointwise; similarly `v' ≤ v`.  Then
+  --       `map_inf_left` + `inf_eq_left.mpr` give monotonicity in each
+  --       slot, so `φ u' v' → φ u v' → φ u v`.
+  classical
+  refine ⟨fun w => ∃ u' v', cubePairing u' v' ≤ w ∧ φ u' v', ?_⟩
+  intro u v
+  refine ⟨fun huv => ⟨u, v, le_refl _, huv⟩, ?_⟩
+  rintro ⟨u', v', hle, hφ'⟩
+  -- Case split: is u' everywhere-⊥?
+  by_cases hu_empty : ∀ i, ¬ u' i
+  · -- u' = ⊥ ⇒ φ u' v' = ⊥ = False ⇒ contradiction with hφ'.
+    exfalso
+    -- u' = ⊥ pointwise → u' equals ⊥
+    have hu_bot : u' = (⊥ : Fin N → SierpinskiOmega) := by
+      funext i
+      exact propext ⟨fun h => (hu_empty i h).elim, fun h => h.elim⟩
+    -- bot = sSup ∅
+    have hbot_eq : (⊥ : Fin N → SierpinskiOmega) =
+        sSup (∅ : Set (Fin N → SierpinskiOmega)) := by
+      rw [sSup_empty]
+    -- φ ⊥ v' = ⊥
+    have hφ_bot : φ (⊥ : Fin N → SierpinskiOmega) v' =
+        (⊥ : SierpinskiOmega) := by
+      rw [hbot_eq, hφ.map_sSup_left, Set.image_empty, sSup_empty]
+    rw [hu_bot, hφ_bot] at hφ'
+    exact hφ'
+  · simp only [not_forall, Classical.not_not] at hu_empty
+    by_cases hv_empty : ∀ j, ¬ v' j
+    · exfalso
+      have hv_bot : v' = (⊥ : Fin M → SierpinskiOmega) := by
+        funext j
+        exact propext ⟨fun h => (hv_empty j h).elim, fun h => h.elim⟩
+      have hbot_eq : (⊥ : Fin M → SierpinskiOmega) =
+          sSup (∅ : Set (Fin M → SierpinskiOmega)) := by
+        rw [sSup_empty]
+      have hφ_bot : φ u' (⊥ : Fin M → SierpinskiOmega) =
+          (⊥ : SierpinskiOmega) := by
+        rw [hbot_eq, hφ.map_sSup_right, Set.image_empty, sSup_empty]
+      rw [hv_bot, hφ_bot] at hφ'
+      exact hφ'
+    · simp only [not_forall, Classical.not_not] at hv_empty
+      obtain ⟨i₀, hi₀⟩ := hu_empty
+      obtain ⟨j₀, hj₀⟩ := hv_empty
+      -- u' ≤ u pointwise: at k = finProdFinEquiv (i, j₀), the
+      -- hypothesis gives `(u' i ∧ v' j₀) → (u i ∧ v j₀)`, and since
+      -- `v' j₀` holds, `u' i → u i`.
+      have hu_le : u' ≤ u := by
+        intro i hi
+        have hk := hle (finProdFinEquiv (i, j₀))
+        simp only [cubePairing_apply, Equiv.symm_apply_apply] at hk
+        exact (hk ⟨hi, hj₀⟩).1
+      have hv_le : v' ≤ v := by
+        intro j hj
+        have hk := hle (finProdFinEquiv (i₀, j))
+        simp only [cubePairing_apply, Equiv.symm_apply_apply] at hk
+        exact (hk ⟨hi₀, hj⟩).2
+      -- Monotonicity in left slot via map_inf_left + inf_eq_left.
+      -- u' ⊓ u = u' (since u' ≤ u), so
+      -- φ u' v' = φ (u' ⊓ u) v' = φ u' v' ⊓ φ u v', hence
+      -- a proof of φ u' v' yields a proof of φ u v'.
+      have hu_inf : u' ⊓ u = u' := inf_eq_left.mpr hu_le
+      have hsplit_left := hφ.map_inf_left v' u' u
+      rw [hu_inf] at hsplit_left
+      rw [hsplit_left] at hφ'
+      have hφ_uv' : φ u v' := hφ'.2
+      have hv_inf : v' ⊓ v = v' := inf_eq_left.mpr hv_le
+      have hsplit_right := hφ.map_inf_right u v' v
+      rw [hv_inf] at hsplit_right
+      rw [hsplit_right] at hφ_uv'
+      exact hφ_uv'.2
+
+end CubeFrameCoprod
+
+/-- **P3-Topological (v0.5 doctrine — outer-product factoring form)**
     — every **Joyal-Tierney bilinear** form
     `φ : (Fin N → Ω) → (Fin M → Ω) → Ω` (i.e. one satisfying
     `IsJTFrameBilinear`: preserves arbitrary joins AND finite meets
-    in each slot) factors through the canonical frame-product
-    structure on `Fin (min N M) → Ω`.
+    in each slot) factors through the canonical **outer-product**
+    frame coproduct structure on `Fin (N * M) → Ω`.
 
     -----------------------------------------------------------------
-    ## v0.4 doctrine note (2026-05-17, supersedes v0.3 weak form)
+    ## v0.5 doctrine note (2026-05-17, supersedes v0.4 diagonal form)
     -----------------------------------------------------------------
-    Per the v0.4 doctrine revision (`docs-next/00_start/gut-c-doctrine.md`
-    §4.2), this theorem was **upgraded** from the v0.3 weak hypothesis
-    `IsFrameBilinear` (⊥-preservation only) to the **strong** hypothesis
-    `IsJTFrameBilinear` (⨆+⊓ preservation in each slot) — *Option 1a*
-    from the doctrine: keep the conclusion shape, strengthen the
-    hypothesis to the genuine Joyal-Tierney bimorphism predicate.
+    Per the v0.5 statement correction (2026-05-17, post-PR #51 audit),
+    this theorem's **conclusion shape** was migrated from the v0.4
+    diagonal pointwise-meet form (factor through
+    `Fin (min N M) → Ω`) to the geometrically correct **outer-product
+    cube** form (factor through `Fin (N * M) → Ω` via `cubePairing`).
 
-    **Motivation**: under the v0.3 weak hypothesis, the conclusion is
-    *false* — the off-diagonal cross-pairing
-    `φ u v := (u 0 ⊓ v 1) ⊔ (u 1 ⊓ v 0)` at `N = M = 2` is a
-    counter-example (it satisfies `IsFrameBilinear` but its value
-    depends on cross terms that are not recoverable from the
-    pointwise diagonal `fun i => u i ⊓ v i`).  See
-    `B4_counterexample_fails_strong` below for a Lean-verified
-    statement that this counter-example does NOT satisfy the v0.4
-    strong hypothesis (= confirms the v0.4 strengthening is real
-    progress and not vacuous).
+    **Why the correction**: the v0.4 conclusion shape is *false* even
+    under the strong `IsJTFrameBilinear` hypothesis. The cross-pairing
+    `φ u v := u 0 ⊓ v 1` at `N = M = 2` is a counter-example: it
+    satisfies all four `IsJTFrameBilinear` clauses but cannot factor
+    through the pointwise diagonal `fun i => u i ⊓ v i` (because it
+    takes different values on inputs that have identical diagonals
+    — see §4bis above for the full witness).
+
+    The correct Joyal-Tierney frame coproduct geometry on Sierpinski
+    cubes is the **outer product**: `frameCoprod (Fin N → Ω) (Fin M
+    → Ω) ≃o (Fin (N*M) → Ω)`, indexed by *pairs* `(i, j)` rather than
+    by diagonal `i = j` (Picado-Pultr 2012 Ch. IV §3). Cross-pairings
+    like `u 0 ⊓ v 1` live at off-diagonal indices in the outer cube
+    and are correctly captured by the `cubePairing` formula.
+
+    The previous unsoundness incident (`sierpinski_cube_JT_factorization`
+    axiom, PR #51, removed) is preserved in §4bis as a historical
+    lesson: **never introduce a fresh `axiom` to retire a stubborn
+    `sorry` without verifying the statement against an explicit
+    candidate counter-example first**.
 
     **Asymmetry vs Heyting**: in the Heyting case (`Heyting.lean
     P3_heyting`), the strong hypothesis *collapses* the classification
     to a triviality via the pointwise himp formula
-    `(u → v) = ⨅ i (u i → v i)`.  No such collapse holds in `Frm`:
+    `(u → v) = ⨅ i (u i → v i)`. No such collapse holds in `Frm`:
     the JT-strong hypothesis is genuinely classified by the frame
-    coproduct — but, as the 2026-05-17 audit showed, *not* by the
-    pointwise-meet `Fin (min N M) → Ω` diagonal as originally
-    advertised; the correct coproduct geometry is the outer product
-    `Fin (N * M) → Ω`.
+    coproduct, and the correct coproduct geometry is the outer product
+    `Fin (N * M) → Ω`, NOT the pointwise-meet diagonal.
 
     -----------------------------------------------------------------
-    ## Proof status (post-2026-05-17 audit): research-level sorry, *honest*
+    ## Proof status (v0.5): sound, gated on cube_JT_universal_property
     -----------------------------------------------------------------
-    Even under the v0.4 strong hypothesis, the present conclusion
-    shape (factor through pointwise-meet `Fin (min N M) → Ω`) is
-    **not derivable**.  The cross-pairing `φ u v := u 0 ⊓ v 1` at
-    `N = M = 2` satisfies `IsJTFrameBilinear` but cannot factor
-    through the diagonal — see §4bis above for the full counter-
-    example.  PR #51 (merged 2026-05-17) briefly claimed to close
-    this `sorry` via an Option-G axiom `sierpinski_cube_JT_factorization`;
-    that axiom has been removed as unsound.
+    With the conclusion shape corrected to the outer-product form,
+    the theorem now reduces directly to `cube_JT_universal_property`
+    (§4ter above), which carries the residual `sorry` for the JT
+    classification proof. This is a strict improvement over the v0.4
+    state: a **sound, statement-correct theorem** at the geometry
+    that matches Joyal-Tierney 1984, with the residual proof obligation
+    factored cleanly into the cube-specific universal property lemma.
 
-    The honest residual obligation: either restate the conclusion
-    against the *correct* outer-product cube `Fin (N * M) → Ω` and
-    prove via the upstream Mathlib `frameCoprod` PR, or strengthen
-    `IsJTFrameBilinear` to a "diagonal JT-bilinear" predicate that
-    excludes cross-pairings.  Concretely (under restatement-route):
+    See `cubePairing` (§4ter) for the canonical outer-product diagonal
+    `Fin (N*M) ≃ Fin N × Fin M` underlying the factoring.
 
-    1. Apply `JT_classification`
-       (`Foundation/Order/FrameBimorphism.lean §4`) to obtain a
-       frame `T` with a universal bilinear `ι : (Fin N → Ω) → (Fin M
-       → Ω) → T` and a unique `FrameHom u : T → Ω` with `u ∘ ι = φ`.
-    2. Identify `T ≅ Fin (N * M) → Ω` via the JT 1984 §VI
-       **outer-product** cube identification (Picado-Pultr 2012
-       Ch. IV §3 + Vickers 1989 Ch. 7).
-    3. Transport `u` along the iso to obtain a `ψ : (Fin (N*M) → Ω) → Ω`.
-
-    Step (1)'s `JT_classification` *currently* has a Path-B trivial
-    diagonal witness in `FrameBimorphism.lean` (commit 416c744), but
-    that witness uses `T := F₃, ι := φ, u := id` — which does
-    **NOT** satisfy any specific conclusion shape (`ψ` must factor
-    through the *specific* outer-product cube, not arbitrary `ι`).
-    Hence the trivial witness does *not* discharge `P3_topological`,
-    and we record an honest `sorry`.
+    The `B4_counterexample_fails_strong` check below remains valid
+    as a sanity certificate that the v0.4 hypothesis-strengthening
+    (Option 1a) was genuine progress against the *v0.3*-era counter-
+    example `(u 0 ⊓ v 1) ⊔ (u 1 ⊓ v 0)` — though it was never
+    sufficient to rescue the v0.4 diagonal conclusion, hence the v0.5
+    statement correction.
 
     -----------------------------------------------------------------
     ## References
@@ -673,45 +852,27 @@ References for the correct statement:
       JT bimorphism universal property** (the central reference for
       this theorem).
     * Picado & Pultr 2012, *Frames and Locales* (Birkhäuser), Ch. IV
-      §3 — textbook treatment of frame tensor + cube cancellation.
+      §3 — textbook treatment of frame tensor + cube cancellation
+      (`frameCoprod (Fin N → Ω) (Fin M → Ω) ≃o (Fin (N*M) → Ω)`).
     * Vickers 1989, *Topology via Logic* (Cambridge), Ch. 7 —
       locale-theoretic perspective on `Fin n → Ω` cubes.
     * Johnstone 1982, *Stone Spaces* (Cambridge) — classical
       reference.
     * `Foundation/Order/FrameBimorphism.lean §4-§6` — full Mathlib
-      upstream PR roadmap (~1000-1500 LOC) needed to discharge this
-      `sorry`. -/
+      upstream PR roadmap (~1000-1500 LOC) needed to discharge the
+      residual `sorry` in `cube_JT_universal_property`.
+    * `cubePairing` (§4ter, this file) — the canonical outer-product
+      universal pairing through which the factoring runs. -/
 theorem P3_topological (N M : ℕ)
     (φ : (Fin N → SierpinskiOmega) → (Fin M → SierpinskiOmega) →
           SierpinskiOmega)
     (hφ : IsJTFrameBilinear φ) :
-    -- Classification conclusion: φ is representable as the canonical
-    -- frame product `⨆ i (u_i ⊓ v_i)` over `Fin (min N M)`.
-    ∃ (ψ : (Fin (min N M) → SierpinskiOmega) → SierpinskiOmega),
-      ∀ u v, φ u v ↔
-        ψ (fun i => u ⟨i.val, lt_of_lt_of_le i.isLt (min_le_left _ _)⟩
-                      ⊓ v ⟨i.val, lt_of_lt_of_le i.isLt (min_le_right _ _)⟩) := by
-  -- **Honest sorry** (2026-05-17, post-PR #51 audit).
-  --
-  -- This conclusion shape (factor through pointwise-meet
-  -- `Fin (min N M) → Ω`) is, in its current form, **not derivable**
-  -- from `IsJTFrameBilinear φ` alone: the cross-pairing
-  -- `φ u v := u 0 ⊓ v 1` at `N = M = 2` is a counter-example
-  -- (satisfies all four `IsJTFrameBilinear` clauses but cannot
-  -- factor through the diagonal).  The correct Joyal-Tierney
-  -- frame coproduct of cubes is `Fin (N * M) → Ω` (outer product),
-  -- not `Fin (min N M) → Ω` (pointwise meet).
-  --
-  -- Previously discharged by `sierpinski_cube_JT_factorization`,
-  -- which has been removed as unsound (see §4bis above for the
-  -- counter-example, root-cause analysis, and restoration plan).
-  -- The honest current state: either (a) restate this theorem
-  -- against `Fin (N * M) → Ω` and prove via the Mathlib upstream
-  -- `frameCoprod` PR (§6), or (b) strengthen the hypothesis on
-  -- `φ` to a "diagonal JT-bilinear" predicate that excludes
-  -- cross-pairings.  Neither path is closed yet; the residual
-  -- obligation is recorded honestly here as `sorry`.
-  sorry
+    -- Classification conclusion (v0.5 — outer-product form): φ is
+    -- representable through the canonical Joyal-Tierney outer-product
+    -- frame coproduct `Fin (N * M) → Ω` via `cubePairing`.
+    ∃ (ψ : (Fin (N * M) → SierpinskiOmega) → SierpinskiOmega),
+      ∀ u v, φ u v ↔ ψ (cubePairing u v) :=
+  cube_JT_universal_property φ hφ
 
 /-- **B4 counter-example check (v0.4 doctrine certificate)** — the
     v0.3-era counter-example to weak-P3,
@@ -968,9 +1129,11 @@ Per the task brief's deliverable requirements:
 ### What is reformulated (non-trivial frame analogues)
 
 * **P3** (relate / frame morphism classification):
-  `P3_topological` records the statement; the full classification
-  (Joyal-Tierney frame-tensor universal property in constructive
-  setting) is a Path C γ.3 research open problem (`sorry`).
+  `P3_topological` (v0.5) records the statement-correct outer-product
+  factoring `Fin (N*M) → Ω` via `cubePairing`, closed by direct
+  reduction to `cube_JT_universal_property`. The full Joyal-Tierney
+  frame-tensor classification (the residual `sorry` carrier) is a
+  Path C γ.3 research open problem.
 
 * **P7b** (wedderburn / Sierpinski2_Squared anchor):
   `P7b_topological` records the existence + 4-element nature;
