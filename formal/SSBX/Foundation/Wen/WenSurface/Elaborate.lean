@@ -417,6 +417,13 @@ def elabSurfaceExprWithCtx (ctx : Ctx) : SurfaceExpr → Except ElabErr Tm
       match elabSurfaceExprWithCtx ctx inner with
       | .error e => .error e
       | .ok tInner => .ok (.unquote tInner)
+  -- wen-2.0 ⑦ 真名词化器: `PRED 者` (noun-position 者).  Inner must elaborate
+  -- to a predicate `T → Bool`; emit `Tm.setOf inner`.  Kernel typecheck
+  -- enforces `inner : .arr T .bool` and yields `.set T`.
+  | .construction "者" [inner] =>
+      match elabSurfaceExprWithCtx ctx inner with
+      | .error e => .error e
+      | .ok tInner => .ok (.setOf tInner)
   | .grouped openTok _ body =>
       -- wen-2.0 ⑩: 引语括号 「」/『』 inside body → wrap as Tm.quote (data, not eval).
       -- Existing value-grouping `（…）`/`(…)` is unchanged.
@@ -561,6 +568,23 @@ def inferTypeDetailed : Ctx → Tm → Except TypeDiag Ty
       match typeCheck ctx t with
       | some ty => .ok ty
       | none    => .error (.unknownVar "<match>")
+  -- wen-2.0 ⑦: setOf pred — pred must check to `.arr T .bool`; result `.set T`.
+  -- Non-arr / non-bool-codomain arg surfaces as expectedFunction / argumentMismatch.
+  | ctx, .setOf pred =>
+      match inferTypeDetailed ctx pred with
+      | .error e => .error e
+      | .ok (.arr elem .bool) => .ok (.set elem)
+      | .ok (.arr _ actual) => .error (.argumentMismatch .bool actual)
+      | .ok actual => .error (.expectedFunction actual)
+  -- wen-2.0 ⑦: memberOf x s — s : .set T, x : T; result .bool.
+  | ctx, .memberOf x s =>
+      match inferTypeDetailed ctx s with
+      | .error e => .error e
+      | .ok (.set elem) =>
+          match inferTypeDetailed ctx x with
+          | .error e => .error e
+          | .ok tx => if tx = elem then .ok .bool else .error (.argumentMismatch elem tx)
+      | .ok actual => .error (.expectedFunction actual)
 
 def elabSurfaceTyped (expr : SurfaceExpr) : Except ElabErr TypedTm :=
   match elabSurfaceExpr expr with

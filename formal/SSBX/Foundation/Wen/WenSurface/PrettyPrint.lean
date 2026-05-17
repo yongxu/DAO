@@ -160,6 +160,10 @@ mutual
     -- `析 <scrut> 为 <pat> → <body> | <pat> → <body> | …`
     | .«match» scrut arms =>
         "析 " ++ prettyPrintTm scrut ++ " 为 " ++ prettyPrintArms arms
+    -- wen-2.0 ⑦: setOf / memberOf — nominalize predicate / set-membership.
+    -- `setOf pred` renders as `pred 者`; `memberOf x s` as `x 属 s`.
+    | .setOf pred => prettyPrintTm pred ++ " 者"
+    | .memberOf x s => prettyPrintTm x ++ " 属 " ++ prettyPrintTm s
     | t =>
         match builtinGlyph t with
         | some s => s

@@ -248,6 +248,14 @@ def isCloseBracketTok (t : ResolvedTok) : Bool :=
   | .closeBracket => true
   | _ => false
 
+/-- wen-2.0 ⑦: `者` syntax marker test.  Distinguishing this lets the
+    postfix-dispatch branch of `parsePostfixApplications` fire the
+    nominalizer rule when `者` follows a complete predicate expression. -/
+def isZheSyntaxTok (t : ResolvedTok) : Bool :=
+  match t.atom with
+  | .syntax .zhe => true
+  | _ => false
+
 def exactOperatorType? (id : OperatorId) : Option Ty :=
   match theoremBackedSemanticsFor? id with
   | some sem => typeCheck [] sem.body
@@ -353,6 +361,11 @@ mutual
     | ctx, .construction "执" [inner] =>
         match surfaceExprTypeWithCtx? ctx inner with
         | some .quoted => some .hex
+        | _ => none
+    -- wen-2.0 ⑦: 者 nominalizer — inner must be `arr T .bool`; result `.set T`.
+    | ctx, .construction "者" [inner] =>
+        match surfaceExprTypeWithCtx? ctx inner with
+        | some (.arr t .bool) => some (.set t)
         | _ => none
     | _, .construction _ _ => none
     | ctx, .grouped openTok _ body =>
@@ -753,6 +766,22 @@ mutual
     | ctx, allowInfix, n+1, reserve, acc, head :: rest =>
         if isCloseBracketTok head then
           .ok (acc, head :: rest)
+        -- wen-2.0 ⑦ 真名词化器: `PRED 者` (者 in noun position).  When `acc`
+        -- surface-types to an `arr T .bool` (a predicate) and `head` is the
+        -- syntax marker `者`, fold `acc` into `.construction "者" [acc]`.
+        -- This fires *before* the head-position binder case picks it up
+        -- (binder requires a variable name *after* `者`; here there's no
+        -- such requirement because we're nominalizing the predicate to its
+        -- left).  Honour `reserve` so outer contexts aren't starved.
+        else if isZheSyntaxTok head then
+          match surfaceExprTypeWithCtx? ctx acc with
+          | some (.arr _ .bool) =>
+              if decide (reserve <= rest.length) then
+                parsePostfixApplications ctx allowInfix n reserve
+                  (.construction "者" [acc]) rest
+              else
+                .ok (acc, head :: rest)
+          | _ => .ok (acc, head :: rest)
         else if isApplicationMarkerTok head then
           match parseSurfaceExprAux ctx allowInfix n reserve rest with
           | .ok (arg, rest') =>

@@ -52,6 +52,8 @@ inductive MTy : Type
   | quoted
   /-- wen-2.0 ④ user inductive nominal type (mirrors `Ty.user`). -/
   | user (name : String)
+  /-- wen-2.0 ⑦: predicate-extension set type, mirrors `Ty.set`. -/
+  | set (elem : MTy)
 deriving DecidableEq, Repr
 
 /-- Lift a closed `Ty` into `MTy` (no metavariables introduced). -/
@@ -65,6 +67,7 @@ def MTy.ofTy : Ty → MTy
   | .arr a b => .arr (MTy.ofTy a) (MTy.ofTy b)
   | .quoted => .quoted
   | .user n => .user n
+  | .set a => .set (MTy.ofTy a)
 
 /-- Total substitution: list of `(id, MTy)` pairs.  Lookup is first-match. -/
 abbrev Subst := List (Nat × MTy)
@@ -89,6 +92,7 @@ def MTy.apply : Nat → Subst → MTy → MTy
   | n+1,  s, .prod a b => .prod (MTy.apply n s a) (MTy.apply n s b)
   | n+1,  s, .list a => .list (MTy.apply n s a)
   | n+1,  s, .arr a b => .arr (MTy.apply n s a) (MTy.apply n s b)
+  | n+1,  s, .set a => .set (MTy.apply n s a)
   | n+1,  s, .mvar i =>
       match s.lookup i with
       | some t => MTy.apply n s t
@@ -108,6 +112,7 @@ def MTy.occurs (i : Nat) : MTy → Bool
   | .prod a b => MTy.occurs i a || MTy.occurs i b
   | .list a => MTy.occurs i a
   | .arr a b => MTy.occurs i a || MTy.occurs i b
+  | .set a => MTy.occurs i a
 
 /-! ## § 3  Unification -/
 
@@ -155,6 +160,7 @@ def unify : Nat → Subst → MTy → MTy → Except UnifyErr Subst
           match unify n s x1 x2 with
           | .error e => .error e
           | .ok s' => unify n s' y1 y2
+      | .set x1, .set x2 => unify n s x1 x2
       | _, _ => .error (.mismatch a' b')
 
 def unifyFuel : Nat := 256
@@ -335,6 +341,30 @@ def infer : Nat → MCtx → Tm → InferState →
   -- wen-2.0 ④ user-ctor: typechecks to `.user typeName` (table validity is
   -- enforced upstream in the surface elaborator).
   | _+1,  _, .userCtor tn _, st => .ok (.user tn, st)
+  -- wen-2.0 ⑦: setOf pred — infer pred, unify with `α → Bool`, result `set α`.
+  | n+1,  ctx, .setOf pred, st =>
+      match infer n ctx pred st with
+      | .error e => .error e
+      | .ok (tp, st1) =>
+          let (alpha, st2) := freshMVar st1
+          match st2.unify tp (.arr alpha .bool) with
+          | .error e => .error e
+          | .ok st3 => .ok (.set alpha, st3)
+  -- wen-2.0 ⑦: memberOf x s — s : set α, x : α, result Bool.
+  | n+1,  ctx, .memberOf x s, st =>
+      match infer n ctx s st with
+      | .error e => .error e
+      | .ok (ts, st1) =>
+          let (alpha, st2) := freshMVar st1
+          match st2.unify ts (.set alpha) with
+          | .error e => .error e
+          | .ok st3 =>
+              match infer n ctx x st3 with
+              | .error e => .error e
+              | .ok (tx, st4) =>
+                  match st4.unify tx alpha with
+                  | .error e => .error e
+                  | .ok st5 => .ok (.bool, st5)
   | _+1,  _, t, st =>
       match builtinType t with
       | some ty => .ok (ty, st)
@@ -359,6 +389,7 @@ def zonk : Nat → Subst → MTy → Ty
   | n+1,  s, .prod a b => .prod (zonk n s a) (zonk n s b)
   | n+1,  s, .list a => .list (zonk n s a)
   | n+1,  s, .arr a b => .arr (zonk n s a) (zonk n s b)
+  | n+1,  s, .set a => .set (zonk n s a)
   | n+1,  s, .mvar i =>
       match s.lookup i with
       | some t => zonk n s t
@@ -407,6 +438,14 @@ def reannotate : Nat → MCtx → Subst → InferState → Tm → Tm × InferSta
   | _+1,  _, _, st, .quote body =>
       -- Quote bodies are opaque to inference; preserve as-is.
       (.quote body, st)
+  -- wen-2.0 ⑦: setOf / memberOf — recurse structurally.
+  | n+1,  ctx, s, st, .setOf pred =>
+      let (pred', st1) := reannotate n ctx s st pred
+      (.setOf pred', st1)
+  | n+1,  ctx, s, st, .memberOf x set =>
+      let (x', st1) := reannotate n ctx s st x
+      let (set', st2) := reannotate n ctx s st1 set
+      (.memberOf x' set', st2)
   | _+1,  _, _, st, t => (t, st)
 
 /-! ## § 10  Top-level: infer + reannotate -/
