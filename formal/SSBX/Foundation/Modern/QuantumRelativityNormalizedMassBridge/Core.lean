@@ -9,7 +9,7 @@ probability mass law:
 
 1. it sums `normalizedMass` over the explicit finite row support;
 2. it proves this sum is the S9 normalized-row-total candidate;
-3. it closes the concrete and `94976` grid non-terminal row mass sums as `1`;
+3. it closes the concrete and `96000` grid non-terminal row mass sums as `1`;
 4. it keeps Born-rule derivation, quantum channel laws, metric recovery, and
    empirical closure as later boundaries.
 

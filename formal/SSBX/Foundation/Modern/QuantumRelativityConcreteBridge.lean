@@ -8,7 +8,7 @@ interfaces with a three-state process:
 
 It also imports `QuantumRelativityWenBoundary` so the public summary can
 record that this concrete bridge remains compatible with the machine-checked
-`192 × 371` Wen constructive coverage fact.
+`192 × 375` Wen constructive coverage fact.
 -/
 import SSBX.Foundation.Modern.QuantumRelativityMarkovBridge
 import SSBX.Foundation.Modern.QuantumRelativityWenBoundary
@@ -116,7 +116,7 @@ theorem concrete_measurement_event_alignment :
 /-- Public summary:
     the concrete process has Markov and causal projections, aligns the terminal
     measurement with the causal event record, preserves the previous integration
-    layer's noncollapse boundary, and includes the checked `192 × 371` Wen
+    layer's noncollapse boundary, and includes the checked `192 × 375` Wen
     constructive coverage fact. -/
 theorem concrete_bridge_summary :
     HasMarkovProjection concreteProcess

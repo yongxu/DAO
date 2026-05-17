@@ -1030,7 +1030,7 @@ theorem predicateAnchor_denotes_true (id : OperatorId) (h : Hexagram) :
     native_decide
 
 def truthMarkerLawOperatorIds : List OperatorId :=
-  [.S_4, .S_5, .S_6, .S_8]
+  [.S_4, .S_5, .S_6, .S_8, .S_21, .S_22, .S_23, .S_24]
 
 def truthMarker (_id : OperatorId) (b : Bool) : Bool := b
 
@@ -1328,7 +1328,7 @@ theorem predicateAnchorLawOperatorIds_length :
     predicateAnchorLawOperatorIds.length = 9 := by native_decide
 
 theorem truthMarkerLawOperatorIds_length :
-    truthMarkerLawOperatorIds.length = 4 := by native_decide
+    truthMarkerLawOperatorIds.length = 8 := by native_decide
 
 theorem facet2CoreOperatorIds_length :
     facet2CoreOperatorIds.length = 6 := by native_decide
@@ -1352,7 +1352,7 @@ theorem aggregateFoldProjectionOperatorIds_length :
     aggregateFoldProjectionOperatorIds.length = 7 := by native_decide
 
 theorem domainLawOperatorIds_length :
-    domainLawOperatorIds.length = 364 := by native_decide
+    domainLawOperatorIds.length = 368 := by native_decide
 
 theorem domainLawOperatorIds_nodup :
     domainLawOperatorIds.Nodup := by native_decide

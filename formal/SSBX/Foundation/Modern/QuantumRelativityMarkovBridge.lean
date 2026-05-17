@@ -9,7 +9,7 @@ Companion: `义理/Markov因果桥 · 大统一最小验证构造.md`
 2. 同一个过程结构可以提供因果读法：事件与 before 关系；
 3. 终端状态可以同时读成测量候选与事件记录；
 4. 这仍不是现成 tagged 量子/相对论语言的直接相加，而是上一层 `mediatedBridge`
-   方向的一个最小中介候选；它不否定 `192 × 371` 文构造覆盖路线。
+   方向的一个最小中介候选；它不否定 `192 × 375` 文构造覆盖路线。
 -/
 import SSBX.Foundation.Modern.QuantumRelativityIntegration
 

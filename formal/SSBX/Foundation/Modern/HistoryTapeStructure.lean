@@ -441,7 +441,7 @@ Machine-checkable summary of the narrow claim:
 * each cell has a six-yao trace.
 * `fen` builds the three-yao trigram spine from Yuan/Yao inputs.
 * recursive structure expressions have only yao/root leaves.
-* the catalogue has all 371 signature rows, while L0 has 12 executable clauses.
+* the catalogue has all 375 signature rows, while L0 has 12 executable clauses.
 -/
 theorem history_tape_structure_summary :
     (∀ s : YiState, stateTape s = s.history)
@@ -468,7 +468,7 @@ theorem history_tape_structure_summary :
     ∧ (∀ l : VerticalLayer, l ∈ qianKunJianLayers)
     ∧ (∀ l : VerticalLayer, ∀ s : SiXiang, ∀ y : Yuan,
         removeLayer l (fenAtLayer l s y) = s)
-    ∧ fullOperatorSignatures.length = 371
+    ∧ fullOperatorSignatures.length = 375
     ∧ l0InstructionClauseKinds.length = 12 := by
   exact
     ⟨ stateTape_eq_history

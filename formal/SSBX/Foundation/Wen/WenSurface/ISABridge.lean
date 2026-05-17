@@ -46,6 +46,10 @@ per-example native_decide 在 `Hexagram := Fin 6 → Bool` 之后 ~10s, 故
 -/
 import SSBX.Foundation.Wen.WenSurface.EndToEnd
 import SSBX.Foundation.Wen.WenDefCompile
+-- WenyanParser provides `DecidableEq YiInstr` (needed for native_decide on
+-- nested `Option (List YiInstr)` equalities — see line ~95).  Without this
+-- import, typeclass synthesis silently fails on the deeper test cases.
+import SSBX.Foundation.Wen.WenyanParser
 
 set_option maxHeartbeats 8000000
 

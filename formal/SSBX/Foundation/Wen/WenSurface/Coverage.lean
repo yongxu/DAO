@@ -3,7 +3,7 @@
 
 This module does not duplicate the text catalogue proofs.  It imports the
 existing coverage ledgers and exposes the counts that matter to WenSurface:
-surface readings are resolvable/diagnosable, all 371 operator ids have total
+surface readings are resolvable/diagnosable, all 375 operator ids have total
 signatures, every operator-cell row has a conservative machine denotation, and
 exact cell transforms remain separately counted.
 -/
@@ -51,9 +51,9 @@ theorem wenSurface_hex_literal_counts :
 theorem coverage_counts :
     allSurfaceReadings.length = 82
       ∧ (allSurfaceReadings.map (fun e => e.readings.length)).foldl Nat.add 0 = 193
-      ∧ allOperatorIds.length = 371
-      ∧ SSBX.Text.OperatorCellMap.allOperatorCells.length = 94976
-      ∧ allOperatorCellSemanticRows.length = 94976 := by
+      ∧ allOperatorIds.length = 375
+      ∧ SSBX.Text.OperatorCellMap.allOperatorCells.length = 96000
+      ∧ allOperatorCellSemanticRows.length = 96000 := by
   exact
     ⟨ all_surface_readings_count
     , all_surface_total_reading_count
@@ -63,11 +63,11 @@ theorem coverage_counts :
     ⟩
 
 theorem wenSurface_operator_catalogue_counts :
-    fullOperatorSignatures.length = 371
-      ∧ operatorRegistryEntries.length = 371
-      ∧ executableRegistryEntries.length = 371
-      ∧ theoremBackedOperatorIds.length = 371
-      ∧ exactTheoremBackedStrongOperatorIds.length = 371
+    fullOperatorSignatures.length = 375
+      ∧ operatorRegistryEntries.length = 375
+      ∧ executableRegistryEntries.length = 375
+      ∧ theoremBackedOperatorIds.length = 375
+      ∧ exactTheoremBackedStrongOperatorIds.length = 375
       ∧ exactStructuralHelperStrongOperatorIds.length = 0
       ∧ structuralCarrierOperatorIds.length = 0
       ∧ catalogueNormalFormOperatorIds.length = 0
@@ -91,7 +91,7 @@ theorem wenSurface_operator_catalogue_counts :
       ∧ (domainGapDetailKindOperatorIds .predicateModel).length = 0
       ∧ (domainGapDetailKindOperatorIds .truthMarkerModel).length = 0
       ∧ (domainGapDetailKindOperatorIds .catalogueShape).length = 0
-      ∧ domainLawOperatorIds.length = 364
+      ∧ domainLawOperatorIds.length = 368
       ∧ domainCaveatOperatorIds.length = 0
       ∧ (domainCaveatKindOperatorIds .identityNoop).length = 0
       ∧ (domainCaveatKindOperatorIds .projectionAnchor).length = 0
@@ -167,8 +167,8 @@ theorem wenSurface_operator_compound_surface_lex_coverage :
   operatorCompoundSurfaces_lex_as_single
 
 theorem wenSurface_operator_cell_catalogue_counts :
-    allOperatorCellSemanticRows.length = 94976
-      ∧ allOperatorCellSemanticPairs.length = 94976 := by
+    allOperatorCellSemanticRows.length = 96000
+      ∧ allOperatorCellSemanticPairs.length = 96000 := by
   exact
     ⟨ allOperatorCellSemanticRows_length
     , allOperatorCellSemanticPairs_length
@@ -183,12 +183,12 @@ theorem wenSurface_registry_total_signature (id : OperatorId) :
 theorem wenSurface_registry_summary :
     allSurfaceReadings.length = 82
       ∧ (allSurfaceReadings.map (fun e => e.readings.length)).foldl Nat.add 0 = 193
-      ∧ fullOperatorSignatures.length = 371
-      ∧ allOperatorCellSemanticRows.length = 94976
-      ∧ operatorRegistryEntries.length = 371
-      ∧ executableRegistryEntries.length = 371
-      ∧ theoremBackedOperatorIds.length = 371
-      ∧ exactTheoremBackedStrongOperatorIds.length = 371
+      ∧ fullOperatorSignatures.length = 375
+      ∧ allOperatorCellSemanticRows.length = 96000
+      ∧ operatorRegistryEntries.length = 375
+      ∧ executableRegistryEntries.length = 375
+      ∧ theoremBackedOperatorIds.length = 375
+      ∧ exactTheoremBackedStrongOperatorIds.length = 375
       ∧ exactStructuralHelperStrongOperatorIds.length = 0
       ∧ structuralCarrierOperatorIds.length = 0
       ∧ catalogueNormalFormOperatorIds.length = 0
@@ -212,7 +212,7 @@ theorem wenSurface_registry_summary :
       ∧ (domainGapDetailKindOperatorIds .predicateModel).length = 0
       ∧ (domainGapDetailKindOperatorIds .truthMarkerModel).length = 0
       ∧ (domainGapDetailKindOperatorIds .catalogueShape).length = 0
-      ∧ domainLawOperatorIds.length = 364
+      ∧ domainLawOperatorIds.length = 368
       ∧ domainCaveatOperatorIds.length = 0
       ∧ (domainCaveatKindOperatorIds .identityNoop).length = 0
       ∧ (domainCaveatKindOperatorIds .projectionAnchor).length = 0
@@ -291,21 +291,21 @@ theorem wenSurface_registry_summary :
     ⟩
 
 theorem wenSurface_reuses_bagua_grid_summary :
-    allOperatorIds.length = 371
+    allOperatorIds.length = 375
       ∧ SSBX.Foundation.Bagua.R8.R8.all.length = 256
-      ∧ SSBX.Text.OperatorCellMap.allOperatorCells.length = 94976 :=
+      ∧ SSBX.Text.OperatorCellMap.allOperatorCells.length = 96000 :=
   ⟨ allOperatorIds_length
   , SSBX.Foundation.Bagua.R8.R8.all_length
   , allOperatorCells_length
   ⟩
 
 theorem wenSurface_reuses_operator_cell_semantic_summary :
-    allOperatorCellSemanticRows.length = 94976
-      ∧ allOperatorCellSemanticPairs.length = 94976
-      ∧ machineDenotationRows.length = 94976
+    allOperatorCellSemanticRows.length = 96000
+      ∧ allOperatorCellSemanticPairs.length = 96000
+      ∧ machineDenotationRows.length = 96000
       ∧ exactCellTransformDenotationRows.length = 11008
       ∧ executableCellTransformRows.length = 11008
-      ∧ signatureCarrierDenotationRows.length = 83968 :=
+      ∧ signatureCarrierDenotationRows.length = 84992 :=
   ⟨ allOperatorCellSemanticRows_length
   , allOperatorCellSemanticPairs_length
   , machineDenotationRows_length

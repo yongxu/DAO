@@ -191,7 +191,7 @@ theorem operatorCellGrid_nonterminal_row_normalizable
 /-! ## § 4 Public summary -/
 
 /-- Public summary for S2:
-    both the toy concrete bridge and the full `371 × 256` operator-cell grid
+    both the toy concrete bridge and the full `375 × 256` operator-cell grid
     bridge have finite probability-kernel interfaces.  This only closes finite
     denominators and bounded weights; it does not prove Born rule, quantum
     channels, interference, metric recovery, or empirical closure. -/
@@ -210,9 +210,9 @@ theorem finite_probability_bridge_summary :
     ∧ (∀ a b : OperatorCellGridState,
         operatorCellGridFiniteProbabilityKernel.weight a b
           ≤ operatorCellGridFiniteProbabilityKernel.rowTotal a)
-    ∧ allOperatorIds.length = 371
+    ∧ allOperatorIds.length = 375
     ∧ R8.all.length = 256
-    ∧ allOperatorCells.length = 94976
+    ∧ allOperatorCells.length = 96000
     ∧ WenConstructiveCoverage := by
   exact
     ⟨ ⟨concreteFiniteProbabilityKernel⟩

@@ -122,6 +122,10 @@ def OperatorId.group : OperatorId -> OperatorGroup
   | .S_18 => .S
   | .S_19 => .S
   | .S_20 => .S
+  | .S_21 => .S
+  | .S_22 => .S
+  | .S_23 => .S
+  | .S_24 => .S
   | .H_1 => .H
   | .H_2 => .H
   | .H_3 => .H

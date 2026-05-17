@@ -144,7 +144,7 @@ def operatorCellGridPathAmplitudeSkeleton :
 /-! ## § 4 Public summary -/
 
 /-- Public summary for S5:
-    concrete and `371 × 256` grid bridges now carry path-amplitude candidates
+    concrete and `375 × 256` grid bridges now carry path-amplitude candidates
     above the S4 amplitude/channel layer.  S5 also records an interference
     candidate and a Born-rule-shaped `ampProb` boundary.  These are candidate
     interfaces only: no nonzero physical path amplitudes, no unitary path
@@ -162,7 +162,7 @@ theorem interference_bridge_summary :
     ∧ (∀ z : ℂ, 0 ≤ (bornRuleCandidate z).candidateWeight)
     ∧ HasQuantumChannelCandidate concreteProcess
     ∧ HasQuantumChannelCandidate operatorCellGridProcess
-    ∧ allOperatorCells.length = 94976
+    ∧ allOperatorCells.length = 96000
     ∧ WenConstructiveCoverage := by
   rcases amplitude_channel_bridge_summary with
     ⟨_hConcreteProb, _hConcreteAmp, hConcreteChannel,

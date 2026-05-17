@@ -5,7 +5,7 @@ import SSBX.Text.OperatorSignatures
 # OperatorCellSemantics — theorem-level coverage rows for operator-cell pairs
 
 This file gives every `OperatorId × R8` pair a machine-checkable semantic
-row.  It does not hand-write 94,976 denotational theorems.  Each row carries the
+row.  It does not hand-write 96,000 denotational theorems.  Each row carries the
 total text-level signature coverage and a conservative machine denotation. Exact
 `R8` transform operators carry their concrete output cell; every remaining
 operator carries a signature-preserving support-cell carrier, intentionally
@@ -116,7 +116,7 @@ def operatorCellSemanticRow (id : OperatorId) (cell : R8) :
 def operatorCellSemanticRowsFor (id : OperatorId) : List OperatorCellSemanticRow :=
   R8.all.map (operatorCellSemanticRow id)
 
-/-- Total semantic coverage table for the 371 × 256 operator-cell grid. -/
+/-- Total semantic coverage table for the 375 × 256 operator-cell grid. -/
 def allOperatorCellSemanticRows : List OperatorCellSemanticRow :=
   allOperatorIds.flatMap operatorCellSemanticRowsFor
 
@@ -154,11 +154,11 @@ theorem operatorCellSemanticRowsFor_length (id : OperatorId) :
   rw [operatorCellSemanticRowsFor, List.length_map, R8.all_length]
 
 theorem allOperatorCellSemanticRows_length :
-    allOperatorCellSemanticRows.length = 94976 := by
+    allOperatorCellSemanticRows.length = 96000 := by
   native_decide
 
 theorem allOperatorCellSemanticPairs_length :
-    allOperatorCellSemanticPairs.length = 94976 := by
+    allOperatorCellSemanticPairs.length = 96000 := by
   rw [allOperatorCellSemanticPairs, List.length_map, allOperatorCellSemanticRows_length]
 
 theorem exactCellTransformDenotationRows_length :
@@ -170,11 +170,11 @@ theorem familyBackedDenotationRows_length :
   rw [familyBackedDenotationRows, exactCellTransformDenotationRows_length]
 
 theorem signatureCarrierDenotationRows_length :
-    signatureCarrierDenotationRows.length = 83968 := by
+    signatureCarrierDenotationRows.length = 84992 := by
   native_decide
 
 theorem machineDenotationRows_length :
-    machineDenotationRows.length = 94976 := by
+    machineDenotationRows.length = 96000 := by
   rw [machineDenotationRows, allOperatorCellSemanticRows_length]
 
 theorem executableCellTransformRows_length :
@@ -315,17 +315,17 @@ theorem operatorCellSemanticRows_R_1_signature_carrier (cell : R8) :
   constructor <;> rfl
 
 /--
-Summary: all 94,976 pairs have theorem-level semantic coverage rows and total
+Summary: all 96,000 pairs have theorem-level semantic coverage rows and total
 machine denotations. Exact cell execution is attached only where a current
 cell-transform family exists; the remaining rows are support-cell
 signature-carrier denotations.
 -/
 theorem operator_cell_semantic_coverage_summary :
-    allOperatorCellSemanticRows.length = 94976
-    ∧ allOperatorCellSemanticPairs.length = 94976
-    ∧ machineDenotationRows.length = 94976
+    allOperatorCellSemanticRows.length = 96000
+    ∧ allOperatorCellSemanticPairs.length = 96000
+    ∧ machineDenotationRows.length = 96000
     ∧ exactCellTransformDenotationRows.length = 11008
-    ∧ signatureCarrierDenotationRows.length = 83968
+    ∧ signatureCarrierDenotationRows.length = 84992
     ∧ executableCellTransformRows.length = 11008
     ∧ exactCellTransformDenotationRows.length
         + signatureCarrierDenotationRows.length
@@ -361,10 +361,10 @@ theorem operator_cell_semantic_coverage_summary :
     ⟩
 
 theorem operatorCellDenotation_total_summary :
-    allOperatorCellSemanticRows.length = 94976
-    ∧ machineDenotationRows.length = 94976
+    allOperatorCellSemanticRows.length = 96000
+    ∧ machineDenotationRows.length = 96000
     ∧ exactCellTransformDenotationRows.length = 11008
-    ∧ signatureCarrierDenotationRows.length = 83968
+    ∧ signatureCarrierDenotationRows.length = 84992
     ∧ exactCellTransformDenotationRows.length
         + signatureCarrierDenotationRows.length
         = machineDenotationRows.length

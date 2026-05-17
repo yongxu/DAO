@@ -178,7 +178,7 @@ def operatorCellGridQuantumChannelSkeleton :
 /-! ## § 4 Public summary -/
 
 /-- Public summary for S4:
-    concrete and `371 × 256` grid bridges now carry separate classical Markov,
+    concrete and `375 × 256` grid bridges now carry separate classical Markov,
     amplitude, and channel-candidate layers.  The layer tags prove that
     amplitude/channel candidates are not the same formal object as the
     classical finite probability kernel; channel candidates still project back
@@ -207,7 +207,7 @@ theorem amplitude_channel_bridge_summary :
             operatorCellGridProcess.step a b)
     ∧ (∀ ψ : Qubit, computationalBasisNormalized ψ →
         0 ≤ bornProb0 ψ ∧ 0 ≤ bornProb1 ψ ∧ bornProb0 ψ + bornProb1 ψ = 1)
-    ∧ allOperatorCells.length = 94976
+    ∧ allOperatorCells.length = 96000
     ∧ WenConstructiveCoverage := by
   exact
     ⟨ ⟨concreteFiniteProbabilityKernel⟩

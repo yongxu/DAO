@@ -8,9 +8,9 @@ Companion: `义理/文构造完备与直相加边界.md`
 1. `QuantumRelativityNoGo` 只证明当前 tagged 量子/相对论物理语言并和不会
    自动坍缩为一个直接统一项；
 2. 这不是文构造系统的不可能性结论；
-3. 现有 WenSurface 层已经有 `371 × 256 = 94976` 覆盖网格、371 个可执行
+3. 现有 WenSurface 层已经有 `375 × 256 = 96000` 覆盖网格、375 个可执行
    registry rows、以及 256 个 Cell 的全覆盖；
-4. 因而 `256 × 371` 路线应被读作更强的构造基底候选，而不是被 tagged
+4. 因而 `256 × 375` 路线应被读作更强的构造基底候选，而不是被 tagged
    物理语言边界排除。
 -/
 import SSBX.Foundation.Modern.QuantumRelativityNoGo
@@ -27,15 +27,15 @@ open SSBX.Text.OperatorCellSemantics
 
 /-! ## § 1 Wen constructive coverage -/
 
-/-- 当前可机器检查的 `256 × 371` 文构造覆盖读法。 -/
+/-- 当前可机器检查的 `256 × 375` 文构造覆盖读法。 -/
 def WenConstructiveCoverage : Prop :=
-  allOperatorIds.length = 371
+  allOperatorIds.length = 375
     ∧ R8.all.length = 256
-    ∧ allOperatorCells.length = 94976
-    ∧ executableRegistryEntries.length = 371
-    ∧ allOperatorCellSemanticRows.length = 94976
+    ∧ allOperatorCells.length = 96000
+    ∧ executableRegistryEntries.length = 375
+    ∧ allOperatorCellSemanticRows.length = 96000
 
-/-- `371` 个文言算子与 `256` 个格位的覆盖网格已经机器检查。 -/
+/-- `375` 个文言算子与 `256` 个格位的覆盖网格已经机器检查。 -/
 theorem wen_constructive_coverage_192_371 :
     WenConstructiveCoverage :=
   ⟨ allOperatorIds_length
@@ -68,7 +68,7 @@ theorem tagged_boundary_scope_split :
     ∧ taggedBoundaryApplies .wenConstructiveCoverage = false :=
   ⟨rfl, rfl⟩
 
-/-- tagged 物理语言非坍缩与 `192 × 371` 文构造覆盖可以同时成立。 -/
+/-- tagged 物理语言非坍缩与 `192 × 375` 文构造覆盖可以同时成立。 -/
 theorem tagged_boundary_compatible_with_wen_constructive_coverage :
     TaggedPhysicalLanguageBoundary
     ∧ WenConstructiveCoverage :=
@@ -78,9 +78,9 @@ theorem tagged_boundary_compatible_with_wen_constructive_coverage :
 
 /-- 公开摘要：
     (1) 当前 tagged 物理语言并和不自动坍缩；
-    (2) `371 × 256` 文构造覆盖已机器检查；
+    (2) `375 × 256` 文构造覆盖已机器检查；
     (3) 前者不否定后者；
-    (4) 因此用户提出的 `256 × 371` 路线应作为构造基底方向继续推进。 -/
+    (4) 因此用户提出的 `256 × 375` 路线应作为构造基底方向继续推进。 -/
 theorem wen_constructive_boundary_summary :
     TaggedPhysicalLanguageBoundary
     ∧ WenConstructiveCoverage

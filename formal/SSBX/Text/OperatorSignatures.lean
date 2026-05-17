@@ -9,7 +9,7 @@ commitments that can later be connected to concrete semantics.
 
 The `exactSignatureSeed` layer remains the small high-value seed set already
 used by downstream audits.  The `fullOperatorSignatures` layer gives total
-all-371 coverage by applying explicit seed overrides over per-operator
+all-375 coverage by applying explicit seed overrides over per-operator
 catalogue-shape rows.
 -/
 
@@ -515,6 +515,10 @@ def catalogueSignatureShapeFor : OperatorId → SignatureKind × Nat
   | .S_18 => (.aspect, 1)
   | .S_19 => (.binder, 2)
   | .S_20 => (.binder, 2)
+  | .S_21 => (.propUnary, 1)
+  | .S_22 => (.propUnary, 1)
+  | .S_23 => (.propUnary, 1)
+  | .S_24 => (.propUnary, 1)
   | .H_1 => (.extractor, 1)
   | .H_2 => (.extractor, 1)
   | .H_3 => (.extractor, 1)
@@ -786,7 +790,7 @@ def fullSignatureFor (id : OperatorId) : CoveredOperatorSignature :=
       { id := id, kind := shape.1, arity := shape.2,
         evidence := .catalogueShape, note := catalogueSignatureNote id }
 
-/-- Total all-371 signature coverage layer. -/
+/-- Total all-375 signature coverage layer. -/
 def fullOperatorSignatures : List CoveredOperatorSignature :=
   allOperatorIds.map fullSignatureFor
 
@@ -838,7 +842,7 @@ theorem catalogueSignatureShapeFor_arities_positive :
   native_decide
 
 theorem fullOperatorSignatures_length :
-    fullOperatorSignatures.length = 371 := by
+    fullOperatorSignatures.length = 375 := by
   native_decide
 
 theorem fullSignatureOperatorIds_eq :
@@ -862,7 +866,7 @@ theorem seedOverrideSignatureRows_length :
   native_decide
 
 theorem catalogueShapeSignatureRows_length :
-    catalogueShapeSignatureRows.length = 357 := by
+    catalogueShapeSignatureRows.length = 361 := by
   native_decide
 
 theorem fullSignatureFor_id (id : OperatorId) :
@@ -886,13 +890,13 @@ theorem fullSignatureFor_R_1_catalogueShape :
   native_decide
 
 theorem fullOperatorSignatureCoverage_summary :
-    fullOperatorSignatures.length = 371
+    fullOperatorSignatures.length = 375
     ∧ fullSignatureOperatorIds = allOperatorIds
     ∧ fullSignatureOperatorIds.Nodup
     ∧ fullOperatorSignatures.all (fun sig => decide (sig.id ∈ allOperatorIds)) = true
     ∧ fullOperatorSignatures.all (fun sig => decide (0 < sig.arity)) = true
     ∧ seedOverrideSignatureRows.length = 14
-    ∧ catalogueShapeSignatureRows.length = 357
+    ∧ catalogueShapeSignatureRows.length = 361
     ∧ (∀ id : OperatorId, (fullSignatureFor id).id = id) := by
   exact
     ⟨ fullOperatorSignatures_length

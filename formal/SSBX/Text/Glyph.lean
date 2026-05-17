@@ -40,7 +40,8 @@ def canonicalKind (glyph : Glyph) : LexKind :=
   | "生" | "和" | "故" | "以" | "为" | "為" | "乃" | "即" | "然" | "系" | "的" | "地" => .operator
   | "可" | "能" | "当" | "當" | "宜" | "或" => .modal
   | "所" | "者" | "也" | "于" | "於" | "未" | "已" | "不" | "非" | "无" | "無"
-  | "凡" | "皆" | "有" | "若" | "则" | "則" => .particle
+  | "凡" | "皆" | "有" | "若" | "则" | "則"
+  | "乎" | "矣" | "哉" | "兮" => .particle
   | _ => .glyph
 
 def senseOfGlyph (glyph : Glyph) : GlyphSense :=
@@ -90,6 +91,10 @@ def «于1» : GlyphSense := mk "于" 1 .particle
 def «於1» : GlyphSense := mk "於" 1 .particle
 def «未1» : GlyphSense := senseOfGlyph "未"
 def «已1» : GlyphSense := mk "已" 1 .particle
+def «乎1» : GlyphSense := mk "乎" 1 .particle
+def «矣1» : GlyphSense := mk "矣" 1 .particle
+def «哉1» : GlyphSense := mk "哉" 1 .particle
+def «兮1» : GlyphSense := mk "兮" 1 .particle
 def «不1» : GlyphSense := senseOfGlyph "不"
 def «息1» : GlyphSense := senseOfGlyph "息"
 def «非1» : GlyphSense := senseOfGlyph "非"
@@ -143,7 +148,11 @@ def coreSenseEntries : List SenseEntry := [
   { key := «于1», label := "于1", gloss := "境域绑定", role := "context-binding" },
   { key := «於1», label := "於1", gloss := "境域绑定", role := "context-binding" },
   { key := «未1», label := "未1", gloss := "尚未而留未来开口", role := "not-yet" },
-  { key := «已1», label := "已1", gloss := "已经完成或稳定", role := "perfective" }
+  { key := «已1», label := "已1", gloss := "已经完成或稳定", role := "perfective" },
+  { key := «乎1», label := "乎1", gloss := "句末疑问、提问之闭合", role := "interrogative-final" },
+  { key := «矣1», label := "矣1", gloss := "句末完成、变化已至", role := "perfective-final" },
+  { key := «哉1», label := "哉1", gloss := "句末感叹、惊异之闭合", role := "exclamatory-final" },
+  { key := «兮1», label := "兮1", gloss := "句末抒情、韵律之闭合", role := "lyrical-final" }
 ]
 
 def coreNumberedSenses : List GlyphSense :=

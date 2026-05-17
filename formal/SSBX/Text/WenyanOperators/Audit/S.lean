@@ -63,6 +63,18 @@ theorem mem_S_19 : (.S_19 : OperatorId) ∈ allOperatorIds := by
 theorem mem_S_20 : (.S_20 : OperatorId) ∈ allOperatorIds := by
   native_decide
 
+theorem mem_S_21 : (.S_21 : OperatorId) ∈ allOperatorIds := by
+  native_decide
+
+theorem mem_S_22 : (.S_22 : OperatorId) ∈ allOperatorIds := by
+  native_decide
+
+theorem mem_S_23 : (.S_23 : OperatorId) ∈ allOperatorIds := by
+  native_decide
+
+theorem mem_S_24 : (.S_24 : OperatorId) ∈ allOperatorIds := by
+  native_decide
+
 theorem covered_S_1 : CoveredOperator .S_1 := by
   native_decide
 
@@ -121,6 +133,18 @@ theorem covered_S_19 : CoveredOperator .S_19 := by
   native_decide
 
 theorem covered_S_20 : CoveredOperator .S_20 := by
+  native_decide
+
+theorem covered_S_21 : CoveredOperator .S_21 := by
+  native_decide
+
+theorem covered_S_22 : CoveredOperator .S_22 := by
+  native_decide
+
+theorem covered_S_23 : CoveredOperator .S_23 := by
+  native_decide
+
+theorem covered_S_24 : CoveredOperator .S_24 := by
   native_decide
 
 end Audit

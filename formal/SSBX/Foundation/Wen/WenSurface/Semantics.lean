@@ -2,7 +2,7 @@
 # WenSurface.Semantics — executable semantics registry
 
 This module separates theorem-backed stdlib denotations from total catalogue
-execution.  All 371 `OperatorId`s use explicit `WenDef.Tm`
+execution.  All 375 `OperatorId`s use explicit `WenDef.Tm`
 bodies: the original high-value stdlib rows, ObjectEndo/ObjectMap/OpUnary Hex
 transforms, finite Hex carrier rows, finite Hex quantifiers, finite motion /
 process rows, plus the Bool relation/predicate package.  The semantic strength
@@ -755,6 +755,10 @@ def coreTheoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .S_18 => some ⟨.S_18, Stdlib.hexIdBody, 1, "已: aspect anchor as identity; no completed-time semantics"⟩
   | .S_19 => some ⟨.S_19, Stdlib.hexApplyBody, 2, "的: explicit modifier application as Hex endomap application; no modern-grammar semantics"⟩
   | .S_20 => some ⟨.S_20, Stdlib.hexPredApplyBody, 2, "地: situated Hex context predicate application"⟩
+  | .S_21 => some ⟨.S_21, Stdlib.boolMarkerBody, 1, "乎: Bool identity marker; no interrogative-modal discourse semantics"⟩
+  | .S_22 => some ⟨.S_22, Stdlib.boolMarkerBody, 1, "矣: Bool identity marker; no perfective-final discourse semantics"⟩
+  | .S_23 => some ⟨.S_23, Stdlib.boolMarkerBody, 1, "哉: Bool identity marker; no exclamatory-modal discourse semantics"⟩
+  | .S_24 => some ⟨.S_24, Stdlib.boolMarkerBody, 1, "兮: Bool identity marker; no lyrical-aesthetic discourse semantics"⟩
   | .S_1  => some ⟨.S_1,  Stdlib.hexApplyBody, 2, "之: Hex endomap application/projection"⟩
   | .S_2  => some ⟨.S_2,  Stdlib.endoCompBody, 2,
       "而: Hex endomap composition; surface currently requires explicit Hex→Hex terms"⟩
@@ -811,7 +815,8 @@ def coreTheoremBackedOperatorIds : List OperatorId :=
         .A_1, .A_2, .A_3, .A_4, .A_5, .A_6, .A_7, .A_8, .A_9, .A_10,
         .A_11, .A_12, .A_13, .A_14, .A_15, .A_16, .A_17, .A_18, .A_19, .A_20,
         .S_1, .S_2, .S_4, .S_5, .S_6, .S_8, .S_9, .S_10, .S_11, .S_12,
-        .S_13, .S_14, .S_15, .S_16, .S_17, .S_18, .S_19, .S_20]
+        .S_13, .S_14, .S_15, .S_16, .S_17, .S_18, .S_19, .S_20,
+        .S_21, .S_22, .S_23, .S_24]
     -- A-class upgrades — promoted from the axiom-interface fallthrough into
     -- the exact theorem-backed core (see `coreTheoremBackedSemanticsFor?`).
     ++ [.D_5, .D_6, .D_7, .K_4, .F_12, .Z_4]
@@ -887,7 +892,7 @@ These are theorem-backed by `boolMarkerBody_eq_id`; this deliberately does not
 claim full discourse, concessive, conditional, or sequential semantics.
 -/
 def exactTruthMarkerOperatorIds : List OperatorId :=
-  [.S_4, .S_5, .S_6, .S_8]
+  [.S_4, .S_5, .S_6, .S_8, .S_21, .S_22, .S_23, .S_24]
 
 theorem truthMarkerBoolIdentity_denotes (b : Bool) :
     denoteBool (.app Stdlib.boolMarkerBody (.boolLit b)) = some b :=
@@ -1177,7 +1182,7 @@ def isCatalogueOperator (id : OperatorId) : Bool :=
 /-! ## § 2 Total registry view -/
 
 /--
-One registry row for a catalogue operator.  `signature` is total for all 371
+One registry row for a catalogue operator.  `signature` is total for all 375
 operator ids; `executable?` is total for catalogue ids.  The exact subset is
 tracked separately by `theoremBackedOperatorIds`.
 -/
@@ -1197,13 +1202,13 @@ def executableRegistryEntries : List OperatorRegistryEntry :=
   operatorRegistryEntries.filter (fun entry => entry.executable?.isSome)
 
 theorem executableOperatorIds_length :
-    executableOperatorIds.length = 371 := by native_decide
+    executableOperatorIds.length = 375 := by native_decide
 
 theorem coreTheoremBackedOperatorIds_length :
-    coreTheoremBackedOperatorIds.length = 331 := by native_decide
+    coreTheoremBackedOperatorIds.length = 335 := by native_decide
 
 theorem theoremBackedOperatorIds_length :
-    theoremBackedOperatorIds.length = 371 := by native_decide
+    theoremBackedOperatorIds.length = 375 := by native_decide
 
 theorem theoremBackedOperatorIds_nodup :
     theoremBackedOperatorIds.Nodup := by native_decide
@@ -1243,7 +1248,7 @@ theorem exactSurfaceProjectionAnchorOperatorIds_nodup :
     exactSurfaceProjectionAnchorOperatorIds.Nodup := by native_decide
 
 theorem exactTruthMarkerOperatorIds_length :
-    exactTruthMarkerOperatorIds.length = 4 := by native_decide
+    exactTruthMarkerOperatorIds.length = 8 := by native_decide
 
 theorem exactTruthMarkerOperatorIds_nodup :
     exactTruthMarkerOperatorIds.Nodup := by native_decide
@@ -1279,7 +1284,7 @@ theorem exactPredicateAnchorOperatorIds_nodup :
     exactPredicateAnchorOperatorIds.Nodup := by native_decide
 
 theorem exactTheoremBackedStrongOperatorIds_length :
-    exactTheoremBackedStrongOperatorIds.length = 371 := by native_decide
+    exactTheoremBackedStrongOperatorIds.length = 375 := by native_decide
 
 theorem exactStructuralHelperStrongOperatorIds_length :
     exactStructuralHelperStrongOperatorIds.length = 0 := by native_decide
@@ -1623,7 +1628,7 @@ theorem semanticStrengthPartition_counts :
     exactTheoremBackedStrongOperatorIds.length
       + exactStructuralHelperStrongOperatorIds.length
       + structuralCarrierOperatorIds.length
-      + catalogueNormalFormOperatorIds.length = 371 := by
+      + catalogueNormalFormOperatorIds.length = 375 := by
   native_decide
 
 theorem structuralCatalogueOperatorIds_all_not_theorem_backed :
@@ -1631,14 +1636,14 @@ theorem structuralCatalogueOperatorIds_all_not_theorem_backed :
   native_decide
 
 theorem executablePartition_counts :
-    theoremBackedOperatorIds.length + structuralCatalogueOperatorIds.length = 371 := by
+    theoremBackedOperatorIds.length + structuralCatalogueOperatorIds.length = 375 := by
   native_decide
 
 theorem executableOperatorIds_registered :
     executableOperatorIds.all isCatalogueOperator = true := by native_decide
 
 theorem operatorRegistryEntries_length :
-    operatorRegistryEntries.length = 371 := by
+    operatorRegistryEntries.length = 375 := by
   native_decide
 
 theorem operatorRegistryEntryFor_id (id : OperatorId) :
@@ -1649,21 +1654,21 @@ theorem operatorRegistryEntryFor_signature_id (id : OperatorId) :
   exact fullSignatureFor_id id
 
 theorem executableRegistryEntries_length :
-    executableRegistryEntries.length = 371 := by native_decide
+    executableRegistryEntries.length = 375 := by native_decide
 
 theorem operatorRegistryCoverage_summary :
-    operatorRegistryEntries.length = 371
-      ∧ executableRegistryEntries.length = 371
-      ∧ executableOperatorIds.length = 371
-      ∧ theoremBackedOperatorIds.length = 371
+    operatorRegistryEntries.length = 375
+      ∧ executableRegistryEntries.length = 375
+      ∧ executableOperatorIds.length = 375
+      ∧ theoremBackedOperatorIds.length = 375
       ∧ structuralCatalogueOperatorIds.length = 0
       ∧ catalogueNormalFormOperatorIds.length = 0
       ∧ domainGapOperatorIds.length = 0
       ∧ exactTheoremBackedStrongOperatorIds.length
         + exactStructuralHelperStrongOperatorIds.length
         + structuralCarrierOperatorIds.length
-        + catalogueNormalFormOperatorIds.length = 371
-      ∧ theoremBackedOperatorIds.length + structuralCatalogueOperatorIds.length = 371
+        + catalogueNormalFormOperatorIds.length = 375
+      ∧ theoremBackedOperatorIds.length + structuralCatalogueOperatorIds.length = 375
       ∧ executableOperatorIds.all isCatalogueOperator = true
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).id = id)
       ∧ (∀ id : OperatorId, (operatorRegistryEntryFor id).signature.id = id) := by

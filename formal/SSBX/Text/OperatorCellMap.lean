@@ -8,7 +8,7 @@ import SSBX.Text.OperatorCellSemantics
 import SSBX.Text.OperatorAnchors
 
 /-!
-# OperatorCellMap — 371 文言算子 × 256 八卦单元
+# OperatorCellMap — 375 文言算子 × 256 八卦单元
 
 This file records the total indexing layer between the text catalogue and the
 Bagua cell space.  It is deliberately weaker than a semantic interpretation:
@@ -35,20 +35,20 @@ open SSBX.Foundation.Bagua.R8
 abbrev OperatorCell : Type := OperatorId × R8
 
 /--
-The total 371 × 256 index.  This is a coverage grid, not a claim that each
+The total 375 × 256 index.  This is a coverage grid, not a claim that each
 operator has a distinct theorem-level semantics at each cell.
 -/
 def allOperatorCells : List OperatorCell :=
   allOperatorIds.flatMap fun id =>
     R8.all.map fun c => (id, c)
 
-theorem allOperatorIds_length : allOperatorIds.length = 371 := by
+theorem allOperatorIds_length : allOperatorIds.length = 375 := by
   native_decide
 
 theorem allOperatorIds_nodup : allOperatorIds.Nodup := by
   native_decide
 
-theorem allOperatorCells_length : allOperatorCells.length = 94976 := by
+theorem allOperatorCells_length : allOperatorCells.length = 96000 := by
   native_decide
 
 theorem allOperatorCells_length_product :
@@ -88,7 +88,7 @@ theorem cellsForOperator_length (id : OperatorId) :
   rw [cellsForOperator, List.length_map, R8.all_length]
 
 theorem operatorsForCell_length (cell : R8) :
-    (operatorsForCell cell).length = 371 := by
+    (operatorsForCell cell).length = 375 := by
   rw [operatorsForCell, List.length_map, allOperatorIds_length]
 
 theorem indexedCellsForOperator_length (id : OperatorId) :
@@ -96,7 +96,7 @@ theorem indexedCellsForOperator_length (id : OperatorId) :
   rw [indexedCellsForOperator, R8.all_length]
 
 theorem indexedOperatorsForCell_length (cell : R8) :
-    (indexedOperatorsForCell cell).length = 371 := by
+    (indexedOperatorsForCell cell).length = 375 := by
   rw [indexedOperatorsForCell, allOperatorIds_length]
 
 theorem indexedCellsForOperator_complete (id : OperatorId) (cell : R8) :
@@ -148,7 +148,7 @@ theorem allOperatorCells_cell_mem (p : OperatorCell) :
 /--
 Machine-checkable summary for the text/Bagua bridge:
 
-* 371 catalogue operator ids are registered.
+* 375 catalogue operator ids are registered.
 * 256 Bagua cells are enumerated.
 * the total coverage grid has 94,976 rows.
 * every operator-cell pair is present in that grid.
@@ -156,16 +156,16 @@ Machine-checkable summary for the text/Bagua bridge:
   cell-transform execution remains separately counted.
 -/
 theorem operator_cell_bagua_summary :
-    allOperatorIds.length = 371
+    allOperatorIds.length = 375
     ∧ R8.all.length = 256
-    ∧ allOperatorCells.length = 94976
+    ∧ allOperatorCells.length = 96000
     ∧ allOperatorIds.Nodup
     ∧ R8.all.Nodup
     ∧ (∀ id : OperatorId, id ∈ allOperatorIds)
     ∧ (∀ c : R8, c ∈ R8.all)
     ∧ (∀ id : OperatorId, ∀ c : R8, (id, c) ∈ allOperatorCells)
     ∧ (∀ id : OperatorId, (cellsForOperator id).length = 256)
-    ∧ (∀ cell : R8, (operatorsForCell cell).length = 371) := by
+    ∧ (∀ cell : R8, (operatorsForCell cell).length = 375) := by
   exact
     ⟨ allOperatorIds_length
     , R8.all_length
@@ -208,7 +208,7 @@ inductive CompletionMark where
 
 /--
 Finite audit targets for semantic proof obligations.  These are intentionally
-not the 371 × 256 pair grid: the pair grid is an index, while semantics should
+not the 375 × 256 pair grid: the pair grid is an index, while semantics should
 be proved by parameterized families and generators.
 -/
 inductive SemanticLowerBoundKind where
@@ -268,18 +268,18 @@ Functional completion ledger for the current text/Bagua bridge.
 
 The first five rows are complete for the current catalogue and Bagua universe.
 The tracked rows retain seed / policy subledgers.  The requested completion
-rows are explicit: all 371 operators have conservative signature coverage, all
+rows are explicit: all 375 operators have conservative signature coverage, all
 94,976 operator-cell pairs have machine denotation rows, and the 31 gap words
 have a 25/6 promotion partition.
 -/
 def functionalCompletionRows : List CompletionRow :=
-  [ { layer := .catalogueOperators, mark := .complete, scope := 371 }
+  [ { layer := .catalogueOperators, mark := .complete, scope := 375 }
   , { layer := .baguaCells, mark := .complete, scope := 256 }
-  , { layer := .operatorCellIndex, mark := .complete, scope := 94976 }
+  , { layer := .operatorCellIndex, mark := .complete, scope := 96000 }
   , { layer := .baguaAnchors, mark := .complete, scope := 192 }
   , { layer := .homographReadings, mark := .complete, scope := 81 }
-  , { layer := .exactOperatorSignatures, mark := .complete, scope := 371 }
-  , { layer := .operatorCellSemanticRows, mark := .complete, scope := 94976 }
+  , { layer := .exactOperatorSignatures, mark := .complete, scope := 375 }
+  , { layer := .operatorCellSemanticRows, mark := .complete, scope := 96000 }
   , { layer := .hexagramGapPromotions, mark := .complete, scope := 25 }
   , { layer := .hexagramGapPolicies, mark := .tracked, scope := 31 }
   , { layer := .exactSignatureSeeds, mark := .tracked, scope := 14 }
@@ -314,13 +314,13 @@ theorem functionalCompletionPendingRows_length :
 
 theorem functionalCompletionCompleteRows_eq :
     functionalCompletionCompleteRows =
-      [ { layer := .catalogueOperators, mark := .complete, scope := 371 }
+      [ { layer := .catalogueOperators, mark := .complete, scope := 375 }
       , { layer := .baguaCells, mark := .complete, scope := 256 }
-      , { layer := .operatorCellIndex, mark := .complete, scope := 94976 }
+      , { layer := .operatorCellIndex, mark := .complete, scope := 96000 }
       , { layer := .baguaAnchors, mark := .complete, scope := 192 }
       , { layer := .homographReadings, mark := .complete, scope := 81 }
-      , { layer := .exactOperatorSignatures, mark := .complete, scope := 371 }
-      , { layer := .operatorCellSemanticRows, mark := .complete, scope := 94976 }
+      , { layer := .exactOperatorSignatures, mark := .complete, scope := 375 }
+      , { layer := .operatorCellSemanticRows, mark := .complete, scope := 96000 }
       , { layer := .hexagramGapPromotions, mark := .complete, scope := 25 }
       ] := by
   native_decide
@@ -369,16 +369,16 @@ theorem functionalCompletionPendingLayers_eq :
   native_decide
 
 theorem functional_completion_summary :
-    allOperatorIds.length = 371
+    allOperatorIds.length = 375
     ∧ R8.all.length = 256
-    ∧ allOperatorCells.length = 94976
+    ∧ allOperatorCells.length = 96000
     ∧ allOperatorIds.Nodup
     ∧ R8.all.Nodup
     ∧ (functionalCompletionRows.map (·.layer)).Nodup
     ∧ (∀ id : OperatorId, (indexedCellsForOperator id).length = 256)
-    ∧ (∀ cell : R8, (indexedOperatorsForCell cell).length = 371)
+    ∧ (∀ cell : R8, (indexedOperatorsForCell cell).length = 375)
     ∧ (∀ id : OperatorId, (cellsForOperator id).length = 256)
-    ∧ (∀ cell : R8, (operatorsForCell cell).length = 371)
+    ∧ (∀ cell : R8, (operatorsForCell cell).length = 375)
     ∧ catalogueHomographReadings.length = 81
     ∧ allSurfaceReadings.length = 82
     ∧ (allSurfaceReadings.map (fun e => e.readings.length)).foldl Nat.add 0 = 193
@@ -388,19 +388,19 @@ theorem functional_completion_summary :
     ∧ hexagramNearMissAnchors.length = 7
     ∧ exactSignatureSeed.length = 14
     ∧ signedOperatorIds.Nodup
-    ∧ fullOperatorSignatures.length = 371
+    ∧ fullOperatorSignatures.length = 375
     ∧ seedOverrideSignatureRows.length = 14
-    ∧ catalogueShapeSignatureRows.length = 357
+    ∧ catalogueShapeSignatureRows.length = 361
     ∧ cellTransformKinds.length = 10
     ∧ cellTransformOperatorIds.length = 43
     ∧ cellTransformOperatorIds.all (fun id => decide ((fullSignatureFor id).id = id)) = true
     ∧ Cell192Generator.all.length = 7
     ∧ l0InstructionClauseKinds.length = 12
     ∧ operatorCellCandidateBindings.length = 7
-    ∧ allOperatorCellSemanticRows.length = 94976
-    ∧ machineDenotationRows.length = 94976
+    ∧ allOperatorCellSemanticRows.length = 96000
+    ∧ machineDenotationRows.length = 96000
     ∧ exactCellTransformDenotationRows.length = 11008
-    ∧ signatureCarrierDenotationRows.length = 83968
+    ∧ signatureCarrierDenotationRows.length = 84992
     ∧ executableCellTransformRows.length = 11008
     ∧ semanticLowerBoundRows.length = 4
     ∧ semanticLowerBoundRows.map (·.scope) = [10, 7, 12, 27]

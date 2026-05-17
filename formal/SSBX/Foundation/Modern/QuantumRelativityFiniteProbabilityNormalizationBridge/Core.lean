@@ -9,7 +9,7 @@ boundary available in the current bridge:
 
 1. it adds explicit finite row-support lists for probability kernels;
 2. it defines row-weight sums and a rational normalized-row-total candidate;
-3. it proves that concrete and `94976` grid non-terminal rows normalize to `1`;
+3. it proves that concrete and `96000` grid non-terminal rows normalize to `1`;
 4. it moves the pending ledger beyond S9 by removing the finite sum-one row
    boundary while keeping the larger physical tasks explicit.
 
@@ -148,7 +148,7 @@ theorem concrete_normalized_row_total_candidate_eq_one
 
 /-! ## § 3 Operator-cell grid row support -/
 
-/-- Explicit successor row support for the `94976` operator-cell grid kernel. -/
+/-- Explicit successor row support for the `96000` operator-cell grid kernel. -/
 def operatorCellGridRowSupport
     (a : OperatorCellGridState) : List OperatorCellGridState :=
   if h : a.val + 1 = allOperatorCells.length then

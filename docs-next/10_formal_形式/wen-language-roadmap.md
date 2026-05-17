@@ -8,7 +8,7 @@
 |---|---|---|---|
 | **Bagua-ISA** | 22-token 汇编 | `wenyan` CLI + `BaguaTuring.YiInstr` | 自封闭，complement-equivariant universal |
 | **WenDef.Tm** | 类型化 lambda (Hex/Bool/Pair/List/Arr) | `WenDefEval` | 22 builtin + helper body 全套 |
-| **WenSurface** | 文言级 prose | `wenyanCompile + theoremBackedSemanticsFor?` | **desugar 100%** (371/371, 形式见证 [Semantics.lean:1142-1153](../../formal/SSBX/Foundation/Wen/WenSurface/Semantics.lean#L1142)) |
+| **WenSurface** | 文言级 prose | `wenyanCompile + theoremBackedSemanticsFor?` | **desugar 100%** (375/375, 形式见证 [Semantics.lean:1142-1153](../../formal/SSBX/Foundation/Wen/WenSurface/Semantics.lean#L1142)) |
 | **Bridge WenSurface→ISA** | — | `wenyanCompileToYiInstr?` | ✓ Slice B (PR #27), complement-equivariant 子集 |
 
 已落地的 4-步收顶进度：

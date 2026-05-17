@@ -6,7 +6,7 @@
 
 ## 当前范围
 
-- **算子**：371 个 theorem-backed operator 进入 `WenDef.Tm` bodies；
+- **算子**：375 个 theorem-backed operator 进入 `WenDef.Tm` bodies；
   catalogue structural normal form 仅保留作未来 fallback。
 - **常值**：「一」 → `.yi` primitive；64 卦名 / aliases → `.hexLit h`。
 - **组合**：显式 `SurfaceExpr.app` 左结合到 `Tm.app`。

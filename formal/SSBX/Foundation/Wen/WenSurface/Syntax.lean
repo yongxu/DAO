@@ -160,6 +160,22 @@ def postfixSurfaceSyntaxEntries : List SurfaceSyntaxEntry :=
     , surface := "也"
     , form := .postfix 10
     , note := "predication/finality particle; postfix demo (parser dispatches via postfixSyntaxEntry?)" }
+  , { id := .S_21
+    , surface := "乎"
+    , form := .postfix 10
+    , note := "interrogative final particle (modal axis: M_5 可); postfix boolMarker on Bool" }
+  , { id := .S_22
+    , surface := "矣"
+    , form := .postfix 10
+    , note := "perfective final particle (与 S_18 已 关联); postfix boolMarker on Bool" }
+  , { id := .S_23
+    , surface := "哉"
+    , form := .postfix 10
+    , note := "exclamatory final particle (modal axis: M_1 必); postfix boolMarker on Bool" }
+  , { id := .S_24
+    , surface := "兮"
+    , form := .postfix 10
+    , note := "lyrical final particle (aesthetic/韵律 marker); postfix boolMarker on Bool" }
   ]
 
 def surfaceSyntaxEntries : List SurfaceSyntaxEntry :=
@@ -172,7 +188,7 @@ theorem relationInfixSurfaceSyntaxEntries_length :
     relationInfixSurfaceSyntaxEntries.length = 2 := by native_decide
 
 theorem postfixSurfaceSyntaxEntries_length :
-    postfixSurfaceSyntaxEntries.length = 1 := by native_decide
+    postfixSurfaceSyntaxEntries.length = 5 := by native_decide
 
 theorem prefixSurfaceSyntaxEntries_cover_all_operators :
     allOperatorIds.all (fun id => !(prefixSurfaceSyntaxEntriesForOperator id).isEmpty) = true := by
