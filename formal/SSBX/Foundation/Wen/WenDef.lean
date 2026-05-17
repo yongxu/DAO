@@ -93,6 +93,12 @@ inductive Ty : Type
       type-level identifier declared by `类 NAME = CTOR₁ | … | CTORₙ`.
       Two `.user` types are equal iff their names match (decidable). -/
   | user (name : String)
+  /-- `set elem` — wen-2.0 ⑦ 真名词化器: predicate extension over `elem`.
+      Carriers a Boolean-valued predicate `elem → Bool`; element-test is
+      decidable on finite `elem` (currently `.hex` — 64 elements).  Built
+      via `Tm.setOf pred` (where `pred : elem → Bool`); membership-test
+      via `属` (member-of) operator. -/
+  | set (elem : Ty)
 deriving DecidableEq, Repr
 
 /-! ## § 2  项 -/
@@ -220,6 +226,16 @@ inductive Tm : Type
       synthesize the SAME type, and patterns must be compatible with
       the scrutinee's type (see `patternBindings`). -/
   | «match» (scrut : Tm) (arms : MatchArms) : Tm
+  /-- `setOf pred`: wen-2.0 ⑦ 真名词化器 (`者` 之 noun-position 读法).
+      `pred : elem → Bool` 决定 set 之 extension `{ x : elem | pred x }`.
+      Typecheck rule: `pred` 必须为 `.arr T .bool`; 结果为 `.set T`.
+      Operationally — `Value.setV` 持 the runtime predicate；元素测验
+      是 `evalApp pred x` 与 `.boolV true` 之比对 (见 `Tm.memberOf`). -/
+  | setOf (pred : Tm) : Tm
+  /-- `memberOf x s`: wen-2.0 ⑦ `X 属 S` set-membership (Bool).
+      Typecheck rule: `s : .set T`, `x : T` ⇒ result `.bool`.
+      Operationally — 对 `s = setV pred`, 返 `applyFuel pred x` 之 boolV. -/
+  | memberOf (x s : Tm) : Tm
 
 /-- A cons-list of match arms, mutual with `Tm` for derivable DecidableEq.
     Use the `MatchArms.fromList` / `MatchArms.toList` helpers below to
@@ -451,6 +467,19 @@ def typeCheck : Ctx → Tm → Option Ty
                             if prev = bodyTy then checkArms rest (some bodyTy)
                             else none
           checkArms arms none
+  -- wen-2.0 ⑦: `setOf pred` — pred : elem → Bool, result : Set elem.
+  | ctx, .setOf pred =>
+      match typeCheck ctx pred with
+      | some (.arr elem .bool) => some (.set elem)
+      | _ => none
+  -- wen-2.0 ⑦: `memberOf x s` — x : T, s : Set T, result : Bool.
+  | ctx, .memberOf x s =>
+      match typeCheck ctx s with
+      | some (.set elem) =>
+          match typeCheck ctx x with
+          | some tx => if tx = elem then some .bool else none
+          | none => none
+      | _ => none
 
 example :
     typeCheck [] (.catalogue2 .E_2 (.hexLit Hexagram.heaven) (.hexLit Hexagram.heaven))
@@ -618,6 +647,44 @@ example :
 example :
     Ty.user "五行" ≠ Ty.user "真假" := by native_decide
 
+/-! ### wen-2.0 ⑦ `.setOf` / `.memberOf` typecheck examples -/
+
+/-- `setOf (λx:Hex. x = 一)` typechecks to `Set Hex`. -/
+example :
+    typeCheck [] (.setOf (.abs "x" .hex (.app (.app .eqHex (.var "x")) .yi)))
+      = some (.set .hex) := by native_decide
+
+/-- `setOf (λp:Bool. p)` typechecks to `Set Bool` — `.bool → .bool` predicate. -/
+example :
+    typeCheck [] (.setOf (.abs "p" .bool (.var "p"))) = some (.set .bool) := by
+  native_decide
+
+/-- `setOf` rejects a non-Bool-returning predicate. -/
+example :
+    typeCheck [] (.setOf (.abs "x" .hex (.var "x"))) = none := by native_decide
+
+/-- `setOf` rejects a non-function. -/
+example :
+    typeCheck [] (.setOf .yi) = none := by native_decide
+
+/-- `一 属 (setOf (λx. x = 一))` typechecks to `.bool`. -/
+example :
+    typeCheck []
+        (.memberOf .yi
+          (.setOf (.abs "x" .hex (.app (.app .eqHex (.var "x")) .yi))))
+      = some .bool := by native_decide
+
+/-- `memberOf` rejects mismatched element type. -/
+example :
+    typeCheck []
+        (.memberOf (.boolLit true)
+          (.setOf (.abs "x" .hex (.app (.app .eqHex (.var "x")) .yi))))
+      = none := by native_decide
+
+/-- `memberOf` rejects non-Set second arg. -/
+example :
+    typeCheck [] (.memberOf .yi .yi) = none := by native_decide
+
 /-! ## § 3b  Free-variable substitution (used by wen-2.0 ② 定递)
 
   `substTmFree name replacement t` substitutes every **free** occurrence of
@@ -650,6 +717,10 @@ mutual
     | .«match» scrut arms =>
         .«match» (substTmFree name replacement scrut)
                  (substTmFreeArms name replacement arms)
+    -- wen-2.0 ⑦: subst into predicate / element / set sub-terms.
+    | .setOf pred => .setOf (substTmFree name replacement pred)
+    | .memberOf x s =>
+        .memberOf (substTmFree name replacement x) (substTmFree name replacement s)
     | t => t  -- literals + primitives are leaves
 
   /-- Capture-avoiding subst into a `MatchArms` chain.  Mutual with
