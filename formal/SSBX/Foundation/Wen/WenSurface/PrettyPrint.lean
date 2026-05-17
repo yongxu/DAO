@@ -143,6 +143,10 @@ def prettyPrintTm : Tm → String
         prettyPrintTm b ++ " " ++ prettyPrintTm c
   -- wen-2.0 ⑥/⑩: 引语 wrap 用 「」（primary quote bracket）.
   | .quote body => "「" ++ prettyPrintTm body ++ "」"
+  -- wen-2.0 ⑪: `执 「X」` quote-eval.  Show as `执 ` + body's pretty form.
+  -- Body should normally be a `.quote` (renders as `「X」`), but we render
+  -- whatever it is for diagnostic clarity.
+  | .unquote q => "执 " ++ prettyPrintTm q
   | t =>
       -- 22 core builtin + 12 cell-endo 走 builtinGlyph 表
       match builtinGlyph t with
