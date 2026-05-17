@@ -308,6 +308,21 @@ inductive DefErr where
   | classNoConstructors   (typeName : String)
   /-- A ctor name clashes with another in-scope `类`/`定`/catalogue. -/
   | classCtorConflict     (typeName ctorName : String)
+  -- wen-2.0 ⑤ `析 SCRUT 为 PAT₁ → BODY₁ | …` errors
+  /-- The `析` chunk is missing `为` or has empty SCRUT / body. -/
+  | matchMalformed        (raw : String)
+  /-- The arm list after `为` had zero valid `PAT → BODY` arms. -/
+  | matchNoArms           (raw : String)
+  /-- An arm's pattern did not parse to a single recognisable token
+      (lit / bool / user-ctor / heavenly stem). -/
+  | matchBadPattern       (raw : String)
+  /-- An arm body failed to compile. -/
+  | matchArmBodyFailed    (raw : String)
+  /-- Scrutinee source failed to compile. -/
+  | matchScrutFailed
+  /-- The compiled match `Tm` failed typecheck (e.g. mixed arm types,
+      incompatible pat type, etc.).  `none` from `WenDef.typeCheck`. -/
+  | matchTypeError
 deriving Repr
 
 /-- Multi-statement program error with `def` support. Extends the base
@@ -471,6 +486,102 @@ def parseClassChunk? (s : String) : Option (String × List String) :=
           if ctors.any String.isEmpty then none
           else if ctors.isEmpty then none
           else some (typeName, ctors)
+
+/-! ### § 2c.1c  wen-2.0 ⑤ `析` (pattern match) decl detection + parsing
+
+  Surface form (statement-level v1):
+
+      析 SCRUT 为 PAT₁ → BODY₁ | PAT₂ → BODY₂ | … | PATₙ → BODYₙ
+
+  Implementation notes (deliberate scope cuts for v1):
+
+  · The entire match is treated as a statement-level construct (parsed
+    by string-ops on `为`, `|`, and `→` BEFORE the lexer touches it).
+    Embedded matches inside arbitrary expression positions are NOT
+    supported in v1 — match must appear as the head of a chunk.
+  · `→` is the unicode arrow U+2192.  The lexer cannot accept it as a
+    bare token (non-CJK), so we split on it pre-lex.
+  · `|` is the arm separator (mirrors `类`'s ctor list precedent).
+  · No exhaustiveness check (planned follow-up).  Runtime returns
+    `none` if no arm matches.
+  · Patterns are flat single tokens — see `parseMatchPat?` below.
+
+  Examples:
+      析 一 为 一 → 真 | 凡 → 假
+      析 甲 为 木 → 推 一 | 水 → 一        (where 甲 : .user "五行")
+-/
+
+/-- True iff the first non-whitespace codepoint of `s` starts with `析`. -/
+def chunkStartsWithMatchKeyword (s : String) : Bool :=
+  (strTrim s).startsWith "析"
+
+/-- Parse `析 SCRUT 为 ARMS` into `(scrutSrc, armsSrc)`.  Splits on the
+    FIRST `为` after the leading `析`.  Returns `none` if either side is
+    empty. -/
+def parseMatchChunkHead? (s : String) : Option (String × String) :=
+  let trimmed := strTrim s
+  if !trimmed.startsWith "析" then none
+  else
+    let afterXi := strTrim (trimmed.drop 1).toString
+    match afterXi.splitOn "为" with
+    | [] => none
+    | [_] => none
+    | scrutRaw :: bodyParts =>
+        let bodyRaw := String.intercalate "为" bodyParts
+        let scrut := strTrim scrutRaw
+        let body := strTrim bodyRaw
+        if scrut.isEmpty || body.isEmpty then none else some (scrut, body)
+
+/-- Split an arm-list source on `|` and split each piece on `→` to obtain
+    `(patSrc, bodySrc)` pairs.  Each side trimmed; arms with empty either
+    side are dropped (caller validates non-empty result). -/
+def parseMatchArmsSource (armsSrc : String) : List (String × String) :=
+  (armsSrc.splitOn "|").filterMap (fun rawArm =>
+    let armTrimmed := strTrim rawArm
+    if armTrimmed.isEmpty then none
+    else
+      match armTrimmed.splitOn "→" with
+      | [] => none
+      | [_] => none
+      | patRaw :: bodyParts =>
+          let bodyRaw := String.intercalate "→" bodyParts
+          let pat := strTrim patRaw
+          let body := strTrim bodyRaw
+          if pat.isEmpty || body.isEmpty then none else some (pat, body))
+
+/-- Compile a single pattern source (e.g. `"一"`, `"甲"`, `"木"`, `"真"`)
+    into a `MatchPat`, given the in-scope user-ctor table.  Strategy:
+
+    1. Lex the pat source; must yield exactly one token.
+    2. Map by priority (most-specific first):
+       a. User-ctor lookup (in scope) → `.userP typeName ctorName`
+          — checked FIRST so a `类` decl re-binding a Heavenly Stem
+          (e.g. `类 X = 甲 | 乙`) takes precedence over the bare-stem
+          varP reading.
+       b. Bool literal (`真`/`假`) → `.boolP true/false`
+       c. Hex literal (lookup `resolveHexConst`) → `.lit h`
+       d. Heavenly stem (`甲乙丙丁戊己庚辛壬癸`) → `.varP` (bind)
+       e. Otherwise → `none` (caller reports diagnostic).
+-/
+def parseMatchPat? (ctors : List UserCtor) (src : String) : Option MatchPat :=
+  match lexWen src with
+  | .error _ => none
+  | .ok [tok] =>
+      let g := tok.surface
+      match UserCtor.lookupType ctors g with
+      | some tn => some (.userP tn g)
+      | none =>
+        match resolveBoolConst g with
+        | some b => some (.boolP b)
+        | none =>
+          match resolveHexConst g with
+          | some h => some (.lit h)
+          | none =>
+            if ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"].contains g then
+              some (.varP g)
+            else
+              none
+  | _ => none
 
 /-! ### § 2c.2  Name validation against catalogue -/
 
@@ -808,6 +919,60 @@ def wenyanCompileProgramWithDefs (s : String)
                     ({ name := cn, typeName := typeName } : UserCtor))
                   let ctors' := ctors ++ newCtors
                   go (i + 1) env rwEnv ctors' (.classStmt typeName newCtors :: acc) rest
+      else if chunkStartsWithMatchKeyword c then
+        -- wen-2.0 ⑤ `析 SCRUT 为 PAT₁ → BODY₁ | PAT₂ → BODY₂ | …` as a
+        -- statement-level pattern match expression.  Emits an `exprStmt`
+        -- whose body is `Tm.«match» scrut arms`.  No exhaustiveness check
+        -- (v1); runtime returns `none` on unmatched scrutinee.
+        match parseMatchChunkHead? c with
+        | none =>
+            .error (.defError i (.matchMalformed (strTrim c)))
+        | some (scrutSrc, armsSrc) =>
+            let armPairs := parseMatchArmsSource armsSrc
+            if armPairs.isEmpty then
+              .error (.defError i (.matchNoArms (strTrim c)))
+            else
+              -- Compile scrutinee in the standard env.
+              let scrutExpanded := applyDefs env scrutSrc
+              match wenyanCompileInCtx (recDefAndCtorCtx env ctors) scrutExpanded with
+              | .error _ => .error (.defError i .matchScrutFailed)
+              | .ok scrutTyped =>
+                  let scrutTm0 := applyRecDefs env scrutTyped.tm
+                  let scrutTm := resolveUserCtors ctors scrutTm0 []
+                  -- Compile each arm.  Pattern parses; pattern's varP
+                  -- introduces a binding of the scrutinee's type into
+                  -- the arm body's ctx.
+                  let scrutTy := scrutTyped.ty
+                  let rec compileArms :
+                      List (String × String) → List (MatchPat × Tm) →
+                      Except DefErr (List (MatchPat × Tm))
+                    | [], acc => .ok acc.reverse
+                    | (patSrc, bodySrc) :: rest, acc =>
+                        match parseMatchPat? ctors patSrc with
+                        | none => .error (.matchBadPattern patSrc)
+                        | some pat =>
+                            -- patternBindings derives the arm's extra ctx
+                            -- entry (for varP).
+                            match patternBindings pat scrutTy with
+                            | none => .error (.matchBadPattern patSrc)
+                            | some binds =>
+                                let armCtx := binds ++ recDefAndCtorCtx env ctors
+                                let bodyExpanded := applyDefs env bodySrc
+                                match wenyanCompileInCtx armCtx bodyExpanded with
+                                | .error _ => .error (.matchArmBodyFailed bodySrc)
+                                | .ok bodyTyped =>
+                                    let bodyTm0 := applyRecDefs env bodyTyped.tm
+                                    let bodyTm := resolveUserCtors ctors bodyTm0 []
+                                    compileArms rest ((pat, bodyTm) :: acc)
+                  match compileArms armPairs [] with
+                  | .error e => .error (.defError i e)
+                  | .ok arms =>
+                      let matchTm : Tm := .«match» scrutTm (MatchArms.ofList arms)
+                      match typeCheck [] matchTm with
+                      | none => .error (.defError i .matchTypeError)
+                      | some ty =>
+                          let typed' : TypedTm := ⟨matchTm, ty⟩
+                          go (i + 1) env rwEnv ctors (.exprStmt typed' :: acc) rest
       else if chunkStartsWithRecDefKeyword c then
         match parseRecDefChunk? c with
         | none =>
@@ -1293,6 +1458,53 @@ example :
 example :
     resolveUserCtors [⟨"木", "五行"⟩] (.var "甲") []
       = .var "甲" := by native_decide
+
+/-! ## § 2c.7  wen-2.0 ⑤ `析` (pattern match) decl sanity -/
+
+example : chunkStartsWithMatchKeyword "析 一 为 一 → 真" = true := by native_decide
+example : chunkStartsWithMatchKeyword "  析 一 为 一 → 真" = true := by native_decide
+example : chunkStartsWithMatchKeyword "推 一" = false := by native_decide
+example : chunkStartsWithMatchKeyword "" = false := by native_decide
+
+/-- Parse the SCRUT vs ARMS halves. -/
+example :
+    parseMatchChunkHead? "析 一 为 一 → 真 | 凡 → 假"
+      = some ("一", "一 → 真 | 凡 → 假") := by native_decide
+
+example : parseMatchChunkHead? "析 一 为 " = none := by native_decide
+example : parseMatchChunkHead? "析  为 一 → 真" = none := by native_decide
+example : parseMatchChunkHead? "析 一 一 → 真" = none := by native_decide
+
+/-- Parse the arms list. -/
+example :
+    parseMatchArmsSource "一 → 真 | 凡 → 假"
+      = [("一", "真"), ("凡", "假")] := by native_decide
+
+/-- Empty arm side gives no arm. -/
+example :
+    parseMatchArmsSource "一 → 真 | " = [("一", "真")] := by native_decide
+
+/-- Hex pattern compiles. -/
+example :
+    parseMatchPat? [] "一" = some (MatchPat.lit «一») := by native_decide
+
+/-- Bool pattern compiles. -/
+example :
+    parseMatchPat? [] "真" = some (MatchPat.boolP true) := by native_decide
+
+/-- Heavenly stem compiles to varP. -/
+example :
+    parseMatchPat? [] "甲" = some (MatchPat.varP "甲") := by native_decide
+
+/-- User-ctor pattern: when a ctor decl rebinds a heavenly stem, the
+    ctor takes precedence over the bare-stem varP reading. -/
+example :
+    parseMatchPat? [⟨"丁", "甴甴"⟩] "丁"
+      = some (MatchPat.userP "甴甴" "丁") := by native_decide
+
+/-- Heavenly stem without any ctor decl falls back to `varP`. -/
+example :
+    parseMatchPat? [] "丁" = some (MatchPat.varP "丁") := by native_decide
 
 /-! ## § 3  端到端 sanity tests
 
