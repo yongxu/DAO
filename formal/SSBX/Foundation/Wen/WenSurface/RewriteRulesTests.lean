@@ -137,16 +137,24 @@ example :
 
 /-! ## § 4  Confluence + ambiguity -/
 
-/-- (4) Two rules with the same head constructor (.app) are rejected.
+/-- (4) Two rules with the same head primitive are rejected.
 
-    Both `错 错 甲 → 甲` and `综 综 甲 → 甲` produce LHS of head `.appH`
-    (operator-applied form), so the second add fails with
-    `overlapWithExisting .appH .appH`. -/
+    Two `错 错 ?` rules collide on head `.primH 10` (the index for `.cuoH`
+    in the spine-walking discriminator).  The second add fails with
+    `overlapWithExisting`. -/
+example :
+    let prog := "定 错 错 甲 等 甲；定 错 错 乙 等 乙"
+    (match wenyanCompileProgramWithDefs prog with
+     | .error (.defError 1 (.rewriteRuleRejected
+         (.overlapWithExisting _ _))) => true
+     | _ => false) = true := by native_decide
+
+/-- (4b) Two rules with DIFFERENT primitive heads (`错 错 ?` vs `综 综 ?`)
+    coexist because the spine-walking discriminator distinguishes them. -/
 example :
     let prog := "定 错 错 甲 等 甲；定 综 综 乙 等 乙"
     (match wenyanCompileProgramWithDefs prog with
-     | .error (.defError 1 (.rewriteRuleRejected
-         (.overlapWithExisting .appH .appH))) => true
+     | .ok _ => true
      | _ => false) = true := by native_decide
 
 /-- (5) Ambiguous chunk: contains both 等 and 为 → `rewriteAmbiguous`.

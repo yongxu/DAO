@@ -138,10 +138,40 @@ private def primIdxOf : Tm → Option Nat
   | .flip4C => some 35 | .flip5C => some 36 | .flip6C => some 37
   | _ => none
 
+/-- Walk down the leftmost-spine of an `.app` chain to find the innermost
+    function head.  E.g. `.app (.app .cuoH x) y` returns `.cuoH`. -/
+private def spineHead : Tm → Tm
+  | .app f _ => spineHead f
+  | t => t
+
+/-- `headTag` discriminates rules by the **spine head** of the LHS.
+
+    For `.app` chains this reaches past the curried applications to the
+    innermost head function — so `错 错 X` (= `.app .cuoH (.app .cuoH X)`)
+    has head `primH 10` (the index for `.cuoH`), distinguishable from a
+    `综 综 Y` rule (head `primH 11`).
+
+    Other constructors use their own tag directly. -/
 def headTag : Tm → HeadTag
   | .var _ => .varH
   | .abs _ _ _ => .absH
-  | .app _ _ => .appH
+  | t@(.app _ _) =>
+    let h := spineHead t
+    match h with
+    | .var _ => .varH
+    | .abs _ _ _ => .absH
+    | .hexLit _ => .hexLitH
+    | .boolLit _ => .boolLitH
+    | .cellLit _ => .cellLitH
+    | .catalogue1 _ _ => .cat1H
+    | .catalogue2 _ _ _ => .cat2H
+    | .catalogue3 _ _ _ _ => .cat3H
+    | .quote _ => .quoteH
+    | .fix _ _ _ => .fixH
+    | h' =>
+      match primIdxOf h' with
+      | some i => .primH i
+      | none   => .appH  -- defensive
   | .hexLit _ => .hexLitH
   | .boolLit _ => .boolLitH
   | .cellLit _ => .cellLitH
@@ -391,8 +421,17 @@ example :
 
 /-- Head tags discriminate constructors. -/
 example : headTag (.catalogue1 .Z_5 .yi) = .cat1H := by native_decide
-example : headTag (.app .notB (.boolLit true)) = .appH := by native_decide
+/-- `.app .notB X` walks the spine to the inner head `.notB` (primIdx 2). -/
+example : headTag (.app .notB (.boolLit true)) = .primH 2 := by native_decide
 example : headTag .yi = .primH 1 := by native_decide
+/-- Curried-app spine: `app cuoH (app cuoH x)` → head .cuoH (primIdx 10). -/
+example :
+    headTag (.app .cuoH (.app .cuoH (.var "甲"))) = .primH 10 := by
+  native_decide
+/-- Different primitive heads in `.app` chains get distinct tags. -/
+example :
+    headTag (.app .zongH (.app .zongH (.var "甲"))) = .primH 11 := by
+  native_decide
 
 /-- Single-rule normalize: `错 错 X` → `X`. -/
 example :
