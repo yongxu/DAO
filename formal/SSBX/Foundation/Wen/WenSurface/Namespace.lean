@@ -313,6 +313,14 @@ example :
       = some ([], 0, 0) :=
   by native_decide
 
+/-! ### B-11  schoolNamespaceSurfaces ↔ Namespace.entries 同步守门 -/
+
+/-- B-11: `Reading.schoolNamespaceSurfaces` 必须严格等于 `Namespace.entries`
+    之 surface key 集（按 list 顺序）。若两侧分离，这里 native_decide 会失败,
+    提醒同步更新 `WenSurface/Reading.lean`. -/
+theorem schoolNamespaceSurfaces_eq_namespace_entries :
+    schoolNamespaceSurfaces = Namespace.allNames := by native_decide
+
 /-! ### inActiveNamespaces -/
 
 /-- T_10 (group T) 不在 active [.P] 中 → false. -/

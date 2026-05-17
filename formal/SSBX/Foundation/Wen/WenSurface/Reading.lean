@@ -104,6 +104,16 @@ inductive ResolveErr where
   | ambiguous (surface : String) (col : Nat) (candidates : List OperatorReading) : ResolveErr
   | knownButUnsupported (surface : String) (col : Nat) (readings : List OperatorReading) : ResolveErr
   | unpromotedHexagramGap (surface : String) (col : Nat) : ResolveErr
+  /-- B-10: surface glyph is a first-character of one or more multi-glyph
+      hexagram names (e.g. 大 → 大有/大壮/大畜/大过; 中 → 中孚; 明 → 明夷).
+      The glyph is intentionally unreachable as a bare expression — write the
+      full hex name instead.  `examples` carries up to a few canonical full
+      names that begin with `surface`. -/
+  | hexCompoundStarter (surface : String) (col : Nat) (examples : List String) : ResolveErr
+  /-- B-11: surface is a registered 学派 namespace name (e.g. 墨经, 名家,
+      庄子, 中庸).  These are labels for `OperatorGroup`s used in
+      `用 NS_NAME` declarations and are not parseable expressions. -/
+  | schoolNamespaceName (surface : String) (col : Nat) : ResolveErr
 deriving DecidableEq, Repr
 
 /-! ## § 2  Surface maps -/
@@ -449,16 +459,98 @@ def uniqueExecutableReadingForGlyph (glyph : Glyph) : Option OperatorReading :=
           else
             uniqueExecutableReadingBySemantics catalogue
 
+/-! ### B-10 / B-11  Helpful error classification for unreachable surfaces
+
+For glyphs that have no catalogue reading, we classify them into one of:
+
+* **hex-compound starter** — first glyph of a multi-glyph canonical hex name
+  (e.g. `大` → 大有 / 大壮 / 大畜 / 大过).  These are intentionally
+  unreachable as bare expressions to avoid prefix ambiguity with the lexer's
+  longest-prefix match; the lexer would consume `大壮` as one token, so a
+  bare `大` cannot mean either a single-glyph hex or a partial compound.
+* **学派 namespace name** — surfaces registered in `Namespace.entries`
+  (e.g. 墨经, 名家, 庄子, 中庸).  These are labels for `OperatorGroup`s
+  used in `用 NS_NAME` declarations; they have no expression-level Tm
+  constructor.
+
+Both classifications take priority over the generic `noReading` error.  See
+`renderResolveErr` in `WenSurface.ErrorRender` for the user-facing
+messages. -/
+
+/-- A glyph 是 hex-compound starter ⇔ 它是某条多字 `canonicalHexNames` 或
+    `hexNameAliases` 的首字符（按 codepoint 计），且本身不是该名（即不是
+    完整的单字 hex 名）。 -/
+def firstCharOf? (s : String) : Option String :=
+  match s.toList with
+  | []      => none
+  | c :: _  => some c.toString
+
+/-- 多字 canonical hex names + multi-char aliases，作为 starter 的来源集合. -/
+def multiCharHexNames : List String :=
+  canonicalHexNames.filter (fun s => decide (s.toList.length > 1))
+    ++ (hexNameAliases.map Prod.fst).filter (fun s => decide (s.toList.length > 1))
+
+/-- Full hex names whose first glyph equals `g`. Used for `hexCompoundStarter`
+    error examples. -/
+def hexCompoundsStartingWith (g : Glyph) : List String :=
+  multiCharHexNames.filter (fun s =>
+    match firstCharOf? s with
+    | some c => c = g
+    | none   => false)
+
+/-- `g` 是某多字 hex name 的首字符（且 `g` 本身不是单字 canonical hex；如
+    `小畜` 起字 `小` 也是 unpromoted-gap 单字 hex，仍归此类以给出更具体的
+    指引）。 -/
+def isHexCompoundStarter (g : Glyph) : Bool :=
+  !(hexCompoundsStartingWith g).isEmpty
+
+/-- Surfaces registered as 学派 namespace names.  This list mirrors the keys
+    of `Namespace.entries` but is duplicated here (rather than imported) to
+    avoid a circular dependency: `Namespace` already imports `EndToEnd`,
+    which transitively depends on `Reading`. -/
+def schoolNamespaceSurfaces : List String :=
+  [ "墨经", "墨經", "墨家", "墨"
+  , "名家", "名学", "名學"
+  , "法家", "法學", "法学"
+  , "医家", "醫家", "中医", "中醫", "黄帝内经", "黃帝內經"
+  , "庄子", "莊子", "齐物", "齊物"
+  , "孙子", "孫子", "兵家", "兵法"
+  , "楚辞", "楚辭"
+  , "礼记", "禮記", "中庸"
+  , "杂家", "雜家", "黄老", "黃老", "淮南", "淮南子"
+  , "史官", "春秋"
+  , "社会", "社會", "荀子"
+  , "补遗", "補遺" ]
+
+def isSchoolNamespaceSurface (g : Glyph) : Bool :=
+  schoolNamespaceSurfaces.contains g
+
+/-- Promote a `noReading` to a more informative classification when possible. -/
+def classifyNoReading (surface : String) (col : Nat) : ResolveErr :=
+  if isSchoolNamespaceSurface surface then
+    .schoolNamespaceName surface col
+  else if isHexCompoundStarter surface then
+    .hexCompoundStarter surface col (hexCompoundsStartingWith surface)
+  else
+    .noReading surface col
+
 def resolveCatalogueByTable (t : GlyphTok) : Except ResolveErr ResolvedTok :=
   if isUnpromotedHexagramGap t.surface then
-    .error (.unpromotedHexagramGap t.surface t.startCol)
+    -- B-10: 大/小 are both unpromoted-gap AND hex-compound starters; the
+    -- compound-starter classification is strictly more actionable for the
+    -- user (it lists concrete examples).
+    if isHexCompoundStarter t.surface then
+      .error (.hexCompoundStarter t.surface t.startCol
+                (hexCompoundsStartingWith t.surface))
+    else
+      .error (.unpromotedHexagramGap t.surface t.startCol)
   else
     let readings := catalogueOrOperatorFormReadingsForGlyph t.surface
     match readings with
     | [] =>
         let knownReadings := readingsForGlyph t.surface
         if knownReadings.isEmpty then
-          .error (.noReading t.surface t.startCol)
+          .error (classifyNoReading t.surface t.startCol)
         else
           .error (.knownButUnsupported t.surface t.startCol knownReadings)
     | [r] => .ok ⟨t, .catalogueOp r⟩
@@ -467,14 +559,18 @@ def resolveCatalogueByTable (t : GlyphTok) : Except ResolveErr ResolvedTok :=
 def resolveCatalogueByTableAllowAmbiguous (t : GlyphTok)
     : Except ResolveErr ResolvedTok :=
   if isUnpromotedHexagramGap t.surface then
-    .error (.unpromotedHexagramGap t.surface t.startCol)
+    if isHexCompoundStarter t.surface then
+      .error (.hexCompoundStarter t.surface t.startCol
+                (hexCompoundsStartingWith t.surface))
+    else
+      .error (.unpromotedHexagramGap t.surface t.startCol)
   else
     let readings := catalogueOrOperatorFormReadingsForGlyph t.surface
     match readings with
     | [] =>
         let knownReadings := readingsForGlyph t.surface
         if knownReadings.isEmpty then
-          .error (.noReading t.surface t.startCol)
+          .error (classifyNoReading t.surface t.startCol)
         else
           .error (.knownButUnsupported t.surface t.startCol knownReadings)
     | [r] => .ok ⟨t, .catalogueOp r⟩
@@ -1255,6 +1351,86 @@ example :
       = some [some OperatorId.T_10, some OperatorId.R_8, some OperatorId.N_1,
               some OperatorId.M_1,  some OperatorId.I_1, some OperatorId.Q_1,
               none] :=
+  by native_decide
+
+/-! ## § 8  B-10 / B-11  Helpful classifications for unreachable surfaces -/
+
+/-- B-10: 大 是 4 个多字卦名 (大有 / 大壮 / 大畜 / 大过) 的起字。 -/
+example :
+    hexCompoundsStartingWith "大"
+      = ["大有", "大畜", "大过", "大壮", "大過", "大壯"] :=
+  by native_decide
+
+/-- B-10: 中 是 1 个多字卦名 (中孚) 的起字. -/
+example : hexCompoundsStartingWith "中" = ["中孚"] := by native_decide
+
+/-- B-10: 明 是 1 个多字卦名 (明夷) 的起字. -/
+example : hexCompoundsStartingWith "明" = ["明夷"] := by native_decide
+
+/-- B-10: 既 / 未 / 同 / 小 / 噬 / 家 / 归 / 歸 / 既濟 起字之全集. -/
+example : isHexCompoundStarter "既" = true := by native_decide
+example : isHexCompoundStarter "未" = true := by native_decide
+example : isHexCompoundStarter "同" = true := by native_decide
+example : isHexCompoundStarter "小" = true := by native_decide
+example : isHexCompoundStarter "噬" = true := by native_decide
+example : isHexCompoundStarter "家" = true := by native_decide
+example : isHexCompoundStarter "归" = true := by native_decide
+example : isHexCompoundStarter "歸" = true := by native_decide
+
+/-- 单字 hex 名（如 乾 / 坤 / 离）不视作 compound starter（即便其名长度 = 1）. -/
+example : isHexCompoundStarter "乾" = false := by native_decide
+example : isHexCompoundStarter "坤" = false := by native_decide
+example : isHexCompoundStarter "离" = false := by native_decide
+
+/-- 普通算子 surface 不视作 compound starter. -/
+example : isHexCompoundStarter "推" = false := by native_decide
+example : isHexCompoundStarter "及" = false := by native_decide  -- 不是任何多字 hex 起字
+example : isHexCompoundStarter "夷" = false := by native_decide  -- 是 *第二* 字 (明夷)
+
+/-- B-11: 学派 surface 全集都识别. -/
+example : isSchoolNamespaceSurface "墨经" = true := by native_decide
+example : isSchoolNamespaceSurface "墨" = true := by native_decide
+example : isSchoolNamespaceSurface "名家" = true := by native_decide
+example : isSchoolNamespaceSurface "庄子" = true := by native_decide
+example : isSchoolNamespaceSurface "中庸" = true := by native_decide
+example : isSchoolNamespaceSurface "兵家" = true := by native_decide
+example : isSchoolNamespaceSurface "孙子" = true := by native_decide
+
+/-- 非学派 surface 不被误识. -/
+example : isSchoolNamespaceSurface "推" = false := by native_decide
+example : isSchoolNamespaceSurface "乾" = false := by native_decide
+example : isSchoolNamespaceSurface "兼愛" = false := by native_decide  -- 在 spec 但未入表
+example : isSchoolNamespaceSurface "仁" = false := by native_decide      -- 同上
+
+/-- classifyNoReading 之分类逻辑：学派优先 > hex-compound starter > noReading. -/
+example :
+    classifyNoReading "墨经" 0
+      = ResolveErr.schoolNamespaceName "墨经" 0 :=
+  by native_decide
+
+example :
+    classifyNoReading "中" 5
+      = ResolveErr.hexCompoundStarter "中" 5 ["中孚"] :=
+  by native_decide
+
+example :
+    classifyNoReading "及" 0
+      = ResolveErr.noReading "及" 0 :=
+  by native_decide
+
+/-- 「大」走 resolveCatalogueByTable：unpromoted-gap **AND** hex-compound starter
+    → 取 hex-compound starter 分类（更具体）. -/
+example :
+    (match resolveCatalogueByTable ⟨"大", 0, 1, false⟩ with
+     | .error (.hexCompoundStarter s _ _) => s == "大"
+     | _ => false) = true :=
+  by native_decide
+
+/-- 「鼎」是 unpromoted-gap 但不是 compound starter → 保留旧错误. -/
+example :
+    (match resolveCatalogueByTable ⟨"鼎", 0, 1, false⟩ with
+     | .error (.unpromotedHexagramGap s _) => s == "鼎"
+     | _ => false) = true :=
   by native_decide
 
 end SSBX.Foundation.Wen.WenSurface
