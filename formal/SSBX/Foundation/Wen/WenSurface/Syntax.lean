@@ -82,6 +82,16 @@ def ResolvedAtom.operatorId? : ResolvedAtom → Option OperatorId
   | .hexOrOp _ r => r.operator?
   | _ => none
 
+/-- True iff this atom is a B-2/B-3/B-6 builtin Tm primitive. -/
+def ResolvedAtom.isBuiltinTm : ResolvedAtom → Bool
+  | .builtinTm _ _ => true
+  | _              => false
+
+/-- Extract `(body, arity)` for a `.builtinTm` atom (none otherwise). -/
+def ResolvedAtom.builtinTm? : ResolvedAtom → Option (Tm × Nat)
+  | .builtinTm body arity => some (body, arity)
+  | _                     => none
+
 def isApplicationOperator : OperatorId → Bool
   | .S_1 => true
   | _ => false
@@ -336,6 +346,7 @@ def atomSurfaceTypeWithCtx? (ctx : Ctx) : ResolvedAtom → Option Ty
       | some id => exactOperatorType? id
       | none => none
   | .hexOrOp _ _ => some .hex
+  | .builtinTm body _ => typeCheck [] body
   | _ => none
 
 def atomSurfaceType? (atom : ResolvedAtom) : Option Ty :=
@@ -761,6 +772,14 @@ mutual
                       | .ok (expr, rest') => parsePostfixApplications ctx allowInfix n reserve expr rest'
                       | .error e => .error e
       | .ambiguousOp _ => .error .empty
+      | .builtinTm _ arity =>
+          -- B-2/B-3/B-6: builtin Tm primitive head.  Same dispatch shape as a
+          -- catalogue prefix op: collect `arity` sub-expressions as
+          -- left-associative args (e.g. `加 一 一` → `((加 一) 一)`), then
+          -- continue with postfix applications.
+          match collectSurfaceArgs ctx allowInfix n (.atom head) arity rest with
+          | .ok (expr, rest') => parsePostfixApplications ctx allowInfix n reserve expr rest'
+          | .error e => .error e
       | .hexConst _ => parsePostfixApplications ctx allowInfix n reserve (.atom head) rest
       | .boolConst _ => parsePostfixApplications ctx allowInfix n reserve (.atom head) rest
       | .varName _ => parsePostfixApplications ctx allowInfix n reserve (.atom head) rest

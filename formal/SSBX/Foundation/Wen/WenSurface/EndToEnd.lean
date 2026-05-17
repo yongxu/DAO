@@ -624,6 +624,7 @@ def nameConflictsWithCatalogue (name : String) : Bool :=
           | .varName _     => true
           | .openBracket   => true
           | .closeBracket  => true
+          | .builtinTm _ _ => true   -- B-2/B-3/B-6 builtin Tm primitives
         | .error _ => false
       | _ =>
         -- Multi-token names are fine: substitution runs textually on the
@@ -904,7 +905,7 @@ def wenyanCompileProgramWithDefs (s : String)
                     | .ok r =>
                       match r.atom with
                       | .varName _ => true
-                      | _ => false
+                      | _ => false   -- catalogueOp / hexConst / builtinTm / … all reject
                     | .error _ => false  -- unknown glyph won't reach `.var` leaf
                   | _ => false           -- multi-token names not supported
               let conflict := ctorNames.find? (fun cn =>
