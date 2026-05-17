@@ -181,16 +181,18 @@ def evalLine (src : String) : String :=
     let lines := (stmts.map renderStmt).filter (fun s => !s.isEmpty)
     String.intercalate "\n" lines
   | .error progErr =>
-    -- For a single-statement submission, prefer the legacy single-stmt
-    -- diagnostic (more focused than `stmt 0: ...`).  We detect this by
-    -- checking the chunk count.
+    -- Prefer the single-stmt diagnostic only when the program error is a
+    -- *base* (compile-pipeline) error on a 0-indexed single-chunk input;
+    -- decl-specific errors (defError) are program-level and always shown
+    -- as such.  This keeps decl error messages crisp (e.g. for `类` decls
+    -- that the single-stmt path can't even tokenize because of `=`).
     let chunks := splitOnStatementSep src
-    match chunks with
-    | [_] =>
+    match chunks, progErr with
+    | [_], .base _ _ =>
       match wenyanCompile src with
       | .error e => errShow e
       | .ok typed => renderExpr typed
-    | _ => progErrShow progErr
+    | _, _ => progErrShow progErr
 
 /-- Type query: compile and show `ty` without evaluating.  For multi-stmt
     submissions we show the type of the last `exprStmt` (or the last stmt
