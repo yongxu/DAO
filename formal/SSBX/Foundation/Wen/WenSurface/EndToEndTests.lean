@@ -235,7 +235,12 @@ example :
      | _ => false) = true :=
   by native_decide
 
-example : (parseSurface "乾 之 坤").toOption.isSome = true := by native_decide
+-- B-7 (2026-05-18): after the curried-λ chained-`之` fix, an `之`
+-- following a non-function `acc` is no longer greedy-folded.  `乾 之 坤`
+-- now surfaces as a `.leftoverAtoms` parse error rather than parsing as a
+-- malformed `.app 乾 坤` that fails later at elab.  This is a strictly
+-- better diagnostic — see Syntax.lean appMarker branch.
+example : (parseSurface "乾 之 坤").toOption.isNone = true := by native_decide
 
 example : (wenyanCompile "乾 之 坤").toOption = none := by native_decide
 
@@ -1003,6 +1008,39 @@ example :
 
 example :
     (wenyanInterpBool "（者 甲 甲 之 真） 之 不").toOption = some false :=
+  by native_decide
+
+/-! ### B-7 regression: curried λ + chained `之` without inner parens
+
+Before the fix the chained `之 X 之 Y` after a curried lambda required an
+explicit inner paren — i.e. `（（λ）之 X）之 Y` worked but `（λ）之 X 之 Y`
+emitted `elab error: empty` because the inner `parseSurfaceExprAux` from the
+postfix `appMarker` branch greedy-consumed the trailing `之 Y`, producing a
+single-arg application `(λ) (X Y)` rather than the curried `((λ) X) Y`.
+
+The fix is in `Syntax.lean parsePostfixApplications`: only fold an `之`
+postfix when `acc` surface-types to a function (or is a lambda).  When
+`acc` is hex/bool we surrender the `之` to the outer caller so the chain
+unwinds correctly. -/
+
+/-- B-7 ① bare curried λ + chained 之 applies two args left-associatively. -/
+example :
+    (wenyanInterp "（者 甲 者 乙 甲）之 乾 之 坤").toOption = some Hexagram.heaven :=
+  by native_decide
+
+/-- B-7 ② curried λ body using both binders + chained 之 yields predicate result. -/
+example :
+    (wenyanInterpBool "（者 甲 者 乙 同 之 甲 之 乙）之 乾 之 坤").toOption = some false :=
+  by native_decide
+
+/-- B-7 ③ chained 之 reflexive predicate evaluates to true. -/
+example :
+    (wenyanInterpBool "（者 甲 者 乙 同 之 甲 之 乙）之 乾 之 乾").toOption = some true :=
+  by native_decide
+
+/-- B-7 ④ explicit-paren form still works — back-compat regression. -/
+example :
+    (wenyanInterp "（（者 甲 者 乙 甲）之 乾）之 坤").toOption = some Hexagram.heaven :=
   by native_decide
 
 example :

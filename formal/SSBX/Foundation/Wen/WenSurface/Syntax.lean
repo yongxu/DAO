@@ -911,13 +911,29 @@ mutual
           else
             .ok (acc, head :: rest)
         else if isApplicationMarkerTok head then
-          match parseSurfaceExprAux ctx allowInfix n reserve rest with
-          | .ok (arg, rest') =>
-              if decide (reserve <= rest'.length) then
-                parsePostfixApplications ctx allowInfix n reserve (.marker head (.app acc arg)) rest'
-              else
-                .ok (acc, head :: rest)
-          | .error _ => .ok (acc, head :: rest)
+          -- B-7: only fold `之 ARG` into `(acc ARG)` when `acc` is a function
+          -- (or a lambda).  Otherwise `(NON-FN) 之 X 之 Y` would inner-recurse
+          -- on `[X, 之, Y]` and greedily produce `(X Y)`, which the outer
+          -- marker then mis-applies to `acc` as a *single* arg.  Surrendering
+          -- the `之` here lets the outer caller resume the chain so curried
+          -- lambdas (`（λ甲 λ乙 BODY）之 X 之 Y`) parse without inner parens.
+          let accIsFunctional : Bool :=
+            match surfaceExprTypeWithCtx? ctx acc with
+            | some (.arr _ _) => true
+            | _ =>
+                match lambdaParts? acc with
+                | some _ => true
+                | none => false
+          if !accIsFunctional then
+            .ok (acc, head :: rest)
+          else
+            match parseSurfaceExprAux ctx allowInfix n reserve rest with
+            | .ok (arg, rest') =>
+                if decide (reserve <= rest'.length) then
+                  parsePostfixApplications ctx allowInfix n reserve (.marker head (.app acc arg)) rest'
+                else
+                  .ok (acc, head :: rest)
+            | .error _ => .ok (acc, head :: rest)
           else
             -- Postfix dispatch fires before infix.  A postfix entry consumes
             -- exactly one token (`head`) and re-shapes `acc` into
