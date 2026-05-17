@@ -1162,5 +1162,32 @@ example :
     (wenyanInterp "推 之 一").toOption = some («生» «一») :=
   by native_decide
 
+/-! ### 「也」 postfix marker (wen-restructure 05)
+
+`S_14 也` carries two surface forms:
+* prefix (arity 1, from `operatorForms`) — `也 乾` still parses as the prefix
+  application of the identity-anchor `hexIdBody`
+* postfix (prec 10, from `postfixSurfaceSyntaxEntries`) — `推 一 也` parses
+  the trailing `也` as a postfix marker re-shaping `acc` into `(也) acc`
+
+Since `S_14 = hexIdBody` is the identity on `Hex`, postfix and prefix both
+preserve the underlying Hex value but record the surface form distinctly. -/
+
+/-- Postfix demo: `推 一 也` compiles successfully (postfix applies to result). -/
+example : (wenyanCompile "推 一 也").toOption.isSome = true := by native_decide
+
+/-- Back-compat: `推 一` still compiles (regression check). -/
+example : (wenyanCompile "推 一").toOption.isSome = true := by native_decide
+
+/-- Postfix `也` over `推 一` is the identity on `Hex`, so the denoted value
+    matches the bare `推 一`. -/
+example : (wenyanInterp "推 一 也").toOption = some («生» «一») := by native_decide
+
+/-- Back-compat: `也 乾` still parses as the prefix application of S_14. -/
+example : (wenyanCompile "也 乾").toOption.isSome = true := by native_decide
+
+/-- Mixed postfix + relation infix: `一 同 一 也` compiles (postfix is
+    greedy and fires before the infix dispatch chain). -/
+example : (wenyanCompile "一 同 一 也").toOption.isSome = true := by native_decide
 
 end SSBX.Foundation.Wen.WenSurface

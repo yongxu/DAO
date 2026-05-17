@@ -143,14 +143,36 @@ def relationInfixSurfaceSyntaxEntries : List SurfaceSyntaxEntry :=
     , note := "relation comparison infix; expression-start 比 remains hex/operator disambiguated" }
   ]
 
+/--
+Postfix surface entries.  A postfix entry fires inside
+[`parsePostfixApplications`](#parsePostfixApplications) **after** a complete
+left-side expression `acc` has been parsed and **before** any infix dispatch.
+Postfix consumes one token and re-shapes `acc` into `(opTok) acc`.
+
+Currently demos `S_14 也` (predication/finality particle) with precedence `10`
+so that postfix binds tightly to the immediately preceding expression.  The
+existing `S_14` prefix entry from `operatorForms` is preserved unchanged, so
+`也 乾` still parses as the prefix application; `推 一 也` now elaborates the
+trailing `也` as a postfix marker over `推 一`.
+-/
+def postfixSurfaceSyntaxEntries : List SurfaceSyntaxEntry :=
+  [ { id := .S_14
+    , surface := "也"
+    , form := .postfix 10
+    , note := "predication/finality particle; postfix demo (parser dispatches via postfixSyntaxEntry?)" }
+  ]
+
 def surfaceSyntaxEntries : List SurfaceSyntaxEntry :=
-  relationInfixSurfaceSyntaxEntries ++ allPrefixSurfaceSyntaxEntries
+  relationInfixSurfaceSyntaxEntries ++ postfixSurfaceSyntaxEntries ++ allPrefixSurfaceSyntaxEntries
 
 def surfaceSyntaxEntriesForOperator (id : OperatorId) : List SurfaceSyntaxEntry :=
   surfaceSyntaxEntries.filter (fun entry => decide (entry.id = id))
 
 theorem relationInfixSurfaceSyntaxEntries_length :
     relationInfixSurfaceSyntaxEntries.length = 2 := by native_decide
+
+theorem postfixSurfaceSyntaxEntries_length :
+    postfixSurfaceSyntaxEntries.length = 1 := by native_decide
 
 theorem prefixSurfaceSyntaxEntries_cover_all_operators :
     allOperatorIds.all (fun id => !(prefixSurfaceSyntaxEntriesForOperator id).isEmpty) = true := by
@@ -160,6 +182,10 @@ theorem surfaceSyntaxEntries_relation_examples :
     (surfaceSyntaxEntriesForOperator .I_1).length = 2
       ∧ (surfaceSyntaxEntriesForOperator .R_8).length = 2 := by
   native_decide
+
+/-- `S_14 也` now has 1 prefix entry (from `operatorForms`) + 1 postfix entry. -/
+theorem surfaceSyntaxEntries_S_14_has_postfix :
+    (surfaceSyntaxEntriesForOperator .S_14).length = 2 := by native_decide
 
 def relationInfixTok? (t : ResolvedTok) : Option ResolvedTok :=
   match t.atom with
@@ -171,6 +197,33 @@ def relationInfixTok? (t : ResolvedTok) : Option ResolvedTok :=
       match r.operator? with
       | some id =>
           if isRelationInfixOperator id then some { t with atom := .catalogueOp r } else none
+      | none => none
+  | _ => none
+
+/--
+Postfix surface-entry lookup for a `ResolvedTok`.  Returns the operator id
+and its postfix precedence, plus a `ResolvedTok` normalised to `.catalogueOp`
+so downstream `SurfaceExpr.atom` construction sees a clean dispatch atom.
+
+Resolution walks `postfixSurfaceSyntaxEntries`; the parser consults this
+**before** infix dispatch (postfix is 1-token, infix is 2-token).
+-/
+def postfixSyntaxEntry? (t : ResolvedTok) : Option (ResolvedTok × Nat) :=
+  let lookup (id : OperatorId) (tok : ResolvedTok) : Option (ResolvedTok × Nat) :=
+    match postfixSurfaceSyntaxEntries.find? (fun entry => decide (entry.id = id)) with
+    | some entry =>
+        match entry.form with
+        | .postfix prec => some (tok, prec)
+        | _ => none
+    | none => none
+  match t.atom with
+  | .catalogueOp r =>
+      match r.operator? with
+      | some id => lookup id t
+      | none => none
+  | .hexOrOp _ r =>
+      match r.operator? with
+      | some id => lookup id { t with atom := .catalogueOp r }
       | none => none
   | _ => none
 
@@ -666,56 +719,69 @@ mutual
                 .ok (acc, head :: rest)
           | .error _ => .ok (acc, head :: rest)
           else
-            match relationInfixTok? head with
-            | some opTok =>
-                if allowInfix then
-                  if decide ((head :: rest).length <= reserve) then
-                    .ok (acc, head :: rest)
-                  else
-                    match surfaceExprTypeWithCtx? ctx acc with
-                    | some .hex =>
-                        match parseSurfaceExprExpected ctx false n reserve .hex rest with
-                        | .ok (rhs, rest') =>
-                            match rest' with
-                            | next :: _ =>
-                                match relationInfixTok? next with
-                                | some _ => .error (.nonassocInfix next.surface next.col)
-                                | none =>
-                                    parsePostfixApplications ctx allowInfix n reserve
-                                      (.app (.app (.atom opTok) acc) rhs) rest'
-                            | [] =>
-                                parsePostfixApplications ctx allowInfix n reserve
-                                  (.app (.app (.atom opTok) acc) rhs) []
-                        | .error e => .error e
-                    | some actual => .error (.typeMismatch .hex actual head.surface head.col)
-                    | none => .ok (acc, head :: rest)
+            -- Postfix dispatch fires before infix.  A postfix entry consumes
+            -- exactly one token (`head`) and re-shapes `acc` into
+            -- `(opTok) acc`.  Honour `reserve` so outer contexts that need
+            -- trailing tokens are not starved.  The `prec` field is currently
+            -- treated as a tie-breaker only (entries are disjoint by surface
+            -- glyph from infix entries — see `postfixSurfaceSyntaxEntries`).
+            match postfixSyntaxEntry? head with
+            | some (opTok, _prec) =>
+                if decide (reserve <= rest.length) then
+                  parsePostfixApplications ctx allowInfix n reserve (.app (.atom opTok) acc) rest
                 else
                   .ok (acc, head :: rest)
             | none =>
-                let parseBareLambdaArg :=
-                  if decide ((head :: rest).length <= reserve) then
-                    .ok (acc, head :: rest)
-                  else
-                    match parseSurfaceExprAux ctx allowInfix n reserve (head :: rest) with
-                    | .ok (arg, rest') =>
-                        parsePostfixApplications ctx allowInfix n reserve (.app acc arg) rest'
-                    | .error _ => .ok (acc, head :: rest)
-                match surfaceExprTypeWithCtx? ctx acc with
-                | some (.arr expected _) =>
+              match relationInfixTok? head with
+              | some opTok =>
+                  if allowInfix then
                     if decide ((head :: rest).length <= reserve) then
                       .ok (acc, head :: rest)
                     else
-                      match parseSurfaceExprExpected ctx allowInfix n reserve expected (head :: rest) with
+                      match surfaceExprTypeWithCtx? ctx acc with
+                      | some .hex =>
+                          match parseSurfaceExprExpected ctx false n reserve .hex rest with
+                          | .ok (rhs, rest') =>
+                              match rest' with
+                              | next :: _ =>
+                                  match relationInfixTok? next with
+                                  | some _ => .error (.nonassocInfix next.surface next.col)
+                                  | none =>
+                                      parsePostfixApplications ctx allowInfix n reserve
+                                        (.app (.app (.atom opTok) acc) rhs) rest'
+                              | [] =>
+                                  parsePostfixApplications ctx allowInfix n reserve
+                                    (.app (.app (.atom opTok) acc) rhs) []
+                          | .error e => .error e
+                      | some actual => .error (.typeMismatch .hex actual head.surface head.col)
+                      | none => .ok (acc, head :: rest)
+                  else
+                    .ok (acc, head :: rest)
+              | none =>
+                  let parseBareLambdaArg :=
+                    if decide ((head :: rest).length <= reserve) then
+                      .ok (acc, head :: rest)
+                    else
+                      match parseSurfaceExprAux ctx allowInfix n reserve (head :: rest) with
                       | .ok (arg, rest') =>
                           parsePostfixApplications ctx allowInfix n reserve (.app acc arg) rest'
-                      | .error _ =>
-                          match lambdaParts? acc with
-                          | some _ => parseBareLambdaArg
-                          | none => .ok (acc, head :: rest)
-                | _ =>
-                    match lambdaParts? acc with
-                    | some _ => parseBareLambdaArg
-                    | none => .ok (acc, head :: rest)
+                      | .error _ => .ok (acc, head :: rest)
+                  match surfaceExprTypeWithCtx? ctx acc with
+                  | some (.arr expected _) =>
+                      if decide ((head :: rest).length <= reserve) then
+                        .ok (acc, head :: rest)
+                      else
+                        match parseSurfaceExprExpected ctx allowInfix n reserve expected (head :: rest) with
+                        | .ok (arg, rest') =>
+                            parsePostfixApplications ctx allowInfix n reserve (.app acc arg) rest'
+                        | .error _ =>
+                            match lambdaParts? acc with
+                            | some _ => parseBareLambdaArg
+                            | none => .ok (acc, head :: rest)
+                  | _ =>
+                      match lambdaParts? acc with
+                      | some _ => parseBareLambdaArg
+                      | none => .ok (acc, head :: rest)
   end
 
 def leftoverAtomsErr : List ResolvedTok → ParseErr
@@ -837,5 +903,35 @@ example :
     (match parseSurface "或 乾" with
      | .error (.inr (.inl (.ambiguous "或" 0 candidates))) => candidates.length == 2
      | _ => false) = true := by native_decide
+
+/-! ## § 5 Postfix marker parsing
+
+The `也` glyph carries two surface forms after wen-restructure 05:
+
+* prefix `S_14` (arity 1, from `operatorForms`) — `也 乾` still parses as
+  the prefix application
+* postfix `S_14` (prec 10) — `推 一 也` parses `也` as a postfix marker
+  over the already-built `推 一`
+
+Postfix dispatch runs **before** infix in `parsePostfixApplications`, so the
+choice between prefix-start and postfix-tail is decided by the *position* of
+the token (expression-start = prefix, after a complete `acc` = postfix).
+-/
+
+/-- Postfix demo: `也` after a complete expression. -/
+example : (parseSurface "推 一 也").toOption.isSome = true := by native_decide
+
+/-- Back-compat: `推 一` still parses without any postfix. -/
+example : (parseSurface "推 一").toOption.isSome = true := by native_decide
+
+/-- Back-compat: `也 乾` still parses as the prefix application of `S_14`. -/
+example : (parseSurface "也 乾").toOption.isSome = true := by native_decide
+
+/-- Postfix consumes one token; chained postfix is left-associative. -/
+example : (parseSurface "推 一 也 也").toOption.isSome = true := by native_decide
+
+/-- Mixed postfix + relation infix: `一 同 一 也` succeeds. The postfix
+    binds tighter than the infix, so `也` applies after the relation rhs. -/
+example : (parseSurface "一 同 一 也").toOption.isSome = true := by native_decide
 
 end SSBX.Foundation.Wen.WenSurface
