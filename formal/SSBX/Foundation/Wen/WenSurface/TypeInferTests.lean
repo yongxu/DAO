@@ -92,15 +92,13 @@ example :
       = some (.arr (.arr .hex .hex) .hex) := by
   native_decide
 
-/-- `者 甲 甲 之 真`: f applied to Bool, defaulting result to Hex
-    (legacy: `(Bool → Bool) → Bool`).  HM picks `(Bool → Hex) → Hex`
-    because there is no constraint pinning the codomain.
-    Either is a valid principal-type instance; pin it down here. -/
+/-- `者 甲 甲 之 真`: f applied to Bool. Both `(Bool → Hex) → Hex`
+    and `(Bool → Bool) → Bool` are valid principal-type instances;
+    `pickBinderDomain` picks the legacy-first choice `(Bool→Bool)`
+    for back-compat with EndToEndTests. -/
 example :
-    (wenyanCompile "者 甲 甲 之 真").toOption.bind (fun t =>
-      match t.ty with
-      | .arr (.arr .bool _) _ => some true
-      | _ => none) = some true := by
+    (wenyanCompile "者 甲 甲 之 真").toOption.map (·.ty)
+      = some (.arr (.arr .bool .bool) .bool) := by
   native_decide
 
 /-! ## § 5  Eval still works through the inferred lambda. -/
