@@ -45,6 +45,11 @@ inductive SyntaxMarker where
       current env.  Not a value operator; not registered as an OperatorId
       to keep the catalogue audit/coverage tables stable. -/
   | zhi
+  /-- wen-2.0 ⑦ `X 属 S`: set-membership infix marker.  Parsed in
+      postfix-application dispatch (similar to relation infix `同`/`比`):
+      consumes one trailing expression as the Set argument and emits
+      `Tm.memberOf x s`.  Not registered as an OperatorId. -/
+  | shu
 deriving DecidableEq, Repr
 
 /-- 已消歧的原子：卦字面值 / Bool 字面值 / catalogue 算子读法 /
@@ -196,6 +201,8 @@ def resolveSyntaxMarker : Glyph → Option SyntaxMarker
   | "令" => some .ling
   | "执" => some .zhi    -- wen-2.0 ⑪ quote-eval prefix
   | "執" => some .zhi    -- traditional variant
+  | "属" => some .shu    -- wen-2.0 ⑦ set-membership infix
+  | "屬" => some .shu    -- traditional variant
   | _    => none
 
 def matchingCloseBracket? : Glyph → Option Glyph

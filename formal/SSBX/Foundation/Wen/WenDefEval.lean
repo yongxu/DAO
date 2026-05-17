@@ -104,6 +104,10 @@ inductive Value : Type
       pattern-match — out of scope for ④).  Operationally it is a
       first-class value, like a hex literal. -/
   | userCtorV (typeName ctorName : String) : Value
+  /-- wen-2.0 ⑦ 真名词化器 runtime value: holds the predicate `pred` as a Value
+      (typically a `.closV` or `.builtinV` returning `.boolV`).  Element-test
+      is `applyFuel pred x` against `.boolV true` (see `.memberOf` eval rule). -/
+  | setV     (pred : Value)                                   : Value
 deriving Repr
 
 abbrev Env := List (String × Value)
@@ -269,6 +273,22 @@ mutual
         match evalFuel fuel env scrut with
         | none => none
         | some vs => tryArmsFuel fuel env vs arms
+    -- wen-2.0 ⑦ 真名词化器: eval `pred` to a Value (must be a function;
+    -- typecheck has already ensured arr-shape) and wrap it in `setV`.
+    | fuel+1, env, .setOf pred => do
+        let vp ← evalFuel fuel env pred
+        some (.setV vp)
+    -- wen-2.0 ⑦ `X 属 S`: reduce `s` to `.setV pred`, then test predicate at `x`.
+    -- `apply pred x = some (.boolV b)` ⇒ `.boolV b`; any other shape ⇒ `none`.
+    | fuel+1, env, .memberOf x s => do
+        let vs ← evalFuel fuel env s
+        let vx ← evalFuel fuel env x
+        match vs with
+        | .setV pred =>
+            match applyFuel fuel pred vx with
+            | some (.boolV b) => some (.boolV b)
+            | _ => none
+        | _ => none
 
   /-- Fuel-bounded builtin 求值. -/
   def applyBuiltinFuel : Nat → Builtin → List Value → Option Value
@@ -778,6 +798,36 @@ example :
     denoteHexFun Stdlib.tuiBody Hexagram.heaven = some «一» := by native_decide
 
 /-! ## § 10  桥之总公示 -/
+
+/-! ## § 10c  wen-2.0 ⑦ 真名词化器 eval sanity -/
+
+/-- `setOf (λx:Hex. x = 一)` evaluates to a setV; membership test on `一` is true. -/
+example :
+    denoteBool
+        (.memberOf .yi
+          (.setOf (.abs "x" .hex (.app (.app .eqHex (.var "x")) .yi))))
+      = some true := by native_decide
+
+/-- Membership on a non-member element is false. -/
+example :
+    denoteBool
+        (.memberOf (.hexLit Hexagram.heaven)
+          (.setOf (.abs "x" .hex (.app (.app .eqHex (.var "x")) .yi))))
+      = some false := by native_decide
+
+/-- Universal-predicate set: every Hex is a member. -/
+example :
+    denoteBool
+        (.memberOf .yi
+          (.setOf (.abs "x" .hex (.boolLit true))))
+      = some true := by native_decide
+
+/-- Empty set: no member returns true. -/
+example :
+    denoteBool
+        (.memberOf .yi
+          (.setOf (.abs "x" .hex (.boolLit false))))
+      = some false := by native_decide
 
 /-! ## § 10b  wen-2.0 ⑪ unquote eval sanity -/
 
