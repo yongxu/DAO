@@ -92,6 +92,12 @@ inductive Value : Type
       (kind : SSBX.Text.OperatorSignatures.SignatureKind)
       (args : List Value)                                      : Value
   | quoteV   (body : Tm)                                       : Value
+  /-- wen-2.0 ② μ-fixpoint value (`定递`).  Holds captured environment + the
+      self-reference name + body Tm.  When **applied** to an argument, unfolds
+      one level: evaluates `body` in `env` extended with `n ↦ fixV env n body`
+      (each unfolding consumes one fuel tick), then applies the result to the
+      argument.  Fuel exhaustion ⇒ `none` (clean error, no crash). -/
+  | fixV     (env : List (String × Value)) (n : String) (body : Tm) : Value
 deriving Repr
 
 abbrev Env := List (String × Value)
@@ -137,6 +143,14 @@ mutual
           some (.builtinV b args')
         else
           applyBuiltinFuel fuel b args'
+    -- wen-2.0 ② μ-fixpoint application: unroll one level then apply.
+    -- evalFuel of body produces a function value (closV or another fixV);
+    -- each unrolling consumes one fuel tick, so divergent recursion exhausts
+    -- fuel cleanly instead of crashing.
+    | fuel+1, .fixV env n body, arg =>
+        match evalFuel fuel ((n, .fixV env n body) :: env) body with
+        | some f => applyFuel fuel f arg
+        | none   => none
     | _+1, _, _ => none
 
   /-- Fuel-bounded Tm 求值（closure-based，总函数）. -/
@@ -205,6 +219,10 @@ mutual
     -- 之语义是 *捕获 syntactic body*，不是 closure。这与 ⑪ unquote/eval 之
     -- 设计契合：unquote 时再决定要不要 substitution / re-eval.
     | _+1,    _,   .quote body   => some (.quoteV body)
+    -- wen-2.0 ② μ-fixpoint: capture current env + self-reference name + body;
+    -- the fixV value is unrolled on-demand by applyFuel.  Each unrolling
+    -- consumes fuel, so divergent recursion exhausts cleanly.
+    | _+1,    env, .fix n _ body => some (.fixV env n body)
 
   /-- Fuel-bounded builtin 求值. -/
   def applyBuiltinFuel : Nat → Builtin → List Value → Option Value

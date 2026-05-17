@@ -147,6 +147,13 @@ inductive Tm : Type
       整体类型为 `.quoted`，载入 doxastic / 言说 / meta-prog 之 deferred Tm 数据.
       `WenDefEval` 仅以 builtin tag 标记此 Value，不对 body 作 β-reduction. -/
   | quote (body : Tm) : Tm
+  /-- `fix n t body`: wen-2.0 ② μ-fixpoint (`定递 n 为 body`).
+      Models `μ n : t. body` — the body is closed over a self-reference to
+      `n` of type `t`; operationally unrolled on-demand by the fuel-bounded
+      evaluator (`WenDefEval.evalFuel`).  Each unrolling consumes one fuel
+      tick, so divergent recursion exhausts fuel cleanly rather than crashing.
+      Typecheck rule:  `body` typechecks to `t` in `(n,t) :: ctx`. -/
+  | fix (n : String) (t : Ty) (body : Tm) : Tm
 deriving DecidableEq, Repr
 
 /-! ## § 3  类型检查 -/
@@ -283,6 +290,10 @@ def typeCheck : Ctx → Tm → Option Ty
             none
       | _, _, _ => none
   | _, .quote _ => some .quoted
+  | ctx, .fix n t body =>
+      match typeCheck ((n, t) :: ctx) body with
+      | some t' => if t = t' then some t else none
+      | none => none
 
 example :
     typeCheck [] (.catalogue2 .E_2 (.hexLit Hexagram.heaven) (.hexLit Hexagram.heaven))
@@ -321,6 +332,59 @@ example :
 example :
     typeCheck [] (.catalogue2 .P_23 (.hexLit Hexagram.heaven) (.hexLit Hexagram.earth))
       = none := by native_decide
+
+/-! ### wen-2.0 ② `.fix` typecheck examples -/
+
+/-- A trivial fixpoint at type `.hex` (body just returns self-reference) is
+    typeable as `.hex` — operationally diverges but typechecks. -/
+example :
+    typeCheck [] (.fix "f" .hex (.var "f")) = some .hex := by native_decide
+
+/-- `μ f : Hex → Hex. λ x. f x` typechecks to `Hex → Hex`. -/
+example :
+    typeCheck []
+        (.fix "f" (.arr .hex .hex)
+          (.abs "x" .hex (.app (.var "f") (.var "x"))))
+      = some (.arr .hex .hex) := by native_decide
+
+/-- Mismatched annotation: body typechecks to a different type → none. -/
+example :
+    typeCheck []
+        (.fix "f" .hex (.abs "x" .hex (.var "x")))
+      = none := by native_decide
+
+/-- An ill-typed body propagates as none. -/
+example :
+    typeCheck []
+        (.fix "f" .hex (.app .notB .yi))
+      = none := by native_decide
+
+/-! ## § 3b  Free-variable substitution (used by wen-2.0 ② 定递)
+
+  `substTmFree name replacement t` substitutes every **free** occurrence of
+  `Tm.var name` in `t` with `replacement`.  Binders (`abs`, `fix`) that
+  re-bind `name` shadow the substitution within their body.  Note:
+  `replacement` is inserted verbatim (no α-renaming), so this is safe only
+  when `replacement` is a closed term — which is the use case here
+  (recursive defs produce closed `.fix` terms).
+-/
+def substTmFree (name : String) (replacement : Tm) : Tm → Tm
+  | .var n => if n = name then replacement else .var n
+  | .abs n t body =>
+      if n = name then .abs n t body
+      else .abs n t (substTmFree name replacement body)
+  | .app f x => .app (substTmFree name replacement f) (substTmFree name replacement x)
+  | .catalogue1 id a => .catalogue1 id (substTmFree name replacement a)
+  | .catalogue2 id a b =>
+      .catalogue2 id (substTmFree name replacement a) (substTmFree name replacement b)
+  | .catalogue3 id a b c =>
+      .catalogue3 id (substTmFree name replacement a)
+        (substTmFree name replacement b) (substTmFree name replacement c)
+  | .quote body => .quote body  -- quote body is data; not subject to subst
+  | .fix n t body =>
+      if n = name then .fix n t body
+      else .fix n t (substTmFree name replacement body)
+  | t => t  -- literals + primitives are leaves
 
 /-! ## § 4  命名空间 -/
 
