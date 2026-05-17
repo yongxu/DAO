@@ -50,6 +50,8 @@ inductive MTy : Type
   | list (elem : MTy)
   | arr (dom cod : MTy)
   | quoted
+  /-- wen-2.0 ④ user inductive nominal type (mirrors `Ty.user`). -/
+  | user (name : String)
 deriving DecidableEq, Repr
 
 /-- Lift a closed `Ty` into `MTy` (no metavariables introduced). -/
@@ -62,6 +64,7 @@ def MTy.ofTy : Ty → MTy
   | .list a => .list (MTy.ofTy a)
   | .arr a b => .arr (MTy.ofTy a) (MTy.ofTy b)
   | .quoted => .quoted
+  | .user n => .user n
 
 /-- Total substitution: list of `(id, MTy)` pairs.  Lookup is first-match. -/
 abbrev Subst := List (Nat × MTy)
@@ -82,6 +85,7 @@ def MTy.apply : Nat → Subst → MTy → MTy
   | _+1,  _, .cell => .cell
   | _+1,  _, .quoted => .quoted
   | _+1,  _, .catalogue k => .catalogue k
+  | _+1,  _, .user n => .user n
   | n+1,  s, .prod a b => .prod (MTy.apply n s a) (MTy.apply n s b)
   | n+1,  s, .list a => .list (MTy.apply n s a)
   | n+1,  s, .arr a b => .arr (MTy.apply n s a) (MTy.apply n s b)
@@ -100,7 +104,7 @@ def MTy.applyS (s : Subst) (t : MTy) : MTy := MTy.apply applyFuel s t
 
 def MTy.occurs (i : Nat) : MTy → Bool
   | .mvar j => decide (i = j)
-  | .hex | .bool | .cell | .quoted | .catalogue _ => false
+  | .hex | .bool | .cell | .quoted | .catalogue _ | .user _ => false
   | .prod a b => MTy.occurs i a || MTy.occurs i b
   | .list a => MTy.occurs i a
   | .arr a b => MTy.occurs i a || MTy.occurs i b
@@ -138,6 +142,10 @@ def unify : Nat → Subst → MTy → MTy → Except UnifyErr Subst
       | .quoted, .quoted => .ok s
       | .catalogue k1, .catalogue k2 =>
           if k1 = k2 then .ok s else .error (.mismatch a' b')
+      -- wen-2.0 ④ user types unify iff their names match exactly.
+      -- `.mvar ↔ .user` is handled by the mvar cases above.
+      | .user n1, .user n2 =>
+          if n1 = n2 then .ok s else .error (.mismatch a' b')
       | .prod x1 y1, .prod x2 y2 =>
           match unify n s x1 x2 with
           | .error e => .error e
@@ -315,6 +323,9 @@ def infer : Nat → MCtx → Tm → InferState →
                                 | .error _ => .error e
                               else .error e
   | _+1,  _, .quote _, st => .ok (.quoted, st)
+  -- wen-2.0 ④ user-ctor: typechecks to `.user typeName` (table validity is
+  -- enforced upstream in the surface elaborator).
+  | _+1,  _, .userCtor tn _, st => .ok (.user tn, st)
   | _+1,  _, t, st =>
       match builtinType t with
       | some ty => .ok (ty, st)
@@ -335,6 +346,7 @@ def zonk : Nat → Subst → MTy → Ty
   | _+1,  _, .cell => .cell
   | _+1,  _, .quoted => .quoted
   | _+1,  _, .catalogue k => .catalogue k
+  | _+1,  _, .user n => .user n
   | n+1,  s, .prod a b => .prod (zonk n s a) (zonk n s b)
   | n+1,  s, .list a => .list (zonk n s a)
   | n+1,  s, .arr a b => .arr (zonk n s a) (zonk n s b)

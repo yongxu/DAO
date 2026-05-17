@@ -147,6 +147,8 @@ def prettyPrintTm : Tm → String
   -- Body should normally be a `.quote` (renders as `「X」`), but we render
   -- whatever it is for diagnostic clarity.
   | .unquote q => "执 " ++ prettyPrintTm q
+  -- wen-2.0 ④: user-ctor renders to its bare ctor name (e.g. "木").
+  | .userCtor _ cn => cn
   | t =>
       -- 22 core builtin + 12 cell-endo 走 builtinGlyph 表
       match builtinGlyph t with

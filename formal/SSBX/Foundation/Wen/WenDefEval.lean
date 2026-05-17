@@ -98,6 +98,12 @@ inductive Value : Type
       (each unfolding consumes one fuel tick), then applies the result to the
       argument.  Fuel exhaustion ⇒ `none` (clean error, no crash). -/
   | fixV     (env : List (String × Value)) (n : String) (body : Tm) : Value
+  /-- wen-2.0 ④ user inductive constructor value.  Opaque to the
+      hex/bool/cell reduction relations; tag carries `typeName` +
+      `ctorName` for downstream consumers (REPL pretty-print, future
+      pattern-match — out of scope for ④).  Operationally it is a
+      first-class value, like a hex literal. -/
+  | userCtorV (typeName ctorName : String) : Value
 deriving Repr
 
 abbrev Env := List (String × Value)
@@ -239,6 +245,8 @@ mutual
     -- the fixV value is unrolled on-demand by applyFuel.  Each unrolling
     -- consumes fuel, so divergent recursion exhausts cleanly.
     | _+1,    env, .fix n _ body => some (.fixV env n body)
+    -- wen-2.0 ④ user-ctor: opaque value tagged with `typeName` + `ctorName`.
+    | _+1,    _,   .userCtor tn cn => some (.userCtorV tn cn)
 
   /-- Fuel-bounded builtin 求值. -/
   def applyBuiltinFuel : Nat → Builtin → List Value → Option Value

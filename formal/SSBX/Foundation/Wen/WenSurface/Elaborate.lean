@@ -551,6 +551,8 @@ def inferTypeDetailed : Ctx → Tm → Except TypeDiag Ty
       | .ok t' =>
           if t = t' then .ok t else .error (.argumentMismatch t t')
       | .error e => .error e
+  -- wen-2.0 ④: user-ctor typechecks to its nominal `.user` type.
+  | _, .userCtor tn _ => .ok (.user tn)
 
 def elabSurfaceTyped (expr : SurfaceExpr) : Except ElabErr TypedTm :=
   match elabSurfaceExpr expr with
