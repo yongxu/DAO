@@ -23,6 +23,11 @@
 5. **Round-trip safety** 不强求 — 仅给可读 output；parser 之 cue resolve
    可能选 alternate glyph，round-trip 留待 follow-up.
 
+   wen-2.0 ⑧ 备注：`所 PRED 者` desugars at parse time to `λ甲. PRED 甲`
+   (a `Tm.abs`)，pretty-prints back as `者 甲 (PRED 甲)`；`Y 之所以 X`
+   desugars to `.app X Y`，pretty-prints back as `X Y`。两种 surface
+   relativization 形式 round-trip 都 lossy，但语义保持（v1 acceptable）。
+
 ## 状态
 
 0 sorry / 0 axiom / 总函数. 关键例由 native_decide 见证.
