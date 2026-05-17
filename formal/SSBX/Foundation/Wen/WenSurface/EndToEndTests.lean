@@ -1013,15 +1013,21 @@ example :
 /-! ### B-7 regression: curried λ + chained `之` without inner parens
 
 Before the fix the chained `之 X 之 Y` after a curried lambda required an
-explicit inner paren — i.e. `（（λ）之 X）之 Y` worked but `（λ）之 X 之 Y`
+explicit inner paren — `（（λ）之 X）之 Y` worked but `（λ）之 X 之 Y`
 emitted `elab error: empty` because the inner `parseSurfaceExprAux` from the
 postfix `appMarker` branch greedy-consumed the trailing `之 Y`, producing a
 single-arg application `(λ) (X Y)` rather than the curried `((λ) X) Y`.
 
-The fix is in `Syntax.lean parsePostfixApplications`: only fold an `之`
-postfix when `acc` surface-types to a function (or is a lambda).  When
-`acc` is hex/bool we surrender the `之` to the outer caller so the chain
-unwinds correctly. -/
+Two coordinated changes in `Syntax.lean parsePostfixApplications`:
+
+* refuse the `之` fold when `acc` is a literal hex/bool constant — its
+  type is fixed and non-functional, so `(乾) 之 X` is never a valid
+  application; surrendering the `之` lets the outer caller resume.
+* the reserve check now counts **consumable** tokens (those before the
+  next close bracket).  Closing `）` previously inflated `rest'.length`
+  so inside a parens-group the reserve mechanism couldn't stop the inner
+  chained `之` fold; the bracket-aware count fixes `（… 同 之 甲 之 乙）`
+  so it parses as `同 甲 乙` rather than `同 (甲 乙)`. -/
 
 /-- B-7 ① bare curried λ + chained 之 applies two args left-associatively. -/
 example :

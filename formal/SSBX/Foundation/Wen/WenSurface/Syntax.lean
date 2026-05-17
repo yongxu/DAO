@@ -258,6 +258,17 @@ def isCloseBracketTok (t : ResolvedTok) : Bool :=
   | .closeBracket => true
   | _ => false
 
+/-- B-7: count tokens up to (but not including) the first close bracket.
+    Used by the appMarker fold's reserve check so the trailing `）` of a
+    parenthesised group doesn't inflate `rest'.length` (which would otherwise
+    let `（… 同 之 甲 之 乙）` mis-fold `甲 之 乙` into `.app 甲 乙` rather
+    than leaving `之 乙` as arg2 of the surrounding `同 …`). -/
+def consumableTokensBefore : List ResolvedTok → Nat
+  | [] => 0
+  | t :: rest =>
+      if isCloseBracketTok t then 0
+      else 1 + consumableTokensBefore rest
+
 /-- wen-2.0 ⑦: `者` syntax marker test.  Distinguishing this lets the
     postfix-dispatch branch of `parsePostfixApplications` fire the
     nominalizer rule when `者` follows a complete predicate expression. -/
@@ -911,25 +922,32 @@ mutual
           else
             .ok (acc, head :: rest)
         else if isApplicationMarkerTok head then
-          -- B-7: only fold `之 ARG` into `(acc ARG)` when `acc` is a function
-          -- (or a lambda).  Otherwise `(NON-FN) 之 X 之 Y` would inner-recurse
-          -- on `[X, 之, Y]` and greedily produce `(X Y)`, which the outer
-          -- marker then mis-applies to `acc` as a *single* arg.  Surrendering
-          -- the `之` here lets the outer caller resume the chain so curried
-          -- lambdas (`（λ甲 λ乙 BODY）之 X 之 Y`) parse without inner parens.
-          let accIsFunctional : Bool :=
-            match surfaceExprTypeWithCtx? ctx acc with
-            | some (.arr _ _) => true
-            | _ =>
-                match lambdaParts? acc with
-                | some _ => true
-                | none => false
-          if !accIsFunctional then
+          -- B-7: refuse the `之 ARG` fold when:
+          --   ① `acc` is a literal hex/bool constant — its type is fixed and
+          --      non-functional, so `(乾) 之 X` is never a valid application;
+          --      surrendering the `之` here lets the outer caller resume the
+          --      chain (`（λ甲 λ乙 BODY）之 X 之 Y` must not greedy-fold the
+          --      trailing `之 Y` into the inner-recursive parse).
+          --   ② the reserve check on **consumable** tokens (i.e. those before
+          --      the next close bracket) fails.  Closing `）` previously
+          --      inflated `rest'.length` so inside a parens-group the reserve
+          --      mechanism couldn't stop the inner chained `之` fold; using a
+          --      bracket-aware count fixes `（… 同 之 甲 之 乙）` so it parses
+          --      as `同 甲 乙` instead of `同 (甲 乙)`.
+          let accIsLiteralNonFn : Bool :=
+            match acc with
+            | .atom tok =>
+                match tok.atom with
+                | .hexConst _ => true
+                | .boolConst _ => true
+                | _ => false
+            | _ => false
+          if accIsLiteralNonFn then
             .ok (acc, head :: rest)
           else
             match parseSurfaceExprAux ctx allowInfix n reserve rest with
             | .ok (arg, rest') =>
-                if decide (reserve <= rest'.length) then
+                if decide (reserve <= consumableTokensBefore rest') then
                   parsePostfixApplications ctx allowInfix n reserve (.marker head (.app acc arg)) rest'
                 else
                   .ok (acc, head :: rest)
