@@ -341,6 +341,41 @@ import SSBX.Foundation.Doctrine.LawvereTheory
 -- Cross-dep on G1: instance `LawvereTheory T ⇒ LawvereTheorySig T`.
 import SSBX.Foundation.Doctrine.EnrichedLawvereTheory
 
+-- GUT-C Phase 1 (2026-05-18): Mathlib-PR-3 vendor for V-enriched
+-- universal sayability program. Per
+-- `docs-next/10_formal_形式/enriched-universal-sayability-plan.md`.
+-- These 5 files mirror the structure of upcoming Mathlib PRs (the plan's
+-- §4.2 Sub-PRs 3.1-3.5):
+--   * Cotensor.lean    — V-cotensor / power class (Kelly 1982 §3.7)
+--   * Weighted.lean    — Weighted V-limits (object-level skeleton)
+--   * Monad.lean       — V-enriched monad (data + axiom placeholders)
+--   * Finitary.lean    — Finitary V-monad class
+--   * Power.lean       — Power 1999 Theorem 4.5 statement (proof = sorry-free
+--                        statement-only via True; full proof in Phase 1.5
+--                        elaboration)
+-- Status: Phase 1 SCAFFOLDING — class signatures + dependency wiring; the
+-- mathematical content (V-naturality axioms, universal-property proofs,
+-- Power 4.5's constructive equivalence) is `True`/placeholder for the
+-- minimum-viable Phase 1 deliverable. Phase 2-4 build on these as a layered
+-- skeleton; each placeholder is a documented TODO for elaboration.
+import SSBX.Foundation.Enriched.Cotensor
+import SSBX.Foundation.Enriched.Weighted
+import SSBX.Foundation.Enriched.Monad
+import SSBX.Foundation.Enriched.Finitary
+import SSBX.Foundation.Enriched.Power
+
+-- GUT-C Phase 3 (2026-05-18): Hilbert continuous substrate (V = FinHilb).
+-- Per plan §6. Phase 3 SCAFFOLDING: records intent + type placeholders;
+-- actual FinHilb SMCC structure + TGUTRealisationCore_Hilb instance is
+-- Phase 3.1-3.4 follow-up work (Mathlib upstream + SSBX-local).
+import SSBX.Foundation.Doctrine.Instance.HilbertEnriched
+
+-- GUT-C Phase 4 (2026-05-18): V-enriched universal sayability statement.
+-- Per plan §7. Phase 4 SCAFFOLDING: statement-only via True placeholder;
+-- proof routes through Phase 1.5 Power 4.5 once that lands. Non-vacuous
+-- Hilb instantiation is Phase 4.1 follow-up.
+import SSBX.Foundation.Doctrine.T_GUT_Enriched
+
 -- GUT-C Path C Doctrine: T_GUT Lawvere theory skeleton.
 -- Per docs-next/00_start/gut-c-doctrine.md v0.2 §§3.3, 3.4, 3.5.
 -- Defines the signature `TGUTOp`, equational laws `TGUTLaw`, and the
