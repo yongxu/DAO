@@ -114,6 +114,17 @@ def renderLexErr (source : String) : LexErr → String
 
 /-! ## § 5  ResolveErr 渲染 -/
 
+/-- 渲染 hex-compound starter 之示例名清单（最多前 N 条），用作 B-10 error 之
+    内联提示。 -/
+def renderHexCompoundExamples (examples : List String) (maxShown : Nat := 4) : String :=
+  let shown := examples.take maxShown
+  let body := String.intercalate " / " shown
+  let extra :=
+    if examples.length > maxShown then ", …"
+    else if examples.length = 0 then ""
+    else ""
+  body ++ extra
+
 def renderResolveErr (source : String) : ResolveErr → String
   | .noReading surface col =>
       withCaret source col (surface.toList.length) ++ "\n"
@@ -135,6 +146,18 @@ def renderResolveErr (source : String) : ResolveErr → String
         ++ "resolve error at column " ++ toString col ++ ":\n"
         ++ "  '" ++ surface ++ "' is an unpromoted gap-form hexagram surface;\n"
         ++ "  use the canonical surface instead"
+  | .hexCompoundStarter surface col examples =>
+      withCaret source col (surface.toList.length) ++ "\n"
+        ++ "resolve error at column " ++ toString col ++ ":\n"
+        ++ "  '" ++ surface ++ "' is a hex compound starter ("
+        ++ renderHexCompoundExamples examples
+        ++ ") — write the full hex name"
+  | .schoolNamespaceName surface col =>
+      withCaret source col (surface.toList.length) ++ "\n"
+        ++ "resolve error at column " ++ toString col ++ ":\n"
+        ++ "  '" ++ surface
+        ++ "' is a 学派 namespace name, not an expression — try `用 "
+        ++ surface ++ "` to activate"
 
 /-! ## § 6  ParseErr 渲染 -/
 
@@ -427,6 +450,89 @@ example :
     let err := WenSurfaceErr.resolve (.unpromotedHexagramGap "鼎" 0)
     let out := renderWenSurfaceErr src err
     containsSubstring out "unpromoted" = true := by native_decide
+
+/-! ### B-10 / B-11  Informative classifications -/
+
+/-- B-10: hex-compound starter error includes glyph + examples + actionable hint. -/
+example :
+    let src := "大"
+    let err := WenSurfaceErr.resolve (.hexCompoundStarter "大" 0
+      ["大有", "大畜", "大过", "大壮"])
+    let out := renderWenSurfaceErr src err
+    containsSubstring out "hex compound starter" = true
+      ∧ containsSubstring out "大" = true
+      ∧ containsSubstring out "大有" = true
+      ∧ containsSubstring out "大壮" = true
+      ∧ containsSubstring out "write the full hex name" = true
+      ∧ ((out.splitOn "\n").head? = some "大") := by native_decide
+
+/-- B-10: end-to-end 「大」 — pipeline 自动产 hexCompoundStarter classification
+    (via resolveCatalogueByTable; 大 同时是 unpromoted-gap, compound 起字优先). -/
+example :
+    let out := renderForInput "大"
+    containsSubstring out "hex compound starter" = true
+      ∧ containsSubstring out "write the full hex name" = true := by native_decide
+
+/-- B-10: 中 单字 — 是 hex 复合 starter (中孚) 但有 4 个 catalogue readings,
+    走 ambiguous 分支，不进 classifyNoReading。这是当前行为；测试用
+    synthetic err 守护 renderer. -/
+example :
+    let src := "中"
+    let err := WenSurfaceErr.resolve (.hexCompoundStarter "中" 0 ["中孚"])
+    let out := renderWenSurfaceErr src err
+    containsSubstring out "中孚" = true
+      ∧ containsSubstring out "hex compound starter" = true := by native_decide
+
+/-- B-10: 多于 4 个示例时会显示截断 ", …". -/
+example :
+    let src := "大"
+    let err := WenSurfaceErr.resolve (.hexCompoundStarter "大" 0
+      ["大有", "大畜", "大过", "大壮", "大過", "大壯"])
+    let out := renderWenSurfaceErr src err
+    containsSubstring out "…" = true
+      ∧ containsSubstring out "大有" = true
+      ∧ containsSubstring out "大壮" = true := by native_decide
+
+/-- B-11: schoolNamespaceName error suggests the 用 NS form. -/
+example :
+    let src := "墨经"
+    let err := WenSurfaceErr.resolve (.schoolNamespaceName "墨经" 0)
+    let out := renderWenSurfaceErr src err
+    containsSubstring out "学派 namespace" = true
+      ∧ containsSubstring out "墨经" = true
+      ∧ containsSubstring out "`用 墨经`" = true
+      ∧ containsSubstring out "not an expression" = true
+      ∧ ((out.splitOn "\n").head? = some "墨经") := by native_decide
+
+/-- B-11: end-to-end 「墨经」(实际是两个单字 token 墨 + 经) — 第一个 token 墨
+    本身是已知学派 surface，触发 schoolNamespaceName 分类。 -/
+example :
+    let out := renderForInput "墨"
+    containsSubstring out "学派 namespace" = true
+      ∧ containsSubstring out "用 墨" = true := by native_decide
+
+/-- B-11: 中庸 单作为 token 输入：lex 为单字 中 + 庸；
+    中 有 4 catalogue readings → ambiguous 不走 noReading；
+    所以 schoolNamespaceName 走在 noReading 之上而非 ambiguous 之上。
+    Synthetic 测试守护 renderer 端文本. -/
+example :
+    let src := "中庸"
+    let err := WenSurfaceErr.resolve (.schoolNamespaceName "中庸" 0)
+    let out := renderWenSurfaceErr src err
+    containsSubstring out "中庸" = true
+      ∧ containsSubstring out "用 中庸" = true := by native_decide
+
+/-- renderHexCompoundExamples: 前 4 个用 / 分隔，多余 ", …". -/
+example :
+    renderHexCompoundExamples ["大有", "大畜", "大过", "大壮"]
+      = "大有 / 大畜 / 大过 / 大壮" := by native_decide
+
+example :
+    renderHexCompoundExamples ["大有", "大畜", "大过", "大壮", "大過"]
+      = "大有 / 大畜 / 大过 / 大壮, …" := by native_decide
+
+example : renderHexCompoundExamples [] = "" := by native_decide
+example : renderHexCompoundExamples ["中孚"] = "中孚" := by native_decide
 
 /-- parse expectedExpression with non-empty source. -/
 example :
