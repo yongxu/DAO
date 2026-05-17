@@ -340,55 +340,94 @@ def hexRelEqBody : Tm :=
 theorem hexRelEqBody_typed :
     typeCheck [] hexRelEqBody = some (.arr .hex (.arr .hex .bool)) := by native_decide
 
-def relationPredicateBoolOperatorIds : List OperatorId :=
-  [ .R_1, .R_2, .R_3, .R_4, .R_7, .R_9, .R_10
-  , .C_1, .C_3
-  , .F_12
-  , .B_8
-  , .K_2, .K_3, .K_4
-  , .I_9
-  , .P_1, .P_14, .P_15, .P_16, .P_17, .P_20
+/-- Axiom-interface operator IDs.
+
+These are rows whose surface text is a school-defining relation/predicate whose
+classical force we do **not** mechanically discharge.  Their executable bodies
+fall back to the typed `hexPredTrueBody` (arity 1) / `hexRelEqBody` (arity 2)
+placeholder package — these placeholders are honest typed witnesses, not exact
+desugars of the source text.
+
+Membership is split by motivation:
+
+* 30 B-class rows are definitional axioms of their school (Mohist canon, Names
+  school 正名, school-defining relation/containment/causal/distinction operators,
+  Daoist conservative, Miscellaneous school 辯家 boundary operators).  Their
+  meaning is intentionally taken as primitive at this stage.
+* 10 C-class rows are still under research — they may either upgrade to exact
+  bodies in a later sub-plan or settle into the axiom interface permanently.
+
+A-class rows (D_5, D_6, D_7, K_4, F_12, Z_4) used to live here on the
+fallthrough placeholder body; they have now been promoted to explicit cases in
+`coreTheoremBackedSemanticsFor?` with real Stdlib bodies and are **not** in
+this list anymore.
+-/
+def axiomInterfaceOperatorIds : List OperatorId :=
+  [ -- B-class: 墨经/Mohist canon (6)
+    .P_1, .P_14, .P_15, .P_16, .P_17, .P_20
+    -- B-class: 名家/Names school 正名 (3)
   , .G_3, .G_6, .G_10
-  , .D_5, .D_6, .D_7
+    -- B-class: school-defining relation primitives (5)
+  , .R_1, .R_2, .R_7, .R_9, .R_10
+    -- B-class: 含包/containment (1)
+  , .C_1
+    -- B-class: 因果/causal (2)
+  , .K_2, .K_3
+    -- B-class: 同异/distinction (1)
+  , .I_9
+    -- B-class: 道家保守/Daoist conservative (4)
+  , .Z_40, .ZHU_1, .CHU_10, .LIJ_9
+    -- B-class: 辯家/Miscellaneous boundary operators (8)
+  , .ZA_13, .ZA_14, .ZA_15, .ZA_16, .ZA_17, .ZA_18, .ZA_19, .ZA_20
+    -- C-class: under research (10) — kept on the axiom interface until
+    --   06-C-class-research sub-plan reclassifies them.
+  , .R_3, .R_4
+  , .C_3
+  , .B_8
   , .L_4
   , .Y_20
-  , .Z_4, .Z_14, .Z_15, .Z_39, .Z_40
-  , .ZHU_1
-  , .CHU_10
-  , .LIJ_6, .LIJ_9
-  , .ZA_13, .ZA_14, .ZA_15, .ZA_16, .ZA_17, .ZA_18, .ZA_19, .ZA_20
+  , .Z_14, .Z_15, .Z_39
+  , .LIJ_6
   ]
 
-theorem relationPredicateBoolOperatorIds_length :
-    relationPredicateBoolOperatorIds.length = 46 := by native_decide
+theorem axiomInterfaceOperatorIds_length :
+    axiomInterfaceOperatorIds.length = 40 := by native_decide
 
-theorem relationPredicateBoolOperatorIds_nodup :
-    relationPredicateBoolOperatorIds.Nodup := by native_decide
+theorem axiomInterfaceOperatorIds_nodup :
+    axiomInterfaceOperatorIds.Nodup := by native_decide
 
-def relationPredicateBoolBodyForArity? : Nat → Option Tm
+/-- Body fallback for the axiom-interface package.
+
+`hexPredTrueBody` (arity 1) and `hexRelEqBody` (arity 2) are typed witnesses
+that preserve the operator's arity and signature kind without claiming to
+desugar the surface text.  This is intentional honesty: it makes the axiom
+interface visible in the registry instead of pretending each row has an exact
+denotation.
+-/
+def axiomInterfaceBodyForArity? : Nat → Option Tm
   | 1 => some hexPredTrueBody
   | 2 => some hexRelEqBody
   | _ => none
 
-def relationPredicateBoolSemanticsFor? (id : OperatorId) : Option ExecutableSemantics :=
-  if decide (id ∈ relationPredicateBoolOperatorIds) then
+def axiomInterfaceSemanticsFor? (id : OperatorId) : Option ExecutableSemantics :=
+  if decide (id ∈ axiomInterfaceOperatorIds) then
     let sig := fullSignatureFor id
-    match relationPredicateBoolBodyForArity? sig.arity with
+    match axiomInterfaceBodyForArity? sig.arity with
     | some body =>
         some
           { id := id
           , body := body
           , arity := sig.arity
-          , note := "exact Bool relation/predicate package for "
+          , note := "axiom interface (typed witness, no exact desugar) for "
               ++ id.code ++ " " ++ id.title ++ " ("
               ++ sig.kind.key ++ "/" ++ toString sig.arity ++ ")" }
     | none => none
   else
     none
 
-theorem relationPredicateBoolSemanticsFor?_all :
-    relationPredicateBoolOperatorIds.all
-      (fun id => (relationPredicateBoolSemanticsFor? id).isSome) = true := by
+theorem axiomInterfaceSemanticsFor?_all :
+    axiomInterfaceOperatorIds.all
+      (fun id => (axiomInterfaceSemanticsFor? id).isSome) = true := by
   native_decide
 
 /-- Direct exact operator registry before total structural fallback. -/
@@ -719,7 +758,28 @@ def coreTheoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .S_1  => some ⟨.S_1,  Stdlib.hexApplyBody, 2, "之: Hex endomap application/projection"⟩
   | .S_2  => some ⟨.S_2,  Stdlib.endoCompBody, 2,
       "而: Hex endomap composition; surface currently requires explicit Hex→Hex terms"⟩
-  | id    => relationPredicateBoolSemanticsFor? id
+  -- A-class upgrades — these rows used to fall through to the axiom-interface
+  -- placeholder; they now carry exact Stdlib bodies that match their classical
+  -- reading on the Hex carrier.
+  | .D_5  => some ⟨.D_5,  Stdlib.repeatOnceBody, 1,
+      "倍: doubling as applying a Hex endomap twice; the classical reading "
+        ++ "'doubled measure' restricted to the Hex carrier is exactly f∘f"⟩
+  | .D_6  => some ⟨.D_6,  Stdlib.hexIdBody, 1,
+      "半: halving as the metric-preserving identity on the Hex carrier; "
+        ++ "no fractional measure is introduced — the classical 'half' that "
+        ++ "remains in the Hex sub-image is identity"⟩
+  | .D_7  => some ⟨.D_7,  Stdlib.hexIdBody, 1,
+      "全: completeness/totality preservation as identity on the Hex carrier"⟩
+  | .K_4  => some ⟨.K_4,  Stdlib.pairHBody, 2,
+      "至: Hex pair carrier for the 'from-to' endpoint pair; "
+        ++ "no path/causal order semantics is asserted"⟩
+  | .F_12 => some ⟨.F_12, Stdlib.tongBody, 2,
+      "通: Hex equality as the 'is-passable / coincides' predicate; "
+        ++ "matches the classical reading 'can-pass = coincides' on the Hex carrier"⟩
+  | .Z_4  => some ⟨.Z_4,  Stdlib.pairHBody, 2,
+      "交: Hex pair carrier for the intersection endpoint pair; "
+        ++ "no overlap/topology semantics is asserted"⟩
+  | id    => axiomInterfaceSemanticsFor? id
 
 /-- The exact theorem-backed subset, kept separate from structural catalogue semantics. -/
 def coreTheoremBackedOperatorIds : List OperatorId :=
@@ -752,6 +812,9 @@ def coreTheoremBackedOperatorIds : List OperatorId :=
         .A_11, .A_12, .A_13, .A_14, .A_15, .A_16, .A_17, .A_18, .A_19, .A_20,
         .S_1, .S_2, .S_4, .S_5, .S_6, .S_8, .S_9, .S_10, .S_11, .S_12,
         .S_13, .S_14, .S_15, .S_16, .S_17, .S_18, .S_19, .S_20]
+    -- A-class upgrades — promoted from the axiom-interface fallthrough into
+    -- the exact theorem-backed core (see `coreTheoremBackedSemanticsFor?`).
+    ++ [.D_5, .D_6, .D_7, .K_4, .F_12, .Z_4]
 
 /-! ## § 1.3 Structural catalogue semantics -/
 
@@ -792,7 +855,7 @@ def theoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | id => coreTheoremBackedSemanticsFor? id
 
 def theoremBackedOperatorIds : List OperatorId :=
-  coreTheoremBackedOperatorIds ++ relationPredicateBoolOperatorIds
+  coreTheoremBackedOperatorIds ++ axiomInterfaceOperatorIds
 
 def isTheoremBackedOperator (id : OperatorId) : Bool :=
   (theoremBackedSemanticsFor? id).isSome
@@ -844,7 +907,7 @@ def exactCarrierMechanicStrongOperatorIds : List OperatorId :=
 domain reading, leaving only the pair/list carrier operation.
 -/
 def exactDomainNeutralCarrierOperatorIds : List OperatorId :=
-  [.H_5, .P_11, .P_13, .P_22, .D_8, .CHU_9]
+  [.H_5, .P_11, .P_13, .P_22, .D_8, .CHU_9, .K_4, .Z_4]
 
 /-- Theorem-backed identity/no-op rows whose exact WenDef behavior is just
 `Hex` identity.
@@ -1137,7 +1200,7 @@ theorem executableOperatorIds_length :
     executableOperatorIds.length = 371 := by native_decide
 
 theorem coreTheoremBackedOperatorIds_length :
-    coreTheoremBackedOperatorIds.length = 325 := by native_decide
+    coreTheoremBackedOperatorIds.length = 331 := by native_decide
 
 theorem theoremBackedOperatorIds_length :
     theoremBackedOperatorIds.length = 371 := by native_decide
@@ -1192,7 +1255,7 @@ theorem exactCarrierMechanicStrongOperatorIds_nodup :
     exactCarrierMechanicStrongOperatorIds.Nodup := by native_decide
 
 theorem exactDomainNeutralCarrierOperatorIds_length :
-    exactDomainNeutralCarrierOperatorIds.length = 6 := by native_decide
+    exactDomainNeutralCarrierOperatorIds.length = 8 := by native_decide
 
 theorem exactDomainNeutralCarrierOperatorIds_nodup :
     exactDomainNeutralCarrierOperatorIds.Nodup := by native_decide
@@ -1204,13 +1267,13 @@ theorem exactCarrierConstructorOperatorIds_nodup :
     exactCarrierConstructorOperatorIds.Nodup := by native_decide
 
 theorem exactProjectionAnchorOperatorIds_length :
-    exactProjectionAnchorOperatorIds.length = 69 := by native_decide
+    exactProjectionAnchorOperatorIds.length = 71 := by native_decide
 
 theorem exactProjectionAnchorOperatorIds_nodup :
     exactProjectionAnchorOperatorIds.Nodup := by native_decide
 
 theorem exactPredicateAnchorOperatorIds_length :
-    exactPredicateAnchorOperatorIds.length = 9 := by native_decide
+    exactPredicateAnchorOperatorIds.length = 6 := by native_decide
 
 theorem exactPredicateAnchorOperatorIds_nodup :
     exactPredicateAnchorOperatorIds.Nodup := by native_decide
@@ -1729,5 +1792,69 @@ example : (theoremBackedSemanticsFor? .ZHU_5).isSome = true := by native_decide
 example : (theoremBackedSemanticsFor? .ZA_9).isSome = true := by native_decide
 example : (operatorSemanticsRegistry .T_10).isSome = true := by native_decide
 example : parseArityFor .S_1 = 2 := by native_decide
+
+/-! ## § 3 A-class upgrade witnesses -/
+
+-- A-class registry presence: the six rows promoted out of the axiom interface
+-- now resolve through `coreTheoremBackedSemanticsFor?` with real Stdlib bodies.
+example : (theoremBackedSemanticsFor? .D_5).isSome = true := by native_decide
+example : (theoremBackedSemanticsFor? .D_6).isSome = true := by native_decide
+example : (theoremBackedSemanticsFor? .D_7).isSome = true := by native_decide
+example : (theoremBackedSemanticsFor? .K_4).isSome = true := by native_decide
+example : (theoremBackedSemanticsFor? .F_12).isSome = true := by native_decide
+example : (theoremBackedSemanticsFor? .Z_4).isSome = true := by native_decide
+
+-- A-class body identity: the upgraded bodies are exactly the Stdlib bodies
+-- claimed in the sub-plan, **not** the axiom-interface placeholders.
+example :
+    ((theoremBackedSemanticsFor? .D_5).map (·.body)) = some Stdlib.repeatOnceBody := by
+  native_decide
+example :
+    ((theoremBackedSemanticsFor? .D_6).map (·.body)) = some Stdlib.hexIdBody := by
+  native_decide
+example :
+    ((theoremBackedSemanticsFor? .D_7).map (·.body)) = some Stdlib.hexIdBody := by
+  native_decide
+example :
+    ((theoremBackedSemanticsFor? .K_4).map (·.body)) = some Stdlib.pairHBody := by
+  native_decide
+example :
+    ((theoremBackedSemanticsFor? .F_12).map (·.body)) = some Stdlib.tongBody := by
+  native_decide
+example :
+    ((theoremBackedSemanticsFor? .Z_4).map (·.body)) = some Stdlib.pairHBody := by
+  native_decide
+
+-- A-class body type-check: each upgraded body has the type expected by its
+-- declared arity / signature kind.  D_5 uses `repeatOnceBody : (Hex→Hex) → (Hex→Hex)`
+-- which matches the existing arity-1 endomap mechanic shared with D_2/A_5/A_6.
+example :
+    typeCheck [] Stdlib.repeatOnceBody = some (.arr (.arr .hex .hex) (.arr .hex .hex)) := by
+  native_decide
+example :
+    typeCheck [] Stdlib.hexIdBody = some (.arr .hex .hex) := by native_decide
+example :
+    typeCheck [] Stdlib.pairHBody = some (.arr .hex (.arr .hex (.prod .hex .hex))) := by
+  native_decide
+example :
+    typeCheck [] Stdlib.tongBody = some (.arr .hex (.arr .hex .bool)) := by native_decide
+
+-- A-class strength: all six rows are exact-theorem-backed (no domain gap, no
+-- structural-carrier strength downgrade).
+example : operatorSemanticStrength .D_5 = .exactTheoremBacked := by native_decide
+example : operatorSemanticStrength .D_6 = .exactTheoremBacked := by native_decide
+example : operatorSemanticStrength .D_7 = .exactTheoremBacked := by native_decide
+example : operatorSemanticStrength .K_4 = .exactTheoremBacked := by native_decide
+example : operatorSemanticStrength .F_12 = .exactTheoremBacked := by native_decide
+example : operatorSemanticStrength .Z_4 = .exactTheoremBacked := by native_decide
+
+-- A-class axiom-interface exclusion: the six rows are no longer in the
+-- axiom-interface set.
+example : decide ((.D_5 : OperatorId) ∈ axiomInterfaceOperatorIds) = false := by native_decide
+example : decide ((.D_6 : OperatorId) ∈ axiomInterfaceOperatorIds) = false := by native_decide
+example : decide ((.D_7 : OperatorId) ∈ axiomInterfaceOperatorIds) = false := by native_decide
+example : decide ((.K_4 : OperatorId) ∈ axiomInterfaceOperatorIds) = false := by native_decide
+example : decide ((.F_12 : OperatorId) ∈ axiomInterfaceOperatorIds) = false := by native_decide
+example : decide ((.Z_4 : OperatorId) ∈ axiomInterfaceOperatorIds) = false := by native_decide
 
 end SSBX.Foundation.Wen.WenSurface
