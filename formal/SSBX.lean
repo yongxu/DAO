@@ -419,6 +419,80 @@ import SSBX.Foundation.Order.FrameBimorphism
 -- commit γ.3-topological + γ.4 paper.
 import SSBX.Foundation.Doctrine.Instance.Quantum
 
+-- R-tower ↔ Riemann ζ bridge program — Step 2 (char-p → char-0 lift).
+-- Per session 2026-05-17 conversation: a second algebraic T_GUT realisation
+-- whose generator object is `WittVector p (ZMod p) ≃ ℤ_p` (the p-adic
+-- integers — characteristic 0 lift of the algebraic instance).
+-- Provides:
+--   * `TGUTRealisation.witt p` — char-0 companion of `algebraic p`.
+--   * Teichmüller lift `algebraic → witt` (multiplicative section).
+--   * Reduction-mod-p `witt → algebraic` (ring map; `constantCoeff`-wise).
+--   * Round-trip identity `reduction ∘ teichmuller = id`.
+--   * Frobenius compatibility (`frobenius_zmodp`-based recovery).
+-- 0 sorries, 0 axioms; pure Mathlib WittVector API.
+import SSBX.Foundation.Doctrine.Instance.WittLift
+
+-- R-tower ↔ Riemann ζ bridge program — Step 3 (archimedean continuous Sq^t).
+-- Per session 2026-05-17 conversation: continuous one-parameter extension
+-- of the discrete squaring generator `square_mor`, closing the archimedean
+-- / `v = ∞` place at the GUT-C T_GUT framework level.
+-- Provides:
+--   * `cSq : ℝ → (NNReal → NNReal)` — continuous Sq with one-parameter
+--     group law `cSq (s+t) = cSq s ∘ cSq t`.
+--   * Integer recovery `cSq k x = x^(2^k)` — discrete R-tower at t ∈ ℕ.
+--   * `SpectralSequence` + `integerSpectrum` — the integer eigenvalue
+--     sequence whose formal Dirichlet series is `riemannZeta`.
+--   * `RiemannHypothesisStatement : Prop` — the canonical RH statement-
+--     site inside the SSBX library (open problem; not proved).
+-- 0 sorries, 0 axioms; uses Mathlib `NNReal.rpow` + `riemannZeta`.
+import SSBX.Foundation.Doctrine.Instance.QuantumContinuous
+
+-- R-tower ↔ Riemann ζ bridge program — Step 4 (spectral ζ + RH statement-site).
+-- Per session 2026-05-17 conversation: the research-stage entry-point for
+-- the Riemann hypothesis inside the SSBX framework.  Builds the Dirichlet-
+-- series spectral zeta, identifies it with Mathlib's `riemannZeta` on the
+-- integer spectrum, and proves the cSq scaling identity:
+--   spectralZeta (cSqOnSpectrum t spec) s = spectralZeta spec (s · 2^t)
+-- — the **archimedean-scaling content** of step ④.
+-- Statement-only: RiemannHypothesisSpectralForm (= RH), ConnesWeilPositivity,
+-- and the Connes-Weil ↔ RH conjecture.
+-- 0 sorries on (a)(b)(c); statement-level only on (d)(e) — the research-
+-- level pieces (positivity, trace formula, adele class space).
+import SSBX.Foundation.Doctrine.Instance.SpectralZeta
+
+-- R-tower ↔ Riemann ζ bridge program — Direction B1 (Euler product bridge).
+-- Per session 2026-05-17 conversation strategy discussion (post-step ④):
+-- connects Mathlib's `riemannZeta_eulerProduct` to our `spectralZeta`,
+-- then bridges to the "primes already inside F_{2^∞}^×" observation via:
+--   * `eulerFactor p s` — local zeta factor at prime p
+--   * `primeCyclicEmbedsAtLevel p k` — p ∣ (2^k - 1), the cyclic-embedding witness
+--   * `prime_two_no_cyclic_embedding` — prime 2 is silent multiplicatively
+--   * `fermat_witness_for_cyclic_embedding` — odd primes embed at k = p - 1 (Fermat)
+--   * `primeOrderTwo_pos_of_odd_prime` — minimal level `ord_p(2)`
+--   * `primeRTowerStructure_holds` — existence-side of the R-tower Galois-prime
+--     structure
+-- 0 sorries, 0 axioms.
+import SSBX.Foundation.Doctrine.Instance.EulerBridge
+
+-- R-tower ↔ Riemann ζ bridge program — Direction B2 (cross-SMCC L-functions).
+-- Per session 2026-05-17 strategy discussion: unified L-function library for the
+-- four GUT-C instances (Algebraic, Heyting, Quantum, Topological).
+-- Concrete content:
+--   * `cardSpectrum q` — the geometric spectral sequence `n ↦ q^n`
+--   * `cardSpectralZeta_eq` — closed form `(1 − q^(-s))^(-1)` (Euler factor at q)
+--   * `algebraicCardZeta` / `heytingCardZeta` / `quantumCardZeta` /
+--     `topologicalCardZeta` — instance-specific cardinality zetas
+--   * `heytingCardZeta_eq_quantumCardZeta` — **the Heyting/Quantum cardinality
+--     degeneracy theorem** (both have |δ| = 4, so cardinality zeta cannot
+--     distinguish them; finer invariants needed)
+--   * `spectralZeta_integerSpectrum_as_algebraic_product` — Riemann ζ as a
+--     product of algebraic-instance cardinality zetas over primes
+-- Statement-only Props (research-open): HeytingMobiusZetaConjecture,
+-- QuantumSymplecticZetaConjecture, TopologicalFrameMobiusZetaConjecture,
+-- FinerZetasDistinguishHeytingQuantum.
+-- 0 sorries, 0 axioms on the proved theorems.
+import SSBX.Foundation.Doctrine.Instance.LSeriesSMCC
+
 -- GUT-C Path C Phase γ.3: third non-algebraic T_GUT instance
 -- (topological / δ=Sierpinski Ω, ambient Frm).
 -- Per docs-next/00_start/gut-c-doctrine.md v0.2 §3.4, §4.3 deliverable (2).
