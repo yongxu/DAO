@@ -360,7 +360,7 @@ theorem GUT_A_recovery_via_universal_sayability
     Nonempty (M.R N ≃ SSBX.Foundation.R.R N (ZMod 2)) := by
   -- Step 1: extract the component iso at level N.
   let iso : M.R N ≅ TGUTRealisation.tensorPow (ZMod 2 : Type 0) N :=
-    TGUTRealisation.componentIso (ZMod 2 : Type 0) M N
+    TGUTRealisation.componentIso (ZMod 2 : Type 0) M.toTGUTRealisationCore N
   -- Step 2: convert the `Type 0`-iso to a `Type`-level `Equiv`.
   -- Morphisms in `Type 0` are functions (via `TypeCat.Hom`), and the
   -- iso laws `hom_inv_id / inv_hom_id` give the inverse-pair conditions.

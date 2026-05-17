@@ -679,10 +679,10 @@ theorem quantum_realisation_consistent_with_HilbertPauliFunctor :
     the γ.3-quantum specialisation. -/
 theorem quantum_universal_sayability_witness :
     Nonempty (TGUTRealisation.RealIso
-      (TGUTRealisation.quantum)
+      (TGUTRealisation.quantum.toTGUTRealisationCore)
       (TGUTRealisation.canonical (PauliBase : Type 0))) :=
   TGUTRealisation.universal_sayability (PauliBase : Type 0)
-    TGUTRealisation.quantum
+    TGUTRealisation.quantum.toTGUTRealisationCore
 
 end ConsistencyCheck
 
