@@ -319,27 +319,67 @@ theorem GUT_A_recovery_layerwise (S : P1P7_Satisfier_F2) (N : ℕ) :
   -- definitionally `R N (ZMod 2)`.
   exact ⟨eBool.trans eZMod⟩
 
-/-- **GUT-A recovery — Universal Sayability form (cross-dep on G3)**.
+/-- **`tensorPow δ n ≃ Fin n → δ`** for `δ : Type 0`.
 
-    Combining `T_GUT.universal_sayability` (G3, currently `sorry`) with
-    the algebraic instance: any `T_GUT`-realisation in
-    `(Type 0, ZMod 2)` is iso to the canonical one, hence layerwise
-    equivalent to `R N (ZMod 2)`.
+    In the cartesian-monoidal `Type 0`-category (`⊗ = ×`, `𝟙_ = PUnit`),
+    the tensor-power `tensorPow δ n` unfolds by induction to
+    `PUnit / δ × PUnit / δ × δ × PUnit / …`.  We expose the standard
+    `Type`-level equivalence to `Fin n → δ` (the canonical n-ary
+    cartesian power) by induction on `n`, using `Fin.consEquiv` at the
+    successor step. -/
+def tensorPowEquivPi (δ : Type) : ∀ n,
+    TGUTRealisation.tensorPow (δ : Type 0) n ≃ (Fin n → δ)
+  | 0 =>
+      -- `tensorPow δ 0 = 𝟙_ (Type 0) = PUnit`; `Fin 0 → δ` is unique.
+      { toFun := fun _ i => i.elim0
+        invFun := fun _ => PUnit.unit
+        left_inv := fun p => by cases p; rfl
+        right_inv := fun f => by funext i; exact i.elim0 }
+  | n + 1 =>
+      -- `tensorPow δ (n+1) = δ ⊗ tensorPow δ n = δ × tensorPow δ n`.
+      -- Map via `(id × tensorPowEquivPi δ n)`, then `Fin.consEquiv`.
+      (Equiv.prodCongr (Equiv.refl δ) (tensorPowEquivPi δ n)).trans
+        (Fin.consEquiv (fun _ => δ))
 
-    Statement holds; the proof depends on G3's `sorry` in
-    `T_GUT.universal_sayability` (kept as `sorry` here). -/
+/-- **GUT-A recovery — Universal Sayability form (G3-discharged)**.
+
+    Combining `T_GUT.universal_sayability` (G3, now proved at the
+    structural level via `componentIso`) with the algebraic instance:
+    any `T_GUT`-realisation `M` in `(Type 0, ZMod 2)` is iso to the
+    canonical one, hence layerwise equivalent to `R N (ZMod 2)`.
+
+    **Proof structure**:
+    1. `componentIso (ZMod 2) M N : M.R N ≅ tensorPow (ZMod 2) N` in
+       the category `Type 0`; convert the categorical iso to an `Equiv`
+       via `iso.hom / iso.inv` (morphisms in `Type 0` are functions).
+    2. `tensorPowEquivPi (ZMod 2) N : tensorPow (ZMod 2) N ≃
+       Fin N → ZMod 2` (= `R N (ZMod 2)` definitionally).
+    3. Compose the two equivs. -/
 theorem GUT_A_recovery_via_universal_sayability
     (M : TGUTRealisation (Type 0) (ZMod 2)) (N : ℕ) :
     Nonempty (M.R N ≃ SSBX.Foundation.R.R N (ZMod 2)) := by
-  -- Per G3's `universal_sayability`, `M ≅ canonical (ZMod 2)`.
-  -- Component at level N gives a `Type 0`-iso = bijection
-  -- `M.R N ≅ tensorPow (ZMod 2) N`.
-  -- Then `tensorPow (ZMod 2) N` is iso (in Type) to `Fin N → ZMod 2 = R N (ZMod 2)`.
-  -- Both steps are recorded as `sorry` (the first identically equals G3's
-  -- universal_sayability `sorry`; the second is the standard
-  -- "tensorPow ZMod q n ≅ Fin n → ZMod q" iso, also routinely a sorry
-  -- in the present skeleton).
-  sorry
+  -- Step 1: extract the component iso at level N.
+  let iso : M.R N ≅ TGUTRealisation.tensorPow (ZMod 2 : Type 0) N :=
+    TGUTRealisation.componentIso (ZMod 2 : Type 0) M N
+  -- Step 2: convert the `Type 0`-iso to a `Type`-level `Equiv`.
+  -- Morphisms in `Type 0` are functions (via `TypeCat.Hom`), and the
+  -- iso laws `hom_inv_id / inv_hom_id` give the inverse-pair conditions.
+  let eIso : M.R N ≃ TGUTRealisation.tensorPow (ZMod 2 : Type 0) N :=
+    { toFun := iso.hom
+      invFun := iso.inv
+      left_inv := fun x => by
+        have h : iso.hom ≫ iso.inv = 𝟙 _ := iso.hom_inv_id
+        exact congrFun (congrArg (fun (f : M.R N ⟶ M.R N) =>
+          (f : M.R N → M.R N)) h) x
+      right_inv := fun x => by
+        have h : iso.inv ≫ iso.hom = 𝟙 _ := iso.inv_hom_id
+        exact congrFun (congrArg (fun
+          (f : TGUTRealisation.tensorPow (ZMod 2 : Type 0) N ⟶
+                TGUTRealisation.tensorPow (ZMod 2 : Type 0) N) =>
+          (f : _ → _)) h) x }
+  -- Step 3: compose with `tensorPowEquivPi`.  Target
+  -- `R N (ZMod 2) = Fin N → ZMod 2` is definitional.
+  exact ⟨eIso.trans (tensorPowEquivPi (ZMod 2) N)⟩
 
 end GUTRecovery
 

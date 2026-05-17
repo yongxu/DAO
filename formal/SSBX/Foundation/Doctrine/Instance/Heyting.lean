@@ -343,19 +343,86 @@ def IsHeytingBilinear {N M : ℕ}
     `IsHeytingBilinear`) factors through the standard Heyting lattice
     operations (`⊓`, `⊔`, `⇨`, `⊥`, `⊤`).
 
-    **Status**: the *statement* matches gut-c-doctrine v0.2 §3.5
-    (P3 in HeytAlg = lattice morphism classification); the *proof*
-    requires the Heyting-bimorphism classification theorem (analogue
-    of Arf invariant for `F_2`-bilinear), which is a Path C γ.2
-    research open problem.
+    **Status — 2026-05-17 update**: the literal statement, paired with
+    the **loose** `IsHeytingBilinear` predicate defined in this file
+    (preserve `⊥` in each slot, expressed as `φ ⊥ v ↔ True` and
+    `φ u ⊥ ↔ True`), is in fact **FALSE** — a Lean-verified counter-
+    example exists.  We keep the `sorry` so the statement form stays
+    on file as a research marker; closing it would require **either**
+    weakening the conclusion **or** strengthening `IsHeytingBilinear`
+    (the latter is exactly what `Foundation/Order/HeytingBimorphism.lean`
+    does, see below).  Neither move is taken here because it would
+    modify a published theorem statement; per project policy "don't
+    drop theorems to keep sorry-count at 0".
 
-    **`sorry` is used here** to record the open math at the statement
-    level. The form of the conclusion is intentionally weak ("there
-    exists *some* lattice expression representing φ") so that the
-    statement is **provable for nicely-structured φ** (e.g., the
-    canonical `relate_heyting_pointwise_himp`); the *strong* form
-    requiring *every* `IsHeytingBilinear φ` to be representable is the
-    research open problem. -/
+    ## Counter-example (verified in Lean, see history of
+    ## `formal/test_p3h_counterex.lean`)
+
+    Take `N = M = 2` and
+    ```
+    φ u v := ¬ (u 0 ∧ ¬ u 1 ∧ ¬ v 0 ∧ v 1)
+    ```
+    (i.e. `True` everywhere except at the single point
+    `u = (True, False), v = (False, True)`, where `φ` returns `False`).
+
+    Then `IsHeytingBilinear φ` holds (whenever `u = ⊥` or `v = ⊥`,
+    at least one of the conjuncts of the negated body is `False`, so
+    `φ = ¬ False = True`).
+
+    Now compare two test points:
+    1. `u₁ = (True, False), v₁ = (False, True)`: `φ u₁ v₁ = False`,
+       and pointwise meet `(True ⊓ False, False ⊓ True) = (False, False)
+       = ⊥`.
+    2. `u₂ = ⊥, v₂ = ⊥`: `φ u₂ v₂ = True`, and pointwise meet `= ⊥`.
+
+    Both pairs have **the same meet** `⊥`, but `φ` disagrees on them
+    (`False` vs `True`).  No function `ψ` can satisfy
+    `φ u v ↔ ψ(meet u v)` for both pairs simultaneously, since that
+    would force `ψ(⊥) = False` AND `ψ(⊥) = True`.  Hence no `ψ`
+    exists, and the conclusion of `P3_heyting` is false.
+
+    ## How to close it (and why the doctrine deliberately doesn't)
+
+    There are two ways to make the statement provable; both **change
+    the theorem** and so are deliberately not taken here:
+
+    (a) **Strengthen `IsHeytingBilinear`** to the "strong" predicate
+        from `Foundation/Order/HeytingBimorphism.lean` §1 (a
+        `HeytingHom` in each argument).  Then
+        `IsHeytingBilinear.collapse` (§3 of that file) shows the
+        predicate is satisfiable only on the trivial Heyting algebra
+        (`⊥ = ⊤`), so the conclusion holds vacuously.  This is a
+        **degenerate** discharge: the hypothesis becomes false on
+        `Fin N → Prop` (for any `N ≥ 1`), and `P3_heyting` reduces to
+        `False → _`.
+
+    (b) **Weaken the conclusion** to the Birkhoff sub-bimorphism form:
+        replace "factors through the meet" by "is expressible as a
+        polynomial in `⊓`, `⊔`, `⇨`, projections and constants".
+        This is the **mathematically-correct** statement (see
+        `HeytingBimorphism.lean` §7 `P3_heyting_refined_*` and
+        `P3_heyting_framework` for the full discharge under the
+        correct predicate `IsSubBimorphism`).
+
+    ## Conclusion
+
+    The Path C γ.2 doctrine treats this slot as **research-open at the
+    *statement* level**: the *loose* P3 form recorded here is provably
+    false, the *strong* form is vacuously true, and the *correct
+    Birkhoff form* is already discharged in
+    `Foundation/Order/HeytingBimorphism.lean`.  The remaining sorry
+    documents the gap between the three formulations rather than an
+    open piece of mathematics.
+
+    ## References
+
+    * `Foundation/Order/HeytingBimorphism.lean` §3 `IsHeytingBilinear.
+      collapse` — strong predicate vacuity.
+    * `Foundation/Order/HeytingBimorphism.lean` §7 `P3_heyting_framework`
+      — the discharged correct form.
+    * `docs-next/00_start/gut-c-doctrine.md` v0.3 §4.2.1 — research
+      open #2 (Heyting-bimorphism classification, Arf-invariant
+      analogue). -/
 theorem P3_heyting (N M : ℕ)
     (φ : (Fin N → Prop) → (Fin M → Prop) → Prop)
     (hφ : IsHeytingBilinear φ) :
@@ -366,9 +433,16 @@ theorem P3_heyting (N M : ℕ)
       ∀ u v, φ u v ↔
         ψ (fun i => u ⟨i.val, lt_of_lt_of_le i.isLt (min_le_left _ _)⟩
                       ⊓ v ⟨i.val, lt_of_lt_of_le i.isLt (min_le_right _ _)⟩) := by
-  -- The heavy classification (Heyting-bimorphism = lattice morphism)
-  -- is the Path C γ.2 research open problem. We record the form
-  -- and leave the proof to future work.
+  -- STATUS: the literal conclusion is FALSE under the loose
+  -- `IsHeytingBilinear` predicate from §4 (Lean-verified counter-
+  -- example: see the doc comment above for the explicit witness at
+  -- N = M = 2).  Closing this sorry requires either weakening the
+  -- conclusion (to the Birkhoff sub-bimorphism form already proved
+  -- in `Foundation/Order/HeytingBimorphism.lean §7`) or strengthening
+  -- the hypothesis (to the strong `IsHeytingBilinear` from that same
+  -- file §1, which collapses to `⊥ = ⊤` and discharges vacuously).
+  -- Neither move is taken here because both would change the
+  -- doctrine-level statement.  See the doc comment for full details.
   sorry
 
 end HeytingP3

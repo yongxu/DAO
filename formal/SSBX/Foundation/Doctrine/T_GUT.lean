@@ -436,11 +436,68 @@ def tensorPow (δ : C) : ℕ → C
 @[simp] theorem tensorPow_succ (δ : C) (n : ℕ) :
     tensorPow δ (n + 1) = δ ⊗ tensorPow δ n := rfl
 
+/-- **Tensor-power additivity** in a monoidal category:
+`δ^⊗(n+m) ≅ δ^⊗n ⊗ δ^⊗m`. Proof is by induction on `n`:
+
+* `n = 0`: `tensorPow δ m ≅ 𝟙_C ⊗ tensorPow δ m` via the inverse left
+  unitor `(λ_ _).symm`.
+* `n = k+1`: chain `tensorPow δ ((k+1)+m) = tensorPow δ ((k+m)+1)
+  = δ ⊗ tensorPow δ (k+m) ≅[IH] δ ⊗ (tensorPow δ k ⊗ tensorPow δ m)
+  ≅[α.symm] (δ ⊗ tensorPow δ k) ⊗ tensorPow δ m
+  = tensorPow δ (k+1) ⊗ tensorPow δ m`.
+
+The first equality uses `Nat.succ_add` (definitional in Lean 4 since
+`(k+1)+m = Nat.succ (k+m) = (k+m)+1`), routed via `eqToIso`. -/
+noncomputable def tensorPow_add (δ : C) :
+    ∀ n m, tensorPow δ (n + m) ≅ tensorPow δ n ⊗ tensorPow δ m
+  | 0,     m => by
+      -- tensorPow δ (0 + m) = tensorPow δ m
+      -- need: tensorPow δ m ≅ tensorPow δ 0 ⊗ tensorPow δ m
+      --                     = 𝟙_C ⊗ tensorPow δ m
+      exact eqToIso (by rw [Nat.zero_add]) ≪≫ (λ_ (tensorPow δ m)).symm
+  | k + 1, m => by
+      -- (k+1) + m = k + m + 1 = (k+m).succ  -- by Nat.succ_add
+      have hcomm : (k + 1) + m = (k + m) + 1 := by omega
+      -- tensorPow δ ((k+m)+1) = δ ⊗ tensorPow δ (k+m)
+      -- IH: tensorPow δ (k+m) ≅ tensorPow δ k ⊗ tensorPow δ m
+      -- δ ⊗ (tensorPow δ k ⊗ tensorPow δ m) ≅ (δ ⊗ tensorPow δ k) ⊗ tensorPow δ m
+      -- = tensorPow δ (k+1) ⊗ tensorPow δ m
+      exact eqToIso (congrArg (tensorPow δ) hcomm)
+        ≪≫ (Iso.refl (δ ⊗ tensorPow δ (k + m)))
+        ≪≫ (Iso.refl δ ⊗ᵢ tensorPow_add δ k m)
+        ≪≫ (α_ δ (tensorPow δ k) (tensorPow δ m)).symm
+
 /-- The canonical T_GUT realisation in `(C, δ)` at the chosen generator
-`δ`. Sends `n ↦ δ^⊗n` (iterated left-associated tensor power). All
-generator morphisms are recorded as `sorry`: the actual proofs require
-the structural coherences (associators, unitors, braidings) that are
-the content of the canonical realisation theorem, deferred to γ.2/γ.3. -/
+`δ`. Sends `n ↦ δ^⊗n` (iterated left-associated tensor power).
+
+**Status (γ.2)**: 2 of 5 generator morphisms closed by genuine universal
+construction:
+* `R_tensor n m`     = `tensorPow_add δ n m`        (additivity iso)
+* `compose_mor N M_` = `(tensorPow_add δ N M_).inv` (inverse of additivity)
+
+**Remaining 3 sorries** — *genuinely non-universal in a general SMCC*:
+
+| field          | type                                         | obstruction |
+|---|---|---|
+| `square_mor N`     | `δ^⊗N ⟶ δ^⊗(2N)`                          | needs a diagonal `δ^N ⟶ δ^N ⊗ δ^N` |
+| `relate_mor N M`   | `δ^⊗N ⟶ δ^⊗M` for arbitrary N, M           | no canonical map between distinct tensor powers |
+| `modal_V4_mor`     | `δ ⟶ δ^⊗2 ⊗ δ^⊗2`                          | needs a diagonal `δ ⟶ δ⊗δ` |
+
+A general symmetric monoidal category does *not* admit a diagonal
+(`δ ⟶ δ ⊗ δ`) — that would make `(C, ⊗)` cartesian. The doctrine
+instances supply these per-base:
+  * `FinVect_{F_q}`: zero morphism (via biproducts) for `relate`;
+                     duplication via `F_q`-bilinearity for `square` / `modal_V4`
+  * `HeytAlg`:        meet diagonal (Heyting is cartesian)
+  * `FdHilb`:         partial isometry / Pauli operators
+  * `Frm`:            frame diagonal (cartesian on frames)
+
+Per `gut-c-doctrine.md` v0.2 §3.5 these are *instance-specific* data,
+not universal. The general `canonical` therefore cannot supply them at
+the SMCC level — that is the *content* of the (3 × 3) base-vs-generator
+classification, not a defect of this construction. Per-instance
+constructors live in `Foundation/Doctrine/Instance/*`.
+-/
 noncomputable def canonical (δ : C) : TGUTRealisation C δ where
   R := tensorPow δ
   R_unit := Iso.refl _
@@ -449,18 +506,21 @@ noncomputable def canonical (δ : C) : TGUTRealisation C δ where
     show tensorPow δ 1 ≅ δ
     -- tensorPow δ 1 = δ ⊗ 𝟙_ C
     exact ρ_ δ
-  R_tensor n m := by
-    -- `tensorPow δ (n + m) ≅ tensorPow δ n ⊗ tensorPow δ m`
-    -- This is the standard left-additivity-of-tensor-powers theorem
-    -- in a monoidal category. The proof is by induction on `n` using
-    -- associators. We sorry it here; full proof is straightforward
-    -- but bulky (~30 LOC) and not load-bearing for the API.
-    exact (by sorry : tensorPow δ (n + m) ≅ tensorPow δ n ⊗ tensorPow δ m)
-  compose_mor N M_ := (by sorry : tensorPow δ N ⊗ tensorPow δ M_ ⟶ tensorPow δ (N + M_))
-  square_mor N := (by sorry : tensorPow δ N ⟶ tensorPow δ (2 * N))
-  relate_mor N M_ := (by sorry : tensorPow δ N ⟶ tensorPow δ M_)
+  R_tensor n m := tensorPow_add δ n m
+  compose_mor N M_ := (tensorPow_add δ N M_).inv
+  square_mor N := by
+    -- See docstring: needs a diagonal δ^N ⟶ δ^N ⊗ δ^N, not available
+    -- in a general SMCC. Deferred to per-instance constructors.
+    exact (by sorry : tensorPow δ N ⟶ tensorPow δ (2 * N))
+  relate_mor N M_ := by
+    -- See docstring above: no canonical δ^⊗N ⟶ δ^⊗M in a general SMCC.
+    -- Deferred to per-instance constructors.
+    exact (by sorry : tensorPow δ N ⟶ tensorPow δ M_)
   hom_mor N M_ := 𝟙 (tensorPow δ (N * M_))
-  modal_V4_mor := (by sorry : tensorPow δ 1 ⟶ tensorPow δ 2 ⊗ tensorPow δ 2)
+  modal_V4_mor := by
+    -- See docstring above: needs a diagonal δ ⟶ δ ⊗ δ which a general
+    -- SMCC does not have. Deferred to per-instance constructors.
+    exact (by sorry : tensorPow δ 1 ⟶ tensorPow δ 2 ⊗ tensorPow δ 2)
   atom_3_mor := 𝟙 (tensorPow δ 3)
   wedderburn_4_mor := Iso.refl _
 
