@@ -126,7 +126,8 @@ def operatorCompoundSurfaceIds : List (String × OperatorId) :=
     包含构式/目录复词，以及完整卦名中不能被拆为单字的 surface。
     扩充时按长度降序排列（最长前缀优先匹配）；同长度内顺序无关. -/
 def multiCharSurfaces : List String :=
-  [ "之又"
+  [ "之所以"  -- wen-2.0 ⑧ reason-extraction marker: `Y 之所以 X`
+  , "之又"
   , "小畜", "同人", "大有", "噬嗑", "无妄", "無妄", "大畜", "大过", "大過"
   , "明夷", "家人", "大壮", "大壯", "归妹", "歸妹", "中孚", "小过", "小過"
   , "既济", "既濟", "未济", "未濟" ]
