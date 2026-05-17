@@ -812,12 +812,17 @@ def leftoverAtomsErr : List ResolvedTok → ParseErr
       | .closeBracket => .unmatchedCloseBracket first.surface first.col
       | _ => .leftoverAtoms (rest.length + 1) first.surface first.col
 
-def parseSurfaceResolved (rs : List ResolvedTok) : Except ParseErr SurfaceExpr :=
+/-- Context-aware variant of `parseSurfaceResolved` — used by wen-2.0 ②
+    `定递` so subsequent statements can reference recursive defs by their
+    Heavenly-Stem var name with the correct function type pre-bound in ctx.
+    The parser's `surfaceExprTypeWithCtx?` consults this ctx for varName
+    typing, which drives application-arity inference. -/
+def parseSurfaceResolvedInCtx (ctx : Ctx) (rs : List ResolvedTok) : Except ParseErr SurfaceExpr :=
   match rs with
   | [] => .error (.expectedExpression 0)
   | _ =>
       let fuel := rs.length * 2 + 1
-      match parseSurfaceExprAux [] true fuel 0 rs with
+      match parseSurfaceExprAux ctx true fuel 0 rs with
       | .error e => .error e
       | .ok (expr, []) => .ok expr
       | .ok (.atom tok, leftover@(_ :: _)) =>
@@ -826,6 +831,9 @@ def parseSurfaceResolved (rs : List ResolvedTok) : Except ParseErr SurfaceExpr :
           else
             .error (leftoverAtomsErr leftover)
       | .ok (_, leftover) => .error (leftoverAtomsErr leftover)
+
+def parseSurfaceResolved (rs : List ResolvedTok) : Except ParseErr SurfaceExpr :=
+  parseSurfaceResolvedInCtx [] rs
 
 def firstAmbiguousResolved? : List ResolvedTok → Option (GlyphTok × List OperatorReading)
   | [] => none
@@ -837,6 +845,18 @@ def firstAmbiguousResolved? : List ResolvedTok → Option (GlyphTok × List Oper
 def parseSurfaceResolvedOrResolveErr (rs : List ResolvedTok)
     : Except (ResolveErr ⊕ ParseErr) SurfaceExpr :=
   match parseSurfaceResolved rs with
+  | .ok expr => .ok expr
+  | .error e =>
+      match firstAmbiguousResolved? rs with
+      | some (tok, candidates) =>
+          .error (.inl (.ambiguous tok.surface tok.startCol candidates))
+      | none => .error (.inr e)
+
+/-- Context-aware variant of `parseSurfaceResolvedOrResolveErr`.  See
+    `parseSurfaceResolvedInCtx`. -/
+def parseSurfaceResolvedOrResolveErrInCtx (ctx : Ctx) (rs : List ResolvedTok)
+    : Except (ResolveErr ⊕ ParseErr) SurfaceExpr :=
+  match parseSurfaceResolvedInCtx ctx rs with
   | .ok expr => .ok expr
   | .error e =>
       match firstAmbiguousResolved? rs with

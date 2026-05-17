@@ -526,12 +526,30 @@ def inferTypeDetailed : Ctx → Tm → Except TypeDiag Ty
       | _, _, .error e => .error e
   -- wen-2.0 ⑥/⑩: quote 一律返 .quoted；body 之类型 / 自由变量不需检查.
   | _, .quote _ => .ok .quoted
+  -- wen-2.0 ②: fix n t body — body must check to t in ctx extended with (n,t).
+  | ctx, .fix n t body =>
+      match inferTypeDetailed ((n, t) :: ctx) body with
+      | .ok t' =>
+          if t = t' then .ok t else .error (.argumentMismatch t t')
+      | .error e => .error e
 
 def elabSurfaceTyped (expr : SurfaceExpr) : Except ElabErr TypedTm :=
   match elabSurfaceExpr expr with
   | .error e => .error e
   | .ok t =>
       match inferTypeDetailed [] t with
+      | .ok ty => .ok ⟨t, ty⟩
+      | .error diag => .error (.typeMismatch diag)
+
+/-- Variant of `elabSurfaceTyped` that elaborates and typechecks in a
+    non-empty context.  Used by wen-2.0 ② `定递` to compile statements that
+    reference recursive defs (the names need a pre-existing type binding
+    so unbound-var diagnostics don't trigger). -/
+def elabSurfaceTypedWithCtx (ctx : Ctx) (expr : SurfaceExpr) : Except ElabErr TypedTm :=
+  match elabSurfaceExprWithCtx ctx expr with
+  | .error e => .error e
+  | .ok t =>
+      match inferTypeDetailed ctx t with
       | .ok ty => .ok ⟨t, ty⟩
       | .error diag => .error (.typeMismatch diag)
 

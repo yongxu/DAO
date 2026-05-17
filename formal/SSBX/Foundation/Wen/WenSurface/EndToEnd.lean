@@ -67,6 +67,28 @@ def wenyanCompile (s : String) : Except WenSurfaceErr TypedTm :=
         | .error e => .error (.elab e)
         | .ok t    => .ok t
 
+/-- Variant of `wenyanCompile` that elaborates and typechecks in a non-empty
+    context — used by wen-2.0 ② `定递` so chunks that reference recursive
+    defs can name them as bound vars during compile, with AST-level
+    substitution applied afterward.  Threads `ctx` through BOTH the parser
+    (`parseSurfaceResolvedInCtx`) and the elaborator
+    (`elabSurfaceTypedWithCtx`) so application-arity inference for var
+    names works against the pre-bound recursive-def types. -/
+def wenyanCompileInCtx (ctx : Ctx) (s : String) : Except WenSurfaceErr TypedTm :=
+  match lexWen s with
+  | .error e => .error (.lex e)
+  | .ok toks =>
+    match resolveWithCuesAllowAmbiguous toks with
+    | .error e => .error (.resolve e)
+    | .ok rs =>
+      match parseSurfaceResolvedOrResolveErrInCtx ctx rs with
+      | .error (.inl e) => .error (.resolve e)
+      | .error (.inr e) => .error (.parse e)
+      | .ok expr =>
+        match elabSurfaceTypedWithCtx ctx expr with
+        | .error e => .error (.elab e)
+        | .ok t    => .ok t
+
 /-- Backward-compatible untyped projection for code that only needs the Tm. -/
 def wenyanCompileTm (s : String) : Except WenSurfaceErr Tm :=
   (wenyanCompile s).map (fun typed => typed.tm)
@@ -192,23 +214,41 @@ def Stmt.body : Stmt → TypedTm
   | .defStmt _ b => b
   | .exprStmt b  => b
 
-/-- Per-definition entry: name + body source + compiled `TypedTm`. -/
+/-- Per-definition entry: name + body source + compiled `TypedTm`.
+    `isRec` distinguishes Wen 1.5 textual `定` defs from Wen 2.0 ② `定递`
+    recursive defs.  For recursive entries the `body` carries the already
+    self-referential `.fix NAME ty body'` Tm; references in subsequent
+    chunks are substituted at the AST level (not textually) to avoid
+    infinite expansion. -/
 structure DefEntry where
   name       : String
   bodySource : String
   body       : TypedTm
+  isRec      : Bool := false
 deriving Repr
 
 /-- Accumulated in-scope definitions, in source order. -/
 abbrev DefEnv := List DefEntry
 
-/-- Wen 1.5 sub-plan 05 errors specific to `def` processing. -/
+/-- Wen 1.5 sub-plan 05 errors specific to `def` processing.
+    wen-2.0 ② extends with:
+      · `recBodyNotLambda` — `定递 NAME 为 BODY` requires BODY to elaborate
+        to a `Tm.abs` (so we can extract the self-reference type).
+      · `recMultiTokenName` — the recursive-def name must be a single
+        resolver token (the `者` binder accepts only single-token vars).
+      · `recNameNotStem` — for v1, `定递` NAMEs are restricted to the 10
+        Heavenly Stems (甲乙丙丁戊己庚辛壬癸) — these are the only glyphs
+        the resolver accepts as bare var names.  Other glyphs would fail
+        to resolve at the call sites of the recursive def. -/
 inductive DefErr where
   | redefinition          (name : String)
   | conflictWithCatalogue (name : String)
   | emptyName
   | missingFor
   | emptyBody
+  | recBodyNotLambda      (name : String)
+  | recMultiTokenName     (name : String)
+  | recNameNotStem        (name : String)
 deriving Repr
 
 /-- Multi-statement program error with `def` support. Extends the base
@@ -229,19 +269,47 @@ def ProgramErrWithDefs.index : ProgramErrWithDefs → Nat
 private def strTrim (s : String) : String := s.trimAscii.toString
 
 /-- True iff the first non-whitespace codepoint(s) of `s` start with the
-    literal `定` keyword used to open a user-defined definition. -/
+    literal `定递` keyword used to open a recursive user-def (wen-2.0 ②).
+    Checked BEFORE `chunkStartsWithDefKeyword` so a `定递 …` line is not
+    confused for a plain `定 递 …` (which would mis-parse name as `递`). -/
+def chunkStartsWithRecDefKeyword (s : String) : Bool :=
+  (strTrim s).startsWith "定递"
+
+/-- True iff the first non-whitespace codepoint(s) of `s` start with the
+    literal `定` keyword used to open a user-defined definition.  Returns
+    `false` for `定递 …` chunks (those are handled by the recursive-def
+    pipeline). -/
 def chunkStartsWithDefKeyword (s : String) : Bool :=
-  (strTrim s).startsWith "定"
+  let t := strTrim s
+  t.startsWith "定" && !t.startsWith "定递"
 
 /-- Parse a chunk starting with `定` into (name, bodySource).
     Splits on the FIRST `为` after the leading `定`. Returns `none` if either
     component is empty after trim. -/
 def parseDefChunk? (s : String) : Option (String × String) :=
   let trimmed := strTrim s
-  if !trimmed.startsWith "定" then none
+  if !trimmed.startsWith "定" || trimmed.startsWith "定递" then none
   else
     let afterDing := strTrim (trimmed.drop 1).toString
     match afterDing.splitOn "为" with
+    | [] => none
+    | [_] => none
+    | nameRaw :: bodyParts =>
+        let bodyRaw := String.intercalate "为" bodyParts
+        let name := strTrim nameRaw
+        let body := strTrim bodyRaw
+        if name.isEmpty || body.isEmpty then none else some (name, body)
+
+/-- Parse a chunk starting with `定递` into (name, bodySource).
+    Splits on the FIRST `为` after the leading `定递`.  Same shape as
+    `parseDefChunk?` but consumes 2 codepoints of the prefix. -/
+def parseRecDefChunk? (s : String) : Option (String × String) :=
+  let trimmed := strTrim s
+  if !trimmed.startsWith "定递" then none
+  else
+    -- drop the 2-codepoint prefix 「定递」
+    let afterDingDi := strTrim (trimmed.drop 2).toString
+    match afterDingDi.splitOn "为" with
     | [] => none
     | [_] => none
     | nameRaw :: bodyParts =>
@@ -306,29 +374,116 @@ def replaceAll (s needle replacement : String) : String :=
   else
     String.intercalate replacement (s.splitOn needle)
 
-/-- Apply all in-scope defs to the chunk by textual substitution.
-    Iterates the env in REVERSE declaration order (most-recent first), so a
-    later def can shadow the name boundary against an earlier def (we already
-    reject re-definition though, so this is mostly future-proofing).  Each
-    occurrence of a defined name is rewritten as 「（BODY_SOURCE）」 (full-width
-    parens) so the lexer treats the body as a grouped sub-expression. -/
+/-- Apply all in-scope **non-recursive** defs to the chunk by textual
+    substitution.  Iterates the env in REVERSE declaration order
+    (most-recent first), so a later def can shadow the name boundary
+    against an earlier def (we already reject re-definition though, so
+    this is mostly future-proofing).  Each occurrence of a defined name
+    is rewritten as 「（BODY_SOURCE）」 (full-width parens) so the lexer
+    treats the body as a grouped sub-expression.
+
+    Recursive (`定递`) entries are **skipped** here — their names are
+    substituted at the AST level by `applyRecDefs` after compilation,
+    avoiding the infinite-loop hazard of textually expanding a body that
+    references itself. -/
 def applyDefs (env : DefEnv) (chunk : String) : String :=
   let go : String → DefEntry → String :=
-    fun acc entry => replaceAll acc entry.name ("（" ++ entry.bodySource ++ "）")
+    fun acc entry =>
+      if entry.isRec then acc
+      else replaceAll acc entry.name ("（" ++ entry.bodySource ++ "）")
   env.reverse.foldl go chunk
+
+/-- After the existing textual pipeline produces a `Tm`, apply AST-level
+    substitution of recursive-def names with their compiled `.fix` Tm.
+    Iterates the env in declaration order (oldest first) so a later rec-def
+    that references an earlier rec-def works.  Uses
+    `WenDef.substTmFree` (capture-avoiding on binders, safe because the
+    replacement is a closed `.fix` term). -/
+def applyRecDefs (env : DefEnv) (t : Tm) : Tm :=
+  env.foldl (fun acc e =>
+    if e.isRec then substTmFree e.name e.body.tm acc else acc) t
+
+/-- Compile-time context that binds each in-scope recursive def's name to
+    its inferred fixpoint type.  Used by `wenyanCompileInCtx` so chunks
+    that reference rec-defs by name don't trigger unbound-var diagnostics
+    during the elaborate / typecheck pass.  Order: most-recent first, so
+    later defs shadow earlier defs of the same name (which we currently
+    reject anyway). -/
+def recDefCtx (env : DefEnv) : Ctx :=
+  env.foldr (fun e acc => if e.isRec then (e.name, e.body.ty) :: acc else acc) []
+
+/-! ### § 2c.3b  Recursive-def name validation + type inference
+
+  The recursive-def name must lex to **exactly one** token (the `者 NAME …`
+  binder only accepts a single var token).  Multi-token names work for
+  textual `定` defs but are rejected by `定递`.
+
+  For a recursive `定递 F 为 BODY`, the desired fixpoint type T must satisfy
+  `body' : T`  in ctx `[(F, T)]`  — i.e. the body's type *with F bound* equals
+  T.  We discover T by trying a small list of candidates; if none fit, the
+  def is rejected. -/
+
+/-- True iff `name` lexes to a single token (acceptable as a `者` binder). -/
+def isSingleTokenName (name : String) : Bool :=
+  match lexWen name with
+  | .error _ => false
+  | .ok toks => toks.length = 1
+
+/-- True iff `name` is one of the 10 Heavenly Stems (甲乙丙丁戊己庚辛壬癸).
+    Only these are accepted as `定递` NAMEs in v1, since the WenSurface
+    resolver (`Reading.surfaceVarNames`) accepts only these glyphs as bare
+    var names — any other glyph would fail to resolve at the call sites of
+    the recursive def. -/
+def isHeavenlyStem (name : String) : Bool :=
+  ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"].contains name
+
+/-- Candidate types for inferring a recursive-def's fixpoint type.
+    Ordered from most-common to least-common; the first that yields a
+    typecheck wins.  Mirrors the candidate list in `Elaborate.lean`'s
+    `者` binder elaborator. -/
+def recFixTyCandidates : List Ty :=
+  [ .arr .hex .hex
+  , .arr .hex (.arr .hex .hex)
+  , .arr .hex .bool
+  , .arr .hex (.arr .hex .bool)
+  , .arr .bool .bool
+  , .arr .bool .hex
+  , .hex
+  , .bool ]
+
+/-- Try each candidate fixpoint type for a recursive def's body.
+    Returns the first `T` such that `typeCheck [(name, T)] body' = some T`. -/
+def findRecFixTy? (name : String) (body : Tm) : Option Ty :=
+  recFixTyCandidates.findSome? fun T =>
+    match typeCheck [(name, T)] body with
+    | some T' => if T = T' then some T else none
+    | none    => none
 
 /-! ### § 2c.4  Main entry: wenyanCompileProgramWithDefs -/
 
-/-- Compile a multi-statement program with `def`-declarations.
+/-- Re-typecheck a `Tm` after AST-level substitution of recursive-def names.
+    Returns `none` if the substituted term no longer typechecks (should not
+    happen given that each replacement is a closed `.fix` of the bound type;
+    safety net only). -/
+private def retypeAfterRecSubst? (t : Tm) : Option TypedTm :=
+  match typeCheck [] t with
+  | some ty => some ⟨t, ty⟩
+  | none    => none
 
-    Each chunk is either a `定 NAME 为 BODY` declaration or an ordinary
-    expression.  Declarations accumulate into a `DefEnv`; subsequent chunks
-    rewrite references to declared names by textual substitution of the
-    declaration's body source before invoking `wenyanCompile`.
+/-- Compile a multi-statement program with `def` / `定递` declarations.
 
-    All chunk-local errors propagate as `.base i e` with the statement index;
-    `def`-specific errors (re-def, catalogue collision, malformed `定` line)
-    propagate as `.defError i e`. -/
+    Each chunk is one of:
+      · `定递 NAME 为 BODY`  — wen-2.0 ② μ-fixpoint recursive def.  Compiles
+        `者 NAME （BODY）` to obtain `.abs NAME T body'`, then wraps as
+        `.fix NAME T body'`.  Subsequent references to NAME are
+        AST-substituted (not textual) so the recursive body's self-reference
+        is preserved without infinite textual expansion.
+      · `定 NAME 为 BODY` — Wen 1.5 non-recursive textual def.
+      · ordinary expression.
+
+    Declarations accumulate into a `DefEnv`.  All chunk-local errors
+    propagate as `.base i e`; `def`-specific failures (re-def, catalogue
+    collision, malformed `定`/`定递` line) propagate as `.defError i e`. -/
 def wenyanCompileProgramWithDefs (s : String)
     : Except ProgramErrWithDefs (List Stmt) :=
   let chunks := splitOnStatementSep s
@@ -336,7 +491,64 @@ def wenyanCompileProgramWithDefs (s : String)
       List String → Except ProgramErrWithDefs (List Stmt)
     | [] => .ok acc.reverse
     | c :: rest =>
-      if chunkStartsWithDefKeyword c then
+      if chunkStartsWithRecDefKeyword c then
+        match parseRecDefChunk? c with
+        | none =>
+          let trimmed := strTrim c
+          let err : DefErr :=
+            if (strTrim (trimmed.drop 2).toString).isEmpty then .emptyName
+            else if !c.contains '为' then .missingFor
+            else .emptyBody
+          .error (.defError i err)
+        | some (name, bodySrc) =>
+          if env.any (fun e => e.name = name) then
+            .error (.defError i (.redefinition name))
+          else if !isSingleTokenName name then
+            .error (.defError i (.recMultiTokenName name))
+          else if !isHeavenlyStem name then
+            -- v1 restriction: 定递 NAME must be a Heavenly Stem so it
+            -- resolves as a bare var at the call sites of the recursive
+            -- def.  Other glyphs would fail to resolve.  (Note: stems
+            -- *do* trip `nameConflictsWithCatalogue` since they resolve
+            -- as varName — that check is intentionally bypassed for
+            -- 定递, which deliberately rebinds a stem to a closed `.fix`.)
+            .error (.defError i (.recNameNotStem name))
+          else
+            -- Compile 者 NAME （expanded BODY）.  Existing non-rec defs are
+            -- textually expanded in BODY first.  The wrapper makes NAME a
+            -- bound var inside BODY so self-references resolve cleanly.
+            -- The outer abs's domain type (`T_outer`) is whatever the
+            -- elaborator picks — we re-infer the *fixpoint* type T
+            -- independently via `findRecFixTy?` because T_outer may differ
+            -- from T when NAME is unused in the body.
+            let expandedBody := applyDefs env bodySrc
+            let wrappedSrc := "者 " ++ name ++ " （" ++ expandedBody ++ "）"
+            match wenyanCompileInCtx (recDefCtx env) wrappedSrc with
+            | .error e => .error (.base i e)
+            | .ok typed =>
+                -- AST-substitute any earlier in-scope rec defs that this
+                -- body uses.  Capture-avoiding subst (`substTmFree`) skips
+                -- the outer 者 NAME binder cleanly.
+                let substituted := applyRecDefs env typed.tm
+                match substituted with
+                | .abs n _ body' =>
+                    match findRecFixTy? n body' with
+                    | none =>
+                        .error (.defError i (.recBodyNotLambda name))
+                    | some fixTy =>
+                        let fixTm : Tm := .fix n fixTy body'
+                        match retypeAfterRecSubst? fixTm with
+                        | none =>
+                            .error (.defError i (.recBodyNotLambda name))
+                        | some recTyped =>
+                            let entry : DefEntry :=
+                              { name := name, bodySource := bodySrc
+                              , body := recTyped, isRec := true }
+                            let env' := env ++ [entry]
+                            go (i + 1) env' (.defStmt name recTyped :: acc) rest
+                | _ =>
+                    .error (.defError i (.recBodyNotLambda name))
+      else if chunkStartsWithDefKeyword c then
         match parseDefChunk? c with
         | none =>
           let trimmed := strTrim c
@@ -352,16 +564,25 @@ def wenyanCompileProgramWithDefs (s : String)
             .error (.defError i (.conflictWithCatalogue name))
           else
             let expanded := applyDefs env bodySrc
-            match wenyanCompile expanded with
+            match wenyanCompileInCtx (recDefCtx env) expanded with
             | .error e => .error (.base i e)
             | .ok typed =>
-                let env' := env ++ [⟨name, bodySrc, typed⟩]
-                go (i + 1) env' (.defStmt name typed :: acc) rest
+                let substituted := applyRecDefs env typed.tm
+                match retypeAfterRecSubst? substituted with
+                | none => .error (.base i (.denoteFailed typed.ty typed.ty))
+                | some typed' =>
+                    let env' := env ++ [⟨name, bodySrc, typed', false⟩]
+                    go (i + 1) env' (.defStmt name typed' :: acc) rest
       else
         let expanded := applyDefs env c
-        match wenyanCompile expanded with
+        match wenyanCompileInCtx (recDefCtx env) expanded with
         | .error e => .error (.base i e)
-        | .ok typed => go (i + 1) env (.exprStmt typed :: acc) rest
+        | .ok typed =>
+            let substituted := applyRecDefs env typed.tm
+            match retypeAfterRecSubst? substituted with
+            | none => .error (.base i (.denoteFailed typed.ty typed.ty))
+            | some typed' =>
+                go (i + 1) env (.exprStmt typed' :: acc) rest
   go 0 [] [] chunks
 
 
@@ -432,15 +653,20 @@ example : replaceAll "hello" "ll" "rr" = "herro" := by native_decide
 /-- `applyDefs`: single def is substituted once per occurrence and wrapped
     in full-width parens. -/
 example :
-    applyDefs [⟨"F", "推 一", ⟨.yi, .hex⟩⟩] "F" = "（推 一）" := by native_decide
+    applyDefs [⟨"F", "推 一", ⟨.yi, .hex⟩, false⟩] "F" = "（推 一）" := by native_decide
 
 /-- Two-def substitution: the env is applied in reverse declaration order
     (most-recent first). -/
 example :
     applyDefs
-      [⟨"F", "推 一", ⟨.yi, .hex⟩⟩, ⟨"G", "凡 甲 同 甲 甲", ⟨.yi, .bool⟩⟩]
+      [⟨"F", "推 一", ⟨.yi, .hex⟩, false⟩, ⟨"G", "凡 甲 同 甲 甲", ⟨.yi, .bool⟩, false⟩]
       "F 与 G"
       = "（推 一） 与 （凡 甲 同 甲 甲）" := by native_decide
+
+/-- Recursive entries are SKIPPED by `applyDefs` (textual substitution would
+    risk infinite expansion; AST-level `applyRecDefs` handles them instead). -/
+example :
+    applyDefs [⟨"F", "推 一", ⟨.yi, .hex⟩, true⟩] "F" = "F" := by native_decide
 
 /-! ## § 3  端到端 sanity tests
 
