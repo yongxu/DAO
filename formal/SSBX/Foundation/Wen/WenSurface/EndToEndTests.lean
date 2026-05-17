@@ -1323,4 +1323,12 @@ example :
     lastExpr.bind (denoteHex ·.tm) = some («生生» 2 «一») := by
   native_decide
 
+/-- (13) Nested def references: `定 三推 为 而 倍推 推；三推 一` ≡ apply 推 thrice. -/
+example :
+    let lastExpr :=
+      (wenyanCompileProgramWithDefs "定 倍推 为 而 推 推；定 三推 为 而 倍推 推；三推 一").toOption
+        |>.bind (·.getLast?) |>.map Stmt.body
+    lastExpr.bind (denoteHex ·.tm) = some («生生» 3 «一») := by
+  native_decide
+
 end SSBX.Foundation.Wen.WenSurface
