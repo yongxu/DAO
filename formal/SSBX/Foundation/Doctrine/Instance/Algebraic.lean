@@ -92,11 +92,14 @@ The file is wired into top-level `SSBX.lean` after the `T_GUT` import.
 
 * **0 new axioms**.
 * **No existing `R/` file modified** — only `SSBX.lean` gets the import.
-* `sorry` only for the `R_tensor` iso (the natural iso
-  `(Fin (n+m) → ZMod q) ≅ (Fin n → ZMod q) × (Fin m → ZMod q)` at the
-  category-theoretic iso level — the underlying `Equiv` is given by
-  `algebraic_squaring_iso` and the `≅` lifting is the standard pattern
-  but produces verbose proofs).
+* `R_tensor` iso DISCHARGED via `Equiv.toIso` lift of
+  `algebraicTensorEquiv` (the natural iso
+  `(Fin (n+m) → ZMod q) ≅ (Fin n → ZMod q) × (Fin m → ZMod q)` lives in
+  the cartesian-monoidal `Type 0`-category where `X ⊗ Y = X × Y`
+  definitionally, so the categorical iso is the lift of the underlying
+  `Equiv`).
+* Remaining `sorry`: only `GUT_A_recovery_via_universal_sayability`
+  (cross-dependency on G3's `T_GUT.universal_sayability`).
 -/
 
 namespace SSBX.Foundation.Doctrine.Instance
@@ -156,10 +159,10 @@ def algebraicTensorEquiv (n m : ℕ) :
     * `atom_3_mor : R 3 → R 3` — identity (involution).
     * `wedderburn_4_mor : R 4 ≅ R 4` — identity iso.
 
-    The `R_tensor` iso is recorded as a `sorry` placeholder; its
-    underlying `Equiv` is `algebraicTensorEquiv` and the categorical
-    lift is a standard but verbose construction (the bridge content
-    delivered by this file does not depend on its detailed proof). -/
+    The `R_tensor` iso is discharged via `(algebraicTensorEquiv q n m).toIso`:
+    the underlying `Equiv` is `algebraicTensorEquiv` and the categorical
+    lift to `≅` works because `X ⊗ Y = X × Y` definitionally in the
+    cartesian-monoidal `Type 0`-category. -/
 noncomputable def TGUTRealisation.algebraic :
     TGUTRealisation (Type 0) (ZMod q) where
   R n := SSBX.Foundation.R.R n (ZMod q)
@@ -187,12 +190,14 @@ noncomputable def TGUTRealisation.algebraic :
       inv_hom_id := by ext _; rfl }
   R_tensor n m :=
     -- `R (n + m) (ZMod q) ≃ R n (ZMod q) × R m (ZMod q)`.
-    -- Underlying Equiv is `algebraicTensorEquiv n m`; the categorical
-    -- iso form requires `funext` ceremony.  Recorded as `sorry`; the
-    -- *Equiv* form is exposed as `algebraicTensorEquiv` and
-    -- `algebraic_squaring_iso` (§4 below).
-    (sorry : SSBX.Foundation.R.R (n + m) (ZMod q)
-              ≅ SSBX.Foundation.R.R n (ZMod q) ⊗ SSBX.Foundation.R.R m (ZMod q))
+    -- The categorical iso in `(Type 0, ⊗ = ×)` is given by lifting the
+    -- underlying `Equiv` via `Equiv.toIso`; the target tensor `⊗`
+    -- unfolds definitionally to cartesian `×` per
+    -- `types_tensorObj_def : X ⊗ Y = X × Y` (Mathlib
+    -- `CategoryTheory.Monoidal.Types.Basic`).  The *Equiv* form is
+    -- exposed as `algebraicTensorEquiv` and `algebraic_squaring_iso`
+    -- (§4 below).
+    (algebraicTensorEquiv q n m).toIso
   compose_mor N M := TypeCat.ofHom (fun p =>
     -- compose_mor : R N × R M → R (N + M) — inverse of direct-sum decomp.
     (algebraicTensorEquiv q N M).symm p)

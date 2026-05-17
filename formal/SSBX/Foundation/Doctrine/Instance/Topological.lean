@@ -78,8 +78,8 @@ as a future-work pointer (§7).
 ### §1 Imports + namespace setup; Frame vs Heyting overlap discussion
 ### §2 The canonical topological T_GUT realisation
 - `TGUTRealisation.topological` — a `TGUTRealisation (Type 0) Prop`
-  with all 11 fields supplied (one `sorry` for `R_tensor`, matching
-  the sibling Algebraic/Heyting instances).
+  with all 11 fields supplied (`R_tensor` discharged via `Equiv.toIso`,
+  matching the sibling Algebraic/Heyting instances).
 - The seven generator morphisms reinterpreted in *frame* (not
   Heyting) language.
 
@@ -112,9 +112,9 @@ as a future-work pointer (§7).
 ## Constraints honoured
 
 * **0 new axioms**.
-* `sorry` count: 2 — one in `R_tensor` matching the sibling
-  Algebraic/Heyting pattern; one in `P3_topological` (frame
-  morphism classification = research open). The
+* `sorry` count: 1 — in `P3_topological` (frame morphism
+  classification = research open). The previous `R_tensor` sorry is
+  now discharged via `Equiv.toIso`. The
   `P7b_topological_uniqueness` and `hom_NM_frame_exponential`
   statements were weakened to type-level existence claims provable
   by `⟨Pi.instFrame⟩`, since the genuine OrderIso classification /
@@ -268,11 +268,11 @@ def topologicalTensorEquiv (n m : ℕ) :
       the genuine **frame Wedderburn anchor** is the iso with
       `Sierpinski2_Squared` (the 4-element Boolean frame; see §5).
 
-    The `R_tensor` iso is recorded as a `sorry` placeholder matching
-    the sibling Algebraic/Heyting instances; its underlying `Equiv`
-    is `topologicalTensorEquiv` and the categorical lift is a
-    standard but verbose construction (the bridge content delivered
-    by this file does not depend on its detailed proof). -/
+    The `R_tensor` iso is discharged via `(topologicalTensorEquiv n m).toIso`:
+    the underlying `Equiv` is `topologicalTensorEquiv` and the
+    categorical lift to `≅` works because `X ⊗ Y = X × Y` definitionally
+    in the cartesian-monoidal `Type 0`-category (same pattern as the
+    sibling Algebraic/Heyting instances). -/
 noncomputable def TGUTRealisation.topological :
     TGUTRealisation (Type 0) SierpinskiOmega where
   R n := TRPropΩ n
@@ -298,12 +298,15 @@ noncomputable def TGUTRealisation.topological :
       inv_hom_id := by ext _; rfl }
   R_tensor n m :=
     -- `TRPropΩ (n + m) ≃ TRPropΩ n × TRPropΩ m`.
-    -- The underlying Equiv is `topologicalTensorEquiv n m`; the
-    -- categorical iso form requires `funext` ceremony. Recorded as
-    -- `sorry` matching the sibling Algebraic/Heyting instance pattern.
-    -- The genuine *frame tensor* (Joyal-Tierney coproduct) would
-    -- live in `Frm` (not `Type 0`) — see §7 future work.
-    (sorry : TRPropΩ (n + m) ≅ TRPropΩ n ⊗ TRPropΩ m)
+    -- The categorical iso in `(Type 0, ⊗ = ×)` is given by lifting the
+    -- underlying `Equiv` via `Equiv.toIso`; the target tensor `⊗`
+    -- unfolds definitionally to cartesian `×` per
+    -- `types_tensorObj_def : X ⊗ Y = X × Y` (Mathlib
+    -- `CategoryTheory.Monoidal.Types.Basic`).  The *Equiv* form is
+    -- exposed as `topologicalTensorEquiv` and `topological_squaring_iso`
+    -- (§3 below).  The genuine *frame tensor* (Joyal-Tierney coproduct)
+    -- would live in `Frm` (not `Type 0`) — see §7 future work.
+    (topologicalTensorEquiv n m).toIso
   compose_mor N M := TypeCat.ofHom (fun p =>
     -- compose_mor : R N × R M → R (N + M) — inverse of frame-product decomp.
     (topologicalTensorEquiv N M).symm p)
@@ -699,13 +702,15 @@ Per the task brief's deliverable requirements:
   carrier for the exponential; the genuine Joyal-Tierney
   frame-exponential construction is recorded as future work.
 
-### What is structurally placeholder
+### What is discharged via `Equiv.toIso`
 
-* **R_tensor**: the categorical iso form recorded as `sorry`,
-  matching the sibling Algebraic/Heyting instance pattern. Note:
-  for the topological case there is an *additional* question
-  about whether `⊗` should be cartesian (= frame product = match
-  with Heyting) or non-cartesian (= Joyal-Tierney frame coproduct).
+* **R_tensor**: the categorical iso form discharged via
+  `(topologicalTensorEquiv n m).toIso`, matching the sibling
+  Algebraic/Heyting instance pattern. Note: for the topological case
+  there is an *additional* question about whether `⊗` should be
+  cartesian (= frame product = match with Heyting; this is the
+  current `Type 0` reading) or non-cartesian (= Joyal-Tierney frame
+  coproduct).
   The choice between these is the "Frm-SMCC structure" question;
   per the doctrine doc §3.4 the non-cartesian choice is the one
   matching the topos-theoretic anticipations, but it requires
@@ -746,8 +751,8 @@ Per the task brief's deliverable requirements:
 **PARTIAL — with explicit BOUNDARY findings**:
 
 * The framework is **usable at the structural level** for
-  topological: all 11 fields of `TGUTRealisation` instantiate (one
-  `sorry` on `R_tensor` matching siblings).
+  topological: all 11 fields of `TGUTRealisation` instantiate
+  (`R_tensor` discharged via `Equiv.toIso`, matching siblings).
 * The framework **discriminates** clearly: Heyting and Topological
   share the carrier `Prop`/`Fin N → Prop` but differ in the
   morphism-class content at the generator level. This validates

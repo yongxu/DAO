@@ -364,6 +364,17 @@ import SSBX.Foundation.Doctrine.Instance.Algebraic
 -- classification is research-level open problem).
 import SSBX.Foundation.Doctrine.Instance.Heyting
 
+-- GUT-C Path C Phase γ.2 sub-deliverable: DiamondH4 uniqueness theorem.
+-- Per docs-next/00_start/gut-c-doctrine.md v0.2 §4.2.2 (DiamondH4 discovery).
+-- Discharges the uniqueness flag on `P7b_heyting` from
+-- Foundation/Doctrine/Instance/Heyting.lean §5: every non-Boolean
+-- 4-element bounded distributive lattice (equivalently, every
+-- non-Boolean 4-element Heyting algebra) is order-isomorphic to
+-- `DiamondH4`.  Proven by `Finset.card_eq_four` enumeration +
+-- exhaustive case-analysis on 16 pairs in the 4-element universe.
+-- **0 sorries, 0 axioms** — fully discharges the open conjecture.
+import SSBX.Foundation.Order.HeytingClassification
+
 -- GUT-C Path C Phase γ.3: second non-algebraic T_GUT instance (quantum / δ=PauliBase).
 -- Per docs-next/00_start/gut-c-doctrine.md v0.2 §3.4, §8.3.
 -- Concrete `TGUTRealisation (Type 0) PauliBase` with stabilizer-quantum-flavour

@@ -32,10 +32,10 @@ Per gut-c-doctrine.md §8.2 (Decision point after Phase γ.2 Heyting):
 
 This file's answer: **YES (PARTIAL) — sufficient to commit γ.3**.
 All 11 fields of `TGUTRealisation` instantiate cleanly at the
-existence/structural level for the Heyting case (`R_tensor` recorded
-as `sorry` per the same pattern as `Foundation/Doctrine/Instance/Algebraic.lean`'s
-algebraic instance). The two reformulations that distinguish Heyting
-from F₂-Boolean are:
+existence/structural level for the Heyting case (`R_tensor` discharged
+via `Equiv.toIso` per the same pattern as
+`Foundation/Doctrine/Instance/Algebraic.lean`'s algebraic instance).
+The two reformulations that distinguish Heyting from F₂-Boolean are:
 
 1. **P3-Heyting**: `relate_mor` interpreted as **Heyting lattice
    morphism** (intuitionistic implication, not F₂-bilinear).
@@ -47,8 +47,8 @@ from F₂-Boolean are:
 ### §1 Imports + namespace setup
 ### §2 The canonical Heyting T_GUT realisation
 - `TGUTRealisation.heyting` — a `TGUTRealisation (Type 0) Prop`
-  with all 11 fields supplied (one `sorry` for `R_tensor`, matching
-  the sibling Algebraic instance).
+  with all 11 fields supplied (`R_tensor` discharged via
+  `Equiv.toIso`, matching the sibling Algebraic instance).
 ### §3 Equivalence with the existing R/Distinction/Prop.lean witness
 - `heyting_R_eq` — definitional equality at every layer.
 - `heyting_equiv_RProp` — identity equivalence with `RProp N`.
@@ -68,9 +68,9 @@ from F₂-Boolean are:
 ## Constraints honoured
 
 * **0 new axioms**.
-* `sorry` count: 2 (one in `R_tensor` matching the Algebraic instance
-  pattern, one in `P3_heyting` recording the research-level open
-  Heyting-bimorphism classification problem).
+* `sorry` count: 1 (in `P3_heyting` recording the research-level open
+  Heyting-bimorphism classification problem). The previous `R_tensor`
+  sorry is now discharged via `Equiv.toIso`.
 * No modifications to existing files.
 * Build target: `lake build SSBX.Foundation.Doctrine.Instance.Heyting`.
 
@@ -193,11 +193,11 @@ def heytingTensorEquiv (n m : ℕ) :
       with `DiamondH4` (the 4-element non-Boolean Heyting algebra;
       see §5 for the statement).
 
-    The `R_tensor` iso is recorded as a `sorry` placeholder (matching
-    the sibling Algebraic instance's pattern); its underlying `Equiv`
-    is `heytingTensorEquiv` and the categorical lift is a standard but
-    verbose construction (the bridge content delivered by this file
-    does not depend on its detailed proof). -/
+    The `R_tensor` iso is discharged via `(heytingTensorEquiv n m).toIso`:
+    the underlying `Equiv` is `heytingTensorEquiv` and the categorical
+    lift to `≅` works because `X ⊗ Y = X × Y` definitionally in the
+    cartesian-monoidal `Type 0`-category (same pattern as the sibling
+    Algebraic instance). -/
 noncomputable def TGUTRealisation.heyting :
     TGUTRealisation (Type 0) Prop where
   R n := HRProp n
@@ -225,12 +225,14 @@ noncomputable def TGUTRealisation.heyting :
       inv_hom_id := by ext _; rfl }
   R_tensor n m :=
     -- `HRProp (n + m) ≃ HRProp n × HRProp m`.
-    -- Underlying Equiv is `heytingTensorEquiv n m`; the categorical
-    -- iso form requires `funext` ceremony.  Recorded as `sorry`; the
-    -- *Equiv* form is exposed as `heytingTensorEquiv` and
-    -- `heyting_squaring_iso` (§3 below).  Same pattern as the
-    -- sibling algebraic instance.
-    (sorry : HRProp (n + m) ≅ HRProp n ⊗ HRProp m)
+    -- The categorical iso in `(Type 0, ⊗ = ×)` is given by lifting the
+    -- underlying `Equiv` via `Equiv.toIso`; the target tensor `⊗`
+    -- unfolds definitionally to cartesian `×` per
+    -- `types_tensorObj_def : X ⊗ Y = X × Y` (Mathlib
+    -- `CategoryTheory.Monoidal.Types.Basic`).  The *Equiv* form is
+    -- exposed as `heytingTensorEquiv` and `heyting_squaring_iso`
+    -- (§3 below).  Same pattern as the sibling algebraic instance.
+    (heytingTensorEquiv n m).toIso
   compose_mor N M := TypeCat.ofHom (fun p =>
     -- compose_mor : R N × R M → R (N + M) — inverse of direct-sum decomp.
     (heytingTensorEquiv N M).symm p)
@@ -563,11 +565,12 @@ Per the task brief's deliverable requirements (§7-8):
   of `DiamondH4` as "the" minimum non-Boolean 4-element Heyting
   anchor is OPEN.
 
-### What is structurally placeholder
+### What is discharged via `Equiv.toIso`
 
-* **R_tensor**: the categorical iso form recorded as `sorry`, matching
-  the sibling Algebraic instance pattern (the `Equiv` form is exposed
-  as `heytingTensorEquiv` and `heyting_squaring_iso`).
+* **R_tensor**: the categorical iso form discharged via
+  `(heytingTensorEquiv n m).toIso`, matching the sibling Algebraic
+  instance pattern (the `Equiv` form is `heytingTensorEquiv` and the
+  cartesian-monoidal `Type 0` identifies `⊗` with `×`).
 
 ### What genuinely fails (does not transfer from δ=Bool)
 
@@ -583,9 +586,10 @@ Per the task brief's deliverable requirements (§7-8):
 decision protocol in gut-c-doctrine v0.2 §8.2):
 
 * The framework is **usable** for Heyting: all 11 fields of
-  `TGUTRealisation` instantiate at the structural level (one `sorry`
-  on `R_tensor`, matching the Algebraic instance pattern); 2
-  reformulations required at the *equational* level (P3, P7b).
+  `TGUTRealisation` instantiate at the structural level (`R_tensor`
+  discharged via `Equiv.toIso`, matching the Algebraic instance
+  pattern); 2 reformulations required at the *equational* level
+  (P3, P7b).
 * The two reformulations (`P3_heyting`, `P7b_heyting`) **expose**
   genuine open math (Heyting-bimorphism classification; minimum
   non-Boolean 4-element Heyting anchor uniqueness) — this is

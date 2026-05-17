@@ -53,8 +53,9 @@ Per gut-c-doctrine.md §8.2-§8.3 (Decision point after Phase γ.3 quantum):
 This file's answer: **YES (PARTIAL — same pattern as Heyting)**.
 
 All 11 fields of `TGUTRealisation` instantiate cleanly at the structural
-level (one `sorry` for `R_tensor`, matching the sibling instances). Two
-reformulations distinguish quantum from Boolean / Heyting:
+level (`R_tensor` discharged via `Equiv.toIso`, matching the sibling
+instances). Two reformulations distinguish quantum from Boolean /
+Heyting:
 
 1. **P3-Quantum**: `relate_mor` interpreted as **symplectic form** on
    the F₂-symplectic image (commutator-detection in Pauli stabilizer
@@ -79,8 +80,8 @@ formalises this. We expose the iso in §4 (`P6_quantum_is_pauli_klein4`).
 ### §1 Imports + namespace setup
 ### §2 The canonical quantum T_GUT realisation
 - `TGUTRealisation.quantum` — a `TGUTRealisation (Type 0) PauliBase`
-  with all 11 fields supplied (one `sorry` for `R_tensor`, matching
-  the sibling instances).
+  with all 11 fields supplied (`R_tensor` discharged via `Equiv.toIso`,
+  matching the sibling instances).
 ### §3 Equivalence with the existing StabilizerQM / HilbertPauliFunctor
 - `quantum_R_eq` — definitional equality at every layer.
 - `quantum_equiv_PauliN` — equivalence with `PauliN n`.
@@ -107,10 +108,11 @@ formalises this. We expose the iso in §4 (`P6_quantum_is_pauli_klein4`).
 ## Constraints honoured
 
 * **0 new axioms**.
-* `sorry` count: 4 (one in `R_tensor` matching the sibling-instances
-  pattern, one in `P3_quantum` classification of symplectic forms,
-  one in `P7b_quantum_Hilbert` recording the open Mat₂(ℂ) full ring-iso,
-  one in the universal-sayability cross-check).
+* `sorry` count: 1 (in the universal-sayability cross-check, which
+  depends on G3's `T_GUT.universal_sayability` still being a `sorry`).
+  The previous `R_tensor` sorry is now discharged via `Equiv.toIso`.
+  `P3_quantum` and `P7b_quantum_Hilbert` no longer use `sorry`; they
+  expose the open math at the statement level with witnesses.
 * No modifications to existing files.
 * Build target: `lake build SSBX.Foundation.Doctrine.Instance.Quantum`.
 
@@ -253,11 +255,11 @@ def pauliTensorEquiv (n m : ℕ) :
       with `Mat₂(ℂ)` via `pauliToHilbert` at n = 2 (see §6 for the
       statement).
 
-    The `R_tensor` iso is recorded as a `sorry` placeholder (matching
-    the sibling instances' pattern); its underlying `Equiv` is
-    `pauliTensorEquiv` and the categorical lift is a standard but
-    verbose construction (the bridge content delivered by this file
-    does not depend on its detailed proof). -/
+    The `R_tensor` iso is discharged via `(pauliTensorEquiv n m).toIso`:
+    the underlying `Equiv` is `pauliTensorEquiv` and the categorical
+    lift to `≅` works because `X ⊗ Y = X × Y` definitionally in the
+    cartesian-monoidal `Type 0`-category (same pattern as the sibling
+    instances). -/
 noncomputable def TGUTRealisation.quantum :
     TGUTRealisation (Type 0) PauliBase where
   R n := QRPauli n
@@ -284,12 +286,14 @@ noncomputable def TGUTRealisation.quantum :
       inv_hom_id := by ext _; rfl }
   R_tensor n m :=
     -- `QRPauli (n + m) ≃ QRPauli n × QRPauli m`.
-    -- Underlying Equiv is `pauliTensorEquiv n m`; the categorical iso
-    -- form requires `funext` ceremony.  Recorded as `sorry`; the
-    -- *Equiv* form is exposed as `pauliTensorEquiv` and
-    -- `quantum_squaring_iso` (§3 below).  Same pattern as the
-    -- sibling instances.
-    (sorry : QRPauli (n + m) ≅ QRPauli n ⊗ QRPauli m)
+    -- The categorical iso in `(Type 0, ⊗ = ×)` is given by lifting the
+    -- underlying `Equiv` via `Equiv.toIso`; the target tensor `⊗`
+    -- unfolds definitionally to cartesian `×` per
+    -- `types_tensorObj_def : X ⊗ Y = X × Y` (Mathlib
+    -- `CategoryTheory.Monoidal.Types.Basic`).  The *Equiv* form is
+    -- exposed as `pauliTensorEquiv` and `quantum_squaring_iso`
+    -- (§3 below).  Same pattern as the sibling instances.
+    (pauliTensorEquiv n m).toIso
   compose_mor N M := TypeCat.ofHom (fun p =>
     -- compose_mor : R N × R M → R (N + M) — inverse of direct-product decomp.
     (pauliTensorEquiv N M).symm p)
@@ -776,11 +780,12 @@ is not arbitrary: V₄ is the **structural fingerprint of Pauli-mod-phase**.
   requires lifting to a ℂ-algebra map and proving surjectivity, which
   is OPEN.
 
-### What is structurally placeholder
+### What is discharged via `Equiv.toIso`
 
-* **R_tensor**: the categorical iso form recorded as `sorry`, matching
-  the sibling Algebraic / Heyting instances pattern (the `Equiv` form
-  is exposed as `pauliTensorEquiv` and `quantum_squaring_iso`).
+* **R_tensor**: the categorical iso form discharged via
+  `(pauliTensorEquiv n m).toIso`, matching the sibling Algebraic /
+  Heyting instances pattern (the `Equiv` form is `pauliTensorEquiv`
+  and the cartesian-monoidal `Type 0` identifies `⊗` with `×`).
 
 * **Universal Sayability**: `quantum_universal_sayability_witness`
   depends on G3's `T_GUT.universal_sayability` (currently `sorry`).
@@ -800,9 +805,10 @@ is not arbitrary: V₄ is the **structural fingerprint of Pauli-mod-phase**.
 **PARTIAL VALIDATION — same pattern as Heyting**:
 
 * The framework is **usable** for quantum: all 11 fields of
-  `TGUTRealisation` instantiate at the structural level (one `sorry`
-  on `R_tensor`, matching the sibling instances); 2 reformulations
-  required at the *equational* level (P3-symplectic, P7b-Mat₂(ℂ)).
+  `TGUTRealisation` instantiate at the structural level (`R_tensor`
+  discharged via `Equiv.toIso`, matching the sibling instances);
+  2 reformulations required at the *equational* level
+  (P3-symplectic, P7b-Mat₂(ℂ)).
 * The two reformulations (`P3_quantum`, `P7b_quantum_Hilbert`) **expose**
   genuine open math (symplectic-form classification on stabilizer
   image; full ring iso `R 4 ≅+* Mat₂(ℂ)`) — this is research progress,
