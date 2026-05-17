@@ -18,6 +18,12 @@
   - `user T` (wen-2.0 ④ user inductive) → 提取 ctor name
   - 其他 → 显示 `<elaborated> : ty`
 
+B-8 修复（2026-05-18）：`执 「Bool 表达式」` — kernel doctrine 是
+`Tm.unquote q` 始终类型为 `.hex`，故 `执 「真」` 通过类型检查但
+denote 失败（runtime 实为 `.boolV`）。`hexFallbackMessage`
+检测此 case 并给一个明确的 B-8 诊断，而不是含糊的
+`<elaborated> : Hex`。改进 Option C（runtime 派发）留给后续 sub-plan。
+
 错误统一打印为 `programErrShow`（v1：薄包装，富格式留给 sub-plan 04）。
 提交内多语句以**换行**呈现：每个 `exprStmt` 独立一行。
 
@@ -149,13 +155,43 @@ def programErrShow (src : String) : ProgramErrWithDefs → String
 
 /-! ## § 3  Stmt-level eval dispatch -/
 
+/-- Detect whether a `Tm` has an `.unquote` (`执 「…」`) form at the head
+    or at the head of a left-spine application.  Used by `showTypedTm`
+    to produce a B-8-specific diagnostic when an unquote produces a
+    non-Hex runtime value (kernel rule: `Tm.unquote q` is always typed
+    `.hex`, so a Bool-yielding quoted body slips through typecheck and
+    then can't be denoted as Hex). -/
+partial def isUnquoteHead : Tm → Bool
+  | .unquote _ => true
+  | .app f _   => isUnquoteHead f
+  | _          => false
+
+/-- B-8 diagnostic: when `typed.ty = .hex` but `denoteHex` failed, run
+    the term through `eval` once to see what we actually got.  For the
+    `执 「真」` case (unquote yielding `.boolV`) we emit a clear,
+    targeted message; other shapes fall through to the generic
+    `<elaborated> : Hex` placeholder. -/
+def hexFallbackMessage (typed : TypedTm) : String :=
+  match eval [] typed.tm with
+  | some (.boolV b) =>
+    if isUnquoteHead typed.tm then
+      s!"执 returned a Bool value ({toString b}), but 执 is typed `Hex` \
+         in wen 1.5.\n  Note: `执 「…」` is currently restricted to \
+         Hex-returning quoted expressions; Bool-returning quotes are \
+         future work (HM on `Quoted` payloads)."
+    else
+      s!"<elaborated> : Hex  (runtime produced Bool {toString b})"
+  | some (.cellV _) =>
+    s!"<elaborated> : Hex  (runtime produced Cell)"
+  | _ => s!"<elaborated> : Hex"
+
 /-- Render the value of a single `exprStmt`'s `TypedTm`. -/
 def showTypedTm (typed : TypedTm) : String :=
   match typed.ty with
   | .hex =>
     match denoteHex typed.tm with
     | some h => s!"{hexShow h} : Hex"
-    | none   => s!"<elaborated> : Hex"
+    | none   => hexFallbackMessage typed
   | .bool =>
     match denoteBool typed.tm with
     | some b => s!"{toString b} : Bool"
@@ -293,5 +329,41 @@ partial def loop : IO Unit := do
 def main : IO Unit := do
   IO.println banner
   loop
+
+/-! ## § 7  B-8 regression tests (native_decide)
+
+Acceptance tests for the `执 「Bool 表达式」` path: kernel says the
+typed result is always `.hex`, but the runtime value is a `.boolV`.
+Before the fix, `showTypedTm` printed the unhelpful `<elaborated> : Hex`
+fallback; afterwards it emits a clear B-8-specific message that mentions
+both the surface operator (`执`) and the wen 1.5 limitation.
+
+`evalLine` is the public single-string entry point, so we anchor the
+checks to its output and only assert the *prefix* (`执 returned a Bool
+value`) to keep the test robust to wording tweaks. -/
+
+def evalLineHasPrefix (src pre : String) : Bool :=
+  (evalLine src).startsWith pre
+
+/-- `执 「真」` → clear B-8 diagnostic (not `<elaborated> : Hex`). -/
+example :
+    evalLineHasPrefix "执 「真」" "执 returned a Bool value" = true := by
+  native_decide
+
+/-- `执 「假」` → clear B-8 diagnostic. -/
+example :
+    evalLineHasPrefix "执 「假」" "执 returned a Bool value" = true := by
+  native_decide
+
+/-- `执 「同 一 一」` (Hex-eq predicate, yields Bool) → B-8 diagnostic. -/
+example :
+    evalLineHasPrefix "执 「同 一 一」" "执 returned a Bool value" = true := by
+  native_decide
+
+/-- Hex-yielding `执` still produces the regular `«乾» (111111) : Hex` line
+    (positive regression — fix didn't break the happy path). -/
+example : evalLine "执 「乾」" = "«乾» (111111) : Hex" := by native_decide
+
+example : evalLine "执 「一」" = "«姤» (011111) : Hex" := by native_decide
 
 end SSBX.Foundation.Wen.REPL
