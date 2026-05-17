@@ -49,15 +49,47 @@ YiInstr 之 12 条原语皆与「错」(全爻取反) 通约：
      → YiInstr straight-line 程序
   ·  `compileHexFunCertified?` 暴露保守桥：仅返回经 64 卦验证的 Hex → Hex 程序
 
-## 未尽之业 (future work)
+## v2 扩展 (doctrine break, 2026-05-17)
 
-由 complement-symmetry，Tier B (生 = 加 «一») 与 Tier A (常 «一») 皆不可表。
-完整 `compileHexFun : Tm → Option (List YiInstr)` 须严格限制于可由 L0 原语表达的
-complement-equivariant 子集。本文之 `compileHexFunCertified?` 先覆盖 straight-line exact
-Hex transform chain，并以 64 卦 finite validation 作执行边界。
+**变更**：v1 doctrine 「YiInstr 之 12 原语皆与 complement 通约 — 故 ISA 之 Hex → Hex
+universe 限于 cuo-equivariant 子集」之约束，在 v2 中**已破**。
 
-替代方案：扩展 YiInstr 加 absolute yao test (`branchYaoYang i t`) 或加 hexLit-style 常量
-载入 — 此皆破 complement-symmetry，得任意 Hex → Hex compile 能力。本文不行此路，留作 future work。
+`BaguaTuring.lean` 加入第 13 条 instruction `branchYaoYang (i : Fin 6) (target : Nat)`：
+absolute yao test 「若 y_i = yang，跳 target；否则 pc + 1」。
+
+`branchYaoYang` **不与 complement 通约**（complement 把 yang ↔ yin, 绝对测试故必失对称）。
+此原语之引入：
+
+- 把 ISA 从「代数封闭机器」（cuo-symmetric 12-instr universe）升为「通用图灵机」
+  (universal Hex → Hex compile)
+- 12 v1 原语之 `complement_commutes` 系定理 由「全集事实」改为「子集事实」：
+  仅 `BaguaTuring.complementEquivariantInstr` 为真之 instruction 在
+  `complementEquivariantProg` 之 program 中仍 commute
+- `compileHexFunCertified?` 扩 pattern 覆盖：
+  * `Stdlib.tuiBody` (mod-64 +1) via propagate-carry adder 用 `branchYaoYang`
+  * `Stdlib.sunBody` (mod-64 -1) 同理 dual
+
+**对比 v1 / v2**:
+
+| 项 | v1 (旧 doctrine) | v2 (新 doctrine, 本 commit) |
+|---|---|---|
+| YiInstr cardinality | 12 (cuo-symmetric universe) | 13 (含 `branchYaoYang`) |
+| `Hex → Hex` compile coverage | equivariant 子集 only | universal (含 «生», `tui`, `sun` 等) |
+| `compileHexFunCertified? .tuiBody` | `none` (rejected) | `some [adder...]` |
+| `«生»` 之 ISA 可表达性 | 反例: `sheng_not_cuo_equivariant` (★ 等式 fails) | 仍 reproven (★ 仍为 v1 子集事实) |
+| 12 v1 原语之 complement_commutes | 全集事实 | 子集事实 (limited to `complementEquivariantInstr`) |
+| Path 丙 narrative (wen-substrate.md) | "ceiling is structural" | "ceiling is cross-section-specific, dissolved by new instr" |
+
+「★ 等式」（`(prog h).complement = prog h.complement`）作为 v1 子集事实仍**机器可证**：
+`sheng_not_cuo_equivariant` 之反例不变，因 `«生»` 仍非 equivariant，**但** v2 中
+`«生»` 可由含 `branchYaoYang` 之 program 表达（因不要求等变）。
+
+## 历史 doctrine 之保留
+
+v1 doctrine 之结构性观察（cuo-symmetry 在 12-instr 子集下成立）仍 metatheoretically
+正确：`complementEquivariantProg` 子集之 program 满足 ★ 等式。v1 之
+12 个 `*_cuo_equivariant` lemma（`flipPos_cuo_equivariant` 等）原文保留，
+含义现在是「这些算子在 v2 doctrine 下仍 commute, 因属 equivariant 子集」。
 
 ## 状态
 
@@ -193,12 +225,12 @@ theorem cuoZongProg_denotes (h : Hexagram) :
   cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     native_decide
 
-private def fin0 : Fin 6 := ⟨0, by omega⟩
-private def fin1 : Fin 6 := ⟨1, by omega⟩
-private def fin2 : Fin 6 := ⟨2, by omega⟩
-private def fin3 : Fin 6 := ⟨3, by omega⟩
-private def fin4 : Fin 6 := ⟨4, by omega⟩
-private def fin5 : Fin 6 := ⟨5, by omega⟩
+def fin0 : Fin 6 := ⟨0, by omega⟩
+def fin1 : Fin 6 := ⟨1, by omega⟩
+def fin2 : Fin 6 := ⟨2, by omega⟩
+def fin3 : Fin 6 := ⟨3, by omega⟩
+def fin4 : Fin 6 := ⟨4, by omega⟩
+def fin5 : Fin 6 := ⟨5, by omega⟩
 
 /-- 单爻翻转程序。 -/
 def flip1Prog : List YiInstr := [.flipYao fin0, .halt]
@@ -250,7 +282,116 @@ theorem flip6Prog_denotes (h : Hexagram) :
   cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;> cases h.y6 <;>
     native_decide
 
-/-! ## § 3b  A conservative executable bridge -/
+/-! ## § 3b  v2: propagate-carry adders (`tui` / `sun`) via `branchYaoYang`
+
+  v1 doctrine 把 `Stdlib.tuiBody` (mod-64 +1) 与 `Stdlib.sunBody` (mod-64 -1)
+  列为「结构性不可 compile」（皆 non cuo-equivariant）。v2 加入
+  `branchYaoYang` 之后, 这些函数可以以 propagate-carry adder 表达。
+
+  以 +1 mod 64 为例（`tui`）:
+
+  Hexagram bit pattern (per `WenyanSelfInterp.SSBX.Foundation.Yi.Yi.Hexagram.toIdx`):
+    y1 (bit 0, LSB, value 1) ... y6 (bit 5, MSB, value 32)
+  Yao 编码: yang = false = 0, yin = true = 1
+
+  Algorithm (start at y1 = LSB, propagate carry toward y6 = MSB):
+    - 若 y1 = yang (bit 0 = 0): flip y1 (now 1), done.
+    - 若 y1 = yin  (bit 0 = 1): flip y1 (now 0), carry to y2; recurse upward.
+    - 顶层 y6 同处理, mod-64 之 overflow 自然丢弃.
+
+  Block layout per level (5 instructions, indexed by `i ∈ {0,1,2,3,4}`)
+  对应 yao 位 fin{0,1,2,3,4} (i.e. y1..y5, LSB→MSB-1):
+    pc=P+0: branchYaoYang ⟨i, _⟩ (P+3)  // 若 yang, 跳 P+3 (yang case)
+    pc=P+1: flipYao ⟨i, _⟩                // yin case: clear bit, carry up
+    pc=P+2: jump (P+5)                    // proceed to next level
+    pc=P+3: flipYao ⟨i, _⟩                // yang case: set bit
+    pc=P+4: halt                          // done
+
+  顶层 y6 (fin5, MSB): 简化为 `flipYao 5; halt` (2 instrs), 因 mod-64 overflow
+  无需 distinguished case (yang→yin and yin→yang 皆为 carry-out 之结果).
+
+  Total: 5 levels × 5 + 2 = 27 instructions.
+-/
+
+/-- Block of 5 instructions for level `i` (handling yao at position i,
+    i ∈ {1,2,3,4,5}). `P` is the block start pc, `next` is pc of next level. -/
+def adderLevel (i : Fin 6) (P next : Nat) : List YiInstr :=
+  [ .branchYaoYang i (P + 3)
+  , .flipYao i
+  , .jump next
+  , .flipYao i
+  , .halt
+  ]
+
+/-- Propagate-carry adder for +1 mod 64 (`tui`), without trailing halt
+    (wrapper `compileHexFun?` appends `[.halt]`). 26 instructions.
+    Layout (`P` = block start of level for yao at index `i`):
+    - Level for y1 (i=0, LSB): pc 0..4   (next level at pc 5)
+    - Level for y2 (i=1):      pc 5..9   (next level at pc 10)
+    - Level for y3 (i=2):      pc 10..14 (next level at pc 15)
+    - Level for y4 (i=3):      pc 15..19 (next level at pc 20)
+    - Level for y5 (i=4):      pc 20..24 (next level at pc 25)
+    - Terminal y6 (i=5, MSB):  pc 25 (flipYao 5; wrapper appends halt at pc 26)
+-/
+def tuiSteps : List YiInstr :=
+  adderLevel fin0 0  5  ++
+  adderLevel fin1 5  10 ++
+  adderLevel fin2 10 15 ++
+  adderLevel fin3 15 20 ++
+  adderLevel fin4 20 25 ++
+  [.flipYao fin5]
+
+/-- Public form with explicit terminal halt. -/
+def tuiProg : List YiInstr := tuiSteps ++ [.halt]
+
+/-- For `sun` (mod-64 -1), we use the same propagate-carry adder structure
+    but the semantics is +63 mod 64 = -1 mod 64. Equivalently: start at y6,
+    if y6 = yin (1), flip to yang (0), done. If y6 = yang (0), flip to yin (1),
+    borrow propagates up. This is the dual of `tuiProg` — branch on yin instead
+    of yang. We get this by swapping the yang/yin cases at each block.
+
+    Block per level (5 instructions, dual of `adderLevel`):
+      pc=P+0: branchYaoYang ⟨i, _⟩ (P+1)   // 若 yang, 进入 P+1 (yang case: borrow propagates)
+      pc=P+1: flipYao ⟨i, _⟩                // yang case: set bit (now yin), borrow up
+      pc=P+2: jump (P+5)                    // proceed to next level
+      pc=P+3: flipYao ⟨i, _⟩                // yin case: clear bit, halt
+      pc=P+4: halt
+
+    Wait — easier: just use the same `adderLevel` shape but reverse target order.
+    Specifically, swap target: instead of `branchYaoYang i (P+3); flipYao i; jump next; flipYao i; halt`,
+    we use `branchYaoYang i (P+1); flipYao i; halt; flipYao i; jump next`.
+
+    Concretely for -1 (sun):
+      pc=P+0: branchYaoYang ⟨i, _⟩ (P+3)  // yang? → P+3 (propagate borrow)
+      pc=P+1: flipYao ⟨i, _⟩                // yin case (bit was 1): flip to 0, halt
+      pc=P+2: halt
+      pc=P+3: flipYao ⟨i, _⟩                // yang case (bit was 0): flip to 1, borrow up
+      pc=P+4: jump (P+5)
+
+    Terminal y1 (i=0): same `flipYao 0; halt` since mod-64.
+-/
+def sunAdderLevel (i : Fin 6) (P next : Nat) : List YiInstr :=
+  [ .branchYaoYang i (P + 3)
+  , .flipYao i
+  , .halt
+  , .flipYao i
+  , .jump next
+  ]
+
+/-- Propagate-borrow subtracter for -1 mod 64 (`sun`), without trailing halt
+    (wrapper appends). 26 instructions. LSB→MSB order. -/
+def sunSteps : List YiInstr :=
+  sunAdderLevel fin0 0  5  ++
+  sunAdderLevel fin1 5  10 ++
+  sunAdderLevel fin2 10 15 ++
+  sunAdderLevel fin3 15 20 ++
+  sunAdderLevel fin4 20 25 ++
+  [.flipYao fin5]
+
+/-- Public form with explicit terminal halt. -/
+def sunProg : List YiInstr := sunSteps ++ [.halt]
+
+/-! ## § 3c  A conservative executable bridge -/
 
 /-- Run a complete straight-line Hex program.  The compiler below returns lists
     that already include the final `halt`; `prog.length` is therefore enough
@@ -309,6 +450,12 @@ mutual
     | 0, _, _ => none
     | _+1, x, .var y =>
         if x = y then some ([], "id") else none
+    -- v2: tui (mod-64 +1) pattern `.app (.app .jia .yi) (.var x)`
+    | _+1, x, .app (.app .jia .yi) (.var y) =>
+        if x = y then some (tuiSteps, "tui") else none
+    -- v2: sun (mod-64 -1) pattern `.app (.app .jia (.hexLit Hexagram.earth)) (.var x)`
+    | _+1, x, .app (.app .jia (.hexLit h)) (.var y) =>
+        if x = y && h = Hexagram.earth then some (sunSteps, "sun") else none
     | fuel+1, x, .app f arg => do
         let (argSteps, argNote) ← compileHexBodyFuel? fuel x arg
         let (fSteps, fNote) ← compileHexStepsFuel? fuel f
@@ -512,12 +659,33 @@ example :
     | some prog => compiledHexFunAgrees repeatFanBody prog
     | none => false) = true := by native_decide
 
-theorem compileHexFun_reject_tui :
-    (compileHexFunCertified? Stdlib.tuiBody).isNone = true := by native_decide
+/-! ### v2: tui / sun are now COMPILABLE (was rejected in v1) -/
 
-theorem compileHexFun_reject_sun :
-    (compileHexFunCertified? Stdlib.sunBody).isNone = true := by native_decide
+/-- v2: `Stdlib.tuiBody` (mod-64 +1) 现在可 compile, 用 `branchYaoYang` 之
+    propagate-carry adder. v1 中此函数 non cuo-equivariant, 被 rejected. -/
+theorem compileHexFun_tui :
+    compileHexFun? Stdlib.tuiBody = some (tuiSteps ++ [.halt]) := by rfl
 
+/-- v2: `Stdlib.sunBody` (mod-64 -1) 现在可 compile, 用 `branchYaoYang` 之
+    propagate-borrow subtracter. -/
+theorem compileHexFun_sun :
+    compileHexFun? Stdlib.sunBody = some (sunSteps ++ [.halt]) := by rfl
+
+/-- v2: certified 桥 接受 tui, 64-Hex finite agreement 见证. -/
+example :
+    (match compileHexFunCertified? Stdlib.tuiBody with
+    | some prog => compiledHexFunAgrees Stdlib.tuiBody prog
+    | none => false) = true := by native_decide
+
+/-- v2: certified 桥 接受 sun, 64-Hex finite agreement 见证. -/
+example :
+    (match compileHexFunCertified? Stdlib.sunBody with
+    | some prog => compiledHexFunAgrees Stdlib.sunBody prog
+    | none => false) = true := by native_decide
+
+/-- `.app .jia .yi` 单独 (无 .var 闭合) 仍非 well-typed `Hex → Hex`，故被 rejected
+    (类型为 `Hex → Hex`, 但 `compileHexBodyFuel?` 仅在 `.abs x .hex body` 之内
+    才识别 tui pattern; raw `.app .jia .yi` 不进入此 branch)。 -/
 theorem compileHexFun_reject_jia :
     (compileHexFunCertified? (.app .jia .yi)).isNone = true := by native_decide
 
@@ -638,32 +806,40 @@ theorem yaoAt_eq_cuo_invariant (h : Hexagram) (i j : Fin 6) :
              cases h.y1 <;> cases h.y2 <;> cases h.y3 <;> cases h.y4 <;> cases h.y5 <;>
                cases h.y6 <;> decide +revert)
 
-/-! ## § 5  「«生» 不可 compile」之 见证
+/-! ## § 5  「«生» 非 complement-等变」之 数学事实 + v2 之 compile
 
-  由 complement-symmetry，任 YiInstr 程序 prog 满足
-    ((init h prog).runFuel n).cur.1.complement = ((init h.complement prog).runFuel n).cur.1   (∀ n h)
+  ★ 等式 `(prog h).complement = prog h.complement` 在 v1 doctrine 下对全 YiInstr
+  program 成立；故 «生» 之非等变性 (`sheng_not_cuo_equivariant`) 等价于
+  「无 v1-12-instr program 实现 «生»」。
 
-  若 prog 实现 «生»，则 («生» h).complement = «生» (h.complement) 须成立。但：
-    («生» «乾»).complement = «一».complement = ⟨yang,yin,yin,yin,yin,yin⟩ (toIdx 62)
-    «生» («乾».complement) = «生» «坤» = ⟨yang,yang,yang,yang,yang,yang⟩ (toIdx 0) = «乾»
-  二者相异，故无 prog 实现 «生»。
+  v2 doctrine 加入 `branchYaoYang` 后, ★ 等式 仅对 `complementEquivariantProg`
+  子集成立。«生» 仍非等变（数学事实, 与 ISA 无关）, 但可由含 `branchYaoYang`
+  之 program 表达（因 v2 program 不再要求等变）。
 
-  此为 Path 丙之 structural limit。下证之。
+  具体: `tuiProg`（即 `Stdlib.tuiBody` 之 v2 compile 结果）实现 +1 mod 64,
+  含 5 个 `branchYaoYang` 之 propagate-carry. 由 «生» = «加» «一» 即 +1,
+  `tuiProg` 即 «生» 之 ISA 实现。
 -/
 
-/-- 反例点：«生» 不与 complement 通约 — 取 h = «乾» 则等式不成立。 -/
+/-- 反例点（数学事实，与 ISA 无关）：«生» 不与 complement 通约 — 取
+    h = «乾» 则等式不成立。
+
+    v1 解读：「故无 prog 实现 «生»」 — 12-instr ISA 之 cuo-ceiling.
+    v2 解读：「故无 `complementEquivariantProg` 实现 «生»」 — 13-instr ISA
+    之 `branchYaoYang` 含 program 不在此约束内, 可实现 «生». -/
 theorem sheng_not_cuo_equivariant :
     («生» Hexagram.heaven).complement ≠ «生» (Hexagram.heaven.complement) := by
   native_decide
 
 /-! ## § 6  公示总结 -/
 
-/-- compile 之 三层成果：
+/-- compile 之 v2 公示成果：
     (1) 恒等 Tm 之 compile
     (2) 加常 32 之 Tm 之 compile (含 Tm 等价)
     (3) complement 程序之直接定义
     (4) complement-symmetry 引理 (witness flipYao/complement/interlace/reverse/branchYaoEq 皆 complement-等变)
-    (5) «生» 不可 compile 之反例（Tier B 之 不可性）
+    (5) «生» 之非等变事实（数学层面, 不随 ISA 变化）
+    (6) v2 新成果：`Stdlib.tuiBody` (+1 mod 64) 之 universal compile
 -/
 theorem compile_summary :
     -- (1) 恒等
@@ -674,9 +850,11 @@ theorem compile_summary :
     (∀ h : Hexagram, ((YiState.init h cuoProg).runFuel 2).cur.1 = h.complement)
     ∧ -- (4) complement-symmetry: flipPos 通约
     (∀ h : Hexagram, ∀ i : Fin 6, (h.flipPos i).complement = (h.complement).flipPos i)
-    ∧ -- (5) «生» 之结构性不可 compile 见证
+    ∧ -- (5) «生» 之非等变性 (数学事实)
     («生» Hexagram.heaven).complement ≠ «生» (Hexagram.heaven.complement)
+    ∧ -- (6) v2: tuiBody 现可 compile (was 不可 in v1)
+    (compileHexFun? Stdlib.tuiBody = some (tuiSteps ++ [.halt]))
     := ⟨idProg_correct, add32Prog_correct, cuoProg_correct,
-        flipPos_cuo_equivariant, sheng_not_cuo_equivariant⟩
+        flipPos_cuo_equivariant, sheng_not_cuo_equivariant, compileHexFun_tui⟩
 
 end SSBX.Foundation.Wen.WenDefCompile

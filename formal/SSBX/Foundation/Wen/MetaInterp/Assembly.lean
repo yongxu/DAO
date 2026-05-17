@@ -967,9 +967,12 @@ theorem metaInterpProg_dispatch_routes_halt_at_fuel
 /-- Instruction-indexed assembly-specialized dispatch route.  This is the
     case-split wrapper around the 12 absolute-pc dispatch routes; for
     parameterized opcodes it routes only to the current Strategy-B
-    sub-dispatch/default entry, not to arbitrary parameter-specific blocks. -/
+    sub-dispatch/default entry, not to arbitrary parameter-specific blocks.
+
+    v2 (2026-05-17): restricted to `Dispatch.IsV1Instr instr` (v1 12-instr
+    subset). `branchYaoYang` 之 routing 是 follow-up obligation. -/
 theorem metaInterpProg_dispatch_routes_instr_at_fuel
-    (history : List R8) (instr : YiInstr) :
+    (history : List R8) (instr : YiInstr) (h_v1 : Dispatch.IsV1Instr instr) :
     let μ : YiState :=
       { cur := Dispatch.dispatchTagOfInstr instr
         history := history
@@ -984,7 +987,7 @@ theorem metaInterpProg_dispatch_routes_instr_at_fuel
       ∧ μ'.halted = false := by
   simpa [metaInterpDispatchOffsets] using
     Dispatch.dispatchTree_routes_instr_at_segment
-      metaInterpDispatchOffsets dispatchOffset metaInterpProg history instr
+      metaInterpDispatchOffsets dispatchOffset metaInterpProg history instr h_v1
       (fun i hi => by
         simpa [DispatchProg.dispatchProg] using
           metaInterpProg_dispatchProg_at_offset i hi)

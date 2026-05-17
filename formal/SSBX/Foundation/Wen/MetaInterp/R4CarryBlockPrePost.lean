@@ -136,6 +136,11 @@ structure R4CarryIndexedBlockContracts
     CarryExactBlockAt bodyOffsetOf bodyFuelOf YiInstr.pop
   halt :
     CarryExactBlockAt bodyOffsetOf bodyFuelOf YiInstr.halt
+  /-- v2 (2026-05-17): obligation for `branchYaoYang` instruction.
+      MetaInterp 暂将其与 halt 同 route (见 Dispatch.lean v2 注). -/
+  branchYaoYang :
+    ∀ i target,
+      CarryExactBlockAt bodyOffsetOf bodyFuelOf (YiInstr.branchYaoYang i target)
 
 theorem carryExactBlockAt_of_indexed_contracts
     (bodyOffsetOf : CarryBodyOffsetOf) (bodyFuelOf : CarryBodyFuelOf)
@@ -167,6 +172,8 @@ theorem carryExactBlockAt_of_indexed_contracts
       exact O.pop
   | halt =>
       exact O.halt
+  | branchYaoYang i target =>
+      exact O.branchYaoYang i target
 
 theorem r4_carry_indexed_blocks_cover_all_opcodes :
     ∀ bodyOffsetOf bodyFuelOf,

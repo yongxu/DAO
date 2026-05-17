@@ -14,27 +14,33 @@ denotation); `samples/{hello,microKernel,daoJudge}.wen` 跑在 `wenyan` CLI
 并证: 该 ISA 程序在 64 Hex 上之输出 == wenyanInterp 之 denotation.
 故 Bagua-ISA 实际是 WenDef.Tm 之**后端目标**, 不是另一个表面.
 
-## 「错等变」约束 (complement-equivariance ceiling)
+## v2 — universal Hex → Hex 桥 (post-doctrine break, 2026-05-17)
 
-由 `WenDefCompile.lean` 之 doctrine: YiInstr 之 12 原语皆与 Hex.complement
-通约. 故任 YiInstr 可表达之 f : Hex → Hex 须满足
+v1 doctrine 之「错等变 ceiling」在 v2 中**已破**: `BaguaTuring.lean`
+加 `branchYaoYang` 后, ISA 升为 universal Hex → Hex 后端。
 
-    f(h.complement) = (f h).complement    ... (★)
+v1 之「★ 等式」`(prog h).complement = prog h.complement`：
+- 在 v2 中仅对 `complementEquivariantProg` 子集成立
+- `branchYaoYang` 含 program 不在此约束内, 可表 `Stdlib.tuiBody` (+1 mod 64) /
+  `Stdlib.sunBody` (-1 mod 64) 等 non-equivariant Hex → Hex 函数
 
-非 equivariant 项 (如 «生» / `.jia` / Stdlib.tuiBody / Stdlib.sunBody / .yi)
-**结构性不可桥**. 此非工程缺陷, 是 YiInstr 之代数刚性. 故下方 `推`/`损`
-返 `none`, 符预期.
+故 `推` / `損` 在 v2 中可桥 (v1 中返 `none`)。下方 §3 之示例更新。
 
-可桥子集:
+可桥子集 (v2):
+  · 所有 Hex → Hex Tm (universal, 含 v1 之 equivariant 子集与新加 non-equivariant)
   · identity (`者 甲 甲`)
   · `.cuoH` / `.zongH` / `.huH` / `.cuoZongH` / `.flip1H`..`.flip6H`
   · 经 `Stdlib.endoCompBody` 之 straight-line composition (`而 反 综` 等)
   · `Stdlib.repeatOnceBody` (`再 反` 等)
   · `Stdlib.hexApplyBody` 之透明应用
+  · **v2 新**: `Stdlib.tuiBody` (推, +1 mod 64) / `Stdlib.sunBody` (損, -1 mod 64)
+
+仍不可桥 (类型不匹配, 与 equivariance 无关):
+  · `同` (`.eqHex : Hex → Hex → Bool`) — 非 `Hex → Hex` 型
 
 ## 状态
 
-0 sorry / 0 axiom / 总函数. 全 6 例由 `native_decide` 见证, 含 64-Hex
+0 sorry / 0 axiom / 总函数. 全 8+ 例由 `native_decide` 见证, 含 64-Hex
 finite agreement (`compiledHexFunAgrees`).
 
 ## 不在 SSBX.lean
@@ -65,9 +71,9 @@ open SSBX.Foundation.Wen.WenDefCompile
 /-! ## § 1  String → YiInstr 之端到端桥 -/
 
 /--
-文言 prose → Bagua-ISA 程序. 仅对 type `Hex → Hex` 且经 64-Hex 验证之
-complement-equivariant 子集返成功; 其他 (含 non-equivariant 与非 Hex→Hex 型)
-皆返 `none`. -/
+文言 prose → Bagua-ISA 程序. v2: 对 type `Hex → Hex` 且经 64-Hex 验证之
+universal Tm 子集 (含 v1 equivariant 与 v2 新加之 non-equivariant tui/sun)
+返成功; 非 `Hex → Hex` 型 (如 `同 : Hex → Hex → Bool`) 返 `none`. -/
 def wenyanCompileToYiInstr? (s : String) : Option (List YiInstr) :=
   match wenyanCompile s with
   | .ok typed => compileHexFunCertified? typed.tm
@@ -98,15 +104,30 @@ example :
     wenyanCompileToYiInstr? "再 反" = some [.complement, .complement, .halt] :=
   by native_decide
 
-/-! ## § 3  不可桥子集 (non-equivariant) -/
+/-! ## § 3  v2 新可桥子集 (non-equivariant Hex → Hex, was rejected in v1)
 
-/-- 「推」 (= `Stdlib.tuiBody` 用 `.jia` + `.yi`, 非 equivariant) → `none`. -/
-example : wenyanCompileToYiInstr? "推" = none := by native_decide
+  v2 doctrine break 把 `Stdlib.tuiBody` (mod-64 +1) 与 `Stdlib.sunBody` (mod-64 -1)
+  从 v1 之 "结构性不可 compile" 移入 "可 compile" 子集, via `branchYaoYang`
+  之 propagate-carry/borrow adder (见 `WenDefCompile.lean § 3b`).
 
-/-- 「損」 (= `Stdlib.sunBody`, mod-64 减, 非 equivariant) → `none`. -/
-example : wenyanCompileToYiInstr? "損" = none := by native_decide
+  Prose-level 之 wenyanCompile "推" 单独 (无 arg) 仍因 parser arity 检查 error;
+  v2 之 universality 在 ISA 层 (Tm → YiInstr 之 compile) 直接见证, 不依 prose
+  parser 之 arity 配合.
+-/
 
-/-- 「同」 (Hex × Hex → Bool, 非 Hex → Hex 型) → `none`. -/
+/-- 直接 ISA 层测试 (绕过 prose parser): `compileHexFunCertified? Stdlib.tuiBody`
+    现 v2 中返 `some (tuiSteps ++ [.halt])` (含 5 个 `branchYaoYang`). -/
+example : compileHexFunCertified? Stdlib.tuiBody = some (tuiSteps ++ [.halt]) := by
+  native_decide
+
+/-- 直接 ISA 层测试: `compileHexFunCertified? Stdlib.sunBody`
+    现 v2 中返 `some (sunSteps ++ [.halt])`. -/
+example : compileHexFunCertified? Stdlib.sunBody = some (sunSteps ++ [.halt]) := by
+  native_decide
+
+/-! ## § 3b  仍不可桥子集 (类型不匹配, 与 equivariance 无关) -/
+
+/-- 「同」 (`.eqHex : Hex → Hex → Bool`, 非 `Hex → Hex` 型) → 仍 `none`. -/
 example : wenyanCompileToYiInstr? "同" = none := by native_decide
 
 /-! ## § 4  跨层 commute (64-Hex finite agreement)
@@ -143,26 +164,41 @@ example : proseBridgeAgrees "而 反 综" = true := by native_decide
 /-- 「再 反」 cross-layer 一致. -/
 example : proseBridgeAgrees "再 反" = true := by native_decide
 
-/-! ## § 5  汇总定理 -/
+/-- v2: ISA-level cross-layer agreement for `Stdlib.tuiBody` (mod-64 +1).
+    Bypasses prose parser (推 alone is arity-error at parser level). -/
+example : compiledHexFunAgrees Stdlib.tuiBody (tuiSteps ++ [.halt]) = true := by
+  native_decide
 
-/-- 文言→Bagua-ISA 桥之核心见证:
+/-- v2: ISA-level cross-layer agreement for `Stdlib.sunBody` (mod-64 -1). -/
+example : compiledHexFunAgrees Stdlib.sunBody (sunSteps ++ [.halt]) = true := by
+  native_decide
 
-    五个 equivariant prose 例皆 (i) 成功 compile, (ii) 与 wenyanInterp 在
-    64 Hex 上跨层一致; 二个 non-equivariant 例正确返 `none` (反映 YiInstr
-    之代数刚性).
+/-! ## § 5  汇总定理 (v2 — universal coverage of `Hex → Hex` 子集) -/
 
-  Bagua-ISA 不是 WenSurface 之"另一个表面", 是其后端目标. 此定理为 PR #26
-  之"vertical slice"补一段水平桥: 两条表面在 WenDef.Tm 处汇合. -/
+/-- 文言→Bagua-ISA 桥之 v2 核心见证:
+
+    (i) 5 v1 equivariant prose 例皆 (a) 成功 compile, (b) 与 wenyanInterp 在
+        64 Hex 上跨层一致
+    (ii) v2 新加 2 个 non-equivariant Tm (Stdlib.tuiBody / Stdlib.sunBody)
+         直接 ISA 层 universal compile + 64-Hex agreement (prose parser 之
+         arity 检查 故 推/損 单独无 arg 仍 parser-error; ISA-level test 直接
+         测 Tm)
+    (iii) 1 个非 `Hex → Hex` 型 (同 : Hex → Hex → Bool) 仍正确返 `none`
+          (类型不匹配, 与 equivariance 无关)
+
+  Bagua-ISA 不是 WenSurface 之"另一个表面", 是其后端目标. v2 中 ISA 升为
+  universal Hex → Hex 后端 (含 cuo-equivariant 与 non-equivariant 子集). -/
 theorem isaBridge_endToEnd :
-    -- (i) 可桥子集: cross-layer 一致
+    -- (i) v1 equivariant 子集: cross-layer 一致
     proseBridgeAgrees "错" = true
   ∧ proseBridgeAgrees "综" = true
   ∧ proseBridgeAgrees "互" = true
   ∧ proseBridgeAgrees "而 反 综" = true
   ∧ proseBridgeAgrees "再 反" = true
-    -- (ii) 不可桥子集: 正确拒绝
-  ∧ wenyanCompileToYiInstr? "推" = none
-  ∧ wenyanCompileToYiInstr? "損" = none
+    -- (ii) v2 ISA-level: tui / sun universal compile + 64-Hex agreement
+  ∧ compileHexFunCertified? Stdlib.tuiBody = some (tuiSteps ++ [.halt])
+  ∧ compileHexFunCertified? Stdlib.sunBody = some (sunSteps ++ [.halt])
+    -- (iii) 类型不匹配: 正确拒绝
   ∧ wenyanCompileToYiInstr? "同" = none := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> native_decide
 

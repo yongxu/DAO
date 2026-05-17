@@ -16,6 +16,27 @@ The capstone: a Lean-verified Dao judge that, given a hexagram input, runs as a
 YiProg and outputs whether the hexagram is 天道 (tian) or 心道 (xin) — answering
 "是道非道" within the system.
 
+## v2 — branchYaoYang doctrine break (2026-05-17)
+
+`branchYaoYang (i : Fin 6) (target : Nat)` 是 absolute yao test：
+若 yao i = yang，跳 target；否则 pc + 1。
+
+此原语 **不与 complement 通约**（complement 把 yang ↔ yin，绝对测试故必失对称），
+因此 `branchYaoYang` 不在 `complementEquivariantInstr` 谓词之子集内。
+
+破之意义：
+- ISA 可表达全 `Hex → Hex` 函数（universal compile），不再受 cuo-equivariance
+  ceiling 之限。
+- v1 之 12 原语之 `complement_commutes` 系定理由「全集事实」改为「子集事实」
+  (`complementEquivariantInstr` 之 instruction 仍然 complement-通约)。
+- WenDefCompile 可 compile `Stdlib.tuiBody` (mod-64 自增) 等 non-equivariant
+  Hex → Hex 函数，via propagate-carry adder 用 `branchYaoYang` 实现。
+
+详 doctrine 之 v2 narrative 见
+[`WenDefCompile.lean` 文件头之 §v2 扩展](../../../../Wen/WenDefCompile.lean) 与
+[`docs-next/.../wen-substrate/03-operation-monism.md`](../../../../../../../../docs-next/10_formal_形式/wen-substrate/03-operation-monism.md)
+之 cuo-equivariance ceiling 章节。
+
 ## Phase F.2 migration note (Cell192 → R8)
 
 Previously this module operated on Cell192 = Hexagram × Shi where Shi was a
@@ -88,6 +109,12 @@ inductive YiInstr : Type
   | pop
   /-- 终: halt. -/
   | halt
+  /-- 比阳 (v2, branch if yao = yang): if y_i = yang then jump to target,
+      else advance. Absolute yao test — **not** complement-equivariant
+      (complement flips yang ↔ yin, breaking the test invariant). Adding
+      this instruction promotes the ISA from "complement-symmetric"
+      (12-instr v1) to "universal Hex → Hex" (v2). -/
+  | branchYaoYang (i : Fin 6) (target : Nat)
   deriving Repr
 
 end SSBX.Foundation.Bagua.BaguaTuring
@@ -174,6 +201,11 @@ def execute (instr : YiInstr) (s : YiState) : YiState :=
       | [] => { s with halted := true }
       | h :: rest => { s with cur := h, history := rest, pc := s.pc + 1 }
   | .halt => { s with halted := true }
+  | .branchYaoYang i target =>
+      -- v2 absolute yao test. **not** complement-equivariant.
+      if s.cur.1.yaoAt i = Yao.yang
+      then { s with pc := target }
+      else { s with pc := s.pc + 1 }
 
 /-- Single-step the state: fetch instruction at pc, execute. -/
 def step (s : YiState) : YiState :=
@@ -400,5 +432,73 @@ theorem dao_judge_complete :
   intro h
   rw [daoJudge_correct]
   cases h.isTian <;> simp
+
+/-! ## § 8  complement-equivariant 子集谓词 (v2 doctrine)
+
+  v1 之全集事实「12 原语皆与 complement 通约」在 v2 doctrine 下变为子集事实：
+  仅 `complementEquivariantInstr` 谓词为真的 instruction 仍 complement-通约。
+
+  `branchYaoYang` 是 v2 新加之 absolute yao test, complement 把 yang ↔ yin,
+  绝对测试故必失对称, 不在 equivariant 子集内。
+
+  本谓词为 v2 doctrine 之 formal hook：
+  - 任何在 `complementEquivariantInstr` 内之 instruction 列 program 均仍满足
+    cuo-equivariance（即 v1 之 ★ 等式 `(prog h).complement = prog h.complement`）
+  - `branchYaoYang` 之 program 不在此约束之列，可表非 equivariant 函数 (e.g.
+    `Stdlib.tuiBody` 之 mod-64 自增)
+-/
+
+/-- v2: which YiInstr are complement-equivariant.
+
+    `branchYaoYang` 是 absolute yao test, complement 后必反，
+    故 **不** equivariant；其余 12 原语皆 equivariant（v1 全集事实之 prefix）。 -/
+def complementEquivariantInstr : YiInstr → Bool
+  | .nop => true
+  | .setShi _ => true
+  | .flipYao _ => true
+  | .interlace => true
+  | .complement => true
+  | .reverse => true
+  | .branchYaoEq _ _ _ => true
+  | .branchShiEq _ _ => true
+  | .jump _ => true
+  | .push => true
+  | .pop => true
+  | .halt => true
+  | .branchYaoYang _ _ => false  -- v2 新加之 absolute yao test, 必失对称
+
+/-- A program is complement-equivariant iff every instruction in it is. -/
+def complementEquivariantProg (prog : List YiInstr) : Bool :=
+  prog.all complementEquivariantInstr
+
+/-- 12 v1 原语之每一条均在 equivariant 子集内（穷举）。 -/
+theorem complementEquivariantInstr_v1_originals :
+    complementEquivariantInstr .nop = true
+    ∧ (∀ s, complementEquivariantInstr (.setShi s) = true)
+    ∧ (∀ i, complementEquivariantInstr (.flipYao i) = true)
+    ∧ complementEquivariantInstr .interlace = true
+    ∧ complementEquivariantInstr .complement = true
+    ∧ complementEquivariantInstr .reverse = true
+    ∧ (∀ i j t, complementEquivariantInstr (.branchYaoEq i j t) = true)
+    ∧ (∀ s t, complementEquivariantInstr (.branchShiEq s t) = true)
+    ∧ (∀ t, complementEquivariantInstr (.jump t) = true)
+    ∧ complementEquivariantInstr .push = true
+    ∧ complementEquivariantInstr .pop = true
+    ∧ complementEquivariantInstr .halt = true := by
+  refine ⟨rfl, ?_, ?_, rfl, rfl, rfl, ?_, ?_, ?_, rfl, rfl, rfl⟩ <;> intros <;> rfl
+
+/-- v2 新加之 `branchYaoYang` 不在 equivariant 子集（穷举）。 -/
+theorem branchYaoYang_not_complementEquivariant (i : Fin 6) (target : Nat) :
+    complementEquivariantInstr (.branchYaoYang i target) = false := rfl
+
+/-! ## § 9  v2 之总结 — universal Hex → Hex compile
+
+  v1 doctrine（cuo-equivariance ceiling, 12 原语全集事实）改为 v2 doctrine：
+  - `complementEquivariantInstr` 标识哪些 instruction 仍 commute with complement
+  - 12 v1 原语之 program 之 cuo-equivariance 仍由 `complementEquivariantProg`
+    刻画为子集事实
+  - `branchYaoYang` 之引入打破对称约束, 使 `compileHexFunCertified?` 能 compile
+    任意 `Hex → Hex` 之 Tm (包括 `Stdlib.tuiBody` 之 mod-64 自增等 non-equivariant)
+-/
 
 end SSBX.Foundation.Bagua.BaguaTuring

@@ -413,9 +413,11 @@ theorem restoredMetaInterpProg_dispatchProg_at_offset :
   omega
 
 /-- Instruction-indexed dispatch routing for the restored layout. Dispatch
-lands on the restore prelude, not the block body. -/
+lands on the restore prelude, not the block body.
+
+v2 (2026-05-17): restricted to `IsV1Instr instr`. -/
 theorem restoredMetaInterpProg_dispatch_routes_instr_at_fuel
-    (history : List R8) (instr : YiInstr) :
+    (history : List R8) (instr : YiInstr) (h_v1 : IsV1Instr instr) :
     let μ : YiState :=
       { cur := dispatchTagOfInstr instr
       , history := history
@@ -430,7 +432,8 @@ theorem restoredMetaInterpProg_dispatch_routes_instr_at_fuel
       ∧ μ'.halted = false := by
   simpa using
     dispatchTree_routes_instr_at_segment restoredDispatchOffsets dispatchOffset
-      restoredMetaInterpProg history instr restoredMetaInterpProg_dispatchProg_at_offset
+      restoredMetaInterpProg history instr h_v1
+      restoredMetaInterpProg_dispatchProg_at_offset
 
 /-- Every instruction-indexed dispatch target in the restored layout begins
 with the uniform saved-current-cell restore prelude. -/

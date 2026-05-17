@@ -402,9 +402,14 @@ private theorem cuoState_step_not_halted (s : YiState) (h_nh : s.halted = false)
   rw [show (cuoState s).halted = false from h_nh]
   rfl
 
-/-- The CORE INVARIANT: `step` commutes with `cuoState`.  Case analysis on
-    each YiInstr — captures complement as a structural symmetry of the transition. -/
-theorem cuoState_step (s : YiState) :
+/-- v2: The CORE INVARIANT, **reframed**: `step` commutes with `cuoState`
+    when the fetched instruction is in `complementEquivariantInstr` (v1 之 12 原语).
+
+    v1 doctrine 中此为全集事实；v2 中变为子集事实，guard 为
+    `complementEquivariantInstr instr = true`. `branchYaoYang` (v2 新加) 不在此子集.
+    -/
+theorem cuoState_step_equivariant (s : YiState)
+    (h_eq : ∀ instr, s.prog[s.pc]? = some instr → complementEquivariantInstr instr = true) :
     cuoState (s.step) = (cuoState s).step := by
   by_cases h_halt : s.halted = true
   · have h_halt' : (cuoState s).halted = true := h_halt
@@ -421,6 +426,7 @@ theorem cuoState_step (s : YiState) :
     rcases h_inst : s.prog[s.pc]? with _ | i
     · simp [cuoState]
     · simp
+      have h_inst_eq : complementEquivariantInstr i = true := h_eq i h_inst
       cases i with
       | nop      => rfl
       | setShi sh => rfl
@@ -439,15 +445,15 @@ theorem cuoState_step (s : YiState) :
       | branchYaoEq i j t =>
         unfold YiState.execute cuoState cuoCell
         simp only
-        by_cases h_eq : s.cur.1.yaoAt i = s.cur.1.yaoAt j
-        · rw [if_pos h_eq, if_pos ((yaoEq_cuo s.cur.1 i j).mpr h_eq)]
-        · rw [if_neg h_eq, if_neg (fun h => h_eq ((yaoEq_cuo s.cur.1 i j).mp h))]
+        by_cases h_eq2 : s.cur.1.yaoAt i = s.cur.1.yaoAt j
+        · rw [if_pos h_eq2, if_pos ((yaoEq_cuo s.cur.1 i j).mpr h_eq2)]
+        · rw [if_neg h_eq2, if_neg (fun h => h_eq2 ((yaoEq_cuo s.cur.1 i j).mp h))]
       | branchShiEq sh t =>
         unfold YiState.execute cuoState cuoCell
         simp only
-        by_cases h_eq : s.cur.2 = sh
-        · rw [if_pos h_eq, if_pos h_eq]
-        · rw [if_neg h_eq, if_neg h_eq]
+        by_cases h_eq2 : s.cur.2 = sh
+        · rw [if_pos h_eq2, if_pos h_eq2]
+        · rw [if_neg h_eq2, if_neg h_eq2]
       | jump t => rfl
       | push =>
         unfold YiState.execute cuoState cuoCell
@@ -458,9 +464,21 @@ theorem cuoState_step (s : YiState) :
         | nil => simp
         | cons head rest => simp [cuoCell]
       | halt => rfl
+      | branchYaoYang i t =>
+        -- v2 新加: 此 case 在 hypothesis 下不可达 (complementEquivariantInstr 为 false)
+        exact absurd h_inst_eq (by simp [complementEquivariantInstr])
 
-/-- runFuel commutes with cuoState (any fuel). -/
-theorem cuoState_runFuel (s : YiState) (n : Nat) :
+/-- v1 compat alias — only applicable when programs are in the equivariant subset. -/
+theorem cuoState_step (s : YiState)
+    (h_eq : ∀ instr, s.prog[s.pc]? = some instr → complementEquivariantInstr instr = true) :
+    cuoState (s.step) = (cuoState s).step := cuoState_step_equivariant s h_eq
+
+/-- v2: runFuel commutes with cuoState (any fuel) — guard 加，
+    require all encountered instructions to be equivariant. -/
+theorem cuoState_runFuel (s : YiState) (n : Nat)
+    (h_eq : ∀ s' : YiState, s'.prog = s.prog →
+              ∀ instr, s'.prog[s'.pc]? = some instr →
+                complementEquivariantInstr instr = true) :
     cuoState (s.runFuel n) = (cuoState s).runFuel n := by
   induction n generalizing s with
   | zero => rfl
@@ -475,26 +493,83 @@ theorem cuoState_runFuel (s : YiState) (n : Nat) :
         · rfl
         · exact (h_halt hh).elim
       have h_halt_cuo : (cuoState s).halted = false := h_halt'
-      simp only [h_halt', h_halt_cuo]
-      rw [← cuoState_step]
-      exact ih s.step
+      simp only [h_halt', h_halt_cuo, Bool.false_eq_true, if_false]
+      -- s.step 之 prog 与 s.prog 相同（step 不修改 prog）
+      have h_step_prog : s.step.prog = s.prog := by
+        show (YiState.step s).prog = s.prog
+        unfold YiState.step
+        rw [show s.halted = false from h_halt']
+        simp only [if_false, Bool.false_eq_true]
+        cases h_inst : s.prog[s.pc]? with
+        | none => rfl
+        | some i =>
+          cases i with
+          | nop => rfl
+          | setShi _ => rfl
+          | flipYao _ => rfl
+          | interlace => rfl
+          | complement => rfl
+          | reverse => rfl
+          | branchYaoEq i j t =>
+              show (YiState.execute (.branchYaoEq i j t) s).prog = s.prog
+              unfold YiState.execute
+              by_cases h : s.cur.1.yaoAt i = s.cur.1.yaoAt j
+              · simp [h]
+              · simp [h]
+          | branchShiEq sh t =>
+              show (YiState.execute (.branchShiEq sh t) s).prog = s.prog
+              unfold YiState.execute
+              by_cases h : s.cur.2 = sh
+              · simp [h]
+              · simp [h]
+          | jump _ => rfl
+          | push => rfl
+          | pop =>
+              show (YiState.execute .pop s).prog = s.prog
+              unfold YiState.execute
+              cases s.history <;> rfl
+          | halt => rfl
+          | branchYaoYang i t =>
+              show (YiState.execute (.branchYaoYang i t) s).prog = s.prog
+              unfold YiState.execute
+              by_cases h : s.cur.1.yaoAt i = Yao.yang
+              · simp [h]
+              · simp [h]
+      rw [← cuoState_step_equivariant s (h_eq s rfl)]
+      exact ih s.step (fun s' h_prog instr h_inst =>
+        h_eq s' (by rw [h_prog, h_step_prog]) instr h_inst)
 
 /-- The init state is complement-equivariant: cuoState (init h P) = init (complement h) P. -/
 theorem cuoState_init (h : Hexagram) (P : List YiInstr) :
     cuoState (YiState.init h P) = YiState.init h.complement P := rfl
 
-private theorem halts_cuo_forward (P : List YiInstr) (h : Hexagram) :
+/-- v2 (2026-05-17): predicate "every instruction in P is complement-equivariant".
+    Required to lift `cuoState_step_equivariant` over a whole program. -/
+def AllEquivariant (P : List YiInstr) : Prop :=
+  ∀ instr ∈ P, complementEquivariantInstr instr = true
+
+private theorem halts_cuo_forward (P : List YiInstr) (h : Hexagram)
+    (hP : AllEquivariant P) :
     Halts P h → Halts P h.complement := by
   intro ⟨n, hn⟩
   refine ⟨n, ?_⟩
-  rw [← cuoState_init, ← cuoState_runFuel, cuoState_halted]
+  rw [← cuoState_init,
+      ← cuoState_runFuel _ n (fun s' h_prog instr h_inst => by
+        -- s' 之 prog 与 init 之 prog (= P) 相同; instr ∈ P
+        rw [h_prog] at h_inst
+        simp [YiState.init] at h_inst
+        have : instr ∈ P := List.mem_of_getElem? h_inst
+        exact hP instr this),
+      cuoState_halted]
   exact hn
 
-/-- **MAIN SYMMETRY**: `Halts P h ↔ Halts P (complement h)`. -/
-theorem halts_cuo_invariant (P : List YiInstr) (h : Hexagram) :
+/-- v2: **MAIN SYMMETRY** (子集形): `Halts P h ↔ Halts P (complement h)`,
+    限定于 `AllEquivariant P` (v1 之 12 原语之子集 program). -/
+theorem halts_cuo_invariant (P : List YiInstr) (h : Hexagram)
+    (hP : AllEquivariant P) :
     Halts P h ↔ Halts P h.complement := by
-  refine ⟨halts_cuo_forward P h, fun hyp => ?_⟩
-  have := halts_cuo_forward P h.complement hyp
+  refine ⟨halts_cuo_forward P h hP, fun hyp => ?_⟩
+  have := halts_cuo_forward P h.complement hP hyp
   rwa [Hexagram.complement_involutive] at this
 
 /-! ## § 3 Kleene 递归 假设 + 条件 Halting 不可判
@@ -516,15 +591,16 @@ theorem halts_cuo_invariant (P : List YiInstr) (h : Hexagram) :
   不可判」——即 道理二分 之精确数学陈述。
 -/
 
-/-- A Lean Bool decider is **complement-invariant** iff its output is unchanged
-    under yao-wise hexagram negation.  This is a NECESSARY precondition for
-    Kleene-style inversion in BaguaTuring: by `halts_cuo_invariant`, every
-    YiProg's halt profile is complement-invariant, so only complement-invariant deciders
-    admit a YiProg counter-example.  Without this restriction the plain
-    `KleeneInverter` is provably inconsistent (proof in `CuoInvariance.lean`
-    via `unrestricted_kleene_inverter_inconsistent`). -/
+/-- A Lean Bool decider is **complement-invariant on equivariant programs**:
+    its output is unchanged under yao-wise hexagram negation, when `P` is a
+    `complementEquivariantInstr`-only program. v2 reframing:
+    `halts_cuo_invariant` 之 子集事实 (v1 全集事实) 之 decider-level 投影.
+
+    Without restriction to `AllEquivariant P`, the original predicate
+    `∀ P h, decide P h = decide P h.complement` is inconsistent with v2 之 ISA
+    (含 branchYaoYang), 因可构造 P 使 `Halts P h ≠ Halts P h.complement`. -/
 def CuoInvariantDecide (decide : List YiInstr → Hexagram → Bool) : Prop :=
-  ∀ P h, decide P h = decide P h.complement
+  ∀ P, AllEquivariant P → ∀ h, decide P h = decide P h.complement
 
 /-- **Kleene 递归性质**（complement-invariant 限定形）：对任 complement-不变之 Lean Bool
     函数 `decide`，存在 YiProg D 使其在 h 上停机当且仅当 decide(D, h) = false。
@@ -541,16 +617,16 @@ def KleeneInverter : Prop :=
     CuoInvariantDecide decide →
     ∃ D : List YiInstr, ∀ h : Hexagram, Halts D h ↔ decide D h = false
 
-/-- 由 `Halts P h ↔ Halts P h.complement` 派生：若 `decide` 是 Halts 之 Lean Bool
-    判定器，则它必为 complement-不变。 -/
+/-- 由 `Halts P h ↔ Halts P h.complement` (v2: 限定于 equivariant P) 派生：
+    若 `decide` 是 Halts 之 Lean Bool 判定器，则它在 equivariant P 上 complement-不变。 -/
 theorem cuoInvariant_of_decides_halts
     (decide : List YiInstr → Hexagram → Bool)
     (h_dec : ∀ P h, decide P h = true ↔ Halts P h) :
     CuoInvariantDecide decide := by
-  intro P h
+  intro P hP h
   have h₁ : decide P h = true ↔ Halts P h := h_dec P h
   have h₂ : decide P h.complement = true ↔ Halts P h.complement := h_dec P h.complement
-  have h₃ : Halts P h ↔ Halts P h.complement := halts_cuo_invariant P h
+  have h₃ : Halts P h ↔ Halts P h.complement := halts_cuo_invariant P h hP
   -- Bool extensionality via cases
   cases hb : decide P h with
   | true =>
@@ -571,25 +647,25 @@ theorem cuoInvariant_of_decides_halts
 /-- h-忽略 decide 是 complement-不变（trivially）。 -/
 theorem cuoInvariant_of_h_ignore (f : List YiInstr → Bool) :
     CuoInvariantDecide (fun P _ => f P) := by
-  intro _ _; rfl
+  intro _ _ _; rfl
 
 /-- complement-不变性在 Bool not 下保持。 -/
 theorem cuoInvariant_not (f : List YiInstr → Hexagram → Bool)
     (h_inv : CuoInvariantDecide f) :
     CuoInvariantDecide (fun P h => !f P h) := by
-  intro P h
-  simp only [h_inv P h]
+  intro P hP h
+  simp only [h_inv P hP h]
 
-/-- 由 `Halts P h ↔ Halts P h.complement` 派生：若 `decide` 是 ¬Halts 之 Lean Bool
-    判定器，则它必为 complement-不变。 -/
+/-- 由 `Halts P h ↔ Halts P h.complement` (v2: 限定于 equivariant P) 派生：
+    若 `decide` 是 ¬Halts 之 Lean Bool 判定器，则它在 equivariant P 上 complement-不变。 -/
 theorem cuoInvariant_of_decides_not_halts
     (decide : List YiInstr → Hexagram → Bool)
     (h_dec : ∀ P h, decide P h = true ↔ ¬ Halts P h) :
     CuoInvariantDecide decide := by
-  intro P h
+  intro P hP h
   have h₁ : decide P h = true ↔ ¬ Halts P h := h_dec P h
   have h₂ : decide P h.complement = true ↔ ¬ Halts P h.complement := h_dec P h.complement
-  have h₃ : Halts P h ↔ Halts P h.complement := halts_cuo_invariant P h
+  have h₃ : Halts P h ↔ Halts P h.complement := halts_cuo_invariant P h hP
   cases hb : decide P h with
   | true =>
     have hnh : ¬ Halts P h := h₁.mp hb

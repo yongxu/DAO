@@ -1532,6 +1532,10 @@ manually selecting one of 12 theorem names.  Parameterized opcodes still route
 only to their Strategy-B sub-dispatch/default entry; their payload semantics
 remain a later obligation. -/
 
+/-- v2 (2026-05-17): tag for `branchYaoYang` matches its encoded constructor index
+    (12), per `WenyanSelfInterp.YiInstrEnc.encInstr`. -/
+def branchYaoYangTag : R8 := cellFromIdx ⟨12, by omega⟩
+
 def dispatchTagOfInstr : YiInstr → R8
   | .nop => nopTag
   | .setShi _ => setShiTag
@@ -1545,6 +1549,12 @@ def dispatchTagOfInstr : YiInstr → R8
   | .push => pushTag
   | .pop => popTag
   | .halt => haltTag
+  -- v2: `branchYaoYang` 之 encInstr 头 cell = cellFromIdx 12 (tag 12).
+  -- MetaInterp's dispatch tree 暂未为此 tag 安排 routing slot;
+  -- `dispatchTree_routes_instr_at_segment` 之 branchYaoYang 案 留作 v2 obligation
+  -- (current sub-plan 08 仅交付 ISA + WenDefCompile; MetaInterp 全 13-instr
+  -- self-interp 是 follow-up).
+  | .branchYaoYang _ _ => branchYaoYangTag
 
 def dispatchFuelOfInstr : YiInstr → Nat
   | .nop => 3
@@ -1559,6 +1569,8 @@ def dispatchFuelOfInstr : YiInstr → Nat
   | .push => 4
   | .pop => 5
   | .halt => 6
+  -- v2 placeholder: 同 halt 之 fuel (6).
+  | .branchYaoYang _ _ => 6
 
 def dispatchTargetOfInstr (offsets : DispatchOffsets) : YiInstr → Nat
   | .nop => offsets.nop_offset
@@ -1573,14 +1585,25 @@ def dispatchTargetOfInstr (offsets : DispatchOffsets) : YiInstr → Nat
   | .push => offsets.push_offset
   | .pop => offsets.pop_offset
   | .halt => offsets.halt_offset
+  -- v2 placeholder: 同 halt 之 offset.
+  | .branchYaoYang _ _ => offsets.halt_offset
 
 theorem encInstr_head?_eq_dispatchTagOfInstr (instr : YiInstr) :
     (YiInstrEnc.encInstr instr).head? = some (dispatchTagOfInstr instr) := by
   cases instr <;> rfl
 
+/-- v2 (2026-05-17): predicate "instruction is a v1 12-instr universe member"
+    (i.e., NOT `branchYaoYang`). The `dispatchTree_routes_instr_at_segment`
+    universal dispatch theorem is restricted to this subset in v2; the
+    branchYaoYang case is a follow-up obligation. -/
+def IsV1Instr : YiInstr → Prop
+  | .branchYaoYang _ _ => False
+  | _ => True
+
 theorem dispatchTree_routes_instr_at_segment
     (offsets : DispatchOffsets) (dispatchBase : Nat)
     (metaProg : List YiInstr) (history : List R8) (instr : YiInstr)
+    (h_v1 : IsV1Instr instr)
     (hseg : ∀ i (_ : i < 16),
         metaProg[dispatchBase + i]? =
           (dispatchTree offsets dispatchBase)[i]?) :
@@ -1635,5 +1658,8 @@ theorem dispatchTree_routes_instr_at_segment
   | halt =>
       simpa [dispatchTagOfInstr, dispatchFuelOfInstr, dispatchTargetOfInstr] using
         dispatchTree_routes_halt_at_segment offsets dispatchBase metaProg history hseg
+  | branchYaoYang i target =>
+      -- v2: branchYaoYang 不在 v1 dispatch tree 中. Hypothesis `h_v1` 排除此 case.
+      exact absurd h_v1 (by simp [IsV1Instr])
 
 end SSBX.Foundation.Wen.MetaInterp.Dispatch

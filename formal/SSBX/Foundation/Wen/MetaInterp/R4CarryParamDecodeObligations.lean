@@ -127,6 +127,10 @@ structure DynamicTargetDecodeContracts
   branchYaoTarget :
     ∀ i j target, ParamDecodeAt paramDecodeOffsetOf bodyOffsetOf paramDecodeFuelOf
       (YiInstr.branchYaoEq i j target)
+  /-- v2 (2026-05-17): obligation for `branchYaoYang` instruction. -/
+  branchYaoYangTarget :
+    ∀ i target, ParamDecodeAt paramDecodeOffsetOf bodyOffsetOf paramDecodeFuelOf
+      (YiInstr.branchYaoYang i target)
 
 /-- Operand routing surface.  Finite operand dispatch and dynamic target decode
 are separated because the latter is the real Nat-decoder frontier. -/
@@ -175,6 +179,8 @@ theorem paramDecodeAt_of_contracts
       exact O.parameterFree.pop
   | halt =>
       exact O.parameterFree.halt
+  | branchYaoYang i target =>
+      exact O.dynamicTarget.branchYaoYangTarget i target
 
 theorem r4_carry_param_decode_contracts_cover_all_opcodes :
     ∀ paramDecodeOffsetOf bodyOffsetOf paramDecodeFuelOf,

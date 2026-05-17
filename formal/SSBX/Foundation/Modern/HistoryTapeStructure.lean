@@ -469,7 +469,7 @@ theorem history_tape_structure_summary :
     ∧ (∀ l : VerticalLayer, ∀ s : SiXiang, ∀ y : Yuan,
         removeLayer l (fenAtLayer l s y) = s)
     ∧ fullOperatorSignatures.length = 375
-    ∧ l0InstructionClauseKinds.length = 12 := by
+    ∧ l0InstructionClauseKinds.length = 13 := by  -- v2 加 branchYaoYang
   exact
     ⟨ stateTape_eq_history
     , push_writes_current_cell_to_tape

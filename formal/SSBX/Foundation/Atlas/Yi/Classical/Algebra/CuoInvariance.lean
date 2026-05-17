@@ -47,12 +47,19 @@ open SSBX.Foundation.Bagua.GodelLi
 
 /-! ## § 1 The unrestricted (rejected) form -/
 
-/-- The original `KleeneInverter` form WITHOUT the `CuoInvariantDecide`
-    precondition.  This is the form whose adoption as an axiom would make
-    Lean inconsistent (proved in § 2 below). -/
+/-- v2 (2026-05-17): The original `KleeneInverter` form WITHOUT the
+    `CuoInvariantDecide` precondition, **with v2 restriction**: the witness
+    `D` must be in the `AllEquivariant` subset of YiInstr programs.
+    Without this restriction in v2 (post `branchYaoYang`),
+    `halts_cuo_invariant` no longer applies, and the inconsistency proof
+    in § 2 below would fail.
+
+    In v1 doctrine, the equivariance restriction was implicit (all 12 v1
+    instructions are equivariant); v2 makes it explicit. -/
 def KleeneInverterUnrestricted : Prop :=
   ∀ (decide : List YiInstr → Hexagram → Bool),
-    ∃ D : List YiInstr, ∀ h : Hexagram, Halts D h ↔ decide D h = false
+    ∃ D : List YiInstr, AllEquivariant D ∧
+      ∀ h : Hexagram, Halts D h ↔ decide D h = false
 
 /-! ## § 2 Inconsistency witness -/
 
@@ -87,7 +94,7 @@ theorem kun_eq_cuo_qian : Hexagram.earth = Hexagram.heaven.complement := rfl
 theorem unrestricted_kleene_inverter_inconsistent :
     ¬ KleeneInverterUnrestricted := by
   intro h_unrestricted
-  obtain ⟨D, hD⟩ := h_unrestricted nonCuoInvariantDecide
+  obtain ⟨D, hD_eq, hD⟩ := h_unrestricted nonCuoInvariantDecide
   have h_qian : Halts D Hexagram.heaven ↔ nonCuoInvariantDecide D Hexagram.heaven = false :=
     hD Hexagram.heaven
   have h_kun : Halts D Hexagram.earth ↔ nonCuoInvariantDecide D Hexagram.earth = false :=
@@ -100,10 +107,10 @@ theorem unrestricted_kleene_inverter_inconsistent :
     exact Bool.noConfusion (h_qian.mp hq)
   -- h_kun : Halts D earth ↔ false = false → Halts D earth
   have h_kun_holds : Halts D Hexagram.earth := h_kun.mpr rfl
-  -- complement-invariance: Halts D heaven ↔ Halts D earth
+  -- complement-invariance: Halts D heaven ↔ Halts D earth (v2: requires equivariance)
   have h_cuo_inv : Halts D Hexagram.heaven ↔ Halts D Hexagram.earth := by
     rw [kun_eq_cuo_qian]
-    exact halts_cuo_invariant D Hexagram.heaven
+    exact halts_cuo_invariant D Hexagram.heaven hD_eq
   exact h_not_qian (h_cuo_inv.mpr h_kun_holds)
 
 /-! ## § 3 Public summary
@@ -112,15 +119,20 @@ theorem unrestricted_kleene_inverter_inconsistent :
   RESTRICTED form.  Whether it is consistent in Lean depends on Church-Turing
   for complement-invariant Bool deciders (which this project takes as the meta-axiom).
   What this file proves UNCONDITIONALLY is the negative half: dropping the
-  restriction would make Lean inconsistent. -/
+  restriction would make Lean inconsistent.
 
-/-- The unrestricted form is provably False; this is the receipt that
-    `CuoInvariantDecide` precondition in `GodelLi.lean § 3` is REQUIRED. -/
+  v2 (2026-05-17): `Halts P h ↔ Halts P h.complement` is now a **子集事实**
+  限定 `AllEquivariant P`; v1 全集事实之 `branchYaoYang`-含 program 不在此约束内 (
+  doctrine break, 见 `BaguaTuring.complementEquivariantInstr`). -/
+
+/-- v2: The unrestricted form (with equivariance witness on D) is provably False;
+    this is the receipt that `CuoInvariantDecide` precondition in
+    `GodelLi.lean § 3` is REQUIRED. -/
 theorem complement_invariance_summary :
-    -- (1) Halts is complement-invariant (already in GodelLi)
-    (∀ P h, Halts P h ↔ Halts P h.complement)
-    ∧ -- (2) Unrestricted KleeneInverter is logically false in Lean
+    -- (1) Halts is complement-invariant on equivariant programs (v2 子集事实)
+    (∀ P h, AllEquivariant P → (Halts P h ↔ Halts P h.complement))
+    ∧ -- (2) Unrestricted KleeneInverter (v2 equivariant form) is logically false in Lean
     (¬ KleeneInverterUnrestricted) :=
-  ⟨halts_cuo_invariant, unrestricted_kleene_inverter_inconsistent⟩
+  ⟨fun P h hP => halts_cuo_invariant P h hP, unrestricted_kleene_inverter_inconsistent⟩
 
 end SSBX.Foundation.Bagua.CuoInvariance

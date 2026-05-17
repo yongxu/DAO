@@ -247,6 +247,9 @@ def tokensOfInstr : YiInstr → List Tok
       [Tok.cjk "比时", tokOfShi s, Tok.cjk "至", tokOfNum t]
   | .jump t =>
       [Tok.cjk "跳", Tok.cjk "至", tokOfNum t]
+  -- v2: branchYaoYang
+  | .branchYaoYang i t =>
+      [Tok.cjk "比阳", tokOfYao i, Tok.cjk "至", tokOfNum t]
 
 /-- 程序之规范化 token 序列：sep 隔之。 -/
 def tokensOfProg : List YiInstr → List Tok
@@ -386,6 +389,10 @@ def printInstrChars : YiInstr → List Char
         printNumeralChars t
   | .jump t =>
       ['«', '跳', '»', ' ', '«', '至', '»', ' '] ++ printNumeralChars t
+  -- v2: branchYaoYang
+  | .branchYaoYang i t =>
+      ['«', '比', '阳', '»', ' '] ++ printYaoChars i ++ [' ', '«', '至', '»', ' '] ++
+        printNumeralChars t
 
 /-- (printInstr i).toList 化为 printInstrChars i (在 validInstr i = true 之下). -/
 theorem printInstr_toList (i : YiInstr) (h : validInstr i = true) :
@@ -422,6 +429,12 @@ theorem printInstr_toList (i : YiInstr) (h : validInstr i = true) :
       simp only [printInstr, printInstrChars, String.toList_append]
       rw [printNumeral_toList t h1 h64]
       rfl
+  | branchYaoYang i t =>
+      simp only [validInstr, decide_eq_true_eq] at h
+      obtain ⟨h1, h64⟩ := h
+      simp only [printInstr, printInstrChars, String.toList_append]
+      rw [printYao_toList i, printNumeral_toList t h1 h64]
+      rfl
 
 /-! ## § 5.6  per-instruction lex bridge (M1 v3.1 之主柱) -/
 
@@ -432,6 +445,7 @@ def instrLexFuel : YiInstr → Nat
   | .jump _ => 5
   | .branchShiEq _ _ => 7
   | .branchYaoEq _ _ _ => 9
+  | .branchYaoYang _ _ => 7  -- v2: 同 branchShiEq 之 lex 复杂度
 
 /-- printShiChars 之 inner 不含 '»'. -/
 private theorem printShiChars_inner_no_close (s : Shi) :
@@ -680,8 +694,32 @@ theorem lexFuel_printInstrChars_app
       simp only [tokensOfInstr, List.cons_append, List.nil_append, Option.map_map,
                  Function.comp_def, show String.ofList ['至'] = "至" from rfl,
                  show String.ofList ['跳'] = "跳" from rfl]
+  | branchYaoYang i t =>
+      -- v2: 与 branchShiEq 同结构 (1 yao + 1 至 + 1 numeral)
+      simp only [validInstr, decide_eq_true_eq] at h
+      obtain ⟨h1, h64⟩ := h
+      simp only [printInstrChars, instrLexFuel]
+      have heq : (['«', '比', '阳', '»', ' '] : List Char) ++ printYaoChars i ++
+                  [' ', '«', '至', '»', ' '] ++ printNumeralChars t ++ tail
+        = ('«' :: ['比', '阳'] ++ ['»']) ++ ' ' :: (printYaoChars i ++
+            ' ' :: (('«' :: ['至'] ++ ['»']) ++ ' ' :: (printNumeralChars t ++ tail))) := by simp
+      rw [heq]
+      rw [show n + 7 = (n + 6) + 1 from rfl]
+      rw [lexFuel_bracket_split ['比', '阳'] _ (n + 6)
+            (by intro c hc; simp at hc; rcases hc with rfl|rfl <;> decide)]
+      rw [show n + 6 = (n + 5) + 1 from rfl, lexFuel_skip_space _ (n + 5)]
+      rw [lexFuel_printYaoChars i _ (n + 4)]
+      rw [show n + 4 = (n + 3) + 1 from rfl, lexFuel_skip_space _ (n + 3)]
+      rw [show n + 3 = (n + 2) + 1 from rfl]
+      rw [lexFuel_bracket_split ['至'] _ (n + 2)
+            (by intro c hc; simp at hc; subst hc; decide)]
+      rw [show n + 2 = (n + 1) + 1 from rfl, lexFuel_skip_space _ (n + 1)]
+      rw [lexFuel_printNumeralChars t h1 h64 tail n]
+      simp only [tokensOfInstr, List.cons_append, List.nil_append, Option.map_map,
+                 Function.comp_def, show String.ofList ['比', '阳'] = "比阳" from rfl,
+                 show String.ofList ['至'] = "至" from rfl]
 
-/-! ## § 6  parseInstr inversion (12 案，with append) -/
+/-! ## § 6  parseInstr inversion (13 案，with append) -/
 
 /-- 单条指令之 parser 逆 (with append)：吃 tokensOfInstr i ++ rest 后留 rest. -/
 theorem parseInstr_tokensOfInstr_app (i : YiInstr) (rest : List Tok) (h : validInstr i = true) :
@@ -729,6 +767,17 @@ theorem parseInstr_tokensOfInstr_app (i : YiInstr) (rest : List Tok) (h : validI
       have hnum := parseNumeral_numeralInner t h1 h64
       simp only [tokensOfInstr, List.cons_append, List.nil_append, parseInstr, tokOfNum]
       simp [hnum]
+  | branchYaoYang i t =>
+      -- v2: 镜像 branchShiEq 之 parseInstr inversion 模式
+      simp [validInstr] at h
+      obtain ⟨h1, h64⟩ := h
+      have hnum := parseNumeral_numeralInner t h1 h64
+      have hi := parseYao_yao i
+      have htoki := tokOfYao_eq i
+      simp only [tokensOfInstr, List.cons_append, List.nil_append, parseInstr]
+      rw [htoki]
+      simp only [tokOfNum]
+      rw [hi, hnum]
 
 /-- parseInstr 之 print-逆（不留残）. -/
 theorem parseInstr_tokensOfInstr (i : YiInstr) (h : validInstr i = true) :
@@ -1012,6 +1061,10 @@ private theorem progLexFuel_le_length (p : List YiInstr) (h : validProg p = true
           | jump t =>
               simp [printInstrChars, instrLexFuel, printNumeralChars, numeralInnerChars]
               try omega
+          | branchYaoYang i t =>
+              simp [printInstrChars, instrLexFuel, printNumeralChars, numeralInnerChars,
+                    printYaoChars]
+              try omega
       | cons r rs =>
           have ih' := ih hrest
           show instrLexFuel i + 1 + progLexFuel (r :: rs)
@@ -1045,6 +1098,10 @@ private theorem progLexFuel_le_length (p : List YiInstr) (h : validProg p = true
                 try omega
             | jump t =>
                 simp [printInstrChars, instrLexFuel, printNumeralChars, numeralInnerChars]
+                try omega
+            | branchYaoYang i t =>
+                simp [printInstrChars, instrLexFuel, printNumeralChars, numeralInnerChars,
+                      printYaoChars]
                 try omega
           have h_sep : ['；'].length = 1 := rfl
           rw [h_sep]

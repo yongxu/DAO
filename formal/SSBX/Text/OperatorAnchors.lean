@@ -55,6 +55,8 @@ inductive YiInstrKind where
   | push
   | pop
   | halt
+  -- v2 (2026-05-17)
+  | branchYaoYang
   deriving Repr, DecidableEq, BEq
 
 namespace YiInstrKind
@@ -73,6 +75,7 @@ def token : YiInstrKind → String
   | .push => "推"
   | .pop => "取"
   | .halt => "终"
+  | .branchYaoYang => "比阳"  -- v2
 
 /-- A representative concrete instruction for checking against `primaryToken`. -/
 def sample : YiInstrKind → YiInstr
@@ -88,6 +91,7 @@ def sample : YiInstrKind → YiInstr
   | .push => .push
   | .pop => .pop
   | .halt => .halt
+  | .branchYaoYang => .branchYaoYang ⟨0, by decide⟩ 0  -- v2
 
 theorem primaryToken_sample (k : YiInstrKind) :
     primaryToken k.sample = k.token := by
@@ -97,9 +101,10 @@ end YiInstrKind
 
 def yiInstrKinds : List YiInstrKind :=
   [.nop, .setShi, .flipYao, .interlace, .complement, .reverse,
-   .branchYaoEq, .branchShiEq, .jump, .push, .pop, .halt]
+   .branchYaoEq, .branchShiEq, .jump, .push, .pop, .halt,
+   .branchYaoYang]  -- v2
 
-theorem yiInstrKinds_length : yiInstrKinds.length = 12 := by native_decide
+theorem yiInstrKinds_length : yiInstrKinds.length = 13 := by native_decide
 
 theorem yiInstrKinds_tokens_eq_primaryTokens :
     yiInstrKinds.map YiInstrKind.token = primaryTokens := by
@@ -118,7 +123,7 @@ def token (a : L0OperatorAnchor) : String := a.kind.token
 
 end L0OperatorAnchor
 
-/-- All 12 BaguaWen primary instruction tokens, with text-catalogue status. -/
+/-- All 13 BaguaWen primary instruction tokens (v2), with text-catalogue status. -/
 def l0OperatorAnchors : List L0OperatorAnchor :=
   [ { kind := .nop,          catalogueIds := [],              missingForms := ["不动"] }
   , { kind := .setShi,       catalogueIds := [],              missingForms := ["设时"] }
@@ -132,9 +137,11 @@ def l0OperatorAnchors : List L0OperatorAnchor :=
   , { kind := .push,         catalogueIds := [.T_10, .Z_29],  missingForms := [] }
   , { kind := .pop,          catalogueIds := [],              missingForms := ["取"] }
   , { kind := .halt,         catalogueIds := [.B_2, .D_9],    missingForms := [] }
+  -- v2 (2026-05-17)
+  , { kind := .branchYaoYang, catalogueIds := [],             missingForms := ["比阳"] }
   ]
 
-theorem l0OperatorAnchors_length : l0OperatorAnchors.length = 12 := by
+theorem l0OperatorAnchors_length : l0OperatorAnchors.length = 13 := by
   native_decide
 
 theorem l0OperatorAnchor_tokens_eq_primaryTokens :
@@ -210,7 +217,7 @@ def reservedTokenAnchors : List ReservedTokenAnchor :=
   [{ token := atKeyword, kind := AnchorKind.targetMarker }]
 
 theorem reservedTokenAnchors_length :
-    reservedTokenAnchors.length = 23 := by
+    reservedTokenAnchors.length = 24 := by
   native_decide
 
 theorem reservedTokenAnchor_tokens_eq_reservedTokens :

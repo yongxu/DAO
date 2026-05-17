@@ -386,7 +386,9 @@ theorem semantic_loop_obligation_frontier_summary :
 
 /-- Source instructions covered by the current Strategy-B assembly shape.
     Parameterized instructions are compatible only when their parameters match
-    the fixed defaults embedded in `Assembly.metaInterpProg`. -/
+    the fixed defaults embedded in `Assembly.metaInterpProg`.
+
+    v2 (2026-05-17): `branchYaoYang` 不在 Strategy-B 兼容子集 (留作 v2 obligation). -/
 def StrategyBCompatibleInstr : YiInstr → Prop
   | .nop => True
   | .setShi sh => sh = Shi.dao
@@ -400,6 +402,7 @@ def StrategyBCompatibleInstr : YiInstr → Prop
   | .push => True
   | .pop => True
   | .halt => True
+  | .branchYaoYang _ _ => False  -- v2: not covered by current Strategy-B
 
 /-- Programs covered by the current Strategy-B fixed-parameter assembly. -/
 def StrategyBCompatibleProgram (P : List YiInstr) : Prop :=
