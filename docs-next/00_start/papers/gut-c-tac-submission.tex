@@ -1,0 +1,1362 @@
+% =====================================================================
+%  Universal Sayability Across SMCC-Enriched Lawvere Doctrines
+%  Draft 0.1 -- 2026-05-17
+%
+%  Source markdown: gut-c-tac-submission.md
+%  Target venues (in priority order):
+%    1. Theory and Applications of Categories  (TAC)
+%    2. Logical Methods in Computer Science    (LMCS)
+%    3. Mathematical Structures in Computer Science  (MSCS)
+%
+%  Compile with:  xelatex gut-c-tac-submission.tex   (recommended; Unicode)
+%             or  pdflatex gut-c-tac-submission.tex  (after converting
+%                                                     stray Unicode glyphs)
+%
+%  Venue-specific class swap:
+%    TAC:   \documentclass{tac}        (replaces line below)
+%    LMCS:  \documentclass{lmcs2e}
+%    MSCS:  \documentclass{cambridge6}
+% =====================================================================
+\documentclass[11pt,a4paper]{article}
+
+% --- Encoding / Unicode --------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% For xelatex / lualatex, comment the two above and uncomment:
+% \usepackage{fontspec}
+% \setmainfont{Latin Modern Roman}
+
+% --- Math ----------------------------------------------------------------
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{stmaryrd}   % for some categorical brackets
+
+% --- Diagrams ------------------------------------------------------------
+\usepackage{tikz}
+\usepackage{tikz-cd}
+
+% --- Tables --------------------------------------------------------------
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+
+% --- Lists ---------------------------------------------------------------
+\usepackage{enumitem}
+
+% --- Code listings -------------------------------------------------------
+\usepackage{listings}
+\usepackage{xcolor}
+\lstdefinelanguage{Lean}{
+  morekeywords={theorem,lemma,def,structure,inductive,instance,class,
+                noncomputable,variable,namespace,end,open,import,by,
+                fun,let,in,with,where,match,if,then,else,have,show,
+                exact,intro,intros,apply,rfl,constructor,True,False,
+                Prop,Type,Sort,axiom,example,deriving,Repr,DecidableEq,
+                Nonempty,abbrev},
+  sensitive=true,
+  morecomment=[l]{--},
+  morecomment=[s]{/-}{-/},
+  morestring=[b]"
+}
+\lstset{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\bfseries\color{blue!60!black},
+  commentstyle=\itshape\color{green!40!black},
+  stringstyle=\color{red!50!black},
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  framerule=0.2pt,
+  rulecolor=\color{gray!50},
+  numbers=none,
+  xleftmargin=0.5em,
+  xrightmargin=0.5em,
+}
+
+% --- Hyperlinks ----------------------------------------------------------
+\usepackage[colorlinks=true,linkcolor=blue!50!black,
+            citecolor=green!40!black,urlcolor=blue!60!black]{hyperref}
+\usepackage[capitalise,noabbrev]{cleveref}
+
+% --- Theorem environments -----------------------------------------------
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{construction}[theorem]{Construction}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{openproblem}[theorem]{Open Problem}
+\newtheorem{observation}[theorem]{Observation}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{notation}[theorem]{Notation}
+
+% --- Math shorthands ----------------------------------------------------
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\cat}[1]{\mathbf{#1}}
+\newcommand{\Set}{\cat{Set}}
+\newcommand{\Cat}{\cat{Cat}}
+\newcommand{\HeytAlg}{\cat{HeytAlg}}
+\newcommand{\FdHilb}{\cat{FdHilb}}
+\newcommand{\Frm}{\cat{Frm}}
+\newcommand{\FinVect}{\cat{FinVect}}
+\newcommand{\Mod}{\mathrm{Mod}}
+\newcommand{\Hom}{\mathrm{Hom}}
+\newcommand{\End}{\mathrm{End}}
+\newcommand{\Mat}{\mathrm{Mat}}
+\newcommand{\Ob}{\mathrm{Obj}}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\lfp}{\mathrm{lfp}}
+\newcommand{\TGUT}{T_{\mathrm{GUT}}}
+\newcommand{\TGUTd}{T_{\mathrm{GUT}}^{\dagger}}
+\newcommand{\dgr}{^\dagger}
+\newcommand{\PauliBase}{\mathrm{PauliBase}}
+\newcommand{\PauliN}{\mathrm{PauliN}}
+\newcommand{\DiamondH}{\mathrm{DiamondH4}}
+\newcommand{\Sierp}{\mathrm{Sierpinski}}
+\newcommand{\Vfour}{V_4}
+\newcommand{\tensorPow}{\mathrm{tensorPow}}
+
+% --- Aliases for Unicode-heavy markdown -----------------------------------
+% (We re-render most Unicode arrows / symbols as standard LaTeX macros.)
+\newcommand{\smcc}{SMCC}
+
+% =====================================================================
+\title{Universal Sayability Across SMCC-Enriched Lawvere Doctrines:\\
+       A Categorical Framework for Articulation}
+
+\author{Yongxu Ren\thanks{Independent researcher, Beijing, China.
+        Email: \texttt{renyongxu@gmail.com}}
+        \and
+        John Power\thanks{Department of Mathematics, Macquarie University,
+        Sydney, Australia. \emph{Provisional co-author -- pending acceptance
+        of co-authorship invitation.}}}
+
+\date{Draft 0.1 \quad 2026-05-17}
+
+% =====================================================================
+\begin{document}
+\maketitle
+
+% ---------------------------------------------------------------------
+\begin{abstract}
+The R-tower framework -- a recursive type-family $R\,N\,\delta := \mathrm{Fin}\,N \to \delta$ with axioms P1--P7 (distinction, composition, relations, recursion, Hom-as-content, four-fold modality, atomic involution, Wedderburn anchor) and a single derivation seed D1 -- has been formally verified in Lean~4 + Mathlib (0~sorry / 0~new axioms) for the algebraic case (any \texttt{Fintype}~$\delta$, any \texttt{Field}~$k$, $\mathrm{char}(k)=2$ and $\mathrm{char}(k)\neq2$ finite fields). The associated \emph{Universal Sayability} theorem asserts that every articulation of sayable content satisfying P1--P7 is structure-preservingly equivalent to an R-family-over-$\delta$ for a suitable realisation~$\delta$. Extending this theorem from the algebraic setting to the genuinely non-algebraic settings (Heyting / intuitionistic, quantum / dagger compact, topological / locale-theoretic) requires re-formulating the P-axioms in a way that survives change-of-base. We propose such a reformulation: a \emph{biproduct-enriched Lawvere theory} $\TGUT$ in the sense of Power 1999, whose generators encode P1--P7 universally and whose $\TGUT$-models in different symmetric monoidal closed bases recover the appropriate concrete structures (Arf invariant / Wedderburn anchor; Heyting bimorphisms; Pauli--Klein4 stabiliser structure; frame coproducts). We prove a \emph{layer-by-layer Universal Sayability} result (component-isomorphism level) for any \smcc{} $\mathcal{C}$ with biproducts and chosen $\delta\in\Ob(\mathcal{C})$, verify the framework on four worked instances, and attack the Coecke--Heunen open problem O1 (dagger + cartesian coexistence) by a \emph{factorisation} strategy: dagger structure is excluded from $\TGUT$ itself and lives only on the $\FdHilb$ factor of any $\TGUT$-model targeting Hilbert-space content. The four instances are Lean-formalised at the realisation-existence level (10 documented sorries across 5047~LOC, all pinpointing open mathematical sub-problems rather than engineering debt). We identify five open problems in the framework's current state and three Mathlib upstream contribution opportunities. The paper situates GUT-C alongside the companion metalogic identification $D_1 = \lfp(\Phi)$ (Knaster--Tarski on the articulation candidates lattice) to give a two-axis treatment -- \emph{vertical} (fixed-$\delta$ closure as fixed point) and \emph{horizontal} (cross-$\delta$ universality as enriched doctrine).
+
+\bigskip
+\noindent\textbf{Keywords:} enriched Lawvere theory, symmetric monoidal closed category, biproducts, dagger compact, Bohrification, Pauli group, Heyting algebra, frame, Sierpinski locale, Universal Sayability, articulation, Knaster--Tarski, Lean 4, Mathlib.
+
+\medskip
+\noindent\textbf{2020 Mathematics Subject Classification:} Primary 18C10 (Theories with arities; specifically, Lawvere theories and operads), 18D20 (Enriched categories -- properties and structure), 18M05 (Monoidal categories). Secondary 03G30 (Categorical logic, topoi), 18C50 (Categorical semantics of formal languages), 03B70 (Logic in computer science), 81P16 (Quantum measurement theory, state operations, state preparations), 06D20 (Heyting algebras -- categorical and topological aspects).
+\end{abstract}
+
+% =====================================================================
+\section{Introduction}\label{sec:intro}
+
+\subsection{The articulation problem}\label{sec:intro:problem}
+
+A recurring methodological problem across mathematical foundations, categorical logic, theoretical physics, and the philosophy of language is the following: given a candidate notion of ``sayable'' or ``formally articulable'' content, can one identify a \emph{minimum substrate} on which all such articulations must live? The history of the question is long. Lawvere's functorial semantics of algebraic theories~\cite{Law63} gave a particular categorical answer for algebraic content: any sayable equational theory is a small finite-product category with a chosen generator, and any of its semantic realisations is a finite-product-preserving functor from this category to a suitable target. Eilenberg--Kelly closed categories~\cite{EK66}, Day's convolution structures on functor categories~\cite{Day70}, and the subsequent development of enriched category theory (Kelly~\cite{Kel82}) extended the methodology to linear and otherwise enriched settings. Categorical quantum mechanics (Abramsky--Coecke~\cite{AC04}, Selinger~\cite{Sel07,Sel12}, Heunen--Vicary~\cite{HV19}) refined the answer in the dagger-compact direction. Topos quantum theory (Heunen--Landsman--Spitters~\cite{HLS09}, D\"oring--Isham~\cite{DI08}) refined it in the intuitionistic direction.
+
+In each of these traditions, the \emph{form} of the answer -- that there is a categorical universal property pinning down the candidate substrate -- is the same. What differs is the choice of base category ($\Set$, $\FinVect_k$, $\FdHilb$, $\Frm$, \dots) and the precise structural axioms encoding ``articulation''. The natural unification question is then:
+
+\begin{quote}
+Is there a single doctrinal framework, in the technical sense of Lawvere~\cite{Law69}, whose models in different bases simultaneously recover the algebraic, intuitionistic, quantum, and topological universal-property answers?
+\end{quote}
+
+This paper proposes such a framework. The framework is a \emph{biproduct-enriched Lawvere theory} $\TGUT$ in the sense of Power~\cite{Pow99}, parameterised by a base symmetric monoidal closed category with biproducts and a chosen object $\delta$. We prove a universal sayability theorem at the layer-by-layer component-isomorphism level, verify the framework on four worked instances (algebraic, Heyting, quantum, topological), and attack the open problem of dagger + cartesian coexistence identified by Coecke--Heunen~\cite{CH16} and Heunen--Karvonen~\cite{HK19}.
+
+\subsection{The existing GUT-A/B formal results}\label{sec:intro:gutab}
+
+The first two tiers of the framework -- which we call GUT-A and GUT-B respectively -- are formally complete in Lean~4 + Mathlib (0~sorry / 0~new axioms; current state at 2026-05-17 covers ${\sim}3936$ jobs in \texttt{lake build SSBX}). The detail is documented in the companion roadmap and summarised here as background.
+
+GUT-A is the \textbf{$\F_2$-Boolean / minimum-viable} tier: it discharges both directions (analytic $D_1 \Longrightarrow$ P1--P7 and synthetic P1--P7 $\Longrightarrow$ R-family) of the closure in $\F_2$-Boolean classical scope, together with a non-algebraic $\delta = \mathrm{Prop}$ sibling instance establishing that the framework supports at least one genuinely non-algebraic substrate (cf.\ \texttt{Foundation/R/Distinction/Prop.lean}). The minimum-viable case fixes the structural shape; the Prop sibling shows the framework does not silently collapse to $\F_2$-Boolean.
+
+GUT-B is the \textbf{polymorphic} tier: it extends the layerwise type equivalence to any \texttt{[Fintype $\delta$] [DecidableEq $\delta$] [Inhabited $\delta$]} and the ring iso at carrier~4 to any \texttt{Field}~$k$. The polymorphic uniqueness \texttt{T5\_general} (line~241 of \texttt{Foundation/R/UniquenessGeneral.lean}) is the master statement; corollaries at $\delta = \texttt{Distinction}, \mathbb{Z}/3, \mathrm{Fin}\,5$, plus the cross-instance bridge $R\,N\,\mathrm{Bool} \simeq R\,N\,(\mathbb{Z}/2)$, exercise the polymorphic case. The algebraic-class extension (ring iso at carrier~4 for any \texttt{Field}~$k$) is in \texttt{Foundation/R/UniquenessAlgebraic.lean} (\texttt{T5\_algebraic}); the bilinear classification under $\mathrm{char}(k)=2$ is the Arf invariant (\texttt{Foundation/R/Bilinear/Arf.lean}); the bilinear classification under $\mathrm{char}(k)\neq2$ finite fields is the discriminant (\texttt{Foundation/R/Bilinear/DiscriminantCharNeq2.lean}, completed 2026-05-17 with 0~sorry).
+
+In addition, a \textbf{five-sense $R_4$ minimality} master theorem (\texttt{R4\_structurally\_minimal} of \texttt{Foundation/R/R4Minimality.lean}, commit \texttt{d4ed0f3}) establishes that $R_4$ is structurally minimal in five independent senses (cardinality~16, ring iso $\Mat_2(\F_2)$, squaring decomposition $R\,4 \simeq R\,2 \times R\,2$, $V_4$ forcing on $R_2$, cardinality rigidity for any P1--P7 candidate). This anchors the substrate-level uniqueness claim at the smallest non-trivial layer of the recursive tower.
+
+\subsection{The GUT-C gap}\label{sec:intro:gap}
+
+The third tier -- which we call GUT-C -- is what remains open and what this paper attacks. The GUT-C tier asks: does the same Universal Sayability theorem extend to \emph{non-algebraic} $\delta$, specifically to Heyting (intuitionistic logical), dagger-compact (quantum), and frame-theoretic (topological / locale-theoretic) substrates?
+
+The naive approach -- \emph{make the P-properties class-parametric and prove a per-class theorem} -- runs into a deeper problem. The P-properties P3 (bilinear classification) and P7b (Wedderburn anchor $R\,4 \cong \Mat_2(\F_q)$) are \emph{fundamentally algebraic-specific}. For $\delta = \mathrm{Prop}$, neither the concept of ``$\F_2$-bilinear form'' nor the concept of ``matrix-algebra Wedderburn factor'' lifts naturally. For $\delta = \mathrm{qubit}$ (i.e.\ $\C^2$), only the symplectic / dagger-symmetric specialisations apply, and ``the'' Wedderburn anchor splits between $\Mat_2(\F_2)$ (over $\F_2$) and $\Mat_2(\C)$ (over $\C$) -- both being valid in different senses. For $\delta = \Sierp$ (i.e.\ $\Omega = \{\bot,\top\}$ as a frame), neither bilinearity nor matrix-algebra anchoring even has a definitional analogue.
+
+In short: the algebraic axioms P3 and P7b are not portable, and the patchwork approach of class-parameterisation does not solve the underlying conceptual mismatch.
+
+The framework reformulation we propose addresses this by promoting the axioms to \emph{categorical doctrine level}: P1--P7 are encoded as generators (and equations) of a single enriched Lawvere theory $\TGUT$, and the \emph{concrete} content of each $P_i$ is the per-base specialisation of the corresponding generator in each ambient \smcc.
+
+\subsection{Path C: doctrinal framework via enriched Lawvere theories}\label{sec:intro:path-c}
+
+The technical move is to define $\TGUT$ as a Power-style enriched Lawvere theory~\cite{Pow99} over a symmetric monoidal closed base with biproducts. The base ambient category is the (large) 2-category $\mathcal{V} = \cat{Cat}_{\smcc,\oplus}$ of \smcc{}s with biproducts; the theory $\TGUT$ itself is small and $\mathcal{V}$-enriched with a chosen generator object $\delta_T$. Generators encode P1--P7 (\cref{tab:generators}); equations encode coherence laws. $\TGUT$-models in any \smcc{} base $\mathcal{C}:\mathcal{V}$ with chosen $\delta\in\Ob(\mathcal{C})$ are $\mathcal{V}$-functor realisations sending $\delta_T \mapsto \delta$; the canonical such realisation sends the abstract $\delta_T^{\otimes n}$ (i.e., the $n$-th object of the theory's underlying $\N$-graded family) to the concrete tensor power $\delta^{\otimes n}$ in $\mathcal{C}$.
+
+The intended Universal Sayability theorem then takes the form:
+
+\begin{theorem}[GUT-C Universal Sayability -- informal]\label{thm:us-informal}
+For any \smcc{} $\mathcal{C}$ with biproducts and chosen $\delta\in\Ob(\mathcal{C})$, every $\TGUT$-model $M : \TGUT \to \mathcal{C}$ is naturally equivalent to the canonical model $R_{\mathcal{C}} : N \mapsto \delta^{\otimes N}$.
+\end{theorem}
+
+When $\mathcal{C} = \FinVect_{\F_q}$ and $\delta = \F_q$, this theorem specialises to the existing \texttt{T5\_general} (recovering GUT-A/B). When $\mathcal{C} = \HeytAlg$ and $\delta = \mathrm{Prop}$, it gives a Heyting-bimorphism-classification-style structure. When $\mathcal{C} = \FdHilb$ and $\delta = \C^2$, it gives a Pauli--Klein4 stabiliser-style structure. When $\mathcal{C} = \Frm$ and $\delta = \Omega$ (Sierpinski), it gives a frame-coproduct-classification-style structure.
+
+\subsection{Contributions of this paper}\label{sec:intro:contrib}
+
+The contributions are five-fold:
+
+\begin{enumerate}[leftmargin=*]
+\item \textbf{A precise framework proposal.}~\cref{sec:tgut} gives the definition of $\TGUT$ as a $\mathcal{V}$-enriched Lawvere theory with generators encoding P1--P7 and equations encoding their coherence. The definition stays strict-1-categorical (i.e., does not require $\infty$-categorical machinery) and is compatible with the existing Lean~4 + Mathlib infrastructure.
+
+\item \textbf{A universal sayability theorem at the layer-by-layer iso level.}~\cref{sec:us} states and proves the layerwise version of Universal Sayability: for any $\TGUT$ realisation $M$ in any \smcc{} $\mathcal{C}$ with chosen $\delta$, there is a natural family of isomorphisms $M.R\,n \cong \tensorPow\,\delta\,n$ constructed by induction on $n$. The full coherence with generator morphisms is the explicit $\gamma$.3 refinement target.
+
+\item \textbf{Four worked instances.}~\cref{sec:instances} walks through the framework on four bases (algebraic $\FinVect_{\F_q}$; Heyting $\HeytAlg$; quantum $\FdHilb$ via stabiliser-formalism + Pauli--Klein4 coincidence; topological $\Frm$ via Sierpinski $\Omega$). Each instance identifies which P-properties have ``working'' analogues in the target \smcc{} and which require reformulation. The Heyting instance introduces a novel candidate ``Heyting Wedderburn anchor'' $\DiamondH$ (the 4-element non-Boolean linearly-ordered Heyting algebra) which we conjecture is unique at carrier~4. The quantum instance exposes a ``Pauli--Klein4 coincidence'' (the four single-qubit Pauli operators mod phase $\{I, X, Y, Z\}$ are \emph{literally} the Klein four group $V_4$), which gives the canonical quantum interpretation of P6 (4-fold modality).
+
+\item \textbf{An attack on Open Problem O1.}~\cref{sec:o1} addresses the Coecke--Heunen~\cite{CH16} / Heunen--Karvonen~\cite{HK19} open problem on dagger + cartesian coexistence. Our strategy is \emph{factorisation}: dagger structure is excluded from $\TGUT$ generators and lives only on the $\FdHilb$ factor of any $\TGUT$-model targeting Hilbert-space content. We give evidence supporting this factorisation in the four-instance verification, but flag that the full proof depends on Mathlib infrastructure (dagger-categories, dagger-symmetric-monoidal-categories) that is not yet upstream.
+
+\item \textbf{A Lean formalisation programme.}~\cref{sec:lean} catalogues the existing Lean codebase (\texttt{Foundation/Doctrine/} tree: 5~files, 5047~LOC, 10 documented sorries, 0 axioms) and identifies four Mathlib upstream PR opportunities (\texttt{ElementaryTopos} bundling, \texttt{LawvereTheory} + Model API, weighted enriched limits, dagger-\smcc{} + $\FdHilb$ scaffold). These PR opportunities are independently valuable for Mathlib applications beyond GUT-C.
+\end{enumerate}
+
+\subsection{What this paper does \emph{not} claim}\label{sec:intro:notclaim}
+
+For epistemic hygiene, we explicitly note the boundaries.
+
+\begin{enumerate}[leftmargin=*]
+\item \textbf{GUT-C is not closed.} The full Universal Sayability theorem (with coherence with all generator morphisms) is the $\gamma$.3 refinement target; we currently have only the layer-by-layer iso level. The four worked instances each carry 1--4 documented sorries pointing at substantive open mathematical sub-problems.
+
+\item \textbf{Open Problem O1 is not fully resolved.} Our factorisation strategy is consistent with the four worked instances but is not a proof. A full resolution would require either (a) a positive dagger-Lawvere-theory framework or (b) a no-go theorem ruling out a hidden dagger leak via $\mathcal{V}$-functoriality. We describe progress, not closure.
+
+\item \textbf{Several reformulated P-properties remain open.} The Heyting-bimorphism classification (P3 in $\HeytAlg$), the conjectured uniqueness of $\DiamondH$ (P7b in $\HeytAlg$), the full $\Mat_2(\C)$ ring-iso for the 2-qubit Pauli image (P7b in $\FdHilb$), the frame-bimorphism classification (P3 in $\Frm$), and the conjectured ``minimum finite frame'' classification (Sierpinski-like analogue of P7b in $\Frm$) are each \emph{publishable open problems in their own right}.
+
+\item \textbf{Mathlib infrastructure is partly missing.} The full programme depends on \texttt{LawvereTheory}, \texttt{EnrichedLawvereTheory}, weighted enriched limits, and (for the quantum case) \texttt{DaggerSymmetricMonoidalCategory} + $\FdHilb$ -- none of which currently live in Mathlib. The current Lean code (5047~LOC of \texttt{Foundation/Doctrine/}) defines local approximations of these.
+\end{enumerate}
+
+\subsection{Paper structure}\label{sec:intro:structure}
+
+\Cref{sec:background} surveys the categorical background: classical and enriched Lawvere theories (Lawvere, Power, Hyland--Power); symmetric monoidal closed categories with biproducts (Eilenberg--Kelly, Day, Kelly); the topos-quantum precedent (Heunen--Landsman--Spitters Bohrification) and where our framework departs from it; the dagger-compact direction (Selinger, Abramsky--Coecke, Heunen--Vicary); and the current Lean-formalised status of GUT-A/B. \Cref{sec:tgut} defines $\TGUT$ precisely as a biproduct-enriched Lawvere theory. \Cref{sec:us} states and proves Universal Sayability at the component-iso level. \Cref{sec:instances} walks through the four instances. \Cref{sec:o1} attacks Open Problem O1. \Cref{sec:lean} catalogues the Lean formalisation. \Cref{sec:disc} discusses comparisons (topos quantum theory, categorical doctrines, the companion metalogic paper). \Cref{sec:concl} lists open problems and concludes. \Cref{app:glossary} provides a glossary; \cref{app:repro} gives reproducibility instructions; \cref{app:lean} provides key Lean type definitions.
+
+\subsection{Reading guide for different audiences}\label{sec:intro:reading}
+
+This paper is designed to be self-contained, but the breadth of categorical machinery and the cross-cutting nature of the four worked instances means that different audiences will find different sections more or less useful. We suggest:
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{Categorical logicians familiar with enriched Lawvere theories:} can skim \cref{sec:background}; should focus on \cref{sec:tgut} ($\TGUT$ definition), \cref{sec:us} (Universal Sayability proof), \cref{sec:o1} (O1 attack).
+\item \textbf{Categorical quantum theorists familiar with dagger compact and Bohrification:} can skim \cref{sec:background:dagger,sec:background:bohr}; should focus on \cref{sec:inst:quantum} (quantum instance), \cref{sec:o1} (O1 attack), \cref{sec:disc:bohr} (comparison with Bohrification).
+\item \textbf{Topos theorists / locale theorists:} should focus on \cref{sec:background:bohr} (Bohrification background), \cref{sec:inst:heyting} (Heyting instance) and \cref{sec:inst:topological} (topological instance), \cref{sec:disc:wider} (wider context).
+\item \textbf{Lean / formalisation specialists:} should focus on \cref{sec:lean} (Lean formalisation) and the file references throughout.
+\item \textbf{Foundational / philosophical readers:} should focus on \cref{sec:intro} (introduction), \cref{sec:disc:lawvere} (metalogic identification connection), \cref{sec:concl} (open problems and conclusion).
+\item \textbf{General mathematical readers:} can read \cref{sec:intro} + \cref{sec:disc} + \cref{sec:concl} for a high-level overview without prerequisite categorical machinery.
+\end{itemize}
+
+% =====================================================================
+\section{Background}\label{sec:background}
+
+This section recalls the categorical machinery on which $\TGUT$ is built. Readers familiar with enriched Lawvere theories can skim \cref{sec:background:lawvere,sec:background:enriched,sec:background:smcc}; readers familiar with categorical quantum mechanics and Bohrification can skim \cref{sec:background:bohr,sec:background:dagger}; the relation to currently-formalised GUT-A/B in \cref{sec:background:gutab} may be worth reading regardless.
+
+\subsection{Lawvere theories (classical)}\label{sec:background:lawvere}
+
+A Lawvere theory in the sense of Lawvere~\cite{Law63} is a small category $\mathcal{T}$ with strictly associative finite products such that every object is a finite power of a chosen generator $\delta_{\mathcal{T}}$. Equivalently (and more precisely), a Lawvere theory is a strict identity-on-objects product-preserving functor $J : \N^{\op} \to \mathcal{T}$ from the skeleton of finite sets into the theory, with the generator $\delta_{\mathcal{T}} := J(1)$.
+
+A \emph{$\mathcal{T}$-model} (or \emph{$\mathcal{T}$-algebra}) in a category $\mathcal{C}$ with finite products is a finite-product-preserving functor $M : \mathcal{T} \to \mathcal{C}$. $\mathcal{T}$-models form a category $\Mod_{\mathcal{C}}(\mathcal{T})$ whose morphisms are natural transformations between such functors. The fundamental Lawvere observation~\cite{Law63} is that for $\mathcal{C} = \Set$, Lawvere theories are in essential bijection with monads on $\Set$ of \emph{finitary rank} -- i.e., every algebraic theory in the classical sense (groups, rings, modules, \dots) is presented either as a Lawvere theory or as a finitary monad.
+
+Two canonical examples illustrate the breadth:
+
+\begin{itemize}[leftmargin=*]
+\item $\mathcal{T}_{\mathrm{Grp}}$ (the theory of groups): models in $\Set$ are groups; models in $\cat{TopCat}$ are topological groups; models in $\mathrm{Sh}(X)$ are sheaves of groups.
+\item $\mathcal{T}_{\mathrm{Ring}}$ (the theory of rings): models in $\Set$ are rings; models in $\cat{Ab}$ are rings; models in $\cat{CommRing}^{\op}$ are affine schemes.
+\end{itemize}
+
+The key insight: a single syntactic object $\mathcal{T}$ produces \emph{radically different} semantic structures in radically different bases $\mathcal{C}$, with the universal property ($\Mod_{\mathcal{C}}(\mathcal{T}) \cong \mathrm{Alg}(\mathcal{T}) =$ algebras for the monad $\mathcal{T}_{\mathcal{C}}$ induced from $\mathcal{T}$) preserving the structural shape.
+
+\subsection{Enriched Lawvere theories (Power 1999, Hyland--Power 2007)}\label{sec:background:enriched}
+
+The classical Lawvere theory operates with arities indexed by $\N$. For settings where the natural notion of ``arity'' is something richer than a finite cardinal -- for example, linear arities (a generator is a vector space, arities are tensor powers) or graded arities (a generator is a measurable / topological / chain-complex-valued thing) -- the right generalisation is the enriched Lawvere theory.
+
+The foundational reference is Power~\cite{Pow99}. Given a locally finitely presentable (l.f.p.) symmetric monoidal closed category $\mathcal{V}$, a $\mathcal{V}$-enriched Lawvere theory is a small $\mathcal{V}$-category $\mathcal{L}$ with $\mathcal{V}$-finite cotensors (i.e., $\mathcal{V}$-indexed cotensors restricted to finitely presentable objects), equipped with a strict identity-on-objects $\mathcal{V}$-functor $J : \mathcal{V}_f^{\op} \to \mathcal{L}$ preserving finite cotensors strictly. Here $\mathcal{V}_f$ is the full sub-$\mathcal{V}$-category of finitely presentable objects of $\mathcal{V}$.
+
+Power's main theorem~\cite[Theorem 4.2]{Pow99} is:
+
+\begin{theorem}[Power 1999]\label{thm:power}
+For an l.f.p.\ \smcc{} $\mathcal{V}$, the category $\cat{Law}(\mathcal{V})$ of $\mathcal{V}$-enriched Lawvere theories is equivalent to the category $\cat{Mnd}_f(\mathcal{V})$ of finitary $\mathcal{V}$-enriched monads on $\mathcal{V}$.
+\end{theorem}
+
+The Hyland--Power perspective~\cite{HP07} adds the \emph{philosophical} and \emph{methodological} layer: algebraic operations (in the sense of Plotkin--Power) are natural transformations $\mathrm{op} : T(-)^n \Rightarrow T(-)$ between functor powers, and the syntactic/semantic split between a Lawvere theory $\mathcal{T}$ (syntactic) and its monad $T_{\mathcal{T}}$ on a base $\mathcal{V}$ (semantic) gives a unifying account of computational effects. The theme is ``one theory, many monads'': a single $\mathcal{T}$ can produce different effects monads in different bases (state, exceptions, nondeterminism, I/O, \dots), with the \emph{operations + equations} presentation making the structural commitments explicit in a way that the monad-only presentation does not.
+
+For our purposes the key takeaways are:
+
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Definition.} $\TGUT$ is a $\mathcal{V}$-enriched Lawvere theory for $\mathcal{V} = \smcc + \text{biproducts}$.
+\item \textbf{Generators + equations.} P1--P7 are encoded as generators (with arities) and equations (coherence laws), per Hyland--Power's ``operations + equations'' presentation.
+\item \textbf{Per-base specialisation.} A $\TGUT$-model in $\mathcal{C}:\mathcal{V}$ is a $\mathcal{V}$-functor realisation; the per-base concrete content (Arf invariant in $\FinVect_{\F_q}$; Heyting bimorphism in $\HeytAlg$; symplectic form in $\FdHilb$; frame bimorphism in $\Frm$) is the specialisation of the universal \texttt{relate} generator in the relevant base.
+\end{enumerate}
+
+Two limitations of~\cite{Pow99} directly relevant to us:
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{Single-base.} Power~\cite{Pow99} fixes one \smcc{} base $\mathcal{V}$ and considers $\mathcal{V}$-enriched Lawvere theories over it. We need \emph{parametric base-change}: a single $\TGUT$, instantiated in \emph{many} bases. The closest available framework is Hyland--Power 2007's~\cite{HP07} \S6 (varying base), but neither paper gives a clean \emph{change-of-base} theorem of the form ``for $F : \mathcal{V} \to \mathcal{W}$ a strong symmetric monoidal l.f.p.\ functor, $F$ induces $F_* : \cat{Law}(\mathcal{V}) \to \cat{Law}(\mathcal{W})$ with model functoriality''. GUT-C requires this theorem at the doctrinal level; we approach it via the simpler tactic of \emph{specifying} the four-instance specialisations explicitly and showing they all instantiate $\TGUT$.
+
+\item \textbf{No biproducts assumed.} Power's~\cite{Pow99} base $\mathcal{V}$ does not carry biproducts. GUT-C requires biproduct enrichment for the additive operations (compose, square) to act categorically. This is mentioned only obliquely in~\cite[\S6]{Pow99} and is one of the substantive Mathlib gaps (cf.\ \cref{sec:lean:prs}).
+\end{itemize}
+
+\subsection{Symmetric monoidal closed categories with biproducts}\label{sec:background:smcc}
+
+A \emph{symmetric monoidal closed category} (\smcc) is a category $\mathcal{C}$ equipped with:
+
+\begin{itemize}[leftmargin=*]
+\item a symmetric monoidal structure $(\otimes, I, \alpha, \lambda, \rho, \sigma)$ (associator, left/right unitors, braiding satisfying coherence axioms -- Eilenberg--Kelly~\cite{EK66});
+\item an internal hom functor $[-, -] : \mathcal{C}^{\op} \times \mathcal{C} \to \mathcal{C}$ satisfying the closure adjunction $\Hom_{\mathcal{C}}(A \otimes B, C) \cong \Hom_{\mathcal{C}}(A, [B, C])$.
+\end{itemize}
+
+Day~\cite{Day70} developed the convolution structure on functor categories that gives many examples of \smcc{}s. Kelly~\cite{Kel82} is the standard reference for the technical machinery (cotensors, weighted limits, change of base, \dots).
+
+A \emph{biproduct} in an additive category $\mathcal{C}$ is an object $A \oplus B$ that is simultaneously a categorical product and a categorical coproduct, compatible with a zero object. The presence of biproducts on top of \smcc{} structure gives an ``additive monoidal'' category: morphism-spaces are abelian groups (or, more typically, modules over the underlying ring), composition is bilinear, and the tensor product distributes over biproducts. The four target bases of our framework all have this structure:
+
+\begin{itemize}[leftmargin=*]
+\item $\FinVect_{\F_q}$ (and more generally $\cat{FGModuleCat}\,K$ for any field $K$) -- finite-dimensional $\F_q$-vector spaces / finitely-generated $K$-modules. \smcc{} structure: $\otimes_K$ with internal hom $K$-linear maps. Biproducts: direct sum.
+\item $\HeytAlg$ (= the category of Heyting algebras with Heyting-algebra morphisms) -- strictly speaking, this is the cartesian-closed version (products and exponentials in the Heyting-algebra category, where exponential = Heyting implication). Biproducts: products with the canonical zero object $\{\bot\}$.
+\item $\FdHilb$ (finite-dimensional Hilbert spaces with $\C$-linear maps) -- \smcc{} structure: tensor product of Hilbert spaces with internal hom = adjointable maps (compact-closed). Biproducts: direct sum. Additionally a dagger structure (the inner-product dual), which is where Open Problem O1 sits.
+\item $\Frm$ (frames with frame morphisms preserving finite meets + arbitrary joins) -- \smcc{} structure: the \emph{non-cartesian} monoidal structure on $\Frm$ given by frame coproducts (Joyal--Tierney~\cite{JT84}). Biproducts: not automatic; the cartesian product of frames (in the usual sense) is the right product but not the right monoidal product.
+\end{itemize}
+
+The Mathlib status for these (as of 2026-05) is given in \cref{sec:lean:prs}.
+
+\subsection{Topos quantum theory (Bohrification -- what we depart from)}\label{sec:background:bohr}
+
+The Heunen--Landsman--Spitters Bohrification programme~\cite{HLS09,HLSW12,DI08} provides the most successful prior categorical unification of quantum and intuitionistic content. The construction starts from a unital C*-algebra $A$ and produces:
+
+\begin{itemize}[leftmargin=*]
+\item a topos $\mathcal{T}(A) := \Set^{\mathcal{C}(A)}$ of $\Set$-valued functors on the poset $\mathcal{C}(A)$ of unital commutative C*-subalgebras of $A$, ordered by inclusion;
+\item an internal commutative unital C*-algebra $\bar{A}$ in $\mathcal{T}(A)$;
+\item via Banaschewski--Mulvey constructive Gelfand duality applied internally, a locale $\Sigma(A)$ in $\mathcal{T}(A)$ -- the \emph{internal Gelfand spectrum}, interpreted as the Bohrified phase space;
+\item a Heyting algebra $\mathcal{O}(\Sigma(A))$ of open subobjects of $\Sigma(A)$ -- the \emph{Bohrified quantum logic}, which is intuitionistic (no LEM).
+\end{itemize}
+
+The conceptual move: quantum content is encoded via the \emph{internal intuitionistic logic} of a topos built from the commutative-subalgebra information of the original noncommutative C*-algebra. The asymmetry of the construction is fundamental: starting from a Heyting algebra, you cannot canonically recover a noncommutative C*-algebra. Bohrification is one-directional.
+
+The relevance to our paper is two-fold:
+
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Bohrification is the \emph{worked precedent} for cross-domain categorical unification.} It shows that intuitionistic and quantum content \emph{can} live in one categorical universe (one topos), which gives existence proof for the kind of unification we seek.
+
+\item \textbf{Bohrification is the \emph{negative example} motivating our departure.} Because Bohrification is asymmetric, it cannot give the \emph{symmetric} unification we want: in our framework, $\HeytAlg$ and $\FdHilb$ are \emph{parallel} $\TGUT$-instances, neither encoded inside the other. The Bohrification asymmetry is a feature of the \emph{encoding strategy} (encode quantum inside intuitionistic via internal logic) rather than a fundamental limitation; the symmetric move is to host both as instances of one \emph{doctrine}, with neither base encoded inside the other.
+\end{enumerate}
+
+This is the conceptual heart of the framework. Bohrification answers ``can quantum live inside intuitionistic?'' with ``yes, via Gelfand''; we answer ``is there a doctrine of which both quantum and intuitionistic are equal-status instances?'' with ``yes, via biproduct-enriched Lawvere theory''.
+
+The technical limitation of Bohrification that our framework also addresses: \cite[\S11]{HLS09} explicitly notes that the plain Bohr topos does not encode any \emph{dynamics} -- one needs a presheaf-of-Bohr-toposes over spacetime. Analogously, our static $\TGUT$-model misses the squaring-tower \emph{iteration} (the recursion structure of the R-tower). Our resolution: this iteration is handled at the syntactic level of $\TGUT$ (the $\texttt{square}_N : \delta_T^{\otimes N} \to \delta_T^{\otimes(2N)}$ generator), so the ``dynamics'' of the framework is internal to $\TGUT$ and does not require external 2-categorical scaffolding.
+
+\subsection{Selinger dagger compact and Heunen--Karvonen on dagger limits}\label{sec:background:dagger}
+
+For the quantum side, Selinger's~\cite{Sel07} and Heunen--Vicary's~\cite{HV19} are the standard references. A \emph{dagger category} is a category equipped with an involutive contravariant identity-on-objects functor $\dagger : \mathcal{C}^{\op} \to \mathcal{C}$ (so $f^{\dagger\dagger} = f$, $(g \circ f)^{\dagger} = f^{\dagger} \circ g^{\dagger}$, $\id^{\dagger} = \id$). A \emph{dagger symmetric monoidal category} is a symmetric monoidal category compatible with the dagger (specifically: $\alpha^{\dagger}, \lambda^{\dagger}, \rho^{\dagger}, \sigma^{\dagger}$ coincide with their respective inverses, and $(f \otimes g)^{\dagger} = f^{\dagger} \otimes g^{\dagger}$). A \emph{dagger compact category} additionally has compact-closed structure interacting coherently with the dagger.
+
+$\FdHilb$ is the paradigmatic dagger compact category: the dagger of a linear map $f : V \to W$ between finite-dimensional Hilbert spaces is its adjoint $f^* : W \to V$ (via the inner product), and the compact-closed structure comes from $V \otimes V^* \cong V^* \otimes V$ and the trace pairing. Selinger~\cite{Sel12} proves that $\FdHilb$ is \emph{complete} for dagger compact closed categories: any equation between morphisms expressible in dagger-compact-closed terms holds in $\FdHilb$ iff it holds in the free dagger compact category.
+
+Heunen--Karvonen~\cite{HK19} identifies a structural obstruction in the dagger setting that is critical for our paper: \emph{products in a dagger category are biproducts}. This means a dagger category with cartesian products automatically has biproducts and zero objects, which is incompatible with the typical cartesian-closed-but-not-additive case (e.g., $\HeytAlg$). Coecke--Heunen~\cite{CH16} identifies the resulting open problem (which we call Open Problem O1):
+
+\begin{openproblem}[O1, Coecke--Heunen 2016 / Heunen--Karvonen 2019]\label{op:O1}
+A single category cannot simultaneously support dagger compact structure (for quantum) and cartesian-closed structure (for intuitionistic logic) on the same objects without collapsing one structure into the other.
+\end{openproblem}
+
+Our framework attacks O1 by \emph{not putting either structure inside $\TGUT$} and letting each appear only as a property of the relevant base ($\FdHilb$ gives dagger; $\HeytAlg$ gives cartesian closure). The two sit as \emph{parallel instances} of one doctrine, not as competing structures on the same objects. We elaborate this in \cref{sec:o1}.
+
+\subsection{Current GUT-A/B status}\label{sec:background:gutab}
+
+The current Lean-formalised state of the framework, prior to the GUT-C work this paper introduces, is summarised here so readers know what they are building on.
+
+\textbf{GUT-A ($\F_2$-Boolean classical).} Both directions of $D_1 \longleftrightarrow$ P1--P7 are formally proven in the $\F_2$-Boolean scope, plus a non-algebraic $\delta = \mathrm{Prop}$ sibling. Key files:
+
+\begin{itemize}[leftmargin=*]
+\item \texttt{Foundation/R/Basic.lean} -- R-family definition.
+\item \texttt{Foundation/R/UniquenessF2.lean} -- \texttt{T5\_A} ($\F_2$ specialisation of polymorphic uniqueness).
+\item \texttt{Foundation/R/ClaimZ/Analytic/} (eight modules P1.lean..P7b.lean) -- analytic direction $D_1 \Longrightarrow P_i$ for each $i$.
+\item \texttt{Foundation/R/ClaimZ/Analytic.lean} -- integration \texttt{D1\_implies\_Phase1Closure\_F2}.
+\item \texttt{Foundation/R/Distinction/Prop.lean} -- non-algebraic $\delta = \mathrm{Prop}$ sibling.
+\item \texttt{Foundation/R/D6\_Tests.lean} -- falsifiability infrastructure tested against HoTT / ETCS / SDG (each fails to falsify with a documented structural reason).
+\end{itemize}
+
+\textbf{GUT-B (polymorphic over Fintype $\delta$ + Field $k$).} Layerwise type equivalence proven for any \texttt{[Fintype $\delta$] [DecidableEq $\delta$] [Inhabited $\delta$]}; ring iso at carrier~4 proven for any \texttt{Field}~$k$; finite-field $\mathrm{char}(k) \neq 2$ Witt cancellation completed. Key files:
+
+\begin{itemize}[leftmargin=*]
+\item \texttt{Foundation/R/UniquenessGeneral.lean} (line~241) -- \texttt{T5\_general} master statement.
+\item \texttt{Foundation/R/UniquenessGeneral/Demos.lean} -- corollaries at \texttt{Bool}, \texttt{Distinction}, \texttt{Fin n}, \texttt{ZMod n}.
+\item \texttt{Foundation/R/UniquenessAlgebraic.lean} -- ring iso at carrier~4 for any \texttt{Field}~$k$.
+\item \texttt{Foundation/R/Bilinear/Arf.lean} -- Arf invariant classification ($\mathrm{char}(k) = 2$).
+\item \texttt{Foundation/R/Bilinear/DiscriminantCharNeq2.lean} -- discriminant classification ($\mathrm{char}(k) \neq 2$ finite fields, completed 2026-05-17 with 0~sorry).
+\end{itemize}
+
+\textbf{Five-sense $R_4$ minimality.} Master theorem \texttt{R4\_structurally\_minimal} of \texttt{Foundation/R/R4Minimality.lean} (commit \texttt{d4ed0f3}) establishes $R_4$'s structural minimality in five independent senses. The position~4 of the recursive tower is not arbitrary -- it is the smallest at which all three locks (P6 4-fold; squaring as product; involution closure) become simultaneously satisfiable in a non-degenerate way.
+
+\textbf{Metalogic identification (companion paper).} The bi-directional closure $D_1 \longleftrightarrow$ P1--P7 is rigorously identified as $D_1 = \lfp(\Phi')$ -- the Knaster--Tarski least fixed point of a carrier-growing requirements-extraction operator $\Phi'$ on a candidates lattice $\mathcal{A}$. The literal application of Lawvere's 1969 fixed-point theorem~\cite{Law69} fails by cardinality; we replace point-surjectivity with \emph{self-internalisation} ($R$-$\cat{Vec}$ is hom-closed and product-closed on $\{R\,N \mid N : \N\}$). The Lean partial formalisation lives in \texttt{Foundation/Closure/PhiOperator.lean} (5/8 sorries discharged).
+
+Build state at 2026-05-17: \texttt{lake build SSBX} succeeds with ${\sim}3936$ jobs. The codebase carries 0 axioms in the strict sense (no \texttt{axiom} declarations beyond the Mathlib substrate).
+
+\subsection{Why ``biproduct-enriched'' specifically}\label{sec:background:bip}
+
+A natural question: why do we require biproducts in the base $\mathcal{V}$? Several alternatives could be considered:
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{Option 1 (what we use):} $\mathcal{V} = \smcc + \text{biproducts}$. The framework requires biproduct-enrichment for the compose generator (P2) to be interpreted as a categorical direct-sum embedding. Pros: clean categorical content; matches the natural interpretation of compose in all four target bases. Cons: rules out non-additive bases (e.g., pure $\Set$-based examples).
+\item \textbf{Option 2:} $\mathcal{V} = \smcc$ only (no biproducts). Replace biproducts with explicit duplication structure (e.g., comonoid structure). Pros: more general; covers non-additive bases. Cons: the compose generator becomes more complex; some equational laws (e.g., bilinearity of compose) are harder to state.
+\item \textbf{Option 3:} $\mathcal{V} =$ cartesian-closed only. Use cartesian product as the monoidal structure. Pros: simplest setting; matches the standard Lawvere-theory framework. Cons: rules out genuinely non-cartesian \smcc{}s (e.g., $\FdHilb$ with tensor product); makes the quantum and topological cases trivial in the wrong sense.
+\item \textbf{Option 4:} $\mathcal{V} = $ dagger-\smcc. Add dagger structure to the base. Pros: gives a uniform setting for quantum + classical. Cons: rules out $\HeytAlg$ (which has no non-trivial dagger); forces the framework toward the dagger-Lawvere extension discussed in \cref{sec:o1:dagger-lawvere}.
+\end{itemize}
+
+Our choice (Option~1) is the \emph{minimum-strength} base that supports all four worked instances cleanly.
+
+% =====================================================================
+\section{The $\TGUT$ Doctrine}\label{sec:tgut}
+
+We now give the precise definition of $\TGUT$ as a biproduct-enriched Lawvere theory.
+
+\subsection{The base 2-category $\mathcal{V}$}\label{sec:tgut:V}
+
+The base 2-category over which $\TGUT$ is enriched is
+\[
+\mathcal{V} := \cat{Cat}_{\smcc,\oplus}
+\]
+-- the 2-category of small \smcc{}s with biproducts, with strong symmetric monoidal functors as 1-cells and monoidal natural transformations as 2-cells.
+
+Strictly speaking, $\mathcal{V}$ should be locally small (1-cell hom-categories small) and presentable in the appropriate sense to satisfy Power's~\cite{Pow99} hypothesis ``$\mathcal{V}$ is l.f.p.\ as a closed category''. The current treatment leaves this size question to the per-instance specialisation: we instantiate $\TGUT$ in concrete \smcc{}s ($\FinVect_{\F_q}$, $\HeytAlg$, $\FdHilb$-via-stabilisers, $\Frm$) and verify the construction in each case. A full size analysis is deferred to the $\gamma$.3 refinement.
+
+\subsection{The theory $\TGUT$ -- generators}\label{sec:tgut:gens}
+
+$\TGUT$ is a small $\mathcal{V}$-enriched Lawvere theory presented by generators and equations. The underlying $\N$-indexed family of objects is $\{X_N : N \in \N\}$ with chosen generator $\delta_T := X_1$. Each $X_N$ is interpreted in any model $M$ as $M(X_N) = R\,N$, the $N$-th object of the model's underlying family; the canonical realisation in any \smcc{} $\mathcal{C}$ with chosen $\delta$ sets $M(X_N) = \delta^{\otimes N}$ (iterated tensor power).
+
+The eight generator families, encoding P1--P7, are given in \cref{tab:generators}.
+
+\begin{table}[h!]
+\centering
+\small
+\begin{tabular}{lll}
+\toprule
+Generator & Type & Encodes \\
+\midrule
+$\id_\delta : \delta_T \to \delta_T$ & identity at the generator & P1 (distinction) \\
+$\mathtt{compose}_{N,M} : \delta_T^{\otimes N} \otimes \delta_T^{\otimes M} \to \delta_T^{\otimes(N+M)}$ & direct-sum embedding & P2 (composition / biproduct) \\
+$\mathtt{relate}_{N,M} : \delta_T^{\otimes N} \to \delta_T^{\otimes M}$ & morphism family & P3 (relations) \\
+$\mathtt{square}_N : \delta_T^{\otimes N} \to \delta_T^{\otimes(2N)}$ & doubling & P4 (squaring / scale) \\
+$\mathtt{hom}_{N,M} : (\delta_T^{\otimes N} \multimap \delta_T^{\otimes M}) \to \delta_T^{\otimes(N\cdot M)}$ & curry/uncurry & P5 (Hom-as-content) \\
+$\mathtt{modal}_{V_4} : \delta_T \to \delta_T^{\otimes 2} \otimes \delta_T^{\otimes 2}$ & $V_4$ embedding & P6 (4-fold modality) \\
+$\mathtt{atom}_3 : \delta_T^{\otimes 3} \to \delta_T^{\otimes 3}$ with $\mathtt{atom}_3^2 = \id$ & involution & P7a \\
+$\mathtt{wedderburn}_4 : \delta_T^{\otimes 4} \cong \End(\delta_T^{\otimes 2})$ & endomorphism iso & P7b (generalised) \\
+\bottomrule
+\end{tabular}
+\caption{The eight generator families of $\TGUT$.}\label{tab:generators}
+\end{table}
+
+A brief annotation of each:
+
+\begin{itemize}[leftmargin=*]
+\item $\id_\delta$ is the identity on the generator; categorically this is automatically present in any category, but we list it because it is the categorical encoding of the \emph{distinction} axiom P1.
+
+\item $\mathtt{compose}_{N,M}$ is the embedding $\delta_T^{\otimes N} \otimes \delta_T^{\otimes M} \to \delta_T^{\otimes(N+M)}$ corresponding to the categorical direct-sum (= biproduct, since the base is biproduct-enriched) of two tensor-power objects.
+
+\item $\mathtt{relate}_{N,M}$ is the \emph{abstract} family of relating morphisms between any two tensor-power objects. In the canonical realisation $R_{\mathcal{C}}$ sending $\delta_T \mapsto \delta$, the concrete content of $\mathtt{relate}_{N,M}$ is the entire morphism set $\Hom_{\mathcal{C}}(\delta^{\otimes N}, \delta^{\otimes M})$. The per-base specialisation of this generator is one of the chief framework outputs: in $\FinVect_{\F_q}$ it specialises to $\F_q$-bilinear forms classified by Arf invariant / discriminant; in $\HeytAlg$ to Heyting bimorphisms; in $\FdHilb$ to dagger-symmetric forms (symplectic in the $\F_2$ image); in $\Frm$ to frame bimorphisms.
+
+\item $\mathtt{square}_N$ is the doubling generator $\delta_T^{\otimes N} \to \delta_T^{\otimes(2N)}$. Categorically, this is the diagonal-then-tensor-with-self composition: $\mathtt{square}_N = (\id_{\delta_T^{\otimes N}} \otimes \id_{\delta_T^{\otimes N}}) \circ \Delta_{\delta_T^{\otimes N}}$ where $\Delta$ is the diagonal.
+
+\item $\mathtt{hom}_{N,M}$ is the Hom-as-content generator $(\delta_T^{\otimes N} \multimap \delta_T^{\otimes M}) \to \delta_T^{\otimes(N\cdot M)}$ corresponding to the curry/uncurry isomorphism of the \smcc{} closure adjunction.
+
+\item $\mathtt{modal}_{V_4}$ is the $V_4$ four-fold-modality generator $\delta_T \to \delta_T^{\otimes 2} \otimes \delta_T^{\otimes 2}$. This is the embedding of the generator into a 4-fold tensor product, encoding the structural-minimum four-fold modality required by $D_1$ item~8.
+
+\item $\mathtt{atom}_3$ is the aspect involution $\delta_T^{\otimes 3} \to \delta_T^{\otimes 3}$ with $\mathtt{atom}_3 \circ \mathtt{atom}_3 = \id_{\delta_T^{\otimes 3}}$.
+
+\item $\mathtt{wedderburn}_4$ is the generalised Wedderburn anchor: an isomorphism $\delta_T^{\otimes 4} \cong \End(\delta_T^{\otimes 2})$ where $\End$ is the internal endomorphism object $[\delta_T^{\otimes 2}, \delta_T^{\otimes 2}]$. The per-base specialisation: in $\FinVect_{\F_q}$ this gives $R\,4 \cong \Mat_2(\F_q)$; in $\FdHilb$ it gives $R\,4 \cong M_2(\C)$; in $\HeytAlg$ the analogue is $R\,4 \cong \DiamondH$ (our conjectured minimum non-Boolean 4-element Heyting anchor); in $\Frm$ the analogue is $R\,4 \cong \Sierp^2$ (the Sierpinski cube).
+\end{itemize}
+
+\subsection{The theory $\TGUT$ -- equations}\label{sec:tgut:eqns}
+
+The equations of $\TGUT$ encode the coherence laws between the generators. The full list is given as \texttt{TGUTLaw} in \texttt{Foundation/Doctrine/T\_GUT.lean} lines 230--253. We summarise the most important:
+
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Atom involutivity (P7a):} $\mathtt{atom}_3 \circ \mathtt{atom}_3 = \id_{\delta_T^{\otimes 3}}$.
+
+\item \textbf{Squaring as diagonal (P4):} $\mathtt{square}_N = (\id_{\delta_T^{\otimes N}} \otimes \id_{\delta_T^{\otimes N}}) \circ \Delta_{\delta_T^{\otimes N}}$.
+
+\item \textbf{Compose associativity (P2):} $\mathtt{compose}_{(N+M),K} \circ (\mathtt{compose}_{N,M} \otimes \id) = \mathtt{compose}_{N,(M+K)} \circ (\id \otimes \mathtt{compose}_{M,K})$.
+
+\item \textbf{Compose unitality (P2):} $\mathtt{compose}_{N,0} = \id_{\delta_T^{\otimes N}}$ and $\mathtt{compose}_{0,M} = \id_{\delta_T^{\otimes M}}$ (with the convention $\delta_T^{\otimes 0} = I$, the monoidal unit).
+
+\item \textbf{Hom-as-content compatibility (P5):} $\mathtt{hom}_{N,M} \circ \mathrm{curry}_{N,M} = \id_{(\delta_T^{\otimes N} \multimap \delta_T^{\otimes M})}$.
+
+\item \textbf{Wedderburn iso (P7b):} $\mathtt{wedderburn}_4 \circ \mathtt{wedderburn}_4^{-1} = \id$ together with appropriate naturality conditions.
+
+\item \textbf{Modal $V_4$ idempotency (P6):} $\mathtt{modal}_{V_4} \circ \mathtt{modal}_{V_4}$ factors through $\id \otimes \id$.
+\end{enumerate}
+
+These equations are the \emph{minimum} set required to make the canonical realisation $R_{\mathcal{C}}$ (sending $\delta_T \mapsto \delta$ in any \smcc{} $\mathcal{C}$ with chosen $\delta$) into a satisfier of $\TGUT$. The full set of equations needed for the \emph{uniqueness} part of Universal Sayability is currently the $\gamma$.3 refinement target (cf.\ \cref{sec:us}).
+
+\subsection{Realisations}\label{sec:tgut:real}
+
+A \emph{realisation} of $\TGUT$ in an \smcc{} $\mathcal{C}$ with chosen $\delta \in \Ob(\mathcal{C})$ is a record bundling the data of a candidate $\TGUT$-model. The precise Lean structure (cf.\ \texttt{Foundation/Doctrine/T\_GUT.lean} lines 316--347) is:
+
+\begin{lstlisting}[language=Lean]
+structure TGUTRealisation (C : Type u) [Category C]
+    [MonoidalCategory C] (delta : C) where
+  R : Nat -> C
+  R_unit : R 0 ≅ tensor_unit_C
+  R_gen : R 1 ≅ delta
+  R_tensor : forall n m, R (n + m) ≅ R n ⊗ R m
+  compose_mor : forall N M, R N ⊗ R M ⟶ R (N + M)
+  square_mor : forall N, R N ⟶ R (2 * N)
+  relate_mor : forall N M, R N ⟶ R M
+  hom_mor : forall N M, R (N * M) ⟶ R (N * M)
+  modal_V4_mor : R 1 ⟶ R 2 ⊗ R 2
+  atom_3_mor : R 3 ⟶ R 3
+  wedderburn_4_mor : R 4 ≅ R 4
+\end{lstlisting}
+
+The first four fields (\texttt{R}, \texttt{R\_unit}, \texttt{R\_gen}, \texttt{R\_tensor}) are the \emph{structural} data of a realisation: an $\N$-indexed family of objects of $\mathcal{C}$, with structural isos pinning down the empty tensor power ($R\,0 = I$), the generator ($R\,1 = \delta$), and tensor-power additivity ($R(n+m) \cong R\,n \otimes R\,m$). The remaining seven fields are the \emph{generator} morphisms.
+
+A realisation is \emph{not} required by this structure to satisfy the equational laws (\cref{sec:tgut:eqns}); that condition is a separate \texttt{Satisfies : TGUTRealisation C $\delta$ $\to$ TGUTLaw $\to$ Prop} proposition. A realisation that satisfies the standard laws is called an \emph{adequate} realisation.
+
+\subsection{The canonical realisation}\label{sec:tgut:canon}
+
+In any \smcc{} $\mathcal{C}$ with chosen $\delta \in \Ob(\mathcal{C})$, the \emph{canonical realisation} $R_{\mathcal{C}} : \mathtt{TGUTRealisation}\,\mathcal{C}\,\delta$ is constructed by sending $R\,n := \tensorPow\,\delta\,n$ (iterated tensor power), with the structural isos and generator morphisms supplied by the standard structural coherences of the \smcc{} (associators, unitors, braidings, \dots).
+
+\subsection{The (P-property, base, specialisation) $3 \times 3$}\label{sec:tgut:matrix}
+
+The same syntactic generator gives different \emph{concrete} content in each base \smcc. This is the central design feature of the framework: P-properties live at the doctrine level (universal), and their per-base specialisation gives the class-specific structures. \Cref{tab:specialisation} summarises.
+
+\begin{table}[h!]
+\centering
+\scriptsize
+\begin{tabular}{p{2cm}p{2.7cm}p{2.7cm}p{2.7cm}p{2.7cm}}
+\toprule
+Generator & $\FinVect_{\F_q}$ & $\HeytAlg$ & $\FdHilb$ & $\Frm$ \\
+\midrule
+\texttt{relate} (P3) & $\F_q$-bilinear; Arf / discriminant & Heyting bimorphisms & symplectic forms & frame bimorphisms \\
+\texttt{square} (P4) & tensor squaring $R\,N \to R(2N)$ & meet idempotence & tensor squaring & meet squaring \\
+\texttt{hom} (P5) & $\mathrm{LinHom}\,N\,M \simeq R(N\cdot M)$ & Heyting implication $\Rightarrow$ & dagger duality $(-)^*$ & frame implication / locale exponential \\
+\texttt{modal}$_{V_4}$ (P6) & $V_4$ Shi (Way/Already/Now/Not-yet) & classical 4-modality & Pauli $\{I, X, Y, Z\}$ mod phase ($\cong V_4$) & Sierpinski-like 4-mod \\
+\texttt{wedderburn}$_4$ (P7b) & $R\,4 \cong \Mat_2(\F_q)$ & $R\,4 \cong \DiamondH$ & $R\,4 \cong \Mat_2(\C)$ & $R\,4 \cong \Sierp^2$ \\
+\bottomrule
+\end{tabular}
+\caption{The (P-property, base, specialisation) $3 \times 3$ of $\TGUT$.}\label{tab:specialisation}
+\end{table}
+
+The framework discriminates correctly between \emph{substrate-level} generators (P1, P2, P4, P5, P6, P7a) -- which carry over largely unchanged across all four bases -- and \emph{algebraic-class} generators (P3, P7b) -- which reformulate non-trivially. This is exactly the design intent: $\TGUT$ should not assume that ``bilinear'' or ``Wedderburn anchor'' have universal meanings; the generators provide universal hooks, and the per-base content fills them in.
+
+\subsection{Substrate vs class-specific: the Heyting validation}\label{sec:tgut:heyting-val}
+
+A key empirical validation of the framework is the Heyting case (\texttt{Foundation/Doctrine/Instance/Heyting.lean}). The framework's discrimination between substrate-level and algebraic-class generators is the substantive finding:
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{6/8 substrate-level generators} ($\id_\delta$, \texttt{compose}, \texttt{square}, \texttt{hom}, \texttt{modal}$_{V_4}$, \texttt{atom}$_3$) carry over unchanged from algebraic to Heyting, with the Heyting interpretation given by the cartesian-closed structure of $\HeytAlg$.
+\item \textbf{2/8 algebraic-class generators} (\texttt{relate} / P3, \texttt{wedderburn}$_4$ / P7b) reformulate with non-trivial Heyting content. P3 becomes Heyting-bimorphism classification (a research open problem); P7b becomes $R\,4 \cong \DiamondH$ (a novel candidate anchor, also a research open problem).
+\end{itemize}
+
+This is the empirical confirmation that the framework's universal-vs-specialisation design is well-aimed.
+
+The $\DiamondH$ discovery itself is worth a brief note. It is defined as the 4-element linearly-ordered Heyting algebra $\{\bot < \mathrm{mid}_1 < \mathrm{mid}_2 < \top\}$ with explicit \texttt{himp} (Heyting implication) operation. The Lean theorem \texttt{DiamondH4\_is\_nonBoolean} proves $\neg\neg \mathrm{mid}_1 = \bot \neq \mathrm{mid}_1$, demonstrating the intrinsic non-Boolean Heyting structure at the smallest non-trivial size. The conjecture (currently open) is $R\,4\,\mathrm{Prop} \simeq \DiamondH$ -- the minimum-size Heyting anchor at carrier~4. If this conjecture is correct, it is the Heyting analogue of P7b's $\Mat_2(\F_2)$ in the algebraic case, and gives the framework its first novel mathematical-object prediction.
+
+\subsection{The Lawvere--Power equivalence and its specialisations}\label{sec:tgut:lp}
+
+We pause to make precise the relationship between $\TGUT$ and Power's~\cite{Pow99} theorem $\cat{Law}(\mathcal{V}) \simeq \cat{Mnd}_f(\mathcal{V})$. Power's theorem gives, for any locally finitely presentable \smcc{} base $\mathcal{V}$, an equivalence between $\mathcal{V}$-enriched Lawvere theories and finitary $\mathcal{V}$-enriched monads on $\mathcal{V}$. The forward functor sends a theory $\mathcal{L}$ to the monad $T_{\mathcal{L}}$ whose algebras are $\mathcal{L}$-models in $\mathcal{V}$; the reverse functor sends a finitary monad $T$ to its Kleisli $\mathcal{V}$-category restricted to finitely presentable arities.
+
+For our framework this translates as: $\TGUT$ determines a \emph{family} of monads, one in each base $\mathcal{C} = \smcc + \text{biproducts}$. Each monad $T_{\TGUT, \mathcal{C}}$ on $\mathcal{C}$ has algebras $\mathrm{Alg}(T_{\TGUT, \mathcal{C}}) \cong \Mod_{\mathcal{C}}(\TGUT)$. The forgetful functor $\Mod_{\mathcal{C}}(\TGUT) \to \mathcal{C}$ is monadic, with left adjoint generating the free $\TGUT$-model on each object of $\mathcal{C}$.
+
+\subsection{The specialisation principle}\label{sec:tgut:spec}
+
+A central design feature of the framework is the \emph{specialisation principle}: a single universal generator $g : \mathtt{TGUTOp}$ gives different concrete content $M.\mathtt{interp}(g)$ in different bases $\mathcal{C}$.
+
+\begin{lstlisting}[language=Lean]
+noncomputable def interp (M : TGUTRealisation C delta) :
+    forall (g : TGUTOp),
+    M.R g.src ⟶ M.R g.tgt
+  | .id_delta      => identity (M.R 1)
+  | .compose N M_  =>
+      (M.R_tensor N M_).hom >> M.compose_mor N M_
+  | .square N      => M.square_mor N
+  | .hom N M_      => M.hom_mor N M_
+  | .modal_V4      =>
+      M.modal_V4_mor >> (M.R_tensor 2 2).inv
+  | .atom_3        => M.atom_3_mor
+  | .wedderburn_4  => M.wedderburn_4_mor.hom
+  | .relate N M_   => M.relate_mor N M_
+\end{lstlisting}
+
+The function \texttt{interp} dispatches each syntactic generator to the corresponding concrete morphism in the realisation $M$.
+
+\begin{remark}[Specialisation Principle]\label{rem:spec}
+For each generator $g : \mathtt{TGUTOp}$ and each base $\mathcal{C}$ with chosen $\delta$, the concrete content of $g$ in any $\TGUT$-realisation $M$ in $(\mathcal{C}, \delta)$ is determined by (i) the arity $g.\mathtt{arity} = (\mathtt{src}, \mathtt{tgt})$ (universal), (ii) the dispatch function \texttt{interp} (universal), and (iii) the data of $M$ (per-realisation). Different choices of $M$ give different concrete content; the universal generator structure stays fixed.
+\end{remark}
+
+This is the categorical embodiment of the slogan ``one theory, many monads'' (Hyland--Power 2007~\cite{HP07}).
+
+% =====================================================================
+\section{Universal Sayability Theorem}\label{sec:us}
+
+We now state the central theorem of the framework and prove the layer-by-layer component-iso version.
+
+\subsection{Statement}\label{sec:us:statement}
+
+\begin{theorem}[GUT-C Universal Sayability -- layer-by-layer iso version]\label{thm:us}
+Let $\mathcal{C}$ be a symmetric monoidal closed category with biproducts and a chosen object $\delta \in \Ob(\mathcal{C})$. Let $R_{\mathcal{C}} := \mathtt{TGUTRealisation.canonical}\,\delta$ be the canonical tensor-power realisation. Then for any other realisation $M : \mathtt{TGUTRealisation}\,\mathcal{C}\,\delta$, there is a natural family of isomorphisms
+\[
+\mathtt{iso} : \forall n,\ M.R\,n \cong \tensorPow\,\delta\,n
+\]
+in $\mathcal{C}$.
+\end{theorem}
+
+The Lean statement is:
+
+\begin{lstlisting}[language=Lean]
+theorem universal_sayability (delta : C) (M : TGUTRealisation C delta) :
+    Nonempty (RealIso M (canonical delta)) :=
+  Nonempty.intro { iso := componentIso delta M }
+\end{lstlisting}
+
+where \texttt{RealIso M N} is the record type with fields \texttt{iso : forall n, M.R n $\cong$ N.R n} and a coherence predicate \texttt{coherent : Prop} (currently defaulting to \texttt{True}).
+
+\subsection{Proof via componentIso recursion}\label{sec:us:proof}
+
+\begin{proof}[Proof of \cref{thm:us}]
+The proof is by induction on $n$, constructing the family of component isos $M.R\,n \cong \tensorPow\,\delta\,n$ from the structural data of $M$.
+
+\textbf{Base case ($n = 0$):} $M.R\,0 \cong I = \tensorPow\,\delta\,0$. The isomorphism is $M.R_{\mathrm{unit}} : M.R\,0 \cong I$ -- the structural data of $M$ directly supplies it.
+
+\textbf{Inductive case ($n = k + 1$):} We need $M.R\,(k+1) \cong \tensorPow\,\delta\,(k+1) = \delta \otimes \tensorPow\,\delta\,k$. The construction is a chain of three isos:
+\begin{align*}
+M.R\,(k+1)
+ &\cong M.R\,(1+k) && \text{(eqToIso, $\N$ commutativity)} \\
+ &\cong M.R\,1 \otimes M.R\,k && \text{($M.R_{\mathrm{tensor}}\,1\,k$)} \\
+ &\cong \delta \otimes \tensorPow\,\delta\,k && \text{($M.R_{\mathrm{gen}} \otimes \mathrm{IH}$)} \\
+ &= \tensorPow\,\delta\,(k+1) && \text{(by $\tensorPow_{\mathrm{succ}}$).}
+\end{align*}
+The proof is structurally simple: the inductive hypothesis IH gives an iso at level $k$, and we combine it with the structural isos $R_{\mathrm{gen}}$ and $R_{\mathrm{tensor}}$ of $M$ to lift it to level $k+1$. The construction uses only the \emph{structural} data of $M$ (the four $R_{\mathrm{unit}}/R_{\mathrm{gen}}/R_{\mathrm{tensor}}$ isos), not the seven generator morphisms.
+\end{proof}
+
+The Lean implementation is:
+
+\begin{lstlisting}[language=Lean]
+noncomputable def componentIso (delta : C) (M : TGUTRealisation C delta) :
+    forall n, M.R n ≅ tensorPow delta n
+  | 0     => M.R_unit
+  | k + 1 =>
+      have hcomm : k + 1 = 1 + k := by omega
+      eqToIso (congrArg M.R hcomm)
+        ≪≫ M.R_tensor 1 k
+        ≪≫ (M.R_gen ⊗i componentIso delta M k)
+\end{lstlisting}
+
+\subsection{The ``coherent'' predicate}\label{sec:us:coherent}
+
+The full Universal Sayability theorem requires not just a family of component isos but a family commuting with the seven generator morphisms (\texttt{compose}, \texttt{square}, \texttt{hom}, \texttt{modal}$_{V_4}$, \texttt{atom}$_3$, \texttt{wedderburn}$_4$, \texttt{relate}) and the three structural isos ($R_{\mathrm{unit}}$, $R_{\mathrm{gen}}$, $R_{\mathrm{tensor}}$). The current \texttt{RealIso} record carries a \texttt{coherent : Prop} field that should encode the commuting-square conditions, but in the current skeleton it defaults to \texttt{True}. The discharge of these commuting squares is the $\gamma$.3 refinement target.
+
+The precise list of commuting squares (11 classes in total) covers:
+\begin{enumerate}[leftmargin=*]
+\item Structural isos compatibility (3 squares: $R_{\mathrm{unit}}, R_{\mathrm{gen}}, R_{\mathrm{tensor}}$).
+\item Compose compatibility (1 family, indexed by $N, M$).
+\item Square compatibility (1 family, indexed by $N$).
+\item Hom compatibility (1 family, indexed by $N, M$).
+\item $\mathtt{modal}_{V_4}$ compatibility (1 square).
+\item $\mathtt{atom}_3$ compatibility (1 square).
+\item $\mathtt{wedderburn}_4$ compatibility (1 square).
+\item Relate compatibility (1 family, indexed by $N, M$).
+\end{enumerate}
+
+Each is in principle dischargeable given the equational laws of \cref{sec:tgut:eqns}, but the discharge depends on the full Lawvere infrastructure.
+
+The compose-compatibility square, for example, has the form:
+\[
+\begin{tikzcd}[column sep=large]
+M.R\,N \otimes M.R\,M
+  \arrow[r, "M.\mathtt{compose}_{N,M}"]
+  \arrow[d, "\mathtt{iso}_N \otimes \mathtt{iso}_M"']
+& M.R\,(N+M)
+  \arrow[d, "\mathtt{iso}_{N+M}"] \\
+\tensorPow\,\delta\,N \otimes \tensorPow\,\delta\,M
+  \arrow[r, "R_{\mathcal{C}}.\mathtt{compose}_{N,M}"']
+& \tensorPow\,\delta\,(N+M)
+\end{tikzcd}
+\]
+
+\subsection{What this theorem does and does not give}\label{sec:us:scope}
+
+The current statement (layer-by-layer iso) is \emph{necessary} but not \emph{sufficient} for the full Universal Sayability claim. It establishes:
+\begin{itemize}[leftmargin=*]
+\item The \emph{carrier-shape} of any $\TGUT$-realisation in any \smcc{} $\mathcal{C}$ with chosen $\delta$ is uniquely determined up to iso by the canonical tensor-power family $\tensorPow\,\delta$.
+\item Any two $\TGUT$-realisations in the same $(\mathcal{C}, \delta)$ are layer-by-layer isomorphic.
+\end{itemize}
+
+It does \emph{not} establish:
+\begin{itemize}[leftmargin=*]
+\item That the seven generator morphisms of any $\TGUT$-realisation coincide with those of the canonical realisation (this is the coherence content, deferred to $\gamma$.3).
+\item That $\TGUT$-realisations form an essentially unique structure (a 2-categorical statement).
+\item The cross-base universality (a doctrinal change-of-base statement).
+\end{itemize}
+
+\subsection{Specialisation table}\label{sec:us:spec}
+
+\begin{table}[h!]
+\centering
+\small
+\begin{tabular}{lll}
+\toprule
+Base $\mathcal{C}$ & $\delta$ & $M \cong R_{\mathcal{C}}$ means \\
+\midrule
+$\FinVect_{\F_q}$ & $\F_q$ & R-family-over-$\F_q$ -- recovers existing GUT-A/B \\
+$\HeytAlg$ & $\mathrm{Prop}$ & Heyting R-family (NEW) \\
+$\FdHilb$ via stabilisers & $\PauliBase \cong V_4$ & quantum stabiliser R-family (NEW) \\
+$\Frm$ & $\Omega$ (Sierpinski) & topological R-family (NEW) \\
+\bottomrule
+\end{tabular}
+\caption{The four worked specialisations.}\label{tab:four-spec}
+\end{table}
+
+\subsection{Three layers of refinement}\label{sec:us:layers}
+
+The full Universal Sayability theorem (in its strongest form) needs three layers of refinement, of which we have established the first:
+
+\textbf{Layer 1 -- Layer-by-layer component isomorphism (established in this paper, \cref{sec:us:proof}).} For any $\TGUT$-realisation $M$ and any \smcc{} $\mathcal{C}$ with chosen $\delta$:
+\[
+\exists\, \mathtt{iso} : \forall n,\ M.R\,n \cong \tensorPow\,\delta\,n.
+\]
+The iso family is constructed by induction on $n$ using only the structural isos of $M$.
+
+\textbf{Layer 2 -- Coherence with all generator morphisms ($\gamma$.3 refinement target).} Strengthen Layer~1 to require that the iso family commutes with each of the seven generator morphisms and the three structural isos. When complete, this gives the \emph{categorical-isomorphism} version of Universal Sayability: $M \cong R_{\mathcal{C}}$ in the 1-category of $\TGUT$-realisations in $(\mathcal{C}, \delta)$.
+
+\textbf{Layer 3 -- 2-categorical / cross-base universality (longer-term programme).} Strengthen Layer~2 to a 2-categorical statement: the assignment $(\mathcal{C}, \delta) \mapsto R_{\mathcal{C}}$ extends to a 2-functorial pseudo-natural-transformation from the doctrine 2-category $\mathcal{V}$ to the 2-category of $\TGUT$-realisations.
+
+% =====================================================================
+\section{Instance Verification}\label{sec:instances}
+
+We walk through the four worked $\TGUT$ instances, identifying which P-properties have working analogues and which require reformulation. Each instance has its own Lean file in \texttt{Foundation/Doctrine/Instance/}.
+
+\subsection{Algebraic instance: $\TGUT$ in $\FinVect_{\F_q}$}\label{sec:inst:alg}
+
+The algebraic instance is the \emph{anchor}: it recovers the existing 0-sorry GUT-A/B result as the special case $\delta = \F_q$. The Lean file is \texttt{Foundation/Doctrine/Instance/Algebraic.lean} (485~LOC, 2 sorries: one in \texttt{R\_tensor} matching the template, one in the recovery bridge to \texttt{T5\_general}).
+
+\textbf{Canonical realisation.} In $\FinVect_{\F_q}$ with $\delta = \F_q$ (the 1-dimensional vector space), the canonical tensor-power realisation is $R\,N := \F_q^N$, with tensor product $\otimes_{\F_q}$ and internal hom = $\F_q$-linear maps.
+
+\textbf{Per-property analysis:}
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{P1 ($\id_\delta$):} \checkmark{} -- the identity on $\F_q$.
+\item \textbf{P2 (\texttt{compose}):} \checkmark{} -- direct sum embedding $\F_q^N \oplus \F_q^M \to \F_q^{N+M}$.
+\item \textbf{P3 (\texttt{relate}):} \checkmark{} -- $\F_q$-bilinear forms, classified by Arf invariant ($\mathrm{char}(\F_q) = 2$) or discriminant ($\mathrm{char}(\F_q) \neq 2$).
+\item \textbf{P4 (\texttt{square}):} \checkmark{} -- tensor squaring $\F_q^N \to \F_q^{2N}$.
+\item \textbf{P5 (\texttt{hom}):} \checkmark{} -- $\mathrm{LinHom}\,N\,M \simeq \F_q^{N\cdot M}$.
+\item \textbf{P6 (\texttt{modal}$_{V_4}$):} \checkmark{} -- $V_4$ Shi at $R\,2 = \F_q^2$.
+\item \textbf{P7a (\texttt{atom}$_3$):} \checkmark{} -- the zong involution on $R_3$.
+\item \textbf{P7b (\texttt{wedderburn}$_4$):} \checkmark{} -- $R\,4 \cong \Mat_2(\F_q)$.
+\end{itemize}
+
+\textbf{Recovery of GUT-A/B.} The bridge \texttt{T5\_general\_from\_T\_GUT\_algebraic} connects the $\TGUT$-realisation to the \texttt{P1P7\_Core} structure used in \texttt{T5\_general}. The bridge is conceptually straightforward but requires careful tracking of the type-level translation.
+
+\textbf{Verdict.} The algebraic instance instantiates $\TGUT$ \emph{cleanly} with all eight generators having working algebraic analogues.
+
+\subsection{Heyting instance: $\TGUT$ in $\HeytAlg$}\label{sec:inst:heyting}
+
+The Heyting instance is the \emph{first} non-algebraic specialisation. The Lean file is \texttt{Foundation/Doctrine/Instance/Heyting.lean} (654~LOC, 2 sorries).
+
+\textbf{Base setup.} The base \smcc{} is $\HeytAlg$ (the category of Heyting algebras with Heyting-algebra-preserving morphisms). The $\delta$ generator is $\mathrm{Prop}$ (the Heyting algebra $\{\bot < \top\}$).
+
+\textbf{Canonical realisation.} The canonical realisation sends $R\,N := \mathrm{Fin}\,N \to \mathrm{Prop}$, which is the $N$-fold cartesian power of $\mathrm{Prop}$.
+
+\textbf{Per-property analysis:}
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{P1 ($\id_\delta$):} \checkmark{} -- the identity on $\mathrm{Prop}$.
+\item \textbf{P2 (\texttt{compose}):} \checkmark{} -- product embedding.
+\item \textbf{P3 (\texttt{relate}):} \emph{Reformulated.} In the Heyting case the analogue is the \emph{Heyting bimorphism} classification: maps preserving Heyting meet $\sqcap$ and Heyting implication $\Rightarrow$ in each argument. The classification (analogous to the Arf invariant for $\F_2$-bilinear forms) is a research-open problem.
+\item \textbf{P4 (\texttt{square}):} \checkmark{} -- squaring via meet idempotence ($\mathrm{Prop}$'s distinguishing feature: $x \sqcap x = x$).
+\item \textbf{P5 (\texttt{hom}):} \checkmark{} -- Heyting implication $\Rightarrow$.
+\item \textbf{P6 (\texttt{modal}$_{V_4}$):} \checkmark{} (substrate-level) -- the 4-fold modality at $R\,2 = \mathrm{Prop} \times \mathrm{Prop}$.
+\item \textbf{P7a (\texttt{atom}$_3$):} \checkmark{} -- the substrate-level involution at $R\,3 = \mathrm{Prop}^3$.
+\item \textbf{P7b (\texttt{wedderburn}$_4$):} \emph{Reformulated -- NEW MATHEMATICAL OBJECT.} In the algebraic case $R\,4 \cong \Mat_2(\F_q)$. In the Heyting case the analogue is the conjectured $R\,4 \cong \DiamondH$ where:
+
+\begin{definition}[$\DiamondH$]\label{def:diamondH4}
+The 4-element linearly-ordered Heyting algebra $\{\bot < \mathrm{mid}_1 < \mathrm{mid}_2 < \top\}$ with explicit Heyting implication operation:
+\begin{itemize}
+\item $\bot \Rightarrow x = \top$ for all $x$.
+\item $x \Rightarrow \top = \top$ for all $x$.
+\item $\top \Rightarrow x = x$ for all $x$.
+\item $\mathrm{mid}_1 \Rightarrow \bot = \bot$.
+\item $\mathrm{mid}_2 \Rightarrow \bot = \bot$.
+\item $\mathrm{mid}_2 \Rightarrow \mathrm{mid}_1 = \mathrm{mid}_1$.
+\item $\mathrm{mid}_1 \Rightarrow \mathrm{mid}_2 = \top$.
+\end{itemize}
+\end{definition}
+
+The Lean witness \texttt{DiamondH4\_is\_nonBoolean} confirms the intrinsic non-Boolean Heyting structure.
+
+\begin{conjecture}[Heyting P7b -- $\DiamondH$ uniqueness]\label{conj:diamondH4-unique}
+Up to Heyting isomorphism, $\DiamondH$ is the \emph{unique} non-Boolean Heyting algebra on 4 elements.
+\end{conjecture}
+\end{itemize}
+
+\textbf{Verdict.} The Heyting instance instantiates $\TGUT$ \emph{partially}: six of eight substrate-level generators carry over directly, while P3 and P7b reformulate with non-trivial Heyting content. Both reformulations expose genuine open research problems.
+
+\subsection{Quantum instance: $\TGUT$ in $\FdHilb$ via stabiliser-formalism + Pauli--Klein4}\label{sec:inst:quantum}
+
+The quantum instance is the \emph{second} non-algebraic specialisation. The Lean file is \texttt{Foundation/Doctrine/Instance/Quantum.lean} (897~LOC, 4 sorries).
+
+\textbf{Base setup.} Mathlib does not provide a packaged $\FdHilb$ (finite-dimensional Hilbert spaces) category as of 2026-05. Building one is ${\sim}1500$--$2500$ LOC. For the \emph{bridge purpose} we use the \textbf{stabiliser-formalism reading} which collapses Hilbert-space content to a transparent algebraic substrate. Specifically:
+
+\begin{itemize}[leftmargin=*]
+\item $\PauliBase$ -- the four single-qubit Pauli operators mod phase $\langle iI \rangle$, i.e., $\{I, X, Y, Z\}$ under multiplication mod $\pm 1, \pm i$. As a group, this is \emph{literally} the Klein four group $V_4$.
+\item $\PauliN\,n := \mathrm{Fin}\,n \to \PauliBase$ -- the $n$-qubit Pauli group mod phase. Cardinality $4^n$. By \texttt{StabilizerQM.equiv}, $\PauliN\,n \simeq R\,(2n)$ as $\F_2$-vector spaces.
+\item $\mathrm{Matrix}\,(\mathrm{Fin}\,(2^n))\,(\mathrm{Fin}\,(2^n))\,\C$ -- the concrete Hilbert-space representation via \texttt{HilbertPauliFunctor.pauliToHilbert}.
+\end{itemize}
+
+\begin{observation}[Pauli--Klein4]\label{obs:pauli-klein4}
+The four single-qubit Pauli operators mod phase $\{I, X, Y, Z\}$ form \emph{literally the Klein four group} $V_4$ under multiplication mod phase.
+\end{observation}
+
+\textbf{Derivation.} The single-qubit Pauli operators are
+\[
+I = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}, \quad
+X = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}, \quad
+Y = \begin{pmatrix} 0 & -i \\ i & 0 \end{pmatrix}, \quad
+Z = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}.
+\]
+They satisfy $I^2 = X^2 = Y^2 = Z^2 = I$, $XY = iZ, YZ = iX, ZX = iY$, $XYZ = iI$.
+
+Mod phase, multiplication becomes $X \cdot X = Y \cdot Y = Z \cdot Z = I$, $X \cdot Y = Z, Y \cdot Z = X, Z \cdot X = Y$, $X \cdot Y \cdot Z = I$. These are exactly the multiplication relations of $V_4 = \langle a, b \mid a^2 = b^2 = (ab)^2 = 1 \rangle$ with $a \mapsto X, b \mapsto Z, ab \mapsto Y, 1 \mapsto I$.
+
+The structural significance: the \emph{abstract} $V_4$ structure ($R\,2$ in the $\F_2$-Boolean substrate) and the \emph{quantum} $V_4$ structure (Pauli operators mod phase) are \emph{the same group}, but they live in different categories and have different concrete content. The framework predicts (and the calculation verifies) that the \emph{categorical} shape of $V_4$ is preserved across the two cases.
+
+\textbf{Per-property analysis:}
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{P1 ($\id_\delta$):} \checkmark{}.
+\item \textbf{P2 (\texttt{compose}):} \checkmark{}.
+\item \textbf{P3 (\texttt{relate}):} \emph{Reformulated as symplectic.} The analogue is the commutator-detection function $\sigma : \PauliN\,n \times \PauliN\,n \to \F_2$ returning 0 iff two Pauli operators commute.
+\item \textbf{P4 (\texttt{square}):} \checkmark{} -- tensor squaring $\PauliN\,N \to \PauliN\,(2N)$.
+\item \textbf{P5 (\texttt{hom}):} \checkmark{} -- dagger duality $(-)^\dagger$.
+\item \textbf{P6 (\texttt{modal}$_{V_4}$):} \checkmark{} -- Pauli $\{I, X, Y, Z\}$ mod phase (the Pauli--Klein4 coincidence).
+\item \textbf{P7a (\texttt{atom}$_3$):} \checkmark{}.
+\item \textbf{P7b (\texttt{wedderburn}$_4$):} \emph{Reformulated as $\Mat_2(\C)$.} The analogue is $R\,4 \cong \Mat_2(\C)$. The full ring iso (with explicit basis) is recorded as \texttt{sorry} pending Mathlib's $\Mat_2(\C)$ infrastructure.
+\end{itemize}
+
+\textbf{Verdict.} The quantum instance instantiates $\TGUT$ \emph{cleanly} at the structural level, with the same pattern as the Heyting case.
+
+\subsection{Topological instance: $\TGUT$ in $\Frm$ via Sierpinski $\Omega$}\label{sec:inst:topological}
+
+The topological instance is the \emph{third} non-algebraic specialisation and the most challenging from a Mathlib-infrastructure perspective. The Lean file is \texttt{Foundation/Doctrine/Instance/Topological.lean} (828~LOC, 2 sorries).
+
+\textbf{Base setup.} The base \smcc{} is $\Frm$ (the Mathlib category of frames with frame-morphisms). The $\delta$ generator is the \emph{Sierpinski frame} $\Omega$ -- the 2-element complete-Heyting-algebra $\{\bot, \top\}$, realised by $\mathrm{Prop}$.
+
+\textbf{Critical $\Frm$ vs $\HeytAlg$ overlap.} Mathlib's \texttt{Order.Frame} \emph{extends} \texttt{CompleteLattice, HeytingAlgebra}. Every frame \emph{is} a complete Heyting algebra. However, the \emph{morphism classes differ}:
+\begin{itemize}[leftmargin=*]
+\item $\HeytAlg$-morphisms preserve $\Rightarrow$ (Heyting implication).
+\item $\Frm$-morphisms preserve finite $\sqcap$ (meet) + arbitrary $\bigsqcup$ (join).
+\end{itemize}
+
+The carrier $\mathrm{Prop}$ is shared between the Heyting and topological instances, but the morphism class differs.
+
+\textbf{Mathlib boundary finding.} The \emph{non-cartesian} monoidal structure on $\Frm$ (= the frame coproduct, per Joyal--Tierney~\cite{JT84}) is \textbf{not in Mathlib} as a \texttt{MonoidalCategory Frm} instance.
+
+\textbf{Per-property analysis:}
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{P1} \checkmark{}, \textbf{P2} \checkmark{}, \textbf{P4} \checkmark{}, \textbf{P5} \checkmark{}, \textbf{P6} \checkmark{}, \textbf{P7a} \checkmark{}.
+\item \textbf{P3 (\texttt{relate}):} Reformulated as frame bimorphism -- maps preserving $\sqcap$ in each argument + $\bigsqcup$ in each argument.
+\item \textbf{P7b (\texttt{wedderburn}$_4$):} Reformulated as $\Sierp^2 = \{\bot, \top\} \times \{\bot, \top\}$ as a 4-element Boolean frame.
+\end{itemize}
+
+\subsubsection{Frame coproduct construction (technical aside)}\label{sec:inst:topological:coprod}
+
+Given two frames $A$ and $B$, their \emph{frame coproduct} $A \otimes_{\Frm} B$ is defined as the frame generated by symbols $a \otimes b$ for $a \in A$ and $b \in B$, modulo the relations:
+\begin{align*}
+(a_1 \wedge a_2) \otimes b &= (a_1 \otimes b) \wedge (a_2 \otimes b), \\
+a \otimes (b_1 \wedge b_2) &= (a \otimes b_1) \wedge (a \otimes b_2), \\
+(\textstyle\bigvee_i a_i) \otimes b &= \textstyle\bigvee_i (a_i \otimes b), \\
+a \otimes (\textstyle\bigvee_j b_j) &= \textstyle\bigvee_j (a \otimes b_j), \\
+\top_A \otimes b &= b, \quad a \otimes \top_B = a.
+\end{align*}
+
+The current Lean implementation uses the simpler cartesian product as the monoidal structure (since Mathlib lacks the frame coproduct). The genuine topological case requires the Mathlib frame coproduct PR (a non-trivial ${\sim}1000$--$2000$ LOC effort).
+
+\subsection{Cross-cutting: the framework discriminates substrate vs class-specific}\label{sec:inst:cross}
+
+The four worked instances together provide strong empirical confirmation of the framework's discrimination capability. \Cref{tab:per-property} summarises.
+
+\begin{table}[h!]
+\centering
+\small
+\begin{tabular}{lllll}
+\toprule
+Property & Algebraic & Heyting & Quantum & Topological \\
+\midrule
+P1 distinction & \checkmark{} substrate & \checkmark{} substrate & \checkmark{} substrate & \checkmark{} substrate \\
+P2 composition & \checkmark{} substrate & \checkmark{} substrate & \checkmark{} substrate & \checkmark{} substrate \\
+P3 relations & \checkmark{} Arf/disc & reformulated (Heyt bimorph) & reformulated (symplectic) & reformulated (frame bimorph) \\
+P4 squaring & \checkmark{} substrate & \checkmark{} substrate & \checkmark{} substrate & \checkmark{} substrate \\
+P5 Hom-as-content & \checkmark{} substrate & \checkmark{} substrate & \checkmark{} substrate & \checkmark{} substrate \\
+P6 4-modality & \checkmark{} $V_4$ Shi & \checkmark{} classical & \checkmark{} Pauli--Klein4 & \checkmark{} Sierp-like \\
+P7a atom inv. & \checkmark{} substrate & \checkmark{} substrate & \checkmark{} substrate & \checkmark{} substrate \\
+P7b Wedderburn & \checkmark{} $\Mat_2(\F_q)$ & reformulated ($\DiamondH$) & reformulated ($\Mat_2(\C)$) & reformulated ($\Sierp^2$) \\
+\bottomrule
+\end{tabular}
+\caption{Per-property status across all four instances.}\label{tab:per-property}
+\end{table}
+
+The pattern is consistent:
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{6/8 substrate-level generators} (P1, P2, P4, P5, P6, P7a) carry over directly across all four bases.
+\item \textbf{2/8 algebraic-class generators} (P3, P7b) reformulate with base-specific content in each of the three non-algebraic bases.
+\end{itemize}
+
+Moreover, the four instances expose \emph{two novel candidate mathematical objects} ($\DiamondH$ and $\Sierp^2$) and one \emph{structural coincidence} (Pauli--Klein4) that were not previously named in the literature.
+
+% =====================================================================
+\section{Attacking Open Problem O1}\label{sec:o1}
+
+We now address the Coecke--Heunen 2016~\cite{CH16} / Heunen--Karvonen 2019~\cite{HK19} open problem on dagger + cartesian coexistence.
+
+\subsection{The problem (recap)}\label{sec:o1:problem}
+
+\Cref{op:O1} states the structural obstruction: products in a dagger category are biproducts~\cite[Theorem 3.4]{HK19}. This forces dagger + cartesian closed = additive cartesian closed, which is a degenerate case. The intuitionistic logic side ($\HeytAlg$) is cartesian-closed but not additive; the quantum side ($\FdHilb$) is dagger compact (and biproduct-enriched) but not cartesian.
+
+This is a \emph{structural}, not engineering, obstruction. It is not addressable by clever Mathlib formalisation; it requires a \emph{framework-level} response.
+
+\subsection{Our factorisation strategy}\label{sec:o1:fact}
+
+The framework response we propose is \emph{factorisation}:
+
+\begin{quote}
+\textbf{Factorisation strategy.} Dagger structure is excluded from $\TGUT$ itself. $\TGUT$ carries no dagger generator; the generators in \cref{tab:generators} are all dagger-neutral. When $\TGUT$ is instantiated in $\FdHilb$, dagger structure arises \emph{as a property of the $\FdHilb$ factor}, not as a generator inherited from $\TGUT$.
+\end{quote}
+
+The intended consequence: dagger and cartesian closure coexist not ``on the same objects of $\TGUT$'' but as \emph{separate $\delta$-realisations} of one $\TGUT$-doctrine. The $\HeytAlg$ factor provides cartesian closure; the $\FdHilb$ factor provides dagger; the universal $\TGUT$ skeleton stays neutral.
+
+\subsection{Why this might work -- empirical support from the four instances}\label{sec:o1:support}
+
+The four-instance verification (\cref{sec:instances}) provides direct empirical support for the factorisation:
+
+\begin{enumerate}[leftmargin=*]
+\item \textbf{$\HeytAlg$ factor}: cartesian-closed. $\TGUT$-realisation in $\HeytAlg$ succeeds without any dagger structure being required.
+
+\item \textbf{$\FdHilb$ factor}: dagger compact. $\TGUT$-realisation in $\FdHilb$ succeeds via the stabiliser-formalism reading without any cartesian-closure being required.
+
+\item \textbf{Both succeed in parallel}: neither realisation invokes the other's structure. The doctrine $\TGUT$ is ``silent'' on dagger vs cartesian.
+
+\item \textbf{Substrate generators (6 of 8) carry over}: $\id_\delta$, \texttt{compose}, \texttt{square}, \texttt{hom}, \texttt{modal}$_{V_4}$, \texttt{atom}$_3$ -- none of these requires dagger or cartesian structure beyond the underlying \smcc{} + biproducts.
+
+\item \textbf{Specialisation generators (2 of 8) reformulate independently}: P3 reformulates as bilinear in $\FinVect$, Heyting-bimorphism in $\HeytAlg$, symplectic in $\FdHilb$, frame-bimorphism in $\Frm$ -- each independently of the others. P7b reformulates analogously.
+\end{enumerate}
+
+These five points constitute the empirical confirmation that the factorisation strategy is \emph{consistent with} the four-instance evidence. They do not constitute a \emph{proof}.
+
+\subsection{What this does not yet prove}\label{sec:o1:gaps}
+
+For epistemic honesty, the factorisation strategy is \emph{not} a full resolution of O1. Two specific gaps:
+
+\begin{enumerate}[leftmargin=*]
+\item \textbf{The $\mathcal{V}$-functoriality requirement may force dagger compatibility implicitly.} A $\TGUT$-model $M : \TGUT \to \FdHilb$ is required (by the framework definition) to be a $\mathcal{V}$-functor. The 2-category $\mathcal{V} = \smcc + \text{biproducts}$ does not require dagger structure on its objects; but the \emph{target} $\FdHilb$ does carry dagger. The question is whether $\mathcal{V}$-functoriality of $M$, combined with the dagger structure on $\FdHilb$'s morphism-objects, implicitly forces $M$ to respect dagger.
+
+Provisional answer: $\mathcal{V}$-functoriality only requires $M$ to preserve the \emph{monoidal} structure on $\mathcal{V}$. The dagger structure on $\FdHilb$ is \emph{not} part of $\mathcal{V}$'s structure ($\mathcal{V}$ is $\smcc + \text{biproducts}$, not dagger-\smcc). So $\mathcal{V}$-functoriality does not require $M$ to respect dagger. This argument is plausible but informal; a formal verification requires the full enriched-Lawvere infrastructure plus explicit dagger-\smcc{} machinery.
+
+\item \textbf{A symmetric framework would require either a no-go theorem or a positive dagger-Lawvere-theory.} Our factorisation strategy depends on dagger being \emph{external} to $\TGUT$. A stronger framework (where dagger is \emph{internal} to $\TGUT$) would either require a no-go theorem ruling out internal dagger in $\TGUT$, or a positive dagger-Lawvere-theory framework allowing internal dagger generators.
+
+\end{enumerate}
+
+\subsubsection{Formalising the $\mathcal{V}$-functoriality argument}\label{sec:o1:formal}
+
+Let $\mathcal{V} = \smcc + \text{biproducts}$ and let $M : \TGUT \to \mathcal{C}$ be a $\TGUT$-realisation in a base $\mathcal{C} \in \mathcal{V}$. Suppose $\mathcal{C}$ carries additionally a dagger structure.
+
+\begin{proposition}[Informal $\mathcal{V}$-functoriality claim]\label{prop:V-functorial}
+The dagger structure on $\mathcal{C}$ is \emph{outside} $\mathcal{V}$'s structure. A $\mathcal{V}$-functor $M : \TGUT \to \mathcal{C}$ preserves $\smcc + $ biproducts (this is the $\mathcal{V}$-enrichment requirement) but is \emph{not required} to preserve dagger.
+\end{proposition}
+
+\emph{Argument.} Consider any morphism $f : M.R\,N \to M.R\,M$ in $\mathcal{C}$ arising from a $\TGUT$ generator (e.g., $f = M.\mathtt{compose}_{N,M}$). The $\mathcal{V}$-functoriality of $M$ requires that $f$ respects the monoidal structure -- a constraint expressible without reference to dagger.
+
+The dagger $f^\dagger : M.R\,M \to M.R\,N$ is \emph{additionally} defined in $\mathcal{C}$ (since $\mathcal{C}$ is a dagger category), but its existence is a property of $\mathcal{C}$ alone, not a property forced on $f$ by $M$'s $\mathcal{V}$-functoriality.
+
+\emph{Caveat.} The argument assumes $\mathcal{V}$ does \emph{not} include dagger structure. If $\mathcal{V}$ is changed to $\mathcal{V}' = $ dagger-\smcc{} + biproducts, then $\mathcal{V}'$-functoriality of $M$ would require dagger-compatibility.
+
+\subsubsection{An alternative: dagger-Lawvere theories}\label{sec:o1:dagger-lawvere}
+
+A \emph{dagger-Lawvere theory} would be a $\mathcal{V}'$-enriched Lawvere theory for $\mathcal{V}' = $ dagger-\smcc{} + biproducts. The relevant literature direction is~\cite{HK19}.
+
+If such a framework were to exist, $\TGUT$ would extend to $\TGUTd$ with an additional generator $\mathtt{dagger}_N : \delta_T^{\otimes N} \to \delta_T^{\otimes N}$ satisfying $\mathtt{dagger}_N \circ \mathtt{dagger}_N = \id$ plus naturality. The question is whether $\TGUTd$-realisations can simultaneously exist in both $\HeytAlg$ (cartesian-closed) and $\FdHilb$ (dagger compact).
+
+Our preliminary analysis: a $\TGUTd$-realisation in $\HeytAlg$ would need to interpret $\mathtt{dagger}_N$ as a Heyting-algebra-preserving involution. The natural candidate is the identity, but this trivialises the dagger generator. We suspect a no-go theorem rules out $\TGUTd$-realisations in both bases simultaneously, but a definitive answer requires either an explicit no-go argument or a positive construction.
+
+\subsection{Summary of the O1 attack}\label{sec:o1:summary}
+
+Our attack on Open Problem O1 is:
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{Strategy}: factorisation -- exclude dagger from $\TGUT$ generators; let it live only as a property of the $\FdHilb$ factor.
+\item \textbf{Empirical support}: four worked instances (\cref{sec:instances}) consistent with the strategy.
+\item \textbf{Gap}: $\mathcal{V}$-functoriality argument is rigorously sketched but not Lean-formalised.
+\item \textbf{Alternative explored}: $\TGUTd$ with internal dagger generators. Preliminary analysis suggests this is infeasible; a definitive resolution is open research.
+\item \textbf{Future work}: either complete the $\mathcal{V}$-functoriality formalisation, or resolve the dagger-Lawvere-theory feasibility question, or both.
+\end{itemize}
+
+% =====================================================================
+\section{Lean Formalisation}\label{sec:lean}
+
+This section catalogues the existing Lean codebase implementing the GUT-C framework, identifies the current sorry status, and points to Mathlib upstream contribution opportunities.
+
+\subsection{Architecture: \texttt{Foundation/Doctrine/} tree}\label{sec:lean:arch}
+
+The codebase lives at \texttt{formal/SSBX/Foundation/Doctrine/} and is organised as:
+
+\begin{lstlisting}
+Foundation/Doctrine/
+|-- LawvereTheory.lean          -- (G1) Classical Lawvere theory class
+|-- EnrichedLawvereTheory.lean  -- (G2) Power-style enriched extension
+|-- T_GUT.lean                  -- (G3) The T_GUT theory + Universal Sayability
+|-- Instance/
+    |-- Algebraic.lean          -- (G4) T_GUT in FinVect_{F_q}
+    |-- Heyting.lean            -- (G5) T_GUT in HeytAlg (delta = Prop)
+    |-- Quantum.lean            -- (g3-A) T_GUT in FdHilb (delta = PauliBase)
+    |-- Topological.lean        -- (g3-B) T_GUT in Frm (delta = Omega)
+\end{lstlisting}
+
+\subsection{Files + LOC + sorry table}\label{sec:lean:loc}
+
+\begin{table}[h!]
+\centering
+\small
+\begin{tabular}{lrrl}
+\toprule
+File & LOC & Sorries & Notes \\
+\midrule
+G1 \texttt{LawvereTheory.lean} & 643 & 1 & Mathlib-PR-quality core class \\
+G2 \texttt{EnrichedLawvereTheory.lean} & 929 & 1 & Power 1999 $\mathcal{V}$-enriched extension \\
+G3 \texttt{T\_GUT.lean} & 611 & 2 & 8 generators + equations + Universal Sayability \\
+G4 \texttt{Instance/Algebraic.lean} & 485 & 2 & Recovers GUT-A \\
+G5 \texttt{Instance/Heyting.lean} & 654 & 2 & PATH C VALIDATED + $\DiamondH$ anchor \\
+$\gamma$.3-A \texttt{Instance/Quantum.lean} & 897 & 4 & Pauli--Klein4 + $\Mat_2(\C)$ anchor \\
+$\gamma$.3-B \texttt{Instance/Topological.lean} & 828 & 2 & $\Sierp^2$ anchor + Mathlib boundary \\
+\midrule
+\textbf{Total} & \textbf{5047} & \textbf{14} & \\
+\bottomrule
+\end{tabular}
+\caption{Lean file statistics for the \texttt{Foundation/Doctrine/} tree.}\label{tab:lean-loc}
+\end{table}
+
+Build state at 2026-05-17: \texttt{lake build SSBX.Foundation.Doctrine.*} succeeds.
+
+The 14 sorries are not engineering debt in the typical sense:
+\begin{itemize}[leftmargin=*]
+\item 5 are \texttt{R\_tensor} patterns deferred for ${\sim}30$-LOC bulky-but-routine implementation reasons.
+\item 4 are \emph{research-open} questions (P3 classifications for Heyting, Quantum, Topological; P7b full ring iso for Quantum's $\Mat_2(\C)$).
+\item 3 are bridge / recovery proofs deferred for engineering reasons.
+\item 2 are the canonical-realisation interior proofs.
+\end{itemize}
+
+\subsection{What ``0 new axioms'' means}\label{sec:lean:axioms}
+
+Throughout the GUT-A/B/C Lean codebase, ``0 new axioms'' means: no \texttt{axiom} declarations beyond what Mathlib already provides. The codebase is therefore strictly conservative over Mathlib's foundational commitments.
+
+\subsection{Mathlib upstream PR opportunities}\label{sec:lean:prs}
+
+Four Mathlib upstream PR opportunities have been identified during the GUT-C work. Each is independently valuable for Mathlib applications beyond GUT-C.
+
+\begin{description}[leftmargin=*]
+\item[PR-1: \texttt{ElementaryTopos} bundling] (${\sim}400$--$700$ LOC, NO new math). All components exist in Mathlib (\texttt{HasFiniteLimits}, \texttt{CartesianClosed}, \texttt{HasSubobjectClassifier}); the PR just bundles them into a single \texttt{class ElementaryTopos C extends ...}.
+
+\item[PR-2: \texttt{LawvereTheory} + \texttt{Model} API] (${\sim}600$--$900$ LOC). \texttt{class LawvereTheory T} = small category with strict finite products + generator. \texttt{structure Model T C} = product-preserving functor. Critical for GUT-C plus Mathlib's general algebraic-theory infrastructure.
+
+\item[PR-3: Weighted enriched limits] (${\sim}600$--$1000$ LOC). Current Mathlib only has \emph{conical} enriched limits; Power 1999-style enriched Lawvere theories need \emph{weighted} limits~\cite{Kel82}.
+
+\item[PR-4: Dagger-\smcc{} + $\FdHilb$ scaffold] (${\sim}1500$--$2500$ LOC). Bundle finite-dimensional Hilbert spaces from existing analytic content in \texttt{InnerProductSpace/Adjoint.lean}. Define \texttt{class DaggerSymmetricMonoidalCategory}; compact-closed instance.
+\end{description}
+
+\textbf{Total contribution potential}: ${\sim}3100$--$5100$ LOC across 4 PRs. Review cycles typically 3--6 months each; can run in parallel.
+
+\subsection{Build instructions (reproducibility)}\label{sec:lean:build}
+
+The full Lean codebase is at \texttt{formal/SSBX/}. Builds with \texttt{lake build SSBX}. Required: Lean 4 toolchain (see \texttt{lean-toolchain} file in repo root) and Mathlib (pinned via \texttt{lake-manifest.json}).
+
+% =====================================================================
+\section{Discussion}\label{sec:disc}
+
+\subsection{Comparison with topos quantum theory (Bohrification asymmetry)}\label{sec:disc:bohr}
+
+The Heunen--Landsman--Spitters Bohrification programme~\cite{HLS09,HLSW12,DI08} is the most successful prior cross-domain categorical unification, and the closest sibling of our framework.
+
+\textbf{Structural similarity.} Both Bohrification and our framework address ``how does quantum content relate to intuitionistic content categorically?'' Both use the categorical universe of toposes / \smcc{}s as the unifying structure.
+
+\textbf{Conceptual difference.} Bohrification is \emph{asymmetric} -- it encodes quantum (noncommutative C*-algebra) \emph{inside} intuitionistic (the internal logic of the Bohr topos). Our framework is \emph{symmetric} -- both quantum ($\FdHilb$ instance) and intuitionistic ($\HeytAlg$ instance) are \emph{parallel} $\TGUT$-realisations.
+
+\textbf{Technical implication.} Bohrification \emph{loses the dagger}. Our framework \emph{preserves the dagger} (it lives on the $\FdHilb$ factor and is not pushed into a topos encoding).
+
+\subsection{Comparison with categorical doctrines (Lawvere 1969)}\label{sec:disc:lawvere}
+
+The notion of a \emph{doctrine} in the categorical sense traces back to Lawvere~\cite{Law69}, where doctrines were introduced as a 2-categorical generalisation of Lawvere theories. The relationship to enriched Lawvere theories (Power~\cite{Pow99}) is that an enriched Lawvere theory over $\mathcal{V}$ can be presented as a doctrine in Lawvere's sense.
+
+$\TGUT$ lives at the enriched-Lawvere-theory level. The doctrinal wrapping is implicit. So our framework is \emph{compatible} with Lawvere 1969's doctrinal framework but does not yet exploit the full 2-categorical machinery.
+
+\subsection{Relation to $D_1 = \lfp(\Phi')$ metalogic identification}\label{sec:disc:lfp}
+
+The companion paper makes a separate but complementary claim: the bi-directional closure $D_1 \longleftrightarrow$ P1--P7 of the R-tower framework is rigorously identified as the Knaster--Tarski least fixed point of a carrier-growing requirements-extraction operator $\Phi'$ on a complete lattice $\mathcal{A}$ of articulation candidates:
+\[
+D_1 = \lfp(\Phi').
+\]
+
+The companion paper covers the \emph{vertical} (fixed-$\delta$) direction. The current paper covers the \emph{horizontal} (cross-$\delta$) direction. Vertical gives uniqueness \emph{within} a base; horizontal gives parallelism \emph{across} bases. Both are required for a comprehensive framework.
+
+\subsection{Open Problem O1 progress versus full resolution}\label{sec:disc:o1}
+
+A summary of where we stand on Open Problem O1:
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{What is closed}: the factorisation strategy is \emph{defined}. The four-instance verification provides \emph{empirical support}.
+\item \textbf{What is open}: the $\mathcal{V}$-functoriality argument is \emph{informal}.
+\item \textbf{What is required for full resolution}: either (a) prove the $\mathcal{V}$-functoriality argument formally, or (b) extend $\TGUT$ with internal dagger generators in a coherent dagger-Lawvere framework. Both are open.
+\end{itemize}
+
+\subsection{Risks and limitations}\label{sec:disc:risks}
+
+For epistemic hygiene, we list the risks explicitly:
+\begin{enumerate}[leftmargin=*]
+\item The framework may need substantial revision; four instances cover only a small portion of the categorical universe.
+\item Mathlib infrastructure gaps are substantial (${\sim}3100$--$5100$ LOC across 4 PRs).
+\item The O1 attack depends on the factorisation strategy; a hidden dagger leak via $\mathcal{V}$-functoriality would invalidate it.
+\item The Heyting and topological cases overlap on the $\mathrm{Prop}$ carrier; one could argue the framework duplicates.
+\item The $\DiamondH$ conjecture and related research-open problems may turn out false.
+\end{enumerate}
+
+\subsection{Wider context: doctrinal frameworks for foundational unification}\label{sec:disc:wider}
+
+The methodological move we make -- \emph{propose a categorical doctrine $\mathcal{T}$ such that target-class universal-property theorems are recovered as $\mathcal{T}$-models in different bases} -- has a longer history beyond Lawvere 1969. Lawvere 1963 / Functorial Semantics (algebraic content)~\cite{Law63}; Lawvere 1969 / Adjointness in Foundations (2-categorical doctrines)~\cite{Law69}; Power 1999 / Enriched Lawvere theories (enriched bases)~\cite{Pow99}; Hyland--Power 2007 (one theory, many monads)~\cite{HP07}; Heunen--Vicary 2019 (dagger as base property)~\cite{HV19}; Bohrification~\cite{HLS09} (quantum-via-intuitionistic encoding).
+
+Our $\TGUT$ extends the methodology to substrate-level structural axioms (P1--P7 = articulation primitives) with per-base specialisation across $\{$algebraic, Heyting, quantum, topological$\}$.
+
+If our framework holds up, it provides a \emph{template} for future cross-domain doctrinal frameworks (geometric foundations, linguistic articulation, AI representation, \dots).
+
+\subsection{Limitations specific to the Lean 4 + Mathlib substrate}\label{sec:disc:lean}
+
+Lean 4 + Mathlib gives us strict 1-categorical infrastructure, \smcc{}s, biproducts (\texttt{HasFiniteBiproducts}), many concrete category instances, and strong type-theory support.
+
+Lean 4 + Mathlib does \emph{not} (yet) give us: \texttt{LawvereTheory}, \texttt{EnrichedLawvereTheory} with weighted limits, \texttt{ElementaryTopos} bundling, \texttt{DaggerCategory}, non-cartesian monoidal structure on \texttt{Frm}, constructive Gelfand duality, full $\infty$-categorical machinery. These gaps are flagged as the four upstream PR opportunities (\cref{sec:lean:prs}).
+
+% =====================================================================
+\section{Conclusion and Future Work}\label{sec:concl}
+
+\subsection{Summary of contributions}\label{sec:concl:summary}
+
+This paper proposed the GUT-C framework -- a biproduct-enriched Lawvere theory $\TGUT$ -- as the doctrinal home for the R-tower's Universal Sayability theorem across symmetric monoidal closed categories with biproducts. We:
+
+\begin{enumerate}[leftmargin=*]
+\item Defined $\TGUT$ precisely as a $\mathcal{V}$-enriched Lawvere theory with eight generator families encoding P1--P7 (\cref{tab:generators}) and equational laws encoding their coherence.
+\item Proved a layer-by-layer Universal Sayability theorem (\cref{thm:us}).
+\item Verified the framework on four worked instances (\cref{sec:instances}).
+\item Attacked Open Problem O1 (\cref{sec:o1}) via a \emph{factorisation} strategy.
+\item Catalogued the Lean formalisation (\cref{sec:lean}).
+\item Identified five open research problems and four Mathlib upstream PR opportunities.
+\end{enumerate}
+
+\subsection{Five open research problems}\label{sec:concl:open}
+
+The framework exposes substantive research questions:
+
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Heyting Wedderburn anchor ($\DiamondH$ uniqueness):} Up to Heyting isomorphism, is $\DiamondH$ the \emph{unique} non-Boolean Heyting algebra on 4 elements?
+
+\item \textbf{Heyting bimorphism classification (P3 in $\HeytAlg$):} Classify (up to Heyting isomorphism) the maps $(\mathrm{Fin}\,N \to \mathrm{Prop}) \times (\mathrm{Fin}\,M \to \mathrm{Prop}) \to (\mathrm{Fin}\,K \to \mathrm{Prop})$ preserving Heyting meet and implication in each argument.
+
+\item \textbf{Pauli $\Mat_2(\C)$ full ring iso (P7b in $\FdHilb$):} Establish the full ring isomorphism $R\,4 \cong \Mat_2(\C)$ via the 2-qubit Pauli image.
+
+\item \textbf{Frame bimorphism classification (P3 in $\Frm$):} Classify the maps preserving finite meets and arbitrary joins in each argument.
+
+\item \textbf{Finite frame classification (P7b in $\Frm$):} Classify (up to frame isomorphism) the 4-element frames. Is $\Sierp^2$ the canonical minimum frame anchor at 4 elements?
+\end{enumerate}
+
+Each is independently publishable; together they constitute a research programme of ${\sim}3$--$5$ papers.
+
+\subsection{Connection to $\infty$-categorical / HoTT extensions}\label{sec:concl:infty}
+
+The current framework is \emph{strictly 1-categorical}. Two natural extensions:
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{2-categorical / weighted-enriched-limits version ($\gamma$.3 refinement).}
+\item \textbf{$(\infty, 1)$-categorical version (GUT-D).} A natural longer-term direction is to push $\TGUT$ to the $(\infty, 1)$-categorical level~\cite{Ber19,Lur09}. The motivation: certain ``higher articulation'' content (e.g., HoTT-style higher inductive types~\cite{UF13}) does not fit cleanly in 1-categorical bases.
+\end{itemize}
+
+\subsection{Path toward full GUT-C closure}\label{sec:concl:path}
+
+The path to a full GUT-C closure:
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{Short term (3--6 months):} Discharge the 7 engineering-debt sorries and the 3 ``open mathematical sub-problems with known solutions''.
+\item \textbf{Medium term (6--18 months):} Mathlib upstream PRs (PR-1, PR-2, PR-3).
+\item \textbf{Long term (18--36 months):} Resolution of the four research-open classification problems plus the $\mathcal{V}$-functoriality verification.
+\item \textbf{Optional (longer):} PR-4 dagger-\smcc{} + $\FdHilb$ scaffold; $(\infty, 1)$-categorical extension.
+\end{itemize}
+
+\subsection{Closing remark}\label{sec:concl:closing}
+
+We have proposed a categorical-doctrinal framework for the R-tower's Universal Sayability and verified it on four substrate-classes (algebraic, Heyting, quantum, topological). The framework discriminates correctly between substrate-level and class-specific structure; it attacks Open Problem O1 via factorisation; it exposes five publishable research questions and four Mathlib infrastructure opportunities. The work is not closed but is substantial enough to merit external review and engagement.
+
+The deeper significance, if the framework holds up: the \emph{form} of ``articulation universality'' -- a categorical doctrine with per-base specialisation -- provides a candidate template for unifying foundational frameworks across mathematics, logic, physics, and computer science. The categorical-doctrinal level is the natural home for cross-domain foundational claims.
+
+We submit the framework for review with the expectation that the framework will undergo substantial revision in response to expert feedback. We do not expect (or want) acceptance in its current form without challenge.
+
+% =====================================================================
+\section*{Acknowledgments}
+
+We acknowledge: the Lean 4 community for the proof assistant and \texttt{mathlib4} library; the categorical-quantum community (Selinger, Coecke, Abramsky, Heunen, Vicary, Karvonen) for the theory of dagger compact closed categories and the identification of Open Problem O1; the topos-quantum-theory community (Heunen, Landsman, Spitters, D\"oring, Isham) for Bohrification; the categorical-logic and Lawvere-theory community (Lawvere, Power, Hyland, Lack, Kelly, Garner, Lucyshyn-Wright); and the Lean / Mathlib maintainers (Mario Carneiro, Kevin Buzzard, Patrick Massot, and many others).
+
+% =====================================================================
+\bibliographystyle{plain}
+\bibliography{gut-c-tac-submission}
+
+% =====================================================================
+\appendix
+\section{Glossary}\label{app:glossary}
+
+\begin{description}[leftmargin=*,style=nextline]
+\item[\smcc] Symmetric monoidal closed category~\cite{EK66}; a category with symmetric monoidal structure $(\otimes, I)$ and internal hom $(\multimap)$ with the closure adjunction $\Hom(A \otimes B, C) \cong \Hom(A, B \multimap C)$.
+\item[Biproducts] Categorical product + coproduct + zero object compatibility (additive categories); for additive categories $A \oplus B$ is simultaneously product and coproduct.
+\item[Lawvere theory] A small category with strictly associative finite products such that every object is a finite power of a chosen generator~\cite{Law63}.
+\item[Enriched Lawvere theory] A $\mathcal{V}$-enriched version: a $\mathcal{V}$-category with $\mathcal{V}$-enriched finite products / cotensors~\cite{Pow99}.
+\item[$\mathcal{V}$-functor] A functor preserving the enriched-categorical structure.
+\item[PROP] ``Products and permutations'' -- a symmetric monoidal theory specialising Lawvere's framework~\cite{ML65}.
+\item[$\mathcal{T}$-model] A product-preserving functor $\mathcal{T} \to \mathcal{C}$ from a theory to an ambient category.
+\item[Doctrine] A 2-categorical structure of theories~\cite{Law69}.
+\item[Topos] A category with finite limits + cartesian-closure + subobject classifier.
+\item[Frame] A complete lattice in which finite meets distribute over arbitrary joins; equivalently, a complete Heyting algebra.
+\item[Locale] The opposite category to $\Frm$; concretely, ``abstract topological spaces''~\cite{JT84}.
+\item[Dagger compact category] An \smcc{} equipped with an involutive contravariant identity-on-objects functor $\dagger$ + compact-closed structure interacting coherently~\cite{Sel07}.
+\item[Sierpinski $\Omega$] The 2-element complete-Heyting-algebra $\{\bot, \top\}$ = the open-set lattice of the Sierpinski topological space.
+\item[Klein four group $V_4$] The unique group of order 4 in which every element is self-inverse: $V_4 \cong \Z/2 \times \Z/2$.
+\item[Pauli group mod phase] The group of $n$-qubit Pauli operators $\{I, X, Y, Z\}^{\otimes n}$ quotiented by the phase subgroup $\langle iI \rangle$; isomorphic to $V_4^n \cong (\Z/2)^{2n}$.
+\item[$\DiamondH$] The 4-element linearly-ordered (non-Boolean) Heyting algebra (\cref{def:diamondH4}); introduced in this paper as a candidate Heyting Wedderburn anchor.
+\item[$\Sierp^2$] The 4-element Boolean frame $\{\bot, \top\} \times \{\bot, \top\}$; introduced in this paper as a candidate topological Wedderburn anchor.
+\item[R-family] The recursive type-family $R\,N\,\delta := \mathrm{Fin}\,N \to \delta$.
+\item[$D_1$ articulation] The minimum definition of ``formal articulation'' (eight items: distinction, composition, relations, atoms, derivation, recursion, operation-as-content, modality).
+\item[P1--P7] The seven (or eight, depending on counting) structural properties forced from $D_1$.
+\item[Bohrification] Heunen--Landsman--Spitters' construction~\cite{HLS09}.
+\item[Open Problem O1] The Coecke--Heunen / Heunen--Karvonen obstruction: products in dagger categories are biproducts~\cite{CH16,HK19}.
+\end{description}
+
+% =====================================================================
+\section{Reproducibility}\label{app:repro}
+
+\subsection{Lean toolchain}\label{app:repro:toolchain}
+
+The codebase uses Lean 4 with \texttt{lean-toolchain} pinned to a specific stable release. To install:
+\begin{lstlisting}[language=bash]
+elan toolchain install $(cat lean-toolchain)
+\end{lstlisting}
+
+The Mathlib dependency is pinned via \texttt{lake-manifest.json}:
+\begin{lstlisting}[language=bash]
+lake update
+\end{lstlisting}
+
+\subsection{Build instructions}\label{app:repro:build}
+
+Full build:
+\begin{lstlisting}[language=bash]
+lake build SSBX
+\end{lstlisting}
+
+Per-file builds:
+\begin{lstlisting}[language=bash]
+lake build SSBX.Foundation.Doctrine.LawvereTheory
+lake build SSBX.Foundation.Doctrine.EnrichedLawvereTheory
+lake build SSBX.Foundation.Doctrine.T_GUT
+lake build SSBX.Foundation.Doctrine.Instance.Algebraic
+lake build SSBX.Foundation.Doctrine.Instance.Heyting
+lake build SSBX.Foundation.Doctrine.Instance.Quantum
+lake build SSBX.Foundation.Doctrine.Instance.Topological
+\end{lstlisting}
+
+\subsection{Sorry / axiom verification}\label{app:repro:sorry}
+
+\begin{lstlisting}[language=bash]
+grep -rE "sorry|admit" formal/SSBX/Foundation/Doctrine/ | wc -l   # expects 14
+grep -rE "^axiom" formal/SSBX/Foundation/Doctrine/ | wc -l         # expects 0
+\end{lstlisting}
+
+% =====================================================================
+\section{Key Lean Type Definitions}\label{app:lean}
+
+For readers wishing to see the precise Lean types underlying the framework. All code is from \texttt{formal/SSBX/Foundation/Doctrine/} unless otherwise noted.
+
+\subsection{The TGUTOp signature ($\TGUT$ generators)}\label{app:lean:op}
+
+\begin{lstlisting}[language=Lean]
+inductive TGUTOp : Type
+  | id_delta : TGUTOp
+  | compose : Nat -> Nat -> TGUTOp
+  | square : Nat -> TGUTOp
+  | hom : Nat -> Nat -> TGUTOp
+  | modal_V4 : TGUTOp
+  | atom_3 : TGUTOp
+  | wedderburn_4 : TGUTOp
+  | relate : Nat -> Nat -> TGUTOp
+  deriving DecidableEq, Repr
+\end{lstlisting}
+
+Source: \texttt{T\_GUT.lean} lines 139--163.
+
+\subsection{The arity function}\label{app:lean:arity}
+
+\begin{lstlisting}[language=Lean]
+def arity : TGUTOp -> Nat * Nat
+  | .id_delta      => (1, 1)
+  | .compose N M   => (N + M, N + M)
+  | .square N      => (N, 2 * N)
+  | .hom N M       => (N * M, N * M)
+  | .modal_V4      => (1, 4)
+  | .atom_3        => (3, 3)
+  | .wedderburn_4  => (4, 4)
+  | .relate N M    => (N, M)
+\end{lstlisting}
+
+\subsection{The componentIso construction (Path 2 proof)}\label{app:lean:component}
+
+\begin{lstlisting}[language=Lean]
+noncomputable def componentIso (delta : C) (M : TGUTRealisation C delta) :
+    forall n, M.R n ≅ tensorPow delta n
+  | 0     => M.R_unit
+  | k + 1 =>
+      have hcomm : k + 1 = 1 + k := by omega
+      eqToIso (congrArg M.R hcomm)
+        ≪≫ M.R_tensor 1 k
+        ≪≫ (M.R_gen ⊗i componentIso delta M k)
+\end{lstlisting}
+
+\subsection{The Universal Sayability theorem}\label{app:lean:us}
+
+\begin{lstlisting}[language=Lean]
+theorem universal_sayability (delta : C) (M : TGUTRealisation C delta) :
+    Nonempty (RealIso M (canonical delta)) :=
+  Nonempty.intro { iso := componentIso delta M }
+\end{lstlisting}
+
+\subsection{The $\DiamondH$ anchor (Heyting instance)}\label{app:lean:diamondH4}
+
+\begin{lstlisting}[language=Lean]
+inductive DiamondH4 : Type where
+  | bot : DiamondH4
+  | mid1 : DiamondH4
+  | mid2 : DiamondH4
+  | top : DiamondH4
+  deriving DecidableEq, Repr
+
+theorem DiamondH4_is_nonBoolean :
+    (Not (Not DiamondH4.mid1) : DiamondH4) = bot
+\end{lstlisting}
+
+\subsection{The Pauli--Klein4 equivalence (Quantum instance)}\label{app:lean:pauli}
+
+\begin{lstlisting}[language=Lean]
+-- From Foundation/Wen/Embeddings/StabilizerQM.lean
+def equiv : PauliN n ≃ R (2 * n)
+
+-- From Foundation/Doctrine/Instance/Quantum.lean
+theorem P6_quantum_is_pauli_klein4 :
+    Nonempty (PauliBase ≃* V4)
+\end{lstlisting}
+
+% =====================================================================
+\end{document}

@@ -278,6 +278,18 @@ import SSBX.Foundation.R8
 import SSBX.Foundation.RInfty
 import SSBX.Foundation.Atlas
 
+-- T5 polymorphic-field scaffold (G11 cut-1: char(k)=2 + char(k)≠2 dispatch).
+-- Per gut-roadmap.md §十二.
+import SSBX.Foundation.R.UniquenessAlgebraic
+import SSBX.Foundation.R.UniquenessGeneralField
+
+-- G11 bottleneck-removal: install `IsSimpleRing` / `IsArtinianRing`
+-- chain on `Matrix (Fin n) (Fin n) (ZMod p)` and `Matrix (Fin n) (Fin n) k`
+-- so Mathlib's `IsSimpleRing.exists_ringEquiv_matrix_divisionRing`
+-- applies directly to our R₄-anchor ring.
+-- Per gut-roadmap.md G11 (T5-B parametric over k).
+import SSBX.Foundation.R.Algebra.MatFqInstances
+
 -- Phase E: Wen/Core — PartialCell-native Wen kernel.
 -- Parallel to legacy Foundation/Bagua/BaguaTuring.lean (which is Yi-flavored).
 -- Yi semantics is provided via Foundation/Atlas/Yi/ as application overlay.
@@ -289,3 +301,139 @@ import SSBX.Foundation.Lang.Partial
 -- Representation closure: A/B/D locator strategies for concept → R-Family.
 -- Per wen-substrate.md v1.4 §Representation.
 import SSBX.Foundation.Representation
+
+-- Closure (Knaster-Tarski lfp identification of D1, skeleton).
+-- Per docs-next/00_start/lawvere-identification.md v0.2 §§4.5, 5.
+import SSBX.Foundation.Closure.PhiOperator
+
+-- Cross-base functor library (G7 gut-roadmap §三 Tier 2).
+-- Mod-phase Hilbert ↔ Pauli ↔ R(2n) — reverse functors + RFamily k bridges.
+import SSBX.Foundation.Wen.Embeddings.StabilizerQM
+import SSBX.Foundation.Wen.Embeddings.HilbertPauliFunctor
+
+-- GUT-C Path C foundation: elementary topos bundling (PR-1).
+-- Per docs-next/00_start/gut-c-doctrine.md v0.2 §11.1.
+-- Mathlib-PR-quality skeleton: bundles HasFiniteLimits + CartesianMonoidalCategory +
+-- MonoidalClosed + HasSubobjectClassifier into a single `class ElementaryTopos`.
+-- Includes canonical instance on `Type u` (Lawvere classical construction).
+import SSBX.Foundation.CategoryTheory.ElementaryTopos
+
+-- GUT-C Path C foundation: Lawvere theories + models API (PR-2).
+-- Per docs-next/00_start/gut-c-doctrine.md v0.2 §11.1.
+-- Mathlib-PR-quality skeleton: `class LawvereTheory T` (small finite-product
+-- category with chosen generator and powers), `structure Model T C`
+-- (finite-product-preserving functor), `structure LawvereTheoryHom T T'`
+-- (morphism of theories), and a category instance on `Model T C`.
+-- `free` Lawvere theory + Lawvere/finitary-monad equivalence stubs (`sorry`).
+import SSBX.Foundation.Doctrine.LawvereTheory
+
+-- GUT-C Path C foundation: V-enriched Lawvere theories (Power 1999, PR-3).
+-- Per docs-next/00_start/gut-c-doctrine.md v0.2 §§3.2, 11.1.
+-- Mathlib-PR-quality skeleton: `class EnrichedLawvereTheory V T` (V-enriched
+-- ordinary category with conical V-finite-products + chosen generator),
+-- `structure EnrichedModel V T C` (V-product-preserving V-functor),
+-- `structure EnrichedLawvereTheoryHom`, plus skeleta for additive (V = Ab),
+-- linear (V = Vect_K), 2-Lawvere (V = Cat), free V-category L_V, Power's
+-- forgetful / free V-T-model functors, and the Power 1999 main theorem
+-- (`enriched_lawvere_iff_finitary_v_monad`) stated with `sorry`-tolerant
+-- placeholders pending Mathlib's weighted-enriched-limits API.
+-- Cross-dep on G1: instance `LawvereTheory T ⇒ LawvereTheorySig T`.
+import SSBX.Foundation.Doctrine.EnrichedLawvereTheory
+
+-- GUT-C Path C Doctrine: T_GUT Lawvere theory skeleton.
+-- Per docs-next/00_start/gut-c-doctrine.md v0.2 §§3.3, 3.4, 3.5.
+-- Defines the signature `TGUTOp`, equational laws `TGUTLaw`, and the
+-- `TGUTRealisation C δ` structure that any SMCC realisation satisfies.
+-- Headline `universal_sayability` statement included; proof = γ.3 work.
+import SSBX.Foundation.Doctrine.T_GUT
+
+-- GUT-C Path C Doctrine: T_GUT algebraic instance — bridge from new
+-- framework to existing GUT-A/B R-family-over-(ZMod q).
+-- Per docs-next/00_start/gut-c-doctrine.md v0.2 §3.4 + §11.2.
+-- Packages `Foundation/R/UniquenessGeneral.lean` + `UniquenessAlgebraic.lean`
+-- as a concrete `TGUTRealisation (Type 0) (ZMod q)`, recovering
+-- GUT-A's `T5_A_ringEquiv_at_4_zmod2` as a corollary of the algebraic
+-- specialisation.
+import SSBX.Foundation.Doctrine.Instance.Algebraic
+
+-- GUT-C Path C Phase γ.2: first non-algebraic T_GUT instance (Heyting / δ=Prop).
+-- Per docs-next/00_start/gut-c-doctrine.md v0.2 §3.4, §4.2 deliverable (4), §8.2.
+-- Concrete `TGUTRealisation (Type 0) Prop` with Heyting-flavour generators
+-- + Heyting-specific reformulations of P3 (lattice morphism classification,
+--   `relate_heyting_pointwise_himp`) and P7b (minimum non-Boolean 4-element
+--   Heyting algebra, `DiamondH4`).
+-- Validates Path C framework in PARTIAL form: 11/11 generator slots filled;
+-- 2 sorries (R_tensor matching Algebraic instance pattern; P3-Heyting
+-- classification is research-level open problem).
+import SSBX.Foundation.Doctrine.Instance.Heyting
+
+-- GUT-C Path C Phase γ.2 sub-deliverable: DiamondH4 uniqueness theorem.
+-- Per docs-next/00_start/gut-c-doctrine.md v0.2 §4.2.2 (DiamondH4 discovery).
+-- Discharges the uniqueness flag on `P7b_heyting` from
+-- Foundation/Doctrine/Instance/Heyting.lean §5: every non-Boolean
+-- 4-element bounded distributive lattice (equivalently, every
+-- non-Boolean 4-element Heyting algebra) is order-isomorphic to
+-- `DiamondH4`.  Proven by `Finset.card_eq_four` enumeration +
+-- exhaustive case-analysis on 16 pairs in the 4-element universe.
+-- **0 sorries, 0 axioms** — fully discharges the open conjecture.
+import SSBX.Foundation.Order.HeytingClassification
+
+-- GUT-C Path C Phase γ.2 sub-deliverable: Heyting-bimorphism classification.
+-- Per docs-next/00_start/gut-c-doctrine.md v0.3 §4.2.1 (research open #2 from G5).
+-- Discharges the open `P3_heyting` flag from
+-- Foundation/Doctrine/Instance/Heyting.lean §4 via the **collapse theorem**:
+-- strong `IsHeytingBilinear` (= HeytingHom in each argument) is
+-- PROVABLY VACUOUS on every non-degenerate Heyting algebra (`⊥ ≠ ⊤`).
+-- The structurally-correct replacement is `IsSubBimorphism` (lattice-level,
+-- without implication preservation), with 6 fundamental examples on every
+-- bounded distributive lattice: `inf2`, `sup2`, `proj1`, `proj2`,
+-- `constBot`, `constTop`.
+-- **0 sorries, 0 axioms** — refines the conjecture from a single open
+-- to a two-tier framework (strong-vacuous + sub-bimorphism-Birkhoff).
+import SSBX.Foundation.Order.HeytingBimorphism
+
+-- GUT-C γ.5-E Pauli ring iso research-open attack.
+-- Lifts existing pauliBaseToHilbert to full ring-theoretic statement:
+-- ℂ-linear independence of {I, X, Y, Z} as basis of Mat₂(ℂ);
+-- F₂-subalgebra of Mat₂(ℂ) generated by Pauli matrices.
+-- 0 sorries, 0 axioms (Mathlib `Complex.I` + Pauli matrix theory).
+import SSBX.Foundation.Wen.Embeddings.PauliRingIso
+
+-- GUT-C γ.5-F Frame bimorphism / Joyal-Tierney classification research-open attack.
+-- Cartesian classification proved; non-cartesian (Joyal-Tierney) flagged
+-- as Mathlib upstream gap (~1000-1500 LOC PR). 2 sorries documented.
+import SSBX.Foundation.Order.FrameBimorphism
+
+-- GUT-C Path C Phase γ.3: second non-algebraic T_GUT instance (quantum / δ=PauliBase).
+-- Per docs-next/00_start/gut-c-doctrine.md v0.2 §3.4, §8.3.
+-- Concrete `TGUTRealisation (Type 0) PauliBase` with stabilizer-quantum-flavour
+-- generators built on the existing `StabilizerQM` + `HilbertPauliFunctor` infra.
+-- Strategy: pivots from "abstract FdHilb category" (Mathlib doesn't have it)
+-- to **concrete stabilizer-quantum substrate** via Pauli matrices.
+-- Quantum-specific reformulations:
+--   * P3 → symplectic form `R.sigma` (commutator detection in stabilizer);
+--   * P7b → `Mat₂(ℂ)` anchor via `pauliToHilbert` (Pauli → Hilbert).
+-- KEY RESULT: P6 (V₄ modality) is LITERAL Klein-four in quantum — single-qubit
+-- Pauli {I, X, Y, Z} IS the V₄ group (the "Pauli-Klein4 coincidence").
+-- Validates Path C framework in SAME PARTIAL form as Heyting; sufficient to
+-- commit γ.3-topological + γ.4 paper.
+import SSBX.Foundation.Doctrine.Instance.Quantum
+
+-- GUT-C Path C Phase γ.3: third non-algebraic T_GUT instance
+-- (topological / δ=Sierpinski Ω, ambient Frm).
+-- Per docs-next/00_start/gut-c-doctrine.md v0.2 §3.4, §4.3 deliverable (2).
+-- Concrete `TGUTRealisation (Type 0) SierpinskiOmega` (= Prop with frame
+-- instance) reinterpreting the seven generators in **frame** (not Heyting)
+-- flavour: frame product, frame morphism classification (P3-topological),
+-- frame exponential, Sierpinski-square Wedderburn anchor (P7b-topological,
+-- `Sierpinski2_Squared` = Boolean 4-element frame — distinct from Heyting's
+-- non-Boolean `DiamondH4`).
+-- Validates Path C framework in PARTIAL form with explicit BOUNDARY findings:
+-- the Joyal-Tierney non-cartesian frame tensor and frame exponential are
+-- Mathlib-upstream-PR-level gaps; the framework gracefully degrades to
+-- cartesian-product approximations. No generator literally breaks.
+-- 2 sorries: R_tensor (matching siblings), P3_topological classification.
+-- P7b_topological_uniqueness + hom_NM_frame_exponential weakened to
+-- type-level existence (Pi.instFrame), since the genuine OrderIso /
+-- Joyal-Tierney machinery is out-of-scope (Mathlib-upstream-PR-level).
+import SSBX.Foundation.Doctrine.Instance.Topological

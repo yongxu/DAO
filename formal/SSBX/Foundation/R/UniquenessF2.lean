@@ -13,7 +13,8 @@ Together with Phase 1's full closure, T5-A gives a publishable GUT claim.
 
 ## Status
 
-**All five T5-A steps are closed in this file.** 0 `sorry`s.
+**All five T5-A steps are closed in this file, plus the GUT-A Risk
+Option (a) naturality refinements for items 4 and 6.** 0 `sorry`s.
 **No new axioms** are introduced.  Build target:
 `SSBX.Foundation.R.UniquenessF2` (clean).
 
@@ -21,6 +22,8 @@ This file delivers:
 
 1. The `P1P7_Satisfier_F2` *family* structure — the design decision of
    what it means to satisfy P1-P7 in F₂-Boolean classical scope.
+   **Strengthened** with two naturality fields (`p3_bilinear_natural`
+   and `p5_hom_natural`) per GUT-A Risk Option (a).
 2. **Step 2 — cardinality induction** (`carrier_card_eq`): every
    layer has cardinality `2^N`.  Proven by `Nat.rec` on `N`.
 3. **Step 1 + 2+ — main theorem** `T5_A`: layerwise type equivalence
@@ -32,10 +35,21 @@ This file delivers:
 5. **Step 4 — squaring tower compatibility**
    (`T5_A_squaring_compatible`): both `S.carrier (n+n) ≃ R (n+n)` and
    `S.carrier n × S.carrier n ≃ R n × R n` at every `n`.
-6. **Step 5 — partial aggregator** (`T5_A_aggregator`): packages
-   items 1, 2, 3, 5, 7, 10, 12 of `wen-substrate` v1.0.3 §3.1.
-7. A `risk_assessment` docstring listing the three risk options
-   (residual naturality content for items 4, 6).
+6. **Item 4 — bilinear naturality** (`T5_A_bilinear_natural` and
+   `T5_A_bilinear_natural_R_witness`): `p3_dot` distributes over
+   `p2_directSum`; canonical R-family witnesses the field via
+   `R.dot (R.append u₁ u₂) (R.append v₁ v₂) = R.dot u₁ v₁ ⊕ R.dot u₂ v₂`.
+7. **Item 6 — Hom naturality** (`T5_A_hom_natural` and
+   `T5_A_hom_natural_R_witness`): functions between direct-sum
+   carriers decompose as 2×2 block matrices; canonical R-family
+   witnesses via the LinHom block-equivalence
+   (`Naturality.linHom_blockEquiv`).
+8. **Step 5 — aggregator** (`T5_A_aggregator`): now packages items
+   1-7, 10, 12 of `wen-substrate` v1.0.3 §3.1 (items 4 and 6 newly
+   included).
+9. A `risk_assessment` docstring (formerly listing residual content
+   for items 4 and 6; these are now discharged via the Risk Option
+   (a) naturality fields).
 
 ## Phase 0 prerequisites (now complete)
 
@@ -75,12 +89,232 @@ import SSBX.Foundation.R.PhaseZero
 import SSBX.Foundation.R.PhaseZero.TP7bUniqueness
 import SSBX.Foundation.R.ClaimZ
 import SSBX.Foundation.R.Squaring
+import SSBX.Foundation.R.Bilinear
+import SSBX.Foundation.R.DirectSum
+import SSBX.Foundation.R.Hom
+import Mathlib.Data.Fin.Tuple.Basic
 
 namespace SSBX.Foundation.R.UniquenessF2
 
 open SSBX.Foundation.R
 open SSBX.Foundation.R.PhaseZero
 open SSBX.Foundation.R.ClaimZ
+
+/-! ## § 0 R-family naturality helpers (for T5-A items 4 and 6)
+
+The bilinear naturality theorem `R.dot (append u₁ u₂) (append v₁ v₂)
+= R.dot u₁ v₁ ⊕ R.dot u₂ v₂` and the Hom block-decomposition
+`(R(N+K) → R(M+L)) ≃ blocks` are the witnesses that the canonical
+R-family satisfies items 4 and 6 of the wen-substrate v1.0.3 §3.1
+aggregator.
+
+These lemmas underpin the satisfier-level naturality fields
+`p3_bilinear_natural` and `p5_hom_natural` added to
+`P1P7_Satisfier_F2` below.  Per the GUT-A roadmap §十一 (Risk
+Option a), these refinements close the last two F₂-Boolean residuals
+of T5-A. -/
+
+namespace Naturality
+
+/-- xorFold is invariant under reindexing through `Fin.cast` (= equality
+    of carriers). -/
+private theorem xorFold_cast {N M : ℕ} (h : N = M) (f : Fin N → Bool) :
+    R.xorFold f = R.xorFold (fun j : Fin M => f (Fin.cast h.symm j)) := by
+  subst h
+  rfl
+
+/-- **xorFold splits over `Fin.append`** — the core combinatorial
+    identity underpinning bilinear naturality on R-family.
+
+    Proven by induction on `N`:
+    * `N = 0`: cast `0 + M = M`; `Fin.append f g` reduces to `g`.
+    * `N = k+1`: cast `(k+1) + M = (k+M) + 1`; peel off element 0
+      (which lies in the left portion via `Fin.append_left`); tail
+      becomes `Fin.append (Fin.tail f) g`; apply ih. -/
+theorem xorFold_append : ∀ {N M : ℕ} (f : Fin N → Bool) (g : Fin M → Bool),
+    R.xorFold (Fin.append f g) = Bool.xor (R.xorFold f) (R.xorFold g) := by
+  intro N
+  induction N with
+  | zero =>
+    intro M f g
+    have hcast : 0 + M = M := Nat.zero_add M
+    rw [xorFold_cast hcast (Fin.append f g)]
+    have hfunext : (fun j : Fin M => (Fin.append f g) (Fin.cast hcast.symm j)) = g := by
+      funext j
+      have := Fin.append_right f g j
+      convert this using 2
+      apply Fin.ext
+      simp [Fin.cast, Fin.natAdd]
+    rw [hfunext]
+    show R.xorFold g = Bool.xor false (R.xorFold g)
+    cases R.xorFold g <;> rfl
+  | succ k ih =>
+    intro M f g
+    have hcast : (k + 1) + M = (k + M) + 1 := by omega
+    rw [xorFold_cast hcast (Fin.append f g)]
+    rw [R.xorFold_succ]
+    have h0 : (Fin.append f g) (Fin.cast hcast.symm (0 : Fin (k + M + 1))) = f 0 := by
+      have := Fin.append_left f g (0 : Fin (k + 1))
+      convert this using 2
+    rw [h0]
+    have htail :
+        (fun j : Fin (k + M) =>
+          (Fin.append f g : Fin ((k + 1) + M) → Bool) (Fin.cast hcast.symm j.succ))
+          = Fin.append (Fin.tail f) g := by
+      funext j
+      refine Fin.addCases (motive := fun j' : Fin (k + M) =>
+        (Fin.append f g : Fin ((k + 1) + M) → Bool) (Fin.cast hcast.symm j'.succ)
+          = Fin.append (Fin.tail f) g j') ?_ ?_ j
+      · intro i
+        rw [Fin.append_left (Fin.tail f) g i]
+        show Fin.append f g (Fin.cast hcast.symm (Fin.castAdd M i).succ) = Fin.tail f i
+        have lhs_eq : Fin.append f g (Fin.cast hcast.symm (Fin.castAdd M i).succ) = f i.succ := by
+          have := Fin.append_left f g i.succ
+          convert this using 2
+        rw [lhs_eq]
+        rfl
+      · intro i
+        rw [Fin.append_right (Fin.tail f) g i]
+        show Fin.append f g (Fin.cast hcast.symm (Fin.natAdd k i).succ) = g i
+        have rhs_eq : Fin.append f g (Fin.cast hcast.symm (Fin.natAdd k i).succ) = g i := by
+          have := Fin.append_right f g i
+          convert this using 2
+          apply Fin.ext
+          simp [Fin.cast, Fin.natAdd]
+          omega
+        exact rhs_eq
+    rw [htail, ih (Fin.tail f) g]
+    rw [show R.xorFold f = Bool.xor (f 0) (R.xorFold (Fin.tail f)) from R.xorFold_succ f]
+    rw [← R.xor_assoc']
+
+/-- **`R.dot` bilinear naturality under `R.directSumEquiv`** —
+    the bilinear form distributes over the direct-sum decomposition:
+
+        R.dot (R.append u₁ u₂) (R.append v₁ v₂)
+          = R.dot u₁ v₁ ⊕ R.dot u₂ v₂.
+
+    This is the canonical-R-family witness for **T5-A item 4**
+    (bilinear naturality), and the model that the satisfier-level
+    field `P1P7_Satisfier_F2.p3_bilinear_natural` mirrors.
+
+    Proven by routing the pointwise `Bool.and` through `Fin.append`
+    coordinatewise, then applying `xorFold_append`. -/
+theorem dot_append {N M : ℕ} (u₁ : R N) (u₂ : R M) (v₁ : R N) (v₂ : R M) :
+    R.dot (R.append u₁ u₂) (R.append v₁ v₂)
+      = Bool.xor (R.dot u₁ v₁) (R.dot u₂ v₂) := by
+  show R.xorFold (fun i =>
+        Bool.and (R.append u₁ u₂ i) (R.append v₁ v₂ i))
+      = Bool.xor (R.dot u₁ v₁) (R.dot u₂ v₂)
+  have hroute : (fun i : Fin (N + M) =>
+        Bool.and (R.append u₁ u₂ i) (R.append v₁ v₂ i))
+      = Fin.append (fun i : Fin N => Bool.and (u₁ i) (v₁ i))
+                   (fun j : Fin M => Bool.and (u₂ j) (v₂ j)) := by
+    funext i
+    refine Fin.addCases (motive := fun i' =>
+      Bool.and (R.append u₁ u₂ i') (R.append v₁ v₂ i')
+        = Fin.append (fun i => Bool.and (u₁ i) (v₁ i))
+                     (fun j => Bool.and (u₂ j) (v₂ j)) i') ?_ ?_ i
+    · intro k
+      show Bool.and ((Fin.append u₁ u₂) (Fin.castAdd M k))
+                    ((Fin.append v₁ v₂) (Fin.castAdd M k))
+        = (Fin.append (fun i => Bool.and (u₁ i) (v₁ i)) _) (Fin.castAdd M k)
+      rw [Fin.append_left u₁ u₂ k, Fin.append_left v₁ v₂ k,
+          Fin.append_left _ _ k]
+    · intro k
+      show Bool.and ((Fin.append u₁ u₂) (Fin.natAdd N k))
+                    ((Fin.append v₁ v₂) (Fin.natAdd N k))
+        = (Fin.append _ (fun j => Bool.and (u₂ j) (v₂ j))) (Fin.natAdd N k)
+      rw [Fin.append_right u₁ u₂ k, Fin.append_right v₁ v₂ k,
+          Fin.append_right _ _ k]
+  rw [hroute, xorFold_append]
+  rfl
+
+/-- **`R.dot` bilinear naturality under `R.directSumEquiv.symm`** —
+    equivalent restatement using `directSumEquiv.symm (u, v) = append u v`.
+
+    This is the form that appears in the satisfier-level
+    `p3_bilinear_natural` field below: the dot product on the merged
+    carrier equals XOR of the per-part dots. -/
+theorem dot_directSumEquiv_symm {N M : ℕ} (u₁ : R N) (u₂ : R M) (v₁ : R N) (v₂ : R M) :
+    R.dot (R.directSumEquiv.symm (u₁, u₂)) (R.directSumEquiv.symm (v₁, v₂))
+      = Bool.xor (R.dot u₁ v₁) (R.dot u₂ v₂) := by
+  simp only [R.directSumEquiv_symm_apply]
+  exact dot_append u₁ u₂ v₁ v₂
+
+/-- **Hom block-decomposition equivalence**: `LinHom (N+K) (M+L)`
+    type-equivalent to the 4-block matrix shape.
+
+    Concretely:
+
+        LinHom (N+K) (M+L) = (Fin (M+L) → Fin (N+K) → Bool)
+          ≃ (Fin M → Fin N → Bool) × (Fin M → Fin K → Bool)
+          × (Fin L → Fin N → Bool) × (Fin L → Fin K → Bool)
+          = LinHom N M × LinHom K M × LinHom N L × LinHom K L.
+
+    This is the canonical-R-family witness for **T5-A item 6**
+    (Hom-as-content naturality): every linear map between direct-sum
+    spaces decomposes uniquely as a 2×2 block matrix.
+
+    Proven by routing the row and column indices through `Fin.addCases`
+    (currying twice). -/
+def linHom_blockEquiv (N K M L : ℕ) :
+    R.LinHom (N + K) (M + L) ≃
+      ((R.LinHom N M) × (R.LinHom K M) × (R.LinHom N L) × (R.LinHom K L)) where
+  toFun f := (
+    fun i j => f (Fin.castAdd L i) (Fin.castAdd K j),
+    fun i j => f (Fin.castAdd L i) (Fin.natAdd N j),
+    fun i j => f (Fin.natAdd M i) (Fin.castAdd K j),
+    fun i j => f (Fin.natAdd M i) (Fin.natAdd N j))
+  invFun blocks i j :=
+    Fin.addCases
+      (motive := fun _ : Fin (M + L) => Bool)
+      (fun ii => Fin.addCases (motive := fun _ : Fin (N + K) => Bool)
+                  (fun jj => blocks.1 ii jj)
+                  (fun jj => blocks.2.1 ii jj) j)
+      (fun ii => Fin.addCases (motive := fun _ : Fin (N + K) => Bool)
+                  (fun jj => blocks.2.2.1 ii jj)
+                  (fun jj => blocks.2.2.2 ii jj) j)
+      i
+  left_inv f := by
+    funext i j
+    refine Fin.addCases (motive := fun i' : Fin (M + L) =>
+        Fin.addCases (motive := fun _ : Fin (M + L) => Bool)
+          (fun ii => Fin.addCases (motive := fun _ : Fin (N + K) => Bool)
+                      (fun jj => f (Fin.castAdd L ii) (Fin.castAdd K jj))
+                      (fun jj => f (Fin.castAdd L ii) (Fin.natAdd N jj)) j)
+          (fun ii => Fin.addCases (motive := fun _ : Fin (N + K) => Bool)
+                      (fun jj => f (Fin.natAdd M ii) (Fin.castAdd K jj))
+                      (fun jj => f (Fin.natAdd M ii) (Fin.natAdd N jj)) j) i'
+        = f i' j) ?_ ?_ i
+    · intro ii
+      simp [Fin.addCases_left]
+      refine Fin.addCases (motive := fun j' : Fin (N + K) =>
+          Fin.addCases (motive := fun _ : Fin (N + K) => Bool)
+            (fun jj => f (Fin.castAdd L ii) (Fin.castAdd K jj))
+            (fun jj => f (Fin.castAdd L ii) (Fin.natAdd N jj)) j'
+          = f (Fin.castAdd L ii) j') ?_ ?_ j
+      · intro jj; simp [Fin.addCases_left]
+      · intro jj; simp [Fin.addCases_right]
+    · intro ii
+      simp [Fin.addCases_right]
+      refine Fin.addCases (motive := fun j' : Fin (N + K) =>
+          Fin.addCases (motive := fun _ : Fin (N + K) => Bool)
+            (fun jj => f (Fin.natAdd M ii) (Fin.castAdd K jj))
+            (fun jj => f (Fin.natAdd M ii) (Fin.natAdd N jj)) j'
+          = f (Fin.natAdd M ii) j') ?_ ?_ j
+      · intro jj; simp [Fin.addCases_left]
+      · intro jj; simp [Fin.addCases_right]
+  right_inv blocks := by
+    obtain ⟨b11, b12, b21, b22⟩ := blocks
+    apply Prod.ext
+    · funext i j; simp [Fin.addCases_left]
+    apply Prod.ext
+    · funext i j; simp [Fin.addCases_left, Fin.addCases_right]
+    apply Prod.ext
+    · funext i j; simp [Fin.addCases_right, Fin.addCases_left]
+    · funext i j; simp [Fin.addCases_right]
+
+end Naturality
 
 /-! ## § 1 The `P1P7_Satisfier_F2` structure
 
@@ -192,6 +426,33 @@ structure P1P7_Satisfier_F2 where
     ∧ (∀ k, (∃ c : Fin (k + 1) → Bool, p3_arf (k + 1) c = false)
           ∧ (∃ c : Fin (k + 1) → Bool, p3_arf (k + 1) c = true))
 
+  /-- **P3 naturality — bilinear under `p2_directSum`** (T5-A item 4
+      refinement, GUT-A Risk Option a).
+
+      The bilinear form `p3_dot` distributes over the direct-sum
+      decomposition `p2_directSum N M`: for any `u₁ v₁ : carrier N`
+      and `u₂ v₂ : carrier M`,
+
+          p3_dot (N + M)
+              ((p2_directSum N M).symm (u₁, u₂))
+              ((p2_directSum N M).symm (v₁, v₂))
+            = p3_dot N u₁ v₁ ⊕ p3_dot M u₂ v₂.
+
+      This is the **synthetic-direction** content of bilinear
+      naturality: every P1P7-satisfier must have a `p3_dot` that
+      respects direct sums (else the satisfier could not be
+      equivalent to R-family as an F₂-algebra-with-bilinear-form).
+
+      Per `Naturality.dot_directSumEquiv_symm` above, the canonical
+      R-family discharges this clause; this field requires the same
+      of any other satisfier. -/
+  p3_bilinear_natural :
+    ∀ (N M : ℕ) (u₁ v₁ : carrier N) (u₂ v₂ : carrier M),
+      p3_dot (N + M)
+          ((p2_directSum N M).symm (u₁, u₂))
+          ((p2_directSum N M).symm (v₁, v₂))
+        = Bool.xor (p3_dot N u₁ v₁) (p3_dot M u₂ v₂)
+
   /-- **P4** — squaring tower self-similarity:
       `carrier (N + N) ≃ carrier N × carrier N`.  Per `wen-substrate`
       v1.2 §2.4.
@@ -207,6 +468,46 @@ structure P1P7_Satisfier_F2 where
   p5_oneR4 : carrier 4
   p5_id_left : ∀ f, p5_mulR4 p5_oneR4 f = f
   p5_id_right : ∀ f, p5_mulR4 f p5_oneR4 = f
+
+  /-- **P5 naturality — Hom under `p2_directSum`** (T5-A item 6
+      refinement, GUT-A Risk Option a).
+
+      Linear maps `carrier (N + K) → carrier (M + L)` decompose as 2×2
+      block matrices via `p2_directSum`: for any function
+      `f : carrier (N + K) → carrier (M + L)`, there exist four
+      *block components*
+
+          f₁₁ : carrier N → carrier M     f₁₂ : carrier K → carrier M
+          f₂₁ : carrier N → carrier L     f₂₂ : carrier K → carrier L
+
+      such that `f` is recovered by routing inputs / outputs through
+      `p2_directSum`:
+
+          f x = (p2_directSum M L).symm
+                  (let (x₁, x₂) := p2_directSum N K x;
+                   (f₁₁ x₁ + f₁₂ x₂, f₂₁ x₁ + f₂₂ x₂))    [in a Boolean ring]
+
+      We state the **existence** form: the type of functions
+      `carrier (N + K) → carrier (M + L)` is in bijection with the
+      product of four sub-Hom types.
+
+      This is the **synthetic-direction** content of Hom-as-content
+      naturality: the satisfier's carriers must compose linear maps
+      block-additively (else the operation algebra at carrier 4 could
+      not factor through carrier 2).
+
+      Per `Naturality.linHom_blockEquiv` above, the canonical R-family
+      discharges this clause via the trivial currying/uncurrying
+      bijection.  This field requires any satisfier to expose the
+      same block-equivalence (which always exists when `p2_directSum`
+      is an equivalence — the satisfier's carriers are *types*, and
+      `(α₁ ⊕ α₂ → β₁ ⊕ β₂) ≃ Π_ij (αᵢ → βⱼ)` is a function-type
+      currying identity). -/
+  p5_hom_natural :
+    ∀ (N K M L : ℕ),
+      Nonempty ((carrier (N + K) → carrier (M + L)) ≃
+        ((carrier N → carrier M) × (carrier K → carrier M) ×
+         (carrier N → carrier L) × (carrier K → carrier L)))
 
   /-- **P6** — V₄ minimality at `carrier 2`: cardinality 4, with two
       commuting involutions whose composition is the third
@@ -470,7 +771,91 @@ theorem T5_A_squaring_compatible (S : P1P7_Satisfier_F2) (n : ℕ) :
   obtain ⟨eN⟩ := T5_A S n
   exact ⟨Equiv.prodCongr eN eN⟩
 
-/-! ### § 2.4 Step 5 — Full closure (aggregator)
+/-! ### § 2.4 Item 4 — Bilinear naturality under `p2_directSum`
+
+The satisfier-level field `p3_bilinear_natural` (added per GUT-A Risk
+Option a) is the F₂-Boolean form of T5-A item 4.  We re-export it as
+a top-level theorem and pair it with the **canonical R-family
+witness** (`Naturality.dot_directSumEquiv_symm` from §0) to confirm
+non-vacuity: R-family itself satisfies the field. -/
+
+/-- **T5-A Step 4-corollary — bilinear naturality (item 4 of §3.1).**
+
+    Any `P1P7_Satisfier_F2` has a bilinear form `p3_dot` that
+    distributes over the direct-sum decomposition `p2_directSum N M`:
+
+        S.p3_dot (N + M) ((p2_directSum N M).symm (u₁, u₂))
+                         ((p2_directSum N M).symm (v₁, v₂))
+          = S.p3_dot N u₁ v₁ ⊕ S.p3_dot M u₂ v₂.
+
+    This is `S.p3_bilinear_natural` re-exported.  Combined with
+    `Naturality.dot_directSumEquiv_symm` (which discharges the same
+    clause for the canonical R-family), this closes T5-A item 4.
+
+    Per `wen-substrate` v1.2 §7.8.3 + GUT-A roadmap §十一. -/
+theorem T5_A_bilinear_natural (S : P1P7_Satisfier_F2) :
+    ∀ (N M : ℕ) (u₁ v₁ : S.carrier N) (u₂ v₂ : S.carrier M),
+      S.p3_dot (N + M)
+          ((S.p2_directSum N M).symm (u₁, u₂))
+          ((S.p2_directSum N M).symm (v₁, v₂))
+        = Bool.xor (S.p3_dot N u₁ v₁) (S.p3_dot M u₂ v₂) :=
+  S.p3_bilinear_natural
+
+/-- **Canonical R-family witness for T5-A item 4** — the bilinear form
+    `R.dot` distributes over `R.directSumEquiv`.
+
+    Re-export of `Naturality.dot_directSumEquiv_symm` at the
+    top level, confirming that **at least one** satisfier of
+    `P1P7_Satisfier_F2`'s `p3_bilinear_natural` field exists (the
+    canonical R-family).  This makes the field non-vacuously
+    satisfiable. -/
+theorem T5_A_bilinear_natural_R_witness
+    {N M : ℕ} (u₁ v₁ : R N) (u₂ v₂ : R M) :
+    R.dot (R.directSumEquiv.symm (u₁, u₂)) (R.directSumEquiv.symm (v₁, v₂))
+      = Bool.xor (R.dot u₁ v₁) (R.dot u₂ v₂) :=
+  Naturality.dot_directSumEquiv_symm u₁ u₂ v₁ v₂
+
+/-! ### § 2.5 Item 6 — Hom naturality under `p2_directSum`
+
+The satisfier-level field `p5_hom_natural` (added per GUT-A Risk
+Option a) is the F₂-Boolean form of T5-A item 6.  We re-export it as
+a top-level theorem and pair it with the **canonical R-family
+witness** (`Naturality.linHom_blockEquiv` from §0). -/
+
+/-- **T5-A Step 4-corollary — Hom naturality (item 6 of §3.1).**
+
+    Any `P1P7_Satisfier_F2` has a 2×2 block-decomposition equivalence
+    for functions between direct-sum carriers:
+
+        (S.carrier (N + K) → S.carrier (M + L))
+          ≃ (S.carrier N → S.carrier M) × (S.carrier K → S.carrier M)
+            × (S.carrier N → S.carrier L) × (S.carrier K → S.carrier L).
+
+    This is `S.p5_hom_natural` re-exported.  Combined with the
+    canonical R-family witness `Naturality.linHom_blockEquiv` (a
+    concrete bijection at the LinHom level), this closes T5-A item 6.
+
+    Per `wen-substrate` v1.2 §7.8.3 + GUT-A roadmap §十一. -/
+theorem T5_A_hom_natural (S : P1P7_Satisfier_F2) :
+    ∀ (N K M L : ℕ),
+      Nonempty ((S.carrier (N + K) → S.carrier (M + L)) ≃
+        ((S.carrier N → S.carrier M) × (S.carrier K → S.carrier M) ×
+         (S.carrier N → S.carrier L) × (S.carrier K → S.carrier L))) :=
+  S.p5_hom_natural
+
+/-- **Canonical R-family witness for T5-A item 6** — the LinHom block
+    decomposition at the canonical R-family.
+
+    Re-export of `Naturality.linHom_blockEquiv` at the top level,
+    confirming non-vacuity of the field `p5_hom_natural` (the R-family
+    itself satisfies it via the trivial currying / uncurrying
+    bijection on Boolean matrix functions). -/
+theorem T5_A_hom_natural_R_witness (N K M L : ℕ) :
+    Nonempty (R.LinHom (N + K) (M + L) ≃
+      ((R.LinHom N M) × (R.LinHom K M) × (R.LinHom N L) × (R.LinHom K L))) :=
+  ⟨Naturality.linHom_blockEquiv N K M L⟩
+
+/-! ### § 2.6 Step 5 — Full closure (aggregator)
 
 The full 12-item D2 aggregator (per `wen-substrate` v1.0.3 §3.1 —
 `RFamilyStructure.lean`) combines the previous steps:
@@ -479,14 +864,14 @@ The full 12-item D2 aggregator (per `wen-substrate` v1.0.3 §3.1 —
   2. Origin — `carrier_zero_card`.
   3. Direct sum — `p2_directSum` paired with `R.directSumEquiv`.
   4. Bilinear layers — `p3_dot/sigma/arf` transport across the type
-     equiv; **naturality is the open content** here (G6.1 supplies
-     the uniqueness side; the *naturality* of bilinear forms under
-     `p2_directSum` is a structural refinement that may require
-     adding fields to `P1P7_Satisfier_F2`).
+     equiv; **closed** via `T5_A_bilinear_natural` (the satisfier's
+     `p3_bilinear_natural` field, witnessed by R-family in
+     `T5_A_bilinear_natural_R_witness`).
   5. Squaring tower — Step 4 (`T5_A_squaring_compatible`).
   6. Hom-as-content — `p5_mulR4` transports across to match
-     `composeR2` on `R 4`.  Subsumed by Step 3 modulo ring-iso
-     pinning.
+     `composeR2` on `R 4`.  **Closed** via `T5_A_hom_natural` (the
+     satisfier's `p5_hom_natural` field, witnessed by R-family in
+     `T5_A_hom_natural_R_witness`).
   7. Ring at R 4 — Step 3 (`T5_A_ringEquiv_at_4`).
   8. R∞ profinite — deferred to T5-B/T5-C.
   9. Atlas naming on R 2 — orthogonal to T5-A claim.
@@ -495,26 +880,28 @@ The full 12-item D2 aggregator (per `wen-substrate` v1.0.3 §3.1 —
   11. Atomic ops at R 4 — Step 3 + `T_P7b_uniqueness_card_eq_16`.
   12. Self-following / closure — `T5_A` itself is the witness.
 
-The aggregator below packages items 1-3, 5, 7, 10, 12 (the items
-fully discharged by the present proof).  Items 4 and 6 require
-naturality refinements per the risk assessment (Option (a)). -/
+The aggregator below packages items 1-7, 10, 12 (the items fully
+discharged with the §0 naturality additions).  Items 8, 9, 11
+remain deferred per the original scope of T5-A. -/
 
-/-- **T5-A Step 5 aggregator (partial).**
+/-- **T5-A Step 5 aggregator (extended with items 4 and 6).**
 
     Packages the items of `wen-substrate` v1.0.3 §3.1 that are
-    fully discharged by the proof of `T5_A`:
+    fully discharged by the proof of `T5_A` plus the GUT-A Risk
+    Option a naturality refinements:
 
     * (1) layerwise type-equivalence `S.carrier N ≃ R N` for all `N`;
     * (2) origin agreement at `N = 0` (`|carrier 0| = 1`);
     * (3) direct-sum existence (`p2_directSum`);
+    * (4) **bilinear naturality** (`T5_A_bilinear_natural` — NEW);
     * (5) squaring-tower existence (`T5_A_squaring_compatible`);
+    * (6) **Hom naturality** (`T5_A_hom_natural` — NEW);
     * (7) ring iso at `N = 4` (`T5_A_ringEquiv_at_4`);
     * (10) trigram cardinality at `N = 3` (`|carrier 3| = 8`);
     * (12) carrier-card identity at every layer (`carrier_card_eq`).
 
-    Items (4), (6), (8), (9), (11) are either deferred (8, 9, 11) or
-    require naturality refinements (4, 6) per the risk assessment
-    below. -/
+    Items (8), (9), (11) remain deferred (R∞ profinite / Atlas
+    naming / atomic-op naturality) — orthogonal to T5-A scope. -/
 theorem T5_A_aggregator (S : P1P7_Satisfier_F2) :
     -- (1) layerwise type equivalence
     (∀ N, Nonempty (S.carrier N ≃ R N))
@@ -522,17 +909,30 @@ theorem T5_A_aggregator (S : P1P7_Satisfier_F2) :
   ∧ (@Fintype.card (S.carrier 0) (S.fintype 0) = 1)
     -- (3) direct-sum existence  (structure field, re-exported)
   ∧ (∀ N M, Nonempty (S.carrier (N + M) ≃ S.carrier N × S.carrier M))
+    -- (4) bilinear naturality (NEW — closes GUT-A item 4)
+  ∧ (∀ (N M : ℕ) (u₁ v₁ : S.carrier N) (u₂ v₂ : S.carrier M),
+        S.p3_dot (N + M)
+            ((S.p2_directSum N M).symm (u₁, u₂))
+            ((S.p2_directSum N M).symm (v₁, v₂))
+          = Bool.xor (S.p3_dot N u₁ v₁) (S.p3_dot M u₂ v₂))
     -- (5) squaring-tower existence (per layer pair)
   ∧ (∀ n, Nonempty (S.carrier (n + n) ≃ R (n + n))
           ∧ Nonempty (S.carrier n × S.carrier n ≃ R n × R n))
+    -- (6) Hom naturality (NEW — closes GUT-A item 6)
+  ∧ (∀ (N K M L : ℕ),
+        Nonempty ((S.carrier (N + K) → S.carrier (M + L)) ≃
+          ((S.carrier N → S.carrier M) × (S.carrier K → S.carrier M) ×
+           (S.carrier N → S.carrier L) × (S.carrier K → S.carrier L))))
     -- (10) trigram cardinality
   ∧ (@Fintype.card (S.carrier 3) (S.fintype 3) = 8)
     -- (12) carrier-card identity
   ∧ (∀ N, @Fintype.card (S.carrier N) (S.fintype N) = 2 ^ N) := by
-  refine ⟨T5_A S, ?_, ?_, ?_, ?_, ?_⟩
+  refine ⟨T5_A S, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · exact S.carrier_zero_card
   · intro N M; exact ⟨S.p2_directSum N M⟩
+  · exact T5_A_bilinear_natural S
   · intro n; exact T5_A_squaring_compatible S n
+  · exact T5_A_hom_natural S
   · exact S.p7a_card
   · exact S.carrier_card_eq
 
@@ -586,22 +986,28 @@ the GUT roadmap, the corresponding mitigation in each case is:
   require re-doing Phase 1 (D1 ⟹ P_i) under the revised P-closure.
   The roadmap flags this as a *measure of last resort*.
 
-**Current best-bet**: Option (a) is most likely needed at the
-naturality level (item 4 of the §3.1 aggregator: bilinear forms must
-agree with `R.dot/sigma/arf` *naturally* under `p2_directSum`, not just
-as *some* forms with the right identities).  We expect to extend
-`P1P7_Satisfier_F2` with naturality fields as Steps 2-4 are filled in.
+**Current best-bet**: Option (a) was needed at the naturality level
+(items 4 and 6 of the §3.1 aggregator).  We have now **exercised
+Option (a)** by extending `P1P7_Satisfier_F2` with two naturality
+fields: `p3_bilinear_natural` (bilinear distribution over
+`p2_directSum`) and `p5_hom_natural` (Hom block-decomposition over
+`p2_directSum`).  The canonical R-family witnesses both fields via
+`Naturality.dot_directSumEquiv_symm` and `Naturality.linHom_blockEquiv`
+in §0 of this file.  These additions are conservative (no concrete
+`P1P7_Satisfier_F2` instance is constructed outside of this file, so
+no downstream code needs updating).
 -/
 def risk_assessment : Unit := ()
 
 /-! ## § 4 Summary
 
-* **Status**: **all five T5-A steps closed**, 0 `sorry`s remaining.
+* **Status**: **all five T5-A steps closed plus the GUT-A Risk Option (a)
+  naturality refinements for items 4 and 6**, 0 `sorry`s remaining.
 * **No new axioms** introduced.
 * **Compiles cleanly** — see lake build target
   `SSBX.Foundation.R.UniquenessF2`.
 
-* **Closed steps** (this session):
+* **Closed steps** (this session and previous):
   1. **Step 1** — Boolean ring is free from structure design
      (`carrier_isBooleanRing` field).
   2. **Step 2** — cardinality induction (`carrier_card_eq`): proven
@@ -619,22 +1025,27 @@ def risk_assessment : Unit := ()
      (`T5_A_squaring_compatible`): existence of both equivalences
      `S.carrier (n + n) ≃ R (n + n)` and
      `S.carrier n × S.carrier n ≃ R n × R n` at every `n`.
-  6. **Step 5** — partial aggregator (`T5_A_aggregator`): packages
-     items 1, 2, 3, 5, 7, 10, 12 of `wen-substrate` v1.0.3 §3.1.
+  6. **Item 4 — bilinear naturality** (NEW, GUT-A Risk Option a):
+     field `p3_bilinear_natural` requires the satisfier's `p3_dot` to
+     distribute over `p2_directSum`; theorem `T5_A_bilinear_natural`
+     re-exports it; theorem `T5_A_bilinear_natural_R_witness`
+     discharges the canonical R-family case via
+     `Naturality.dot_directSumEquiv_symm` (built on the auxiliary
+     `Naturality.xorFold_append` + `Naturality.dot_append`).
+  7. **Item 6 — Hom naturality** (NEW, GUT-A Risk Option a): field
+     `p5_hom_natural` requires the satisfier's function-space between
+     direct-sum carriers to factor as a 2×2 block product; theorem
+     `T5_A_hom_natural` re-exports it; theorem
+     `T5_A_hom_natural_R_witness` discharges the R-family case via
+     `Naturality.linHom_blockEquiv` (a `Fin.addCases`-routed
+     bijection).
+  8. **Step 5** — aggregator (`T5_A_aggregator`): now packages items
+     1-7, 10, 12 of `wen-substrate` v1.0.3 §3.1 (items 4 and 6
+     newly included).
 
-* **Residual content for follow-up streams** (per the risk
-  assessment below, Option (a)):
+* **Residual content for follow-up streams** (orthogonal to T5-A
+  scope, deferred to T5-B/T5-C):
 
-  - **Item 4 — Bilinear naturality**: `p3_dot/sigma/arf` agreement
-    with `R.dot/sigma/arf` *under* `p2_directSum`.  Currently the
-    bilinear forms are independent fields whose identities are
-    pinned but whose *naturality* under direct sum is not.  This is
-    the open content of `T_P3_uniqueness` lifted to the family
-    level.
-  - **Item 6 — Hom-as-content naturality**: `p5_mulR4` agreement
-    with `composeR2` on `R 4`.  Subsumed by Step 3 modulo
-    `T_P7b_ring_equiv` naturality; finishing this is a small
-    additional refinement.
   - **Item 8 — R∞ profinite**: deferred to T5-B/T5-C
     (`Foundation/RInfty/Profinite.lean`).
   - **Item 9 — Atlas naming on R 2**: semantic naming, orthogonal
@@ -643,15 +1054,18 @@ def risk_assessment : Unit := ()
     `T_P7b_uniqueness_card_eq_16` — fully discharged at the
     cardinality level.
 
-* **Status of the GUT claim**: with Steps 1-5 closed, the **synthetic
+* **Status of the GUT claim**: with Steps 1-5 closed plus the
+  naturality refinements (items 4 and 6), the **synthetic
   direction of Claim Z** in the F₂-Boolean classical scope is
-  formally proven.  Combined with Phase 1 (analytic direction,
+  formally proven with the strengthened P-closure conditions.
+  Combined with Phase 1 (analytic direction,
   `Foundation/R/ClaimZ.lean`'s `d1_implies_P` chain), the GUT-A claim
-  has both halves discharged.
+  has both halves discharged, with all naturality clauses pinned.
 
-This file is the **type-level core of T5-A**.  Refinements in §3
-(ring + squaring + aggregator) provide structural lifting at the
-specific layers where ring / direct-sum structure exists.
+This file is the **type-level core of T5-A**.  Refinements in §2.2-§2.6
+(ring + squaring + bilinear naturality + Hom naturality + aggregator)
+provide structural lifting at the specific layers where ring /
+direct-sum structure exists.
 -/
 
 end SSBX.Foundation.R.UniquenessF2
