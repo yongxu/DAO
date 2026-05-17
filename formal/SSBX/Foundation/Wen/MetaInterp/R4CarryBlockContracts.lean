@@ -115,6 +115,11 @@ structure HaltBlockContract
     (bodyOffsetOf : BodyOffsetOf) (bodyFuelOf : BodyFuelOf) : Prop where
   halt :
     ExactBlockAt bodyOffsetOf bodyFuelOf YiInstr.halt
+  /-- v2 (2026-05-17): obligation for `branchYaoYang` instruction.
+      MetaInterp 暂将其与 halt 同 route. -/
+  branchYaoYang :
+    ∀ i target,
+      ExactBlockAt bodyOffsetOf bodyFuelOf (YiInstr.branchYaoYang i target)
 
 /-- Family-complete exact block surface for the R4-squared carry route. -/
 structure R4CarryExactBlockContracts
@@ -158,6 +163,8 @@ theorem exactBlockAt_of_contracts
       exact O.stack.pop
   | halt =>
       exact O.halt.halt
+  | branchYaoYang i target =>
+      exact O.halt.branchYaoYang i target
 
 theorem r4_carry_block_contracts_cover_all_opcodes :
     ∀ bodyOffsetOf bodyFuelOf,

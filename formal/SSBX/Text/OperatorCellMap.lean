@@ -395,7 +395,7 @@ theorem functional_completion_summary :
     ∧ cellTransformOperatorIds.length = 43
     ∧ cellTransformOperatorIds.all (fun id => decide ((fullSignatureFor id).id = id)) = true
     ∧ Cell192Generator.all.length = 7
-    ∧ l0InstructionClauseKinds.length = 12
+    ∧ l0InstructionClauseKinds.length = 13  -- v2 加 branchYaoYang
     ∧ operatorCellCandidateBindings.length = 7
     ∧ allOperatorCellSemanticRows.length = 96000
     ∧ machineDenotationRows.length = 96000

@@ -267,6 +267,8 @@ def encInstr : YiInstr → List R8
   | .push                       => [cellFromIdx ⟨9,  by omega⟩]
   | .pop                        => [cellFromIdx ⟨10, by omega⟩]
   | .halt                       => [cellFromIdx ⟨11, by omega⟩]
+  -- v2: branchYaoYang (tag 12)
+  | .branchYaoYang i t          => [cellFromIdx ⟨12, by omega⟩, encFin6 i] ++ encNat t
 
 def decInstr (l : List R8) : Option (YiInstr × List R8) :=
   match l with
@@ -308,6 +310,13 @@ def decInstr (l : List R8) : Option (YiInstr × List R8) :=
     | 9,  rest => some (.push, rest)
     | 10, rest => some (.pop, rest)
     | 11, rest => some (.halt, rest)
+    | 12, i :: rest =>
+        if hi : (cellToIdx i).val < 6 then
+          match decNat rest with
+          | some (t, rest') =>
+              some (.branchYaoYang ⟨(cellToIdx i).val, hi⟩ t, rest')
+          | none => none
+        else none
     | _, _ => none
 
 /-! ### § 3b Round-trip lemmas for instruction encoding -/
@@ -441,12 +450,25 @@ theorem decInstr_encInstr_branchYaoEq (i j : Fin 6) (t : Nat) (rest : List R8)
   rw [dif_pos hi, dif_pos hj]
   rw [decNat_encNat t rest hlen]
 
+/-- v2: round-trip for `branchYaoYang i t`. -/
+theorem decInstr_encInstr_branchYaoYang (i : Fin 6) (t : Nat) (rest : List R8)
+    (hlen : (NatCell.encodeNat t).length < 256) :
+    decInstr (encInstr (.branchYaoYang i t) ++ rest)
+      = some (.branchYaoYang i t, rest) := by
+  have hi : i.val < 6 := i.isLt
+  show decInstr (cellFromIdx ⟨12, by omega⟩ :: encFin6 i
+                  :: (encNat t ++ rest)) = _
+  simp only [decInstr, encFin6, cellFromIdx_toIdx]
+  rw [dif_pos hi]
+  rw [decNat_encNat t rest hlen]
+
 /-! ### § 3d Unified round-trip for `YiInstr ↔ List R8` -/
 
 def Encodable : YiInstr → Prop
   | .jump t                  => (NatCell.encodeNat t).length < 256
   | .branchShiEq _ t         => (NatCell.encodeNat t).length < 256
   | .branchYaoEq _ _ t       => (NatCell.encodeNat t).length < 256
+  | .branchYaoYang _ t       => (NatCell.encodeNat t).length < 256  -- v2
   | _                        => True
 
 theorem decInstr_encInstr (i : YiInstr) (h_enc : Encodable i)
@@ -465,6 +487,7 @@ theorem decInstr_encInstr (i : YiInstr) (h_enc : Encodable i)
   | jump t                   => exact decInstr_encInstr_jump t rest h_enc
   | branchShiEq s t          => exact decInstr_encInstr_branchShiEq s t rest h_enc
   | branchYaoEq i j t        => exact decInstr_encInstr_branchYaoEq i j t rest h_enc
+  | branchYaoYang i t        => exact decInstr_encInstr_branchYaoYang i t rest h_enc
 
 theorem decInstr_encInstr_of_all (i : YiInstr) (h_enc : Encodable i) :
     decInstr (encInstr i) = some (i, []) := by

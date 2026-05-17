@@ -38,27 +38,31 @@ open SSBX.Foundation.Bagua.BaguaTuring
 
 /-! ## § 1  12 主字 -/
 
-/-- baguaWen 主字之规范化字符串。每个 `YiInstr` 构造子对应唯一一个 token。 -/
-def primaryToken : YiInstr → String
-  | .nop                => "不动"
-  | .setShi _           => "设时"
-  | .flipYao _          => "翻爻"
-  | .interlace                 => "互"
-  | .complement                => "错"
-  | .reverse               => "综"
-  | .branchYaoEq _ _ _  => "比爻"
-  | .branchShiEq _ _    => "比时"
-  | .jump _             => "跳"
-  | .push               => "推"
-  | .pop                => "取"
-  | .halt               => "终"
+/-- baguaWen 主字之规范化字符串。每个 `YiInstr` 构造子对应唯一一个 token。
 
-/-- 12 主字之表（去重，序与 YiInstr tag 对齐）。 -/
+    v2 (2026-05-17): 加入 `branchYaoYang` (token "比阳"), 与 `branchYaoEq`
+    "比爻"、`branchShiEq` "比时" 同 prefix「比」系。 -/
+def primaryToken : YiInstr → String
+  | .nop                  => "不动"
+  | .setShi _             => "设时"
+  | .flipYao _            => "翻爻"
+  | .interlace            => "互"
+  | .complement           => "错"
+  | .reverse              => "综"
+  | .branchYaoEq _ _ _    => "比爻"
+  | .branchShiEq _ _      => "比时"
+  | .jump _               => "跳"
+  | .push                 => "推"
+  | .pop                  => "取"
+  | .halt                 => "终"
+  | .branchYaoYang _ _    => "比阳"  -- v2
+
+/-- 13 主字之表（v2 加 "比阳", 去重，序与 YiInstr tag 对齐）。 -/
 def primaryTokens : List String :=
   ["不动", "设时", "翻爻", "互", "错", "综",
-   "比爻", "比时", "跳", "推", "取", "终"]
+   "比爻", "比时", "跳", "推", "取", "终", "比阳"]
 
-theorem primaryTokens_length : primaryTokens.length = 12 := by native_decide
+theorem primaryTokens_length : primaryTokens.length = 13 := by native_decide
 
 theorem primaryTokens_nodup : primaryTokens.Nodup := by native_decide
 
@@ -98,12 +102,12 @@ def atKeyword : String := "至"
 
 /-- 全部保留 token（不含数词）。M1 parser 遇任何不在此表的 CJK token 即拒。
 
-    Phase F.2: 23 = 12 主字 + 4 时态 (V₄) + 6 爻位 + 1 关键字「至」(was 22 在
-    legacy Z/3 时代). -/
+    v2 (2026-05-17): 24 = 13 主字 (含新加 `branchYaoYang` 之 "比阳") + 4 时态 (V₄)
+    + 6 爻位 + 1 关键字「至」. Phase F.2 之前为 23. -/
 def reservedTokens : List String :=
   primaryTokens ++ shiTokens ++ yaoTokens ++ [atKeyword]
 
-theorem reservedTokens_length : reservedTokens.length = 23 := by native_decide
+theorem reservedTokens_length : reservedTokens.length = 24 := by native_decide
 
 theorem reservedTokens_nodup : reservedTokens.Nodup := by native_decide
 

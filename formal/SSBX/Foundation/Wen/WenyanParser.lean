@@ -252,6 +252,11 @@ def parseInstr : List Tok → Option (YiInstr × List Tok)
       match parseNumeral n with
       | some t => some (.jump t, rest)
       | none   => none
+  -- v2: branchYaoYang (absolute yao test)
+  | .cjk "比阳" :: .cjk yi :: .cjk "至" :: .cjk n :: rest =>
+      match parseYao yi, parseNumeral n with
+      | some i, some t => some (.branchYaoYang i t, rest)
+      | _, _ => none
   | .cjk op :: rest => parseInstrAlias op rest
   | _ => none
 
@@ -344,6 +349,9 @@ def printInstr : YiInstr → String
       "«比时» " ++ printShi s ++ " «至» " ++ printNumeral t
   | .jump t =>
       "«跳» «至» " ++ printNumeral t
+  -- v2: branchYaoYang
+  | .branchYaoYang i t =>
+      "«比阳» " ++ printYao i ++ " «至» " ++ printNumeral t
 
 def printProg : List YiInstr → String
   | []         => ""
@@ -360,6 +368,7 @@ def validInstr : YiInstr → Bool
   | .branchYaoEq _ _ t => decide (1 ≤ t ∧ t ≤ 64)
   | .branchShiEq _ t   => decide (1 ≤ t ∧ t ≤ 64)
   | .jump t            => decide (1 ≤ t ∧ t ≤ 64)
+  | .branchYaoYang _ t => decide (1 ≤ t ∧ t ≤ 64)  -- v2
   | _ => true
 
 /-- 整程合度：每条指令皆合度。 -/
@@ -382,7 +391,8 @@ theorem daoJudgeProg_roundtrip :
 
 /-! ## § 8  扩展 round-trip：所有 12 构造子 + 全 param 值 -/
 
-/-- 12 构造子之代表（每构造子至少一例，含全部 6 爻位 / 3 时态 / 范围内 Nat 参数）。 -/
+/-- 13 构造子之代表（每构造子至少一例，含全部 6 爻位 / 3 时态 / 范围内 Nat 参数）。
+    v2 加入 `branchYaoYang`. -/
 def allKindReprs : List YiInstr := [
   .nop,
   .interlace, .complement, .reverse,
@@ -394,7 +404,9 @@ def allKindReprs : List YiInstr := [
   .branchYaoEq ⟨0, by omega⟩ ⟨5, by omega⟩ 1,
   .branchYaoEq ⟨2, by omega⟩ ⟨3, by omega⟩ 64,
   .branchShiEq .dao 1, .branchShiEq .ji 1,   .branchShiEq .jin 32, .branchShiEq .wei 64,
-  .jump 1, .jump 10, .jump 32, .jump 64
+  .jump 1, .jump 10, .jump 32, .jump 64,
+  -- v2: branchYaoYang
+  .branchYaoYang ⟨0, by omega⟩ 1, .branchYaoYang ⟨5, by omega⟩ 64
 ]
 
 /-- 12 构造子代表之单例 round-trip：每例 print 后 parse 回原指令. -/
@@ -414,15 +426,17 @@ def yaoRange : List (Fin 6) := [
 /-- 所有时态。用于穷尽合法单指令 universe。 -/
 def shiRange : List Shi := [.dao, .ji, .jin, .wei]
 
-/-- 所有合度单指令，共 2641 条。
+/-- 所有合度单指令，v2 共 3025 条。
 
-构成：
+构成 (v2):
   * 7 条无参指令
   * 4 条 `setShi`
   * 6 条 `flipYao`
-  * 6 * 6 * 64 条 `branchYaoEq`
-  * 4 * 64 条 `branchShiEq`
+  * 6 * 6 * 64 条 `branchYaoEq` (= 2304)
+  * 4 * 64 条 `branchShiEq` (= 256)
   * 64 条 `jump`
+  * 6 * 64 条 `branchYaoYang` (= 384, v2 新加)
+  Total: 7 + 4 + 6 + 2304 + 256 + 64 + 384 = 3025
 -/
 def validInstrUniverse : List YiInstr :=
   [.nop, .interlace, .complement, .reverse, .push, .pop, .halt]
@@ -438,9 +452,13 @@ def validInstrUniverse : List YiInstr :=
         (fun s => numeralRange.map fun n => YiInstr.branchShiEq s n)
         shiRange)
   ++ numeralRange.map YiInstr.jump
+  -- v2: branchYaoYang
+  ++ (List.flatMap
+        (fun i => numeralRange.map fun n => YiInstr.branchYaoYang i n)
+        yaoRange)
 
 theorem validInstrUniverse_length :
-    validInstrUniverse.length = 2641 := by native_decide
+    validInstrUniverse.length = 3025 := by native_decide
 
 theorem validInstrUniverse_all_valid :
     validInstrUniverse.all validInstr = true := by native_decide
