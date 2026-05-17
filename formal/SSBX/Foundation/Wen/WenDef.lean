@@ -89,6 +89,10 @@ inductive Ty : Type
   | list (elem : Ty)
   | arr (dom cod : Ty)
   | quoted
+  /-- wen-2.0 ④ user inductive type, nominal-by-name.  `name` is the
+      type-level identifier declared by `类 NAME = CTOR₁ | … | CTORₙ`.
+      Two `.user` types are equal iff their names match (decidable). -/
+  | user (name : String)
 deriving DecidableEq, Repr
 
 /-! ## § 2  项 -/
@@ -168,6 +172,16 @@ inductive Tm : Type
       tick, so divergent recursion exhausts fuel cleanly rather than crashing.
       Typecheck rule:  `body` typechecks to `t` in `(n,t) :: ctx`. -/
   | fix (n : String) (t : Ty) (body : Tm) : Tm
+  /-- wen-2.0 ④ user inductive constructor.  `typeName` is the surface
+      declaration name (e.g. `"五行"`), `ctorName` is the constructor head
+      (e.g. `"木"`).  Typechecks to `.user typeName` unconditionally —
+      the constructor table is enforced at the surface parsing layer
+      (`WenSurface.EndToEnd` rejects bare ctor names without a `类` decl
+      in scope and rejects ctor clashes with existing 定/catalogue
+      names).  Operationally the value is opaque to evaluation (see
+      `WenDefEval.userCtorV`); reduction relations from the cells/Hex
+      sublanguage do not interpret it. -/
+  | userCtor (typeName ctorName : String) : Tm
 deriving DecidableEq, Repr
 
 /-! ## § 3  类型检查 -/
@@ -312,6 +326,9 @@ def typeCheck : Ctx → Tm → Option Ty
       match typeCheck ((n, t) :: ctx) body with
       | some t' => if t = t' then some t else none
       | none => none
+  -- wen-2.0 ④ user inductive constructor: typechecks to `.user typeName`.
+  -- The ctor-table validity is enforced at the surface layer, not here.
+  | _, .userCtor typeName _ => some (.user typeName)
 
 example :
     typeCheck [] (.catalogue2 .E_2 (.hexLit Hexagram.heaven) (.hexLit Hexagram.heaven))
@@ -405,6 +422,20 @@ example :
         (.fix "f" .hex (.app .notB .yi))
       = none := by native_decide
 
+/-! ### wen-2.0 ④ `.userCtor` typecheck examples -/
+
+/-- A bare user-ctor typechecks to its nominal `.user` type. -/
+example :
+    typeCheck [] (.userCtor "五行" "木") = some (.user "五行") := by native_decide
+
+/-- Two ctors of the same user type unify (same `.user` head). -/
+example :
+    typeCheck [] (.userCtor "真假" "真") = some (.user "真假") := by native_decide
+
+/-- Distinct user types are distinct (decidable). -/
+example :
+    Ty.user "五行" ≠ Ty.user "真假" := by native_decide
+
 /-! ## § 3b  Free-variable substitution (used by wen-2.0 ② 定递)
 
   `substTmFree name replacement t` substitutes every **free** occurrence of
@@ -432,6 +463,35 @@ def substTmFree (name : String) (replacement : Tm) : Tm → Tm
       if n = name then .fix n t body
       else .fix n t (substTmFree name replacement body)
   | t => t  -- literals + primitives are leaves
+
+/-! ## § 3c  wen-2.0 ④ user inductive constructor table
+
+  A `UserCtor` is one row of a `类 TYPENAME = CTOR₁ | … | CTORₙ` decl.
+  `name` is the constructor head glyph (e.g. `"木"`), `typeName` is the
+  enclosing user type (e.g. `"五行"`).  A list of `UserCtor`s is
+  threaded through the WenSurface compile pipeline so the elaborator can
+  resolve bare ctor names against the in-scope user-decl table.
+
+  We do NOT bake this table into `Tm.userCtor` itself — the Tm only
+  carries `typeName` + `ctorName`, both as bare strings.  Type-checking
+  succeeds for any `.userCtor t c` regardless of the table (the table's
+  role is *resolution* + decl-time *clash detection*, not kernel typing).
+-/
+
+/-- One constructor row of a `类 TYPENAME = CTOR₁ | … | CTORₙ` decl. -/
+structure UserCtor where
+  /-- Constructor head glyph (e.g. `"木"`). -/
+  name     : String
+  /-- Enclosing user type name (e.g. `"五行"`). -/
+  typeName : String
+deriving DecidableEq, Repr
+
+/-- Lookup a ctor in a table by its bare name.  Returns the typeName of the
+    enclosing user inductive, or `none` if no decl in scope binds this glyph. -/
+def UserCtor.lookupType (table : List UserCtor) (name : String) : Option String :=
+  match table.find? (fun c => c.name = name) with
+  | some c => some c.typeName
+  | none   => none
 
 /-! ## § 4  命名空间 -/
 

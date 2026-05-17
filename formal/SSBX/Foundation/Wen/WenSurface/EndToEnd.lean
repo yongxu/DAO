@@ -205,31 +205,43 @@ def wenyanCompileProgram (s : String) :
   This module is purely additive over `wenyanCompileProgram`: no existing
   pipeline functions, types, or examples change. -/
 
-/-- A compiled statement: either a `定` declaration, a rewrite-rule decl,
-    or an evaluated expression. -/
+/-- A compiled statement: a `定`/`定递` def, a `定 LHS 等 RHS` rewrite-rule
+    decl, a `类 TYPENAME = …` user-inductive decl, or an evaluated
+    expression. -/
 inductive Stmt where
   | defStmt     (name : String) (body : TypedTm)
   | rewriteStmt (rule : RewriteRule)
   | exprStmt    (body : TypedTm)
+  /-- wen-2.0 ④ `类 TYPENAME = CTOR₁ | … | CTORₙ` decl.  The `ctors`
+      list preserves source order; each entry's `typeName` field equals
+      `typeName`. -/
+  | classStmt   (typeName : String) (ctors : List UserCtor)
 deriving Repr
 
-/-- Extract the body `TypedTm` for `defStmt`/`exprStmt`; for rewrite decls,
-    returns the (typed) LHS as a representative — note rewrite stmts don't
-    have an evaluation result, so callers that genuinely need a `body` for
-    a rewrite stmt should pattern-match instead.
+/-- For the convenience of consumers that only want the typed body of an
+    expression / def statement.  `rewriteStmt`/`classStmt` have no runtime
+    body, so we return `none`. -/
+def Stmt.body? : Stmt → Option TypedTm
+  | .defStmt _ b   => some b
+  | .exprStmt b    => some b
+  | .rewriteStmt _ => none
+  | .classStmt _ _ => none
 
-    Rationale: every existing user of `Stmt.body` expects a `TypedTm`.  We
-    keep the legacy `body` accessor exhaustive by returning the LHS for the
-    new constructor; semantics-sensitive callers (REPL display, denote loop)
-    have always done their own pattern match. -/
+/-- Legacy `Stmt.body` accessor — defaults `rewriteStmt`/`classStmt` to a
+    sentinel `TypedTm` so existing callers (`EndToEndTests.lean`) don't
+    break.  New callers should use `Stmt.body?` or pattern-match.
+
+    Rationale: every existing user of `Stmt.body` expects a `TypedTm`.
+    Semantics-sensitive callers (REPL display, denote loop) have always
+    done their own pattern match. -/
 def Stmt.body : Stmt → TypedTm
-  | .defStmt _ b => b
-  | .exprStmt b  => b
+  | .defStmt _ b   => b
+  | .exprStmt b    => b
+  | .classStmt _ _ => ⟨.yi, .hex⟩
   | .rewriteStmt r =>
     -- The LHS has whatever type `typeCheck [] r.lhs` says.  This may be
     -- `none` if LHS contains free pattern vars, but we still need to
     -- return *some* TypedTm; pick `.bool` as a defensive placeholder.
-    -- (Tests that care use `match` against the constructor instead.)
     match typeCheck [] r.lhs with
     | some ty => ⟨r.lhs, ty⟩
     | none    => ⟨r.lhs, .bool⟩
@@ -285,6 +297,17 @@ inductive DefErr where
       pattern, RHS extra vars, or head-tag collision with an existing
       rule). -/
   | rewriteRuleRejected   (reason : RewriteErr)
+  -- wen-2.0 ④ `类 NAME = CTOR₁ | … | CTORₙ` errors
+  /-- The decl `类 NAME = …` had an empty TYPENAME or no `=`. -/
+  | classMalformed        (raw : String)
+  /-- TYPENAME redeclared / clashes with another `类`. -/
+  | classRedefinition     (typeName : String)
+  /-- TYPENAME clashes with catalogue / existing 定 decl. -/
+  | classNameConflict     (typeName : String)
+  /-- An empty constructor list after `=`. -/
+  | classNoConstructors   (typeName : String)
+  /-- A ctor name clashes with another in-scope `类`/`定`/catalogue. -/
+  | classCtorConflict     (typeName ctorName : String)
 deriving Repr
 
 /-- Multi-statement program error with `def` support. Extends the base
@@ -406,6 +429,49 @@ def parseRecDefChunk? (s : String) : Option (String × String) :=
         let body := strTrim bodyRaw
         if name.isEmpty || body.isEmpty then none else some (name, body)
 
+/-! ### § 2c.1b  wen-2.0 ④ `类` decl detection + parsing
+
+  Syntax: `类 TYPENAME = CTOR₁ | CTOR₂ | … | CTORₙ`
+
+  - Statement separator (`；`/`。`/`;`) ends the decl.
+  - Trimmed ctors are non-empty bare glyphs (one resolver token each).
+  - Examples:  `类 五行 = 木 | 火 | 土 | 金 | 水`
+              `类 真假 = 真 | 假`
+-/
+
+/-- True iff the first non-whitespace codepoint of `s` starts with `类`. -/
+def chunkStartsWithClassKeyword (s : String) : Bool :=
+  (strTrim s).startsWith "类"
+
+/-- Parse `类 TYPENAME = CTOR₁ | CTOR₂ | … | CTORₙ` into
+    `(typeName, [ctor₁, …, ctorₙ])`.
+
+    Returns `none` if:
+      · the chunk does not start with `类`, OR
+      · there is no `=` separator, OR
+      · TYPENAME is empty after trim, OR
+      · the constructor list is empty.
+
+    Each ctor is the trimmed substring between `|` separators (or the
+    final tail).  Empty ctor names cause `none`. -/
+def parseClassChunk? (s : String) : Option (String × List String) :=
+  let trimmed := strTrim s
+  if !trimmed.startsWith "类" then none
+  else
+    let afterLei := strTrim (trimmed.drop 1).toString
+    match afterLei.splitOn "=" with
+    | [] => none
+    | [_] => none
+    | nameRaw :: bodyParts =>
+        let bodyRaw := String.intercalate "=" bodyParts
+        let typeName := strTrim nameRaw
+        if typeName.isEmpty then none
+        else
+          let ctors := (bodyRaw.splitOn "|").map strTrim
+          if ctors.any String.isEmpty then none
+          else if ctors.isEmpty then none
+          else some (typeName, ctors)
+
 /-! ### § 2c.2  Name validation against catalogue -/
 
 /-- Returns true iff the bare name would already resolve to a meaningful
@@ -491,6 +557,51 @@ def applyRecDefs (env : DefEnv) (t : Tm) : Tm :=
   env.foldl (fun acc e =>
     if e.isRec then substTmFree e.name e.body.tm acc else acc) t
 
+/-! ### § 2c.3c  wen-2.0 ④ user-ctor AST resolution
+
+  When a chunk is elaborated by `elabSurfaceTypedWithCtx`, bare ctor
+  glyphs (e.g. `木`) resolve as ordinary tokens — typically through
+  `Reading.surfaceVarNames` as `.varName "木"` if they're heavenly stems,
+  otherwise as catalogue ops if they collide.  After elaboration, we
+  walk the Tm and rewrite each unbound `.var n` (or any leaf whose source
+  surface was the ctor glyph) into `.userCtor typeName n` provided
+  `n` appears in the user-ctor table and is NOT shadowed by a binder
+  along the walk.
+
+  This pass is a closure-respecting substitution: when we enter a
+  binder `.abs name _ body` (or `.fix name _ body`) we DROP `name`
+  from the table before recursing, restoring it afterwards is not
+  needed because we descend into independent subtrees.
+-/
+
+/-- Rewrite the Tm's free `.var n` leaves into `.userCtor typeName n`
+    when `n` appears in `ctors`.  `bound` accumulates currently-bound
+    var names from enclosing `.abs` / `.fix` binders. -/
+def resolveUserCtors (ctors : List UserCtor) : Tm → List String → Tm
+  | .var n, bound =>
+      if bound.contains n then .var n
+      else
+        match UserCtor.lookupType ctors n with
+        | some tn => .userCtor tn n
+        | none    => .var n
+  | .abs n t body, bound =>
+      .abs n t (resolveUserCtors ctors body (n :: bound))
+  | .app f x, bound =>
+      .app (resolveUserCtors ctors f bound) (resolveUserCtors ctors x bound)
+  | .catalogue1 id a, bound =>
+      .catalogue1 id (resolveUserCtors ctors a bound)
+  | .catalogue2 id a b, bound =>
+      .catalogue2 id (resolveUserCtors ctors a bound) (resolveUserCtors ctors b bound)
+  | .catalogue3 id a b c, bound =>
+      .catalogue3 id
+        (resolveUserCtors ctors a bound)
+        (resolveUserCtors ctors b bound)
+        (resolveUserCtors ctors c bound)
+  | .quote body, _ => .quote body  -- quote bodies are data; do not rewrite
+  | .fix n t body, bound =>
+      .fix n t (resolveUserCtors ctors body (n :: bound))
+  | t, _ => t  -- literals + primitives + .userCtor leaves are stable
+
 /-- Compile-time context that binds each in-scope recursive def's name to
     its inferred fixpoint type.  Used by `wenyanCompileInCtx` so chunks
     that reference rec-defs by name don't trigger unbound-var diagnostics
@@ -499,6 +610,16 @@ def applyRecDefs (env : DefEnv) (t : Tm) : Tm :=
     reject anyway). -/
 def recDefCtx (env : DefEnv) : Ctx :=
   env.foldr (fun e acc => if e.isRec then (e.name, e.body.ty) :: acc else acc) []
+
+/-- Compile-time context augmenting `recDefCtx` with each in-scope
+    user-ctor name bound to its nominal `.user typeName` type.  Used so
+    chunks that reference bare ctor glyphs don't trip
+    `unknownVar`/`unsupported` diagnostics during elaborate/typecheck —
+    they elaborate as `.var name : .user typeName`, then the post-pass
+    `resolveUserCtors` rewrites them to `.userCtor typeName name`. -/
+def recDefAndCtorCtx (env : DefEnv) (ctors : List UserCtor) : Ctx :=
+  let baseCtx := recDefCtx env
+  ctors.foldr (fun c acc => (c.name, .user c.typeName) :: acc) baseCtx
 
 /-! ### § 2c.3b  Recursive-def name validation + type inference
 
@@ -599,8 +720,8 @@ def compileRewriteSide (env : DefEnv) (src : String) : Except WenSurfaceErr Tm :
     let substituted := applyRecDefs env typed.tm
     .ok substituted
 
-/-- Compile a multi-statement program with `def` / `定递` / rewrite-rule
-    declarations.
+/-- Compile a multi-statement program with `def` / `定递` / rewrite-rule /
+    `类` declarations.
 
     Each chunk is one of:
       · `定递 NAME 为 BODY`  — wen-2.0 ② μ-fixpoint recursive def.  Compiles
@@ -610,28 +731,84 @@ def compileRewriteSide (env : DefEnv) (src : String) : Except WenSurfaceErr Tm :
         is preserved without infinite textual expansion.
       · `定 LHS 等 RHS`     — wen-2.0 ⑫ rewrite rule.  Adds a structural
         equational rewrite that normalises subsequent terms.
-      · `定 NAME 为 BODY`  — Wen 1.5 non-recursive textual def.
+      · `定 NAME 为 BODY`   — Wen 1.5 non-recursive textual def.
+      · `类 TYPENAME = CTOR₁ | … | CTORₙ` — wen-2.0 ④ user inductive type.
+        Registers `typeName` + each `CTORᵢ` in the in-scope user-ctor
+        table; subsequent expressions resolve bare `CTORᵢ` glyphs to
+        `Tm.userCtor typeName ctorᵢ` after elaboration.
       · ordinary expression.
 
     Chunks that match both `等` and `为` after a leading `定` are rejected
     as `rewriteAmbiguous` to avoid silently picking one parse.
 
-    Declarations accumulate into a `DefEnv` (defs / rec defs) and a
-    `RewriteEnv` (rules).  Each subsequent expression chunk is normalised
-    by `RewriteRules.normalize` AFTER AST-subst and re-typechecked.
+    Declarations accumulate into a `DefEnv` (defs / rec defs), a
+    `RewriteEnv` (rules), and a `List UserCtor` table (类 ctors).  Each
+    subsequent expression chunk is normalised by `RewriteRules.normalize`
+    AFTER AST-subst and re-typechecked.  User-ctor resolution runs on
+    `定`/expression bodies after rec-subst.
 
-    All chunk-local errors propagate as `.base i e`; `def`-specific failures
-    (re-def, catalogue collision, malformed `定`/`定递`, malformed/rejected
-    rewrite rule, ambiguous `定 ... 等 ... 为 ...`) propagate as
-    `.defError i e`. -/
+    All chunk-local errors propagate as `.base i e`; declaration-specific
+    failures (re-def, catalogue collision, malformed `定`/`定递`/`类`
+    line, class-ctor clash, malformed/rejected rewrite rule, ambiguous
+    `定 ... 等 ... 为 ...`) propagate as `.defError i e`. -/
 def wenyanCompileProgramWithDefs (s : String)
     : Except ProgramErrWithDefs (List Stmt) :=
   let chunks := splitOnStatementSep s
-  let rec go (i : Nat) (env : DefEnv) (rwEnv : RewriteEnv) (acc : List Stmt) :
+  let rec go (i : Nat) (env : DefEnv) (rwEnv : RewriteEnv)
+      (ctors : List UserCtor) (acc : List Stmt) :
       List String → Except ProgramErrWithDefs (List Stmt)
     | [] => .ok acc.reverse
     | c :: rest =>
-      if chunkStartsWithRecDefKeyword c then
+      if chunkStartsWithClassKeyword c then
+        match parseClassChunk? c with
+        | none =>
+            .error (.defError i (.classMalformed (strTrim c)))
+        | some (typeName, ctorNames) =>
+            -- 1. Reject TYPENAME clashes: existing 类 decl, def, or
+            --    catalogue (we reuse `nameConflictsWithCatalogue` —
+            --    even multi-token typenames are conservative here).
+            if ctors.any (fun uc => uc.typeName = typeName) then
+              .error (.defError i (.classRedefinition typeName))
+            else if env.any (fun e => e.name = typeName) then
+              .error (.defError i (.classNameConflict typeName))
+            else if nameConflictsWithCatalogue typeName then
+              .error (.defError i (.classNameConflict typeName))
+            else if ctorNames.isEmpty then
+              .error (.defError i (.classNoConstructors typeName))
+            else
+              -- 2. Reject CTOR clashes against in-scope ctors / defs.
+              --    A ctor name resolving to a catalogue op / hex literal /
+              --    syntax marker is rejected (it would never reach the
+              --    `.var` leaf where `resolveUserCtors` rewrites it).
+              --    Heavenly stems (which `nameConflictsWithCatalogue`
+              --    flags as `.varName`) are *allowed* because they
+              --    resolve to `.var` leaves we can rewrite.
+              let bareVarName (cn : String) : Bool :=
+                match lexWen cn with
+                | .error _ => false
+                | .ok toks =>
+                  match toks with
+                  | [t] =>
+                    match resolveOne t with
+                    | .ok r =>
+                      match r.atom with
+                      | .varName _ => true
+                      | _ => false
+                    | .error _ => false  -- unknown glyph won't reach `.var` leaf
+                  | _ => false           -- multi-token names not supported
+              let conflict := ctorNames.find? (fun cn =>
+                ctors.any (fun uc => uc.name = cn)
+                  || env.any (fun e => e.name = cn)
+                  || !bareVarName cn)
+              match conflict with
+              | some cn =>
+                  .error (.defError i (.classCtorConflict typeName cn))
+              | none =>
+                  let newCtors := ctorNames.map (fun cn =>
+                    ({ name := cn, typeName := typeName } : UserCtor))
+                  let ctors' := ctors ++ newCtors
+                  go (i + 1) env rwEnv ctors' (.classStmt typeName newCtors :: acc) rest
+      else if chunkStartsWithRecDefKeyword c then
         match parseRecDefChunk? c with
         | none =>
           let trimmed := strTrim c
@@ -663,7 +840,7 @@ def wenyanCompileProgramWithDefs (s : String)
             -- from T when NAME is unused in the body.
             let expandedBody := applyDefs env bodySrc
             let wrappedSrc := "者 " ++ name ++ " （" ++ expandedBody ++ "）"
-            match wenyanCompileInCtx (recDefCtx env) wrappedSrc with
+            match wenyanCompileInCtx (recDefAndCtorCtx env ctors) wrappedSrc with
             | .error e => .error (.base i e)
             | .ok typed =>
                 -- AST-substitute any earlier in-scope rec defs that this
@@ -685,7 +862,7 @@ def wenyanCompileProgramWithDefs (s : String)
                               { name := name, bodySource := bodySrc
                               , body := recTyped, isRec := true }
                             let env' := env ++ [entry]
-                            go (i + 1) env' rwEnv (.defStmt name recTyped :: acc) rest
+                            go (i + 1) env' rwEnv ctors (.defStmt name recTyped :: acc) rest
                 | _ =>
                     .error (.defError i (.recBodyNotLambda name))
       else if chunkIsAmbiguousDefRewrite c then
@@ -712,7 +889,7 @@ def wenyanCompileProgramWithDefs (s : String)
               | .ok rwEnv' =>
                 let rule : RewriteRule :=
                   { lhs := lhsTm, rhs := rhsTm, vars := freeVars lhsTm }
-                go (i + 1) env rwEnv' (.rewriteStmt rule :: acc) rest
+                go (i + 1) env rwEnv' ctors (.rewriteStmt rule :: acc) rest
       else if chunkStartsWithDefKeyword c then
         match parseDefChunk? c with
         | none =>
@@ -725,32 +902,39 @@ def wenyanCompileProgramWithDefs (s : String)
         | some (name, bodySrc) =>
           if env.any (fun e => e.name = name) then
             .error (.defError i (.redefinition name))
+          else if ctors.any (fun uc => uc.name = name) then
+            -- wen-2.0 ④: 定 NAME 不可与 类 之 ctor 同名 (clash detection).
+            .error (.defError i (.conflictWithCatalogue name))
           else if nameConflictsWithCatalogue name then
             .error (.defError i (.conflictWithCatalogue name))
           else
             let expanded := applyDefs env bodySrc
-            match wenyanCompileInCtx (recDefCtx env) expanded with
+            match wenyanCompileInCtx (recDefAndCtorCtx env ctors) expanded with
             | .error e => .error (.base i e)
             | .ok typed =>
+                -- Apply rec-def AST subst then user-ctor resolution.
                 let substituted := applyRecDefs env typed.tm
-                match retypeAfterRecSubst? substituted with
+                let resolved := resolveUserCtors ctors substituted []
+                match retypeAfterRecSubst? resolved with
                 | none => .error (.base i (.denoteFailed typed.ty typed.ty))
                 | some typed' =>
                     let env' := env ++ [⟨name, bodySrc, typed', false⟩]
-                    go (i + 1) env' rwEnv (.defStmt name typed' :: acc) rest
+                    go (i + 1) env' rwEnv ctors (.defStmt name typed' :: acc) rest
       else
         let expanded := applyDefs env c
-        match wenyanCompileInCtx (recDefCtx env) expanded with
+        match wenyanCompileInCtx (recDefAndCtorCtx env ctors) expanded with
         | .error e => .error (.base i e)
         | .ok typed =>
             let substituted := applyRecDefs env typed.tm
+            -- wen-2.0 ④: resolve bare ctor glyphs into `.userCtor` leaves.
+            let resolved := resolveUserCtors ctors substituted []
             -- wen-2.0 ⑫: apply accumulated rewrite rules to normalise.
-            let normalized := normalize rwEnv substituted
+            let normalized := normalize rwEnv resolved
             match retypeAfterRecSubst? normalized with
             | none => .error (.base i (.denoteFailed typed.ty typed.ty))
             | some typed' =>
-                go (i + 1) env rwEnv (.exprStmt typed' :: acc) rest
-  go 0 [] [] [] chunks
+                go (i + 1) env rwEnv ctors (.exprStmt typed' :: acc) rest
+  go 0 [] [] [] [] chunks
 
 
 /-! ## § 2c.5  Helper sanity (cheap; pipeline tests live in `EndToEndTests.lean`) -/
@@ -834,6 +1018,51 @@ example :
     risk infinite expansion; AST-level `applyRecDefs` handles them instead). -/
 example :
     applyDefs [⟨"F", "推 一", ⟨.yi, .hex⟩, true⟩] "F" = "F" := by native_decide
+
+/-! ## § 2c.6  wen-2.0 ④ `类` decl sanity (cheap; pipeline tests in `UserInductiveTests.lean`) -/
+
+example : chunkStartsWithClassKeyword "类 五行 = 木 | 火" = true := by native_decide
+example : chunkStartsWithClassKeyword "  类 真假 = 真 | 假" = true := by native_decide
+example : chunkStartsWithClassKeyword "推 一" = false := by native_decide
+example : chunkStartsWithClassKeyword "" = false := by native_decide
+
+/-- Parse a 5-ctor 类 decl. -/
+example :
+    parseClassChunk? "类 五行 = 木 | 火 | 土 | 金 | 水"
+      = some ("五行", ["木", "火", "土", "金", "水"]) := by native_decide
+
+/-- 2-ctor decl. -/
+example :
+    parseClassChunk? "类 真假 = 真 | 假" = some ("真假", ["真", "假"]) :=
+  by native_decide
+
+/-- 1-ctor decl is fine. -/
+example : parseClassChunk? "类 X = 甲" = some ("X", ["甲"]) := by native_decide
+
+/-- Missing `=` → none. -/
+example : parseClassChunk? "类 五行 木 火" = none := by native_decide
+
+/-- Empty TYPENAME → none. -/
+example : parseClassChunk? "类  = 木 | 火" = none := by native_decide
+
+/-- Empty ctor → none. -/
+example : parseClassChunk? "类 X = 甲 | " = none := by native_decide
+
+/-- `resolveUserCtors` rewrites a free `.var` to `.userCtor`. -/
+example :
+    resolveUserCtors [⟨"木", "五行"⟩] (.var "木") [] = .userCtor "五行" "木" := by
+  native_decide
+
+/-- Bound `.var` (under `.abs`) is NOT rewritten. -/
+example :
+    resolveUserCtors [⟨"木", "五行"⟩]
+        (.abs "木" .hex (.var "木")) []
+      = .abs "木" .hex (.var "木") := by native_decide
+
+/-- A non-ctor `.var` is preserved. -/
+example :
+    resolveUserCtors [⟨"木", "五行"⟩] (.var "甲") []
+      = .var "甲" := by native_decide
 
 /-! ## § 3  端到端 sanity tests
 

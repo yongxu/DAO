@@ -50,6 +50,8 @@ inductive MTy : Type
   | list (elem : MTy)
   | arr (dom cod : MTy)
   | quoted
+  /-- wen-2.0 ④ user inductive nominal type (mirrors `Ty.user`). -/
+  | user (name : String)
 deriving DecidableEq, Repr
 
 /-- Lift a closed `Ty` into `MTy` (no metavariables introduced). -/
@@ -62,6 +64,7 @@ def MTy.ofTy : Ty → MTy
   | .list a => .list (MTy.ofTy a)
   | .arr a b => .arr (MTy.ofTy a) (MTy.ofTy b)
   | .quoted => .quoted
+  | .user n => .user n
 
 /-- Total substitution: list of `(id, MTy)` pairs.  Lookup is first-match. -/
 abbrev Subst := List (Nat × MTy)
@@ -82,6 +85,7 @@ def MTy.apply : Nat → Subst → MTy → MTy
   | _+1,  _, .cell => .cell
   | _+1,  _, .quoted => .quoted
   | _+1,  _, .catalogue k => .catalogue k
+  | _+1,  _, .user n => .user n
   | n+1,  s, .prod a b => .prod (MTy.apply n s a) (MTy.apply n s b)
   | n+1,  s, .list a => .list (MTy.apply n s a)
   | n+1,  s, .arr a b => .arr (MTy.apply n s a) (MTy.apply n s b)
@@ -100,7 +104,7 @@ def MTy.applyS (s : Subst) (t : MTy) : MTy := MTy.apply applyFuel s t
 
 def MTy.occurs (i : Nat) : MTy → Bool
   | .mvar j => decide (i = j)
-  | .hex | .bool | .cell | .quoted | .catalogue _ => false
+  | .hex | .bool | .cell | .quoted | .catalogue _ | .user _ => false
   | .prod a b => MTy.occurs i a || MTy.occurs i b
   | .list a => MTy.occurs i a
   | .arr a b => MTy.occurs i a || MTy.occurs i b
@@ -138,6 +142,10 @@ def unify : Nat → Subst → MTy → MTy → Except UnifyErr Subst
       | .quoted, .quoted => .ok s
       | .catalogue k1, .catalogue k2 =>
           if k1 = k2 then .ok s else .error (.mismatch a' b')
+      -- wen-2.0 ④ user types unify iff their names match exactly.
+      -- `.mvar ↔ .user` is handled by the mvar cases above.
+      | .user n1, .user n2 =>
+          if n1 = n2 then .ok s else .error (.mismatch a' b')
       | .prod x1 y1, .prod x2 y2 =>
           match unify n s x1 x2 with
           | .error e => .error e
@@ -231,15 +239,24 @@ def infer : Nat → MCtx → Tm → InferState →
       match MCtx.lookup ctx n with
       | some t => .ok (t, st)
       | none => .error (.unknownVar n)
-  | n+1,  ctx, .abs name _dom body, st =>
-      -- Ignore the elaborator's prior guess; use a fresh metavar α as
-      -- the binder's domain, let `body`'s usage constrain it via the
-      -- collected app/catalogue unifications, then zonk back to a Ty
-      -- annotation in `reannotate`.
-      let (alpha, st1) := freshMVar st
-      match infer n ((name, alpha) :: ctx) body st1 with
-      | .error e => .error e
-      | .ok (tb, st2) => .ok (.arr alpha tb, st2)
+  | n+1,  ctx, .abs name dom body, st =>
+      -- wen-2.0 ④: when the elaborator's prior guess is a user-inductive
+      -- nominal type (`.user`), preserve it as-is — HM has no way to
+      -- *infer* a user-type binder (no constraints from primitive ops
+      -- could narrow `α` to `.user "X"`), so we honour the annotation.
+      -- For all other binder annotations (`.hex`, `.bool`, ...), HM
+      -- ignores the prior guess and uses a fresh metavar α, letting
+      -- `body`'s usage constrain it via app/catalogue unifications.
+      match dom with
+      | .user _ =>
+          match infer n ((name, MTy.ofTy dom) :: ctx) body st with
+          | .error e => .error e
+          | .ok (tb, st2) => .ok (.arr (MTy.ofTy dom) tb, st2)
+      | _ =>
+          let (alpha, st1) := freshMVar st
+          match infer n ((name, alpha) :: ctx) body st1 with
+          | .error e => .error e
+          | .ok (tb, st2) => .ok (.arr alpha tb, st2)
   | n+1,  ctx, .app f x, st =>
       match infer n ctx f st with
       | .error e => .error e
@@ -315,6 +332,9 @@ def infer : Nat → MCtx → Tm → InferState →
                                 | .error _ => .error e
                               else .error e
   | _+1,  _, .quote _, st => .ok (.quoted, st)
+  -- wen-2.0 ④ user-ctor: typechecks to `.user typeName` (table validity is
+  -- enforced upstream in the surface elaborator).
+  | _+1,  _, .userCtor tn _, st => .ok (.user tn, st)
   | _+1,  _, t, st =>
       match builtinType t with
       | some ty => .ok (ty, st)
@@ -335,6 +355,7 @@ def zonk : Nat → Subst → MTy → Ty
   | _+1,  _, .cell => .cell
   | _+1,  _, .quoted => .quoted
   | _+1,  _, .catalogue k => .catalogue k
+  | _+1,  _, .user n => .user n
   | n+1,  s, .prod a b => .prod (zonk n s a) (zonk n s b)
   | n+1,  s, .list a => .list (zonk n s a)
   | n+1,  s, .arr a b => .arr (zonk n s a) (zonk n s b)
@@ -356,11 +377,17 @@ def zonkTop (s : Subst) (t : MTy) : Ty := zonk zonkFuel s t
 def reannotate : Nat → MCtx → Subst → InferState → Tm → Tm × InferState
   | 0,    _, _, st, t => (t, st)
   | _+1,  _, _, st, .var n => (.var n, st)
-  | n+1,  ctx, s, st, .abs name _dom body =>
-      let (alpha, st1) := freshMVar st
-      let dom' := zonkTop s alpha
-      let (body', st2) := reannotate n ((name, alpha) :: ctx) s st1 body
-      (.abs name dom' body', st2)
+  | n+1,  ctx, s, st, .abs name dom body =>
+      -- wen-2.0 ④: preserve `.user` annotations (mirrors `infer`).
+      match dom with
+      | .user _ =>
+          let (body', st1) := reannotate n ((name, MTy.ofTy dom) :: ctx) s st body
+          (.abs name dom body', st1)
+      | _ =>
+          let (alpha, st1) := freshMVar st
+          let dom' := zonkTop s alpha
+          let (body', st2) := reannotate n ((name, alpha) :: ctx) s st1 body
+          (.abs name dom' body', st2)
   | n+1,  ctx, s, st, .app f x =>
       let (f', st1) := reannotate n ctx s st f
       let (x', st2) := reannotate n ctx s st1 x
@@ -498,5 +525,36 @@ example :
     typeCheck [] (inferAndReannotate
         (.abs "f" .hex (.app (.var "f") .yi)))
       = some (.arr (.arr .hex .hex) .hex) := by native_decide
+
+/-! ### wen-2.0 ④ HM unification on user types -/
+
+/-- Same-name `.user` types unify. -/
+example : (unifyTop [] (.user "五行") (.user "五行")).toOption = some [] := by
+  native_decide
+
+/-- Different-name `.user` types fail to unify. -/
+example :
+    (match unifyTop [] (.user "五行") (.user "真假") with
+     | .error (.mismatch _ _) => true
+     | _ => false) = true := by native_decide
+
+/-- `.mvar` unifies with `.user`. -/
+example :
+    (unifyTop [] (.mvar 0) (.user "X")).toOption
+      = some [(0, .user "X")] := by native_decide
+
+/-- `.user "X"` does not unify with `.hex` (nominal types are disjoint
+    from primitive types). -/
+example :
+    (match unifyTop [] (.user "X") .hex with
+     | .error _ => true
+     | _ => false) = true := by native_decide
+
+/-- HM infers `λx. x` where `x : .user "X"` body returns `x`.  The binder
+    must be annotated by the elaborator (HM defaults unsolved mvars to
+    `.hex`); we test that ground-truth `.user` annotations round-trip. -/
+example :
+    typeCheck [] (inferAndReannotate (.abs "x" (.user "五行") (.var "x")))
+      = some (.arr (.user "五行") (.user "五行")) := by native_decide
 
 end SSBX.Foundation.Wen.WenSurface
