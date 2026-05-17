@@ -937,6 +937,236 @@ def wenyanCompileProgramWithDefs (s : String)
   go 0 [] [] [] [] chunks
 
 
+/-! ## § 2d  Subject ellipsis (wen-2.0 ⑨) — PendingBinder state
+
+  Classical Chinese commonly omits the subject across statements once it is
+  bound by an earlier clause.  Example:
+
+      凡 仁 者；其 心 為 善
+
+  Meaning: `∀x. virtuous(x) → (x.mind = good)`, where `其` ("his") refers
+  back to the bound `x` in the second clause.
+
+  **v1 design** — pragmatic, narrow scope:
+
+  · A statement is **open** (has a dangling binder) iff its elaborated `Tm`
+    is `Tm.abs n t (.var n)` — i.e. a pure identity lambda waiting for an
+    argument.  This is the simplest, structurally-recognisable "dangling
+    subject" form.
+  · After an open statement under a `；` separator, `PendingBinder` records
+    `(n, t)`.  Subsequent statements compile with `(n, t)` pre-bound in the
+    Ctx so references to `n` (and the new pronoun `其`, resolved to `n` —
+    Step 2) typecheck.
+  · After a `。` separator, the pending binder is cleared.
+  · A non-open statement clears the pending binder.
+
+  This is intentionally a minimal-viable design.  Broader patterns (e.g.
+  `凡 X 仁 者；其 X` where the binder body is non-trivial) are out of v1
+  scope — they require deciding whether to discard the body or build a
+  conjunction, both of which have semantic pitfalls.
+-/
+
+/-- Detect the pending binder of an open statement.
+    Returns `some (n, t)` iff the term is `Tm.abs n t (.var n)`, i.e. a pure
+    identity lambda.  All other shapes are treated as closed. -/
+def openBinderOf? : Tm → Option (String × Ty)
+  | .abs n t (.var m) => if n = m then some (n, t) else none
+  | _ => none
+
+/-- Cross-statement pending binder state.  `none` = no open binder in scope. -/
+abbrev PendingBinder := Option (String × Ty)
+
+/-- Promote a `PendingBinder` to a typing Ctx extension (empty if none). -/
+def pendingCtx (pb : PendingBinder) : Ctx :=
+  match pb with
+  | some (n, t) => [(n, t)]
+  | none        => []
+
+/-- Sanity: identity lambda `Tm.abs "甲" .hex (.var "甲")` is open. -/
+example : openBinderOf? (.abs "甲" .hex (.var "甲")) = some ("甲", .hex) := by
+  native_decide
+
+/-- Sanity: a non-identity binder (body ≠ var n) is NOT open. -/
+example : openBinderOf? (.abs "甲" .hex (.hexLit «一»)) = none := by
+  native_decide
+
+/-- Sanity: a binder whose body is a *different* var is not open. -/
+example : openBinderOf? (.abs "甲" .hex (.var "乙")) = none := by
+  native_decide
+
+/-- Sanity: a non-binder term is not open. -/
+example : openBinderOf? (.hexLit «一») = none := by
+  native_decide
+
+/-- Sanity: pendingCtx empty / singleton. -/
+example : pendingCtx none = [] := by native_decide
+example : pendingCtx (some ("甲", .hex)) = [("甲", .hex)] := by native_decide
+
+/-! ### § 2d.1  `其` pronoun resolution
+
+  Surface form: `其` ("his/its") inside a statement that follows an open
+  binder is rewritten to the binder's variable name BEFORE lex/resolve.
+
+  Design choice: textual substitution rather than resolver-level integration.
+  Reasons:
+  · Consistency with the Wen 1.5 `定 NAME 为 BODY` pipeline (which also
+    uses textual substitution to expand user-defs).
+  · The resolver is context-free; threading a runtime pending-binder state
+    through it would be a much larger change.
+  · `其` does NOT currently resolve to anything (no `OperatorReading`, no
+    surface marker), so substituting it pre-lex has no collision risk.
+
+  Note: we deliberately do NOT substitute `之` as a pronoun.  `之` is the
+  application-marker (S_1) and re-purposing it would silently break
+  thousands of catalogue invocations.
+
+  Edge cases handled by `replaceAll` semantics:
+  · Multiple `其` in one chunk all rewrite to the same name (correct: the
+    pronoun refers to the SAME bound subject).
+  · `其` appearing without a pending binder is left untouched — it will
+    then fail to resolve as an unknown glyph and surface a clean
+    parser-level error, which is the desired Wen 1.5 behaviour for unknown
+    glyphs. -/
+
+/-- Rewrite all literal occurrences of `其` in `chunk` to the pending
+    binder's variable name (wrapped in spaces so it tokenises as a separate
+    glyph). When `pb = none`, `chunk` is returned unchanged. -/
+def applyPendingBinder (pb : PendingBinder) (chunk : String) : String :=
+  match pb with
+  | none        => chunk
+  | some (n, _) => replaceAll chunk "其" (" " ++ n ++ " ")
+
+/-- Sanity: no pending binder → no-op. -/
+example : applyPendingBinder none "其 一" = "其 一" := by native_decide
+
+/-- Sanity: pending binder `甲` rewrites `其` to `甲`. -/
+example : applyPendingBinder (some ("甲", .hex)) "其" = " 甲 " := by native_decide
+
+/-- Sanity: multiple occurrences. -/
+example :
+    applyPendingBinder (some ("甲", .hex)) "其 与 其" = " 甲  与  甲 " :=
+  by native_decide
+
+/-- Sanity: non-`其` chunk unchanged. -/
+example : applyPendingBinder (some ("甲", .hex)) "推 一" = "推 一" := by native_decide
+
+/-! ### § 2d.2  Separator-tagged statement split
+
+  For subject ellipsis the SOFT vs HARD distinction between statement
+  separators is load-bearing:
+
+      `；` / `;` : SOFT — pending binder propagates to the next statement.
+      `。`      : HARD — pending binder cleared at this boundary.
+
+  `splitOnStatementSep` (used by the legacy pipeline) normalises all three
+  separators to one, so we need a sibling that retains the kind.  Returned
+  list is `(chunk, isSoft)` pairs in source order; the boolean indicates
+  whether THIS chunk was followed by a soft separator (`true`) or a hard
+  one / EOF (`false`). -/
+
+inductive StmtSepKind where
+  | soft   -- 「；」 or ASCII `;`
+  | hard   -- 「。」 (also used at EOF)
+deriving DecidableEq, Repr
+
+/-- Result of separator-tagged split: each chunk + the separator that
+    terminates it (hard at EOF). -/
+abbrev TaggedChunk := String × StmtSepKind
+
+/-- Walk the string char-by-char accumulating chunks, tagging each by the
+    separator that closed it.  EOF emits a final chunk tagged `.hard`. -/
+def splitOnStatementSepTagged (s : String) : List TaggedChunk :=
+  let step : (List TaggedChunk × String) → Char → (List TaggedChunk × String) :=
+    fun (acc, cur) c =>
+      if c = '；' || c = ';' then
+        ((cur, StmtSepKind.soft) :: acc, "")
+      else if c = '。' then
+        ((cur, StmtSepKind.hard) :: acc, "")
+      else
+        (acc, cur.push c)
+  let (acc, cur) := s.foldl step ([], "")
+  let withTail :=
+    if cur.trimAscii.toString.isEmpty then acc
+    else (cur, StmtSepKind.hard) :: acc
+  withTail.reverse.map (fun (c, k) => (c.trimAscii.toString, k))
+    |>.filter (fun (c, _) => !c.isEmpty)
+
+/-- Sanity: soft separator. -/
+example :
+    splitOnStatementSepTagged "推 一；推 二" =
+      [("推 一", .soft), ("推 二", .hard)] := by native_decide
+
+/-- Sanity: hard separator. -/
+example :
+    splitOnStatementSepTagged "推 一。推 二" =
+      [("推 一", .hard), ("推 二", .hard)] := by native_decide
+
+/-- Sanity: mixed. -/
+example :
+    splitOnStatementSepTagged "推 一；推 二。推 三" =
+      [("推 一", .soft), ("推 二", .hard), ("推 三", .hard)] := by native_decide
+
+/-- Sanity: ASCII `;` is soft. -/
+example :
+    splitOnStatementSepTagged "推 一;推 二" =
+      [("推 一", .soft), ("推 二", .hard)] := by native_decide
+
+/-! ### § 2d.3  Ellipsis-aware multi-statement compiler
+
+  Extends the no-defs pipeline with PendingBinder threading.  After each
+  statement compiles, we inspect the resulting `Tm` via `openBinderOf?`:
+  · If open AND the terminating separator is `.soft`, set PendingBinder
+    to that `(name, ty)` for the next statement.
+  · If closed OR the separator is `.hard`, clear PendingBinder.
+
+  The next statement's source has `其` substituted (`applyPendingBinder`)
+  and compiles in a Ctx that pre-binds the pending name.  This lets the
+  body typecheck even though the binder is "outside" the statement.
+
+  v1 limitation: the compiled `TypedTm` of an ellipsis-following statement
+  is its raw `Tm` (with `Tm.var n` references to the pending binder).  We
+  do NOT re-bind it as `Tm.abs n t body` — callers that want the
+  λ-equivalent should compose with the prior statement's identity binder
+  externally.  This keeps the per-statement output shape stable so
+  existing `List TypedTm` consumers don't break. -/
+
+/-- Multi-statement compiler with subject-ellipsis support.
+
+    Returns one `TypedTm` per chunk in source order.  PendingBinder is
+    threaded across `；` separators and cleared at `。` separators.  On the
+    first compile error, fails fast at the offending statement. -/
+def wenyanCompileProgramWithEllipsis (s : String) :
+    Except WenSurfaceErr (List TypedTm) :=
+  let tagged := splitOnStatementSepTagged s
+  let rec go : PendingBinder → List TaggedChunk → List TypedTm →
+      Except WenSurfaceErr (List TypedTm)
+    | _,  [],            acc => .ok acc.reverse
+    | pb, (c, sep) :: rest, acc =>
+        let chunk := applyPendingBinder pb c
+        match wenyanCompileInCtx (pendingCtx pb) chunk with
+        | .error e => .error e
+        | .ok typed =>
+            let pb' :=
+              match sep with
+              | .hard => none
+              | .soft =>
+                  match openBinderOf? typed.tm with
+                  | some nt => some nt
+                  | none    => none
+            go pb' rest (typed :: acc)
+  go none tagged []
+
+/-! ### § 2d.4  Helper sanity (more end-to-end tests live in EllipsisTests.lean) -/
+
+/-- An empty program yields the empty list. -/
+example : wenyanCompileProgramWithEllipsis "" = .ok [] := by native_decide
+
+/-- A single non-binder statement compiles cleanly and produces one TypedTm
+    of the right type. -/
+example :
+    (wenyanCompileProgramWithEllipsis "推 一").toOption.map (·.map (·.ty))
+      = some [.hex] := by native_decide
+
 /-! ## § 2c.5  Helper sanity (cheap; pipeline tests live in `EndToEndTests.lean`) -/
 
 /-- `chunkStartsWithDefKeyword` recognises a leading `定` after trimming. -/
