@@ -753,6 +753,71 @@ def wenyanCompileProgramWithDefs (s : String)
   go 0 [] [] [] chunks
 
 
+/-! ## § 2d  Subject ellipsis (wen-2.0 ⑨) — PendingBinder state
+
+  Classical Chinese commonly omits the subject across statements once it is
+  bound by an earlier clause.  Example:
+
+      凡 仁 者；其 心 為 善
+
+  Meaning: `∀x. virtuous(x) → (x.mind = good)`, where `其` ("his") refers
+  back to the bound `x` in the second clause.
+
+  **v1 design** — pragmatic, narrow scope:
+
+  · A statement is **open** (has a dangling binder) iff its elaborated `Tm`
+    is `Tm.abs n t (.var n)` — i.e. a pure identity lambda waiting for an
+    argument.  This is the simplest, structurally-recognisable "dangling
+    subject" form.
+  · After an open statement under a `；` separator, `PendingBinder` records
+    `(n, t)`.  Subsequent statements compile with `(n, t)` pre-bound in the
+    Ctx so references to `n` (and the new pronoun `其`, resolved to `n` —
+    Step 2) typecheck.
+  · After a `。` separator, the pending binder is cleared.
+  · A non-open statement clears the pending binder.
+
+  This is intentionally a minimal-viable design.  Broader patterns (e.g.
+  `凡 X 仁 者；其 X` where the binder body is non-trivial) are out of v1
+  scope — they require deciding whether to discard the body or build a
+  conjunction, both of which have semantic pitfalls.
+-/
+
+/-- Detect the pending binder of an open statement.
+    Returns `some (n, t)` iff the term is `Tm.abs n t (.var n)`, i.e. a pure
+    identity lambda.  All other shapes are treated as closed. -/
+def openBinderOf? : Tm → Option (String × Ty)
+  | .abs n t (.var m) => if n = m then some (n, t) else none
+  | _ => none
+
+/-- Cross-statement pending binder state.  `none` = no open binder in scope. -/
+abbrev PendingBinder := Option (String × Ty)
+
+/-- Promote a `PendingBinder` to a typing Ctx extension (empty if none). -/
+def pendingCtx (pb : PendingBinder) : Ctx :=
+  match pb with
+  | some (n, t) => [(n, t)]
+  | none        => []
+
+/-- Sanity: identity lambda `Tm.abs "甲" .hex (.var "甲")` is open. -/
+example : openBinderOf? (.abs "甲" .hex (.var "甲")) = some ("甲", .hex) := by
+  native_decide
+
+/-- Sanity: a non-identity binder (body ≠ var n) is NOT open. -/
+example : openBinderOf? (.abs "甲" .hex (.hexLit «一»)) = none := by
+  native_decide
+
+/-- Sanity: a binder whose body is a *different* var is not open. -/
+example : openBinderOf? (.abs "甲" .hex (.var "乙")) = none := by
+  native_decide
+
+/-- Sanity: a non-binder term is not open. -/
+example : openBinderOf? (.hexLit «一») = none := by
+  native_decide
+
+/-- Sanity: pendingCtx empty / singleton. -/
+example : pendingCtx none = [] := by native_decide
+example : pendingCtx (some ("甲", .hex)) = [("甲", .hex)] := by native_decide
+
 /-! ## § 2c.5  Helper sanity (cheap; pipeline tests live in `EndToEndTests.lean`) -/
 
 /-- `chunkStartsWithDefKeyword` recognises a leading `定` after trimming. -/
