@@ -151,11 +151,12 @@
 - **依赖**: ⑥ + ⑩
 - **成本**: ~250 LOC
 
-#### ⑫ Rewrite rules
+#### ⑫ Rewrite rules — **DONE** (2026-05-17, PR pending)
 - **Why**: `而 反 反 X` 应自动 reduce 到 `X`；当前算 2 次 complement
-- **Syntax**: `定 反 反 X 等 X` 之 rewrite assertion
-- **Semantics**: equational rewrite + confluence check
-- **依赖**: 无；但与 1.5 之 user-def 配套
+- **Syntax**: `定 LHS 等 RHS` rewrite assertion；与 `定 NAME 为 BODY` 共生（用 `等` vs `为` 区分；两者同现报 `rewriteAmbiguous`）
+- **Semantics**: bottom-up structural rewrite + fuel-bounded normalize；linear-pattern only (v1)；spine-walk head-tag disjointness 作 confluence (v1 conservative)
+- **依赖**: 无；与 ② 配套（rec-def 体内可含 rewrite 后的 Tm）
+- **实现**: `Foundation/Wen/WenSurface/RewriteRules.lean` (~470 LOC) + `EndToEnd.lean` 集成 (~110 LOC) + `RewriteRulesTests.lean` (~190 LOC, 14 native_decide 例)
 - **成本**: ~400 LOC + 简化 normalize
 
 ~~#### ⑬ Cell-level operations (V₄ Shi binding)~~ **— REMOVED 2026-05-17**
