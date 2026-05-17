@@ -113,6 +113,20 @@ def Env.lookup : Env → String → Option Value
   | [], _ => none
   | (n, v) :: rest, name => if n = name then some v else rest.lookup name
 
+/-! ## § 2b  wen-2.0 ⑤ pattern matching against runtime Values -/
+
+/-- Try one pattern against a Value.  On success returns the list of
+    `(name, value)` bindings the pattern introduces; on failure returns
+    `none`.  This is the runtime analogue of `WenDef.patternBindings`. -/
+def matchValue : Value → MatchPat → Option (List (String × Value))
+  | .hexV h,            .lit h'         => if h = h' then some [] else none
+  | .boolV b,           .boolP b'       => if b = b' then some [] else none
+  | .userCtorV tn cn,   .userP tn' cn'  =>
+      if tn = tn' ∧ cn = cn' then some [] else none
+  | _,                  .wildcard       => some []
+  | v,                  .varP n         => some [(n, v)]
+  | _,                  _               => none
+
 /-! ## § 3  64-fold 凡 — 有限 ∀ -/
 
 /-- 64 元 hex 上之 ∀: 检查 64 hex 之 predicate 全 true. -/
@@ -247,6 +261,19 @@ mutual
     | _+1,    env, .fix n _ body => some (.fixV env n body)
     -- wen-2.0 ④ user-ctor: opaque value tagged with `typeName` + `ctorName`.
     | _+1,    _,   .userCtor tn cn => some (.userCtorV tn cn)
+    -- wen-2.0 ⑤ pattern-match: evaluate scrut to a Value, then walk arms
+    -- top-down testing each pattern.  On the first match, extend env with
+    -- the bindings and evaluate the arm body.  No match ⇒ `none`
+    -- (clean error — v1 deliberately has no exhaustiveness check).
+    | fuel+1, env, .«match» scrut arms => do
+        let vs ← evalFuel fuel env scrut
+        let rec tryArms : List (MatchPat × Tm) → Option Value
+          | [] => none
+          | (p, body) :: rest =>
+              match matchValue vs p with
+              | some binds => evalFuel fuel (binds ++ env) body
+              | none       => tryArms rest
+        tryArms arms
 
   /-- Fuel-bounded builtin 求值. -/
   def applyBuiltinFuel : Nat → Builtin → List Value → Option Value
@@ -759,6 +786,53 @@ example : denoteHex (.unquote (.quote (.hexLit Hexagram.heaven))) =
 example :
     denoteHex (.unquote (.quote (.app Stdlib.tuiBody .yi))) = some («生» «一») := by
   native_decide
+
+/-! ## § 10c  wen-2.0 ⑤ match-arm eval sanity -/
+
+/-- Match a true literal against [true → .yi; false → .heaven]: picks first arm. -/
+example :
+    denoteHex
+        (.«match» (.boolLit true)
+          [(.boolP true, .yi),
+           (.boolP false, .hexLit Hexagram.heaven)])
+      = some «一» := by native_decide
+
+/-- Match false on same arms: picks second arm. -/
+example :
+    denoteHex
+        (.«match» (.boolLit false)
+          [(.boolP true, .yi),
+           (.boolP false, .hexLit Hexagram.heaven)])
+      = some Hexagram.heaven := by native_decide
+
+/-- Wildcard fallback. -/
+example :
+    denoteHex
+        (.«match» .yi
+          [(.lit Hexagram.heaven, .hexLit Hexagram.earth),
+           (.wildcard, .yi)])
+      = some «一» := by native_decide
+
+/-- `varP` binds the scrutinee value in the arm body. -/
+example :
+    denoteHex (.«match» .yi [(.varP "x", .var "x")]) = some «一» :=
+  by native_decide
+
+/-- No arm matches ⇒ runtime returns `none`. -/
+example :
+    denoteHex
+        (.«match» (.boolLit true)
+          [(.boolP false, .yi)])
+      = none := by native_decide
+
+/-- User-ctor match selects the right arm. -/
+example :
+    denoteHex
+        (.«match» (.userCtor "甴甴" "甲")
+          [(.userP "甴甴" "甲", .yi),
+           (.userP "甴甴" "乙", .hexLit Hexagram.heaven),
+           (.wildcard, .hexLit Hexagram.earth)])
+      = some «一» := by native_decide
 
 /-- 桥之公示：L1 typed Tm (WenDef) 与 L0 «加»/«一» (YiCore) 一致.
 
