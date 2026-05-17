@@ -147,6 +147,20 @@ inductive Tm : Type
       整体类型为 `.quoted`，载入 doxastic / 言说 / meta-prog 之 deferred Tm 数据.
       `WenDefEval` 仅以 builtin tag 标记此 Value，不对 body 作 β-reduction. -/
   | quote (body : Tm) : Tm
+  /-- `unquote q`: wen-2.0 ⑪ quote-eval (`执 「X」`).  Evaluates `q` (which must
+      reduce to a `.quoteV inner`) and then re-evaluates `inner` under the
+      *empty* environment.  Fuel-bounded — divergent quoted bodies exhaust
+      fuel cleanly (return `none`).
+
+      Typecheck rule (v1): `unquote q` is `.hex`.  Justified by the doctrine
+      "every Wen term reduces to a Hex value at the top of the R-tower"; the
+      kernel cannot peer inside the opaque `.quoted` type so this is the only
+      sound universal answer.  Future work (with HM on `.quoted`) could
+      refine to the inner body's type.
+
+      Argument typecheck: `q` must have type `.quoted` (so applying `执` to a
+      non-quoted argument is rejected by `typeCheck`). -/
+  | unquote (q : Tm) : Tm
   /-- `fix n t body`: wen-2.0 ② μ-fixpoint (`定递 n 为 body`).
       Models `μ n : t. body` — the body is closed over a self-reference to
       `n` of type `t`; operationally unrolled on-demand by the fuel-bounded
@@ -290,6 +304,10 @@ def typeCheck : Ctx → Tm → Option Ty
             none
       | _, _, _ => none
   | _, .quote _ => some .quoted
+  | ctx, .unquote q =>
+      match typeCheck ctx q with
+      | some .quoted => some .hex
+      | _ => none
   | ctx, .fix n t body =>
       match typeCheck ((n, t) :: ctx) body with
       | some t' => if t = t' then some t else none
@@ -332,6 +350,34 @@ example :
 example :
     typeCheck [] (.catalogue2 .P_23 (.hexLit Hexagram.heaven) (.hexLit Hexagram.earth))
       = none := by native_decide
+
+/-! ### wen-2.0 ⑪ `.unquote` typecheck examples -/
+
+/-- `执 「一」` typechecks to `.hex`. -/
+example :
+    typeCheck [] (.unquote (.quote .yi)) = some .hex := by native_decide
+
+/-- `执 「乾」` typechecks to `.hex`. -/
+example :
+    typeCheck [] (.unquote (.quote (.hexLit Hexagram.heaven))) = some .hex := by
+  native_decide
+
+/-- Quoted lambda — still typechecks (unquote returns `.hex`, evaluation will
+    decide at runtime). -/
+example :
+    typeCheck [] (.unquote (.quote .notB)) = some .hex := by native_decide
+
+/-- Type error: applying `执` to a non-`.quoted` arg (`一 : .hex`) is rejected. -/
+example :
+    typeCheck [] (.unquote .yi) = none := by native_decide
+
+/-- Type error: applying `执` to a `.bool` is rejected. -/
+example :
+    typeCheck [] (.unquote (.boolLit true)) = none := by native_decide
+
+/-- Type error: applying `执` to a function is rejected. -/
+example :
+    typeCheck [] (.unquote .cuoH) = none := by native_decide
 
 /-! ### wen-2.0 ② `.fix` typecheck examples -/
 
@@ -381,6 +427,7 @@ def substTmFree (name : String) (replacement : Tm) : Tm → Tm
       .catalogue3 id (substTmFree name replacement a)
         (substTmFree name replacement b) (substTmFree name replacement c)
   | .quote body => .quote body  -- quote body is data; not subject to subst
+  | .unquote q => .unquote (substTmFree name replacement q)
   | .fix n t body =>
       if n = name then .fix n t body
       else .fix n t (substTmFree name replacement body)

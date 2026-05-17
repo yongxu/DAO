@@ -39,6 +39,12 @@ open SSBX.Text.OperatorAnchors
 inductive SyntaxMarker where
   | zhe
   | ling
+  /-- wen-2.0 ⑪ `执 「X」`: quote-eval prefix marker.  Consumes the next
+      SurfaceExpr (expected to elaborate to a `.quoted`) and wraps it in a
+      `Tm.unquote` so the evaluator re-runs the quoted body under the
+      current env.  Not a value operator; not registered as an OperatorId
+      to keep the catalogue audit/coverage tables stable. -/
+  | zhi
 deriving DecidableEq, Repr
 
 /-- 已消歧的原子：卦字面值 / Bool 字面值 / catalogue 算子读法 /
@@ -188,6 +194,8 @@ def isIterateConstruction : Glyph → Bool
 def resolveSyntaxMarker : Glyph → Option SyntaxMarker
   | "者" => some .zhe
   | "令" => some .ling
+  | "执" => some .zhi    -- wen-2.0 ⑪ quote-eval prefix
+  | "執" => some .zhi    -- traditional variant
   | _    => none
 
 def matchingCloseBracket? : Glyph → Option Glyph
