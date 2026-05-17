@@ -14,6 +14,8 @@
 
 故 Bagua-ISA 是 WenDef.Tm 之**后端目标**而非另一表面，两条表面在 Tm 处汇合。**「错等变」约束** (`f(h.complement) = (f h).complement`) 是 YiInstr 之代数刚性 — 故 `推`/`损`/`生` 等非 equivariant 项不可桥（这是结构性界限，不是工程缺口）。
 
+> **Canonical user evaluator** (2026-05-17): `WenDefEval.denoteHex` (Tm→Value) 与 `WenEval.wenEval` (String→R8). `RootRuleDemoInterpreter` 已 `@[deprecated]`, 仅作教学示例保留, 不应在新代码中复用.
+
 ## Inventory
 
 ### Bagua-ISA samples (runnable via `wenyan` CLI)
