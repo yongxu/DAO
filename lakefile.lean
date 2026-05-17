@@ -30,3 +30,7 @@ lean_exe wenyan where
 lean_exe «wen-lisp» where
   root := `WenLisp
   supportInterpreter := true
+
+lean_exe wen where
+  root := `WenREPL
+  supportInterpreter := true
