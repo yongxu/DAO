@@ -487,6 +487,41 @@ def asVarName? (t : ResolvedTok) : Option String :=
   | .varName n => some n
   | _ => none
 
+/-- wen-2.0 ⑧ helper: split `toks` at the first **terminal** `者` —— i.e., a
+    `.syntax .zhe` token that is **not** followed by a varName (such a `者`
+    would otherwise be the head of a lambda binder `者 甲 BODY`).  Returns
+    `some (before, after)` where `before` is the prefix tokens consumed up to
+    (but not including) the terminal `者`, and `after` is everything after
+    the `者`.  Returns `none` if no terminal `者` is found.
+
+    Used by `所 PRED 者` to isolate `PRED` from trailing context: the `者`
+    here is **not** a binder (it has no var name afterward), it merely closes
+    the relativization. -/
+def splitAtTerminalZhe : List ResolvedTok → Option (List ResolvedTok × List ResolvedTok)
+  | [] => none
+  | t :: rest =>
+      match t.atom with
+      | .syntax .zhe =>
+          -- Check if this `者` is followed by a varName (= lambda binder).
+          match rest with
+          | v :: _ =>
+              match asVarName? v with
+              | some _ =>
+                  -- Lambda-binder 者: skip past it (consume `者` + var as part of prefix).
+                  match splitAtTerminalZhe rest with
+                  | some (before, after) => some (t :: before, after)
+                  | none => none
+              | none =>
+                  -- Terminal 者: split here.
+                  some ([], rest)
+          | [] =>
+              -- 者 at end of stream with no var → terminal.
+              some ([], [])
+      | _ =>
+          match splitAtTerminalZhe rest with
+          | some (before, after) => some (t :: before, after)
+          | none => none
+
 def expectedVariableErr (head : ResolvedTok) : ParseErr :=
   .expectedVariable head.surface head.col
 
@@ -573,6 +608,48 @@ mutual
       | .syntax .shu =>
           -- wen-2.0 ⑦ `属` 是 infix-only; 出现在 expression start 是语法错误。
           .error (.unexpectedApplicationMarker head.surface head.col)
+      | .syntax .suo =>
+          -- wen-2.0 ⑧ `所 PRED 者`: object relativization.  Split `rest` at
+          -- the first **terminal** `者` (i.e., a `者` not followed by a
+          -- varName, so it's not a nested lambda binder).  Parse the prefix
+          -- as `pred`, then desugar to `λ甲. pred 甲` — a Hex-input lambda
+          -- whose body applies the predicate to an implicit `甲` variable.
+          -- The legacy `S_16` (所: Hex→Hex identity) catalogue reading is
+          -- shadowed: `所` is no longer reachable as an operator surface.
+          match splitAtTerminalZhe rest with
+          | none =>
+              .error (.expectedExpression (head.col + head.surface.toList.length))
+          | some (predToks, restAfterZhe) =>
+              match predToks with
+              | [] => .error (.expectedExpression (head.col + head.surface.toList.length))
+              | _ =>
+                  -- Parse `predToks` as a complete sub-expression.  Use fuel
+                  -- `n` and reserve `0` (the predToks list is self-contained).
+                  match parseSurfaceExprAux ctx false n 0 predToks with
+                  | .error e => .error e
+                  | .ok (pred, leftover) =>
+                      match leftover with
+                      | [] =>
+                          -- Synthesize an implicit binder `甲` and body
+                          -- `pred 甲`.  The varName tok is dummy (col=0);
+                          -- only `name` is consulted by the elaborator.
+                          let varTok : ResolvedTok :=
+                            ⟨⟨"甲", 0, 1, false⟩, .varName "甲"⟩
+                          let varExpr : SurfaceExpr := .atom varTok
+                          let body : SurfaceExpr := .app pred varExpr
+                          parsePostfixApplications ctx allowInfix n reserve
+                            (.binder .lambda "甲" body) restAfterZhe
+                      | first :: _ =>
+                          -- Inner `pred` did not consume all predToks —
+                          -- the surplus tokens are between `所` and `者`
+                          -- but couldn't fold into the predicate.
+                          .error (.leftoverAtoms leftover.length first.surface first.col)
+      | .syntax .zhiSuoYi =>
+          -- wen-2.0 ⑧: `之所以` at expression-start has no subject (acc).
+          -- This is the bare form `之所以 X` which is grammatically
+          -- ill-formed (the reason-extractor needs a preceding subject).
+          -- Surface this as a parse error so the user fixes it.
+          .error (.expectedExpression head.col)
       | .appMarker =>
           match rest with
           | [] => .error (.expectedExpression (head.col + head.surface.toList.length))
@@ -836,6 +913,28 @@ mutual
                 else
                   .ok (acc, head :: rest)
             | none =>
+              -- wen-2.0 ⑧ `Y 之所以 X`: reason-extraction infix.  When the
+              -- preceding `acc = Y` is a complete expression and the next
+              -- token is `之所以`, consume the marker and parse the rhs `X`
+              -- (the "reason" predicate / verb).  Reshape to `.app X Y`
+              -- (reason-as-application — the kernel treats this as ordinary
+              -- function application; the rhetorical "causes Y to X"
+              -- framing lives only at the surface).
+              --
+              -- Honour `reserve` so outer contexts that need trailing
+              -- tokens still get them.  Disallow infix inside `X` to keep
+              -- chained relation parsing predictable.
+              match head.atom with
+              | .syntax .zhiSuoYi =>
+                  if decide ((head :: rest).length <= reserve) then
+                    .ok (acc, head :: rest)
+                  else
+                    match parseSurfaceExprAux ctx false n reserve rest with
+                    | .ok (rhs, rest') =>
+                        parsePostfixApplications ctx allowInfix n reserve
+                          (.app rhs acc) rest'
+                    | .error e => .error e
+              | _ =>
               match relationInfixTok? head with
               | some opTok =>
                   if allowInfix then

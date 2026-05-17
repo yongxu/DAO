@@ -50,6 +50,21 @@ inductive SyntaxMarker where
       consumes one trailing expression as the Set argument and emits
       `Tm.memberOf x s`.  Not registered as an OperatorId. -/
   | shu
+  /-- wen-2.0 ⑧ `所 PRED 者`: object relativization.  The leading `所`
+      marker triggers the parser to consume one sub-expression `PRED`
+      followed by a required `者`, then desugar to `λ甲. PRED 甲` (i.e.,
+      nominalize the predicate over an implicit object via the existing
+      `Tm.abs` lambda-binder).  Note: this **overrides** the legacy
+      catalogue reading `S_16` (nominalization particle as Hex→Hex
+      identity), which had no surface-grammar uses prior to ⑧. -/
+  | suo
+  /-- wen-2.0 ⑧ `Y 之所以 X`: reason-extraction marker.  When the
+      preceding `acc` is a complete expression, `之所以` consumes the
+      next sub-expression `X` and reshapes `acc` into `X acc`
+      (reason-as-application — the rhetorical "what causes Y to X"
+      collapses to ordinary application in the kernel; surface form
+      preserved for pretty-print). -/
+  | zhiSuoYi
 deriving DecidableEq, Repr
 
 /-- 已消歧的原子：卦字面值 / Bool 字面值 / catalogue 算子读法 /
@@ -203,6 +218,8 @@ def resolveSyntaxMarker : Glyph → Option SyntaxMarker
   | "執" => some .zhi    -- traditional variant
   | "属" => some .shu    -- wen-2.0 ⑦ set-membership infix
   | "屬" => some .shu    -- traditional variant
+  | "所" => some .suo    -- wen-2.0 ⑧ object relativization head
+  | "之所以" => some .zhiSuoYi  -- wen-2.0 ⑧ reason-extraction infix
   | _    => none
 
 def matchingCloseBracket? : Glyph → Option Glyph
