@@ -24,6 +24,7 @@ complement-equivariant 子集 commute 作 future work）。
 0 sorry / 0 axiom / 总函数. 端到端例由 native_decide 见证.
 -/
 import SSBX.Foundation.Wen.WenSurface.Elaborate
+import SSBX.Foundation.Wen.WenSurface.RewriteRules
 
 set_option maxHeartbeats 8000000
 
@@ -204,15 +205,34 @@ def wenyanCompileProgram (s : String) :
   This module is purely additive over `wenyanCompileProgram`: no existing
   pipeline functions, types, or examples change. -/
 
-/-- A compiled statement: either a `定` declaration or an evaluated expression. -/
+/-- A compiled statement: either a `定` declaration, a rewrite-rule decl,
+    or an evaluated expression. -/
 inductive Stmt where
-  | defStmt  (name : String) (body : TypedTm)
-  | exprStmt (body : TypedTm)
+  | defStmt     (name : String) (body : TypedTm)
+  | rewriteStmt (rule : RewriteRule)
+  | exprStmt    (body : TypedTm)
 deriving Repr
 
+/-- Extract the body `TypedTm` for `defStmt`/`exprStmt`; for rewrite decls,
+    returns the (typed) LHS as a representative — note rewrite stmts don't
+    have an evaluation result, so callers that genuinely need a `body` for
+    a rewrite stmt should pattern-match instead.
+
+    Rationale: every existing user of `Stmt.body` expects a `TypedTm`.  We
+    keep the legacy `body` accessor exhaustive by returning the LHS for the
+    new constructor; semantics-sensitive callers (REPL display, denote loop)
+    have always done their own pattern match. -/
 def Stmt.body : Stmt → TypedTm
   | .defStmt _ b => b
   | .exprStmt b  => b
+  | .rewriteStmt r =>
+    -- The LHS has whatever type `typeCheck [] r.lhs` says.  This may be
+    -- `none` if LHS contains free pattern vars, but we still need to
+    -- return *some* TypedTm; pick `.bool` as a defensive placeholder.
+    -- (Tests that care use `match` against the constructor instead.)
+    match typeCheck [] r.lhs with
+    | some ty => ⟨r.lhs, ty⟩
+    | none    => ⟨r.lhs, .bool⟩
 
 /-- Per-definition entry: name + body source + compiled `TypedTm`.
     `isRec` distinguishes Wen 1.5 textual `定` defs from Wen 2.0 ② `定递`
@@ -249,6 +269,22 @@ inductive DefErr where
   | recBodyNotLambda      (name : String)
   | recMultiTokenName     (name : String)
   | recNameNotStem        (name : String)
+  -- wen-2.0 ⑫: 定 LHS 等 RHS rewrite-rule decls.
+  /-- The chunk contains BOTH `等` and `为` after the leading `定` —
+      ambiguous between `定 NAME 为 BODY` (user-def) and
+      `定 LHS 等 RHS` (rewrite rule).  User must restructure. -/
+  | rewriteAmbiguous
+  /-- Missing LHS or RHS of a `定 ... 等 ...` rewrite rule. -/
+  | rewriteEmptyLhs
+  | rewriteEmptyRhs
+  /-- The LHS source failed to compile. -/
+  | rewriteLhsCompileFailed
+  /-- The RHS source failed to compile. -/
+  | rewriteRhsCompileFailed
+  /-- Rule rejected by `RewriteRules.addRule` (bare-var LHS, non-linear
+      pattern, RHS extra vars, or head-tag collision with an existing
+      rule). -/
+  | rewriteRuleRejected   (reason : RewriteErr)
 deriving Repr
 
 /-- Multi-statement program error with `def` support. Extends the base
@@ -299,6 +335,58 @@ def parseDefChunk? (s : String) : Option (String × String) :=
         let name := strTrim nameRaw
         let body := strTrim bodyRaw
         if name.isEmpty || body.isEmpty then none else some (name, body)
+
+/-- True iff `s` (already trimmed) starts with `定` and contains `等` —
+    a rewrite-rule chunk (wen-2.0 ⑫: `定 LHS 等 RHS`).
+
+    The check is structural: we look for `等` anywhere AFTER the leading
+    `定` codepoint.  The actual ambiguity guard (the body must NOT also
+    contain `为`) is enforced separately by `chunkStartsWithRewriteKeyword`
+    so that ambiguous chunks become a distinct diagnostic. -/
+def chunkContainsDeng (s : String) : Bool :=
+  s.contains '等'
+
+/-- True iff the chunk should be parsed as a rewrite-rule decl.
+
+    Rules:
+    · must start with `定` (after trim)
+    · must NOT start with `定递`
+    · must contain `等`
+    · must NOT contain `为` (to disambiguate from `定 NAME 为 BODY`).  A
+      chunk containing both is rejected as `rewriteAmbiguous` upstream.
+
+    Returning `false` here means the chunk is either a non-`定` chunk or
+    a `定 NAME 为 BODY` user-def. -/
+def chunkStartsWithRewriteKeyword (s : String) : Bool :=
+  let t := strTrim s
+  t.startsWith "定" && !t.startsWith "定递"
+    && chunkContainsDeng t && !t.contains '为'
+
+/-- Detect a chunk that is `定`-led and contains BOTH `等` and `为`.  This
+    is ambiguous between a rewrite rule and a user-def; we raise
+    `rewriteAmbiguous` rather than guessing. -/
+def chunkIsAmbiguousDefRewrite (s : String) : Bool :=
+  let t := strTrim s
+  t.startsWith "定" && !t.startsWith "定递"
+    && chunkContainsDeng t && t.contains '为'
+
+/-- Parse a `定 LHS 等 RHS` chunk into (lhsSource, rhsSource).  Splits on
+    the FIRST `等` after the leading `定`.  Both sides trimmed; returns
+    `none` if either is empty. -/
+def parseRewriteChunk? (s : String) : Option (String × String) :=
+  let trimmed := strTrim s
+  if !trimmed.startsWith "定" || trimmed.startsWith "定递" then none
+  else if !chunkContainsDeng trimmed then none
+  else
+    let afterDing := strTrim (trimmed.drop 1).toString
+    match afterDing.splitOn "等" with
+    | [] => none
+    | [_] => none
+    | lhsRaw :: rhsParts =>
+        let rhsRaw := String.intercalate "等" rhsParts
+        let lhs := strTrim lhsRaw
+        let rhs := strTrim rhsRaw
+        if lhs.isEmpty || rhs.isEmpty then none else some (lhs, rhs)
 
 /-- Parse a chunk starting with `定递` into (name, bodySource).
     Splits on the FIRST `为` after the leading `定递`.  Same shape as
@@ -470,7 +558,49 @@ private def retypeAfterRecSubst? (t : Tm) : Option TypedTm :=
   | some ty => some ⟨t, ty⟩
   | none    => none
 
-/-- Compile a multi-statement program with `def` / `定递` declarations.
+/-! ### § 2c.3c  Rewrite-rule chunk compilation (wen-2.0 ⑫)
+
+  Compiling a `定 LHS 等 RHS` chunk:
+
+  1. Both sides are compiled via `wenyanCompileInCtx` against a context
+     that pre-binds every Heavenly Stem as `.hex`.  This lets pattern
+     variables (`甲`, `乙`, …) resolve as `Tm.var` without
+     unknown-variable diagnostics.  The pattern's actual *type* is
+     determined post-hoc by `typeCheck`; we use `.hex` here only as a
+     plausible default that matches the dominant Hex-endomap use case
+     (錯, 综, 互, etc.).
+  2. The resulting LHS / RHS `Tm` pair is fed to `RewriteRules.addRule`.
+     If accepted, the new rule is appended to the rewrite env and a
+     `Stmt.rewriteStmt` is emitted.
+
+  v1 limitation: only the 10 Heavenly Stems can appear as pattern vars
+  (mirroring the `定递` NAME restriction — these are the only single-
+  codepoint glyphs the WenSurface resolver treats as bare var names).
+-/
+
+/-- Ctx that pre-binds all 10 Heavenly Stems as `.hex`.  Used by the
+    rewrite-rule compiler so pattern vars resolve cleanly. -/
+def heavenlyStemHexCtx : Ctx :=
+  [ ("甲", .hex), ("乙", .hex), ("丙", .hex), ("丁", .hex), ("戊", .hex)
+  , ("己", .hex), ("庚", .hex), ("辛", .hex), ("壬", .hex), ("癸", .hex) ]
+
+/-- Compile (in an environment-aware way) one side of a rewrite-rule
+    declaration.  Returns just the `Tm` (drops type) since rewrite rules
+    operate at the Tm level. -/
+def compileRewriteSide (env : DefEnv) (src : String) : Except WenSurfaceErr Tm :=
+  -- Apply existing non-rec defs textually (so user-named macros work in
+  -- rule patterns) but DO NOT recursively expand `.fix` bodies.
+  let expanded := applyDefs env src
+  let ctx := heavenlyStemHexCtx ++ recDefCtx env
+  match wenyanCompileInCtx ctx expanded with
+  | .error e => .error e
+  | .ok typed =>
+    -- AST-substitute rec-def names (preserves closed `.fix` body).
+    let substituted := applyRecDefs env typed.tm
+    .ok substituted
+
+/-- Compile a multi-statement program with `def` / `定递` / rewrite-rule
+    declarations.
 
     Each chunk is one of:
       · `定递 NAME 为 BODY`  — wen-2.0 ② μ-fixpoint recursive def.  Compiles
@@ -478,16 +608,26 @@ private def retypeAfterRecSubst? (t : Tm) : Option TypedTm :=
         `.fix NAME T body'`.  Subsequent references to NAME are
         AST-substituted (not textual) so the recursive body's self-reference
         is preserved without infinite textual expansion.
-      · `定 NAME 为 BODY` — Wen 1.5 non-recursive textual def.
+      · `定 LHS 等 RHS`     — wen-2.0 ⑫ rewrite rule.  Adds a structural
+        equational rewrite that normalises subsequent terms.
+      · `定 NAME 为 BODY`  — Wen 1.5 non-recursive textual def.
       · ordinary expression.
 
-    Declarations accumulate into a `DefEnv`.  All chunk-local errors
-    propagate as `.base i e`; `def`-specific failures (re-def, catalogue
-    collision, malformed `定`/`定递` line) propagate as `.defError i e`. -/
+    Chunks that match both `等` and `为` after a leading `定` are rejected
+    as `rewriteAmbiguous` to avoid silently picking one parse.
+
+    Declarations accumulate into a `DefEnv` (defs / rec defs) and a
+    `RewriteEnv` (rules).  Each subsequent expression chunk is normalised
+    by `RewriteRules.normalize` AFTER AST-subst and re-typechecked.
+
+    All chunk-local errors propagate as `.base i e`; `def`-specific failures
+    (re-def, catalogue collision, malformed `定`/`定递`, malformed/rejected
+    rewrite rule, ambiguous `定 ... 等 ... 为 ...`) propagate as
+    `.defError i e`. -/
 def wenyanCompileProgramWithDefs (s : String)
     : Except ProgramErrWithDefs (List Stmt) :=
   let chunks := splitOnStatementSep s
-  let rec go (i : Nat) (env : DefEnv) (acc : List Stmt) :
+  let rec go (i : Nat) (env : DefEnv) (rwEnv : RewriteEnv) (acc : List Stmt) :
       List String → Except ProgramErrWithDefs (List Stmt)
     | [] => .ok acc.reverse
     | c :: rest =>
@@ -545,9 +685,34 @@ def wenyanCompileProgramWithDefs (s : String)
                               { name := name, bodySource := bodySrc
                               , body := recTyped, isRec := true }
                             let env' := env ++ [entry]
-                            go (i + 1) env' (.defStmt name recTyped :: acc) rest
+                            go (i + 1) env' rwEnv (.defStmt name recTyped :: acc) rest
                 | _ =>
                     .error (.defError i (.recBodyNotLambda name))
+      else if chunkIsAmbiguousDefRewrite c then
+        -- 定 ... 等 ... 为 ...：cannot disambiguate.  Force user to rephrase.
+        .error (.defError i .rewriteAmbiguous)
+      else if chunkStartsWithRewriteKeyword c then
+        match parseRewriteChunk? c with
+        | none =>
+          let trimmed := strTrim c
+          let err : DefErr :=
+            if (strTrim (trimmed.drop 1).toString).isEmpty then .rewriteEmptyLhs
+            else .rewriteEmptyRhs
+          .error (.defError i err)
+        | some (lhsSrc, rhsSrc) =>
+          match compileRewriteSide env lhsSrc with
+          | .error _ => .error (.defError i .rewriteLhsCompileFailed)
+          | .ok lhsTm =>
+            match compileRewriteSide env rhsSrc with
+            | .error _ => .error (.defError i .rewriteRhsCompileFailed)
+            | .ok rhsTm =>
+              match addRule rwEnv lhsTm rhsTm with
+              | .error reason =>
+                .error (.defError i (.rewriteRuleRejected reason))
+              | .ok rwEnv' =>
+                let rule : RewriteRule :=
+                  { lhs := lhsTm, rhs := rhsTm, vars := freeVars lhsTm }
+                go (i + 1) env rwEnv' (.rewriteStmt rule :: acc) rest
       else if chunkStartsWithDefKeyword c then
         match parseDefChunk? c with
         | none =>
@@ -572,18 +737,20 @@ def wenyanCompileProgramWithDefs (s : String)
                 | none => .error (.base i (.denoteFailed typed.ty typed.ty))
                 | some typed' =>
                     let env' := env ++ [⟨name, bodySrc, typed', false⟩]
-                    go (i + 1) env' (.defStmt name typed' :: acc) rest
+                    go (i + 1) env' rwEnv (.defStmt name typed' :: acc) rest
       else
         let expanded := applyDefs env c
         match wenyanCompileInCtx (recDefCtx env) expanded with
         | .error e => .error (.base i e)
         | .ok typed =>
             let substituted := applyRecDefs env typed.tm
-            match retypeAfterRecSubst? substituted with
+            -- wen-2.0 ⑫: apply accumulated rewrite rules to normalise.
+            let normalized := normalize rwEnv substituted
+            match retypeAfterRecSubst? normalized with
             | none => .error (.base i (.denoteFailed typed.ty typed.ty))
             | some typed' =>
-                go (i + 1) env (.exprStmt typed' :: acc) rest
-  go 0 [] [] chunks
+                go (i + 1) env rwEnv (.exprStmt typed' :: acc) rest
+  go 0 [] [] [] chunks
 
 
 /-! ## § 2c.5  Helper sanity (cheap; pipeline tests live in `EndToEndTests.lean`) -/

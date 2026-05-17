@@ -33,8 +33,12 @@ pattern metavariable.  After this declaration, every term of shape
 ## Status
 
 0 sorry / 0 axiom.  Pure structural transform over `Tm`.
+
+This module only depends on `WenDef` (Tm + Ty + typeCheck); it is imported
+by `EndToEnd.lean` to provide the rewrite engine for the multi-statement
+compiler.
 -/
-import SSBX.Foundation.Wen.WenSurface.EndToEnd
+import SSBX.Foundation.Wen.WenDef
 
 set_option maxHeartbeats 8000000
 
@@ -54,7 +58,7 @@ structure RewriteRule where
   lhs  : Tm
   rhs  : Tm
   vars : List String
-deriving Repr
+deriving DecidableEq, Repr
 
 /-- Accumulated rules, in declaration order.  Rules are applied newest-first
     in `normalize`; the confluence check at `addRule` keeps head constructors
@@ -153,10 +157,10 @@ def headTag : Tm → HeadTag
 
 /-! ## § 5  Pattern matching -/
 
-/-- `Subst`: a finite map from pattern-var name to matched Tm. -/
-abbrev Subst := List (String × Tm)
+/-- `PatSubst`: a finite map from pattern-var name to matched Tm. -/
+abbrev PatSubst := List (String × Tm)
 
-private def Subst.lookup : Subst → String → Option Tm
+private def PatSubst.lookup : PatSubst → String → Option Tm
   | [], _ => none
   | (n, t) :: rest, name => if n = name then some t else rest.lookup name
 
@@ -175,7 +179,7 @@ private def Subst.lookup : Subst → String → Option Tm
     `pVars` is the set of names that ARE pattern vars in this LHS; vars not
     in `pVars` are treated as ordinary structural references that must match
     by name. -/
-partial def matchPat (pVars : List String) : Tm → Tm → Subst → Option Subst
+partial def matchPat (pVars : List String) : Tm → Tm → PatSubst → Option PatSubst
   | .var n, t, σ =>
       if pVars.contains n then
         match σ.lookup n with
@@ -222,7 +226,7 @@ partial def matchPat (pVars : List String) : Tm → Tm → Subst → Option Subs
 
 /-- Apply a substitution to a template Tm.  Pattern-var names in `pVars`
     that are bound by `σ` are replaced; binders shadow as usual. -/
-def instantiate (pVars : List String) (σ : Subst) : Tm → Tm
+def instantiate (pVars : List String) (σ : PatSubst) : Tm → Tm
   | .var n =>
       if pVars.contains n then
         match σ.lookup n with
@@ -329,7 +333,7 @@ inductive RewriteErr where
   | rhsExtraVars       (extra : List String)
   | overlapWithExisting (newHead existingHead : HeadTag)
   | lhsIsBareVar       -- LHS is a single pattern var — would rewrite EVERYTHING
-deriving Repr
+deriving DecidableEq, Repr
 
 /-- Validate a candidate rule and (if valid) extend the env.
 
@@ -397,8 +401,8 @@ example :
       , rhs := .var "甲"
       , vars := ["甲"] }
     normalize [rule]
-        (.catalogue1 .Z_5 (.catalogue1 .Z_5 (.hexLit SSBX.Foundation.Yi.Yi.«乾»)))
-      = .hexLit SSBX.Foundation.Yi.Yi.«乾» := by native_decide
+        (.catalogue1 .Z_5 (.catalogue1 .Z_5 (.hexLit SSBX.Foundation.Yi.Yi.Hexagram.heaven)))
+      = .hexLit SSBX.Foundation.Yi.Yi.Hexagram.heaven := by native_decide
 
 /-- Cascade: `错 错 错 错 X` → `X` via two rule firings. -/
 example :
@@ -409,8 +413,8 @@ example :
     normalize [rule]
         (.catalogue1 .Z_5 (.catalogue1 .Z_5
           (.catalogue1 .Z_5 (.catalogue1 .Z_5
-            (.hexLit SSBX.Foundation.Yi.Yi.«乾»)))))
-      = .hexLit SSBX.Foundation.Yi.Yi.«乾» := by native_decide
+            (.hexLit SSBX.Foundation.Yi.Yi.Hexagram.heaven)))))
+      = .hexLit SSBX.Foundation.Yi.Yi.Hexagram.heaven := by native_decide
 
 /-- A rule that doesn't fire is a no-op. -/
 example :
