@@ -878,14 +878,33 @@ def forgetfulVFunctorObj : EnrichedModel V T C → C := forgetfulObj
 
 /-- The *free V-T-model functor* `C ⥤ Mod_C(T)`, left V-adjoint to the
 forgetful V-functor.  Existence requires V-cocompleteness of `C` and the
-V-cotensor API (PR-3); declared as `sorry`-tolerant. -/
+V-cotensor API (PR-3); declared as `sorry`-tolerant.
+
+**Phase 2 status (2026-05-18)**: the GUT-C v0.6 plan
+(`docs-next/10_formal_形式/enriched-universal-sayability-plan.md`) Phase 1
+has landed *scaffolding* for the V-cotensor + Power 1999 Theorem 4.5 APIs
+under `SSBX.Foundation.Enriched.{Cotensor,Weighted,Monad,Finitary,Power}`.
+The sorry below cannot yet be honestly closed: Phase 1's
+`theory_monad_equiv` (Power 4.5) is itself a statement-only placeholder
+(`True := by trivial`). When Phase 1 elaboration provides a constructive
+Power 4.5 equivalence, this sorry should be closed by routing through
+`CategoryTheory.Enriched.Power.theory_monad_equiv`.
+
+Per [[no-axiom-for-zero-sorry]]: leaving the sorry honest rather than
+routing through Phase 1's placeholder (which would close the sorry by
+gaming the metric — the actual mathematical content would still be in
+Phase 1's `True`). -/
 noncomputable def freeVFunctor :
     -- conceptually: `C ⥤ EnrichedModel V T C`
     C → EnrichedModel V T C :=
   fun _c => sorry
 
 /-- The free / forgetful adjunction `F ⊣ U` for V-T-models in a V-cocomplete
-V-category `C` (Power 1999 §2 Theorem 2.4). -/
+V-category `C` (Power 1999 §2 Theorem 2.4).
+
+**Phase 2 status (2026-05-18)**: statement remains `True` placeholder.
+Will be strengthened to actual `freeVFunctor ⊣ forgetfulVFunctor` once
+Phase 1 elaboration provides a real Power 4.5 equivalence. -/
 theorem freeForgetfulAdjunction :
     -- conceptually: `freeVFunctor ⊣ forgetfulVFunctor`
     True := by trivial

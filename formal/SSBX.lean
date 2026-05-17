@@ -364,6 +364,18 @@ import SSBX.Foundation.Enriched.Monad
 import SSBX.Foundation.Enriched.Finitary
 import SSBX.Foundation.Enriched.Power
 
+-- GUT-C Phase 3 (2026-05-18): Hilbert continuous substrate (V = FinHilb).
+-- Per plan §6. Phase 3 SCAFFOLDING: records intent + type placeholders;
+-- actual FinHilb SMCC structure + TGUTRealisationCore_Hilb instance is
+-- Phase 3.1-3.4 follow-up work (Mathlib upstream + SSBX-local).
+import SSBX.Foundation.Doctrine.Instance.HilbertEnriched
+
+-- GUT-C Phase 4 (2026-05-18): V-enriched universal sayability statement.
+-- Per plan §7. Phase 4 SCAFFOLDING: statement-only via True placeholder;
+-- proof routes through Phase 1.5 Power 4.5 once that lands. Non-vacuous
+-- Hilb instantiation is Phase 4.1 follow-up.
+import SSBX.Foundation.Doctrine.T_GUT_Enriched
+
 -- GUT-C Path C Doctrine: T_GUT Lawvere theory skeleton.
 -- Per docs-next/00_start/gut-c-doctrine.md v0.2 §§3.3, 3.4, 3.5.
 -- Defines the signature `TGUTOp`, equational laws `TGUTLaw`, and the
