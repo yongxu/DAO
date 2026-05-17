@@ -866,6 +866,123 @@ example :
 /-- Sanity: non-`其` chunk unchanged. -/
 example : applyPendingBinder (some ("甲", .hex)) "推 一" = "推 一" := by native_decide
 
+/-! ### § 2d.2  Separator-tagged statement split
+
+  For subject ellipsis the SOFT vs HARD distinction between statement
+  separators is load-bearing:
+
+      `；` / `;` : SOFT — pending binder propagates to the next statement.
+      `。`      : HARD — pending binder cleared at this boundary.
+
+  `splitOnStatementSep` (used by the legacy pipeline) normalises all three
+  separators to one, so we need a sibling that retains the kind.  Returned
+  list is `(chunk, isSoft)` pairs in source order; the boolean indicates
+  whether THIS chunk was followed by a soft separator (`true`) or a hard
+  one / EOF (`false`). -/
+
+inductive StmtSepKind where
+  | soft   -- 「；」 or ASCII `;`
+  | hard   -- 「。」 (also used at EOF)
+deriving DecidableEq, Repr
+
+/-- Result of separator-tagged split: each chunk + the separator that
+    terminates it (hard at EOF). -/
+abbrev TaggedChunk := String × StmtSepKind
+
+/-- Walk the string char-by-char accumulating chunks, tagging each by the
+    separator that closed it.  EOF emits a final chunk tagged `.hard`. -/
+def splitOnStatementSepTagged (s : String) : List TaggedChunk :=
+  let step : (List TaggedChunk × String) → Char → (List TaggedChunk × String) :=
+    fun (acc, cur) c =>
+      if c = '；' || c = ';' then
+        ((cur, StmtSepKind.soft) :: acc, "")
+      else if c = '。' then
+        ((cur, StmtSepKind.hard) :: acc, "")
+      else
+        (acc, cur.push c)
+  let (acc, cur) := s.foldl step ([], "")
+  let withTail :=
+    if cur.trimAscii.toString.isEmpty then acc
+    else (cur, StmtSepKind.hard) :: acc
+  withTail.reverse.map (fun (c, k) => (c.trimAscii.toString, k))
+    |>.filter (fun (c, _) => !c.isEmpty)
+
+/-- Sanity: soft separator. -/
+example :
+    splitOnStatementSepTagged "推 一；推 二" =
+      [("推 一", .soft), ("推 二", .hard)] := by native_decide
+
+/-- Sanity: hard separator. -/
+example :
+    splitOnStatementSepTagged "推 一。推 二" =
+      [("推 一", .hard), ("推 二", .hard)] := by native_decide
+
+/-- Sanity: mixed. -/
+example :
+    splitOnStatementSepTagged "推 一；推 二。推 三" =
+      [("推 一", .soft), ("推 二", .hard), ("推 三", .hard)] := by native_decide
+
+/-- Sanity: ASCII `;` is soft. -/
+example :
+    splitOnStatementSepTagged "推 一;推 二" =
+      [("推 一", .soft), ("推 二", .hard)] := by native_decide
+
+/-! ### § 2d.3  Ellipsis-aware multi-statement compiler
+
+  Extends the no-defs pipeline with PendingBinder threading.  After each
+  statement compiles, we inspect the resulting `Tm` via `openBinderOf?`:
+  · If open AND the terminating separator is `.soft`, set PendingBinder
+    to that `(name, ty)` for the next statement.
+  · If closed OR the separator is `.hard`, clear PendingBinder.
+
+  The next statement's source has `其` substituted (`applyPendingBinder`)
+  and compiles in a Ctx that pre-binds the pending name.  This lets the
+  body typecheck even though the binder is "outside" the statement.
+
+  v1 limitation: the compiled `TypedTm` of an ellipsis-following statement
+  is its raw `Tm` (with `Tm.var n` references to the pending binder).  We
+  do NOT re-bind it as `Tm.abs n t body` — callers that want the
+  λ-equivalent should compose with the prior statement's identity binder
+  externally.  This keeps the per-statement output shape stable so
+  existing `List TypedTm` consumers don't break. -/
+
+/-- Multi-statement compiler with subject-ellipsis support.
+
+    Returns one `TypedTm` per chunk in source order.  PendingBinder is
+    threaded across `；` separators and cleared at `。` separators.  On the
+    first compile error, fails fast at the offending statement. -/
+def wenyanCompileProgramWithEllipsis (s : String) :
+    Except WenSurfaceErr (List TypedTm) :=
+  let tagged := splitOnStatementSepTagged s
+  let rec go : PendingBinder → List TaggedChunk → List TypedTm →
+      Except WenSurfaceErr (List TypedTm)
+    | _,  [],            acc => .ok acc.reverse
+    | pb, (c, sep) :: rest, acc =>
+        let chunk := applyPendingBinder pb c
+        match wenyanCompileInCtx (pendingCtx pb) chunk with
+        | .error e => .error e
+        | .ok typed =>
+            let pb' :=
+              match sep with
+              | .hard => none
+              | .soft =>
+                  match openBinderOf? typed.tm with
+                  | some nt => some nt
+                  | none    => none
+            go pb' rest (typed :: acc)
+  go none tagged []
+
+/-! ### § 2d.4  Helper sanity (more end-to-end tests live in EllipsisTests.lean) -/
+
+/-- An empty program yields the empty list. -/
+example : wenyanCompileProgramWithEllipsis "" = .ok [] := by native_decide
+
+/-- A single non-binder statement compiles cleanly and produces one TypedTm
+    of the right type. -/
+example :
+    (wenyanCompileProgramWithEllipsis "推 一").toOption.map (·.map (·.ty))
+      = some [.hex] := by native_decide
+
 /-! ## § 2c.5  Helper sanity (cheap; pipeline tests live in `EndToEndTests.lean`) -/
 
 /-- `chunkStartsWithDefKeyword` recognises a leading `定` after trimming. -/
