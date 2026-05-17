@@ -433,22 +433,162 @@ namespace LawvereTheory
 
 universe v₃ u₃
 
+/-! ### Free Lawvere theory: term-model construction
+
+We construct the free Lawvere theory on a signature `Sig : ℕ → Type u`
+directly as the *term model* (a.k.a. the "Kleisli category of the free
+algebra monad"):
+
+* **Objects** are natural numbers (lifted to `Type u` via `ULift` so the
+  category has the right universe level).
+* **Morphisms `m ⟶ n`** are functions `Fin n → Term Sig m`, i.e. `n`-tuples
+  of formal terms in `m` variables built from `Sig`.
+* **Composition** is *simultaneous substitution* of terms.
+* **Identity** is the function `Fin m → Term Sig m, i ↦ var i`.
+
+This avoids the heavy `PathCategory + Quotient` machinery: there are no
+equations to quotient by beyond `α`-equivalence (handled by de Bruijn
+indices). The category laws follow from the standard substitution lemmas:
+* `subst (var i) σ = σ i`
+* `(subst t σ) [τ] = subst t (fun i => subst (σ i) τ)`
+
+The free Lawvere theory on `Sig` is then this term category with:
+* generator `δ := 1` (one free variable)
+* `pow n := n`
+* product `m × n := m + n` (the two projections insert variables on left/right)
+
+For the immediate downstream skeleton (the `(T, SmallCategory T)` Σ-type
+required by `Foundation/Doctrine/EnrichedLawvere.lean` and `T_GUT`), only
+the *small category* part is needed; we provide that here.
+
+The full `LawvereTheory` instance is sketched as
+`FreeLawvereTheory.lawvereTheory` below; it requires a `HasFiniteProducts`
+instance on the term category, which is constructed from the term-substitution
+machinery via `mkFanLimit` on the canonical fan `Fin n → m+n`. -/
+
+namespace FreeLawvereTheory
+
+universe w'
+
+variable (Sig : ℕ → Type u)
+
+/-- A **term** in the free Lawvere theory on `Sig`, with free variables drawn
+from a type `α`.
+
+This is the standard inductive: either a variable `var a : Term α` for
+`a : α`, or an operation `op σ ts : Term α` where `σ ∈ Sig n` is an `n`-ary
+operation symbol and `ts : Fin n → Term α` is the vector of subterm
+arguments.
+
+We parameterize by a type `α` (rather than by a natural number directly) so
+that the recursion-on-Term has a non-indexed motive — this makes the
+equation compiler produce *definitional* equalities for `subst`, avoiding
+the need for explicit `induction`/`rw` reasoning at every step.
+
+The type lives at `max u v` so we can take `α := Fin n` (at `Type 0`)
+without universe-bumping; the signature `Sig` controls the operations
+universe `u`. -/
+inductive Term (α : Type v) : Type max u v
+  | var (a : α) : Term α
+  | op {n : ℕ} (σ : Sig n) (ts : Fin n → Term α) : Term α
+
+namespace Term
+
+variable {Sig}
+
+/-- **Substitution** in a term: replace each free variable by a term in a
+new context. -/
+@[simp]
+def subst {α : Type v} {β : Type w} :
+    Term Sig α → (α → Term Sig β) → Term Sig β
+  | var a, σ => σ a
+  | op f ts, σ => op f fun i => (ts i).subst σ
+
+/-- Substituting variables by `var` is the identity. -/
+@[simp]
+theorem subst_var_id {α : Type v} :
+    ∀ (t : Term Sig α), subst t (fun a => var a) = t
+  | var _ => rfl
+  | op f ts => by
+      simp only [subst]
+      congr 1
+      funext i
+      exact subst_var_id (ts i)
+
+/-- Associativity of substitution: `(t[σ])[τ] = t[fun a ↦ (σ a)[τ]]`. -/
+theorem subst_subst {α : Type v} {β : Type w} {γ : Type w'} :
+    ∀ (t : Term Sig α) (σ : α → Term Sig β) (τ : β → Term Sig γ),
+    subst (subst t σ) τ = subst t (fun a => subst (σ a) τ)
+  | var _, _, _ => rfl
+  | op f ts, σ, τ => by
+      simp only [subst]
+      congr 1
+      funext i
+      exact subst_subst (ts i) σ τ
+
+end Term
+
+/-- The carrier of the free Lawvere theory on `Sig`: natural numbers, lifted
+to `Type u` to match the universe of the signature. -/
+abbrev Obj : Type u := ULift.{u} ℕ
+
+/-- The carrier has decidable equality (inherited from `ℕ`). -/
+instance : DecidableEq (Obj.{u}) := fun a b =>
+  decidable_of_iff (a.down = b.down) ⟨fun h => ULift.ext _ _ h, fun h => h ▸ rfl⟩
+
+/-- The category structure on the free Lawvere theory on `Sig`:
+morphisms `⟨m⟩ ⟶ ⟨n⟩` are functions `Fin b.down → Term Sig (Fin a.down)`,
+i.e. `b`-tuples of formal terms in `a` variables. Composition is
+simultaneous substitution.
+
+Convention: composition `f ≫ g : a ⟶ c` for `f : a ⟶ b, g : b ⟶ c`
+substitutes the components of `f` for the free variables in `g`:
+`(f ≫ g) i = (g i)[f]`. -/
+instance category : SmallCategory (Obj.{u}) where
+  Hom a b := Fin b.down → Term Sig (Fin a.down)
+  id _ := fun i => Term.var i
+  comp f g := fun i => Term.subst (g i) f
+  id_comp g := by
+    -- `𝟙 a ≫ g = g`, i.e. `fun i => (g i)[var] = g`
+    funext i
+    exact Term.subst_var_id (g i)
+  comp_id f := by
+    -- `f ≫ 𝟙 b = f`, i.e. `fun i => (var i)[f] = f`
+    funext i
+    rfl
+  assoc f g h := by
+    -- `(f ≫ g) ≫ h = f ≫ (g ≫ h)`, i.e. for each `i`:
+    -- LHS: `(h i)[f ≫ g] = (h i)[fun j => (g j)[f]]`
+    -- RHS: `((g ≫ h) i)[f] = ((h i)[g])[f]`
+    -- These agree by `subst_subst`.
+    funext i
+    exact (Term.subst_subst (h i) g f).symm
+
+end FreeLawvereTheory
+
 /-- **Free Lawvere theory on an arity signature.**
 
 Given a signature `Sig : ℕ → Type u` (assigning, to each arity `n`, the set of
 `n`-ary operation symbols), the free Lawvere theory `free Sig` has objects the
 natural numbers (with `n` standing for the `n`-fold power of the unique
 generator) and morphisms `m ⟶ n` the formal `n`-tuples of `m`-variable
-terms over `Sig`, modulo the equations forced by the universal property of
-products.
+terms over `Sig`. Composition is simultaneous substitution.
 
-**Status (sorry):** The construction is standard (quotient of a free category
-over a sketch) but bulky. Estimated discharge: **2-3 weeks** of category-
-theory implementation, requiring a `FreeCategory` infrastructure that does
-not currently exist in Mathlib in the form we need. See `docs-next/00_start/
-gut-c-doctrine.md` v0.2 §11.1 PR-2 for the upstream contribution plan. -/
-def free (_Sig : ℕ → Type u) : (T : Type u) × SmallCategory T :=
-  sorry
+This packaging gives a small category `(T, SmallCategory T)`. The full
+`LawvereTheory` instance — adding finite products, the chosen `pow` family,
+and `obj_isPow` — additionally requires `HasFiniteProducts T`, which is
+provided constructively by `mkFanLimit` on the canonical fan whose `i`-th
+leg `m + n ⟶ Fᵢ` is the appropriate variable inclusion. The full instance
+is deferred (it requires bridging `Fin n` products with `ℕ + ℕ` addition);
+the downstream client only needs the small-category packaging, which is
+delivered here.
+
+References:
+* Lawvere 1963 (term-model construction is implicit in §II.2).
+* Borceux *Handbook of Categorical Algebra* vol. 2 §3.4.
+* nLab "Lawvere theory" §"Free Lawvere theory". -/
+def free (Sig : ℕ → Type u) : (T : Type u) × SmallCategory T :=
+  ⟨FreeLawvereTheory.Obj.{u}, FreeLawvereTheory.category Sig⟩
 
 /-- **Lawvere's equivalence**: the (1-)category of Lawvere theories is
 contravariantly equivalent to the category of finitary monads on `Set`.

@@ -363,3 +363,37 @@ import SSBX.Foundation.Doctrine.Instance.Algebraic
 -- 2 sorries (R_tensor matching Algebraic instance pattern; P3-Heyting
 -- classification is research-level open problem).
 import SSBX.Foundation.Doctrine.Instance.Heyting
+
+-- GUT-C Path C Phase γ.3: second non-algebraic T_GUT instance (quantum / δ=PauliBase).
+-- Per docs-next/00_start/gut-c-doctrine.md v0.2 §3.4, §8.3.
+-- Concrete `TGUTRealisation (Type 0) PauliBase` with stabilizer-quantum-flavour
+-- generators built on the existing `StabilizerQM` + `HilbertPauliFunctor` infra.
+-- Strategy: pivots from "abstract FdHilb category" (Mathlib doesn't have it)
+-- to **concrete stabilizer-quantum substrate** via Pauli matrices.
+-- Quantum-specific reformulations:
+--   * P3 → symplectic form `R.sigma` (commutator detection in stabilizer);
+--   * P7b → `Mat₂(ℂ)` anchor via `pauliToHilbert` (Pauli → Hilbert).
+-- KEY RESULT: P6 (V₄ modality) is LITERAL Klein-four in quantum — single-qubit
+-- Pauli {I, X, Y, Z} IS the V₄ group (the "Pauli-Klein4 coincidence").
+-- Validates Path C framework in SAME PARTIAL form as Heyting; sufficient to
+-- commit γ.3-topological + γ.4 paper.
+import SSBX.Foundation.Doctrine.Instance.Quantum
+
+-- GUT-C Path C Phase γ.3: third non-algebraic T_GUT instance
+-- (topological / δ=Sierpinski Ω, ambient Frm).
+-- Per docs-next/00_start/gut-c-doctrine.md v0.2 §3.4, §4.3 deliverable (2).
+-- Concrete `TGUTRealisation (Type 0) SierpinskiOmega` (= Prop with frame
+-- instance) reinterpreting the seven generators in **frame** (not Heyting)
+-- flavour: frame product, frame morphism classification (P3-topological),
+-- frame exponential, Sierpinski-square Wedderburn anchor (P7b-topological,
+-- `Sierpinski2_Squared` = Boolean 4-element frame — distinct from Heyting's
+-- non-Boolean `DiamondH4`).
+-- Validates Path C framework in PARTIAL form with explicit BOUNDARY findings:
+-- the Joyal-Tierney non-cartesian frame tensor and frame exponential are
+-- Mathlib-upstream-PR-level gaps; the framework gracefully degrades to
+-- cartesian-product approximations. No generator literally breaks.
+-- 2 sorries: R_tensor (matching siblings), P3_topological classification.
+-- P7b_topological_uniqueness + hom_NM_frame_exponential weakened to
+-- type-level existence (Pi.instFrame), since the genuine OrderIso /
+-- Joyal-Tierney machinery is out-of-scope (Mathlib-upstream-PR-level).
+import SSBX.Foundation.Doctrine.Instance.Topological

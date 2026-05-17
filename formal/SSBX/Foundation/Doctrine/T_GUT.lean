@@ -56,8 +56,14 @@ generator (associativity for `compose`, diagonal compatibility for
   with the structural coherences making it a candidate `T_GUT`-model
 * `TGUTRealisation.canonical` — the canonical tensor-power realisation
   `n ↦ δ^⊗n` in any SMCC `C` with chosen `δ`
+* `TGUTRealisation.componentIso` — the layer-by-layer component iso
+  `M.R n ≅ tensorPow δ n`, by induction on `n` using
+  `R_unit / R_gen / R_tensor`
 * `TGUTRealisation.universal_sayability` — the headline GUT-C theorem
-  (statement only; proof `sorry`)
+  (now **proven** at the structural-iso level via `componentIso`; the
+  `coherent` predicate of `RealIso` is the placeholder `True` here,
+  so commutation with the seven generator morphisms is currently
+  vacuous and is the γ.3 refinement target)
 
 ## Design decisions
 
@@ -84,9 +90,12 @@ generator (associativity for `compose`, diagonal compatibility for
    would-be T_GUT-model (the underlying ℕ-indexed family + the seven
    generator morphisms). The Universal Sayability theorem states that
    any such realisation is *isomorphic* (in the appropriate sense) to
-   the canonical tensor-power realisation. The actual proof of the
-   isomorphism uses inductive arguments on `n` that we have not yet
-   formalized.
+   the canonical tensor-power realisation. The structural part of the
+   isomorphism (component family `M.R n ≅ tensorPow δ n`) is proven
+   here by induction on `n` (see `componentIso`); the *coherence* part
+   (commutation with the seven generator morphisms) is the γ.3
+   refinement target — currently `RealIso.coherent` defaults to `True`
+   so the discharge is vacuous at the coherence side.
 
 4. **Independence from G1**: per the task spec we depend only on Mathlib
    primitives, *not* on any GUT-C `LawvereTheory` typeclass. This keeps
@@ -95,11 +104,18 @@ generator (associativity for `compose`, diagonal compatibility for
 ## Status
 
 Build target: `lake build SSBX.Foundation.Doctrine.T_GUT` succeeds with
-`sorry` warnings (the canonical realisation's coherence isos and the
-Universal Sayability theorem). 0 new axioms.
+one remaining `sorry` warning (the canonical realisation's structural
+isos / generator morphisms — `R_tensor / compose_mor / square_mor /
+relate_mor / modal_V4_mor` of `canonical`). The Universal Sayability
+theorem itself is **proven** at the structural-iso level (Path 2 — by
+induction on `n`). 0 new axioms.
 
 This file is the Phase γ.1 *framework deliverable*: it pins down the API
-shape that subsequent γ.2 / γ.3 work will fill in.
+shape that subsequent γ.2 / γ.3 work will fill in. The γ.3 work
+remaining is the *coherence* refinement: replace `RealIso.coherent`
+from its `True` default with the concrete list of commuting squares
+(one per `TGUTOp` constructor and one per structural iso) and
+discharge each square using the equational laws of §3.
 -/
 
 namespace SSBX.Foundation.Doctrine
@@ -497,11 +513,57 @@ structure RealIso {δ : C} (M N : TGUTRealisation C δ) where
       `coherent` field is left at its default `True`. -/
   coherent_holds : coherent := by trivial
 
-/-- **GUT-C Universal Sayability** (statement only — proof is
-Phase γ.3): in any SMCC `C` with chosen δ, every T_GUT realisation is
-isomorphic to the canonical tensor-power realisation.
+/-! ### § 7.1 Layer-by-layer component iso
 
-Specializations (per `gut-c-doctrine.md` v0.2 §3.4):
+The first ingredient of `universal_sayability` is the *layerwise* iso
+`M.R n ≅ tensorPow δ n` for each `n : ℕ`. This is the structural
+content of the theorem and is proven by induction on `n` using the
+three structural isos `R_unit / R_gen / R_tensor` of `M`:
+
+* `n = 0`: `M.R 0 ≅ 𝟙_ C = tensorPow δ 0` via `M.R_unit`.
+* `n = k + 1`: chain
+    `M.R (k + 1) ≅ M.R (1 + k)`              -- eqToIso (commutativity of ℕ)
+    `             ≅ M.R 1 ⊗ M.R k`            -- M.R_tensor 1 k
+    `             ≅ δ ⊗ tensorPow δ k`        -- M.R_gen ⊗ᵢ IH
+    `             = tensorPow δ (k + 1)`     -- rfl (by tensorPow_succ)
+
+The proof does *not* depend on the seven generator morphisms or the
+equational laws — only on the structural isos. This is the "free part"
+of the theory uniqueness: the carrier-shape uniqueness is determined
+by `R 1 ≅ δ` and the tensor-power additivity. -/
+noncomputable def componentIso (δ : C) (M : TGUTRealisation C δ) :
+    ∀ n, M.R n ≅ tensorPow δ n
+  | 0 => M.R_unit
+  | k + 1 =>
+      -- tensorPow δ (k + 1) = δ ⊗ tensorPow δ k  (by rfl via tensorPow_succ)
+      -- Chain: M.R (k+1) ≅ M.R (1+k) ≅ M.R 1 ⊗ M.R k ≅ δ ⊗ tensorPow δ k
+      have hcomm : k + 1 = 1 + k := by omega
+      eqToIso (congrArg M.R hcomm)
+        ≪≫ M.R_tensor 1 k
+        ≪≫ (M.R_gen ⊗ᵢ componentIso δ M k)
+
+/-- **GUT-C Universal Sayability** — in any SMCC `C` with chosen `δ`,
+every T_GUT realisation `M` is isomorphic (in the structural sense
+recorded by `RealIso`) to the canonical tensor-power realisation
+`canonical δ`.
+
+**Proof strategy (Path 2 — layer-by-layer)**: a `RealIso` only requires
+a family of component isos `M.R n ≅ (canonical δ).R n = tensorPow δ n`
+(the `coherent` field is `True` by default in this skeleton). The
+family is constructed by `componentIso` above, by induction on `n`
+using the three structural isos `R_unit / R_gen / R_tensor` of `M`.
+
+**What this does NOT yet prove** (deferred to Phase γ.3 full version):
+* commutation with the seven *generator* morphisms (compose, square,
+  hom, modal_V4, atom_3, wedderburn_4, relate) — the `coherent`
+  predicate is currently the placeholder `True`, so this is vacuous
+  here; when γ.3 instantiates it with the concrete commuting-square
+  list, the proof will need to discharge each square explicitly using
+  the (currently informal) Lawvere equational laws.
+* naturality across morphisms of realisations — `RealIso` is currently
+  bundled as iso-only, not as a 2-cell in a category of realisations.
+
+**Specializations** (per `gut-c-doctrine.md` v0.2 §3.4):
 
 | Base `C`       | `δ`         | Conclusion `M ≅ R_C` means … |
 |---|---|---|
@@ -511,8 +573,8 @@ Specializations (per `gut-c-doctrine.md` v0.2 §3.4):
 | `Frm`           | `Ω` Sierpinski | `M = ` topological R-family (new GUT-Topological) |
 -/
 theorem universal_sayability (δ : C) (M : TGUTRealisation C δ) :
-    Nonempty (RealIso M (canonical δ)) := by
-  sorry
+    Nonempty (RealIso M (canonical δ)) :=
+  ⟨{ iso := componentIso δ M }⟩
 
 end UniversalSayability
 
