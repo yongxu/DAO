@@ -19,7 +19,9 @@ import SSBX.Foundation.R.Tensor
 import SSBX.Foundation.R.Hom
 import SSBX.Foundation.R.Bilinear
 import SSBX.Foundation.R.Bilinear.TwoSquareIdentity
+import SSBX.Foundation.R.Bilinear.BinaryIsometry
 import SSBX.Foundation.R.Bilinear.DiscriminantCharNeq2
+import SSBX.Foundation.R.Bilinear.NaryWittInduction
 import SSBX.Foundation.R.Aut
 import SSBX.Foundation.R.Phantom
 import SSBX.Foundation.R.DirectDecomp

@@ -63,33 +63,36 @@ the **Arf invariant** (binary {0, 1}) instead; see
   `IsSquare Q.discr` and picking `d = 1` (resp. `d = Q.discr`) — the
   full isometry content is deferred to the uniqueness theorem.
 
-**Remaining (research-level, 0 sorries):**
+**Full classification, 0 unproven hypotheses (2026-05-17 final):**
 
-* `classification_finite_fields_uniqueness` — **discharged 2026-05-17**
-  as a documented weakening: the form-equality hypothesis `hEq : Q₁ = Q₂`
-  is added explicitly to the signature, making the proof go through
-  via `QuadraticMap.Isometry.ofEq`.  The full Witt-cancellation
-  statement (without `hEq`) is the canonical target; its algebraic
-  substrate is now formalized in
-  `Foundation/R/Bilinear/TwoSquareIdentity.lean`:
+* `classification_finite_fields_uniqueness` — **fully discharged**
+  at its original mathematical statement:
 
-  - `R.binary_2sq_exists_alpha_gamma` : `∃ α γ : ZMod p,
-    α² + a·b·γ² = a` for non-zero `a, b ∈ ZMod p`
-    (via `FiniteField.exists_root_sum_quadratic`, the binary
-    Chevalley–Warning).
-  - `R.binary_redistribute_quadratic_identity` :
-    `1·(α x − (a·b·γ/a) y)² + a·b·(γ x + (α/a) y)² = a·x² + b·y²`
-    (the polynomial-identity payload of the explicit 2×2 isometry
-    `⟨a, b⟩ → ⟨1, a·b⟩` modulo `α² + a·b·γ² = a`).
+      ∀ (Q₁ Q₂ : QuadraticMap (ZMod p) (Fin (N+1) → ZMod p) (ZMod p)),
+        (associated Q₁).SeparatingLeft →
+        (associated Q₂).SeparatingLeft →
+        DiscriminantEquiv Q₁ Q₂ →
+        Nonempty (QuadraticMap.IsometryEquiv Q₁ Q₂).
 
-  Lifting these to a full `QuadraticMap.IsometryEquiv` between
-  `weightedSumSquares (ZMod p) ![a, b]` and
-  `weightedSumSquares (ZMod p) ![1, a·b]`, then iterating over a
-  `Fin N` index to reduce any diagonal form to canonical
-  `⟨1, 1, …, 1, d⟩`, is the remaining ~200-300 LOC of bridging.
-  Estimated effort: 2-3 weeks once one of the **bridging APIs**
-  (full 2×2 `IsometryEquiv` via `LinearEquiv` construction, then
-  `Fin N` induction) is added.
+  Hypotheses:  only nondegeneracy (`SeparatingLeft`) and
+  discriminant-equivalence — both mathematically necessary.
+  The earlier `hEq : Q₁ = Q₂` weakening and the subsequent
+  `hCanonDiscr` "honest extraction" hypothesis are **both dropped**.
+
+  The substrate:
+
+  - `R.binary_2sq_exists_alpha_gamma` (`TwoSquareIdentity.lean`)
+  - `R.binary_redistribute_quadratic_identity` (`TwoSquareIdentity.lean`)
+  - `R.redistribute_pair_isometry` / `R.consLiftIsometry` /
+    `R.reduce_to_one_then_d_form` (`NaryWittInduction.lean` §§ 2-5):
+    iterate the 2×2 redistribution over `Fin N` to reduce any
+    diagonal form to canonical `⟨1, 1, …, 1, d⟩`.
+  - `R.diag_n_toMatrix'` / `R.discr_diag_n_quadratic_form` /
+    `R.canon_diag_discr` (`NaryWittInduction.lean` § 6):
+    compute `(weightedSumSquares w).toMatrix' = Matrix.diagonal w`
+    by polarization on standard basis vectors; hence
+    `discr = ∏ w` via `Matrix.det_diagonal`; specialize to
+    `Fin.snoc 1's d` via `Fin.prod_univ_castSucc`.
 
 ## Doctrinal anchor
 
@@ -101,11 +104,13 @@ the **Arf invariant** (binary {0, 1}) instead; see
 -/
 
 import SSBX.Foundation.R.Basic
+import SSBX.Foundation.R.Bilinear.NaryWittInduction
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Algebra.CharP.Basic
 import Mathlib.Algebra.Field.ZMod
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
 import Mathlib.LinearAlgebra.QuadraticForm.Isometry
+import Mathlib.LinearAlgebra.QuadraticForm.IsometryEquiv
 import Mathlib.Algebra.Group.Even
 import Mathlib.FieldTheory.Finite.Basic
 import Mathlib.NumberTheory.LegendreSymbol.QuadraticChar.Basic
@@ -326,43 +331,327 @@ theorem classification_finite_fields_existence
   · exact ⟨N, 1, le_refl N, Or.inl rfl⟩
   · exact ⟨N, Q.discr, le_refl N, Or.inr h⟩
 
-/-- **Classification (uniqueness half) — provable weakening.**  Two
-    quadratic forms on `(ZMod p)^N` that are discriminant-equivalent
-    AND **equal as forms** are isometric.
+/-! ### § 6a Canonical-form Witt cancellation
 
-    The original target statement (without the `hEq : Q₁ = Q₂`
-    hypothesis) is the full **Witt cancellation** theorem for finite
-    fields of odd characteristic, which is a 2-3 week development
-    even with the algebraic substrate in this subtree (see
-    `Bilinear/TwoSquareIdentity.lean` for the 2-square identity
-    `∃ α γ, α² + a·b·γ² = a` and the associated polynomial
-    redistribution identity, both **discharged** as `Theorem`s).
-    Getting from those to a full `IsometryEquiv` between arbitrary
-    rank-`N` quadratic forms requires:
+The **core Witt-cancellation lemma** in canonical form: two
+canonical forms `⟨1, 1, …, 1, d₁⟩` and `⟨1, 1, …, 1, d₂⟩` of the
+same rank `N+1` over `ZMod p` (odd prime) are isometric whenever
+`d₁` and `d₂` differ by a square. This is the **finite-field
+classification** at the canonical-form level.
 
-    1. Diagonalization (Mathlib: `equivalent_weightedSumSquares`).
-    2. Iterative binary redistribution to a canonical form
-       `⟨1, 1, …, 1, d⟩` — needs ~200 LOC bridging from the 2×2
-       case in `TwoSquareIdentity.lean` to the `Fin N` general case
-       (an `Fin N` induction on the position of the unique non-unit
-       weight).
-    3. Comparison of two canonical forms with `d ≡ d' (mod squares)`
-       via Mathlib's `isometryEquivWeightedSumSquaresWeightedSumSquares`.
+The proof uses Mathlib's `isometryEquivWeightedSumSquaresWeightedSumSquares`
+to rescale each coordinate by a unit, with the unit at coord 0..N-1
+being `1` and the unit at coord N being the square root linking
+`d₂ * u^2 = d₁`.
+-/
 
-    The **provable kernel** here uses `QuadraticMap.Isometry.ofEq`:
-    when `Q₁ = Q₂` the identity map is an isometry.  The
-    `DiscriminantEquiv` hypothesis is held for forward compatibility
-    (when the full Witt proof lands it can be re-strengthened to drop
-    the `hEq` argument).
+/-- **Witt-cancellation, canonical form.**  Given non-zero `d₁ d₂ : ZMod p`
+    with `d₁ = u² * d₂` for some unit `u : (ZMod p)ˣ`, the two canonical
+    diagonal forms `⟨1, 1, …, 1, d₁⟩` and `⟨1, 1, …, 1, d₂⟩` of
+    length `N+1` are isometric. -/
+noncomputable def canonical_isometry_of_square_class {N : ℕ}
+    (d₁ d₂ : ZMod p) (u : (ZMod p)ˣ) (hu : d₁ = u.val ^ 2 * d₂) :
+    QuadraticMap.IsometryEquiv
+      (diag_n_quadratic_form
+        (@Fin.snoc N (fun _ => ZMod p) (fun _ : Fin N => (1 : ZMod p)) d₁))
+      (diag_n_quadratic_form
+        (@Fin.snoc N (fun _ => ZMod p) (fun _ : Fin N => (1 : ZMod p)) d₂)) := by
+  -- diag_n_quadratic_form = weightedSumSquares
+  unfold diag_n_quadratic_form
+  -- Build the unit weight vector: 1 at coords 0..N-1, u at coord N.
+  let uvec : Fin (N+1) → (ZMod p)ˣ :=
+    @Fin.snoc N (fun _ => (ZMod p)ˣ) (fun _ : Fin N => (1 : (ZMod p)ˣ)) u
+  -- Want: weightedSumSquares (snoc 1 d₁) ≅ weightedSumSquares (snoc 1 d₂)
+  -- Use isometryEquivWeightedSumSquaresWeightedSumSquares with weight transform
+  -- d₂_i * uvec_i^2 = d₁_i.
+  refine QuadraticForm.isometryEquivWeightedSumSquaresWeightedSumSquares uvec ?_
+  intro i
+  -- Goal: (snoc 1 d₂) i * uvec i ^ 2 = (snoc 1 d₁) i
+  induction i using Fin.lastCases with
+  | last =>
+    -- snoc 1 d₂ (last N) = d₂, uvec (last N) = u, snoc 1 d₁ (last N) = d₁
+    show @Fin.snoc N (fun _ => ZMod p) (fun _ : Fin N => (1 : ZMod p)) d₂ (Fin.last N)
+            * (uvec (Fin.last N)).val ^ 2
+          = @Fin.snoc N (fun _ => ZMod p) (fun _ : Fin N => (1 : ZMod p)) d₁ (Fin.last N)
+    rw [Fin.snoc_last, Fin.snoc_last]
+    show d₂ * (uvec (Fin.last N)).val ^ 2 = d₁
+    show d₂ * (@Fin.snoc N (fun _ => (ZMod p)ˣ) (fun _ : Fin N => (1 : (ZMod p)ˣ)) u
+                (Fin.last N)).val ^ 2 = d₁
+    rw [Fin.snoc_last]
+    rw [hu]; ring
+  | cast i =>
+    show @Fin.snoc N (fun _ => ZMod p) (fun _ : Fin N => (1 : ZMod p)) d₂ i.castSucc
+            * (uvec i.castSucc).val ^ 2
+          = @Fin.snoc N (fun _ => ZMod p) (fun _ : Fin N => (1 : ZMod p)) d₁ i.castSucc
+    rw [Fin.snoc_castSucc, Fin.snoc_castSucc]
+    show (1 : ZMod p) * (uvec i.castSucc).val ^ 2 = 1
+    show (1 : ZMod p) * (@Fin.snoc N (fun _ => (ZMod p)ˣ) (fun _ : Fin N => (1 : (ZMod p)ˣ)) u
+            i.castSucc).val ^ 2 = 1
+    rw [Fin.snoc_castSucc]
+    simp
 
-    **Status:** sorry-free (2026-05-17), with the documented weakening
-    `hEq : Q₁ = Q₂`. -/
-theorem classification_finite_fields_uniqueness
-    (Q₁ Q₂ : QuadraticMap (ZMod p) (Fin N → ZMod p) (ZMod p))
-    (_hdisc : DiscriminantEquiv Q₁ Q₂)
-    (hEq : Q₁ = Q₂) :
-    Nonempty (QuadraticMap.Isometry Q₁ Q₂) :=
-  ⟨QuadraticMap.Isometry.ofEq hEq⟩
+/-! ### § 6b Diagonalization-to-canonical bridge
+
+When `Q : QuadraticForm (ZMod p) (Fin (N+1) → ZMod p)` is
+nondegenerate (its associated bilinear form is `SeparatingLeft`),
+Mathlib provides `equivalent_weightedSumSquares_units_of_nondegenerate'`
+to diagonalize it with **unit** weights `w : Fin (N+1) → (ZMod p)ˣ`.
+The unit weights guarantee `(w i).val ≠ 0`, allowing us to apply
+`R.reduce_to_one_then_d_form` to get a canonical
+`⟨1, …, 1, d⟩` representative. -/
+
+/-- Bridge: `Q ≅ canonical(d)` for some non-zero `d`, assuming `Q`
+    is nondegenerate (`SeparatingLeft` on associated bilinear).
+
+    The proof:
+    1. Diagonalize Q via `equivalent_weightedSumSquares_units_of_nondegenerate'`
+       to get `Q ≅ weightedSumSquares w` for `w : Fin (finrank) → (ZMod p)ˣ`.
+    2. Use `subst` on the `finrank = N+1` equation to make weights live in `Fin (N+1)`.
+    3. Apply `reduce_to_one_then_d_form` to get the canonical form. -/
+theorem isometryToCanonical {N : ℕ}
+    (Q : QuadraticMap (ZMod p) (Fin (N+1) → ZMod p) (ZMod p))
+    (hQ : (QuadraticMap.associated (R := ZMod p) Q).SeparatingLeft) :
+    ∃ (d : ZMod p), d ≠ 0 ∧ Nonempty (QuadraticMap.IsometryEquiv Q
+      (diag_n_quadratic_form
+        (@Fin.snoc N (fun _ => ZMod p) (fun _ : Fin N => (1 : ZMod p)) d))) := by
+  -- Step 1: diagonalize.
+  have hFinrank : Module.finrank (ZMod p) (Fin (N+1) → ZMod p) = N + 1 := by
+    rw [Module.finrank_fintype_fun_eq_card]; simp
+  obtain ⟨w, hw_equiv⟩ := QuadraticForm.equivalent_weightedSumSquares_units_of_nondegenerate'
+    (Q : QuadraticForm (ZMod p) (Fin (N+1) → ZMod p)) hQ
+  -- Use the bridge equivalence Fin (Module.finrank ...) ≃ Fin (N+1).
+  let finCastEquiv : Fin (Module.finrank (ZMod p) (Fin (N+1) → ZMod p)) ≃ Fin (N+1) :=
+    (Fin.castOrderIso hFinrank).toEquiv
+  -- Recast w to live on Fin (N+1).
+  let wRecast : Fin (N+1) → ZMod p := fun i => (w (finCastEquiv.symm i)).val
+  have hwRecast_ne : ∀ i, wRecast i ≠ 0 := fun i => (w _).ne_zero
+  obtain ⟨d, hd_ne, hReduce⟩ := reduce_to_one_then_d_form wRecast hwRecast_ne
+  refine ⟨d, hd_ne, ?_⟩
+  -- Step 3: chain: Q ≅ wss (Units.val ∘ w) ≅ wss wRecast ≅ canonical(d).
+  refine ⟨?_⟩
+  have eDiag : QuadraticMap.IsometryEquiv Q
+                  (QuadraticMap.weightedSumSquares (ZMod p) (Units.val ∘ w)) :=
+    Classical.choice hw_equiv
+  -- Build the bridging isometry: weightedSumSquares (Units.val ∘ w) ≅ weightedSumSquares wRecast.
+  -- This uses funCongrLeft + the fact that the sum reparametrizes correctly.
+  let fLin : (Fin (Module.finrank (ZMod p) (Fin (N+1) → ZMod p)) → ZMod p) ≃ₗ[ZMod p]
+              (Fin (N+1) → ZMod p) :=
+    LinearEquiv.funCongrLeft (ZMod p) (ZMod p) finCastEquiv.symm
+  have eBridge : QuadraticMap.IsometryEquiv
+                  (QuadraticMap.weightedSumSquares (ZMod p) (Units.val ∘ w))
+                  (diag_n_quadratic_form wRecast) := by
+    refine ⟨fLin, ?_⟩
+    intro v
+    show diag_n_quadratic_form wRecast (fLin v) = QuadraticMap.weightedSumSquares (ZMod p) (Units.val ∘ w) v
+    rw [diag_n_quadratic_form_apply, QuadraticMap.weightedSumSquares_apply]
+    -- LHS: ∑_{i : Fin (N+1)} wRecast i * (fLin v i)²
+    --   where fLin v i = v (finCastEquiv.symm i)  [from funCongrLeft definition]
+    --   and wRecast i = (w (finCastEquiv.symm i)).val
+    -- Use `Equiv.sum_comp finCastEquiv` to reparametrize:
+    --   ∑_{j : Fin (finrank)} g (finCastEquiv j) = ∑_{i : Fin (N+1)} g i.
+    -- Setting g i := wRecast i * (fLin v i)², we get:
+    --   ∑_{j : Fin (finrank)} (w j).val * (v j)² = ∑_{i : Fin (N+1)} wRecast i * (fLin v i)².
+    rw [← Equiv.sum_comp finCastEquiv
+          (fun i : Fin (N+1) => wRecast i * (fLin v i * fLin v i))]
+    -- Now LHS = ∑_{j : Fin (finrank)} wRecast (finCastEquiv j) * (fLin v (finCastEquiv j))²
+    refine Finset.sum_congr rfl ?_
+    intro j _
+    show wRecast (finCastEquiv j) * (fLin v (finCastEquiv j) * fLin v (finCastEquiv j))
+       = (Units.val ∘ w) j • (v j * v j)
+    have h1 : wRecast (finCastEquiv j) = (w j).val := by
+      show (w (finCastEquiv.symm (finCastEquiv j))).val = (w j).val
+      rw [Equiv.symm_apply_apply]
+    have h2 : fLin v (finCastEquiv j) = v j := by
+      show v (finCastEquiv.symm (finCastEquiv j)) = v j
+      rw [Equiv.symm_apply_apply]
+    rw [h1, h2]
+    simp [smul_eq_mul, Function.comp]
+  exact eDiag.trans (eBridge.trans (Classical.choice hReduce))
+
+/-! ### § 6b-bis Discriminant is invariant under isometry up to a square -/
+
+/-- An isometry-equivalent quadratic form has the **same discriminant up to a square**:
+
+      `Q₁ ≅ Q₂  ⟹  Q₁.discr = (det f)² * Q₂.discr`
+
+    where `f : M₁ ≃ₗ[R] M₂` is the underlying linear equivalence.  This
+    follows from `Q₁ = Q₂.comp f` (which is what `map_app'` says) plus
+    `discr_comp`. -/
+theorem discr_isometryEquiv_mul_sq {N : ℕ}
+    {Q₁ Q₂ : QuadraticMap (ZMod p) (Fin N → ZMod p) (ZMod p)}
+    (f : QuadraticMap.IsometryEquiv Q₁ Q₂) :
+    Q₁.discr = (f.toLinearEquiv.toLinearMap.toMatrix'.det) ^ 2 * Q₂.discr := by
+  -- From map_app': Q₂ (f x) = Q₁ x, i.e., Q₁ = Q₂.comp f.toLinearMap.
+  have hcomp : Q₁ = Q₂.comp f.toLinearEquiv.toLinearMap := by
+    ext x
+    show Q₁ x = Q₂.comp f.toLinearEquiv.toLinearMap x
+    rw [QuadraticMap.comp_apply]
+    show Q₁ x = Q₂ (f x)
+    exact (f.map_app x).symm
+  -- Use the comp identity at the discriminant level.
+  have hdiscr : Q₁.discr = (Q₂.comp f.toLinearEquiv.toLinearMap).discr :=
+    congrArg QuadraticMap.discr hcomp
+  rw [hdiscr, QuadraticMap.discr_comp]
+  ring
+
+/-- **Discriminant equivalence is preserved under isometry.**
+    If `Q₁ ≅ Q₁'` and `Q₂ ≅ Q₂'`, then `DiscriminantEquiv Q₁ Q₂ ↔ DiscriminantEquiv Q₁' Q₂'`. -/
+theorem discriminantEquiv_of_isometryEquiv {N : ℕ}
+    {Q₁ Q₂ Q₁' Q₂' : QuadraticMap (ZMod p) (Fin N → ZMod p) (ZMod p)}
+    (e₁ : QuadraticMap.IsometryEquiv Q₁ Q₁')
+    (e₂ : QuadraticMap.IsometryEquiv Q₂ Q₂')
+    (hDisc : DiscriminantEquiv Q₁ Q₂) :
+    DiscriminantEquiv Q₁' Q₂' := by
+  obtain ⟨s, hs_ne, hs_sq, hs⟩ := hDisc
+  -- From discr_isometryEquiv_mul_sq:
+  -- Q₁.discr = (det e₁)² * Q₁'.discr
+  -- Q₂.discr = (det e₂)² * Q₂'.discr
+  have h1 := discr_isometryEquiv_mul_sq e₁
+  have h2 := discr_isometryEquiv_mul_sq e₂
+  set d1 := (e₁.toLinearEquiv.toLinearMap.toMatrix'.det)
+  set d2 := (e₂.toLinearEquiv.toLinearMap.toMatrix'.det)
+  -- LinearEquiv's matrix has non-zero determinant.
+  have hd1_ne : d1 ≠ 0 := by
+    show (LinearMap.toMatrix' e₁.toLinearEquiv.toLinearMap).det ≠ 0
+    rw [LinearMap.det_toMatrix']
+    exact (LinearEquiv.isUnit_det' e₁.toLinearEquiv).ne_zero
+  have hd2_ne : d2 ≠ 0 := by
+    show (LinearMap.toMatrix' e₂.toLinearEquiv.toLinearMap).det ≠ 0
+    rw [LinearMap.det_toMatrix']
+    exact (LinearEquiv.isUnit_det' e₂.toLinearEquiv).ne_zero
+  -- From the hypothesis: Q₁.discr = s * Q₂.discr
+  -- ⟹ d1² * Q₁'.discr = s * d2² * Q₂'.discr
+  -- ⟹ Q₁'.discr = (s * d2² / d1²) * Q₂'.discr
+  -- The factor (s * d2² / d1²) is a square (since s, d2², d1² are all squares, and d1⁻² is a square).
+  refine ⟨s * d2^2 * (d1^2)⁻¹, ?_, ?_, ?_⟩
+  · -- non-zero
+    exact mul_ne_zero (mul_ne_zero hs_ne (pow_ne_zero _ hd2_ne)) (inv_ne_zero (pow_ne_zero _ hd1_ne))
+  · -- IsSquare
+    obtain ⟨v, hv⟩ := hs_sq
+    refine ⟨v * d2 * d1⁻¹, ?_⟩
+    rw [show s = v * v from hv]
+    ring
+  · -- Q₁'.discr = (s * d2² / d1²) * Q₂'.discr
+    -- From h1: Q₁.discr = d1² * Q₁'.discr ⟹ Q₁'.discr = Q₁.discr / d1² = Q₁.discr * d1⁻²
+    -- From h2: Q₂.discr = d2² * Q₂'.discr ⟹ Q₂'.discr = Q₂.discr / d2² = Q₂.discr * d2⁻²
+    -- From hs: Q₁.discr = s * Q₂.discr
+    have hQ₁' : Q₁'.discr = Q₁.discr * (d1^2)⁻¹ := by
+      rw [h1]; field_simp
+    have hQ₂' : Q₂'.discr = Q₂.discr * (d2^2)⁻¹ := by
+      rw [h2]; field_simp
+    rw [hQ₁', hQ₂', hs]
+    field_simp
+
+/-! ### § 6c Full uniqueness theorem (Witt cancellation for finite fields,
+    char ≠ 2)
+
+The main theorem: two nondegenerate quadratic forms on `(ZMod p)^N`
+with the same rank and discriminant-equivalent are isometric.
+
+This is the **full Witt cancellation** at the original mathematical
+statement, with the `hEq : Q₁ = Q₂` weakening hypothesis and the
+prior `hCanonDiscr` "honest extraction" hypothesis **both dropped**.
+The remaining hypotheses are mathematically necessary:
+
+* `SeparatingLeft` on each `Q.associated` — encodes nondegeneracy,
+  needed for diagonalization via `equivalent_weightedSumSquares_units_of_nondegenerate'`.
+* `DiscriminantEquiv Q₁ Q₂` — the discriminant-equivalence condition,
+  which together with `SeparatingLeft` is **necessary and sufficient**
+  for isometry over `F_p` (`p` odd).
+
+The proof routes through:
+
+* `classification_finite_fields_uniqueness_canonical` — the canonical-level
+  form taking a square-class equation `d₁ = u² * d₂` directly.
+* `discriminantEquiv_of_isometryEquiv` — transport `DiscriminantEquiv`
+  through isometries to the canonical forms.
+* `canon_diag_discr` (in `NaryWittInduction.lean`) — pure
+  matrix-determinant computation showing the canonical form's
+  discriminant is exactly its trailing weight, via
+  `(weightedSumSquares w).toMatrix' = Matrix.diagonal w`
+  and `Matrix.det_diagonal`.
+-/
+
+/-- **Full classification uniqueness — finite fields, char ≠ 2.**
+    For two nondegenerate quadratic forms `Q₁ Q₂` on `(ZMod p)^(N+1)`
+    (with `p` odd prime), if their canonical-form discriminants
+    `d₁, d₂` differ by a square (`d₁ = u² * d₂`), then `Q₁` and `Q₂`
+    are isometric.
+
+    This is a **canonical-level** form of the classification: takes
+    the canonical residues `d₁, d₂` and a square-class equation
+    directly.  See `classification_finite_fields_uniqueness` below for
+    the bridge to the `DiscriminantEquiv Q₁ Q₂` hypothesis. -/
+theorem classification_finite_fields_uniqueness_canonical {N : ℕ}
+    (Q₁ Q₂ : QuadraticMap (ZMod p) (Fin (N+1) → ZMod p) (ZMod p))
+    (hQ₁ : (QuadraticMap.associated (R := ZMod p) Q₁).SeparatingLeft)
+    (hQ₂ : (QuadraticMap.associated (R := ZMod p) Q₂).SeparatingLeft)
+    (hDiscEquiv : ∀ (d₁ d₂ : ZMod p),
+      d₁ ≠ 0 → d₂ ≠ 0 →
+      Nonempty (QuadraticMap.IsometryEquiv Q₁
+        (diag_n_quadratic_form
+          (@Fin.snoc N (fun _ => ZMod p) (fun _ : Fin N => (1 : ZMod p)) d₁))) →
+      Nonempty (QuadraticMap.IsometryEquiv Q₂
+        (diag_n_quadratic_form
+          (@Fin.snoc N (fun _ => ZMod p) (fun _ : Fin N => (1 : ZMod p)) d₂))) →
+      ∃ u : (ZMod p)ˣ, d₁ = u.val ^ 2 * d₂) :
+    Nonempty (QuadraticMap.IsometryEquiv Q₁ Q₂) := by
+  -- Step 1: canonicalize both forms.
+  obtain ⟨d₁, hd₁_ne, hQ₁_canon⟩ := isometryToCanonical Q₁ hQ₁
+  obtain ⟨d₂, hd₂_ne, hQ₂_canon⟩ := isometryToCanonical Q₂ hQ₂
+  -- Step 2: use the supplied discriminant-equivalence to get d₁ = u² * d₂.
+  obtain ⟨u, hu⟩ := hDiscEquiv d₁ d₂ hd₁_ne hd₂_ne hQ₁_canon hQ₂_canon
+  -- Step 3: chain Q₁ ≅ canon(d₁) ≅ canon(d₂) ≅ Q₂.
+  have eQ₁ : QuadraticMap.IsometryEquiv Q₁ _ := Classical.choice hQ₁_canon
+  have eQ₂ : QuadraticMap.IsometryEquiv Q₂ _ := Classical.choice hQ₂_canon
+  have eCanon := canonical_isometry_of_square_class (N := N) d₁ d₂ u hu
+  exact ⟨eQ₁.trans (eCanon.trans eQ₂.symm)⟩
+
+/-- **Classification (uniqueness half) — direct `DiscriminantEquiv` form.**
+
+    For two nondegenerate quadratic forms `Q₁ Q₂` on `(ZMod p)^(N+1)`
+    (with `p` odd prime), if they are **discriminant-equivalent** in
+    the standard sense (`DiscriminantEquiv Q₁ Q₂`: their discriminants
+    differ by a non-zero square in `ZMod p`), then `Q₁` and `Q₂` are
+    isometric.
+
+    The `hEq : Q₁ = Q₂` weakening of the previous formulation is
+    **dropped**.  The remaining hypotheses (nondegeneracy via
+    `SeparatingLeft`) are mathematically necessary.
+
+    **The full Witt-cancellation classification at its original
+    mathematical statement — no unproven hypotheses.**  The discriminant
+    of the canonical diagonal form is computed by `canon_diag_discr` in
+    `NaryWittInduction.lean` (via `QuadraticMap.toMatrix' = Matrix.diagonal`
+    and `Matrix.det_diagonal`). -/
+theorem classification_finite_fields_uniqueness {N : ℕ}
+    (Q₁ Q₂ : QuadraticMap (ZMod p) (Fin (N+1) → ZMod p) (ZMod p))
+    (hQ₁ : (QuadraticMap.associated (R := ZMod p) Q₁).SeparatingLeft)
+    (hQ₂ : (QuadraticMap.associated (R := ZMod p) Q₂).SeparatingLeft)
+    (hDisc : DiscriminantEquiv Q₁ Q₂) :
+    Nonempty (QuadraticMap.IsometryEquiv Q₁ Q₂) := by
+  apply classification_finite_fields_uniqueness_canonical Q₁ Q₂ hQ₁ hQ₂
+  -- Now need to provide: for canonical d₁, d₂ and isometries, ∃ u : (ZMod p)ˣ, d₁ = u² * d₂.
+  intro d₁ d₂ hd₁_ne hd₂_ne hQ₁_canon hQ₂_canon
+  -- Use discriminantEquiv_of_isometryEquiv to transport DiscriminantEquiv to canonical forms.
+  have hDisc_canon := discriminantEquiv_of_isometryEquiv
+    (Classical.choice hQ₁_canon) (Classical.choice hQ₂_canon) hDisc
+  obtain ⟨s, hs_ne, hs_sq, hs⟩ := hDisc_canon
+  -- hs : (canon d₁).discr = s * (canon d₂).discr
+  -- By canon_diag_discr: (canon d_i).discr = d_i  (proved in NaryWittInduction.lean § 6).
+  rw [canon_diag_discr d₁, canon_diag_discr d₂] at hs
+  -- hs : d₁ = s * d₂
+  -- s is a non-zero square, so s = u² for some unit u.
+  obtain ⟨v, hv⟩ := hs_sq
+  have hv_ne : v ≠ 0 := by
+    intro h
+    rw [h, mul_zero] at hv
+    exact hs_ne hv
+  refine ⟨Units.mk0 v hv_ne, ?_⟩
+  show d₁ = (Units.mk0 v hv_ne).val ^ 2 * d₂
+  show d₁ = v ^ 2 * d₂
+  rw [hs, show s = v * v from hv]
+  ring
 
 /-! ## § 7 Bridge / counterpart to char 2 (Arf) classification
 
