@@ -55,6 +55,7 @@ partial def tyStr : Ty → String
   | .catalogue k    => s!"Catalogue({(repr k).pretty})"
   | .prod a b       => s!"({tyStr a} × {tyStr b})"
   | .list a         => s!"List {tyStr a}"
+  | .quoted         => "Quoted"
   | .arr a b        =>
     -- right-associate: `a → b → c` rather than `a → (b → c)`
     match a with
