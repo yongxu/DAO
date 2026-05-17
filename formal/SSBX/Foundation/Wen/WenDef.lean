@@ -89,6 +89,10 @@ inductive Ty : Type
   | list (elem : Ty)
   | arr (dom cod : Ty)
   | quoted
+  /-- wen-2.0 ④ user inductive type, nominal-by-name.  `name` is the
+      type-level identifier declared by `类 NAME = CTOR₁ | … | CTORₙ`.
+      Two `.user` types are equal iff their names match (decidable). -/
+  | user (name : String)
 deriving DecidableEq, Repr
 
 /-! ## § 2  项 -/
