@@ -168,12 +168,16 @@ def wenyanCompileProgram (s : String) :
   · Re-definition: REJECTED (returns `defRedefinition`). Forces explicit
     cleanup; no silent shadow.
   · Name conflict with catalogue glyph: REJECTED with
-    `defConflictWithCatalogue`. Each glyph of the bare name is fed through
-    `resolveOne`; if any token resolves to a catalogue op, app-marker,
-    syntax marker, var, bool/hex literal, or iterate, the name is rejected.
-  · Multi-glyph names like `倍推` are encouraged because the lexer splits
-    them into glyphs `倍 + 推`, neither of which resolves as catalogue
-    (since `倍` is unknown). Substitution handles them cleanly.
+    `defConflictWithCatalogue`.  Rules:
+      ‣ Single-token names that `resolveOne` resolves to anything (catalogue
+        op, app-marker, syntax marker, var, bool/hex literal, iterate) are
+        rejected.
+      ‣ Names appearing literally in `multiCharSurfaces` (e.g. `错综`) are
+        rejected — those names would be lexed as a single multi-char token.
+      ‣ All other multi-token names (e.g. `倍推`) are accepted because the
+        lexer splits them into separate glyphs; textual substitution acts
+        on the verbatim multi-codepoint substring before lex/resolve sees
+        it, so there is no runtime collision.
 
   This module is purely additive over `wenyanCompileProgram`: no existing
   pipeline functions, types, or examples change. -/
