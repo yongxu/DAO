@@ -314,3 +314,52 @@ import SSBX.Foundation.Wen.Embeddings.HilbertPauliFunctor
 -- MonoidalClosed + HasSubobjectClassifier into a single `class ElementaryTopos`.
 -- Includes canonical instance on `Type u` (Lawvere classical construction).
 import SSBX.Foundation.CategoryTheory.ElementaryTopos
+
+-- GUT-C Path C foundation: Lawvere theories + models API (PR-2).
+-- Per docs-next/00_start/gut-c-doctrine.md v0.2 §11.1.
+-- Mathlib-PR-quality skeleton: `class LawvereTheory T` (small finite-product
+-- category with chosen generator and powers), `structure Model T C`
+-- (finite-product-preserving functor), `structure LawvereTheoryHom T T'`
+-- (morphism of theories), and a category instance on `Model T C`.
+-- `free` Lawvere theory + Lawvere/finitary-monad equivalence stubs (`sorry`).
+import SSBX.Foundation.Doctrine.LawvereTheory
+
+-- GUT-C Path C foundation: V-enriched Lawvere theories (Power 1999, PR-3).
+-- Per docs-next/00_start/gut-c-doctrine.md v0.2 §§3.2, 11.1.
+-- Mathlib-PR-quality skeleton: `class EnrichedLawvereTheory V T` (V-enriched
+-- ordinary category with conical V-finite-products + chosen generator),
+-- `structure EnrichedModel V T C` (V-product-preserving V-functor),
+-- `structure EnrichedLawvereTheoryHom`, plus skeleta for additive (V = Ab),
+-- linear (V = Vect_K), 2-Lawvere (V = Cat), free V-category L_V, Power's
+-- forgetful / free V-T-model functors, and the Power 1999 main theorem
+-- (`enriched_lawvere_iff_finitary_v_monad`) stated with `sorry`-tolerant
+-- placeholders pending Mathlib's weighted-enriched-limits API.
+-- Cross-dep on G1: instance `LawvereTheory T ⇒ LawvereTheorySig T`.
+import SSBX.Foundation.Doctrine.EnrichedLawvereTheory
+
+-- GUT-C Path C Doctrine: T_GUT Lawvere theory skeleton.
+-- Per docs-next/00_start/gut-c-doctrine.md v0.2 §§3.3, 3.4, 3.5.
+-- Defines the signature `TGUTOp`, equational laws `TGUTLaw`, and the
+-- `TGUTRealisation C δ` structure that any SMCC realisation satisfies.
+-- Headline `universal_sayability` statement included; proof = γ.3 work.
+import SSBX.Foundation.Doctrine.T_GUT
+
+-- GUT-C Path C Doctrine: T_GUT algebraic instance — bridge from new
+-- framework to existing GUT-A/B R-family-over-(ZMod q).
+-- Per docs-next/00_start/gut-c-doctrine.md v0.2 §3.4 + §11.2.
+-- Packages `Foundation/R/UniquenessGeneral.lean` + `UniquenessAlgebraic.lean`
+-- as a concrete `TGUTRealisation (Type 0) (ZMod q)`, recovering
+-- GUT-A's `T5_A_ringEquiv_at_4_zmod2` as a corollary of the algebraic
+-- specialisation.
+import SSBX.Foundation.Doctrine.Instance.Algebraic
+
+-- GUT-C Path C Phase γ.2: first non-algebraic T_GUT instance (Heyting / δ=Prop).
+-- Per docs-next/00_start/gut-c-doctrine.md v0.2 §3.4, §4.2 deliverable (4), §8.2.
+-- Concrete `TGUTRealisation (Type 0) Prop` with Heyting-flavour generators
+-- + Heyting-specific reformulations of P3 (lattice morphism classification,
+--   `relate_heyting_pointwise_himp`) and P7b (minimum non-Boolean 4-element
+--   Heyting algebra, `DiamondH4`).
+-- Validates Path C framework in PARTIAL form: 11/11 generator slots filled;
+-- 2 sorries (R_tensor matching Algebraic instance pattern; P3-Heyting
+-- classification is research-level open problem).
+import SSBX.Foundation.Doctrine.Instance.Heyting
