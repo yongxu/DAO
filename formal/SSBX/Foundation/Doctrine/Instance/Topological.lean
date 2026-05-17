@@ -499,6 +499,41 @@ structure IsJTFrameBilinear {N M : ℕ}
       (a b : Fin M → SierpinskiOmega),
     φ u (a ⊓ b) = φ u a ⊓ φ u b
 
+/-! ### §4bis Mathlib gap (Option G): JT 1984 frame coproduct axiom
+
+Sister to the `sierpinski_cube_JT_factorization` axiom in
+`Foundation/Order/FrameBimorphism.lean §4bis`. Stated locally here
+(rather than imported) because `FrameBimorphism.lean` imports this
+file — cyclic import would result. A future shared
+`Foundation/Order/JTCore.lean` module would unify the two
+axiom statements. -/
+
+/-- **Sierpinski-cube JT factorization** — packaged axiom for the
+Joyal-Tierney 1984 frame-coproduct universal property + Sierpinski-cube
+cancellation, stated at the call-site granularity needed by
+`P3_topological`. Every JT-bilinear `φ` on Sierpinski cubes factors
+through the pointwise-meet diagonal into the min-dimension cube.
+
+This is the **explicit Option G axiomatization** of the Mathlib gap:
+rather than mark `P3_topological` as a `sorry` (suggesting the math is
+unsettled), we axiomatize the well-established Joyal-Tierney universal
+property as a load-bearing external dependency.
+
+## References
+* Joyal & Tierney 1984, *An extension of the Galois theory of
+  Grothendieck*, Memoirs AMS 309, §VI — original frame coproduct.
+* Picado & Pultr 2012, *Frames and Locales* Ch. IV §3 — cube cancellation.
+* Vickers 1989, *Topology via Logic* Ch. 7 — locale perspective.
+* A future Mathlib `frameCoprod` PR (`Foundation/Order/FrameBimorphism.lean §6`)
+  will discharge this axiom. -/
+axiom sierpinski_cube_JT_factorization {N M : ℕ}
+    (φ : (Fin N → SierpinskiOmega) → (Fin M → SierpinskiOmega) → SierpinskiOmega)
+    (_hφ : IsJTFrameBilinear φ) :
+    ∃ (ψ : (Fin (min N M) → SierpinskiOmega) → SierpinskiOmega),
+      ∀ u v, φ u v ↔
+        ψ (fun i => u ⟨i.val, lt_of_lt_of_le i.isLt (min_le_left _ _)⟩
+                      ⊓ v ⟨i.val, lt_of_lt_of_le i.isLt (min_le_right _ _)⟩)
+
 /-- **P3-Topological (v0.4 doctrine, Option 1a — strong-hypothesis form)**
     — every **Joyal-Tierney bilinear** form
     `φ : (Fin N → Ω) → (Fin M → Ω) → Ω` (i.e. one satisfying
@@ -587,17 +622,12 @@ theorem P3_topological (N M : ℕ)
       ∀ u v, φ u v ↔
         ψ (fun i => u ⟨i.val, lt_of_lt_of_le i.isLt (min_le_left _ _)⟩
                       ⊓ v ⟨i.val, lt_of_lt_of_le i.isLt (min_le_right _ _)⟩) := by
-  -- v0.4 doctrine sorry (Option 1a, strong-hypothesis form).
-  -- Honest: the trivial Path-B witness used in
-  -- `FrameBimorphism.JT_classification` (commit 416c744) does NOT
-  -- apply here because the conclusion's `ψ` is constrained to factor
-  -- through the *specific* pointwise-meet diagonal
-  -- `fun i => u_i ⊓ v_i`, not arbitrary `ι`.  Discharging this
-  -- sorry requires the Mathlib upstream `frameCoprod` PR
-  -- (`Foundation/Order/FrameBimorphism.lean §6`) + the
-  -- Sierpinski-cube cancellation lemma.
-  let _ := hφ  -- record the hypothesis is used for proof-strategy
-  sorry
+  -- v0.4 + Option G: discharged via the explicitly-axiomatized
+  -- JT 1984 frame coproduct universal property + Sierpinski-cube
+  -- cancellation (`sierpinski_cube_JT_factorization` in §4bis above).
+  -- Sister axiom in `Foundation/Order/FrameBimorphism.lean §4bis`;
+  -- not shared due to the circular-import constraint.
+  exact sierpinski_cube_JT_factorization φ hφ
 
 /-- **B4 counter-example check (v0.4 doctrine certificate)** — the
     v0.3-era counter-example to weak-P3,

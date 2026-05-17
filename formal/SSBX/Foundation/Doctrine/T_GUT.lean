@@ -298,22 +298,34 @@ that satisfies the laws is what `TGUTRealisation.Satisfies` records.
 variable (C : Type u) [Category.{v} C]
 
 variable [MonoidalCategory C] in
-/-- A `TGUTRealisation C δ` is the structural data of a T_GUT
-realisation in `C` at the chosen generator `δ`. Per the §3.3 table:
+/-- A `TGUTRealisationCore C δ` is the **universal / structural** data of
+a T_GUT realisation in `C` at the chosen generator `δ`. Per the §3.3
+table this contains the fields that admit a *canonical* universal
+construction in any SMCC:
 
 * `R n` interprets the abstract object `δ_T^⊗n`
 * `R_unit : R 0 ≅ 𝟙_ C` — the empty tensor power is the monoidal unit
 * `R_gen : R 1 ≅ δ` — the generator is `δ`
 * `R_tensor n m : R (n + m) ≅ R n ⊗ R m` — tensor-power additivity
+* `compose_mor N M : R N ⊗ R M ⟶ R (N + M)` — inverse of additivity
+* `hom_mor N M`     — `R (N · M) ⟶ R (N · M)`, the curry identification
+* `atom_3_mor`      — the `δ^⊗3 → δ^⊗3` involution carrier (identity in
+  the canonical realisation; instance-specific choices may upgrade)
+* `wedderburn_4_mor`— the `δ^⊗4 ≅ δ^⊗4` Wedderburn iso carrier
 
-Plus the seven generator morphisms, one per non-trivial constructor
-of `TGUTOp`. The eighth generator (`id_δ`) is the identity on `R 1`
-and is *derived* from `Category` automatically.
+**Doctrinal change (2026-05-17, Option A refactor)**: the three
+*instance-specific* morphisms `square_mor`, `relate_mor`, `modal_V4_mor`
+have been factored out into `TGUTRealisationOps` (below) because they
+have **no canonical universal definition** in a general SMCC (a general
+SMCC has no diagonal `δ ⟶ δ ⊗ δ` and no canonical map between distinct
+tensor powers — see the docstring of `TGUTRealisation.canonical`). This
+honest split removes 3 `sorry`s from `canonical` and re-localises them
+to per-instance constructors where they are mathematically meaningful.
 
 A realisation is **not** required to satisfy the equational laws
 (§3); that condition is recorded separately as
 `TGUTRealisation.Satisfies` (see below). -/
-structure TGUTRealisation (δ : C) where
+structure TGUTRealisationCore (δ : C) where
   /-- The underlying `ℕ`-indexed family of objects: `R n` interprets
       `δ_T^⊗n`. -/
   R : ℕ → C
@@ -325,18 +337,10 @@ structure TGUTRealisation (δ : C) where
   R_tensor : ∀ n m, R (n + m) ≅ R n ⊗ R m
   /-- Interpretation of `compose N M : δ^⊗N ⊗ δ^⊗M → δ^⊗(N+M)`. -/
   compose_mor : ∀ N M, R N ⊗ R M ⟶ R (N + M)
-  /-- Interpretation of `square N : δ^⊗N → δ^⊗(2N)`. -/
-  square_mor : ∀ N, R N ⟶ R (2 * N)
-  /-- Interpretation of `relate N M : δ^⊗N → δ^⊗M`. -/
-  relate_mor : ∀ N M, R N ⟶ R M
   /-- Interpretation of `hom N M : (δ^⊗N ⊸ δ^⊗M) → δ^⊗(N·M)`,
       represented (in the realisation) as an endomorphism of
       `R (N · M)` (the "curry-identification" lives in this morphism). -/
   hom_mor : ∀ N M, R (N * M) ⟶ R (N * M)
-  /-- Interpretation of `modal_V4 : δ → δ^⊗2 ⊗ δ^⊗2`,
-      i.e. `R 1 ⟶ R 2 ⊗ R 2`. The codomain is `R 2 ⊗ R 2`
-      (= `R 4` up to `R_tensor 2 2`). -/
-  modal_V4_mor : R 1 ⟶ R 2 ⊗ R 2
   /-- Interpretation of `atom_3 : δ^⊗3 → δ^⊗3`. -/
   atom_3_mor : R 3 ⟶ R 3
   /-- Interpretation of `wedderburn_4 : δ^⊗4 ≅ End(δ^⊗2)`,
@@ -346,12 +350,74 @@ structure TGUTRealisation (δ : C) where
       `wedderburn_factors_through_End` below, registered in §5.1). -/
   wedderburn_4_mor : R 4 ≅ R 4
 
+/-- The **instance-specific** operational layer attached to a
+`TGUTRealisationCore`. These three morphisms have NO canonical
+universal definition in a general SMCC — they require a per-base
+choice (a diagonal, a bilinear form, a Pauli-type operator, etc.):
+
+* `square_mor N : R N ⟶ R (2 * N)`     — needs a diagonal δ^N ⟶ δ^N ⊗ δ^N
+* `relate_mor N M : R N ⟶ R M`         — no canonical map between distinct tensor powers
+* `modal_V4_mor : R 1 ⟶ R 2 ⊗ R 2`     — needs a diagonal δ ⟶ δ ⊗ δ
+
+Per `gut-c-doctrine.md` v0.2 §3.5 these are *instance-specific* data,
+not universal. The per-instance constructors live in
+`Foundation/Doctrine/Instance/*` and supply real morphisms appropriate
+to the chosen SMCC base (FinVect: F_q-bilinear duplication; HeytAlg:
+meet diagonal; FdHilb: Pauli; Frm: frame diagonal). -/
+structure TGUTRealisationOps {δ : C} [MonoidalCategory C]
+    (M : TGUTRealisationCore C δ) where
+  /-- Interpretation of `square N : δ^⊗N → δ^⊗(2N)`. -/
+  square_mor : ∀ N, M.R N ⟶ M.R (2 * N)
+  /-- Interpretation of `relate N M : δ^⊗N → δ^⊗M`. -/
+  relate_mor : ∀ N M_, M.R N ⟶ M.R M_
+  /-- Interpretation of `modal_V4 : δ → δ^⊗2 ⊗ δ^⊗2`,
+      i.e. `R 1 ⟶ R 2 ⊗ R 2`. The codomain is `R 2 ⊗ R 2`
+      (= `R 4` up to `R_tensor 2 2`). -/
+  modal_V4_mor : M.R 1 ⟶ M.R 2 ⊗ M.R 2
+
+variable [MonoidalCategory C] in
+/-- A **bundled** `TGUTRealisation C δ` = `Core` + `Ops`.
+
+This is the back-compat layer: prior code that wrote
+`M : TGUTRealisation C δ` and accessed `M.R / M.R_unit / … /
+M.square_mor / M.relate_mor / M.modal_V4_mor` continues to compile
+because `extends TGUTRealisationCore C δ` inherits all 8 Core
+projections and we re-export the 3 Ops projections inline.
+
+Doctrinally, *prefer*  `TGUTRealisationCore C δ` for any new code
+that does not need the Ops fields — universal_sayability is now stated
+at Core level. -/
+structure TGUTRealisation (δ : C) extends TGUTRealisationCore C δ where
+  /-- Interpretation of `square N : δ^⊗N → δ^⊗(2N)`. -/
+  square_mor : ∀ N, R N ⟶ R (2 * N)
+  /-- Interpretation of `relate N M : δ^⊗N → δ^⊗M`. -/
+  relate_mor : ∀ N M, R N ⟶ R M
+  /-- Interpretation of `modal_V4 : δ → δ^⊗2 ⊗ δ^⊗2`,
+      i.e. `R 1 ⟶ R 2 ⊗ R 2`. The codomain is `R 2 ⊗ R 2`
+      (= `R 4` up to `R_tensor 2 2`). -/
+  modal_V4_mor : R 1 ⟶ R 2 ⊗ R 2
+
 namespace TGUTRealisation
 
 variable {C}
 
 section
 variable [MonoidalCategory C] {δ : C}
+
+/-- Project a bundled `TGUTRealisation` to its instance-specific
+operational layer `TGUTRealisationOps`. -/
+def toOps (M : TGUTRealisation C δ) : TGUTRealisationOps C M.toTGUTRealisationCore where
+  square_mor   := M.square_mor
+  relate_mor   := M.relate_mor
+  modal_V4_mor := M.modal_V4_mor
+
+/-- Bundle a `Core` + `Ops` into a `TGUTRealisation`. -/
+def ofCoreOps (M : TGUTRealisationCore C δ) (O : TGUTRealisationOps C M) :
+    TGUTRealisation C δ where
+  toTGUTRealisationCore := M
+  square_mor   := O.square_mor
+  relate_mor   := O.relate_mor
+  modal_V4_mor := O.modal_V4_mor
 
 /-! ### § 5.1 Generator dispatch
 
@@ -467,38 +533,31 @@ noncomputable def tensorPow_add (δ : C) :
         ≪≫ (Iso.refl δ ⊗ᵢ tensorPow_add δ k m)
         ≪≫ (α_ δ (tensorPow δ k) (tensorPow δ m)).symm
 
-/-- The canonical T_GUT realisation in `(C, δ)` at the chosen generator
-`δ`. Sends `n ↦ δ^⊗n` (iterated left-associated tensor power).
+/-- The canonical T_GUT **Core** realisation in `(C, δ)` at the chosen
+generator `δ`. Sends `n ↦ δ^⊗n` (iterated left-associated tensor power).
 
-**Status (γ.2)**: 2 of 5 generator morphisms closed by genuine universal
-construction:
-* `R_tensor n m`     = `tensorPow_add δ n m`        (additivity iso)
-* `compose_mor N M_` = `(tensorPow_add δ N M_).inv` (inverse of additivity)
+**Status (post Option-A refactor, 2026-05-17)**: **0 sorry**. All 8 Core
+fields admit a universal construction in any SMCC:
 
-**Remaining 3 sorries** — *genuinely non-universal in a general SMCC*:
+| field             | universal definition                |
+|---|---|
+| `R`               | `tensorPow δ`                       |
+| `R_unit`          | `Iso.refl _` (`tensorPow δ 0 = 𝟙_C`) |
+| `R_gen`           | `ρ_ δ` (right unitor, `δ ⊗ 𝟙_C ≅ δ`) |
+| `R_tensor n m`    | `tensorPow_add δ n m`               |
+| `compose_mor N M` | `(tensorPow_add δ N M).inv`         |
+| `hom_mor N M`     | `𝟙 (tensorPow δ (N * M))`           |
+| `atom_3_mor`      | `𝟙 (tensorPow δ 3)`                  |
+| `wedderburn_4_mor`| `Iso.refl _`                         |
 
-| field          | type                                         | obstruction |
-|---|---|---|
-| `square_mor N`     | `δ^⊗N ⟶ δ^⊗(2N)`                          | needs a diagonal `δ^N ⟶ δ^N ⊗ δ^N` |
-| `relate_mor N M`   | `δ^⊗N ⟶ δ^⊗M` for arbitrary N, M           | no canonical map between distinct tensor powers |
-| `modal_V4_mor`     | `δ ⟶ δ^⊗2 ⊗ δ^⊗2`                          | needs a diagonal `δ ⟶ δ⊗δ` |
-
-A general symmetric monoidal category does *not* admit a diagonal
-(`δ ⟶ δ ⊗ δ`) — that would make `(C, ⊗)` cartesian. The doctrine
-instances supply these per-base:
-  * `FinVect_{F_q}`: zero morphism (via biproducts) for `relate`;
-                     duplication via `F_q`-bilinearity for `square` / `modal_V4`
-  * `HeytAlg`:        meet diagonal (Heyting is cartesian)
-  * `FdHilb`:         partial isometry / Pauli operators
-  * `Frm`:            frame diagonal (cartesian on frames)
-
-Per `gut-c-doctrine.md` v0.2 §3.5 these are *instance-specific* data,
-not universal. The general `canonical` therefore cannot supply them at
-the SMCC level — that is the *content* of the (3 × 3) base-vs-generator
-classification, not a defect of this construction. Per-instance
-constructors live in `Foundation/Doctrine/Instance/*`.
+The three *instance-specific* operations (`square_mor`, `relate_mor`,
+`modal_V4_mor`) have been refactored out into `TGUTRealisationOps` —
+they have no canonical universal definition in a general SMCC (a
+diagonal `δ ⟶ δ ⊗ δ` would force cartesianness). Per
+`gut-c-doctrine.md` v0.2 §3.5 these are *instance-specific* data; the
+per-instance constructors live in `Foundation/Doctrine/Instance/*`.
 -/
-noncomputable def canonical (δ : C) : TGUTRealisation C δ where
+noncomputable def canonical (δ : C) : TGUTRealisationCore C δ where
   R := tensorPow δ
   R_unit := Iso.refl _
   R_gen := by
@@ -508,19 +567,7 @@ noncomputable def canonical (δ : C) : TGUTRealisation C δ where
     exact ρ_ δ
   R_tensor n m := tensorPow_add δ n m
   compose_mor N M_ := (tensorPow_add δ N M_).inv
-  square_mor N := by
-    -- See docstring: needs a diagonal δ^N ⟶ δ^N ⊗ δ^N, not available
-    -- in a general SMCC. Deferred to per-instance constructors.
-    exact (by sorry : tensorPow δ N ⟶ tensorPow δ (2 * N))
-  relate_mor N M_ := by
-    -- See docstring above: no canonical δ^⊗N ⟶ δ^⊗M in a general SMCC.
-    -- Deferred to per-instance constructors.
-    exact (by sorry : tensorPow δ N ⟶ tensorPow δ M_)
   hom_mor N M_ := 𝟙 (tensorPow δ (N * M_))
-  modal_V4_mor := by
-    -- See docstring above: needs a diagonal δ ⟶ δ ⊗ δ which a general
-    -- SMCC does not have. Deferred to per-instance constructors.
-    exact (by sorry : tensorPow δ 1 ⟶ tensorPow δ 2 ⊗ tensorPow δ 2)
   atom_3_mor := 𝟙 (tensorPow δ 3)
   wedderburn_4_mor := Iso.refl _
 
@@ -551,18 +598,27 @@ variable [MonoidalCategory C]
 `M.R n ⟶ N.R n` commuting with the structural isos and the generator
 morphisms. We bundle only the underlying components here — naturality
 in `n` and commutation with each generator are the *Phase γ.3* content
-and are not enforced at this skeleton level. -/
-structure Hom {δ : C} (M N : TGUTRealisation C δ) where
+and are not enforced at this skeleton level.
+
+**Doctrinal note (Option A refactor, 2026-05-17)**: stated at *Core*
+level — universal sayability is fundamentally about carrier uniqueness,
+which lives in the universal `TGUTRealisationCore`. Coherence with the
+instance-specific `Ops` morphisms is a separate (per-instance) claim. -/
+structure Hom {δ : C} (M N : TGUTRealisationCore C δ) where
   /-- The underlying family of component morphisms. -/
   component : ∀ n, M.R n ⟶ N.R n
 
-/-- A *realisation isomorphism* is a `Hom` whose components are all
-isos and which commutes with the structural data. The full coherence
-predicate (a conjunction of square diagrams, one per `TGUTOp`
+/-- A *realisation isomorphism* (Core-level) is a `Hom` whose components
+are all isos and which commutes with the structural data. The full
+coherence predicate (a conjunction of square diagrams, one per `TGUTOp`
 constructor and one per structural iso) is left as a placeholder
 `True` in this skeleton; γ.3 work will replace it with the concrete
-list of squares. -/
-structure RealIso {δ : C} (M N : TGUTRealisation C δ) where
+list of squares.
+
+**Doctrinal note (Option A refactor, 2026-05-17)**: stated at *Core*
+level for the same reason as `Hom` above — the universal-sayability
+statement is about carrier uniqueness. -/
+structure RealIso {δ : C} (M N : TGUTRealisationCore C δ) where
   /-- The underlying family of component isos. -/
   iso : ∀ n, M.R n ≅ N.R n
   /-- The "coherence with all generator morphisms" predicate.
@@ -591,7 +647,7 @@ The proof does *not* depend on the seven generator morphisms or the
 equational laws — only on the structural isos. This is the "free part"
 of the theory uniqueness: the carrier-shape uniqueness is determined
 by `R 1 ≅ δ` and the tensor-power additivity. -/
-noncomputable def componentIso (δ : C) (M : TGUTRealisation C δ) :
+noncomputable def componentIso (δ : C) (M : TGUTRealisationCore C δ) :
     ∀ n, M.R n ≅ tensorPow δ n
   | 0 => M.R_unit
   | k + 1 =>
@@ -632,7 +688,7 @@ using the three structural isos `R_unit / R_gen / R_tensor` of `M`.
 | `FdHilb`        | `ℂ²` qubit  | `M = ` quantum stabilizer-style R-family (new GUT-Quantum) |
 | `Frm`           | `Ω` Sierpinski | `M = ` topological R-family (new GUT-Topological) |
 -/
-theorem universal_sayability (δ : C) (M : TGUTRealisation C δ) :
+theorem universal_sayability (δ : C) (M : TGUTRealisationCore C δ) :
     Nonempty (RealIso M (canonical δ)) :=
   ⟨{ iso := componentIso δ M }⟩
 
