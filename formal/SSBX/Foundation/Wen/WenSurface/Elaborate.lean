@@ -424,6 +424,12 @@ def elabSurfaceExprWithCtx (ctx : Ctx) : SurfaceExpr → Except ElabErr Tm
       match elabSurfaceExprWithCtx ctx inner with
       | .error e => .error e
       | .ok tInner => .ok (.setOf tInner)
+  -- wen-2.0 ⑦ set-membership: `X 属 S` → `Tm.memberOf X S`.
+  | .construction "属" [x, s] =>
+      match elabSurfaceExprWithCtx ctx x, elabSurfaceExprWithCtx ctx s with
+      | .ok tx, .ok ts => .ok (.memberOf tx ts)
+      | .error e, _ => .error e
+      | _, .error e => .error e
   | .grouped openTok _ body =>
       -- wen-2.0 ⑩: 引语括号 「」/『』 inside body → wrap as Tm.quote (data, not eval).
       -- Existing value-grouping `（…）`/`(…)` is unchanged.

@@ -256,6 +256,14 @@ def isZheSyntaxTok (t : ResolvedTok) : Bool :=
   | .syntax .zhe => true
   | _ => false
 
+/-- wen-2.0 ⑦: `属` (member-of) syntax marker test.  Used by the
+    postfix-application dispatch to fold `X 属 S` into a `.construction "属"
+    [X, S]`, which the elaborator lowers to `Tm.memberOf`. -/
+def isShuSyntaxTok (t : ResolvedTok) : Bool :=
+  match t.atom with
+  | .syntax .shu => true
+  | _ => false
+
 def exactOperatorType? (id : OperatorId) : Option Ty :=
   match theoremBackedSemanticsFor? id with
   | some sem => typeCheck [] sem.body
@@ -366,6 +374,14 @@ mutual
     | ctx, .construction "者" [inner] =>
         match surfaceExprTypeWithCtx? ctx inner with
         | some (.arr t .bool) => some (.set t)
+        | _ => none
+    -- wen-2.0 ⑦: `X 属 S` — S : .set T, X : T, result .bool.
+    | ctx, .construction "属" [x, s] =>
+        match surfaceExprTypeWithCtx? ctx s with
+        | some (.set elem) =>
+            match surfaceExprTypeWithCtx? ctx x with
+            | some tx => if tx = elem then some .bool else none
+            | none => none
         | _ => none
     | _, .construction _ _ => none
     | ctx, .grouped openTok _ body =>
@@ -554,6 +570,9 @@ mutual
                   parsePostfixApplications ctx allowInfix n reserve
                     (.construction "执" [body]) rest'
               | .error e => .error e
+      | .syntax .shu =>
+          -- wen-2.0 ⑦ `属` 是 infix-only; 出现在 expression start 是语法错误。
+          .error (.unexpectedApplicationMarker head.surface head.col)
       | .appMarker =>
           match rest with
           | [] => .error (.expectedExpression (head.col + head.surface.toList.length))
@@ -782,6 +801,19 @@ mutual
               else
                 .ok (acc, head :: rest)
           | _ => .ok (acc, head :: rest)
+        -- wen-2.0 ⑦ `X 属 S` set-membership infix.  `属` is a binary postfix-
+        -- positioned operator: `acc` is the element being tested; the next
+        -- sub-expression is the Set argument.  Result: `.construction "属"
+        -- [acc, rhs]` ⇒ elaborator emits `Tm.memberOf acc rhs`.
+        else if isShuSyntaxTok head then
+          if allowInfix && decide (reserve < rest.length) then
+            match parseSurfaceExprAux ctx false n reserve rest with
+            | .ok (rhs, rest') =>
+                parsePostfixApplications ctx allowInfix n reserve
+                  (.construction "属" [acc, rhs]) rest'
+            | .error e => .error e
+          else
+            .ok (acc, head :: rest)
         else if isApplicationMarkerTok head then
           match parseSurfaceExprAux ctx allowInfix n reserve rest with
           | .ok (arg, rest') =>
