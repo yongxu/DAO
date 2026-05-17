@@ -219,6 +219,22 @@ mutual
     -- 之语义是 *捕获 syntactic body*，不是 closure。这与 ⑪ unquote/eval 之
     -- 设计契合：unquote 时再决定要不要 substitution / re-eval.
     | _+1,    _,   .quote body   => some (.quoteV body)
+    -- wen-2.0 ⑪ `执 「X」`: quote-eval — reduce `q` to a `.quoteV inner`,
+    -- then re-evaluate `inner` under the **current** env.  Each unquote
+    -- step consumes one fuel tick (`fuel`, not `fuel+1`, when recursing)
+    -- so nested 执 「执 「执 「…」」」 chains exhaust fuel cleanly rather
+    -- than crashing.  Non-quoteV results (e.g. a hex literal that slipped
+    -- past typecheck) yield `none`, which surfaces as a runtime error.
+    --
+    -- Env policy: re-evaluate `inner` under the *current* env (not empty).
+    -- Wen 1.5 user-defs are textually substituted before reaching the
+    -- evaluator, so the inner Tm is already closed for user-defs; lexical
+    -- scope for binder-introduced vars is preserved naturally.
+    | fuel+1, env, .unquote q   => do
+        let vq ← evalFuel fuel env q
+        match vq with
+        | .quoteV inner => evalFuel fuel env inner
+        | _ => none
     -- wen-2.0 ② μ-fixpoint: capture current env + self-reference name + body;
     -- the fixV value is unrolled on-demand by applyFuel.  Each unrolling
     -- consumes fuel, so divergent recursion exhausts cleanly.
@@ -721,6 +737,20 @@ example :
     denoteHexFun Stdlib.tuiBody Hexagram.heaven = some «一» := by native_decide
 
 /-! ## § 10  桥之总公示 -/
+
+/-! ## § 10b  wen-2.0 ⑪ unquote eval sanity -/
+
+/-- 执 「一」 evaluates to «一» (unquote then re-evaluate). -/
+example : denoteHex (.unquote (.quote .yi)) = some «一» := by native_decide
+
+/-- 执 「乾」 evaluates to Hexagram.heaven. -/
+example : denoteHex (.unquote (.quote (.hexLit Hexagram.heaven))) =
+    some Hexagram.heaven := by native_decide
+
+/-- 执 「推 一」 evaluates to «生 一». -/
+example :
+    denoteHex (.unquote (.quote (.app Stdlib.tuiBody .yi))) = some («生» «一») := by
+  native_decide
 
 /-- 桥之公示：L1 typed Tm (WenDef) 与 L0 «加»/«一» (YiCore) 一致.
 
