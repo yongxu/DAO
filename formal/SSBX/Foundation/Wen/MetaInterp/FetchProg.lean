@@ -188,7 +188,9 @@ branch instruction META is routed to either `haltOffset` (halted) or
 falls through to the walker (running).
 
 The "general" version (which walks the pc-counter region first) is
-deferred.  See sorrys below. -/
+deferred — currently captured as the `pcCounterPeelExit_*` theorems in
+§ 4a (real proofs, no `sorry`); the two anchors below cover the
+degenerate (post-peel) shape. -/
 
 /-- Entry state where META.cur already carries the halted-flag cell
     (post pc-counter peel).  This is the shape on which we prove the

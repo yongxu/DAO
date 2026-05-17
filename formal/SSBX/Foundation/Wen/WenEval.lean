@@ -73,6 +73,32 @@ theorem wenEval_head (n : Nat) (s : YiState) :
   unfold wenEval StateEnc.encState
   rfl
 
+/-- `n+1` 步展开：halted 直接编码、运行则前进一步再 n 步.
+    此即 `runFuel.succ` 之等式提升到编码层（定义即得）. -/
+theorem wenEval_succ (n : Nat) (s : YiState) :
+    wenEval (n+1) s
+      = if s.halted then StateEnc.encState s else wenEval n s.step := by
+  unfold wenEval
+  show StateEnc.encState (s.runFuel (n+1))
+      = if s.halted then StateEnc.encState s else StateEnc.encState (s.step.runFuel n)
+  -- 由 `YiState.runFuel.succ`：runFuel (n+1) s = if s.halted then s else runFuel n s.step
+  show StateEnc.encState (if s.halted then s else s.step.runFuel n)
+      = if s.halted then StateEnc.encState s else StateEnc.encState (s.step.runFuel n)
+  cases s.halted <;> rfl
+
+/-- 已停状态下 wenEval 任意燃料皆得原状态编码（幂等）.
+    由 `runFuel` 在已停态之恒等性归纳得证. -/
+theorem wenEval_halted (n : Nat) (s : YiState) (h : s.halted = true) :
+    wenEval n s = StateEnc.encState s := by
+  unfold wenEval
+  -- 关键：归纳证 s.runFuel n = s（已停态下）
+  suffices hfix : s.runFuel n = s by rw [hfix]
+  induction n with
+  | zero => rfl
+  | succ k ih =>
+    show (if s.halted then s else s.step.runFuel k) = s
+    simp [h]
+
 /-! ## § 3  顶层入口 — String 端到端 -/
 
 /-- 「解执」：从文之源、初卦、燃料 n，得末态之编码列。 -/
@@ -133,8 +159,8 @@ theorem «端到端_非法» :
   `wenEval n s = StateEnc.encState (s.runFuel n)`.
 
   By `runFuel.zero = id`，`wenEval 0 s = StateEnc.encState s`.
-  其余多步关系（与 `runFuel` 之归纳一致）由调用 `runFuel` 之既有性质即得；
-  本文件仅给 PoC 端到端，多步循环之 simulation 留 §6b universal interp.
+  归纳之多步展开由 § 2 之 `wenEval_succ` 与 `wenEval_halted` 给出；
+  多步循环 simulation 之完整 universal-interp 处理见 §6b.
 -/
 
 end SSBX.Foundation.Wen.WenEval
