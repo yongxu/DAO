@@ -379,19 +379,16 @@ def axiomInterfaceOperatorIds : List OperatorId :=
   , .Z_40, .ZHU_1, .CHU_10, .LIJ_9
     -- B-class: 辯家/Miscellaneous boundary operators (8)
   , .ZA_13, .ZA_14, .ZA_15, .ZA_16, .ZA_17, .ZA_18, .ZA_19, .ZA_20
-    -- C-class: under research (10) — kept on the axiom interface until
-    --   06-C-class-research sub-plan reclassifies them.
-  , .R_3, .R_4
-  , .C_3
-  , .B_8
-  , .L_4
+    -- C-class still under research (5) — kept on the axiom interface.
+    -- The other 5 C-class rows (R_3, R_4, C_3, B_8, L_4) were promoted to
+    -- exact bodies per sub-plan 01b (2026-05-17, based on PR #32 research).
   , .Y_20
   , .Z_14, .Z_15, .Z_39
   , .LIJ_6
   ]
 
 theorem axiomInterfaceOperatorIds_length :
-    axiomInterfaceOperatorIds.length = 40 := by native_decide
+    axiomInterfaceOperatorIds.length = 35 := by native_decide
 
 theorem axiomInterfaceOperatorIds_nodup :
     axiomInterfaceOperatorIds.Nodup := by native_decide
@@ -783,6 +780,22 @@ def coreTheoremBackedSemanticsFor? : OperatorSemanticsRegistry
   | .Z_4  => some ⟨.Z_4,  Stdlib.pairHBody, 2,
       "交: Hex pair carrier for the intersection endpoint pair; "
         ++ "no overlap/topology semantics is asserted"⟩
+  -- 01b: 5 C-class upgrades (per PR #32 c-class-semantics-research.md):
+  | .R_3  => some ⟨.R_3,  Stdlib.pairHBody, 2,
+      "際/际: Hex pair carrier for the boundary/interface pair; "
+        ++ "no spatial-boundary topology is asserted"⟩
+  | .R_4  => some ⟨.R_4,  Stdlib.pairHBody, 2,
+      "間/间: Hex pair carrier for the interior/between pair; "
+        ++ "no temporal-interval / spatial-extent semantics is asserted"⟩
+  | .C_3  => some ⟨.C_3,  Stdlib.pairHBody, 2,
+      "容: Hex pair carrier for the container + content pair; "
+        ++ "no capacity/volume semantics is asserted (distinct from C_1 含 inclusion)"⟩
+  | .B_8  => some ⟨.B_8,  Stdlib.hexIdBody, 1,
+      "節/节: node-marker as Hex identity anchor; "
+        ++ "no discretization/segmentation semantics is asserted"⟩
+  | .L_4  => some ⟨.L_4,  Stdlib.tongBody, 2,
+      "形名: Hex equality as 'form matches name' verification predicate; "
+        ++ "matches Legalist 韩非 form-name conformance reading on the Hex carrier"⟩
   | id    => axiomInterfaceSemanticsFor? id
 
 /-- The exact theorem-backed subset, kept separate from structural catalogue semantics. -/
@@ -820,6 +833,9 @@ def coreTheoremBackedOperatorIds : List OperatorId :=
     -- A-class upgrades — promoted from the axiom-interface fallthrough into
     -- the exact theorem-backed core (see `coreTheoremBackedSemanticsFor?`).
     ++ [.D_5, .D_6, .D_7, .K_4, .F_12, .Z_4]
+    -- 01b: 5 C-class upgrades (PR #32 c-class-semantics-research.md → 01b):
+    --   R_3/R_4/C_3 → pairHBody, B_8 → hexIdBody, L_4 → tongBody
+    ++ [.R_3, .R_4, .C_3, .B_8, .L_4]
 
 /-! ## § 1.3 Structural catalogue semantics -/
 
@@ -912,7 +928,9 @@ def exactCarrierMechanicStrongOperatorIds : List OperatorId :=
 domain reading, leaving only the pair/list carrier operation.
 -/
 def exactDomainNeutralCarrierOperatorIds : List OperatorId :=
-  [.H_5, .P_11, .P_13, .P_22, .D_8, .CHU_9, .K_4, .Z_4]
+  [.H_5, .P_11, .P_13, .P_22, .D_8, .CHU_9, .K_4, .Z_4,
+   -- 01b: R_3/R_4/C_3 promoted to pairHBody with explicit "no X semantics" caveats
+   .R_3, .R_4, .C_3]
 
 /-- Theorem-backed identity/no-op rows whose exact WenDef behavior is just
 `Hex` identity.
@@ -1205,7 +1223,7 @@ theorem executableOperatorIds_length :
     executableOperatorIds.length = 375 := by native_decide
 
 theorem coreTheoremBackedOperatorIds_length :
-    coreTheoremBackedOperatorIds.length = 335 := by native_decide
+    coreTheoremBackedOperatorIds.length = 340 := by native_decide
 
 theorem theoremBackedOperatorIds_length :
     theoremBackedOperatorIds.length = 375 := by native_decide
@@ -1260,7 +1278,7 @@ theorem exactCarrierMechanicStrongOperatorIds_nodup :
     exactCarrierMechanicStrongOperatorIds.Nodup := by native_decide
 
 theorem exactDomainNeutralCarrierOperatorIds_length :
-    exactDomainNeutralCarrierOperatorIds.length = 8 := by native_decide
+    exactDomainNeutralCarrierOperatorIds.length = 11 := by native_decide
 
 theorem exactDomainNeutralCarrierOperatorIds_nodup :
     exactDomainNeutralCarrierOperatorIds.Nodup := by native_decide
@@ -1272,13 +1290,13 @@ theorem exactCarrierConstructorOperatorIds_nodup :
     exactCarrierConstructorOperatorIds.Nodup := by native_decide
 
 theorem exactProjectionAnchorOperatorIds_length :
-    exactProjectionAnchorOperatorIds.length = 71 := by native_decide
+    exactProjectionAnchorOperatorIds.length = 72 := by native_decide
 
 theorem exactProjectionAnchorOperatorIds_nodup :
     exactProjectionAnchorOperatorIds.Nodup := by native_decide
 
 theorem exactPredicateAnchorOperatorIds_length :
-    exactPredicateAnchorOperatorIds.length = 6 := by native_decide
+    exactPredicateAnchorOperatorIds.length = 5 := by native_decide
 
 theorem exactPredicateAnchorOperatorIds_nodup :
     exactPredicateAnchorOperatorIds.Nodup := by native_decide
@@ -1861,5 +1879,48 @@ example : decide ((.D_7 : OperatorId) ∈ axiomInterfaceOperatorIds) = false := 
 example : decide ((.K_4 : OperatorId) ∈ axiomInterfaceOperatorIds) = false := by native_decide
 example : decide ((.F_12 : OperatorId) ∈ axiomInterfaceOperatorIds) = false := by native_decide
 example : decide ((.Z_4 : OperatorId) ∈ axiomInterfaceOperatorIds) = false := by native_decide
+
+/-! ## § 3b 01b — 5 C-class upgrades (R_3/R_4/C_3/B_8/L_4)
+
+Per PR #32 `c-class-semantics-research.md`. R_3/R_4/C_3 → `pairHBody`, B_8 → `hexIdBody`,
+L_4 → `tongBody`. -/
+
+-- Registry presence
+example : (theoremBackedSemanticsFor? .R_3).isSome = true := by native_decide
+example : (theoremBackedSemanticsFor? .R_4).isSome = true := by native_decide
+example : (theoremBackedSemanticsFor? .C_3).isSome = true := by native_decide
+example : (theoremBackedSemanticsFor? .B_8).isSome = true := by native_decide
+example : (theoremBackedSemanticsFor? .L_4).isSome = true := by native_decide
+
+-- Body identity (not placeholder hexRelEqBody/hexPredTrueBody anymore)
+example :
+    ((theoremBackedSemanticsFor? .R_3).map (·.body)) = some Stdlib.pairHBody := by
+  native_decide
+example :
+    ((theoremBackedSemanticsFor? .R_4).map (·.body)) = some Stdlib.pairHBody := by
+  native_decide
+example :
+    ((theoremBackedSemanticsFor? .C_3).map (·.body)) = some Stdlib.pairHBody := by
+  native_decide
+example :
+    ((theoremBackedSemanticsFor? .B_8).map (·.body)) = some Stdlib.hexIdBody := by
+  native_decide
+example :
+    ((theoremBackedSemanticsFor? .L_4).map (·.body)) = some Stdlib.tongBody := by
+  native_decide
+
+-- Axiom-interface exclusion: 5 rows no longer in axiom interface
+example : decide ((.R_3 : OperatorId) ∈ axiomInterfaceOperatorIds) = false := by native_decide
+example : decide ((.R_4 : OperatorId) ∈ axiomInterfaceOperatorIds) = false := by native_decide
+example : decide ((.C_3 : OperatorId) ∈ axiomInterfaceOperatorIds) = false := by native_decide
+example : decide ((.B_8 : OperatorId) ∈ axiomInterfaceOperatorIds) = false := by native_decide
+example : decide ((.L_4 : OperatorId) ∈ axiomInterfaceOperatorIds) = false := by native_decide
+
+-- Strength: 5 rows all exact-theorem-backed
+example : operatorSemanticStrength .R_3 = .exactTheoremBacked := by native_decide
+example : operatorSemanticStrength .R_4 = .exactTheoremBacked := by native_decide
+example : operatorSemanticStrength .C_3 = .exactTheoremBacked := by native_decide
+example : operatorSemanticStrength .B_8 = .exactTheoremBacked := by native_decide
+example : operatorSemanticStrength .L_4 = .exactTheoremBacked := by native_decide
 
 end SSBX.Foundation.Wen.WenSurface
