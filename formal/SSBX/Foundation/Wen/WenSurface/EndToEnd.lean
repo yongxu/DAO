@@ -611,6 +611,16 @@ def resolveUserCtors (ctors : List UserCtor) : Tm → List String → Tm
 def recDefCtx (env : DefEnv) : Ctx :=
   env.foldr (fun e acc => if e.isRec then (e.name, e.body.ty) :: acc else acc) []
 
+/-- Compile-time context augmenting `recDefCtx` with each in-scope
+    user-ctor name bound to its nominal `.user typeName` type.  Used so
+    chunks that reference bare ctor glyphs don't trip
+    `unknownVar`/`unsupported` diagnostics during elaborate/typecheck —
+    they elaborate as `.var name : .user typeName`, then the post-pass
+    `resolveUserCtors` rewrites them to `.userCtor typeName name`. -/
+def recDefAndCtorCtx (env : DefEnv) (ctors : List UserCtor) : Ctx :=
+  let baseCtx := recDefCtx env
+  ctors.foldr (fun c acc => (c.name, .user c.typeName) :: acc) baseCtx
+
 /-! ### § 2c.3b  Recursive-def name validation + type inference
 
   The recursive-def name must lex to **exactly one** token (the `者 NAME …`
@@ -784,7 +794,7 @@ def wenyanCompileProgramWithDefs (s : String)
                       match r.atom with
                       | .varName _ => true
                       | _ => false
-                    | .error _ => true   -- unknown single-token glyph: usable
+                    | .error _ => false  -- unknown glyph won't reach `.var` leaf
                   | _ => false           -- multi-token names not supported
               let conflict := ctorNames.find? (fun cn =>
                 ctors.any (fun uc => uc.name = cn)
@@ -830,7 +840,7 @@ def wenyanCompileProgramWithDefs (s : String)
             -- from T when NAME is unused in the body.
             let expandedBody := applyDefs env bodySrc
             let wrappedSrc := "者 " ++ name ++ " （" ++ expandedBody ++ "）"
-            match wenyanCompileInCtx (recDefCtx env) wrappedSrc with
+            match wenyanCompileInCtx (recDefAndCtorCtx env ctors) wrappedSrc with
             | .error e => .error (.base i e)
             | .ok typed =>
                 -- AST-substitute any earlier in-scope rec defs that this
@@ -899,7 +909,7 @@ def wenyanCompileProgramWithDefs (s : String)
             .error (.defError i (.conflictWithCatalogue name))
           else
             let expanded := applyDefs env bodySrc
-            match wenyanCompileInCtx (recDefCtx env) expanded with
+            match wenyanCompileInCtx (recDefAndCtorCtx env ctors) expanded with
             | .error e => .error (.base i e)
             | .ok typed =>
                 -- Apply rec-def AST subst then user-ctor resolution.
@@ -912,7 +922,7 @@ def wenyanCompileProgramWithDefs (s : String)
                     go (i + 1) env' rwEnv ctors (.defStmt name typed' :: acc) rest
       else
         let expanded := applyDefs env c
-        match wenyanCompileInCtx (recDefCtx env) expanded with
+        match wenyanCompileInCtx (recDefAndCtorCtx env ctors) expanded with
         | .error e => .error (.base i e)
         | .ok typed =>
             let substituted := applyRecDefs env typed.tm
