@@ -767,12 +767,29 @@ def wenyanCompileProgramWithDefs (s : String)
               .error (.defError i (.classNoConstructors typeName))
             else
               -- 2. Reject CTOR clashes against in-scope ctors / defs.
-              --    Catalogue clash is checked but allowed for ctors that
-              --    are heavenly stems (they resolve as varName which is
-              --    legitimately a leaf, akin to `定递`'s rebind).
+              --    A ctor name resolving to a catalogue op / hex literal /
+              --    syntax marker is rejected (it would never reach the
+              --    `.var` leaf where `resolveUserCtors` rewrites it).
+              --    Heavenly stems (which `nameConflictsWithCatalogue`
+              --    flags as `.varName`) are *allowed* because they
+              --    resolve to `.var` leaves we can rewrite.
+              let bareVarName (cn : String) : Bool :=
+                match lexWen cn with
+                | .error _ => false
+                | .ok toks =>
+                  match toks with
+                  | [t] =>
+                    match resolveOne t with
+                    | .ok r =>
+                      match r.atom with
+                      | .varName _ => true
+                      | _ => false
+                    | .error _ => true   -- unknown single-token glyph: usable
+                  | _ => false           -- multi-token names not supported
               let conflict := ctorNames.find? (fun cn =>
                 ctors.any (fun uc => uc.name = cn)
-                  || env.any (fun e => e.name = cn))
+                  || env.any (fun e => e.name = cn)
+                  || !bareVarName cn)
               match conflict with
               | some cn =>
                   .error (.defError i (.classCtorConflict typeName cn))
@@ -991,6 +1008,51 @@ example :
     risk infinite expansion; AST-level `applyRecDefs` handles them instead). -/
 example :
     applyDefs [⟨"F", "推 一", ⟨.yi, .hex⟩, true⟩] "F" = "F" := by native_decide
+
+/-! ## § 2c.6  wen-2.0 ④ `类` decl sanity (cheap; pipeline tests in `UserInductiveTests.lean`) -/
+
+example : chunkStartsWithClassKeyword "类 五行 = 木 | 火" = true := by native_decide
+example : chunkStartsWithClassKeyword "  类 真假 = 真 | 假" = true := by native_decide
+example : chunkStartsWithClassKeyword "推 一" = false := by native_decide
+example : chunkStartsWithClassKeyword "" = false := by native_decide
+
+/-- Parse a 5-ctor 类 decl. -/
+example :
+    parseClassChunk? "类 五行 = 木 | 火 | 土 | 金 | 水"
+      = some ("五行", ["木", "火", "土", "金", "水"]) := by native_decide
+
+/-- 2-ctor decl. -/
+example :
+    parseClassChunk? "类 真假 = 真 | 假" = some ("真假", ["真", "假"]) :=
+  by native_decide
+
+/-- 1-ctor decl is fine. -/
+example : parseClassChunk? "类 X = 甲" = some ("X", ["甲"]) := by native_decide
+
+/-- Missing `=` → none. -/
+example : parseClassChunk? "类 五行 木 火" = none := by native_decide
+
+/-- Empty TYPENAME → none. -/
+example : parseClassChunk? "类  = 木 | 火" = none := by native_decide
+
+/-- Empty ctor → none. -/
+example : parseClassChunk? "类 X = 甲 | " = none := by native_decide
+
+/-- `resolveUserCtors` rewrites a free `.var` to `.userCtor`. -/
+example :
+    resolveUserCtors [⟨"木", "五行"⟩] (.var "木") [] = .userCtor "五行" "木" := by
+  native_decide
+
+/-- Bound `.var` (under `.abs`) is NOT rewritten. -/
+example :
+    resolveUserCtors [⟨"木", "五行"⟩]
+        (.abs "木" .hex (.var "木")) []
+      = .abs "木" .hex (.var "木") := by native_decide
+
+/-- A non-ctor `.var` is preserved. -/
+example :
+    resolveUserCtors [⟨"木", "五行"⟩] (.var "甲") []
+      = .var "甲" := by native_decide
 
 /-! ## § 3  端到端 sanity tests
 
