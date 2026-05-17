@@ -19,6 +19,7 @@
 0 sorry / 0 axiom / 总函数. 关键例由 native_decide 见证.
 -/
 import SSBX.Foundation.Wen.WenSurface.Syntax
+import SSBX.Foundation.Wen.WenSurface.TypeInfer
 import SSBX.Foundation.Wen.WenDef
 import SSBX.Foundation.Wen.WenDefEval
 
@@ -320,71 +321,74 @@ def elabSurfaceExprWithCtx (ctx : Ctx) : SurfaceExpr → Except ElabErr Tm
   | .seq _ => .error (.unsupportedConstruction "seq")
   | .marker _ body => elabSurfaceExprWithCtx ctx body
   | .binder .lambda name body =>
+      -- wen-2.0 ①: Hindley-Milner type inference replaces the legacy
+      -- hand-rolled 6-candidate domain trial.  Strategy:
+      --
+      -- 1. Elaborate `body` with `(name, .hex) :: ctx` (placeholder).
+      --    The elaborator's `Tm` output is invariant of the assumed
+      --    bound-var type (it only emits `Tm.var name` references).
+      -- 2. Run HM `pickBinderDomain` — this iterates the legacy
+      --    candidate list `[hex, bool, Hex→Hex, Hex→Bool, Bool→Bool,
+      --    Bool→Hex]` and uses constraint-based unification as the
+      --    predicate for each candidate.  This replaces six redundant
+      --    elaborate-plus-typecheck rounds with HM's single-pass
+      --    consistency check while preserving legacy choice order
+      --    (and thus existing acceptance tests).
+      -- 3. Re-elaborate `body` with the picked domain in context (if
+      --    different from `.hex`, since parser-level type expectations
+      --    may differ), build `Tm.abs name dom body'`, and rely on
+      --    kernel `typeCheck` to derive the codomain naturally.
+      --
+      -- Fallback: if `.hex` elaboration fails (parser-level expected
+      -- type error), try `.bool` directly with the same HM strategy.
       match elabSurfaceExprWithCtx ((name, .hex) :: ctx) body with
       | .ok tHex =>
-          match checkedAbs? ctx name .hex tHex with
-          | some abs => .ok abs
-          | none =>
-              match elabSurfaceExprWithCtx ((name, .bool) :: ctx) body with
-              | .ok tBool =>
-                  match checkedAbs? ctx name .bool tBool with
+          match pickBinderDomain ctx name tHex with
+          | some dom =>
+              let bodyResult :=
+                if dom = .hex then .ok tHex
+                else elabSurfaceExprWithCtx ((name, dom) :: ctx) body
+              match bodyResult with
+              | .ok tb =>
+                  match checkedAbs? ctx name dom tb with
                   | some abs => .ok abs
                   | none =>
-                      match elabSurfaceExprWithCtx ((name, .arr .hex .hex) :: ctx) body with
-                      | .ok tHH =>
-                          match checkedAbs? ctx name (.arr .hex .hex) tHH with
-                          | some abs => .ok abs
-                          | none =>
-                              match elabSurfaceExprWithCtx ((name, .arr .hex .bool) :: ctx) body with
-                              | .ok tHB =>
-                                  match checkedAbs? ctx name (.arr .hex .bool) tHB with
-                                  | some abs => .ok abs
-                                  | none =>
-                                      match elabSurfaceExprWithCtx ((name, .arr .bool .bool) :: ctx) body with
-                                      | .ok tBB =>
-                                          match checkedAbs? ctx name (.arr .bool .bool) tBB with
-                                          | some abs => .ok abs
-                                          | none =>
-                                              match elabSurfaceExprWithCtx ((name, .arr .bool .hex) :: ctx) body with
-                                              | .ok tBH =>
-                                                  match checkedAbs? ctx name (.arr .bool .hex) tBH with
-                                                  | some abs => .ok abs
-                                                  | none => .error .empty
-                                              | .error e => .error e
-                                      | .error e => .error e
-                              | .error e => .error e
-                      | .error e => .error e
-              | .error e => .error e
+                      match checkedAbs? ctx name .hex tHex with
+                      | some abs => .ok abs
+                      | none => .error .empty
+              | .error _ =>
+                  match checkedAbs? ctx name .hex tHex with
+                  | some abs => .ok abs
+                  | none => .error .empty
+          | none =>
+              -- HM rejected every candidate; fall back to raw `.hex`.
+              match checkedAbs? ctx name .hex tHex with
+              | some abs => .ok abs
+              | none => .error .empty
       | .error _ =>
           match elabSurfaceExprWithCtx ((name, .bool) :: ctx) body with
           | .ok tBool =>
-              match checkedAbs? ctx name .bool tBool with
-              | some abs => .ok abs
-              | none =>
-                  match elabSurfaceExprWithCtx ((name, .arr .hex .hex) :: ctx) body with
-                  | .ok tHH =>
-                      match checkedAbs? ctx name (.arr .hex .hex) tHH with
+              match pickBinderDomain ctx name tBool with
+              | some dom =>
+                  let bodyResult :=
+                    if dom = .bool then .ok tBool
+                    else elabSurfaceExprWithCtx ((name, dom) :: ctx) body
+                  match bodyResult with
+                  | .ok tb =>
+                      match checkedAbs? ctx name dom tb with
                       | some abs => .ok abs
                       | none =>
-                          match elabSurfaceExprWithCtx ((name, .arr .hex .bool) :: ctx) body with
-                          | .ok tHB =>
-                              match checkedAbs? ctx name (.arr .hex .bool) tHB with
-                              | some abs => .ok abs
-                              | none =>
-                                  match elabSurfaceExprWithCtx ((name, .arr .bool .bool) :: ctx) body with
-                                  | .ok tBB =>
-                                      match checkedAbs? ctx name (.arr .bool .bool) tBB with
-                                      | some abs => .ok abs
-                                      | none =>
-                                          match elabSurfaceExprWithCtx ((name, .arr .bool .hex) :: ctx) body with
-                                          | .ok tBH =>
-                                              match checkedAbs? ctx name (.arr .bool .hex) tBH with
-                                              | some abs => .ok abs
-                                              | none => .error .empty
-                                          | .error e => .error e
-                                  | .error e => .error e
-                          | .error e => .error e
-                  | .error e => .error e
+                          match checkedAbs? ctx name .bool tBool with
+                          | some abs => .ok abs
+                          | none => .error .empty
+                  | .error _ =>
+                      match checkedAbs? ctx name .bool tBool with
+                      | some abs => .ok abs
+                      | none => .error .empty
+              | none =>
+                  match checkedAbs? ctx name .bool tBool with
+                  | some abs => .ok abs
+                  | none => .error .empty
           | .error e => .error e
   | .binder .forallHex name body =>
       match elabSurfaceExprWithCtx ((name, .hex) :: ctx) body with
