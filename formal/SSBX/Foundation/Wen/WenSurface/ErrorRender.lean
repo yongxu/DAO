@@ -158,6 +158,13 @@ def renderResolveErr (source : String) : ResolveErr → String
         ++ "  '" ++ surface
         ++ "' is a 学派 namespace name, not an expression — try `用 "
         ++ surface ++ "` to activate"
+  -- B-12: cell-op surfaces are pretty-printable but not parseable in v1.
+  | .cellOpUnsupported surface col =>
+      withCaret source col (surface.toList.length) ++ "\n"
+        ++ "resolve error at column " ++ toString col ++ ":\n"
+        ++ "  '" ++ surface ++ "' is a Cell-level operator surface\n"
+        ++ "  (emitted by the pretty-printer for Tm.cuoC / Tm.eqCell / …);\n"
+        ++ "  v1 has no Cell literal surface, so cell ops are not parseable yet."
 
 /-! ## § 6  ParseErr 渲染 -/
 

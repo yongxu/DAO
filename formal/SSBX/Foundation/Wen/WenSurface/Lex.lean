@@ -122,6 +122,24 @@ def operatorCompoundSurfaceIds : List (String × OperatorId) :=
   , ("內極", .T_2), ("内极", .T_2), ("上變", .T_2), ("上变", .T_2)
   , ("翻上", .T_2) ]
 
+/-- B-12: Cell-level operation surfaces emitted by `PrettyPrint.builtinGlyph`.
+
+    These are reserved here at the lexer so the strings `错位 / 同位 / ...`
+    lex as a single token rather than splitting into `错 + 位` (two
+    independently-resolvable `Hex → Hex` operators).  Lexing them as one
+    token allows the resolver to emit a single, **consistent**
+    `cellOpUnsupported` error in both `:t 错位` and `错位 乾` paths —
+    fixing the B-12 inconsistency where the two-token reading made
+    `:t 错位` typeMismatch while `错位 乾` reduced to `cuoH 乾` and
+    printed a Hex.
+
+    The cell-level Tm constructors (`Tm.cuoC` / `Tm.eqCell` / …) require a
+    `Cell` literal which has no surface form in v1 (no `cellLit` parser).
+    The error message points the user at this gap. -/
+def cellOpSurfaces : List String :=
+  [ "同位", "错位", "综位", "互位", "进时", "退时"
+  , "位初爻", "位二爻", "位三爻", "位四爻", "位五爻", "位上爻" ]
+
 /-- 多字 wenyan surface。
     包含构式/目录复词，以及完整卦名中不能被拆为单字的 surface。
     扩充时按长度降序排列（最长前缀优先匹配）；同长度内顺序无关.
@@ -129,7 +147,10 @@ def operatorCompoundSurfaceIds : List (String × OperatorId) :=
     B-2 / B-6: 多字 builtin Tm surfaces (`初爻..上爻` 与 `列一..列三`) — 各自
     映射到 `WenDef` 之 `flip{1..6}H` / `list{1,2,3}H` Tm 原语，由
     [Reading.resolveBuiltinSurface](Reading.lean) 解析为 `.builtinTm`
-    atom（不进 OperatorId 表）.  B-3 (`加`) 是单字，无需进此表. -/
+    atom（不进 OperatorId 表）.  B-3 (`加`) 是单字，无需进此表.
+
+    B-12: Cell-op surfaces (`错位` / `同位` / …) are reserved as multi-char
+    so they don't decay into `错 + 位` (two `Hex → Hex` tokens). -/
 def multiCharSurfaces : List String :=
   [ "之所以"  -- wen-2.0 ⑧ reason-extraction marker: `Y 之所以 X`
   , "之又"
@@ -140,6 +161,7 @@ def multiCharSurfaces : List String :=
   , "初爻", "二爻", "三爻", "四爻", "五爻", "上爻"
     -- B-6: Hex list-construction builtin surfaces (per `WenDef.list{1,2,3}H`).
   , "列一", "列二", "列三" ]
+    ++ cellOpSurfaces
     ++ operatorCompoundSurfaceIds.map Prod.fst
 
 /-- 检查 prefix 是否为 cs 之前缀（字符级）。 -/

@@ -114,6 +114,13 @@ inductive ResolveErr where
       庄子, 中庸).  These are labels for `OperatorGroup`s used in
       `用 NS_NAME` declarations and are not parseable expressions. -/
   | schoolNamespaceName (surface : String) (col : Nat) : ResolveErr
+  /-- B-12: Cell-level operator surface (`错位 / 同位 / …`) emitted by
+      `PrettyPrint.builtinGlyph` but not parseable in v1 because no
+      `Cell` literal surface exists.  Reserved here so `:t 错位` and
+      `错位 乾` both fail with the same diagnostic (the historical
+      two-token split made `:t` typeMismatch but `错位 乾` reduce to
+      `cuoH 乾` and print a Hex). -/
+  | cellOpUnsupported (surface : String) (col : Nat) : ResolveErr
 deriving DecidableEq, Repr
 
 /-! ## § 2  Surface maps -/
@@ -273,6 +280,16 @@ def resolveBuiltinSurface : Glyph → Option (Tm × Nat)
   | "列三" => some (.list3H, 3)
   | "首"   => some (.headH, 1)
   | _      => none
+
+/-- B-12: Cell-op surfaces emitted by `PrettyPrint.builtinGlyph` for
+    `Tm.cuoC / .eqCell / …`.  Mirrors `Lex.cellOpSurfaces` (kept in sync
+    via the `cellOpSurfaces_sane` example below).  Resolves to
+    `ResolveErr.cellOpUnsupported` instead of decaying into separate
+    `Hex → Hex` tokens. -/
+def isCellOpSurface : Glyph → Bool
+  | "同位" | "错位" | "综位" | "互位" | "进时" | "退时"
+  | "位初爻" | "位二爻" | "位三爻" | "位四爻" | "位五爻" | "位上爻" => true
+  | _ => false
 
 def matchingCloseBracket? : Glyph → Option Glyph
   | "（" => some "）"
@@ -590,6 +607,10 @@ def resolveOne (t : GlyphTok) : Except ResolveErr ResolvedTok :=
     .ok ⟨t, .closeBracket⟩
   else if isIterateConstruction t.surface then
     .ok ⟨t, .iterate⟩
+  -- B-12: cell-op surfaces fail uniformly here so `:t 错位` and `错位 乾`
+  -- both produce `cellOpUnsupported`; they cannot decay into `错 + 位`.
+  else if isCellOpSurface t.surface then
+    .error (.cellOpUnsupported t.surface t.startCol)
   else if isApplicationMarker t.surface then
     .ok ⟨t, .appMarker⟩
   else match resolveSyntaxMarker t.surface with
@@ -718,6 +739,54 @@ example : opIdsOf "瓜" = none := by native_decide
 
 /-- 空串 → 空 list. -/
 example : opIdsOf "" = some [] := by native_decide
+
+/-! ### § 5.1  B-12 cell-op surface gate
+
+Cell-op surfaces emitted by `PrettyPrint.builtinGlyph` (`错位 / 同位 / 综位 /
+互位 / 进时 / 退时 / 位{初,二,三,四,五,上}爻`) all resolve to
+`cellOpUnsupported` — they cannot decay into `错 + 位` (two `Hex → Hex`
+tokens) and so `:t 错位` and `错位 乾` both fail with the same error
+(fixing the B-12 inconsistency). -/
+
+/-- `错位` resolves to `cellOpUnsupported`, not to two separate tokens. -/
+example :
+    (match lexAndResolve "错位" with
+     | .error (.inr (.cellOpUnsupported "错位" 0)) => true
+     | _ => false) = true := by native_decide
+
+/-- `同位` likewise. -/
+example :
+    (match lexAndResolve "同位" with
+     | .error (.inr (.cellOpUnsupported "同位" 0)) => true
+     | _ => false) = true := by native_decide
+
+/-- All six 2-glyph cell-op surfaces fail identically. -/
+example :
+    (["同位", "错位", "综位", "互位", "进时", "退时"].all
+       (fun s =>
+         match lexAndResolve s with
+         | .error (.inr (.cellOpUnsupported s' 0)) => s' == s
+         | _ => false)) = true := by native_decide
+
+/-- 3-glyph 位×爻 cell-op surfaces fail identically. -/
+example :
+    (["位初爻", "位二爻", "位三爻", "位四爻", "位五爻", "位上爻"].all
+       (fun s =>
+         match lexAndResolve s with
+         | .error (.inr (.cellOpUnsupported s' 0)) => s' == s
+         | _ => false)) = true := by native_decide
+
+/-- `错位 乾` fails at the cell-op surface, not at type-check. -/
+example :
+    (match lexAndResolve "错位 乾" with
+     | .error (.inr (.cellOpUnsupported "错位" 0)) => true
+     | _ => false) = true := by native_decide
+
+/-- The single-glyph `错` still resolves normally (Z_5 cuoH). -/
+example : opIdsOf "错" = some [some OperatorId.Z_5] := by native_decide
+
+/-- `Lex.cellOpSurfaces` and `Reading.isCellOpSurface` agree (sync guard). -/
+example : cellOpSurfaces.all isCellOpSurface = true := by native_decide
 
 /-! ## § 6  结构性断言 -/
 
@@ -1039,6 +1108,9 @@ def resolveOneWithCues (toks : List GlyphTok) (i : Nat) (t : GlyphTok)
     .ok ⟨t, .closeBracket⟩
   else if isIterateConstruction t.surface then
     .ok ⟨t, .iterate⟩
+  -- B-12: cell-op surface gate (mirror of `resolveOne`).
+  else if isCellOpSurface t.surface then
+    .error (.cellOpUnsupported t.surface t.startCol)
   else
   match resolveBoolConst t.surface with
   | some b => .ok ⟨t, .boolConst b⟩
@@ -1083,6 +1155,9 @@ def resolveOneWithCuesAllowAmbiguous (toks : List GlyphTok) (i : Nat) (t : Glyph
     .ok ⟨t, .closeBracket⟩
   else if isIterateConstruction t.surface then
     .ok ⟨t, .iterate⟩
+  -- B-12: cell-op surface gate (mirror of `resolveOne`).
+  else if isCellOpSurface t.surface then
+    .error (.cellOpUnsupported t.surface t.startCol)
   else
   match resolveBoolConst t.surface with
   | some b => .ok ⟨t, .boolConst b⟩
