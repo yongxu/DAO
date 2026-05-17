@@ -347,7 +347,12 @@ mutual
         | none => none
     | ctx, .construction "之又" [inner] => surfaceExprTypeWithCtx? ctx inner
     | _, .construction _ _ => none
-    | ctx, .grouped _ _ body => surfaceExprTypeWithCtx? ctx body
+    | ctx, .grouped openTok _ body =>
+        -- wen-2.0 ⑩: quote brackets 「」/『』 give the surface group type `.quoted`,
+        -- regardless of body type — matches `Tm.quote` elaboration.  Value
+        -- grouping `（…）`/`(…)` is unchanged (delegates to body).
+        if isQuoteOpenBracketSurface openTok.surface then some .quoted
+        else surfaceExprTypeWithCtx? ctx body
 
   def lambdaTypeWithCtx? : Ctx → String → SurfaceExpr → List Ty → Option Ty
     | _, _, _, [] => none

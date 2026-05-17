@@ -141,6 +141,8 @@ def prettyPrintTm : Tm → String
   | .catalogue3 id a b c =>
       operatorPrimaryGlyph id ++ " " ++ prettyPrintTm a ++ " " ++
         prettyPrintTm b ++ " " ++ prettyPrintTm c
+  -- wen-2.0 ⑥/⑩: 引语 wrap 用 「」（primary quote bracket）.
+  | .quote body => "「" ++ prettyPrintTm body ++ "」"
   | t =>
       -- 22 core builtin + 12 cell-endo 走 builtinGlyph 表
       match builtinGlyph t with
@@ -187,5 +189,20 @@ example : prettyPrintTm (.catalogue2 .E_2 (.hexLit Hexagram.heaven) (.hexLit Hex
 
 example : prettyPrintTm (.catalogue1 .T_10 (.hexLit Hexagram.heaven))
     = "推 乾" := by native_decide
+
+/-! ### wen-2.0 ⑥/⑩ 之 prettyPrint -/
+
+/-- Quoted hex literal: `.quote (.hexLit 乾)` → `「乾」`. -/
+example : prettyPrintTm (.quote (.hexLit Hexagram.heaven)) = "「乾」" := by native_decide
+
+/-- 曰 + quote: `子曰：「学」` shape — speaker = 甲 (heavenly stem).  -/
+example :
+    prettyPrintTm (.catalogue2 .E_2 (.var "甲") (.quote .yi))
+      = "曰 甲 「一」" := by native_decide
+
+/-- Quote-of-non-trivial expression: `「推 乾」`. -/
+example :
+    prettyPrintTm (.quote (.app .cuoH (.hexLit Hexagram.heaven)))
+      = "「错 乾」" := by native_decide
 
 end SSBX.Foundation.Wen.WenSurface
