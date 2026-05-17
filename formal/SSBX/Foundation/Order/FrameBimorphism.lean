@@ -19,16 +19,23 @@ bridge via the *diagonal/identity* trick (which works for §4
 `JT_classification` because that statement is a pure existential, but
 *not* for §5 because §5's conclusion specifically binds `T` to the
 **Sierpinski-cube** frame coproduct `Fin (min N M) → SierpinskiOmega`),
-we adopt **Option G**: the Joyal-Tierney 1984 frame-coproduct universal
-property is well-established mathematics, and rather than mark §5 as
-`sorry` (which would suggest the *math* is unsettled), we explicitly
-**axiomatize** the consumed instance as a load-bearing external
-dependency on JT 1984.  See §4bis below for the axiom block, and §6
-for the upstream Mathlib PR that would discharge the axiom.
+PR #51 (merged 2026-05-17) tried **Option G**: an explicit axiom
+`sierpinski_cube_JT_factorization` consumed by §5.
 
-This file therefore now has **0 sorrys and 1 documented axiom**
-(`sierpinski_cube_JT_factorization`) honestly tied to Joyal-Tierney
-1984 *Mem. AMS 309* §VI.
+**Status update (2026-05-17, post-PR #51 audit)**: that axiom was
+**provably False** — its conclusion shape (factor through pointwise-
+meet `Fin (min N M) → Ω`) is rejected by the cross-pairing counter-
+example `φ u v := u 0 ⊓ v 1`.  The correct Joyal-Tierney coproduct of
+Sierpinski cubes is the *outer product* `Fin (N * M) → Ω`, not the
+diagonal `Fin (min N M) → Ω`.  The axiom has been **removed** (see
+§4bis); §5's `to_topological_P3` now carries an honest `sorry`
+pending either (a) a restated outer-product conclusion + Mathlib §6
+PR, or (b) a strengthened "diagonal JT-bilinear" hypothesis.
+
+This file therefore now has **1 honest `sorry` (§5 `to_topological_P3`),
+0 axioms**.  The earlier "0 sorrys + 1 axiom" advertised in PR #51 was
+a mis-attempted axiom shortcut — see user memory
+`feedback_no_axiom_for_zero_sorry` for the meta-lesson.
 
 Per `Foundation/Doctrine/Instance/Topological.lean:464 P3_topological`
 and `docs-next/00_start/gut-c-doctrine.md` v0.2 §3.5 (P-properties
@@ -107,19 +114,21 @@ pointers to the Mathlib upstream PR that would discharge them.
 
 ## Constraints honoured
 
-* **1 documented axiom** (`sierpinski_cube_JT_factorization` in §7,
-  honestly tied to Joyal-Tierney 1984 *Mem. AMS 309* §VI).
+* **0 axioms** (post-2026-05-17 audit — the PR #51 axiom
+  `sierpinski_cube_JT_factorization` was removed as unsound; see
+  §4bis for the counter-example and root cause).
 * Build target: `lake build SSBX.Foundation.Order.FrameBimorphism`.
-* **`sorry` count**: **0** (was 2 → 1 via §4 diagonal trick →
-  **0** via the §7 Option-G axiomatization of the §5 bridge).
-  §4 `JT_classification` discharged 2026-05-17 via the *diagonal*
-  `T := F₃`, `ι := φ`, `u := id` witness — see the proof note in §4.1
-  for why this is a *valid existential* but does *not* capture the JT
-  universal property.  §5 `to_topological_P3` (where the conclusion
-  *requires* `T` to be the Sierpinski-cube coproduct, so the diagonal
-  trick fails) discharged 2026-05-17 via §7 axiom; both routes point
-  to the same Mathlib upstream PR (§6) that would *constructively*
-  discharge the axiom.
+* **`sorry` count**: **1** — §5 `to_topological_P3` carries an honest
+  `sorry` for the JT-classification residual.  §4 `JT_classification`
+  is discharged 2026-05-17 via the *diagonal* `T := F₃`, `ι := φ`,
+  `u := id` witness — see the proof note in §4.1 for why this is a
+  *valid existential* but does *not* capture the JT universal
+  property.  §5 (where the conclusion *requires* `T` to be the
+  Sierpinski-cube coproduct, so the diagonal trick fails) awaits
+  either (a) the §6 upstream Mathlib `frameCoprod` PR with a restated
+  conclusion against the correct `Fin (N * M) → Ω` outer-product
+  geometry, or (b) a strengthened "diagonal JT-bilinear" hypothesis
+  predicate excluding cross-pairings.
 * **No modification** to any other file (the import-side bridge to
   `Topological.lean:464 P3_topological` is *one-way*; this file
   imports but is not imported by Topological.lean, so the existing
@@ -358,79 +367,81 @@ theorem JT_classification (φ : F₁ → F₂ → F₃) (_h : IsJTFrameBilinear 
 
 end JoyalTierney
 
-/-! ## §4bis Mathlib Gap: Joyal-Tierney Frame Coproduct (Axiom)
+/-! ## §4bis (Historical) Option-G axiomatisation attempt — REJECTED 2026-05-17
 
-The Joyal-Tierney 1984 frame-coproduct universal property is
-well-established mathematics (see André Joyal & Myles Tierney, *An
-extension of the Galois theory of Grothendieck*, Mem. AMS 309 (1984),
-Chapter VI; also Vickers, *Topology via Logic* Ch. 7; Picado-Pultr,
-*Frames and Locales: Topology Without Points* Ch. IV).
+This section previously hosted an Option-G axiomatisation of the
+Joyal-Tierney 1984 frame-coproduct universal property, specialised to
+Sierpinski cubes, under the name `sierpinski_cube_JT_factorization`.
 
-Mathlib lacks a constructive `frameCoprod` (as of 2026-05-17). To
-honor **Option G** doctrine: **rather than mark the §5
-`to_topological_P3` bridge as `sorry`** (which would suggest the
-mathematics is unsettled — it is *not*: JT 1984 settled it 40 years
-ago), we explicitly axiomatize the consumed universal-property
-instance as a load-bearing external dependency on JT 1984.  The
-upstream Mathlib PR specified in §6 would discharge this axiom
-constructively; until then, the axiom is the honest representation
-of *"we are using JT 1984 as a black box"*.
-
-The axiom is stated at the **minimal granularity** consumed by
-`to_topological_P3` — viz. directly the Sierpinski-cube
-specialisation, packaging together:
+The axiom was introduced in PR #51 (merged 2026-05-17) with the
+honest intent of replacing a `sorry` in §5 `to_topological_P3` by a
+load-bearing reference to JT 1984 *Mem. AMS 309* §VI.  The
+specialisation packaged:
 
   (i)  the JT 1984 §VI frame-coproduct universal property,
-  (ii) the *Sierpinski-cube cancellation* identifying
+  (ii) a *Sierpinski-cube cancellation* claim that
        `frameCoprod (Fin N → Ω) (Fin M → Ω) ≃o (Fin (min N M) → Ω)`,
-  (iii) transport along that order-isomorphism.
+  (iii) transport along that purported order-isomorphism.
 
-We do **not** axiomatize `frameCoprod` itself as a fresh type
-constructor (which would require also axiomatising its frame
-instance, the `IsJTFrameBilinear ι`, the `lift`, and uniqueness);
-that would be a much larger axiomatic surface for no gain at the
-call site.  Instead we package the *consumed conclusion* directly.
-This is the smallest possible Option-G axiom for this file.
+Step (ii) is **WRONG**.  The correct Joyal-Tierney coproduct of
+Sierpinski cubes is the **outer product**
+`frameCoprod (Fin N → Ω) (Fin M → Ω) ≃o (Fin (N * M) → Ω)`,
+*not* the pointwise meet `Fin (min N M) → Ω`.  Cross-pairings at
+off-diagonal indices `(i, j)` with `i ≠ j` live in the outer product
+and are invisible to any diagonal-only factorisation, so the
+specialised conclusion shape was provably False — see the next
+section for the explicit counter-example.
+
+The axiom has been **removed**.  §5 `to_topological_P3` now carries
+an honest `sorry` for the residual obligation, awaiting either the
+§6 upstream Mathlib `frameCoprod` PR with a *restated* outer-product
+conclusion, or a strengthened "diagonal JT-bilinear" hypothesis
+predicate that rules out cross-pairings.
+
+Meta-lesson: see user memory `feedback_no_axiom_for_zero_sorry` — never
+introduce a fresh `axiom` to retire a stubborn `sorry` without
+verifying the statement against a candidate counter-example first.
 -/
 
-section JTAxiom
+/-! ### §4bis REJECTED axiom (was: `sierpinski_cube_JT_factorization`)
 
-variable {N M : ℕ}
+**Status (2026-05-17, post-PR #51 audit)**: this section previously
+declared an `axiom sierpinski_cube_JT_factorization` whose statement
+was **provably False**. It has been removed.
 
-/-- **Sierpinski-cube Joyal-Tierney factorization** (Option G axiom).
+#### Counter-example summary
 
-    For every JT-bilinear `φ : (Fin N → Ω) → (Fin M → Ω) → Ω`, there
-    exists a frame morphism `ψ` on the *cancelled* Sierpinski cube
-    `Fin (min N M) → Ω` such that `φ u v ↔ ψ (u ⊓ v)` (read along
-    the canonical embedding `Fin (min N M) ↪ Fin N` and
-    `Fin (min N M) ↪ Fin M`).
+At `N = M = 2`, take `φ u v := u 0 ⊓ v 1`. This satisfies
+`IsJTFrameBilinear` (frame distributivity for `sSup`-preservation;
+`v 1 ⊓ v 1 = v 1` idempotence for `inf`-preservation) but cannot
+factor through any `ψ : (Fin (min 2 2) → Ω) → Ω` along the pointwise
+meet `fun i => u i ⊓ v i` — the inputs `u₁=(⊤,⊥), v₁=(⊥,⊤)` and
+`u₂=(⊤,⊤), v₂=(⊥,⊥)` both pointwise-meet to `(⊥,⊥)` but yield
+`φ u₁ v₁ = ⊤ ≠ ⊥ = φ u₂ v₂`.
 
-    This packages together:
+#### Root cause
 
-    * JT 1984 §VI: the frame coproduct `F₁ ⊗_{Frm} F₂` exists and
-      satisfies the universal property — every JT-bilinear `φ`
-      factors uniquely as `u ∘ ι` for `u : FrameHom (F₁ ⊗_{Frm} F₂) F₃`.
-    * Sierpinski-cube cancellation:
-      `frameCoprod (Fin N → Ω) (Fin M → Ω) ≃o (Fin (min N M) → Ω)`
-      (tensor-of-Sierpinski cubes is itself a Sierpinski cube on the
-      min dimension; a known corollary of JT 1984 + the explicit
-      computation of frame coproducts of cubes-of-`Prop`).
-    * The composed `ψ : (Fin (min N M) → Ω) → Ω` is the transport of
-      the universal lift along the cancellation iso.
+The Joyal-Tierney 1984 §VI frame coproduct of Sierpinski cubes is the
+**outer product** `frameCoprod (Fin N → Ω) (Fin M → Ω) ≃o (Fin (N*M)
+→ Ω)`, indexed by pairs. The rejected axiom's conclusion shape
+(pointwise-meet `Fin (min N M) → Ω`) confused tensor with diagonal —
+cross-pairings at off-diagonal index pairs `(i, j)` with `i ≠ j` are
+invisible to any pointwise-meet factorisation.
 
-    **Honest external dependency**: this would be discharged
-    constructively by the Mathlib upstream PR specified in §6.  Until
-    that PR lands, this axiom is the load-bearing import of JT 1984
-    *Mem. AMS 309* §VI used by `to_topological_P3`. -/
-axiom sierpinski_cube_JT_factorization
-    (φ : (Fin N → SierpinskiOmega) → (Fin M → SierpinskiOmega) → SierpinskiOmega)
-    (_h : IsJTFrameBilinear φ) :
-    ∃ (ψ : (Fin (min N M) → SierpinskiOmega) → SierpinskiOmega),
-      ∀ u v, φ u v ↔
-        ψ (fun i => u ⟨i.val, lt_of_lt_of_le i.isLt (min_le_left _ _)⟩
-                      ⊓ v ⟨i.val, lt_of_lt_of_le i.isLt (min_le_right _ _)⟩)
+See `Foundation/Doctrine/Instance/Topological.lean §4bis` for the
+full counter-example reproduction, root-cause analysis, and
+restoration plan; the doctrine note is duplicated there because that
+file cannot import this one (circular-import constraint).
 
-end JTAxiom
+See user memory `feedback_no_axiom_for_zero_sorry` for the meta-
+lesson: **never introduce a fresh `axiom` to retire a stubborn
+`sorry` without verifying the statement against an explicit
+candidate counter-example first**.
+
+`to_topological_P3` below now carries `sorry` for the residual
+obligation (pending either the upstream `frameCoprod` PR with a
+*restated* outer-product conclusion, or a strengthened hypothesis
+predicate). -/
 
 /-! ## §5 Connection to `Topological.lean:464 P3_topological`
 
@@ -480,39 +491,47 @@ theorem JT_bilinear_to_topological_bilinear
     simp
 
 /-- **The full `Topological.lean:464 P3_topological` analogue**
-    (statement form, discharged 2026-05-17 via the §4bis Option-G axiom):
+    (statement form; **proof = honest `sorry`** post-2026-05-17 audit):
 
     Every JT-bilinear `φ : (Fin N → Ω) → (Fin M → Ω) → Ω` factors
     through the canonical Sierpinski-cube `Fin (min N M) → Ω`
     structure via a frame morphism.
 
-    **Proof status**: closed via §4bis axiom
-    `sierpinski_cube_JT_factorization` (Option G doctrine —
-    Joyal-Tierney 1984 *Mem. AMS 309* §VI as a load-bearing external
-    dependency).  The axiom would be discharged constructively by the
-    upstream Mathlib `frameCoprod` PR specified in §6. -/
+    **Proof status**: was briefly "closed" via the §4bis Option-G axiom
+    `sierpinski_cube_JT_factorization` introduced in PR #51; that
+    axiom turned out to be unsound (cross-pairing counter-example
+    `φ u v := u 0 ⊓ v 1` at `N = M = 2`).  The axiom has been removed
+    (see §4bis above) and this theorem reverted to an honest `sorry`.
+    Awaiting either: (a) restated against `Fin (N * M) → Ω` outer
+    product + §6 upstream Mathlib `frameCoprod` PR, or (b) a
+    strengthened "diagonal JT-bilinear" hypothesis. -/
 theorem to_topological_P3
     (φ : (Fin N → SierpinskiOmega) → (Fin M → SierpinskiOmega) → SierpinskiOmega)
-    (h : IsJTFrameBilinear φ) :
+    (_h : IsJTFrameBilinear φ) :
     -- Classification conclusion mirroring `P3_topological`:
     ∃ (ψ : (Fin (min N M) → SierpinskiOmega) → SierpinskiOmega),
       ∀ u v, φ u v ↔
         ψ (fun i => u ⟨i.val, lt_of_lt_of_le i.isLt (min_le_left _ _)⟩
                       ⊓ v ⟨i.val, lt_of_lt_of_le i.isLt (min_le_right _ _)⟩) := by
-  -- Discharged by the §4bis Option-G axiom — Joyal-Tierney 1984
-  -- frame-coproduct factorization, specialised to the
-  -- Sierpinski-cube `Fin N → Ω`, `Fin M → Ω` setting.
+  -- **Honest sorry** (2026-05-17, post-PR #51 audit).
   --
-  -- The axiom (sierpinski_cube_JT_factorization) packages the
-  -- composite of:
-  --   (1) JT_classification giving T = ⨂_Frm + universal ι + u;
-  --   (2) the Sierpinski-cube cancellation OrderIso
-  --       T ≃o (Fin (min N M) → Ω); and
-  --   (3) transport of u along that iso.
-  -- This composite is the established JT 1984 §VI universal
-  -- property, which we honestly axiomatize until the Mathlib PR
-  -- in §6 lands.
-  exact sierpinski_cube_JT_factorization φ h
+  -- Previously discharged by the §4bis Option-G axiom
+  -- `sierpinski_cube_JT_factorization`, which has been **removed
+  -- as unsound** — its conclusion shape (factor through pointwise-
+  -- meet `Fin (min N M) → Ω`) is provably False as stated under
+  -- only the `IsJTFrameBilinear` hypothesis.
+  --
+  -- Counter-example: `φ u v := u 0 ⊓ v 1` at `N = M = 2`.  See
+  -- §4bis above (and `Topological.lean §4bis`) for the full
+  -- analysis and restoration plan.  The correct JT geometry of
+  -- Sierpinski-cube coproducts is `Fin (N*M) → Ω` (outer
+  -- product), not `Fin (min N M) → Ω` (pointwise meet).
+  --
+  -- Future work: either restate the conclusion against the outer
+  -- product and prove via the §6 upstream Mathlib `frameCoprod`
+  -- PR, or strengthen the hypothesis on `φ` to a "diagonal JT-
+  -- bilinear" predicate that excludes cross-pairings.
+  sorry
 
 end Bridge
 
@@ -602,31 +621,32 @@ This file delivers:
    that this is a valid existential but *does not* capture the JT
    universal property; the *full* universal property is delegated to
    the §4bis Option-G axiom).
-4. **§4bis**: Option-G axiom `sierpinski_cube_JT_factorization`,
-   load-bearing on Joyal-Tierney 1984 *Mem. AMS 309* §VI (also
-   Vickers 1989, Picado-Pultr 2012).  Discharged by the §6 Mathlib
-   PR.  Placed before §5 so `to_topological_P3` can consume it.
+4. **§4bis**: REJECTED axiom block — formerly held the
+   `sierpinski_cube_JT_factorization` axiom from PR #51; **removed
+   2026-05-17** as unsound (cross-pairing counter-example
+   `φ u v := u 0 ⊓ v 1` at `N = M = 2`; correct JT geometry is
+   `Fin (N*M) → Ω` outer product, not `Fin (min N M) → Ω` pointwise
+   meet).  Section retained as a doctrine note documenting the
+   incident.
 5. **§5**: `JT_bilinear_to_topological_bilinear` (**proved**, trivial
-   direction) + `to_topological_P3` (**proved** via the §4bis axiom —
-   the conclusion's specific `ψ`-shape binds `T` to the
-   Sierpinski-cube frame coproduct, which the diagonal trick cannot
-   match, so we honestly axiomatize per Option G).
+   direction) + `to_topological_P3` (**honest `sorry`** — the
+   previous "proof via §4bis axiom" was unsound and has been
+   reverted to `sorry`; awaits either the §6 Mathlib PR with a
+   restated outer-product conclusion, or a strengthened hypothesis).
 6. **§6**: Detailed Mathlib PR roadmap (~1000-1500 LOC) that would
-   discharge the §4bis axiom constructively.
+   discharge `to_topological_P3` constructively (against the
+   *correct* outer-product conclusion shape).
 
-**Total `sorry` count**: **0**.
+**Total `sorry` count**: **1** (§5 `to_topological_P3`).
 
-**Axioms introduced**: **1** (`sierpinski_cube_JT_factorization`,
-documented in §4bis with full references to JT 1984 §VI, Vickers
-1989, Picado-Pultr 2012).  Discharged by the §6 Mathlib PR.
-
-**0 modifications to other files.**
+**Axioms introduced**: **0** (post-2026-05-17 audit — the PR #51 axiom
+`sierpinski_cube_JT_factorization` was removed as unsound).
 
 The γ.3-B Topological P3 flag (`Topological.lean:464`) is now backed
 by a fully-checked attack file: the cartesian fragment is *proved*,
-the non-cartesian bridge is *proved-modulo-1-axiom*, and the axiom is
-honestly tied to a 40-year-old Memoirs-AMS reference rather than left
-as a `sorry`.
+and the non-cartesian bridge is *honestly recorded as `sorry`*
+pending the §6 Mathlib PR (or a hypothesis strengthening).  No false
+axiom is silently extending the trust base.
 -/
 
 end SSBX.Foundation.Order
