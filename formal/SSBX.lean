@@ -307,3 +307,10 @@ import SSBX.Foundation.Closure.PhiOperator
 -- Mod-phase Hilbert ↔ Pauli ↔ R(2n) — reverse functors + RFamily k bridges.
 import SSBX.Foundation.Wen.Embeddings.StabilizerQM
 import SSBX.Foundation.Wen.Embeddings.HilbertPauliFunctor
+
+-- GUT-C Path C foundation: elementary topos bundling (PR-1).
+-- Per docs-next/00_start/gut-c-doctrine.md v0.2 §11.1.
+-- Mathlib-PR-quality skeleton: bundles HasFiniteLimits + CartesianMonoidalCategory +
+-- MonoidalClosed + HasSubobjectClassifier into a single `class ElementaryTopos`.
+-- Includes canonical instance on `Type u` (Lawvere classical construction).
+import SSBX.Foundation.CategoryTheory.ElementaryTopos
