@@ -124,13 +124,22 @@ def operatorCompoundSurfaceIds : List (String × OperatorId) :=
 
 /-- 多字 wenyan surface。
     包含构式/目录复词，以及完整卦名中不能被拆为单字的 surface。
-    扩充时按长度降序排列（最长前缀优先匹配）；同长度内顺序无关. -/
+    扩充时按长度降序排列（最长前缀优先匹配）；同长度内顺序无关.
+
+    B-2 / B-6: 多字 builtin Tm surfaces (`初爻..上爻` 与 `列一..列三`) — 各自
+    映射到 `WenDef` 之 `flip{1..6}H` / `list{1,2,3}H` Tm 原语，由
+    [Reading.resolveBuiltinSurface](Reading.lean) 解析为 `.builtinTm`
+    atom（不进 OperatorId 表）.  B-3 (`加`) 是单字，无需进此表. -/
 def multiCharSurfaces : List String :=
   [ "之所以"  -- wen-2.0 ⑧ reason-extraction marker: `Y 之所以 X`
   , "之又"
   , "小畜", "同人", "大有", "噬嗑", "无妄", "無妄", "大畜", "大过", "大過"
   , "明夷", "家人", "大壮", "大壯", "归妹", "歸妹", "中孚", "小过", "小過"
-  , "既济", "既濟", "未济", "未濟" ]
+  , "既济", "既濟", "未济", "未濟"
+    -- B-2: yao-flip builtin surfaces (per `WenDef.flip{1..6}H`).
+  , "初爻", "二爻", "三爻", "四爻", "五爻", "上爻"
+    -- B-6: Hex list-construction builtin surfaces (per `WenDef.list{1,2,3}H`).
+  , "列一", "列二", "列三" ]
     ++ operatorCompoundSurfaceIds.map Prod.fst
 
 /-- 检查 prefix 是否为 cs 之前缀（字符级）。 -/

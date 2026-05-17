@@ -85,6 +85,8 @@ def atomToTm : ResolvedAtom → Except ElabErr Tm
   | .iterate    => .error .empty
   | .openBracket => .error .empty
   | .closeBracket => .error .empty
+  -- B-2 / B-3 / B-6: builtin Tm primitive — emit the body directly.
+  | .builtinTm body _ => .ok body
 
 def symbolicCatalogueTm? (id : OperatorId) : List Tm → Option Tm
   | [a] => some (.catalogue1 id a)
@@ -148,6 +150,10 @@ mutual
                 match symbolicCatalogueTm? id args with
                 | some tm => .ok (tm, rest')
                 | none => .error .empty
+    | n+1,  .builtinTm body arity :: rest      =>
+      -- B-2/B-3/B-6 builtin Tm primitive: collect `arity` args and
+      -- left-fold them onto the body (same shape as a theorem-backed op).
+      collectArgs n body arity rest
 
   /-- 消费 `k` 个子表达式作为 `acc` 的参数（左结合：`((acc a1) a2) ...`). -/
   def collectArgs : Nat → Tm → Nat → List ResolvedAtom → Except ElabErr (Tm × List ResolvedAtom)

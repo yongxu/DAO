@@ -18,6 +18,7 @@ Hex/Bool denotation。
 -/
 import SSBX.Foundation.Wen.WenSurface.Lex
 import SSBX.Foundation.Wen.WenSurface.Semantics
+import SSBX.Foundation.Wen.WenDef
 import SSBX.Foundation.Atlas.Yi.Classical.Cells.R8
 import SSBX.Text.OperatorAnchors
 import SSBX.Text.OperatorReadings
@@ -32,6 +33,7 @@ open SSBX.Foundation.Yi.Yi
 open SSBX.Foundation.Yi.YiCore
 open SSBX.Foundation.Bagua.R8
 open SSBX.Text.OperatorAnchors
+open SSBX.Foundation.Wen.WenDef
 
 /-! ## § 1  Resolved 类型 -/
 
@@ -68,7 +70,7 @@ inductive SyntaxMarker where
 deriving DecidableEq, Repr
 
 /-- 已消歧的原子：卦字面值 / Bool 字面值 / catalogue 算子读法 /
-    应用标记 / 迭代构式. -/
+    应用标记 / 迭代构式 / builtin Tm primitive. -/
 inductive ResolvedAtom where
   | hexConst    (h : Hexagram)
   | boolConst   (b : Bool)
@@ -81,6 +83,13 @@ inductive ResolvedAtom where
   | iterate               -- 「之又」 迭代构式 marker：F X ↦ F (F X)
   | openBracket
   | closeBracket
+  /-- B-2 / B-3 / B-6: builtin `WenDef.Tm` primitive that has no
+      OperatorId in the catalogue.  `body` is a closed Tm whose
+      `typeCheck` is `arr a₁ (... arr aₙ b)` for some `n = arity`;
+      parser/elaborator treat this like a `.catalogueOp` of the
+      corresponding arity but bypass the OperatorId / executable-registry
+      dispatch entirely. -/
+  | builtinTm   (body : Tm) (arity : Nat)
 deriving DecidableEq, Repr
 
 /-- 已消歧的 token：保留 GlyphTok 与解析结果. -/
@@ -221,6 +230,34 @@ def resolveSyntaxMarker : Glyph → Option SyntaxMarker
   | "所" => some .suo    -- wen-2.0 ⑧ object relativization head
   | "之所以" => some .zhiSuoYi  -- wen-2.0 ⑧ reason-extraction infix
   | _    => none
+
+/-! ### Builtin Tm surface map (B-2 / B-3 / B-6)
+
+Surfaces that map directly to a closed `WenDef.Tm` body and a parser arity,
+without going through the catalogue / OperatorId path.  These are kept here
+(rather than added as new OperatorIds) so the 375-row catalogue audit stays
+stable; the catalogue is about classical text glosses, while these surfaces
+are mechanical Tm primitives.
+
+* **B-2** yao flips (`Hex → Hex`): 初/二/三/四/五/上 爻 → `flip{1..6}H`.
+* **B-3** Hex addition `加` (`Hex → Hex → Hex`): the `Tm.jia` primitive.
+* **B-6** Hex list ops: 列一/二/三 → `list{1..3}H`; 首 → `headH`. -/
+def resolveBuiltinSurface : Glyph → Option (Tm × Nat)
+  -- B-2: yao flips (per `WenDef.lean` Tm constructors)
+  | "初爻" => some (.flip1H, 1)
+  | "二爻" => some (.flip2H, 1)
+  | "三爻" => some (.flip3H, 1)
+  | "四爻" => some (.flip4H, 1)
+  | "五爻" => some (.flip5H, 1)
+  | "上爻" => some (.flip6H, 1)
+  -- B-3: Hex addition `加 : Hex → Hex → Hex`
+  | "加" => some (.jia, 2)
+  -- B-6: list ops
+  | "列一" => some (.list1H, 1)
+  | "列二" => some (.list2H, 2)
+  | "列三" => some (.list3H, 3)
+  | "首"   => some (.headH, 1)
+  | _      => none
 
 def matchingCloseBracket? : Glyph → Option Glyph
   | "（" => some "）"
@@ -463,6 +500,12 @@ def resolveOne (t : GlyphTok) : Except ResolveErr ResolvedTok :=
   match resolveBoolConst t.surface with
   | some b => .ok ⟨t, .boolConst b⟩
   | none =>
+  -- B-2 / B-3 / B-6: builtin Tm surfaces (no OperatorId, no catalogue row).
+  -- These take priority over any catalogue reading so the surface table stays
+  -- the canonical source for builtin primitives.
+  match resolveBuiltinSurface t.surface with
+  | some (body, arity) => .ok ⟨t, .builtinTm body arity⟩
+  | none =>
     match uniqueExecutableReadingForGlyph t.surface with
     | some r =>
         match resolveHexConst t.surface with
@@ -513,6 +556,7 @@ def ResolvedAtom.opId? : ResolvedAtom → Option OperatorId
   | .iterate       => none
   | .openBracket   => none
   | .closeBracket  => none
+  | .builtinTm _ _ => none
 
 /-- 判别 atom 是否为 appMarker（elab 阶段用）. -/
 def ResolvedAtom.isAppMarker : ResolvedAtom → Bool
@@ -715,6 +759,48 @@ example : opIdsOf "损" = some [some OperatorId.T_12] := by native_decide
 /-- 「益」 → catalogueOp T_13. -/
 example : opIdsOf "益" = some [some OperatorId.T_13] := by native_decide
 
+/-! ### § 6.6  Builtin Tm surface map (B-2 / B-3 / B-6)
+
+`resolveBuiltinSurface` maps surface glyphs directly to `WenDef.Tm` primitive
+bodies, bypassing the OperatorId catalogue.  These surfaces have no
+`operator?` entry (they are not catalogue rows) so `opIdsOf` returns `[none]`
+for them — the test below witnesses that they resolve to a `.builtinTm`
+atom rather than to `.noReading` / `.catalogueOp`. -/
+
+/-- B-2: yao flips all resolve to `.builtinTm`. -/
+example :
+    (["初爻", "二爻", "三爻", "四爻", "五爻", "上爻"].all
+      (fun s => match resolveBuiltinSurface s with | some _ => true | none => false)) = true := by
+  native_decide
+
+/-- B-3: 加 resolves to `.builtinTm` with arity 2. -/
+example : (resolveBuiltinSurface "加").map Prod.snd = some 2 := by native_decide
+
+/-- B-6: list ops resolve to `.builtinTm` with their declared arities. -/
+example : (resolveBuiltinSurface "列一").map Prod.snd = some 1 := by native_decide
+example : (resolveBuiltinSurface "列二").map Prod.snd = some 2 := by native_decide
+example : (resolveBuiltinSurface "列三").map Prod.snd = some 3 := by native_decide
+example : (resolveBuiltinSurface "首").map Prod.snd = some 1 := by native_decide
+
+/-- 加 (single glyph) lexes and resolves via `lexAndResolve`. -/
+example :
+    ((lexAndResolve "加").toOption.map (fun rs => rs.map (·.atom)))
+      = some [.builtinTm Tm.jia 2] := by native_decide
+
+/-- 初爻 (multi-glyph) is lexed as a single 2-char surface and resolves to flip1H. -/
+example :
+    ((lexAndResolve "初爻").toOption.map (fun rs => rs.map (·.atom)))
+      = some [.builtinTm Tm.flip1H 1] := by native_decide
+
+/-- 列一 / 首 likewise resolve to their builtin Tms. -/
+example :
+    ((lexAndResolve "列一").toOption.map (fun rs => rs.map (·.atom)))
+      = some [.builtinTm Tm.list1H 1] := by native_decide
+
+example :
+    ((lexAndResolve "首").toOption.map (fun rs => rs.map (·.atom)))
+      = some [.builtinTm Tm.headH 1] := by native_decide
+
 /-! ## § 7  Cue-based resolution (Phase C)
 
   simple resolver 对「之」一律视为透明 appMarker；cue-aware 路径可在
@@ -837,6 +923,11 @@ def resolveOneWithCues (toks : List GlyphTok) (i : Nat) (t : GlyphTok)
     match resolveVarName t.surface with
     | some name => .ok ⟨t, .varName name⟩
     | none =>
+    -- B-2 / B-3 / B-6: builtin Tm surfaces take priority over both cue and
+    -- registry paths.
+    match resolveBuiltinSurface t.surface with
+    | some (body, arity) => .ok ⟨t, .builtinTm body arity⟩
+    | none =>
       let cues := computeCues toks i
       match uniqueCatalogueReading t.surface cues with
       | some r =>
@@ -875,6 +966,9 @@ def resolveOneWithCuesAllowAmbiguous (toks : List GlyphTok) (i : Nat) (t : Glyph
     | none =>
     match resolveVarName t.surface with
     | some name => .ok ⟨t, .varName name⟩
+    | none =>
+    match resolveBuiltinSurface t.surface with
+    | some (body, arity) => .ok ⟨t, .builtinTm body arity⟩
     | none =>
       let cues := computeCues toks i
       match uniqueCatalogueReading t.surface cues with
