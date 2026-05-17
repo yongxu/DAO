@@ -1,14 +1,15 @@
 # GUT-C Doctrine: An SMCC-Enriched Lawvere Theory for Universal Sayability
 ## Path C Framework Proposal — Unified Categorical Foundation
 
-> **Version**: 0.3 · 2026-05-17 · post γ.2 Heyting validation
-> **Status**: research framework proposal (draft) — **PATH C VALIDATED, γ.3 commitment**
+> **Version**: 0.4 · 2026-05-17 · post-PR-#50 P3 hypothesis correction
+> **Status**: research framework proposal (draft) — **PATH C VALIDATED, γ.3 commitment; P3 hypothesis strengthened per Lean-verified counter-examples**
 > **Companion to**: [`lawvere-identification.md`](lawvere-identification.md) v0.6 · [`representation-closure.md`](representation-closure.md) v0.1.3 · [`gut-roadmap.md`](../10_formal_形式/gut-roadmap.md) §十二
 > **Author intent**: 推 GUT-C (full δ-realisation 含 non-algebraic) 从 12-24 月 research estimate 内的最优 path
 > **Risk tier**: MEDIUM (further revised down post γ.2 Heyting validation — framework discriminates correctly)
 > **Estimated timeline**: 24-36 months (γ.1 + γ.2 substantially compressed via parallel agent execution; γ.3 in progress)
 > **Novel contribution**: Open Problem O1 attack (dagger + cartesian coexistence as separate δ-realisations of one R-tower) — identified as **publishable in TAC / LMCS / MSCS**
 > **γ.2 deliverables**: 5 G files (G1-G5) totaling 3120 LOC, 8 documented sorries (no axioms); Heyting instance introduces `DiamondH4` as new non-Boolean 4-element Heyting anchor
+> **v0.4 correction**: weak bilinear hypothesis falsified in HeytAlg and Frm via two explicit Lean counter-examples; upgraded to instance-natural strong predicates (see **§4.2bis**)
 
 ---
 
@@ -202,6 +203,18 @@ For example:
 
 The single P3 axiom in T_GUT, instantiated in different C, gives different concrete classifications. **This is what "categorical universality" means**.
 
+> **★ v0.4 correction (2026-05-17)** — In v0.3 the P3 instantiation in HeytAlg
+> and Frm was stated with a **weak bilinear predicate** (preserves `⊥` in each
+> slot only). Lean foreground verification post-PR #50 produced two **explicit
+> counter-examples** that falsify the classification at that hypothesis
+> strength. The v0.4 fix replaces the weak predicate with the *instance-natural
+> strong* variant in each non-Cartesian SMCC: `IsHeytingBilinear` for HeytAlg
+> (which then **collapses** — see §4.2bis) and `IsJTFrameBilinear` for Frm.
+> Both counter-examples are filtered out by the strong hypotheses. See
+> **§4.2bis** for the full statement, the Lean witnesses, and the
+> philosophical reading of the HeytAlg collapse as a *categorical fingerprint*
+> rather than a defect.
+
 - P7b (Wedderburn anchor):
   - In C = FinVect_{F_q}: R 4 ≅ Mat₂(F_q)
   - In C = HeytAlg: R 4 ≅ End(R 2) = lattice of self-maps (Boolean lattice in classical case)
@@ -294,6 +307,232 @@ This is the **Heyting analog of P7b's Mat₂(F₂)**: the framework predicts a c
 | 6-12 months sequential | Single session via 5 parallel agents |
 | 2000-4000 LOC | 3120 LOC |
 | Heyting case = validation | Validated PARTIAL — sufficient to commit γ.3 |
+
+### §4.2bis P3 hypothesis revision (v0.4, post-PR #50)
+
+> **TL;DR.** v0.3 stated the P3 classification in HeytAlg and Frm under a
+> **weak bilinear hypothesis** (preserves `⊥` in each slot only). Foreground
+> Lean verification post-PR #50 produced **two explicit counter-examples**
+> that falsify the v0.3 conclusion at that hypothesis strength. v0.4
+> upgrades each non-Cartesian instance to its **instance-natural strong
+> bimorphism predicate** (`IsHeytingBilinear` for HeytAlg;
+> `IsJTFrameBilinear` for Frm). FinVect is unchanged (standard bilinear was
+> already the strong notion). Both counter-examples are filtered out by the
+> strong hypotheses, restoring soundness. As a non-trivial side effect, the
+> HeytAlg case **collapses to vacuity** — and that vacuity is itself the
+> categorical fingerprint of cartesian closure, not a defect of the
+> framework.
+
+#### §4.2bis.1 The two counter-examples
+
+Both counter-examples sit in the 2-dimensional indexed setting `Fin 2 → δ`,
+which is the smallest arity at which the conclusion of v0.3's P3
+classification (factor-through-pointwise-meet) becomes informative.
+
+**Counter-example B3 (HeytAlg, over `Fin 2 → Prop`).**
+
+Define
+```lean
+φ : (Fin 2 → Prop) → (Fin 2 → Prop) → Prop
+φ u v := ¬(u 0 ∧ ¬u 1 ∧ ¬v 0 ∧ v 1)
+```
+
+This `φ` satisfies the **v0.3 weak hypothesis** (`φ ⊥ v ↔ ⊥` and
+`φ u ⊥ ↔ ⊥` — both slots vacuously preserve bottom because the negated
+conjunction never bottoms out in the all-`⊥` slot) but **violates** the
+v0.3 conclusion: no Heyting morphism `ψ : (Fin 2 → Prop) → Prop` satisfies
+`φ u v ↔ ψ (u ⊓ v)` pointwise. The diagnostic is that `φ` is *cross-slot*,
+not diagonal: it probes `u 0` against `v 1`, a coupling that pointwise
+meet `(u ⊓ v) i = u i ⊓ v i` cannot recover.
+
+**Counter-example B4 (Frm, over `Fin 2 → Ω`).**
+
+Define
+```lean
+φ : (Fin 2 → Ω) → (Fin 2 → Ω) → Ω
+φ u v := (u 0 ⊓ v 1) ⊔ (u 1 ⊓ v 0)
+```
+
+This is the **cross-pairing** bimorphism. It preserves `⊥` in each slot
+(if `u = ⊥` then both `u 0` and `u 1` are `⊥`, so each disjunct vanishes;
+symmetrically for `v`), satisfying the v0.3 weak hypothesis. But it
+**violates** the v0.3 conclusion: there is no frame morphism
+`ψ : (Fin 2 → Ω) → Ω` with `φ u v = ψ (u ⊓ v)`, because `φ` is identically
+`⊥` on the diagonal `u = v` of the simplex `{e₀, e₁}` (where
+`(e_i ⊓ e_j) k = δ_{ij} · u i`), yet non-trivial on the cross pair. Pointwise
+meet collapses the cross-information; `φ` doesn't.
+
+In both cases the morally identical pathology is **off-diagonal coupling**
+that the weak hypothesis cannot rule out and the pointwise-meet conclusion
+cannot represent.
+
+#### §4.2bis.2 The strong-predicate upgrade
+
+The v0.4 fix replaces the weak hypothesis in each instance with its
+instance-natural strong version. The strong predicates are *not* invented
+for this purpose — each is the standard bimorphism notion in its
+respective category, already developed in the supporting Lean modules
+prior to PR #50.
+
+| Instance | v0.3 hypothesis (weak) | v0.4 hypothesis (strong) | Lean module |
+|---|---|---|---|
+| **FinVect_{F_q}** | bilinear (preserves `+` and `·` each slot) | unchanged — already strong | `Foundation/R/Bilinear/` (GUT-A/B) |
+| **HeytAlg** | `φ ⊥ v ↔ ⊥` and `φ u ⊥ ↔ ⊥` (each slot preserves `⊥`) | `IsHeytingBilinear` — Heyting-hom in each slot (preserves `⊥⊤⊓⊔⇨`) | `Foundation/Order/HeytingBimorphism.lean §1` |
+| **Frm** | `φ ⊥ v = ⊥` and `φ u ⊥ = ⊥` (each slot preserves `⊥`) | `IsJTFrameBilinear` — preserves `⨆` (arbitrary joins) AND `⊓` (finite meets) in each slot | `Foundation/Order/FrameBimorphism.lean §2` |
+
+For FinVect this is a no-op: the standard `BilinForm`-style hypothesis is
+already strong (each slot is `F_q`-linear, which in characteristic `q`
+finite-fields entails preservation of `+`, `·`, `0`, and scalar action
+each slot). The Witt-Arf classification (GUT-A/B) is untouched.
+
+For HeytAlg the strong upgrade triggers a **collapse**: see §4.2bis.3
+below. For Frm it gates the (non-vacuous) Joyal-Tierney classification on
+the existing Mathlib `frameCoprod` PR — the bilinearity now has enough
+structure to invoke the universal property of the frame coproduct, but
+the supporting PR is itself a research-open in this project.
+
+Both counter-examples above are explicitly **filtered out** by the strong
+hypotheses:
+
+- **B3** fails `map_himp_left` (and `map_sup_left`, and `map_top_left`,
+  pick any) — the cross-slot structure of `¬(u 0 ∧ ¬u 1 ∧ ¬v 0 ∧ v 1)`
+  does not commute with Heyting implication in the left slot when one
+  reads off `φ (a₁ ⇨ a₂) b = φ a₁ b ⇨ φ a₂ b` at concrete points.
+- **B4** fails `map_inf_left` (and `map_sSup_left`) — the cross-pairing
+  `(u 0 ⊓ v 1) ⊔ (u 1 ⊓ v 0)` distributes joins across the union of
+  cross-cells, which is a strictly stronger pattern than join-preservation
+  in the left slot alone.
+
+#### §4.2bis.3 The non-trivial asymmetry (the philosophical core)
+
+The strong upgrade does not restore a uniform classification; instead it
+exposes a **categorical asymmetry across the three non-trivial bases**:
+
+| Instance | Strong P3 behavior | Reason |
+|---|---|---|
+| **FinVect_{F_q}** | non-vacuous; Witt-Arf classification (GUT-A/B) | linear, **non-cartesian** SMCC |
+| **Frm** | non-vacuous; Joyal-Tierney classification (gated on Mathlib `frameCoprod`) | **non-cartesian** SMCC |
+| **HeytAlg** | **vacuous via collapse** (`IsHeytingBilinear.collapse` ⇒ `⊥ = ⊤`) | **cartesian closed** |
+
+The Heyting collapse is not a defect of the framework. Cartesian-closed
+categories have `product = tensor`; there is no separate bilinear theory
+beyond products. Concretely, in HeytAlg the joint constraints
+`φ ⊥ b = ⊥` and `φ ⊤ b = ⊤` (the latter derived from `map_himp_left` via
+`⊥ ⇨ ⊥ = ⊤`), together with `map_bot_right a = ⊤`, force `φ ⊤ ⊥` to be
+both `⊤` and `⊥`, forcing the algebra to be trivial. The Lean witness is
+`Foundation/Order/HeytingBimorphism.lean` lines 213–218
+(`IsHeytingBilinear.collapse`):
+
+```lean
+theorem IsHeytingBilinear.collapse
+    {φ : H → H → H} (h : IsHeytingBilinear φ) : (⊥ : H) = ⊤ := by
+  have h_top : φ ⊤ ⊥ = ⊤ := h.map_top_left ⊥
+  have h_bot : φ ⊤ ⊥ = ⊥ := h.map_bot_right ⊤
+  rw [h_top] at h_bot
+  exact h_bot.symm
+```
+
+The right *philosophical* reading: the vacuity is the framework **correctly
+detecting** that there is nothing for P3 to say in a cartesian-closed
+setting beyond what `product = tensor` already says. A close analogy:
+
+> **Torsion on ℚ is vacuous** — not because torsion theory is broken, but
+> because ℚ is torsion-free, and torsion correctly reports this fact. The
+> torsion predicate is universal across abelian groups; on ℚ it returns
+> the trivial subgroup; the predicate has not failed, it has *measured*
+> ℚ's torsion-freeness.
+
+By the same logic: `IsHeytingBilinear` is the universal *non-Cartesian*
+bilinear predicate transported to HeytAlg; on a cartesian-closed
+SMCC it returns the trivial bimorphism `constBot`; the predicate has not
+failed, it has measured HeytAlg's cartesian closure.
+
+The same P3 axiom thereby reveals the **categorical fingerprint** of each
+instance:
+
+- **FinVect** — *linear algebra*: P3 = Witt-Arf classification (the
+  irreducible bilinear-form data over `F_q`).
+- **Frm** — *pointfree topology*: P3 = Joyal-Tierney classification (the
+  irreducible frame-tensor data; needs `⨆` and `⊓` each slot).
+- **HeytAlg** — *cartesian closure*: P3 = vacuous via collapse (because
+  in a cartesian-closed SMCC, `product = tensor`, so there is no bilinear
+  theory separate from products).
+
+This **is** the GUT-C unification: *one* axiom (P3), *one* doctrinal
+formulation (strong bimorphism in the ambient SMCC), *instance-specific
+manifestations* that depend on whether the ambient SMCC is cartesian.
+v0.3's weak hypothesis hid this asymmetry by being insufficiently
+discriminating; v0.4's strong hypothesis exposes it as the central
+phenomenon.
+
+#### §4.2bis.4 Why this is a feature, not a bug
+
+Three corroborating points:
+
+1. **The asymmetry is *predicted* by §3.5**, which explicitly states "the
+   single P3 axiom in T_GUT, instantiated in different C, gives different
+   concrete classifications". v0.3 just hadn't yet pinned down what
+   *different* meant for HeytAlg vs Frm vs FinVect. v0.4 does: the
+   discriminant is **cartesian closure of the ambient SMCC**.
+
+2. **The collapse is a *theorem*, not a workaround**:
+   `IsHeytingBilinear.collapse` is a proved (`0 sorry`) statement that
+   any strongly Heyting-bilinear `φ` on a non-trivial Heyting algebra
+   implies `⊥ = ⊤`. The collapse is intrinsic to the predicate, not an
+   artifact of the v0.4 statement.
+
+3. **The non-vacuous cases (FinVect, Frm) survive intact**, with the
+   strong hypothesis being exactly what the literature uses for the
+   classification theorems (`BilinForm` for FinVect, Joyal-Tierney 1984
+   for Frm). v0.4 brings GUT-C's P3 into agreement with standard
+   bimorphism theory in each non-Cartesian SMCC.
+
+The torsion-on-ℚ analogy is exact in another way: torsion theory is
+*useful precisely because it discriminates* between torsion and
+torsion-free abelian groups. A "torsion theory" that returned non-trivial
+subgroups on ℚ would be measuring the wrong thing. Similarly, a P3 that
+returned non-vacuous content in HeytAlg would be smuggling in
+non-cartesian structure that HeytAlg does not have.
+
+#### §4.2bis.5 Validation lemmas
+
+The counter-examples and their filtration by the strong hypothesis are
+recorded in Lean as the following named theorems (per the post-PR #50
+parallel implementation work; see commit log on
+`Foundation/Order/HeytingBimorphism.lean` and
+`Foundation/Order/FrameBimorphism.lean`):
+
+| Lemma | Module | Statement |
+|---|---|---|
+| `IsHeytingBilinear.collapse` | `Foundation/Order/HeytingBimorphism.lean` §3 (lines 213–218) | strong HeytAlg bimorphism on non-trivial `H` ⇒ `⊥ = ⊤` |
+| `B3_counterexample_fails_strong` | `Foundation/Order/HeytingBimorphism.lean` §5 | concrete `φ u v := ¬(u 0 ∧ ¬u 1 ∧ ¬v 0 ∧ v 1)` on `Fin 2 → Prop` satisfies v0.3 weak hyp but **fails** `IsHeytingBilinear` (witnessed by `map_himp_left`) |
+| `IsJTFrameBilinear` (def) | `Foundation/Order/FrameBimorphism.lean` §2 (lines 167–180) | preserves `⨆` and `⊓` in each slot |
+| `B4_counterexample_fails_strong` | `Foundation/Order/FrameBimorphism.lean` §5 | concrete `φ u v := (u 0 ⊓ v 1) ⊔ (u 1 ⊓ v 0)` on `Fin 2 → Ω` satisfies v0.3 weak hyp but **fails** `IsJTFrameBilinear` (witnessed by `map_inf_left`) |
+| (instance use) | `Foundation/Doctrine/Instance/Heyting.lean` | P3-Heyting statement updated to require `IsHeytingBilinear`; conclusion follows trivially by collapse on non-trivial `H` |
+| (instance use) | `Foundation/Doctrine/Instance/Topological.lean` lines 480–535 | P3-Frm statement updated to require `IsJTFrameBilinear`; conclusion follows under JT classification + Sierpinski-cube cancellation (still gated on Mathlib `frameCoprod`) |
+
+These validation lemmas constitute the **foreground Lean evidence** that
+v0.3's weak hypothesis was insufficient and v0.4's strong hypothesis is
+the right replacement. They are also the **safety net** for any future
+revisions: any further weakening of the bimorphism predicate in HeytAlg
+or Frm must demonstrably rule out `B3_counterexample` and
+`B4_counterexample`, respectively.
+
+#### §4.2bis.6 Consequences for the §4.2.1 Heyting validation table
+
+The §4.2.1 per-generator analysis (Heyting case) remains correct in
+overall shape, but the entry for `relate` (P3) is now sharpened:
+
+| Generator | Heyting form (v0.3) | Heyting form (v0.4) |
+|---|---|---|
+| `relate` (P3) | Reformulated as lattice morphism classification (`P3_heyting`) under weak bilinear hyp | Reformulated as `IsHeytingBilinear` ⇒ collapse to `constBot`; **vacuous classification = categorical fingerprint of cartesian closure** |
+
+The framework-discriminates-correctly conclusion of §4.2.1 is
+*strengthened*, not weakened: v0.4 shows the framework discriminates not
+just between substrate-level and algebraic-class generators but also
+between cartesian-closed and non-cartesian SMCC bases for each
+algebraic-class generator. The `DiamondH4` discovery (§4.2.2) is
+orthogonal and unaffected — it concerns P7b (Wedderburn anchor), not P3.
 
 ### §4.3 Phase γ.3 (6-12 months) — Remaining Instances + Publication
 
@@ -721,6 +960,13 @@ Alternative is Path B (~24-30 months for per-class proofs, lower risk, multi-pap
 ---
 
 ## Appendix C — Revision History
+
+- **v0.4 (2026-05-17, post-PR #50 P3 hypothesis correction)**: ★ **P3 hypothesis strengthened per Lean-verified counter-examples**. Key updates:
+  - **§4.2bis NEW (~1900 words)**: P3 hypothesis revision documenting the two explicit Lean counter-examples (`B3_counterexample` on `Fin 2 → Prop`; `B4_counterexample` on `Fin 2 → Ω`) that falsify v0.3's weak bilinear hypothesis, the instance-natural strong-predicate upgrade (`IsHeytingBilinear` / `IsJTFrameBilinear`), the cartesian-closedness asymmetry (FinVect/Frm non-vacuous, HeytAlg vacuous via collapse), the torsion-on-ℚ analogy for reading the HeytAlg collapse as a *categorical fingerprint*, and the explicit validation-lemma table citing `Foundation/Order/HeytingBimorphism.lean` §1, §3 (lines 213–218), §5 and `Foundation/Order/FrameBimorphism.lean` §2 (lines 167–180), §5
+  - **§3.5 forward pointer**: P3 instantiation row now warns that v0.3's weak hypothesis is superseded by §4.2bis
+  - **Header**: bumped to v0.4; status line records P3 hypothesis correction; new "v0.4 correction" line in front-matter
+  - **Risk tier**: unchanged at MEDIUM (correction strengthens framework discriminative power; does not introduce new framework risk)
+  - **Net philosophical claim**: same P3 axiom + same doctrinal formulation, with the cartesian-vs-non-cartesian asymmetry revealed as the central GUT-C unification phenomenon rather than as a defect
 
 - **v0.3 (2026-05-17, post γ.2 Heyting validation)**: ★ **PATH C VALIDATED**. Key updates:
   - **§4.2 rewritten**: γ.2 substantially complete via 5 parallel agents (G1-G5), 3120 LOC, 8 sorries

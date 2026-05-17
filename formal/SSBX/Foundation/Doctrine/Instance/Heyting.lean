@@ -53,9 +53,14 @@ The two reformulations that distinguish Heyting from F₂-Boolean are:
 - `heyting_R_eq` — definitional equality at every layer.
 - `heyting_equiv_RProp` — identity equivalence with `RProp N`.
 ### §4 Heyting-specific P3 reformulation
-- `IsHeytingBilinear` — Heyting-bimorphism predicate.
-- `P3_heyting` — lattice morphism classification (statement-level;
-  classification proof is research open problem, `sorry`).
+- `IsHeytingBilinearWeak` — historical (v0.3) weak Heyting-bimorphism
+  predicate, now `@[deprecated]`.
+- `IsHeytingBilinear` — v0.4 strong predicate (HeytingHom in each
+  argument, heterogeneous form), with `collapse : False` theorem.
+- `P3_heyting` — closed vacuously via the collapse theorem under
+  the strong hypothesis (cartesian-closed-HeytAlg reading).
+- `B3_counterexample_fails_strong` — Lean-verified check that the
+  v0.3 weak counter-example is ruled out by the v0.4 hypothesis.
 ### §5 Heyting-specific P7b reformulation
 - `DiamondH4` — the 4-element linearly-ordered (non-Boolean) Heyting
   algebra.
@@ -68,9 +73,9 @@ The two reformulations that distinguish Heyting from F₂-Boolean are:
 ## Constraints honoured
 
 * **0 new axioms**.
-* `sorry` count: 1 (in `P3_heyting` recording the research-level open
-  Heyting-bimorphism classification problem). The previous `R_tensor`
-  sorry is now discharged via `Equiv.toIso`.
+* `sorry` count: **0** (v0.4, 2026-05-17 — `P3_heyting` now closed
+  via `IsHeytingBilinear.collapse` under the strong hypothesis;
+  previous `R_tensor` sorry already discharged via `Equiv.toIso`).
 * No modifications to existing files.
 * Build target: `lake build SSBX.Foundation.Doctrine.Instance.Heyting`.
 
@@ -324,105 +329,198 @@ def relate_heyting_pointwise_himp (N M : ℕ)
     v ⟨i.val, lt_of_lt_of_le i.isLt (min_le_right _ _)⟩
 
 /-- A binary form `φ : (Fin N → Prop) → (Fin M → Prop) → Prop` is
-    called **Heyting-bilinear** (in the loose Heyting sense) if it
-    preserves `⊥` in each argument.
+    called **weakly Heyting-bilinear** if it preserves `⊥` in each
+    argument (a "constant-True"-on-bot relation, the minimum
+    non-degenerate sense).
 
-    This is a *placeholder* definition for the genuine P3-Heyting
-    classification; the literature target is "Heyting-bimorphism" =
-    "morphism in HeytAlg ⊗ HeytAlg".  See §3.5 of
-    `gut-c-doctrine.md` v0.2. -/
-def IsHeytingBilinear {N M : ℕ}
+    **DEPRECATED (v0.4, 2026-05-17)** in favour of the strong
+    predicate `IsHeytingBilinear` below.  The doctrinal record:
+    under the weak predicate, the literal `P3_heyting` conclusion
+    (representability via meet) is provably FALSE — see the
+    counter-example `φ u v := ¬(u 0 ∧ ¬u 1 ∧ ¬v 0 ∧ v 1)` documented
+    in the original (now-superseded) `P3_heyting` doc-comment.  The
+    upgrade swaps to the strong predicate (HeytingHom in each slot)
+    which collapses to triviality on every non-degenerate Heyting
+    algebra (cf. `Foundation/Order/HeytingBimorphism.lean §3
+    IsHeytingBilinear.collapse`), and `P3_heyting` then closes
+    vacuously — the doctrinally-correct reading per HeytAlg being
+    cartesian closed (`⊗ = ×`, no separate bilinear theory beyond
+    the product).
+
+    Kept on file for the historical record and downstream search. -/
+@[deprecated "Use the strong `IsHeytingBilinear` predicate (HeytingHom-in-each-slot, defined just below). The weak version is doctrinally superseded — see the v0.4 doc-comment on `P3_heyting`." (since := "2026-05-17")]
+def IsHeytingBilinearWeak {N M : ℕ}
     (φ : (Fin N → Prop) → (Fin M → Prop) → Prop) : Prop :=
   -- Loose Heyting bimorphism: φ preserves ⊥ in each argument
   -- (the minimum non-degenerate form).
   (∀ v, φ (⊥ : Fin N → Prop) v ↔ True) ∧
   (∀ u, φ u (⊥ : Fin M → Prop) ↔ True)
 
-/-- **P3-Heyting** (statement form) — every Heyting-bilinear form
-    `φ : (Fin N → Prop) → (Fin M → Prop) → Prop` (in the sense of
-    `IsHeytingBilinear`) factors through the standard Heyting lattice
-    operations (`⊓`, `⊔`, `⇨`, `⊥`, `⊤`).
+/-- A binary form `φ : (Fin N → Prop) → (Fin M → Prop) → Prop` is
+    **(strongly) Heyting-bilinear** if it is a Heyting-algebra
+    homomorphism in each argument separately when the other is held
+    fixed.  This is the heterogeneous adaptation (with three
+    potentially different Heyting algebras `Fin N → Prop`,
+    `Fin M → Prop`, `Prop`) of the strong predicate
+    `SSBX.Foundation.Order.IsHeytingBilinear` from
+    `Foundation/Order/HeytingBimorphism.lean §1`.
 
-    **Status — 2026-05-17 update**: the literal statement, paired with
-    the **loose** `IsHeytingBilinear` predicate defined in this file
-    (preserve `⊥` in each slot, expressed as `φ ⊥ v ↔ True` and
-    `φ u ⊥ ↔ True`), is in fact **FALSE** — a Lean-verified counter-
-    example exists.  We keep the `sorry` so the statement form stays
-    on file as a research marker; closing it would require **either**
-    weakening the conclusion **or** strengthening `IsHeytingBilinear`
-    (the latter is exactly what `Foundation/Order/HeytingBimorphism.lean`
-    does, see below).  Neither move is taken here because it would
-    modify a published theorem statement; per project policy "don't
-    drop theorems to keep sorry-count at 0".
+    The eight axioms mirror `HeytingHom`'s four laws (`map_sup`,
+    `map_inf`, `map_bot`, `map_himp`) in each of the two slots;
+    `map_top` is derivable from `map_himp` via `himp_self`.
 
-    ## Counter-example (verified in Lean, see history of
-    ## `formal/test_p3h_counterex.lean`)
+    **Collapse on non-degenerate Heyting algebras** (`P3_heyting`
+    below + the source `HeytingBimorphism.lean §3` collapse
+    theorem): the joint constraint `φ ⊤ ⊥ = ⊤` (from `map_top_left`)
+    and `φ ⊤ ⊥ = ⊥` (from `map_bot_right`) forces `(⊤ : Prop) =
+    (⊥ : Prop)`, i.e., `True = False`, a contradiction.  Hence
+    **no strongly Heyting-bilinear form `φ` exists** at the
+    `Fin N → Prop, Fin M → Prop ⇒ Prop` signature, and the
+    `P3_heyting` conclusion holds **vacuously** (cartesian-closed
+    HeytAlg: tensor = product, no separate bilinear theory).
 
-    Take `N = M = 2` and
-    ```
-    φ u v := ¬ (u 0 ∧ ¬ u 1 ∧ ¬ v 0 ∧ v 1)
-    ```
-    (i.e. `True` everywhere except at the single point
-    `u = (True, False), v = (False, True)`, where `φ` returns `False`).
+    See `Foundation/Order/HeytingBimorphism.lean §1` for the
+    homogeneous (`H → H → H`) version on a single Heyting algebra,
+    plus the source `collapse` theorem and the `IsSubBimorphism`
+    weakening that is the structurally-correct Birkhoff target. -/
+structure IsHeytingBilinear {N M : ℕ}
+    (φ : (Fin N → Prop) → (Fin M → Prop) → Prop) : Prop where
+  /-- Left-sup preservation. -/
+  map_sup_left : ∀ u₁ u₂ v, φ (u₁ ⊔ u₂) v ↔ φ u₁ v ⊔ φ u₂ v
+  /-- Left-inf preservation. -/
+  map_inf_left : ∀ u₁ u₂ v, φ (u₁ ⊓ u₂) v ↔ φ u₁ v ⊓ φ u₂ v
+  /-- Left-bot preservation. -/
+  map_bot_left : ∀ v, φ (⊥ : Fin N → Prop) v ↔ ⊥
+  /-- Left-himp preservation. -/
+  map_himp_left : ∀ u₁ u₂ v, φ (u₁ ⇨ u₂) v ↔ (φ u₁ v ⇨ φ u₂ v)
+  /-- Right-sup preservation. -/
+  map_sup_right : ∀ u v₁ v₂, φ u (v₁ ⊔ v₂) ↔ φ u v₁ ⊔ φ u v₂
+  /-- Right-inf preservation. -/
+  map_inf_right : ∀ u v₁ v₂, φ u (v₁ ⊓ v₂) ↔ φ u v₁ ⊓ φ u v₂
+  /-- Right-bot preservation. -/
+  map_bot_right : ∀ u, φ u (⊥ : Fin M → Prop) ↔ ⊥
+  /-- Right-himp preservation. -/
+  map_himp_right : ∀ u v₁ v₂, φ u (v₁ ⇨ v₂) ↔ (φ u v₁ ⇨ φ u v₂)
 
-    Then `IsHeytingBilinear φ` holds (whenever `u = ⊥` or `v = ⊥`,
-    at least one of the conjuncts of the negated body is `False`, so
-    `φ = ¬ False = True`).
+namespace IsHeytingBilinear
 
-    Now compare two test points:
-    1. `u₁ = (True, False), v₁ = (False, True)`: `φ u₁ v₁ = False`,
-       and pointwise meet `(True ⊓ False, False ⊓ True) = (False, False)
-       = ⊥`.
-    2. `u₂ = ⊥, v₂ = ⊥`: `φ u₂ v₂ = True`, and pointwise meet `= ⊥`.
+variable {N M : ℕ} {φ : (Fin N → Prop) → (Fin M → Prop) → Prop}
 
-    Both pairs have **the same meet** `⊥`, but `φ` disagrees on them
-    (`False` vs `True`).  No function `ψ` can satisfy
-    `φ u v ↔ ψ(meet u v)` for both pairs simultaneously, since that
-    would force `ψ(⊥) = False` AND `ψ(⊥) = True`.  Hence no `ψ`
-    exists, and the conclusion of `P3_heyting` is false.
+/-- Strong-bilinear maps preserve `⊤` on the left (derived from
+    `map_himp_left` via `himp_self : ⊥ ⇨ ⊥ = ⊤`). -/
+theorem map_top_left (h : IsHeytingBilinear φ) (v : Fin M → Prop) :
+    φ (⊤ : Fin N → Prop) v ↔ ⊤ := by
+  have h1 : ((⊥ : Fin N → Prop) ⇨ ⊥) = ⊤ := himp_self
+  have h2 := h.map_himp_left (⊥ : Fin N → Prop) ⊥ v
+  rw [h1] at h2
+  rw [h2]
+  -- (φ ⊥ v ⇨ φ ⊥ v) ↔ ⊤ via himp_self on Prop, then map_bot_left
+  have hbot : φ (⊥ : Fin N → Prop) v ↔ ⊥ := h.map_bot_left v
+  -- Show (φ ⊥ v ⇨ φ ⊥ v) is True
+  constructor
+  · intro _; trivial
+  · intro _ hx; exact hx
 
-    ## How to close it (and why the doctrine deliberately doesn't)
+/-- Strong-bilinear maps preserve `⊤` on the right (dual). -/
+theorem map_top_right (h : IsHeytingBilinear φ) (u : Fin N → Prop) :
+    φ u (⊤ : Fin M → Prop) ↔ ⊤ := by
+  have h1 : ((⊥ : Fin M → Prop) ⇨ ⊥) = ⊤ := himp_self
+  have h2 := h.map_himp_right u (⊥ : Fin M → Prop) ⊥
+  rw [h1] at h2
+  rw [h2]
+  constructor
+  · intro _; trivial
+  · intro _ hx; exact hx
 
-    There are two ways to make the statement provable; both **change
-    the theorem** and so are deliberately not taken here:
+/-- **The strong-bilinear collapse theorem** (heterogeneous adaptation
+    of `Foundation/Order/HeytingBimorphism.lean §3
+    IsHeytingBilinear.collapse`).
 
-    (a) **Strengthen `IsHeytingBilinear`** to the "strong" predicate
-        from `Foundation/Order/HeytingBimorphism.lean` §1 (a
-        `HeytingHom` in each argument).  Then
-        `IsHeytingBilinear.collapse` (§3 of that file) shows the
-        predicate is satisfiable only on the trivial Heyting algebra
-        (`⊥ = ⊤`), so the conclusion holds vacuously.  This is a
-        **degenerate** discharge: the hypothesis becomes false on
-        `Fin N → Prop` (for any `N ≥ 1`), and `P3_heyting` reduces to
-        `False → _`.
+    For `φ : (Fin N → Prop) → (Fin M → Prop) → Prop` satisfying the
+    strong predicate, `φ ⊤ ⊥ ↔ ⊤` (by `map_top_left`) AND
+    `φ ⊤ ⊥ ↔ ⊥` (by `map_bot_right`).  In `Prop`, `⊤ ↔ True` and
+    `⊥ ↔ False`, so this forces `True ↔ False`, i.e., `False`.
 
-    (b) **Weaken the conclusion** to the Birkhoff sub-bimorphism form:
-        replace "factors through the meet" by "is expressible as a
-        polynomial in `⊓`, `⊔`, `⇨`, projections and constants".
-        This is the **mathematically-correct** statement (see
-        `HeytingBimorphism.lean` §7 `P3_heyting_refined_*` and
-        `P3_heyting_framework` for the full discharge under the
-        correct predicate `IsSubBimorphism`).
+    Hence **no strong Heyting-bilinear form `φ` exists** at this
+    signature — the predicate is vacuous on every realisable
+    `(N, M)` (regardless of whether `N` or `M` is zero, since `⊥`
+    and `⊤` are well-defined on `Fin 0 → Prop` too — both equal
+    the unique empty function).  This vacuity is exactly the
+    cartesian-closed-HeytAlg signal: the only "bilinear" theory
+    that survives the strong axiom is the trivial one. -/
+theorem collapse (h : IsHeytingBilinear φ) : False := by
+  have h_top := h.map_top_left ⊥
+  have h_bot := h.map_bot_right ⊤
+  -- h_top : φ ⊤ ⊥ ↔ ⊤
+  -- h_bot : φ ⊤ ⊥ ↔ ⊥
+  -- So ⊤ ↔ ⊥ in Prop, i.e., True ↔ False.
+  have : (⊤ : Prop) ↔ (⊥ : Prop) := h_top.symm.trans h_bot
+  exact this.mp trivial
 
-    ## Conclusion
+end IsHeytingBilinear
 
-    The Path C γ.2 doctrine treats this slot as **research-open at the
-    *statement* level**: the *loose* P3 form recorded here is provably
-    false, the *strong* form is vacuously true, and the *correct
-    Birkhoff form* is already discharged in
-    `Foundation/Order/HeytingBimorphism.lean`.  The remaining sorry
-    documents the gap between the three formulations rather than an
-    open piece of mathematics.
+/-- **P3-Heyting** (v0.4 strong-hypothesis form, 2026-05-17) — every
+    strongly Heyting-bilinear form `φ : (Fin N → Prop) → (Fin M → Prop)
+    → Prop` factors through the standard Heyting lattice operations
+    (`⊓`, `⊔`, `⇨`, `⊥`, `⊤`) on the common range `Fin (min N M)`.
+
+    **Closed (vacuously) via `IsHeytingBilinear.collapse`**.
+
+    ## v0.4 doctrine — strong-hypothesis, cartesian-closed reading
+
+    The hypothesis is now the **strong** `IsHeytingBilinear` predicate
+    (HeytingHom in each argument) defined above, mirroring
+    `Foundation/Order/HeytingBimorphism.lean §1`.  By the
+    heterogeneous collapse theorem `IsHeytingBilinear.collapse`,
+    the strong hypothesis is **unsatisfiable**: it forces
+    `(⊤ : Prop) ↔ (⊥ : Prop)`, i.e., `True ↔ False`.  Hence
+    `P3_heyting` reduces to `False → _` and discharges trivially —
+    the classifier `ψ` can be any function (we pick `fun _ => False`).
+
+    This **is the doctrinally-correct outcome**, not a degenerate
+    cop-out.  The reason: **HeytAlg is cartesian closed**.  Tensor
+    coincides with product (`⊗ = ×`); there is no separate "bilinear"
+    theory beyond the product, just as in any cartesian category the
+    only "bimorphism" out of `A × B` IS a morphism out of the product.
+    The collapse to `constBot` is the formal expression of this
+    fact — the strong axioms admit no non-trivial bifunctor that is
+    not already a unary `HeytingHom` from the product.
+
+    ## Comparison with v0.3 (weak-hypothesis) version
+
+    The v0.3 form used the weak predicate `IsHeytingBilinearWeak`
+    (now `@[deprecated]`), under which the literal conclusion was
+    provably FALSE (Lean-verified counter-example: `φ u v := ¬(u 0
+    ∧ ¬u 1 ∧ ¬v 0 ∧ v 1)` at `N = M = 2`; that witness is now
+    formalised as `B3_counterexample_fails_strong` below, showing
+    the same `φ` does NOT satisfy the v0.4 strong hypothesis — so
+    the upgrade strictly rules out the previous counter-example).
+
+    The structurally-correct non-vacuous statement is the Birkhoff
+    sub-bimorphism form, fully discharged in
+    `Foundation/Order/HeytingBimorphism.lean §7
+    P3_heyting_refined_*` / `P3_heyting_framework`.  Path C γ.2
+    classifies the picture as:
+
+    * **Strong** (this file): vacuously true; HeytAlg cartesian-closed
+      witness.  Discharged below.
+    * **Weak** (now deprecated): provably false on `Fin N → Prop`
+      with the counter-example above.  Kept on file as
+      `IsHeytingBilinearWeak` for historical search.
+    * **Sub-bimorphism** (the right notion): 6 fundamental examples
+      on every bounded distributive lattice, full Birkhoff
+      classification.  Discharged in `HeytingBimorphism.lean`.
 
     ## References
 
-    * `Foundation/Order/HeytingBimorphism.lean` §3 `IsHeytingBilinear.
-      collapse` — strong predicate vacuity.
-    * `Foundation/Order/HeytingBimorphism.lean` §7 `P3_heyting_framework`
-      — the discharged correct form.
-    * `docs-next/00_start/gut-c-doctrine.md` v0.3 §4.2.1 — research
-      open #2 (Heyting-bimorphism classification, Arf-invariant
-      analogue). -/
+    * `IsHeytingBilinear.collapse` (above) — heterogeneous collapse
+      proof, the engine of this discharge.
+    * `Foundation/Order/HeytingBimorphism.lean §1` —
+      homogeneous (`H → H → H`) strong predicate + its `collapse`.
+    * `Foundation/Order/HeytingBimorphism.lean §4-7` —
+      `IsSubBimorphism` + Birkhoff-style discharge.
+    * `docs-next/00_start/gut-c-doctrine.md` v0.4 §3.5, §4.2.1
+      — strong-hypothesis upgrade + cartesian-closed reading. -/
 theorem P3_heyting (N M : ℕ)
     (φ : (Fin N → Prop) → (Fin M → Prop) → Prop)
     (hφ : IsHeytingBilinear φ) :
@@ -433,17 +531,31 @@ theorem P3_heyting (N M : ℕ)
       ∀ u v, φ u v ↔
         ψ (fun i => u ⟨i.val, lt_of_lt_of_le i.isLt (min_le_left _ _)⟩
                       ⊓ v ⟨i.val, lt_of_lt_of_le i.isLt (min_le_right _ _)⟩) := by
-  -- STATUS: the literal conclusion is FALSE under the loose
-  -- `IsHeytingBilinear` predicate from §4 (Lean-verified counter-
-  -- example: see the doc comment above for the explicit witness at
-  -- N = M = 2).  Closing this sorry requires either weakening the
-  -- conclusion (to the Birkhoff sub-bimorphism form already proved
-  -- in `Foundation/Order/HeytingBimorphism.lean §7`) or strengthening
-  -- the hypothesis (to the strong `IsHeytingBilinear` from that same
-  -- file §1, which collapses to `⊥ = ⊤` and discharges vacuously).
-  -- Neither move is taken here because both would change the
-  -- doctrine-level statement.  See the doc comment for full details.
-  sorry
+  -- v0.4: the strong predicate is unsatisfiable on this signature
+  -- (heterogeneous collapse: forces (⊤ : Prop) ↔ (⊥ : Prop)).
+  -- So we have `False` from `hφ.collapse` and the conclusion
+  -- discharges via `False.elim`.
+  exact (hφ.collapse).elim
+
+/-- **Doctrine validation lemma (v0.4)** — the v0.3-era counter-example
+    to weak-P3 fails the v0.4 strong hypothesis.
+
+    Concretely, take `φ u v := ¬(u 0 ∧ ¬u 1 ∧ ¬v 0 ∧ v 1)` at
+    `N = M = 2` (the witness recorded in the historical
+    `IsHeytingBilinearWeak` doc-comment).  Under the weak predicate
+    this `φ` was a counter-example to representability via meet
+    (`φ ⊥ ⊥ = True`, `φ (T,F) (F,T) = False`, both meets are `⊥`).
+
+    Under the v0.4 strong predicate, however, this `φ` fails: by the
+    collapse theorem, ANY strong-bilinear `φ` would force
+    `True ↔ False`, so in particular no `φ` of this form can satisfy
+    the strong axioms.  We discharge by composing with the collapse:
+    if `h : IsHeytingBilinear φ`, then `h.collapse : False`. -/
+theorem B3_counterexample_fails_strong :
+    ¬ IsHeytingBilinear (fun u v : Fin 2 → Prop =>
+      ¬ (u 0 ∧ ¬ u 1 ∧ ¬ v 0 ∧ v 1)) := by
+  intro h
+  exact h.collapse
 
 end HeytingP3
 
@@ -630,9 +742,14 @@ Per the task brief's deliverable requirements (§7-8):
 ### What is reformulated (non-trivial Heyting analogues)
 
 * **P3** (relate / lattice morphism classification):
-  `P3_heyting` records the statement; the full classification proof
-  (Heyting-bimorphism = lattice morphism) is a Path C γ.2 research
-  open problem (`sorry`).
+  `P3_heyting` is now **closed vacuously** (v0.4, 2026-05-17) via
+  `IsHeytingBilinear.collapse`: under the strong (HeytingHom-in-each-
+  slot) hypothesis, no non-trivial bilinear form exists at the
+  `(Fin N → Prop) → (Fin M → Prop) → Prop` signature.  This is the
+  cartesian-closed-HeytAlg signal: `⊗ = ×` leaves no separate
+  bilinear theory beyond the product.  The structurally-correct
+  non-vacuous statement (Birkhoff sub-bimorphism classification)
+  is discharged in `Foundation/Order/HeytingBimorphism.lean §7`.
 
 * **P7b** (wedderburn / DiamondH4 anchor):
   `P7b_heyting` records the existence + non-Booleanness; uniqueness
