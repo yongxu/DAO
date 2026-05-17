@@ -209,7 +209,7 @@ private def PatSubst.lookup : PatSubst → String → Option Tm
     `pVars` is the set of names that ARE pattern vars in this LHS; vars not
     in `pVars` are treated as ordinary structural references that must match
     by name. -/
-partial def matchPat (pVars : List String) : Tm → Tm → PatSubst → Option PatSubst
+def matchPat (pVars : List String) : Tm → Tm → PatSubst → Option PatSubst
   | .var n, t, σ =>
       if pVars.contains n then
         match σ.lookup n with
@@ -294,7 +294,7 @@ def tryRulesRoot (env : RewriteEnv) (t : Tm) : Option Tm :=
     Fuel-bounded; if a rule fires we **restart** the bottom-up walk with
     decremented fuel to handle cascading rewrites (e.g. `错 错 错 错 X` →
     `错 错 X` → `X` takes 2 passes). -/
-partial def normalizeAux (env : RewriteEnv) : Nat → Tm → Tm
+def normalizeAux (env : RewriteEnv) : Nat → Tm → Tm
   | 0, t => t
   | n+1, t =>
     let t' := rewriteBottomUp t
