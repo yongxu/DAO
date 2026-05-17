@@ -367,11 +367,13 @@ example :
       ∧ containsSubstring out "candidates" = true
       ∧ ((out.splitOn "\n").head? = some "或 乾") := by native_decide
 
-/-- end-to-end 「或 乾」 — pipeline 实际产 resolve.ambiguous. -/
+/-- end-to-end 「或 乾」 — after B-5, `或` resolves to the `Tm.orB` builtin
+    (priority above catalogue), so the pipeline no longer produces a
+    `resolve.ambiguous`. The renderer test for the ambiguous-resolve
+    path above (constructed err) still exercises the renderer logic. -/
 example :
     let out := renderForInput "或 乾"
-    containsSubstring out "ambiguous" = true
-      ∧ containsSubstring out "candidates" = true := by native_decide
+    out ≠ "" := by native_decide
 
 /-- (5) empty input — pipeline 实际产 parse.expectedExpression 0. -/
 example :

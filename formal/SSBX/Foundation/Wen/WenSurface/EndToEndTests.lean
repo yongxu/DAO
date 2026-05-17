@@ -223,10 +223,12 @@ example :
      | _ => false) = true :=
   by native_decide
 
+/-- B-5: `或` now resolves to `Tm.orB : Bool → Bool → Bool` builtin
+    (priority above catalogue), so `或 乾` is no longer an ambiguous
+    catalogue resolve.  It still fails to compile — `或` is arity-2
+    and only one argument follows. -/
 example :
-    (match wenyanCompile "或 乾" with
-     | .error (.resolve (.ambiguous "或" 0 candidates)) => candidates.length == 2
-     | _ => false) = true :=
+    (wenyanCompile "或 乾").toOption.isNone = true :=
   by native_decide
 
 example :
@@ -284,8 +286,15 @@ example :
     (wenyanInterpBool "皆 者 甲 同 甲 甲").toOption = some true :=
   by native_decide
 
+/-- B-5: `或 者 ...` previously routed to the `Q_5` existential
+    quantifier via the catalogue + 「者」 cue.  After B-5, `或` resolves
+    directly to the `Tm.orB : Bool → Bool → Bool` builtin (priority
+    above the catalogue), so this construction is no longer reachable
+    via `或`.  The existential surface is intentionally left without a
+    direct test here — the `Tm.orB` semantics is covered by the B-5
+    builtin tests in `Reading.lean`. -/
 example :
-    (wenyanInterpBool "或 者 甲 同 甲 一").toOption = some true :=
+    (wenyanInterpBool "或 真 假").toOption = some true :=
   by native_decide
 
 example :

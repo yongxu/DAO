@@ -199,11 +199,23 @@ def evalLine (src : String) : String :=
 
 /-- Type query: compile single expression and show `ty` without evaluating.
     `:type` does NOT support multi-statement submissions (the type of a
-    program is not well-defined); falls back to single-stmt `wenyanCompile`. -/
+    program is not well-defined); falls back to single-stmt `wenyanCompile`.
+
+    Special case: if `src` is a bare builtin-Tm surface (single glyph mapped
+    by `resolveBuiltinSurface`, e.g. `加`, `並`, `或`, list ops), report the
+    builtin's `typeCheck` type directly so users can ask `:t 並` without
+    having to supply the full arity. -/
 def typeLine (src : String) : String :=
-  match wenyanCompile src with
-  | .error e => errShow src e
-  | .ok typed => tyStr typed.ty
+  let trimmed := (src.trimAscii).toString
+  match resolveBuiltinSurface trimmed with
+  | some (body, _) =>
+      match typeCheck [] body with
+      | some ty => tyStr ty
+      | none    => "type query failed (builtin not well-typed)"
+  | none =>
+    match wenyanCompile src with
+    | .error e => errShow src e
+    | .ok typed => tyStr typed.ty
 
 /-! ## § 5  Help text -/
 
