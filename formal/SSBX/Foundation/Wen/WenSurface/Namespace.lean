@@ -94,17 +94,9 @@ private def isNamespaceSpace (c : Char) : Bool :=
 /-- 去字符串两端的 namespace-空白. 总函数（结构递归 on List Char）. -/
 private def trimNamespaceSpaces (s : String) : String :=
   let cs := s.toList
-  let dropLead :=
-    let rec go : List Char → List Char
-      | [] => []
-      | c :: rest => if isNamespaceSpace c then go rest else c :: rest
-    go cs
+  let dropLead := cs.dropWhile isNamespaceSpace
   let revCs := dropLead.reverse
-  let dropTrail :=
-    let rec go : List Char → List Char
-      | [] => []
-      | c :: rest => if isNamespaceSpace c then go rest else c :: rest
-    go revCs
+  let dropTrail := revCs.dropWhile isNamespaceSpace
   String.mk dropTrail.reverse
 
 /-- 一个 chunk 是 `用 SP* NS_NAME SP*` 声明，则返回对应 `OperatorGroup`. -/
@@ -169,7 +161,7 @@ def stepProgramNs (i : Nat) (active : List OperatorGroup) (stmts : List ProgramS
     let trimmed := trimNamespaceSpaces chunk
     if looksLikeUseDecl trimmed then
       -- 「用 X」 X ≠ 已知 NS → unknownNamespace
-      let rest := trimNamespaceSpaces (trimmed.drop 1)
+      let rest := trimNamespaceSpaces (trimmed.drop 1).toString
       .error (.unknownNamespace i rest)
     else
       match wenyanCompile chunk with
@@ -230,7 +222,7 @@ example : useStmtNamespace? "用" = none := by native_decide
 /-! ### Namespace 表覆盖性断言 -/
 
 theorem namespace_entries_count :
-    Namespace.entries.length = 39 := by native_decide
+    Namespace.entries.length = 42 := by native_decide
 
 theorem namespace_groups_distinct_count :
     (Namespace.allGroups.foldl
@@ -285,15 +277,15 @@ example :
 /-- 未知 NS_NAME → unknownNamespace 错误（带 index）. -/
 example :
     (match wenyanCompileProgramWithNamespaces "推 一；用 不存在派" with
-     | .error (.unknownNamespace i name) => i = 1 ∧ name = "不存在派"
-     | _ => False) :=
+     | .error (.unknownNamespace i name) => decide (i = 1) && decide (name = "不存在派")
+     | _ => false) = true :=
   by native_decide
 
 /-- code 编译错误时返 .compile + index. -/
 example :
     (match wenyanCompileProgramWithNamespaces "用 墨经；XYZ不存在" with
-     | .error (.compile i _) => i = 1
-     | _ => False) :=
+     | .error (.compile i _) => decide (i = 1)
+     | _ => false) = true :=
   by native_decide
 
 /-- 第一个 NS 声明 + 第二个 NS 声明：active = [P, G] (顺序保留). -/
