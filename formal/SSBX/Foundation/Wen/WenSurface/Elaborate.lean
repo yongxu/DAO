@@ -553,6 +553,14 @@ def inferTypeDetailed : Ctx → Tm → Except TypeDiag Ty
       | .error e => .error e
   -- wen-2.0 ④: user-ctor typechecks to its nominal `.user` type.
   | _, .userCtor tn _ => .ok (.user tn)
+  -- wen-2.0 ⑤: match — delegate to kernel `typeCheck`, lifting `none` as
+  -- a generic diagnostic.  Match expressions are built at the statement
+  -- level (`wenyanCompileProgramWithDefs`), which produces detailed
+  -- per-arm diagnostics BEFORE this fallback runs.
+  | ctx, t@(.«match» _ _) =>
+      match typeCheck ctx t with
+      | some ty => .ok ty
+      | none    => .error (.unknownVar "<match>")
 
 def elabSurfaceTyped (expr : SurfaceExpr) : Except ElabErr TypedTm :=
   match elabSurfaceExpr expr with

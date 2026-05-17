@@ -117,6 +117,16 @@ inductive MatchPat : Type
   | varP     (n : String)                  : MatchPat
 deriving DecidableEq, Repr
 
+/-! ## § 2b  Tm + MatchArms (mutual for DecidableEq).
+
+  `.match`'s arms are a `MatchArms` inductive (mutual with `Tm`) rather
+  than a `List (MatchPat × Tm)`.  This is because Lean's `DecidableEq`
+  deriving handler doesn't synthesize equality through a `Tm`-bearing
+  `List` element type (nested non-mutual inductive + `× Tm` defeats the
+  derive pass).  The mutual form lets the deriving handler generate
+  both side-by-side. -/
+
+mutual
 /-- 文之项：λ + app + var + 字面值 + core primitives。 -/
 inductive Tm : Type
   | var     (n : String)               : Tm
@@ -209,8 +219,40 @@ inductive Tm : Type
       exhaustiveness check).  Type checking requires every arm body to
       synthesize the SAME type, and patterns must be compatible with
       the scrutinee's type (see `patternBindings`). -/
-  | «match» (scrut : Tm) (arms : List (MatchPat × Tm)) : Tm
-deriving Repr, DecidableEq
+  | «match» (scrut : Tm) (arms : MatchArms) : Tm
+
+/-- A cons-list of match arms, mutual with `Tm` for derivable DecidableEq.
+    Use the `MatchArms.fromList` / `MatchArms.toList` helpers below to
+    convert to/from `List (MatchPat × Tm)`. -/
+inductive MatchArms : Type
+  | nil : MatchArms
+  | cons (pat : MatchPat) (body : Tm) (rest : MatchArms) : MatchArms
+end
+deriving instance DecidableEq, Repr for Tm
+deriving instance DecidableEq, Repr for MatchArms
+
+/-- Convert a `List (MatchPat × Tm)` into a `MatchArms` chain. -/
+def MatchArms.ofList : List (MatchPat × Tm) → MatchArms
+  | [] => .nil
+  | (p, b) :: rest => .cons p b (MatchArms.ofList rest)
+
+/-- Convert a `MatchArms` chain back into a `List (MatchPat × Tm)`.
+    Inverse of `MatchArms.ofList`. -/
+def MatchArms.toList : MatchArms → List (MatchPat × Tm)
+  | .nil => []
+  | .cons p b rest => (p, b) :: MatchArms.toList rest
+
+@[simp] theorem MatchArms.toList_ofList :
+    ∀ xs, (MatchArms.ofList xs).toList = xs
+  | [] => rfl
+  | (p, b) :: rest => by
+      simp [MatchArms.ofList, MatchArms.toList, MatchArms.toList_ofList rest]
+
+@[simp] theorem MatchArms.ofList_toList :
+    ∀ arms, MatchArms.ofList arms.toList = arms
+  | .nil => rfl
+  | .cons p b rest => by
+      simp [MatchArms.ofList, MatchArms.toList, MatchArms.ofList_toList rest]
 
 /-! ## § 3  类型检查 -/
 
@@ -387,15 +429,15 @@ def typeCheck : Ctx → Tm → Option Ty
   -- (i) pattern compatibility with scrutinee type, (ii) the arm body
   -- typechecks under the extended ctx, (iii) every arm body shares one
   -- common type (the result type).  An empty arm list rejects.  The
-  -- inner `checkArms` loop is structural-recursive on `arms : List …`
-  -- and never re-enters `typeCheck` recursively on the scrutinee.
+  -- inner `checkArms` loop is structural-recursive on `MatchArms` and
+  -- never re-enters `typeCheck` recursively on the scrutinee.
   | ctx, .«match» scrut arms =>
       match typeCheck ctx scrut with
       | none => none
       | some scrutTy =>
-          let rec checkArms : List (MatchPat × Tm) → Option Ty → Option Ty
-            | [], acc => acc
-            | (pat, body) :: rest, acc =>
+          let rec checkArms : MatchArms → Option Ty → Option Ty
+            | .nil, acc => acc
+            | .cons pat body rest, acc =>
                 match patternBindings pat scrutTy with
                 | none => none
                 | some binds =>
@@ -508,31 +550,31 @@ example :
 example :
     typeCheck []
         (.«match» (.boolLit true)
-          [(.boolP true, .yi),
-           (.boolP false, .hexLit Hexagram.heaven)])
+          (MatchArms.ofList [(.boolP true, .yi),
+                             (.boolP false, .hexLit Hexagram.heaven)]))
       = some .hex := by native_decide
 
 /-- Match on a Hex scrutinee with a literal arm + a wildcard fallback. -/
 example :
     typeCheck []
         (.«match» .yi
-          [(.lit Hexagram.heaven, .boolLit true),
-           (.wildcard, .boolLit false)])
+          (MatchArms.ofList [(.lit Hexagram.heaven, .boolLit true),
+                             (.wildcard, .boolLit false)]))
       = some .bool := by native_decide
 
 /-- Match with a `varP` binder: arm body uses the bound name. -/
 example :
     typeCheck []
         (.«match» .yi
-          [(.varP "x", .var "x")])
+          (MatchArms.ofList [(.varP "x", .var "x")]))
       = some .hex := by native_decide
 
 /-- Type error: two arms produce different result types. -/
 example :
     typeCheck []
         (.«match» (.boolLit true)
-          [(.boolP true, .yi),
-           (.boolP false, .boolLit true)])
+          (MatchArms.ofList [(.boolP true, .yi),
+                             (.boolP false, .boolLit true)]))
       = none := by native_decide
 
 /-- Type error: pattern type doesn't match scrutinee (Bool pattern on Hex
@@ -540,26 +582,26 @@ example :
 example :
     typeCheck []
         (.«match» .yi
-          [(.boolP true, .yi)])
+          (MatchArms.ofList [(.boolP true, .yi)]))
       = none := by native_decide
 
 /-- Empty arm list rejects (no result type). -/
 example :
-    typeCheck [] (.«match» .yi []) = none := by native_decide
+    typeCheck [] (.«match» .yi MatchArms.nil) = none := by native_decide
 
 /-- User-ctor pattern matches against `.user` scrutinee. -/
 example :
     typeCheck []
         (.«match» (.userCtor "甴甴" "甲")
-          [(.userP "甴甴" "甲", .yi),
-           (.wildcard, .yi)])
+          (MatchArms.ofList [(.userP "甴甴" "甲", .yi),
+                             (.wildcard, .yi)]))
       = some .hex := by native_decide
 
 /-- Type error: user-ctor pattern with wrong type name. -/
 example :
     typeCheck []
         (.«match» (.userCtor "甴甴" "甲")
-          [(.userP "真假" "甲", .yi)])
+          (MatchArms.ofList [(.userP "真假" "甲", .yi)]))
       = none := by native_decide
 
 /-! ### wen-2.0 ④ `.userCtor` typecheck examples -/
@@ -585,33 +627,43 @@ example :
   when `replacement` is a closed term — which is the use case here
   (recursive defs produce closed `.fix` terms).
 -/
-def substTmFree (name : String) (replacement : Tm) : Tm → Tm
-  | .var n => if n = name then replacement else .var n
-  | .abs n t body =>
-      if n = name then .abs n t body
-      else .abs n t (substTmFree name replacement body)
-  | .app f x => .app (substTmFree name replacement f) (substTmFree name replacement x)
-  | .catalogue1 id a => .catalogue1 id (substTmFree name replacement a)
-  | .catalogue2 id a b =>
-      .catalogue2 id (substTmFree name replacement a) (substTmFree name replacement b)
-  | .catalogue3 id a b c =>
-      .catalogue3 id (substTmFree name replacement a)
-        (substTmFree name replacement b) (substTmFree name replacement c)
-  | .quote body => .quote body  -- quote body is data; not subject to subst
-  | .unquote q => .unquote (substTmFree name replacement q)
-  | .fix n t body =>
-      if n = name then .fix n t body
-      else .fix n t (substTmFree name replacement body)
-  -- wen-2.0 ⑤: subst into scrutinee and each arm body; varP / userP-bound
-  -- names within a pattern shadow the outer substitution.
-  | .«match» scrut arms =>
-      let scrut' := substTmFree name replacement scrut
-      let arms' := arms.map (fun (p, b) =>
-        match p with
-        | .varP n => if n = name then (p, b) else (p, substTmFree name replacement b)
-        | _ => (p, substTmFree name replacement b))
-      .«match» scrut' arms'
-  | t => t  -- literals + primitives are leaves
+mutual
+  def substTmFree (name : String) (replacement : Tm) : Tm → Tm
+    | .var n => if n = name then replacement else .var n
+    | .abs n t body =>
+        if n = name then .abs n t body
+        else .abs n t (substTmFree name replacement body)
+    | .app f x => .app (substTmFree name replacement f) (substTmFree name replacement x)
+    | .catalogue1 id a => .catalogue1 id (substTmFree name replacement a)
+    | .catalogue2 id a b =>
+        .catalogue2 id (substTmFree name replacement a) (substTmFree name replacement b)
+    | .catalogue3 id a b c =>
+        .catalogue3 id (substTmFree name replacement a)
+          (substTmFree name replacement b) (substTmFree name replacement c)
+    | .quote body => .quote body  -- quote body is data; not subject to subst
+    | .unquote q => .unquote (substTmFree name replacement q)
+    | .fix n t body =>
+        if n = name then .fix n t body
+        else .fix n t (substTmFree name replacement body)
+    -- wen-2.0 ⑤: subst into scrutinee + each arm body; varP-bound names
+    -- within a pattern shadow the outer substitution.
+    | .«match» scrut arms =>
+        .«match» (substTmFree name replacement scrut)
+                 (substTmFreeArms name replacement arms)
+    | t => t  -- literals + primitives are leaves
+
+  /-- Capture-avoiding subst into a `MatchArms` chain.  Mutual with
+      `substTmFree` (via `Tm.match`'s body fields).  varP-bound names
+      shadow the outer substitution within their arm body. -/
+  def substTmFreeArms (name : String) (replacement : Tm) : MatchArms → MatchArms
+    | .nil => .nil
+    | .cons p body rest =>
+        let body' :=
+          match p with
+          | .varP n => if n = name then body else substTmFree name replacement body
+          | _ => substTmFree name replacement body
+        .cons p body' (substTmFreeArms name replacement rest)
+end
 
 /-! ## § 3c  wen-2.0 ④ user inductive constructor table
 

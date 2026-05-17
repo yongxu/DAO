@@ -265,15 +265,10 @@ mutual
     -- top-down testing each pattern.  On the first match, extend env with
     -- the bindings and evaluate the arm body.  No match ⇒ `none`
     -- (clean error — v1 deliberately has no exhaustiveness check).
-    | fuel+1, env, .«match» scrut arms => do
-        let vs ← evalFuel fuel env scrut
-        let rec tryArms : List (MatchPat × Tm) → Option Value
-          | [] => none
-          | (p, body) :: rest =>
-              match matchValue vs p with
-              | some binds => evalFuel fuel (binds ++ env) body
-              | none       => tryArms rest
-        tryArms arms
+    | fuel+1, env, .«match» scrut arms =>
+        match evalFuel fuel env scrut with
+        | none => none
+        | some vs => tryArmsFuel fuel env vs arms
 
   /-- Fuel-bounded builtin 求值. -/
   def applyBuiltinFuel : Nat → Builtin → List Value → Option Value
@@ -332,6 +327,17 @@ mutual
           | some (.boolV b) => b
           | _               => false)))
     | _+1,    _,       _                    => none
+
+  /-- Fuel-bounded match-arm walker.  Tests each arm's pattern against
+      `vs` in order; on first match, evaluates the arm body in `env`
+      extended with the pattern bindings.  No match ⇒ `none`. -/
+  def tryArmsFuel : Nat → Env → Value → MatchArms → Option Value
+    | 0,      _,   _,  _                => none
+    | _+1,    _,   _,  .nil             => none
+    | fuel+1, env, vs, .cons p body rest =>
+        match matchValue vs p with
+        | some binds => evalFuel fuel (binds ++ env) body
+        | none       => tryArmsFuel fuel env vs rest
 end
 
 /-- 应用 Value 到 Value: closure beta + builtin partial-apply. -/
@@ -793,45 +799,45 @@ example :
 example :
     denoteHex
         (.«match» (.boolLit true)
-          [(.boolP true, .yi),
-           (.boolP false, .hexLit Hexagram.heaven)])
+          (MatchArms.ofList [(.boolP true, .yi),
+                             (.boolP false, .hexLit Hexagram.heaven)]))
       = some «一» := by native_decide
 
 /-- Match false on same arms: picks second arm. -/
 example :
     denoteHex
         (.«match» (.boolLit false)
-          [(.boolP true, .yi),
-           (.boolP false, .hexLit Hexagram.heaven)])
+          (MatchArms.ofList [(.boolP true, .yi),
+                             (.boolP false, .hexLit Hexagram.heaven)]))
       = some Hexagram.heaven := by native_decide
 
 /-- Wildcard fallback. -/
 example :
     denoteHex
         (.«match» .yi
-          [(.lit Hexagram.heaven, .hexLit Hexagram.earth),
-           (.wildcard, .yi)])
+          (MatchArms.ofList [(.lit Hexagram.heaven, .hexLit Hexagram.earth),
+                             (.wildcard, .yi)]))
       = some «一» := by native_decide
 
 /-- `varP` binds the scrutinee value in the arm body. -/
 example :
-    denoteHex (.«match» .yi [(.varP "x", .var "x")]) = some «一» :=
+    denoteHex (.«match» .yi (MatchArms.ofList [(.varP "x", .var "x")])) = some «一» :=
   by native_decide
 
 /-- No arm matches ⇒ runtime returns `none`. -/
 example :
     denoteHex
         (.«match» (.boolLit true)
-          [(.boolP false, .yi)])
+          (MatchArms.ofList [(.boolP false, .yi)]))
       = none := by native_decide
 
 /-- User-ctor match selects the right arm. -/
 example :
     denoteHex
         (.«match» (.userCtor "甴甴" "甲")
-          [(.userP "甴甴" "甲", .yi),
-           (.userP "甴甴" "乙", .hexLit Hexagram.heaven),
-           (.wildcard, .hexLit Hexagram.earth)])
+          (MatchArms.ofList [(.userP "甴甴" "甲", .yi),
+                             (.userP "甴甴" "乙", .hexLit Hexagram.heaven),
+                             (.wildcard, .hexLit Hexagram.earth)]))
       = some «一» := by native_decide
 
 /-- 桥之公示：L1 typed Tm (WenDef) 与 L0 «加»/«一» (YiCore) 一致.

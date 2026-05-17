@@ -967,7 +967,7 @@ def wenyanCompileProgramWithDefs (s : String)
                   match compileArms armPairs [] with
                   | .error e => .error (.defError i e)
                   | .ok arms =>
-                      let matchTm : Tm := .«match» scrutTm arms
+                      let matchTm : Tm := .«match» scrutTm (MatchArms.ofList arms)
                       match typeCheck [] matchTm with
                       | none => .error (.defError i .matchTypeError)
                       | some ty =>

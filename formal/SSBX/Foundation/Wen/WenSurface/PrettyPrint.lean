@@ -125,47 +125,53 @@ def operatorPrimaryGlyph (id : OperatorId) : String :=
 
 /-! ## § 4  Top-level pretty printer -/
 
-/-- 把 `Tm` 渲染为可读的文言串.
-    总函数（结构递归 on Tm）. -/
-def prettyPrintTm : Tm → String
-  | .var n        => n
-  | .abs n _ body => "者 " ++ n ++ " " ++ prettyPrintTm body
-  | .app f x      => prettyPrintTm f ++ " " ++ prettyPrintTm x
-  | .hexLit h     => hexagramSurfaceName h
-  | .boolLit b    => boolSurfaceName b
-  | .cellLit c    => cellSurfaceName c
-  | .catalogue1 id a =>
-      operatorPrimaryGlyph id ++ " " ++ prettyPrintTm a
-  | .catalogue2 id a b =>
-      operatorPrimaryGlyph id ++ " " ++ prettyPrintTm a ++ " " ++ prettyPrintTm b
-  | .catalogue3 id a b c =>
-      operatorPrimaryGlyph id ++ " " ++ prettyPrintTm a ++ " " ++
-        prettyPrintTm b ++ " " ++ prettyPrintTm c
-  -- wen-2.0 ⑥/⑩: 引语 wrap 用 「」（primary quote bracket）.
-  | .quote body => "「" ++ prettyPrintTm body ++ "」"
-  -- wen-2.0 ⑪: `执 「X」` quote-eval.  Show as `执 ` + body's pretty form.
-  -- Body should normally be a `.quote` (renders as `「X」`), but we render
-  -- whatever it is for diagnostic clarity.
-  | .unquote q => "执 " ++ prettyPrintTm q
-  -- wen-2.0 ④: user-ctor renders to its bare ctor name (e.g. "木").
-  | .userCtor _ cn => cn
-  -- wen-2.0 ⑤: pattern match.  Pretty-prints as
-  -- `析 <scrut> 为 <pat> → <body> | <pat> → <body> | …`
-  | .«match» scrut arms =>
-      let renderPat : MatchPat → String
-        | .lit h           => hexagramSurfaceName h
-        | .boolP b         => boolSurfaceName b
-        | .userP _ cn      => cn
-        | .wildcard        => "_"
-        | .varP n          => n
-      let armStrs := arms.map (fun (p, b) =>
-        renderPat p ++ " → " ++ prettyPrintTm b)
-      "析 " ++ prettyPrintTm scrut ++ " 为 " ++ String.intercalate " | " armStrs
-  | t =>
-      -- 22 core builtin + 12 cell-endo 走 builtinGlyph 表
-      match builtinGlyph t with
-      | some s => s
-      | none   => "?"  -- 不可达：上述 match 已覆盖所有非 builtin 形
+/-- Render a single `MatchPat` to its surface glyph. -/
+def renderMatchPat : MatchPat → String
+  | .lit h           => hexagramSurfaceName h
+  | .boolP b         => boolSurfaceName b
+  | .userP _ cn      => cn
+  | .wildcard        => "_"
+  | .varP n          => n
+
+mutual
+  /-- 把 `Tm` 渲染为可读的文言串.
+      总函数（mutual with `prettyPrintArms`，结构递归 on Tm + MatchArms). -/
+  def prettyPrintTm : Tm → String
+    | .var n        => n
+    | .abs n _ body => "者 " ++ n ++ " " ++ prettyPrintTm body
+    | .app f x      => prettyPrintTm f ++ " " ++ prettyPrintTm x
+    | .hexLit h     => hexagramSurfaceName h
+    | .boolLit b    => boolSurfaceName b
+    | .cellLit c    => cellSurfaceName c
+    | .catalogue1 id a =>
+        operatorPrimaryGlyph id ++ " " ++ prettyPrintTm a
+    | .catalogue2 id a b =>
+        operatorPrimaryGlyph id ++ " " ++ prettyPrintTm a ++ " " ++ prettyPrintTm b
+    | .catalogue3 id a b c =>
+        operatorPrimaryGlyph id ++ " " ++ prettyPrintTm a ++ " " ++
+          prettyPrintTm b ++ " " ++ prettyPrintTm c
+    -- wen-2.0 ⑥/⑩: 引语 wrap 用 「」（primary quote bracket）.
+    | .quote body => "「" ++ prettyPrintTm body ++ "」"
+    -- wen-2.0 ⑪: `执 「X」` quote-eval.  Show as `执 ` + body's pretty form.
+    | .unquote q => "执 " ++ prettyPrintTm q
+    -- wen-2.0 ④: user-ctor renders to its bare ctor name.
+    | .userCtor _ cn => cn
+    -- wen-2.0 ⑤: pattern match.  Pretty-prints as
+    -- `析 <scrut> 为 <pat> → <body> | <pat> → <body> | …`
+    | .«match» scrut arms =>
+        "析 " ++ prettyPrintTm scrut ++ " 为 " ++ prettyPrintArms arms
+    | t =>
+        match builtinGlyph t with
+        | some s => s
+        | none   => "?"  -- defensive
+
+  /-- Pretty-print a chain of match arms, separated by `|`. -/
+  def prettyPrintArms : MatchArms → String
+    | .nil => ""
+    | .cons p body .nil => renderMatchPat p ++ " → " ++ prettyPrintTm body
+    | .cons p body rest =>
+        renderMatchPat p ++ " → " ++ prettyPrintTm body ++ " | " ++ prettyPrintArms rest
+end
 
 /-! ## § 5  Sanity examples (≥ 5 by spec) -/
 
