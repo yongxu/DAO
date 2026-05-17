@@ -252,6 +252,11 @@ def resolveBuiltinSurface : Glyph → Option (Tm × Nat)
   | "上爻" => some (.flip6H, 1)
   -- B-3: Hex addition `加 : Hex → Hex → Hex`
   | "加" => some (.jia, 2)
+  -- B-4: Bool conjunction `並/并 : Bool → Bool → Bool`
+  | "並" => some (.andB, 2)
+  | "并" => some (.andB, 2)
+  -- B-5: Bool disjunction `或 : Bool → Bool → Bool`
+  | "或" => some (.orB, 2)
   -- B-6: list ops
   | "列一" => some (.list1H, 1)
   | "列二" => some (.list2H, 2)
@@ -759,7 +764,7 @@ example : opIdsOf "损" = some [some OperatorId.T_12] := by native_decide
 /-- 「益」 → catalogueOp T_13. -/
 example : opIdsOf "益" = some [some OperatorId.T_13] := by native_decide
 
-/-! ### § 6.6  Builtin Tm surface map (B-2 / B-3 / B-6)
+/-! ### § 6.6  Builtin Tm surface map (B-2 / B-3 / B-4 / B-5 / B-6)
 
 `resolveBuiltinSurface` maps surface glyphs directly to `WenDef.Tm` primitive
 bodies, bypassing the OperatorId catalogue.  These surfaces have no
@@ -776,6 +781,16 @@ example :
 /-- B-3: 加 resolves to `.builtinTm` with arity 2. -/
 example : (resolveBuiltinSurface "加").map Prod.snd = some 2 := by native_decide
 
+/-- B-4: 並/并 resolve to `Tm.andB` with arity 2. -/
+example :
+    (resolveBuiltinSurface "並") = some (Tm.andB, 2) := by native_decide
+example :
+    (resolveBuiltinSurface "并") = some (Tm.andB, 2) := by native_decide
+
+/-- B-5: 或 resolves to `Tm.orB` with arity 2. -/
+example :
+    (resolveBuiltinSurface "或") = some (Tm.orB, 2) := by native_decide
+
 /-- B-6: list ops resolve to `.builtinTm` with their declared arities. -/
 example : (resolveBuiltinSurface "列一").map Prod.snd = some 1 := by native_decide
 example : (resolveBuiltinSurface "列二").map Prod.snd = some 2 := by native_decide
@@ -786,6 +801,21 @@ example : (resolveBuiltinSurface "首").map Prod.snd = some 1 := by native_decid
 example :
     ((lexAndResolve "加").toOption.map (fun rs => rs.map (·.atom)))
       = some [.builtinTm Tm.jia 2] := by native_decide
+
+/-- B-4: 並/并 lex+resolve to `Tm.andB` (builtin priority overrides
+    the legacy catalogue routing to `R_13` pairH carrier). -/
+example :
+    ((lexAndResolve "並").toOption.map (fun rs => rs.map (·.atom)))
+      = some [.builtinTm Tm.andB 2] := by native_decide
+example :
+    ((lexAndResolve "并").toOption.map (fun rs => rs.map (·.atom)))
+      = some [.builtinTm Tm.andB 2] := by native_decide
+
+/-- B-5: 或 lex+resolves to `Tm.orB` (builtin priority overrides the
+    legacy catalogue routing to `Q_5` / `M_2` quantifier/modal). -/
+example :
+    ((lexAndResolve "或").toOption.map (fun rs => rs.map (·.atom)))
+      = some [.builtinTm Tm.orB 2] := by native_decide
 
 /-- 初爻 (multi-glyph) is lexed as a single 2-char surface and resolves to flip1H. -/
 example :
@@ -1160,9 +1190,12 @@ example :
       = some [some OperatorId.T_1, none] :=
   by native_decide
 
+/-- B-5: 或 now resolves to `Tm.orB` builtin (priority above catalogue),
+    so the cue path no longer routes to `Q_5`. The first atom is a
+    `.builtinTm` whose `opId?` is `none`. -/
 example :
     opIdsOfCues [⟨"或", 0, 1, false⟩, ⟨"者", 2, 1, false⟩, ⟨"甲", 4, 1, false⟩]
-      = some [some OperatorId.Q_5, none, none] :=
+      = some [none, none, none] :=
   by native_decide
 
 /-- resolveWithCues 在「推 之 一」上 success（.toOption.isSome = true）. -/

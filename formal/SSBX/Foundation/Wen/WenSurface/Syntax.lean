@@ -1141,9 +1141,13 @@ example :
      | .error (.inr (.inl (.ambiguous "反" 0 candidates))) => candidates.length == 3
      | _ => false) = true := by native_decide
 
+/-- B-5: `或` now resolves to the `Tm.orB : Bool → Bool → Bool` builtin
+    (priority above catalogue), so it is no longer ambiguous at resolve
+    time.  The parser still rejects `或 乾` because `或` is arity-2 and
+    only one argument follows. -/
 example :
     (match parseSurface "或 乾" with
-     | .error (.inr (.inl (.ambiguous "或" 0 candidates))) => candidates.length == 2
+     | .error (.inr (.inr _)) => true
      | _ => false) = true := by native_decide
 
 /-! ## § 5 Postfix marker parsing
