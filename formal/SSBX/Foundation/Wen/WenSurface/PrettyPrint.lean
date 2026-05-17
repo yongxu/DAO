@@ -149,6 +149,18 @@ def prettyPrintTm : Tm → String
   | .unquote q => "执 " ++ prettyPrintTm q
   -- wen-2.0 ④: user-ctor renders to its bare ctor name (e.g. "木").
   | .userCtor _ cn => cn
+  -- wen-2.0 ⑤: pattern match.  Pretty-prints as
+  -- `析 <scrut> 为 <pat> → <body> | <pat> → <body> | …`
+  | .«match» scrut arms =>
+      let renderPat : MatchPat → String
+        | .lit h           => hexagramSurfaceName h
+        | .boolP b         => boolSurfaceName b
+        | .userP _ cn      => cn
+        | .wildcard        => "_"
+        | .varP n          => n
+      let armStrs := arms.map (fun (p, b) =>
+        renderPat p ++ " → " ++ prettyPrintTm b)
+      "析 " ++ prettyPrintTm scrut ++ " 为 " ++ String.intercalate " | " armStrs
   | t =>
       -- 22 core builtin + 12 cell-endo 走 builtinGlyph 表
       match builtinGlyph t with
