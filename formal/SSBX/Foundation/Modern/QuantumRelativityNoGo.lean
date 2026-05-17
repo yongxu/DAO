@@ -9,7 +9,7 @@ Companion: `义理/量子与相对论直统一不可能 · 当前语言NoGo.md`
 2. 把两套现成语言相加，并不会产生一个同时属于二者的当前语言对象；
 3. 二者仍可同指一个 root，并作为同一世界的不同 face 被互补读取；
 4. 因此本文件的范围只是“当前 tagged 物理语言的直接同一化 / 现成语言相加”，
-   不是未来物理统一理论，也不是文构造系统的生成边界。`192 × 371`
+   不是未来物理统一理论，也不是文构造系统的生成边界。`192 × 375`
    文构造覆盖另见 `QuantumRelativityWenBoundary`。
 -/
 import SSBX.Foundation.Modern.QuantumSpacetime

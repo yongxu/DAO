@@ -148,6 +148,10 @@ theorem allOperatorIds_complete (id : OperatorId) : id ∈ allOperatorIds := by
   · exact Audit.mem_S_18
   · exact Audit.mem_S_19
   · exact Audit.mem_S_20
+  · exact Audit.mem_S_21
+  · exact Audit.mem_S_22
+  · exact Audit.mem_S_23
+  · exact Audit.mem_S_24
   · exact Audit.mem_H_1
   · exact Audit.mem_H_2
   · exact Audit.mem_H_3
@@ -522,6 +526,10 @@ theorem operator_table_complete (id : OperatorId) : CoveredOperator id := by
   · exact Audit.covered_S_18
   · exact Audit.covered_S_19
   · exact Audit.covered_S_20
+  · exact Audit.covered_S_21
+  · exact Audit.covered_S_22
+  · exact Audit.covered_S_23
+  · exact Audit.covered_S_24
   · exact Audit.covered_H_1
   · exact Audit.covered_H_2
   · exact Audit.covered_H_3

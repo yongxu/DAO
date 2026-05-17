@@ -124,6 +124,10 @@ def operatorForms : OperatorId -> List GlyphSense
   | .S_18 => [«已1»]
   | .S_19 => [«的1»]
   | .S_20 => [«地1»]
+  | .S_21 => [«乎1»]
+  | .S_22 => [«矣1»]
+  | .S_23 => [«哉1»]
+  | .S_24 => [«兮1»]
   | .H_1 => textToSenses "道"
   | .H_2 => textToSenses "理"
   | .H_3 => textToSenses "勢势"

@@ -13,7 +13,7 @@ open SSBX.Text.OperatorCellMap
 /-! ## Public summary -/
 
 /-- Public summary for S10:
-    S9 row-support normalization is retained, and the concrete plus `94976`
+    S9 row-support normalization is retained, and the concrete plus `96000`
     grid kernels now also have finite normalized mass sums equal to `1` on
     every non-terminal row.  This closes the classical finite probability law
     for these displayed rows, while Born-weight normalization, channel laws,
@@ -23,7 +23,7 @@ theorem normalized_mass_bridge_summary :
     ∧ FiniteNormalizedMassBoundaryClosed
     ∧ HasFiniteProbabilityProjection concreteProcess
     ∧ HasFiniteProbabilityProjection operatorCellGridProcess
-    ∧ allOperatorCells.length = 94976
+    ∧ allOperatorCells.length = 96000
     ∧ (∀ b : PendingBeyondS10, ClosedByStepwiseS10 b = false)
     ∧ WenConstructiveCoverage := by
   rcases finite_probability_normalization_bridge_summary with

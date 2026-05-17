@@ -15,8 +15,8 @@ complement-equivariant 子集 commute 作 future work）。
 
 - cue-aware resolver + explicit `SurfaceExpr` AST
 - 64 卦名 / aliases + Bool literals + Hex-first/Bool-fallback lambdas and lets
-- executable registry 覆盖全部 371 个 OperatorId
-- 371 个 theorem-backed operator 可求 Hex/Bool/Pair/List；0 个 catalogue rows 只需 structural normal form
+- executable registry 覆盖全部 375 个 OperatorId
+- 375 个 theorem-backed operator 可求 Hex/Bool/Pair/List；0 个 catalogue rows 只需 structural normal form
 - unpromoted gap form 只诊断，不伪造 denotation
 
 ## 状态

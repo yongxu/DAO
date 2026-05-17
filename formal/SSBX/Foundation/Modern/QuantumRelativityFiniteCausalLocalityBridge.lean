@@ -12,7 +12,7 @@ interface:
 3. prove nonlocal targets cannot be one-step successors;
 4. prove positive Markov kernel weight respects the local-future list;
 5. instantiate the interface for the concrete three-state process and the
-   `371 × 192` operator-cell grid process.
+   `375 × 256` operator-cell grid process.
 
 This is only a finite one-step causal locality candidate.  It is not a full
 causal set, not a light-cone theorem, not Lorentzian locality, not metric
