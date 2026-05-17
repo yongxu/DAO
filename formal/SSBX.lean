@@ -96,6 +96,7 @@ import SSBX.Foundation.Wen.WenSurface.Semantics
 import SSBX.Foundation.Wen.WenSurface.Syntax
 import SSBX.Foundation.Wen.WenSurface.Elaborate
 import SSBX.Foundation.Wen.WenSurface.EndToEnd
+import SSBX.Foundation.Wen.WenSurface.Namespace
 import SSBX.Foundation.Wen.WenSurface.Coverage
 import SSBX.Foundation.Wen.WenSurface.ErrorRender
 
