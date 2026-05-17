@@ -346,6 +346,14 @@ mutual
         | some ty => surfaceExprTypeWithCtx? ((name, ty) :: ctx) body
         | none => none
     | ctx, .construction "之又" [inner] => surfaceExprTypeWithCtx? ctx inner
+    -- wen-2.0 ⑪: 执 X — the inner expression must surface-type to `.quoted`
+    -- (typically a 引语括号 group); the construction itself is `.hex` (the
+    -- kernel `typeCheck` returns `.hex` for `Tm.unquote q` whenever
+    -- `q : .quoted`).
+    | ctx, .construction "执" [inner] =>
+        match surfaceExprTypeWithCtx? ctx inner with
+        | some .quoted => some .hex
+        | _ => none
     | _, .construction _ _ => none
     | ctx, .grouped openTok _ body =>
         -- wen-2.0 ⑩: quote brackets 「」/『』 give the surface group type `.quoted`,
@@ -519,6 +527,20 @@ mutual
                       | .error e => .error e
               | none => .error (expectedVariableErr head)
           | [] => .error (expectedVariableErr head)
+      | .syntax .zhi =>
+          -- wen-2.0 ⑪ `执 X`: consume one SurfaceExpr argument as the quoted
+          -- payload.  Reserve 1 so trailing tokens aren't starved.  The
+          -- elaborator turns the resulting `.construction "执" [body]` into
+          -- `Tm.unquote body'`.  Body must elaborate to a `.quoted` (typically
+          -- a 引语括号-grouped expression `「Y」`).
+          match rest with
+          | [] => .error (.expectedExpression (head.col + head.surface.toList.length))
+          | _ =>
+              match parseSurfaceExprAux ctx false n reserve rest with
+              | .ok (body, rest') =>
+                  parsePostfixApplications ctx allowInfix n reserve
+                    (.construction "执" [body]) rest'
+              | .error e => .error e
       | .appMarker =>
           match rest with
           | [] => .error (.expectedExpression (head.col + head.surface.toList.length))

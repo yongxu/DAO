@@ -410,6 +410,13 @@ def elabSurfaceExprWithCtx (ctx : Ctx) : SurfaceExpr → Except ElabErr Tm
       | .error e => .error e
       | .ok (.app f x) => .ok (.app f (.app f x))
       | .ok _ => .error .empty
+  -- wen-2.0 ⑪ `执 X`: emit `Tm.unquote X'`.  Typecheck rule (in `WenDef`)
+  -- requires `X'` to have type `.quoted`, so applying 执 to a non-quoted arg
+  -- is rejected at the kernel level via `inferTypeDetailed`.
+  | .construction "执" [inner] =>
+      match elabSurfaceExprWithCtx ctx inner with
+      | .error e => .error e
+      | .ok tInner => .ok (.unquote tInner)
   | .grouped openTok _ body =>
       -- wen-2.0 ⑩: 引语括号 「」/『』 inside body → wrap as Tm.quote (data, not eval).
       -- Existing value-grouping `（…）`/`(…)` is unchanged.
@@ -530,6 +537,14 @@ def inferTypeDetailed : Ctx → Tm → Except TypeDiag Ty
       | _, _, .error e => .error e
   -- wen-2.0 ⑥/⑩: quote 一律返 .quoted；body 之类型 / 自由变量不需检查.
   | _, .quote _ => .ok .quoted
+  -- wen-2.0 ⑪: unquote q — q must be `.quoted`, result is `.hex`.
+  -- Non-`.quoted` arg surfaces as an argument-mismatch diagnostic so the
+  -- CLI / error renderer can pinpoint the bad expression.
+  | ctx, .unquote q =>
+      match inferTypeDetailed ctx q with
+      | .error e => .error e
+      | .ok .quoted => .ok .hex
+      | .ok actual => .error (.argumentMismatch .quoted actual)
   -- wen-2.0 ②: fix n t body — body must check to t in ctx extended with (n,t).
   | ctx, .fix n t body =>
       match inferTypeDetailed ((n, t) :: ctx) body with
