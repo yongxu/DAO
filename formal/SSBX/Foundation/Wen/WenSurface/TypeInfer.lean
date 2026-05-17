@@ -239,15 +239,24 @@ def infer : Nat → MCtx → Tm → InferState →
       match MCtx.lookup ctx n with
       | some t => .ok (t, st)
       | none => .error (.unknownVar n)
-  | n+1,  ctx, .abs name _dom body, st =>
-      -- Ignore the elaborator's prior guess; use a fresh metavar α as
-      -- the binder's domain, let `body`'s usage constrain it via the
-      -- collected app/catalogue unifications, then zonk back to a Ty
-      -- annotation in `reannotate`.
-      let (alpha, st1) := freshMVar st
-      match infer n ((name, alpha) :: ctx) body st1 with
-      | .error e => .error e
-      | .ok (tb, st2) => .ok (.arr alpha tb, st2)
+  | n+1,  ctx, .abs name dom body, st =>
+      -- wen-2.0 ④: when the elaborator's prior guess is a user-inductive
+      -- nominal type (`.user`), preserve it as-is — HM has no way to
+      -- *infer* a user-type binder (no constraints from primitive ops
+      -- could narrow `α` to `.user "X"`), so we honour the annotation.
+      -- For all other binder annotations (`.hex`, `.bool`, ...), HM
+      -- ignores the prior guess and uses a fresh metavar α, letting
+      -- `body`'s usage constrain it via app/catalogue unifications.
+      match dom with
+      | .user _ =>
+          match infer n ((name, MTy.ofTy dom) :: ctx) body st with
+          | .error e => .error e
+          | .ok (tb, st2) => .ok (.arr (MTy.ofTy dom) tb, st2)
+      | _ =>
+          let (alpha, st1) := freshMVar st
+          match infer n ((name, alpha) :: ctx) body st1 with
+          | .error e => .error e
+          | .ok (tb, st2) => .ok (.arr alpha tb, st2)
   | n+1,  ctx, .app f x, st =>
       match infer n ctx f st with
       | .error e => .error e
@@ -368,11 +377,17 @@ def zonkTop (s : Subst) (t : MTy) : Ty := zonk zonkFuel s t
 def reannotate : Nat → MCtx → Subst → InferState → Tm → Tm × InferState
   | 0,    _, _, st, t => (t, st)
   | _+1,  _, _, st, .var n => (.var n, st)
-  | n+1,  ctx, s, st, .abs name _dom body =>
-      let (alpha, st1) := freshMVar st
-      let dom' := zonkTop s alpha
-      let (body', st2) := reannotate n ((name, alpha) :: ctx) s st1 body
-      (.abs name dom' body', st2)
+  | n+1,  ctx, s, st, .abs name dom body =>
+      -- wen-2.0 ④: preserve `.user` annotations (mirrors `infer`).
+      match dom with
+      | .user _ =>
+          let (body', st1) := reannotate n ((name, MTy.ofTy dom) :: ctx) s st body
+          (.abs name dom body', st1)
+      | _ =>
+          let (alpha, st1) := freshMVar st
+          let dom' := zonkTop s alpha
+          let (body', st2) := reannotate n ((name, alpha) :: ctx) s st1 body
+          (.abs name dom' body', st2)
   | n+1,  ctx, s, st, .app f x =>
       let (f', st1) := reannotate n ctx s st f
       let (x', st2) := reannotate n ctx s st1 x
@@ -510,5 +525,36 @@ example :
     typeCheck [] (inferAndReannotate
         (.abs "f" .hex (.app (.var "f") .yi)))
       = some (.arr (.arr .hex .hex) .hex) := by native_decide
+
+/-! ### wen-2.0 ④ HM unification on user types -/
+
+/-- Same-name `.user` types unify. -/
+example : (unifyTop [] (.user "五行") (.user "五行")).toOption = some [] := by
+  native_decide
+
+/-- Different-name `.user` types fail to unify. -/
+example :
+    (match unifyTop [] (.user "五行") (.user "真假") with
+     | .error (.mismatch _ _) => true
+     | _ => false) = true := by native_decide
+
+/-- `.mvar` unifies with `.user`. -/
+example :
+    (unifyTop [] (.mvar 0) (.user "X")).toOption
+      = some [(0, .user "X")] := by native_decide
+
+/-- `.user "X"` does not unify with `.hex` (nominal types are disjoint
+    from primitive types). -/
+example :
+    (match unifyTop [] (.user "X") .hex with
+     | .error _ => true
+     | _ => false) = true := by native_decide
+
+/-- HM infers `λx. x` where `x : .user "X"` body returns `x`.  The binder
+    must be annotated by the elaborator (HM defaults unsolved mvars to
+    `.hex`); we test that ground-truth `.user` annotations round-trip. -/
+example :
+    typeCheck [] (inferAndReannotate (.abs "x" (.user "五行") (.var "x")))
+      = some (.arr (.user "五行") (.user "五行")) := by native_decide
 
 end SSBX.Foundation.Wen.WenSurface
