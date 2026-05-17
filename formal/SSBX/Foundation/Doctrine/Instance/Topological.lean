@@ -127,15 +127,17 @@ as a future-work pointer (§7).
 ## Constraints honoured
 
 * **0 new axioms**.
-* `sorry` count: 1 — in `cube_JT_universal_property` (§4ter; the
-  full Joyal-Tierney frame coproduct classification of Sierpinski
-  cubes, gated on the upstream Mathlib `frameCoprod` PR). The
-  v0.5 `P3_topological` (formerly carried the `sorry`) is now
-  closed by direct reduction to `cube_JT_universal_property`, after
-  its conclusion shape was corrected from the geometrically wrong
+* `sorry` count: **0** (2026-05-17 update — §4ter
+  `cube_JT_universal_property` **discharged** for the Sierpinski-
+  specialised shape via the
+  `ψ w := ∃ u' v', cubePairing u' v' ≤ w ∧ φ u' v'` candidate
+  construction; see §4ter docstring for the argument).  The v0.5
+  `P3_topological` (formerly carried the `sorry`) is now closed by
+  direct reduction to `cube_JT_universal_property`, after its
+  conclusion shape was corrected from the geometrically wrong
   pointwise-meet diagonal `Fin (min N M) → Ω` (v0.4) to the correct
-  outer-product cube `Fin (N * M) → Ω` (v0.5). See §4bis for the
-  audit and §4ter for the universal-property carrier. The
+  outer-product cube `Fin (N * M) → Ω` (v0.5).  See §4bis for the
+  audit and §4ter for the universal-property carrier.  The
   `P7b_topological_uniqueness` and `hom_NM_frame_exponential`
   statements were weakened to type-level existence claims provable
   by `⟨Pi.instFrame⟩`, since the genuine OrderIso classification /
@@ -666,30 +668,113 @@ theorem cubePairing_apply (u : Fin N → SierpinskiOmega) (v : Fin M → Sierpin
     product cube indexed by `Fin N × Fin M ≃ Fin (N*M)`, NOT the
     diagonal `Fin (min N M)`.
 
-    **Proof status**: `sorry` — the statement is the geometrically
-    correct form, but the full proof requires the JT classification
-    machinery (Picado-Pultr 2012 Ch. IV §3 cube cancellation, gated
-    on the Mathlib `frameCoprod` PR tracked in
-    `Foundation/Order/FrameBimorphism.lean §6`).
-
-    A natural candidate construction is
-    `ψ w := ∃ u v, cubePairing u v ≤ w ∧ φ u v` (the join of `φ`
-    over all `(u, v)` whose outer product is `≤ w`). The forward
+    **Proof status (2026-05-17)**: **proved**, via the candidate
+    construction
+    `ψ w := ∃ u' v', cubePairing u' v' ≤ w ∧ φ u' v'` (the join of
+    `φ` over all `(u', v')` whose outer product is `≤ w`). The forward
     direction `φ u v → ψ (cubePairing u v)` is immediate (witness
-    `u, v` themselves with `le_refl`). The backward direction
-    requires monotonicity arguments under the JT hypothesis that
-    go beyond the carrier-level statement here. -/
+    `u, v` themselves with `le_refl`). The backward direction case-
+    splits on whether `u'` / `v'` are everywhere-`⊥`:
+    * if so, JT-bilinearity reduces `φ u' v'` to `⊥ = False`,
+      contradicting the hypothesis `φ u' v'`;
+    * otherwise, picking witnesses `i₀, j₀` with `u' i₀, v' j₀`,
+      the outer-product index `finProdFinEquiv (i, j₀)` forces
+      `u' ≤ u` pointwise; symmetrically `v' ≤ v`; then
+      `map_inf_left` + `inf_eq_left.mpr` give monotonicity in each
+      slot, so `φ u' v' → φ u v' → φ u v`.
+
+    The argument is specific to the Sierpinski generator
+    `Ω = Prop` (uses `propext` to identify `(∀ i, ¬ u' i) ↔ u' = ⊥`
+    on `Fin N → Prop`); a fully generic frame-coproduct version
+    would still require the upstream Mathlib `frameCoprod` PR
+    tracked in `Foundation/Order/FrameBimorphism.lean §6`. -/
 theorem cube_JT_universal_property
     (φ : (Fin N → SierpinskiOmega) → (Fin M → SierpinskiOmega) → SierpinskiOmega)
-    (_hφ : IsJTFrameBilinear φ) :
+    (hφ : IsJTFrameBilinear φ) :
     ∃ (ψ : (Fin (N * M) → SierpinskiOmega) → SierpinskiOmega),
       ∀ u v, φ u v ↔ ψ (cubePairing u v) := by
-  -- **Honest sorry** (2026-05-17): statement is the correct outer-product
-  -- form per Joyal-Tierney 1984 §VI; proof requires the JT
-  -- classification machinery + cube-cancellation iso
-  -- `frameCoprod (Fin N → Ω) (Fin M → Ω) ≃o (Fin (N*M) → Ω)`.
-  -- See doctring above for the candidate construction and references.
-  sorry
+  -- **Proved 2026-05-17** (Sierpinski-cube specialisation): take
+  --   `ψ w := ∃ u' v', cubePairing u' v' ≤ w ∧ φ u' v'`.
+  -- Forward direction is by `⟨u, v, le_refl _, ·⟩`.
+  -- Backward direction uses two structural facts about
+  -- `SierpinskiOmega = Prop`:
+  --   (a) if `u' = ⊥` (i.e. `∀ i, ¬ u' i`), then JT-bilinearity
+  --       (`map_sSup_left v' ∅`) gives `φ u' v' = ⊥ = False`, so any
+  --       supposed proof of `φ u' v'` is `False.elim`-able.  Symmetric
+  --       for `v'`.
+  --   (b) otherwise, pick witnesses `i₀, j₀` with `u' i₀, v' j₀`; the
+  --       hypothesis `cubePairing u' v' ≤ cubePairing u v` at the
+  --       outer-product index `finProdFinEquiv (i, j₀)` forces
+  --       `u' ≤ u` pointwise; similarly `v' ≤ v`.  Then
+  --       `map_inf_left` + `inf_eq_left.mpr` give monotonicity in each
+  --       slot, so `φ u' v' → φ u v' → φ u v`.
+  classical
+  refine ⟨fun w => ∃ u' v', cubePairing u' v' ≤ w ∧ φ u' v', ?_⟩
+  intro u v
+  refine ⟨fun huv => ⟨u, v, le_refl _, huv⟩, ?_⟩
+  rintro ⟨u', v', hle, hφ'⟩
+  -- Case split: is u' everywhere-⊥?
+  by_cases hu_empty : ∀ i, ¬ u' i
+  · -- u' = ⊥ ⇒ φ u' v' = ⊥ = False ⇒ contradiction with hφ'.
+    exfalso
+    -- u' = ⊥ pointwise → u' equals ⊥
+    have hu_bot : u' = (⊥ : Fin N → SierpinskiOmega) := by
+      funext i
+      exact propext ⟨fun h => (hu_empty i h).elim, fun h => h.elim⟩
+    -- bot = sSup ∅
+    have hbot_eq : (⊥ : Fin N → SierpinskiOmega) =
+        sSup (∅ : Set (Fin N → SierpinskiOmega)) := by
+      rw [sSup_empty]
+    -- φ ⊥ v' = ⊥
+    have hφ_bot : φ (⊥ : Fin N → SierpinskiOmega) v' =
+        (⊥ : SierpinskiOmega) := by
+      rw [hbot_eq, hφ.map_sSup_left, Set.image_empty, sSup_empty]
+    rw [hu_bot, hφ_bot] at hφ'
+    exact hφ'
+  · simp only [not_forall, Classical.not_not] at hu_empty
+    by_cases hv_empty : ∀ j, ¬ v' j
+    · exfalso
+      have hv_bot : v' = (⊥ : Fin M → SierpinskiOmega) := by
+        funext j
+        exact propext ⟨fun h => (hv_empty j h).elim, fun h => h.elim⟩
+      have hbot_eq : (⊥ : Fin M → SierpinskiOmega) =
+          sSup (∅ : Set (Fin M → SierpinskiOmega)) := by
+        rw [sSup_empty]
+      have hφ_bot : φ u' (⊥ : Fin M → SierpinskiOmega) =
+          (⊥ : SierpinskiOmega) := by
+        rw [hbot_eq, hφ.map_sSup_right, Set.image_empty, sSup_empty]
+      rw [hv_bot, hφ_bot] at hφ'
+      exact hφ'
+    · simp only [not_forall, Classical.not_not] at hv_empty
+      obtain ⟨i₀, hi₀⟩ := hu_empty
+      obtain ⟨j₀, hj₀⟩ := hv_empty
+      -- u' ≤ u pointwise: at k = finProdFinEquiv (i, j₀), the
+      -- hypothesis gives `(u' i ∧ v' j₀) → (u i ∧ v j₀)`, and since
+      -- `v' j₀` holds, `u' i → u i`.
+      have hu_le : u' ≤ u := by
+        intro i hi
+        have hk := hle (finProdFinEquiv (i, j₀))
+        simp only [cubePairing_apply, Equiv.symm_apply_apply] at hk
+        exact (hk ⟨hi, hj₀⟩).1
+      have hv_le : v' ≤ v := by
+        intro j hj
+        have hk := hle (finProdFinEquiv (i₀, j))
+        simp only [cubePairing_apply, Equiv.symm_apply_apply] at hk
+        exact (hk ⟨hi₀, hj⟩).2
+      -- Monotonicity in left slot via map_inf_left + inf_eq_left.
+      -- u' ⊓ u = u' (since u' ≤ u), so
+      -- φ u' v' = φ (u' ⊓ u) v' = φ u' v' ⊓ φ u v', hence
+      -- a proof of φ u' v' yields a proof of φ u v'.
+      have hu_inf : u' ⊓ u = u' := inf_eq_left.mpr hu_le
+      have hsplit_left := hφ.map_inf_left v' u' u
+      rw [hu_inf] at hsplit_left
+      rw [hsplit_left] at hφ'
+      have hφ_uv' : φ u v' := hφ'.2
+      have hv_inf : v' ⊓ v = v' := inf_eq_left.mpr hv_le
+      have hsplit_right := hφ.map_inf_right u v' v
+      rw [hv_inf] at hsplit_right
+      rw [hsplit_right] at hφ_uv'
+      exact hφ_uv'.2
 
 end CubeFrameCoprod
 

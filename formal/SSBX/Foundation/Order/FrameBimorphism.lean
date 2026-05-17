@@ -135,15 +135,16 @@ pointers to the Mathlib upstream PR that would discharge them.
   `sierpinski_cube_JT_factorization` was removed as unsound; see
   §4bis for the counter-example and root cause).
 * Build target: `lake build SSBX.Foundation.Order.FrameBimorphism`.
-* **`sorry` count**: **1** — §4ter `cube_JT_universal_property`
-  carries an honest `sorry` for the Joyal-Tierney 1984 §VI
-  Sierpinski-cube-specialised universal property; §5
-  `to_topological_P3` *consumes* that statement (via a one-line
-  `exact`) and is therefore *not* a separate `sorry`.  §4
-  `JT_classification` is discharged 2026-05-17 via the *diagonal*
-  `T := F₃`, `ι := φ`, `u := id` witness — see the proof note in
-  §4.1 for why this is a *valid existential* but does *not* capture
-  the JT universal property.
+* **`sorry` count**: **0** (2026-05-17 update — §4ter
+  `cube_JT_universal_property` was **discharged** via the candidate
+  construction `ψ w := ∃ u' v', cubePairing u' v' ≤ w ∧ φ u' v'`;
+  see §4ter docstring for the argument).  §5 `to_topological_P3`
+  reduces to it via a one-line `exact`.  §4 `JT_classification` is
+  discharged 2026-05-17 via the *diagonal* `T := F₃`, `ι := φ`,
+  `u := id` witness — see the proof note in §4.1 for why this is a
+  *valid existential* but does *not* capture the full JT universal
+  property (the genuine `frameCoprod` upstream PR remains tracked
+  in §6 for the universe-polymorphic, uniqueness-bearing version).
 * **No modification** to any other file (the import-side bridge to
   `Topological.lean:464 P3_topological` is *one-way*; this file
   imports but is not imported by Topological.lean, so the existing
@@ -535,29 +536,103 @@ def cubePairing
     `ψ (cubePairing u v) := (cubePairing u v) (finProdFinEquiv (0, 1))`,
     so the outer-product statement is **not** vacuous.
 
-    **Proof sketch** (deferred to a future PR): identify
-    `Fin (N * M) → Ω` with `P(Fin N × Fin M)`; for each pair `(i, j)`
-    let `eᵢⱼ : Fin (N * M) → Ω` be the singleton at
-    `finProdFinEquiv (i, j)`; define
-    `ψ w := ⨆ (i, j), w (finProdFinEquiv (i, j)) ⊓ φ eᵢ eⱼ`
-    where `eᵢ : Fin N → Ω` is the i-th singleton.  Bidirectional
-    closure uses frame distributivity (`inf_iSup_eq`, `iSup_inf_eq`)
-    plus the JT-bilinear preservation axioms.  ~50-100 LOC for the
-    full discharge.
+    **Proof status (2026-05-17): proved.**  The discharge uses the
+    candidate construction
+    `ψ w := ∃ u' v', cubePairing u' v' ≤ w ∧ φ u' v'`.  Forward is
+    `⟨u, v, le_refl _, ·⟩`; backward case-splits on whether `u'` (resp.
+    `v'`) is everywhere-`⊥`: if so, JT-bilinearity reduces `φ u' v'`
+    to `⊥ = False` (via `map_sSup_left ∅`), contradicting the
+    hypothesis; otherwise, the outer-product index
+    `finProdFinEquiv (i, j₀)` forces `u' ≤ u` componentwise (and
+    symmetrically `v' ≤ v`), and `map_inf_left` + `inf_eq_left.mpr`
+    give monotonicity in each slot, yielding `φ u' v' → φ u v' → φ u v`.
 
-    For now the statement is recorded as `sorry`; consumers (notably
-    `to_topological_P3` below) can build on the statement-level
-    interface without circular dependency on a Mathlib `frameCoprod`. -/
+    The argument is specific to the Sierpinski generator
+    `Ω = Prop` (uses `propext` to identify `(∀ i, ¬ u' i) ↔ u' = ⊥`);
+    a fully generic frame-coproduct version still requires the
+    upstream Mathlib `frameCoprod` PR (§6).  Consumers (notably
+    `to_topological_P3` below) reduce to this theorem directly. -/
 theorem cube_JT_universal_property
     (φ : (Fin N → SierpinskiOmega) → (Fin M → SierpinskiOmega) → SierpinskiOmega)
-    (_hφ : IsJTFrameBilinear φ) :
+    (hφ : IsJTFrameBilinear φ) :
     ∃ (ψ : (Fin (N * M) → SierpinskiOmega) → SierpinskiOmega),
       ∀ u v, φ u v ↔ ψ (cubePairing u v) := by
-  -- Honest sorry: see docstring for proof sketch.  Construction is
-  -- standard Joyal-Tierney 1984 §VI (Sierpinski-cube specialisation)
-  -- but ~50-100 LOC and not on the current critical path; the
-  -- *statement* is the load-bearing deliverable here.
-  sorry
+  -- **Proved 2026-05-17** (Sierpinski-cube specialisation): take
+  --   `ψ w := ∃ u' v', cubePairing u' v' ≤ w ∧ φ u' v'`.
+  -- Forward direction is by `⟨u, v, le_refl _, ·⟩`.
+  -- Backward direction uses two structural facts about
+  -- `SierpinskiOmega = Prop`:
+  --   (a) if `u' = ⊥` (i.e. `∀ i, ¬ u' i`), then JT-bilinearity
+  --       (`map_sSup_left v' ∅`) gives `φ u' v' = ⊥ = False`, so any
+  --       supposed proof of `φ u' v'` is contradictory.  Symmetric
+  --       for `v'`.
+  --   (b) otherwise, pick witnesses `i₀, j₀` with `u' i₀, v' j₀`; the
+  --       hypothesis `cubePairing u' v' ≤ cubePairing u v` at the
+  --       outer-product index `finProdFinEquiv (i, j₀)` forces
+  --       `u' ≤ u` pointwise; similarly `v' ≤ v`.  Then
+  --       `map_inf_left` + `inf_eq_left.mpr` give monotonicity in each
+  --       slot, so `φ u' v' → φ u v' → φ u v`.
+  -- This discharges the §4ter universal-property `sorry`; consumers
+  -- such as `to_topological_P3` (§5) reduce to this theorem directly.
+  classical
+  refine ⟨fun w => ∃ u' v', cubePairing u' v' ≤ w ∧ φ u' v', ?_⟩
+  intro u v
+  refine ⟨fun huv => ⟨u, v, le_refl _, huv⟩, ?_⟩
+  rintro ⟨u', v', hle, hφ'⟩
+  by_cases hu_empty : ∀ i, ¬ u' i
+  · exfalso
+    have hu_bot : u' = (⊥ : Fin N → SierpinskiOmega) := by
+      funext i
+      exact propext ⟨fun h => (hu_empty i h).elim, fun h => h.elim⟩
+    have hbot_eq : (⊥ : Fin N → SierpinskiOmega) =
+        sSup (∅ : Set (Fin N → SierpinskiOmega)) := by
+      rw [sSup_empty]
+    have hφ_bot : φ (⊥ : Fin N → SierpinskiOmega) v' =
+        (⊥ : SierpinskiOmega) := by
+      rw [hbot_eq, hφ.map_sSup_left, Set.image_empty, sSup_empty]
+    rw [hu_bot, hφ_bot] at hφ'
+    exact hφ'
+  · simp only [not_forall, Classical.not_not] at hu_empty
+    by_cases hv_empty : ∀ j, ¬ v' j
+    · exfalso
+      have hv_bot : v' = (⊥ : Fin M → SierpinskiOmega) := by
+        funext j
+        exact propext ⟨fun h => (hv_empty j h).elim, fun h => h.elim⟩
+      have hbot_eq : (⊥ : Fin M → SierpinskiOmega) =
+          sSup (∅ : Set (Fin M → SierpinskiOmega)) := by
+        rw [sSup_empty]
+      have hφ_bot : φ u' (⊥ : Fin M → SierpinskiOmega) =
+          (⊥ : SierpinskiOmega) := by
+        rw [hbot_eq, hφ.map_sSup_right, Set.image_empty, sSup_empty]
+      rw [hv_bot, hφ_bot] at hφ'
+      exact hφ'
+    · simp only [not_forall, Classical.not_not] at hv_empty
+      obtain ⟨i₀, hi₀⟩ := hu_empty
+      obtain ⟨j₀, hj₀⟩ := hv_empty
+      -- u' ≤ u pointwise: at the outer-product index
+      -- `finProdFinEquiv (i, j₀)`, `cubePairing u' v' ≤ cubePairing u v`
+      -- specialises to `(u' i ∧ v' j₀) → (u i ∧ v j₀)`; since
+      -- `v' j₀` holds, this forces `u' i → u i`.
+      have hu_le : u' ≤ u := by
+        intro i hi
+        have hk := hle (finProdFinEquiv (i, j₀))
+        simp only [cubePairing, Equiv.symm_apply_apply] at hk
+        exact (hk ⟨hi, hj₀⟩).1
+      have hv_le : v' ≤ v := by
+        intro j hj
+        have hk := hle (finProdFinEquiv (i₀, j))
+        simp only [cubePairing, Equiv.symm_apply_apply] at hk
+        exact (hk ⟨hi₀, hj⟩).2
+      have hu_inf : u' ⊓ u = u' := inf_eq_left.mpr hu_le
+      have hsplit_left := hφ.map_inf_left v' u' u
+      rw [hu_inf] at hsplit_left
+      rw [hsplit_left] at hφ'
+      have hφ_uv' : φ u v' := hφ'.2
+      have hv_inf : v' ⊓ v = v' := inf_eq_left.mpr hv_le
+      have hsplit_right := hφ.map_inf_right u v' v
+      rw [hv_inf] at hsplit_right
+      rw [hsplit_right] at hφ_uv'
+      exact hφ_uv'.2
 
 end CubeFrameCoprod
 
@@ -763,20 +838,21 @@ This file delivers:
    discharge `cube_JT_universal_property` constructively (against
    the *correct* outer-product conclusion shape).
 
-**Total `sorry` count**: **1** (§4ter
-`cube_JT_universal_property`; §5 `to_topological_P3` consumes it).
+**Total `sorry` count**: **0** (2026-05-17 update — §4ter
+`cube_JT_universal_property` discharged for the Sierpinski-cube
+shape via the `ψ w := ∃ u' v', cubePairing u' v' ≤ w ∧ φ u' v'`
+candidate construction; §5 `to_topological_P3` reduces to it).
 
 **Axioms introduced**: **0** (post-2026-05-17 audit — the PR #51 axiom
 `sierpinski_cube_JT_factorization` was removed as unsound).
 
 The γ.3-B Topological P3 flag (`Topological.lean:464`) is now backed
 by a fully-checked attack file: the cartesian fragment is *proved*,
-the JT-bilinear → IsFrameBilinear bridge is *proved*, the restated
-outer-product `to_topological_P3` is *closed modulo a single
-documented `sorry`* at the canonical universal-property statement
-`cube_JT_universal_property`.  No false axiom is silently extending
-the trust base, and the load-bearing statement no longer carries the
-provably-false pointwise-meet shape.
+the JT-bilinear → IsFrameBilinear bridge is *proved*, and the
+restated outer-product `to_topological_P3` is *closed* via the
+discharged `cube_JT_universal_property`.  No false axiom is
+extending the trust base, and the load-bearing statement no longer
+carries the provably-false pointwise-meet shape.
 -/
 
 end SSBX.Foundation.Order
