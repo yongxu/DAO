@@ -49,6 +49,8 @@
 | `list a` | list |
 | `catalogue kind` | catalog op result |
 
+> **R-tower doctrine** (2026-05-17): `cell` 不是独立 primitive；R₈ = R₄² 由 squaring tower 派生（R₀/R₁/R₂/R₄/R₈, T_{k+1}=T_k²）。V₄ Shi 不再作 first-class 时态轴 — 任何需 "时" 之操作都从 R-tower 投影/印获得。详 [[wen-substrate.md]] §3.7 operation monism.
+
 类型检查 **explicit** (typecheck), 无 inference.
 
 ### E. 工具
@@ -156,12 +158,10 @@
 - **依赖**: 无；但与 1.5 之 user-def 配套
 - **成本**: ~400 LOC + 简化 normalize
 
-#### ⑬ Cell-level operations (V₄ Shi binding)
-- **Why**: 当前 Hex 是默认；Cell (Hex × Shi) 之 surface 写法弱
-- **Syntax**: `卦·时` 或 `(乾, 已)` 之 cell literal；`设时 X` 之 syntactic sugar
-- **Semantics**: lift Hex op to Cell；时态 propagation rules
-- **依赖**: 无
-- **成本**: ~200 LOC
+~~#### ⑬ Cell-level operations (V₄ Shi binding)~~ **— REMOVED 2026-05-17**
+
+V₄ Shi 不作 first-class primitive；R-tower (squaring) 已派生 Cell.
+任何 "时态" 写法应从 R₂/R₄/R₈ 投影获得，而非加 surface 层。
 
 ---
 
@@ -185,9 +185,6 @@ Phase γ (literary, depends on β):
   ⑦ 真名词化器                  ← needs ④ for Set type
   ⑧ 所...者 / 之所以            ← needs ⑦
   ⑨ subject ellipsis            ← needs cross-statement env
-
-Phase δ (orthogonal):
-  ⑬ cell-level surface
 ```
 
 ---
@@ -202,6 +199,7 @@ Phase δ (orthogonal):
 | **Classifiers 三人 vs 三個人** | 边际收益；古文一般也不区分 |
 | **完整 trait / typeclass 系统** | 与 catalogue 之 inductive 设计冲突 |
 | **Compile-time macros** | 由 ⑪ quote/unquote 部分覆盖；完整 macro 系统过大 |
+| **V₄ Shi surface (原 ⑬)** | R-tower 已派生 Cell；不需要独立 surface 写法。任何 "时" 操作从 squaring tower 投影 |
 
 ---
 
