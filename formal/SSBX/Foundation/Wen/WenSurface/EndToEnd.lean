@@ -106,6 +106,43 @@ def wenyanInterpHexList (s : String) : Except WenSurfaceErr (List Hexagram) :=
     | none    => .error (.denoteFailed (.list .hex) typed.ty)
 
 
+/-! ## § 2b  Multi-statement programs
+
+Statement separators: `；` (ideographic), `。` (period), `;` (ASCII).
+A program is a sequence of statements; `wenyanCompileProgram` compiles each
+chunk via `wenyanCompile` and returns the list of `TypedTm`.
+
+Limitation (v1): separators are recognised at top level only — there is no
+bracket-aware splitting.  Statements inside `（...）` should not contain bare
+top-level separators in this version.
+-/
+
+/-- Split a String on a single Char delimiter. -/
+def splitOnChar (s : String) (delim : Char) : List String :=
+  s.split (· = delim)
+
+/-- Split a String on the ideographic 「；」, full-stop 「。」, and ASCII `;`.
+    Returns chunks with whitespace trimmed and empty chunks removed. -/
+def splitOnStatementSep (s : String) : List String :=
+  -- Replace 「。」 and ASCII `;` with 「；」, then split on 「；」.
+  let unified := (s.replace "。" "；").replace ";" "；"
+  (splitOnChar unified '；').map String.trim
+    |>.filter (fun c => !c.isEmpty)
+
+/-- Multi-statement compiler.  Returns the list of typed terms in source order.
+    On error, fails fast at the offending statement. -/
+def wenyanCompileProgram (s : String) :
+    Except WenSurfaceErr (List TypedTm) :=
+  let chunks := splitOnStatementSep s
+  let rec go : List String → List TypedTm → Except WenSurfaceErr (List TypedTm)
+    | [], acc => .ok acc.reverse
+    | c :: rest, acc =>
+        match wenyanCompile c with
+        | .error e => .error e
+        | .ok t    => go rest (t :: acc)
+  go chunks []
+
+
 /-! ## § 3  端到端 sanity tests
 
 318 `example := by native_decide` tests moved to `EndToEndTests.lean` (Phase γ,

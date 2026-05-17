@@ -1190,4 +1190,43 @@ example : (wenyanCompile "也 乾").toOption.isSome = true := by native_decide
     greedy and fires before the infix dispatch chain). -/
 example : (wenyanCompile "一 同 一 也").toOption.isSome = true := by native_decide
 
+/-! ### Multi-statement programs (wen-1.5 sub-plan 03)
+
+Statement separators: 「；」 「。」 ASCII `;`. -/
+
+/-- Empty input → empty program. -/
+example : (wenyanCompileProgram "").toOption.map List.length = some 0 := by native_decide
+
+/-- Whitespace-only input → empty program. -/
+example : (wenyanCompileProgram "   ").toOption.map List.length = some 0 := by native_decide
+
+/-- Single statement, no separator → one element. -/
+example : (wenyanCompileProgram "推 一").toOption.map List.length = some 1 := by native_decide
+
+/-- Two statements separated by ideographic 「；」. -/
+example : (wenyanCompileProgram "推 一；推 推 一").toOption.map List.length = some 2 := by native_decide
+
+/-- Three statements separated by 「。」. -/
+example : (wenyanCompileProgram "推 一。推 推 一。推 推 推 一").toOption.map List.length = some 3 := by native_decide
+
+/-- Mixed separators: 「；」 and 「。」 both recognised. -/
+example : (wenyanCompileProgram "推 一；推 推 一。推 推 推 一").toOption.map List.length = some 3 := by native_decide
+
+/-- ASCII semicolon also works. -/
+example : (wenyanCompileProgram "推 一;推 推 一").toOption.map List.length = some 2 := by native_decide
+
+/-- Each statement gets its own type from the elaborator. -/
+example :
+    (wenyanCompileProgram "推 一；凡 甲 同 甲 甲").toOption.map
+        (fun ts => ts.map (·.ty))
+      = some [.hex, .bool] := by
+  native_decide
+
+/-- Error in a chunk propagates. -/
+example :
+    (wenyanCompileProgram "推 一 二").toOption = none := by native_decide
+
+/-- Trailing separator is tolerated (empty chunks filtered). -/
+example : (wenyanCompileProgram "推 一；").toOption.map List.length = some 1 := by native_decide
+
 end SSBX.Foundation.Wen.WenSurface
