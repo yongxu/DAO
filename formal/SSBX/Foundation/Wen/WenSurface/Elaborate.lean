@@ -322,44 +322,74 @@ def elabSurfaceExprWithCtx (ctx : Ctx) : SurfaceExpr → Except ElabErr Tm
   | .marker _ body => elabSurfaceExprWithCtx ctx body
   | .binder .lambda name body =>
       -- wen-2.0 ①: Hindley-Milner type inference replaces the legacy
-      -- 6-candidate domain trial.  The elaborator's behaviour for `body`
-      -- does not depend on the bound variable's `Ty` (it only generates
-      -- `Tm.var name` references), so we elaborate body with a placeholder
-      -- `.hex` annotation, then ask `TypeInfer.inferAndReannotate` to
-      -- compute the correct binder domain via constraint-based unification
-      -- over the body's actual usage of `name`.
+      -- hand-rolled 6-candidate domain trial.  Strategy:
       --
-      -- Fallback (HM fails — should not happen for well-typed programs):
-      -- emit the placeholder lambda and let the caller's typecheck path
-      -- surface the existing typeMismatch error.
+      -- 1. Elaborate `body` with `(name, .hex) :: ctx` (placeholder).
+      --    The elaborator's `Tm` output is invariant of the assumed
+      --    bound-var type (it only emits `Tm.var name` references).
+      -- 2. Run HM `pickBinderDomain` — this iterates the legacy
+      --    candidate list `[hex, bool, Hex→Hex, Hex→Bool, Bool→Bool,
+      --    Bool→Hex]` and uses constraint-based unification as the
+      --    predicate for each candidate.  This replaces six redundant
+      --    elaborate-plus-typecheck rounds with HM's single-pass
+      --    consistency check while preserving legacy choice order
+      --    (and thus existing acceptance tests).
+      -- 3. Re-elaborate `body` with the picked domain in context (if
+      --    different from `.hex`, since parser-level type expectations
+      --    may differ), build `Tm.abs name dom body'`, and rely on
+      --    kernel `typeCheck` to derive the codomain naturally.
+      --
+      -- Fallback: if `.hex` elaboration fails (parser-level expected
+      -- type error), try `.bool` directly with the same HM strategy.
       match elabSurfaceExprWithCtx ((name, .hex) :: ctx) body with
+      | .ok tHex =>
+          match pickBinderDomain ctx name tHex with
+          | some dom =>
+              let bodyResult :=
+                if dom = .hex then .ok tHex
+                else elabSurfaceExprWithCtx ((name, dom) :: ctx) body
+              match bodyResult with
+              | .ok tb =>
+                  match checkedAbs? ctx name dom tb with
+                  | some abs => .ok abs
+                  | none =>
+                      match checkedAbs? ctx name .hex tHex with
+                      | some abs => .ok abs
+                      | none => .error .empty
+              | .error _ =>
+                  match checkedAbs? ctx name .hex tHex with
+                  | some abs => .ok abs
+                  | none => .error .empty
+          | none =>
+              -- HM rejected every candidate; fall back to raw `.hex`.
+              match checkedAbs? ctx name .hex tHex with
+              | some abs => .ok abs
+              | none => .error .empty
       | .error _ =>
-          -- Try `.bool` as a parsing-only fallback (some surface positions
-          -- statically reject `.hex` bindings via expected-type errors).
           match elabSurfaceExprWithCtx ((name, .bool) :: ctx) body with
           | .ok tBool =>
-              let candidate := Tm.abs name .bool tBool
-              let inferred := inferAndReannotate candidate
-              if (typeCheck ctx inferred).isSome then .ok inferred
-              else .ok candidate
+              match pickBinderDomain ctx name tBool with
+              | some dom =>
+                  let bodyResult :=
+                    if dom = .bool then .ok tBool
+                    else elabSurfaceExprWithCtx ((name, dom) :: ctx) body
+                  match bodyResult with
+                  | .ok tb =>
+                      match checkedAbs? ctx name dom tb with
+                      | some abs => .ok abs
+                      | none =>
+                          match checkedAbs? ctx name .bool tBool with
+                          | some abs => .ok abs
+                          | none => .error .empty
+                  | .error _ =>
+                      match checkedAbs? ctx name .bool tBool with
+                      | some abs => .ok abs
+                      | none => .error .empty
+              | none =>
+                  match checkedAbs? ctx name .bool tBool with
+                  | some abs => .ok abs
+                  | none => .error .empty
           | .error e => .error e
-      | .ok tHex =>
-          let candidate := Tm.abs name .hex tHex
-          let inferred := inferAndReannotate candidate
-          -- Prefer HM-inferred annotations; if the resulting Tm typechecks
-          -- in the kernel checker, use it.  Otherwise fall back to the
-          -- legacy candidate-trial behaviour to remain conservative.
-          if (typeCheck ctx inferred).isSome then .ok inferred
-          else if (typeCheck ctx candidate).isSome then .ok candidate
-          else
-              match elabSurfaceExprWithCtx ((name, .bool) :: ctx) body with
-              | .ok tBool =>
-                  let cb := Tm.abs name .bool tBool
-                  let ib := inferAndReannotate cb
-                  if (typeCheck ctx ib).isSome then .ok ib
-                  else if (typeCheck ctx cb).isSome then .ok cb
-                  else .error .empty
-              | .error e => .error e
   | .binder .forallHex name body =>
       match elabSurfaceExprWithCtx ((name, .hex) :: ctx) body with
       | .ok t => .ok (.app .forallH (.abs name .hex t))

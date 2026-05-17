@@ -397,6 +397,64 @@ def inferAndReannotate (tm : Tm) : Tm :=
       let (tm', _) := reannotate fuel [] st.subst InferState.empty tm
       tm'
 
+/-- Run HM on `.abs name placeholderDom body` and return only the
+    HM-inferred domain `Ty` for `name`.  Useful when the caller wants to
+    drive a single elaboration pass with a known-good domain and let the
+    kernel `typeCheck` derive the codomain naturally — this preserves
+    legacy back-compat for cases where HM's principal codomain (default
+    `.hex`) differs from the legacy candidate-trial's chosen codomain.
+
+    Returns `none` if HM inference itself fails. -/
+def inferBinderDomain (ctxTys : List (String × Ty)) (name : String) (body : Tm) : Option Ty :=
+  let initState := InferState.empty
+  let fuel := 1024
+  -- Lift the caller's `Ctx` into `MCtx` with no metavars (caller's
+  -- previously chosen binder domains are taken as ground truth).
+  let mctx : MCtx := ctxTys.map (fun ⟨n, ty⟩ => (n, MTy.ofTy ty))
+  let candidate : Tm := .abs name .hex body
+  match infer fuel mctx candidate initState with
+  | .error _ => none
+  | .ok (resTy, st) =>
+      -- `resTy = .arr α β` where α is the binder's fresh mvar; zonk α.
+      match resTy with
+      | .arr α _ => some (zonkTop st.subst α)
+      | _ => none
+
+/-- The legacy candidate domain list, kept here for back-compat
+    defaulting.  HM produces a valid principal-type instance, but for
+    cases where multiple principal-type instances exist (e.g. higher-
+    order `者 甲 甲 之 真`, where both `(Bool→Hex)→Hex` and
+    `(Bool→Bool)→Bool` are valid), we prefer the legacy choice so
+    existing test fixtures continue to match.
+
+    Order matches `binderDomainCandidates` in `WenSurface.Syntax`. -/
+def legacyBinderDomainCandidates : List Ty :=
+  [ .hex
+  , .bool
+  , .arr .hex .hex
+  , .arr .hex .bool
+  , .arr .bool .bool
+  , .arr .bool .hex ]
+
+/-- Check that HM's inferred domain for `name` in `body`, when used as
+    the binder's `dom`, is consistent (HM admits this assignment). -/
+def hmAdmitsDomain (ctxTys : List (String × Ty)) (name : String) (dom : Ty) (body : Tm) : Bool :=
+  let initState := InferState.empty
+  let fuel := 1024
+  let mctx : MCtx := (name, MTy.ofTy dom) :: ctxTys.map (fun ⟨n, ty⟩ => (n, MTy.ofTy ty))
+  match infer fuel mctx body initState with
+  | .ok _ => true
+  | .error _ => false
+
+/-- Pick the first legacy candidate domain that HM accepts.  This is the
+    Wen 2.0 ① replacement for the elaborator's hand-rolled 6-candidate
+    trial: we still iterate the legacy list, but **HM is the predicate**
+    (rather than re-running the elaborator + typecheck for each guess).
+
+    Returns `none` if no candidate is HM-admissible. -/
+def pickBinderDomain (ctxTys : List (String × Ty)) (name : String) (body : Tm) : Option Ty :=
+  legacyBinderDomainCandidates.find? (fun dom => hmAdmitsDomain ctxTys name dom body)
+
 /-! ## § 11  Sanity examples -/
 
 /-- Unify two equal hex types — no substitution change. -/
