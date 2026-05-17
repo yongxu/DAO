@@ -35,6 +35,7 @@
 - 状态: 0 sorry / 0 axiom / 总函数 (`partial def` 仅 loop 体)
 -/
 import SSBX.Foundation.Wen.WenSurface.EndToEnd
+import SSBX.Foundation.Wen.WenSurface.ErrorRender
 import SSBX.Foundation.Atlas.Yi.Classical.Core.Yi
 import SSBX.Text.OperatorAnchors
 
@@ -89,38 +90,40 @@ def hexShow (h : Hexagram) : String :=
 
 /-! ## § 2  Error printer -/
 
-/-- Single-line friendly summary of a `WenSurfaceErr`. Full rich rendering
-    (column anchors, suggestions, etc.) lives in sub-plan 04. -/
-def errShow : WenSurfaceErr → String
-  | .lex e          => s!"lex error: {(repr e).pretty}"
-  | .resolve e      => s!"resolve error: {(repr e).pretty}"
-  | .parse e        => s!"parse error: {(repr e).pretty}"
-  | .elab e         => s!"elab error: {(repr e).pretty}"
-  | .denoteFailed expected actual =>
-      s!"denote failed: expected {tyStr expected}, got {tyStr actual}"
+/-- Friendly multi-line rendering of a `WenSurfaceErr`, anchored to the
+    original `src` line. Delegates to `renderWenSurfaceErr` from
+    `WenSurface.ErrorRender` so that `typeMismatch` (and friends) show
+    expected vs actual `Ty` plus a caret indicating the offending span.
+
+    Previously this just printed `(repr e).pretty`, which for
+    `ElabErr.typeMismatch` collapsed to the bare constructor name
+    `SSBX.Foundation.Wen.WenSurface.ElabErr.typeMismatch` with no info
+    (bug B-9). -/
+def errShow (src : String) (e : WenSurfaceErr) : String :=
+  renderWenSurfaceErr src e
 
 /-! ## § 3  Eval dispatch -/
 
 /-- Evaluate one source string and produce the REPL output line. -/
 def evalLine (src : String) : String :=
   match wenyanCompile src with
-  | .error e => errShow e
+  | .error e => errShow src e
   | .ok typed =>
     match typed.ty with
     | .hex =>
       match wenyanInterp src with
       | .ok h    => s!"{hexShow h} : Hex"
-      | .error e => errShow e
+      | .error e => errShow src e
     | .bool =>
       match wenyanInterpBool src with
       | .ok b    => s!"{toString b} : Bool"
-      | .error e => errShow e
+      | .error e => errShow src e
     | t => s!"<elaborated> : {tyStr t}"
 
 /-- Type query: compile and show `ty` without evaluating. -/
 def typeLine (src : String) : String :=
   match wenyanCompile src with
-  | .error e => errShow e
+  | .error e => errShow src e
   | .ok typed => tyStr typed.ty
 
 /-! ## § 4  Help text -/
