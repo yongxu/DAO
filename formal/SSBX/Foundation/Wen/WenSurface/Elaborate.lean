@@ -204,6 +204,25 @@ def symbolicCatalogueHead? (tok : ResolvedTok) (arity : Nat) : Option OperatorId
       | none => none
   | _ => none
 
+/-- wen-2.0 ⑥: detect the speech-act head 曰 (E_2).  When this token heads an
+    application whose final arg is a quote-bracketed group, the elaborator
+    skips the theorem-backed `pairHBody` body and emits a `.catalogue2 .E_2 …`
+    directly so the `.quote` payload survives the structural normal form. -/
+def isSpeechActHead (tok : ResolvedTok) : Option OperatorId :=
+  match tok.atom with
+  | .catalogueOp r =>
+      match r.operator? with
+      | some .E_2 => some .E_2
+      | _ => none
+  | _ => none
+
+/-- wen-2.0 ⑩: detect a quote-bracketed `.grouped` SurfaceExpr (open token's
+    surface is `「` or `『`).  Used by the speech-act elaborator to bypass the
+    theorem-backed catalogue body when the final argument is a quoted Tm. -/
+def isQuotedGroup : SurfaceExpr → Bool
+  | .grouped openTok _ _ => isQuoteOpenBracketSurface openTok.surface
+  | _ => false
+
 def checkedAbs? (ctx : Ctx) (name : String) (dom : Ty) (body : Tm) : Option Tm :=
   let abs := .abs name dom body
   if (typeCheck ctx abs).isSome then some abs else none
@@ -229,10 +248,30 @@ def elabSurfaceExprWithCtx (ctx : Ctx) : SurfaceExpr → Except ElabErr Tm
           | .error e, _ => .error e
           | _, .error e => .error e
       | none =>
-          match elabSurfaceExprWithCtx ctx (.app (.atom tok) a), elabSurfaceExprWithCtx ctx b with
-          | .ok tf, .ok tb => .ok (.app tf tb)
-          | .error e, _ => .error e
-          | _, .error e => .error e
+          -- wen-2.0 ⑥: `X 曰 「Y」`.  E_2's theorem-backed `pairHBody` is a
+          -- structural carrier (Hex × Hex); the speech-act variant *replaces*
+          -- it with a `.catalogue2 .E_2 X (.quote Y)` form so the quoted
+          -- payload is preserved through typecheck/eval (textAct kind accepts
+          -- `.quoted` for its last arg via `catalogueArgTypeOk`).
+          match isSpeechActHead tok with
+          | some id =>
+              if isQuotedGroup b then
+                match elabSurfaceExprWithCtx ctx a, elabSurfaceExprWithCtx ctx b with
+                | .ok ta, .ok tb => .ok (.catalogue2 id ta tb)
+                | .error e, _ => .error e
+                | _, .error e => .error e
+              else
+                match elabSurfaceExprWithCtx ctx (.app (.atom tok) a),
+                      elabSurfaceExprWithCtx ctx b with
+                | .ok tf, .ok tb => .ok (.app tf tb)
+                | .error e, _ => .error e
+                | _, .error e => .error e
+          | none =>
+              match elabSurfaceExprWithCtx ctx (.app (.atom tok) a),
+                    elabSurfaceExprWithCtx ctx b with
+              | .ok tf, .ok tb => .ok (.app tf tb)
+              | .error e, _ => .error e
+              | _, .error e => .error e
   | .app (.app (.app (.atom tok) a) b) c =>
       match symbolicCatalogueHead? tok 3 with
       | some id =>
@@ -367,7 +406,15 @@ def elabSurfaceExprWithCtx (ctx : Ctx) : SurfaceExpr → Except ElabErr Tm
       | .error e => .error e
       | .ok (.app f x) => .ok (.app f (.app f x))
       | .ok _ => .error .empty
-  | .grouped _ _ body => elabSurfaceExprWithCtx ctx body
+  | .grouped openTok _ body =>
+      -- wen-2.0 ⑩: 引语括号 「」/『』 inside body → wrap as Tm.quote (data, not eval).
+      -- Existing value-grouping `（…）`/`(…)` is unchanged.
+      if isQuoteOpenBracketSurface openTok.surface then
+        match elabSurfaceExprWithCtx ctx body with
+        | .ok tb    => .ok (.quote tb)
+        | .error e  => .error e
+      else
+        elabSurfaceExprWithCtx ctx body
   | .construction name _ => .error (.unsupportedConstruction name)
 
 def elabSurfaceExpr (expr : SurfaceExpr) : Except ElabErr Tm :=
@@ -441,9 +488,8 @@ def inferTypeDetailed : Ctx → Tm → Except TypeDiag Ty
       | .ok ta =>
           let sig := fullSignatureFor id
           if sig.arity = 1 then
-            let expected := catalogueExpectedArgTy sig.kind 0
-            if ta = expected then .ok (.catalogue sig.kind)
-            else .error (.argumentMismatch expected ta)
+            if catalogueArgTypeOk sig 0 ta then .ok (.catalogue sig.kind)
+            else .error (.argumentMismatch (catalogueExpectedArgTy sig.kind 0) ta)
           else
             .error (.expectedFunction (.catalogue sig.kind))
   | ctx, .catalogue2 id a b =>
@@ -451,13 +497,11 @@ def inferTypeDetailed : Ctx → Tm → Except TypeDiag Ty
       | .ok ta, .ok tb =>
           let sig := fullSignatureFor id
           if sig.arity = 2 then
-            let expectedA := catalogueExpectedArgTy sig.kind 0
-            let expectedB := catalogueExpectedArgTy sig.kind 1
-            if ta = expectedA then
-              if tb = expectedB then .ok (.catalogue sig.kind)
-              else .error (.argumentMismatch expectedB tb)
+            if catalogueArgTypeOk sig 0 ta then
+              if catalogueArgTypeOk sig 1 tb then .ok (.catalogue sig.kind)
+              else .error (.argumentMismatch (catalogueExpectedArgTy sig.kind 1) tb)
             else
-              .error (.argumentMismatch expectedA ta)
+              .error (.argumentMismatch (catalogueExpectedArgTy sig.kind 0) ta)
           else
             .error (.expectedFunction (.catalogue sig.kind))
       | .error e, _ => .error e
@@ -467,22 +511,21 @@ def inferTypeDetailed : Ctx → Tm → Except TypeDiag Ty
       | .ok ta, .ok tb, .ok tc =>
           let sig := fullSignatureFor id
           if sig.arity = 3 then
-            let expectedA := catalogueExpectedArgTy sig.kind 0
-            let expectedB := catalogueExpectedArgTy sig.kind 1
-            let expectedC := catalogueExpectedArgTy sig.kind 2
-            if ta = expectedA then
-              if tb = expectedB then
-                if tc = expectedC then .ok (.catalogue sig.kind)
-                else .error (.argumentMismatch expectedC tc)
+            if catalogueArgTypeOk sig 0 ta then
+              if catalogueArgTypeOk sig 1 tb then
+                if catalogueArgTypeOk sig 2 tc then .ok (.catalogue sig.kind)
+                else .error (.argumentMismatch (catalogueExpectedArgTy sig.kind 2) tc)
               else
-                .error (.argumentMismatch expectedB tb)
+                .error (.argumentMismatch (catalogueExpectedArgTy sig.kind 1) tb)
             else
-              .error (.argumentMismatch expectedA ta)
+              .error (.argumentMismatch (catalogueExpectedArgTy sig.kind 0) ta)
           else
             .error (.expectedFunction (.catalogue sig.kind))
       | .error e, _, _ => .error e
       | _, .error e, _ => .error e
       | _, _, .error e => .error e
+  -- wen-2.0 ⑥/⑩: quote 一律返 .quoted；body 之类型 / 自由变量不需检查.
+  | _, .quote _ => .ok .quoted
 
 def elabSurfaceTyped (expr : SurfaceExpr) : Except ElabErr TypedTm :=
   match elabSurfaceExpr expr with

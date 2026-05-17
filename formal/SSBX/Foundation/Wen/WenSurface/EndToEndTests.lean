@@ -1331,4 +1331,126 @@ example :
     lastExpr.bind (denoteHex ·.tm) = some («生生» 3 «一») := by
   native_decide
 
+/-! ## § 9  wen-2.0 ⑥ 曰 direct speech + ⑩ 引语括号「」/『』
+
+  Pair feature (Phase β depends on α-⑩ lex extension):
+
+  · ⑩ 引语括号 — lex 新支持 `「」` 与 `『』`. 内部 body 按一般规则解析为
+    `SurfaceExpr`, 在 elab 阶段被识为 quote 之 group (openTok.surface ∈ {「,『})
+    并 wrap 为 `Tm.quote body`. 类型一律为 `Ty.quoted`. 体内任意类型 / 自由
+    变量在 typecheck 时不被强制（quote 之 body 是 *data*, 不是 *expression*).
+
+  · ⑥ 曰 direct speech (E_2) — `曰 X Y` 之第二参数 Y 若为 quoted group 即
+    被 elaborate 为 `.catalogue2 .E_2 X (.quote ...)`. textAct 之 `arity-1` 位
+    被 `catalogueArgTypeOk` 放宽允许 `.quoted` 类型；Hex/Hex 之 back-compat
+    形式 (e.g. `曰 乾 坤`) 仍合法.
+
+  公示数字 **375 不变** — 不引入新 OperatorId. 仅 `Tm.quote` 构造子 + `Ty.quoted`
+  类型 + lex/elab extension. 与 ⑪ unquote/eval 之未来接入预留接口.
+-/
+
+/-- ⑩ (1) Bare quote「一」 compiles to `Tm.quote .yi` with type `.quoted`. -/
+example :
+    let typed := wenyanCompile "「一」"
+    typed.toOption.map TypedTm.tm = some (.quote .yi)
+      ∧ typed.toOption.map TypedTm.ty = some .quoted := by native_decide
+
+/-- ⑩ (2) Bare quote「乾」 → quoted hex literal Hexagram.heaven. -/
+example :
+    let typed := wenyanCompile "「乾」"
+    typed.toOption.map TypedTm.tm = some (.quote (.hexLit Hexagram.heaven))
+      ∧ typed.toOption.map TypedTm.ty = some .quoted := by native_decide
+
+/-- ⑩ (3) Secondary quote bracket『一』 has identical semantics to「一」. -/
+example :
+    (wenyanCompile "「一」").toOption.map TypedTm.tm
+      = (wenyanCompile "『一』").toOption.map TypedTm.tm := by native_decide
+
+/-- ⑩ (4) Quote of composite expression — body is fully elaborated but never
+    evaluated.  「推 一」 → `.quote (.app tuiBody .yi)`. -/
+example :
+    let typed := wenyanCompile "「推 一」"
+    typed.toOption.map TypedTm.ty = some .quoted
+      ∧ typed.toOption.map TypedTm.tm
+          = some (.quote (.app Stdlib.tuiBody .yi)) := by native_decide
+
+/-- ⑩ (5) Deferment witness: 「不」 (notB primitive, .arr .bool .bool) quotes
+    without forcing scalar evaluation.  The body is a function — bare 「不」
+    body is well-formed Tm; quoted wrapper accepts any well-elaborated body. -/
+example :
+    let typed := wenyanCompile "「不」"
+    typed.toOption.map TypedTm.tm = some (.quote .notB)
+      ∧ typed.toOption.map TypedTm.ty = some .quoted := by native_decide
+
+/-- ⑩ (6) Nested quote: 「『一』」 → `.quote (.quote .yi)`. -/
+example :
+    let typed := wenyanCompile "「『一』」"
+    typed.toOption.map TypedTm.tm = some (.quote (.quote .yi))
+      ∧ typed.toOption.map TypedTm.ty = some .quoted := by native_decide
+
+/-- ⑩ (7) `「一」 同 「一」` — `.quoted` is not `.hex`, so an infix `同` over
+    quotes is a type mismatch (not silently coerced).  Confirms `.quoted` is
+    a *distinct* type, not a hex-alias. -/
+example : (wenyanCompile "「一」 同 「一」").toOption.isNone = true := by native_decide
+
+/-- ⑥ (1) 曰 + Hex speaker + quoted body: `曰 乾 「一」` →
+    `.catalogue2 .E_2 (.hexLit Hexagram.heaven) (.quote .yi)`. -/
+example :
+    let typed := wenyanCompile "曰 乾 「一」"
+    typed.toOption.map TypedTm.tm
+        = some (.catalogue2 .E_2 (.hexLit Hexagram.heaven) (.quote .yi))
+      ∧ typed.toOption.map TypedTm.ty = some (.catalogue .textAct) := by
+  native_decide
+
+/-- ⑥ (2) Back-compat: `曰 乾 坤` (both args Hex, no quote) keeps the
+    pre-existing `pairHBody`-based elaboration (Hex × Hex carrier), exactly
+    matching the legacy E_2 test fixture in `EndToEndTests` § 6. ⑥ only
+    fires the `.catalogue2 .E_2 …` form when 2nd arg is a quoted group. -/
+example :
+    (match wenyanCompile "曰 乾 坤" with
+     | .ok typed => typed.ty = .prod .hex .hex
+     | _ => false) = true := by native_decide
+
+/-- ⑥ (3) 曰 + hex speaker + quoted COMPOSITE body: `曰 乾 「推 一」`.
+    Body is `.app tuiBody .yi` inside a quote — body not evaluated. -/
+example :
+    let typed := wenyanCompile "曰 乾 「推 一」"
+    typed.toOption.map TypedTm.tm
+        = some (.catalogue2 .E_2 (.hexLit Hexagram.heaven)
+                  (.quote (.app Stdlib.tuiBody .yi)))
+      ∧ typed.toOption.map TypedTm.ty = some (.catalogue .textAct) := by
+  native_decide
+
+/-- ⑥ (4) Quote of a stand-alone non-scalar (`.notB`) is accepted as 曰 body —
+    confirms deferment: the body need not denote a Hex/Bool value.  Equivalent
+    to the spec example "子曰：「不」 doesn't error even though 不 alone is a
+    function". -/
+example :
+    let typed := wenyanCompile "曰 乾 「不」"
+    typed.toOption.map TypedTm.tm
+        = some (.catalogue2 .E_2 (.hexLit Hexagram.heaven) (.quote .notB))
+      ∧ typed.toOption.map TypedTm.ty = some (.catalogue .textAct) := by
+  native_decide
+
+/-- ⑩ (8) Unclosed quote bracket → parse error.  Confirms `「` is a real open
+    bracket that must be paired. -/
+example : (wenyanCompile "「一").toOption.isNone = true := by native_decide
+
+/-- ⑩ (9) Mismatched close: `「一)` reports an expectedCloseBracket-shaped
+    parse error (or similar bracket-mismatch).  The pipeline rejects rather
+    than silently accepting. -/
+example : (wenyanCompile "「一)").toOption.isNone = true := by native_decide
+
+/-- ⑩ (10) Quotes inside value-grouping parens still work: `（「一」）`.
+    Outer `（...）` is a no-op group; inner `「一」` quotes the Hex literal. -/
+example :
+    let typed := wenyanCompile "（「一」）"
+    typed.toOption.map TypedTm.tm = some (.quote .yi)
+      ∧ typed.toOption.map TypedTm.ty = some .quoted := by native_decide
+
+/-- ⑩ (11) Empty quote `「」` is an error (parser rejects empty grouped body).
+    Quotes must wrap a non-empty expression — matches value-grouping
+    behavior for `（）`. -/
+example : (wenyanCompile "「」").toOption.isNone = true := by native_decide
+
 end SSBX.Foundation.Wen.WenSurface

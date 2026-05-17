@@ -73,7 +73,13 @@ open SSBX.Text.OperatorSignatures
 
 /-! ## § 1  简单类型 -/
 
-/-- 简单类型：Hex（卦，64 元）、Bool、函数。 -/
+/-- 简单类型：Hex（卦，64 元）、Bool、函数。
+
+    `quoted` 是 wen-2.0 ⑥/⑩ 之 quoted Tm 之类型：`「Y」` (引语括号) 内之
+    内容作为不立即求值之数据，载入 `Tm.quote` 之 payload；其类型一律为
+    `.quoted`，使 doxastic / 言说 / meta-programming 构造可在 STLC 上类
+    型一致地承载。语义层不对 quoted body 求值（只作 syntactic carrier），
+    亦不要求 body 类型上确切（quoted body 可为任意 Tm，包括含自由变量者）. -/
 inductive Ty : Type
   | hex
   | bool
@@ -82,6 +88,7 @@ inductive Ty : Type
   | prod (fst snd : Ty)
   | list (elem : Ty)
   | arr (dom cod : Ty)
+  | quoted
 deriving DecidableEq, Repr
 
 /-! ## § 2  项 -/
@@ -135,6 +142,11 @@ inductive Tm : Type
   | catalogue1 (id : OperatorId) (a : Tm) : Tm
   | catalogue2 (id : OperatorId) (a b : Tm) : Tm
   | catalogue3 (id : OperatorId) (a b c : Tm) : Tm
+  /-- `quote body`: wen-2.0 ⑥/⑩ 之引语 (引语括号 `「Y」` 内之 Tm).
+      Body 本身可为任意 Tm（含自由变量、ill-typed 子项不在此处校验）；
+      整体类型为 `.quoted`，载入 doxastic / 言说 / meta-prog 之 deferred Tm 数据.
+      `WenDefEval` 仅以 builtin tag 标记此 Value，不对 body 作 β-reduction. -/
+  | quote (body : Tm) : Tm
 deriving DecidableEq, Repr
 
 /-! ## § 3  类型检查 -/
@@ -159,18 +171,30 @@ def catalogueExpectedArgTy (kind : SignatureKind) (pos : Nat) : Ty :=
   | .endoComp => .arr .hex .hex
   | _ => .hex
 
+/--
+An argument's actual type is acceptable for a catalogue position if it matches
+the structural expectation, or — for `textAct` operators (wen-2.0 ⑥ 曰 direct
+speech) — the last positional argument is allowed to be `.quoted` instead of
+`.hex`.  The "speech content" of `X 曰 Y` carries `Y` as `.quoted` data when
+it is wrapped in 引语括号 「」/『』; bare Hex remains valid for back-compat.
+-/
+def catalogueArgTypeOk (sig : CoveredOperatorSignature) (pos : Nat) (ty : Ty) : Bool :=
+  let expected := catalogueExpectedArgTy sig.kind pos
+  decide (ty = expected)
+    || (sig.kind = .textAct && pos + 1 = sig.arity && ty = .quoted)
+
 def catalogueArgTypesOk (sig : CoveredOperatorSignature) : List Ty → Bool
   | [a] =>
-      decide (sig.arity = 1) && decide (a = catalogueExpectedArgTy sig.kind 0)
+      decide (sig.arity = 1) && catalogueArgTypeOk sig 0 a
   | [a, b] =>
       decide (sig.arity = 2)
-        && decide (a = catalogueExpectedArgTy sig.kind 0)
-        && decide (b = catalogueExpectedArgTy sig.kind 1)
+        && catalogueArgTypeOk sig 0 a
+        && catalogueArgTypeOk sig 1 b
   | [a, b, c] =>
       decide (sig.arity = 3)
-        && decide (a = catalogueExpectedArgTy sig.kind 0)
-        && decide (b = catalogueExpectedArgTy sig.kind 1)
-        && decide (c = catalogueExpectedArgTy sig.kind 2)
+        && catalogueArgTypeOk sig 0 a
+        && catalogueArgTypeOk sig 1 b
+        && catalogueArgTypeOk sig 2 c
   | _ => false
 
 /-- 在上下文中查找变量类型。 -/
@@ -258,9 +282,32 @@ def typeCheck : Ctx → Tm → Option Ty
           else
             none
       | _, _, _ => none
+  | _, .quote _ => some .quoted
 
 example :
     typeCheck [] (.catalogue2 .E_2 (.hexLit Hexagram.heaven) (.hexLit Hexagram.heaven))
+      = some (.catalogue .textAct) := by native_decide
+
+/-! ### wen-2.0 ⑥ 曰 / ⑩ 引语括号 typecheck examples -/
+
+/-- 「子曰：「学」」 — 第二参数 `.quote .yi` 之类型 `.quoted`，textAct 接受. -/
+example :
+    typeCheck [] (.catalogue2 .E_2 (.hexLit Hexagram.heaven) (.quote .yi))
+      = some (.catalogue .textAct) := by native_decide
+
+/-- Quote a non-trivially typed body (.notB : Bool → Bool) is fine; `.quoted`
+    erases inner type. -/
+example :
+    typeCheck [] (.quote .notB) = some .quoted := by native_decide
+
+/-- Quote of `.var` (free variable) still typechecks — quote 不强求 body
+    well-typed，符合 wen-2.0 ⑥ "不立即 eval / deferred Tm 数据" 之语义. -/
+example :
+    typeCheck [] (.quote (.var "x")) = some .quoted := by native_decide
+
+/-- Back-compat：曰 之两 Hex 参数仍为合法 textAct 应用. -/
+example :
+    typeCheck [] (.catalogue2 .E_2 (.hexLit Hexagram.heaven) (.hexLit Hexagram.earth))
       = some (.catalogue .textAct) := by native_decide
 
 example :

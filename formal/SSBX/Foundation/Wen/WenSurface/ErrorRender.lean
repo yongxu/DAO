@@ -76,6 +76,7 @@ partial def Ty.render : Ty → String
   | .prod a b       => "(" ++ Ty.render a ++ " × " ++ Ty.render b ++ ")"
   | .list a         => "List " ++ Ty.render a
   | .arr a b        => Ty.render a ++ " → " ++ Ty.render b
+  | .quoted         => "Quoted"
 
 /-! ## § 3  OperatorReading 渲染 -/
 

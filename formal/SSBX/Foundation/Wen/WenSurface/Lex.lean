@@ -59,9 +59,20 @@ def isAsciiSpace (c : Char) : Bool :=
 def isWenSpace (c : Char) : Bool :=
   isAsciiSpace c || c == '　'
 
-/-- Grouping punctuation accepted by the WenSurface parser. -/
+/-- Grouping & quoting punctuation accepted by the WenSurface parser.
+
+  · `（）()`     — value grouping (parses inside as ordinary expression)
+  · `「」`       — quote brackets (wen-2.0 ⑩); inside parses to Tm but wraps
+                  in `Tm.quote` — body is data, not evaluated. Pairs with ⑥ 曰.
+  · `『』`       — secondary / nested quote brackets (same semantics as `「」`).
+                  Useful in classical Chinese for quotes inside quotes.
+
+  All four open/close pairs use the same lexer 1-char branch.  Disambiguation
+  between value grouping and quote happens at `Reading.matchingCloseBracket?`
+  and `Syntax.SurfaceExpr.grouped` (the open token's surface is preserved). -/
 def isBracketChar (c : Char) : Bool :=
   c == '（' || c == '）' || c == '(' || c == ')'
+    || c == '「' || c == '」' || c == '『' || c == '』'
 
 /-! ## § 3  多字 surface 词典 -/
 
@@ -251,6 +262,25 @@ example :
     (lexWen "(推 一)").toOption
       = some [⟨"(", 0, 1, false⟩, ⟨"推", 1, 1, false⟩,
               ⟨"一", 3, 1, false⟩, ⟨")", 4, 1, false⟩] :=
+  by native_decide
+
+/-- wen-2.0 ⑩: `「`/`」` 引语括号 lex 为独立 1-char tokens. -/
+example :
+    (lexWen "「学」").toOption
+      = some [⟨"「", 0, 1, false⟩, ⟨"学", 1, 1, false⟩, ⟨"」", 2, 1, false⟩] :=
+  by native_decide
+
+/-- wen-2.0 ⑩: `『`/`』` 次级引语括号 lex 为独立 1-char tokens. -/
+example :
+    (lexWen "『学』").toOption
+      = some [⟨"『", 0, 1, false⟩, ⟨"学", 1, 1, false⟩, ⟨"』", 2, 1, false⟩] :=
+  by native_decide
+
+/-- Nested quote brackets lex correctly. -/
+example :
+    (lexWen "「『一』」").toOption
+      = some [⟨"「", 0, 1, false⟩, ⟨"『", 1, 1, false⟩, ⟨"一", 2, 1, false⟩,
+              ⟨"』", 3, 1, false⟩, ⟨"」", 4, 1, false⟩] :=
   by native_decide
 
 /-- 全空白. -/

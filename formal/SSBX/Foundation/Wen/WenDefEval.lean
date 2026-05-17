@@ -75,7 +75,11 @@ def Builtin.arity : Builtin → Nat
 
 /-! ## § 2  Value -/
 
-/-- 运行时值。closV 持环境；builtinV 持已应用之参数（partial application）. -/
+/-- 运行时值。closV 持环境；builtinV 持已应用之参数（partial application）.
+
+    `quoteV body` (wen-2.0 ⑥/⑩) 持原 Tm body，不评估 — body 可含自由
+    变量、可为任意类型，evaluator 只把它打包成 quote 值，待 ⑪ unquote
+    才解封. -/
 inductive Value : Type
   | hexV     (h : Hexagram)                                    : Value
   | boolV    (b : Bool)                                        : Value
@@ -87,6 +91,7 @@ inductive Value : Type
   | catalogueV (id : SSBX.Text.WenyanOperators.OperatorId)
       (kind : SSBX.Text.OperatorSignatures.SignatureKind)
       (args : List Value)                                      : Value
+  | quoteV   (body : Tm)                                       : Value
 deriving Repr
 
 abbrev Env := List (String × Value)
@@ -196,6 +201,10 @@ mutual
         let vb ← evalFuel fuel env b
         let vc ← evalFuel fuel env c
         some (.catalogueV id (SSBX.Text.OperatorSignatures.fullSignatureFor id).kind [va, vb, vc])
+    -- wen-2.0 ⑥/⑩: 引语 — body 不评估，原样打包.  `env` 故意被丢弃；quote
+    -- 之语义是 *捕获 syntactic body*，不是 closure。这与 ⑪ unquote/eval 之
+    -- 设计契合：unquote 时再决定要不要 substitution / re-eval.
+    | _+1,    _,   .quote body   => some (.quoteV body)
 
   /-- Fuel-bounded builtin 求值. -/
   def applyBuiltinFuel : Nat → Builtin → List Value → Option Value

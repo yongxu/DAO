@@ -193,14 +193,21 @@ def resolveSyntaxMarker : Glyph → Option SyntaxMarker
 def matchingCloseBracket? : Glyph → Option Glyph
   | "（" => some "）"
   | "("  => some ")"
+  | "「" => some "」"   -- wen-2.0 ⑩ quote bracket (primary)
+  | "『" => some "』"   -- wen-2.0 ⑩ quote bracket (nested)
   | _    => none
 
 def isOpenBracketSurface (g : Glyph) : Bool :=
   (matchingCloseBracket? g).isSome
 
 def isCloseBracketSurface : Glyph → Bool
-  | "）" | ")" => true
+  | "）" | ")" | "」" | "』" => true
   | _ => false
+
+/-- wen-2.0 ⑩: an open-bracket surface is a *quote* bracket (vs value
+    grouping) when it is one of `「` / `『`. -/
+def isQuoteOpenBracketSurface (g : Glyph) : Bool :=
+  g == "「" || g == "『"
 
 def catalogueReadingsForGlyph (glyph : Glyph) : List OperatorReading :=
   (readingsForGlyph glyph).filter (fun r => r.status = .catalogue ∧ r.operator?.isSome)
