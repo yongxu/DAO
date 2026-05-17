@@ -913,6 +913,28 @@ mutual
                 else
                   .ok (acc, head :: rest)
             | none =>
+              -- wen-2.0 ⑧ `Y 之所以 X`: reason-extraction infix.  When the
+              -- preceding `acc = Y` is a complete expression and the next
+              -- token is `之所以`, consume the marker and parse the rhs `X`
+              -- (the "reason" predicate / verb).  Reshape to `.app X Y`
+              -- (reason-as-application — the kernel treats this as ordinary
+              -- function application; the rhetorical "causes Y to X"
+              -- framing lives only at the surface).
+              --
+              -- Honour `reserve` so outer contexts that need trailing
+              -- tokens still get them.  Disallow infix inside `X` to keep
+              -- chained relation parsing predictable.
+              match head.atom with
+              | .syntax .zhiSuoYi =>
+                  if decide ((head :: rest).length <= reserve) then
+                    .ok (acc, head :: rest)
+                  else
+                    match parseSurfaceExprAux ctx false n reserve rest with
+                    | .ok (rhs, rest') =>
+                        parsePostfixApplications ctx allowInfix n reserve
+                          (.app rhs acc) rest'
+                    | .error e => .error e
+              | _ =>
               match relationInfixTok? head with
               | some opTok =>
                   if allowInfix then
