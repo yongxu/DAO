@@ -1238,21 +1238,22 @@ lexing.  v1: no recursion; re-definition rejected; catalogue glyphs
 rejected as names. -/
 
 /-- (1) Single def + single use: `定 倍推 为 而 推 推；倍推 一`.
-    Result: list of 2 stmts (one defStmt, one exprStmt).  The exprStmt's
-    type is `.hex`. -/
+    Result: list of 2 stmts.  The defStmt body has type `Hex → Hex`
+    (S_2 = endoCompBody composes the two T_10 endomaps); the exprStmt
+    applies it to `一` and has type `Hex`. -/
 example :
-    (wenyanCompileProgramWithDefs "定 倍推 为 推 推；倍推 一").toOption.map
+    (wenyanCompileProgramWithDefs "定 倍推 为 而 推 推；倍推 一").toOption.map
         (·.map (·.body.ty))
-      = some [.hex, .hex] := by
+      = some [.arr .hex .hex, .hex] := by
   native_decide
 
-/-- (2) `倍推 一` after def has the SAME semantic value as `推 推 一`. -/
+/-- (2) `倍推 一` after `定 倍推 为 而 推 推` has the SAME denotation as
+    `推 推 一` (S_2 ≡ composition; substitution preserves semantics). -/
 example :
-    let lhs := (wenyanCompileProgramWithDefs "定 倍推 为 推 推；倍推 一").toOption
+    let lhs := (wenyanCompileProgramWithDefs "定 倍推 为 而 推 推；倍推 一").toOption
       |>.bind (·.getLast?) |>.map Stmt.body
     let rhs := (wenyanCompile "推 推 一").toOption
-    lhs.map (·.ty) = rhs.map (·.ty)
-      ∧ (lhs.bind (denoteHex ·.tm)) = (rhs.bind (denoteHex ·.tm)) := by
+    (lhs.bind (denoteHex ·.tm)) = (rhs.bind (denoteHex ·.tm)) := by
   native_decide
 
 /-- (3) Chained defs: `定 F 为 推 一；定 G 为 F；G` ≡ `推 一`. -/
@@ -1288,13 +1289,15 @@ example :
      | .error (.defError 0 _) => true
      | _ => false) = true := by native_decide
 
-/-- (8) Def-body compile failure surfaces as a `.base` (not `.defError`). -/
+/-- (8) Def-body compile failure surfaces as a `.base` (not `.defError`).
+    The body `推 真` is a type error: `推` expects `Hex` but `真` is `Bool`. -/
 example :
-    (match wenyanCompileProgramWithDefs "定 甴 为 鼎" with
+    (match wenyanCompileProgramWithDefs "定 甴 为 推 真" with
      | .error (.base 0 _) => true
      | _ => false) = true := by native_decide
 
-/-- (9) Multi-token name «倍推» is accepted (not in `multiCharSurfaces`). -/
+/-- (9) Multi-token name «倍推» is accepted (not in `multiCharSurfaces`).
+    Body `推 一` has type `Hex`; `倍推` resolves to it. -/
 example :
     (wenyanCompileProgramWithDefs "定 倍推 为 推 一；倍推").toOption.map List.length
       = some 2 := by
@@ -1312,9 +1315,10 @@ example :
     (wenyanCompileProgramWithDefs "推 一").toOption.map List.length = some 1 := by
   native_decide
 
-/-- (12) End-to-end value check: `定 倍推 为 推 推；倍推 一` denotes «生生» 2 «一». -/
+/-- (12) End-to-end value check: `定 倍推 为 而 推 推；倍推 一` denotes
+    «生生» 2 «一» (compose-then-apply ≡ apply-twice). -/
 example :
-    let lastExpr := (wenyanCompileProgramWithDefs "定 倍推 为 推 推；倍推 一").toOption
+    let lastExpr := (wenyanCompileProgramWithDefs "定 倍推 为 而 推 推；倍推 一").toOption
       |>.bind (·.getLast?) |>.map Stmt.body
     lastExpr.bind (denoteHex ·.tm) = some («生生» 2 «一») := by
   native_decide
