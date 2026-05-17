@@ -97,6 +97,7 @@ import SSBX.Foundation.Wen.WenSurface.Syntax
 import SSBX.Foundation.Wen.WenSurface.Elaborate
 import SSBX.Foundation.Wen.WenSurface.EndToEnd
 import SSBX.Foundation.Wen.WenSurface.Coverage
+import SSBX.Foundation.Wen.WenSurface.ErrorRender
 
 -- Foundation/Jian — 间之核（14 字粒子核）
 import SSBX.Foundation.Jian.JianOntology
